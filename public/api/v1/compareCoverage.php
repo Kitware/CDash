@@ -118,9 +118,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
     //
     $filterdata = get_filterdata_from_request($page_id);
     $filter_sql = $filterdata['sql'];
-    
+
     $response['filter_sql'] = $filter_sql;
-    
+
     $limit_sql = '';
     if ($filterdata['limit'] > 0) {
         $limit_sql = ' LIMIT '.$filterdata['limit'];
@@ -140,7 +140,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
     // Menu
     if ($date == '') {
-    $back = "index.php?project=".urlencode($project_array['name']);
+        $back = "index.php?project=".urlencode($project_array['name']);
     } else {
         $back = "index.php?project=".urlencode($project_array['name'])."&date=".$date;
     }
@@ -232,8 +232,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
     }
 
     $parentid = null;
-    $build_data = get_build_data($projectid, $beginning_UTCDate, $end_UTCDate,
-                                 $filterdata, $parentid, $filter_sql, $limit_sql);
+    $build_data = get_build_data($parentid, $projectid, $beginning_UTCDate,
+                                 $end_UTCDate, $filterdata, $filter_sql,
+                                 $limit_sql);
 
     // Generate the JSON response from the rows of builds.
     $response['coverages'] = array();
@@ -256,74 +257,25 @@ function echo_main_dashboard_JSON($project_instance, $date)
         }
 
         $buildid = $build_array["id"];
-        $siteid = $build_array["siteid"];
 
-        // Figure out how many labels to report for this build.
-        if (!array_key_exists('numlabels', $build_array) ||
-                $build_array['numlabels'] == 0) {
-            $num_labels = 0;
-        } else {
-            $num_labels = $build_array['numlabels'];
-        }
-
-        $label_query =
-            "SELECT l.text FROM label AS l
-            INNER JOIN label2build AS l2b ON (l.id=l2b.labelid)
-            INNER JOIN build AS b ON (l2b.buildid=b.id)
-            WHERE b.id=" . qnum($buildid);
-
-        if ($num_selected_subprojects > 0) {
-            // Special handling for whitelisting/blacklisting SubProjects.
-            if ($include_subprojects) {
-                $num_labels = 0;
-            }
-            $labels_result = pdo_query($label_query);
-            while ($label_row = pdo_fetch_array($labels_result)) {
-                // Whitelist case
-                if ($include_subprojects &&
-                        in_array($label_row['text'], $included_subprojects)) {
-                    $num_labels++;
-                }
-                // Blacklist case
-                if ($exclude_subprojects &&
-                        in_array($label_row['text'], $excluded_subprojects)) {
-                    $num_labels--;
-                }
-            }
-
-            if ($num_labels === 0) {
-                // Skip this build entirely if none of its SubProjects
-                // survived filtering.
-                continue;
-            }
-        }
-
-        // Assign a label to this build based on how many labels it has.
-        if ($num_labels == 0) {
-            $build_label = "(none)";
-        } elseif ($num_labels == 1) {
-            // If exactly one label for this build, look it up here.
-            $label_result = pdo_single_row_query($label_query);
-            $build_label = $label_result['text'];
-        } else {
-            // More than one label, just report the number.
-            $build_label = "($num_labels labels)";
-        }
+        // Are there labels for this build?
+        //
+        $build_label = get_build_label($buildid, $build_array,
+                                       $include_subprojects, $num_selected_subprojects,
+                                       $included_subprojects, $excluded_subprojects);
 
         // Coverage
         //
         $coverages = pdo_query("SELECT * FROM coveragesummary WHERE buildid='$buildid'");
         while ($coverage_array = pdo_fetch_array($coverages)) {
             $coverage_response = array();
-            $coverage_response['buildid'] = $build_array["id"];
+            $coverage_response['buildid'] = $build_array['id'];
 
             $percent = round(
                     compute_percentcoverage($coverage_array['loctested'],
                         $coverage_array['locuntested']), 2);
 
             $coverage_response['percentage'] = $percent;
-            $coverage_response['locuntested'] = intval($coverage_array["locuntested"]);
-            $coverage_response['loctested'] = intval($coverage_array["loctested"]);
 
             // Compute the diff
             $coveragediff = pdo_query("SELECT * FROM coveragesummarydiff WHERE buildid='$buildid'");
@@ -332,118 +284,86 @@ function echo_main_dashboard_JSON($project_instance, $date)
                 $loctesteddiff = $coveragediff_array['loctested'];
                 $locuntesteddiff = $coveragediff_array['locuntested'];
                 @$previouspercent =
-                    round(($coverage_array["loctested"] - $loctesteddiff) /
-                            ($coverage_array["loctested"] - $loctesteddiff +
-                             $coverage_array["locuntested"] - $locuntesteddiff)
+                    round(($coverage_array['loctested'] - $loctesteddiff) /
+                            ($coverage_array['loctested'] - $loctesteddiff +
+                             $coverage_array['locuntested'] - $locuntesteddiff)
                             * 100, 2);
                 $percentdiff = round($percent - $previouspercent, 2);
                 $coverage_response['percentagediff'] = $percentdiff;
-                $coverage_response['locuntesteddiff'] = $locuntesteddiff;
-                $coverage_response['loctesteddiff'] = $loctesteddiff;
             }
 
-
-
-            // Are there labels for this build?
-            //
             $coverage_response['label'] = $build_label;
-
-            $coverage_response['site'] = $build_array["sitename"];
             $coverage_response['buildname'] = $build_array["name"];
             $response['coverages'][] = $coverage_response;
 
         }  // end coverage
-
-        $coverageThreshold = $project_array['coveragethreshold'];
-        $response['thresholdgreen'] = $coverageThreshold;
-        $response['thresholdyellow'] = $coverageThreshold * 0.7;
     } // end looping through builds
 
-
-    // Summarize coverage by subproject groups.
-    // This happens when we have subprojects and we're looking at the children
-    // of a specific build.
-    $coverage_groups = array();
+    $subproject_groups = array();
     if ($project_instance->GetNumberOfSubProjects($end_UTCDate) > 0) {
-        $groups = $project_instance->GetSubProjectGroups();
-        foreach ($groups as $group) {
-            // Keep track of coverage info on a per-group basis.
-            $groupId = $group->GetId();
-
-            $coverage_groups[$groupId] = array();
-            $coverageThreshold = $group->GetCoverageThreshold();
-            $coverage_groups[$groupId]['thresholdgreen'] = $coverageThreshold;
-            $coverage_groups[$groupId]['thresholdyellow'] = $coverageThreshold * 0.7;
-            $coverage_groups[$groupId]['label'] = $group->GetName();
-            $coverage_groups[$groupId]['loctested'] = 0;
-            $coverage_groups[$groupId]['locuntested'] = 0;
-            $coverage_groups[$groupId]['buildname'] = '';
-            $coverage_groups[$groupId]['coverages'] = array();
-        }
+        $subproject_groups = $project_instance->GetSubProjectGroups();
     }
 
     $response['numberbuilds'] = count($response['coverages']) + 1;
     $response['buildnames'] = array();
 
-    foreach( $response['coverages'] as $coverage)
-    {
-      $response['buildnames'][] = 'build'.$coverage['buildid'];
+    foreach( $response['coverages'] as $coverage) {
+        $response['buildnames'][] = 'build'.$coverage['buildid'];
     }
     $response['buildnames'][] = 'aggregate';
 
-    // First create an empty coveragegroups structure
-    $coverage_labels = array();
+    // First create empty coveragegroups and coveragelabels objects
+    $coveragelabels = array();
     $coveragegroups = array();
-    if ($project_instance->GetNumberOfSubProjects($end_UTCDate) > 0) {
-        $groups = $project_instance->GetSubProjectGroups();
-        foreach ($groups as $group) {
-            // Keep track of coverage info on a per-group basis.
-            $groupId = $group->GetId();
+    foreach ($subproject_groups as $group) {
+        // Keep track of coverage info on a per-group basis.
+        $groupId = $group->GetId();
 
-            $coveragegroups[$groupId] = array();
-            $coverageThreshold = $group->GetCoverageThreshold();
-            $coveragegroups[$groupId]['thresholdgreen'] = $coverageThreshold;
-            $coveragegroups[$groupId]['thresholdyellow'] = $coverageThreshold * 0.7;
-            $coveragegroups[$groupId]['coverages'] = array();
+        $coveragegroups[$groupId] = array();
+        $coverageThreshold = $group->GetCoverageThreshold();
+        $coveragegroups[$groupId]['thresholdgreen'] = $coverageThreshold;
+        $coveragegroups[$groupId]['thresholdyellow'] = $coverageThreshold * 0.7;
+        $coveragegroups[$groupId]['coverages'] = array();
 
-            foreach( $response['buildnames'] as $buildname)
-            {
-              $coveragegroups[$groupId][$buildname] = -1;
-            }
-            $coveragegroups[$groupId]['label'] = $group->GetName();;
-            $coveragegroups[$groupId]['aggregate'] = -1;
-            $coverage_labels[$groupId] = array();
+        foreach( $response['buildnames'] as $buildname) {
+          $coveragegroups[$groupId][$buildname] = -1;
         }
+        $coveragegroups[$groupId]['label'] = $group->GetName();;
+        $coveragegroups[$groupId]['aggregate'] = -1;
+
+        $coveragelabels[$groupId] = array();
     }
 
     $_coveragegroups = array();
-    foreach( $response['coverages'] as $coverage)
-    {
-      $buildid = $coverage['buildid'];
-      // Get the coverage data for each build
-      $groups = get_coverage_groups($projectid, $beginning_UTCDate, $end_UTCDate, 
-                                    $filterdata, $num_selected_subprojects,
-                                    $buildid, $filter_sql, $limit_sql,
-                                    $buildgroups_response, $coverage_groups);
+    foreach( $response['coverages'] as $coverage) {
+        $buildid = $coverage['buildid'];
 
-      // Make an entry in coverage groups for each possible subproject
-      foreach ($groups as $group) {
-        $groupId = $group['id'];
-        foreach ($group['coverages'] as $coverage) {
-          $coverage_label = $coverage['label'];
-          if (!in_array($coverage_label, $coverage_labels[$groupId])) {
-            $coverage_labels[$groupId][] = $coverage_label;
-            $a = array();
-            $a['label'] = $coverage_label;
-            foreach($response['buildnames'] as $buildname)
-            {
-              $a[$buildname] = -1;
+        $build_data = get_build_data($buildid, $projectid, $beginning_UTCDate, $end_UTCDate,
+                                     $filterdata, $filter_sql, $limit_sql);
+
+        // Get the coverage data for each build
+        $groups = get_coverage_groups($include_subprojects, $num_selected_subprojects,
+                                      $included_subprojects, $excluded_subprojects,
+                                      $buildid, $build_data, $buildgroups_response,
+                                      $subproject_groups);
+
+        // Make an entry in coveragegroups for each possible subproject
+        foreach ($groups as $group) {
+            $groupId = $group['id'];
+            foreach ($group['coverages'] as $groupcoverage) {
+                $coverage_label = $groupcoverage['label'];
+                if (!in_array($coveragelabels, $coveragelabels[$groupId])) {
+                    $coveragelabels[$groupId][] = $coverage_label;
+                    $a = array();
+                    $a['label'] = $coverage_label;
+                    foreach($response['buildnames'] as $buildname) {
+                        $a[$buildname] = -1;
+                    }
+                    $coveragegroups[$groupId]['coverages'][] = $a;
+                }
             }
-            $coveragegroups[$groupId]['coverages'][] = $a;
-          }
         }
-      }
-      $_coveragegroups[] = $groups;
+        $_coveragegroups[] = $groups;
     }
 
     // Populate coveragegroups
@@ -500,17 +420,86 @@ function echo_main_dashboard_JSON($project_instance, $date)
 } // end echo_main_dashboard_JSON
 
 
-function get_coverage_groups($projectid, $beginning_UTCDate, $end_UTCDate, 
-                            $filterdata, $num_selected_subprojects,
-                            $parentid, $filter_sql, $limit_sql, 
-                            $buildgroups_response, $coverage_groups)
+function get_build_label($buildid, $build_array,
+                         $include_subprojects, $num_selected_subprojects,
+                         $included_subprojects, $excluded_subprojects)
 {
+  // Figure out how many labels to report for this build.
+  if (!array_key_exists('numlabels', $build_array) ||
+          $build_array['numlabels'] == 0) {
+      $num_labels = 0;
+  } else {
+      $num_labels = $build_array['numlabels'];
+  }
 
-   $build_data = get_build_data($projectid, $beginning_UTCDate, $end_UTCDate,
-                                $filterdata, $parentid, $filter_sql, $limit_sql);
+  $label_query =
+      "SELECT l.text FROM label AS l
+      INNER JOIN label2build AS l2b ON (l.id=l2b.labelid)
+      INNER JOIN build AS b ON (l2b.buildid=b.id)
+      WHERE b.id=" . qnum($buildid);
+
+  if ($num_selected_subprojects > 0) {
+      // Special handling for whitelisting/blacklisting SubProjects.
+      if ($include_subprojects) {
+          $num_labels = 0;
+      }
+      $labels_result = pdo_query($label_query);
+      while ($label_row = pdo_fetch_array($labels_result)) {
+          // Whitelist case
+          if ($include_subprojects &&
+                  in_array($label_row['text'], $included_subprojects)) {
+              $num_labels++;
+          }
+          // Blacklist case
+          if ($exclude_subprojects &&
+                  in_array($label_row['text'], $excluded_subprojects)) {
+              $num_labels--;
+          }
+      }
+
+      if ($num_labels === 0) {
+          // Skip this build entirely if none of its SubProjects
+          // survived filtering.
+          continue;
+      }
+  }
+
+  // Assign a label to this build based on how many labels it has.
+  if ($num_labels == 0) {
+      $build_label = "(none)";
+  } elseif ($num_labels == 1) {
+      // If exactly one label for this build, look it up here.
+      $label_result = pdo_single_row_query($label_query);
+      $build_label = $label_result['text'];
+  } else {
+      // More than one label, just report the number.
+      $build_label = "($num_labels labels)";
+  }
+
+  return $build_label;
+}
+
+function get_coverage_groups($include_subprojects, $num_selected_subprojects,
+                            $included_subprojects, $excluded_subprojects,
+                            $parentid, $build_data, $buildgroups_response,
+                            $subproject_groups)
+{
+    // Summarize coverage by subproject groups.
+    // This happens when we have subprojects and we're looking at the children
+    // of a specific build.
+    $coverage_groups = array();
+    foreach ($subproject_groups as $group) {
+        // Keep track of coverage info on a per-group basis.
+        $groupId = $group->GetId();
+
+        $coverage_groups[$groupId] = array();
+        $coverage_groups[$groupId]['label'] = $group->GetName();
+        $coverage_groups[$groupId]['loctested'] = 0;
+        $coverage_groups[$groupId]['locuntested'] = 0;
+        $coverage_groups[$groupId]['coverages'] = array();
+    }
 
     // Generate the JSON response from the rows of builds.
-
     foreach ($build_data as $build_array) {
         $groupid = $build_array["groupid"];
 
@@ -529,65 +518,8 @@ function get_coverage_groups($projectid, $beginning_UTCDate, $end_UTCDate,
             continue;
         }
 
-        $groupname = $buildgroups_response[$i]['name'];
-
         $buildid = $build_array["id"];
-        $siteid = $build_array["siteid"];
 
-        // Figure out how many labels to report for this build.
-        if (!array_key_exists('numlabels', $build_array) ||
-                $build_array['numlabels'] == 0) {
-            $num_labels = 0;
-        } else {
-            $num_labels = $build_array['numlabels'];
-        }
-
-        $label_query =
-            "SELECT l.text FROM label AS l
-            INNER JOIN label2build AS l2b ON (l.id=l2b.labelid)
-            INNER JOIN build AS b ON (l2b.buildid=b.id)
-            WHERE b.id=" . qnum($buildid);
-
-        if ($num_selected_subprojects > 0) {
-            // Special handling for whitelisting/blacklisting SubProjects.
-            if ($include_subprojects) {
-                $num_labels = 0;
-            }
-            $labels_result = pdo_query($label_query);
-            while ($label_row = pdo_fetch_array($labels_result)) {
-                // Whitelist case
-                if ($include_subprojects &&
-                        in_array($label_row['text'], $included_subprojects)) {
-                    $num_labels++;
-                }
-                // Blacklist case
-                if ($exclude_subprojects &&
-                        in_array($label_row['text'], $excluded_subprojects)) {
-                    $num_labels--;
-                }
-            }
-
-            if ($num_labels === 0) {
-                // Skip this build entirely if none of its SubProjects
-                // survived filtering.
-                continue;
-            }
-        }
-
-        // Assign a label to this build based on how many labels it has.
-        if ($num_labels == 0) {
-            $build_label = "(none)";
-        } elseif ($num_labels == 1) {
-            // If exactly one label for this build, look it up here.
-            $label_result = pdo_single_row_query($label_query);
-            $build_label = $label_result['text'];
-        } else {
-            // More than one label, just report the number.
-            $build_label = "($num_labels labels)";
-        }
-
-        // Coverage
-        //
         $coverageIsGrouped = false;
         $coverages = pdo_query("SELECT * FROM coveragesummary WHERE buildid='$buildid'");
         while ($coverage_array = pdo_fetch_array($coverages)) {
@@ -603,7 +535,6 @@ function get_coverage_groups($projectid, $beginning_UTCDate, $end_UTCDate,
                 $groupId = $build_array['subprojectgroup'];
                 if (array_key_exists($groupId, $coverage_groups)) {
                     $coverageIsGrouped = true;
-                    $coverageThreshold = $coverage_groups[$groupId]['thresholdgreen'];
                     $coverage_groups[$groupId]['loctested'] +=
                         $coverage_array['loctested'];
                     $coverage_groups[$groupId]['locuntested'] +=
@@ -628,46 +559,41 @@ function get_coverage_groups($projectid, $beginning_UTCDate, $end_UTCDate,
                             * 100, 2);
                 $percentdiff = round($percent - $previouspercent, 2);
                 $coverage_response['percentagediff'] = $percentdiff;
-                $coverage_response['locuntesteddiff'] = $locuntesteddiff;
-                $coverage_response['loctesteddiff'] = $loctesteddiff;
             }
 
             // Are there labels for this build?
-            //
-            $coverage_response['label'] = $build_label;
-
+            $coverage_response['label'] = get_build_label($buildid, $build_array,
+                                                          $include_subprojects,
+                                                          $num_selected_subprojects,
+                                                          $included_subprojects,
+                                                          $excluded_subprojects);
 
             if ($coverageIsGrouped) {
-              $coverage_groups[$groupId]['coverages'][] = $coverage_response;
+                $coverage_groups[$groupId]['coverages'][] = $coverage_response;
             }
         }  // end coverage
     } // end looping through builds
 
-
     // Generate coverage by group here.
-    if (!empty($coverage_groups)) {
-        $response_coveragegroups = array();
-        foreach ($coverage_groups as $groupid => $group) {
-            $loctested = $group['loctested'];
-            $locuntested = $group['locuntested'];
-            if ($loctested == 0 && $locuntested == 0) {
-                continue;
-            }
-            $percentage = round($loctested / ($loctested + $locuntested) * 100, 2);
-            $group['percentage'] = $percentage;
-            $group['id'] = $groupid;
-            $group['parentid'] = $parentid;
-
-            $response_coveragegroups[] = $group;
+    $response_coveragegroups = array();
+    foreach ($coverage_groups as $groupid => $group) {
+        $loctested = $group['loctested'];
+        $locuntested = $group['locuntested'];
+        if ($loctested == 0 && $locuntested == 0) {
+            continue;
         }
-        return $response_coveragegroups;
-    }
+        $percentage = round($loctested / ($loctested + $locuntested) * 100, 2);
+        $group['percentage'] = $percentage;
+        $group['id'] = $groupid;
+        $group['parentid'] = $parentid;
 
-    return [];
+        $response_coveragegroups[] = $group;
+    }
+    return $response_coveragegroups;
 }
 
-function get_build_data($projectid, $beginning_UTCDate, $end_UTCDate, $filterdata,
-                          $parentid, $filter_sql, $limit_sql)
+function get_build_data($parentid, $projectid, $beginning_UTCDate,
+                        $end_UTCDate, $filterdata, $filter_sql, $limit_sql)
 {
     // Use this as the default date clause, but if $filterdata has a date clause,
     // then cancel this one out:
