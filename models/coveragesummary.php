@@ -131,12 +131,6 @@ class coveragesummary
                 $functionstested = $coverage->FunctionsTested;
                 $functionsuntested = $coverage->FunctionsUntested;
 
-                if ($i>0) {
-                    $sql .= ", ";
-                } else {
-                    $i=1;
-                }
-
                 if (empty($covered)) {
                     $covered = 0;
                 }
@@ -162,14 +156,47 @@ class coveragesummary
                 $this->LocTested += $loctested;
                 $this->LocUntested += $locuntested;
 
+                if ($append) {
+                    // UPDATE (instead of INSERT) if this coverage already
+                    // exists.
+                    $row = pdo_single_row_query(
+                            "SELECT 1 FROM coverage
+                            WHERE buildid=".qnum($this->BuildId)." AND
+                            fileid=".qnum($coverage->CoverageFile->Id));
+                    if ($row && array_key_exists('1', $row)) {
+                        $query = "UPDATE coverage SET
+                            covered=".qnum($covered).",
+                            loctested=".qnum($loctested).",
+                            locuntested=".qnum($locuntested).",
+                            branchstested=".qnum($branchstested).",
+                            branchsuntested=".qnum($branchsuntested).",
+                            functionstested=".qnum($functionstested).",
+                            functionsuntested=".qnum($functionsuntested)."
+                            WHERE buildid=".qnum($this->BuildId)." AND
+                            fileid=".qnum($coverage->CoverageFile->Id);
+                        if (!pdo_query($query)) {
+                            add_last_sql_error("CoverageSummary Update Coverage");
+                            return false;
+                        }
+                        continue;
+                    }
+                }
+
+                if ($i>0) {
+                    $sql .= ", ";
+                } else {
+                    $i=1;
+                }
                 $sql .= "(".qnum($this->BuildId).",".qnum($fileid).",".qnum($covered).",".qnum($loctested).",".qnum($locuntested).",
                     ".qnum($branchstested).",".qnum($branchsuntested).
                         ",".qnum($functionstested).",".qnum($functionsuntested).")";
             }
-            // Insert into coverage
-            if (!pdo_query($sql)) {
-                add_last_sql_error("CoverageSummary Insert Coverage");
-                return false;
+            if ($i > 0) {
+                // Insert into coverage
+                if (!pdo_query($sql)) {
+                    add_last_sql_error("CoverageSummary Insert Coverage");
+                    return false;
+                }
             }
 
             // Add labels
@@ -181,9 +208,12 @@ class coveragesummary
         $summary_updated = false;
         if ($append) {
             // Check if a coveragesummary already exists for this build.
-            $row = pdo_single_row_query("SELECT 1 FROM coveragesummary
+            $row = pdo_single_row_query(
+                    "SELECT loctested, locuntested FROM coveragesummary
                     WHERE buildid=".qnum($this->BuildId));
-            if ($row && array_key_exists('1', $row)) {
+            if ($row && array_key_exists('loctested', $row)) {
+                $previous_loctested = $row['loctested'];
+                $previous_locuntested = $row['locuntested'];
                 // Recompute how many lines were tested & untested
                 // based on all files covered by this build.
                 $this->LocTested = 0;
@@ -210,6 +240,11 @@ class coveragesummary
                     return false;
                 }
                 $summary_updated = true;
+
+                // Record how loctested and locuntested changed as a result
+                // of this update.
+                $delta_tested = $this->LocTested - $previous_loctested;
+                $delta_untested = $this->LocUntested - $previous_locuntested;
             }
         }
 
@@ -237,10 +272,16 @@ class coveragesummary
                         VALUES
                         (".qnum($parentid).",".qnum($this->LocTested).",".qnum($this->LocUntested).")";
                 } else {
+                    if (!isset($delta_tested)) {
+                        $delta_tested = $this->LocTested;
+                    }
+                    if (!isset($delta_untested)) {
+                        $delta_untested = $this->LocUntested;
+                    }
                     $query =
                         "UPDATE coveragesummary SET
-                        `loctested` = `loctested` + " . qnum($this->LocTested) . ",
-                        `locuntested` = `locuntested` + " . qnum($this->LocUntested) . "
+                        `loctested` = `loctested` + " . qnum($delta_tested) . ",
+                        `locuntested` = `locuntested` + " . qnum($delta_untested) . "
                             WHERE buildid=" . qnum($parentid);
                 }
                 if (!pdo_query($query)) {
