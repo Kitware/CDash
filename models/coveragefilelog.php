@@ -58,10 +58,11 @@ class coveragefilelog
             return false;
         }
 
+        pdo_begin_transaction();
         $update = false;
         if ($append) {
             // Load any previously existing results for this file & build.
-            $update = $this->Load();
+            $update = $this->Load(true);
         }
 
         $log = '';
@@ -86,16 +87,20 @@ class coveragefilelog
             pdo_query($sql);
             add_last_sql_error("CoverageFileLog::$sql_command()");
         }
+        pdo_commit();
         return true;
     }
 
-    public function Load()
+    public function Load($for_update = false)
     {
         global $CDASH_DB_TYPE;
 
         $query = "SELECT log FROM coveragefilelog
             WHERE fileid=".qnum($this->FileId)."
             AND buildid=".qnum($this->BuildId);
+        if ($for_update) {
+            $query .= " FOR UPDATE";
+        }
 
         $result = pdo_query($query);
         if (!$result || pdo_num_rows($result) < 1) {
