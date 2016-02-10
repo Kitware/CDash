@@ -331,19 +331,14 @@ function GetNextSubmission($projectid)
     $now_utc = gmdate(FMT_DATETIMESTD);
 
     // Avoid a race condition when parallel processing.
-    $for_update = "";
-    global $CDASH_ASYNC_WORKERS;
-    if ($CDASH_ASYNC_WORKERS > 1) {
-        pdo_begin_transaction();
-        $for_update = "FOR UPDATE";
-    }
+    pdo_begin_transaction();
 
     // Get the next submission to process.
     $query_array = pdo_single_row_query(
             "SELECT id, filename, filesize, filemd5sum, attempts
             FROM submission
             WHERE projectid='$projectid' AND status=0
-            ORDER BY id LIMIT 1 $for_update");
+            ORDER BY id LIMIT 1 FOR UPDATE");
     add_last_sql_error("GetNextSubmission-1");
 
     $submission_id = $query_array['id'];
@@ -355,9 +350,7 @@ function GetNextSubmission($projectid)
             "WHERE id='".$submission_id."'");
     add_last_sql_error("GetNextSubmission-2");
 
-    if ($CDASH_ASYNC_WORKERS > 1) {
-        pdo_commit();
-    }
+    pdo_commit();
 
     return $query_array;
 }

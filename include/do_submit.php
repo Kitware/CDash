@@ -66,10 +66,6 @@ function do_submit($filehandle, $projectid, $expected_md5='', $do_checksum=true,
         $scheduleid = pdo_real_escape_numeric($_GET["clientscheduleid"]);
     }
 
-    global $CDASH_ASYNC_WORKERS;
-    if ($CDASH_ASYNC_WORKERS < 2) {
-        pdo_begin_transaction();
-    }
   // Parse the XML file
   $handler = ctest_parse($filehandle, $projectid, $expected_md5, $do_checksum, $scheduleid);
   //this is the md5 checksum fail case
@@ -77,9 +73,6 @@ function do_submit($filehandle, $projectid, $expected_md5='', $do_checksum=true,
       //no need to log an error since ctest_parse already did
     return;
   }
-    if ($CDASH_ASYNC_WORKERS < 2) {
-        pdo_commit();
-    }
 
   // Send the emails if necessary
   if ($handler instanceof UpdateHandler) {
