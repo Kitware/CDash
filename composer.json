@@ -11,23 +11,26 @@
     "wiki": "http://public.kitware.com/Wiki/CDash"
   },
   "require": {
-    "php": ">=5.3.3",
+    "php": ">=5.3.6",
     "ext-curl": "*",
-    "ext-xsl": "*",
+    "ext-json": "*",
     "ext-pdo": "*",
-    "paragonie/random_compat": "~1.0.10"
+    "ext-xsl": "*",
+    "monolog/monolog": "~1.17",
+    "paragonie/random_compat": "~1.2",
+    "swiftmailer/swiftmailer": "~5.4"
   },
   "require-dev": {
     "ext-gd": "*",
     "ext-xdebug": "*",
-    "fabpot/php-cs-fixer": "~1.10",
+    "fabpot/php-cs-fixer": "~1.11",
     "phpunit/phpunit": "~4.8",
     "sensiolabs/security-checker": "~3.0",
     "phpunit/phpunit-selenium": "~1.4"
   },
   "suggest": {
-    "ext-pdo_mysql": "*",
-    "ext-pdo_pgsql": "*"
+    "ext-pdo_mysql": "",
+    "ext-pdo_pgsql": ""
   },
   "autoload": {
     "psr-4": {"CDash\\": "include/CDash/"}

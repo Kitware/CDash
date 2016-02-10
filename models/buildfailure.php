@@ -167,10 +167,11 @@ class buildfailure
           $query .= "(".qnum($id).",".qnum($argumentid).",".qnum($i).")";
           $i++;
       }
-
-      if (!pdo_query($query)) {
-          add_last_sql_error("BuildFailure Insert", 0, $this->BuildId);
-          return false;
+      if ($i > 0) {
+          if (!pdo_query($query)) {
+              add_last_sql_error("BuildFailure Insert", 0, $this->BuildId);
+              return false;
+          }
       }
 
       $this->InsertLabelAssociations($id);

@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -34,7 +34,14 @@ $xml .= "<menutitle>CDash</menutitle>";
 $xml .= "<menusubtitle>Log Viewer</menusubtitle>";
 
 $xml .= "<log>";
-$xml .= htmlentities(file_get_contents($CDASH_LOG_FILE));
+if ($CDASH_LOG_FILE === false) {
+    $xml .= "See entries for 'cdash' in the syslog.";
+} else {
+    $contents = file_get_contents($CDASH_LOG_FILE);
+    if ($contents !== false) {
+        $xml .= htmlentities($contents);
+    }
+}
 $xml .= "</log>";
 // List of the file in the directory that have other*.xml
 foreach (glob($CDASH_BACKUP_DIRECTORY."/*_Other*.xml") as $filename) {

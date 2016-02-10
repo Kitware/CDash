@@ -90,7 +90,10 @@ function pdo_error($link_identifier = null)
     $error_info = get_link_identifier($link_identifier)->getPdo()->errorInfo();
     if (isset($error_info[2]) && $error_info[0] !== '00000') {
         if ($CDASH_PRODUCTION_MODE) {
-            error_log($error_info[2]);
+            if (openlog('cdash', LOG_PID, LOG_USER)) {
+                syslog(LOG_ERR, $error_info[2]);
+                closelog();
+            }
             return "SQL error encountered, query hidden.";
         }
         return $error_info[2];
@@ -275,7 +278,13 @@ function pdo_real_escape_numeric($unescaped_string, $link_identifier = null)
         $unescaped_string = "0";
     }
 
-    return pdo_real_escape_string($unescaped_string, $link_identifier);
+    // Return zero if we don't end up with a numeric value.
+    $escaped_string =
+        pdo_real_escape_string($unescaped_string, $link_identifier);
+    if (!is_numeric($escaped_string)) {
+        return 0;
+    }
+    return $escaped_string;
 }
 
 /**

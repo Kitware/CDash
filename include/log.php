@@ -19,6 +19,12 @@ require_once("include/defines.php");
 require_once("include/pdocore.php");
 require_once("models/errorlog.php");
 
+use \Monolog\Logger;
+use \Monolog\Registry;
+use \Monolog\Formatter\LineFormatter;
+use \Monolog\Handler\StreamHandler;
+use \Monolog\Handler\SyslogHandler;
+use \Psr\Log\LogLevel;
 
 function cdash_unlink($filename)
 {
@@ -45,158 +51,186 @@ function cdash_unlink($filename)
     return $success;
 }
 
+function to_psr3_level($type)
+{
+    if (is_string($type) && defined('LogLevel::'.strtoupper($type))) {
+        return $type;
+    }
+
+    switch ($type) {
+        case LOG_EMERG:
+            $level = LogLevel::EMERGENCY;
+            break;
+        case LOG_ALERT:
+            $level = LogLevel::ALERT;
+            break;
+        case LOG_CRIT:
+            $level = LogLevel::CRITICAL;
+            break;
+        case LOG_ERR:
+            $level = LogLevel::ERROR;
+            break;
+        case LOG_WARNING:
+            $level = LogLevel::WARNING;
+            break;
+        case LOG_NOTICE:
+            $level = LogLevel::NOTICE;
+            break;
+        case LOG_INFO:
+            $level = LogLevel::INFO;
+            break;
+        case LOG_DEBUG:
+            $level = LogLevel::DEBUG;
+            break;
+        default:
+            $level = LogLevel::INFO;
+    }
+
+    return $level;
+}
 
 /** Add information to the log file */
 function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
                  $resourcetype=0, $resourceid=0)
 {
-    global $CDASH_LOG_FILE;
-    global $CDASH_LOG_FILE_MAXSIZE_MB;
-    global $CDASH_LOG_LEVEL;
-    global $CDASH_LOG_TO_DATABASE;
-  
-  // Check if we are within the log level
-  if ($type!= LOG_TESTING && $type>$CDASH_LOG_LEVEL) {
-      return;
-  }
-  
-    $logFile = $CDASH_LOG_FILE;
-    if ($buildid == 0 && isset($GLOBALS['PHP_ERROR_BUILD_ID'])) {
-        //use the global build id as a default if it's set
+    global $CDASH_LOG_FILE, $CDASH_LOG_FILE_MAXSIZE_MB, $CDASH_LOG_LEVEL,
+        $CDASH_LOG_TO_DATABASE, $CDASH_TESTING_MODE;
 
-    $buildid = $GLOBALS['PHP_ERROR_BUILD_ID'];
+    $level = to_psr3_level($type);
+
+    if (($buildid === 0 || is_null($buildid)) && isset($GLOBALS['PHP_ERROR_BUILD_ID'])) {
+        $buildid = $GLOBALS['PHP_ERROR_BUILD_ID'];
     }
 
-    if (!file_exists(dirname($logFile))) {
-        $paths = explode(PATH_SEPARATOR, get_include_path());
-    // Search the include path for the log file
-    foreach ($paths as $path) {
-        if (file_exists(dirname("$path/$CDASH_LOG_FILE"))) {
-            $logFile = "$path/$CDASH_LOG_FILE";
-            break;
-        }
-    }
+    $context = array('function' => $function);
+
+    if ($projectid !== 0 && !is_null($projectid)) {
+        $context['project_id'] = $projectid;
     }
 
-    if (strlen($text)==0) {
-        return;
+    if ($buildid !== 0 && !is_null($buildid)) {
+        $context['build_id'] = $buildid;
     }
 
-  // If the size of the log file is bigger than 10 times the allocated memory
-  // we rotate
-  $maxlogsize = $CDASH_LOG_FILE_MAXSIZE_MB*1024*1024/10.0;
-    if (file_exists($logFile) && filesize($logFile)>$maxlogsize) {
-        $tmplogfile = $logFile.".tmp";
-        if (!file_exists($tmplogfile)) {
-            rename($logFile, $tmplogfile); // This should be quick so we can keep logging
+    if ($resourcetype !== 0 && !is_null($resourcetype)) {
+        $context['resource_type'] = $resourcetype;
+    }
 
-      for ($i=9;$i>=0;$i--) {
-          // If we don't have compression we just rename the files
-        if (!function_exists("gzwrite")) {
-            $currentfile = $logFile.".".$i.".txt";
-            $j = $i+1;
-            $newfile = $logFile.".".$j.".txt";
-            if (file_exists($newfile)) {
-                cdash_unlink($newfile);
-            }
-            if (file_exists($currentfile)) {
-                rename($currentfile, $newfile);
-            }
-        } else {
-            $currentfile = $logFile.".".$i.".gz";
-            $j = $i+1;
-            $newfile = $logFile.".".$j.".gz";
-            if (file_exists($newfile)) {
-                cdash_unlink($newfile);
-            }
-            if (file_exists($currentfile)) {
-                $gz = gzopen($newfile, 'wb');
-                $f = fopen($currentfile, 'rb');
-                while ($f && !feof($f)) {
-                    gzwrite($gz, fread($f, 8192));
+    if ($resourceid !== 0 && !is_null($resourceid)) {
+        $context['resource_id'] = $resourceid;
+    }
+
+    $minLevel = to_psr3_level($CDASH_LOG_LEVEL);
+
+    if (!is_null($CDASH_LOG_FILE)) {
+        // If the size of the log file is bigger than 10 times the allocated memory
+        // we rotate
+        $logFileMaxSize = $CDASH_LOG_FILE_MAXSIZE_MB * 100000;
+        if (file_exists($CDASH_LOG_FILE) && filesize($CDASH_LOG_FILE) > $logFileMaxSize) {
+            $tempLogFile = $CDASH_LOG_FILE.'.tmp';
+            if (!file_exists($tempLogFile)) {
+                rename($CDASH_LOG_FILE, $tempLogFile); // This should be quick so we can keep logging
+                for ($i = 9; $i >= 0; $i--) {
+                    // If we do not have compression we just rename the files
+                    if (function_exists('gzwrite') === false) {
+                        $currentLogFile = $CDASH_LOG_FILE.'.'.$i;
+                        $j = $i + 1;
+                        $newLogFile = $CDASH_LOG_FILE.'.'.$j;
+                        if (file_exists($newLogFile)) {
+                            cdash_unlink($newLogFile);
+                        }
+                        if (file_exists($currentLogFile)) {
+                            rename($currentLogFile, $newLogFile);
+                        }
+                    } else {
+                        $currentLogFile = $CDASH_LOG_FILE.'.'.$i.'.gz';
+                        $j = $i + 1;
+                        $newLogFile = $CDASH_LOG_FILE.'.'.$j.'.gz';
+                        if (file_exists($newLogFile)) {
+                            cdash_unlink($newLogFile);
+                        }
+                        if (file_exists($currentLogFile)) {
+                            $gz = gzopen($newLogFile, 'wb');
+                            $f = fopen($currentLogFile, 'rb');
+                            while ($f && !feof($f)) {
+                                gzwrite($gz, fread($f, 8192));
+                            }
+                            fclose($f);
+                            unset($f);
+                            gzclose($gz);
+                            unset($gz);
+                        }
+                    }
                 }
-                fclose($f);
-                unset($f);
-                gzclose($gz);
-                unset($gz);
+                // Move the current backup
+                if (function_exists('gzwrite') === false) {
+                    rename($tempLogFile, $CDASH_LOG_FILE.'.0');
+                } else {
+                    $gz = gzopen($CDASH_LOG_FILE.'.0.gz', 'wb');
+                    $f = fopen($tempLogFile, 'rb');
+                    while ($f && !feof($f)) {
+                        gzwrite($gz, fread($f, 8192));
+                    }
+                    fclose($f);
+                    unset($f);
+                    gzclose($gz);
+                    unset($gz);
+                    cdash_unlink($tempLogFile);
+                }
             }
         }
-      }
 
-      // Move the current backup
-      if (!function_exists("gzwrite")) {
-          rename($tmplogfile, $logFile.'.0.txt');
-      } else {
-          $gz = gzopen($logFile.'.0.gz', 'wb');
-          $f = fopen($tmplogfile, 'rb');
-          while ($f && !feof($f)) {
-              gzwrite($gz, fread($f, 8192));
-          }
-          fclose($f);
-          unset($f);
-          gzclose($gz);
-          unset($gz);
-          cdash_unlink($tmplogfile);
-      }
-        } // end tmp file doesn't exist
-    } // end log rotation
-
-  $error = "";
-    if ($type != LOG_TESTING) {
-        $error = "[".date(FMT_DATETIME)."]";
+        $context['pid'] = getmypid();
     }
 
-  // This is parsed by the testing
-  switch ($type) {
-    case LOG_INFO: $error.="[INFO]"; break;
-    case LOG_WARNING: $error.="[WARNING]"; break;
-    case LOG_ERR: $error.="[ERROR]"; break;
-    case LOG_TESTING: $error.="[TESTING]";break;
+    if (Registry::hasLogger('cdash') === false) {
+        if ($CDASH_LOG_FILE === false) {
+            $handler = new SyslogHandler('cdash', LOG_USER, $minLevel);
+            $handler->getFormatter()->ignoreEmptyContextAndExtra();
+        } else {
+            if ($CDASH_TESTING_MODE) {
+                $filePermission = 0666;
+            } else {
+                $filePermission = 0664;
+            }
+            $handler = new StreamHandler($CDASH_LOG_FILE, $minLevel, true,
+                                         $filePermission);
+            $handler->getFormatter()->allowInlineLineBreaks();
+            $handler->getFormatter()->ignoreEmptyContextAndExtra();
+        }
+
+        $logger = new Logger('cdash');
+        $logger->pushHandler($handler);
+        Registry::addLogger($logger);
+    } else {
+        $logger = Registry::getInstance('cdash');
     }
-    $error .= "[pid=".getmypid()."]";
-    $error .= "(".$function."): ".$text."\n";
 
-    $log_pre_exists = file_exists($logFile);
+    $logger->log($level, $text, $context);
 
-    $logged = error_log($error, 3, $logFile);
+    // Insert into the database, if so desired.
+    if ($CDASH_LOG_TO_DATABASE &&
+        ($level === LogLevel::ERROR || $level === LogLevel::WARNING)
+    ) {
+        $ErrorLog = new ErrorLog();
+        $ErrorLog->ProjectId = $projectid;
+        $ErrorLog->BuildId = $buildid;
 
-  // If there was a problem logging to cdash.log, echo and send it to
-  // PHP's system log:
-  //
-  if (!$logged) {
-      echo "warning: problem logging error to $logFile\n";
-      echo "  $error\n";
-      echo "\n";
-      echo "attempting to send to PHP's system log now\n";
-      echo "\n";
+        switch ($level) {
+            case LogLevel::ERROR:
+                $ErrorLog->Type = 4;
+                break;
+            case LogLevel::WARNING:
+                $ErrorLog->Type = 5;
+                break;
+        }
 
-      error_log($error, 0);
-  }
+        $ErrorLog->Description = '('.$function.'): '.$text;
+        $ErrorLog->ResourceType = $resourcetype;
+        $ErrorLog->ResourceId = $resourceid;
 
-  // If we just created the logFile, then give it group write permissions
-  // so that command-line invocations of CDash functions can also write to
-  // the same log file.
-  //
-  if (!$log_pre_exists && $logged && file_exists($logFile)) {
-      chmod($logFile, 0664);
-  }
-
-  // Insert in the database
-  if ($CDASH_LOG_TO_DATABASE && ($type == LOG_WARNING || $type==LOG_ERR)) {
-      $ErrorLog = new ErrorLog;
-      $ErrorLog->ProjectId = $projectid;
-      $ErrorLog->BuildId = $buildid;
-      switch ($type) {
-      // case LOG_INFO: $ErrorLog->Type = 6; break;
-      case LOG_WARNING: $ErrorLog->Type = 5; break;
-      case LOG_ERR: $ErrorLog->Type = 4; break;
-      }
-      $ErrorLog->Description = "(".$function."): ".$text;
-      $ErrorLog->ResourceType = $resourcetype;
-      $ErrorLog->ResourceId = $resourceid;
-
-      $ErrorLog->Insert();
-  }
+        $ErrorLog->Insert();
+    }
 }
 
 

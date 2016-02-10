@@ -680,9 +680,14 @@ if (isset($_GET['upgrade-2-4'])) {
     AddTableIndex('label2test', 'testid');
 
     // Better caching of build & test time, particularly for parent builds.
-    AddTableField('build', 'configureduration', 'float(7,2)', 'numeric(7,2)', '0.00');
-    UpgradeConfigureDuration();
-    UpgradeTestDuration();
+    $query = "SELECT configureduration FROM build LIMIT 1";
+    $dbTest = pdo_query($query);
+    if ($dbTest === false) {
+        AddTableField('build', 'configureduration', 'float(7,2)',
+                'numeric(7,2)', '0.00');
+        UpgradeConfigureDuration();
+        UpgradeTestDuration();
+    }
 
     // Support for marking a build as "done".
     AddTableField('build', 'done', 'tinyint(1)', 'smallint', '0');
@@ -726,6 +731,13 @@ if ($Upgrade) {
       $xml .= "<backupwritable>0</backupwritable>";
   } else {
       $xml .= "<backupwritable>1</backupwritable>";
+  }
+
+  // check if the log directory is writable
+  if ($CDASH_LOG_FILE !== false && !is_writable($CDASH_LOG_DIRECTORY)) {
+      $xml .= "<logwritable>0</logwritable>";
+  } else {
+      $xml .= "<logwritable>1</logwritable>";
   }
 
   // check if the upload directory is writable
