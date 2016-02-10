@@ -1096,12 +1096,15 @@ function echo_main_dashboard_JSON($project_instance, $date)
         }
 
         $coverageIsGrouped = false;
+
+        $response['comparecoverage'] = 0;
         $coverages = pdo_query("SELECT * FROM coveragesummary WHERE buildid='$buildid'");
         while ($coverage_array = pdo_fetch_array($coverages)) {
             $coverage_response = array();
             $coverage_response['buildid'] = $build_array["id"];
             if ($linkToChildCoverage) {
                 $coverage_response['childlink'] = "$child_builds_hyperlink#Coverage";
+                $response['comparecoverage'] = 1;
             }
 
             $percent = round(
