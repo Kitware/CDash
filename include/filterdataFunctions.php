@@ -44,6 +44,18 @@ interface PageSpecificFilters
 
 class DefaultFilters implements PageSpecificFilters
 {
+    public function __construct()
+    {
+        // The way we concatenate text into a single value
+        // depends on our database backend.
+        global $CDASH_DB_TYPE;
+        if ($CDASH_DB_TYPE === 'pgsql') {
+            $this->TextConcat = "array_to_string(array_agg(text), ', ')";
+        } else {
+            $this->TextConcat = "GROUP_CONCAT(text SEPARATOR ', ')";
+        }
+    }
+
     public function getDefaultFilter()
     {
         trigger_error(
@@ -227,7 +239,8 @@ class IndexPhpFilters extends DefaultFilters
 
             case 'label':
                 {
-                    $sql_field = "(SELECT text FROM label, label2build WHERE label2build.labelid=label.id AND label2build.buildid=b.id)";
+                    $sql_field = "(SELECT $this->TextConcat FROM label, label2build WHERE label2build.labelid=label.id AND label2build.buildid=b.id)";
+
                 }
                 break;
 
@@ -381,7 +394,7 @@ class QueryTestsPhpFilters extends DefaultFilters
 
             case 'label':
                 {
-                    $sql_field = "(SELECT group_concat(text separator ', ') FROM label, label2build WHERE label2build.buildid=b.id and label2build.labelid=label.id)";
+                    $sql_field = "(SELECT $this->TextConcat FROM label, label2build WHERE label2build.buildid=b.id AND label2build.labelid=label.id)";
                 }
                 break;
 
@@ -471,7 +484,7 @@ class ViewCoveragePhpFilters extends DefaultFilters
 
             case 'labels':
                 {
-                    $sql_field = "(SELECT GROUP_CONCAT(text) AS labels FROM (SELECT label.text, coverage.fileid, coverage.buildid FROM label, label2coveragefile, coverage WHERE label2coveragefile.labelid=label.id AND label2coveragefile.buildid=coverage.buildid AND label2coveragefile.coveragefileid=coverage.fileid) AS filelabels WHERE fileid=c.fileid AND buildid=c.buildid)";
+                    $sql_field = "(SELECT $this->TextConcat AS labels FROM (SELECT label.text, coverage.fileid, coverage.buildid FROM label, label2coveragefile, coverage WHERE label2coveragefile.labelid=label.id AND label2coveragefile.buildid=coverage.buildid AND label2coveragefile.coveragefileid=coverage.fileid) AS filelabels WHERE fileid=c.fileid AND buildid=c.buildid)";
                 }
                 break;
 
