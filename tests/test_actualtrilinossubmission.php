@@ -64,46 +64,6 @@ class ActualTrilinosSubmissionTestCase extends TrilinosSubmissionTestCase
         $this->createProjectWithName("Trilinos");
     }
 
-    public function submitFiles($test)
-    {
-        $dir = str_replace("\\", '/',
-      dirname(__FILE__).'/data/'.$test);
-
-        $listfilename = $dir."/orderedFileList.txt";
-
-        $filenames = explode("\n", file_get_contents($listfilename));
-
-        foreach ($filenames as $filename) {
-            if (!$filename) {
-                continue;
-            }
-
-            $fullname = str_replace("\r", '', $dir.'/'.$filename);
-
-            if (!file_exists($fullname)) {
-                $this->fail("file '$fullname' does not exist");
-                return false;
-            }
-
-            if (preg_match("/TrilinosDriver/", $filename)) {
-                $project = "TrilinosDriver";
-            } elseif (preg_match("/Trilinos/", $filename)) {
-                $project = "Trilinos";
-            } else {
-                $this->fail("file [$fullname] does not match project name Trilinos or TrilinosDriver");
-                return false;
-            }
-
-            if (!$this->submission($project, $fullname)) {
-                $this->fail("Submission of file [$fullname] for project [$project] failed");
-                return false;
-            }
-        }
-
-        $this->assertTrue(true, "Submission of all files succeeded");
-        return true;
-    }
-
     public function testActualTrilinosSubmission()
     {
         $this->createProjects();
