@@ -26,7 +26,9 @@ CREATE TABLE "build" (
   "testtimestatusfailed" smallint DEFAULT '-1',
   "notified" smallint DEFAULT '0' NOT NULL,
   "done" smallint DEFAULT '0' NOT NULL,
-  PRIMARY KEY ("id")
+  "uuid" character varying(36) NOT NULL,
+  PRIMARY KEY ("id"),
+  CONSTRAINT "uuid" UNIQUE ("uuid")
 );
 CREATE INDEX "projectid" on "build" ("projectid");
 CREATE INDEX "starttime" on "build" ("starttime");
@@ -37,6 +39,7 @@ CREATE INDEX "type" on "build" ("type");
 CREATE INDEX "name" on "build" ("name");
 CREATE INDEX "parentid" on "build" ("parentid");
 CREATE INDEX "projectid_parentid_starttime" ON "build" (projectid,parentid,starttime);
+CREATE INDEX "uuid" on "build" ("uuid");
 
 --
 -- Table: buildgroup
@@ -336,9 +339,10 @@ CREATE TABLE "site" (
   "latitude" character varying(10) DEFAULT '' NOT NULL,
   "longitude" character varying(10) DEFAULT '' NOT NULL,
   "outoforder" smallint DEFAULT '0' NOT NULL,
-  PRIMARY KEY ("id")
+  PRIMARY KEY ("id"),
+  CONSTRAINT "name_ip1" UNIQUE ("name", "ip")
 );
-CREATE INDEX "name3" on "site" ("name");
+CREATE INDEX "name_ip2" on "site" ("name", "ip");
 
 --
 -- Table: siteinformation
@@ -790,10 +794,12 @@ CREATE TABLE "subproject" (
   "groupid" bigint NOT NULL,
   "starttime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
   "endtime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
-  PRIMARY KEY ("id")
+  PRIMARY KEY ("id"),
+  CONSTRAINT "subproject_unique1" UNIQUE ("name", "projectid", "endtime")
 );
 CREATE INDEX "projectid5" on "subproject" ("projectid");
 CREATE INDEX "subprojectgroupid" on "subproject" ("groupid");
+CREATE INDEX "subproject_unique2" on "subproject" ("name", "projectid", "endtime");
 
 --
 -- Table: subprojectgroup

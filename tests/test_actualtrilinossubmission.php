@@ -4,8 +4,9 @@
 // relative to the top of the CDash source tree
 //
 require_once(dirname(__FILE__).'/cdash_test_case.php');
+require_once('tests/trilinos_submission_test.php');
 
-class ActualTrilinosSubmissionTestCase extends KWWebTestCase
+class ActualTrilinosSubmissionTestCase extends TrilinosSubmissionTestCase
 {
     public function __construct()
     {
@@ -63,7 +64,6 @@ class ActualTrilinosSubmissionTestCase extends KWWebTestCase
         $this->createProjectWithName("Trilinos");
     }
 
-
     public function submitFiles($test)
     {
         $dir = str_replace("\\", '/',
@@ -104,13 +104,13 @@ class ActualTrilinosSubmissionTestCase extends KWWebTestCase
         return true;
     }
 
-
     public function testActualTrilinosSubmission()
     {
         $this->createProjects();
         $this->setEmailCommitters("Trilinos", 1);
         $this->submitFiles('ActualTrilinosSubmission');
         $this->submitFiles('ActualTrilinosSubmissionTestData');
+        $this->verifyResults();
         $this->setEmailCommitters("Trilinos", 0);
         $this->deleteLog($this->logfilename);
     }
