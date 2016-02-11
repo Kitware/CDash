@@ -143,6 +143,19 @@ class buildconfigure
     }  // end insert
 
 
+    /** Return true if the specified line contains a configure warning,
+     * false otherwise.
+     */
+    public static function IsConfigureWarning($line)
+    {
+        if (strpos($line, 'CMake Warning') !== false ||
+                strpos($line, 'WARNING:') !== false) {
+            return true;
+        }
+        return false;
+    }
+
+
     /** Compute the warnings from the log. In the future we might want to add errors */
     public function ComputeWarnings()
     {
@@ -151,8 +164,7 @@ class buildconfigure
         $numlines = count($log_lines);
 
         for ($l = 0; $l < $numlines; $l++) {
-            if (($pos = stripos($log_lines[$l], 'warning')) !== false &&
-                    strpos($log_lines[$l], ':', $pos + 7) !== false) {
+            if ($this->IsConfigureWarning($log_lines[$l])) {
                 $precontext = "";
                 $postcontext = "";
 
