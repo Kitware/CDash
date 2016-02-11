@@ -66,8 +66,9 @@ function do_submit($filehandle, $projectid, $expected_md5='', $do_checksum=true,
         $scheduleid = pdo_real_escape_numeric($_GET["clientscheduleid"]);
     }
 
-    if ($CDASH_DB_TYPE != 'pgsql') {
-        pdo_query("START TRANSACTION");
+    global $CDASH_ASYNC_WORKERS;
+    if ($CDASH_ASYNC_WORKERS < 2) {
+        pdo_begin_transaction();
     }
   // Parse the XML file
   $handler = ctest_parse($filehandle, $projectid, $expected_md5, $do_checksum, $scheduleid);
@@ -76,8 +77,8 @@ function do_submit($filehandle, $projectid, $expected_md5='', $do_checksum=true,
       //no need to log an error since ctest_parse already did
     return;
   }
-    if ($CDASH_DB_TYPE != 'pgsql') {
-        pdo_query("COMMIT");
+    if ($CDASH_ASYNC_WORKERS < 2) {
+        pdo_commit();
     }
 
   // Send the emails if necessary
@@ -414,31 +415,94 @@ function put_submit_file()
     echo json_encode($response_array);
 }
 
+// Used for parallel requests to processubmissions.php
+// Adapted from a comment found here:
+// stackoverflow.com/questions/962915/how-do-i-make-an-asynchronous-get-request-in-php
+function curl_request_async($url, $params, $type='POST')
+{
+    foreach ($params as $key => &$val) {
+        if (is_array($val)) {
+            $val = implode(',', $val);
+        }
+        $post_params[] = $key.'='.urlencode($val);
+    }
+    $post_string = implode('&', $post_params);
+
+    $parts=parse_url($url);
+
+    switch ($parts['scheme']) {
+        case 'https':
+            $scheme = 'ssl://';
+            $port = 443;
+            break;
+        case 'http':
+        default:
+            $scheme = '';
+            $port = 80;
+    }
+
+    $fp = fsockopen($scheme . $parts['host'], $port, $errno, $errstr, 30);
+
+    // Data goes in the path for a GET request
+    if ('GET' == $type) {
+        $parts['path'] .= '?'.$post_string;
+    }
+
+    $out = "$type ".$parts['path']." HTTP/1.1\r\n";
+    $out.= "Host: ".$parts['host']."\r\n";
+    $out.= "Content-Type: application/x-www-form-urlencoded\r\n";
+    $out.= "Content-Length: ".strlen($post_string)."\r\n";
+    $out.= "Connection: Close\r\n\r\n";
+    // Data goes in the request body for a POST request
+    if ('POST' == $type && isset($post_string)) {
+        $out.= $post_string;
+    }
+
+    fwrite($fp, $out);
+    fclose($fp);
+}
+
 // Trigger processsubmissions.php using cURL.
 function trigger_process_submissions($projectid)
 {
-    global $CDASH_USE_HTTPS;
+    global $CDASH_USE_HTTPS, $CDASH_ASYNC_WORKERS;
     $currentURI = get_server_URI(true);
-    $request = $currentURI."/ajax/processsubmissions.php?projectid=".$projectid;
 
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $request);
-    curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 1);
-    if ($CDASH_USE_HTTPS) {
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    if ($CDASH_ASYNC_WORKERS > 1) {
+        // Parallel processing.
+        // Obtain the processing lock before firing off parallel workers.
+        $mypid = getmypid();
+        include("include/submission_functions.php");
+        if (AcquireProcessingLock($projectid, false, $mypid)) {
+            $url = $currentURI."/ajax/processsubmissions.php";
+            $params = array('projectid' => $projectid, 'pid' => $mypid);
+            for ($i = 0; $i < $CDASH_ASYNC_WORKERS; $i++) {
+                curl_request_async($url, $params, 'GET');
+            }
+        }
+    } else {
+        // Serial processing.
+        $request = $currentURI."/ajax/processsubmissions.php?projectid=".$projectid;
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $request);
+        curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+        if ($CDASH_USE_HTTPS) {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        }
+
+        // It's likely that the process timesout because the processing takes more
+        // than 1s to run. This is OK as we just need to trigger it.
+        // 28 = CURLE_OPERATION_TIMEDOUT
+        if (curl_exec($ch) === false && curl_errno($ch) != 28) {
+            add_log(
+                    "cURL error: ". curl_error($ch).' for request: '.$request,
+                    "do_submit_asynchronous",
+                    LOG_ERR, $projectid);
+        }
+        curl_close($ch);
     }
-
-  // It's likely that the process timesout because the processing takes more
-  // than 1s to run. This is OK as we just need to trigger it.
-  // 28 = CURLE_OPERATION_TIMEDOUT
-  if (curl_exec($ch) === false && curl_errno($ch) != 28) {
-      add_log(
-      "cURL error: ". curl_error($ch).' for request: '.$request,
-      "do_submit_asynchronous",
-      LOG_ERR, $projectid);
-  }
-    curl_close($ch);
 }

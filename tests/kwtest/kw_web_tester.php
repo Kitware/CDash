@@ -15,10 +15,11 @@ require_once('tests/kwtest/simpletest/web_tester.php');
  */
 class KWWebTestCase extends WebTestCase
 {
-    public $url           = null;
-    public $db            = null;
-    public $logfilename   = null;
-    public $cdashpro   = null;
+    public $url            = null;
+    public $db             = null;
+    public $logfilename    = null;
+    public $configfilename = null;
+    public $cdashpro       = null;
 
     public function __construct()
     {
@@ -39,8 +40,9 @@ class KWWebTestCase extends WebTestCase
         $this->db->setUser($db['login']);
         $this->db->setPassword($db['pwd']);
 
-        global $CDASH_LOG_FILE;
+        global $CDASH_LOG_FILE, $cdashpath;
         $this->logfilename = $CDASH_LOG_FILE;
+        $this->configfilename = $cdashpath."/config/config.local.php";
     }
 
     public function startCodeCoverage()
@@ -292,4 +294,37 @@ class KWWebTestCase extends WebTestCase
       $this->clickSubmitByName('Submit');
       return $this->clickLink('Back');
   }
+
+    public function addLineToConfig($line_to_add)
+    {
+        $contents = file_get_contents($this->configfilename);
+        $handle = fopen($this->configfilename, "w");
+        $lines = explode("\n", $contents);
+        foreach ($lines as $line) {
+            if (strpos($line, "?>") !== false) {
+                fwrite($handle, "$line_to_add\n");
+            }
+            if ($line != '') {
+                fwrite($handle, "$line\n");
+            }
+        }
+        fclose($handle);
+        unset($handle);
+        $this->pass("Passed");
+    }
+
+    public function removeLineFromConfig($line_to_remove)
+    {
+        $contents = file_get_contents($this->configfilename);
+        $handle = fopen($this->configfilename, "w");
+        $lines = explode("\n", $contents);
+        foreach ($lines as $line) {
+            if (strpos($line, $line_to_remove) !== false) {
+                continue;
+            } elseif ($line != '') {
+                fwrite($handle, "$line\n");
+            }
+        }
+        fclose($handle);
+    }
 }
