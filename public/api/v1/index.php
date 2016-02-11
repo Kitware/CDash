@@ -813,13 +813,8 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $build_response['done'] = $build_array['done'];
         $build_response['uploadfilecount'] = $build_array["builduploadfiles"];
 
-        if ($build_array['countbuildnotes']>0) {
-            $build_response['buildnote'] = 1;
-        }
-
-        if ($build_array['countnotes'] > 0) {
-            $build_response['note'] = 1;
-        }
+        $build_response['buildnotes'] = $build_array['countbuildnotes'];
+        $build_response['notes'] = $build_array['countnotes'];
 
         // Figure out how many labels to report for this build.
         if (!array_key_exists('numlabels', $build_array) ||
