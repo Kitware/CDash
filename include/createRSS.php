@@ -67,12 +67,10 @@ function CreateRSSFeed($projectid)
         $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
 
         // Find the number of errors and warnings
-        $builderror = pdo_query("SELECT buildid FROM builderror WHERE buildid='$buildid' AND type='0'");
-        $nerrors = pdo_num_rows($builderror);
-        $buildwarning = pdo_query("SELECT buildid FROM builderror WHERE buildid='$buildid' AND type='1'");
-        $nwarnings = pdo_num_rows($buildwarning);
-        $nnotrun = pdo_num_rows(pdo_query("SELECT buildid FROM build2test WHERE buildid='$buildid' AND status='notrun'"));
-        $nfail = pdo_num_rows(pdo_query("SELECT buildid FROM build2test WHERE buildid='$buildid' AND status='failed'"));
+        $nerrors = $build_array['builderrors'];
+        $nwarnings = $build_array['buildwarnings'];
+        $nnotrun = $build_array['testnotrun'];
+        $nfail = $build_array['testfailed'];
 
         $title = "CDash(".$projectname.") - ".$site_array["name"]." - ".$build_array["name"]." - ".$build_array["type"];
         $title .= " - ".$build_array["submittime"]." - ".$nerrors." errors, ".$nwarnings." warnings, ".$nnotrun." not run, ".$nfail." failed.";
