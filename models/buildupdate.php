@@ -354,7 +354,7 @@ class buildupdate
   } // end AssociateBuild()
 
   /** Update a child build so that it shares the parent's updates.
-   *  This function does not change he data model unless the parent
+   *  This function does not change the data model unless the parent
    * has an update and the child does not. **/
   public static function AssignUpdateToChild($childid, $parentid)
   {
