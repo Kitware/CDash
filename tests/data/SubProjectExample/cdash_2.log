@@ -1,6 +1,6 @@
-[TESTING][pid=<NA>](TESTING: EMAIL): simpletest@localhost
-[TESTING][pid=<NA>](TESTING: EMAILTITLE): FAILED (t=1): SubProjectExample/NOX - Linux-GCC-4.1.2-SERIAL_RELEASE - Nightly
-[TESTING][pid=<NA>](TESTING: EMAILBODY): A submission to CDash for the project SubProjectExample has failing tests.
+[<NA> <NA>] cdash.DEBUG: simpletest@<NA> {"function":"TESTING: EMAIL","build_id":"<NA>","pid":<NA>} 
+[<NA> <NA>] cdash.DEBUG: FAILED (t=1): SubProjectExample/NOX - Linux-GCC-4.1.2-SERIAL_RELEASE - Nightly {"function":"TESTING: EMAILTITLE","build_id":"<NA>","pid":<NA>} 
+[<NA> <NA>] cdash.DEBUG: A submission to CDash for the project SubProjectExample has failing tests.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
 Details on the submission can be found at http://<NA>/<NA>/buildSummary.php?buildid=<NA>
@@ -19,10 +19,10 @@ NOX_FiniteDifferenceIsorropiaColoring (http://<NA>/<NA>/testDetails.php?test=<NA
 
 
 -CDash on <NA>
-
-[TESTING][pid=<NA>](TESTING: EMAIL): nox-noemail@noemail
-[TESTING][pid=<NA>](TESTING: EMAILTITLE): FAILED (t=1): SubProjectExample/NOX - Linux-GCC-4.1.2-SERIAL_RELEASE - Nightly
-[TESTING][pid=<NA>](TESTING: EMAILBODY): A submission to CDash for the project SubProjectExample has failing tests.
+ {"function":"TESTING: EMAILBODY","build_id":"<NA>","pid":<NA>} 
+[<NA> <NA>] cdash.DEBUG: nox-noemail@noemail {"function":"TESTING: EMAIL","build_id":"<NA>","pid":<NA>} 
+[<NA> <NA>] cdash.DEBUG: FAILED (t=1): SubProjectExample/NOX - Linux-GCC-4.1.2-SERIAL_RELEASE - Nightly {"function":"TESTING: EMAILTITLE","build_id":"<NA>","pid":<NA>} 
+[<NA> <NA>] cdash.DEBUG: A submission to CDash for the project SubProjectExample has failing tests.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
 Details on the submission can be found at http://<NA>/<NA>/buildSummary.php?buildid=<NA>
@@ -41,4 +41,4 @@ NOX_FiniteDifferenceIsorropiaColoring (http://<NA>/<NA>/testDetails.php?test=<NA
 
 
 -CDash on <NA>
-
+ {"function":"TESTING: EMAILBODY","build_id":"<NA>","pid":<NA>} 

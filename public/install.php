@@ -23,11 +23,6 @@ if (class_exists('XsltProcessor') == false) {
     echo "WAMP Hint: uncomment extension=php_xsl.dll in php.ini.<br></font>";
     return;
 }
-if (function_exists('imagecreatefromstring') == false) {
-    echo "<font color=\"#FF0000\">Your PHP install does not support the imagecreatefromstring() function, please install the PHP_GD package.<br>  ";
-    echo "WAMP Hint: uncomment extension=php_gd.dll in php.ini.<br></font>";
-    return;
-}
 
 include(dirname(__DIR__)."/config/config.php");
 require_once("include/pdo.php");
@@ -84,6 +79,13 @@ if (!is_writable($CDASH_BACKUP_DIRECTORY)) {
     $xml .= "<backupwritable>0</backupwritable>";
 } else {
     $xml .= "<backupwritable>1</backupwritable>";
+}
+
+// check if the log directory is writable
+if ($CDASH_LOG_FILE !== false && !is_writable($CDASH_LOG_DIRECTORY)) {
+    $xml .= "<logwritable>0</logwritable>";
+} else {
+    $xml .= "<logwritable>1</logwritable>";
 }
 
 // check if the upload directory is writable
