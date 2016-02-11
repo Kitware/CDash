@@ -3,7 +3,7 @@
   "description": "An open source, web-based software testing server",
   "type": "project",
   "homepage": "http://www.cdash.org",
-  "license": "Apache-2.0",
+  "license": "BSD-3-Clause",
   "support": {
     "email": "kitware@kitware.com",
     "issues": "https://github.com/Kitware/CDash/issues",
