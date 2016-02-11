@@ -35,6 +35,7 @@ class build
     public $SiteId;
     public $ProjectId;
     public $ParentId;
+    public $Uuid;
     private $Stamp;
     public $Name;
     public $Type;
@@ -513,33 +514,63 @@ class build
             $this->Type = pdo_real_escape_string($this->Type);
             $this->Generator = pdo_real_escape_string($this->Generator);
 
-            $parentId = 0;
+            $this->ParentId = 0;
             $justCreatedParent = false;
             if ($this->SubProjectName) {
-                $parentId = $this->GetParentBuildId();
-                if ($parentId == 0) {
+                $this->ParentId = $this->GetParentBuildId();
+                if ($this->ParentId == 0) {
                     // This is the first subproject to submit for a new build.
                     // Create a new parent build for it.
-                    $parentId = $this->CreateParentBuild($nbuilderrors, $nbuildwarnings);
-                    $justCreatedParent = true;
+                    $justCreatedParent = $this->CreateParentBuild($nbuilderrors, $nbuildwarnings);
                 }
             }
-            $this->ParentId = $parentId;
+            $this->Uuid = Build::GenerateUuid($this->Stamp, $this->Name,
+                    $this->SiteId, $this->ProjectId, $this->SubProjectName);
 
             $query =
                 "INSERT INTO build
                 (".$id."siteid, projectid, stamp, name, type, generator,
                  starttime, endtime, submittime, command, log, builderrors,
-                 buildwarnings, parentid)
+                 buildwarnings, parentid, uuid)
                 VALUES
                 (".$idvalue."'$this->SiteId', '$this->ProjectId',
                  '$this->Stamp', '$this->Name', '$this->Type',
                  '$this->Generator', '$this->StartTime', '$this->EndTime',
                  '$this->SubmitTime', '$this->Command', '$this->Log',
-                 $nbuilderrors, $nbuildwarnings, $this->ParentId)";
+                 $nbuilderrors, $nbuildwarnings, $this->ParentId,
+                 '$this->Uuid')";
 
             if (!pdo_query($query)) {
-                add_last_sql_error("Build Insert", $this->ProjectId, $this->Id);
+                $error = pdo_error();
+                // This error might be due to a unique constraint violation
+                // for this UUID.  Query for such a previously existing build.
+                $existing_id_result = pdo_single_row_query(
+                        "SELECT id FROM build WHERE uuid = '$this->Uuid'");
+                if ($existing_id_result &&
+                        array_key_exists('id', $existing_id_result)) {
+                    $this->Id = $existing_id_result['id'];
+                    // If a previously existing build with this UUID was found
+                    // call UpdateBuild() on it.  This also sets ParentId
+                    // if an existing parent was found.
+                    $this->UpdateBuild($this->Id,
+                            $nbuilderrors, $nbuildwarnings);
+                    // Does the parent still need to be created?
+                    if ($this->SubProjectName && $this->ParentId < 1) {
+                        if (!$this->CreateParentBuild(
+                                    $nbuilderrors, $nbuildwarnings)) {
+                            // Someone else created the parent after we called
+                            // UpdateBuild(this->Id,...).
+                            // In this case we also need to manually update
+                            // the parent as well.
+                            $this->UpdateBuild($this->ParentId,
+                                    $nbuilderrors, $nbuildwarnings);
+                        }
+                    }
+                    // Now that the existing build and its parent (if any) have
+                    // been updated we can return early.
+                    return true;
+                }
+                add_log("SQL error: $error", "Build Insert", LOG_ERR, $this->ProjectId, $this->Id);
                 return false;
             }
 
@@ -551,8 +582,7 @@ class build
             if ($this->GroupId) {
                 $query = "INSERT INTO build2group (groupid,buildid) VALUES ('$this->GroupId','$this->Id')";
                 if (!pdo_query($query)) {
-                    add_last_sql_error("Build Insert", $this->ProjectId, $this->Id);
-                    return false;
+                    add_last_sql_error("Build2Group Insert", $this->ProjectId, $this->Id);
                 }
                 // Associate the parent with this group too.
                 if ($this->ParentId > 0) {
@@ -561,10 +591,10 @@ class build
                     if (pdo_num_rows($result) == 0) {
                         $query =
                             "INSERT INTO build2group (groupid,buildid)
-                            VALUES ('$this->GroupId','$this->ParentId')";
+                            VALUES ('$this->GroupId','$this->ParentId')
+                            ON DUPLICATE KEY UPDATE groupid=groupid";
                         if (!pdo_query($query)) {
-                            add_last_sql_error("Build Insert", $this->ProjectId, $this->ParentId);
-                            return false;
+                            add_last_sql_error("Parent Build2Group Insert", $this->ProjectId, $this->ParentId);
                         }
                     }
                 }
@@ -574,8 +604,7 @@ class build
             if ($this->SubProjectId) {
                 $query = "INSERT INTO subproject2build (subprojectid,buildid) VALUES ('$this->SubProjectId','$this->Id')";
                 if (!pdo_query($query)) {
-                    add_last_sql_error("Build Insert", $this->ProjectId, $this->Id);
-                    return false;
+                    add_last_sql_error("SubProject2Build Insert", $this->ProjectId, $this->Id);
                 }
             }
 
@@ -588,19 +617,18 @@ class build
             // Update parent's tally of total build errors & warnings.
             if (!$justCreatedParent) {
                 $this->UpdateBuild($this->ParentId, $nbuilderrors, $nbuildwarnings);
+            } elseif ($this->ParentId > 0) {
+                // If we just created a child build, associate it with
+                // the parent's updates (if any).
+                require_once('models/buildupdate.php');
+                BuildUpdate::AssignUpdateToChild($this->Id, $this->ParentId);
             }
         } else {
             // Build already exists.
             $this->Command = ' ' . $this->Command;
             $this->Log = ' ' . $this->Log;
 
-            if ($this->SubProjectName) {
-                // Update the parent build if necessary.
-                $this->ParentId = $this->GetParentBuildId();
-                $this->UpdateBuild($this->ParentId, $nbuilderrors, $nbuildwarnings);
-            }
-
-            // Now update this build.
+            // Update this build and its parent (if necessary).
             $this->UpdateBuild($this->Id, $nbuilderrors, $nbuildwarnings);
         }
 
@@ -1414,7 +1442,7 @@ class build
         return 0;
     }
 
-    /** Create a new build as a parent of $this.
+    /** Create a new build as a parent of $this and sets $this->ParentId.
      * Assumes many fields have been set prior to calling this function.
      **/
     public function CreateParentBuild($numErrors, $numWarnings)
@@ -1435,32 +1463,48 @@ class build
         $result = pdo_query($query);
         if (pdo_num_rows($result) > 0) {
             $result_array = pdo_fetch_array($result);
-            $parentId = $result_array['id'];
-            $this->ParentId = $parentId;
+            $this->ParentId = $result_array['id'];
 
-            // Mark it as a parent (parentid of -1) and update its tally of
-            // build errors & warnings.
-            pdo_query("UPDATE build SET parentid = -1 WHERE id = $parentId");
-            $this->UpdateBuild($this->ParentId, $numErrors, $numWarnings);
+            // Mark it as a parent (parentid of -1).
+            pdo_query("UPDATE build SET parentid = -1 WHERE id = $this->ParentId");
         } else {
+            // Generate a UUID for the parent build.  It is distinguished
+            // from its children by the lack of SubProject (final parameter).
+            $uuid = Build::GenerateUuid($this->Stamp, $this->Name,
+                    $this->SiteId, $this->ProjectId, "");
+
             // Create the parent build here.  Note how parent builds
             // are indicated by parentid == -1.
             $query = "INSERT INTO build
                 (parentid, siteid, projectid, stamp, name, type, generator,
-                 starttime, endtime, submittime, builderrors, buildwarnings)
+                 starttime, endtime, submittime, builderrors, buildwarnings,
+                 uuid)
                 VALUES
                 ('-1', '$this->SiteId', '$this->ProjectId', '$this->Stamp',
                  '$this->Name', '$this->Type', '$this->Generator',
                  '$this->StartTime', '$this->EndTime', '$this->SubmitTime',
-                 $numErrors, $numWarnings)";
+                 $numErrors, $numWarnings, '$uuid')";
 
             if (!pdo_query($query)) {
-                add_last_sql_error("Build Insert Parent", $this->ProjectId, $this->Id);
-                return false;
+                // Check if somebody else beat us to creating this parent build.
+                $existing_id_result = pdo_single_row_query(
+                        "SELECT id FROM build WHERE uuid = '$uuid'");
+                if ($existing_id_result &&
+                        array_key_exists('id', $existing_id_result)) {
+                    $this->ParentId = $existing_id_result['id'];
+                    return false;
+                } else {
+                    add_last_sql_error("Build Insert Parent", $this->ProjectId, $this->Id);
+                    return false;
+                }
             }
-
-            $parentId = pdo_insert_id("build");
+            if (!$this->ParentId) {
+                $this->ParentId = pdo_insert_id("build");
+            }
         }
+
+        // Update the parent's tally of build errors & warnings.
+        $this->UpdateBuild($this->ParentId, $numErrors, $numWarnings);
 
         // Since we just created a parent we should also update any existing
         // builds that should be a child of this parent but aren't yet.
@@ -1468,15 +1512,15 @@ class build
         // contain info about what subproject it came from.
         // TODO: maybe we don't need this any more?
         $query =
-            "UPDATE build SET parentid=$parentId
+            "UPDATE build SET parentid=$this->ParentId
             WHERE parentid=0 AND siteid='$this->SiteId' AND
             name='$this->Name' AND stamp='$this->Stamp'";
         if (!pdo_query($query)) {
             add_last_sql_error(
-                    "Build Insert Update Parent", $this->ProjectId, $parentId);
+                    "Build Insert Update Parent", $this->ProjectId, $this->ParentId);
         }
 
-        return $parentId;
+        return true;
     }
 
     /**
@@ -1489,12 +1533,20 @@ class build
             return;
         }
 
+        // Avoid a race condition when parallel processing.
+        $for_update = "";
+        global $CDASH_ASYNC_WORKERS;
+        if ($CDASH_ASYNC_WORKERS > 1) {
+            pdo_begin_transaction();
+            $for_update = "FOR UPDATE";
+        }
+
         $clauses = array();
 
         $build = pdo_single_row_query(
                 "SELECT builderrors, buildwarnings, starttime, endtime,
                 submittime, log, command
-                FROM build WHERE id='$buildid'");
+                FROM build WHERE id='$buildid' $for_update");
 
 
         // Special case: check if we should move from -1 to 0 errors/warnings.
@@ -1516,7 +1568,7 @@ class build
             if ($build['builderrors'] == -1) {
                 $build['builderrors'] = 0;
             }
-            if ($newErrors > -1) {
+            if ($newErrors > 0) {
                 $numErrors = $build['builderrors'] + $newErrors;
                 $clauses[] = "builderrors = $numErrors";
             }
@@ -1525,7 +1577,7 @@ class build
             if ($build['buildwarnings'] == -1) {
                 $build['buildwarnings'] = 0;
             }
-            if ($newWarnings > -1) {
+            if ($newWarnings > 0) {
                 $numWarnings = $build['buildwarnings'] + $newWarnings;
                 $clauses[] = "buildwarnings = $numWarnings";
             }
@@ -1558,7 +1610,24 @@ class build
             $query .= " WHERE id = '$buildid'";
             if (!pdo_query($query)) {
                 add_last_sql_error("UpdateBuild", $this->ProjectId, $buildid);
+                if ($CDASH_ASYNC_WORKERS > 1) {
+                    pdo_rollback();
+                }
                 return false;
+            }
+        }
+
+        if ($CDASH_ASYNC_WORKERS > 1) {
+            pdo_commit();
+        }
+
+        // Also update the parent if necessary.
+        $row = pdo_single_row_query(
+                "SELECT parentid FROM build WHERE id='$buildid'");
+        if ($row && array_key_exists('parentid', $row) && $row['parentid'] > 0) {
+            $this->UpdateBuild($row['parentid'], $newErrors, $newWarnings);
+            if ($buildid == $this->Id) {
+                $this->ParentId = $row['parentid'];
             }
         }
     }
@@ -1570,13 +1639,21 @@ class build
             return;
         }
 
+        // Avoid a race condition when parallel processing.
+        $for_update = "";
+        global $CDASH_ASYNC_WORKERS;
+        if ($CDASH_ASYNC_WORKERS > 1) {
+            pdo_begin_transaction();
+            $for_update = "FOR UPDATE";
+        }
+
         $numFailed = 0;
         $numNotRun = 0;
         $numPassed = 0;
 
         $parent = pdo_single_row_query(
                 "SELECT testfailed, testnotrun, testpassed
-                FROM build WHERE id=".qnum($this->ParentId));
+                FROM build WHERE id=".qnum($this->ParentId) . $for_update);
 
         // Don't let the -1 default value screw up our math.
         if ($parent['testfailed'] == -1) {
@@ -1600,6 +1677,10 @@ class build
                 WHERE id=".qnum($this->ParentId));
 
         add_last_sql_error("Build:UpdateParentTestNumbers", $this->ProjectId, $this->Id);
+
+        if ($CDASH_ASYNC_WORKERS > 1) {
+            pdo_commit();
+        }
 
         // NOTE: as far as I can tell, build.testtimestatusfailed isn't used,
         // so for now it isn't being updated for parent builds.
@@ -1653,13 +1734,20 @@ class build
         if ($this->ParentId < 1) {
             return;
         }
+        // Avoid a race condition when parallel processing.
+        $for_update = "";
+        global $CDASH_ASYNC_WORKERS;
+        if ($CDASH_ASYNC_WORKERS > 1) {
+            pdo_begin_transaction();
+            $for_update = "FOR UPDATE";
+        }
 
         $numErrors = 0;
         $numWarnings = 0;
 
         $parent = pdo_single_row_query(
                 "SELECT configureerrors, configurewarnings
-                FROM build WHERE id=".qnum($this->ParentId));
+                FROM build WHERE id=".qnum($this->ParentId) . $for_update);
 
         // Don't let the -1 default value screw up our math.
         if ($parent['configureerrors'] == -1) {
@@ -1679,6 +1767,10 @@ class build
 
         add_last_sql_error("Build:UpdateParentConfigureNumbers",
                 $this->ProjectId, $this->Id);
+
+        if ($CDASH_ASYNC_WORKERS > 1) {
+            pdo_commit();
+        }
     }
 
     /** Get/set pull request for this build. */
@@ -1830,5 +1922,15 @@ class build
         remove_build($this->Id);
         $this->Id = 0;
         return true;
+    }
+
+    /** Generate a UUID from the specified build details. */
+    public static function GenerateUuid($stamp, $name, $siteid, $projectid,
+            $subprojectname)
+    {
+        $input_string =
+            $stamp . "_" .  $name . "_" . $siteid . "_" . "_" .
+            $projectid . "_" . $subprojectname;
+        return md5($input_string);
     }
 } // end class Build;

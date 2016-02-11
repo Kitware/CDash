@@ -40,6 +40,7 @@ CREATE TABLE `build` (
   `testtimestatusfailed` smallint(6) DEFAULT '-1',
   `notified` tinyint(1) default '0',
   `done` tinyint(1) default '0',
+  `uuid` varchar(36) NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `projectid` (`projectid`),
   KEY `starttime` (`starttime`),
@@ -49,7 +50,8 @@ CREATE TABLE `build` (
   KEY `type` (`type`),
   KEY `name` (`name`),
   KEY `parentid` (`parentid`),
-  KEY `projectid_parentid_starttime` (`projectid`,`parentid`,`starttime`)
+  KEY `projectid_parentid_starttime` (`projectid`,`parentid`,`starttime`),
+  UNIQUE KEY uuid (uuid)
 );
 
 
@@ -427,7 +429,7 @@ CREATE TABLE `site` (
   `longitude` varchar(10) NOT NULL default '',
   `outoforder` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`id`),
-  KEY `name` (`name`)
+  UNIQUE KEY `name_ip` (`name`, `ip`)
 ) ;
 
 --
@@ -872,7 +874,8 @@ CREATE TABLE `subproject` (
   `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
   PRIMARY KEY  (`id`),
   KEY `groupid` (`groupid`),
-  KEY `projectid` (`projectid`)
+  KEY `projectid` (`projectid`),
+  UNIQUE KEY `unique_key` (`name`, `projectid`, `endtime`)
 );
 
 

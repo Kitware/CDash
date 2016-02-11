@@ -1,7 +1,7 @@
 # function to add a new ctest based test to CDash
 #
 function(add_ctest_test TestName ProjectName Directory CDashVerifyScript)
-  set(DriverScript 
+  set(DriverScript
     "${CDash_BINARY_DIR}/tests/ctest/ctestdriver-${TestName}.ctest")
   configure_file(
     "${CDash_SOURCE_DIR}/tests/ctest/ctestdriver.ctest.in"
@@ -42,10 +42,10 @@ add_php_test(api)
 add_ctest_test(simple2 InsightExample simple2 simple2.php)
 add_ctest_test(login InsightExample simple loginCoverage.php)
 add_ctest_test(sameImage InsightExample sameImage sameImage.php)
-  
+
 add_ctest_test(svnUpdates EmailProjectExample simple simple.php)
 add_ctest_test(gitUpdates PublicDashboard simple simple.php)
-  
+
 function(add_cdash_test TestName TestDir)
   CONFIGURE_FILE(
     "${CMAKE_CURRENT_SOURCE_DIR}/${TestDir}/test.cmake.in"
@@ -56,11 +56,11 @@ function(add_cdash_test TestName TestDir)
     --output-log "${CDash_BINARY_DIR}/Tests/${TestDir}/output.log"
     )
 endfunction(add_cdash_test)
-  
+
 set(protocol "http")
 set(server "${CDASH_SERVER}")
 set(path "/${CDASH_DIR_NAME}")
-  
+
 add_cdash_test(CTestSubmitLargeOutput CTestSubmitLargeOutput)
 if("${CDASH_DB_TYPE}" STREQUAL "mysql")
   # This test only passes if it fails to submit properly...
@@ -145,7 +145,7 @@ if(CMake_SOURCE_DIR)
   endforeach()
 endif()
 
-add_test(recoverpassword 
+add_test(recoverpassword
   ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_recoverpassword.php)
 set_tests_properties(
   recoverpassword PROPERTIES
@@ -156,6 +156,8 @@ add_php_test(submitsortingdata)
 add_test(enable_async
   ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_enable_async.php
 )
+
+add_php_test(parallelsubmissions)
 
 if(COVERAGE_COMMAND)
   add_coverage_test(simple_async InsightExample simple manageCoverageTest.php enable_async)
