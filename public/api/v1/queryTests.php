@@ -33,6 +33,15 @@ if ($date != null) {
     $date = htmlspecialchars(pdo_real_escape_string($date));
 }
 
+// If parentid is set we need to lookup the date for this build
+// because it is not specified as a query string parameter.
+if (isset($_GET['parentid'])) {
+    $parentid = pdo_real_escape_numeric($_GET['parentid']);
+    $parent_build = new Build();
+    $parent_build->Id = $parentid;
+    $date = $parent_build->GetDate();
+}
+
 @$projectname = $_GET["project"];
 if ($projectname != null) {
     $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
@@ -76,27 +85,48 @@ $response['filterurl'] = htmlentities(@$_GET['filterstring'], ENT_QUOTES);
 
 // Menu
 $menu = array();
-
-if ($date == '') {
-    $back = "index.php?project=".urlencode($project_array['name']);
-} else {
-    $back = "index.php?project=".urlencode($project_array['name'])."&date=".$date;
-}
-$menu['back'] = $back;
-
 $limit_param = "&limit=".$filterdata['limit'];
+$base_url = "queryTests.php?project=".urlencode($project_array['name']);
+if (isset($_GET['parentid'])) {
+    // When a parentid is specified, we should link to the next build,
+    // not the next day.
+    $previous_buildid = $parent_build->GetPreviousBuildId();
+    $current_buildid = $parent_build->GetCurrentBuildId();
+    $next_buildid = $parent_build->GetNextBuildId();
 
-$menu['previous'] =
-  "queryTests.php?project=".urlencode($project_array['name'])."&date=".$previousdate.$limit_param;
+    $menu['back'] = "index.php?project=".urlencode($project_array['name'])."&parentid=".$current_buildid;
 
-$menu['current'] =
-  "queryTests.php?project=".urlencode($project_array['name']).$limit_param;
+    if ($previous_buildid > 0) {
+        $menu['previous'] = "$base_url&parentid=$previous_buildid".$limit_param;
+    } else {
+        $menu['noprevious'] = "1";
+    }
 
-if (has_next_date($date, $currentstarttime)) {
-    $menu['next'] =
-      "queryTests.php?project=".urlencode($project_array['name'])."&date=".$nextdate.$limit_param;
+    $menu['current'] = "$base_url&parentid=$current_buildid".$limit_param;
+
+    if ($next_buildid > 0) {
+        $menu['next'] = "$base_url&parentid=$next_buildid".$limit_param;
+    } else {
+        $menu['nonext'] = "1";
+    }
 } else {
-    $menu['nonext'] = "1";
+
+    if ($date == '') {
+        $back = "index.php?project=".urlencode($project_array['name']);
+    } else {
+        $back = "index.php?project=".urlencode($project_array['name'])."&date=".$date;
+    }
+    $menu['back'] = $back;
+
+    $menu['previous'] = $base_url."&date=".$previousdate.$limit_param;
+
+    $menu['current'] = $base_url.$limit_param;
+
+    if (has_next_date($date, $currentstarttime)) {
+        $menu['next'] = $base_url.$nextdate.$limit_param;
+    } else {
+        $menu['nonext'] = "1";
+    }
 }
 
 $response['menu'] = $menu;
@@ -127,9 +157,17 @@ if (!$filterdata['hasdateclause']) {
     $date_clause = "AND b.starttime>='$beginning_UTCDate' AND b.starttime<'$end_UTCDate'";
 }
 
+$parent_clause = "";
+if (isset($_GET["parentid"])) {
+    // If we have a parentid, then we should only show children of that build.
+    // Date becomes irrelevant in this case.
+    $parent_clause ="AND (b.parentid = " . qnum($_GET["parentid"]) . ") ";
+    $date_clause = "";
+}
+
 
 $query = "SELECT
-            b.id, b.name, b.starttime, b.siteid,
+            b.id, b.name, b.starttime, b.siteid,b.parentid,
             build2test.testid AS testid, build2test.status, build2test.time, build2test.timestatus,
             site.name AS sitename,
             test.name AS testname, test.details
@@ -138,7 +176,7 @@ $query = "SELECT
           JOIN site ON (b.siteid = site.id)
           JOIN test ON (test.id = build2test.testid)
           WHERE b.projectid = '" . $project_array['id'] . "' " .
-          $date_clause . " " .
+          $parent_clause . $date_clause . " " .
           $filter_sql .
           "ORDER BY build2test.status, test.name".
           $limit_sql;
