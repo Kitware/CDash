@@ -110,7 +110,6 @@ if (isset($_GET['parentid'])) {
         $menu['nonext'] = "1";
     }
 } else {
-
     if ($date == '') {
         $back = "index.php?project=".urlencode($project_array['name']);
     } else {

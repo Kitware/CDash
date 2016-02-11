@@ -22,7 +22,7 @@ class ExcludeSubProjectsTestCase extends KWWebTestCase
 
         // Find the build for the 'hut11.kitware' site
         $builds = $buildgroup['builds'];
-        foreach($builds as $build) {
+        foreach ($builds as $build) {
             if ($build['site'] === 'hut11.kitware') {
                 break;
             }
@@ -90,7 +90,7 @@ class ExcludeSubProjectsTestCase extends KWWebTestCase
 
         // Find the build for the 'hut11.kitware' site
         $builds = $buildgroup['builds'];
-        foreach($builds as $build) {
+        foreach ($builds as $build) {
             if ($build['site'] === 'hut11.kitware') {
                 break;
             }
