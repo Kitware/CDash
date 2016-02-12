@@ -34,9 +34,9 @@ class ExcludeSubProjectsTestCase extends KWWebTestCase
             return 1;
         }
 
-        // Verify 65 configure warnings (normally 73).
-        if ($build['configure']['warning'] !== 65) {
-            $this->fail("Expected 65 configure warnings, found " . $build['configure']['warning']);
+        // Verify 32 configure warnings (normally 36).
+        if ($build['configure']['warning'] !== 32) {
+            $this->fail("Expected 32 configure warnings, found " . $build['configure']['warning']);
             return 1;
         }
 
@@ -102,9 +102,9 @@ class ExcludeSubProjectsTestCase extends KWWebTestCase
             return 1;
         }
 
-        // Verify 8 configure warnings (normally 73).
-        if ($build['configure']['warning'] !== 8) {
-            $this->fail("Expected 8 configure warnings, found " . $build['configure']['warning']);
+        // Verify 4 configure warnings (normally 36).
+        if ($build['configure']['warning'] !== 4) {
+            $this->fail("Expected 4 configure warnings, found " . $build['configure']['warning']);
             return 1;
         }
 
