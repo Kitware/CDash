@@ -54,19 +54,14 @@ class buildupdate
       }
 
       // Avoid a race condition when parallel processing.
-      $for_update = "";
-      global $CDASH_ASYNC_WORKERS;
-      if ($CDASH_ASYNC_WORKERS > 1) {
-          pdo_begin_transaction();
-          $for_update = "FOR UPDATE";
-      }
+      pdo_begin_transaction();
 
       $buildid = qnum($this->BuildId);
 
       // Check if this update already exists.
       $query = pdo_query(
               "SELECT updateid FROM build2update
-              WHERE buildid=$buildid $for_update");
+              WHERE buildid=$buildid FOR UPDATE");
       $exists = pdo_num_rows($query)==1;
       if ($exists) {
           $query_array = pdo_fetch_array($query);
@@ -91,27 +86,21 @@ class buildupdate
             $query = "DELETE FROM buildupdate WHERE id=$updateid";
             if (!pdo_query($query)) {
                 add_last_sql_error("BuildUpdate Delete", 0, $this->BuildId);
-                if ($CDASH_ASYNC_WORKERS > 1) {
-                    pdo_rollback();
-                }
+                pdo_rollback();
                 return false;
             }
 
             $query = "DELETE FROM updatefile WHERE updateid=$updateid";
             if (!pdo_query($query)) {
                 add_last_sql_error("BuildUpdate Delete updatefil", 0, $this->BuildId);
-                if ($CDASH_ASYNC_WORKERS > 1) {
-                    pdo_rollback();
-                }
+                pdo_rollback();
                 return false;
             }
         }
         $query = "DELETE FROM build2update WHERE buildid=$buildid";
         if (!pdo_query($query)) {
             add_last_sql_error("Build2Update Delete", 0, $this->BuildId);
-            if ($CDASH_ASYNC_WORKERS > 1) {
-                pdo_rollback();
-            }
+            pdo_rollback();
             return false;
         }
         $exists = false;
@@ -154,9 +143,7 @@ class buildupdate
                       '$this->Revision','$this->PriorRevision','$this->Path')";
           if (!pdo_query($query)) {
               add_last_sql_error("BuildUpdate Insert", 0, $this->BuildId);
-              if ($CDASH_ASYNC_WORKERS > 1) {
-                  pdo_rollback();
-              }
+              pdo_rollback();
               return false;
           }
 
@@ -168,9 +155,7 @@ class buildupdate
 
           if (!pdo_query($query)) {
               add_last_sql_error("Build2Update Insert", 0, $this->BuildId);
-              if ($CDASH_ASYNC_WORKERS > 1) {
-                  pdo_rollback();
-              }
+              pdo_rollback();
               return false;
           }
 
@@ -184,9 +169,7 @@ class buildupdate
         and build.parentid=$buildid";
           if (!pdo_query($query)) {
               add_last_sql_error("BuildUpdate Child Insert", 0, $this->BuildId);
-              if ($CDASH_ASYNC_WORKERS > 1) {
-                  pdo_rollback();
-              }
+              pdo_rollback();
               return false;
           }
       } else {
@@ -215,9 +198,7 @@ class buildupdate
 
           if (!pdo_query($query)) {
               add_last_sql_error("BuildUpdate Update", 0, $this->BuildId);
-              if ($CDASH_ASYNC_WORKERS > 1) {
-                  pdo_rollback();
-              }
+              pdo_rollback();
               return false;
           }
       }
@@ -227,9 +208,7 @@ class buildupdate
           $file->Insert();
       }
 
-      if ($CDASH_ASYNC_WORKERS > 1) {
-          pdo_commit();
-      }
+      pdo_commit();
       return true;
   }  // end function insert()
 
