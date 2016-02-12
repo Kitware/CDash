@@ -28,7 +28,6 @@ class ConfigureWarningTestCase extends KWWebTestCase
                 'WARNING some other text: blah blah blah',
                 'This warning is for project developers. Use -Wno-dev to suppress it.',
                 '<<< Configuring library with warnings >>>',
-                'library warnings................. : yes',
                 'library warnings................. : yes');
 
         foreach ($warning_lines as $line) {
