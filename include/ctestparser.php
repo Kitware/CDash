@@ -112,7 +112,9 @@ function writeBackupFile($filehandler, $content, $projectname, $buildname,
             }
         }
         flock($lockfp, LOCK_UN);
-        unlink($lockfilename);
+        if (file_exists($lockfilename)) {
+            unlink($lockfilename);
+        }
     }
 
   // Write the file.
