@@ -148,6 +148,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $parent_build = new Build();
         $parent_build->Id = $parentid;
         $date = $parent_build->GetDate();
+        $response['parentid'] = $parentid;
+    } else {
+        $response['parentid'] = -1;
     }
 
     list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $project_array["nightlytime"]);

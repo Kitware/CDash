@@ -22,9 +22,10 @@ class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
     {
         // Delete the existing Trilinos build.
         $row = pdo_single_row_query(
-                "SELECT build.id FROM build
-                WHERE build.parentid=-1 AND
+                "SELECT id FROM build
+                WHERE parentid=-1 AND
                 projectid=(SELECT id FROM project WHERE name='Trilinos') AND
+                name='Windows_NT-MSVC10-SERIAL_DEBUG_DEV' AND
                 starttime BETWEEN '2011-07-22 00:00:00' AND '2011-07-22 23:59:59'");
         remove_build($row['id']);
 
@@ -33,7 +34,7 @@ class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
 
         // Re-submit the Trilinos build.
         $begin = time();
-        $this->submitFiles(true);
+        $this->submitFiles('ActualTrilinosSubmission', true);
         echo "Submission took " . (time() - $begin) . " seconds.\n";
 
         // Re-enable submission processing and enable parallel processing

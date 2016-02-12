@@ -565,7 +565,7 @@ class ViewTestPhpFilters extends DefaultFilters
 
             case 'label':
                 {
-                  $sql_field = "(SELECT text FROM label, label2test WHERE label.id=label2test.labelid AND label2test.testid=t.id)";
+                    $sql_field = "(SELECT $this->TextConcat FROM label, label2test WHERE label.id=label2test.labelid AND label2test.testid=t.id)";
                 }
                 break;
 

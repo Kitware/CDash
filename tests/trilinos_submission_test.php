@@ -12,10 +12,9 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
         parent::__construct();
     }
 
-    public function submitFiles($trilinosOnly=false)
+    public function submitFiles($test, $trilinosOnly=false)
     {
-        $dir = str_replace("\\", '/',
-      dirname(__FILE__).'/data/ActualTrilinosSubmission');
+        $dir = str_replace("\\", '/', dirname(__FILE__)."/data/$test");
 
         $listfilename = $dir."/orderedFileList.txt";
 
@@ -63,15 +62,26 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
         $jsonobj = json_decode($content, true);
         $buildgroup = array_pop($jsonobj['buildgroups']);
 
-        // Verify only one parent build.
+        // Verify three parent builds.
         $num_parents = count($buildgroup['builds']);
-        if ($num_parents != 1) {
-            $this->fail("Expected 1 parent build, found $num_parents");
+        if ($num_parents != 3) {
+            $this->fail("Expected 3 parent builds, found $num_parents");
             return false;
         }
 
-        // Verify details about the parent build.
-        $parent_build = $buildgroup['builds'][0];
+        // Isolate the parent build that we care about.
+        $parent_build = null;
+        foreach ($buildgroup['builds'] as $build) {
+            if ($build['site'] === 'hut11.kitware' &&
+                $build['buildname'] === 'Windows_NT-MSVC10-SERIAL_DEBUG_DEV') {
+                $parent_build = $build;
+            }
+        }
+        if (is_null($parent_build)) {
+            $this->fail("Could not find expected parent build");
+            return false;
+        }
+
         if ($parent_build['numchildren'] != 36) {
             $this->fail("Expected 36 children, found " . $parent_build['numchildren']);
             return false;

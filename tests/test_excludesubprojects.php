@@ -19,7 +19,14 @@ class ExcludeSubProjectsTestCase extends KWWebTestCase
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $buildgroup = array_pop($jsonobj['buildgroups']);
-        $build = $buildgroup['builds'][0];
+
+        // Find the build for the 'hut11.kitware' site
+        $builds = $buildgroup['builds'];
+        foreach ($builds as $build) {
+            if ($build['site'] === 'hut11.kitware') {
+                break;
+            }
+        }
 
         // Verify 21 configure errors (normally 22).
         if ($build['configure']['error'] !== 21) {
@@ -80,7 +87,14 @@ class ExcludeSubProjectsTestCase extends KWWebTestCase
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $buildgroup = array_pop($jsonobj['buildgroups']);
-        $build = $buildgroup['builds'][0];
+
+        // Find the build for the 'hut11.kitware' site
+        $builds = $buildgroup['builds'];
+        foreach ($builds as $build) {
+            if ($build['site'] === 'hut11.kitware') {
+                break;
+            }
+        }
 
         // Verify 1 configure error (normally 22).
         if ($build['configure']['error'] !== 1) {

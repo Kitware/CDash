@@ -64,12 +64,12 @@ class ActualTrilinosSubmissionTestCase extends TrilinosSubmissionTestCase
         $this->createProjectWithName("Trilinos");
     }
 
-
     public function testActualTrilinosSubmission()
     {
         $this->createProjects();
         $this->setEmailCommitters("Trilinos", 1);
-        $this->submitFiles();
+        $this->submitFiles('ActualTrilinosSubmission');
+        $this->submitFiles('ActualTrilinosSubmissionTestData');
         $this->verifyResults();
         $this->setEmailCommitters("Trilinos", 0);
         $this->deleteLog($this->logfilename);
