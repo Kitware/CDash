@@ -102,6 +102,7 @@ add_php_test(replacebuild)
 add_php_test(sequenceindependence)
 add_php_test(passwordcomplexity)
 add_php_test(crosssubprojectcoverage)
+add_php_test(configurewarnings)
 
 if(CDASH_GITHUB_USERNAME AND CDASH_GITHUB_PASSWORD)
   add_php_test(github_PR_comment)
