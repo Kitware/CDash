@@ -68,11 +68,9 @@ class JSCoverTarHandler
       foreach ($coverageFileLog->Lines as $line) {
           if ($line == 0) {
               $coverage->LocUntested += 1;
-              $coverageSummary->LocUntested += 1;
           } else {
               $coverage->Covered = 1;
               $coverage->LocTested += 1;
-              $coverageSummary->LocTested += 1;
           }
       }
 

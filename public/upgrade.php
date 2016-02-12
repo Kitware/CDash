@@ -715,6 +715,9 @@ if (isset($_GET['upgrade-2-4'])) {
         }
     }
 
+    // Support for subproject path.
+    AddTableField('subproject', 'path', 'varchar(512)', 'character varying(512)', '');
+
     // Set the database version
     setVersion();
 

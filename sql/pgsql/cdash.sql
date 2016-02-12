@@ -792,6 +792,7 @@ CREATE TABLE "subproject" (
   "name" character varying(255) NOT NULL,
   "projectid" bigint NOT NULL,
   "groupid" bigint NOT NULL,
+  "path" character varying(512) DEFAULT '' NOT NULL,
   "starttime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
   "endtime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
   PRIMARY KEY ("id"),
@@ -800,6 +801,7 @@ CREATE TABLE "subproject" (
 CREATE INDEX "projectid5" on "subproject" ("projectid");
 CREATE INDEX "subprojectgroupid" on "subproject" ("groupid");
 CREATE INDEX "subproject_unique2" on "subproject" ("name", "projectid", "endtime");
+CREATE INDEX "subprojectpath" on "subproject" ("path");
 
 --
 -- Table: subprojectgroup

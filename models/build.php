@@ -1534,19 +1534,14 @@ class build
         }
 
         // Avoid a race condition when parallel processing.
-        $for_update = "";
-        global $CDASH_ASYNC_WORKERS;
-        if ($CDASH_ASYNC_WORKERS > 1) {
-            pdo_begin_transaction();
-            $for_update = "FOR UPDATE";
-        }
+        pdo_begin_transaction();
 
         $clauses = array();
 
         $build = pdo_single_row_query(
                 "SELECT builderrors, buildwarnings, starttime, endtime,
                 submittime, log, command
-                FROM build WHERE id='$buildid' $for_update");
+                FROM build WHERE id='$buildid' FOR UPDATE");
 
 
         // Special case: check if we should move from -1 to 0 errors/warnings.
@@ -1610,16 +1605,12 @@ class build
             $query .= " WHERE id = '$buildid'";
             if (!pdo_query($query)) {
                 add_last_sql_error("UpdateBuild", $this->ProjectId, $buildid);
-                if ($CDASH_ASYNC_WORKERS > 1) {
-                    pdo_rollback();
-                }
+                pdo_rollback();
                 return false;
             }
         }
 
-        if ($CDASH_ASYNC_WORKERS > 1) {
-            pdo_commit();
-        }
+        pdo_commit();
 
         // Also update the parent if necessary.
         $row = pdo_single_row_query(
@@ -1640,12 +1631,7 @@ class build
         }
 
         // Avoid a race condition when parallel processing.
-        $for_update = "";
-        global $CDASH_ASYNC_WORKERS;
-        if ($CDASH_ASYNC_WORKERS > 1) {
-            pdo_begin_transaction();
-            $for_update = "FOR UPDATE";
-        }
+        pdo_begin_transaction();
 
         $numFailed = 0;
         $numNotRun = 0;
@@ -1653,7 +1639,7 @@ class build
 
         $parent = pdo_single_row_query(
                 "SELECT testfailed, testnotrun, testpassed
-                FROM build WHERE id=".qnum($this->ParentId) . $for_update);
+                FROM build WHERE id=".qnum($this->ParentId) . " FOR UPDATE");
 
         // Don't let the -1 default value screw up our math.
         if ($parent['testfailed'] == -1) {
@@ -1678,9 +1664,7 @@ class build
 
         add_last_sql_error("Build:UpdateParentTestNumbers", $this->ProjectId, $this->Id);
 
-        if ($CDASH_ASYNC_WORKERS > 1) {
-            pdo_commit();
-        }
+        pdo_commit();
 
         // NOTE: as far as I can tell, build.testtimestatusfailed isn't used,
         // so for now it isn't being updated for parent builds.
@@ -1735,19 +1719,14 @@ class build
             return;
         }
         // Avoid a race condition when parallel processing.
-        $for_update = "";
-        global $CDASH_ASYNC_WORKERS;
-        if ($CDASH_ASYNC_WORKERS > 1) {
-            pdo_begin_transaction();
-            $for_update = "FOR UPDATE";
-        }
+        pdo_begin_transaction();
 
         $numErrors = 0;
         $numWarnings = 0;
 
         $parent = pdo_single_row_query(
                 "SELECT configureerrors, configurewarnings
-                FROM build WHERE id=".qnum($this->ParentId) . $for_update);
+                FROM build WHERE id=".qnum($this->ParentId) . " FOR UPDATE");
 
         // Don't let the -1 default value screw up our math.
         if ($parent['configureerrors'] == -1) {
@@ -1768,9 +1747,7 @@ class build
         add_last_sql_error("Build:UpdateParentConfigureNumbers",
                 $this->ProjectId, $this->Id);
 
-        if ($CDASH_ASYNC_WORKERS > 1) {
-            pdo_commit();
-        }
+        pdo_commit();
     }
 
     /** Get/set pull request for this build. */
