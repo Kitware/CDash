@@ -334,10 +334,10 @@ class subproject
   {
       return $this->Path;
   }
-  public function SetPath($path)
-  {
-      $this->Path = $path;
-  }
+    public function SetPath($path)
+    {
+        $this->Path = $path;
+    }
 
   /** Get the last submission of the subproject*/
   public function GetLastSubmission()

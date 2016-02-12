@@ -119,11 +119,11 @@ class coveragefilelog
             if (empty($log_entry)) {
                 continue;
             }
-            list ($line, $value) = explode(':', $log_entry);
+            list($line, $value) = explode(':', $log_entry);
             if ($line[0] === 'b') {
                 // Branch coverage
                 $line = ltrim($line, 'b');
-                list ($covered, $total) = explode('/', $value);
+                list($covered, $total) = explode('/', $value);
                 $this->AddBranch($line, $covered, $total);
             } else {
                 // Line coverage
@@ -149,7 +149,7 @@ class coveragefilelog
         }
 
         foreach ($this->Branches as $line => $value) {
-            list ($timesHit, $total) = explode('/', $value);
+            list($timesHit, $total) = explode('/', $value);
             if ($timesHit > 0) {
                 $stats['branchestested'] += 1;
             } else {
