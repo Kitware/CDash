@@ -53,38 +53,59 @@ class buildupdate
           return false;
       }
 
-    // Check if this update already exists
-    $query = pdo_query("SELECT updateid FROM build2update WHERE buildid=".qnum($this->BuildId));
+      // Avoid a race condition when parallel processing.
+      pdo_begin_transaction();
+
+      $buildid = qnum($this->BuildId);
+
+      // Check if this update already exists.
+      $query = pdo_query(
+              "SELECT updateid FROM build2update
+              WHERE buildid=$buildid FOR UPDATE");
       $exists = pdo_num_rows($query)==1;
       if ($exists) {
           $query_array = pdo_fetch_array($query);
           $this->UpdateId = $query_array['updateid'];
+          $updateid = qnum($this->UpdateId);
       }
 
     // Remove previous updates
     if ($exists && !$this->Append) {
-        // If the buildupdate and updatefile are not shared we delete them as well
-      $query = pdo_query("SELECT buildid FROM build2update WHERE updateid=".qnum($this->UpdateId));
+        // Parent builds share updates with their children.
+        // So if this is a parent build remove any build2update rows
+        // from the children here.
+        pdo_query(
+                "DELETE FROM build2update WHERE buildid IN
+                (SELECT id FROM build WHERE parentid=$buildid)");
+
+        // If the buildupdate and updatefile are not shared
+        // we delete them as well.
+        $query = pdo_query(
+                "SELECT buildid FROM build2update WHERE updateid=$updateid");
         if (pdo_num_rows($query)==1) {
-            $query = "DELETE FROM buildupdate WHERE id=".qnum($this->UpdateId);
+            $query = "DELETE FROM buildupdate WHERE id=$updateid";
             if (!pdo_query($query)) {
-                add_last_sql_error("BuildUpdate Insert", 0, $this->BuildId);
+                add_last_sql_error("BuildUpdate Delete", 0, $this->BuildId);
+                pdo_rollback();
                 return false;
             }
 
-            $query = "DELETE FROM updatefile WHERE updateid=".qnum($this->UpdateId);
+            $query = "DELETE FROM updatefile WHERE updateid=$updateid";
             if (!pdo_query($query)) {
-                add_last_sql_error("BuildUpdate Insert", 0, $this->BuildId);
+                add_last_sql_error("BuildUpdate Delete updatefil", 0, $this->BuildId);
+                pdo_rollback();
                 return false;
             }
         }
-        $query = "DELETE FROM build2update WHERE buildid=".qnum($this->BuildId);
+        $query = "DELETE FROM build2update WHERE buildid=$buildid";
         if (!pdo_query($query)) {
-            add_last_sql_error("BuildUpdate Insert", 0, $this->BuildId);
+            add_last_sql_error("Build2Update Delete", 0, $this->BuildId);
+            pdo_rollback();
             return false;
         }
         $exists = false;
         $this->UpdateId = "";
+        $updateid = "";
     }
 
       if (!$exists) {
@@ -113,22 +134,28 @@ class buildupdate
       }
 
       if (!$exists) {
-          $query = "INSERT INTO buildupdate (starttime,endtime,command,type,status,nfiles,warnings,
-                                        revision,priorrevision,path)
-                VALUES ('$this->StartTime','$this->EndTime','$this->Command',
-                        '$this->Type','$this->Status',$nfiles,$nwarnings,
-                        '$this->Revision','$this->PriorRevision','$this->Path')";
+          $query =
+              "INSERT INTO buildupdate
+              (starttime,endtime,command,type,status,nfiles,warnings,
+               revision,priorrevision,path)
+              VALUES ('$this->StartTime','$this->EndTime','$this->Command',
+                      '$this->Type','$this->Status',$nfiles,$nwarnings,
+                      '$this->Revision','$this->PriorRevision','$this->Path')";
           if (!pdo_query($query)) {
               add_last_sql_error("BuildUpdate Insert", 0, $this->BuildId);
+              pdo_rollback();
               return false;
           }
 
           $this->UpdateId = pdo_insert_id("buildupdate");
+          $updateid = qnum($this->UpdateId);
           $query = "INSERT INTO build2update (buildid,updateid)
-                VALUES (".qnum($this->BuildId).",".qnum($this->UpdateId).")";
+              VALUES ($buildid,$updateid)
+              ON DUPLICATE KEY UPDATE buildid=buildid";
 
           if (!pdo_query($query)) {
-              add_last_sql_error("BuildUpdate Insert", 0, $this->BuildId);
+              add_last_sql_error("Build2Update Insert", 0, $this->BuildId);
+              pdo_rollback();
               return false;
           }
 
@@ -139,9 +166,10 @@ class buildupdate
         SELECT id, '$this->UpdateId' FROM build
         LEFT JOIN build2update ON build.id = build2update.buildid
         WHERE build2update.buildid IS NULL
-        and build.parentid=".qnum($this->BuildId);
+        and build.parentid=$buildid";
           if (!pdo_query($query)) {
               add_last_sql_error("BuildUpdate Child Insert", 0, $this->BuildId);
+              pdo_rollback();
               return false;
           }
       } else {
@@ -152,23 +180,25 @@ class buildupdate
           if ($CDASH_DB_TYPE == 'pgsql') {
               // pgsql doesn't have concat...
 
-        $query = "UPDATE buildupdate SET
-                endtime='$this->EndTime'," .
-                "command=command || '$this->Command',
-                status='$this->Status'," .
-                "nfiles='$nfiles',warnings='$nwarnings'".
-        "WHERE id=".qnum($this->UpdateId);
+              $query = "UPDATE buildupdate SET
+                  endtime='$this->EndTime'," .
+                  "command=command || '$this->Command',
+                  status='$this->Status'," .
+                      "nfiles='$nfiles',warnings='$nwarnings'".
+                      "WHERE id=$updateid";
           } else {
               $query = "UPDATE buildupdate SET
-                endtime='$this->EndTime'," .
-                "command=CONCAT(command, '$this->Command'),
-                status='$this->Status'," .
-                "nfiles='$nfiles',warnings='$nwarnings'".
-        "WHERE id=".qnum($this->UpdateId);
+                  endtime='$this->EndTime',
+                  command=CONCAT(command, '$this->Command'),
+                  status='$this->Status',
+                  nfiles='$nfiles',
+                  warnings='$nwarnings'
+                      WHERE id=$updateid";
           }
 
           if (!pdo_query($query)) {
-              add_last_sql_error("BuildUpdate Insert", 0, $this->BuildId);
+              add_last_sql_error("BuildUpdate Update", 0, $this->BuildId);
+              pdo_rollback();
               return false;
           }
       }
@@ -178,6 +208,7 @@ class buildupdate
           $file->Insert();
       }
 
+      pdo_commit();
       return true;
   }  // end function insert()
 
@@ -271,7 +302,8 @@ class buildupdate
           $this->updateId = $query_array['updateid'];
 
           pdo_query("INSERT INTO build2update (buildid,updateid) VALUES
-                   (".qnum($this->BuildId).",".qnum($this->updateId).")");
+                  (".qnum($this->BuildId).",".qnum($this->updateId).")
+                  ON DUPLICATE KEY UPDATE buildid=buildid");
           add_last_sql_error("BuildUpdate AssociateBuild", 0, $this->BuildId);
 
       // check if this build's parent also needs to be associated with
@@ -291,11 +323,44 @@ class buildupdate
               }
 
               pdo_query("INSERT INTO build2update (buildid,updateid) VALUES
-                     (".qnum($parentid).",".qnum($this->updateId).")");
+                      (".qnum($parentid).",".qnum($this->updateId).")
+                      ON DUPLICATE KEY UPDATE buildid=buildid");
               add_last_sql_error("BuildUpdate AssociateBuild", 0, $parentid);
           }
       }
 
       return true;
   } // end AssociateBuild()
+
+  /** Update a child build so that it shares the parent's updates.
+   *  This function does not change the data model unless the parent
+   * has an update and the child does not. **/
+  public static function AssignUpdateToChild($childid, $parentid)
+  {
+      $childid = qnum($childid);
+      $parentid = qnum($parentid);
+
+      // Make sure the child does not already have an update.
+      $result = pdo_query(
+              "SELECT updateid FROM build2update WHERE buildid=$childid");
+      if (pdo_num_rows($result) > 0) {
+          return;
+      }
+
+      // Get the parent's update.
+      $result = pdo_query(
+              "SELECT updateid FROM build2update WHERE buildid=$parentid");
+      if (pdo_num_rows($result) < 1) {
+          return;
+      }
+      $row = pdo_fetch_array($result);
+      $updateid = qnum($row['updateid']);
+
+      // Assign the parent's update to the child.
+      $query = "INSERT INTO build2update (buildid, updateid)
+          VALUES ($childid, $updateid)";
+      if (!pdo_query($query)) {
+          add_last_sql_error("AssignUpdateToChild", 0, $childid);
+      }
+  }
 }

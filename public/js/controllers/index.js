@@ -174,17 +174,17 @@ CDash.filter("showEmptyBuildsLast", function () {
     // Check for label filters
     cdash.extrafilterurl = filters.getLabelString(cdash.filterdata);
 
+    // Read simple/advanced view cookie setting.
+    var advanced_cookie = $.cookie('cdash_'+cdash.projectname+'_advancedview');
+    if(advanced_cookie == 1) {
+      cdash.advancedview = 1;
+    } else {
+      cdash.advancedview = 0;
+    }
+
     $scope.cdash = cdash;
 
     $rootScope.setupCalendar($scope.cdash.date);
-
-    // Read simple/advanced view cookie setting.
-    var advanced_cookie = $.cookie('cdash_'+ $scope.cdash.projectname+'_advancedview');
-    if(advanced_cookie == 1) {
-      $scope.cdash.advancedview = 1;
-    } else {
-      $scope.cdash.advancedview = 0;
-    }
 
     if (!$scope.cdash.feed) {
       $scope.showFeed = false;

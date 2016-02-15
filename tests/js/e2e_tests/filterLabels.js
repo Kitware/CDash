@@ -1,7 +1,8 @@
 describe("filterLabels", function() {
 
   it("pass filters to viewTest", function() {
-    browser.get('index.php?project=Trilinos&parentid=11');
+    browser.get('index.php?project=Trilinos&date=2011-07-22');
+    element(by.linkText('Windows_NT-MSVC10-SERIAL_DEBUG_DEV')).click();
 
     // First, verify the expected number of builds
     expect(element(by.id('numbuilds')).getText()).toBe('Number of SubProjects Built: 36');
@@ -40,7 +41,8 @@ describe("filterLabels", function() {
   });
 
   it("pass filters to queryTests", function() {
-    browser.get('index.php?project=Trilinos&parentid=11');
+    browser.get('index.php?project=Trilinos&date=2011-07-22');
+    element(by.linkText('Windows_NT-MSVC10-SERIAL_DEBUG_DEV')).click();
 
     // First, verify the expected number of builds
     expect(element(by.id('numbuilds')).getText()).toBe('Number of SubProjects Built: 36');

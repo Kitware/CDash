@@ -4,7 +4,7 @@
 // processing loop. Returns false if another instance of processsubmissions.php
 // is already executing the loop for this projectid.
 //
-function AcquireProcessingLock($projectid, $force)
+function AcquireProcessingLock($projectid, $force, $mypid)
 {
     $locked = false;
 
@@ -26,7 +26,6 @@ function AcquireProcessingLock($projectid, $force)
                 'c', 0);
 
         $now_utc = gmdate(FMT_DATETIMESTD);
-        $mypid = getmypid();
 
         if ($c == 0) {
             // No row yet for this projectid. Insert one and own the loop lock.
@@ -117,7 +116,7 @@ function AcquireProcessingLock($projectid, $force)
 // Releases the lock we own in the submissionprocessor table by
 // setting the pid field of this projectid's row to 0.
 //
-function ReleaseProcessingLock($projectid)
+function ReleaseProcessingLock($projectid, $mypid, $multi=false)
 {
     $unlocked = false;
 
@@ -131,7 +130,6 @@ function ReleaseProcessingLock($projectid)
 
     if ($table_locked) {
         $now_utc = gmdate(FMT_DATETIMESTD);
-        $mypid = getmypid();
 
         $row = pdo_single_row_query(
                 "SELECT * FROM submissionprocessor WHERE projectid='".$projectid."'");
@@ -143,7 +141,8 @@ function ReleaseProcessingLock($projectid)
                     "WHERE projectid='".$projectid."'");
             add_last_sql_error("ReleaseProcessingLock-1");
             $unlocked = true;
-        } else {
+        } elseif (!$multi) {
+            // Only log an error if we're not processing in parallel.
             add_log(
                     "lock not released, unexpected pid mismatch: pid='$pid' mypid='$mypid' - attempt to unlock a lock we don't own...",
                     "ReleaseProcessingLock",
@@ -231,34 +230,26 @@ function ResetApparentlyStalledSubmissions($projectid)
 // Process them in the order received, and continue processing until there are
 // no more with status=0.
 //
-function ProcessSubmissions($projectid)
+function ProcessSubmissions($projectid, $mypid)
 {
-    $qs = "SELECT id, filename, filesize, filemd5sum, attempts FROM submission ".
-        "WHERE projectid='".$projectid."' AND status=0 ORDER BY id LIMIT 1";
-
-    $query = pdo_query($qs);
-    add_last_sql_error("ProcessSubmissions-1");
     $iterations = 0;
-    $mypid = getmypid();
-
     @$sleep_in_loop = $_GET['sleep_in_loop'];
     @$intentional_nonreturning_submit = $_GET['intentional_nonreturning_submit'];
 
-    $n = pdo_num_rows($query);
+    $query_array = GetNextSubmission($projectid);
+    if ($query_array === false) {
+        return false;
+    }
+    $n = count($query_array);
     while ($n > 0) {
         if ($sleep_in_loop) {
             sleep($sleep_in_loop);
         }
 
-        $query_array = pdo_fetch_array($query);
-        add_last_sql_error("ProcessSubmissions-1.5");
-
-        pdo_free_result($query);
-
         // Verify that *this* process still owns the lock.
         //
-        // If not, log a message and return, presuming that the process that took
-        // the lock is now looping over pending submissions.
+        // If not, log a message and return, presuming that the process
+        // that took the lock is now looping over pending submissions.
         //
         if (!ProcessOwnsLock($projectid, $mypid)) {
             add_log(
@@ -273,35 +264,25 @@ function ProcessSubmissions($projectid)
         $new_attempts = $query_array['attempts'] + 1;
         $md5 = $query_array['filemd5sum'];
 
-        // Mark the submissionprocessing table each time through the loop so that
-        // we do not become known as an "apparently stalled" processor...
-        //
+        // Mark the submissionprocessing table each time through the loop
+        // so that we do not become known as an "apparently stalled" processor.
         SetLockLastUpdatedTime($projectid);
 
         global $CDASH_SUBMISSION_PROCESSING_MAX_ATTEMPTS;
         if ($new_attempts > $CDASH_SUBMISSION_PROCESSING_MAX_ATTEMPTS) {
-            add_log("Too many attempts to process '".$filename."'",
+            add_log("Too many attempts to process '$filename'",
                     "ProcessSubmissions",
                     LOG_ERR, $projectid);
             $new_status = 5; // done, called do_submit too many times already
         } else {
-            // Mark it as status=1 (processing) and record started time:
-            //
-            $now_utc = gmdate(FMT_DATETIMESTD);
-            pdo_query("UPDATE submission SET status=1, started='$now_utc', ".
-                    "lastupdated='$now_utc', attempts=$new_attempts ".
-                    "WHERE id='".$submission_id."'");
-            add_last_sql_error("ProcessSubmissions-2");
-
-            // Record id in global so that we can mark it as "error status" if we
-            // get thrown to the error handler...
-            //
+            // Record id in global so that we can mark it as "error status"
+            // if we get thrown to the error handler.
             global $PHP_ERROR_SUBMISSION_ID;
             $PHP_ERROR_SUBMISSION_ID = $submission_id;
 
             if ($intentional_nonreturning_submit) {
-                // simulate "error occurred" during do_submit: status will be set
-                // to 4 in error handler...
+                // simulate "error occurred" during do_submit:
+                // status will be set to 4 in error handler.
                 trigger_error(
                         'ProcessFile: intentional_nonreturning_submit is on',
                         E_USER_ERROR);
@@ -333,13 +314,48 @@ function ProcessSubmissions($projectid)
         // Query for more... Continue processing while there are records to
         // process:
         //
-        $query = pdo_query($qs);
-        add_last_sql_error("ProcessSubmissions-4");
-        $n = pdo_num_rows($query);
+        $query_array = GetNextSubmission($projectid);
+        if ($query_array === false) {
+            return false;
+        }
+        $n = count($query_array);
         $iterations = $iterations + 1;
     }
 
     return true;
+}
+
+
+function GetNextSubmission($projectid)
+{
+    $now_utc = gmdate(FMT_DATETIMESTD);
+
+    // Avoid a race condition when parallel processing.
+    pdo_begin_transaction();
+
+    // Get the next submission to process.
+    $query_array = pdo_single_row_query(
+            "SELECT id, filename, filesize, filemd5sum, attempts
+            FROM submission
+            WHERE projectid='$projectid' AND status=0
+            ORDER BY id LIMIT 1 FOR UPDATE");
+    add_last_sql_error("GetNextSubmission-1");
+
+    if (!array_key_exists('id', $query_array)) {
+        return false;
+    }
+    $submission_id = $query_array['id'];
+    $new_attempts = $query_array['attempts'] + 1;
+
+    // Mark it as status=1 (processing) and record started time.
+    pdo_query("UPDATE submission SET status=1, started='$now_utc', ".
+            "lastupdated='$now_utc', attempts=$new_attempts ".
+            "WHERE id='".$submission_id."'");
+    add_last_sql_error("GetNextSubmission-2");
+
+    pdo_commit();
+
+    return $query_array;
 }
 
 

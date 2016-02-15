@@ -1,27 +1,29 @@
-[<NA>][INFO][pid=<NA>](removeFirstBuilds): about to query for builds to remove
-[<NA>][INFO][pid=<NA>](removeFirstBuilds): removing old buildids for projectid: <NA>
-[<NA>][INFO][pid=<NA>](removeBuildsGroupwise): removing old buildids for projectid: <NA>
-[TESTING][pid=<NA>](TESTING: EMAIL): simpletest@localhost
-[TESTING][pid=<NA>](TESTING: EMAILTITLE): FAILED (t=5): EmailProjectExample - Win32-MSVC2009 - Nightly
-[TESTING][pid=<NA>](TESTING: EMAILBODY): A submission to CDash for the project EmailProjectExample has failing tests.
+[<NA> <NA>] cdash.INFO: about to query for builds to remove {"function":"removeFirstBuilds","pid":<NA>} 
+[<NA> <NA>] cdash.INFO: removing old buildids for projectid: 4 {"function":"removeFirstBuilds","pid":<NA>} 
+[<NA> <NA>] cdash.DEBUG: simpletest@<NA> {"function":"TESTING: EMAIL","build_id":"<NA>","pid":<NA>} 
+[<NA> <NA>] cdash.DEBUG: FAILED (t=5): BatchmakeExample - Win32-MSVC2009 - Nightly {"function":"TESTING: EMAILTITLE","build_id":"<NA>","pid":<NA>} 
+[<NA> <NA>] cdash.DEBUG: A submission to CDash for the project BatchmakeExample has failing tests.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
-Details on the submission can be found at http://localhost/CDash-Head-MySQL/buildSummary.php?buildid=<NA>
+Details on the submission can be found at http://<NA>/<NA>/buildSummary.php?buildid=<NA>
 
-Project: EmailProjectExample
+Project: BatchmakeExample
 Site: Dash20.kitware
 Build Name: Win32-MSVC2009
-Build Time: 2009-02-23T05:04:11 EST
+Build Time: 2009-02-23T05:02:03 EST
 Type: Nightly
 Tests failing: 5
 
 
 *Tests failing* (first 5)
-DashboardSendTest (<NA>/testDetails.php?test=<NA>&build=<NA>)
-SystemInfoTest (<NA>testDetails.php?test=<NA>&build=<NA>)
-FileActionsTest (<NA>/testDetails.php?test=<NA>&build=<NA>)
-StringActionsTest (<NA>/testDetails.php?test=<NA>&build=<NA>)
-MathActionsTest (<NA>/testDetails.php?test=<NA>&build=<NA>)
+DashboardSendTest (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
+SystemInfoTest (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
+FileActionsTest (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
+StringActionsTest (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
+MathActionsTest (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
 
 
--CDash on localhost
+-CDash on <NA>
+ {"function":"TESTING: EMAILBODY","build_id":"<NA>","pid":<NA>} 
+[<NA> <NA>] cdash.INFO: about to query for builds to remove {"function":"removeFirstBuilds","pid":<NA>} 
+[<NA> <NA>] cdash.INFO: removing old buildids for projectid: 5 {"function":"removeFirstBuilds","pid":<NA>} 

@@ -26,13 +26,15 @@ class subproject
     private $Id;
     private $ProjectId;
     private $GroupId;
+    private $Path;
 
     public function __construct()
     {
-        $this->Name = "";
         $this->Id = 0;
         $this->GroupId = 0;
         $this->ProjectId = 0;
+        $this->Name = '';
+        $this->Path = '';
     }
 
   /** Function to get the id */
@@ -53,7 +55,7 @@ class subproject
       $this->Id = $id;
 
       $row = pdo_single_row_query(
-      "SELECT name, projectid, groupid FROM subproject
+      "SELECT name, projectid, groupid, path FROM subproject
        WHERE id=".qnum($this->Id). " AND endtime='1980-01-01 00:00:00'");
       if (empty($row)) {
           return false;
@@ -62,6 +64,7 @@ class subproject
       $this->Name = $row['name'];
       $this->ProjectId = $row['projectid'];
       $this->GroupId = $row['groupid'];
+      $this->Path = $row['path'];
       return true;
   }
 
@@ -162,6 +165,7 @@ class subproject
         $query .= "name='".$this->Name."'";
         $query .= ",projectid=".qnum($this->ProjectId);
         $query .= ",groupid=".qnum($this->GroupId);
+        $query .= ",path='".$this->Path."'";
         $query .= " WHERE id=".qnum($this->Id)."";
 
         if (!pdo_query($query)) {
@@ -171,40 +175,52 @@ class subproject
     } else {
         // insert the subproject
 
-      $id = "";
+        $id = "";
         $idvalue = "";
         if ($this->Id) {
             $id = "id,";
             $idvalue = "'".$this->Id."',";
         }
 
-      // Trim the name
-      $this->Name = trim($this->Name);
+        // Trim the name
+        $this->Name = trim($this->Name);
 
-      // Double check that it's not already in the database.
-      $query = pdo_query("SELECT id FROM subproject WHERE name='".$this->Name."' AND projectid=".qnum($this->ProjectId)
-                         ." AND endtime='1980-01-01 00:00:00'");
-        if (!$query) {
+        // Double check that it's not already in the database.
+        $select_query =
+            "SELECT id FROM subproject WHERE name='$this->Name' AND
+            projectid=".qnum($this->ProjectId) ." AND
+            endtime='1980-01-01 00:00:00'";
+        $result = pdo_query($select_query);
+
+        if (!$result) {
             add_last_sql_error("SubProject Update");
             return false;
         }
 
-        if (pdo_num_rows($query)>0) {
-            $query_array = pdo_fetch_array($query);
-            $this->Id = $query_array['id'];
+        if (pdo_num_rows($result) > 0) {
+            $row = pdo_fetch_array($result);
+            $this->Id = $row['id'];
             return true;
         }
 
         $starttime = gmdate(FMT_DATETIME);
         $endtime = "1980-01-01 00:00:00";
-        $query =
-        "INSERT INTO subproject(".$id."name,projectid,groupid,starttime,endtime)
-         VALUES (".$idvalue."'$this->Name',".qnum($this->ProjectId).",".
-                 qnum($this->GroupId).",'".$starttime."','".$endtime."')";
+        $insert_query =
+                "INSERT INTO subproject(".$id."name,projectid,groupid,path,starttime,endtime)
+                VALUES (".$idvalue."'$this->Name',".qnum($this->ProjectId).",".
+                qnum($this->GroupId).",'$this->Path','$starttime','$endtime')";
 
-        if (!pdo_query($query)) {
-            add_last_sql_error("SubProject Create");
-            return false;
+        if (!pdo_query($insert_query)) {
+            $error = pdo_error();
+            // Check if the query failed due to a race condition during
+            // parallel submission processing.
+            $result = pdo_query($select_query);
+            if (!$result || pdo_num_rows($result) == 0) {
+                add_log("SQL error: $error", "SubProject Create", LOG_ERR, $this->ProjectId);
+                return false;
+            }
+            $row = pdo_fetch_array($result);
+            $this->Id = $row['id'];
         }
 
         if ($this->Id < 1) {
@@ -312,6 +328,16 @@ class subproject
       $this->GroupId = $row['id'];
       return true;
   }
+
+  /** Get/Set this SubProject's path. */
+  public function GetPath()
+  {
+      return $this->Path;
+  }
+    public function SetPath($path)
+    {
+        $this->Path = $path;
+    }
 
   /** Get the last submission of the subproject*/
   public function GetLastSubmission()

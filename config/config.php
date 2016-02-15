@@ -49,11 +49,15 @@ $CDASH_SSL_CA = null;
 $CDASH_PRODUCTION_MODE = false;
 $CDASH_TESTING_MODE = false;
 $CDASH_TESTING_RENAME_LOGS = false;
+
 // Should we use asynchronous submission
 $CDASH_ASYNCHRONOUS_SUBMISSION = false;
 // How long to keep finished async submissions in the DB.
 // Set to 0 to delete them right away.
 $CDASH_ASYNC_EXPIRATION_TIME = 691200; // 8 days.
+// How many asynchronous workers to use.
+$CDASH_ASYNC_WORKERS = 1;
+
 // Main title and subtitle for the index page
 $CDASH_MAININDEX_TITLE = 'CDash';
 $CDASH_MAININDEX_SUBTITLE = 'Projects';
@@ -61,6 +65,18 @@ $CDASH_MAININDEX_SUBTITLE = 'Projects';
 $CDASH_EMAILADMIN = 'admin@cdash.org';
 $CDASH_EMAIL_FROM = 'admin@cdash.org';
 $CDASH_EMAIL_REPLY = 'noreply@cdash.org';
+// Hostname of the SMTP server or null to use the PHP mail() function.
+$CDASH_EMAIL_SMTP_HOST = null;
+// Port for the SMTP server.
+$CDASH_EMAIL_SMTP_PORT = 25;
+// Either 'ssl' for SSL encryption, 'tls' for TLS encryption, or null for no
+// encryption. For 'ssl' or 'tls', PHP must have the appropriate OpenSSL
+// transport wrappers installed.
+$CDASH_EMAIL_SMTP_ENCRYPTION = null;
+// Login for the SMTP server or null for anonymous.
+$CDASH_EMAIL_SMTP_LOGIN = null;
+// Password for the SMTP server.
+$CDASH_EMAIL_SMTP_PASS = null;
 // Should CDash only register valid emails
 $CDASH_REGISTRATION_EMAIL_VERIFY = true;
 // Duration of the cookie session (in seconds)
@@ -93,14 +109,16 @@ $CDASH_USE_LOCAL_DIRECTORY = '0';
 $CDASH_CSS_FILE = 'css/cdash.css';
 // Backup directory
 $CDASH_BACKUP_DIRECTORY = $CDASH_ROOT_DIR.'/backup';
+// Log directory
+$CDASH_LOG_DIRECTORY = $CDASH_ROOT_DIR.'/log';
+// Log file location. Set to false to log to the syslog.
+$CDASH_LOG_FILE = $CDASH_LOG_DIRECTORY."/cdash.log";
 // Upload directory (absolute or relative)
 $CDASH_UPLOAD_DIRECTORY = $CDASH_ROOT_DIR.'/upload';
 // The relative path from the CDash root dir to the $CDASH_UPLOAD_DIRECTORY (for downloading)
 // http://<CDASH_URL>/<CDASH_DIR>/$CDASH_DOWNLOAD_RELATIVE_URL/<SHA-1>/<FILENAME>
 // Note that this must be a relative path to the same directory specified by $CDASH_UPLOAD_DIRECTORY
 $CDASH_DOWNLOAD_RELATIVE_URL = 'upload';
-// Log file location
-$CDASH_LOG_FILE = $CDASH_BACKUP_DIRECTORY."/cdash.log";
 // Should normal user allowed to create projects
 $CDASH_USER_CREATE_PROJECTS = false;
 // Maximum size allocated for the logs

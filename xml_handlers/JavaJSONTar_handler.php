@@ -179,12 +179,10 @@ class JavaJSONTarHandler
       if ($timesHit === '0') {
           $timesHit = 0;
           $coverage->LocUntested += 1;
-          $coverageSummary->LocUntested += 1;
       } else {
           $timesHit = 1;
           $coverage->Covered = 1;
           $coverage->LocTested += 1;
-          $coverageSummary->LocTested += 1;
       }
 
           $coverageFileLog->AddLine($lineNumber, $timesHit);

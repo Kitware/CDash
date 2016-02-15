@@ -127,12 +127,26 @@ class site
             $this->Longitude = $location['longitude'];
         }
 
-        if (pdo_query("INSERT INTO site (name,ip,latitude,longitude)
-                    VALUES ('$this->Name','$this->Ip','$this->Latitude','$this->Longitude')")) {
-            $this->Id = pdo_insert_id("site");
-        } else {
-            add_last_sql_error("Site Insert");
+        $query =
+            "INSERT INTO site (name,ip,latitude,longitude)
+            VALUES
+            ('$this->Name','$this->Ip','$this->Latitude','$this->Longitude')";
+        if (!pdo_query($query)) {
+            $error = pdo_error();
+            // This error might be due to a unique constraint violation.
+            // Query for a previously existing site with this name & ip.
+            $existing_id_result = pdo_single_row_query(
+                    "SELECT id FROM site WHERE name='$this->Name'
+                    AND ip='$this->Ip'");
+            if ($existing_id_result &&
+                    array_key_exists('id', $existing_id_result)) {
+                $this->Id = $existing_id_result['id'];
+                return true;
+            }
+            add_log("SQL error: $error", "Site Insert", LOG_ERR);
             return false;
+        } else {
+            $this->Id = pdo_insert_id("site");
         }
     } // end function save
 
