@@ -259,9 +259,10 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $coveragegroups[$groupId]['coverages'] = array();
 
         foreach ($response['builds'] as $build) {
-          $coveragegroups[$groupId][$build['key']] = -1;
+            $coveragegroups[$groupId][$build['key']] = -1;
         }
-        $coveragegroups[$groupId]['label'] = $group->GetName();;
+        $coveragegroups[$groupId]['label'] = $group->GetName();
+        ;
     }
 
     $builds = array();
@@ -291,7 +292,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
                         $subproject = array();
                         $subproject['label'] = $subproject_name;
-                        foreach($response['builds'] as $build) {
+                        foreach ($response['builds'] as $build) {
                             $subproject[$build['key']] = -1;
                         }
                         $coveragegroups[$groupId]['coverages'][] = $subproject;
@@ -301,7 +302,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $groups['id'] = $buildid;
             $builds[] = $groups;
         } else {
-              // Make an entry in coverages for each possible subproject
+            // Make an entry in coverages for each possible subproject
               foreach ($coverage_response['coverages'] as $coverage) {
                   $subproject_name = $coverage['label'];
                   if (!in_array($subproject_name, $subproject_names)) {
@@ -309,18 +310,18 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
                       $subproject = array();
                       $subproject['label'] = $subproject_name;
-                      foreach($response['builds'] as $build) {
+                      foreach ($response['builds'] as $build) {
                           $subproject[$build['key']] = -1;
                       }
                       $coverages[] = $subproject;
                   }
               }
 
-              $build = array();
-              $build['id'] = $buildid;
-              $build['coverages'] = $coverage_response['coverages'];
-              $builds[] = $build;
-          }
+            $build = array();
+            $build['id'] = $buildid;
+            $build['coverages'] = $coverage_response['coverages'];
+            $builds[] = $build;
+        }
     } // end loop through builds
 
     $response['$subproject_names'] = $subproject_names;
@@ -344,8 +345,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
                             $coveragegroups[$groupId]['coverages'][$key]['build'.$parentid.'id'] = $subproject['buildid'];
                             if (array_key_exists('percentagediff', $subproject)) {
                                 $percentagediff = $subproject['percentagediff'];
-                            }
-                            else {
+                            } else {
                                 $percentagediff = null;
                             }
                             $coveragegroups[$groupId]['coverages'][$key]['build'.$parentid.'percentagediff'] = $percentagediff;
@@ -366,8 +366,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
                         $coverages[$key]['build'.$parentid.'id'] = $subproject['buildid'];
                         if (array_key_exists('percentagediff', $subproject)) {
                             $percentagediff = $subproject['percentagediff'];
-                        }
-                        else {
+                        } else {
                             $percentagediff = null;
                         }
                         $coverages[$key]['build'.$parentid.'percentagediff'] = $percentagediff;
@@ -412,7 +411,7 @@ function get_build_label($buildid, $build_array,
                          $include_subprojects, $num_selected_subprojects,
                          $included_subprojects, $excluded_subprojects)
 {
-  // Figure out how many labels to report for this build.
+    // Figure out how many labels to report for this build.
   if (!array_key_exists('numlabels', $build_array) ||
           $build_array['numlabels'] == 0) {
       $num_labels = 0;
@@ -420,20 +419,20 @@ function get_build_label($buildid, $build_array,
       $num_labels = $build_array['numlabels'];
   }
 
-  $label_query =
+    $label_query =
       "SELECT l.text FROM label AS l
       INNER JOIN label2build AS l2b ON (l.id=l2b.labelid)
       INNER JOIN build AS b ON (l2b.buildid=b.id)
       WHERE b.id=" . qnum($buildid);
 
-  if ($num_selected_subprojects > 0) {
-      // Special handling for whitelisting/blacklisting SubProjects.
+    if ($num_selected_subprojects > 0) {
+        // Special handling for whitelisting/blacklisting SubProjects.
       if ($include_subprojects) {
           $num_labels = 0;
       }
-      $labels_result = pdo_query($label_query);
-      while ($label_row = pdo_fetch_array($labels_result)) {
-          // Whitelist case
+        $labels_result = pdo_query($label_query);
+        while ($label_row = pdo_fetch_array($labels_result)) {
+            // Whitelist case
           if ($include_subprojects &&
                   in_array($label_row['text'], $included_subprojects)) {
               $num_labels++;
@@ -443,14 +442,14 @@ function get_build_label($buildid, $build_array,
                   in_array($label_row['text'], $excluded_subprojects)) {
               $num_labels--;
           }
-      }
+        }
 
-      if ($num_labels === 0) {
-          // Skip this build entirely if none of its SubProjects
+        if ($num_labels === 0) {
+            // Skip this build entirely if none of its SubProjects
           // survived filtering.
           return '';
-      }
-  }
+        }
+    }
 
   // Assign a label to this build based on how many labels it has.
   if ($num_labels == 0) {
@@ -464,7 +463,7 @@ function get_build_label($buildid, $build_array,
       $build_label = "($num_labels labels)";
   }
 
-  return $build_label;
+    return $build_label;
 }
 
 function get_coverage($include_subprojects, $num_selected_subprojects,
@@ -542,9 +541,8 @@ function get_coverage($include_subprojects, $num_selected_subprojects,
 
             if ($coverageIsGrouped) {
                 $coverage_groups[$groupId]['coverages'][] = $coverage_response;
-            }
-            else {
-               $response['coverages'][] = $coverage_response;
+            } else {
+                $response['coverages'][] = $coverage_response;
             }
         }  // end coverage
     } // end looping through builds
@@ -669,8 +667,3 @@ function get_build_data($parentid, $projectid, $beginning_UTCDate,
 
     return $build_data;
 }
-
-
-
-
-
