@@ -186,21 +186,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $response['user'] = $user_response;
     }
 
-    // Get info about our buildgroups.
-    $buildgroups_response = array();
-    $buildgroup_result = pdo_query(
-            "SELECT bg.id, bg.name, bgp.position FROM buildgroup AS bg
-            LEFT JOIN buildgroupposition AS bgp ON (bgp.buildgroupid=bg.id)
-            WHERE bg.projectid=$projectid AND bg.starttime < '$beginning_UTCDate' AND
-            (bg.endtime > '$beginning_UTCDate' OR
-             bg.endtime='1980-01-01 00:00:00')");
-    while ($buildgroup_array = pdo_fetch_array($buildgroup_result)) {
-        $buildgroup_response = array();
-        $buildgroup_response['id'] = $buildgroup_array['id'];
-        $buildgroup_response['name'] = $buildgroup_array['name'];
-        $buildgroups_response[] = $buildgroup_response;
-    }
-
     // Check if we should be excluding some SubProjects from our
     // build results.
     $include_subprojects = false;
@@ -231,187 +216,190 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $exclude_subprojects = true;
     }
 
+    // Get the list of builds we're interested in
     $parentid = null;
     $build_data = get_build_data($parentid, $projectid, $beginning_UTCDate,
                                  $end_UTCDate, $filterdata, $filter_sql,
                                  $limit_sql);
-
-    // Generate the JSON response from the rows of builds.
-    $response['coverages'] = array();
+    $response['builds'] = array();
     foreach ($build_data as $build_array) {
-        $groupid = $build_array["groupid"];
-
-        // Find the buildgroup array for this build.
-        $i = -1;
-        for ($j = 0; $j < count($buildgroups_response); $j++) {
-            if ($buildgroups_response[$j]['id'] == $groupid) {
-                $i = $j;
-                break;
-            }
-        }
-        if ($i == -1) {
-            add_log("BuildGroup '$groupid' not found for build #" . $build_array['id'],
-                    __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__,
-                    LOG_WARNING);
-            continue;
-        }
-
-        $buildid = $build_array["id"];
-
-        // Are there labels for this build?
-        //
-        $build_label = get_build_label($buildid, $build_array,
-                                       $include_subprojects, $num_selected_subprojects,
-                                       $included_subprojects, $excluded_subprojects);
-
-        // Coverage
-        //
-        $coverages = pdo_query("SELECT * FROM coveragesummary WHERE buildid='$buildid'");
-        while ($coverage_array = pdo_fetch_array($coverages)) {
-            $coverage_response = array();
-            $coverage_response['buildid'] = $build_array['id'];
-
-            $percent = round(
-                    compute_percentcoverage($coverage_array['loctested'],
-                        $coverage_array['locuntested']), 2);
-
-            $coverage_response['percentage'] = $percent;
-
-            // Compute the diff
-            $coveragediff = pdo_query("SELECT * FROM coveragesummarydiff WHERE buildid='$buildid'");
-            if (pdo_num_rows($coveragediff) >0) {
-                $coveragediff_array = pdo_fetch_array($coveragediff);
-                $loctesteddiff = $coveragediff_array['loctested'];
-                $locuntesteddiff = $coveragediff_array['locuntested'];
-                @$previouspercent =
-                    round(($coverage_array['loctested'] - $loctesteddiff) /
-                            ($coverage_array['loctested'] - $loctesteddiff +
-                             $coverage_array['locuntested'] - $locuntesteddiff)
-                            * 100, 2);
-                $percentdiff = round($percent - $previouspercent, 2);
-                $coverage_response['percentagediff'] = $percentdiff;
-            }
-
-            $coverage_response['label'] = $build_label;
-            $coverage_response['buildname'] = $build_array["name"];
-            $response['coverages'][] = $coverage_response;
-
-        }  // end coverage
+        $build = array();
+        $build['name'] = $build_array['name'];
+        $build['key'] = 'build'.$build_array['id'];
+        $build['id'] = $build_array['id'];
+        $response['builds'][] = $build;
     } // end looping through builds
+    // Add 'Aggregate' build last
+    $aggregate_build = array();
+    $aggregate_build['name'] = 'Aggregate';
+    $aggregate_build['key'] = 'aggregate';
+    $aggregate_build['id'] = null;
+    $response['builds'][] = $aggregate_build;
 
+    $subproject_names = array(); // A list of all the subprojects in all of the builds
+    $coverages = array(); // For un-grouped subprojects
+    $coveragegroups = array();  // For grouped subprojects
+
+    // Are there any subproject groups?
     $subproject_groups = array();
     if ($project_instance->GetNumberOfSubProjects($end_UTCDate) > 0) {
         $subproject_groups = $project_instance->GetSubProjectGroups();
     }
-
-    $response['numberbuilds'] = count($response['coverages']) + 1;
-    $response['buildnames'] = array();
-
-    foreach( $response['coverages'] as $coverage) {
-        $response['buildnames'][] = 'build'.$coverage['buildid'];
-    }
-    $response['buildnames'][] = 'aggregate';
-
-    // First create empty coveragegroups and coveragelabels objects
-    $coveragelabels = array();
-    $coveragegroups = array();
     foreach ($subproject_groups as $group) {
         // Keep track of coverage info on a per-group basis.
         $groupId = $group->GetId();
+
+        $subproject_names[$groupId] = array();
 
         $coveragegroups[$groupId] = array();
         $coverageThreshold = $group->GetCoverageThreshold();
         $coveragegroups[$groupId]['thresholdgreen'] = $coverageThreshold;
         $coveragegroups[$groupId]['thresholdyellow'] = $coverageThreshold * 0.7;
+
         $coveragegroups[$groupId]['coverages'] = array();
 
-        foreach( $response['buildnames'] as $buildname) {
-          $coveragegroups[$groupId][$buildname] = -1;
+        foreach ($response['builds'] as $build) {
+          $coveragegroups[$groupId][$build['key']] = -1;
         }
         $coveragegroups[$groupId]['label'] = $group->GetName();;
-        $coveragegroups[$groupId]['aggregate'] = -1;
-
-        $coveragelabels[$groupId] = array();
     }
 
-    $_coveragegroups = array();
-    foreach( $response['coverages'] as $coverage) {
-        $buildid = $coverage['buildid'];
+    $builds = array();
+    foreach ($response['builds'] as $build_response) {
+        $buildid = $build_response['id'];
+        if ($buildid == null) {
+            continue;
+        }
 
         $build_data = get_build_data($buildid, $projectid, $beginning_UTCDate, $end_UTCDate,
                                      $filterdata, $filter_sql, $limit_sql);
 
         // Get the coverage data for each build
-        $groups = get_coverage_groups($include_subprojects, $num_selected_subprojects,
-                                      $included_subprojects, $excluded_subprojects,
-                                      $buildid, $build_data, $buildgroups_response,
-                                      $subproject_groups);
+        $coverage_response = get_coverage($include_subprojects, $num_selected_subprojects,
+                                          $included_subprojects, $excluded_subprojects,
+                                          $build_data, $subproject_groups);
 
-        // Make an entry in coveragegroups for each possible subproject
-        foreach ($groups as $group) {
-            $groupId = $group['id'];
-            foreach ($group['coverages'] as $groupcoverage) {
-                $coverage_label = $groupcoverage['label'];
-                if (!in_array($coveragelabels, $coveragelabels[$groupId])) {
-                    $coveragelabels[$groupId][] = $coverage_label;
-                    $a = array();
-                    $a['label'] = $coverage_label;
-                    foreach($response['buildnames'] as $buildname) {
-                        $a[$buildname] = -1;
+        if (!empty($coverage_response['coveragegroups'])) {
+            // Make an entry in coveragegroups for each possible subproject
+            $groups = $coverage_response['coveragegroups'];
+            foreach ($groups as $group) {
+                $groupId = $group['id'];
+                foreach ($group['coverages'] as $groupcoverage) {
+                    $subproject_name = $groupcoverage['label'];
+                    if (!in_array($subproject_name, $subproject_names[$groupId])) {
+                        $subproject_names[$groupId][] = $subproject_name;
+
+                        $subproject = array();
+                        $subproject['label'] = $subproject_name;
+                        foreach($response['builds'] as $build) {
+                            $subproject[$build['key']] = -1;
+                        }
+                        $coveragegroups[$groupId]['coverages'][] = $subproject;
                     }
-                    $coveragegroups[$groupId]['coverages'][] = $a;
                 }
             }
-        }
-        $_coveragegroups[] = $groups;
-    }
+            $groups['id'] = $buildid;
+            $builds[] = $groups;
+        } else {
+              // Make an entry in coverages for each possible subproject
+              foreach ($coverage_response['coverages'] as $coverage) {
+                  $subproject_name = $coverage['label'];
+                  if (!in_array($subproject_name, $subproject_names)) {
+                      $subproject_names[] = $subproject_name;
 
-    // Populate coveragegroups
-    foreach ($_coveragegroups as $_coveragegroup) { 
-      foreach ($_coveragegroup as $group) { 
-        $parentid = $group['parentid'];
-        $groupId = $group['id'];
-
-        $coveragegroups[$groupId]['build'.$parentid] = $group['percentage'];
-        $coveragegroups[$groupId]['aggregate'] = max($coveragegroups[$groupId]['aggregate'], $group['percentage']);
-        $coveragegroups[$groupId]['label'] = $group['label'];
-
-        foreach ($group['coverages'] as $coverage) {
-          $coverage_label = $coverage['label'];
-
-          foreach ($coveragegroups[$groupId]['coverages'] as $key => $__coverage) {
-            if ($__coverage['label'] == $coverage_label)
-            {
-              $coveragegroups[$groupId]['coverages'][$key]['build'.$parentid] = $coverage['percentage'];
-              $coveragegroups[$groupId]['coverages'][$key]['build'.$parentid.'id'] = $coverage['buildid'];
-              if (array_key_exists('percentagediff', $coverage)) {
-                $percentagediff = $coverage['percentagediff'];
+                      $subproject = array();
+                      $subproject['label'] = $subproject_name;
+                      foreach($response['builds'] as $build) {
+                          $subproject[$build['key']] = -1;
+                      }
+                      $coverages[] = $subproject;
+                  }
               }
-              else {
-                $percentagediff = null;
-              }
-              $coveragegroups[$groupId]['coverages'][$key]['build'.$parentid.'percentagediff'] = $percentagediff;
-              $coveragegroups[$groupId]['coverages'][$key]['aggregate'] = max($coveragegroups[$groupId]['coverages'][$key]['aggregate'], $coverage['percentage']);
-              break;
-            }
+
+              $build = array();
+              $build['id'] = $buildid;
+              $build['coverages'] = $coverage_response['coverages'];
+              $builds[] = $build;
           }
+    } // end loop through builds
+
+    $response['$subproject_names'] = $subproject_names;
+
+    if (!empty($subproject_groups)) {
+        // Grouped subprojects
+        foreach ($builds as $build) {
+            $parentid = $build['id'];
+            foreach ($build as $group) {
+                $groupId = $group['id'];
+
+                $coveragegroups[$groupId]['build'.$parentid] = $group['percentage'];
+                $coveragegroups[$groupId]['aggregate'] = max($coveragegroups[$groupId]['aggregate'], $group['percentage']);
+                $coveragegroups[$groupId]['label'] = $group['label'];
+
+                foreach ($group['coverages'] as $subproject) {
+                    foreach ($coveragegroups[$groupId]['coverages'] as $key => $subproject_response) {   // Find this subproject in the response
+                        if ($subproject_response['label'] == $subproject['label']) {
+                            // And populate the information...
+                            $coveragegroups[$groupId]['coverages'][$key]['build'.$parentid] = $subproject['percentage'];
+                            $coveragegroups[$groupId]['coverages'][$key]['build'.$parentid.'id'] = $subproject['buildid'];
+                            if (array_key_exists('percentagediff', $subproject)) {
+                                $percentagediff = $subproject['percentagediff'];
+                            }
+                            else {
+                                $percentagediff = null;
+                            }
+                            $coveragegroups[$groupId]['coverages'][$key]['build'.$parentid.'percentagediff'] = $percentagediff;
+                            $coveragegroups[$groupId]['coverages'][$key]['aggregate'] = max($coveragegroups[$groupId]['coverages'][$key]['aggregate'], $subproject['percentage']);
+                            break;
+                        }
+                    }
+                } // end loop through subprojects
+            } // end loop through groups
+        } // end loop through builds
+    } else {
+        foreach ($builds as $build) {
+            $parentid = $build['id'];
+            foreach ($build['coverages'] as $subproject) {
+                foreach ($coverages as $key => $subproject_response) {
+                    if ($subproject_response['label'] == $subproject['label']) {
+                        $coverages[$key]['build'.$parentid] = $subproject['percentage'];
+                        $coverages[$key]['build'.$parentid.'id'] = $subproject['buildid'];
+                        if (array_key_exists('percentagediff', $subproject)) {
+                            $percentagediff = $subproject['percentagediff'];
+                        }
+                        else {
+                            $percentagediff = null;
+                        }
+                        $coverages[$key]['build'.$parentid.'percentagediff'] = $percentagediff;
+                        $coverages[$key]['aggregate'] = max($coverages[$key]['aggregate'], $subproject['percentage']);
+                        break;
+                    }
+                }
+            }
+        } // end populate coveragegroups
+    }
+
+    if (!empty($subproject_groups)) {
+        // At this point it is safe to remove any empty $coveragegroups from our response.
+        function is_coveragegroup_nonempty($group)
+        {
+            return !empty($group['coverages']);
         }
-      }
+        $coveragegroups_response =
+            array_filter($coveragegroups, "is_coveragegroup_nonempty");
+
+        // Report coveragegroups as a list, not an associative array.
+        $coveragegroups_response = array_values($coveragegroups_response);
+
+        $response['coveragegroups'] = $coveragegroups_response;
+    } else {
+        $coverageThreshold = $project_array['coveragethreshold'];
+        $response['thresholdgreen'] = $coverageThreshold;
+        $response['thresholdyellow'] = $coverageThreshold * 0.7;
+
+        // Report coverages as a list, not an associative array.
+        $response['coverages'] = array_values($coverages);
     }
-
-    // At this point it is safe to remove any empty $coveragegroups from our response.
-    function is_coveragegroup_nonempty($group)
-    {
-      return !empty($group['coverages']);
-    }
-    $coveragegroups_response =
-        array_filter($coveragegroups, "is_coveragegroup_nonempty");
-
-    // Report coveragegroups as a list, not an associative array.
-    $coveragegroups_response = array_values($coveragegroups_response);
-
-    $response['coveragegroups'] = $coveragegroups_response;
-
 
     $end = microtime_float();
     $response['generationtime'] = round($end-$start, 3);
@@ -479,11 +467,13 @@ function get_build_label($buildid, $build_array,
   return $build_label;
 }
 
-function get_coverage_groups($include_subprojects, $num_selected_subprojects,
-                            $included_subprojects, $excluded_subprojects,
-                            $parentid, $build_data, $buildgroups_response,
-                            $subproject_groups)
+function get_coverage($include_subprojects, $num_selected_subprojects,
+                      $included_subprojects, $excluded_subprojects,
+                      $build_data, $subproject_groups)
 {
+    $response = array();
+    $response['coveragegroups'] = array();
+
     // Summarize coverage by subproject groups.
     // This happens when we have subprojects and we're looking at the children
     // of a specific build.
@@ -502,22 +492,6 @@ function get_coverage_groups($include_subprojects, $num_selected_subprojects,
     // Generate the JSON response from the rows of builds.
     foreach ($build_data as $build_array) {
         $groupid = $build_array["groupid"];
-
-        // Find the buildgroup array for this build.
-        $i = -1;
-        for ($j = 0; $j < count($buildgroups_response); $j++) {
-            if ($buildgroups_response[$j]['id'] == $groupid) {
-                $i = $j;
-                break;
-            }
-        }
-        if ($i == -1) {
-            add_log("BuildGroup '$groupid' not found for build #" . $build_array['id'],
-                    __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__,
-                    LOG_WARNING);
-            continue;
-        }
-
         $buildid = $build_array["id"];
 
         $coverageIsGrouped = false;
@@ -525,7 +499,6 @@ function get_coverage_groups($include_subprojects, $num_selected_subprojects,
         while ($coverage_array = pdo_fetch_array($coverages)) {
             $coverage_response = array();
             $coverage_response['buildid'] = $build_array["id"];
-
 
             $percent = round(
                     compute_percentcoverage($coverage_array['loctested'],
@@ -571,11 +544,13 @@ function get_coverage_groups($include_subprojects, $num_selected_subprojects,
             if ($coverageIsGrouped) {
                 $coverage_groups[$groupId]['coverages'][] = $coverage_response;
             }
+            else {
+               $response['coverages'][] = $coverage_response;
+            }
         }  // end coverage
     } // end looping through builds
 
     // Generate coverage by group here.
-    $response_coveragegroups = array();
     foreach ($coverage_groups as $groupid => $group) {
         $loctested = $group['loctested'];
         $locuntested = $group['locuntested'];
@@ -585,11 +560,11 @@ function get_coverage_groups($include_subprojects, $num_selected_subprojects,
         $percentage = round($loctested / ($loctested + $locuntested) * 100, 2);
         $group['percentage'] = $percentage;
         $group['id'] = $groupid;
-        $group['parentid'] = $parentid;
 
-        $response_coveragegroups[] = $group;
+        $response['coveragegroups'][] = $group;
     }
-    return $response_coveragegroups;
+
+    return $response;
 }
 
 function get_build_data($parentid, $projectid, $beginning_UTCDate,
