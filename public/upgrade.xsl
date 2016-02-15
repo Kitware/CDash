@@ -19,6 +19,9 @@
           <xsl:if test="cdash/backupwritable=0">
             <font color="#FF0000">Your backup directory is not writable, make sure that the web process can write into the directory.</font><br/>
           </xsl:if>
+          <xsl:if test="cdash/logwritable=0">
+            <font color="#FF0000">Your log directory is not writable, make sure that the web process can write into the directory.</font><br/>
+          </xsl:if>
           <xsl:if test="cdash/uploadwritable=0">
             <font color="#FF0000">Your upload directory is not writable, make sure that the web process can write into the directory.</font><br/>
           </xsl:if>

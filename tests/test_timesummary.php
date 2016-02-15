@@ -19,7 +19,14 @@ class TimeSummaryTestCase extends KWWebTestCase
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $buildgroup = array_pop($jsonobj['buildgroups']);
-        $build = $buildgroup['builds'][0];
+
+        // Find the build for the 'hut11.kitware' site
+        $builds = $buildgroup['builds'];
+        foreach ($builds as $build) {
+            if ($build['site'] === 'hut11.kitware') {
+                break;
+            }
+        }
 
         // Verify configure duration
         if ($build['configure']['timefull'] !== 309) {

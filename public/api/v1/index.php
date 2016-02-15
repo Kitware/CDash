@@ -148,6 +148,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $parent_build = new Build();
         $parent_build->Id = $parentid;
         $date = $parent_build->GetDate();
+        $response['parentid'] = $parentid;
+    } else {
+        $response['parentid'] = -1;
     }
 
     list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $project_array["nightlytime"]);
@@ -308,7 +311,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
     $response['updates'] = $updates_response;
 
     // User
-    if (isset($_SESSION['cdash'])) {
+    if (isset($_SESSION['cdash']) && array_key_exists('loginid', $_SESSION['cdash'])) {
         $user_response = array();
         $userid = $_SESSION['cdash']['loginid'];
         $user2project = pdo_query(
@@ -447,7 +450,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
     // If the user is logged in we display if the build has some changes for him
     $userupdatesql = "";
-    if (isset($_SESSION['cdash'])) {
+    if (isset($_SESSION['cdash']) && array_key_exists('loginid', $_SESSION['cdash'])) {
         $userupdatesql = "(SELECT count(updatefile.updateid) FROM updatefile,build2update,user2project,
             user2repository
                 WHERE build2update.buildid=b.id
@@ -813,13 +816,8 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $build_response['done'] = $build_array['done'];
         $build_response['uploadfilecount'] = $build_array["builduploadfiles"];
 
-        if ($build_array['countbuildnotes']>0) {
-            $build_response['buildnote'] = 1;
-        }
-
-        if ($build_array['countnotes'] > 0) {
-            $build_response['note'] = 1;
-        }
+        $build_response['buildnotes'] = $build_array['countbuildnotes'];
+        $build_response['notes'] = $build_array['countnotes'];
 
         // Figure out how many labels to report for this build.
         if (!array_key_exists('numlabels', $build_array) ||

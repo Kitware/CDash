@@ -10,17 +10,18 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE.  See the above copyright notices for more information.
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE.  See the above copyright notices for more information.
 
-=========================================================================*/
+  =========================================================================*/
 $noforcelogin = 1;
 include(dirname(__DIR__)."/config/config.php");
 require_once("include/pdo.php");
 include('public/login.php');
 include_once("include/common.php");
 include("include/version.php");
+require_once("models/coveragefilelog.php");
 
 @$buildid = $_GET["buildid"];
 if ($buildid != null) {
@@ -86,120 +87,102 @@ $xml .= "<title>CDash : ".$projectname."</title>";
 
 $xml .= get_cdash_dashboard_xml_by_name($projectname, $date);
 
-  // Build
-  $xml .= "<build>";
-  $build = pdo_query("SELECT * FROM build WHERE id='$buildid'");
-  $build_array = pdo_fetch_array($build);
-  $siteid = $build_array["siteid"];
-  $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
-  $xml .= add_XML_value("site", $site_array["name"]);
-  $xml .= add_XML_value("buildname", $build_array["name"]);
-  $xml .= add_XML_value("buildid", $build_array["id"]);
-  $xml .= add_XML_value("buildtime", $build_array["starttime"]);
-  $xml .= "</build>";
+// Build
+$xml .= "<build>";
+$build = pdo_query("SELECT * FROM build WHERE id='$buildid'");
+$build_array = pdo_fetch_array($build);
+$siteid = $build_array["siteid"];
+$site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
+$xml .= add_XML_value("site", $site_array["name"]);
+$xml .= add_XML_value("buildname", $build_array["name"]);
+$xml .= add_XML_value("buildid", $build_array["id"]);
+$xml .= add_XML_value("buildtime", $build_array["starttime"]);
+$xml .= "</build>";
 
-  // coverage
-  $coveragefile_array = pdo_fetch_array(pdo_query("SELECT fullpath,file FROM coveragefile WHERE id='$fileid'"));
+// coverage
+$coveragefile_array = pdo_fetch_array(pdo_query("SELECT fullpath,file FROM coveragefile WHERE id='$fileid'"));
 
-  $xml .= "<coverage>";
-  $xml .= add_XML_value("fullpath", $coveragefile_array["fullpath"]);
+$xml .= "<coverage>";
+$xml .= add_XML_value("fullpath", $coveragefile_array["fullpath"]);
 
-  if ($CDASH_USE_COMPRESSION) {
-      if ($CDASH_DB_TYPE == "pgsql") {
-          if (is_resource($coveragefile_array["file"])) {
-              $file = base64_decode(stream_get_contents($coveragefile_array["file"]));
-          } else {
-              $file = base64_decode($coveragefile_array["file"]);
-          }
-      } else {
-          $file = $coveragefile_array["file"];
-      }
+if ($CDASH_USE_COMPRESSION) {
+    if ($CDASH_DB_TYPE == "pgsql") {
+        if (is_resource($coveragefile_array["file"])) {
+            $file = base64_decode(stream_get_contents($coveragefile_array["file"]));
+        } else {
+            $file = base64_decode($coveragefile_array["file"]);
+        }
+    } else {
+        $file = $coveragefile_array["file"];
+    }
 
-      @$uncompressedrow = gzuncompress($file);
-      if ($uncompressedrow !== false) {
-          $file = $uncompressedrow;
-      }
-  } else {
-      $file = $coveragefile_array["file"];
-  }
+    @$uncompressedrow = gzuncompress($file);
+    if ($uncompressedrow !== false) {
+        $file = $uncompressedrow;
+    }
+} else {
+    $file = $coveragefile_array["file"];
+}
 
-    // Generating the html file
-  $file_array = explode("<br>", $file);
-  $i = 0;
+// Generating the html file
+$file_array = explode("<br>", $file);
+$i = 0;
 
-  // Get the codes in an array
-  $linecodes = array();
-  $coveragefilelog = pdo_query("SELECT log FROM coveragefilelog WHERE fileid=".qnum($fileid)." AND buildid=".qnum($buildid));
-  if (pdo_num_rows($coveragefilelog)>0) {
-      $coveragefilelog_array = pdo_fetch_array($coveragefilelog);
-      if ($CDASH_DB_TYPE == "pgsql") {
-          $log = stream_get_contents($coveragefilelog_array['log']);
-      } else {
-          $log = $coveragefilelog_array['log'];
-      }
-      $linecode = explode(';', $log);
-      foreach ($linecode as $value) {
-          if (!empty($value)) {
-              $code = explode(':', $value);
-              $linecodes[$code[0]] = $code[1];
-          }
-      }
-  }
+// Load the coverage info.
+$log = new CoverageFileLog();
+$log->BuildId = $buildid;
+$log->FileId = $fileid;
+$log->Load();
 
-  // Detect if we have branch coverage or not.
-  $hasBranchCoverage = false;
-  foreach (array_keys($linecodes) as $key) {
-      if ($key[0] == 'b') {
-          $hasBranchCoverage = true;
-          break;
-      }
-  }
-  if ($hasBranchCoverage) {
-  }
+// Detect if we have branch coverage or not.
+$hasBranchCoverage = false;
+if (!empty($log->Branches)) {
+    $hasBranchCoverage = true;
+}
 
-  foreach ($file_array as $line) {
-      $linenumber = $i+1;
-      $line = htmlentities($line);
+foreach ($file_array as $line) {
+    $linenumber = $i+1;
+    $line = htmlentities($line);
 
-      $file_array[$i] = '<span class="warning">'.str_pad($linenumber, 5, ' ', STR_PAD_LEFT).'</span>';
+    $file_array[$i] = '<span class="warning">'.str_pad($linenumber, 5, ' ', STR_PAD_LEFT).'</span>';
 
-      if ($hasBranchCoverage) {
-          if (array_key_exists("b$i", $linecodes)) {
-              $code = $linecodes["b$i"];
+    if ($hasBranchCoverage) {
+        if (array_key_exists("$i", $log->Branches)) {
+            $code = $log->Branches["$i"];
 
-        // Branch coverage data is stored as <# covered> / <total branches>.
-        $branchCoverageData = explode('/', $code);
-              if ($branchCoverageData[0] != $branchCoverageData[1]) {
-                  $file_array[$i] .= '<span class="error">';
-              } else {
-                  $file_array[$i] .= '<span class="normal">';
-              }
-              $file_array[$i] .= str_pad($code, 5, ' ', STR_PAD_LEFT) ."</span>";
-          } else {
-              $file_array[$i] .= str_pad('', 5, ' ', STR_PAD_LEFT);
-          }
-      }
+            // Branch coverage data is stored as <# covered> / <total branches>.
+            $branchCoverageData = explode('/', $code);
+            if ($branchCoverageData[0] != $branchCoverageData[1]) {
+                $file_array[$i] .= '<span class="error">';
+            } else {
+                $file_array[$i] .= '<span class="normal">';
+            }
+            $file_array[$i] .= str_pad($code, 5, ' ', STR_PAD_LEFT) ."</span>";
+        } else {
+            $file_array[$i] .= str_pad('', 5, ' ', STR_PAD_LEFT);
+        }
+    }
 
-      if (array_key_exists($i, $linecodes)) {
-          $code = $linecodes[$i];
-          if ($code==0) {
-              $file_array[$i] .= '<span class="error">';
-          } else {
-              $file_array[$i] .= '<span class="normal">';
-          }
-          $file_array[$i] .= str_pad($code, 5, ' ', STR_PAD_LEFT)." | ".$line;
-          $file_array[$i] .= "</span>";
-      } else {
-          $file_array[$i] .= str_pad('', 5, ' ', STR_PAD_LEFT)." | ".$line;
-      }
-      $i++;
-  }
+    if (array_key_exists($i, $log->Lines)) {
+        $code = $log->Lines[$i];
+        if ($code==0) {
+            $file_array[$i] .= '<span class="error">';
+        } else {
+            $file_array[$i] .= '<span class="normal">';
+        }
+        $file_array[$i] .= str_pad($code, 5, ' ', STR_PAD_LEFT)." | ".$line;
+        $file_array[$i] .= "</span>";
+    } else {
+        $file_array[$i] .= str_pad('', 5, ' ', STR_PAD_LEFT)." | ".$line;
+    }
+    $i++;
+}
 
-  $file = implode("<br>", $file_array);
+$file = implode("<br>", $file_array);
 
-  $xml .= "<file>".utf8_encode(htmlspecialchars($file))."</file>";
-  $xml .= "</coverage>";
-  $xml .= "</cdash>";
+$xml .= "<file>".utf8_encode(htmlspecialchars($file))."</file>";
+$xml .= "</coverage>";
+$xml .= "</cdash>";
 
 // Now doing the xslt transition
 generate_XSLT($xml, "viewCoverageFile");

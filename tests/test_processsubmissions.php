@@ -158,8 +158,11 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
             return 1;
         }
 
-        echo "log file perms: [";
-        echo substr(sprintf('%o', fileperms($this->logfilename)), -4)."]\n";
+        global $CDASH_LOG_FILE;
+        if ($CDASH_LOG_FILE !== false) {
+            echo "log file perms: [";
+            echo substr(sprintf('%o', fileperms($this->logfilename)), -4)."]\n";
+        }
 
     // Simulate the processsubmissions.php "been processing for a long time"
     // issue. (Add records that are in the "processing" state, but appear to

@@ -782,8 +782,7 @@ function sendEmailExpectedBuilds($projectid, $currentstarttime)
             $missingSummary .= "\n".$currentURI."/index.php?project=".urlencode($projectname)."\n";
             $missingSummary .= "\n-CDash on ".$serverName."\n";
 
-            if (cdashmail("$email", $missingTitle, $missingSummary,
-       "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nContent-type: text/plain; charset=utf-8\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0")) {
+            if (cdashmail("$email", $missingTitle, $missingSummary)) {
                 add_log("email sent to: ".$email, "sendEmailExpectedBuilds");
                 return;
             } else {
@@ -814,8 +813,7 @@ function sendEmailExpectedBuilds($projectid, $currentstarttime)
 
     // Send the email
     if ($email != "") {
-        if (cdashmail("$email", $title, $summary,
-         "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nContent-type: text/plain; charset=utf-8\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0")) {
+        if (cdashmail("$email", $title, $summary)) {
             add_log("email sent to: ".$email, "sendEmailExpectedBuilds");
             return;
         } else {
@@ -897,8 +895,7 @@ function sendEmailUnregisteredUsers($projectid, $cvsauthors)
 
         add_log($title." : ".$body." : ".$email, "sendEmailUnregisteredUsers");
 
-        if (cdashmail("$email", $title, $body,
-         "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nContent-type: text/plain; charset=utf-8\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0")) {
+        if (cdashmail("$email", $title, $body)) {
             add_log("email sent to: ".$email, "sendEmailUnregisteredUsers");
             return;
         } else {

@@ -59,8 +59,9 @@ class label
 
                 // Only do the INSERT if it's not already there:
                 if (0 == $v) {
-                    $query = "INSERT INTO $table (labelid, $field1, $field2) ".
-                        "VALUES ('$this->Id', '$value1', '$value2')";
+                    $query = "INSERT INTO $table (labelid, $field1, $field2)
+                        VALUES ('$this->Id', '$value1', '$value2')
+                        ON DUPLICATE KEY UPDATE labelid=labelid";
 
                     if (!pdo_query($query)) {
                         add_last_sql_error("Label::InsertAssociation");
@@ -73,8 +74,9 @@ class label
 
                 // Only do the INSERT if it's not already there:
                 if (0 == $v) {
-                    $query = "INSERT INTO $table (labelid, $field1) ".
-                        "VALUES ('$this->Id', '$value1')";
+                    $query = "INSERT INTO $table (labelid, $field1)
+                        VALUES ('$this->Id', '$value1')
+                        ON DUPLICATE KEY UPDATE labelid=labelid";
 
                     if (!pdo_query($query)) {
                         add_last_sql_error("Label::InsertAssociation");
@@ -95,14 +97,21 @@ class label
                 "SELECT id FROM label WHERE text='$text'", 'id', 0);
 
         // Or, if necessary, insert a new row, then get the id of the inserted row:
-        if (0 == $this->Id) {
+        if ($this->Id === 0) {
             $query = "INSERT INTO label (text) VALUES ('$text')";
             if (!pdo_query($query)) {
-                add_last_sql_error('Label::Insert');
-                return false;
+                // This insert might have failed due to a race condition
+                // during parallel processing.
+                // Query again to see if it exists before throwing an error.
+                $this->Id = pdo_get_field_value(
+                        "SELECT id FROM label WHERE text='$text'", 'id', 0);
+                if ($this->Id === 0) {
+                    add_last_sql_error('Label::Insert');
+                    return false;
+                }
+            } else {
+                $this->Id = pdo_insert_id('label');
             }
-
-            $this->Id = pdo_insert_id('label');
         }
 
         // Insert relationship records, too, but only for those relationships

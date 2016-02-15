@@ -250,7 +250,10 @@ function SimpleTestErrorHandler($severity, $message, $filename = null, $line = n
         if (IsNotCausedBySimpleTest($message) && IsNotTimeZoneNag($message)) {
             if (ini_get('log_errors')) {
                 $label = SimpleErrorQueue::getSeverityAsString($severity);
-                error_log("$label: $message in $filename on line $line");
+                if (openlog('cdash', LOG_PID, LOG_USER)) {
+                    syslog(LOG_ERR, "$label: $message in $filename on line $line");
+                    closelog();
+                }
             }
             $queue = SimpleTest::getContext()->get('SimpleErrorQueue');
             $queue->add($severity, $message, $filename, $line);

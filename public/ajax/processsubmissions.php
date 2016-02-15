@@ -17,6 +17,13 @@
 =========================================================================*/
 
 require_once(dirname(dirname(__DIR__))."/config/config.php");
+
+// Only used to setup the parallel submissions test case.
+global $CDASH_DO_NOT_PROCESS_SUBMISSIONS;
+if ($CDASH_DO_NOT_PROCESS_SUBMISSIONS) {
+    exit(0);
+}
+
 require_once("include/common.php");
 require_once("include/do_submit.php");
 require_once("include/fnProcessFile.php");
@@ -63,6 +70,7 @@ if (isset($argc) && $argc>1) {
     }
 
     @$force = $_GET['force'];
+    @$pid = $_GET['pid'];
 }
 
 if (!is_numeric($projectid)) {
@@ -74,28 +82,43 @@ if (!is_numeric($projectid)) {
     return;
 }
 
+$multi = false;
+if (!$pid) {
+    $pid = getmypid();
+} else {
+    // if pid was specified then this is a parallel request.
+    $multi = true;
+}
 
 // Catch any fatal errors during processing
 //
-register_shutdown_function('ProcessSubmissionsErrorHandler', $projectid);
+register_shutdown_function('ProcessSubmissionsErrorHandler', $projectid, $pid);
 
 
 echo "projectid='$projectid'\n";
+echo "pid='$pid'\n";
 echo "force='$force'\n";
 
-if (AcquireProcessingLock($projectid, $force)) {
+if ($multi) {
+    // multi processing, so lock was acquired in do_submit.php
+    $lockAcquired = true;
+} else {
+    $lockAcquired = AcquireProcessingLock($projectid, $force, $pid);
+}
+
+if ($lockAcquired) {
     echo "AcquireProcessingLock returned true\n";
 
     ResetApparentlyStalledSubmissions($projectid);
     echo "Done with ResetApparentlyStalledSubmissions\n";
 
-    ProcessSubmissions($projectid);
+    ProcessSubmissions($projectid, $pid);
     echo "Done with ProcessSubmissions\n";
 
     DeleteOldSubmissionRecords($projectid);
     echo "Done with DeleteOldSubmissionRecords\n";
 
-    if (ReleaseProcessingLock($projectid)) {
+    if (ReleaseProcessingLock($projectid, $pid, $multi)) {
         echo "ReleasedProcessingLock returned true\n";
     } else {
         echo "ReleasedProcessingLock returned false\n";
