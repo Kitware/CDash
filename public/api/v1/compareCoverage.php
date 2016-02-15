@@ -448,7 +448,7 @@ function get_build_label($buildid, $build_array,
       if ($num_labels === 0) {
           // Skip this build entirely if none of its SubProjects
           // survived filtering.
-          continue;
+          return '';
       }
   }
 
@@ -534,7 +534,6 @@ function get_coverage($include_subprojects, $num_selected_subprojects,
                 $coverage_response['percentagediff'] = $percentdiff;
             }
 
-            // Are there labels for this build?
             $coverage_response['label'] = get_build_label($buildid, $build_array,
                                                           $include_subprojects,
                                                           $num_selected_subprojects,
