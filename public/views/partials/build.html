@@ -30,7 +30,7 @@
   <div ng-if="!build.id" style="float: left; margin: 0px 4px;">{{build.buildname}}</div>
 
   <div style="float:left;">
-    <a ng-if="build.note.length > 0" ng-show="cdash.advancedview != 0" title="View notes" ng-href="viewNotes.php?buildid={{build.id}}">
+    <a ng-if="build.notes.length > 0" ng-show="cdash.advancedview != 0" title="View notes" ng-href="viewNotes.php?buildid={{build.id}}">
       <img src="img/document.png" alt="Notes" class="icon"/>
     </a>
 
@@ -51,7 +51,7 @@
     </a>
 
     <!-- Display the note icon -->
-    <a ng-if="build.buildnote > 0" name="Build Notes" class="jTip" id="buildnote_{{build.id}}" ng-href="ajax/buildnote.php?buildid={{build.id}}&width=350&link=buildSummary.php%3Fbuildid%3D{{build.id}}">
+    <a ng-if="build.buildnotes > 0" name="Build Notes" class="jTip" id="buildnote_{{build.id}}" ng-href="ajax/buildnote.php?buildid={{build.id}}&width=350&link=buildSummary.php%3Fbuildid%3D{{build.id}}">
       <img src="img/note.png" alt="note" class="icon"></img>
     </a>
 

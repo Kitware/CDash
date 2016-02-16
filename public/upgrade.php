@@ -692,6 +692,32 @@ if (isset($_GET['upgrade-2-4'])) {
     // Support for marking a build as "done".
     AddTableField('build', 'done', 'tinyint(1)', 'smallint', '0');
 
+    // Add a unique uuid field to the build table.
+    $uuid_check = pdo_query("SELECT uuid FROM build LIMIT 1");
+    if ($uuid_check === false) {
+        AddTableField('build', 'uuid', 'varchar(36)', 'character varying(36)', false);
+        if ($db_type === "pgsql") {
+            pdo_query("ALTER TABLE build ADD UNIQUE (uuid)");
+            pdo_query('CREATE INDEX "uuid" ON "build" ("uuid")');
+        } else {
+            pdo_query("ALTER TABLE build ADD UNIQUE KEY (uuid)");
+        }
+
+        // Also add a new unique constraint to the site table.
+        AddUniqueConstraintToSiteTable('site');
+
+        // Also add a new unique constraint to the subproject table.
+        if ($db_type === "pgsql") {
+            pdo_query("ALTER TABLE subproject ADD UNIQUE (name, projectid, endtime)");
+            pdo_query('CREATE INDEX "subproject_unique2" ON "subproject" ("name", "projectid", "endtime")');
+        } else {
+            pdo_query("ALTER TABLE subproject ADD UNIQUE KEY (name, projectid, endtime)");
+        }
+    }
+
+    // Support for subproject path.
+    AddTableField('subproject', 'path', 'varchar(512)', 'character varying(512)', '');
+
     // Set the database version
     setVersion();
 
@@ -708,6 +734,13 @@ if ($Upgrade) {
       $xml .= "<backupwritable>0</backupwritable>";
   } else {
       $xml .= "<backupwritable>1</backupwritable>";
+  }
+
+  // check if the log directory is writable
+  if ($CDASH_LOG_FILE !== false && !is_writable($CDASH_LOG_DIRECTORY)) {
+      $xml .= "<logwritable>0</logwritable>";
+  } else {
+      $xml .= "<logwritable>1</logwritable>";
   }
 
   // check if the upload directory is writable

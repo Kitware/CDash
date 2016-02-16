@@ -3,7 +3,7 @@
   "version": "2.3.0",
   "description": "Continuous integration dashboard.",
   "repository": "https://github.com/Kitware/CDash",
-  "license": "Apache-2.0",
+  "license": "BSD-3-Clause",
   "dependencies": {
     "protractor": "^2.0.0"
   },

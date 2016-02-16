@@ -23,4 +23,3 @@ define("FMT_DATETIME", 'Y-m-d\TH:i:s');  // date and time
 define("FMT_DATETIMETZ", 'Y-m-d\TH:i:s T');  // date and time with time zone
 define("FMT_DATETIMEMS", 'Y-m-d\TH:i:s.u');  // date and time with milliseconds
 define("FMT_DATETIMEDISPLAY", 'M d, Y - H:i T');  // date and time standard
-define("LOG_TESTING", "log_testing");

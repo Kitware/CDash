@@ -155,8 +155,7 @@ function register()
                     }
                     $emailbody .= "\n-CDash on ".$serverName."\n";
 
-                    if (cdashmail("$email", $emailtitle, $emailbody,
-                                "From: CDash <".$CDASH_EMAIL_FROM.">\nReply-To: ".$CDASH_EMAIL_REPLY."\nContent-type: text/plain; charset=utf-8\nX-Mailer: PHP/" . phpversion()."\nMIME-Version: 1.0")) {
+                    if (cdashmail("$email", $emailtitle, $emailbody)) {
                         add_log("email sent to: ".$email, "Registration");
                     } else {
                         add_log("cannot send email to: ".$email, "Registration", LOG_ERR);

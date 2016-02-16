@@ -90,7 +90,10 @@ function pdo_error($link_identifier = null)
     $error_info = get_link_identifier($link_identifier)->getPdo()->errorInfo();
     if (isset($error_info[2]) && $error_info[0] !== '00000') {
         if ($CDASH_PRODUCTION_MODE) {
-            error_log($error_info[2]);
+            if (openlog('cdash', LOG_PID, LOG_USER)) {
+                syslog(LOG_ERR, $error_info[2]);
+                closelog();
+            }
             return "SQL error encountered, query hidden.";
         }
         return $error_info[2];
@@ -282,6 +285,33 @@ function pdo_real_escape_numeric($unescaped_string, $link_identifier = null)
         return 0;
     }
     return $escaped_string;
+}
+
+/**
+ * Begin a transaction with PDO.
+ * @param PDO|null $link_identifier
+ */
+function pdo_begin_transaction($link_identifier = null)
+{
+    get_link_identifier($link_identifier)->getPdo()->beginTransaction();
+}
+
+/**
+ * Commit a transaction with PDO.
+ * @param PDO|null $link_identifier
+ */
+function pdo_commit($link_identifier = null)
+{
+    get_link_identifier($link_identifier)->getPdo()->commit();
+}
+
+/**
+ * Roll back a transaction with PDO.
+ * @param PDO|null $link_identifier
+ */
+function pdo_rollback($link_identifier = null)
+{
+    get_link_identifier($link_identifier)->getPdo()->rollBack();
 }
 
 

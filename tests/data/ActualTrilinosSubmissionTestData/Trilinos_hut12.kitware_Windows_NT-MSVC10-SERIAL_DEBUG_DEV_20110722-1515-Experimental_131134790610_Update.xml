@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Update mode="Client" Generator="ctest-2.8.4.20110707-g0eecf">
+	<Site>hut12.kitware</Site>
+	<BuildName>Windows_TEST_BUILD</BuildName>
+	<BuildStamp>20110722-1515-Experimental</BuildStamp>
+	<StartDateTime>Jul 22 11:15 Eastern Daylight Time</StartDateTime>
+	<StartTime>1311347501</StartTime>
+	<UpdateCommand>"C:/Program Files (x86)/Git/cmd/git.cmd" "fetch"</UpdateCommand>
+	<UpdateType>GIT</UpdateType>
+	<Revision>91143198be7f9790c9b57de4051f134ce6070838</Revision>
+	<PriorRevision>fea8a82f78311ee109a9cdf3e4179ea065be6ee4</PriorRevision>
+	<Directory>
+		<Name>packages/isorropia/example</Name>
+		<Updated>
+			<File>parallel_matching.cpp</File>
+			<Directory>packages/isorropia/example</Directory>
+			<FullName>packages/isorropia/example/parallel_matching.cpp</FullName>
+			<CheckinDate>2011-07-20 20:52:56 -0600</CheckinDate>
+			<Author>Arif Khan</Author>
+			<Email>mhkhan@noemail</Email>
+			<Committer>Arif Khan</Committer>
+			<CommitterEmail>mhkhan@noemail</CommitterEmail>
+			<CommitDate>2011-07-21 17:21:10 -0600</CommitDate>
+			<Log>Adding PHKDW, PDFS, PPF and modifying PHK
+</Log>
+			<Revision>0162a778364ddf3c29d30050d77a6026197bb283</Revision>
+			<PriorRevision>0ff073d679a482fcb1054abec734edd11d2dfa9d</PriorRevision>
+		</Updated>
+	</Directory>
+	<Directory>
+		<Name>packages/isorropia/src/epetra</Name>
+		<Updated>
+			<File>Isorropia_EpetraMatcher.cpp</File>
+			<Directory>packages/isorropia/src/epetra</Directory>
+			<FullName>packages/isorropia/src/epetra/Isorropia_EpetraMatcher.cpp</FullName>
+			<CheckinDate>2011-07-21 17:19:34 -0600</CheckinDate>
+			<Author>Arif Khan</Author>
+			<Email>mhkhan@noemail</Email>
+			<Committer>Arif Khan</Committer>
+			<CommitterEmail>mhkhan@noemail</CommitterEmail>
+			<CommitDate>2011-07-21 18:53:27 -0600</CommitDate>
+			<Log>Bug fix ... memory deallocation
+
+Enabled Packages: Isorropia
+Enabled all Forward Packages
+0) MPI_DEBUG =&gt; FAILED: passed=368,notpassed=9 =&gt; Not ready to push! (43.73 min)
+1) SERIAL_RELEASE =&gt; passed: passed=353,notpassed=0 (18.74 min)
+
+The following tests FAILED:
+  	135 - FEI_multifield_MPI_1 (Failed)
+  	138 - FEI_multifield_vbr_MPI_1 (Failed)
+  	136 - FEI_multifield_MPI_2 (Failed)
+  	137 - FEI_multifield_MPI_3 (Failed)
+  	139 - FEI_multifield_vbr_MPI_2 (Failed)
+  	140 - FEI_multifield_vbr_MPI_3 (Failed)
+  	144 - FEI_multifield_slave_MPI_1 (Failed)
+  	145 - FEI_multifield_slave_MPI_2 (Failed)
+  	146 - FEI_multifield_slave_MPI_3 (Failed)
+
+(These are the tests which failed before, Alan said its OK to push)
+</Log>
+			<Revision>003e094de3e4b6e66bc3a4d876e33d4c35abbcc0</Revision>
+			<PriorRevision>7bb640feba1fc73be80cfef738aca6b0634e60f6</PriorRevision>
+		</Updated>
+		<Updated>
+			<File>Isorropia_EpetraMatcher.hpp</File>
+			<Directory>packages/isorropia/src/epetra</Directory>
+			<FullName>packages/isorropia/src/epetra/Isorropia_EpetraMatcher.hpp</FullName>
+			<CheckinDate>2011-07-20 20:52:56 -0600</CheckinDate>
+			<Author>Arif Khan</Author>
+			<Email>mhkhan@noemail</Email>
+			<Committer>Arif Khan</Committer>
+			<CommitterEmail>mhkhan@noemail</CommitterEmail>
+			<CommitDate>2011-07-21 17:21:10 -0600</CommitDate>
+			<Log>Adding PHKDW, PDFS, PPF and modifying PHK
+</Log>
+			<Revision>0162a778364ddf3c29d30050d77a6026197bb283</Revision>
+			<PriorRevision>0ff073d679a482fcb1054abec734edd11d2dfa9d</PriorRevision>
+		</Updated>
+	</Directory>
+	<Directory>
+		<Name>packages/optika/doc/manual</Name>
+		<Updated>
+			<File>OptikaThesis.tex</File>
+			<Directory>packages/optika/doc/manual</Directory>
+			<FullName>packages/optika/doc/manual/OptikaThesis.tex</FullName>
+			<CheckinDate>2011-07-21 17:11:23 -0500</CheckinDate>
+			<Author>Kurtis Nusbaum</Author>
+			<Email>klnusbaum@noemail</Email>
+			<Committer>Kurtis Nusbaum</Committer>
+			<CommitterEmail>klnusbaum@noemail</CommitterEmail>
+			<CommitDate>2011-07-21 23:07:25 -0500</CommitDate>
+			<Log>Updated the furture development section of the SAND report
+
+-Kurtis
+</Log>
+			<Revision>6b5d78245ac11c03b1206c79ee35c0e0476934f3</Revision>
+			<PriorRevision>fea8a82f78311ee109a9cdf3e4179ea065be6ee4</PriorRevision>
+		</Updated>
+	</Directory>
+	<Directory>
+		<Name>packages/tpetra/example/RTInterface</Name>
+		<Updated>
+			<File>CMakeLists.txt</File>
+			<Directory>packages/tpetra/example/RTInterface</Directory>
+			<FullName>packages/tpetra/example/RTInterface/CMakeLists.txt</FullName>
+			<CheckinDate>2011-07-20 23:37:35 -0400</CheckinDate>
+			<Author>Christopher G. Baker</Author>
+			<Email>bakercg@noemail</Email>
+			<Committer>Christopher G. Baker</Committer>
+			<CommitterEmail>bakercg@noemail</CommitterEmail>
+			<CommitDate>2011-07-20 23:48:05 -0400</CommitDate>
+			<Log>added new qd example
+
+Build/Test Cases Summary
+Enabled Packages: Tpetra
+Disabled Packages: PyTrilinos,TriKota,Optika,Sundance,Stokhos
+Enabled all Forward Packages
+0) MPI_DEBUG =&gt; passed: passed=548,notpassed=0 (7.01 min)
+1) SERIAL_RELEASE =&gt; passed: passed=518,notpassed=0 (2.69 min)
+</Log>
+			<Revision>952d85e3e192edafa6a0f539300f347896cedfa8</Revision>
+			<PriorRevision>fea8a82f78311ee109a9cdf3e4179ea065be6ee4</PriorRevision>
+		</Updated>
+		<Updated>
+			<File>RTIExample.cpp</File>
+			<Directory>packages/tpetra/example/RTInterface</Directory>
+			<FullName>packages/tpetra/example/RTInterface/RTIExample.cpp</FullName>
+			<CheckinDate>2011-07-21 22:21:06 -0600</CheckinDate>
+			<Author>Mark Hoemmen</Author>
+			<Email>mhoemme@noemail</Email>
+			<Committer>Mark Hoemmen</Committer>
+			<CommitterEmail>mhoemme@noemail</CommitterEmail>
+			<CommitDate>2011-07-21 22:29:48 -0600</CommitDate>
+			<Log>Tpetra: Added documentation to the RTI example.
+
+Build/Test Cases Summary
+Enabled Packages: Tpetra
+0) MPI_DEBUG =&gt; passed: passed=32,notpassed=0 (8.48 min)
+1) SERIAL_RELEASE =&gt; Test case SERIAL_RELEASE was not run! =&gt; Does not affect push readiness! (-1.00 min)
+</Log>
+			<Revision>1bc8c969f25a527cdfc4868d2ba3123d78a60a39</Revision>
+			<PriorRevision>fea8a82f78311ee109a9cdf3e4179ea065be6ee4</PriorRevision>
+		</Updated>
+		<Updated>
+			<File>RTIInlineCG.cpp</File>
+			<Directory>packages/tpetra/example/RTInterface</Directory>
+			<FullName>packages/tpetra/example/RTInterface/RTIInlineCG.cpp</FullName>
+			<CheckinDate>2011-07-20 23:37:35 -0400</CheckinDate>
+			<Author>Christopher G. Baker</Author>
+			<Email>bakercg@noemail</Email>
+			<Committer>Christopher G. Baker</Committer>
+			<CommitterEmail>bakercg@noemail</CommitterEmail>
+			<CommitDate>2011-07-20 23:48:05 -0400</CommitDate>
+			<Log>added new qd example
+
+Build/Test Cases Summary
+Enabled Packages: Tpetra
+Disabled Packages: PyTrilinos,TriKota,Optika,Sundance,Stokhos
+Enabled all Forward Packages
+0) MPI_DEBUG =&gt; passed: passed=548,notpassed=0 (7.01 min)
+1) SERIAL_RELEASE =&gt; passed: passed=518,notpassed=0 (2.69 min)
+</Log>
+			<Revision>952d85e3e192edafa6a0f539300f347896cedfa8</Revision>
+			<PriorRevision>fea8a82f78311ee109a9cdf3e4179ea065be6ee4</PriorRevision>
+		</Updated>
+		<Updated>
+			<File>RTIInlineCG.hpp</File>
+			<Directory>packages/tpetra/example/RTInterface</Directory>
+			<FullName>packages/tpetra/example/RTInterface/RTIInlineCG.hpp</FullName>
+			<CheckinDate>2011-07-20 23:37:35 -0400</CheckinDate>
+			<Author>Christopher G. Baker</Author>
+			<Email>bakercg@noemail</Email>
+			<Committer>Christopher G. Baker</Committer>
+			<CommitterEmail>bakercg@noemail</CommitterEmail>
+			<CommitDate>2011-07-20 23:48:05 -0400</CommitDate>
+			<Log>added new qd example
+
+Build/Test Cases Summary
+Enabled Packages: Tpetra
+Disabled Packages: PyTrilinos,TriKota,Optika,Sundance,Stokhos
+Enabled all Forward Packages
+0) MPI_DEBUG =&gt; passed: passed=548,notpassed=0 (7.01 min)
+1) SERIAL_RELEASE =&gt; passed: passed=518,notpassed=0 (2.69 min)
+</Log>
+			<Revision>952d85e3e192edafa6a0f539300f347896cedfa8</Revision>
+			<PriorRevision>fea8a82f78311ee109a9cdf3e4179ea065be6ee4</PriorRevision>
+		</Updated>
+		<Updated>
+			<File>RTIInlineCG_qd.cpp</File>
+			<Directory>packages/tpetra/example/RTInterface</Directory>
+			<FullName>packages/tpetra/example/RTInterface/RTIInlineCG_qd.cpp</FullName>
+			<CheckinDate>2011-07-20 23:37:35 -0400</CheckinDate>
+			<Author>Christopher G. Baker</Author>
+			<Email>bakercg@noemail</Email>
+			<Committer>Christopher G. Baker</Committer>
+			<CommitterEmail>bakercg@noemail</CommitterEmail>
+			<CommitDate>2011-07-20 23:48:05 -0400</CommitDate>
+			<Log>added new qd example
+
+Build/Test Cases Summary
+Enabled Packages: Tpetra
+Disabled Packages: PyTrilinos,TriKota,Optika,Sundance,Stokhos
+Enabled all Forward Packages
+0) MPI_DEBUG =&gt; passed: passed=548,notpassed=0 (7.01 min)
+1) SERIAL_RELEASE =&gt; passed: passed=518,notpassed=0 (2.69 min)
+</Log>
+			<Revision>952d85e3e192edafa6a0f539300f347896cedfa8</Revision>
+			<PriorRevision>fea8a82f78311ee109a9cdf3e4179ea065be6ee4</PriorRevision>
+		</Updated>
+	</Directory>
+	<Directory>
+		<Name>packages/trilinoscouplings/src</Name>
+		<Updated>
+			<File>CMakeLists.txt</File>
+			<Directory>packages/trilinoscouplings/src</Directory>
+			<FullName>packages/trilinoscouplings/src/CMakeLists.txt</FullName>
+			<CheckinDate>2011-07-21 23:11:52 -0600</CheckinDate>
+			<Author>Heidi Thornquist</Author>
+			<Email>hkthorn@noemail</Email>
+			<Committer>Heidi Thornquist</Committer>
+			<CommitterEmail>hkthorn@noemail</CommitterEmail>
+			<CommitDate>2011-07-21 23:14:07 -0600</CommitDate>
+			<Log>Adding a global AMD permutation for an Epetra_CrsGraph object.
+</Log>
+			<Revision>91143198be7f9790c9b57de4051f134ce6070838</Revision>
+			<PriorRevision>fea8a82f78311ee109a9cdf3e4179ea065be6ee4</PriorRevision>
+		</Updated>
+	</Directory>
+	<Directory>
+		<Name>packages/trilinoscouplings/src/epetraext</Name>
+		<Updated>
+			<File>EpetraExt_AmesosAMDGlobal_CrsGraph.cpp</File>
+			<Directory>packages/trilinoscouplings/src/epetraext</Directory>
+			<FullName>packages/trilinoscouplings/src/epetraext/EpetraExt_AmesosAMDGlobal_CrsGraph.cpp</FullName>
+			<CheckinDate>2011-07-21 23:11:52 -0600</CheckinDate>
+			<Author>Heidi Thornquist</Author>
+			<Email>hkthorn@noemail</Email>
+			<Committer>Heidi Thornquist</Committer>
+			<CommitterEmail>hkthorn@noemail</CommitterEmail>
+			<CommitDate>2011-07-21 23:14:07 -0600</CommitDate>
+			<Log>Adding a global AMD permutation for an Epetra_CrsGraph object.
+</Log>
+			<Revision>91143198be7f9790c9b57de4051f134ce6070838</Revision>
+			<PriorRevision>fea8a82f78311ee109a9cdf3e4179ea065be6ee4</PriorRevision>
+		</Updated>
+		<Updated>
+			<File>EpetraExt_AmesosAMDGlobal_CrsGraph.h</File>
+			<Directory>packages/trilinoscouplings/src/epetraext</Directory>
+			<FullName>packages/trilinoscouplings/src/epetraext/EpetraExt_AmesosAMDGlobal_CrsGraph.h</FullName>
+			<CheckinDate>2011-07-21 23:11:52 -0600</CheckinDate>
+			<Author>Heidi Thornquist</Author>
+			<Email>hkthorn@noemail</Email>
+			<Committer>Heidi Thornquist</Committer>
+			<CommitterEmail>hkthorn@noemail</CommitterEmail>
+			<CommitDate>2011-07-21 23:14:07 -0600</CommitDate>
+			<Log>Adding a global AMD permutation for an Epetra_CrsGraph object.
+</Log>
+			<Revision>91143198be7f9790c9b57de4051f134ce6070838</Revision>
+			<PriorRevision>fea8a82f78311ee109a9cdf3e4179ea065be6ee4</PriorRevision>
+		</Updated>
+	</Directory>
+	<Directory>
+		<Name>sampleScripts</Name>
+		<Updated>
+			<File>linux-hopper-tpetra-cmake</File>
+			<Directory>sampleScripts</Directory>
+			<FullName>sampleScripts/linux-hopper-tpetra-cmake</FullName>
+			<CheckinDate>2011-07-21 23:02:12 -0500</CheckinDate>
+			<Author>Kurtis Nusbaum</Author>
+			<Email>klnusbaum@noemail</Email>
+			<Committer>Kurtis Nusbaum</Committer>
+			<CommitterEmail>klnusbaum@noemail</CommitterEmail>
+			<CommitDate>2011-07-21 23:07:29 -0500</CommitDate>
+			<Log>Added a sample script for configuring a tpetra build on
+hopper.
+
+-Kurtis
+
+Build/Test Cases Summary
+Enabled Packages: Optika
+Enabled all Forward Packages
+0) MPI_DEBUG =&gt; passed: passed=2,notpassed=0 (2.77 min)
+1) SERIAL_RELEASE =&gt; passed: passed=2,notpassed=0 (1.18 min)
+Other local commits for this build/test group: 6b5d782
+</Log>
+			<Revision>8e20b439f1cb043594402e7e7b965b8f2e569ad8</Revision>
+			<PriorRevision>fea8a82f78311ee109a9cdf3e4179ea065be6ee4</PriorRevision>
+		</Updated>
+	</Directory>
+	<EndDateTime>Jul 22 11:15 Eastern Daylight Time</EndDateTime>
+	<EndTime>1311348570</EndTime>
+<ElapsedMinutes>1.3</ElapsedMinutes>
+	<UpdateReturnStatus></UpdateReturnStatus>
+</Update>

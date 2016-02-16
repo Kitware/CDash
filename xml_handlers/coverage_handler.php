@@ -148,12 +148,6 @@ class CoverageHandler extends AbstractHandler
         case 'ELAPSEDMINUTES':
           $this->EndTimeStamp = $this->StartTimeStamp+$data*60;
           break;
-        case 'LOCTESTED':
-          $this->CoverageSummary->LocTested .= $data;
-          break;
-        case 'LOCUNTESTED':
-          $this->CoverageSummary->LocUntested .= $data;
-          break;
         }
       } elseif ($parent == 'FILE') {
           switch ($element) {

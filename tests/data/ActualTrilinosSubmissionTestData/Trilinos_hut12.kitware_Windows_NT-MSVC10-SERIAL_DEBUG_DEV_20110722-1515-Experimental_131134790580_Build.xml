@@ -1,0 +1,661 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Windows_TEST_BUILD"
+	BuildStamp="20110722-1515-Experimental"
+	Name="hut12.kitware"
+	Generator="ctest-2.8.4.20110707-g0eecf"
+	Append="true"
+	CompilerName=""
+	OSName="Windows"
+	Hostname="hut12"
+	OSRelease="7"
+	OSVersion=" (Build 7600)"
+	OSPlatform="x86"
+	Is64Bits="0"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="10"
+	ProcessorCacheSize="-1"
+	NumberOfLogicalCPU="1"
+	NumberOfPhysicalCPU="8"
+	TotalVirtualMemory="2047"
+	TotalPhysicalMemory="9206"
+	LogicalProcessorsPerPhysical="16"
+	ProcessorClockFrequency="2672"
+>
+<Subproject name="Teuchos">
+</Subproject>
+<Labels>
+  <Label>Teuchos</Label>
+</Labels>
+<Build>
+	<StartDateTime>Jul 22 11:22 Eastern Daylight Time</StartDateTime>
+	<StartBuildTime>1311347924</StartBuildTime>
+<BuildCommand>nmake /NOLOGO  -i &quot;Teuchos_libs&quot;</BuildCommand>
+	<Failure type="Warning">
+		<!-- Meta-information about the build action -->
+		<Action>
+			<TargetName>teuchos</TargetName>
+			<Language>C++</Language>
+			<SourceFile>packages/teuchos/src/Teuchos_LAPACK.cpp</SourceFile>
+			<OutputFile>CMakeFiles\teuchos.dir\Teuchos_LAPACK.cpp.obj</OutputFile>
+			<OutputType>object file</OutputType>
+		</Action>
+
+		<!-- Details of command -->
+		<Command>
+			<WorkingDirectory>C:/K/SERIAL_DEBUG_DEV/BUILD/packages/teuchos/src</WorkingDirectory>
+			<Argument>C:\PROGRA~2\MICROS~2.0\VC\bin\cl.exe</Argument>
+			<Argument>/nologo</Argument>
+			<Argument>/DWIN32</Argument>
+			<Argument>/D_WINDOWS</Argument>
+			<Argument>/W3</Argument>
+			<Argument>/Zm1000</Argument>
+			<Argument>/EHsc</Argument>
+			<Argument>/GR</Argument>
+			<Argument>/D_DEBUG</Argument>
+			<Argument>/MDd</Argument>
+			<Argument>/Zi</Argument>
+			<Argument>/Ob0</Argument>
+			<Argument>/Od</Argument>
+			<Argument>/RTC1</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\commonTools\WinInterface\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\teuchos\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src</Argument>
+			<Argument>-D_CRT_SECURE_NO_DEPRECATE</Argument>
+			<Argument>-D_CRT_NONSTDC_NO_DEPRECATE</Argument>
+			<Argument>-D_SCL_SECURE_NO_WARNINGS</Argument>
+			<Argument>-DTEUCHOS_LIB_EXPORTS_MODE</Argument>
+			<Argument>/TP</Argument>
+			<Argument>/FoCMakeFiles\teuchos.dir\Teuchos_LAPACK.cpp.obj</Argument>
+			<Argument>/FdC:\K\SERIAL_DEBUG_DEV\BUILD\packages\teuchos\src\teuchos.pdb</Argument>
+			<Argument>-c</Argument>
+			<Argument>C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src\Teuchos_LAPACK.cpp</Argument>
+		</Command>
+
+		<!-- Result of command -->
+		<Result>
+			<StdOut>Teuchos_LAPACK.cpp
+c:\k\serial_debug_dev\trilinos\packages\teuchos\src\Teuchos_LAPACK_wrappers.hpp(854) : warning C4190: 'clarnd_' has C-linkage specified, but returns UDT 'std::complex&lt;float&gt;' which is incompatible with C
+        C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\INCLUDE\complex(537) : see declaration of 'std::complex&lt;float&gt;'
+c:\k\serial_debug_dev\trilinos\packages\teuchos\src\Teuchos_LAPACK_wrappers.hpp(855) : warning C4190: 'zlarnd_' has C-linkage specified, but returns UDT 'std::complex&lt;double&gt;' which is incompatible with C
+        C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\INCLUDE\complex(668) : see declaration of 'std::complex&lt;double&gt;'
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src\Teuchos_LAPACK.cpp(341) : warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data</StdOut>
+			<StdErr></StdErr>
+			<ExitCondition>0</ExitCondition>
+		</Result>
+
+		<!-- Interested parties -->
+		<Labels>
+			<Label>Teuchos</Label>
+		</Labels>
+	</Failure>
+	<Failure type="Error">
+		<!-- Meta-information about the build action -->
+		<Action>
+			<TargetName>teuchos</TargetName>
+			<Language>C++</Language>
+			<SourceFile>packages/teuchos/src/Teuchos_PerformanceMonitorBase.cpp</SourceFile>
+			<OutputFile>CMakeFiles\teuchos.dir\Teuchos_PerformanceMonitorBase.cpp.obj</OutputFile>
+			<OutputType>object file</OutputType>
+		</Action>
+
+		<!-- Details of command -->
+		<Command>
+			<WorkingDirectory>C:/K/SERIAL_DEBUG_DEV/BUILD/packages/teuchos/src</WorkingDirectory>
+			<Argument>C:\PROGRA~2\MICROS~2.0\VC\bin\cl.exe</Argument>
+			<Argument>/nologo</Argument>
+			<Argument>/DWIN32</Argument>
+			<Argument>/D_WINDOWS</Argument>
+			<Argument>/W3</Argument>
+			<Argument>/Zm1000</Argument>
+			<Argument>/EHsc</Argument>
+			<Argument>/GR</Argument>
+			<Argument>/D_DEBUG</Argument>
+			<Argument>/MDd</Argument>
+			<Argument>/Zi</Argument>
+			<Argument>/Ob0</Argument>
+			<Argument>/Od</Argument>
+			<Argument>/RTC1</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\commonTools\WinInterface\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\teuchos\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src</Argument>
+			<Argument>-D_CRT_SECURE_NO_DEPRECATE</Argument>
+			<Argument>-D_CRT_NONSTDC_NO_DEPRECATE</Argument>
+			<Argument>-D_SCL_SECURE_NO_WARNINGS</Argument>
+			<Argument>-DTEUCHOS_LIB_EXPORTS_MODE</Argument>
+			<Argument>/TP</Argument>
+			<Argument>/FoCMakeFiles\teuchos.dir\Teuchos_PerformanceMonitorBase.cpp.obj</Argument>
+			<Argument>/FdC:\K\SERIAL_DEBUG_DEV\BUILD\packages\teuchos\src\teuchos.pdb</Argument>
+			<Argument>-c</Argument>
+			<Argument>C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src\Teuchos_PerformanceMonitorBase.cpp</Argument>
+		</Command>
+
+		<!-- Result of command -->
+		<Result>
+			<StdOut>Teuchos_PerformanceMonitorBase.cpp
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src\Teuchos_PerformanceMonitorBase.cpp(367) : error C2039: 'back_inserter' : is not a member of 'std'
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src\Teuchos_PerformanceMonitorBase.cpp(367) : error C3861: 'back_inserter': identifier not found
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src\Teuchos_PerformanceMonitorBase.cpp(371) : error C2039: 'back_inserter' : is not a member of 'std'
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src\Teuchos_PerformanceMonitorBase.cpp(371) : error C3861: 'back_inserter': identifier not found
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src\Teuchos_PerformanceMonitorBase.cpp(437) : error C2039: 'back_inserter' : is not a member of 'std'
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src\Teuchos_PerformanceMonitorBase.cpp(437) : error C3861: 'back_inserter': identifier not found</StdOut>
+			<StdErr></StdErr>
+			<ExitCondition>2</ExitCondition>
+		</Result>
+
+		<!-- Interested parties -->
+		<Labels>
+			<Label>Teuchos</Label>
+		</Labels>
+	</Failure>
+	<Failure type="Error">
+		<!-- Meta-information about the build action -->
+		<Action>
+			<TargetName>teuchos</TargetName>
+			<Language>C++</Language>
+			<SourceFile>packages/teuchos/src/Teuchos_TimeMonitor.cpp</SourceFile>
+			<OutputFile>CMakeFiles\teuchos.dir\Teuchos_TimeMonitor.cpp.obj</OutputFile>
+			<OutputType>object file</OutputType>
+		</Action>
+
+		<!-- Details of command -->
+		<Command>
+			<WorkingDirectory>C:/K/SERIAL_DEBUG_DEV/BUILD/packages/teuchos/src</WorkingDirectory>
+			<Argument>C:\PROGRA~2\MICROS~2.0\VC\bin\cl.exe</Argument>
+			<Argument>/nologo</Argument>
+			<Argument>/DWIN32</Argument>
+			<Argument>/D_WINDOWS</Argument>
+			<Argument>/W3</Argument>
+			<Argument>/Zm1000</Argument>
+			<Argument>/EHsc</Argument>
+			<Argument>/GR</Argument>
+			<Argument>/D_DEBUG</Argument>
+			<Argument>/MDd</Argument>
+			<Argument>/Zi</Argument>
+			<Argument>/Ob0</Argument>
+			<Argument>/Od</Argument>
+			<Argument>/RTC1</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\commonTools\WinInterface\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\teuchos\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src</Argument>
+			<Argument>-D_CRT_SECURE_NO_DEPRECATE</Argument>
+			<Argument>-D_CRT_NONSTDC_NO_DEPRECATE</Argument>
+			<Argument>-D_SCL_SECURE_NO_WARNINGS</Argument>
+			<Argument>-DTEUCHOS_LIB_EXPORTS_MODE</Argument>
+			<Argument>/TP</Argument>
+			<Argument>/FoCMakeFiles\teuchos.dir\Teuchos_TimeMonitor.cpp.obj</Argument>
+			<Argument>/FdC:\K\SERIAL_DEBUG_DEV\BUILD\packages\teuchos\src\teuchos.pdb</Argument>
+			<Argument>-c</Argument>
+			<Argument>C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src\Teuchos_TimeMonitor.cpp</Argument>
+		</Command>
+
+		<!-- Result of command -->
+		<Result>
+			<StdOut>Teuchos_TimeMonitor.cpp
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src\Teuchos_TimeMonitor.cpp(457) : error C2039: 'back_inserter' : is not a member of 'std'
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src\Teuchos_TimeMonitor.cpp(457) : error C3861: 'back_inserter': identifier not found
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src\Teuchos_TimeMonitor.cpp(461) : error C2039: 'back_inserter' : is not a member of 'std'
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src\Teuchos_TimeMonitor.cpp(461) : error C3861: 'back_inserter': identifier not found</StdOut>
+			<StdErr></StdErr>
+			<ExitCondition>2</ExitCondition>
+		</Result>
+
+		<!-- Interested parties -->
+		<Labels>
+			<Label>Teuchos</Label>
+		</Labels>
+	</Failure>
+	<Failure type="Warning">
+		<!-- Meta-information about the build action -->
+		<Action>
+			<TargetName>teuchos</TargetName>
+			<Language>C++</Language>
+			<SourceFile>packages/teuchos/src/Teuchos_DependencyXMLConverterDB.cpp</SourceFile>
+			<OutputFile>CMakeFiles\teuchos.dir\Teuchos_DependencyXMLConverterDB.cpp.obj</OutputFile>
+			<OutputType>object file</OutputType>
+		</Action>
+
+		<!-- Details of command -->
+		<Command>
+			<WorkingDirectory>C:/K/SERIAL_DEBUG_DEV/BUILD/packages/teuchos/src</WorkingDirectory>
+			<Argument>C:\PROGRA~2\MICROS~2.0\VC\bin\cl.exe</Argument>
+			<Argument>/nologo</Argument>
+			<Argument>/DWIN32</Argument>
+			<Argument>/D_WINDOWS</Argument>
+			<Argument>/W3</Argument>
+			<Argument>/Zm1000</Argument>
+			<Argument>/EHsc</Argument>
+			<Argument>/GR</Argument>
+			<Argument>/D_DEBUG</Argument>
+			<Argument>/MDd</Argument>
+			<Argument>/Zi</Argument>
+			<Argument>/Ob0</Argument>
+			<Argument>/Od</Argument>
+			<Argument>/RTC1</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\commonTools\WinInterface\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\teuchos\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src</Argument>
+			<Argument>-D_CRT_SECURE_NO_DEPRECATE</Argument>
+			<Argument>-D_CRT_NONSTDC_NO_DEPRECATE</Argument>
+			<Argument>-D_SCL_SECURE_NO_WARNINGS</Argument>
+			<Argument>-DTEUCHOS_LIB_EXPORTS_MODE</Argument>
+			<Argument>/TP</Argument>
+			<Argument>/FoCMakeFiles\teuchos.dir\Teuchos_DependencyXMLConverterDB.cpp.obj</Argument>
+			<Argument>/FdC:\K\SERIAL_DEBUG_DEV\BUILD\packages\teuchos\src\teuchos.pdb</Argument>
+			<Argument>-c</Argument>
+			<Argument>C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src\Teuchos_DependencyXMLConverterDB.cpp</Argument>
+		</Command>
+
+		<!-- Result of command -->
+		<Result>
+			<StdOut>Teuchos_DependencyXMLConverterDB.cpp
+c:\k\serial_debug_dev\trilinos\packages\teuchos\src\Teuchos_StandardDependencyXMLConverters.hpp(898) : warning C4373: 'Teuchos::NumberArrayLengthDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency': virtual function overrides 'Teuchos::ArrayModifierDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+        with
+        [
+            DependeeType=int,
+            DependentType=std::string
+        ]
+        c:\k\serial_debug_dev\trilinos\packages\teuchos\src\Teuchos_StandardDependencyXMLConverters.hpp(824) : see declaration of 'Teuchos::ArrayModifierDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency'
+        with
+        [
+            DependeeType=int,
+            DependentType=std::string
+        ]
+        C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src\Teuchos_DependencyXMLConverterDB.cpp(137) : see reference to class template instantiation 'Teuchos::NumberArrayLengthDependencyXMLConverter&lt;DependeeType,DependentType&gt;' being compiled
+        with
+        [
+            DependeeType=int,
+            DependentType=std::string
+        ]
+c:\k\serial_debug_dev\trilinos\packages\teuchos\src\Teuchos_StandardDependencyXMLConverters.hpp(898) : warning C4373: 'Teuchos::NumberArrayLengthDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency': virtual function overrides 'Teuchos::ArrayModifierDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+        with
+        [
+            DependeeType=int,
+            DependentType=int
+        ]
+        c:\k\serial_debug_dev\trilinos\packages\teuchos\src\Teuchos_StandardDependencyXMLConverters.hpp(824) : see declaration of 'Teuchos::ArrayModifierDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency'
+        with
+        [
+            DependeeType=int,
+            DependentType=int
+        ]
+        C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src\Teuchos_DependencyXMLConverterDB.cpp(137) : see reference to class template instantiation 'Teuchos::NumberArrayLengthDependencyXMLConverter&lt;DependeeType,DependentType&gt;' being compiled
+        with
+        [
+            DependeeType=int,
+            DependentType=int
+        ]
+c:\k\serial_debug_dev\trilinos\packages\teuchos\src\Teuchos_StandardDependencyXMLConverters.hpp(898) : warning C4373: 'Teuchos::NumberArrayLengthDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency': virtual function overrides 'Teuchos::ArrayModifierDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+        with
+        [
+            DependeeType=int,
+            DependentType=double
+        ]
+        c:\k\serial_debug_dev\trilinos\packages\teuchos\src\Teuchos_StandardDependencyXMLConverters.hpp(824) : see declaration of 'Teuchos::ArrayModifierDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency'
+        with
+        [
+            DependeeType=int,
+            DependentType=double
+        ]
+        C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src\Teuchos_DependencyXMLConverterDB.cpp(137) : see reference to class template instantiation 'Teuchos::NumberArrayLengthDependencyXMLConverter&lt;DependeeType,DependentType&gt;' being compiled
+        with
+        [
+            DependeeType=int,
+            DependentType=double
+        ]
+c:\k\serial_debug_dev\trilinos\packages\teuchos\src\Teuchos_StandardDependencyXMLConverters.hpp(898) : warning C4373: 'Teuchos::NumberArrayLengthDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency': virtual function overrides 'Teuchos::ArrayModifierDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+        with
+        [
+            DependeeType=int,
+            DependentType=float
+        ]
+        c:\k\serial_debug_dev\trilinos\packages\teuchos\src\Teuchos_StandardDependencyXMLConverters.hpp(824) : see declaration of 'Teuchos::ArrayModifierDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency'
+        with
+        [
+            DependeeType=int,
+            DependentType=float
+        ]
+        C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src\Teuchos_DependencyXMLConverterDB.cpp(137) : see reference to class template instantiation 'Teuchos::NumberArrayLengthDependencyXMLConverter&lt;DependeeType,DependentType&gt;' being compiled
+        with
+        [
+            DependeeType=int,
+            DependentType=float
+        ]
+c:\k\serial_debug_dev\trilinos\packages\teuchos\src\Teuchos_StandardDependencyXMLConverters.hpp(945) : warning C4373: 'Teuchos::TwoDRowDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency': virtual function overrides 'Teuchos::ArrayModifierDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+        with
+        [
+            DependeeType=int,
+            DependentType=std::string
+        ]
+        c:\k\serial_debug_dev\trilinos\packages\teuchos\src\Teuchos_StandardDependencyXMLConverters.hpp(824) : see declaration of 'Teuchos::ArrayModifierDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency'
+        with
+        [
+            DependeeType=int,
+            DependentType=std::string
+        ]
+        C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src\Teuchos_DependencyXMLConverterDB.cpp(137) : see reference to class template instantiation 'Teuchos::TwoDRowDependencyXMLConverter&lt;DependeeType,DependentType&gt;' being compiled
+        with
+        [
+            DependeeType=int,
+            DependentType=std::string
+        ]
+c:\k\serial_debug_dev\trilinos\packages\teuchos\src\Teuchos_StandardDependencyXMLConverters.hpp(945) : warning C4373: 'Teuchos::TwoDRowDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency': virtual function overrides 'Teuchos::ArrayModifierDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+        with
+        [
+            DependeeType=int,
+            DependentType=int
+        ]
+        c:\k\serial_debug_dev\trilinos\packages\teuchos\src\Teuchos_StandardDependencyXMLConverters.hpp(824) : see declaration of 'Teuchos::ArrayModifierDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency'
+        with
+        [
+            DependeeType=int,
+            DependentType=int
+        ]
+        C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src\Teuchos_DependencyXMLConverterDB.cpp(137) : see reference to class template instantiation 'Teuchos::TwoDRowDependencyXMLConverter&lt;DependeeType,DependentType&gt;' being compiled
+        with
+        [
+            DependeeType=int,
+            DependentType=int
+        ]
+c:\k\serial_debug_dev\trilinos\packages\teuchos\src\Teuchos_StandardDependencyXMLConverters.hpp(945) : warning C4373: 'Teuchos::TwoDRowDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency': virtual function overrides 'Teuchos::ArrayModifierDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+        with
+        [
+            DependeeType=int,
+            DependentType=double
+        ]
+        c:\k\serial_debug_dev\trilinos\packages\teuchos\src\Teuchos_StandardDependencyXMLConverters.hpp(824) : see declaration of 'Teuchos::ArrayModifierDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency'
+        with
+        [
+            DependeeType=int,
+            DependentType=double
+        ]
+        C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src\Teuchos_DependencyXMLConverterDB.cpp(137) : see reference to class template instantiation 'Teuchos::TwoDRowDependencyXMLConverter&lt;DependeeType,DependentType&gt;' being compiled
+        with
+        [
+            DependeeType=int,
+            DependentType=double
+        ]
+c:\k\serial_debug_dev\trilinos\packages\teuchos\src\Teuchos_StandardDependencyXMLConverters.hpp(945) : warning C4373: 'Teuchos::TwoDRowDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency': virtual function overrides 'Teuchos::ArrayModifierDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+        with
+        [
+            DependeeType=int,
+            DependentType=float
+        ]
+        c:\k\serial_debug_dev\trilinos\packages\teuchos\src\Teuchos_StandardDependencyXMLConverters.hpp(824) : see declaration of 'Teuchos::ArrayModifierDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency'
+        with
+        [
+            DependeeType=int,
+            DependentType=float
+        ]
+        C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src\Teuchos_DependencyXMLConverterDB.cpp(137) : see reference to class template instantiation 'Teuchos::TwoDRowDependencyXMLConverter&lt;DependeeType,DependentType&gt;' being compiled
+        with
+        [
+            DependeeType=int,
+            DependentType=float
+        ]
+c:\k\serial_debug_dev\trilinos\packages\teuchos\src\Teuchos_StandardDependencyXMLConverters.hpp(991) : warning C4373: 'Teuchos::TwoDColDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency': virtual function overrides 'Teuchos::ArrayModifierDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+        with
+        [
+            DependeeType=int,
+            DependentType=std::string
+        ]
+        c:\k\serial_debug_dev\trilinos\packages\teuchos\src\Teuchos_StandardDependencyXMLConverters.hpp(824) : see declaration of 'Teuchos::ArrayModifierDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency'
+        with
+        [
+            DependeeType=int,
+            DependentType=std::string
+        ]
+        C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src\Teuchos_DependencyXMLConverterDB.cpp(137) : see reference to class template instantiation 'Teuchos::TwoDColDependencyXMLConverter&lt;DependeeType,DependentType&gt;' being compiled
+        with
+        [
+            DependeeType=int,
+            DependentType=std::string
+        ]
+c:\k\serial_debug_dev\trilinos\packages\teuchos\src\Teuchos_StandardDependencyXMLConverters.hpp(991) : warning C4373: 'Teuchos::TwoDColDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency': virtual function overrides 'Teuchos::ArrayModifierDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+        with
+        [
+            DependeeType=int,
+            DependentType=int
+        ]
+        c:\k\serial_debug_dev\trilinos\packages\teuchos\src\Teuchos_StandardDependencyXMLConverters.hpp(824) : see declaration of 'Teuchos::ArrayModifierDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency'
+        with
+        [
+            DependeeType=int,
+            DependentType=int
+        ]
+        C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src\Teuchos_DependencyXMLConverterDB.cpp(137) : see reference to class template instantiation 'Teuchos::TwoDColDependencyXMLConverter&lt;DependeeType,DependentType&gt;' being compiled
+        with
+        [
+            DependeeType=int,
+            DependentType=int
+        ]
+c:\k\serial_debug_dev\trilinos\packages\teuchos\src\Teuchos_StandardDependencyXMLConverters.hpp(991) : warning C4373: 'Teuchos::TwoDColDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency': virtual function overrides 'Teuchos::ArrayModifierDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+        with
+        [
+            DependeeType=int,
+            DependentType=double
+        ]
+        c:\k\serial_debug_dev\trilinos\packages\teuchos\src\Teuchos_StandardDependencyXMLConverters.hpp(824) : see declaration of 'Teuchos::ArrayModifierDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency'
+        with
+        [
+            DependeeType=int,
+            DependentType=double
+        ]
+        C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src\Teuchos_DependencyXMLConverterDB.cpp(137) : see reference to class template instantiation 'Teuchos::TwoDColDependencyXMLConverter&lt;DependeeType,DependentType&gt;' being compiled
+        with
+        [
+            DependeeType=int,
+            DependentType=double
+        ]
+c:\k\serial_debug_dev\trilinos\packages\teuchos\src\Teuchos_StandardDependencyXMLConverters.hpp(991) : warning C4373: 'Teuchos::TwoDColDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency': virtual function overrides 'Teuchos::ArrayModifierDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency', previous versions of the compiler did not override when parameters only differed by const/volatile qualifiers
+        with
+        [
+            DependeeType=int,
+            DependentType=float
+        ]
+        c:\k\serial_debug_dev\trilinos\packages\teuchos\src\Teuchos_StandardDependencyXMLConverters.hpp(824) : see declaration of 'Teuchos::ArrayModifierDependencyXMLConverter&lt;DependeeType,DependentType&gt;::getConcreteDependency'
+        with
+        [
+            DependeeType=int,
+            DependentType=float
+        ]
+        C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src\Teuchos_DependencyXMLConverterDB.cpp(137) : see reference to class template instantiation 'Teuchos::TwoDColDependencyXMLConverter&lt;DependeeType,DependentType&gt;' being compiled
+        with
+        [
+            DependeeType=int,
+            DependentType=float
+        ]</StdOut>
+			<StdErr></StdErr>
+			<ExitCondition>0</ExitCondition>
+		</Result>
+
+		<!-- Interested parties -->
+		<Labels>
+			<Label>Teuchos</Label>
+		</Labels>
+	</Failure>
+	<Failure type="Warning">
+		<!-- Meta-information about the build action -->
+		<Action>
+			<TargetName>teuchos</TargetName>
+			<Language>C++</Language>
+			<SourceFile>packages/teuchos/src/Teuchos_FileInputStream.cpp</SourceFile>
+			<OutputFile>CMakeFiles\teuchos.dir\Teuchos_FileInputStream.cpp.obj</OutputFile>
+			<OutputType>object file</OutputType>
+		</Action>
+
+		<!-- Details of command -->
+		<Command>
+			<WorkingDirectory>C:/K/SERIAL_DEBUG_DEV/BUILD/packages/teuchos/src</WorkingDirectory>
+			<Argument>C:\PROGRA~2\MICROS~2.0\VC\bin\cl.exe</Argument>
+			<Argument>/nologo</Argument>
+			<Argument>/DWIN32</Argument>
+			<Argument>/D_WINDOWS</Argument>
+			<Argument>/W3</Argument>
+			<Argument>/Zm1000</Argument>
+			<Argument>/EHsc</Argument>
+			<Argument>/GR</Argument>
+			<Argument>/D_DEBUG</Argument>
+			<Argument>/MDd</Argument>
+			<Argument>/Zi</Argument>
+			<Argument>/Ob0</Argument>
+			<Argument>/Od</Argument>
+			<Argument>/RTC1</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\commonTools\WinInterface\include</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\BUILD\packages\teuchos\src</Argument>
+			<Argument>-IC:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src</Argument>
+			<Argument>-D_CRT_SECURE_NO_DEPRECATE</Argument>
+			<Argument>-D_CRT_NONSTDC_NO_DEPRECATE</Argument>
+			<Argument>-D_SCL_SECURE_NO_WARNINGS</Argument>
+			<Argument>-DTEUCHOS_LIB_EXPORTS_MODE</Argument>
+			<Argument>/TP</Argument>
+			<Argument>/FoCMakeFiles\teuchos.dir\Teuchos_FileInputStream.cpp.obj</Argument>
+			<Argument>/FdC:\K\SERIAL_DEBUG_DEV\BUILD\packages\teuchos\src\teuchos.pdb</Argument>
+			<Argument>-c</Argument>
+			<Argument>C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src\Teuchos_FileInputStream.cpp</Argument>
+		</Command>
+
+		<!-- Result of command -->
+		<Result>
+			<StdOut>Teuchos_FileInputStream.cpp
+C:\K\SERIAL_DEBUG_DEV\Trilinos\packages\teuchos\src\Teuchos_FileInputStream.cpp(77) : warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)</StdOut>
+			<StdErr></StdErr>
+			<ExitCondition>0</ExitCondition>
+		</Result>
+
+		<!-- Interested parties -->
+		<Labels>
+			<Label>Teuchos</Label>
+		</Labels>
+	</Failure>
+	<Failure type="Error">
+		<!-- Meta-information about the build action -->
+		<Action>
+			<TargetName>teuchos</TargetName>
+			<Language>C++</Language>
+			<OutputFile>teuchos.lib</OutputFile>
+			<OutputType>static library</OutputType>
+		</Action>
+
+		<!-- Details of command -->
+		<Command>
+			<WorkingDirectory>C:/K/SERIAL_DEBUG_DEV/BUILD/packages/teuchos/src</WorkingDirectory>
+			<Argument>C:\PROGRA~2\MICROS~2.0\VC\bin\link.exe</Argument>
+			<Argument>/lib</Argument>
+			<Argument>/nologo</Argument>
+			<Argument>/out:teuchos.lib</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_BLAS.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_CTimeMonitor.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_CommandLineProcessor.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_CompObject.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_Describable.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_Dependency.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_DependencySheet.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_ErrorPolling.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_Flops.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_GlobalMPISession.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_LAPACK.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_LabeledObject.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_MPIComm.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_MPISession.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_Object.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_ParameterEntry.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_ParameterList.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_ParameterListAcceptorHelpers.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_ParameterListAcceptor.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_ParameterListAcceptorDefaultBase.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_ParameterListNonAcceptor.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_PerformanceMonitorBase.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_PerformanceMonitorUtils.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_Ptr.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_RCPNode.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_Range1D.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_ScalarTraits.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_StandardConditions.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_StandardDependencies.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_StandardParameterEntryValidators.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_StringToIntMap.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_TableColumn.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_TableEntry.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_TableFormat.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_TabularOutputter.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_TestForException.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_TestingHelpers.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_Time.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_TimeMonitor.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_TypeNameTraits.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_UnitTestBase.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_UnitTestRepository.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_Utils.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_ValidatorFactory.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_VerboseObject.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_VerboseObjectParameterListHelpers.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_VerbosityLevel.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_VerbosityLevelCommandLineProcessorHelpers.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_Workspace.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_dyn_cast.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_stacktrace.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_ConditionXMLConverter.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_ConditionXMLConverterDB.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_DependencyXMLConverter.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_DependencyXMLConverterDB.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_ExpatHandlerAdapter.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_FileInputSource.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_FileInputStream.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_FunctionObjectXMLConverter.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_FunctionObjectXMLConverterDB.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_HashUtils.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_Libxml2HandlerAdapter.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_ParameterXMLFileReader.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_ParameterEntryXMLConverter.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_ParameterEntryXMLConverterDB.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_StandardDependencyXMLConverters.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_StandardParameterEntryXMLConverters.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_StandardValidatorXMLConverters.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_StandardConditionXMLConverters.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_StrUtils.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_StringInputSource.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_StringInputStream.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_TreeBuildingXMLHandler.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_ValidatorMaps.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_ValidatorXMLConverter.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_ValidatorXMLConverterDB.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_XMLInputSource.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_XMLInputStream.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_XMLObject.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_XMLObjectImplem.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_XMLParameterListHelpers.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_XMLParameterListReader.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_XMLParameterListWriter.cpp.obj</Argument>
+			<Argument>CMakeFiles/teuchos.dir/Teuchos_XMLParser.cpp.obj</Argument>
+		</Command>
+
+		<!-- Result of command -->
+		<Result>
+			<StdOut>LINK : fatal error LNK1181: cannot open input file 'CMakeFiles/teuchos.dir/Teuchos_PerformanceMonitorBase.cpp.obj'</StdOut>
+			<StdErr></StdErr>
+			<ExitCondition>1181</ExitCondition>
+		</Result>
+
+		<!-- Interested parties -->
+		<Labels>
+			<Label>Teuchos</Label>
+		</Labels>
+	</Failure>
+	<Log Encoding="base64" Compression="/bin/gzip">
+	</Log>
+	<EndDateTime>Jul 22 11:18 Eastern Daylight Time</EndDateTime>
+	<EndBuildTime>1311347909</EndBuildTime>
+<ElapsedMinutes>1.4</ElapsedMinutes></Build>
+</Site>

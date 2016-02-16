@@ -782,19 +782,20 @@ function post_github_pull_request_comment($projectid, $pull_request, $comment, $
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_USERAGENT, 'Googlebot/2.1 (+http://www.google.com/bot.html)');
 
+    global $CDASH_TESTING_MODE;
     $retval = curl_exec($ch);
     if ($retval === false) {
         add_log(
       "cURL error: ". curl_error($ch),
       "post_github_pull_request_comment",
       LOG_ERR, $projectid);
-    } else {
+    } elseif ($CDASH_TESTING_MODE) {
         $matches = array();
         preg_match("#/comments/(\d+)#", $retval, $matches);
         add_log(
       "Just posted comment #" . $matches[1],
       "post_github_pull_request_comment",
-      LOG_TESTING, $projectid);
+      LOG_DEBUG, $projectid);
     }
 
     curl_close($ch);

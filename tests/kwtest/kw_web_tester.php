@@ -15,10 +15,11 @@ require_once('tests/kwtest/simpletest/web_tester.php');
  */
 class KWWebTestCase extends WebTestCase
 {
-    public $url           = null;
-    public $db            = null;
-    public $logfilename   = null;
-    public $cdashpro   = null;
+    public $url            = null;
+    public $db             = null;
+    public $logfilename    = null;
+    public $configfilename = null;
+    public $cdashpro       = null;
 
     public function __construct()
     {
@@ -39,8 +40,9 @@ class KWWebTestCase extends WebTestCase
         $this->db->setUser($db['login']);
         $this->db->setPassword($db['pwd']);
 
-        global $cdashpath;
-        $this->logfilename = $cdashpath."/backup/cdash.log";
+        global $CDASH_LOG_FILE, $cdashpath;
+        $this->logfilename = $CDASH_LOG_FILE;
+        $this->configfilename = $cdashpath."/config/config.local.php";
     }
 
     public function startCodeCoverage()
@@ -103,8 +105,8 @@ class KWWebTestCase extends WebTestCase
           if ($CDASH_TESTING_RENAME_LOGS) {
               // Rename to a random name to keep for later inspection:
         //
-        global $CDASH_LOG_FILE;
-              rename($filename, $CDASH_LOG_FILE . "." . mt_rand() . ".txt");
+              global $CDASH_LOG_DIRECTORY;
+              rename($filename, $CDASH_LOG_DIRECTORY . '/cdash.' . microtime(true) . '.' . bin2hex(random_bytes(2)) . '.log');
           } else {
               // Delete file:
         cdash_testsuite_unlink($filename);
@@ -158,10 +160,10 @@ class KWWebTestCase extends WebTestCase
         }
         // if we have the tag we skip the word
         elseif ($pos2 == $it) {
-            while (($it < strlen($templateLog)) && ($templateLog[$it] != ' ') && ($templateLog[$it] != '/') && ($templateLog[$it] != ']')) {
+            while (($it < strlen($templateLog)) && ($templateLog[$it] != ' ') && ($templateLog[$it] != '/') && ($templateLog[$it] != ']')  && ($templateLog[$it] != '}') && ($templateLog[$it] != '"') && ($templateLog[$it] != '&')) {
                 $it++;
             }
-            while (($il < strlen($log)) && ($log[$il] != ' ') && ($log[$il] != '/') && ($log[$il] != ']')) {
+            while (($il < strlen($log)) && ($log[$il] != ' ') && ($log[$il] != '/') && ($log[$il] != ']') && ($log[$il] != '}') && ($log[$il] != '"') && ($log[$il] != '&')) {
                 $il++;
             }
             continue;
@@ -292,4 +294,37 @@ class KWWebTestCase extends WebTestCase
       $this->clickSubmitByName('Submit');
       return $this->clickLink('Back');
   }
+
+    public function addLineToConfig($line_to_add)
+    {
+        $contents = file_get_contents($this->configfilename);
+        $handle = fopen($this->configfilename, "w");
+        $lines = explode("\n", $contents);
+        foreach ($lines as $line) {
+            if (strpos($line, "?>") !== false) {
+                fwrite($handle, "$line_to_add\n");
+            }
+            if ($line != '') {
+                fwrite($handle, "$line\n");
+            }
+        }
+        fclose($handle);
+        unset($handle);
+        $this->pass("Passed");
+    }
+
+    public function removeLineFromConfig($line_to_remove)
+    {
+        $contents = file_get_contents($this->configfilename);
+        $handle = fopen($this->configfilename, "w");
+        $lines = explode("\n", $contents);
+        foreach ($lines as $line) {
+            if (strpos($line, $line_to_remove) !== false) {
+                continue;
+            } elseif ($line != '') {
+                fwrite($handle, "$line\n");
+            }
+        }
+        fclose($handle);
+    }
 }
