@@ -15,8 +15,16 @@ CDash.controller('ViewTestController',
     // Check for filters
     $rootScope.queryString['filterstring'] = filters.getString();
 
-    // Default sorting : failed tests in alphabetical order.
-    $scope.orderByFields = ['status', 'name'];
+    // Check for sort order cookie.
+    var sort_order = [];
+    var sort_cookie_value = $.cookie('cdash_view_test_sort');
+    if(sort_cookie_value) {
+      sort_order = sort_cookie_value.split(",");
+    } else {
+      // Default sorting : failed tests in alphabetical order.
+      sort_order = ['status', 'name'];
+    }
+    $scope.orderByFields = sort_order;
 
     $http({
       url: 'api/v1/viewTest.php',
@@ -116,5 +124,6 @@ CDash.controller('ViewTestController',
       multisort.updateOrderByFields($scope, field, $event);
       $scope.cdash.tests = $filter('orderBy')($scope.cdash.tests, $scope.orderByFields);
       $scope.pageChanged();
+      $.cookie('cdash_view_test_sort', $scope.orderByFields);
     };
 });
