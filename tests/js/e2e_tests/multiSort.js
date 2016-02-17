@@ -1,5 +1,5 @@
 describe("multiSort", function() {
-  
+
   function check_build_order(first_value, second_value, third_value) {
     // Filter out the table cells that aren't currently displayed.
     var visible_tds_row0 = element(by.repeater('build in buildgroup.pagination.filteredBuilds').row(0)).all(by.tagName('td')).filter(function(elem) { return elem.isDisplayed(); });
@@ -9,6 +9,9 @@ describe("multiSort", function() {
     expect(visible_tds_row0.get(0).getText()).toBe(first_value);
     expect(visible_tds_row1.get(0).getText()).toBe(second_value);
     expect(visible_tds_row2.get(0).getText()).toBe(third_value);
+
+    // Delete the cookie.
+    browser.manage().deleteAllCookies();
   }
 
   it("sort by label column", function() {
