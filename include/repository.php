@@ -1,19 +1,17 @@
 <?php
 /*=========================================================================
-
   Program:   CDash - Cross-Platform Dashboard System
-  Module:    $Id: repository.php 3381 2013-10-29 08:39:13Z jjomier $
+  Module:    $Id$
   Language:  PHP
-  Date:      $Date: 2013-10-29 08:39:13 +0000 (Tue, 29 Oct 2013) $
-  Version:   $Revision: 3381 $
+  Date:      $Date$
+  Version:   $Revision$
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE.  See the above copyright notices for more information.
-
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
 require_once("config/config.php");

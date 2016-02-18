@@ -1,20 +1,18 @@
 <?php
 /*=========================================================================
-
   Program:   CDash - Cross-Platform Dashboard System
-  Module:    $Id: buildOverview.php 1161 2008-09-19 14:56:14Z jjomier $
+  Module:    $Id$
   Language:  PHP
-  Date:      $Date: 2007-10-16 11:23:29 -0400 (Tue, 16 Oct 2007) $
-  Version:   $Revision: 12 $
+  Date:      $Date$
+  Version:   $Revision$
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
 
   This software is distributed WITHOUT ANY WARRANTY; without even
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-  PURPOSE.  See the above copyright notices for more information.
-
-  =========================================================================*/
+  PURPOSE. See the above copyright notices for more information.
+=========================================================================*/
 
 include(dirname(__DIR__)."/config/config.php");
 require_once("include/pdo.php");

@@ -1,19 +1,17 @@
 <?php
 /*=========================================================================
-
   Program:   CDash - Cross-Platform Dashboard System
-  Module:    $Id: index.php 1895 2009-05-15 04:21:03Z jjomier $
+  Module:    $Id$
   Language:  PHP
-  Date:      $Date: 2009-05-15 00:21:03 -0400 (Fri, 15 May 2009) $
-  Version:   $Revision: 1895 $
+  Date:      $Date$
+  Version:   $Revision$
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE.  See the above copyright notices for more information.
-
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
 $NoXSLGenerate = 1;
