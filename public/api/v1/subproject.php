@@ -297,6 +297,3 @@ function echo_error($msg)
     $response['error'] = $msg;
     echo json_encode($response);
 }
-
-
-?>

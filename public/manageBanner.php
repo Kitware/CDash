@@ -128,5 +128,4 @@ if ($projectid>=0) {
 
 // Now doing the xslt transition
 generate_XSLT($xml, "manageBanner");
-} // end session OK
-?>
+} // end session OK;

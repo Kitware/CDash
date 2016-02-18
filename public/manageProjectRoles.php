@@ -468,5 +468,4 @@ if (isset($CDASH_FULL_EMAIL_WHEN_ADDING_USER) && $CDASH_FULL_EMAIL_WHEN_ADDING_U
 
 // Now doing the xslt transition
 generate_XSLT($xml, "manageProjectRoles");
-} // end session
-?>
+} // end session;

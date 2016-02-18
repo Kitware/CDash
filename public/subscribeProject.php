@@ -296,6 +296,4 @@ if ($session_OK) {
 
   // Now doing the xslt transition
   generate_XSLT($xml, "subscribeProject");
-} // end session OK
-
-?>
+} // end session OK;

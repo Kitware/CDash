@@ -113,5 +113,4 @@ if ($session_OK) {
 
 // Now doing the xslt transition
 generate_XSLT($xml, "manageUsers");
-} // end session
-?>
+} // end session;

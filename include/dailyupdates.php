@@ -1031,4 +1031,3 @@ function addDailyChanges($projectid)
         removeBuildsGroupwise($projectid, $project_array["autoremovemaxbuilds"]);
     }
 }
-?>

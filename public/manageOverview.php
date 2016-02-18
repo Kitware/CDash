@@ -140,5 +140,4 @@ $query =
 
 // Now doing the xslt transition
 generate_XSLT($xml, "manageOverview");
-} // end session OK
-?>
+} // end session OK;
