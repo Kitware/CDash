@@ -15,6 +15,7 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
+
 interface SaxHandler
 {
     public function startElement($parser, $name, $attributes);

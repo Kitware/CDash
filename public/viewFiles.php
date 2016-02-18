@@ -11,6 +11,7 @@
  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  PURPOSE.  See the above copyright notices for more information.
  =========================================================================*/
+
 $noforcelogin = 1;
 
 include(dirname(__DIR__)."/config/config.php");

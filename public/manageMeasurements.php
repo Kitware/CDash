@@ -14,6 +14,7 @@
      PURPOSE.  See the above copyright notices for more information.
   Copyright (c) 2012 Volkan Gezer <volkangezer@gmail.com>
 =========================================================================*/
+
 include(dirname(__DIR__)."/config/config.php");
 require_once("include/pdo.php");
 include('public/login.php');

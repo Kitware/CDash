@@ -15,6 +15,7 @@
   PURPOSE.  See the above copyright notices for more information.
 
   =========================================================================*/
+
 include_once('models/buildconfigureerror.php');
 include_once('models/buildconfigureerrordiff.php');
 

@@ -15,6 +15,7 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
+
 require_once("include/common.php");
 
 function get_bugid_and_pos_from_log($log)

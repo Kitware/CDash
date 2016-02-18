@@ -15,6 +15,7 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
+
 /** WARNING: JUST ADD TO THIS TABLE. NEVER MODIFY THE ENUMS */
 define("CDASH_JOB_SCHEDULED", "0");
 define("CDASH_JOB_RUNNING", "2");

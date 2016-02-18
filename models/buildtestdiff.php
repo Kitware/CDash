@@ -15,6 +15,7 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
+
 /** Build Test Diff */
 class buildtestdiff
 {

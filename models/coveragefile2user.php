@@ -15,6 +15,7 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
+
 /** Coverage file to users */
 class coveragefile2user
 {

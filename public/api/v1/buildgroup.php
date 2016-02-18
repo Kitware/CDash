@@ -15,6 +15,7 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
+
 $noforcelogin = 1;
 include(dirname(dirname(dirname(__DIR__)))."/config/config.php");
 require_once('include/pdo.php');

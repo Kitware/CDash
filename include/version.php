@@ -15,6 +15,7 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
+
 // Current version
 $CDASH_VERSION_MAJOR = '2';
 $CDASH_VERSION_MINOR = '3';

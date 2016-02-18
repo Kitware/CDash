@@ -15,6 +15,7 @@
   PURPOSE.  See the above copyright notices for more information.
 
   =========================================================================*/
+
 /** This class shouldn't be used externally */
 class coveragefile
 {
