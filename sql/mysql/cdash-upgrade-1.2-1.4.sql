@@ -85,27 +85,27 @@ DROP TABLE IF EXISTS `label2coverage`;
   --- table renamed label2coveragefile
 
 
--- 
+--
 -- Table structure for table `label2build`
--- 
+--
 CREATE TABLE IF NOT EXISTS `label2build` (
   `labelid` bigint(20) NOT NULL,
   `buildid` bigint(20) NOT NULL,
   PRIMARY KEY (`labelid`,`buildid`)
 );
 
--- 
+--
 -- Table structure for table `label2buildfailure`
--- 
+--
 CREATE TABLE IF NOT EXISTS `label2buildfailure` (
   `labelid` bigint(20) NOT NULL,
   `buildfailureid` bigint(20) NOT NULL,
   PRIMARY KEY (`labelid`,`buildfailureid`)
 );
 
--- 
+--
 -- Table structure for table `label2coveragefile`
--- 
+--
 CREATE TABLE IF NOT EXISTS `label2coveragefile` (
   `labelid` bigint(20) NOT NULL,
   `buildid` bigint(20) NOT NULL,
@@ -113,18 +113,18 @@ CREATE TABLE IF NOT EXISTS `label2coveragefile` (
   PRIMARY KEY (`labelid`,`buildid`,`coveragefileid`)
 );
 
--- 
+--
 -- Table structure for table `label2dynamicanalysis`
--- 
+--
 CREATE TABLE IF NOT EXISTS `label2dynamicanalysis` (
   `labelid` bigint(20) NOT NULL,
   `dynamicanalysisid` bigint(20) NOT NULL,
   PRIMARY KEY (`labelid`,`dynamicanalysisid`)
 );
 
--- 
+--
 -- Table structure for table `label2test`
--- 
+--
 CREATE TABLE IF NOT EXISTS `label2test` (
   `labelid` bigint(20) NOT NULL,
   `buildid` bigint(20) NOT NULL,
@@ -132,9 +132,9 @@ CREATE TABLE IF NOT EXISTS `label2test` (
   PRIMARY KEY (`labelid`,`buildid`,`testid`)
 );
 
--- 
+--
 -- Table structure for table `label2update`
--- 
+--
 CREATE TABLE IF NOT EXISTS `label2update` (
   `labelid` bigint(20) NOT NULL,
   `updateid` bigint(20) NOT NULL,
@@ -142,9 +142,9 @@ CREATE TABLE IF NOT EXISTS `label2update` (
 );
 
 
--- 
+--
 -- Table structure for table `subproject`
--- 
+--
 CREATE TABLE IF NOT EXISTS `subproject` (
   `id` bigint(20) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL,
@@ -172,4 +172,3 @@ CREATE TABLE IF NOT EXISTS `subproject2build` (
   PRIMARY KEY  (`buildid`),
   KEY `subprojectid` (`subprojectid`)
 );
-

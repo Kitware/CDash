@@ -36,7 +36,7 @@ class builderrordiff
           echo "BuildErrorDiff::Save(): Type not set<br>";
           return false;
       }
-        
+
       $query = pdo_query("SELECT count(*) AS c FROM builderrordiff WHERE buildid='".$this->BuildId."' AND type='".$this->Type."'");
       $query_array = pdo_fetch_array($query);
       if ($query_array['c']>0) {
@@ -44,7 +44,7 @@ class builderrordiff
       }
       return false;
   }
-      
+
   // Save in the database
   public function Save()
   {
@@ -62,7 +62,7 @@ class builderrordiff
           echo "BuildErrorDiff::Save(): DifferencePositive not set<br>";
           return false;
       }
-      
+
       if (!$this->DifferenceNegative || !is_numeric($this->DifferenceNegative)) {
           echo "BuildErrorDiff::Save(): DifferenceNegative not set<br>";
           return false;

@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -70,32 +70,32 @@ $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
 $project_array = pdo_fetch_array($project);
 
 list($previousdate, $currenttime, $nextdate) = get_dates($date, $project_array["nightlytime"]);
-    
+
 $nightlytime = strtotime($project_array["nightlytime"]);
-  
+
 $nightlyhour = gmdate("H", $nightlytime);
 $nightlyminute = gmdate("i", $nightlytime);
 $nightlysecond = gmdate("s", $nightlytime);
-  
+
 $end_timestamp = $currenttime-1; // minus 1 second when the nightly start time is midnight exactly
 
 $beginning_timestamp = gmmktime($nightlyhour, $nightlyminute, $nightlysecond, gmdate("m", $end_timestamp), gmdate("d", $end_timestamp), gmdate("Y", $end_timestamp));
 if ($end_timestamp<$beginning_timestamp) {
     $beginning_timestamp = gmmktime($nightlyhour, $nightlyminute, $nightlysecond, gmdate("m", $end_timestamp-24*3600), gmdate("d", $end_timestamp-24*3600), gmdate("Y", $end_timestamp-24*3600));
 }
-  
+
 $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
 $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
 
 if ($CDASH_DB_TYPE == "pgsql") {
     $site = pdo_query("SELECT s.id,s.name,si.processorclockfrequency,
                      si.description,
-                     si.numberphysicalcpus,s.ip,s.latitude,s.longitude, 
+                     si.numberphysicalcpus,s.ip,s.latitude,s.longitude,
                      ".qid('user').".firstname,".qid('user').".lastname,".qid('user').".id AS userid
                      FROM build AS b, siteinformation AS si, site as s
                      LEFT JOIN site2user ON (site2user.siteid=s.id)
                      LEFT JOIN ".qid('user')." ON (site2user.userid=".qid('user').".id)
-                     WHERE s.id=b.siteid 
+                     WHERE s.id=b.siteid
                      AND b.starttime<'$end_UTCDate' AND b.starttime>'$beginning_UTCDate'
                      AND si.siteid=s.id
                      AND b.projectid='$projectid' GROUP BY s.id,s.name,si.processorclockfrequency,
@@ -104,17 +104,17 @@ if ($CDASH_DB_TYPE == "pgsql") {
 } else {
     $site = pdo_query("SELECT s.id,s.name,si.processorclockfrequency,
                      si.description,
-                     si.numberphysicalcpus,s.ip,s.latitude,s.longitude, 
+                     si.numberphysicalcpus,s.ip,s.latitude,s.longitude,
                      ".qid('user').".firstname,".qid('user').".lastname,".qid('user').".id AS userid
                      FROM build AS b, siteinformation AS si, site as s
                      LEFT JOIN site2user ON (site2user.siteid=s.id)
                      LEFT JOIN ".qid('user')." ON (site2user.userid=".qid('user').".id)
-                     WHERE s.id=b.siteid 
+                     WHERE s.id=b.siteid
                      AND b.starttime<'$end_UTCDate' AND b.starttime>'$beginning_UTCDate'
                      AND si.siteid=s.id
                      AND b.projectid='$projectid' GROUP BY s.id");
 }
-   
+
 echo pdo_error();
 
 while ($site_array = pdo_fetch_array($site)) {

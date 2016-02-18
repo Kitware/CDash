@@ -22,7 +22,7 @@ class buildconfigureerror
     public $Type;
     public $Text;
     public $BuildId;
-  
+
   /** Return if exists */
   public function Exists()
   {
@@ -30,12 +30,12 @@ class buildconfigureerror
           echo "BuildConfigureError::Save(): BuildId not set";
           return false;
       }
-      
+
       if (!$this->Type || !is_numeric($this->Type)) {
           echo "BuildConfigureError::Save(): Type not set";
           return false;
       }
-        
+
       $query = pdo_query("SELECT count(*) AS c FROM configureerror WHERE buildid='".$this->BuildId."'
                          AND type='".$this->Type."' AND text='".$this->Text."'");
       add_last_sql_error("BuildConfigureError:Exists", 0, $this->BuildId);
@@ -45,7 +45,7 @@ class buildconfigureerror
       }
       return false;
   }
-      
+
   /** Save in the database */
   public function Save()
   {
@@ -53,12 +53,12 @@ class buildconfigureerror
           echo "BuildConfigureError::Save(): BuildId not set";
           return false;
       }
-      
+
       if (!$this->Type || !is_numeric($this->Type)) {
           echo "BuildConfigureError::Save(): Type not set";
           return false;
       }
-        
+
       if (!$this->Exists()) {
           $text = pdo_real_escape_string($this->Text);
           $query = "INSERT INTO configureerror (buildid,type,text)

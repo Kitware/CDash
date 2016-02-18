@@ -361,7 +361,7 @@ function filters_preserve_link(status)
     {
     s = s.substr(0, idx);
     }
-    
+
   s = s + "&filtercount=" + n;
 
   idx = s.indexOf("&value", 0);
@@ -423,5 +423,3 @@ function filters_field_onfocus(o)
 function filters_onload(o)
 {
 }
-
-

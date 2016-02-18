@@ -321,4 +321,3 @@ $response['generationtime'] = round($end - $start, 3);
 echo json_encode(cast_data_for_JSON($response));
 
 ?>
-

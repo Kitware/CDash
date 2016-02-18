@@ -32,7 +32,7 @@ class buildconfigureerrordiff
       }
       return false;
   }
-      
+
   /** Save in the database */
   public function Save()
   {
@@ -40,7 +40,7 @@ class buildconfigureerrordiff
           echo "BuildConfigureErrorDiff::Save(): BuildId not set";
           return false;
       }
-      
+
       if ($this->Exists()) {
           // Update
       $query = "UPDATE configureerrordiff SET";

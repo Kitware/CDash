@@ -45,7 +45,7 @@ function clearLibrary()
 /** Check how many machines are currently available */
 function checkSystem()
   {
-  var os='';  
+  var os='';
   $('#system_select :selected').each(function(i, selected){
   if(os != '')
       {
@@ -53,8 +53,8 @@ function checkSystem()
     }
   os += $(selected).val();
   });
- 
-  var compiler='';  
+
+  var compiler='';
   $('#compiler_select :selected').each(function(i, selected){
   if(compiler != '')
       {
@@ -62,8 +62,8 @@ function checkSystem()
     }
   compiler += $(selected).val();
   });
-  
-  var cmake='';  
+
+  var cmake='';
   $('#cmake_select :selected').each(function(i, selected){
   if(cmake != '')
       {
@@ -71,8 +71,8 @@ function checkSystem()
     }
   cmake += $(selected).val();
   });
-  
-  var site='';  
+
+  var site='';
   $('#site_select :selected').each(function(i, selected){
   if(site != '')
       {
@@ -80,8 +80,8 @@ function checkSystem()
     }
   site += $(selected).val();
   });
-  
-  var library='';  
+
+  var library='';
   $('#library_select :selected').each(function(i, selected){
   if(library != '')
       {
@@ -89,7 +89,7 @@ function checkSystem()
     }
   library += $(selected).val();
   });
-    
+
   $.ajax({
       type: "POST",
       url: "ajax/clientchecksystem.php",

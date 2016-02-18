@@ -20,7 +20,7 @@ class dynamicanalysisdefect
     public $DynamicAnalysisId;
     public $Type;
     public $Value;
-  
+
   // Insert the DynamicAnalysisDefect
   public function Insert()
   {
@@ -32,7 +32,7 @@ class dynamicanalysisdefect
       $this->Type = pdo_real_escape_string($this->Type);
       $this->Value = pdo_real_escape_string($this->Value);
       $this->DynamicAnalysisId = pdo_real_escape_string($this->DynamicAnalysisId);
-    
+
       $query = "INSERT INTO dynamicanalysisdefect (dynamicanalysisid,type,value)
               VALUES (".qnum($this->DynamicAnalysisId).",'$this->Type','$this->Value')";
       if (!pdo_query($query)) {

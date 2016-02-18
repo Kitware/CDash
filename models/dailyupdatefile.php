@@ -34,16 +34,16 @@ class dailyupdatefile
     if (!$this->DailyUpdateId || !$this->Filename) {
         return false;
     }
-    
+
       $query = pdo_query("SELECT count(*) AS c FROM dailyupdatefile WHERE dailyupdateid='".$this->DailyUpdateId."' AND filename='".$this->Filename."'");
       $query_array = pdo_fetch_array($query);
       if ($query_array['c']==0) {
           return false;
       }
-    
+
       return true;
   }
-    
+
   /** Save the group */
   public function Save()
   {
@@ -51,7 +51,7 @@ class dailyupdatefile
           echo "DailyUpdateFile::Save(): DailyUpdateId not set!";
           return false;
       }
-    
+
       if (!$this->Filename) {
           echo "DailyUpdateFile::Save(): Filename not set!";
           return false;
@@ -61,7 +61,7 @@ class dailyupdatefile
           echo "DailyUpdateFile::Save(): CheckinDate not set!";
           return false;
       }
-      
+
       if ($this->Exists()) {
           // Update the project
       $query = "UPDATE dailyupdatefile SET";
@@ -71,7 +71,7 @@ class dailyupdatefile
           $query .= ",revision='".$this->Revision."'";
           $query .= ",priorrevision='".$this->PriorRevision."'";
           $query .= " WHERE dailyupdateid='".$this->DailyUpdateId."' AND filename='".$this->Filename."'";
-      
+
           if (!pdo_query($query)) {
               add_last_sql_error("DailyUpdateFile Update");
               return false;

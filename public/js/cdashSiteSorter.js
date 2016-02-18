@@ -1,10 +1,10 @@
 $(document).ready(function() {
-    
-  // Initialize the table 
+
+  // Initialize the table
   $tabs = $("#maintainerTable");
   $tabs.each(function(index) {
      $(this).tablesorter({
-            headers: { 
+            headers: {
                 0: { sorter:'text'},
                 1: { sorter:'text'},
                 2: { sorter:'text'},
@@ -12,6 +12,6 @@ $(document).ready(function() {
             },
           debug: false,
           widgets: ['zebra']
-        });  
+        });
       });
 });

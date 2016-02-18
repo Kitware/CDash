@@ -108,7 +108,6 @@ if ($submit) {
 }
 
 
-
 if (!isset($buildgroupid) || !is_numeric($buildgroupid)) {
     echo "Invalid buildgroupid";
     return;

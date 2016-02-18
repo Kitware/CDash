@@ -126,4 +126,3 @@ $query =
 generate_XSLT($xml, "manageOverview");
 } // end session OK
 ?>
-

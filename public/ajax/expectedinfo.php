@@ -73,4 +73,3 @@ if (pdo_num_rows($lastbuild)>0) {
   </tr>
 </table>
 </html>
-

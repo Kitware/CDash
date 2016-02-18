@@ -27,4 +27,3 @@ CREATE TABLE "project2repositories" (
   "repositoryid" bigint NOT NULL,
   PRIMARY KEY ("projectid", "repositoryid")
 );
-

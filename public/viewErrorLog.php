@@ -53,7 +53,7 @@ if (!isset($projectid) || !is_numeric($projectid)) {
     $userid = $_SESSION['cdash']['loginid'];
     $User = new User;
     $User->Id = $userid;
-  
+
     $Project = new Project;
     $role = 0;
 

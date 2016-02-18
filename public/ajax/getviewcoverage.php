@@ -202,7 +202,6 @@ if ($userid) {
   }
 
 
-
   // Add the coverage type
   $status = -1;
   if (isset($_GET['status'])) {

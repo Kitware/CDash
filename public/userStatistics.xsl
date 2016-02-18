@@ -138,7 +138,6 @@ Last Year</option>
    </xsl:if> <!-- if we have a project selected -->
 
 
-
 <!-- FOOTER -->
 <br/>
 

@@ -541,11 +541,11 @@ function sendsummaryemail($projectid, $groupid, $errors, $buildid)
     require_once("models/project.php");
     require_once("models/build.php");
     require_once("models/site.php");
-  
+
     $Project = new Project();
     $Project->Id = $projectid;
     $Project->Fill();
-  
+
   // Check if the email has been sent
   $date = ""; // now
   list($previousdate, $currentstarttime, $nextdate, $today) = get_dates($date, $Project->NightlyTime);
@@ -1294,7 +1294,7 @@ function sendemail($handler, $projectid)
     $Project->Fill();
 
     $sendEmail = null;
-  
+
     if ($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/sendemail.php")) {
         include_once("local/sendemail.php");
         $sendEmail = new SendEmail();

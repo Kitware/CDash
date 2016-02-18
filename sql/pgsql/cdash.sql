@@ -1120,7 +1120,6 @@ CREATE TABLE "client_library" (
 );
 
 
-
 --
 -- Table: client_os
 --
@@ -1370,8 +1369,3 @@ CREATE INDEX "buildfile_buildid" on "buildfile" ("buildid");
 CREATE INDEX "buildfile_filename" on "buildfile" ("filename");
 CREATE INDEX "buildfile_type" on "buildfile" ("type");
 CREATE INDEX "buildfile_md5" on "buildfile" ("md5");
-
-
-
-
-

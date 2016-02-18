@@ -68,7 +68,7 @@ class banner
       }
 
       $this->Text = pdo_real_escape_string($text);
-    
+
     // Check if the project is already
     if ($this->Exists()) {
         // Update the project

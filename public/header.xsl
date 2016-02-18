@@ -210,8 +210,6 @@
 <div id="calendar" class="ui-datepicker-calendar" ></div>
 
 
-
-
 </xsl:template>
 
 </xsl:stylesheet>

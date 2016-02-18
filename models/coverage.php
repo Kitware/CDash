@@ -58,7 +58,7 @@ class coverage
           if (empty($this->Labels)) {
               return;
           }
-      
+
           foreach ($this->Labels as $label) {
               $label->CoverageFileId = $this->CoverageFile->Id;
               $label->CoverageFileBuildId = $buildid;

@@ -11,12 +11,12 @@ function rightTransfer()
 function leftTransfer()
 {
   opt.transferLeft();
-  saveChanges();  
+  saveChanges();
 }
 
 function SubmitForm()
-{  
-  $('#emaillabels option').each(function(i) {  
-   $(this).attr("selected", "selected");  
-   });  
+{
+  $('#emaillabels option').each(function(i) {
+   $(this).attr("selected", "selected");
+   });
 }

@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -98,7 +98,7 @@ if ($session_OK) {
         pdo_query("DELETE FROM ".qid("user")." WHERE id='".$postuserid."'");
         $xml .= "<warning>".$update_array['firstname']." ".$update_array['lastname']." has been removed.</warning>";
     }
-    
+
     if (isset($_POST["search"])) {
         $xml .= "<search>".$_POST["search"]."</search>";
     }
@@ -106,12 +106,11 @@ if ($session_OK) {
     if (isset($CDASH_FULL_EMAIL_WHEN_ADDING_USER) && $CDASH_FULL_EMAIL_WHEN_ADDING_USER==1) {
         $xml .= add_XML_value("fullemail", "1");
     }
-  
-  
+
+
     $xml .= "</cdash>";
 
 // Now doing the xslt transition
 generate_XSLT($xml, "manageUsers");
 } // end session
 ?>
-

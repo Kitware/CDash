@@ -26,7 +26,7 @@ class userproject
   public $EmailSuccess; // email when my checkin are fixing something
   public $UserId;
     public $ProjectId;
-  
+
     public function __construct()
     {
         $this->Role = 0;
@@ -53,7 +53,7 @@ class userproject
       }
       return false;
   }
-      
+
   // Save the project in the database
   public function Save()
   {
@@ -61,12 +61,12 @@ class userproject
           echo "UserProject::Save(): no ProjectId specified";
           return false;
       }
-      
+
       if (!$this->UserId) {
           echo "UserProject::Save(): no UserId specified";
           return false;
       }
-      
+
     // Check if the project is already
     if ($this->Exists()) {
         // Update the project
@@ -96,7 +96,7 @@ class userproject
     }
       return true;
   }
-  
+
   /** Get the users of the project */
   public function GetUsers($role=-1)
   {
@@ -104,25 +104,25 @@ class userproject
           echo "UserProject GetUsers(): ProjectId not set";
           return false;
       }
-  
+
       $sql = "";
       if ($role != -1) {
           $sql = " AND role=".$role;
       }
-  
+
       $project = pdo_query("SELECT userid FROM user2project WHERE projectid=".qnum($this->ProjectId).$sql);
       if (!$project) {
           add_last_sql_error("UserProject GetUsers");
           return false;
       }
-    
+
       $userids = array();
       while ($project_array = pdo_fetch_array($project)) {
           $userids[] = $project_array['userid'];
       }
       return $userids;
   }
-   
+
   /** Update the credentials for a project */
   public function UpdateCredentials($credentials)
   {
@@ -131,7 +131,7 @@ class userproject
               $this->ProjectId, 0, CDASH_OBJECT_USER, $this->UserId);
           return false;
       }
-    
+
     // Insert the new credentials
     $credential_string = '';
       foreach ($credentials as $credential) {
@@ -157,20 +157,20 @@ class userproject
       if (empty($credential)) {
           return false;
       }
-     
+
       if (!$this->UserId) {
           add_log('UserId not set', "UserProject AddCredential()", LOG_ERR,
               $this->ProjectId, 0, CDASH_OBJECT_USER, $this->UserId);
           return false;
       }
-    
+
     // Check if the credential exists for all the project or the given project
     $credential = pdo_real_escape_string($credential);
       $query = pdo_query("SELECT userid FROM user2repository WHERE userid=".qnum($this->UserId)."
                         AND (projectid=".qnum($this->ProjectId)." OR projectid=0)
                         AND credential='".$credential."'");
       add_last_sql_error("UserProject AddCredential");
-    
+
       if (pdo_num_rows($query) == 0) {
           pdo_query("INSERT INTO user2repository (userid,projectid,credential)
                  VALUES(".qnum($this->UserId).",".qnum($this->ProjectId).",'".$credential."')");
@@ -181,8 +181,8 @@ class userproject
       return false;
   } // End AddCredential
 
-    
-  /** Fill in the information given a projectid and a repository credential. 
+
+  /** Fill in the information given a projectid and a repository credential.
    *  This function expects the emailtype>0 */
   public function FillFromRepositoryCredential()
   {
@@ -191,13 +191,13 @@ class userproject
               $this->ProjectId, 0, CDASH_OBJECT_USER, $this->UserId);
           return false;
       }
-     
+
       if (!$this->RepositoryCredential) {
           add_log("RepositoryCredential not set", "UserProject FillFromRepositoryCredential()", LOG_ERR,
               $this->ProjectId, 0, CDASH_OBJECT_USER, $this->UserId);
           return false;
       }
-     
+
       $sql = "SELECT up.emailcategory,up.userid,up.emailsuccess
                FROM user2project AS up,user2repository AS ur
                WHERE up.projectid=".qnum($this->ProjectId)."
@@ -205,7 +205,7 @@ class userproject
                AND (ur.projectid=0 OR ur.projectid=up.projectid)
                AND ur.credential='".$this->RepositoryCredential."'
                AND up.emailtype>0";
-               
+
       $user = pdo_query($sql);
       if (!$user) {
           add_last_sql_error("UserProject FillFromRepositoryCredential");
@@ -265,13 +265,13 @@ class userproject
           echo "UserProject GetEmailCategory(): UserId not set";
           return false;
       }
-      
+
       if (!$this->ProjectId) {
           echo "UserProject GetEmailCategory(): ProjectId not set";
           return false;
       }
-        
-      $category = pdo_query("SELECT emailcategory FROM user2project WHERE 
+
+      $category = pdo_query("SELECT emailcategory FROM user2project WHERE
                           userid=".qnum($this->UserId)." AND projectid=".qnum($this->ProjectId));
       if (!$category) {
           add_last_sql_error("UserProject GetEmailCategory");
@@ -294,7 +294,7 @@ class userproject
           add_last_sql_error("UserProject GetProjects");
           return false;
       }
-    
+
       $projectids = array();
       while ($project_array = pdo_fetch_array($project)) {
           $projectids[] = $project_array['projectid'];

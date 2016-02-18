@@ -704,7 +704,6 @@ class clientjobschedule
   }
 
 
-
   // Return the ctest script
   public function GetCTestScript()
   {

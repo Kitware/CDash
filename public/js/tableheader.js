@@ -96,4 +96,3 @@ $(document).ready(function() {
   };
   $(window).resize(resize);
 });
-

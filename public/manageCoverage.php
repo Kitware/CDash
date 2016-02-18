@@ -364,4 +364,3 @@ if ($projectid>0) {
 generate_XSLT($xml, "manageCoverage");
 } // end session OK
 ?>
-

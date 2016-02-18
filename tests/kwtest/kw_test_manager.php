@@ -185,7 +185,6 @@ class TestManager
 }
 
 
-
 /**
  * The cdash test manager interface cdash test with simpletest
  *

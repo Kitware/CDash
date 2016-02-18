@@ -25,4 +25,3 @@ function oauth2Login() {
     window.location = _url;
   });
 }
-

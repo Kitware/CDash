@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -111,7 +111,7 @@ function client_submit()
           $ClientCompiler->Generator = $compiler->generator;
           $ClientCompiler->SiteId = $siteid;
           $ClientCompiler->Save();
-      
+
           $comp = array();
           $comp['name'] = $compiler->name;
           $comp['version'] = $compiler->version;
@@ -131,7 +131,7 @@ function client_submit()
           $ClientCMake->Path = $cmake->path;
           $ClientCMake->SiteId = $siteid;
           $ClientCMake->Save();
-      
+
           $cm = array();
           $cm['path'] = $cmake->path;
           $cm['version'] = $cmake->version;

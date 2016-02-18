@@ -33,7 +33,7 @@ class siteinformation
     public $ProcessorClockFrequency;
     public $Description;
     public $SiteId;
-  
+
   /** Constructor */
   public function __construct()
   {
@@ -53,8 +53,8 @@ class siteinformation
       $this->Description = '';
       $this->SiteId = 0;
   }
-  
-  
+
+
     public function SetValue($tag, $value)
     {
         switch ($tag) {
@@ -73,7 +73,7 @@ class siteinformation
       case "PROCESSORCLOCKFREQUENCY": $this->ProcessorClockFrequency = $value;break;
       }
     }
-    
+
   /** Check if the site already exists */
   public function Exists()
   {
@@ -81,7 +81,7 @@ class siteinformation
     if (!$this->SiteId) {
         return false;
     }
-    
+
       $query = pdo_query("SELECT count(*) FROM siteinformation WHERE siteid='".$this->SiteId."'");
       $query_array = pdo_fetch_array($query);
       if ($query_array[0]==0) {
@@ -89,7 +89,7 @@ class siteinformation
       }
       return true;
   }
-    
+
   /** Save the site information */
   public function Save()
   {
@@ -111,7 +111,7 @@ class siteinformation
           $query .= ",processorclockfrequency='".round($this->ProcessorClockFrequency)."'";
           $query .= ",description='".$this->Description."'";
           $query .= " WHERE siteid='".$this->SiteId."'";
-      
+
           if (!pdo_query($query)) {
               add_last_sql_error("SiteInformation Update");
               return false;

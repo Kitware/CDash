@@ -19,7 +19,7 @@ class clientos
     public $Bits;
     public $Platforms;
     public $OperatingSystems;
-    
+
     public function __construct()
     {
         $this->Platforms = array(
@@ -62,7 +62,7 @@ class clientos
       $row = pdo_fetch_array($name);
       return $row[0];
   }
-  
+
   /** Get bits */
   public function GetBits()
   {
@@ -74,7 +74,7 @@ class clientos
       $row = pdo_fetch_array($name);
       return $row[0];
   }
-    
+
   /** Get version */
   public function GetVersion()
   {
@@ -86,22 +86,22 @@ class clientos
       $row = pdo_fetch_array($name);
       return $row[0];
   }
-       
-    
+
+
   /** Save a site */
   public function Save()
   {
       $name = $this->GetNameFromPlatform($this->Name);
       $version = $this->GetNameFromVersion($this->Version);
-    
+
       if (strlen($name) == 0) {
           return false;
       }
-    
+
     // Check if the name and bits system already exists
     $query = pdo_query("SELECT id FROM client_os WHERE name='".$name."' AND version='".$version."' AND bits='".$this->Bits."'");
       if (pdo_num_rows($query) == 0) {
-          $sql = "INSERT INTO client_os (name,version,bits) 
+          $sql = "INSERT INTO client_os (name,version,bits)
               VALUES ('".$name."','".$version."','".$this->Bits."')";
           pdo_query($sql);
           $this->Id = pdo_insert_id('client_os');
@@ -137,7 +137,7 @@ class clientos
           $sql .= " name='".$name."'";
           $firstarg = false;
       }
-    
+
       if ($version!='') {
           if (!$firstarg) {
               $sql .= " AND ";
@@ -146,7 +146,7 @@ class clientos
           $sql .= " version='".$version."'";
           $firstarg = false;
       }
-      
+
       if ($bits!='') {
           if (!$firstarg) {
               $sql .= " AND ";
@@ -155,7 +155,7 @@ class clientos
           $sql .= " bits='".$bits."'";
           $firstarg = false;
       }
-      
+
       $query = pdo_query($sql);
       while ($query_array = pdo_fetch_array($query)) {
           $ids[] = $query_array['id'];
@@ -188,7 +188,7 @@ class clientos
       }
       return 0;
   }
-    
+
   /** Get the OS name */
   public function GetNameFromVersion($platform)
   {

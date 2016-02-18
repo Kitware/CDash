@@ -32,7 +32,6 @@
 </table>
 
 
-
 <br/>
 <!-- FOOTER -->
 <xsl:choose>

@@ -92,7 +92,6 @@ CREATE TABLE `buildgroupposition` (
 );
 
 
-
 -- --------------------------------------------------------
 
 --
@@ -297,7 +296,6 @@ CREATE TABLE `dynamicanalysisdefect` (
   `value` int(11) NOT NULL default '0',
   KEY `buildid` (`dynamicanalysisid`)
 );
-
 
 
 -- --------------------------------------------------------
@@ -659,7 +657,6 @@ CREATE TABLE `testmeasurement` (
 );
 
 
-
 CREATE TABLE `dailyupdate` (
   `id` bigint(11) NOT NULL auto_increment,
   `projectid` int(11) NOT NULL,
@@ -914,7 +911,6 @@ CREATE TABLE `subproject2build` (
   PRIMARY KEY  (`buildid`),
   KEY `subprojectid` (`subprojectid`)
 );
-
 
 
 CREATE TABLE `buildfailure` (

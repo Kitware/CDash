@@ -22,7 +22,7 @@ class buildgroupposition
     public $StartTime;
     public $EndTime;
     public $GroupId;
-  
+
     public function __construct()
     {
         $this->StartTime = '1980-01-01 00:00:00';
@@ -37,8 +37,8 @@ class buildgroupposition
     if (!$this->GroupId) {
         return false;
     }
-    
-      $query = pdo_query("SELECT count(*) AS c FROM buildgroupposition WHERE 
+
+      $query = pdo_query("SELECT count(*) AS c FROM buildgroupposition WHERE
                         buildgroupid='".$this->GroupId."' AND position='".$this->Position."'
                         AND starttime='".$this->StartTime."'
                         AND endtime='".$this->EndTime."'"
@@ -49,7 +49,7 @@ class buildgroupposition
       }
       return true;
   }
-    
+
   /** Save the goup position */
   public function Add()
   {

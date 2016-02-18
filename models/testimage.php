@@ -17,14 +17,14 @@
 =========================================================================*/
 // It is assumed that appropriate headers should be included before including this file
 
-/** Test Image 
+/** Test Image
  *  Actually stores just the image id. The image is supposed to be already in the image table */
 class testimage
 {
     public $Id;
     public $Role;
     public $TestId;
-  
+
   /** Return if exists */
   public function Exists()
   {
@@ -35,7 +35,7 @@ class testimage
       }
       return false;
   }
-      
+
   // Save in the database
   public function Insert()
   {

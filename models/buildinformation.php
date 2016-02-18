@@ -24,7 +24,7 @@ class buildinformation
     public $OSVersion;
     public $CompilerName = 'unknown';
     public $CompilerVersion = 'unknown';
-  
+
     public function SetValue($tag, $value)
     {
         switch ($tag) {
@@ -36,8 +36,8 @@ class buildinformation
       case "COMPILERVERSION": $this->CompilerVersion = $value;break;
       }
     }
- 
-    
+
+
   /** Save the site information */
   public function Save()
   {
@@ -45,12 +45,12 @@ class buildinformation
           if (empty($this->BuildId)) {
               return false;
           }
-       
+
        // Check if we already have a buildinformation for that build. If yes we just skip it
        $query = pdo_query("SELECT buildid FROM buildinformation WHERE buildid=".qnum($this->BuildId));
           add_last_sql_error("BuildInformation Insert", 0, $this->BuildId);
           if (pdo_num_rows($query)==0) {
-              pdo_query("INSERT INTO buildinformation (buildid,osname,osrelease,osversion,osplatform,compilername,compilerversion) 
+              pdo_query("INSERT INTO buildinformation (buildid,osname,osrelease,osversion,osplatform,compilername,compilerversion)
                     VALUES (".qnum($this->BuildId).",'$this->OSName','$this->OSRelease',
                             '$this->OSVersion','$this->OSPlatform','$this->CompilerName','$this->CompilerVersion')");
               add_last_sql_error("BuildInformation Insert", 0, $this->BuildId);

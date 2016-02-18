@@ -24,7 +24,7 @@ class testmeasurement
     public $Type;
     public $Value;
     public $TestId;
-      
+
   // Save in the database
   public function Insert()
   {

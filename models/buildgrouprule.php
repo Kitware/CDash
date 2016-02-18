@@ -31,7 +31,7 @@ class buildgrouprule
         $this->StartTime = '1980-01-01 00:00:00';
         $this->EndTime = '1980-01-01 00:00:00';
     }
-    
+
   /** Check if the rule already exists */
   public function Exists()
   {
@@ -40,8 +40,8 @@ class buildgrouprule
       || empty($this->BuildName) || empty($this->SiteId)) {
        return false;
    }
-    
-      $query = pdo_query("SELECT count(*) AS c FROM build2grouprule WHERE 
+
+      $query = pdo_query("SELECT count(*) AS c FROM build2grouprule WHERE
                         groupid='".$this->GroupId."' AND buildtype='".$this->BuildType."'
                         AND buildname='".$this->BuildName."'
                         AND siteid='".$this->SiteId."'
@@ -54,7 +54,7 @@ class buildgrouprule
       }
       return true;
   }
-    
+
   /** Save the goup position */
   public function Add()
   {

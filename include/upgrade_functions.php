@@ -198,7 +198,6 @@ function RemoveTablePrimaryKey($table)
 }
 
 
-
 /** Compress the notes. Since they are almost always the same form build to build */
 function CompressNotes()
 {
@@ -385,7 +384,6 @@ function ComputeTestTiming($days = 4)
                         $timestatus = 0;
                         $timemean = $testtime;
                     }
-
 
 
                     pdo_query("UPDATE build2test SET timemean='$timemean',timestd='$timestd',timestatus='$timestatus'

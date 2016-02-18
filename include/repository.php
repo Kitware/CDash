@@ -485,7 +485,6 @@ function get_gitlab_diff_url($projecturl, $directory, $file, $revision)
 }
 
 
-
 /** Return the cgit diff URL */
 function get_cgit_diff_url($projecturl, $directory, $file, $revision)
 {

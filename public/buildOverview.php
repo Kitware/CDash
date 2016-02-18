@@ -77,7 +77,7 @@ if ($groupSelection != null) {
 if (!isset($groupSelection)) {
     $groupSelection = 0;
 }
-  
+
 $buildgroup = pdo_query("SELECT id,name FROM buildgroup WHERE projectid='$projectid'");
 while ($buildgroup_array = pdo_fetch_array($buildgroup)) {
     $xml .= "<group>";
@@ -95,20 +95,20 @@ $end_timestamp = $currentstarttime+3600*24;
 
 $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
 $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
-  
+
 
 $groupSelectionSQL = "";
 if ($groupSelection>0) {
     $groupSelectionSQL = " AND b2g.groupid='$groupSelection' ";
 }
-  
+
 $sql =  "SELECT s.name,b.name as buildname,be.type,be.sourcefile,be.sourceline,be.text
                          FROM build AS b,builderror as be,site AS s, build2group as b2g
                          WHERE b.starttime<'$end_UTCDate' AND b.starttime>'$beginning_UTCDate'
-                         AND b.projectid='$projectid' AND be.buildid=b.id 
+                         AND b.projectid='$projectid' AND be.buildid=b.id
                          AND s.id=b.siteid AND b2g.buildid=b.id
                          ".$groupSelectionSQL."ORDER BY be.sourcefile ASC,be.type ASC,be.sourceline ASC";
-                           
+
 $builds = pdo_query($sql);
 echo pdo_error();
 

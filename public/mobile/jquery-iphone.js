@@ -1,8 +1,8 @@
 var cdashUser = undefined;
 jQuery.user = function() {
-    if (jQuery.cookie('loginname') == undefined || 
+    if (jQuery.cookie('loginname') == undefined ||
         jQuery.cookie('id_hash') == undefined) {
-        return { 
+        return {
             isLoggedIn : false
         };
     }
@@ -39,13 +39,13 @@ jQuery.writeOp = function(params) {
         'data' : params.data,
         'success' : function(resp) {
             return params.success(resp);
-        },     
+        },
         'error' : function(xml) {
             var json = eval('(' + xml.responseText + ')');
             json.http = {
                 'code' : xml.status,
                 'status' : xml.statusText
-            };            
+            };
 
             return params.error(json);
         }

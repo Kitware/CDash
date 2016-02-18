@@ -74,9 +74,6 @@ for ($beginning_timestamp = $starttime; $beginning_timestamp>$starttime-3600*24*
 <br>
 
 
-
-
-
 <script language="javascript" type="text/javascript">
 $(function () {
   var d1 = [];

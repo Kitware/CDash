@@ -121,5 +121,3 @@ foreach ($feeds as $f) {
 <?php
 
 } ?>
-
-

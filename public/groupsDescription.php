@@ -10,8 +10,8 @@
   Copyright (c) 2002 Kitware, Inc.  All rights reserved.
   See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -37,7 +37,7 @@ pdo_select_db("$CDASH_DB_NAME", $db);
    </tr>
    <?php
     $i = 0;
-   
+
    $project = htmlspecialchars(pdo_real_escape_string($_GET["project"]));
    $projectid = get_project_id($project);
    if ($projectid<1) {
@@ -48,14 +48,14 @@ pdo_select_db("$CDASH_DB_NAME", $db);
      return;
    }
     $group = pdo_query("SELECT buildgroup.name,buildgroup.description
-                          FROM buildgroup,buildgroupposition 
-                          WHERE buildgroup.projectid='$projectid' 
+                          FROM buildgroup,buildgroupposition
+                          WHERE buildgroup.projectid='$projectid'
                           AND buildgroup.id = buildgroupposition.buildgroupid
                           AND buildgroup.endtime = '1980-01-01 00:00:00'
                           AND buildgroupposition.endtime = '1980-01-01 00:00:00'
                           ORDER BY buildgroupposition.position ASC");
     while ($group_array = pdo_fetch_array($group)) {
-        ?> 
+        ?>
     <tr class="<?php if ($i%2==0) {
     echo "treven";
 } else {
@@ -67,7 +67,7 @@ pdo_select_db("$CDASH_DB_NAME", $db);
        <td align="left"><?php echo $group_array["description"];
         ?></td>
     </tr>
-    <?php 
+    <?php
     $i++;
     } ?>
      <tr class="<?php if ($i%2==0) {
