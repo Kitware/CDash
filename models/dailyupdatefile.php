@@ -1,20 +1,19 @@
 <?php
 /*=========================================================================
-
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
   Language:  PHP
   Date:      $Date$
   Version:   $Revision$
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE.  See the above copyright notices for more information.
-
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 // It is assumed that appropriate headers should be included before including this file
 
 class dailyupdatefile
@@ -34,16 +33,16 @@ class dailyupdatefile
     if (!$this->DailyUpdateId || !$this->Filename) {
         return false;
     }
-    
+
       $query = pdo_query("SELECT count(*) AS c FROM dailyupdatefile WHERE dailyupdateid='".$this->DailyUpdateId."' AND filename='".$this->Filename."'");
       $query_array = pdo_fetch_array($query);
       if ($query_array['c']==0) {
           return false;
       }
-    
+
       return true;
   }
-    
+
   /** Save the group */
   public function Save()
   {
@@ -51,7 +50,7 @@ class dailyupdatefile
           echo "DailyUpdateFile::Save(): DailyUpdateId not set!";
           return false;
       }
-    
+
       if (!$this->Filename) {
           echo "DailyUpdateFile::Save(): Filename not set!";
           return false;
@@ -61,7 +60,7 @@ class dailyupdatefile
           echo "DailyUpdateFile::Save(): CheckinDate not set!";
           return false;
       }
-      
+
       if ($this->Exists()) {
           // Update the project
       $query = "UPDATE dailyupdatefile SET";
@@ -71,7 +70,7 @@ class dailyupdatefile
           $query .= ",revision='".$this->Revision."'";
           $query .= ",priorrevision='".$this->PriorRevision."'";
           $query .= " WHERE dailyupdateid='".$this->DailyUpdateId."' AND filename='".$this->Filename."'";
-      
+
           if (!pdo_query($query)) {
               add_last_sql_error("DailyUpdateFile Update");
               return false;

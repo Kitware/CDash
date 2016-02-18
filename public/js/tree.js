@@ -77,7 +77,7 @@ function toggle(n) {
 function reload() {
   //   if (navigator.userAgent.toLowerCase().indexOf('opera') == -1) {
   //        history.go(0);
-  //     } else {   
+  //     } else {
       if (document.images) {
          location.replace(location.href);
       } else {
@@ -97,7 +97,7 @@ function pad(n) {
 function explode() {
   current = "";
   initState="";
-  for (var i = 1; i < db.length; i++) { 
+  for (var i = 1; i < db.length; i++) {
     initState += "1"
     current += "1"
     }
@@ -109,7 +109,7 @@ function explode() {
 function contract() {
   current = "";
   initState="";
-  for (var i = 1; i < db.length; i++) { 
+  for (var i = 1; i < db.length; i++) {
     initState += "0"
     current += "0"
     }

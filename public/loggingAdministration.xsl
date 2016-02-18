@@ -2,9 +2,9 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
    <xsl:include href="footer.xsl"/>
-    <xsl:include href="headerback.xsl"/> 
-   
-   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    <xsl:include href="headerback.xsl"/>
+
+   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
 
     <xsl:template match="/">
@@ -17,7 +17,7 @@
          </link>
        </head>
        <body bgcolor="#ffffff">
-       
+
    <xsl:call-template name="headerback"/>
 
 <xsl:if test="string-length(cdash/alert)>0">
@@ -39,10 +39,9 @@
   <xsl:value-of select="fullpath"/>
   </xsl:attribute>
   <xsl:value-of select="name"/></a></div></td>
-  </tr> 
- </xsl:for-each> 
+  </tr>
+ </xsl:for-each>
 </table>
-
 
 
 <br/>

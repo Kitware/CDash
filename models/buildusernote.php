@@ -1,20 +1,19 @@
 <?php
 /*=========================================================================
-
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
   Language:  PHP
   Date:      $Date$
   Version:   $Revision$
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE.  See the above copyright notices for more information.
-
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 // It is assumed that appropriate headers should be included before including this file
 class buildusernote
 {
@@ -31,7 +30,7 @@ class buildusernote
           echo "BuildUserNote::Insert(): BuildId is not set<br>";
           return false;
       }
-      
+
       if (!$this->UserId) {
           echo "BuildUserNote::Insert(): UserId is not set<br>";
           return false;
@@ -41,17 +40,17 @@ class buildusernote
           echo "BuildUserNote::Insert(): Note is not set<br>";
           return false;
       }
-      
+
       if (!$this->TimeStamp) {
           echo "BuildUserNote::Insert(): TimeStamp is not set<br>";
           return false;
       }
-      
+
       if (!$this->Status) {
           echo "BuildUserNote::Insert(): Status is not set<br>";
           return false;
       }
-       
+
       $query = "INSERT INTO buildnote (buildid,userid,note,timestamp,status)
               VALUES ('$this->BuildId','$this->UserId','$this->Note','$this->TimeStamp','$this->Status')";
       if (!pdo_query($query)) {

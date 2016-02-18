@@ -1,20 +1,19 @@
 <?php
 /*=========================================================================
-
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
   Language:  PHP
   Date:      $Date$
   Version:   $Revision$
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE.  See the above copyright notices for more information.
-
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 require_once("include/cdashmail.php");
 
 
@@ -541,11 +540,11 @@ function sendsummaryemail($projectid, $groupid, $errors, $buildid)
     require_once("models/project.php");
     require_once("models/build.php");
     require_once("models/site.php");
-  
+
     $Project = new Project();
     $Project->Id = $projectid;
     $Project->Fill();
-  
+
   // Check if the email has been sent
   $date = ""; // now
   list($previousdate, $currentstarttime, $nextdate, $today) = get_dates($date, $Project->NightlyTime);
@@ -1294,7 +1293,7 @@ function sendemail($handler, $projectid)
     $Project->Fill();
 
     $sendEmail = null;
-  
+
     if ($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/sendemail.php")) {
         include_once("local/sendemail.php");
         $sendEmail = new SendEmail();

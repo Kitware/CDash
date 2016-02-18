@@ -1,20 +1,19 @@
 <?php
 /*=========================================================================
-
   Program:   CDash - Cross-Platform Dashboard System
-  Module:    $Id: buildOverview.php 1161 2008-09-19 14:56:14Z jjomier $
+  Module:    $Id$
   Language:  PHP
-  Date:      $Date: 2008-02-04 17:50:42 -0500 (Mon, 04 Feb 2008) $
-  Version:   $Revision: 435 $
+  Date:      $Date$
+  Version:   $Revision$
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-     PURPOSE.  See the above copyright notices for more information.
-
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 $noforcelogin = 1;
 include(dirname(__DIR__)."/config/config.php");
 require_once("include/pdo.php");
@@ -38,7 +37,7 @@ if (!isset($projectid) || !is_numeric($projectid)) {
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME", $db);
-  
+
 $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
 if (pdo_num_rows($project)==0) {
     return;
@@ -65,7 +64,7 @@ $ctestconfig .= "set(CTEST_DROP_SITE \"".$_SERVER['SERVER_NAME']."\")\n";
 
 $currentURI = $_SERVER['REQUEST_URI'];
 $currentURI = substr($currentURI, 0, strrpos($currentURI, "/"));
-   
+
 $ctestconfig .= "set(CTEST_DROP_LOCATION \"".$currentURI."/submit.php?project=".urlencode($project_array["name"])."\")\n";
 $ctestconfig .= "set(CTEST_DROP_SITE_CDASH TRUE)\n";
 
@@ -103,17 +102,17 @@ usort($subprojectids, "cmp");
 if (count($subprojectids)>0) {
     $ctestconfig .= "\nset(CTEST_PROJECT_SUBPROJECTS\n";
 }
-  
+
 foreach ($subprojectids as $subprojectid) {
     $SubProject = new SubProject();
     $SubProject->SetId($subprojectid);
     $ctestconfig .= $SubProject->GetName()."\n";
 }
-  
+
 if (count($subprojectids)>0) {
     $ctestconfig .= ")\n";
 }
- 
+
 header('Vary: User-Agent');
 if (ob_get_contents()) {
     echo "Some data has already been output";
@@ -126,7 +125,7 @@ if (isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'M
 if (headers_sent()) {
     echo "Some data has already been output to browser";
 }
-   
+
 header("Content-Disposition: attachment; filename=\"CTestConfig.cmake\"");
 header("Content-Transfer-Encoding: binary");
 header("Content-Length: ".strlen($ctestconfig));

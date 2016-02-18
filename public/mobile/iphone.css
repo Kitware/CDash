@@ -6,7 +6,7 @@
 .table-heading { background-color : #b0c4de; }
 .tr-even { background-color : #b0c4de; }
 .tr-odd { background-color : #ffffff; }
- 
+
 .news-summary {
  padding-left: 82px;
  position: relative;
@@ -329,7 +329,7 @@ body > ul > li > a.link {
     color: inherit;
     min-height: 32px;
 }
-    
+
 .panel {
     box-sizing: border-box;
     padding: 10px;
@@ -389,7 +389,7 @@ input {
     margin: 6px;
     padding: 6px;
     font-size: 16px;
-    font-weight: normal; 
+    font-weight: normal;
 }
 
 input[type='text'], input[type='password'], select {
@@ -426,14 +426,14 @@ img.wss {
 #Stage0{
   padding-top: 10px;
   font-size: 12;
-  font-weight: normal; 
+  font-weight: normal;
   border-bottom: 1px solid #C0C0C0;
 }
 
 #Stage1{
   padding-top: 10px;
   font-size: 12;
-  font-weight: normal; 
+  font-weight: normal;
   border-bottom: 1px solid #C0C0C0;
 }
 
@@ -441,20 +441,20 @@ img.wss {
 #Stage2{
   padding-top: 10px;
   font-size: 12;
-  font-weight: normal; 
+  font-weight: normal;
   border-bottom: 1px solid #C0C0C0;
 }
 
 #Stage3{
   padding-top: 10px;
   font-size: 12;
-  font-weight: normal; 
+  font-weight: normal;
   border-bottom: 1px solid #C0C0C0;
 }
 
 BuildError{
   font-size: 12;
-  font-weight: normal; 
+  font-weight: normal;
   border-bottom: 1px solid #C0C0C0;
 }
 
@@ -462,5 +462,3 @@ BuildError{
   font-size:12;
   font-style: italic;
 }
-
-

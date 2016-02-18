@@ -1,19 +1,17 @@
 <?php
 /*=========================================================================
-
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
   Language:  PHP
   Date:      $Date$
   Version:   $Revision$
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE.  See the above copyright notices for more information.
-
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
 /** BuildErrorDiff */
@@ -36,7 +34,7 @@ class builderrordiff
           echo "BuildErrorDiff::Save(): Type not set<br>";
           return false;
       }
-        
+
       $query = pdo_query("SELECT count(*) AS c FROM builderrordiff WHERE buildid='".$this->BuildId."' AND type='".$this->Type."'");
       $query_array = pdo_fetch_array($query);
       if ($query_array['c']>0) {
@@ -44,7 +42,7 @@ class builderrordiff
       }
       return false;
   }
-      
+
   // Save in the database
   public function Save()
   {
@@ -62,7 +60,7 @@ class builderrordiff
           echo "BuildErrorDiff::Save(): DifferencePositive not set<br>";
           return false;
       }
-      
+
       if (!$this->DifferenceNegative || !is_numeric($this->DifferenceNegative)) {
           echo "BuildErrorDiff::Save(): DifferenceNegative not set<br>";
           return false;

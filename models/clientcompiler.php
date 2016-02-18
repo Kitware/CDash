@@ -1,20 +1,19 @@
 <?php
 /*=========================================================================
-
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
   Language:  PHP
   Date:      $Date$
   Version:   $Revision$
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE.  See the above copyright notices for more information.
-
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 class clientcompiler
 {
     public $Id;
@@ -23,7 +22,7 @@ class clientcompiler
     public $SiteId;
     public $Command;
     public $Generator;
-  
+
   /** Get id from name */
   public function GetIdFromName()
   {
@@ -35,7 +34,7 @@ class clientcompiler
       $row = pdo_fetch_array($sys);
       return $row['name'];
   }
-  
+
   /** Get name */
   public function GetName()
   {
@@ -59,7 +58,7 @@ class clientcompiler
       }
       return $ids;
   }
-      
+
   /** Get version */
   public function GetVersion()
   {
@@ -71,20 +70,20 @@ class clientcompiler
       $row = pdo_fetch_array($sys);
       return $row['version'];
   }
-    
+
   /** Get the Compiler id from the description */
   public function GetCompiler($name, $version='')
   {
       $sql = "SELECT id FROM client_compiler WHERE ";
       $ids = array();
-    
+
       $firstarg = true;
       if ($name!='') {
           $name = pdo_real_escape_string($name);
           $sql .= " name='".$name."'";
           $firstarg = false;
       }
-    
+
       if ($version!='') {
           if (!$firstarg) {
               $sql .= " AND ";
@@ -93,7 +92,7 @@ class clientcompiler
           $sql .= " version='".$version."'";
           $firstarg = false;
       }
-            
+
       $query = pdo_query($sql);
       while ($query_array = pdo_fetch_array($query)) {
           $ids[] = $query_array['id'];
@@ -107,7 +106,7 @@ class clientcompiler
       // Check if the version already exists
     $query = pdo_query("SELECT id FROM client_compiler WHERE name='".$this->Name."' AND version='".$this->Version."'");
       if (pdo_num_rows($query) == 0) {
-          $sql = "INSERT INTO client_compiler (name,version) 
+          $sql = "INSERT INTO client_compiler (name,version)
               VALUES ('".$this->Name."','".$this->Version."')";
           pdo_query($sql);
           $this->Id = pdo_insert_id('client_compiler');
@@ -121,11 +120,11 @@ class clientcompiler
           pdo_query($sql);
           add_last_sql_error("clientCompiler::Save");
       }
-      
+
     // Insert into the siteid
     $query = pdo_query("SELECT compilerid FROM client_site2compiler WHERE compilerid=".qnum($this->Id)." AND siteid=".qnum($this->SiteId));
       if (pdo_num_rows($query) == 0) {
-          $sql = "INSERT INTO client_site2compiler (siteid,compilerid,command,generator) 
+          $sql = "INSERT INTO client_site2compiler (siteid,compilerid,command,generator)
               VALUES (".qnum($this->SiteId).",".qnum($this->Id).",'".$this->Command."','".$this->Generator."')";
           pdo_query($sql);
           add_last_sql_error("clientCompiler::Save2");
@@ -148,10 +147,10 @@ class clientcompiler
       }
 
     // Delete the old libraries
-    $query = pdo_query("SELECT name,command,version,generator,compilerid FROM client_compiler,client_site2compiler 
+    $query = pdo_query("SELECT name,command,version,generator,compilerid FROM client_compiler,client_site2compiler
               WHERE client_site2compiler.compilerid=client_compiler.id
               AND siteid=".qnum($this->SiteId));
-    
+
       add_last_sql_error("clientCompiler::DeleteUnused()");
       while ($query_array = pdo_fetch_array($query)) {
           $delete = 1;
@@ -170,7 +169,7 @@ class clientcompiler
               add_last_sql_error("clientCompiler::DeleteUnused()");
           }
       }
-    
+
     // Delete the client_compiler not attached to anything
     pdo_query("DELETE FROM client_compiler WHERE id NOT IN(SELECT compilerid AS id FROM client_site2compiler)");
   }  // end DeleteUnused

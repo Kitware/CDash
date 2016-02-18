@@ -162,7 +162,6 @@ CREATE TABLE "client_jobschedule2site" (
 );
 
 
-
 --
 -- Table: client_jobschedule2toolkit
 --
@@ -171,7 +170,6 @@ CREATE TABLE "client_jobschedule2toolkit" (
   "toolkitconfigurationid" bigint NOT NULL,
   Constraint "scheduleid7" UNIQUE ("scheduleid", "toolkitconfigurationid")
 );
-
 
 
 --
@@ -183,7 +181,6 @@ CREATE TABLE "client_library" (
   "version" character varying(255) NOT NULL,
   PRIMARY KEY ("id")
 );
-
 
 
 --

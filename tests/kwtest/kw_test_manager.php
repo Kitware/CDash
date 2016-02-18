@@ -1,4 +1,19 @@
 <?php
+/*=========================================================================
+  Program:   CDash - Cross-Platform Dashboard System
+  Module:    $Id$
+  Language:  PHP
+  Date:      $Date$
+  Version:   $Revision$
+
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
+
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE. See the above copyright notices for more information.
+=========================================================================*/
+
 require_once(dirname(dirname(__FILE__)) . '/config.test.php');
 require_once(dirname(__FILE__) . '/simpletest/unit_tester.php');
 require_once(dirname(__FILE__) . '/simpletest/mock_objects.php');
@@ -183,7 +198,6 @@ class TestManager
       }
   }
 }
-
 
 
 /**

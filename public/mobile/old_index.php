@@ -1,20 +1,19 @@
 <?php
 /*=========================================================================
-
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
   Language:  PHP
   Date:      $Date$
   Version:   $Revision$
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE.  See the above copyright notices for more information.
-
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 require_once(dirname(dirname(__DIR__))."/config/config.php");
 require_once("include/pdo.php");
 include("include/common.php");
@@ -546,7 +545,6 @@ function generate_main_dashboard_XML($project_instance, $date)
             $seconds = ($time%60);
             $nextExpected = strtotime($hours.":".$minutes.":".$seconds." UTC");
         }
-
 
 
               $divname = $build2grouprule_array["siteid"]."_".$build2grouprule_array["buildname"];

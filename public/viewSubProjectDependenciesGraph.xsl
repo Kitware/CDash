@@ -155,10 +155,10 @@ This circle plot captures the interrelationships among subgroups. Mouse over any
 
     if (window.location.protocol === 'https:') {
       e.setAttribute('src', 'https://rawgit.com/NYTimes/svg-crowbar/gh-pages/svg-crowbar.js');
-    } 
-    else { 
-      e.setAttribute('src', 'http://nytimes.github.com/svg-crowbar/svg-crowbar.js'); 
-    } 
+    }
+    else {
+      e.setAttribute('src', 'http://nytimes.github.com/svg-crowbar/svg-crowbar.js');
+    }
     e.setAttribute('class', 'svg-crowbar');
     document.body.appendChild(e);
   }
