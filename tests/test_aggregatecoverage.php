@@ -20,10 +20,10 @@ class AggregateCoverageTestCase extends KWWebTestCase
             'debug_case/Coverage.xml', 'debug_case/CoverageLog-0.xml');
 
         foreach ($files as $file) {
-          if (!$this->submitTestingFile($file)) {
-              $this->fail("Failed to submit $file");
-              return 1;
-          }
+            if (!$this->submitTestingFile($file)) {
+                $this->fail("Failed to submit $file");
+                return 1;
+            }
         }
 
         $this->get($this->url . "/api/v1/index.php?project=InsightExample&date=2016-02-16");
@@ -59,10 +59,10 @@ class AggregateCoverageTestCase extends KWWebTestCase
         }
 
         if ($success) {
-          $this->pass('Tests passed');
-          return 0;
+            $this->pass('Tests passed');
+            return 0;
         } else {
-          return 1;
+            return 1;
         }
     }
 
@@ -86,8 +86,8 @@ class AggregateCoverageTestCase extends KWWebTestCase
 
     public function submitTestingFile($filename)
     {
-      $file_to_submit =
+        $file_to_submit =
           dirname(__FILE__)."/data/AggregateCoverage/".$filename;
-      return $this->submission('InsightExample', $file_to_submit);
+        return $this->submission('InsightExample', $file_to_submit);
     }
 }

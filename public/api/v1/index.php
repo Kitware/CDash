@@ -1076,7 +1076,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $build_response['nerrorlog'] = $build_array["nerrorlog"];
 
         if ($build_response['buildname'] != 'Aggregate Coverage') {
-          $buildgroups_response[$i]['builds'][] = $build_response;
+            $buildgroups_response[$i]['builds'][] = $build_response;
         }
 
         // Coverage

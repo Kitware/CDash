@@ -63,11 +63,11 @@ class CoverageLogHandler extends AbstractHandler
             $this->Build->Generator = $attributes['GENERATOR'];
 
             if ($this->Build->Type == "Nightly") {
-              $this->AggregateBuild->SiteId = $this->Site->Id;
-              $this->AggregateBuild->Name = "Aggregate Coverage";
-              $date = substr($attributes['BUILDSTAMP'], 0, strpos($attributes['BUILDSTAMP'], '-'));
-              $this->AggregateBuild->SetStamp($date."-0000-Nightly");
-              $this->AggregateBuild->Generator = $attributes['GENERATOR'];
+                $this->AggregateBuild->SiteId = $this->Site->Id;
+                $this->AggregateBuild->Name = "Aggregate Coverage";
+                $date = substr($attributes['BUILDSTAMP'], 0, strpos($attributes['BUILDSTAMP'], '-'));
+                $this->AggregateBuild->SetStamp($date."-0000-Nightly");
+                $this->AggregateBuild->Generator = $attributes['GENERATOR'];
             }
         } elseif ($name=='FILE') {
             $this->CurrentCoverageFile = new CoverageFile();
@@ -96,13 +96,13 @@ class CoverageLogHandler extends AbstractHandler
             $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
 
             if ($this->Build->Type == "Nightly") {
-              $this->AggregateBuild->ProjectId = $this->projectid;
-              $this->AggregateBuild->StartTime = $start_time;
-              $this->AggregateBuild->EndTime = $end_time;
-              $this->AggregateBuild->SubmitTime = gmdate(FMT_DATETIME);
-              $this->AggregateBuild->SetSubProject($this->SubProjectName);
-              $this->AggregateBuild->GetIdFromName($this->SubProjectName);
-              $this->AggregateBuild->RemoveIfDone();
+                $this->AggregateBuild->ProjectId = $this->projectid;
+                $this->AggregateBuild->StartTime = $start_time;
+                $this->AggregateBuild->EndTime = $end_time;
+                $this->AggregateBuild->SubmitTime = gmdate(FMT_DATETIME);
+                $this->AggregateBuild->SetSubProject($this->SubProjectName);
+                $this->AggregateBuild->GetIdFromName($this->SubProjectName);
+                $this->AggregateBuild->RemoveIfDone();
 
               // If the build doesn't exist we add it
               if ($this->AggregateBuild->Id == 0) {
@@ -110,8 +110,8 @@ class CoverageLogHandler extends AbstractHandler
                   add_build($this->AggregateBuild);
               }
 
-              $this->CoverageSummary = new CoverageSummary();
-              $this->CoverageSummary->BuildId = $this->AggregateBuild->Id;
+                $this->CoverageSummary = new CoverageSummary();
+                $this->CoverageSummary->BuildId = $this->AggregateBuild->Id;
 
               // Record the coverage data that we parsed from this file.
               foreach ($this->AggregateCoverageFiles as $coverageInfo) {
@@ -145,7 +145,7 @@ class CoverageLogHandler extends AbstractHandler
 
               // Insert coverage summary
               $this->CoverageSummary->Insert(true);
-              $this->CoverageSummary->ComputeDifference();
+                $this->CoverageSummary->ComputeDifference();
             }
 
             $this->Build->ProjectId = $this->projectid;
