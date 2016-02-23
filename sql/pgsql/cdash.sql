@@ -39,7 +39,7 @@ CREATE INDEX "type" on "build" ("type");
 CREATE INDEX "name" on "build" ("name");
 CREATE INDEX "parentid" on "build" ("parentid");
 CREATE INDEX "projectid_parentid_starttime" ON "build" (projectid,parentid,starttime);
-CREATE INDEX "uuid" on "build" ("uuid");
+CREATE INDEX "build_uuid" on "build" ("uuid");
 
 --
 -- Table: buildgroup

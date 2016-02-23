@@ -697,7 +697,7 @@ if (isset($_GET['upgrade-2-4'])) {
         AddTableField('build', 'uuid', 'varchar(36)', 'character varying(36)', false);
         if ($db_type === "pgsql") {
             pdo_query("ALTER TABLE build ADD UNIQUE (uuid)");
-            pdo_query('CREATE INDEX "uuid" ON "build" ("uuid")');
+            pdo_query('CREATE INDEX "build_uuid" on "build" ("uuid")');
         } else {
             pdo_query("ALTER TABLE build ADD UNIQUE KEY (uuid)");
         }
