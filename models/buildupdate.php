@@ -37,6 +37,11 @@ class buildupdate
         $this->Files = array();
         $this->Command = "";
         $this->Append = false;
+        $this->DuplicateSQL = '';
+        global $CDASH_DB_TYPE;
+        if ($CDASH_DB_TYPE !== 'pgsql') {
+            $this->DuplicateSQL = 'ON DUPLICATE KEY UPDATE buildid=buildid';
+        }
     }
 
     public function AddFile($file)
@@ -150,7 +155,7 @@ class buildupdate
           $updateid = qnum($this->UpdateId);
           $query = "INSERT INTO build2update (buildid,updateid)
               VALUES ($buildid,$updateid)
-              ON DUPLICATE KEY UPDATE buildid=buildid";
+              $this->DuplicateSQL";
 
           if (!pdo_query($query)) {
               add_last_sql_error("Build2Update Insert", 0, $this->BuildId);
@@ -302,7 +307,7 @@ class buildupdate
 
           pdo_query("INSERT INTO build2update (buildid,updateid) VALUES
                   (".qnum($this->BuildId).",".qnum($this->updateId).")
-                  ON DUPLICATE KEY UPDATE buildid=buildid");
+                  $this->DuplicateSQL");
           add_last_sql_error("BuildUpdate AssociateBuild", 0, $this->BuildId);
 
       // check if this build's parent also needs to be associated with
@@ -323,7 +328,7 @@ class buildupdate
 
               pdo_query("INSERT INTO build2update (buildid,updateid) VALUES
                       (".qnum($parentid).",".qnum($this->updateId).")
-                      ON DUPLICATE KEY UPDATE buildid=buildid");
+                      $this->DuplicateSQL");
               add_last_sql_error("BuildUpdate AssociateBuild", 0, $parentid);
           }
       }
