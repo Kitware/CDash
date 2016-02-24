@@ -301,6 +301,9 @@ function ProcessSubmissions($projectid, $mypid)
             pdo_query(
                     "DELETE FROM submission WHERE id='$submission_id'");
             add_last_sql_error("ProcessSubmissions-3");
+            pdo_query(
+                    "DELETE FROM submission2ip WHERE submissionid='$submission_id'");
+            add_last_sql_error("ProcessSubmissions-3");
         } else {
             // Mark it as done with $new_status and record finished time:
             //
