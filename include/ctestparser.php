@@ -167,8 +167,8 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
             (SELECT siteid FROM build WHERE id=$buildid)");
     $sitename = $row["name"];
 
-    writeBackupFile($filehandler, "", $projectname, $buildname, $sitename,
-            $stamp, $buildfile_row["filename"]);
+    $filename = writeBackupFile($filehandler, "", $projectname, $buildname,
+            $sitename, $stamp, $buildfile_row["filename"]);
 
     // Include the handler file for this type of submission.
     $type = $buildfile_row['type'];
@@ -177,6 +177,7 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
         add_log("No handler include file for $type (tried $include_file)",
                 "parse_put_submission",
                 LOG_ERR, $projectid);
+        check_for_immediate_deletion($filename);
         return true;
     }
     require_once($include_file);
@@ -186,12 +187,14 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
     if (!class_exists($className)) {
         add_log("No handler class for $type", "parse_put_submission",
                 LOG_ERR, $projectid);
+        check_for_immediate_deletion($filename);
         return true;
     }
     $handler = new $className($buildid);
 
     // Parse the file.
     $handler->Parse($filehandler);
+    check_for_immediate_deletion($filename);
     return true;
 }
 
@@ -382,13 +385,17 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
         $parsingerror = $localParser->EndParsingFile();
     }
 
-    // Delete this file as soon as its been parsed if
-    // CDASH_BACKUP_TIMEFRAME is set to '0'.
+    check_for_immediate_deletion($filename);
+    displayReturnStatus($statusarray);
+    return $handler;
+}
+
+function check_for_immediate_deletion($filename)
+{
+    // Delete this file as soon as its been parsed (or an error occurs)
+    // if CDASH_BACKUP_TIMEFRAME is set to '0'.
     global $CDASH_BACKUP_TIMEFRAME;
     if ($CDASH_BACKUP_TIMEFRAME === '0') {
         unlink($filename);
     }
-
-    displayReturnStatus($statusarray);
-    return $handler;
 }
