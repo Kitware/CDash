@@ -426,8 +426,9 @@ function clean_backup_directory()
         return;
     }
 
-    foreach (glob($CDASH_BACKUP_DIRECTORY."/*.xml") as $filename) {
-        if (file_exists($filename) && time()-filemtime($filename) > $CDASH_BACKUP_TIMEFRAME*3600) {
+    foreach (glob("$CDASH_BACKUP_DIRECTORY/*") as $filename) {
+        if (file_exists($filename) && is_file($filename) &&
+                time()-filemtime($filename) > $CDASH_BACKUP_TIMEFRAME * 3600) {
             cdash_unlink($filename);
         }
     }
