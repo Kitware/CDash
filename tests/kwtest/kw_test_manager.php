@@ -62,9 +62,12 @@ class TestManager
           }
       }
 
-      $filenames = glob(dirname($logfilename)."/*.xml");
+      global $CDASH_BACKUP_DIRECTORY;
+      $filenames = glob("$CDASH_BACKUP_DIRECTORY/*");
       foreach ($filenames as $filename) {
-          cdash_testsuite_unlink($filename);
+          if (is_file($filename)) {
+              cdash_testsuite_unlink($filename);
+          }
       }
   }
     public function runFileTest(&$reporter, $file)
