@@ -419,10 +419,16 @@ function checkUserPolicy($userid, $projectid, $onlyreturn=0)
 /** Clean the backup directory */
 function clean_backup_directory()
 {
-    include("config/config.php");
-    require_once("include/pdo.php");
-    foreach (glob($CDASH_BACKUP_DIRECTORY."/*.xml") as $filename) {
-        if (file_exists($filename) && time()-filemtime($filename) > $CDASH_BACKUP_TIMEFRAME*3600) {
+    global $CDASH_BACKUP_DIRECTORY, $CDASH_BACKUP_TIMEFRAME;
+
+    if ($CDASH_BACKUP_TIMEFRAME === '0') {
+        // File are deleted upon submission, no need to do anything here.
+        return;
+    }
+
+    foreach (glob("$CDASH_BACKUP_DIRECTORY/*") as $filename) {
+        if (file_exists($filename) && is_file($filename) &&
+                time()-filemtime($filename) > $CDASH_BACKUP_TIMEFRAME * 3600) {
             cdash_unlink($filename);
         }
     }
