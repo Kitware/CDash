@@ -160,7 +160,7 @@ class coveragesummary
                     // exists.
                     pdo_begin_transaction();
                     $row = pdo_single_row_query(
-                            "SELECT 1 FROM coverage
+                            "SELECT * FROM coverage
                             WHERE buildid=".qnum($this->BuildId)." AND
                             fileid=".qnum($coverage->CoverageFile->Id)."
                             FOR UPDATE");
@@ -292,8 +292,8 @@ class coveragesummary
                     }
                     $query =
                         "UPDATE coveragesummary SET
-                        `loctested` = `loctested` + " . qnum($delta_tested) . ",
-                        `locuntested` = `locuntested` + " . qnum($delta_untested) . "
+                        loctested = loctested + " . qnum($delta_tested) . ",
+                        locuntested = locuntested + " . qnum($delta_untested) . "
                             WHERE buildid=" . qnum($parentid);
                 }
                 if (!pdo_query($query)) {
