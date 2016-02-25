@@ -740,8 +740,8 @@ function AddUniqueConstraintToSiteTable($site_table)
             'client_site2project');
 
     // Find all the rows that will violate this new unique constraint.
-    $query = "SELECT name, ip, COUNT(*) AS c FROM $site_table
-        GROUP BY name, ip HAVING c > 1";
+    $query = "SELECT name, ip, COUNT(*) FROM $site_table
+        GROUP BY name, ip HAVING COUNT(*) > 1";
     $result = pdo_query($query);
     while ($row = pdo_fetch_array($result)) {
         $name = $row['name'];
@@ -770,7 +770,7 @@ function AddUniqueConstraintToSiteTable($site_table)
         $ids_to_remove = array();
         $dupe_query =
             "SELECT id FROM $site_table
-            WHERE id != $id_to_keep && name = '$name' AND ip = '$ip'";
+            WHERE id != $id_to_keep AND name = '$name' AND ip = '$ip'";
         $dupe_result = pdo_query($dupe_query);
         while ($dupe_row = pdo_fetch_array($dupe_result)) {
             $id_to_remove = $dupe_row['id'];
@@ -788,7 +788,7 @@ function AddUniqueConstraintToSiteTable($site_table)
     // It should be safe to add the constraint now.
     if ($CDASH_DB_TYPE == "pgsql") {
         pdo_query("ALTER TABLE $site_table ADD UNIQUE (name,ip)");
-        pdo_query('CREATE INDEX "name_ip" ON "'.$site_table.'" ("name,ip")');
+        pdo_query('CREATE INDEX "name_ip" ON "'.$site_table.'" ("name","ip")');
     } else {
         pdo_query("ALTER TABLE $site_table ADD UNIQUE KEY (name,ip)");
     }

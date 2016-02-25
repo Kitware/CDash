@@ -454,6 +454,22 @@ class UpgradeTestCase extends KWWebTestCase
                     $insert_query =
                         "INSERT INTO $table_to_update (siteid, uuid)
                         VALUES ($dupe, '$dupe')";
+                } elseif ($table_to_update === 'client_job') {
+                    $insert_query =
+                        "INSERT INTO $table_to_update (siteid, scheduleid, osid, cmakeid, compilerid)
+                        VALUES ($dupe, 0, 0, 0, 0)";
+                } elseif ($table_to_update === 'client_site2compiler') {
+                    $insert_query =
+                        "INSERT INTO $table_to_update (siteid, generator)
+                        VALUES ($dupe, 'asdf')";
+                } elseif ($table_to_update === 'client_site2library') {
+                    $insert_query =
+                        "INSERT INTO $table_to_update (siteid, include)
+                        VALUES ($dupe, 'asdf')";
+                } elseif ($table_to_update === 'client_site2program') {
+                    $insert_query =
+                        "INSERT INTO $table_to_update (siteid, name, version, path)
+                        VALUES ($dupe, 'asdf', 'asdf', 'asdf')";
                 } else {
                     $insert_query =
                         "INSERT INTO $table_to_update (siteid) VALUES ($dupe)";
