@@ -358,7 +358,7 @@ function GetNextSubmission($projectid)
             ORDER BY id LIMIT 1 FOR UPDATE");
     add_last_sql_error("GetNextSubmission-1");
 
-    if (!array_key_exists('id', $query_array)) {
+    if ($query_array === false || !array_key_exists('id', $query_array)) {
         return false;
     }
     $submission_id = $query_array['id'];
