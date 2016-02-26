@@ -304,7 +304,6 @@ class coveragesummary
                 pdo_commit();
             }
         }
-
         return true;
     }   // Insert()
 
@@ -385,4 +384,5 @@ class coveragesummary
         }
         return false;
     }
+
 } // end CoverageSummary class;
