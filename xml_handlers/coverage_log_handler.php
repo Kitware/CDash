@@ -63,8 +63,19 @@ class CoverageLogHandler extends AbstractHandler
             $this->Build->Generator = $attributes['GENERATOR'];
 
             if ($this->Build->Type == "Nightly") {
-                $this->AggregateBuild->SiteId = $this->Site->Id;
-                $this->AggregateBuild->Name = "Aggregate Coverage";
+
+                // Get siteid for 'CDash Server'.
+                $server = new Site();
+                $server->Name = "CDash Server";
+                if (!$server->Exists()) {
+                    // Create it if it doesn't exist.
+                    $server_ip = $_SERVER['SERVER_ADDR'];
+                    $server->Ip = $server_ip;
+                    $server->Insert();
+                }
+                $this->AggregateBuild->SiteId = $server->Id;
+
+                $this->AggregateBuild->Name = 'Aggregate Coverage';
                 $date = substr($attributes['BUILDSTAMP'], 0, strpos($attributes['BUILDSTAMP'], '-'));
                 $this->AggregateBuild->SetStamp($date."-0000-Nightly");
                 $this->AggregateBuild->Generator = $attributes['GENERATOR'];
