@@ -30,7 +30,11 @@ function do_submit($filehandle, $projectid, $expected_md5='', $do_checksum=true,
   // If we have php curl we do it asynchronously
   if (function_exists("curl_init") == true) {
       $currentURI = get_server_URI(true);
-      $request = $currentURI."/ajax/dailyupdatescurl.php?projectid=".$projectid;
+      if ($CDASH_ASYNCHRONOUS_SUBMISSION) {
+          $request = $currentURI."/dailyupdatescurl.php?projectid=".$projectid;
+      } else {
+          $request = $currentURI."/ajax/dailyupdatescurl.php?projectid=".$projectid;
+      }
 
       $ch = curl_init();
       curl_setopt($ch, CURLOPT_URL, $request);
