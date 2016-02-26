@@ -91,7 +91,7 @@ class UpdateHandler extends AbstractHandler
           // if so, change our buildid to point at the parent instead.
           $parentid = $this->Build->GetParentBuildId();
           if ($parentid > 0) {
-            $this->Build->Id = $parentid;
+              $this->Build->Id = $parentid;
           }
 
           $this->Build->RemoveIfDone();
