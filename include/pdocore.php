@@ -87,11 +87,8 @@ function pdo_error($link_identifier = null)
     global $CDASH_PRODUCTION_MODE;
     $error_info = get_link_identifier($link_identifier)->getPdo()->errorInfo();
     if (isset($error_info[2]) && $error_info[0] !== '00000') {
+        add_log($error_info[2], "pdo_error", LOG_ERR);
         if ($CDASH_PRODUCTION_MODE) {
-            if (openlog('cdash', LOG_PID, LOG_USER)) {
-                syslog(LOG_ERR, $error_info[2]);
-                closelog();
-            }
             return "SQL error encountered, query hidden.";
         }
         return $error_info[2];
