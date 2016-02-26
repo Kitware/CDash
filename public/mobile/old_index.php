@@ -657,7 +657,6 @@ function generate_main_dashboard_XML($project_instance, $date)
                   sp.groupid AS subprojectgroup,
                   g.name as groupname,gp.position,g.id as groupid,
                   $label_sql
-                  (SELECT count(buildid) FROM errorlog WHERE buildid=b.id) AS nerrorlog,
                   (SELECT count(buildid) FROM build2uploadfile WHERE buildid=b.id) AS builduploadfiles
                   FROM build AS b
                   LEFT JOIN build2group AS b2g ON (b2g.buildid=b.id)
@@ -1231,7 +1230,6 @@ function generate_main_dashboard_XML($project_instance, $date)
       $xml .= add_XML_value("builddate", time_difference(time()-$starttimestamp, false, 'ago')); // use the default timezone
     }
         $xml .= add_XML_value("submitdate", date(FMT_DATETIMEDISPLAY, $submittimestamp));// use the default timezone
-    $xml .= add_XML_value("nerrorlog", $build_array["nerrorlog"]);// use the default timezone
     $xml .= "</build>";
 
 

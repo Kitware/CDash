@@ -16,7 +16,6 @@
 
 require_once("include/defines.php");
 require_once("include/pdocore.php");
-require_once("models/errorlog.php");
 
 use \Monolog\Logger;
 use \Monolog\Registry;

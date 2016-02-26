@@ -98,7 +98,6 @@ function get_dynamic_builds($projectid)
               b.testtimestatusfailed AS countteststimestatusfailed,
               sp.id AS subprojectid,
               sp.groupid AS subprojectgroup,
-              (SELECT count(buildid) FROM errorlog WHERE buildid=b.id) AS nerrorlog,
               (SELECT count(buildid) FROM build2uploadfile WHERE buildid=b.id) AS builduploadfiles
               FROM build AS b
               LEFT JOIN build2group AS b2g ON (b2g.buildid=b.id)

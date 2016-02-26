@@ -500,7 +500,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
         sp.groupid AS subprojectgroup,
         g.name AS groupname,gp.position,g.id AS groupid,
         (SELECT count(buildid) FROM label2build WHERE buildid=b.id) AS numlabels,
-        (SELECT count(buildid) FROM errorlog WHERE buildid=b.id) AS nerrorlog,
         (SELECT count(buildid) FROM build2uploadfile WHERE buildid=b.id) AS builduploadfiles
             FROM build AS b
             LEFT JOIN build2group AS b2g ON (b2g.buildid=b.id)
@@ -1073,7 +1072,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $build_response['builddate'] = time_difference(time()-$starttimestamp, false, 'ago');
         }
         $build_response['submitdate'] = date(FMT_DATETIMEDISPLAY, $submittimestamp);
-        $build_response['nerrorlog'] = $build_array["nerrorlog"];
 
         $buildgroups_response[$i]['builds'][] = $build_response;
 
