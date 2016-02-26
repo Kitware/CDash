@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once('public/login.php');
+require_once('login.php');
 
 
 function echo_currently_processing_submissions()
