@@ -331,9 +331,6 @@
     <tr class="trodd"><td id="nob"><a href="manageBanner.php">Manage banner message</a></td></tr>
     <tr class="treven"><td id="nob"><a href="manageUsers.php">Manage users</a></td></tr>
     <tr class="trodd"><td id="nob"><a href="upgrade.php">Maintenance</a></td></tr>
-    <tr class="treven"><td id="nob"><a href="loggingAdministration.php">CDash Logs</a>
-
-    </td></tr>
     <tr class="trodd"><td id="nob"><a href="monitor.php">Monitor / Processing Statistics</a></td></tr>
     <tr class="treven"><td id="nob"><a href="siteStatistics.php">Site Statistics</a></td></tr>
     <tr class="trodd"><td id="nob"><a href="userStatistics.php">User Statistics</a></td></tr>
