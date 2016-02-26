@@ -125,7 +125,7 @@ namespace CDash {
                         $this->attributes);
                 } catch (\PDOException $e) {
                     if ($log_error) {
-                        \add_log($e->getMessage() . PHP_EOL . $e->getTraceAsString(), 'getPdo', LOG_ERR);
+                        add_log($e->getMessage() . PHP_EOL . $e->getTraceAsString(), 'getPdo', LOG_ERR);
                     }
                     return false;
                 }
@@ -156,7 +156,7 @@ namespace CDash {
                 try {
                     return $this->pdo->query($sql);
                 } catch (\PDOException $e) {
-                    \add_log($e->getMessage() . PHP_EOL . $e->getTraceAsString(), 'query', LOG_ERR);
+                    add_log($e->getMessage() . PHP_EOL . $e->getTraceAsString(), 'query', LOG_ERR);
                     return false;
                 }
             });
