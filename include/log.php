@@ -108,7 +108,7 @@ function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
     }
 
     if ($buildid !== 0 && !is_null($buildid)) {
-        $context['build_id'] = $buildid;
+        $context['build_id'] = strval($buildid);
     }
 
     if ($resourcetype !== 0 && !is_null($resourcetype)) {

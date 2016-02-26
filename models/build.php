@@ -588,10 +588,16 @@ class build
                     $result = pdo_query(
                             "SELECT groupid FROM build2group WHERE buildid=".qnum($this->ParentId));
                     if (pdo_num_rows($result) == 0) {
+                        global $CDASH_DB_TYPE;
+                        $duplicate_sql = '';
+                        if ($CDASH_DB_TYPE !== 'pgsql') {
+                            $duplicate_sql =
+                                'ON DUPLICATE KEY UPDATE groupid=groupid';
+                        }
                         $query =
                             "INSERT INTO build2group (groupid,buildid)
                             VALUES ('$this->GroupId','$this->ParentId')
-                            ON DUPLICATE KEY UPDATE groupid=groupid";
+                            $duplicate_sql";
                         if (!pdo_query($query)) {
                             add_last_sql_error("Parent Build2Group Insert", $this->ProjectId, $this->ParentId);
                         }

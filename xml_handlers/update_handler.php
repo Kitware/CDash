@@ -86,6 +86,14 @@ class UpdateHandler extends AbstractHandler
           $this->Build->ProjectId = $this->projectid;
 
           $this->Build->GetIdFromName($this->SubProjectName);
+          // Update.xml doesn't include SubProject information.
+          // Check if GetIdFromName returned a child build, and
+          // if so, change our buildid to point at the parent instead.
+          $parentid = $this->Build->GetParentBuildId();
+          if ($parentid > 0) {
+              $this->Build->Id = $parentid;
+          }
+
           $this->Build->RemoveIfDone();
 
           // If the build doesn't exist we add it
