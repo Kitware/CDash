@@ -63,7 +63,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname, $date);
 $xml .= "<menu>";
 $xml .= add_XML_value("previous", "overview.php?project=$projectname&date=$previousdate");
 $xml .= add_XML_value("current", "overview.php?project=$projectname");
-$xml .= add_XML_value("next", "overview.phpv?project=$projectname&date=$nextdate");
+$xml .= add_XML_value("next", "overview.php?project=$projectname&date=$nextdate");
 $xml .= "</menu>";
 $xml .= add_XML_value("hasSubProjects", $has_subprojects);
 
