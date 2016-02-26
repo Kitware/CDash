@@ -716,6 +716,9 @@ if (isset($_GET['upgrade-2-4'])) {
     // Support for subproject path.
     AddTableField('subproject', 'path', 'varchar(512)', 'character varying(512)', '');
 
+    // Remove the errorlog from the DB (we're all log files now).
+    pdo_query("DROP TABLE IF EXISTS errorlog");
+
     // Set the database version
     setVersion();
 
