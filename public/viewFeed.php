@@ -22,7 +22,6 @@ include_once("include/common.php");
 include("include/version.php");
 include("models/project.php");
 include("models/user.php");
-include_once("models/errorlog.php");
 
 @$projectid = $_GET["projectid"];
 if ($projectid != null) {

@@ -1015,11 +1015,6 @@ function addDailyChanges($projectid)
 
         pdo_query("UPDATE dailyupdate SET status='1' WHERE projectid='$projectid' AND date='$date'");
 
-    // Remove the old logs
-    include_once("models/errorlog.php");
-        $ErrorLog = new ErrorLog;
-        $ErrorLog->Clean(10); // 10 days
-
     // Clean the backup directory
     clean_backup_directory();
 
