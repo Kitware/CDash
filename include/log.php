@@ -16,7 +16,6 @@
 
 require_once("include/defines.php");
 require_once("include/pdocore.php");
-require_once("models/errorlog.php");
 
 use \Monolog\Logger;
 use \Monolog\Registry;
@@ -92,8 +91,7 @@ function to_psr3_level($type)
 function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
                  $resourcetype=0, $resourceid=0)
 {
-    global $CDASH_LOG_FILE, $CDASH_LOG_FILE_MAXSIZE_MB, $CDASH_LOG_LEVEL,
-        $CDASH_LOG_TO_DATABASE, $CDASH_TESTING_MODE;
+    global $CDASH_LOG_FILE, $CDASH_LOG_FILE_MAXSIZE_MB, $CDASH_LOG_LEVEL, $CDASH_TESTING_MODE;
 
     $level = to_psr3_level($type);
 
@@ -206,30 +204,6 @@ function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
     }
 
     $logger->log($level, $text, $context);
-
-    // Insert into the database, if so desired.
-    if ($CDASH_LOG_TO_DATABASE &&
-        ($level === LogLevel::ERROR || $level === LogLevel::WARNING)
-    ) {
-        $ErrorLog = new ErrorLog();
-        $ErrorLog->ProjectId = $projectid;
-        $ErrorLog->BuildId = $buildid;
-
-        switch ($level) {
-            case LogLevel::ERROR:
-                $ErrorLog->Type = 4;
-                break;
-            case LogLevel::WARNING:
-                $ErrorLog->Type = 5;
-                break;
-        }
-
-        $ErrorLog->Description = '('.$function.'): '.$text;
-        $ErrorLog->ResourceType = $resourcetype;
-        $ErrorLog->ResourceId = $resourceid;
-
-        $ErrorLog->Insert();
-    }
 }
 
 
