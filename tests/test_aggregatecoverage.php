@@ -16,8 +16,11 @@ class AggregateCoverageTestCase extends KWWebTestCase
 
     public function testAggregateCoverage()
     {
-        $files = array('release_case/Coverage.xml', 'release_case/CoverageLog-0.xml',
-            'debug_case/Coverage.xml', 'debug_case/CoverageLog-0.xml');
+        $files = array(
+                'debug_case/Coverage.xml',
+                'debug_case/CoverageLog-0.xml',
+                'release_case/Coverage.xml',
+                'release_case/CoverageLog-0.xml');
 
         foreach ($files as $file) {
             if (!$this->submitTestingFile($file)) {
@@ -36,26 +39,72 @@ class AggregateCoverageTestCase extends KWWebTestCase
             return 1;
         }
 
+        $debug_buildid = 0;
+        $release_buildid = 0;
+        $aggregate_buildid = 0;
         $success = true;
         foreach ($jsonobj['coverages'] as $coverage) {
             $name = $coverage['buildname'];
             switch ($name) {
                 case 'Aggregate Coverage':
+                    $aggregate_buildid = $coverage['buildid'];
                     $success &=
-                        $this->checkCoverage($coverage, 18, 6, 75);
+                        $this->checkCoverage($coverage, 23, 6, 79.31);
                     break;
                 case 'release_coverage':
+                    $release_buildid = $coverage['buildid'];
                     $success &=
-                        $this->checkCoverage($coverage, 12, 12, 50);
+                        $this->checkCoverage($coverage, 15, 14, 51.72);
                     break;
                 case 'debug_coverage':
+                    $debug_buildid = $coverage['buildid'];
                     $success &=
-                        $this->checkCoverage($coverage, 15, 9, 62.5);
+                        $this->checkCoverage($coverage, 20, 9, 68.97);
                     break;
                 default:
                     $this->fail("Unexpected coverage $name");
                     return 1;
             }
+        }
+
+        // Verify the differing file case.  The aggregate should share its version of
+        // 'diff.cxx' with debug_coverage because it submitted first.
+        $query = "SELECT buildid, fileid FROM coverage AS c
+            INNER JOIN coveragefile AS cf ON (cf.id=c.fileid)
+            WHERE cf.fullpath='./diff.cxx'";
+        $result = pdo_query($query);
+        $num_rows = pdo_num_rows($result);
+        if ($num_rows != 3) {
+            $this->fail("Expected 3 rows, found $num_rows");
+            return 1;
+        }
+        $debug_fileid = 0;
+        $release_fileid = 0;
+        $aggregate_fileid = 0;
+        while ($row = pdo_fetch_array($result)) {
+            $buildid = $row['buildid'];
+            switch ($buildid) {
+                case $debug_buildid:
+                    $debug_fileid = $row['fileid'];
+                    break;
+                case $release_buildid:
+                    $release_fileid = $row['fileid'];
+                    break;
+                case $aggregate_buildid:
+                    $aggregate_fileid = $row['fileid'];
+                    break;
+                default:
+                    $this->fail("Unexpected buildid $buildid");
+                    return 1;
+            }
+        }
+        if ($aggregate_fileid !== $debug_fileid) {
+            $this->fail("Expected aggregate and debug to share a version of diff.cxx ($aggregate_fileid vs $debug_fileid");
+            return 1;
+        }
+        if ($aggregate_fileid === $release_fileid) {
+            $this->fail("Expected aggregate and release to have different versions of diff.cxx ($aggregate_fileid vs $release_fileid");
+            return 1;
         }
 
         if ($success) {

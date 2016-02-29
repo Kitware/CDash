@@ -38,16 +38,22 @@
 			<PercentCoverage>62.50</PercentCoverage>
 			<CoverageMetric>0.83</CoverageMetric>
 		</File>
+		<File Name="diff.cxx" FullPath="./diff.cxx" Covered="true">
+			<LOCTested>5</LOCTested>
+			<LOCUnTested>0</LOCUnTested>
+			<PercentCoverage>100.00</PercentCoverage>
+			<CoverageMetric>1.00</CoverageMetric>
+		</File>
 		<File Name="foo.cxx" FullPath="./foo.cxx" Covered="true">
 			<LOCTested>5</LOCTested>
 			<LOCUnTested>3</LOCUnTested>
 			<PercentCoverage>62.50</PercentCoverage>
 			<CoverageMetric>0.83</CoverageMetric>
 		</File>
-		<LOCTested>15</LOCTested>
+		<LOCTested>20</LOCTested>
 		<LOCUntested>9</LOCUntested>
-		<LOC>24</LOC>
-		<PercentCoverage>62.50</PercentCoverage>
+		<LOC>29</LOC>
+		<PercentCoverage>68.97</PercentCoverage>
 		<EndDateTime>Feb 16 11:02 EST</EndDateTime>
 		<EndTime>1455638576</EndTime>
 		<ElapsedMinutes>0.00</ElapsedMinutes>
