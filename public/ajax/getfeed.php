@@ -105,13 +105,13 @@ foreach ($feeds as $f) {
         echo "<b>".$elapsedtime." ago: </b>";
     }
     ?>
- <?php //echo get_feed_type($f["type"]) ?>
+ <?php //echo get_feed_type($f["type"])?>
 <?php echo get_feed_link($f["type"], $f["buildid"], $f["description"]);
     ?>
 <br/>
 <?php
 
-} // End looping through feed ?>
+} // End looping through feed?>
 <?php if (count($feeds)>0) {
     ?>
 <div id="feedmore"><a href="viewFeed.php?projectid=<?php echo $projectid;

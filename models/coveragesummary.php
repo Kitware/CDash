@@ -387,5 +387,4 @@ class coveragesummary
         }
         return false;
     }
-
 } // end CoverageSummary class;
