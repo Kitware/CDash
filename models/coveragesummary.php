@@ -1,20 +1,19 @@
 <?php
 /*=========================================================================
-
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
   Language:  PHP
   Date:      $Date$
   Version:   $Revision$
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
 
   This software is distributed WITHOUT ANY WARRANTY; without even
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-  PURPOSE.  See the above copyright notices for more information.
+  PURPOSE. See the above copyright notices for more information.
+=========================================================================*/
 
-  =========================================================================*/
 class coveragesummary
 {
     private $LocTested = 0;
@@ -161,7 +160,7 @@ class coveragesummary
                     // exists.
                     pdo_begin_transaction();
                     $row = pdo_single_row_query(
-                            "SELECT 1 FROM coverage
+                            "SELECT * FROM coverage
                             WHERE buildid=".qnum($this->BuildId)." AND
                             fileid=".qnum($coverage->CoverageFile->Id)."
                             FOR UPDATE");
@@ -293,8 +292,8 @@ class coveragesummary
                     }
                     $query =
                         "UPDATE coveragesummary SET
-                        `loctested` = `loctested` + " . qnum($delta_tested) . ",
-                        `locuntested` = `locuntested` + " . qnum($delta_untested) . "
+                        loctested = loctested + " . qnum($delta_tested) . ",
+                        locuntested = locuntested + " . qnum($delta_untested) . "
                             WHERE buildid=" . qnum($parentid);
                 }
                 if (!pdo_query($query)) {

@@ -1,20 +1,19 @@
 <?php
 /*=========================================================================
-
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
   Language:  PHP
   Date:      $Date$
   Version:   $Revision$
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE.  See the above copyright notices for more information.
-
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 /** WARNING: It's recommended to create a config.local.php file and leave
  * this file as is.
  * If creating the config.local.php from config.php make sure you DELETE
@@ -204,9 +203,6 @@ $CDASH_SHOW_LAST_SUBMISSION = 1;
 
 // How many times to retry queries via random exponential back-off
 $CDASH_MAX_QUERY_RETRIES = 1;
-
-// Log to the database. This should really default to false. Seriously.
-$CDASH_LOG_TO_DATABASE = true;
 
 // Whether to use persistent mysql connections (mysql_connectp)
 $CDASH_USE_PERSISTENT_MYSQL_CONNECTION = false;

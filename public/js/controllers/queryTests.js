@@ -8,7 +8,13 @@ CDash.controller('QueryTestsController',
     // Check for filters
     $rootScope.queryString['filterstring'] = filters.getString();
 
-    $scope.orderByFields = [];
+    // Check for sort order cookie.
+    var sort_order = [];
+    var sort_cookie_value = $.cookie('cdash_query_tests_sort');
+    if(sort_cookie_value) {
+      sort_order = sort_cookie_value.split(",");
+    }
+    $scope.orderByFields = sort_order;
 
     $http({
       url: 'api/v1/queryTests.php',
@@ -38,5 +44,6 @@ CDash.controller('QueryTestsController',
 
     $scope.updateOrderByFields = function(field, $event) {
       multisort.updateOrderByFields($scope, field, $event);
+      $.cookie('cdash_query_tests_sort', $scope.orderByFields);
     };
 });

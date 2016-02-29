@@ -1,7 +1,7 @@
 <xsl:stylesheet
 xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
- 
-   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
+
+   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
 
     <xsl:template match="/">
@@ -14,7 +14,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
          <script type="application/x-javascript" src="jquery-iphone.js"></script>
          <script type="application/x-javascript" src="iphone.js"></script>
          </head>
-         
+
          <body orient="landscape">
 
    <div id="Top"></div>
@@ -22,11 +22,11 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
     <a href="http://cdash.org/mobile" class="home"></a>
     <a class="showPage button" href="#loginForm">Login</a>
     <a class="showPage title">CDash by Kitware Inc.</a>
-     
+
      <ul id="projects" title="Project" selection="true" class="nobg">
-        <li>        
+        <li>
           <h3><a href="http://www.itk.org"><xsl:value-of select="cdash/dashboard/projectname_encoded"/></a></h3>
-          
+
                 <div class="news-details">
                 <div><xsl:value-of select="cdash/dashboard/datetime"/></div>
                 <div><a>
@@ -43,12 +43,12 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
     <br/><b>Time: </b><xsl:value-of select="cdash/build/time"/>
     <br/><b>Type: </b><xsl:value-of select="cdash/build/type"/>
     </div>
-    
+
     <xsl:if test="cdash/build/lastsubmitbuild>0">
     <p/><b>Last submission: </b><a>
-     <xsl:attribute name="href">buildSummary.php?buildid=<xsl:value-of select="cdash/build/lastsubmitbuild"/></xsl:attribute><xsl:value-of select="cdash/build/lastsubmitdate"/></a>  
-     </xsl:if> 
-    
+     <xsl:attribute name="href">buildSummary.php?buildid=<xsl:value-of select="cdash/build/lastsubmitbuild"/></xsl:attribute><xsl:value-of select="cdash/build/lastsubmitdate"/></a>
+     </xsl:if>
+
     <div id="buildtable">
     <table cellspacing="0" cellpadding="0">
       <tr><td>
@@ -71,7 +71,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
                   </xsl:otherwise>
                </xsl:choose>
        </xsl:attribute>
-       
+
         <b><xsl:value-of select="cdash/update/nerrors"/></b></td>
         <td align="right">
               <xsl:attribute name="class">
@@ -83,7 +83,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
                   </xsl:otherwise>
                </xsl:choose>
        </xsl:attribute>
-        
+
         <b><xsl:value-of select="cdash/update/nwarnings"/></b></td>
         </tr>
         <tr class="tr-even">
@@ -179,7 +179,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
                   </xsl:otherwise>
                </xsl:choose>
        </xsl:attribute>
-       
+
         <b><xsl:value-of select="cdash/previousbuild/nupdateerrors"/></b></td>
         <td align="right">
               <xsl:attribute name="class">
@@ -191,7 +191,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
                   </xsl:otherwise>
                </xsl:choose>
        </xsl:attribute>
-        
+
         <b><xsl:value-of select="cdash/previousbuild/nupdatewarnings"/></b></td>
         </tr>
         <tr class="tr-even">
@@ -276,10 +276,10 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 [<a href="#Stage3">Test</a>]
 </div>
 <b>Update (<xsl:value-of select="cdash/update/nerrors"/> errors, <xsl:value-of select="cdash/update/nwarnings"/> warnings)</b>
-<br/><b>Start Time: </b><xsl:value-of select="cdash/update/starttime"/> 
+<br/><b>Start Time: </b><xsl:value-of select="cdash/update/starttime"/>
 <br/><b>End Time: </b><xsl:value-of select="cdash/update/endtime"/>
-<br/><b>Update Command: </b> <xsl:value-of select="cdash/update/command"/>    
-<br/><b>Update Type: </b> <xsl:value-of select="cdash/update/type"/>   
+<br/><b>Update Command: </b> <xsl:value-of select="cdash/update/command"/>
+<br/><b>Update Type: </b> <xsl:value-of select="cdash/update/type"/>
 <br/><b>Number of Updates: </b><xsl:value-of select="cdash/update/nupdates"/>
 </div>
 
@@ -294,10 +294,10 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 </div>
 <b>Configure (<xsl:value-of select="cdash/configure/nerrors"/> errors, <xsl:value-of select="cdash/configure/nwarnings"/> warnings)</b>
 
-<br/><b>Start Time: </b><xsl:value-of select="cdash/configure/starttime"/> 
+<br/><b>Start Time: </b><xsl:value-of select="cdash/configure/starttime"/>
 <br/><b>End Time: </b><xsl:value-of select="cdash/configure/endtime"/>
-<br/><b>Configure Command: </b> <xsl:value-of select="cdash/configure/command"/>    
-<br/><b>Configure Return Value: </b> <xsl:value-of select="cdash/configure/status"/> 
+<br/><b>Configure Command: </b> <xsl:value-of select="cdash/configure/command"/>
+<br/><b>Configure Return Value: </b> <xsl:value-of select="cdash/configure/status"/>
 <br/><b>Configure Output: </b>
 <br/><div class="CodeText"><xsl:value-of select="cdash/configure/output" disable-output-escaping="yes"/></div>
 </div>
@@ -333,7 +333,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 </xsl:for-each>
 </div> <!-- Stage 2 -->
 
-<div id="Stage2">      
+<div id="Stage2">
 <div class="tracknav">
 [<a href="#top">Top</a>]
 [<a href="#Stage0">Update</a>]
@@ -356,7 +356,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 <xsl:value-of select="postcontext" disable-output-escaping="yes"/>
 </div>
 </div>
-</xsl:for-each>      
+</xsl:for-each>
 </div> <!-- Stage 2 -->
 
 <!-- Test -->
@@ -370,7 +370,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 </div>
 <b>Tests (<xsl:value-of select="cdash/test/npassed"/>  passed, <xsl:value-of select="cdash/test/nfailed"/> failed, <xsl:value-of select="cdash/test/nnotrun"/> not run)</b>
 </div>
-<!-- 
+<!--
 <a><xsl:attribute name="href">viewTest.php?buildid=<xsl:value-of select="cdash/build/id"/></xsl:attribute>[View Tests Summary]</a>
 -->
 <br/>
@@ -382,18 +382,18 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
     <form id="loginForm" class="dialog" method="post" action="/login">
         <fieldset>
             <h1>Login</h1>
-            <label class="inside" id="username-label" for="username">Username...</label> 
+            <label class="inside" id="username-label" for="username">Username...</label>
             <input id="username" name="side-username" type="text"/>
 
             <label class="inside" id="password-label" for="password">Password...</label>
             <input id="password" name="side-password" type="password"/>
-            
+
             <input class="submitButton" value="Login" type="submit"/>
             <input name="processlogin" value="1" type="hidden"/>
             <input name="returnpage" value="/mobile" type="hidden"/>
         </fieldset>
     </form>
-    
+
         </body>
       </html>
     </xsl:template>

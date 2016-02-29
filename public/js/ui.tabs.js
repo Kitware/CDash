@@ -9,13 +9,13 @@ function showHelp(id_div)
   {
   $(".tab_help").html($("#"+id_div).html()).show();
   }
-  
+
 function showHelpTop(id_div)
   {
   $(".tab_help_top").html($("#"+id_div).html()).show();
   }
-  
-function extractUrlParams(){  
+
+function extractUrlParams(){
   var t = location.search.substring(1).split('&');
   var f = [];
   for (var i=0; i<t.length; i++){
@@ -399,7 +399,7 @@ $.fn.tabs = function(initial, settings) {
         tabs.bind('triggerTab', function() {
 
             // if the tab is already selected or disabled or animation is still running stop here
-            
+
             var li = $(this).parents('li:eq(0)');
             if (container.locked || li.is('.' + settings.selectedClass) || li.is('.' + settings.disabledClass)) {
                 return false;
@@ -425,10 +425,10 @@ $.fn.tabs = function(initial, settings) {
                 }
 
             } else {
-               
+
                   location.hash = hash.replace('#', '');
                     $(this).trigger('click');
-                
+
             }
 
         });
@@ -465,7 +465,7 @@ $.fn.tabs = function(initial, settings) {
 
         // attach click event
         tabs.bind('click', function(e) {
-            $('.tab_help').html('');            
+            $('.tab_help').html('');
             var trueClick = e.clientX; // add to history only if true click occured, not a triggered click
             var clicked = this, li = $(this).parents('li:eq(0)'), toShow = $(this.hash), toHide = containers.filter(':visible');
             // if animation is still running, tab is selected or disabled or onClick callback returns false stop here
@@ -493,7 +493,7 @@ $.fn.tabs = function(initial, settings) {
                 if (!$.browser.msie) { // not in IE to prevent ClearType font issue
                     resetCSS['opacity'] = '';
                 }
-                
+
                 // switch tab, animation prevents browser scrolling to the fragment
                 function switchTab() {
                     if (settings.bookmarkable && trueClick) { // add to history only if true click occured, not a triggered click
@@ -501,7 +501,7 @@ $.fn.tabs = function(initial, settings) {
                     }
                     toHide.animate(hideAnim, hideSpeed, function() { //
                         $(clicked).parents('li:eq(0)').addClass(settings.selectedClass).siblings().removeClass(settings.selectedClass);
-                        toHide.addClass(settings.hideClass).css(resetCSS); // maintain flexible height and accessibility in print etc.                        
+                        toHide.addClass(settings.hideClass).css(resetCSS); // maintain flexible height and accessibility in print etc.
                         if (typeof onHide == 'function') {
                             onHide(clicked, toShow[0], toHide[0]);
                         }

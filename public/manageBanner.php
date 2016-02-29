@@ -1,20 +1,19 @@
 <?php
 /*=========================================================================
-
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
   Language:  PHP
   Date:      $Date$
   Version:   $Revision$
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-     PURPOSE.  See the above copyright notices for more information.
-
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 include(dirname(__DIR__)."/config/config.php");
 require_once("include/pdo.php");
 include_once("include/common.php");
@@ -34,13 +33,13 @@ if (!isset($userid) || !is_numeric($userid)) {
     echo "Not a valid userid!";
     return;
 }
-  
+
     $xml = begin_XML_for_XSLT();
     $xml .= "<backurl>user.php</backurl>";
     $xml .= "<title>CDash - Manage Banner</title>";
     $xml .= "<menutitle>CDash</menutitle>";
     $xml .= "<menusubtitle>Banner</menusubtitle>";
-  
+
     @$projectid = $_GET["projectid"];
     if ($projectid != null) {
         $projectid = pdo_real_escape_numeric($projectid);
@@ -51,7 +50,7 @@ if (!isset($userid) || !is_numeric($userid)) {
     }
 
     $Project = new Project;
-     
+
 // If the projectid is not set and there is only one project we go directly to the page
 if (isset($edit) && !isset($projectid)) {
     $projectids = $Project->GetIds();
@@ -63,14 +62,14 @@ if (isset($edit) && !isset($projectid)) {
     $User = new User;
     $User->Id = $userid;
     $Project->Id = $projectid;
-  
+
     $role = $Project->GetUserRole($userid);
-     
+
     if ($User->IsAdmin()===false && $role<=1) {
         echo "You don't have the permissions to access this page";
         return;
     }
-    
+
 // If user is admin then we can add a banner for all projects
 if ($User->IsAdmin() == true) {
     $xml .= "<availableproject>";
@@ -81,8 +80,8 @@ if ($User->IsAdmin() == true) {
     }
     $xml .= "</availableproject>";
 }
-  
-  
+
+
     $sql = "SELECT id,name FROM project";
     if ($User->IsAdmin() == false) {
         $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$userid' AND role>0)";
@@ -97,7 +96,7 @@ if ($User->IsAdmin() == true) {
         }
         $xml .= "</availableproject>";
     }
-   
+
     $Banner = new Banner();
     $Banner->SetProjectId($projectid);
 
@@ -127,6 +126,4 @@ if ($projectid>=0) {
 
 // Now doing the xslt transition
 generate_XSLT($xml, "manageBanner");
-} // end session OK
-?>
-
+} // end session OK;

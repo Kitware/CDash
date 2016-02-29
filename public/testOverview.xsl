@@ -1,11 +1,11 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
   <xsl:include href="header.xsl"/>
   <xsl:include href="footer.xsl"/>
-  
+
   <xsl:include href="local/header.xsl"/>
   <xsl:include href="local/footer.xsl"/>
-  
-  <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
+
+  <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
   <xsl:template match="/">
   <html>
@@ -20,8 +20,8 @@
     <xsl:call-template name="headscripts"/>
   </head>
   <body bgcolor="#ffffff">
-  
-<xsl:choose>         
+
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="header_local"/>
 </xsl:when>
@@ -57,9 +57,9 @@
   </xsl:when>
   <xsl:otherwise>
 
-<h3>List of 
+<h3>List of
 <u><xsl:value-of select="cdash/dashboard/projectname"/></u>
- tests that did not run cleanly on 
+ tests that did not run cleanly on
 <xsl:value-of select="cdash/dashboard/startdate"/>
 </h3>
 
@@ -80,7 +80,7 @@
 
 <br/>
 <br/>
-<xsl:choose>         
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="footer_local"/>
 </xsl:when>

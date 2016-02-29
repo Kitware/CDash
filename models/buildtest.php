@@ -1,19 +1,17 @@
 <?php
 /*=========================================================================
-
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
   Language:  PHP
   Date:      $Date$
   Version:   $Revision$
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE.  See the above copyright notices for more information.
-
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
 /** Build Test class */
@@ -39,7 +37,7 @@ class buildtest
           add_log('TestId is not set', 'BuildTest::Insert()', LOG_ERR, 0, $this->BuildId);
           return false;
       }
-    
+
       if (empty($this->Time)) {
           $this->Time = 0;
       }
@@ -52,7 +50,7 @@ class buildtest
       if (empty($this->TimeStatus)) {
           $this->TimeStatus = 0;
       }
-        
+
       $query = "INSERT INTO build2test (buildid,testid,status,time,timemean,timestd,timestatus)
                  VALUES (".qnum($this->BuildId).",".qnum($this->TestId).",'$this->Status',".qnum($this->Time).","
                           .qnum($this->TimeMean).",".qnum($this->TimeStd).",".qnum($this->TimeStatus).")";
@@ -62,7 +60,7 @@ class buildtest
       }
       return true;
   }
-    
+
   /** Get the number of tests that are failing */
   public function GetNumberOfFailures($checktesttiming, $testtimemaxstatus)
   {
@@ -70,7 +68,7 @@ class buildtest
           echo "BuildTest::GetNumberOfFailures(): BuildId not set";
           return false;
       }
-      
+
       $sql = "SELECT testfailed,testnotrun,testtimestatusfailed FROM build WHERE id=".qnum($this->BuildId);
       $query = pdo_query($sql);
       if (!$query) {
@@ -79,7 +77,7 @@ class buildtest
       }
 
       $nfail_array = pdo_fetch_array($query);
-    
+
       $sumerrors = 0;
       if ($nfail_array['testfailed']>0) {
           $sumerrors += $nfail_array['testfailed'];
@@ -87,7 +85,7 @@ class buildtest
       if ($nfail_array['testnotrun']>0) {
           $sumerrors += $nfail_array['testnotrun'];
       }
-        
+
     // Find if the build has any test failings
     if ($checktesttiming) {
         if ($nfail_array['testtimestatusfailed']>0) {

@@ -1306,7 +1306,6 @@
                   </div>
 
 
-
                   <div class="tab_content">
                    <xsl:attribute name="id">
                      <xsl:if test="cdash/edit=0">fragment-6</xsl:if>

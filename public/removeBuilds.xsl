@@ -2,7 +2,7 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
    <xsl:include href="footer.xsl"/>
-    <xsl:include href="headerback.xsl"/> 
+    <xsl:include href="headerback.xsl"/>
 
     <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
      doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
@@ -24,13 +24,13 @@
 <br/><br/>
 </xsl:if>
 
-Project: 
+Project:
 <select onchange="location = 'removeBuilds.php?projectid='+this.options[this.selectedIndex].value;" name="projectSelection">
         <option>
         <xsl:attribute name="value">0</xsl:attribute>
         Choose...
         </option>
-        
+
         <xsl:for-each select="cdash/availableproject">
         <option>
         <xsl:attribute name="value"><xsl:value-of select="id"/></xsl:attribute>
@@ -41,7 +41,7 @@ Project:
         </option>
         </xsl:for-each>
         </select>
-        
+
 <br/><br/>
 Remove builds in this date range.
 <br/><br/>

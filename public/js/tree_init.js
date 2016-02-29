@@ -3,7 +3,7 @@
  if (current == "" || current.length != (db.length-1)) {
  current = ""
  initState = ""
- for (i = 1; i < db.length; i++) { 
+ for (i = 1; i < db.length; i++) {
  initState += db[i].open
  current += db[i].open
  }
@@ -12,7 +12,7 @@
  var prevIndentDisplayed = 0
  var showMyDaughter = 0
  // end -->
-  
+
  <!--
        var Outline=""
  // cycle through each entry in the outline array
@@ -34,8 +34,8 @@
    if (db[i].image==5) { image="_admin"; }
    if (!(db[i].mother)) {
     Outline += ""
-    } 
-   else { 
+    }
+   else {
     if (current.substring(i-1,i) == 1) {
    Outline += "<A HREF=\"javascript:reload()\" onMouseOver=\"window.parent.status=\'Click to collapse\';return true;\" onClick=\"toggle(" + i + ")\">"
    Outline += "<IMG SRC=\"" + Icons + "Minus.gif\" WIDTH=16 HEIGHT=16 BORDER=0><IMG SRC=\"" + Icons + "Open.gif\" WIDTH=16 HEIGHT=16 BORDER=0>"
@@ -48,12 +48,12 @@
    }
     }
   Outline += "&nbsp;";
-     
-  if (db[i].URL == "" || db[i].URL == null) 
+
+  if (db[i].URL == "" || db[i].URL == null)
     {
-    Outline += " " + db[i].display      // no link, just a listed item  
+    Outline += " " + db[i].display      // no link, just a listed item
     }
-  else 
+  else
     {
     Outline += " <A HREF=\"" + db[i].URL + "\">" + db[i].display + "</A>"
     }
@@ -88,14 +88,13 @@
       }
 
 
-
     // Add link when there is http in the comments
     var posHTTP = comment.indexOf("http://",posHTTPInit);
     while(posHTTP != -1)
       {
       var commentBegin = comment.substr(0,posHTTP);
       var commentEnd = comment.substr(posHTTP);
-      
+
       var posSpace = commentEnd.indexOf(' ');
       var word = commentEnd;
       if(posSpace > 0)
@@ -113,17 +112,17 @@
 
     Outline += "<br>" + pad(currIndent) + comment + "<br>"
     }
-    
+
   // Bold if at level 0
-  if (currIndent == 0) 
-    { 
+  if (currIndent == 0)
+    {
     Outline = "<B>" + Outline + "</B>"
     }
-    
+
   Outline += "<BR>"
   prevIndentDisplayed = currIndent
   showMyDaughter = expanded
-  if (db.length > 25) 
+  if (db.length > 25)
     {
     document.write(Outline)
     Outline = ""

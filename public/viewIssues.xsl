@@ -2,8 +2,6 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
 
-
-
 <xsl:template name="buildgroupheader">
   <xsl:param name="type"/>
 
@@ -139,8 +137,6 @@
    </thead>
   </xsl:if>
 </xsl:template>
-
-
 
 
 <xsl:template name="buildrow">
@@ -525,8 +521,6 @@
 </xsl:template>
 
 
-
-
 <xsl:template name="buildgroupfooter">
   <xsl:param name="type"/>
 
@@ -674,18 +668,12 @@
 </xsl:template>
 
 
-
-
 <xsl:template name="buildgroupopentable">
 </xsl:template>
 
 
-
-
 <xsl:template name="buildgroupclosetable">
 </xsl:template>
-
-
 
 
 <xsl:template name="buildgroup">
@@ -713,16 +701,12 @@
 </xsl:template>
 
 
-
-
 <xsl:template name="repeatthis">
 <xsl:for-each select="cdash/buildgroup">
   <xsl:call-template name="buildgroup"/>
   <br/>
 </xsl:for-each>
 </xsl:template>
-
-
 
 
 <xsl:template name="summarizeMissing">
@@ -758,8 +742,6 @@
 </xsl:template>
 
 
-
-
 <xsl:template name="summarizeUpdateErrors">
 <xsl:for-each select="cdash/buildgroup">
   <xsl:if test="contains(name, 'Nightly')">
@@ -791,8 +773,6 @@
   </xsl:if>
 </xsl:for-each>
 </xsl:template>
-
-
 
 
 <xsl:template name="summarizeConfigureErrors">
@@ -828,8 +808,6 @@
 </xsl:template>
 
 
-
-
 <xsl:template name="summarizeBuildErrors">
 <xsl:for-each select="cdash/buildgroup">
   <xsl:if test="contains(name, 'Nightly')">
@@ -861,8 +839,6 @@
   </xsl:if>
 </xsl:for-each>
 </xsl:template>
-
-
 
 
 <xsl:template name="summarizeTestsFailed">
@@ -898,8 +874,6 @@
 </xsl:template>
 
 
-
-
 <xsl:template name="summarizeTestsNotRun">
 <xsl:for-each select="cdash/buildgroup">
   <xsl:if test="contains(name, 'Nightly')">
@@ -931,8 +905,6 @@
   </xsl:if>
 </xsl:for-each>
 </xsl:template>
-
-
 
 
 <xsl:template name="summarizeConfigureWarnings">
@@ -968,8 +940,6 @@
 </xsl:template>
 
 
-
-
 <xsl:template name="summarizeBuildWarnings">
 <xsl:for-each select="cdash/buildgroup">
   <xsl:if test="contains(name, 'Nightly')">
@@ -1001,8 +971,6 @@
   </xsl:if>
 </xsl:for-each>
 </xsl:template>
-
-
 
 
 <xsl:template name="statistics">
@@ -1140,8 +1108,6 @@
 </xsl:template>
 
 
-
-
 <!--
 
 <xsl:template name="buildrowWithUpdateErrors">
@@ -1149,8 +1115,6 @@
     <xsl:call-template name="buildrow" />
   </xsl:if>
 </xsl:template>
-
-
 
 
 <xsl:template name="summarizeThing">
@@ -1189,7 +1153,6 @@
 </xsl:template>
 
 -->
-
 
 
   <xsl:include href="header.xsl"/>

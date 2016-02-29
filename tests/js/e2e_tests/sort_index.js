@@ -31,6 +31,14 @@ describe("sort_index", function() {
     header.click();
     expect(header.element(by.tagName('span')).getAttribute('class')).toContain("glyphicon-chevron-up");
     expect(visible_tds.get(column_index).getText()).toBe(last_value);
+
+    // Reload the page and make sure we get the same result.
+    // This tests that our cookies are set & read correctly.
+    browser.get('index.php?project=InsightExample&date=2010-07-07');
+    expect(visible_tds.get(column_index).getText()).toBe(last_value);
+
+    // Delete the cookie.
+    browser.manage().deleteAllCookies();
   }
 
   it("sort by Site", function() {

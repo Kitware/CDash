@@ -5,7 +5,13 @@ CDash.controller('ViewSubProjectsController',
     // Hide filters by default.
     $scope.showfilters = false;
 
-    $scope.sortSubProjects = { orderByFields: [] };
+    // Check for sort order cookie.
+    var sort_order = [];
+    var sort_cookie_value = $.cookie('cdash_subproject_sort');
+    if(sort_cookie_value) {
+      sort_order = sort_cookie_value.split(",");
+    }
+    $scope.sortSubProjects = { orderByFields: sort_order };
 
     $http({
       url: 'api/v1/viewSubProjects.php',
@@ -19,5 +25,6 @@ CDash.controller('ViewSubProjectsController',
 
     $scope.updateOrderByFields = function(obj, field, $event) {
       multisort.updateOrderByFields(obj, field, $event);
+      $.cookie('cdash_subproject_sort', obj.orderByFields);
     };
 });

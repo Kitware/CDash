@@ -113,7 +113,7 @@
     <td align="center" class="nob">
     <span class="sorttime" style="display:none"><xsl:value-of select="lastbuilddatefull"/></span>
     <a class="builddateelapsed">
-      <xsl:attribute name="alt"><xsl:value-of select="lastbuild"/> <!-- (<xsl:value-of select="uploadsize"/> GB) --></xsl:attribute> 
+      <xsl:attribute name="alt"><xsl:value-of select="lastbuild"/> <!-- (<xsl:value-of select="uploadsize"/> GB) --></xsl:attribute>
       <xsl:attribute name="href">index.php?project=<xsl:value-of select="name_encoded"/>&amp;date=<xsl:value-of select="lastbuilddate"/></xsl:attribute>
       <xsl:value-of select="lastbuild_elapsed"/>
     </a>

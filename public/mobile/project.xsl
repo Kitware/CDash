@@ -3,17 +3,17 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
 <xsl:template name="builds">
     <xsl:param name="type"/>
-    
+
         <div class="section">
     <xsl:attribute name="id">group<xsl:value-of select="id"/></xsl:attribute>
-     
+
    <xsl:if test="count($type/build)=0">
               <h4><a href="#gotop">No <xsl:value-of select="name"/> Builds</a></h4>
    </xsl:if>
-   
+
     <xsl:if test="count($type/build)>0">
           <h4><a href="#gotop"><xsl:value-of select="$type/name"/></a></h4>
-   
+
    <ul>
             <li>
               <h5>
@@ -29,9 +29,9 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
               </tr>
               </table>
               </h5>
-   
-      <xsl:for-each select="$type/build">              
-                       
+
+      <xsl:for-each select="$type/build">
+
            <a class="buildlink">
                <xsl:attribute name="href">buildsummary.php?buildid=<xsl:value-of select="buildid"/>&amp;date=<xsl:value-of select="/cdash/dashboard/date"/></xsl:attribute>
 
@@ -52,7 +52,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
                    </xsl:when>
                   <xsl:when test="string-length(configure/error)=0">
                    tr-odd
-                   </xsl:when>     
+                   </xsl:when>
                  <xsl:otherwise>
                   normal
                   </xsl:otherwise>
@@ -67,7 +67,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
                     </xsl:when>
                    <xsl:when test="string-length(compilation/error)=0">
                     tr-odd
-                    </xsl:when>     
+                    </xsl:when>
                   <xsl:otherwise>
                    normal
                    </xsl:otherwise>
@@ -82,7 +82,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
                    </xsl:when>
                   <xsl:when test="string-length(compilation/warning)=0">
                    tr-odd
-                   </xsl:when>   
+                   </xsl:when>
                  <xsl:otherwise>
                   normal
                   </xsl:otherwise>
@@ -97,7 +97,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
                   </xsl:when>
                    <xsl:when test="string-length(test/fail)=0">
                   tr-odd
-                  </xsl:when>       
+                  </xsl:when>
                 <xsl:otherwise>
                  normal
                  </xsl:otherwise>
@@ -113,13 +113,13 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
                   </xsl:when>
                 <xsl:when test="string-length(test/fail)=0">
                   tr-odd
-                  </xsl:when>  
+                  </xsl:when>
                 <xsl:otherwise>
                  normal
                  </xsl:otherwise>
               </xsl:choose>
             </xsl:attribute>
-          <xsl:value-of select="test/fail"/>       
+          <xsl:value-of select="test/fail"/>
               </td>
               <td width="14%">
               <xsl:attribute name="class">
@@ -129,13 +129,13 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
                     </xsl:when>
                   <xsl:when test="string-length(test/notrun)=0">
                     tr-odd
-                    </xsl:when>    
+                    </xsl:when>
                   <xsl:otherwise>
                    normal
                    </xsl:otherwise>
                 </xsl:choose>
               </xsl:attribute>
-              <xsl:value-of select="test/notrun"/>  
+              <xsl:value-of select="test/notrun"/>
               </td>
               </tr>
          </table>
@@ -143,48 +143,47 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
   </xsl:for-each>
               </li>
             </ul>
-    
+
   </xsl:if>
 </div>
 </xsl:template>
-    
-    <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
+
+    <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
 
     <xsl:template match="/">
       <html>
        <head>
-  
+
        <title><xsl:value-of select="cdash/title"/></title>
          <meta name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=1;"/>
         <style type="text/css" media="screen">@import "iphone.css";</style>
          <script type="application/x-javascript" src="jquery-1.1.4.js"></script>
          <script type="application/x-javascript" src="jquery-iphone.js"></script>
          <script type="application/x-javascript" src="iphone.js"></script>
-         
+
          </head><body orient="landscape">
 
 
-         
     <h1 id="pageTitle">CDash</h1>
     <a href="http://cdash.org/mobile" class="home"></a>
     <a class="showPage button" href="#loginForm">Login</a>
     <a class="showPage title">CDash by Kitware Inc.</a>
-    
+
      <ul id="projects" title="Project" selection="true" class="nobg">
-        <li>   
-        <div id="gotop"></div>      
+        <li>
+        <div id="gotop"></div>
           <h3><a>
           <xsl:attribute name="href">
             <xsl:value-of select="cdash/dashboard/home"/>
           </xsl:attribute>
-          
+
           <xsl:value-of select="cdash/dashboard/projectname"/></a></h3>
-          
+
                 <div class="news-details">
                 <div><xsl:value-of select="cdash/dashboard/datetime"/></div>
                 <div>
-                
+
                 <table width="100%">
                 <tr>
                 <td style="text-align: left;font-size: 14;">
@@ -202,11 +201,11 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
                 <hr/>
                 <!--  Show the buildgroups -->
                 <xsl:for-each select="cdash/buildgroup">
-                <a><xsl:attribute name="href">#group<xsl:value-of select="id"/></xsl:attribute>[<xsl:value-of select="name"/>]</a><br/> 
+                <a><xsl:attribute name="href">#group<xsl:value-of select="id"/></xsl:attribute>[<xsl:value-of select="name"/>]</a><br/>
                 </xsl:for-each>
                  </div>
                 </div>
-       
+
 
 <xsl:for-each select="cdash/buildgroup">
   <xsl:call-template name="builds">
@@ -219,16 +218,16 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
     <form id="loginForm" class="dialog" method="post" action="/login">
         <fieldset>
             <h1>Login</h1>
-            <label class="inside" id="username-label" for="username">Email...</label> 
+            <label class="inside" id="username-label" for="username">Email...</label>
             <input id="username" name="login" type="text"/>
 
             <label class="inside" id="password-label" for="password">Password...</label>
             <input id="password" name="passwd" type="password"/>
-            
+
             <input class="submitButton" name="sent"  value="Login" type="submit"/>
         </fieldset>
     </form>
-    
+
         </body>
       </html>
     </xsl:template>

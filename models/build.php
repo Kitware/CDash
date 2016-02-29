@@ -1,20 +1,19 @@
 <?php
 /*=========================================================================
-
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
   Language:  PHP
   Date:      $Date$
   Version:   $Revision$
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
 
   This software is distributed WITHOUT ANY WARRANTY; without even
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-  PURPOSE.  See the above copyright notices for more information.
+  PURPOSE. See the above copyright notices for more information.
+=========================================================================*/
 
-  =========================================================================*/
 // It is assumed that appropriate headers should be included before including this file
 include_once("include/common.php");
 include_once('include/ctestparserutils.php');
@@ -589,10 +588,16 @@ class build
                     $result = pdo_query(
                             "SELECT groupid FROM build2group WHERE buildid=".qnum($this->ParentId));
                     if (pdo_num_rows($result) == 0) {
+                        global $CDASH_DB_TYPE;
+                        $duplicate_sql = '';
+                        if ($CDASH_DB_TYPE !== 'pgsql') {
+                            $duplicate_sql =
+                                'ON DUPLICATE KEY UPDATE groupid=groupid';
+                        }
                         $query =
                             "INSERT INTO build2group (groupid,buildid)
                             VALUES ('$this->GroupId','$this->ParentId')
-                            ON DUPLICATE KEY UPDATE groupid=groupid";
+                            $duplicate_sql";
                         if (!pdo_query($query)) {
                             add_last_sql_error("Parent Build2Group Insert", $this->ProjectId, $this->ParentId);
                         }

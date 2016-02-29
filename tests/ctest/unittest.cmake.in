@@ -8,12 +8,12 @@ string(REGEX REPLACE ".*strong>([0-9]+).*strong.*passes.*" "\\1"
 if("${PASSED}" STREQUAL "")
   set(PASSED 0)
 endif()
-string(REGEX REPLACE ".*strong>([0-9]+).*strong.*fails.*" "\\1" 
+string(REGEX REPLACE ".*strong>([0-9]+).*strong.*fails.*" "\\1"
   FAILED "${OUTDATA}")
 if("${FAILED}" STREQUAL "")
   set(FAILED 0)
 endif()
-string(REGEX REPLACE ".*strong>([0-9]+).*strong.*exceptions.*" "\\1" 
+string(REGEX REPLACE ".*strong>([0-9]+).*strong.*exceptions.*" "\\1"
   EXCEPTIONS "${OUTDATA}")
 if("${EXCEPTIONS}" STREQUAL "")
   set(EXCEPTIONS 0)
@@ -25,7 +25,7 @@ if(${FAILED} GREATER 0  OR ${EXCEPTIONS} GREATER 0)
   message(FATAL_ERROR "Test failures found: ${OUTDATA}")
 endif()
 if(${PASSED} LESS ${EXPECTED_PASSED})
-  message(FATAL_ERROR 
+  message(FATAL_ERROR
     "Not enough passed tests found: ${PASSED},"
     " expected ${EXPECTED_PASSED}):\n"
     "Output from tests:\n${OUTDATA}")

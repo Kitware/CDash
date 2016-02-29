@@ -1,13 +1,13 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
-   
+
    <xsl:include href="footer.xsl"/>
-   <xsl:include href="headerback.xsl"/> 
-   
+   <xsl:include href="headerback.xsl"/>
+
    <!-- Local includes -->
    <xsl:include href="local/footer.xsl"/>
-   <xsl:include href="local/headerback.xsl"/> 
+   <xsl:include href="local/headerback.xsl"/>
 
-   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" 
+   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
    <xsl:template match="/">
       <html>
@@ -19,8 +19,8 @@
          </link>
        </head>
         <body bgcolor="#ffffff">
- 
-<xsl:choose>         
+
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="headerback_local"/>
 </xsl:when>
@@ -74,7 +74,7 @@
   <td width="20%" id="nob"></td>
   <td width="80%" id="nob"><input type="submit" value="Update Profile" name="updateprofile" class="textbox"/>
   </td>
-</tr> 
+</tr>
 </form>
 <form method="post" action="" name="updatemail_form">
 <tr class="trodd">
@@ -87,7 +87,7 @@
 </tr>
 <tr>
   <td width="20%" id="nob"></td>
-  <td width="80%" id="nob"><input type="submit" value="Update Password" name="updatepassword" class="textbox"/>  
+  <td width="80%" id="nob"><input type="submit" value="Update Password" name="updatepassword" class="textbox"/>
  </td>
 </tr>
 <tr class="treven">
@@ -97,27 +97,27 @@
 <tr class="trodd">
     <td width="20%" height="2" ><div align="right">Repository Credential #2</div></td>
     <td width="80%" height="2" id="nob"><input class="textbox" type="text" name="credentials[1]">
-    <xsl:attribute name="value"><xsl:value-of select="cdash/user/credential_1"/></xsl:attribute>  
+    <xsl:attribute name="value"><xsl:value-of select="cdash/user/credential_1"/></xsl:attribute>
     </input>
     </td>
 </tr>
 <tr class="treven">
     <td width="20%" height="2" ><div align="right">Repository Credential #3</div></td>
     <td width="80%" height="2" id="nob"><input class="textbox" type="text" name="credentials[2]">
-    <xsl:attribute name="value"><xsl:value-of select="cdash/user/credential_2"/></xsl:attribute>  
+    <xsl:attribute name="value"><xsl:value-of select="cdash/user/credential_2"/></xsl:attribute>
     </input>
     </td>
 </tr>
 <tr class="trodd">
     <td width="20%" height="2" ><div align="right">Repository Credential #4</div></td>
     <td width="80%" height="2" id="nob"><input class="textbox" type="text" name="credentials[3]">
-    <xsl:attribute name="value"><xsl:value-of select="cdash/user/credential_3"/></xsl:attribute>  
+    <xsl:attribute name="value"><xsl:value-of select="cdash/user/credential_3"/></xsl:attribute>
     </input>
     </td>
 </tr>
 <tr class="treven">
   <td width="20%" id="nob"></td>
-  <td width="80%" id="nob"><input type="submit" value="Update Credentials" name="updatecredentials" class="textbox"/>  
+  <td width="80%" id="nob"><input type="submit" value="Update Credentials" name="updatecredentials" class="textbox"/>
  </td>
 </tr>
 <tr class="trodd">
@@ -130,7 +130,7 @@
 
 <!-- FOOTER -->
 <br/>
-<xsl:choose>         
+<xsl:choose>
 <xsl:when test="/cdash/uselocaldirectory=1">
   <xsl:call-template name="footer_local"/>
 </xsl:when>

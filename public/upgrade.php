@@ -1,20 +1,19 @@
 <?php
 /*=========================================================================
-
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
   Language:  PHP
   Date:      $Date$
   Version:   $Revision$
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE.  See the above copyright notices for more information.
-
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 include(dirname(__DIR__)."/config/config.php");
 require_once("include/pdo.php");
 include('public/login.php');
@@ -698,7 +697,6 @@ if (isset($_GET['upgrade-2-4'])) {
         AddTableField('build', 'uuid', 'varchar(36)', 'character varying(36)', false);
         if ($db_type === "pgsql") {
             pdo_query("ALTER TABLE build ADD UNIQUE (uuid)");
-            pdo_query('CREATE INDEX "uuid" ON "build" ("uuid")');
         } else {
             pdo_query("ALTER TABLE build ADD UNIQUE KEY (uuid)");
         }
@@ -717,6 +715,9 @@ if (isset($_GET['upgrade-2-4'])) {
 
     // Support for subproject path.
     AddTableField('subproject', 'path', 'varchar(512)', 'character varying(512)', '');
+
+    // Remove the errorlog from the DB (we're all log files now).
+    pdo_query("DROP TABLE IF EXISTS errorlog");
 
     // Set the database version
     setVersion();

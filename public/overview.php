@@ -1,13 +1,11 @@
 <?php
 /*=========================================================================
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
 
-  Copyright (c) Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
-
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE.  See the above copyright notices for more information.
-
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
 $noforcelogin = 1;
@@ -65,7 +63,7 @@ $xml .= get_cdash_dashboard_xml_by_name($projectname, $date);
 $xml .= "<menu>";
 $xml .= add_XML_value("previous", "overview.php?project=$projectname&date=$previousdate");
 $xml .= add_XML_value("current", "overview.php?project=$projectname");
-$xml .= add_XML_value("next", "overview.phpv?project=$projectname&date=$nextdate");
+$xml .= add_XML_value("next", "overview.php?project=$projectname&date=$nextdate");
 $xml .= "</menu>";
 $xml .= add_XML_value("hasSubProjects", $has_subprojects);
 

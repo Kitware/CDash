@@ -1,20 +1,19 @@
 <?php
 /*=========================================================================
-
   Program:   CDash - Cross-Platform Dashboard System
-  Module:    $Id: submit.php 1582 2009-03-19 21:05:00Z jjomier $
+  Module:    $Id$
   Language:  PHP
-  Date:      $Date: 2009-03-19 17:05:00 -0400 (Thu, 19 Mar 2009) $
-  Version:   $Revision: 1582 $
+  Date:      $Date$
+  Version:   $Revision$
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE.  See the above copyright notices for more information.
-
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 //error_reporting(0); // disable error reporting
 
 include("include/ctestparser.php");
@@ -31,7 +30,11 @@ function do_submit($filehandle, $projectid, $expected_md5='', $do_checksum=true,
   // If we have php curl we do it asynchronously
   if (function_exists("curl_init") == true) {
       $currentURI = get_server_URI(true);
-      $request = $currentURI."/ajax/dailyupdatescurl.php?projectid=".$projectid;
+      if ($CDASH_ASYNCHRONOUS_SUBMISSION) {
+          $request = $currentURI."/dailyupdatescurl.php?projectid=".$projectid;
+      } else {
+          $request = $currentURI."/ajax/dailyupdatescurl.php?projectid=".$projectid;
+      }
 
       $ch = curl_init();
       curl_setopt($ch, CURLOPT_URL, $request);

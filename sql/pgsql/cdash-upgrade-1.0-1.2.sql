@@ -99,4 +99,3 @@ CREATE TABLE "coveragesummarydiff" (
   "locuntested" bigint DEFAULT '0' NOT NULL,
   PRIMARY KEY ("buildid")
 );
-

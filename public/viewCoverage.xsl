@@ -269,11 +269,11 @@ Show coverage over time
 <thead>
   <tr class="table-heading1">
     <xsl:choose>
-    <xsl:when test="cdash/coverage/status=-1">  
+    <xsl:when test="cdash/coverage/status=-1">
       <th width="50%">Directory</th>
     </xsl:when>
     <xsl:otherwise>
-       <th width="50%">Filename</th>  
+       <th width="50%">Filename</th>
     </xsl:otherwise>
     </xsl:choose>
   <th width="10%" align="center">Status</th>

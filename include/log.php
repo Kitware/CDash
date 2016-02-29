@@ -1,23 +1,21 @@
 <?php
 /*=========================================================================
-
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
   Language:  PHP
   Date:      $Date$
   Version:   $Revision$
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE.  See the above copyright notices for more information.
-
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 require_once("include/defines.php");
 require_once("include/pdocore.php");
-require_once("models/errorlog.php");
 
 use \Monolog\Logger;
 use \Monolog\Registry;
@@ -93,8 +91,7 @@ function to_psr3_level($type)
 function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
                  $resourcetype=0, $resourceid=0)
 {
-    global $CDASH_LOG_FILE, $CDASH_LOG_FILE_MAXSIZE_MB, $CDASH_LOG_LEVEL,
-        $CDASH_LOG_TO_DATABASE, $CDASH_TESTING_MODE;
+    global $CDASH_LOG_FILE, $CDASH_LOG_FILE_MAXSIZE_MB, $CDASH_LOG_LEVEL, $CDASH_TESTING_MODE;
 
     $level = to_psr3_level($type);
 
@@ -109,7 +106,7 @@ function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
     }
 
     if ($buildid !== 0 && !is_null($buildid)) {
-        $context['build_id'] = $buildid;
+        $context['build_id'] = strval($buildid);
     }
 
     if ($resourcetype !== 0 && !is_null($resourcetype)) {
@@ -207,30 +204,6 @@ function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
     }
 
     $logger->log($level, $text, $context);
-
-    // Insert into the database, if so desired.
-    if ($CDASH_LOG_TO_DATABASE &&
-        ($level === LogLevel::ERROR || $level === LogLevel::WARNING)
-    ) {
-        $ErrorLog = new ErrorLog();
-        $ErrorLog->ProjectId = $projectid;
-        $ErrorLog->BuildId = $buildid;
-
-        switch ($level) {
-            case LogLevel::ERROR:
-                $ErrorLog->Type = 4;
-                break;
-            case LogLevel::WARNING:
-                $ErrorLog->Type = 5;
-                break;
-        }
-
-        $ErrorLog->Description = '('.$function.'): '.$text;
-        $ErrorLog->ResourceType = $resourcetype;
-        $ErrorLog->ResourceId = $resourceid;
-
-        $ErrorLog->Insert();
-    }
 }
 
 

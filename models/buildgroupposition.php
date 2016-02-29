@@ -1,20 +1,19 @@
 <?php
 /*=========================================================================
-
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
   Language:  PHP
   Date:      $Date$
   Version:   $Revision$
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE.  See the above copyright notices for more information.
-
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 // It is assumed that appropriate headers should be included before including this file
 class buildgroupposition
 {
@@ -22,7 +21,7 @@ class buildgroupposition
     public $StartTime;
     public $EndTime;
     public $GroupId;
-  
+
     public function __construct()
     {
         $this->StartTime = '1980-01-01 00:00:00';
@@ -37,8 +36,8 @@ class buildgroupposition
     if (!$this->GroupId) {
         return false;
     }
-    
-      $query = pdo_query("SELECT count(*) AS c FROM buildgroupposition WHERE 
+
+      $query = pdo_query("SELECT count(*) AS c FROM buildgroupposition WHERE
                         buildgroupid='".$this->GroupId."' AND position='".$this->Position."'
                         AND starttime='".$this->StartTime."'
                         AND endtime='".$this->EndTime."'"
@@ -49,7 +48,7 @@ class buildgroupposition
       }
       return true;
   }
-    
+
   /** Save the goup position */
   public function Add()
   {

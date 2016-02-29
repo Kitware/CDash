@@ -55,11 +55,6 @@
       <img src="img/note.png" alt="note" class="icon"></img>
     </a>
 
-    <!-- If we have error logs -->
-    <a ng-if="build.nerrorlog > 0" class="tooltip" title="{{build.nerrorlog}} errors in the CDash log" ng-href="viewErrorLog.php?buildid={{build.id}}&projectid={{cdash.projectid}}&date={{cdash.date}}">
-      <img src="img/warningsmall.png" alt="errorlogs" class="icon"/>
-    </a>
-
     <div ng-if="cdash.userid > 0">
       <!-- Display folder icon for logged in users -->
       <a ng-if="build.id" href="javascript:;" ng-click="toggleAdminOptions(build)">

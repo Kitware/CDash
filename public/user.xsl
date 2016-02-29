@@ -125,12 +125,6 @@
           <xsl:attribute name="href">manageCoverage.php?projectid=<xsl:value-of select="id"/></xsl:attribute>
            <img src="img/filecoverage.png" border="0" alt="managecoverage" /></a>
 
-          <xsl:if test="nerrorlogs>0">
-          <a class="tooltip">
-          <xsl:attribute name="title"><xsl:value-of select="nerrorlogs"/> errors in the CDash log</xsl:attribute>
-          <xsl:attribute name="href">viewErrorLog.php?projectid=<xsl:value-of select="id"/></xsl:attribute>
-           <img src="img/warning.png" border="0" alt="erro logs" height="16" /></a>
-          </xsl:if>
         </xsl:if>
       </td>
       <td align="center"  bgcolor="#DDDDDD">
@@ -337,15 +331,6 @@
     <tr class="trodd"><td id="nob"><a href="manageBanner.php">Manage banner message</a></td></tr>
     <tr class="treven"><td id="nob"><a href="manageUsers.php">Manage users</a></td></tr>
     <tr class="trodd"><td id="nob"><a href="upgrade.php">Maintenance</a></td></tr>
-    <tr class="treven"><td id="nob"><a href="loggingAdministration.php">CDash Logs</a>
-
-    <xsl:if test="cdash/nerrorlogs>0">
-       <a class="tooltip">
-       <xsl:attribute name="title"><xsl:value-of select="cdash/nerrorlogs"/> errors in the CDash log</xsl:attribute>
-       <xsl:attribute name="href">viewErrorLog.php</xsl:attribute>
-       <img src="img/warning.png" border="0" alt="erro logs" height="16" /></a>
-       </xsl:if>
-    </td></tr>
     <tr class="trodd"><td id="nob"><a href="monitor.php">Monitor / Processing Statistics</a></td></tr>
     <tr class="treven"><td id="nob"><a href="siteStatistics.php">Site Statistics</a></td></tr>
     <tr class="trodd"><td id="nob"><a href="userStatistics.php">User Statistics</a></td></tr>

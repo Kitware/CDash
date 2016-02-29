@@ -47,4 +47,3 @@ function showprojectgraph_click(projectid,timestamp,zoomout)
   $("#graphoptions").show();
 });
 }
-

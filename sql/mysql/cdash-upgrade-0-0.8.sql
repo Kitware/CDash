@@ -1,4 +1,4 @@
--- 
+--
 -- Host: localhost
 -- Server version: 4.1.15
 -- PHP Version: 5.2.3-1+b1
@@ -7,15 +7,15 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Database: `cdash`
--- 
+--
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `buildnote`
--- 
+--
 
 CREATE TABLE IF NOT EXISTS `buildnote` (
   `buildid` int(11) NOT NULL,
