@@ -24,20 +24,20 @@ class SimpleDumper
     {
         $type = $this->getType($value);
         switch ($type) {
-            case "Null":
-                return "NULL";
-            case "Boolean":
-                return "Boolean: " . ($value ? "true" : "false");
-            case "Array":
-                return "Array: " . count($value) . " items";
-            case "Object":
-                return "Object: of " . get_class($value);
-            case "String":
-                return "String: " . $this->clipString($value, 200);
+            case 'Null':
+                return 'NULL';
+            case 'Boolean':
+                return 'Boolean: ' . ($value ? 'true' : 'false');
+            case 'Array':
+                return 'Array: ' . count($value) . ' items';
+            case 'Object':
+                return 'Object: of ' . get_class($value);
+            case 'String':
+                return 'String: ' . $this->clipString($value, 200);
             default:
                 return "$type: $value";
         }
-        return "Unknown";
+        return 'Unknown';
     }
 
     /**
@@ -48,23 +48,23 @@ class SimpleDumper
     public function getType($value)
     {
         if (!isset($value)) {
-            return "Null";
+            return 'Null';
         } elseif (is_bool($value)) {
-            return "Boolean";
+            return 'Boolean';
         } elseif (is_string($value)) {
-            return "String";
+            return 'String';
         } elseif (is_integer($value)) {
-            return "Integer";
+            return 'Integer';
         } elseif (is_float($value)) {
-            return "Float";
+            return 'Float';
         } elseif (is_array($value)) {
-            return "Array";
+            return 'Array';
         } elseif (is_resource($value)) {
-            return "Resource";
+            return 'Resource';
         } elseif (is_object($value)) {
-            return "Object";
+            return 'Object';
         }
-        return "Unknown";
+        return 'Unknown';
     }
 
     /**
@@ -80,13 +80,13 @@ class SimpleDumper
     {
         if ($identical) {
             if (!$this->isTypeMatch($first, $second)) {
-                return "with type mismatch as [" . $this->describeValue($first) .
-                "] does not match [" . $this->describeValue($second) . "]";
+                return 'with type mismatch as [' . $this->describeValue($first) .
+                '] does not match [' . $this->describeValue($second) . ']';
             }
         }
         $type = $this->getType($first);
-        if ($type == "Unknown") {
-            return "with unknown type";
+        if ($type == 'Unknown') {
+            return 'with unknown type';
         }
         $method = 'describe' . $type . 'Difference';
         return $this->$method($first, $second, $identical);
@@ -122,7 +122,7 @@ class SimpleDumper
             $start = $length - $size;
         }
         $value = substr($value, $start, $size);
-        return ($start > 0 ? "..." : "") . $value . ($start + $size < $length ? "..." : "");
+        return ($start > 0 ? '...' : '') . $value . ($start + $size < $length ? '...' : '');
     }
 
     /**
@@ -135,9 +135,9 @@ class SimpleDumper
      */
     protected function describeGenericDifference($first, $second)
     {
-        return "as [" . $this->describeValue($first) .
-        "] does not match [" .
-        $this->describeValue($second) . "]";
+        return 'as [' . $this->describeValue($first) .
+        '] does not match [' .
+        $this->describeValue($second) . ']';
     }
 
     /**
@@ -181,9 +181,9 @@ class SimpleDumper
         }
         $position = $this->stringDiffersAt($first, $second);
         $message = "at character $position";
-        $message .= " with [" .
-            $this->clipString($first, 200, $position) . "] and [" .
-            $this->clipString($second, 200, $position) . "]";
+        $message .= ' with [' .
+            $this->clipString($first, 200, $position) . '] and [' .
+            $this->clipString($second, 200, $position) . ']';
         return $message;
     }
 
@@ -200,9 +200,9 @@ class SimpleDumper
         if (is_object($second) || is_array($second)) {
             return $this->describeGenericDifference($first, $second);
         }
-        return "because [" . $this->describeValue($first) .
-        "] differs from [" .
-        $this->describeValue($second) . "] by " .
+        return 'because [' . $this->describeValue($first) .
+        '] differs from [' .
+        $this->describeValue($second) . '] by ' .
         abs($first - $second);
     }
 
@@ -219,9 +219,9 @@ class SimpleDumper
         if (is_object($second) || is_array($second)) {
             return $this->describeGenericDifference($first, $second);
         }
-        return "because [" . $this->describeValue($first) .
-        "] differs from [" .
-        $this->describeValue($second) . "] by " .
+        return 'because [' . $this->describeValue($first) .
+        '] differs from [' .
+        $this->describeValue($second) . '] by ' .
         abs($first - $second);
     }
 
@@ -239,9 +239,9 @@ class SimpleDumper
             return $this->describeGenericDifference($first, $second);
         }
         if (!$this->isMatchingKeys($first, $second, $identical)) {
-            return "as key list [" .
-            implode(", ", array_keys($first)) . "] does not match key list [" .
-            implode(", ", array_keys($second)) . "]";
+            return 'as key list [' .
+            implode(', ', array_keys($first)) . '] does not match key list [' .
+            implode(', ', array_keys($second)) . ']';
         }
         foreach (array_keys($first) as $key) {
             if ($identical && ($first[$key] === $second[$key])) {
@@ -255,7 +255,7 @@ class SimpleDumper
                 $second[$key],
                 $identical);
         }
-        return "";
+        return '';
     }
 
     /**

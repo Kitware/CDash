@@ -31,20 +31,20 @@ class builderror
     public function Insert()
     {
         if (!$this->BuildId) {
-            echo "BuildError::Insert(): BuildId not set<br>";
+            echo 'BuildError::Insert(): BuildId not set<br>';
             return false;
         }
 
         $text = pdo_real_escape_string($this->Text);
 
         if (strlen($this->PreContext) == 0) {
-            $precontext = "NULL";
+            $precontext = 'NULL';
         } else {
             $precontext = "'" . pdo_real_escape_string($this->PreContext) . "'";
         }
 
         if (strlen($this->PostContext) == 0) {
-            $postcontext = "NULL";
+            $postcontext = 'NULL';
         } else {
             $postcontext = "'" . pdo_real_escape_string($this->PostContext) . "'";
         }
@@ -64,12 +64,12 @@ class builderror
             $crc32 = crc32($text . $this->SourceFile . $this->SourceLine); // some warning can be on the same line
         }
 
-        $query = "INSERT INTO builderror (buildid,type,logline,text,sourcefile,sourceline,precontext,
+        $query = 'INSERT INTO builderror (buildid,type,logline,text,sourcefile,sourceline,precontext,
                                       postcontext,repeatcount,newstatus,crc32)
-              VALUES (" . qnum($this->BuildId) . "," . qnum($this->Type) . "," . qnum($this->LogLine) . ",'$text','$this->SourceFile'," . qnum($this->SourceLine) . ",
-              " . $precontext . "," . $postcontext . "," . qnum($this->RepeatCount) . ",0," . qnum($crc32) . ")";
+              VALUES (' . qnum($this->BuildId) . ',' . qnum($this->Type) . ',' . qnum($this->LogLine) . ",'$text','$this->SourceFile'," . qnum($this->SourceLine) . ',
+              ' . $precontext . ',' . $postcontext . ',' . qnum($this->RepeatCount) . ',0,' . qnum($crc32) . ')';
         if (!pdo_query($query)) {
-            add_last_sql_error("BuildError Insert", 0, $this->BuildId);
+            add_last_sql_error('BuildError Insert', 0, $this->BuildId);
             return false;
         }
         return true;

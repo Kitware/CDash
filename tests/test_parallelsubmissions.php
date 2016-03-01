@@ -35,22 +35,22 @@ class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
         // Re-submit the Trilinos build.
         $begin = time();
         $this->submitFiles('ActualTrilinosSubmission', true);
-        echo "Submission took " . (time() - $begin) . " seconds.\n";
+        echo 'Submission took ' . (time() - $begin) . " seconds.\n";
 
         // Re-enable submission processing and enable parallel processing
         $this->removeLineFromConfig($this->DisableProcessingConfig);
         $this->addLineToConfig($this->ParallelProcessingConfig);
 
         // Submit another file to Trilinos to start the processing loop.
-        $file = dirname(__FILE__) . "/data/SubProjectNextPrevious/Build_1.xml";
+        $file = dirname(__FILE__) . '/data/SubProjectNextPrevious/Build_1.xml';
         $this->submission('Trilinos', $file);
 
         // Wait for processing to complete.
         $todo = 999;
         $begin = time();
         while ($todo > 0) {
-            $row = pdo_single_row_query("SELECT count(1) AS todo
-                    FROM submission WHERE status=0 OR status=1");
+            $row = pdo_single_row_query('SELECT count(1) AS todo
+                    FROM submission WHERE status=0 OR status=1');
             $todo = $row['todo'];
             sleep(1);
             if (time() - $begin > 120) {
@@ -58,7 +58,7 @@ class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
                 break;
             }
         }
-        echo "Processing took " . (time() - $begin) . " seconds.\n";
+        echo 'Processing took ' . (time() - $begin) . " seconds.\n";
 
         // Verify the results.
         $this->verifyResults();

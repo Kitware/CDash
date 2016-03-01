@@ -49,11 +49,11 @@ class dynamicanalysis
     public function GetNumberOfErrors()
     {
         if (strlen($this->BuildId) == 0) {
-            echo "DynamicAnalysis::GetNumberOfErrors BuildId not set";
+            echo 'DynamicAnalysis::GetNumberOfErrors BuildId not set';
             return false;
         }
 
-        $query = "SELECT count(*) FROM dynamicanalysis WHERE buildid=" . qnum($this->BuildId) .
+        $query = 'SELECT count(*) FROM dynamicanalysis WHERE buildid=' . qnum($this->BuildId) .
             " AND status IN ('notrun','failed')";
 
         $errorcount = pdo_query($query);
@@ -64,35 +64,35 @@ class dynamicanalysis
     /** Remove all the dynamic analysis associated with a buildid */
     public function RemoveAll()
     {
-        include "config/config.php";
+        include 'config/config.php';
 
         if (strlen($this->BuildId) == 0) {
-            echo "DynamicAnalysis::RemoveAll BuildId not set";
+            echo 'DynamicAnalysis::RemoveAll BuildId not set';
             return false;
         }
 
         if ($CDASH_DB_TYPE == 'pgsql') {
             // postgresql doesn't support multiple delete
 
-            $query = "BEGIN";
-            $query = "DELETE FROM dynamicanalysisdefect WHERE dynamicanalysis.buildid=" . qnum($this->BuildId) . "
-                AND dynamicanalysis.id=dynamicanalysisdefect.dynamicanalysisid";
-            $query = "DELETE FROM dynamicanalysis WHERE dynamicanalysis.buildid=" . qnum($this->BuildId);
-            $query = "COMMIT";
+            $query = 'BEGIN';
+            $query = 'DELETE FROM dynamicanalysisdefect WHERE dynamicanalysis.buildid=' . qnum($this->BuildId) . '
+                AND dynamicanalysis.id=dynamicanalysisdefect.dynamicanalysisid';
+            $query = 'DELETE FROM dynamicanalysis WHERE dynamicanalysis.buildid=' . qnum($this->BuildId);
+            $query = 'COMMIT';
         } else {
-            $query = "DELETE dynamicanalysisdefect,dynamicanalysis FROM dynamicanalysisdefect, dynamicanalysis
-               WHERE dynamicanalysis.buildid=" . qnum($this->BuildId) . "
-               AND dynamicanalysis.id=dynamicanalysisdefect.dynamicanalysisid";
+            $query = 'DELETE dynamicanalysisdefect,dynamicanalysis FROM dynamicanalysisdefect, dynamicanalysis
+               WHERE dynamicanalysis.buildid=' . qnum($this->BuildId) . '
+               AND dynamicanalysis.id=dynamicanalysisdefect.dynamicanalysisid';
         }
 
         if (!pdo_query($query)) {
-            add_last_sql_error("DynamicAnalysis RemoveAll", 0, $this->BuildId);
+            add_last_sql_error('DynamicAnalysis RemoveAll', 0, $this->BuildId);
             return false;
         }
 
-        $query = "DELETE FROM dynamicanalysis WHERE buildid=" . qnum($this->BuildId);
+        $query = 'DELETE FROM dynamicanalysis WHERE buildid=' . qnum($this->BuildId);
         if (!pdo_query($query)) {
-            add_last_sql_error("DynamicAnalysis RemoveAll", 0, $this->BuildId);
+            add_last_sql_error('DynamicAnalysis RemoveAll', 0, $this->BuildId);
             return false;
         }
     }
@@ -120,15 +120,15 @@ class dynamicanalysis
     public function Insert()
     {
         if (strlen($this->BuildId) == 0) {
-            echo "DynamicAnalysis::Insert BuildId not set";
+            echo 'DynamicAnalysis::Insert BuildId not set';
             return false;
         }
 
-        $id = "";
-        $idvalue = "";
+        $id = '';
+        $idvalue = '';
         if ($this->Id) {
-            $id = "id,";
-            $idvalue = qnum($this->Id) . ",";
+            $id = 'id,';
+            $idvalue = qnum($this->Id) . ',';
         }
 
         // Handle log decoding/decompression
@@ -153,16 +153,16 @@ class dynamicanalysis
         $this->Log = pdo_real_escape_string($this->Log);
         $this->BuildId = pdo_real_escape_string($this->BuildId);
 
-        $query = "INSERT INTO dynamicanalysis (" . $id . "buildid,status,checker,name,path,fullcommandline,log)
-              VALUES (" . $idvalue . qnum($this->BuildId) . ",'$this->Status','$this->Checker','$this->Name','" . $path . "',
+        $query = 'INSERT INTO dynamicanalysis (' . $id . 'buildid,status,checker,name,path,fullcommandline,log)
+              VALUES (' . $idvalue . qnum($this->BuildId) . ",'$this->Status','$this->Checker','$this->Name','" . $path . "',
                       '" . $fullCommandLine . "','$this->Log')";
         if (!pdo_query($query)) {
-            add_last_sql_error("DynamicAnalysis Insert", 0, $this->BuildId);
+            add_last_sql_error('DynamicAnalysis Insert', 0, $this->BuildId);
             return false;
         }
 
         if (!$this->Id) {
-            $this->Id = pdo_insert_id("dynamicanalysis");
+            $this->Id = pdo_insert_id('dynamicanalysis');
         }
 
         // Add the defects

@@ -50,7 +50,7 @@ class UpdateHandler extends AbstractHandler
             }
 
             if (array_key_exists('APPEND', $attributes)) {
-                if (strtolower($attributes['APPEND']) == "true") {
+                if (strtolower($attributes['APPEND']) == 'true') {
                     $this->Append = true;
                 }
             } else {
@@ -139,7 +139,7 @@ class UpdateHandler extends AbstractHandler
                 case 'BUILDNAME':
                     $this->Build->Name = $data;
                     if (empty($this->Build->Name)) {
-                        $this->Build->Name = "(empty)";
+                        $this->Build->Name = '(empty)';
                     }
                     break;
                 case 'BUILDSTAMP':
@@ -148,7 +148,7 @@ class UpdateHandler extends AbstractHandler
                 case 'SITE':
                     $this->Site->Name = $data;
                     if (empty($this->Site->Name)) {
-                        $this->Site->Name = "(empty)";
+                        $this->Site->Name = '(empty)';
                     }
                     break;
                 case 'STARTTIME':

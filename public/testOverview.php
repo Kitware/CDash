@@ -15,17 +15,17 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include dirname(__DIR__) . "/config/config.php";
-require_once "include/pdo.php";
+include dirname(__DIR__) . '/config/config.php';
+require_once 'include/pdo.php';
 include 'public/login.php';
-include_once "include/common.php";
-include "include/version.php";
+include_once 'include/common.php';
+include 'include/version.php';
 
-@$projectname = htmlspecialchars(pdo_real_escape_string($_GET["project"]));
+@$projectname = htmlspecialchars(pdo_real_escape_string($_GET['project']));
 if (!isset($projectname)) {
     die("Error: project not specified<br>\n");
 }
-@$date = $_GET["date"];
+@$date = $_GET['date'];
 if ($date != null) {
     $date = htmlspecialchars(pdo_real_escape_string($date));
 }
@@ -37,23 +37,23 @@ $project = pdo_query("SELECT id,nightlytime FROM project WHERE name='$projectnam
 $project_array = pdo_fetch_array($project);
 
 $xml = begin_XML_for_XSLT();
-$xml .= "<title>" . $projectname . " : Test Overview</title>";
+$xml .= '<title>' . $projectname . ' : Test Overview</title>';
 $xml .= get_cdash_dashboard_xml_by_name($projectname, $date);
 
-$nightlytime = $project_array["nightlytime"];
+$nightlytime = $project_array['nightlytime'];
 
 // We select the builds
 list($previousdate, $currentstarttime, $nextdate, $today) = get_dates($date, $nightlytime);
-$xml .= "<menu>";
-$xml .= add_XML_value("previous", "testOverview.php?project=" . urlencode($projectname) . "&date=" . $previousdate);
-if ($date != "" && date(FMT_DATE, $currentstarttime) != date(FMT_DATE)) {
-    $xml .= add_XML_value("next", "testOverview.php?project=" . urlencode($projectname) . "&date=" . $nextdate);
+$xml .= '<menu>';
+$xml .= add_XML_value('previous', 'testOverview.php?project=' . urlencode($projectname) . '&date=' . $previousdate);
+if ($date != '' && date(FMT_DATE, $currentstarttime) != date(FMT_DATE)) {
+    $xml .= add_XML_value('next', 'testOverview.php?project=' . urlencode($projectname) . '&date=' . $nextdate);
 } else {
-    $xml .= add_XML_value("nonext", "1");
+    $xml .= add_XML_value('nonext', '1');
 }
-$xml .= add_XML_value("current", "testOverview.php?project=" . urlencode($projectname) . "&date=");
-$xml .= add_XML_value("back", "index.php?project=" . urlencode($projectname) . "&date=" . get_dashboard_date_from_project($projectname, $date));
-$xml .= "</menu>";
+$xml .= add_XML_value('current', 'testOverview.php?project=' . urlencode($projectname) . '&date=');
+$xml .= add_XML_value('back', 'index.php?project=' . urlencode($projectname) . '&date=' . get_dashboard_date_from_project($projectname, $date));
+$xml .= '</menu>';
 
 // Get some information about the specified project
 $projectname = pdo_real_escape_string($projectname);
@@ -62,13 +62,13 @@ $projectResult = pdo_query($projectQuery);
 if (!$projectRow = pdo_fetch_array($projectResult)) {
     die("Error:  project $projectname not found<br>\n");
 }
-$projectid = $projectRow["id"];
-$nightlytime = $projectRow["nightlytime"];
+$projectid = $projectRow['id'];
+$nightlytime = $projectRow['nightlytime'];
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid);
 
 // Return the available groups
-@$groupSelection = $_POST["groupSelection"];
+@$groupSelection = $_POST['groupSelection'];
 if ($groupSelection != null) {
     $groupSelection = pdo_real_escape_numeric($groupSelection);
 }
@@ -78,27 +78,27 @@ if (!isset($groupSelection)) {
 
 $buildgroup = pdo_query("SELECT id,name FROM buildgroup WHERE projectid='$projectid'");
 while ($buildgroup_array = pdo_fetch_array($buildgroup)) {
-    $xml .= "<group>";
-    $xml .= add_XML_value("id", $buildgroup_array["id"]);
-    $xml .= add_XML_value("name", $buildgroup_array["name"]);
-    if ($groupSelection == $buildgroup_array["id"]) {
-        $xml .= add_XML_value("selected", "1");
+    $xml .= '<group>';
+    $xml .= add_XML_value('id', $buildgroup_array['id']);
+    $xml .= add_XML_value('name', $buildgroup_array['name']);
+    if ($groupSelection == $buildgroup_array['id']) {
+        $xml .= add_XML_value('selected', '1');
     }
-    $xml .= "</group>";
+    $xml .= '</group>';
 }
 
-$groupSelectionSQL = "";
+$groupSelectionSQL = '';
 if ($groupSelection > 0) {
     $groupSelectionSQL = " AND b2g.groupid='$groupSelection' ";
 }
 
 // Get each build that was submitted on this date
-$rlike = "RLIKE";
-if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE == "pgsql") {
-    $rlike = "~";
+$rlike = 'RLIKE';
+if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE == 'pgsql') {
+    $rlike = '~';
 }
 
-$stamp = str_replace("-", "", $today);
+$stamp = str_replace('-', '', $today);
 
 $buildQuery = "SELECT id FROM build,build2group as b2g WHERE projectid = '$projectid'
                AND build.stamp " . $rlike . " '^$stamp-' AND b2g.buildid=build.id" . $groupSelectionSQL;
@@ -106,13 +106,13 @@ $buildQuery = "SELECT id FROM build,build2group as b2g WHERE projectid = '$proje
 $buildResult = pdo_query($buildQuery);
 $builds = array();
 while ($buildRow = pdo_fetch_array($buildResult)) {
-    array_push($builds, $buildRow["id"]);
+    array_push($builds, $buildRow['id']);
 }
 
 //find all the tests that were performed for this project on this date
 //skip tests that passed on all builds
 if (count($builds) > 0) {
-    $testQuery = "SELECT DISTINCT test.name FROM test,build2test WHERE (";
+    $testQuery = 'SELECT DISTINCT test.name FROM test,build2test WHERE (';
     $firstTime = true;
     foreach ($builds as $id) {
         if ($firstTime) {
@@ -131,7 +131,7 @@ if (count($builds) > 0) {
 if ($testResult !== false) {
     $tests = array();
     while ($testRow = pdo_fetch_array($testResult)) {
-        array_push($tests, $testRow["name"]);
+        array_push($tests, $testRow['name']);
     }
 
     if (count($tests) > 0) {
@@ -139,7 +139,7 @@ if ($testResult !== false) {
 
         //now generate some XML
         $xml .= "<tests>\n";
-        $previousLetter = "";
+        $previousLetter = '';
         $firstSection = true;
         foreach ($tests as $testName) {
             $letter = strtolower(substr($testName, 0, 1));
@@ -150,19 +150,19 @@ if ($testResult !== false) {
                 } else {
                     $xml .= "</section>\n<section>";
                 }
-                $xml .= add_XML_value("sectionName", $letter) . "\n";
+                $xml .= add_XML_value('sectionName', $letter) . "\n";
                 $previousLetter = $letter;
             }
             $xml .= "<test>\n";
-            $xml .= add_XML_value("testName", $testName) . "\n";
+            $xml .= add_XML_value('testName', $testName) . "\n";
             $summaryLink = "testSummary.php?project=$projectid&name=$testName&date=$today";
-            $xml .= add_XML_value("summaryLink", $summaryLink) . "\n";
+            $xml .= add_XML_value('summaryLink', $summaryLink) . "\n";
             $xml .= "</test>\n";
         }
         $xml .= "</section>\n";
         $xml .= "</tests>\n";
     }
 }
-$xml .= "</cdash>";
+$xml .= '</cdash>';
 
-generate_XSLT($xml, "testOverview");
+generate_XSLT($xml, 'testOverview');

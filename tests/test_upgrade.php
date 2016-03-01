@@ -4,7 +4,7 @@
 // relative to the top of the CDash source tree
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
-include_once "include/upgrade_functions.php";
+include_once 'include/upgrade_functions.php';
 
 class UpgradeTestCase extends KWWebTestCase
 {
@@ -18,8 +18,8 @@ class UpgradeTestCase extends KWWebTestCase
         if (!$this->getMaintenancePage()) {
             return 1;
         }
-        $this->clickSubmitByName("AssignBuildToDefaultGroups");
-        $this->assertText("Builds have been added to default groups successfully.");
+        $this->clickSubmitByName('AssignBuildToDefaultGroups');
+        $this->assertText('Builds have been added to default groups successfully.');
     }
 
     public function testFixBuildGroups()
@@ -27,10 +27,10 @@ class UpgradeTestCase extends KWWebTestCase
         if (!$this->getMaintenancePage()) {
             return 1;
         }
-        if ($this->clickSubmitByName("FixBuildBasedOnRule")) {
-            $this->pass("Passed");
+        if ($this->clickSubmitByName('FixBuildBasedOnRule')) {
+            $this->pass('Passed');
         } else {
-            $this->fail("clicking FixBuildBasedOnRule returned false");
+            $this->fail('clicking FixBuildBasedOnRule returned false');
         }
     }
 
@@ -39,13 +39,13 @@ class UpgradeTestCase extends KWWebTestCase
         if (!$this->getMaintenancePage()) {
             return 1;
         }
-        if (!$this->clickSubmitByName("CheckBuildsWrongDate")) {
-            $this->fail("clicking CheckBuildsWrongDate returned false");
+        if (!$this->clickSubmitByName('CheckBuildsWrongDate')) {
+            $this->fail('clicking CheckBuildsWrongDate returned false');
         }
-        if (!$this->clickSubmitByName("DeleteBuildsWrongDate")) {
-            $this->fail("clicking DeleteBuildsWrongDate returned false");
+        if (!$this->clickSubmitByName('DeleteBuildsWrongDate')) {
+            $this->fail('clicking DeleteBuildsWrongDate returned false');
         }
-        $this->pass("Passed");
+        $this->pass('Passed');
     }
 
     public function testComputeTestTiming()
@@ -53,10 +53,10 @@ class UpgradeTestCase extends KWWebTestCase
         if (!$this->getMaintenancePage()) {
             return 1;
         }
-        if (!$this->clickSubmitByName("ComputeTestTiming")) {
-            $this->fail("clicking ComputeTestTiming returned false");
+        if (!$this->clickSubmitByName('ComputeTestTiming')) {
+            $this->fail('clicking ComputeTestTiming returned false');
         }
-        $this->assertText("Timing for tests has been computed successfully.");
+        $this->assertText('Timing for tests has been computed successfully.');
     }
 
     /* functionality seems broken...
@@ -80,10 +80,10 @@ class UpgradeTestCase extends KWWebTestCase
             return 1;
         }
         set_time_limit(0);
-        if (!$this->clickSubmitByName("CompressTestOutput")) {
-            $this->fail("clicking CompressTestOutput returned false");
+        if (!$this->clickSubmitByName('CompressTestOutput')) {
+            $this->fail('clicking CompressTestOutput returned false');
         }
-        $this->pass("Passed");
+        $this->pass('Passed');
     }
 
     public function testCleanup()
@@ -92,10 +92,10 @@ class UpgradeTestCase extends KWWebTestCase
             return 1;
         }
         set_time_limit(0);
-        if (!$this->clickSubmitByName("Cleanup")) {
-            $this->fail("clicking Cleanup returned false");
+        if (!$this->clickSubmitByName('Cleanup')) {
+            $this->fail('clicking Cleanup returned false');
         }
-        $this->assertText("Database cleanup complete.");
+        $this->assertText('Database cleanup complete.');
     }
 
     public function testUpgrade()
@@ -104,23 +104,23 @@ class UpgradeTestCase extends KWWebTestCase
             return 1;
         }
         set_time_limit(0);
-        $result = $this->clickSubmitByName("Upgrade");
+        $result = $this->clickSubmitByName('Upgrade');
         if (!$result) {
-            $this->fail("clicking Upgrade returned false");
+            $this->fail('clicking Upgrade returned false');
         }
         //fake the javascript calls...
-        $this->get($this->url . "/upgrade.php?upgrade-tables=1");
-        $this->get($this->url . "/upgrade.php?upgrade-0-8=1");
-        $this->get($this->url . "/upgrade.php?upgrade-1-0=1");
-        $this->get($this->url . "/upgrade.php?upgrade-1-2=1");
-        $this->get($this->url . "/upgrade.php?upgrade-1-4=1");
-        $this->get($this->url . "/upgrade.php?upgrade-1-6=1");
-        $this->get($this->url . "/upgrade.php?upgrade-1-8=1");
+        $this->get($this->url . '/upgrade.php?upgrade-tables=1');
+        $this->get($this->url . '/upgrade.php?upgrade-0-8=1');
+        $this->get($this->url . '/upgrade.php?upgrade-1-0=1');
+        $this->get($this->url . '/upgrade.php?upgrade-1-2=1');
+        $this->get($this->url . '/upgrade.php?upgrade-1-4=1');
+        $this->get($this->url . '/upgrade.php?upgrade-1-6=1');
+        $this->get($this->url . '/upgrade.php?upgrade-1-8=1');
         //some of these upgrades pollute the log file
         //clear it out so that it doesn't cause subsequent tests to fail
         $this->deleteLog($this->logfilename);
 
-        $this->pass("Passed");
+        $this->pass('Passed');
     }
 
     public function testBuildFailureDetailsUpgrade()
@@ -130,8 +130,8 @@ class UpgradeTestCase extends KWWebTestCase
         require_once 'include/pdo.php';
 
         $retval = 0;
-        $old_table = "testbuildfailure";
-        $new_table = "testdetails";
+        $old_table = 'testbuildfailure';
+        $new_table = 'testdetails';
 
         global $CDASH_DB_TYPE;
         if ($CDASH_DB_TYPE == 'pgsql') {
@@ -207,11 +207,11 @@ class UpgradeTestCase extends KWWebTestCase
 
         // Create testing tables.
         if (!pdo_query($create_old_query)) {
-            $this->fail("pdo_query returned false");
+            $this->fail('pdo_query returned false');
             $retval = 1;
         }
         if (!pdo_query($create_new_query)) {
-            $this->fail("pdo_query returned false");
+            $this->fail('pdo_query returned false');
             $retval = 1;
         }
 
@@ -226,11 +226,11 @@ class UpgradeTestCase extends KWWebTestCase
              'C', 'foo', 'foo.o', 'object file', 'foo.c', '1234',
              '0')";
         if (!pdo_query($insert_query)) {
-            $this->fail("pdo_query returned false");
+            $this->fail('pdo_query returned false');
             $retval = 1;
         }
         if (!pdo_query($insert_query)) {
-            $this->fail("pdo_query returned false");
+            $this->fail('pdo_query returned false');
             $retval = 1;
         }
 
@@ -246,12 +246,12 @@ class UpgradeTestCase extends KWWebTestCase
         $count_results = pdo_single_row_query($count_query);
         if ($count_results['numfails'] != 2) {
             $this->fail(
-                "Expected 2 buildfailures, found " . $count_results['numfails']);
+                'Expected 2 buildfailures, found ' . $count_results['numfails']);
             $retval = 1;
         }
         if ($count_results['numdetails'] != 1) {
             $this->fail(
-                "Expected 1 buildfailuredetails, found " . $count_results['numdetails']);
+                'Expected 1 buildfailuredetails, found ' . $count_results['numdetails']);
             $retval = 1;
         }
 
@@ -260,7 +260,7 @@ class UpgradeTestCase extends KWWebTestCase
         pdo_query("DROP TABLE $new_table");
 
         if ($retval == 0) {
-            $this->pass("Passed");
+            $this->pass('Passed');
         }
         return $retval;
     }
@@ -284,7 +284,7 @@ class UpgradeTestCase extends KWWebTestCase
         // Set build.configureduration to 0 for all builds.
         // This will force the upgrade function to recompute these values
         // based on configure start & end time.
-        pdo_query("UPDATE build SET configureduration = 0");
+        pdo_query('UPDATE build SET configureduration = 0');
 
         // Run the configure duration upgrade function.
         UpgradeConfigureDuration();
@@ -294,7 +294,7 @@ class UpgradeTestCase extends KWWebTestCase
         $row = pdo_single_row_query($query);
         if ($row['configureduration'] != 309.00) {
             $this->fail(
-                "Expected configure duration to be 309.00, found " . $row['configureduration']);
+                'Expected configure duration to be 309.00, found ' . $row['configureduration']);
             $retval = 1;
         }
 
@@ -309,12 +309,12 @@ class UpgradeTestCase extends KWWebTestCase
         $row = pdo_single_row_query($query);
         if ($row['time'] != 48.00) {
             $this->fail(
-                "Expected test duration to be 48.00, found " . $row['time']);
+                'Expected test duration to be 48.00, found ' . $row['time']);
             $retval = 1;
         }
 
         if ($retval == 0) {
-            $this->pass("Passed");
+            $this->pass('Passed');
         }
         return $retval;
     }
@@ -322,9 +322,9 @@ class UpgradeTestCase extends KWWebTestCase
     public function getMaintenancePage()
     {
         $this->login();
-        $content = $this->connect($this->url . "/upgrade.php");
+        $content = $this->connect($this->url . '/upgrade.php');
         if ($content == false) {
-            $this->fail("failed to connect to upgrade.php");
+            $this->fail('failed to connect to upgrade.php');
             return false;
         }
         return true;
@@ -337,7 +337,7 @@ class UpgradeTestCase extends KWWebTestCase
         require_once 'include/pdo.php';
 
         $retval = 0;
-        $table_name = "testsite";
+        $table_name = 'testsite';
 
         global $CDASH_DB_TYPE;
         if ($CDASH_DB_TYPE == 'pgsql') {
@@ -367,13 +367,13 @@ class UpgradeTestCase extends KWWebTestCase
 
         // Create testing table.
         if (!pdo_query($create_query)) {
-            $this->fail("pdo_query returned false");
+            $this->fail('pdo_query returned false');
             $retval = 1;
         }
 
         // Find the largest siteid from the real site table.
         $row = pdo_single_row_query(
-            "SELECT id FROM site ORDER BY id DESC LIMIT 1");
+            'SELECT id FROM site ORDER BY id DESC LIMIT 1');
         $i = $row['id'];
         $dupes = array();
         $keepers = array();
@@ -390,7 +390,7 @@ class UpgradeTestCase extends KWWebTestCase
             VALUES
             ($nolatlon_keeper, 'case1_site', '128.4.4.1')";
         if (!pdo_query($insert_query)) {
-            $this->fail("pdo_query returned false");
+            $this->fail('pdo_query returned false');
             $retval = 1;
         }
         $nolatlon_dupe = ++$i;
@@ -401,7 +401,7 @@ class UpgradeTestCase extends KWWebTestCase
             VALUES
             ($nolatlon_dupe, 'case1_site', '128.4.4.1')";
         if (!pdo_query($insert_query)) {
-            $this->fail("pdo_query returned false");
+            $this->fail('pdo_query returned false');
             $retval = 1;
         }
 
@@ -415,7 +415,7 @@ class UpgradeTestCase extends KWWebTestCase
             VALUES
             ($latlon_dupe1, 'case2_site', '129.5.5.2', '40.70', '-74.00')";
         if (!pdo_query($insert_query)) {
-            $this->fail("pdo_query returned false");
+            $this->fail('pdo_query returned false');
             $retval = 1;
         }
         $latlon_keeper = ++$i; // Has newest lat/lon, will be kept.
@@ -426,7 +426,7 @@ class UpgradeTestCase extends KWWebTestCase
             VALUES
             ($latlon_keeper, 'case2_site', '129.5.5.2', '40.71', '-73.97')";
         if (!pdo_query($insert_query)) {
-            $this->fail("pdo_query returned false");
+            $this->fail('pdo_query returned false');
             $retval = 1;
         }
         $latlon_dupe2 = ++$i; // Does not have lat/lon.
@@ -437,7 +437,7 @@ class UpgradeTestCase extends KWWebTestCase
             VALUES
             ($latlon_dupe2, 'case2_site', '129.5.5.2')";
         if (!pdo_query($insert_query)) {
-            $this->fail("pdo_query returned false");
+            $this->fail('pdo_query returned false');
             $retval = 1;
         }
 
@@ -449,7 +449,7 @@ class UpgradeTestCase extends KWWebTestCase
             'client_site2project');
         foreach ($tables_to_update as $table_to_update) {
             foreach ($dupes as $dupe) {
-                if ($table_to_update === "build") {
+                if ($table_to_update === 'build') {
                     // Handle unique constraint here.
                     $insert_query =
                         "INSERT INTO $table_to_update (siteid, uuid)
@@ -475,7 +475,7 @@ class UpgradeTestCase extends KWWebTestCase
                         "INSERT INTO $table_to_update (siteid) VALUES ($dupe)";
                 }
                 if (!pdo_query($insert_query)) {
-                    $this->fail("pdo_query returned false");
+                    $this->fail('pdo_query returned false');
                     $retval = 1;
                 }
             }
@@ -491,7 +491,7 @@ class UpgradeTestCase extends KWWebTestCase
             $count_results = pdo_single_row_query($count_query);
             if ($count_results['numsites'] != 1) {
                 $this->fail(
-                    "Expected 1 site, found " . $count_results['numsites']);
+                    'Expected 1 site, found ' . $count_results['numsites']);
                 $retval = 1;
             }
         }
@@ -503,7 +503,7 @@ class UpgradeTestCase extends KWWebTestCase
             $count_results = pdo_single_row_query($count_query);
             if ($count_results['numsites'] != 0) {
                 $this->fail(
-                    "Expected 0 site, found " . $count_results['numsites']);
+                    'Expected 0 site, found ' . $count_results['numsites']);
                 $retval = 1;
             }
         }
@@ -553,7 +553,7 @@ class UpgradeTestCase extends KWWebTestCase
         pdo_query("DROP TABLE $table_name");
 
         if ($retval == 0) {
-            $this->pass("Passed");
+            $this->pass('Passed');
         }
         return $retval;
     }

@@ -14,26 +14,26 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once "include/common.php";
+require_once 'include/common.php';
 
 function get_bugid_and_pos_from_log($log)
 {
     // If the input is empty, return false straight away:
     //
-    if ($log == "") {
+    if ($log == '') {
         return false;
     }
 
     // Init for false return in case there is no match:
     //
-    $bugid = "";
+    $bugid = '';
     $pos = -1;
 
     // See if it matches "BUG: 12345" or "issue23456" or "#78910"
     //
     $matches = array();
     if (preg_match(
-        "/^.*([Bb][Uu][Gg]:*|[Ii][Ss][Ss][Uu][Ee]:*|#) *#* *([0-9]+).*$/",
+        '/^.*([Bb][Uu][Gg]:*|[Ii][Ss][Ss][Uu][Ee]:*|#) *#* *([0-9]+).*$/',
         $log, $matches)) {
         //echo "count(matches)='".count($matches)."'<br/>";
         //echo "matches[0]='$matches[0]'<br/>";
@@ -47,7 +47,7 @@ function get_bugid_and_pos_from_log($log)
         //echo "pos='$pos'<br/>";
     }
 
-    if ($bugid == "") {
+    if ($bugid == '') {
         return false;
     }
     return array($bugid, $pos);
@@ -55,11 +55,11 @@ function get_bugid_and_pos_from_log($log)
 
 function get_bug_from_log($log, $baseurl)
 {
-    $bugurl = "";
+    $bugurl = '';
     $bugid = -1;
     $pos = -1;
 
-    if ($baseurl != "") {
+    if ($baseurl != '') {
         $bugid_and_pos = get_bugid_and_pos_from_log($log);
 
         if ($bugid_and_pos !== false) {
@@ -69,7 +69,7 @@ function get_bug_from_log($log, $baseurl)
         }
     }
 
-    if ($bugurl == "") {
+    if ($bugurl == '') {
         return false;
     }
     return array($bugurl, $bugid, $pos);

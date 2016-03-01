@@ -36,7 +36,7 @@ class feed
     public function __construct()
     {
         $this->Type = Feed::TypeUnknown;
-        $this->Description = "";
+        $this->Description = '';
     }
 
     /** Helper function to insert a test */
@@ -47,9 +47,9 @@ class feed
         if ($build->GetPreviousBuildId() == 0) {
             // if we don't have a previous build then we need to count ourselves
 
-            $query = pdo_query("SELECT name FROM build WHERE id=" . $buildid);
+            $query = pdo_query('SELECT name FROM build WHERE id=' . $buildid);
             if (!$query) {
-                add_last_sql_error("Feed::InsertTest");
+                add_last_sql_error('Feed::InsertTest');
                 return false;
             }
             $query_array = pdo_fetch_array($query);
@@ -59,7 +59,7 @@ class feed
             $positives_array = pdo_fetch_array($positives);
             $npositives = $positives_array[0];
             if ($npositives > 0) {
-                $description = $npositives . " test";
+                $description = $npositives . ' test';
                 if ($npositives > 1) {
                     $description .= 's';
                 }
@@ -71,7 +71,7 @@ class feed
             $positives_array = pdo_fetch_array($positives);
             $npositives = $positives_array[0];
             if ($npositives > 0) {
-                $description = $npositives . " test";
+                $description = $npositives . ' test';
                 if ($npositives > 1) {
                     $description .= 's';
                 }
@@ -85,7 +85,7 @@ class feed
         // Check if we have any fixes or errors
         $query = pdo_query("SELECT * FROM testdiff AS td JOIN build AS b ON (bd.buildid=b.id) WHERE bd.buildid='$buildid'");
         if (!$query) {
-            add_last_sql_error("Feed::InsertTest");
+            add_last_sql_error('Feed::InsertTest');
             return false;
         }
 
@@ -107,7 +107,7 @@ class feed
             if (($query_array['type'] == 0 || $query_array['type'] == 1)
                 && $query_array['difference_positive'] > 0
             ) {
-                $description .= $query_array['difference_positive'] . " test";
+                $description .= $query_array['difference_positive'] . ' test';
 
                 if ($query_array['difference_positive'] > 1) {
                     $description .= 's';
@@ -117,7 +117,7 @@ class feed
                 $this->Insert($projectid, $buildid, $feedtype, $description);
             }
             if ($query_array['type'] == 1 && $query_array['difference_negative'] > 0) {
-                $description .= $query_array['difference_negative'] . " test";
+                $description .= $query_array['difference_negative'] . ' test';
 
                 if ($query_array['difference_negative'] > 1) {
                     $description .= 's';
@@ -127,7 +127,7 @@ class feed
                 $this->Insert($projectid, $buildid, $feedtype, $description);
             }
             if ($query_array['type'] == 2 && $query_array['difference_positive'] > 0) {
-                $description .= $query_array['difference_positive'] . " new test";
+                $description .= $query_array['difference_positive'] . ' new test';
 
                 if ($query_array['difference_positive'] > 1) {
                     $description .= 's';
@@ -147,26 +147,26 @@ class feed
         if ($build->GetPreviousBuildId() == 0) {
             // if we don't have a previous build then we need to count ourselves
 
-            $query = pdo_query("SELECT name FROM build WHERE id=" . $buildid);
+            $query = pdo_query('SELECT name FROM build WHERE id=' . $buildid);
             if (!$query) {
-                add_last_sql_error("Feed::InsertBuild");
+                add_last_sql_error('Feed::InsertBuild');
                 return false;
             }
             $query_array = pdo_fetch_array($query);
             $buildname = $query_array['name'];
 
-            $positives = pdo_query("SELECT count(*) FROM builderror WHERE buildid=" . $buildid . " AND type=0");
+            $positives = pdo_query('SELECT count(*) FROM builderror WHERE buildid=' . $buildid . ' AND type=0');
             $positives_array = pdo_fetch_array($positives);
             $npositives = $positives_array[0];
             $positives = pdo_query(
-                "SELECT count(*) FROM buildfailure AS bf
+                'SELECT count(*) FROM buildfailure AS bf
          LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
-         WHERE bf.buildid=" . $buildid . " AND bfd.type=0");
+         WHERE bf.buildid=' . $buildid . ' AND bfd.type=0');
             $positives_array = pdo_fetch_array($positives);
             $npositives += $positives_array[0];
 
             if ($npositives > 0) {
-                $description = $npositives . " error";
+                $description = $npositives . ' error';
                 if ($npositives > 1) {
                     $description .= 's';
                 }
@@ -174,18 +174,18 @@ class feed
                 $this->Insert($projectid, $buildid, Feed::TypeBuildError, $description);
             }
 
-            $positives = pdo_query("SELECT count(*) FROM builderror WHERE buildid=" . $buildid . " AND type=1");
+            $positives = pdo_query('SELECT count(*) FROM builderror WHERE buildid=' . $buildid . ' AND type=1');
             $positives_array = pdo_fetch_array($positives);
             $npositives = $positives_array[0];
             $positives = pdo_query(
-                "SELECT count(*) FROM buildfailure AS bf
+                'SELECT count(*) FROM buildfailure AS bf
          LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
-         WHERE bf.buildid=" . $buildid . " AND bfd.type=1");
+         WHERE bf.buildid=' . $buildid . ' AND bfd.type=1');
             $positives_array = pdo_fetch_array($positives);
             $npositives += $positives_array[0];
 
             if ($npositives > 0) {
-                $description = $npositives . " warning";
+                $description = $npositives . ' warning';
                 if ($npositives > 1) {
                     $description .= 's';
                 }
@@ -199,7 +199,7 @@ class feed
         // Check if we have any fixes or errors
         $query = pdo_query("SELECT * FROM builderrordiff AS bd JOIN build AS b ON (bd.buildid=b.id) WHERE bd.buildid='$buildid'");
         if (!$query) {
-            add_last_sql_error("Feed::InsertBuild");
+            add_last_sql_error('Feed::InsertBuild');
             return false;
         }
 
@@ -214,7 +214,7 @@ class feed
             }
 
             if ($query_array['difference_positive'] > 0) {
-                $description .= $query_array['difference_positive'] . " " . $type;
+                $description .= $query_array['difference_positive'] . ' ' . $type;
 
                 if ($query_array['difference_positive'] > 1) {
                     $description .= 's';
@@ -222,7 +222,7 @@ class feed
                 $description .= ' introduced on ' . $query_array['name'];
                 $this->Insert($projectid, $buildid, $feedtype, $description);
             } elseif ($query_array['difference_negative'] > 0) {
-                $description .= $query_array['difference_negative'] . " " . $type;
+                $description .= $query_array['difference_negative'] . ' ' . $type;
 
                 if ($query_array['difference_negative'] > 1) {
                     $description .= 's';
@@ -243,7 +243,7 @@ class feed
             AND b.projectid='$projectid' AND bu.id=b2u.updateid AND bu.revision =
             (SELECT bu1.revision FROM buildupdate AS bu1, build2update AS b2u1 WHERE b2u1.updateid=bu1.id AND b2u1.buildid='$buildid')");
         if (!$query) {
-            add_last_sql_error("Feed::InsertUpdate");
+            add_last_sql_error('Feed::InsertUpdate');
             return false;
         }
         $query_array = pdo_fetch_array($query);
@@ -294,7 +294,7 @@ class feed
 
         if (count($authors) > 2) {
             $c = count($authors) - 2;
-            $description .= ' and ' . $c . " others";
+            $description .= ' and ' . $c . ' others';
         }
 
         $description = pdo_real_escape_string($description);
@@ -310,7 +310,7 @@ class feed
     }
 
     /** Insert a new feed */
-    public function Insert($projectid, $buildid, $type, $description = "")
+    public function Insert($projectid, $buildid, $type, $description = '')
     {
         $this->ProjectId = $projectid;
         $this->BuildId = $buildid;
@@ -320,9 +320,9 @@ class feed
 
         if (pdo_query("INSERT INTO feed (projectid,buildid,type,date,description)
                   VALUES ('$this->ProjectId','$this->BuildId','$this->Type','$this->Date','$this->Description')")) {
-            $this->Id = pdo_insert_id("feed");
+            $this->Id = pdo_insert_id('feed');
         } else {
-            add_last_sql_error("Feed Insert");
+            add_last_sql_error('Feed Insert');
             return false;
         }
 
@@ -338,9 +338,9 @@ class feed
             return false;
         }
 
-        $query = pdo_query("SELECT * FROM feed WHERE projectid=" . qnum($projectid) . " ORDER BY id DESC LIMIT " . $limit);
+        $query = pdo_query('SELECT * FROM feed WHERE projectid=' . qnum($projectid) . ' ORDER BY id DESC LIMIT ' . $limit);
         if (!$query) {
-            add_last_sql_error("Feed::GetFeed");
+            add_last_sql_error('Feed::GetFeed');
             return false;
         }
 

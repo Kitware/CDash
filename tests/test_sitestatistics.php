@@ -15,10 +15,10 @@ class SiteStatisticsTestCase extends KWWebTestCase
     public function testSiteStatistics()
     {
         $this->login();
-        $content = $this->get($this->url . "/siteStatistics.php");
-        if (strpos($content, "Busy time") === false) {
+        $content = $this->get($this->url . '/siteStatistics.php');
+        if (strpos($content, 'Busy time') === false) {
             $this->fail("'Busy time' not found on siteStatistics.php");
         }
-        $this->pass("Passed");
+        $this->pass('Passed');
     }
 }

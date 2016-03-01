@@ -67,11 +67,11 @@ class XmlReporter extends SimpleReporter
     {
         parent::paintGroupStart($test_name, $size);
         echo $this->getIndent();
-        echo "<" . $this->namespace . "group size=\"$size\">\n";
+        echo '<' . $this->namespace . "group size=\"$size\">\n";
         echo $this->getIndent(1);
-        echo "<" . $this->namespace . "name>" .
+        echo '<' . $this->namespace . 'name>' .
             $this->toParsedXml($test_name) .
-            "</" . $this->namespace . "name>\n";
+            '</' . $this->namespace . "name>\n";
     }
 
     /**
@@ -81,7 +81,7 @@ class XmlReporter extends SimpleReporter
     public function paintGroupEnd($test_name)
     {
         echo $this->getIndent();
-        echo "</" . $this->namespace . "group>\n";
+        echo '</' . $this->namespace . "group>\n";
         parent::paintGroupEnd($test_name);
     }
 
@@ -93,11 +93,11 @@ class XmlReporter extends SimpleReporter
     {
         parent::paintCaseStart($test_name);
         echo $this->getIndent();
-        echo "<" . $this->namespace . "case>\n";
+        echo '<' . $this->namespace . "case>\n";
         echo $this->getIndent(1);
-        echo "<" . $this->namespace . "name>" .
+        echo '<' . $this->namespace . 'name>' .
             $this->toParsedXml($test_name) .
-            "</" . $this->namespace . "name>\n";
+            '</' . $this->namespace . "name>\n";
     }
 
     /**
@@ -107,7 +107,7 @@ class XmlReporter extends SimpleReporter
     public function paintCaseEnd($test_name)
     {
         echo $this->getIndent();
-        echo "</" . $this->namespace . "case>\n";
+        echo '</' . $this->namespace . "case>\n";
         parent::paintCaseEnd($test_name);
     }
 
@@ -119,11 +119,11 @@ class XmlReporter extends SimpleReporter
     {
         parent::paintMethodStart($test_name);
         echo $this->getIndent();
-        echo "<" . $this->namespace . "test>\n";
+        echo '<' . $this->namespace . "test>\n";
         echo $this->getIndent(1);
-        echo "<" . $this->namespace . "name>" .
+        echo '<' . $this->namespace . 'name>' .
             $this->toParsedXml($test_name) .
-            "</" . $this->namespace . "name>\n";
+            '</' . $this->namespace . "name>\n";
     }
 
     /**
@@ -134,7 +134,7 @@ class XmlReporter extends SimpleReporter
     public function paintMethodEnd($test_name)
     {
         echo $this->getIndent();
-        echo "</" . $this->namespace . "test>\n";
+        echo '</' . $this->namespace . "test>\n";
         parent::paintMethodEnd($test_name);
     }
 
@@ -146,9 +146,9 @@ class XmlReporter extends SimpleReporter
     {
         parent::paintPass($message);
         echo $this->getIndent(1);
-        echo "<" . $this->namespace . "pass>";
+        echo '<' . $this->namespace . 'pass>';
         echo $this->toParsedXml($message);
-        echo "</" . $this->namespace . "pass>\n";
+        echo '</' . $this->namespace . "pass>\n";
     }
 
     /**
@@ -159,9 +159,9 @@ class XmlReporter extends SimpleReporter
     {
         parent::paintFail($message);
         echo $this->getIndent(1);
-        echo "<" . $this->namespace . "fail>";
+        echo '<' . $this->namespace . 'fail>';
         echo $this->toParsedXml($message);
-        echo "</" . $this->namespace . "fail>\n";
+        echo '</' . $this->namespace . "fail>\n";
     }
 
     /**
@@ -172,9 +172,9 @@ class XmlReporter extends SimpleReporter
     {
         parent::paintError($message);
         echo $this->getIndent(1);
-        echo "<" . $this->namespace . "exception>";
+        echo '<' . $this->namespace . 'exception>';
         echo $this->toParsedXml($message);
-        echo "</" . $this->namespace . "exception>\n";
+        echo '</' . $this->namespace . "exception>\n";
     }
 
     /**
@@ -185,13 +185,13 @@ class XmlReporter extends SimpleReporter
     {
         parent::paintException($exception);
         echo $this->getIndent(1);
-        echo "<" . $this->namespace . "exception>";
+        echo '<' . $this->namespace . 'exception>';
         $message = 'Unexpected exception of type [' . get_class($exception) .
             '] with message [' . $exception->getMessage() .
             '] in [' . $exception->getFile() .
             ' line ' . $exception->getLine() . ']';
         echo $this->toParsedXml($message);
-        echo "</" . $this->namespace . "exception>\n";
+        echo '</' . $this->namespace . "exception>\n";
     }
 
     /**
@@ -202,9 +202,9 @@ class XmlReporter extends SimpleReporter
     {
         parent::paintSkip($message);
         echo $this->getIndent(1);
-        echo "<" . $this->namespace . "skip>";
+        echo '<' . $this->namespace . 'skip>';
         echo $this->toParsedXml($message);
-        echo "</" . $this->namespace . "skip>\n";
+        echo '</' . $this->namespace . "skip>\n";
     }
 
     /**
@@ -215,9 +215,9 @@ class XmlReporter extends SimpleReporter
     {
         parent::paintMessage($message);
         echo $this->getIndent(1);
-        echo "<" . $this->namespace . "message>";
+        echo '<' . $this->namespace . 'message>';
         echo $this->toParsedXml($message);
-        echo "</" . $this->namespace . "message>\n";
+        echo '</' . $this->namespace . "message>\n";
     }
 
     /**
@@ -229,9 +229,9 @@ class XmlReporter extends SimpleReporter
     {
         parent::paintFormattedMessage($message);
         echo $this->getIndent(1);
-        echo "<" . $this->namespace . "formatted>";
+        echo '<' . $this->namespace . 'formatted>';
         echo "<![CDATA[$message]]>";
-        echo "</" . $this->namespace . "formatted>\n";
+        echo '</' . $this->namespace . "formatted>\n";
     }
 
     /**
@@ -243,9 +243,9 @@ class XmlReporter extends SimpleReporter
     {
         parent::paintSignal($type, $payload);
         echo $this->getIndent(1);
-        echo "<" . $this->namespace . "signal type=\"$type\">";
-        echo "<![CDATA[" . serialize($payload) . "]]>";
-        echo "</" . $this->namespace . "signal>\n";
+        echo '<' . $this->namespace . "signal type=\"$type\">";
+        echo '<![CDATA[' . serialize($payload) . ']]>';
+        echo '</' . $this->namespace . "signal>\n";
     }
 
     /**
@@ -259,13 +259,13 @@ class XmlReporter extends SimpleReporter
         if (!SimpleReporter::inCli()) {
             header('Content-type: text/xml');
         }
-        echo "<?xml version=\"1.0\"";
+        echo '<?xml version="1.0"';
         if ($this->namespace) {
-            echo " xmlns:" . $this->namespace .
-                "=\"www.lastcraft.com/SimpleTest/Beta3/Report\"";
+            echo ' xmlns:' . $this->namespace .
+                '="www.lastcraft.com/SimpleTest/Beta3/Report"';
         }
         echo "?>\n";
-        echo "<" . $this->namespace . "run>\n";
+        echo '<' . $this->namespace . "run>\n";
     }
 
     /**
@@ -275,7 +275,7 @@ class XmlReporter extends SimpleReporter
      */
     public function paintFooter($test_name)
     {
-        echo "</" . $this->namespace . "run>\n";
+        echo '</' . $this->namespace . "run>\n";
     }
 }
 

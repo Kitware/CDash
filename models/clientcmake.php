@@ -25,10 +25,10 @@ class clientcmake
     public function GetVersion()
     {
         if (!$this->Id) {
-            add_log("clientCMake::GetVersion()", "Id not set");
+            add_log('clientCMake::GetVersion()', 'Id not set');
             return;
         }
-        $sys = pdo_query("SELECT version FROM client_cmake WHERE id=" . qnum($this->Id));
+        $sys = pdo_query('SELECT version FROM client_cmake WHERE id=' . qnum($this->Id));
         $row = pdo_fetch_array($sys);
         return $row['version'];
     }
@@ -37,7 +37,7 @@ class clientcmake
     public function GetAll()
     {
         $ids = array();
-        $sql = "SELECT id FROM client_cmake ORDER BY version";
+        $sql = 'SELECT id FROM client_cmake ORDER BY version';
         $query = pdo_query($sql);
         while ($query_array = pdo_fetch_array($query)) {
             $ids[] = $query_array['id'];
@@ -49,7 +49,7 @@ class clientcmake
     public function GetIdFromVersion()
     {
         if (!$this->Version) {
-            add_log("clientCMake::GetIdFromVersion()", "Version not set");
+            add_log('clientCMake::GetIdFromVersion()', 'Version not set');
             return;
         }
         $version = pdo_real_escape_string($this->Version);
@@ -71,7 +71,7 @@ class clientcmake
               VALUES ('" . $version . "')";
             pdo_query($sql);
             $this->Id = pdo_insert_id('client_cmake');
-            add_last_sql_error("clientCMake::Save()");
+            add_last_sql_error('clientCMake::Save()');
         } else {
             // update
 
@@ -79,22 +79,22 @@ class clientcmake
             $this->Id = $query_array['id'];
             $sql = "UPDATE client_cmake SET version='" . $version . "' WHERE id=" . qnum($this->Id);
             pdo_query($sql);
-            add_last_sql_error("clientCMake::Save()");
+            add_last_sql_error('clientCMake::Save()');
         }
 
         // Insert into the siteid
-        $query = pdo_query("SELECT cmakeid FROM client_site2cmake WHERE cmakeid=" . qnum($this->Id) . " AND siteid=" . qnum($this->SiteId));
+        $query = pdo_query('SELECT cmakeid FROM client_site2cmake WHERE cmakeid=' . qnum($this->Id) . ' AND siteid=' . qnum($this->SiteId));
         if (pdo_num_rows($query) == 0) {
-            $sql = "INSERT INTO client_site2cmake (siteid,cmakeid,path)
-              VALUES (" . qnum($this->SiteId) . "," . qnum($this->Id) . ",'" . $path . "')";
+            $sql = 'INSERT INTO client_site2cmake (siteid,cmakeid,path)
+              VALUES (' . qnum($this->SiteId) . ',' . qnum($this->Id) . ",'" . $path . "')";
             pdo_query($sql);
-            add_last_sql_error("clientCMake::Save()");
+            add_last_sql_error('clientCMake::Save()');
         } else {
             // update
 
-            $sql = "UPDATE client_site2cmake SET path='" . $path . "' WHERE cmakeid=" . qnum($this->Id) . " AND siteid=" . qnum($this->SiteId);
+            $sql = "UPDATE client_site2cmake SET path='" . $path . "' WHERE cmakeid=" . qnum($this->Id) . ' AND siteid=' . qnum($this->SiteId);
             pdo_query($sql);
-            add_last_sql_error("clientCMake::Save()");
+            add_last_sql_error('clientCMake::Save()');
         }
     }
 
@@ -102,16 +102,16 @@ class clientcmake
     public function DeleteUnused($cmakes)
     {
         if (!$this->SiteId) {
-            add_log("clientCMake::DeleteUnused()", "SiteId not set");
+            add_log('clientCMake::DeleteUnused()', 'SiteId not set');
             return;
         }
 
         // Delete the old cmakes
-        $query = pdo_query("SELECT path,version,cmakeid FROM client_cmake,client_site2cmake
+        $query = pdo_query('SELECT path,version,cmakeid FROM client_cmake,client_site2cmake
               WHERE client_cmake.id=client_site2cmake.cmakeid
-              AND siteid=" . qnum($this->SiteId));
+              AND siteid=' . qnum($this->SiteId));
 
-        add_last_sql_error("clientCMake::DeleteUnused()");
+        add_last_sql_error('clientCMake::DeleteUnused()');
         while ($query_array = pdo_fetch_array($query)) {
             $delete = 1;
             foreach ($cmakes as $cmake) {
@@ -124,11 +124,11 @@ class clientcmake
                 pdo_query("DELETE FROM client_site2cmake WHERE path='" . $query_array['path'] .
                     "' AND cmakeid='" . $query_array['cmakeid'] .
                     "' AND siteid=" . qnum($this->SiteId));
-                add_last_sql_error("clientCMake::DeleteUnused()");
+                add_last_sql_error('clientCMake::DeleteUnused()');
             }
         }
 
         // Delete the client_compiler not attached to anything
-        pdo_query("DELETE FROM client_cmake WHERE id NOT IN(SELECT cmakeid AS id FROM client_site2cmake)");
+        pdo_query('DELETE FROM client_cmake WHERE id NOT IN(SELECT cmakeid AS id FROM client_site2cmake)');
     }
 }

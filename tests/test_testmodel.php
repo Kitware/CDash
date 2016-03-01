@@ -23,23 +23,23 @@ class TestModelTestCase extends KWWebTestCase
         $this->startCodeCoverage();
 
         $test = new Test();
-        $test->Id = "8967";
-        $test->Name = "dummytest";
+        $test->Id = '8967';
+        $test->Name = 'dummytest';
         $test->ProjectId = 2;
 
         // Cover error condition
         $test->InsertLabelAssociations('');
 
         $testmeasurement = new TestMeasurement();
-        $testmeasurement->Name = "Label";
-        $testmeasurement->Value = "Some_Label";
+        $testmeasurement->Name = 'Label';
+        $testmeasurement->Value = 'Some_Label';
         $test->AddMeasurement($testmeasurement);
 
         $image = new Image();
-        $image->Filename = dirname(__FILE__) . "/data/smile.gif";
+        $image->Filename = dirname(__FILE__) . '/data/smile.gif';
         $image->Data = base64_encode(file_get_contents($image->Filename));
         $image->Checksum = 100;
-        $image->Extension = "image/gif";
+        $image->Extension = 'image/gif';
 
         $test->AddImage($image);
 

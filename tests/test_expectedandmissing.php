@@ -35,7 +35,7 @@ class ExpectedAndMissingTestCase extends KWWebTestCase
             INNER JOIN buildgroup AS g ON (b2g.groupid=g.id)
             WHERE b.name='$buildname'";
         if ($projectname === 'Trilinos') {
-            $query .= " AND b.parentid=-1";
+            $query .= ' AND b.parentid=-1';
         }
         $build_row = pdo_single_row_query($query);
 
@@ -71,7 +71,7 @@ class ExpectedAndMissingTestCase extends KWWebTestCase
             return 1;
         }
 
-        $this->pass("Passed");
+        $this->pass('Passed');
         return 0;
     }
 }

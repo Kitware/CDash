@@ -18,41 +18,41 @@
 function databaseAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
 {
     global $loginerror;
-    $loginerror = "";
+    $loginerror = '';
 
-    include dirname(__DIR__) . "/config/config.php";
+    include dirname(__DIR__) . '/config/config.php';
 
     $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
     pdo_select_db("$CDASH_DB_NAME", $db);
-    $sql = "SELECT id,password FROM " . qid("user") . " WHERE email='" . pdo_real_escape_string($email) . "'";
+    $sql = 'SELECT id,password FROM ' . qid('user') . " WHERE email='" . pdo_real_escape_string($email) . "'";
     $result = pdo_query("$sql");
 
     if (pdo_num_rows($result) == 0) {
         pdo_free_result($result);
-        $loginerror = "Wrong email or password.";
+        $loginerror = 'Wrong email or password.';
         return false;
     }
 
     $user_array = pdo_fetch_array($result);
-    $pass = $user_array["password"];
+    $pass = $user_array['password'];
 
     // External authentication
     if ($password === null && isset($CDASH_EXTERNAL_AUTH) && $CDASH_EXTERNAL_AUTH) {
         // create the session array
-        $sessionArray = array("login" => $login, "password" => 'this is not a valid password', "passwd" => $user_array['password'], "ID" => session_id(), "valid" => 1, "loginid" => $user_array["id"]);
+        $sessionArray = array('login' => $login, 'password' => 'this is not a valid password', 'passwd' => $user_array['password'], 'ID' => session_id(), 'valid' => 1, 'loginid' => $user_array['id']);
         $_SESSION['cdash'] = $sessionArray;
         pdo_free_result($result);
         return true;                               // authentication succeeded
     } elseif (md5($password) == $pass) {
         if ($rememberme) {
-            $cookiename = "CDash-" . $_SERVER['SERVER_NAME'];
+            $cookiename = 'CDash-' . $_SERVER['SERVER_NAME'];
             $time = time() + 60 * 60 * 24 * 30; // 30 days;
 
             // Create a new password
-            $keychars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            $keychars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
             $length = 32;
 
-            $key = "";
+            $key = '';
             $max = strlen($keychars) - 1;
             for ($i = 0; $i <= $length; $i++) {
                 // random_int is available in PHP 7 and the random_compat PHP 5.x
@@ -64,25 +64,25 @@ function databaseAuthenticate($email, $password, $SessionCachePolicy, $rememberm
             setcookie($cookiename, $value, $time);
 
             // Update the user key
-            pdo_query("UPDATE " . qid("user") . " SET cookiekey='" . $key . "' WHERE id=" . qnum($user_array['id']));
+            pdo_query('UPDATE ' . qid('user') . " SET cookiekey='" . $key . "' WHERE id=" . qnum($user_array['id']));
         }
 
-        session_name("CDash");
+        session_name('CDash');
         session_cache_limiter($SessionCachePolicy);
         session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
         @ini_set('session.gc_maxlifetime', $CDASH_COOKIE_EXPIRATION_TIME + 600);
         session_start();
 
         // create the session array
-        if (isset($_SESSION['cdash']["password"])) {
-            $password = $_SESSION['cdash']["password"];
+        if (isset($_SESSION['cdash']['password'])) {
+            $password = $_SESSION['cdash']['password'];
         }
-        $sessionArray = array("login" => $email, "passwd" => $pass, "ID" => session_id(), "valid" => 1, "loginid" => $user_array["id"]);
+        $sessionArray = array('login' => $email, 'passwd' => $pass, 'ID' => session_id(), 'valid' => 1, 'loginid' => $user_array['id']);
         $_SESSION['cdash'] = $sessionArray;
         return true;
     }
 
-    $loginerror = "Wrong email or password.";
+    $loginerror = 'Wrong email or password.';
     return false;
 }
 
@@ -90,10 +90,10 @@ function databaseAuthenticate($email, $password, $SessionCachePolicy, $rememberm
 function ldapAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
 {
     global $loginerror;
-    $loginerror = "";
+    $loginerror = '';
 
-    include dirname(__DIR__) . "/config/config.php";
-    include_once "models/user.php";
+    include dirname(__DIR__) . '/config/config.php';
+    include_once 'models/user.php';
 
     $ldap = ldap_connect($CDASH_LDAP_HOSTNAME);
     ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, $CDASH_LDAP_PROTOCOL_VERSION);
@@ -113,7 +113,7 @@ function ldapAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
             if (isset($principal)) {
                 // bind as this user
                 if (@ldap_bind($ldap, $principal, $password) and strlen(trim($password)) != 0) {
-                    $sql = "SELECT id,password FROM " . qid("user") . " WHERE email='" . pdo_real_escape_string($email) . "'";
+                    $sql = 'SELECT id,password FROM ' . qid('user') . " WHERE email='" . pdo_real_escape_string($email) . "'";
                     $result = pdo_query("$sql");
 
                     // If the user doesn't exist we add it
@@ -123,7 +123,7 @@ function ldapAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
                             $loginerror = 'No givenname (cn) set in LDAP, cannot register user into CDash';
                             return false;
                         }
-                        $names = explode(" ", $givenname);
+                        $names = explode(' ', $givenname);
 
                         $User = new User;
 
@@ -131,7 +131,7 @@ function ldapAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
                             $User->FirstName = $names[0];
                             $User->LastName = $names[1];
                             for ($i = 2; $i < count($names); $i++) {
-                                $User->LastName .= " " . $names[$i];
+                                $User->LastName .= ' ' . $names[$i];
                             }
                         } else {
                             $User->LastName = $names[0];
@@ -145,8 +145,8 @@ function ldapAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
                         $userid = $User->Id;
                     } else {
                         $user_array = pdo_fetch_array($result);
-                        $storedPassword = $user_array["password"];
-                        $userid = $user_array["id"];
+                        $storedPassword = $user_array['password'];
+                        $userid = $user_array['id'];
 
                         // If the password has changed we update
                         if ($storedPassword != md5($password)) {
@@ -157,14 +157,14 @@ function ldapAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
                     }
 
                     if ($rememberme) {
-                        $cookiename = "CDash-" . $_SERVER['SERVER_NAME'];
+                        $cookiename = 'CDash-' . $_SERVER['SERVER_NAME'];
                         $time = time() + 60 * 60 * 24 * 30; // 30 days;
 
                         // Create a new password
-                        $keychars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+                        $keychars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
                         $length = 32;
 
-                        $key = "";
+                        $key = '';
                         $max = strlen($keychars) - 1;
                         for ($i = 0; $i <= $length; $i++) {
                             // random_int is available in PHP 7 and the random_compat PHP 5.x
@@ -176,24 +176,24 @@ function ldapAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
                         setcookie($cookiename, $value, $time);
 
                         // Update the user key
-                        pdo_query("UPDATE " . qid("user") . " SET cookiekey='" . $key . "' WHERE id=" . qnum($userid));
+                        pdo_query('UPDATE ' . qid('user') . " SET cookiekey='" . $key . "' WHERE id=" . qnum($userid));
                     }
 
-                    session_name("CDash");
+                    session_name('CDash');
                     session_cache_limiter($SessionCachePolicy);
                     session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
                     @ini_set('session.gc_maxlifetime', $CDASH_COOKIE_EXPIRATION_TIME + 600);
                     session_start();
 
                     // create the session array
-                    if (isset($_SESSION['cdash']["password"])) {
-                        $password = $_SESSION['cdash']["password"];
+                    if (isset($_SESSION['cdash']['password'])) {
+                        $password = $_SESSION['cdash']['password'];
                     }
-                    $sessionArray = array("login" => $email, "passwd" => $storedPassword, "ID" => session_id(), "valid" => 1, "loginid" => $userid);
+                    $sessionArray = array('login' => $email, 'passwd' => $storedPassword, 'ID' => session_id(), 'valid' => 1, 'loginid' => $userid);
                     $_SESSION['cdash'] = $sessionArray;
                     return true;
                 } else {
-                    $loginerror = "Wrong email or password.";
+                    $loginerror = 'Wrong email or password.';
                     return false;
                 }
             } else {
@@ -216,16 +216,16 @@ function authenticate($email, $password, $SessionCachePolicy, $rememberme)
     if (empty($email)) {
         return 0;
     }
-    include dirname(__DIR__) . "/config/config.php";
+    include dirname(__DIR__) . '/config/config.php';
 
     if ($CDASH_USE_LDAP) {
         // If the user is '1' we use it to login
         $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
         pdo_select_db("$CDASH_DB_NAME", $db);
-        $query = pdo_query("SELECT id FROM " . qid("user") . " WHERE email='$email'");
+        $query = pdo_query('SELECT id FROM ' . qid('user') . " WHERE email='$email'");
         if ($query && pdo_num_rows($query) > 0) {
             $user_array = pdo_fetch_array($query);
-            if ($user_array["id"] == 1) {
+            if ($user_array['id'] == 1) {
                 return databaseAuthenticate($email, $password, $SessionCachePolicy, $rememberme);
             }
         }
@@ -238,7 +238,7 @@ function authenticate($email, $password, $SessionCachePolicy, $rememberme)
 /** Authentication function */
 function auth($SessionCachePolicy = 'private_no_expire')
 {
-    include dirname(__DIR__) . "/config/config.php";
+    include dirname(__DIR__) . '/config/config.php';
     $loginid = 1231564132;
 
     if (isset($CDASH_EXTERNAL_AUTH) && $CDASH_EXTERNAL_AUTH
@@ -248,15 +248,15 @@ function auth($SessionCachePolicy = 'private_no_expire')
         return authenticate($login, null, $SessionCachePolicy, 0); // we don't remember
     }
 
-    if (@$_GET["logout"]) {                             // user requested logout
-        session_name("CDash");
+    if (@$_GET['logout']) {                             // user requested logout
+        session_name('CDash');
         session_cache_limiter('nocache');
         @session_start();
         unset($_SESSION['cdash']);
         session_destroy();
 
         // Remove the cookie if we have one
-        $cookienames = array("CDash", str_replace('.', '_', "CDash-" . $_SERVER['SERVER_NAME'])); // php doesn't like dot in cookie names
+        $cookienames = array('CDash', str_replace('.', '_', 'CDash-' . $_SERVER['SERVER_NAME'])); // php doesn't like dot in cookie names
         foreach ($cookienames as $cookiename) {
             if (isset($_COOKIE[$cookiename])) {
                 $cookievalue = $_COOKIE[$cookiename];
@@ -264,34 +264,34 @@ function auth($SessionCachePolicy = 'private_no_expire')
                 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
                 pdo_select_db("$CDASH_DB_NAME", $db);
 
-                pdo_query("UPDATE " . qid("user") . " SET cookiekey='' WHERE id=" . qnum($cookieuseridkey));
-                setcookie("CDash-" . $_SERVER['SERVER_NAME'], "", time() - 3600);
+                pdo_query('UPDATE ' . qid('user') . " SET cookiekey='' WHERE id=" . qnum($cookieuseridkey));
+                setcookie('CDash-' . $_SERVER['SERVER_NAME'], '', time() - 3600);
             }
         }
         echo "<script language=\"javascript\">window.location='index.php'</script>";
         return 0;
     }
 
-    if (isset($_POST["sent"])) {
+    if (isset($_POST['sent'])) {
         // arrive from login form
 
-        @$login = $_POST["login"];
+        @$login = $_POST['login'];
         if ($login != null) {
             $login = htmlspecialchars(pdo_real_escape_string($login));
         }
 
-        @$passwd = $_POST["passwd"];
+        @$passwd = $_POST['passwd'];
         if ($passwd != null) {
             $passwd = htmlspecialchars(pdo_real_escape_string($passwd));
         }
 
-        @$rememberme = $_POST["rememberme"];
+        @$rememberme = $_POST['rememberme'];
         if ($rememberme != null) {
             $rememberme = pdo_real_escape_numeric($rememberme);
         }
         return authenticate($login, $passwd, $SessionCachePolicy, $rememberme);
     } else {                                         // arrive from session var
-        $cookiename = str_replace('.', '_', "CDash-" . $_SERVER['SERVER_NAME']); // php doesn't like dot in cookie names
+        $cookiename = str_replace('.', '_', 'CDash-' . $_SERVER['SERVER_NAME']); // php doesn't like dot in cookie names
         if (isset($_COOKIE[$cookiename])) {
             $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
             pdo_select_db("$CDASH_DB_NAME", $db);
@@ -303,7 +303,7 @@ function auth($SessionCachePolicy = 'private_no_expire')
             }
             $cookieuseridkey = substr($cookievalue, 0, strlen($cookievalue) - 33);
             $sql =
-                "SELECT email,password,id FROM " . qid("user") . "
+                'SELECT email,password,id FROM ' . qid('user') . "
                 WHERE cookiekey='" . pdo_real_escape_string($cookiekey) . "'";
             if (!empty($cookieuseridkey)) {
                 $sql .= " AND id='" . pdo_real_escape_string($cookieuseridkey) . "'";
@@ -311,13 +311,13 @@ function auth($SessionCachePolicy = 'private_no_expire')
             $result = pdo_query("$sql");
             if (pdo_num_rows($result) == 1) {
                 $user_array = pdo_fetch_array($result);
-                session_name("CDash");
+                session_name('CDash');
                 session_cache_limiter($SessionCachePolicy);
                 session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
                 @ini_set('session.gc_maxlifetime', $CDASH_COOKIE_EXPIRATION_TIME + 600);
                 session_start();
 
-                $sessionArray = array("login" => $user_array['email'], "passwd" => $user_array['password'], "ID" => session_id(), "valid" => 1, "loginid" => $user_array['id']);
+                $sessionArray = array('login' => $user_array['email'], 'passwd' => $user_array['password'], 'ID' => session_id(), 'valid' => 1, 'loginid' => $user_array['id']);
                 $_SESSION['cdash'] = $sessionArray;
                 return true;
             }
@@ -334,31 +334,31 @@ function auth($SessionCachePolicy = 'private_no_expire')
             }
         }
 
-        session_name("CDash");
+        session_name('CDash');
         session_cache_limiter($SessionCachePolicy);
         session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
         @ini_set('session.gc_maxlifetime', $CDASH_COOKIE_EXPIRATION_TIME + 600);
         session_start();
 
-        $email = @$_SESSION['cdash']["login"];
+        $email = @$_SESSION['cdash']['login'];
 
         if (!empty($email)) {
             $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
             pdo_select_db("$CDASH_DB_NAME", $db);
-            $sql = "SELECT id,password FROM " . qid("user") . " WHERE email='" . pdo_real_escape_string($email) . "'";
+            $sql = 'SELECT id,password FROM ' . qid('user') . " WHERE email='" . pdo_real_escape_string($email) . "'";
             $result = pdo_query("$sql");
 
             if (pdo_num_rows($result) == 0) {
                 pdo_free_result($result);
-                $loginerror = "Wrong email or password.";
+                $loginerror = 'Wrong email or password.';
                 return false;
             }
 
             $user_array = pdo_fetch_array($result);
-            if ($user_array["password"] == $_SESSION['cdash']["passwd"]) {
+            if ($user_array['password'] == $_SESSION['cdash']['passwd']) {
                 return true;
             }
-            $loginerror = "Wrong email or password.";
+            $loginerror = 'Wrong email or password.';
             return false;
         }
     }
@@ -367,38 +367,38 @@ function auth($SessionCachePolicy = 'private_no_expire')
 /** Login Form function */
 function LoginForm($loginerror)
 {
-    include dirname(__DIR__) . "/config/config.php";
-    require_once "include/pdo.php";
-    include_once "include/common.php";
-    include "include/version.php";
+    include dirname(__DIR__) . '/config/config.php';
+    require_once 'include/pdo.php';
+    include_once 'include/common.php';
+    include 'include/version.php';
 
     $xml = begin_XML_for_XSLT();
-    $xml .= "<title>Login</title>";
+    $xml .= '<title>Login</title>';
     if (isset($CDASH_NO_REGISTRATION) && $CDASH_NO_REGISTRATION == 1) {
-        $xml .= add_XML_value("noregister", "1");
+        $xml .= add_XML_value('noregister', '1');
     }
-    if (@$_GET['note'] == "register") {
-        $xml .= "<message>Registration Complete. Please login with your email and password.</message>";
+    if (@$_GET['note'] == 'register') {
+        $xml .= '<message>Registration Complete. Please login with your email and password.</message>';
     }
 
-    if ($loginerror != "") {
-        $xml .= "<message>" . $loginerror . "</message>";
+    if ($loginerror != '') {
+        $xml .= '<message>' . $loginerror . '</message>';
     }
 
     if ($CDASH_ALLOW_LOGIN_COOKIE) {
-        $xml .= "<allowlogincookie>1</allowlogincookie>";
+        $xml .= '<allowlogincookie>1</allowlogincookie>';
     }
 
     if ($GOOGLE_CLIENT_ID != '' && $GOOGLE_CLIENT_SECRET != '') {
-        $xml .= "<oauth2>";
-        $xml .= add_XML_value("client", $GOOGLE_CLIENT_ID);
-        $xml .= "</oauth2>";
+        $xml .= '<oauth2>';
+        $xml .= add_XML_value('client', $GOOGLE_CLIENT_ID);
+        $xml .= '</oauth2>';
     }
 
-    $xml .= "</cdash>";
+    $xml .= '</cdash>';
 
     if (!isset($NoXSLGenerate)) {
-        generate_XSLT($xml, "login");
+        generate_XSLT($xml, 'login');
     }
 }
 
@@ -410,19 +410,19 @@ function getPasswordComplexity($password)
     $matches = array();
 
     // Uppercase letters
-    $num_uppercase = preg_match_all("/[A-Z]/", $password, $matches);
+    $num_uppercase = preg_match_all('/[A-Z]/', $password, $matches);
     if ($num_uppercase >= $CDASH_PASSWORD_COMPLEXITY_COUNT) {
         $complexity++;
     }
 
     // Lowercase letters
-    $num_lowercase = preg_match_all("/[a-z]/", $password, $matches);
+    $num_lowercase = preg_match_all('/[a-z]/', $password, $matches);
     if ($num_lowercase >= $CDASH_PASSWORD_COMPLEXITY_COUNT) {
         $complexity++;
     }
 
     // Numbers
-    $num_numbers = preg_match_all("/[0-9]/", $password, $matches);
+    $num_numbers = preg_match_all('/[0-9]/', $password, $matches);
     if ($num_numbers >= $CDASH_PASSWORD_COMPLEXITY_COUNT) {
         $complexity++;
     }
@@ -430,7 +430,7 @@ function getPasswordComplexity($password)
     // Symbols
     $num_symbols = preg_match_all("/\W/", $password, $matches);
     // Underscore is not matched by \W but we consider it a symbol.
-    $num_symbols += substr_count($password, "_");
+    $num_symbols += substr_count($password, '_');
     if ($num_symbols >= $CDASH_PASSWORD_COMPLEXITY_COUNT) {
         $complexity++;
     }

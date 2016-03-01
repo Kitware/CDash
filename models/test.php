@@ -116,7 +116,7 @@ class test
     {
         $name = pdo_real_escape_string($this->Name);
         $crc32 = $this->GetCrc32();
-        $query = pdo_query("SELECT id FROM test WHERE projectid=" . qnum($this->ProjectId)
+        $query = pdo_query('SELECT id FROM test WHERE projectid=' . qnum($this->ProjectId)
             . " AND name='" . $name . "'"
             . " AND crc32='" . $crc32 . "'");
         if (pdo_num_rows($query) > 0) {
@@ -134,22 +134,22 @@ class test
             return true;
         }
 
-        include "config/config.php";
+        include 'config/config.php';
         $command = pdo_real_escape_string($this->Command);
 
         $name = pdo_real_escape_string($this->Name);
         $path = pdo_real_escape_string($this->Path);
         $details = pdo_real_escape_string($this->Details);
 
-        $id = "";
-        $idvalue = "";
+        $id = '';
+        $idvalue = '';
         if ($this->Id) {
-            $id = "id,";
+            $id = 'id,';
             $idvalue = "'" . $this->Id . "',";
         }
 
         if ($this->CompressedOutput) {
-            if ($CDASH_DB_TYPE == "pgsql") {
+            if ($CDASH_DB_TYPE == 'pgsql') {
                 $output = pg_escape_bytea($this->Output);
             } else {
                 $output = base64_decode($this->Output);
@@ -159,7 +159,7 @@ class test
             if ($output === false) {
                 $output = $this->Output;
             } else {
-                if ($CDASH_DB_TYPE == "pgsql") {
+                if ($CDASH_DB_TYPE == 'pgsql') {
                     if (strlen($this->Output) < 2000) {
                         // compression doesn't help for small chunk
 
@@ -178,22 +178,22 @@ class test
             $query_array = pdo_fetch_array($query);
             $max = $query_array[1];
             if (strlen($this->Output) > $max) {
-                add_log("Output is bigger than max_allowed_packet", "Test::Insert", LOG_ERR, $this->ProjectId);
+                add_log('Output is bigger than max_allowed_packet', 'Test::Insert', LOG_ERR, $this->ProjectId);
                 // We cannot truncate the output because it is compressed (too complicated)
             }
         }
 
         $output = pdo_real_escape_string($output);
-        $query = "INSERT INTO test (" . $id . "projectid,crc32,name,path,command,details,output)
-              VALUES (" . $idvalue . "'$this->ProjectId','$this->Crc32','$name','$path','$command','$details','$output')";
+        $query = 'INSERT INTO test (' . $id . 'projectid,crc32,name,path,command,details,output)
+              VALUES (' . $idvalue . "'$this->ProjectId','$this->Crc32','$name','$path','$command','$details','$output')";
 
         if (!pdo_query($query)) {
-            add_last_sql_error("Cannot insert test: " . $name . " into the database", $this->ProjectId);
+            add_last_sql_error('Cannot insert test: ' . $name . ' into the database', $this->ProjectId);
             return false;
         }
 
         if (!$this->Id) {
-            $this->Id = pdo_insert_id("test");
+            $this->Id = pdo_insert_id('test');
         }
 
         // Add the measurements
@@ -209,16 +209,16 @@ class test
             $img = imagecreatefromstring($imgStr);
             ob_start();
             switch ($image->Extension) {
-                case "image/jpg":
+                case 'image/jpg':
                     imagejpeg($img);
                     break;
-                case "image/jpeg":
+                case 'image/jpeg':
                     imagejpeg($img);
                     break;
-                case "image/gif":
+                case 'image/gif':
                     imagegif($img);
                     break;
-                case "image/png":
+                case 'image/png':
                     imagepng($img);
                     break;
                 default:

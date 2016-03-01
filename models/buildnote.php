@@ -79,29 +79,29 @@ class buildnote
             }
 
             if (!pdo_query($query)) {
-                add_last_sql_error("BuildNote:Insert", 0, $this->BuildId);
+                add_last_sql_error('BuildNote:Insert', 0, $this->BuildId);
                 return false;
             }
 
             if (!$this->Id) {
-                $this->Id = pdo_insert_id("note");
+                $this->Id = pdo_insert_id('note');
             }
         } else {
             // already there
 
             $notecrc32_array = pdo_fetch_array($notecrc32);
-            $this->Id = $notecrc32_array["id"];
+            $this->Id = $notecrc32_array['id'];
         }
 
         if (!$this->Id) {
-            echo "BuildNote::Insert(): No NoteId";
+            echo 'BuildNote::Insert(): No NoteId';
             return false;
         }
 
         $query = "INSERT INTO build2note (buildid,noteid,time)
             VALUES ('$this->BuildId','$this->Id','$this->Time')";
         if (!pdo_query($query)) {
-            add_last_sql_error("BuildNote:Insert", 0, $this->BuildId);
+            add_last_sql_error('BuildNote:Insert', 0, $this->BuildId);
             return false;
         }
         return true;

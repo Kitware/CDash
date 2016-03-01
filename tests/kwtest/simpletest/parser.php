@@ -98,7 +98,7 @@ class ParallelRegex
                         array('\/', '\(', '\)'),
                         $this->_patterns[$i]) . ')';
             }
-            $this->_regex = "/" . implode("|", $this->_patterns) . "/" . $this->_getPerlMatchingFlags();
+            $this->_regex = '/' . implode('|', $this->_patterns) . '/' . $this->_getPerlMatchingFlags();
         }
         return $this->_regex;
     }
@@ -109,7 +109,7 @@ class ParallelRegex
      */
     public function _getPerlMatchingFlags()
     {
-        return ($this->_case ? "msS" : "msSi");
+        return ($this->_case ? 'msS' : 'msSi');
     }
 }
 
@@ -187,7 +187,7 @@ class SimpleLexer
      * @param string $start Starting handler.
      * @param bool $case True for case sensitive.
      */
-    public function SimpleLexer(&$parser, $start = "accept", $case = false)
+    public function SimpleLexer(&$parser, $start = 'accept', $case = false)
     {
         $this->_case = $case;
         $this->_regexes = array();
@@ -206,7 +206,7 @@ class SimpleLexer
      *                                pattern when dealing with
      *                                this type of input.
      */
-    public function addPattern($pattern, $mode = "accept")
+    public function addPattern($pattern, $mode = 'accept')
     {
         if (!isset($this->_regexes[$mode])) {
             $this->_regexes[$mode] = new ParallelRegex($this->_case);
@@ -252,7 +252,7 @@ class SimpleLexer
         if (!isset($this->_regexes[$mode])) {
             $this->_regexes[$mode] = new ParallelRegex($this->_case);
         }
-        $this->_regexes[$mode]->addPattern($pattern, "__exit");
+        $this->_regexes[$mode]->addPattern($pattern, '__exit');
         if (!isset($this->_mode_handlers[$mode])) {
             $this->_mode_handlers[$mode] = $mode;
         }
@@ -369,7 +369,7 @@ class SimpleLexer
      */
     public function _isModeEnd($mode)
     {
-        return ($mode === "__exit");
+        return ($mode === '__exit');
     }
 
     /**
@@ -381,7 +381,7 @@ class SimpleLexer
      */
     public function _isSpecialMode($mode)
     {
-        return (strncmp($mode, "_", 1) == 0);
+        return (strncmp($mode, '_', 1) == 0);
     }
 
     /**
@@ -517,7 +517,7 @@ class SimpleHtmlLexer extends SimpleLexer
     {
         $this->mapHandler('dq_attribute', 'acceptAttributeToken');
         $this->addEntryPattern('=\s*"', 'tag', 'dq_attribute');
-        $this->addPattern("\\\\\"", 'dq_attribute');
+        $this->addPattern('\\\\"', 'dq_attribute');
         $this->addExitPattern('"', 'dq_attribute');
         $this->mapHandler('sq_attribute', 'acceptAttributeToken');
         $this->addEntryPattern("=\s*'", 'tag', 'sq_attribute');

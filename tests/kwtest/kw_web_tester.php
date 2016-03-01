@@ -55,7 +55,7 @@ class KWWebTestCase extends WebTestCase
 
         global $CDASH_LOG_FILE, $cdashpath;
         $this->logfilename = $CDASH_LOG_FILE;
-        $this->configfilename = $cdashpath . "/config/config.local.php";
+        $this->configfilename = $cdashpath . '/config/config.local.php';
     }
 
     public function startCodeCoverage()
@@ -135,7 +135,7 @@ class KWWebTestCase extends WebTestCase
             if ($this->findString($content, 'ERROR') ||
                 $this->findString($content, 'WARNING')
             ) {
-                $this->fail("Log file has errors or warnings");
+                $this->fail('Log file has errors or warnings');
                 return false;
             }
             return $content;
@@ -146,7 +146,7 @@ class KWWebTestCase extends WebTestCase
     /** Compare the current log with a file */
     public function compareLog($logfilename, $template)
     {
-        $log = "";
+        $log = '';
         if (file_exists($logfilename)) {
             $log = file_get_contents($logfilename);
             $log = str_replace("\r", '', $log);
@@ -159,7 +159,7 @@ class KWWebTestCase extends WebTestCase
         $it = 0;
         while ($il < strlen($log) && $it < strlen($templateLog)) {
             if ($templateLog[$it] == '<') {
-                $pos2 = strpos($templateLog, "<NA>", $it);
+                $pos2 = strpos($templateLog, '<NA>', $it);
                 $pos3 = strpos($templateLog, "<NA>\n", $it);
 
                 // We skip the line
@@ -184,7 +184,7 @@ class KWWebTestCase extends WebTestCase
             }
 
             if ($log[$il] != $templateLog[$it]) {
-                $this->fail("Log files are different\n  logfilename='$logfilename'\n  template='$template'\n  at char $it: " . ord($templateLog[$it]) . "=" . ord($log[$il]) . "\n  **" . substr($templateLog, $it, 10) . "** vs. **" . substr($log, $il, 10) . "**");
+                $this->fail("Log files are different\n  logfilename='$logfilename'\n  template='$template'\n  at char $it: " . ord($templateLog[$it]) . '=' . ord($log[$il]) . "\n  **" . substr($templateLog, $it, 10) . '** vs. **' . substr($log, $il, 10) . '**');
                 return false;
             }
             $it++;
@@ -221,7 +221,7 @@ class KWWebTestCase extends WebTestCase
     public function analyse($page)
     {
         if (!$page) {
-            $this->assertTrue(false, "The requested URL was not found on this server");
+            $this->assertTrue(false, 'The requested URL was not found on this server');
             return false;
         }
         $browser = $this->getBrowser();
@@ -297,7 +297,7 @@ class KWWebTestCase extends WebTestCase
     }
 
     // In case of the project does not exist yet
-    public function createProject($name, $description, $svnviewerurl = "", $bugtrackerfileurl = "")
+    public function createProject($name, $description, $svnviewerurl = '', $bugtrackerfileurl = '')
     {
         $this->clickLink('Create new project');
         $this->setField('name', $name);
@@ -312,10 +312,10 @@ class KWWebTestCase extends WebTestCase
     public function addLineToConfig($line_to_add)
     {
         $contents = file_get_contents($this->configfilename);
-        $handle = fopen($this->configfilename, "w");
+        $handle = fopen($this->configfilename, 'w');
         $lines = explode("\n", $contents);
         foreach ($lines as $line) {
-            if (strpos($line, "?>") !== false) {
+            if (strpos($line, '?>') !== false) {
                 fwrite($handle, "$line_to_add\n");
             }
             if ($line != '') {
@@ -324,13 +324,13 @@ class KWWebTestCase extends WebTestCase
         }
         fclose($handle);
         unset($handle);
-        $this->pass("Passed");
+        $this->pass('Passed');
     }
 
     public function removeLineFromConfig($line_to_remove)
     {
         $contents = file_get_contents($this->configfilename);
-        $handle = fopen($this->configfilename, "w");
+        $handle = fopen($this->configfilename, 'w');
         $lines = explode("\n", $contents);
         foreach ($lines as $line) {
             if (strpos($line, $line_to_remove) !== false) {

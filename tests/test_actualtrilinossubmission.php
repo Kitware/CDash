@@ -17,13 +17,13 @@ class ActualTrilinosSubmissionTestCase extends TrilinosSubmissionTestCase
     {
         $content = $this->connect($this->url);
         if (!$content) {
-            $this->fail("no content after connect");
+            $this->fail('no content after connect');
             return;
         }
 
         $this->login();
         if (!$this->analyse($this->clickLink('Create new project'))) {
-            $this->fail("analyse failed after login then clickLink [Create new project]");
+            $this->fail('analyse failed after login then clickLink [Create new project]');
             return;
         }
 
@@ -57,18 +57,18 @@ class ActualTrilinosSubmissionTestCase extends TrilinosSubmissionTestCase
 
     public function createProjects()
     {
-        $this->createProjectWithName("TrilinosDriver");
-        $this->createProjectWithName("Trilinos");
+        $this->createProjectWithName('TrilinosDriver');
+        $this->createProjectWithName('Trilinos');
     }
 
     public function testActualTrilinosSubmission()
     {
         $this->createProjects();
-        $this->setEmailCommitters("Trilinos", 1);
+        $this->setEmailCommitters('Trilinos', 1);
         $this->submitFiles('ActualTrilinosSubmission');
         $this->submitFiles('ActualTrilinosSubmissionTestData');
         $this->verifyResults();
-        $this->setEmailCommitters("Trilinos", 0);
+        $this->setEmailCommitters('Trilinos', 0);
         $this->deleteLog($this->logfilename);
     }
 }

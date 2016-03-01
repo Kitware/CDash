@@ -30,16 +30,16 @@ class buildgroup
     public function __construct()
     {
         $this->Id = 0;
-        $this->Name = "";
+        $this->Name = '';
         $this->ProjectId = 0;
         $this->StartTime = '1980-01-01 00:00:00';
         $this->EndTime = '1980-01-01 00:00:00';
         $this->AutoRemoveTimeFrame = 0;
-        $this->Description = "";
+        $this->Description = '';
         $this->SummaryEmail = 0;
         $this->IncludeSubProjectTotal = 1;
         $this->EmailCommitters = 0;
-        $this->Type = "Daily";
+        $this->Type = 'Daily';
     }
 
     /** Get the id */
@@ -60,7 +60,7 @@ class buildgroup
         $this->Id = $id;
 
         $row = pdo_single_row_query(
-            "SELECT * FROM buildgroup WHERE id=" . qnum($this->Id));
+            'SELECT * FROM buildgroup WHERE id=' . qnum($this->Id));
         if (empty($row)) {
             return false;
         }
@@ -77,13 +77,13 @@ class buildgroup
         }
 
         if ($this->Id < 1) {
-            add_log("BuildGroup GetName(): Id not set", LOG_ERR);
+            add_log('BuildGroup GetName(): Id not set', LOG_ERR);
             return false;
         }
 
-        $project = pdo_query("SELECT name FROM buildgroup WHERE id=" . qnum($this->Id));
+        $project = pdo_query('SELECT name FROM buildgroup WHERE id=' . qnum($this->Id));
         if (!$project) {
-            add_last_sql_error("BuildGroup GetName");
+            add_last_sql_error('BuildGroup GetName');
             return false;
         }
         $project_array = pdo_fetch_array($project);
@@ -111,7 +111,7 @@ class buildgroup
     {
         if (is_numeric($projectid)) {
             $this->ProjectId = $projectid;
-            if ($this->Name != "") {
+            if ($this->Name != '') {
                 $this->Fill();
             }
             return true;
@@ -123,7 +123,7 @@ class buildgroup
     public function GetStartTime()
     {
         if ($this->Id < 1) {
-            add_log("BuildGroup GetStartTime(): Id not set", LOG_ERR);
+            add_log('BuildGroup GetStartTime(): Id not set', LOG_ERR);
             return false;
         }
         return $this->StartTime;
@@ -138,7 +138,7 @@ class buildgroup
     public function GetEndTime()
     {
         if ($this->Id < 1) {
-            add_log("BuildGroup GetEndTime(): Id not set", LOG_ERR);
+            add_log('BuildGroup GetEndTime(): Id not set', LOG_ERR);
             return false;
         }
         return $this->EndTime;
@@ -153,7 +153,7 @@ class buildgroup
     public function GetAutoRemoveTimeFrame()
     {
         if ($this->Id < 1) {
-            add_log("BuildGroup GetAutoRemoveTimeFrame(): Id not set", LOG_ERR);
+            add_log('BuildGroup GetAutoRemoveTimeFrame(): Id not set', LOG_ERR);
             return false;
         }
         return $this->AutoRemoveTimeFrame;
@@ -171,7 +171,7 @@ class buildgroup
     public function GetDescription()
     {
         if ($this->Id < 1) {
-            add_log("BuildGroup GetDescription(): Id not set", LOG_ERR);
+            add_log('BuildGroup GetDescription(): Id not set', LOG_ERR);
             return false;
         }
         return $this->Description;
@@ -190,7 +190,7 @@ class buildgroup
     public function GetSummaryEmail()
     {
         if ($this->Id < 1) {
-            add_log("BuildGroup GetSummaryEmail(): Id not set", LOG_ERR);
+            add_log('BuildGroup GetSummaryEmail(): Id not set', LOG_ERR);
             return false;
         }
         return $this->SummaryEmail;
@@ -208,7 +208,7 @@ class buildgroup
     public function GetIncludeSubProjectTotal()
     {
         if ($this->Id < 1) {
-            add_log("BuildGroup GetIncludeSubProjectTotal(): Id not set", LOG_ERR);
+            add_log('BuildGroup GetIncludeSubProjectTotal(): Id not set', LOG_ERR);
             return false;
         }
         return $this->IncludeSubProjectTotal;
@@ -227,7 +227,7 @@ class buildgroup
     public function GetEmailCommitters()
     {
         if ($this->Id < 1) {
-            add_log("BuildGroup GetEmailCommitters(): Id not set", LOG_ERR);
+            add_log('BuildGroup GetEmailCommitters(): Id not set', LOG_ERR);
             return false;
         }
         return $this->EmailCommitters;
@@ -246,7 +246,7 @@ class buildgroup
     public function GetType()
     {
         if ($this->Id < 1) {
-            add_log("BuildGroup GetType(): Id not set", LOG_ERR);
+            add_log('BuildGroup GetType(): Id not set', LOG_ERR);
             return false;
         }
         return $this->Type;
@@ -262,17 +262,17 @@ class buildgroup
      **/
     public function Fill()
     {
-        if ($this->Name == "" || $this->ProjectId == 0) {
+        if ($this->Name == '' || $this->ProjectId == 0) {
             add_log(
                 "Name='" . $this->Name . "' or ProjectId='" . $this->ProjectId . "' not set",
-                "BuildGroup::Fill",
+                'BuildGroup::Fill',
                 LOG_WARNING);
             return false;
         }
 
         $row = pdo_single_row_query(
-            "SELECT * FROM buildgroup
-       WHERE projectid=" . qnum($this->ProjectId) . " AND name='$this->Name'");
+            'SELECT * FROM buildgroup
+       WHERE projectid=' . qnum($this->ProjectId) . " AND name='$this->Name'");
 
         if (empty($row)) {
             return false;
@@ -301,14 +301,14 @@ class buildgroup
     public function GetPosition()
     {
         if ($this->Id < 1) {
-            add_log("BuildGroup GetPosition(): Id not set", LOG_ERR);
+            add_log('BuildGroup GetPosition(): Id not set', LOG_ERR);
             return false;
         }
 
-        $query = "
+        $query = '
       SELECT position FROM buildgroupposition
-      WHERE buildgroupid=" . qnum($this->Id) . "
-      ORDER BY position DESC LIMIT 1";
+      WHERE buildgroupid=' . qnum($this->Id) . '
+      ORDER BY position DESC LIMIT 1';
         $result = pdo_query($query);
 
         if (pdo_num_rows($result) < 1) {
@@ -356,7 +356,7 @@ class buildgroup
         }
 
         $query = pdo_query("SELECT count(*) AS c FROM buildgroup WHERE id='" . $this->Id . "' AND projectid='" . $this->ProjectId . "'");
-        add_last_sql_error("BuildGroup:Exists", $this->ProjectId);
+        add_last_sql_error('BuildGroup:Exists', $this->ProjectId);
         $query_array = pdo_fetch_array($query);
         if ($query_array['c'] == 0) {
             return false;
@@ -383,34 +383,34 @@ class buildgroup
           type='$this->Type'
         WHERE id='$this->Id'";
             if (!pdo_query($query)) {
-                add_last_sql_error("BuildGroup:Update", $this->ProjectId);
+                add_last_sql_error('BuildGroup:Update', $this->ProjectId);
                 return false;
             }
         } else {
-            $id = "";
-            $idvalue = "";
+            $id = '';
+            $idvalue = '';
             if ($this->Id > 0) {
-                $id = "id,";
+                $id = 'id,';
                 $idvalue = "'" . $this->Id . "',";
             }
 
-            $query = "
+            $query = '
         INSERT INTO buildgroup
-          (" . $id . "name,projectid,starttime,endtime,autoremovetimeframe,
+          (' . $id . 'name,projectid,starttime,endtime,autoremovetimeframe,
            description,summaryemail,includesubprojectotal,emailcommitters, type)
         VALUES
-          (" . $idvalue . "'$this->Name','$this->ProjectId','$this->StartTime',
+          (' . $idvalue . "'$this->Name','$this->ProjectId','$this->StartTime',
            '$this->EndTime','$this->AutoRemoveTimeFrame','$this->Description',
            '$this->SummaryEmail','$this->IncludeSubProjectTotal',
            '$this->EmailCommitters','$this->Type')";
 
             if (!pdo_query($query)) {
-                add_last_sql_error("Buildgroup Insert", $this->ProjectId);
+                add_last_sql_error('Buildgroup Insert', $this->ProjectId);
                 return false;
             }
 
             if (!$this->Id) {
-                $this->Id = pdo_insert_id("buildgroup");
+                $this->Id = pdo_insert_id('buildgroup');
             }
 
             // Insert the default position for this group
@@ -445,8 +445,8 @@ class buildgroup
         echo pdo_error();
         while ($oldbuilds_array = pdo_fetch_array($oldbuilds)) {
             // Move the builds
-            $buildid = $oldbuilds_array["id"];
-            $buildtype = $oldbuilds_array["type"];
+            $buildid = $oldbuilds_array['id'];
+            $buildtype = $oldbuilds_array['type'];
 
             // Find the group corresponding to the build type
             $query = pdo_query("
@@ -459,7 +459,7 @@ class buildgroup
             }
             echo pdo_error();
             $grouptype_array = pdo_fetch_array($query);
-            $grouptype = $grouptype_array["id"];
+            $grouptype = $grouptype_array['id'];
 
             pdo_query("
         UPDATE build2group SET groupid='$grouptype' WHERE buildid='$buildid'");
@@ -476,7 +476,7 @@ class buildgroup
 
         $p = 1;
         while ($buildgroupposition_array = pdo_fetch_array($buildgroupposition)) {
-            $buildgroupid = $buildgroupposition_array["buildgroupid"];
+            $buildgroupid = $buildgroupposition_array['buildgroupid'];
             pdo_query("
         UPDATE buildgroupposition SET position='$p'
         WHERE buildgroupid='$buildgroupid'");
@@ -502,7 +502,7 @@ class buildgroup
 
         if (pdo_num_rows($build2grouprule) > 0) {
             $build2grouprule_array = pdo_fetch_array($build2grouprule);
-            return $build2grouprule_array["groupid"];
+            return $build2grouprule_array['groupid'];
         }
 
         // 2) Check for buildname-based groups
@@ -514,7 +514,7 @@ class buildgroup
 
         if (pdo_num_rows($build2grouprule) > 0) {
             $build2grouprule_array = pdo_fetch_array($build2grouprule);
-            return $build2grouprule_array["groupid"];
+            return $build2grouprule_array['groupid'];
         }
 
         // If we reach this far, none of the rules matched.
@@ -526,6 +526,6 @@ class buildgroup
             $buildgroup = pdo_query("SELECT id FROM buildgroup WHERE name='Experimental' AND projectid='$projectid'");
         }
         $buildgroup_array = pdo_fetch_array($buildgroup);
-        return $buildgroup_array["id"];
+        return $buildgroup_array['id'];
     }
 }

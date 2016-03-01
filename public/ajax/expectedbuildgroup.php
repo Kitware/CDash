@@ -15,37 +15,37 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once dirname(dirname(__DIR__)) . "/config/config.php";
-require_once "include/pdo.php";
-require_once "include/common.php";
+require_once dirname(dirname(__DIR__)) . '/config/config.php';
+require_once 'include/pdo.php';
+require_once 'include/common.php';
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME", $db);
 
-$siteid = pdo_real_escape_numeric($_GET["siteid"]);
-$buildname = htmlspecialchars(pdo_real_escape_string($_GET["buildname"]));
-$buildtype = htmlspecialchars(pdo_real_escape_string($_GET["buildtype"]));
-$buildgroupid = pdo_real_escape_numeric($_GET["buildgroup"]);
-$divname = htmlspecialchars(pdo_real_escape_string($_GET["divname"]));
+$siteid = pdo_real_escape_numeric($_GET['siteid']);
+$buildname = htmlspecialchars(pdo_real_escape_string($_GET['buildname']));
+$buildtype = htmlspecialchars(pdo_real_escape_string($_GET['buildtype']));
+$buildgroupid = pdo_real_escape_numeric($_GET['buildgroup']);
+$divname = htmlspecialchars(pdo_real_escape_string($_GET['divname']));
 if (!isset($siteid) || !is_numeric($siteid)) {
-    echo "Not a valid siteid!";
+    echo 'Not a valid siteid!';
     return;
 }
 
-@$submit = $_POST["submit"];
+@$submit = $_POST['submit'];
 
-@$groupid = $_POST["groupid"];
+@$groupid = $_POST['groupid'];
 if ($groupid != null) {
     $groupid = pdo_real_escape_numeric($groupid);
 }
 
-@$expected = $_POST["expected"];
-@$markexpected = $_POST["markexpected"];
-@$previousgroupid = $_POST["previousgroupid"];
+@$expected = $_POST['expected'];
+@$markexpected = $_POST['markexpected'];
+@$previousgroupid = $_POST['previousgroupid'];
 
 if ($markexpected) {
     if (!isset($groupid) || !is_numeric($groupid)) {
-        echo "Not a valid groupid!";
+        echo 'Not a valid groupid!';
         return;
     }
 
@@ -65,7 +65,7 @@ if ($submit) {
                  WHERE groupid='$previousgroupid' AND buildtype='$buildtype'
                  AND buildname='$buildname' AND siteid='$siteid' AND endtime='1980-01-01 00:00:00'");*/
     if (!isset($previousgroupid) || !is_numeric($previousgroupid)) {
-        echo "Not a valid previousgroupid!";
+        echo 'Not a valid previousgroupid!';
         return;
     }
 
@@ -78,17 +78,17 @@ if ($submit) {
                VALUES ('$groupid','$buildtype','$buildname','$siteid','$expected','1980-01-01 00:00:00','1980-01-01 00:00:00')");
 
     // Move any builds that follow this rule to the correct build2group
-    $buildgroups = pdo_query("SELECT * from build2group");
+    $buildgroups = pdo_query('SELECT * from build2group');
     while ($buildgroup_array = pdo_fetch_array($buildgroups)) {
-        $buildid = $buildgroup_array["buildid"];
+        $buildid = $buildgroup_array['buildid'];
 
         $build = pdo_query("SELECT * from build WHERE id='$buildid'");
         $build_array = pdo_fetch_array($build);
-        $type = $build_array["type"];
-        $name = $build_array["name"];
-        $siteid = $build_array["siteid"];
-        $projectid = $build_array["projectid"];
-        $submittime = $build_array["submittime"];
+        $type = $build_array['type'];
+        $name = $build_array['name'];
+        $siteid = $build_array['siteid'];
+        $projectid = $build_array['projectid'];
+        $submittime = $build_array['submittime'];
 
         $build2grouprule = pdo_query("SELECT b2g.groupid FROM build2grouprule AS b2g, buildgroup as bg
                                     WHERE b2g.buildtype='$type' AND b2g.siteid='$siteid' AND b2g.buildname='$name'
@@ -97,7 +97,7 @@ if ($submit) {
         echo pdo_error();
         if (pdo_num_rows($build2grouprule) > 0) {
             $build2grouprule_array = pdo_fetch_array($build2grouprule);
-            $groupid = $build2grouprule_array["groupid"];
+            $groupid = $build2grouprule_array['groupid'];
             pdo_query("UPDATE build2group SET groupid='$groupid' WHERE buildid='$buildid'");
         }
     }
@@ -105,14 +105,14 @@ if ($submit) {
 }
 
 if (!isset($buildgroupid) || !is_numeric($buildgroupid)) {
-    echo "Invalid buildgroupid";
+    echo 'Invalid buildgroupid';
     return;
 }
 
 // Find the project variables
 $currentgroup = pdo_query("SELECT id,name,projectid FROM buildgroup WHERE id='$buildgroupid'");
 $currentgroup_array = pdo_fetch_array($currentgroup);
-$projectid = $currentgroup_array["projectid"];
+$projectid = $currentgroup_array['projectid'];
 
 // Find the groups available for this project
 $group = pdo_query("SELECT name,id FROM buildgroup WHERE id!='$buildgroupid' AND projectid='$projectid'");
@@ -176,7 +176,7 @@ $group = pdo_query("SELECT name,id FROM buildgroup WHERE id!='$buildgroupid' AND
             // If expected
             // Find the groups available for this project
             $isexpected = 0;
-            $currentgroupid = $currentgroup_array["id"];
+            $currentgroupid = $currentgroup_array['id'];
 
             // This works only for the most recent dashboard (and future)
             $build2groupexpected = pdo_query("SELECT groupid FROM build2grouprule WHERE groupid='$currentgroupid' AND buildtype='$buildtype'
@@ -185,20 +185,20 @@ $group = pdo_query("SELECT name,id FROM buildgroup WHERE id!='$buildgroupid' AND
                 $isexpected = 1;
             }
             ?>
-            <td bgcolor="#DDDDDD" width="35%"><font size="2"><b><?php echo $currentgroup_array["name"] ?></b>: </font>
+            <td bgcolor="#DDDDDD" width="35%"><font size="2"><b><?php echo $currentgroup_array['name'] ?></b>: </font>
             </td>
             <td bgcolor="#DDDDDD" width="65%" colspan="2" id="nob"><font size="2"><a href="#"
-                                                                                     onclick="javascript:markasnonexpected_click('<?php echo $siteid ?>','<?php echo $buildname ?>','<?php echo $buildtype ?>','<?php echo $currentgroup_array["id"] ?>',
+                                                                                     onclick="javascript:markasnonexpected_click('<?php echo $siteid ?>','<?php echo $buildname ?>','<?php echo $buildtype ?>','<?php echo $currentgroup_array['id'] ?>',
                                                                                      <?php if ($isexpected) {
-    echo "0";
+    echo '0';
 } else {
-    echo "1";
+    echo '1';
 } ?>,'<?php echo $divname ?>')">
                         [<?php
                         if ($isexpected) {
-                            echo "mark as non expected";
+                            echo 'mark as non expected';
                         } else {
-                            echo "mark as expected";
+                            echo 'mark as expected';
                         }
 
                         ?>]</a> </font></td>
@@ -207,14 +207,14 @@ $group = pdo_query("SELECT name,id FROM buildgroup WHERE id!='$buildgroupid' AND
         while ($group_array = pdo_fetch_array($group)) {
             ?>
             <tr>
-                <td bgcolor="#DDDDDD" width="35%"><font size="2"><b><?php echo $group_array["name"] ?></b>: </font></td>
+                <td bgcolor="#DDDDDD" width="35%"><font size="2"><b><?php echo $group_array['name'] ?></b>: </font></td>
                 <td bgcolor="#DDDDDD" width="20%"><font size="2"><input
                             id="expectednosubmission_<?php $expectedtag = rand();
             echo $expectedtag;
             ?>" type="checkbox"/> expected</font></td>
                 <td bgcolor="#DDDDDD" width="45%" id="nob"><font size="2">
                         <a href="#"
-                           onclick="javascript:movenonexpectedbuildgroup_click('<?php echo $siteid ?>','<?php echo $buildname ?>','<?php echo $buildtype ?>','<?php echo $group_array["id"] ?>','<?php echo $currentgroup_array["id"] ?>','<?php echo $divname ?>','<?php echo $expectedtag ?>')">[move
+                           onclick="javascript:movenonexpectedbuildgroup_click('<?php echo $siteid ?>','<?php echo $buildname ?>','<?php echo $buildtype ?>','<?php echo $group_array['id'] ?>','<?php echo $currentgroup_array['id'] ?>','<?php echo $divname ?>','<?php echo $expectedtag ?>')">[move
                             to group]</a>
                     </font></td>
             </tr>

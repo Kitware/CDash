@@ -15,16 +15,16 @@ class BuildOverviewTestCase extends KWWebTestCase
     public function testBuildOverview()
     {
         $this->login();
-        $this->get($this->url . "/buildOverview.php");
-        if (strpos($this->getBrowser()->getContentAsText(), "project not specified") === false) {
+        $this->get($this->url . '/buildOverview.php');
+        if (strpos($this->getBrowser()->getContentAsText(), 'project not specified') === false) {
             $this->fail("'project not specified' not found when expected");
             return 1;
         }
-        $this->get($this->url . "/buildOverview.php?project=InsightExample");
-        if (strpos($this->getBrowser()->getContentAsText(), "Build summary") === false) {
+        $this->get($this->url . '/buildOverview.php?project=InsightExample');
+        if (strpos($this->getBrowser()->getContentAsText(), 'Build summary') === false) {
             $this->fail("'Build summary' not found when expected");
             return 1;
         }
-        $this->pass("Passed");
+        $this->pass('Passed');
     }
 }

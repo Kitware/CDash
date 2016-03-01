@@ -14,34 +14,34 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include dirname(__DIR__) . "/config/config.php";
-include_once "include/common.php";
-require_once "include/pdo.php";
+include dirname(__DIR__) . '/config/config.php';
+include_once 'include/common.php';
+require_once 'include/pdo.php';
 
 /** Google authentication */
 function googleAuthenticate($code)
 {
-    include dirname(__DIR__) . "/config/config.php";
+    include dirname(__DIR__) . '/config/config.php';
     global $CDASH_DB_HOST, $CDASH_DB_LOGIN, $CDASH_DB_PASS, $CDASH_DB_NAME;
     $SessionCachePolicy = 'private_no_expire';
 
     // initialize the session
-    session_name("CDash");
+    session_name('CDash');
     session_cache_limiter($SessionCachePolicy);
     session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
     @ini_set('session.gc_maxlifetime', $CDASH_COOKIE_EXPIRATION_TIME + 600);
     session_start();
 
-    if (!isset($_GET["state"])) {
-        add_log("no state value passed via GET", LOG_ERR);
+    if (!isset($_GET['state'])) {
+        add_log('no state value passed via GET', LOG_ERR);
         return;
     }
 
     // Both the anti-forgery token and the user's requested URL are specified
     // in the same "state" GET parameter.  Split them out here.
-    $splitState = explode("_AND_STATE_IS_", $_GET["state"]);
+    $splitState = explode('_AND_STATE_IS_', $_GET['state']);
     if (sizeof($splitState) != 2) {
-        add_log("Expected two values after splitting state parameter, found " .
+        add_log('Expected two values after splitting state parameter, found ' .
             sizeof($splitState), LOG_ERR);
         return;
     }
@@ -49,14 +49,14 @@ function googleAuthenticate($code)
     @$state = $splitState[1];
 
     // don't send the user back to login.php if that's where they came from
-    if (strpos($requestedURI, "login.php") !== false) {
-        $requestedURI = "user.php";
+    if (strpos($requestedURI, 'login.php') !== false) {
+        $requestedURI = 'user.php';
     }
 
     // check that the anti-forgery token is valid
     if ($state != $_SESSION['cdash']['state']) {
-        add_log("state anti-forgery token mismatch: " . $state .
-            " vs " . $_SESSION['cdash']['state'], LOG_ERR);
+        add_log('state anti-forgery token mismatch: ' . $state .
+            ' vs ' . $_SESSION['cdash']['state'], LOG_ERR);
         return;
     }
 
@@ -75,13 +75,13 @@ function googleAuthenticate($code)
     // http://mydomain.com/CDash/googleauth_callback.php.
     //
     // Make sure that redirectURI contains the path to our callback script.
-    if (strpos($redirectURI, "googleauth_callback.php") === false) {
+    if (strpos($redirectURI, 'googleauth_callback.php') === false) {
         $redirectURI .= '/googleauth_callback.php';
     }
 
     $postData = implode('&', array(
         'grant_type=authorization_code',
-        'code=' . $_GET["code"],
+        'code=' . $_GET['code'],
         'client_id=' . $GOOGLE_CLIENT_ID,
         'client_secret=' . $GOOGLE_CLIENT_SECRET,
         'redirect_uri=' . $redirectURI
@@ -131,7 +131,7 @@ function googleAuthenticate($code)
     // Check if this email address appears in our user database
     $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
     pdo_select_db("$CDASH_DB_NAME", $db);
-    $sql = "SELECT id,password FROM " . qid("user") . " WHERE email='" . pdo_real_escape_string($email) . "'";
+    $sql = 'SELECT id,password FROM ' . qid('user') . " WHERE email='" . pdo_real_escape_string($email) . "'";
     $result = pdo_query("$sql");
 
     if (pdo_num_rows($result) == 0) {
@@ -144,14 +144,14 @@ function googleAuthenticate($code)
     }
 
     $user_array = pdo_fetch_array($result);
-    $pass = $user_array["password"];
+    $pass = $user_array['password'];
 
     $sessionArray = array(
-        "login" => $email,
-        "passwd" => $user_array['password'],
-        "ID" => session_id(),
-        "valid" => 1,
-        "loginid" => $user_array["id"]);
+        'login' => $email,
+        'passwd' => $user_array['password'],
+        'ID' => session_id(),
+        'valid' => 1,
+        'loginid' => $user_array['id']);
     $_SESSION['cdash'] = $sessionArray;
     session_write_close();
     pdo_free_result($result);
@@ -160,6 +160,6 @@ function googleAuthenticate($code)
 }
 
 // Google account login entry point
-if (isset($_GET["code"])) {
-    return googleAuthenticate($_GET["code"]);
+if (isset($_GET['code'])) {
+    return googleAuthenticate($_GET['code']);
 }

@@ -12,18 +12,18 @@ class ReplaceBuildTestCase extends KWWebTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->OriginalConfigSettings = "";
+        $this->OriginalConfigSettings = '';
     }
 
     public function testReplaceBuild()
     {
         $success = true;
-        $error_msg = "";
+        $error_msg = '';
 
         // Submit the first test file.
-        $rep = dirname(__FILE__) . "/data/ReplaceBuild";
+        $rep = dirname(__FILE__) . '/data/ReplaceBuild';
         if (!$this->submission('EmailProjectExample', "$rep/Build_1.xml")) {
-            $this->fail("failed to submit Build_1.xml");
+            $this->fail('failed to submit Build_1.xml');
             return 1;
         }
 
@@ -40,14 +40,14 @@ class ReplaceBuildTestCase extends KWWebTestCase
 
         // Mark this build as ready for replacement.
         if (!pdo_query("UPDATE build SET done=1 WHERE id=$first_buildid")) {
-            $error_msg = "UPDATE query returned false";
+            $error_msg = 'UPDATE query returned false';
             echo "$error_msg\n";
             $success = false;
         }
 
         // Submit the second test file.
         if (!$this->submission('EmailProjectExample', "$rep/Build_2.xml")) {
-            $error_msg = "Failed to submit Build_2.xml";
+            $error_msg = 'Failed to submit Build_2.xml';
             echo "$error_msg\n";
             $success = false;
         }
@@ -56,7 +56,7 @@ class ReplaceBuildTestCase extends KWWebTestCase
         if (!$query = pdo_query(
             "SELECT * FROM build WHERE id=$first_buildid")
         ) {
-            $error_msg = "SELECT query returned false";
+            $error_msg = 'SELECT query returned false';
             echo "$error_msg\n";
             $success = false;
         }

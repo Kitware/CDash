@@ -15,10 +15,10 @@ class ManageBackupTestCase extends KWWebTestCase
     public function testManageBackup()
     {
         $this->login();
-        $content = $this->get($this->url . "/manageBackup.php");
-        if (strpos($content, "Import") === false) {
+        $content = $this->get($this->url . '/manageBackup.php');
+        if (strpos($content, 'Import') === false) {
             $this->fail("'Import' not found on manageBackup.php");
         }
-        $this->pass("Passed");
+        $this->pass('Passed');
     }
 }

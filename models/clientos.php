@@ -26,31 +26,31 @@ class clientos
     public function __construct()
     {
         $this->Platforms = array(
-            0 => "Unknown",
-            1 => "Windows",
-            2 => "Linux",
-            3 => "Mac",
+            0 => 'Unknown',
+            1 => 'Windows',
+            2 => 'Linux',
+            3 => 'Mac',
         );
 
         $this->OperatingSystems = array(
-            0 => "Unknown",
-            1 => "Vista",
-            2 => "7",
-            3 => "Ubuntu",
-            4 => "Debian",
-            5 => "Fedora",
-            6 => "CentOS",
-            7 => "Tiger",
-            8 => "Leopard",
-            9 => "SnowLeopard",
-            10 => "XP",
-            11 => "NT",
-            12 => "2000",
-            13 => "Lion",
-            14 => "MountainLion",
-            15 => "8",
-            16 => "8.1",
-            17 => "10",
+            0 => 'Unknown',
+            1 => 'Vista',
+            2 => '7',
+            3 => 'Ubuntu',
+            4 => 'Debian',
+            5 => 'Fedora',
+            6 => 'CentOS',
+            7 => 'Tiger',
+            8 => 'Leopard',
+            9 => 'SnowLeopard',
+            10 => 'XP',
+            11 => 'NT',
+            12 => '2000',
+            13 => 'Lion',
+            14 => 'MountainLion',
+            15 => '8',
+            16 => '8.1',
+            17 => '10',
         );
     }
 
@@ -58,10 +58,10 @@ class clientos
     public function GetName()
     {
         if (!$this->Id) {
-            add_log("ClientOS::GetName()", "Id not set");
+            add_log('ClientOS::GetName()', 'Id not set');
             return;
         }
-        $name = pdo_query("SELECT name FROM client_os WHERE id=" . qnum($this->Id));
+        $name = pdo_query('SELECT name FROM client_os WHERE id=' . qnum($this->Id));
         $row = pdo_fetch_array($name);
         return $row[0];
     }
@@ -70,10 +70,10 @@ class clientos
     public function GetBits()
     {
         if (!$this->Id) {
-            add_log("ClientOS::GetBits()", "Id not set");
+            add_log('ClientOS::GetBits()', 'Id not set');
             return;
         }
-        $name = pdo_query("SELECT bits FROM client_os WHERE id=" . qnum($this->Id));
+        $name = pdo_query('SELECT bits FROM client_os WHERE id=' . qnum($this->Id));
         $row = pdo_fetch_array($name);
         return $row[0];
     }
@@ -82,10 +82,10 @@ class clientos
     public function GetVersion()
     {
         if (!$this->Id) {
-            add_log("ClientOS::GetVersion()", "Id not set");
+            add_log('ClientOS::GetVersion()', 'Id not set');
             return;
         }
-        $name = pdo_query("SELECT version FROM client_os WHERE id=" . qnum($this->Id));
+        $name = pdo_query('SELECT version FROM client_os WHERE id=' . qnum($this->Id));
         $row = pdo_fetch_array($name);
         return $row[0];
     }
@@ -107,7 +107,7 @@ class clientos
               VALUES ('" . $name . "','" . $version . "','" . $this->Bits . "')";
             pdo_query($sql);
             $this->Id = pdo_insert_id('client_os');
-            add_last_sql_error("ClientOS::Save()");
+            add_last_sql_error('ClientOS::Save()');
         } else {
             // update
 
@@ -120,7 +120,7 @@ class clientos
     public function GetAll()
     {
         $ids = array();
-        $sql = "SELECT id FROM client_os ORDER BY name";
+        $sql = 'SELECT id FROM client_os ORDER BY name';
         $query = pdo_query($sql);
         while ($query_array = pdo_fetch_array($query)) {
             $ids[] = $query_array['id'];
@@ -131,7 +131,7 @@ class clientos
     /** Get the OS id from the description */
     public function GetOS($name, $version = '', $bits = '')
     {
-        $sql = "SELECT id FROM client_os WHERE ";
+        $sql = 'SELECT id FROM client_os WHERE ';
         $ids = array();
         $firstarg = true;
         if ($name != '') {
@@ -142,7 +142,7 @@ class clientos
 
         if ($version != '') {
             if (!$firstarg) {
-                $sql .= " AND ";
+                $sql .= ' AND ';
             }
             $version = pdo_real_escape_string($version);
             $sql .= " version='" . $version . "'";
@@ -151,7 +151,7 @@ class clientos
 
         if ($bits != '') {
             if (!$firstarg) {
-                $sql .= " AND ";
+                $sql .= ' AND ';
             }
             $bits = pdo_real_escape_string($bits);
             $sql .= " bits='" . $bits . "'";

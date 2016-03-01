@@ -240,7 +240,7 @@ class SimpleHttpRequest
             $socket->write($header_line . "\r\n");
         }
         if (count($this->cookies) > 0) {
-            $socket->write("Cookie: " . implode(";", $this->cookies) . "\r\n");
+            $socket->write('Cookie: ' . implode(';', $this->cookies) . "\r\n");
         }
         $encoding->writeHeadersTo($socket);
         $socket->write("\r\n");
@@ -452,7 +452,7 @@ class SimpleHttpHeaders
      */
     protected function parseCookie($cookie_line)
     {
-        $parts = explode(";", $cookie_line);
+        $parts = explode(';', $cookie_line);
         $cookie = array();
         preg_match('/\s*(.*?)\s*=(.*)/', array_shift($parts), $cookie);
         foreach ($parts as $part) {
@@ -463,8 +463,8 @@ class SimpleHttpHeaders
         return new SimpleCookie(
             $cookie[1],
             trim($cookie[2]),
-            isset($cookie["path"]) ? $cookie["path"] : "",
-            isset($cookie["expires"]) ? $cookie["expires"] : false);
+            isset($cookie['path']) ? $cookie['path'] : '',
+            isset($cookie['expires']) ? $cookie['expires'] : false);
     }
 }
 

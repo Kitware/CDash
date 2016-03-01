@@ -40,7 +40,7 @@ class user
         if (!$this->Id || !is_numeric($this->Id)) {
             return false;
         }
-        $user_array = pdo_fetch_array(pdo_query("SELECT admin FROM " . qid("user") . " WHERE id='" . $this->Id . "'"));
+        $user_array = pdo_fetch_array(pdo_query('SELECT admin FROM ' . qid('user') . " WHERE id='" . $this->Id . "'"));
         if ($user_array['admin'] == 1) {
             return true;
         }
@@ -57,7 +57,7 @@ class user
             }
 
             // Check if the email is already there
-            $query = pdo_query("SELECT count(*) FROM " . qid("user") . " WHERE email='" . $this->Email . "'");
+            $query = pdo_query('SELECT count(*) FROM ' . qid('user') . " WHERE email='" . $this->Email . "'");
             $query_array = pdo_fetch_array($query);
             if ($query_array[0] > 0) {
                 return true;
@@ -65,7 +65,7 @@ class user
             return false;
         }
 
-        $query = pdo_query("SELECT count(*) FROM " . qid("user") . " WHERE id='" . $this->Id . "' OR (firstname='" . $this->FirstName . "' AND lastname='" . $this->LastName . "')");
+        $query = pdo_query('SELECT count(*) FROM ' . qid('user') . " WHERE id='" . $this->Id . "' OR (firstname='" . $this->FirstName . "' AND lastname='" . $this->LastName . "')");
         $query_array = pdo_fetch_array($query);
         if ($query_array[0] > 0) {
             return true;
@@ -83,7 +83,7 @@ class user
         // Check if the user exists already
         if ($this->Exists()) {
             // Update the project
-            $query = "UPDATE " . qid("user") . " SET";
+            $query = 'UPDATE ' . qid('user') . ' SET';
             $query .= " email='" . $this->Email . "'";
             $query .= ",password='" . $this->Password . "'";
             $query .= ",firstname='" . $this->FirstName . "'";
@@ -92,16 +92,16 @@ class user
             $query .= ",admin='" . $this->Admin . "'";
             $query .= " WHERE id='" . $this->Id . "'";
             if (!pdo_query($query)) {
-                add_last_sql_error("User Update");
+                add_last_sql_error('User Update');
                 return false;
             }
         } else {
             // insert
 
-            $id = "";
-            $idvalue = "";
+            $id = '';
+            $idvalue = '';
             if ($this->Id) {
-                $id = "id,";
+                $id = 'id,';
                 $idvalue = "'" . $this->Id . "',";
             }
 
@@ -111,15 +111,15 @@ class user
             $lname = pdo_real_escape_string($this->LastName);
             $institution = pdo_real_escape_string($this->Institution);
 
-            $query = "INSERT INTO " . qid("user") . " (" . $id . "email,password,firstname,lastname,institution,admin)
-                 VALUES (" . $idvalue . "'" . $email . "','" . $passwd . "','" . $fname . "','" . $lname . "','" . $institution . "','$this->Admin')";
+            $query = 'INSERT INTO ' . qid('user') . ' (' . $id . 'email,password,firstname,lastname,institution,admin)
+                 VALUES (' . $idvalue . "'" . $email . "','" . $passwd . "','" . $fname . "','" . $lname . "','" . $institution . "','$this->Admin')";
             if (!pdo_query($query)) {
-                add_last_sql_error("User Create");
+                add_last_sql_error('User Create');
                 return false;
             }
 
             if (!$this->Id) {
-                $this->Id = pdo_insert_id("user");
+                $this->Id = pdo_insert_id('user');
             }
         }
         return true;
@@ -133,9 +133,9 @@ class user
             return false;
         }
 
-        $query = pdo_query("SELECT firstname,lastname FROM " . qid("user") . " WHERE id=" . qnum($this->Id));
+        $query = pdo_query('SELECT firstname,lastname FROM ' . qid('user') . ' WHERE id=' . qnum($this->Id));
         $query_array = pdo_fetch_array($query);
-        return trim($query_array['firstname'] . " " . $query_array['lastname']);
+        return trim($query_array['firstname'] . ' ' . $query_array['lastname']);
     }
 
     /** Get the email */
@@ -146,7 +146,7 @@ class user
             return false;
         }
 
-        $query = pdo_query("SELECT email FROM " . qid("user") . " WHERE id=" . qnum($this->Id));
+        $query = pdo_query('SELECT email FROM ' . qid('user') . ' WHERE id=' . qnum($this->Id));
         $query_array = pdo_fetch_array($query);
         return $query_array['email'];
     }
@@ -157,9 +157,9 @@ class user
         if (!$this->Id || !is_numeric($this->Id)) {
             return false;
         }
-        $query = pdo_query("UPDATE " . qid("user") . " SET password='" . $newPassword . "' WHERE id='" . $this->Id . "'");
+        $query = pdo_query('UPDATE ' . qid('user') . " SET password='" . $newPassword . "' WHERE id='" . $this->Id . "'");
         if (!$query) {
-            add_last_sql_error("User:SetPassword");
+            add_last_sql_error('User:SetPassword');
             return false;
         }
         return true;
@@ -168,9 +168,9 @@ class user
     /** Get the user id from the name */
     public function GetIdFromName($name)
     {
-        $query = pdo_query("SELECT id FROM " . qid("user") . " WHERE firstname='" . $name . "' OR lastname='" . $name . "'");
+        $query = pdo_query('SELECT id FROM ' . qid('user') . " WHERE firstname='" . $name . "' OR lastname='" . $name . "'");
         if (!$query) {
-            add_last_sql_error("User:GetIdFromName");
+            add_last_sql_error('User:GetIdFromName');
             return false;
         }
 
@@ -186,9 +186,9 @@ class user
     public function GetIdFromEmail($email)
     {
         $email = pdo_real_escape_string($email);
-        $query = pdo_query("SELECT id FROM " . qid("user") . " WHERE email='" . trim($email) . "'");
+        $query = pdo_query('SELECT id FROM ' . qid('user') . " WHERE email='" . trim($email) . "'");
         if (!$query) {
-            add_last_sql_error("User:GetIdFromEmail");
+            add_last_sql_error('User:GetIdFromEmail');
             return false;
         }
 

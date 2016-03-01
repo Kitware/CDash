@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once "include/common.php";
+require_once 'include/common.php';
 
 use \Suin\RSSWriter\Channel;
 use \Suin\RSSWriter\Feed;
@@ -24,17 +24,17 @@ function CreateRSSFeed($projectid)
 {
     // Checks
     if (!isset($projectid) || !is_numeric($projectid)) {
-        echo "Not a valid projectid!";
+        echo 'Not a valid projectid!';
         return;
     }
 
     // Find the project name
     $project = pdo_query("SELECT public,name FROM project WHERE id='$projectid'");
     $project_array = pdo_fetch_array($project);
-    $projectname = $project_array["name"];
+    $projectname = $project_array['name'];
 
     // Don't create RSS feed for private projects
-    if ($project_array["public"] != 1) {
+    if ($project_array['public'] != 1) {
         return;
     }
 
@@ -49,7 +49,7 @@ function CreateRSSFeed($projectid)
     $channel->title("CDash for $projectname")
         ->url("$currentURI/index.php?project=$projectname")
         ->description("Recent CDash submissions for $projectname")
-        ->language("en-US")
+        ->language('en-US')
         ->lastBuildDate($currenttime)
         ->appendTo($feed);
 
@@ -61,8 +61,8 @@ function CreateRSSFeed($projectid)
                          AND projectid='$projectid'
                          ");
     while ($build_array = pdo_fetch_array($builds)) {
-        $siteid = $build_array["siteid"];
-        $buildid = $build_array["id"];
+        $siteid = $build_array['siteid'];
+        $buildid = $build_array['id'];
         $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
 
         // Find the number of errors and warnings
@@ -71,17 +71,17 @@ function CreateRSSFeed($projectid)
         $nnotrun = $build_array['testnotrun'];
         $nfail = $build_array['testfailed'];
 
-        $title = "CDash(" . $projectname . ") - " . $site_array["name"] . " - " . $build_array["name"] . " - " . $build_array["type"];
-        $title .= " - " . $build_array["submittime"] . " - " . $nerrors . " errors, " . $nwarnings . " warnings, " . $nnotrun . " not run, " . $nfail . " failed.";
+        $title = 'CDash(' . $projectname . ') - ' . $site_array['name'] . ' - ' . $build_array['name'] . ' - ' . $build_array['type'];
+        $title .= ' - ' . $build_array['submittime'] . ' - ' . $nerrors . ' errors, ' . $nwarnings . ' warnings, ' . $nnotrun . ' not run, ' . $nfail . ' failed.';
 
         // Should link to the errors...
-        $link = $currentURI . "/buildSummary.php?buildid=" . $buildid;
+        $link = $currentURI . '/buildSummary.php?buildid=' . $buildid;
 
-        $description = "A new " . $build_array["type"] . " submission from " . $site_array["name"] . " - " . $build_array["name"] . " is available: ";
-        $description .= $nerrors . " errors, " . $nwarnings . " warnings, " . $nnotrun . " not run, " . $nfail . " failed.";
+        $description = 'A new ' . $build_array['type'] . ' submission from ' . $site_array['name'] . ' - ' . $build_array['name'] . ' is available: ';
+        $description .= $nerrors . ' errors, ' . $nwarnings . ' warnings, ' . $nnotrun . ' not run, ' . $nfail . ' failed.';
 
         $item = new Item();
-        $item->guid($currentURI . "/buildSummary.php?buildid=" . $buildid)
+        $item->guid($currentURI . '/buildSummary.php?buildid=' . $buildid)
             ->title($title)
             ->url($link)
             ->description($description)

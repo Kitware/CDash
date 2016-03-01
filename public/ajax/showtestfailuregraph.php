@@ -14,31 +14,31 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once dirname(dirname(__DIR__)) . "/config/config.php";
-require_once "include/pdo.php";
-require_once "include/common.php";
+require_once dirname(dirname(__DIR__)) . '/config/config.php';
+require_once 'include/pdo.php';
+require_once 'include/common.php';
 
-$projectid = pdo_real_escape_numeric($_GET["projectid"]);
+$projectid = pdo_real_escape_numeric($_GET['projectid']);
 
 if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
-    echo "You are not authorized to view this page.";
+    echo 'You are not authorized to view this page.';
     return;
 }
 
-$testname = htmlspecialchars(pdo_real_escape_string($_GET["testname"]));
-$starttime = pdo_real_escape_numeric($_GET["starttime"]);
-@$zoomout = $_GET["zoomout"];
+$testname = htmlspecialchars(pdo_real_escape_string($_GET['testname']));
+$starttime = pdo_real_escape_numeric($_GET['starttime']);
+@$zoomout = $_GET['zoomout'];
 
 if (!isset($projectid) || !is_numeric($projectid)) {
-    echo "Not a valid projectid!";
+    echo 'Not a valid projectid!';
     return;
 }
 if (!isset($testname)) {
-    echo "Not a valid test name!";
+    echo 'Not a valid test name!';
     return;
 }
 if (!isset($starttime)) {
-    echo "Not a valid starttime!";
+    echo 'Not a valid starttime!';
     return;
 }
 

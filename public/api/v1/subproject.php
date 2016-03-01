@@ -15,7 +15,7 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include dirname(dirname(dirname(__DIR__))) . "/config/config.php";
+include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 include_once 'include/common.php';
 include 'public/login.php';
@@ -41,7 +41,7 @@ pdo_select_db("$CDASH_DB_NAME", $db);
 // Check required parameter.
 @$projectid = $_GET['projectid'];
 if (!isset($projectid)) {
-    $rest_json = file_get_contents("php://input");
+    $rest_json = file_get_contents('php://input');
     $_POST = json_decode($rest_json, true);
     @$projectid = $_POST['projectid'];
 }
@@ -104,12 +104,12 @@ function rest_get()
     $response['name'] = $SubProject->GetName();
     $response['group'] = $SubProject->GetGroupId();
 
-    $query = pdo_query("
-    SELECT id, name FROM subproject WHERE projectid=" . qnum($projectid) . "
+    $query = pdo_query('
+    SELECT id, name FROM subproject WHERE projectid=' . qnum($projectid) . "
     AND endtime='1980-01-01 00:00:00'");
 
     if (!$query) {
-        add_last_sql_error("getSubProject Select");
+        add_last_sql_error('getSubProject Select');
         return false;
     }
 
@@ -277,7 +277,7 @@ function rest_put()
 function get_subprojectid()
 {
     if (!isset($_GET['subprojectid'])) {
-        echo_error("subprojectid not specified.");
+        echo_error('subprojectid not specified.');
         return false;
     }
     $subprojectid = pdo_real_escape_numeric($_GET['subprojectid']);

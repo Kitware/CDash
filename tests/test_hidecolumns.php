@@ -38,7 +38,7 @@ class HideColumnsTestCase extends KWWebTestCase
     public function onlyColumn($method)
     {
         // Submit our testing file.
-        $rep = dirname(__FILE__) . "/data/HideColumns";
+        $rep = dirname(__FILE__) . '/data/HideColumns';
         if (!$this->submission('InsightExample', "$rep/$method.xml")) {
             return false;
         }

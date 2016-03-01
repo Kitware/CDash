@@ -48,7 +48,7 @@ function removeBuildsGroupwise($projectid, $maxbuilds, $force = false)
                 build2group.buildid=build.id AND
                 build2group.groupid=" . qnum($groupid) .
             "ORDER BY build.starttime ASC LIMIT $maxbuilds");
-        add_last_sql_error("autoremove::removeBuildsGroupwise");
+        add_last_sql_error('autoremove::removeBuildsGroupwise');
 
         while ($build = pdo_fetch_array($builds)) {
             $buildids[] = $build['id'];
@@ -57,16 +57,16 @@ function removeBuildsGroupwise($projectid, $maxbuilds, $force = false)
 
     $s = 'removing old buildids for projectid: ' . $projectid;
     add_log($s, 'removeBuildsGroupwise');
-    echo "  -- " . $s . "\n";
+    echo '  -- ' . $s . "\n";
     remove_build($buildids);
 }
 
 /** Remove the first builds that are at the beginning of the queue */
 function removeFirstBuilds($projectid, $days, $maxbuilds, $force = false)
 {
-    require "config/config.php";
-    require_once "include/pdo.php";
-    require_once "include/common.php";
+    require 'config/config.php';
+    require_once 'include/pdo.php';
+    require_once 'include/common.php';
 
     set_time_limit(0);
 
@@ -93,16 +93,16 @@ function removeFirstBuilds($projectid, $days, $maxbuilds, $force = false)
             starttime<'$startdate' AND
             projectid=" . qnum($projectid) . "
             ORDER BY starttime ASC LIMIT $maxbuilds");
-    add_last_sql_error("dailyupdates::removeFirstBuilds");
+    add_last_sql_error('dailyupdates::removeFirstBuilds');
 
     $buildids = array();
     while ($builds_array = pdo_fetch_array($builds)) {
-        $buildids[] = $builds_array["id"];
+        $buildids[] = $builds_array['id'];
     }
 
     $s = 'removing old buildids for projectid: ' . $projectid;
     add_log($s, 'removeFirstBuilds');
-    echo "  -- " . $s . "\n"; // for "interactive" command line feedback
+    echo '  -- ' . $s . "\n"; // for "interactive" command line feedback
     remove_build($buildids);
 
     // Remove any job schedules that are older than our cutoff date
@@ -110,9 +110,9 @@ function removeFirstBuilds($projectid, $days, $maxbuilds, $force = false)
     require_once 'models/constants.php';
     require_once 'models/clientjobschedule.php';
     $sql =
-        "SELECT scheduleid FROM client_job AS cj
+        'SELECT scheduleid FROM client_job AS cj
     LEFT JOIN client_jobschedule AS cjs ON cj.scheduleid = cjs.id
-    WHERE cj.status > " . CDASH_JOB_RUNNING . "
+    WHERE cj.status > ' . CDASH_JOB_RUNNING . "
     AND cjs.projectid=$projectid AND cj.startdate < '$startdate'
     AND (cjs.repeattime = 0.00 OR
       (cjs.enddate < '$startdate' AND cjs.enddate != '1980-01-01 00:00:00'))";
@@ -129,9 +129,9 @@ function removeFirstBuilds($projectid, $days, $maxbuilds, $force = false)
     // some of its past runs are older than our autoremove threshold.
     require_once 'models/clientjob.php';
     $sql =
-        "SELECT cj.id FROM client_job AS cj
+        'SELECT cj.id FROM client_job AS cj
     LEFT JOIN client_jobschedule AS cjs ON cj.scheduleid = cjs.id
-    WHERE cj.status > " . CDASH_JOB_RUNNING . "
+    WHERE cj.status > ' . CDASH_JOB_RUNNING . "
     AND cjs.projectid=$projectid AND cj.startdate < '$startdate'";
 
     $jobs = pdo_query($sql);

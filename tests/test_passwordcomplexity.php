@@ -28,23 +28,23 @@ class ViewIssuesTestCase extends KWWebTestCase
     {
         $success = true;
 
-        $success = $this->complexityTest("a", 1, 1);
-        $success = $this->complexityTest("aA", 2, 1);
-        $success = $this->complexityTest("aA1", 3, 1);
-        $success = $this->complexityTest("aA1_", 4, 1);
+        $success = $this->complexityTest('a', 1, 1);
+        $success = $this->complexityTest('aA', 2, 1);
+        $success = $this->complexityTest('aA1', 3, 1);
+        $success = $this->complexityTest('aA1_', 4, 1);
 
-        $success = $this->complexityTest("a", 0, 2);
-        $success = $this->complexityTest("aA", 0, 2);
-        $success = $this->complexityTest("aA1", 0, 2);
-        $success = $this->complexityTest("aA1_", 0, 2);
+        $success = $this->complexityTest('a', 0, 2);
+        $success = $this->complexityTest('aA', 0, 2);
+        $success = $this->complexityTest('aA1', 0, 2);
+        $success = $this->complexityTest('aA1_', 0, 2);
 
-        $success = $this->complexityTest("ab", 1, 2);
-        $success = $this->complexityTest("abAB", 2, 2);
-        $success = $this->complexityTest("abAB12", 3, 2);
-        $success = $this->complexityTest("abAB12_%", 4, 2);
+        $success = $this->complexityTest('ab', 1, 2);
+        $success = $this->complexityTest('abAB', 2, 2);
+        $success = $this->complexityTest('abAB12', 3, 2);
+        $success = $this->complexityTest('abAB12_%', 4, 2);
 
         if ($success) {
-            $this->pass("Passed");
+            $this->pass('Passed');
         }
     }
 

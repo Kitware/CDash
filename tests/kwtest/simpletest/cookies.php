@@ -38,7 +38,7 @@ class SimpleCookie
         $this->host = false;
         $this->name = $name;
         $this->value = $value;
-        $this->path = ($path ? $this->fixPath($path) : "/");
+        $this->path = ($path ? $this->fixPath($path) : '/');
         $this->expiry = false;
         if (is_string($expiry)) {
             $this->expiry = strtotime($expiry);
@@ -156,7 +156,7 @@ class SimpleCookie
         if (!$this->expiry) {
             return false;
         }
-        return gmdate("D, d M Y H:i:s", $this->expiry) . " GMT";
+        return gmdate('D, d M Y H:i:s', $this->expiry) . ' GMT';
     }
 
     /**

@@ -18,29 +18,29 @@ require_once 'login.php';
 
 function echo_currently_processing_submissions()
 {
-    include dirname(__DIR__) . "/config/config.php";
+    include dirname(__DIR__) . '/config/config.php';
 
-    if ($CDASH_DB_TYPE == "pgsql") {
+    if ($CDASH_DB_TYPE == 'pgsql') {
         $sql_query = "SELECT now() AT TIME ZONE 'UTC'";
     } else {
-        $sql_query = "SELECT UTC_TIMESTAMP()";
+        $sql_query = 'SELECT UTC_TIMESTAMP()';
     }
     $current_time = pdo_single_row_query($sql_query);
 
-    $sql_query = "SELECT project.name, submission.*, ";
-    if ($CDASH_DB_TYPE == "pgsql") {
-        $sql_query .= "round((extract(EPOCH FROM now() - created)/3600)::numeric, 2) AS hours_ago ";
+    $sql_query = 'SELECT project.name, submission.*, ';
+    if ($CDASH_DB_TYPE == 'pgsql') {
+        $sql_query .= 'round((extract(EPOCH FROM now() - created)/3600)::numeric, 2) AS hours_ago ';
     } else {
-        $sql_query .= "ROUND(TIMESTAMPDIFF(SECOND, created, UTC_TIMESTAMP)/3600, 2) AS hours_ago ";
+        $sql_query .= 'ROUND(TIMESTAMPDIFF(SECOND, created, UTC_TIMESTAMP)/3600, 2) AS hours_ago ';
     }
 
-    $sql_query .= "FROM " . qid("project") . ", " . qid("submission") . " " .
-        "WHERE project.id = submission.projectid AND status = 1";
+    $sql_query .= 'FROM ' . qid('project') . ', ' . qid('submission') . ' ' .
+        'WHERE project.id = submission.projectid AND status = 1';
     $rows = pdo_all_rows_query($sql_query);
 
     $sep = ', ';
 
-    echo "<h3>Currently Processing Submissions as of " . $current_time[0] . " UTC</h3>";
+    echo '<h3>Currently Processing Submissions as of ' . $current_time[0] . ' UTC</h3>';
     echo '<pre>';
     if (count($rows) > 0) {
         echo 'project name, backlog in hours' . "\n";
@@ -48,7 +48,7 @@ function echo_currently_processing_submissions()
         echo "\n";
         foreach ($rows as $row) {
             echo $row['name'] . $sep . $row['hours_ago'] . ' hours behind' . "\n";
-            echo "    " . $row['id'] .
+            echo '    ' . $row['id'] .
                 $sep . $row['filename'] .
                 $sep . $row['projectid'] .
                 $sep . $row['status'] .
@@ -72,11 +72,11 @@ function echo_currently_processing_submissions()
 function echo_pending_submissions()
 {
     $rows = pdo_all_rows_query(
-        "SELECT project.name, project.id, COUNT(submission.id) AS c FROM " .
-        qid("project") . ", " . qid("submission") . " " .
-        "WHERE project.id = submission.projectid " .
-        "AND status = 0 " .
-        "GROUP BY project.name,project.id"
+        'SELECT project.name, project.id, COUNT(submission.id) AS c FROM ' .
+        qid('project') . ', ' . qid('submission') . ' ' .
+        'WHERE project.id = submission.projectid ' .
+        'AND status = 0 ' .
+        'GROUP BY project.name,project.id'
     );
 
     $sep = ', ';
@@ -101,28 +101,28 @@ function echo_pending_submissions()
 
 function echo_average_wait_time($projectid)
 {
-    include dirname(__DIR__) . "/config/config.php";
+    include dirname(__DIR__) . '/config/config.php';
 
-    if ($CDASH_DB_TYPE == "pgsql") {
-        $sql_query = "SELECT extract(EPOCH FROM now() - created)/3600 as hours_ago, " .
-            "current_time AS time_local, " .
-            "count(created) AS num_files, " .
-            "round(avg((extract(EPOCH FROM started - created)/3600)::numeric), 1) AS avg_hours_delay, " .
-            "avg(extract(EPOCH FROM finished - started)) AS mean, " .
-            "min(extract(EPOCH FROM finished - started)) AS shortest, " .
-            "max(extract(EPOCH FROM finished - started)) AS longest " .
+    if ($CDASH_DB_TYPE == 'pgsql') {
+        $sql_query = 'SELECT extract(EPOCH FROM now() - created)/3600 as hours_ago, ' .
+            'current_time AS time_local, ' .
+            'count(created) AS num_files, ' .
+            'round(avg((extract(EPOCH FROM started - created)/3600)::numeric), 1) AS avg_hours_delay, ' .
+            'avg(extract(EPOCH FROM finished - started)) AS mean, ' .
+            'min(extract(EPOCH FROM finished - started)) AS shortest, ' .
+            'max(extract(EPOCH FROM finished - started)) AS longest ' .
             "FROM submission WHERE status = 2 AND projectid = $projectid " .
-            "GROUP BY hours_ago ORDER BY hours_ago ASC LIMIT 48";
+            'GROUP BY hours_ago ORDER BY hours_ago ASC LIMIT 48';
     } else {
-        $sql_query = "SELECT TIMESTAMPDIFF(HOUR, created, UTC_TIMESTAMP) as hours_ago, " .
+        $sql_query = 'SELECT TIMESTAMPDIFF(HOUR, created, UTC_TIMESTAMP) as hours_ago, ' .
             "TIME_FORMAT(CONVERT_TZ(created, '+00:00', 'SYSTEM'), '%l:00 %p') AS time_local, " .
-            "COUNT(created) AS num_files, " .
-            "ROUND(AVG(TIMESTAMPDIFF(SECOND, created, started))/3600, 1) AS avg_hours_delay, " .
-            "AVG(TIMESTAMPDIFF(SECOND, started, finished)) AS mean, " .
-            "MIN(TIMESTAMPDIFF(SECOND, started, finished)) AS shortest, " .
-            "MAX(TIMESTAMPDIFF(SECOND, started, finished)) AS longest " .
+            'COUNT(created) AS num_files, ' .
+            'ROUND(AVG(TIMESTAMPDIFF(SECOND, created, started))/3600, 1) AS avg_hours_delay, ' .
+            'AVG(TIMESTAMPDIFF(SECOND, started, finished)) AS mean, ' .
+            'MIN(TIMESTAMPDIFF(SECOND, started, finished)) AS shortest, ' .
+            'MAX(TIMESTAMPDIFF(SECOND, started, finished)) AS longest ' .
             "FROM submission WHERE status = 2 AND projectid = $projectid " .
-            "GROUP BY hours_ago ORDER BY hours_ago ASC LIMIT 48";
+            'GROUP BY hours_ago ORDER BY hours_ago ASC LIMIT 48';
     }
 
     $rows = pdo_all_rows_query($sql_query);
@@ -133,7 +133,7 @@ function echo_average_wait_time($projectid)
     if (count($rows) > 0) {
         echo 'hours_ago, time_local, num_files, avg_hours_delay, mean, shortest, longest' . "\n";
         foreach ($rows as $row) {
-            echo "    " . $row['hours_ago'] .
+            echo '    ' . $row['hours_ago'] .
                 $sep . $row['time_local'] .
                 $sep . $row['num_files'] .
                 $sep . $row['avg_hours_delay'] .
@@ -151,8 +151,8 @@ function echo_average_wait_time($projectid)
 function echo_average_wait_times()
 {
     $rows = pdo_all_rows_query(
-        "SELECT projectid, COUNT(*) AS c FROM submission " .
-        "WHERE status=2 GROUP BY projectid");
+        'SELECT projectid, COUNT(*) AS c FROM submission ' .
+        'WHERE status=2 GROUP BY projectid');
 
     echo '<h3>Average Wait Times</h3>';
     echo '<pre>';
@@ -172,9 +172,9 @@ function echo_average_wait_times()
 function echo_submissionprocessor_table()
 {
     $rows = pdo_all_rows_query(
-        "SELECT project.name, submissionprocessor.* FROM " .
-        qid("project") . ", " . qid("submissionprocessor") . " " .
-        "WHERE project.id = submissionprocessor.projectid "
+        'SELECT project.name, submissionprocessor.* FROM ' .
+        qid('project') . ', ' . qid('submissionprocessor') . ' ' .
+        'WHERE project.id = submissionprocessor.projectid '
     );
 
     $sep = ', ';
@@ -200,7 +200,7 @@ function echo_submission_table()
     }
 
     $rows = pdo_all_rows_query(
-        "SELECT * FROM " . qid("submission") . " ORDER BY id DESC LIMIT " . $limit
+        'SELECT * FROM ' . qid('submission') . ' ORDER BY id DESC LIMIT ' . $limit
     );
 
     $sep = ', ';
@@ -230,14 +230,14 @@ function echo_submission_table()
 
 function echo_project_data_sizes()
 {
-    echo "<h3>Project Data Sizes</h3>";
-    echo "All sizes measured in millions of bytes<br/>";
+    echo '<h3>Project Data Sizes</h3>';
+    echo 'All sizes measured in millions of bytes<br/>';
     $sep = ', ';
 
-    $sql = "SELECT p.name, SUM(LENGTH(t.output)+LENGTH(t.details)+LENGTH(t.command)+LENGTH(t.path)+LENGTH(t.name)) AS testsize " .
-        "FROM project AS p, test AS t " .
-        "WHERE p.id=t.projectid " .
-        "GROUP BY p.name";
+    $sql = 'SELECT p.name, SUM(LENGTH(t.output)+LENGTH(t.details)+LENGTH(t.command)+LENGTH(t.path)+LENGTH(t.name)) AS testsize ' .
+        'FROM project AS p, test AS t ' .
+        'WHERE p.id=t.projectid ' .
+        'GROUP BY p.name';
 
     $rows = pdo_all_rows_query($sql);
 
@@ -252,10 +252,10 @@ function echo_project_data_sizes()
     echo '</pre>';
     echo '<br/>';
 
-    $sql = "SELECT p.name, SUM(LENGTH(cov.log)) AS covsize " .
-        "FROM project AS p, build AS b, coveragefilelog AS cov " .
-        "WHERE p.id=b.projectid AND b.id=cov.buildid " .
-        "GROUP BY p.name";
+    $sql = 'SELECT p.name, SUM(LENGTH(cov.log)) AS covsize ' .
+        'FROM project AS p, build AS b, coveragefilelog AS cov ' .
+        'WHERE p.id=b.projectid AND b.id=cov.buildid ' .
+        'GROUP BY p.name';
 
     $rows = pdo_all_rows_query($sql);
 
@@ -270,10 +270,10 @@ function echo_project_data_sizes()
     echo '</pre>';
     echo '<br/>';
 
-    $sql = "SELECT p.name, SUM(LENGTH(da.log)) AS dasize " .
-        "FROM project AS p, build AS b, dynamicanalysis AS da " .
-        "WHERE p.id=b.projectid AND b.id=da.buildid " .
-        "GROUP BY p.name";
+    $sql = 'SELECT p.name, SUM(LENGTH(da.log)) AS dasize ' .
+        'FROM project AS p, build AS b, dynamicanalysis AS da ' .
+        'WHERE p.id=b.projectid AND b.id=da.buildid ' .
+        'GROUP BY p.name';
 
     $rows = pdo_all_rows_query($sql);
 
@@ -293,7 +293,7 @@ if ($session_OK) {
     $userid = $_SESSION['cdash']['loginid'];
 
     $user_is_admin = pdo_get_field_value(
-        "SELECT admin FROM " . qid("user") . " WHERE id='$userid'",
+        'SELECT admin FROM ' . qid('user') . " WHERE id='$userid'",
         'admin',
         0);
 

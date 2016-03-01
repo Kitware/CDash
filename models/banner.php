@@ -29,7 +29,7 @@ class banner
     /** Return the text */
     public function GetText()
     {
-        $query = pdo_query("SELECT text FROM banner WHERE projectid=" . qnum($this->ProjectId));
+        $query = pdo_query('SELECT text FROM banner WHERE projectid=' . qnum($this->ProjectId));
         if (pdo_num_rows($query) == 0) {
             return false;
         }
@@ -50,7 +50,7 @@ class banner
     /** Return if exists */
     public function Exists()
     {
-        $query = pdo_query("SELECT count(*) AS c FROM banner WHERE projectid=" . qnum($this->ProjectId));
+        $query = pdo_query('SELECT count(*) AS c FROM banner WHERE projectid=' . qnum($this->ProjectId));
         $query_array = pdo_fetch_array($query);
         if ($query_array['c'] > 0) {
             return true;
@@ -62,7 +62,7 @@ class banner
     public function SetText($text)
     {
         if ($this->ProjectId == -1) {
-            echo "Banner::SetText(): no ProjectId specified";
+            echo 'Banner::SetText(): no ProjectId specified';
             return false;
         }
 
@@ -71,21 +71,21 @@ class banner
         // Check if the project is already
         if ($this->Exists()) {
             // Update the project
-            $query = "UPDATE banner SET";
+            $query = 'UPDATE banner SET';
             $query .= " text='" . $this->Text . "'";
             $query .= " WHERE projectid='" . $this->ProjectId . "'";
             if (!pdo_query($query)) {
-                add_last_sql_error("Banner:SetText", $this->ProjectId);
+                add_last_sql_error('Banner:SetText', $this->ProjectId);
                 echo $query;
                 return false;
             }
         } else {
             // insert
 
-            $query = "INSERT INTO banner (projectid,text)
-                VALUES (" . qnum($this->ProjectId) . ",'" . $this->Text . "')";
+            $query = 'INSERT INTO banner (projectid,text)
+                VALUES (' . qnum($this->ProjectId) . ",'" . $this->Text . "')";
             if (!pdo_query($query)) {
-                add_last_sql_error("Banner:SetText", $this->ProjectId);
+                add_last_sql_error('Banner:SetText', $this->ProjectId);
                 echo $query;
                 return false;
             }

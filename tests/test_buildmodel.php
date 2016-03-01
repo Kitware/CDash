@@ -121,14 +121,14 @@ class BuildModelTestCase extends KWWebTestCase
         $build->SetSubProject('8567');
         global $CDASH_LOG_FILE;
         if ($CDASH_LOG_FILE !== false && strpos(file_get_contents($this->logfilename),
-                "New subproject detected") === false
+                'New subproject detected') === false
         ) {
             $this->fail("'New subproject detected' not found in log after calling SetSubProject for invalid subproject id");
             return 1;
         }
 
         if ($build->Exists() == false) {
-            $this->fail("Exists returned false for a valid build id");
+            $this->fail('Exists returned false for a valid build id');
             return 1;
         }
 
@@ -141,7 +141,7 @@ class BuildModelTestCase extends KWWebTestCase
         $build->SubmitTime = '2012-01-25 16:43:11';
 
         if ($build->Exists() == true) {
-            $this->fail("Exists returned true for an invalid build id");
+            $this->fail('Exists returned true for an invalid build id');
             return 1;
         }
 

@@ -14,21 +14,21 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include dirname(dirname(dirname(__DIR__))) . "/config/config.php";
-require_once "include/pdo.php";
-include "include/common.php";
-require_once "models/project.php";
+include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
+require_once 'include/pdo.php';
+include 'include/common.php';
+require_once 'models/project.php';
 
 set_time_limit(0);
 
-@$projectname = $_GET["project"];
+@$projectname = $_GET['project'];
 $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
 $projectid = get_project_id($projectname);
 $Project = new Project();
 $Project->Id = $projectid;
 $Project->Fill();
 
-@$date = $_GET["date"];
+@$date = $_GET['date'];
 if ($date != null) {
     $date = htmlspecialchars(pdo_real_escape_string($date));
 }
@@ -40,22 +40,22 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
 {
     $start = microtime_float();
     $noforcelogin = 1;
-    include_once dirname(dirname(dirname(__DIR__))) . "/config/config.php";
-    require_once "include/pdo.php";
+    include_once dirname(dirname(dirname(__DIR__))) . '/config/config.php';
+    require_once 'include/pdo.php';
     include 'public/login.php';
-    include_once "models/banner.php";
-    include_once "models/subproject.php";
+    include_once 'models/banner.php';
+    include_once 'models/subproject.php';
 
     $response = array();
 
     $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
     if (!$db) {
-        $response['error'] = "Error connecting to CDash database server";
+        $response['error'] = 'Error connecting to CDash database server';
         echo json_encode($response);
         return;
     }
     if (!pdo_select_db("$CDASH_DB_NAME", $db)) {
-        $response['error'] = "Error selecting CDash database";
+        $response['error'] = 'Error selecting CDash database';
         echo json_encode($response);
         return;
     }
@@ -73,7 +73,7 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
 
     $response = begin_JSON_response();
 
-    $response['title'] = "CDash - " . $Project->Name;
+    $response['title'] = 'CDash - ' . $Project->Name;
 
     $banners = array();
     $Banner = new Banner;
@@ -105,7 +105,7 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
 
     // Main dashboard section
     $projectname_encoded = urlencode($Project->Name);
-    $response['datetime'] = date("l, F d Y H:i:s T", time());
+    $response['datetime'] = date('l, F d Y H:i:s T', time());
     $response['date'] = $date;
     $response['unixtimestamp'] = $currentstarttime;
     $response['vcs'] = $vcsurl;
@@ -122,13 +122,13 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
 
     if (empty($Project->HomeUrl)) {
         $response['home'] =
-            "index.php?project=" . urlencode($Project->Name);
+            'index.php?project=' . urlencode($Project->Name);
     } else {
         $response['home'] = $homeurl;
     }
 
-    if ($CDASH_USE_LOCAL_DIRECTORY && file_exists("local/models/proProject.php")) {
-        include_once "local/models/proProject.php";
+    if ($CDASH_USE_LOCAL_DIRECTORY && file_exists('local/models/proProject.php')) {
+        include_once 'local/models/proProject.php';
         $pro = new proProject;
         $pro->ProjectId = $projectid;
         $response['proedition'] = $pro->GetEdition(1);
@@ -140,7 +140,7 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
         $response['future'] = 0;
     }
 
-    $linkparams = "project=" . urlencode($Project->Name);
+    $linkparams = 'project=' . urlencode($Project->Name);
     if (!empty($date)) {
         $linkparams .= "&date=$date";
     }
@@ -170,12 +170,12 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
         $userid = $_SESSION['cdash']['loginid'];
         $user2project = pdo_query("SELECT role FROM user2project WHERE userid='$userid' and projectid='$projectid'");
         $user2project_array = pdo_fetch_array($user2project);
-        $user = pdo_query("SELECT admin FROM " . qid("user") . "  WHERE id='$userid'");
+        $user = pdo_query('SELECT admin FROM ' . qid('user') . "  WHERE id='$userid'");
         $user_array = pdo_fetch_array($user);
         $user_response['id'] = $userid;
         $response['userid'] = $userid;
         $isadmin = 0;
-        if ($user2project_array["role"] > 1 || $user_array["admin"]) {
+        if ($user2project_array['role'] > 1 || $user_array['admin']) {
             $isadmin = 1;
         }
         $user_response['admin'] = $isadmin;
@@ -204,7 +204,7 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
     $project_response['ntestnotrun'] =
         $Project->GetNumberOfNotRunTests($beginning_UTCDate, $end_UTCDate, true);
     if (strlen($Project->GetLastSubmission()) == 0) {
-        $project_response['lastsubmission'] = "NA";
+        $project_response['lastsubmission'] = 'NA';
     } else {
         $project_response['lastsubmission'] = $Project->GetLastSubmission();
     }
@@ -291,7 +291,7 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
             $subproject_response[$reportnum] = $reportval;
         }
         if (strlen($SubProject->GetLastSubmission()) == 0) {
-            $subproject_response['lastsubmission'] = "NA";
+            $subproject_response['lastsubmission'] = 'NA';
         } else {
             $subproject_response['lastsubmission'] = $SubProject->GetLastSubmission();
         }

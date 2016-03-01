@@ -50,7 +50,7 @@ class SubProjectTestCase extends KWWebTestCase
 
     public function testSubmissionProjectDependencies()
     {
-        $rep = dirname(__FILE__) . "/data/SubProjectExample";
+        $rep = dirname(__FILE__) . '/data/SubProjectExample';
         $file = "$rep/Project_1.xml";
         if (!$this->submission('SubProjectExample', $file)) {
             return;
@@ -64,12 +64,12 @@ class SubProjectTestCase extends KWWebTestCase
     public function testSubmissionSubProjectBuild()
     {
         $this->deleteLog($this->logfilename);
-        $rep = dirname(__FILE__) . "/data/SubProjectExample";
+        $rep = dirname(__FILE__) . '/data/SubProjectExample';
         $file = "$rep/Build_1.xml";
         if (!$this->submission('SubProjectExample', $file)) {
             return;
         }
-        if (!$this->compareLog($this->logfilename, $rep . "/cdash_1.log")) {
+        if (!$this->compareLog($this->logfilename, $rep . '/cdash_1.log')) {
             return;
         }
         $this->pass('Test passed');
@@ -78,12 +78,12 @@ class SubProjectTestCase extends KWWebTestCase
     public function testSubmissionSubProjectTest()
     {
         $this->deleteLog($this->logfilename);
-        $rep = dirname(__FILE__) . "/data/SubProjectExample";
+        $rep = dirname(__FILE__) . '/data/SubProjectExample';
         $file = "$rep/Test_1.xml";
         if (!$this->submission('SubProjectExample', $file)) {
             return;
         }
-        if (!$this->compareLog($this->logfilename, $rep . "/cdash_2.log")) {
+        if (!$this->compareLog($this->logfilename, $rep . '/cdash_2.log')) {
             return;
         }
         $this->pass('Test passed');

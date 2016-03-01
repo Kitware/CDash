@@ -47,13 +47,13 @@ class coveragefilelog
     public function Insert($append = false)
     {
         if (!$this->BuildId || !is_numeric($this->BuildId)) {
-            add_log("BuildId not set", "CoverageFileLog::Insert()", LOG_ERR,
+            add_log('BuildId not set', 'CoverageFileLog::Insert()', LOG_ERR,
                 0, $this->BuildId, CDASH_OBJECT_COVERAGE, $this->FileId);
             return false;
         }
 
         if (!$this->FileId || !is_numeric($this->FileId)) {
-            add_log("FileId not set", "CoverageFileLog::Insert()", LOG_ERR,
+            add_log('FileId not set', 'CoverageFileLog::Insert()', LOG_ERR,
                 0, $this->BuildId, CDASH_OBJECT_COVERAGE, $this->FileId);
             return false;
         }
@@ -75,14 +75,14 @@ class coveragefilelog
 
         if ($log != '') {
             if ($update) {
-                $sql_command = "UPDATE";
+                $sql_command = 'UPDATE';
                 $sql = "UPDATE coveragefilelog SET log='$log'
-                WHERE buildid=" . qnum($this->BuildId) . " AND
-                fileid=" . qnum($this->FileId);
+                WHERE buildid=" . qnum($this->BuildId) . ' AND
+                fileid=' . qnum($this->FileId);
             } else {
-                $sql_command = "INSERT";
-                $sql = "INSERT INTO coveragefilelog (buildid,fileid,log) VALUES ";
-                $sql .= "(" . qnum($this->BuildId) . "," . qnum($this->FileId) . ",'" . $log . "')";
+                $sql_command = 'INSERT';
+                $sql = 'INSERT INTO coveragefilelog (buildid,fileid,log) VALUES ';
+                $sql .= '(' . qnum($this->BuildId) . ',' . qnum($this->FileId) . ",'" . $log . "')";
             }
             pdo_query($sql);
             add_last_sql_error("CoverageFileLog::$sql_command()");
@@ -96,11 +96,11 @@ class coveragefilelog
     {
         global $CDASH_DB_TYPE;
 
-        $query = "SELECT log FROM coveragefilelog
-            WHERE fileid=" . qnum($this->FileId) . "
-            AND buildid=" . qnum($this->BuildId);
+        $query = 'SELECT log FROM coveragefilelog
+            WHERE fileid=' . qnum($this->FileId) . '
+            AND buildid=' . qnum($this->BuildId);
         if ($for_update) {
-            $query .= " FOR UPDATE";
+            $query .= ' FOR UPDATE';
         }
 
         $result = pdo_query($query);
@@ -176,7 +176,7 @@ class coveragefilelog
 
         // Get the site ID for 'CDash Server'.
         $server = new Site();
-        $server->Name = "CDash Server";
+        $server->Name = 'CDash Server';
         if (!$server->Exists()) {
             // Create it if it doesn't exist.
             $server_ip = $_SERVER['SERVER_ADDR'];
@@ -239,7 +239,7 @@ class coveragefilelog
             $row['id'] !== $this->FileId
         ) {
             add_log("Not appending coverage of '$path' to aggregate as it " .
-                "already contains a different version of this file.",
+                'already contains a different version of this file.',
                 'CoverageSummary::UpdateAggregate', LOG_INFO,
                 $this->BuildId);
             return;

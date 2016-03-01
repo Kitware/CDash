@@ -46,7 +46,7 @@ class site
         }
 
         if ($this->Id) {
-            $query = pdo_query("SELECT count(*) AS c FROM site WHERE id=" . qnum($this->Id));
+            $query = pdo_query('SELECT count(*) AS c FROM site WHERE id=' . qnum($this->Id));
             $query_array = pdo_fetch_array($query);
             if ($query_array['c'] > 0) {
                 return true;
@@ -71,7 +71,7 @@ class site
         }
 
         // Update the project
-        $query = "UPDATE site SET";
+        $query = 'UPDATE site SET';
         $query .= " name='" . $this->Name . "'";
         $query .= ",ip='" . $this->Ip . "'";
         $query .= ",latitude='" . $this->Latitude . "'";
@@ -81,7 +81,7 @@ class site
         $query .= " WHERE id='" . $this->Id . "'";
 
         if (!pdo_query($query)) {
-            add_last_sql_error("Site Update");
+            add_last_sql_error('Site Update');
             return false;
         }
     }
@@ -96,7 +96,7 @@ class site
         $submission_id = $PHP_ERROR_SUBMISSION_ID;
         if ($submission_id) {
             $this->Ip = pdo_get_field_value(
-                "SELECT ip FROM submission2ip WHERE submissionid=" . qnum($submission_id),
+                'SELECT ip FROM submission2ip WHERE submissionid=' . qnum($submission_id),
                 'ip', ''
             );
         }
@@ -143,10 +143,10 @@ class site
                 $this->Id = $existing_id_result['id'];
                 return true;
             }
-            add_log("SQL error: $error", "Site Insert", LOG_ERR);
+            add_log("SQL error: $error", 'Site Insert', LOG_ERR);
             return false;
         } else {
-            $this->Id = pdo_insert_id("site");
+            $this->Id = pdo_insert_id('site');
         }
     }
 
@@ -154,13 +154,13 @@ class site
     public function GetName()
     {
         if (!$this->Id) {
-            echo "Site::GetName(): Id not set";
+            echo 'Site::GetName(): Id not set';
             return false;
         }
 
-        $query = pdo_query("SELECT name FROM site WHERE id=" . qnum($this->Id));
+        $query = pdo_query('SELECT name FROM site WHERE id=' . qnum($this->Id));
         if (!$query) {
-            add_last_sql_error("Site GetName");
+            add_last_sql_error('Site GetName');
             return false;
         }
 

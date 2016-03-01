@@ -54,8 +54,8 @@ class ProjectHandler extends AbstractHandler
         // Check that the project name matches
         if ($name == 'PROJECT') {
             if (get_project_id($attributes['NAME']) != $this->projectid) {
-                add_log("Wrong project name: " . $attributes['NAME'],
-                    "ProjectHandler::startElement", LOG_ERR, $this->projectid);
+                add_log('Wrong project name: ' . $attributes['NAME'],
+                    'ProjectHandler::startElement', LOG_ERR, $this->projectid);
                 $this->ProjectNameMatches = false;
             }
         }
@@ -72,7 +72,7 @@ class ProjectHandler extends AbstractHandler
             $this->SubProject = new SubProject();
             $this->SubProject->SetProjectId($this->projectid);
             $this->SubProject->SetName($attributes['NAME']);
-            if (array_key_exists("GROUP", $attributes)) {
+            if (array_key_exists('GROUP', $attributes)) {
                 $this->SubProject->SetGroup($attributes['GROUP']);
             }
         } elseif ($name == 'DEPENDENCY') {
@@ -115,12 +115,12 @@ class ProjectHandler extends AbstractHandler
                         if (array_key_exists($removeid, $this->SubProjects)) {
                             $subproject->RemoveDependency($removeid);
                         } else {
-                            $dep = pdo_get_field_value("SELECT name FROM subproject WHERE id='$removeid'", "name", "$removeid");
+                            $dep = pdo_get_field_value("SELECT name FROM subproject WHERE id='$removeid'", 'name', "$removeid");
                             add_log(
                                 "Not removing dependency $dep($removeid) from " .
                                 $subproject->GetName() .
-                                "because it is not a SubProject element in this Project.xml file",
-                                "ProjectHandler:endElement", LOG_WARNING, $this->projectid);
+                                'because it is not a SubProject element in this Project.xml file',
+                                'ProjectHandler:endElement', LOG_WARNING, $this->projectid);
                         }
                     }
                 }
@@ -133,8 +133,8 @@ class ProjectHandler extends AbstractHandler
                         $subproject->AddDependency($addid);
                     } else {
                         add_log(
-                            "impossible condition: should NEVER see this: unknown DEPENDENCY clause should prevent this case",
-                            "ProjectHandler:endElement", LOG_WARNING, $this->projectid);
+                            'impossible condition: should NEVER see this: unknown DEPENDENCY clause should prevent this case',
+                            'ProjectHandler:endElement', LOG_WARNING, $this->projectid);
                     }
                 }
             }
@@ -181,9 +181,9 @@ class ProjectHandler extends AbstractHandler
                 }
 
                 if (!$added) {
-                    add_log("Project.xml DEPENDENCY of " . $this->SubProject->GetName() .
-                        " not mentioned earlier in file.",
-                        "ProjectHandler:endElement", LOG_WARNING, $this->projectid);
+                    add_log('Project.xml DEPENDENCY of ' . $this->SubProject->GetName() .
+                        ' not mentioned earlier in file.',
+                        'ProjectHandler:endElement', LOG_WARNING, $this->projectid);
                 }
             }
 

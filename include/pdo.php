@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once "include/log.php";
+require_once 'include/log.php';
 
 //
 // ATTENTION CDash devs:

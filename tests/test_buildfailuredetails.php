@@ -12,7 +12,7 @@ class BuildFailureDetailsTestCase extends KWWebTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->OriginalConfigSettings = "";
+        $this->OriginalConfigSettings = '';
     }
 
     public function testBuildFailureDetails()
@@ -20,13 +20,13 @@ class BuildFailureDetailsTestCase extends KWWebTestCase
         echo "1. testBuildFailureDetails\n";
 
         // Submit our test data.
-        $rep = dirname(__FILE__) . "/data/BuildFailureDetails";
+        $rep = dirname(__FILE__) . '/data/BuildFailureDetails';
         if (!$this->submission('EmailProjectExample', "$rep/Build_1.xml")) {
-            $this->fail("failed to submit Build_1.xml");
+            $this->fail('failed to submit Build_1.xml');
             return 1;
         }
         if (!$this->submission('EmailProjectExample', "$rep/Build_2.xml")) {
-            $this->fail("failed to submit Build_2.xml");
+            $this->fail('failed to submit Build_2.xml');
             return 1;
         }
 
@@ -49,17 +49,17 @@ class BuildFailureDetailsTestCase extends KWWebTestCase
         $count_results = pdo_single_row_query($count_query);
         if ($count_results['numfails'] != 4) {
             $this->fail(
-                "Expected 4 buildfailures, found " . $count_results['numfails']);
+                'Expected 4 buildfailures, found ' . $count_results['numfails']);
             return 1;
         }
         if ($count_results['numbuilds'] != 2) {
             $this->fail(
-                "Expected 2 builds, found " . $count_results['numbuilds']);
+                'Expected 2 builds, found ' . $count_results['numbuilds']);
             return 1;
         }
         if ($count_results['numdetails'] != 2) {
             $this->fail(
-                "Expected 2 buildfailuredetails, found " . $count_results['numdetails']);
+                'Expected 2 buildfailuredetails, found ' . $count_results['numdetails']);
             return 1;
         }
 
@@ -70,17 +70,17 @@ class BuildFailureDetailsTestCase extends KWWebTestCase
         $count_results = pdo_single_row_query($count_query);
         if ($count_results['numfails'] != 2) {
             $this->fail(
-                "Expected 2 buildfailures, found " . $count_results['numfails']);
+                'Expected 2 buildfailures, found ' . $count_results['numfails']);
             return 1;
         }
         if ($count_results['numbuilds'] != 1) {
             $this->fail(
-                "Expected 1 build, found " . $count_results['numbuilds']);
+                'Expected 1 build, found ' . $count_results['numbuilds']);
             return 1;
         }
         if ($count_results['numdetails'] != 2) {
             $this->fail(
-                "Expected 2 buildfailuredetails, found " . $count_results['numdetails']);
+                'Expected 2 buildfailuredetails, found ' . $count_results['numdetails']);
             return 1;
         }
 
@@ -91,17 +91,17 @@ class BuildFailureDetailsTestCase extends KWWebTestCase
         $count_results = pdo_single_row_query($count_query);
         if ($count_results['numfails'] != 0) {
             $this->fail(
-                "Expected 0 buildfailures, found " . $count_results['numfails']);
+                'Expected 0 buildfailures, found ' . $count_results['numfails']);
             return 1;
         }
         if ($count_results['numbuilds'] != 0) {
             $this->fail(
-                "Expected 0 builds, found " . $count_results['numbuilds']);
+                'Expected 0 builds, found ' . $count_results['numbuilds']);
             return 1;
         }
         if ($count_results['numdetails'] != 0) {
             $this->fail(
-                "Expected 0 buildfailuredetails, found " . $count_results['numdetails']);
+                'Expected 0 buildfailuredetails, found ' . $count_results['numdetails']);
             return 1;
         }
 

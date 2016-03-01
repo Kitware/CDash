@@ -14,9 +14,9 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include dirname(__DIR__) . "/config/config.php";
-require_once "include/pdo.php";
-require_once "include/autoremove.php";
+include dirname(__DIR__) . '/config/config.php';
+require_once 'include/pdo.php';
+require_once 'include/autoremove.php';
 
 if ($argc != 2) {
     echo "Usage: php $argv[0] <project_name>\n";
@@ -31,11 +31,11 @@ set_time_limit(0);
 $projectname = $argv[1];
 echo "removing builds for $projectname \n";
 $sql = " WHERE name='" . $projectname . "'";
-if ($projectname == "all") {
-    $sql = "";
+if ($projectname == 'all') {
+    $sql = '';
 }
 
-$project = pdo_query("SELECT id,autoremovetimeframe,autoremovemaxbuilds FROM project" . $sql);
+$project = pdo_query('SELECT id,autoremovetimeframe,autoremovemaxbuilds FROM project' . $sql);
 if (!$project) {
     add_last_sql_error('autoRemoveBuilds');
     return false;

@@ -15,7 +15,7 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include dirname(dirname(dirname(__DIR__))) . "/config/config.php";
+include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 include_once 'include/common.php';
 include 'public/login.php';
@@ -41,7 +41,7 @@ pdo_select_db("$CDASH_DB_NAME", $db);
 // Check required parameter.
 @$projectid = $_GET['projectid'];
 if (!isset($projectid)) {
-    $rest_json = file_get_contents("php://input");
+    $rest_json = file_get_contents('php://input');
     $_POST = json_decode($rest_json, true);
     @$projectid = $_POST['projectid'];
 }
@@ -104,12 +104,12 @@ function rest_get()
     $response['name'] = $BuildGroup->GetName();
     $response['group'] = $BuildGroup->GetGroupId();
 
-    $query = pdo_query("
-    SELECT id, name FROM buildgroup WHERE projectid=" . qnum($projectid) . "
+    $query = pdo_query('
+    SELECT id, name FROM buildgroup WHERE projectid=' . qnum($projectid) . "
     AND endtime='1980-01-01 00:00:00'");
 
     if (!$query) {
-        add_last_sql_error("getBuildGroup Select");
+        add_last_sql_error('getBuildGroup Select');
         return false;
     }
 
@@ -210,7 +210,7 @@ function rest_post()
         $name = htmlspecialchars(pdo_real_escape_string($_POST['newbuildgroup']));
 
         // Avoid creating a group that uses one of the default names.
-        if ($name == "Nightly" || $name == "Experimental" || $name == "Continuous") {
+        if ($name == 'Nightly' || $name == 'Experimental' || $name == 'Continuous') {
             echo_error("You cannot create a group named 'Nightly','Experimental' or 'Continuous'");
             return;
         }
@@ -237,7 +237,7 @@ function rest_post()
             // Remove old build group layout for this project.
 
             global $CDASH_DB_TYPE;
-            if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE == "pgsql") {
+            if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE == 'pgsql') {
                 // We use a subquery here because postgres doesn't support
                 // JOINs in a DELETE statement.
                 $sql = "
@@ -252,20 +252,20 @@ function rest_post()
           WHERE bg.projectid = '$projectid'";
             }
             pdo_query($sql);
-            add_last_sql_error("manageBuildGroup::newLayout::DELETE", $projectid);
+            add_last_sql_error('manageBuildGroup::newLayout::DELETE', $projectid);
 
             // construct query to insert the new layout
-            $query = "INSERT INTO buildgroupposition (buildgroupid, position) VALUES ";
+            $query = 'INSERT INTO buildgroupposition (buildgroupid, position) VALUES ';
             foreach ($inputRows as $inputRow) {
-                $query .= "(" .
-                    qnum(pdo_real_escape_numeric($inputRow["buildgroupid"])) . ", " .
-                    qnum(pdo_real_escape_numeric($inputRow["position"])) . "), ";
+                $query .= '(' .
+                    qnum(pdo_real_escape_numeric($inputRow['buildgroupid'])) . ', ' .
+                    qnum(pdo_real_escape_numeric($inputRow['position'])) . '), ';
             }
 
             // remove the trailing comma and space, then insert our new values
-            $query = rtrim($query, ", ");
+            $query = rtrim($query, ', ');
             pdo_query($query);
-            add_last_sql_error("API::buildgroup::newLayout::INSERT", $projectid);
+            add_last_sql_error('API::buildgroup::newLayout::INSERT', $projectid);
         }
         return;
     }
@@ -274,7 +274,7 @@ function rest_post()
         // Move builds to a new group.
         $group = $_POST['group'];
         if ($group['id'] < 1) {
-            echo_error("Please select a group for these builds");
+            echo_error('Please select a group for these builds');
             return;
         }
 
@@ -320,13 +320,13 @@ function rest_post()
         $group = $_POST['group'];
         $groupid = $group['id'];
         if ($groupid < 1) {
-            echo_error("Please select a BuildGroup to define.");
+            echo_error('Please select a BuildGroup to define.');
             return;
         }
 
-        $nameMatch = "%" .
-            htmlspecialchars(pdo_real_escape_string($_POST["nameMatch"])) . "%";
-        $type = htmlspecialchars(pdo_real_escape_string($_POST["type"]));
+        $nameMatch = '%' .
+            htmlspecialchars(pdo_real_escape_string($_POST['nameMatch'])) . '%';
+        $type = htmlspecialchars(pdo_real_escape_string($_POST['type']));
         $sql =
             "INSERT INTO build2grouprule (groupid, buildtype, buildname, siteid)
        VALUES ('$groupid', '$type', '$nameMatch', '-1')";
@@ -352,10 +352,10 @@ function rest_post()
         }
 
         if (empty($_POST['match'])) {
-            $match = "";
+            $match = '';
         } else {
-            $match = "%" .
-                htmlspecialchars(pdo_real_escape_string($_POST['match'])) . "%";
+            $match = '%' .
+                htmlspecialchars(pdo_real_escape_string($_POST['match'])) . '%';
         }
 
         $sql =
@@ -430,7 +430,7 @@ function rest_put()
 function get_buildgroupid()
 {
     if (!isset($_GET['buildgroupid'])) {
-        echo_error("buildgroupid not specified.");
+        echo_error('buildgroupid not specified.');
         return false;
     }
     $buildgroupid = pdo_real_escape_numeric($_GET['buildgroupid']);

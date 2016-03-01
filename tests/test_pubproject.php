@@ -29,22 +29,22 @@ class PubProjectTestCase extends KWWebTestCase
         $this->setField('emailAdministrator', '1');
         $this->clickSubmitByName('Submit');
 
-        $query = "SELECT COUNT(*) FROM project";
+        $query = 'SELECT COUNT(*) FROM project';
         $result = $this->db->query($query);
-        if (strcmp($this->db->getType(), "pgsql") == 0 &&
+        if (strcmp($this->db->getType(), 'pgsql') == 0 &&
             $result[0]['count'] < 1
         ) {
             $result = $result[0]['count'];
             $errormsg = "The result of the query '$query' which is $result";
-            $errormsg .= "is not the one expected: 1";
+            $errormsg .= 'is not the one expected: 1';
             $this->assertEqual($result, '1', $errormsg);
             return;
-        } elseif (strcmp($this->db->getType(), "mysql") == 0 &&
+        } elseif (strcmp($this->db->getType(), 'mysql') == 0 &&
             $result[0]['COUNT(*)'] < 1
         ) {
             $result = $result[0]['COUNT(*)'];
             $errormsg = "The result of the query '$query' which is $result";
-            $errormsg .= "is not the one expected: 1";
+            $errormsg .= 'is not the one expected: 1';
             $this->assertEqual($result, '1', $errormsg);
             return;
         }
@@ -57,8 +57,8 @@ class PubProjectTestCase extends KWWebTestCase
     {
         $query = "SELECT name,description,public FROM project WHERE name = 'ProjectTest'";
         $result = $this->db->query($query);
-        $nameexpected = "ProjectTest";
-        $descriptionexpected = "This is a project test for cdash";
+        $nameexpected = 'ProjectTest';
+        $descriptionexpected = 'This is a project test for cdash';
         $publicexpected = 1;
         $expected = array(
             'name' => $nameexpected,

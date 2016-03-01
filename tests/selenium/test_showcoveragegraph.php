@@ -14,11 +14,11 @@ class Example extends CDashSeleniumTestCase
 
     public function testShowCoverageGraph()
     {
-        $this->open($this->webPath . "/index.php?project=InsightExample");
+        $this->open($this->webPath . '/index.php?project=InsightExample');
         $this->click("//table[@id='coveragetable']/tbody/tr/td[3]/a");
-        $this->waitForPageToLoad("30000");
-        $this->click("link=Show coverage over time");
-        $this->click("link=Zoom out");
-        $this->click("link=Show coverage over time");
+        $this->waitForPageToLoad('30000');
+        $this->click('link=Show coverage over time');
+        $this->click('link=Zoom out');
+        $this->click('link=Show coverage over time');
     }
 }

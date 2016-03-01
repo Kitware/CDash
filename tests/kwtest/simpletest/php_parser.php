@@ -98,7 +98,7 @@ class ParallelRegex
                         array('\/', '\(', '\)'),
                         $this->patterns[$i]) . ')';
             }
-            $this->regex = "/" . implode("|", $this->patterns) . "/" . $this->getPerlMatchingFlags();
+            $this->regex = '/' . implode('|', $this->patterns) . '/' . $this->getPerlMatchingFlags();
         }
         return $this->regex;
     }
@@ -109,7 +109,7 @@ class ParallelRegex
      */
     protected function getPerlMatchingFlags()
     {
-        return ($this->case ? "msS" : "msSi");
+        return ($this->case ? 'msS' : 'msSi');
     }
 }
 
@@ -187,7 +187,7 @@ class SimpleLexer
      * @param string $start Starting handler.
      * @param bool $case True for case sensitive.
      */
-    public function __construct($parser, $start = "accept", $case = false)
+    public function __construct($parser, $start = 'accept', $case = false)
     {
         $this->case = $case;
         $this->regexes = array();
@@ -206,7 +206,7 @@ class SimpleLexer
      *                                pattern when dealing with
      *                                this type of input.
      */
-    public function addPattern($pattern, $mode = "accept")
+    public function addPattern($pattern, $mode = 'accept')
     {
         if (!isset($this->regexes[$mode])) {
             $this->regexes[$mode] = new ParallelRegex($this->case);
@@ -252,7 +252,7 @@ class SimpleLexer
         if (!isset($this->regexes[$mode])) {
             $this->regexes[$mode] = new ParallelRegex($this->case);
         }
-        $this->regexes[$mode]->addPattern($pattern, "__exit");
+        $this->regexes[$mode]->addPattern($pattern, '__exit');
         if (!isset($this->mode_handlers[$mode])) {
             $this->mode_handlers[$mode] = $mode;
         }
@@ -369,7 +369,7 @@ class SimpleLexer
      */
     protected function isModeEnd($mode)
     {
-        return ($mode === "__exit");
+        return ($mode === '__exit');
     }
 
     /**
@@ -381,7 +381,7 @@ class SimpleLexer
      */
     protected function isSpecialMode($mode)
     {
-        return (strncmp($mode, "_", 1) == 0);
+        return (strncmp($mode, '_', 1) == 0);
     }
 
     /**
@@ -517,7 +517,7 @@ class SimpleHtmlLexer extends SimpleLexer
     {
         $this->mapHandler('dq_attribute', 'acceptAttributeToken');
         $this->addEntryPattern('=\s*"', 'tag', 'dq_attribute');
-        $this->addPattern("\\\\\"", 'dq_attribute');
+        $this->addPattern('\\\\"', 'dq_attribute');
         $this->addExitPattern('"', 'dq_attribute');
         $this->mapHandler('sq_attribute', 'acceptAttributeToken');
         $this->addEntryPattern("=\s*'", 'tag', 'sq_attribute');
@@ -906,11 +906,11 @@ class SimplePhpPageBuilder
      */
     protected function acceptTag($tag)
     {
-        if ($tag->getTagName() == "a") {
+        if ($tag->getTagName() == 'a') {
             $this->page->addLink($tag);
-        } elseif ($tag->getTagName() == "base") {
+        } elseif ($tag->getTagName() == 'base') {
             $this->page->setBase($tag->getAttribute('href'));
-        } elseif ($tag->getTagName() == "title") {
+        } elseif ($tag->getTagName() == 'title') {
             $this->page->setTitle($tag);
         } elseif ($this->isFormElement($tag->getTagName())) {
             for ($i = 0; $i < count($this->open_forms); $i++) {

@@ -14,11 +14,11 @@ class ViewMapTestCase extends KWWebTestCase
 
     public function testViewMap()
     {
-        $this->get($this->url . "/viewMap.php?project=InsightExample");
-        if (strpos($this->getBrowser()->getContentAsText(), "Maintainer") === false) {
+        $this->get($this->url . '/viewMap.php?project=InsightExample');
+        if (strpos($this->getBrowser()->getContentAsText(), 'Maintainer') === false) {
             $this->fail("'Maintainer' not found when expected");
             return 1;
         }
-        $this->pass("Passed");
+        $this->pass('Passed');
     }
 }

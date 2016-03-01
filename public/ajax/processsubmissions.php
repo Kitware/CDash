@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once dirname(dirname(__DIR__)) . "/config/config.php";
+require_once dirname(dirname(__DIR__)) . '/config/config.php';
 
 // Only used to setup the parallel submissions test case.
 global $CDASH_DO_NOT_PROCESS_SUBMISSIONS;
@@ -22,11 +22,11 @@ if ($CDASH_DO_NOT_PROCESS_SUBMISSIONS) {
     exit(0);
 }
 
-require_once "include/common.php";
-require_once "include/do_submit.php";
-require_once "include/fnProcessFile.php";
-require_once "include/pdo.php";
-require_once "include/submission_functions.php";
+require_once 'include/common.php';
+require_once 'include/do_submit.php';
+require_once 'include/fnProcessFile.php';
+require_once 'include/pdo.php';
+require_once 'include/submission_functions.php';
 
 ob_start();
 set_time_limit(0);
@@ -42,7 +42,7 @@ ignore_user_abort(true);
 // When called by http, use "?projectid=1&force=1" to pass the info through
 // php's _GET array. Use value 0 or 1 for force. If omitted, $force is 0.
 //
-echo "<pre>";
+echo '<pre>';
 echo "begin processSubmissions.php\n";
 
 $force = 0;
@@ -51,7 +51,7 @@ if (isset($argc) && $argc > 1) {
     echo "argc, context is php command-line invocation...\n";
     echo "argc='" . $argc . "'\n";
     for ($i = 0; $i < $argc; ++$i) {
-        echo "argv[" . $i . "]='" . $argv[$i] . "'\n";
+        echo 'argv[' . $i . "]='" . $argv[$i] . "'\n";
 
         if ($argv[$i] == '--force') {
             $force = 1;
@@ -72,9 +72,9 @@ if (isset($argc) && $argc > 1) {
 
 if (!is_numeric($projectid)) {
     echo "projectid/argv[1] should be a number\n";
-    echo "</pre>";
+    echo '</pre>';
     add_log("projectid '" . $projectid . "' should be a number",
-        "ProcessSubmission",
+        'ProcessSubmission',
         LOG_ERR, $projectid);
     return;
 }
@@ -125,6 +125,6 @@ if ($lockAcquired) {
 }
 
 echo "end processSubmissions.php\n";
-echo "</pre>";
+echo '</pre>';
 
 ob_end_flush();

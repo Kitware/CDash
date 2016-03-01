@@ -15,13 +15,13 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include dirname(__DIR__) . "/config/config.php";
-require_once "include/pdo.php";
+include dirname(__DIR__) . '/config/config.php';
+require_once 'include/pdo.php';
 include 'public/login.php';
-include_once "include/common.php";
-include_once "include/repository.php";
-include "include/version.php";
-require_once "include/bugurl.php";
+include_once 'include/common.php';
+include_once 'include/repository.php';
+include 'include/version.php';
+require_once 'include/bugurl.php';
 
 // get_related_dates takes a projectname and basedate as input
 // and produces an array of related dates and times based on:
@@ -29,8 +29,8 @@ require_once "include/bugurl.php";
 //
 function get_related_dates($projectname, $basedate)
 {
-    include dirname(__DIR__) . "/config/config.php";
-    require_once "include/pdo.php";
+    include dirname(__DIR__) . '/config/config.php';
+    require_once 'include/pdo.php';
 
     $dates = array();
 
@@ -43,7 +43,7 @@ function get_related_dates($projectname, $basedate)
         $nightlytime = $project['nightlytime'];
         //echo "query result nightlytime: " . $nightlytime . "<br/>";
     } else {
-        $nightlytime = "00:00:00";
+        $nightlytime = '00:00:00';
         //echo "default nightlytime: " . $nightlytime . "<br/>";
     }
 
@@ -152,7 +152,7 @@ function sort_by_directory_file_time($e1, $e2)
 function get_updates_xml_from_commits($projectname, $projectid, $dates, $commits)
 {
     $xml = "<updates>\n";
-    $xml .= "<timestamp>" . date(FMT_DATETIMETZ, $dates['nightly-0']) . "</timestamp>";
+    $xml .= '<timestamp>' . date(FMT_DATETIMETZ, $dates['nightly-0']) . '</timestamp>';
 
     // Get revision numbers for the current day and "the last time it ran before that..."
     // Only works if the LIMIT 2 query below returns exactly 2 records and the date from
@@ -163,10 +163,10 @@ function get_updates_xml_from_commits($projectname, $projectid, $dates, $commits
     $revision_current = '';
     $revision_prior = '';
 
-    $qry = "SELECT date, revision FROM dailyupdate " .
+    $qry = 'SELECT date, revision FROM dailyupdate ' .
         "WHERE projectid='$projectid' " .
         "  AND date <= '" . gmdate(FMT_DATE, $dates['nightly-0']) . "' " .
-        "ORDER BY date DESC LIMIT 2";
+        'ORDER BY date DESC LIMIT 2';
     $rows = pdo_all_rows_query($qry);
     if (count($rows) == 2) {
         if ($rows[0]['date'] == gmdate(FMT_DATE, $dates['nightly-0'])) {
@@ -175,34 +175,34 @@ function get_updates_xml_from_commits($projectname, $projectid, $dates, $commits
         }
     }
 
-    $xml .= add_XML_value("revision", $revision_current);
-    $xml .= add_XML_value("priorrevision", $revision_prior);
-    $xml .= add_XML_value("revisionurl", get_revision_url($projectid, $revision_current, $revision_prior));
-    $xml .= add_XML_value("revisiondiff", get_revision_url($projectid, $revision_prior, '')); // no prior prior revision...
+    $xml .= add_XML_value('revision', $revision_current);
+    $xml .= add_XML_value('priorrevision', $revision_prior);
+    $xml .= add_XML_value('revisionurl', get_revision_url($projectid, $revision_current, $revision_prior));
+    $xml .= add_XML_value('revisiondiff', get_revision_url($projectid, $revision_prior, '')); // no prior prior revision...
 
     $xml .= "<javascript>\n";
 
     // Args to dbAdd : "true" means directory, "false" means file
     //
-    $xml .= "dbAdd(true, \"Updated files  (" . count($commits) . ")\", \"\", 0, \"\", \"1\", \"\", \"\", \"\", \"\", \"\")\n";
+    $xml .= 'dbAdd(true, "Updated files  (' . count($commits) . ")\", \"\", 0, \"\", \"1\", \"\", \"\", \"\", \"\", \"\")\n";
 
-    $previousdir = "";
+    $previousdir = '';
 
-    usort($commits, "sort_by_directory_file_time");
+    usort($commits, 'sort_by_directory_file_time');
 
-    $projecturl = get_project_property($projectname, "cvsurl");
+    $projecturl = get_project_property($projectname, 'cvsurl');
 
     foreach ($commits as $commit) {
         $directory = $commit['directory'];
 
         if ($directory != $previousdir) {
-            $xml .= "dbAdd(true, \"" . $directory . "\", \"\", 1, \"\", \"1\", \"\", \"\", \"\", \"\", \"\")\n";
+            $xml .= 'dbAdd(true, "' . $directory . "\", \"\", 1, \"\", \"1\", \"\", \"\", \"\", \"\", \"\")\n";
             $previousdir = $directory;
         }
 
         $filename = $commit['filename'];
         $revision = '';
-        if ($commit['priorrevision'] != "-1") {
+        if ($commit['priorrevision'] != '-1') {
             $revision = $commit['revision'];
         }
         $time = gmdate(FMT_DATETIME, strtotime($commit['time']));
@@ -221,10 +221,10 @@ function get_updates_xml_from_commits($projectname, $projectid, $dates, $commits
             if ($posat !== false) {
                 $author = substr($author, 0, $posat);
             }
-            $email = "";
+            $email = '';
         }
         $comment = $commit['comment'];
-        $comment = str_replace("\n", " ", $comment);
+        $comment = str_replace("\n", ' ', $comment);
         // Do this twice so that <something> ends up as
         // &amp;lt;something&amp;gt; because it gets sent to a
         // java script function not just displayed as html
@@ -234,22 +234,22 @@ function get_updates_xml_from_commits($projectname, $projectid, $dates, $commits
         $diff_url = get_diff_url(get_project_id($projectname), $projecturl, $directory, $filename, $revision);
         $diff_url = XMLStrFormat($diff_url);
 
-        $xml .= "dbAdd(false, \"" . $filename . "  Revision: " . $revision . "\",\"" . $diff_url . "\",2,\"\",\"1\",\"" . $author . "\",\"" . $email . "\",\"" . $comment . "\",\"" . $commit['bugurl'] . "\",\"" . $commit['bugid'] . "\",\"" . $commit['bugpos'] . "\")\n";
+        $xml .= 'dbAdd(false, "' . $filename . '  Revision: ' . $revision . '","' . $diff_url . '",2,"","1","' . $author . '","' . $email . '","' . $comment . '","' . $commit['bugurl'] . '","' . $commit['bugid'] . '","' . $commit['bugpos'] . "\")\n";
     }
 
     $xml .= "</javascript>\n";
-    $xml .= "</updates>";
+    $xml .= '</updates>';
     return $xml;
 }
 
 // Repository nightly queries are for the 24 hours leading up to the
 // nightly start time for "$projectname" on "$date"
-@$projectname = $_GET["project"];
+@$projectname = $_GET['project'];
 if ($projectname != null) {
     $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
 }
 
-@$date = $_GET["date"];
+@$date = $_GET['date'];
 if ($date != null) {
     $date = htmlspecialchars(pdo_real_escape_string($date));
 }
@@ -260,33 +260,33 @@ pdo_select_db("$CDASH_DB_NAME", $db);
 $project = pdo_query("SELECT id,nightlytime,bugtrackerurl,bugtrackerfileurl FROM project WHERE name='$projectname'");
 $project_array = pdo_fetch_array($project);
 
-$projectid = $project_array["id"];
+$projectid = $project_array['id'];
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid);
 
 $dates = get_related_dates($projectname, $date);
 
 $xml = begin_XML_for_XSLT();
-$xml .= "<title>CDash : " . $projectname . "</title>";
+$xml .= '<title>CDash : ' . $projectname . '</title>';
 
 $gmdate = gmdate(FMT_DATE, $dates['nightly-0']);
 
-$nightlytime = $project_array["nightlytime"];
+$nightlytime = $project_array['nightlytime'];
 $xml .= get_cdash_dashboard_xml_by_name($projectname, $date);
 list($previousdate, $currentstarttime, $nextdate, $today) = get_dates($date, $nightlytime);
-$xml .= "<menu>";
-$xml .= add_XML_value("previous", "viewChanges.php?project=" . urlencode($projectname) . "&date=" . $previousdate);
-if ($date != "" && date(FMT_DATE, $currentstarttime) != date(FMT_DATE)) {
-    $xml .= add_XML_value("next", "viewChanges.php?project=" . urlencode($projectname) . "&date=" . $nextdate);
+$xml .= '<menu>';
+$xml .= add_XML_value('previous', 'viewChanges.php?project=' . urlencode($projectname) . '&date=' . $previousdate);
+if ($date != '' && date(FMT_DATE, $currentstarttime) != date(FMT_DATE)) {
+    $xml .= add_XML_value('next', 'viewChanges.php?project=' . urlencode($projectname) . '&date=' . $nextdate);
 } else {
-    $xml .= add_XML_value("nonext", "1");
+    $xml .= add_XML_value('nonext', '1');
 }
-$xml .= add_XML_value("current", "viewChanges.php?project=" . urlencode($projectname) . "&date=");
+$xml .= add_XML_value('current', 'viewChanges.php?project=' . urlencode($projectname) . '&date=');
 
-$xml .= add_XML_value("back", "index.php?project=" . urlencode($projectname) . "&date=" . $today);
+$xml .= add_XML_value('back', 'index.php?project=' . urlencode($projectname) . '&date=' . $today);
 
-$xml .= add_XML_value("back", "index.php?project=" . urlencode($projectname) . "&date=" . get_dashboard_date_from_project($projectname, $date));
-$xml .= "</menu>";
+$xml .= add_XML_value('back', 'index.php?project=' . urlencode($projectname) . '&date=' . get_dashboard_date_from_project($projectname, $date));
+$xml .= '</menu>';
 
 $dailyupdate = pdo_query("SELECT df.filename,df.revision,df.priorrevision,df.author,df.email,df.log,df.checkindate
                             FROM dailyupdatefile AS df,dailyupdate AS du
@@ -303,9 +303,9 @@ while ($dailyupdate_array = pdo_fetch_array($dailyupdate)) {
         $current_directory = '/';
     }
 
-    $baseurl = $project_array["bugtrackerfileurl"];
+    $baseurl = $project_array['bugtrackerfileurl'];
     if (empty($baseurl)) {
-        $baseurl = $project_array["bugtrackerurl"];
+        $baseurl = $project_array['bugtrackerurl'];
     }
 
     $commit['directory'] = $current_directory;
@@ -316,9 +316,9 @@ while ($dailyupdate_array = pdo_fetch_array($dailyupdate)) {
     $commit['author'] = $dailyupdate_array['author'];
     $commit['email'] = $dailyupdate_array['email'];
     $commit['comment'] = $dailyupdate_array['log'];
-    $commit['bugurl'] = "";
-    $commit['bugid'] = "";
-    $commit['bugpos'] = "";
+    $commit['bugurl'] = '';
+    $commit['bugid'] = '';
+    $commit['bugpos'] = '';
 
     $log = $commit['comment'];
     $bug = get_bug_from_log($log, $baseurl);
@@ -328,11 +328,11 @@ while ($dailyupdate_array = pdo_fetch_array($dailyupdate)) {
         $commit['bugpos'] = $bug[2];
     }
 
-    $commits[$current_directory . "/" . $current_filename . ";" . $current_revision] = $commit;
+    $commits[$current_directory . '/' . $current_filename . ';' . $current_revision] = $commit;
 }
 
 $xml .= get_updates_xml_from_commits($projectname, $projectid, $dates, $commits);
 
-$xml .= "</cdash>";
+$xml .= '</cdash>';
 
-generate_XSLT($xml, "viewChanges");
+generate_XSLT($xml, 'viewChanges');

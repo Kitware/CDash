@@ -32,7 +32,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
 
     public function testSubmissionBatchmakeBuild()
     {
-        $rep = dirname(__FILE__) . "/data/BatchmakeNightlyExample";
+        $rep = dirname(__FILE__) . '/data/BatchmakeNightlyExample';
         $file = "$rep/BatchMake_Nightly_Build.xml";
         if (!$this->submission('BatchmakeExample', $file)) {
             return;
@@ -42,7 +42,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
 
     public function testSubmissionBatchmakeConfigure()
     {
-        $rep = dirname(__FILE__) . "/data/BatchmakeNightlyExample";
+        $rep = dirname(__FILE__) . '/data/BatchmakeNightlyExample';
         $file = "$rep/BatchMake_Nightly_Configure.xml";
         if (!$this->submission('BatchmakeExample', $file)) {
             return;
@@ -52,7 +52,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
 
     public function testSubmissionBatchmakeNotes()
     {
-        $rep = dirname(__FILE__) . "/data/BatchmakeNightlyExample";
+        $rep = dirname(__FILE__) . '/data/BatchmakeNightlyExample';
         $file = "$rep/BatchMake_Nightly_Notes.xml";
         if (!$this->submission('BatchmakeExample', $file)) {
             return;
@@ -62,7 +62,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
 
     public function testSubmissionBatchmakeTest()
     {
-        $rep = dirname(__FILE__) . "/data/BatchmakeNightlyExample";
+        $rep = dirname(__FILE__) . '/data/BatchmakeNightlyExample';
         $file = "$rep/BatchMake_Nightly_Test.xml";
         if (!$this->submission('BatchmakeExample', $file)) {
             return;
@@ -72,7 +72,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
 
     public function testSubmissionBatchmakeUpdate()
     {
-        $rep = dirname(__FILE__) . "/data/BatchmakeNightlyExample";
+        $rep = dirname(__FILE__) . '/data/BatchmakeNightlyExample';
         $file = "$rep/BatchMake_Nightly_Update.xml";
         if (!$this->submission('BatchmakeExample', $file)) {
             return;
@@ -83,7 +83,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
     public function testSubmissionInsightBuild()
     {
         $url = $this->url . '/submit.php?project=InsightExample';
-        $rep = dirname(__FILE__) . "/data/InsightExperimentalExample";
+        $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
         $file = "$rep/Insight_Experimental_Build.xml";
         if (!$this->submission('InsightExample', $file)) {
             return;
@@ -94,7 +94,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
     public function testSubmissionInsightConfigure()
     {
         $url = $this->url . '/submit.php?project=InsightExample';
-        $rep = dirname(__FILE__) . "/data/InsightExperimentalExample";
+        $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
         $file = "$rep/Insight_Experimental_Configure.xml";
         if (!$this->submission('InsightExample', $file)) {
             return;
@@ -105,7 +105,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
     public function testSubmissionInsightCoverage()
     {
         $url = $this->url . '/submit.php?project=InsightExample';
-        $rep = dirname(__FILE__) . "/data/InsightExperimentalExample";
+        $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
         $file = "$rep/Insight_Experimental_Coverage.xml";
         if (!$this->submission('InsightExample', $file)) {
             return;
@@ -116,7 +116,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
     public function testSubmissionInsightCoverageLog()
     {
         $url = $this->url . '/submit.php?project=InsightExample';
-        $rep = dirname(__FILE__) . "/data/InsightExperimentalExample";
+        $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
         $file = "$rep/Insight_Experimental_CoverageLog.xml";
         if (!$this->submission('InsightExample', $file)) {
             return;
@@ -129,7 +129,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
         $content = $this->connect($this->url . '/api/v1/index.php?project=InsightExample&date=20090223');
         $jsonobj = json_decode($content, true);
         if (count($jsonobj['coverages']) < 1) {
-            $this->fail("No coverage build found when expected");
+            $this->fail('No coverage build found when expected');
             return;
         }
         $buildid = $jsonobj['coverages'][0]['buildid'];
@@ -153,7 +153,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
     public function testSubmissionInsightDynamicAnalysis()
     {
         $url = $this->url . '/submit.php?project=InsightExample';
-        $rep = dirname(__FILE__) . "/data/InsightExperimentalExample";
+        $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
         $file = "$rep/Insight_Experimental_DynamicAnalysis.xml";
         if (!$this->submission('InsightExample', $file)) {
             return;
@@ -164,7 +164,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
     public function testSubmissionInsightNotes()
     {
         $url = $this->url . '/submit.php?project=InsightExample';
-        $rep = dirname(__FILE__) . "/data/InsightExperimentalExample";
+        $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
         $file = "$rep/Insight_Experimental_Notes.xml";
         if (!$this->submission('InsightExample', $file)) {
             return;
@@ -175,7 +175,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
     public function testSubmissionInsightTest()
     {
         $url = $this->url . '/submit.php?project=InsightExample';
-        $rep = dirname(__FILE__) . "/data/InsightExperimentalExample";
+        $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
         $file = "$rep/Insight_Experimental_Test.xml";
         if (!$this->submission('InsightExample', $file)) {
             return;
@@ -185,7 +185,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
 
     public function testSubmissionInDb()
     {
-        $query = "SELECT id, stamp, name, type, generator,command FROM build WHERE id=6";
+        $query = 'SELECT id, stamp, name, type, generator,command FROM build WHERE id=6';
         $result = $this->db->query($query);
         $expected = array('id' => '6',
             'stamp' => '20090223-0100-Nightly',
@@ -202,7 +202,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
         $content = $this->connect($this->url . '/api/v1/index.php?project=BatchmakeExample&date=20090223');
         $jsonobj = json_decode($content, true);
         if (count($jsonobj['buildgroups']) < 1) {
-            $this->fail("No build found when expected");
+            $this->fail('No build found when expected');
             return;
         }
         $buildgroup = array_pop($jsonobj['buildgroups']);
@@ -223,7 +223,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
         $content = $this->connect($this->url . '/api/v1/index.php?project=BatchmakeExample&date=20090223');
         $jsonobj = json_decode($content, true);
         if (count($jsonobj['buildgroups']) < 1) {
-            $this->fail("No build found when expected");
+            $this->fail('No build found when expected');
             return;
         }
 

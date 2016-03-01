@@ -65,7 +65,7 @@ class SimpleUrl
         }
         $this->path = $this->chompPath($url);
         $this->request = $this->parseRequest($this->chompRequest($url));
-        $this->fragment = (strncmp($url, "#", 1) == 0 ? substr($url, 1) : false);
+        $this->fragment = (strncmp($url, '#', 1) == 0 ? substr($url, 1) : false);
         $this->target = false;
     }
 
@@ -117,7 +117,7 @@ class SimpleUrl
         }
         if (preg_match('#^([^/]*)@(.*)#', $url, $matches)) {
             $url = $prefix . $matches[2];
-            $parts = explode(":", $matches[1]);
+            $parts = explode(':', $matches[1]);
             return array(
                 urldecode($parts[0]),
                 isset($parts[1]) ? urldecode($parts[1]) : false);
@@ -195,7 +195,7 @@ class SimpleUrl
     {
         $this->raw = $raw;
         $request = new SimpleGetEncoding();
-        foreach (explode("&", $raw) as $pair) {
+        foreach (explode('&', $raw) as $pair) {
             if (preg_match('/(.*?)=(.*)/', $pair, $matches)) {
                 $request->add(urldecode($matches[1]), urldecode($matches[2]));
             } elseif ($pair) {

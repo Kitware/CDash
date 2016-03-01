@@ -14,15 +14,15 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once dirname(dirname(dirname(__DIR__))) . "/config/config.php";
-require_once "include/pdo.php";
-require_once "include/common.php";
+require_once dirname(dirname(dirname(__DIR__))) . '/config/config.php';
+require_once 'include/pdo.php';
+require_once 'include/common.php';
 
 $response = array();
 
-$buildid = pdo_real_escape_numeric($_GET["buildid"]);
+$buildid = pdo_real_escape_numeric($_GET['buildid']);
 if (!isset($buildid) || !is_numeric($buildid)) {
-    $response['error'] = "Not a valid buildid!";
+    $response['error'] = 'Not a valid buildid!';
     echo json_encode($response);
     return;
 }
@@ -33,9 +33,9 @@ pdo_select_db("$CDASH_DB_NAME", $db);
 // Get details about this build.
 $build = pdo_query("SELECT name, type, siteid FROM build WHERE id='$buildid'");
 $build_array = pdo_fetch_array($build);
-$buildtype = $build_array["type"];
-$buildname = $build_array["name"];
-$siteid = $build_array["siteid"];
+$buildtype = $build_array['type'];
+$buildname = $build_array['name'];
+$siteid = $build_array['siteid'];
 
 // Lookup what group this build currently belongs to.
 $currentgroup = pdo_query(

@@ -23,7 +23,7 @@ class BuildGroupRuleTestCase extends KWWebTestCase
 
         $buildgrouprule->GroupId = 0;
         if ($buildgrouprule->Exists()) {
-            $this->fail("Exists() should return false when GroupId is 0");
+            $this->fail('Exists() should return false when GroupId is 0');
             return 1;
         }
 
@@ -49,7 +49,7 @@ class BuildGroupRuleTestCase extends KWWebTestCase
             return 1;
         }
 
-        $this->pass("Passed");
+        $this->pass('Passed');
 
         $this->stopCodeCoverage();
         return 0;

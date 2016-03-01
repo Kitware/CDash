@@ -110,12 +110,12 @@ class ExceptionExpectation extends SimpleExpectation
     public function testMessage($compare)
     {
         if (is_string($this->expected)) {
-            return "Exception [" . $this->describeException($compare) .
-            "] should be type [" . $this->expected . "]";
+            return 'Exception [' . $this->describeException($compare) .
+            '] should be type [' . $this->expected . ']';
         }
-        return "Exception [" . $this->describeException($compare) .
-        "] should match [" .
-        $this->describeException($this->expected) . "]";
+        return 'Exception [' . $this->describeException($compare) .
+        '] should match [' .
+        $this->describeException($this->expected) . ']';
     }
 
     /**
@@ -125,7 +125,7 @@ class ExceptionExpectation extends SimpleExpectation
      */
     protected function describeException($exception)
     {
-        return get_class($exception) . ": " . $exception->getMessage();
+        return get_class($exception) . ': ' . $exception->getMessage();
     }
 }
 

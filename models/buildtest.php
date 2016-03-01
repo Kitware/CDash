@@ -51,11 +51,11 @@ class buildtest
             $this->TimeStatus = 0;
         }
 
-        $query = "INSERT INTO build2test (buildid,testid,status,time,timemean,timestd,timestatus)
-                 VALUES (" . qnum($this->BuildId) . "," . qnum($this->TestId) . ",'$this->Status'," . qnum($this->Time) . ","
-            . qnum($this->TimeMean) . "," . qnum($this->TimeStd) . "," . qnum($this->TimeStatus) . ")";
+        $query = 'INSERT INTO build2test (buildid,testid,status,time,timemean,timestd,timestatus)
+                 VALUES (' . qnum($this->BuildId) . ',' . qnum($this->TestId) . ",'$this->Status'," . qnum($this->Time) . ','
+            . qnum($this->TimeMean) . ',' . qnum($this->TimeStd) . ',' . qnum($this->TimeStatus) . ')';
         if (!pdo_query($query)) {
-            add_last_sql_error("BuildTest:Insert", 0, $this->BuildId);
+            add_last_sql_error('BuildTest:Insert', 0, $this->BuildId);
             return false;
         }
         return true;
@@ -65,14 +65,14 @@ class buildtest
     public function GetNumberOfFailures($checktesttiming, $testtimemaxstatus)
     {
         if (!$this->BuildId) {
-            echo "BuildTest::GetNumberOfFailures(): BuildId not set";
+            echo 'BuildTest::GetNumberOfFailures(): BuildId not set';
             return false;
         }
 
-        $sql = "SELECT testfailed,testnotrun,testtimestatusfailed FROM build WHERE id=" . qnum($this->BuildId);
+        $sql = 'SELECT testfailed,testnotrun,testtimestatusfailed FROM build WHERE id=' . qnum($this->BuildId);
         $query = pdo_query($sql);
         if (!$query) {
-            add_last_sql_error("BuildTest:GetNumberOfFailures", 0, $this->BuildId);
+            add_last_sql_error('BuildTest:GetNumberOfFailures', 0, $this->BuildId);
             return false;
         }
 

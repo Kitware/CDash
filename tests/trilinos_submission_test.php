@@ -14,9 +14,9 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
 
     public function submitFiles($test, $trilinosOnly = false)
     {
-        $dir = str_replace("\\", '/', dirname(__FILE__) . "/data/$test");
+        $dir = str_replace('\\', '/', dirname(__FILE__) . "/data/$test");
 
-        $listfilename = $dir . "/orderedFileList.txt";
+        $listfilename = $dir . '/orderedFileList.txt';
 
         $filenames = explode("\n", file_get_contents($listfilename));
 
@@ -25,7 +25,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 continue;
             }
 
-            if ($trilinosOnly && strpos($filename, "TrilinosDriver") !== false) {
+            if ($trilinosOnly && strpos($filename, 'TrilinosDriver') !== false) {
                 continue;
             }
 
@@ -36,10 +36,10 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 return false;
             }
 
-            if (preg_match("/TrilinosDriver/", $filename)) {
-                $project = "TrilinosDriver";
-            } elseif (preg_match("/Trilinos/", $filename)) {
-                $project = "Trilinos";
+            if (preg_match('/TrilinosDriver/', $filename)) {
+                $project = 'TrilinosDriver';
+            } elseif (preg_match('/Trilinos/', $filename)) {
+                $project = 'Trilinos';
             } else {
                 $this->fail("file [$fullname] does not match project name Trilinos or TrilinosDriver");
                 return false;
@@ -51,13 +51,13 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
             }
         }
 
-        $this->assertTrue(true, "Submission of all files succeeded");
+        $this->assertTrue(true, 'Submission of all files succeeded');
         return true;
     }
 
     public function verifyResults()
     {
-        $this->get($this->url . "/api/v1/index.php?project=Trilinos&date=2011-07-22");
+        $this->get($this->url . '/api/v1/index.php?project=Trilinos&date=2011-07-22');
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $buildgroup = array_pop($jsonobj['buildgroups']);
@@ -79,12 +79,12 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
             }
         }
         if (is_null($parent_build)) {
-            $this->fail("Could not find expected parent build");
+            $this->fail('Could not find expected parent build');
             return false;
         }
 
         if ($parent_build['numchildren'] != 36) {
-            $this->fail("Expected 36 children, found " . $parent_build['numchildren']);
+            $this->fail('Expected 36 children, found ' . $parent_build['numchildren']);
             return false;
         }
         $parent_answers = array(
@@ -106,17 +106,17 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
             'testfail' => 11,
             'testpass' => 303,
             'testtime' => '48s');
-        $this->verifyBuild($parent_build, $parent_answers, "parent");
+        $this->verifyBuild($parent_build, $parent_answers, 'parent');
 
         // Verify details about the children.
-        $this->get($this->url . "/api/v1/index.php?project=Trilinos&parentid=" . $parent_build['id']);
+        $this->get($this->url . '/api/v1/index.php?project=Trilinos&parentid=' . $parent_build['id']);
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $buildgroup = array_pop($jsonobj['buildgroups']);
         $builds = $buildgroup['builds'];
 
         $subproject_answers = array(
-            "Amesos" => array(
+            'Amesos' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:29 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -126,7 +126,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'configuretime' => '7s',
                 'notes' => 2),
 
-            "AztecOO" => array(
+            'AztecOO' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:28 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -143,7 +143,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'testtime' => '0s',
                 'notes' => 2),
 
-            "Belos" => array(
+            'Belos' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:31 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -153,7 +153,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'configuretime' => '6s',
                 'notes' => 2),
 
-            "Claps" => array(
+            'Claps' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:27 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -170,7 +170,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'testtime' => '0s',
                 'notes' => 2),
 
-            "CTrilinos" => array(
+            'CTrilinos' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:34 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -180,7 +180,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'configuretime' => '6s',
                 'notes' => 2),
 
-            "Didasko" => array(
+            'Didasko' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:34 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -197,7 +197,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'testtime' => '0s',
                 'notes' => 2),
 
-            "Epetra" => array(
+            'Epetra' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:24 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -214,7 +214,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'testtime' => '0s',
                 'notes' => 2),
 
-            "EpetraExt" => array(
+            'EpetraExt' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:26 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -224,7 +224,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'configuretime' => '7s',
                 'notes' => 2),
 
-            "FEApp" => array(
+            'FEApp' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:37 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -234,7 +234,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'configuretime' => '7s',
                 'notes' => 2),
 
-            "FEI" => array(
+            'FEI' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:31 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -244,7 +244,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'configuretime' => '6s',
                 'notes' => 2),
 
-            "Galeri" => array(
+            'Galeri' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:28 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -254,7 +254,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'configuretime' => '7s',
                 'notes' => 2),
 
-            "GlobiPack" => array(
+            'GlobiPack' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:26 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -264,7 +264,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'configuretime' => '6s',
                 'notes' => 2),
 
-            "Ifpack" => array(
+            'Ifpack' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:29 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -274,7 +274,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'configuretime' => '7s',
                 'notes' => 2),
 
-            "Intrepid" => array(
+            'Intrepid' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:32 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -284,7 +284,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'configuretime' => '6s',
                 'notes' => 2),
 
-            "Kokkos" => array(
+            'Kokkos' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:24 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -294,7 +294,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'configuretime' => '7s',
                 'notes' => 2),
 
-            "Komplex" => array(
+            'Komplex' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:29 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -304,7 +304,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'configuretime' => '7s',
                 'notes' => 2),
 
-            "Mesquite" => array(
+            'Mesquite' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:35 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -317,7 +317,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'buildtime' => '2m 54s',
                 'notes' => 2),
 
-            "ML" => array(
+            'ML' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:29 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -334,7 +334,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'testtime' => '0s',
                 'notes' => 2),
 
-            "Moertel" => array(
+            'Moertel' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:32 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -344,7 +344,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'configuretime' => '7s',
                 'notes' => 2),
 
-            "NOX" => array(
+            'NOX' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:32 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -354,7 +354,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'configuretime' => '7s',
                 'notes' => 2),
 
-            "OptiPack" => array(
+            'OptiPack' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:27 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -364,7 +364,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'configuretime' => '7s',
                 'notes' => 2),
 
-            "Piro" => array(
+            'Piro' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:34 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -374,7 +374,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'configuretime' => '6s',
                 'notes' => 2),
 
-            "Pliris" => array(
+            'Pliris' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:27 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -391,7 +391,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'testtime' => '0s',
                 'notes' => 2),
 
-            "RBGen" => array(
+            'RBGen' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:31 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -401,7 +401,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'configuretime' => '6s',
                 'notes' => 2),
 
-            "RTOp" => array(
+            'RTOp' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:23 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -411,7 +411,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'configuretime' => '7s',
                 'notes' => 2),
 
-            "Rythmos" => array(
+            'Rythmos' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:33 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -421,7 +421,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'configuretime' => '6s',
                 'notes' => 2),
 
-            "Sacado" => array(
+            'Sacado' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:18 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -438,7 +438,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'testtime' => '4s',
                 'notes' => 2),
 
-            "Shards" => array(
+            'Shards' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:25 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -455,7 +455,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'testtime' => '0s',
                 'notes' => 2),
 
-            "Stokhos" => array(
+            'Stokhos' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:33 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -465,7 +465,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'configuretime' => '6s',
                 'notes' => 2),
 
-            "Stratimikos" => array(
+            'Stratimikos' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:31 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -475,7 +475,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'configuretime' => '7s',
                 'notes' => 2),
 
-            "Teuchos" => array(
+            'Teuchos' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:16 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -488,7 +488,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'buildtime' => '1m 48s',
                 'notes' => 2),
 
-            "ThreadPool" => array(
+            'ThreadPool' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:18 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -505,7 +505,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'testtime' => '0s',
                 'notes' => 2),
 
-            "Thyra" => array(
+            'Thyra' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:27 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -515,7 +515,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'configuretime' => '7s',
                 'notes' => 2),
 
-            "TrilinosCouplings" => array(
+            'TrilinosCouplings' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:32 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -532,7 +532,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'testtime' => '0s',
                 'notes' => 2),
 
-            "TrilinosFramework" => array(
+            'TrilinosFramework' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:15 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,
@@ -549,7 +549,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 'testtime' => '44s',
                 'notes' => 2),
 
-            "Triutils" => array(
+            'Triutils' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:26 EDT',
                 'updatefiles' => 15,
                 'updateerror' => 0,

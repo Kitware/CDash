@@ -15,13 +15,13 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once dirname(dirname(__DIR__)) . "/config/config.php";
-require_once "include/pdo.php";
-require_once "include/common.php";
+require_once dirname(dirname(__DIR__)) . '/config/config.php';
+require_once 'include/pdo.php';
+require_once 'include/common.php';
 
-$buildid = pdo_real_escape_numeric($_GET["buildid"]);
+$buildid = pdo_real_escape_numeric($_GET['buildid']);
 if (!isset($buildid) || !is_numeric($buildid)) {
-    echo "Not a valid buildid!";
+    echo 'Not a valid buildid!';
     return;
 }
 
@@ -32,11 +32,11 @@ pdo_select_db("$CDASH_DB_NAME", $db);
 $build = pdo_query("SELECT name,type,siteid,projectid,starttime FROM build WHERE id='$buildid'");
 $build_array = pdo_fetch_array($build);
 
-$buildtype = $build_array["type"];
-$buildname = $build_array["name"];
-$siteid = $build_array["siteid"];
-$starttime = $build_array["starttime"];
-$projectid = $build_array["projectid"];
+$buildtype = $build_array['type'];
+$buildname = $build_array['name'];
+$siteid = $build_array['siteid'];
+$starttime = $build_array['starttime'];
+$projectid = $build_array['projectid'];
 
 $project = pdo_query("SELECT name FROM project WHERE id='$projectid'");
 $project_array = pdo_fetch_array($project);
@@ -55,7 +55,7 @@ if ($buildfailing) {
 
     if (pdo_num_rows($cleanbuild) > 0) {
         $cleanbuild_array = pdo_fetch_array($cleanbuild);
-        $gmtdate = strtotime($cleanbuild_array["starttime"] . " UTC");
+        $gmtdate = strtotime($cleanbuild_array['starttime'] . ' UTC');
         $datefirstbuildfailing = date(FMT_DATETIMETZ, $gmtdate);
     } else {
         // Find the first build
@@ -63,7 +63,7 @@ if ($buildfailing) {
                             WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
                             AND projectid='$projectid' AND starttime<='$starttime' ORDER BY starttime ASC LIMIT 1");
         $firstbuild_array = pdo_fetch_array($firstbuild);
-        $gmtdate = strtotime($firstbuild_array["starttime"] . " UTC");
+        $gmtdate = strtotime($firstbuild_array['starttime'] . ' UTC');
         $datefirstbuildfailing = date(FMT_DATETIMETZ, $gmtdate);
     }
 
@@ -83,7 +83,7 @@ if ($testfailing) {
 
     if (pdo_num_rows($cleanbuild) > 0) {
         $cleanbuild_array = pdo_fetch_array($cleanbuild);
-        $gmtdate = strtotime($cleanbuild_array["starttime"] . " UTC");
+        $gmtdate = strtotime($cleanbuild_array['starttime'] . ' UTC');
         $datefirsttestfailing = date(FMT_DATETIMETZ, $gmtdate);
     } else {
         // Find the first build
@@ -91,7 +91,7 @@ if ($testfailing) {
                             WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
                             AND projectid='$projectid' AND starttime<='$starttime' ORDER BY starttime ASC LIMIT 1");
         $firstbuild_array = pdo_fetch_array($firstbuild);
-        $gmtdate = strtotime($firstbuild_array["starttime"] . " UTC");
+        $gmtdate = strtotime($firstbuild_array['starttime'] . ' UTC');
         $datefirsttestfailing = date(FMT_DATETIMETZ, $gmtdate);
     }
 
@@ -107,12 +107,12 @@ if ($testfailing) {
                         <?php
                         if ($buildfailingdays > 1) {
                             $date = date2year($datefirstbuildfailing) . date2month($datefirstbuildfailing) . date2day($datefirstbuildfailing);
-                            echo "<a href=\"index.php?project=" . urlencode($project_array["name"]) . "&date=" . $date . "\">" . $datefirstbuildfailing . "</a> (" . $buildfailingdays . " days)";
+                            echo '<a href="index.php?project=' . urlencode($project_array['name']) . '&date=' . $date . '">' . $datefirstbuildfailing . '</a> (' . $buildfailingdays . ' days)';
                         } elseif ($buildfailingdays == 1) {
                             $date = date2year($datefirstbuildfailing) . date2month($datefirstbuildfailing) . date2day($datefirstbuildfailing);
-                            echo "<a href=\"index.php?project=" . urlencode($project_array["name"]) . "&date=" . $date . "\">" . $datefirstbuildfailing . "</a> (" . $buildfailingdays . " day)";
+                            echo '<a href="index.php?project=' . urlencode($project_array['name']) . '&date=' . $date . '">' . $datefirstbuildfailing . '</a> (' . $buildfailingdays . ' day)';
                         } else {
-                            echo $datefirstbuildfailing . " (today)";
+                            echo $datefirstbuildfailing . ' (today)';
                         }
     ?>
                     </b></font></td>
@@ -128,11 +128,11 @@ if ($testfailing) {
                         <?php
                         if ($testfailingdays > 1) {
                             $date = date2year($datefirsttestfailing) . date2month($datefirsttestfailing) . date2day($datefirsttestfailing);
-                            echo "<a href=\"index.php?project=" . urlencode($project_array["name"]) . "&date=" . $date . "\">" . $datefirsttestfailing . "</a> (" . $testfailingdays . " days)";
+                            echo '<a href="index.php?project=' . urlencode($project_array['name']) . '&date=' . $date . '">' . $datefirsttestfailing . '</a> (' . $testfailingdays . ' days)';
                         } elseif ($testfailingdays == 1) {
-                            echo $datefirsttestfailing . " (" . $testfailingdays . " day)";
+                            echo $datefirsttestfailing . ' (' . $testfailingdays . ' day)';
                         } else {
-                            echo $datefirsttestfailing . " (today)";
+                            echo $datefirsttestfailing . ' (today)';
                         }
     ?>
                     </b></font></td>

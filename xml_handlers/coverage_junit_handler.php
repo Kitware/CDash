@@ -45,7 +45,7 @@ class CoverageJUnitHandler extends AbstractHandler
         if ($name == 'SITE') {
             $this->Site->Name = $attributes['NAME'];
             if (empty($this->Site->Name)) {
-                $this->Site->Name = "(empty)";
+                $this->Site->Name = '(empty)';
             }
             $this->Site->Insert();
 
@@ -63,7 +63,7 @@ class CoverageJUnitHandler extends AbstractHandler
             $this->Build->SiteId = $this->Site->Id;
             $this->Build->Name = $attributes['BUILDNAME'];
             if (empty($this->Build->Name)) {
-                $this->Build->Name = "(empty)";
+                $this->Build->Name = '(empty)';
             }
             $this->Build->SetStamp($attributes['BUILDSTAMP']);
             $this->Build->Generator = $attributes['GENERATOR'];

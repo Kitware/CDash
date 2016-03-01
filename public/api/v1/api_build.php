@@ -25,36 +25,36 @@ class BuildAPI extends CDashAPI
         global $CDASH_DB_TYPE;
 
         if (!isset($this->Parameters['project'])) {
-            echo "Project not set";
+            echo 'Project not set';
             return;
         }
 
         $projectid = get_project_id($this->Parameters['project']);
         if (!is_numeric($projectid) || $projectid <= 0) {
-            echo "Project not found";
+            echo 'Project not found';
             return;
         }
 
         $builds = array();
 
-        if ($CDASH_DB_TYPE == "pgsql") {
-            $query = pdo_query("SELECT EXTRACT(YEAR FROM starttime) AS y ,
+        if ($CDASH_DB_TYPE == 'pgsql') {
+            $query = pdo_query('SELECT EXTRACT(YEAR FROM starttime) AS y ,
                               EXTRACT(MONTH FROM starttime) AS m,
                               EXTRACT(DAY FROM starttime) AS d,
                   AVG(builderrors) AS builderrors,AVG(buildwarnings) AS buildwarnings,
                   AVG(testnotrun) AS testnotrun,AVG(testfailed) AS testfailed
-                  FROM build WHERE projectid=" . $projectid . "
+                  FROM build WHERE projectid=' . $projectid . '
                   AND starttime<NOW()
                   GROUP BY y,m,d
-                  ORDER BY y,m,d ASC LIMIT 1000"); // limit the request
+                  ORDER BY y,m,d ASC LIMIT 1000'); // limit the request
         } else {
-            $query = pdo_query("SELECT YEAR(starttime) AS y ,MONTH(starttime) AS m,DAY(starttime) AS d,
+            $query = pdo_query('SELECT YEAR(starttime) AS y ,MONTH(starttime) AS m,DAY(starttime) AS d,
                   AVG(builderrors) AS builderrors,AVG(buildwarnings) AS buildwarnings,
                   AVG(testnotrun) AS testnotrun,AVG(testfailed) AS testfailed
-                  FROM build WHERE projectid=" . $projectid . "
+                  FROM build WHERE projectid=' . $projectid . '
                   AND starttime<NOW()
                   GROUP BY YEAR(starttime),MONTH(starttime),DAY(starttime)
-                  ORDER BY YEAR(starttime),MONTH(starttime),DAY(starttime) ASC LIMIT 1000"); // limit the request
+                  ORDER BY YEAR(starttime),MONTH(starttime),DAY(starttime) ASC LIMIT 1000'); // limit the request
         }
 
         echo pdo_error();
@@ -90,15 +90,15 @@ class BuildAPI extends CDashAPI
     private function RevisionStatus()
     {
         include_once 'include/common.php';
-        include dirname(dirname(dirname(__DIR__))) . "/config/config.php";
+        include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 
         if (!isset($this->Parameters['project'])) {
-            echo "Project not set";
+            echo 'Project not set';
             return;
         }
 
         if (!isset($this->Parameters['revision'])) {
-            echo "revision not set";
+            echo 'revision not set';
             return;
         }
 
@@ -106,7 +106,7 @@ class BuildAPI extends CDashAPI
 
         $projectid = get_project_id($this->Parameters['project']);
         if (!is_numeric($projectid) || $projectid <= 0) {
-            echo "Project not found";
+            echo 'Project not found';
             return;
         }
 
@@ -180,24 +180,24 @@ class BuildAPI extends CDashAPI
     {
         include_once 'include/common.php';
         if (!isset($this->Parameters['project'])) {
-            echo "Project not set";
+            echo 'Project not set';
             return;
         }
 
         $projectid = get_project_id($this->Parameters['project']);
         if (!is_numeric($projectid) || $projectid <= 0) {
-            echo "Project not found";
+            echo 'Project not found';
             return;
         }
 
         $builds = array();
-        $query = pdo_query("SELECT nfiles, builderrors, buildwarnings, testnotrun, testfailed
-                FROM build,buildupdate,build2update WHERE build.projectid=" . $projectid . "
+        $query = pdo_query('SELECT nfiles, builderrors, buildwarnings, testnotrun, testfailed
+                FROM build,buildupdate,build2update WHERE build.projectid=' . $projectid . '
                 AND buildupdate.id=build2update.updateid
                 AND build2update.buildid=build.id
                 AND nfiles>0
                 AND build.starttime<NOW()
-                ORDER BY build.starttime DESC LIMIT 1000"); // limit the request
+                ORDER BY build.starttime DESC LIMIT 1000'); // limit the request
         echo pdo_error();
 
         while ($query_array = pdo_fetch_array($query)) {
@@ -228,17 +228,17 @@ class BuildAPI extends CDashAPI
      *  array2: array1_id, test_fullname */
     private function ListSiteTestFailure()
     {
-        include dirname(dirname(dirname(__DIR__))) . "/config/config.php";
+        include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
         include_once 'include/common.php';
 
         if (!isset($this->Parameters['project'])) {
-            echo "Project not set";
+            echo 'Project not set';
             return;
         }
 
         $projectid = get_project_id($this->Parameters['project']);
         if (!is_numeric($projectid) || $projectid <= 0) {
-            echo "Project not found";
+            echo 'Project not found';
             return;
         }
 
@@ -248,15 +248,15 @@ class BuildAPI extends CDashAPI
         }
 
         // Get first all the unique builds for today's dashboard and group
-        $query = pdo_query("SELECT nightlytime FROM project WHERE id=" . qnum($projectid));
+        $query = pdo_query('SELECT nightlytime FROM project WHERE id=' . qnum($projectid));
         $project_array = pdo_fetch_array($query);
 
-        $date = date("Y-m-d");
-        list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $project_array["nightlytime"]);
+        $date = date('Y-m-d');
+        list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $project_array['nightlytime']);
         $currentUTCTime = date(FMT_DATETIME, $currentstarttime);
 
         // Get all the unique builds for the section of the dashboard
-        if ($CDASH_DB_TYPE == "pgsql") {
+        if ($CDASH_DB_TYPE == 'pgsql') {
             $query = pdo_query("SELECT max(b.id) AS buildid,s.name || '-' || b.name AS fullname,s.name AS sitename,b.name,
                si.totalphysicalmemory,si.processorclockfrequency
                FROM build AS b, site AS s, siteinformation AS si, buildgroup AS bg, build2group AS b2g
@@ -277,7 +277,7 @@ class BuildAPI extends CDashAPI
         $buildids = '';
         while ($query_array = pdo_fetch_array($query)) {
             if ($buildids != '') {
-                $buildids .= ",";
+                $buildids .= ',';
             }
             $buildids .= $query_array['buildid'];
             $site = array();
@@ -292,9 +292,9 @@ class BuildAPI extends CDashAPI
             return $sites;
         }
 
-        $query = pdo_query("SELECT bt.buildid AS buildid,t.name AS testname,t.id AS testid
+        $query = pdo_query('SELECT bt.buildid AS buildid,t.name AS testname,t.id AS testid
               FROM build2test AS bt,test as t
-              WHERE bt.buildid IN (" . $buildids . ") AND bt.testid=t.id AND bt.status='failed'");
+              WHERE bt.buildid IN (' . $buildids . ") AND bt.testid=t.id AND bt.status='failed'");
 
         $tests = array();
 
@@ -310,13 +310,13 @@ class BuildAPI extends CDashAPI
     /** Schedule a build */
     private function ScheduleBuild()
     {
-        include dirname(dirname(dirname(__DIR__))) . "/config/config.php";
+        include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
         include_once 'include/common.php';
-        include_once "models/clientjobschedule.php";
-        include_once "models/clientos.php";
-        include_once "models/clientcmake.php";
-        include_once "models/clientcompiler.php";
-        include_once "models/clientlibrary.php";
+        include_once 'models/clientjobschedule.php';
+        include_once 'models/clientos.php';
+        include_once 'models/clientcmake.php';
+        include_once 'models/clientcompiler.php';
+        include_once 'models/clientlibrary.php';
 
         if (!isset($this->Parameters['token'])) {
             return array('status' => false, 'message' => 'You must specify a token parameter.');
@@ -383,8 +383,8 @@ class BuildAPI extends CDashAPI
             $clientJobSchedule->BuildConfiguration = pdo_real_escape_string($this->Parameters['configuration']);
         }
 
-        $clientJobSchedule->StartDate = date("Y-m-d H:i:s");
-        $clientJobSchedule->StartTime = date("Y-m-d H:i:s");
+        $clientJobSchedule->StartDate = date('Y-m-d H:i:s');
+        $clientJobSchedule->StartTime = date('Y-m-d H:i:s');
         $clientJobSchedule->EndDate = '1980-01-01 00:00:00';
         $clientJobSchedule->RepeatTime = 0; // No repeat
         $clientJobSchedule->Enable = 1;
@@ -479,30 +479,30 @@ class BuildAPI extends CDashAPI
     /** Return the status of a scheduled build */
     private function ScheduleStatus()
     {
-        include dirname(dirname(dirname(__DIR__))) . "/config/config.php";
+        include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
         include_once 'include/common.php';
-        include_once "models/clientjobschedule.php";
-        include_once "models/clientos.php";
-        include_once "models/clientcmake.php";
-        include_once "models/clientcompiler.php";
-        include_once "models/clientlibrary.php";
+        include_once 'models/clientjobschedule.php';
+        include_once 'models/clientos.php';
+        include_once 'models/clientcmake.php';
+        include_once 'models/clientcompiler.php';
+        include_once 'models/clientlibrary.php';
 
         $status = array();
         $status['scheduled'] = 0;
         if (!isset($this->Parameters['project'])) {
-            echo "Project name should be set";
+            echo 'Project name should be set';
             return;
         }
 
         $projectid = get_project_id($this->Parameters['project']);
         if (!is_numeric($projectid) || $projectid <= 0) {
-            echo "Project not found";
+            echo 'Project not found';
             return;
         }
 
         $scheduleid = $this->Parameters['scheduleid'];
         if (!is_numeric($scheduleid) || $scheduleid <= 0) {
-            echo "ScheduleId not set";
+            echo 'ScheduleId not set';
             return;
         }
 
@@ -513,22 +513,22 @@ class BuildAPI extends CDashAPI
         $status['status'] = $clientJobSchedule->GetStatus();
         switch ($status['status']) {
             case -1:
-                $status['statusstring'] = "not found";
+                $status['statusstring'] = 'not found';
                 break;
             case 0:
-                $status['statusstring'] = "scheduled";
+                $status['statusstring'] = 'scheduled';
                 break;
             case 2:
-                $status['statusstring'] = "running";
+                $status['statusstring'] = 'running';
                 break;
             case 3:
-                $status['statusstring'] = "finished";
+                $status['statusstring'] = 'finished';
                 break;
             case 4:
-                $status['statusstring'] = "aborted";
+                $status['statusstring'] = 'aborted';
                 break;
             case 5:
-                $status['statusstring'] = "failed";
+                $status['statusstring'] = 'failed';
                 break;
         }
 

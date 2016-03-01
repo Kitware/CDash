@@ -24,11 +24,11 @@ class ImportBuildsTestCase extends KWWebTestCase
         global $configure;
         $dir = $configure['svnroot'];
         chdir($dir);
-        $argv[0] = "importBuilds.php";
-        $xmlDirectory = dirname(__FILE__) . "/data/SubProjectExample";
+        $argv[0] = 'importBuilds.php';
+        $xmlDirectory = dirname(__FILE__) . '/data/SubProjectExample';
         $argv[1] = $xmlDirectory;
 
-        $checkFile = dirname(__FILE__) . "/data/SubProjectExample/lastcheck";
+        $checkFile = dirname(__FILE__) . '/data/SubProjectExample/lastcheck';
         if (file_exists($checkFile)) {
             cdash_testsuite_unlink($checkFile);
         }
@@ -38,7 +38,7 @@ class ImportBuildsTestCase extends KWWebTestCase
         include 'public/importBuilds.php';
         $output = ob_get_contents();
         ob_end_clean();
-        if (strpos($output, "Usage: php") === false) {
+        if (strpos($output, 'Usage: php') === false) {
             $this->fail("Expected output not found from importBuilds.php.\n$output\n");
             return 1;
         }
@@ -48,7 +48,7 @@ class ImportBuildsTestCase extends KWWebTestCase
         include 'public/importBuilds.php';
         $output = ob_get_contents();
         ob_end_clean();
-        if (strpos($output, "Import backup complete. 3 files processed.") === false) {
+        if (strpos($output, 'Import backup complete. 3 files processed.') === false) {
             $this->fail("Expected output not found from importBuilds.php.\n$output\n");
             return 1;
         }
@@ -57,12 +57,12 @@ class ImportBuildsTestCase extends KWWebTestCase
         include 'public/importBuilds.php';
         $output = ob_get_contents();
         ob_end_clean();
-        if (strpos($output, "Import backup complete. 0 files processed.") === false) {
+        if (strpos($output, 'Import backup complete. 0 files processed.') === false) {
             $this->fail("Expected output not found from importBuilds.php.\n$output\n");
             return 1;
         }
 
-        $this->pass("Passed");
+        $this->pass('Passed');
         cdash_testsuite_unlink($checkFile);
         $this->deleteLog($this->logfilename);
 

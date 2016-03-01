@@ -15,12 +15,12 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include dirname(dirname(dirname(__DIR__))) . "/config/config.php";
-require_once "include/pdo.php";
-include_once "include/common.php";
+include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
+require_once 'include/pdo.php';
+include_once 'include/common.php';
 include 'public/login.php';
 include 'include/version.php';
-include "models/project.php";
+include 'models/project.php';
 
 $start = microtime_float();
 $response = array();
@@ -42,45 +42,45 @@ $response['menutitle'] = 'CDash';
 $response['menusubtitle'] = 'Build Groups';
 $response['hidenav'] = 1;
 
-@$projectid = $_GET["projectid"];
+@$projectid = $_GET['projectid'];
 if ($projectid != null) {
     $projectid = pdo_real_escape_numeric($projectid);
 }
 
 // If the projectid is not set and there is only one project we go directly to the page
 if (!isset($projectid)) {
-    $project = pdo_query("SELECT id FROM project");
+    $project = pdo_query('SELECT id FROM project');
     if (pdo_num_rows($project) == 1) {
         $project_array = pdo_fetch_array($project);
-        $projectid = $project_array["id"];
+        $projectid = $project_array['id'];
     }
 }
 
-@$show = $_GET["show"];
+@$show = $_GET['show'];
 
 $role = 0;
 
 $user_array = pdo_fetch_array(pdo_query(
-    "SELECT admin FROM " . qid("user") . " WHERE id='$userid'"));
+    'SELECT admin FROM ' . qid('user') . " WHERE id='$userid'"));
 if ($projectid && is_numeric($projectid)) {
     $user2project = pdo_query(
         "SELECT role FROM user2project
      WHERE userid='$userid' AND projectid='$projectid'");
     if (pdo_num_rows($user2project) > 0) {
         $user2project_array = pdo_fetch_array($user2project);
-        $role = $user2project_array["role"];
+        $role = $user2project_array['role'];
     }
 }
 
-if ($user_array["admin"] != 1 && $role <= 1) {
+if ($user_array['admin'] != 1 && $role <= 1) {
     $response['error'] = "You don't have the permissions to access this page";
     echo json_encode($response);
     return;
 }
 
 // List the available projects that this user has admin rights to.
-$sql = "SELECT id,name FROM project";
-if ($user_array["admin"] != 1) {
+$sql = 'SELECT id,name FROM project';
+if ($user_array['admin'] != 1) {
     $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$userid' AND role>0)";
 }
 $projects = pdo_query($sql);
@@ -107,7 +107,7 @@ if ($projectid < 1) {
 $currentUTCTime = gmdate(FMT_DATETIME);
 $beginUTCTime = gmdate(FMT_DATETIME, time() - 3600 * 7 * 24); // 7 days
 
-$sql = "";
+$sql = '';
 if ($show > 0) {
     $sql = "AND g.id='$show'";
 }
@@ -120,8 +120,8 @@ $builds = pdo_query("
   WHERE b.starttime<'$currentUTCTime' AND b.starttime>'$beginUTCTime' AND
         b.projectid='$projectid' AND b2g.buildid=b.id AND
         gp.buildgroupid=g.id AND b2g.groupid=g.id AND
-        s.id = b.siteid " . $sql . "
-  ORDER BY b.name ASC");
+        s.id = b.siteid " . $sql . '
+  ORDER BY b.name ASC');
 
 $err = pdo_error();
 if (!empty($err)) {
@@ -140,8 +140,8 @@ while ($build_array = pdo_fetch_array($builds)) {
 
         $currentbuild = array();
         $currentbuild['id'] = $build_array['id'];
-        $currentbuild['name'] = $build_array['sitename'] . " " .
-            $build_array['name'] . " [" . $build_array['type'] . "] " .
+        $currentbuild['name'] = $build_array['sitename'] . ' ' .
+            $build_array['name'] . ' [' . $build_array['type'] . '] ' .
             $build_array['groupname'];
         $currentbuild['groupid'] = $build_array['groupid'];
         $currentbuilds[] = $currentbuild;
@@ -163,8 +163,8 @@ $builds = pdo_query(
    WHERE g.id = b2g.groupid AND b2g.buildid = b.id AND
          b2gr.expected = 1 AND b2gr.groupid = g.id AND
          g.endtime='1980-01-01 00:00:00' AND b.projectid='$projectid' AND
-         s.id = b.siteid " . $sql . "
-   ORDER BY b.name ASC");
+         s.id = b.siteid " . $sql . '
+   ORDER BY b.name ASC');
 $err = pdo_error();
 if (!empty($err)) {
     $response['error'] = $err;
@@ -178,9 +178,9 @@ while ($build_array = pdo_fetch_array($builds)) {
         $build_names[] = $build_name;
         $currentbuild = array();
         $currentbuild['id'] = $build_array['id'];
-        $currentbuild['name'] = $build_array['sitename'] . " " .
-            $build_array['name'] . " [" . $build_array['type'] . "] " .
-            $build_array['groupname'] . " (expected)";
+        $currentbuild['name'] = $build_array['sitename'] . ' ' .
+            $build_array['name'] . ' [' . $build_array['type'] . '] ' .
+            $build_array['groupname'] . ' (expected)';
         $currentbuilds[] = $currentbuild;
     }
     $site = array();
@@ -221,7 +221,7 @@ foreach ($buildgroups as $buildgroup) {
 
     $buildgroups_response[] = $buildgroup_response;
 
-    if ($buildgroup->GetType() != "Daily") {
+    if ($buildgroup->GetType() != 'Daily') {
         // Get the rules associated with this dynamic group.
         $dynamic_response = $buildgroup_response;
         $rules_result = pdo_query("
@@ -237,13 +237,13 @@ foreach ($buildgroups as $buildgroup) {
             $rule = array();
             $match = $rule_array['buildname'];
             if (!empty($match)) {
-                $match = trim($match, "%");
+                $match = trim($match, '%');
             }
             $rule['match'] = $match;
 
             $siteid = $rule_array['siteid'];
             if (empty($siteid)) {
-                $rule['sitename'] = "Any";
+                $rule['sitename'] = 'Any';
                 $rule['siteid'] = 0;
             } else {
                 foreach ($sites as $site) {
@@ -257,7 +257,7 @@ foreach ($buildgroups as $buildgroup) {
 
             $parentgroupid = $rule_array['parentgroupid'];
             if (empty($parentgroupid)) {
-                $rule['parentgroupname'] = "Any";
+                $rule['parentgroupname'] = 'Any';
                 $rule['parentgroupid'] = 0;
             } else {
                 foreach ($buildgroups as $buildgroup) {
@@ -307,7 +307,7 @@ while ($wildcard_array = pdo_fetch_array($wildcards)) {
     $wildcard_response['buildtype'] = $wildcard_array['buildtype'];
 
     $match = $wildcard_array['buildname'];
-    $match = str_replace("%", "", $match);
+    $match = str_replace('%', '', $match);
     $wildcard_response['match'] = $match;
 
     $wildcards_response[] = $wildcard_response;

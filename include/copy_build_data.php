@@ -16,8 +16,8 @@
 function copy_build_data($old_buildid, $new_buildid, $type)
 {
     switch ($type) {
-        case "GcovTar":
-        case "JavaJSONTar":
+        case 'GcovTar':
+        case 'JavaJSONTar':
             copy_coverage_data($old_buildid, $new_buildid);
     }
 }
@@ -28,7 +28,7 @@ function copy_build_data($old_buildid, $new_buildid, $type)
 function copy_coverage_data($old_buildid, $new_buildid)
 {
     $tables_to_copy = array(
-        "coverage", "coveragefilelog", "coveragesummary", "coveragesummarydiff");
+        'coverage', 'coveragefilelog', 'coveragesummary', 'coveragesummarydiff');
 
     foreach ($tables_to_copy as $table) {
         copy_build_table($old_buildid, $new_buildid, $table);
@@ -58,7 +58,7 @@ function copy_build_table($old_buildid, $new_buildid, $table)
             }
         }
         $insert_query = "INSERT INTO $table (buildid,";
-        $insert_query .= implode(",", $keys) . ")";
+        $insert_query .= implode(',', $keys) . ')';
         $insert_query .= " VALUES ('$new_buildid','";
         $insert_query .= implode("','", $values) . "')";
         pdo_query($insert_query);

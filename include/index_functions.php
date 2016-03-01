@@ -40,7 +40,7 @@ function get_dynamic_builds($projectid)
         if ($rule['type'] == 'Latest') {
             // optional fields: parentgroupid, site, and build name match.
             // Use these to construct a WHERE clause for our query.
-            $where = "";
+            $where = '';
             $whereClauses = array();
             if (!empty($rule['parentgroupid'])) {
                 $whereClauses[] = "b2g.groupid='" . $rule['parentgroupid'] . "'";
@@ -52,11 +52,11 @@ function get_dynamic_builds($projectid)
                 $whereClauses[] = "b.name LIKE '" . $rule['buildname'] . "'";
             }
             if (!empty($whereClauses)) {
-                $where = "WHERE " . implode($whereClauses, " AND ");
+                $where = 'WHERE ' . implode($whereClauses, ' AND ');
             }
 
             // We only want the most recent build.
-            $order = "ORDER BY b.submittime DESC LIMIT 1";
+            $order = 'ORDER BY b.submittime DESC LIMIT 1';
 
             // Copied from index.php.
             $sql = "SELECT b.id,b.siteid,b.parentid,b.done,

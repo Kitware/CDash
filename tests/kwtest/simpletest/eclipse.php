@@ -27,9 +27,9 @@ class EclipseReporter extends SimpleScorer
     {
         $this->listener = &$listener;
         $this->SimpleScorer();
-        $this->case = "";
-        $this->group = "";
-        $this->method = "";
+        $this->case = '';
+        $this->group = '';
+        $this->method = '';
         $this->cc = $cc;
         $this->error = false;
         $this->fail = false;
@@ -50,7 +50,7 @@ class EclipseReporter extends SimpleScorer
      * @param string $host Normally localhost.
      * @return SimpleSocket      Connection to Eclipse.
      */
-    public function &createListener($port, $host = "127.0.0.1")
+    public function &createListener($port, $host = '127.0.0.1')
     {
         $tmplistener = new SimpleSocket($host, $port, 5);
         return $tmplistener;
@@ -74,7 +74,7 @@ class EclipseReporter extends SimpleScorer
      */
     public function escapeVal($raw)
     {
-        $needle = array("\\", "\"", "/", "\b", "\f", "\n", "\r", "\t");
+        $needle = array('\\', '"', '/', "\b", "\f", "\n", "\r", "\t");
         $replace = array('\\\\', '\"', '\/', '\b', '\f', '\n', '\r', '\t');
         return str_replace($needle, $replace, $raw);
     }
@@ -202,7 +202,7 @@ class EclipseReporter extends SimpleScorer
      */
     public function paintCaseEnd($case)
     {
-        $this->case = "";
+        $this->case = '';
     }
 
     /**
@@ -227,8 +227,8 @@ class EclipseReporter extends SimpleScorer
      */
     public function paintGroupEnd($group)
     {
-        $this->group = "";
-        $cc = "";
+        $this->group = '';
+        $cc = '';
         if ($this->cc) {
             if (extension_loaded('xdebug')) {
                 $arrfiles = xdebug_get_code_coverage();
@@ -253,7 +253,7 @@ class EclipseReporter extends SimpleScorer
                     if ($lcnt > 0) {
                         $cc .= round(($ccnt / $lcnt) * 100, 2) . '%';
                     } else {
-                        $cc .= "0.00%";
+                        $cc .= '0.00%';
                     }
                     $cc .= "\t" . $index . "\n";
                 }
@@ -296,7 +296,7 @@ class EclipseInvoker extends SimpleInvokerDecorator
         $this->invoker->after($method);
         $output = ob_get_contents();
         ob_end_clean();
-        if ($output !== "") {
+        if ($output !== '') {
             $result = $this->listener->write('{status:"info",message:"' .
                 EclipseReporter::escapeVal($output) . '"}');
         }

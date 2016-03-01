@@ -19,7 +19,7 @@ include_once 'models/dailyupdatefile.php';
 include_once 'models/buildgroup.php';
 include_once 'models/buildgrouprule.php';
 include_once 'models/buildgroupposition.php';
-require_once "include/cdashmail.php";
+require_once 'include/cdashmail.php';
 
 /** Main project class */
 class project
@@ -126,7 +126,7 @@ class project
         // Remove the project groups and rules
         $buildgroup = pdo_query("SELECT * FROM buildgroup WHERE projectid=$this->Id");
         while ($buildgroup_array = pdo_fetch_array($buildgroup)) {
-            $groupid = $buildgroup_array["id"];
+            $groupid = $buildgroup_array['id'];
             pdo_query("DELETE FROM buildgroupposition WHERE buildgroupid=$groupid");
             pdo_query("DELETE FROM build2grouprule WHERE groupid=$groupid");
             pdo_query("DELETE FROM build2group WHERE groupid=$groupid");
@@ -151,16 +151,16 @@ class project
 
         // Delete any repositories that aren't shared with other projects.
         $repositories_query = pdo_query(
-            "SELECT repositoryid FROM project2repositories
-       WHERE projectid=" . qnum($this->Id) . "
-       ORDER BY repositoryid");
-        add_last_sql_error("Project DeleteRepositories1", $this->Id);
+            'SELECT repositoryid FROM project2repositories
+       WHERE projectid=' . qnum($this->Id) . '
+       ORDER BY repositoryid');
+        add_last_sql_error('Project DeleteRepositories1', $this->Id);
         while ($repository_array = pdo_fetch_array($repositories_query)) {
             $repoid = $repository_array['repositoryid'];
             $projects_query = pdo_query(
-                "SELECT projectid FROM project2repositories
-         WHERE repositoryid=" . qnum($repoid));
-            add_last_sql_error("Project DeleteRepositories1", $this->Id);
+                'SELECT projectid FROM project2repositories
+         WHERE repositoryid=' . qnum($repoid));
+            add_last_sql_error('Project DeleteRepositories1', $this->Id);
             if (pdo_num_rows($projects_query) > 1) {
                 continue;
             }
@@ -211,58 +211,58 @@ class project
             $this->Name = trim($this->Name);
             $this->Initialize();
             // Update the project
-            $query = "UPDATE project SET ";
+            $query = 'UPDATE project SET ';
             $query .= "description='" . $Description . "'";
             $query .= ",homeurl='" . $HomeUrl . "'";
             $query .= ",cvsurl='" . $CvsUrl . "'";
             $query .= ",documentationurl='" . $DocumentationUrl . "'";
             $query .= ",bugtrackerurl='" . $BugTrackerUrl . "'";
             $query .= ",bugtrackerfileurl='" . $BugTrackerFileUrl . "'";
-            $query .= ",public=" . qnum($this->Public);
-            $query .= ",coveragethreshold=" . qnum($this->CoverageThreshold);
+            $query .= ',public=' . qnum($this->Public);
+            $query .= ',coveragethreshold=' . qnum($this->CoverageThreshold);
             $query .= ",testingdataurl='" . $TestingDataUrl . "'";
             $query .= ",nightlytime='" . $NightlyTime . "'";
             $query .= ",googletracker='" . $GoogleTracker . "'";
-            $query .= ",emaillowcoverage=" . qnum($this->EmailLowCoverage);
-            $query .= ",emailtesttimingchanged=" . qnum($this->EmailTestTimingChanged);
-            $query .= ",emailbrokensubmission=" . qnum($this->EmailBrokenSubmission);
-            $query .= ",emailredundantfailures=" . qnum($this->EmailRedundantFailures);
-            $query .= ",emailadministrator=" . qnum($this->EmailAdministrator);
-            $query .= ",showipaddresses=" . qnum($this->ShowIPAddresses);
-            $query .= ",displaylabels=" . qnum($this->DisplayLabels);
-            $query .= ",showcoveragecode=" . qnum($this->ShowCoverageCode);
-            $query .= ",autoremovetimeframe=" . qnum($this->AutoremoveTimeframe);
-            $query .= ",autoremovemaxbuilds=" . qnum($this->AutoremoveMaxBuilds);
-            $query .= ",uploadquota=" . qnum($this->UploadQuota);
+            $query .= ',emaillowcoverage=' . qnum($this->EmailLowCoverage);
+            $query .= ',emailtesttimingchanged=' . qnum($this->EmailTestTimingChanged);
+            $query .= ',emailbrokensubmission=' . qnum($this->EmailBrokenSubmission);
+            $query .= ',emailredundantfailures=' . qnum($this->EmailRedundantFailures);
+            $query .= ',emailadministrator=' . qnum($this->EmailAdministrator);
+            $query .= ',showipaddresses=' . qnum($this->ShowIPAddresses);
+            $query .= ',displaylabels=' . qnum($this->DisplayLabels);
+            $query .= ',showcoveragecode=' . qnum($this->ShowCoverageCode);
+            $query .= ',autoremovetimeframe=' . qnum($this->AutoremoveTimeframe);
+            $query .= ',autoremovemaxbuilds=' . qnum($this->AutoremoveMaxBuilds);
+            $query .= ',uploadquota=' . qnum($this->UploadQuota);
             $query .= ",cvsviewertype='" . $CvsViewerType . "'";
-            $query .= ",testtimestd=" . qnum($this->TestTimeStd);
-            $query .= ",testtimestdthreshold=" . qnum($this->TestTimeStdThreshold);
-            $query .= ",showtesttime=" . qnum($this->ShowTestTime);
-            $query .= ",testtimemaxstatus=" . qnum($this->TestTimeMaxStatus);
-            $query .= ",emailmaxitems=" . qnum($this->EmailMaxItems);
-            $query .= ",emailmaxchars=" . qnum($this->EmailMaxChars);
-            $query .= " WHERE id=" . qnum($this->Id) . "";
+            $query .= ',testtimestd=' . qnum($this->TestTimeStd);
+            $query .= ',testtimestdthreshold=' . qnum($this->TestTimeStdThreshold);
+            $query .= ',showtesttime=' . qnum($this->ShowTestTime);
+            $query .= ',testtimemaxstatus=' . qnum($this->TestTimeMaxStatus);
+            $query .= ',emailmaxitems=' . qnum($this->EmailMaxItems);
+            $query .= ',emailmaxchars=' . qnum($this->EmailMaxChars);
+            $query .= ' WHERE id=' . qnum($this->Id) . '';
 
             if (!pdo_query($query)) {
-                add_last_sql_error("Project Update", $this->Id);
+                add_last_sql_error('Project Update', $this->Id);
                 return false;
             }
 
             if ($this->RobotName != '') {
                 // Check if it exists
-                $robot = pdo_query("SELECT projectid FROM projectrobot WHERE projectid=" . qnum($this->Id));
+                $robot = pdo_query('SELECT projectid FROM projectrobot WHERE projectid=' . qnum($this->Id));
                 if (pdo_num_rows($robot) > 0) {
                     $query = "UPDATE projectrobot SET robotname='" . $RobotName . "',authorregex='" . $RobotRegex .
                         "' WHERE projectid=" . qnum($this->Id);
                     if (!pdo_query($query)) {
-                        add_last_sql_error("Project Update", $this->Id);
+                        add_last_sql_error('Project Update', $this->Id);
                         return false;
                     }
                 } else {
-                    $query = "INSERT INTO projectrobot(projectid,robotname,authorregex)
-                   VALUES (" . qnum($this->Id) . ",'" . $RobotName . "','" . $RobotRegex . "')";
+                    $query = 'INSERT INTO projectrobot(projectid,robotname,authorregex)
+                   VALUES (' . qnum($this->Id) . ",'" . $RobotName . "','" . $RobotRegex . "')";
                     if (!pdo_query($query)) {
-                        add_last_sql_error("Project Update", $this->Id);
+                        add_last_sql_error('Project Update', $this->Id);
                         return false;
                     }
                 }
@@ -273,15 +273,15 @@ class project
                 $CTestTemplateScript = pdo_real_escape_string($this->CTestTemplateScript);
 
                 // Check if it exists
-                $script = pdo_query("SELECT projectid FROM projectjobscript WHERE projectid=" . qnum($this->Id));
+                $script = pdo_query('SELECT projectid FROM projectjobscript WHERE projectid=' . qnum($this->Id));
                 if (pdo_num_rows($script) > 0) {
                     $query = "UPDATE projectjobscript SET script='" . $CTestTemplateScript . "' WHERE projectid=" . qnum($this->Id);
                     if (!pdo_query($query)) {
                         return false;
                     }
                 } else {
-                    $query = "INSERT INTO projectjobscript(projectid,script)
-                   VALUES (" . qnum($this->Id) . ",'" . $CTestTemplateScript . "')";
+                    $query = 'INSERT INTO projectjobscript(projectid,script)
+                   VALUES (' . qnum($this->Id) . ",'" . $CTestTemplateScript . "')";
                     if (!pdo_query($query)) {
                         return false;
                     }
@@ -292,10 +292,10 @@ class project
         } else {
             // insert the project
 
-            $id = "";
-            $idvalue = "";
+            $id = '';
+            $idvalue = '';
             if ($this->Id) {
-                $id = "id,";
+                $id = 'id,';
                 $idvalue = "'" . $this->Id . "',";
             }
 
@@ -306,31 +306,31 @@ class project
             // Trim the name
             $this->Name = trim($this->Name);
             $this->Initialize();
-            $query = "INSERT INTO project(" . $id . "name,description,homeurl,cvsurl,bugtrackerurl,bugtrackerfileurl,documentationurl,public,imageid,coveragethreshold,testingdataurl,
+            $query = 'INSERT INTO project(' . $id . 'name,description,homeurl,cvsurl,bugtrackerurl,bugtrackerfileurl,documentationurl,public,imageid,coveragethreshold,testingdataurl,
                                     nightlytime,googletracker,emailbrokensubmission,emailredundantfailures,
                                     emaillowcoverage,emailtesttimingchanged,cvsviewertype,
                                     testtimestd,testtimestdthreshold,testtimemaxstatus,emailmaxitems,emailmaxchars,showtesttime,emailadministrator,showipaddresses
                                     ,displaylabels,showcoveragecode,autoremovetimeframe,autoremovemaxbuilds,uploadquota,webapikey)
-                 VALUES (" . $idvalue . "'$Name','$Description','$HomeUrl','$CvsUrl','$BugTrackerUrl','$BugTrackerFileUrl','$DocumentationUrl',
-                 " . qnum($this->Public) . "," . qnum($this->ImageId) . "," . qnum($this->CoverageThreshold) . ",'$TestingDataUrl','$NightlyTime',
-                 '$GoogleTracker'," . qnum($this->EmailBrokenSubmission) . "," . qnum($this->EmailRedundantFailures) . ","
-                . qnum($this->EmailLowCoverage) . "," . qnum($this->EmailTestTimingChanged) . ",'$CvsViewerType'," . qnum($this->TestTimeStd)
-                . "," . qnum($this->TestTimeStdThreshold) . "," . qnum($this->TestTimeMaxStatus) . "," . qnum($this->EmailMaxItems) . "," . qnum($this->EmailMaxChars) . ","
-                . qnum($this->ShowTestTime) . "," . qnum($this->EmailAdministrator) . "," . qnum($this->ShowIPAddresses) . "," . qnum($this->DisplayLabels) . "," . qnum($this->ShowCoverageCode)
-                . "," . qnum($this->AutoremoveTimeframe) . "," . qnum($this->AutoremoveMaxBuilds) . "," . qnum($this->UploadQuota) . ",'" . $this->WebApiKey . "')";
+                 VALUES (' . $idvalue . "'$Name','$Description','$HomeUrl','$CvsUrl','$BugTrackerUrl','$BugTrackerFileUrl','$DocumentationUrl',
+                 " . qnum($this->Public) . ',' . qnum($this->ImageId) . ',' . qnum($this->CoverageThreshold) . ",'$TestingDataUrl','$NightlyTime',
+                 '$GoogleTracker'," . qnum($this->EmailBrokenSubmission) . ',' . qnum($this->EmailRedundantFailures) . ','
+                . qnum($this->EmailLowCoverage) . ',' . qnum($this->EmailTestTimingChanged) . ",'$CvsViewerType'," . qnum($this->TestTimeStd)
+                . ',' . qnum($this->TestTimeStdThreshold) . ',' . qnum($this->TestTimeMaxStatus) . ',' . qnum($this->EmailMaxItems) . ',' . qnum($this->EmailMaxChars) . ','
+                . qnum($this->ShowTestTime) . ',' . qnum($this->EmailAdministrator) . ',' . qnum($this->ShowIPAddresses) . ',' . qnum($this->DisplayLabels) . ',' . qnum($this->ShowCoverageCode)
+                . ',' . qnum($this->AutoremoveTimeframe) . ',' . qnum($this->AutoremoveMaxBuilds) . ',' . qnum($this->UploadQuota) . ",'" . $this->WebApiKey . "')";
 
             if (!pdo_query($query)) {
-                add_last_sql_error("Project Create");
+                add_last_sql_error('Project Create');
                 return false;
             }
 
             if (!$this->Id) {
-                $this->Id = pdo_insert_id("project");
+                $this->Id = pdo_insert_id('project');
             }
 
             if ($this->RobotName != '') {
-                $query = "INSERT INTO projectrobot(projectid,robotname,authorregex)
-                 VALUES (" . qnum($this->Id) . ",'" . $RobotName . "','" . $RobotRegex . "')";
+                $query = 'INSERT INTO projectrobot(projectid,robotname,authorregex)
+                 VALUES (' . qnum($this->Id) . ",'" . $RobotName . "','" . $RobotRegex . "')";
                 if (!pdo_query($query)) {
                     return false;
                 }
@@ -339,8 +339,8 @@ class project
             if ($this->CTestTemplateScript != '') {
                 $CTestTemplateScript = pdo_real_escape_string($this->CTestTemplateScript);
 
-                $query = "INSERT INTO projectjobscript(projectid,script)
-                 VALUES (" . qnum($this->Id) . ",'" . $$CTestTemplateScript . "')";
+                $query = 'INSERT INTO projectjobscript(projectid,script)
+                 VALUES (' . qnum($this->Id) . ",'" . $$CTestTemplateScript . "')";
                 if (!pdo_query($query)) {
                     return false;
                 }
@@ -361,7 +361,7 @@ class project
         $user2project = pdo_query("SELECT role FROM user2project WHERE userid='$userid' AND projectid='" . $this->Id . "'");
         if (pdo_num_rows($user2project) > 0) {
             $user2project_array = pdo_fetch_array($user2project);
-            $role = $user2project_array["role"];
+            $role = $user2project_array['role'];
         }
         return $role;
     }
@@ -379,15 +379,15 @@ class project
     /** Get the logo id */
     public function GetLogoId()
     {
-        $query = pdo_query("SELECT imageid FROM project WHERE id=" . $this->Id);
+        $query = pdo_query('SELECT imageid FROM project WHERE id=' . $this->Id);
 
         if (!$query) {
-            add_last_sql_error("Project GetLogoId", $this->Id);
+            add_last_sql_error('Project GetLogoId', $this->Id);
             return 0;
         }
 
         if ($query_array = pdo_fetch_array($query)) {
-            return $query_array["imageid"];
+            return $query_array['imageid'];
         }
         return 0;
     }
@@ -396,12 +396,12 @@ class project
     public function Fill()
     {
         if (!$this->Id) {
-            echo "Project Fill(): Id not set";
+            echo 'Project Fill(): Id not set';
         }
 
-        $project = pdo_query("SELECT * FROM project WHERE id=" . $this->Id);
+        $project = pdo_query('SELECT * FROM project WHERE id=' . $this->Id);
         if (!$project) {
-            add_last_sql_error("Project Fill", $this->Id);
+            add_last_sql_error('Project Fill', $this->Id);
             return;
         }
 
@@ -448,9 +448,9 @@ class project
         }
 
         // Check if we have a robot
-        $robot = pdo_query("SELECT * FROM projectrobot WHERE projectid=" . $this->Id);
+        $robot = pdo_query('SELECT * FROM projectrobot WHERE projectid=' . $this->Id);
         if (!$robot) {
-            add_last_sql_error("Project Fill", $this->Id);
+            add_last_sql_error('Project Fill', $this->Id);
             return;
         }
 
@@ -460,9 +460,9 @@ class project
         }
 
         // Check if we have a ctest script
-        $script = pdo_query("SELECT script FROM projectjobscript WHERE projectid=" . $this->Id);
+        $script = pdo_query('SELECT script FROM projectjobscript WHERE projectid=' . $this->Id);
         if (!$script) {
-            add_last_sql_error("Project Fill", $this->Id);
+            add_last_sql_error('Project Fill', $this->Id);
             return;
         }
         if ($script_array = pdo_fetch_array($script)) {
@@ -484,32 +484,32 @@ class project
         $sql = "SELECT id FROM image WHERE checksum = '$checksum'";
         $result = pdo_query("$sql");
         if ($row = pdo_fetch_array($result)) {
-            $imgid = $row["id"];
+            $imgid = $row['id'];
             // Insert into the project
-            pdo_query("UPDATE project SET imageid=" . qnum($imgid) . " WHERE id=" . $this->Id);
-            add_last_sql_error("Project AddLogo", $this->Id);
+            pdo_query('UPDATE project SET imageid=' . qnum($imgid) . ' WHERE id=' . $this->Id);
+            add_last_sql_error('Project AddLogo', $this->Id);
         } elseif ($imgid == 0) {
-            include "config/config.php";
-            if ($CDASH_DB_TYPE == "pgsql") {
+            include 'config/config.php';
+            if ($CDASH_DB_TYPE == 'pgsql') {
                 $contents = pg_escape_bytea($contents);
             }
             $sql = "INSERT INTO image(img, extension, checksum) VALUES ('$contents', '$filetype', '$checksum')";
             if (pdo_query("$sql")) {
-                $imgid = pdo_insert_id("image");
+                $imgid = pdo_insert_id('image');
 
                 // Insert into the project
-                pdo_query("UPDATE project SET imageid=" . qnum($imgid) . " WHERE id=" . qnum($this->Id));
-                add_last_sql_error("Project AddLogo", $this->Id);
+                pdo_query('UPDATE project SET imageid=' . qnum($imgid) . ' WHERE id=' . qnum($this->Id));
+                add_last_sql_error('Project AddLogo', $this->Id);
             }
         } else {
             // update the current image
 
-            include "config/config.php";
-            if ($CDASH_DB_TYPE == "pgsql") {
+            include 'config/config.php';
+            if ($CDASH_DB_TYPE == 'pgsql') {
                 $contents = pg_escape_bytea($contents);
             }
             pdo_query("UPDATE image SET img='$contents',extension='$filetype',checksum='$checksum' WHERE id=" . qnum($imgid));
-            add_last_sql_error("Project AddLogo", $this->Id);
+            add_last_sql_error('Project AddLogo', $this->Id);
         }
         return $imgid;
     }
@@ -519,22 +519,22 @@ class project
     {
         // First we update/delete any registered repositories
         $currentRepository = 0;
-        $repositories_query = pdo_query("SELECT repositoryid FROM project2repositories WHERE projectid=" . qnum($this->Id) . " ORDER BY repositoryid");
-        add_last_sql_error("Project AddRepositories", $this->Id);
+        $repositories_query = pdo_query('SELECT repositoryid FROM project2repositories WHERE projectid=' . qnum($this->Id) . ' ORDER BY repositoryid');
+        add_last_sql_error('Project AddRepositories', $this->Id);
         while ($repository_array = pdo_fetch_array($repositories_query)) {
-            $repositoryid = $repository_array["repositoryid"];
+            $repositoryid = $repository_array['repositoryid'];
             if (!isset($repositories[$currentRepository]) || strlen($repositories[$currentRepository]) == 0) {
-                $query = pdo_query("SELECT * FROM project2repositories WHERE repositoryid=" . qnum($repositoryid));
-                add_last_sql_error("Project AddRepositories", $this->Id);
+                $query = pdo_query('SELECT * FROM project2repositories WHERE repositoryid=' . qnum($repositoryid));
+                add_last_sql_error('Project AddRepositories', $this->Id);
                 if (pdo_num_rows($query) == 1) {
                     pdo_query("DELETE FROM repositories WHERE id='$repositoryid'");
-                    add_last_sql_error("Project AddRepositories", $this->Id);
+                    add_last_sql_error('Project AddRepositories', $this->Id);
                 }
-                pdo_query("DELETE FROM project2repositories WHERE projectid=" . qnum($this->Id) . " AND repositoryid=" . qnum($repositoryid));
-                add_last_sql_error("Project AddRepositories", $this->Id);
+                pdo_query('DELETE FROM project2repositories WHERE projectid=' . qnum($this->Id) . ' AND repositoryid=' . qnum($repositoryid));
+                add_last_sql_error('Project AddRepositories', $this->Id);
             } else {
                 // If the repository is not shared by any other project we update
-                $count_query = pdo_query("SELECT count(*) as c FROM project2repositories WHERE repositoryid=" . qnum($repositoryid));
+                $count_query = pdo_query('SELECT count(*) as c FROM project2repositories WHERE repositoryid=' . qnum($repositoryid));
                 $count_array = pdo_fetch_array($count_query);
                 if ($count_array['c'] == 1) {
                     pdo_query("UPDATE repositories SET url='$repositories[$currentRepository]',
@@ -542,12 +542,12 @@ class project
                           password='$passwords[$currentRepository]',
                           branch='$branches[$currentRepository]'
                           WHERE id=" . qnum($repositoryid));
-                    add_last_sql_error("Project AddRepositories", $this->Id);
+                    add_last_sql_error('Project AddRepositories', $this->Id);
                 } else {
                     // Otherwise we remove it from the current project and add it to the queue to be created
 
-                    pdo_query("DELETE FROM project2repositories WHERE projectid=" . qnum($this->Id) . " AND repositoryid=" . qnum($repositoryid));
-                    add_last_sql_error("Project AddRepositories", $this->Id);
+                    pdo_query('DELETE FROM project2repositories WHERE projectid=' . qnum($this->Id) . ' AND repositoryid=' . qnum($repositoryid));
+                    add_last_sql_error('Project AddRepositories', $this->Id);
                     $repositories[] = $repositories[$currentRepository];
                     $usernames[] = $usernames[$currentRepository];
                     $passwords[] = $passwords[$currentRepository];
@@ -571,14 +571,14 @@ class project
             $repositories_query = pdo_query("SELECT id FROM repositories WHERE url='$url'");
             if (pdo_num_rows($repositories_query) == 0) {
                 pdo_query("INSERT INTO repositories (url, username, password, branch) VALUES ('$url', '$username', '$password','$branch')");
-                add_last_sql_error("Project AddRepositories", $this->Id);
-                $repositoryid = pdo_insert_id("repositories");
+                add_last_sql_error('Project AddRepositories', $this->Id);
+                $repositoryid = pdo_insert_id('repositories');
             } else {
                 $repositories_array = pdo_fetch_array($repositories_query);
-                $repositoryid = $repositories_array["id"];
+                $repositoryid = $repositories_array['id'];
             }
-            pdo_query("INSERT INTO project2repositories (projectid,repositoryid) VALUES (" . qnum($this->Id) . ",'$repositoryid')");
-            add_last_sql_error("Project AddRepositories", $this->Id);
+            pdo_query('INSERT INTO project2repositories (projectid,repositoryid) VALUES (' . qnum($this->Id) . ",'$repositoryid')");
+            add_last_sql_error('Project AddRepositories', $this->Id);
         }
     }
 
@@ -586,10 +586,10 @@ class project
     public function GetRepositories()
     {
         $repositories = array();
-        $repository = pdo_query("SELECT url,username,password,branch from repositories,project2repositories
+        $repository = pdo_query('SELECT url,username,password,branch from repositories,project2repositories
                                WHERE repositories.id=project2repositories.repositoryid
-                               AND project2repositories.projectid=" . qnum($this->Id));
-        add_last_sql_error("Project GetRepositories", $this->Id);
+                               AND project2repositories.projectid=' . qnum($this->Id));
+        add_last_sql_error('Project GetRepositories', $this->Id);
         while ($repository_array = pdo_fetch_array($repository)) {
             $rep['url'] = $repository_array['url'];
             $rep['username'] = $repository_array['username'];
@@ -604,12 +604,12 @@ class project
     public function GetBuildGroups()
     {
         $buildgroups = array();
-        $query = pdo_query("
+        $query = pdo_query('
        SELECT id FROM buildgroup
-       WHERE projectid=" . qnum($this->Id) . " AND
+       WHERE projectid=' . qnum($this->Id) . " AND
              endtime='1980-01-01 00:00:00'");
 
-        add_last_sql_error("Project GetBuildGroups", $this->Id);
+        add_last_sql_error('Project GetBuildGroups', $this->Id);
         while ($row = pdo_fetch_array($query)) {
             $buildgroup = new BuildGroup();
             $buildgroup->SetId($row['id']);
@@ -622,9 +622,9 @@ class project
     public function GetBlockedBuilds()
     {
         $sites = array();
-        $site = pdo_query("SELECT id,buildname,sitename,ipaddress FROM blockbuild
-                             WHERE projectid=" . qnum($this->Id));
-        add_last_sql_error("Project GetBlockedBuilds", $this->Id);
+        $site = pdo_query('SELECT id,buildname,sitename,ipaddress FROM blockbuild
+                             WHERE projectid=' . qnum($this->Id));
+        add_last_sql_error('Project GetBlockedBuilds', $this->Id);
         while ($site_array = pdo_fetch_array($site)) {
             $sites[] = $site_array;
         }
@@ -636,10 +636,10 @@ class project
     public function GetIds()
     {
         $ids = array();
-        $query = pdo_query("SELECT id FROM project ORDER BY id");
-        add_last_sql_error("Project GetIds", $this->Id);
+        $query = pdo_query('SELECT id FROM project ORDER BY id');
+        add_last_sql_error('Project GetIds', $this->Id);
         while ($query_array = pdo_fetch_array($query)) {
-            $ids[] = $query_array["id"];
+            $ids[] = $query_array['id'];
         }
         return $ids;
     }
@@ -652,13 +652,13 @@ class project
         }
 
         if (!$this->Id) {
-            echo "Project GetName(): Id not set";
+            echo 'Project GetName(): Id not set';
             return false;
         }
 
-        $project = pdo_query("SELECT name FROM project WHERE id=" . qnum($this->Id));
+        $project = pdo_query('SELECT name FROM project WHERE id=' . qnum($this->Id));
         if (!$project) {
-            add_last_sql_error("Project GetName", $this->Id);
+            add_last_sql_error('Project GetName', $this->Id);
             return false;
         }
         $project_array = pdo_fetch_array($project);
@@ -674,13 +674,13 @@ class project
         }
 
         if (!$this->Id) {
-            echo "Project GetCoverageThreshold(): Id not set";
+            echo 'Project GetCoverageThreshold(): Id not set';
             return false;
         }
 
-        $project = pdo_query("SELECT coveragethreshold FROM project WHERE id=" . qnum($this->Id));
+        $project = pdo_query('SELECT coveragethreshold FROM project WHERE id=' . qnum($this->Id));
         if (!$project) {
-            add_last_sql_error("Project GetCoverageThreshold", $this->Id);
+            add_last_sql_error('Project GetCoverageThreshold', $this->Id);
             return false;
         }
         $project_array = pdo_fetch_array($project);
@@ -692,7 +692,7 @@ class project
     public function GetNumberOfSubProjects($date = null)
     {
         if (!$this->Id) {
-            echo "Project GetNumberOfSubProjects(): Id not set";
+            echo 'Project GetNumberOfSubProjects(): Id not set';
             return false;
         }
 
@@ -700,9 +700,9 @@ class project
             $date = gmdate(FMT_DATETIME);
         }
 
-        $project = pdo_query("SELECT count(*) AS c FROM subproject WHERE projectid=" . qnum($this->Id) . " AND (endtime='1980-01-01 00:00:00' OR endtime>'" . $date . "')");
+        $project = pdo_query('SELECT count(*) AS c FROM subproject WHERE projectid=' . qnum($this->Id) . " AND (endtime='1980-01-01 00:00:00' OR endtime>'" . $date . "')");
         if (!$project) {
-            add_last_sql_error("Project GetNumberOfSubProjects", $this->Id);
+            add_last_sql_error('Project GetNumberOfSubProjects', $this->Id);
             return false;
         }
         $project_array = pdo_fetch_array($project);
@@ -713,7 +713,7 @@ class project
     public function GetSubProjects($date = null)
     {
         if (!$this->Id) {
-            echo "Project GetNumberOfSubProjects(): Id not set";
+            echo 'Project GetNumberOfSubProjects(): Id not set';
             return false;
         }
 
@@ -722,10 +722,10 @@ class project
             $date = gmdate(FMT_DATETIME);
         }
 
-        $project = pdo_query("SELECT id FROM subproject WHERE projectid=" . qnum($this->Id) . " AND
+        $project = pdo_query('SELECT id FROM subproject WHERE projectid=' . qnum($this->Id) . " AND
                           starttime<='" . $date . "' AND (endtime>'" . $date . "' OR endtime='1980-01-01 00:00:00')");
         if (!$project) {
-            add_last_sql_error("Project GetSubProjects", $this->Id);
+            add_last_sql_error('Project GetSubProjects', $this->Id);
             return false;
         }
 
@@ -745,33 +745,33 @@ class project
         }
 
         if (!$this->Id) {
-            echo "Project GetLastSubmission(): Id not set";
+            echo 'Project GetLastSubmission(): Id not set';
             return false;
         }
 
-        $build = pdo_query("SELECT submittime FROM build WHERE projectid=" . qnum($this->Id) .
-            " ORDER BY submittime DESC LIMIT 1");
+        $build = pdo_query('SELECT submittime FROM build WHERE projectid=' . qnum($this->Id) .
+            ' ORDER BY submittime DESC LIMIT 1');
 
         if (!$build) {
-            add_last_sql_error("Project GetLastSubmission", $this->Id);
+            add_last_sql_error('Project GetLastSubmission', $this->Id);
             return false;
         }
         $build_array = pdo_fetch_array($build);
-        return date(FMT_DATETIMESTD, strtotime($build_array['submittime'] . "UTC"));
+        return date(FMT_DATETIMESTD, strtotime($build_array['submittime'] . 'UTC'));
     }
 
     /** Get the total number of builds for a project*/
     public function GetTotalNumberOfBuilds()
     {
         if (!$this->Id) {
-            echo "Project GetTotalNumberOfBuilds(): Id not set";
+            echo 'Project GetTotalNumberOfBuilds(): Id not set';
             return false;
         }
 
-        $project = pdo_query("SELECT count(*) FROM build WHERE projectid=" . qnum($this->Id));
+        $project = pdo_query('SELECT count(*) FROM build WHERE projectid=' . qnum($this->Id));
 
         if (!$project) {
-            add_last_sql_error("Project GetTotalNumberOfBuilds", $this->Id);
+            add_last_sql_error('Project GetTotalNumberOfBuilds', $this->Id);
             return false;
         }
         $project_array = pdo_fetch_array($project);
@@ -782,16 +782,16 @@ class project
     public function GetNumberOfBuilds($startUTCdate, $endUTCdate)
     {
         if (!$this->Id) {
-            echo "Project GetNumberOfBuilds(): Id not set";
+            echo 'Project GetNumberOfBuilds(): Id not set';
             return false;
         }
 
-        $project = pdo_query("SELECT count(build.id) FROM build WHERE projectid=" . qnum($this->Id) .
+        $project = pdo_query('SELECT count(build.id) FROM build WHERE projectid=' . qnum($this->Id) .
             " AND build.starttime>'$startUTCdate'
                            AND build.starttime<='$endUTCdate'");
 
         if (!$project) {
-            add_last_sql_error("Project GetNumberOfBuilds", $this->Id);
+            add_last_sql_error('Project GetNumberOfBuilds', $this->Id);
             return false;
         }
         $project_array = pdo_fetch_array($project);
@@ -802,11 +802,11 @@ class project
     public function GetBuildsDailyAverage($startUTCdate, $endUTCdate)
     {
         if (!$this->Id) {
-            echo "Project GetNumberOfBuilds(): Id not set";
+            echo 'Project GetNumberOfBuilds(): Id not set';
             return false;
         }
         $nbuilds = $this->GetNumberOfBuilds($startUTCdate, $endUTCdate);
-        $project = pdo_query("SELECT starttime FROM build WHERE projectid=" . qnum($this->Id) .
+        $project = pdo_query('SELECT starttime FROM build WHERE projectid=' . qnum($this->Id) .
             " AND build.starttime>'$startUTCdate'
                              AND build.starttime<='$endUTCdate'
                              ORDER BY starttime ASC
@@ -826,24 +826,24 @@ class project
                                              $childrenOnly = false)
     {
         if (!$this->Id) {
-            echo "Project GetNumberOfWarningBuilds(): Id not set";
+            echo 'Project GetNumberOfWarningBuilds(): Id not set';
             return false;
         }
 
-        $query = "SELECT count(*) FROM build,build2group,buildgroup
-              WHERE build.projectid=" . qnum($this->Id) . "
+        $query = 'SELECT count(*) FROM build,build2group,buildgroup
+              WHERE build.projectid=' . qnum($this->Id) . "
               AND build.starttime>'$startUTCdate'
               AND build.starttime<='$endUTCdate'
               AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
               AND buildgroup.includesubprojectotal=1
               AND build.buildwarnings>0";
         if ($childrenOnly) {
-            $query .= " AND build.parentid > 0";
+            $query .= ' AND build.parentid > 0';
         }
 
         $project = pdo_query($query);
         if (!$project) {
-            add_last_sql_error("Project GetNumberOfWarningBuilds", $this->Id);
+            add_last_sql_error('Project GetNumberOfWarningBuilds', $this->Id);
             return false;
         }
         $project_array = pdo_fetch_array($project);
@@ -856,26 +856,26 @@ class project
                                            $childrenOnly = false)
     {
         if (!$this->Id) {
-            echo "Project GetNumberOfErrorBuilds(): Id not set";
+            echo 'Project GetNumberOfErrorBuilds(): Id not set';
             return false;
         }
 
         // build failures
         $query =
-            "SELECT count(*) FROM build,build2group,buildgroup
-       WHERE build.projectid=" . qnum($this->Id) . "
+            'SELECT count(*) FROM build,build2group,buildgroup
+       WHERE build.projectid=' . qnum($this->Id) . "
        AND build.starttime>'$startUTCdate'
        AND build.starttime<='$endUTCdate'
        AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
        AND buildgroup.includesubprojectotal=1
        AND build.builderrors>0";
         if ($childrenOnly) {
-            $query .= " AND build.parentid > 0";
+            $query .= ' AND build.parentid > 0';
         }
 
         $project = pdo_query($query);
         if (!$project) {
-            add_last_sql_error("Project GetNumberOfErrorBuilds", $this->Id);
+            add_last_sql_error('Project GetNumberOfErrorBuilds', $this->Id);
             return false;
         }
         $project_array = pdo_fetch_array($project);
@@ -888,12 +888,12 @@ class project
                                              $childrenOnly = false)
     {
         if (!$this->Id) {
-            echo "Project GetNumberOfPassingBuilds(): Id not set";
+            echo 'Project GetNumberOfPassingBuilds(): Id not set';
             return false;
         }
 
-        $query = "SELECT count(*) FROM build,build2group,buildgroup
-              WHERE build.projectid=" . qnum($this->Id) . "
+        $query = 'SELECT count(*) FROM build,build2group,buildgroup
+              WHERE build.projectid=' . qnum($this->Id) . "
               AND build.starttime>'$startUTCdate'
               AND build.starttime<='$endUTCdate'
               AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
@@ -901,12 +901,12 @@ class project
               AND build.builderrors=0
               AND build.buildwarnings=0";
         if ($childrenOnly) {
-            $query .= " AND build.parentid > 0";
+            $query .= ' AND build.parentid > 0';
         }
 
         $project = pdo_query($query);
         if (!$project) {
-            add_last_sql_error("Project GetNumberOfPassingBuilds", $this->Id);
+            add_last_sql_error('Project GetNumberOfPassingBuilds', $this->Id);
             return false;
         }
         $project_array = pdo_fetch_array($project);
@@ -918,24 +918,24 @@ class project
                                                  $childrenOnly = false)
     {
         if (!$this->Id) {
-            echo "Project GetNumberOfWarningConfigures(): Id not set";
+            echo 'Project GetNumberOfWarningConfigures(): Id not set';
             return false;
         }
 
-        $query = "SELECT count(*) FROM build,configure,build2group,buildgroup
-              WHERE  configure.buildid=build.id  AND build.projectid=" . qnum($this->Id) . "
+        $query = 'SELECT count(*) FROM build,configure,build2group,buildgroup
+              WHERE  configure.buildid=build.id  AND build.projectid=' . qnum($this->Id) . "
               AND build.starttime>'$startUTCdate'
               AND build.starttime<='$endUTCdate'
               AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
               AND buildgroup.includesubprojectotal=1
               AND  configure.warnings>0";
         if ($childrenOnly) {
-            $query .= " AND build.parentid > 0";
+            $query .= ' AND build.parentid > 0';
         }
 
         $project = pdo_query($query);
         if (!$project) {
-            add_last_sql_error("Project GetNumberOfWarningConfigures", $this->Id);
+            add_last_sql_error('Project GetNumberOfWarningConfigures', $this->Id);
             return false;
         }
         $project_array = pdo_fetch_array($project);
@@ -947,24 +947,24 @@ class project
                                                $childrenOnly = false)
     {
         if (!$this->Id) {
-            echo "Project GetNumberOfErrorConfigures(): Id not set";
+            echo 'Project GetNumberOfErrorConfigures(): Id not set';
             return false;
         }
 
-        $query = "SELECT count(*) FROM build,configure,buildgroup,build2group
-              WHERE  configure.buildid=build.id  AND build.projectid=" . qnum($this->Id) . "
+        $query = 'SELECT count(*) FROM build,configure,buildgroup,build2group
+              WHERE  configure.buildid=build.id  AND build.projectid=' . qnum($this->Id) . "
               AND build.starttime>'$startUTCdate'
               AND build.starttime<='$endUTCdate'
               AND configure.status='1'
               AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
               AND buildgroup.includesubprojectotal=1";
         if ($childrenOnly) {
-            $query .= " AND build.parentid > 0";
+            $query .= ' AND build.parentid > 0';
         }
 
         $project = pdo_query($query);
         if (!$project) {
-            add_last_sql_error("Project GetNumberOfErrorConfigures", $this->Id);
+            add_last_sql_error('Project GetNumberOfErrorConfigures', $this->Id);
             return false;
         }
         $project_array = pdo_fetch_array($project);
@@ -976,22 +976,22 @@ class project
                                                  $childrenOnly = false)
     {
         if (!$this->Id) {
-            echo "Project GetNumberOfPassingConfigures(): Id not set";
+            echo 'Project GetNumberOfPassingConfigures(): Id not set';
             return false;
         }
 
-        $query = "SELECT count(*) FROM configure,build,build2group,buildgroup WHERE build.projectid=" . qnum($this->Id) . "
+        $query = 'SELECT count(*) FROM configure,build,build2group,buildgroup WHERE build.projectid=' . qnum($this->Id) . "
               AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
               AND buildgroup.includesubprojectotal=1
               AND configure.buildid=build.id AND build.starttime>'$startUTCdate'
               AND build.starttime<='$endUTCdate' AND configure.status='0'";
         if ($childrenOnly) {
-            $query .= " AND build.parentid > 0";
+            $query .= ' AND build.parentid > 0';
         }
 
         $project = pdo_query($query);
         if (!$project) {
-            add_last_sql_error("Project GetNumberOfPassingConfigures", $this->Id);
+            add_last_sql_error('Project GetNumberOfPassingConfigures', $this->Id);
             return false;
         }
         $project_array = pdo_fetch_array($project);
@@ -1003,11 +1003,11 @@ class project
                                             $childrenOnly = false)
     {
         if (!$this->Id) {
-            echo "Project GetNumberOfPassingTests(): Id not set";
+            echo 'Project GetNumberOfPassingTests(): Id not set';
             return false;
         }
 
-        $query = "SELECT SUM(build.testpassed) FROM build,build2group,buildgroup WHERE build.projectid=" . qnum($this->Id) . "
+        $query = 'SELECT SUM(build.testpassed) FROM build,build2group,buildgroup WHERE build.projectid=' . qnum($this->Id) . "
               AND build2group.buildid=build.id
               AND build.testpassed>=0
               AND build2group.groupid=buildgroup.id
@@ -1015,12 +1015,12 @@ class project
               AND build.starttime>'$startUTCdate'
               AND build.starttime<='$endUTCdate'";
         if ($childrenOnly) {
-            $query .= " AND build.parentid > 0";
+            $query .= ' AND build.parentid > 0';
         }
 
         $project = pdo_query($query);
         if (!$project) {
-            add_last_sql_error("Project GetNumberOfPassingTests", $this->Id);
+            add_last_sql_error('Project GetNumberOfPassingTests', $this->Id);
             return false;
         }
         $project_array = pdo_fetch_array($project);
@@ -1032,11 +1032,11 @@ class project
                                             $childrenOnly = false)
     {
         if (!$this->Id) {
-            echo "Project GetNumberOfFailingTests(): Id not set";
+            echo 'Project GetNumberOfFailingTests(): Id not set';
             return false;
         }
 
-        $query = "SELECT SUM(build.testfailed) FROM build,build2group,buildgroup WHERE build.projectid=" . qnum($this->Id) . "
+        $query = 'SELECT SUM(build.testfailed) FROM build,build2group,buildgroup WHERE build.projectid=' . qnum($this->Id) . "
               AND build2group.buildid=build.id
               AND build.testfailed>=0
               AND build2group.groupid=buildgroup.id
@@ -1044,12 +1044,12 @@ class project
               AND build.starttime>'$startUTCdate'
               AND build.starttime<='$endUTCdate'";
         if ($childrenOnly) {
-            $query .= " AND build.parentid > 0";
+            $query .= ' AND build.parentid > 0';
         }
 
         $project = pdo_query($query);
         if (!$project) {
-            add_last_sql_error("Project GetNumberOfFailingTests", $this->Id);
+            add_last_sql_error('Project GetNumberOfFailingTests', $this->Id);
             return false;
         }
         $project_array = pdo_fetch_array($project);
@@ -1061,11 +1061,11 @@ class project
                                            $childrenOnly = false)
     {
         if (!$this->Id) {
-            echo "Project GetNumberOfNotRunTests(): Id not set";
+            echo 'Project GetNumberOfNotRunTests(): Id not set';
             return false;
         }
 
-        $query = "SELECT SUM(build.testnotrun) FROM build,build2group,buildgroup WHERE build.projectid=" . qnum($this->Id) . "
+        $query = 'SELECT SUM(build.testnotrun) FROM build,build2group,buildgroup WHERE build.projectid=' . qnum($this->Id) . "
               AND build2group.buildid=build.id
               AND build.testnotrun>=0
               AND build2group.groupid=buildgroup.id
@@ -1073,12 +1073,12 @@ class project
               AND build.starttime>'$startUTCdate'
               AND build.starttime<='$endUTCdate'";
         if ($childrenOnly) {
-            $query .= " AND build.parentid > 0";
+            $query .= ' AND build.parentid > 0';
         }
 
         $project = pdo_query($query);
         if (!$project) {
-            add_last_sql_error("Project GetNumberOfNotRunTests", $this->Id);
+            add_last_sql_error('Project GetNumberOfNotRunTests', $this->Id);
             return false;
         }
         $project_array = pdo_fetch_array($project);
@@ -1092,30 +1092,30 @@ class project
         $todaytime -= 3600 * 24 * $days;
         $today = date(FMT_DATETIMESTD, $todaytime);
 
-        include "config/config.php";
-        $straighthjoin = "";
-        if ($CDASH_DB_TYPE != "pgsql") {
+        include 'config/config.php';
+        $straighthjoin = '';
+        if ($CDASH_DB_TYPE != 'pgsql') {
             $straighthjoin = 'STRAIGHT_JOIN';
         }
 
         $labelids = array();
-        $labels = pdo_query("(SELECT labelid AS id FROM label2build,build WHERE label2build.buildid=build.id AND build.projectid=" . qnum($this->Id) . " AND build.starttime>'$today')
+        $labels = pdo_query('(SELECT labelid AS id FROM label2build,build WHERE label2build.buildid=build.id AND build.projectid=' . qnum($this->Id) . " AND build.starttime>'$today')
                           UNION
                           (SELECT labelid AS id FROM label2test,build WHERE label2test.buildid=build.id
                                   AND build.projectid=" . qnum($this->Id) . " AND build.starttime>'$today')
                           UNION
-                          (SELECT " . $straighthjoin . " labelid AS id FROM build,label2coveragefile WHERE label2coveragefile.buildid=build.id
-                                 AND build.projectid=" . qnum($this->Id) . " AND build.starttime>'$today')
+                          (SELECT " . $straighthjoin . ' labelid AS id FROM build,label2coveragefile WHERE label2coveragefile.buildid=build.id
+                                 AND build.projectid=' . qnum($this->Id) . " AND build.starttime>'$today')
                           UNION
-                          (SELECT " . $straighthjoin . " labelid AS id FROM build,buildfailure,label2buildfailure WHERE label2buildfailure.buildfailureid=buildfailure.id
-                                 AND buildfailure.buildid=build.id AND build.projectid=" . qnum($this->Id) . " AND build.starttime>'$today')
+                          (SELECT " . $straighthjoin . ' labelid AS id FROM build,buildfailure,label2buildfailure WHERE label2buildfailure.buildfailureid=buildfailure.id
+                                 AND buildfailure.buildid=build.id AND build.projectid=' . qnum($this->Id) . " AND build.starttime>'$today')
                           UNION
-                          (SELECT " . $straighthjoin . " labelid AS id FROM build,dynamicanalysis,label2dynamicanalysis WHERE label2dynamicanalysis.dynamicanalysisid=dynamicanalysis.id
-                                 AND dynamicanalysis.buildid=build.id AND build.projectid=" . qnum($this->Id) . " AND build.starttime>'$today')
+                          (SELECT " . $straighthjoin . ' labelid AS id FROM build,dynamicanalysis,label2dynamicanalysis WHERE label2dynamicanalysis.dynamicanalysisid=dynamicanalysis.id
+                                 AND dynamicanalysis.buildid=build.id AND build.projectid=' . qnum($this->Id) . " AND build.starttime>'$today')
                           ");
 
         if (!$labels) {
-            add_last_sql_error("Project GetLabels", $this->Id);
+            add_last_sql_error('Project GetLabels', $this->Id);
             return false;
         }
 
@@ -1129,16 +1129,16 @@ class project
     public function SendEmailToAdmin($subject, $body)
     {
         if (!$this->Id) {
-            echo "Project SendEmailToAdmin(): Id not set";
+            echo 'Project SendEmailToAdmin(): Id not set';
             return false;
         }
 
         include 'config/config.php';
 
         // Check if we should send emails
-        $project = pdo_query("SELECT emailadministrator,name FROM project WHERE id =" . qnum($this->Id));
+        $project = pdo_query('SELECT emailadministrator,name FROM project WHERE id =' . qnum($this->Id));
         if (!$project) {
-            add_last_sql_error("Project SendEmailToAdmin", $this->Id);
+            add_last_sql_error('Project SendEmailToAdmin', $this->Id);
             return false;
         }
         $project_array = pdo_fetch_array($project);
@@ -1154,20 +1154,20 @@ class project
         $UserProject->ProjectId = $this->Id;
 
         $userids = $UserProject->GetUsers(2); // administrators
-        $email = "";
+        $email = '';
         foreach ($userids as $userid) {
             $User = new User;
             $User->Id = $userid;
-            if ($email != "") {
-                $email .= ", ";
+            if ($email != '') {
+                $email .= ', ';
             }
             $email .= $User->GetEmail();
         }
 
-        if ($email != "") {
+        if ($email != '') {
             $projectname = $project_array['name'];
-            $emailtitle = "CDash [" . $projectname . "] - Administration ";
-            $emailbody = "Object: " . $subject . "\n";
+            $emailtitle = 'CDash [' . $projectname . '] - Administration ';
+            $emailbody = 'Object: ' . $subject . "\n";
             $emailbody .= $body . "\n";
             $serverName = $CDASH_SERVER_NAME;
             if (strlen($serverName) == 0) {
@@ -1176,10 +1176,10 @@ class project
             $emailbody .= "\n-CDash on " . $serverName . "\n";
 
             if (cdashmail("$email", $emailtitle, $emailbody)) {
-                add_log("email sent to: " . $email, "Project::SendEmailToAdmin");
+                add_log('email sent to: ' . $email, 'Project::SendEmailToAdmin');
                 return;
             } else {
-                add_log("cannot send email to: " . $email, "Project::SendEmailToAdmin", LOG_ERR, $this->Id);
+                add_log('cannot send email to: ' . $email, 'Project::SendEmailToAdmin', LOG_ERR, $this->Id);
             }
         }
     }
@@ -1192,20 +1192,20 @@ class project
             case 'gitorious':
             case 'gitweb':
             case 'redmine':
-                return "git";
+                return 'git';
                 break;
 
             case 'websvn':
             case 'allura':
-                return "svn";
+                return 'svn';
                 break;
 
             case 'hgweb':
-                return "mercurial";
+                return 'mercurial';
                 break;
 
             default:
-                return "cvs";
+                return 'cvs';
                 break;
         }
     }
@@ -1301,13 +1301,13 @@ class project
             add_log('Id not set', 'Project::GetUploadsTotalSize', LOG_ERR);
             return false;
         }
-        $totalSizeQuery = pdo_query("SELECT DISTINCT uploadfile.id, uploadfile.filesize AS size
+        $totalSizeQuery = pdo_query('SELECT DISTINCT uploadfile.id, uploadfile.filesize AS size
                                  FROM build, build2uploadfile, uploadfile
-                                 WHERE build.projectid=" . qnum($this->Id) . " AND
+                                 WHERE build.projectid=' . qnum($this->Id) . ' AND
                                  build.id=build2uploadfile.buildid AND
-                                 build2uploadfile.fileid=uploadfile.id");
+                                 build2uploadfile.fileid=uploadfile.id');
         if (!$totalSizeQuery) {
-            add_last_sql_error("Project::GetUploadsTotalSize", $this->Id);
+            add_last_sql_error('Project::GetUploadsTotalSize', $this->Id);
             return false;
         }
 
@@ -1333,13 +1333,13 @@ class project
             add_log('Id not set', 'Project::GetUploadedFilesOrUrls', LOG_ERR);
             return false;
         }
-        $query = pdo_query("SELECT uploadfile.id, uploadfile.filename, uploadfile.filesize, uploadfile.sha1sum, uploadfile.isurl
+        $query = pdo_query('SELECT uploadfile.id, uploadfile.filename, uploadfile.filesize, uploadfile.sha1sum, uploadfile.isurl
                         FROM uploadfile, build2uploadfile, build
-                        WHERE build.projectid=" . qnum($this->Id) . " AND
+                        WHERE build.projectid=' . qnum($this->Id) . ' AND
                         build.id=build2uploadfile.buildid AND
-                        build2uploadfile.fileid=uploadfile.id ORDER BY build.starttime DESC");
+                        build2uploadfile.fileid=uploadfile.id ORDER BY build.starttime DESC');
         if (!$query) {
-            add_last_sql_error("Project::GetUploadedFilesOrUrls", $this->Id);
+            add_last_sql_error('Project::GetUploadedFilesOrUrls', $this->Id);
             return false;
         }
 
@@ -1372,18 +1372,18 @@ class project
             add_log('Upload quota exceeded, removing old files', 'Project::CullUploadedFiles',
                 LOG_INFO, $this->Id);
 
-            $query = pdo_query("SELECT DISTINCT build.id AS id, build.starttime
+            $query = pdo_query('SELECT DISTINCT build.id AS id, build.starttime
                                FROM build, build2uploadfile, uploadfile
-                               WHERE build.projectid=" . qnum($this->Id) . " AND
+                               WHERE build.projectid=' . qnum($this->Id) . ' AND
                                build.id=build2uploadfile.buildid AND
                                build2uploadfile.fileid=uploadfile.id
-                               ORDER BY build.starttime ASC");
+                               ORDER BY build.starttime ASC');
 
             while ($builds_array = pdo_fetch_array($query)) {
                 // Delete the uploaded files
                 $fileids = '(';
-                $build2uploadfiles = pdo_query("SELECT fileid FROM build2uploadfile
-                                 WHERE buildid = " . qnum($builds_array['id']));
+                $build2uploadfiles = pdo_query('SELECT fileid FROM build2uploadfile
+                                 WHERE buildid = ' . qnum($builds_array['id']));
                 while ($build2uploadfile_array = pdo_fetch_array($build2uploadfiles)) {
                     $fileid = $build2uploadfile_array['fileid'];
                     if ($fileids != '(') {
@@ -1396,8 +1396,8 @@ class project
 
                 $fileids .= ')';
                 if (strlen($fileids) > 2) {
-                    pdo_query("DELETE FROM uploadfile WHERE id IN " . $fileids);
-                    pdo_query("DELETE FROM build2uploadfile WHERE fileid IN " . $fileids);
+                    pdo_query('DELETE FROM uploadfile WHERE id IN ' . $fileids);
+                    pdo_query('DELETE FROM build2uploadfile WHERE fileid IN ' . $fileids);
                 }
 
                 // Stop if we get below the quota
@@ -1420,10 +1420,10 @@ class project
         include_once 'models/subprojectgroup.php';
 
         $query = pdo_query(
-            "SELECT id FROM subprojectgroup WHERE projectid=" . qnum($this->Id) . "
+            'SELECT id FROM subprojectgroup WHERE projectid=' . qnum($this->Id) . "
          AND endtime='1980-01-01 00:00:00'");
         if (!$query) {
-            add_last_sql_error("Project::GetSubProjectGroups", $this->Id);
+            add_last_sql_error('Project::GetSubProjectGroups', $this->Id);
             return false;
         }
 

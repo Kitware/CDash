@@ -15,7 +15,7 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include dirname(dirname(dirname(__DIR__))) . "/config/config.php";
+include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 include_once 'include/common.php';
 include 'public/login.php';
@@ -55,7 +55,7 @@ if (!isset($userid) || !is_numeric($userid)) {
 $User = new User;
 $User->Id = $userid;
 
-$sql = "SELECT id,name FROM project";
+$sql = 'SELECT id,name FROM project';
 if ($User->IsAdmin() == false) {
     $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$userid' AND role>0)";
 }
@@ -74,7 +74,7 @@ while ($project_array = pdo_fetch_array($projects)) {
 $response['availableprojects'] = $availableprojects;
 
 if (!isset($projectid)) {
-    $response['error'] = "Please select a project to continue.";
+    $response['error'] = 'Please select a project to continue.';
     echo json_encode($response);
     return;
 }

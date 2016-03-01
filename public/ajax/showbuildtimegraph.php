@@ -14,13 +14,13 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once dirname(dirname(__DIR__)) . "/config/config.php";
-require_once "include/pdo.php";
-require_once "include/common.php";
+require_once dirname(dirname(__DIR__)) . '/config/config.php';
+require_once 'include/pdo.php';
+require_once 'include/common.php';
 
-$buildid = pdo_real_escape_numeric($_GET["buildid"]);
+$buildid = pdo_real_escape_numeric($_GET['buildid']);
 if (!isset($buildid) || !is_numeric($buildid)) {
-    echo "Not a valid buildid!";
+    echo 'Not a valid buildid!';
     return;
 }
 
@@ -32,11 +32,11 @@ $build = pdo_query("SELECT name,type,siteid,projectid,starttime
                     FROM build WHERE id='$buildid'");
 $build_array = pdo_fetch_array($build);
 
-$buildtype = $build_array["type"];
-$buildname = $build_array["name"];
-$siteid = $build_array["siteid"];
-$starttime = $build_array["starttime"];
-$projectid = $build_array["projectid"];
+$buildtype = $build_array['type'];
+$buildname = $build_array['name'];
+$siteid = $build_array['siteid'];
+$starttime = $build_array['starttime'];
+$projectid = $build_array['projectid'];
 
 $project = pdo_query("SELECT name FROM project WHERE id='$projectid'");
 $project_array = pdo_fetch_array($project);
@@ -59,19 +59,19 @@ $previousbuilds = pdo_query("SELECT id,starttime,endtime,buildwarnings,builderro
         <?php
         $i = 0;
         while ($build_array = pdo_fetch_array($previousbuilds)) {
-            $t = strtotime($build_array["starttime"]) * 1000; //flot expects milliseconds
+            $t = strtotime($build_array['starttime']) * 1000; //flot expects milliseconds
         ?>
         buildtime.push([<?php echo $t;
-            ?>,<?php echo(strtotime($build_array["endtime"]) - strtotime($build_array["starttime"])) / 60;
+            ?>,<?php echo(strtotime($build_array['endtime']) - strtotime($build_array['starttime'])) / 60;
             ?>]);
         builderrors.push([<?php echo $t;
-            ?>,<?php echo $build_array["builderrors"] ?>]);
+            ?>,<?php echo $build_array['builderrors'] ?>]);
         buildwarnings.push([<?php echo $t;
-            ?>,<?php echo $build_array["buildwarnings"] ?>]);
+            ?>,<?php echo $build_array['buildwarnings'] ?>]);
         testfailed.push([<?php echo $t;
-            ?>,<?php echo $build_array["testfailed"] ?>]);
+            ?>,<?php echo $build_array['testfailed'] ?>]);
         buildids[<?php echo $t;
-            ?>] = <?php echo $build_array["id"];
+            ?>] = <?php echo $build_array['id'];
             ?>;
         <?php
         $i++;

@@ -14,9 +14,9 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once dirname(dirname(dirname(__DIR__))) . "/config/config.php";
-require_once "include/common.php";
-require_once "include/pdo.php";
+require_once dirname(dirname(dirname(__DIR__))) . '/config/config.php';
+require_once 'include/common.php';
+require_once 'include/pdo.php';
 
 @$project = $_GET['project'];
 @$site = $_GET['site'];
@@ -33,10 +33,10 @@ $name = htmlspecialchars(pdo_real_escape_string($name));
 $projectid = get_project_id($project);
 
 echo '<?xml version="1.0" encoding="UTF-8"?>';
-echo "<buildid>";
+echo '<buildid>';
 
 if (!is_numeric($projectid)) {
-    echo "not found</buildid>";
+    echo 'not found</buildid>';
     return;
 }
 
@@ -49,7 +49,7 @@ if (!isset($siteid)) {
 }
 
 if (!is_numeric($siteid)) {
-    echo "wrong site</buildid>";
+    echo 'wrong site</buildid>';
     return;
 }
 
@@ -59,8 +59,8 @@ $buildquery = pdo_query("SELECT id FROM build WHERE siteid='$siteid' AND project
 if (pdo_num_rows($buildquery) > 0) {
     $buildarray = pdo_fetch_array($buildquery);
     $buildid = $buildarray['id'];
-    echo $buildid . "</buildid>";
+    echo $buildid . '</buildid>';
     return;
 }
 
-echo "not found</buildid>";
+echo 'not found</buildid>';

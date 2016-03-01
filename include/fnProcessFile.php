@@ -14,8 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once "include/common.php";
-require_once "include/do_submit.php";
+require_once 'include/common.php';
+require_once 'include/do_submit.php';
 
 // Try to open the file and process it (call "do_submit" on it)
 //
@@ -44,7 +44,7 @@ function ProcessFile($projectid, $filename, $md5)
         cdash_unlink($filename);
         $new_status = 2; // done, did call do_submit, finished normally
     } else {
-        add_log("Cannot open file '" . $filename . "'", "ProcessFile",
+        add_log("Cannot open file '" . $filename . "'", 'ProcessFile',
             LOG_ERR, $projectid);
         $new_status = 3; // done, did *NOT* call do_submit
     }

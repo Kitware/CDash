@@ -49,12 +49,12 @@ class JSCoverTarHandler
         // This function receives an open file handle, but we really just need
         // the path to this file so that we can extract it.
         $meta_data = stream_get_meta_data($handle);
-        $filename = $meta_data["uri"];
+        $filename = $meta_data['uri'];
         fclose($handle);
 
         // Create a new directory where we can extract our tarball.
         $pathParts = pathinfo($filename);
-        $dirName = $CDASH_BACKUP_DIRECTORY . "/" . $pathParts['filename'];
+        $dirName = $CDASH_BACKUP_DIRECTORY . '/' . $pathParts['filename'];
         mkdir($dirName);
         // Extract the tarball.
         $phar = new PharData($filename);
@@ -68,7 +68,7 @@ class JSCoverTarHandler
         foreach ($iterator as $fileinfo) {
             // need the longest extension, so getExtension() won't do here.
             $ext = substr(strstr($fileinfo->getFilename(), '.'), 1);
-            if ($ext === "json") {
+            if ($ext === 'json') {
                 $this->ParseJSCoverFile($fileinfo);
             }
         }
@@ -128,8 +128,8 @@ class JSCoverTarHandler
         foreach ($jsonDecoded as $path => $coverageEntry) {
             // Make sure it has the fields we expect.
             if (is_null($coverageEntry) ||
-                !array_key_exists("source", $coverageEntry) ||
-                !array_key_exists("coverage", $coverageEntry)
+                !array_key_exists('source', $coverageEntry) ||
+                !array_key_exists('coverage', $coverageEntry)
             ) {
                 return;
             }
@@ -149,10 +149,10 @@ class JSCoverTarHandler
            WHERE fullpath='$path' AND file IS NULL");
                 if (pdo_num_rows($sql) == 0) {
                     pdo_query("INSERT INTO coveragefile (fullpath) VALUES ('$path')");
-                    $fileid = pdo_insert_id("coveragefile");
+                    $fileid = pdo_insert_id('coveragefile');
                 } else {
                     $coveragefile_array = pdo_fetch_array($sql);
-                    $fileid = $coveragefile_array["id"];
+                    $fileid = $coveragefile_array['id'];
                 }
                 $coverageFile->Id = $fileid;
 

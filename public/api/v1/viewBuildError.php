@@ -15,30 +15,30 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include dirname(dirname(dirname(__DIR__))) . "/config/config.php";
-require_once "include/pdo.php";
-include_once "include/common.php";
+include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
+require_once 'include/pdo.php';
+include_once 'include/common.php';
 include 'public/login.php';
-include_once "include/repository.php";
-include "include/version.php";
+include_once 'include/repository.php';
+include 'include/version.php';
 require_once 'models/build.php';
 
-@$buildid = $_GET["buildid"];
+@$buildid = $_GET['buildid'];
 if ($buildid != null) {
     $buildid = pdo_real_escape_numeric($buildid);
 }
 
-@$date = $_GET["date"];
+@$date = $_GET['date'];
 if ($date != null) {
     $date = htmlspecialchars(pdo_real_escape_string($date));
 }
 
 $response = begin_JSON_response();
-$response['title'] = "CDash : View Build Errors";
+$response['title'] = 'CDash : View Build Errors';
 
 // Checks
 if (!isset($buildid) || !is_numeric($buildid)) {
-    $response['error'] = "Not a valid buildid!";
+    $response['error'] = 'Not a valid buildid!';
     echo json_encode($response);
     return;
 }
@@ -57,36 +57,36 @@ $build_query = "SELECT build.id, build.projectid, build.siteid, build.type,
 $build_array = pdo_fetch_array(pdo_query($build_query));
 
 if (empty($build_array)) {
-    $response['error'] = "This build does not exist. Maybe it has been deleted.";
+    $response['error'] = 'This build does not exist. Maybe it has been deleted.';
     echo json_encode($response);
     return;
 }
 
-$projectid = $build_array["projectid"];
+$projectid = $build_array['projectid'];
 $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
 if (pdo_num_rows($project) > 0) {
     $project_array = pdo_fetch_array($project);
-    $projectname = $project_array["name"];
+    $projectname = $project_array['name'];
 }
 
-if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $project_array["id"], 1)) {
+if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $project_array['id'], 1)) {
     $response['requirelogin'] = '1';
     echo json_encode($response);
     return;
 }
 
 $response['title'] = "CDash : $projectname";
-$siteid = $build_array["siteid"];
-$buildtype = $build_array["type"];
-$buildname = $build_array["name"];
-$starttime = $build_array["starttime"];
-$revision = $build_array["revision"];
+$siteid = $build_array['siteid'];
+$buildtype = $build_array['type'];
+$buildname = $build_array['name'];
+$starttime = $build_array['starttime'];
+$revision = $build_array['revision'];
 
-$date = get_dashboard_date_from_build_starttime($build_array["starttime"], $project_array["nightlytime"]);
+$date = get_dashboard_date_from_build_starttime($build_array['starttime'], $project_array['nightlytime']);
 get_dashboard_JSON_by_name($projectname, $date, $response);
 
 $menu = array();
-$menu['back'] = "index.php?project=" . urlencode($projectname) . "&date=" . $date;
+$menu['back'] = 'index.php?project=' . urlencode($projectname) . '&date=' . $date;
 
 $build = new Build();
 $build->Id = $buildid;
@@ -117,11 +117,11 @@ $build_response['site'] = $site_array['name'];
 $build_response['siteid'] = $siteid;
 $build_response['buildname'] = $build_array['name'];
 $build_response['starttime'] =
-    date(FMT_DATETIMETZ, strtotime($build_array["starttime"] . "UTC"));
+    date(FMT_DATETIMETZ, strtotime($build_array['starttime'] . 'UTC'));
 $build_response['buildid'] = $build_array['id'];
 $response['build'] = $build_response;
 
-@$type = $_GET["type"];
+@$type = $_GET['type'];
 if ($type != null) {
     $type = pdo_real_escape_numeric($type);
 }
@@ -142,16 +142,16 @@ if ($type == 0) {
 
 $errors_response = array();
 
-if (isset($_GET["onlydeltan"])) {
+if (isset($_GET['onlydeltan'])) {
     // Build error table
     $errors = pdo_query(
-        "SELECT * FROM
+        'SELECT * FROM
       (SELECT * FROM builderror
-        WHERE buildid=" . $previous_buildid . " AND type=" . $type . ") AS builderrora
+        WHERE buildid=' . $previous_buildid . ' AND type=' . $type . ') AS builderrora
       LEFT JOIN (SELECT crc32 AS crc32b FROM builderror
-        WHERE buildid=" . $buildid . " AND type=" . $type . ") AS builderrorb
+        WHERE buildid=' . $buildid . ' AND type=' . $type . ') AS builderrorb
         ON builderrora.crc32=builderrorb.crc32b
-      WHERE builderrorb.crc32b IS NULL");
+      WHERE builderrorb.crc32b IS NULL');
 
     $errorid = 0;
     while ($error_array = pdo_fetch_array($errors)) {
@@ -186,7 +186,7 @@ if (isset($_GET["onlydeltan"])) {
      LEFT JOIN buildfailuredetails AS bfd ON (bf.detailsid=bfd.id)
      WHERE bf.buildid=$buildid AND bfd.type=$type";
     $result = pdo_query($query);
-    add_last_sql_error("viewBuildError onlydeltan", 0, $buildid);
+    add_last_sql_error('viewBuildError onlydeltan', 0, $buildid);
     while ($row = pdo_fetch_array($result)) {
         $current_failures[] = $row['detailsid'];
     }
@@ -196,7 +196,7 @@ if (isset($_GET["onlydeltan"])) {
      LEFT JOIN buildfailuredetails AS bfd ON (bf.detailsid=bfd.id)
      WHERE bf.buildid=$previous_buildid AND bfd.type=$type";
     $result = pdo_query($query);
-    add_last_sql_error("viewBuildError onlydeltan", 0, $buildid);
+    add_last_sql_error('viewBuildError onlydeltan', 0, $buildid);
     while ($row = pdo_fetch_array($result)) {
         $previous_failures[] = $row['detailsid'];
     }
@@ -210,7 +210,7 @@ if (isset($_GET["onlydeltan"])) {
          FROM buildfailure AS bf
          LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
          WHERE bf.buildid=$previous_buildid AND bfd.id=$failure");
-            add_last_sql_error("viewBuildError onlydeltan", $projectid);
+            add_last_sql_error('viewBuildError onlydeltan', $projectid);
 
             if (!$error_array) {
                 add_log('Expected results not returned', 'viewBuildError onlydeltan',
@@ -281,13 +281,13 @@ if (isset($_GET["onlydeltan"])) {
         }
     }
 } else {
-    $extrasql = "";
-    if (isset($_GET["onlydeltap"])) {
+    $extrasql = '';
+    if (isset($_GET['onlydeltap'])) {
         $extrasql = " AND newstatus='1'";
     }
 
     // Build error table
-    $errors = pdo_query("SELECT * FROM builderror WHERE buildid='$buildid' AND type='$type'" . $extrasql . " ORDER BY logline ASC");
+    $errors = pdo_query("SELECT * FROM builderror WHERE buildid='$buildid' AND type='$type'" . $extrasql . ' ORDER BY logline ASC');
     $errorid = 0;
     while ($error_array = pdo_fetch_array($errors)) {
         $error_response = array();
@@ -299,7 +299,7 @@ if (isset($_GET["onlydeltan"])) {
         $text = $error_array['text'];
 
         // Detect if the source directory has already been replaced by CTest with /.../
-        $pattern = "&/.../(.*?)/&";
+        $pattern = '&/.../(.*?)/&';
         $matches = array();
         preg_match($pattern, $text, $matches);
         if (sizeof($matches) > 1) {
@@ -336,9 +336,9 @@ if (isset($_GET["onlydeltan"])) {
             bfd.exitcondition
      FROM buildfailure AS bf
      LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
-     WHERE bf.buildid='$buildid' AND bfd.type='$type'" . $extrasql . "
-     ORDER BY bf.id ASC");
-    add_last_sql_error("viewBuildError get_failures", $projectid);
+     WHERE bf.buildid='$buildid' AND bfd.type='$type'" . $extrasql . '
+     ORDER BY bf.id ASC');
+    add_last_sql_error('viewBuildError get_failures', $projectid);
     while ($error_array = pdo_fetch_array($errors)) {
         $error_response = array();
         $error_response['id'] = $errorid;

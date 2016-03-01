@@ -74,7 +74,7 @@ class buildfailure
     public function Insert()
     {
         if (!$this->BuildId) {
-            echo "BuildFailure::Insert(): BuildId not set<br>";
+            echo 'BuildFailure::Insert(): BuildId not set<br>';
             return false;
         }
 
@@ -93,36 +93,36 @@ class buildfailure
 
         // Get details ID if it already exists, otherwise insert a new row.
         $detailsResult = pdo_single_row_query(
-            "SELECT id FROM buildfailuredetails WHERE crc32=" . qnum($crc32));
+            'SELECT id FROM buildfailuredetails WHERE crc32=' . qnum($crc32));
         if ($detailsResult && array_key_exists('id', $detailsResult)) {
             $detailsId = $detailsResult['id'];
         } else {
             $query =
-                "INSERT INTO buildfailuredetails
+                'INSERT INTO buildfailuredetails
           (type, stdoutput, stderror, exitcondition, language, targetname,
            outputfile, outputtype, crc32)
          VALUES
-          (" . qnum($this->Type) . ", '$stdOutput', '$stdError', '$exitCondition',
-           '$language', '$targetName', '$outputFile', '$outputType'," . qnum($crc32) . ")";
+          (' . qnum($this->Type) . ", '$stdOutput', '$stdError', '$exitCondition',
+           '$language', '$targetName', '$outputFile', '$outputType'," . qnum($crc32) . ')';
             if (!pdo_query($query)) {
-                add_last_sql_error("BuildFailure InsertDetails", 0, $this->BuildId);
+                add_last_sql_error('BuildFailure InsertDetails', 0, $this->BuildId);
             }
-            $detailsId = pdo_insert_id("buildfailuredetails");
+            $detailsId = pdo_insert_id('buildfailuredetails');
         }
 
         // Insert the buildfailure.
         $query =
-            "INSERT INTO buildfailure
+            'INSERT INTO buildfailure
          (buildid, detailsid, workingdirectory, sourcefile, newstatus)
        VALUES
-         (" . qnum($this->BuildId) . ", " . qnum($detailsId) . ", '$workingDirectory',
+         (' . qnum($this->BuildId) . ', ' . qnum($detailsId) . ", '$workingDirectory',
           '$sourceFile', 0)";
         if (!pdo_query($query)) {
-            add_last_sql_error("BuildFailure Insert", 0, $this->BuildId);
+            add_last_sql_error('BuildFailure Insert', 0, $this->BuildId);
             return false;
         }
 
-        $id = pdo_insert_id("buildfailure");
+        $id = pdo_insert_id('buildfailure');
 
         // Insert the arguments
         $argumentids = array();
@@ -134,7 +134,7 @@ class buildfailure
             // Check if the argument exists
             $query = pdo_query("SELECT id FROM buildfailureargument WHERE argument='" . $argumentescaped . "'");
             if (!$query) {
-                add_last_sql_error("BuildFailure Insert", 0, $this->BuildId);
+                add_last_sql_error('BuildFailure Insert', 0, $this->BuildId);
                 return false;
             }
 
@@ -146,27 +146,27 @@ class buildfailure
 
                 $query = "INSERT INTO buildfailureargument (argument) VALUES ('" . $argumentescaped . "')";
                 if (!pdo_query($query)) {
-                    add_last_sql_error("BuildFailure Insert", 0, $this->BuildId);
+                    add_last_sql_error('BuildFailure Insert', 0, $this->BuildId);
                     return false;
                 }
 
-                $argumentids[] = pdo_insert_id("buildfailureargument");
+                $argumentids[] = pdo_insert_id('buildfailureargument');
             }
         }
 
         // Insert the argument
-        $query = "INSERT INTO buildfailure2argument (buildfailureid,argumentid,place) VALUES ";
+        $query = 'INSERT INTO buildfailure2argument (buildfailureid,argumentid,place) VALUES ';
         $i = 0;
         foreach ($argumentids as $argumentid) {
             if ($i > 0) {
-                $query .= ",";
+                $query .= ',';
             }
-            $query .= "(" . qnum($id) . "," . qnum($argumentid) . "," . qnum($i) . ")";
+            $query .= '(' . qnum($id) . ',' . qnum($argumentid) . ',' . qnum($i) . ')';
             $i++;
         }
         if ($i > 0) {
             if (!pdo_query($query)) {
-                add_last_sql_error("BuildFailure Insert", 0, $this->BuildId);
+                add_last_sql_error('BuildFailure Insert', 0, $this->BuildId);
                 return false;
             }
         }

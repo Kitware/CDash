@@ -22,20 +22,20 @@ class ProjectModelTestCase extends KWWebTestCase
 
         $project = new Project();
 
-        $this->assertTrue($project->GetNumberOfErrorConfigures(0, 0) === false, "GetNumberOfErrorConfigures!=false");
-        $this->assertTrue($project->GetNumberOfWarningConfigures(0, 0) === false, "GetNumberOfWarningConfigures!=false");
-        $this->assertTrue($project->GetNumberOfPassingConfigures(0, 0) === false, "GetNumberOfPassingConfigures!=false");
-        $this->assertTrue($project->GetNumberOfPassingTests(0, 0) === false, "GetNumberOfPassingTests!=false");
-        $this->assertTrue($project->GetNumberOfFailingTests(0, 0) === false, "GetNumberOfFailingTests!=false");
-        $this->assertTrue($project->GetNumberOfNotRunTests(0, 0) === false, "GetNumberOfNotRunTests!=false");
-        $this->assertTrue($project->SendEmailToAdmin(0, 0) === false, "SendEmailToAdmin!=false");
+        $this->assertTrue($project->GetNumberOfErrorConfigures(0, 0) === false, 'GetNumberOfErrorConfigures!=false');
+        $this->assertTrue($project->GetNumberOfWarningConfigures(0, 0) === false, 'GetNumberOfWarningConfigures!=false');
+        $this->assertTrue($project->GetNumberOfPassingConfigures(0, 0) === false, 'GetNumberOfPassingConfigures!=false');
+        $this->assertTrue($project->GetNumberOfPassingTests(0, 0) === false, 'GetNumberOfPassingTests!=false');
+        $this->assertTrue($project->GetNumberOfFailingTests(0, 0) === false, 'GetNumberOfFailingTests!=false');
+        $this->assertTrue($project->GetNumberOfNotRunTests(0, 0) === false, 'GetNumberOfNotRunTests!=false');
+        $this->assertTrue($project->SendEmailToAdmin(0, 0) === false, 'SendEmailToAdmin!=false');
 
         if (!($project->Delete() === false)) {
             $this->fail("Project::Delete didn't return false for no id");
             return 1;
         }
 
-        $project->Id = "27123";
+        $project->Id = '27123';
         if (!($project->Exists() === false)) {
             $this->fail("Project::Exists didn't return false for bogus id");
             return 1;
@@ -43,7 +43,7 @@ class ProjectModelTestCase extends KWWebTestCase
 
         //Cover empty contents case
         $project->AddLogo('', '');
-        $project->Id = "2";
+        $project->Id = '2';
         $contents1 = file_get_contents('data/smile.gif', true);
         $contents2 = file_get_contents('data/smile2.gif', true);
 

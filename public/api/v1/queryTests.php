@@ -17,15 +17,15 @@
 // queryTests.php displays test results based on query parameters
 //
 $noforcelogin = 1;
-include dirname(dirname(dirname(__DIR__))) . "/config/config.php";
-require_once "include/pdo.php";
+include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
+require_once 'include/pdo.php';
 include 'public/login.php';
-include_once "include/common.php";
-include "include/version.php";
-require_once "include/filterdataFunctions.php";
-include_once "models/build.php";
+include_once 'include/common.php';
+include 'include/version.php';
+require_once 'include/filterdataFunctions.php';
+include_once 'models/build.php';
 
-@$date = $_GET["date"];
+@$date = $_GET['date'];
 if ($date != null) {
     $date = htmlspecialchars(pdo_real_escape_string($date));
 }
@@ -39,7 +39,7 @@ if (isset($_GET['parentid'])) {
     $date = $parent_build->GetDate();
 }
 
-@$projectname = $_GET["project"];
+@$projectname = $_GET['project'];
 if ($projectname != null) {
     $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
 }
@@ -53,7 +53,7 @@ $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME", $db);
 
 if ($projectname == '') {
-    $project_array = pdo_single_row_query("SELECT * FROM project LIMIT 1");
+    $project_array = pdo_single_row_query('SELECT * FROM project LIMIT 1');
 } else {
     $project_array = pdo_single_row_query("SELECT * FROM project WHERE name='$projectname'");
 }
@@ -82,8 +82,8 @@ $response['filterurl'] = htmlentities(@$_GET['filterstring'], ENT_QUOTES);
 
 // Menu
 $menu = array();
-$limit_param = "&limit=" . $filterdata['limit'];
-$base_url = "queryTests.php?project=" . urlencode($project_array['name']);
+$limit_param = '&limit=' . $filterdata['limit'];
+$base_url = 'queryTests.php?project=' . urlencode($project_array['name']);
 if (isset($_GET['parentid'])) {
     // When a parentid is specified, we should link to the next build,
     // not the next day.
@@ -91,12 +91,12 @@ if (isset($_GET['parentid'])) {
     $current_buildid = $parent_build->GetCurrentBuildId();
     $next_buildid = $parent_build->GetNextBuildId();
 
-    $menu['back'] = "index.php?project=" . urlencode($project_array['name']) . "&parentid=" . $current_buildid;
+    $menu['back'] = 'index.php?project=' . urlencode($project_array['name']) . '&parentid=' . $current_buildid;
 
     if ($previous_buildid > 0) {
         $menu['previous'] = "$base_url&parentid=$previous_buildid" . $limit_param;
     } else {
-        $menu['noprevious'] = "1";
+        $menu['noprevious'] = '1';
     }
 
     $menu['current'] = "$base_url&parentid=$current_buildid" . $limit_param;
@@ -104,24 +104,24 @@ if (isset($_GET['parentid'])) {
     if ($next_buildid > 0) {
         $menu['next'] = "$base_url&parentid=$next_buildid" . $limit_param;
     } else {
-        $menu['nonext'] = "1";
+        $menu['nonext'] = '1';
     }
 } else {
     if ($date == '') {
-        $back = "index.php?project=" . urlencode($project_array['name']);
+        $back = 'index.php?project=' . urlencode($project_array['name']);
     } else {
-        $back = "index.php?project=" . urlencode($project_array['name']) . "&date=" . $date;
+        $back = 'index.php?project=' . urlencode($project_array['name']) . '&date=' . $date;
     }
     $menu['back'] = $back;
 
-    $menu['previous'] = $base_url . "&date=" . $previousdate . $limit_param;
+    $menu['previous'] = $base_url . '&date=' . $previousdate . $limit_param;
 
     $menu['current'] = $base_url . $limit_param;
 
     if (has_next_date($date, $currentstarttime)) {
         $menu['next'] = $base_url . $nextdate . $limit_param;
     } else {
-        $menu['nonext'] = "1";
+        $menu['nonext'] = '1';
     }
 }
 
@@ -152,12 +152,12 @@ if (!$filterdata['hasdateclause']) {
     $date_clause = "AND b.starttime>='$beginning_UTCDate' AND b.starttime<'$end_UTCDate'";
 }
 
-$parent_clause = "";
-if (isset($_GET["parentid"])) {
+$parent_clause = '';
+if (isset($_GET['parentid'])) {
     // If we have a parentid, then we should only show children of that build.
     // Date becomes irrelevant in this case.
-    $parent_clause = "AND (b.parentid = " . qnum($_GET["parentid"]) . ") ";
-    $date_clause = "";
+    $parent_clause = 'AND (b.parentid = ' . qnum($_GET['parentid']) . ') ';
+    $date_clause = '';
 }
 
 $query = "SELECT
@@ -170,9 +170,9 @@ $query = "SELECT
           JOIN site ON (b.siteid = site.id)
           JOIN test ON (test.id = build2test.testid)
           WHERE b.projectid = '" . $project_array['id'] . "' " .
-    $parent_clause . $date_clause . " " .
+    $parent_clause . $date_clause . ' ' .
     $filter_sql .
-    "ORDER BY build2test.status, test.name" .
+    'ORDER BY build2test.status, test.name' .
     $limit_sql;
 
 $result = pdo_query($query);
@@ -180,23 +180,23 @@ $result = pdo_query($query);
 // Builds
 $builds = array();
 while ($row = pdo_fetch_array($result)) {
-    $buildid = $row["id"];
-    $testid = $row["testid"];
+    $buildid = $row['id'];
+    $testid = $row['testid'];
 
     $build = array();
 
-    $build['testname'] = $row["testname"];
-    $build['site'] = $row["sitename"];
-    $build['buildName'] = $row["name"];
+    $build['testname'] = $row['testname'];
+    $build['site'] = $row['sitename'];
+    $build['buildName'] = $row['name'];
 
     $build['buildstarttime'] =
-        date(FMT_DATETIMETZ, strtotime($row["starttime"] . " UTC"));
+        date(FMT_DATETIMETZ, strtotime($row['starttime'] . ' UTC'));
     // use the default timezone, same as index.php
 
-    $build['time'] = $row["time"];
-    $build['details'] = $row["details"] . "\n";
+    $build['time'] = $row['time'];
+    $build['details'] = $row['details'] . "\n";
 
-    $siteLink = "viewSite.php?siteid=" . $row["siteid"];
+    $siteLink = 'viewSite.php?siteid=' . $row['siteid'];
     $build['siteLink'] = $siteLink;
 
     $buildSummaryLink = "buildSummary.php?buildid=$buildid";
@@ -205,30 +205,30 @@ while ($row = pdo_fetch_array($result)) {
     $testDetailsLink = "testDetails.php?test=$testid&build=$buildid";
     $build['testDetailsLink'] = $testDetailsLink;
 
-    switch ($row["status"]) {
-        case "passed":
-            $build['status'] = "Passed";
-            $build['statusclass'] = "normal";
+    switch ($row['status']) {
+        case 'passed':
+            $build['status'] = 'Passed';
+            $build['statusclass'] = 'normal';
             break;
 
-        case "failed":
-            $build['status'] = "Failed";
-            $build['statusclass'] = "error";
+        case 'failed':
+            $build['status'] = 'Failed';
+            $build['statusclass'] = 'error';
             break;
 
-        case "notrun":
-            $build['status'] = "Not Run";
-            $build['statusclass'] = "warning";
+        case 'notrun':
+            $build['status'] = 'Not Run';
+            $build['statusclass'] = 'warning';
             break;
     }
 
     if ($project_array['showtesttime']) {
-        if ($row["timestatus"] < $project_array['testtimemaxstatus']) {
-            $build['timestatus'] = "Passed";
-            $build['timestatusclass'] = "normal";
+        if ($row['timestatus'] < $project_array['testtimemaxstatus']) {
+            $build['timestatus'] = 'Passed';
+            $build['timestatusclass'] = 'normal';
         } else {
-            $build['timestatus'] = "Failed";
-            $build['timestatusclass'] = "error";
+            $build['timestatus'] = 'Failed';
+            $build['timestatusclass'] = 'error';
         }
     }
 

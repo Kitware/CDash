@@ -24,13 +24,13 @@ class CoverageAPI extends CDashAPI
     {
         include_once 'include/common.php';
         if (!isset($this->Parameters['project'])) {
-            echo "Project not set";
+            echo 'Project not set';
             return;
         }
 
         $projectid = get_project_id($this->Parameters['project']);
         if (!is_numeric($projectid) || $projectid <= 0) {
-            echo "Project not found";
+            echo 'Project not found';
             return;
         }
 
@@ -40,7 +40,7 @@ class CoverageAPI extends CDashAPI
         echo pdo_error();
 
         if (pdo_num_rows($query) == 0) {
-            echo "No coverage entries found for this project";
+            echo 'No coverage entries found for this project';
             return;
         }
         $query_array = pdo_fetch_array($query);

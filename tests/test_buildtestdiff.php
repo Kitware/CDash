@@ -29,10 +29,10 @@ class BuildTestDiffTestCase extends KWWebTestCase
         $output = ob_get_contents();
         ob_end_clean();
         if ($result) {
-            $this->fail("Insert() should return false when BuildId is 0");
+            $this->fail('Insert() should return false when BuildId is 0');
             return 1;
         }
-        if (strpos($output, "BuildTestDiff::Insert(): BuildId is not set") === false) {
+        if (strpos($output, 'BuildTestDiff::Insert(): BuildId is not set') === false) {
             $this->fail("'BuildId is not set' not found from Insert()");
             return 1;
         }
@@ -57,7 +57,7 @@ class BuildTestDiffTestCase extends KWWebTestCase
             return 1;
         }
 
-        $this->pass("Passed");
+        $this->pass('Passed');
 
         $this->stopCodeCoverage();
         return 0;

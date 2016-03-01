@@ -28,7 +28,7 @@ class BuildErrorDiffTestCase extends KWWebTestCase
         $builderrordiff->Save();
         $output = ob_get_contents();
         ob_end_clean();
-        if (strpos($output, "BuildErrorDiff::Save(): BuildId not set") === false) {
+        if (strpos($output, 'BuildErrorDiff::Save(): BuildId not set') === false) {
             $this->fail("'BuildId not set' not found from Save()");
             return 1;
         }
@@ -58,7 +58,7 @@ class BuildErrorDiffTestCase extends KWWebTestCase
             return 1;
         }
 
-        $this->pass("Passed");
+        $this->pass('Passed');
 
         $this->stopCodeCoverage();
         return 0;

@@ -67,12 +67,12 @@ class GCovTarHandler
         // This function receives an open file handle, but we really just need
         // the path to this file so that we can extract it.
         $meta_data = stream_get_meta_data($handle);
-        $filename = $meta_data["uri"];
+        $filename = $meta_data['uri'];
         fclose($handle);
 
         // Create a new directory where we can extract our tarball.
         $pathParts = pathinfo($filename);
-        $dirName = $CDASH_BACKUP_DIRECTORY . "/" . $pathParts['filename'];
+        $dirName = $CDASH_BACKUP_DIRECTORY . '/' . $pathParts['filename'];
         mkdir($dirName);
 
         // Extract the tarball.
@@ -84,11 +84,11 @@ class GCovTarHandler
             new RecursiveDirectoryIterator($dirName),
             RecursiveIteratorIterator::CHILD_FIRST);
         foreach ($iterator as $fileinfo) {
-            if ($fileinfo->getFilename() == "data.json") {
+            if ($fileinfo->getFilename() == 'data.json') {
                 $jsonContents = file_get_contents($fileinfo->getRealPath());
                 $jsonDecoded = json_decode($jsonContents, true);
-                if (is_null($jsonDecoded) || !array_key_exists("Source", $jsonDecoded)
-                    || !array_key_exists("Binary", $jsonDecoded)
+                if (is_null($jsonDecoded) || !array_key_exists('Source', $jsonDecoded)
+                    || !array_key_exists('Binary', $jsonDecoded)
                 ) {
                     DeleteDirectory($dirName);
                     return false;
@@ -107,7 +107,7 @@ class GCovTarHandler
         // Check if any Labels.json files were included
         $iterator->rewind();
         foreach ($iterator as $fileinfo) {
-            if ($fileinfo->getFilename() == "Labels.json") {
+            if ($fileinfo->getFilename() == 'Labels.json') {
                 $this->ParseLabelsFile($fileinfo);
             }
         }
@@ -115,7 +115,7 @@ class GCovTarHandler
         // Recursively search for .gcov files and parse them.
         $iterator->rewind();
         foreach ($iterator as $fileinfo) {
-            if (pathinfo($fileinfo->getFilename(), PATHINFO_EXTENSION) == "gcov") {
+            if (pathinfo($fileinfo->getFilename(), PATHINFO_EXTENSION) == 'gcov') {
                 $this->ParseGcovFile($fileinfo);
             }
         }
@@ -149,7 +149,7 @@ class GCovTarHandler
         $path = '';
         while (!$file->eof()) {
             $gcovLine = $file->current();
-            $term = ":Source:";
+            $term = ':Source:';
             $pos = strpos($gcovLine, $term);
             if ($pos !== false) {
                 $path = substr($gcovLine, $pos + strlen($term));
@@ -164,9 +164,9 @@ class GCovTarHandler
         // If this source file isn't from the source or binary directory
         // we shouldn't include it in our coverage report.
         if (strpos($path, $this->SourceDirectory) !== false) {
-            $path = str_replace($this->SourceDirectory, ".", trim($path));
+            $path = str_replace($this->SourceDirectory, '.', trim($path));
         } elseif (strpos($path, $this->BinaryDirectory) !== false) {
-            $path = str_replace($this->BinaryDirectory, ".", trim($path));
+            $path = str_replace($this->BinaryDirectory, '.', trim($path));
         } else {
             return;
         }
@@ -195,10 +195,10 @@ class GCovTarHandler
 
             // Find the sibling build that performed this SubProject.
             $query =
-                "SELECT b.id FROM build AS b
+                'SELECT b.id FROM build AS b
                 INNER JOIN subproject2build AS sp2b ON (sp2b.buildid=b.id)
                 WHERE b.parentid=
-                (SELECT parentid FROM build WHERE id=" . $this->Build->Id . ")
+                (SELECT parentid FROM build WHERE id=' . $this->Build->Id . ")
                 AND sp2b.subprojectid=$subprojectid";
             $row = pdo_single_row_query($query);
             if ($row && array_key_exists('id', $row)) {
@@ -240,7 +240,7 @@ class GCovTarHandler
             // <lineNumber>: <timesHit>: <source code at that line>
             // So we check if this line matches the format & parse the
             // data out of it if so.
-            $fields = explode(":", $gcovLine, 3);
+            $fields = explode(':', $gcovLine, 3);
             if (count($fields) > 2) {
                 // Separate out delimited values from this line.
                 $timesHit = trim($fields[0]);
@@ -279,25 +279,25 @@ class GCovTarHandler
                 $fallthroughBranches = 0;
                 while (count($fields) < 3 && !$file->eof()) {
                     // Parse branch coverage here.
-                    if (substr($gcovLine, 0, 6) === "branch") {
+                    if (substr($gcovLine, 0, 6) === 'branch') {
                         // Figure out whether this branch was covered or not.
-                        if (strpos($gcovLine, "taken 0%") !== false) {
+                        if (strpos($gcovLine, 'taken 0%') !== false) {
                             $uncoveredBranches += 1;
                         } else {
                             $coveredBranches += 1;
                         }
 
                         // Also keep track of the different types of branches encountered.
-                        if (strpos($gcovLine, "(throw)") !== false) {
+                        if (strpos($gcovLine, '(throw)') !== false) {
                             $throwBranches += 1;
-                        } elseif (strpos($gcovLine, "(fallthrough)") !== false) {
+                        } elseif (strpos($gcovLine, '(fallthrough)') !== false) {
                             $fallthroughBranches += 1;
                         }
                     }
 
                     $file->next();
                     $gcovLine = $file->current();
-                    $fields = explode(":", $gcovLine);
+                    $fields = explode(':', $gcovLine);
                 }
 
                 // Don't report branch coverage for this line if we only
@@ -352,39 +352,39 @@ class GCovTarHandler
         // read the file & decode the JSON.
         $jsonContents = file_get_contents($fileinfo->getRealPath());
         $jsonDecoded = json_decode($jsonContents, true);
-        if (is_null($jsonDecoded) || !array_key_exists("sources", $jsonDecoded)) {
+        if (is_null($jsonDecoded) || !array_key_exists('sources', $jsonDecoded)) {
             return;
         }
 
         // Parse out any target-wide labels first.  These apply to
         // every source file found below.
         $target_labels = array();
-        if (array_key_exists("target", $jsonDecoded)) {
-            $target = $jsonDecoded["target"];
-            if (array_key_exists("labels", $target)) {
-                $target_labels = $target["labels"];
+        if (array_key_exists('target', $jsonDecoded)) {
+            $target = $jsonDecoded['target'];
+            if (array_key_exists('labels', $target)) {
+                $target_labels = $target['labels'];
             }
         }
 
-        $sources = $jsonDecoded["sources"];
+        $sources = $jsonDecoded['sources'];
         foreach ($sources as $source) {
-            if (!array_key_exists("file", $source)) {
+            if (!array_key_exists('file', $source)) {
                 continue;
             }
 
-            $path = $source["file"];
+            $path = $source['file'];
             if (strpos($path, $this->SourceDirectory) !== false) {
-                $path = str_replace($this->SourceDirectory, ".", trim($path));
+                $path = str_replace($this->SourceDirectory, '.', trim($path));
             } elseif (strpos($path, $this->BinaryDirectory) !== false) {
-                $path = str_replace($this->BinaryDirectory, ".", trim($path));
+                $path = str_replace($this->BinaryDirectory, '.', trim($path));
             } else {
                 continue;
             }
 
             $source_labels = $target_labels;
 
-            if (array_key_exists("labels", $source)) {
-                $source_labels = array_merge($source_labels, $source["labels"]);
+            if (array_key_exists('labels', $source)) {
+                $source_labels = array_merge($source_labels, $source['labels']);
             }
 
             $this->Labels[$path] = $source_labels;

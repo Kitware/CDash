@@ -43,7 +43,7 @@ class testimage
         $query = "INSERT INTO test2image (imgid,testid,role)
               VALUES ('$this->Id','$this->TestId','$role')";
         if (!pdo_query($query)) {
-            add_last_sql_error("TestImage Insert");
+            add_last_sql_error('TestImage Insert');
             return false;
         }
         return true;

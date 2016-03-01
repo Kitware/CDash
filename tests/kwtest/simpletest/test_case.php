@@ -235,7 +235,7 @@ class SimpleTestCase
     /**
      * @deprecated
      */
-    public function pass($message = "Pass")
+    public function pass($message = 'Pass')
     {
         if (!isset($this->reporter)) {
             trigger_error('Can only make assertions within test methods');
@@ -249,7 +249,7 @@ class SimpleTestCase
      *    Sends a fail event with a message.
      * @param string $message Message to send.
      */
-    public function fail($message = "Fail")
+    public function fail($message = 'Fail')
     {
         if (!isset($this->reporter)) {
             trigger_error('Can only make assertions within test methods');

@@ -56,43 +56,43 @@ class siteinformation
     public function SetValue($tag, $value)
     {
         switch ($tag) {
-            case "DESCRIPTION":
+            case 'DESCRIPTION':
                 $this->Description = $value;
                 break;
-            case "IS64BITS":
+            case 'IS64BITS':
                 $this->ProcessorIs64Bits = $value;
                 break;
-            case "VENDORSTRING":
+            case 'VENDORSTRING':
                 $this->ProcessorVendor = $value;
                 break;
-            case "VENDORID":
+            case 'VENDORID':
                 $this->ProcessorVendorId = $value;
                 break;
-            case "FAMILYID":
+            case 'FAMILYID':
                 $this->ProcessorFamilyId = $value;
                 break;
-            case "MODELID":
+            case 'MODELID':
                 $this->ProcessorModelId = $value;
                 break;
-            case "PROCESSORCACHESIZE":
+            case 'PROCESSORCACHESIZE':
                 $this->ProcessorCacheSize = $value;
                 break;
-            case "NUMBEROFLOGICALCPU":
+            case 'NUMBEROFLOGICALCPU':
                 $this->NumberLogicalCpus = $value;
                 break;
-            case "NUMBEROFPHYSICALCPU":
+            case 'NUMBEROFPHYSICALCPU':
                 $this->NumberPhysicalCpus = $value;
                 break;
-            case "TOTALVIRTUALMEMORY":
+            case 'TOTALVIRTUALMEMORY':
                 $this->TotalVirtualMemory = $value;
                 break;
-            case "TOTALPHYSICALMEMORY":
+            case 'TOTALPHYSICALMEMORY':
                 $this->TotalPhysicalMemory = $value;
                 break;
-            case "LOGICALPROCESSORSPERPHYSICAL":
+            case 'LOGICALPROCESSORSPERPHYSICAL':
                 $this->LogicalProcessorsPerPhysical = $value;
                 break;
-            case "PROCESSORCLOCKFREQUENCY":
+            case 'PROCESSORCLOCKFREQUENCY':
                 $this->ProcessorClockFrequency = $value;
                 break;
         }
@@ -119,7 +119,7 @@ class siteinformation
     {
         if ($this->Exists()) {
             // Update the project
-            $query = "UPDATE siteinformation SET";
+            $query = 'UPDATE siteinformation SET';
             $query .= " timestamp='" . $this->TimeStamp . "'";
             $query .= ",processoris64bits='" . $this->ProcessorIs64Bits . "'";
             $query .= ",processorvendor='" . $this->ProcessorVendor . "'";
@@ -137,27 +137,27 @@ class siteinformation
             $query .= " WHERE siteid='" . $this->SiteId . "'";
 
             if (!pdo_query($query)) {
-                add_last_sql_error("SiteInformation Update");
+                add_last_sql_error('SiteInformation Update');
                 return false;
             }
         } else {
-            if (!pdo_query("INSERT INTO siteinformation (siteid,timestamp,
+            if (!pdo_query('INSERT INTO siteinformation (siteid,timestamp,
                      processoris64bits,processorvendor,processorvendorid,
                      processorfamilyid,processormodelid,processorcachesize,
                      numberlogicalcpus,numberphysicalcpus,totalvirtualmemory,
                      totalphysicalmemory,logicalprocessorsperphysical,processorclockfrequency,
                      description
                      )
-                     VALUES (" . qnum($this->SiteId) . ",'$this->TimeStamp','$this->ProcessorIs64Bits',
+                     VALUES (' . qnum($this->SiteId) . ",'$this->TimeStamp','$this->ProcessorIs64Bits',
                      '$this->ProcessorVendor','$this->ProcessorVendorId',
-                     " . qnum($this->ProcessorFamilyId) . "," . qnum($this->ProcessorModelId) . ",
-                     " . qnum(round($this->ProcessorCacheSize)) . "," . qnum(round($this->NumberLogicalCpus)) . ",
-                     " . qnum(round($this->NumberPhysicalCpus)) . "," . qnum(round($this->TotalVirtualMemory)) . ",
-                     " . qnum(round($this->TotalPhysicalMemory)) . "," . qnum(round($this->LogicalProcessorsPerPhysical)) . ",
-                      " . qnum(round($this->ProcessorClockFrequency)) . ",'$this->Description'
+                     " . qnum($this->ProcessorFamilyId) . ',' . qnum($this->ProcessorModelId) . ',
+                     ' . qnum(round($this->ProcessorCacheSize)) . ',' . qnum(round($this->NumberLogicalCpus)) . ',
+                     ' . qnum(round($this->NumberPhysicalCpus)) . ',' . qnum(round($this->TotalVirtualMemory)) . ',
+                     ' . qnum(round($this->TotalPhysicalMemory)) . ',' . qnum(round($this->LogicalProcessorsPerPhysical)) . ',
+                      ' . qnum(round($this->ProcessorClockFrequency)) . ",'$this->Description'
                      )")
             ) {
-                add_last_sql_error("SiteInformation Insert");
+                add_last_sql_error('SiteInformation Insert');
                 return false;
             }
         }

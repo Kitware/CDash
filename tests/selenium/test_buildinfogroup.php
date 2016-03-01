@@ -14,7 +14,7 @@ class Example extends CDashSeleniumTestCase
 
     public function testBuildInfoGroup()
     {
-        $this->open($this->webPath . "/index.php?project=EmailProjectExample&date=2009-02-23");
+        $this->open($this->webPath . '/index.php?project=EmailProjectExample&date=2009-02-23');
         $this->click("//img[@alt='info']");
         sleep(1);
         $this->click("//img[@alt='info']");

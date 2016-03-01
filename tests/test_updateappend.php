@@ -12,7 +12,7 @@ class UppdateAppendTestCase extends KWWebTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->OriginalConfigSettings = "";
+        $this->OriginalConfigSettings = '';
     }
 
     public function testUpdateAppend()
@@ -20,17 +20,17 @@ class UppdateAppendTestCase extends KWWebTestCase
         echo "1. testUpdateAppend\n";
 
         // Submit our test data.
-        $rep = dirname(__FILE__) . "/data/UpdateAppend";
+        $rep = dirname(__FILE__) . '/data/UpdateAppend';
         if (!$this->submission('EmailProjectExample', "$rep/Update_1.xml")) {
-            $this->fail("failed to submit Update_1.xml");
+            $this->fail('failed to submit Update_1.xml');
             return 1;
         }
         if (!$this->submission('EmailProjectExample', "$rep/Update_2.xml")) {
-            $this->fail("failed to submit Update_2.xml");
+            $this->fail('failed to submit Update_2.xml');
             return 1;
         }
         if (!$this->submission('EmailProjectExample', "$rep/Update_3.xml")) {
-            $this->fail("failed to submit Update_3.xml");
+            $this->fail('failed to submit Update_3.xml');
             return 1;
         }
 
@@ -46,16 +46,16 @@ class UppdateAppendTestCase extends KWWebTestCase
             foreach ($buildids as $id) {
                 remove_build($id);
             }
-            $this->fail("Expected 1 build, found " . count($buildids));
+            $this->fail('Expected 1 build, found ' . count($buildids));
             return 1;
         }
         $buildid = $buildids[0];
 
         // Get the updateid associated with the build id
-        $query = pdo_query("SELECT updateid FROM build2update WHERE buildid=" . qnum($buildid));
+        $query = pdo_query('SELECT updateid FROM build2update WHERE buildid=' . qnum($buildid));
         $query_array = pdo_fetch_array($query);
         $updateid = $query_array['updateid'];
-        $build_query = pdo_query("SELECT * FROM buildupdate WHERE id=" . qnum($updateid));
+        $build_query = pdo_query('SELECT * FROM buildupdate WHERE id=' . qnum($updateid));
         $buildupdate_array = pdo_fetch_array($build_query);
 
         // Check that values have been updated correctly
@@ -64,28 +64,28 @@ class UppdateAppendTestCase extends KWWebTestCase
             $success = true;
 
             if ($buildupdate_array['nfiles'] != 3) {
-                throw new Exception("Expected nfiles=3, found nfiles= " . qnum($buildupdate_array['nfiles']));
+                throw new Exception('Expected nfiles=3, found nfiles= ' . qnum($buildupdate_array['nfiles']));
             }
             if ($buildupdate_array['warnings'] != 1) {
-                throw new Exception("Expected warnings=1, found warnings= " . qnum($buildupdate_array['nwarnings']));
+                throw new Exception('Expected warnings=1, found warnings= ' . qnum($buildupdate_array['nwarnings']));
             }
 
             // Note: UpdateType is only read from the first Update
             if ($buildupdate_array['type'] != 'GIT') {
-                throw new Exception("Expected type=GIT, found type= " . $buildupdate_array['type']);
+                throw new Exception('Expected type=GIT, found type= ' . $buildupdate_array['type']);
             }
 
             // Note: Commands from all Updates are concatenated together
             if ($buildupdate_array['command'] != 'Command 1Command 2Command 3') {
-                throw new Exception("Expected command=Command 1Command 2Command 3, found command= " . $buildupdate_array['command']);
+                throw new Exception('Expected command=Command 1Command 2Command 3, found command= ' . $buildupdate_array['command']);
             }
 
             // Note: MDT = GMT - 6
             if ($buildupdate_array['starttime'] != '2015-08-24 04:04:14') {
-                throw new Exception("Expected starttime=GIT, found starttime= " . $buildupdate_array['starttime']);
+                throw new Exception('Expected starttime=GIT, found starttime= ' . $buildupdate_array['starttime']);
             }
             if ($buildupdate_array['endtime'] != '2015-08-24 04:20:30') {
-                throw new Exception("Expected endtime=2015-08-24 04:20:30, found endtime= " . $buildupdate_array['endtime']);
+                throw new Exception('Expected endtime=2015-08-24 04:20:30, found endtime= ' . $buildupdate_array['endtime']);
             }
 
             // Note: UpdateReturnStatus is overwritten with each update
@@ -96,15 +96,15 @@ class UppdateAppendTestCase extends KWWebTestCase
             // Note: Revision and PriorRevision are only read from the first Update AND
             //       only IF they're under the <Update> tag (not in <Updated> or <Revisions>)
             if ($buildupdate_array['revision'] != 3) {
-                throw new Exception("Expected revision=3, found revision= " . $buildupdate_array['revision']);
+                throw new Exception('Expected revision=3, found revision= ' . $buildupdate_array['revision']);
             }
             if ($buildupdate_array['priorrevision'] != 2) {
-                throw new Exception("Expected priorrevision=2, found priorrevision= " . $buildupdate_array['priorrevision']);
+                throw new Exception('Expected priorrevision=2, found priorrevision= ' . $buildupdate_array['priorrevision']);
             }
 
             // Note: Path is only read from the first Update
             if ($buildupdate_array['path'] != 'mypath') {
-                throw new Exception("Expected path=mypath, found path= " . $buildupdate_array['path']);
+                throw new Exception('Expected path=mypath, found path= ' . $buildupdate_array['path']);
             }
         } catch (Exception $e) {
             $success = false;

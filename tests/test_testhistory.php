@@ -17,13 +17,13 @@ class TestHistoryTestCase extends KWWebTestCase
     public function testTestHistory()
     {
         // Submit our testing data.
-        $rep = dirname(__FILE__) . "/data/TestHistory";
+        $rep = dirname(__FILE__) . '/data/TestHistory';
         if (!$this->submission('InsightExample', "$rep/Test_1.xml")) {
-            $this->fail("Failed to submit Test_1.xml");
+            $this->fail('Failed to submit Test_1.xml');
             return 1;
         }
         if (!$this->submission('InsightExample', "$rep/Test_2.xml")) {
-            $this->fail("Failed to submit Test_1.xml");
+            $this->fail('Failed to submit Test_1.xml');
             return 1;
         }
 
@@ -46,7 +46,7 @@ class TestHistoryTestCase extends KWWebTestCase
         $jsonobj = json_decode($content, true);
 
         $success = true;
-        $error_message = "";
+        $error_message = '';
 
         foreach ($jsonobj['tests'] as $test) {
             $history = $test['history'];

@@ -36,9 +36,9 @@ class labelemail
             return false;
         }
 
-        $query = pdo_query("SELECT count(*) FROM labelemail WHERE userid=" . qnum($this->UserId) .
-            " AND projectid=" . qnum($this->ProjectId) .
-            " AND labelid=" . qnum($this->LabelId));
+        $query = pdo_query('SELECT count(*) FROM labelemail WHERE userid=' . qnum($this->UserId) .
+            ' AND projectid=' . qnum($this->ProjectId) .
+            ' AND labelid=' . qnum($this->LabelId));
         $query_array = pdo_fetch_array($query);
         if ($query_array[0] > 0) {
             return true;
@@ -49,24 +49,24 @@ class labelemail
     public function Insert()
     {
         if (!$this->ProjectId) {
-            echo "LabelEmail Insert(): ProjectId not set";
+            echo 'LabelEmail Insert(): ProjectId not set';
             return false;
         }
 
         if (!$this->UserId) {
-            echo "LabelEmail Insert(): UserId not set";
+            echo 'LabelEmail Insert(): UserId not set';
             return false;
         }
 
         if (!$this->LabelId) {
-            echo "LabelEmail Insert(): LabelId not set";
+            echo 'LabelEmail Insert(): LabelId not set';
             return false;
         }
 
         if (!$this->Exists()) {
-            $query = pdo_query("INSERT INTO labelemail (userid,projectid,labelid) VALUES(" . qnum($this->UserId) .
-                "," . qnum($this->ProjectId) .
-                "," . qnum($this->LabelId) . ")");
+            $query = pdo_query('INSERT INTO labelemail (userid,projectid,labelid) VALUES(' . qnum($this->UserId) .
+                ',' . qnum($this->ProjectId) .
+                ',' . qnum($this->LabelId) . ')');
             if (!$query) {
                 return false;
             }
@@ -78,12 +78,12 @@ class labelemail
     public function UpdateLabels($labels)
     {
         if (!$this->ProjectId) {
-            echo "LabelEmail UpdateLabels(): ProjectId not set";
+            echo 'LabelEmail UpdateLabels(): ProjectId not set';
             return false;
         }
 
         if (!$this->UserId) {
-            echo "LabelEmail UpdateLabels(): UserId not set";
+            echo 'LabelEmail UpdateLabels(): UserId not set';
             return false;
         }
 
@@ -111,18 +111,18 @@ class labelemail
     public function GetLabels()
     {
         if (empty($this->ProjectId)) {
-            echo "LabelEmail GetLabels(): ProjectId not set";
+            echo 'LabelEmail GetLabels(): ProjectId not set';
             return false;
         }
 
         if (empty($this->UserId)) {
-            echo "LabelEmail GetLabels(): UserId not set";
+            echo 'LabelEmail GetLabels(): UserId not set';
             return false;
         }
 
-        $labels = pdo_query("SELECT labelid FROM labelemail WHERE projectid=" . qnum($this->ProjectId) . " AND userid=" . qnum($this->UserId));
+        $labels = pdo_query('SELECT labelid FROM labelemail WHERE projectid=' . qnum($this->ProjectId) . ' AND userid=' . qnum($this->UserId));
         if (!$labels) {
-            add_last_sql_error("LabelEmail GetLabels");
+            add_last_sql_error('LabelEmail GetLabels');
             return false;
         }
 

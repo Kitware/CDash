@@ -56,7 +56,7 @@ class buildgroupposition
             if (!pdo_query("INSERT INTO buildgroupposition (buildgroupid,position,starttime,endtime)
                      VALUES ('$this->GroupId','$this->Position','$this->StartTime','$this->EndTime')")
             ) {
-                add_last_sql_error("BuildGroupPosition Insert()");
+                add_last_sql_error('BuildGroupPosition Insert()');
                 return false;
             }
             return true;

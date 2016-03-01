@@ -14,14 +14,14 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include dirname(__DIR__) . "/config/config.php";
-require_once "include/pdo.php";
+include dirname(__DIR__) . '/config/config.php';
+require_once 'include/pdo.php';
 include 'public/login.php';
-include "include/version.php";
+include 'include/version.php';
 
 if ($session_OK) {
     include_once 'include/common.php';
-    include_once "include/ctestparser.php";
+    include_once 'include/ctestparser.php';
 
     set_time_limit(0);
 
@@ -31,77 +31,77 @@ if ($session_OK) {
     checkUserPolicy(@$_SESSION['cdash']['loginid'], 0); // only admin
 
 //get date info here
-    @$dayFrom = $_POST["dayFrom"];
+    @$dayFrom = $_POST['dayFrom'];
     if (!isset($dayFrom)) {
-        $dayFrom = date('d', strtotime("yesterday"));
-        $monthFrom = date('m', strtotime("yesterday"));
-        $yearFrom = date('Y', strtotime("yesterday"));
+        $dayFrom = date('d', strtotime('yesterday'));
+        $monthFrom = date('m', strtotime('yesterday'));
+        $yearFrom = date('Y', strtotime('yesterday'));
         $dayTo = date('d');
         $yearTo = date('Y');
         $monthTo = date('m');
     } else {
         $dayFrom = pdo_real_escape_numeric($dayFrom);
-        $monthFrom = pdo_real_escape_numeric($_POST["monthFrom"]);
-        $yearFrom = pdo_real_escape_numeric($_POST["yearFrom"]);
-        $dayTo = pdo_real_escape_numeric($_POST["dayTo"]);
-        $monthTo = pdo_real_escape_numeric($_POST["monthTo"]);
-        $yearTo = pdo_real_escape_numeric($_POST["yearTo"]);
+        $monthFrom = pdo_real_escape_numeric($_POST['monthFrom']);
+        $yearFrom = pdo_real_escape_numeric($_POST['yearFrom']);
+        $dayTo = pdo_real_escape_numeric($_POST['dayTo']);
+        $monthTo = pdo_real_escape_numeric($_POST['monthTo']);
+        $yearTo = pdo_real_escape_numeric($_POST['yearTo']);
     }
 
     $xml = begin_XML_for_XSLT();
-    $xml .= "<backurl>manageBackup.php</backurl>";
-    $xml .= "<title>CDash - Import</title>";
-    $xml .= "<menutitle>CDash</menutitle>";
-    $xml .= "<menusubtitle>Import Dart1</menusubtitle>";
+    $xml .= '<backurl>manageBackup.php</backurl>';
+    $xml .= '<title>CDash - Import</title>';
+    $xml .= '<menutitle>CDash</menutitle>';
+    $xml .= '<menusubtitle>Import Dart1</menusubtitle>';
 
-    $project = pdo_query("SELECT name,id FROM project ORDER BY id");
-    $projName = "";
+    $project = pdo_query('SELECT name,id FROM project ORDER BY id');
+    $projName = '';
     while ($project_array = pdo_fetch_array($project)) {
-        $projName = $project_array["name"];
-        $xml .= "<project>";
-        $xml .= "<name>" . $projName . "</name>";
-        $xml .= "<id>" . $project_array["id"] . "</id>";
-        $xml .= "</project>";
+        $projName = $project_array['name'];
+        $xml .= '<project>';
+        $xml .= '<name>' . $projName . '</name>';
+        $xml .= '<id>' . $project_array['id'] . '</id>';
+        $xml .= '</project>';
     }
 
-    $xml .= "<dayFrom>" . $dayFrom . "</dayFrom>";
-    $xml .= "<monthFrom>" . $monthFrom . "</monthFrom>";
-    $xml .= "<yearFrom>" . $yearFrom . "</yearFrom>";
-    $xml .= "<dayTo>" . $dayTo . "</dayTo>";
-    $xml .= "<monthTo>" . $monthTo . "</monthTo>";
-    $xml .= "<yearTo>" . $yearTo . "</yearTo>";
-    $xml .= "</cdash>";
+    $xml .= '<dayFrom>' . $dayFrom . '</dayFrom>';
+    $xml .= '<monthFrom>' . $monthFrom . '</monthFrom>';
+    $xml .= '<yearFrom>' . $yearFrom . '</yearFrom>';
+    $xml .= '<dayTo>' . $dayTo . '</dayTo>';
+    $xml .= '<monthTo>' . $monthTo . '</monthTo>';
+    $xml .= '<yearTo>' . $yearTo . '</yearTo>';
+    $xml .= '</cdash>';
 
-    @$Submit = $_POST["Submit"];
+    @$Submit = $_POST['Submit'];
     if ($Submit) {
-        $directory = htmlspecialchars(pdo_real_escape_string($_POST["directory"]));
-        $projectid = pdo_real_escape_numeric($_POST["project"]);
+        $directory = htmlspecialchars(pdo_real_escape_string($_POST['directory']));
+        $projectid = pdo_real_escape_numeric($_POST['project']);
 
         // Checks
         if (!isset($projectid) || !is_numeric($projectid)) {
-            echo "Not a valid projectid!";
+            echo 'Not a valid projectid!';
             return;
         }
         // Checks
         if (!isset($directory) || strlen($directory) < 3) {
-            echo "Not a valid directory!";
+            echo 'Not a valid directory!';
             return;
         }
 
         if ($projectid == 0) {
-            echo("Use your browsers Back button, and select a valid project.<br>");
+            echo('Use your browsers Back button, and select a valid project.<br>');
             ob_flush();
             return;
         }
-        echo("Import for Project: ");
+        echo('Import for Project: ');
         echo(get_project_name($projectid));
-        echo("<br>");
+        echo('<br>');
         ob_flush();
         if (strlen($directory) > 0) {
             $directory = str_replace('\\\\', '/', $directory);
-            if (!file_exists($directory) || strpos($directory, "Sites") === false) {
+            if (!file_exists($directory) || strpos($directory, 'Sites') === false) {
                 echo("Error: $directory is not a valid path to Dart XML data on the server.<br>\n");
-                generate_XSLT($xml, "import_dart_classic");
+                generate_XSLT($xml, 'import_dart_classic');
                 return;
             }
             $startDate = mktime(0, 0, 0, $monthFrom, $dayFrom, $yearFrom);
@@ -122,9 +122,9 @@ if ($session_OK) {
                     if (strlen($file) == 0) {
                         continue;
                     }
-                    $handle = fopen($file, "r");
+                    $handle = fopen($file, 'r');
                     //$contents = fread($handle,filesize($file));
-                    echo ".";
+                    echo '.';
                     flush();
                     ob_flush();
                     $numDots++;
@@ -140,15 +140,15 @@ if ($session_OK) {
                     fclose($handle);
                     unset($handle);
                 }
-                echo "<br>Done for the day" . $currentDay . "<br>\n";
+                echo '<br>Done for the day' . $currentDay . "<br>\n";
                 flush();
                 ob_flush();
             }
         }
-        echo("<a href=index.php?project=" . urlencode($projName) . ">Back to $projName dashboard</a>\n");
+        echo('<a href=index.php?project=' . urlencode($projName) . ">Back to $projName dashboard</a>\n");
         return;
     }
 
 // Now doing the xslt transition
-    generate_XSLT($xml, "import");
+    generate_XSLT($xml, 'import');
 }

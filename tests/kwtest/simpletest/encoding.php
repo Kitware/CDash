@@ -45,7 +45,7 @@ class SimpleEncodedPair
     public function asMime()
     {
         $part = 'Content-Disposition: form-data; ';
-        $part .= "name=\"" . $this->key . "\"\r\n";
+        $part .= 'name="' . $this->key . "\"\r\n";
         $part .= "\r\n" . $this->value;
         return $part;
     }
@@ -461,8 +461,8 @@ class SimpleEntityEncoding extends SimpleEncoding
      */
     public function writeHeadersTo(&$socket)
     {
-        $socket->write("Content-Length: " . (integer)strlen($this->encode()) . "\r\n");
-        $socket->write("Content-Type: " . $this->getContentType() . "\r\n");
+        $socket->write('Content-Length: ' . (integer)strlen($this->encode()) . "\r\n");
+        $socket->write('Content-Type: ' . $this->getContentType() . "\r\n");
     }
 
     /**
@@ -520,7 +520,7 @@ class SimplePostEncoding extends SimpleEntityEncoding
         foreach ($query as $key => $value) {
             if (is_array($value)) {
                 foreach ($value as $sub_key => $sub_value) {
-                    $query_[$key . "[" . $sub_key . "]"] = $sub_value;
+                    $query_[$key . '[' . $sub_key . ']'] = $sub_value;
                 }
             } else {
                 $query_[$key] = $value;
@@ -604,8 +604,8 @@ class SimpleMultipartEncoding extends SimplePostEncoding
      */
     public function writeHeadersTo(&$socket)
     {
-        $socket->write("Content-Length: " . (integer)strlen($this->encode()) . "\r\n");
-        $socket->write("Content-Type: multipart/form-data; boundary=" . $this->boundary . "\r\n");
+        $socket->write('Content-Length: ' . (integer)strlen($this->encode()) . "\r\n");
+        $socket->write('Content-Type: multipart/form-data; boundary=' . $this->boundary . "\r\n");
     }
 
     /**
@@ -626,10 +626,10 @@ class SimpleMultipartEncoding extends SimplePostEncoding
     {
         $stream = '';
         foreach ($this->getAll() as $pair) {
-            $stream .= "--" . $this->boundary . "\r\n";
+            $stream .= '--' . $this->boundary . "\r\n";
             $stream .= $pair->asMime() . "\r\n";
         }
-        $stream .= "--" . $this->boundary . "--\r\n";
+        $stream .= '--' . $this->boundary . "--\r\n";
         return $stream;
     }
 }

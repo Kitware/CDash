@@ -23,7 +23,7 @@ class DeleteDailyUpdateTestCase extends KWWebTestCase
     public function testDeleteDailyUpdate()
     {
         //double check that it's the testing database before doing anything hasty...
-        if ($this->databaseName !== "cdash4simpletest") {
+        if ($this->databaseName !== 'cdash4simpletest') {
             $this->fail("can only test on a database named 'cdash4simpletest'");
             return 1;
         }
@@ -31,21 +31,21 @@ class DeleteDailyUpdateTestCase extends KWWebTestCase
         //remove the daily update entry for some projects so that subsequent tests
         //will cover dailyupdate.php more thoroughly
 
-        $cvsID = get_project_id("InsightExample");
+        $cvsID = get_project_id('InsightExample');
         if (!$query = pdo_query("DELETE FROM dailyupdate WHERE projectid='$cvsID'")) {
-            $this->fail("pdo_query returned false");
+            $this->fail('pdo_query returned false');
             return 1;
         }
-        $svnID = get_project_id("EmailProjectExample");
+        $svnID = get_project_id('EmailProjectExample');
         if (!$query = pdo_query("DELETE FROM dailyupdate WHERE projectid='$svnID'")) {
-            $this->fail("pdo_query returned false");
+            $this->fail('pdo_query returned false');
             return 1;
         }
-        $gitID = get_project_id("PublicDashboard");
+        $gitID = get_project_id('PublicDashboard');
         if (!$query = pdo_query("DELETE FROM dailyupdate WHERE projectid='$gitID'")) {
-            $this->fail("pdo_query returned false");
+            $this->fail('pdo_query returned false');
             return 1;
         }
-        $this->pass("Passed");
+        $this->pass('Passed');
     }
 }

@@ -21,9 +21,9 @@ class UserTestCase extends KWWebTestCase
         $this->startCodeCoverage();
 
         $user = new User();
-        $user->Id = "non_numeric";
+        $user->Id = 'non_numeric';
 
-        if (!($user->SetPassword("blah") === false)) {
+        if (!($user->SetPassword('blah') === false)) {
             $this->fail("User::SetPassword didn't return false for non-numeric user id");
             return 1;
         }
@@ -33,8 +33,8 @@ class UserTestCase extends KWWebTestCase
             return 1;
         }
 
-        $user->Id = "";
-        $user->Email = "";
+        $user->Id = '';
+        $user->Email = '';
 
         if (!($user->GetName() === false)) {
             $this->fail("User::GetName didn't return false when given no user id");
@@ -46,37 +46,37 @@ class UserTestCase extends KWWebTestCase
             return 1;
         }
 
-        $user->Email = "simpletest@localhost";
+        $user->Email = 'simpletest@localhost';
 
         if ($user->Exists() === false) {
-            $this->fail("User::Exists returned false even though user exists");
+            $this->fail('User::Exists returned false even though user exists');
             return 1;
         }
 
-        $id = $user->GetIdFromEmail("simpletest@localhost");
+        $id = $user->GetIdFromEmail('simpletest@localhost');
 
         if ($id === false) {
-            $this->fail("User::GetIdFromEmail returned false for a valid user");
+            $this->fail('User::GetIdFromEmail returned false for a valid user');
             return 1;
         }
 
         $user->Id = $id;
-        $user->Admin = "1";
-        $user->FirstName = "administrator";
-        $user->Institution = "Kitware Inc.";
+        $user->Admin = '1';
+        $user->FirstName = 'administrator';
+        $user->Institution = 'Kitware Inc.';
 
         if ($user->Exists() != true) {
-            $this->fail("User::Exists failed given a valid user id");
+            $this->fail('User::Exists failed given a valid user id');
             return 1;
         }
 
-        $user->Password = md5("simpletest");
+        $user->Password = md5('simpletest');
 
         // Coverage for update save
         $user->Save();
 
         // Coverage for SetPassword
-        $user->SetPassword(md5("simpletest"));
+        $user->SetPassword(md5('simpletest'));
 
         $this->stopCodeCoverage();
         return 0;

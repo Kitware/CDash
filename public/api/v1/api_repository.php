@@ -25,11 +25,11 @@ class RepositoryAPI extends CDashAPI
         include_once 'include/repository.php';
 
         if (!isset($this->Parameters['url'])) {
-            echo "url parameter not set";
+            echo 'url parameter not set';
             return;
         }
         if (!isset($this->Parameters['type'])) {
-            echo "type parameter not set";
+            echo 'type parameter not set';
             return;
         }
 

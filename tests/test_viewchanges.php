@@ -14,7 +14,7 @@ class ViewChangesTestCase extends KWWebTestCase
 
     public function testViewChanges()
     {
-        $content = $this->connect($this->url . "/viewChanges.php?project=TestCompressionExample");
+        $content = $this->connect($this->url . '/viewChanges.php?project=TestCompressionExample');
         if ($content == false) {
             return;
         }

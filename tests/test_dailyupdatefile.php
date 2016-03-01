@@ -25,7 +25,7 @@ class DailyUpdateFileTestCase extends KWWebTestCase
         //no id, no matching database entry
         $dailyupdatefile->DailyUpdateId = 0;
         if ($dailyupdatefile->Exists()) {
-            $this->fail("Exists() should return false when DailyUpdateId is 0");
+            $this->fail('Exists() should return false when DailyUpdateId is 0');
             return 1;
         }
 
@@ -33,52 +33,52 @@ class DailyUpdateFileTestCase extends KWWebTestCase
         $dailyupdatefile->Save();
         $output = ob_get_contents();
         ob_end_clean();
-        if ($output !== "DailyUpdateFile::Save(): DailyUpdateId not set!") {
+        if ($output !== 'DailyUpdateFile::Save(): DailyUpdateId not set!') {
             $this->fail("'DailyUpdateId not set!' not found from Save()");
             return 1;
         }
 
         //no filename
-        $dailyupdatefile->Filename = "";
+        $dailyupdatefile->Filename = '';
         $dailyupdatefile->DailyUpdateId = 1;
         ob_start();
         $dailyupdatefile->Save();
         $output = ob_get_contents();
         ob_end_clean();
-        if ($output !== "DailyUpdateFile::Save(): Filename not set!") {
+        if ($output !== 'DailyUpdateFile::Save(): Filename not set!') {
             $this->fail("'Filename not set!' not found from Save()");
             return 1;
         }
 
         //no matching database entry
         if ($dailyupdatefile->Exists()) {
-            $this->fail("Exists() should return false before Save() has been called");
+            $this->fail('Exists() should return false before Save() has been called');
             return 1;
         }
 
-        $dailyupdatefile->Filename = "dailyupdatefile.log";
+        $dailyupdatefile->Filename = 'dailyupdatefile.log';
         ob_start();
         $dailyupdatefile->Save();
         $output = ob_get_contents();
         ob_end_clean();
-        if ($output !== "DailyUpdateFile::Save(): CheckinDate not set!") {
+        if ($output !== 'DailyUpdateFile::Save(): CheckinDate not set!') {
             $this->fail("'CheckinDate not set!' not found from Save()");
             return 1;
         }
 
-        $dailyupdatefile->CheckinDate = "2010-10-10 10:10:10";
+        $dailyupdatefile->CheckinDate = '2010-10-10 10:10:10';
 
         //call save twice to cover different execution paths
         if (!$dailyupdatefile->Save()) {
-            $this->fail("Save() returned false on call #1");
+            $this->fail('Save() returned false on call #1');
             return 1;
         }
         if (!$dailyupdatefile->Save()) {
-            $this->fail("Save() returned false on call #2");
+            $this->fail('Save() returned false on call #2');
             return 1;
         }
 
-        $this->pass("Passed");
+        $this->pass('Passed');
 
         $this->stopCodeCoverage();
         return 0;

@@ -15,19 +15,19 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include dirname(dirname(dirname(__DIR__))) . "/config/config.php";
-require_once "include/pdo.php";
+include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
+require_once 'include/pdo.php';
 include 'public/login.php';
-include_once "include/common.php";
-include "include/version.php";
-require_once "include/filterdataFunctions.php";
-include_once "models/build.php";
+include_once 'include/common.php';
+include 'include/version.php';
+require_once 'include/filterdataFunctions.php';
+include_once 'models/build.php';
 
-@$buildid = $_GET["buildid"];
+@$buildid = $_GET['buildid'];
 if ($buildid != null) {
     $buildid = pdo_real_escape_numeric($buildid);
 }
-@$date = $_GET["date"];
+@$date = $_GET['date'];
 if ($date != null) {
     $date = htmlspecialchars(pdo_real_escape_string($date));
 }
@@ -39,11 +39,11 @@ if (isset($_GET['tests'])) {
 }
 
 $response = begin_JSON_response();
-$response['title'] = "CDash : View Tests";
+$response['title'] = 'CDash : View Tests';
 
 // Checks
 if (!isset($buildid) || !is_numeric($buildid)) {
-    $response['error'] = "Not a valid buildid!";
+    $response['error'] = 'Not a valid buildid!';
     echo json_encode($response);
     return;
 }
@@ -57,7 +57,7 @@ $build_array = pdo_fetch_array(pdo_query(
      FROM build AS b
      LEFT JOIN build2group AS b2g ON (b.id = b2g.buildid)
      WHERE id='$buildid'"));
-$projectid = $build_array["projectid"];
+$projectid = $build_array['projectid'];
 if (!isset($projectid) || $projectid == 0) {
     $response['error'] = "This build doesn't exist. Maybe it has been deleted.";
     echo json_encode($response);
@@ -73,9 +73,9 @@ if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
 $project = pdo_query("SELECT name,showtesttime,testtimemaxstatus,nightlytime,displaylabels FROM project WHERE id='$projectid'");
 if (pdo_num_rows($project) > 0) {
     $project_array = pdo_fetch_array($project);
-    $projectname = $project_array["name"];
-    $projectshowtesttime = $project_array["showtesttime"];
-    $testtimemaxstatus = $project_array["testtimemaxstatus"];
+    $projectname = $project_array['name'];
+    $projectshowtesttime = $project_array['showtesttime'];
+    $testtimemaxstatus = $project_array['testtimemaxstatus'];
 }
 
 $response['title'] = "CDash : $projectname";
@@ -87,7 +87,7 @@ $endtime = $build_array['endtime'];
 $groupid = $build_array['groupid'];
 $response['groupid'] = $groupid;
 
-$date = get_dashboard_date_from_build_starttime($starttime, $project_array["nightlytime"]);
+$date = get_dashboard_date_from_build_starttime($starttime, $project_array['nightlytime']);
 get_dashboard_JSON_by_name($projectname, $date, $response);
 
 // Menu
@@ -98,36 +98,36 @@ $onlyfailed = 0;
 $onlytimestatus = 0;
 $onlynotrun = 0;
 $onlydelta = 0;
-$extraquery = "";
-$display = "";
+$extraquery = '';
+$display = '';
 
-if (isset($_GET["onlypassed"])) {
+if (isset($_GET['onlypassed'])) {
     $onlypassed = 1;
-    $extraquery = "&onlypassed";
-    $display = "onlypassed";
-} elseif (isset($_GET["onlyfailed"])) {
+    $extraquery = '&onlypassed';
+    $display = 'onlypassed';
+} elseif (isset($_GET['onlyfailed'])) {
     $onlyfailed = 1;
-    $extraquery = "&onlyfailed";
-    $display = "onlyfailed";
-} elseif (isset($_GET["onlytimestatus"])) {
+    $extraquery = '&onlyfailed';
+    $display = 'onlyfailed';
+} elseif (isset($_GET['onlytimestatus'])) {
     $onlytimestatus = 1;
-    $extraquery = "&onlytimestatus";
-    $display = "onlytimestatus";
-} elseif (isset($_GET["onlynotrun"])) {
+    $extraquery = '&onlytimestatus';
+    $display = 'onlytimestatus';
+} elseif (isset($_GET['onlynotrun'])) {
     $onlynotrun = 1;
-    $extraquery = "&onlynotrun";
-    $display = "onlynotrun";
-} elseif (isset($_GET["onlydelta"])) {
+    $extraquery = '&onlynotrun';
+    $display = 'onlynotrun';
+} elseif (isset($_GET['onlydelta'])) {
     // new test that are showing up for this category
     $onlydelta = 1;
-    $extraquery = "&onlydelta";
-    $display = "onlydelta";
+    $extraquery = '&onlydelta';
+    $display = 'onlydelta';
 } else {
-    $display = "all";
+    $display = 'all';
 }
 
-$nightlytime = get_project_property($projectname, "nightlytime");
-$menu['back'] = "index.php?project=" . urlencode($projectname) . "&date=" . get_dashboard_date_from_build_starttime($starttime, $nightlytime);
+$nightlytime = get_project_property($projectname, 'nightlytime');
+$menu['back'] = 'index.php?project=' . urlencode($projectname) . '&date=' . get_dashboard_date_from_build_starttime($starttime, $nightlytime);
 
 // Get the IDs of the four previous builds.
 // These are used to check the recent history of this test.
@@ -159,23 +159,23 @@ for ($i = 0; $i < $n; $i++) {
     $previous_buildids[] = $id;
 }
 
-$previous_buildids_str = "";
+$previous_buildids_str = '';
 if ($previous_buildid > 0) {
     $menu['previous'] = "viewTest.php?buildid=$previous_buildid$extraquery";
     if (count($previous_buildids) > 1) {
-        $previous_buildids_str = implode(", ", $previous_buildids);
+        $previous_buildids_str = implode(', ', $previous_buildids);
     }
 } else {
-    $menu['noprevious'] = "1";
+    $menu['noprevious'] = '1';
 }
 $response['previous_builds'] = $previous_buildids_str;
 
 $menu['current'] = "viewTest.php?buildid=$current_buildid";
 
 if ($next_buildid > 0) {
-    $menu['next'] = "viewTest.php?buildid=" . $next_buildid . $extraquery;
+    $menu['next'] = 'viewTest.php?buildid=' . $next_buildid . $extraquery;
 } else {
-    $menu['nonext'] = "1";
+    $menu['nonext'] = '1';
 }
 
 $response['menu'] = $menu;
@@ -193,27 +193,27 @@ $build['testtime'] = $endtime;
 $buildinformation = pdo_query("SELECT * FROM buildinformation WHERE buildid='$buildid'");
 if (pdo_num_rows($buildinformation) > 0) {
     $buildinformation_array = pdo_fetch_array($buildinformation);
-    if ($buildinformation_array["osname"] != "") {
-        $build['osname'] = $buildinformation_array["osname"];
+    if ($buildinformation_array['osname'] != '') {
+        $build['osname'] = $buildinformation_array['osname'];
     }
-    if ($buildinformation_array["osplatform"] != "") {
-        $build['osplatform'] = $buildinformation_array["osplatform"];
+    if ($buildinformation_array['osplatform'] != '') {
+        $build['osplatform'] = $buildinformation_array['osplatform'];
     }
-    if ($buildinformation_array["osrelease"] != "") {
-        $build['osrelease'] = $buildinformation_array["osrelease"];
+    if ($buildinformation_array['osrelease'] != '') {
+        $build['osrelease'] = $buildinformation_array['osrelease'];
     }
-    if ($buildinformation_array["osversion"] != "") {
-        $build['osversion'] = $buildinformation_array["osversion"];
+    if ($buildinformation_array['osversion'] != '') {
+        $build['osversion'] = $buildinformation_array['osversion'];
     }
-    if ($buildinformation_array["compilername"] != "") {
-        $build['compilername'] = $buildinformation_array["compilername"];
+    if ($buildinformation_array['compilername'] != '') {
+        $build['compilername'] = $buildinformation_array['compilername'];
     }
-    if ($buildinformation_array["compilerversion"] != "") {
-        $build['compilerversion'] = $buildinformation_array["compilerversion"];
+    if ($buildinformation_array['compilerversion'] != '') {
+        $build['compilerversion'] = $buildinformation_array['compilerversion'];
     }
 }
 $response['build'] = $build;
-$response['csvlink'] = htmlspecialchars($_SERVER["REQUEST_URI"]) . "&export=csv";
+$response['csvlink'] = htmlspecialchars($_SERVER['REQUEST_URI']) . '&export=csv';
 $project = array();
 $project['showtesttime'] = $projectshowtesttime;
 $response['project'] = $project;
@@ -252,24 +252,24 @@ if ($filterdata['limit'] > 0) {
 // htmlentities used here to prevent XSS injection from filterstring content
 $response['filterurl'] = htmlentities(@$_GET['filterstring'], ENT_QUOTES);
 
-$limitnew = "";
-$onlydelta_extra = "";
+$limitnew = '';
+$onlydelta_extra = '';
 if ($onlydelta) {
-    $limitnew = " AND newstatus=1 ";
-    $onlydelta_extra = " AND build2test.newstatus=1 ";
+    $limitnew = ' AND newstatus=1 ';
+    $onlydelta_extra = ' AND build2test.newstatus=1 ';
 }
 
 // Postgres differs from MySQL on how to aggregate results
 // into a single column.
-$labeljoin_sql = "";
-$label_sql = "";
-$groupby_sql = "";
+$labeljoin_sql = '';
+$label_sql = '';
+$groupby_sql = '';
 if ($CDASH_DB_TYPE != 'pgsql') {
-    $labeljoin_sql = "
+    $labeljoin_sql = '
         LEFT JOIN label2test AS l2t ON (l2t.testid=t.id)
-        LEFT JOIN label AS l ON (l.id=l2t.labelid)";
+        LEFT JOIN label AS l ON (l.id=l2t.labelid)';
     $label_sql = ", GROUP_CONCAT(DISTINCT l.text SEPARATOR ', ') AS labels";
-    $groupby_sql = " GROUP BY t.id";
+    $groupby_sql = ' GROUP BY t.id';
 }
 
 $sql = "
@@ -300,13 +300,13 @@ GROUP by testmeasurement.name
 "); // We need to keep the count of columns for correct column-data assign
 
 while ($row = pdo_fetch_array($getcolumnnumber)) {
-    $columns[] = $row["name"];
+    $columns[] = $row['name'];
 }
 $response['columnnames'] = $columns;
 
 $columncount = pdo_num_rows($getcolumnnumber);
 // If at least one column is selected
-$extras = "";
+$extras = '';
 if ($onlypassed) {
     $extras .= "AND build2test.status='passed'";
 } elseif ($onlyfailed) {
@@ -329,7 +329,7 @@ $tmpr = array();
 $getalltestlist = pdo_query($getalltestlistsql);
 while ($row = pdo_fetch_array($getalltestlist)) {
     for ($i = 0; $i < $columncount; $i++) {
-        $tmpr[$row['id']][$columns[$i]] = "";
+        $tmpr[$row['id']][$columns[$i]] = '';
     }
 }
 
@@ -351,15 +351,15 @@ if ($columncount > 0) {
   ");
 }
 
-if (@$_GET['export'] == "csv") {
+if (@$_GET['export'] == 'csv') {
     // If user wants to export as CSV file
 
-    header("Cache-Control: public");
-    header("Content-Description: File Transfer");
-    header("Content-Disposition: attachment; filename=testExport.csv"); // Prepare some headers to download
-    header("Content-Type: application/octet-stream;");
-    header("Content-Transfer-Encoding: binary");
-    $filecontent = "Name,Time,Details,Status,Time Status"; // Standard columns
+    header('Cache-Control: public');
+    header('Content-Description: File Transfer');
+    header('Content-Disposition: attachment; filename=testExport.csv'); // Prepare some headers to download
+    header('Content-Type: application/octet-stream;');
+    header('Content-Transfer-Encoding: binary');
+    $filecontent = 'Name,Time,Details,Status,Time Status'; // Standard columns
 
     // Store named measurements in an array
     while ($row = pdo_fetch_array($etestquery)) {
@@ -367,38 +367,38 @@ if (@$_GET['export'] == "csv") {
     }
 
     for ($c = 0; $c < count($columns); $c++) {
-        $filecontent .= "," . $columns[$c]; // Add selected columns to the next
+        $filecontent .= ',' . $columns[$c]; // Add selected columns to the next
     }
     $filecontent .= "\n";
 
     while ($row = pdo_fetch_array($result)) {
-        $currentStatus = $row["status"];
-        $testName = $row["name"];
+        $currentStatus = $row['status'];
+        $testName = $row['name'];
 
-        $filecontent .= "$testName,{$row["time"]},{$row["details"]},";
+        $filecontent .= "$testName,{$row['time']},{$row['details']},";
 
         if ($projectshowtesttime) {
-            if ($row["timestatus"] < $testtimemaxstatus) {
-                $filecontent .= "Passed,";
+            if ($row['timestatus'] < $testtimemaxstatus) {
+                $filecontent .= 'Passed,';
             } else {
-                $filecontent .= "Failed,";
+                $filecontent .= 'Failed,';
             }
         }
 
         switch ($currentStatus) {
-            case "passed":
-                $filecontent .= "Passed,";
+            case 'passed':
+                $filecontent .= 'Passed,';
                 break;
-            case "failed":
-                $filecontent .= "Failed,";
+            case 'failed':
+                $filecontent .= 'Failed,';
                 break;
-            case "notrun":
-                $filecontent .= "Not Run,";
+            case 'notrun':
+                $filecontent .= 'Not Run,';
                 break;
         }
         // start writing test results
         for ($t = 0; $t < count($columns); $t++) {
-            $filecontent .= $etest[$row['id']][$columns[$t]] . ",";
+            $filecontent .= $etest[$row['id']][$columns[$t]] . ',';
         }
         $filecontent .= "\n";
     }
@@ -454,54 +454,54 @@ $labels_found = false;
 
 // Generate a response for each test found.
 while ($row = pdo_fetch_array($result)) {
-    $currentStatus = $row["status"];
+    $currentStatus = $row['status'];
     $previousStatus;
-    $testName = $row["name"];
+    $testName = $row['name'];
 
     $test = array();
     $test['name'] = $testName;
-    if ($row["newstatus"]) {
-        $test['new'] = "1";
+    if ($row['newstatus']) {
+        $test['new'] = '1';
     }
-    $test['execTimeFull'] = floatval($row["time"]);
-    $test['execTime'] = time_difference($row["time"], true, '', true);
-    $test['details'] = $row["details"];
+    $test['execTimeFull'] = floatval($row['time']);
+    $test['execTime'] = time_difference($row['time'], true, '', true);
+    $test['details'] = $row['details'];
     $summaryLink = "testSummary.php?project=$projectid&name=" . urlencode($testName) . "&date=$testdate";
     $test['summaryLink'] = $summaryLink;
-    $testid = $row["id"];
+    $testid = $row['id'];
     $detailsLink = "testDetails.php?test=$testid&build=$buildid";
     $test['detailsLink'] = $detailsLink;
     $test['id'] = $testid;
 
     if ($projectshowtesttime) {
-        if ($row["timestatus"] < $testtimemaxstatus) {
-            $test['timestatus'] = "Passed";
-            $test['timestatusclass'] = "normal";
+        if ($row['timestatus'] < $testtimemaxstatus) {
+            $test['timestatus'] = 'Passed';
+            $test['timestatusclass'] = 'normal';
         } else {
-            $test['timestatus'] = "Failed";
-            $test['timestatusclass'] = "error";
+            $test['timestatus'] = 'Failed';
+            $test['timestatusclass'] = 'error';
         }
     }
 
     switch ($currentStatus) {
-        case "passed":
-            $test['status'] = "Passed";
-            $test['statusclass'] = "normal";
+        case 'passed':
+            $test['status'] = 'Passed';
+            $test['statusclass'] = 'normal';
             $numPassed++;
             break;
-        case "failed":
-            $test['status'] = "Failed";
-            $test['statusclass'] = "error";
+        case 'failed':
+            $test['status'] = 'Failed';
+            $test['statusclass'] = 'error';
             $numFailed++;
             break;
-        case "notrun":
-            $test['status'] = "Not Run";
-            $test['statusclass'] = "warning";
+        case 'notrun':
+            $test['status'] = 'Not Run';
+            $test['statusclass'] = 'warning';
             $numNotRun++;
             break;
     }
 
-    if ($row["timestatus"] >= $testtimemaxstatus) {
+    if ($row['timestatus'] >= $testtimemaxstatus) {
         $numTimeFailed++;
     }
 
@@ -510,15 +510,15 @@ while ($row = pdo_fetch_array($result)) {
 
     if ($CDASH_DB_TYPE == 'pgsql') {
         get_labels_JSON_from_query_results(
-            "SELECT text FROM label, label2test WHERE " .
-            "label.id=label2test.labelid AND " .
+            'SELECT text FROM label, label2test WHERE ' .
+            'label.id=label2test.labelid AND ' .
             "label2test.testid='$testid' AND " .
             "label2test.buildid='$buildid' " .
-            "ORDER BY text ASC",
+            'ORDER BY text ASC',
             $test);
     } else {
         if (!empty($row['labels'])) {
-            $labels = explode(",", $row['labels']);
+            $labels = explode(',', $row['labels']);
             $test['labels'] = $labels;
             $labels_found = true;
         }
@@ -528,7 +528,7 @@ while ($row = pdo_fetch_array($result)) {
     // If we have more than 25 tests we lookup this data on-the-fly
     // using AJAX rather than loading it all right now.
     if ($num_tests < 26) {
-        if ($previous_buildids_str != "") {
+        if ($previous_buildids_str != '') {
             // Get the recent history for this test.
             $history = get_test_history($testname, $previous_buildids_str);
             if (!empty($history)) {
@@ -572,10 +572,10 @@ function get_test_history($testname, $previous_buildids)
     $retval = array();
 
     // STRAIGHT_JOIN is a MySQL specific enhancement.
-    $join_type = "INNER JOIN";
+    $join_type = 'INNER JOIN';
     global $CDASH_DB_TYPE;
     if ($CDASH_DB_TYPE === 'mysql') {
-        $join_type = "STRAIGHT_JOIN";
+        $join_type = 'STRAIGHT_JOIN';
     }
 
     $history_query = "
@@ -587,25 +587,25 @@ function get_test_history($testname, $previous_buildids)
     $num_statuses = pdo_num_rows($history_results);
     if ($num_statuses > 0) {
         if ($num_statuses > 1) {
-            $retval['history'] = "Unstable";
-            $retval['historyclass'] = "warning";
+            $retval['history'] = 'Unstable';
+            $retval['historyclass'] = 'warning';
         } else {
             $row = pdo_fetch_array($history_results);
 
             $retval['history'] = ucfirst($row['status']);
 
             switch ($row['status']) {
-                case "passed":
-                    $retval['historyclass'] = "normal";
-                    $retval['history'] = "Stable";
+                case 'passed':
+                    $retval['historyclass'] = 'normal';
+                    $retval['history'] = 'Stable';
                     break;
-                case "failed":
-                    $retval['historyclass'] = "error";
-                    $retval['history'] = "Broken";
+                case 'failed':
+                    $retval['historyclass'] = 'error';
+                    $retval['history'] = 'Broken';
                     break;
-                case "notrun":
-                    $retval['historyclass'] = "warning";
-                    $retval['history'] = "Inactive";
+                case 'notrun':
+                    $retval['historyclass'] = 'warning';
+                    $retval['history'] = 'Inactive';
                     break;
             }
         }
@@ -618,10 +618,10 @@ function get_test_summary($testname, $projectid, $groupid, $begin, $end)
     $retval = array();
 
     // STRAIGHT_JOIN is a MySQL specific enhancement.
-    $join_type = "INNER JOIN";
+    $join_type = 'INNER JOIN';
     global $CDASH_DB_TYPE;
     if ($CDASH_DB_TYPE === 'mysql') {
-        $join_type = "STRAIGHT_JOIN";
+        $join_type = 'STRAIGHT_JOIN';
     }
 
     $summary_query = "
@@ -641,25 +641,25 @@ function get_test_summary($testname, $projectid, $groupid, $begin, $end)
     if ($num_statuses > 0) {
         $response['displaysummary'] = 1;
         if ($num_statuses > 1) {
-            $retval['summary'] = "Unstable";
-            $retval['summaryclass'] = "warning";
+            $retval['summary'] = 'Unstable';
+            $retval['summaryclass'] = 'warning';
         } else {
             $row = pdo_fetch_array($summary_results);
 
             $retval['summary'] = ucfirst($row['status']);
 
             switch ($row['status']) {
-                case "passed":
-                    $retval['summaryclass'] = "normal";
-                    $retval['summary'] = "Stable";
+                case 'passed':
+                    $retval['summaryclass'] = 'normal';
+                    $retval['summary'] = 'Stable';
                     break;
-                case "failed":
-                    $retval['summaryclass'] = "error";
-                    $retval['summary'] = "Broken";
+                case 'failed':
+                    $retval['summaryclass'] = 'error';
+                    $retval['summary'] = 'Broken';
                     break;
-                case "notrun":
-                    $retval['summaryclass'] = "warning";
-                    $retval['summary'] = "Inactive";
+                case 'notrun':
+                    $retval['summaryclass'] = 'warning';
+                    $retval['summary'] = 'Inactive';
                     break;
             }
         }
@@ -678,15 +678,15 @@ function load_test_details()
         return;
     }
 
-    $previous_builds = "";
+    $previous_builds = '';
     if (array_key_exists('previous_builds', $_GET)) {
         $previous_builds = pdo_real_escape_string($_GET['previous_builds']);
     }
-    $time_begin = "";
+    $time_begin = '';
     if (array_key_exists('time_begin', $_GET)) {
         $time_begin = pdo_real_escape_string($_GET['time_begin']);
     }
-    $time_end = "";
+    $time_end = '';
     if (array_key_exists('time_end', $_GET)) {
         $time_end = pdo_real_escape_string($_GET['time_end']);
     }

@@ -15,11 +15,11 @@ class GroupsDescriptionTestCase extends KWWebTestCase
     public function testGroupsDescription()
     {
         $this->login();
-        $this->get($this->url . "/groupsDescription.php?project=SubProjectExample");
-        if (strpos($this->getBrowser()->getContentAsText(), "Continuous builds") === false) {
+        $this->get($this->url . '/groupsDescription.php?project=SubProjectExample');
+        if (strpos($this->getBrowser()->getContentAsText(), 'Continuous builds') === false) {
             $this->fail("'Continuous builds' not found when expected.");
             return 1;
         }
-        $this->pass("Passed");
+        $this->pass('Passed');
     }
 }

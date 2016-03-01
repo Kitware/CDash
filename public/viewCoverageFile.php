@@ -15,30 +15,30 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include dirname(__DIR__) . "/config/config.php";
-require_once "include/pdo.php";
+include dirname(__DIR__) . '/config/config.php';
+require_once 'include/pdo.php';
 include 'public/login.php';
-include_once "include/common.php";
-include "include/version.php";
-require_once "models/coveragefile.php";
-require_once "models/coveragefilelog.php";
+include_once 'include/common.php';
+include 'include/version.php';
+require_once 'models/coveragefile.php';
+require_once 'models/coveragefilelog.php';
 
-@$buildid = $_GET["buildid"];
+@$buildid = $_GET['buildid'];
 if ($buildid != null) {
     $buildid = pdo_real_escape_numeric($buildid);
 }
-@$fileid = $_GET["fileid"];
+@$fileid = $_GET['fileid'];
 if ($fileid != null) {
     $fileid = pdo_real_escape_numeric($fileid);
 }
-@$date = $_GET["date"];
+@$date = $_GET['date'];
 if ($date != null) {
     $date = htmlspecialchars(pdo_real_escape_string($date));
 }
 
 // Checks
 if (!isset($buildid) || !is_numeric($buildid)) {
-    echo "Not a valid buildid!";
+    echo 'Not a valid buildid!';
     return;
 }
 
@@ -51,7 +51,7 @@ $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME", $db);
 
 $build_array = pdo_fetch_array(pdo_query("SELECT starttime,projectid FROM build WHERE id='$buildid'"));
-$projectid = $build_array["projectid"];
+$projectid = $build_array['projectid'];
 if (!isset($projectid) || $projectid == 0) {
     echo "This build doesn't exist. Maybe it has been deleted.";
     exit();
@@ -66,49 +66,49 @@ if (pdo_num_rows($project) == 0) {
 }
 
 $project_array = pdo_fetch_array($project);
-$projectname = $project_array["name"];
+$projectname = $project_array['name'];
 
 $role = 0;
 $user2project = pdo_query("SELECT role FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
 if (pdo_num_rows($user2project) > 0) {
     $user2project_array = pdo_fetch_array($user2project);
-    $role = $user2project_array["role"];
+    $role = $user2project_array['role'];
 }
-if (!$project_array["showcoveragecode"] && $role < 2) {
+if (!$project_array['showcoveragecode'] && $role < 2) {
     echo "This project doesn't allow display of coverage code. Contact the administrator of the project.";
     exit();
 }
 
-list($previousdate, $currenttime, $nextdate) = get_dates($date, $project_array["nightlytime"]);
+list($previousdate, $currenttime, $nextdate) = get_dates($date, $project_array['nightlytime']);
 $logoid = getLogoID($projectid);
 
 $xml = begin_XML_for_XSLT();
-$xml .= "<title>CDash : " . $projectname . "</title>";
+$xml .= '<title>CDash : ' . $projectname . '</title>';
 
 $xml .= get_cdash_dashboard_xml_by_name($projectname, $date);
 
 // Build
-$xml .= "<build>";
+$xml .= '<build>';
 $build = pdo_query("SELECT * FROM build WHERE id='$buildid'");
 $build_array = pdo_fetch_array($build);
-$siteid = $build_array["siteid"];
+$siteid = $build_array['siteid'];
 $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
-$xml .= add_XML_value("site", $site_array["name"]);
-$xml .= add_XML_value("buildname", $build_array["name"]);
-$xml .= add_XML_value("buildid", $build_array["id"]);
-$xml .= add_XML_value("buildtime", $build_array["starttime"]);
-$xml .= "</build>";
+$xml .= add_XML_value('site', $site_array['name']);
+$xml .= add_XML_value('buildname', $build_array['name']);
+$xml .= add_XML_value('buildid', $build_array['id']);
+$xml .= add_XML_value('buildtime', $build_array['starttime']);
+$xml .= '</build>';
 
 // Load coverage file.
 $coverageFile = new CoverageFile();
 $coverageFile->Id = $fileid;
 $coverageFile->Load();
 
-$xml .= "<coverage>";
-$xml .= add_XML_value("fullpath", $coverageFile->FullPath);
+$xml .= '<coverage>';
+$xml .= add_XML_value('fullpath', $coverageFile->FullPath);
 
 // Generating the html file
-$file_array = explode("<br>", $coverageFile->File);
+$file_array = explode('<br>', $coverageFile->File);
 $i = 0;
 
 // Load the coverage info.
@@ -140,7 +140,7 @@ foreach ($file_array as $line) {
             } else {
                 $file_array[$i] .= '<span class="normal">';
             }
-            $file_array[$i] .= str_pad($code, 5, ' ', STR_PAD_LEFT) . "</span>";
+            $file_array[$i] .= str_pad($code, 5, ' ', STR_PAD_LEFT) . '</span>';
         } else {
             $file_array[$i] .= str_pad('', 5, ' ', STR_PAD_LEFT);
         }
@@ -153,19 +153,19 @@ foreach ($file_array as $line) {
         } else {
             $file_array[$i] .= '<span class="normal">';
         }
-        $file_array[$i] .= str_pad($code, 5, ' ', STR_PAD_LEFT) . " | " . $line;
-        $file_array[$i] .= "</span>";
+        $file_array[$i] .= str_pad($code, 5, ' ', STR_PAD_LEFT) . ' | ' . $line;
+        $file_array[$i] .= '</span>';
     } else {
-        $file_array[$i] .= str_pad('', 5, ' ', STR_PAD_LEFT) . " | " . $line;
+        $file_array[$i] .= str_pad('', 5, ' ', STR_PAD_LEFT) . ' | ' . $line;
     }
     $i++;
 }
 
-$file = implode("<br>", $file_array);
+$file = implode('<br>', $file_array);
 
-$xml .= "<file>" . utf8_encode(htmlspecialchars($file)) . "</file>";
-$xml .= "</coverage>";
-$xml .= "</cdash>";
+$xml .= '<file>' . utf8_encode(htmlspecialchars($file)) . '</file>';
+$xml .= '</coverage>';
+$xml .= '</cdash>';
 
 // Now doing the xslt transition
-generate_XSLT($xml, "viewCoverageFile");
+generate_XSLT($xml, 'viewCoverageFile');

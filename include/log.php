@@ -14,8 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once "include/defines.php";
-require_once "include/pdocore.php";
+require_once 'include/defines.php';
+require_once 'include/pdocore.php';
 
 use \Monolog\Formatter\LineFormatter;
 use \Monolog\Handler\StreamHandler;
@@ -252,6 +252,6 @@ function end_timer($context, $threshold = -0.001)
     $text .= $context . ', ' . round($delta, 3) . ' seconds';
 
     if ($delta > $threshold) {
-        add_log($text, "end_timer");
+        add_log($text, 'end_timer');
     }
 }

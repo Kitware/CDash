@@ -19,10 +19,10 @@
 // the input, the project's nightly start time, now
 //
 
-include "config/config.php";
-require_once "include/pdo.php";
-include_once "include/common.php";
-require_once "include/cdashmail.php";
+include 'config/config.php';
+require_once 'include/pdo.php';
+include_once 'include/common.php';
+require_once 'include/cdashmail.php';
 
 set_time_limit(0);
 
@@ -93,10 +93,10 @@ function get_related_dates($projectnightlytime, $basedate)
 /** */
 function remove_directory_from_filename(&$filename)
 {
-    $npos = strrpos($filename, "/");
+    $npos = strrpos($filename, '/');
 
     if ($npos === false || $npos === 0) {
-        $dir = ".";
+        $dir = '.';
     } else {
         $dir = substr($filename, 0, $npos);
         $filename = substr($filename, $npos + 1);
@@ -109,12 +109,12 @@ function remove_directory_from_filename(&$filename)
 //
 function is_cvs_root($root)
 {
-    $npos = strpos($root, ":pserver:");
+    $npos = strpos($root, ':pserver:');
     if ($npos !== false && $npos === 0) {
         return true;
     }
 
-    $npos = strpos($root, ":ext:");
+    $npos = strpos($root, ':ext:');
     if ($npos !== false && $npos === 0) {
         return true;
     }
@@ -128,12 +128,12 @@ function get_cvs_repository_commits($cvsroot, $dates)
 
     // Compute time stamp range expressed as $fromtime and $totime for cvs
     //
-    $fromtime = gmdate(FMT_DATETIMESTD, $dates['nightly-1'] + 1) . " GMT";
-    $totime = gmdate(FMT_DATETIMESTD, $dates['nightly-0']) . " GMT";
+    $fromtime = gmdate(FMT_DATETIMESTD, $dates['nightly-1'] + 1) . ' GMT';
+    $totime = gmdate(FMT_DATETIMESTD, $dates['nightly-0']) . ' GMT';
 
-    $npos = strpos($cvsroot, "/");
+    $npos = strpos($cvsroot, '/');
     $npos2 = strlen($cvsroot);
-    $module = substr($cvsroot, $npos + strlen("/cvsroot/"));
+    $module = substr($cvsroot, $npos + strlen('/cvsroot/'));
     $Idbase = substr($cvsroot, $npos, $npos2 - $npos) . '/'; // . $module . '/';
 
     // Do a shell_exec of a cvs rlog call to get the changes in the requested
@@ -147,11 +147,11 @@ function get_cvs_repository_commits($cvsroot, $dates)
 
     // Compute summary data:
     //
-    $current_author = "";
-    $current_comment = "";
-    $current_directory = "";
-    $current_filename = "";
-    $current_revision = "";
+    $current_author = '';
+    $current_comment = '';
+    $current_directory = '';
+    $current_filename = '';
+    $current_revision = '';
     $current_time = 0;
 
     $line_number = 0;
@@ -163,21 +163,21 @@ function get_cvs_repository_commits($cvsroot, $dates)
         $num_revisions = 0;
         $line_number = $line_number + 1;
 
-        $npos = strpos($vv, "--------------------");
+        $npos = strpos($vv, '--------------------');
         if ($npos !== false && $npos === 0) {
             if ($in_revision_chunk === 1) {
                 $commit = array();
                 $commit['directory'] = $current_directory;
                 $commit['filename'] = $current_filename;
                 $commit['revision'] = $current_revision;
-                $commit['priorrevision'] = "";
+                $commit['priorrevision'] = '';
                 $commit['time'] = $current_time;
                 $commit['author'] = $current_author;
                 $commit['comment'] = $current_comment;
-                $commits[$current_directory . "/" . $current_filename . ";" . $current_revision] = $commit;
+                $commits[$current_directory . '/' . $current_filename . ';' . $current_revision] = $commit;
             }
 
-            $current_comment = "";
+            $current_comment = '';
             $in_revision_chunk = 1;
             $in_revision_chunk_line_number = $line_number;
 
@@ -185,16 +185,16 @@ function get_cvs_repository_commits($cvsroot, $dates)
         }
 
         if ($in_revision_chunk === 0) {
-            $npos = strpos($vv, "RCS file: " . $Idbase);
+            $npos = strpos($vv, 'RCS file: ' . $Idbase);
             if ($npos !== false && $npos === 0) {
-                $npos = strlen("RCS file: " . $Idbase);
+                $npos = strlen('RCS file: ' . $Idbase);
                 $npos2 = strlen($vv) - 2; // 2 == strlen(",v") at the end of the "RCS file:" line
 
                 $current_filename = substr($vv, $npos, $npos2 - $npos);
 
                 // We need to remove the current directory
                 // which is the directory of the project
-                $p = strpos($current_filename, "/");
+                $p = strpos($current_filename, '/');
                 if ($p !== false) {
                     $current_filename = substr($current_filename, $p + 1);
                 }
@@ -205,49 +205,49 @@ function get_cvs_repository_commits($cvsroot, $dates)
 
         if ($in_revision_chunk === 1) {
             // $in_revision_chunk_line_number + 1
-            $npos = strpos($vv, "revision ");
+            $npos = strpos($vv, 'revision ');
             if ($npos !== false && $npos === 0 && $line_number === $in_revision_chunk_line_number + 1) {
-                $npos = strlen("revision ");
+                $npos = strlen('revision ');
                 $npos2 = strlen($vv);
                 $current_revision = substr($vv, $npos, $npos2 - $npos);
             }
 
             // $in_revision_chunk_line_number + 2
-            $npos = strpos($vv, "date: ");
+            $npos = strpos($vv, 'date: ');
             if ($npos !== false && $npos === 0 && $line_number === $in_revision_chunk_line_number + 2) {
-                $npos2 = strpos($vv, "; ", $npos);
+                $npos2 = strpos($vv, '; ', $npos);
                 $current_time = gmdate(FMT_DATETIME, strtotime(substr($vv, $npos + 6, $npos2 - ($npos + 6)))); // 6 == strlen("date: ")
 
                 // Lines that begin with "date: " also contain "author: "
                 //
-                $npos = strpos($vv, "author: ");
+                $npos = strpos($vv, 'author: ');
                 if ($npos !== false) {
-                    $npos2 = strpos($vv, "; ", $npos);
+                    $npos2 = strpos($vv, '; ', $npos);
                     $current_author = substr($vv, $npos + 8, $npos2 - ($npos + 8)); // 8 == strlen("author: ")
                 }
             }
 
             // still $in_revision_chunk?
-            $npos = strpos($vv, "====================");
+            $npos = strpos($vv, '====================');
             if ($npos !== false && $npos === 0) {
                 $commit = array();
                 $commit['directory'] = $current_directory;
                 $commit['filename'] = $current_filename;
                 $commit['revision'] = $current_revision;
-                $commit['priorrevision'] = "";
+                $commit['priorrevision'] = '';
                 $commit['time'] = $current_time;
                 $commit['author'] = $current_author;
                 $commit['comment'] = $current_comment;
-                $commits[$current_directory . "/" . $current_filename . ";" . $current_revision] = $commit;
+                $commits[$current_directory . '/' . $current_filename . ';' . $current_revision] = $commit;
 
                 // Switching out of revision chunk. Clear current_comment:
                 //
-                $current_comment = "";
+                $current_comment = '';
                 $in_revision_chunk = 0;
             }
 
             if ($in_revision_chunk === 1 && $line_number > $in_revision_chunk_line_number + 2) {
-                if ($current_comment === "") {
+                if ($current_comment === '') {
                     $current_comment = $vv;
                 } else {
                     $current_comment = $current_comment . "\n" . $vv;
@@ -268,11 +268,11 @@ function get_p4_repository_commits($root, $branch, $dates)
     // Add the command line specified by the user in the "Repository" field
     // of the project settings "Repository" tab and set the message language
     // to be English
-    $p4command = '"' . $CDASH_P4_COMMAND . '" ' . $root . " -L en";
+    $p4command = '"' . $CDASH_P4_COMMAND . '" ' . $root . ' -L en';
 
     // Perforce needs the dates separated with / and not with -
-    $fromtime = str_replace("-", "/", gmdate(FMT_DATETIMESTD, $dates['nightly-1'] + 1));
-    $totime = str_replace("-", "/", gmdate(FMT_DATETIMESTD, $dates['nightly-0']));
+    $fromtime = str_replace('-', '/', gmdate(FMT_DATETIMESTD, $dates['nightly-1'] + 1));
+    $totime = str_replace('-', '/', gmdate(FMT_DATETIMESTD, $dates['nightly-0']));
 
     // "Branch" is the file spec for the root directory of the P4 client
     // Example: //depot/myproject/...
@@ -281,21 +281,21 @@ function get_p4_repository_commits($root, $branch, $dates)
 
     // Enumerate the changelists between the two given dates and p4 describe
     // them to get a list of files commited
-    $currentrevision = "";
+    $currentrevision = '';
     foreach (array_reverse($lines) as $line) {
-        if (preg_match("/^Change ([0-9]+) on/", $line, $matches)) {
+        if (preg_match('/^Change ([0-9]+) on/', $line, $matches)) {
             $currentrevision = $matches[1];
             $raw_output = `$p4command describe -s $matches[1]`;
             $describe_lines = explode("\n", $raw_output);
 
             $commit = array();
-            $comment = "";
+            $comment = '';
 
             // Parse the changelist description and add each file modified to the
             // commits list
             foreach ($describe_lines as $dline) {
                 // Commit header
-                if (preg_match("/^Change ([0-9]+) by (.+)@(.+) on (.*)$/", $dline, $matches)) {
+                if (preg_match('/^Change ([0-9]+) by (.+)@(.+) on (.*)$/', $dline, $matches)) {
                     $commit['revision'] = $matches[1];
                     $commit['priorrevision'] = '';
                     $commit['comment'] = '';
@@ -320,10 +320,10 @@ function get_p4_repository_commits($root, $branch, $dates)
                         }
                     }
                 } // File specification
-                elseif (preg_match("/^\\.\\.\\. (.*)#[0-9]+ ([^ ]+)$/", $dline, $matches)) {
+                elseif (preg_match('/^\\.\\.\\. (.*)#[0-9]+ ([^ ]+)$/', $dline, $matches)) {
                     $commit['filename'] = $matches[1];
                     $commit['directory'] = remove_directory_from_filename($commit['filename']);
-                    $commits[$directory . "/" . $filename . ";" . $commit['revision']] = $commit;
+                    $commits[$directory . '/' . $filename . ';' . $commit['revision']] = $commit;
                 } // Anything else that begins with a tab is a comment line
                 elseif (strlen($dline) > 0 && $dline[0] == "\t") {
                     $commit['comment'] = $commit['comment'] . trim(substr($dline, 1)) . "\n";
@@ -348,7 +348,7 @@ function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision
 
     // Check that the default git directory exists and is writable
     if (empty($gitlocaldirectory) || !is_writable($gitlocaldirectory)) {
-        add_log("CDASH_DEFAULT_GIT_DIRECTORY is not set in config or not writable.", "get_git_repository_commits");
+        add_log('CDASH_DEFAULT_GIT_DIRECTORY is not set in config or not writable.', 'get_git_repository_commits');
         $results['commits'] = $commits;
         return $results;
     }
@@ -367,7 +367,7 @@ function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision
     // Update the current bare repository
     $command = '"' . $gitcommand . '" --git-dir="' . $gitdir . '" fetch ' . $gitroot;
     if ($branch != '') {
-        $command .= ' +' . $branch . ":" . $branch;
+        $command .= ' +' . $branch . ':' . $branch;
     }
 
     $raw_output = `$command`;
@@ -386,8 +386,8 @@ function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision
         // Compare with the fetch head for now
         $command = '"' . $gitcommand . '" --git-dir="' . $gitdir . '" whatchanged ' . $previousrevision . '..' . $currentrevision . ' --pretty=medium ' . $branch;
     } else {
-        $fromtime = gmdate(FMT_DATETIMESTD, $dates['nightly-1'] + 1) . " GMT";
-        $totime = gmdate(FMT_DATETIMESTD, $dates['nightly-0']) . " GMT";
+        $fromtime = gmdate(FMT_DATETIMESTD, $dates['nightly-1'] + 1) . ' GMT';
+        $totime = gmdate(FMT_DATETIMESTD, $dates['nightly-0']) . ' GMT';
 
         // Compare with the fetch head for now
         $command = '"' . $gitcommand . '" --git-dir="' . $gitdir . '" whatchanged --since="' . $fromtime . '" --until="' . $totime . '" --pretty=medium ' . $branch;
@@ -422,7 +422,7 @@ function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision
             }
             // add the current commit
             if (isset($commit['filename']) && $commit['filename'] != '') {
-                $commits[$commit['directory'] . "/" . $commit['filename'] . ";" . $commit['revision']] = $commit;
+                $commits[$commit['directory'] . '/' . $commit['filename'] . ';' . $commit['revision']] = $commit;
             }
         } elseif (strlen($line) > 0 && $line[0] == ' ') {
             $commit['comment'] .= trim($line) . "\n";
@@ -447,11 +447,11 @@ function get_svn_repository_commits($svnroot, $dates, $username = '', $password 
     // So call get_dates twice to get yesterday ($fromdate) and again to
     // get the low end of the svn log date range ($daybefore)...
     //
-    $svnrevision = "{" . gmdate(FMT_DATE, $dates['nightly-2']) . "}:{" .
-        gmdate(FMT_DATE, $dates['nightly+1']) . "}";
+    $svnrevision = '{' . gmdate(FMT_DATE, $dates['nightly-2']) . '}:{' .
+        gmdate(FMT_DATE, $dates['nightly+1']) . '}';
 
-    $fromtime = gmdate(FMT_DATETIMESTD, $dates['nightly-1'] + 1) . " GMT";
-    $totime = gmdate(FMT_DATETIMESTD, $dates['nightly-0']) . " GMT";
+    $fromtime = gmdate(FMT_DATETIMESTD, $dates['nightly-1'] + 1) . ' GMT';
+    $totime = gmdate(FMT_DATETIMESTD, $dates['nightly-0']) . ' GMT';
 
     $ustring = (isset($username) && strlen($username) != 0) ? "--username $username" : '';
     $pstring = (isset($password) && strlen($password) != 0) ? "--password $password" : '';
@@ -462,11 +462,11 @@ function get_svn_repository_commits($svnroot, $dates, $username = '', $password 
     $lines = explode("\n", $raw_output);
 
     $gathered_file_lines = array();
-    $current_author = "";
-    $current_comment = "";
-    $current_directory = "";
-    $current_filename = "";
-    $current_revision = "";
+    $current_author = '';
+    $current_comment = '';
+    $current_directory = '';
+    $current_filename = '';
+    $current_revision = '';
     $current_time = 0;
 
     $line_number = 0;
@@ -475,16 +475,16 @@ function get_svn_repository_commits($svnroot, $dates, $username = '', $password 
     foreach ($lines as $vv) {
         $line_number = $line_number + 1;
 
-        $npos = strpos($vv, "--------------------");
+        $npos = strpos($vv, '--------------------');
         if ($npos !== false && $npos === 0) {
             if ($line_number > 1) {
                 if ($current_time > $fromtime && $current_time <= $totime) {
                     foreach ($gathered_file_lines as $ff) {
-                        $previous_revision = "";
+                        $previous_revision = '';
 
                         // Look if we have a A or a M
                         if (strpos(substr($ff, 0, 5), 'A') !== false) {
-                            $previous_revision = "-1"; // newly added file so we marked it as no prior revision
+                            $previous_revision = '-1'; // newly added file so we marked it as no prior revision
                         }
 
                         // Skip the '   M ' at the beginning of the filename output lines:
@@ -494,13 +494,13 @@ function get_svn_repository_commits($svnroot, $dates, $username = '', $password 
                         // If there is " (from /blah/blah.h:42)" notation at end of filename,
                         // strip it off:
                         //
-                        $npos = strpos($current_filename, " (from ");
+                        $npos = strpos($current_filename, ' (from ');
                         if ($npos !== false && $npos !== 0) {
                             $current_filename = substr($current_filename, 0, $npos);
                         }
 
                         // Remove the first directory
-                        $npos = strpos($current_filename, "/", 2);
+                        $npos = strpos($current_filename, '/', 2);
                         if ($npos !== false && $npos !== 0) {
                             $current_filename = substr($current_filename, $npos + 1);
                         }
@@ -515,31 +515,31 @@ function get_svn_repository_commits($svnroot, $dates, $username = '', $password 
                         $commit['time'] = $current_time;
                         $commit['author'] = $current_author;
                         $commit['comment'] = $current_comment;
-                        $commits[$current_directory . "/" . $current_filename . ";" . $current_revision] = $commit;
+                        $commits[$current_directory . '/' . $current_filename . ';' . $current_revision] = $commit;
                     }
                 } else {
                     //echo "excluding: '" . $current_time . "' (" . gmdate(FMT_DATETIMEMS, $current_time) . ")<br/>";
                 }
                 $gathered_file_lines = array();
             }
-            $current_comment = "";
+            $current_comment = '';
             $last_chunk_line_number = $line_number;
             //echo "<br/>";
         }
 
         if ($line_number === $last_chunk_line_number + 1) {
-            $npos = strpos($vv, " | ");
+            $npos = strpos($vv, ' | ');
             if ($npos !== false) {
                 $current_revision = substr($vv, 1, $npos - 1); // 1 == skip the 'r' at the beginning...
                 //echo "current_revision: '" . $current_revision . "'<br/>";
 
-                $npos2 = strpos($vv, " | ", $npos + 3);
+                $npos2 = strpos($vv, ' | ', $npos + 3);
                 if ($npos2 !== false) {
                     $current_author = substr($vv, $npos + 3, $npos2 - ($npos + 3));
                     //echo "current_author: '" . $current_author . "'<br/>";
                     $npos = $npos2;
 
-                    $npos2 = strpos($vv, " (", $npos + 3);
+                    $npos2 = strpos($vv, ' (', $npos + 3);
                     if ($npos2 !== false) {
                         $current_date = substr($vv, $npos + 3, $npos2 - ($npos + 3));
                         //echo "current_date: '" . $current_date . "'<br/>";
@@ -548,11 +548,11 @@ function get_svn_repository_commits($svnroot, $dates, $username = '', $password 
                         //echo "date: '" . $current_time . "' (" . date(FMT_DATETIMEMS, $current_time) . ")<br/>";
                         //echo "gmdate: '" . $current_time . "' (" . gmdate(FMT_DATETIMEMS, $current_time) . ")<br/>";
 
-                        $npos2 = strpos($vv, " | ", $npos + 3);
+                        $npos2 = strpos($vv, ' | ', $npos + 3);
                         $npos = $npos2;
                         if ($npos2 !== false) {
                             $current_line_count = substr($vv, $npos + 3);
-                            $npos2 = strpos($current_line_count, " line");
+                            $npos2 = strpos($current_line_count, ' line');
                             $current_line_count = substr($current_line_count, 0, $npos2);
                             //echo "current_line_count: '" . $current_line_count . "'<br/>";
                         }
@@ -565,7 +565,7 @@ function get_svn_repository_commits($svnroot, $dates, $username = '', $password 
             $in_comment = 1;
 
             //echo "gather comment line: '" . $vv . "'<br/>";
-            if ($current_comment === "") {
+            if ($current_comment === '') {
                 $current_comment = $vv;
             } else {
                 $current_comment = $current_comment . "\n" . $vv;
@@ -594,25 +594,25 @@ function get_bzr_repository_commits($bzrroot, $dates)
 {
     $commits = array();
 
-    $fromtime = gmdate(FMT_DATETIMESTD, $dates['nightly-1'] + 1) . " GMT";
-    $totime = gmdate(FMT_DATETIMESTD, $dates['nightly-0']) . " GMT";
+    $fromtime = gmdate(FMT_DATETIMESTD, $dates['nightly-1'] + 1) . ' GMT';
+    $totime = gmdate(FMT_DATETIMESTD, $dates['nightly-0']) . ' GMT';
 
     $raw_output = `bzr log -v --xml -r date:"$fromtime"..date:"$totime" $bzrroot 2>&1`;
 
     $doc = new DomDocument;
     $doc->loadXML($raw_output);
-    $logs = $doc->getElementsByTagName("log");
+    $logs = $doc->getElementsByTagName('log');
 
     foreach ($logs as $log) {
-        $current_author = $log->getElementsByTagName("committer")->item(0)->nodeValue;
+        $current_author = $log->getElementsByTagName('committer')->item(0)->nodeValue;
         // remove email from author and strip result
-        $current_author = trim(substr($current_author, 0, strpos($current_author, "<")));
+        $current_author = trim(substr($current_author, 0, strpos($current_author, '<')));
 
-        $current_comment = $log->getElementsByTagName("message")->item(0)->nodeValue;
-        $current_time = gmdate(FMT_DATETIMEMS, strtotime($log->getElementsByTagName("timestamp")->item(0)->nodeValue));
-        $current_revision = $log->getElementsByTagName("revno")->item(0)->nodeValue;
+        $current_comment = $log->getElementsByTagName('message')->item(0)->nodeValue;
+        $current_time = gmdate(FMT_DATETIMEMS, strtotime($log->getElementsByTagName('timestamp')->item(0)->nodeValue));
+        $current_revision = $log->getElementsByTagName('revno')->item(0)->nodeValue;
 
-        $files = $log->getElementsByTagName("file");
+        $files = $log->getElementsByTagName('file');
         foreach ($files as $file) {
             $current_filename = $file->nodeValue;
             $current_directory = remove_directory_from_filename($current_filename);
@@ -620,11 +620,11 @@ function get_bzr_repository_commits($bzrroot, $dates)
             $commit['directory'] = $current_directory;
             $commit['filename'] = $current_filename;
             $commit['revision'] = $current_revision;
-            $commit['priorrevision'] = "";
+            $commit['priorrevision'] = '';
             $commit['time'] = $current_time;
             $commit['author'] = $current_author;
             $commit['comment'] = $current_comment;
-            $commits[$current_directory . "/" . $current_filename . ";" . $current_revision] = $commit;
+            $commits[$current_directory . '/' . $current_filename . ';' . $current_revision] = $commit;
         }
     }
     return $commits;
@@ -655,17 +655,17 @@ function get_repository_commits($projectid, $dates)
     $commits = array();
 
     while ($repositories_array = pdo_fetch_array($repositories)) {
-        $root = $repositories_array["url"];
-        $username = $repositories_array["username"];
-        $password = $repositories_array["password"];
+        $root = $repositories_array['url'];
+        $username = $repositories_array['username'];
+        $password = $repositories_array['password'];
 
         if (is_cvs_root($root)) {
             $new_commits = get_cvs_repository_commits($root, $dates);
         } else {
-            if ($cvsviewer == "loggerhead") {
+            if ($cvsviewer == 'loggerhead') {
                 $new_commits = get_bzr_repository_commits($root, $dates);
-            } elseif ($cvsviewer == "p4web") {
-                $branch = $repositories_array["branch"];
+            } elseif ($cvsviewer == 'p4web') {
+                $branch = $repositories_array['branch'];
                 $results = get_p4_repository_commits($root, $branch, $dates);
 
                 // Update the current revision
@@ -673,11 +673,11 @@ function get_repository_commits($projectid, $dates)
                     $currentdate = gmdate(FMT_DATE, $dates['nightly-0']);
                     $prevrev = pdo_query("UPDATE dailyupdate SET revision='" . $results['currentrevision'] . "'
                                 WHERE projectid='$projectid' AND date='" . $currentdate . "'");
-                    add_last_sql_error("get_repository_commits");
+                    add_last_sql_error('get_repository_commits');
                 }
                 $new_commits = $results['commits'];
-            } elseif ($cvsviewer == "gitweb" || $cvsviewer == "gitorious" || $cvsviewer == "github") {
-                $branch = $repositories_array["branch"];
+            } elseif ($cvsviewer == 'gitweb' || $cvsviewer == 'gitorious' || $cvsviewer == 'github') {
+                $branch = $repositories_array['branch'];
 
                 // Find the prior revision
                 $previousdate = gmdate(FMT_DATE, $dates['nightly-1']);
@@ -697,7 +697,7 @@ function get_repository_commits($projectid, $dates)
                     $currentdate = gmdate(FMT_DATE, $dates['nightly-0']);
                     $prevrev = pdo_query("UPDATE dailyupdate SET revision='" . $results['currentrevision'] . "'
                                 WHERE projectid='$projectid' AND date='" . $currentdate . "'");
-                    add_last_sql_error("get_repository_commits");
+                    add_last_sql_error('get_repository_commits');
                 }
                 $new_commits = $results['commits'];
             } else {
@@ -715,14 +715,14 @@ function get_repository_commits($projectid, $dates)
 /** Send email if expected build from last day have not been submitting */
 function sendEmailExpectedBuilds($projectid, $currentstarttime)
 {
-    include "config/config.php";
-    include_once "include/common.php";
+    include 'config/config.php';
+    include_once 'include/common.php';
     $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
     pdo_select_db("$CDASH_DB_NAME", $db);
 
     $currentURI = get_server_URI();
     if ($CDASH_BASE_URL == '' && $CDASH_ASYNCHRONOUS_SUBMISSION) {
-        $currentURI = substr($currentURI, 0, strrpos($currentURI, "/"));
+        $currentURI = substr($currentURI, 0, strrpos($currentURI, '/'));
     }
 
     $currentEndUTCTime = gmdate(FMT_DATETIME, $currentstarttime);
@@ -738,7 +738,7 @@ function sendEmailExpectedBuilds($projectid, $currentstarttime)
           ";
     $build2grouprule = pdo_query($sql);
     $projectname = get_project_name($projectid);
-    $summary = "The following expected build(s) for the project *" . $projectname . "* didn't submit yesterday:\n";
+    $summary = 'The following expected build(s) for the project *' . $projectname . "* didn't submit yesterday:\n";
     $missingbuilds = 0;
 
     $serverName = $CDASH_SERVER_NAME;
@@ -747,34 +747,34 @@ function sendEmailExpectedBuilds($projectid, $currentstarttime)
     }
 
     while ($build2grouprule_array = pdo_fetch_array($build2grouprule)) {
-        $builtype = $build2grouprule_array["buildtype"];
-        $buildname = $build2grouprule_array["buildname"];
-        $sitename = $build2grouprule_array["name"];
-        $siteid = $build2grouprule_array["siteid"];
-        $summary .= "* " . $sitename . " - " . $buildname . " (" . $builtype . ")\n";
+        $builtype = $build2grouprule_array['buildtype'];
+        $buildname = $build2grouprule_array['buildname'];
+        $sitename = $build2grouprule_array['name'];
+        $siteid = $build2grouprule_array['siteid'];
+        $summary .= '* ' . $sitename . ' - ' . $buildname . ' (' . $builtype . ")\n";
 
         // Find the site maintainers
-        $email = "";
-        $emails = pdo_query("SELECT email FROM " . qid("user") . ",site2user WHERE " . qid("user") . ".id=site2user.userid AND site2user.siteid='$siteid'");
+        $email = '';
+        $emails = pdo_query('SELECT email FROM ' . qid('user') . ',site2user WHERE ' . qid('user') . ".id=site2user.userid AND site2user.siteid='$siteid'");
         while ($emails_array = pdo_fetch_array($emails)) {
-            if ($email != "") {
-                $email .= ", ";
+            if ($email != '') {
+                $email .= ', ';
             }
-            $email .= $emails_array["email"];
+            $email .= $emails_array['email'];
         }
 
-        if ($email != "") {
-            $missingTitle = "CDash [" . $projectname . "] - Missing Build for " . $sitename;
-            $missingSummary = "The following expected build(s) for the project " . $projectname . " didn't submit yesterday:\n";
-            $missingSummary .= "* " . $sitename . " - " . $buildname . " (" . $builtype . ")\n";
-            $missingSummary .= "\n" . $currentURI . "/index.php?project=" . urlencode($projectname) . "\n";
+        if ($email != '') {
+            $missingTitle = 'CDash [' . $projectname . '] - Missing Build for ' . $sitename;
+            $missingSummary = 'The following expected build(s) for the project ' . $projectname . " didn't submit yesterday:\n";
+            $missingSummary .= '* ' . $sitename . ' - ' . $buildname . ' (' . $builtype . ")\n";
+            $missingSummary .= "\n" . $currentURI . '/index.php?project=' . urlencode($projectname) . "\n";
             $missingSummary .= "\n-CDash on " . $serverName . "\n";
 
             if (cdashmail("$email", $missingTitle, $missingSummary)) {
-                add_log("email sent to: " . $email, "sendEmailExpectedBuilds");
+                add_log('email sent to: ' . $email, 'sendEmailExpectedBuilds');
                 return;
             } else {
-                add_log("cannot send email to: " . $email, "sendEmailExpectedBuilds");
+                add_log('cannot send email to: ' . $email, 'sendEmailExpectedBuilds');
             }
         }
         $missingbuilds = 1;
@@ -783,29 +783,29 @@ function sendEmailExpectedBuilds($projectid, $currentstarttime)
     // Send a summary email to the project administrator or users who want to receive notification
     // of missing builds
     if ($missingbuilds == 1) {
-        $summary .= "\n" . $currentURI . "/index.php?project=" . urlencode($projectname) . "\n";
+        $summary .= "\n" . $currentURI . '/index.php?project=' . urlencode($projectname) . "\n";
         $summary .= "\n-CDash on " . $serverName . "\n";
 
-        $title = "CDash [" . $projectname . "] - Missing Builds";
+        $title = 'CDash [' . $projectname . '] - Missing Builds';
 
         // Find the site administrators or users who want to receive the builds
-        $email = "";
-        $emails = pdo_query("SELECT email FROM " . qid("user") . ",user2project WHERE " . qid("user") . ".id=user2project.userid
+        $email = '';
+        $emails = pdo_query('SELECT email FROM ' . qid('user') . ',user2project WHERE ' . qid('user') . ".id=user2project.userid
                          AND user2project.projectid='$projectid' AND (user2project.role='2' OR user2project.emailmissingsites=1)");
         while ($emails_array = pdo_fetch_array($emails)) {
-            if ($email != "") {
-                $email .= ", ";
+            if ($email != '') {
+                $email .= ', ';
             }
-            $email .= $emails_array["email"];
+            $email .= $emails_array['email'];
         }
 
         // Send the email
-        if ($email != "") {
+        if ($email != '') {
             if (cdashmail("$email", $title, $summary)) {
-                add_log("email sent to: " . $email, "sendEmailExpectedBuilds");
+                add_log('email sent to: ' . $email, 'sendEmailExpectedBuilds');
                 return;
             } else {
-                add_log("cannot send email to: " . $email, "sendEmailExpectedBuilds");
+                add_log('cannot send email to: ' . $email, 'sendEmailExpectedBuilds');
             }
         }
     }
@@ -814,8 +814,8 @@ function sendEmailExpectedBuilds($projectid, $currentstarttime)
 /** Remove the buildemail that have been there from more than 48h */
 function cleanBuildEmail()
 {
-    include "config/config.php";
-    include_once "include/common.php";
+    include 'config/config.php';
+    include_once 'include/common.php';
     $now = date(FMT_DATETIME, time() - 3600 * 48);
     pdo_query("DELETE FROM buildemail WHERE time<'$now'");
 }
@@ -823,8 +823,8 @@ function cleanBuildEmail()
 /** Clean the usertemp table if more than 24hrs */
 function cleanUserTemp()
 {
-    include "config/config.php";
-    include_once "include/common.php";
+    include 'config/config.php';
+    include_once 'include/common.php';
     $now = date(FMT_DATETIME, time() - 3600 * 24);
     pdo_query("DELETE FROM usertemp WHERE registrationdate<'$now'");
 }
@@ -832,13 +832,13 @@ function cleanUserTemp()
 /** Send an email to administrator of the project for users who are not registered */
 function sendEmailUnregisteredUsers($projectid, $cvsauthors)
 {
-    include "config/config.php";
-    require_once "models/userproject.php";
-    include_once "include/common.php";
+    include 'config/config.php';
+    require_once 'models/userproject.php';
+    include_once 'include/common.php';
 
     $unregisteredusers = array();
     foreach ($cvsauthors as $author) {
-        if ($author == "Local User") {
+        if ($author == 'Local User') {
             continue;
         }
 
@@ -854,40 +854,40 @@ function sendEmailUnregisteredUsers($projectid, $cvsauthors)
     // Send the email if any
     if (count($unregisteredusers) > 0) {
         // Find the project administrators
-        $email = "";
-        $emails = pdo_query("SELECT email FROM " . qid("user") . ",user2project WHERE " . qid("user") . ".id=user2project.userid
-                         AND user2project.projectid=" . qnum($projectid) . " AND user2project.role='2'");
+        $email = '';
+        $emails = pdo_query('SELECT email FROM ' . qid('user') . ',user2project WHERE ' . qid('user') . '.id=user2project.userid
+                         AND user2project.projectid=' . qnum($projectid) . " AND user2project.role='2'");
         while ($emails_array = pdo_fetch_array($emails)) {
-            if ($email != "") {
-                $email .= ", ";
+            if ($email != '') {
+                $email .= ', ';
             }
-            $email .= $emails_array["email"];
+            $email .= $emails_array['email'];
         }
 
         // Send the email
-        if ($email != "") {
+        if ($email != '') {
             $projectname = get_project_name($projectid);
             $serverName = $CDASH_SERVER_NAME;
             if (strlen($serverName) == 0) {
                 $serverName = $_SERVER['SERVER_NAME'];
             }
 
-            $title = "CDash [" . $projectname . "] - Unregistered users";
-            $body = "The following users are checking in code but are not registered for the project " . $projectname . ":\n";
+            $title = 'CDash [' . $projectname . '] - Unregistered users';
+            $body = 'The following users are checking in code but are not registered for the project ' . $projectname . ":\n";
 
             foreach ($unregisteredusers as $unreg) {
-                $body .= "* " . $unreg . "\n";
+                $body .= '* ' . $unreg . "\n";
             }
             $body .= "\n You should register these users to your project. They are currently not receiving any emails from CDash.\n";
             $body .= "\n-CDash on " . $serverName . "\n";
 
-            add_log($title . " : " . $body . " : " . $email, "sendEmailUnregisteredUsers");
+            add_log($title . ' : ' . $body . ' : ' . $email, 'sendEmailUnregisteredUsers');
 
             if (cdashmail("$email", $title, $body)) {
-                add_log("email sent to: " . $email, "sendEmailUnregisteredUsers");
+                add_log('email sent to: ' . $email, 'sendEmailUnregisteredUsers');
                 return;
             } else {
-                add_log("cannot send email to: " . $email, "sendEmailUnregisteredUsers");
+                add_log('cannot send email to: ' . $email, 'sendEmailUnregisteredUsers');
             }
         }
     }
@@ -896,17 +896,17 @@ function sendEmailUnregisteredUsers($projectid, $cvsauthors)
 /** Add daily changes if necessary */
 function addDailyChanges($projectid)
 {
-    include "config/config.php";
-    include_once "include/common.php";
-    include_once "include/sendemail.php";
+    include 'config/config.php';
+    include_once 'include/common.php';
+    include_once 'include/sendemail.php';
 
     $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
     pdo_select_db("$CDASH_DB_NAME", $db);
 
     $project_array = pdo_fetch_array(pdo_query("SELECT nightlytime,name,autoremovetimeframe,autoremovemaxbuilds,emailadministrator
                                               FROM project WHERE id='$projectid'"));
-    $date = ""; // now
-    list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $project_array["nightlytime"]);
+    $date = ''; // now
+    list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $project_array['nightlytime']);
     $date = gmdate(FMT_DATE, $currentstarttime);
 
     // Check if we already have it somwhere
@@ -916,13 +916,13 @@ function addDailyChanges($projectid)
 
         pdo_query("INSERT INTO dailyupdate (projectid,date,command,type,status)
                VALUES ($projectid,'$date','NA','NA','0')");
-        $updateid = pdo_insert_id("dailyupdate");
-        $dates = get_related_dates($project_array["nightlytime"], $date);
+        $updateid = pdo_insert_id('dailyupdate');
+        $dates = get_related_dates($project_array['nightlytime'], $date);
         $commits = get_repository_commits($projectid, $dates);
 
         // Insert the commits
         foreach ($commits as $commit) {
-            $filename = $commit['directory'] . "/" . $commit['filename'];
+            $filename = $commit['directory'] . '/' . $commit['filename'];
             $checkindate = $commit['time'];
             $author = addslashes($commit['author']);
             $email = '';
@@ -934,8 +934,8 @@ function addDailyChanges($projectid)
             $priorrevision = $commit['priorrevision'];
 
             // Check if we have a robot file for this build
-            $robot = pdo_query("SELECT authorregex FROM projectrobot
-                  WHERE projectid=" . qnum($projectid) . " AND robotname='" . $author . "'");
+            $robot = pdo_query('SELECT authorregex FROM projectrobot
+                  WHERE projectid=' . qnum($projectid) . " AND robotname='" . $author . "'");
 
             if (pdo_num_rows($robot) > 0) {
                 $robot_array = pdo_fetch_array($robot);
@@ -952,7 +952,7 @@ function addDailyChanges($projectid)
 
             pdo_query("INSERT INTO dailyupdatefile (dailyupdateid,filename,checkindate,author,email,log,revision,priorrevision)
                    VALUES ($updateid,'$filename','$checkindate','$author','$email','$log','$revision','$priorrevision')");
-            add_last_sql_error("addDailyChanges", $projectid);
+            add_last_sql_error('addDailyChanges', $projectid);
         }
 
         // If the project has the option to send an email to the author
@@ -970,13 +970,13 @@ function addDailyChanges($projectid)
         // If the status of daily update is set to 2 that means we should send an email
         $query = pdo_query("SELECT status FROM dailyupdate WHERE projectid='$projectid' AND date='$date'");
         $dailyupdate_array = pdo_fetch_array($query);
-        $dailyupdate_status = $dailyupdate_array["status"];
+        $dailyupdate_status = $dailyupdate_array['status'];
         if ($dailyupdate_status == 2) {
             // Find the groupid
             $group_query = pdo_query("SELECT buildid,groupid FROM summaryemail WHERE date='$date'");
             while ($group_array = pdo_fetch_array($group_query)) {
-                $groupid = $group_array["groupid"];
-                $buildid = $group_array["buildid"];
+                $groupid = $group_array['groupid'];
+                $buildid = $group_array['buildid'];
 
                 // Find if the build has any errors
                 $builderror = pdo_query("SELECT count(buildid) FROM builderror WHERE buildid='$buildid' AND type='0'");
@@ -990,7 +990,7 @@ function addDailyChanges($projectid)
 
                 // Find if the build has any test failings
                 if ($project_emailtesttimingchanged) {
-                    $sql = "SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND (status='failed' OR timestatus>" . qnum($project_testtimemaxstatus) . ")";
+                    $sql = "SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND (status='failed' OR timestatus>" . qnum($project_testtimemaxstatus) . ')';
                 } else {
                     $sql = "SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='failed'";
                 }
@@ -1008,8 +1008,8 @@ function addDailyChanges($projectid)
         clean_backup_directory();
 
         // Remove the first builds of the project
-        include_once "include/autoremove.php";
-        removeFirstBuilds($projectid, $project_array["autoremovetimeframe"], $project_array["autoremovemaxbuilds"]);
-        removeBuildsGroupwise($projectid, $project_array["autoremovemaxbuilds"]);
+        include_once 'include/autoremove.php';
+        removeFirstBuilds($projectid, $project_array['autoremovetimeframe'], $project_array['autoremovemaxbuilds']);
+        removeBuildsGroupwise($projectid, $project_array['autoremovemaxbuilds']);
     }
 }

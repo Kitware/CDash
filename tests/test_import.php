@@ -16,58 +16,58 @@ class ImportTestCase extends KWWebTestCase
     {
         //make sure we can't visit the import page while logged out
         $this->logout();
-        $content = $this->get($this->url . "/import.php");
-        if (strpos($content, "<title>Login</title>") === false) {
+        $content = $this->get($this->url . '/import.php');
+        if (strpos($content, '<title>Login</title>') === false) {
             $this->fail("'<title>Login</title>' not found when expected");
             return 1;
         }
 
         //make sure we can visit the page while logged in
         $this->login();
-        $content = $this->get($this->url . "/import.php");
-        if (strpos($content, "dartboard") === false) {
+        $content = $this->get($this->url . '/import.php');
+        if (strpos($content, 'dartboard') === false) {
             $this->fail("'dartboard' not found when expected");
             return 1;
         }
 
         //fill out the import form
-        if (!$this->SetFieldByName("project", "1")) {
-            $this->fail("SetFieldByName on project returned false");
+        if (!$this->SetFieldByName('project', '1')) {
+            $this->fail('SetFieldByName on project returned false');
             return 1;
         }
-        if (!$this->SetFieldByName("monthFrom", "07")) {
-            $this->fail("SetFieldByName on monthFrom returned false");
+        if (!$this->SetFieldByName('monthFrom', '07')) {
+            $this->fail('SetFieldByName on monthFrom returned false');
             return 1;
         }
-        if (!$this->SetFieldByName("dayFrom", "19")) {
-            $this->fail("SetFieldByName on dayFrom returned false");
+        if (!$this->SetFieldByName('dayFrom', '19')) {
+            $this->fail('SetFieldByName on dayFrom returned false');
             return 1;
         }
-        if (!$this->SetFieldByName("yearFrom", "2005")) {
-            $this->fail("SetFieldByName on yearFrom returned false");
+        if (!$this->SetFieldByName('yearFrom', '2005')) {
+            $this->fail('SetFieldByName on yearFrom returned false');
             return 1;
         }
-        if (!$this->SetFieldByName("monthTo", "07")) {
-            $this->fail("SetFieldByName on monthTo returned false");
+        if (!$this->SetFieldByName('monthTo', '07')) {
+            $this->fail('SetFieldByName on monthTo returned false');
             return 1;
         }
-        if (!$this->SetFieldByName("dayTo", "19")) {
-            $this->fail("SetFieldByName on dayTo returned false");
+        if (!$this->SetFieldByName('dayTo', '19')) {
+            $this->fail('SetFieldByName on dayTo returned false');
             return 1;
         }
-        if (!$this->SetFieldByName("yearTo", "2005")) {
-            $this->fail("SetFieldByName on yearTo returned false");
+        if (!$this->SetFieldByName('yearTo', '2005')) {
+            $this->fail('SetFieldByName on yearTo returned false');
             return 1;
         }
-        $pathToSites = dirname(__FILE__) . "/data/Sites";
-        if (!$this->SetFieldByName("directory", $pathToSites)) {
-            $this->fail("SetFieldByName on directory returned false");
+        $pathToSites = dirname(__FILE__) . '/data/Sites';
+        if (!$this->SetFieldByName('directory', $pathToSites)) {
+            $this->fail('SetFieldByName on directory returned false');
             return 1;
         }
-        $content = $this->clickSubmitByName("Submit");
+        $content = $this->clickSubmitByName('Submit');
 
         //check for expected output
-        if (strpos($content, "<status>OK</status>") === false) {
+        if (strpos($content, '<status>OK</status>') === false) {
             $this->fail("'<status>OK</status>' not found on import.php\n$content\n");
             return 1;
         }
@@ -77,7 +77,7 @@ class ImportTestCase extends KWWebTestCase
         echo "\n";
         echo "endcontent\n";
 
-        $this->pass("Passed");
+        $this->pass('Passed');
         return 0;
     }
 }

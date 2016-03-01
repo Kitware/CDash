@@ -26,7 +26,7 @@ class CDashSeleniumTestCase extends PHPUnit_Extensions_SeleniumTestCase
     protected function browserSetUp()
     {
         global $argv;
-        $this->setBrowser("*" . $argv[2]);
+        $this->setBrowser('*' . $argv[2]);
         global $configure;
         $this->setBrowserUrl($configure['webserver']);
         $this->webPath = $configure['webpath'];

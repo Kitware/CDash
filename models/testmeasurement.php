@@ -34,7 +34,7 @@ class testmeasurement
         $query = "INSERT INTO testmeasurement (testid,name,type,value)
               VALUES ('$this->TestId','$name','$type','$value')";
         if (!pdo_query($query)) {
-            add_last_sql_error("TestMeasurement Insert");
+            add_last_sql_error('TestMeasurement Insert');
             return false;
         }
         return true;

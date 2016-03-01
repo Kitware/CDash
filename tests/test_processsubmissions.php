@@ -32,9 +32,9 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
         $i = 0;
         while ($i < $n) {
             pdo_query(
-                "INSERT INTO submission " .
-                " (filename,projectid,status,attempts,filesize,filemd5sum,created,started) " .
-                "VALUES " .
+                'INSERT INTO submission ' .
+                ' (filename,projectid,status,attempts,filesize,filemd5sum,created,started) ' .
+                'VALUES ' .
                 " ('bogus_submission_file_1.noxml','$projectid','1','1','999','bogus_md5sum_1','$old_time','$old_time')"
             );
 
@@ -44,9 +44,9 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
         $i = 0;
         while ($i < $n) {
             pdo_query(
-                "INSERT INTO submission " .
-                " (filename,projectid,status,attempts,filesize,filemd5sum,created) " .
-                "VALUES " .
+                'INSERT INTO submission ' .
+                ' (filename,projectid,status,attempts,filesize,filemd5sum,created) ' .
+                'VALUES ' .
                 " ('bogus_submission_file_2.noxml','$projectid','0','0','999','bogus_md5sum_2','$now_utc')"
             );
 
@@ -69,7 +69,7 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
         $old_time = gmdate(FMT_DATETIMESTD, time() - (2 * $CDASH_SUBMISSION_PROCESSING_TIME_LIMIT));
 
         pdo_query(
-            "UPDATE submissionprocessor " .
+            'UPDATE submissionprocessor ' .
             "SET pid='1', lastupdated='$old_time', locked='$old_time' " .
             "WHERE projectid='$projectid'"
         );
@@ -142,15 +142,15 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
         echo "this->logfilename='$this->logfilename'\n";
         echo "this->url='$this->url'\n";
 
-        $content = $this->get($this->url . "/ajax/processsubmissions.php");
-        if (strpos($content, "projectid/argv[1] should be a number") === false) {
+        $content = $this->get($this->url . '/ajax/processsubmissions.php');
+        if (strpos($content, 'projectid/argv[1] should be a number') === false) {
             $this->fail("'projectid/argv[1] should be a number' not found when expected");
             echo "content (1):\n$content\n";
             return 1;
         }
 
-        $content = $this->get($this->url . "/ajax/processsubmissions.php?projectid=1");
-        if (strpos($content, "Done with ProcessSubmissions") === false) {
+        $content = $this->get($this->url . '/ajax/processsubmissions.php?projectid=1');
+        if (strpos($content, 'Done with ProcessSubmissions') === false) {
             $this->fail("'Done with ProcessSubmissions' not found when expected");
             echo "content (2):\n$content\n";
             return 1;
@@ -158,7 +158,7 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
 
         global $CDASH_LOG_FILE;
         if ($CDASH_LOG_FILE !== false) {
-            echo "log file perms: [";
+            echo 'log file perms: [';
             echo substr(sprintf('%o', fileperms($this->logfilename)), -4) . "]\n";
         }
 
@@ -168,14 +168,14 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
         // Then validate that processsubmissions properly processes the old record
         // *and* the queued records.
         //
-        $this->addFakeSubmissionRecords("1");
+        $this->addFakeSubmissionRecords('1');
 
         // Launch the first instance of the processor process via curl and tell
         // it to take a long time by sleeping each time through its loop.
         // (With 6 fake records just added, it'll sleep for about 6 seconds,
         // 1 second for each time through its loop...)
         //
-        $this->launchViaCurl("/ajax/processsubmissions.php?projectid=1&sleep_in_loop=1", 1);
+        $this->launchViaCurl('/ajax/processsubmissions.php?projectid=1&sleep_in_loop=1', 1);
 
         // Sleep for 2 seconds, and then try to process submissions synchronously
         // and simultaneously... (This one should go through the "can't acquire
@@ -184,8 +184,8 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
         echo "sleep(2)\n";
         sleep(2);
 
-        $content = $this->get($this->url . "/ajax/processsubmissions.php?projectid=1");
-        if (strpos($content, "Another process is already processing") === false) {
+        $content = $this->get($this->url . '/ajax/processsubmissions.php?projectid=1');
+        if (strpos($content, 'Another process is already processing') === false) {
             $this->fail("'Another process is already processing' not found when expected");
             echo "content (3):\n$content\n";
             return 1;
@@ -197,13 +197,13 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
         echo "sleep(10)\n";
         sleep(10);
 
-        if (!$this->allRecordsProcessed("1")) {
+        if (!$this->allRecordsProcessed('1')) {
             // projectid 1 is tested in this test...
 
-            $rows = pdo_all_rows_query("SELECT * FROM submission WHERE status<2");
+            $rows = pdo_all_rows_query('SELECT * FROM submission WHERE status<2');
             echo print_r($rows, true) . "\n";
 
-            $this->fail("some records still not processed after call 1 processsubmissions.php");
+            $this->fail('some records still not processed after call 1 processsubmissions.php');
             return 1;
         }
 
@@ -212,17 +212,17 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
         // lock, such that the processing code has to go through the "acquire
         // lock by assuming existing lock is dead, so steal it" chunk of code.
         //
-        $this->addFakeSubmissionRecords("1");
-        $this->addFakeStaleProcessingLock("1");
-        $content = $this->get($this->url . "/ajax/processsubmissions.php?projectid=1");
+        $this->addFakeSubmissionRecords('1');
+        $this->addFakeStaleProcessingLock('1');
+        $content = $this->get($this->url . '/ajax/processsubmissions.php?projectid=1');
 
-        if (!$this->allRecordsProcessed("1")) {
+        if (!$this->allRecordsProcessed('1')) {
             // projectid 1 is tested in this test...
 
-            $rows = pdo_all_rows_query("SELECT * FROM submission WHERE status<2");
+            $rows = pdo_all_rows_query('SELECT * FROM submission WHERE status<2');
             echo print_r($rows, true) . "\n";
 
-            $this->fail("some records still not processed after call 2 processsubmissions.php");
+            $this->fail('some records still not processed after call 2 processsubmissions.php');
             echo "content (4):\n$content\n";
             return 1;
         }
@@ -230,17 +230,17 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
         // Finally, execute the processsubmissions.php script by php command line
         // to get coverage of the chunk of code that processes command line args.
         //
-        $this->addFakeSubmissionRecords("1");
-        $this->addFakeStaleProcessingLock("1");
+        $this->addFakeSubmissionRecords('1');
+        $this->addFakeStaleProcessingLock('1');
         $this->launchViaCommandLine(1);
 
-        if (!$this->allRecordsProcessed("1")) {
+        if (!$this->allRecordsProcessed('1')) {
             // projectid 1 is tested in this test...
 
-            $rows = pdo_all_rows_query("SELECT * FROM submission WHERE status<2");
+            $rows = pdo_all_rows_query('SELECT * FROM submission WHERE status<2');
             echo print_r($rows, true) . "\n";
 
-            $this->fail("some records still not processed after call 3 processsubmissions.php");
+            $this->fail('some records still not processed after call 3 processsubmissions.php');
             return 1;
         }
 
@@ -252,7 +252,7 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
         //  return 1;
         //  }
 
-        $this->pass("Passed");
+        $this->pass('Passed');
         return 0;
     }
 }

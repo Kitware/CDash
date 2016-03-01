@@ -47,7 +47,7 @@ class DynamicAnalysisHandler extends AbstractHandler
         if ($name == 'SITE') {
             $this->Site->Name = $attributes['NAME'];
             if (empty($this->Site->Name)) {
-                $this->Site->Name = "(empty)";
+                $this->Site->Name = '(empty)';
             }
             $this->Site->Insert();
 
@@ -65,7 +65,7 @@ class DynamicAnalysisHandler extends AbstractHandler
             $this->Build->SiteId = $this->Site->Id;
             $this->Build->Name = $attributes['BUILDNAME'];
             if (empty($this->Build->Name)) {
-                $this->Build->Name = "(empty)";
+                $this->Build->Name = '(empty)';
             }
             $this->Build->SetStamp($attributes['BUILDSTAMP']);
             $this->Build->Generator = $attributes['GENERATOR'];
@@ -93,7 +93,7 @@ class DynamicAnalysisHandler extends AbstractHandler
         $parent = $this->getParent(); // should be before endElement
         parent::endElement($parser, $name);
 
-        if ($name == "STARTTESTTIME" && $parent == 'DYNAMICANALYSIS') {
+        if ($name == 'STARTTESTTIME' && $parent == 'DYNAMICANALYSIS') {
             $this->Build->ProjectId = $this->projectid;
             $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
             $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
@@ -118,7 +118,7 @@ class DynamicAnalysisHandler extends AbstractHandler
                 unset($this->DynamicAnalysis);
             }
             $GLOBALS['PHP_ERROR_BUILD_ID'] = $this->Build->Id;
-        } elseif ($name == "TEST" && $parent == 'DYNAMICANALYSIS') {
+        } elseif ($name == 'TEST' && $parent == 'DYNAMICANALYSIS') {
             $this->DynamicAnalysis->BuildId = $this->Build->Id;
             $this->DynamicAnalysis->Insert();
         } elseif ($name == 'DEFECT') {

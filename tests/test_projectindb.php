@@ -17,8 +17,8 @@ class ProjectInDbTestCase extends KWWebTestCase
         $this->createProjectTest4Db();
         $query = "SELECT name,description,public FROM project WHERE name = 'ProjectTest4Db'";
         $result = $this->db->query($query);
-        $nameexpected = "ProjectTest4Db";
-        $descriptionexpected = "This is a project test for cdash";
+        $nameexpected = 'ProjectTest4Db';
+        $descriptionexpected = 'This is a project test for cdash';
         $publicexpected = 0;
         $expected = array('name' => $nameexpected,
             'description' => $descriptionexpected,
@@ -56,8 +56,8 @@ class ProjectInDbTestCase extends KWWebTestCase
 
     public function testProjectInBuildGroupPosition()
     {
-        $query = "SELECT COUNT(*) FROM buildgroupposition WHERE buildgroupid IN (SELECT id FROM buildgroup WHERE projectid=";
-        $query .= $this->projecttestid . ")";
+        $query = 'SELECT COUNT(*) FROM buildgroupposition WHERE buildgroupid IN (SELECT id FROM buildgroup WHERE projectid=';
+        $query .= $this->projecttestid . ')';
         $result = $this->db->query($query);
         if (!strcmp($this->db->getType(), 'pgsql')) {
             $this->assertEqual($result[0]['count'], 3);
@@ -68,7 +68,7 @@ class ProjectInDbTestCase extends KWWebTestCase
 
     public function testUser2Project()
     {
-        $query = "SELECT userid, role, emailtype, emailcategory FROM user2project WHERE projectid=" . $this->projecttestid;
+        $query = 'SELECT userid, role, emailtype, emailcategory FROM user2project WHERE projectid=' . $this->projecttestid;
         $result = $this->db->query($query);
         $expected = array('userid' => 1,
             'role' => 2,

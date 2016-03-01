@@ -45,12 +45,12 @@ class JavaJSONTarHandler
         // This function receives an open file handle, but we really just need
         // the path to this file so that we can extract it.
         $meta_data = stream_get_meta_data($handle);
-        $filename = $meta_data["uri"];
+        $filename = $meta_data['uri'];
         fclose($handle);
 
         // Create a new directory where we can extract our tarball.
         $pathParts = pathinfo($filename);
-        $dirName = $CDASH_BACKUP_DIRECTORY . "/" . $pathParts['filename'];
+        $dirName = $CDASH_BACKUP_DIRECTORY . '/' . $pathParts['filename'];
         mkdir($dirName);
 
         // Extract the tarball.
@@ -64,7 +64,7 @@ class JavaJSONTarHandler
             new RecursiveDirectoryIterator($dirName),
             RecursiveIteratorIterator::CHILD_FIRST);
         foreach ($iterator as $fileinfo) {
-            if ($fileinfo->getFilename() == "package_map.json") {
+            if ($fileinfo->getFilename() == 'package_map.json') {
                 $this->ParsePackageMap($fileinfo);
             }
         }
@@ -74,7 +74,7 @@ class JavaJSONTarHandler
         foreach ($iterator as $fileinfo) {
             // need the longest extension, so getExtension() won't do here.
             $ext = substr(strstr($fileinfo->getFilename(), '.'), 1);
-            if ($ext === "java.json") {
+            if ($ext === 'java.json') {
                 $this->ParseJavaJSONFile($fileinfo);
             }
         }
@@ -109,8 +109,8 @@ class JavaJSONTarHandler
         }
 
         foreach ($jsonDecoded as $row) {
-            if (!array_key_exists("package", $row) ||
-                !array_key_exists("subproject", $row)
+            if (!array_key_exists('package', $row) ||
+                !array_key_exists('subproject', $row)
             ) {
                 return;
             }
@@ -157,9 +157,9 @@ class JavaJSONTarHandler
 
         // Make sure it has the fields we expect.
         if (is_null($jsonDecoded) ||
-            !array_key_exists("file", $jsonDecoded) ||
-            !array_key_exists("package", $jsonDecoded) ||
-            !array_key_exists("lines", $jsonDecoded)
+            !array_key_exists('file', $jsonDecoded) ||
+            !array_key_exists('package', $jsonDecoded) ||
+            !array_key_exists('lines', $jsonDecoded)
         ) {
             return;
         }
@@ -167,7 +167,7 @@ class JavaJSONTarHandler
         $path = $jsonDecoded['file'];
         $coverageFile->FullPath = $path;
 
-        $packageName = str_replace("/", ".", $jsonDecoded['package']);
+        $packageName = str_replace('/', '.', $jsonDecoded['package']);
         if (array_key_exists($packageName, $this->CoverageSummaries)) {
             $coverageSummary = $this->CoverageSummaries[$packageName];
         } else {

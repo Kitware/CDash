@@ -15,7 +15,7 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include dirname(dirname(dirname(__DIR__))) . "/config/config.php";
+include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 include_once 'include/common.php';
 include 'public/login.php';
@@ -32,7 +32,7 @@ pdo_select_db("$CDASH_DB_NAME", $db);
 $buildid_ok = false;
 @$buildid = $_GET['buildid'];
 if (!isset($buildid)) {
-    $rest_json = file_get_contents("php://input");
+    $rest_json = file_get_contents('php://input');
     $_POST = json_decode($rest_json, true);
     @$buildid = $_POST['buildid'];
 }
@@ -51,7 +51,7 @@ if (!$buildid_ok) {
 // Make sure this build actually exists.
 $build_array = pdo_fetch_array(pdo_query(
     "SELECT * FROM build WHERE id='$buildid'"));
-$projectid = $build_array["projectid"];
+$projectid = $build_array['projectid'];
 if (!isset($projectid) || $projectid == 0) {
     $response['error'] = "This build doesn't exist. Maybe it has been deleted.";
     echo json_encode($response);
@@ -114,7 +114,7 @@ switch ($method) {
 function rest_delete()
 {
     global $buildid;
-    add_log("Build #" . $buildid . " removed manually", "buildAPI");
+    add_log('Build #' . $buildid . ' removed manually', 'buildAPI');
     remove_build($buildid);
 }
 
@@ -127,10 +127,10 @@ function rest_post()
     $build = pdo_query(
         "SELECT name, type, siteid, projectid FROM build WHERE id='$buildid'");
     $build_array = pdo_fetch_array($build);
-    $buildtype = $build_array["type"];
-    $buildname = $build_array["name"];
-    $siteid = $build_array["siteid"];
-    $projectid = $build_array["projectid"];
+    $buildtype = $build_array['type'];
+    $buildname = $build_array['name'];
+    $siteid = $build_array['siteid'];
+    $projectid = $build_array['projectid'];
 
     // Should we change whether or not this build is expected?
     if (isset($_POST['expected']) && isset($_POST['groupid'])) {
@@ -171,7 +171,7 @@ function rest_post()
         // Remove the build from its previous group.
         $prevgroup = pdo_fetch_array(pdo_query(
             "SELECT groupid as id FROM build2group WHERE buildid='$buildid'"));
-        $prevgroupid = $prevgroup["id"];
+        $prevgroupid = $prevgroup['id'];
         pdo_query(
             "DELETE FROM build2group
                 WHERE groupid='$prevgroupid' AND buildid='$buildid'");

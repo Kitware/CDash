@@ -37,13 +37,13 @@ class label
     /** Get the text of a label */
     public function GetText()
     {
-        return pdo_get_field_value("SELECT text FROM label WHERE id=" . qnum($this->Id), "text", 0);
+        return pdo_get_field_value('SELECT text FROM label WHERE id=' . qnum($this->Id), 'text', 0);
     }
 
     /** Get the id from a label */
     public function GetIdFromText()
     {
-        return pdo_get_field_value("SELECT id FROM label WHERE text='" . $this->Text . "'", "id", 0);
+        return pdo_get_field_value("SELECT id FROM label WHERE text='" . $this->Text . "'", 'id', 0);
     }
 
     public function InsertAssociation($table, $field1, $value1 = null, $field2 = null, $value2 = null)
@@ -66,7 +66,7 @@ class label
                         $duplicate_sql";
 
                     if (!pdo_query($query)) {
-                        add_last_sql_error("Label::InsertAssociation");
+                        add_last_sql_error('Label::InsertAssociation');
                     }
                 }
             } else {
@@ -81,7 +81,7 @@ class label
                         $duplicate_sql";
 
                     if (!pdo_query($query)) {
-                        add_last_sql_error("Label::InsertAssociation");
+                        add_last_sql_error('Label::InsertAssociation');
                     }
                 }
             }

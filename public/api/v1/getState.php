@@ -14,11 +14,11 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-session_name("CDash");
+session_name('CDash');
 session_start();
 
 if (empty($_SESSION['cdash']) || empty($_SESSION['cdash']['state'])) {
-    echo "";
+    echo '';
     return;
 }
 

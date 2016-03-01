@@ -68,7 +68,7 @@ class buildgrouprule
             if (!pdo_query("INSERT INTO build2grouprule (groupid,buildtype,buildname,siteid,expected,starttime,endtime)
                      VALUES ('$this->GroupId','$this->BuildType','$this->BuildName','$this->SiteId','$this->Expected','$this->StartTime','$this->EndTime')")
             ) {
-                add_last_sql_error("BuildGroupRule Insert()");
+                add_last_sql_error('BuildGroupRule Insert()');
                 return false;
             }
             return true;

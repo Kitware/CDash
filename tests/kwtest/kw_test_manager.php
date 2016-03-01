@@ -72,7 +72,7 @@ class TestManager
     {
         $test = new TestSuite('All Tests');
         if ($this->testDir !== null) {
-            $path = $this->testDir . "/" . $file;
+            $path = $this->testDir . '/' . $file;
         } else {
             $path = $file;
         }
@@ -182,12 +182,12 @@ class TestManager
             if (!$database->create($dbname)) {
                 $dbcreated = false;
                 $msg = 'error query(CREATE DATABASE)';
-                die("Error" . " File: " . __FILE__ . " on line: " . __LINE__ . ": $msg");
+                die('Error' . ' File: ' . __FILE__ . ' on line: ' . __LINE__ . ": $msg");
                 return false;
             }
             if ($dbcreated) {
                 $dirname = str_replace('\\', '/', dirname(__FILE__));
-                $sqlfile = str_replace("/tests/kwtest", "", $dirname) . "/sql/" . $dbtype . "/cdash.sql";
+                $sqlfile = str_replace('/tests/kwtest', '', $dirname) . '/sql/' . $dbtype . '/cdash.sql';
                 $database->fillDb($sqlfile);
             }
             return true;
@@ -420,7 +420,7 @@ class CDashTestManager extends TestManager
         }
         $reporter->close();
         $msg = "Submit files (using http)\n\tUsing HTTP submit method\n\t";
-        $msg .= "Drop site: " . $this->_urlToCdash . "?project=CDash\n";
+        $msg .= 'Drop site: ' . $this->_urlToCdash . "?project=CDash\n";
         echo $msg;
         $filename = $directory . '/Build.xml';
         $this->__uploadViaCurl($filename);

@@ -160,7 +160,7 @@ class ShellTestCase extends SimpleTestCase
      * @param string $message Message to display.
      * @return bool              True on pass
      */
-    public function assertEqual($first, $second, $message = "%s")
+    public function assertEqual($first, $second, $message = '%s')
     {
         return $this->assert(
             new EqualExpectation($first),
@@ -177,7 +177,7 @@ class ShellTestCase extends SimpleTestCase
      * @param string $message Message to display.
      * @return bool               True on pass
      */
-    public function assertNotEqual($first, $second, $message = "%s")
+    public function assertNotEqual($first, $second, $message = '%s')
     {
         return $this->assert(
             new NotEqualExpectation($first),
@@ -192,11 +192,11 @@ class ShellTestCase extends SimpleTestCase
      * @param string $message Message to display.
      * @return bool          True if pass.
      */
-    public function assertExitCode($status, $message = "%s")
+    public function assertExitCode($status, $message = '%s')
     {
         $message = sprintf($message, "Expected status code of [$status] from [" .
-            $this->last_command . "], but got [" .
-            $this->last_status . "]");
+            $this->last_command . '], but got [' .
+            $this->last_status . ']');
         return $this->assertTrue($status === $this->last_status, $message);
     }
 
@@ -207,7 +207,7 @@ class ShellTestCase extends SimpleTestCase
      * @param string $message Message to display.
      * @return bool          True if pass.
      */
-    public function assertOutput($expected, $message = "%s")
+    public function assertOutput($expected, $message = '%s')
     {
         $shell = $this->getShell();
         return $this->assert(
@@ -223,7 +223,7 @@ class ShellTestCase extends SimpleTestCase
      * @param string $message Message to display.
      * @return bool           True if pass.
      */
-    public function assertOutputPattern($pattern, $message = "%s")
+    public function assertOutputPattern($pattern, $message = '%s')
     {
         $shell = $this->getShell();
         return $this->assert(
@@ -239,7 +239,7 @@ class ShellTestCase extends SimpleTestCase
      * @param $message           Message to display.
      * @return bool           True if pass.
      */
-    public function assertNoOutputPattern($pattern, $message = "%s")
+    public function assertNoOutputPattern($pattern, $message = '%s')
     {
         $shell = $this->getShell();
         return $this->assert(
@@ -254,7 +254,7 @@ class ShellTestCase extends SimpleTestCase
      * @param string $message Message to display.
      * @return bool          True if pass.
      */
-    public function assertFileExists($path, $message = "%s")
+    public function assertFileExists($path, $message = '%s')
     {
         $message = sprintf($message, "File [$path] should exist");
         return $this->assertTrue(file_exists($path), $message);
@@ -266,7 +266,7 @@ class ShellTestCase extends SimpleTestCase
      * @param string $message Message to display.
      * @return bool          True if pass.
      */
-    public function assertFileNotExists($path, $message = "%s")
+    public function assertFileNotExists($path, $message = '%s')
     {
         $message = sprintf($message, "File [$path] should not exist");
         return $this->assertFalse(file_exists($path), $message);
@@ -280,7 +280,7 @@ class ShellTestCase extends SimpleTestCase
      * @param string $message Message to display.
      * @return bool           True if pass.
      */
-    public function assertFilePattern($pattern, $path, $message = "%s")
+    public function assertFilePattern($pattern, $path, $message = '%s')
     {
         return $this->assert(
             new PatternExpectation($pattern),
@@ -296,7 +296,7 @@ class ShellTestCase extends SimpleTestCase
      * @param string $message Message to display.
      * @return bool           True if pass.
      */
-    public function assertNoFilePattern($pattern, $path, $message = "%s")
+    public function assertNoFilePattern($pattern, $path, $message = '%s')
     {
         return $this->assert(
             new NoPatternExpectation($pattern),

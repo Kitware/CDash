@@ -14,13 +14,13 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once dirname(dirname(__DIR__)) . "/config/config.php";
-require_once "include/pdo.php";
-require_once "include/common.php";
+require_once dirname(dirname(__DIR__)) . '/config/config.php';
+require_once 'include/pdo.php';
+require_once 'include/common.php';
 
-$buildid = pdo_real_escape_numeric($_GET["buildid"]);
+$buildid = pdo_real_escape_numeric($_GET['buildid']);
 if (!isset($buildid) || !is_numeric($buildid)) {
-    echo "Not a valid buildid!";
+    echo 'Not a valid buildid!';
     return;
 }
 
@@ -31,11 +31,11 @@ pdo_select_db("$CDASH_DB_NAME", $db);
 $build = pdo_query("SELECT name,type,siteid,projectid,starttime FROM build WHERE id='$buildid'");
 $build_array = pdo_fetch_array($build);
 
-$buildtype = $build_array["type"];
-$buildname = $build_array["name"];
-$siteid = $build_array["siteid"];
-$starttime = $build_array["starttime"];
-$projectid = $build_array["projectid"];
+$buildtype = $build_array['type'];
+$buildname = $build_array['name'];
+$siteid = $build_array['siteid'];
+$starttime = $build_array['starttime'];
+$projectid = $build_array['projectid'];
 
 // Find the other builds
 $previousbuilds = pdo_query("SELECT id,starttime,endtime,loctested,locuntested FROM build,coveragesummary as cs WHERE cs.buildid=build.id AND siteid='$siteid' AND type='$buildtype' AND name='$buildname'
@@ -53,21 +53,21 @@ $previousbuilds = pdo_query("SELECT id,starttime,endtime,loctested,locuntested F
         <?php
         $i = 0;
         while ($build_array = pdo_fetch_array($previousbuilds)) {
-            $t = strtotime($build_array["starttime"]) * 1000; //flot expects milliseconds
-        @$percent = round($build_array["loctested"] / ($build_array["loctested"] + $build_array["locuntested"]) * 100, 2);
+            $t = strtotime($build_array['starttime']) * 1000; //flot expects milliseconds
+        @$percent = round($build_array['loctested'] / ($build_array['loctested'] + $build_array['locuntested']) * 100, 2);
 
             ?>
         percent_array.push([<?php echo $t;
             ?>,<?php echo $percent;
             ?>]);
         loctested_array.push([<?php echo $t;
-            ?>,<?php echo $build_array["loctested"];
+            ?>,<?php echo $build_array['loctested'];
             ?>]);
         locuntested_array.push([<?php echo $t;
-            ?>,<?php echo $build_array["locuntested"];
+            ?>,<?php echo $build_array['locuntested'];
             ?>]);
         buildids[<?php echo $t;
-            ?>] = <?php echo $build_array["id"];
+            ?>] = <?php echo $build_array['id'];
             ?>;
         <?php
         $i++;

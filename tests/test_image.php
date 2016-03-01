@@ -26,7 +26,7 @@ class ImageTestCase extends KWWebTestCase
         //no id, no matching checksum
         $image->Id = 0;
         if ($image->Exists()) {
-            $this->fail("Exists() should return false when Id is 0");
+            $this->fail('Exists() should return false when Id is 0');
             return 1;
         }
 
@@ -36,7 +36,7 @@ class ImageTestCase extends KWWebTestCase
             $this->fail("Exists() should return false with no matching checksum\n");
         }
 
-        $pathToImage = dirname(__FILE__) . "/data/smile.gif";
+        $pathToImage = dirname(__FILE__) . '/data/smile.gif';
 
         //dummy checksum so we don't break the test on pgSQL
         $image->Checksum = 100;
@@ -72,7 +72,7 @@ class ImageTestCase extends KWWebTestCase
             return 1;
         }
 
-        $this->pass("Passed");
+        $this->pass('Passed');
 
         $this->stopCodeCoverage();
         return 0;

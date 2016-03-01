@@ -18,7 +18,7 @@ class ExternalLinksFromTestsTestCase extends KWWebTestCase
     {
         // Submit our testing data.
         $file_to_submit =
-            dirname(__FILE__) . "/data/ExternalLinksFromTests/Test.xml";
+            dirname(__FILE__) . '/data/ExternalLinksFromTests/Test.xml';
         if (!$this->submission('InsightExample', $file_to_submit)) {
             $this->fail("Failed to submit $file_to_submit");
             return 1;
@@ -40,7 +40,7 @@ class ExternalLinksFromTestsTestCase extends KWWebTestCase
         $measurement = array_pop($jsonobj['test']['measurements']);
 
         $success = true;
-        $error_msg = "";
+        $error_msg = '';
 
         if ($measurement['name'] !== 'Interesting website') {
             $error_msg = "Expected name to be 'Interesting website', instead found " . $measurement['name'];

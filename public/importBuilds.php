@@ -15,11 +15,11 @@
 =========================================================================*/
 
 // Open the database connection
-include dirname(__DIR__) . "/config/config.php";
-require_once "include/pdo.php";
-include "include/version.php";
+include dirname(__DIR__) . '/config/config.php';
+require_once 'include/pdo.php';
+include 'include/version.php';
 include_once 'include/common.php';
-include_once "include/ctestparser.php";
+include_once 'include/ctestparser.php';
 
 if ($argc != 2) {
     echo "Usage: php $argv[0] directory \n";
@@ -35,12 +35,12 @@ pdo_select_db("$CDASH_DB_NAME", $db);
 echo "checking new build files $directory \n";
 
 // Write the current time in the file
-$lastcheckfile = $directory . "/lastcheck";
+$lastcheckfile = $directory . '/lastcheck';
 @$lastcheck = file_get_contents($lastcheckfile);
 if (!empty($lastcheck)) {
-    echo "last check was " . date("Y-m-d H:i:s", $lastcheck) . "\n";
+    echo 'last check was ' . date('Y-m-d H:i:s', $lastcheck) . "\n";
 }
-$handle = fopen($lastcheckfile, "wb");
+$handle = fopen($lastcheckfile, 'wb');
 fwrite($handle, time());
 fclose($handle);
 unset($handle);
@@ -61,7 +61,7 @@ foreach ($filelist as $filename) {
     // split on path separator
     $pathParts = preg_split('_[\\\\/]_', $filename);
     // split on cdash separator "_"
-    $cdashParts = explode("_", $pathParts[count($pathParts) - 1]);
+    $cdashParts = explode('_', $pathParts[count($pathParts) - 1]);
     $projectid = get_project_id($cdashParts[0]);
 
     if ($projectid != -1) {
@@ -70,7 +70,7 @@ foreach ($filelist as $filename) {
         ob_flush();
         flush();
 
-        $handle = fopen($filename, "r");
+        $handle = fopen($filename, 'r');
         ctest_parse($handle, $projectid);
         fclose($handle);
         unset($handle);

@@ -16,10 +16,10 @@
 
 $noforcelogin = 1;
 
-include dirname(__DIR__) . "/config/config.php";
-require_once "include/pdo.php";
+include dirname(__DIR__) . '/config/config.php';
+require_once 'include/pdo.php';
 include_once 'include/common.php';
-include "include/version.php";
+include 'include/version.php';
 include 'public/login.php';
 include_once 'models/project.php';
 include_once 'models/build.php';
@@ -27,7 +27,7 @@ include_once 'models/site.php';
 include_once 'models/uploadfile.php';
 
 if (!isset($_GET['buildid'])) {
-    echo "Build id not set";
+    echo 'Build id not set';
     return;
 }
 
@@ -39,15 +39,15 @@ $Site = new Site();
 $Site->Id = $Build->SiteId;
 
 $build_array = pdo_fetch_array(pdo_query("SELECT projectid FROM build WHERE id='$buildid'"));
-if (!isset($build_array["projectid"])) {
-    echo "Build does not exist. Maybe it has been deleted.";
+if (!isset($build_array['projectid'])) {
+    echo 'Build does not exist. Maybe it has been deleted.';
     return;
 }
-$projectid = $build_array["projectid"];
+$projectid = $build_array['projectid'];
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid);
 
-@$date = $_GET["date"];
+@$date = $_GET['date'];
 if ($date != null) {
     $date = htmlspecialchars(pdo_real_escape_string($date));
 }
@@ -57,13 +57,13 @@ $xml .= get_cdash_dashboard_xml(get_project_name($projectid), $date);
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME", $db);
-$xml .= add_XML_value("title", "CDash - Uploaded files");
-$xml .= add_XML_value("menutitle", "CDash");
-$xml .= add_XML_value("menusubtitle", "Uploaded files");
+$xml .= add_XML_value('title', 'CDash - Uploaded files');
+$xml .= add_XML_value('menutitle', 'CDash');
+$xml .= add_XML_value('menusubtitle', 'Uploaded files');
 
-$xml .= "<hostname>" . $_SERVER['SERVER_NAME'] . "</hostname>";
-$xml .= "<date>" . date("r") . "</date>";
-$xml .= "<backurl>index.php</backurl>";
+$xml .= '<hostname>' . $_SERVER['SERVER_NAME'] . '</hostname>';
+$xml .= '<date>' . date('r') . '</date>';
+$xml .= '<backurl>index.php</backurl>';
 
 $xml .= "<buildid>$buildid</buildid>";
 $xml .= '<buildname>' . $Build->Name . '</buildname>';
@@ -83,22 +83,22 @@ foreach ($uploadFilesOrURLs as $uploadFileOrURL) {
         $xml .= '<filesize>' . $uploadFileOrURL->Filesize . '</filesize>';
 
         $filesize = $uploadFileOrURL->Filesize;
-        $ext = "b";
+        $ext = 'b';
         if ($filesize > 1024) {
             $filesize /= 1024;
-            $ext = "Kb";
+            $ext = 'Kb';
         }
         if ($filesize > 1024) {
             $filesize /= 1024;
-            $ext = "Mb";
+            $ext = 'Mb';
         }
         if ($filesize > 1024) {
             $filesize /= 1024;
-            $ext = "Gb";
+            $ext = 'Gb';
         }
         if ($filesize > 1024) {
             $filesize /= 1024;
-            $ext = "Tb";
+            $ext = 'Tb';
         }
 
         $xml .= '<filesizedisplay>' . round($filesize) . ' ' . $ext . '</filesizedisplay>';
@@ -112,6 +112,6 @@ foreach ($uploadFilesOrURLs as $uploadFileOrURL) {
     }
 }
 
-$xml .= "</cdash>";
+$xml .= '</cdash>';
 
-generate_XSLT($xml, "viewFiles", true);
+generate_XSLT($xml, 'viewFiles', true);

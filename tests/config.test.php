@@ -4,7 +4,7 @@
 // Do not include this file directly; include cdash_test_case.php instead.
 // That file adds the root of the CDash source tree to the include path.
 //
-require_once "config/config.php";
+require_once 'config/config.php';
 
 global $configure;
 $configure = array(

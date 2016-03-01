@@ -14,14 +14,14 @@ class Example extends CDashSeleniumTestCase
 
     public function testShowUpdateGraph()
     {
-        $this->open($this->webPath . "/viewUpdate.php?buildid=1");
-        $this->click("link=Show Activity Graph");
-        $this->click("link=Zoom out");
-        $this->click("link=Show Activity Graph");
+        $this->open($this->webPath . '/viewUpdate.php?buildid=1');
+        $this->click('link=Show Activity Graph');
+        $this->click('link=Zoom out');
+        $this->click('link=Show Activity Graph');
 
-        $this->open($this->webPath . "/viewChanges.php?project=TestCompressionExample");
-        $this->click("link=Show Activity Graph");
-        $this->click("link=Zoom out");
-        $this->click("link=Show Activity Graph");
+        $this->open($this->webPath . '/viewChanges.php?project=TestCompressionExample');
+        $this->click('link=Show Activity Graph');
+        $this->click('link=Zoom out');
+        $this->click('link=Show Activity Graph');
     }
 }

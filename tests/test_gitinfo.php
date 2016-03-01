@@ -19,11 +19,11 @@ class SVNInfoTestCase extends KWWebTestCase
     public function testSVNInfo()
     {
         $this->login();
-        $this->get($this->url . "/gitinfo.php");
-        if (strpos($this->getBrowser()->getContentAsText(), "phpinfo") === false) {
+        $this->get($this->url . '/gitinfo.php');
+        if (strpos($this->getBrowser()->getContentAsText(), 'phpinfo') === false) {
             $this->fail("'phpinfo' not found when expected.");
             return 1;
         }
-        $this->pass("Passed");
+        $this->pass('Passed');
     }
 }

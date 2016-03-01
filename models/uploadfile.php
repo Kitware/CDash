@@ -27,22 +27,22 @@ class uploadfile
     public function Insert()
     {
         if (!$this->BuildId) {
-            add_log("BuildId is not set", __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
+            add_log('BuildId is not set', __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
             return false;
         }
 
         if (!$this->Filename) {
-            add_log("Filename is not set", __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
+            add_log('Filename is not set', __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
             return false;
         }
 
         if (!$this->Sha1Sum) {
-            add_log("Sha1Sum is not set", __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
+            add_log('Sha1Sum is not set', __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
             return false;
         }
 
         if (!$this->Filesize) {
-            add_log("Filesize is not set", __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
+            add_log('Filesize is not set', __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
             return false;
         }
 
@@ -65,21 +65,21 @@ class uploadfile
                 add_last_sql_error('Uploadfile::Insert', 0, $this->BuildId);
                 return false;
             }
-            $this->Id = pdo_insert_id("uploadfile");
+            $this->Id = pdo_insert_id('uploadfile');
         } else {
             $filequery_array = pdo_fetch_array($filequery);
-            $this->Id = $filequery_array["id"];
+            $this->Id = $filequery_array['id'];
         }
 
         if (!$this->Id) {
-            add_log("No Id", __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
+            add_log('No Id', __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
             return false;
         }
 
         if (!pdo_query("INSERT INTO build2uploadfile (fileid, buildid)
                    VALUES ('$this->Id','$this->BuildId')")
         ) {
-            add_last_sql_error("UploadFile::Insert", 0, $this->BuildId);
+            add_last_sql_error('UploadFile::Insert', 0, $this->BuildId);
             return false;
         }
         return true;
@@ -88,7 +88,7 @@ class uploadfile
     public function Fill()
     {
         if (!$this->Id) {
-            add_log("Id not set", __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
+            add_log('Id not set', __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
             return false;
         }
         $query = pdo_query("SELECT filename, filesize, sha1sum, isurl FROM uploadfile WHERE id='$this->Id'");
@@ -103,7 +103,7 @@ class uploadfile
             $this->Filesize = $fileArray['filesize'];
             $this->IsUrl = $fileArray['isurl'];
         } else {
-            add_log("Invalid id", __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
+            add_log('Invalid id', __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
             return false;
         }
         return true;

@@ -75,15 +75,15 @@ class coverage
     public function GetFiles()
     {
         if (!$this->BuildId) {
-            echo "Coverage GetFiles(): BuildId not set";
+            echo 'Coverage GetFiles(): BuildId not set';
             return false;
         }
 
         $fileids = array();
 
-        $coverage = pdo_query("SELECT fileid FROM coverage WHERE buildid=" . qnum($this->BuildId));
+        $coverage = pdo_query('SELECT fileid FROM coverage WHERE buildid=' . qnum($this->BuildId));
         if (!$coverage) {
-            add_last_sql_error("Coverage GetFiles");
+            add_last_sql_error('Coverage GetFiles');
             return false;
         }
 

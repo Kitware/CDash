@@ -131,12 +131,12 @@ class IndexPhpFilters extends DefaultFilters
         $sql_field = '';
         switch (strtolower($field)) {
             case 'buildduration': {
-                $sql_field = "ROUND(TIMESTAMPDIFF(SECOND,b.starttime,b.endtime)/60.0,1)";
+                $sql_field = 'ROUND(TIMESTAMPDIFF(SECOND,b.starttime,b.endtime)/60.0,1)';
             }
                 break;
 
             case 'builderrors': {
-                $sql_field = "b.builderrors";
+                $sql_field = 'b.builderrors';
             }
                 break;
 
@@ -166,12 +166,12 @@ class IndexPhpFilters extends DefaultFilters
                 break;
 
             case 'buildwarnings': {
-                $sql_field = "b.buildwarnings";
+                $sql_field = 'b.buildwarnings';
             }
                 break;
 
             case 'configureduration': {
-                $sql_field = "(SELECT ROUND(TIMESTAMPDIFF(SECOND,starttime,endtime)/60.0,1) FROM configure WHERE buildid=b.id)";
+                $sql_field = '(SELECT ROUND(TIMESTAMPDIFF(SECOND,starttime,endtime)/60.0,1) FROM configure WHERE buildid=b.id)';
             }
                 break;
 
@@ -186,7 +186,7 @@ class IndexPhpFilters extends DefaultFilters
                 break;
 
             case 'expected': {
-                $sql_field = "IF((SELECT COUNT(expected) FROM build2grouprule WHERE groupid=b2g.groupid AND buildtype=b.type AND buildname=b.name AND siteid=b.siteid)>0,(SELECT COUNT(expected) FROM build2grouprule WHERE groupid=b2g.groupid AND buildtype=b.type AND buildname=b.name AND siteid=b.siteid),0)";
+                $sql_field = 'IF((SELECT COUNT(expected) FROM build2grouprule WHERE groupid=b2g.groupid AND buildtype=b.type AND buildname=b.name AND siteid=b.siteid)>0,(SELECT COUNT(expected) FROM build2grouprule WHERE groupid=b2g.groupid AND buildtype=b.type AND buildname=b.name AND siteid=b.siteid),0)';
             }
                 break;
 
@@ -222,12 +222,12 @@ class IndexPhpFilters extends DefaultFilters
                 break;
 
             case 'site': {
-                $sql_field = "(SELECT name FROM site WHERE site.id=b.siteid)";
+                $sql_field = '(SELECT name FROM site WHERE site.id=b.siteid)';
             }
                 break;
 
             case 'subproject': {
-                $sql_field = "(SELECT name FROM subproject, subproject2build WHERE subproject2build.subprojectid=subproject.id AND subproject2build.buildid=b.id)";
+                $sql_field = '(SELECT name FROM subproject, subproject2build WHERE subproject2build.subprojectid=subproject.id AND subproject2build.buildid=b.id)';
             }
                 break;
 
@@ -247,23 +247,23 @@ class IndexPhpFilters extends DefaultFilters
                 break;
 
             case 'testsduration': {
-                $sql_field = "IF((SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id)>0,(SELECT ROUND(SUM(time)/60.0,1) FROM build2test WHERE buildid=b.id),0)";
+                $sql_field = 'IF((SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id)>0,(SELECT ROUND(SUM(time)/60.0,1) FROM build2test WHERE buildid=b.id),0)';
             }
                 break;
 
             case 'testtimestatus': {
-                $sql_field = "IF((SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id)>0,(SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id AND timestatus>=(SELECT testtimemaxstatus FROM project WHERE project.id=b.projectid)),0)";
+                $sql_field = 'IF((SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id)>0,(SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id AND timestatus>=(SELECT testtimemaxstatus FROM project WHERE project.id=b.projectid)),0)';
             }
                 break;
 
             case 'updatedfiles': {
-                $sql_field = "(SELECT COUNT(uf.updateid) FROM updatefile AS uf, build2update AS b2u WHERE b2u.updateid=uf.updateid AND b2u.buildid=b.id)";
+                $sql_field = '(SELECT COUNT(uf.updateid) FROM updatefile AS uf, build2update AS b2u WHERE b2u.updateid=uf.updateid AND b2u.buildid=b.id)';
             }
                 break;
 
             case 'updateduration': {
-                $sql_field = "IF((SELECT COUNT(*) FROM buildupdate AS u, build2update AS b2u WHERE b2u.updateid=u.updateid AND b2u.buildid=b.id)>0,(SELECT ROUND(TIMESTAMPDIFF(SECOND,starttime,endtime)/60.0,1)
-                        FROM buildupdate AS u, build2update AS b2u WHERE b2u.updateid=u.updateid AND b2u.buildid=b.id),0)";
+                $sql_field = 'IF((SELECT COUNT(*) FROM buildupdate AS u, build2update AS b2u WHERE b2u.updateid=u.updateid AND b2u.buildid=b.id)>0,(SELECT ROUND(TIMESTAMPDIFF(SECOND,starttime,endtime)/60.0,1)
+                        FROM buildupdate AS u, build2update AS b2u WHERE b2u.updateid=u.updateid AND b2u.buildid=b.id),0)';
             }
                 break;
 
@@ -332,12 +332,12 @@ class QueryTestsPhpFilters extends DefaultFilters
         $sql_field = '';
         switch (strtolower($field)) {
             case 'buildname': {
-                $sql_field = "b.name";
+                $sql_field = 'b.name';
             }
                 break;
 
             case 'buildstarttime': {
-                $sql_field = "b.starttime";
+                $sql_field = 'b.starttime';
             }
                 break;
 
@@ -347,7 +347,7 @@ class QueryTestsPhpFilters extends DefaultFilters
                 break;
 
             case 'details': {
-                $sql_field = "test.details";
+                $sql_field = 'test.details';
             }
                 break;
 
@@ -357,22 +357,22 @@ class QueryTestsPhpFilters extends DefaultFilters
                 break;
 
             case 'site': {
-                $sql_field = "site.name";
+                $sql_field = 'site.name';
             }
                 break;
 
             case 'status': {
-                $sql_field = "build2test.status";
+                $sql_field = 'build2test.status';
             }
                 break;
 
             case 'testname': {
-                $sql_field = "test.name";
+                $sql_field = 'test.name';
             }
                 break;
 
             case 'time': {
-                $sql_field = "build2test.time";
+                $sql_field = 'build2test.time';
             }
                 break;
 
@@ -423,12 +423,12 @@ class ViewCoveragePhpFilters extends DefaultFilters
         $sql_field = '';
         switch (strtolower($field)) {
             case 'coveredlines': {
-                $sql_field = "c.loctested";
+                $sql_field = 'c.loctested';
             }
                 break;
 
             case 'filename': {
-                $sql_field = "cf.fullpath";
+                $sql_field = 'cf.fullpath';
             }
                 break;
 
@@ -444,7 +444,7 @@ class ViewCoveragePhpFilters extends DefaultFilters
             //break;
 
             case 'priority': {
-                $sql_field = "cfp.priority";
+                $sql_field = 'cfp.priority';
             }
                 break;
 
@@ -455,12 +455,12 @@ class ViewCoveragePhpFilters extends DefaultFilters
             //break;
 
             case 'totallines': {
-                $sql_field = "(c.loctested + c.locuntested)";
+                $sql_field = '(c.loctested + c.locuntested)';
             }
                 break;
 
             case 'uncoveredlines': {
-                $sql_field = "c.locuntested";
+                $sql_field = 'c.locuntested';
             }
                 break;
 
@@ -502,7 +502,7 @@ class ViewTestPhpFilters extends DefaultFilters
         $sql_field = '';
         switch (strtolower($field)) {
             case 'details': {
-                $sql_field = "t.details";
+                $sql_field = 't.details';
             }
                 break;
 
@@ -512,22 +512,22 @@ class ViewTestPhpFilters extends DefaultFilters
                 break;
 
             case 'status': {
-                $sql_field = "bt.status";
+                $sql_field = 'bt.status';
             }
                 break;
 
             case 'testname': {
-                $sql_field = "t.name";
+                $sql_field = 't.name';
             }
                 break;
 
             case 'timestatus': {
-                $sql_field = "bt.timestatus";
+                $sql_field = 'bt.timestatus';
             }
                 break;
 
             case 'time': {
-                $sql_field = "bt.time";
+                $sql_field = 'bt.time';
             }
                 break;
 
@@ -651,14 +651,14 @@ function get_sql_compare_and_value($compare, $value)
         case 1: {
             // bool is true
             $sql_compare = '!=';
-            $sql_value = "0";
+            $sql_value = '0';
         }
             break;
 
         case 2: {
             // bool is false
             $sql_compare = '=';
-            $sql_value = "0";
+            $sql_value = '0';
         }
             break;
 
@@ -847,7 +847,7 @@ function get_filterdata_from_request($page_id = '')
         $sql_combine = 'AND';
     }
 
-    $sql = "AND (";
+    $sql = 'AND (';
 
     for ($i = 1; $i <= $filtercount; ++$i) {
         if (empty($_REQUEST['field' . $i])) {
@@ -959,8 +959,8 @@ function get_filterdata_from_request($page_id = '')
         $filterdata['showfilters'] = 0;
     }
 
-    if (array_key_exists("colorblind", $_COOKIE)) {
-        $filterdata['colorblind'] = intval($_COOKIE["colorblind"]);
+    if (array_key_exists('colorblind', $_COOKIE)) {
+        $filterdata['colorblind'] = intval($_COOKIE['colorblind']);
     } else {
         if ($CDASH_CSS_FILE === 'css/colorblind.css') {
             $filterdata['colorblind'] = 1;

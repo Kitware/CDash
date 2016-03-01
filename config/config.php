@@ -22,7 +22,7 @@
 
 // This file is 'config.php', in the directory 'config', in the root.
 // Therefore, the root of the CDash source tree on the web server is:
-$CDASH_ROOT_DIR = str_replace("\\", "/", dirname(dirname(__FILE__)));
+$CDASH_ROOT_DIR = str_replace('\\', '/', dirname(dirname(__FILE__)));
 set_include_path(get_include_path() . PATH_SEPARATOR . $CDASH_ROOT_DIR);
 
 // Hostname of the database server
@@ -111,7 +111,7 @@ $CDASH_BACKUP_DIRECTORY = $CDASH_ROOT_DIR . '/backup';
 // Log directory
 $CDASH_LOG_DIRECTORY = $CDASH_ROOT_DIR . '/log';
 // Log file location. Set to false to log to the syslog.
-$CDASH_LOG_FILE = $CDASH_LOG_DIRECTORY . "/cdash.log";
+$CDASH_LOG_FILE = $CDASH_LOG_DIRECTORY . '/cdash.log';
 // Upload directory (absolute or relative)
 $CDASH_UPLOAD_DIRECTORY = $CDASH_ROOT_DIR . '/upload';
 // The relative path from the CDash root dir to the $CDASH_UPLOAD_DIRECTORY (for downloading)

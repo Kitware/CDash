@@ -27,7 +27,7 @@ class dailyupdate
     public function GetAuthors($filename, $onlylast = false)
     {
         if (!$this->ProjectId) {
-            echo "DailyUpdate::GetAuthors(): ProjectId is not set<br>";
+            echo 'DailyUpdate::GetAuthors(): ProjectId is not set<br>';
             return false;
         }
 
@@ -39,22 +39,22 @@ class dailyupdate
             $filename = substr($filename, 2);
         }
 
-        $sql = "";
+        $sql = '';
         if ($onlylast) {
-            $sql = " ORDER BY dailyupdate.id DESC LIMIT 1";
+            $sql = ' ORDER BY dailyupdate.id DESC LIMIT 1';
         }
 
-        $query = pdo_query("SELECT DISTINCT up.userid,dailyupdate.id FROM user2project AS up,user2repository AS ur,dailyupdatefile,dailyupdate
+        $query = pdo_query('SELECT DISTINCT up.userid,dailyupdate.id FROM user2project AS up,user2repository AS ur,dailyupdatefile,dailyupdate
                         WHERE dailyupdatefile.dailyupdateid=dailyupdate.id
                         AND dailyupdate.projectid=up.projectid
                         AND ur.credential=dailyupdatefile.author
-                        AND up.projectid=" . qnum($this->ProjectId) . "
+                        AND up.projectid=' . qnum($this->ProjectId) . '
                         AND up.userid=ur.userid
-                        AND (ur.projectid=0 OR ur.projectid=" . qnum($this->ProjectId) . ")
+                        AND (ur.projectid=0 OR ur.projectid=' . qnum($this->ProjectId) . ")
                         AND dailyupdatefile.filename LIKE '%" . $filename . "'" . $sql);
 
         if (!$query) {
-            add_last_sql_error("DailyUpdate GetAuthors", $this->ProjectId);
+            add_last_sql_error('DailyUpdate GetAuthors', $this->ProjectId);
             return false;
         }
 

@@ -2,60 +2,60 @@
 // Helper function to alter a table
 function AddTableField($table, $field, $mySQLType, $pgSqlType, $default)
 {
-    include dirname(__DIR__) . "/config/config.php";
+    include dirname(__DIR__) . '/config/config.php';
 
     $sql = '';
     if ($default !== false) {
         $sql = " DEFAULT '" . $default . "'";
     }
 
-    $query = pdo_query("SELECT " . $field . " FROM " . $table . " LIMIT 1");
+    $query = pdo_query('SELECT ' . $field . ' FROM ' . $table . ' LIMIT 1');
     if (!$query) {
-        add_log("Adding $field to $table", "AddTableField");
-        if ($CDASH_DB_TYPE == "pgsql") {
-            pdo_query("ALTER TABLE \"" . $table . "\" ADD \"" . $field . "\" " . $pgSqlType . $sql);
+        add_log("Adding $field to $table", 'AddTableField');
+        if ($CDASH_DB_TYPE == 'pgsql') {
+            pdo_query('ALTER TABLE "' . $table . '" ADD "' . $field . '" ' . $pgSqlType . $sql);
         } else {
-            pdo_query("ALTER TABLE " . $table . " ADD " . $field . " " . $mySQLType . $sql);
+            pdo_query('ALTER TABLE ' . $table . ' ADD ' . $field . ' ' . $mySQLType . $sql);
         }
 
-        add_last_sql_error("AddTableField");
-        add_log("Done adding $field to $table", "AddTableField");
+        add_last_sql_error('AddTableField');
+        add_log("Done adding $field to $table", 'AddTableField');
     }
 }
 
 /** Remove a table field */
 function RemoveTableField($table, $field)
 {
-    include dirname(__DIR__) . "/config/config.php";
-    $query = pdo_query("SELECT " . $field . " FROM " . $table . " LIMIT 1");
+    include dirname(__DIR__) . '/config/config.php';
+    $query = pdo_query('SELECT ' . $field . ' FROM ' . $table . ' LIMIT 1');
     if ($query) {
-        add_log("Droping $field from $table", "DropTableField");
-        if ($CDASH_DB_TYPE == "pgsql") {
-            pdo_query("ALTER TABLE \"" . $table . "\" DROP COLUMN \"" . $field . "\"");
+        add_log("Droping $field from $table", 'DropTableField');
+        if ($CDASH_DB_TYPE == 'pgsql') {
+            pdo_query('ALTER TABLE "' . $table . '" DROP COLUMN "' . $field . '"');
         } else {
-            pdo_query("ALTER TABLE " . $table . " DROP " . $field);
+            pdo_query('ALTER TABLE ' . $table . ' DROP ' . $field);
         }
-        add_last_sql_error("DropTableField");
-        add_log("Done droping $field from $table", "DropTableField");
+        add_last_sql_error('DropTableField');
+        add_log("Done droping $field from $table", 'DropTableField');
     }
 }
 
 // Rename a table vield
 function RenameTableField($table, $field, $newfield, $mySQLType, $pgSqlType, $default)
 {
-    include dirname(__DIR__) . "/config/config.php";
-    $query = pdo_query("SELECT " . $field . " FROM " . $table . " LIMIT 1");
+    include dirname(__DIR__) . '/config/config.php';
+    $query = pdo_query('SELECT ' . $field . ' FROM ' . $table . ' LIMIT 1');
     if ($query) {
-        add_log("Changing $field to $newfield for $table", "RenameTableField");
-        if ($CDASH_DB_TYPE == "pgsql") {
-            pdo_query("ALTER TABLE \"" . $table . "\" RENAME \"" . $field . "\" TO \"" . $newfield . "\"");
-            pdo_query("ALTER TABLE \"" . $table . "\" ALTER COLUMN \"" . $newfield . "\" TYPE " . $pgSqlType);
-            pdo_query("ALTER TABLE \"" . $table . "\" ALTER COLUMN \"" . $newfield . "\" SET DEFAULT " . $default);
+        add_log("Changing $field to $newfield for $table", 'RenameTableField');
+        if ($CDASH_DB_TYPE == 'pgsql') {
+            pdo_query('ALTER TABLE "' . $table . '" RENAME "' . $field . '" TO "' . $newfield . '"');
+            pdo_query('ALTER TABLE "' . $table . '" ALTER COLUMN "' . $newfield . '" TYPE ' . $pgSqlType);
+            pdo_query('ALTER TABLE "' . $table . '" ALTER COLUMN "' . $newfield . '" SET DEFAULT ' . $default);
         } else {
-            pdo_query("ALTER TABLE " . $table . " CHANGE " . $field . " " . $newfield . " " . $mySQLType . " DEFAULT '" . $default . "'");
-            add_last_sql_error("RenameTableField");
+            pdo_query('ALTER TABLE ' . $table . ' CHANGE ' . $field . ' ' . $newfield . ' ' . $mySQLType . " DEFAULT '" . $default . "'");
+            add_last_sql_error('RenameTableField');
         }
-        add_log("Done renaming $field to $newfield for $table", "RenameTableField");
+        add_log("Done renaming $field to $newfield for $table", 'RenameTableField');
     }
 }
 
@@ -64,11 +64,11 @@ function pdo_check_index_exists($tablename, $columnname)
 {
     global $CDASH_DB_TYPE;
 
-    if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE != "mysql") {
-        echo "NOT IMPLEMENTED";
+    if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE != 'mysql') {
+        echo 'NOT IMPLEMENTED';
         return false;
     } else {
-        $query = pdo_query("SHOW INDEX FROM " . $tablename . " WHERE Seq_in_index=1");
+        $query = pdo_query('SHOW INDEX FROM ' . $tablename . ' WHERE Seq_in_index=1');
         if ($query) {
             while ($index_array = pdo_fetch_array($query)) {
                 if ($index_array['Column_name'] == $columnname) {
@@ -83,138 +83,138 @@ function pdo_check_index_exists($tablename, $columnname)
 // Helper function to add an index to a table
 function AddTableIndex($table, $field)
 {
-    include dirname(__DIR__) . "/config/config.php";
+    include dirname(__DIR__) . '/config/config.php';
 
     $index_name = $field;
     // Support for multiple column indices
     if (is_array($field)) {
-        $index_name = implode("_", $field);
-        $field = implode(",", $field);
+        $index_name = implode('_', $field);
+        $field = implode(',', $field);
     }
 
     if (!pdo_check_index_exists($table, $field)) {
-        add_log("Adding index $field to $table", "AddTableIndex");
-        if ($CDASH_DB_TYPE == "pgsql") {
+        add_log("Adding index $field to $table", 'AddTableIndex');
+        if ($CDASH_DB_TYPE == 'pgsql') {
             @pdo_query("CREATE INDEX $index_name ON $table ($field)");
         } else {
             pdo_query("ALTER TABLE $table ADD INDEX $index_name ($field)");
-            add_last_sql_error("AddTableIndex");
+            add_last_sql_error('AddTableIndex');
         }
-        add_log("Done adding index $field to $table", "AddTableIndex");
+        add_log("Done adding index $field to $table", 'AddTableIndex');
     }
 }
 
 // Helper function to remove an index to a table
 function RemoveTableIndex($table, $field)
 {
-    include dirname(__DIR__) . "/config/config.php";
+    include dirname(__DIR__) . '/config/config.php';
     if (pdo_check_index_exists($table, $field)) {
-        add_log("Removing index $field from $table", "RemoveTableIndex");
+        add_log("Removing index $field from $table", 'RemoveTableIndex');
 
-        if ($CDASH_DB_TYPE == "pgsql") {
-            pdo_query("DROP INDEX " . $table . "_" . $field . "_idx");
+        if ($CDASH_DB_TYPE == 'pgsql') {
+            pdo_query('DROP INDEX ' . $table . '_' . $field . '_idx');
         } else {
-            pdo_query("ALTER TABLE " . $table . " DROP INDEX " . $field);
+            pdo_query('ALTER TABLE ' . $table . ' DROP INDEX ' . $field);
         }
-        add_log("Done removing index $field from $table", "RemoveTableIndex");
-        add_last_sql_error("RemoveTableIndex");
+        add_log("Done removing index $field from $table", 'RemoveTableIndex');
+        add_last_sql_error('RemoveTableIndex');
     }
 }
 
 // Helper function to modify a table
 function ModifyTableField($table, $field, $mySQLType, $pgSqlType, $default, $notnull, $autoincrement)
 {
-    include dirname(__DIR__) . "/config/config.php";
+    include dirname(__DIR__) . '/config/config.php';
 
     //$check = pdo_query("SELECT ".$field." FROM ".$table." LIMIT 1");
     //$type  = pdo_field_type($check,0);
     //add_log($type,"ModifyTableField");
     if (1) {
-        add_log("Modifying $field to $table", "ModifyTableField");
-        if ($CDASH_DB_TYPE == "pgsql") {
+        add_log("Modifying $field to $table", 'ModifyTableField');
+        if ($CDASH_DB_TYPE == 'pgsql') {
             // ALTER TABLE "buildfailureargument" ALTER COLUMN "argument" TYPE VARCHAR( 255 );
             // ALTER TABLE "buildfailureargument" ALTER COLUMN "argument" SET NOT NULL;
             // ALTER TABLE "dynamicanalysisdefect" ALTER COLUMN "value" SET DEFAULT 0;
-            pdo_query("ALTER TABLE \"" . $table . "\" ALTER COLUMN  \"" . $field . "\" TYPE " . $pgSqlType);
+            pdo_query('ALTER TABLE "' . $table . '" ALTER COLUMN  "' . $field . '" TYPE ' . $pgSqlType);
             if ($notnull) {
-                pdo_query("ALTER TABLE \"" . $table . "\" ALTER COLUMN  \"" . $field . "\" SET NOT NULL");
+                pdo_query('ALTER TABLE "' . $table . '" ALTER COLUMN  "' . $field . '" SET NOT NULL');
             }
             if (strlen($default) > 0) {
-                pdo_query("ALTER TABLE \"" . $table . "\" ALTER COLUMN  \"" . $field . "\" SET DEFAULT " . $default);
+                pdo_query('ALTER TABLE "' . $table . '" ALTER COLUMN  "' . $field . '" SET DEFAULT ' . $default);
             }
             if ($autoincrement) {
-                pdo_query("DROP INDEX \"" . $table . "_" . $field . "_idx\"");
-                pdo_query("ALTER TABLE \"" . $table . "\" ADD PRIMARY KEY (\"" . $field . "\")");
-                pdo_query("CREATE SEQUENCE \"" . $table . "_" . $field . "_seq\"");
-                pdo_query("ALTER TABLE  \"" . $table . "\" ALTER COLUMN \"" . $field . "\" SET DEFAULT nextval('" . $table . "_" . $field . "_seq')");
-                pdo_query("ALTER SEQUENCE \"" . $table . "_" . $field . "_seq\" OWNED BY \"" . $table . "\".\"" . $field . "\"");
+                pdo_query('DROP INDEX "' . $table . '_' . $field . '_idx"');
+                pdo_query('ALTER TABLE "' . $table . '" ADD PRIMARY KEY ("' . $field . '")');
+                pdo_query('CREATE SEQUENCE "' . $table . '_' . $field . '_seq"');
+                pdo_query('ALTER TABLE  "' . $table . '" ALTER COLUMN "' . $field . "\" SET DEFAULT nextval('" . $table . '_' . $field . "_seq')");
+                pdo_query('ALTER SEQUENCE "' . $table . '_' . $field . '_seq" OWNED BY "' . $table . '"."' . $field . '"');
             }
         } else {
             //ALTER TABLE dynamicanalysisdefect MODIFY value INT NOT NULL DEFAULT 0;
-            $sql = "ALTER TABLE " . $table . " MODIFY " . $field . " " . $mySQLType;
+            $sql = 'ALTER TABLE ' . $table . ' MODIFY ' . $field . ' ' . $mySQLType;
             if ($notnull) {
-                $sql .= " NOT NULL";
+                $sql .= ' NOT NULL';
             }
             if (strlen($default) > 0) {
                 $sql .= " DEFAULT '" . $default . "'";
             }
             if ($autoincrement) {
-                $sql .= " AUTO_INCREMENT";
+                $sql .= ' AUTO_INCREMENT';
             }
             pdo_query($sql);
         }
-        add_last_sql_error("ModifyTableField");
-        add_log("Done modifying $field to $table", "ModifyTableField");
+        add_last_sql_error('ModifyTableField');
+        add_log("Done modifying $field to $table", 'ModifyTableField');
     }
 }
 
 // Helper function to add an index to a table
 function AddTablePrimaryKey($table, $field)
 {
-    include dirname(__DIR__) . "/config/config.php";
-    add_log("Adding primarykey $field to $table", "AddTablePrimaryKey");
-    if ($CDASH_DB_TYPE == "pgsql") {
-        pdo_query("ALTER TABLE \"" . $table . "\" ADD PRIMARY KEY (\"" . $field . "\")");
+    include dirname(__DIR__) . '/config/config.php';
+    add_log("Adding primarykey $field to $table", 'AddTablePrimaryKey');
+    if ($CDASH_DB_TYPE == 'pgsql') {
+        pdo_query('ALTER TABLE "' . $table . '" ADD PRIMARY KEY ("' . $field . '")');
     } else {
-        pdo_query("ALTER IGNORE TABLE " . $table . " ADD PRIMARY KEY ( " . $field . " )");
+        pdo_query('ALTER IGNORE TABLE ' . $table . ' ADD PRIMARY KEY ( ' . $field . ' )');
     }
     //add_last_sql_error("AddTablePrimaryKey");
-    add_log("Done adding primarykey $field to $table", "AddTablePrimaryKey");
+    add_log("Done adding primarykey $field to $table", 'AddTablePrimaryKey');
 }
 
 // Helper function to add an index to a table
 function RemoveTablePrimaryKey($table)
 {
-    include dirname(__DIR__) . "/config/config.php";
-    add_log("Removing primarykey from $table", "RemoveTablePrimaryKey");
-    if ($CDASH_DB_TYPE == "pgsql") {
-        pdo_query("ALTER TABLE \"" . $table . "\" DROP CONSTRAINT \"value_pkey\"");
-        pdo_query("ALTER TABLE \"" . $table . "\" DROP CONSTRAINT \"" . $table . "_pkey\"");
+    include dirname(__DIR__) . '/config/config.php';
+    add_log("Removing primarykey from $table", 'RemoveTablePrimaryKey');
+    if ($CDASH_DB_TYPE == 'pgsql') {
+        pdo_query('ALTER TABLE "' . $table . '" DROP CONSTRAINT "value_pkey"');
+        pdo_query('ALTER TABLE "' . $table . '" DROP CONSTRAINT "' . $table . '_pkey"');
     } else {
-        pdo_query("ALTER TABLE " . $table . " DROP PRIMARY KEY");
+        pdo_query('ALTER TABLE ' . $table . ' DROP PRIMARY KEY');
     }
     //add_last_sql_error("RemoveTablePrimaryKey");
-    add_log("Done removing primarykey from $table", "RemoveTablePrimaryKey");
+    add_log("Done removing primarykey from $table", 'RemoveTablePrimaryKey');
 }
 
 /** Compress the notes. Since they are almost always the same form build to build */
 function CompressNotes()
 {
     // Rename the old note table
-    if (!pdo_query("RENAME TABLE note TO notetemp")) {
+    if (!pdo_query('RENAME TABLE note TO notetemp')) {
         echo pdo_error();
-        echo "Cannot rename table note to notetemp";
+        echo 'Cannot rename table note to notetemp';
         return false;
     }
 
     // Create the new note table
-    $query = "CREATE TABLE note (
+    $query = 'CREATE TABLE note (
         id bigint(20) NOT NULL auto_increment,
            text mediumtext NOT NULL,
            name varchar(255) NOT NULL,
            crc32 int(11) NOT NULL,
            PRIMARY KEY  (id),
-           KEY crc32 (crc32))";
+           KEY crc32 (crc32))';
 
     if (!pdo_query($query)) {
         echo pdo_error();
@@ -223,24 +223,24 @@ function CompressNotes()
     }
 
     // Move each note from notetemp to the new table
-    $note = pdo_query("SELECT * FROM notetemp ORDER BY buildid ASC");
+    $note = pdo_query('SELECT * FROM notetemp ORDER BY buildid ASC');
     while ($note_array = pdo_fetch_array($note)) {
-        $text = $note_array["text"];
-        $name = $note_array["name"];
-        $time = $note_array["time"];
-        $buildid = $note_array["buildid"];
+        $text = $note_array['text'];
+        $name = $note_array['name'];
+        $time = $note_array['time'];
+        $buildid = $note_array['buildid'];
         $crc32 = crc32($text . $name);
 
         $notecrc32 = pdo_query("SELECT id FROM note WHERE crc32='$crc32'");
         if (pdo_num_rows($notecrc32) == 0) {
             pdo_query("INSERT INTO note (text,name,crc32) VALUES ('$text','$name','$crc32')");
-            $noteid = pdo_insert_id("note");
+            $noteid = pdo_insert_id('note');
             echo pdo_error();
         } else {
             // already there
 
             $notecrc32_array = pdo_fetch_array($notecrc32);
-            $noteid = $notecrc32_array["id"];
+            $noteid = $notecrc32_array['id'];
         }
 
         pdo_query("INSERT INTO build2note (buildid,noteid,time) VALUES ('$buildid','$noteid','$time')");
@@ -248,7 +248,7 @@ function CompressNotes()
     }
 
     // Drop the old note table
-    pdo_query("DROP TABLE notetemp");
+    pdo_query('DROP TABLE notetemp');
     echo pdo_error();
 }
 
@@ -263,13 +263,13 @@ function CompressNotes()
 function ComputeTestTiming($days = 4)
 {
     // Loop through the projects
-    $project = pdo_query("SELECT id,testtimestd,testtimestdthreshold FROM project");
+    $project = pdo_query('SELECT id,testtimestd,testtimestdthreshold FROM project');
     $weight = 0.3;
 
     while ($project_array = pdo_fetch_array($project)) {
-        $projectid = $project_array["id"];
-        $testtimestd = $project_array["testtimestd"];
-        $projecttimestdthreshold = $project_array["testtimestdthreshold"];
+        $projectid = $project_array['id'];
+        $testtimestd = $project_array['testtimestd'];
+        $projecttimestdthreshold = $project_array['testtimestdthreshold'];
 
         // only test a couple of days
         $now = gmdate(FMT_DATETIME, time() - 3600 * 24 * $days);
@@ -286,11 +286,11 @@ function ComputeTestTiming($days = 4)
         $i = 0;
         $previousperc = 0;
         while ($build_array = pdo_fetch_array($builds)) {
-            $buildid = $build_array["id"];
-            $buildname = $build_array["name"];
-            $buildtype = $build_array["type"];
-            $starttime = $build_array["starttime"];
-            $siteid = $build_array["siteid"];
+            $buildid = $build_array['id'];
+            $buildname = $build_array['name'];
+            $buildtype = $build_array['type'];
+            $starttime = $build_array['starttime'];
+            $siteid = $build_array['siteid'];
 
             // Find the previous build
             $previousbuild = pdo_query("SELECT id FROM build
@@ -307,7 +307,7 @@ function ComputeTestTiming($days = 4)
             if (pdo_num_rows($previousbuild) > 0) {
                 // Loop through the tests
                 $previousbuild_array = pdo_fetch_array($previousbuild);
-                $previousbuildid = $previousbuild_array ["id"];
+                $previousbuildid = $previousbuild_array ['id'];
 
                 $tests = pdo_query("SELECT build2test.time,build2test.testid,test.name
                         FROM build2test,test WHERE build2test.buildid='$buildid'
@@ -328,8 +328,8 @@ function ComputeTestTiming($days = 4)
                 $testarray = array();
                 while ($test_array = pdo_fetch_array($previoustest)) {
                     $test = array();
-                    $test['id'] = $test_array["testid"];
-                    $test['name'] = $test_array["name"];
+                    $test['id'] = $test_array['testid'];
+                    $test['name'] = $test_array['name'];
                     $testarray[] = $test;
                 }
 
@@ -354,8 +354,8 @@ function ComputeTestTiming($days = 4)
                                 ");
 
                         $previoustest_array = pdo_fetch_array($previoustest);
-                        $previoustimemean = $previoustest_array["timemean"];
-                        $previoustimestd = $previoustest_array["timestd"];
+                        $previoustimemean = $previoustest_array['timemean'];
+                        $previoustimestd = $previoustest_array['timestd'];
 
                         // Check the current status
                         if ($previoustimestd < $projecttimestdthreshold) {
@@ -405,7 +405,7 @@ function ComputeTestTiming($days = 4)
             // Progress bar
             $perc = ($i / $total) * 100;
             if ($perc - $previousperc > 5) {
-                echo round($perc, 3) . "% done.<br>";
+                echo round($perc, 3) . '% done.<br>';
                 flush();
                 ob_flush();
                 $previousperc = $perc;
@@ -421,10 +421,10 @@ function ComputeUpdateStatistics($days = 4)
     include_once 'models/build.php';
 
     // Loop through the projects
-    $project = pdo_query("SELECT id FROM project");
+    $project = pdo_query('SELECT id FROM project');
 
     while ($project_array = pdo_fetch_array($project)) {
-        $projectid = $project_array["id"];
+        $projectid = $project_array['id'];
 
         // only test a couple of days
         $now = gmdate(FMT_DATETIME, time() - 3600 * 24 * $days);
@@ -442,14 +442,14 @@ function ComputeUpdateStatistics($days = 4)
         $previousperc = 0;
         while ($build_array = pdo_fetch_array($builds)) {
             $Build = new Build();
-            $Build->Id = $build_array["id"];
+            $Build->Id = $build_array['id'];
             $Build->ProjectId = $projectid;
             $Build->ComputeUpdateStatistics();
 
             // Progress bar
             $perc = ($i / $total) * 100;
             if ($perc - $previousperc > 5) {
-                echo round($perc, 3) . "% done.<br>";
+                echo round($perc, 3) . '% done.<br>';
                 flush();
                 ob_flush();
                 $previousperc = $perc;
@@ -522,16 +522,16 @@ function UpgradeBuildFailureTable($from_table = 'buildfailure', $to_table = 'bui
                     ('$type', '$stdoutput', '$stderror', '$exitcondition', '$language',
                      '$targetname', '$outputfile', '$outputtype','$crc32')";
                 if (!pdo_query($query)) {
-                    add_last_sql_error("UpgradeBuildFailureTable::InsertDetails", 0, $row['id']);
+                    add_last_sql_error('UpgradeBuildFailureTable::InsertDetails', 0, $row['id']);
                 }
                 $details_id = pdo_insert_id($to_table);
             }
 
             $query =
-                "UPDATE $from_table SET detailsid=" . qnum($details_id) . "
-                WHERE id=" . qnum($row['id']);
+                "UPDATE $from_table SET detailsid=" . qnum($details_id) . '
+                WHERE id=' . qnum($row['id']);
             if (!pdo_query($query)) {
-                add_last_sql_error("UpgradeBuildFailureTable::UpdateDetailsId", 0, $details_id);
+                add_last_sql_error('UpgradeBuildFailureTable::UpdateDetailsId', 0, $details_id);
             }
             $last_id = $row['id'];
         }
@@ -557,11 +557,11 @@ function UpgradeBuildFailureTable($from_table = 'buildfailure', $to_table = 'bui
 function UpgradeConfigureDuration()
 {
     // Do non-parent builds first.
-    $query = "
+    $query = '
         SELECT b.id, c.starttime, c.endtime
         FROM build AS b
         LEFT JOIN configure AS c ON b.id=c.buildid
-        WHERE b.configureduration = 0 AND b.parentid != -1";
+        WHERE b.configureduration = 0 AND b.parentid != -1';
     $result = pdo_query($query);
 
     while ($row = pdo_fetch_array($result)) {
@@ -571,24 +571,24 @@ function UpgradeConfigureDuration()
             continue;
         }
         $update_query =
-            "UPDATE build SET configureduration=" . qnum($duration) .
-            " WHERE id=" . qnum($id);
+            'UPDATE build SET configureduration=' . qnum($duration) .
+            ' WHERE id=' . qnum($id);
         if (!pdo_query($update_query)) {
-            add_last_sql_error("UpgradeConfigureDuration", 0, $id);
+            add_last_sql_error('UpgradeConfigureDuration', 0, $id);
         }
     }
 
     // Now handle the parent builds.
-    $query = "
+    $query = '
         SELECT id FROM build
-        WHERE configureduration = 0 AND parentid = -1";
+        WHERE configureduration = 0 AND parentid = -1';
     $result = pdo_query($query);
 
     while ($row = pdo_fetch_array($result)) {
         $id = $row['id'];
         $subquery =
-            "SELECT sum(configureduration) AS configureduration
-            FROM build WHERE parentid=" . qnum($id);
+            'SELECT sum(configureduration) AS configureduration
+            FROM build WHERE parentid=' . qnum($id);
         $subrow = pdo_single_row_query($subquery);
 
         $duration = $subrow['configureduration'];
@@ -597,10 +597,10 @@ function UpgradeConfigureDuration()
         }
 
         $update_query =
-            "UPDATE build SET configureduration=" . qnum($duration) .
-            " WHERE id=" . qnum($id);
+            'UPDATE build SET configureduration=' . qnum($duration) .
+            ' WHERE id=' . qnum($id);
         if (!pdo_query($update_query)) {
-            add_last_sql_error("UpgradeConfigureDuration", 0, $id);
+            add_last_sql_error('UpgradeConfigureDuration', 0, $id);
         }
     }
 }
@@ -612,9 +612,9 @@ function UpgradeTestDuration()
 {
     // Find parent builds that don't have test duration set.
     $query =
-        "SELECT b.id FROM build AS b
+        'SELECT b.id FROM build AS b
         WHERE b.parentid=-1 AND NOT EXISTS
-        (SELECT null FROM buildtesttime AS btt WHERE btt.buildid = b.id)";
+        (SELECT null FROM buildtesttime AS btt WHERE btt.buildid = b.id)';
     $result = pdo_query($query);
 
     while ($row = pdo_fetch_array($result)) {
@@ -631,7 +631,7 @@ function UpgradeTestDuration()
         $update_query =
             "INSERT INTO buildtesttime (buildid, time) VALUES ($id, $duration)";
         if (!pdo_query($update_query)) {
-            add_last_sql_error("UpgradeTestDuration", 0, $id);
+            add_last_sql_error('UpgradeTestDuration', 0, $id);
         }
     }
 }
@@ -647,26 +647,26 @@ function CompressCoverage()
 {
     /* FIRST STEP */
     // Compute the crc32 of the fullpath+file
-    $coveragefile = pdo_query("SELECT count(*) AS num FROM coveragefile WHERE crc32 IS NULL");
+    $coveragefile = pdo_query('SELECT count(*) AS num FROM coveragefile WHERE crc32 IS NULL');
     $coveragefile_array = pdo_fetch_array($coveragefile);
-    $total = $coveragefile_array["num"];
+    $total = $coveragefile_array['num'];
 
     $i = 0;
     $previousperc = 0;
-    $coveragefile = pdo_query("SELECT * FROM coveragefile WHERE crc32 IS NULL LIMIT 1000");
+    $coveragefile = pdo_query('SELECT * FROM coveragefile WHERE crc32 IS NULL LIMIT 1000');
     while (pdo_num_rows($coveragefile) > 0) {
         while ($coveragefile_array = pdo_fetch_array($coveragefile)) {
-            $fullpath = $coveragefile_array["fullpath"];
-            $file = $coveragefile_array["file"];
-            $id = $coveragefile_array["id"];
+            $fullpath = $coveragefile_array['fullpath'];
+            $file = $coveragefile_array['file'];
+            $id = $coveragefile_array['id'];
             $crc32 = crc32($fullpath . $file);
             pdo_query("UPDATE coveragefile SET crc32='$crc32' WHERE id='$id'");
         }
         $i += 1000;
-        $coveragefile = pdo_query("SELECT * FROM coveragefile WHERE crc32 IS NULL LIMIT 1000");
+        $coveragefile = pdo_query('SELECT * FROM coveragefile WHERE crc32 IS NULL LIMIT 1000');
         $perc = ($i / $total) * 100;
         if ($perc - $previousperc > 10) {
-            echo round($perc, 3) . "% done.<br>";
+            echo round($perc, 3) . '% done.<br>';
             flush();
             ob_flush();
             $previousperc = $perc;
@@ -675,13 +675,13 @@ function CompressCoverage()
 
     // Delete files with the same crc32 and upgrade
     $previouscrc32 = 0;
-    $coveragefile = pdo_query("SELECT id,crc32 FROM coveragefile ORDER BY crc32 ASC,id ASC");
+    $coveragefile = pdo_query('SELECT id,crc32 FROM coveragefile ORDER BY crc32 ASC,id ASC');
     $total = pdo_num_rows($coveragefile);
     $i = 0;
     $previousperc = 0;
     while ($coveragefile_array = pdo_fetch_array($coveragefile)) {
-        $id = $coveragefile_array["id"];
-        $crc32 = $coveragefile_array["crc32"];
+        $id = $coveragefile_array['id'];
+        $crc32 = $coveragefile_array['crc32'];
         if ($crc32 == $previouscrc32) {
             pdo_query("UPDATE coverage SET fileid='$currentid' WHERE fileid='$id'");
             pdo_query("UPDATE coveragefilelog SET fileid='$currentid' WHERE fileid='$id'");
@@ -690,7 +690,7 @@ function CompressCoverage()
             $currentid = $id;
             $perc = ($i / $total) * 100;
             if ($perc - $previousperc > 10) {
-                echo round($perc, 3) . "% done.<br>";
+                echo round($perc, 3) . '% done.<br>';
                 flush();
                 ob_flush();
                 $previousperc = $perc;
@@ -701,15 +701,15 @@ function CompressCoverage()
     }
 
     /* Remove the Duplicates in the coverage section */
-    $coverage = pdo_query("SELECT buildid,fileid,count(*) as cnt FROM coverage GROUP BY buildid,fileid");
+    $coverage = pdo_query('SELECT buildid,fileid,count(*) as cnt FROM coverage GROUP BY buildid,fileid');
     while ($coverage_array = pdo_fetch_array($coverage)) {
-        $cnt = $coverage_array["cnt"];
+        $cnt = $coverage_array['cnt'];
         if ($cnt > 1) {
-            $buildid = $coverage_array["buildid"];
-            $fileid = $coverage_array["fileid"];
+            $buildid = $coverage_array['buildid'];
+            $fileid = $coverage_array['fileid'];
             $limit = $cnt - 1;
             $sql = "DELETE FROM coverage WHERE buildid='$buildid' AND fileid='$fileid'";
-            $sql .= " LIMIT " . $limit;
+            $sql .= ' LIMIT ' . $limit;
             pdo_query($sql);
         }
     }
@@ -777,7 +777,7 @@ function AddUniqueConstraintToSiteTable($site_table)
         }
     }
     // It should be safe to add the constraint now.
-    if ($CDASH_DB_TYPE == "pgsql") {
+    if ($CDASH_DB_TYPE == 'pgsql') {
         pdo_query("ALTER TABLE $site_table ADD UNIQUE (name,ip)");
         pdo_query('CREATE INDEX "name_ip" ON "' . $site_table . '" ("name","ip")');
     } else {

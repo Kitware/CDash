@@ -29,14 +29,14 @@ class database
     public function __construct($type)
     {
         switch ($type) {
-            case "mysql":
+            case 'mysql':
                 $this->dbo = new dbo_mysql();
-                $this->type = "mysql";
+                $this->type = 'mysql';
                 break;
 
-            case "pgsql":
+            case 'pgsql':
                 $this->dbo = new dbo_pgsql();
-                $this->type = "pgsql";
+                $this->type = 'pgsql';
                 break;
 
             default:
@@ -230,18 +230,18 @@ class dbo_mysql extends dbo
         }
         $this->connectToDb();
         $file_content = file($sqlfile);
-        $query = "";
+        $query = '';
         foreach ($file_content as $sql_line) {
             $tsl = trim($sql_line);
-            if (($sql_line != "") && (substr($tsl, 0, 2) != "--") && (substr($tsl, 0, 1) != "#")) {
+            if (($sql_line != '') && (substr($tsl, 0, 2) != '--') && (substr($tsl, 0, 1) != '#')) {
                 $query .= $sql_line;
                 if (preg_match("/;\s*$/", $sql_line)) {
-                    $query = str_replace(";", "", "$query");
+                    $query = str_replace(';', '', "$query");
                     $result = pdo_query($query);
                     if (!$result) {
                         die(pdo_error());
                     }
-                    $query = "";
+                    $query = '';
                 }
             }
         }
@@ -345,68 +345,68 @@ class dbo_pgsql extends dbo
         }
         $file_content = file($sqlfile);
         //print_r($file_content);
-        $query = "";
+        $query = '';
         $line_number = 0;
         foreach ($file_content as $sql_line) {
             $tsl = trim($sql_line);
-            if (($sql_line != "") && (substr($tsl, 0, 2) != "--") && (substr($tsl, 0, 1) != "#")) {
+            if (($sql_line != '') && (substr($tsl, 0, 2) != '--') && (substr($tsl, 0, 1) != '#')) {
                 $query .= $sql_line;
                 if (preg_match("/;\s*$/", $sql_line)) {
-                    $query = str_replace(";", "", "$query");
+                    $query = str_replace(';', '', "$query");
                     $result = pdo_query($query);
                     if (!$result) {
-                        echo "Error line:" . $line_number . "<br/>";
+                        echo 'Error line:' . $line_number . '<br/>';
                         return pdo_error();
                     }
-                    $query = "";
+                    $query = '';
                 }
             }
             $line_number++;
         }
         $pwd = md5('simpletest');
-        $query = "INSERT INTO \"user\" (email, password, firstname, lastname, institution, admin) ";
+        $query = 'INSERT INTO "user" (email, password, firstname, lastname, institution, admin) ';
         $query .= "VALUES ('simpletest@localhost', '$pwd', 'administrator', '','Kitware Inc.', 1)";
         pdo_query($query);
         echo pdo_error();
 
         // Create the language. PgSQL has no way to know if the language already
         // exists
-        @pdo_query("CREATE LANGUAGE plpgsql");
+        @pdo_query('CREATE LANGUAGE plpgsql');
 
-        $sqlfile = str_replace(".sql", ".ext.sql", $sqlfile);
+        $sqlfile = str_replace('.sql', '.ext.sql', $sqlfile);
         // If we are with PostGreSQL we need to add some extra functions
         $file_content = file($sqlfile);
-        $query = "";
+        $query = '';
         foreach ($file_content as $sql_line) {
             $tsl = trim($sql_line);
-            if (($sql_line != "") && (substr($tsl, 0, 2) != "--")) {
+            if (($sql_line != '') && (substr($tsl, 0, 2) != '--')) {
                 $query .= $sql_line;
-                if (strpos("CREATE ", $sql_line) !== false) {
+                if (strpos('CREATE ', $sql_line) !== false) {
                     // We need to remove only the last semicolon
-                    $pos = strrpos($query, ";");
+                    $pos = strrpos($query, ';');
                     if ($pos !== false) {
                         $query = substr($query, 0, $pos) . substr($query, $pos + 1);
                     }
 
                     $result = pdo_query($query);
                     if (!$result) {
-                        $xml = "<db_created>0</db_created>";
+                        $xml = '<db_created>0</db_created>';
                         die(pdo_error());
                     }
-                    $query = "";
+                    $query = '';
                 }
             }
         }
 
         // Run the last query
-        $pos = strrpos($query, ";");
+        $pos = strrpos($query, ';');
         if ($pos !== false) {
             $query = substr($query, 0, $pos) . substr($query, $pos + 1);
         }
 
         $result = pdo_query($query);
         if (!$result) {
-            $xml = "<db_created>0</db_created>";
+            $xml = '<db_created>0</db_created>';
             die(pdo_error());
         }
         $this->disconnect();

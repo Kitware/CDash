@@ -16,10 +16,10 @@
 
 //error_reporting(0); // disable error reporting
 
-include "include/ctestparser.php";
-include_once "include/common.php";
-include_once "include/createRSS.php";
-include "include/sendemail.php";
+include 'include/ctestparser.php';
+include_once 'include/common.php';
+include_once 'include/createRSS.php';
+include 'include/sendemail.php';
 
 function do_submit($filehandle, $projectid, $expected_md5 = '', $do_checksum = true,
                    $submission_id = 0)
@@ -28,12 +28,12 @@ function do_submit($filehandle, $projectid, $expected_md5 = '', $do_checksum = t
 
     // We find the daily updates
     // If we have php curl we do it asynchronously
-    if (function_exists("curl_init") == true) {
+    if (function_exists('curl_init') == true) {
         $currentURI = get_server_URI(true);
         if ($CDASH_ASYNCHRONOUS_SUBMISSION) {
-            $request = $currentURI . "/dailyupdatescurl.php?projectid=" . $projectid;
+            $request = $currentURI . '/dailyupdatescurl.php?projectid=' . $projectid;
         } else {
-            $request = $currentURI . "/ajax/dailyupdatescurl.php?projectid=" . $projectid;
+            $request = $currentURI . '/ajax/dailyupdatescurl.php?projectid=' . $projectid;
         }
 
         $ch = curl_init();
@@ -50,12 +50,12 @@ function do_submit($filehandle, $projectid, $expected_md5 = '', $do_checksum = t
     } else {
         // synchronously
 
-        include "include/dailyupdates.php";
+        include 'include/dailyupdates.php';
         addDailyChanges($projectid);
     }
 
-    if ($CDASH_USE_LOCAL_DIRECTORY && file_exists("local/submit.php")) {
-        include "local/submit.php";
+    if ($CDASH_USE_LOCAL_DIRECTORY && file_exists('local/submit.php')) {
+        include 'local/submit.php';
     }
 
     $scheduleid = 0;
@@ -65,8 +65,8 @@ function do_submit($filehandle, $projectid, $expected_md5 = '', $do_checksum = t
         if (!empty($row)) {
             $scheduleid = $row[0];
         }
-    } elseif (isset($_GET["clientscheduleid"])) {
-        $scheduleid = pdo_real_escape_numeric($_GET["clientscheduleid"]);
+    } elseif (isset($_GET['clientscheduleid'])) {
+        $scheduleid = pdo_real_escape_numeric($_GET['clientscheduleid']);
     }
 
     // Parse the XML file
@@ -104,7 +104,7 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5 = '')
     include 'include/version.php';
 
     do {
-        $filename = $CDASH_BACKUP_DIRECTORY . "/" . mt_rand() . ".xml";
+        $filename = $CDASH_BACKUP_DIRECTORY . '/' . mt_rand() . '.xml';
         $fp = @fopen($filename, 'x');
     } while (!$fp);
     fclose($fp);
@@ -117,7 +117,7 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5 = '')
         $content = fread($filehandle, 8192);
         if (fwrite($outfile, $content) === false) {
             echo "ERROR: Cannot write to file ($filename)";
-            add_log("Cannot write to file ($filename)", "do_submit_asynchronous",
+            add_log("Cannot write to file ($filename)", 'do_submit_asynchronous',
                 LOG_ERR, $projectid);
             fclose($outfile);
             unset($outfile);
@@ -128,8 +128,8 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5 = '')
     unset($outfile);
 
     // Sends the file size to the local parser
-    if ($CDASH_USE_LOCAL_DIRECTORY && file_exists("local/ctestparser.php")) {
-        require_once "local/ctestparser.php";
+    if ($CDASH_USE_LOCAL_DIRECTORY && file_exists('local/ctestparser.php')) {
+        require_once 'local/ctestparser.php';
         $localParser = new LocalParser();
         $filesize = filesize($filename);
         $localParser->SetFileSize($projectid, $filesize);
@@ -138,7 +138,7 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5 = '')
     $md5sum = md5_file($filename);
     $md5error = false;
 
-    echo "<cdash version=\"" . $CDASH_VERSION . "\">\n";
+    echo '<cdash version="' . $CDASH_VERSION . "\">\n";
     if ($expected_md5 == '' || $expected_md5 == $md5sum) {
         echo "  <status>OK</status>\n";
         echo "  <message></message>\n";
@@ -151,7 +151,7 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5 = '')
     echo "</cdash>\n";
 
     if ($md5error) {
-        add_log("Checksum failure on file: $filename", "do_submit_asynchronous",
+        add_log("Checksum failure on file: $filename", 'do_submit_asynchronous',
             LOG_ERR, $projectid);
         return;
     }
@@ -160,7 +160,7 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5 = '')
 
     // Insert the filename in the database
     $now_utc = gmdate(FMT_DATETIMESTD);
-    pdo_query("INSERT INTO submission (filename,projectid,status,attempts,filesize,filemd5sum,created) " .
+    pdo_query('INSERT INTO submission (filename,projectid,status,attempts,filesize,filemd5sum,created) ' .
         "VALUES ('" . $filename . "','" . $projectid . "','0','0','$bytes','$md5sum','$now_utc')");
 
     // Get the ID associated with this submission.  We may need to reference it
@@ -169,9 +169,9 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5 = '')
 
     // We find the daily updates
     // If we have php curl we do it asynchronously
-    if (function_exists("curl_init") == true) {
+    if (function_exists('curl_init') == true) {
         $currentURI = get_server_URI(true);
-        $request = $currentURI . "/ajax/dailyupdatescurl.php?projectid=" . $projectid;
+        $request = $currentURI . '/ajax/dailyupdatescurl.php?projectid=' . $projectid;
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $request);
@@ -185,15 +185,15 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5 = '')
         curl_exec($ch);
         curl_close($ch);
 
-        $clientscheduleid = isset($_GET["clientscheduleid"]) ? pdo_real_escape_numeric($_GET["clientscheduleid"]) : 0;
+        $clientscheduleid = isset($_GET['clientscheduleid']) ? pdo_real_escape_numeric($_GET['clientscheduleid']) : 0;
         if ($clientscheduleid !== 0) {
-            pdo_query("INSERT INTO client_jobschedule2submission (scheduleid,submissionid) " .
+            pdo_query('INSERT INTO client_jobschedule2submission (scheduleid,submissionid) ' .
                 "VALUES ('$clientscheduleid','$submissionid')");
         }
 
         // Save submitter IP in the database in the async case, so we have a valid
         // IP at Site::Insert time when processing rather than 'localhost's IP:
-        pdo_insert_query("INSERT INTO submission2ip (submissionid, ip) " .
+        pdo_insert_query('INSERT INTO submission2ip (submissionid, ip) ' .
             "VALUES ('$submissionid', '" . $_SERVER['REMOTE_ADDR'] . "')");
 
         // Call process submissions via cURL.
@@ -202,8 +202,8 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5 = '')
         // synchronously
 
         add_log(
-            "Cannot submit asynchronously: php curl_init function does not exist",
-            "do_submit_asynchronous",
+            'Cannot submit asynchronously: php curl_init function does not exist',
+            'do_submit_asynchronous',
             LOG_ERR, $projectid);
     }
 }
@@ -211,7 +211,7 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5 = '')
 /** Function to deal with the external tool mechanism */
 function post_submit()
 {
-    include "models/buildfile.php";
+    include 'models/buildfile.php';
 
     // We expect POST to contain the following values.
     $vars = array('project', 'build', 'stamp', 'site', 'track', 'type', 'starttime', 'endtime', 'datafilesmd5');
@@ -235,8 +235,8 @@ function post_submit()
 
     // Check if we have the CDash@Home scheduleid
     $scheduleid = 0;
-    if (isset($_POST["clientscheduleid"])) {
-        $scheduleid = pdo_real_escape_numeric($_POST["clientscheduleid"]);
+    if (isset($_POST['clientscheduleid'])) {
+        $scheduleid = pdo_real_escape_numeric($_POST['clientscheduleid']);
     }
 
     // Add the build
@@ -261,12 +261,12 @@ function post_submit()
     $build->Append = true;
 
     // TODO: Check the labels and generator and other optional
-    if (isset($_POST["generator"])) {
+    if (isset($_POST['generator'])) {
         $build->Generator = htmlspecialchars(pdo_real_escape_string($_POST['generator']));
     }
 
-    $subprojectname = "";
-    if (isset($_POST["subproject"])) {
+    $subprojectname = '';
+    if (isset($_POST['subproject'])) {
         $subprojectname = htmlspecialchars(pdo_real_escape_string($_POST['subproject']));
         $build->SetSubProject($subprojectname);
     }
@@ -296,7 +296,7 @@ function post_submit()
 
             // Associate this build file with the new build if it has been previously
             // uploaded.
-            require_once "copy_build_data.php";
+            require_once 'copy_build_data.php';
             copy_build_data($old_buildid, $buildid, $type);
         }
     }
@@ -306,7 +306,7 @@ function post_submit()
 /** Function to deal with the external tool mechanism */
 function put_submit_file()
 {
-    include "models/buildfile.php";
+    include 'models/buildfile.php';
 
     // We expect GET to contain the following values:
     $vars = array('buildid', 'type');
@@ -355,7 +355,7 @@ function put_submit_file()
     global $CDASH_BACKUP_DIRECTORY;
     $uploadDir = $CDASH_BACKUP_DIRECTORY;
     $ext = pathinfo($buildfile->Filename, PATHINFO_EXTENSION);
-    $filename = $uploadDir . "/" . $buildfile->BuildId . "_" . $buildfile->md5
+    $filename = $uploadDir . '/' . $buildfile->BuildId . '_' . $buildfile->md5
         . ".$ext";
 
     if (!$handle = fopen($filename, 'w')) {
@@ -366,7 +366,7 @@ function put_submit_file()
     }
 
     // Read the data 1 KB at a time and write to the file.
-    $putdata = fopen("php://input", "r");
+    $putdata = fopen('php://input', 'r');
     while ($data = fread($putdata, 1024)) {
         fwrite($handle, $data);
     }
@@ -391,7 +391,7 @@ function put_submit_file()
         // Create a new entry in the submission table for this file.
         $bytes = filesize($filename);
         $now_utc = gmdate(FMT_DATETIMESTD);
-        pdo_query("INSERT INTO submission (filename,projectid,status,attempts,filesize,filemd5sum,created) " .
+        pdo_query('INSERT INTO submission (filename,projectid,status,attempts,filesize,filemd5sum,created) ' .
             "VALUES ('$filename','$projectid','0','0','$bytes','$buildfile->md5','$now_utc')");
 
         // Trigger the processing loop in case it's not already running.
@@ -446,9 +446,9 @@ function curl_request_async($url, $params, $type = 'POST')
     }
 
     $out = "$type " . $parts['path'] . " HTTP/1.1\r\n";
-    $out .= "Host: " . $parts['host'] . "\r\n";
+    $out .= 'Host: ' . $parts['host'] . "\r\n";
     $out .= "Content-Type: application/x-www-form-urlencoded\r\n";
-    $out .= "Content-Length: " . strlen($post_string) . "\r\n";
+    $out .= 'Content-Length: ' . strlen($post_string) . "\r\n";
     $out .= "Connection: Close\r\n\r\n";
     // Data goes in the request body for a POST request
     if ('POST' == $type && isset($post_string)) {
@@ -469,9 +469,9 @@ function trigger_process_submissions($projectid)
         // Parallel processing.
         // Obtain the processing lock before firing off parallel workers.
         $mypid = getmypid();
-        include "include/submission_functions.php";
+        include 'include/submission_functions.php';
         if (AcquireProcessingLock($projectid, false, $mypid)) {
-            $url = $currentURI . "/ajax/processsubmissions.php";
+            $url = $currentURI . '/ajax/processsubmissions.php';
             $params = array('projectid' => $projectid, 'pid' => $mypid);
             for ($i = 0; $i < $CDASH_ASYNC_WORKERS; $i++) {
                 curl_request_async($url, $params, 'GET');
@@ -479,7 +479,7 @@ function trigger_process_submissions($projectid)
         }
     } else {
         // Serial processing.
-        $request = $currentURI . "/ajax/processsubmissions.php?projectid=" . $projectid;
+        $request = $currentURI . '/ajax/processsubmissions.php?projectid=' . $projectid;
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $request);
@@ -496,8 +496,8 @@ function trigger_process_submissions($projectid)
         // 28 = CURLE_OPERATION_TIMEDOUT
         if (curl_exec($ch) === false && curl_errno($ch) != 28) {
             add_log(
-                "cURL error: " . curl_error($ch) . ' for request: ' . $request,
-                "do_submit_asynchronous",
+                'cURL error: ' . curl_error($ch) . ' for request: ' . $request,
+                'do_submit_asynchronous',
                 LOG_ERR, $projectid);
         }
         curl_close($ch);

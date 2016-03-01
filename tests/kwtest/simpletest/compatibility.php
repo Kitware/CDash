@@ -105,14 +105,14 @@ class SimpleTestCompatibility
             return ($first === $second);
         }
         if (is_object($first) && is_object($second)) {
-            $id = uniqid("test");
+            $id = uniqid('test');
             $first->$id = true;
             $is_ref = isset($second->$id);
             unset($first->$id);
             return $is_ref;
         }
         $temp = $first;
-        $first = uniqid("test");
+        $first = uniqid('test');
         $is_ref = ($first === $second);
         $first = $temp;
         return $is_ref;

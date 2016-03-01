@@ -113,11 +113,11 @@ class FieldExpectation extends SimpleExpectation
             sort($compare);
         }
         if ($this->test($compare)) {
-            return "Field expectation [" . $dumper->describeValue($this->value) . "]";
+            return 'Field expectation [' . $dumper->describeValue($this->value) . ']';
         } else {
-            return "Field expectation [" . $dumper->describeValue($this->value) .
-            "] fails with [" .
-            $dumper->describeValue($compare) . "] " .
+            return 'Field expectation [' . $dumper->describeValue($this->value) .
+            '] fails with [' .
+            $dumper->describeValue($compare) . '] ' .
             $dumper->describeDifference($this->value, $compare);
         }
     }
@@ -349,9 +349,9 @@ class TextExpectation extends SimpleExpectation
             return $this->describeTextMatch($this->getSubstring(), $compare);
         } else {
             $dumper = $this->getDumper();
-            return "Text [" . $this->getSubstring() .
-            "] not detected in [" .
-            $dumper->describeValue($compare) . "]";
+            return 'Text [' . $this->getSubstring() .
+            '] not detected in [' .
+            $dumper->describeValue($compare) . ']';
         }
     }
 
@@ -366,8 +366,8 @@ class TextExpectation extends SimpleExpectation
         $position = strpos($subject, $substring);
         $dumper = $this->getDumper();
         return "Text [$substring] detected at character [$position] in [" .
-        $dumper->describeValue($subject) . "] in region [" .
-        $dumper->clipString($subject, 100, $position) . "]";
+        $dumper->describeValue($subject) . '] in region [' .
+        $dumper->clipString($subject, 100, $position) . ']';
     }
 }
 
@@ -408,9 +408,9 @@ class NoTextExpectation extends TextExpectation
     {
         if ($this->test($compare)) {
             $dumper = $this->getDumper();
-            return "Text [" . $this->getSubstring() .
-            "] not detected in [" .
-            $dumper->describeValue($compare) . "]";
+            return 'Text [' . $this->getSubstring() .
+            '] not detected in [' .
+            $dumper->describeValue($compare) . ']';
         } else {
             return $this->describeTextMatch($this->getSubstring(), $compare);
         }
@@ -1229,8 +1229,8 @@ class WebTestCase extends SimpleTestCase
     {
         $responses = (is_array($responses) ? $responses : array($responses));
         $code = $this->browser->getResponseCode();
-        $message = sprintf($message, "Expecting response in [" .
-            implode(", ", $responses) . "] got [$code]");
+        $message = sprintf($message, 'Expecting response in [' .
+            implode(', ', $responses) . "] got [$code]");
         return $this->assertTrue(in_array($code, $responses), $message);
     }
 
@@ -1245,8 +1245,8 @@ class WebTestCase extends SimpleTestCase
     {
         $types = (is_array($types) ? $types : array($types));
         $type = $this->browser->getMimeType();
-        $message = sprintf($message, "Expecting mime type in [" .
-            implode(", ", $types) . "] got [$type]");
+        $message = sprintf($message, 'Expecting mime type in [' .
+            implode(', ', $types) . "] got [$type]");
         return $this->assertTrue(in_array($type, $types), $message);
     }
 
@@ -1260,14 +1260,14 @@ class WebTestCase extends SimpleTestCase
     public function assertAuthentication($authentication = false, $message = '%s')
     {
         if (!$authentication) {
-            $message = sprintf($message, "Expected any authentication type, got [" .
-                $this->browser->getAuthentication() . "]");
+            $message = sprintf($message, 'Expected any authentication type, got [' .
+                $this->browser->getAuthentication() . ']');
             return $this->assertTrue(
                 $this->browser->getAuthentication(),
                 $message);
         } else {
             $message = sprintf($message, "Expected authentication [$authentication] got [" .
-                $this->browser->getAuthentication() . "]");
+                $this->browser->getAuthentication() . ']');
             return $this->assertTrue(
                 strtolower($this->browser->getAuthentication()) == strtolower($authentication),
                 $message);
@@ -1282,8 +1282,8 @@ class WebTestCase extends SimpleTestCase
      */
     public function assertNoAuthentication($message = '%s')
     {
-        $message = sprintf($message, "Expected no authentication type, got [" .
-            $this->browser->getAuthentication() . "]");
+        $message = sprintf($message, 'Expected no authentication type, got [' .
+            $this->browser->getAuthentication() . ']');
         return $this->assertFalse($this->browser->getAuthentication(), $message);
     }
 

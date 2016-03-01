@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include dirname(__DIR__) . "/config/config.php";
+include dirname(__DIR__) . '/config/config.php';
 require_once 'public/login.php';
 
 function echo_svn_output($cmd)
@@ -51,7 +51,7 @@ if ($session_OK) {
     $userid = $_SESSION['cdash']['loginid'];
 
     $user_is_admin = pdo_get_field_value(
-        "SELECT admin FROM " . qid("user") . " WHERE id='$userid'",
+        'SELECT admin FROM ' . qid('user') . " WHERE id='$userid'",
         'admin',
         0);
 

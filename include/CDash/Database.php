@@ -87,15 +87,15 @@ namespace CDash {
                                     $use_persistent_connections = false, $retries = 1,
                                     $ssl_key = null, $ssl_cert = null, $ssl_ca = null)
         {
-            $dsn = $database_type . ":host=" . $hostname;
+            $dsn = $database_type . ':host=' . $hostname;
             $this->attributes = array(\PDO::ATTR_PERSISTENT => $use_persistent_connections);
             if (!is_null($database_port) and $database_port !== '') {
-                $dsn = $dsn . ";port=" . strval($database_port);
+                $dsn = $dsn . ';port=' . strval($database_port);
             }
             if (!is_null($database_name) and $database_name != '') {
-                $dsn = $dsn . ";dbname=" . $database_name;
+                $dsn = $dsn . ';dbname=' . $database_name;
             } else {
-                $this->database_name = "";
+                $this->database_name = '';
             }
             $this->dsn = $dsn;
             $this->database_name = $database_name;

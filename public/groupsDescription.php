@@ -14,9 +14,9 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include dirname(__DIR__) . "/config/config.php";
-require_once "include/pdo.php";
-include_once "include/common.php";
+include dirname(__DIR__) . '/config/config.php';
+require_once 'include/pdo.php';
+include_once 'include/common.php';
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME", $db);
@@ -37,7 +37,7 @@ pdo_select_db("$CDASH_DB_NAME", $db);
     <?php
     $i = 0;
 
-    $project = htmlspecialchars(pdo_real_escape_string($_GET["project"]));
+    $project = htmlspecialchars(pdo_real_escape_string($_GET['project']));
     $projectid = get_project_id($project);
     if ($projectid < 1) {
         ?>
@@ -56,32 +56,32 @@ $group = pdo_query("SELECT buildgroup.name,buildgroup.description
 while ($group_array = pdo_fetch_array($group)) {
     ?>
     <tr class="<?php if ($i % 2 == 0) {
-    echo "treven";
+    echo 'treven';
 } else {
-    echo "trodd";
+    echo 'trodd';
 }
     ?>">
-        <td align="center" width="30%"><b><?php echo $group_array["name"];
+        <td align="center" width="30%"><b><?php echo $group_array['name'];
     ?></b></td>
-        <td align="left"><?php echo $group_array["description"];
+        <td align="left"><?php echo $group_array['description'];
     ?></td>
     </tr>
     <?php
     $i++;
 } ?>
 <tr class="<?php if ($i % 2 == 0) {
-    echo "treven";
+    echo 'treven';
 } else {
-    echo "trodd";
+    echo 'trodd';
 }
 $i++; ?>">
     <td align="center" width="30%"><b>Coverage</b></td>
     <td align="left">Check how many current lines of code are currently tested</td>
 </tr>
 <tr class="<?php if ($i % 2 == 0) {
-    echo "treven";
+    echo 'treven';
 } else {
-    echo "trodd";
+    echo 'trodd';
 } ?>">
     <td align="center" width="30%"><b>Dynamic Analysis</b></td>
     <td align="left">Check if the current tests have memory defects</td>

@@ -38,9 +38,9 @@ class HtmlReporter extends SimpleReporter
     public function paintHeader($test_name)
     {
         $this->sendNoCacheHeaders();
-        echo "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">";
+        echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">';
         echo "<html>\n<head>\n<title>$test_name</title>\n";
-        echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=" .
+        echo '<meta http-equiv="Content-Type" content="text/html; charset=' .
             $this->character_set . "\">\n";
         echo "<style type=\"text/css\">\n";
         echo $this->getCss() . "\n";
@@ -58,11 +58,11 @@ class HtmlReporter extends SimpleReporter
     public static function sendNoCacheHeaders()
     {
         if (!headers_sent()) {
-            header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-            header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-            header("Cache-Control: no-store, no-cache, must-revalidate");
-            header("Cache-Control: post-check=0, pre-check=0", false);
-            header("Pragma: no-cache");
+            header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+            header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+            header('Cache-Control: no-store, no-cache, must-revalidate');
+            header('Cache-Control: post-check=0, pre-check=0', false);
+            header('Pragma: no-cache');
         }
     }
 
@@ -72,9 +72,9 @@ class HtmlReporter extends SimpleReporter
      */
     protected function getCss()
     {
-        return ".fail { background-color: inherit; color: red; }" .
-        ".pass { background-color: inherit; color: green; }" .
-        " pre { background-color: lightgray; color: inherit; }";
+        return '.fail { background-color: inherit; color: red; }' .
+        '.pass { background-color: inherit; color: green; }' .
+        ' pre { background-color: lightgray; color: inherit; }';
     }
 
     /**
@@ -84,15 +84,15 @@ class HtmlReporter extends SimpleReporter
      */
     public function paintFooter($test_name)
     {
-        $colour = ($this->getFailCount() + $this->getExceptionCount() > 0 ? "red" : "green");
-        echo "<div style=\"";
+        $colour = ($this->getFailCount() + $this->getExceptionCount() > 0 ? 'red' : 'green');
+        echo '<div style="';
         echo "padding: 8px; margin-top: 1em; background-color: $colour; color: white;";
-        echo "\">";
-        echo $this->getTestCaseProgress() . "/" . $this->getTestCaseCount();
+        echo '">';
+        echo $this->getTestCaseProgress() . '/' . $this->getTestCaseCount();
         echo " test cases complete:\n";
-        echo "<strong>" . $this->getPassCount() . "</strong> passes, ";
-        echo "<strong>" . $this->getFailCount() . "</strong> fails and ";
-        echo "<strong>" . $this->getExceptionCount() . "</strong> exceptions.";
+        echo '<strong>' . $this->getPassCount() . '</strong> passes, ';
+        echo '<strong>' . $this->getFailCount() . '</strong> fails and ';
+        echo '<strong>' . $this->getExceptionCount() . '</strong> exceptions.';
         echo "</div>\n";
         echo "</body>\n</html>\n";
     }
@@ -107,11 +107,11 @@ class HtmlReporter extends SimpleReporter
     public function paintFail($message)
     {
         parent::paintFail($message);
-        echo "<span class=\"fail\">Fail</span>: ";
+        echo '<span class="fail">Fail</span>: ';
         $breadcrumb = $this->getTestList();
         array_shift($breadcrumb);
-        echo implode(" -&gt; ", $breadcrumb);
-        echo " -&gt; " . $this->htmlEntities($message) . "<br />\n";
+        echo implode(' -&gt; ', $breadcrumb);
+        echo ' -&gt; ' . $this->htmlEntities($message) . "<br />\n";
     }
 
     /**
@@ -121,11 +121,11 @@ class HtmlReporter extends SimpleReporter
     public function paintError($message)
     {
         parent::paintError($message);
-        echo "<span class=\"fail\">Exception</span>: ";
+        echo '<span class="fail">Exception</span>: ';
         $breadcrumb = $this->getTestList();
         array_shift($breadcrumb);
-        echo implode(" -&gt; ", $breadcrumb);
-        echo " -&gt; <strong>" . $this->htmlEntities($message) . "</strong><br />\n";
+        echo implode(' -&gt; ', $breadcrumb);
+        echo ' -&gt; <strong>' . $this->htmlEntities($message) . "</strong><br />\n";
     }
 
     /**
@@ -135,15 +135,15 @@ class HtmlReporter extends SimpleReporter
     public function paintException($exception)
     {
         parent::paintException($exception);
-        echo "<span class=\"fail\">Exception</span>: ";
+        echo '<span class="fail">Exception</span>: ';
         $breadcrumb = $this->getTestList();
         array_shift($breadcrumb);
-        echo implode(" -&gt; ", $breadcrumb);
+        echo implode(' -&gt; ', $breadcrumb);
         $message = 'Unexpected exception of type [' . get_class($exception) .
             '] with message [' . $exception->getMessage() .
             '] in [' . $exception->getFile() .
             ' line ' . $exception->getLine() . ']';
-        echo " -&gt; <strong>" . $this->htmlEntities($message) . "</strong><br />\n";
+        echo ' -&gt; <strong>' . $this->htmlEntities($message) . "</strong><br />\n";
     }
 
     /**
@@ -153,11 +153,11 @@ class HtmlReporter extends SimpleReporter
     public function paintSkip($message)
     {
         parent::paintSkip($message);
-        echo "<span class=\"pass\">Skipped</span>: ";
+        echo '<span class="pass">Skipped</span>: ';
         $breadcrumb = $this->getTestList();
         array_shift($breadcrumb);
-        echo implode(" -&gt; ", $breadcrumb);
-        echo " -&gt; " . $this->htmlEntities($message) . "<br />\n";
+        echo implode(' -&gt; ', $breadcrumb);
+        echo ' -&gt; ' . $this->htmlEntities($message) . "<br />\n";
     }
 
     /**
@@ -223,11 +223,11 @@ class TextReporter extends SimpleReporter
         } else {
             echo "FAILURES!!!\n";
         }
-        echo "Test cases run: " . $this->getTestCaseProgress() .
-            "/" . $this->getTestCaseCount() .
-            ", Passes: " . $this->getPassCount() .
-            ", Failures: " . $this->getFailCount() .
-            ", Exceptions: " . $this->getExceptionCount() . "\n";
+        echo 'Test cases run: ' . $this->getTestCaseProgress() .
+            '/' . $this->getTestCaseCount() .
+            ', Passes: ' . $this->getPassCount() .
+            ', Failures: ' . $this->getFailCount() .
+            ', Exceptions: ' . $this->getExceptionCount() . "\n";
     }
 
     /**
@@ -253,7 +253,7 @@ class TextReporter extends SimpleReporter
     public function paintError($message)
     {
         parent::paintError($message);
-        echo "Exception " . $this->getExceptionCount() . "!\n$message\n";
+        echo 'Exception ' . $this->getExceptionCount() . "!\n$message\n";
         $breadcrumb = $this->getTestList();
         array_shift($breadcrumb);
         echo "\tin " . implode("\n\tin ", array_reverse($breadcrumb));
@@ -272,7 +272,7 @@ class TextReporter extends SimpleReporter
             '] with message [' . $exception->getMessage() .
             '] in [' . $exception->getFile() .
             ' line ' . $exception->getLine() . ']';
-        echo "Exception " . $this->getExceptionCount() . "!\n$message\n";
+        echo 'Exception ' . $this->getExceptionCount() . "!\n$message\n";
         $breadcrumb = $this->getTestList();
         array_shift($breadcrumb);
         echo "\tin " . implode("\n\tin ", array_reverse($breadcrumb));

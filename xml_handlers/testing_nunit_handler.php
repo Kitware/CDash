@@ -72,7 +72,7 @@ class TestingNUnitHandler extends AbstractHandler
             $this->HasSiteTag = true;
             $this->Site->Name = $attributes['NAME'];
             if (empty($this->Site->Name)) {
-                $this->Site->Name = "(empty)";
+                $this->Site->Name = '(empty)';
             }
             $this->Site->Insert();
 
@@ -90,7 +90,7 @@ class TestingNUnitHandler extends AbstractHandler
             $this->Build->SiteId = $this->Site->Id;
             $this->Build->Name = $attributes['BUILDNAME'];
             if (empty($this->Build->Name)) {
-                $this->Build->Name = "(empty)";
+                $this->Build->Name = '(empty)';
             }
             $this->Build->SetStamp($attributes['BUILDSTAMP']);
             $this->Build->Generator = $attributes['GENERATOR'];
@@ -101,25 +101,25 @@ class TestingNUnitHandler extends AbstractHandler
             } else {
                 $this->Append = false;
             }
-        } elseif ($name == "TEST-CASE" && count($attributes) > 0) {
+        } elseif ($name == 'TEST-CASE' && count($attributes) > 0) {
             $this->Test = new Test();
             $this->Test->ProjectId = $this->projectid;
             $this->BuildTest = new BuildTest();
 
-            $teststatus = "notrun";
-            if ($attributes['RESULT'] == "Success") {
-                $teststatus = "passed";
-            } elseif ($attributes['RESULT'] == "Failure") {
-                $teststatus = "failed";
+            $teststatus = 'notrun';
+            if ($attributes['RESULT'] == 'Success') {
+                $teststatus = 'passed';
+            } elseif ($attributes['RESULT'] == 'Failure') {
+                $teststatus = 'failed';
             }
 
             $this->BuildTest->Status = $teststatus;
 
-            if ($teststatus == "passed") {
+            if ($teststatus == 'passed') {
                 $this->NumberTestsPassed++;
-            } elseif ($teststatus == "failed") {
+            } elseif ($teststatus == 'failed') {
                 $this->NumberTestsFailed++;
-            } elseif ($teststatus == "notrun") {
+            } elseif ($teststatus == 'notrun') {
                 $this->NumberTestsNotRun++;
             }
 
@@ -134,10 +134,10 @@ class TestingNUnitHandler extends AbstractHandler
             $this->Test->Name = $attributes['NAME'];
             $this->Test->Path = $attributes['NAME'];
             $this->Test->Command = $attributes['NAME'];
-        } elseif ($name == "TEST-RESULTS") {
+        } elseif ($name == 'TEST-RESULTS') {
             $this->StartTimeStamp = strtotime($attributes['DATE'] . ' ' . $attributes['TIME']);
             $this->EndTimeStamp = $this->StartTimeStamp;
-        } elseif ($this->HasSiteTag == false && $name == "ENVIRONMENT") {
+        } elseif ($this->HasSiteTag == false && $name == 'ENVIRONMENT') {
             // If the XML file doesn't have a <Site> tag then we use the information
             // provided by the testsuite.
             // buildname is 'name'
@@ -157,11 +157,11 @@ class TestingNUnitHandler extends AbstractHandler
 
             // Construct a CMake-Like build stamp
             // We assume Nightly
-            $stamp = date("Ymd-Hi", $this->StartTimeStamp) . '-Nightly';
+            $stamp = date('Ymd-Hi', $this->StartTimeStamp) . '-Nightly';
             $this->Build->SetStamp($stamp);
             $this->Build->Information = $buildInformation;
             $this->Append = false;
-        } elseif ($this->BuildAdded == false && $name == "TEST-SUITE") {
+        } elseif ($this->BuildAdded == false && $name == 'TEST-SUITE') {
             $this->Build->SaveTotalTestsTime(0);
 
             $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
@@ -203,7 +203,7 @@ class TestingNUnitHandler extends AbstractHandler
         //$parent = $this->getParent(); // should be before endElement
         parent::endElement($parser, $name);
 
-        if ($name == "TEST-CASE") {
+        if ($name == 'TEST-CASE') {
             $this->Test->Insert();
             if ($this->Test->Id > 0) {
                 $this->BuildTest->TestId = $this->Test->Id;
@@ -212,10 +212,10 @@ class TestingNUnitHandler extends AbstractHandler
 
                 $this->Test->InsertLabelAssociations($this->Build->Id);
             } else {
-                add_log("Cannot insert test", "Test XML parser", LOG_ERR,
+                add_log('Cannot insert test', 'Test XML parser', LOG_ERR,
                     $this->projectid, $this->Build->Id);
             }
-        } elseif ($name == "SITE" || ($this->HasSiteTag == false && $name == "TEST-RESULTS")) {
+        } elseif ($name == 'SITE' || ($this->HasSiteTag == false && $name == 'TEST-RESULTS')) {
             if (strlen($this->EndTimeStamp) > 0 && $this->UpdateEndTime) {
                 $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp); // The EndTimeStamp
                 $this->Build->UpdateEndTime($end_time);

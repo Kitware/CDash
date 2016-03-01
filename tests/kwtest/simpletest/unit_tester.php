@@ -302,14 +302,14 @@ class UnitTestCase extends SimpleTestCase
      * @param string $message Message to display.
      * @return bool               True on pass
      */
-    public function assertCopy(&$first, &$second, $message = "%s")
+    public function assertCopy(&$first, &$second, $message = '%s')
     {
         $dumper = new SimpleDumper();
         $message = sprintf(
             $message,
-            "[" . $dumper->describeValue($first) .
-            "] and [" . $dumper->describeValue($second) .
-            "] should not be the same object");
+            '[' . $dumper->describeValue($first) .
+            '] and [' . $dumper->describeValue($second) .
+            '] should not be the same object');
         return $this->assertFalse(
             SimpleTestCompatibility::isReference($first, $second),
             $message);

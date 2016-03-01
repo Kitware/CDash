@@ -40,10 +40,10 @@ class clientjobschedule
     public function __construct()
     {
         $this->BuildConfigurations = array(
-            0 => "Debug",
-            1 => "Release",
-            2 => "RelWithDebInfo",
-            3 => "MinSizeRel",
+            0 => 'Debug',
+            1 => 'Release',
+            2 => 'RelWithDebInfo',
+            3 => 'MinSizeRel',
         );
     }
 
@@ -51,10 +51,10 @@ class clientjobschedule
     public function GetProjectId()
     {
         if (!$this->Id) {
-            add_log("ClientJobSchedule::GetProjectId", "Id not set");
+            add_log('ClientJobSchedule::GetProjectId', 'Id not set');
             return;
         }
-        $sys = pdo_query("SELECT projectid FROM client_jobschedule WHERE id=" . qnum($this->Id));
+        $sys = pdo_query('SELECT projectid FROM client_jobschedule WHERE id=' . qnum($this->Id));
         $row = pdo_fetch_array($sys);
         return $row[0];
     }
@@ -63,10 +63,10 @@ class clientjobschedule
     public function GetCMakeCache()
     {
         if (!$this->Id) {
-            add_log("ClientJobSchedule::GetCMakeCache", "Id not set");
+            add_log('ClientJobSchedule::GetCMakeCache', 'Id not set');
             return;
         }
-        $sys = pdo_query("SELECT cmakecache FROM client_jobschedule WHERE id=" . qnum($this->Id));
+        $sys = pdo_query('SELECT cmakecache FROM client_jobschedule WHERE id=' . qnum($this->Id));
         $row = pdo_fetch_array($sys);
         return $row[0];
     }
@@ -75,10 +75,10 @@ class clientjobschedule
     public function GetDescription()
     {
         if (!$this->Id) {
-            add_log("ClientJobSchedule::GetDescription", "Id not set");
+            add_log('ClientJobSchedule::GetDescription', 'Id not set');
             return;
         }
-        $sys = pdo_query("SELECT description FROM client_jobschedule WHERE id=" . qnum($this->Id));
+        $sys = pdo_query('SELECT description FROM client_jobschedule WHERE id=' . qnum($this->Id));
         $row = pdo_fetch_array($sys);
         return $row[0];
     }
@@ -87,10 +87,10 @@ class clientjobschedule
     public function GetClientScript()
     {
         if (!$this->Id) {
-            add_log("ClientJobSchedule::GetClientScript", "Id not set");
+            add_log('ClientJobSchedule::GetClientScript', 'Id not set');
             return;
         }
-        $query = pdo_query("SELECT clientscript FROM client_jobschedule WHERE id=" . qnum($this->Id));
+        $query = pdo_query('SELECT clientscript FROM client_jobschedule WHERE id=' . qnum($this->Id));
         $row = pdo_fetch_array($query);
         return $row[0];
     }
@@ -99,10 +99,10 @@ class clientjobschedule
     public function GetStartDate()
     {
         if (!$this->Id) {
-            add_log("ClientJobSchedule::GetStartDate", "Id not set");
+            add_log('ClientJobSchedule::GetStartDate', 'Id not set');
             return;
         }
-        $sys = pdo_query("SELECT startdate FROM client_jobschedule WHERE id=" . qnum($this->Id));
+        $sys = pdo_query('SELECT startdate FROM client_jobschedule WHERE id=' . qnum($this->Id));
         $row = pdo_fetch_array($sys);
         return $row[0];
     }
@@ -111,10 +111,10 @@ class clientjobschedule
     public function GetEndDate()
     {
         if (!$this->Id) {
-            add_log("ClientJobSchedule::GetEndDate", "Id not set");
+            add_log('ClientJobSchedule::GetEndDate', 'Id not set');
             return;
         }
-        $sys = pdo_query("SELECT enddate FROM client_jobschedule WHERE id=" . qnum($this->Id));
+        $sys = pdo_query('SELECT enddate FROM client_jobschedule WHERE id=' . qnum($this->Id));
         $row = pdo_fetch_array($sys);
         return $row[0];
     }
@@ -123,10 +123,10 @@ class clientjobschedule
     public function GetStartTime()
     {
         if (!$this->Id) {
-            add_log("ClientJobSchedule::GetStartTime", "Id not set");
+            add_log('ClientJobSchedule::GetStartTime', 'Id not set');
             return;
         }
-        $sys = pdo_query("SELECT starttime FROM client_jobschedule WHERE id=" . qnum($this->Id));
+        $sys = pdo_query('SELECT starttime FROM client_jobschedule WHERE id=' . qnum($this->Id));
         $row = pdo_fetch_array($sys);
         return $row[0];
     }
@@ -135,10 +135,10 @@ class clientjobschedule
     public function GetRepeatTime()
     {
         if (!$this->Id) {
-            add_log("ClientJobSchedule::GetRepeatTime", "Id not set");
+            add_log('ClientJobSchedule::GetRepeatTime', 'Id not set');
             return;
         }
-        $sys = pdo_query("SELECT repeattime FROM client_jobschedule WHERE id=" . qnum($this->Id));
+        $sys = pdo_query('SELECT repeattime FROM client_jobschedule WHERE id=' . qnum($this->Id));
         $row = pdo_fetch_array($sys);
         return $row[0];
     }
@@ -147,10 +147,10 @@ class clientjobschedule
     public function GetType()
     {
         if (!$this->Id) {
-            add_log("ClientJobSchedule::GetType", "Id not set");
+            add_log('ClientJobSchedule::GetType', 'Id not set');
             return;
         }
-        $sys = pdo_query("SELECT type FROM client_jobschedule WHERE id=" . qnum($this->Id));
+        $sys = pdo_query('SELECT type FROM client_jobschedule WHERE id=' . qnum($this->Id));
         $row = pdo_fetch_array($sys);
         return $row[0];
     }
@@ -159,10 +159,10 @@ class clientjobschedule
     public function GetRepository()
     {
         if (!$this->Id) {
-            add_log("ClientJobSchedule::GetRepository", "Id not set");
+            add_log('ClientJobSchedule::GetRepository', 'Id not set');
             return;
         }
-        $sys = pdo_query("SELECT repository FROM client_jobschedule WHERE id=" . qnum($this->Id));
+        $sys = pdo_query('SELECT repository FROM client_jobschedule WHERE id=' . qnum($this->Id));
         $row = pdo_fetch_array($sys);
         return $row[0];
     }
@@ -171,10 +171,10 @@ class clientjobschedule
     public function GetTag()
     {
         if (!$this->Id) {
-            add_log("ClientJobSchedule::GetTag", "Id not set");
+            add_log('ClientJobSchedule::GetTag', 'Id not set');
             return;
         }
-        $sys = pdo_query("SELECT tag FROM client_jobschedule WHERE id=" . qnum($this->Id));
+        $sys = pdo_query('SELECT tag FROM client_jobschedule WHERE id=' . qnum($this->Id));
         $row = pdo_fetch_array($sys);
         return $row[0];
     }
@@ -183,10 +183,10 @@ class clientjobschedule
     public function GetBuildNameSuffix()
     {
         if (!$this->Id) {
-            add_log("ClientJobSchedule::GetBuildNameSuffix", "Id not set");
+            add_log('ClientJobSchedule::GetBuildNameSuffix', 'Id not set');
             return;
         }
-        $sys = pdo_query("SELECT buildnamesuffix FROM client_jobschedule WHERE id=" . qnum($this->Id));
+        $sys = pdo_query('SELECT buildnamesuffix FROM client_jobschedule WHERE id=' . qnum($this->Id));
         $row = pdo_fetch_array($sys);
         return $row[0];
     }
@@ -195,10 +195,10 @@ class clientjobschedule
     public function GetBuildConfiguration()
     {
         if (!$this->Id) {
-            add_log("ClientJobSchedule::GetBuildConfiguration", "Id not set");
+            add_log('ClientJobSchedule::GetBuildConfiguration', 'Id not set');
             return;
         }
-        $sys = pdo_query("SELECT buildconfiguration FROM client_jobschedule WHERE id=" . qnum($this->Id));
+        $sys = pdo_query('SELECT buildconfiguration FROM client_jobschedule WHERE id=' . qnum($this->Id));
         $row = pdo_fetch_array($sys);
         return $row[0];
     }
@@ -207,10 +207,10 @@ class clientjobschedule
     public function GetModule()
     {
         if (!$this->Id) {
-            add_log("ClientJobSchedule::GetModule", "Id not set");
+            add_log('ClientJobSchedule::GetModule', 'Id not set');
             return;
         }
-        $sys = pdo_query("SELECT module FROM client_jobschedule WHERE id=" . qnum($this->Id));
+        $sys = pdo_query('SELECT module FROM client_jobschedule WHERE id=' . qnum($this->Id));
         $row = pdo_fetch_array($sys);
         return $row[0];
     }
@@ -219,10 +219,10 @@ class clientjobschedule
     public function GetEnable()
     {
         if (!$this->Id) {
-            add_log("ClientJobSchedule::GetEnable", "Id not set");
+            add_log('ClientJobSchedule::GetEnable', 'Id not set');
             return;
         }
-        $sys = pdo_query("SELECT enable FROM client_jobschedule WHERE id=" . qnum($this->Id));
+        $sys = pdo_query('SELECT enable FROM client_jobschedule WHERE id=' . qnum($this->Id));
         $row = pdo_fetch_array($sys);
         return $row[0];
     }
@@ -243,9 +243,9 @@ class clientjobschedule
                 "','" . $cmakecache . "','" . $clientscript . "','" . $this->Repository . "','" . $this->Module . "','" . $this->BuildNameSuffix .
                 "','" . $this->Tag . "','" . $this->BuildConfiguration . "','" . $description . "')";
             pdo_query($sql);
-            add_last_sql_error("ClientJobSchedule::Save");
+            add_last_sql_error('ClientJobSchedule::Save');
             $this->Id = pdo_insert_id('client_jobschedule');
-            add_last_sql_error("ClientJobSchedule::Save");
+            add_last_sql_error('ClientJobSchedule::Save');
         } else {
             // update
 
@@ -265,7 +265,7 @@ class clientjobschedule
              enable='" . $this->Enable . "',
              type='" . $this->Type . "' WHERE id=" . qnum($this->Id);
             pdo_query($sql);
-            add_last_sql_error("ClientJobSchedule::Save");
+            add_last_sql_error('ClientJobSchedule::Save');
         }
     }
 
@@ -273,44 +273,44 @@ class clientjobschedule
     public function RemoveDependencies()
     {
         if (!$this->Id) {
-            add_log("ClientJobSchedule::RemoveDependencies", "Id not set");
+            add_log('ClientJobSchedule::RemoveDependencies', 'Id not set');
             return;
         }
-        pdo_query("DELETE FROM client_jobschedule2cmake WHERE scheduleid=" . qnum($this->Id));
-        pdo_query("DELETE FROM client_jobschedule2compiler WHERE scheduleid=" . qnum($this->Id));
-        pdo_query("DELETE FROM client_jobschedule2library WHERE scheduleid=" . qnum($this->Id));
-        pdo_query("DELETE FROM client_jobschedule2os WHERE scheduleid=" . qnum($this->Id));
-        pdo_query("DELETE FROM client_jobschedule2site WHERE scheduleid=" . qnum($this->Id));
-        add_last_sql_error("ClientJobSchedule::RemoveDependencies");
+        pdo_query('DELETE FROM client_jobschedule2cmake WHERE scheduleid=' . qnum($this->Id));
+        pdo_query('DELETE FROM client_jobschedule2compiler WHERE scheduleid=' . qnum($this->Id));
+        pdo_query('DELETE FROM client_jobschedule2library WHERE scheduleid=' . qnum($this->Id));
+        pdo_query('DELETE FROM client_jobschedule2os WHERE scheduleid=' . qnum($this->Id));
+        pdo_query('DELETE FROM client_jobschedule2site WHERE scheduleid=' . qnum($this->Id));
+        add_last_sql_error('ClientJobSchedule::RemoveDependencies');
     }
 
     /** Remove a job schedule */
     public function Remove()
     {
         if (!$this->Id) {
-            add_log("ClientJobSchedule::Remove", "Id not set");
+            add_log('ClientJobSchedule::Remove', 'Id not set');
             return;
         }
-        pdo_query("DELETE FROM client_job WHERE scheduleid=" . qnum($this->Id));
-        pdo_query("DELETE FROM client_jobschedule2cmake WHERE scheduleid=" . qnum($this->Id));
-        pdo_query("DELETE FROM client_jobschedule2compiler WHERE scheduleid=" . qnum($this->Id));
-        pdo_query("DELETE FROM client_jobschedule2library WHERE scheduleid=" . qnum($this->Id));
-        pdo_query("DELETE FROM client_jobschedule2os WHERE scheduleid=" . qnum($this->Id));
-        pdo_query("DELETE FROM client_jobschedule2site WHERE scheduleid=" . qnum($this->Id));
-        pdo_query("DELETE FROM client_jobschedule2build WHERE scheduleid=" . qnum($this->Id));
-        pdo_query("DELETE FROM client_jobschedule WHERE id=" . qnum($this->Id));
+        pdo_query('DELETE FROM client_job WHERE scheduleid=' . qnum($this->Id));
+        pdo_query('DELETE FROM client_jobschedule2cmake WHERE scheduleid=' . qnum($this->Id));
+        pdo_query('DELETE FROM client_jobschedule2compiler WHERE scheduleid=' . qnum($this->Id));
+        pdo_query('DELETE FROM client_jobschedule2library WHERE scheduleid=' . qnum($this->Id));
+        pdo_query('DELETE FROM client_jobschedule2os WHERE scheduleid=' . qnum($this->Id));
+        pdo_query('DELETE FROM client_jobschedule2site WHERE scheduleid=' . qnum($this->Id));
+        pdo_query('DELETE FROM client_jobschedule2build WHERE scheduleid=' . qnum($this->Id));
+        pdo_query('DELETE FROM client_jobschedule WHERE id=' . qnum($this->Id));
 
-        add_last_sql_error("ClientJobSchedule::Remove");
+        add_last_sql_error('ClientJobSchedule::Remove');
     }
 
     /** Get the owner of the schedule */
     public function GetOwner()
     {
         if (!$this->Id) {
-            add_log("ClientJobSchedule::GetOwner()", "Id not set");
+            add_log('ClientJobSchedule::GetOwner()', 'Id not set');
             return;
         }
-        $sys = pdo_query("SELECT userid FROM client_jobschedule WHERE id=" . qnum($this->Id));
+        $sys = pdo_query('SELECT userid FROM client_jobschedule WHERE id=' . qnum($this->Id));
         $row = pdo_fetch_array($sys);
         return $row[0];
     }
@@ -319,11 +319,11 @@ class clientjobschedule
     public function GetLastJobId()
     {
         if (!$this->Id) {
-            add_log("ClientJobSchedule::GetLastJobId", "Id not set");
+            add_log('ClientJobSchedule::GetLastJobId', 'Id not set');
             return;
         }
-        $query = pdo_query("SELECT id FROM client_job WHERE scheduleid=" . qnum($this->Id) . " ORDER BY id DESC LIMIT 1");
-        add_last_sql_error("ClientJobSchedule::GetLastJobId");
+        $query = pdo_query('SELECT id FROM client_job WHERE scheduleid=' . qnum($this->Id) . ' ORDER BY id DESC LIMIT 1');
+        add_last_sql_error('ClientJobSchedule::GetLastJobId');
         $result = 0;
         if ($row = pdo_fetch_array($query)) {
             return $row['id'];
@@ -335,7 +335,7 @@ class clientjobschedule
     public function getAll($userid, $nresult)
     {
         $query = pdo_query("SELECT id FROM client_jobschedule WHERE userid='$userid' ORDER BY id DESC LIMIT $nresult");
-        add_last_sql_error("ClientJobSchedule::getAll");
+        add_last_sql_error('ClientJobSchedule::getAll');
         $result = array();
         while ($row = pdo_fetch_array($query)) {
             $result[] = $row['id'];
@@ -347,13 +347,13 @@ class clientjobschedule
     public function AddLibrary($libraryid)
     {
         if (!$this->Id) {
-            add_log("ClientJobSchedule::AddLibrary", "Id not set");
+            add_log('ClientJobSchedule::AddLibrary', 'Id not set');
             return;
         }
 
-        $query = pdo_query("INSERT INTO client_jobschedule2library (scheduleid,libraryid) VALUES(" . qnum($this->Id) . "," . qnum($libraryid) . ")");
+        $query = pdo_query('INSERT INTO client_jobschedule2library (scheduleid,libraryid) VALUES(' . qnum($this->Id) . ',' . qnum($libraryid) . ')');
         if (!$query) {
-            add_last_sql_error("ClientJobSchedule::AddLibrary");
+            add_last_sql_error('ClientJobSchedule::AddLibrary');
             return false;
         }
         return true;
@@ -363,13 +363,13 @@ class clientjobschedule
     public function AddOS($osid)
     {
         if (!$this->Id) {
-            add_log("ClientJobSchedule::AddOS", "Id not set");
+            add_log('ClientJobSchedule::AddOS', 'Id not set');
             return;
         }
 
-        $query = pdo_query("INSERT INTO client_jobschedule2os (scheduleid,osid) VALUES(" . qnum($this->Id) . "," . qnum($osid) . ")");
+        $query = pdo_query('INSERT INTO client_jobschedule2os (scheduleid,osid) VALUES(' . qnum($this->Id) . ',' . qnum($osid) . ')');
         if (!$query) {
-            add_last_sql_error("ClientJobSchedule::AddOS");
+            add_last_sql_error('ClientJobSchedule::AddOS');
             return false;
         }
         return true;
@@ -379,14 +379,14 @@ class clientjobschedule
     public function AddCompiler($compilerid)
     {
         if (!$this->Id) {
-            add_log("ClientJobSchedule::AddCompiler", "Id not set");
+            add_log('ClientJobSchedule::AddCompiler', 'Id not set');
             return;
         }
 
-        $query = pdo_query("INSERT INTO client_jobschedule2compiler (scheduleid,compilerid)
-                        VALUES(" . qnum($this->Id) . "," . qnum($compilerid) . ")");
+        $query = pdo_query('INSERT INTO client_jobschedule2compiler (scheduleid,compilerid)
+                        VALUES(' . qnum($this->Id) . ',' . qnum($compilerid) . ')');
         if (!$query) {
-            add_last_sql_error("ClientJobSchedule::AddCompiler");
+            add_last_sql_error('ClientJobSchedule::AddCompiler');
             return false;
         }
         return true;
@@ -396,14 +396,14 @@ class clientjobschedule
     public function AddCMake($cmakeid)
     {
         if (!$this->Id) {
-            add_log("ClientJobSchedule::AddCMake", "Id not set");
+            add_log('ClientJobSchedule::AddCMake', 'Id not set');
             return;
         }
 
-        $query = pdo_query("INSERT INTO client_jobschedule2cmake (scheduleid,cmakeid)
-                        VALUES(" . qnum($this->Id) . "," . qnum($cmakeid) . ")");
+        $query = pdo_query('INSERT INTO client_jobschedule2cmake (scheduleid,cmakeid)
+                        VALUES(' . qnum($this->Id) . ',' . qnum($cmakeid) . ')');
         if (!$query) {
-            add_last_sql_error("ClientJobSchedule::AddCMake");
+            add_last_sql_error('ClientJobSchedule::AddCMake');
             return false;
         }
         return true;
@@ -413,14 +413,14 @@ class clientjobschedule
     public function AddSite($siteid)
     {
         if (!$this->Id) {
-            add_log("ClientJobSchedule::AddSite", "Id not set");
+            add_log('ClientJobSchedule::AddSite', 'Id not set');
             return;
         }
 
-        $query = pdo_query("INSERT INTO client_jobschedule2site (scheduleid,siteid)
-                        VALUES(" . qnum($this->Id) . "," . qnum($siteid) . ")");
+        $query = pdo_query('INSERT INTO client_jobschedule2site (scheduleid,siteid)
+                        VALUES(' . qnum($this->Id) . ',' . qnum($siteid) . ')');
         if (!$query) {
-            add_last_sql_error("ClientJobSchedule::AddSite");
+            add_last_sql_error('ClientJobSchedule::AddSite');
             return false;
         }
         return true;
@@ -430,13 +430,13 @@ class clientjobschedule
     public function GetCompilers()
     {
         if (!$this->Id) {
-            add_log("ClientJobSchedule::GetCompilers", "Id not set");
+            add_log('ClientJobSchedule::GetCompilers', 'Id not set');
             return;
         }
 
-        $query = pdo_query("SELECT compilerid FROM client_jobschedule2compiler WHERE scheduleid=" . qnum($this->Id));
+        $query = pdo_query('SELECT compilerid FROM client_jobschedule2compiler WHERE scheduleid=' . qnum($this->Id));
         if (!$query) {
-            add_last_sql_error("ClientJobSchedule::GetCompilers");
+            add_last_sql_error('ClientJobSchedule::GetCompilers');
             return false;
         }
 
@@ -451,13 +451,13 @@ class clientjobschedule
     public function GetSites()
     {
         if (!$this->Id) {
-            add_log("ClientJobSchedule::GetSites", "Id not set");
+            add_log('ClientJobSchedule::GetSites', 'Id not set');
             return;
         }
 
-        $query = pdo_query("SELECT siteid FROM client_jobschedule2site WHERE scheduleid=" . qnum($this->Id));
+        $query = pdo_query('SELECT siteid FROM client_jobschedule2site WHERE scheduleid=' . qnum($this->Id));
         if (!$query) {
-            add_last_sql_error("ClientJobSchedule::GetSites");
+            add_last_sql_error('ClientJobSchedule::GetSites');
             return false;
         }
 
@@ -472,13 +472,13 @@ class clientjobschedule
     public function GetSystems()
     {
         if (!$this->Id) {
-            add_log("ClientJobSchedule::GetSystems", "Id not set");
+            add_log('ClientJobSchedule::GetSystems', 'Id not set');
             return;
         }
 
-        $query = pdo_query("SELECT osid FROM client_jobschedule2os WHERE scheduleid=" . qnum($this->Id));
+        $query = pdo_query('SELECT osid FROM client_jobschedule2os WHERE scheduleid=' . qnum($this->Id));
         if (!$query) {
-            add_last_sql_error("ClientJobSchedule::GetSystems");
+            add_last_sql_error('ClientJobSchedule::GetSystems');
             return false;
         }
 
@@ -493,13 +493,13 @@ class clientjobschedule
     public function GetCMakes()
     {
         if (!$this->Id) {
-            add_log("ClientJobSchedule::GetCMakes", "Id not set");
+            add_log('ClientJobSchedule::GetCMakes', 'Id not set');
             return;
         }
 
-        $query = pdo_query("SELECT cmakeid FROM client_jobschedule2cmake WHERE scheduleid=" . qnum($this->Id));
+        $query = pdo_query('SELECT cmakeid FROM client_jobschedule2cmake WHERE scheduleid=' . qnum($this->Id));
         if (!$query) {
-            add_last_sql_error("ClientJobSchedule::GetCMakes");
+            add_last_sql_error('ClientJobSchedule::GetCMakes');
             return false;
         }
 
@@ -514,13 +514,13 @@ class clientjobschedule
     public function GetLibraries()
     {
         if (!$this->Id) {
-            add_log("ClientJobSchedule::GetLibraries", "Id not set");
+            add_log('ClientJobSchedule::GetLibraries', 'Id not set');
             return;
         }
 
-        $query = pdo_query("SELECT libraryid FROM client_jobschedule2library WHERE scheduleid=" . qnum($this->Id));
+        $query = pdo_query('SELECT libraryid FROM client_jobschedule2library WHERE scheduleid=' . qnum($this->Id));
         if (!$query) {
-            add_last_sql_error("ClientJobSchedule::GetLibraries");
+            add_last_sql_error('ClientJobSchedule::GetLibraries');
             return false;
         }
 
@@ -535,7 +535,7 @@ class clientjobschedule
     public function GetStatus()
     {
         if (!$this->Id) {
-            add_log("ClientJobSchedule:GetStatus", "Id not set");
+            add_log('ClientJobSchedule:GetStatus', 'Id not set');
             return -1;
         }
 
@@ -545,11 +545,11 @@ class clientjobschedule
             $extrasql = " AND js.projectid='" . $this->ProjectId . "' ";
         }
 
-        $sql = "SELECT js.lastrun,j.id,j.status,j.startdate,j.enddate FROM client_jobschedule AS js
+        $sql = 'SELECT js.lastrun,j.id,j.status,j.startdate,j.enddate FROM client_jobschedule AS js
             LEFT JOIN client_job AS j ON (j.scheduleid=js.id)
-            WHERE js.id=" . qnum($this->Id) . $extrasql . "
+            WHERE js.id=' . qnum($this->Id) . $extrasql . '
             ORDER BY j.id
-            ";
+            ';
         $query = pdo_query($sql);
         if (pdo_num_rows($query) == 0) {
             return -1; // No schedule found
@@ -570,15 +570,15 @@ class clientjobschedule
         $allowed = true;
 
         $count = pdo_get_field_value(
-            "SELECT COUNT(*) AS c FROM client_site2project " .
-            "  WHERE siteid=" . qnum($this->SiteId),
+            'SELECT COUNT(*) AS c FROM client_site2project ' .
+            '  WHERE siteid=' . qnum($this->SiteId),
             'c', 0);
         if ($count > 0) {
             // If some records contain siteid, only listed projects are allowed:
             //
             $projectid_count = pdo_get_field_value(
-                "SELECT COUNT(*) AS c FROM client_site2project " .
-                "  WHERE siteid=" . qnum($this->SiteId) . " AND projectid=" . qnum($projectid),
+                'SELECT COUNT(*) AS c FROM client_site2project ' .
+                '  WHERE siteid=' . qnum($this->SiteId) . ' AND projectid=' . qnum($projectid),
                 'c', 0);
             if ($projectid_count > 0) {
                 $allowed = true;
@@ -593,7 +593,7 @@ class clientjobschedule
     public function HasJob()
     {
         if (!$this->SiteId) {
-            add_log("ClientJobSchedule:HasJob", "SiteId not set");
+            add_log('ClientJobSchedule:HasJob', 'SiteId not set');
             return 0;
         }
 
@@ -605,7 +605,7 @@ class clientjobschedule
         // Update the lastping
         pdo_query("UPDATE client_site SET lastping='" . $now . "' WHERE id=" . qnum($this->SiteId));
 
-        $sql = "SELECT js.id, js.lastrun, js.starttime, js.repeattime,
+        $sql = 'SELECT js.id, js.lastrun, js.starttime, js.repeattime,
        count(library.libraryid) AS c, js.projectid
      FROM client_jobschedule AS js
      LEFT JOIN client_jobschedule2cmake AS cmake ON (cmake.scheduleid=js.id)
@@ -614,7 +614,7 @@ class clientjobschedule
      LEFT JOIN client_jobschedule2site AS site ON (site.scheduleid=js.id)
      LEFT JOIN client_jobschedule2library AS library ON (library.scheduleid=js.id)
      ,client_site2cmake,client_site2compiler,client_site AS s
-     WHERE s.id=" . qnum($this->SiteId) . "
+     WHERE s.id=' . qnum($this->SiteId) . "
       AND client_site2cmake.siteid=s.id
       AND (cmake.scheduleid IS NULL OR cmake.cmakeid=client_site2cmake.cmakeid)
       AND client_site2compiler.siteid=s.id
@@ -627,7 +627,7 @@ class clientjobschedule
       ";
         $query = pdo_query($sql);
         if (!$query) {
-            add_last_sql_error("ClientJobSchedule::HasJob");
+            add_last_sql_error('ClientJobSchedule::HasJob');
             return 0;
         }
         if (pdo_num_rows($query) == 0) {
@@ -658,9 +658,9 @@ class clientjobschedule
                 // We assume the interval is symetrical (might not be the case...)
                 $secondsdiff = (floor(($currentimeseconds - $starttimeseconds) / ($interval * 3600))) * ($interval * 3600);
                 if ($secondsdiff < 0) {
-                    $expectedstartingdate = strtotime($currentday . " " . $starttime . " " . $secondsdiff . " seconds");
+                    $expectedstartingdate = strtotime($currentday . ' ' . $starttime . ' ' . $secondsdiff . ' seconds');
                 } else {
-                    $expectedstartingdate = strtotime($currentday . " " . $starttime . " +" . $secondsdiff . " seconds");
+                    $expectedstartingdate = strtotime($currentday . ' ' . $starttime . ' +' . $secondsdiff . ' seconds');
                 }
 
                 if (strtotime($lastrun) > $expectedstartingdate) {
@@ -676,11 +676,11 @@ class clientjobschedule
             $nlibraries = $row[4];
 
             // Check if we have the right libraries for this job
-            $library = pdo_query("SELECT count(sl.libraryid) FROM client_jobschedule2library AS jsl,
-                          client_site2library AS sl WHERE jsl.scheduleid=" . qnum($scheduleid) . "
-                          AND sl.libraryid=jsl.libraryid AND sl.siteid=" . qnum($this->SiteId));
+            $library = pdo_query('SELECT count(sl.libraryid) FROM client_jobschedule2library AS jsl,
+                          client_site2library AS sl WHERE jsl.scheduleid=' . qnum($scheduleid) . '
+                          AND sl.libraryid=jsl.libraryid AND sl.siteid=' . qnum($this->SiteId));
             if (!$library) {
-                add_last_sql_error("ClientJobSchedule::HasJob-Library");
+                add_last_sql_error('ClientJobSchedule::HasJob-Library');
                 return 0;
             }
 
@@ -697,7 +697,7 @@ class clientjobschedule
     public function GetCTestScript()
     {
         if (!$this->Id || !$this->SiteId) {
-            add_log("ClientJobSchedule:GetCTestScript", "Id not set");
+            add_log('ClientJobSchedule:GetCTestScript', 'Id not set');
             return;
         }
 
@@ -712,25 +712,25 @@ class clientjobschedule
         // Create a job
         $job = new ClientJob();
         $job->ScheduleId = $this->Id;
-        $job->StartDate = date("Y-m-d H:i:s");
-        $job->EndDate = date("1980-01-01 00:00:00");
+        $job->StartDate = date('Y-m-d H:i:s');
+        $job->EndDate = date('1980-01-01 00:00:00');
         $job->Status = CDASH_JOB_RUNNING;
         $job->SiteId = $this->SiteId;
         $job->OsId = $ClientSite->GetOS();
 
         // Determine the appropriate CMake id (get the newest version)
-        $cmake = pdo_query("SELECT sc.cmakeid FROM client_cmake,client_site2cmake AS sc
+        $cmake = pdo_query('SELECT sc.cmakeid FROM client_cmake,client_site2cmake AS sc
                       LEFT JOIN client_jobschedule2cmake AS jc ON (jc.cmakeid=sc.cmakeid)
-                      WHERE client_cmake.id=sc.cmakeid AND sc.siteid=" . $this->SiteId . "
-                      ORDER BY client_cmake.version DESC LIMIT 1");
+                      WHERE client_cmake.id=sc.cmakeid AND sc.siteid=' . $this->SiteId . '
+                      ORDER BY client_cmake.version DESC LIMIT 1');
         $cmake_array = pdo_fetch_array($cmake);
         $job->CMakeId = $cmake_array[0];
 
         // Determine the appropriate compiler
-        $compiler = pdo_query("SELECT sc.compilerid FROM client_compiler,client_site2compiler AS sc
+        $compiler = pdo_query('SELECT sc.compilerid FROM client_compiler,client_site2compiler AS sc
                          LEFT JOIN client_jobschedule2compiler AS jc ON (jc.compilerid=sc.compilerid)
-                         WHERE client_compiler.id=sc.compilerid AND sc.siteid=" . $this->SiteId . "
-                         ORDER BY client_compiler.version DESC LIMIT 1");
+                         WHERE client_compiler.id=sc.compilerid AND sc.siteid=' . $this->SiteId . '
+                         ORDER BY client_compiler.version DESC LIMIT 1');
         $compiler_array = pdo_fetch_array($compiler);
         $job->CompilerId = $compiler_array[0];
         $job->Save();
@@ -745,16 +745,16 @@ class clientjobschedule
         $os->Id = $job->OsId;
 
         // Initialize the variables
-        $buildtype = "Experimental"; //default
+        $buildtype = 'Experimental'; //default
         switch ($this->GetType()) {
             case CDASH_JOB_EXPERIMENTAL:
-                $buildtype = "Experimental";
+                $buildtype = 'Experimental';
                 break;
             case CDASH_JOB_NIGHTLY:
-                $buildtype = "Nightly";
+                $buildtype = 'Nightly';
                 break;
             case CDASH_JOB_CONTINUOUS:
-                $buildtype = "Continuous";
+                $buildtype = 'Continuous';
                 break;
         }
         $ctest_script = '#' . $this->Id . "\n";
@@ -808,8 +808,8 @@ class clientjobschedule
         }
 
         $ctest_script .= 'set(CTEST_DROP_SITE "' . $serverName . '")' . "\n";
-        $dropLocation = dirname($_SERVER['PHP_SELF']) . "/submit.php?project=" . urlencode($Project->Name);
-        $dropLocation .= "&clientscheduleid=" . $this->Id;
+        $dropLocation = dirname($_SERVER['PHP_SELF']) . '/submit.php?project=' . urlencode($Project->Name);
+        $dropLocation .= '&clientscheduleid=' . $this->Id;
         $ctest_script .= 'set(CTEST_DROP_LOCATION "' . $dropLocation . '")' . "\n";
         $ctest_script .= 'set(JOB_DROP_LOCATION "' . $dropLocation . '")' . "\n";
         $ctest_script .= 'set(JOB_DROP_SITE "' . $serverName . '")' . "\n";
@@ -846,7 +846,7 @@ class clientjobschedule
     public function AssociateBuild($buildid)
     {
         if (!$this->Id) {
-            add_log("ClientJobSchedule::AssociateBuild", "Id not set");
+            add_log('ClientJobSchedule::AssociateBuild', 'Id not set');
             return;
         }
         $result = pdo_query("SELECT scheduleid FROM client_jobschedule2build WHERE scheduleid='" . $this->Id . "' AND buildid='$buildid'");
@@ -859,7 +859,7 @@ class clientjobschedule
     public function GetAssociatedBuilds()
     {
         if (!$this->Id) {
-            add_log("ClientJobSchedule::GetAssociateBuilds", "Id not set");
+            add_log('ClientJobSchedule::GetAssociateBuilds', 'Id not set');
             return false;
         }
         $result = pdo_query("SELECT buildid FROM client_jobschedule2build WHERE scheduleid='" . $this->Id . "'");

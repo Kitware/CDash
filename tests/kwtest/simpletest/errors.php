@@ -129,7 +129,7 @@ class SimpleErrorQueue
             $this->test->error($severity, $message, $file, $line);
         }
         while (list($expected, $message) = $this->extractExpectation()) {
-            $this->test->assert($expected, false, "%s -> Expected error not caught");
+            $this->test->assert($expected, false, '%s -> Expected error not caught');
         }
     }
 

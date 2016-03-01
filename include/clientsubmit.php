@@ -21,13 +21,13 @@ function client_submit()
         return 0;
     }
 
-    include_once "models/clientsite.php";
-    include_once "models/clientos.php";
-    include_once "models/clientjob.php";
-    include_once "models/clientjobschedule.php";
-    include_once "models/clientcmake.php";
-    include_once "models/clientcompiler.php";
-    include_once "models/clientlibrary.php";
+    include_once 'models/clientsite.php';
+    include_once 'models/clientos.php';
+    include_once 'models/clientjob.php';
+    include_once 'models/clientjobschedule.php';
+    include_once 'models/clientcmake.php';
+    include_once 'models/clientcompiler.php';
+    include_once 'models/clientlibrary.php';
 
     include 'config/config.php';
     require_once 'include/common.php';
@@ -35,7 +35,7 @@ function client_submit()
     // Client asks for the site id
     if (isset($_GET['getsiteid'])) {
         if (!isset($_GET['sitename']) || !isset($_GET['systemname'])) {
-            echo "ERROR: sitename or systemname not set";
+            echo 'ERROR: sitename or systemname not set';
             return 0;
         }
 
@@ -51,11 +51,11 @@ function client_submit()
     } // If the client asks for something to build
     elseif (isset($_GET['getjob'])) {
         if (!isset($_GET['siteid'])) {
-            echo "0";
+            echo '0';
             return 1;
         }
         if (!$_GET['siteid']) {
-            echo "0";
+            echo '0';
             return 1;
         }
 
@@ -68,12 +68,12 @@ function client_submit()
 
             echo $ClientJobSchedule->GetCTestScript();
         } else {
-            echo "0"; // send zero to let the client know that nothing is there
+            echo '0'; // send zero to let the client know that nothing is there
         }
         return 1;
     } elseif (isset($_GET['submitinfo'])) {
         if (!isset($_GET['sitename']) || !isset($_GET['systemname'])) {
-            echo "0";
+            echo '0';
             return 1;
         }
 
@@ -183,11 +183,11 @@ function client_submit()
         // Mark the job has finished
 
         if (!isset($_GET['siteid'])) {
-            echo "0";
+            echo '0';
             return 1;
         }
         if (!$_GET['siteid']) {
-            echo "0";
+            echo '0';
             return 1;
         }
         $ClientJob = new ClientJob();
@@ -198,11 +198,11 @@ function client_submit()
         // Mark the job has failed
 
         if (!isset($_GET['siteid'])) {
-            echo "0";
+            echo '0';
             return 1;
         }
         if (!$_GET['siteid']) {
-            echo "0";
+            echo '0';
             return 1;
         }
         $ClientJob = new ClientJob();

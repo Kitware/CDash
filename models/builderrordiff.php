@@ -26,12 +26,12 @@ class builderrordiff
     public function Exists()
     {
         if (!$this->BuildId || !is_numeric($this->BuildId)) {
-            echo "BuildErrorDiff::Save(): BuildId not set<br>";
+            echo 'BuildErrorDiff::Save(): BuildId not set<br>';
             return false;
         }
 
         if (!$this->Type || !is_numeric($this->Type)) {
-            echo "BuildErrorDiff::Save(): Type not set<br>";
+            echo 'BuildErrorDiff::Save(): Type not set<br>';
             return false;
         }
 
@@ -47,32 +47,32 @@ class builderrordiff
     public function Save()
     {
         if (!$this->BuildId || !is_numeric($this->BuildId)) {
-            echo "BuildErrorDiff::Save(): BuildId not set<br>";
+            echo 'BuildErrorDiff::Save(): BuildId not set<br>';
             return false;
         }
 
         if (!$this->Type || !is_numeric($this->Type)) {
-            echo "BuildErrorDiff::Save(): Type not set<br>";
+            echo 'BuildErrorDiff::Save(): Type not set<br>';
             return false;
         }
 
         if (!$this->DifferencePositive || !is_numeric($this->DifferencePositive)) {
-            echo "BuildErrorDiff::Save(): DifferencePositive not set<br>";
+            echo 'BuildErrorDiff::Save(): DifferencePositive not set<br>';
             return false;
         }
 
         if (!$this->DifferenceNegative || !is_numeric($this->DifferenceNegative)) {
-            echo "BuildErrorDiff::Save(): DifferenceNegative not set<br>";
+            echo 'BuildErrorDiff::Save(): DifferenceNegative not set<br>';
             return false;
         }
         if ($this->Exists()) {
             // Update
-            $query = "UPDATE builderrordiff SET ";
+            $query = 'UPDATE builderrordiff SET ';
             $query .= "difference_positive='" . $this->DifferencePositive . "'";
             $query .= ", difference_negative='" . $this->DifferenceNegative . "'";
             $query .= " WHERE buildid='" . $this->BuildId . "' AND type='" . $this->Type . "'";
             if (!pdo_query($query)) {
-                add_last_sql_error("BuildErrorDiff Update", 0, $this->BuildId);
+                add_last_sql_error('BuildErrorDiff Update', 0, $this->BuildId);
                 return false;
             }
         } else {
@@ -82,7 +82,7 @@ class builderrordiff
                  VALUES ('" . $this->BuildId . "','" . $this->Type . "','" . $this->DifferencePositive . "','" .
                 $this->DifferenceNegative . "')";
             if (!pdo_query($query)) {
-                add_last_sql_error("BuildErrorDiff Create", 0, $this->BuildId);
+                add_last_sql_error('BuildErrorDiff Create', 0, $this->BuildId);
                 return false;
             }
         }

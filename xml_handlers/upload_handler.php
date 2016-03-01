@@ -70,7 +70,7 @@ class UploadHandler extends AbstractHandler
         if ($name == 'SITE') {
             $this->Site->Name = $attributes['NAME'];
             if (empty($this->Site->Name)) {
-                $this->Site->Name = "(empty)";
+                $this->Site->Name = '(empty)';
             }
             $this->Site->Insert();
 
@@ -88,7 +88,7 @@ class UploadHandler extends AbstractHandler
             $this->Build->SiteId = $this->Site->Id;
             $this->Build->Name = $attributes['BUILDNAME'];
             if (empty($this->Build->Name)) {
-                $this->Build->Name = "(empty)";
+                $this->Build->Name = '(empty)';
             }
             $this->Build->SetStamp($attributes['BUILDSTAMP']);
             $this->Build->Generator = $attributes['GENERATOR'];
@@ -133,7 +133,7 @@ class UploadHandler extends AbstractHandler
             // Create tmp file
             $this->TmpFilename = tempnam($GLOBALS['CDASH_UPLOAD_DIRECTORY'], 'tmp'); // TODO Handle error
             if (empty($this->TmpFilename)) {
-                add_log("Failed to create temporary filename", __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
+                add_log('Failed to create temporary filename', __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
                 $this->UploadError = true;
                 return;
             }
@@ -213,7 +213,7 @@ class UploadHandler extends AbstractHandler
             $path_parts = pathinfo($this->UploadFile->Filename);
             $ext = $path_parts['extension'];
 
-            if ($ext == "url") {
+            if ($ext == 'url') {
                 $this->UploadFile->IsUrl = true;
 
                 // Read content of the file
@@ -268,7 +268,7 @@ class UploadHandler extends AbstractHandler
 
                 if ($createSymlink) {
                     // Create symlink
-                    if (function_exists("symlink")) {
+                    if (function_exists('symlink')) {
                         $success = symlink($uploadfilepath, $upload_dir . '/' . $symlinkName);
                     } else {
                         $success = 0;

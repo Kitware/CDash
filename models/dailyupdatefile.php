@@ -46,23 +46,23 @@ class dailyupdatefile
     public function Save()
     {
         if (!$this->DailyUpdateId) {
-            echo "DailyUpdateFile::Save(): DailyUpdateId not set!";
+            echo 'DailyUpdateFile::Save(): DailyUpdateId not set!';
             return false;
         }
 
         if (!$this->Filename) {
-            echo "DailyUpdateFile::Save(): Filename not set!";
+            echo 'DailyUpdateFile::Save(): Filename not set!';
             return false;
         }
 
         if (!$this->CheckinDate) {
-            echo "DailyUpdateFile::Save(): CheckinDate not set!";
+            echo 'DailyUpdateFile::Save(): CheckinDate not set!';
             return false;
         }
 
         if ($this->Exists()) {
             // Update the project
-            $query = "UPDATE dailyupdatefile SET";
+            $query = 'UPDATE dailyupdatefile SET';
             $query .= " checkindate='" . $this->CheckinDate . "'";
             $query .= ",author='" . $this->Author . "'";
             $query .= ",log='" . $this->Log . "'";
@@ -71,7 +71,7 @@ class dailyupdatefile
             $query .= " WHERE dailyupdateid='" . $this->DailyUpdateId . "' AND filename='" . $this->Filename . "'";
 
             if (!pdo_query($query)) {
-                add_last_sql_error("DailyUpdateFile Update");
+                add_last_sql_error('DailyUpdateFile Update');
                 return false;
             }
         } else {
@@ -79,7 +79,7 @@ class dailyupdatefile
                      VALUES ('$this->DailyUpdateId','$this->Filename','$this->CheckinDate','$this->Author','$this->Log',
                      '$this->Revision','$this->PriorRevision')")
             ) {
-                add_last_sql_error("DailyUpdateFile Insert");
+                add_last_sql_error('DailyUpdateFile Insert');
                 return false;
             }
         }

@@ -14,14 +14,14 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include dirname(__DIR__) . "/config/config.php";
-require_once "include/pdo.php";
-include_once "include/common.php";
-include "include/version.php";
+include dirname(__DIR__) . '/config/config.php';
+require_once 'include/pdo.php';
+include_once 'include/common.php';
+include 'include/version.php';
 $noforcelogin = 1;
 include 'public/login.php';
 
-@$projectname = $_GET["project"];
+@$projectname = $_GET['project'];
 if ($projectname != null) {
     $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
 }
@@ -30,7 +30,7 @@ if (!isset($projectname) || strlen($projectname) == 0) {
     die("Error: project not specified<br>\n");
 }
 
-@$date = $_GET["date"];
+@$date = $_GET['date'];
 if ($date != null) {
     $date = htmlspecialchars(pdo_real_escape_string($date));
 }
@@ -39,7 +39,7 @@ $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME", $db);
 
 $xml = begin_XML_for_XSLT();
-$xml .= "<title>" . $projectname . " : Build Overview</title>";
+$xml .= '<title>' . $projectname . ' : Build Overview</title>';
 $xml .= get_cdash_dashboard_xml_by_name($projectname, $date);
 
 // Get some information about the specified project
@@ -48,27 +48,27 @@ if (!$project_array = pdo_fetch_array($project)) {
     die("Error:  project $projectname not found<br>\n");
 }
 
-checkUserPolicy(@$_SESSION['cdash']['loginid'], $project_array["id"]);
+checkUserPolicy(@$_SESSION['cdash']['loginid'], $project_array['id']);
 
-$projectid = $project_array["id"];
-$nightlytime = $project_array["nightlytime"];
+$projectid = $project_array['id'];
+$nightlytime = $project_array['nightlytime'];
 
 // We select the builds
 list($previousdate, $currentstarttime, $nextdate, $today) = get_dates($date, $nightlytime);
-$xml .= "<menu>";
-$xml .= add_XML_value("previous", "buildOverview.php?project=" . urlencode($projectname) . "&date=" . $previousdate);
+$xml .= '<menu>';
+$xml .= add_XML_value('previous', 'buildOverview.php?project=' . urlencode($projectname) . '&date=' . $previousdate);
 if (has_next_date($date, $currentstarttime)) {
-    $xml .= add_XML_value("next", "buildOverview.php?project=" . urlencode($projectname) . "&date=" . $nextdate);
+    $xml .= add_XML_value('next', 'buildOverview.php?project=' . urlencode($projectname) . '&date=' . $nextdate);
 } else {
-    $xml .= add_XML_value("nonext", "1");
+    $xml .= add_XML_value('nonext', '1');
 }
-$xml .= add_XML_value("current", "buildOverview.php?project=" . urlencode($projectname) . "&date=");
+$xml .= add_XML_value('current', 'buildOverview.php?project=' . urlencode($projectname) . '&date=');
 
-$xml .= add_XML_value("back", "index.php?project=" . urlencode($projectname) . "&date=" . $today);
-$xml .= "</menu>";
+$xml .= add_XML_value('back', 'index.php?project=' . urlencode($projectname) . '&date=' . $today);
+$xml .= '</menu>';
 
 // Return the available groups
-@$groupSelection = $_POST["groupSelection"];
+@$groupSelection = $_POST['groupSelection'];
 if ($groupSelection != null) {
     $groupSelection = pdo_real_escape_numeric($groupSelection);
 }
@@ -79,13 +79,13 @@ if (!isset($groupSelection)) {
 
 $buildgroup = pdo_query("SELECT id,name FROM buildgroup WHERE projectid='$projectid'");
 while ($buildgroup_array = pdo_fetch_array($buildgroup)) {
-    $xml .= "<group>";
-    $xml .= add_XML_value("id", $buildgroup_array["id"]);
-    $xml .= add_XML_value("name", $buildgroup_array["name"]);
-    if ($groupSelection == $buildgroup_array["id"]) {
-        $xml .= add_XML_value("selected", "1");
+    $xml .= '<group>';
+    $xml .= add_XML_value('id', $buildgroup_array['id']);
+    $xml .= add_XML_value('name', $buildgroup_array['name']);
+    if ($groupSelection == $buildgroup_array['id']) {
+        $xml .= add_XML_value('selected', '1');
     }
-    $xml .= "</group>";
+    $xml .= '</group>';
 }
 
 // Check the builds
@@ -95,7 +95,7 @@ $end_timestamp = $currentstarttime + 3600 * 24;
 $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
 $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
 
-$groupSelectionSQL = "";
+$groupSelectionSQL = '';
 if ($groupSelection > 0) {
     $groupSelectionSQL = " AND b2g.groupid='$groupSelection' ";
 }
@@ -105,50 +105,50 @@ $sql = "SELECT s.name,b.name as buildname,be.type,be.sourcefile,be.sourceline,be
                          WHERE b.starttime<'$end_UTCDate' AND b.starttime>'$beginning_UTCDate'
                          AND b.projectid='$projectid' AND be.buildid=b.id
                          AND s.id=b.siteid AND b2g.buildid=b.id
-                         " . $groupSelectionSQL . "ORDER BY be.sourcefile ASC,be.type ASC,be.sourceline ASC";
+                         " . $groupSelectionSQL . 'ORDER BY be.sourcefile ASC,be.type ASC,be.sourceline ASC';
 
 $builds = pdo_query($sql);
 echo pdo_error();
 
 if (pdo_num_rows($builds) == 0) {
-    $xml .= "<message>No warnings or errors today!</message>";
+    $xml .= '<message>No warnings or errors today!</message>';
 }
 
-$current_file = "ThisIsMyFirstFile";
+$current_file = 'ThisIsMyFirstFile';
 while ($build_array = pdo_fetch_array($builds)) {
-    if ($build_array["sourcefile"] != $current_file) {
-        if ($current_file != "ThisIsMyFirstFile") {
-            $xml .= "</sourcefile>";
+    if ($build_array['sourcefile'] != $current_file) {
+        if ($current_file != 'ThisIsMyFirstFile') {
+            $xml .= '</sourcefile>';
         }
-        $xml .= "<sourcefile>";
-        $xml .= "<name>" . $build_array["sourcefile"] . "</name>";
-        $current_file = $build_array["sourcefile"];
+        $xml .= '<sourcefile>';
+        $xml .= '<name>' . $build_array['sourcefile'] . '</name>';
+        $current_file = $build_array['sourcefile'];
     }
 
-    if ($build_array["type"] == 0) {
-        $xml .= "<error>";
+    if ($build_array['type'] == 0) {
+        $xml .= '<error>';
     } else {
-        $xml .= "<warning>";
+        $xml .= '<warning>';
     }
-    $xml .= "<line>" . $build_array["sourceline"] . "</line>";
-    $textarray = explode("\n", $build_array["text"]);
+    $xml .= '<line>' . $build_array['sourceline'] . '</line>';
+    $textarray = explode("\n", $build_array['text']);
     foreach ($textarray as $text) {
         if (strlen($text) > 0) {
-            $xml .= add_XML_value("text", $text);
+            $xml .= add_XML_value('text', $text);
         }
     }
-    $xml .= "<sitename>" . $build_array["name"] . "</sitename>";
-    $xml .= "<buildname>" . $build_array["buildname"] . "</buildname>";
-    if ($build_array["type"] == 0) {
-        $xml .= "</error>";
+    $xml .= '<sitename>' . $build_array['name'] . '</sitename>';
+    $xml .= '<buildname>' . $build_array['buildname'] . '</buildname>';
+    if ($build_array['type'] == 0) {
+        $xml .= '</error>';
     } else {
-        $xml .= "</warning>";
+        $xml .= '</warning>';
     }
 }
 
 if (pdo_num_rows($builds) > 0) {
-    $xml .= "</sourcefile>";
+    $xml .= '</sourcefile>';
 }
-$xml .= "</cdash>";
+$xml .= '</cdash>';
 
-generate_XSLT($xml, "buildOverview");
+generate_XSLT($xml, 'buildOverview');

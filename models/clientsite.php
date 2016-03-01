@@ -28,10 +28,10 @@ class clientsite
     public function GetName()
     {
         if (!$this->Id) {
-            add_log("ClientSite::GetName()", "Id not set");
+            add_log('ClientSite::GetName()', 'Id not set');
             return;
         }
-        $name = pdo_query("SELECT name FROM client_site WHERE id=" . qnum($this->Id));
+        $name = pdo_query('SELECT name FROM client_site WHERE id=' . qnum($this->Id));
         $row = pdo_fetch_array($name);
         return $row[0];
     }
@@ -40,11 +40,11 @@ class clientsite
     public function GetLastPing()
     {
         if (!$this->Id) {
-            add_log("ClientSite::GetLastPing()", "Id not set");
+            add_log('ClientSite::GetLastPing()', 'Id not set');
             return false;
         }
 
-        $lastping = pdo_query("SELECT lastping FROM client_site WHERE id=" . qnum($this->Id));
+        $lastping = pdo_query('SELECT lastping FROM client_site WHERE id=' . qnum($this->Id));
         $row = pdo_fetch_array($lastping);
         return $row[0];
     }
@@ -53,10 +53,10 @@ class clientsite
     public function GetSystemName()
     {
         if (!$this->Id) {
-            add_log("ClientSite::Name()", "Id not set");
+            add_log('ClientSite::Name()', 'Id not set');
             return;
         }
-        $name = pdo_query("SELECT systemname FROM client_site WHERE id=" . qnum($this->Id));
+        $name = pdo_query('SELECT systemname FROM client_site WHERE id=' . qnum($this->Id));
         $row = pdo_fetch_array($name);
         return $row[0];
     }
@@ -65,10 +65,10 @@ class clientsite
     public function GetOS()
     {
         if (!$this->Id) {
-            add_log("ClientSite::GetOS()", "Id not set");
+            add_log('ClientSite::GetOS()', 'Id not set');
             return;
         }
-        $sys = pdo_query("SELECT osid FROM client_site WHERE id=" . qnum($this->Id));
+        $sys = pdo_query('SELECT osid FROM client_site WHERE id=' . qnum($this->Id));
         $row = pdo_fetch_array($sys);
         return $row[0];
     }
@@ -93,10 +93,10 @@ class clientsite
     public function GetBaseDirectory()
     {
         if (!$this->Id) {
-            add_log("ClientSite::GetBaseDirectory()", "Id not set");
+            add_log('ClientSite::GetBaseDirectory()', 'Id not set');
             return;
         }
-        $sys = pdo_query("SELECT basedirectory FROM client_site WHERE id=" . qnum($this->Id));
+        $sys = pdo_query('SELECT basedirectory FROM client_site WHERE id=' . qnum($this->Id));
         $row = pdo_fetch_array($sys);
 
         // If we have a source we update and build
@@ -132,10 +132,10 @@ class clientsite
     public function GetCompilerGenerator($compilerid)
     {
         if (!$this->Id) {
-            add_log("ClientSite::GetCompilerGenerator()", "Id not set");
+            add_log('ClientSite::GetCompilerGenerator()', 'Id not set');
             return;
         }
-        $name = pdo_query("SELECT generator FROM client_site2compiler WHERE siteid=" . qnum($this->Id) . " AND compilerid='" . $compilerid . "'");
+        $name = pdo_query('SELECT generator FROM client_site2compiler WHERE siteid=' . qnum($this->Id) . " AND compilerid='" . $compilerid . "'");
         $row = pdo_fetch_array($name);
         return $row[0];
     }
@@ -144,10 +144,10 @@ class clientsite
     public function GetCMakePath($cmakeid)
     {
         if (!$this->Id) {
-            add_log("ClientSite::GetCMakePath()", "Id not set");
+            add_log('ClientSite::GetCMakePath()', 'Id not set');
             return;
         }
-        $sys = pdo_query("SELECT path FROM client_site2cmake WHERE siteid=" . qnum($this->Id) . " AND cmakeid=" . qnum($cmakeid));
+        $sys = pdo_query('SELECT path FROM client_site2cmake WHERE siteid=' . qnum($this->Id) . ' AND cmakeid=' . qnum($cmakeid));
         $row = pdo_fetch_array($sys);
         return $row[0];
     }
@@ -263,7 +263,7 @@ class clientsite
     {
         $query = pdo_query("SELECT id FROM client_site WHERE name='" . $sitename . "' AND systemname='" . $systemname . "'");
         if (!$query) {
-            add_last_sql_error("clientSite::GetId()");
+            add_last_sql_error('clientSite::GetId()');
             return 0;
         }
 
@@ -285,7 +285,7 @@ class clientsite
               VALUES ('" . $this->Name . "','" . $this->OsId . "','" . $this->SystemName . "','" . $this->Host . "','" . $this->BaseDirectory . "')";
             pdo_query($sql);
             $this->Id = pdo_insert_id('client_site');
-            add_last_sql_error("clientSite::Save()");
+            add_last_sql_error('clientSite::Save()');
         } else {
             // update
 
@@ -293,7 +293,7 @@ class clientsite
             $this->Id = $query_array['id'];
             $sql = "UPDATE client_site SET osid='" . $this->OsId . "',host='" . $this->Host . "',basedirectory='" . $this->BaseDirectory . "' WHERE id=" . qnum($this->Id);
             pdo_query($sql);
-            add_last_sql_error("clientSite::Save()");
+            add_last_sql_error('clientSite::Save()');
         }
     }
 
@@ -301,7 +301,7 @@ class clientsite
     public function GetAll()
     {
         $ids = array();
-        $sql = "SELECT id FROM client_site ORDER BY lastping DESC, name ASC";
+        $sql = 'SELECT id FROM client_site ORDER BY lastping DESC, name ASC';
         $query = pdo_query($sql);
         while ($query_array = pdo_fetch_array($query)) {
             $ids[] = $query_array['id'];
@@ -315,11 +315,11 @@ class clientsite
 
         $matching = array();
         foreach ($ids as $id) {
-            $result = pdo_query("SELECT projectid FROM client_site2project WHERE siteid=" . qnum($id));
+            $result = pdo_query('SELECT projectid FROM client_site2project WHERE siteid=' . qnum($id));
             if (pdo_num_rows($result) == 0) {
                 $matching[] = $id;
             } else {
-                $result = pdo_query("SELECT projectid FROM client_site2project WHERE siteid=" . qnum($id) . " AND projectid=" . qnum($projectid));
+                $result = pdo_query('SELECT projectid FROM client_site2project WHERE siteid=' . qnum($id) . ' AND projectid=' . qnum($projectid));
                 if (pdo_num_rows($result) > 0) {
                     $matching[] = $id;
                 }
@@ -348,12 +348,12 @@ class clientsite
     public function GetPrograms()
     {
         if (!$this->Id) {
-            add_log("ClientSite::GetPrograms()", "Id not set");
+            add_log('ClientSite::GetPrograms()', 'Id not set');
             return;
         }
 
         $programs = array();
-        $query = pdo_query("SELECT name,version,path FROM client_site2program WHERE siteid=" . qnum($this->Id) . " ORDER BY NAME,VERSION DESC");
+        $query = pdo_query('SELECT name,version,path FROM client_site2program WHERE siteid=' . qnum($this->Id) . ' ORDER BY NAME,VERSION DESC');
         while ($query_array = pdo_fetch_array($query)) {
             $programs[] = $query_array;
         }
@@ -371,26 +371,26 @@ class clientsite
             // Check if the name or system already exists
             $query = pdo_query("SELECT siteid FROM client_site2program
                 WHERE name='" . $program_name . "' AND version='" . $program_version . "' AND siteid=" . qnum($this->Id));
-            add_last_sql_error("clientSite::UpdatePrograms()");
+            add_last_sql_error('clientSite::UpdatePrograms()');
             if (pdo_num_rows($query) == 0) {
                 $sql = "INSERT INTO client_site2program (siteid,name,version,path)
                 VALUES ('" . $this->Id . "','" . $program_name . "','" . $program_version . "','" . $program_path . "')";
                 pdo_query($sql);
-                add_last_sql_error("clientSite::UpdatePrograms()");
+                add_last_sql_error('clientSite::UpdatePrograms()');
             } else {
                 // update
 
                 $sql = "UPDATE client_site2program SET path='" . $program_path .
                     "' WHERE name='" . $program_name . "' AND version='" . $program_version . "' AND siteid=" . qnum($this->Id);
                 pdo_query($sql);
-                add_last_sql_error("clientSite::UpdatePrograms()");
+                add_last_sql_error('clientSite::UpdatePrograms()');
             }
         }
 
         // Delete the old programs
-        $query = pdo_query("SELECT name,version FROM client_site2program WHERE siteid=" . qnum($this->Id));
+        $query = pdo_query('SELECT name,version FROM client_site2program WHERE siteid=' . qnum($this->Id));
 
-        add_last_sql_error("clientSite::UpdatePrograms()");
+        add_last_sql_error('clientSite::UpdatePrograms()');
         while ($query_array = pdo_fetch_array($query)) {
             $delete = 1;
             foreach ($programs as $program) {
@@ -401,7 +401,7 @@ class clientsite
             }
             if ($delete) {
                 pdo_query("DELETE FROM client_site2program WHERE name='" . $query_array['name'] . "' AND version='" . $query_array['version'] . "' AND siteid=" . qnum($this->Id));
-                add_last_sql_error("clientSite::UpdatePrograms()");
+                add_last_sql_error('clientSite::UpdatePrograms()');
             }
         }
     }
@@ -409,11 +409,11 @@ class clientsite
     public function UpdateAllowedProjects($projectNames)
     {
         if (!$this->Id) {
-            add_log("ClientSite::UpdateAllowedProjects()", "Id not set");
+            add_log('ClientSite::UpdateAllowedProjects()', 'Id not set');
             return;
         }
 
-        pdo_query("DELETE FROM client_site2project WHERE siteid=" . qnum($this->Id));
+        pdo_query('DELETE FROM client_site2project WHERE siteid=' . qnum($this->Id));
         foreach ($projectNames as $projectName) {
             $projectid = 0;
             $projectName = pdo_real_escape_string($projectName);
@@ -421,17 +421,17 @@ class clientsite
 
             if (pdo_num_rows($project) > 0) {
                 $project_array = pdo_fetch_array($project);
-                $projectid = $project_array["id"];
+                $projectid = $project_array['id'];
             }
 
             if (!$projectid) {
-                add_log("ClientSite::UpdateAllowedProjects()", "Invalid project name given: $projectName");
+                add_log('ClientSite::UpdateAllowedProjects()', "Invalid project name given: $projectName");
                 continue;
             }
 
             $sql = "INSERT INTO client_site2project (siteid,projectid) VALUES ('" . $this->Id . "','" . $projectid . "')";
             pdo_query($sql);
-            add_last_sql_error("clientSite::UpdateAllowedProjects()");
+            add_last_sql_error('clientSite::UpdateAllowedProjects()');
         }
     }
 }

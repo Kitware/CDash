@@ -14,27 +14,27 @@
   Copyright (c) 2012 Volkan Gezer <volkangezer@gmail.com>
 =========================================================================*/
 
-include dirname(__DIR__) . "/config/config.php";
-require_once "include/pdo.php";
+include dirname(__DIR__) . '/config/config.php';
+require_once 'include/pdo.php';
 include 'public/login.php';
-include_once "include/common.php";
-include_once "models/project.php";
+include_once 'include/common.php';
+include_once 'models/project.php';
 
 if ($session_OK) {
-    $projectid = pdo_real_escape_numeric($_REQUEST["projectid"]);
+    $projectid = pdo_real_escape_numeric($_REQUEST['projectid']);
     checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid);
 
 // Checks
     if (!isset($projectid) || !is_numeric($projectid)) {
-        echo "Not a valid projectid!";
+        echo 'Not a valid projectid!';
         return;
     }
 
     $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
     if (pdo_num_rows($project) > 0) {
         $project_array = pdo_fetch_array($project);
-        $projectname = $project_array["name"];
-        $nightlytime = $project_array["nightlytime"];
+        $projectname = $project_array['name'];
+        $nightlytime = $project_array['nightlytime'];
     }
 
     $submit = $_POST['submit'];
@@ -46,7 +46,7 @@ if ($session_OK) {
     $name = $_POST['name'];
 
 // Start operation if it is submitted
-    if ($submit == "Save") {
+    if ($submit == 'Save') {
         if ($nameN) {
             pdo_query("INSERT INTO measurement (projectid,name,testpage,summarypage) VALUES ('$projectid','$nameN','$showTN','$showSN')"); // only write a new entry if new field is filled
         }
@@ -54,8 +54,8 @@ if ($session_OK) {
 
         if (count($_POST['name'])) {
             foreach ($name as $newName) { // everytime update all test attributes
-                $showT = $_POST["showT"];
-                $showS = $_POST["showS"];
+                $showT = $_POST['showT'];
+                $showS = $_POST['showS'];
                 if ($showT[$id[$i]] == '') {
                     $showT[$id[$i]] = 0;
                 }
@@ -75,56 +75,56 @@ if ($session_OK) {
     }
 
     $xml = begin_XML_for_XSLT();
-    $xml .= "<backurl>user.php</backurl>";
-    $xml .= "<title>CDash - " . $projectname . " Measurements</title>";
-    $xml .= "<menutitle>" . $projectname . "</menutitle>";
-    $xml .= "<menusubtitle>Measurements</menusubtitle>";
+    $xml .= '<backurl>user.php</backurl>';
+    $xml .= '<title>CDash - ' . $projectname . ' Measurements</title>';
+    $xml .= '<menutitle>' . $projectname . '</menutitle>';
+    $xml .= '<menusubtitle>Measurements</menusubtitle>';
 
     if ($projectid > 0) {
         $Project = new Project;
         $Project->Id = $projectid;
-        $xml .= "<project>";
-        $xml .= add_XML_value("id", $projectid);
-        $xml .= add_XML_value("name", $Project->GetName());
-        $xml .= add_XML_value("name_encoded", urlencode($Project->GetName()));
+        $xml .= '<project>';
+        $xml .= add_XML_value('id', $projectid);
+        $xml .= add_XML_value('name', $Project->GetName());
+        $xml .= add_XML_value('name_encoded', urlencode($Project->GetName()));
 
-        $xml .= "</project>";
+        $xml .= '</project>';
     }
 
 // Menu
-    $xml .= "<menu>";
+    $xml .= '<menu>';
 
-    $nightlytime = get_project_property($projectname, "nightlytime");
-    $xml .= add_XML_value("back", "index.php?project=" . urlencode($projectname) . "&date=" . get_dashboard_date_from_build_starttime($build_array["starttime"], $nightlytime));
+    $nightlytime = get_project_property($projectname, 'nightlytime');
+    $xml .= add_XML_value('back', 'index.php?project=' . urlencode($projectname) . '&date=' . get_dashboard_date_from_build_starttime($build_array['starttime'], $nightlytime));
 
-    $xml .= add_XML_value("noprevious", "1");
-    $xml .= add_XML_value("nonext", "1");
-    $xml .= "</menu>";
+    $xml .= add_XML_value('noprevious', '1');
+    $xml .= add_XML_value('nonext', '1');
+    $xml .= '</menu>';
     {
-        $xml .= "<user>";
+        $xml .= '<user>';
         $userid = $_SESSION['cdash']['loginid'];
-        $user = pdo_query("SELECT admin FROM " . qid("user") . " WHERE id='$userid'");
+        $user = pdo_query('SELECT admin FROM ' . qid('user') . " WHERE id='$userid'");
         $user_array = pdo_fetch_array($user);
-        $xml .= add_XML_value("id", $userid);
-        $xml .= add_XML_value("admin", $user_array["admin"]);
-        $xml .= "</user>";
+        $xml .= add_XML_value('id', $userid);
+        $xml .= add_XML_value('admin', $user_array['admin']);
+        $xml .= '</user>';
     }
 
 //get any measurements associated with this test
-    $xml .= "<measurements>";
+    $xml .= '<measurements>';
     $query = "SELECT id,name,testpage,summarypage FROM measurement WHERE projectid='$projectid' ORDER BY name ASC";
     $result = pdo_query($query);
     while ($row = pdo_fetch_array($result)) {
-        $xml .= "<measurement>";
-        $xml .= add_XML_value("id", $row["id"]);
-        $xml .= add_XML_value("name", $row["name"]);
-        $xml .= add_XML_value("showT", $row["testpage"]);
-        $xml .= add_XML_value("showS", $row["summarypage"]);
-        $xml .= "</measurement>";
+        $xml .= '<measurement>';
+        $xml .= add_XML_value('id', $row['id']);
+        $xml .= add_XML_value('name', $row['name']);
+        $xml .= add_XML_value('showT', $row['testpage']);
+        $xml .= add_XML_value('showS', $row['summarypage']);
+        $xml .= '</measurement>';
     }
-    $xml .= "</measurements>";
-    $xml .= "</cdash>";
+    $xml .= '</measurements>';
+    $xml .= '</cdash>';
 
 // Now doing the xslt transition
-    generate_XSLT($xml, "manageMeasurements");
+    generate_XSLT($xml, 'manageMeasurements');
 }

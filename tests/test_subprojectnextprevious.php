@@ -24,10 +24,10 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
         // underlying functionality ignores the subproject & finds the
         // most recently submitted build instead.
         $filesToSubmit =
-            array("Build_1.xml", "Configure_1.xml", "Notes_1.xml", "Test_1.xml",
-                "Build_2.xml", "Configure_2.xml", "Notes_2.xml", "Test_2.xml",
-                "Build_3.xml");
-        $dir = dirname(__FILE__) . "/data/SubProjectNextPrevious";
+            array('Build_1.xml', 'Configure_1.xml', 'Notes_1.xml', 'Test_1.xml',
+                'Build_2.xml', 'Configure_2.xml', 'Notes_2.xml', 'Test_2.xml',
+                'Build_3.xml');
+        $dir = dirname(__FILE__) . '/data/SubProjectNextPrevious';
         foreach ($filesToSubmit as $file) {
             if (!$this->submission('Trilinos', "$dir/$file")) {
                 $this->fail("Failed to submit $file");
@@ -60,10 +60,10 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
         // Verify the relevant pages have the correct links for
         // Previous, Next, and Current.
         $success = true;
-        $error_msg = "";
+        $error_msg = '';
 
-        $old_style_pages = array("buildSummary", "viewConfigure", "viewUpdate");
-        $new_style_pages = array("viewBuildError", "viewNotes");
+        $old_style_pages = array('buildSummary', 'viewConfigure', 'viewUpdate');
+        $new_style_pages = array('viewBuildError', 'viewNotes');
 
         foreach ($old_style_pages as $page) {
             $this->get($this->url . "/$page.php?buildid=" . $first_buildid);
@@ -256,7 +256,7 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
 
         // Make sure that a build is not displayed when it does not
         // contain any of the whitelisted SubProjects.
-        $this->get($this->url . "/api/v1/index.php?project=Trilinos&date=2011-07-23&filtercount=1&showfilters=1&field1=subprojects&compare1=93&value1=Teuchos");
+        $this->get($this->url . '/api/v1/index.php?project=Trilinos&date=2011-07-23&filtercount=1&showfilters=1&field1=subprojects&compare1=93&value1=Teuchos');
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $num_buildgroups = count($jsonobj['buildgroups']);
@@ -267,7 +267,7 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
 
         // Make sure that a build is not displayed when all of its
         // SubProjects have been blacklisted away.
-        $this->get($this->url . "/api/v1/index.php?project=Trilinos&date=2011-07-23&filtercount=1&showfilters=1&field1=subprojects&compare1=92&value1=Didasko");
+        $this->get($this->url . '/api/v1/index.php?project=Trilinos&date=2011-07-23&filtercount=1&showfilters=1&field1=subprojects&compare1=92&value1=Didasko');
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $num_buildgroups = count($jsonobj['buildgroups']);
@@ -278,7 +278,7 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
 
         // Make sure that the reported number of labels does not
         // change when an irrelevant blacklist criterion is added.
-        $this->get($this->url . "/api/v1/index.php?project=Trilinos&date=2011-07-23&filtercount=1&showfilters=1&field1=subprojects&compare1=92&value1=Teuchos");
+        $this->get($this->url . '/api/v1/index.php?project=Trilinos&date=2011-07-23&filtercount=1&showfilters=1&field1=subprojects&compare1=92&value1=Teuchos');
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $buildgroup = array_pop($jsonobj['buildgroups']);

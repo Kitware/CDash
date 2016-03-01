@@ -44,7 +44,7 @@ class CoverageHandler extends AbstractHandler
         if ($name == 'SITE') {
             $this->Site->Name = $attributes['NAME'];
             if (empty($this->Site->Name)) {
-                $this->Site->Name = "(empty)";
+                $this->Site->Name = '(empty)';
             }
             $this->Site->Insert();
 
@@ -62,7 +62,7 @@ class CoverageHandler extends AbstractHandler
             $this->Build->SiteId = $this->Site->Id;
             $this->Build->Name = $attributes['BUILDNAME'];
             if (empty($this->Build->Name)) {
-                $this->Build->Name = "(empty)";
+                $this->Build->Name = '(empty)';
             }
             $this->Build->SetStamp($attributes['BUILDSTAMP']);
             $this->Build->Generator = $attributes['GENERATOR'];
@@ -71,7 +71,7 @@ class CoverageHandler extends AbstractHandler
             $this->CoverageFile = new CoverageFile();
             $this->Coverage = new Coverage();
             $this->CoverageFile->FullPath = $attributes['FULLPATH'];
-            if ($attributes['COVERED'] == 1 || $attributes['COVERED'] == "true") {
+            if ($attributes['COVERED'] == 1 || $attributes['COVERED'] == 'true') {
                 $this->Coverage->Covered = 1;
             } else {
                 $this->Coverage->Covered = 0;

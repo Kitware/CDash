@@ -23,14 +23,14 @@ class BuildGroupPositionTestCase extends KWWebTestCase
 
         $buildgroupposition->GroupId = 0;
         if ($buildgroupposition->Exists()) {
-            $this->fail("Exists() should return false when GroupId is 0");
+            $this->fail('Exists() should return false when GroupId is 0');
             return 1;
         }
 
         $buildgroupposition->GroupId = 1;
         $buildgroupposition->Position = 1;
-        $buildgroupposition->StartTime = date("Y-m-d H:i:s", time() - 1);
-        $buildgroupposition->EndTime = date("Y-m-d H:i:s");
+        $buildgroupposition->StartTime = date('Y-m-d H:i:s', time() - 1);
+        $buildgroupposition->EndTime = date('Y-m-d H:i:s');
 
         //call save twice to cover different execution paths
         if (!$buildgroupposition->Add()) {
@@ -41,7 +41,7 @@ class BuildGroupPositionTestCase extends KWWebTestCase
             $this->fail("Add returned true when it should be false.\n");
             return 1;
         }
-        $this->pass("Passed");
+        $this->pass('Passed');
 
         $this->stopCodeCoverage();
         return 0;

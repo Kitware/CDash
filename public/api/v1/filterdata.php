@@ -14,12 +14,12 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include dirname(dirname(dirname(__DIR__))) . "/config/config.php";
-require_once "include/pdo.php";
-include_once "include/common.php";
-include_once "include/filterdataFunctions.php";
+include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
+require_once 'include/pdo.php';
+include_once 'include/common.php';
+include_once 'include/filterdataFunctions.php';
 
-$response = get_filterdata_array_from_request($_GET["page_id"]);
+$response = get_filterdata_array_from_request($_GET['page_id']);
 echo json_encode(cast_data_for_JSON($response));
 
 // Parse filter data from the request into an array.
@@ -39,8 +39,8 @@ function get_filterdata_array_from_request($page_id = '')
 
     $pageSpecificFilters = createPageSpecificFilters($page_id);
 
-    if (isset($_GET["value1"]) && strlen($_GET["value1"]) > 0) {
-        $filtercount = $_GET["filtercount"];
+    if (isset($_GET['value1']) && strlen($_GET['value1']) > 0) {
+        $filtercount = $_GET['filtercount'];
     } else {
         $filtercount = 0;
     }
@@ -79,7 +79,7 @@ function get_filterdata_array_from_request($page_id = '')
         $sql_combine = 'AND';
     }
 
-    $sql = "AND (";
+    $sql = 'AND (';
 
     // Check for filters passed in via the query string
     for ($i = 1; $i <= $filtercount; ++$i) {
@@ -137,7 +137,7 @@ function get_filterdata_array_from_request($page_id = '')
     if ($clauses == 0) {
         $sql = '';
     } else {
-        $sql .= ")";
+        $sql .= ')';
     }
 
     $filterdata['sql'] = $sql;

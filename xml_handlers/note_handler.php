@@ -40,7 +40,7 @@ class NoteHandler extends AbstractHandler
         if ($name == 'SITE') {
             $this->Site->Name = $attributes['NAME'];
             if (empty($this->Site->Name)) {
-                $this->Site->Name = "(empty)";
+                $this->Site->Name = '(empty)';
             }
             $this->Site->Insert();
 
@@ -58,7 +58,7 @@ class NoteHandler extends AbstractHandler
             $this->Build->SiteId = $this->Site->Id;
             $this->Build->Name = $attributes['BUILDNAME'];
             if (empty($this->Build->Name)) {
-                $this->Build->Name = "(empty)";
+                $this->Build->Name = '(empty)';
             }
             $this->Build->SetStamp($attributes['BUILDSTAMP']);
             $this->Build->Generator = $attributes['GENERATOR'];
@@ -97,7 +97,7 @@ class NoteHandler extends AbstractHandler
                 $this->Note->BuildId = $this->Build->Id;
                 $this->Note->Insert();
             } else {
-                add_log("Trying to add a note to a nonexistent build", "note_handler.php", LOG_ERR);
+                add_log('Trying to add a note to a nonexistent build', 'note_handler.php', LOG_ERR);
             }
         }
     }

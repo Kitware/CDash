@@ -34,7 +34,7 @@ class image
     private function GetData()
     {
         if (strlen($this->Filename) > 0) {
-            $h = fopen($this->Filename, "rb");
+            $h = fopen($this->Filename, 'rb');
             $this->Data = addslashes(fread($h, filesize($this->Filename)));
             fclose($h);
             unset($h);
@@ -68,32 +68,32 @@ class image
     /** Save the image */
     public function Save()
     {
-        include "config/config.php";
+        include 'config/config.php';
         // Get the data from the file if necessary
         $this->GetData();
 
         if (!$this->Exists()) {
-            $id = "";
-            $idvalue = "";
+            $id = '';
+            $idvalue = '';
             if ($this->Id) {
-                $id = "id,";
+                $id = 'id,';
                 $idvalue = "'" . $this->Id . "',";
             }
 
             $contents = $this->Data;
-            if ($CDASH_DB_TYPE == "pgsql") {
+            if ($CDASH_DB_TYPE == 'pgsql') {
                 $contents = pg_escape_bytea($this->Data);
             }
 
-            if (!pdo_query("INSERT INTO image (" . $id . "img,extension,checksum)
-                     VALUES (" . $idvalue . "'" . $contents . "','" . $this->Extension . "','" . $this->Checksum . "')")
+            if (!pdo_query('INSERT INTO image (' . $id . 'img,extension,checksum)
+                     VALUES (' . $idvalue . "'" . $contents . "','" . $this->Extension . "','" . $this->Checksum . "')")
             ) {
-                add_last_sql_error("Image::Save");
+                add_last_sql_error('Image::Save');
                 return false;
             }
 
             if (!$this->Id) {
-                $this->Id = pdo_insert_id("image");
+                $this->Id = pdo_insert_id('image');
             }
         }
         return true;

@@ -41,7 +41,7 @@ class UploadFileTestCase extends KWWebTestCase
     public function testSubmitUploadXML()
     {
         $this->deleteLog($this->logfilename);
-        $rep = dirname(__FILE__) . "/data/EmailProjectExample";
+        $rep = dirname(__FILE__) . '/data/EmailProjectExample';
         $file = "$rep/1_upload.xml";
         if (!$this->submission('EmailProjectExample', $file)) {
             return;
@@ -57,7 +57,7 @@ class UploadFileTestCase extends KWWebTestCase
     {
         $this->deleteLog($this->logfilename);
         //Verify file exists in the database
-        $query = $this->db->query("SELECT buildid, fileid FROM build2uploadfile");
+        $query = $this->db->query('SELECT buildid, fileid FROM build2uploadfile');
         if (count($query) == 0) {
             $this->fail('No build2upload records were added to the database');
             return;

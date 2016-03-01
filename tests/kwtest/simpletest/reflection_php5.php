@@ -322,7 +322,7 @@ class SimpleReflection
         $static = $method->isStatic() ? 'static ' : '';
         return "{$static}function $reference$name(" .
         implode(', ', $this->getParameterSignatures($method)) .
-        ")";
+        ')';
     }
 
     /**

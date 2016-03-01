@@ -27,7 +27,7 @@ class CompressedTestCase extends KWWebTestCase
             return;
         }
 
-        $file = dirname(__FILE__) . "/data/CompressedTest.xml";
+        $file = dirname(__FILE__) . '/data/CompressedTest.xml';
         if (!$this->submission('TestCompressionExample', $file)) {
             return;
         }
@@ -47,7 +47,7 @@ class CompressedTestCase extends KWWebTestCase
         $this->setField('robotregex', '^(?:(?:\w|\.)+)\s+((?:\w|\.|\@)+)^');
         $this->clickSubmitByName('Update');
 
-        $query = "SELECT robotname,authorregex FROM projectrobot WHERE projectid=" . $projectid;
+        $query = 'SELECT robotname,authorregex FROM projectrobot WHERE projectid=' . $projectid;
         $result = $this->db->query($query);
         if ($result[0]['robotname'] != 'itkrobot') {
             $this->fail('Robot name not set correctly got' . $result[0]['robotname'] . ' instead of itkrobot');
@@ -64,13 +64,13 @@ class CompressedTestCase extends KWWebTestCase
     public function testGITUpdate()
     {
         echo "4. testGITUpdate\n";
-        $file = dirname(__FILE__) . "/data/git-Update.xml";
+        $file = dirname(__FILE__) . '/data/git-Update.xml';
         if (!$this->submission('TestCompressionExample', $file)) {
             return;
         }
 
         // Find the buildid that has the updates we just submitted.
-        $this->get($this->url . "/api/v1/index.php?project=TestCompressionExample&date=2009-12-18");
+        $this->get($this->url . '/api/v1/index.php?project=TestCompressionExample&date=2009-12-18');
         $response = json_decode($this->getBrowser()->getContentAsText(), true);
         $buildid = -1;
         foreach ($response['buildgroups'] as $buildgroup) {

@@ -45,7 +45,7 @@ class BuildHandler extends AbstractHandler
         if ($name == 'SITE') {
             $this->Site->Name = $attributes['NAME'];
             if (empty($this->Site->Name)) {
-                $this->Site->Name = "(empty)";
+                $this->Site->Name = '(empty)';
             }
             $this->Site->Insert();
 
@@ -67,14 +67,14 @@ class BuildHandler extends AbstractHandler
             $this->Build->SiteId = $this->Site->Id;
             $this->Build->Name = $attributes['BUILDNAME'];
             if (empty($this->Build->Name)) {
-                $this->Build->Name = "(empty)";
+                $this->Build->Name = '(empty)';
             }
             $this->Build->SetStamp($attributes['BUILDSTAMP']);
             $this->Build->Generator = $attributes['GENERATOR'];
             $this->Build->Information = $buildInformation;
 
             if (array_key_exists('APPEND', $attributes)) {
-                if (strtolower($attributes['APPEND']) == "true") {
+                if (strtolower($attributes['APPEND']) == 'true') {
                     $this->Append = true;
                 }
             } else {
@@ -89,9 +89,9 @@ class BuildHandler extends AbstractHandler
         } elseif ($name == 'FAILURE') {
             $this->Error = new BuildFailure();
             $this->Error->Type = 0;
-            if ($attributes['TYPE'] == "Error") {
+            if ($attributes['TYPE'] == 'Error') {
                 $this->Error->Type = 0;
-            } elseif ($attributes['TYPE'] == "Warning") {
+            } elseif ($attributes['TYPE'] == 'Warning') {
                 $this->Error->Type = 1;
             }
         } elseif ($name == 'LABEL') {

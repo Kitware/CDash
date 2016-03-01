@@ -22,10 +22,10 @@ class NotesAPICase extends KWWebTestCase
         // This was 13 at the time this test was written, but things
         // like this have a habit of changing.
         $buildid_result = pdo_single_row_query(
-            "SELECT buildid, COUNT(1) FROM build2note
-       GROUP BY buildid HAVING COUNT(1) > 1 ORDER BY buildid LIMIT 1");
+            'SELECT buildid, COUNT(1) FROM build2note
+       GROUP BY buildid HAVING COUNT(1) > 1 ORDER BY buildid LIMIT 1');
         if (empty($buildid_result)) {
-            $this->fail("No build found with multiple notes");
+            $this->fail('No build found with multiple notes');
             return 1;
         }
         $buildid = $buildid_result['buildid'];
@@ -52,15 +52,15 @@ class NotesAPICase extends KWWebTestCase
             }
         }
         if ($driverFound === false) {
-            $this->fail("Expected to find a note named TrilinosDriverDashboard.cmake");
+            $this->fail('Expected to find a note named TrilinosDriverDashboard.cmake');
             return 1;
         }
         if ($cronFound === false) {
-            $this->fail("Expected to find a note named cron_driver.bat");
+            $this->fail('Expected to find a note named cron_driver.bat');
             return 1;
         }
 
-        $this->pass("Passed");
+        $this->pass('Passed');
         return 0;
     }
 }

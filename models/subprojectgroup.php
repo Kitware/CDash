@@ -30,7 +30,7 @@ class subprojectgroup
     {
         $this->Id = 0;
         $this->ProjectId = 0;
-        $this->Name = "";
+        $this->Name = '';
         $this->IsDefault = 0;
     }
 
@@ -51,13 +51,13 @@ class subprojectgroup
         $this->Id = $id;
 
         $row = pdo_single_row_query(
-            "SELECT name, projectid, coveragethreshold, is_default, starttime
+            'SELECT name, projectid, coveragethreshold, is_default, starttime
        FROM subprojectgroup
-       WHERE id=" . qnum($this->Id) . " AND endtime='1980-01-01 00:00:00'");
+       WHERE id=' . qnum($this->Id) . " AND endtime='1980-01-01 00:00:00'");
         if (empty($row)) {
             add_log(
                 "No subprojectgroup found with Id='$this->Id'",
-                "SubProjectGroup::SetId",
+                'SubProjectGroup::SetId',
                 LOG_WARNING);
             return false;
         }
@@ -81,7 +81,7 @@ class subprojectgroup
     {
         if (is_numeric($projectid)) {
             $this->ProjectId = $projectid;
-            if ($this->Name != "") {
+            if ($this->Name != '') {
                 $this->Fill();
             }
             return true;
@@ -97,12 +97,12 @@ class subprojectgroup
         }
 
         if ($this->Id < 1) {
-            echo "SubProjectGroup GetName(): Id not set";
+            echo 'SubProjectGroup GetName(): Id not set';
             return false;
         }
 
         $row = pdo_single_row_query(
-            "SELECT name FROM subprojectgroup WHERE id=" . qnum($this->Id));
+            'SELECT name FROM subprojectgroup WHERE id=' . qnum($this->Id));
 
         if (empty($row)) {
             return false;
@@ -156,18 +156,18 @@ class subprojectgroup
      **/
     public function Fill()
     {
-        if ($this->Name == "" || $this->ProjectId == 0) {
+        if ($this->Name == '' || $this->ProjectId == 0) {
             add_log(
                 "Name='" . $this->Name . "' or ProjectId='" . $this->ProjectId . "' not set",
-                "SubProjectGroup::Fill",
+                'SubProjectGroup::Fill',
                 LOG_WARNING);
             return false;
         }
 
         $row = pdo_single_row_query(
-            "SELECT id, coveragethreshold, is_default, starttime
+            'SELECT id, coveragethreshold, is_default, starttime
        FROM subprojectgroup
-       WHERE projectid=" . qnum($this->ProjectId) . "
+       WHERE projectid=' . qnum($this->ProjectId) . "
        AND name='$this->Name' AND endtime='1980-01-01 00:00:00'");
 
         if (empty($row)) {
@@ -190,9 +190,9 @@ class subprojectgroup
 
         // If there are no subprojects in this group we can safely remove it.
         $query = pdo_query(
-            "SELECT count(*) FROM subproject WHERE groupid=" . qnum($this->Id));
+            'SELECT count(*) FROM subproject WHERE groupid=' . qnum($this->Id));
         if (!$query) {
-            add_last_sql_error("SubProjectGroup Delete");
+            add_last_sql_error('SubProjectGroup Delete');
             return false;
         }
         $query_array = pdo_fetch_array($query);
@@ -201,14 +201,14 @@ class subprojectgroup
         }
 
         if (!$keephistory) {
-            pdo_query("DELETE FROM subprojectgroup WHERE id=" . qnum($this->Id));
+            pdo_query('DELETE FROM subprojectgroup WHERE id=' . qnum($this->Id));
         } else {
             $endtime = gmdate(FMT_DATETIME);
-            $query = "UPDATE subprojectgroup SET ";
+            $query = 'UPDATE subprojectgroup SET ';
             $query .= "endtime='" . $endtime . "'";
-            $query .= " WHERE id=" . qnum($this->Id) . "";
+            $query .= ' WHERE id=' . qnum($this->Id) . '';
             if (!pdo_query($query)) {
-                add_last_sql_error("SubProjectGroup Delete");
+                add_last_sql_error('SubProjectGroup Delete');
                 return false;
             }
         }
@@ -235,10 +235,10 @@ class subprojectgroup
     // Save this subproject group in the database.
     public function Save()
     {
-        if ($this->Name == "" || $this->ProjectId == 0) {
+        if ($this->Name == '' || $this->ProjectId == 0) {
             add_log(
                 "Name='" . $this->Name . "' or ProjectId='" . $this->ProjectId . "' not set",
-                "SubProjectGroup::Save",
+                'SubProjectGroup::Save',
                 LOG_WARNING);
             return false;
         }
@@ -247,8 +247,8 @@ class subprojectgroup
         // hasn't been set for this group.
         if (!isset($this->CoverageThreshold)) {
             $row = pdo_single_row_query(
-                "SELECT coveragethreshold FROM project
-         WHERE id=" . qnum($this->ProjectId));
+                'SELECT coveragethreshold FROM project
+         WHERE id=' . qnum($this->ProjectId));
             if (empty($row)) {
                 return false;
             }
@@ -258,10 +258,10 @@ class subprojectgroup
         // Force is_default=1 if this will be the first subproject group
         // for this project.
         $query = pdo_query(
-            "SELECT COUNT(*) FROM subprojectgroup
-       WHERE projectid=" . qnum($this->ProjectId));
+            'SELECT COUNT(*) FROM subprojectgroup
+       WHERE projectid=' . qnum($this->ProjectId));
         if (!$query) {
-            add_last_sql_error("SubProjectGroup::Save Count");
+            add_last_sql_error('SubProjectGroup::Save Count');
             return false;
         }
         $query_array = pdo_fetch_array($query);
@@ -277,21 +277,21 @@ class subprojectgroup
             // Update the group
             $query = "UPDATE subprojectgroup SET
         name='$this->Name',
-        projectid=" . qnum($this->ProjectId) . ",
-        is_default=" . qnum($this->IsDefault) . ",
-        coveragethreshold=" . qnum($this->CoverageThreshold) . "
-        WHERE id=" . qnum($this->Id);
+        projectid=" . qnum($this->ProjectId) . ',
+        is_default=' . qnum($this->IsDefault) . ',
+        coveragethreshold=' . qnum($this->CoverageThreshold) . '
+        WHERE id=' . qnum($this->Id);
             if (!pdo_query($query)) {
-                add_last_sql_error("SubProjectGroup::Save Update");
+                add_last_sql_error('SubProjectGroup::Save Update');
                 return false;
             }
         } else {
             // insert the subproject
 
-            $id = "";
-            $idvalue = "";
+            $id = '';
+            $idvalue = '';
             if ($this->Id) {
-                $id = "id,";
+                $id = 'id,';
                 $idvalue = "'" . $this->Id . "',";
             }
 
@@ -304,7 +304,7 @@ class subprojectgroup
          AND projectid=" . qnum($this->ProjectId) . "
          AND endtime='1980-01-01 00:00:00'");
             if (!$query) {
-                add_last_sql_error("SubProjectGroup::Save Select");
+                add_last_sql_error('SubProjectGroup::Save Select');
                 return false;
             }
             if (pdo_num_rows($query) > 0) {
@@ -314,31 +314,31 @@ class subprojectgroup
             }
 
             $starttime = gmdate(FMT_DATETIME);
-            $endtime = "1980-01-01 00:00:00";
+            $endtime = '1980-01-01 00:00:00';
             $query =
-                "INSERT INTO subprojectgroup(" . $id . "name,projectid,is_default,
+                'INSERT INTO subprojectgroup(' . $id . 'name,projectid,is_default,
                                      coveragethreshold,starttime,endtime)
-         VALUES (" . $idvalue . "'$this->Name'," . qnum($this->ProjectId) . "," .
-                qnum($this->IsDefault) . "," . qnum($this->CoverageThreshold) . ",
+         VALUES (' . $idvalue . "'$this->Name'," . qnum($this->ProjectId) . ',' .
+                qnum($this->IsDefault) . ',' . qnum($this->CoverageThreshold) . ",
                  '$starttime','$endtime')";
 
             if (!pdo_query($query)) {
-                add_last_sql_error("SubProjectGroup::Save Insert");
+                add_last_sql_error('SubProjectGroup::Save Insert');
                 return false;
             }
 
             if ($this->Id < 1) {
-                $this->Id = pdo_insert_id("subprojectgroup");
+                $this->Id = pdo_insert_id('subprojectgroup');
             }
         }
 
         // Make sure there's only one default group per project.
         if ($this->IsDefault) {
             $query =
-                "UPDATE subprojectgroup SET is_default=0
-         WHERE projectid=" . qnum($this->ProjectId) . " AND id!=" . qnum($this->Id);
+                'UPDATE subprojectgroup SET is_default=0
+         WHERE projectid=' . qnum($this->ProjectId) . ' AND id!=' . qnum($this->Id);
             if (!pdo_query($query)) {
-                add_last_sql_error("SubProjectGroup Update Default");
+                add_last_sql_error('SubProjectGroup Update Default');
                 return false;
             }
         }
