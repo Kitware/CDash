@@ -199,9 +199,13 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
     {
         if ($coverage['loctested'] != $expected_loctested) {
             $this->fail("Expected $name loctested to be $expected_loctested, found " . $coverage['loctested']);
+            return false;
         }
         if ($coverage['locuntested'] != $expected_locuntested) {
             $this->fail("Expected $name locuntested to be $expected_locuntested, found " . $coverage['locuntested']);
+            return false;
         }
+
+        return true;
     }
 }

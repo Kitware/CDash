@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="release_coverage"
+	BuildStamp="20160216-0100-Nightly"
+	Name="localhost"
+	Generator="ctest-3.5.20160210-g06204"
+	CompilerName=""
+	CompilerVersion=""
+	OSName="Linux"
+	Hostname="elysium"
+	OSRelease="3.13.0-77-generic"
+	OSVersion="#121-Ubuntu SMP Wed Jan 20 10:50:42 UTC 2016"
+	OSPlatform="x86_64"
+	Is64Bits="1"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="45"
+	ProcessorCacheSize="12288"
+	NumberOfLogicalCPU="12"
+	NumberOfPhysicalCPU="1"
+	TotalVirtualMemory="32690"
+	TotalPhysicalMemory="32100"
+	LogicalProcessorsPerPhysical="12"
+	ProcessorClockFrequency="1200"
+	>
+	<CoverageLog>
+		<StartDateTime>Feb 16 11:06 EST</StartDateTime>
+		<StartTime>1455638789</StartTime>
+		<File Name="bar.cxx" FullPath="./bar.cxx">
+			<Report>
+				<Line Number="0" Count="-1">#include &lt;cstring&gt;</Line>
+				<Line Number="1" Count="-1">#include &lt;iostream&gt;</Line>
+				<Line Number="2" Count="-1">int main(int argc, char *argv[])</Line>
+				<Line Number="3" Count="-1">{</Line>
+				<Line Number="4" Count="1">  if (strcmp(argv[1], "debug") == 0) {</Line>
+				<Line Number="5" Count="0">    std::cout &lt;&lt; "This bar line gets covered by debug builds" &lt;&lt; std::endl;</Line>
+				<Line Number="6" Count="0">  } else {</Line>
+				<Line Number="7" Count="1">    std::cout &lt;&lt; "This bar line gets covered by release builds" &lt;&lt; std::endl;</Line>
+				<Line Number="8" Count="-1">  }</Line>
+				<Line Number="9" Count="1">  if (strcmp(argv[1], "neither") == 0) {</Line>
+				<Line Number="10" Count="0">    std::cout &lt;&lt; "This bar line doesn't get covered in general" &lt;&lt; std::endl;</Line>
+				<Line Number="11" Count="0">  }</Line>
+				<Line Number="12" Count="1">  return 0;</Line>
+				<Line Number="13" Count="-1">}</Line>
+			</Report>
+		</File>
+		<File Name="baz.cxx" FullPath="./baz.cxx">
+			<Report>
+				<Line Number="0" Count="-1">#include &lt;cstring&gt;</Line>
+				<Line Number="1" Count="-1">#include &lt;iostream&gt;</Line>
+				<Line Number="2" Count="-1">int main(int argc, char *argv[])</Line>
+				<Line Number="3" Count="-1">{</Line>
+				<Line Number="4" Count="1">  if (strcmp(argv[1], "debug") == 0) {</Line>
+				<Line Number="5" Count="0">    std::cout &lt;&lt; "This baz line gets covered by debug builds" &lt;&lt; std::endl;</Line>
+				<Line Number="6" Count="0">  } else {</Line>
+				<Line Number="7" Count="1">    std::cout &lt;&lt; "This baz line gets covered by release builds" &lt;&lt; std::endl;</Line>
+				<Line Number="8" Count="-1">  }</Line>
+				<Line Number="9" Count="1">  if (strcmp(argv[1], "neither") == 0) {</Line>
+				<Line Number="10" Count="0">    std::cout &lt;&lt; "This baz line doesn't get covered in general" &lt;&lt; std::endl;</Line>
+				<Line Number="11" Count="0">  }</Line>
+				<Line Number="12" Count="1">  return 0;</Line>
+				<Line Number="13" Count="-1">}</Line>
+			</Report>
+		</File>
+		<File Name="diff.cxx" FullPath="./diff.cxx">
+			<Report>
+				<Line Number="0" Count="-1">#include &lt;cstring&gt;</Line>
+				<Line Number="1" Count="-1">#include &lt;iostream&gt;</Line>
+				<Line Number="2" Count="-1">int main(int argc, char *argv[])</Line>
+				<Line Number="3" Count="-1">{</Line>
+				<Line Number="4" Count="1">  std::cout &lt;&lt; "This is the release case" &lt;&lt; std::endl;</Line>
+				<Line Number="5" Count="1">  if (strcmp(argv[1], "debug") == 0) {</Line>
+				<Line Number="6" Count="0">    std::cout &lt;&lt; "This line does not get covered" &lt;&lt; std::endl;</Line>
+				<Line Number="7" Count="0">  }</Line>
+				<Line Number="8" Count="1">  return 0;</Line>
+				<Line Number="9" Count="-1">}</Line>
+			</Report>
+		</File>
+		<File Name="foo.cxx" FullPath="./foo.cxx">
+			<Report>
+				<Line Number="0" Count="-1">#include &lt;cstring&gt;</Line>
+				<Line Number="1" Count="-1">#include &lt;iostream&gt;</Line>
+				<Line Number="2" Count="-1">int main(int argc, char *argv[])</Line>
+				<Line Number="3" Count="-1">{</Line>
+				<Line Number="4" Count="1">  if (strcmp(argv[1], "debug") == 0) {</Line>
+				<Line Number="5" Count="0">    std::cout &lt;&lt; "This foo line gets covered by debug builds" &lt;&lt; std::endl;</Line>
+				<Line Number="6" Count="0">  } else {</Line>
+				<Line Number="7" Count="1">    std::cout &lt;&lt; "This foo line gets covered by release builds" &lt;&lt; std::endl;</Line>
+				<Line Number="8" Count="-1">  }</Line>
+				<Line Number="9" Count="1">  if (strcmp(argv[1], "neither") == 0) {</Line>
+				<Line Number="10" Count="0">    std::cout &lt;&lt; "This foo line doesn't get covered in general" &lt;&lt; std::endl;</Line>
+				<Line Number="11" Count="0">  }</Line>
+				<Line Number="12" Count="1">  return 0;</Line>
+				<Line Number="13" Count="-1">}</Line>
+			</Report>
+		</File>
+		<EndDateTime>Feb 16 11:06 EST</EndDateTime>
+		<EndTime>1455638789</EndTime>
+	</CoverageLog>
+</Site>

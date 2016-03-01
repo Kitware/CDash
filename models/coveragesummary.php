@@ -109,8 +109,11 @@ class coveragesummary
 
                 if ($fileid === -1) {
                     // Check if this file already exists in the database.
-                    $coveragefile = pdo_query("SELECT id FROM coveragefile
-                            WHERE fullpath='$fullpath'");
+                    // This could happen if CoverageLog.xml was parsed before Coverage.xml.
+                    $coveragefile = pdo_query(
+                    "SELECT id FROM coveragefile AS cf
+                    INNSER JOIN coveragefilelog AS cfl ON (cfl.fileid=cf.id)
+                    WHERE cf.fullpath='$fullpath' AND cfl.buildid='$this->BuildId'");
                     if (pdo_num_rows($coveragefile) == 0) {
                         // Create an empty file if doesn't exist.
                         pdo_query("INSERT INTO coveragefile (fullpath) VALUES ('$fullpath')");
@@ -304,7 +307,6 @@ class coveragesummary
                 pdo_commit();
             }
         }
-
         return true;
     }   // Insert()
 

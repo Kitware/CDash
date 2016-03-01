@@ -280,7 +280,7 @@ class build
         }
 
         $query = pdo_query(
-                "SELECT projectid,starttime,siteid,name,type,parentid,done
+                "SELECT projectid,starttime,siteid,name,stamp,type,parentid,done
                 FROM build WHERE id=".qnum($buildid));
 
         if (!$query) {
@@ -290,6 +290,7 @@ class build
 
         $build_array = pdo_fetch_array($query);
         $this->Name = $build_array['name'];
+        $this->SetStamp($build_array['stamp']);
         $this->Type = $build_array['type'];
         $this->StartTime = $build_array['starttime'];
         $this->SiteId = $build_array['siteid'];

@@ -20,6 +20,7 @@ require_once("include/pdo.php");
 include('public/login.php');
 include_once("include/common.php");
 include("include/version.php");
+require_once("models/coveragefile.php");
 require_once("models/coveragefilelog.php");
 
 @$buildid = $_GET["buildid"];
@@ -98,33 +99,16 @@ $xml .= add_XML_value("buildid", $build_array["id"]);
 $xml .= add_XML_value("buildtime", $build_array["starttime"]);
 $xml .= "</build>";
 
-// coverage
-$coveragefile_array = pdo_fetch_array(pdo_query("SELECT fullpath,file FROM coveragefile WHERE id='$fileid'"));
+// Load coverage file.
+$coverageFile = new CoverageFile();
+$coverageFile->Id = $fileid;
+$coverageFile->Load();
 
 $xml .= "<coverage>";
-$xml .= add_XML_value("fullpath", $coveragefile_array["fullpath"]);
-
-if ($CDASH_USE_COMPRESSION) {
-    if ($CDASH_DB_TYPE == "pgsql") {
-        if (is_resource($coveragefile_array["file"])) {
-            $file = base64_decode(stream_get_contents($coveragefile_array["file"]));
-        } else {
-            $file = base64_decode($coveragefile_array["file"]);
-        }
-    } else {
-        $file = $coveragefile_array["file"];
-    }
-
-    @$uncompressedrow = gzuncompress($file);
-    if ($uncompressedrow !== false) {
-        $file = $uncompressedrow;
-    }
-} else {
-    $file = $coveragefile_array["file"];
-}
+$xml .= add_XML_value("fullpath", $coverageFile->FullPath);
 
 // Generating the html file
-$file_array = explode("<br>", $file);
+$file_array = explode("<br>", $coverageFile->File);
 $i = 0;
 
 // Load the coverage info.

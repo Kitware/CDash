@@ -1073,7 +1073,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
         }
         $build_response['submitdate'] = date(FMT_DATETIMEDISPLAY, $submittimestamp);
 
-        $buildgroups_response[$i]['builds'][] = $build_response;
+        if ($build_array['name'] != 'Aggregate Coverage') {
+            $buildgroups_response[$i]['builds'][] = $build_response;
+        }
 
         // Coverage
         //
