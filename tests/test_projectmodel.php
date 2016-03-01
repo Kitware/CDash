@@ -3,7 +3,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__).'/cdash_test_case.php');
+require_once(dirname(__FILE__) . '/cdash_test_case.php');
 
 require_once('include/common.php');
 require_once('include/pdo.php');
@@ -41,21 +41,20 @@ class ProjectModelTestCase extends KWWebTestCase
             return 1;
         }
 
-    //Cover empty contents case
-    $project->AddLogo('', '');
+        //Cover empty contents case
+        $project->AddLogo('', '');
         $project->Id = "2";
         $contents1 = file_get_contents('data/smile.gif', true);
         $contents2 = file_get_contents('data/smile2.gif', true);
 
-    //Cover all execution paths
-    $project->AddLogo($contents1, 'gif');
+        //Cover all execution paths
+        $project->AddLogo($contents1, 'gif');
         $project->AddLogo($contents2, 'gif');
         $project->AddLogo($contents1, 'gif');
 
         @$project->SendEmailToAdmin('foo', 'hello world');
 
         $this->stopCodeCoverage();
-
         return 0;
     }
 }

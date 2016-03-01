@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once(dirname(dirname(__DIR__))."/config/config.php");
+require_once(dirname(dirname(__DIR__)) . "/config/config.php");
 require_once("include/pdo.php");
 require_once("include/common.php");
 
@@ -45,47 +45,48 @@ pdo_select_db("$CDASH_DB_NAME", $db);
 if ($AddNote) {
     $TextNote = htmlspecialchars(pdo_real_escape_string($_POST["TextNote"]));
     $Status = pdo_real_escape_numeric($_POST["Status"]);
-    if (strlen($TextNote)>0) {
+    if (strlen($TextNote) > 0) {
         $now = gmdate(FMT_DATETIME);
         pdo_query("INSERT INTO buildnote (buildid,userid,note,timestamp,status)
                    VALUES ('$buildid','$userid','$TextNote','$now','$Status')");
     }
-    $url = "../buildSummary.php?buildid=".$buildid."&message=noteaddded";
-    header("location: ".$url);
+    $url = "../buildSummary.php?buildid=" . $buildid . "&message=noteaddded";
+    header("location: " . $url);
 }
-?><head>
-<style type="text/css">
-  .submitLink {
-   color: #00f;
-   background-color: transparent;
-   text-decoration: underline;
-   border: none;
-   cursor: pointer;
-   cursor: hand;
-  }
-</style>
+?>
+<head>
+    <style type="text/css">
+        .submitLink {
+            color: #00f;
+            background-color: transparent;
+            text-decoration: underline;
+            border: none;
+            cursor: pointer;
+            cursor: hand;
+        }
+    </style>
 </head>
 
 
-<form method="post" action="ajax/addnote.php?buildid=<?php echo $buildid?>&userid=<?php echo $userid; ?>">
- <table>
- <tr>
- <td><b>Note:</b></td>
- <td> <textarea name="TextNote" cols="50" rows="5"></textarea></td>
- </tr>
- <tr>
- <td><b>Status:</b></td>
- <td><select name="Status">
-  <option value="0">Simple Note</option>
-  <option value="1">Fix in progress</option>
-  <option value="2">Fixed</option>
- </select></td>
- </tr>
- <tr>
- <td></td>
- <td> <input name="AddNote" type="submit" value="Add Note"></td>
- </tr>
- </table>
+<form method="post" action="ajax/addnote.php?buildid=<?php echo $buildid ?>&userid=<?php echo $userid; ?>">
+    <table>
+        <tr>
+            <td><b>Note:</b></td>
+            <td><textarea name="TextNote" cols="50" rows="5"></textarea></td>
+        </tr>
+        <tr>
+            <td><b>Status:</b></td>
+            <td><select name="Status">
+                    <option value="0">Simple Note</option>
+                    <option value="1">Fix in progress</option>
+                    <option value="2">Fixed</option>
+                </select></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input name="AddNote" type="submit" value="Add Note"></td>
+        </tr>
+    </table>
 
 
- </form>
+</form>

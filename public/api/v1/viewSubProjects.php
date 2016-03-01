@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include(dirname(dirname(dirname(__DIR__)))."/config/config.php");
+include(dirname(dirname(dirname(__DIR__))) . "/config/config.php");
 require_once("include/pdo.php");
 include("include/common.php");
 require_once("models/project.php");
@@ -41,7 +41,7 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
 {
     $start = microtime_float();
     $noforcelogin = 1;
-    include_once(dirname(dirname(dirname(__DIR__)))."/config/config.php");
+    include_once(dirname(dirname(dirname(__DIR__))) . "/config/config.php");
     require_once("include/pdo.php");
     include('public/login.php');
     include_once("models/banner.php");
@@ -123,19 +123,19 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
 
     if (empty($Project->HomeUrl)) {
         $response['home'] =
-      "index.php?project=".urlencode($Project->Name);
+            "index.php?project=" . urlencode($Project->Name);
     } else {
         $response['home'] = $homeurl;
     }
 
     if ($CDASH_USE_LOCAL_DIRECTORY && file_exists("local/models/proProject.php")) {
         include_once("local/models/proProject.php");
-        $pro= new proProject;
-        $pro->ProjectId=$projectid;
+        $pro = new proProject;
+        $pro->ProjectId = $projectid;
         $response['proedition'] = $pro->GetEdition(1);
     }
 
-    if ($currentstarttime>time()) {
+    if ($currentstarttime > time()) {
         $response['future'] = 1;
     } else {
         $response['future'] = 0;
@@ -147,8 +147,8 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
     }
     $response['linkparams'] = $linkparams;
 
-  // Menu definition
-  $menu_response = array();
+    // Menu definition
+    $menu_response = array();
     $menu_response['subprojects'] = 1;
     $menu_response['previous'] = "viewSubProjects.php?project=$projectname_encoded&date=$previousdate";
     $menu_response['current'] = "viewSubProjects.php?project=$projectname_encoded";
@@ -160,50 +160,50 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
     $response['menu'] = $menu_response;
 
     $beginning_timestamp = $currentstarttime;
-    $end_timestamp = $currentstarttime+3600*24;
+    $end_timestamp = $currentstarttime + 3600 * 24;
 
     $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
     $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
 
-  // User
-  if (isset($_SESSION['cdash'])) {
-      $user_response = array();
-      $userid = $_SESSION['cdash']['loginid'];
-      $user2project = pdo_query("SELECT role FROM user2project WHERE userid='$userid' and projectid='$projectid'");
-      $user2project_array = pdo_fetch_array($user2project);
-      $user = pdo_query("SELECT admin FROM ".qid("user")."  WHERE id='$userid'");
-      $user_array = pdo_fetch_array($user);
-      $user_response['id'] = $userid;
-      $response['userid'] = $userid;
-      $isadmin=0;
-      if ($user2project_array["role"]>1 || $user_array["admin"]) {
-          $isadmin=1;
-      }
-      $user_response['admin'] = $isadmin;
-      $user_response['projectrole'] = $user2project_array['role'];
-      $response['user'] = $user_response;
-  }
+    // User
+    if (isset($_SESSION['cdash'])) {
+        $user_response = array();
+        $userid = $_SESSION['cdash']['loginid'];
+        $user2project = pdo_query("SELECT role FROM user2project WHERE userid='$userid' and projectid='$projectid'");
+        $user2project_array = pdo_fetch_array($user2project);
+        $user = pdo_query("SELECT admin FROM " . qid("user") . "  WHERE id='$userid'");
+        $user_array = pdo_fetch_array($user);
+        $user_response['id'] = $userid;
+        $response['userid'] = $userid;
+        $isadmin = 0;
+        if ($user2project_array["role"] > 1 || $user_array["admin"]) {
+            $isadmin = 1;
+        }
+        $user_response['admin'] = $isadmin;
+        $user_response['projectrole'] = $user2project_array['role'];
+        $response['user'] = $user_response;
+    }
 
-  // Get some information about the project
-  $project_response = array();
+    // Get some information about the project
+    $project_response = array();
     $project_response['nbuilderror'] =
-    $Project->GetNumberOfErrorBuilds($beginning_UTCDate, $end_UTCDate, true);
+        $Project->GetNumberOfErrorBuilds($beginning_UTCDate, $end_UTCDate, true);
     $project_response['nbuildwarning'] =
-    $Project->GetNumberOfWarningBuilds($beginning_UTCDate, $end_UTCDate, true);
+        $Project->GetNumberOfWarningBuilds($beginning_UTCDate, $end_UTCDate, true);
     $project_response['nbuildpass'] =
-    $Project->GetNumberOfPassingBuilds($beginning_UTCDate, $end_UTCDate, true);
+        $Project->GetNumberOfPassingBuilds($beginning_UTCDate, $end_UTCDate, true);
     $project_response['nconfigureerror'] =
-    $Project->GetNumberOfErrorConfigures($beginning_UTCDate, $end_UTCDate, true);
+        $Project->GetNumberOfErrorConfigures($beginning_UTCDate, $end_UTCDate, true);
     $project_response['nconfigurewarning'] =
-    $Project->GetNumberOfWarningConfigures($beginning_UTCDate, $end_UTCDate, true);
+        $Project->GetNumberOfWarningConfigures($beginning_UTCDate, $end_UTCDate, true);
     $project_response['nconfigurepass'] =
-    $Project->GetNumberOfPassingConfigures($beginning_UTCDate, $end_UTCDate, true);
+        $Project->GetNumberOfPassingConfigures($beginning_UTCDate, $end_UTCDate, true);
     $project_response['ntestpass'] =
-    $Project->GetNumberOfPassingTests($beginning_UTCDate, $end_UTCDate, true);
+        $Project->GetNumberOfPassingTests($beginning_UTCDate, $end_UTCDate, true);
     $project_response['ntestfail'] =
-    $Project->GetNumberOfFailingTests($beginning_UTCDate, $end_UTCDate, true);
+        $Project->GetNumberOfFailingTests($beginning_UTCDate, $end_UTCDate, true);
     $project_response['ntestnotrun'] =
-    $Project->GetNumberOfNotRunTests($beginning_UTCDate, $end_UTCDate, true);
+        $Project->GetNumberOfNotRunTests($beginning_UTCDate, $end_UTCDate, true);
     if (strlen($Project->GetLastSubmission()) == 0) {
         $project_response['lastsubmission'] = "NA";
     } else {
@@ -211,14 +211,14 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
     }
     $response['project'] = $project_response;
 
-  // Look for the subproject
-  $row=0;
+    // Look for the subproject
+    $row = 0;
     $subprojectids = $Project->GetSubProjects();
     $subprojProp = array();
     foreach ($subprojectids as $subprojectid) {
         $SubProject = new SubProject();
         $SubProject->SetId($subprojectid);
-        $subprojProp[$subprojectid] = array('name'=>$SubProject->GetName());
+        $subprojProp[$subprojectid] = array('name' => $SubProject->GetName());
     }
     $testSubProj = new SubProject();
     $result = $testSubProj->GetNumberOfErrorBuilds($beginning_UTCDate, $end_UTCDate, true);
@@ -276,8 +276,8 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
         }
     }
     $reportArray = array('nbuilderror', 'nbuildwarning', 'nbuildpass',
-                       'nconfigureerror', 'nconfigurewarning', 'nconfigurepass',
-                       'ntestpass', 'ntestfail', 'ntestnotrun');
+        'nconfigureerror', 'nconfigurewarning', 'nconfigurepass',
+        'ntestpass', 'ntestfail', 'ntestnotrun');
     $subprojects_response = array();
     foreach ($subprojectids as $subprojectid) {
         $SubProject = new SubProject();
@@ -288,7 +288,7 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
 
         foreach ($reportArray as $reportnum) {
             $reportval = array_key_exists($reportnum, $subprojProp[$subprojectid]) ?
-                   $subprojProp[$subprojectid][$reportnum] : 0;
+                $subprojProp[$subprojectid][$reportnum] : 0;
             $subproject_response[$reportnum] = $reportval;
         }
         if (strlen($SubProject->GetLastSubmission()) == 0) {
@@ -297,11 +297,11 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
             $subproject_response['lastsubmission'] = $SubProject->GetLastSubmission();
         }
         $subprojects_response[] = $subproject_response;
-    } // end for each subproject
-  $response['subprojects'] = $subprojects_response;
+    }
+    $response['subprojects'] = $subprojects_response;
 
     $end = microtime_float();
-    $response['generationtime'] = round($end-$start, 3);
+    $response['generationtime'] = round($end - $start, 3);
 
     echo json_encode(cast_data_for_JSON($response));
 }

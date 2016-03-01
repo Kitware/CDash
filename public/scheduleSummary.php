@@ -47,8 +47,8 @@ $xml .= add_XML_value("title", "CDash - Scheduled Build Submissions");
 $xml .= add_XML_value("menutitle", "CDash");
 $xml .= add_XML_value("menusubtitle", "Submitted Builds");
 
-$xml .= "<hostname>".$_SERVER['SERVER_NAME']."</hostname>";
-$xml .= "<date>".date("r")."</date>";
+$xml .= "<hostname>" . $_SERVER['SERVER_NAME'] . "</hostname>";
+$xml .= "<date>" . date("r") . "</date>";
 $xml .= "<backurl>user.php</backurl>";
 
 $builds = $ClientJobSchedule->GetAssociatedBuilds();
@@ -60,26 +60,26 @@ foreach ($builds as $buildid) {
 
 $status = $ClientJobSchedule->GetStatus();
 switch ($status) {
-  case CDASH_JOB_SCHEDULED:
-    $statusText = "Scheduled";
-    break;
-  case CDASH_JOB_RUNNING:
-    $statusText = "Running";
-    break;
-  case CDASH_JOB_FINISHED:
-    $statusText = "Finished";
-    break;
-  case CDASH_JOB_FAILED:
-    $statusText = "Failed";
-    break;
-  case CDASH_JOB_ABORTED:
-    $statusText = "Aborted";
-    break;
-  default:
-    $statusText = "Unknown";
-    break;
-  }
-$xml .= '<status>'.$statusText.'</status>';
+    case CDASH_JOB_SCHEDULED:
+        $statusText = "Scheduled";
+        break;
+    case CDASH_JOB_RUNNING:
+        $statusText = "Running";
+        break;
+    case CDASH_JOB_FINISHED:
+        $statusText = "Finished";
+        break;
+    case CDASH_JOB_FAILED:
+        $statusText = "Failed";
+        break;
+    case CDASH_JOB_ABORTED:
+        $statusText = "Aborted";
+        break;
+    default:
+        $statusText = "Unknown";
+        break;
+}
+$xml .= '<status>' . $statusText . '</status>';
 
 $xml .= "</cdash>";
 generate_XSLT($xml, "scheduleSummary", true);

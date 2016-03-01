@@ -16,12 +16,12 @@
 
 require_once(dirname(dirname(__FILE__)) . '/config.test.php');
 require_once(dirname(dirname(dirname(__FILE__))) . '/include/pdocore.php');
-/**
-  *    db object to allow the user to interact with
-  *    a database
-  *    @package KWSimpletest
-  */
 
+/**
+ *    db object to allow the user to interact with
+ *    a database
+ * @package KWSimpletest
+ */
 class database
 {
     public $dbo = null;
@@ -30,26 +30,26 @@ class database
     public function __construct($type)
     {
         switch ($type) {
-      case "mysql":
-        $this->dbo = new dbo_mysql();
-        $this->type = "mysql";
-        break;
+            case "mysql":
+                $this->dbo = new dbo_mysql();
+                $this->type = "mysql";
+                break;
 
-      case "pgsql":
-        $this->dbo = new dbo_pgsql();
-        $this->type = "pgsql";
-        break;
+            case "pgsql":
+                $this->dbo = new dbo_pgsql();
+                $this->type = "pgsql";
+                break;
 
-      default:
-        $status = "database type unsupported.\n";
+            default:
+                $status = "database type unsupported.\n";
 
-        trigger_error(
-          __FILE__ . ": $status",
-          E_USER_ERROR);
+                trigger_error(
+                    __FILE__ . ": $status",
+                    E_USER_ERROR);
 
-        exit($status);
-        break;
-      }
+                exit($status);
+                break;
+        }
     }
 
     public function getType()
@@ -127,11 +127,11 @@ class database
 
 class dbo
 {
-    public $host      = null;
-    public $port      = null;
-    public $user      = null;
-    public $password  = null;
-    public $db        = null;
+    public $host = null;
+    public $port = null;
+    public $user = null;
+    public $password = null;
+    public $db = null;
     public $dbconnect = null;
 
     public function getDbConnect()
@@ -171,7 +171,7 @@ class dbo_mysql extends dbo
     {
         $host = $this->host;
         if (!empty($this->port)) {
-            $host .= ':'.$this->port;
+            $host .= ':' . $this->port;
         }
         pdo_connect($host, $this->user, $this->password);
     }
@@ -183,7 +183,7 @@ class dbo_mysql extends dbo
 
     public function create($db)
     {
-        $dbh = new PDO('mysql:host='.$this->host, $this->user, $this->password);
+        $dbh = new PDO('mysql:host=' . $this->host, $this->user, $this->password);
         if (!$dbh->query("CREATE DATABASE IF NOT EXISTS $db")) {
             $this->disconnect();
             return false;
@@ -194,7 +194,7 @@ class dbo_mysql extends dbo
 
     public function drop($db)
     {
-        $dbh = new PDO('mysql:host='.$this->host, $this->user, $this->password);
+        $dbh = new PDO('mysql:host=' . $this->host, $this->user, $this->password);
         if (!$dbh->query("DROP DATABASE IF EXISTS $db")) {
             $this->disconnect();
             return false;
@@ -245,8 +245,8 @@ class dbo_mysql extends dbo
                     $query = "";
                 }
             }
-        } // end for each line
-        pdo_query("INSERT INTO user VALUES (1, 'simpletest@localhost', '".md5('simpletest')."', 'administrator', '','Kitware Inc.', 1, '')");
+        }
+        pdo_query("INSERT INTO user VALUES (1, 'simpletest@localhost', '" . md5('simpletest') . "', 'administrator', '','Kitware Inc.', 1, '')");
         echo pdo_error();
         $this->disconnect();
         return true;
@@ -257,11 +257,11 @@ class dbo_pgsql extends dbo
 {
     public function connect($dbname = null)
     {
-        $dbname   = $this->db;
-        $host     = $this->host;
-        $user     = $this->user;
+        $dbname = $this->db;
+        $host = $this->host;
+        $user = $this->user;
         $password = $this->password;
-        $conn  = "host='$host' dbname='$dbname' user='$user' password='$password'";
+        $conn = "host='$host' dbname='$dbname' user='$user' password='$password'";
         if (!empty($this->port)) {
             $conn .= " port='$this->port'";
         }
@@ -274,23 +274,23 @@ class dbo_pgsql extends dbo
         $this->dbconnect = null;
     }
 
-   /* attempt to connect to the default postgres database.
-    * currently we try two different names: 'host' and 'postgres'
-    */
-   public function connectToHostDb()
-   {
-       $this->setDb('host');
-       $this->connect();
-       if ($this->dbconnect) {
-           return;
-       }
-       $this->setDb('postgres');
-       $this->connect();
-       if (!$this->dbconnect) {
-           echo "Error connecting to host postgres database.\n";
-           echo "Tried names 'host' and 'postgres'\n";
-       }
-   }
+    /* attempt to connect to the default postgres database.
+     * currently we try two different names: 'host' and 'postgres'
+     */
+    public function connectToHostDb()
+    {
+        $this->setDb('host');
+        $this->connect();
+        if ($this->dbconnect) {
+            return;
+        }
+        $this->setDb('postgres');
+        $this->connect();
+        if (!$this->dbconnect) {
+            echo "Error connecting to host postgres database.\n";
+            echo "Tried names 'host' and 'postgres'\n";
+        }
+    }
 
     public function create($db)
     {
@@ -356,14 +356,14 @@ class dbo_pgsql extends dbo
                     $query = str_replace(";", "", "$query");
                     $result = pdo_query($query);
                     if (!$result) {
-                        echo "Error line:".$line_number."<br/>";
+                        echo "Error line:" . $line_number . "<br/>";
                         return pdo_error();
                     }
                     $query = "";
                 }
             }
             $line_number++;
-        } // end for each line
+        }
         $pwd = md5('simpletest');
         $query = "INSERT INTO \"user\" (email, password, firstname, lastname, institution, admin) ";
         $query .= "VALUES ('simpletest@localhost', '$pwd', 'administrator', '','Kitware Inc.', 1)";
@@ -386,7 +386,7 @@ class dbo_pgsql extends dbo
                     // We need to remove only the last semicolon
                     $pos = strrpos($query, ";");
                     if ($pos !== false) {
-                        $query = substr($query, 0, $pos).substr($query, $pos+1);
+                        $query = substr($query, 0, $pos) . substr($query, $pos + 1);
                     }
 
                     $result = pdo_query($query);
@@ -397,12 +397,12 @@ class dbo_pgsql extends dbo
                     $query = "";
                 }
             }
-        } // end foreach line
+        }
 
-       // Run the last query
-       $pos = strrpos($query, ";");
+        // Run the last query
+        $pos = strrpos($query, ";");
         if ($pos !== false) {
-            $query = substr($query, 0, $pos).substr($query, $pos+1);
+            $query = substr($query, 0, $pos) . substr($query, $pos + 1);
         }
 
         $result = pdo_query($query);

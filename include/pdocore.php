@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require dirname(__DIR__).'/vendor/autoload.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
 
 require_once("config/config.php");
 
@@ -69,7 +69,8 @@ function pdo_select_db($database, $link_identifier = null)
            $cdash_database_connection;
     if (!is_null($link_identifier) and
         $link_identifier instanceof CDash\Database and
-        $cdash_database_connection->getDatabaseName() === $database) {
+        $cdash_database_connection->getDatabaseName() === $database
+    ) {
         $cdash_database_connection = $link_identifier;
     } else {
         $cdash_database_connection = pdo_connect($CDASH_DB_HOST, $CDASH_DB_LOGIN, $CDASH_DB_PASS, $database);
@@ -142,9 +143,9 @@ function pdo_free_result($result)
 function pdo_insert_id($table_name)
 {
     global $CDASH_DB_TYPE;
-    $seq  = "";
+    $seq = "";
     if ($CDASH_DB_TYPE === "pgsql") {
-        $seq = $table_name."_id_seq";
+        $seq = $table_name . "_id_seq";
     }
     return get_link_identifier(null)->getPdo()->lastInsertId($seq);
 }
@@ -210,11 +211,11 @@ function pdo_lock_tables($tables)
 
     $table_str = join(", ", $tables);
 
-    if (isset($CDASH_DB_TYPE)  && $CDASH_DB_TYPE=="pgsql") {
+    if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE == "pgsql") {
         // PgSql table locking syntax:
         // http://www.postgresql.org/docs/8.1/static/sql-lock.html
         pdo_query("BEGIN WORK");
-        $locked = pdo_query("LOCK TABLE ".$table_str);
+        $locked = pdo_query("LOCK TABLE " . $table_str);
         if (!$locked) {
             pdo_query("COMMIT WORK");
         }
@@ -222,7 +223,7 @@ function pdo_lock_tables($tables)
     } else {
         // MySQL table locking:
         // http://dev.mysql.com/doc/refman/5.0/en/lock-tables.html
-        return pdo_query("LOCK TABLES ".$table_str." WRITE");
+        return pdo_query("LOCK TABLES " . $table_str . " WRITE");
     }
 }
 
@@ -235,7 +236,7 @@ function pdo_unlock_tables()
 {
     global $CDASH_DB_TYPE;
 
-    if (isset($CDASH_DB_TYPE)  && $CDASH_DB_TYPE === "pgsql") {
+    if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE === "pgsql") {
         // Unlock occurs automatically at transaction end for PgSql, according to:
         // http://www.postgresql.org/docs/8.1/static/sql-lock.html
         pdo_query("COMMIT WORK");
@@ -267,7 +268,7 @@ function pdo_real_escape_numeric($unescaped_string, $link_identifier = null)
 {
     global $CDASH_DB_TYPE;
 
-    if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE=="pgsql" && $unescaped_string=="") {
+    if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE == "pgsql" && $unescaped_string == "") {
         // MySQL interprets an empty string as zero when assigned to a numeric field,
         // for PostgreSQL this must be done explicitly:
         $unescaped_string = "0";

@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include(dirname(__DIR__)."/config/config.php");
+include(dirname(__DIR__) . "/config/config.php");
 require_once("include/pdo.php");
 include('public/login.php');
 include_once('include/common.php');
@@ -23,15 +23,15 @@ include('models/user.php');
 
 if ($session_OK) {
     $userid = $_SESSION['cdash']['loginid'];
-  // Checks
-  if (!isset($userid) || !is_numeric($userid)) {
-      echo "Not a valid usersessionid!";
-      return;
-  }
+    // Checks
+    if (!isset($userid) || !is_numeric($userid)) {
+        echo "Not a valid usersessionid!";
+        return;
+    }
 
-    $user_array = pdo_fetch_array(pdo_query("SELECT admin FROM ".qid("user")." WHERE id='$userid'"));
+    $user_array = pdo_fetch_array(pdo_query("SELECT admin FROM " . qid("user") . " WHERE id='$userid'"));
 
-    if ($user_array["admin"]!=1) {
+    if ($user_array["admin"] != 1) {
         echo "You don't have the permissions to access this page!";
         return;
     }
@@ -50,7 +50,7 @@ if ($session_OK) {
     if (isset($_POST["adduser"])) {
         // arrive from register form
 
-    $email = $_POST["email"];
+        $email = $_POST["email"];
         $passwd = $_POST["passwd"];
         $passwd2 = $_POST["passwd2"];
         if (!($passwd == $passwd2)) {
@@ -71,7 +71,7 @@ if ($session_OK) {
                     $User->LastName = $lname;
                     $User->Institution = $institution;
                     if ($User->Save()) {
-                        $xml .= add_XML_value("warning", "User ".$email." added successfully with password:".$passwd);
+                        $xml .= add_XML_value("warning", "User " . $email . " added successfully with password:" . $passwd);
                     } else {
                         $xml .= add_XML_value("error", "Cannot add user");
                     }
@@ -82,27 +82,27 @@ if ($session_OK) {
         }
     } elseif (isset($_POST["makenormaluser"])) {
         if ($postuserid > 1) {
-            $update_array = pdo_fetch_array(pdo_query("SELECT firstname,lastname FROM ".qid("user")." WHERE id='".$postuserid."'"));
-            pdo_query("UPDATE ".qid("user")." SET admin=0 WHERE id='".$postuserid."'");
-            $xml .= "<warning>".$update_array['firstname']." ".$update_array['lastname']." is not administrator anymore.</warning>";
+            $update_array = pdo_fetch_array(pdo_query("SELECT firstname,lastname FROM " . qid("user") . " WHERE id='" . $postuserid . "'"));
+            pdo_query("UPDATE " . qid("user") . " SET admin=0 WHERE id='" . $postuserid . "'");
+            $xml .= "<warning>" . $update_array['firstname'] . " " . $update_array['lastname'] . " is not administrator anymore.</warning>";
         } else {
             $xml .= "<error>Administrator should remain admin.</error>";
         }
     } elseif (isset($_POST["makeadmin"])) {
-        $update_array = pdo_fetch_array(pdo_query("SELECT firstname,lastname FROM ".qid("user")." WHERE id='".$postuserid."'"));
-        pdo_query("UPDATE ".qid("user")." SET admin=1 WHERE id='".$postuserid."'");
-        $xml .= "<warning>".$update_array['firstname']." ".$update_array['lastname']." is now an administrator.</warning>";
+        $update_array = pdo_fetch_array(pdo_query("SELECT firstname,lastname FROM " . qid("user") . " WHERE id='" . $postuserid . "'"));
+        pdo_query("UPDATE " . qid("user") . " SET admin=1 WHERE id='" . $postuserid . "'");
+        $xml .= "<warning>" . $update_array['firstname'] . " " . $update_array['lastname'] . " is now an administrator.</warning>";
     } elseif (isset($_POST["removeuser"])) {
-        $update_array = pdo_fetch_array(pdo_query("SELECT firstname,lastname FROM ".qid("user")." WHERE id='".$postuserid."'"));
-        pdo_query("DELETE FROM ".qid("user")." WHERE id='".$postuserid."'");
-        $xml .= "<warning>".$update_array['firstname']." ".$update_array['lastname']." has been removed.</warning>";
+        $update_array = pdo_fetch_array(pdo_query("SELECT firstname,lastname FROM " . qid("user") . " WHERE id='" . $postuserid . "'"));
+        pdo_query("DELETE FROM " . qid("user") . " WHERE id='" . $postuserid . "'");
+        $xml .= "<warning>" . $update_array['firstname'] . " " . $update_array['lastname'] . " has been removed.</warning>";
     }
 
     if (isset($_POST["search"])) {
-        $xml .= "<search>".$_POST["search"]."</search>";
+        $xml .= "<search>" . $_POST["search"] . "</search>";
     }
 
-    if (isset($CDASH_FULL_EMAIL_WHEN_ADDING_USER) && $CDASH_FULL_EMAIL_WHEN_ADDING_USER==1) {
+    if (isset($CDASH_FULL_EMAIL_WHEN_ADDING_USER) && $CDASH_FULL_EMAIL_WHEN_ADDING_USER == 1) {
         $xml .= add_XML_value("fullemail", "1");
     }
 
@@ -110,5 +110,5 @@ if ($session_OK) {
     $xml .= "</cdash>";
 
 // Now doing the xslt transition
-generate_XSLT($xml, "manageUsers");
-} // end session;
+    generate_XSLT($xml, "manageUsers");
+}

@@ -81,14 +81,15 @@ class GCovTarHandler
 
         // Find the data.json file and extract the source directory from it.
         $iterator = new RecursiveIteratorIterator(
-                new RecursiveDirectoryIterator($dirName),
-                RecursiveIteratorIterator::CHILD_FIRST);
+            new RecursiveDirectoryIterator($dirName),
+            RecursiveIteratorIterator::CHILD_FIRST);
         foreach ($iterator as $fileinfo) {
             if ($fileinfo->getFilename() == "data.json") {
                 $jsonContents = file_get_contents($fileinfo->getRealPath());
                 $jsonDecoded = json_decode($jsonContents, true);
                 if (is_null($jsonDecoded) || !array_key_exists("Source", $jsonDecoded)
-                        || !array_key_exists("Binary", $jsonDecoded)) {
+                    || !array_key_exists("Binary", $jsonDecoded)
+                ) {
                     DeleteDirectory($dirName);
                     return false;
                 }
@@ -174,7 +175,8 @@ class GCovTarHandler
         // Check if this file belongs to a different SubProject.
         $buildid = $this->Build->Id;
         if (!empty($this->SubProjectPath) &&
-                strpos($path, $this->SubProjectPath) === false) {
+            strpos($path, $this->SubProjectPath) === false
+        ) {
             // Find the SubProject that corresponds to this path.
             $query =
                 "SELECT id, name FROM subproject
@@ -185,8 +187,8 @@ class GCovTarHandler
             $row = pdo_single_row_query($query);
             if (!$row || !array_key_exists('name', $row)) {
                 add_log(
-                        "No SubProject found for '$path'",
-                        LOG_WARNING, $this->ProjectId, $this->Build->Id);
+                    "No SubProject found for '$path'",
+                    LOG_WARNING, $this->ProjectId, $this->Build->Id);
                 return;
             }
             $subprojectname = $row['id'];
@@ -304,9 +306,10 @@ class GCovTarHandler
                 // encountered (throw) and (fallthrough) branches here.
                 $totalBranches = $coveredBranches + $uncoveredBranches;
                 if ($totalBranches > 0 &&
-                        $totalBranches > ($throwBranches + $fallthroughBranches)) {
+                    $totalBranches > ($throwBranches + $fallthroughBranches)
+                ) {
                     $coverageFileLog->AddBranch($lineNumber - 1, $coveredBranches,
-                            $totalBranches);
+                        $totalBranches);
                 }
             }
         }
@@ -389,4 +392,4 @@ class GCovTarHandler
             $this->Labels[$path] = $source_labels;
         }
     }
-} // end class;
+}

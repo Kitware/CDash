@@ -3,7 +3,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__).'/cdash_test_case.php');
+require_once(dirname(__FILE__) . '/cdash_test_case.php');
 
 class ManageProjectRolesTestCase extends KWWebTestCase
 {
@@ -17,7 +17,7 @@ class ManageProjectRolesTestCase extends KWWebTestCase
         if (!$this->connectAndGetProjectId()) {
             return 1;
         }
-        $this->get($this->url."/manageProjectRoles.php?projectid=$this->projectid#fragment-3");
+        $this->get($this->url . "/manageProjectRoles.php?projectid=$this->projectid#fragment-3");
         if (!$this->setFieldByName("registeruseremail", "simpleuser@localhost")) {
             $this->fail("Set user email returned false");
             return 1;
@@ -46,8 +46,8 @@ class ManageProjectRolesTestCase extends KWWebTestCase
     {
         $this->login();
 
-    //get projectid for PublicDashboards
-    $content = $this->connect($this->url.'/manageProjectRoles.php');
+        //get projectid for PublicDashboards
+        $content = $this->connect($this->url . '/manageProjectRoles.php');
         $lines = explode("\n", $content);
         foreach ($lines as $line) {
             if (strpos($line, "PublicDashboard") !== false) {

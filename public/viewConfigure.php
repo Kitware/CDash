@@ -15,7 +15,7 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include(dirname(__DIR__)."/config/config.php");
+include(dirname(__DIR__) . "/config/config.php");
 require_once("include/pdo.php");
 include('public/login.php');
 include_once("include/common.php");
@@ -43,7 +43,7 @@ pdo_select_db("$CDASH_DB_NAME", $db);
 
 $build_array = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$buildid'"));
 $projectid = $build_array["projectid"];
-if (!isset($projectid) || $projectid==0) {
+if (!isset($projectid) || $projectid == 0) {
     echo "This build doesn't exist. Maybe it has been deleted.";
     exit();
 }
@@ -51,13 +51,13 @@ if (!isset($projectid) || $projectid==0) {
 checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid);
 
 $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
-if (pdo_num_rows($project)>0) {
+if (pdo_num_rows($project) > 0) {
     $project_array = pdo_fetch_array($project);
     $projectname = $project_array["name"];
 }
 
 $xml = begin_XML_for_XSLT();
-$xml .= "<title>CDash : ".$projectname."</title>";
+$xml .= "<title>CDash : " . $projectname . "</title>";
 
 $date = get_dashboard_date_from_build_starttime($build_array["starttime"], $project_array["nightlytime"]);
 $xml .= get_cdash_dashboard_xml_by_name($projectname, $date);
@@ -69,7 +69,7 @@ $starttime = $build_array["starttime"];
 
 // Menu
 $xml .= "<menu>";
-$xml .= add_XML_value("back", "index.php?project=".urlencode($projectname)."&date=".$date);
+$xml .= add_XML_value("back", "index.php?project=" . urlencode($projectname) . "&date=" . $date);
 
 $build = new Build();
 $build->Id = $buildid;
@@ -92,26 +92,26 @@ if ($next_buildid > 0) {
 }
 $xml .= "</menu>";
 
-  // Build
-  $xml .= "<build>";
-  $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
-  $xml .= add_XML_value("site", $site_array["name"]);
-  $xml .= add_XML_value("siteid", $siteid);
-  $xml .= add_XML_value("buildname", $build_array["name"]);
-  $xml .= add_XML_value("buildid", $build_array["id"]);
-  $xml .= "</build>";
+// Build
+$xml .= "<build>";
+$site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
+$xml .= add_XML_value("site", $site_array["name"]);
+$xml .= add_XML_value("siteid", $siteid);
+$xml .= add_XML_value("buildname", $build_array["name"]);
+$xml .= add_XML_value("buildid", $build_array["id"]);
+$xml .= "</build>";
 
-  $xml .= "<configure>";
+$xml .= "<configure>";
 
-  $configure = pdo_query("SELECT * FROM configure WHERE buildid='$buildid'");
-  $configure_array = pdo_fetch_array($configure);
+$configure = pdo_query("SELECT * FROM configure WHERE buildid='$buildid'");
+$configure_array = pdo_fetch_array($configure);
 
-  $xml .= add_XML_value("status", $configure_array["status"]);
-  $xml .= add_XML_value("command", $configure_array["command"]);
-  $xml .= add_XML_value("output", $configure_array["log"]);
+$xml .= add_XML_value("status", $configure_array["status"]);
+$xml .= add_XML_value("command", $configure_array["command"]);
+$xml .= add_XML_value("output", $configure_array["log"]);
 
-  $xml .= "</configure>";
-  $xml .= "</cdash>";
+$xml .= "</configure>";
+$xml .= "</cdash>";
 
 // Now doing the xslt transition
 generate_XSLT($xml, "viewConfigure");

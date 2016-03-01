@@ -37,7 +37,7 @@ class NoteHandler extends AbstractHandler
     public function startElement($parser, $name, $attributes)
     {
         parent::startElement($parser, $name, $attributes);
-        if ($name=='SITE') {
+        if ($name == 'SITE') {
             $this->Site->Name = $attributes['NAME'];
             if (empty($this->Site->Name)) {
                 $this->Site->Name = "(empty)";
@@ -48,7 +48,7 @@ class NoteHandler extends AbstractHandler
             $buildInformation = new BuildInformation();
 
             // Fill in the attribute
-            foreach ($attributes as $key=>$value) {
+            foreach ($attributes as $key => $value) {
                 $siteInformation->SetValue($key, $value);
                 $buildInformation->SetValue($key, $value);
             }
@@ -63,18 +63,18 @@ class NoteHandler extends AbstractHandler
             $this->Build->SetStamp($attributes['BUILDSTAMP']);
             $this->Build->Generator = $attributes['GENERATOR'];
             $this->Build->Information = $buildInformation;
-        } elseif ($name=='NOTE') {
+        } elseif ($name == 'NOTE') {
             $this->Note = new BuildNote();
             $this->Note->Name =
                 isset($attributes['NAME']) ? $attributes['NAME'] : '';
         }
-    } // end startElement
+    }
 
     /** endElement function */
     public function endElement($parser, $name)
     {
         parent::endElement($parser, $name);
-        if ($name=='NOTE') {
+        if ($name == 'NOTE') {
             $this->Build->ProjectId = $this->projectid;
             $this->Build->GetIdFromName($this->SubProjectName);
             $this->Build->SetSubProject($this->SubProjectName);
@@ -100,7 +100,7 @@ class NoteHandler extends AbstractHandler
                 add_log("Trying to add a note to a nonexistent build", "note_handler.php", LOG_ERR);
             }
         }
-    } // end endElement
+    }
 
     /** text function */
     public function text($parser, $data)
@@ -117,5 +117,5 @@ class NoteHandler extends AbstractHandler
                     break;
             }
         }
-    } // end function text
-} // end class;
+    }
+}

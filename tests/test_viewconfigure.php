@@ -3,7 +3,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__).'/cdash_test_case.php');
+require_once(dirname(__FILE__) . '/cdash_test_case.php');
 
 class ViewConfigureTestCase extends KWWebTestCase
 {
@@ -15,7 +15,7 @@ class ViewConfigureTestCase extends KWWebTestCase
     public function testViewConfigure()
     {
         $this->login();
-        $this->get($this->url."/viewConfigure.php?buildid=1");
+        $this->get($this->url . "/viewConfigure.php?buildid=1");
         if (strpos($this->getBrowser()->getContentAsText(), "Win32-VCExpress") === false) {
             $this->fail("'Win32-VCExpress' not found when expected.");
             return 1;

@@ -15,7 +15,7 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include(dirname(__DIR__)."/config/config.php");
+include(dirname(__DIR__) . "/config/config.php");
 require_once("include/pdo.php");
 include('public/login.php');
 include_once("include/common.php");
@@ -37,7 +37,7 @@ $project = pdo_query("SELECT id,nightlytime FROM project WHERE name='$projectnam
 $project_array = pdo_fetch_array($project);
 
 $xml = begin_XML_for_XSLT();
-$xml .= "<title>".$projectname." : Test Overview</title>";
+$xml .= "<title>" . $projectname . " : Test Overview</title>";
 $xml .= get_cdash_dashboard_xml_by_name($projectname, $date);
 
 $nightlytime = $project_array["nightlytime"];
@@ -45,14 +45,14 @@ $nightlytime = $project_array["nightlytime"];
 // We select the builds
 list($previousdate, $currentstarttime, $nextdate, $today) = get_dates($date, $nightlytime);
 $xml .= "<menu>";
-$xml .= add_XML_value("previous", "testOverview.php?project=".urlencode($projectname)."&date=".$previousdate);
-if ($date!="" && date(FMT_DATE, $currentstarttime)!=date(FMT_DATE)) {
-    $xml .= add_XML_value("next", "testOverview.php?project=".urlencode($projectname)."&date=".$nextdate);
+$xml .= add_XML_value("previous", "testOverview.php?project=" . urlencode($projectname) . "&date=" . $previousdate);
+if ($date != "" && date(FMT_DATE, $currentstarttime) != date(FMT_DATE)) {
+    $xml .= add_XML_value("next", "testOverview.php?project=" . urlencode($projectname) . "&date=" . $nextdate);
 } else {
     $xml .= add_XML_value("nonext", "1");
 }
-$xml .= add_XML_value("current", "testOverview.php?project=".urlencode($projectname)."&date=");
-$xml .= add_XML_value("back", "index.php?project=".urlencode($projectname)."&date=".get_dashboard_date_from_project($projectname, $date));
+$xml .= add_XML_value("current", "testOverview.php?project=" . urlencode($projectname) . "&date=");
+$xml .= add_XML_value("back", "index.php?project=" . urlencode($projectname) . "&date=" . get_dashboard_date_from_project($projectname, $date));
 $xml .= "</menu>";
 
 // Get some information about the specified project
@@ -88,7 +88,7 @@ while ($buildgroup_array = pdo_fetch_array($buildgroup)) {
 }
 
 $groupSelectionSQL = "";
-if ($groupSelection>0) {
+if ($groupSelection > 0) {
     $groupSelectionSQL = " AND b2g.groupid='$groupSelection' ";
 }
 
@@ -101,7 +101,7 @@ if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE == "pgsql") {
 $stamp = str_replace("-", "", $today);
 
 $buildQuery = "SELECT id FROM build,build2group as b2g WHERE projectid = '$projectid'
-               AND build.stamp ".$rlike." '^$stamp-' AND b2g.buildid=build.id".$groupSelectionSQL;
+               AND build.stamp " . $rlike . " '^$stamp-' AND b2g.buildid=build.id" . $groupSelectionSQL;
 
 $buildResult = pdo_query($buildQuery);
 $builds = array();
@@ -137,8 +137,8 @@ if ($testResult !== false) {
     if (count($tests) > 0) {
         natcasesort($tests);
 
-    //now generate some XML
-    $xml .= "<tests>\n";
+        //now generate some XML
+        $xml .= "<tests>\n";
         $previousLetter = "";
         $firstSection = true;
         foreach ($tests as $testName) {

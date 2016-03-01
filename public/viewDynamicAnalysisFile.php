@@ -15,7 +15,7 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include(dirname(__DIR__)."/config/config.php");
+include(dirname(__DIR__) . "/config/config.php");
 require_once("include/pdo.php");
 include('public/login.php');
 include_once("include/common.php");
@@ -41,7 +41,7 @@ function get_previous_fileid_dynamicanalysis($filename, $projectid, $siteid, $bu
                               AND dynamicanalysis.name='$filename'
                               ORDER BY build.starttime DESC LIMIT 1");
 
-    if (pdo_num_rows($previousbuild)>0) {
+    if (pdo_num_rows($previousbuild) > 0) {
         $previousbuild_array = pdo_fetch_array($previousbuild);
         return $previousbuild_array["id"];
     }
@@ -58,7 +58,7 @@ function get_next_fileid_dynamicanalysis($filename, $projectid, $siteid, $buildt
                           AND dynamicanalysis.name='$filename'
                           ORDER BY build.starttime ASC LIMIT 1");
 
-    if (pdo_num_rows($nextbuild)>0) {
+    if (pdo_num_rows($nextbuild) > 0) {
         $nextbuild_array = pdo_fetch_array($nextbuild);
         return $nextbuild_array["id"];
     }
@@ -75,7 +75,7 @@ function get_last_fileid_dynamicanalysis($filename, $projectid, $siteid, $buildt
                           AND dynamicanalysis.name='$filename'
                           ORDER BY build.starttime DESC LIMIT 1");
 
-    if (pdo_num_rows($nextbuild)>0) {
+    if (pdo_num_rows($nextbuild) > 0) {
         $nextbuild_array = pdo_fetch_array($nextbuild);
         return $nextbuild_array["id"];
     }
@@ -99,7 +99,7 @@ $projectid = $build_array["projectid"];
 checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid);
 
 $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
-if (pdo_num_rows($project)>0) {
+if (pdo_num_rows($project) > 0) {
     $project_array = pdo_fetch_array($project);
     $projectname = $project_array["name"];
 } else {
@@ -111,7 +111,7 @@ list($previousdate, $currenttime, $nextdate) = get_dates($date, $project_array["
 $logoid = getLogoID($projectid);
 
 $xml = begin_XML_for_XSLT();
-$xml .= "<title>CDash : ".$projectname."</title>";
+$xml .= "<title>CDash : " . $projectname . "</title>";
 $xml .= get_cdash_dashboard_xml_by_name($projectname, $date);
 
 // Build
@@ -132,39 +132,39 @@ $buildname = $build_array["name"];
 $starttime = $build_array["starttime"];
 
 $xml .= "<menu>";
-$xml .= add_XML_value("back", "viewDynamicAnalysis.php?buildid=".$buildid);
+$xml .= add_XML_value("back", "viewDynamicAnalysis.php?buildid=" . $buildid);
 $previousfileid = get_previous_fileid_dynamicanalysis($dyn_array["name"], $projectid, $siteid, $buildtype, $buildname, $starttime);
-if ($previousfileid>0) {
-    $xml .= add_XML_value("previous", "viewDynamicAnalysisFile.php?id=".$previousfileid);
+if ($previousfileid > 0) {
+    $xml .= add_XML_value("previous", "viewDynamicAnalysisFile.php?id=" . $previousfileid);
 } else {
     $xml .= add_XML_value("noprevious", "1");
 }
-$xml .= add_XML_value("current", "viewDynamicAnalysisFile.php?id=".get_last_fileid_dynamicanalysis($dyn_array["name"], $projectid, $siteid, $buildtype, $buildname, $starttime));
+$xml .= add_XML_value("current", "viewDynamicAnalysisFile.php?id=" . get_last_fileid_dynamicanalysis($dyn_array["name"], $projectid, $siteid, $buildtype, $buildname, $starttime));
 $nextfileid = get_next_fileid_dynamicanalysis($dyn_array["name"], $projectid, $siteid, $buildtype, $buildname, $starttime);
-if ($nextfileid>0) {
-    $xml .= add_XML_value("next", "viewDynamicAnalysisFile.php?id=".$nextfileid);
+if ($nextfileid > 0) {
+    $xml .= add_XML_value("next", "viewDynamicAnalysisFile.php?id=" . $nextfileid);
 } else {
     $xml .= add_XML_value("nonext", "1");
 }
 $xml .= "</menu>";
 
 
-  // dynamic analysis
-  $xml .= "<dynamicanalysis>";
-  $xml .= add_XML_value("status", ucfirst($dyn_array["status"]));
-  $xml .= add_XML_value("filename", $dyn_array["name"]);
-  // Only display the first 1MB of the log (in case it's huge)
-  $xml .= add_XML_value("log", substr($dyn_array["log"], 0, 1024*1024));
-  $href = "testSummary.php?project=".$projectid."&name=".$dyn_array["name"];
-  if ($date) {
-      $href .= "&date=".$date;
-  } else {
-      $href .= "&date=".date(FMT_DATE);
-  }
-  $xml .= add_XML_value("href", $href);
-  $xml .= "</dynamicanalysis>";
+// dynamic analysis
+$xml .= "<dynamicanalysis>";
+$xml .= add_XML_value("status", ucfirst($dyn_array["status"]));
+$xml .= add_XML_value("filename", $dyn_array["name"]);
+// Only display the first 1MB of the log (in case it's huge)
+$xml .= add_XML_value("log", substr($dyn_array["log"], 0, 1024 * 1024));
+$href = "testSummary.php?project=" . $projectid . "&name=" . $dyn_array["name"];
+if ($date) {
+    $href .= "&date=" . $date;
+} else {
+    $href .= "&date=" . date(FMT_DATE);
+}
+$xml .= add_XML_value("href", $href);
+$xml .= "</dynamicanalysis>";
 
-  $xml .= "</cdash>";
+$xml .= "</cdash>";
 
 // Now doing the xslt transition
 generate_XSLT($xml, "viewDynamicAnalysisFile");

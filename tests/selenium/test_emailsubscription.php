@@ -3,7 +3,7 @@
 // After including cdash_selenium_test_base.php, subsequent require_once calls
 // are relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__).'/cdash_selenium_test_case.php');
+require_once(dirname(__FILE__) . '/cdash_selenium_test_case.php');
 
 class Example extends CDashSeleniumTestCase
 {
@@ -14,7 +14,7 @@ class Example extends CDashSeleniumTestCase
 
     public function testEmailSubscription()
     {
-        $this->open($this->webPath."/index.php");
+        $this->open($this->webPath . "/index.php");
         $this->click("link=Login");
         $this->waitForPageToLoad("30000");
         $this->type("login", "simpletest@localhost");
@@ -23,15 +23,15 @@ class Example extends CDashSeleniumTestCase
         $this->waitForPageToLoad("30000");
 
         $this->click("//tr[4]/td[2]/a[4]/img");
-      // the 'Edit project' link for 'EmailProjectExample'
-      // "//tr[4]" is the EmailProjectExample table row (4th row, 2 rows of header-ish rows...)
-      // "//tr[4]/td[2]" is the Actions column in that row
-      // "//tr[4]/td[2]/a[4]/img" is the 4th image from the left in that column
+        // the 'Edit project' link for 'EmailProjectExample'
+        // "//tr[4]" is the EmailProjectExample table row (4th row, 2 rows of header-ish rows...)
+        // "//tr[4]/td[2]" is the Actions column in that row
+        // "//tr[4]/td[2]/a[4]/img" is the 4th image from the left in that column
 
-    $this->waitForPageToLoad("30000");
+        $this->waitForPageToLoad("30000");
         $this->click("//div[@id='wizard']/ul/li[5]/a/span");
-      // tab 5, the 'E-mail' tab
-    $this->click("emailBrokenSubmission");
+        // tab 5, the 'E-mail' tab
+        $this->click("emailBrokenSubmission");
         $this->click("emailRedundantFailures");
         $this->click("emailAdministrator");
         $this->click("emailLowCoverage");
@@ -41,18 +41,18 @@ class Example extends CDashSeleniumTestCase
         $this->waitForPageToLoad("30000");
 
         $this->click("//tr[4]/td[2]/a[1]/img");
-      // the 'Edit subscription' link for 'EmailProjectExample'
+        // the 'Edit subscription' link for 'EmailProjectExample'
 
-    $this->sleepWaitingForElement("//div[@id='wizard']/ul/li[2]/a/span");
-      // tab 2, the 'Logo' tab
-    $this->click("//div[@id='wizard']/ul/li[2]/a/span");
+        $this->sleepWaitingForElement("//div[@id='wizard']/ul/li[2]/a/span");
+        // tab 2, the 'Logo' tab
+        $this->click("//div[@id='wizard']/ul/li[2]/a/span");
         $this->click("//div[@id='wizard']/ul/li[3]/a/span");
         $this->click("//div[@id='wizard']/ul/li[4]/a/span");
         $this->click("//div[@id='wizard']/ul/li[5]/a/span");
         $this->click("updatesubscription");
 
-    // Completely unsubscribe from the next project down, 'InsightExample'
-    $this->sleepWaitingForElement("//tr[5]/td[2]/a[1]/img");
+        // Completely unsubscribe from the next project down, 'InsightExample'
+        $this->sleepWaitingForElement("//tr[5]/td[2]/a[1]/img");
         $this->click("//tr[5]/td[2]/a[1]/img");
 
         $this->sleepWaitingForElement("unsubscribe");

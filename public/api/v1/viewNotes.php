@@ -15,7 +15,7 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include(dirname(dirname(dirname(__DIR__)))."/config/config.php");
+include(dirname(dirname(dirname(__DIR__))) . "/config/config.php");
 require_once("include/pdo.php");
 include('public/login.php');
 include_once("include/common.php");
@@ -45,7 +45,7 @@ pdo_select_db("$CDASH_DB_NAME", $db);
 
 $build_array = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$buildid'"));
 $projectid = $build_array["projectid"];
-if (!isset($projectid) || $projectid==0) {
+if (!isset($projectid) || $projectid == 0) {
     $response['error'] = "This build doesn't exist. Maybe it has been deleted.";
     echo json_encode($response);
     return;
@@ -71,7 +71,7 @@ get_dashboard_JSON_by_name($projectname, $date, $response);
 
 // Menu
 $menu = array();
-$menu['back'] = "index.php?project=".urlencode($projectname)."&date=".$date;
+$menu['back'] = "index.php?project=" . urlencode($projectname) . "&date=" . $date;
 
 $build = new Build();
 $build->Id = $buildid;

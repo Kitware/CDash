@@ -15,7 +15,7 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include(dirname(__DIR__)."/config/config.php");
+include(dirname(__DIR__) . "/config/config.php");
 require_once("include/pdo.php");
 include('public/login.php');
 include_once("include/common.php");
@@ -39,14 +39,14 @@ $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME", $db);
 
 $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
-if (pdo_num_rows($project)==0) {
+if (pdo_num_rows($project) == 0) {
     return;
 }
 
 $project_array = pdo_fetch_array($project);
 checkUserPolicy(@$_SESSION['cdash']['loginid'], $project_array["id"]);
 
-$ctestconfig  = "## This file should be placed in the root directory of your project.\n";
+$ctestconfig = "## This file should be placed in the root directory of your project.\n";
 $ctestconfig .= "## Then modify the CMakeLists.txt file in the root directory of your\n";
 $ctestconfig .= "## project to incorporate the testing dashboard.\n";
 $ctestconfig .= "##\n";
@@ -55,17 +55,17 @@ $ctestconfig .= "##   ENABLE_TESTING()\n";
 $ctestconfig .= "##   INCLUDE(CTest)\n";
 $ctestconfig .= "\n";
 
-$ctestconfig .= "set(CTEST_PROJECT_NAME \"".$project_array["name"]."\")\n";
-$ctestconfig .= "set(CTEST_NIGHTLY_START_TIME \"".$project_array["nightlytime"]."\")\n\n";
+$ctestconfig .= "set(CTEST_PROJECT_NAME \"" . $project_array["name"] . "\")\n";
+$ctestconfig .= "set(CTEST_NIGHTLY_START_TIME \"" . $project_array["nightlytime"] . "\")\n\n";
 
 $ctestconfig .= "set(CTEST_DROP_METHOD \"http\")\n";
 
-$ctestconfig .= "set(CTEST_DROP_SITE \"".$_SERVER['SERVER_NAME']."\")\n";
+$ctestconfig .= "set(CTEST_DROP_SITE \"" . $_SERVER['SERVER_NAME'] . "\")\n";
 
 $currentURI = $_SERVER['REQUEST_URI'];
 $currentURI = substr($currentURI, 0, strrpos($currentURI, "/"));
 
-$ctestconfig .= "set(CTEST_DROP_LOCATION \"".$currentURI."/submit.php?project=".urlencode($project_array["name"])."\")\n";
+$ctestconfig .= "set(CTEST_DROP_LOCATION \"" . $currentURI . "/submit.php?project=" . urlencode($project_array["name"]) . "\")\n";
 $ctestconfig .= "set(CTEST_DROP_SITE_CDASH TRUE)\n";
 
 // Add the subproject
@@ -79,8 +79,8 @@ function get_graph_depth($a, $value)
     $SubProject->SetId($a);
     $parents = $SubProject->GetDependencies();
     foreach ($parents as $parentid) {
-        $subvalue = get_graph_depth($parentid, $value+1);
-        if ($subvalue>$value) {
+        $subvalue = get_graph_depth($parentid, $value + 1);
+        if ($subvalue > $value) {
             $value = $subvalue;
         }
     }
@@ -97,19 +97,20 @@ function cmp($a, $b)
     }
     return ($va < $vb) ? -1 : 1;
 }
+
 usort($subprojectids, "cmp");
 
-if (count($subprojectids)>0) {
+if (count($subprojectids) > 0) {
     $ctestconfig .= "\nset(CTEST_PROJECT_SUBPROJECTS\n";
 }
 
 foreach ($subprojectids as $subprojectid) {
     $SubProject = new SubProject();
     $SubProject->SetId($subprojectid);
-    $ctestconfig .= $SubProject->GetName()."\n";
+    $ctestconfig .= $SubProject->GetName() . "\n";
 }
 
-if (count($subprojectids)>0) {
+if (count($subprojectids) > 0) {
     $ctestconfig .= ")\n";
 }
 
@@ -128,5 +129,5 @@ if (headers_sent()) {
 
 header("Content-Disposition: attachment; filename=\"CTestConfig.cmake\"");
 header("Content-Transfer-Encoding: binary");
-header("Content-Length: ".strlen($ctestconfig));
+header("Content-Length: " . strlen($ctestconfig));
 echo $ctestconfig;

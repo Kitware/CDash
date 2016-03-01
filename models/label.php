@@ -37,17 +37,17 @@ class label
     /** Get the text of a label */
     public function GetText()
     {
-        return pdo_get_field_value("SELECT text FROM label WHERE id=".qnum($this->Id), "text", 0);
+        return pdo_get_field_value("SELECT text FROM label WHERE id=" . qnum($this->Id), "text", 0);
     }
 
     /** Get the id from a label */
     public function GetIdFromText()
     {
-        return pdo_get_field_value("SELECT id FROM label WHERE text='".$this->Text."'", "id", 0);
+        return pdo_get_field_value("SELECT id FROM label WHERE text='" . $this->Text . "'", "id", 0);
     }
 
 
-    public function InsertAssociation($table, $field1, $value1=null, $field2=null, $value2=null)
+    public function InsertAssociation($table, $field1, $value1 = null, $field2 = null, $value2 = null)
     {
         $duplicate_sql = '';
         global $CDASH_DB_TYPE;
@@ -57,8 +57,8 @@ class label
         if (!empty($value1)) {
             if (!empty($value2)) {
                 $v = pdo_get_field_value(
-                        "SELECT $field1 FROM $table WHERE labelid='$this->Id' ".
-                        "AND $field1='$value1' AND $field2='$value2'", "$field1", 0);
+                    "SELECT $field1 FROM $table WHERE labelid='$this->Id' " .
+                    "AND $field1='$value1' AND $field2='$value2'", "$field1", 0);
 
                 // Only do the INSERT if it's not already there:
                 if (0 == $v) {
@@ -72,8 +72,8 @@ class label
                 }
             } else {
                 $v = pdo_get_field_value(
-                        "SELECT $field1 FROM $table WHERE labelid='$this->Id' ".
-                        "AND $field1='$value1'", "$field1", 0);
+                    "SELECT $field1 FROM $table WHERE labelid='$this->Id' " .
+                    "AND $field1='$value1'", "$field1", 0);
 
                 // Only do the INSERT if it's not already there:
                 if (0 == $v) {
@@ -97,7 +97,7 @@ class label
 
         // Get this->Id from the database if text is already in the label table:
         $this->Id = pdo_get_field_value(
-                "SELECT id FROM label WHERE text='$text'", 'id', 0);
+            "SELECT id FROM label WHERE text='$text'", 'id', 0);
 
         // Or, if necessary, insert a new row, then get the id of the inserted row:
         if ($this->Id === 0) {
@@ -107,7 +107,7 @@ class label
                 // during parallel processing.
                 // Query again to see if it exists before throwing an error.
                 $this->Id = pdo_get_field_value(
-                        "SELECT id FROM label WHERE text='$text'", 'id', 0);
+                    "SELECT id FROM label WHERE text='$text'", 'id', 0);
                 if ($this->Id === 0) {
                     add_last_sql_error('Label::Insert');
                     return false;
@@ -121,21 +121,21 @@ class label
         // established by callers. (If coming from test.php, for example, TestId
         // will be set, but none of the others will. Similarly for other callers.)
         $this->InsertAssociation('label2build', 'buildid',
-                $this->BuildId);
+            $this->BuildId);
 
         $this->InsertAssociation('label2buildfailure',
-                'buildfailureid', $this->BuildFailureId);
+            'buildfailureid', $this->BuildFailureId);
 
         $this->InsertAssociation('label2coveragefile',
-                'buildid', $this->CoverageFileBuildId,
-                'coveragefileid', $this->CoverageFileId);
+            'buildid', $this->CoverageFileBuildId,
+            'coveragefileid', $this->CoverageFileId);
 
         $this->InsertAssociation('label2dynamicanalysis',
-                'dynamicanalysisid', $this->DynamicAnalysisId);
+            'dynamicanalysisid', $this->DynamicAnalysisId);
 
         $this->InsertAssociation('label2test',
-                'buildid', $this->TestBuildId,
-                'testid', $this->TestId);
+            'buildid', $this->TestBuildId,
+            'testid', $this->TestId);
 
         // TODO: Implement this:
         //

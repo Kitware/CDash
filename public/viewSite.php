@@ -15,7 +15,7 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include(dirname(__DIR__)."/config/config.php");
+include(dirname(__DIR__) . "/config/config.php");
 require_once("include/pdo.php");
 include('public/login.php');
 include_once('include/common.php');
@@ -59,7 +59,7 @@ $siteinformation_array["totalphysicalmemory"] = "NA";
 $siteinformation_array["logicalprocessorsperphysical"] = "NA";
 $siteinformation_array["processorclockfrequency"] = "NA";
 
-$currenttimestamp = gmdate(FMT_DATETIME, $currenttime+3600*24); // Current timestamp is the beginning of the dashboard and we want the end
+$currenttimestamp = gmdate(FMT_DATETIME, $currenttime + 3600 * 24); // Current timestamp is the beginning of the dashboard and we want the end
 
 $query = pdo_query("SELECT * FROM siteinformation WHERE siteid='$siteid' AND timestamp<='$currenttimestamp' ORDER BY timestamp DESC LIMIT 1");
 if (pdo_num_rows($query) > 0) {
@@ -97,13 +97,13 @@ if (pdo_num_rows($query) > 0) {
 }
 
 $xml = begin_XML_for_XSLT();
-$xml .= "<title>CDash : ".$sitename."</title>";
+$xml .= "<title>CDash : " . $sitename . "</title>";
 
 @$projectid = pdo_real_escape_numeric($_GET["project"]);
 if ($projectid) {
     $project_array = pdo_fetch_array(pdo_query("SELECT name,nightlytime,showipaddresses FROM project WHERE id='$projectid'"));
-    $xml .= "<backurl>index.php?project=".urlencode($project_array["name"]);
-    $xml .= "&#38;date=".get_dashboard_date_from_build_starttime(gmdate(FMT_DATETIME, $currenttime), $project_array["nightlytime"]);
+    $xml .= "<backurl>index.php?project=" . urlencode($project_array["name"]);
+    $xml .= "&#38;date=" . get_dashboard_date_from_build_starttime(gmdate(FMT_DATETIME, $currenttime), $project_array["nightlytime"]);
     $xml .= "</backurl>";
 } else {
     $xml .= "<backurl>index.php</backurl>";
@@ -118,14 +118,14 @@ $xml .= "<title>CDash</title>";
 
 $apikey = "";
 // Find the correct google map key
-foreach ($CDASH_GOOGLE_MAP_API_KEY as $key=>$value) {
+foreach ($CDASH_GOOGLE_MAP_API_KEY as $key => $value) {
     if (strstr($_SERVER['HTTP_HOST'], $key) !== false) {
         $apikey = $value;
         break;
     }
 }
 
-$xml .=  add_XML_value("googlemapkey", $apikey);
+$xml .= add_XML_value("googlemapkey", $apikey);
 $xml .= "</dashboard>";
 $xml .= "<site>";
 $xml .= add_XML_value("id", $site_array["id"]);
@@ -139,10 +139,10 @@ $xml .= add_XML_value("processormodelid", $siteinformation_array["processormodel
 $xml .= add_XML_value("processorcachesize", $siteinformation_array["processorcachesize"]);
 $xml .= add_XML_value("numberlogicalcpus", $siteinformation_array["numberlogicalcpus"]);
 $xml .= add_XML_value("numberphysicalcpus", $siteinformation_array["numberphysicalcpus"]);
-$xml .= add_XML_value("totalvirtualmemory", getByteValueWithExtension($siteinformation_array["totalvirtualmemory"]*1048576)."iB");
-$xml .= add_XML_value("totalphysicalmemory", getByteValueWithExtension($siteinformation_array["totalphysicalmemory"]*1048576)."iB");
+$xml .= add_XML_value("totalvirtualmemory", getByteValueWithExtension($siteinformation_array["totalvirtualmemory"] * 1048576) . "iB");
+$xml .= add_XML_value("totalphysicalmemory", getByteValueWithExtension($siteinformation_array["totalphysicalmemory"] * 1048576) . "iB");
 $xml .= add_XML_value("logicalprocessorsperphysical", $siteinformation_array["logicalprocessorsperphysical"]);
-$xml .= add_XML_value("processorclockfrequency", getByteValueWithExtension($siteinformation_array["processorclockfrequency"]*1000000, 1000)."Hz");
+$xml .= add_XML_value("processorclockfrequency", getByteValueWithExtension($siteinformation_array["processorclockfrequency"] * 1000000, 1000) . "Hz");
 $xml .= add_XML_value("outoforder", $site_array["outoforder"]);
 if ($projectid && $project_array['showipaddresses']) {
     $xml .= add_XML_value("ip", $site_array["ip"]);
@@ -152,8 +152,8 @@ if ($projectid && $project_array['showipaddresses']) {
 $xml .= "</site>";
 
 // List the claimers of the site
-$siteclaimer = pdo_query("SELECT firstname,lastname,email FROM ".qid("user").",site2user
-                          WHERE ".qid("user").".id=site2user.userid AND site2user.siteid='$siteid' ORDER BY firstname");
+$siteclaimer = pdo_query("SELECT firstname,lastname,email FROM " . qid("user") . ",site2user
+                          WHERE " . qid("user") . ".id=site2user.userid AND site2user.siteid='$siteid' ORDER BY firstname");
 while ($siteclaimer_array = pdo_fetch_array($siteclaimer)) {
     $xml .= "<claimer>";
     $xml .= add_XML_value("firstname", $siteclaimer_array["firstname"]);
@@ -165,7 +165,7 @@ while ($siteclaimer_array = pdo_fetch_array($siteclaimer)) {
 }
 
 // Select projects that belong to this site
-$displayPage=0;
+$displayPage = 0;
 $projects = array();
 $site2project = pdo_query("SELECT projectid,max(submittime) AS maxtime FROM build WHERE siteid='$siteid' AND projectid>0 GROUP BY projectid");
 
@@ -180,8 +180,8 @@ while ($site2project_array = pdo_fetch_array($site2project)) {
         $xml .= add_XML_value("name", $project_array["name"]);
         $xml .= add_XML_value("name_encoded", urlencode($project_array["name"]));
         $xml .= "</project>";
-        $displayPage=1; // if we have at least a valid project we display the page
-     $projects[] = $projectid;
+        $displayPage = 1; // if we have at least a valid project we display the page
+        $projects[] = $projectid;
     }
 }
 
@@ -199,13 +199,13 @@ if ($CDASH_DB_TYPE == "pgsql") {
     $timestampadd = "NOW()-INTERVAL'167 hours'";
 } else {
     $timediff = "TIME_TO_SEC(TIMEDIFF(build.submittime, buildupdate.starttime))";
-    $timestampadd = "TIMESTAMPADD(".qiv("HOUR").", -167, NOW())";
+    $timestampadd = "TIMESTAMPADD(" . qiv("HOUR") . ", -167, NOW())";
 }
 
-$testtime = pdo_query("SELECT projectid, build.name AS buildname, build.type AS buildtype, SUM(".$timediff.") AS elapsed
+$testtime = pdo_query("SELECT projectid, build.name AS buildname, build.type AS buildtype, SUM(" . $timediff . ") AS elapsed
               FROM build, buildupdate, build2update
               WHERE
-                build.submittime > ".$timestampadd."
+                build.submittime > " . $timestampadd . "
                 AND build2update.buildid = build.id
                 AND buildupdate.id = build2update.updateid
                 AND build.siteid = '$siteid'
@@ -219,8 +219,8 @@ $totalload = 0;
 while ($testtime_array = pdo_fetch_array($testtime)) {
     $projectid = $testtime_array["projectid"];
     if (checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
-        $timespent = round($testtime_array["elapsed"]/7.0); // average over 7 days
-     $xml .= "<build>";
+        $timespent = round($testtime_array["elapsed"] / 7.0); // average over 7 days
+        $xml .= "<build>";
         $xml .= add_XML_value("name", $testtime_array["buildname"]);
         $xml .= add_XML_value("project", get_project_name($projectid));
         $xml .= add_XML_value("type", $testtime_array["buildtype"]);
@@ -231,34 +231,34 @@ while ($testtime_array = pdo_fetch_array($testtime)) {
 }
 
 // Compute the idle time
-$idletime = 24*3600-$totalload;
-if ($idletime<0) {
+$idletime = 24 * 3600 - $totalload;
+if ($idletime < 0) {
     $idletime = 0;
 }
-$xml .= "<idle>".$idletime."</idle>";
+$xml .= "<idle>" . $idletime . "</idle>";
 $xml .= "</siteload>";
 
 if (isset($_SESSION['cdash'])) {
     $xml .= "<user>";
     $userid = $_SESSION['cdash']['loginid'];
 
-   // Check if the current user as a role in this project
-   foreach ($projects as $projectid) {
-       $user2project = pdo_query("SELECT role FROM user2project WHERE projectid='$projectid' and role>0");
-       if (pdo_num_rows($user2project)>0) {
-           $xml .= add_XML_value("sitemanager", "1");
+    // Check if the current user as a role in this project
+    foreach ($projects as $projectid) {
+        $user2project = pdo_query("SELECT role FROM user2project WHERE projectid='$projectid' and role>0");
+        if (pdo_num_rows($user2project) > 0) {
+            $xml .= add_XML_value("sitemanager", "1");
 
-           $user2site = pdo_query("SELECT * FROM site2user WHERE siteid='$siteid' and userid='$userid'");
-           if (pdo_num_rows($user2site) == 0) {
-               $xml .= add_XML_value("siteclaimed", "0");
-           } else {
-               $xml .= add_XML_value("siteclaimed", "1");
-           }
-           break;
-       }
-   }
+            $user2site = pdo_query("SELECT * FROM site2user WHERE siteid='$siteid' and userid='$userid'");
+            if (pdo_num_rows($user2site) == 0) {
+                $xml .= add_XML_value("siteclaimed", "0");
+            } else {
+                $xml .= add_XML_value("siteclaimed", "1");
+            }
+            break;
+        }
+    }
 
-    $user = pdo_query("SELECT admin FROM ".qid("user")." WHERE id='$userid'");
+    $user = pdo_query("SELECT admin FROM " . qid("user") . " WHERE id='$userid'");
     $user_array = pdo_fetch_array($user);
     $xml .= add_XML_value("id", $userid);
     $xml .= add_XML_value("admin", $user_array["admin"]);

@@ -3,7 +3,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__).'/cdash_test_case.php');
+require_once(dirname(__FILE__) . '/cdash_test_case.php');
 
 class ManageUsersTestCase extends KWWebTestCase
 {
@@ -15,26 +15,26 @@ class ManageUsersTestCase extends KWWebTestCase
     public function testManageUsersTest()
     {
         //make sure we can't visit the manageUsers page while logged out
-    $this->logout();
-        $content = $this->get($this->url."/manageUsers.php");
+        $this->logout();
+        $content = $this->get($this->url . "/manageUsers.php");
         if (strpos($content, "<title>Login</title>") === false) {
             $this->fail("'<title>Login</title>' not found when expected.");
             return 1;
         }
 
-    //make sure we can visit the page while logged in
-    $this->login();
-        $content = $this->get($this->url."/manageUsers.php");
+        //make sure we can visit the page while logged in
+        $this->login();
+        $content = $this->get($this->url . "/manageUsers.php");
         if (strpos($content, "Add new user") === false) {
             $this->fail("'Add new user' not found when expected");
             return 1;
         }
 
-    //add a new user
-    if (!$this->SetFieldByName("fname", "Simple")) {
-        $this->fail("SetFieldByName on first name returned false");
-        return 1;
-    }
+        //add a new user
+        if (!$this->SetFieldByName("fname", "Simple")) {
+            $this->fail("SetFieldByName on first name returned false");
+            return 1;
+        }
         if (!$this->SetFieldByName("lname", "User2")) {
             $this->fail("SetFieldByName on last name returned false");
             return 1;

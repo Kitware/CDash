@@ -15,7 +15,7 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include(dirname(dirname(dirname(__DIR__)))."/config/config.php");
+include(dirname(dirname(dirname(__DIR__))) . "/config/config.php");
 require_once("include/pdo.php");
 include('public/login.php');
 include_once('models/banner.php');
@@ -42,7 +42,7 @@ if ($dbTest === false) {
 $response['title'] = $CDASH_MAININDEX_TITLE;
 $response['subtitle'] = $CDASH_MAININDEX_SUBTITLE;
 $response['googletracker'] = $CDASH_DEFAULT_GOOGLE_ANALYTICS;
-if (isset($CDASH_NO_REGISTRATION) && $CDASH_NO_REGISTRATION==1) {
+if (isset($CDASH_NO_REGISTRATION) && $CDASH_NO_REGISTRATION == 1) {
     $response['noregister'] = 1;
 }
 
@@ -50,7 +50,7 @@ if (isset($CDASH_NO_REGISTRATION) && $CDASH_NO_REGISTRATION==1) {
 $userid = 0;
 if (isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid'])) {
     $userid = $_SESSION['cdash']['loginid'];
-    $user = pdo_query("SELECT admin FROM ".qid("user")." WHERE id='$userid'");
+    $user = pdo_query("SELECT admin FROM " . qid("user") . " WHERE id='$userid'");
     $user_array = pdo_fetch_array($user);
     $user_response = array();
     $user_response['id'] = $userid;
@@ -83,11 +83,11 @@ foreach ($projects as $project) {
     if ($project['last_build'] == "NA") {
         $project_response['lastbuild'] = 'NA';
     } else {
-        $lastbuild = strtotime($project['last_build']. "UTC");
+        $lastbuild = strtotime($project['last_build'] . "UTC");
         $project_response['lastbuild'] = date(FMT_DATETIMEDISPLAY, $lastbuild);
         $project_response['lastbuilddate'] = date(FMT_DATE, $lastbuild);
         $project_response['lastbuild_elapsed'] =
-      time_difference(time() - $lastbuild, false, 'ago');
+            time_difference(time() - $lastbuild, false, 'ago');
         $project_response['lastbuilddatefull'] = $lastbuild;
     }
 
@@ -96,11 +96,11 @@ foreach ($projects as $project) {
     } elseif ($project['nbuilds'] < 20) {
         // 2 builds day
 
-    $project_response['activity'] = 'low';
+        $project_response['activity'] = 'low';
     } elseif ($project['nbuilds'] < 70) {
         // 10 builds a day
 
-    $project_response['activity'] = 'medium';
+        $project_response['activity'] = 'medium';
     } elseif ($project['nbuilds'] >= 70) {
         $project_response['activity'] = 'high';
     }

@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include(dirname(__DIR__)."/config/config.php");
+include(dirname(__DIR__) . "/config/config.php");
 require_once("include/pdo.php");
 include('public/login.php');
 include_once('include/common.php');
@@ -32,8 +32,8 @@ if ($session_OK) {
     $xml .= "<menutitle>CDash</menutitle>";
     $xml .= "<menusubtitle>Claim sites</menusubtitle>";
 
-  // Post
-  @$claimsites = $_POST["claimsites"];
+    // Post
+    @$claimsites = $_POST["claimsites"];
     @$availablesites = $_POST["availablesites"];
     @$checkedsites = $_POST["checkedsites"];
     if ($claimsites) {
@@ -57,7 +57,7 @@ if ($session_OK) {
     @$geolocation = $_POST["geolocation"];
 
     if (isset($_POST['unclaimsite']) && isset($_GET['siteid'])) {
-        pdo_query("DELETE FROM site2user WHERE siteid=".qnum(pdo_real_escape_numeric($_GET['siteid']))." AND userid=".qnum($userid));
+        pdo_query("DELETE FROM site2user WHERE siteid=" . qnum(pdo_real_escape_numeric($_GET['siteid'])) . " AND userid=" . qnum($userid));
         echo "<script language=\"javascript\">window.location='user.php'</script>";
         return;
     }
@@ -82,60 +82,60 @@ if ($session_OK) {
         $site_latitude = $_POST["site_latitude"];
 
         if (isset($_POST["outoforder"])) {
-            $outoforder=1;
+            $outoforder = 1;
         } else {
-            $outoforder=0;
+            $outoforder = 0;
         }
 
         if (isset($_POST["newdescription_revision"])) {
-            $newdescription_revision=1;
+            $newdescription_revision = 1;
         } else {
-            $newdescription_revision=0;
+            $newdescription_revision = 0;
         }
     }
 
     if ($updatesite) {
         update_site($claimsiteid, $site_name,
-         $site_processoris64bits,
-         $site_processorvendor,
-         $site_processorvendorid,
-         $site_processorfamilyid,
-         $site_processormodelid,
-         $site_processorcachesize,
-         $site_numberlogicalcpus,
-         $site_numberphysicalcpus,
-         $site_totalvirtualmemory,
-         $site_totalphysicalmemory,
-         $site_logicalprocessorsperphysical,
-         $site_processorclockfrequency,
-         $site_description,
-         $site_ip, $site_latitude,
-         $site_longitude, !$newdescription_revision,
-         $outoforder);
+            $site_processoris64bits,
+            $site_processorvendor,
+            $site_processorvendorid,
+            $site_processorfamilyid,
+            $site_processormodelid,
+            $site_processorcachesize,
+            $site_numberlogicalcpus,
+            $site_numberphysicalcpus,
+            $site_totalvirtualmemory,
+            $site_totalphysicalmemory,
+            $site_logicalprocessorsperphysical,
+            $site_processorclockfrequency,
+            $site_description,
+            $site_ip, $site_latitude,
+            $site_longitude, !$newdescription_revision,
+            $outoforder);
     }
 
-  // If we should retrieve the geolocation
-  if ($geolocation) {
-      $location = get_geolocation($site_ip);
-      update_site($claimsiteid, $site_name,
-         $site_processoris64bits,
-         $site_processorvendor,
-         $site_processorvendorid,
-         $site_processorfamilyid,
-         $site_processormodelid,
-         $site_processorcachesize,
-         $site_numberlogicalcpus,
-         $site_numberphysicalcpus,
-         $site_totalvirtualmemory,
-         $site_totalphysicalmemory,
-         $site_logicalprocessorsperphysical,
-         $site_processorclockfrequency,
-         $site_description, $site_ip, $location['latitude'], $location['longitude'],
-         false, $outoforder);
-  }
+    // If we should retrieve the geolocation
+    if ($geolocation) {
+        $location = get_geolocation($site_ip);
+        update_site($claimsiteid, $site_name,
+            $site_processoris64bits,
+            $site_processorvendor,
+            $site_processorvendorid,
+            $site_processorfamilyid,
+            $site_processormodelid,
+            $site_processorcachesize,
+            $site_numberlogicalcpus,
+            $site_numberphysicalcpus,
+            $site_totalvirtualmemory,
+            $site_totalphysicalmemory,
+            $site_logicalprocessorsperphysical,
+            $site_processorclockfrequency,
+            $site_description, $site_ip, $location['latitude'], $location['longitude'],
+            false, $outoforder);
+    }
 
-  // If we have a projectid that means we should list all the sites
-  @$projectid = $_GET["projectid"];
+    // If we have a projectid that means we should list all the sites
+    @$projectid = $_GET["projectid"];
     if ($projectid != null) {
         $projectid = pdo_real_escape_numeric($projectid);
     }
@@ -146,29 +146,29 @@ if ($session_OK) {
         $xml .= add_XML_value("name", $project_array["name"]);
         $xml .= "</project>";
 
-    // Select sites that belong to this project
-    $beginUTCTime = gmdate(FMT_DATETIME, time()-3600*7*24); // 7 days
-    $site2project = pdo_query("SELECT DISTINCT site.id,site.name FROM build,site WHERE build.projectid='$projectid'
+        // Select sites that belong to this project
+        $beginUTCTime = gmdate(FMT_DATETIME, time() - 3600 * 7 * 24); // 7 days
+        $site2project = pdo_query("SELECT DISTINCT site.id,site.name FROM build,site WHERE build.projectid='$projectid'
                                AND build.starttime>'$beginUTCTime'
                                AND site.id=build.siteid ORDER BY site.name ASC"); //group by is slow
 
-    while ($site2project_array = pdo_fetch_array($site2project)) {
-        $siteid = $site2project_array["id"];
-        $xml .= "<site>";
-        $xml .= add_XML_value("id", $siteid);
-        $xml .= add_XML_value("name", $site2project_array["name"]);
-        $user2site = pdo_query("SELECT * FROM site2user WHERE siteid='$siteid' and userid='$userid'");
-        if (pdo_num_rows($user2site) == 0) {
-            $xml .= add_XML_value("claimed", "0");
-        } else {
-            $xml .= add_XML_value("claimed", "1");
+        while ($site2project_array = pdo_fetch_array($site2project)) {
+            $siteid = $site2project_array["id"];
+            $xml .= "<site>";
+            $xml .= add_XML_value("id", $siteid);
+            $xml .= add_XML_value("name", $site2project_array["name"]);
+            $user2site = pdo_query("SELECT * FROM site2user WHERE siteid='$siteid' and userid='$userid'");
+            if (pdo_num_rows($user2site) == 0) {
+                $xml .= add_XML_value("claimed", "0");
+            } else {
+                $xml .= add_XML_value("claimed", "1");
+            }
+            $xml .= "</site>";
         }
-        $xml .= "</site>";
     }
-    } // end isset(projectid)
 
-  // If we have a siteid we look if the user has claimed the site or not
-  @$siteid = $_GET["siteid"];
+    // If we have a siteid we look if the user has claimed the site or not
+    @$siteid = $_GET["siteid"];
     if ($siteid != null) {
         $siteid = pdo_real_escape_numeric($siteid);
     }
@@ -192,8 +192,8 @@ if ($session_OK) {
         $siteinformation_array["logicalprocessorsperphysical"] = "NA";
         $siteinformation_array["processorclockfrequency"] = "NA";
 
-    // Get the last information about the size
-    $query = pdo_query("SELECT * FROM siteinformation WHERE siteid='$siteid' ORDER BY timestamp DESC LIMIT 1");
+        // Get the last information about the size
+        $query = pdo_query("SELECT * FROM siteinformation WHERE siteid='$siteid' ORDER BY timestamp DESC LIMIT 1");
         if (pdo_num_rows($query) > 0) {
             $siteinformation_array = pdo_fetch_array($query);
             if ($siteinformation_array["processoris64bits"] == -1) {
@@ -259,11 +259,11 @@ if ($session_OK) {
         }
 
         $xml .= "</user>";
-    } // end isset(siteid)
+    }
 
 
-  $xml .= "</cdash>";
+    $xml .= "</cdash>";
 
-  // Now doing the xslt transition
-  generate_XSLT($xml, "editSite");
-} // end session OK;
+    // Now doing the xslt transition
+    generate_XSLT($xml, "editSite");
+}

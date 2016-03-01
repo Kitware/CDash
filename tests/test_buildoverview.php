@@ -3,7 +3,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__).'/cdash_test_case.php');
+require_once(dirname(__FILE__) . '/cdash_test_case.php');
 
 class BuildOverviewTestCase extends KWWebTestCase
 {
@@ -15,12 +15,12 @@ class BuildOverviewTestCase extends KWWebTestCase
     public function testBuildOverview()
     {
         $this->login();
-        $this->get($this->url."/buildOverview.php");
+        $this->get($this->url . "/buildOverview.php");
         if (strpos($this->getBrowser()->getContentAsText(), "project not specified") === false) {
             $this->fail("'project not specified' not found when expected");
             return 1;
         }
-        $this->get($this->url."/buildOverview.php?project=InsightExample");
+        $this->get($this->url . "/buildOverview.php?project=InsightExample");
         if (strpos($this->getBrowser()->getContentAsText(), "Build summary") === false) {
             $this->fail("'Build summary' not found when expected");
             return 1;

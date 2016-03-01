@@ -3,7 +3,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__).'/cdash_test_case.php');
+require_once(dirname(__FILE__) . '/cdash_test_case.php');
 
 require_once('include/common.php');
 require_once('include/pdo.php');
@@ -22,8 +22,8 @@ class DailyUpdateFileTestCase extends KWWebTestCase
 
         $dailyupdatefile = new DailyUpdateFile();
 
-    //no id, no matching database entry
-    $dailyupdatefile->DailyUpdateId = 0;
+        //no id, no matching database entry
+        $dailyupdatefile->DailyUpdateId = 0;
         if ($dailyupdatefile->Exists()) {
             $this->fail("Exists() should return false when DailyUpdateId is 0");
             return 1;
@@ -38,8 +38,8 @@ class DailyUpdateFileTestCase extends KWWebTestCase
             return 1;
         }
 
-    //no filename
-    $dailyupdatefile->Filename = "";
+        //no filename
+        $dailyupdatefile->Filename = "";
         $dailyupdatefile->DailyUpdateId = 1;
         ob_start();
         $dailyupdatefile->Save();
@@ -50,11 +50,11 @@ class DailyUpdateFileTestCase extends KWWebTestCase
             return 1;
         }
 
-    //no matching database entry
-    if ($dailyupdatefile->Exists()) {
-        $this->fail("Exists() should return false before Save() has been called");
-        return 1;
-    }
+        //no matching database entry
+        if ($dailyupdatefile->Exists()) {
+            $this->fail("Exists() should return false before Save() has been called");
+            return 1;
+        }
 
         $dailyupdatefile->Filename = "dailyupdatefile.log";
         ob_start();
@@ -68,11 +68,11 @@ class DailyUpdateFileTestCase extends KWWebTestCase
 
         $dailyupdatefile->CheckinDate = "2010-10-10 10:10:10";
 
-    //call save twice to cover different execution paths
-    if (!$dailyupdatefile->Save()) {
-        $this->fail("Save() returned false on call #1");
-        return 1;
-    }
+        //call save twice to cover different execution paths
+        if (!$dailyupdatefile->Save()) {
+            $this->fail("Save() returned false on call #1");
+            return 1;
+        }
         if (!$dailyupdatefile->Save()) {
             $this->fail("Save() returned false on call #2");
             return 1;
@@ -81,7 +81,6 @@ class DailyUpdateFileTestCase extends KWWebTestCase
         $this->pass("Passed");
 
         $this->stopCodeCoverage();
-
         return 0;
     }
 }

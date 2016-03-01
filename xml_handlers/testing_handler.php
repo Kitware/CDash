@@ -66,7 +66,7 @@ class TestingHandler extends AbstractHandler
         parent::startElement($parser, $name, $attributes);
         $parent = $this->getParent(); // should be before endElement
 
-        if ($name=='SITE') {
+        if ($name == 'SITE') {
             $this->Site->Name = $attributes['NAME'];
             if (empty($this->Site->Name)) {
                 $this->Site->Name = "(empty)";
@@ -74,10 +74,10 @@ class TestingHandler extends AbstractHandler
             $this->Site->Insert();
 
             $siteInformation = new SiteInformation();
-            $buildInformation =  new BuildInformation();
+            $buildInformation = new BuildInformation();
 
             // Fill in the attribute
-            foreach ($attributes as $key=>$value) {
+            foreach ($attributes as $key => $value) {
                 if ($key === "CHANGEID") {
                     $this->Build->SetPullRequest($value);
                     continue;
@@ -124,8 +124,8 @@ class TestingHandler extends AbstractHandler
                 $this->TestMeasurement->Name = $attributes['NAME'];
             }
             $this->TestMeasurement->Type = $attributes['TYPE'];
-        } elseif ($name == "VALUE" && $parent== "MEASUREMENT") {
-            if (isset($attributes['COMPRESSION']) && $attributes['COMPRESSION']=="gzip") {
+        } elseif ($name == "VALUE" && $parent == "MEASUREMENT") {
+            if (isset($attributes['COMPRESSION']) && $attributes['COMPRESSION'] == "gzip") {
                 $this->Test->CompressedOutput = true;
             }
         } elseif ($name == 'LABEL' && $parent == 'LABELS') {
@@ -161,7 +161,7 @@ class TestingHandler extends AbstractHandler
 
             $GLOBALS['PHP_ERROR_BUILD_ID'] = $this->Build->Id;
         }
-    } // end startElement
+    }
 
 
     /** End Element */
@@ -172,7 +172,7 @@ class TestingHandler extends AbstractHandler
 
         if ($name == "TEST" && $parent == 'TESTING') {
             $this->Test->Insert();
-            if ($this->Test->Id>0) {
+            if ($this->Test->Id > 0) {
                 $this->BuildTest->TestId = $this->Test->Id;
                 $this->BuildTest->BuildId = $this->Build->Id;
                 $this->BuildTest->Insert();
@@ -180,7 +180,7 @@ class TestingHandler extends AbstractHandler
                 $this->Test->InsertLabelAssociations($this->Build->Id);
             } else {
                 add_log("Cannot insert test", "Test XML parser", LOG_ERR,
-                        $this->projectid, $this->Build->Id);
+                    $this->projectid, $this->Build->Id);
             }
         } elseif ($name == 'LABEL' && $parent == 'LABELS') {
             if (isset($this->Test)) {
@@ -190,14 +190,14 @@ class TestingHandler extends AbstractHandler
             if ($this->TestMeasurement->Name == 'Execution Time') {
                 $this->BuildTest->Time = $this->TestMeasurement->Value;
             } elseif ($this->TestMeasurement->Name == 'Exit Code') {
-                if (strlen($this->Test->Details)>0) {
-                    $this->Test->Details .= " (".$this->TestMeasurement->Value.")";
+                if (strlen($this->Test->Details) > 0) {
+                    $this->Test->Details .= " (" . $this->TestMeasurement->Value . ")";
                 } else {
                     $this->Test->Details = $this->TestMeasurement->Value;
                 }
             } elseif ($this->TestMeasurement->Name == 'Completion Status') {
-                if (strlen($this->Test->Details)>0) {
-                    $this->Test->Details =  $this->TestMeasurement->Value." (".$this->Test->Details.")";
+                if (strlen($this->Test->Details) > 0) {
+                    $this->Test->Details = $this->TestMeasurement->Value . " (" . $this->Test->Details . ")";
                 } else {
                     $this->Test->Details = $this->TestMeasurement->Value;
                 }
@@ -207,7 +207,7 @@ class TestingHandler extends AbstractHandler
                 // explicit measurement
 
                 // If it's an image we add it as an image
-                if (strpos($this->TestMeasurement->Type, 'image')!== false) {
+                if (strpos($this->TestMeasurement->Type, 'image') !== false) {
                     $image = new Image();
                     $image->Extension = $this->TestMeasurement->Type;
                     $image->Data = $this->TestMeasurement->Value;
@@ -218,18 +218,17 @@ class TestingHandler extends AbstractHandler
                     $this->Test->AddMeasurement($this->TestMeasurement);
                 }
             }
-        } // end named measurement
-        elseif ($name == "SITE") {
+        } elseif ($name == "SITE") {
             // Update the number of tests in the Build table
             $this->Build->UpdateTestNumbers($this->NumberTestsPassed,
-                    $this->NumberTestsFailed,
-                    $this->NumberTestsNotRun);
+                $this->NumberTestsFailed,
+                $this->NumberTestsNotRun);
             $this->Build->ComputeTestTiming();
 
             if ($this->StartTimeStamp > 0 && $this->EndTimeStamp > 0) {
                 // Update test duration in the Build table.
                 $this->Build->SaveTotalTestsTime(
-                        $this->EndTimeStamp - $this->StartTimeStamp);
+                    $this->EndTimeStamp - $this->StartTimeStamp);
             }
 
             global $CDASH_ENABLE_FEED;
@@ -238,7 +237,7 @@ class TestingHandler extends AbstractHandler
                 $this->Feed->InsertTest($this->projectid, $this->Build->Id);
             }
         }
-    } // end endElement
+    }
 
     /** Text function */
     public function text($parser, $data)

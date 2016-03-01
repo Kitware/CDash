@@ -36,62 +36,62 @@ class coverage
     public $Labels;
 
 
-  // Purposely no Insert function. Everything is done from the coverage summary
-  public function AddLabel($label)
-  {
-      if (!isset($this->Labels)) {
-          $this->Labels = array();
-      }
+    // Purposely no Insert function. Everything is done from the coverage summary
+    public function AddLabel($label)
+    {
+        if (!isset($this->Labels)) {
+            $this->Labels = array();
+        }
 
-      $label->CoverageFileId = $this->CoverageFile->Id;
-      $label->CoverageFileBuildId = $this->BuildId;
-      $this->Labels[] = $label;
-  }
+        $label->CoverageFileId = $this->CoverageFile->Id;
+        $label->CoverageFileBuildId = $this->BuildId;
+        $this->Labels[] = $label;
+    }
 
-  /** Put labels for coverage */
-  public function InsertLabelAssociations($buildid)
-  {
-      if ($buildid &&
-       isset($this->CoverageFile) &&
-       $this->CoverageFile->Id) {
-          if (empty($this->Labels)) {
-              return;
-          }
+    /** Put labels for coverage */
+    public function InsertLabelAssociations($buildid)
+    {
+        if ($buildid &&
+            isset($this->CoverageFile) &&
+            $this->CoverageFile->Id
+        ) {
+            if (empty($this->Labels)) {
+                return;
+            }
 
-          foreach ($this->Labels as $label) {
-              $label->CoverageFileId = $this->CoverageFile->Id;
-              $label->CoverageFileBuildId = $buildid;
-              $label->Insert();
-          }
-      } else {
-          add_log('No buildid or coveragefile',
-              'Coverage::InsertLabelAssociations', LOG_ERR,
-              0, $buildid,
-              CDASH_OBJECT_COVERAGE, $this->CoverageFile->Id);
-      }
-  }
+            foreach ($this->Labels as $label) {
+                $label->CoverageFileId = $this->CoverageFile->Id;
+                $label->CoverageFileBuildId = $buildid;
+                $label->Insert();
+            }
+        } else {
+            add_log('No buildid or coveragefile',
+                'Coverage::InsertLabelAssociations', LOG_ERR,
+                0, $buildid,
+                CDASH_OBJECT_COVERAGE, $this->CoverageFile->Id);
+        }
+    }
 
 
-  /** Return the name of a build */
-  public function GetFiles()
-  {
-      if (!$this->BuildId) {
-          echo "Coverage GetFiles(): BuildId not set";
-          return false;
-      }
+    /** Return the name of a build */
+    public function GetFiles()
+    {
+        if (!$this->BuildId) {
+            echo "Coverage GetFiles(): BuildId not set";
+            return false;
+        }
 
-      $fileids = array();
+        $fileids = array();
 
-      $coverage = pdo_query("SELECT fileid FROM coverage WHERE buildid=".qnum($this->BuildId));
-      if (!$coverage) {
-          add_last_sql_error("Coverage GetFiles");
-          return false;
-      }
+        $coverage = pdo_query("SELECT fileid FROM coverage WHERE buildid=" . qnum($this->BuildId));
+        if (!$coverage) {
+            add_last_sql_error("Coverage GetFiles");
+            return false;
+        }
 
-      while ($coverage_array = pdo_fetch_array($coverage)) {
-          $fileids[] = $coverage_array['fileid'];
-      }
-
-      return $fileids;
-  } // end function GetFiles()
-} // end class Coverage;
+        while ($coverage_array = pdo_fetch_array($coverage)) {
+            $fileids[] = $coverage_array['fileid'];
+        }
+        return $fileids;
+    }
+}

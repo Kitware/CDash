@@ -15,7 +15,7 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include_once(dirname(__DIR__)."/config/config.php");
+include_once(dirname(__DIR__) . "/config/config.php");
 require_once("include/pdo.php");
 include('public/login.php');
 include('include/version.php');
@@ -41,7 +41,7 @@ $xml = begin_XML_for_XSLT();
 $xml .= "<backurl>user.php</backurl>";
 $xml .= "<title>CDash - Developpers Statistics</title>";
 $xml .= "<menutitle>User Statistics</menutitle>";
-$xml .= "<menusubtitle>".$projectname."</menusubtitle>";
+$xml .= "<menusubtitle>" . $projectname . "</menusubtitle>";
 
 $project = pdo_query("SELECT id,name FROM project WHERE id='$projectid'");
 $project_array = pdo_fetch_array($project);
@@ -59,35 +59,35 @@ if (isset($_POST["range"])) {
 // Find the list of the best submitters for the project
 $now = time();
 
-if ($range=="thisweek") {
+if ($range == "thisweek") {
     // find the current day of the week
-  $day = date("w");
+    $day = date("w");
     $end = $now;
-    $beginning = $now-$day*3600*24;
-} elseif ($range=="lastweek") {
+    $beginning = $now - $day * 3600 * 24;
+} elseif ($range == "lastweek") {
     // find the current day of the week
-  $day = date("w");
-    $end = $now-$day*3600*24;
-    $beginning = $end-7*3600*24;
-} elseif ($range=="thismonth") {
+    $day = date("w");
+    $end = $now - $day * 3600 * 24;
+    $beginning = $end - 7 * 3600 * 24;
+} elseif ($range == "thismonth") {
     // find the current day of the month
-  $day = date("j");
+    $day = date("j");
     $end = $now;
-    $beginning = $now-$day*3600*24;
-} elseif ($range=="lastmonth") {
+    $beginning = $now - $day * 3600 * 24;
+} elseif ($range == "lastmonth") {
     // find the current day of the month
-  $day = date("j");
-    $end = $now-$day*3600*24;
-    $beginning = $end-30*3600*24; // assume 30 days months
-} elseif ($range=="thisyear") {
+    $day = date("j");
+    $end = $now - $day * 3600 * 24;
+    $beginning = $end - 30 * 3600 * 24; // assume 30 days months
+} elseif ($range == "thisyear") {
     // find the current day of the month
-  $day = date("z");
-    $beginning = $now-$day*3600*24;
+    $day = date("z");
+    $beginning = $now - $day * 3600 * 24;
     $end = $now;
-} elseif ($range=="lastyear") {
+} elseif ($range == "lastyear") {
     $currentyear = date("Y");
-    $beginning = mktime(0, 0, 0, 1, 1, $currentyear-1);
-    $end = mktime(0, 0, 0, 12, 31, $currentyear-1);
+    $beginning = mktime(0, 0, 0, 1, 1, $currentyear - 1);
+    $end = mktime(0, 0, 0, 12, 31, $currentyear - 1);
 }
 
 $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning);
@@ -144,7 +144,7 @@ $alpha_warning = 0.3;
 $alpha_error = 0.4;
 $alpha_test = 0.3;
 
-$weight = (1-$alpha_warning)+(1-$alpha_error)+(1-$alpha_test);
+$weight = (1 - $alpha_warning) + (1 - $alpha_error) + (1 - $alpha_test);
 
 $max['nfailederrors'] = 1;
 $max['nfixederrors'] = 1;
@@ -153,40 +153,40 @@ $max['nfixedwarnings'] = 1;
 $max['nfailedtests'] = 1;
 $max['nfixedtests'] = 1;
 
-foreach ($users as $key=>$user) {
-    if ($user['totalbuilds']==0) {
+foreach ($users as $key => $user) {
+    if ($user['totalbuilds'] == 0) {
         $users[$key]['totalbuilds'] = 1;
     }
-    $users[$key]['nfailederrors'] = abs(round($user['nfailederrors']/$user['totalbuilds']));
-    $users[$key]['nfixederrors'] = abs(round($user['nfixederrors']/$user['totalbuilds']));
-    $users[$key]['nfailedwarnings'] = abs(round($user['nfailedwarnings']/$user['totalbuilds']));
-    $users[$key]['nfixedwarnings'] = abs(round($user['nfixedwarnings']/$user['totalbuilds']));
-    $users[$key]['nfailedtests'] = abs(round($user['nfailedtests']/$user['totalbuilds']));
-    $users[$key]['nfixedtests'] = abs(round($user['nfixedtests']/$user['totalbuilds']));
-    $users[$key]['totalupdatedfiles'] = abs(round($user['totalupdatedfiles']/$user['totalbuilds']));
+    $users[$key]['nfailederrors'] = abs(round($user['nfailederrors'] / $user['totalbuilds']));
+    $users[$key]['nfixederrors'] = abs(round($user['nfixederrors'] / $user['totalbuilds']));
+    $users[$key]['nfailedwarnings'] = abs(round($user['nfailedwarnings'] / $user['totalbuilds']));
+    $users[$key]['nfixedwarnings'] = abs(round($user['nfixedwarnings'] / $user['totalbuilds']));
+    $users[$key]['nfailedtests'] = abs(round($user['nfailedtests'] / $user['totalbuilds']));
+    $users[$key]['nfixedtests'] = abs(round($user['nfixedtests'] / $user['totalbuilds']));
+    $users[$key]['totalupdatedfiles'] = abs(round($user['totalupdatedfiles'] / $user['totalbuilds']));
 
     foreach ($max as $mk => $mv) {
-        if ($mv<$users[$key][$mk]) {
-            $max[$mk]=$users[$key][$mk];
+        if ($mv < $users[$key][$mk]) {
+            $max[$mk] = $users[$key][$mk];
         }
     }
 }
 
-foreach ($users as $key=>$user) {
+foreach ($users as $key => $user) {
     $xml .= "<user>";
-    $user_array = pdo_fetch_array(pdo_query("SELECT firstname,lastname FROM ".qid("user")." WHERE id=".qnum($key)));
+    $user_array = pdo_fetch_array(pdo_query("SELECT firstname,lastname FROM " . qid("user") . " WHERE id=" . qnum($key)));
 
-    $xml .= add_XML_value("name", $user_array['firstname']." ".$user_array['lastname']);
+    $xml .= add_XML_value("name", $user_array['firstname'] . " " . $user_array['lastname']);
     $xml .= add_XML_value("id", $key);
-    $scorep=$alpha_test*$user['nfixedtests']/$max['nfixedtests'];
-    $scorep+=$alpha_error*$user['nfixederrors']/$max['nfixederrors'];
-    $scorep+=$alpha_warning*$user['nfixedwarnings']/$max['nfixedwarnings'];
-  // weights for scorep should be 1
+    $scorep = $alpha_test * $user['nfixedtests'] / $max['nfixedtests'];
+    $scorep += $alpha_error * $user['nfixederrors'] / $max['nfixederrors'];
+    $scorep += $alpha_warning * $user['nfixedwarnings'] / $max['nfixedwarnings'];
+    // weights for scorep should be 1
 
-  $scoren=(1-$alpha_test)*$user['nfailedtests']/$max['nfailedtests'];
-    $scoren+=(1-$alpha_error)*$user['nfailederrors']/$max['nfailederrors'];
-    $scoren+=(1-$alpha_warning)*$user['nfailedwarnings']/$max['nfailedwarnings'];
-    $score = $scorep-$scoren/$weight;
+    $scoren = (1 - $alpha_test) * $user['nfailedtests'] / $max['nfailedtests'];
+    $scoren += (1 - $alpha_error) * $user['nfailederrors'] / $max['nfailederrors'];
+    $scoren += (1 - $alpha_warning) * $user['nfailedwarnings'] / $max['nfailedwarnings'];
+    $score = $scorep - $scoren / $weight;
 
     $xml .= add_XML_value("score", round($score, 3));
     $xml .= add_XML_value("failed_errors", $user['nfailederrors']);

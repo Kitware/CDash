@@ -23,7 +23,7 @@ if (class_exists('XsltProcessor') == false) {
     return;
 }
 
-include(dirname(__DIR__)."/config/config.php");
+include(dirname(__DIR__) . "/config/config.php");
 require_once("include/pdo.php");
 require_once("include/common.php");
 require_once("include/login_functions.php");
@@ -41,10 +41,10 @@ if (!isset($CDASH_DB_TYPE)) {
 } else {
     $db_type = $CDASH_DB_TYPE;
 }
-$xml .= "<connectiondb_type>".$db_type."</connectiondb_type>";
-$xml .= "<connectiondb_host>".$CDASH_DB_HOST."</connectiondb_host>";
-$xml .= "<connectiondb_login>".$CDASH_DB_LOGIN."</connectiondb_login>";
-$xml .= "<connectiondb_name>".$CDASH_DB_NAME."</connectiondb_name>";
+$xml .= "<connectiondb_type>" . $db_type . "</connectiondb_type>";
+$xml .= "<connectiondb_host>" . $CDASH_DB_HOST . "</connectiondb_host>";
+$xml .= "<connectiondb_login>" . $CDASH_DB_LOGIN . "</connectiondb_login>";
+$xml .= "<connectiondb_name>" . $CDASH_DB_NAME . "</connectiondb_name>";
 
 // Step 1: Check if we can connect to the database
 @$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
@@ -103,7 +103,8 @@ if (!is_writable("rss")) {
 
 // If the database already exists and we have all the tables
 if (true === @pdo_select_db("$CDASH_DB_NAME", $db)
-        && pdo_query("SELECT id FROM ".qid("user")." LIMIT 1", $db, false)) {
+    && pdo_query("SELECT id FROM " . qid("user") . " LIMIT 1", $db, false)
+) {
     $xml .= "<database>1</database>";
 } else {
     $xml .= "<database>0</database>";
@@ -113,7 +114,7 @@ if (true === @pdo_select_db("$CDASH_DB_NAME", $db)
     // If we should create the tables
     @$Submit = $_POST["Submit"];
     if ($Submit) {
-        if ($db_type=='mysql') {
+        if ($db_type == 'mysql') {
             pdo_select_db("");
         } else {
             pdo_select_db("$CDASH_DB_NAME");
@@ -154,11 +155,11 @@ if (true === @pdo_select_db("$CDASH_DB_NAME", $db)
         if ($valid_email) {
             $db_created = true;
             // If this is MySQL we try to create the database
-            if ($db_type=='mysql') {
+            if ($db_type == 'mysql') {
                 pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
                 if (!pdo_query("CREATE DATABASE IF NOT EXISTS `$CDASH_DB_NAME`")) {
                     $xml .= "<db_created>0</db_created>";
-                    $xml .= "<alert>".pdo_error()."</alert>";
+                    $xml .= "<alert>" . pdo_error() . "</alert>";
                     $db_created = false;
                 }
             }
@@ -177,7 +178,7 @@ if (true === @pdo_select_db("$CDASH_DB_NAME", $db)
                             // We need to remove only the last semicolon
                             $pos = strrpos($query, ";");
                             if ($pos !== false) {
-                                $query = substr($query, 0, $pos).substr($query, $pos+1);
+                                $query = substr($query, 0, $pos) . substr($query, $pos + 1);
                             }
 
                             $result = pdo_query($query);
@@ -188,17 +189,17 @@ if (true === @pdo_select_db("$CDASH_DB_NAME", $db)
                             $query = "";
                         }
                     }
-                } // end for each line
-            } // end _processSQLfile
+                }
+            }
 
             if ($db_created) {
                 pdo_select_db("$CDASH_DB_NAME", $db);
-                $sqlfile = "$CDASH_ROOT_DIR/sql/".$db_type."/cdash.sql";
+                $sqlfile = "$CDASH_ROOT_DIR/sql/" . $db_type . "/cdash.sql";
                 _processSQLfile($sqlfile);
 
                 // If we have a local directory we process the sql in that directory
                 if ($CDASH_USE_LOCAL_DIRECTORY) {
-                    $sqlfile = "$CDASH_ROOT_DIR/local/sql/".$db_type."/cdash.sql";
+                    $sqlfile = "$CDASH_ROOT_DIR/local/sql/" . $db_type . "/cdash.sql";
                     if (file_exists($sqlfile)) {
                         _processSQLfile($sqlfile);
                     }
@@ -219,11 +220,11 @@ if (true === @pdo_select_db("$CDASH_DB_NAME", $db)
                         if (($sql_line != "") && (substr($tsl, 0, 2) != "--")) {
                             $query .= $sql_line;
                             $possemicolon = strrpos($query, ";");
-                            if ($possemicolon !== false && substr_count($query, '\'', 0, $possemicolon)%2==0) {
+                            if ($possemicolon !== false && substr_count($query, '\'', 0, $possemicolon) % 2 == 0) {
                                 // We need to remove only the last semicolon
                                 $pos = strrpos($query, ";");
                                 if ($pos !== false) {
-                                    $query = substr($query, 0, $pos).substr($query, $pos+1);
+                                    $query = substr($query, 0, $pos) . substr($query, $pos + 1);
                                 }
                                 $result = pdo_query($query);
                                 if (!$result) {
@@ -233,28 +234,28 @@ if (true === @pdo_select_db("$CDASH_DB_NAME", $db)
                                 $query = "";
                             }
                         }
-                    } // end foreach line
+                    }
 
                     // Check the version of PostgreSQL
                     $result_version = pdo_query("SELECT version()");
                     $version_array = pdo_fetch_array($result_version);
                     if (strpos(strtolower($version_array[0]), "postgresql 9.") !== false) {
                         // For PgSQL 9.0 we need to set the bytea_output to 'escape' (it was changed to hexa)
-                        @pdo_query("ALTER DATABASE ".$CDASH_DB_NAME." SET bytea_output TO 'escape'");
+                        @pdo_query("ALTER DATABASE " . $CDASH_DB_NAME . " SET bytea_output TO 'escape'");
                     }
-                } // end pgsql functions
+                }
 
-                pdo_query("INSERT INTO ".qid("user")." (email,password,firstname,lastname,institution,admin) VALUES ('".$admin_email."', '".md5($admin_password)."', 'administrator', '','Kitware Inc.', 1)");
+                pdo_query("INSERT INTO " . qid("user") . " (email,password,firstname,lastname,institution,admin) VALUES ('" . $admin_email . "', '" . md5($admin_password) . "', 'administrator', '','Kitware Inc.', 1)");
                 echo pdo_error();
 
                 $xml .= "<db_created>1</db_created>";
 
                 // Set the database version
                 setVersion();
-            } // end database created
-        } // end check valid username and password
-    } // end submit
-} // end database doesn't exists
+            }
+        }
+    }
+}
 
 
 $xml .= "</cdash>";

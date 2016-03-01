@@ -3,7 +3,7 @@
 // After including cdash_selenium_test_base.php, subsequent require_once calls
 // are relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__).'/cdash_selenium_test_case.php');
+require_once(dirname(__FILE__) . '/cdash_selenium_test_case.php');
 
 class Example extends CDashSeleniumTestCase
 {
@@ -14,7 +14,7 @@ class Example extends CDashSeleniumTestCase
 
     public function testEditSite()
     {
-        $this->open($this->webPath."/index.php");
+        $this->open($this->webPath . "/index.php");
         $this->click("link=Login");
         $this->waitForPageToLoad("30000");
         $this->type("login", "simpletest@localhost");

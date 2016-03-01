@@ -23,40 +23,40 @@ class buildusernote
     public $Status;
     public $BuildId;
 
-  // Insert in the database
-  public function Insert()
-  {
-      if (!$this->BuildId) {
-          echo "BuildUserNote::Insert(): BuildId is not set<br>";
-          return false;
-      }
+    // Insert in the database
+    public function Insert()
+    {
+        if (!$this->BuildId) {
+            echo "BuildUserNote::Insert(): BuildId is not set<br>";
+            return false;
+        }
 
-      if (!$this->UserId) {
-          echo "BuildUserNote::Insert(): UserId is not set<br>";
-          return false;
-      }
+        if (!$this->UserId) {
+            echo "BuildUserNote::Insert(): UserId is not set<br>";
+            return false;
+        }
 
-      if (!$this->Note) {
-          echo "BuildUserNote::Insert(): Note is not set<br>";
-          return false;
-      }
+        if (!$this->Note) {
+            echo "BuildUserNote::Insert(): Note is not set<br>";
+            return false;
+        }
 
-      if (!$this->TimeStamp) {
-          echo "BuildUserNote::Insert(): TimeStamp is not set<br>";
-          return false;
-      }
+        if (!$this->TimeStamp) {
+            echo "BuildUserNote::Insert(): TimeStamp is not set<br>";
+            return false;
+        }
 
-      if (!$this->Status) {
-          echo "BuildUserNote::Insert(): Status is not set<br>";
-          return false;
-      }
+        if (!$this->Status) {
+            echo "BuildUserNote::Insert(): Status is not set<br>";
+            return false;
+        }
 
-      $query = "INSERT INTO buildnote (buildid,userid,note,timestamp,status)
+        $query = "INSERT INTO buildnote (buildid,userid,note,timestamp,status)
               VALUES ('$this->BuildId','$this->UserId','$this->Note','$this->TimeStamp','$this->Status')";
-      if (!pdo_query($query)) {
-          add_last_sql_error("BuildUserNote Insert", 0, $this->BuildId);
-          return false;
-      }
-      return true;
-  }
+        if (!pdo_query($query)) {
+            add_last_sql_error("BuildUserNote Insert", 0, $this->BuildId);
+            return false;
+        }
+        return true;
+    }
 }

@@ -1,22 +1,22 @@
 <?php
 /**
  *  base include file for SimpleTest
- *  @package    SimpleTest
- *  @version    $Id$
+ * @package    SimpleTest
+ * @version    $Id$
  */
 
 /**
  *  Static methods for compatibility between different
  *  PHP versions.
- *  @package    SimpleTest
+ * @package    SimpleTest
  */
 class SimpleTestCompatibility
 {
     /**
      *    Creates a copy whether in PHP5 or PHP4.
-     *    @param object $object     Thing to copy.
-     *    @return object            A copy.
-     *    @access public
+     * @param object $object Thing to copy.
+     * @return object            A copy.
+     * @access public
      */
     public static function copy($object)
     {
@@ -31,10 +31,10 @@ class SimpleTestCompatibility
      *    Identity test. Drops back to equality + types for PHP5
      *    objects as the === operator counts as the
      *    stronger reference constraint.
-     *    @param mixed $first    Test subject.
-     *    @param mixed $second   Comparison object.
-     *    @return boolean        True if identical.
-     *    @access public
+     * @param mixed $first Test subject.
+     * @param mixed $second Comparison object.
+     * @return boolean        True if identical.
+     * @access public
      */
     public static function isIdentical($first, $second)
     {
@@ -49,10 +49,10 @@ class SimpleTestCompatibility
 
     /**
      *    Recursive type test.
-     *    @param mixed $first    Test subject.
-     *    @param mixed $second   Comparison object.
-     *    @return boolean        True if same type.
-     *    @access private
+     * @param mixed $first Test subject.
+     * @param mixed $second Comparison object.
+     * @return boolean        True if same type.
+     * @access private
      */
     protected static function isIdenticalType($first, $second)
     {
@@ -64,8 +64,8 @@ class SimpleTestCompatibility
                 return false;
             }
             return SimpleTestCompatibility::isArrayOfIdenticalTypes(
-                    (array) $first,
-                    (array) $second);
+                (array)$first,
+                (array)$second);
         }
         if (is_array($first) && is_array($second)) {
             return SimpleTestCompatibility::isArrayOfIdenticalTypes($first, $second);
@@ -78,10 +78,10 @@ class SimpleTestCompatibility
 
     /**
      *    Recursive type test for each element of an array.
-     *    @param mixed $first    Test subject.
-     *    @param mixed $second   Comparison object.
-     *    @return boolean        True if identical.
-     *    @access private
+     * @param mixed $first Test subject.
+     * @param mixed $second Comparison object.
+     * @return boolean        True if identical.
+     * @access private
      */
     protected static function isArrayOfIdenticalTypes($first, $second)
     {
@@ -90,9 +90,9 @@ class SimpleTestCompatibility
         }
         foreach (array_keys($first) as $key) {
             $is_identical = SimpleTestCompatibility::isIdenticalType(
-                    $first[$key],
-                    $second[$key]);
-            if (! $is_identical) {
+                $first[$key],
+                $second[$key]);
+            if (!$is_identical) {
                 return false;
             }
         }
@@ -101,10 +101,10 @@ class SimpleTestCompatibility
 
     /**
      *    Test for two variables being aliases.
-     *    @param mixed $first    Test subject.
-     *    @param mixed $second   Comparison object.
-     *    @return boolean        True if same.
-     *    @access public
+     * @param mixed $first Test subject.
+     * @param mixed $second Comparison object.
+     * @return boolean        True if same.
+     * @access public
      */
     public static function isReference(&$first, &$second)
     {
@@ -128,17 +128,17 @@ class SimpleTestCompatibility
     /**
      *    Test to see if an object is a member of a
      *    class hiearchy.
-     *    @param object $object    Object to test.
-     *    @param string $class     Root name of hiearchy.
-     *    @return boolean         True if class in hiearchy.
-     *    @access public
+     * @param object $object Object to test.
+     * @param string $class Root name of hiearchy.
+     * @return boolean         True if class in hiearchy.
+     * @access public
      */
     public static function isA($object, $class)
     {
         if (version_compare(phpversion(), '5') >= 0) {
-            if (! class_exists($class, false)) {
+            if (!class_exists($class, false)) {
                 if (function_exists('interface_exists')) {
-                    if (! interface_exists($class, false)) {
+                    if (!interface_exists($class, false)) {
                         return false;
                     }
                 }
@@ -150,14 +150,14 @@ class SimpleTestCompatibility
             return is_a($object, $class);
         }
         return ((strtolower($class) == get_class($object))
-                or (is_subclass_of($object, $class)));
+            or (is_subclass_of($object, $class)));
     }
 
     /**
      *    Sets a socket timeout for each chunk.
-     *    @param resource $handle    Socket handle.
-     *    @param integer $timeout    Limit in seconds.
-     *    @access public
+     * @param resource $handle Socket handle.
+     * @param integer $timeout Limit in seconds.
+     * @access public
      */
     public static function setTimeout($handle, $timeout)
     {

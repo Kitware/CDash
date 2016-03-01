@@ -3,7 +3,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__).'/cdash_test_case.php');
+require_once(dirname(__FILE__) . '/cdash_test_case.php');
 include_once("include/upgrade_functions.php");
 
 class UpgradeTestCase extends KWWebTestCase
@@ -125,7 +125,7 @@ class UpgradeTestCase extends KWWebTestCase
 
     public function testBuildFailureDetailsUpgrade()
     {
-        require_once(dirname(__FILE__).'/cdash_test_case.php');
+        require_once(dirname(__FILE__) . '/cdash_test_case.php');
         require_once('include/common.php');
         require_once('include/pdo.php');
 
@@ -136,7 +136,7 @@ class UpgradeTestCase extends KWWebTestCase
         global $CDASH_DB_TYPE;
         if ($CDASH_DB_TYPE == 'pgsql') {
             $create_old_query = '
-                CREATE TABLE "'. $old_table . '" (
+                CREATE TABLE "' . $old_table . '" (
                         "id" bigserial NOT NULL,
                         "buildid" bigint NOT NULL,
                         "type" smallint NOT NULL,
@@ -246,12 +246,12 @@ class UpgradeTestCase extends KWWebTestCase
         $count_results = pdo_single_row_query($count_query);
         if ($count_results['numfails'] != 2) {
             $this->fail(
-                    "Expected 2 buildfailures, found " . $count_results['numfails']);
+                "Expected 2 buildfailures, found " . $count_results['numfails']);
             $retval = 1;
         }
         if ($count_results['numdetails'] != 1) {
             $this->fail(
-                    "Expected 1 buildfailuredetails, found " . $count_results['numdetails']);
+                "Expected 1 buildfailuredetails, found " . $count_results['numdetails']);
             $retval = 1;
         }
 
@@ -267,7 +267,7 @@ class UpgradeTestCase extends KWWebTestCase
 
     public function testUpgradeDurations()
     {
-        require_once(dirname(__FILE__).'/cdash_test_case.php');
+        require_once(dirname(__FILE__) . '/cdash_test_case.php');
         require_once('include/common.php');
         require_once('include/pdo.php');
 
@@ -294,7 +294,7 @@ class UpgradeTestCase extends KWWebTestCase
         $row = pdo_single_row_query($query);
         if ($row['configureduration'] != 309.00) {
             $this->fail(
-                    "Expected configure duration to be 309.00, found " . $row['configureduration']);
+                "Expected configure duration to be 309.00, found " . $row['configureduration']);
             $retval = 1;
         }
 
@@ -309,7 +309,7 @@ class UpgradeTestCase extends KWWebTestCase
         $row = pdo_single_row_query($query);
         if ($row['time'] != 48.00) {
             $this->fail(
-                    "Expected test duration to be 48.00, found " . $row['time']);
+                "Expected test duration to be 48.00, found " . $row['time']);
             $retval = 1;
         }
 
@@ -332,7 +332,7 @@ class UpgradeTestCase extends KWWebTestCase
 
     public function testSiteConstraintUpgrade()
     {
-        require_once(dirname(__FILE__).'/cdash_test_case.php');
+        require_once(dirname(__FILE__) . '/cdash_test_case.php');
         require_once('include/common.php');
         require_once('include/pdo.php');
 
@@ -342,7 +342,7 @@ class UpgradeTestCase extends KWWebTestCase
         global $CDASH_DB_TYPE;
         if ($CDASH_DB_TYPE == 'pgsql') {
             $create_query = '
-                CREATE TABLE "'. $table_name . '" (
+                CREATE TABLE "' . $table_name . '" (
                         "id" serial NOT NULL,
                         "name" character varying(255) DEFAULT \'\' NOT NULL,
                         "ip" character varying(255) DEFAULT \'\' NOT NULL,
@@ -373,7 +373,7 @@ class UpgradeTestCase extends KWWebTestCase
 
         // Find the largest siteid from the real site table.
         $row = pdo_single_row_query(
-                "SELECT id FROM site ORDER BY id DESC LIMIT 1");
+            "SELECT id FROM site ORDER BY id DESC LIMIT 1");
         $i = $row['id'];
         $dupes = array();
         $keepers = array();
@@ -444,9 +444,9 @@ class UpgradeTestCase extends KWWebTestCase
         // We also need to verify that siteids in other tables get updated
         // properly as duplicates are removed.
         $tables_to_update = array('build', 'build2grouprule', 'site2user',
-                'client_job', 'client_site2cmake', 'client_site2compiler',
-                'client_site2library', 'client_site2program',
-                'client_site2project');
+            'client_job', 'client_site2cmake', 'client_site2compiler',
+            'client_site2library', 'client_site2program',
+            'client_site2project');
         foreach ($tables_to_update as $table_to_update) {
             foreach ($dupes as $dupe) {
                 if ($table_to_update === "build") {
@@ -491,7 +491,7 @@ class UpgradeTestCase extends KWWebTestCase
             $count_results = pdo_single_row_query($count_query);
             if ($count_results['numsites'] != 1) {
                 $this->fail(
-                        "Expected 1 site, found " . $count_results['numsites']);
+                    "Expected 1 site, found " . $count_results['numsites']);
                 $retval = 1;
             }
         }
@@ -503,7 +503,7 @@ class UpgradeTestCase extends KWWebTestCase
             $count_results = pdo_single_row_query($count_query);
             if ($count_results['numsites'] != 0) {
                 $this->fail(
-                        "Expected 0 site, found " . $count_results['numsites']);
+                    "Expected 0 site, found " . $count_results['numsites']);
                 $retval = 1;
             }
         }
@@ -520,9 +520,9 @@ class UpgradeTestCase extends KWWebTestCase
                 $count_results = pdo_single_row_query($count_query);
                 if ($count_results['numsites'] != $expected_matches) {
                     $this->fail(
-                            "Expected $expected_matches match for siteid $keeper
+                        "Expected $expected_matches match for siteid $keeper
                             in $table_to_update, found " .
-                            $count_results['numsites']);
+                        $count_results['numsites']);
                     $retval = 1;
                 }
             }
@@ -533,7 +533,7 @@ class UpgradeTestCase extends KWWebTestCase
                 if ($count_results['numsites'] != 0) {
                     $this->fail("Expected 0 matches for siteid $dupe
                             in $table_to_update, found " .
-                            $count_results['numsites']);
+                        $count_results['numsites']);
                     $retval = 1;
                 }
             }

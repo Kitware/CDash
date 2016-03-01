@@ -16,7 +16,7 @@
 
 $noforcelogin = 1;
 
-include(dirname(__DIR__)."/config/config.php");
+include(dirname(__DIR__) . "/config/config.php");
 require_once("include/pdo.php");
 include_once('include/common.php');
 include("include/version.php");
@@ -61,53 +61,53 @@ $xml .= add_XML_value("title", "CDash - Uploaded files");
 $xml .= add_XML_value("menutitle", "CDash");
 $xml .= add_XML_value("menusubtitle", "Uploaded files");
 
-$xml .= "<hostname>".$_SERVER['SERVER_NAME']."</hostname>";
-$xml .= "<date>".date("r")."</date>";
+$xml .= "<hostname>" . $_SERVER['SERVER_NAME'] . "</hostname>";
+$xml .= "<date>" . date("r") . "</date>";
 $xml .= "<backurl>index.php</backurl>";
 
 $xml .= "<buildid>$buildid</buildid>";
-$xml .= '<buildname>'.$Build->Name.'</buildname>';
-$xml .= '<buildstarttime>'.$Build->StartTime.'</buildstarttime>';
-$xml .= '<siteid>'.$Site->Id.'</siteid>';
-$xml .= '<sitename>'.$Site->GetName().'</sitename>';
+$xml .= '<buildname>' . $Build->Name . '</buildname>';
+$xml .= '<buildstarttime>' . $Build->StartTime . '</buildstarttime>';
+$xml .= '<siteid>' . $Site->Id . '</siteid>';
+$xml .= '<sitename>' . $Site->GetName() . '</sitename>';
 
 $uploadFilesOrURLs = $Build->GetUploadedFilesOrUrls();
 
 foreach ($uploadFilesOrURLs as $uploadFileOrURL) {
     if (!$uploadFileOrURL->IsUrl) {
         $xml .= '<uploadfile>';
-        $xml .= '<id>'.$uploadFileOrURL->Id.'</id>';
-        $xml .= '<href>'.$CDASH_DOWNLOAD_RELATIVE_URL.'/'.$uploadFileOrURL->Sha1Sum.'/'.$uploadFileOrURL->Filename.'</href>';
-        $xml .= '<sha1sum>'.$uploadFileOrURL->Sha1Sum.'</sha1sum>';
-        $xml .= '<filename>'.$uploadFileOrURL->Filename.'</filename>';
-        $xml .= '<filesize>'.$uploadFileOrURL->Filesize.'</filesize>';
+        $xml .= '<id>' . $uploadFileOrURL->Id . '</id>';
+        $xml .= '<href>' . $CDASH_DOWNLOAD_RELATIVE_URL . '/' . $uploadFileOrURL->Sha1Sum . '/' . $uploadFileOrURL->Filename . '</href>';
+        $xml .= '<sha1sum>' . $uploadFileOrURL->Sha1Sum . '</sha1sum>';
+        $xml .= '<filename>' . $uploadFileOrURL->Filename . '</filename>';
+        $xml .= '<filesize>' . $uploadFileOrURL->Filesize . '</filesize>';
 
         $filesize = $uploadFileOrURL->Filesize;
         $ext = "b";
-        if ($filesize>1024) {
+        if ($filesize > 1024) {
             $filesize /= 1024;
             $ext = "Kb";
         }
-        if ($filesize>1024) {
+        if ($filesize > 1024) {
             $filesize /= 1024;
             $ext = "Mb";
         }
-        if ($filesize>1024) {
+        if ($filesize > 1024) {
             $filesize /= 1024;
             $ext = "Gb";
         }
-        if ($filesize>1024) {
+        if ($filesize > 1024) {
             $filesize /= 1024;
             $ext = "Tb";
         }
 
-        $xml .= '<filesizedisplay>'.round($filesize).' '.$ext.'</filesizedisplay>';
-        $xml .= '<isurl>'.$uploadFileOrURL->IsUrl.'</isurl>';
+        $xml .= '<filesizedisplay>' . round($filesize) . ' ' . $ext . '</filesizedisplay>';
+        $xml .= '<isurl>' . $uploadFileOrURL->IsUrl . '</isurl>';
         $xml .= '</uploadfile>';
     } else {
         $xml .= '<uploadurl>';
-        $xml .= '<id>'.$uploadFileOrURL->Id.'</id>';
-        $xml .= '<filename>'.htmlspecialchars($uploadFileOrURL->Filename).'</filename>';
+        $xml .= '<id>' . $uploadFileOrURL->Id . '</id>';
+        $xml .= '<filename>' . htmlspecialchars($uploadFileOrURL->Filename) . '</filename>';
         $xml .= '</uploadurl>';
     }
 }

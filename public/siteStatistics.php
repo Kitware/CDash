@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include(dirname(__DIR__)."/config/config.php");
+include(dirname(__DIR__) . "/config/config.php");
 require_once("include/pdo.php");
 include('public/login.php');
 include("include/version.php");
@@ -28,7 +28,7 @@ if ($session_OK) {
 
     checkUserPolicy(@$_SESSION['cdash']['loginid'], 0); // only admin
 
-$xml = begin_XML_for_XSLT();
+    $xml = begin_XML_for_XSLT();
     $xml .= "<backurl>user.php</backurl>";
     $xml .= "<title>CDash - Sites Statistics</title>";
     $xml .= "<menutitle>CDash</menutitle>";
@@ -61,7 +61,7 @@ $xml = begin_XML_for_XSLT();
   AVG(TIME_TO_SEC(TIMEDIFF(submittime, buildupdate.starttime))) AS elapsed
   FROM build, build2update, buildupdate, project, site
   WHERE
-    submittime > TIMESTAMPADD(".qiv("HOUR").", -168, NOW())
+    submittime > TIMESTAMPADD(" . qiv("HOUR") . ", -168, NOW())
     AND build2update.buildid = build.id
     AND buildupdate.id = build2update.updateid
     AND site.id = build.siteid
@@ -86,5 +86,5 @@ $xml = begin_XML_for_XSLT();
     $xml .= "</cdash>";
 
 // Now doing the xslt transition
-generate_XSLT($xml, "siteStatistics");
-} // end session;
+    generate_XSLT($xml, "siteStatistics");
+}

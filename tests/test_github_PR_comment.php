@@ -3,7 +3,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__).'/cdash_test_case.php');
+require_once(dirname(__FILE__) . '/cdash_test_case.php');
 require_once('include/common.php');
 
 class GithubCommentTestCase extends KWWebTestCase
@@ -26,7 +26,7 @@ class GithubCommentTestCase extends KWWebTestCase
         $svnviewerurl = 'https://github.com/Kitware/CDash';
         $bugtrackerfileurl = 'http://public.kitware.com/Bug/view.php?id=';
         $this->createProject($name, $description, $svnviewerurl, $bugtrackerfileurl);
-        $content = $this->connect($this->url.'/index.php?project=CDash');
+        $content = $this->connect($this->url . '/index.php?project=CDash');
         if (!$content) {
             return 1;
         }
@@ -36,7 +36,7 @@ class GithubCommentTestCase extends KWWebTestCase
             $this->fail("Could not retrieve projectid");
             return 1;
         }
-        $this->get($this->url."/createProject.php?edit=1&projectid=$this->projectid#fragment-3");
+        $this->get($this->url . "/createProject.php?edit=1&projectid=$this->projectid#fragment-3");
         if (!$this->setFieldByName("cvsviewertype", "github")) {
             $this->fail("Set Viewer Type returned false");
             return 1;
@@ -62,39 +62,43 @@ class GithubCommentTestCase extends KWWebTestCase
         // Setup subprojects by submitting the Project.xml file.
         global $configure;
         // Submit the file.
-        $url = $this->url."/submit.php?project=CDash";
+        $url = $this->url . "/submit.php?project=CDash";
         $result = $this->uploadfile($url,
-                dirname(__FILE__)."/data/GithubPR/Project.xml");
+            dirname(__FILE__) . "/data/GithubPR/Project.xml");
         $this->deleteLog($this->logfilename);
 
         // Submit a failing test.
         echo "Submitting Test.xml\n";
         if (!$this->submitPullRequestFile(
-                    dirname(__FILE__)."/data/GithubPR/Test.xml")) {
+            dirname(__FILE__) . "/data/GithubPR/Test.xml")
+        ) {
             return 1;
         }
 
         // Submit a broken build.
         echo "Submitting Build.xml\n";
         if (!$this->submitPullRequestFile(
-                    dirname(__FILE__)."/data/GithubPR/Build.xml")) {
+            dirname(__FILE__) . "/data/GithubPR/Build.xml")
+        ) {
             return 1;
         }
 
         // Submit a failed configure.
         echo "Submitting Configure.xml\n";
         if (!$this->submitPullRequestFile(
-                    dirname(__FILE__)."/data/GithubPR/Configure.xml")) {
+            dirname(__FILE__) . "/data/GithubPR/Configure.xml")
+        ) {
             return 1;
         }
 
         // Delete the project now that we're done with it.
-        $this->get($this->url."/createProject.php?edit=1&projectid=$this->projectid#fragment-8");
+        $this->get($this->url . "/createProject.php?edit=1&projectid=$this->projectid#fragment-8");
         $this->clickSubmitByName("Delete");
 
         // Verify that it's actually gone.
         if (!$query = pdo_query(
-                    "SELECT * FROM project WHERE id=$this->projectid")) {
+            "SELECT * FROM project WHERE id=$this->projectid")
+        ) {
             $this->fail("pdo_query returned false");
             return 1;
         }
@@ -108,7 +112,7 @@ class GithubCommentTestCase extends KWWebTestCase
     public function getProjectId()
     {
         //get projectid for CDash
-        $content = $this->connect($this->url.'/manageProjectRoles.php');
+        $content = $this->connect($this->url . '/manageProjectRoles.php');
         $lines = explode("\n", $content);
         foreach ($lines as $line) {
             if (strpos($line, "CDash") !== false) {
@@ -129,7 +133,7 @@ class GithubCommentTestCase extends KWWebTestCase
     {
         global $configure;
         // Submit the file.
-        $url = $this->url."/submit.php?project=CDash";
+        $url = $this->url . "/submit.php?project=CDash";
         $result = $this->uploadfile($url, $file);
 
         // Get the ID of the comment that was just posted.

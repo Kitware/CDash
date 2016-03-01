@@ -24,28 +24,28 @@ class testimage
     public $Role;
     public $TestId;
 
-  /** Return if exists */
-  public function Exists()
-  {
-      $query = pdo_query("SELECT count(*) AS c FROM test2image WHERE imgid='".$this->Id."' AND testid='".$this->TestId."' AND role='".$this->Role."'");
-      $query_array = pdo_fetch_array($query);
-      if ($query_array['c']>0) {
-          return true;
-      }
-      return false;
-  }
+    /** Return if exists */
+    public function Exists()
+    {
+        $query = pdo_query("SELECT count(*) AS c FROM test2image WHERE imgid='" . $this->Id . "' AND testid='" . $this->TestId . "' AND role='" . $this->Role . "'");
+        $query_array = pdo_fetch_array($query);
+        if ($query_array['c'] > 0) {
+            return true;
+        }
+        return false;
+    }
 
-  // Save in the database
-  public function Insert()
-  {
-      $role = pdo_real_escape_string($this->Role);
+    // Save in the database
+    public function Insert()
+    {
+        $role = pdo_real_escape_string($this->Role);
 
-      $query = "INSERT INTO test2image (imgid,testid,role)
+        $query = "INSERT INTO test2image (imgid,testid,role)
               VALUES ('$this->Id','$this->TestId','$role')";
-      if (!pdo_query($query)) {
-          add_last_sql_error("TestImage Insert");
-          return false;
-      }
-      return true;
-  }  // end Insert
+        if (!pdo_query($query)) {
+            add_last_sql_error("TestImage Insert");
+            return false;
+        }
+        return true;
+    }
 }

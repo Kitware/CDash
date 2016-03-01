@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include(dirname(__DIR__)."/config/config.php");
+include(dirname(__DIR__) . "/config/config.php");
 require_once("include/pdo.php");
 include('public/login.php');
 include("include/version.php");
@@ -29,7 +29,7 @@ if ($session_OK) {
     pdo_select_db("$CDASH_DB_NAME", $db);
 
     checkUserPolicy(@$_SESSION['cdash']['loginid'], 0); // only admin
-$xml = begin_XML_for_XSLT();
+    $xml = begin_XML_for_XSLT();
     $xml .= "<title>CDash - Backup</title>";
     $xml .= "<menutitle>CDash</menutitle>";
     $xml .= "<menusubtitle>Backup</menusubtitle>";
@@ -37,5 +37,5 @@ $xml = begin_XML_for_XSLT();
     $xml .= "</cdash>";
 
 // Now doing the xslt transition
-generate_XSLT($xml, "manageBackup");
-} // end session;
+    generate_XSLT($xml, "manageBackup");
+}

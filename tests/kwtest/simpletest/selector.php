@@ -1,9 +1,9 @@
 <?php
 /**
  *  Base include file for SimpleTest.
- *  @package    SimpleTest
- *  @subpackage WebTester
- *  @version    $Id$
+ * @package    SimpleTest
+ * @subpackage WebTester
+ * @version    $Id$
  */
 
 /**#@+
@@ -16,8 +16,8 @@ require_once(dirname(__FILE__) . '/encoding.php');
 /**
  *    Used to extract form elements for testing against.
  *    Searches by name attribute.
- *    @package SimpleTest
- *    @subpackage WebTester
+ * @package SimpleTest
+ * @subpackage WebTester
  */
 class SimpleByName
 {
@@ -25,7 +25,7 @@ class SimpleByName
 
     /**
      *    Stashes the name for later comparison.
-     *    @param string $name     Name attribute to match.
+     * @param string $name Name attribute to match.
      */
     public function __construct($name)
     {
@@ -34,7 +34,7 @@ class SimpleByName
 
     /**
      *  Accessor for name.
-     *  @returns string $name       Name to match.
+     * @returns string $name       Name to match.
      */
     public function getName()
     {
@@ -43,8 +43,8 @@ class SimpleByName
 
     /**
      *    Compares with name attribute of widget.
-     *    @param SimpleWidget $widget    Control to compare.
-     *    @access public
+     * @param SimpleWidget $widget Control to compare.
+     * @access public
      */
     public function isMatch($widget)
     {
@@ -55,8 +55,8 @@ class SimpleByName
 /**
  *    Used to extract form elements for testing against.
  *    Searches by visible label or alt text.
- *    @package SimpleTest
- *    @subpackage WebTester
+ * @package SimpleTest
+ * @subpackage WebTester
  */
 class SimpleByLabel
 {
@@ -64,7 +64,7 @@ class SimpleByLabel
 
     /**
      *    Stashes the name for later comparison.
-     *    @param string $label     Visible text to match.
+     * @param string $label Visible text to match.
      */
     public function __construct($label)
     {
@@ -74,12 +74,12 @@ class SimpleByLabel
     /**
      *    Comparison. Compares visible text of widget or
      *    related label.
-     *    @param SimpleWidget $widget    Control to compare.
-     *    @access public
+     * @param SimpleWidget $widget Control to compare.
+     * @access public
      */
     public function isMatch($widget)
     {
-        if (! method_exists($widget, 'isLabel')) {
+        if (!method_exists($widget, 'isLabel')) {
             return false;
         }
         return $widget->isLabel($this->label);
@@ -89,8 +89,8 @@ class SimpleByLabel
 /**
  *    Used to extract form elements for testing against.
  *    Searches dy id attribute.
- *    @package SimpleTest
- *    @subpackage WebTester
+ * @package SimpleTest
+ * @subpackage WebTester
  */
 class SimpleById
 {
@@ -98,7 +98,7 @@ class SimpleById
 
     /**
      *    Stashes the name for later comparison.
-     *    @param string $id     ID atribute to match.
+     * @param string $id ID atribute to match.
      */
     public function __construct($id)
     {
@@ -107,8 +107,8 @@ class SimpleById
 
     /**
      *    Comparison. Compares id attribute of widget.
-     *    @param SimpleWidget $widget    Control to compare.
-     *    @access public
+     * @param SimpleWidget $widget Control to compare.
+     * @access public
      */
     public function isMatch($widget)
     {
@@ -119,8 +119,8 @@ class SimpleById
 /**
  *    Used to extract form elements for testing against.
  *    Searches by visible label, name or alt text.
- *    @package SimpleTest
- *    @subpackage WebTester
+ * @package SimpleTest
+ * @subpackage WebTester
  */
 class SimpleByLabelOrName
 {
@@ -128,7 +128,7 @@ class SimpleByLabelOrName
 
     /**
      *    Stashes the name/label for later comparison.
-     *    @param string $label     Visible text to match.
+     * @param string $label Visible text to match.
      */
     public function __construct($label)
     {
@@ -138,8 +138,8 @@ class SimpleByLabelOrName
     /**
      *    Comparison. Compares visible text of widget or
      *    related label or name.
-     *    @param SimpleWidget $widget    Control to compare.
-     *    @access public
+     * @param SimpleWidget $widget Control to compare.
+     * @access public
      */
     public function isMatch($widget)
     {

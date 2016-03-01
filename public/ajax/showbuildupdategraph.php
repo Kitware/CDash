@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once(dirname(dirname(__DIR__))."/config/config.php");
+require_once(dirname(dirname(__DIR__)) . "/config/config.php");
 require_once("include/pdo.php");
 require_once("include/common.php");
 
@@ -47,50 +47,55 @@ $previousbuilds = pdo_query("SELECT b.id,b.starttime,bu.nfiles FROM build as b,b
 
 <br>
 <script language="javascript" type="text/javascript">
-$(function () {
-    var d1 = [];
-    var buildids = [];
-    <?php
-    $i=0;
-    while ($build_array = pdo_fetch_array($previousbuilds)) {
-        $t = strtotime($build_array["starttime"])*1000; //flot expects milliseconds
-    ?>
-      d1.push([<?php echo $t;
-        ?>,<?php echo $build_array["nfiles"];
-        ?>]);
-      buildids[<?php echo $t;
-        ?>] = <?php echo $build_array["id"];
-        ?>;
-    <?php
-    $i++;
-    }
-    ?>
+    $(function () {
+        var d1 = [];
+        var buildids = [];
+        <?php
+        $i = 0;
+        while ($build_array = pdo_fetch_array($previousbuilds)) {
+            $t = strtotime($build_array["starttime"]) * 1000; //flot expects milliseconds
+        ?>
+        d1.push([<?php echo $t;
+            ?>,<?php echo $build_array["nfiles"];
+            ?>]);
+        buildids[<?php echo $t;
+            ?>] = <?php echo $build_array["id"];
+            ?>;
+        <?php
+        $i++;
+        }
+        ?>
 
-    var options = {
-      lines: { show: true },
-      points: { show: true },
-      xaxis: { mode: "time" },
-      grid: {backgroundColor: "#fffaff",
-      clickable: true,
-      hoverable: true,
-      hoverFill: '#444',
-      hoverRadius: 4},
-      selection: { mode: "x" },
-      colors: ["#0000FF", "#dba255", "#919733"]
-    };
+        var options = {
+            lines: {show: true},
+            points: {show: true},
+            xaxis: {mode: "time"},
+            grid: {
+                backgroundColor: "#fffaff",
+                clickable: true,
+                hoverable: true,
+                hoverFill: '#444',
+                hoverRadius: 4
+            },
+            selection: {mode: "x"},
+            colors: ["#0000FF", "#dba255", "#919733"]
+        };
 
-    $("#grapholder").bind("selected", function (event, area) {
-    plot = $.plot($("#grapholder"), [{label: "Number of changed files",  data: d1}], $.extend(true, {}, options, {xaxis: { min: area.x1, max: area.x2 }}));
-     });
+        $("#grapholder").bind("selected", function (event, area) {
+            plot = $.plot($("#grapholder"), [{
+                label: "Number of changed files",
+                data: d1
+            }], $.extend(true, {}, options, {xaxis: {min: area.x1, max: area.x2}}));
+        });
 
-   $("#grapholder").bind("plotclick", function (e, pos, item) {
-       if (item) {
-           plot.highlight(item.series, item.datapoint);
-           buildid = buildids[item.datapoint[0]];
-           window.location = "buildSummary.php?buildid="+buildid;
-           }
+        $("#grapholder").bind("plotclick", function (e, pos, item) {
+            if (item) {
+                plot.highlight(item.series, item.datapoint);
+                buildid = buildids[item.datapoint[0]];
+                window.location = "buildSummary.php?buildid=" + buildid;
+            }
+        });
+
+        plot = $.plot($("#grapholder"), [{label: "Number of changed files", data: d1}], options);
     });
-
-  plot = $.plot($("#grapholder"), [{label: "Number of changed files",  data: d1}],options);
-});
 </script>

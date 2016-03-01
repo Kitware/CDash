@@ -15,7 +15,7 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include(dirname(dirname(dirname(__DIR__)))."/config/config.php");
+include(dirname(dirname(dirname(__DIR__))) . "/config/config.php");
 require_once("include/pdo.php");
 include_once("include/common.php");
 include('public/login.php');
@@ -50,7 +50,7 @@ if ($projectid != null) {
 // If the projectid is not set and there is only one project we go directly to the page
 if (!isset($projectid)) {
     $project = pdo_query("SELECT id FROM project");
-    if (pdo_num_rows($project)==1) {
+    if (pdo_num_rows($project) == 1) {
         $project_array = pdo_fetch_array($project);
         $projectid = $project_array["id"];
     }
@@ -58,21 +58,21 @@ if (!isset($projectid)) {
 
 @$show = $_GET["show"];
 
-$role=0;
+$role = 0;
 
 $user_array = pdo_fetch_array(pdo_query(
-  "SELECT admin FROM ".qid("user")." WHERE id='$userid'"));
+    "SELECT admin FROM " . qid("user") . " WHERE id='$userid'"));
 if ($projectid && is_numeric($projectid)) {
     $user2project = pdo_query(
-    "SELECT role FROM user2project
+        "SELECT role FROM user2project
      WHERE userid='$userid' AND projectid='$projectid'");
-    if (pdo_num_rows($user2project)>0) {
+    if (pdo_num_rows($user2project) > 0) {
         $user2project_array = pdo_fetch_array($user2project);
         $role = $user2project_array["role"];
     }
 }
 
-if ($user_array["admin"]!=1 && $role<=1) {
+if ($user_array["admin"] != 1 && $role <= 1) {
     $response['error'] = "You don't have the permissions to access this page";
     echo json_encode($response);
     return;
@@ -104,11 +104,11 @@ if ($projectid < 1) {
 }
 
 // Find the recent builds for this project
-$currentUTCTime =  gmdate(FMT_DATETIME);
-$beginUTCTime = gmdate(FMT_DATETIME, time()-3600*7*24); // 7 days
+$currentUTCTime = gmdate(FMT_DATETIME);
+$beginUTCTime = gmdate(FMT_DATETIME, time() - 3600 * 7 * 24); // 7 days
 
 $sql = "";
-if ($show>0) {
+if ($show > 0) {
     $sql = "AND g.id='$show'";
 }
 
@@ -120,7 +120,7 @@ $builds = pdo_query("
   WHERE b.starttime<'$currentUTCTime' AND b.starttime>'$beginUTCTime' AND
         b.projectid='$projectid' AND b2g.buildid=b.id AND
         gp.buildgroupid=g.id AND b2g.groupid=g.id AND
-        s.id = b.siteid ".$sql."
+        s.id = b.siteid " . $sql . "
   ORDER BY b.name ASC");
 
 $err = pdo_error();
@@ -133,16 +133,16 @@ $currentbuilds = array();
 $sites = array();
 while ($build_array = pdo_fetch_array($builds)) {
     // Avoid adding the same build twice
-  $build_name = $build_array['sitename'] . $build_array['name'] .
-    $build_array['type'];
+    $build_name = $build_array['sitename'] . $build_array['name'] .
+        $build_array['type'];
     if (!in_array($build_name, $build_names)) {
         $build_names[] = $build_name;
 
         $currentbuild = array();
-        $currentbuild['id'] =  $build_array['id'];
+        $currentbuild['id'] = $build_array['id'];
         $currentbuild['name'] = $build_array['sitename'] . " " .
-      $build_array['name'] . " [" .  $build_array['type'] . "] " .
-      $build_array['groupname'];
+            $build_array['name'] . " [" . $build_array['type'] . "] " .
+            $build_array['groupname'];
         $currentbuild['groupid'] = $build_array['groupid'];
         $currentbuilds[] = $currentbuild;
     }
@@ -156,14 +156,14 @@ while ($build_array = pdo_fetch_array($builds)) {
 
 // Add expected builds
 $builds = pdo_query(
-  "SELECT b.id, s.name AS sitename, s.id AS siteid, b.name, b.type,
+    "SELECT b.id, s.name AS sitename, s.id AS siteid, b.name, b.type,
           g.name as groupname, g.id as groupid
    FROM site AS s, build AS b, build2group AS b2g, buildgroup AS g,
           build2grouprule AS b2gr
    WHERE g.id = b2g.groupid AND b2g.buildid = b.id AND
          b2gr.expected = 1 AND b2gr.groupid = g.id AND
          g.endtime='1980-01-01 00:00:00' AND b.projectid='$projectid' AND
-         s.id = b.siteid ".$sql."
+         s.id = b.siteid " . $sql . "
    ORDER BY b.name ASC");
 $err = pdo_error();
 if (!empty($err)) {
@@ -172,17 +172,17 @@ if (!empty($err)) {
 
 while ($build_array = pdo_fetch_array($builds)) {
     $build_name = $build_array['sitename'] . $build_array['name'] .
-    $build_array['type'];
-  // Avoid adding the same build twice
-  if (!in_array($build_name, $build_names)) {
-      $build_names[] = $build_name;
-      $currentbuild = array();
-      $currentbuild['id'] =  $build_array['id'];
-      $currentbuild['name'] = $build_array['sitename'] . " " .
-      $build_array['name'] . " [" . $build_array['type'] . "] " .
-      $build_array['groupname']." (expected)";
-      $currentbuilds[] = $currentbuild;
-  }
+        $build_array['type'];
+    // Avoid adding the same build twice
+    if (!in_array($build_name, $build_names)) {
+        $build_names[] = $build_name;
+        $currentbuild = array();
+        $currentbuild['id'] = $build_array['id'];
+        $currentbuild['name'] = $build_array['sitename'] . " " .
+            $build_array['name'] . " [" . $build_array['type'] . "] " .
+            $build_array['groupname'] . " (expected)";
+        $currentbuilds[] = $currentbuild;
+    }
     $site = array();
     $site['id'] = $build_array['siteid'];
     $site['name'] = $build_array['sitename'];
@@ -213,20 +213,20 @@ foreach ($buildgroups as $buildgroup) {
     $buildgroup_response['summaryemail'] = $buildgroup->GetSummaryEmail();
     $buildgroup_response['emailcommitters'] = $buildgroup->GetEmailCommitters();
     $buildgroup_response['includesubprojecttotal'] =
-    $buildgroup->GetIncludeSubProjectTotal();
+        $buildgroup->GetIncludeSubProjectTotal();
     $buildgroup_response['position'] = $buildgroup->GetPosition();
     $buildgroup_response['startdate'] = $buildgroup->GetStartTime();
     $buildgroup_response['autoremovetimeframe'] =
-    $buildgroup->GetAutoRemoveTimeFrame();
+        $buildgroup->GetAutoRemoveTimeFrame();
 
     $buildgroups_response[] = $buildgroup_response;
 
     if ($buildgroup->GetType() != "Daily") {
         // Get the rules associated with this dynamic group.
-    $dynamic_response = $buildgroup_response;
+        $dynamic_response = $buildgroup_response;
         $rules_result = pdo_query("
       SELECT * FROM build2grouprule
-      WHERE groupid='".$dynamic_response['id']."'");
+      WHERE groupid='" . $dynamic_response['id'] . "'");
         $err = pdo_error();
         if (!empty($err)) {
             $response['error'] = $err;

@@ -15,7 +15,7 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include(dirname(__DIR__)."/config/config.php");
+include(dirname(__DIR__) . "/config/config.php");
 require_once("include/pdo.php");
 include('public/login.php');
 include_once("include/common.php");
@@ -47,7 +47,7 @@ $role = 0;
 
 if ($projectid) {
     $project = pdo_query("SELECT name FROM project WHERE id='$projectid'");
-    if (pdo_num_rows($project)>0) {
+    if (pdo_num_rows($project) > 0) {
         $project_array = pdo_fetch_array($project);
         $projectname = $project_array["name"];
     }
@@ -58,17 +58,17 @@ if ($projectid) {
 }
 
 $xml = begin_XML_for_XSLT();
-$xml .= "<title>Feed - ".$projectname."</title>";
+$xml .= "<title>Feed - " . $projectname . "</title>";
 
 $xml .= get_cdash_dashboard_xml(get_project_name($projectid), $date);
 
 $sql = '';
 if ($date) {
-    $sql = "AND date>'".$date."'";
+    $sql = "AND date>'" . $date . "'";
 }
 
 // Get the errors
-$query = pdo_query("SELECT * FROM feed WHERE projectid=".qnum($projectid)." ORDER BY id DESC");
+$query = pdo_query("SELECT * FROM feed WHERE projectid=" . qnum($projectid) . " ORDER BY id DESC");
 
 while ($query_array = pdo_fetch_array($query)) {
     $xml .= "<feeditem>";

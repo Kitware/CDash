@@ -44,37 +44,37 @@ class coveragesummary
             return false;
         }
 
-        $query = "DELETE FROM coveragesummarydiff WHERE buildid=".qnum($this->BuildId);
+        $query = "DELETE FROM coveragesummarydiff WHERE buildid=" . qnum($this->BuildId);
         if (!pdo_query($query)) {
             add_last_sql_error("CoverageSummary RemoveAll");
             return false;
         }
 
         // coverage file are kept unless they are shared
-        $coverage = pdo_query("SELECT fileid FROM coverage WHERE buildid=".qnum($this->BuildId));
+        $coverage = pdo_query("SELECT fileid FROM coverage WHERE buildid=" . qnum($this->BuildId));
         while ($coverage_array = pdo_fetch_array($coverage)) {
             $fileid = $coverage_array["fileid"];
             // Make sure the file is not shared
             $numfiles = pdo_query("SELECT count(*) FROM coveragefile WHERE id='$fileid'");
             $numfiles_array = pdo_fetch_row($numfiles);
-            if ($numfiles_array[0]==1) {
+            if ($numfiles_array[0] == 1) {
                 pdo_query("DELETE FROM coveragefile WHERE id='$fileid'");
             }
         }
 
-        $query = "DELETE FROM coverage WHERE buildid=".qnum($this->BuildId);
+        $query = "DELETE FROM coverage WHERE buildid=" . qnum($this->BuildId);
         if (!pdo_query($query)) {
             add_last_sql_error("CoverageSummary RemoveAll");
             return false;
         }
 
-        $query = "DELETE FROM coveragefilelog WHERE buildid=".qnum($this->BuildId);
+        $query = "DELETE FROM coveragefilelog WHERE buildid=" . qnum($this->BuildId);
         if (!pdo_query($query)) {
             add_last_sql_error("CoverageSummary RemoveAll");
             return false;
         }
 
-        $query = "DELETE FROM coveragesummary WHERE buildid=".qnum($this->BuildId);
+        $query = "DELETE FROM coveragesummary WHERE buildid=" . qnum($this->BuildId);
         if (!pdo_query($query)) {
             add_last_sql_error("CoverageSummary RemoveAll");
             return false;
@@ -83,7 +83,7 @@ class coveragesummary
     }   // RemoveAll()
 
     /** Insert a new summary */
-    public function Insert($append=false)
+    public function Insert($append = false)
     {
         if (!$this->BuildId || !is_numeric($this->BuildId)) {
             echo "CoverageSummary::Insert(): BuildId not set";
@@ -92,11 +92,11 @@ class coveragesummary
 
         // Add the coverages
         // Construct the SQL query
-        if (count($this->Coverages)>0) {
+        if (count($this->Coverages) > 0) {
             $sql = "INSERT INTO coverage (buildid,fileid,covered,loctested,locuntested,branchstested,branchsuntested,
                 functionstested,functionsuntested) VALUES ";
 
-            $i=0;
+            $i = 0;
             foreach ($this->Coverages as &$coverage) {
                 $fullpath = $coverage->CoverageFile->FullPath;
 
@@ -111,7 +111,7 @@ class coveragesummary
                     // Check if this file already exists in the database.
                     // This could happen if CoverageLog.xml was parsed before Coverage.xml.
                     $coveragefile = pdo_query(
-                    "SELECT id FROM coveragefile AS cf
+                        "SELECT id FROM coveragefile AS cf
                     INNSER JOIN coveragefilelog AS cfl ON (cfl.fileid=cf.id)
                     WHERE cf.fullpath='$fullpath' AND cfl.buildid='$this->BuildId'");
                     if (pdo_num_rows($coveragefile) == 0) {
@@ -163,21 +163,21 @@ class coveragesummary
                     // exists.
                     pdo_begin_transaction();
                     $row = pdo_single_row_query(
-                            "SELECT * FROM coverage
-                            WHERE buildid=".qnum($this->BuildId)." AND
-                            fileid=".qnum($coverage->CoverageFile->Id)."
+                        "SELECT * FROM coverage
+                            WHERE buildid=" . qnum($this->BuildId) . " AND
+                            fileid=" . qnum($coverage->CoverageFile->Id) . "
                             FOR UPDATE");
                     if ($row && array_key_exists('1', $row)) {
                         $query = "UPDATE coverage SET
-                            covered=".qnum($covered).",
-                            loctested=".qnum($loctested).",
-                            locuntested=".qnum($locuntested).",
-                            branchstested=".qnum($branchstested).",
-                            branchsuntested=".qnum($branchsuntested).",
-                            functionstested=".qnum($functionstested).",
-                            functionsuntested=".qnum($functionsuntested)."
-                            WHERE buildid=".qnum($this->BuildId)." AND
-                            fileid=".qnum($coverage->CoverageFile->Id);
+                            covered=" . qnum($covered) . ",
+                            loctested=" . qnum($loctested) . ",
+                            locuntested=" . qnum($locuntested) . ",
+                            branchstested=" . qnum($branchstested) . ",
+                            branchsuntested=" . qnum($branchsuntested) . ",
+                            functionstested=" . qnum($functionstested) . ",
+                            functionsuntested=" . qnum($functionsuntested) . "
+                            WHERE buildid=" . qnum($this->BuildId) . " AND
+                            fileid=" . qnum($coverage->CoverageFile->Id);
                         if (!pdo_query($query)) {
                             add_last_sql_error("CoverageSummary Update Coverage");
                             pdo_rollback();
@@ -189,14 +189,14 @@ class coveragesummary
                     pdo_commit();
                 }
 
-                if ($i>0) {
+                if ($i > 0) {
                     $sql .= ", ";
                 } else {
-                    $i=1;
+                    $i = 1;
                 }
-                $sql .= "(".qnum($this->BuildId).",".qnum($fileid).",".qnum($covered).",".qnum($loctested).",".qnum($locuntested).",
-                    ".qnum($branchstested).",".qnum($branchsuntested).
-                        ",".qnum($functionstested).",".qnum($functionsuntested).")";
+                $sql .= "(" . qnum($this->BuildId) . "," . qnum($fileid) . "," . qnum($covered) . "," . qnum($loctested) . "," . qnum($locuntested) . ",
+                    " . qnum($branchstested) . "," . qnum($branchsuntested) .
+                    "," . qnum($functionstested) . "," . qnum($functionsuntested) . ")";
             }
             if ($i > 0) {
                 // Insert into coverage
@@ -217,8 +217,8 @@ class coveragesummary
             // Check if a coveragesummary already exists for this build.
             pdo_begin_transaction();
             $row = pdo_single_row_query(
-                    "SELECT loctested, locuntested FROM coveragesummary
-                    WHERE buildid=".qnum($this->BuildId)."
+                "SELECT loctested, locuntested FROM coveragesummary
+                    WHERE buildid=" . qnum($this->BuildId) . "
                     FOR UPDATE");
             if ($row && array_key_exists('loctested', $row)) {
                 $previous_loctested = $row['loctested'];
@@ -228,7 +228,7 @@ class coveragesummary
                 $this->LocTested = 0;
                 $this->LocUntested = 0;
                 $query = "SELECT loctested, locuntested FROM coverage
-                    WHERE buildid=".qnum($this->BuildId);
+                    WHERE buildid=" . qnum($this->BuildId);
                 $results = pdo_query($query);
                 if (!$results) {
                     add_last_sql_error("CoverageSummary:GetExistingCoverage");
@@ -242,9 +242,9 @@ class coveragesummary
 
                 // Update the existing record with this information.
                 $query = "UPDATE coveragesummary SET
-                    loctested=".qnum($this->LocTested).",
-                    locuntested=".qnum($this->LocUntested)."
-                    WHERE buildid=".qnum($this->BuildId);
+                    loctested=" . qnum($this->LocTested) . ",
+                    locuntested=" . qnum($this->LocUntested) . "
+                    WHERE buildid=" . qnum($this->BuildId);
                 if (!pdo_query($query)) {
                     add_last_sql_error("CoverageSummary Update");
                     pdo_rollback();
@@ -263,7 +263,7 @@ class coveragesummary
         if (!$summary_updated) {
             $query = "INSERT INTO coveragesummary
                 (buildid,loctested,locuntested)
-                VALUES (".qnum($this->BuildId).",".qnum($this->LocTested).",".qnum($this->LocUntested).")";
+                VALUES (" . qnum($this->BuildId) . "," . qnum($this->LocTested) . "," . qnum($this->LocUntested) . ")";
             if (!pdo_query($query)) {
                 add_last_sql_error("CoverageSummary Insert");
                 return false;
@@ -272,20 +272,20 @@ class coveragesummary
 
         // If this is a child build then update the parent's summary as well.
         $parent = pdo_single_row_query(
-                "SELECT parentid FROM build WHERE id=".qnum($this->BuildId));
+            "SELECT parentid FROM build WHERE id=" . qnum($this->BuildId));
         if ($parent && array_key_exists('parentid', $parent)) {
             $parentid = $parent['parentid'];
             if ($parentid > 0) {
                 pdo_begin_transaction();
                 $exists = pdo_query(
-                        "SELECT * FROM coveragesummary
-                        WHERE buildid=".qnum($parentid)."
+                    "SELECT * FROM coveragesummary
+                        WHERE buildid=" . qnum($parentid) . "
                         FOR UPDATE");
                 if (pdo_num_rows($exists) == 0) {
                     $query = "INSERT INTO coveragesummary
                         (buildid,loctested,locuntested)
                         VALUES
-                        (".qnum($parentid).",".qnum($this->LocTested).",".qnum($this->LocUntested).")";
+                        (" . qnum($parentid) . "," . qnum($this->LocTested) . "," . qnum($this->LocUntested) . ")";
                 } else {
                     if (!isset($delta_tested)) {
                         $delta_tested = $this->LocTested;
@@ -322,24 +322,24 @@ class coveragesummary
         }
 
         // Look at the number of errors and warnings differences
-        $coverage = pdo_query("SELECT loctested,locuntested FROM coveragesummary WHERE buildid=".qnum($this->BuildId));
+        $coverage = pdo_query("SELECT loctested,locuntested FROM coveragesummary WHERE buildid=" . qnum($this->BuildId));
         if (!$coverage) {
             add_last_sql_error("CoverageSummary:ComputeDifference");
             return false;
         }
-        $coverage_array  = pdo_fetch_array($coverage);
+        $coverage_array = pdo_fetch_array($coverage);
         $loctested = $coverage_array['loctested'];
         $locuntested = $coverage_array['locuntested'];
 
-        $previouscoverage = pdo_query("SELECT loctested,locuntested FROM coveragesummary WHERE buildid=".qnum($previousBuildId));
-        if (pdo_num_rows($previouscoverage)>0) {
+        $previouscoverage = pdo_query("SELECT loctested,locuntested FROM coveragesummary WHERE buildid=" . qnum($previousBuildId));
+        if (pdo_num_rows($previouscoverage) > 0) {
             $previouscoverage_array = pdo_fetch_array($previouscoverage);
             $previousloctested = $previouscoverage_array['loctested'];
             $previouslocuntested = $previouscoverage_array['locuntested'];
 
             // Don't log if no diff
-            $loctesteddiff = $loctested-$previousloctested;
-            $locuntesteddiff = $locuntested-$previouslocuntested;
+            $loctesteddiff = $loctested - $previousloctested;
+            $locuntesteddiff = $locuntested - $previouslocuntested;
 
             if ($loctesteddiff != 0 && $locuntesteddiff != 0) {
                 $summaryDiff = new CoverageSummaryDiff();
@@ -349,20 +349,20 @@ class coveragesummary
                 $summaryDiff->Insert();
             }
         }
-    } // end ComputeDifference()
+    }
 
     /** Return the list of buildid which are contributing to the dashboard */
     public function GetBuilds($projectid, $timestampbegin, $timestampend)
     {
         $buildids = array();
         $coverage = pdo_query("SELECT buildid FROM coveragesummary,build WHERE coveragesummary.buildid=build.id
-                AND build.projectid=".qnum($projectid)." AND build.starttime>'".$timestampbegin."'
-                AND endtime<'".$timestampend."'");
+                AND build.projectid=" . qnum($projectid) . " AND build.starttime>'" . $timestampbegin . "'
+                AND endtime<'" . $timestampend . "'");
         if (!$coverage) {
             add_last_sql_error("CoverageSummary:GetBuilds");
             return false;
         }
-        while ($coverage_array  = pdo_fetch_array($coverage)) {
+        while ($coverage_array = pdo_fetch_array($coverage)) {
             $buildids[] = $coverage_array['buildid'];
         }
         return $buildids;
@@ -376,8 +376,8 @@ class coveragesummary
         }
 
         $exists_result = pdo_single_row_query(
-                "SELECT COUNT(1) AS numrows FROM coveragesummary
-                WHERE buildid=".qnum($this->BuildId));
+            "SELECT COUNT(1) AS numrows FROM coveragesummary
+                WHERE buildid=" . qnum($this->BuildId));
 
         if ($exists_result && array_key_exists('numrows', $exists_result)) {
             $numrows = $exists_result['numrows'];
@@ -387,4 +387,4 @@ class coveragesummary
         }
         return false;
     }
-} // end CoverageSummary class;
+}

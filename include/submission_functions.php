@@ -27,7 +27,7 @@ function AcquireProcessingLock($projectid, $force, $mypid)
     $table_locked = pdo_lock_tables($tables);
     if (!$table_locked) {
         add_log("could not lock database tables", "AcquireProcessingLock",
-                LOG_ERR, $projectid);
+            LOG_ERR, $projectid);
     }
 
     if ($table_locked) {
@@ -35,9 +35,9 @@ function AcquireProcessingLock($projectid, $force, $mypid)
         // each projectid value. Expect $c to be 0 or 1 here.
         //
         $c = pdo_get_field_value(
-                "SELECT COUNT(*) AS c FROM submissionprocessor ".
-                "WHERE projectid='".$projectid."'",
-                'c', 0);
+            "SELECT COUNT(*) AS c FROM submissionprocessor " .
+            "WHERE projectid='" . $projectid . "'",
+            'c', 0);
 
         $now_utc = gmdate(FMT_DATETIMESTD);
 
@@ -45,8 +45,8 @@ function AcquireProcessingLock($projectid, $force, $mypid)
             // No row yet for this projectid. Insert one and own the loop lock.
             //
             pdo_query(
-                    "INSERT INTO submissionprocessor (projectid, pid, lastupdated, locked) ".
-                    "VALUES ('$projectid', '$mypid', '$now_utc', '$now_utc')");
+                "INSERT INTO submissionprocessor (projectid, pid, lastupdated, locked) " .
+                "VALUES ('$projectid', '$mypid', '$now_utc', '$now_utc')");
             add_last_sql_error("AcquireProcessingLock-1");
             $locked = true;
         } else {
@@ -54,11 +54,11 @@ function AcquireProcessingLock($projectid, $force, $mypid)
             //
             if ($c != 1) {
                 add_log("unexpected row count c='$c'", "AcquireProcessingLock",
-                        LOG_ERR, $projectid);
+                    LOG_ERR, $projectid);
             }
 
             $row = pdo_single_row_query(
-                    "SELECT * FROM submissionprocessor WHERE projectid='".$projectid."'");
+                "SELECT * FROM submissionprocessor WHERE projectid='" . $projectid . "'");
             $pid = $row['pid'];
 
             // By default, do not acquire the lock:
@@ -67,7 +67,7 @@ function AcquireProcessingLock($projectid, $force, $mypid)
 
             if ($force) {
                 add_log("taking lock: 'force' is true", "AcquireProcessingLock",
-                        LOG_INFO, $projectid);
+                    LOG_INFO, $projectid);
                 $acquire_lock = true;
             } elseif ($pid != 0) {
                 // Another pid owns the lock and is presumably still alive
@@ -91,10 +91,10 @@ function AcquireProcessingLock($projectid, $force, $mypid)
                     //if ($pid is not presently running) // assumed, php-way to measure?
                     //  {
                     add_log(
-                            "taking lock: projectid=$projectid, other processor pid='$pid' ".
-                            "apparently stalled, lastupdated='$lastupdated'",
-                            "AcquireProcessingLock",
-                            LOG_ERR, $projectid);
+                        "taking lock: projectid=$projectid, other processor pid='$pid' " .
+                        "apparently stalled, lastupdated='$lastupdated'",
+                        "AcquireProcessingLock",
+                        LOG_ERR, $projectid);
                     $acquire_lock = true;
                     //  }
                 }
@@ -108,9 +108,9 @@ function AcquireProcessingLock($projectid, $force, $mypid)
                 // Update the one row with mypid and own the loop lock.
                 //
                 pdo_query(
-                        "UPDATE submissionprocessor ".
-                        "SET pid='$mypid', lastupdated='$now_utc', locked='$now_utc' ".
-                        "WHERE projectid='".$projectid."'");
+                    "UPDATE submissionprocessor " .
+                    "SET pid='$mypid', lastupdated='$now_utc', locked='$now_utc' " .
+                    "WHERE projectid='" . $projectid . "'");
                 add_last_sql_error("AcquireProcessingLock-2");
                 $locked = true;
             }
@@ -118,11 +118,10 @@ function AcquireProcessingLock($projectid, $force, $mypid)
             $table_unlocked = pdo_unlock_tables();
             if (!$table_unlocked) {
                 add_log("could not unlock database tables", "AcquireProcessingLock",
-                        LOG_ERR, $projectid);
+                    LOG_ERR, $projectid);
             }
         }
     }
-
     return $locked;
 }
 
@@ -130,7 +129,7 @@ function AcquireProcessingLock($projectid, $force, $mypid)
 // Releases the lock we own in the submissionprocessor table by
 // setting the pid field of this projectid's row to 0.
 //
-function ReleaseProcessingLock($projectid, $mypid, $multi=false)
+function ReleaseProcessingLock($projectid, $mypid, $multi = false)
 {
     $unlocked = false;
 
@@ -139,37 +138,36 @@ function ReleaseProcessingLock($projectid, $mypid, $multi=false)
     $table_locked = pdo_lock_tables($tables);
     if (!$table_locked) {
         add_log("could not lock database tables", "ReleaseProcessingLock",
-                LOG_ERR, $projectid);
+            LOG_ERR, $projectid);
     }
 
     if ($table_locked) {
         $now_utc = gmdate(FMT_DATETIMESTD);
 
         $row = pdo_single_row_query(
-                "SELECT * FROM submissionprocessor WHERE projectid='".$projectid."'");
+            "SELECT * FROM submissionprocessor WHERE projectid='" . $projectid . "'");
         $pid = $row['pid'];
 
         if ($pid == $mypid) {
-            pdo_query("UPDATE submissionprocessor ".
-                    "SET pid='0', lastupdated='$now_utc', locked='1980-01-01 00:00:00' ".
-                    "WHERE projectid='".$projectid."'");
+            pdo_query("UPDATE submissionprocessor " .
+                "SET pid='0', lastupdated='$now_utc', locked='1980-01-01 00:00:00' " .
+                "WHERE projectid='" . $projectid . "'");
             add_last_sql_error("ReleaseProcessingLock-1");
             $unlocked = true;
         } elseif (!$multi) {
             // Only log an error if we're not processing in parallel.
             add_log(
-                    "lock not released, unexpected pid mismatch: pid='$pid' mypid='$mypid' - attempt to unlock a lock we don't own...",
-                    "ReleaseProcessingLock",
-                    LOG_ERR, $projectid);
+                "lock not released, unexpected pid mismatch: pid='$pid' mypid='$mypid' - attempt to unlock a lock we don't own...",
+                "ReleaseProcessingLock",
+                LOG_ERR, $projectid);
         }
 
         $table_unlocked = pdo_unlock_tables();
         if (!$table_unlocked) {
             add_log("could not unlock database tables", "ReleaseProcessingLock",
-                    LOG_ERR, $projectid);
+                LOG_ERR, $projectid);
         }
     }
-
     return $unlocked;
 }
 
@@ -179,8 +177,8 @@ function ReleaseProcessingLock($projectid, $mypid, $multi=false)
 function ProcessOwnsLock($projectid, $pid)
 {
     $owner_pid = pdo_get_field_value(
-            "SELECT pid FROM submissionprocessor WHERE projectid='".$projectid."'",
-            'pid', 0);
+        "SELECT pid FROM submissionprocessor WHERE projectid='" . $projectid . "'",
+        'pid', 0);
     return $owner_pid == $pid;
 }
 
@@ -191,9 +189,9 @@ function SetLockLastUpdatedTime($projectid)
 {
     $now_utc = gmdate(FMT_DATETIMESTD);
 
-    if (pdo_query("UPDATE submissionprocessor ".
-                "SET lastupdated='$now_utc' ".
-                "WHERE projectid='".$projectid."'")) {
+    if (pdo_query("UPDATE submissionprocessor " .
+        "SET lastupdated='$now_utc' " .
+        "WHERE projectid='" . $projectid . "'")) {
         return true;
     }
 
@@ -220,21 +218,20 @@ function ResetApparentlyStalledSubmissions($projectid)
 {
     global $CDASH_SUBMISSION_PROCESSING_TIME_LIMIT;
 
-    $stall_time = gmdate(FMT_DATETIMESTD, time()-$CDASH_SUBMISSION_PROCESSING_TIME_LIMIT);
+    $stall_time = gmdate(FMT_DATETIMESTD, time() - $CDASH_SUBMISSION_PROCESSING_TIME_LIMIT);
 
-    $result = pdo_query("UPDATE submission SET status=0 ".
-            "WHERE status=1 AND projectid='$projectid' AND ".
-            "started<'$stall_time' AND finished='1980-01-01 00:00:00'");
+    $result = pdo_query("UPDATE submission SET status=0 " .
+        "WHERE status=1 AND projectid='$projectid' AND " .
+        "started<'$stall_time' AND finished='1980-01-01 00:00:00'");
     add_last_sql_error("ResetApparentlyStalledSubmissions-1");
 
     $nrows = pdo_affected_rows($result);
     if ($nrows > 0) {
         add_log(
-                "$nrows submission records assumed stalled, reset to status=0",
-                "ResetApparentlyStalledSubmissions",
-                LOG_ERR, $projectid);
+            "$nrows submission records assumed stalled, reset to status=0",
+            "ResetApparentlyStalledSubmissions",
+            LOG_ERR, $projectid);
     }
-
     return $nrows;
 }
 
@@ -267,9 +264,9 @@ function ProcessSubmissions($projectid, $mypid)
         //
         if (!ProcessOwnsLock($projectid, $mypid)) {
             add_log(
-                    "pid '$mypid' does not own lock anymore: abandoning loop...",
-                    "ProcessSubmissions",
-                    LOG_INFO, $projectid);
+                "pid '$mypid' does not own lock anymore: abandoning loop...",
+                "ProcessSubmissions",
+                LOG_INFO, $projectid);
             return false;
         }
 
@@ -285,8 +282,8 @@ function ProcessSubmissions($projectid, $mypid)
         global $CDASH_SUBMISSION_PROCESSING_MAX_ATTEMPTS;
         if ($new_attempts > $CDASH_SUBMISSION_PROCESSING_MAX_ATTEMPTS) {
             add_log("Too many attempts to process '$filename'",
-                    "ProcessSubmissions",
-                    LOG_ERR, $projectid);
+                "ProcessSubmissions",
+                LOG_ERR, $projectid);
             $new_status = 5; // done, called do_submit too many times already
         } else {
             // Record id in global so that we can mark it as "error status"
@@ -298,8 +295,8 @@ function ProcessSubmissions($projectid, $mypid)
                 // simulate "error occurred" during do_submit:
                 // status will be set to 4 in error handler.
                 trigger_error(
-                        'ProcessFile: intentional_nonreturning_submit is on',
-                        E_USER_ERROR);
+                    'ProcessFile: intentional_nonreturning_submit is on',
+                    E_USER_ERROR);
             }
 
             $new_status = ProcessFile($projectid, $filename, $md5);
@@ -309,21 +306,22 @@ function ProcessSubmissions($projectid, $mypid)
 
         global $CDASH_ASYNC_EXPIRATION_TIME;
         if ($CDASH_ASYNC_EXPIRATION_TIME === 0 &&
-                ($new_status > 1 && $new_status < 6)) {
+            ($new_status > 1 && $new_status < 6)
+        ) {
             // If our expiration time is set to 0 we delete finished
             // submissions rather than marking them as done in the database.
             pdo_query(
-                    "DELETE FROM submission WHERE id='$submission_id'");
+                "DELETE FROM submission WHERE id='$submission_id'");
             add_last_sql_error("ProcessSubmissions-3");
             pdo_query(
-                    "DELETE FROM submission2ip WHERE submissionid='$submission_id'");
+                "DELETE FROM submission2ip WHERE submissionid='$submission_id'");
             add_last_sql_error("ProcessSubmissions-3");
         } else {
             // Mark it as done with $new_status and record finished time:
             //
             $now_utc = gmdate(FMT_DATETIMESTD);
             pdo_query(
-                    "UPDATE submission SET status=$new_status, finished='$now_utc',
+                "UPDATE submission SET status=$new_status, finished='$now_utc',
                     lastupdated='$now_utc' WHERE id='$submission_id'");
             add_last_sql_error("ProcessSubmissions-3");
         }
@@ -338,7 +336,6 @@ function ProcessSubmissions($projectid, $mypid)
         $n = count($query_array);
         $iterations = $iterations + 1;
     }
-
     return true;
 }
 
@@ -352,7 +349,7 @@ function GetNextSubmission($projectid)
 
     // Get the next submission to process.
     $query_array = pdo_single_row_query(
-            "SELECT id, filename, filesize, filemd5sum, attempts
+        "SELECT id, filename, filesize, filemd5sum, attempts
             FROM submission
             WHERE projectid='$projectid' AND status=0
             ORDER BY id LIMIT 1 FOR UPDATE");
@@ -365,13 +362,12 @@ function GetNextSubmission($projectid)
     $new_attempts = $query_array['attempts'] + 1;
 
     // Mark it as status=1 (processing) and record started time.
-    pdo_query("UPDATE submission SET status=1, started='$now_utc', ".
-            "lastupdated='$now_utc', attempts=$new_attempts ".
-            "WHERE id='".$submission_id."'");
+    pdo_query("UPDATE submission SET status=1, started='$now_utc', " .
+        "lastupdated='$now_utc', attempts=$new_attempts " .
+        "WHERE id='" . $submission_id . "'");
     add_last_sql_error("GetNextSubmission-2");
 
     pdo_commit();
-
     return $query_array;
 }
 
@@ -386,10 +382,10 @@ function DeleteOldSubmissionRecords($projectid)
     $delete_time =
         gmdate(FMT_DATETIMESTD, time() - $CDASH_ASYNC_EXPIRATION_TIME);
 
-    $ids = pdo_all_rows_query("SELECT id FROM submission WHERE ".
-            "(status=2 OR status=3 OR status=4 OR status=5) AND ".
-            "projectid='$projectid' AND finished<'$delete_time' AND ".
-            "finished!='1980-01-01 00:00:00'");
+    $ids = pdo_all_rows_query("SELECT id FROM submission WHERE " .
+        "(status=2 OR status=3 OR status=4 OR status=5) AND " .
+        "projectid='$projectid' AND finished<'$delete_time' AND " .
+        "finished!='1980-01-01 00:00:00'");
 
     $count = count($ids);
     if (0 == $count) {
@@ -404,11 +400,11 @@ function DeleteOldSubmissionRecords($projectid)
     }
     // Avoid conditional ", " emission in the loop. OK to repeat an
     // element in this DELETE IN type of query:
-    $idset .= "'".$ids[0]["id"]."')";
+    $idset .= "'" . $ids[0]["id"] . "')";
 
-    pdo_delete_query("DELETE FROM submission WHERE id IN ".$idset);
-    pdo_delete_query("DELETE FROM client_jobschedule2submission WHERE submissionid IN ".$idset);
-    pdo_delete_query("DELETE FROM submission2ip WHERE submissionid IN ".$idset);
+    pdo_delete_query("DELETE FROM submission WHERE id IN " . $idset);
+    pdo_delete_query("DELETE FROM client_jobschedule2submission WHERE submissionid IN " . $idset);
+    pdo_delete_query("DELETE FROM submission2ip WHERE submissionid IN " . $idset);
 }
 
 
@@ -437,15 +433,15 @@ function ProcessSubmissionsErrorHandler($projectid)
         if (0 != $PHP_ERROR_SUBMISSION_ID) {
             $now_utc = gmdate(FMT_DATETIMESTD);
             pdo_query(
-                    "UPDATE submission SET status=4, finished='$now_utc', ".
-                    "lastupdated='$now_utc' WHERE id='".$PHP_ERROR_SUBMISSION_ID."'");
+                "UPDATE submission SET status=4, finished='$now_utc', " .
+                "lastupdated='$now_utc' WHERE id='" . $PHP_ERROR_SUBMISSION_ID . "'");
             add_last_sql_error("ProcessSubmissionsErrorHandler-1");
 
             echo "ProcessSubmissionsErrorHandler: error processing submission id $PHP_ERROR_SUBMISSION_ID\n";
             add_log(
-                    "error processing submission id $PHP_ERROR_SUBMISSION_ID",
-                    'ProcessSubmissionsErrorHandler',
-                    LOG_ERR, $projectid);
+                "error processing submission id $PHP_ERROR_SUBMISSION_ID",
+                'ProcessSubmissionsErrorHandler',
+                LOG_ERR, $projectid);
         }
 
         // Call ReleaseProcessingLock since an error occurred before the expected

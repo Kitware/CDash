@@ -3,7 +3,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__).'/cdash_test_case.php');
+require_once(dirname(__FILE__) . '/cdash_test_case.php');
 
 class ManageCoverageTestCase extends KWWebTestCase
 {
@@ -16,8 +16,8 @@ class ManageCoverageTestCase extends KWWebTestCase
     {
         $this->login();
 
-    //get projectid for InsightExamples
-    $content = $this->connect($this->url.'/user.php');
+        //get projectid for InsightExamples
+        $content = $this->connect($this->url . '/user.php');
         $lines = explode("\n", $content);
         $rightSpot = false;
         $projectid = -1;
@@ -41,23 +41,23 @@ class ManageCoverageTestCase extends KWWebTestCase
             return 1;
         }
 
-    //make sure we can't visit the manageCoverage page while logged out
-    $this->logout();
-        $content = $this->connect($this->url."/manageCoverage.php?projectid=$projectid");
+        //make sure we can't visit the manageCoverage page while logged out
+        $this->logout();
+        $content = $this->connect($this->url . "/manageCoverage.php?projectid=$projectid");
         if (strpos($content, "<title>Login</title>") === false) {
             $this->fail("'<title>Login</title>' not found when expected");
             return 1;
         }
 
         $this->login();
-        $content = $this->connect($this->url."/manageCoverage.php?projectid=$projectid");
+        $content = $this->connect($this->url . "/manageCoverage.php?projectid=$projectid");
         if (strpos($content, "Coverage files") === false) {
             $this->fail("'Coverage files' not found when expected");
             return 1;
         }
 
-    //get a valid coverage buildid
-    $lines = explode("\n", $content);
+        //get a valid coverage buildid
+        $lines = explode("\n", $content);
         $rightSpot = false;
         $buildid = -1;
         foreach ($lines as $line) {
@@ -79,17 +79,17 @@ class ManageCoverageTestCase extends KWWebTestCase
             return 1;
         }
 
-        $content = $this->connect($this->url."/manageCoverage.php?buildid=$buildid&projectid=$projectid");
+        $content = $this->connect($this->url . "/manageCoverage.php?buildid=$buildid&projectid=$projectid");
         if (strpos($content, "simple.cxx") === false) {
-            $this->fail("'simple.cxx' not found when expected for buildid=".$buildid);
+            $this->fail("'simple.cxx' not found when expected for buildid=" . $buildid);
             return 1;
         }
 
-    //test the "Add author" button
-    if (!$this->setFieldByName("prioritySelection", 2)) {
-        $this->fail("SetFieldByName #1 returned false");
-        return 1;
-    }
+        //test the "Add author" button
+        if (!$this->setFieldByName("prioritySelection", 2)) {
+            $this->fail("SetFieldByName #1 returned false");
+            return 1;
+        }
         if (!$this->setFieldByName("userSelection", 1)) {
             $this->fail("SetFieldByName #2 returned false");
             return 1;
@@ -100,9 +100,9 @@ class ManageCoverageTestCase extends KWWebTestCase
             return 1;
         }
 
-    //test 'remove author' capability
-    //need removeuserid & removefileid, find them now.
-    $content = $this->getBrowser()->getContent();
+        //test 'remove author' capability
+        //need removeuserid & removefileid, find them now.
+        $content = $this->getBrowser()->getContent();
         $lines = explode("\n", $content);
         $removeuserid = -1;
         $removefileid = -1;
@@ -118,15 +118,15 @@ class ManageCoverageTestCase extends KWWebTestCase
             $this->fail("Couldn't find removeuserid or removefileid.");
             return 1;
         }
-        $removeAuthorUrl = $this->url."/manageCoverage.php?buildid=$buildid&projectid=$projectid&removeuserid=$removeuserid&removefileid=$removefileid";
+        $removeAuthorUrl = $this->url . "/manageCoverage.php?buildid=$buildid&projectid=$projectid&removeuserid=$removeuserid&removefileid=$removefileid";
         $content = $this->connect($removeAuthorUrl);
         if (strpos($content, "<td>administrator") !== false) {
             $this->fail("'<td>administrator' found when unexpected");
             return 1;
         }
 
-    //test the "Upload authors file" button
-     $authorsFile = dirname(__FILE__)."/data/authors.txt";
+        //test the "Upload authors file" button
+        $authorsFile = dirname(__FILE__) . "/data/authors.txt";
         if (!$this->setFieldByName("authorsFile", @$authorsFile)) {
             $this->fail("SetFieldByName on authorsFile returned false");
             return 1;
@@ -136,24 +136,25 @@ class ManageCoverageTestCase extends KWWebTestCase
             return 1;
         }
 
-    //test the "Assign last author" button
-    if (!$this->clickSubmitByName("assignLastAuthor")) {
-        $this->fail("clicking assignLastAuthor returned false");
-        return 1;
-    }
+        //test the "Assign last author" button
+        if (!$this->clickSubmitByName("assignLastAuthor")) {
+            $this->fail("clicking assignLastAuthor returned false");
+            return 1;
+        }
 
-    //test the "Assign all authors" button
-    if (!$this->clickSubmitByName("assignAllAuthors")) {
-        $this->fail("clicking assignAllAuthors returned false");
-        return 1;
-    }
+        //test the "Assign all authors" button
+        if (!$this->clickSubmitByName("assignAllAuthors")) {
+            $this->fail("clicking assignAllAuthors returned false");
+            return 1;
+        }
 
-    //test the "Send email to authors" buttons
-    $this->clickSubmitByName("sendEmail");
+        //test the "Send email to authors" buttons
+        $this->clickSubmitByName("sendEmail");
         if (strpos($this->getBrowser()->getContentAsText(),
-       "email has been sent successfully") === false) {
+                "email has been sent successfully") === false
+        ) {
             $this->fail(
-        "'email has been sent successfully' not found when expected");
+                "'email has been sent successfully' not found when expected");
             return 1;
         }
 

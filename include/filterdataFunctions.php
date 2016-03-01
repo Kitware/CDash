@@ -26,7 +26,6 @@ function getFilterDefinitionXML($key, $uitext, $type, $valuelist, $defaultvalue)
     $xml .= add_XML_value('valuelist', $valuelist);
     $xml .= add_XML_value('defaultvalue', $defaultvalue);
     $xml .= '</def>';
-
     return $xml;
 }
 
@@ -34,8 +33,11 @@ function getFilterDefinitionXML($key, $uitext, $type, $valuelist, $defaultvalue)
 interface PageSpecificFilters
 {
     public function getDefaultFilter();
+
     public function getDefaultShowLimit();
+
     public function getFilterDefinitionsXML();
+
     public function getSqlField($field);
 }
 
@@ -57,8 +59,8 @@ class DefaultFilters implements PageSpecificFilters
     public function getDefaultFilter()
     {
         trigger_error(
-                'DefaultFilters::getDefaultFilter not implemented: subclass should override',
-                E_USER_WARNING);
+            'DefaultFilters::getDefaultFilter not implemented: subclass should override',
+            E_USER_WARNING);
     }
 
     public function getDefaultShowLimit()
@@ -69,15 +71,15 @@ class DefaultFilters implements PageSpecificFilters
     public function getFilterDefinitionsXML()
     {
         trigger_error(
-                'DefaultFilters::getFilterDefinitionsXML not implemented: subclass should override',
-                E_USER_WARNING);
+            'DefaultFilters::getFilterDefinitionsXML not implemented: subclass should override',
+            E_USER_WARNING);
     }
 
     public function getSqlField($field)
     {
         trigger_error(
-                'DefaultFilters::getSqlField not implemented: subclass should override',
-                E_USER_WARNING);
+            'DefaultFilters::getSqlField not implemented: subclass should override',
+            E_USER_WARNING);
     }
 }
 
@@ -87,11 +89,11 @@ class IndexPhpFilters extends DefaultFilters
     public function getDefaultFilter()
     {
         return array(
-                'field' => 'site',
-                'fieldtype' => 'string',
-                'compare' => 63,
-                'value' => '',
-                );
+            'field' => 'site',
+            'fieldtype' => 'string',
+            'compare' => 63,
+            'value' => '',
+        );
     }
 
     public function getFilterDefinitionsXML()
@@ -125,7 +127,6 @@ class IndexPhpFilters extends DefaultFilters
         $xml .= getFilterDefinitionXML('testtimestatus', 'Tests Timing Failed', 'number', '', '0');
         $xml .= getFilterDefinitionXML('updateduration', 'Update Duration', 'number', '', '0');
         $xml .= getFilterDefinitionXML('updatedfiles', 'Updated Files', 'number', '', '0');
-
         return $xml;
     }
 
@@ -133,195 +134,165 @@ class IndexPhpFilters extends DefaultFilters
     {
         $sql_field = '';
         switch (strtolower($field)) {
-            case 'buildduration':
-                {
-                    $sql_field = "ROUND(TIMESTAMPDIFF(SECOND,b.starttime,b.endtime)/60.0,1)";
-                }
+            case 'buildduration': {
+                $sql_field = "ROUND(TIMESTAMPDIFF(SECOND,b.starttime,b.endtime)/60.0,1)";
+            }
                 break;
 
-            case 'builderrors':
-                {
-                    $sql_field = "b.builderrors";
-                }
+            case 'builderrors': {
+                $sql_field = "b.builderrors";
+            }
                 break;
 
-            case 'buildgenerator':
-                {
-                    $sql_field = 'b.generator';
-                }
+            case 'buildgenerator': {
+                $sql_field = 'b.generator';
+            }
                 break;
 
-            case 'buildname':
-                {
-                    $sql_field = 'b.name';
-                }
+            case 'buildname': {
+                $sql_field = 'b.name';
+            }
                 break;
 
-            case 'buildstamp':
-                {
-                    $sql_field = 'b.stamp';
-                }
+            case 'buildstamp': {
+                $sql_field = 'b.stamp';
+            }
                 break;
 
-            case 'buildstarttime':
-                {
-                    $sql_field = 'b.starttime';
-                }
+            case 'buildstarttime': {
+                $sql_field = 'b.starttime';
+            }
                 break;
 
-            case 'buildtype':
-                {
-                    $sql_field = 'b.type';
-                }
+            case 'buildtype': {
+                $sql_field = 'b.type';
+            }
                 break;
 
-            case 'buildwarnings':
-                {
-                    $sql_field = "b.buildwarnings";
-                }
+            case 'buildwarnings': {
+                $sql_field = "b.buildwarnings";
+            }
                 break;
 
-            case 'configureduration':
-                {
-                    $sql_field = "(SELECT ROUND(TIMESTAMPDIFF(SECOND,starttime,endtime)/60.0,1) FROM configure WHERE buildid=b.id)";
-                }
+            case 'configureduration': {
+                $sql_field = "(SELECT ROUND(TIMESTAMPDIFF(SECOND,starttime,endtime)/60.0,1) FROM configure WHERE buildid=b.id)";
+            }
                 break;
 
-            case 'configureerrors':
-                {
-                    $sql_field = "(SELECT SUM(status) FROM configure WHERE buildid=b.id AND status!='0')";
-                }
+            case 'configureerrors': {
+                $sql_field = "(SELECT SUM(status) FROM configure WHERE buildid=b.id AND status!='0')";
+            }
                 break;
 
-            case 'configurewarnings':
-                {
-                    $sql_field = "(SELECT COUNT(buildid) FROM configureerror WHERE buildid=b.id AND type='1')";
-                }
+            case 'configurewarnings': {
+                $sql_field = "(SELECT COUNT(buildid) FROM configureerror WHERE buildid=b.id AND type='1')";
+            }
                 break;
 
-            case 'expected':
-                {
-                    $sql_field = "IF((SELECT COUNT(expected) FROM build2grouprule WHERE groupid=b2g.groupid AND buildtype=b.type AND buildname=b.name AND siteid=b.siteid)>0,(SELECT COUNT(expected) FROM build2grouprule WHERE groupid=b2g.groupid AND buildtype=b.type AND buildname=b.name AND siteid=b.siteid),0)";
-                }
+            case 'expected': {
+                $sql_field = "IF((SELECT COUNT(expected) FROM build2grouprule WHERE groupid=b2g.groupid AND buildtype=b.type AND buildname=b.name AND siteid=b.siteid)>0,(SELECT COUNT(expected) FROM build2grouprule WHERE groupid=b2g.groupid AND buildtype=b.type AND buildname=b.name AND siteid=b.siteid),0)";
+            }
                 break;
 
-            case 'groupname':
-                {
-                    $sql_field = 'g.name';
-                }
+            case 'groupname': {
+                $sql_field = 'g.name';
+            }
                 break;
 
-            case 'hascoverage':
-                {
-                    $sql_field = '(SELECT COUNT(*) FROM coveragesummary WHERE buildid=b.id)';
-                }
+            case 'hascoverage': {
+                $sql_field = '(SELECT COUNT(*) FROM coveragesummary WHERE buildid=b.id)';
+            }
                 break;
 
-            case 'hasctestnotes':
-                {
-                    $sql_field = '(SELECT COUNT(*) FROM build2note WHERE buildid=b.id)';
-                }
+            case 'hasctestnotes': {
+                $sql_field = '(SELECT COUNT(*) FROM build2note WHERE buildid=b.id)';
+            }
                 break;
 
-            case 'hasdynamicanalysis':
-                {
-                    $sql_field = '(SELECT COUNT(*) FROM dynamicanalysis WHERE buildid=b.id)';
-                }
+            case 'hasdynamicanalysis': {
+                $sql_field = '(SELECT COUNT(*) FROM dynamicanalysis WHERE buildid=b.id)';
+            }
                 break;
 
-            case 'hasusernotes':
-                {
-                    $sql_field = '(SELECT COUNT(*) FROM buildnote WHERE buildid=b.id)';
-                }
+            case 'hasusernotes': {
+                $sql_field = '(SELECT COUNT(*) FROM buildnote WHERE buildid=b.id)';
+            }
                 break;
 
-            case 'label':
-                {
-                    $sql_field = "(SELECT $this->TextConcat FROM label, label2build WHERE label2build.labelid=label.id AND label2build.buildid=b.id)";
+            case 'label': {
+                $sql_field = "(SELECT $this->TextConcat FROM label, label2build WHERE label2build.labelid=label.id AND label2build.buildid=b.id)";
 
-                }
+            }
                 break;
 
-            case 'site':
-                {
-                    $sql_field = "(SELECT name FROM site WHERE site.id=b.siteid)";
-                }
+            case 'site': {
+                $sql_field = "(SELECT name FROM site WHERE site.id=b.siteid)";
+            }
                 break;
 
-            case 'subproject':
-                {
-                    $sql_field = "(SELECT name FROM subproject, subproject2build WHERE subproject2build.subprojectid=subproject.id AND subproject2build.buildid=b.id)";
-                }
+            case 'subproject': {
+                $sql_field = "(SELECT name FROM subproject, subproject2build WHERE subproject2build.subprojectid=subproject.id AND subproject2build.buildid=b.id)";
+            }
                 break;
 
-            case 'testsfailed':
-                {
-                    $sql_field = "(SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id AND status='failed')";
-                }
+            case 'testsfailed': {
+                $sql_field = "(SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id AND status='failed')";
+            }
                 break;
 
-            case 'testsnotrun':
-                {
-                    $sql_field = "(SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id AND status='notrun')";
-                }
+            case 'testsnotrun': {
+                $sql_field = "(SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id AND status='notrun')";
+            }
                 break;
 
-            case 'testspassed':
-                {
-                    $sql_field = "(SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id AND status='passed')";
-                }
+            case 'testspassed': {
+                $sql_field = "(SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id AND status='passed')";
+            }
                 break;
 
-            case 'testsduration':
-                {
-                    $sql_field = "IF((SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id)>0,(SELECT ROUND(SUM(time)/60.0,1) FROM build2test WHERE buildid=b.id),0)";
-                }
+            case 'testsduration': {
+                $sql_field = "IF((SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id)>0,(SELECT ROUND(SUM(time)/60.0,1) FROM build2test WHERE buildid=b.id),0)";
+            }
                 break;
 
-            case 'testtimestatus':
-                {
-                    $sql_field = "IF((SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id)>0,(SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id AND timestatus>=(SELECT testtimemaxstatus FROM project WHERE project.id=b.projectid)),0)";
-                }
+            case 'testtimestatus': {
+                $sql_field = "IF((SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id)>0,(SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id AND timestatus>=(SELECT testtimemaxstatus FROM project WHERE project.id=b.projectid)),0)";
+            }
                 break;
 
-            case 'updatedfiles':
-                {
-                    $sql_field = "(SELECT COUNT(uf.updateid) FROM updatefile AS uf, build2update AS b2u WHERE b2u.updateid=uf.updateid AND b2u.buildid=b.id)";
-                }
+            case 'updatedfiles': {
+                $sql_field = "(SELECT COUNT(uf.updateid) FROM updatefile AS uf, build2update AS b2u WHERE b2u.updateid=uf.updateid AND b2u.buildid=b.id)";
+            }
                 break;
 
-            case 'updateduration':
-                {
-                    $sql_field = "IF((SELECT COUNT(*) FROM buildupdate AS u, build2update AS b2u WHERE b2u.updateid=u.updateid AND b2u.buildid=b.id)>0,(SELECT ROUND(TIMESTAMPDIFF(SECOND,starttime,endtime)/60.0,1)
+            case 'updateduration': {
+                $sql_field = "IF((SELECT COUNT(*) FROM buildupdate AS u, build2update AS b2u WHERE b2u.updateid=u.updateid AND b2u.buildid=b.id)>0,(SELECT ROUND(TIMESTAMPDIFF(SECOND,starttime,endtime)/60.0,1)
                         FROM buildupdate AS u, build2update AS b2u WHERE b2u.updateid=u.updateid AND b2u.buildid=b.id),0)";
-                }
+            }
                 break;
 
-            case 'updateerrors':
-                {
-                    // this one is pretty complicated... save it for later...
-                    //  $sql_field = "(SELECT COUNT(buildid) FROM buildupdate WHERE buildid=b.id)";
-                    add_log(
-                            'warning: updateerrors field not implemented yet...',
-                            'get_sql_field');
-                }
+            case 'updateerrors': {
+                // this one is pretty complicated... save it for later...
+                //  $sql_field = "(SELECT COUNT(buildid) FROM buildupdate WHERE buildid=b.id)";
+                add_log(
+                    'warning: updateerrors field not implemented yet...',
+                    'get_sql_field');
+            }
                 break;
 
-            case 'updatewarnings':
-                {
-                    // this one is pretty complicated... save it for later...
-                    //  $sql_field = "(SELECT COUNT(buildid) FROM buildupdate WHERE buildid=b.id)";
-                    add_log(
-                            'warning: updatewarnings field not implemented yet...',
-                            'get_sql_field');
-                }
+            case 'updatewarnings': {
+                // this one is pretty complicated... save it for later...
+                //  $sql_field = "(SELECT COUNT(buildid) FROM buildupdate WHERE buildid=b.id)";
+                add_log(
+                    'warning: updatewarnings field not implemented yet...',
+                    'get_sql_field');
+            }
                 break;
 
-            case 'subprojects':
-                {
-                    // Handle via custom logic rather than a modified SQL query.
-                    $sql_field = '';
-                }
+            case 'subprojects': {
+                // Handle via custom logic rather than a modified SQL query.
+                $sql_field = '';
+            }
                 break;
 
             default:
@@ -338,11 +309,11 @@ class QueryTestsPhpFilters extends DefaultFilters
     public function getDefaultFilter()
     {
         return array(
-                'field' => 'testname',
-                'fieldtype' => 'string',
-                'compare' => 63,
-                'value' => '',
-                );
+            'field' => 'testname',
+            'fieldtype' => 'string',
+            'compare' => 63,
+            'value' => '',
+        );
     }
 
     public function getFilterDefinitionsXML()
@@ -358,7 +329,6 @@ class QueryTestsPhpFilters extends DefaultFilters
         $xml .= getFilterDefinitionXML('status', 'Status', 'string', '', '');
         $xml .= getFilterDefinitionXML('testname', 'Test Name', 'string', '', '');
         $xml .= getFilterDefinitionXML('time', 'Time', 'number', '', '');
-
         return $xml;
     }
 
@@ -366,58 +336,49 @@ class QueryTestsPhpFilters extends DefaultFilters
     {
         $sql_field = '';
         switch (strtolower($field)) {
-            case 'buildname':
-                {
-                    $sql_field = "b.name";
-                }
+            case 'buildname': {
+                $sql_field = "b.name";
+            }
                 break;
 
-            case 'buildstarttime':
-                {
-                    $sql_field = "b.starttime";
-                }
+            case 'buildstarttime': {
+                $sql_field = "b.starttime";
+            }
                 break;
 
-            case 'buildtype':
-                {
-                    $sql_field = 'b.type';
-                }
+            case 'buildtype': {
+                $sql_field = 'b.type';
+            }
                 break;
 
-            case 'details':
-                {
-                    $sql_field = "test.details";
-                }
+            case 'details': {
+                $sql_field = "test.details";
+            }
                 break;
 
-            case 'label':
-                {
-                    $sql_field = "(SELECT $this->TextConcat FROM label, label2build WHERE label2build.buildid=b.id AND label2build.labelid=label.id)";
-                }
+            case 'label': {
+                $sql_field = "(SELECT $this->TextConcat FROM label, label2build WHERE label2build.buildid=b.id AND label2build.labelid=label.id)";
+            }
                 break;
 
-            case 'site':
-                {
-                    $sql_field = "site.name";
-                }
+            case 'site': {
+                $sql_field = "site.name";
+            }
                 break;
 
-            case 'status':
-                {
-                    $sql_field = "build2test.status";
-                }
+            case 'status': {
+                $sql_field = "build2test.status";
+            }
                 break;
 
-            case 'testname':
-                {
-                    $sql_field = "test.name";
-                }
+            case 'testname': {
+                $sql_field = "test.name";
+            }
                 break;
 
-            case 'time':
-                {
-                    $sql_field = "build2test.time";
-                }
+            case 'time': {
+                $sql_field = "build2test.time";
+            }
                 break;
 
             default:
@@ -434,11 +395,11 @@ class ViewCoveragePhpFilters extends DefaultFilters
     public function getDefaultFilter()
     {
         return array(
-                'field' => 'filename',
-                'fieldtype' => 'string',
-                'compare' => 63,
-                'value' => '',
-                );
+            'field' => 'filename',
+            'fieldtype' => 'string',
+            'compare' => 63,
+            'value' => '',
+        );
     }
 
     public function getDefaultShowLimit()
@@ -460,7 +421,6 @@ class ViewCoveragePhpFilters extends DefaultFilters
         //$xml .= getFilterDefinitionXML('status', 'Status', 'string', '', '');
         $xml .= getFilterDefinitionXML('totallines', 'Total Lines', 'number', '', '0');
         $xml .= getFilterDefinitionXML('uncoveredlines', 'Uncovered Lines', 'number', '', '0');
-
         return $xml;
     }
 
@@ -468,52 +428,46 @@ class ViewCoveragePhpFilters extends DefaultFilters
     {
         $sql_field = '';
         switch (strtolower($field)) {
-            case 'coveredlines':
-                {
-                    $sql_field = "c.loctested";
-                }
+            case 'coveredlines': {
+                $sql_field = "c.loctested";
+            }
                 break;
 
-            case 'filename':
-                {
-                    $sql_field = "cf.fullpath";
-                }
+            case 'filename': {
+                $sql_field = "cf.fullpath";
+            }
                 break;
 
-            case 'labels':
-                {
-                    $sql_field = "(SELECT $this->TextConcat AS labels FROM (SELECT label.text, coverage.fileid, coverage.buildid FROM label, label2coveragefile, coverage WHERE label2coveragefile.labelid=label.id AND label2coveragefile.buildid=coverage.buildid AND label2coveragefile.coveragefileid=coverage.fileid) AS filelabels WHERE fileid=c.fileid AND buildid=c.buildid)";
-                }
+            case 'labels': {
+                $sql_field = "(SELECT $this->TextConcat AS labels FROM (SELECT label.text, coverage.fileid, coverage.buildid FROM label, label2coveragefile, coverage WHERE label2coveragefile.labelid=label.id AND label2coveragefile.buildid=coverage.buildid AND label2coveragefile.coveragefileid=coverage.fileid) AS filelabels WHERE fileid=c.fileid AND buildid=c.buildid)";
+            }
                 break;
 
-                //case 'percentage':
-                //{
-                //  $sql_field = "TODO.percentage";
-                //}
-                //break;
+            //case 'percentage':
+            //{
+            //  $sql_field = "TODO.percentage";
+            //}
+            //break;
 
-            case 'priority':
-                {
-                    $sql_field = "cfp.priority";
-                }
+            case 'priority': {
+                $sql_field = "cfp.priority";
+            }
                 break;
 
-                //case 'status':
-                //{
-                //  $sql_field = "TODO.status";
-                //}
-                //break;
+            //case 'status':
+            //{
+            //  $sql_field = "TODO.status";
+            //}
+            //break;
 
-            case 'totallines':
-                {
-                    $sql_field = "(c.loctested + c.locuntested)";
-                }
+            case 'totallines': {
+                $sql_field = "(c.loctested + c.locuntested)";
+            }
                 break;
 
-            case 'uncoveredlines':
-                {
-                    $sql_field = "c.locuntested";
-                }
+            case 'uncoveredlines': {
+                $sql_field = "c.locuntested";
+            }
                 break;
 
             default:
@@ -530,11 +484,11 @@ class ViewTestPhpFilters extends DefaultFilters
     public function getDefaultFilter()
     {
         return array(
-                'field' => 'testname',
-                'fieldtype' => 'string',
-                'compare' => 63,
-                'value' => '',
-                );
+            'field' => 'testname',
+            'fieldtype' => 'string',
+            'compare' => 63,
+            'value' => '',
+        );
     }
 
     public function getFilterDefinitionsXML()
@@ -547,7 +501,6 @@ class ViewTestPhpFilters extends DefaultFilters
         $xml .= getFilterDefinitionXML('testname', 'Test Name', 'string', '', '');
         $xml .= getFilterDefinitionXML('timestatus', 'Time Status', 'string', '', '');
         $xml .= getFilterDefinitionXML('time', 'Time', 'number', '', '');
-
         return $xml;
     }
 
@@ -555,40 +508,34 @@ class ViewTestPhpFilters extends DefaultFilters
     {
         $sql_field = '';
         switch (strtolower($field)) {
-            case 'details':
-                {
-                    $sql_field = "t.details";
-                }
+            case 'details': {
+                $sql_field = "t.details";
+            }
                 break;
 
-            case 'label':
-                {
-                    $sql_field = "(SELECT $this->TextConcat FROM label, label2test WHERE label.id=label2test.labelid AND label2test.testid=t.id)";
-                }
+            case 'label': {
+                $sql_field = "(SELECT $this->TextConcat FROM label, label2test WHERE label.id=label2test.labelid AND label2test.testid=t.id)";
+            }
                 break;
 
-            case 'status':
-                {
-                    $sql_field = "bt.status";
-                }
+            case 'status': {
+                $sql_field = "bt.status";
+            }
                 break;
 
-            case 'testname':
-                {
-                    $sql_field = "t.name";
-                }
+            case 'testname': {
+                $sql_field = "t.name";
+            }
                 break;
 
-            case 'timestatus':
-                {
-                    $sql_field = "bt.timestatus";
-                }
+            case 'timestatus': {
+                $sql_field = "bt.timestatus";
+            }
                 break;
 
-            case 'time':
-                {
-                    $sql_field = "bt.time";
-                }
+            case 'time': {
+                $sql_field = "bt.time";
+            }
                 break;
 
             default:
@@ -607,38 +554,33 @@ function createPageSpecificFilters($page_id)
     switch ($page_id) {
         case 'index.php':
         case 'project.php':
-        case 'indexchildren.php':
-            {
-                return new IndexPhpFilters();
-            }
+        case 'indexchildren.php': {
+            return new IndexPhpFilters();
+        }
             break;
 
-        case 'queryTests.php':
-            {
-                return new QueryTestsPhpFilters();
-            }
+        case 'queryTests.php': {
+            return new QueryTestsPhpFilters();
+        }
             break;
 
         case 'viewCoverage.php':
-        case 'getviewcoverage.php':
-            {
-                return new ViewCoveragePhpFilters();
-            }
+        case 'getviewcoverage.php': {
+            return new ViewCoveragePhpFilters();
+        }
             break;
 
-        case 'viewTest.php':
-            {
-                return new ViewTestPhpFilters();
-            }
+        case 'viewTest.php': {
+            return new ViewTestPhpFilters();
+        }
             break;
 
-        default:
-            {
-                trigger_error('unknown $page_id value: ' . $page_id .
-                        ' Add a new subclass of DefaultFilters for ' . $page_id,
-                        E_USER_WARNING);
-                return new DefaultFilters();
-            }
+        default: {
+            trigger_error('unknown $page_id value: ' . $page_id .
+                ' Add a new subclass of DefaultFilters for ' . $page_id,
+                E_USER_WARNING);
+            return new DefaultFilters();
+        }
             break;
     }
 }
@@ -685,7 +627,6 @@ function filterdata_XML($filterdata)
     $xml .= '</filters>';
 
     $xml .= '</filterdata>';
-
     return $xml;
 }
 
@@ -701,7 +642,6 @@ function get_sql_date_value($value)
     // to sql_value (UTC):
     $ts = strtotime($value);
     $sql_value = "'" . gmdate(FMT_DATETIME, $ts) . "'";
-
     return $sql_value;
 }
 
@@ -719,20 +659,18 @@ function get_sql_compare_and_value($compare, $value)
             // explicitly skip adding a clause when $compare == 0 ( "--" in the GUI )
             break;
 
-        case 1:
-            {
-                // bool is true
-                $sql_compare = '!=';
-                $sql_value = "0";
-            }
+        case 1: {
+            // bool is true
+            $sql_compare = '!=';
+            $sql_value = "0";
+        }
             break;
 
-        case 2:
-            {
-                // bool is false
-                $sql_compare = '=';
-                $sql_value = "0";
-            }
+        case 2: {
+            // bool is false
+            $sql_compare = '=';
+            $sql_value = "0";
+        }
             break;
 
         case 40:
@@ -740,36 +678,32 @@ function get_sql_compare_and_value($compare, $value)
             // explicitly skip adding a clause when $compare == 40 ( "--" in the GUI )
             break;
 
-        case 41:
-            {
-                // number is equal
-                $sql_compare = '=';
-                $sql_value = "'$value'";
-            }
+        case 41: {
+            // number is equal
+            $sql_compare = '=';
+            $sql_value = "'$value'";
+        }
             break;
 
-        case 42:
-            {
-                // number is not equal
-                $sql_compare = '!=';
-                $sql_value = "'$value'";
-            }
+        case 42: {
+            // number is not equal
+            $sql_compare = '!=';
+            $sql_value = "'$value'";
+        }
             break;
 
-        case 43:
-            {
-                // number is greater than
-                $sql_compare = '>';
-                $sql_value = "'$value'";
-            }
+        case 43: {
+            // number is greater than
+            $sql_compare = '>';
+            $sql_value = "'$value'";
+        }
             break;
 
-        case 44:
-            {
-                // number is less than
-                $sql_compare = '<';
-                $sql_value = "'$value'";
-            }
+        case 44: {
+            // number is less than
+            $sql_compare = '<';
+            $sql_value = "'$value'";
+        }
             break;
 
         case 60:
@@ -777,52 +711,46 @@ function get_sql_compare_and_value($compare, $value)
             // explicitly skip adding a clause when $compare == 60 ( "--" in the GUI )
             break;
 
-        case 61:
-            {
-                // string is equal
-                $sql_compare = '=';
-                $sql_value = "'$value'";
-            }
+        case 61: {
+            // string is equal
+            $sql_compare = '=';
+            $sql_value = "'$value'";
+        }
             break;
 
-        case 62:
-            {
-                // string is not equal
-                $sql_compare = '!=';
-                $sql_value = "'$value'";
-            }
+        case 62: {
+            // string is not equal
+            $sql_compare = '!=';
+            $sql_value = "'$value'";
+        }
             break;
 
-        case 63:
-            {
-                // string contains
-                $sql_compare = 'LIKE';
-                $sql_value = "'%$value%'";
-            }
+        case 63: {
+            // string contains
+            $sql_compare = 'LIKE';
+            $sql_value = "'%$value%'";
+        }
             break;
 
-        case 64:
-            {
-                // string does not contain
-                $sql_compare = 'NOT LIKE';
-                $sql_value = "'%$value%'";
-            }
+        case 64: {
+            // string does not contain
+            $sql_compare = 'NOT LIKE';
+            $sql_value = "'%$value%'";
+        }
             break;
 
-        case 65:
-            {
-                // string starts with
-                $sql_compare = 'LIKE';
-                $sql_value = "'$value%'";
-            }
+        case 65: {
+            // string starts with
+            $sql_compare = 'LIKE';
+            $sql_value = "'$value%'";
+        }
             break;
 
-        case 66:
-            {
-                // string ends with
-                $sql_compare = 'LIKE';
-                $sql_value = "'%$value'";
-            }
+        case 66: {
+            // string ends with
+            $sql_compare = 'LIKE';
+            $sql_value = "'%$value'";
+        }
             break;
 
         case 80:
@@ -830,54 +758,48 @@ function get_sql_compare_and_value($compare, $value)
             // explicitly skip adding a clause when $compare == 80 ( "--" in the GUI )
             break;
 
-        case 81:
-            {
-                // date is equal
-                $sql_compare = '=';
-                $sql_value = get_sql_date_value($value);
-            }
+        case 81: {
+            // date is equal
+            $sql_compare = '=';
+            $sql_value = get_sql_date_value($value);
+        }
             break;
 
-        case 82:
-            {
-                // date is not equal
-                $sql_compare = '!=';
-                $sql_value = get_sql_date_value($value);
-            }
+        case 82: {
+            // date is not equal
+            $sql_compare = '!=';
+            $sql_value = get_sql_date_value($value);
+        }
             break;
 
-        case 83:
-            {
-                // date is after
-                $sql_compare = '>';
-                $sql_value = get_sql_date_value($value);
-            }
+        case 83: {
+            // date is after
+            $sql_compare = '>';
+            $sql_value = get_sql_date_value($value);
+        }
             break;
 
-        case 84:
-            {
-                // date is before
-                $sql_compare = '<';
-                $sql_value = get_sql_date_value($value);
-            }
+        case 84: {
+            // date is before
+            $sql_compare = '<';
+            $sql_value = get_sql_date_value($value);
+        }
             break;
 
         case 92:
-        case 93:
-            {
-                // Include or exclude a SubProject from the parent summary.
-                // This has to be handled via custom logic,
-                // not just by tweaking the SQL query.
-                $sql_compare = '';
-                $sql_value = '';
-            }
+        case 93: {
+            // Include or exclude a SubProject from the parent summary.
+            // This has to be handled via custom logic,
+            // not just by tweaking the SQL query.
+            $sql_compare = '';
+            $sql_value = '';
+        }
             break;
 
         default:
             trigger_error('unknown $compare value: ' . $compare, E_USER_WARNING);
             break;
     }
-
     return array($sql_compare, $sql_value);
 }
 
@@ -910,7 +832,7 @@ function get_filterdata_from_request($page_id = '')
 
     if (empty($page_id)) {
         $pos = strrpos($_SERVER['SCRIPT_NAME'], '/');
-        $page_id = substr($_SERVER['SCRIPT_NAME'], $pos+1);
+        $page_id = substr($_SERVER['SCRIPT_NAME'], $pos + 1);
     }
     $filterdata['pageId'] = $page_id;
 
@@ -930,7 +852,7 @@ function get_filterdata_from_request($page_id = '')
         $filtercount = 0;
     }
 
-    @$filtercombine =  htmlspecialchars(pdo_real_escape_string($_REQUEST['filtercombine']));
+    @$filtercombine = htmlspecialchars(pdo_real_escape_string($_REQUEST['filtercombine']));
     if (strtolower($filtercombine) == 'or') {
         $sql_combine = 'OR';
     } else {
@@ -940,14 +862,14 @@ function get_filterdata_from_request($page_id = '')
     $sql = "AND (";
 
     for ($i = 1; $i <= $filtercount; ++$i) {
-        if (empty($_REQUEST['field'.$i])) {
+        if (empty($_REQUEST['field' . $i])) {
             continue;
         }
-        $fieldinfo =  htmlspecialchars(pdo_real_escape_string($_REQUEST['field'.$i]));
-        $compare =  htmlspecialchars(pdo_real_escape_string($_REQUEST['compare'.$i]));
-        $value =  htmlspecialchars(pdo_real_escape_string($_REQUEST['value'.$i]));
-        @$add = $_REQUEST['add'.$i];
-        @$remove = $_REQUEST['remove'.$i];
+        $fieldinfo = htmlspecialchars(pdo_real_escape_string($_REQUEST['field' . $i]));
+        $compare = htmlspecialchars(pdo_real_escape_string($_REQUEST['compare' . $i]));
+        $value = htmlspecialchars(pdo_real_escape_string($_REQUEST['value' . $i]));
+        @$add = $_REQUEST['add' . $i];
+        @$remove = $_REQUEST['remove' . $i];
 
         $fieldinfo = explode('/', $fieldinfo, 2);
         $field = $fieldinfo[0];
@@ -986,10 +908,10 @@ function get_filterdata_from_request($page_id = '')
         }
 
         $filters[] = array(
-                'field' => $field,
-                'compare' => $compare,
-                'value' => $value,
-                );
+            'field' => $field,
+            'compare' => $compare,
+            'value' => $value,
+        );
     }
 
 
@@ -1011,7 +933,7 @@ function get_filterdata_from_request($page_id = '')
     // $filters array in the $filterdata...
     //
     if ($add_filter != 0) {
-        $idx = $add_filter-1;
+        $idx = $add_filter - 1;
 
         // Add a copy of the existing filter we are adding after:
         //
@@ -1023,7 +945,7 @@ function get_filterdata_from_request($page_id = '')
     }
 
     if ($remove_filter != 0) {
-        $idx = $remove_filter-1;
+        $idx = $remove_filter - 1;
 
         array_splice($filters, $idx, 1);
         //
@@ -1075,6 +997,5 @@ function get_filterdata_from_request($page_id = '')
     $xml = filterdata_XML($filterdata);
 
     $filterdata['xml'] = $xml;
-
     return $filterdata;
 }

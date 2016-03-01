@@ -3,7 +3,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__).'/cdash_test_case.php');
+require_once(dirname(__FILE__) . '/cdash_test_case.php');
 require_once('include/common.php');
 require_once('include/pdo.php');
 
@@ -25,9 +25,9 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
         // most recently submitted build instead.
         $filesToSubmit =
             array("Build_1.xml", "Configure_1.xml", "Notes_1.xml", "Test_1.xml",
-                    "Build_2.xml", "Configure_2.xml", "Notes_2.xml", "Test_2.xml",
-                    "Build_3.xml");
-        $dir  = dirname(__FILE__)."/data/SubProjectNextPrevious";
+                "Build_2.xml", "Configure_2.xml", "Notes_2.xml", "Test_2.xml",
+                "Build_3.xml");
+        $dir = dirname(__FILE__) . "/data/SubProjectNextPrevious";
         foreach ($filesToSubmit as $file) {
             if (!$this->submission('Trilinos', "$dir/$file")) {
                 $this->fail("Failed to submit $file");

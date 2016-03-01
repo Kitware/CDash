@@ -3,7 +3,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__).'/cdash_test_case.php');
+require_once(dirname(__FILE__) . '/cdash_test_case.php');
 require_once('include/pdo.php');
 
 class SequenceIndependenceTestCase extends KWWebTestCase
@@ -18,16 +18,16 @@ class SequenceIndependenceTestCase extends KWWebTestCase
     public function testOriginalOrder()
     {
         $file_order = array(
-                'Build',
-                'Configure',
-                'Coverage',
-                'CoverageLog',
-                'DynamicAnalysis',
-                'Notes',
-                'Test',
-                'Update',
-                'Upload'
-                );
+            'Build',
+            'Configure',
+            'Coverage',
+            'CoverageLog',
+            'DynamicAnalysis',
+            'Notes',
+            'Test',
+            'Update',
+            'Upload'
+        );
         if ($this->PerformOrderTest($file_order)) {
             $this->pass("Passed");
         }
@@ -36,15 +36,15 @@ class SequenceIndependenceTestCase extends KWWebTestCase
     public function testReverseOrder()
     {
         $file_order = array(
-                'Upload',
-                'Update',
-                'Test',
-                'Notes',
-                'DynamicAnalysis',
-                'CoverageLog',
-                'Coverage',
-                'Configure',
-                'Build');
+            'Upload',
+            'Update',
+            'Test',
+            'Notes',
+            'DynamicAnalysis',
+            'CoverageLog',
+            'Coverage',
+            'Configure',
+            'Build');
         if ($this->PerformOrderTest($file_order)) {
             $this->pass("Passed");
         }
@@ -53,15 +53,15 @@ class SequenceIndependenceTestCase extends KWWebTestCase
     public function testConfigureFirst()
     {
         $file_order = array(
-                'Configure',
-                'Test',
-                'Notes',
-                'CoverageLog',
-                'Coverage',
-                'Build',
-                'DynamicAnalysis',
-                'Upload',
-                'Update');
+            'Configure',
+            'Test',
+            'Notes',
+            'CoverageLog',
+            'Coverage',
+            'Build',
+            'DynamicAnalysis',
+            'Upload',
+            'Update');
         if ($this->PerformOrderTest($file_order)) {
             $this->pass("Passed");
         }
@@ -70,15 +70,15 @@ class SequenceIndependenceTestCase extends KWWebTestCase
     public function testCoverageFirst()
     {
         $file_order = array(
-                'Coverage',
-                'DynamicAnalysis',
-                'Configure',
-                'Build',
-                'CoverageLog',
-                'Upload',
-                'Notes',
-                'Update',
-                'Test');
+            'Coverage',
+            'DynamicAnalysis',
+            'Configure',
+            'Build',
+            'CoverageLog',
+            'Upload',
+            'Notes',
+            'Update',
+            'Test');
         if ($this->PerformOrderTest($file_order)) {
             $this->pass("Passed");
         }
@@ -87,15 +87,15 @@ class SequenceIndependenceTestCase extends KWWebTestCase
     public function testCoverageLogFirst()
     {
         $file_order = array(
-                'CoverageLog',
-                'Notes',
-                'Coverage',
-                'Configure',
-                'Upload',
-                'Build',
-                'DynamicAnalysis',
-                'Update',
-                'Test');
+            'CoverageLog',
+            'Notes',
+            'Coverage',
+            'Configure',
+            'Upload',
+            'Build',
+            'DynamicAnalysis',
+            'Update',
+            'Test');
         if ($this->PerformOrderTest($file_order)) {
             $this->pass("Passed");
         }
@@ -104,15 +104,15 @@ class SequenceIndependenceTestCase extends KWWebTestCase
     public function testDynamicAnalysisFirst()
     {
         $file_order = array(
-                'DynamicAnalysis',
-                'Notes',
-                'Configure',
-                'Upload',
-                'Test',
-                'Coverage',
-                'Update',
-                'CoverageLog',
-                'Build');
+            'DynamicAnalysis',
+            'Notes',
+            'Configure',
+            'Upload',
+            'Test',
+            'Coverage',
+            'Update',
+            'CoverageLog',
+            'Build');
         if ($this->PerformOrderTest($file_order)) {
             $this->pass("Passed");
         }
@@ -121,15 +121,15 @@ class SequenceIndependenceTestCase extends KWWebTestCase
     public function testNotesFirst()
     {
         $file_order = array(
-                'Notes',
-                'DynamicAnalysis',
-                'CoverageLog',
-                'Update',
-                'Configure',
-                'Upload',
-                'Build',
-                'Test',
-                'Coverage');
+            'Notes',
+            'DynamicAnalysis',
+            'CoverageLog',
+            'Update',
+            'Configure',
+            'Upload',
+            'Build',
+            'Test',
+            'Coverage');
         if ($this->PerformOrderTest($file_order)) {
             $this->pass("Passed");
         }
@@ -138,15 +138,15 @@ class SequenceIndependenceTestCase extends KWWebTestCase
     public function testTestFirst()
     {
         $file_order = array(
-                'Test',
-                'CoverageLog',
-                'DynamicAnalysis',
-                'Build',
-                'Configure',
-                'Notes',
-                'Update',
-                'Coverage',
-                'Upload');
+            'Test',
+            'CoverageLog',
+            'DynamicAnalysis',
+            'Build',
+            'Configure',
+            'Notes',
+            'Update',
+            'Coverage',
+            'Upload');
         if ($this->PerformOrderTest($file_order)) {
             $this->pass("Passed");
         }
@@ -155,15 +155,15 @@ class SequenceIndependenceTestCase extends KWWebTestCase
     public function testUpdateFirst()
     {
         $file_order = array(
-                'Update',
-                'Notes',
-                'DynamicAnalysis',
-                'Upload',
-                'Configure',
-                'Test',
-                'CoverageLog',
-                'Build',
-                'Coverage');
+            'Update',
+            'Notes',
+            'DynamicAnalysis',
+            'Upload',
+            'Configure',
+            'Test',
+            'CoverageLog',
+            'Build',
+            'Coverage');
         if ($this->PerformOrderTest($file_order)) {
             $this->pass("Passed");
         }
@@ -190,7 +190,7 @@ class SequenceIndependenceTestCase extends KWWebTestCase
         }
 
         // Submit the files in the order specified.
-        $rep  = dirname(__FILE__)."/data/InsightExperimentalExample";
+        $rep = dirname(__FILE__) . "/data/InsightExperimentalExample";
         foreach ($file_order as $type) {
             $file = "$rep/Insight_Experimental_$type.xml";
             if (!$this->submission('InsightExample', $file)) {
@@ -305,7 +305,7 @@ class SequenceIndependenceTestCase extends KWWebTestCase
 
         // Verify coverage.
         $coverage_result = pdo_query(
-                "SELECT loctested, locuntested FROM coveragesummary
+            "SELECT loctested, locuntested FROM coveragesummary
                 WHERE buildid='$buildid'");
         if (!$coverage_result) {
             $this->fail("coverage query returned false");
@@ -322,7 +322,7 @@ class SequenceIndependenceTestCase extends KWWebTestCase
         }
 
         $num_files_row = pdo_single_row_query(
-                "SELECT COUNT(1) AS numfiles
+            "SELECT COUNT(1) AS numfiles
                 FROM coveragefilelog
                 WHERE buildid='$buildid'");
         $num_files_covered = $num_files_row['numfiles'];
@@ -374,7 +374,6 @@ class SequenceIndependenceTestCase extends KWWebTestCase
             $this->fail("Expected uploaded file to be named 'tmp.txt', found " . $upload_row['filename']);
             return false;
         }
-
         return true;
     }
 }

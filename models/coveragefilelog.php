@@ -45,17 +45,17 @@ class coveragefilelog
     }
 
     /** Update the content of the file */
-    public function Insert($append=false)
+    public function Insert($append = false)
     {
         if (!$this->BuildId || !is_numeric($this->BuildId)) {
             add_log("BuildId not set", "CoverageFileLog::Insert()", LOG_ERR,
-                    0, $this->BuildId, CDASH_OBJECT_COVERAGE, $this->FileId);
+                0, $this->BuildId, CDASH_OBJECT_COVERAGE, $this->FileId);
             return false;
         }
 
         if (!$this->FileId || !is_numeric($this->FileId)) {
             add_log("FileId not set", "CoverageFileLog::Insert()", LOG_ERR,
-                    0, $this->BuildId, CDASH_OBJECT_COVERAGE, $this->FileId);
+                0, $this->BuildId, CDASH_OBJECT_COVERAGE, $this->FileId);
             return false;
         }
 
@@ -67,8 +67,8 @@ class coveragefilelog
         }
 
         $log = '';
-        foreach ($this->Lines as $lineNumber=>$code) {
-            $log .= $lineNumber.':'.$code.';';
+        foreach ($this->Lines as $lineNumber => $code) {
+            $log .= $lineNumber . ':' . $code . ';';
         }
         foreach ($this->Branches as $lineNumber => $code) {
             $log .= 'b' . $lineNumber . ':' . $code . ';';
@@ -78,12 +78,12 @@ class coveragefilelog
             if ($update) {
                 $sql_command = "UPDATE";
                 $sql = "UPDATE coveragefilelog SET log='$log'
-                WHERE buildid=".qnum($this->BuildId)." AND
-                fileid=".qnum($this->FileId);
+                WHERE buildid=" . qnum($this->BuildId) . " AND
+                fileid=" . qnum($this->FileId);
             } else {
                 $sql_command = "INSERT";
                 $sql = "INSERT INTO coveragefilelog (buildid,fileid,log) VALUES ";
-                $sql.= "(".qnum($this->BuildId).",".qnum($this->FileId).",'".$log."')";
+                $sql .= "(" . qnum($this->BuildId) . "," . qnum($this->FileId) . ",'" . $log . "')";
             }
             pdo_query($sql);
             add_last_sql_error("CoverageFileLog::$sql_command()");
@@ -98,8 +98,8 @@ class coveragefilelog
         global $CDASH_DB_TYPE;
 
         $query = "SELECT log FROM coveragefilelog
-            WHERE fileid=".qnum($this->FileId)."
-            AND buildid=".qnum($this->BuildId);
+            WHERE fileid=" . qnum($this->FileId) . "
+            AND buildid=" . qnum($this->BuildId);
         if ($for_update) {
             $query .= " FOR UPDATE";
         }
@@ -158,7 +158,6 @@ class coveragefilelog
                 $stats['branchesuntested'] += 1;
             }
         }
-
         return $stats;
     }
 
@@ -171,7 +170,8 @@ class coveragefilelog
 
         // Only nightly builds count towards aggregate coverage.
         if ($build->Type !== 'Nightly' ||
-                $build->Name === 'Aggregate Coverage') {
+            $build->Name === 'Aggregate Coverage'
+        ) {
             return;
         }
 
@@ -197,7 +197,7 @@ class coveragefilelog
         list($previousdate, $currentstarttime, $nextdate) =
             get_dates($build_date, $nightly_time);
         $beginning_timestamp = $currentstarttime;
-        $end_timestamp = $currentstarttime+3600*24;
+        $end_timestamp = $currentstarttime + 3600 * 24;
         $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
         $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
 
@@ -230,18 +230,19 @@ class coveragefilelog
         // Abort if this log refers to a different version of the file
         // than the one already contained in the aggregate.
         $row = pdo_single_row_query(
-                "SELECT id, fullpath FROM coveragefile WHERE id='$this->FileId'");
+            "SELECT id, fullpath FROM coveragefile WHERE id='$this->FileId'");
         $path = $row['fullpath'];
         $row = pdo_single_row_query(
-                "SELECT id FROM coveragefile AS cf
+            "SELECT id FROM coveragefile AS cf
                 INNER JOIN coveragefilelog AS cfl ON (cfl.fileid=cf.id)
                 WHERE cfl.buildid='$aggregateBuildId' AND cf.fullpath='$path'");
         if ($row && array_key_exists('id', $row) &&
-                $row['id'] !== $this->FileId) {
+            $row['id'] !== $this->FileId
+        ) {
             add_log("Not appending coverage of '$path' to aggregate as it " .
-                    "already contains a different version of this file.",
-                    'CoverageSummary::UpdateAggregate', LOG_INFO,
-                    $this->BuildId);
+                "already contains a different version of this file.",
+                'CoverageSummary::UpdateAggregate', LOG_INFO,
+                $this->BuildId);
             return;
         }
 

@@ -3,7 +3,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__).'/cdash_test_case.php');
+require_once(dirname(__FILE__) . '/cdash_test_case.php');
 
 require_once('include/common.php');
 require_once('include/pdo.php');
@@ -72,14 +72,13 @@ class UserTestCase extends KWWebTestCase
 
         $user->Password = md5("simpletest");
 
-    // Coverage for update save
-    $user->Save();
+        // Coverage for update save
+        $user->Save();
 
-    // Coverage for SetPassword
-    $user->SetPassword(md5("simpletest"));
+        // Coverage for SetPassword
+        $user->SetPassword(md5("simpletest"));
 
         $this->stopCodeCoverage();
-
         return 0;
     }
 }

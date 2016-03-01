@@ -38,7 +38,7 @@ abstract class AbstractHandler implements SaxHandler
 
     protected function getParent()
     {
-        return $this->stack->at($this->stack->size()-2);
+        return $this->stack->at($this->stack->size() - 2);
     }
 
     protected function getElement()

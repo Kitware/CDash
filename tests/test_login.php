@@ -3,7 +3,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__).'/cdash_test_case.php');
+require_once(dirname(__FILE__) . '/cdash_test_case.php');
 
 class LoginTestCase extends KWWebTestCase
 {
@@ -40,7 +40,7 @@ class LoginTestCase extends KWWebTestCase
 
     public function testRegister()
     {
-        $url = $this->url.'/register.php';
+        $url = $this->url . '/register.php';
         $content = $this->connect($url);
         if ($content == false) {
             return;
@@ -52,7 +52,7 @@ class LoginTestCase extends KWWebTestCase
 
     public function testPasswordTooShort()
     {
-        $url = $this->url.'/register.php';
+        $url = $this->url . '/register.php';
         $content = $this->connect($url);
         if ($content == false) {
             return;
@@ -64,9 +64,9 @@ class LoginTestCase extends KWWebTestCase
 
     public function fillOutRegisterForm($email, $passwd)
     {
-        $fname        = 'test';
-        $lname        = 'kw';
-        $institution  = 'developer';
+        $fname = 'test';
+        $lname = 'kw';
+        $institution = 'developer';
         $this->setField('fname', $fname);
         $this->setField('lname', $lname);
         $this->setField('email', $email);

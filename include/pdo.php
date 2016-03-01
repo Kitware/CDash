@@ -17,17 +17,17 @@
 require_once("include/log.php");
 
 
-  //
-  // ATTENTION CDash devs:
-  //   See also new file "pdocore.php"
-  //
-  // This file contains pdo functions that use the "add_log" function.
-  // The functions in pdocore.php are not allowed to use "add_log"
-  //
-  // The separation is necessary now because add_log logs its calls
-  // into the database, and needs to call pdocore.php functions
-  // to do it.
-  //
+//
+// ATTENTION CDash devs:
+//   See also new file "pdocore.php"
+//
+// This file contains pdo functions that use the "add_log" function.
+// The functions in pdocore.php are not allowed to use "add_log"
+//
+// The separation is necessary now because add_log logs its calls
+// into the database, and needs to call pdocore.php functions
+// to do it.
+//
 
 
 // pdo_single_row_query returns a single row. Useful for SELECT
@@ -38,22 +38,21 @@ function pdo_single_row_query($qry)
     $result = pdo_query($qry);
     if (false === $result) {
         add_log('error: pdo_query failed: ' . pdo_error(),
-      'pdo_single_row_query', LOG_ERR);
+            'pdo_single_row_query', LOG_ERR);
         return array();
     }
 
     $num_rows = pdo_num_rows($result);
     if (0 !== $num_rows && 1 !== $num_rows) {
         add_log('error: at most 1 row should be returned, not ' . $num_rows,
-      'pdo_single_row_query', LOG_ERR);
+            'pdo_single_row_query', LOG_ERR);
         add_log('warning: returning the first row anyway even though result ' .
-      'contains ' . $num_rows . ' rows',
-      'pdo_single_row_query', LOG_WARNING);
+            'contains ' . $num_rows . ' rows',
+            'pdo_single_row_query', LOG_WARNING);
     }
 
     $row = pdo_fetch_array($result);
     pdo_free_result($result);
-
     return $row;
 }
 
@@ -68,7 +67,7 @@ function pdo_all_rows_query($qry)
     $result = pdo_query($qry);
     if (false === $result) {
         add_log('error: pdo_query failed: ' . pdo_error(),
-      'pdo_all_rows_query', LOG_ERR);
+            'pdo_all_rows_query', LOG_ERR);
         return array();
     }
 
@@ -77,7 +76,6 @@ function pdo_all_rows_query($qry)
         $all_rows[] = $row;
     }
     pdo_free_result($result);
-
     return $all_rows;
 }
 
@@ -95,7 +93,6 @@ function pdo_get_field_value($qry, $fieldname, $default)
     } else {
         $f = $default;
     }
-
     return $f;
 }
 
@@ -111,20 +108,18 @@ function pdo_query_and_log_if_failed($qry, $caller)
 
     if (false === $result) {
         add_log('error: pdo_query failed: ' . pdo_error(),
-      $caller, LOG_ERR);
+            $caller, LOG_ERR);
 
-    // Also log a bit of the query so we can tell where it came from:
-    if (strlen($qry) > 100) {
-        $log_qry = substr($qry, 0, 100) . '...';
-    } else {
-        $log_qry = $qry;
-    }
-        add_log('query: '.$log_qry,
-      $caller, LOG_INFO);
-
+        // Also log a bit of the query so we can tell where it came from:
+        if (strlen($qry) > 100) {
+            $log_qry = substr($qry, 0, 100) . '...';
+        } else {
+            $log_qry = $qry;
+        }
+        add_log('query: ' . $log_qry,
+            $caller, LOG_INFO);
         return false;
     }
-
     return true;
 }
 

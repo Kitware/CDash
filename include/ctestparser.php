@@ -33,8 +33,8 @@ function displayReturnStatus($statusarray)
 {
     include 'include/version.php';
     echo "<cdash version=\"$CDASH_VERSION\">\n";
-    foreach ($statusarray as $key=>$value) {
-        echo "  <".$key.">".$value."</".$key.">\n";
+    foreach ($statusarray as $key => $value) {
+        echo "  <" . $key . ">" . $value . "</" . $key . ">\n";
     }
     echo "</cdash>\n";
 }
@@ -42,12 +42,12 @@ function displayReturnStatus($statusarray)
 /** Function used to write a submitted file to our backup directory with a
  * descriptive name. */
 function writeBackupFile($filehandler, $content, $projectname, $buildname,
-        $sitename, $stamp, $fileNameWithExt)
+                         $sitename, $stamp, $fileNameWithExt)
 {
     global $CDASH_BACKUP_DIRECTORY;
 
     // Append a timestamp for the file
-    $currenttimestamp = microtime(true)*100;
+    $currenttimestamp = microtime(true) * 100;
 
     $backupDir = $CDASH_BACKUP_DIRECTORY;
     if (!file_exists($backupDir)) {
@@ -56,9 +56,9 @@ function writeBackupFile($filehandler, $content, $projectname, $buildname,
 
         if (!file_exists($backupDir)) {
             trigger_error(
-                    "function writeBackupFile cannot process files when backup directory ".
-                    "does not exist: CDASH_BACKUP_DIRECTORY='$CDASH_BACKUP_DIRECTORY'",
-                    E_USER_ERROR);
+                "function writeBackupFile cannot process files when backup directory " .
+                "does not exist: CDASH_BACKUP_DIRECTORY='$CDASH_BACKUP_DIRECTORY'",
+                E_USER_ERROR);
             return false;
         }
     }
@@ -73,9 +73,9 @@ function writeBackupFile($filehandler, $content, $projectname, $buildname,
     $file = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
 
     if ($file == "Project") {
-        $filename = $backupDir."/".$projectname_escaped."_".$currenttimestamp."_".$file.$ext;
+        $filename = $backupDir . "/" . $projectname_escaped . "_" . $currenttimestamp . "_" . $file . $ext;
     } else {
-        $filename = $backupDir."/".$projectname_escaped."_".$sitename_escaped."_".$buildname_escaped."_".$stamp."_".$currenttimestamp.'_'.$file.$ext;
+        $filename = $backupDir . "/" . $projectname_escaped . "_" . $sitename_escaped . "_" . $buildname_escaped . "_" . $stamp . "_" . $currenttimestamp . '_' . $file . $ext;
     }
 
     // If the file exists we append a number until we get a nonexistent file.
@@ -86,16 +86,16 @@ function writeBackupFile($filehandler, $content, $projectname, $buildname,
         $lockfp = fopen($lockfilename, "w");
         flock($lockfp, LOCK_EX | LOCK_NB, $wouldblock);
         if ($wouldblock) {
-            $filename = $backupDir."/".$projectname_escaped."_".$sitename_escaped."_".$buildname_escaped."_".$stamp.'_'.$currenttimestamp."_".$file."_".$i.$ext;
+            $filename = $backupDir . "/" . $projectname_escaped . "_" . $sitename_escaped . "_" . $buildname_escaped . "_" . $stamp . '_' . $currenttimestamp . "_" . $file . "_" . $i . $ext;
             $i++;
         } else {
             $got_lock = true;
 
             // Make sure the file is in the right directory.
             $pos = strpos(realpath(dirname($filename)), realpath($backupDir));
-            if ($pos === false || $pos!=0) {
+            if ($pos === false || $pos != 0) {
                 echo "File cannot be stored in backup directory: $filename";
-                add_log("File cannot be stored in backup directory: $filename (realpath = ".realpath($backupDir).")", "writeBackupFile", LOG_ERR);
+                add_log("File cannot be stored in backup directory: $filename (realpath = " . realpath($backupDir) . ")", "writeBackupFile", LOG_ERR);
                 flock($lockfp, LOCK_UN);
                 unlink($lockfilename);
                 return false;
@@ -147,7 +147,7 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
     }
 
     $buildfile_row = pdo_single_row_query(
-            "SELECT * FROM buildfile WHERE md5='$expected_md5'");
+        "SELECT * FROM buildfile WHERE md5='$expected_md5'");
     if (empty($buildfile_row)) {
         return false;
     }
@@ -158,25 +158,25 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
 
     $buildid = $buildfile_row['buildid'];
     $row = pdo_single_row_query(
-            "SELECT name, stamp FROM build WHERE id=$buildid");
+        "SELECT name, stamp FROM build WHERE id=$buildid");
     $buildname = $row["name"];
     $stamp = $row["stamp"];
 
     $row = pdo_single_row_query(
-            "SELECT name FROM site WHERE id=
+        "SELECT name FROM site WHERE id=
             (SELECT siteid FROM build WHERE id=$buildid)");
     $sitename = $row["name"];
 
     $filename = writeBackupFile($filehandler, "", $projectname, $buildname,
-            $sitename, $stamp, $buildfile_row["filename"]);
+        $sitename, $stamp, $buildfile_row["filename"]);
 
     // Include the handler file for this type of submission.
     $type = $buildfile_row['type'];
     $include_file = "xml_handlers/" . $type . "_handler.php";
     if (stream_resolve_include_path($include_file) === false) {
         add_log("No handler include file for $type (tried $include_file)",
-                "parse_put_submission",
-                LOG_ERR, $projectid);
+            "parse_put_submission",
+            LOG_ERR, $projectid);
         check_for_immediate_deletion($filename);
         return true;
     }
@@ -186,7 +186,7 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
     $className = $type . "Handler";
     if (!class_exists($className)) {
         add_log("No handler class for $type", "parse_put_submission",
-                LOG_ERR, $projectid);
+            LOG_ERR, $projectid);
         check_for_immediate_deletion($filename);
         return true;
     }
@@ -199,19 +199,19 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
 }
 
 /** Main function to parse the incoming xml from ctest */
-function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=true,
-        $scheduleid=0)
+function ctest_parse($filehandler, $projectid, $expected_md5 = '', $do_checksum = true,
+                     $scheduleid = 0)
 {
     include 'config/config.php';
     require_once 'include/common.php';
     require_once 'models/project.php';
     include 'include/version.php';
 
-    if ($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/ctestparser.php")) {
+    if ($CDASH_USE_LOCAL_DIRECTORY && file_exists("local/ctestparser.php")) {
         require_once("local/ctestparser.php");
         $localParser = new LocalParser();
         $localParser->SetProjectId($projectid);
-        $localParser->BufferSizeMB =8192/(1024*1024);
+        $localParser->BufferSizeMB = 8192 / (1024 * 1024);
     }
 
     // Check if this is a new style PUT submission.
@@ -279,7 +279,7 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
         $ip = $_SERVER['REMOTE_ADDR'];
 
         $Project->SendEmailToAdmin('Cannot create handler based on XML content',
-                'An XML submission from '.$ip.' to the project '.get_project_name($projectid).' cannot be parsed. The content of the file is as follow: '.$content);
+            'An XML submission from ' . $ip . ' to the project ' . get_project_name($projectid) . ' cannot be parsed. The content of the file is as follow: ' . $content);
         return;
     }
 
@@ -301,12 +301,12 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
     }
 
     // Check if the build is in the block list
-    $query = pdo_query("SELECT id FROM blockbuild WHERE projectid=".qnum($projectid)."
-            AND (buildname='' OR buildname='".$buildname."')
-            AND (sitename='' OR sitename='".$sitename."')
-            AND (ipaddress='' OR ipaddress='".$_SERVER['REMOTE_ADDR']."')");
+    $query = pdo_query("SELECT id FROM blockbuild WHERE projectid=" . qnum($projectid) . "
+            AND (buildname='' OR buildname='" . $buildname . "')
+            AND (sitename='' OR sitename='" . $sitename . "')
+            AND (ipaddress='' OR ipaddress='" . $_SERVER['REMOTE_ADDR'] . "')");
 
-    if (pdo_num_rows($query)>0) {
+    if (pdo_num_rows($query) > 0) {
         echo $query_array['id'];
         echo "The submission is banned from this CDash server.";
         add_log("Submission is banned from this CDash server", "ctestparser");
@@ -315,7 +315,7 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
 
     // Write the file to the backup directory.
     $filename = writeBackupFile($filehandler, $content, $projectname, $buildname,
-            $sitename, $stamp, $file . ".xml");
+        $sitename, $stamp, $file . ".xml");
     if ($filename === false) {
         return $handler;
     }
@@ -330,7 +330,7 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
             $statusarray['status'] = 'OK';
         } else {
             $statusarray['status'] = 'ERROR';
-            $statusarray['message'] = 'Checksum failed for file. Expected '.$expected_md5.' but got '.$md5sum;
+            $statusarray['message'] = 'Checksum failed for file. Expected ' . $expected_md5 . ' but got ' . $md5sum;
             $md5error = true;
         }
 
@@ -343,7 +343,7 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
     }
 
     $parsingerror = '';
-    if ($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/ctestparser.php")) {
+    if ($CDASH_USE_LOCAL_DIRECTORY && file_exists("local/ctestparser.php")) {
         $parsingerror = $localParser->StartParsing();
         if ($parsingerror != '') {
             $statusarray['status'] = 'ERROR';
@@ -365,7 +365,7 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
     while (!feof($parseHandle)) {
         $content = fread($parseHandle, 8192);
 
-        if ($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/ctestparser.php")) {
+        if ($CDASH_USE_LOCAL_DIRECTORY && file_exists("local/ctestparser.php")) {
             $parsingerror = $localParser->ParseFile();
             if ($parsingerror != '') {
                 $statusarray['status'] = 'ERROR';
@@ -381,7 +381,7 @@ function ctest_parse($filehandler, $projectid, $expected_md5='', $do_checksum=tr
     fclose($parseHandle);
     unset($parseHandle);
 
-    if ($CDASH_USE_LOCAL_DIRECTORY&&file_exists("local/ctestparser.php")) {
+    if ($CDASH_USE_LOCAL_DIRECTORY && file_exists("local/ctestparser.php")) {
         $parsingerror = $localParser->EndParsingFile();
     }
 

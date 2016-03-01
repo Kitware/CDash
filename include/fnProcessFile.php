@@ -26,7 +26,7 @@ function ProcessFile($projectid, $filename, $md5)
 
     if (!file_exists($filename)) {
         // check in parent dir also
-    $filename = "../$filename";
+        $filename = "../$filename";
     }
 
     if (file_exists($filename)) {
@@ -41,14 +41,13 @@ function ProcessFile($projectid, $filename, $md5)
         @fclose($fp);
         unset($fp);
 
-    // delete the temporary backup file since we now have a better-named one
-    cdash_unlink($filename);
+        // delete the temporary backup file since we now have a better-named one
+        cdash_unlink($filename);
         $new_status = 2; // done, did call do_submit, finished normally
     } else {
-        add_log("Cannot open file '".$filename."'", "ProcessFile",
-      LOG_ERR, $projectid);
+        add_log("Cannot open file '" . $filename . "'", "ProcessFile",
+            LOG_ERR, $projectid);
         $new_status = 3; // done, did *NOT* call do_submit
     }
-
     return $new_status;
 }

@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once(dirname(dirname(dirname(__DIR__)))."/config/config.php");
+require_once(dirname(dirname(dirname(__DIR__))) . "/config/config.php");
 require_once("include/pdo.php");
 
 // Add other api includes here
@@ -30,7 +30,7 @@ if (!isset($_GET['method'])) {
 }
 $method = htmlspecialchars(pdo_real_escape_string($_GET['method']));
 
-$classname = ucfirst($method).'API';
+$classname = ucfirst($method) . 'API';
 $class = new $classname;
 $class->Parameters = array_merge($_GET, $_POST);
 $results = $class->Run();

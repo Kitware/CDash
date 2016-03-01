@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once(dirname(dirname(__DIR__))."/config/config.php");
+require_once(dirname(dirname(__DIR__)) . "/config/config.php");
 require_once("include/pdo.php");
 require_once("include/common.php");
 
@@ -68,13 +68,13 @@ ORDER BY build.starttime DESC
 $tarray = array();
 while ($build_array = pdo_fetch_array($previousbuilds)) {
     $t = array();
-    $t['x'] = strtotime($build_array["starttime"])*1000;
+    $t['x'] = strtotime($build_array["starttime"]) * 1000;
     if (strtolower($build_array["status"]) == "passed") {
         $t['y'] = 1;
     } else {
         $t['y'] = -1;
     }
-    $tarray[]=$t;
+    $tarray[] = $t;
 }
 
 $tarray = array_reverse($tarray);

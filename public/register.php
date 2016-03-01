@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include_once(dirname(__DIR__)."/config/config.php");
+include_once(dirname(__DIR__) . "/config/config.php");
 include_once("include/common.php");
 include_once("include/login_functions.php");
 include_once('include/version.php');
@@ -28,12 +28,12 @@ $reg = "";
 function register()
 {
     global $reg;
-    include(dirname(__DIR__)."/config/config.php");
+    include(dirname(__DIR__) . "/config/config.php");
     require_once("include/pdo.php");
 
     if (isset($_GET["key"])) {
         $key = pdo_real_escape_string($_GET["key"]);
-        $sql = "SELECT * FROM ".qid("usertemp")." WHERE registrationkey='$key'";
+        $sql = "SELECT * FROM " . qid("usertemp") . " WHERE registrationkey='$key'";
         $query = pdo_query($sql);
         if (pdo_num_rows($query) == 0) {
             $reg = "The key is invalid.";
@@ -49,11 +49,11 @@ function register()
         $institution = $query_array['institution'];
 
         // We copy the data from usertemp to user
-        $sql="INSERT INTO ".qid("user")." (email,password,firstname,lastname,institution)
+        $sql = "INSERT INTO " . qid("user") . " (email,password,firstname,lastname,institution)
             VALUES ('$email','$passwd','$fname','$lname','$institution')";
 
         if (pdo_query($sql)) {
-            pdo_query("DELETE FROM usertemp WHERE email='".$email."'");
+            pdo_query("DELETE FROM usertemp WHERE email='" . $email . "'");
             return 1;
         } else {
             $reg = pdo_error();
@@ -62,7 +62,7 @@ function register()
     } elseif (isset($_POST["sent"])) {
         // arrive from register form
 
-        $url   = $_POST["url"];
+        $url = $_POST["url"];
         if ($url != "catchbot") {
             $reg = "Bots are not allowed to obtain CDash accounts!";
             return 0;
@@ -102,12 +102,12 @@ function register()
             $passwd = md5($passwd);
             $email = pdo_real_escape_string($email);
 
-            $sql = "SELECT email FROM ".qid("user")." WHERE email='$email'";
+            $sql = "SELECT email FROM " . qid("user") . " WHERE email='$email'";
             if (pdo_num_rows(pdo_query($sql)) > 0) {
                 $reg = "$email is already registered.";
                 return 0;
             }
-            $sql = "SELECT email  FROM ".qid("usertemp")." WHERE email='$email'";
+            $sql = "SELECT email  FROM " . qid("usertemp") . " WHERE email='$email'";
             if (pdo_num_rows(pdo_query($sql)) > 0) {
                 $reg = "$email is already registered. Check your email if you haven't received the link to activate yet.";
                 return 0;
@@ -123,18 +123,18 @@ function register()
                 $length = 40;
 
                 $key = "";
-                $max=strlen($keychars)-1;
-                for ($i=0;$i<$length;$i++) {
+                $max = strlen($keychars) - 1;
+                for ($i = 0; $i < $length; $i++) {
                     // random_int is available in PHP 7 and the random_compat PHP 5.x
                     // polyfill included in the Composer package.json dependencies.
                     $key .= substr($keychars, random_int(0, $max), 1);
                 }
 
                 $date = date(FMT_DATETIME);
-                $sql="INSERT INTO ".qid("usertemp")." (email,password,firstname,lastname,institution,registrationkey,registrationdate)
+                $sql = "INSERT INTO " . qid("usertemp") . " (email,password,firstname,lastname,institution,registrationkey,registrationdate)
                     VALUES ('$email','$passwd','$fname','$lname','$institution','$key','$date')";
             } else {
-                $sql="INSERT INTO ".qid("user")." (email,password,firstname,lastname,institution)
+                $sql = "INSERT INTO " . qid("user") . " (email,password,firstname,lastname,institution)
                     VALUES ('$email','$passwd','$fname','$lname','$institution')";
             }
             if (pdo_query($sql)) {
@@ -143,20 +143,20 @@ function register()
 
                     // Send the email
                     $emailtitle = "Welcome to CDash!";
-                    $emailbody = "Hello ".$fname.",\n\n";
+                    $emailbody = "Hello " . $fname . ",\n\n";
                     $emailbody .= "Welcome to CDash! In order to validate your registration please follow this link: \n";
-                    $emailbody .= $currentURI."/register.php?key=".$key."\n";
+                    $emailbody .= $currentURI . "/register.php?key=" . $key . "\n";
 
                     $serverName = $CDASH_SERVER_NAME;
                     if (strlen($serverName) == 0) {
                         $serverName = $_SERVER['SERVER_NAME'];
                     }
-                    $emailbody .= "\n-CDash on ".$serverName."\n";
+                    $emailbody .= "\n-CDash on " . $serverName . "\n";
 
                     if (cdashmail("$email", $emailtitle, $emailbody)) {
-                        add_log("email sent to: ".$email, "Registration");
+                        add_log("email sent to: " . $email, "Registration");
                     } else {
-                        add_log("cannot send email to: ".$email, "Registration", LOG_ERR);
+                        add_log("cannot send email to: " . $email, "Registration", LOG_ERR);
                     }
 
                     $reg = "A confirmation email has been sent. Check your email (including your spam folder) to confirm your registration!\n";
@@ -172,19 +172,18 @@ function register()
             $reg = "Please fill in all of the required fields";
             return 0;
         }
-    } // end register
-
+    }
     return 0;
 }
 
 /** Login Form function */
 function RegisterForm($regerror)
 {
-    include(dirname(__DIR__)."/config/config.php");
+    include(dirname(__DIR__) . "/config/config.php");
     require_once("include/pdo.php");
     include_once("include/common.php");
 
-    if (isset($CDASH_NO_REGISTRATION) && $CDASH_NO_REGISTRATION==1) {
+    if (isset($CDASH_NO_REGISTRATION) && $CDASH_NO_REGISTRATION == 1) {
         die("You cannot access this page. Contact your administrator if you think that's an error.");
     }
 

@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include(dirname(__DIR__)."/config/config.php");
+include(dirname(__DIR__) . "/config/config.php");
 require_once("include/pdo.php");
 include_once("include/common.php");
 include('public/login.php');
@@ -29,10 +29,10 @@ if ($session_OK) {
 
     $userid = $_SESSION['cdash']['loginid'];
 // Checks
-if (!isset($userid) || !is_numeric($userid)) {
-    echo "Not a valid userid!";
-    return;
-}
+    if (!isset($userid) || !is_numeric($userid)) {
+        echo "Not a valid userid!";
+        return;
+    }
 
     $xml = begin_XML_for_XSLT();
     $xml .= "<backurl>user.php</backurl>";
@@ -52,12 +52,12 @@ if (!isset($userid) || !is_numeric($userid)) {
     $Project = new Project;
 
 // If the projectid is not set and there is only one project we go directly to the page
-if (isset($edit) && !isset($projectid)) {
-    $projectids = $Project->GetIds();
-    if (count($projectids)==1) {
-        $projectid = $projectids[0];
+    if (isset($edit) && !isset($projectid)) {
+        $projectids = $Project->GetIds();
+        if (count($projectids) == 1) {
+            $projectid = $projectids[0];
+        }
     }
-}
 
     $User = new User;
     $User->Id = $userid;
@@ -65,21 +65,21 @@ if (isset($edit) && !isset($projectid)) {
 
     $role = $Project->GetUserRole($userid);
 
-    if ($User->IsAdmin()===false && $role<=1) {
+    if ($User->IsAdmin() === false && $role <= 1) {
         echo "You don't have the permissions to access this page";
         return;
     }
 
 // If user is admin then we can add a banner for all projects
-if ($User->IsAdmin() == true) {
-    $xml .= "<availableproject>";
-    $xml .= add_XML_value("id", "0");
-    $xml .= add_XML_value("name", "All");
-    if ($projectid==0) {
-        $xml .= add_XML_value("selected", "1");
+    if ($User->IsAdmin() == true) {
+        $xml .= "<availableproject>";
+        $xml .= add_XML_value("id", "0");
+        $xml .= add_XML_value("name", "All");
+        if ($projectid == 0) {
+            $xml .= add_XML_value("selected", "1");
+        }
+        $xml .= "</availableproject>";
     }
-    $xml .= "</availableproject>";
-}
 
 
     $sql = "SELECT id,name FROM project";
@@ -91,7 +91,7 @@ if ($User->IsAdmin() == true) {
         $xml .= "<availableproject>";
         $xml .= add_XML_value("id", $project_array['id']);
         $xml .= add_XML_value("name", $project_array['name']);
-        if ($project_array['id']==$projectid) {
+        if ($project_array['id'] == $projectid) {
             $xml .= add_XML_value("selected", "1");
         }
         $xml .= "</availableproject>";
@@ -101,29 +101,29 @@ if ($User->IsAdmin() == true) {
     $Banner->SetProjectId($projectid);
 
 // If submit has been pressed
-@$updateMessage = $_POST["updateMessage"];
+    @$updateMessage = $_POST["updateMessage"];
     if (isset($updateMessage)) {
         $Banner->SetText(htmlspecialchars(pdo_real_escape_string($_POST["message"])));
     }
 
 
-/** We start generating the XML here */
+    /** We start generating the XML here */
 // List the available project
-if ($projectid>=0) {
-    $xml .= "<project>";
-    $xml .= add_XML_value("id", $Project->Id);
-    $xml .= add_XML_value("text", $Banner->GetText());
+    if ($projectid >= 0) {
+        $xml .= "<project>";
+        $xml .= add_XML_value("id", $Project->Id);
+        $xml .= add_XML_value("text", $Banner->GetText());
 
-    if ($projectid>0) {
-        $xml .= add_XML_value("name", $Project->GetName());
-        $xml .= add_XML_value("name_encoded", urlencode($Project->GetName()));
+        if ($projectid > 0) {
+            $xml .= add_XML_value("name", $Project->GetName());
+            $xml .= add_XML_value("name_encoded", urlencode($Project->GetName()));
+        }
+        $xml .= add_XML_value("id", $Project->Id);
+        $xml .= "</project>";
     }
-    $xml .= add_XML_value("id", $Project->Id);
-    $xml .= "</project>";
-}
 
     $xml .= "</cdash>";
 
 // Now doing the xslt transition
-generate_XSLT($xml, "manageBanner");
-} // end session OK;
+    generate_XSLT($xml, "manageBanner");
+}

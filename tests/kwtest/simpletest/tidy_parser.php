@@ -1,15 +1,15 @@
 <?php
 /**
  *  base include file for SimpleTest
- *  @package    SimpleTest
- *  @subpackage WebTester
- *  @version    $Id$
+ * @package    SimpleTest
+ * @subpackage WebTester
+ * @version    $Id$
  */
 
 /**
  *    Builds the page object.
- *    @package SimpleTest
- *    @subpackage WebTester
+ * @package SimpleTest
+ * @subpackage WebTester
  */
 class SimpleTidyPageBuilder
 {
@@ -36,7 +36,7 @@ class SimpleTidyPageBuilder
 
     /**
      *    This builder is only available if the 'tidy' extension is loaded.
-     *    @return boolean       True if available.
+     * @return boolean       True if available.
      */
     public function can()
     {
@@ -45,15 +45,15 @@ class SimpleTidyPageBuilder
 
     /**
      *    Reads the raw content the page using HTML Tidy.
-     *    @param $response SimpleHttpResponse  Fetched response.
-     *    @return SimplePage                   Newly parsed page.
+     * @param $response SimpleHttpResponse  Fetched response.
+     * @return SimplePage                   Newly parsed page.
      */
     public function parse($response)
     {
         $this->page = new SimplePage($response);
         $tidied = tidy_parse_string($input = $this->insertGuards($response->getContent()),
-                                    array('output-xml' => false, 'wrap' => '0', 'indent' => 'no'),
-                                    'latin1');
+            array('output-xml' => false, 'wrap' => '0', 'indent' => 'no'),
+            'latin1');
         $this->walkTree($tidied->html());
         $this->attachLabels($this->widgets_by_id, $this->labels);
         $this->page->setForms($this->forms);
@@ -64,8 +64,8 @@ class SimpleTidyPageBuilder
 
     /**
      *    Stops HTMLTidy stripping content that we wish to preserve.
-     *    @param string      The raw html.
-     *    @return string     The html with guard tags inserted.
+     * @param string      The raw html.
+     * @return string     The html with guard tags inserted.
      */
     private function insertGuards($html)
     {
@@ -76,8 +76,8 @@ class SimpleTidyPageBuilder
      *    Removes the extra content added during the parse stage
      *    in order to preserve content we don't want stripped
      *    out by HTMLTidy.
-     *    @param string      The raw html.
-     *    @return string     The html with guard tags removed.
+     * @param string      The raw html.
+     * @return string     The html with guard tags removed.
      */
     private function stripGuards($html)
     {
@@ -87,14 +87,14 @@ class SimpleTidyPageBuilder
     /**
      *    HTML tidy strips out empty tags such as <option> which we
      *    need to preserve. This method inserts an additional marker.
-     *    @param string      The raw html.
-     *    @return string     The html with guards inserted.
+     * @param string      The raw html.
+     * @return string     The html with guards inserted.
      */
     private function insertEmptyTagGuards($html)
     {
         return preg_replace('#<(option|textarea)([^>]*)>(\s*)</(option|textarea)>#is',
-                            '<\1\2>___EMPTY___\3</\4>',
-                            $html);
+            '<\1\2>___EMPTY___\3</\4>',
+            $html);
     }
 
     /**
@@ -102,8 +102,8 @@ class SimpleTidyPageBuilder
      *    need to preserve. This method strips additional markers
      *    inserted by SimpleTest to the tidy output used to make the
      *    tags non-empty. This ensures their preservation.
-     *    @param string      The raw html.
-     *    @return string     The html with guards removed.
+     * @param string      The raw html.
+     * @return string     The html with guards removed.
      */
     private function stripEmptyTagGuards($html)
     {
@@ -114,64 +114,64 @@ class SimpleTidyPageBuilder
      *    By parsing the XML output of tidy, we lose some whitespace
      *    information in textarea tags. We temporarily recode this
      *    data ourselves so as not to lose it.
-     *    @param string      The raw html.
-     *    @return string     The html with guards inserted.
+     * @param string      The raw html.
+     * @return string     The html with guards inserted.
      */
     private function insertTextareaSimpleWhitespaceGuards($html)
     {
         return preg_replace_callback('#<textarea([^>]*)>(.*?)</textarea>#is',
-                                     array($this, 'insertWhitespaceGuards'),
-                                     $html);
+            array($this, 'insertWhitespaceGuards'),
+            $html);
     }
 
     /**
      *  Callback for insertTextareaSimpleWhitespaceGuards().
-     *  @param array $matches       Result of preg_replace_callback().
-     *  @return string              Guard tags now replace whitespace.
+     * @param array $matches Result of preg_replace_callback().
+     * @return string              Guard tags now replace whitespace.
      */
     private function insertWhitespaceGuards($matches)
     {
         return '<textarea' . $matches[1] . '>' .
-                str_replace(array("\n", "\r", "\t", ' '),
-                            array('___NEWLINE___', '___CR___', '___TAB___', '___SPACE___'),
-                            $matches[2]) .
-                '</textarea>';
+        str_replace(array("\n", "\r", "\t", ' '),
+            array('___NEWLINE___', '___CR___', '___TAB___', '___SPACE___'),
+            $matches[2]) .
+        '</textarea>';
     }
 
     /**
      *    Removes the whitespace preserving guards we added
      *    before parsing.
-     *    @param string      The raw html.
-     *    @return string     The html with guards removed.
+     * @param string      The raw html.
+     * @return string     The html with guards removed.
      */
     private function stripTextareaWhitespaceGuards($html)
     {
         return str_replace(array('___NEWLINE___', '___CR___', '___TAB___', '___SPACE___'),
-                           array("\n", "\r", "\t", ' '),
-                           $html);
+            array("\n", "\r", "\t", ' '),
+            $html);
     }
 
     /**
      *  Visits the given node and all children
-     *  @param object $node      Tidy XML node.
+     * @param object $node Tidy XML node.
      */
     private function walkTree($node)
     {
         if ($node->name == 'a') {
             $this->page->addLink($this->tags()->createTag($node->name, (array)$node->attribute)
-                                        ->addContent($this->innerHtml($node)));
+                ->addContent($this->innerHtml($node)));
         } elseif ($node->name == 'base' and isset($node->attribute['href'])) {
             $this->page->setBase($node->attribute['href']);
         } elseif ($node->name == 'title') {
             $this->page->setTitle($this->tags()->createTag($node->name, (array)$node->attribute)
-                                         ->addContent($this->innerHtml($node)));
+                ->addContent($this->innerHtml($node)));
         } elseif ($node->name == 'frameset') {
             $this->page->setFrames($this->collectFrames($node));
         } elseif ($node->name == 'form') {
             $this->forms[] = $this->walkForm($node, $this->createEmptyForm($node));
         } elseif ($node->name == 'label') {
             $this->labels[] = $this->tags()->createTag($node->name, (array)$node->attribute)
-                                           ->addContent($this->innerHtml($node));
+                ->addContent($this->innerHtml($node));
         } else {
             $this->walkChildren($node);
         }
@@ -179,7 +179,7 @@ class SimpleTidyPageBuilder
 
     /**
      *  Helper method for traversing the XML tree.
-     *  @param object $node     Tidy XML node.
+     * @param object $node Tidy XML node.
      */
     private function walkChildren($node)
     {
@@ -192,8 +192,8 @@ class SimpleTidyPageBuilder
 
     /**
      *  Facade for forms containing preparsed widgets.
-     *  @param object $node     Tidy XML node.
-     *  @return SimpleForm      Facade for SimpleBrowser.
+     * @param object $node Tidy XML node.
+     * @return SimpleForm      Facade for SimpleBrowser.
      */
     private function createEmptyForm($node)
     {
@@ -202,18 +202,18 @@ class SimpleTidyPageBuilder
 
     /**
      *  Visits the given node and all children
-     *  @param object $node      Tidy XML node.
+     * @param object $node Tidy XML node.
      */
     private function walkForm($node, $form, $enclosing_label = '')
     {
         if ($node->name == 'a') {
             $this->page->addLink($this->tags()->createTag($node->name, (array)$node->attribute)
-                                              ->addContent($this->innerHtml($node)));
+                ->addContent($this->innerHtml($node)));
         } elseif (in_array($node->name, array('input', 'button', 'textarea', 'select'))) {
             $this->addWidgetToForm($node, $form, $enclosing_label);
         } elseif ($node->name == 'label') {
             $this->labels[] = $this->tags()->createTag($node->name, (array)$node->attribute)
-                                           ->addContent($this->innerHtml($node));
+                ->addContent($this->innerHtml($node));
             if ($node->hasChildren()) {
                 foreach ($node->child as $child) {
                     $this->walkForm($child, $form, SimplePage::normalise($this->innerHtml($node)));
@@ -230,8 +230,8 @@ class SimpleTidyPageBuilder
     /**
      *  Tests a node for a "for" atribute. Used for
      *  attaching labels.
-     *  @param object $node      Tidy XML node.
-     *  @return boolean          True if the "for" attribute exists.
+     * @param object $node Tidy XML node.
+     * @return boolean          True if the "for" attribute exists.
      */
     private function hasFor($node)
     {
@@ -240,19 +240,19 @@ class SimpleTidyPageBuilder
 
     /**
      *  Adds the widget into the form container.
-     *  @param object $node             Tidy XML node of widget.
-     *  @param SimpleForm $form         Form to add it to.
-     *  @param string $enclosing_label  The label of any label
+     * @param object $node Tidy XML node of widget.
+     * @param SimpleForm $form Form to add it to.
+     * @param string $enclosing_label The label of any label
      *                                  tag we might be in.
      */
     private function addWidgetToForm($node, $form, $enclosing_label)
     {
         $widget = $this->tags()->createTag($node->name, $this->attributes($node));
-        if (! $widget) {
+        if (!$widget) {
             return;
         }
         $widget->setLabel($enclosing_label)
-               ->addContent($this->innerHtml($node));
+            ->addContent($this->innerHtml($node));
         if ($node->name == 'select') {
             $widget->addTags($this->collectSelectOptions($node));
         }
@@ -262,15 +262,15 @@ class SimpleTidyPageBuilder
 
     /**
      *  Fills the widget cache to speed up searching.
-     *  @param SimpleTag $widget    Parsed widget to cache.
+     * @param SimpleTag $widget Parsed widget to cache.
      */
     private function indexWidgetById($widget)
     {
         $id = $widget->getAttribute('id');
-        if (! $id) {
+        if (!$id) {
             return;
         }
-        if (! isset($this->widgets_by_id[$id])) {
+        if (!isset($this->widgets_by_id[$id])) {
             $this->widgets_by_id[$id] = array();
         }
         $this->widgets_by_id[$id][] = $widget;
@@ -278,15 +278,15 @@ class SimpleTidyPageBuilder
 
     /**
      *  Parses the options from inside an XML select node.
-     *  @param object $node      Tidy XML node.
-     *  @return array            List of SimpleTag options.
+     * @param object $node Tidy XML node.
+     * @return array            List of SimpleTag options.
      */
     private function collectSelectOptions($node)
     {
         $options = array();
         if ($node->name == 'option') {
             $options[] = $this->tags()->createTag($node->name, $this->attributes($node))
-                                      ->addContent($this->innerHtml($node));
+                ->addContent($this->innerHtml($node));
         }
         if ($node->hasChildren()) {
             foreach ($node->child as $child) {
@@ -299,12 +299,12 @@ class SimpleTidyPageBuilder
     /**
      *  Convenience method for collecting all the attributes
      *  of a tag. Not sure why Tidy does not have this.
-     *  @param object $node      Tidy XML node.
-     *  @return array            Hash of attribute strings.
+     * @param object $node Tidy XML node.
+     * @return array            Hash of attribute strings.
      */
     private function attributes($node)
     {
-        if (! preg_match('|<[^ ]+\s(.*?)/?>|s', $node->value, $first_tag_contents)) {
+        if (!preg_match('|<[^ ]+\s(.*?)/?>|s', $node->value, $first_tag_contents)) {
             return array();
         }
         $attributes = array();
@@ -317,10 +317,10 @@ class SimpleTidyPageBuilder
 
     /**
      *  Overlay an attribute into the attributes hash.
-     *  @param array $attributes        Current attribute list.
-     *  @param string $raw              Raw attribute string with
+     * @param array $attributes Current attribute list.
+     * @param string $raw Raw attribute string with
      *                                  both key and value.
-     *  @return array                   New attribute hash.
+     * @return array                   New attribute hash.
      */
     private function mergeAttribute($attributes, $raw)
     {
@@ -332,8 +332,8 @@ class SimpleTidyPageBuilder
 
     /**
      *  Remove start and end quotes.
-     *  @param string $quoted    A quoted string.
-     *  @return string           Quotes are gone.
+     * @param string $quoted A quoted string.
+     * @return string           Quotes are gone.
      */
     private function dequote($quoted)
     {
@@ -345,8 +345,8 @@ class SimpleTidyPageBuilder
 
     /**
      *  Collects frame information inside a frameset tag.
-     *  @param object $node     Tidy XML node.
-     *  @return array           List of SimpleTag frame descriptions.
+     * @param object $node Tidy XML node.
+     * @return array           List of SimpleTag frame descriptions.
      */
     private function collectFrames($node)
     {
@@ -364,8 +364,8 @@ class SimpleTidyPageBuilder
 
     /**
      *  Extracts the XML node text.
-     *  @param object $node     Tidy XML node.
-     *  @return string          The text only.
+     * @param object $node Tidy XML node.
+     * @return string          The text only.
      */
     private function innerHtml($node)
     {
@@ -380,7 +380,7 @@ class SimpleTidyPageBuilder
 
     /**
      *  Factory for parsed content holders.
-     *  @return SimpleTagBuilder    Factory.
+     * @return SimpleTagBuilder    Factory.
      */
     private function tags()
     {
@@ -390,8 +390,8 @@ class SimpleTidyPageBuilder
     /**
      *  Called at the end of a parse run. Attaches any
      *  non-wrapping labels to their form elements.
-     *  @param array $widgets_by_id     Cached SimpleTag hash.
-     *  @param array $labels            SimpleTag label elements.
+     * @param array $widgets_by_id Cached SimpleTag hash.
+     * @param array $labels SimpleTag label elements.
      */
     private function attachLabels($widgets_by_id, $labels)
     {

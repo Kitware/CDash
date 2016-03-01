@@ -1,15 +1,15 @@
 <?php
 /**
  *  base include file for SimpleTest
- *  @package    SimpleTest
- *  @subpackage UnitTester
- *  @version    $Id$
+ * @package    SimpleTest
+ * @subpackage UnitTester
+ * @version    $Id$
  */
 
 /**
  *    Parses the command line arguments.
- *    @package  SimpleTest
- *    @subpackage   UnitTester
+ * @package  SimpleTest
+ * @subpackage   UnitTester
  */
 class SimpleArguments
 {
@@ -24,7 +24,7 @@ class SimpleArguments
      * --flag value
      * -f           (true)
      * --flag       (true)
-     * @param array $arguments      Normally the PHP $argv.
+     * @param array $arguments Normally the PHP $argv.
      */
     public function __construct($arguments)
     {
@@ -39,7 +39,7 @@ class SimpleArguments
      * Sets the value in the argments object. If multiple
      * values are added under the same key, the key will
      * give an array value in the order they were added.
-     * @param string $key    The variable to assign to.
+     * @param string $key The variable to assign to.
      * @param string value   The value that would norally
      *                       be colected on the command line.
      */
@@ -47,7 +47,7 @@ class SimpleArguments
     {
         if ($this->$key === false) {
             $this->all[$key] = $value;
-        } elseif (! is_array($this->$key)) {
+        } elseif (!is_array($this->$key)) {
             $this->all[$key] = array($this->$key, $value);
         } else {
             $this->all[$key][] = $value;
@@ -56,7 +56,7 @@ class SimpleArguments
 
     /**
      * Extracts the next key and value from the argument list.
-     * @param array $arguments      The remaining arguments to be parsed.
+     * @param array $arguments The remaining arguments to be parsed.
      *                              The argument list will be reduced.
      * @return array                Two item array of key and value.
      *                              If no value can be found it will
@@ -79,7 +79,7 @@ class SimpleArguments
     /**
      * Attempts to use the next argument as a value. It
      * won't use what it thinks is a flag.
-     * @param array $arguments    Remaining arguments to be parsed.
+     * @param array $arguments Remaining arguments to be parsed.
      *                            This variable is modified if there
      *                            is a value to be extracted.
      * @return string/boolean     The next value unless it's a flag.
@@ -92,18 +92,18 @@ class SimpleArguments
     /**
      * Test to see if the next available argument is a valid value.
      * If it starts with "-" or "--" it's a flag and doesn't count.
-     * @param array $arguments    Remaining arguments to be parsed.
+     * @param array $arguments Remaining arguments to be parsed.
      *                            Not affected by this call.
      * boolean                    True if valid value.
      */
     public function valueIsNext($arguments)
     {
-        return isset($arguments[0]) && ! $this->isFlag($arguments[0]);
+        return isset($arguments[0]) && !$this->isFlag($arguments[0]);
     }
 
     /**
      * It's a flag if it starts with "-" or "--".
-     * @param string $argument       Value to be tested.
+     * @param string $argument Value to be tested.
      * @return boolean               True if it's a flag.
      */
     public function isFlag($argument)
@@ -114,7 +114,7 @@ class SimpleArguments
     /**
      * The arguments are available as individual member
      * variables on the object.
-     * @param string $key              Argument name.
+     * @param string $key Argument name.
      * @return string/array/boolean    Either false for no value,
      *                                 the value as a string or
      *                                 a list of multiple values if
@@ -141,8 +141,8 @@ class SimpleArguments
 
 /**
  *    Renders the help for the command line arguments.
- *    @package  SimpleTest
- *    @subpackage   UnitTester
+ * @package  SimpleTest
+ * @subpackage   UnitTester
  */
 class SimpleHelp
 {
@@ -152,7 +152,7 @@ class SimpleHelp
 
     /**
      * Sets up the top level explanation for the program.
-     * @param string $overview        Summary of program.
+     * @param string $overview Summary of program.
      */
     public function __construct($overview = '')
     {
@@ -162,10 +162,10 @@ class SimpleHelp
     /**
      * Adds the explanation for a group of flags that all
      * have the same function.
-     * @param string/array $flags       Flag and alternates. Don't
+     * @param string /array $flags       Flag and alternates. Don't
      *                                  worry about leading dashes
      *                                  as these are inserted automatically.
-     * @param string $explanation       What that flag group does.
+     * @param string $explanation What that flag group does.
      */
     public function explainFlag($flags, $explanation)
     {
@@ -190,7 +190,7 @@ class SimpleHelp
 
     /**
      * Works out the longest flag for formatting purposes.
-     * @param array $flag_sets      The internal flag set list.
+     * @param array $flag_sets The internal flag set list.
      */
     private function longestFlag($flag_sets)
     {
@@ -219,7 +219,7 @@ class SimpleHelp
 
     /**
      * Generates the flag name including leading dashes.
-     * @param string $flag          Just the name.
+     * @param string $flag Just the name.
      * @returns                     Fag with apropriate dashes.
      */
     private function renderFlag($flag)
@@ -230,7 +230,7 @@ class SimpleHelp
     /**
      * Converts multiple new lines into a single new line.
      * Just there to trap accidental duplicate new lines.
-     * @param string $text      Text to clean up.
+     * @param string $text Text to clean up.
      * @returns string          Text with no blank lines.
      */
     private function noDuplicateNewLines($text)

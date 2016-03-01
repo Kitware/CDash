@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once(dirname(dirname(__DIR__))."/config/config.php");
+require_once(dirname(dirname(__DIR__)) . "/config/config.php");
 
 // Only used to setup the parallel submissions test case.
 global $CDASH_DO_NOT_PROCESS_SUBMISSIONS;
@@ -48,7 +48,7 @@ echo "begin processSubmissions.php\n";
 
 $force = 0;
 
-if (isset($argc) && $argc>1) {
+if (isset($argc) && $argc > 1) {
     echo "argc, context is php command-line invocation...\n";
     echo "argc='" . $argc . "'\n";
     for ($i = 0; $i < $argc; ++$i) {
@@ -74,9 +74,9 @@ if (isset($argc) && $argc>1) {
 if (!is_numeric($projectid)) {
     echo "projectid/argv[1] should be a number\n";
     echo "</pre>";
-    add_log("projectid '".$projectid."' should be a number",
-    "ProcessSubmission",
-    LOG_ERR, $projectid);
+    add_log("projectid '" . $projectid . "' should be a number",
+        "ProcessSubmission",
+        LOG_ERR, $projectid);
     return;
 }
 

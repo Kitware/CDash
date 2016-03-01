@@ -3,7 +3,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__).'/cdash_test_case.php');
+require_once(dirname(__FILE__) . '/cdash_test_case.php');
 
 require_once('include/common.php');
 require_once('include/pdo.php');
@@ -27,8 +27,8 @@ class TestModelTestCase extends KWWebTestCase
         $test->Name = "dummytest";
         $test->ProjectId = 2;
 
-    // Cover error condition
-    $test->InsertLabelAssociations('');
+        // Cover error condition
+        $test->InsertLabelAssociations('');
 
         $testmeasurement = new TestMeasurement();
         $testmeasurement->Name = "Label";
@@ -36,7 +36,7 @@ class TestModelTestCase extends KWWebTestCase
         $test->AddMeasurement($testmeasurement);
 
         $image = new Image();
-        $image->Filename = dirname(__FILE__)."/data/smile.gif";
+        $image->Filename = dirname(__FILE__) . "/data/smile.gif";
         $image->Data = base64_encode(file_get_contents($image->Filename));
         $image->Checksum = 100;
         $image->Extension = "image/gif";
@@ -48,7 +48,6 @@ class TestModelTestCase extends KWWebTestCase
         $test->GetCrc32();
 
         $this->stopCodeCoverage();
-
         return 0;
     }
 }

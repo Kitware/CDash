@@ -15,7 +15,7 @@
 =========================================================================*/
 
 // Open the database connection
-include(dirname(__DIR__)."/config/config.php");
+include(dirname(__DIR__) . "/config/config.php");
 require_once("include/pdo.php");
 include("include/do_submit.php");
 include("include/clientsubmit.php");
@@ -23,7 +23,7 @@ include("include/version.php");
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 if (!$db || !pdo_select_db("$CDASH_DB_NAME", $db)) {
-    echo "<cdash version=\"".$CDASH_VERSION."\">\n";
+    echo "<cdash version=\"" . $CDASH_VERSION . "\">\n";
     echo " <status>ERROR</status>\n";
     echo " <message>Cannot connect to the database.</message>\n";
     echo "</cdash>\n";
@@ -51,7 +51,7 @@ $projectid = get_project_id($projectname);
 
 // If not a valid project we return
 if ($projectid == -1) {
-    echo "<cdash version=\"".$CDASH_VERSION."\">\n";
+    echo "<cdash version=\"" . $CDASH_VERSION . "\">\n";
     echo " <status>ERROR</status>\n";
     echo " <message>Not a valid project.</message>\n";
     echo "</cdash>\n";
@@ -63,7 +63,7 @@ if ($projectid == -1) {
 register_shutdown_function('PHPErrorHandler', $projectid);
 
 $expected_md5 = isset($_GET['MD5']) ? htmlspecialchars(pdo_real_escape_string($_GET['MD5'])) : '';
-$file_path='php://input';
+$file_path = 'php://input';
 $fp = fopen($file_path, 'r');
 
 // If the submission is asynchronous we store in the database

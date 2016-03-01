@@ -9,29 +9,29 @@ require_once("config/config.php");
 
 global $configure;
 $configure = array(
-  // url of the cdash to test
-  'urlwebsite'       => 'http://localhost/CDash',
-  // the directory to store the xml report for cdash
-  'outputdirectory'  => '/tmp',
-  // the kind of test: Experimental, Nightly, Continuous
-  'type'             => 'Nightly',
-  // the site of the test
-  'site'             => 'yellowstone.kitware',
-  // the build name
-  'buildname'        => 'CDash-SVN-MySQL',
-  // the cdash host
-  'cdash'            => 'http://www.cdash.org/CDash',
-  // the local svn repository
-  'svnroot'          => '/var/www/CDashTesting'
-  );
+    // url of the cdash to test
+    'urlwebsite' => 'http://localhost/CDash',
+    // the directory to store the xml report for cdash
+    'outputdirectory' => '/tmp',
+    // the kind of test: Experimental, Nightly, Continuous
+    'type' => 'Nightly',
+    // the site of the test
+    'site' => 'yellowstone.kitware',
+    // the build name
+    'buildname' => 'CDash-SVN-MySQL',
+    // the cdash host
+    'cdash' => 'http://www.cdash.org/CDash',
+    // the local svn repository
+    'svnroot' => '/var/www/CDashTesting'
+);
 
 global $db;
-$db = array( 'host'   => $CDASH_DB_HOST,
-             'port'   => $CDASH_DB_PORT,
-             'login'  => $CDASH_DB_LOGIN,
-             'pwd'    => $CDASH_DB_PASS,
-             'name'   => $CDASH_DB_NAME,
-             'type'   => $CDASH_DB_TYPE);
+$db = array('host' => $CDASH_DB_HOST,
+    'port' => $CDASH_DB_PORT,
+    'login' => $CDASH_DB_LOGIN,
+    'pwd' => $CDASH_DB_PASS,
+    'name' => $CDASH_DB_NAME,
+    'type' => $CDASH_DB_TYPE);
 
 
 // The following heuristic is used to guess whether we are running inside the
@@ -47,11 +47,11 @@ $inBrowser = false;
 if (array_key_exists('SERVER_ADDR', $_SERVER) &&
     array_key_exists('SERVER_NAME', $_SERVER) &&
     array_key_exists('SERVER_PORT', $_SERVER)
-   ) {
+) {
     if (($_SERVER['SERVER_ADDR'] != '') &&
-      ($_SERVER['SERVER_NAME'] != '') &&
-      ($_SERVER['SERVER_PORT'] != '')
-     ) {
+        ($_SERVER['SERVER_NAME'] != '') &&
+        ($_SERVER['SERVER_PORT'] != '')
+    ) {
         $inBrowser = true;
     }
 }
@@ -89,7 +89,7 @@ if (PHP_OS == 'WINNT') {
 
 
 // DO NOT EDIT AFTER THIS LINE
-$localConfig = dirname(__FILE__).'/config.test.local.php';
+$localConfig = dirname(__FILE__) . '/config.test.local.php';
 if (file_exists($localConfig)) {
     include($localConfig);
 }

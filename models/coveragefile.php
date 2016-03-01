@@ -34,7 +34,7 @@ class coveragefile
         include("config/config.php");
 
         // Compute the crc32 of the file (before compression for backward compatibility)
-        $this->Crc32 = crc32($this->FullPath.$this->File);
+        $this->Crc32 = crc32($this->FullPath . $this->File);
 
         $this->FullPath = pdo_real_escape_string($this->FullPath);
         if ($CDASH_USE_COMPRESSION) {
@@ -43,7 +43,7 @@ class coveragefile
                 $file = $this->File;
             } else {
                 if ($CDASH_DB_TYPE == "pgsql") {
-                    if (strlen($this->File)<2000) {
+                    if (strlen($this->File) < 2000) {
                         // compression doesn't help for small chunk
 
                         $file = $this->File;
@@ -59,10 +59,10 @@ class coveragefile
         }
         $file = pdo_real_escape_string($file);
 
-        $coveragefile = pdo_query("SELECT id FROM coveragefile WHERE crc32=".qnum($this->Crc32));
+        $coveragefile = pdo_query("SELECT id FROM coveragefile WHERE crc32=" . qnum($this->Crc32));
         add_last_sql_error("CoverageFile:Update");
 
-        if (pdo_num_rows($coveragefile)>0) {
+        if (pdo_num_rows($coveragefile) > 0) {
             // we have the same crc32
 
             $coveragefile_array = pdo_fetch_array($coveragefile);
@@ -70,29 +70,29 @@ class coveragefile
 
             // Update the current coverage.fileid
             $coverage = pdo_query("SELECT c.fileid FROM coverage AS c,coveragefile AS cf
-                    WHERE c.fileid=cf.id AND c.buildid=".qnum($buildid)."
+                    WHERE c.fileid=cf.id AND c.buildid=" . qnum($buildid) . "
                     AND cf.fullpath='$this->FullPath'");
             $coverage_array = pdo_fetch_array($coverage);
             $prevfileid = $coverage_array["fileid"];
 
-            pdo_query("UPDATE coverage SET fileid=".qnum($this->Id)." WHERE buildid=".qnum($buildid)." AND fileid=".qnum($prevfileid));
+            pdo_query("UPDATE coverage SET fileid=" . qnum($this->Id) . " WHERE buildid=" . qnum($buildid) . " AND fileid=" . qnum($prevfileid));
             add_last_sql_error("CoverageFile:Update");
 
-            $row = pdo_single_row_query("SELECT COUNT(*) AS c FROM label2coveragefile WHERE buildid=".qnum($buildid)." AND coveragefileid=".qnum($prevfileid));
-            if (isset($row['c']) && $row['c']>0) {
-                pdo_query("UPDATE label2coveragefile SET coveragefileid=".qnum($this->Id)." WHERE buildid=".qnum($buildid)." AND coveragefileid=".qnum($prevfileid));
+            $row = pdo_single_row_query("SELECT COUNT(*) AS c FROM label2coveragefile WHERE buildid=" . qnum($buildid) . " AND coveragefileid=" . qnum($prevfileid));
+            if (isset($row['c']) && $row['c'] > 0) {
+                pdo_query("UPDATE label2coveragefile SET coveragefileid=" . qnum($this->Id) . " WHERE buildid=" . qnum($buildid) . " AND coveragefileid=" . qnum($prevfileid));
                 add_last_sql_error("CoverageFile:Update");
             }
 
             // Remove the file if the crc32 is NULL
-            pdo_query("DELETE FROM coveragefile WHERE id=".qnum($prevfileid)." AND file IS NULL and crc32 IS NULL");
+            pdo_query("DELETE FROM coveragefile WHERE id=" . qnum($prevfileid) . " AND file IS NULL and crc32 IS NULL");
             add_last_sql_error("CoverageFile:Update");
         } else {
             // The file doesn't exist in the database
 
             // We find the current fileid based on the name and the file should be null
             $coveragefile = pdo_query("SELECT cf.id,cf.file FROM coverage AS c,coveragefile AS cf
-                    WHERE c.fileid=cf.id AND c.buildid=".qnum($buildid)."
+                    WHERE c.fileid=cf.id AND c.buildid=" . qnum($buildid) . "
                     AND cf.fullpath='$this->FullPath' ORDER BY cf.id ASC");
             $coveragefile_array = pdo_fetch_array($coveragefile);
 
@@ -102,7 +102,7 @@ class coveragefile
                 $this->Id = $coveragefile_array['id'];
             } else {
                 $coveragefile = pdo_query(
-                        "SELECT id, file FROM coveragefile
+                    "SELECT id, file FROM coveragefile
                         WHERE fullpath='$this->FullPath' AND file IS NULL
                         ORDER BY id ASC");
                 $coveragefile_array = pdo_fetch_array($coveragefile);
@@ -113,12 +113,12 @@ class coveragefile
                 // If we still haven't found an existing fileid
                 // we insert one here.
                 pdo_query(
-                        "INSERT INTO coveragefile (fullpath)
+                    "INSERT INTO coveragefile (fullpath)
                         VALUES ('$this->FullPath')");
                 $this->Id = pdo_insert_id("coveragefile");
             }
 
-            pdo_query("UPDATE coveragefile SET file='$file',crc32='$this->Crc32' WHERE id=".qnum($this->Id));
+            pdo_query("UPDATE coveragefile SET file='$file',crc32='$this->Crc32' WHERE id=" . qnum($this->Id));
             add_last_sql_error("CoverageFile:Update");
         }
         return true;
@@ -132,7 +132,7 @@ class coveragefile
             return false;
         }
 
-        $coverage = pdo_query("SELECT fullpath FROM coveragefile WHERE id=".qnum($this->Id));
+        $coverage = pdo_query("SELECT fullpath FROM coveragefile WHERE id=" . qnum($this->Id));
         if (!$coverage) {
             add_last_sql_error("Coverage GetPath");
             return false;
@@ -151,13 +151,13 @@ class coveragefile
         }
 
         $coveragefile = pdo_query("SELECT loctested,locuntested,branchstested,branchsuntested,
-                functionstested,functionsuntested FROM coverage WHERE fileid=".qnum($this->Id));
+                functionstested,functionsuntested FROM coverage WHERE fileid=" . qnum($this->Id));
         if (!$coveragefile) {
             add_last_sql_error("CoverageFile:GetMetric()");
             return false;
         }
 
-        if (pdo_num_rows($coveragefile)==0) {
+        if (pdo_num_rows($coveragefile) == 0) {
             return false;
         }
 
@@ -171,27 +171,26 @@ class coveragefile
         $functionsuntested = $coveragefile_array["functionsuntested"];
 
         // Compute the coverage metric for bullseye
-        if ($branchstested>0 || $branchsuntested>0 || $functionstested>0 || $functionsuntested>0) {
+        if ($branchstested > 0 || $branchsuntested > 0 || $functionstested > 0 || $functionsuntested > 0) {
             // Metric coverage
             $metric = 0;
-            if ($functionstested+$functionsuntested>0) {
-                $metric += $functionstested/($functionstested+$functionsuntested);
+            if ($functionstested + $functionsuntested > 0) {
+                $metric += $functionstested / ($functionstested + $functionsuntested);
             }
-            if ($branchsuntested+$branchsuntested>0) {
-                $metric += $branchsuntested/($branchstested+$branchsuntested);
+            if ($branchsuntested + $branchsuntested > 0) {
+                $metric += $branchsuntested / ($branchstested + $branchsuntested);
                 $metric /= 2.0;
             }
             $coveragemetric = $metric;
-            $this->LastPercentCoverage = $metric*100;
+            $this->LastPercentCoverage = $metric * 100;
         } else {
             // coverage metric for gcov
 
-            $coveragemetric = ($loctested+10)/($loctested+$locuntested+10);
-            $this->LastPercentCoverage = ($loctested/($loctested+$locuntested))*100;
+            $coveragemetric = ($loctested + 10) / ($loctested + $locuntested + 10);
+            $this->LastPercentCoverage = ($loctested / ($loctested + $locuntested)) * 100;
         }
-
         return $coveragemetric;
-    } // end function GetMetric
+    }
 
     // Get the percent coverage
     public function GetLastPercentCoverage()
@@ -202,13 +201,13 @@ class coveragefile
     // Get the fileid from the name
     public function GetIdFromName($file, $buildid)
     {
-        $coveragefile = pdo_query("SELECT id FROM coveragefile,coverage WHERE fullpath LIKE '%".$file."%'
-                AND coverage.buildid=".qnum($buildid)." AND coverage.fileid=coveragefile.id");
+        $coveragefile = pdo_query("SELECT id FROM coveragefile,coverage WHERE fullpath LIKE '%" . $file . "%'
+                AND coverage.buildid=" . qnum($buildid) . " AND coverage.fileid=coveragefile.id");
         if (!$coveragefile) {
             add_last_sql_error("CoverageFile:GetIdFromName()");
             return false;
         }
-        if (pdo_num_rows($coveragefile)==0) {
+        if (pdo_num_rows($coveragefile) == 0) {
             return false;
         }
         $coveragefile_array = pdo_fetch_array($coveragefile);
@@ -225,7 +224,7 @@ class coveragefile
         }
 
         $row = pdo_single_row_query(
-                "SELECT * FROM coveragefile WHERE id='$this->Id'");
+            "SELECT * FROM coveragefile WHERE id='$this->Id'");
         if (!$row || !array_key_exists('id', $row)) {
             return false;
         }

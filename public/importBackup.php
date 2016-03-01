@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include(dirname(__DIR__)."/config/config.php");
+include(dirname(__DIR__) . "/config/config.php");
 require_once("include/pdo.php");
 include('public/login.php');
 include("include/version.php");
@@ -29,7 +29,7 @@ if ($session_OK) {
     pdo_select_db("$CDASH_DB_NAME", $db);
 
     checkUserPolicy(@$_SESSION['cdash']['loginid'], 0); // only admin
-$xml = begin_XML_for_XSLT();
+    $xml = begin_XML_for_XSLT();
     $xml .= "<title>CDash - Import Backups</title>";
     $xml .= "<menutitle>CDash</menutitle>";
     $xml .= "<menusubtitle>Backups</menusubtitle>";
@@ -50,27 +50,27 @@ $xml = begin_XML_for_XSLT();
         $n = count($filelist);
 
         add_log(
-    "before loop n=".$n,
-    "importBackup.php",
-    LOG_INFO);
+            "before loop n=" . $n,
+            "importBackup.php",
+            LOG_INFO);
 
         foreach ($filelist as $filename) {
             ++$i;
             $projectid = -1;
 
             add_log(
-      "looping i=".$i." filename=".$filename,
-      "importBackup.php",
-      LOG_INFO);
+                "looping i=" . $i . " filename=" . $filename,
+                "importBackup.php",
+                LOG_INFO);
 
-    # split on path separator
-    $pathParts = explode(PATH_SEPARATOR, $filename);
+            # split on path separator
+            $pathParts = explode(PATH_SEPARATOR, $filename);
 
-    # split on cdash separator "_"
-    if (count($pathParts)>=1) {
-        $cdashParts = preg_split("#_#", $pathParts[count($pathParts)-1]);
-        $projectid = get_project_id($cdashParts[0]);
-    }
+            # split on cdash separator "_"
+            if (count($pathParts) >= 1) {
+                $cdashParts = preg_split("#_#", $pathParts[count($pathParts) - 1]);
+                $projectid = get_project_id($cdashParts[0]);
+            }
 
             if ($projectid != -1) {
                 $name = get_project_name($projectid);
@@ -81,28 +81,28 @@ $xml = begin_XML_for_XSLT();
                     unset($handle);
                 } else {
                     add_log(
-          "could not open file filename=".$filename,
-          "importBackup.php",
-          LOG_ERR);
+                        "could not open file filename=" . $filename,
+                        "importBackup.php",
+                        LOG_ERR);
                 }
             } else {
                 add_log(
-        "could not determine projectid from filename=".$filename,
-        "importBackup.php",
-        LOG_ERR);
+                    "could not determine projectid from filename=" . $filename,
+                    "importBackup.php",
+                    LOG_ERR);
             }
         }
 
         add_log(
-    "after loop n=".$n,
-    "importBackup.php",
-    LOG_INFO);
+            "after loop n=" . $n,
+            "importBackup.php",
+            LOG_INFO);
 
-        $alert = 'Import backup complete. '.$i.' files processed.';
+        $alert = 'Import backup complete. ' . $i . ' files processed.';
         $xml .= add_XML_value("alert", $alert);
-    } // end submit
+    }
 
 // Now doing the xslt transition
-$xml .= "</cdash>";
+    $xml .= "</cdash>";
     generate_XSLT($xml, "importBackup");
-} // end session;
+}

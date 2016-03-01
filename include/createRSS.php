@@ -34,12 +34,12 @@ function CreateRSSFeed($projectid)
     $projectname = $project_array["name"];
 
     // Don't create RSS feed for private projects
-    if ($project_array["public"]!=1) {
+    if ($project_array["public"] != 1) {
         return;
     }
 
     global $CDASH_ROOT_DIR;
-    $filename = $CDASH_ROOT_DIR.'/public/rss/SubmissionRSS'.$projectname.'.xml';
+    $filename = $CDASH_ROOT_DIR . '/public/rss/SubmissionRSS' . $projectname . '.xml';
 
     $currentURI = get_server_URI();
     $currenttime = time();
@@ -54,7 +54,7 @@ function CreateRSSFeed($projectid)
         ->appendTo($feed);
 
     // Get the last 24hrs submissions
-    $beginning_timestamp = $currenttime-(24*3600);
+    $beginning_timestamp = $currenttime - (24 * 3600);
     $end_timestamp = $currenttime;
     $builds = pdo_query("SELECT * FROM build
                          WHERE UNIX_TIMESTAMP(starttime)<$end_timestamp AND UNIX_TIMESTAMP(starttime)>$beginning_timestamp
@@ -71,17 +71,17 @@ function CreateRSSFeed($projectid)
         $nnotrun = $build_array['testnotrun'];
         $nfail = $build_array['testfailed'];
 
-        $title = "CDash(".$projectname.") - ".$site_array["name"]." - ".$build_array["name"]." - ".$build_array["type"];
-        $title .= " - ".$build_array["submittime"]." - ".$nerrors." errors, ".$nwarnings." warnings, ".$nnotrun." not run, ".$nfail." failed.";
+        $title = "CDash(" . $projectname . ") - " . $site_array["name"] . " - " . $build_array["name"] . " - " . $build_array["type"];
+        $title .= " - " . $build_array["submittime"] . " - " . $nerrors . " errors, " . $nwarnings . " warnings, " . $nnotrun . " not run, " . $nfail . " failed.";
 
         // Should link to the errors...
-        $link = $currentURI."/buildSummary.php?buildid=".$buildid;
+        $link = $currentURI . "/buildSummary.php?buildid=" . $buildid;
 
-        $description = "A new ".$build_array["type"]." submission from ".$site_array["name"]." - ".$build_array["name"]." is available: ";
-        $description .= $nerrors." errors, ".$nwarnings." warnings, ".$nnotrun." not run, ".$nfail." failed.";
+        $description = "A new " . $build_array["type"] . " submission from " . $site_array["name"] . " - " . $build_array["name"] . " is available: ";
+        $description .= $nerrors . " errors, " . $nwarnings . " warnings, " . $nnotrun . " not run, " . $nfail . " failed.";
 
         $item = new Item();
-        $item->guid($currentURI."/buildSummary.php?buildid=".$buildid)
+        $item->guid($currentURI . "/buildSummary.php?buildid=" . $buildid)
             ->title($title)
             ->url($link)
             ->description($description)
@@ -90,6 +90,6 @@ function CreateRSSFeed($projectid)
     }
 
     if (file_put_contents($filename, $feed) === false) {
-        add_log('CreateRSSFeed', 'Cannot write file '.$filename, LOG_ERR, $projectid);
+        add_log('CreateRSSFeed', 'Cannot write file ' . $filename, LOG_ERR, $projectid);
     }
 }

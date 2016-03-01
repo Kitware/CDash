@@ -79,7 +79,7 @@ $CDASH_EMAIL_SMTP_PASS = null;
 // Should CDash only register valid emails
 $CDASH_REGISTRATION_EMAIL_VERIFY = true;
 // Duration of the cookie session (in seconds)
-$CDASH_COOKIE_EXPIRATION_TIME='3600';
+$CDASH_COOKIE_EXPIRATION_TIME = '3600';
 // Minimum password length for CDash accounts.
 $CDASH_MINIMUM_PASSWORD_LENGTH = 5;
 // Of these four kinds of characters: (uppercase, lowercase, numbers, symbols)
@@ -92,28 +92,28 @@ $CDASH_MINIMUM_PASSWORD_COMPLEXITY = 1;
 $CDASH_PASSWORD_COMPLEXITY_COUNT = 1;
 
 // Using HTTPS protocol to access CDash
-$CDASH_USE_HTTPS ='0';
+$CDASH_USE_HTTPS = '0';
 // Name of the server running CDash.
 // Leave empty to use current name and default port.
 $CDASH_SERVER_NAME = '';
 $CDASH_SERVER_PORT = '';
 // If the remote request should use localhost or the full name
 // This variable should be set to 1 in most of the server configurations
-$CDASH_CURL_REQUEST_LOCALHOST='1';
-$CDASH_CURL_LOCALHOST_PREFIX='';
-$CDASH_BASE_URL='';
+$CDASH_CURL_REQUEST_LOCALHOST = '1';
+$CDASH_CURL_LOCALHOST_PREFIX = '';
+$CDASH_BASE_URL = '';
 // Define the location of the local directory
 $CDASH_USE_LOCAL_DIRECTORY = '0';
 // CSS file
 $CDASH_CSS_FILE = 'css/cdash.css';
 // Backup directory
-$CDASH_BACKUP_DIRECTORY = $CDASH_ROOT_DIR.'/backup';
+$CDASH_BACKUP_DIRECTORY = $CDASH_ROOT_DIR . '/backup';
 // Log directory
-$CDASH_LOG_DIRECTORY = $CDASH_ROOT_DIR.'/log';
+$CDASH_LOG_DIRECTORY = $CDASH_ROOT_DIR . '/log';
 // Log file location. Set to false to log to the syslog.
-$CDASH_LOG_FILE = $CDASH_LOG_DIRECTORY."/cdash.log";
+$CDASH_LOG_FILE = $CDASH_LOG_DIRECTORY . "/cdash.log";
 // Upload directory (absolute or relative)
-$CDASH_UPLOAD_DIRECTORY = $CDASH_ROOT_DIR.'/upload';
+$CDASH_UPLOAD_DIRECTORY = $CDASH_ROOT_DIR . '/upload';
 // The relative path from the CDash root dir to the $CDASH_UPLOAD_DIRECTORY (for downloading)
 // http://<CDASH_URL>/<CDASH_DIR>/$CDASH_DOWNLOAD_RELATIVE_URL/<SHA-1>/<FILENAME>
 // Note that this must be a relative path to the same directory specified by $CDASH_UPLOAD_DIRECTORY
@@ -139,34 +139,34 @@ $CDASH_FULL_EMAIL_WHEN_ADDING_USER = '0';
 $CDASH_WARN_ABOUT_UNREGISTERED_COMMITTERS = '0';
 // Use getIPfromApache script to get IP addresses
 // when using forwarding script
-$CDASH_FORWARDING_IP='192.%'; // should be an SQL format
+$CDASH_FORWARDING_IP = '192.%'; // should be an SQL format
 $CDASH_DEFAULT_IP_LOCATIONS = array();
 // Use compression (default on)
-$CDASH_USE_COMPRESSION='1';
+$CDASH_USE_COMPRESSION = '1';
 // Use LDAP
-$CDASH_USE_LDAP='0';
-$CDASH_LDAP_HOSTNAME='localhost';
-$CDASH_LDAP_BASEDN='ou=people,dc=organization,dc=com';
-$CDASH_LDAP_PROTOCOL_VERSION='3';
+$CDASH_USE_LDAP = '0';
+$CDASH_LDAP_HOSTNAME = 'localhost';
+$CDASH_LDAP_BASEDN = 'ou=people,dc=organization,dc=com';
+$CDASH_LDAP_PROTOCOL_VERSION = '3';
 // Additional LDAP query filters to restrict authorized user list
 // Example: To restrict users to a specific Active Directory group:
 // '(memberOf=cn=superCoolRescrictedGroup,cn=Users,dc=example,dc=com)'
-$CDASH_LDAP_FILTER='';
+$CDASH_LDAP_FILTER = '';
 // For authentication against Active Directory, set CDASH_LDAP_AUTHENTICATED to '1'
 // CDASH_LDAP_OPT_REFERRALS to '0', and specify a bind DN and password
-$CDASH_LDAP_OPT_REFERRALS='1';
-$CDASH_LDAP_AUTHENTICATED='0';
-$CDASH_LDAP_BIND_DN='cn=user,ou=people,dc=orgranization,dc=com';
-$CDASH_LDAP_BIND_PASSWORD='password';
+$CDASH_LDAP_OPT_REFERRALS = '1';
+$CDASH_LDAP_AUTHENTICATED = '0';
+$CDASH_LDAP_BIND_DN = 'cn=user,ou=people,dc=orgranization,dc=com';
+$CDASH_LDAP_BIND_PASSWORD = 'password';
 // Allow rememberme
-$CDASH_ALLOW_LOGIN_COOKIE='1';
+$CDASH_ALLOW_LOGIN_COOKIE = '1';
 // Set to start the autoremoval on the first build of the day
-$CDASH_AUTOREMOVE_BUILDS='0';
+$CDASH_AUTOREMOVE_BUILDS = '0';
 // Google Map API
 $CDASH_GOOGLE_MAP_API_KEY = array();
 $CDASH_GOOGLE_MAP_API_KEY['localhost'] = 'ABQIAAAAT7I3XxP5nXC2xZUbg5AhLhQlpUmSySBnNeRIYFXQdqJETZJpYBStoWsCJtLvtHDiIJzsxJ953H3rgg';
 // Enable Google Analytics
-$CDASH_DEFAULT_GOOGLE_ANALYTICS='';
+$CDASH_DEFAULT_GOOGLE_ANALYTICS = '';
 // How long since the last submission before considering a project
 // non active
 $CDASH_ACTIVE_PROJECT_DAYS = '7'; // a week
@@ -212,7 +212,7 @@ $CDASH_USE_PERSISTENT_MYSQL_CONNECTION = false;
 $CDASH_DELETE_OLD_SUBPROJECTS = true;
 
 /** DO NOT EDIT AFTER THIS LINE */
-$localConfig = dirname(__FILE__).'/config.local.php';
+$localConfig = dirname(__FILE__) . '/config.local.php';
 if ((strpos(__FILE__, 'config.local.php') === false) && file_exists($localConfig)) {
     include($localConfig);
 }

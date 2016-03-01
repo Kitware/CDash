@@ -3,7 +3,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__).'/cdash_test_case.php');
+require_once(dirname(__FILE__) . '/cdash_test_case.php');
 
 require_once('include/pdo.php');
 
@@ -20,7 +20,7 @@ class AutoRemoveBuildsTestCase extends KWWebTestCase
         global $PHP_EXE;
         $cmd = "\"$PHP_EXE\" \"$cdashpath/scripts/autoRemoveBuilds.php\"";
         if ($arg1) {
-            $cmd = $cmd." \"$arg1\"";
+            $cmd = $cmd . " \"$arg1\"";
         }
         echo "Running command line:\n";
         echo "  cmd='${cmd}'\n";
@@ -71,7 +71,6 @@ class AutoRemoveBuildsTestCase extends KWWebTestCase
         }
 
         $this->stopCodeCoverage();
-
         return $error;
     }
 }

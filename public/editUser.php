@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include(dirname(__DIR__)."/config/config.php");
+include(dirname(__DIR__) . "/config/config.php");
 require_once("include/pdo.php");
 require_once("include/login_functions.php");
 include('public/login.php');
@@ -41,13 +41,13 @@ if ($session_OK) {
         $institution = pdo_real_escape_string($_POST["institution"]);
         $email = pdo_real_escape_string($_POST["email"]);
 
-        if (strlen($email)<3 || strpos($email, "@")===false) {
+        if (strlen($email) < 3 || strpos($email, "@") === false) {
             $xml .= "<error>Email should be a valid address.</error>";
         } else {
             $lname = pdo_real_escape_string($_POST["lname"]);
             $fname = pdo_real_escape_string($_POST["fname"]);
 
-            if (pdo_query("UPDATE ".qid("user")." SET email='$email',
+            if (pdo_query("UPDATE " . qid("user") . " SET email='$email',
                         institution='$institution',
                         firstname='$fname',
                         lastname='$lname' WHERE id='$userid'")) {
@@ -83,7 +83,7 @@ if ($session_OK) {
         } else {
             $md5pass = md5($passwd);
             $md5pass = pdo_real_escape_string($md5pass);
-            if (pdo_query("UPDATE ".qid("user")." SET password='$md5pass' WHERE id='$userid'")) {
+            if (pdo_query("UPDATE " . qid("user") . " SET password='$md5pass' WHERE id='$userid'")) {
                 $xml .= "<error>Your password has been updated.</error>";
             } else {
                 $xml .= "<error>Cannot update password.</error>";
@@ -91,10 +91,10 @@ if ($session_OK) {
 
             add_last_sql_error("editUser.php");
         }
-    } // end update password
+    }
 
     $xml .= "<user>";
-    $user = pdo_query("SELECT * FROM ".qid("user")." WHERE id='$userid'");
+    $user = pdo_query("SELECT * FROM " . qid("user") . " WHERE id='$userid'");
     $user_array = pdo_fetch_array($user);
     $xml .= add_XML_value("id", $userid);
     $xml .= add_XML_value("firstname", $user_array["firstname"]);
@@ -111,13 +111,13 @@ if ($session_OK) {
         $UserProject->UserId = $userid;
         $credentials[] = $user_array["email"];
         $UserProject->UpdateCredentials($credentials);
-    } // end update credentials
+    }
 
 
     // List the credentials
     // First the email one (which cannot be changed)
     $credential = pdo_query("SELECT credential FROM user2repository WHERE userid='$userid'
-            AND projectid=0 AND credential='".$user_array["email"]."'");
+            AND projectid=0 AND credential='" . $user_array["email"] . "'");
     if (pdo_num_rows($credential) == 0) {
         $xml .= add_XML_value("credential_0", "Not found (you should really add it)");
     } else {
@@ -125,14 +125,14 @@ if ($session_OK) {
     }
 
     $credential = pdo_query("SELECT credential FROM user2repository WHERE userid='$userid'
-            AND projectid=0 AND credential!='".$user_array["email"]."'");
+            AND projectid=0 AND credential!='" . $user_array["email"] . "'");
     $credential_num = 1;
     while ($credential_array = pdo_fetch_array($credential)) {
-        $xml .= add_XML_value("credential_".$credential_num++, stripslashes($credential_array["credential"]));
+        $xml .= add_XML_value("credential_" . $credential_num++, stripslashes($credential_array["credential"]));
     }
 
     $xml .= "</user>";
     $xml .= "</cdash>";
 
     generate_XSLT($xml, "editUser");
-} // end session OK;
+}

@@ -15,7 +15,7 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include(dirname(__DIR__)."/config/config.php");
+include(dirname(__DIR__) . "/config/config.php");
 require_once("include/pdo.php");
 include('public/login.php');
 include_once("include/common.php");
@@ -52,7 +52,7 @@ pdo_select_db("$CDASH_DB_NAME", $db);
 
 $build_array = pdo_fetch_array(pdo_query("SELECT starttime,projectid FROM build WHERE id='$buildid'"));
 $projectid = $build_array["projectid"];
-if (!isset($projectid) || $projectid==0) {
+if (!isset($projectid) || $projectid == 0) {
     echo "This build doesn't exist. Maybe it has been deleted.";
     exit();
 }
@@ -68,13 +68,13 @@ if (pdo_num_rows($project) == 0) {
 $project_array = pdo_fetch_array($project);
 $projectname = $project_array["name"];
 
-$role=0;
+$role = 0;
 $user2project = pdo_query("SELECT role FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
-if (pdo_num_rows($user2project)>0) {
+if (pdo_num_rows($user2project) > 0) {
     $user2project_array = pdo_fetch_array($user2project);
     $role = $user2project_array["role"];
 }
-if (!$project_array["showcoveragecode"] && $role<2) {
+if (!$project_array["showcoveragecode"] && $role < 2) {
     echo "This project doesn't allow display of coverage code. Contact the administrator of the project.";
     exit();
 }
@@ -83,7 +83,7 @@ list($previousdate, $currenttime, $nextdate) = get_dates($date, $project_array["
 $logoid = getLogoID($projectid);
 
 $xml = begin_XML_for_XSLT();
-$xml .= "<title>CDash : ".$projectname."</title>";
+$xml .= "<title>CDash : " . $projectname . "</title>";
 
 $xml .= get_cdash_dashboard_xml_by_name($projectname, $date);
 
@@ -124,10 +124,10 @@ if (!empty($log->Branches)) {
 }
 
 foreach ($file_array as $line) {
-    $linenumber = $i+1;
+    $linenumber = $i + 1;
     $line = htmlentities($line);
 
-    $file_array[$i] = '<span class="warning">'.str_pad($linenumber, 5, ' ', STR_PAD_LEFT).'</span>';
+    $file_array[$i] = '<span class="warning">' . str_pad($linenumber, 5, ' ', STR_PAD_LEFT) . '</span>';
 
     if ($hasBranchCoverage) {
         if (array_key_exists("$i", $log->Branches)) {
@@ -140,7 +140,7 @@ foreach ($file_array as $line) {
             } else {
                 $file_array[$i] .= '<span class="normal">';
             }
-            $file_array[$i] .= str_pad($code, 5, ' ', STR_PAD_LEFT) ."</span>";
+            $file_array[$i] .= str_pad($code, 5, ' ', STR_PAD_LEFT) . "</span>";
         } else {
             $file_array[$i] .= str_pad('', 5, ' ', STR_PAD_LEFT);
         }
@@ -148,22 +148,22 @@ foreach ($file_array as $line) {
 
     if (array_key_exists($i, $log->Lines)) {
         $code = $log->Lines[$i];
-        if ($code==0) {
+        if ($code == 0) {
             $file_array[$i] .= '<span class="error">';
         } else {
             $file_array[$i] .= '<span class="normal">';
         }
-        $file_array[$i] .= str_pad($code, 5, ' ', STR_PAD_LEFT)." | ".$line;
+        $file_array[$i] .= str_pad($code, 5, ' ', STR_PAD_LEFT) . " | " . $line;
         $file_array[$i] .= "</span>";
     } else {
-        $file_array[$i] .= str_pad('', 5, ' ', STR_PAD_LEFT)." | ".$line;
+        $file_array[$i] .= str_pad('', 5, ' ', STR_PAD_LEFT) . " | " . $line;
     }
     $i++;
 }
 
 $file = implode("<br>", $file_array);
 
-$xml .= "<file>".utf8_encode(htmlspecialchars($file))."</file>";
+$xml .= "<file>" . utf8_encode(htmlspecialchars($file)) . "</file>";
 $xml .= "</coverage>";
 $xml .= "</cdash>";
 

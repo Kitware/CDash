@@ -15,7 +15,7 @@
 =========================================================================*/
 
 // Open the database connection
-include(dirname(__DIR__)."/config/config.php");
+include(dirname(__DIR__) . "/config/config.php");
 require_once("include/pdo.php");
 include("include/version.php");
 include_once('include/common.php');
@@ -26,7 +26,7 @@ if ($argc != 2) {
     return -1;
 }
 
-$directory=$argv[1];
+$directory = $argv[1];
 set_time_limit(0);
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
@@ -35,23 +35,23 @@ pdo_select_db("$CDASH_DB_NAME", $db);
 print "checking new build files $directory \n";
 
 // Write the current time in the file
-$lastcheckfile = $directory."/lastcheck";
+$lastcheckfile = $directory . "/lastcheck";
 @$lastcheck = file_get_contents($lastcheckfile);
 if (!empty($lastcheck)) {
-    print "last check was ".date("Y-m-d H:i:s", $lastcheck)."\n";
+    print "last check was " . date("Y-m-d H:i:s", $lastcheck) . "\n";
 }
 $handle = fopen($lastcheckfile, "wb");
 fwrite($handle, time());
 fclose($handle);
 unset($handle);
 
-$files = glob($directory.'/*.xml');
+$files = glob($directory . '/*.xml');
 $filelist = array();
 foreach ($files as $file) {
     if (filemtime($file) > $lastcheck) {
         $filelist[] = $file;
     }
-} // end foreach
+}
 
 $i = 0;
 $n = count($filelist);
@@ -61,12 +61,12 @@ foreach ($filelist as $filename) {
     // split on path separator
     $pathParts = preg_split('_[\\\\/]_', $filename);
     // split on cdash separator "_"
-    $cdashParts = explode("_", $pathParts[count($pathParts)-1]);
+    $cdashParts = explode("_", $pathParts[count($pathParts) - 1]);
     $projectid = get_project_id($cdashParts[0]);
 
     if ($projectid != -1) {
         $name = get_project_name($projectid);
-        echo 'Project ['.$name.'] importing file ('.$i.'/'.$n.'): '.$filename."\n";
+        echo 'Project [' . $name . '] importing file (' . $i . '/' . $n . '): ' . $filename . "\n";
         ob_flush();
         flush();
 
@@ -75,13 +75,12 @@ foreach ($filelist as $filename) {
         fclose($handle);
         unset($handle);
     } else {
-        echo 'Project id not found - skipping file ('.$i.'/'.$n.'): '.$filename."\n";
+        echo 'Project id not found - skipping file (' . $i . '/' . $n . '): ' . $filename . "\n";
         ob_flush();
         flush();
     }
 }
 
-echo 'Import backup complete. '.$i.' files processed.'."\n";
+echo 'Import backup complete. ' . $i . ' files processed.' . "\n";
 echo "\n";
-
 return 0;

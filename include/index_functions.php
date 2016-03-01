@@ -18,8 +18,8 @@ function get_dynamic_builds($projectid)
 {
     $builds = array();
 
-  // Get the build rules for each dynamic group belonging to this project.
-  $rules = pdo_query("
+    // Get the build rules for each dynamic group belonging to this project.
+    $rules = pdo_query("
     SELECT b2gr.buildname, b2gr.siteid, b2gr.parentgroupid, bg.id, bg.name,
            bg.type, gp.position
     FROM build2grouprule AS b2gr
@@ -39,8 +39,8 @@ function get_dynamic_builds($projectid)
         $buildgroup_position = $rule['position'];
         if ($rule['type'] == 'Latest') {
             // optional fields: parentgroupid, site, and build name match.
-      // Use these to construct a WHERE clause for our query.
-      $where = "";
+            // Use these to construct a WHERE clause for our query.
+            $where = "";
             $whereClauses = array();
             if (!empty($rule['parentgroupid'])) {
                 $whereClauses[] = "b2g.groupid='" . $rule['parentgroupid'] . "'";
@@ -55,11 +55,11 @@ function get_dynamic_builds($projectid)
                 $where = "WHERE " . implode($whereClauses, " AND ");
             }
 
-      // We only want the most recent build.
-      $order = "ORDER BY b.submittime DESC LIMIT 1";
+            // We only want the most recent build.
+            $order = "ORDER BY b.submittime DESC LIMIT 1";
 
-      // Copied from index.php.
-      $sql = "SELECT b.id,b.siteid,b.parentid,b.done,
+            // Copied from index.php.
+            $sql = "SELECT b.id,b.siteid,b.parentid,b.done,
               bu.status AS updatestatus,
               i.osname AS osname,
               bu.starttime AS updatestarttime,
