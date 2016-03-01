@@ -58,7 +58,6 @@ function buildinfo_click(buildid)
 }
 
 
-
 function expectedinfo_click(siteid,buildname,divname,projectid,buildtype,currentime)
 {
   buildname = URLencode(buildname);

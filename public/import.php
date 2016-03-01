@@ -1,20 +1,19 @@
 <?php
 /*=========================================================================
-
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
   Language:  PHP
   Date:      $Date$
   Version:   $Revision$
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-     PURPOSE.  See the above copyright notices for more information.
-
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 include(dirname(__DIR__)."/config/config.php");
 require_once("include/pdo.php");
 include('public/login.php');
@@ -31,7 +30,7 @@ if ($session_OK) {
 
     checkUserPolicy(@$_SESSION['cdash']['loginid'], 0); // only admin
 
-  
+
 //get date info here
 @$dayFrom = $_POST["dayFrom"];
     if (!isset($dayFrom)) {
@@ -49,7 +48,7 @@ if ($session_OK) {
         $monthTo = pdo_real_escape_numeric($_POST["monthTo"]);
         $yearTo = pdo_real_escape_numeric($_POST["yearTo"]);
     }
-  
+
     $xml = begin_XML_for_XSLT();
     $xml .= "<backurl>manageBackup.php</backurl>";
     $xml .= "<title>CDash - Import</title>";
@@ -78,7 +77,7 @@ if ($session_OK) {
     if ($Submit) {
         $directory = htmlspecialchars(pdo_real_escape_string($_POST["directory"]));
         $projectid = pdo_real_escape_numeric($_POST["project"]);
-  
+
   // Checks
   if (!isset($projectid) || !is_numeric($projectid)) {
       echo "Not a valid projectid!";
@@ -89,7 +88,7 @@ if ($session_OK) {
       echo "Not a valid directory!";
       return;
   }
-    
+
         if ($projectid == 0) {
             echo("Use your browsers Back button, and select a valid project.<br>");
             ob_flush();

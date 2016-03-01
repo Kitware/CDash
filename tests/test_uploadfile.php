@@ -68,9 +68,9 @@ class UploadFileTestCase extends KWWebTestCase
       if (!$content) {
           return;
       }
-    
+
       $this->assertClickable('http://www.kitware.com/company/about.html');
-      
+
       $this->clickLink('CMakeCache.txt');
       if (!$this->checkLog($this->logfilename)) {
           return;

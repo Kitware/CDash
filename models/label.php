@@ -1,20 +1,18 @@
 <?php
 /*=========================================================================
-
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
   Language:  PHP
   Date:      $Date$
   Version:   $Revision$
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
 
   This software is distributed WITHOUT ANY WARRANTY; without even
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-  PURPOSE.  See the above copyright notices for more information.
-
-  =========================================================================*/
+  PURPOSE. See the above copyright notices for more information.
+=========================================================================*/
 
 /** Label */
 class label
@@ -51,6 +49,11 @@ class label
 
     public function InsertAssociation($table, $field1, $value1=null, $field2=null, $value2=null)
     {
+        $duplicate_sql = '';
+        global $CDASH_DB_TYPE;
+        if ($CDASH_DB_TYPE !== 'pgsql') {
+            $duplicate_sql = 'ON DUPLICATE KEY UPDATE labelid=labelid';
+        }
         if (!empty($value1)) {
             if (!empty($value2)) {
                 $v = pdo_get_field_value(
@@ -61,7 +64,7 @@ class label
                 if (0 == $v) {
                     $query = "INSERT INTO $table (labelid, $field1, $field2)
                         VALUES ('$this->Id', '$value1', '$value2')
-                        ON DUPLICATE KEY UPDATE labelid=labelid";
+                        $duplicate_sql";
 
                     if (!pdo_query($query)) {
                         add_last_sql_error("Label::InsertAssociation");
@@ -76,7 +79,7 @@ class label
                 if (0 == $v) {
                     $query = "INSERT INTO $table (labelid, $field1)
                         VALUES ('$this->Id', '$value1')
-                        ON DUPLICATE KEY UPDATE labelid=labelid";
+                        $duplicate_sql";
 
                     if (!pdo_query($query)) {
                         add_last_sql_error("Label::InsertAssociation");

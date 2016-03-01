@@ -1,20 +1,19 @@
 <?php
 /*=========================================================================
-
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
   Language:  PHP
   Date:      $Date$
   Version:   $Revision$
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE.  See the above copyright notices for more information.
-
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 require_once(dirname(dirname(__DIR__))."/config/config.php");
 require_once("include/pdo.php");
 include("include/common.php");
@@ -548,7 +547,6 @@ function generate_main_dashboard_XML($project_instance, $date)
         }
 
 
-
               $divname = $build2grouprule_array["siteid"]."_".$build2grouprule_array["buildname"];
               $divname = str_replace("+", "_", $divname);
               $divname = str_replace(".", "_", $divname);
@@ -659,7 +657,6 @@ function generate_main_dashboard_XML($project_instance, $date)
                   sp.groupid AS subprojectgroup,
                   g.name as groupname,gp.position,g.id as groupid,
                   $label_sql
-                  (SELECT count(buildid) FROM errorlog WHERE buildid=b.id) AS nerrorlog,
                   (SELECT count(buildid) FROM build2uploadfile WHERE buildid=b.id) AS builduploadfiles
                   FROM build AS b
                   LEFT JOIN build2group AS b2g ON (b2g.buildid=b.id)
@@ -1233,7 +1230,6 @@ function generate_main_dashboard_XML($project_instance, $date)
       $xml .= add_XML_value("builddate", time_difference(time()-$starttimestamp, false, 'ago')); // use the default timezone
     }
         $xml .= add_XML_value("submitdate", date(FMT_DATETIMEDISPLAY, $submittimestamp));// use the default timezone
-    $xml .= add_XML_value("nerrorlog", $build_array["nerrorlog"]);// use the default timezone
     $xml .= "</build>";
 
 

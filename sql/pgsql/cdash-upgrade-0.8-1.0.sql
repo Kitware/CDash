@@ -35,4 +35,3 @@ CREATE TABLE "dailyupdatefile" (
   "priorrevision" character varying(10) DEFAULT '0' NOT NULL
 );
 CREATE INDEX "dailyupdatefile_buildid_idx" on "dailyupdatefile" ("dailyupdateid");
-

@@ -92,7 +92,6 @@ CREATE TABLE `buildgroupposition` (
 );
 
 
-
 -- --------------------------------------------------------
 
 --
@@ -297,7 +296,6 @@ CREATE TABLE `dynamicanalysisdefect` (
   `value` int(11) NOT NULL default '0',
   KEY `buildid` (`dynamicanalysisid`)
 );
-
 
 
 -- --------------------------------------------------------
@@ -659,7 +657,6 @@ CREATE TABLE `testmeasurement` (
 );
 
 
-
 CREATE TABLE `dailyupdate` (
   `id` bigint(11) NOT NULL auto_increment,
   `projectid` int(11) NOT NULL,
@@ -914,7 +911,6 @@ CREATE TABLE `subproject2build` (
   PRIMARY KEY  (`buildid`),
   KEY `subprojectid` (`subprojectid`)
 );
-
 
 
 CREATE TABLE `buildfailure` (
@@ -1335,24 +1331,6 @@ CREATE TABLE IF NOT EXISTS `projectjobscript` (
   `script` longtext NOT NULL,
   PRIMARY KEY (`id`),
   KEY `projectid` (`projectid`)
-);
-
-
-CREATE TABLE IF NOT EXISTS `errorlog` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `projectid` int(11) NOT NULL,
-  `buildid` bigint(20) NOT NULL,
-  `date` timestamp NOT NULL,
-  `type` tinyint(4) NOT NULL,
-  `description` mediumtext NOT NULL,
-  `resourcetype` tinyint(4) NOT NULL DEFAULT '0',
-  `resourceid` bigint(20) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `resourceid` (`resourceid`),
-  KEY `date` (`date`),
-  KEY `resourcetype` (`resourcetype`),
-  KEY `projectid` (`projectid`),
-  KEY `buildid` (`buildid`)
 );
 
 

@@ -6,8 +6,16 @@ CDash.controller('TestSummaryController',
     $scope.showgraph = false;
     $scope.graphurl = '';
 
-    // Default sorting : status then site.
-    $scope.orderByFields = ['status', 'site'];
+    // Check for sort order cookie.
+    var sort_order = [];
+    var sort_cookie_value = $.cookie('cdash_test_summary_sort');
+    if(sort_cookie_value) {
+      sort_order = sort_cookie_value.split(",");
+    } else {
+      // Default sorting : status then site.
+      sort_order = ['status', 'site'];
+    }
+    $scope.orderByFields = sort_order;
 
     $http({
       url: 'api/v1/testSummary.php',
@@ -24,6 +32,7 @@ CDash.controller('TestSummaryController',
 
     $scope.updateOrderByFields = function(field, $event) {
       multisort.updateOrderByFields($scope, field, $event);
+      $.cookie('cdash_test_summary_sort', $scope.orderByFields);
     };
 
     $scope.failureGraphUrl = function() {

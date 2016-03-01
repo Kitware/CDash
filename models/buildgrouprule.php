@@ -1,20 +1,19 @@
 <?php
 /*=========================================================================
-
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
   Language:  PHP
   Date:      $Date$
   Version:   $Revision$
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE.  See the above copyright notices for more information.
-
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 // It is assumed that appropriate headers should be included before including this file
 class buildgrouprule
 {
@@ -31,7 +30,7 @@ class buildgrouprule
         $this->StartTime = '1980-01-01 00:00:00';
         $this->EndTime = '1980-01-01 00:00:00';
     }
-    
+
   /** Check if the rule already exists */
   public function Exists()
   {
@@ -40,8 +39,8 @@ class buildgrouprule
       || empty($this->BuildName) || empty($this->SiteId)) {
        return false;
    }
-    
-      $query = pdo_query("SELECT count(*) AS c FROM build2grouprule WHERE 
+
+      $query = pdo_query("SELECT count(*) AS c FROM build2grouprule WHERE
                         groupid='".$this->GroupId."' AND buildtype='".$this->BuildType."'
                         AND buildname='".$this->BuildName."'
                         AND siteid='".$this->SiteId."'
@@ -54,7 +53,7 @@ class buildgrouprule
       }
       return true;
   }
-    
+
   /** Save the goup position */
   public function Add()
   {

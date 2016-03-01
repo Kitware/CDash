@@ -1,20 +1,19 @@
 <?php
 /*=========================================================================
-
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
   Language:  PHP
   Date:      $Date$
   Version:   $Revision$
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE.  See the above copyright notices for more information.
-
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 require_once("config/config.php");
 require_once("include/log.php");
 
@@ -420,10 +419,16 @@ function checkUserPolicy($userid, $projectid, $onlyreturn=0)
 /** Clean the backup directory */
 function clean_backup_directory()
 {
-    include("config/config.php");
-    require_once("include/pdo.php");
-    foreach (glob($CDASH_BACKUP_DIRECTORY."/*.xml") as $filename) {
-        if (file_exists($filename) && time()-filemtime($filename) > $CDASH_BACKUP_TIMEFRAME*3600) {
+    global $CDASH_BACKUP_DIRECTORY, $CDASH_BACKUP_TIMEFRAME;
+
+    if ($CDASH_BACKUP_TIMEFRAME === '0') {
+        // File are deleted upon submission, no need to do anything here.
+        return;
+    }
+
+    foreach (glob("$CDASH_BACKUP_DIRECTORY/*") as $filename) {
+        if (file_exists($filename) && is_file($filename) &&
+                time()-filemtime($filename) > $CDASH_BACKUP_TIMEFRAME * 3600) {
             cdash_unlink($filename);
         }
     }
@@ -909,7 +914,6 @@ function remove_build($buildid)
     pdo_query("DELETE FROM testdiff WHERE buildid IN ".$buildids);
     pdo_query("DELETE FROM buildtesttime WHERE buildid IN ".$buildids);
     pdo_query("DELETE FROM summaryemail WHERE buildid IN ".$buildids);
-    pdo_query("DELETE FROM errorlog WHERE buildid IN ".$buildids);
 
   // Remove the buildfailureargument
   $buildfailureids = '(';

@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `errorlog` (
   `type` tinyint(4) NOT NULL,
   `description` mediumtext NOT NULL,
   `resourcetype` tinyint(4) NOT NULL DEFAULT '0',
-  `resourceid` bigint(20) NOT NULL, 
+  `resourceid` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `resourceid` (`resourceid`),
   KEY `date` (`date`),

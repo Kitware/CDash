@@ -1,19 +1,17 @@
 <?php
 /*=========================================================================
-
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
   Language:  PHP
   Date:      $Date$
   Version:   $Revision$
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE.  See the above copyright notices for more information.
-
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
 include(dirname(__DIR__)."/config/config.php");
@@ -51,9 +49,7 @@ if ($session_OK) {
         $xml .= add_XML_value("user_can_create_projects", 0);
     }
   // Go through the list of project the user is part of
-  $project2user = pdo_query("SELECT user2project.projectid AS projectid,role,name,
-                            (SELECT count(errorlog.projectid) FROM errorlog WHERE errorlog.projectid=user2project.projectid)
-                             AS errors
+  $project2user = pdo_query("SELECT user2project.projectid AS projectid,role,name
                              FROM user2project,project
                              WHERE project.id=user2project.projectid
                              AND userid='$userid' ORDER BY project.name ASC");
@@ -72,7 +68,6 @@ if ($session_OK) {
     $xml .= add_XML_value("name", $projectname);
         $xml .= add_XML_value("name_encoded", urlencode($projectname));
         $xml .= add_XML_value("nbuilds", $Project->GetTotalNumberOfBuilds());
-        $xml .= add_XML_value("nerrorlogs", $project2user_array["errors"]);
         $xml .= add_XML_value("average_builds", round($Project->GetBuildsDailyAverage(gmdate(FMT_DATETIME, time()-(3600*24*7)), gmdate(FMT_DATETIME), 2)));
         $xml .= add_XML_value("success", $Project->GetNumberOfPassingBuilds($start, gmdate(FMT_DATETIME)));
         $xml .= add_XML_value("error", $Project->GetNumberOfErrorBuilds($start, gmdate(FMT_DATETIME)));
@@ -353,13 +348,6 @@ if ($session_OK) {
     } elseif (@$_GET['note'] == "subscribedtoproject") {
         $xml .= "<message>You have been unsubscribed from a project.</message>";
     }
-
-  // If the user is admin we show all the errors
-  if ($user_array["admin"]) {
-      $errorlog = pdo_fetch_array(pdo_query("SELECT count(id) FROM errorlog"));
-      $xml .= add_XML_value("nerrorlogs", $errorlog[0]);
-  }
-
 
     $xml .= "</cdash>";
 

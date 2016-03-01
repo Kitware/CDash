@@ -1,20 +1,19 @@
 <?php
 /*=========================================================================
-
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
   Language:  PHP
   Date:      $Date$
   Version:   $Revision$
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
 
   This software is distributed WITHOUT ANY WARRANTY; without even
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-  PURPOSE.  See the above copyright notices for more information.
+  PURPOSE. See the above copyright notices for more information.
+=========================================================================*/
 
-  =========================================================================*/
 /** This class shouldn't be used externally */
 class coveragefile
 {
@@ -214,5 +213,44 @@ class coveragefile
         }
         $coveragefile_array = pdo_fetch_array($coveragefile);
         return $coveragefile_array['id'];
+    }
+
+    // Populate $this from existing database results.
+    public function Load()
+    {
+        global $CDASH_USE_COMPRESSION, $CDASH_DB_TYPE;
+
+        if (!$this->Id) {
+            return false;
+        }
+
+        $row = pdo_single_row_query(
+                "SELECT * FROM coveragefile WHERE id='$this->Id'");
+        if (!$row || !array_key_exists('id', $row)) {
+            return false;
+        }
+
+        $this->FullPath = $row['fullpath'];
+        $this->Crc32 = $row['crc32'];
+
+        if ($CDASH_USE_COMPRESSION) {
+            if ($CDASH_DB_TYPE == 'pgsql') {
+                if (is_resource($row['file'])) {
+                    $this->File = base64_decode(stream_get_contents($row['file']));
+                } else {
+                    $this->File = base64_decode($row['file']);
+                }
+            } else {
+                $this->File = $row['file'];
+            }
+
+            @$uncompressedrow = gzuncompress($this->File);
+            if ($uncompressedrow !== false) {
+                $this->File = $uncompressedrow;
+            }
+        } else {
+            $this->File = $row['file'];
+        }
+        return true;
     }
 }

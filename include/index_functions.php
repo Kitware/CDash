@@ -1,4 +1,18 @@
 <?php
+/*=========================================================================
+  Program:   CDash - Cross-Platform Dashboard System
+  Module:    $Id$
+  Language:  PHP
+  Date:      $Date$
+  Version:   $Revision$
+
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
+
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE. See the above copyright notices for more information.
+=========================================================================*/
 
 function get_dynamic_builds($projectid)
 {
@@ -84,7 +98,6 @@ function get_dynamic_builds($projectid)
               b.testtimestatusfailed AS countteststimestatusfailed,
               sp.id AS subprojectid,
               sp.groupid AS subprojectgroup,
-              (SELECT count(buildid) FROM errorlog WHERE buildid=b.id) AS nerrorlog,
               (SELECT count(buildid) FROM build2uploadfile WHERE buildid=b.id) AS builduploadfiles
               FROM build AS b
               LEFT JOIN build2group AS b2g ON (b2g.buildid=b.id)

@@ -11,7 +11,7 @@
 // use. That means, you can include it in your product, or your web
 // site, or any other form where the code is actually being used. You
 // may not put the plain javascript up on your site for download or
-// include it in your javascript libraries for download. 
+// include it in your javascript libraries for download.
 // If you wish to share this code with others, please just point them
 // to the URL instead.
 // Please DO NOT link directly to my .js files from your site. Copy
@@ -27,7 +27,7 @@
 //                one selected option
 /*
 DESCRIPTION: These are general functions to deal with and manipulate
-select boxes. Also see the OptionTransfer library to more easily 
+select boxes. Also see the OptionTransfer library to more easily
 handle transferring options between two lists
 
 COMPATABILITY: These are fairly basic functions - they should work on
@@ -76,7 +76,7 @@ function selectUnselectMatchingOptions(obj,regex,which,only) {
       }
     }
   }
-    
+
 // -------------------------------------------------------------------
 // selectMatchingOptions(select_object,regex)
 //  This function selects all options that match the regular expression
@@ -96,12 +96,12 @@ function selectOnlyMatchingOptions(obj,regex) {
 // -------------------------------------------------------------------
 // unSelectMatchingOptions(select_object,regex)
 //  This function Unselects all options that match the regular expression
-//  passed in. 
+//  passed in.
 // -------------------------------------------------------------------
 function unSelectMatchingOptions(obj,regex) {
   selectUnselectMatchingOptions(obj,regex,"unselect",false);
   }
-  
+
 // -------------------------------------------------------------------
 // sortSelect(select_object)
 //   Pass this function a SELECT object and the options will be sorted
@@ -114,12 +114,12 @@ function sortSelect(obj) {
     o[o.length] = new Option( obj.options[i].text, obj.options[i].value, obj.options[i].defaultSelected, obj.options[i].selected) ;
     }
   if (o.length==0) { return; }
-  o = o.sort( 
-    function(a,b) { 
+  o = o.sort(
+    function(a,b) {
       if ((a.text+"") < (b.text+"")) { return -1; }
       if ((a.text+"") > (b.text+"")) { return 1; }
       return 0;
-      } 
+      }
     );
 
   for (var i=0; i<o.length; i++) {
@@ -129,9 +129,9 @@ function sortSelect(obj) {
 
 // -------------------------------------------------------------------
 // selectAllOptions(select_object)
-//  This function takes a select box and selects all options (in a 
+//  This function takes a select box and selects all options (in a
 //  multiple select object). This is used when passing values between
-//  two select boxes. Select all options in the right box before 
+//  two select boxes. Select all options in the right box before
 //  submitting the form so the values will be sent to the server.
 // -------------------------------------------------------------------
 function selectAllOptions(obj) {
@@ -140,7 +140,7 @@ function selectAllOptions(obj) {
     obj.options[i].selected = true;
     }
   }
-  
+
 // -------------------------------------------------------------------
 // moveSelectedOptions(select_object,select_object[,autosort(true/false)[,regex]])
 //  This function moves options between select boxes. Works best with
@@ -150,13 +150,13 @@ function selectAllOptions(obj) {
 //  If a third argument of 'false' is passed, then the lists are not
 //  sorted after the move.
 //  If a fourth string argument is passed, this will function as a
-//  Regular Expression to match against the TEXT or the options. If 
+//  Regular Expression to match against the TEXT or the options. If
 //  the text of an option matches the pattern, it will NOT be moved.
 //  It will be treated as an unmoveable option.
 //  You can also put this into the <SELECT> object as follows:
 //    onDblClick="moveSelectedOptions(this,this.form.target)
 //  This way, when the user double-clicks on a value in one box, it
-//  will be transferred to the other (in browsers that support the 
+//  will be transferred to the other (in browsers that support the
 //  onDblClick() event handler).
 // -------------------------------------------------------------------
 function moveSelectedOptions(from,to) {
@@ -193,7 +193,7 @@ function moveSelectedOptions(from,to) {
 
 // -------------------------------------------------------------------
 // copySelectedOptions(select_object,select_object[,autosort(true/false)])
-//  This function copies options between select boxes instead of 
+//  This function copies options between select boxes instead of
 //  moving items. Duplicates in the target list are not allowed.
 // -------------------------------------------------------------------
 function copySelectedOptions(from,to) {
@@ -267,7 +267,7 @@ function swapOptions(obj,i,j) {
   o[i].selected = j_selected;
   o[j].selected = i_selected;
   }
-  
+
 // -------------------------------------------------------------------
 // moveOptionUp(select_object)
 //  Move selected option in a select list up one
@@ -305,28 +305,28 @@ function moveOptionDown(obj) {
 //  Remove all selected options from a list
 //  (Thanks to Gene Ninestein)
 // -------------------------------------------------------------------
-function removeSelectedOptions(from) { 
+function removeSelectedOptions(from) {
   if (!hasOptions(from)) { return; }
-  for (var i=(from.options.length-1); i>=0; i--) { 
-    var o=from.options[i]; 
-    if (o.selected) { 
-      from.options[i] = null; 
-      } 
-    } 
-  from.selectedIndex = -1; 
-  } 
+  for (var i=(from.options.length-1); i>=0; i--) {
+    var o=from.options[i];
+    if (o.selected) {
+      from.options[i] = null;
+      }
+    }
+  from.selectedIndex = -1;
+  }
 
 // -------------------------------------------------------------------
 // removeAllOptions(select_object)
 //  Remove all options from a list
 // -------------------------------------------------------------------
-function removeAllOptions(from) { 
+function removeAllOptions(from) {
   if (!hasOptions(from)) { return; }
-  for (var i=(from.options.length-1); i>=0; i--) { 
-    from.options[i] = null; 
-    } 
-  from.selectedIndex = -1; 
-  } 
+  for (var i=(from.options.length-1); i>=0; i--) {
+    from.options[i] = null;
+    }
+  from.selectedIndex = -1;
+  }
 
 // -------------------------------------------------------------------
 // addOption(select_object,display_text,value,selected)
@@ -341,7 +341,7 @@ function addOption(obj,text,value,selected) {
 
 /* SOURCE FILE: OptionTransfer.js */
 
-/* 
+/*
 OptionTransfer.js
 Last Modified: 7/12/2004
 
@@ -349,7 +349,7 @@ DESCRIPTION: This widget is used to easily and quickly create an interface
 where the user can transfer choices from one select box to another. For
 example, when selecting which columns to show or hide in search results.
 This object adds value by automatically storing the values that were added
-or removed from each list, as well as the state of the final list. 
+or removed from each list, as well as the state of the final list.
 
 COMPATABILITY: Should work on all Javascript-compliant browsers.
 
@@ -358,7 +358,7 @@ USAGE:
 // select box and the right select box.
 var ot = new OptionTransfer("from","to");
 
-// Optionally tell the lists whether or not to auto-sort when options are 
+// Optionally tell the lists whether or not to auto-sort when options are
 // moved. By default, the lists will be sorted.
 ot.setAutoSort(true);
 
@@ -408,7 +408,7 @@ ot.transferAllLeft();
 NOTES:
 1) Requires the functions in selectbox.js
 
-*/ 
+*/
 function OT_transferLeft() { moveSelectedOptions(this.right,this.left,this.autoSort,this.staticOptionRegex); this.update(); }
 function OT_transferRight() { moveSelectedOptions(this.left,this.right,this.autoSort,this.staticOptionRegex); this.update(); }
 function OT_transferAllLeft() { moveAllOptions(this.right,this.left,this.autoSort,this.staticOptionRegex); this.update(); }

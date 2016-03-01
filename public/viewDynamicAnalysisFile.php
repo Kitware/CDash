@@ -1,20 +1,19 @@
 <?php
 /*=========================================================================
-
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
   Language:  PHP
   Date:      $Date$
   Version:   $Revision$
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-     PURPOSE.  See the above copyright notices for more information.
-
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 $noforcelogin = 1;
 include(dirname(__DIR__)."/config/config.php");
 require_once("include/pdo.php");
@@ -37,11 +36,11 @@ function get_previous_fileid_dynamicanalysis($filename, $projectid, $siteid, $bu
 {
     $previousbuild = pdo_query("SELECT dynamicanalysis.id FROM build,dynamicanalysis
                               WHERE build.siteid='$siteid' AND build.type='$buildtype' AND build.name='$buildname'
-                              AND build.projectid='$projectid' AND build.starttime<'$starttime' 
+                              AND build.projectid='$projectid' AND build.starttime<'$starttime'
                               AND dynamicanalysis.buildid=build.id
                               AND dynamicanalysis.name='$filename'
                               ORDER BY build.starttime DESC LIMIT 1");
-  
+
     if (pdo_num_rows($previousbuild)>0) {
         $previousbuild_array = pdo_fetch_array($previousbuild);
         return $previousbuild_array["id"];
@@ -54,7 +53,7 @@ function get_next_fileid_dynamicanalysis($filename, $projectid, $siteid, $buildt
 {
     $nextbuild = pdo_query("SELECT dynamicanalysis.id FROM build,dynamicanalysis
                           WHERE build.siteid='$siteid' AND build.type='$buildtype' AND build.name='$buildname'
-                          AND build.projectid='$projectid' AND build.starttime>'$starttime' 
+                          AND build.projectid='$projectid' AND build.starttime>'$starttime'
                           AND dynamicanalysis.buildid=build.id
                           AND dynamicanalysis.name='$filename'
                           ORDER BY build.starttime ASC LIMIT 1");
@@ -71,7 +70,7 @@ function get_last_fileid_dynamicanalysis($filename, $projectid, $siteid, $buildt
 {
     $nextbuild = pdo_query("SELECT dynamicanalysis.id FROM build,dynamicanalysis
                           WHERE build.siteid='$siteid' AND build.type='$buildtype' AND build.name='$buildname'
-                          AND build.projectid='$projectid' 
+                          AND build.projectid='$projectid'
                           AND dynamicanalysis.buildid=build.id
                           AND dynamicanalysis.name='$filename'
                           ORDER BY build.starttime DESC LIMIT 1");
@@ -88,7 +87,7 @@ if (!isset($id) || !is_numeric($id)) {
     echo "Not a valid id!";
     return;
 }
-  
+
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME", $db);
 
@@ -98,7 +97,7 @@ $buildid = $dyn_array["buildid"];
 $build_array = pdo_fetch_array(pdo_query("SELECT starttime,projectid FROM build WHERE id='$buildid'"));
 $projectid = $build_array["projectid"];
 checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid);
-    
+
 $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
 if (pdo_num_rows($project)>0) {
     $project_array = pdo_fetch_array($project);
@@ -107,7 +106,7 @@ if (pdo_num_rows($project)>0) {
     echo "This build doesn't exist. Maybe it has been deleted.";
     return;
 }
-  
+
 list($previousdate, $currenttime, $nextdate) = get_dates($date, $project_array["nightlytime"]);
 $logoid = getLogoID($projectid);
 
@@ -126,7 +125,7 @@ $xml .= add_XML_value("buildname", $build_array["name"]);
 $xml .= add_XML_value("buildid", $buildid);
 $xml .= add_XML_value("buildtime", $build_array["starttime"]);
 $xml .= "</build>";
-  
+
 $siteid = $build_array["siteid"];
 $buildtype = $build_array["type"];
 $buildname = $build_array["name"];
@@ -148,8 +147,8 @@ if ($nextfileid>0) {
     $xml .= add_XML_value("nonext", "1");
 }
 $xml .= "</menu>";
-  
- 
+
+
   // dynamic analysis
   $xml .= "<dynamicanalysis>";
   $xml .= add_XML_value("status", ucfirst($dyn_array["status"]));
@@ -164,7 +163,7 @@ $xml .= "</menu>";
   }
   $xml .= add_XML_value("href", $href);
   $xml .= "</dynamicanalysis>";
-    
+
   $xml .= "</cdash>";
 
 // Now doing the xslt transition

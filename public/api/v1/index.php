@@ -1,20 +1,18 @@
 <?php
 /*=========================================================================
-
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
   Language:  PHP
   Date:      $Date$
   Version:   $Revision$
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
 
   This software is distributed WITHOUT ANY WARRANTY; without even
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-  PURPOSE.  See the above copyright notices for more information.
-
-  =========================================================================*/
+  PURPOSE. See the above copyright notices for more information.
+=========================================================================*/
 
 // Redirect to the previous version of api/index.php if it seems like
 // that's what the user wants.
@@ -502,7 +500,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
         sp.groupid AS subprojectgroup,
         g.name AS groupname,gp.position,g.id AS groupid,
         (SELECT count(buildid) FROM label2build WHERE buildid=b.id) AS numlabels,
-        (SELECT count(buildid) FROM errorlog WHERE buildid=b.id) AS nerrorlog,
         (SELECT count(buildid) FROM build2uploadfile WHERE buildid=b.id) AS builduploadfiles
             FROM build AS b
             LEFT JOIN build2group AS b2g ON (b2g.buildid=b.id)
@@ -1075,9 +1072,10 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $build_response['builddate'] = time_difference(time()-$starttimestamp, false, 'ago');
         }
         $build_response['submitdate'] = date(FMT_DATETIMEDISPLAY, $submittimestamp);
-        $build_response['nerrorlog'] = $build_array["nerrorlog"];
 
-        $buildgroups_response[$i]['builds'][] = $build_response;
+        if ($build_array['name'] != 'Aggregate Coverage') {
+            $buildgroups_response[$i]['builds'][] = $build_response;
+        }
 
         // Coverage
         //

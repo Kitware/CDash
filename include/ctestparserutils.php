@@ -178,7 +178,10 @@ function compute_error_difference($buildid, $previousbuildid, $warning)
     $positives = pdo_query("SELECT count(*) FROM builderror WHERE buildid=".$buildid." AND type=".$warning." AND newstatus=1");
     $positives_array  = pdo_fetch_array($positives);
     $npositives = $positives_array[0];
-    $positives = pdo_query("SELECT count(*) FROM buildfailure WHERE buildid=".$buildid." AND type=".$warning." AND newstatus=1");
+    $positives = pdo_query(
+        "SELECT COUNT(*) FROM buildfailure AS bf
+        LEFT JOIN buildfailuredetails AS bfd ON (bf.detailsid=bfd.id)
+        WHERE bf.buildid=$buildid AND bfd.type=$warning AND bf.newstatus=1");
     $positives_array  = pdo_fetch_array($positives);
     $npositives += $positives_array[0];
 

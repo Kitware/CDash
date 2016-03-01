@@ -1,4 +1,19 @@
 <?php
+/*=========================================================================
+  Program:   CDash - Cross-Platform Dashboard System
+  Module:    $Id$
+  Language:  PHP
+  Date:      $Date$
+  Version:   $Revision$
+
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
+
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE. See the above copyright notices for more information.
+=========================================================================*/
+
 class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
 {
     public function __construct()
@@ -184,9 +199,13 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
     {
         if ($coverage['loctested'] != $expected_loctested) {
             $this->fail("Expected $name loctested to be $expected_loctested, found " . $coverage['loctested']);
+            return false;
         }
         if ($coverage['locuntested'] != $expected_locuntested) {
             $this->fail("Expected $name locuntested to be $expected_locuntested, found " . $coverage['locuntested']);
+            return false;
         }
+
+        return true;
     }
 }

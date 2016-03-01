@@ -1,20 +1,19 @@
 <?php
 /*=========================================================================
-
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
   Language:  PHP
   Date:      $Date$
   Version:   $Revision$
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE.  See the above copyright notices for more information.
-
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 include_once('models/constants.php');
 
 class clientjob
@@ -45,7 +44,7 @@ class clientjob
     return $row[0];
     }
   */
-    
+
   /** Get StartingDate */
   public function GetStartDate()
   {
@@ -69,7 +68,7 @@ class clientjob
       $row = pdo_fetch_array($sys);
       return $row[0];
   }
-    
+
   /** Get Status */
   public function GetStatus()
   {
@@ -81,7 +80,7 @@ class clientjob
       $row = pdo_fetch_array($sys);
       return $row[0];
   }
-  
+
   /** Get Site */
   public function GetSite()
   {
@@ -93,7 +92,7 @@ class clientjob
       $row = pdo_fetch_array($sys);
       return $row[0];
   }
-      
+
   /** Set the job has finished */
   public function SetFinished()
   {
@@ -111,11 +110,11 @@ class clientjob
       pdo_query($sql);
       add_last_sql_error("ClientJob::SetFailed");
   }
-    
+
   /** Save a job */
   public function Save()
   {
-      $sql = "INSERT INTO client_job (scheduleid,osid,siteid,startdate,enddate,status,output,cmakeid,compilerid) 
+      $sql = "INSERT INTO client_job (scheduleid,osid,siteid,startdate,enddate,status,output,cmakeid,compilerid)
             VALUES ('".$this->ScheduleId."','".$this->OsId."','".$this->SiteId."','".$this->StartDate."','".$this->EndDate
             ."','".$this->Status."','".$this->Output."','".$this->CMakeId."','".$this->CompilerId."')";
       pdo_query($sql);

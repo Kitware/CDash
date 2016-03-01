@@ -1,30 +1,29 @@
 <?php
 /*=========================================================================
-
   Program:   CDash - Cross-Platform Dashboard System
   Module:    $Id$
   Language:  PHP
   Date:      $Date$
   Version:   $Revision$
 
-  Copyright (c) 2002 Kitware, Inc.  All rights reserved.
-  See Copyright.txt or http://www.cmake.org/HTML/Copyright.html for details.
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-     PURPOSE.  See the above copyright notices for more information.
-
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 // It is assumed that appropriate headers should be included before including this file
 
-/** Test Image 
+/** Test Image
  *  Actually stores just the image id. The image is supposed to be already in the image table */
 class testimage
 {
     public $Id;
     public $Role;
     public $TestId;
-  
+
   /** Return if exists */
   public function Exists()
   {
@@ -35,7 +34,7 @@ class testimage
       }
       return false;
   }
-      
+
   // Save in the database
   public function Insert()
   {
