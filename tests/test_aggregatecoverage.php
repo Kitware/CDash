@@ -33,6 +33,12 @@ class AggregateCoverageTestCase extends KWWebTestCase
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
 
+        $num_builds = count($jsonobj['buildgroups'][0]['builds']);
+        if ($num_builds != 2) {
+            $this->fail("Expected 2 builds, found $num_builds");
+            return 1;
+        }
+
         $num_coverages = count($jsonobj['coverages']);
         if ($num_coverages != 3) {
             $this->fail("Expected 3 coverages, found $num_coverages");
