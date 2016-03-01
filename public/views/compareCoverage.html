@@ -30,7 +30,7 @@
             <td colspan="1" class="nob">
               <h3>Coverage</h3>
             </td>
-            <td colspan="{{cdash.numberbuilds}} + 1" align="right" class="nob"></td>
+            <td colspan={{cdash.builds.length}} + 1 align="right" class="nob"></td>
           </tr>
 
           <tr class="table-heading">
@@ -39,21 +39,16 @@
               <span class="glyphicon" ng-class="sortCoverage.orderByFields.indexOf('-label') != -1 ? 'glyphicon-chevron-down' : (sortCoverage.orderByFields.indexOf('label') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
             </th>
 
-            <th class="timeheader botl" align="center" colspan="{{cdash.numberbuilds}}" >
+            <th class="timeheader botl" align="center" colspan={{cdash.builds.length}}>
               Percentage
             </th>
           </tr>
 
           <tr class="table-heading">
-            <th align="center" ng-repeat="coverage in cdash.coverages" style="cursor: pointer" ng-click="updateOrderByFields(sortCoverage, 'build'+coverage.buildid, $event)">
-            {{coverage.buildname}}
-            <span class="glyphicon" ng-class="sortCoverage.orderByFields.indexOf('-build'+coverage.buildid) != -1 ? 'glyphicon-chevron-down' : (sortCoverage.orderByFields.indexOf('build'+coverage.buildid) != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+            <th align="center" ng-repeat="build in cdash.builds" style="cursor: pointer" ng-click="updateOrderByFields(sortCoverage, build.key, $event)">
+            {{build.name}}
+            <span class="glyphicon" ng-class="sortCoverage.orderByFields.indexOf('-{{build.key}}') != -1 ? 'glyphicon-chevron-down' : (sortCoverage.orderByFields.indexOf('{{build.key}}') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
             </th>
-
-             <th align="center" style="cursor: pointer" ng-click="updateOrderByFields(sortCoverage, 'aggregate', $event)">
-             Aggregate
-             <span class="glyphicon" ng-class="sortCoverage.orderByFields.indexOf('-aggregate') != -1 ? 'glyphicon-chevron-down' : (sortCoverage.orderByFields.indexOf('aggregate') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
-             </th>
           </tr>
 
       </thead>
@@ -66,8 +61,8 @@
               <div class="glyphicon"  ng-click="group.hidden = ! group.hidden" ng-class="{'glyphicon-chevron-down': !group.hidden, 'glyphicon-chevron-right': group.hidden}"></div>
             </td>
 
-            <td align="center" ng-repeat="buildname in cdash.buildnames" ng-class="{'normal': group[buildname] >= group.thresholdgreen, 'warning': group[buildname] < group.thresholdgreen && group[buildname] >= group.thresholdyellow, 'error': group[buildname] < group.thresholdyellow}">
-              <a ng-if="group[buildname] >= 0"> {{group[buildname]}}% </a>
+            <td align="center" ng-repeat="build in cdash.builds" ng-class="{'normal': group[build.key] >= group.thresholdgreen, 'warning': group[build.key] < group.thresholdgreen && group[build.key] >= group.thresholdyellow, 'error': group[build.key] < group.thresholdyellow}">
+              <a ng-if="group[build.key] >= 0"> {{group[build.key]}}% </a>
             </td>
 
           </tr>
@@ -77,18 +72,40 @@
               {{coverage.label}}
             </td>
 
-            <td align="center" ng-repeat="buildname in cdash.buildnames" ng-class="{'normal': coverage[buildname] >= group.thresholdgreen, 'warning': coverage[buildname] < group.thresholdgreen && coverage[buildname] >= group.thresholdyellow, 'error': coverage[buildname] < group.thresholdyellow}">
-              <a ng-if="coverage[buildname] >= 0 && buildname != 'aggregate'" ng-href="viewCoverage.php?buildid={{coverage[buildname+'id']}}">
-                {{coverage[buildname]}}%
+            <td align="center" ng-repeat="build in cdash.builds" ng-class="{'normal': coverage[build.key] >= group.thresholdgreen, 'warning': coverage[build.key] < group.thresholdgreen && coverage[build.key] >= group.thresholdyellow, 'error': coverage[build.key] < group.thresholdyellow}">
+              <a ng-if="coverage[build.key] >= 0 && build.key != 'aggregate'" ng-href="viewCoverage.php?buildid={{coverage[build.key +'id']}}">
+                {{coverage[build.key]}}%
               </a>
-               <a ng-if="coverage[buildname] >= 0 && buildname == 'aggregate'">
-                {{coverage[buildname]}}%
+               <a ng-if="coverage[build.key] >= 0 && build.key == 'aggregate'">
+                {{coverage[build.key]}}%
               </a>
-              <sub ng-if="coverage[buildname+'percentagediff'] > 0">+{{coverage[buildname+'percentagediff']}}%</sub>
-              <sub ng-if="coverage[buildname+'percentagediff'] < 0">{{coverage[buildname+'percentagediff']}}%</sub>
+              <sub ng-if="coverage[build.key+'percentagediff'] > 0">+{{coverage[build.key+'percentagediff']}}%</sub>
+              <sub ng-if="coverage[build.key+'percentagediff'] < 0">{{coverage[build.key+'percentagediff']}}%</sub>
             </td>
           </tr>
         </tbody>
+
+        <!-- Ungrouped coverage -->
+        <tbody ng-if="!cdash.coveragegroups || cdash.coveragegroups.length == 0" id="coveragebody">
+
+          <tr class="child_row" ng-repeat="coverage in cdash.coverages |orderBy:sortCoverage.orderByFields" ng-class-odd="'odd'" ng-class-even="'even'">
+            <td align="left" class="paddt">
+              {{coverage.label}}
+            </td>
+
+            <td align="center" ng-repeat="build in cdash.builds" ng-class="{'normal': coverage[build.key] >= cdash.thresholdgreen, 'warning': coverage[build.key] < cdash.thresholdgreen && coverage[build.key] >= cdash.thresholdyellow, 'error': coverage[build.key] < cdash.thresholdyellow}">
+              <a ng-if="coverage[build.key] >= 0 && build.key != 'aggregate'" ng-href="viewCoverage.php?buildid={{coverage[build.key+'id']}}">
+                {{coverage[build.key]}}%
+              </a>
+               <a ng-if="coverage[build.key] >= 0 && build.key == 'aggregate'">
+                {{coverage[build.key]}}%
+              </a>
+              <sub ng-if="coverage[build.key+'percentagediff'] > 0">+{{coverage[build.key+'percentagediff']}}%</sub>
+              <sub ng-if="coverage[build.key+'percentagediff'] < 0">{{coverage[build.key+'percentagediff']}}%</sub>
+            </td>
+          </tr>
+        </tbody>
+
       </table>
 
       <!-- FOOTER -->

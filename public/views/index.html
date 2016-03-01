@@ -297,26 +297,24 @@
           <tr class="table-heading2">
             <td colspan="1" class="nob">
               <h3><a href="#" class="grouptrigger">Coverage</a>
-              <a ng-if="cdash.coverages.length > 0" href="compareCoverage.php?project={{cdash.projectname}}&date={{cdash.date}}">Compare Coverage</a></h3>
+              <a ng-if="cdash.comparecoverage == 1" href="compareCoverage.php?project={{cdash.projectname}}&date={{cdash.date}}">Compare Coverage</a></h3>
             </td>
             <td colspan="6" align="right" class="nob">
             </td>
           </tr>
 
           <tr class="table-heading">
-            <!-- Site & Build Name for non-grouped coverage -->
-            <th ng-if="cdash.coverages.length > 0" align="center" width="20%" style="cursor: pointer" ng-click="updateOrderByFields(sortCoverage, 'site', $event)">
+            <th ng-if="cdash.childview != 1" align="center" width="20%" style="cursor: pointer" ng-click="updateOrderByFields(sortCoverage, 'site', $event)">
               Site
               <span class="glyphicon" ng-class="sortCoverage.orderByFields.indexOf('-site') != -1 ? 'glyphicon-chevron-down' : (sortCoverage.orderByFields.indexOf('site') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
             </th>
 
-            <th ng-if="cdash.coverages.length > 0" align="center" width="25%" style="cursor: pointer" ng-click="updateOrderByFields(sortCoverage, 'buildname', $event)">
+            <th ng-if="cdash.childview != 1" align="center" width="25%" style="cursor: pointer" ng-click="updateOrderByFields(sortCoverage, 'buildname', $event)">
               Build Name
               <span class="glyphicon" ng-class="sortCoverage.orderByFields.indexOf('-buildname') != -1 ? 'glyphicon-chevron-down' : (sortCoverage.orderByFields.indexOf('buildname') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
             </th>
 
-            <!-- SubProject name for grouped coverage -->
-            <th ng-if="cdash.coveragegroups.length > 0" align="center" width="20%" style="cursor: pointer" ng-click="updateOrderByFields(sortCoverage,'label', $event)">
+            <th ng-if="cdash.childview == 1" align="center" width="20%" style="cursor: pointer" ng-click="updateOrderByFields(sortCoverage,'label', $event)">
               SubProject
               <span class="glyphicon" ng-class="sortCoverage.orderByFields.indexOf('-label') != -1 ? 'glyphicon-chevron-down' : (sortCoverage.orderByFields.indexOf('label') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
             </th>
@@ -406,12 +404,16 @@
         <!-- Ungrouped coverage -->
         <tbody ng-if="!cdash.coveragegroups || cdash.coveragegroups.length == 0" id="coveragebody">
           <tr class="child_row" ng-repeat="coverage in cdash.coverages |orderBy:sortCoverage.orderByFields" ng-class-odd="'odd'" ng-class-even="'even'">
-            <td align="left" class="paddt">
+            <td ng-if="cdash.childview != 1" align="left" class="paddt">
               {{coverage.site}}
             </td>
 
-            <td align="left" class="paddt">
+            <td ng-if="cdash.childview != 1" align="left" class="paddt">
               {{coverage.buildname}}
+            </td>
+
+            <td ng-if="cdash.childview == 1" align="left" class="paddt">
+              {{coverage.label}}
             </td>
 
             <td align="center" ng-class="{'normal': coverage.percentage >= cdash.thresholdgreen, 'warning': coverage.percentage < cdash.thresholdgreen && coverage.percentage >= cdash.thresholdyellow, 'error': coverage.percentage < cdash.thresholdyellow}">
