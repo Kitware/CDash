@@ -14,14 +14,14 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include(dirname(__DIR__) . "/config/config.php");
-require_once("include/pdo.php");
-include('public/login.php');
-include("include/version.php");
+include dirname(__DIR__) . "/config/config.php";
+require_once "include/pdo.php";
+include 'public/login.php';
+include "include/version.php";
 
 if ($session_OK) {
-    include_once('include/common.php');
-    include_once("include/ctestparser.php");
+    include_once 'include/common.php';
+    include_once "include/ctestparser.php";
 
     set_time_limit(0);
 

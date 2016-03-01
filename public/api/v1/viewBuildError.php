@@ -15,13 +15,13 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include(dirname(dirname(dirname(__DIR__))) . "/config/config.php");
-require_once("include/pdo.php");
-include_once("include/common.php");
-include('public/login.php');
-include_once("include/repository.php");
-include("include/version.php");
-require_once('models/build.php');
+include dirname(dirname(dirname(__DIR__))) . "/config/config.php";
+require_once "include/pdo.php";
+include_once "include/common.php";
+include 'public/login.php';
+include_once "include/repository.php";
+include "include/version.php";
+require_once 'models/build.php';
 
 @$buildid = $_GET["buildid"];
 if ($buildid != null) {

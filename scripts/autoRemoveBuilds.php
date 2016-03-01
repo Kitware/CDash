@@ -14,13 +14,13 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include(dirname(__DIR__) . "/config/config.php");
-require_once("include/pdo.php");
-require_once("include/autoremove.php");
+include dirname(__DIR__) . "/config/config.php";
+require_once "include/pdo.php";
+require_once "include/autoremove.php";
 
 if ($argc != 2) {
-    print "Usage: php $argv[0] <project_name>\n";
-    print "Or:    php $argv[0] all\n";
+    echo "Usage: php $argv[0] <project_name>\n";
+    echo "Or:    php $argv[0] all\n";
     return -1;
 }
 
@@ -29,7 +29,7 @@ pdo_select_db("$CDASH_DB_NAME", $db);
 set_time_limit(0);
 
 $projectname = $argv[1];
-print "removing builds for $projectname \n";
+echo "removing builds for $projectname \n";
 $sql = " WHERE name='" . $projectname . "'";
 if ($projectname == "all") {
     $sql = "";

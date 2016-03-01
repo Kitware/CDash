@@ -48,7 +48,6 @@ class buildinformation
         }
     }
 
-
     /** Save the site information */
     public function Save()
     {

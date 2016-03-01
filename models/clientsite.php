@@ -275,7 +275,6 @@ class clientsite
         return $row['0'];
     }
 
-
     /** Save a site */
     public function Save()
     {

@@ -14,9 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once("include/common.php");
-require_once("include/do_submit.php");
-
+require_once "include/common.php";
+require_once "include/do_submit.php";
 
 // Try to open the file and process it (call "do_submit" on it)
 //

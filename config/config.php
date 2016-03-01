@@ -211,8 +211,8 @@ $CDASH_USE_PERSISTENT_MYSQL_CONNECTION = false;
 // mentioned by a newly uploaded Project.xml
 $CDASH_DELETE_OLD_SUBPROJECTS = true;
 
-/** DO NOT EDIT AFTER THIS LINE */
+/* DO NOT EDIT AFTER THIS LINE */
 $localConfig = dirname(__FILE__) . '/config.local.php';
 if ((strpos(__FILE__, 'config.local.php') === false) && file_exists($localConfig)) {
-    include($localConfig);
+    include $localConfig;
 }

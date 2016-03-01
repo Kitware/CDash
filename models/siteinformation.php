@@ -53,7 +53,6 @@ class siteinformation
         $this->SiteId = 0;
     }
 
-
     public function SetValue($tag, $value)
     {
         switch ($tag) {

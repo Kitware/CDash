@@ -15,10 +15,10 @@
 =========================================================================*/
 
 require_once 'xml_handlers/abstract_handler.php';
-require_once('models/build.php');
-require_once('models/label.php');
-require_once('models/site.php');
-require_once('models/dynamicanalysis.php');
+require_once 'models/build.php';
+require_once 'models/label.php';
+require_once 'models/site.php';
+require_once 'models/dynamicanalysis.php';
 
 class DynamicAnalysisHandler extends AbstractHandler
 {
@@ -38,7 +38,6 @@ class DynamicAnalysisHandler extends AbstractHandler
         $this->Build = new Build();
         $this->Site = new Site();
     }
-
 
     /** Start element */
     public function startElement($parser, $name, $attributes)
@@ -87,7 +86,6 @@ class DynamicAnalysisHandler extends AbstractHandler
             $this->DynamicAnalysis->LogEncoding = isset($attributes['ENCODING']) ? $attributes['ENCODING'] : '';
         }
     }
-
 
     /** Function endElement */
     public function endElement($parser, $name)
@@ -142,7 +140,6 @@ class DynamicAnalysisHandler extends AbstractHandler
             }
         }
     }
-
 
     /** Function Text */
     public function text($parser, $data)

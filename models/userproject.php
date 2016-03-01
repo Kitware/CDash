@@ -179,7 +179,6 @@ class userproject
         return false;
     }
 
-
     /** Fill in the information given a projectid and a repository credential.
      *  This function expects the emailtype>0 */
     public function FillFromRepositoryCredential()

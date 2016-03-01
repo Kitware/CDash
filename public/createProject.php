@@ -14,14 +14,14 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include(dirname(__DIR__) . "/config/config.php");
-require_once("include/pdo.php");
-include('public/login.php');
-include_once('include/common.php');
-include("include/version.php");
-include("models/buildgroup.php");
-include("models/project.php");
-include("models/user.php");
+include dirname(__DIR__) . "/config/config.php";
+require_once "include/pdo.php";
+include 'public/login.php';
+include_once 'include/common.php';
+include "include/version.php";
+include "models/buildgroup.php";
+include "models/project.php";
+include "models/user.php";
 
 if ($session_OK) {
     @$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
@@ -94,7 +94,6 @@ if ($session_OK) {
         $xml .= add_XML_value("edit", "0");
     }
 
-
     /** Strip the HTTP */
     function stripHTTP($url)
     {
@@ -104,7 +103,6 @@ if ($session_OK) {
         }
         return $url;
     }
-
 
 // If we should create the tables
     @$Submit = $_POST["Submit"];
@@ -157,7 +155,7 @@ if ($session_OK) {
             @$Project->AutoremoveMaxBuilds = stripslashes_if_gpc_magic_quotes($_POST["autoremoveMaxBuilds"]);
             $Project->Public = $Public;
 
-            /** Calculate the upload quota */
+            /* Calculate the upload quota */
             if (isset($_POST['uploadQuota'])) {
                 $uploadQuota = $_POST['uploadQuota'];
             } else {
@@ -168,7 +166,7 @@ if ($session_OK) {
                 $Project->UploadQuota = floor(min($uploadQuota, $CDASH_MAX_UPLOAD_QUOTA) * 1024 * 1024 * 1024);
             }
 
-            /** If we are managing clients */
+            /* If we are managing clients */
             if ($CDASH_MANAGE_CLIENTS) {
                 @$Project->CTestTemplateScript = stripslashes_if_gpc_magic_quotes($_POST["ctestTemplateScript"]);
             }
@@ -242,7 +240,7 @@ if ($session_OK) {
             // Add the repositories
             $Project->AddRepositories($CVSRepositories, $CVSUsernames, $CVSPasswords, $CVSBranches);
 
-            /** Add the logo if any */
+            /* Add the logo if any */
             if (isset($_FILES['logo']) && strlen($_FILES['logo']['tmp_name']) > 0) {
                 $handle = fopen($_FILES['logo']['tmp_name'], "r");
                 $contents = 0;
@@ -274,7 +272,6 @@ if ($session_OK) {
                 ",'" . $spambuildname . "','" . $spamsitename . "','" . $spamip . "')");
         }
     }
-
 
 // If we should remove a spam filter
     @$RemoveSpamFilter = $_POST["RemoveSpamFilter"];
@@ -335,7 +332,7 @@ if ($session_OK) {
         @$Project->AutoremoveTimeframe = stripslashes_if_gpc_magic_quotes($_POST["autoremoveTimeframe"]);
         @$Project->AutoremoveMaxBuilds = stripslashes_if_gpc_magic_quotes($_POST["autoremoveMaxBuilds"]);
 
-        /** Calculate the upload quota */
+        /* Calculate the upload quota */
         if (isset($_POST['uploadQuota'])) {
             $uploadQuota = $_POST['uploadQuota'];
         } else {
@@ -345,7 +342,7 @@ if ($session_OK) {
             $Project->UploadQuota = floor(min($uploadQuota, $CDASH_MAX_UPLOAD_QUOTA) * 1024 * 1024 * 1024);
         }
 
-        /** If we are managing clients */
+        /* If we are managing clients */
         if ($CDASH_MANAGE_CLIENTS) {
             $Project->CTestTemplateScript = stripslashes_if_gpc_magic_quotes($_POST["ctestTemplateScript"]);
         }
@@ -463,7 +460,6 @@ if ($session_OK) {
             $nRegisteredRepositories++;
             $nRepositories++;
         }
-
 
         // If we should add another repository
         if ($AddRepository) {

@@ -14,8 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once("include/log.php");
-
+require_once "include/log.php";
 
 //
 // ATTENTION CDash devs:
@@ -28,7 +27,6 @@ require_once("include/log.php");
 // into the database, and needs to call pdocore.php functions
 // to do it.
 //
-
 
 // pdo_single_row_query returns a single row. Useful for SELECT
 // queries that are expected to return 0 or 1 rows.
@@ -56,7 +54,6 @@ function pdo_single_row_query($qry)
     return $row;
 }
 
-
 // pdo_all_rows_query returns all rows. Useful for SELECT
 // queries that return any number of rows. Only use
 // this one on queries expected to return small result
@@ -79,7 +76,6 @@ function pdo_all_rows_query($qry)
     return $all_rows;
 }
 
-
 // pdo_get_field_value executes the given query, expected to return 0 rows
 // or 1 row. If it gets a row, it retrieves the value of the named field
 // and returns it. Otherwise, it returns the passed in default value.
@@ -96,11 +92,10 @@ function pdo_get_field_value($qry, $fieldname, $default)
     return $f;
 }
 
-
 // pdo_query_and_log_if_failed executes the given query, could be any
 // type of query, and logs an error if there was one.
 //
-// Returns TRUE on success, FALSE on error.
+// Returns true on success, false on error.
 //
 function pdo_query_and_log_if_failed($qry, $caller)
 {
@@ -123,22 +118,20 @@ function pdo_query_and_log_if_failed($qry, $caller)
     return true;
 }
 
-
 // pdo_insert_query executes the given query, expected to be an INSERT
 // query, and logs an error if there was one.
 //
-// Returns TRUE on success, FALSE on error.
+// Returns true on success, false on error.
 //
 function pdo_insert_query($qry)
 {
     return pdo_query_and_log_if_failed($qry, 'pdo_insert_query');
 }
 
-
 // pdo_delete_query executes the given query, expected to be a DELETE
 // query, and logs an error if there was one.
 //
-// Returns TRUE on success, FALSE on error.
+// Returns true on success, false on error.
 //
 function pdo_delete_query($qry)
 {

@@ -15,14 +15,14 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include(dirname(dirname(dirname(__DIR__))) . "/config/config.php");
-require_once('include/pdo.php');
-include_once('include/common.php');
-include('public/login.php');
-include('include/version.php');
-include_once('models/project.php');
-include_once('models/subproject.php');
-include_once('models/user.php');
+include dirname(dirname(dirname(__DIR__))) . "/config/config.php";
+require_once 'include/pdo.php';
+include_once 'include/common.php';
+include 'public/login.php';
+include 'include/version.php';
+include_once 'models/project.php';
+include_once 'models/subproject.php';
+include_once 'models/user.php';
 
 $start = microtime_float();
 
@@ -48,7 +48,6 @@ if (!isset($userid) || !is_numeric($userid)) {
     echo json_encode($response);
     return;
 }
-
 
 // List the available projects that this user has admin rights to.
 

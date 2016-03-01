@@ -23,11 +23,11 @@ if (class_exists('XsltProcessor') == false) {
     return;
 }
 
-include(dirname(__DIR__) . "/config/config.php");
-require_once("include/pdo.php");
-require_once("include/common.php");
-require_once("include/login_functions.php");
-require_once("include/version.php");
+include dirname(__DIR__) . "/config/config.php";
+require_once "include/pdo.php";
+require_once "include/common.php";
+require_once "include/login_functions.php";
+require_once "include/version.php";
 
 if ($CDASH_PRODUCTION_MODE) {
     echo "CDash is in production mode. Install cannot be accessed. Change the variable in your config.php if you want to access the installation.";
@@ -110,7 +110,6 @@ if (true === @pdo_select_db("$CDASH_DB_NAME", $db)
     $xml .= "<database>0</database>";
     $xml .= "<dashboard_timeframe>24</dashboard_timeframe>";
 
-
     // If we should create the tables
     @$Submit = $_POST["Submit"];
     if ($Submit) {
@@ -163,7 +162,6 @@ if (true === @pdo_select_db("$CDASH_DB_NAME", $db)
                     $db_created = false;
                 }
             }
-
 
             /** process an SQL file */
             function _processSQLfile($filename)
@@ -256,7 +254,6 @@ if (true === @pdo_select_db("$CDASH_DB_NAME", $db)
         }
     }
 }
-
 
 $xml .= "</cdash>";
 

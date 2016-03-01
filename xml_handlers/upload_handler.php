@@ -14,15 +14,14 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once('config/config.php');
-require_once('xml_handlers/abstract_handler.php');
-require_once('models/build.php');
-require_once('models/uploadfile.php');
-require_once('models/site.php');
-require_once('models/project.php');
+require_once 'config/config.php';
+require_once 'xml_handlers/abstract_handler.php';
+require_once 'models/build.php';
+require_once 'models/uploadfile.php';
+require_once 'models/site.php';
+require_once 'models/project.php';
 
 /**
- *
  * For each uploaded file the following steps occur:
  *  1) Temporary file 'tmpXXX-base64' is created (See startElement())
  *  2) Chunk of base64 data are written to that file  (See text())
@@ -35,7 +34,6 @@ require_once('models/project.php');
  * Ideally, CDash and CTest should first exchange information to make sure the file hasn't been uploaded already.
  *
  * As a first step, CTest could provide the SHA1 so that extra processing are avoided.
- *
  */
 class UploadHandler extends AbstractHandler
 {
@@ -150,7 +148,6 @@ class UploadHandler extends AbstractHandler
             }
         }
     }
-
 
     /** Function endElement */
     public function endElement($parser, $name)
@@ -312,7 +309,6 @@ class UploadHandler extends AbstractHandler
             $this->UploadError = false;
         }
     }
-
 
     /** Function Text */
     public function text($parser, $data)

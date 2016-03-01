@@ -2,7 +2,6 @@
 /**
  *  Autorunner which runs all tests cases found in a file
  *  that includes this module.
- * @package    SimpleTest
  * @version    $Id$
  */
 
@@ -55,7 +54,7 @@ function run_local_tests()
             $loader->selectRunnableTests($candidates));
         return $suite->run(new DefaultReporter());
     } catch (Exception $stack_frame_fix) {
-        print $stack_frame_fix->getMessage();
+        echo $stack_frame_fix->getMessage();
         return false;
     }
 }
@@ -63,7 +62,7 @@ function run_local_tests()
 /**
  *    Checks the current test context to see if a test has
  *    ever been run.
- * @return boolean        True if tests have run.
+ * @return bool        True if tests have run.
  */
 function tests_have_run()
 {

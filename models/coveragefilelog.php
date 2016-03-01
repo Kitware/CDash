@@ -13,8 +13,8 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
-require_once('models/coveragefile.php');
-require_once('models/coveragesummary.php');
+require_once 'models/coveragefile.php';
+require_once 'models/coveragesummary.php';
 
 class coveragefilelog
 {
@@ -22,7 +22,6 @@ class coveragefilelog
     public $FileId;
     public $Lines;
     public $Branches;
-
 
     public function __construct()
     {

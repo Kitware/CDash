@@ -15,10 +15,10 @@
 =========================================================================*/
 
 require_once 'xml_handlers/abstract_handler.php';
-require_once('models/build.php');
-require_once('models/site.php');
-require_once('models/buildupdate.php');
-require_once('models/feed.php');
+require_once 'models/build.php';
+require_once 'models/site.php';
+require_once 'models/buildupdate.php';
+require_once 'models/feed.php';
 
 /** Write the updates in one block
  *  In case of a lot of updates this might take up some memory */

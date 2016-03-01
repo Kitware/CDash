@@ -4,8 +4,7 @@
 // Do not include this file directly; include cdash_test_case.php instead.
 // That file adds the root of the CDash source tree to the include path.
 //
-require_once("config/config.php");
-
+require_once "config/config.php";
 
 global $configure;
 $configure = array(
@@ -33,7 +32,6 @@ $db = array('host' => $CDASH_DB_HOST,
     'name' => $CDASH_DB_NAME,
     'type' => $CDASH_DB_TYPE);
 
-
 // The following heuristic is used to guess whether we are running inside the
 // web browser or via a php command line invocation...
 //
@@ -56,7 +54,6 @@ if (array_key_exists('SERVER_ADDR', $_SERVER) &&
     }
 }
 
-
 // Either:
 //  (1) Set $web_report to false and run the tests through the php command
 //      line tool:
@@ -70,7 +67,6 @@ if (array_key_exists('SERVER_ADDR', $_SERVER) &&
 //
 global $web_report;
 $web_report = $inBrowser;
-
 
 // xampp on Windows XP yields 'WINNT' in the predefined PHP_OS variable
 // (presumably the same for earlier revs of Windows NT family, and also
@@ -87,9 +83,8 @@ if (PHP_OS == 'WINNT') {
     $isMacOSX = true;
 }
 
-
 // DO NOT EDIT AFTER THIS LINE
 $localConfig = dirname(__FILE__) . '/config.test.local.php';
 if (file_exists($localConfig)) {
-    include($localConfig);
+    include $localConfig;
 }

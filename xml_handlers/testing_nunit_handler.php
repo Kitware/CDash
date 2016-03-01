@@ -15,11 +15,11 @@
 =========================================================================*/
 
 require_once 'xml_handlers/abstract_handler.php';
-require_once('models/build.php');
-require_once('models/label.php');
-require_once('models/site.php');
-require_once('models/test.php');
-require_once('models/image.php');
+require_once 'models/build.php';
+require_once 'models/label.php';
+require_once 'models/site.php';
+require_once 'models/test.php';
+require_once 'models/image.php';
 
 class TestingNUnitHandler extends AbstractHandler
 {
@@ -196,7 +196,6 @@ class TestingNUnitHandler extends AbstractHandler
             $this->BuildAdded = true;
         }
     }
-
 
     /** End Element */
     public function endElement($parser, $name)

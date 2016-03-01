@@ -1,25 +1,21 @@
 <?php
 /**
  *  Base include file for SimpleTest
- * @package    SimpleTest
- * @subpackage WebTester
  * @version    $Id$
  */
 
 /**#@+
  *   include other SimpleTest class files
  */
-require_once(dirname(__FILE__) . '/http.php');
-require_once(dirname(__FILE__) . '/php_parser.php');
-require_once(dirname(__FILE__) . '/tag.php');
-require_once(dirname(__FILE__) . '/form.php');
-require_once(dirname(__FILE__) . '/selector.php');
+require_once dirname(__FILE__) . '/http.php';
+require_once dirname(__FILE__) . '/php_parser.php';
+require_once dirname(__FILE__) . '/tag.php';
+require_once dirname(__FILE__) . '/form.php';
+require_once dirname(__FILE__) . '/selector.php';
 /**#@-*/
 
 /**
  *    A wrapper for a web page.
- * @package SimpleTest
- * @subpackage WebTester
  */
 class SimplePage
 {
@@ -42,7 +38,6 @@ class SimplePage
     /**
      *    Parses a page ready to access it's contents.
      * @param SimpleHttpResponse $response Result of HTTP fetch.
-     * @access public
      */
     public function __construct($response = false)
     {
@@ -56,7 +51,6 @@ class SimplePage
     /**
      *    Extracts all of the response information.
      * @param SimpleHttpResponse $response Response being parsed.
-     * @access private
      */
     protected function extractResponse($response)
     {
@@ -71,7 +65,6 @@ class SimplePage
 
     /**
      *    Sets up a missing response.
-     * @access private
      */
     protected function noResponse()
     {
@@ -87,7 +80,6 @@ class SimplePage
     /**
      *    Original request as bytes sent down the wire.
      * @return mixed              Sent content.
-     * @access public
      */
     public function getRequest()
     {
@@ -97,7 +89,6 @@ class SimplePage
     /**
      *    Accessor for raw text of page.
      * @return string        Raw unparsed content.
-     * @access public
      */
     public function getRaw()
     {
@@ -108,7 +99,6 @@ class SimplePage
      *    Accessor for plain text of page as a text browser
      *    would see it.
      * @return string        Plain text of page.
-     * @access public
      */
     public function getText()
     {
@@ -121,7 +111,6 @@ class SimplePage
     /**
      *    Accessor for raw headers of page.
      * @return string       Header block as text.
-     * @access public
      */
     public function getHeaders()
     {
@@ -134,7 +123,6 @@ class SimplePage
     /**
      *    Original request method.
      * @return string        GET, POST or HEAD.
-     * @access public
      */
     public function getMethod()
     {
@@ -144,7 +132,6 @@ class SimplePage
     /**
      *    Original resource name.
      * @return SimpleUrl        Current url.
-     * @access public
      */
     public function getUrl()
     {
@@ -154,7 +141,6 @@ class SimplePage
     /**
      *    Base URL if set via BASE tag page url otherwise
      * @return SimpleUrl        Base url.
-     * @access public
      */
     public function getBaseUrl()
     {
@@ -164,7 +150,6 @@ class SimplePage
     /**
      *    Original request data.
      * @return mixed              Sent content.
-     * @access public
      */
     public function getRequestData()
     {
@@ -174,7 +159,6 @@ class SimplePage
     /**
      *    Accessor for last error.
      * @return string        Error from last response.
-     * @access public
      */
     public function getTransportError()
     {
@@ -184,7 +168,6 @@ class SimplePage
     /**
      *    Accessor for current MIME type.
      * @return string    MIME type as string; e.g. 'text/html'
-     * @access public
      */
     public function getMimeType()
     {
@@ -196,8 +179,7 @@ class SimplePage
 
     /**
      *    Accessor for HTTP response code.
-     * @return integer    HTTP response code received.
-     * @access public
+     * @return int    HTTP response code received.
      */
     public function getResponseCode()
     {
@@ -211,7 +193,6 @@ class SimplePage
      *    Accessor for last Authentication type. Only valid
      *    straight after a challenge (401).
      * @return string    Description of challenge type.
-     * @access public
      */
     public function getAuthentication()
     {
@@ -225,7 +206,6 @@ class SimplePage
      *    Accessor for last Authentication realm. Only valid
      *    straight after a challenge (401).
      * @return string    Name of security realm.
-     * @access public
      */
     public function getRealm()
     {
@@ -239,7 +219,6 @@ class SimplePage
      *    Accessor for current frame focus. Will be
      *    false as no frames.
      * @return array    Always empty.
-     * @access public
      */
     public function getFrameFocus()
     {
@@ -248,9 +227,8 @@ class SimplePage
 
     /**
      *    Sets the focus by index. The integer index starts from 1.
-     * @param integer $choice Chosen frame.
-     * @return boolean           Always false.
-     * @access public
+     * @param int $choice Chosen frame.
+     * @return bool           Always false.
      */
     public function setFrameFocusByIndex($choice)
     {
@@ -260,8 +238,7 @@ class SimplePage
     /**
      *    Sets the focus by name. Always fails for a leaf page.
      * @param string $name Chosen frame.
-     * @return boolean        False as no frames.
-     * @access public
+     * @return bool        False as no frames.
      */
     public function setFrameFocus($name)
     {
@@ -270,7 +247,6 @@ class SimplePage
 
     /**
      *    Clears the frame focus. Does nothing for a leaf page.
-     * @access public
      */
     public function clearFrameFocus()
     {
@@ -287,8 +263,7 @@ class SimplePage
     /**
      *    Test to see if link is an absolute one.
      * @param string $url Url to test.
-     * @return boolean        True if absolute.
-     * @access protected
+     * @return bool        True if absolute.
      */
     protected function linkIsAbsolute($url)
     {
@@ -316,8 +291,7 @@ class SimplePage
 
     /**
      *    Test for the presence of a frameset.
-     * @return boolean        True if frameset.
-     * @access public
+     * @return bool        True if frameset.
      */
     public function hasFrames()
     {
@@ -331,7 +305,6 @@ class SimplePage
      *                              otherwise a hash of frame URLs.
      *                              The key is either a numerical
      *                              base one index or the name attribute.
-     * @access public
      */
     public function getFrameset()
     {
@@ -350,7 +323,6 @@ class SimplePage
     /**
      *    Fetches a list of loaded frames.
      * @return array/string    Just the URL for a single page.
-     * @access public
      */
     public function getFrames()
     {
@@ -362,7 +334,6 @@ class SimplePage
      *    Accessor for a list of all links.
      * @return array   List of urls with scheme of
      *                    http or https and hostname.
-     * @access public
      */
     public function getUrls()
     {
@@ -379,7 +350,6 @@ class SimplePage
      *    regardess of whitespace issues and case.
      * @param string $label Text of link.
      * @return array           List of links with that label.
-     * @access public
      */
     public function getUrlsByLabel($label)
     {
@@ -396,7 +366,6 @@ class SimplePage
      *    Accessor for a URL by the id attribute.
      * @param string $id Id attribute of link.
      * @return SimpleUrl       URL with that id of false if none.
-     * @access public
      */
     public function getUrlById($id)
     {
@@ -412,7 +381,6 @@ class SimplePage
      *    Converts a link tag into a target URL.
      * @param SimpleAnchor $link Parsed link.
      * @return SimpleUrl            URL with frame target if any.
-     * @access private
      */
     protected function getUrlFromLink($link)
     {
@@ -428,7 +396,6 @@ class SimplePage
      *    URLs.
      * @param SimpleUrl $url Relative URL.
      * @return SimpleUrl            Absolute URL.
-     * @access public
      */
     public function expandUrl($url)
     {
@@ -460,7 +427,6 @@ class SimplePage
     /**
      *    Accessor for parsed title.
      * @return string     Title or false if no title is present.
-     * @access public
      */
     public function getTitle()
     {
@@ -476,7 +442,6 @@ class SimplePage
      * @param SimpleSelector $selector Button finder.
      * @return SimpleForm                    Form object containing
      *                                          the button.
-     * @access public
      */
     public function getFormBySubmit($selector)
     {
@@ -485,7 +450,7 @@ class SimplePage
                 return $this->forms[$i];
             }
         }
-        return null;
+        return;
     }
 
     /**
@@ -494,7 +459,6 @@ class SimplePage
      * @param SimpleSelector $selector Image finder.
      * @return SimpleForm               Form object containing
      *                                     the image.
-     * @access public
      */
     public function getFormByImage($selector)
     {
@@ -503,7 +467,7 @@ class SimplePage
                 return $this->forms[$i];
             }
         }
-        return null;
+        return;
     }
 
     /**
@@ -512,7 +476,6 @@ class SimplePage
      *    of the HTML code.
      * @param string $id Form label.
      * @return SimpleForm    Form object containing the matching ID.
-     * @access public
      */
     public function getFormById($id)
     {
@@ -521,7 +484,7 @@ class SimplePage
                 return $this->forms[$i];
             }
         }
-        return null;
+        return;
     }
 
     /**
@@ -529,8 +492,7 @@ class SimplePage
      *    available.
      * @param SimpleSelector $selector Field finder.
      * @param string $value Value to set field to.
-     * @return boolean                    True if value is valid.
-     * @access public
+     * @return bool                    True if value is valid.
      */
     public function setField($selector, $value, $position = false)
     {
@@ -549,7 +511,6 @@ class SimplePage
      * @return string/boolean             A string if the field is
      *                                       present, false if unchecked
      *                                       and null if missing.
-     * @access public
      */
     public function getField($selector)
     {
@@ -559,7 +520,7 @@ class SimplePage
                 return $value;
             }
         }
-        return null;
+        return;
     }
 
     /**
@@ -568,7 +529,6 @@ class SimplePage
      *    Entities are converted to their visible representation.
      * @param string $html HTML to convert.
      * @return string             Plain text.
-     * @access public
      */
     public static function normalise($html)
     {

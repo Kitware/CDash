@@ -14,10 +14,10 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once('models/build.php');
-require_once('models/coverage.php');
-require_once('config/config.php');
-require_once('models/label.php');
+require_once 'models/build.php';
+require_once 'models/coverage.php';
+require_once 'config/config.php';
+require_once 'models/label.php';
 
 class GCovTarHandler
 {
@@ -132,7 +132,6 @@ class GCovTarHandler
         DeleteDirectory($dirName);
         return true;
     }
-
 
     /**
      * Parse an individual .gcov file.
@@ -295,7 +294,6 @@ class GCovTarHandler
                             $fallthroughBranches += 1;
                         }
                     }
-
 
                     $file->next();
                     $gcovLine = $file->current();

@@ -14,19 +14,19 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include(dirname(__DIR__) . "/config/config.php");
-require_once("include/pdo.php");
-include('public/login.php');
+include dirname(__DIR__) . "/config/config.php";
+require_once "include/pdo.php";
+include 'public/login.php';
 
-include_once('include/common.php');
+include_once 'include/common.php';
 redirect_to_https();
 
-require_once('include/version.php');
-require_once("models/project.php");
-require_once("models/user.php");
-require_once("models/label.php");
-require_once("models/labelemail.php");
-include_once("models/userproject.php");
+require_once 'include/version.php';
+require_once "models/project.php";
+require_once "models/user.php";
+require_once "models/label.php";
+require_once "models/labelemail.php";
+include_once "models/userproject.php";
 
 if ($session_OK) {
     $userid = $_SESSION['cdash']['loginid'];
@@ -232,7 +232,6 @@ if ($session_OK) {
         }
         header('location: user.php?note=subscribedtoproject');
     }
-
 
     // XML
     // Show the current credentials for the user

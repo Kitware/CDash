@@ -19,13 +19,13 @@
 * was run.  This includes test output and image comparison information
 */
 $noforcelogin = 1;
-include(dirname(dirname(dirname(__DIR__))) . "/config/config.php");
-require_once("include/pdo.php");
-include('public/login.php');
-include_once("include/common.php");
-include_once("include/repository.php");
-include('include/version.php');
-require_once('models/build.php');
+include dirname(dirname(dirname(__DIR__))) . "/config/config.php";
+require_once "include/pdo.php";
+include 'public/login.php';
+include_once "include/common.php";
+include_once "include/repository.php";
+include 'include/version.php';
+require_once 'models/build.php';
 
 $start = microtime_float();
 $response = begin_JSON_response();

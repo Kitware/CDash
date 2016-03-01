@@ -14,11 +14,11 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once(dirname(dirname(__DIR__)) . "/config/config.php");
-require_once("include/common.php");
-require_once("include/do_submit.php");
-require_once("include/fnProcessFile.php");
-require_once("include/pdo.php");
+require_once dirname(dirname(__DIR__)) . "/config/config.php";
+require_once "include/common.php";
+require_once "include/do_submit.php";
+require_once "include/fnProcessFile.php";
+require_once "include/pdo.php";
 
 ob_start();
 set_time_limit(0);

@@ -15,8 +15,8 @@
 =========================================================================*/
 
 require_once 'xml_handlers/abstract_handler.php';
-require_once('models/coverage.php');
-require_once('models/label.php');
+require_once 'models/coverage.php';
+require_once 'models/label.php';
 
 class CoverageHandler extends AbstractHandler
 {
@@ -28,7 +28,6 @@ class CoverageHandler extends AbstractHandler
     private $CoverageSummary;
     private $Label;
 
-
     /** Constructor */
     public function __construct($projectID, $scheduleID)
     {
@@ -37,7 +36,6 @@ class CoverageHandler extends AbstractHandler
         $this->Site = new Site();
         $this->CoverageSummary = new CoverageSummary();
     }
-
 
     /** startElement */
     public function startElement($parser, $name, $attributes)
@@ -84,7 +82,6 @@ class CoverageHandler extends AbstractHandler
         }
     } // start element
 
-
     /** End element */
     public function endElement($parser, $name)
     {
@@ -128,7 +125,6 @@ class CoverageHandler extends AbstractHandler
             }
         }
     }
-
 
     /** Text function */
     public function text($parser, $data)

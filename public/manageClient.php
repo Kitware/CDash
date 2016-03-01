@@ -14,23 +14,23 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once(dirname(__DIR__) . "/config/config.php");
-require_once("include/pdo.php");
-include('public/login.php');
-include_once('include/common.php');
-include("include/version.php");
+require_once dirname(__DIR__) . "/config/config.php";
+require_once "include/pdo.php";
+include 'public/login.php';
+include_once 'include/common.php';
+include "include/version.php";
 
-include_once('models/project.php');
-include_once("models/clientsite.php");
-include_once("models/clientjobschedule.php");
-include_once("models/clientos.php");
-include_once("models/clientcmake.php");
-include_once("models/clientcompiler.php");
-include_once("models/clientlibrary.php");
-require_once("models/project.php");
-require_once("models/constants.php");
-require_once("models/user.php");
-require_once("models/userproject.php");
+include_once 'models/project.php';
+include_once "models/clientsite.php";
+include_once "models/clientjobschedule.php";
+include_once "models/clientos.php";
+include_once "models/clientcmake.php";
+include_once "models/clientcompiler.php";
+include_once "models/clientlibrary.php";
+require_once "models/project.php";
+require_once "models/constants.php";
+require_once "models/user.php";
+require_once "models/userproject.php";
 
 if ($session_OK) {
     if (!$CDASH_MANAGE_CLIENTS) {
@@ -40,7 +40,7 @@ if ($session_OK) {
 
     $userid = $_SESSION['cdash']['loginid'];
 
-    /** If we should remove a job */
+    /* If we should remove a job */
     if (isset($_GET['removeschedule'])) {
         $User = new User();
         $User->Id = $userid;

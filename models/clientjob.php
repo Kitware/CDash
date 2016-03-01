@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include_once('models/constants.php');
+include_once 'models/constants.php';
 
 class clientjob
 {

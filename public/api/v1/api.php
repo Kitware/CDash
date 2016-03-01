@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include(dirname(dirname(dirname(__DIR__))) . "/config/config.php");
+include dirname(dirname(dirname(__DIR__))) . "/config/config.php";
 
 class CDashAPI
 {

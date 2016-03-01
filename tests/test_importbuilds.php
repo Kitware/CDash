@@ -3,12 +3,12 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__) . '/cdash_test_case.php');
+require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-require_once('include/pdo.php');
-require_once('models/image.php');
-require_once('models/testimage.php');
-require_once('tests/kwtest/kw_unlink.php');
+require_once 'include/pdo.php';
+require_once 'models/image.php';
+require_once 'models/testimage.php';
+require_once 'tests/kwtest/kw_unlink.php';
 
 class ImportBuildsTestCase extends KWWebTestCase
 {
@@ -35,7 +35,7 @@ class ImportBuildsTestCase extends KWWebTestCase
 
         $argc = 1;
         ob_start();
-        include('public/importBuilds.php');
+        include 'public/importBuilds.php';
         $output = ob_get_contents();
         ob_end_clean();
         if (strpos($output, "Usage: php") === false) {
@@ -45,7 +45,7 @@ class ImportBuildsTestCase extends KWWebTestCase
 
         $argc = 2;
         ob_start();
-        include('public/importBuilds.php');
+        include 'public/importBuilds.php';
         $output = ob_get_contents();
         ob_end_clean();
         if (strpos($output, "Import backup complete. 3 files processed.") === false) {
@@ -54,7 +54,7 @@ class ImportBuildsTestCase extends KWWebTestCase
         }
 
         ob_start();
-        include('public/importBuilds.php');
+        include 'public/importBuilds.php';
         $output = ob_get_contents();
         ob_end_clean();
         if (strpos($output, "Import backup complete. 0 files processed.") === false) {

@@ -15,9 +15,9 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once(dirname(dirname(__DIR__)) . "/config/config.php");
-require_once("include/pdo.php");
-require_once("include/common.php");
+require_once dirname(dirname(__DIR__)) . "/config/config.php";
+require_once "include/pdo.php";
+require_once "include/common.php";
 
 $buildid = pdo_real_escape_numeric($_GET["buildid"]);
 if (!isset($buildid) || !is_numeric($buildid)) {
@@ -97,7 +97,6 @@ if ($testfailing) {
 
     $testfailingdays = round((strtotime($starttime) - $gmtdate) / (3600 * 24));
 } // end build failing
-
 
 ?>
 <table width="100%" border="0">

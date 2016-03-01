@@ -3,7 +3,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__) . '/cdash_test_case.php');
+require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 class ProjectInDbTestCase extends KWWebTestCase
 {
@@ -76,7 +76,6 @@ class ProjectInDbTestCase extends KWWebTestCase
             'emailcategory' => 126);
         $this->assertEqual($result[0], $expected);
     }
-
 
     public function createProjectTest4Db()
     {

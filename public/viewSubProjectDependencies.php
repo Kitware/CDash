@@ -15,13 +15,13 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include(dirname(__DIR__) . "/config/config.php");
-require_once("include/pdo.php");
-include('public/login.php');
-include_once("include/common.php");
-include("include/version.php");
-require_once("models/project.php");
-require_once("models/subproject.php");
+include dirname(__DIR__) . "/config/config.php";
+require_once "include/pdo.php";
+include 'public/login.php';
+include_once "include/common.php";
+include "include/version.php";
+require_once "models/project.php";
+require_once "models/subproject.php";
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME", $db);
@@ -42,7 +42,6 @@ if ($projectid == 0) {
     echo "Invalid project";
     return;
 }
-
 
 $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
 if (pdo_num_rows($project) > 0) {
@@ -90,7 +89,7 @@ if (empty($project_array["homeurl"])) {
     $xml .= "<home>" . $homeurl . "</home>";
 }
 if ($CDASH_USE_LOCAL_DIRECTORY && file_exists("local/models/proProject.php")) {
-    include_once("local/models/proProject.php");
+    include_once "local/models/proProject.php";
     $pro = new proProject;
     $pro->ProjectId = $projectid;
     $xml .= "<proedition>" . $pro->GetEdition(1) . "</proedition>";

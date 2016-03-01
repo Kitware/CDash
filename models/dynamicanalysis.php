@@ -14,8 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include_once('models/dynamicanalysisdefect.php');
-include_once('models/label.php');
+include_once 'models/dynamicanalysisdefect.php';
+include_once 'models/label.php';
 
 class dynamicanalysis
 {
@@ -39,7 +39,6 @@ class dynamicanalysis
         $this->Defects[] = $defect;
     }
 
-
     public function AddLabel($label)
     {
         $label->DynamicAnalysisId = $this->Id;
@@ -62,11 +61,10 @@ class dynamicanalysis
         return $error_array[0];
     }
 
-
     /** Remove all the dynamic analysis associated with a buildid */
     public function RemoveAll()
     {
-        include("config/config.php");
+        include "config/config.php";
 
         if (strlen($this->BuildId) == 0) {
             echo "DynamicAnalysis::RemoveAll BuildId not set";

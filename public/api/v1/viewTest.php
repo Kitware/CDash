@@ -15,13 +15,13 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include(dirname(dirname(dirname(__DIR__))) . "/config/config.php");
-require_once("include/pdo.php");
-include('public/login.php');
-include_once("include/common.php");
-include("include/version.php");
-require_once("include/filterdataFunctions.php");
-include_once("models/build.php");
+include dirname(dirname(dirname(__DIR__))) . "/config/config.php";
+require_once "include/pdo.php";
+include 'public/login.php';
+include_once "include/common.php";
+include "include/version.php";
+require_once "include/filterdataFunctions.php";
+include_once "models/build.php";
 
 @$buildid = $_GET["buildid"];
 if ($buildid != null) {
@@ -126,7 +126,6 @@ if (isset($_GET["onlypassed"])) {
     $display = "all";
 }
 
-
 $nightlytime = get_project_property($projectname, "nightlytime");
 $menu['back'] = "index.php?project=" . urlencode($projectname) . "&date=" . get_dashboard_date_from_build_starttime($starttime, $nightlytime);
 
@@ -219,7 +218,6 @@ $project = array();
 $project['showtesttime'] = $projectshowtesttime;
 $response['project'] = $project;
 
-
 $displaydetails = 1;
 $status = '';
 $order = 't.name';
@@ -290,7 +288,6 @@ $numFailed = 0;
 $numNotRun = 0;
 $numTimeFailed = 0;
 
-
 $columns = array();
 $getcolumnnumber = pdo_query("SELECT testmeasurement.name, COUNT(DISTINCT test.name) as xxx FROM test
 JOIN testmeasurement ON (test.id = testmeasurement.testid)
@@ -353,7 +350,6 @@ if ($columncount > 0) {
   ORDER BY test.id, testmeasurement.name
   ");
 }
-
 
 if (@$_GET['export'] == "csv") {
     // If user wants to export as CSV file
@@ -571,7 +567,6 @@ $response['columncount'] = $columncount;
 
 echo json_encode(cast_data_for_JSON($response));
 
-
 function get_test_history($testname, $previous_buildids)
 {
     $retval = array();
@@ -617,7 +612,6 @@ function get_test_history($testname, $previous_buildids)
     }
     return $retval;
 }
-
 
 function get_test_summary($testname, $projectid, $groupid, $begin, $end)
 {
@@ -673,7 +667,6 @@ function get_test_summary($testname, $projectid, $groupid, $begin, $end)
     return $retval;
 }
 
-
 function load_test_details()
 {
     // Parse input arguments.
@@ -726,7 +719,6 @@ function load_test_details()
                 $data_found = true;
             }
         }
-
 
         if ($data_found) {
             $tests_response[] = $test_response;

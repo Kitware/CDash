@@ -15,14 +15,14 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include(dirname(dirname(dirname(__DIR__))) . "/config/config.php");
-require_once('include/pdo.php');
-include_once('include/common.php');
-include('public/login.php');
-include('include/version.php');
-include_once('models/project.php');
-include_once('models/subproject.php');
-include_once('models/user.php');
+include dirname(dirname(dirname(__DIR__))) . "/config/config.php";
+require_once 'include/pdo.php';
+include_once 'include/common.php';
+include 'public/login.php';
+include 'include/version.php';
+include_once 'models/project.php';
+include_once 'models/subproject.php';
+include_once 'models/user.php';
 
 // Make sure we have a valid login.
 if (!$session_OK) {
@@ -142,7 +142,6 @@ function rest_get()
     echo json_encode(cast_data_for_JSON($response));
 }
 
-
 /* Handle DELETE requests */
 function rest_delete()
 {
@@ -173,7 +172,6 @@ function rest_delete()
         $SubProject->Delete();
     }
 }
-
 
 /* Handle POST requests */
 function rest_post()
@@ -229,7 +227,6 @@ function rest_post()
     }
 }
 
-
 /* Handle PUT requests */
 function rest_put()
 {
@@ -277,7 +274,6 @@ function rest_put()
     }
 }
 
-
 function get_subprojectid()
 {
     if (!isset($_GET['subprojectid'])) {
@@ -287,7 +283,6 @@ function get_subprojectid()
     $subprojectid = pdo_real_escape_numeric($_GET['subprojectid']);
     return $subprojectid;
 }
-
 
 function echo_error($msg)
 {

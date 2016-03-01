@@ -9,12 +9,12 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include(dirname(__DIR__) . "/config/config.php");
-require_once("include/pdo.php");
-include('public/login.php');
-include_once("include/common.php");
-include("include/version.php");
-require_once("models/project.php");
+include dirname(__DIR__) . "/config/config.php";
+require_once "include/pdo.php";
+include 'public/login.php';
+include_once "include/common.php";
+include "include/version.php";
+require_once "models/project.php";
 
 // handle required project argument
 @$projectname = $_GET["project"];
@@ -530,7 +530,6 @@ if (!isset($NoXSLGenerate)) {
     generate_XSLT($xml, "overview");
 }
 
-
 // Replace various characters that trip up Javascript with underscores.
 function sanitize_string($input_string)
 {
@@ -541,7 +540,6 @@ function sanitize_string($input_string)
     $retval = str_replace(")", "_", $retval);
     return $retval;
 }
-
 
 // Check if a given groupid belongs to one of our general overview groups.
 function get_build_group_name($id)
@@ -555,7 +553,6 @@ function get_build_group_name($id)
     return false;
 }
 
-
 // Check if a given groupid belongs to one of our static analysis groups.
 function get_static_group_name($id)
 {
@@ -567,7 +564,6 @@ function get_static_group_name($id)
     }
     return false;
 }
-
 
 // Convert a MySQL datetime into the number of days since the beginning of our
 // time range.
@@ -587,7 +583,6 @@ function get_day_index($datetime)
     return $day;
 }
 
-
 // Get most recent value for a given group & measurement.
 function get_current_value($group_name, $measurement)
 {
@@ -599,7 +594,6 @@ function get_current_value($group_name, $measurement)
     }
     return false;
 }
-
 
 // Get most recent dynamic analysis value for a given group & checker.
 function get_current_DA_value($group_name, $checker)
@@ -613,7 +607,6 @@ function get_current_DA_value($group_name, $checker)
     return "N/A";
 }
 
-
 // Get a Javascript-compatible date representing the $ith date of our
 // time range.
 function get_date_from_index($i)
@@ -626,7 +619,6 @@ function get_date_from_index($i)
         ($chart_end_timestamp + $chart_beginning_timestamp) / 2.0);
     return $chart_date;
 }
-
 
 // Get line chart data for configure/build/test metrics.
 function get_chart_data($group_name, $measurement)
@@ -646,7 +638,6 @@ function get_chart_data($group_name, $measurement)
     // JSON encode the chart data to make it easier to use on the client side.
     return json_encode($chart_data);
 }
-
 
 // Get line chart data for coverage
 function get_coverage_chart_data($build_group_name, $coverage_group_name)
@@ -668,7 +659,6 @@ function get_coverage_chart_data($build_group_name, $coverage_group_name)
     }
     return json_encode($chart_data);
 }
-
 
 // Get the current & previous coverage percentage value.
 // These are used by the bullet chart.
@@ -701,7 +691,6 @@ function get_recent_coverage_values($build_group_name, $coverage_group_name)
     // does not support leaving the "marker" off of the chart.
     return array($current_value, $current_value);
 }
-
 
 // Get line chart data for dynamic analysis
 function get_DA_chart_data($group_name, $checker)

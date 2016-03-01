@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include_once('models/label.php');
+include_once 'models/label.php';
 
 /** BuildFailure */
 class buildfailure
@@ -47,13 +47,11 @@ class buildfailure
         $this->Labels[] = $label;
     }
 
-
     // Add an argument to the buildfailure
     public function AddArgument($argument)
     {
         $this->Arguments[] = $argument;
     }
-
 
     public function InsertLabelAssociations($id)
     {

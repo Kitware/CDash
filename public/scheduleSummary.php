@@ -14,12 +14,12 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once("include/pdo.php");
-include_once('include/common.php');
-include("include/version.php");
+require_once "include/pdo.php";
+include_once 'include/common.php';
+include "include/version.php";
 
-include_once('models/project.php');
-include_once("models/clientjobschedule.php");
+include_once 'models/project.php';
+include_once "models/clientjobschedule.php";
 
 if (!$CDASH_MANAGE_CLIENTS) {
     echo "CDash has not been setup to allow client management";

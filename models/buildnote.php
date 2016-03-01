@@ -39,7 +39,6 @@ class buildnote
         return $this->Crc32;
     }
 
-
     // Insert in the database
     public function Insert()
     {

@@ -14,9 +14,9 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once(dirname(dirname(dirname(__DIR__))) . "/config/config.php");
-require_once("include/common.php");
-require_once("include/pdo.php");
+require_once dirname(dirname(dirname(__DIR__))) . "/config/config.php";
+require_once "include/common.php";
+require_once "include/pdo.php";
 
 $md5sums_get = isset($_GET['md5sums']) ? htmlspecialchars(pdo_real_escape_string($_GET['md5sums'])) : '';
 if ($md5sums_get == '') {

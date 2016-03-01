@@ -1,15 +1,11 @@
 <?php
 /**
  *  base include file for SimpleTest
- * @package    SimpleTest
- * @subpackage UnitTester
  * @version    $Id$
  */
 
 /**
  *    Parses the command line arguments.
- * @package  SimpleTest
- * @subpackage   UnitTester
  */
 class SimpleArguments
 {
@@ -104,7 +100,7 @@ class SimpleArguments
     /**
      * It's a flag if it starts with "-" or "--".
      * @param string $argument Value to be tested.
-     * @return boolean               True if it's a flag.
+     * @return bool               True if it's a flag.
      */
     public function isFlag($argument)
     {
@@ -141,8 +137,6 @@ class SimpleArguments
 
 /**
  *    Renders the help for the command line arguments.
- * @package  SimpleTest
- * @subpackage   UnitTester
  */
 class SimpleHelp
 {

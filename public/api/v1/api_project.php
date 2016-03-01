@@ -14,14 +14,14 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include_once('api.php');
+include_once 'api.php';
 
 class ProjectAPI extends CDashAPI
 {
     /** Return the list of all public projects */
     private function ListProjects()
     {
-        include_once('include/common.php');
+        include_once 'include/common.php';
         $query = pdo_query("SELECT id,name FROM project WHERE public=1 ORDER BY name ASC");
         while ($query_array = pdo_fetch_array($query)) {
             $project['id'] = $query_array['id'];
@@ -38,7 +38,7 @@ class ProjectAPI extends CDashAPI
      */
     public function Authenticate()
     {
-        include_once('include/common.php');
+        include_once 'include/common.php';
         if (!isset($this->Parameters['project'])) {
             return array('status' => false, 'message' => "You must specify a project parameter.");
         }
@@ -74,8 +74,8 @@ class ProjectAPI extends CDashAPI
      */
     public function ListFiles()
     {
-        include_once('include/common.php');
-        include_once('models/project.php');
+        include_once 'include/common.php';
+        include_once 'models/project.php';
 
         global $CDASH_DOWNLOAD_RELATIVE_URL;
 

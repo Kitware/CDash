@@ -16,7 +16,7 @@
 
 // It is assumed that appropriate headers should be included before including this file
 
-include_once('models/subprojectgroup.php');
+include_once 'models/subprojectgroup.php';
 
 /** Main subproject class */
 class subproject

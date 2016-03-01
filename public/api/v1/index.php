@@ -21,14 +21,14 @@ if (isset($_GET['method'])) {
     exit(0);
 }
 
-include(dirname(dirname(dirname(__DIR__))) . "/config/config.php");
-require_once("include/pdo.php");
-include("include/common.php");
-include('include/version.php');
-require_once("models/project.php");
-require_once("models/buildfailure.php");
-require_once("include/filterdataFunctions.php");
-require_once("include/index_functions.php");
+include dirname(dirname(dirname(__DIR__))) . "/config/config.php";
+require_once "include/pdo.php";
+include "include/common.php";
+include 'include/version.php';
+require_once "models/project.php";
+require_once "models/buildfailure.php";
+require_once "include/filterdataFunctions.php";
+require_once "include/index_functions.php";
 
 set_time_limit(0);
 
@@ -64,18 +64,17 @@ if ($date != null) {
 
 echo_main_dashboard_JSON($Project, $date);
 
-
 // Generate the main dashboard JSON response.
 function echo_main_dashboard_JSON($project_instance, $date)
 {
     $start = microtime_float();
     $noforcelogin = 1;
-    include_once(dirname(dirname(dirname(__DIR__))) . "/config/config.php");
-    require_once("include/pdo.php");
-    include('public/login.php');
-    include_once("models/banner.php");
-    include_once("models/build.php");
-    include_once("models/subproject.php");
+    include_once dirname(dirname(dirname(__DIR__))) . "/config/config.php";
+    require_once "include/pdo.php";
+    include 'public/login.php';
+    include_once "models/banner.php";
+    include_once "models/build.php";
+    include_once "models/subproject.php";
 
     $response = array();
 
@@ -182,7 +181,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
     $response['childview'] = 0;
 
     if ($CDASH_USE_LOCAL_DIRECTORY && file_exists("local/models/proProject.php")) {
-        include_once("local/models/proProject.php");
+        include_once "local/models/proProject.php";
         $pro = new proProject;
         $pro->ProjectId = $projectid;
         $response['proedition'] = $pro->GetEdition(1);
@@ -632,7 +631,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $build_row['updateduration'] = 0;
         }
 
-
         if (strlen($build_row["updatestatus"]) > 0 &&
             $build_row["updatestatus"] != "0"
         ) {
@@ -1064,7 +1062,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $build_response['test'] = $test_response;
         }
 
-
         $starttimestamp = strtotime($build_array["starttime"] . " UTC");
         $submittimestamp = strtotime($build_array["submittime"] . " UTC");
         // Use the default timezone.
@@ -1287,7 +1284,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
     echo json_encode(cast_data_for_JSON($response));
 }
 
-
 // Get a link to a page showing the children of a given parent build.
 function get_child_builds_hyperlink($parentid, $filterdata)
 {
@@ -1317,7 +1313,6 @@ function get_child_builds_hyperlink($parentid, $filterdata)
         $baseurl = str_replace($query, '', $baseurl);
         $baseurl .= $trimmed_query;
     }
-
 
     // Preserve any filters the user had specified.
     $existing_filter_params = '';
@@ -1379,11 +1374,10 @@ function get_child_builds_hyperlink($parentid, $filterdata)
     return $url;
 }
 
-
 // Find expected builds that haven't submitted yet.
 function add_expected_builds($groupid, $currentstarttime, $received_builds)
 {
-    include(dirname(dirname(dirname(__DIR__))) . "/config/config.php");
+    include dirname(dirname(dirname(__DIR__))) . "/config/config.php";
 
     if (isset($_GET["parentid"])) {
         // Don't add expected builds when viewing a single subproject result.

@@ -3,7 +3,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__) . '/cdash_test_case.php');
+require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 class TestEnvTestCase extends KWWebTestCase
 {
@@ -17,7 +17,6 @@ class TestEnvTestCase extends KWWebTestCase
         $s = "CTEST_FULL_OUTPUT\n";
         $s = $s . "=================\n";
         $s = $s . "\n";
-
 
         $s = $s . "CDash/tests config values\n";
         $s = $s . "=========================\n";
@@ -44,7 +43,6 @@ class TestEnvTestCase extends KWWebTestCase
         $s = $s . "isMacOSX=[" . print_r($isMacOSX, true) . "]\n";
 
         $s = $s . "\n";
-
 
         $s = $s . "php superglobals ( see http://www.php.net/manual/en/language.variables.superglobals.php )\n";
         $s = $s . "================\n";

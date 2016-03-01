@@ -14,22 +14,20 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once("include/common.php");
+require_once "include/common.php";
 
 function get_bugid_and_pos_from_log($log)
 {
-    // If the input is empty, return FALSE straight away:
+    // If the input is empty, return false straight away:
     //
     if ($log == "") {
         return false;
     }
 
-
-    // Init for FALSE return in case there is no match:
+    // Init for false return in case there is no match:
     //
     $bugid = "";
     $pos = -1;
-
 
     // See if it matches "BUG: 12345" or "issue23456" or "#78910"
     //
@@ -49,13 +47,11 @@ function get_bugid_and_pos_from_log($log)
         //echo "pos='$pos'<br/>";
     }
 
-
     if ($bugid == "") {
         return false;
     }
     return array($bugid, $pos);
 }
-
 
 function get_bug_from_log($log, $baseurl)
 {

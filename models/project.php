@@ -15,11 +15,11 @@
 =========================================================================*/
 
 // It is assumed that appropriate headers should be included before including this file
-include_once('models/dailyupdatefile.php');
-include_once('models/buildgroup.php');
-include_once('models/buildgrouprule.php');
-include_once('models/buildgroupposition.php');
-require_once("include/cdashmail.php");
+include_once 'models/dailyupdatefile.php';
+include_once 'models/buildgroup.php';
+include_once 'models/buildgrouprule.php';
+include_once 'models/buildgroupposition.php';
+require_once "include/cdashmail.php";
 
 /** Main project class */
 class project
@@ -440,7 +440,7 @@ class project
             $this->WebApiKey = $project_array['webapikey'];
             if ($this->WebApiKey == '') {
                 // If no web API key exists, we add one
-                include_once('include/common.php');
+                include_once 'include/common.php';
                 $newKey = generate_web_api_key();
                 pdo_query("UPDATE project SET webapikey='$newKey' WHERE id=" . $this->Id);
                 $this->WebApiKey = $newKey;
@@ -489,7 +489,7 @@ class project
             pdo_query("UPDATE project SET imageid=" . qnum($imgid) . " WHERE id=" . $this->Id);
             add_last_sql_error("Project AddLogo", $this->Id);
         } elseif ($imgid == 0) {
-            include("config/config.php");
+            include "config/config.php";
             if ($CDASH_DB_TYPE == "pgsql") {
                 $contents = pg_escape_bytea($contents);
             }
@@ -504,7 +504,7 @@ class project
         } else {
             // update the current image
 
-            include("config/config.php");
+            include "config/config.php";
             if ($CDASH_DB_TYPE == "pgsql") {
                 $contents = pg_escape_bytea($contents);
             }
@@ -1092,7 +1092,7 @@ class project
         $todaytime -= 3600 * 24 * $days;
         $today = date(FMT_DATETIMESTD, $todaytime);
 
-        include("config/config.php");
+        include "config/config.php";
         $straighthjoin = "";
         if ($CDASH_DB_TYPE != "pgsql") {
             $straighthjoin = 'STRAIGHT_JOIN';
@@ -1133,7 +1133,7 @@ class project
             return false;
         }
 
-        include('config/config.php');
+        include 'config/config.php';
 
         // Check if we should send emails
         $project = pdo_query("SELECT emailadministrator,name FROM project WHERE id =" . qnum($this->Id));
@@ -1148,8 +1148,8 @@ class project
         }
 
         // Find the site maintainers
-        include_once('models/userproject.php');
-        include_once('models/user.php');
+        include_once 'models/userproject.php';
+        include_once 'models/user.php';
         $UserProject = new UserProject();
         $UserProject->ProjectId = $this->Id;
 
@@ -1184,7 +1184,6 @@ class project
         }
     }
 
-
     public function getDefaultCTestUpdateType()
     {
         switch ($this->CvsViewerType) {
@@ -1210,7 +1209,6 @@ class project
                 break;
         }
     }
-
 
     public function getDefaultJobTemplateScript()
     {
@@ -1370,7 +1368,7 @@ class project
         $totalUploadSize = $this->GetUploadsTotalSize();
 
         if ($totalUploadSize > $this->UploadQuota) {
-            require_once('include/common.php');
+            require_once 'include/common.php';
             add_log('Upload quota exceeded, removing old files', 'Project::CullUploadedFiles',
                 LOG_INFO, $this->Id);
 
@@ -1419,7 +1417,7 @@ class project
             add_log('Id not set', 'Project::GetSubProjectGroups', LOG_ERR);
             return false;
         }
-        include_once('models/subprojectgroup.php');
+        include_once 'models/subprojectgroup.php';
 
         $query = pdo_query(
             "SELECT id FROM subprojectgroup WHERE projectid=" . qnum($this->Id) . "

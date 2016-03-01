@@ -14,14 +14,14 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include(dirname(__DIR__) . "/config/config.php");
-require_once("include/pdo.php");
-include_once("include/common.php");
-include('public/login.php');
-include('include/version.php');
-include_once("models/project.php");
-include_once("models/banner.php");
-include_once("models/user.php");
+include dirname(__DIR__) . "/config/config.php";
+require_once "include/pdo.php";
+include_once "include/common.php";
+include 'public/login.php';
+include 'include/version.php';
+include_once "models/project.php";
+include_once "models/banner.php";
+include_once "models/user.php";
 
 if ($session_OK) {
     @$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
@@ -81,7 +81,6 @@ if ($session_OK) {
         $xml .= "</availableproject>";
     }
 
-
     $sql = "SELECT id,name FROM project";
     if ($User->IsAdmin() == false) {
         $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$userid' AND role>0)";
@@ -106,8 +105,7 @@ if ($session_OK) {
         $Banner->SetText(htmlspecialchars(pdo_real_escape_string($_POST["message"])));
     }
 
-
-    /** We start generating the XML here */
+    /* We start generating the XML here */
 // List the available project
     if ($projectid >= 0) {
         $xml .= "<project>";

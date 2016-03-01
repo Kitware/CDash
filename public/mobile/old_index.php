@@ -14,14 +14,14 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once(dirname(dirname(__DIR__)) . "/config/config.php");
-require_once("include/pdo.php");
-include("include/common.php");
-include('include/version.php');
-require_once("models/project.php");
-require_once("models/buildfailure.php");
-require_once("include/filterdataFunctions.php");
-require_once("include/index_functions.php");
+require_once dirname(dirname(__DIR__)) . "/config/config.php";
+require_once "include/pdo.php";
+include "include/common.php";
+include 'include/version.php';
+require_once "models/project.php";
+require_once "models/buildfailure.php";
+require_once "include/filterdataFunctions.php";
+require_once "include/index_functions.php";
 
 set_time_limit(0);
 
@@ -29,10 +29,10 @@ set_time_limit(0);
 function generate_index_table()
 {
     $noforcelogin = 1;
-    include("config/config.php");
-    require_once("include/pdo.php");
-    include('public/login.php');
-    include_once('models/banner.php');
+    include "config/config.php";
+    require_once "include/pdo.php";
+    include 'public/login.php';
+    include_once 'models/banner.php';
 
     $xml = begin_XML_for_XSLT();
     $xml .= add_XML_value("title", "CDash - Continuous Integration Made Easy");
@@ -245,11 +245,11 @@ function generate_main_dashboard_XML($project_instance, $date)
 {
     $start = microtime_float();
     $noforcelogin = 1;
-    include_once("config/config.php");
-    require_once("include/pdo.php");
-    include('public/login.php');
-    include_once("models/banner.php");
-    include_once("models/subproject.php");
+    include_once "config/config.php";
+    require_once "include/pdo.php";
+    include 'public/login.php';
+    include_once "models/banner.php";
+    include_once "models/subproject.php";
 
     $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
     if (!$db) {
@@ -340,7 +340,7 @@ function generate_main_dashboard_XML($project_instance, $date)
     }
 
     if ($CDASH_USE_LOCAL_DIRECTORY && file_exists("local/models/proProject.php")) {
-        include_once("local/models/proProject.php");
+        include_once "local/models/proProject.php";
         $pro = new proProject;
         $pro->ProjectId = $projectid;
         $xml .= "<proedition>" . $pro->GetEdition(1) . "</proedition>";
@@ -481,11 +481,10 @@ function generate_main_dashboard_XML($project_instance, $date)
     }
     $xml .= $filterdata['xml'];
 
-
     // Local function to add expected builds
     function add_expected_builds($groupid, $currentstarttime, $received_builds)
     {
-        include('config/config.php');
+        include 'config/config.php';
 
         if (isset($_GET["parentid"])) {
             // Don't add expected builds when viewing a single subproject result.
@@ -546,7 +545,6 @@ function generate_main_dashboard_XML($project_instance, $date)
                     $nextExpected = strtotime($hours . ":" . $minutes . ":" . $seconds . " UTC");
                 }
 
-
                 $divname = $build2grouprule_array["siteid"] . "_" . $build2grouprule_array["buildname"];
                 $divname = str_replace("+", "_", $divname);
                 $divname = str_replace(".", "_", $divname);
@@ -604,7 +602,6 @@ function generate_main_dashboard_XML($project_instance, $date)
                       AND (user2repository.projectid=0 OR user2repository.projectid=b.projectid)
                       AND user2repository.credential=updatefile.author) AS userupdates,";
     }
-
 
     // Postgres differs from MySQL on how to aggregate results
     // into a single column.
@@ -717,7 +714,6 @@ function generate_main_dashboard_XML($project_instance, $date)
     }
     array_multisort($positions, SORT_ASC, $names, SORT_ASC, $siteids, SORT_ASC,
         $stamps, SORT_DESC, $build_data);
-
 
     // The SQL results are ordered by group so this should work
     // Group position have to be continuous
@@ -840,7 +836,6 @@ function generate_main_dashboard_XML($project_instance, $date)
             $build_row['updateduration'] = 0;
         }
 
-
         if (strlen($build_row["updatestatus"]) > 0 &&
             $build_row["updatestatus"] != "0"
         ) {
@@ -884,7 +879,6 @@ function generate_main_dashboard_XML($project_instance, $date)
         if (empty($build_row['countconfigurewarningdiff'])) {
             $build_row['countconfigurewarningdiff'] = 0;
         }
-
 
         $build_row['hastest'] = 0;
         if ($build_row['counttestsfailed'] != -1) {
@@ -971,7 +965,6 @@ function generate_main_dashboard_XML($project_instance, $date)
                 $xml .= "</buildgroup>";
             }
 
-
             $xml .= "<buildgroup>";
             $totalUpdatedFiles = 0;
             $totalUpdateError = 0;
@@ -996,7 +989,6 @@ function generate_main_dashboard_XML($project_instance, $date)
 
             $previousgroupposition = $groupposition;
         }
-
 
         $xml .= "<build>";
 
@@ -1075,7 +1067,6 @@ function generate_main_dashboard_XML($project_instance, $date)
             $xml .= '</labels>';
         }
 
-
         $xml .= "<update>";
 
         $countupdatefiles = $build_array['countupdatefiles'];
@@ -1102,7 +1093,6 @@ function generate_main_dashboard_XML($project_instance, $date)
             $xml .= add_XML_value("timefull", $duration);
         }
         $xml .= "</update>";
-
 
         $xml .= "<compilation>";
 
@@ -1218,7 +1208,6 @@ function generate_main_dashboard_XML($project_instance, $date)
             $xml .= "</test>";
         }
 
-
         $starttimestamp = strtotime($build_array["starttime"] . " UTC");
         $submittimestamp = strtotime($build_array["submittime"] . " UTC");
         $xml .= add_XML_value("builddatefull", $starttimestamp); // use the default timezone
@@ -1233,7 +1222,6 @@ function generate_main_dashboard_XML($project_instance, $date)
         }
         $xml .= add_XML_value("submitdate", date(FMT_DATETIMEDISPLAY, $submittimestamp));// use the default timezone
         $xml .= "</build>";
-
 
         // Coverage
         //
@@ -1318,7 +1306,6 @@ function generate_main_dashboard_XML($project_instance, $date)
 
             $xml .= "</coverage>";
         }
-
 
         // Dynamic Analysis
         //
@@ -1447,17 +1434,16 @@ function generate_main_dashboard_XML($project_instance, $date)
     return $xml;
 }
 
-
 /** Generate the subprojects dashboard */
 function generate_subprojects_dashboard_XML($project_instance, $date)
 {
     $start = microtime_float();
     $noforcelogin = 1;
-    include_once("config/config.php");
-    require_once("include/pdo.php");
-    include('public/login.php');
-    include_once("models/banner.php");
-    include_once("models/subproject.php");
+    include_once "config/config.php";
+    require_once "include/pdo.php";
+    include 'public/login.php';
+    include_once "models/banner.php";
+    include_once "models/subproject.php";
 
     $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
     if (!$db) {
@@ -1534,7 +1520,7 @@ function generate_subprojects_dashboard_XML($project_instance, $date)
     }
 
     if ($CDASH_USE_LOCAL_DIRECTORY && file_exists("local/models/proProject.php")) {
-        include_once("local/models/proProject.php");
+        include_once "local/models/proProject.php";
         $pro = new proProject;
         $pro->ProjectId = $projectid;
         $xml .= "<proedition>" . $pro->GetEdition(1) . "</proedition>";
@@ -1559,7 +1545,6 @@ function generate_subprojects_dashboard_XML($project_instance, $date)
 
     $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
     $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
-
 
     // User
     if (isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid'])) {
@@ -1690,13 +1675,11 @@ function generate_subprojects_dashboard_XML($project_instance, $date)
         }
     }
 
-
     $end = microtime_float();
     $xml .= "<generationtime>" . round($end - $start, 3) . "</generationtime>";
     $xml .= "</cdash>";
     return $xml;
 }
-
 
 // Check if we can connect to the database
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");

@@ -3,9 +3,9 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__) . '/cdash_test_case.php');
+require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-require_once('include/pdo.php');
+require_once 'include/pdo.php';
 
 class ProcessSubmissionsTestCase extends KWWebTestCase
 {
@@ -207,7 +207,6 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
             return 1;
         }
 
-
         // Done, right? Not quite.
         // Now add some more fake submissions, and add a fake, stale processing
         // lock, such that the processing code has to go through the "acquire
@@ -228,7 +227,6 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
             return 1;
         }
 
-
         // Finally, execute the processsubmissions.php script by php command line
         // to get coverage of the chunk of code that processes command line args.
         //
@@ -245,7 +243,6 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
             $this->fail("some records still not processed after call 3 processsubmissions.php");
             return 1;
         }
-
 
         // Actually, with this test, we expect some errors to be logged in the
         // cdash.log file, so do not do this check:

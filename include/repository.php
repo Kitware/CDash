@@ -14,8 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once("config/config.php");
-require_once("include/log.php");
+require_once "config/config.php";
+require_once "include/log.php";
 
 function get_previous_revision($revision)
 {
@@ -57,7 +57,6 @@ function get_previous_revision($revision)
     return $previous_revision;
 }
 
-
 /** Return the ViewCVS URL */
 function get_viewcvs_diff_url($projecturl, $directory, $file, $revision)
 {
@@ -91,13 +90,11 @@ function get_viewcvs_diff_url($projecturl, $directory, $file, $revision)
         }
     }
 
-
     if (strlen($directory) > 0) {
         $dircmp = $directory . "/";
     } else {
         $dircmp = "";
     }
-
 
     // If we have a revision
     if ($revision != '') {
@@ -115,7 +112,6 @@ function get_viewcvs_diff_url($projecturl, $directory, $file, $revision)
     }
     return make_cdash_url($diff_url);
 }
-
 
 /** Return the Trac URL */
 function get_trac_diff_url($projecturl, $directory, $file, $revision)
@@ -196,7 +192,6 @@ function get_cvstrac_diff_url($projecturl, $directory, $file, $revision)
     return make_cdash_url($diff_url);
 }
 
-
 /** Return the ViewVC URL */
 function get_viewvc_diff_url($projecturl, $directory, $file, $revision)
 {
@@ -272,7 +267,6 @@ function get_websvn_diff_url($projecturl, $directory, $file, $revision)
         }
     }
 
-
     // find the project url
     $pos_dotphp = strpos($projecturl, ".php?");
     if ($pos_dotphp !== false) {
@@ -324,7 +318,6 @@ function get_allura_diff_url($projecturl, $directory, $file, $revision)
     }
     return make_cdash_url($diff_url);
 }
-
 
 /** Return the Loggerhead URL */
 function get_loggerhead_diff_url($projecturl, $directory, $file, $revision)
@@ -422,7 +415,7 @@ function get_source_dir($projectid, $projecturl, $file_path)
     if (function_exists($target_fn)) {
         return $target_fn($projecturl, $file_path);
     } else {
-        return null;
+        return;
     }
 }
 
@@ -472,7 +465,6 @@ function get_gitlab_diff_url($projecturl, $directory, $file, $revision)
     // GitLab uses 'blob' or 'tree' (singular, no s)
     return get_gitoriousish_diff_url($projecturl, $directory, $file, $revision, 'blob');
 }
-
 
 /** Return the cgit diff URL */
 function get_cgit_diff_url($projecturl, $directory, $file, $revision)

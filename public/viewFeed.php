@@ -15,13 +15,13 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include(dirname(__DIR__) . "/config/config.php");
-require_once("include/pdo.php");
-include('public/login.php');
-include_once("include/common.php");
-include("include/version.php");
-include("models/project.php");
-include("models/user.php");
+include dirname(__DIR__) . "/config/config.php";
+require_once "include/pdo.php";
+include 'public/login.php';
+include_once "include/common.php";
+include "include/version.php";
+include "models/project.php";
+include "models/user.php";
 
 @$projectid = $_GET["projectid"];
 if ($projectid != null) {

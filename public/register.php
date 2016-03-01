@@ -14,13 +14,13 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include_once(dirname(__DIR__) . "/config/config.php");
-include_once("include/common.php");
-include_once("include/login_functions.php");
-include_once('include/version.php');
+include_once dirname(__DIR__) . "/config/config.php";
+include_once "include/common.php";
+include_once "include/login_functions.php";
+include_once 'include/version.php';
 redirect_to_https();
 
-require_once("include/cdashmail.php");
+require_once "include/cdashmail.php";
 
 $reg = "";
 
@@ -28,8 +28,8 @@ $reg = "";
 function register()
 {
     global $reg;
-    include(dirname(__DIR__) . "/config/config.php");
-    require_once("include/pdo.php");
+    include dirname(__DIR__) . "/config/config.php";
+    require_once "include/pdo.php";
 
     if (isset($_GET["key"])) {
         $key = pdo_real_escape_string($_GET["key"]);
@@ -179,9 +179,9 @@ function register()
 /** Login Form function */
 function RegisterForm($regerror)
 {
-    include(dirname(__DIR__) . "/config/config.php");
-    require_once("include/pdo.php");
-    include_once("include/common.php");
+    include dirname(__DIR__) . "/config/config.php";
+    require_once "include/pdo.php";
+    include_once "include/common.php";
 
     if (isset($CDASH_NO_REGISTRATION) && $CDASH_NO_REGISTRATION == 1) {
         die("You cannot access this page. Contact your administrator if you think that's an error.");

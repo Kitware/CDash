@@ -16,18 +16,18 @@
 
 function client_submit()
 {
-    include('config/config.php');
+    include 'config/config.php';
     if (!$CDASH_MANAGE_CLIENTS) {
         return 0;
     }
 
-    include_once("models/clientsite.php");
-    include_once("models/clientos.php");
-    include_once("models/clientjob.php");
-    include_once("models/clientjobschedule.php");
-    include_once("models/clientcmake.php");
-    include_once("models/clientcompiler.php");
-    include_once("models/clientlibrary.php");
+    include_once "models/clientsite.php";
+    include_once "models/clientos.php";
+    include_once "models/clientjob.php";
+    include_once "models/clientjobschedule.php";
+    include_once "models/clientcmake.php";
+    include_once "models/clientcompiler.php";
+    include_once "models/clientlibrary.php";
 
     include 'config/config.php';
     require_once 'include/common.php';

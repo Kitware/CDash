@@ -86,7 +86,6 @@ function databaseAuthenticate($email, $password, $SessionCachePolicy, $rememberm
     return false;
 }
 
-
 /** LDAP authentication */
 function ldapAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
 {
@@ -210,7 +209,6 @@ function ldapAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
     }
     return false;
 }
-
 
 /** authentication */
 function authenticate($email, $password, $SessionCachePolicy, $rememberme)
@@ -369,10 +367,10 @@ function auth($SessionCachePolicy = 'private_no_expire')
 /** Login Form function */
 function LoginForm($loginerror)
 {
-    include(dirname(__DIR__) . "/config/config.php");
-    require_once("include/pdo.php");
-    include_once("include/common.php");
-    include("include/version.php");
+    include dirname(__DIR__) . "/config/config.php";
+    require_once "include/pdo.php";
+    include_once "include/common.php";
+    include "include/version.php";
 
     $xml = begin_XML_for_XSLT();
     $xml .= "<title>Login</title>";
@@ -390,7 +388,6 @@ function LoginForm($loginerror)
     if ($CDASH_ALLOW_LOGIN_COOKIE) {
         $xml .= "<allowlogincookie>1</allowlogincookie>";
     }
-
 
     if ($GOOGLE_CLIENT_ID != '' && $GOOGLE_CLIENT_SECRET != '') {
         $xml .= "<oauth2>";

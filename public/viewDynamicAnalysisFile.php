@@ -15,11 +15,11 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include(dirname(__DIR__) . "/config/config.php");
-require_once("include/pdo.php");
-include('public/login.php');
-include_once("include/common.php");
-include("include/version.php");
+include dirname(__DIR__) . "/config/config.php";
+require_once "include/pdo.php";
+include 'public/login.php';
+include_once "include/common.php";
+include "include/version.php";
 
 @$id = $_GET["id"];
 if ($id != null) {
@@ -147,7 +147,6 @@ if ($nextfileid > 0) {
     $xml .= add_XML_value("nonext", "1");
 }
 $xml .= "</menu>";
-
 
 // dynamic analysis
 $xml .= "<dynamicanalysis>";

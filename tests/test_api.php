@@ -3,10 +3,10 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__) . '/cdash_test_case.php');
+require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-require_once('include/common.php');
-require_once('include/pdo.php');
+require_once 'include/common.php';
+require_once 'include/pdo.php';
 
 class APITestCase extends KWWebTestCase
 {
@@ -115,7 +115,7 @@ class APITestCase extends KWWebTestCase
             return 1;
         }
 
-        include("include/version.php");
+        include "include/version.php";
         $version = $this->get($this->url . "/api/v1/getversion.php");
         if ($version !== $CDASH_VERSION) {
             $this->fail("Expected output not found when querying API for version: $version");

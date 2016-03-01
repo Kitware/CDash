@@ -24,7 +24,6 @@ namespace CDash {
      * Class Database
      * This class is meant to serve as a minimal lazy database abstraction. The
      * file pdocore.php will use this extensively.
-     * @package CDash
      */
     class Database
     {
@@ -49,8 +48,8 @@ namespace CDash {
          * Private function for exponential back-off as detailed here:
          *   https://cloud.google.com/storage/docs/json_api/v1/how-tos/upload#exp-backoff
          * Pass in a function that takes no arguments to have it retried.
-         * @param \Closure $closure a function that returns FALSE when it fails
-         * @return FALSE on failure mixed otherwise
+         * @param \Closure $closure a function that returns false when it fails
+         * @return false on failure mixed otherwise
          */
         private function _exponential_backoff($closure)
         {

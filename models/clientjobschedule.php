@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include_once('models/constants.php');
+include_once 'models/constants.php';
 
 class clientjobschedule
 {
@@ -489,7 +489,6 @@ class clientjobschedule
         return $cmakeids;
     }
 
-
     /** Get the cmake */
     public function GetCMakes()
     {
@@ -564,7 +563,6 @@ class clientjobschedule
         }
     }
 
-
     public function ProjectAllowed($projectid)
     {
         // By default, all projects are allowed:
@@ -590,7 +588,6 @@ class clientjobschedule
         }
         return $allowed;
     }
-
 
     /** Return the job id if we have a job for the current siteid */
     public function HasJob()
@@ -696,7 +693,6 @@ class clientjobschedule
         return 0;
     }
 
-
     // Return the ctest script
     public function GetCTestScript()
     {
@@ -705,7 +701,7 @@ class clientjobschedule
             return;
         }
 
-        include('config/config.php');
+        include 'config/config.php';
 
         // Update the current run
         pdo_query("UPDATE client_jobschedule SET lastrun='" . date(FMT_DATETIMESTD) . "' WHERE id=" . qnum($this->Id));

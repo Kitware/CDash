@@ -26,7 +26,6 @@ class subprojectgroup
     private $StartTime;
     private $EndTime;
 
-
     public function __construct()
     {
         $this->Id = 0;
@@ -35,13 +34,11 @@ class subprojectgroup
         $this->IsDefault = 0;
     }
 
-
     /** Get the Id of this subproject group. */
     public function GetId()
     {
         return $this->Id;
     }
-
 
     /** Set the id of this subproject group.  This function loads the
      * rest of the details about this group from the database.
@@ -73,13 +70,11 @@ class subprojectgroup
         return true;
     }
 
-
     /** Function to get the project id. */
     public function GetProjectId()
     {
         return $this->ProjectId;
     }
-
 
     /** Function to set the project id. */
     public function SetProjectId($projectid)
@@ -93,7 +88,6 @@ class subprojectgroup
         }
         return false;
     }
-
 
     /** Get the Name of this subproject group. */
     public function GetName()
@@ -118,7 +112,6 @@ class subprojectgroup
         return $this->Name;
     }
 
-
     /** Set the Name of the subproject. */
     public function SetName($name)
     {
@@ -128,13 +121,11 @@ class subprojectgroup
         }
     }
 
-
     /** Get whether or not this subproject group is the default group. */
     public function GetIsDefault()
     {
         return $this->IsDefault;
     }
-
 
     /** Set whether or not this subproject group is the default group. */
     public function SetIsDefault($is_default)
@@ -146,13 +137,11 @@ class subprojectgroup
         }
     }
 
-
     /** Get the coverage threshold for this subproject group. */
     public function GetCoverageThreshold()
     {
         return $this->CoverageThreshold;
     }
-
 
     /** Set the coverage threshold for this subproject group. */
     public function SetCoverageThreshold($threshold)
@@ -161,7 +150,6 @@ class subprojectgroup
             $this->CoverageThreshold = $threshold;
         }
     }
-
 
     /** Populate the ivars of an existing subproject group.
      * Called automatically once name & projectid are set.
@@ -192,7 +180,6 @@ class subprojectgroup
         $this->StartTime = $row['starttime'];
         return true;
     }
-
 
     /** Delete a subproject group */
     public function Delete($keephistory = true)
@@ -226,7 +213,6 @@ class subprojectgroup
             }
         }
     }
-
 
     /** Return if a subproject group exists */
     public function Exists()

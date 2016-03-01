@@ -46,7 +46,6 @@ class label
         return pdo_get_field_value("SELECT id FROM label WHERE text='" . $this->Text . "'", "id", 0);
     }
 
-
     public function InsertAssociation($table, $field1, $value1 = null, $field2 = null, $value2 = null)
     {
         $duplicate_sql = '';
@@ -88,7 +87,6 @@ class label
             }
         }
     }
-
 
     // Save in the database
     public function Insert()

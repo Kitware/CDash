@@ -14,20 +14,20 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include(dirname(__DIR__) . "/config/config.php");
-require_once("include/pdo.php");
+include dirname(__DIR__) . "/config/config.php";
+require_once "include/pdo.php";
 $SessionCachePolicy = 'nocache';
-include('public/login.php');
+include 'public/login.php';
 
-include_once('include/common.php');
+include_once 'include/common.php';
 redirect_to_https();
 
-include("include/version.php");
-include_once('models/project.php');
-include_once('models/clientjobschedule.php');
-include_once('models/clientsite.php');
-include_once('models/clientjob.php');
-include_once('models/build.php');
+include "include/version.php";
+include_once 'models/project.php';
+include_once 'models/clientjobschedule.php';
+include_once 'models/clientsite.php';
+include_once 'models/clientjob.php';
+include_once 'models/build.php';
 
 if ($session_OK) {
     $userid = $_SESSION['cdash']['loginid'];
@@ -140,7 +140,7 @@ if ($session_OK) {
     $j = 0;
     if ($CDASH_USE_LOCAL_DIRECTORY == '1') {
         if (file_exists('local/user.php')) {
-            include_once('local/user.php');
+            include_once 'local/user.php';
         }
     }
     while ($project_array = pdo_fetch_array($project)) {
@@ -304,14 +304,12 @@ if ($session_OK) {
         return $xml;
     }
 
-
     // List the claimed sites
     foreach ($claimedsites as $site) {
         $xml .= "<claimedsite>";
         $xml .= add_XML_value("id", $site["id"]);
         $xml .= add_XML_value("name", $site["name"]);
         $xml .= add_XML_value("outoforder", $site["outoforder"]);
-
 
         $siteid = $site["id"];
 
@@ -340,7 +338,6 @@ if ($session_OK) {
         $xml .= add_XML_value("name_encoded", urlencode($project["name"]));
         $xml .= "</claimedsiteproject>";
     }
-
 
     if (@$_GET['note'] == "subscribedtoproject") {
         $xml .= "<message>You have subscribed to a project.</message>";

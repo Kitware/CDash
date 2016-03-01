@@ -14,14 +14,14 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include_once('api.php');
+include_once 'api.php';
 
 class UserAPI extends CDashAPI
 {
     /** List Defects */
     private function ListDefects()
     {
-        include_once('include/common.php');
+        include_once 'include/common.php';
         if (!isset($this->Parameters['project'])) {
             echo "Project not set";
             return;
@@ -112,7 +112,6 @@ class UserAPI extends CDashAPI
         }
         return $users;
     }
-
 
     /** Run function */
     public function Run()

@@ -17,14 +17,13 @@
 // queryTests.php displays test results based on query parameters
 //
 $noforcelogin = 1;
-include(dirname(dirname(dirname(__DIR__))) . "/config/config.php");
-require_once("include/pdo.php");
-include('public/login.php');
-include_once("include/common.php");
-include("include/version.php");
-require_once("include/filterdataFunctions.php");
-include_once("models/build.php");
-
+include dirname(dirname(dirname(__DIR__))) . "/config/config.php";
+require_once "include/pdo.php";
+include 'public/login.php';
+include_once "include/common.php";
+include "include/version.php";
+require_once "include/filterdataFunctions.php";
+include_once "models/build.php";
 
 @$date = $_GET["date"];
 if ($date != null) {
@@ -148,7 +147,6 @@ $builds['currentstarttime'] = $currentstarttime;
 $builds['teststarttime'] = date(FMT_DATETIME, $beginning_timestamp);
 $builds['testendtime'] = date(FMT_DATETIME, $end_timestamp);
 
-
 $date_clause = '';
 if (!$filterdata['hasdateclause']) {
     $date_clause = "AND b.starttime>='$beginning_UTCDate' AND b.starttime<'$end_UTCDate'";
@@ -161,7 +159,6 @@ if (isset($_GET["parentid"])) {
     $parent_clause = "AND (b.parentid = " . qnum($_GET["parentid"]) . ") ";
     $date_clause = "";
 }
-
 
 $query = "SELECT
             b.id, b.name, b.starttime, b.siteid,b.parentid,

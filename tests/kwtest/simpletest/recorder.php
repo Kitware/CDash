@@ -1,8 +1,6 @@
 <?php
 /**
  *  base include file for SimpleTest
- * @package    SimpleTest
- * @subpackage Extensions
  * @author Rene vd O (original code)
  * @author Perrick Penet
  * @author Marcus Baker
@@ -12,12 +10,10 @@
 /**
  *  include other SimpleTest class files
  */
-require_once(dirname(__FILE__) . '/scorer.php');
+require_once dirname(__FILE__) . '/scorer.php';
 
 /**
  *  A single test result.
- * @package    SimpleTest
- * @subpackage Extensions
  */
 abstract class SimpleResult
 {
@@ -39,8 +35,6 @@ abstract class SimpleResult
 
 /**
  *    A single pass captured for later.
- * @package    SimpleTest
- * @subpackage Extensions
  */
 class SimpleResultOfPass extends SimpleResult
 {
@@ -48,8 +42,6 @@ class SimpleResultOfPass extends SimpleResult
 
 /**
  *    A single failure captured for later.
- * @package    SimpleTest
- * @subpackage Extensions
  */
 class SimpleResultOfFail extends SimpleResult
 {
@@ -57,8 +49,6 @@ class SimpleResultOfFail extends SimpleResult
 
 /**
  *    A single exception captured for later.
- * @package    SimpleTest
- * @subpackage Extensions
  */
 class SimpleResultOfException extends SimpleResult
 {
@@ -67,8 +57,6 @@ class SimpleResultOfException extends SimpleResult
 /**
  *    Array-based test recorder. Returns an array
  *    with timestamp, status, test name and message for each pass and failure.
- * @package    SimpleTest
- * @subpackage Extensions
  */
 class Recorder extends SimpleReporterDecorator
 {

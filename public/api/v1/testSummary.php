@@ -20,12 +20,12 @@
  * about each copy of the test that was run.
  */
 $noforcelogin = 1;
-include(dirname(dirname(dirname(__DIR__))) . "/config/config.php");
-require_once("include/pdo.php");
-include('public/login.php');
-include_once("include/common.php");
-include_once("include/repository.php");
-include("include/version.php");
+include dirname(dirname(dirname(__DIR__))) . "/config/config.php";
+require_once "include/pdo.php";
+include 'public/login.php';
+include_once "include/common.php";
+include_once "include/repository.php";
+include "include/version.php";
 
 $response = begin_JSON_response();
 $response['title'] = "CDash : Test Summary";

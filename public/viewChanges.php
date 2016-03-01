@@ -15,13 +15,13 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include(dirname(__DIR__) . "/config/config.php");
-require_once("include/pdo.php");
-include('public/login.php');
-include_once("include/common.php");
-include_once("include/repository.php");
-include("include/version.php");
-require_once("include/bugurl.php");
+include dirname(__DIR__) . "/config/config.php";
+require_once "include/pdo.php";
+include 'public/login.php';
+include_once "include/common.php";
+include_once "include/repository.php";
+include "include/version.php";
+require_once "include/bugurl.php";
 
 // get_related_dates takes a projectname and basedate as input
 // and produces an array of related dates and times based on:
@@ -29,8 +29,8 @@ require_once("include/bugurl.php");
 //
 function get_related_dates($projectname, $basedate)
 {
-    include(dirname(__DIR__) . "/config/config.php");
-    require_once("include/pdo.php");
+    include dirname(__DIR__) . "/config/config.php";
+    require_once "include/pdo.php";
 
     $dates = array();
 
@@ -154,7 +154,6 @@ function get_updates_xml_from_commits($projectname, $projectid, $dates, $commits
     $xml = "<updates>\n";
     $xml .= "<timestamp>" . date(FMT_DATETIMETZ, $dates['nightly-0']) . "</timestamp>";
 
-
     // Get revision numbers for the current day and "the last time it ran before that..."
     // Only works if the LIMIT 2 query below returns exactly 2 records and the date from
     // the most recent record matches the current 'nightly-0' date... If those criteria
@@ -180,7 +179,6 @@ function get_updates_xml_from_commits($projectname, $projectid, $dates, $commits
     $xml .= add_XML_value("priorrevision", $revision_prior);
     $xml .= add_XML_value("revisionurl", get_revision_url($projectid, $revision_current, $revision_prior));
     $xml .= add_XML_value("revisiondiff", get_revision_url($projectid, $revision_prior, '')); // no prior prior revision...
-
 
     $xml .= "<javascript>\n";
 
@@ -243,7 +241,6 @@ function get_updates_xml_from_commits($projectname, $projectid, $dates, $commits
     $xml .= "</updates>";
     return $xml;
 }
-
 
 // Repository nightly queries are for the 24 hours leading up to the
 // nightly start time for "$projectname" on "$date"

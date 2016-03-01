@@ -14,8 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include(dirname(__DIR__) . "/config/config.php");
-require_once("include/pdo.php");
+include dirname(__DIR__) . "/config/config.php";
+require_once "include/pdo.php";
 
 if (array_key_exists("imgid", $_GET)) {
     $imgid = pdo_real_escape_numeric($_GET["imgid"]);

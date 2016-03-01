@@ -1,8 +1,6 @@
 <?php
 /**
  *  base include file for SimpleTest
- * @package    SimpleTest
- * @subpackage UnitTester
  * @version    $Id$
  */
 
@@ -16,8 +14,6 @@ require_once dirname(__FILE__) . '/expectation.php';
 /**
  *    Extension that traps exceptions and turns them into
  *    an error message. PHP5 only.
- * @package SimpleTest
- * @subpackage UnitTester
  */
 class SimpleExceptionTrappingInvoker extends SimpleInvokerDecorator
 {
@@ -67,8 +63,6 @@ class SimpleExceptionTrappingInvoker extends SimpleInvokerDecorator
  *    exception. This could be improved to accept
  *    a pattern expectation to test the error
  *    message, but that will have to come later.
- * @package SimpleTest
- * @subpackage UnitTester
  */
 class ExceptionExpectation extends SimpleExpectation
 {
@@ -95,7 +89,7 @@ class ExceptionExpectation extends SimpleExpectation
     /**
      *    Carry out the test.
      * @param Exception $compare Value to check.
-     * @return boolean              True if matched.
+     * @return bool              True if matched.
      */
     public function test($compare)
     {
@@ -139,8 +133,6 @@ class ExceptionExpectation extends SimpleExpectation
  *    Stores expected exceptions for when they
  *    get thrown. Saves the irritating try...catch
  *    block.
- * @package  SimpleTest
- * @subpackage   UnitTester
  */
 class SimpleExceptionTrap
 {
@@ -162,7 +154,6 @@ class SimpleExceptionTrap
      *    exception that matches.
      * @param SimpleExpectation $expected Expected exception to match.
      * @param string $message Message to display.
-     * @access public
      */
     public function expectException($expected = false, $message = '%s')
     {
@@ -174,7 +165,6 @@ class SimpleExceptionTrap
      *    Adds an exception to the ignore list. This is the list
      *    of exceptions that when thrown do not affect the test.
      * @param SimpleExpectation $ignored Exception to skip.
-     * @access public
      */
     public function ignoreException($ignored)
     {
@@ -187,7 +177,7 @@ class SimpleExceptionTrap
      *    returns the state of the test.
      * @param SimpleTestCase $test Test case to send messages to.
      * @param Exception $exception Exception to compare.
-     * @return boolean                False on no match.
+     * @return bool                False on no match.
      */
     public function isExpected($test, $exception)
     {

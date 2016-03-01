@@ -2,7 +2,7 @@
 // Helper function to alter a table
 function AddTableField($table, $field, $mySQLType, $pgSqlType, $default)
 {
-    include(dirname(__DIR__) . "/config/config.php");
+    include dirname(__DIR__) . "/config/config.php";
 
     $sql = '';
     if ($default !== false) {
@@ -26,7 +26,7 @@ function AddTableField($table, $field, $mySQLType, $pgSqlType, $default)
 /** Remove a table field */
 function RemoveTableField($table, $field)
 {
-    include(dirname(__DIR__) . "/config/config.php");
+    include dirname(__DIR__) . "/config/config.php";
     $query = pdo_query("SELECT " . $field . " FROM " . $table . " LIMIT 1");
     if ($query) {
         add_log("Droping $field from $table", "DropTableField");
@@ -43,7 +43,7 @@ function RemoveTableField($table, $field)
 // Rename a table vield
 function RenameTableField($table, $field, $newfield, $mySQLType, $pgSqlType, $default)
 {
-    include(dirname(__DIR__) . "/config/config.php");
+    include dirname(__DIR__) . "/config/config.php";
     $query = pdo_query("SELECT " . $field . " FROM " . $table . " LIMIT 1");
     if ($query) {
         add_log("Changing $field to $newfield for $table", "RenameTableField");
@@ -83,7 +83,7 @@ function pdo_check_index_exists($tablename, $columnname)
 // Helper function to add an index to a table
 function AddTableIndex($table, $field)
 {
-    include(dirname(__DIR__) . "/config/config.php");
+    include dirname(__DIR__) . "/config/config.php";
 
     $index_name = $field;
     // Support for multiple column indices
@@ -107,7 +107,7 @@ function AddTableIndex($table, $field)
 // Helper function to remove an index to a table
 function RemoveTableIndex($table, $field)
 {
-    include(dirname(__DIR__) . "/config/config.php");
+    include dirname(__DIR__) . "/config/config.php";
     if (pdo_check_index_exists($table, $field)) {
         add_log("Removing index $field from $table", "RemoveTableIndex");
 
@@ -124,7 +124,7 @@ function RemoveTableIndex($table, $field)
 // Helper function to modify a table
 function ModifyTableField($table, $field, $mySQLType, $pgSqlType, $default, $notnull, $autoincrement)
 {
-    include(dirname(__DIR__) . "/config/config.php");
+    include dirname(__DIR__) . "/config/config.php";
 
     //$check = pdo_query("SELECT ".$field." FROM ".$table." LIMIT 1");
     //$type  = pdo_field_type($check,0);
@@ -171,7 +171,7 @@ function ModifyTableField($table, $field, $mySQLType, $pgSqlType, $default, $not
 // Helper function to add an index to a table
 function AddTablePrimaryKey($table, $field)
 {
-    include(dirname(__DIR__) . "/config/config.php");
+    include dirname(__DIR__) . "/config/config.php";
     add_log("Adding primarykey $field to $table", "AddTablePrimaryKey");
     if ($CDASH_DB_TYPE == "pgsql") {
         pdo_query("ALTER TABLE \"" . $table . "\" ADD PRIMARY KEY (\"" . $field . "\")");
@@ -185,7 +185,7 @@ function AddTablePrimaryKey($table, $field)
 // Helper function to add an index to a table
 function RemoveTablePrimaryKey($table)
 {
-    include(dirname(__DIR__) . "/config/config.php");
+    include dirname(__DIR__) . "/config/config.php";
     add_log("Removing primarykey from $table", "RemoveTablePrimaryKey");
     if ($CDASH_DB_TYPE == "pgsql") {
         pdo_query("ALTER TABLE \"" . $table . "\" DROP CONSTRAINT \"value_pkey\"");
@@ -196,7 +196,6 @@ function RemoveTablePrimaryKey($table)
     //add_last_sql_error("RemoveTablePrimaryKey");
     add_log("Done removing primarykey from $table", "RemoveTablePrimaryKey");
 }
-
 
 /** Compress the notes. Since they are almost always the same form build to build */
 function CompressNotes()
@@ -266,7 +265,6 @@ function ComputeTestTiming($days = 4)
     // Loop through the projects
     $project = pdo_query("SELECT id,testtimestd,testtimestdthreshold FROM project");
     $weight = 0.3;
-
 
     while ($project_array = pdo_fetch_array($project)) {
         $projectid = $project_array["id"];
@@ -349,7 +347,6 @@ function ComputeTestTiming($days = 4)
                         }
                     }
 
-
                     if ($previoustestid > 0) {
                         $previoustest = pdo_query("SELECT timemean,timestd FROM build2test
                                 WHERE buildid='$previousbuildid'
@@ -385,7 +382,6 @@ function ComputeTestTiming($days = 4)
                         $timemean = $testtime;
                     }
 
-
                     pdo_query("UPDATE build2test SET timemean='$timemean',timestd='$timestd',timestatus='$timestatus'
                             WHERE buildid='$buildid' AND testid='$testid'");
                 }
@@ -419,11 +415,10 @@ function ComputeTestTiming($days = 4)
     }
 }
 
-
 /** Compute the statistics for the updated file. Number of produced errors, warning, test failings. */
 function ComputeUpdateStatistics($days = 4)
 {
-    include_once('models/build.php');
+    include_once 'models/build.php';
 
     // Loop through the projects
     $project = pdo_query("SELECT id FROM project");
@@ -555,7 +550,6 @@ function UpgradeBuildFailureTable($from_table = 'buildfailure', $to_table = 'bui
     RemoveTableField($from_table, 'crc32');
 }
 
-
 /**
  * Make sure each build has a correct value set for the
  * build.configureduration field.
@@ -611,7 +605,6 @@ function UpgradeConfigureDuration()
     }
 }
 
-
 /**
  * Make sure each parent build has test timing set.
  **/
@@ -643,7 +636,6 @@ function UpgradeTestDuration()
     }
 }
 
-
 /** Support for compressed coverage.
  *  This is done in two steps.
  *  First step: Reducing the size of the coverage file by computing the crc32 in coveragefile
@@ -653,7 +645,7 @@ function UpgradeTestDuration()
  */
 function CompressCoverage()
 {
-    /** FIRST STEP */
+    /* FIRST STEP */
     // Compute the crc32 of the fullpath+file
     $coveragefile = pdo_query("SELECT count(*) AS num FROM coveragefile WHERE crc32 IS NULL");
     $coveragefile_array = pdo_fetch_array($coveragefile);
@@ -708,7 +700,7 @@ function CompressCoverage()
         $i++;
     }
 
-    /** Remove the Duplicates in the coverage section */
+    /* Remove the Duplicates in the coverage section */
     $coverage = pdo_query("SELECT buildid,fileid,count(*) as cnt FROM coverage GROUP BY buildid,fileid");
     while ($coverage_array = pdo_fetch_array($coverage)) {
         $cnt = $coverage_array["cnt"];
@@ -722,9 +714,8 @@ function CompressCoverage()
         }
     }
 
-    /** SECOND STEP */
+    /* SECOND STEP */
 }
-
 
 /** Carefully add a unique constraint (name & IP address) to the site table.
  *  This function is parameterized to make it easier to test.

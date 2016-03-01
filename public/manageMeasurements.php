@@ -14,11 +14,11 @@
   Copyright (c) 2012 Volkan Gezer <volkangezer@gmail.com>
 =========================================================================*/
 
-include(dirname(__DIR__) . "/config/config.php");
-require_once("include/pdo.php");
-include('public/login.php');
-include_once("include/common.php");
-include_once("models/project.php");
+include dirname(__DIR__) . "/config/config.php";
+require_once "include/pdo.php";
+include 'public/login.php';
+include_once "include/common.php";
+include_once "models/project.php";
 
 if ($session_OK) {
     $projectid = pdo_real_escape_numeric($_REQUEST["projectid"]);

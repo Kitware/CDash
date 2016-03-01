@@ -15,11 +15,11 @@
 =========================================================================*/
 
 require_once 'xml_handlers/abstract_handler.php';
-require_once('models/project.php');
-require_once('models/subproject.php');
-require_once('models/user.php');
-require_once('models/labelemail.php');
-require_once('models/label.php');
+require_once 'models/project.php';
+require_once 'models/subproject.php';
+require_once 'models/user.php';
+require_once 'models/labelemail.php';
+require_once 'models/label.php';
 
 class ProjectHandler extends AbstractHandler
 {
@@ -30,7 +30,6 @@ class ProjectHandler extends AbstractHandler
     private $CurrentDependencies; // The dependencies of the current SubProject.
     private $Email; // Email address associated with the current SubProject.
     private $ProjectNameMatches;
-
 
     /** Constructor */
     public function __construct($projectid, $scheduleid)
@@ -46,7 +45,6 @@ class ProjectHandler extends AbstractHandler
         $this->Project->Id = $projectid;
         $this->Project->Fill();
     }
-
 
     /** startElement function */
     public function startElement($parser, $name, $attributes)
@@ -94,13 +92,11 @@ class ProjectHandler extends AbstractHandler
         }
     }
 
-
     /** endElement function */
     public function endElement($parser, $name)
     {
         parent::endElement($parser, $name);
         global $CDASH_DELETE_OLD_SUBPROJECTS;
-
 
         if (!$this->ProjectNameMatches) {
             return;
@@ -233,7 +229,6 @@ class ProjectHandler extends AbstractHandler
             }
         }
     }
-
 
     /** text function */
     public function text($parser, $data)

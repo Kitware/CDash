@@ -14,9 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include(dirname(__DIR__) . "/config/config.php");
-require_once('public/login.php');
-
+include dirname(__DIR__) . "/config/config.php";
+require_once 'public/login.php';
 
 function echo_svn_output($cmd)
 {
@@ -31,7 +30,6 @@ function echo_svn_output($cmd)
     echo '</pre>';
     echo '<br/>';
 }
-
 
 function echo_file_contents($filename)
 {
@@ -48,7 +46,6 @@ function echo_file_contents($filename)
         echo '<br/>';
     }
 }
-
 
 if ($session_OK) {
     $userid = $_SESSION['cdash']['loginid'];

@@ -261,7 +261,7 @@ class coveragefile2user
     /** Assign the last author */
     public function AssignLastAuthor($buildid, $beginUTCTime, $currentUTCTime)
     {
-        include_once('models/dailyupdate.php');
+        include_once 'models/dailyupdate.php';
 
         if (!isset($this->ProjectId) || $this->ProjectId < 1) {
             echo "CoverageFile2User:AssignLastAuthor: ProjectId not set";
@@ -298,7 +298,7 @@ class coveragefile2user
     /** Assign all author author */
     public function AssignAllAuthors($buildid, $beginUTCTime, $currentUTCTime)
     {
-        include_once('models/dailyupdate.php');
+        include_once 'models/dailyupdate.php';
 
         if (!isset($this->ProjectId) || $this->ProjectId < 1) {
             echo "CoverageFile2User:AssignLastAuthor: ProjectId not set";

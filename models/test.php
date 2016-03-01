@@ -15,14 +15,14 @@
 =========================================================================*/
 
 // It is assumed that appropriate headers should be included before including this file
-include_once('models/testimage.php');
-include_once('models/testmeasurement.php');
-include_once('models/buildtestdiff.php');
-include_once('models/buildtest.php');
-include_once('models/label.php');
-include_once('models/testimage.php');
-include_once('models/image.php');
-include_once('models/constants.php');
+include_once 'models/testimage.php';
+include_once 'models/testmeasurement.php';
+include_once 'models/buildtestdiff.php';
+include_once 'models/buildtest.php';
+include_once 'models/label.php';
+include_once 'models/testimage.php';
+include_once 'models/image.php';
+include_once 'models/constants.php';
 
 /** Test */
 class test
@@ -95,7 +95,6 @@ class test
         return $this->Crc32;
     }
 
-
     public function InsertLabelAssociations($buildid)
     {
         if ($this->Id && $buildid) {
@@ -135,7 +134,7 @@ class test
             return true;
         }
 
-        include("config/config.php");
+        include "config/config.php";
         $command = pdo_real_escape_string($this->Command);
 
         $name = pdo_real_escape_string($this->Name);

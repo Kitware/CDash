@@ -14,12 +14,12 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once('xml_handlers/abstract_handler.php');
-require_once('models/build.php');
-require_once('models/label.php');
-require_once('models/site.php');
-require_once('models/buildfailure.php');
-require_once('models/feed.php');
+require_once 'xml_handlers/abstract_handler.php';
+require_once 'models/build.php';
+require_once 'models/label.php';
+require_once 'models/site.php';
+require_once 'models/buildfailure.php';
+require_once 'models/feed.php';
 
 class BuildHandler extends AbstractHandler
 {

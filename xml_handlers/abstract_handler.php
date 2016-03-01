@@ -17,8 +17,8 @@
 require_once 'include/ctestparserutils.php';
 require_once 'xml_handlers/sax_handler.php';
 require_once 'xml_handlers/stack.php';
-require_once('models/build.php');
-require_once('models/site.php');
+require_once 'models/build.php';
+require_once 'models/site.php';
 
 abstract class AbstractHandler implements SaxHandler
 {

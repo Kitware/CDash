@@ -14,19 +14,17 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once(dirname(__FILE__) . '/kw_unlink.php');
+require_once dirname(__FILE__) . '/kw_unlink.php';
 
 /**#@+
  *  include other SimpleTest class files
  */
-require_once('tests/kwtest/simpletest/web_tester.php');
+require_once 'tests/kwtest/simpletest/web_tester.php';
 
 /**
  *    Test case for testing of web pages. Allows
  *    fetching of pages, parsing of HTML and
  *    submitting forms.
- * @package KWSimpletest
- * @subpackage WebTester
  */
 class KWWebTestCase extends WebTestCase
 {

@@ -19,10 +19,10 @@
 // the input, the project's nightly start time, now
 //
 
-include("config/config.php");
-require_once("include/pdo.php");
-include_once("include/common.php");
-require_once("include/cdashmail.php");
+include "config/config.php";
+require_once "include/pdo.php";
+include_once "include/common.php";
+require_once "include/cdashmail.php";
 
 set_time_limit(0);
 
@@ -90,7 +90,6 @@ function get_related_dates($projectnightlytime, $basedate)
     return $dates;
 }
 
-
 /** */
 function remove_directory_from_filename(&$filename)
 {
@@ -105,9 +104,8 @@ function remove_directory_from_filename(&$filename)
     return $dir;
 }
 
-
 // If the string $root begins with one of the known cvs protocol
-// indicators, then return TRUE. Otherwise, return FALSE.
+// indicators, then return true. Otherwise, return false.
 //
 function is_cvs_root($root)
 {
@@ -263,7 +261,7 @@ function get_cvs_repository_commits($cvsroot, $dates)
 /** Get the Perforce repository commits */
 function get_p4_repository_commits($root, $branch, $dates)
 {
-    include('config/config.php');
+    include 'config/config.php';
     $commits = array();
     $users = array();
 
@@ -342,7 +340,7 @@ function get_p4_repository_commits($root, $branch, $dates)
 /** Get the GIT repository commits */
 function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision)
 {
-    include('config/config.php');
+    include 'config/config.php';
     $commits = array();
 
     $gitcommand = $CDASH_GIT_COMMAND;
@@ -717,8 +715,8 @@ function get_repository_commits($projectid, $dates)
 /** Send email if expected build from last day have not been submitting */
 function sendEmailExpectedBuilds($projectid, $currentstarttime)
 {
-    include("config/config.php");
-    include_once("include/common.php");
+    include "config/config.php";
+    include_once "include/common.php";
     $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
     pdo_select_db("$CDASH_DB_NAME", $db);
 
@@ -816,8 +814,8 @@ function sendEmailExpectedBuilds($projectid, $currentstarttime)
 /** Remove the buildemail that have been there from more than 48h */
 function cleanBuildEmail()
 {
-    include("config/config.php");
-    include_once("include/common.php");
+    include "config/config.php";
+    include_once "include/common.php";
     $now = date(FMT_DATETIME, time() - 3600 * 48);
     pdo_query("DELETE FROM buildemail WHERE time<'$now'");
 }
@@ -825,8 +823,8 @@ function cleanBuildEmail()
 /** Clean the usertemp table if more than 24hrs */
 function cleanUserTemp()
 {
-    include("config/config.php");
-    include_once("include/common.php");
+    include "config/config.php";
+    include_once "include/common.php";
     $now = date(FMT_DATETIME, time() - 3600 * 24);
     pdo_query("DELETE FROM usertemp WHERE registrationdate<'$now'");
 }
@@ -834,9 +832,9 @@ function cleanUserTemp()
 /** Send an email to administrator of the project for users who are not registered */
 function sendEmailUnregisteredUsers($projectid, $cvsauthors)
 {
-    include("config/config.php");
-    require_once("models/userproject.php");
-    include_once("include/common.php");
+    include "config/config.php";
+    require_once "models/userproject.php";
+    include_once "include/common.php";
 
     $unregisteredusers = array();
     foreach ($cvsauthors as $author) {
@@ -898,9 +896,9 @@ function sendEmailUnregisteredUsers($projectid, $cvsauthors)
 /** Add daily changes if necessary */
 function addDailyChanges($projectid)
 {
-    include("config/config.php");
-    include_once("include/common.php");
-    include_once("include/sendemail.php");
+    include "config/config.php";
+    include_once "include/common.php";
+    include_once "include/sendemail.php";
 
     $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
     pdo_select_db("$CDASH_DB_NAME", $db);
@@ -1010,7 +1008,7 @@ function addDailyChanges($projectid)
         clean_backup_directory();
 
         // Remove the first builds of the project
-        include_once("include/autoremove.php");
+        include_once "include/autoremove.php";
         removeFirstBuilds($projectid, $project_array["autoremovetimeframe"], $project_array["autoremovemaxbuilds"]);
         removeBuildsGroupwise($projectid, $project_array["autoremovemaxbuilds"]);
     }

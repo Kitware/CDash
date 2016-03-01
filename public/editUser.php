@@ -14,15 +14,15 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include(dirname(__DIR__) . "/config/config.php");
-require_once("include/pdo.php");
-require_once("include/login_functions.php");
-include('public/login.php');
-include("include/version.php");
-include_once("models/userproject.php");
+include dirname(__DIR__) . "/config/config.php";
+require_once "include/pdo.php";
+require_once "include/login_functions.php";
+include 'public/login.php';
+include "include/version.php";
+include_once "models/userproject.php";
 
 if ($session_OK) {
-    include_once("include/common.php");
+    include_once "include/common.php";
 
     $xml = begin_XML_for_XSLT();
     $xml .= "<title>CDash - My Profile</title>";
@@ -58,7 +58,6 @@ if ($session_OK) {
             add_last_sql_error("editUser.php");
         }
     }
-
 
     // Update the password
     @$updatepassword = $_POST["updatepassword"];
@@ -112,7 +111,6 @@ if ($session_OK) {
         $credentials[] = $user_array["email"];
         $UserProject->UpdateCredentials($credentials);
     }
-
 
     // List the credentials
     // First the email one (which cannot be changed)

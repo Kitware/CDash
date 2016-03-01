@@ -14,14 +14,13 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include(dirname(dirname(dirname(__DIR__))) . "/config/config.php");
-require_once("include/pdo.php");
-include_once("include/common.php");
-include_once("include/filterdataFunctions.php");
+include dirname(dirname(dirname(__DIR__))) . "/config/config.php";
+require_once "include/pdo.php";
+include_once "include/common.php";
+include_once "include/filterdataFunctions.php";
 
 $response = get_filterdata_array_from_request($_GET["page_id"]);
 echo json_encode(cast_data_for_JSON($response));
-
 
 // Parse filter data from the request into an array.
 //
@@ -142,7 +141,6 @@ function get_filterdata_array_from_request($page_id = '')
     }
 
     $filterdata['sql'] = $sql;
-
 
     // If no filters were passed in as parameters,
     // then add one default filter so that the user sees

@@ -1,15 +1,11 @@
 <?php
 /**
  *  base include file for SimpleTest
- * @package    SimpleTest
- * @subpackage WebTester
  * @version    $Id$
  */
 
 /**
  *    Builds the page object.
- * @package SimpleTest
- * @subpackage WebTester
  */
 class SimpleTidyPageBuilder
 {
@@ -36,7 +32,7 @@ class SimpleTidyPageBuilder
 
     /**
      *    This builder is only available if the 'tidy' extension is loaded.
-     * @return boolean       True if available.
+     * @return bool       True if available.
      */
     public function can()
     {
@@ -231,7 +227,7 @@ class SimpleTidyPageBuilder
      *  Tests a node for a "for" atribute. Used for
      *  attaching labels.
      * @param object $node Tidy XML node.
-     * @return boolean          True if the "for" attribute exists.
+     * @return bool          True if the "for" attribute exists.
      */
     private function hasFor($node)
     {

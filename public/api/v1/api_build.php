@@ -14,14 +14,14 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include_once('api.php');
+include_once 'api.php';
 
 class BuildAPI extends CDashAPI
 {
     /** Return the defects: builderrors, buildwarnings, testnotrun, testfailed. */
     private function ListDefects()
     {
-        include_once('include/common.php');
+        include_once 'include/common.php';
         global $CDASH_DB_TYPE;
 
         if (!isset($this->Parameters['project'])) {
@@ -36,7 +36,6 @@ class BuildAPI extends CDashAPI
         }
 
         $builds = array();
-
 
         if ($CDASH_DB_TYPE == "pgsql") {
             $query = pdo_query("SELECT EXTRACT(YEAR FROM starttime) AS y ,
@@ -90,8 +89,8 @@ class BuildAPI extends CDashAPI
     /** Return the defects: builderrors, buildwarnings, testnotrun, testfailed. */
     private function RevisionStatus()
     {
-        include_once('include/common.php');
-        include(dirname(dirname(dirname(__DIR__))) . "/config/config.php");
+        include_once 'include/common.php';
+        include dirname(dirname(dirname(__DIR__))) . "/config/config.php";
 
         if (!isset($this->Parameters['project'])) {
             echo "Project not set";
@@ -176,11 +175,10 @@ class BuildAPI extends CDashAPI
         return $builds;
     }
 
-
     /** Return the number of defects per number of checkins */
     private function ListCheckinsDefects()
     {
-        include_once('include/common.php');
+        include_once 'include/common.php';
         if (!isset($this->Parameters['project'])) {
             echo "Project not set";
             return;
@@ -225,15 +223,13 @@ class BuildAPI extends CDashAPI
         return $builds;
     }
 
-
     /** Return an array with two sub arrays:
      *  array1: id, buildname, os, bits, memory, frequency
      *  array2: array1_id, test_fullname */
     private function ListSiteTestFailure()
     {
-        include(dirname(dirname(dirname(__DIR__))) . "/config/config.php");
-        include_once('include/common.php');
-
+        include dirname(dirname(dirname(__DIR__))) . "/config/config.php";
+        include_once 'include/common.php';
 
         if (!isset($this->Parameters['project'])) {
             echo "Project not set";
@@ -314,13 +310,13 @@ class BuildAPI extends CDashAPI
     /** Schedule a build */
     private function ScheduleBuild()
     {
-        include(dirname(dirname(dirname(__DIR__))) . "/config/config.php");
-        include_once('include/common.php');
-        include_once("models/clientjobschedule.php");
-        include_once("models/clientos.php");
-        include_once("models/clientcmake.php");
-        include_once("models/clientcompiler.php");
-        include_once("models/clientlibrary.php");
+        include dirname(dirname(dirname(__DIR__))) . "/config/config.php";
+        include_once 'include/common.php';
+        include_once "models/clientjobschedule.php";
+        include_once "models/clientos.php";
+        include_once "models/clientcmake.php";
+        include_once "models/clientcompiler.php";
+        include_once "models/clientlibrary.php";
 
         if (!isset($this->Parameters['token'])) {
             return array('status' => false, 'message' => 'You must specify a token parameter.');
@@ -483,13 +479,13 @@ class BuildAPI extends CDashAPI
     /** Return the status of a scheduled build */
     private function ScheduleStatus()
     {
-        include(dirname(dirname(dirname(__DIR__))) . "/config/config.php");
-        include_once('include/common.php');
-        include_once("models/clientjobschedule.php");
-        include_once("models/clientos.php");
-        include_once("models/clientcmake.php");
-        include_once("models/clientcompiler.php");
-        include_once("models/clientlibrary.php");
+        include dirname(dirname(dirname(__DIR__))) . "/config/config.php";
+        include_once 'include/common.php';
+        include_once "models/clientjobschedule.php";
+        include_once "models/clientos.php";
+        include_once "models/clientcmake.php";
+        include_once "models/clientcompiler.php";
+        include_once "models/clientlibrary.php";
 
         $status = array();
         $status['scheduled'] = 0;

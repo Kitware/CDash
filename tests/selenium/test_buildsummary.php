@@ -3,7 +3,7 @@
 // After including cdash_selenium_test_base.php, subsequent require_once calls
 // are relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__) . '/cdash_selenium_test_case.php');
+require_once dirname(__FILE__) . '/cdash_selenium_test_case.php';
 
 class Example extends CDashSeleniumTestCase
 {
@@ -31,7 +31,7 @@ class Example extends CDashSeleniumTestCase
         $this->click("link=Zoom out");
         $this->click("link=Show Build Graphs");
         $this->click("link=Add a Note to this Build");
-        for ($second = 0; ; $second++) {
+        for ($second = 0;; $second++) {
             if ($second >= 60) {
                 $this->fail("timeout");
             }

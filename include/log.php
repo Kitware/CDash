@@ -14,14 +14,14 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once("include/defines.php");
-require_once("include/pdocore.php");
+require_once "include/defines.php";
+require_once "include/pdocore.php";
 
-use \Monolog\Logger;
-use \Monolog\Registry;
 use \Monolog\Formatter\LineFormatter;
 use \Monolog\Handler\StreamHandler;
 use \Monolog\Handler\SyslogHandler;
+use \Monolog\Logger;
+use \Monolog\Registry;
 use \Psr\Log\LogLevel;
 
 function cdash_unlink($filename)
@@ -204,7 +204,6 @@ function add_log($text, $function, $type = LOG_INFO, $projectid = 0, $buildid = 
     $logger->log($level, $text, $context);
 }
 
-
 function begin_timer($context)
 {
     global $cdash_timer_stack;
@@ -218,7 +217,6 @@ function begin_timer($context)
 
     $cdash_timer_stack[] = $timer_entry;
 }
-
 
 function end_timer($context, $threshold = -0.001)
 {

@@ -14,12 +14,12 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include_once('models/coveragesummary.php');
-include_once('models/coveragesummarydiff.php');
-include_once('models/coveragefile.php');
-include_once('models/coveragefile2user.php');
-include_once('models/coveragefilelog.php');
-include_once('models/label.php');
+include_once 'models/coveragesummary.php';
+include_once 'models/coveragesummarydiff.php';
+include_once 'models/coveragefile.php';
+include_once 'models/coveragefile2user.php';
+include_once 'models/coveragefilelog.php';
+include_once 'models/label.php';
 
 /** Coverage class. Used by CoverageSummary */
 class coverage
@@ -34,7 +34,6 @@ class coverage
     public $FunctionsUntested = 0;
     public $CoverageFile;
     public $Labels;
-
 
     // Purposely no Insert function. Everything is done from the coverage summary
     public function AddLabel($label)
@@ -71,7 +70,6 @@ class coverage
                 CDASH_OBJECT_COVERAGE, $this->CoverageFile->Id);
         }
     }
-
 
     /** Return the name of a build */
     public function GetFiles()

@@ -15,7 +15,7 @@
 =========================================================================*/
 
 // It is assumed that appropriate headers should be included before including this file
-include_once('models/buildupdatefile.php');
+include_once 'models/buildupdatefile.php';
 
 class buildupdate
 {
@@ -180,7 +180,7 @@ class buildupdate
             $nwarnings += $this->GetNumberOfWarnings();
             $nfiles += $this->GetNumberOfFiles();
 
-            include('config/config.php');
+            include 'config/config.php';
             if ($CDASH_DB_TYPE == 'pgsql') {
                 // pgsql doesn't have concat...
 
@@ -215,7 +215,6 @@ class buildupdate
         pdo_commit();
         return true;
     }
-
 
     /** Get the number of files for an update */
     public function GetNumberOfFiles()

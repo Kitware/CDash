@@ -14,14 +14,14 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include(dirname(__DIR__) . "/config/config.php");
-require_once("include/pdo.php");
-include('public/login.php');
-include("include/version.php");
+include dirname(__DIR__) . "/config/config.php";
+require_once "include/pdo.php";
+include 'public/login.php';
+include "include/version.php";
 
 if ($session_OK) {
-    include_once('include/common.php');
-    include_once("include/ctestparser.php");
+    include_once 'include/common.php';
+    include_once "include/ctestparser.php";
 
     $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
     pdo_select_db("$CDASH_DB_NAME", $db);
@@ -33,7 +33,6 @@ if ($session_OK) {
     $xml .= "<title>CDash - Sites Statistics</title>";
     $xml .= "<menutitle>CDash</menutitle>";
     $xml .= "<menusubtitle>Site Statistics</menusubtitle>";
-
 
     if ($CDASH_DB_TYPE == "pgsql") {
         $query = pdo_query("SELECT siteid,sitename, SUM(elapsed) AS busytime FROM

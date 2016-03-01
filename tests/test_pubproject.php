@@ -3,8 +3,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__) . '/cdash_test_case.php');
-
+require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 class PubProjectTestCase extends KWWebTestCase
 {
@@ -29,7 +28,6 @@ class PubProjectTestCase extends KWWebTestCase
         $this->setField('public', '1');
         $this->setField('emailAdministrator', '1');
         $this->clickSubmitByName('Submit');
-
 
         $query = "SELECT COUNT(*) FROM project";
         $result = $this->db->query($query);

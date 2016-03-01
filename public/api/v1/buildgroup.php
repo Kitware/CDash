@@ -15,14 +15,14 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include(dirname(dirname(dirname(__DIR__))) . "/config/config.php");
-require_once('include/pdo.php');
-include_once('include/common.php');
-include('public/login.php');
-include('include/version.php');
-include_once('models/project.php');
-include_once('models/buildgroup.php');
-include_once('models/user.php');
+include dirname(dirname(dirname(__DIR__))) . "/config/config.php";
+require_once 'include/pdo.php';
+include_once 'include/common.php';
+include 'public/login.php';
+include 'include/version.php';
+include_once 'models/project.php';
+include_once 'models/buildgroup.php';
+include_once 'models/user.php';
 
 // Make sure we have a valid login.
 if (!$session_OK) {
@@ -142,7 +142,6 @@ function rest_get()
     echo json_encode(cast_data_for_JSON($response));
 }
 
-
 /* Handle DELETE requests */
 function rest_delete()
 {
@@ -197,7 +196,6 @@ function rest_delete()
         }
     }
 }
-
 
 /* Handle POST requests */
 function rest_post()
@@ -271,7 +269,6 @@ function rest_post()
         }
         return;
     }
-
 
     if (isset($_POST['builds'])) {
         // Move builds to a new group.
@@ -391,7 +388,6 @@ function rest_post()
     }
 }
 
-
 /* Handle PUT requests */
 function rest_put()
 {
@@ -431,7 +427,6 @@ function rest_put()
     }
 }
 
-
 function get_buildgroupid()
 {
     if (!isset($_GET['buildgroupid'])) {
@@ -441,7 +436,6 @@ function get_buildgroupid()
     $buildgroupid = pdo_real_escape_numeric($_GET['buildgroupid']);
     return $buildgroupid;
 }
-
 
 function echo_error($msg)
 {

@@ -15,12 +15,12 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include(dirname(__DIR__) . "/config/config.php");
-require_once("include/pdo.php");
-include('public/login.php');
-include_once('include/common.php');
-include("include/version.php");
-include("models/project.php");
+include dirname(__DIR__) . "/config/config.php";
+require_once "include/pdo.php";
+include 'public/login.php';
+include_once 'include/common.php';
+include "include/version.php";
+include "models/project.php";
 
 @$siteid = $_GET["siteid"];
 if ($siteid != null) {
@@ -112,7 +112,6 @@ $xml .= "<title>CDash - $sitename</title>";
 $xml .= "<menutitle>CDash</menutitle>";
 $xml .= "<menusubtitle>$sitename</menusubtitle>";
 
-
 $xml .= "<dashboard>";
 $xml .= "<title>CDash</title>";
 
@@ -191,7 +190,6 @@ if (!$displayPage) {
     echo "You cannot access this page";
     return;
 }
-
 
 // Compute the time for all the projects (faster than individually) average of the week
 if ($CDASH_DB_TYPE == "pgsql") {

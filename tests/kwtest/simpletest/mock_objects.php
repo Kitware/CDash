@@ -1,21 +1,19 @@
 <?php
 /**
  *  base include file for SimpleTest
- * @package    SimpleTest
- * @subpackage MockObjects
  * @version    $Id$
  */
 
 /**#@+
  * include SimpleTest files
  */
-require_once(dirname(__FILE__) . '/expectation.php');
-require_once(dirname(__FILE__) . '/simpletest.php');
-require_once(dirname(__FILE__) . '/dumper.php');
-require_once(dirname(__FILE__) . '/reflection_php5.php');
+require_once dirname(__FILE__) . '/expectation.php';
+require_once dirname(__FILE__) . '/simpletest.php';
+require_once dirname(__FILE__) . '/dumper.php';
+require_once dirname(__FILE__) . '/reflection_php5.php';
 /**#@-*/
 
-/**
+/*
  * Default character simpletest will substitute for any value
  */
 if (!defined('MOCK_ANYTHING')) {
@@ -24,8 +22,6 @@ if (!defined('MOCK_ANYTHING')) {
 
 /**
  *    Parameter comparison assertion.
- * @package SimpleTest
- * @subpackage MockObjects
  */
 class ParametersExpectation extends SimpleExpectation
 {
@@ -48,7 +44,7 @@ class ParametersExpectation extends SimpleExpectation
     /**
      *    Tests the assertion. True if correct.
      * @param array $parameters Comparison values.
-     * @return boolean              True if correct.
+     * @return bool              True if correct.
      */
     public function test($parameters)
     {
@@ -70,7 +66,7 @@ class ParametersExpectation extends SimpleExpectation
      *    Tests an individual parameter.
      * @param mixed $parameter Value to test.
      * @param mixed $expected Comparison value.
-     * @return boolean            True if expectation
+     * @return bool            True if expectation
      *                               fulfilled.
      */
     protected function testParameter($parameter, $expected)
@@ -158,8 +154,6 @@ class ParametersExpectation extends SimpleExpectation
 
 /**
  *    Confirms that the number of calls on a method is as expected.
- * @package    SimpleTest
- * @subpackage MockObjects
  */
 class CallCountExpectation extends SimpleExpectation
 {
@@ -170,7 +164,7 @@ class CallCountExpectation extends SimpleExpectation
      *    Stashes the method and expected count for later
      *    reporting.
      * @param string $method Name of method to confirm against.
-     * @param integer $count Expected number of calls.
+     * @param int $count Expected number of calls.
      * @param string $message Custom error message.
      */
     public function __construct($method, $count, $message = '%s')
@@ -182,8 +176,8 @@ class CallCountExpectation extends SimpleExpectation
 
     /**
      *    Tests the assertion. True if correct.
-     * @param integer $compare Measured call count.
-     * @return boolean             True if expected.
+     * @param int $compare Measured call count.
+     * @return bool             True if expected.
      */
     public function test($compare)
     {
@@ -192,7 +186,7 @@ class CallCountExpectation extends SimpleExpectation
 
     /**
      *    Reports the comparison.
-     * @param integer $compare Measured call count.
+     * @param int $compare Measured call count.
      * @return string              Message to show.
      */
     public function testMessage($compare)
@@ -205,8 +199,6 @@ class CallCountExpectation extends SimpleExpectation
 
 /**
  *    Confirms that the number of calls on a method is as expected.
- * @package    SimpleTest
- * @subpackage MockObjects
  */
 class MinimumCallCountExpectation extends SimpleExpectation
 {
@@ -217,7 +209,7 @@ class MinimumCallCountExpectation extends SimpleExpectation
      *    Stashes the method and expected count for later
      *    reporting.
      * @param string $method Name of method to confirm against.
-     * @param integer $count Minimum number of calls.
+     * @param int $count Minimum number of calls.
      * @param string $message Custom error message.
      */
     public function __construct($method, $count, $message = '%s')
@@ -229,8 +221,8 @@ class MinimumCallCountExpectation extends SimpleExpectation
 
     /**
      *    Tests the assertion. True if correct.
-     * @param integer $compare Measured call count.
-     * @return boolean             True if enough.
+     * @param int $compare Measured call count.
+     * @return bool             True if enough.
      */
     public function test($compare)
     {
@@ -239,7 +231,7 @@ class MinimumCallCountExpectation extends SimpleExpectation
 
     /**
      *    Reports the comparison.
-     * @param integer $compare Measured call count.
+     * @param int $compare Measured call count.
      * @return string              Message to show.
      */
     public function testMessage($compare)
@@ -252,8 +244,6 @@ class MinimumCallCountExpectation extends SimpleExpectation
 
 /**
  *    Confirms that the number of calls on a method is as expected.
- * @package      SimpleTest
- * @subpackage   MockObjects
  */
 class MaximumCallCountExpectation extends SimpleExpectation
 {
@@ -264,7 +254,7 @@ class MaximumCallCountExpectation extends SimpleExpectation
      *    Stashes the method and expected count for later
      *    reporting.
      * @param string $method Name of method to confirm against.
-     * @param integer $count Minimum number of calls.
+     * @param int $count Minimum number of calls.
      * @param string $message Custom error message.
      */
     public function __construct($method, $count, $message = '%s')
@@ -276,8 +266,8 @@ class MaximumCallCountExpectation extends SimpleExpectation
 
     /**
      *    Tests the assertion. True if correct.
-     * @param integer $compare Measured call count.
-     * @return boolean             True if not over.
+     * @param int $compare Measured call count.
+     * @return bool             True if not over.
      */
     public function test($compare)
     {
@@ -286,7 +276,7 @@ class MaximumCallCountExpectation extends SimpleExpectation
 
     /**
      *    Reports the comparison.
-     * @param integer $compare Measured call count.
+     * @param int $compare Measured call count.
      * @return string              Message to show.
      */
     public function testMessage($compare)
@@ -300,8 +290,6 @@ class MaximumCallCountExpectation extends SimpleExpectation
 /**
  *    Retrieves method actions by searching the
  *    parameter lists until an expected match is found.
- * @package SimpleTest
- * @subpackage MockObjects
  */
 class SimpleSignatureMap
 {
@@ -351,7 +339,7 @@ class SimpleSignatureMap
      *    set. True if successful.
      * @param array $parameters Parameters to search by
      *                                without wildcards.
-     * @return boolean             True if a match is present.
+     * @return bool             True if a match is present.
      */
     public function isMatch($parameters)
     {
@@ -394,8 +382,6 @@ class SimpleSignatureMap
  *    at a specific time, or always. Specific time settings
  *    trump lasting ones, otherwise the most recently added
  *    will mask an earlier match.
- * @package SimpleTest
- * @subpackage MockObjects
  */
 class SimpleCallSchedule
 {
@@ -434,7 +420,7 @@ class SimpleCallSchedule
     /**
      *    Stores an action against a signature that
      *    will fire at a specific time in the future.
-     * @param integer $step delay of calls to this method,
+     * @param int $step delay of calls to this method,
      *                                 0 is next.
      * @param string $method Method name.
      * @param array $args Calling parameters.
@@ -471,7 +457,7 @@ class SimpleCallSchedule
     /**
      *    Actually carry out the action stored previously,
      *    if the parameters match.
-     * @param integer $step Time of call.
+     * @param int $step Time of call.
      * @param string $method Method name.
      * @param array $args The parameters making up the
      *                              rest of the call.
@@ -523,8 +509,6 @@ class SimpleCallSchedule
  *    A type of SimpleMethodAction.
  *    Stashes a value for returning later. Follows usual
  *    PHP5 semantics of objects being returned by reference.
- * @package SimpleTest
- * @subpackage MockObjects
  */
 class SimpleReturn
 {
@@ -554,8 +538,6 @@ class SimpleReturn
 /**
  *    A type of SimpleMethodAction.
  *    Stashes a reference for returning later.
- * @package SimpleTest
- * @subpackage MockObjects
  */
 class SimpleByReference
 {
@@ -583,8 +565,6 @@ class SimpleByReference
 /**
  *    A type of SimpleMethodAction.
  *    Stashes a value for returning later.
- * @package SimpleTest
- * @subpackage MockObjects
  */
 class SimpleByValue
 {
@@ -615,8 +595,6 @@ class SimpleByValue
 /**
  *    A type of SimpleMethodAction.
  *    Stashes an exception for throwing later.
- * @package SimpleTest
- * @subpackage MockObjects
  */
 class SimpleThrower
 {
@@ -643,8 +621,6 @@ class SimpleThrower
 /**
  *    A type of SimpleMethodAction.
  *    Stashes an error for emitting later.
- * @package SimpleTest
- * @subpackage MockObjects
  */
 class SimpleErrorThrower
 {
@@ -654,7 +630,7 @@ class SimpleErrorThrower
     /**
      *    Stashes an error to throw later.
      * @param string $error Error message.
-     * @param integer $severity PHP error constant, e.g E_USER_ERROR.
+     * @param int $severity PHP error constant, e.g E_USER_ERROR.
      */
     public function __construct($error, $severity)
     {
@@ -681,8 +657,6 @@ class SimpleErrorThrower
  *    expectations against it's attached test case in
  *    addition to the server stub behaviour or returning
  *    preprogrammed responses.
- * @package SimpleTest
- * @subpackage MockObjects
  */
 class SimpleMock
 {
@@ -734,7 +708,7 @@ class SimpleMock
      *    Die if bad arguments array is passed.
      * @param mixed $args The arguments value to be checked.
      * @param string $task Description of task attempt.
-     * @return boolean        Valid arguments
+     * @return bool        Valid arguments
      */
     protected function checkArgumentsIsArray($args, $task)
     {
@@ -796,7 +770,7 @@ class SimpleMock
     /**
      *    Fetches the call count of a method so far.
      * @param string $method Method name called.
-     * @return integer              Number of calls so far.
+     * @return int              Number of calls so far.
      */
     public function getCallCount($method)
     {
@@ -826,7 +800,7 @@ class SimpleMock
      *    Sets a return for a parameter list that will
      *    be passed only when the required call count
      *    is reached.
-     * @param integer $timing Number of calls in the future
+     * @param int $timing Number of calls in the future
      *                             to which the result applies. If
      *                             not set then all calls will return
      *                             the value.
@@ -865,7 +839,7 @@ class SimpleMock
      *    Sets a return for a parameter list that will
      *    be passed by value only when the required call count
      *    is reached.
-     * @param integer $timing Number of calls in the future
+     * @param int $timing Number of calls in the future
      *                             to which the result applies. If
      *                             not set then all calls will return
      *                             the value.
@@ -910,7 +884,7 @@ class SimpleMock
      *    Sets a return for a parameter list that will
      *    be passed by value only when the required call count
      *    is reached.
-     * @param integer $timing Number of calls in the future
+     * @param int $timing Number of calls in the future
      *                              to which the result applies. If
      *                              not set then all calls will return
      *                              the value.
@@ -957,7 +931,7 @@ class SimpleMock
      *    expected parameters in that call. The
      *    expected call count will be adjusted if it
      *    is set too low to reach this call.
-     * @param integer $timing Number of calls in the future at
+     * @param int $timing Number of calls in the future at
      *                              which to test. Next call is 0.
      * @param string $method Method call to test.
      * @param array $args Expected parameters for the call
@@ -983,7 +957,7 @@ class SimpleMock
      *    a method will be called. The tally method
      *    is used to check this.
      * @param string $method Method call to test.
-     * @param integer $count Number of times it should
+     * @param int $count Number of times it should
      *                                 have been called at tally.
      * @param string $message Overridden message.
      */
@@ -999,7 +973,7 @@ class SimpleMock
      *    Sets the number of times a method may be called
      *    before a test failure is triggered.
      * @param string $method Method call to test.
-     * @param integer $count Most number of times it should
+     * @param int $count Most number of times it should
      *                                 have been called.
      * @param string $message Overridden message.
      */
@@ -1015,7 +989,7 @@ class SimpleMock
      *    Sets the number of times to call a method to prevent
      *    a failure on the tally.
      * @param string $method Method call to test.
-     * @param integer $count Least number of times it should
+     * @param int $count Least number of times it should
      *                               have been called.
      * @param string $message Overridden message.
      */
@@ -1092,7 +1066,7 @@ class SimpleMock
     /**
      *    Sets up a trigger to throw an exception upon the
      *    method call.
-     * @param integer $timing When to throw the exception. A
+     * @param int $timing When to throw the exception. A
      *                              value of 0 throws immediately.
      *                              A value of 1 actually allows one call
      *                              to this method before throwing. 2
@@ -1123,7 +1097,7 @@ class SimpleMock
      *                              If given then the exception
      *                              will only be thrown if the
      *                              method call matches the arguments.
-     * @param integer $severity The PHP severity level. Defaults
+     * @param int $severity The PHP severity level. Defaults
      *                              to E_USER_ERROR.
      */
     public function errorOn($method, $error = 'A mock error', $args = false, $severity = E_USER_ERROR)
@@ -1135,7 +1109,7 @@ class SimpleMock
     /**
      *    Sets up a trigger to throw an error upon a specific
      *    method call.
-     * @param integer $timing When to throw the exception. A
+     * @param int $timing When to throw the exception. A
      *                              value of 0 throws immediately.
      *                              A value of 1 actually allows one call
      *                              to this method before throwing. 2
@@ -1147,7 +1121,7 @@ class SimpleMock
      *                              If given then the exception
      *                              will only be thrown if the
      *                              method call matches the arguments.
-     * @param integer $severity The PHP severity level. Defaults
+     * @param int $severity The PHP severity level. Defaults
      *                              to E_USER_ERROR.
      */
     public function errorAt($timing, $method, $error = 'A mock error', $args = false, $severity = E_USER_ERROR)
@@ -1208,7 +1182,7 @@ class SimpleMock
      *    then an error is triggered.
      * @param string $method Method name.
      * @param array $args Calling arguments.
-     * @param integer $step Current position in the
+     * @param int $step Current position in the
      *                               call history.
      * @return mixed              Stored return or other action.
      */
@@ -1221,7 +1195,7 @@ class SimpleMock
      *    Tests the arguments against expectations.
      * @param string $method Method to check.
      * @param array $args Argument list to match.
-     * @param integer $timing The position of this call
+     * @param int $timing The position of this call
      *                                 in the call history.
      */
     protected function checkExpectations($method, $args, $timing)
@@ -1260,7 +1234,7 @@ class SimpleMock
 
     /**
      *  Restores the E_STRICT level if it was previously set.
-     * @param integer $was Previous error reporting level.
+     * @param int $was Previous error reporting level.
      */
     private function restoreEStrict($was)
     {
@@ -1271,8 +1245,6 @@ class SimpleMock
 /**
  *    Static methods only service class for code generation of
  *    mock objects.
- * @package SimpleTest
- * @subpackage MockObjects
  */
 class Mock
 {
@@ -1331,8 +1303,6 @@ class Mock
 
 /**
  *    Service class for code generation of mock objects.
- * @package SimpleTest
- * @subpackage MockObjects
  */
 class MockGenerator
 {
@@ -1568,7 +1538,7 @@ class MockGenerator
      *    Tests to see if a special PHP method is about to
      *    be stubbed by mistake.
      * @param string $method Method name.
-     * @return boolean          True if special.
+     * @return bool          True if special.
      */
     protected function isConstructor($method)
     {

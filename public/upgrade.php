@@ -14,12 +14,12 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include(dirname(__DIR__) . "/config/config.php");
-require_once("include/pdo.php");
-include('public/login.php');
-include_once("include/common.php");
-include("include/version.php");
-include_once("include/upgrade_functions.php");
+include dirname(__DIR__) . "/config/config.php";
+require_once "include/pdo.php";
+include 'public/login.php';
+include_once "include/common.php";
+include "include/version.php";
+include_once "include/upgrade_functions.php";
 
 set_time_limit(0);
 
@@ -571,7 +571,7 @@ if (isset($_GET['upgrade-1-8'])) {
 if (isset($_GET['upgrade-2-0'])) {
     // Add column id to test2image and testmeasurement
     if (!pdo_query("SELECT id FROM test2image LIMIT 1")) {
-        include(dirname(__DIR__) . "/config/config.php");
+        include dirname(__DIR__) . "/config/config.php";
         if ($CDASH_DB_TYPE != "pgsql") {
             pdo_query("ALTER TABLE testmeasurement ADD id BIGINT NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (id)");
             pdo_query("ALTER TABLE test2image ADD id BIGINT NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (id)");
@@ -776,7 +776,6 @@ if (isset($_POST["CompressTestOutput"])) {
     }
 }
 
-
 // Compute the testtime
 if ($ComputeTestTiming) {
     @$TestTimingDays = $_POST["TestTimingDays"];
@@ -805,7 +804,7 @@ if ($ComputeUpdateStatistics) {
     }
 }
 
-/** Cleanup the database */
+/* Cleanup the database */
 if ($Cleanup) {
     delete_unused_rows('banner', 'projectid', 'project');
     delete_unused_rows('blockbuild', 'projectid', 'project');
@@ -859,7 +858,7 @@ if ($Cleanup) {
     $xml .= add_XML_value("alert", "Database cleanup complete.");
 }
 
-/** Check the builds with wrong date */
+/* Check the builds with wrong date */
 if ($CheckBuildsWrongDate) {
     $currentdate = time() + 3600 * 24 * 3; // or 3 days away from now
     $forwarddate = date(FMT_DATETIME, $currentdate);
@@ -871,7 +870,7 @@ if ($CheckBuildsWrongDate) {
     }
 }
 
-/** Delete the builds with wrong date */
+/* Delete the builds with wrong date */
 if ($DeleteBuildsWrongDate) {
     $currentdate = time() + 3600 * 24 * 3; // or 3 days away from now
     $forwarddate = date(FMT_DATETIME, $currentdate);
@@ -960,7 +959,6 @@ if ($CreateDefaultGroups) {
 
     $xml .= add_XML_value("alert", "Builds have been added to default groups successfully.");
 }
-
 
 $xml .= "</cdash>";
 

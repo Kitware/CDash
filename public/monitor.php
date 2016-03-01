@@ -14,8 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once('login.php');
-
+require_once 'login.php';
 
 function echo_currently_processing_submissions()
 {
@@ -70,7 +69,6 @@ function echo_currently_processing_submissions()
     echo '<br/>';
 }
 
-
 function echo_pending_submissions()
 {
     $rows = pdo_all_rows_query(
@@ -100,7 +98,6 @@ function echo_pending_submissions()
     echo '</pre>';
     echo '<br/>';
 }
-
 
 function echo_average_wait_time($projectid)
 {
@@ -151,7 +148,6 @@ function echo_average_wait_time($projectid)
     echo "\n";
 }
 
-
 function echo_average_wait_times()
 {
     $rows = pdo_all_rows_query(
@@ -173,7 +169,6 @@ function echo_average_wait_times()
     echo '<br/>';
 }
 
-
 function echo_submissionprocessor_table()
 {
     $rows = pdo_all_rows_query(
@@ -194,7 +189,6 @@ function echo_submissionprocessor_table()
     echo '</pre>';
     echo '<br/>';
 }
-
 
 function echo_submission_table()
 {
@@ -234,13 +228,11 @@ function echo_submission_table()
     echo '<br/>';
 }
 
-
 function echo_project_data_sizes()
 {
     echo "<h3>Project Data Sizes</h3>";
     echo "All sizes measured in millions of bytes<br/>";
     $sep = ', ';
-
 
     $sql = "SELECT p.name, SUM(LENGTH(t.output)+LENGTH(t.details)+LENGTH(t.command)+LENGTH(t.path)+LENGTH(t.name)) AS testsize " .
         "FROM project AS p, test AS t " .
@@ -260,7 +252,6 @@ function echo_project_data_sizes()
     echo '</pre>';
     echo '<br/>';
 
-
     $sql = "SELECT p.name, SUM(LENGTH(cov.log)) AS covsize " .
         "FROM project AS p, build AS b, coveragefilelog AS cov " .
         "WHERE p.id=b.projectid AND b.id=cov.buildid " .
@@ -278,7 +269,6 @@ function echo_project_data_sizes()
     }
     echo '</pre>';
     echo '<br/>';
-
 
     $sql = "SELECT p.name, SUM(LENGTH(da.log)) AS dasize " .
         "FROM project AS p, build AS b, dynamicanalysis AS da " .
@@ -298,7 +288,6 @@ function echo_project_data_sizes()
     echo '</pre>';
     echo '<br/>';
 }
-
 
 if ($session_OK) {
     $userid = $_SESSION['cdash']['loginid'];

@@ -14,7 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-
 function getFilterDefinitionXML($key, $uitext, $type, $valuelist, $defaultvalue)
 {
     $xml = '<def>';
@@ -29,7 +28,6 @@ function getFilterDefinitionXML($key, $uitext, $type, $valuelist, $defaultvalue)
     return $xml;
 }
 
-
 interface PageSpecificFilters
 {
     public function getDefaultFilter();
@@ -40,7 +38,6 @@ interface PageSpecificFilters
 
     public function getSqlField($field);
 }
-
 
 class DefaultFilters implements PageSpecificFilters
 {
@@ -82,7 +79,6 @@ class DefaultFilters implements PageSpecificFilters
             E_USER_WARNING);
     }
 }
-
 
 class IndexPhpFilters extends DefaultFilters
 {
@@ -303,7 +299,6 @@ class IndexPhpFilters extends DefaultFilters
     }
 }
 
-
 class QueryTestsPhpFilters extends DefaultFilters
 {
     public function getDefaultFilter()
@@ -388,7 +383,6 @@ class QueryTestsPhpFilters extends DefaultFilters
         return $sql_field;
     }
 }
-
 
 class ViewCoveragePhpFilters extends DefaultFilters
 {
@@ -478,7 +472,6 @@ class ViewCoveragePhpFilters extends DefaultFilters
     }
 }
 
-
 class ViewTestPhpFilters extends DefaultFilters
 {
     public function getDefaultFilter()
@@ -546,7 +539,6 @@ class ViewTestPhpFilters extends DefaultFilters
     }
 }
 
-
 // Factory method to create page specific filters:
 //
 function createPageSpecificFilters($page_id)
@@ -584,7 +576,6 @@ function createPageSpecificFilters($page_id)
             break;
     }
 }
-
 
 // Take a php $filterdata structure and return it as an XML string representation
 //
@@ -630,7 +621,6 @@ function filterdata_XML($filterdata)
     return $xml;
 }
 
-
 function get_sql_date_value($value)
 {
     // transform from sql_value (assumed UTC)
@@ -644,7 +634,6 @@ function get_sql_date_value($value)
     $sql_value = "'" . gmdate(FMT_DATETIME, $ts) . "'";
     return $sql_value;
 }
-
 
 // Translate "comparison operation" and "compare-to value" to SQL equivalents:
 //
@@ -803,7 +792,6 @@ function get_sql_compare_and_value($compare, $value)
     return array($sql_compare, $sql_value);
 }
 
-
 // Analyze parameter values given in the URL _REQUEST and fill up a php
 // $filterdata structure with them.
 //
@@ -913,7 +901,6 @@ function get_filterdata_from_request($page_id = '')
             'value' => $value,
         );
     }
-
 
     if ($clauses == 0) {
         $sql = '';

@@ -14,14 +14,13 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once(dirname(dirname(__DIR__)) . "/config/config.php");
-require_once("include/pdo.php");
-require_once("include/common.php");
+require_once dirname(dirname(__DIR__)) . "/config/config.php";
+require_once "include/pdo.php";
+require_once "include/common.php";
 
 $testid = pdo_real_escape_numeric($_GET["testid"]);
 $buildid = pdo_real_escape_numeric($_GET["buildid"]);
 @$zoomout = $_GET["zoomout"];
-
 
 if (!isset($buildid) || !is_numeric($buildid)) {
     echo "Not a valid buildid!";
@@ -39,7 +38,6 @@ pdo_select_db("$CDASH_DB_NAME", $db);
 $test = pdo_query("SELECT name FROM test WHERE id='$testid'");
 $test_array = pdo_fetch_array($test);
 $testname = $test_array["name"];
-
 
 $build = pdo_query("SELECT name,type,siteid,projectid,starttime
 FROM build WHERE id='$buildid'");

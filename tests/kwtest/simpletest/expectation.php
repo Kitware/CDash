@@ -1,23 +1,19 @@
 <?php
 /**
  *    base include file for SimpleTest
- * @package    SimpleTest
- * @subpackage    UnitTester
  * @version    $Id$
  */
 
 /**#@+
  *    include other SimpleTest class files
  */
-require_once(dirname(__FILE__) . '/dumper.php');
-require_once(dirname(__FILE__) . '/compatibility.php');
+require_once dirname(__FILE__) . '/dumper.php';
+require_once dirname(__FILE__) . '/compatibility.php';
 /**#@-*/
 
 /**
  *    Assertion that can display failure information.
  *    Also includes various helper methods.
- * @package SimpleTest
- * @subpackage UnitTester
  * @abstract
  */
 class SimpleExpectation
@@ -38,8 +34,7 @@ class SimpleExpectation
     /**
      *    Tests the expectation. True if correct.
      * @param mixed $compare Comparison value.
-     * @return boolean              True if correct.
-     * @access public
+     * @return bool              True if correct.
      * @abstract
      */
     public function test($compare)
@@ -51,7 +46,6 @@ class SimpleExpectation
      * @param mixed $compare Comparison value.
      * @return string             Description of success
      *                               or failure.
-     * @access public
      * @abstract
      */
     public function testMessage($compare)
@@ -65,7 +59,6 @@ class SimpleExpectation
      * @param SimpleDumper $dumper For formatting the results.
      * @return string               Description of success
      *                                 or failure.
-     * @access public
      */
     public function overlayMessage($compare, $dumper)
     {
@@ -76,7 +69,6 @@ class SimpleExpectation
     /**
      *    Accessor for the dumper.
      * @return SimpleDumper    Current value dumper.
-     * @access protected
      */
     protected function getDumper()
     {
@@ -92,9 +84,8 @@ class SimpleExpectation
      *    A useful utility method.
      * @param mixed $expectation Hopefully an Expectation
      *                                 class.
-     * @return boolean              True if descended from
+     * @return bool              True if descended from
      *                                 this class.
-     * @access public
      */
     public static function isExpectation($expectation)
     {
@@ -105,16 +96,13 @@ class SimpleExpectation
 
 /**
  *    A wildcard expectation always matches.
- * @package SimpleTest
- * @subpackage MockObjects
  */
 class AnythingExpectation extends SimpleExpectation
 {
     /**
      *    Tests the expectation. Always true.
      * @param mixed $compare Ignored.
-     * @return boolean        True.
-     * @access public
+     * @return bool        True.
      */
     public function test($compare)
     {
@@ -126,7 +114,6 @@ class AnythingExpectation extends SimpleExpectation
      * @param mixed $compare Comparison value.
      * @return string             Description of success
      *                               or failure.
-     * @access public
      */
     public function testMessage($compare)
     {
@@ -137,16 +124,13 @@ class AnythingExpectation extends SimpleExpectation
 
 /**
  *    An expectation that never matches.
- * @package SimpleTest
- * @subpackage MockObjects
  */
 class FailedExpectation extends SimpleExpectation
 {
     /**
      *    Tests the expectation. Always false.
      * @param mixed $compare Ignored.
-     * @return boolean        True.
-     * @access public
+     * @return bool        True.
      */
     public function test($compare)
     {
@@ -157,7 +141,6 @@ class FailedExpectation extends SimpleExpectation
      *    Returns a human readable test message.
      * @param mixed $compare Comparison value.
      * @return string             Description of failure.
-     * @access public
      */
     public function testMessage($compare)
     {
@@ -168,16 +151,13 @@ class FailedExpectation extends SimpleExpectation
 
 /**
  *    An expectation that passes on boolean true.
- * @package SimpleTest
- * @subpackage MockObjects
  */
 class TrueExpectation extends SimpleExpectation
 {
     /**
      *    Tests the expectation.
      * @param mixed $compare Should be true.
-     * @return boolean        True on match.
-     * @access public
+     * @return bool        True on match.
      */
     public function test($compare)
     {
@@ -189,7 +169,6 @@ class TrueExpectation extends SimpleExpectation
      * @param mixed $compare Comparison value.
      * @return string             Description of success
      *                               or failure.
-     * @access public
      */
     public function testMessage($compare)
     {
@@ -200,16 +179,13 @@ class TrueExpectation extends SimpleExpectation
 
 /**
  *    An expectation that passes on boolean false.
- * @package SimpleTest
- * @subpackage MockObjects
  */
 class FalseExpectation extends SimpleExpectation
 {
     /**
      *    Tests the expectation.
      * @param mixed $compare Should be false.
-     * @return boolean        True on match.
-     * @access public
+     * @return bool        True on match.
      */
     public function test($compare)
     {
@@ -221,7 +197,6 @@ class FalseExpectation extends SimpleExpectation
      * @param mixed $compare Comparison value.
      * @return string             Description of success
      *                               or failure.
-     * @access public
      */
     public function testMessage($compare)
     {
@@ -232,8 +207,6 @@ class FalseExpectation extends SimpleExpectation
 
 /**
  *    Test for equality.
- * @package SimpleTest
- * @subpackage UnitTester
  */
 class EqualExpectation extends SimpleExpectation
 {
@@ -243,7 +216,6 @@ class EqualExpectation extends SimpleExpectation
      *    Sets the value to compare against.
      * @param mixed $value Test value to match.
      * @param string $message Customised message on failure.
-     * @access public
      */
     public function __construct($value, $message = '%s')
     {
@@ -255,8 +227,7 @@ class EqualExpectation extends SimpleExpectation
      *    Tests the expectation. True if it matches the
      *    held value.
      * @param mixed $compare Comparison value.
-     * @return boolean              True if correct.
-     * @access public
+     * @return bool              True if correct.
      */
     public function test($compare)
     {
@@ -268,7 +239,6 @@ class EqualExpectation extends SimpleExpectation
      * @param mixed $compare Comparison value.
      * @return string             Description of success
      *                               or failure.
-     * @access public
      */
     public function testMessage($compare)
     {
@@ -283,7 +253,6 @@ class EqualExpectation extends SimpleExpectation
     /**
      *    Accessor for comparison value.
      * @return mixed       Held value to compare with.
-     * @access protected
      */
     protected function getValue()
     {
@@ -293,8 +262,6 @@ class EqualExpectation extends SimpleExpectation
 
 /**
  *    Test for inequality.
- * @package SimpleTest
- * @subpackage UnitTester
  */
 class NotEqualExpectation extends EqualExpectation
 {
@@ -302,7 +269,6 @@ class NotEqualExpectation extends EqualExpectation
      *    Sets the value to compare against.
      * @param mixed $value Test value to match.
      * @param string $message Customised message on failure.
-     * @access public
      */
     public function __construct($value, $message = '%s')
     {
@@ -313,8 +279,7 @@ class NotEqualExpectation extends EqualExpectation
      *    Tests the expectation. True if it differs from the
      *    held value.
      * @param mixed $compare Comparison value.
-     * @return boolean              True if correct.
-     * @access public
+     * @return bool              True if correct.
      */
     public function test($compare)
     {
@@ -326,7 +291,6 @@ class NotEqualExpectation extends EqualExpectation
      * @param mixed $compare Comparison value.
      * @return string             Description of success
      *                               or failure.
-     * @access public
      */
     public function testMessage($compare)
     {
@@ -344,8 +308,6 @@ class NotEqualExpectation extends EqualExpectation
 
 /**
  *    Test for being within a range.
- * @package SimpleTest
- * @subpackage UnitTester
  */
 class WithinMarginExpectation extends SimpleExpectation
 {
@@ -358,7 +320,6 @@ class WithinMarginExpectation extends SimpleExpectation
      * @param mixed $value Test value to match.
      * @param mixed $margin Fuzziness of match.
      * @param string $message Customised message on failure.
-     * @access public
      */
     public function __construct($value, $margin, $message = '%s')
     {
@@ -371,8 +332,7 @@ class WithinMarginExpectation extends SimpleExpectation
      *    Tests the expectation. True if it matches the
      *    held value.
      * @param mixed $compare Comparison value.
-     * @return boolean              True if correct.
-     * @access public
+     * @return bool              True if correct.
      */
     public function test($compare)
     {
@@ -384,7 +344,6 @@ class WithinMarginExpectation extends SimpleExpectation
      * @param mixed $compare Comparison value.
      * @return string             Description of success
      *                               or failure.
-     * @access public
      */
     public function testMessage($compare)
     {
@@ -398,7 +357,6 @@ class WithinMarginExpectation extends SimpleExpectation
     /**
      *    Creates a the message for being within the range.
      * @param mixed $compare Value being tested.
-     * @access private
      */
     protected function withinMessage($compare)
     {
@@ -409,7 +367,6 @@ class WithinMarginExpectation extends SimpleExpectation
     /**
      *    Creates a the message for being within the range.
      * @param mixed $compare Value being tested.
-     * @access private
      */
     protected function outsideMessage($compare)
     {
@@ -425,8 +382,6 @@ class WithinMarginExpectation extends SimpleExpectation
 
 /**
  *    Test for being outside of a range.
- * @package SimpleTest
- * @subpackage UnitTester
  */
 class OutsideMarginExpectation extends WithinMarginExpectation
 {
@@ -436,7 +391,6 @@ class OutsideMarginExpectation extends WithinMarginExpectation
      * @param mixed $value Test value to not match.
      * @param mixed $margin Fuzziness of match.
      * @param string $message Customised message on failure.
-     * @access public
      */
     public function __construct($value, $margin, $message = '%s')
     {
@@ -447,8 +401,7 @@ class OutsideMarginExpectation extends WithinMarginExpectation
      *    Tests the expectation. True if it matches the
      *    held value.
      * @param mixed $compare Comparison value.
-     * @return boolean              True if correct.
-     * @access public
+     * @return bool              True if correct.
      */
     public function test($compare)
     {
@@ -460,7 +413,6 @@ class OutsideMarginExpectation extends WithinMarginExpectation
      * @param mixed $compare Comparison value.
      * @return string             Description of success
      *                               or failure.
-     * @access public
      */
     public function testMessage($compare)
     {
@@ -474,8 +426,6 @@ class OutsideMarginExpectation extends WithinMarginExpectation
 
 /**
  *    Test for reference.
- * @package SimpleTest
- * @subpackage UnitTester
  */
 class ReferenceExpectation
 {
@@ -485,7 +435,6 @@ class ReferenceExpectation
      *    Sets the reference value to compare against.
      * @param mixed $value Test reference to match.
      * @param string $message Customised message on failure.
-     * @access public
      */
     public function __construct(&$value, $message = '%s')
     {
@@ -497,8 +446,7 @@ class ReferenceExpectation
      *    Tests the expectation. True if it exactly
      *    references the held value.
      * @param mixed $compare Comparison reference.
-     * @return boolean              True if correct.
-     * @access public
+     * @return bool              True if correct.
      */
     public function test(&$compare)
     {
@@ -510,7 +458,6 @@ class ReferenceExpectation
      * @param mixed $compare Comparison value.
      * @return string             Description of success
      *                               or failure.
-     * @access public
      */
     public function testMessage($compare)
     {
@@ -529,7 +476,6 @@ class ReferenceExpectation
      * @param SimpleDumper $dumper For formatting the results.
      * @return string               Description of success
      *                                 or failure.
-     * @access public
      */
     public function overlayMessage($compare, $dumper)
     {
@@ -540,7 +486,6 @@ class ReferenceExpectation
     /**
      *    Accessor for the dumper.
      * @return SimpleDumper    Current value dumper.
-     * @access protected
      */
     protected function getDumper()
     {
@@ -554,8 +499,6 @@ class ReferenceExpectation
 
 /**
  *    Test for identity.
- * @package SimpleTest
- * @subpackage UnitTester
  */
 class IdenticalExpectation extends EqualExpectation
 {
@@ -563,7 +506,6 @@ class IdenticalExpectation extends EqualExpectation
      *    Sets the value to compare against.
      * @param mixed $value Test value to match.
      * @param string $message Customised message on failure.
-     * @access public
      */
     public function __construct($value, $message = '%s')
     {
@@ -574,8 +516,7 @@ class IdenticalExpectation extends EqualExpectation
      *    Tests the expectation. True if it exactly
      *    matches the held value.
      * @param mixed $compare Comparison value.
-     * @return boolean              True if correct.
-     * @access public
+     * @return bool              True if correct.
      */
     public function test($compare)
     {
@@ -587,7 +528,6 @@ class IdenticalExpectation extends EqualExpectation
      * @param mixed $compare Comparison value.
      * @return string             Description of success
      *                               or failure.
-     * @access public
      */
     public function testMessage($compare)
     {
@@ -605,8 +545,6 @@ class IdenticalExpectation extends EqualExpectation
 
 /**
  *    Test for non-identity.
- * @package SimpleTest
- * @subpackage UnitTester
  */
 class NotIdenticalExpectation extends IdenticalExpectation
 {
@@ -614,7 +552,6 @@ class NotIdenticalExpectation extends IdenticalExpectation
      *    Sets the value to compare against.
      * @param mixed $value Test value to match.
      * @param string $message Customised message on failure.
-     * @access public
      */
     public function __construct($value, $message = '%s')
     {
@@ -625,8 +562,7 @@ class NotIdenticalExpectation extends IdenticalExpectation
      *    Tests the expectation. True if it differs from the
      *    held value.
      * @param mixed $compare Comparison value.
-     * @return boolean              True if correct.
-     * @access public
+     * @return bool              True if correct.
      */
     public function test($compare)
     {
@@ -638,7 +574,6 @@ class NotIdenticalExpectation extends IdenticalExpectation
      * @param mixed $compare Comparison value.
      * @return string             Description of success
      *                               or failure.
-     * @access public
      */
     public function testMessage($compare)
     {
@@ -654,8 +589,6 @@ class NotIdenticalExpectation extends IdenticalExpectation
 
 /**
  *    Test for a pattern using Perl regex rules.
- * @package SimpleTest
- * @subpackage UnitTester
  */
 class PatternExpectation extends SimpleExpectation
 {
@@ -665,7 +598,6 @@ class PatternExpectation extends SimpleExpectation
      *    Sets the value to compare against.
      * @param string $pattern Pattern to search for.
      * @param string $message Customised message on failure.
-     * @access public
      */
     public function __construct($pattern, $message = '%s')
     {
@@ -676,7 +608,6 @@ class PatternExpectation extends SimpleExpectation
     /**
      *    Accessor for the pattern.
      * @return string       Perl regex as string.
-     * @access protected
      */
     protected function getPattern()
     {
@@ -687,8 +618,7 @@ class PatternExpectation extends SimpleExpectation
      *    Tests the expectation. True if the Perl regex
      *    matches the comparison value.
      * @param string $compare Comparison value.
-     * @return boolean               True if correct.
-     * @access public
+     * @return bool               True if correct.
      */
     public function test($compare)
     {
@@ -700,7 +630,6 @@ class PatternExpectation extends SimpleExpectation
      * @param mixed $compare Comparison value.
      * @return string             Description of success
      *                               or failure.
-     * @access public
      */
     public function testMessage($compare)
     {
@@ -719,7 +648,6 @@ class PatternExpectation extends SimpleExpectation
      *    found and it's position.
      * @param string $pattern Regex to match against.
      * @param string $subject Subject to search.
-     * @access protected
      */
     protected function describePatternMatch($pattern, $subject)
     {
@@ -736,8 +664,6 @@ class PatternExpectation extends SimpleExpectation
 /**
  *    Fail if a pattern is detected within the
  *    comparison.
- * @package SimpleTest
- * @subpackage UnitTester
  */
 class NoPatternExpectation extends PatternExpectation
 {
@@ -745,7 +671,6 @@ class NoPatternExpectation extends PatternExpectation
      *    Sets the reject pattern
      * @param string $pattern Pattern to search for.
      * @param string $message Customised message on failure.
-     * @access public
      */
     public function __construct($pattern, $message = '%s')
     {
@@ -756,8 +681,7 @@ class NoPatternExpectation extends PatternExpectation
      *    Tests the expectation. False if the Perl regex
      *    matches the comparison value.
      * @param string $compare Comparison value.
-     * @return boolean               True if correct.
-     * @access public
+     * @return bool               True if correct.
      */
     public function test($compare)
     {
@@ -769,7 +693,6 @@ class NoPatternExpectation extends PatternExpectation
      * @param string $compare Comparison value.
      * @return string              Description of success
      *                                or failure.
-     * @access public
      */
     public function testMessage($compare)
     {
@@ -786,8 +709,6 @@ class NoPatternExpectation extends PatternExpectation
 
 /**
  *    Tests either type or class name if it's an object.
- * @package SimpleTest
- * @subpackage UnitTester
  */
 class IsAExpectation extends SimpleExpectation
 {
@@ -797,7 +718,6 @@ class IsAExpectation extends SimpleExpectation
      *    Sets the type to compare with.
      * @param string $type Type or class name.
      * @param string $message Customised message on failure.
-     * @access public
      */
     public function __construct($type, $message = '%s')
     {
@@ -808,7 +728,6 @@ class IsAExpectation extends SimpleExpectation
     /**
      *    Accessor for type to check against.
      * @return string    Type or class name.
-     * @access protected
      */
     protected function getType()
     {
@@ -819,8 +738,7 @@ class IsAExpectation extends SimpleExpectation
      *    Tests the expectation. True if the type or
      *    class matches the string value.
      * @param string $compare Comparison value.
-     * @return boolean               True if correct.
-     * @access public
+     * @return bool               True if correct.
      */
     public function test($compare)
     {
@@ -839,7 +757,6 @@ class IsAExpectation extends SimpleExpectation
      *    Coerces type name into a is_*() match.
      * @param string $type User type.
      * @return string             Simpler type.
-     * @access private
      */
     protected function canonicalType($type)
     {
@@ -856,7 +773,6 @@ class IsAExpectation extends SimpleExpectation
      * @param mixed $compare Comparison value.
      * @return string             Description of success
      *                               or failure.
-     * @access public
      */
     public function testMessage($compare)
     {
@@ -869,8 +785,6 @@ class IsAExpectation extends SimpleExpectation
 /**
  *    Tests either type or class name if it's an object.
  *    Will succeed if the type does not match.
- * @package SimpleTest
- * @subpackage UnitTester
  */
 class NotAExpectation extends IsAExpectation
 {
@@ -880,7 +794,6 @@ class NotAExpectation extends IsAExpectation
      *    Sets the type to compare with.
      * @param string $type Type or class name.
      * @param string $message Customised message on failure.
-     * @access public
      */
     public function __construct($type, $message = '%s')
     {
@@ -891,8 +804,7 @@ class NotAExpectation extends IsAExpectation
      *    Tests the expectation. False if the type or
      *    class matches the string value.
      * @param string $compare Comparison value.
-     * @return boolean               True if different.
-     * @access public
+     * @return bool               True if different.
      */
     public function test($compare)
     {
@@ -904,7 +816,6 @@ class NotAExpectation extends IsAExpectation
      * @param mixed $compare Comparison value.
      * @return string             Description of success
      *                               or failure.
-     * @access public
      */
     public function testMessage($compare)
     {
@@ -916,8 +827,6 @@ class NotAExpectation extends IsAExpectation
 
 /**
  *    Tests for existance of a method in an object
- * @package SimpleTest
- * @subpackage UnitTester
  */
 class MethodExistsExpectation extends SimpleExpectation
 {
@@ -927,7 +836,6 @@ class MethodExistsExpectation extends SimpleExpectation
      *    Sets the value to compare against.
      * @param string $method Method to check.
      * @param string $message Customised message on failure.
-     * @return void
      */
     public function __construct($method, $message = '%s')
     {
@@ -938,7 +846,7 @@ class MethodExistsExpectation extends SimpleExpectation
     /**
      *    Tests the expectation. True if the method exists in the test object.
      * @param string $compare Comparison method name.
-     * @return boolean               True if correct.
+     * @return bool               True if correct.
      */
     public function test($compare)
     {
@@ -965,8 +873,6 @@ class MethodExistsExpectation extends SimpleExpectation
 
 /**
  *    Compares an object member's value even if private.
- * @package SimpleTest
- * @subpackage UnitTester
  */
 class MemberExpectation extends IdenticalExpectation
 {
@@ -976,7 +882,6 @@ class MemberExpectation extends IdenticalExpectation
      *    Sets the value to compare against.
      * @param string $method Method to check.
      * @param string $message Customised message on failure.
-     * @return void
      */
     public function __construct($name, $expected)
     {
@@ -987,7 +892,7 @@ class MemberExpectation extends IdenticalExpectation
     /**
      *    Tests the expectation. True if the property value is identical.
      * @param object $actual Comparison object.
-     * @return boolean               True if identical.
+     * @return bool               True if identical.
      */
     public function test($actual)
     {

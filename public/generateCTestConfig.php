@@ -15,12 +15,12 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include(dirname(__DIR__) . "/config/config.php");
-require_once("include/pdo.php");
-include('public/login.php');
-include_once("include/common.php");
-require_once("models/project.php");
-require_once("models/subproject.php");
+include dirname(__DIR__) . "/config/config.php";
+require_once "include/pdo.php";
+include 'public/login.php';
+include_once "include/common.php";
+require_once "models/project.php";
+require_once "models/subproject.php";
 
 set_time_limit(0);
 

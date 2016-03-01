@@ -1,14 +1,12 @@
 <?php
 /**
  *  base include file for SimpleTest
- * @package    SimpleTest
  * @version    $Id$
  */
 
 /**
  *  Static methods for compatibility between different
  *  PHP versions.
- * @package    SimpleTest
  */
 class SimpleTestCompatibility
 {
@@ -16,7 +14,6 @@ class SimpleTestCompatibility
      *    Creates a copy whether in PHP5 or PHP4.
      * @param object $object Thing to copy.
      * @return object            A copy.
-     * @access public
      */
     public static function copy($object)
     {
@@ -33,8 +30,7 @@ class SimpleTestCompatibility
      *    stronger reference constraint.
      * @param mixed $first Test subject.
      * @param mixed $second Comparison object.
-     * @return boolean        True if identical.
-     * @access public
+     * @return bool        True if identical.
      */
     public static function isIdentical($first, $second)
     {
@@ -51,8 +47,7 @@ class SimpleTestCompatibility
      *    Recursive type test.
      * @param mixed $first Test subject.
      * @param mixed $second Comparison object.
-     * @return boolean        True if same type.
-     * @access private
+     * @return bool        True if same type.
      */
     protected static function isIdenticalType($first, $second)
     {
@@ -80,8 +75,7 @@ class SimpleTestCompatibility
      *    Recursive type test for each element of an array.
      * @param mixed $first Test subject.
      * @param mixed $second Comparison object.
-     * @return boolean        True if identical.
-     * @access private
+     * @return bool        True if identical.
      */
     protected static function isArrayOfIdenticalTypes($first, $second)
     {
@@ -103,8 +97,7 @@ class SimpleTestCompatibility
      *    Test for two variables being aliases.
      * @param mixed $first Test subject.
      * @param mixed $second Comparison object.
-     * @return boolean        True if same.
-     * @access public
+     * @return bool        True if same.
      */
     public static function isReference(&$first, &$second)
     {
@@ -130,8 +123,7 @@ class SimpleTestCompatibility
      *    class hiearchy.
      * @param object $object Object to test.
      * @param string $class Root name of hiearchy.
-     * @return boolean         True if class in hiearchy.
-     * @access public
+     * @return bool         True if class in hiearchy.
      */
     public static function isA($object, $class)
     {
@@ -156,8 +148,7 @@ class SimpleTestCompatibility
     /**
      *    Sets a socket timeout for each chunk.
      * @param resource $handle Socket handle.
-     * @param integer $timeout Limit in seconds.
-     * @access public
+     * @param int $timeout Limit in seconds.
      */
     public static function setTimeout($handle, $timeout)
     {

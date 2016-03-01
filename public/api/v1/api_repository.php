@@ -14,15 +14,15 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include_once('api.php');
+include_once 'api.php';
 
 class RepositoryAPI extends CDashAPI
 {
     /** return the example URL  */
     private function ExampleURL()
     {
-        include_once('include/common.php');
-        include_once('include/repository.php');
+        include_once 'include/common.php';
+        include_once 'include/repository.php';
 
         if (!isset($this->Parameters['url'])) {
             echo "url parameter not set";

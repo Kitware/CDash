@@ -15,7 +15,7 @@
 =========================================================================*/
 
 // It is assumed that appropriate headers should be included before including this file
-include_once('models/siteinformation.php');
+include_once 'models/siteinformation.php';
 
 class site
 {

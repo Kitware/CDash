@@ -15,12 +15,12 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include(dirname(__DIR__) . "/config/config.php");
-require_once("include/pdo.php");
-include('public/login.php');
-include_once("include/common.php");
-include("include/version.php");
-require_once('models/build.php');
+include dirname(__DIR__) . "/config/config.php";
+require_once "include/pdo.php";
+include 'public/login.php';
+include_once "include/common.php";
+include "include/version.php";
+require_once 'models/build.php';
 
 // Checks
 @$buildid = pdo_real_escape_numeric($_GET['buildid']);
@@ -173,7 +173,6 @@ $xml .= add_XML_value("relatedBuildsLink", $relatedBuildsLink);
 $xml .= add_XML_value("filterstarttime", date("Y-m-d", strtotime($build_array["starttime"] . " UTC -7 days")));
 $xml .= add_XML_value("filterendtime", date("Y-m-d", strtotime($build_array["starttime"] . " UTC")));
 
-
 // Find the OS and compiler information
 $buildinformation = pdo_query("SELECT * FROM buildinformation WHERE buildid='$buildid'");
 if (pdo_num_rows($buildinformation) > 0) {
@@ -197,7 +196,6 @@ if (pdo_num_rows($buildinformation) > 0) {
         $xml .= add_XML_value("compilerversion", $buildinformation_array["compilerversion"]);
     }
 }
-
 
 $xml .= add_XML_value("generator", $build_array["generator"]);
 $xml .= add_XML_value("command", $build_array["command"]);
@@ -318,7 +316,6 @@ if (pdo_num_rows($buildupdate) > 0) {
     $xml .= "</update>";
 }
 
-
 // Configure
 $xml .= "<configure>";
 $configure = pdo_query("SELECT * FROM configure WHERE buildid='$buildid'");
@@ -331,7 +328,6 @@ if ($configure_array["status"] != 0) {
 
 $xml .= add_XML_value("nerrors", $nerrors);
 $xml .= add_XML_value("nwarnings", $configure_array['warnings']);
-
 
 $xml .= add_XML_value("status", $configure_array["status"]);
 $xml .= add_XML_value("command", $configure_array["command"]);

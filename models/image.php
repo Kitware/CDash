@@ -25,7 +25,6 @@ class image
     public $Data; // In the file refered by Filename
     public $Name; // Use to track the role for test
 
-
     public function __construct()
     {
         $this->Filename = '';
@@ -69,7 +68,7 @@ class image
     /** Save the image */
     public function Save()
     {
-        include("config/config.php");
+        include "config/config.php";
         // Get the data from the file if necessary
         $this->GetData();
 

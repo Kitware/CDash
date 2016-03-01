@@ -16,7 +16,7 @@
 
 $NoXSLGenerate = 1;
 
-include("index.php");
+include "index.php";
 
 @$projectname = $_GET["project"];
 

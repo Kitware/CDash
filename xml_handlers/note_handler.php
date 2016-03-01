@@ -15,9 +15,9 @@
 =========================================================================*/
 
 require_once 'xml_handlers/abstract_handler.php';
-require_once('models/build.php');
-require_once('models/site.php');
-require_once('models/buildnote.php');
+require_once 'models/build.php';
+require_once 'models/site.php';
+require_once 'models/buildnote.php';
 
 class NoteHandler extends AbstractHandler
 {

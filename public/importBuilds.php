@@ -15,14 +15,14 @@
 =========================================================================*/
 
 // Open the database connection
-include(dirname(__DIR__) . "/config/config.php");
-require_once("include/pdo.php");
-include("include/version.php");
-include_once('include/common.php');
-include_once("include/ctestparser.php");
+include dirname(__DIR__) . "/config/config.php";
+require_once "include/pdo.php";
+include "include/version.php";
+include_once 'include/common.php';
+include_once "include/ctestparser.php";
 
 if ($argc != 2) {
-    print "Usage: php $argv[0] directory \n";
+    echo "Usage: php $argv[0] directory \n";
     return -1;
 }
 
@@ -32,13 +32,13 @@ set_time_limit(0);
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME", $db);
 
-print "checking new build files $directory \n";
+echo "checking new build files $directory \n";
 
 // Write the current time in the file
 $lastcheckfile = $directory . "/lastcheck";
 @$lastcheck = file_get_contents($lastcheckfile);
 if (!empty($lastcheck)) {
-    print "last check was " . date("Y-m-d H:i:s", $lastcheck) . "\n";
+    echo "last check was " . date("Y-m-d H:i:s", $lastcheck) . "\n";
 }
 $handle = fopen($lastcheckfile, "wb");
 fwrite($handle, time());

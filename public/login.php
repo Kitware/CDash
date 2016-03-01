@@ -14,11 +14,11 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include(dirname(__DIR__) . "/config/config.php");
-include_once("include/common.php");
-require_once("include/pdo.php");
-include_once("include/version.php");
-include_once('include/login_functions.php');
+include dirname(__DIR__) . "/config/config.php";
+include_once "include/common.php";
+require_once "include/pdo.php";
+include_once "include/version.php";
+include_once 'include/login_functions.php';
 
 $loginerror = "";
 
@@ -59,5 +59,5 @@ if ($CDASH_USER_CREATE_PROJECTS && isset($_SESSION['cdash'])) {
 
 // If we should use the local/prelogin.php
 if (file_exists("local/prelogin.php")) {
-    include("local/prelogin.php");
+    include "local/prelogin.php";
 }

@@ -14,7 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-
 function cdashmail($to, $subject, $body, $headers = false)
 {
     if (empty($to)) {

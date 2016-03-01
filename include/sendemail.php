@@ -14,13 +14,12 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once("include/cdashmail.php");
-
+require_once "include/cdashmail.php";
 
 /** Check the email preferences for errors */
 function checkEmailPreferences($emailcategory, $errors, $fixes = false)
 {
-    include_once("include/common.php");
+    include_once "include/common.php";
 
     if ($fixes) {
         $configures = $errors['fixes']['configure_fixes'];
@@ -56,8 +55,8 @@ function checkEmailPreferences($emailcategory, $errors, $fixes = false)
 /** Given a user check if we should send an email based on labels */
 function checkEmailLabel($projectid, $userid, $buildid, $emailcategory = 62)
 {
-    include_once("models/labelemail.php");
-    include_once("models/build.php");
+    include_once "models/labelemail.php";
+    include_once "models/build.php";
     $LabelEmail = new LabelEmail();
     $LabelEmail->UserId = $userid;
     $LabelEmail->ProjectId = $projectid;
@@ -100,10 +99,10 @@ function checkEmailLabel($projectid, $userid, $buildid, $emailcategory = 62)
 function check_email_errors($buildid, $checktesttimeingchanged, $testtimemaxstatus, $checkpreviouserrors)
 {
     // Includes
-    require_once("models/buildconfigure.php");
-    require_once("models/build.php");
-    require_once("models/buildtest.php");
-    require_once("models/dynamicanalysis.php");
+    require_once "models/buildconfigure.php";
+    require_once "models/build.php";
+    require_once "models/buildtest.php";
+    require_once "models/dynamicanalysis.php";
 
     $errors = array();
     $errors['errors'] = true;
@@ -140,7 +139,6 @@ function check_email_errors($buildid, $checktesttimeingchanged, $testtimemaxstat
     ) {
         $errors['errors'] = false;
     }
-
 
     // look for the previous build
     $previousbuildid = $Build->GetPreviousBuildId();
@@ -181,8 +179,8 @@ function check_email_errors($buildid, $checktesttimeingchanged, $testtimemaxstat
 function check_email_update_errors($buildid)
 {
     // Includes
-    require_once("models/buildupdate.php");
-    require_once("models/build.php");
+    require_once "models/buildupdate.php";
+    require_once "models/build.php";
 
     $errors = array();
     $errors['errors'] = true;
@@ -200,11 +198,10 @@ function check_email_update_errors($buildid)
     return $errors;
 }
 
-
 /** Return the list of user id and committer emails who should get emails */
 function lookup_emails_to_send($errors, $buildid, $projectid, $buildtype, $fixes = false, $collectUnregisteredCommitters = false)
 {
-    require_once("models/userproject.php");
+    require_once "models/userproject.php";
 
     $userids = array();
     $committeremails = array();
@@ -332,11 +329,10 @@ function lookup_emails_to_send($errors, $buildid, $projectid, $buildtype, $fixes
     return $result;
 }
 
-
 /** Return a summary for a category of error */
 function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $testtimemaxstatus, $emailtesttimingchanged)
 {
-    include("config/config.php");
+    include "config/config.php";
 
     $serverURI = get_server_URI();
     // In the case of asynchronous submission, the serverURI contains /cdash
@@ -526,16 +522,15 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
     return $information;
 }
 
-
 /** Send a summary email */
 function sendsummaryemail($projectid, $groupid, $errors, $buildid)
 {
-    include("config/config.php");
-    require_once("models/userproject.php");
-    require_once("models/user.php");
-    require_once("models/project.php");
-    require_once("models/build.php");
-    require_once("models/site.php");
+    include "config/config.php";
+    require_once "models/userproject.php";
+    require_once "models/user.php";
+    require_once "models/project.php";
+    require_once "models/build.php";
+    require_once "models/site.php";
 
     $Project = new Project();
     $Project->Id = $projectid;
@@ -851,10 +846,10 @@ function check_email_sent($userid, $buildid, $errorkey)
 /** Send the email to the user when he fixed something */
 function send_email_fix_to_user($userid, $emailtext, $Build, $Project)
 {
-    include("config/config.php");
-    include_once("include/common.php");
-    require_once("models/site.php");
-    require_once("models/user.php");
+    include "config/config.php";
+    include_once "include/common.php";
+    require_once "models/site.php";
+    require_once "models/user.php";
 
     $serverURI = get_server_URI();
     // In the case of asynchronous submission, the serverURI contains /cdash
@@ -981,14 +976,13 @@ function send_email_fix_to_user($userid, $emailtext, $Build, $Project)
     }
 }
 
-
 // Send one broken submission email to one email address
 //
 function send_email_to_address($emailaddress, $emailtext, $Build, $Project)
 {
-    include("config/config.php");
-    include_once("include/common.php");
-    require_once("models/site.php");
+    include "config/config.php";
+    include_once "include/common.php";
+    require_once "models/site.php";
 
     $serverURI = get_server_URI();
     // In the case of asynchronous submission, the serverURI contains /cdash
@@ -1139,10 +1133,9 @@ function send_email_to_address($emailaddress, $emailtext, $Build, $Project)
     return $sent;
 }
 
-
 function send_email_to_user($userid, $emailtext, $Build, $Project)
 {
-    require_once("models/user.php");
+    require_once "models/user.php";
 
     $User = new User();
     $User->Id = $userid;
@@ -1155,11 +1148,10 @@ function send_email_to_user($userid, $emailtext, $Build, $Project)
     }
 }
 
-
 function send_error_email($userid, $emailaddress, $sendEmail, $errors,
                           $Build, $Project, $prefix = 'none')
 {
-    include("config/config.php");
+    include "config/config.php";
     $emailtext = array();
     $emailtext['nerror'] = 0;
 
@@ -1259,7 +1251,6 @@ function send_error_email($userid, $emailaddress, $sendEmail, $errors,
     }
 }
 
-
 function getHandlerErrorKeyPrefix($handler)
 {
     if ($handler instanceof UpdateHandler) {
@@ -1288,12 +1279,12 @@ function getHandlerErrorKeyPrefix($handler)
  * step fails */
 function send_update_email($handler, $projectid)
 {
-    include("config/config.php");
-    include_once("include/common.php");
-    require_once("include/pdo.php");
-    require_once("models/build.php");
-    require_once("models/project.php");
-    require_once("models/buildgroup.php");
+    include "config/config.php";
+    include_once "include/common.php";
+    require_once "include/pdo.php";
+    require_once "models/build.php";
+    require_once "models/project.php";
+    require_once "models/buildgroup.php";
 
     $Project = new Project();
     $Project->Id = $projectid;
@@ -1386,12 +1377,12 @@ function send_update_email($handler, $projectid)
 /** Main function to send email if necessary */
 function sendemail($handler, $projectid)
 {
-    include("config/config.php");
-    include_once("include/common.php");
-    require_once("include/pdo.php");
-    require_once("models/build.php");
-    require_once("models/project.php");
-    require_once("models/buildgroup.php");
+    include "config/config.php";
+    include_once "include/common.php";
+    require_once "include/pdo.php";
+    require_once "models/build.php";
+    require_once "models/project.php";
+    require_once "models/buildgroup.php";
 
     $Project = new Project();
     $Project->Id = $projectid;
@@ -1400,7 +1391,7 @@ function sendemail($handler, $projectid)
     $sendEmail = null;
 
     if ($CDASH_USE_LOCAL_DIRECTORY && file_exists("local/sendemail.php")) {
-        include_once("local/sendemail.php");
+        include_once "local/sendemail.php";
         $sendEmail = new SendEmail();
         $sendEmail->SetProjectId($projectid);
     }

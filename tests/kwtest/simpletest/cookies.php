@@ -1,15 +1,13 @@
 <?php
 /**
  *  Base include file for SimpleTest
- * @package    SimpleTest
- * @subpackage WebTester
  * @version    $Id$
  */
 
 /**#@+
  *  include other SimpleTest class files
  */
-require_once(dirname(__FILE__) . '/url.php');
+require_once dirname(__FILE__) . '/url.php';
 /**#@-*/
 
 /**
@@ -17,8 +15,6 @@ require_once(dirname(__FILE__) . '/url.php');
  *    arbitary stuff. I have used...
  *    http://wp.netscape.com/newsref/std/cookie_spec.html
  *    http://www.cookiecentral.com/faq/
- * @package SimpleTest
- * @subpackage WebTester
  */
 class SimpleCookie
 {
@@ -35,7 +31,7 @@ class SimpleCookie
      * @param string $value Value of cookie.
      * @param string $path Cookie path if not host wide.
      * @param string $expiry Expiry date as string.
-     * @param boolean $is_secure Currently ignored.
+     * @param bool $is_secure Currently ignored.
      */
     public function __construct($name, $value = false, $path = false, $expiry = false, $is_secure = false)
     {
@@ -59,8 +55,7 @@ class SimpleCookie
      *    new host does not match these rules then the
      *    call will fail.
      * @param string $host New hostname.
-     * @return boolean           True if hostname is valid.
-     * @access public
+     * @return bool           True if hostname is valid.
      */
     public function setHost($host)
     {
@@ -75,7 +70,6 @@ class SimpleCookie
      *    Accessor for the truncated host to which this
      *    cookie applies.
      * @return string       Truncated hostname.
-     * @access public
      */
     public function getHost()
     {
@@ -85,7 +79,7 @@ class SimpleCookie
     /**
      *    Test for a cookie being valid for a host name.
      * @param string $host Host to test against.
-     * @return boolean        True if the cookie would be valid
+     * @return bool        True if the cookie would be valid
      *                           here.
      */
     public function isValidHost($host)
@@ -98,7 +92,6 @@ class SimpleCookie
      *    cookie's host validity.
      * @param string $host Host name to truncate.
      * @return string        Domain or false on a bad host.
-     * @access private
      */
     protected function truncateHost($host)
     {
@@ -114,7 +107,6 @@ class SimpleCookie
     /**
      *    Accessor for name.
      * @return string       Cookie key.
-     * @access public
      */
     public function getName()
     {
@@ -125,7 +117,6 @@ class SimpleCookie
      *    Accessor for value. A deleted cookie will
      *    have an empty string for this.
      * @return string       Cookie value.
-     * @access public
      */
     public function getValue()
     {
@@ -135,7 +126,6 @@ class SimpleCookie
     /**
      *    Accessor for path.
      * @return string       Valid cookie path.
-     * @access public
      */
     public function getPath()
     {
@@ -147,8 +137,7 @@ class SimpleCookie
      *    there. The test path must be longer or
      *    equal to the cookie path.
      * @param string $path Path to test against.
-     * @return boolean           True if cookie valid here.
-     * @access public
+     * @return bool           True if cookie valid here.
      */
     public function isValidPath($path)
     {
@@ -161,7 +150,6 @@ class SimpleCookie
     /**
      *    Accessor for expiry.
      * @return string       Expiry string.
-     * @access public
      */
     public function getExpiry()
     {
@@ -175,12 +163,11 @@ class SimpleCookie
      *    Test to see if cookie is expired against
      *    the cookie format time or timestamp.
      *    Will give true for a session cookie.
-     * @param integer /string $now  Time to test against. Result
+     * @param int /string $now  Time to test against. Result
      *                                will be false if this time
      *                                is later than the cookie expiry.
      *                                Can be either a timestamp integer
      *                                or a cookie format date.
-     * @access public
      */
     public function isExpired($now)
     {
@@ -196,7 +183,7 @@ class SimpleCookie
     /**
      *    Ages the cookie by the specified number of
      *    seconds.
-     * @param integer $interval In seconds.
+     * @param int $interval In seconds.
      * @public
      */
     public function agePrematurely($interval)
@@ -208,8 +195,7 @@ class SimpleCookie
 
     /**
      *    Accessor for the secure flag.
-     * @return boolean       True if cookie needs SSL.
-     * @access public
+     * @return bool       True if cookie needs SSL.
      */
     public function isSecure()
     {
@@ -220,7 +206,6 @@ class SimpleCookie
      *    Adds a trailing and leading slash to the path
      *    if missing.
      * @param string $path Path to fix.
-     * @access private
      */
     protected function fixPath($path)
     {
@@ -237,8 +222,6 @@ class SimpleCookie
 /**
  *    Repository for cookies. This stuff is a
  *    tiny bit browser dependent.
- * @package SimpleTest
- * @subpackage WebTester
  */
 class SimpleCookieJar
 {
@@ -246,7 +229,6 @@ class SimpleCookieJar
 
     /**
      *    Constructor. Jar starts empty.
-     * @access public
      */
     public function __construct()
     {
@@ -257,7 +239,6 @@ class SimpleCookieJar
      *    Removes expired and temporary cookies as if
      *    the browser was closed and re-opened.
      * @param string /integer $now   Time to test expiry against.
-     * @access public
      */
     public function restartSession($date = false)
     {
@@ -279,11 +260,10 @@ class SimpleCookieJar
 
     /**
      *    Ages all cookies in the cookie jar.
-     * @param integer $interval The old session is moved
+     * @param int $interval The old session is moved
      *                                 into the past by this number
      *                                 of seconds. Cookies now over
      *                                 age will be removed.
-     * @access public
      */
     public function agePrematurely($interval)
     {
@@ -300,7 +280,6 @@ class SimpleCookieJar
      * @param string $host Host upon which the cookie is valid.
      * @param string $path Cookie path if not host wide.
      * @param string $expiry Expiry date.
-     * @access public
      */
     public function setCookie($name, $value, $host = false, $path = '/', $expiry = false)
     {
@@ -315,8 +294,7 @@ class SimpleCookieJar
      *    Finds a matching cookie to write over or the
      *    first empty slot if none.
      * @param SimpleCookie $cookie Cookie to write into jar.
-     * @return integer                Available slot.
-     * @access private
+     * @return int                Available slot.
      */
     protected function findFirstMatch($cookie)
     {
@@ -342,7 +320,6 @@ class SimpleCookieJar
      * @param string $name Name of cookie to read.
      * @return string             False if not present, else the
      *                               value as a string.
-     * @access public
      */
     public function getCookieValue($host, $path, $name)
     {
@@ -366,8 +343,7 @@ class SimpleCookieJar
      * @param string $path Cookie path must be shorter than
      *                                 this path.
      * @param string $name Name must match.
-     * @return boolean              True if matched.
-     * @access private
+     * @return bool              True if matched.
      */
     protected function isMatch($cookie, $host, $path, $name)
     {
@@ -388,7 +364,6 @@ class SimpleCookieJar
      *    path. Results are list of strings of form "name=value".
      * @param SimpleUrl $url Url to select by.
      * @return array               Valid name and value pairs.
-     * @access public
      */
     public function selectAsPairs($url)
     {

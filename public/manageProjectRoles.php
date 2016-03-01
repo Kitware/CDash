@@ -14,13 +14,13 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include(dirname(__DIR__) . "/config/config.php");
-require_once("include/pdo.php");
-include('public/login.php');
-include_once('include/common.php');
-include('include/version.php');
-include('models/userproject.php');
-require_once("include/cdashmail.php");
+include dirname(__DIR__) . "/config/config.php";
+require_once "include/pdo.php";
+include 'public/login.php';
+include_once 'include/common.php';
+include 'include/version.php';
+include 'models/userproject.php';
+require_once "include/cdashmail.php";
 
 if ($session_OK) {
     @$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
@@ -68,7 +68,6 @@ if ($session_OK) {
     $xml .= "<menutitle>CDash</menutitle>";
     $xml .= "<menusubtitle>Project Roles</menusubtitle>";
 
-
 // Form post
     @$adduser = $_POST["adduser"];
     @$removeuser = $_POST["removeuser"];
@@ -99,7 +98,7 @@ if ($session_OK) {
 // Register a user and send the email
     function register_user($projectid, $email, $firstName, $lastName, $repositoryCredential)
     {
-        include(dirname(__DIR__) . "/config/config.php");
+        include dirname(__DIR__) . "/config/config.php";
         $UserProject = new UserProject();
         $UserProject->ProjectId = $projectid;
 
@@ -245,7 +244,6 @@ if ($session_OK) {
             $xml .= register_user($projectid, $email, $firstName, $lastName, $repositoryCredential);
         }
     }
-
 
 // Register CVS users
     if ($registerUsers) {
@@ -394,7 +392,6 @@ if ($session_OK) {
         $xml .= add_XML_value("name", $project_array['name']);
         $xml .= add_XML_value("name_encoded", urlencode($project_array['name']));
         $xml .= "</project>";
-
 
         // List the users for that project
         $user = pdo_query("SELECT u.id,u.firstname,u.lastname,u.email,up.role,up.emailtype

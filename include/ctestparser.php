@@ -180,7 +180,7 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
         check_for_immediate_deletion($filename);
         return true;
     }
-    require_once($include_file);
+    require_once $include_file;
 
     // Instantiate the handler.
     $className = $type . "Handler";
@@ -208,7 +208,7 @@ function ctest_parse($filehandler, $projectid, $expected_md5 = '', $do_checksum 
     include 'include/version.php';
 
     if ($CDASH_USE_LOCAL_DIRECTORY && file_exists("local/ctestparser.php")) {
-        require_once("local/ctestparser.php");
+        require_once "local/ctestparser.php";
         $localParser = new LocalParser();
         $localParser->SetProjectId($projectid);
         $localParser->BufferSizeMB = 8192 / (1024 * 1024);

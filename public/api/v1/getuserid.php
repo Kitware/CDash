@@ -14,13 +14,13 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once(dirname(dirname(dirname(__DIR__))) . "/config/config.php");
-require_once("include/common.php");
-require_once("include/pdo.php");
+require_once dirname(dirname(dirname(__DIR__))) . "/config/config.php";
+require_once "include/common.php";
+require_once "include/pdo.php";
 
 // Don't display the login form.
 $noforcelogin = 1;
-include('public/login.php');
+include 'public/login.php';
 
 // Check for authenticated user.
 if (!isset($_SESSION['cdash']) || !isset($_SESSION['cdash']['loginid']) ||

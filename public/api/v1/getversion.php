@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once(dirname(dirname(dirname(__DIR__))) . "/config/config.php");
-require_once("include/version.php");
+require_once dirname(dirname(dirname(__DIR__))) . "/config/config.php";
+require_once "include/version.php";
 
 echo $CDASH_VERSION;

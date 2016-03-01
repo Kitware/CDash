@@ -310,7 +310,6 @@ class coveragesummary
         return true;
     }   // Insert()
 
-
     /** Compute the coverage summary diff */
     public function ComputeDifference()
     {

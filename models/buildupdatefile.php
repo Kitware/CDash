@@ -80,7 +80,6 @@ class buildupdatefile
               VALUES (" . qnum($this->UpdateId) . ",'$this->Filename','$this->CheckinDate','$this->Author','$this->Email',
                       '$this->Log','$this->Revision','$this->PriorRevision','$this->Status','$this->Committer','$this->CommitterEmail')";
 
-
         if (!pdo_query($query)) {
             add_last_sql_error("BuildUpdateFile Insert", 0, $this->UpdateId);
             return false;

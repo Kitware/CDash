@@ -3,9 +3,9 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__) . '/cdash_test_case.php');
+require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-require_once('include/common.php');
+require_once 'include/common.php';
 
 class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
 {
@@ -13,7 +13,6 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
     {
         parent::__construct();
     }
-
 
     public function enableAutoRemoveConfigSetting()
     {
@@ -38,14 +37,12 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         unset($handle);
     }
 
-
     public function setAutoRemoveTimeFrame()
     {
         // set project autoremovetimeframe
         $result = $this->db->query("UPDATE project " .
             "SET autoremovetimeframe='7' WHERE name='EmailProjectExample'");
     }
-
 
     public function testBuildsRemovedOnSubmission()
     {

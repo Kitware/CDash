@@ -107,7 +107,6 @@ class labelemail
         return true;
     }
 
-
     /** Get the labels given a projectid and userid */
     public function GetLabels()
     {

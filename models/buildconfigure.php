@@ -14,8 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include_once('models/buildconfigureerror.php');
-include_once('models/buildconfigureerrordiff.php');
+include_once 'models/buildconfigureerror.php';
+include_once 'models/buildconfigureerrordiff.php';
 
 /** BuildConfigure class */
 class buildconfigure
@@ -140,7 +140,6 @@ class buildconfigure
         return true;
     }
 
-
     /** Return true if the specified line contains a configure warning,
      * false otherwise.
      */
@@ -153,7 +152,6 @@ class buildconfigure
         }
         return false;
     }
-
 
     /** Compute the warnings from the log. In the future we might want to add errors */
     public function ComputeWarnings()

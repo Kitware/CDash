@@ -16,15 +16,15 @@
 
 //error_reporting(0); // disable error reporting
 
-include("include/ctestparser.php");
-include_once("include/common.php");
-include_once("include/createRSS.php");
-include("include/sendemail.php");
+include "include/ctestparser.php";
+include_once "include/common.php";
+include_once "include/createRSS.php";
+include "include/sendemail.php";
 
 function do_submit($filehandle, $projectid, $expected_md5 = '', $do_checksum = true,
                    $submission_id = 0)
 {
-    include('config/config.php');
+    include 'config/config.php';
 
     // We find the daily updates
     // If we have php curl we do it asynchronously
@@ -50,12 +50,12 @@ function do_submit($filehandle, $projectid, $expected_md5 = '', $do_checksum = t
     } else {
         // synchronously
 
-        include("include/dailyupdates.php");
+        include "include/dailyupdates.php";
         addDailyChanges($projectid);
     }
 
     if ($CDASH_USE_LOCAL_DIRECTORY && file_exists("local/submit.php")) {
-        include("local/submit.php");
+        include "local/submit.php";
     }
 
     $scheduleid = 0;
@@ -100,8 +100,8 @@ function do_submit($filehandle, $projectid, $expected_md5 = '', $do_checksum = t
 /** Asynchronous submission */
 function do_submit_asynchronous($filehandle, $projectid, $expected_md5 = '')
 {
-    include('config/config.php');
-    include('include/version.php');
+    include 'config/config.php';
+    include 'include/version.php';
 
     do {
         $filename = $CDASH_BACKUP_DIRECTORY . "/" . mt_rand() . ".xml";
@@ -129,7 +129,7 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5 = '')
 
     // Sends the file size to the local parser
     if ($CDASH_USE_LOCAL_DIRECTORY && file_exists("local/ctestparser.php")) {
-        require_once("local/ctestparser.php");
+        require_once "local/ctestparser.php";
         $localParser = new LocalParser();
         $filesize = filesize($filename);
         $localParser->SetFileSize($projectid, $filesize);
@@ -211,7 +211,7 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5 = '')
 /** Function to deal with the external tool mechanism */
 function post_submit()
 {
-    include("models/buildfile.php");
+    include "models/buildfile.php";
 
     // We expect POST to contain the following values.
     $vars = array('project', 'build', 'stamp', 'site', 'track', 'type', 'starttime', 'endtime', 'datafilesmd5');
@@ -296,7 +296,7 @@ function post_submit()
 
             // Associate this build file with the new build if it has been previously
             // uploaded.
-            require_once("copy_build_data.php");
+            require_once "copy_build_data.php";
             copy_build_data($old_buildid, $buildid, $type);
         }
     }
@@ -306,7 +306,7 @@ function post_submit()
 /** Function to deal with the external tool mechanism */
 function put_submit_file()
 {
-    include("models/buildfile.php");
+    include "models/buildfile.php";
 
     // We expect GET to contain the following values:
     $vars = array('buildid', 'type');
@@ -469,7 +469,7 @@ function trigger_process_submissions($projectid)
         // Parallel processing.
         // Obtain the processing lock before firing off parallel workers.
         $mypid = getmypid();
-        include("include/submission_functions.php");
+        include "include/submission_functions.php";
         if (AcquireProcessingLock($projectid, false, $mypid)) {
             $url = $currentURI . "/ajax/processsubmissions.php";
             $params = array('projectid' => $projectid, 'pid' => $mypid);

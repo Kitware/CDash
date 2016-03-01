@@ -125,7 +125,6 @@ function AcquireProcessingLock($projectid, $force, $mypid)
     return $locked;
 }
 
-
 // Releases the lock we own in the submissionprocessor table by
 // setting the pid field of this projectid's row to 0.
 //
@@ -171,7 +170,6 @@ function ReleaseProcessingLock($projectid, $mypid, $multi = false)
     return $unlocked;
 }
 
-
 // ProcessOwnsLock
 //
 function ProcessOwnsLock($projectid, $pid)
@@ -181,7 +179,6 @@ function ProcessOwnsLock($projectid, $pid)
         'pid', 0);
     return $owner_pid == $pid;
 }
-
 
 // SetLockLastUpdatedTime
 //
@@ -198,7 +195,6 @@ function SetLockLastUpdatedTime($projectid)
     add_last_sql_error("SetLockLastUpdatedTime-1");
     return false;
 }
-
 
 // For submissions that are "currently processing" but started processing a
 // "long time" ago... consider them stalled and reset them to "not processing"
@@ -234,7 +230,6 @@ function ResetApparentlyStalledSubmissions($projectid)
     }
     return $nrows;
 }
-
 
 // Process submissions from the 'submission' table with projectid and status=0.
 //
@@ -339,7 +334,6 @@ function ProcessSubmissions($projectid, $mypid)
     return true;
 }
 
-
 function GetNextSubmission($projectid)
 {
     $now_utc = gmdate(FMT_DATETIMESTD);
@@ -370,7 +364,6 @@ function GetNextSubmission($projectid)
     pdo_commit();
     return $query_array;
 }
-
 
 // Retire submission records after a week (by default).
 // But keep them around for a week to enable analyzing submission timings.
@@ -406,7 +399,6 @@ function DeleteOldSubmissionRecords($projectid)
     pdo_delete_query("DELETE FROM client_jobschedule2submission WHERE submissionid IN " . $idset);
     pdo_delete_query("DELETE FROM submission2ip WHERE submissionid IN " . $idset);
 }
-
 
 // Provide an error handler that can give up on a submission if a
 // fatal PHP error occurs while processing a file.

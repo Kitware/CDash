@@ -16,10 +16,10 @@
 
 $noforcelogin = 1;
 
-include(dirname(__DIR__) . "/config/config.php");
-require_once("include/pdo.php");
-include("include/common.php");
-include('include/version.php');
+include dirname(__DIR__) . "/config/config.php";
+require_once "include/pdo.php";
+include "include/common.php";
+include 'include/version.php';
 
 $xml = begin_XML_for_XSLT();
 $xml .= add_XML_value("title", "CDash");

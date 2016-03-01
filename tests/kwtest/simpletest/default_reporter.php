@@ -1,26 +1,22 @@
 <?php
 /**
  *  Optional include file for SimpleTest
- * @package    SimpleTest
- * @subpackage UnitTester
  * @version    $Id$
  */
 
 /**#@+
  *  include other SimpleTest class files
  */
-require_once(dirname(__FILE__) . '/simpletest.php');
-require_once(dirname(__FILE__) . '/scorer.php');
-require_once(dirname(__FILE__) . '/reporter.php');
-require_once(dirname(__FILE__) . '/xml.php');
+require_once dirname(__FILE__) . '/simpletest.php';
+require_once dirname(__FILE__) . '/scorer.php';
+require_once dirname(__FILE__) . '/reporter.php';
+require_once dirname(__FILE__) . '/xml.php';
 /**#@-*/
 
 /**
  *    Parser for command line arguments. Extracts
  *    the a specific test to run and engages XML
  *    reporting when necessary.
- * @package SimpleTest
- * @subpackage UnitTester
  */
 class SimpleCommandLineParser
 {
@@ -82,7 +78,7 @@ class SimpleCommandLineParser
 
     /**
      *    Output should be XML or not.
-     * @return boolean        True if XML desired.
+     * @return bool        True if XML desired.
      */
     public function isXml()
     {
@@ -91,7 +87,7 @@ class SimpleCommandLineParser
 
     /**
      *    Output should suppress skip messages.
-     * @return boolean        True for no skips.
+     * @return bool        True for no skips.
      */
     public function noSkips()
     {
@@ -100,7 +96,7 @@ class SimpleCommandLineParser
 
     /**
      *    Output should be a help message. Disabled during XML mode.
-     * @return boolean        True if help message desired.
+     * @return bool        True if help message desired.
      */
     public function help()
     {
@@ -131,8 +127,6 @@ HELP;
  *    The default reporter used by SimpleTest's autorun
  *    feature. The actual reporters used are dependency
  *    injected and can be overridden.
- * @package SimpleTest
- * @subpackage UnitTester
  */
 class DefaultReporter extends SimpleReporterDecorator
 {

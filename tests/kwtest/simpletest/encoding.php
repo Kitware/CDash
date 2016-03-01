@@ -1,21 +1,17 @@
 <?php
 /**
  *  base include file for SimpleTest
- * @package    SimpleTest
- * @subpackage WebTester
  * @version    $Id$
  */
 
 /**#@+
  *  include other SimpleTest class files
  */
-require_once(dirname(__FILE__) . '/socket.php');
+require_once dirname(__FILE__) . '/socket.php';
 /**#@-*/
 
 /**
  *    Single post parameter.
- * @package SimpleTest
- * @subpackage WebTester
  */
 class SimpleEncodedPair
 {
@@ -36,7 +32,6 @@ class SimpleEncodedPair
     /**
      *    The pair as a single string.
      * @return string        Encoded pair.
-     * @access public
      */
     public function asRequest()
     {
@@ -46,7 +41,6 @@ class SimpleEncodedPair
     /**
      *    The MIME part as a string.
      * @return string        MIME part encoding.
-     * @access public
      */
     public function asMime()
     {
@@ -59,8 +53,7 @@ class SimpleEncodedPair
     /**
      *    Is this the value we are looking for?
      * @param string $key Identifier.
-     * @return boolean       True if matched.
-     * @access public
+     * @return bool       True if matched.
      */
     public function isKey($key)
     {
@@ -70,7 +63,6 @@ class SimpleEncodedPair
     /**
      *    Is this the value we are looking for?
      * @return string       Identifier.
-     * @access public
      */
     public function getKey()
     {
@@ -80,7 +72,6 @@ class SimpleEncodedPair
     /**
      *    Is this the value we are looking for?
      * @return string       Content.
-     * @access public
      */
     public function getValue()
     {
@@ -90,8 +81,6 @@ class SimpleEncodedPair
 
 /**
  *    Single post parameter.
- * @package SimpleTest
- * @subpackage WebTester
  */
 class SimpleAttachment
 {
@@ -115,7 +104,6 @@ class SimpleAttachment
     /**
      *    The pair as a single string.
      * @return string        Encoded pair.
-     * @access public
      */
     public function asRequest()
     {
@@ -125,7 +113,6 @@ class SimpleAttachment
     /**
      *    The MIME part as a string.
      * @return string        MIME part encoding.
-     * @access public
      */
     public function asMime()
     {
@@ -141,7 +128,6 @@ class SimpleAttachment
      *    Attempts to figure out the MIME type from the
      *    file extension and the content.
      * @return string        MIME type.
-     * @access private
      */
     protected function deduceMimeType()
     {
@@ -154,7 +140,6 @@ class SimpleAttachment
     /**
      *    Tests each character is in the range 0-127.
      * @param string $ascii String to test.
-     * @access private
      */
     protected function isOnlyAscii($ascii)
     {
@@ -169,8 +154,7 @@ class SimpleAttachment
     /**
      *    Is this the value we are looking for?
      * @param string $key Identifier.
-     * @return boolean       True if matched.
-     * @access public
+     * @return bool       True if matched.
      */
     public function isKey($key)
     {
@@ -180,7 +164,6 @@ class SimpleAttachment
     /**
      *    Is this the value we are looking for?
      * @return string       Identifier.
-     * @access public
      */
     public function getKey()
     {
@@ -190,7 +173,6 @@ class SimpleAttachment
     /**
      *    Is this the value we are looking for?
      * @return string       Content.
-     * @access public
      */
     public function getValue()
     {
@@ -201,8 +183,6 @@ class SimpleAttachment
 /**
  *    Bundle of GET/POST parameters. Can include
  *    repeated parameters.
- * @package SimpleTest
- * @subpackage WebTester
  */
 class SimpleEncoding
 {
@@ -213,7 +193,6 @@ class SimpleEncoding
      * @param array $query Hash of parameters.
      *                              Multiple values are
      *                              as lists on a single key.
-     * @access public
      */
     public function __construct($query = false)
     {
@@ -226,7 +205,6 @@ class SimpleEncoding
 
     /**
      *    Empties the request of parameters.
-     * @access public
      */
     public function clear()
     {
@@ -237,7 +215,6 @@ class SimpleEncoding
      *    Adds a parameter to the query.
      * @param string $key Key to add value to.
      * @param string /array $value    New data.
-     * @access public
      */
     public function add($key, $value)
     {
@@ -257,7 +234,6 @@ class SimpleEncoding
      *    Adds a new value into the request.
      * @param string $key Key to add value to.
      * @param string /array $value    New data.
-     * @access private
      */
     protected function addPair($key, $value)
     {
@@ -270,7 +246,6 @@ class SimpleEncoding
      * @param string $key Key to add value to.
      * @param string $content Raw data.
      * @param hash $filename Original filename.
-     * @access public
      */
     public function attach($key, $content, $filename)
     {
@@ -281,7 +256,6 @@ class SimpleEncoding
      *    Adds a set of parameters to this query.
      * @param array /SimpleQueryString $query  Multiple values are
      *                                           as lists on a single key.
-     * @access public
      */
     public function merge($query)
     {
@@ -299,7 +273,6 @@ class SimpleEncoding
      * @return string/array    False if missing, string
      *                            if present and array if
      *                            multiple entries.
-     * @access public
      */
     public function getValue($key)
     {
@@ -321,7 +294,6 @@ class SimpleEncoding
     /**
      *    Accessor for listing of pairs.
      * @return array        All pair objects.
-     * @access public
      */
     public function getAll()
     {
@@ -332,7 +304,6 @@ class SimpleEncoding
      *    Renders the query string as a URL encoded
      *    request part.
      * @return string        Part of URL.
-     * @access protected
      */
     protected function encode()
     {
@@ -349,8 +320,6 @@ class SimpleEncoding
 /**
  *    Bundle of GET parameters. Can include
  *    repeated parameters.
- * @package SimpleTest
- * @subpackage WebTester
  */
 class SimpleGetEncoding extends SimpleEncoding
 {
@@ -359,7 +328,6 @@ class SimpleGetEncoding extends SimpleEncoding
      * @param array $query Hash of parameters.
      *                              Multiple values are
      *                              as lists on a single key.
-     * @access public
      */
     public function __construct($query = false)
     {
@@ -369,7 +337,6 @@ class SimpleGetEncoding extends SimpleEncoding
     /**
      *    HTTP request method.
      * @return string        Always GET.
-     * @access public
      */
     public function getMethod()
     {
@@ -379,7 +346,6 @@ class SimpleGetEncoding extends SimpleEncoding
     /**
      *    Writes no extra headers.
      * @param SimpleSocket $socket Socket to write to.
-     * @access public
      */
     public function writeHeadersTo(&$socket)
     {
@@ -389,7 +355,6 @@ class SimpleGetEncoding extends SimpleEncoding
      *    No data is sent to the socket as the data is encoded into
      *    the URL.
      * @param SimpleSocket $socket Socket to write to.
-     * @access public
      */
     public function writeTo(&$socket)
     {
@@ -399,7 +364,6 @@ class SimpleGetEncoding extends SimpleEncoding
      *    Renders the query string as a URL encoded
      *    request part for attaching to a URL.
      * @return string        Part of URL.
-     * @access public
      */
     public function asUrlRequest()
     {
@@ -409,8 +373,6 @@ class SimpleGetEncoding extends SimpleEncoding
 
 /**
  *    Bundle of URL parameters for a HEAD request.
- * @package SimpleTest
- * @subpackage WebTester
  */
 class SimpleHeadEncoding extends SimpleGetEncoding
 {
@@ -419,7 +381,6 @@ class SimpleHeadEncoding extends SimpleGetEncoding
      * @param array $query Hash of parameters.
      *                              Multiple values are
      *                              as lists on a single key.
-     * @access public
      */
     public function __construct($query = false)
     {
@@ -429,7 +390,6 @@ class SimpleHeadEncoding extends SimpleGetEncoding
     /**
      *    HTTP request method.
      * @return string        Always HEAD.
-     * @access public
      */
     public function getMethod()
     {
@@ -439,8 +399,6 @@ class SimpleHeadEncoding extends SimpleGetEncoding
 
 /**
  *    Bundle of URL parameters for a DELETE request.
- * @package SimpleTest
- * @subpackage WebTester
  */
 class SimpleDeleteEncoding extends SimpleGetEncoding
 {
@@ -449,7 +407,6 @@ class SimpleDeleteEncoding extends SimpleGetEncoding
      * @param array $query Hash of parameters.
      *                              Multiple values are
      *                              as lists on a single key.
-     * @access public
      */
     public function __construct($query = false)
     {
@@ -459,7 +416,6 @@ class SimpleDeleteEncoding extends SimpleGetEncoding
     /**
      *    HTTP request method.
      * @return string        Always DELETE.
-     * @access public
      */
     public function getMethod()
     {
@@ -470,8 +426,6 @@ class SimpleDeleteEncoding extends SimpleGetEncoding
 /**
  *    Bundles an entity-body for transporting
  *    a raw content payload with the request.
- * @package SimpleTest
- * @subpackage WebTester
  */
 class SimpleEntityEncoding extends SimpleEncoding
 {
@@ -492,7 +446,6 @@ class SimpleEntityEncoding extends SimpleEncoding
     /**
      *    Returns the media type of the entity body
      * @return string
-     * @access public
      */
     public function getContentType()
     {
@@ -505,7 +458,6 @@ class SimpleEntityEncoding extends SimpleEncoding
     /**
      *    Dispatches the form headers down the socket.
      * @param SimpleSocket $socket Socket to write to.
-     * @access public
      */
     public function writeHeadersTo(&$socket)
     {
@@ -516,7 +468,6 @@ class SimpleEntityEncoding extends SimpleEncoding
     /**
      *    Dispatches the form data down the socket.
      * @param SimpleSocket $socket Socket to write to.
-     * @access public
      */
     public function writeTo(&$socket)
     {
@@ -526,7 +477,6 @@ class SimpleEntityEncoding extends SimpleEncoding
     /**
      *    Renders the request body
      * @return Encoded entity body
-     * @access protected
      */
     protected function encode()
     {
@@ -537,8 +487,6 @@ class SimpleEntityEncoding extends SimpleEncoding
 /**
  *    Bundle of POST parameters. Can include
  *    repeated parameters.
- * @package SimpleTest
- * @subpackage WebTester
  */
 class SimplePostEncoding extends SimpleEntityEncoding
 {
@@ -547,7 +495,6 @@ class SimplePostEncoding extends SimpleEntityEncoding
      * @param array $query Hash of parameters.
      *                              Multiple values are
      *                              as lists on a single key.
-     * @access public
      */
     public function __construct($query = false, $content_type = false)
     {
@@ -588,7 +535,6 @@ class SimplePostEncoding extends SimpleEntityEncoding
     /**
      *    HTTP request method.
      * @return string        Always POST.
-     * @access public
      */
     public function getMethod()
     {
@@ -599,7 +545,6 @@ class SimplePostEncoding extends SimpleEntityEncoding
      *    Renders the query string as a URL encoded
      *    request part for attaching to a URL.
      * @return string        Part of URL.
-     * @access public
      */
     public function asUrlRequest()
     {
@@ -609,8 +554,6 @@ class SimplePostEncoding extends SimpleEntityEncoding
 
 /**
  *    Encoded entity body for a PUT request.
- * @package SimpleTest
- * @subpackage WebTester
  */
 class SimplePutEncoding extends SimpleEntityEncoding
 {
@@ -619,7 +562,6 @@ class SimplePutEncoding extends SimpleEntityEncoding
      * @param array $query Hash of parameters.
      *                              Multiple values are
      *                              as lists on a single key.
-     * @access public
      */
     public function __construct($query = false, $content_type = false)
     {
@@ -629,7 +571,6 @@ class SimplePutEncoding extends SimpleEntityEncoding
     /**
      *    HTTP request method.
      * @return string        Always PUT.
-     * @access public
      */
     public function getMethod()
     {
@@ -640,8 +581,6 @@ class SimplePutEncoding extends SimpleEntityEncoding
 /**
  *    Bundle of POST parameters in the multipart
  *    format. Can include file uploads.
- * @package SimpleTest
- * @subpackage WebTester
  */
 class SimpleMultipartEncoding extends SimplePostEncoding
 {
@@ -652,7 +591,6 @@ class SimpleMultipartEncoding extends SimplePostEncoding
      * @param array $query Hash of parameters.
      *                              Multiple values are
      *                              as lists on a single key.
-     * @access public
      */
     public function __construct($query = false, $boundary = false)
     {
@@ -663,7 +601,6 @@ class SimpleMultipartEncoding extends SimplePostEncoding
     /**
      *    Dispatches the form headers down the socket.
      * @param SimpleSocket $socket Socket to write to.
-     * @access public
      */
     public function writeHeadersTo(&$socket)
     {
@@ -674,7 +611,6 @@ class SimpleMultipartEncoding extends SimplePostEncoding
     /**
      *    Dispatches the form data down the socket.
      * @param SimpleSocket $socket Socket to write to.
-     * @access public
      */
     public function writeTo(&$socket)
     {
@@ -685,7 +621,6 @@ class SimpleMultipartEncoding extends SimplePostEncoding
      *    Renders the query string as a URL encoded
      *    request part.
      * @return string        Part of URL.
-     * @access public
      */
     public function encode()
     {

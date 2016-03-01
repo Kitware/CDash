@@ -14,13 +14,13 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include(dirname(dirname(__DIR__)) . "/config/config.php");
-require_once("include/pdo.php");
-include_once("include/common.php");
-include("include/version.php");
+include dirname(dirname(__DIR__)) . "/config/config.php";
+require_once "include/pdo.php";
+include_once "include/common.php";
+include "include/version.php";
 $noforcelogin = 1;
-include('public/login.php');
-include("models/feed.php");
+include 'public/login.php';
+include "models/feed.php";
 
 $projectid = pdo_real_escape_numeric($_GET["projectid"]);
 if (!isset($projectid) || !is_numeric($projectid)) {
@@ -85,7 +85,6 @@ function get_feed_link($type, $buildid, $description)
         return '<a href="viewUpdate.php?buildid=' . $buildid . '">' . $description . '</a>';
     } elseif ($type == Feed::TypeBuildError) {
         return '<a href="viewBuildError.php?buildid=' . $buildid . '">' . $description . '</a>';
-        ;
     } elseif ($type == Feed::TypeBuildWarning) {
         return '<a href="viewBuildError.php?type=1&buildid=' . $buildid . '">' . $description . '</a>';
     } elseif ($type == Feed::TypeTestPassing) {

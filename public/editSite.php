@@ -14,11 +14,11 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include(dirname(__DIR__) . "/config/config.php");
-require_once("include/pdo.php");
-include('public/login.php');
-include_once('include/common.php');
-include("include/version.php");
+include dirname(__DIR__) . "/config/config.php";
+require_once "include/pdo.php";
+include 'public/login.php';
+include_once 'include/common.php';
+include "include/version.php";
 
 if ($session_OK) {
     $userid = $_SESSION['cdash']['loginid'];
@@ -260,7 +260,6 @@ if ($session_OK) {
 
         $xml .= "</user>";
     }
-
 
     $xml .= "</cdash>";
 

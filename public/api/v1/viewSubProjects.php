@@ -14,10 +14,10 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include(dirname(dirname(dirname(__DIR__))) . "/config/config.php");
-require_once("include/pdo.php");
-include("include/common.php");
-require_once("models/project.php");
+include dirname(dirname(dirname(__DIR__))) . "/config/config.php";
+require_once "include/pdo.php";
+include "include/common.php";
+require_once "models/project.php";
 
 set_time_limit(0);
 
@@ -35,17 +35,16 @@ if ($date != null) {
 
 echo_subprojects_dashboard_JSON($Project, $date);
 
-
 // Gather up the data for a SubProjects dashboard.
 function echo_subprojects_dashboard_JSON($project_instance, $date)
 {
     $start = microtime_float();
     $noforcelogin = 1;
-    include_once(dirname(dirname(dirname(__DIR__))) . "/config/config.php");
-    require_once("include/pdo.php");
-    include('public/login.php');
-    include_once("models/banner.php");
-    include_once("models/subproject.php");
+    include_once dirname(dirname(dirname(__DIR__))) . "/config/config.php";
+    require_once "include/pdo.php";
+    include 'public/login.php';
+    include_once "models/banner.php";
+    include_once "models/subproject.php";
 
     $response = array();
 
@@ -129,7 +128,7 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
     }
 
     if ($CDASH_USE_LOCAL_DIRECTORY && file_exists("local/models/proProject.php")) {
-        include_once("local/models/proProject.php");
+        include_once "local/models/proProject.php";
         $pro = new proProject;
         $pro->ProjectId = $projectid;
         $response['proedition'] = $pro->GetEdition(1);

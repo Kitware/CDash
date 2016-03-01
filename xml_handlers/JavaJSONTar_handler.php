@@ -14,9 +14,9 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once('models/coverage.php');
-require_once('config/config.php');
-require_once('models/build.php');
+require_once 'models/coverage.php';
+require_once 'config/config.php';
+require_once 'models/build.php';
 
 class JavaJSONTarHandler
 {
@@ -140,7 +140,6 @@ class JavaJSONTarHandler
             }
         }
     }
-
 
     /**
      * Parse an individual .java.json file.

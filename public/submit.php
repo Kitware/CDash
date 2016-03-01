@@ -15,11 +15,11 @@
 =========================================================================*/
 
 // Open the database connection
-include(dirname(__DIR__) . "/config/config.php");
-require_once("include/pdo.php");
-include("include/do_submit.php");
-include("include/clientsubmit.php");
-include("include/version.php");
+include dirname(__DIR__) . "/config/config.php";
+require_once "include/pdo.php";
+include "include/do_submit.php";
+include "include/clientsubmit.php";
+include "include/version.php";
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 if (!$db || !pdo_select_db("$CDASH_DB_NAME", $db)) {

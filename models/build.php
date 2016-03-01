@@ -15,18 +15,18 @@
 =========================================================================*/
 
 // It is assumed that appropriate headers should be included before including this file
-include_once("include/common.php");
-include_once('include/ctestparserutils.php');
-include_once("include/repository.php");
-include_once('models/builderror.php');
-include_once('models/builderrordiff.php');
-include_once('models/buildinformation.php');
-include_once('models/buildusernote.php');
-include_once('models/constants.php');
-include_once('models/label.php');
-include_once('models/subproject.php');
-include_once('models/test.php');
-include_once('models/uploadfile.php');
+include_once "include/common.php";
+include_once 'include/ctestparserutils.php';
+include_once "include/repository.php";
+include_once 'models/builderror.php';
+include_once 'models/builderrordiff.php';
+include_once 'models/buildinformation.php';
+include_once 'models/buildusernote.php';
+include_once 'models/constants.php';
+include_once 'models/label.php';
+include_once 'models/subproject.php';
+include_once 'models/test.php';
+include_once 'models/uploadfile.php';
 
 class build
 {
@@ -102,7 +102,6 @@ class build
             $this->Type = extract_type_from_buildstamp($this->Stamp);
         }
     }
-
 
     public function GetStamp()
     {
@@ -255,7 +254,6 @@ class build
         }
     }
 
-
     public function QuerySubProjectId($buildid)
     {
         $query = pdo_query(
@@ -268,7 +266,6 @@ class build
         $query_array = pdo_fetch_array($query);
         return $query_array["id"];
     }
-
 
     /** Fill the current build information from the buildid */
     public function FillFromId($buildid)
@@ -308,7 +305,6 @@ class build
         $this->Filled = true;
     }
 
-
     /** Get the previous build id. */
     public function GetPreviousBuildId()
     {
@@ -322,7 +318,6 @@ class build
         return $this->GetRelatedBuildId($previous_clause);
     }
 
-
     /** Get the next build id. */
     public function GetNextBuildId()
     {
@@ -335,7 +330,6 @@ class build
         return $this->GetRelatedBuildId($next_clause);
     }
 
-
     /** Get the most recent build id. */
     public function GetCurrentBuildId()
     {
@@ -347,7 +341,6 @@ class build
         $current_clause = "ORDER BY starttime DESC";
         return $this->GetRelatedBuildId($current_clause);
     }
-
 
     /** Private helper function to encapsulate the common parts of
      * Get{Previous,Next,Current}BuildId()
@@ -396,7 +389,6 @@ class build
         return 0;
     }
 
-
     /** Get the build id from its name */
     public function GetIdFromName($subproject)
     {
@@ -432,7 +424,6 @@ class build
         return 0;
     }
 
-
     public function InsertLabelAssociations()
     {
         if ($this->Id) {
@@ -452,7 +443,6 @@ class build
         }
     }
 
-
     /** Return if exists */
     public function Exists()
     {
@@ -468,7 +458,6 @@ class build
         }
         return false;
     }
-
 
     // Save in the database
     public function Save()
@@ -626,7 +615,7 @@ class build
             } elseif ($this->ParentId > 0) {
                 // If we just created a child build, associate it with
                 // the parent's updates (if any).
-                require_once('models/buildupdate.php');
+                require_once 'models/buildupdate.php';
                 BuildUpdate::AssignUpdateToChild($this->Id, $this->ParentId);
             }
         } else {
@@ -1033,7 +1022,6 @@ class build
         return true;
     }
 
-
     /** Compute the user statistics */
     public function ComputeUpdateStatistics()
     {
@@ -1123,7 +1111,6 @@ class build
         }
         return true;
     }
-
 
     /** Helper function for AddUpdateStatistics */
     private function AddUpdateStatistics($author, $email, $checkindate, $firstbuild,
@@ -1261,7 +1248,6 @@ class build
             add_last_sql_error("Build:AddUpdateStatistics", $this->ProjectId, $this->Id);
         }
     }
-
 
     /** Find the errors associated with a user
      *  For now the author is not used, we assume that the filename is sufficient */
@@ -1543,7 +1529,6 @@ class build
             "SELECT builderrors, buildwarnings, starttime, endtime,
                 submittime, log, command
                 FROM build WHERE id='$buildid' FOR UPDATE");
-
 
         // Special case: check if we should move from -1 to 0 errors/warnings.
         $errorsHandled = false;

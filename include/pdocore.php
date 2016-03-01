@@ -16,7 +16,7 @@
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-require_once("config/config.php");
+require_once "config/config.php";
 
 /**
  * Connect to the database.
@@ -41,7 +41,6 @@ function pdo_connect($server = null, $username = null, $password = null, $databa
         $CDASH_SSL_CA
     );
 }
-
 
 function get_link_identifier($link_identifier = null)
 {
@@ -209,7 +208,7 @@ function pdo_lock_tables($tables)
 {
     global $CDASH_DB_TYPE;
 
-    $table_str = join(", ", $tables);
+    $table_str = implode(", ", $tables);
 
     if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE == "pgsql") {
         // PgSql table locking syntax:
@@ -230,7 +229,7 @@ function pdo_lock_tables($tables)
 /**
  * Unlock tables. This is bad. Don't lock or unlock tables manually.
  * @deprecated
- * @return bool|FALSE
+ * @return bool|false
  */
 function pdo_unlock_tables()
 {
@@ -309,7 +308,6 @@ function pdo_rollback($link_identifier = null)
 {
     get_link_identifier($link_identifier)->getPdo()->rollBack();
 }
-
 
 global $cdash_database_connection;
 global $CDASH_DB_HOST;

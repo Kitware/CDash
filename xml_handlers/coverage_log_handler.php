@@ -15,7 +15,7 @@
 =========================================================================*/
 
 require_once 'xml_handlers/abstract_handler.php';
-require_once('models/coverage.php');
+require_once 'models/coverage.php';
 
 class CoverageLogHandler extends AbstractHandler
 {

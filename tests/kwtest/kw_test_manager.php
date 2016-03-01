@@ -14,18 +14,15 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once(dirname(dirname(__FILE__)) . '/config.test.php');
-require_once(dirname(__FILE__) . '/simpletest/unit_tester.php');
-require_once(dirname(__FILE__) . '/simpletest/mock_objects.php');
-require_once(dirname(__FILE__) . '/simpletest/web_tester.php');
-require_once(dirname(__FILE__) . '/kw_db.php');
-require_once(dirname(__FILE__) . '/kw_unlink.php');
-
+require_once dirname(dirname(__FILE__)) . '/config.test.php';
+require_once dirname(__FILE__) . '/simpletest/unit_tester.php';
+require_once dirname(__FILE__) . '/simpletest/mock_objects.php';
+require_once dirname(__FILE__) . '/simpletest/web_tester.php';
+require_once dirname(__FILE__) . '/kw_db.php';
+require_once dirname(__FILE__) . '/kw_unlink.php';
 
 /**
  * The test manager interface kw tests with simpletest test.
- *
- * @package    kwtests
  */
 class TestManager
 {
@@ -79,7 +76,7 @@ class TestManager
         } else {
             $path = $file;
         }
-        print "$path\n";
+        echo "$path\n";
         $test->addFile($path);
         return $test->run($reporter);
     }
@@ -120,7 +117,6 @@ class TestManager
         return $testsFile;
     }
 
-
     /**
      * perform a connection to the database
      * @return the result of the connection
@@ -129,7 +125,6 @@ class TestManager
      * @param string $password
      * @param string $dbname
      * @param string $dbtype
-     * @access protected
      */
     public function _connectToDb($host, $port, $user, $password, $dbname, $dbtype)
     {
@@ -151,7 +146,6 @@ class TestManager
      * @param string $password
      * @param string $dbname
      * @param string $dbtype
-     * @access protected
      */
     public function _uninstalldb4test($host, $port, $user, $password, $dbname, $dbtype)
     {
@@ -167,7 +161,6 @@ class TestManager
         }
     }
 
-
     /**
      * create the new test database
      * @return success/failure depending of the database creating
@@ -176,7 +169,6 @@ class TestManager
      * @param string $password
      * @param string $dbname
      * @param string $dbtype
-     * @access protected
      */
     public function _installdb4test($host, $port, $user, $password, $dbname, $dbtype)
     {
@@ -205,11 +197,8 @@ class TestManager
     }
 }
 
-
 /**
  * The cdash test manager interface cdash test with simpletest
- *
- * @package    kwtests
  */
 class CDashTestManager extends TestManager
 {
@@ -225,7 +214,6 @@ class CDashTestManager extends TestManager
         $reporter->paintTestCaseList($this->getTestCaseList());
         parent::runAllTests($reporter);
     }
-
 
     /**
      *    Set the url of the CDash server
@@ -266,13 +254,11 @@ class CDashTestManager extends TestManager
         return false;
     }
 
-
     /**
      *    perform an update of a revision in the svn
      * @return the time execution of the svn update
      * @param object $reporter
      * @param string $svnroot
-     * @access private
      */
     public function __performSvnUpdate($reporter, $svnroot, $type)
     {
@@ -316,7 +302,6 @@ class CDashTestManager extends TestManager
         return $execution_time;
     }
 
-
     /**
      * perform a command line
      * @return an array of the output result of the commandline
@@ -326,7 +311,6 @@ class CDashTestManager extends TestManager
     {
         return explode("\n", $commandline);
     }
-
 
     /**
      * configure the database for the test by droping the old
@@ -389,7 +373,6 @@ class CDashTestManager extends TestManager
         $reporter->paintConfigureEnd($execution_time);
         return $result;
     }
-
 
     /**
      * Check the log file of the application testing
@@ -473,7 +456,6 @@ class CDashTestManager extends TestManager
         unset($fp);
     }
 }
-
 
 class HtmlTestManager extends TestManager
 {

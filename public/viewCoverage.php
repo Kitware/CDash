@@ -15,15 +15,15 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include(dirname(__DIR__) . "/config/config.php");
-require_once("include/pdo.php");
-include('public/login.php');
-include_once("include/common.php");
-include("include/version.php");
-include("models/build.php");
-include("models/coveragefile2user.php");
-include("models/user.php");
-require_once("include/filterdataFunctions.php");
+include dirname(__DIR__) . "/config/config.php";
+require_once "include/pdo.php";
+include 'public/login.php';
+include_once "include/common.php";
+include "include/version.php";
+include "models/build.php";
+include "models/coveragefile2user.php";
+include "models/user.php";
+require_once "include/filterdataFunctions.php";
 
 set_time_limit(0);
 
@@ -166,7 +166,6 @@ $xml .= add_XML_value("metricpass", $metricpass);
 $metricerror = 0.7 * ($threshold / 100);
 $xml .= add_XML_value("metricerror", $metricerror);
 
-
 // Only execute the label-related queries if labels are being
 // displayed:
 //
@@ -212,7 +211,6 @@ if ($projectdisplaylabels) {
     }
 }
 
-
 $coveredfiles = pdo_query("SELECT count(covered) FROM coverage WHERE buildid='$buildid' AND covered='1'");
 $coveredfiles_array = pdo_fetch_array($coveredfiles);
 $ncoveredfiles = $coveredfiles_array[0];
@@ -225,7 +223,6 @@ $xml .= add_XML_value("totalcovered", $ncoveredfiles);
 $xml .= add_XML_value("totalfiles", $nfiles);
 $xml .= add_XML_value("buildid", $buildid);
 $xml .= add_XML_value("userid", $userid);
-
 
 $xml .= add_XML_value("showcoveragecode", $projectshowcoveragecode);
 $xml .= add_XML_value("displaylabels", $projectdisplaylabels);
@@ -241,7 +238,6 @@ $coveragefile = pdo_query("SELECT c.locuntested,c.loctested,
                                     cf.fullpath
                             FROM coverage AS c, coveragefile AS cf
                             WHERE c.buildid='$buildid' AND c.covered=1 AND c.fileid=cf.id");
-
 
 $directories = array();
 $covfile_array = array();

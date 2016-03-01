@@ -81,13 +81,11 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
             "1455044907", "6adbe63add1bc5171e9e2b9c6a4155de");
     }
 
-
     public function submitProduction()
     {
         return $this->submitResults("MyProductionCode", "1455044909",
             "1455044909", "211f7e369cd2bfc983eaba847c1cab65");
     }
-
 
     public function submitResults($subproject, $starttime, $endtime, $md5)
     {

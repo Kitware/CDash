@@ -14,8 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once("config/config.php");
-require_once("include/log.php");
+require_once "config/config.php";
+require_once "include/log.php";
 
 if (PHP_VERSION >= 5) {
     // Emulate the old xslt library functions
@@ -87,7 +87,7 @@ function generate_XSLT($xml, $pageName, $only_in_local = false)
     // i.e. header, headerback, etc...
     // look if they are in the local directory, and set
     // an XML value accordingly
-    include("config/config.php");
+    include "config/config.php";
     if ($CDASH_USE_LOCAL_DIRECTORY && !$only_in_local) {
         $pos = strpos($xml, "</cdash>"); // this should be the last
         if ($pos !== false) {
@@ -98,7 +98,7 @@ function generate_XSLT($xml, $pageName, $only_in_local = false)
             // and add the xml if needed
             $localphpfile = "local/" . $pageName . ".php";
             if (file_exists($localphpfile)) {
-                include_once($localphpfile);
+                include_once $localphpfile;
                 $xml .= getLocalXML();
             }
 
@@ -306,7 +306,7 @@ function add_last_sql_error($functionname, $projectid = 0, $buildid = 0, $resour
     }
 }
 
-/** Catch any PHP fatal errors */
+/* Catch any PHP fatal errors */
 //
 // This is a registered shutdown function (see register_shutdown_function help)
 // and gets called at script exit time, regardless of reason for script exit.
@@ -351,9 +351,9 @@ function PHPErrorHandler($projectid)
 /** Set the CDash version number in the database */
 function setVersion()
 {
-    include("config/config.php");
-    include("include/version.php");
-    require_once("include/pdo.php");
+    include "config/config.php";
+    include "include/version.php";
+    require_once "include/pdo.php";
 
     $version = pdo_query("SELECT major FROM version");
     if (pdo_num_rows($version) == 0) {
@@ -365,7 +365,6 @@ function setVersion()
                                   patch=$CDASH_VERSION_PATCH");
     }
 }
-
 
 /** Return true if the user is allowed to see the page */
 function checkUserPolicy($userid, $projectid, $onlyreturn = 0)
@@ -414,7 +413,6 @@ function checkUserPolicy($userid, $projectid, $onlyreturn = 0)
     return true;
 }
 
-
 /** Clean the backup directory */
 function clean_backup_directory()
 {
@@ -437,8 +435,8 @@ function clean_backup_directory()
 /** return the total number of public projects */
 function get_number_public_projects()
 {
-    include("config/config.php");
-    require_once("include/pdo.php");
+    include "config/config.php";
+    require_once "include/pdo.php";
 
     $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
     pdo_select_db("$CDASH_DB_NAME", $db);
@@ -453,9 +451,9 @@ function get_projects($onlyactive = true)
 {
     $projects = array();
 
-    include("config/config.php");
-    require_once("include/pdo.php");
-    require_once('models/project.php');
+    include "config/config.php";
+    require_once "include/pdo.php";
+    require_once 'models/project.php';
 
     $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
     pdo_select_db("$CDASH_DB_NAME", $db);
@@ -496,7 +494,7 @@ function get_projects($onlyactive = true)
             $project['nbuilds'] = $buildquery_array[0];
         }
 
-        /** Not showing the upload size for now for performance reasons */
+        /* Not showing the upload size for now for performance reasons */
         //$Project = new Project;
         //$Project->Id = $project['id'];
         //$project['uploadsize'] = $Project->GetUploadsTotalSize();
@@ -572,7 +570,7 @@ function stripslashes_if_gpc_magic_quotes($string)
 /** Get the current URI of the dashboard */
 function get_server_URI($localhost = false)
 {
-    include("config/config.php");
+    include "config/config.php";
 
     // If the base URL is set and no localhost we just return the base URL
     if (!$localhost && $CDASH_BASE_URL != '') {
@@ -663,8 +661,8 @@ function update_site($siteid, $name,
                      $description, $ip, $latitude, $longitude, $nonewrevision = false,
                      $outoforder = 0)
 {
-    include("config/config.php");
-    require_once("include/pdo.php");
+    include "config/config.php";
+    require_once "include/pdo.php";
 
     // Security checks
     if (!is_numeric($siteid)) {
@@ -802,8 +800,8 @@ function update_site($siteid, $name,
 /** Get the geolocation from IP address */
 function get_geolocation($ip)
 {
-    include("config/config.php");
-    require_once("include/pdo.php");
+    include "config/config.php";
+    require_once "include/pdo.php";
     $location = array();
 
     // Test if curl exists
@@ -1322,8 +1320,8 @@ function getLogoID($projectid)
 
 function get_project_properties($projectname)
 {
-    include("config/config.php");
-    require_once("include/pdo.php");
+    include "config/config.php";
+    require_once "include/pdo.php";
 
     $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
     if (!$db) {
@@ -1346,13 +1344,11 @@ function get_project_properties($projectname)
     return $project_props;
 }
 
-
 function get_project_property($projectname, $prop)
 {
     $project_props = get_project_properties($projectname);
     return $project_props[$prop];
 }
-
 
 // make_cdash_url ensures that a url begins with a known url protocol
 // identifier
@@ -1380,8 +1376,8 @@ function make_cdash_url($url)
 // Return the email of a given author within a given project.
 function get_author_email($projectname, $author)
 {
-    include("config/config.php");
-    require_once("include/pdo.php");
+    include "config/config.php";
+    require_once "include/pdo.php";
 
     $projectid = get_project_id($projectname);
     if ($projectid == -1) {
@@ -1502,8 +1498,8 @@ function get_dashboard_date_from_project($projectname, $date)
 
 function get_cdash_dashboard_xml($projectname, $date)
 {
-    include("config/config.php");
-    require_once("include/pdo.php");
+    include "config/config.php";
+    require_once "include/pdo.php";
 
     $projectid = get_project_id($projectname);
     if ($projectid == -1) {
@@ -1561,7 +1557,7 @@ function get_cdash_dashboard_xml($projectname, $date)
     }
 
     if ($CDASH_USE_LOCAL_DIRECTORY && file_exists("local/models/proProject.php")) {
-        include_once("local/models/proProject.php");
+        include_once "local/models/proProject.php";
         $pro = new proProject;
         $pro->ProjectId = $projectid;
         $xml .= "<proedition>" . $pro->GetEdition(1) . "</proedition>";
@@ -1594,7 +1590,6 @@ function get_cdash_dashboard_xml_by_name($projectname, $date)
 {
     return get_cdash_dashboard_xml($projectname, $date);
 }
-
 
 /** Quote SQL identifier */
 function qid($id)
@@ -1932,8 +1927,8 @@ function begin_JSON_response()
 
 function get_dashboard_JSON($projectname, $date, &$response)
 {
-    include("config/config.php");
-    require_once("include/pdo.php");
+    include "config/config.php";
+    require_once "include/pdo.php";
 
     $projectid = get_project_id($projectname);
     if ($projectid == -1) {
@@ -1990,7 +1985,7 @@ function get_dashboard_JSON($projectname, $date, &$response)
     }
 
     if ($CDASH_USE_LOCAL_DIRECTORY && file_exists("local/models/proProject.php")) {
-        include_once("local/models/proProject.php");
+        include_once "local/models/proProject.php";
         $pro = new proProject;
         $pro->ProjectId = $projectid;
         $response['proedition'] = $pro->GetEdition(1);
@@ -2042,7 +2037,6 @@ function compute_percentcoverage($loctested, $locuntested)
     return $percentcoverage;
 }
 
-
 /**
  * PHP won't let you delete a non-empty directory, so we first have to
  * search through it and delete each file & subdirectory that we find.
@@ -2084,7 +2078,7 @@ function load_view($viewName)
 function angular_login()
 {
     if (array_key_exists('sent', $_POST) && $_POST['sent'] === "Login >>") {
-        require_once('include/login_functions.php');
+        require_once 'include/login_functions.php';
         auth();
     }
 }

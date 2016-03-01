@@ -15,14 +15,14 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include(dirname(__DIR__) . "/config/config.php");
-require_once("include/pdo.php");
-include('public/login.php');
-include_once("include/common.php");
-include_once("include/repository.php");
-include("include/version.php");
-require_once("include/bugurl.php");
-require_once('models/build.php');
+include dirname(__DIR__) . "/config/config.php";
+require_once "include/pdo.php";
+include 'public/login.php';
+include_once "include/common.php";
+include_once "include/repository.php";
+include "include/version.php";
+require_once "include/bugurl.php";
+require_once 'models/build.php';
 
 @$buildid = $_GET["buildid"];
 if ($buildid != null) {
@@ -293,7 +293,6 @@ foreach ($conflictingfiles as $file) {
 $xml .= "</javascript>";
 $xml .= "</updates>";
 $xml .= "</cdash>";
-
 
 // Now doing the xslt transition
 generate_XSLT($xml, "viewUpdate");

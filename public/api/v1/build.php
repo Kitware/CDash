@@ -15,12 +15,12 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include(dirname(dirname(dirname(__DIR__))) . "/config/config.php");
-require_once('include/pdo.php');
-include_once('include/common.php');
-include('public/login.php');
-include_once('models/project.php');
-include_once('models/user.php');
+include dirname(dirname(dirname(__DIR__))) . "/config/config.php";
+require_once 'include/pdo.php';
+include_once 'include/common.php';
+include 'public/login.php';
+include_once 'models/project.php';
+include_once 'models/user.php';
 
 $response = array();
 
@@ -205,13 +205,11 @@ function rest_post()
     }
 }
 
-
 /* Handle PUT requests */
 function rest_put()
 {
     global $buildid;
 }
-
 
 /* Handle GET requests */
 function rest_get()

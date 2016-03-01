@@ -14,18 +14,18 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once(dirname(dirname(__DIR__)) . "/config/config.php");
-require_once("include/pdo.php");
-include_once("include/common.php");
-include("include/version.php");
-include("models/coveragefile2user.php");
-include("models/user.php");
-require_once("include/filterdataFunctions.php");
+require_once dirname(dirname(__DIR__)) . "/config/config.php";
+require_once "include/pdo.php";
+include_once "include/common.php";
+include "include/version.php";
+include "models/coveragefile2user.php";
+include "models/user.php";
+require_once "include/filterdataFunctions.php";
 
 set_time_limit(0);
 
 $noforcelogin = 1;
-require('public/login.php');
+require 'public/login.php';
 
 $buildid = pdo_real_escape_numeric($_GET["buildid"]);
 if (!isset($buildid) || !is_numeric($buildid)) {
@@ -74,13 +74,13 @@ if (!$project_array["showcoveragecode"] && $role < 2) {
 $start = 0;
 $end = 10000000;
 
-/** Paging */
+/* Paging */
 if (isset($_GET['iDisplayStart']) && $_GET['iDisplayLength'] != '-1') {
     $start = pdo_real_escape_numeric($_GET['iDisplayStart']);
     $end = pdo_real_escape_numeric($_GET['iDisplayStart']) + pdo_real_escape_numeric($_GET['iDisplayLength']);
 }
 
-/** Sorting */
+/* Sorting */
 $sortby = "";
 if (isset($_GET['iSortCol_0'])) {
     switch ($_GET['iSortCol_0']) {
@@ -183,7 +183,6 @@ while ($coveragefile_array = pdo_fetch_array($coveragefile)) {
         $covfile["functionsuntested"] = $coveragefile_array["functionsuntested"];
         $covfile["functionstested"] = $coveragefile_array["functionstested"];
 
-
         $covfile["percentcoverage"] = sprintf("%3.2f", $metric * 100);
         $covfile["coveragemetric"] = $metric;
         $coveragetype = "bullseye";
@@ -208,7 +207,6 @@ while ($coveragefile_array = pdo_fetch_array($coveragefile)) {
     }
     $covfile_array[] = $covfile;
 }
-
 
 // Add the coverage type
 $status = -1;

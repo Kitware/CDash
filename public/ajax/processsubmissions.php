@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once(dirname(dirname(__DIR__)) . "/config/config.php");
+require_once dirname(dirname(__DIR__)) . "/config/config.php";
 
 // Only used to setup the parallel submissions test case.
 global $CDASH_DO_NOT_PROCESS_SUBMISSIONS;
@@ -22,16 +22,15 @@ if ($CDASH_DO_NOT_PROCESS_SUBMISSIONS) {
     exit(0);
 }
 
-require_once("include/common.php");
-require_once("include/do_submit.php");
-require_once("include/fnProcessFile.php");
-require_once("include/pdo.php");
-require_once("include/submission_functions.php");
+require_once "include/common.php";
+require_once "include/do_submit.php";
+require_once "include/fnProcessFile.php";
+require_once "include/pdo.php";
+require_once "include/submission_functions.php";
 
 ob_start();
 set_time_limit(0);
 ignore_user_abort(true);
-
 
 // Parse script arguments. This file can be run in a web browser or called
 // from the php command line executable.
@@ -91,7 +90,6 @@ if (!$pid) {
 // Catch any fatal errors during processing
 //
 register_shutdown_function('ProcessSubmissionsErrorHandler', $projectid, $pid);
-
 
 echo "projectid='$projectid'\n";
 echo "pid='$pid'\n";

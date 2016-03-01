@@ -14,14 +14,14 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include(dirname(__DIR__) . "/config/config.php");
-include_once("include/common.php");
-require_once("include/pdo.php");
+include dirname(__DIR__) . "/config/config.php";
+include_once "include/common.php";
+require_once "include/pdo.php";
 
 /** Google authentication */
 function googleAuthenticate($code)
 {
-    include(dirname(__DIR__) . "/config/config.php");
+    include dirname(__DIR__) . "/config/config.php";
     global $CDASH_DB_HOST, $CDASH_DB_LOGIN, $CDASH_DB_PASS, $CDASH_DB_NAME;
     $SessionCachePolicy = 'private_no_expire';
 
@@ -79,7 +79,7 @@ function googleAuthenticate($code)
         $redirectURI .= '/googleauth_callback.php';
     }
 
-    $postData = join('&', array(
+    $postData = implode('&', array(
         'grant_type=authorization_code',
         'code=' . $_GET["code"],
         'client_id=' . $GOOGLE_CLIENT_ID,

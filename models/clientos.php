@@ -90,7 +90,6 @@ class clientos
         return $row[0];
     }
 
-
     /** Save a site */
     public function Save()
     {

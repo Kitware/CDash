@@ -14,12 +14,12 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include(dirname(__DIR__) . "/config/config.php");
-require_once("include/pdo.php");
-include_once("include/common.php");
-include("include/version.php");
+include dirname(__DIR__) . "/config/config.php";
+require_once "include/pdo.php";
+include_once "include/common.php";
+include "include/version.php";
 $noforcelogin = 1;
-include('public/login.php');
+include 'public/login.php';
 
 @$projectname = $_GET["project"];
 if ($projectname != null) {
@@ -95,7 +95,6 @@ $end_timestamp = $currentstarttime + 3600 * 24;
 $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
 $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
 
-
 $groupSelectionSQL = "";
 if ($groupSelection > 0) {
     $groupSelectionSQL = " AND b2g.groupid='$groupSelection' ";
@@ -151,6 +150,5 @@ if (pdo_num_rows($builds) > 0) {
     $xml .= "</sourcefile>";
 }
 $xml .= "</cdash>";
-
 
 generate_XSLT($xml, "buildOverview");

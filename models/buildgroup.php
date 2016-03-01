@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include_once('models/build.php');
+include_once 'models/build.php';
 
 class buildgroup
 {
@@ -42,13 +42,11 @@ class buildgroup
         $this->Type = "Daily";
     }
 
-
     /** Get the id */
     public function GetId()
     {
         return $this->Id;
     }
-
 
     /** Set the id.  Also loads remaining data for this
      * buildgroup from the database.
@@ -70,7 +68,6 @@ class buildgroup
         $this->FillFromRow($row);
         return true;
     }
-
 
     /** Get the Name of the buildgroup */
     public function GetName()
@@ -94,7 +91,6 @@ class buildgroup
         return $this->Name;
     }
 
-
     /** Set the Name of the buildgroup. */
     public function SetName($name)
     {
@@ -104,13 +100,11 @@ class buildgroup
         }
     }
 
-
     /** Get the project id */
     public function GetProjectId()
     {
         return $this->ProjectId;
     }
-
 
     /** Set the project id */
     public function SetProjectId($projectid)
@@ -124,7 +118,6 @@ class buildgroup
         }
         return false;
     }
-
 
     /** Get/Set the start time */
     public function GetStartTime()
@@ -141,7 +134,6 @@ class buildgroup
         $this->StartTime = pdo_real_escape_string($time);
     }
 
-
     /** Get/Set the end time */
     public function GetEndTime()
     {
@@ -156,7 +148,6 @@ class buildgroup
     {
         $this->EndTime = pdo_real_escape_string($time);
     }
-
 
     /** Get/Set the autoremove timeframe */
     public function GetAutoRemoveTimeFrame()
@@ -176,7 +167,6 @@ class buildgroup
         $this->AutoRemoveTimeFrame = $timeframe;
     }
 
-
     /** Get/Set the description */
     public function GetDescription()
     {
@@ -191,7 +181,6 @@ class buildgroup
     {
         $this->Description = pdo_real_escape_string($desc);
     }
-
 
     /** Get/Set the email settings for this BuildGroup.
      * 0: project default settings
@@ -215,7 +204,6 @@ class buildgroup
         $this->SummaryEmail = $email;
     }
 
-
     /** Get/Set whether or not this group should include subproject total. */
     public function GetIncludeSubProjectTotal()
     {
@@ -234,7 +222,6 @@ class buildgroup
             $this->IncludeSubProjectTotal = 0;
         }
     }
-
 
     /** Get/Set whether or not committers should be emailed for this group. */
     public function GetEmailCommitters()
@@ -255,7 +242,6 @@ class buildgroup
         }
     }
 
-
     /** Get/Set the type */
     public function GetType()
     {
@@ -270,7 +256,6 @@ class buildgroup
     {
         $this->Type = pdo_real_escape_string($type);
     }
-
 
     /** Populate the ivars of an existing buildgroup.
      * Called automatically once name & projectid are set.
@@ -297,7 +282,6 @@ class buildgroup
         return true;
     }
 
-
     /** Helper function for filling in a buildgroup instance */
     public function FillFromRow($row)
     {
@@ -312,7 +296,6 @@ class buildgroup
         $this->EmailCommitters = $row['emailcommitters'];
         $this->Type = $row['type'];
     }
-
 
     /** Get/Set this BuildGroup's position (the order it should appear in) */
     public function GetPosition()
@@ -337,7 +320,6 @@ class buildgroup
         $query_array = pdo_fetch_array($result);
         return $query_array['position'];
     }
-
 
     public function SetPosition($position)
     {
@@ -443,7 +425,6 @@ class buildgroup
         return true;
     }
 
-
     /** Delete this BuildGroup. */
     public function Delete()
     {
@@ -502,7 +483,6 @@ class buildgroup
             $p++;
         }
     }
-
 
     public function GetGroupIdFromRule($build)
     {
