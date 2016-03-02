@@ -16,26 +16,26 @@
 
   =========================================================================*/
 
-
-include(dirname(dirname(dirname(__DIR__)))."/config/config.php");
-require_once("include/pdo.php");
-include("include/common.php");
-include('include/version.php');
-require_once("models/project.php");
-require_once("models/buildfailure.php");
-require_once("include/filterdataFunctions.php");
-require_once("include/index_functions.php");
+include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
+require_once 'include/pdo.php';
+include 'include/common.php';
+include 'include/version.php';
+require_once 'models/project.php';
+require_once 'models/buildfailure.php';
+require_once 'include/filterdataFunctions.php';
+require_once 'include/index_functions.php';
 
 set_time_limit(0);
 
 // Check if we can connect to the database.
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 if (!$db ||
-        pdo_select_db("$CDASH_DB_NAME", $db) === false ||
-        pdo_query("SELECT id FROM ".qid("user")." LIMIT 1", $db) === false) {
+    pdo_select_db("$CDASH_DB_NAME", $db) === false ||
+    pdo_query('SELECT id FROM ' . qid('user') . ' LIMIT 1', $db) === false
+) {
     if ($CDASH_PRODUCTION_MODE) {
         $response = array();
-        $response['error'] = "CDash cannot connect to the database.";
+        $response['error'] = 'CDash cannot connect to the database.';
         echo json_encode($response);
         return;
     } else {
@@ -45,44 +45,43 @@ if (!$db ||
     return;
 }
 
-@$projectname = $_GET["project"];
+@$projectname = $_GET['project'];
 $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
 $projectid = get_project_id($projectname);
 $Project = new Project();
 $Project->Id = $projectid;
 $Project->Fill();
 
-@$date = $_GET["date"];
+@$date = $_GET['date'];
 if ($date != null) {
     $date = htmlspecialchars(pdo_real_escape_string($date));
 }
 
 echo_main_dashboard_JSON($Project, $date);
 
-
 // Generate the main dashboard JSON response.
 function echo_main_dashboard_JSON($project_instance, $date)
 {
     $start = microtime_float();
     $noforcelogin = 1;
-    include_once(dirname(dirname(dirname(__DIR__)))."/config/config.php");
-    require_once("include/pdo.php");
-    include('public/login.php');
-    include_once("models/banner.php");
-    include_once("models/build.php");
-    include_once("models/subproject.php");
+    include_once dirname(dirname(dirname(__DIR__))) . '/config/config.php';
+    require_once 'include/pdo.php';
+    include 'public/login.php';
+    include_once 'models/banner.php';
+    include_once 'models/build.php';
+    include_once 'models/subproject.php';
 
     $response = begin_JSON_response();
-    $response['title'] = "CDash : Compare Coverage";
+    $response['title'] = 'CDash : Compare Coverage';
 
     $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
     if (!$db) {
-        $response['error'] = "Error connecting to CDash database server";
+        $response['error'] = 'Error connecting to CDash database server';
         echo json_encode($response);
         return;
     }
     if (!pdo_select_db("$CDASH_DB_NAME", $db)) {
-        $response['error'] = "Error selecting CDash database";
+        $response['error'] = 'Error selecting CDash database';
         echo json_encode($response);
         return;
     }
@@ -90,9 +89,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
     $projectid = $project_instance->Id;
 
     $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
-    if (pdo_num_rows($project)>0) {
+    if (pdo_num_rows($project) > 0) {
         $project_array = pdo_fetch_array($project);
-        $projectname = $project_array["name"];
+        $projectname = $project_array['name'];
     } else {
         $response['error'] =
             "This project doesn't exist. Maybe the URL you are trying to access is wrong.";
@@ -100,13 +99,13 @@ function echo_main_dashboard_JSON($project_instance, $date)
         return;
     }
 
-    if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $project_array["id"], 1)) {
+    if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $project_array['id'], 1)) {
         $response['requirelogin'] = 1;
         echo json_encode($response);
         return;
     }
 
-    list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $project_array["nightlytime"]);
+    list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $project_array['nightlytime']);
 
     $response['date'] = $date;
     $response['projectid'] = $projectid;
@@ -123,16 +122,15 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
     $limit_sql = '';
     if ($filterdata['limit'] > 0) {
-        $limit_sql = ' LIMIT '.$filterdata['limit'];
+        $limit_sql = ' LIMIT ' . $filterdata['limit'];
     }
     unset($filterdata['xml']);
     $response['filterdata'] = $filterdata;
     $response['filterurl'] = @$_GET['filterstring'];
 
-
     // Menu definition
     $beginning_timestamp = $currentstarttime;
-    $end_timestamp = $currentstarttime+3600*24;
+    $end_timestamp = $currentstarttime + 3600 * 24;
     $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
     $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
 
@@ -140,27 +138,26 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
     // Menu
     if ($date == '') {
-        $back = "index.php?project=".urlencode($project_array['name']);
+        $back = 'index.php?project=' . urlencode($project_array['name']);
     } else {
-        $back = "index.php?project=".urlencode($project_array['name'])."&date=".$date;
+        $back = 'index.php?project=' . urlencode($project_array['name']) . '&date=' . $date;
     }
     $menu['back'] = $back;
 
-
-    $limit_param = "&limit=".$filterdata['limit'];
+    $limit_param = '&limit=' . $filterdata['limit'];
 
     $menu['previous'] =
-      $page_id."?project=".urlencode($project_array['name'])."&date=".$previousdate;
+        $page_id . '?project=' . urlencode($project_array['name']) . '&date=' . $previousdate;
 
     $today = date(FMT_DATE, time());
     $menu['current'] =
-      $page_id."?project=".urlencode($project_array['name'])."&date=".$today;
+        $page_id . '?project=' . urlencode($project_array['name']) . '&date=' . $today;
 
     if (has_next_date($date, $currentstarttime)) {
         $menu['next'] =
-          $page_id."?project=".urlencode($project_array['name'])."&date=".$nextdate;
+            $page_id . '?project=' . urlencode($project_array['name']) . '&date=' . $nextdate;
     } else {
-        $menu['nonext'] = "1";
+        $menu['nonext'] = '1';
     }
 
     $response['menu'] = $menu;
@@ -170,16 +167,16 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $user_response = array();
         $userid = $_SESSION['cdash']['loginid'];
         $user2project = pdo_query(
-                "SELECT role FROM user2project
+            "SELECT role FROM user2project
                 WHERE userid='$userid' AND projectid='$projectid'");
         $user2project_array = pdo_fetch_array($user2project);
         $user = pdo_query(
-                "SELECT admin FROM ".qid("user")."  WHERE id='$userid'");
+            'SELECT admin FROM ' . qid('user') . "  WHERE id='$userid'");
         $user_array = pdo_fetch_array($user);
         $user_response['id'] = $userid;
         $isadmin = 0;
-        if ($user2project_array["role"] > 1 || $user_array["admin"]) {
-            $isadmin=1;
+        if ($user2project_array['role'] > 1 || $user_array['admin']) {
+            $isadmin = 1;
         }
         $user_response['admin'] = $isadmin;
         $user_response['projectrole'] = $user2project_array['role'];
@@ -192,7 +189,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
     $exclude_subprojects = false;
     $included_subprojects = array();
     $excluded_subprojects = array();
-    $selected_subprojects = "";
+    $selected_subprojects = '';
     $num_selected_subprojects = 0;
     foreach ($filterdata['filters'] as $filter) {
         if ($filter['field'] == 'subprojects') {
@@ -207,25 +204,25 @@ function echo_main_dashboard_JSON($project_instance, $date)
     if (!empty($included_subprojects)) {
         $num_selected_subprojects = count($included_subprojects);
         $selected_subprojects = implode("','", $included_subprojects);
-        $selected_subprojects = "('".$selected_subprojects."')";
+        $selected_subprojects = "('" . $selected_subprojects . "')";
         $include_subprojects = true;
     } elseif (!empty($excluded_subprojects)) {
         $num_selected_subprojects = count($excluded_subprojects);
         $selected_subprojects = implode("','", $excluded_subprojects);
-        $selected_subprojects = "('".$selected_subprojects."')";
+        $selected_subprojects = "('" . $selected_subprojects . "')";
         $exclude_subprojects = true;
     }
 
     // Get the list of builds we're interested in
     $parentid = null;
     $build_data = get_build_data($parentid, $projectid, $beginning_UTCDate,
-                                 $end_UTCDate, $filterdata, $filter_sql,
-                                 $limit_sql);
+        $end_UTCDate, $filterdata, $filter_sql,
+        $limit_sql);
     $response['builds'] = array();
     foreach ($build_data as $build_array) {
         $build = array();
         $build['name'] = $build_array['name'];
-        $build['key'] = 'build'.$build_array['id'];
+        $build['key'] = 'build' . $build_array['id'];
         $build['id'] = $build_array['id'];
         $response['builds'][] = $build;
     } // end looping through builds
@@ -262,7 +259,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $coveragegroups[$groupId][$build['key']] = -1;
         }
         $coveragegroups[$groupId]['label'] = $group->GetName();
-        ;
     }
 
     $builds = array();
@@ -273,12 +269,12 @@ function echo_main_dashboard_JSON($project_instance, $date)
         }
 
         $build_data = get_build_data($buildid, $projectid, $beginning_UTCDate, $end_UTCDate,
-                                     $filterdata, $filter_sql, $limit_sql);
+            $filterdata, $filter_sql, $limit_sql);
 
         // Get the coverage data for each build
         $coverage_response = get_coverage($include_subprojects, $num_selected_subprojects,
-                                          $included_subprojects, $excluded_subprojects,
-                                          $build_data, $subproject_groups);
+            $included_subprojects, $excluded_subprojects,
+            $build_data, $subproject_groups);
 
         if (!empty($coverage_response['coveragegroups'])) {
             // Make an entry in coveragegroups for each possible subproject
@@ -303,19 +299,19 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $builds[] = $groups;
         } else {
             // Make an entry in coverages for each possible subproject
-              foreach ($coverage_response['coverages'] as $coverage) {
-                  $subproject_name = $coverage['label'];
-                  if (!in_array($subproject_name, $subproject_names)) {
-                      $subproject_names[] = $subproject_name;
+            foreach ($coverage_response['coverages'] as $coverage) {
+                $subproject_name = $coverage['label'];
+                if (!in_array($subproject_name, $subproject_names)) {
+                    $subproject_names[] = $subproject_name;
 
-                      $subproject = array();
-                      $subproject['label'] = $subproject_name;
-                      foreach ($response['builds'] as $build) {
-                          $subproject[$build['key']] = -1;
-                      }
-                      $coverages[] = $subproject;
-                  }
-              }
+                    $subproject = array();
+                    $subproject['label'] = $subproject_name;
+                    foreach ($response['builds'] as $build) {
+                        $subproject[$build['key']] = -1;
+                    }
+                    $coverages[] = $subproject;
+                }
+            }
 
             $build = array();
             $build['id'] = $buildid;
@@ -333,7 +329,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
             foreach ($build as $group) {
                 $groupId = $group['id'];
 
-                $coveragegroups[$groupId]['build'.$parentid] = $group['percentage'];
+                $coveragegroups[$groupId]['build' . $parentid] = $group['percentage'];
                 $coveragegroups[$groupId]['aggregate'] = max($coveragegroups[$groupId]['aggregate'], $group['percentage']);
                 $coveragegroups[$groupId]['label'] = $group['label'];
 
@@ -341,14 +337,14 @@ function echo_main_dashboard_JSON($project_instance, $date)
                     foreach ($coveragegroups[$groupId]['coverages'] as $key => $subproject_response) {   // Find this subproject in the response
                         if ($subproject_response['label'] == $subproject['label']) {
                             // And populate the information...
-                            $coveragegroups[$groupId]['coverages'][$key]['build'.$parentid] = $subproject['percentage'];
-                            $coveragegroups[$groupId]['coverages'][$key]['build'.$parentid.'id'] = $subproject['buildid'];
+                            $coveragegroups[$groupId]['coverages'][$key]['build' . $parentid] = $subproject['percentage'];
+                            $coveragegroups[$groupId]['coverages'][$key]['build' . $parentid . 'id'] = $subproject['buildid'];
                             if (array_key_exists('percentagediff', $subproject)) {
                                 $percentagediff = $subproject['percentagediff'];
                             } else {
                                 $percentagediff = null;
                             }
-                            $coveragegroups[$groupId]['coverages'][$key]['build'.$parentid.'percentagediff'] = $percentagediff;
+                            $coveragegroups[$groupId]['coverages'][$key]['build' . $parentid . 'percentagediff'] = $percentagediff;
                             $coveragegroups[$groupId]['coverages'][$key]['aggregate'] = max($coveragegroups[$groupId]['coverages'][$key]['aggregate'], $subproject['percentage']);
                             break;
                         }
@@ -362,14 +358,14 @@ function echo_main_dashboard_JSON($project_instance, $date)
             foreach ($build['coverages'] as $subproject) {
                 foreach ($coverages as $key => $subproject_response) {
                     if ($subproject_response['label'] == $subproject['label']) {
-                        $coverages[$key]['build'.$parentid] = $subproject['percentage'];
-                        $coverages[$key]['build'.$parentid.'id'] = $subproject['buildid'];
+                        $coverages[$key]['build' . $parentid] = $subproject['percentage'];
+                        $coverages[$key]['build' . $parentid . 'id'] = $subproject['buildid'];
                         if (array_key_exists('percentagediff', $subproject)) {
                             $percentagediff = $subproject['percentagediff'];
                         } else {
                             $percentagediff = null;
                         }
-                        $coverages[$key]['build'.$parentid.'percentagediff'] = $percentagediff;
+                        $coverages[$key]['build' . $parentid . 'percentagediff'] = $percentagediff;
                         $coverages[$key]['aggregate'] = max($coverages[$key]['aggregate'], $subproject['percentage']);
                         break;
                     }
@@ -384,8 +380,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
         {
             return !empty($group['coverages']);
         }
+
         $coveragegroups_response =
-            array_filter($coveragegroups, "is_coveragegroup_nonempty");
+            array_filter($coveragegroups, 'is_coveragegroup_nonempty');
 
         // Report coveragegroups as a list, not an associative array.
         $coveragegroups_response = array_values($coveragegroups_response);
@@ -401,67 +398,69 @@ function echo_main_dashboard_JSON($project_instance, $date)
     }
 
     $end = microtime_float();
-    $response['generationtime'] = round($end-$start, 3);
+    $response['generationtime'] = round($end - $start, 3);
 
     echo json_encode(cast_data_for_JSON($response));
 } // end echo_main_dashboard_JSON
-
 
 function get_build_label($buildid, $build_array,
                          $include_subprojects, $num_selected_subprojects,
                          $included_subprojects, $excluded_subprojects)
 {
     // Figure out how many labels to report for this build.
-  if (!array_key_exists('numlabels', $build_array) ||
-          $build_array['numlabels'] == 0) {
-      $num_labels = 0;
-  } else {
-      $num_labels = $build_array['numlabels'];
-  }
+    if (!array_key_exists('numlabels', $build_array) ||
+        $build_array['numlabels'] == 0
+    ) {
+        $num_labels = 0;
+    } else {
+        $num_labels = $build_array['numlabels'];
+    }
 
     $label_query =
-      "SELECT l.text FROM label AS l
+        'SELECT l.text FROM label AS l
       INNER JOIN label2build AS l2b ON (l.id=l2b.labelid)
       INNER JOIN build AS b ON (l2b.buildid=b.id)
-      WHERE b.id=" . qnum($buildid);
+      WHERE b.id=' . qnum($buildid);
 
     if ($num_selected_subprojects > 0) {
         // Special handling for whitelisting/blacklisting SubProjects.
-      if ($include_subprojects) {
-          $num_labels = 0;
-      }
+        if ($include_subprojects) {
+            $num_labels = 0;
+        }
         $labels_result = pdo_query($label_query);
         while ($label_row = pdo_fetch_array($labels_result)) {
             // Whitelist case
-          if ($include_subprojects &&
-                  in_array($label_row['text'], $included_subprojects)) {
-              $num_labels++;
-          }
-          // Blacklist case
-          if ($exclude_subprojects &&
-                  in_array($label_row['text'], $excluded_subprojects)) {
-              $num_labels--;
-          }
+            if ($include_subprojects &&
+                in_array($label_row['text'], $included_subprojects)
+            ) {
+                $num_labels++;
+            }
+            // Blacklist case
+            if ($exclude_subprojects &&
+                in_array($label_row['text'], $excluded_subprojects)
+            ) {
+                $num_labels--;
+            }
         }
 
         if ($num_labels === 0) {
             // Skip this build entirely if none of its SubProjects
-          // survived filtering.
-          return '';
+            // survived filtering.
+            return '';
         }
     }
 
-  // Assign a label to this build based on how many labels it has.
-  if ($num_labels == 0) {
-      $build_label = "(none)";
-  } elseif ($num_labels == 1) {
-      // If exactly one label for this build, look it up here.
-      $label_result = pdo_single_row_query($label_query);
-      $build_label = $label_result['text'];
-  } else {
-      // More than one label, just report the number.
-      $build_label = "($num_labels labels)";
-  }
+    // Assign a label to this build based on how many labels it has.
+    if ($num_labels == 0) {
+        $build_label = '(none)';
+    } elseif ($num_labels == 1) {
+        // If exactly one label for this build, look it up here.
+        $label_result = pdo_single_row_query($label_query);
+        $build_label = $label_result['text'];
+    } else {
+        // More than one label, just report the number.
+        $build_label = "($num_labels labels)";
+    }
 
     return $build_label;
 }
@@ -490,18 +489,18 @@ function get_coverage($include_subprojects, $num_selected_subprojects,
 
     // Generate the JSON response from the rows of builds.
     foreach ($build_data as $build_array) {
-        $groupid = $build_array["groupid"];
-        $buildid = $build_array["id"];
+        $groupid = $build_array['groupid'];
+        $buildid = $build_array['id'];
 
         $coverageIsGrouped = false;
         $coverages = pdo_query("SELECT * FROM coveragesummary WHERE buildid='$buildid'");
         while ($coverage_array = pdo_fetch_array($coverages)) {
             $coverage_response = array();
-            $coverage_response['buildid'] = $build_array["id"];
+            $coverage_response['buildid'] = $build_array['id'];
 
             $percent = round(
-                    compute_percentcoverage($coverage_array['loctested'],
-                        $coverage_array['locuntested']), 2);
+                compute_percentcoverage($coverage_array['loctested'],
+                    $coverage_array['locuntested']), 2);
 
             if ($build_array['subprojectgroup']) {
                 $groupId = $build_array['subprojectgroup'];
@@ -515,29 +514,29 @@ function get_coverage($include_subprojects, $num_selected_subprojects,
             }
 
             $coverage_response['percentage'] = $percent;
-            $coverage_response['locuntested'] = intval($coverage_array["locuntested"]);
-            $coverage_response['loctested'] = intval($coverage_array["loctested"]);
+            $coverage_response['locuntested'] = intval($coverage_array['locuntested']);
+            $coverage_response['loctested'] = intval($coverage_array['loctested']);
 
             // Compute the diff
             $coveragediff = pdo_query("SELECT * FROM coveragesummarydiff WHERE buildid='$buildid'");
-            if (pdo_num_rows($coveragediff) >0) {
+            if (pdo_num_rows($coveragediff) > 0) {
                 $coveragediff_array = pdo_fetch_array($coveragediff);
                 $loctesteddiff = $coveragediff_array['loctested'];
                 $locuntesteddiff = $coveragediff_array['locuntested'];
                 @$previouspercent =
-                    round(($coverage_array["loctested"] - $loctesteddiff) /
-                            ($coverage_array["loctested"] - $loctesteddiff +
-                             $coverage_array["locuntested"] - $locuntesteddiff)
-                            * 100, 2);
+                    round(($coverage_array['loctested'] - $loctesteddiff) /
+                        ($coverage_array['loctested'] - $loctesteddiff +
+                            $coverage_array['locuntested'] - $locuntesteddiff)
+                        * 100, 2);
                 $percentdiff = round($percent - $previouspercent, 2);
                 $coverage_response['percentagediff'] = $percentdiff;
             }
 
             $coverage_response['label'] = get_build_label($buildid, $build_array,
-                                                          $include_subprojects,
-                                                          $num_selected_subprojects,
-                                                          $included_subprojects,
-                                                          $excluded_subprojects);
+                $include_subprojects,
+                $num_selected_subprojects,
+                $included_subprojects,
+                $excluded_subprojects);
 
             if ($coverageIsGrouped) {
                 $coverage_groups[$groupId]['coverages'][] = $coverage_response;
@@ -576,18 +575,18 @@ function get_build_data($parentid, $projectid, $beginning_UTCDate,
         $date_clause = '';
     }
 
-    $parent_clause = "";
+    $parent_clause = '';
     if (isset($parentid)) {
         // If we have a parentid, then we should only show children of that build.
         // Date becomes irrelevant in this case.
-        $parent_clause ="AND (b.parentid = " . qnum($parentid) . ") ";
-        $date_clause = "";
+        $parent_clause = 'AND (b.parentid = ' . qnum($parentid) . ') ';
+        $date_clause = '';
     } else {
         // Only show builds that are not children.
-        $parent_clause ="AND (b.parentid = -1 OR b.parentid = 0) ";
+        $parent_clause = 'AND (b.parentid = -1 OR b.parentid = 0) ';
     }
 
-    $sql =  "SELECT b.id,b.siteid,b.parentid,b.done,
+    $sql = "SELECT b.id,b.siteid,b.parentid,b.done,
         bu.status AS updatestatus,
         i.osname AS osname,
         bu.starttime AS updatestarttime,
@@ -648,15 +647,15 @@ function get_build_data($parentid, $projectid, $beginning_UTCDate,
             LEFT JOIN subproject as sp ON (sp2b.subprojectid = sp.id)
             WHERE b.projectid='$projectid' AND g.type='Daily'
             $parent_clause $date_clause
-            ".$filter_sql." ".$limit_sql;
+            " . $filter_sql . ' ' . $limit_sql;
 
     // We shouldn't get any builds for group that have been deleted (otherwise something is wrong)
     $builds = pdo_query($sql);
 
     // Log any errors
     $pdo_error = pdo_error();
-    if (strlen($pdo_error)>0) {
-        add_log("SQL error: ".$pdo_error, "Index.php", LOG_ERR);
+    if (strlen($pdo_error) > 0) {
+        add_log('SQL error: ' . $pdo_error, 'Index.php', LOG_ERR);
     }
 
     // Gather up results from this query.
