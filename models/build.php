@@ -1443,10 +1443,12 @@ class build
 
         // Check if there's an existing build that should be the parent.
         // This would be a standalone build (parent=0) with no subproject
-        // that matches our name, site, and stamp.
+        // that matches our name, site, stamp, and projectid.
         $query = "SELECT id FROM build
             WHERE parentid = 0 AND name = '$this->Name' AND
-            siteid = '$this->SiteId' AND stamp = '$this->Stamp'";
+            siteid = '$this->SiteId' AND stamp = '$this->Stamp' AND
+            projectid = '$this->ProjectId'
+            ";
         $result = pdo_query($query);
         if (pdo_num_rows($result) > 0) {
             $result_array = pdo_fetch_array($result);
@@ -1502,7 +1504,8 @@ class build
         $query =
             "UPDATE build SET parentid=$this->ParentId
             WHERE parentid=0 AND siteid='$this->SiteId' AND
-            name='$this->Name' AND stamp='$this->Stamp'";
+            name='$this->Name' AND stamp='$this->Stamp' AND
+            projectid=$this->ProjectId";
         if (!pdo_query($query)) {
             add_last_sql_error(
                 'Build Insert Update Parent', $this->ProjectId, $this->ParentId);
