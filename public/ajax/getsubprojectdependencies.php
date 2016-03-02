@@ -16,22 +16,22 @@
 
 $noforcelogin = 1;
 
-require_once(dirname(dirname(__DIR__))."/config/config.php");
-require_once("include/pdo.php");
-require_once("include/common.php");
-include('public/login.php');
-require_once("models/project.php");
-require_once("models/subproject.php");
+require_once dirname(dirname(__DIR__)) . '/config/config.php';
+require_once 'include/pdo.php';
+require_once 'include/common.php';
+include 'public/login.php';
+require_once 'models/project.php';
+require_once 'models/subproject.php';
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME", $db);
 
-@$projectname = $_GET["project"];
+@$projectname = $_GET['project'];
 if ($projectname != null) {
     $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
 }
 
-@$date = $_GET["date"];
+@$date = $_GET['date'];
 if ($date != null) {
     $date = htmlspecialchars(pdo_real_escape_string($date));
 }
@@ -39,25 +39,25 @@ if ($date != null) {
 $projectid = get_project_id($projectname);
 
 if ($projectid == 0) {
-    echo "Invalid project";
+    echo 'Invalid project';
     return;
 }
 
 $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
-if (pdo_num_rows($project)>0) {
+if (pdo_num_rows($project) > 0) {
     $project_array = pdo_fetch_array($project);
-    $svnurl = make_cdash_url(htmlentities($project_array["cvsurl"]));
-    $homeurl = make_cdash_url(htmlentities($project_array["homeurl"]));
-    $bugurl = make_cdash_url(htmlentities($project_array["bugtrackerurl"]));
-    $googletracker = htmlentities($project_array["googletracker"]);
-    $docurl = make_cdash_url(htmlentities($project_array["documentationurl"]));
-    $projectpublic =  $project_array["public"];
-    $projectname = $project_array["name"];
+    $svnurl = make_cdash_url(htmlentities($project_array['cvsurl']));
+    $homeurl = make_cdash_url(htmlentities($project_array['homeurl']));
+    $bugurl = make_cdash_url(htmlentities($project_array['bugtrackerurl']));
+    $googletracker = htmlentities($project_array['googletracker']);
+    $docurl = make_cdash_url(htmlentities($project_array['documentationurl']));
+    $projectpublic = $project_array['public'];
+    $projectname = $project_array['name'];
 } else {
-    $projectname = "NA";
+    $projectname = 'NA';
 }
 
-checkUserPolicy(@$_SESSION['cdash']['loginid'], $project_array["id"]);
+checkUserPolicy(@$_SESSION['cdash']['loginid'], $project_array['id']);
 
 $Project = new Project();
 $Project->Id = $projectid;
@@ -80,7 +80,7 @@ foreach ($subprojectids as $subprojectid) {
 
 foreach ($subprojectids as $subprojectid) {
     $SubProject = $subprojs[$subprojectid];
-    $subarray = array("name"=>$SubProject->GetName(), "id"=>$subprojectid);
+    $subarray = array('name' => $SubProject->GetName(), 'id' => $subprojectid);
     $groupid = $SubProject->GetGroupId();
     if ($groupid > 0) {
         $subarray['group'] = $subproject_groups[$groupid]->GetName();
@@ -89,12 +89,12 @@ foreach ($subprojectids as $subprojectid) {
     $deparray = array();
     foreach ($dependencies as $depprojid) {
         if (array_key_exists($depprojid, $subprojs)) {
-            $deparray[]=$subprojs[$depprojid]->GetName();
+            $deparray[] = $subprojs[$depprojid]->GetName();
         }
     }
     if (!empty($deparray)) {
         $subarray['depends'] = $deparray;
     }
     $result[] = $subarray;
-} // end foreach subprojects
+}
 echo json_encode(cast_data_for_JSON($result));

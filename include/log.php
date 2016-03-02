@@ -14,14 +14,14 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once("include/defines.php");
-require_once("include/pdocore.php");
+require_once 'include/defines.php';
+require_once 'include/pdocore.php';
 
-use \Monolog\Logger;
-use \Monolog\Registry;
 use \Monolog\Formatter\LineFormatter;
 use \Monolog\Handler\StreamHandler;
 use \Monolog\Handler\SyslogHandler;
+use \Monolog\Logger;
+use \Monolog\Registry;
 use \Psr\Log\LogLevel;
 
 function cdash_unlink($filename)
@@ -38,20 +38,19 @@ function cdash_unlink($filename)
 //    $try_count++;
 //  }
 
-  if (file_exists($filename)) {
-      throw new Exception("file still exists after unlink: $filename");
-  }
+    if (file_exists($filename)) {
+        throw new Exception("file still exists after unlink: $filename");
+    }
 
     if (!$success) {
         throw new Exception("unlink returned non-success: $success for $filename");
     }
-
     return $success;
 }
 
 function to_psr3_level($type)
 {
-    if (is_string($type) && defined('LogLevel::'.strtoupper($type))) {
+    if (is_string($type) && defined('LogLevel::' . strtoupper($type))) {
         return $type;
     }
 
@@ -83,13 +82,12 @@ function to_psr3_level($type)
         default:
             $level = LogLevel::INFO;
     }
-
     return $level;
 }
 
 /** Add information to the log file */
-function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
-                 $resourcetype=0, $resourceid=0)
+function add_log($text, $function, $type = LOG_INFO, $projectid = 0, $buildid = 0,
+                 $resourcetype = 0, $resourceid = 0)
 {
     global $CDASH_LOG_FILE, $CDASH_LOG_FILE_MAXSIZE_MB, $CDASH_LOG_LEVEL, $CDASH_TESTING_MODE;
 
@@ -124,15 +122,15 @@ function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
         // we rotate
         $logFileMaxSize = $CDASH_LOG_FILE_MAXSIZE_MB * 100000;
         if (file_exists($CDASH_LOG_FILE) && filesize($CDASH_LOG_FILE) > $logFileMaxSize) {
-            $tempLogFile = $CDASH_LOG_FILE.'.tmp';
+            $tempLogFile = $CDASH_LOG_FILE . '.tmp';
             if (!file_exists($tempLogFile)) {
                 rename($CDASH_LOG_FILE, $tempLogFile); // This should be quick so we can keep logging
                 for ($i = 9; $i >= 0; $i--) {
                     // If we do not have compression we just rename the files
                     if (function_exists('gzwrite') === false) {
-                        $currentLogFile = $CDASH_LOG_FILE.'.'.$i;
+                        $currentLogFile = $CDASH_LOG_FILE . '.' . $i;
                         $j = $i + 1;
-                        $newLogFile = $CDASH_LOG_FILE.'.'.$j;
+                        $newLogFile = $CDASH_LOG_FILE . '.' . $j;
                         if (file_exists($newLogFile)) {
                             cdash_unlink($newLogFile);
                         }
@@ -140,9 +138,9 @@ function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
                             rename($currentLogFile, $newLogFile);
                         }
                     } else {
-                        $currentLogFile = $CDASH_LOG_FILE.'.'.$i.'.gz';
+                        $currentLogFile = $CDASH_LOG_FILE . '.' . $i . '.gz';
                         $j = $i + 1;
-                        $newLogFile = $CDASH_LOG_FILE.'.'.$j.'.gz';
+                        $newLogFile = $CDASH_LOG_FILE . '.' . $j . '.gz';
                         if (file_exists($newLogFile)) {
                             cdash_unlink($newLogFile);
                         }
@@ -161,9 +159,9 @@ function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
                 }
                 // Move the current backup
                 if (function_exists('gzwrite') === false) {
-                    rename($tempLogFile, $CDASH_LOG_FILE.'.0');
+                    rename($tempLogFile, $CDASH_LOG_FILE . '.0');
                 } else {
-                    $gz = gzopen($CDASH_LOG_FILE.'.0.gz', 'wb');
+                    $gz = gzopen($CDASH_LOG_FILE . '.0.gz', 'wb');
                     $f = fopen($tempLogFile, 'rb');
                     while ($f && !feof($f)) {
                         gzwrite($gz, fread($f, 8192));
@@ -191,7 +189,7 @@ function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
                 $filePermission = 0664;
             }
             $handler = new StreamHandler($CDASH_LOG_FILE, $minLevel, true,
-                                         $filePermission);
+                $filePermission);
             $handler->getFormatter()->allowInlineLineBreaks();
             $handler->getFormatter()->ignoreEmptyContextAndExtra();
         }
@@ -205,7 +203,6 @@ function add_log($text, $function, $type=LOG_INFO, $projectid=0, $buildid=0,
 
     $logger->log($level, $text, $context);
 }
-
 
 function begin_timer($context)
 {
@@ -221,27 +218,26 @@ function begin_timer($context)
     $cdash_timer_stack[] = $timer_entry;
 }
 
-
 function end_timer($context, $threshold = -0.001)
 {
     global $cdash_timer_stack;
     if (!isset($cdash_timer_stack)) {
         trigger_error(
-      'end_timer called before begin_timer',
-      E_USER_WARNING);
+            'end_timer called before begin_timer',
+            E_USER_WARNING);
     }
 
     $end_time = microtime_float();
 
-    $n = count($cdash_timer_stack)-1;
+    $n = count($cdash_timer_stack) - 1;
     $timer_entry = $cdash_timer_stack[$n];
     $begin_context = $timer_entry[0];
     $begin_time = $timer_entry[1];
 
     if ($context != $begin_context) {
         trigger_error(
-      'end_timer called with different context than begin_timer',
-      E_USER_WARNING);
+            'end_timer called with different context than begin_timer',
+            E_USER_WARNING);
     }
 
     array_pop($cdash_timer_stack);
@@ -256,6 +252,6 @@ function end_timer($context, $threshold = -0.001)
     $text .= $context . ', ' . round($delta, 3) . ' seconds';
 
     if ($delta > $threshold) {
-        add_log($text, "end_timer");
+        add_log($text, 'end_timer');
     }
 }

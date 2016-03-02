@@ -15,10 +15,10 @@
 =========================================================================*/
 
 require_once 'xml_handlers/abstract_handler.php';
-require_once('models/build.php');
-require_once('models/label.php');
-require_once('models/site.php');
-require_once('models/buildconfigure.php');
+require_once 'models/build.php';
+require_once 'models/label.php';
+require_once 'models/site.php';
+require_once 'models/buildconfigure.php';
 
 class ConfigureHandler extends AbstractHandler
 {
@@ -42,10 +42,10 @@ class ConfigureHandler extends AbstractHandler
     {
         parent::startElement($parser, $name, $attributes);
 
-        if ($name=='SITE') {
+        if ($name == 'SITE') {
             $this->Site->Name = $attributes['NAME'];
             if (empty($this->Site->Name)) {
-                $this->Site->Name = "(empty)";
+                $this->Site->Name = '(empty)';
             }
             $this->Site->Insert();
 
@@ -53,7 +53,7 @@ class ConfigureHandler extends AbstractHandler
             $buildInformation = new BuildInformation();
 
             // Fill in the attribute
-            foreach ($attributes as $key=>$value) {
+            foreach ($attributes as $key => $value) {
                 if ($key === 'CHANGEID') {
                     $this->Build->SetPullRequest($value);
                     continue;
@@ -67,7 +67,7 @@ class ConfigureHandler extends AbstractHandler
             $this->Build->SiteId = $this->Site->Id;
             $this->Build->Name = $attributes['BUILDNAME'];
             if (empty($this->Build->Name)) {
-                $this->Build->Name = "(empty)";
+                $this->Build->Name = '(empty)';
             }
             $this->Build->SetStamp($attributes['BUILDSTAMP']);
             $this->Build->Generator = $attributes['GENERATOR'];
@@ -81,7 +81,7 @@ class ConfigureHandler extends AbstractHandler
     {
         parent::endElement($parser, $name);
 
-        if ($name=='CONFIGURE') {
+        if ($name == 'CONFIGURE') {
             $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
             $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
 
@@ -121,18 +121,18 @@ class ConfigureHandler extends AbstractHandler
 
             // Record the number of warnings & errors with the build.
             $this->Build->SetNumberOfConfigureWarnings(
-                    $this->Configure->NumberOfWarnings);
+                $this->Configure->NumberOfWarnings);
             $this->Build->SetNumberOfConfigureErrors(
-                    $this->Configure->NumberOfErrors);
+                $this->Configure->NumberOfErrors);
 
             // Record configure duration with the build.
             $this->Build->SetConfigureDuration(
-                    $this->EndTimeStamp - $this->StartTimeStamp);
+                $this->EndTimeStamp - $this->StartTimeStamp);
 
             // Update the tally of warnings & errors in the parent build,
             // if applicable.
             $this->Build->UpdateParentConfigureNumbers(
-                    $this->Configure->NumberOfWarnings, $this->Configure->NumberOfErrors);
+                $this->Configure->NumberOfWarnings, $this->Configure->NumberOfErrors);
         } elseif ($name == 'LABEL') {
             if (isset($this->Configure)) {
                 $this->Configure->AddLabel($this->Label);
@@ -145,7 +145,7 @@ class ConfigureHandler extends AbstractHandler
         $parent = $this->getParent();
         $element = $this->getElement();
 
-        if ($parent=='CONFIGURE') {
+        if ($parent == 'CONFIGURE') {
             switch ($element) {
                 case 'STARTDATETIME':
                     $this->StartTimeStamp = str_to_time($data, $this->Build->GetStamp());
@@ -158,7 +158,7 @@ class ConfigureHandler extends AbstractHandler
                     break;
                 case 'ELAPSEDMINUTES':
                     if ($this->EndTimeStamp === 0) {
-                        $this->EndTimeStamp = $this->StartTimeStamp+$data*60;
+                        $this->EndTimeStamp = $this->StartTimeStamp + $data * 60;
                     }
                     break;
                 case 'BUILDCOMMAND':

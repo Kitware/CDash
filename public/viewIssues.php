@@ -16,9 +16,9 @@
 
 $NoXSLGenerate = 1;
 
-include("index.php");
+include 'index.php';
 
-@$projectname = $_GET["project"];
+@$projectname = $_GET['project'];
 
 if (!isset($projectname)) {
     $xml = generate_index_table();
@@ -27,13 +27,13 @@ if (!isset($projectname)) {
 } else {
     $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
     $projectid = get_project_id($projectname);
-    @$date = $_GET["date"];
+    @$date = $_GET['date'];
     if ($date != null) {
         $date = htmlspecialchars(pdo_real_escape_string($date));
     }
 
-  // Check if the project has any subproject
-  $Project = new Project();
+    // Check if the project has any subproject
+    $Project = new Project();
     $Project->Id = $projectid;
     $Project->Fill();
 

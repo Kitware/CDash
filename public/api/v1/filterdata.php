@@ -14,14 +14,13 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include(dirname(dirname(dirname(__DIR__)))."/config/config.php");
-require_once("include/pdo.php");
-include_once("include/common.php");
-include_once("include/filterdataFunctions.php");
+include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
+require_once 'include/pdo.php';
+include_once 'include/common.php';
+include_once 'include/filterdataFunctions.php';
 
-$response = get_filterdata_array_from_request($_GET["page_id"]);
+$response = get_filterdata_array_from_request($_GET['page_id']);
 echo json_encode(cast_data_for_JSON($response));
-
 
 // Parse filter data from the request into an array.
 //
@@ -34,14 +33,14 @@ function get_filterdata_array_from_request($page_id = '')
 
     if (empty($page_id)) {
         $pos = strrpos($_SERVER['SCRIPT_NAME'], '/');
-        $page_id = substr($_SERVER['SCRIPT_NAME'], $pos+1);
+        $page_id = substr($_SERVER['SCRIPT_NAME'], $pos + 1);
     }
     $filterdata['availablefilters'] = getFiltersForPage($page_id);
 
     $pageSpecificFilters = createPageSpecificFilters($page_id);
 
-    if (isset($_GET["value1"]) && strlen($_GET["value1"])>0) {
-        $filtercount = $_GET["filtercount"];
+    if (isset($_GET['value1']) && strlen($_GET['value1']) > 0) {
+        $filtercount = $_GET['filtercount'];
     } else {
         $filtercount = 0;
     }
@@ -71,7 +70,7 @@ function get_filterdata_array_from_request($page_id = '')
     }
     $filterdata['limit'] = $limit;
 
-    @$filtercombine =  htmlspecialchars(pdo_real_escape_string($_REQUEST['filtercombine']));
+    @$filtercombine = htmlspecialchars(pdo_real_escape_string($_REQUEST['filtercombine']));
     $filterdata['filtercombine'] = $filtercombine;
 
     if (strtolower($filtercombine) == 'or') {
@@ -80,16 +79,16 @@ function get_filterdata_array_from_request($page_id = '')
         $sql_combine = 'AND';
     }
 
-    $sql = "AND (";
+    $sql = 'AND (';
 
     // Check for filters passed in via the query string
     for ($i = 1; $i <= $filtercount; ++$i) {
-        if (empty($_REQUEST['field'.$i])) {
+        if (empty($_REQUEST['field' . $i])) {
             continue;
         }
-        $field =  htmlspecialchars(pdo_real_escape_string($_REQUEST['field'.$i]));
-        $compare =  htmlspecialchars(pdo_real_escape_string($_REQUEST['compare'.$i]));
-        $value =  htmlspecialchars(pdo_real_escape_string($_REQUEST['value'.$i]));
+        $field = htmlspecialchars(pdo_real_escape_string($_REQUEST['field' . $i]));
+        $compare = htmlspecialchars(pdo_real_escape_string($_REQUEST['compare' . $i]));
+        $value = htmlspecialchars(pdo_real_escape_string($_REQUEST['value' . $i]));
 
         $cv = get_sql_compare_and_value($compare, $value);
         $sql_compare = $cv[0];
@@ -129,20 +128,19 @@ function get_filterdata_array_from_request($page_id = '')
         }
 
         $filters[] = array(
-                'key' => $field,
-                'value' => $value,
-                'compare' => $compare
-                );
+            'key' => $field,
+            'value' => $value,
+            'compare' => $compare
+        );
     }
 
     if ($clauses == 0) {
         $sql = '';
     } else {
-        $sql .= ")";
+        $sql .= ')';
     }
 
     $filterdata['sql'] = $sql;
-
 
     // If no filters were passed in as parameters,
     // then add one default filter so that the user sees
@@ -152,7 +150,6 @@ function get_filterdata_array_from_request($page_id = '')
         $filters[] = getDefaultFilter($page_id);
     }
     $filterdata['filters'] = $filters;
-
     return $filterdata;
 }
 
@@ -166,44 +163,44 @@ function getFiltersForPage($page_id)
         case 'index.php':
         case 'project.php':
             return array(
-                    'buildduration', 'builderrors', 'buildwarnings',
-                    'buildname', 'buildstamp', 'buildstarttime', 'buildtype',
-                    'configureduration', 'configureerrors', 'configurewarnings',
-                    'expected', 'groupname', 'hascoverage', 'hasctestnotes',
-                    'hasdynamicanalysis', 'hasusernotes', 'label', 'site',
-                    'buildgenerator', 'subprojects', 'testsduration',
-                    'testsfailed', 'testsnotrun', 'testspassed',
-                    'testtimestatus', 'updateduration', 'updatedfiles');
+                'buildduration', 'builderrors', 'buildwarnings',
+                'buildname', 'buildstamp', 'buildstarttime', 'buildtype',
+                'configureduration', 'configureerrors', 'configurewarnings',
+                'expected', 'groupname', 'hascoverage', 'hasctestnotes',
+                'hasdynamicanalysis', 'hasusernotes', 'label', 'site',
+                'buildgenerator', 'subprojects', 'testsduration',
+                'testsfailed', 'testsnotrun', 'testspassed',
+                'testtimestatus', 'updateduration', 'updatedfiles');
             break;
 
         case 'indexchildren.php':
             return array(
-                    'buildduration', 'builderrors', 'buildwarnings',
-                    'buildstarttime', 'buildtype', 'configureduration',
-                    'configureerrors', 'configurewarnings', 'groupname',
-                    'hascoverage', 'hasctestnotes', 'hasdynamicanalysis',
-                    'hasusernotes', 'label', 'buildgenerator', 'subproject',
-                    'testsduration', 'testsfailed', 'testsnotrun',
-                    'testspassed', 'testtimestatus', 'updateduration',
-                    'updatedfiles');
+                'buildduration', 'builderrors', 'buildwarnings',
+                'buildstarttime', 'buildtype', 'configureduration',
+                'configureerrors', 'configurewarnings', 'groupname',
+                'hascoverage', 'hasctestnotes', 'hasdynamicanalysis',
+                'hasusernotes', 'label', 'buildgenerator', 'subproject',
+                'testsduration', 'testsfailed', 'testsnotrun',
+                'testspassed', 'testtimestatus', 'updateduration',
+                'updatedfiles');
             break;
 
         case 'queryTests.php':
             return array(
-                    'buildname', 'buildstarttime', 'details', 'label', 'site',
-                    'status', 'testname', 'time');
+                'buildname', 'buildstarttime', 'details', 'label', 'site',
+                'status', 'testname', 'time');
             break;
 
         case 'viewCoverage.php':
         case 'getviewcoverage.php':
             return array(
-                    'coveredlines', 'filename', 'labels', 'priority',
-                    'totallines', 'uncoveredlines');
+                'coveredlines', 'filename', 'labels', 'priority',
+                'totallines', 'uncoveredlines');
             break;
 
         case 'viewTest.php':
             return array('details', 'label', 'status', 'testname',
-                    'timestatus', 'time');
+                'timestatus', 'time');
             break;
         case 'compareCoverage.php':
             return array('subproject');
@@ -220,32 +217,27 @@ function getDefaultFilter($page_id)
 {
     switch ($page_id) {
         case 'index.php':
-        case 'project.php':
-            {
-                return array('key' => 'site', 'value' => '', 'compare' => 63);
-            }
+        case 'project.php': {
+            return array('key' => 'site', 'value' => '', 'compare' => 63);
+        }
 
         case 'indexchildren.php':
-        case 'compareCoverage.php':
-            {
-                return array('key' => 'subproject', 'value' => '', 'compare' => 61);
-            }
+        case 'compareCoverage.php': {
+            return array('key' => 'subproject', 'value' => '', 'compare' => 61);
+        }
 
         case 'queryTests.php':
-        case 'viewTest.php':
-            {
-                return array('key' => 'testname', 'value' => '', 'compare' => 63);
-            }
+        case 'viewTest.php': {
+            return array('key' => 'testname', 'value' => '', 'compare' => 63);
+        }
 
         case 'viewCoverage.php':
-        case 'getviewcoverage.php':
-            {
-                return array('key' => 'filename', 'value' => '', 'compare' => 63);
-            }
+        case 'getviewcoverage.php': {
+            return array('key' => 'filename', 'value' => '', 'compare' => 63);
+        }
 
-        default:
-            {
-                return array();
-            }
+        default: {
+            return array();
+        }
     }
 }

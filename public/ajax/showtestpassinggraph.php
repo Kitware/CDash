@@ -14,19 +14,19 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once(dirname(dirname(__DIR__))."/config/config.php");
-require_once("include/pdo.php");
-require_once("include/common.php");
+require_once dirname(dirname(__DIR__)) . '/config/config.php';
+require_once 'include/pdo.php';
+require_once 'include/common.php';
 
-$testid = pdo_real_escape_numeric($_GET["testid"]);
-$buildid = pdo_real_escape_numeric($_GET["buildid"]);
+$testid = pdo_real_escape_numeric($_GET['testid']);
+$buildid = pdo_real_escape_numeric($_GET['buildid']);
 
 if (!isset($buildid) || !is_numeric($buildid)) {
-    echo "Not a valid buildid!";
+    echo 'Not a valid buildid!';
     return;
 }
 if (!isset($testid) || !is_numeric($testid)) {
-    echo "Not a valid testid!";
+    echo 'Not a valid testid!';
     return;
 }
 
@@ -36,19 +36,19 @@ pdo_select_db("$CDASH_DB_NAME", $db);
 // Find the project variables
 $test = pdo_query("SELECT name FROM test WHERE id='$testid'");
 $test_array = pdo_fetch_array($test);
-$testname = $test_array["name"];
+$testname = $test_array['name'];
 
 $build = pdo_query("SELECT name,type,siteid,projectid,starttime FROM build WHERE id='$buildid'");
 $build_array = pdo_fetch_array($build);
 
-$buildname = $build_array["name"];
-$siteid = $build_array["siteid"];
-$buildtype = $build_array["type"];
-$starttime = $build_array["starttime"];
-$projectid = $build_array["projectid"];
+$buildname = $build_array['name'];
+$siteid = $build_array['siteid'];
+$buildtype = $build_array['type'];
+$starttime = $build_array['starttime'];
+$projectid = $build_array['projectid'];
 
 if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
-    echo "You are not authorized to view this page.";
+    echo 'You are not authorized to view this page.';
     return;
 }
 
@@ -68,13 +68,13 @@ ORDER BY build.starttime DESC
 $tarray = array();
 while ($build_array = pdo_fetch_array($previousbuilds)) {
     $t = array();
-    $t['x'] = strtotime($build_array["starttime"])*1000;
-    if (strtolower($build_array["status"]) == "passed") {
+    $t['x'] = strtotime($build_array['starttime']) * 1000;
+    if (strtolower($build_array['status']) == 'passed') {
         $t['y'] = 1;
     } else {
         $t['y'] = -1;
     }
-    $tarray[]=$t;
+    $tarray[] = $t;
 }
 
 $tarray = array_reverse($tarray);
