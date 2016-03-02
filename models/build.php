@@ -90,7 +90,6 @@ class build
         if (!isset($this->Labels)) {
             $this->Labels = array();
         }
-
         $label->BuildId = $this->Id;
         $this->Labels[] = $label;
     }
@@ -136,16 +135,15 @@ class build
         }
 
         $this->SubProjectName = $subproject;
+        $label = new Label;
+        $label->Text = $subproject;
+        $this->AddLabel($label);
 
         // Add this subproject as a label on the parent build.
         $this->ParentId = $this->GetParentBuildId();
         if ($this->ParentId > 0) {
             $parent = new Build();
             $parent->Id = $this->ParentId;
-
-            $label = new Label;
-            $label->Text = $subproject;
-
             $parent->AddLabel($label);
             $parent->InsertLabelAssociations();
         }
