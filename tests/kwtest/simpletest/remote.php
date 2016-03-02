@@ -1,23 +1,19 @@
 <?php
 /**
  *  base include file for SimpleTest
- *  @package    SimpleTest
- *  @subpackage UnitTester
- *  @version    $Id$
+ * @version    $Id$
  */
 
 /**#@+
  *  include other SimpleTest class files
  */
-require_once(dirname(__FILE__) . '/browser.php');
-require_once(dirname(__FILE__) . '/xml.php');
-require_once(dirname(__FILE__) . '/test_case.php');
+require_once dirname(__FILE__) . '/browser.php';
+require_once dirname(__FILE__) . '/xml.php';
+require_once dirname(__FILE__) . '/test_case.php';
 /**#@-*/
 
 /**
  *    Runs an XML formated test on a remote server.
- *    @package SimpleTest
- *    @subpackage UnitTester
  */
 class RemoteTestCase
 {
@@ -27,9 +23,8 @@ class RemoteTestCase
 
     /**
      *    Sets the location of the remote test.
-     *    @param string $url       Test location.
-     *    @param string $dry_url   Location for dry run.
-     *    @access public
+     * @param string $url Test location.
+     * @param string $dry_url Location for dry run.
      */
     public function __construct($url, $dry_url = false)
     {
@@ -40,8 +35,7 @@ class RemoteTestCase
 
     /**
      *    Accessor for the test name for subclasses.
-     *    @return string           Name of the test.
-     *    @access public
+     * @return string           Name of the test.
      */
     public function getLabel()
     {
@@ -52,20 +46,19 @@ class RemoteTestCase
      *    Runs the top level test for this class. Currently
      *    reads the data as a single chunk. I'll fix this
      *    once I have added iteration to the browser.
-     *    @param SimpleReporter $reporter    Target of test results.
-     *    @returns boolean                   True if no failures.
-     *    @access public
+     * @param SimpleReporter $reporter Target of test results.
+     * @returns boolean                   True if no failures.
      */
     public function run($reporter)
     {
         $browser = $this->createBrowser();
         $xml = $browser->get($this->url);
-        if (! $xml) {
+        if (!$xml) {
             trigger_error('Cannot read remote test URL [' . $this->url . ']');
             return false;
         }
         $parser = $this->createParser($reporter);
-        if (! $parser->parse($xml)) {
+        if (!$parser->parse($xml)) {
             trigger_error('Cannot parse incoming XML from [' . $this->url . ']');
             return false;
         }
@@ -75,8 +68,7 @@ class RemoteTestCase
     /**
      *    Creates a new web browser object for fetching
      *    the XML report.
-     *    @return SimpleBrowser           New browser.
-     *    @access protected
+     * @return SimpleBrowser           New browser.
      */
     protected function createBrowser()
     {
@@ -85,9 +77,8 @@ class RemoteTestCase
 
     /**
      *    Creates the XML parser.
-     *    @param SimpleReporter $reporter    Target of test results.
-     *    @return SimpleTestXmlListener      XML reader.
-     *    @access protected
+     * @param SimpleReporter $reporter Target of test results.
+     * @return SimpleTestXmlListener      XML reader.
      */
     protected function createParser($reporter)
     {
@@ -96,21 +87,20 @@ class RemoteTestCase
 
     /**
      *    Accessor for the number of subtests.
-     *    @return integer           Number of test cases.
-     *    @access public
+     * @return int           Number of test cases.
      */
     public function getSize()
     {
         if ($this->size === false) {
             $browser = $this->createBrowser();
             $xml = $browser->get($this->dry_url);
-            if (! $xml) {
+            if (!$xml) {
                 trigger_error('Cannot read remote test URL [' . $this->dry_url . ']');
                 return false;
             }
             $reporter = new SimpleReporter();
             $parser = $this->createParser($reporter);
-            if (! $parser->parse($xml)) {
+            if (!$parser->parse($xml)) {
                 trigger_error('Cannot parse incoming XML from [' . $this->dry_url . ']');
                 return false;
             }

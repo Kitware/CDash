@@ -41,7 +41,7 @@ class stack
 
     public function top()
     {
-        return $this->stack[count($this->stack)-1];
+        return $this->stack[count($this->stack) - 1];
     }
 
     public function isEmpty()
@@ -52,7 +52,7 @@ class stack
     public function at($index)
     {
         if ($index < 0 || $index >= count($this->stack)) {
-            return null;
+            return;
         }
         return $this->stack[$index];
     }

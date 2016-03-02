@@ -3,12 +3,12 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__).'/cdash_test_case.php');
+require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-require_once('include/common.php');
-require_once('include/pdo.php');
-require_once('models/image.php');
-require_once('models/testimage.php');
+require_once 'include/common.php';
+require_once 'include/pdo.php';
+require_once 'models/image.php';
+require_once 'models/testimage.php';
 
 class ImageTestCase extends KWWebTestCase
 {
@@ -23,36 +23,36 @@ class ImageTestCase extends KWWebTestCase
 
         $image = new Image();
 
-    //no id, no matching checksum
-    $image->Id = 0;
+        //no id, no matching checksum
+        $image->Id = 0;
         if ($image->Exists()) {
-            $this->fail("Exists() should return false when Id is 0");
+            $this->fail('Exists() should return false when Id is 0');
             return 1;
         }
 
-    //id, no matching checksum
-    $image->Id = 1;
+        //id, no matching checksum
+        $image->Id = 1;
         if ($image->Exists()) {
             $this->fail("Exists() should return false with no matching checksum\n");
         }
 
-        $pathToImage = dirname(__FILE__)."/data/smile.gif";
+        $pathToImage = dirname(__FILE__) . '/data/smile.gif';
 
-    //dummy checksum so we don't break the test on pgSQL
-    $image->Checksum=100;
+        //dummy checksum so we don't break the test on pgSQL
+        $image->Checksum = 100;
 
-    //call save twice to cover different execution paths
-    if (!$image->Save()) {
-        $this->fail("Save() call #1 returned false when it should be true.\n");
-        return 1;
-    }
+        //call save twice to cover different execution paths
+        if (!$image->Save()) {
+            $this->fail("Save() call #1 returned false when it should be true.\n");
+            return 1;
+        }
         if (!$image->Save()) {
             $this->fail("Save() call #2 returned false when it should be true.\n");
             return 1;
         }
 
-    //exercise the TestImage class as well
-    $testimage = new TestImage();
+        //exercise the TestImage class as well
+        $testimage = new TestImage();
 
         $testimage->Id = 1;
         $testimage->TestId = 1;
@@ -72,10 +72,9 @@ class ImageTestCase extends KWWebTestCase
             return 1;
         }
 
-        $this->pass("Passed");
+        $this->pass('Passed');
 
         $this->stopCodeCoverage();
-
         return 0;
     }
 }

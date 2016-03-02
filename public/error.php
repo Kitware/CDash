@@ -16,39 +16,39 @@
 
 $noforcelogin = 1;
 
-include(dirname(__DIR__)."/config/config.php");
-require_once("include/pdo.php");
-include("include/common.php");
-include('include/version.php');
+include dirname(__DIR__) . '/config/config.php';
+require_once 'include/pdo.php';
+include 'include/common.php';
+include 'include/version.php';
 
 $xml = begin_XML_for_XSLT();
-$xml .= add_XML_value("title", "CDash");
-$xml .= "<hostname>".$_SERVER['SERVER_NAME']."</hostname>";
-$xml .= "<date>".date("r")."</date>";
+$xml .= add_XML_value('title', 'CDash');
+$xml .= '<hostname>' . $_SERVER['SERVER_NAME'] . '</hostname>';
+$xml .= '<date>' . date('r') . '</date>';
 
-$xml .= "<dashboard>
+$xml .= '<dashboard>
 <title>CDash - Error</title>
 <subtitle></subtitle>
-<googletracker>".$CDASH_DEFAULT_GOOGLE_ANALYTICS."</googletracker>";
-if (isset($CDASH_NO_REGISTRATION) && $CDASH_NO_REGISTRATION==1) {
-    $xml .= add_XML_value("noregister", "1");
+<googletracker>' . $CDASH_DEFAULT_GOOGLE_ANALYTICS . '</googletracker>';
+if (isset($CDASH_NO_REGISTRATION) && $CDASH_NO_REGISTRATION == 1) {
+    $xml .= add_XML_value('noregister', '1');
 }
-$xml .= "</dashboard> ";
+$xml .= '</dashboard> ';
 
 // User
 $userid = 0;
 if (isset($_SESSION['cdash'])) {
-    $xml .= "<user>";
+    $xml .= '<user>';
     $userid = $_SESSION['cdash']['loginid'];
-    $user = pdo_query("SELECT admin FROM ".qid("user")." WHERE id='$userid'");
+    $user = pdo_query('SELECT admin FROM ' . qid('user') . " WHERE id='$userid'");
     $user_array = pdo_fetch_array($user);
-    $xml .= add_XML_value("id", $userid);
-    $xml .= add_XML_value("admin", $user_array["admin"]);
-    $xml .= "</user>";
+    $xml .= add_XML_value('id', $userid);
+    $xml .= add_XML_value('admin', $user_array['admin']);
+    $xml .= '</user>';
 }
 
-$xml .= add_XML_value("error", $_COOKIE['cdash_error']);
-$xml .= "</cdash>";
+$xml .= add_XML_value('error', $_COOKIE['cdash_error']);
+$xml .= '</cdash>';
 
 // Now doing the xslt transition
-generate_XSLT($xml, "error");
+generate_XSLT($xml, 'error');

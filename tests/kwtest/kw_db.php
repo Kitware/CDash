@@ -14,14 +14,13 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once(dirname(dirname(__FILE__)) . '/config.test.php');
-require_once(dirname(dirname(dirname(__FILE__))) . '/include/pdocore.php');
-/**
-  *    db object to allow the user to interact with
-  *    a database
-  *    @package KWSimpletest
-  */
+require_once dirname(dirname(__FILE__)) . '/config.test.php';
+require_once dirname(dirname(dirname(__FILE__))) . '/include/pdocore.php';
 
+/**
+ *    db object to allow the user to interact with
+ *    a database
+ */
 class database
 {
     public $dbo = null;
@@ -30,26 +29,26 @@ class database
     public function __construct($type)
     {
         switch ($type) {
-      case "mysql":
-        $this->dbo = new dbo_mysql();
-        $this->type = "mysql";
-        break;
+            case 'mysql':
+                $this->dbo = new dbo_mysql();
+                $this->type = 'mysql';
+                break;
 
-      case "pgsql":
-        $this->dbo = new dbo_pgsql();
-        $this->type = "pgsql";
-        break;
+            case 'pgsql':
+                $this->dbo = new dbo_pgsql();
+                $this->type = 'pgsql';
+                break;
 
-      default:
-        $status = "database type unsupported.\n";
+            default:
+                $status = "database type unsupported.\n";
 
-        trigger_error(
-          __FILE__ . ": $status",
-          E_USER_ERROR);
+                trigger_error(
+                    __FILE__ . ": $status",
+                    E_USER_ERROR);
 
-        exit($status);
-        break;
-      }
+                exit($status);
+                break;
+        }
     }
 
     public function getType()
@@ -127,11 +126,11 @@ class database
 
 class dbo
 {
-    public $host      = null;
-    public $port      = null;
-    public $user      = null;
-    public $password  = null;
-    public $db        = null;
+    public $host = null;
+    public $port = null;
+    public $user = null;
+    public $password = null;
+    public $db = null;
     public $dbconnect = null;
 
     public function getDbConnect()
@@ -171,7 +170,7 @@ class dbo_mysql extends dbo
     {
         $host = $this->host;
         if (!empty($this->port)) {
-            $host .= ':'.$this->port;
+            $host .= ':' . $this->port;
         }
         pdo_connect($host, $this->user, $this->password);
     }
@@ -183,7 +182,7 @@ class dbo_mysql extends dbo
 
     public function create($db)
     {
-        $dbh = new PDO('mysql:host='.$this->host, $this->user, $this->password);
+        $dbh = new PDO('mysql:host=' . $this->host, $this->user, $this->password);
         if (!$dbh->query("CREATE DATABASE IF NOT EXISTS $db")) {
             $this->disconnect();
             return false;
@@ -194,7 +193,7 @@ class dbo_mysql extends dbo
 
     public function drop($db)
     {
-        $dbh = new PDO('mysql:host='.$this->host, $this->user, $this->password);
+        $dbh = new PDO('mysql:host=' . $this->host, $this->user, $this->password);
         if (!$dbh->query("DROP DATABASE IF EXISTS $db")) {
             $this->disconnect();
             return false;
@@ -231,22 +230,22 @@ class dbo_mysql extends dbo
         }
         $this->connectToDb();
         $file_content = file($sqlfile);
-        $query = "";
+        $query = '';
         foreach ($file_content as $sql_line) {
             $tsl = trim($sql_line);
-            if (($sql_line != "") && (substr($tsl, 0, 2) != "--") && (substr($tsl, 0, 1) != "#")) {
+            if (($sql_line != '') && (substr($tsl, 0, 2) != '--') && (substr($tsl, 0, 1) != '#')) {
                 $query .= $sql_line;
                 if (preg_match("/;\s*$/", $sql_line)) {
-                    $query = str_replace(";", "", "$query");
+                    $query = str_replace(';', '', "$query");
                     $result = pdo_query($query);
                     if (!$result) {
                         die(pdo_error());
                     }
-                    $query = "";
+                    $query = '';
                 }
             }
-        } // end for each line
-        pdo_query("INSERT INTO user VALUES (1, 'simpletest@localhost', '".md5('simpletest')."', 'administrator', '','Kitware Inc.', 1, '')");
+        }
+        pdo_query("INSERT INTO user VALUES (1, 'simpletest@localhost', '" . md5('simpletest') . "', 'administrator', '','Kitware Inc.', 1, '')");
         echo pdo_error();
         $this->disconnect();
         return true;
@@ -257,11 +256,11 @@ class dbo_pgsql extends dbo
 {
     public function connect($dbname = null)
     {
-        $dbname   = $this->db;
-        $host     = $this->host;
-        $user     = $this->user;
+        $dbname = $this->db;
+        $host = $this->host;
+        $user = $this->user;
         $password = $this->password;
-        $conn  = "host='$host' dbname='$dbname' user='$user' password='$password'";
+        $conn = "host='$host' dbname='$dbname' user='$user' password='$password'";
         if (!empty($this->port)) {
             $conn .= " port='$this->port'";
         }
@@ -274,23 +273,23 @@ class dbo_pgsql extends dbo
         $this->dbconnect = null;
     }
 
-   /* attempt to connect to the default postgres database.
-    * currently we try two different names: 'host' and 'postgres'
-    */
-   public function connectToHostDb()
-   {
-       $this->setDb('host');
-       $this->connect();
-       if ($this->dbconnect) {
-           return;
-       }
-       $this->setDb('postgres');
-       $this->connect();
-       if (!$this->dbconnect) {
-           echo "Error connecting to host postgres database.\n";
-           echo "Tried names 'host' and 'postgres'\n";
-       }
-   }
+    /* attempt to connect to the default postgres database.
+     * currently we try two different names: 'host' and 'postgres'
+     */
+    public function connectToHostDb()
+    {
+        $this->setDb('host');
+        $this->connect();
+        if ($this->dbconnect) {
+            return;
+        }
+        $this->setDb('postgres');
+        $this->connect();
+        if (!$this->dbconnect) {
+            echo "Error connecting to host postgres database.\n";
+            echo "Tried names 'host' and 'postgres'\n";
+        }
+    }
 
     public function create($db)
     {
@@ -346,68 +345,68 @@ class dbo_pgsql extends dbo
         }
         $file_content = file($sqlfile);
         //print_r($file_content);
-        $query = "";
+        $query = '';
         $line_number = 0;
         foreach ($file_content as $sql_line) {
             $tsl = trim($sql_line);
-            if (($sql_line != "") && (substr($tsl, 0, 2) != "--") && (substr($tsl, 0, 1) != "#")) {
+            if (($sql_line != '') && (substr($tsl, 0, 2) != '--') && (substr($tsl, 0, 1) != '#')) {
                 $query .= $sql_line;
                 if (preg_match("/;\s*$/", $sql_line)) {
-                    $query = str_replace(";", "", "$query");
+                    $query = str_replace(';', '', "$query");
                     $result = pdo_query($query);
                     if (!$result) {
-                        echo "Error line:".$line_number."<br/>";
+                        echo 'Error line:' . $line_number . '<br/>';
                         return pdo_error();
                     }
-                    $query = "";
+                    $query = '';
                 }
             }
             $line_number++;
-        } // end for each line
+        }
         $pwd = md5('simpletest');
-        $query = "INSERT INTO \"user\" (email, password, firstname, lastname, institution, admin) ";
+        $query = 'INSERT INTO "user" (email, password, firstname, lastname, institution, admin) ';
         $query .= "VALUES ('simpletest@localhost', '$pwd', 'administrator', '','Kitware Inc.', 1)";
         pdo_query($query);
         echo pdo_error();
 
         // Create the language. PgSQL has no way to know if the language already
         // exists
-        @pdo_query("CREATE LANGUAGE plpgsql");
+        @pdo_query('CREATE LANGUAGE plpgsql');
 
-        $sqlfile = str_replace(".sql", ".ext.sql", $sqlfile);
+        $sqlfile = str_replace('.sql', '.ext.sql', $sqlfile);
         // If we are with PostGreSQL we need to add some extra functions
         $file_content = file($sqlfile);
-        $query = "";
+        $query = '';
         foreach ($file_content as $sql_line) {
             $tsl = trim($sql_line);
-            if (($sql_line != "") && (substr($tsl, 0, 2) != "--")) {
+            if (($sql_line != '') && (substr($tsl, 0, 2) != '--')) {
                 $query .= $sql_line;
-                if (strpos("CREATE ", $sql_line) !== false) {
+                if (strpos('CREATE ', $sql_line) !== false) {
                     // We need to remove only the last semicolon
-                    $pos = strrpos($query, ";");
+                    $pos = strrpos($query, ';');
                     if ($pos !== false) {
-                        $query = substr($query, 0, $pos).substr($query, $pos+1);
+                        $query = substr($query, 0, $pos) . substr($query, $pos + 1);
                     }
 
                     $result = pdo_query($query);
                     if (!$result) {
-                        $xml = "<db_created>0</db_created>";
+                        $xml = '<db_created>0</db_created>';
                         die(pdo_error());
                     }
-                    $query = "";
+                    $query = '';
                 }
             }
-        } // end foreach line
+        }
 
-       // Run the last query
-       $pos = strrpos($query, ";");
+        // Run the last query
+        $pos = strrpos($query, ';');
         if ($pos !== false) {
-            $query = substr($query, 0, $pos).substr($query, $pos+1);
+            $query = substr($query, 0, $pos) . substr($query, $pos + 1);
         }
 
         $result = pdo_query($query);
         if (!$result) {
-            $xml = "<db_created>0</db_created>";
+            $xml = '<db_created>0</db_created>';
             die(pdo_error());
         }
         $this->disconnect();

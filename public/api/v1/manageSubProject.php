@@ -15,14 +15,14 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include(dirname(dirname(dirname(__DIR__)))."/config/config.php");
-require_once('include/pdo.php');
-include_once('include/common.php');
-include('public/login.php');
-include('include/version.php');
-include_once('models/project.php');
-include_once('models/subproject.php');
-include_once('models/user.php');
+include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
+require_once 'include/pdo.php';
+include_once 'include/common.php';
+include 'public/login.php';
+include 'include/version.php';
+include_once 'models/project.php';
+include_once 'models/subproject.php';
+include_once 'models/user.php';
 
 $start = microtime_float();
 
@@ -49,14 +49,13 @@ if (!isset($userid) || !is_numeric($userid)) {
     return;
 }
 
-
 // List the available projects that this user has admin rights to.
 
 @$projectid = $_GET['projectid'];
 $User = new User;
 $User->Id = $userid;
 
-$sql = "SELECT id,name FROM project";
+$sql = 'SELECT id,name FROM project';
 if ($User->IsAdmin() == false) {
     $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$userid' AND role>0)";
 }
@@ -67,7 +66,7 @@ while ($project_array = pdo_fetch_array($projects)) {
     $availableproject = array();
     $availableproject['id'] = $project_array['id'];
     $availableproject['name'] = $project_array['name'];
-    if ($project_array['id']==$projectid) {
+    if ($project_array['id'] == $projectid) {
         $availableproject['selected'] = '1';
     }
     $availableprojects[] = $availableproject;
@@ -75,7 +74,7 @@ while ($project_array = pdo_fetch_array($projects)) {
 $response['availableprojects'] = $availableprojects;
 
 if (!isset($projectid)) {
-    $response['error'] = "Please select a project to continue.";
+    $response['error'] = 'Please select a project to continue.';
     echo json_encode($response);
     return;
 }
@@ -87,7 +86,7 @@ $Project = new Project;
 $Project->Id = $projectid;
 $role = $Project->GetUserRole($userid);
 
-if ($User->IsAdmin()===false && $role<=1) {
+if ($User->IsAdmin() === false && $role <= 1) {
     $response['error'] = "You don't have the permissions to access this page.";
     echo json_encode($response);
     return;
@@ -102,27 +101,27 @@ $response['threshold'] = $Project->GetCoverageThreshold();
 $SubProject = new SubProject();
 $SubProject->SetProjectId($projectid);
 
-if ($projectid>=0) {
+if ($projectid >= 0) {
     $project = array();
     $project['id'] = $Project->Id;
     $project['name_encoded'] = urlencode($Project->GetName());
     $response['project'] = $project;
 
-    if ($projectid>0) {
+    if ($projectid > 0) {
         $project['name'] = $Project->GetName();
         $subprojectids = $Project->GetSubProjects();
 
         $subprojs = array(); // subproject models
-    $subprojects_response = array(); // JSON for subprojects
-    $subproject_groups = array(); // JSON for subproject groups
+        $subprojects_response = array(); // JSON for subprojects
+        $subproject_groups = array(); // JSON for subproject groups
 
-    // Initialize our list of subprojects so dependencies can be resolved.
-    // TODO: probably don't need this anymore?
-    foreach ($subprojectids as $subprojectid) {
-        $SubProject = new SubProject();
-        $SubProject->SetId($subprojectid);
-        $subprojs[$subprojectid] = $SubProject;
-    }
+        // Initialize our list of subprojects so dependencies can be resolved.
+        // TODO: probably don't need this anymore?
+        foreach ($subprojectids as $subprojectid) {
+            $SubProject = new SubProject();
+            $SubProject->SetId($subprojectid);
+            $subprojs[$subprojectid] = $SubProject;
+        }
 
         foreach ($subprojectids as $subprojectid) {
             $SubProject = $subprojs[$subprojectid];
@@ -146,7 +145,7 @@ if ($projectid>=0) {
             }
         }
         $response['groups'] = $groups;
-    } // end projectid > 0
+    }
 }
 
 $end = microtime_float();

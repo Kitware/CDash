@@ -1,9 +1,7 @@
 <?php
 /**
  *  base include file for SimpleTest
- *  @package    SimpleTest
- *  @subpackage UnitTester
- *  @version    $Id$
+ * @version    $Id$
  */
 
 /**#@+
@@ -16,14 +14,12 @@ require_once dirname(__FILE__) . '/expectation.php';
 /**
  *    Extension that traps exceptions and turns them into
  *    an error message. PHP5 only.
- *    @package SimpleTest
- *    @subpackage UnitTester
  */
 class SimpleExceptionTrappingInvoker extends SimpleInvokerDecorator
 {
     /**
      *    Stores the invoker to be wrapped.
-     *    @param SimpleInvoker $invoker   Test method runner.
+     * @param SimpleInvoker $invoker Test method runner.
      */
     public function __construct($invoker)
     {
@@ -34,7 +30,7 @@ class SimpleExceptionTrappingInvoker extends SimpleInvokerDecorator
      *    Invokes a test method whilst trapping expected
      *    exceptions. Any left over unthrown exceptions
      *    are then reported as failures.
-     *    @param string $method    Test method to call.
+     * @param string $method Test method to call.
      */
     public function invoke($method)
     {
@@ -45,7 +41,7 @@ class SimpleExceptionTrappingInvoker extends SimpleInvokerDecorator
             parent::invoke($method);
         } catch (Exception $exception) {
             $has_thrown = true;
-            if (! $trap->isExpected($this->getTestCase(), $exception)) {
+            if (!$trap->isExpected($this->getTestCase(), $exception)) {
                 $this->getTestCase()->exception($exception);
             }
             $trap->clear();
@@ -67,8 +63,6 @@ class SimpleExceptionTrappingInvoker extends SimpleInvokerDecorator
  *    exception. This could be improved to accept
  *    a pattern expectation to test the error
  *    message, but that will have to come later.
- *    @package SimpleTest
- *    @subpackage UnitTester
  */
 class ExceptionExpectation extends SimpleExpectation
 {
@@ -82,9 +76,9 @@ class ExceptionExpectation extends SimpleExpectation
      *    trigger an identical match. Writing this
      *    down now makes it look doubly dumb. I hope
      *    come up with a better scheme later.
-     *    @param mixed $expected   A class name or an actual
+     * @param mixed $expected A class name or an actual
      *                             exception to compare with.
-     *    @param string $message   Message to display.
+     * @param string $message Message to display.
      */
     public function __construct($expected, $message = '%s')
     {
@@ -94,8 +88,8 @@ class ExceptionExpectation extends SimpleExpectation
 
     /**
      *    Carry out the test.
-     *    @param Exception $compare    Value to check.
-     *    @return boolean              True if matched.
+     * @param Exception $compare Value to check.
+     * @return bool              True if matched.
      */
     public function test($compare)
     {
@@ -110,28 +104,28 @@ class ExceptionExpectation extends SimpleExpectation
 
     /**
      *    Create the message to display describing the test.
-     *    @param Exception $compare     Exception to match.
-     *    @return string                Final message.
+     * @param Exception $compare Exception to match.
+     * @return string                Final message.
      */
     public function testMessage($compare)
     {
         if (is_string($this->expected)) {
-            return "Exception [" . $this->describeException($compare) .
-                    "] should be type [" . $this->expected . "]";
+            return 'Exception [' . $this->describeException($compare) .
+            '] should be type [' . $this->expected . ']';
         }
-        return "Exception [" . $this->describeException($compare) .
-                "] should match [" .
-                $this->describeException($this->expected) . "]";
+        return 'Exception [' . $this->describeException($compare) .
+        '] should match [' .
+        $this->describeException($this->expected) . ']';
     }
 
     /**
      *    Summary of an Exception object.
-     *    @param Exception $compare     Exception to describe.
-     *    @return string                Text description.
+     * @param Exception $compare Exception to describe.
+     * @return string                Text description.
      */
     protected function describeException($exception)
     {
-        return get_class($exception) . ": " . $exception->getMessage();
+        return get_class($exception) . ': ' . $exception->getMessage();
     }
 }
 
@@ -139,8 +133,6 @@ class ExceptionExpectation extends SimpleExpectation
  *    Stores expected exceptions for when they
  *    get thrown. Saves the irritating try...catch
  *    block.
- *    @package  SimpleTest
- *    @subpackage   UnitTester
  */
 class SimpleExceptionTrap
 {
@@ -160,9 +152,8 @@ class SimpleExceptionTrap
      *    Sets up an expectation of an exception.
      *    This has the effect of intercepting an
      *    exception that matches.
-     *    @param SimpleExpectation $expected    Expected exception to match.
-     *    @param string $message                Message to display.
-     *    @access public
+     * @param SimpleExpectation $expected Expected exception to match.
+     * @param string $message Message to display.
      */
     public function expectException($expected = false, $message = '%s')
     {
@@ -173,8 +164,7 @@ class SimpleExceptionTrap
     /**
      *    Adds an exception to the ignore list. This is the list
      *    of exceptions that when thrown do not affect the test.
-     *    @param SimpleExpectation $ignored    Exception to skip.
-     *    @access public
+     * @param SimpleExpectation $ignored Exception to skip.
      */
     public function ignoreException($ignored)
     {
@@ -185,9 +175,9 @@ class SimpleExceptionTrap
      *    Compares the expected exception with any
      *    in the queue. Issues a pass or fail and
      *    returns the state of the test.
-     *    @param SimpleTestCase $test    Test case to send messages to.
-     *    @param Exception $exception    Exception to compare.
-     *    @return boolean                False on no match.
+     * @param SimpleTestCase $test Test case to send messages to.
+     * @param Exception $exception Exception to compare.
+     * @return bool                False on no match.
      */
     public function isExpected($test, $exception)
     {
@@ -204,9 +194,9 @@ class SimpleExceptionTrap
 
     /**
      *    Turns an expected exception into a SimpleExpectation object.
-     *    @param mixed $exception      Exception, expectation or
+     * @param mixed $exception Exception, expectation or
      *                                 class name of exception.
-     *    @return SimpleExpectation    Expectation that will match the
+     * @return SimpleExpectation    Expectation that will match the
      *                                 exception.
      */
     private function coerceToExpectation($exception)
@@ -214,7 +204,7 @@ class SimpleExceptionTrap
         if ($exception === false) {
             return new AnythingExpectation();
         }
-        if (! SimpleExpectation::isExpectation($exception)) {
+        if (!SimpleExpectation::isExpectation($exception)) {
             return new ExceptionExpectation($exception);
         }
         return $exception;
@@ -222,7 +212,7 @@ class SimpleExceptionTrap
 
     /**
      *    Tests for any left over exception.
-     *    @return string/false     The failure message or false if none.
+     * @return string/false     The failure message or false if none.
      */
     public function getOutstanding()
     {

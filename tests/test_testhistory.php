@@ -3,9 +3,9 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__).'/cdash_test_case.php');
-require_once('include/common.php');
-require_once('include/pdo.php');
+require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once 'include/common.php';
+require_once 'include/pdo.php';
 
 class TestHistoryTestCase extends KWWebTestCase
 {
@@ -17,13 +17,13 @@ class TestHistoryTestCase extends KWWebTestCase
     public function testTestHistory()
     {
         // Submit our testing data.
-        $rep  = dirname(__FILE__)."/data/TestHistory";
+        $rep = dirname(__FILE__) . '/data/TestHistory';
         if (!$this->submission('InsightExample', "$rep/Test_1.xml")) {
-            $this->fail("Failed to submit Test_1.xml");
+            $this->fail('Failed to submit Test_1.xml');
             return 1;
         }
         if (!$this->submission('InsightExample', "$rep/Test_2.xml")) {
-            $this->fail("Failed to submit Test_1.xml");
+            $this->fail('Failed to submit Test_1.xml');
             return 1;
         }
 
@@ -46,7 +46,7 @@ class TestHistoryTestCase extends KWWebTestCase
         $jsonobj = json_decode($content, true);
 
         $success = true;
-        $error_message = "";
+        $error_message = '';
 
         foreach ($jsonobj['tests'] as $test) {
             $history = $test['history'];

@@ -3,11 +3,11 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__).'/cdash_test_case.php');
+require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-require_once('include/common.php');
-require_once('include/pdo.php');
-require_once('models/builderrordiff.php');
+require_once 'include/common.php';
+require_once 'include/pdo.php';
+require_once 'models/builderrordiff.php';
 
 class BuildErrorDiffTestCase extends KWWebTestCase
 {
@@ -22,13 +22,13 @@ class BuildErrorDiffTestCase extends KWWebTestCase
 
         $builderrordiff = new BuildErrorDiff();
 
-    //no buildid
-    $builderrordiff->BuildId = 0;
+        //no buildid
+        $builderrordiff->BuildId = 0;
         ob_start();
         $builderrordiff->Save();
         $output = ob_get_contents();
         ob_end_clean();
-        if (strpos($output, "BuildErrorDiff::Save(): BuildId not set") === false) {
+        if (strpos($output, 'BuildErrorDiff::Save(): BuildId not set') === false) {
             $this->fail("'BuildId not set' not found from Save()");
             return 1;
         }
@@ -36,11 +36,11 @@ class BuildErrorDiffTestCase extends KWWebTestCase
         $builderrordiff->BuildId = 1;
         $builderrordiff->Type = 1;
 
-    //call save twice to cover different execution paths
-    if ($builderrordiff->Save()) {
-        $this->fail("Save() call #1 returned true when it should be false.\n");
-        return 1;
-    }
+        //call save twice to cover different execution paths
+        if ($builderrordiff->Save()) {
+            $this->fail("Save() call #1 returned true when it should be false.\n");
+            return 1;
+        }
 
         $builderrordiff->DifferencePositive = 1;
         if ($builderrordiff->Save()) {
@@ -58,10 +58,9 @@ class BuildErrorDiffTestCase extends KWWebTestCase
             return 1;
         }
 
-        $this->pass("Passed");
+        $this->pass('Passed');
 
         $this->stopCodeCoverage();
-
         return 0;
     }
 }

@@ -15,12 +15,12 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include(dirname(dirname(dirname(__DIR__)))."/config/config.php");
-require_once('include/pdo.php');
-include_once('include/common.php');
-include('public/login.php');
-include_once('models/project.php');
-include_once('models/user.php');
+include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
+require_once 'include/pdo.php';
+include_once 'include/common.php';
+include 'public/login.php';
+include_once 'models/project.php';
+include_once 'models/user.php';
 
 $response = array();
 
@@ -32,8 +32,8 @@ pdo_select_db("$CDASH_DB_NAME", $db);
 $buildid_ok = false;
 @$buildid = $_GET['buildid'];
 if (!isset($buildid)) {
-    $rest_json = file_get_contents("php://input");
-    $_POST  = json_decode($rest_json, true);
+    $rest_json = file_get_contents('php://input');
+    $_POST = json_decode($rest_json, true);
     @$buildid = $_POST['buildid'];
 }
 if (isset($buildid)) {
@@ -50,8 +50,8 @@ if (!$buildid_ok) {
 
 // Make sure this build actually exists.
 $build_array = pdo_fetch_array(pdo_query(
-            "SELECT * FROM build WHERE id='$buildid'"));
-$projectid = $build_array["projectid"];
+    "SELECT * FROM build WHERE id='$buildid'"));
+$projectid = $build_array['projectid'];
 if (!isset($projectid) || $projectid == 0) {
     $response['error'] = "This build doesn't exist. Maybe it has been deleted.";
     echo json_encode($response);
@@ -114,7 +114,7 @@ switch ($method) {
 function rest_delete()
 {
     global $buildid;
-    add_log("Build #".$buildid." removed manually", "buildAPI");
+    add_log('Build #' . $buildid . ' removed manually', 'buildAPI');
     remove_build($buildid);
 }
 
@@ -125,12 +125,12 @@ function rest_post()
 
     // Lookup some details about this build.
     $build = pdo_query(
-            "SELECT name, type, siteid, projectid FROM build WHERE id='$buildid'");
+        "SELECT name, type, siteid, projectid FROM build WHERE id='$buildid'");
     $build_array = pdo_fetch_array($build);
-    $buildtype = $build_array["type"];
-    $buildname = $build_array["name"];
-    $siteid = $build_array["siteid"];
-    $projectid = $build_array["projectid"];
+    $buildtype = $build_array['type'];
+    $buildname = $build_array['name'];
+    $siteid = $build_array['siteid'];
+    $projectid = $build_array['projectid'];
 
     // Should we change whether or not this build is expected?
     if (isset($_POST['expected']) && isset($_POST['groupid'])) {
@@ -139,13 +139,13 @@ function rest_post()
 
         // If a rule already exists we update it.
         $build2groupexpected = pdo_query(
-                "SELECT groupid FROM build2grouprule
+            "SELECT groupid FROM build2grouprule
                 WHERE groupid='$groupid' AND buildtype='$buildtype' AND
                 buildname='$buildname' AND siteid='$siteid' AND
                 endtime='1980-01-01 00:00:00'");
         if (pdo_num_rows($build2groupexpected) > 0) {
             pdo_query(
-                    "UPDATE build2grouprule SET expected='$expected'
+                "UPDATE build2grouprule SET expected='$expected'
                     WHERE groupid='$groupid' AND buildtype='$buildtype' AND
                     buildname='$buildname' AND siteid='$siteid' AND
                     endtime='1980-01-01 00:00:00'");
@@ -154,7 +154,7 @@ function rest_post()
 
             $now = gmdate(FMT_DATETIME);
             pdo_query(
-                    "INSERT INTO build2grouprule
+                "INSERT INTO build2grouprule
                     (groupid, buildtype, buildname, siteid, expected,
                      starttime, endtime)
                     VALUES
@@ -170,21 +170,21 @@ function rest_post()
 
         // Remove the build from its previous group.
         $prevgroup = pdo_fetch_array(pdo_query(
-                    "SELECT groupid as id FROM build2group WHERE buildid='$buildid'"));
-        $prevgroupid = $prevgroup["id"];
+            "SELECT groupid as id FROM build2group WHERE buildid='$buildid'"));
+        $prevgroupid = $prevgroup['id'];
         pdo_query(
-                "DELETE FROM build2group
+            "DELETE FROM build2group
                 WHERE groupid='$prevgroupid' AND buildid='$buildid'");
 
         // Insert it into the new group.
         pdo_query(
-                "INSERT INTO build2group(groupid,buildid)
+            "INSERT INTO build2group(groupid,buildid)
                 VALUES ('$newgroupid','$buildid')");
 
         // Mark any previous buildgroup rule as finished as of this time.
         $now = gmdate(FMT_DATETIME);
         pdo_query(
-                "UPDATE build2grouprule SET endtime='$now'
+            "UPDATE build2grouprule SET endtime='$now'
                 WHERE groupid='$prevgroupid' AND buildtype='$buildtype' AND
                 buildname='$buildname' AND siteid='$siteid' AND
                 endtime='1980-01-01 00:00:00'");
@@ -192,7 +192,7 @@ function rest_post()
         // Create the rule for the new buildgroup.
         // (begin time is set by default by mysql)
         pdo_query(
-                "INSERT INTO build2grouprule(groupid, buildtype, buildname, siteid,
+            "INSERT INTO build2grouprule(groupid, buildtype, buildname, siteid,
             expected, starttime, endtime)
                 VALUES ('$newgroupid','$buildtype','$buildname','$siteid','$expected',
                     '$now','1980-01-01 00:00:00')");
@@ -205,13 +205,11 @@ function rest_post()
     }
 }
 
-
 /* Handle PUT requests */
 function rest_put()
 {
     global $buildid;
 }
-
 
 /* Handle GET requests */
 function rest_get()

@@ -14,23 +14,23 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once(dirname(dirname(dirname(__DIR__)))."/config/config.php");
-require_once("include/pdo.php");
+require_once dirname(dirname(dirname(__DIR__))) . '/config/config.php';
+require_once 'include/pdo.php';
 
 // Add other api includes here
-require("api_coverage.php");
-require("api_project.php");
-require("api_build.php");
-require("api_user.php");
-require("api_repository.php");
+require 'api_coverage.php';
+require 'api_project.php';
+require 'api_build.php';
+require 'api_user.php';
+require 'api_repository.php';
 
 if (!isset($_GET['method'])) {
-    echo "Method should be set: method=...";
+    echo 'Method should be set: method=...';
     return;
 }
 $method = htmlspecialchars(pdo_real_escape_string($_GET['method']));
 
-$classname = ucfirst($method).'API';
+$classname = ucfirst($method) . 'API';
 $class = new $classname;
 $class->Parameters = array_merge($_GET, $_POST);
 $results = $class->Run();

@@ -24,19 +24,19 @@ class testmeasurement
     public $Value;
     public $TestId;
 
-  // Save in the database
-  public function Insert()
-  {
-      $name = pdo_real_escape_string($this->Name);
-      $type = pdo_real_escape_string($this->Type);
-      $value = pdo_real_escape_string($this->Value);
+    // Save in the database
+    public function Insert()
+    {
+        $name = pdo_real_escape_string($this->Name);
+        $type = pdo_real_escape_string($this->Type);
+        $value = pdo_real_escape_string($this->Value);
 
-      $query = "INSERT INTO testmeasurement (testid,name,type,value)
+        $query = "INSERT INTO testmeasurement (testid,name,type,value)
               VALUES ('$this->TestId','$name','$type','$value')";
-      if (!pdo_query($query)) {
-          add_last_sql_error("TestMeasurement Insert");
-          return false;
-      }
-      return true;
-  }  // end Insert
+        if (!pdo_query($query)) {
+            add_last_sql_error('TestMeasurement Insert');
+            return false;
+        }
+        return true;
+    }
 }

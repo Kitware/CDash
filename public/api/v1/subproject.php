@@ -15,14 +15,14 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include(dirname(dirname(dirname(__DIR__)))."/config/config.php");
-require_once('include/pdo.php');
-include_once('include/common.php');
-include('public/login.php');
-include('include/version.php');
-include_once('models/project.php');
-include_once('models/subproject.php');
-include_once('models/user.php');
+include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
+require_once 'include/pdo.php';
+include_once 'include/common.php';
+include 'public/login.php';
+include 'include/version.php';
+include_once 'models/project.php';
+include_once 'models/subproject.php';
+include_once 'models/user.php';
 
 // Make sure we have a valid login.
 if (!$session_OK) {
@@ -41,8 +41,8 @@ pdo_select_db("$CDASH_DB_NAME", $db);
 // Check required parameter.
 @$projectid = $_GET['projectid'];
 if (!isset($projectid)) {
-    $rest_json = file_get_contents("php://input");
-    $_POST  = json_decode($rest_json, true);
+    $rest_json = file_get_contents('php://input');
+    $_POST = json_decode($rest_json, true);
     @$projectid = $_POST['projectid'];
 }
 if (!isset($projectid)) {
@@ -60,7 +60,7 @@ $Project->Id = $projectid;
 
 $role = $Project->GetUserRole($userid);
 
-if ($User->IsAdmin()===false && $role<=1) {
+if ($User->IsAdmin() === false && $role <= 1) {
     echo_error("You ($userid) don't have the permissions to access this page ($projectid)");
     return;
 }
@@ -69,20 +69,20 @@ if ($User->IsAdmin()===false && $role<=1) {
 $method = $_SERVER['REQUEST_METHOD'];
 
 switch ($method) {
-  case 'DELETE':
-    rest_delete();
-    break;
-  case 'POST':
-    rest_post();
-    break;
-  case 'PUT':
-    rest_put();
-    break;
-  case 'GET':
-  default:
-    rest_get();
-    break;
-  }
+    case 'DELETE':
+        rest_delete();
+        break;
+    case 'POST':
+        rest_post();
+        break;
+    case 'PUT':
+        rest_put();
+        break;
+    case 'GET':
+    default:
+        rest_get();
+        break;
+}
 
 /* Handle GET requests */
 function rest_get()
@@ -104,12 +104,12 @@ function rest_get()
     $response['name'] = $SubProject->GetName();
     $response['group'] = $SubProject->GetGroupId();
 
-    $query = pdo_query("
-    SELECT id, name FROM subproject WHERE projectid=".qnum($projectid)."
+    $query = pdo_query('
+    SELECT id, name FROM subproject WHERE projectid=' . qnum($projectid) . "
     AND endtime='1980-01-01 00:00:00'");
 
     if (!$query) {
-        add_last_sql_error("getSubProject Select");
+        add_last_sql_error('getSubProject Select');
         return false;
     }
 
@@ -142,13 +142,12 @@ function rest_get()
     echo json_encode(cast_data_for_JSON($response));
 }
 
-
 /* Handle DELETE requests */
 function rest_delete()
 {
     if (isset($_GET['groupid'])) {
         // Delete subproject group.
-    $groupid = pdo_real_escape_numeric($_GET['groupid']);
+        $groupid = pdo_real_escape_numeric($_GET['groupid']);
         $Group = new SubProjectGroup();
         $Group->SetId($groupid);
         $Group->Delete();
@@ -162,18 +161,17 @@ function rest_delete()
 
     if (isset($_GET['dependencyid'])) {
         // Remove dependency from subproject.
-    $dependencyid = pdo_real_escape_numeric($_GET['dependencyid']);
+        $dependencyid = pdo_real_escape_numeric($_GET['dependencyid']);
         $SubProject = new SubProject();
         $SubProject->SetId($subprojectid);
         $SubProject->RemoveDependency($dependencyid);
     } else {
         // Delete subproject.
-    $SubProject = new SubProject();
+        $SubProject = new SubProject();
         $SubProject->SetId($subprojectid);
         $SubProject->Delete();
     }
 }
-
 
 /* Handle POST requests */
 function rest_post()
@@ -182,22 +180,22 @@ function rest_post()
 
     if (isset($_POST['newsubproject'])) {
         // Create a new subproject
-    $SubProject = new SubProject();
+        $SubProject = new SubProject();
         $SubProject->SetProjectId($projectid);
 
         $newSubProject =
-      htmlspecialchars(pdo_real_escape_string($_POST['newsubproject']));
+            htmlspecialchars(pdo_real_escape_string($_POST['newsubproject']));
         $SubProject->SetName($newSubProject);
 
         if (isset($_POST['group'])) {
             $SubProject->SetGroup(
-        htmlspecialchars(pdo_real_escape_string($_POST['group'])));
+                htmlspecialchars(pdo_real_escape_string($_POST['group'])));
         }
 
         $SubProject->Save();
 
-    // Respond with a JSON representation of this new subproject
-    $response = array();
+        // Respond with a JSON representation of this new subproject
+        $response = array();
         $response['id'] = $SubProject->GetId();
         $response['name'] = $SubProject->GetName();
         $response['group'] = $SubProject->GetGroupId();
@@ -207,11 +205,11 @@ function rest_post()
 
     if (isset($_POST['newgroup'])) {
         // Create a new group
-    $Group = new SubProjectGroup();
+        $Group = new SubProjectGroup();
         $Group->SetProjectId($projectid);
 
         $newGroup =
-      htmlspecialchars(pdo_real_escape_string($_POST['newgroup']));
+            htmlspecialchars(pdo_real_escape_string($_POST['newgroup']));
         $Group->SetName($newGroup);
         if (isset($_POST['isdefault'])) {
             $Group->SetIsDefault($_POST['isdefault']);
@@ -219,8 +217,8 @@ function rest_post()
         $Group->SetCoverageThreshold(pdo_real_escape_numeric($_POST['threshold']));
         $Group->Save();
 
-    // Respond with a JSON representation of this new group
-    $response = array();
+        // Respond with a JSON representation of this new group
+        $response = array();
         $response['id'] = $Group->GetId();
         $response['name'] = $Group->GetName();
         $response['is_default'] = $Group->GetIsDefault();
@@ -229,7 +227,6 @@ function rest_post()
     }
 }
 
-
 /* Handle PUT requests */
 function rest_put()
 {
@@ -237,7 +234,7 @@ function rest_put()
 
     if (isset($_GET['threshold'])) {
         // Modify an existing subproject group.
-    $groupid = pdo_real_escape_numeric($_GET['groupid']);
+        $groupid = pdo_real_escape_numeric($_GET['groupid']);
         $Group = new SubProjectGroup();
         $Group->SetProjectId($projectid);
         $Group->SetId($groupid);
@@ -263,31 +260,29 @@ function rest_put()
 
     if (isset($_GET['dependencyid'])) {
         // Add dependency to existing subproject.
-    $dependencyid = pdo_real_escape_numeric($_GET['dependencyid']);
+        $dependencyid = pdo_real_escape_numeric($_GET['dependencyid']);
         $SubProject->AddDependency($dependencyid);
         return;
     }
 
     if (isset($_GET['groupname'])) {
         // Change which group a subproject belongs to.
-    $groupName = pdo_real_escape_string($_GET['groupname']);
+        $groupName = pdo_real_escape_string($_GET['groupname']);
         $SubProject->SetGroup($groupName);
         $SubProject->Save();
         return;
     }
 }
 
-
 function get_subprojectid()
 {
     if (!isset($_GET['subprojectid'])) {
-        echo_error("subprojectid not specified.");
+        echo_error('subprojectid not specified.');
         return false;
     }
     $subprojectid = pdo_real_escape_numeric($_GET['subprojectid']);
     return $subprojectid;
 }
-
 
 function echo_error($msg)
 {

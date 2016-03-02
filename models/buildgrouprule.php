@@ -31,45 +31,48 @@ class buildgrouprule
         $this->EndTime = '1980-01-01 00:00:00';
     }
 
-  /** Check if the rule already exists */
-  public function Exists()
-  {
-      // If no id specify return false
-   if (empty($this->GroupId) || empty($this->BuildType)
-      || empty($this->BuildName) || empty($this->SiteId)) {
-       return false;
-   }
+    /** Check if the rule already exists */
+    public function Exists()
+    {
+        // If no id specify return false
+        if (empty($this->GroupId) || empty($this->BuildType)
+            || empty($this->BuildName) || empty($this->SiteId)
+        ) {
+            return false;
+        }
 
-      $query = pdo_query("SELECT count(*) AS c FROM build2grouprule WHERE
-                        groupid='".$this->GroupId."' AND buildtype='".$this->BuildType."'
-                        AND buildname='".$this->BuildName."'
-                        AND siteid='".$this->SiteId."'
-                        AND starttime='".$this->StartTime."'
-                        AND endtime='".$this->EndTime."'"
-                        );
-      $query_array = pdo_fetch_array($query);
-      if ($query_array['c']==0) {
-          return false;
-      }
-      return true;
-  }
+        $query = pdo_query("SELECT count(*) AS c FROM build2grouprule WHERE
+                        groupid='" . $this->GroupId . "' AND buildtype='" . $this->BuildType . "'
+                        AND buildname='" . $this->BuildName . "'
+                        AND siteid='" . $this->SiteId . "'
+                        AND starttime='" . $this->StartTime . "'
+                        AND endtime='" . $this->EndTime . "'"
+        );
+        $query_array = pdo_fetch_array($query);
+        if ($query_array['c'] == 0) {
+            return false;
+        }
+        return true;
+    }
 
-  /** Save the goup position */
-  public function Add()
-  {
-      if (empty($this->GroupId) || empty($this->BuildType)
-       || empty($this->BuildName) || empty($this->SiteId) || empty($this->Expected)) {
-          return false;
-      }
+    /** Save the goup position */
+    public function Add()
+    {
+        if (empty($this->GroupId) || empty($this->BuildType)
+            || empty($this->BuildName) || empty($this->SiteId) || empty($this->Expected)
+        ) {
+            return false;
+        }
 
-      if (!$this->Exists()) {
-          if (!pdo_query("INSERT INTO build2grouprule (groupid,buildtype,buildname,siteid,expected,starttime,endtime)
-                     VALUES ('$this->GroupId','$this->BuildType','$this->BuildName','$this->SiteId','$this->Expected','$this->StartTime','$this->EndTime')")) {
-              add_last_sql_error("BuildGroupRule Insert()");
-              return false;
-          }
-          return true;
-      }
-      return false;
-  } // end function add
+        if (!$this->Exists()) {
+            if (!pdo_query("INSERT INTO build2grouprule (groupid,buildtype,buildname,siteid,expected,starttime,endtime)
+                     VALUES ('$this->GroupId','$this->BuildType','$this->BuildName','$this->SiteId','$this->Expected','$this->StartTime','$this->EndTime')")
+            ) {
+                add_last_sql_error('BuildGroupRule Insert()');
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
 }
