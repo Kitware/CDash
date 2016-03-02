@@ -14,6 +14,28 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+function setRememberMeCookie($userId) {
+    $cookiename = 'CDash-' . $_SERVER['SERVER_NAME'];
+    $time = time() + 60 * 60 * 24 * 30; // 30 days;
+
+    // Create a new password
+    $keychars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    $length = 32;
+
+    $key = '';
+    $max = strlen($keychars) - 1;
+    for ($i = 0; $i <= $length; $i++) {
+        // random_int is available in PHP 7 and the random_compat PHP 5.x
+        // polyfill included in the Composer package.json dependencies.
+        $key .= substr($keychars, random_int(0, $max), 1);
+    }
+
+    // Update the user key
+    if (pdo_query('UPDATE ' . qid('user') . " SET cookiekey='" . $key . "' WHERE id=" . qnum($userId)) !== false) {
+        setcookie($cookiename, $userId . $key, $time);
+    }
+}
+
 /** Database authentication */
 function databaseAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
 {
@@ -45,26 +67,7 @@ function databaseAuthenticate($email, $password, $SessionCachePolicy, $rememberm
         return true;                               // authentication succeeded
     } elseif (md5($password) == $pass) {
         if ($rememberme) {
-            $cookiename = 'CDash-' . $_SERVER['SERVER_NAME'];
-            $time = time() + 60 * 60 * 24 * 30; // 30 days;
-
-            // Create a new password
-            $keychars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            $length = 32;
-
-            $key = '';
-            $max = strlen($keychars) - 1;
-            for ($i = 0; $i <= $length; $i++) {
-                // random_int is available in PHP 7 and the random_compat PHP 5.x
-                // polyfill included in the Composer package.json dependencies.
-                $key .= substr($keychars, random_int(0, $max), 1);
-            }
-
-            $value = $user_array['id'] . $key;
-            setcookie($cookiename, $value, $time);
-
-            // Update the user key
-            pdo_query('UPDATE ' . qid('user') . " SET cookiekey='" . $key . "' WHERE id=" . qnum($user_array['id']));
+            setRememberMeCookie($user_array['id']);
         }
 
         session_name('CDash');
