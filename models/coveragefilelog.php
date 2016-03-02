@@ -202,11 +202,21 @@ class coveragefilelog
 
         // Use all this information to find the build ID for this day's edition
         // of 'Aggregate Coverage'.
+        $subproj_table = '';
+        $subproj_criteria = '';
+        if ($build->SubProjectId) {
+            $subproj_table = ', subproject2build';
+            $subproj_criteria =
+                'AND build.id=subproject2build.buildid ' .
+                'AND subproject2build.subprojectid=' . qnum($build->SubProjectId) . ' ';
+        }
         $query =
-            "SELECT id FROM build
+            "SELECT id FROM build$subproj_table
             WHERE name='Aggregate Coverage' AND
             siteid='$server->Id' AND
-            starttime <'$end_UTCDate' AND starttime>='$beginning_UTCDate'";
+            projectid='$build->ProjectId' AND
+            starttime <'$end_UTCDate' AND starttime>='$beginning_UTCDate'
+            $subproj_criteria";
         $row = pdo_single_row_query($query);
         if (!$row || !array_key_exists('id', $row)) {
             // If the aggregate coverage build doesn't exist we add it here.
@@ -219,6 +229,7 @@ class coveragefilelog
             $aggregateBuild->StartTime = $build->StartTime;
             $aggregateBuild->EndTime = $build->EndTime;
             $aggregateBuild->SubmitTime = gmdate(FMT_DATETIME);
+            $aggregateBuild->SetSubProject($build->GetSubProjectName());
             $aggregateBuild->InsertErrors = false;
             add_build($aggregateBuild);
             $aggregateBuildId = $aggregateBuild->Id;
