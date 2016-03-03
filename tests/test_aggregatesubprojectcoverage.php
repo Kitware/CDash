@@ -101,7 +101,7 @@ class AggregateSubProjectCoverageTestCase extends KWWebTestCase
 
         // Verify child results.
         $success &= $this->verifyChildResult($debug_buildid,
-            5, 0, 5, 3, 10 , 6);
+            5, 0, 5, 3, 10, 6);
         $success &= $this->verifyChildResult($release_buildid,
             3, 2, 4, 4, 8, 8);
         $success &= $this->verifyChildResult($aggregate_buildid,
@@ -124,7 +124,7 @@ class AggregateSubProjectCoverageTestCase extends KWWebTestCase
         return true;
     }
 
-    function verifyChildResult($parentid,
+    public function verifyChildResult($parentid,
         $thirdparty_loctested, $thirdparty_locuntested,
         $experimental_loctested, $experimental_locuntested,
         $production_loctested, $production_locuntested)
