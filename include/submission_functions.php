@@ -436,7 +436,7 @@ function ProcessSubmissionsErrorHandler($projectid)
         // Call ReleaseProcessingLock since an error occurred before the expected
         // call to it at the bottom of the script:
         //
-        if (ReleaseProcessingLock($projectid)) {
+        if (ReleaseProcessingLock($projectid, getmypid())) {
             echo "ProcessSubmissionsErrorHandler: ReleasedProcessingLock($projectid) returned true\n";
         } else {
             echo "ProcessSubmissionsErrorHandler: ReleasedProcessingLock($projectid) returned false\n";
