@@ -16,9 +16,9 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__).'/cdash_test_case.php');
-require_once('include/common.php');
-require_once('include/pdo.php');
+require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once 'include/common.php';
+require_once 'include/pdo.php';
 
 class AggregateCoverageTestCase extends KWWebTestCase
 {
@@ -30,10 +30,10 @@ class AggregateCoverageTestCase extends KWWebTestCase
     public function testAggregateCoverage()
     {
         $files = array(
-                'debug_case/Coverage.xml',
-                'debug_case/CoverageLog-0.xml',
-                'release_case/Coverage.xml',
-                'release_case/CoverageLog-0.xml');
+            'debug_case/Coverage.xml',
+            'debug_case/CoverageLog-0.xml',
+            'release_case/Coverage.xml',
+            'release_case/CoverageLog-0.xml');
 
         foreach ($files as $file) {
             if (!$this->submitTestingFile($file)) {
@@ -42,7 +42,7 @@ class AggregateCoverageTestCase extends KWWebTestCase
             }
         }
 
-        $this->get($this->url . "/api/v1/index.php?project=InsightExample&date=2016-02-16");
+        $this->get($this->url . '/api/v1/index.php?project=InsightExample&date=2016-02-16');
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
 
@@ -135,18 +135,18 @@ class AggregateCoverageTestCase extends KWWebTestCase
     }
 
     public function checkCoverage($coverage, $expected_loctested,
-        $expected_locuntested, $expected_percentage)
+                                  $expected_locuntested, $expected_percentage)
     {
         if ($coverage['loctested'] != $expected_loctested) {
-            $this->fail("Expected " . $coverage['buildname'] . " loctested to be $expected_loctested, found " . $coverage['loctested']);
+            $this->fail('Expected ' . $coverage['buildname'] . " loctested to be $expected_loctested, found " . $coverage['loctested']);
             return false;
         }
         if ($coverage['locuntested'] != $expected_locuntested) {
-            $this->fail("Expected " . $coverage['buildname'] . " locuntested to be $expected_locuntested, found " . $coverage['locuntested']);
+            $this->fail('Expected ' . $coverage['buildname'] . " locuntested to be $expected_locuntested, found " . $coverage['locuntested']);
             return false;
         }
         if ($coverage['percentage'] != $expected_percentage) {
-            $this->fail("Expected " . $coverage['buildname'] . " percentage to be $expected_percentage, found " . $coverage['percentage']);
+            $this->fail('Expected ' . $coverage['buildname'] . " percentage to be $expected_percentage, found " . $coverage['percentage']);
             return false;
         }
         return true;
@@ -155,7 +155,7 @@ class AggregateCoverageTestCase extends KWWebTestCase
     public function submitTestingFile($filename)
     {
         $file_to_submit =
-          dirname(__FILE__)."/data/AggregateCoverage/".$filename;
+            dirname(__FILE__) . '/data/AggregateCoverage/' . $filename;
         return $this->submission('InsightExample', $file_to_submit);
     }
 }

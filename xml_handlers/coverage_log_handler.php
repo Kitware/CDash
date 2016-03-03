@@ -15,7 +15,7 @@
 =========================================================================*/
 
 require_once 'xml_handlers/abstract_handler.php';
-require_once('models/coverage.php');
+require_once 'models/coverage.php';
 
 class CoverageLogHandler extends AbstractHandler
 {
@@ -40,29 +40,29 @@ class CoverageLogHandler extends AbstractHandler
     public function startElement($parser, $name, $attributes)
     {
         parent::startElement($parser, $name, $attributes);
-        if ($name=='SITE') {
+        if ($name == 'SITE') {
             $this->Site->Name = $attributes['NAME'];
             if (empty($this->Site->Name)) {
-                $this->Site->Name = "(empty)";
+                $this->Site->Name = '(empty)';
             }
             $this->Site->Insert();
             $this->Build->SiteId = $this->Site->Id;
             $this->Build->Name = $attributes['BUILDNAME'];
             if (empty($this->Build->Name)) {
-                $this->Build->Name = "(empty)";
+                $this->Build->Name = '(empty)';
             }
             $this->Build->SetStamp($attributes['BUILDSTAMP']);
             $this->Build->Generator = $attributes['GENERATOR'];
-        } elseif ($name=='FILE') {
+        } elseif ($name == 'FILE') {
             $this->CurrentCoverageFile = new CoverageFile();
             $this->CurrentCoverageFileLog = new CoverageFileLog();
             $this->CurrentCoverageFile->FullPath = $attributes['FULLPATH'];
-        } elseif ($name=='LINE') {
-            if ($attributes['COUNT']>=0) {
+        } elseif ($name == 'LINE') {
+            if ($attributes['COUNT'] >= 0) {
                 $this->CurrentCoverageFileLog->AddLine($attributes['NUMBER'], $attributes['COUNT']);
             }
         }
-    } // end startElement()
+    }
 
     /** End Element */
     public function endElement($parser, $name)
@@ -104,9 +104,9 @@ class CoverageLogHandler extends AbstractHandler
             // Store these objects to be inserted after we're guaranteed
             // to have a valid buildid.
             $this->CoverageFiles[] = array($this->CurrentCoverageFile,
-                    $this->CurrentCoverageFileLog);
+                $this->CurrentCoverageFileLog);
         }
-    } // end endElement()
+    }
 
     /** Text */
     public function text($parser, $data)
@@ -126,5 +126,5 @@ class CoverageLogHandler extends AbstractHandler
                     str_to_time($data, $this->Build->GetStamp());
                 break;
         }
-    } // end text()
-} // end class;
+    }
+}

@@ -14,4 +14,4 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include_once(dirname(dirname(__DIR__)) . '/include/mobile_redirect.php');
+include_once dirname(dirname(__DIR__)) . '/include/mobile_redirect.php';

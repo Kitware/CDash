@@ -14,9 +14,9 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require dirname(__DIR__).'/vendor/autoload.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
 
-require_once("config/config.php");
+require_once 'config/config.php';
 
 /**
  * Connect to the database.
@@ -41,7 +41,6 @@ function pdo_connect($server = null, $username = null, $password = null, $databa
         $CDASH_SSL_CA
     );
 }
-
 
 function get_link_identifier($link_identifier = null)
 {
@@ -69,7 +68,8 @@ function pdo_select_db($database, $link_identifier = null)
            $cdash_database_connection;
     if (!is_null($link_identifier) and
         $link_identifier instanceof CDash\Database and
-        $cdash_database_connection->getDatabaseName() === $database) {
+        $cdash_database_connection->getDatabaseName() === $database
+    ) {
         $cdash_database_connection = $link_identifier;
     } else {
         $cdash_database_connection = pdo_connect($CDASH_DB_HOST, $CDASH_DB_LOGIN, $CDASH_DB_PASS, $database);
@@ -87,13 +87,13 @@ function pdo_error($link_identifier = null)
     global $CDASH_PRODUCTION_MODE;
     $error_info = get_link_identifier($link_identifier)->getPdo()->errorInfo();
     if (isset($error_info[2]) && $error_info[0] !== '00000') {
-        add_log($error_info[2], "pdo_error", LOG_ERR);
+        add_log($error_info[2], 'pdo_error', LOG_ERR);
         if ($CDASH_PRODUCTION_MODE) {
-            return "SQL error encountered, query hidden.";
+            return 'SQL error encountered, query hidden.';
         }
         return $error_info[2];
     } else {
-        return ""; // no error;
+        return ''; // no error;
     }
 }
 
@@ -142,9 +142,9 @@ function pdo_free_result($result)
 function pdo_insert_id($table_name)
 {
     global $CDASH_DB_TYPE;
-    $seq  = "";
-    if ($CDASH_DB_TYPE === "pgsql") {
-        $seq = $table_name."_id_seq";
+    $seq = '';
+    if ($CDASH_DB_TYPE === 'pgsql') {
+        $seq = $table_name . '_id_seq';
     }
     return get_link_identifier(null)->getPdo()->lastInsertId($seq);
 }
@@ -208,40 +208,40 @@ function pdo_lock_tables($tables)
 {
     global $CDASH_DB_TYPE;
 
-    $table_str = join(", ", $tables);
+    $table_str = implode(', ', $tables);
 
-    if (isset($CDASH_DB_TYPE)  && $CDASH_DB_TYPE=="pgsql") {
+    if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE == 'pgsql') {
         // PgSql table locking syntax:
         // http://www.postgresql.org/docs/8.1/static/sql-lock.html
-        pdo_query("BEGIN WORK");
-        $locked = pdo_query("LOCK TABLE ".$table_str);
+        pdo_query('BEGIN WORK');
+        $locked = pdo_query('LOCK TABLE ' . $table_str);
         if (!$locked) {
-            pdo_query("COMMIT WORK");
+            pdo_query('COMMIT WORK');
         }
         return $locked;
     } else {
         // MySQL table locking:
         // http://dev.mysql.com/doc/refman/5.0/en/lock-tables.html
-        return pdo_query("LOCK TABLES ".$table_str." WRITE");
+        return pdo_query('LOCK TABLES ' . $table_str . ' WRITE');
     }
 }
 
 /**
  * Unlock tables. This is bad. Don't lock or unlock tables manually.
  * @deprecated
- * @return bool|FALSE
+ * @return bool|false
  */
 function pdo_unlock_tables()
 {
     global $CDASH_DB_TYPE;
 
-    if (isset($CDASH_DB_TYPE)  && $CDASH_DB_TYPE === "pgsql") {
+    if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE === 'pgsql') {
         // Unlock occurs automatically at transaction end for PgSql, according to:
         // http://www.postgresql.org/docs/8.1/static/sql-lock.html
-        pdo_query("COMMIT WORK");
+        pdo_query('COMMIT WORK');
         return true;
     } else {
-        return pdo_query("UNLOCK TABLES");
+        return pdo_query('UNLOCK TABLES');
     }
 }
 
@@ -267,10 +267,10 @@ function pdo_real_escape_numeric($unescaped_string, $link_identifier = null)
 {
     global $CDASH_DB_TYPE;
 
-    if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE=="pgsql" && $unescaped_string=="") {
+    if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE == 'pgsql' && $unescaped_string == '') {
         // MySQL interprets an empty string as zero when assigned to a numeric field,
         // for PostgreSQL this must be done explicitly:
-        $unescaped_string = "0";
+        $unescaped_string = '0';
     }
 
     // Return zero if we don't end up with a numeric value.
@@ -308,7 +308,6 @@ function pdo_rollback($link_identifier = null)
 {
     get_link_identifier($link_identifier)->getPdo()->rollBack();
 }
-
 
 global $cdash_database_connection;
 global $CDASH_DB_HOST;

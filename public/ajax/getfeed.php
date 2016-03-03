@@ -14,15 +14,15 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include(dirname(dirname(__DIR__))."/config/config.php");
-require_once("include/pdo.php");
-include_once("include/common.php");
-include("include/version.php");
+include dirname(dirname(__DIR__)) . '/config/config.php';
+require_once 'include/pdo.php';
+include_once 'include/common.php';
+include 'include/version.php';
 $noforcelogin = 1;
-include('public/login.php');
-include("models/feed.php");
+include 'public/login.php';
+include 'models/feed.php';
 
-$projectid = pdo_real_escape_numeric($_GET["projectid"]);
+$projectid = pdo_real_escape_numeric($_GET['projectid']);
 if (!isset($projectid) || !is_numeric($projectid)) {
     return;
 }
@@ -37,22 +37,22 @@ checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid);
 function get_elapsed_time($date)
 {
     $lastpingtime = '';
-    $diff = time()-strtotime($date." UTC");
-    $days = $diff/(3600*24);
-    if (floor($days)>0) {
-        $lastpingtime .= floor($days)." days ";
-        $diff = $diff-(floor($days)*3600*24);
+    $diff = time() - strtotime($date . ' UTC');
+    $days = $diff / (3600 * 24);
+    if (floor($days) > 0) {
+        $lastpingtime .= floor($days) . ' days ';
+        $diff = $diff - (floor($days) * 3600 * 24);
         return $lastpingtime;
     }
-    $hours = $diff/(3600);
-    if (floor($hours)>0) {
-        $lastpingtime .= floor($hours)." hours ";
-        $diff = $diff-(floor($hours)*3600);
+    $hours = $diff / (3600);
+    if (floor($hours) > 0) {
+        $lastpingtime .= floor($hours) . ' hours ';
+        $diff = $diff - (floor($hours) * 3600);
         return $lastpingtime;
     }
-    $minutes = $diff/(60);
-    if ($minutes>0) {
-        $lastpingtime .= floor($minutes)." minutes";
+    $minutes = $diff / (60);
+    if ($minutes > 0) {
+        $lastpingtime .= floor($minutes) . ' minutes';
     }
 
     return $lastpingtime;
@@ -62,60 +62,66 @@ function get_elapsed_time($date)
 function get_feed_type($type)
 {
     switch ($type) {
-    case Feed::TypeUnknown: return "NA";
-    case Feed::TypeUpdate: return "UPDATE";
-    case Feed::TypeBuildError: return "BUILD ERROR";
-    case Feed::TypeBuildWarning: return "BUILD WARNING";
-    case Feed::TypeTestPassing: return "TEST PASSING";
-    case Feed::TypeTestFailing: return "TEST FAILING";
+        case Feed::TypeUnknown:
+            return 'NA';
+        case Feed::TypeUpdate:
+            return 'UPDATE';
+        case Feed::TypeBuildError:
+            return 'BUILD ERROR';
+        case Feed::TypeBuildWarning:
+            return 'BUILD WARNING';
+        case Feed::TypeTestPassing:
+            return 'TEST PASSING';
+        case Feed::TypeTestFailing:
+            return 'TEST FAILING';
     }
-    return "NA";
+    return 'NA';
 }
+
 // Returns the feed link
 function get_feed_link($type, $buildid, $description)
 {
     if ($type == Feed::TypeUpdate) {
-        return '<a href="viewUpdate.php?buildid='.$buildid.'">'.$description.'</a>';
+        return '<a href="viewUpdate.php?buildid=' . $buildid . '">' . $description . '</a>';
     } elseif ($type == Feed::TypeBuildError) {
-        return '<a href="viewBuildError.php?buildid='.$buildid.'">'.$description.'</a>';
-        ;
+        return '<a href="viewBuildError.php?buildid=' . $buildid . '">' . $description . '</a>';
     } elseif ($type == Feed::TypeBuildWarning) {
-        return '<a href="viewBuildError.php?type=1&buildid='.$buildid.'">'.$description.'</a>';
+        return '<a href="viewBuildError.php?type=1&buildid=' . $buildid . '">' . $description . '</a>';
     } elseif ($type == Feed::TypeTestPassing) {
-        return '<a href="viewTest.php?onlypassed&buildid='.$buildid.'">'.$description.'</a>';
+        return '<a href="viewTest.php?onlypassed&buildid=' . $buildid . '">' . $description . '</a>';
     } elseif ($type == Feed::TypeTestFailing) {
-        return '<a href="viewTest.php?onlyfailed&buildid='.$buildid.'">'.$description.'</a>';
+        return '<a href="viewTest.php?onlyfailed&buildid=' . $buildid . '">' . $description . '</a>';
     } elseif ($type == Feed::TypeTestNotRun) {
-        return '<a href="viewTest.php?onlynotrun&buildid='.$buildid.'">'.$description.'</a>';
+        return '<a href="viewTest.php?onlynotrun&buildid=' . $buildid . '">' . $description . '</a>';
     }
-    return "";
+    return '';
 }
 
 $feeds = $feed->GetFeed($projectid, 5); // display the last five submissions
 foreach ($feeds as $f) {
     ?>
- <?php
-   $elapsedtime = get_elapsed_time($f["date"]);
+    <?php
+    $elapsedtime = get_elapsed_time($f['date']);
     if ($elapsedtime == '') {
         $elapsedtime = 'Some time';
     }
     if ($elapsedtime == '0m') {
-        echo "Just now: ";
+        echo 'Just now: ';
     } else {
-        echo "<b>".$elapsedtime." ago: </b>";
+        echo '<b>' . $elapsedtime . ' ago: </b>';
     }
     ?>
- <?php //echo get_feed_type($f["type"])?>
-<?php echo get_feed_link($f["type"], $f["buildid"], $f["description"]);
+    <?php //echo get_feed_type($f["type"])?>
+    <?php echo get_feed_link($f['type'], $f['buildid'], $f['description']);
     ?>
-<br/>
-<?php
+    <br/>
+    <?php
 
-} // End looping through feed?>
-<?php if (count($feeds)>0) {
+} ?>
+<?php if (count($feeds) > 0) {
     ?>
-<div id="feedmore"><a href="viewFeed.php?projectid=<?php echo $projectid;
+    <div id="feedmore"><a href="viewFeed.php?projectid=<?php echo $projectid;
     ?>">See full feed</a></div>
-<?php
+    <?php
 
 } ?>

@@ -3,9 +3,9 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__).'/cdash_test_case.php');
-require_once('include/common.php');
-require_once('include/pdo.php');
+require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once 'include/common.php';
+require_once 'include/pdo.php';
 
 class HideColumnsTestCase extends KWWebTestCase
 {
@@ -38,13 +38,13 @@ class HideColumnsTestCase extends KWWebTestCase
     public function onlyColumn($method)
     {
         // Submit our testing file.
-        $rep  = dirname(__FILE__)."/data/HideColumns";
+        $rep = dirname(__FILE__) . '/data/HideColumns';
         if (!$this->submission('InsightExample', "$rep/$method.xml")) {
             return false;
         }
 
         // Use our API to verify which columns will be displayed.
-        $content = $this->connect($this->url.'/api/v1/index.php?project=InsightExample&date=2015-10-06');
+        $content = $this->connect($this->url . '/api/v1/index.php?project=InsightExample&date=2015-10-06');
         $jsonobj = json_decode($content, true);
         $buildgroup = array_pop($jsonobj['buildgroups']);
         $retval = false;
@@ -53,7 +53,8 @@ class HideColumnsTestCase extends KWWebTestCase
                 if ($buildgroup['hasupdatedata'] == true &&
                     $buildgroup['hasconfiguredata'] == false &&
                     $buildgroup['hascompilationdata'] == false &&
-                    $buildgroup['hastestdata'] == false) {
+                    $buildgroup['hastestdata'] == false
+                ) {
                     $retval = true;
                 }
                 break;
@@ -61,7 +62,8 @@ class HideColumnsTestCase extends KWWebTestCase
                 if ($buildgroup['hasupdatedata'] == false &&
                     $buildgroup['hasconfiguredata'] == true &&
                     $buildgroup['hascompilationdata'] == false &&
-                    $buildgroup['hastestdata'] == false) {
+                    $buildgroup['hastestdata'] == false
+                ) {
                     $retval = true;
                 }
                 break;
@@ -69,7 +71,8 @@ class HideColumnsTestCase extends KWWebTestCase
                 if ($buildgroup['hasupdatedata'] == false &&
                     $buildgroup['hasconfiguredata'] == false &&
                     $buildgroup['hascompilationdata'] == true &&
-                    $buildgroup['hastestdata'] == false) {
+                    $buildgroup['hastestdata'] == false
+                ) {
                     $retval = true;
                 }
                 break;
@@ -77,7 +80,8 @@ class HideColumnsTestCase extends KWWebTestCase
                 if ($buildgroup['hasupdatedata'] == false &&
                     $buildgroup['hasconfiguredata'] == false &&
                     $buildgroup['hascompilationdata'] == false &&
-                    $buildgroup['hastestdata'] == true) {
+                    $buildgroup['hastestdata'] == true
+                ) {
                     $retval = true;
                 }
                 break;
@@ -88,7 +92,6 @@ class HideColumnsTestCase extends KWWebTestCase
             "SELECT id FROM build WHERE name='HideColumns'");
         $buildid = $buildid_results['id'];
         remove_build($buildid);
-
         return $retval;
     }
 }

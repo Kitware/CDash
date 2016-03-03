@@ -15,18 +15,18 @@
 =========================================================================*/
 
 $noforcelogin = 1;
-include(dirname(dirname(dirname(__DIR__)))."/config/config.php");
-require_once("include/pdo.php");
-include('public/login.php');
-include_once("include/common.php");
-include("include/version.php");
-require_once('models/build.php');
+include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
+require_once 'include/pdo.php';
+include 'public/login.php';
+include_once 'include/common.php';
+include 'include/version.php';
+require_once 'models/build.php';
 
-@$buildid = $_GET["buildid"];
+@$buildid = $_GET['buildid'];
 if ($buildid != null) {
     $buildid = pdo_real_escape_numeric($buildid);
 }
-@$date = $_GET["date"];
+@$date = $_GET['date'];
 if ($date != null) {
     $date = htmlspecialchars(pdo_real_escape_string($date));
 }
@@ -35,7 +35,7 @@ $response = begin_JSON_response();
 
 // Checks
 if (!isset($buildid) || !is_numeric($buildid)) {
-    $response['error'] = "Not a valid buildid!";
+    $response['error'] = 'Not a valid buildid!';
     echo json_encode($response);
     return;
 }
@@ -44,8 +44,8 @@ $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME", $db);
 
 $build_array = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$buildid'"));
-$projectid = $build_array["projectid"];
-if (!isset($projectid) || $projectid==0) {
+$projectid = $build_array['projectid'];
+if (!isset($projectid) || $projectid == 0) {
     $response['error'] = "This build doesn't exist. Maybe it has been deleted.";
     echo json_encode($response);
     return;
@@ -57,21 +57,21 @@ if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
     return;
 }
 
-$siteid = $build_array["siteid"];
-$buildtype = $build_array["type"];
-$buildname = $build_array["name"];
-$starttime = $build_array["starttime"];
+$siteid = $build_array['siteid'];
+$buildtype = $build_array['type'];
+$buildname = $build_array['name'];
+$starttime = $build_array['starttime'];
 
 $project_array = pdo_fetch_array(pdo_query("SELECT * FROM project WHERE id='$projectid'"));
-$projectname = $project_array["name"];
+$projectname = $project_array['name'];
 $response['title'] = "CDash : $projectname";
 
-$date = get_dashboard_date_from_build_starttime($build_array["starttime"], $project_array["nightlytime"]);
+$date = get_dashboard_date_from_build_starttime($build_array['starttime'], $project_array['nightlytime']);
 get_dashboard_JSON_by_name($projectname, $date, $response);
 
 // Menu
 $menu = array();
-$menu['back'] = "index.php?project=".urlencode($projectname)."&date=".$date;
+$menu['back'] = 'index.php?project=' . urlencode($projectname) . '&date=' . $date;
 
 $build = new Build();
 $build->Id = $buildid;
@@ -82,7 +82,7 @@ $next_buildid = $build->GetNextBuildId();
 if ($previous_buildid > 0) {
     $menu['previous'] = "viewNotes.php?buildid=$previous_buildid";
 } else {
-    $menu['noprevious'] = "1";
+    $menu['noprevious'] = '1';
 }
 
 $menu['current'] = "viewNotes.php?buildid=$current_buildid";
@@ -90,7 +90,7 @@ $menu['current'] = "viewNotes.php?buildid=$current_buildid";
 if ($next_buildid > 0) {
     $menu['next'] = "viewNotes.php?buildid=$next_buildid";
 } else {
-    $menu['nonext'] = "1";
+    $menu['nonext'] = '1';
 }
 
 $response['menu'] = $menu;
@@ -98,7 +98,7 @@ $response['menu'] = $menu;
 // Build
 $build_response = array();
 $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
-$build_response['site'] = $site_array["name"];
+$build_response['site'] = $site_array['name'];
 $build_response['siteid'] = $siteid;
 $build_response['buildname'] = $build_array['name'];
 $build_response['buildid'] = $build_array['id'];
@@ -109,13 +109,13 @@ $response['build'] = $build_response;
 $notes = array();
 $build2note = pdo_query("SELECT noteid,time FROM build2note WHERE buildid='$buildid'");
 while ($build2note_array = pdo_fetch_array($build2note)) {
-    $noteid = $build2note_array["noteid"];
+    $noteid = $build2note_array['noteid'];
     $note_array = pdo_fetch_array(pdo_query("SELECT * FROM note WHERE id='$noteid'"));
 
     $note = array();
-    $note['name'] = $note_array["name"];
-    $note['text'] = $note_array["text"];
-    $note['time'] = $build2note_array["time"];
+    $note['name'] = $note_array['name'];
+    $note['text'] = $note_array['text'];
+    $note['time'] = $build2note_array['time'];
 
     $notes[] = $note;
 }

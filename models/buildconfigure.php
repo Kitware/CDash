@@ -14,8 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include_once('models/buildconfigureerror.php');
-include_once('models/buildconfigureerrordiff.php');
+include_once 'models/buildconfigureerror.php';
+include_once 'models/buildconfigureerrordiff.php';
 
 /** BuildConfigure class */
 class buildconfigure
@@ -56,18 +56,18 @@ class buildconfigure
     public function Exists()
     {
         if (!$this->BuildId) {
-            echo "BuildConfigure::Exists(): BuildId not set";
+            echo 'BuildConfigure::Exists(): BuildId not set';
             return false;
         }
 
         if (!is_numeric($this->BuildId)) {
-            echo "BuildConfigure::Exists(): Buildid is not numeric";
+            echo 'BuildConfigure::Exists(): Buildid is not numeric';
             return false;
         }
 
-        $query = pdo_query("SELECT COUNT(*) FROM configure WHERE buildid=".qnum($this->BuildId));
+        $query = pdo_query('SELECT COUNT(*) FROM configure WHERE buildid=' . qnum($this->BuildId));
         if (!$query) {
-            add_last_sql_error("BuildConfigure Exists()", 0, $this->BuildId);
+            add_last_sql_error('BuildConfigure Exists()', 0, $this->BuildId);
             return false;
         }
 
@@ -82,13 +82,13 @@ class buildconfigure
     public function Delete()
     {
         if (!$this->BuildId) {
-            echo "BuildConfigure::Delete(): BuildId not set";
+            echo 'BuildConfigure::Delete(): BuildId not set';
             return false;
         }
 
-        $query = pdo_query("DELETE FROM configure WHERE buildid=".qnum($this->BuildId));
+        $query = pdo_query('DELETE FROM configure WHERE buildid=' . qnum($this->BuildId));
         if (!$query) {
-            add_last_sql_error("BuildConfigure Delete()", 0, $this->BuildId);
+            add_last_sql_error('BuildConfigure Delete()', 0, $this->BuildId);
             return false;
         }
         return true;
@@ -107,8 +107,8 @@ class buildconfigure
             }
         } else {
             add_log('No BuildConfigure::BuildId - cannot call $label->Insert...',
-                    'BuildConfigure::InsertLabelAssociations', LOG_ERR,
-                    0, $this->BuildId, CDASH_OBJECT_CONFIGURE, $this->BuildId);
+                'BuildConfigure::InsertLabelAssociations', LOG_ERR,
+                0, $this->BuildId, CDASH_OBJECT_CONFIGURE, $this->BuildId);
         }
     }
 
@@ -116,12 +116,12 @@ class buildconfigure
     public function Insert()
     {
         if (!$this->BuildId) {
-            echo "BuildConfigure::Insert(): BuildId not set";
+            echo 'BuildConfigure::Insert(): BuildId not set';
             return false;
         }
 
         if ($this->Exists()) {
-            echo "BuildConfigure::Exists(): Cannot insert new configure. Use Delete() first";
+            echo 'BuildConfigure::Exists(): Cannot insert new configure. Use Delete() first';
             return false;
         }
 
@@ -129,18 +129,16 @@ class buildconfigure
         $log = pdo_real_escape_string($this->Log);
         $status = pdo_real_escape_string($this->Status);
 
-        $query = "INSERT INTO configure (buildid,starttime,endtime,command,log,status)
-            VALUES (".qnum($this->BuildId).",'$this->StartTime','$this->EndTime','$command','$log','$status')";
+        $query = 'INSERT INTO configure (buildid,starttime,endtime,command,log,status)
+            VALUES (' . qnum($this->BuildId) . ",'$this->StartTime','$this->EndTime','$command','$log','$status')";
         if (!pdo_query($query)) {
-            add_last_sql_error("BuildConfigure Insert", 0, $this->BuildId);
+            add_last_sql_error('BuildConfigure Insert', 0, $this->BuildId);
             return false;
         }
 
         $this->InsertLabelAssociations();
-
         return true;
-    }  // end insert
-
+    }
 
     /** Return true if the specified line contains a configure warning,
      * false otherwise.
@@ -148,12 +146,12 @@ class buildconfigure
     public static function IsConfigureWarning($line)
     {
         if (strpos($line, 'CMake Warning') !== false ||
-                strpos($line, 'WARNING:') !== false) {
+            strpos($line, 'WARNING:') !== false
+        ) {
             return true;
         }
         return false;
     }
-
 
     /** Compute the warnings from the log. In the future we might want to add errors */
     public function ComputeWarnings()
@@ -164,56 +162,55 @@ class buildconfigure
 
         for ($l = 0; $l < $numlines; $l++) {
             if ($this->IsConfigureWarning($log_lines[$l])) {
-                $precontext = "";
-                $postcontext = "";
+                $precontext = '';
+                $postcontext = '';
 
                 // Get 2 lines of precontext
-                $pre_start = max($l-2, 0);
+                $pre_start = max($l - 2, 0);
                 for ($j = $pre_start; $j < $l; $j++) {
-                    $precontext .= $log_lines[$j]."\n";
+                    $precontext .= $log_lines[$j] . "\n";
                 }
 
                 // Get 5 lines of postcontext
-                $post_end = min($l+6, $numlines);
-                for ($j = $l+1; $j < $post_end; $j++) {
-                    $postcontext .= $log_lines[$j]."\n";
+                $post_end = min($l + 6, $numlines);
+                for ($j = $l + 1; $j < $post_end; $j++) {
+                    $postcontext .= $log_lines[$j] . "\n";
                 }
 
                 // Add the warnings in the configureerror table
-                $warning = pdo_real_escape_string($precontext. $log_lines[$l]."\n" .$postcontext);
+                $warning = pdo_real_escape_string($precontext . $log_lines[$l] . "\n" . $postcontext);
 
                 pdo_query("INSERT INTO configureerror (buildid,type,text)
                         VALUES ('$this->BuildId','1','$warning')");
-                add_last_sql_error("BuildConfigure ComputeWarnings", 0, $this->BuildId);
+                add_last_sql_error('BuildConfigure ComputeWarnings', 0, $this->BuildId);
                 $this->NumberOfWarnings++;
             }
         }
 
         pdo_query(
-                "UPDATE configure SET warnings=".qnum($this->NumberOfWarnings)."
-                WHERE buildid=".qnum($this->BuildId));
-        add_last_sql_error("BuildConfigure ComputeWarnings", 0, $this->BuildId);
-    } // end ComputeWarnings()
+            'UPDATE configure SET warnings=' . qnum($this->NumberOfWarnings) . '
+                WHERE buildid=' . qnum($this->BuildId));
+        add_last_sql_error('BuildConfigure ComputeWarnings', 0, $this->BuildId);
+    }
 
     /** Get the number of configure error for a build */
     public function ComputeErrors()
     {
         if (!$this->BuildId) {
-            echo "BuildConfigure::ComputeErrors(): BuildId not set";
+            echo 'BuildConfigure::ComputeErrors(): BuildId not set';
             return false;
         }
 
         $this->NumberOfErrors = 0;
-        $configure = pdo_query("SELECT status FROM configure WHERE buildid=".qnum($this->BuildId));
+        $configure = pdo_query('SELECT status FROM configure WHERE buildid=' . qnum($this->BuildId));
         if (!$configure) {
-            add_last_sql_error("BuildConfigure ComputeErrors", 0, $this->BuildId);
+            add_last_sql_error('BuildConfigure ComputeErrors', 0, $this->BuildId);
             return false;
         }
         $configure_array = pdo_fetch_array($configure);
-        if ($configure_array["status"] != 0) {
-            $this->NumberOfErrors = $configure_array["status"];
+        if ($configure_array['status'] != 0) {
+            $this->NumberOfErrors = $configure_array['status'];
         }
-
         return $this->NumberOfErrors;
-    } // end ComputeErrors()
+    }
 }

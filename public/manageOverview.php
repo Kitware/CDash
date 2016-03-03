@@ -14,13 +14,13 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include(dirname(__DIR__)."/config/config.php");
-require_once("include/pdo.php");
-include_once("include/common.php");
-include('public/login.php');
-include('include/version.php');
-include_once("models/project.php");
-include_once("models/user.php");
+include dirname(__DIR__) . '/config/config.php';
+require_once 'include/pdo.php';
+include_once 'include/common.php';
+include 'public/login.php';
+include 'include/version.php';
+include_once 'models/project.php';
+include_once 'models/user.php';
 
 if ($session_OK) {
     @$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
@@ -28,31 +28,31 @@ if ($session_OK) {
 
     $userid = $_SESSION['cdash']['loginid'];
 // Checks
-if (!isset($userid) || !is_numeric($userid)) {
-    echo "Not a valid userid!";
-    return;
-}
+    if (!isset($userid) || !is_numeric($userid)) {
+        echo 'Not a valid userid!';
+        return;
+    }
 
     $xml = begin_XML_for_XSLT();
-    $xml .= "<backurl>user.php</backurl>";
-    $xml .= "<title>CDash - Manage Overview</title>";
-    $xml .= "<menutitle>CDash</menutitle>";
-    $xml .= "<menusubtitle>Overview</menusubtitle>";
+    $xml .= '<backurl>user.php</backurl>';
+    $xml .= '<title>CDash - Manage Overview</title>';
+    $xml .= '<menutitle>CDash</menutitle>';
+    $xml .= '<menusubtitle>Overview</menusubtitle>';
 
-    @$projectid = $_GET["projectid"];
+    @$projectid = $_GET['projectid'];
     if ($projectid != null) {
         $projectid = pdo_real_escape_numeric($projectid);
     }
 // If the projectid is not set and there is only one project we go directly to the page
-$Project = new Project;
+    $Project = new Project;
     if (!isset($projectid)) {
         $projectids = $Project->GetIds();
-        if (count($projectids)==1) {
+        if (count($projectids) == 1) {
             $projectid = $projectids[0];
         }
     }
     if (!isset($projectid)) {
-        echo "No projectid specified";
+        echo 'No projectid specified';
         return;
     }
 
@@ -62,80 +62,80 @@ $Project = new Project;
 
     $role = $Project->GetUserRole($userid);
 
-    if ($User->IsAdmin()===false && $role<=1) {
+    if ($User->IsAdmin() === false && $role <= 1) {
         echo "You don't have the permissions to access this page";
         return;
     }
 
 // check if we are saving an overview layout
-if (isset($_POST['saveLayout'])) {
-    $inputRows = json_decode($_POST['saveLayout'], true);
+    if (isset($_POST['saveLayout'])) {
+        $inputRows = json_decode($_POST['saveLayout'], true);
 
-  // remove old overview layout from this project
-  pdo_query(
-    "DELETE FROM overview_components WHERE projectid=" .
-      qnum(pdo_real_escape_numeric($projectid)));
-    add_last_sql_error("manageOverview::saveLayout::DELETE", $projectid);
+        // remove old overview layout from this project
+        pdo_query(
+            'DELETE FROM overview_components WHERE projectid=' .
+            qnum(pdo_real_escape_numeric($projectid)));
+        add_last_sql_error('manageOverview::saveLayout::DELETE', $projectid);
 
-    if (count($inputRows) > 0) {
-        // construct query to insert the new layout
-    $query = "INSERT INTO overview_components (projectid, buildgroupid, position, type) VALUES ";
-        foreach ($inputRows as $inputRow) {
-            $query .= "(" .
-        qnum(pdo_real_escape_numeric($projectid)) . ", " .
-        qnum(pdo_real_escape_numeric($inputRow["buildgroupid"])) . ", " .
-        qnum(pdo_real_escape_numeric($inputRow["position"])) . ", '" .
-        pdo_real_escape_string($inputRow["type"]) . "'), ";
+        if (count($inputRows) > 0) {
+            // construct query to insert the new layout
+            $query = 'INSERT INTO overview_components (projectid, buildgroupid, position, type) VALUES ';
+            foreach ($inputRows as $inputRow) {
+                $query .= '(' .
+                    qnum(pdo_real_escape_numeric($projectid)) . ', ' .
+                    qnum(pdo_real_escape_numeric($inputRow['buildgroupid'])) . ', ' .
+                    qnum(pdo_real_escape_numeric($inputRow['position'])) . ", '" .
+                    pdo_real_escape_string($inputRow['type']) . "'), ";
+            }
+
+            // remove the trailing comma and space, then insert our new values
+            $query = rtrim($query, ', ');
+            pdo_query($query);
+            add_last_sql_error('manageOverview::saveLayout::INSERT', $projectid);
         }
 
-    // remove the trailing comma and space, then insert our new values
-    $query = rtrim($query, ", ");
-        pdo_query($query);
-        add_last_sql_error("manageOverview::saveLayout::INSERT", $projectid);
+        // since this is called by AJAX, we don't need to render the page below.
+        exit(0);
     }
 
-  // since this is called by AJAX, we don't need to render the page below.
-  exit(0);
-}
-
 // otherwise generate the .xml to render this page
-$xml .= "<project>";
-    $xml .= add_XML_value("id", $Project->Id);
-    $xml .= add_XML_value("name", $Project->GetName());
-    $xml .= add_XML_value("name_encoded", urlencode($Project->GetName()));
-    $xml .= "</project>";
+    $xml .= '<project>';
+    $xml .= add_XML_value('id', $Project->Id);
+    $xml .= add_XML_value('name', $Project->GetName());
+    $xml .= add_XML_value('name_encoded', urlencode($Project->GetName()));
+    $xml .= '</project>';
 
 // Get the groups for this project
-$query = "SELECT id, name FROM buildgroup WHERE projectid='$projectid'";
+    $query = "SELECT id, name FROM buildgroup WHERE projectid='$projectid'";
     $buildgroup_rows = pdo_query($query);
-    add_last_sql_error("manageOverview::buildgroups", $projectid);
+    add_last_sql_error('manageOverview::buildgroups', $projectid);
     while ($buildgroup_row = pdo_fetch_array($buildgroup_rows)) {
-        $xml .= "<buildgroup>";
-        $xml .= add_XML_value("id", $buildgroup_row["id"]);
-        $xml .= add_XML_value("name", $buildgroup_row["name"]);
-        $xml .= "</buildgroup>";
+        $xml .= '<buildgroup>';
+        $xml .= add_XML_value('id', $buildgroup_row['id']);
+        $xml .= add_XML_value('name', $buildgroup_row['name']);
+        $xml .= '</buildgroup>';
     }
 
 // Get the groups that are already included in the overview
-$query =
-  "SELECT bg.id, bg.name, obg.type FROM overview_components AS obg
+    $query =
+        'SELECT bg.id, bg.name, obg.type FROM overview_components AS obg
    LEFT JOIN buildgroup AS bg ON (obg.buildgroupid = bg.id)
-   WHERE obg.projectid = " . qnum(pdo_real_escape_numeric($projectid)) . "
-   ORDER BY obg.position";
+   WHERE obg.projectid = ' . qnum(pdo_real_escape_numeric($projectid)) . '
+   ORDER BY obg.position';
     $overviewgroup_rows = pdo_query($query);
-    add_last_sql_error("manageOverview::overviewgroups", $projectid);
+    add_last_sql_error('manageOverview::overviewgroups', $projectid);
 
-    $xml .= "<overview>";
+    $xml .= '<overview>';
     while ($overviewgroup_row = pdo_fetch_array($overviewgroup_rows)) {
-        $xml_element_name = $overviewgroup_row["type"];
+        $xml_element_name = $overviewgroup_row['type'];
         $xml .= "<$xml_element_name>";
-        $xml .= add_XML_value("id", $overviewgroup_row["id"]);
-        $xml .= add_XML_value("name", $overviewgroup_row["name"]);
+        $xml .= add_XML_value('id', $overviewgroup_row['id']);
+        $xml .= add_XML_value('name', $overviewgroup_row['name']);
         $xml .= "</$xml_element_name>";
     }
-    $xml .= "</overview>";
-    $xml .= "</cdash>";
+    $xml .= '</overview>';
+    $xml .= '</cdash>';
 
 // Now doing the xslt transition
-generate_XSLT($xml, "manageOverview");
-} // end session OK;
+    generate_XSLT($xml, 'manageOverview');
+}

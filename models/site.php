@@ -15,7 +15,7 @@
 =========================================================================*/
 
 // It is assumed that appropriate headers should be included before including this file
-include_once('models/siteinformation.php');
+include_once 'models/siteinformation.php';
 
 class site
 {
@@ -46,15 +46,15 @@ class site
         }
 
         if ($this->Id) {
-            $query = pdo_query("SELECT count(*) AS c FROM site WHERE id=".qnum($this->Id));
+            $query = pdo_query('SELECT count(*) AS c FROM site WHERE id=' . qnum($this->Id));
             $query_array = pdo_fetch_array($query);
-            if ($query_array['c']>0) {
+            if ($query_array['c'] > 0) {
                 return true;
             }
         }
         if ($this->Name) {
-            $query = pdo_query("SELECT id FROM site WHERE name='".$this->Name."'");
-            if (pdo_num_rows($query)>0) {
+            $query = pdo_query("SELECT id FROM site WHERE name='" . $this->Name . "'");
+            if (pdo_num_rows($query) > 0) {
                 $query_array = pdo_fetch_array($query);
                 $this->Id = $query_array['id'];
                 return true;
@@ -71,17 +71,17 @@ class site
         }
 
         // Update the project
-        $query = "UPDATE site SET";
-        $query .= " name='".$this->Name."'";
-        $query .= ",ip='".$this->Ip."'";
-        $query .= ",latitude='".$this->Latitude."'";
-        $query .= ",longitude='".$this->Longitude."'";
-        $query .= ",outoforder='".$this->OutOfOrder."'";
+        $query = 'UPDATE site SET';
+        $query .= " name='" . $this->Name . "'";
+        $query .= ",ip='" . $this->Ip . "'";
+        $query .= ",latitude='" . $this->Latitude . "'";
+        $query .= ",longitude='" . $this->Longitude . "'";
+        $query .= ",outoforder='" . $this->OutOfOrder . "'";
 
-        $query .= " WHERE id='".$this->Id."'";
+        $query .= " WHERE id='" . $this->Id . "'";
 
         if (!pdo_query($query)) {
-            add_last_sql_error("Site Update");
+            add_last_sql_error('Site Update');
             return false;
         }
     }
@@ -96,9 +96,9 @@ class site
         $submission_id = $PHP_ERROR_SUBMISSION_ID;
         if ($submission_id) {
             $this->Ip = pdo_get_field_value(
-                    "SELECT ip FROM submission2ip WHERE submissionid=".qnum($submission_id),
-                    'ip', ''
-                    );
+                'SELECT ip FROM submission2ip WHERE submissionid=' . qnum($submission_id),
+                'ip', ''
+            );
         }
     }
 
@@ -107,7 +107,7 @@ class site
     {
         $justSetIP = false;
 
-        if (strlen($this->Ip)==0) {
+        if (strlen($this->Ip) == 0) {
             $this->LookupIP();
             $justSetIP = true;
         }
@@ -120,7 +120,7 @@ class site
         }
 
         // Get the geolocation
-        if (strlen($this->Latitude)==0) {
+        if (strlen($this->Latitude) == 0) {
             $location = get_geolocation($this->Ip);
             $this->Latitude = $location['latitude'];
             $this->Longitude = $location['longitude'];
@@ -135,35 +135,36 @@ class site
             // This error might be due to a unique constraint violation.
             // Query for a previously existing site with this name & ip.
             $existing_id_result = pdo_single_row_query(
-                    "SELECT id FROM site WHERE name='$this->Name'
+                "SELECT id FROM site WHERE name='$this->Name'
                     AND ip='$this->Ip'");
             if ($existing_id_result &&
-                    array_key_exists('id', $existing_id_result)) {
+                array_key_exists('id', $existing_id_result)
+            ) {
                 $this->Id = $existing_id_result['id'];
                 return true;
             }
-            add_log("SQL error: $error", "Site Insert", LOG_ERR);
+            add_log("SQL error: $error", 'Site Insert', LOG_ERR);
             return false;
         } else {
-            $this->Id = pdo_insert_id("site");
+            $this->Id = pdo_insert_id('site');
         }
-    } // end function save
+    }
 
     // Get the name of the size
     public function GetName()
     {
         if (!$this->Id) {
-            echo "Site::GetName(): Id not set";
+            echo 'Site::GetName(): Id not set';
             return false;
         }
 
-        $query = pdo_query("SELECT name FROM site WHERE id=".qnum($this->Id));
+        $query = pdo_query('SELECT name FROM site WHERE id=' . qnum($this->Id));
         if (!$query) {
-            add_last_sql_error("Site GetName");
+            add_last_sql_error('Site GetName');
             return false;
         }
 
         $site_array = pdo_fetch_array($query);
         return $site_array['name'];
-    } // end GetName()
+    }
 }

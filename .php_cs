@@ -22,5 +22,4 @@ $config = Symfony\CS\Config\Config::create()
     ->fixers(array('-psr0', 'whitespacy_lines'))
     ->finder($finder)
     ->setUsingCache(true);
-
 return $config;

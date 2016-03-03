@@ -14,11 +14,11 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once(dirname(dirname(__DIR__))."/config/config.php");
-require_once("include/common.php");
-require_once("include/do_submit.php");
-require_once("include/fnProcessFile.php");
-require_once("include/pdo.php");
+require_once dirname(dirname(__DIR__)) . '/config/config.php';
+require_once 'include/common.php';
+require_once 'include/do_submit.php';
+require_once 'include/fnProcessFile.php';
+require_once 'include/pdo.php';
 
 ob_start();
 set_time_limit(0);
@@ -30,15 +30,15 @@ ignore_user_abort(true);
 
 if (!is_numeric($projectid) || $projectid == 0) {
     trigger_error(
-    'processfile.php: projectid no good',
-    E_USER_ERROR);
+        'processfile.php: projectid no good',
+        E_USER_ERROR);
 }
 $projectid = pdo_real_escape_numeric($projectid);
 
 if (!$filename) {
     trigger_error(
-    'processfile.php: filename no good',
-    E_USER_ERROR);
+        'processfile.php: filename no good',
+        E_USER_ERROR);
 }
 $filename = htmlspecialchars(pdo_real_escape_string($filename));
 

@@ -32,7 +32,6 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
       );
       ++$i;
       }
-
     return 0;
     }
 

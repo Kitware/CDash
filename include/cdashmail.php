@@ -14,7 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-
 function cdashmail($to, $subject, $body, $headers = false)
 {
     if (empty($to)) {
@@ -34,8 +33,8 @@ function cdashmail($to, $subject, $body, $headers = false)
         ->setCharset('UTF-8');
 
     global $CDASH_EMAIL_SMTP_HOST, $CDASH_EMAIL_SMTP_PORT,
-        $CDASH_EMAIL_SMTP_ENCRYPTION, $CDASH_EMAIL_SMTP_LOGIN,
-        $CDASH_EMAIL_SMTP_PASS;
+           $CDASH_EMAIL_SMTP_ENCRYPTION, $CDASH_EMAIL_SMTP_LOGIN,
+           $CDASH_EMAIL_SMTP_PASS;
 
     if (is_null($CDASH_EMAIL_SMTP_HOST)) {
         // Use the PHP mail() function.
@@ -47,13 +46,13 @@ function cdashmail($to, $subject, $body, $headers = false)
             $CDASH_EMAIL_SMTP_ENCRYPTION);
 
         if (!is_null($CDASH_EMAIL_SMTP_LOGIN)
-            && !is_null($CDASH_EMAIL_SMTP_PASS)) {
+            && !is_null($CDASH_EMAIL_SMTP_PASS)
+        ) {
             $transport->setUsername($CDASH_EMAIL_SMTP_LOGIN)
                 ->setPassword($CDASH_EMAIL_SMTP_PASS);
         }
     }
 
     $mailer = Swift_Mailer::newInstance($transport);
-
     return $mailer->send($message) > 0;
 }
