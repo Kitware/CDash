@@ -238,7 +238,11 @@ function authenticate($email, $password, $SessionCachePolicy, $rememberme)
     }
 }
 
-/** Authentication function */
+/**
+ * Authentication function
+ * This is called on every page load where common.php is selected, as well as when
+ * submitting the login form.
+ **/
 function auth($SessionCachePolicy = 'private_no_expire')
 {
     include dirname(__DIR__) . '/config/config.php';
