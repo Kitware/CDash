@@ -18,9 +18,45 @@ include dirname(__DIR__) . '/config/config.php';
 include_once 'include/common.php';
 require_once 'include/pdo.php';
 
+function getGoogleAuthenticateState()
+{
+    $requiredFields = array('csrfToken', 'rememberMe', 'requestedURI');
+
+    if (!isset($_GET['state'])) {
+        add_log('no state value passed via GET', LOG_ERR);
+        return false;
+    }
+
+    $state = json_decode($_GET['state']);
+
+    if ($state === null) {
+        add_log('Invalid state value passed via GET', LOG_ERR);
+        return false;
+    }
+
+    foreach ($requiredFields as $requiredField) {
+        if (!array_key_exists($requiredField, $state)) {
+            add_log('State expected ' . $requiredField, LOG_ERR);
+            return false;
+        }
+    }
+
+    // don't send the user back to login.php if that's where they came from
+    if (strpos($state->requestedURI, 'login.php') !== false) {
+        $requestedURI = 'user.php';
+    }
+
+    return $state;
+}
+
 /** Google authentication */
 function googleAuthenticate($code)
 {
+    $state = getGoogleAuthenticateState();
+    if ($state === false) {
+        return;
+    }
+
     include dirname(__DIR__) . '/config/config.php';
     global $CDASH_DB_HOST, $CDASH_DB_LOGIN, $CDASH_DB_PASS, $CDASH_DB_NAME;
     $SessionCachePolicy = 'private_no_expire';
@@ -32,31 +68,10 @@ function googleAuthenticate($code)
     @ini_set('session.gc_maxlifetime', $CDASH_COOKIE_EXPIRATION_TIME + 600);
     session_start();
 
-    if (!isset($_GET['state'])) {
-        add_log('no state value passed via GET', 'googleAuthenticate', LOG_ERR);
-        return;
-    }
-
-    // Both the anti-forgery token and the user's requested URL are specified
-    // in the same "state" GET parameter.  Split them out here.
-    $splitState = explode('_AND_STATE_IS_', $_GET['state']);
-    if (sizeof($splitState) != 2) {
-        add_log('Expected two values after splitting state parameter, found ' .
-                sizeof($splitState), 'googleAuthenticate', LOG_ERR);
-        return;
-    }
-    $requestedURI = $splitState[0];
-    @$state = $splitState[1];
-
-    // don't send the user back to login.php if that's where they came from
-    if (strpos($requestedURI, 'login.php') !== false) {
-        $requestedURI = 'user.php';
-    }
-
     // check that the anti-forgery token is valid
-    if ($state != $_SESSION['cdash']['state']) {
-        add_log('state anti-forgery token mismatch: ' . $state .
-            ' vs ' . $_SESSION['cdash']['state'], LOG_ERR);
+    if ($state->csrfToken != $_SESSION['cdash']['csrfToken']) {
+        add_log('state anti-forgery token mismatch: ' . $state->csrfToken .
+            ' vs ' . $_SESSION['cdash']['csrfToken'], LOG_ERR);
         return;
     }
 
@@ -146,6 +161,11 @@ function googleAuthenticate($code)
     $user_array = pdo_fetch_array($result);
     $pass = $user_array['password'];
 
+    if ($state->rememberMe) {
+        require_once 'include/login_functions.php';
+        setRememberMeCookie($user_array['id']);
+    }
+
     $sessionArray = array(
         'login' => $email,
         'passwd' => $user_array['password'],
@@ -155,7 +175,7 @@ function googleAuthenticate($code)
     $_SESSION['cdash'] = $sessionArray;
     session_write_close();
     pdo_free_result($result);
-    header("Location: $requestedURI");
+    header("Location: $state->requestedURI");
     return true;                               // authentication succeeded
 }
 

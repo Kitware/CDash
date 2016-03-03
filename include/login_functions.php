@@ -14,7 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-function setRememberMeCookie($userId) {
+function setRememberMeCookie($userId)
+{
     $cookiename = 'CDash-' . $_SERVER['SERVER_NAME'];
     $time = time() + 60 * 60 * 24 * 30; // 30 days;
 
