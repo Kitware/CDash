@@ -219,18 +219,19 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $end_UTCDate, $filterdata, $filter_sql,
         $limit_sql);
     $response['builds'] = array();
+    $aggregate_build = array();
     foreach ($build_data as $build_array) {
         $build = array();
         $build['name'] = $build_array['name'];
         $build['key'] = 'build' . $build_array['id'];
         $build['id'] = $build_array['id'];
-        $response['builds'][] = $build;
+        if ($build['name'] == 'Aggregate Coverage') {
+          $aggregate_build = $build;
+        } else {
+          $response['builds'][] = $build;
+        }
     } // end looping through builds
     // Add 'Aggregate' build last
-    $aggregate_build = array();
-    $aggregate_build['name'] = 'Aggregate';
-    $aggregate_build['key'] = 'aggregate';
-    $aggregate_build['id'] = null;
     $response['builds'][] = $aggregate_build;
 
     $subproject_names = array(); // A list of all the subprojects in all of the builds
@@ -295,8 +296,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
                     }
                 }
             }
-            $groups['id'] = $buildid;
-            $builds[] = $groups;
+            $builds[$buildid] = $groups;
         } else {
             // Make an entry in coverages for each possible subproject
             foreach ($coverage_response['coverages'] as $coverage) {
@@ -324,28 +324,24 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
     if (!empty($subproject_groups)) {
         // Grouped subprojects
-        foreach ($builds as $build) {
-            $parentid = $build['id'];
+        foreach ($builds as $buildid => $build) {
             foreach ($build as $group) {
                 $groupId = $group['id'];
-
-                $coveragegroups[$groupId]['build' . $parentid] = $group['percentage'];
-                $coveragegroups[$groupId]['aggregate'] = max($coveragegroups[$groupId]['aggregate'], $group['percentage']);
+                $coveragegroups[$groupId]['build' . $buildid] = $group['percentage'];
                 $coveragegroups[$groupId]['label'] = $group['label'];
 
                 foreach ($group['coverages'] as $subproject) {
                     foreach ($coveragegroups[$groupId]['coverages'] as $key => $subproject_response) {   // Find this subproject in the response
                         if ($subproject_response['label'] == $subproject['label']) {
                             // And populate the information...
-                            $coveragegroups[$groupId]['coverages'][$key]['build' . $parentid] = $subproject['percentage'];
-                            $coveragegroups[$groupId]['coverages'][$key]['build' . $parentid . 'id'] = $subproject['buildid'];
+                            $coveragegroups[$groupId]['coverages'][$key]['build' . $buildid] = $subproject['percentage'];
+                            $coveragegroups[$groupId]['coverages'][$key]['build' . $buildid . 'id'] = $subproject['buildid'];
                             if (array_key_exists('percentagediff', $subproject)) {
                                 $percentagediff = $subproject['percentagediff'];
                             } else {
                                 $percentagediff = null;
                             }
-                            $coveragegroups[$groupId]['coverages'][$key]['build' . $parentid . 'percentagediff'] = $percentagediff;
-                            $coveragegroups[$groupId]['coverages'][$key]['aggregate'] = max($coveragegroups[$groupId]['coverages'][$key]['aggregate'], $subproject['percentage']);
+                            $coveragegroups[$groupId]['coverages'][$key]['build' . $buildid . 'percentagediff'] = $percentagediff;
                             break;
                         }
                     }
@@ -366,7 +362,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
                             $percentagediff = null;
                         }
                         $coverages[$key]['build' . $parentid . 'percentagediff'] = $percentagediff;
-                        $coverages[$key]['aggregate'] = max($coverages[$key]['aggregate'], $subproject['percentage']);
                         break;
                     }
                 }
@@ -625,7 +620,6 @@ function get_build_data($parentid, $projectid, $beginning_UTCDate,
         sp.groupid AS subprojectgroup,
         g.name AS groupname,gp.position,g.id AS groupid,
         (SELECT count(buildid) FROM label2build WHERE buildid=b.id) AS numlabels,
-        (SELECT count(buildid) FROM errorlog WHERE buildid=b.id) AS nerrorlog,
         (SELECT count(buildid) FROM build2uploadfile WHERE buildid=b.id) AS builduploadfiles
             FROM build AS b
             LEFT JOIN build2group AS b2g ON (b2g.buildid=b.id)
