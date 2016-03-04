@@ -68,17 +68,17 @@ class AggregateCoverageTestCase extends KWWebTestCase
                 case 'Aggregate Coverage':
                     $aggregate_buildid = $coverage['buildid'];
                     $success &=
-                        $this->checkCoverage($coverage, 23, 6, 79.31);
+                        $this->checkCoverage($coverage, 23, 14, 62.16);
                     break;
                 case 'release_coverage':
                     $release_buildid = $coverage['buildid'];
                     $success &=
-                        $this->checkCoverage($coverage, 15, 14, 51.72);
+                        $this->checkCoverage($coverage, 15, 22, 40.54);
                     break;
                 case 'debug_coverage':
                     $debug_buildid = $coverage['buildid'];
                     $success &=
-                        $this->checkCoverage($coverage, 20, 9, 68.97);
+                        $this->checkCoverage($coverage, 20, 17, 54.05);
                     break;
                 default:
                     $this->fail("Unexpected coverage $name");

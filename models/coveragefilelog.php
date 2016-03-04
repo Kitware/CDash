@@ -279,8 +279,8 @@ class coveragefilelog
         $aggregateCoverage->CoverageFile = $coverageFile;
         $aggregateCoverage->LocUntested = $stats['locuntested'];
         $aggregateCoverage->LocTested = $stats['loctested'];
-        if ($aggregateCoverage->LocTested > 0) {
-            $aggregateCoverage->Covered = 1;
+        if ($aggregateCoverage->LocTested > 0 || $aggregateCoverage->LocUntested > 0) {
+           $aggregateCoverage->Covered = 1;
         } else {
             $aggregateCoverage->Covered = 0;
         }
