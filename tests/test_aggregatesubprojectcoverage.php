@@ -209,7 +209,7 @@ class AggregateSubProjectCoverageTestCase extends KWWebTestCase
     }
 
     public function verifyChildResult($parentid, $group_name, $to_find)
-      {
+    {
         $success = true;
         $this->get($this->url . "/api/v1/index.php?project=CrossSubProjectExample&parentid=$parentid");
         $content = $this->getBrowser()->getContent();
@@ -221,14 +221,14 @@ class AggregateSubProjectCoverageTestCase extends KWWebTestCase
         }
         foreach ($jsonobj['coveragegroups'] as $coverage_group) {
             if ($coverage_group['label'] == $group_name) {
-              foreach ($coverage_group['coverages'] as $coverage) {
-                $subproject_name = $coverage['label'];
-                $success &=
+                foreach ($coverage_group['coverages'] as $coverage) {
+                    $subproject_name = $coverage['label'];
+                    $success &=
                       $this->checkCoverage($coverage, $to_find[$subproject_name]['loctested'],
                       $to_find[$subproject_name]['locuntested'], $to_find[$subproject_name]['percentage'],
                       $subproject_name);
-              }
-              break;
+                }
+                break;
             }
         }
         return $success;

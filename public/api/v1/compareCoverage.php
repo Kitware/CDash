@@ -226,9 +226,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $build['key'] = 'build' . $build_array['id'];
         $build['id'] = $build_array['id'];
         if ($build['name'] == 'Aggregate Coverage') {
-          $aggregate_build = $build;
+            $aggregate_build = $build;
         } else {
-          $response['builds'][] = $build;
+            $response['builds'][] = $build;
         }
     } // end looping through builds
     // Add 'Aggregate' build last
