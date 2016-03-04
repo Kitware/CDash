@@ -24,7 +24,7 @@ dependencies:
 test:
   override:
     - mkdir _build
-    - cd _build && cmake -DCDASH_DIR_NAME=cdash -DCDASH_DB_LOGIN=ubuntu -DBUILDNAME="$CIRCLE_BRANCH_$CIRCLE_BUILD_NUM" -DSITE="CircleCI" ..
+    - cd _build && cmake -DCDASH_DIR_NAME=cdash -DCDASH_DB_LOGIN=ubuntu -DBUILDNAME="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}" -DSITE="CircleCI" ..
     - node_modules/.bin/webdriver-manager start:
         background: true
     - apache2 -v && cmake --version && mysql --version && php --version
