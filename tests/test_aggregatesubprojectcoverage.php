@@ -32,6 +32,8 @@ class AggregateSubProjectCoverageTestCase extends KWWebTestCase
             'debug_case/production/CoverageLog-0.xml',
             'debug_case/thirdparty/Coverage.xml',
             'debug_case/thirdparty/CoverageLog-0.xml',
+            'debug_case/nofiles/Coverage.xml',
+            'debug_case/nofiles/CoverageLog-0.xml',
             'release_case/experimental/Coverage.xml',
             'release_case/experimental/CoverageLog-0.xml',
             'release_case/production/Coverage.xml',
@@ -39,7 +41,6 @@ class AggregateSubProjectCoverageTestCase extends KWWebTestCase
             'release_case/thirdparty/Coverage.xml',
             'release_case/thirdparty/CoverageLog-0.xml'
             );
-
         foreach ($files as $filename) {
             $file_to_submit = "$this->DataDir/$filename";
             if (!$this->submission('CrossSubProjectExample', $file_to_submit)) {
@@ -101,11 +102,11 @@ class AggregateSubProjectCoverageTestCase extends KWWebTestCase
 
         // Verify child results.
         $success &= $this->verifyChildResult($debug_buildid,
-            5, 0, 5, 3, 10, 6);
+            5, 0, 5, 3, 0, 0, 10, 6);
         $success &= $this->verifyChildResult($release_buildid,
             3, 2, 4, 4, 8, 8);
         $success &= $this->verifyChildResult($aggregate_buildid,
-            5, 0, 6, 2, 12, 4);
+            5, 0, 6, 2, 0, 0, 12, 4);
 
         return $success;
     }
