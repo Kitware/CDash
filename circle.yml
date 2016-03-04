@@ -16,7 +16,7 @@ dependencies:
     - sudo service apache2 restart
     - chmod a+rwx backup log public/rss upload
     - sudo composer self-update --no-interaction
-    - composer config --global --no-interaction github-oauth.github.com $GITHUB_OAUTH_TOKEN
+    - test -n "${CIRCLE_PR_REPONAME}" || composer config --global --no-interaction github-oauth.github.com $GITHUB_OAUTH_TOKEN
     - composer install --no-interaction --no-progress --prefer-dist
     - npm install
     - node_modules/.bin/webdriver-manager update
