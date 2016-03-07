@@ -202,6 +202,9 @@ function getFiltersForPage($page_id)
             return array('details', 'label', 'status', 'testname',
                 'timestatus', 'time');
             break;
+        case 'compareCoverage.php':
+            return array('subproject');
+            break;
 
         default:
             return array();
@@ -218,7 +221,8 @@ function getDefaultFilter($page_id)
             return array('key' => 'site', 'value' => '', 'compare' => 63);
         }
 
-        case 'indexchildren.php': {
+        case 'indexchildren.php':
+        case 'compareCoverage.php': {
             return array('key' => 'subproject', 'value' => '', 'compare' => 61);
         }
 

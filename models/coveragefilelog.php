@@ -223,7 +223,8 @@ class coveragefilelog
             $aggregateBuild = new Build();
             $aggregateBuild->Name = 'Aggregate Coverage';
             $aggregateBuild->SiteId = $server->Id;
-            $aggregateBuild->SetStamp($build->GetStamp());
+            $date = substr($build->GetStamp(), 0, strpos($build->GetStamp(), '-'));
+            $aggregateBuild->SetStamp($date."-0000-Nightly");
             $aggregateBuild->ProjectId = $build->ProjectId;
 
             $aggregateBuild->StartTime = $build->StartTime;
@@ -279,7 +280,7 @@ class coveragefilelog
         $aggregateCoverage->CoverageFile = $coverageFile;
         $aggregateCoverage->LocUntested = $stats['locuntested'];
         $aggregateCoverage->LocTested = $stats['loctested'];
-        if ($aggregateCoverage->LocTested > 0) {
+        if ($aggregateCoverage->LocTested > 0 || $aggregateCoverage->LocUntested > 0) {
             $aggregateCoverage->Covered = 1;
         } else {
             $aggregateCoverage->Covered = 0;

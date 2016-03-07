@@ -105,6 +105,12 @@ class CoverageLogHandler extends AbstractHandler
             // to have a valid buildid.
             $this->CoverageFiles[] = array($this->CurrentCoverageFile,
                 $this->CurrentCoverageFileLog);
+        } elseif ($name == 'COVERAGELOG') {
+            if (empty($this->CoverageFiles)) {
+                // Store these objects to be inserted after we're guaranteed
+              // to have a valid buildid.
+              $this->CoverageFiles[] = array(new CoverageFile(), new CoverageFileLog());
+            }
         }
     }
 

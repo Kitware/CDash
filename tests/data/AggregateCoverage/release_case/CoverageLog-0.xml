@@ -94,6 +94,24 @@
 				<Line Number="13" Count="-1">}</Line>
 			</Report>
 		</File>
+                <File Name="zero.cxx" FullPath="./zero.cxx">
+                        <Report>
+                                <Line Number="0" Count="-1">#include &lt;cstring&gt;</Line>
+                                <Line Number="1" Count="-1">#include &lt;iostream&gt;</Line>
+                                <Line Number="2" Count="-1">int main(int argc, char *argv[])</Line>
+                                <Line Number="3" Count="-1">{</Line>
+                                <Line Number="4" Count="0">  if (strcmp(argv[1], "debug") == 0) {</Line>
+                                <Line Number="5" Count="0">    std::cout &lt;&lt; "This bar line gets covered by debug builds" &lt;&lt; std::endl;</Line>
+                                <Line Number="6" Count="0">  } else {</Line>
+                                <Line Number="7" Count="0">    std::cout &lt;&lt; "This bar line gets covered by release builds" &lt;&lt; std::endl;</Line>
+                                <Line Number="8" Count="-1">  }</Line>
+                                <Line Number="9" Count="0">  if (strcmp(argv[1], "neither") == 0) {</Line>
+                                <Line Number="10" Count="0">    std::cout &lt;&lt; "This bar line doesn't get covered in general" &lt;&lt; std::endl;</Line>
+                                <Line Number="11" Count="0">  }</Line>
+                                <Line Number="12" Count="0">  return 0;</Line>
+                                <Line Number="13" Count="-1">}</Line>
+                        </Report>
+                </File>
 		<EndDateTime>Feb 16 11:06 EST</EndDateTime>
 		<EndTime>1455638789</EndTime>
 	</CoverageLog>

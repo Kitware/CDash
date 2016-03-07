@@ -50,10 +50,16 @@
 			<PercentCoverage>50.00</PercentCoverage>
 			<CoverageMetric>0.78</CoverageMetric>
 		</File>
+                <File Name="zero.cxx" FullPath="./zero.cxx" Covered="true">
+                        <LOCTested>0</LOCTested>
+                        <LOCUnTested>8</LOCUnTested>
+                        <PercentCoverage>0</PercentCoverage>
+                        <CoverageMetric>0</CoverageMetric>
+                </File>
 		<LOCTested>15</LOCTested>
-		<LOCUntested>14</LOCUntested>
-		<LOC>29</LOC>
-		<PercentCoverage>51.72</PercentCoverage>
+		<LOCUntested>22</LOCUntested>
+		<LOC>37</LOC>
+		<PercentCoverage>40.54</PercentCoverage>
 		<EndDateTime>Feb 16 11:06 EST</EndDateTime>
 		<EndTime>1455638789</EndTime>
 		<ElapsedMinutes>0.00</ElapsedMinutes>
