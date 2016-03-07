@@ -688,6 +688,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
     // Generate the JSON response from the rows of builds.
     $response['coverages'] = array();
     $response['dynamicanalyses'] = array();
+    $num_nightly_coverages_builds = 0;
+    $show_aggregate = false;
+    $response['comparecoverage'] = 0;
     foreach ($build_rows as $build_array) {
         $groupid = $build_array['groupid'];
 
@@ -1097,14 +1100,22 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
         $coverageIsGrouped = false;
 
-        $response['comparecoverage'] = 0;
         $coverages = pdo_query("SELECT * FROM coveragesummary WHERE buildid='$buildid'");
         while ($coverage_array = pdo_fetch_array($coverages)) {
             $coverage_response = array();
             $coverage_response['buildid'] = $build_array['id'];
             if ($linkToChildCoverage) {
                 $coverage_response['childlink'] = "$child_builds_hyperlink#Coverage";
-                $response['comparecoverage'] = 1;
+            }
+
+            if ($build_array['type'] === 'Nightly' && $build_array['name'] !== 'Aggregate Coverage') {
+                $num_nightly_coverages_builds++;
+                if ($num_nightly_coverages_builds > 1) {
+                    $show_aggregate = true;
+                    if ($linkToChildCoverage) {
+                        $response['comparecoverage'] = 1;
+                    }
+                }
             }
 
             $percent = round(
@@ -1257,6 +1268,15 @@ function echo_main_dashboard_JSON($project_instance, $date)
     // Otherwise any missing buildgroups will cause our view to
     // not honor the order specified by the project admins.
     $buildgroups_response = array_values($buildgroups_response);
+
+    // Remove Aggregate Coverage if it should not be displayed.
+    if (!$show_aggregate) {
+        for ($i = 0; $i < count($response['coverages']); $i++) {
+            if ($response['coverages'][$i]['buildname'] === 'Aggregate Coverage') {
+                unset($response['coverages'][$i]);
+            }
+        }
+    }
 
     // Generate coverage by group here.
     if (!empty($coverage_groups)) {
