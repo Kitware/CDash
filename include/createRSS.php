@@ -90,6 +90,6 @@ function CreateRSSFeed($projectid)
     }
 
     if (file_put_contents($filename, $feed) === false) {
-        add_log('CreateRSSFeed', 'Cannot write file ' . $filename, LOG_ERR, $projectid);
+        add_log('Cannot write file ' . $filename, 'CreateRSSFeed', LOG_ERR, $projectid);
     }
 }

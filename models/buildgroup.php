@@ -77,7 +77,7 @@ class buildgroup
         }
 
         if ($this->Id < 1) {
-            add_log('BuildGroup GetName(): Id not set', LOG_ERR);
+            add_log('BuildGroup GetName(): Id not set', 'GetName', LOG_ERR);
             return false;
         }
 
@@ -123,7 +123,7 @@ class buildgroup
     public function GetStartTime()
     {
         if ($this->Id < 1) {
-            add_log('BuildGroup GetStartTime(): Id not set', LOG_ERR);
+            add_log('BuildGroup GetStartTime(): Id not set', 'GetStartTime', LOG_ERR);
             return false;
         }
         return $this->StartTime;
@@ -138,7 +138,7 @@ class buildgroup
     public function GetEndTime()
     {
         if ($this->Id < 1) {
-            add_log('BuildGroup GetEndTime(): Id not set', LOG_ERR);
+            add_log('BuildGroup GetEndTime(): Id not set', 'GetEndTime', LOG_ERR);
             return false;
         }
         return $this->EndTime;
@@ -153,7 +153,7 @@ class buildgroup
     public function GetAutoRemoveTimeFrame()
     {
         if ($this->Id < 1) {
-            add_log('BuildGroup GetAutoRemoveTimeFrame(): Id not set', LOG_ERR);
+            add_log('BuildGroup GetAutoRemoveTimeFrame(): Id not set', 'GetAutoRemoveTimeFrame', LOG_ERR);
             return false;
         }
         return $this->AutoRemoveTimeFrame;
@@ -171,7 +171,7 @@ class buildgroup
     public function GetDescription()
     {
         if ($this->Id < 1) {
-            add_log('BuildGroup GetDescription(): Id not set', LOG_ERR);
+            add_log('BuildGroup GetDescription(): Id not set', 'GetDescription', LOG_ERR);
             return false;
         }
         return $this->Description;
@@ -190,7 +190,7 @@ class buildgroup
     public function GetSummaryEmail()
     {
         if ($this->Id < 1) {
-            add_log('BuildGroup GetSummaryEmail(): Id not set', LOG_ERR);
+            add_log('BuildGroup GetSummaryEmail(): Id not set', 'GetSummaryEmail', LOG_ERR);
             return false;
         }
         return $this->SummaryEmail;
@@ -208,7 +208,7 @@ class buildgroup
     public function GetIncludeSubProjectTotal()
     {
         if ($this->Id < 1) {
-            add_log('BuildGroup GetIncludeSubProjectTotal(): Id not set', LOG_ERR);
+            add_log('BuildGroup GetIncludeSubProjectTotal(): Id not set', 'GetIncludeSubProjectTotal', LOG_ERR);
             return false;
         }
         return $this->IncludeSubProjectTotal;
@@ -227,7 +227,7 @@ class buildgroup
     public function GetEmailCommitters()
     {
         if ($this->Id < 1) {
-            add_log('BuildGroup GetEmailCommitters(): Id not set', LOG_ERR);
+            add_log('BuildGroup GetEmailCommitters(): Id not set', 'GetEmailCommitters', LOG_ERR);
             return false;
         }
         return $this->EmailCommitters;
@@ -246,7 +246,7 @@ class buildgroup
     public function GetType()
     {
         if ($this->Id < 1) {
-            add_log('BuildGroup GetType(): Id not set', LOG_ERR);
+            add_log('BuildGroup GetType(): Id not set', 'GetType', LOG_ERR);
             return false;
         }
         return $this->Type;
@@ -301,7 +301,7 @@ class buildgroup
     public function GetPosition()
     {
         if ($this->Id < 1) {
-            add_log('BuildGroup GetPosition(): Id not set', LOG_ERR);
+            add_log('BuildGroup GetPosition(): Id not set', 'GetPosition', LOG_ERR);
             return false;
         }
 
@@ -314,6 +314,7 @@ class buildgroup
         if (pdo_num_rows($result) < 1) {
             add_log(
                 "BuildGroup GetPosition(): no position found for buildgroup # $this->Id !",
+                'GetPosition',
                 LOG_ERR);
             return false;
         }
