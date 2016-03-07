@@ -33,7 +33,7 @@ function googleAuthenticate($code)
     session_start();
 
     if (!isset($_GET['state'])) {
-        add_log('no state value passed via GET', LOG_ERR);
+        add_log('no state value passed via GET', 'googleAuthenticate', LOG_ERR);
         return;
     }
 
@@ -42,7 +42,7 @@ function googleAuthenticate($code)
     $splitState = explode('_AND_STATE_IS_', $_GET['state']);
     if (sizeof($splitState) != 2) {
         add_log('Expected two values after splitting state parameter, found ' .
-            sizeof($splitState), LOG_ERR);
+                sizeof($splitState), 'googleAuthenticate', LOG_ERR);
         return;
     }
     $requestedURI = $splitState[0];
@@ -99,7 +99,7 @@ function googleAuthenticate($code)
 
     $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
     if ($httpStatus != 200) {
-        add_log("Google access token request failed: $resp", LOG_ERR);
+        add_log("Google access token request failed: $resp", 'googleAuthenticate', LOG_ERR);
         return;
     }
 
@@ -120,7 +120,7 @@ function googleAuthenticate($code)
 
     $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
     if ($httpStatus != 200) {
-        add_log("Get Google user email address request failed: $resp", LOG_ERR);
+        add_log("Get Google user email address request failed: $resp", 'googleAuthenticate', LOG_ERR);
         return;
     }
 

@@ -186,7 +186,7 @@ class GCovTarHandler
             $row = pdo_single_row_query($query);
             if (!$row || !array_key_exists('name', $row)) {
                 add_log(
-                    "No SubProject found for '$path'",
+                    "No SubProject found for '$path'", 'ParseGcovFile',
                     LOG_WARNING, $this->ProjectId, $this->Build->Id);
                 return;
             }
