@@ -285,11 +285,7 @@ function auth($SessionCachePolicy = 'private_no_expire')
             $passwd = htmlspecialchars(pdo_real_escape_string($passwd));
         }
 
-        @$rememberme = $_POST['rememberme'];
-        if ($rememberme != null) {
-            $rememberme = pdo_real_escape_numeric($rememberme);
-        }
-        return authenticate($login, $passwd, $SessionCachePolicy, $rememberme);
+        return authenticate($login, $passwd, $SessionCachePolicy, isset($_POST['rememberme']));
     } else {                                         // arrive from session var
         $cookiename = str_replace('.', '_', 'CDash-' . $_SERVER['SERVER_NAME']); // php doesn't like dot in cookie names
         if (isset($_COOKIE[$cookiename])) {
