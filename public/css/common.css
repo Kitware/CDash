@@ -1185,6 +1185,9 @@ textarea {
   height:100px;
   width:200px;
 }
+.overview-bullet-chart {
+  height:100px;
+}
 
 /* for angular animations */
 .repeat-item.ng-enter,
