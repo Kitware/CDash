@@ -1233,3 +1233,35 @@ textarea {
   width:800px;
   height:400px;
 }
+
+/* for manageOverview.php */
+#buildSortable {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  height: 275px;
+}
+#buildSortable li {
+  margin: 0 3px 3px 3px;
+  padding: 3px;
+  height: 250px;
+  font-size: 1.4em;
+  border-style: solid;
+  border-width: 2px;
+  cursor: move;
+}
+#staticSortable {
+  margin: 0;
+  padding: 0;
+}
+#staticSortable tr {
+  margin: 0 3px 3px 3px;
+  padding: 3px;
+  font-size: 1.4em;
+  border-style: solid;
+  border-width: 2px;
+  cursor: move;
+}
+.spacer {
+    margin-top: 20px;
+}
