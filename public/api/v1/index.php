@@ -95,12 +95,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
     $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
     if (pdo_num_rows($project) > 0) {
         $project_array = pdo_fetch_array($project);
-        $svnurl = make_cdash_url(htmlentities($project_array['cvsurl']));
-        $homeurl = make_cdash_url(htmlentities($project_array['homeurl']));
-        $bugurl = make_cdash_url(htmlentities($project_array['bugtrackerurl']));
-        $googletracker = htmlentities($project_array['googletracker']);
-        $docurl = make_cdash_url(htmlentities($project_array['documentationurl']));
-        $projectpublic = $project_array['public'];
         $projectname = $project_array['name'];
 
         if (isset($project_array['testingdataurl']) && $project_array['testingdataurl'] != '') {
@@ -152,30 +146,10 @@ function echo_main_dashboard_JSON($project_instance, $date)
     }
 
     list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $project_array['nightlytime']);
-    $logoid = getLogoID($projectid);
 
     // Main dashboard section
-    $response['datetime'] = date('l, F d Y H:i:s T', time());
-    $response['date'] = $date;
-    $response['unixtimestamp'] = $currentstarttime;
-    $response['vcs'] = $svnurl;
-    $response['bugtracker'] = $bugurl;
-    $response['googletracker'] = $googletracker;
-    $response['documentation'] = $docurl;
-    $response['logoid'] = $logoid;
-    $response['projectid'] = $projectid;
-    $response['projectname'] = $projectname;
-    $response['projectname_encoded'] = urlencode($projectname);
-    $response['previousdate'] = $previousdate;
-    $response['public'] = $projectpublic;
+    get_dashboard_JSON($projectname, $date, $response);
     $response['displaylabels'] = $project_array['displaylabels'];
-    $response['nextdate'] = $nextdate;
-
-    if (empty($project_array['homeurl'])) {
-        $response['home'] = 'index.php?project=' . urlencode($projectname);
-    } else {
-        $response['home'] = $homeurl;
-    }
 
     $page_id = 'index.php';
     $response['childview'] = 0;
@@ -307,27 +281,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
     }
     $updates_response['timestamp'] = date('l, F d Y - H:i T', $currentstarttime);
     $response['updates'] = $updates_response;
-
-    // User
-    if (isset($_SESSION['cdash']) && array_key_exists('loginid', $_SESSION['cdash'])) {
-        $user_response = array();
-        $userid = $_SESSION['cdash']['loginid'];
-        $user2project = pdo_query(
-            "SELECT role FROM user2project
-                WHERE userid='$userid' AND projectid='$projectid'");
-        $user2project_array = pdo_fetch_array($user2project);
-        $user = pdo_query(
-            'SELECT admin FROM ' . qid('user') . "  WHERE id='$userid'");
-        $user_array = pdo_fetch_array($user);
-        $user_response['id'] = $userid;
-        $isadmin = 0;
-        if ($user2project_array['role'] > 1 || $user_array['admin']) {
-            $isadmin = 1;
-        }
-        $user_response['admin'] = $isadmin;
-        $user_response['projectrole'] = $user2project_array['role'];
-        $response['user'] = $user_response;
-    }
 
     // This array is used to track if expected builds are found or not.
     $received_builds = array();

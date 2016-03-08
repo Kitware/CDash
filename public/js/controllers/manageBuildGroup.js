@@ -72,7 +72,7 @@ CDash.filter('filter_builds', function() {
   /** create a new buildgroup */
   $scope.createBuildGroup = function(newBuildGroup, type) {
     var parameters = {
-      projectid: $scope.cdash.project.id,
+      projectid: $scope.cdash.projectid,
       newbuildgroup: newBuildGroup,
       type: type
     };
@@ -99,7 +99,7 @@ CDash.filter('filter_builds', function() {
   $scope.updateBuildGroupOrder = function() {
     var newLayout = getSortedElements("#sortable");
     var parameters = {
-      projectid: $scope.cdash.project.id,
+      projectid: $scope.cdash.projectid,
       newLayout: newLayout
     };
     $http.post('api/v1/buildgroup.php', parameters)
@@ -117,7 +117,7 @@ CDash.filter('filter_builds', function() {
   /** modify an existing buildgroup */
   $scope.saveBuildGroup = function(buildgroup, summaryemail) {
     var parameters = {
-      projectid: $scope.cdash.project.id,
+      projectid: $scope.cdash.projectid,
       buildgroup: buildgroup
     };
     $http({
@@ -140,7 +140,7 @@ CDash.filter('filter_builds', function() {
     if (window.confirm("Are you sure you want to delete this BuildGroup? If the BuildGroup is not empty, builds will be put in their original BuildGroup.")) {
 
       var parameters = {
-        projectid: $scope.cdash.project.id,
+        projectid: $scope.cdash.projectid,
         buildgroupid: buildgroupid
       };
       $http({
@@ -168,7 +168,7 @@ CDash.filter('filter_builds', function() {
   /** move builds to a different group */
   $scope.moveBuilds = function(builds, group, expected) {
     var parameters = {
-      projectid: $scope.cdash.project.id,
+      projectid: $scope.cdash.projectid,
       builds: builds,
       group: group,
       expected: expected
@@ -189,7 +189,7 @@ CDash.filter('filter_builds', function() {
   /** Add rule for a wildcard BuildGroup */
   $scope.addWildcardRule = function(group, type, nameMatch) {
     var parameters = {
-      projectid: $scope.cdash.project.id,
+      projectid: $scope.cdash.projectid,
       group: group,
       type: type,
       nameMatch: nameMatch
@@ -210,7 +210,7 @@ CDash.filter('filter_builds', function() {
   /** delete a wildcard rule */
   $scope.deleteWildcardRule = function(wildcard) {
     var parameters = {
-      projectid: $scope.cdash.project.id,
+      projectid: $scope.cdash.projectid,
       wildcard: wildcard
     };
     $http({
@@ -231,7 +231,7 @@ CDash.filter('filter_builds', function() {
   /** add a build row to a dynamic group */
   $scope.addDynamicRow = function(dynamic, buildgroup, site, match) {
     var parameters = {
-      projectid: $scope.cdash.project.id,
+      projectid: $scope.cdash.projectid,
       dynamic: dynamic,
       buildgroup: buildgroup,
       site: site,
@@ -260,7 +260,7 @@ CDash.filter('filter_builds', function() {
 
   $scope.deleteDynamicRule = function(dynamic, rule) {
     var parameters = {
-      projectid: $scope.cdash.project.id,
+      projectid: $scope.cdash.projectid,
       dynamic: dynamic,
       rule: rule
     };

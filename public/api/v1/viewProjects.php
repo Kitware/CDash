@@ -46,18 +46,6 @@ if (isset($CDASH_NO_REGISTRATION) && $CDASH_NO_REGISTRATION == 1) {
     $response['noregister'] = 1;
 }
 
-// User
-$userid = 0;
-if (isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid'])) {
-    $userid = $_SESSION['cdash']['loginid'];
-    $user = pdo_query('SELECT admin FROM ' . qid('user') . " WHERE id='$userid'");
-    $user_array = pdo_fetch_array($user);
-    $user_response = array();
-    $user_response['id'] = $userid;
-    $user_response['admin'] = $user_array['admin'];
-    $response['user'] = $user_response;
-}
-
 if (isset($_GET['allprojects']) && $_GET['allprojects'] == 1) {
     $response['allprojects'] = 1;
 } else {

@@ -281,12 +281,7 @@ $response['buildgroups'] = $buildgroups_response;
 $response['dynamics'] = $dynamics_response;
 
 // Store some additional details about this project.
-$project_response = array();
-$project_response['id'] = $projectid;
-$project_name = $Project->GetName();
-$project_response['name'] = $project_name;
-$project_response['name_encoded'] = urlencode($project_name);
-$response['project'] = $project_response;
+get_dashboard_JSON($Project->GetName(), null, $response);
 
 // Generate response for any wildcard groups.
 $wildcards = pdo_query("
