@@ -43,7 +43,7 @@ if (!auth(@$SessionCachePolicy) && !@$noforcelogin) {
     session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
     @ini_set('session.gc_maxlifetime', $CDASH_COOKIE_EXPIRATION_TIME + 600);
     session_start();
-    $sessionArray = array('csrfToken' => md5(rand()));
+    $sessionArray = array('csrfToken' => bin2hex(random_bytes(16)));
     $_SESSION['cdash'] = $sessionArray;
     LoginForm($loginerror); // display login form
     $session_OK = 0;
