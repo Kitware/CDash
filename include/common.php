@@ -2000,7 +2000,7 @@ function get_dashboard_JSON($projectname, $date, &$response)
     }
 
     $userid = 0;
-    if (isset($_SESSION['cdash'])) {
+    if (isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid'])) {
         $userid = $_SESSION['cdash']['loginid'];
         // Is the user an administrator of this project?
         $row = pdo_single_row_query(
