@@ -15,6 +15,7 @@
 =========================================================================*/
 
 include dirname(__DIR__) . '/config/config.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
 include_once 'include/common.php';
 require_once 'include/pdo.php';
 
@@ -71,15 +72,9 @@ function googleAuthenticate($code)
     // check that the anti-forgery token is valid
     if ($state->csrfToken != $_SESSION['cdash']['csrfToken']) {
         add_log('state anti-forgery token mismatch: ' . $state->csrfToken .
-            ' vs ' . $_SESSION['cdash']['csrfToken'], LOG_ERR);
+                ' vs ' . $_SESSION['cdash']['csrfToken'], 'googleAuthenticate', LOG_ERR);
         return;
     }
-
-    // Request the access token
-    $headers = array(
-        'Content-Type: application/x-www-form-urlencoded;charset=UTF-8',
-        'Connection: Keep-Alive'
-    );
 
     $redirectURI = strtok(get_server_URI(false), '?');
     // The return value of get_server_URI can be inconsistent.
@@ -94,56 +89,24 @@ function googleAuthenticate($code)
         $redirectURI .= '/googleauth_callback.php';
     }
 
-    $postData = implode('&', array(
-        'grant_type=authorization_code',
-        'code=' . $_GET['code'],
-        'client_id=' . $GOOGLE_CLIENT_ID,
-        'client_secret=' . $GOOGLE_CLIENT_SECRET,
-        'redirect_uri=' . $redirectURI
-    ));
+    try {
+        $client = new Google_Client();
+        $client->setClientId($GOOGLE_CLIENT_ID);
+        $client->setClientSecret($GOOGLE_CLIENT_SECRET);
+        $client->setRedirectUri($redirectURI);
+        $client->authenticate($_GET['code']);
 
-    $url = 'https://accounts.google.com/o/oauth2/token';
-    $curl = curl_init();
-    curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_POST, 1);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $postData);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_PORT, 443);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-    $resp = curl_exec($curl);
-
-    $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-    if ($httpStatus != 200) {
-        add_log("Google access token request failed: $resp", 'googleAuthenticate', LOG_ERR);
+        $oauth = new Google_Service_Oauth2($client);
+        $me = $oauth->userinfo->get();
+        $tokenResponse = json_decode($client->getAccessToken());
+    } catch (Google_Auth_Exception $e) {
+        add_log('Google access token request failed: ' . $e->getMessage(),
+                'googleAuthenticate', LOG_ERR);
         return;
     }
-
-    $resp = json_decode($resp);
-    $accessToken = $resp->access_token;
-    $tokenType = $resp->token_type;
-
-    // Use the access token to get the user's email address
-    $headers = array(
-        'Authorization: ' . $tokenType . ' ' . $accessToken
-    );
-    $curl = curl_init();
-    curl_setopt($curl, CURLOPT_URL, 'https://www.googleapis.com/plus/v1/people/me');
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_PORT, 443);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-    $resp = curl_exec($curl);
-
-    $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-    if ($httpStatus != 200) {
-        add_log("Get Google user email address request failed: $resp", 'googleAuthenticate', LOG_ERR);
-        return;
-    }
-
-    // Extract the user's email address from the response.
-    $resp = json_decode($resp);
-    $email = strtolower($resp->emails[0]->value);
 
     // Check if this email address appears in our user database
+    $email = $me->getEmail();
     $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
     pdo_select_db("$CDASH_DB_NAME", $db);
     $sql = 'SELECT id,password FROM ' . qid('user') . " WHERE email='" . pdo_real_escape_string($email) . "'";
@@ -152,8 +115,8 @@ function googleAuthenticate($code)
     if (pdo_num_rows($result) == 0) {
         // if no match is found, redirect to pre-filled out registration page
         pdo_free_result($result);
-        $firstname = $resp->name->givenName;
-        $lastname = $resp->name->familyName;
+        $firstname = $me->getGivenName();
+        $lastname = $me->getFamilyName();
         header("Location: register.php?firstname=$firstname&lastname=$lastname&email=$email");
         return false;
     }
