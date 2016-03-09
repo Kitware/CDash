@@ -669,6 +669,7 @@ if (isset($_GET['upgrade-2-4'])) {
 
     // Better caching of buildfailures.
     UpgradeBuildFailureTable('buildfailure', 'buildfailuredetails');
+    AddTableIndex('buildfailure', 'detailsid');
 
     // Add key to label2test.
     // This speeds up viewTest API for builds with lots of tests & labels.
