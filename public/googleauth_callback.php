@@ -106,7 +106,7 @@ function googleAuthenticate($code)
     }
 
     // Check if this email address appears in our user database
-    $email = $me->getEmail();
+    $email = strtolower($me->getEmail());
     $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
     pdo_select_db("$CDASH_DB_NAME", $db);
     $sql = 'SELECT id,password FROM ' . qid('user') . " WHERE email='" . pdo_real_escape_string($email) . "'";
