@@ -7,9 +7,7 @@ var TYPE        =   'code';
 
 function oauth2Login() {
   // construct redirect URI
-  var REDIRECT = window.location.href;
-  REDIRECT = REDIRECT.substring(0, REDIRECT.lastIndexOf('/user.php'));
-  REDIRECT += '/googleauth_callback.php';
+  var REDIRECT = CDASH_BASE_URL + '/googleauth_callback.php';
 
   // get state (anti-forgery token) from session via CDash API
   $.get('api/v1/getCsrfToken.php', function(csrfToken) {

@@ -23,6 +23,7 @@
         <xsl:if test="/cdash/oauth2">
           <script>
             var CLIENTID = '<xsl:value-of select="cdash/oauth2/client"/>';
+            var CDASH_BASE_URL = '<xsl:value-of select="cdash/oauth2/CDASH_BASE_URL"/>';
           </script>
           <script src="js/cdashOauth2.js"></script>
         </xsl:if>

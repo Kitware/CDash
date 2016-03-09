@@ -396,6 +396,8 @@ function LoginForm($loginerror)
     if ($GOOGLE_CLIENT_ID != '' && $GOOGLE_CLIENT_SECRET != '') {
         $xml .= '<oauth2>';
         $xml .= add_XML_value('client', $GOOGLE_CLIENT_ID);
+        // Google OAuth needs to know the base url to redirect back to
+        $xml .= add_XML_value('CDASH_BASE_URL', $CDASH_BASE_URL);
         $xml .= '</oauth2>';
     }
 
