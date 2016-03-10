@@ -16,11 +16,11 @@
     "ext-json": "*",
     "ext-pdo": "*",
     "ext-xsl": "*",
+    "google/apiclient": "~1.1",
     "monolog/monolog": "~1.17",
     "paragonie/random_compat": "~1.2",
     "suin/php-rss-writer": "~1.3",
-    "swiftmailer/swiftmailer": "~5.4",
-    "google/apiclient": "1.0.*@beta"
+    "swiftmailer/swiftmailer": "~5.4"
   },
   "require-dev": {
     "ext-gd": "*",
