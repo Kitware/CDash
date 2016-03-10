@@ -79,7 +79,7 @@ describe("filterLabels", function() {
     browser.waitForAngular();
 
     // Make sure the expected number of tests are displayed
-    expect(element.all(by.repeater('build in cdash.builds')).count()).toBe(200);
+    expect(element.all(by.repeater('build in cdash.builds')).count()).toBe(409);
   });
 
 });
