@@ -88,7 +88,7 @@
   </tr>
 </thead>
 
-  <tr ng-repeat="build in cdash.builds | orderBy:orderByFields"
+  <tr ng-repeat="build in pagination.filteredBuilds | orderBy:orderByFields"
       ng-class-odd="'odd'"
       ng-class-even="'even'">
     <td>
@@ -125,6 +125,26 @@
   </tr>
 
 </table>
+  <div ng-if="cdash.builds.length > 25">
+    <uib-pagination
+      ng-model="pagination.currentPage"
+      total-items="cdash.builds.length"
+      max-size="pagination.maxSize"
+      items-per-page="pagination.numPerPage"
+      ng-change="pageChanged()"
+      boundary-links="true">
+    </uib-pagination>
+
+    <div>
+      <label>Items per page</label>
+      <select ng-model="pagination.numPerPage" convert-to-number ng-change="pageChanged()">
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+        <option value="-1">All</option>
+      </select>
+    </div>
+  </div>
 
 <br/>
 
