@@ -24,20 +24,20 @@ function getGoogleAuthenticateState()
     $requiredFields = array('csrfToken', 'rememberMe', 'requestedURI');
 
     if (!isset($_GET['state'])) {
-        add_log('no state value passed via GET', LOG_ERR);
+        add_log('no state value passed via GET', 'getGoogleAuthenticateState', LOG_ERR);
         return false;
     }
 
     $state = json_decode($_GET['state']);
 
     if ($state === null) {
-        add_log('Invalid state value passed via GET', LOG_ERR);
+        add_log('Invalid state value passed via GET', 'getGoogleAuthenticateState', LOG_ERR);
         return false;
     }
 
     foreach ($requiredFields as $requiredField) {
         if (!array_key_exists($requiredField, $state)) {
-            add_log('State expected ' . $requiredField, LOG_ERR);
+            add_log('State expected ' . $requiredField, 'getGoogleAuthenticateState', LOG_ERR);
             return false;
         }
     }
