@@ -109,4 +109,36 @@ describe("multiSort", function() {
     check_build_order('hut12.kitware', 'test.kitware', 'hut11.kitware');
   });
 
+  it("sort Query Tests", function() {
+    browser.get('queryTests.php?project=Trilinos&date=2011-07-22');
+
+    // Check that the builds are in the expected order
+    var visible_tds_row0 = element(by.repeater('build in pagination.filteredBuilds').row(0)).all(by.tagName('td')).filter(function(elem) { return elem.isDisplayed(); });
+    expect(visible_tds_row0.get(2).getText()).toBe('Sacado_dfad_sfc_example');
+    expect(visible_tds_row0.get(3).getText()).toBe('Failed');
+
+
+    var visible_tds_row24 = element(by.repeater('build in pagination.filteredBuilds').row(24)).all(by.tagName('td')).filter(function(elem) { return elem.isDisplayed(); });
+    expect(visible_tds_row24.get(2).getText()).toBe('TrilinosFramework_DepXmlDumpTests_WithPreCopyrightTrilinosExtraTrilinosRepo');
+    expect(visible_tds_row24.get(3).getText()).toBe('Failed');
+
+    // Click on the Status header.
+    var status_header = element.all(by.className('table-heading1')).all(by.tagName('th')).filter(function(elem) { return elem.isDisplayed(); }).get(3);
+    expect(status_header.getText()).toBe('Status');
+    status_header.click();
+    expect(status_header.element(by.tagName('span')).getAttribute('class')).toContain("glyphicon-chevron-down");
+
+    // Wait for the page to load.
+    browser.waitForAngular();
+
+    // Check that the builds are in the expected order
+    visible_tds_row0 = element(by.repeater('build in pagination.filteredBuilds').row(0)).all(by.tagName('td')).filter(function(elem) { return elem.isDisplayed(); });
+    expect(visible_tds_row0.get(2).getText()).toBe('Sacado_ad_example');
+    expect(visible_tds_row0.get(3).getText()).toBe('Passed');
+
+    visible_tds_row24 = element(by.repeater('build in pagination.filteredBuilds').row(24)).all(by.tagName('td')).filter(function(elem) { return elem.isDisplayed(); });
+    expect(visible_tds_row24.get(2).getText()).toBe('Sacado_tradoptest_04_RE1');
+    expect(visible_tds_row24.get(3).getText()).toBe('Passed');
+  });
+
 });

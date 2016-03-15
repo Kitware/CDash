@@ -1,5 +1,5 @@
 CDash.controller('QueryTestsController',
-  function QueryTestsController($scope, $rootScope, $http, filters, multisort) {
+  function QueryTestsController($scope, $rootScope, $http, $filter, filters, multisort) {
     $scope.loading = true;
 
     // Pagination settings.
@@ -42,6 +42,7 @@ CDash.controller('QueryTestsController',
       $rootScope['title'] = cdash.title;
     }).finally(function() {
       $scope.loading = false;
+      $scope.cdash.builds = $filter('orderBy')($scope.cdash.builds, $scope.orderByFields);
       $scope.pageChanged();
     });
 
@@ -63,6 +64,7 @@ CDash.controller('QueryTestsController',
 
     $scope.updateOrderByFields = function(field, $event) {
       multisort.updateOrderByFields($scope, field, $event);
+      $scope.cdash.builds = $filter('orderBy')($scope.cdash.builds, $scope.orderByFields);
       $scope.pageChanged();
       $.cookie('cdash_query_tests_sort', $scope.orderByFields);
     };

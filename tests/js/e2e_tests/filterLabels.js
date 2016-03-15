@@ -72,14 +72,17 @@ describe("filterLabels", function() {
     element(by.linkText('Tests Query')).click();
 
     // Make sure the expected number of tests are displayed
-    expect(element.all(by.repeater('build in cdash.builds')).count()).toBe(69);
+    expect(element(by.id('numtests')).getText()).toBe('Query Tests: 69 matches');
+
+    // Note: A maximum of 25 builds are displayed at a time
+    expect(element.all(by.repeater('build in pagination.filteredBuilds')).count()).toBe(25);
 
     // Click clear and wait for the page to reload.
     element(by.name('clear')).click();
     browser.waitForAngular();
 
     // Make sure the expected number of tests are displayed
-    expect(element.all(by.repeater('build in cdash.builds')).count()).toBe(409);
+    expect(element(by.id('numtests')).getText()).toBe('Query Tests: 409 matches');
   });
 
 });

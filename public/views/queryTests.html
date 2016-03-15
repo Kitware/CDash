@@ -19,7 +19,7 @@
     <br/>
 
     <div ng-if="cdash.requirelogin != 1 && !loading">
-      <h3>Query {{cdash.dashboard.projectname}} Tests: {{cdash.builds.length}} matches</h3>
+      <h3 id="numtests">Query {{cdash.dashboard.projectname}} Tests: {{cdash.builds.length}} matches</h3>
 
 <!-- Filters -->
 <div id="labelshowfilters">
@@ -88,7 +88,7 @@
   </tr>
 </thead>
 
-  <tr ng-repeat="build in pagination.filteredBuilds | orderBy:orderByFields"
+  <tr ng-repeat="build in pagination.filteredBuilds"
       ng-class-odd="'odd'"
       ng-class-even="'even'">
     <td>
