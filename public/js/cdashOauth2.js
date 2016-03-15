@@ -16,7 +16,7 @@ function oauth2Login() {
       var STATE = encodeURIComponent(JSON.stringify({
           requestedURI: document.URL,
           csrfToken: csrfToken,
-          rememberMe: Number($('input[name="rememberme"]').prop('checked'))
+          rememberMe: Number($('input[name="oauth-rememberme"]').prop('checked'))
       }));
 
     // construct Google authentication URL with the query string all filled out
