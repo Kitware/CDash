@@ -1276,6 +1276,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
                 unset($response['coverages'][$i]);
             }
         }
+        $response['coverages'] = array_values($response['coverages']);
     }
 
     // Generate coverage by group here.
