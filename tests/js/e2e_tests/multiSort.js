@@ -112,15 +112,9 @@ describe("multiSort", function() {
   it("sort Query Tests", function() {
     browser.get('queryTests.php?project=Trilinos&date=2011-07-22');
 
-    // Check that the builds are in the expected order
-    var visible_tds_row0 = element(by.repeater('build in pagination.filteredBuilds').row(0)).all(by.tagName('td')).filter(function(elem) { return elem.isDisplayed(); });
-    expect(visible_tds_row0.get(2).getText()).toBe('Sacado_dfad_sfc_example');
-    expect(visible_tds_row0.get(3).getText()).toBe('Failed');
-
-
-    var visible_tds_row24 = element(by.repeater('build in pagination.filteredBuilds').row(24)).all(by.tagName('td')).filter(function(elem) { return elem.isDisplayed(); });
-    expect(visible_tds_row24.get(2).getText()).toBe('TrilinosFramework_DepXmlDumpTests_WithPreCopyrightTrilinosExtraTrilinosRepo');
-    expect(visible_tds_row24.get(3).getText()).toBe('Failed');
+    // Clear default sorting by clicking on the Site header.
+    var site_header = element.all(by.className('table-heading1')).all(by.tagName('th')).filter(function(elem) { return elem.isDisplayed(); }).get(0);
+    browser.actions().mouseMove(site_header).keyUp(protractor.Key.SHIFT).click().perform();
 
     // Click on the Status header.
     var status_header = element.all(by.className('table-heading1')).all(by.tagName('th')).filter(function(elem) { return elem.isDisplayed(); }).get(3);
@@ -128,17 +122,28 @@ describe("multiSort", function() {
     status_header.click();
     expect(status_header.element(by.tagName('span')).getAttribute('class')).toContain("glyphicon-chevron-down");
 
-    // Wait for the page to load.
-    browser.waitForAngular();
+    // Check that the builds are in the expected order
+    var visible_tds_row0 = element(by.repeater('build in pagination.filteredBuilds').row(0)).all(by.tagName('td')).filter(function(elem) { return elem.isDisplayed(); });
+    expect(visible_tds_row0.get(2).getText()).toBe('TrilinosFramework_CompilerOptions_UnitTests');
+    expect(visible_tds_row0.get(3).getText()).toBe('Passed');
+
+
+    var visible_tds_row24 = element(by.repeater('build in pagination.filteredBuilds').row(24)).all(by.tagName('td')).filter(function(elem) { return elem.isDisplayed(); });
+    expect(visible_tds_row24.get(2).getText()).toBe('TrilinosFramework_DepTests_EnableEpetraExt_EnableAllForwardPackages');
+    expect(visible_tds_row24.get(3).getText()).toBe('Passed');
+
+    // Click on the Status header again.
+    status_header.click();
+    expect(status_header.element(by.tagName('span')).getAttribute('class')).toContain("glyphicon-chevron-up");
 
     // Check that the builds are in the expected order
     visible_tds_row0 = element(by.repeater('build in pagination.filteredBuilds').row(0)).all(by.tagName('td')).filter(function(elem) { return elem.isDisplayed(); });
-    expect(visible_tds_row0.get(2).getText()).toBe('Sacado_ad_example');
-    expect(visible_tds_row0.get(3).getText()).toBe('Passed');
+    expect(visible_tds_row0.get(2).getText()).toBe('TrilinosFramework_CheckinTest_UnitTests');
+    expect(visible_tds_row0.get(3).getText()).toBe('Failed');
 
     visible_tds_row24 = element(by.repeater('build in pagination.filteredBuilds').row(24)).all(by.tagName('td')).filter(function(elem) { return elem.isDisplayed(); });
-    expect(visible_tds_row24.get(2).getText()).toBe('Sacado_tradoptest_04_RE1');
-    expect(visible_tds_row24.get(3).getText()).toBe('Passed');
+    expect(visible_tds_row24.get(2).getText()).toBe('TrilinosFramework_DepTests_extraTrilinosRepo_EnableExtraPack_EnableExtraTPL1');
+    expect(visible_tds_row24.get(3).getText()).toBe('Failed');
   });
 
 });
