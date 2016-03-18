@@ -15,12 +15,49 @@
 =========================================================================*/
 
 include dirname(__DIR__) . '/config/config.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
 include_once 'include/common.php';
 require_once 'include/pdo.php';
+
+function getGoogleAuthenticateState()
+{
+    $requiredFields = array('csrfToken', 'rememberMe', 'requestedURI');
+
+    if (!isset($_GET['state'])) {
+        add_log('no state value passed via GET', 'getGoogleAuthenticateState', LOG_ERR);
+        return false;
+    }
+
+    $state = json_decode($_GET['state']);
+
+    if ($state === null) {
+        add_log('Invalid state value passed via GET', 'getGoogleAuthenticateState', LOG_ERR);
+        return false;
+    }
+
+    foreach ($requiredFields as $requiredField) {
+        if (!array_key_exists($requiredField, $state)) {
+            add_log('State expected ' . $requiredField, 'getGoogleAuthenticateState', LOG_ERR);
+            return false;
+        }
+    }
+
+    // don't send the user back to login.php if that's where they came from
+    if (strpos($state->requestedURI, 'login.php') !== false) {
+        $requestedURI = 'user.php';
+    }
+
+    return $state;
+}
 
 /** Google authentication */
 function googleAuthenticate($code)
 {
+    $state = getGoogleAuthenticateState();
+    if ($state === false) {
+        return;
+    }
+
     include dirname(__DIR__) . '/config/config.php';
     global $CDASH_DB_HOST, $CDASH_DB_LOGIN, $CDASH_DB_PASS, $CDASH_DB_NAME;
     $SessionCachePolicy = 'private_no_expire';
@@ -32,39 +69,12 @@ function googleAuthenticate($code)
     @ini_set('session.gc_maxlifetime', $CDASH_COOKIE_EXPIRATION_TIME + 600);
     session_start();
 
-    if (!isset($_GET['state'])) {
-        add_log('no state value passed via GET', 'googleAuthenticate', LOG_ERR);
-        return;
-    }
-
-    // Both the anti-forgery token and the user's requested URL are specified
-    // in the same "state" GET parameter.  Split them out here.
-    $splitState = explode('_AND_STATE_IS_', $_GET['state']);
-    if (sizeof($splitState) != 2) {
-        add_log('Expected two values after splitting state parameter, found ' .
-                sizeof($splitState), 'googleAuthenticate', LOG_ERR);
-        return;
-    }
-    $requestedURI = $splitState[0];
-    @$state = $splitState[1];
-
-    // don't send the user back to login.php if that's where they came from
-    if (strpos($requestedURI, 'login.php') !== false) {
-        $requestedURI = 'user.php';
-    }
-
     // check that the anti-forgery token is valid
-    if ($state != $_SESSION['cdash']['state']) {
-        add_log('state anti-forgery token mismatch: ' . $state .
-            ' vs ' . $_SESSION['cdash']['state'], LOG_ERR);
+    if ($state->csrfToken != $_SESSION['cdash']['csrfToken']) {
+        add_log('state anti-forgery token mismatch: ' . $state->csrfToken .
+                ' vs ' . $_SESSION['cdash']['csrfToken'], 'googleAuthenticate', LOG_ERR);
         return;
     }
-
-    // Request the access token
-    $headers = array(
-        'Content-Type: application/x-www-form-urlencoded;charset=UTF-8',
-        'Connection: Keep-Alive'
-    );
 
     $redirectURI = strtok(get_server_URI(false), '?');
     // The return value of get_server_URI can be inconsistent.
@@ -79,56 +89,24 @@ function googleAuthenticate($code)
         $redirectURI .= '/googleauth_callback.php';
     }
 
-    $postData = implode('&', array(
-        'grant_type=authorization_code',
-        'code=' . $_GET['code'],
-        'client_id=' . $GOOGLE_CLIENT_ID,
-        'client_secret=' . $GOOGLE_CLIENT_SECRET,
-        'redirect_uri=' . $redirectURI
-    ));
+    try {
+        $client = new Google_Client();
+        $client->setClientId($GOOGLE_CLIENT_ID);
+        $client->setClientSecret($GOOGLE_CLIENT_SECRET);
+        $client->setRedirectUri($redirectURI);
+        $client->authenticate($_GET['code']);
 
-    $url = 'https://accounts.google.com/o/oauth2/token';
-    $curl = curl_init();
-    curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_POST, 1);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $postData);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_PORT, 443);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-    $resp = curl_exec($curl);
-
-    $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-    if ($httpStatus != 200) {
-        add_log("Google access token request failed: $resp", 'googleAuthenticate', LOG_ERR);
+        $oauth = new Google_Service_Oauth2($client);
+        $me = $oauth->userinfo->get();
+        $tokenResponse = json_decode($client->getAccessToken());
+    } catch (Google_Auth_Exception $e) {
+        add_log('Google access token request failed: ' . $e->getMessage(),
+                'googleAuthenticate', LOG_ERR);
         return;
     }
-
-    $resp = json_decode($resp);
-    $accessToken = $resp->access_token;
-    $tokenType = $resp->token_type;
-
-    // Use the access token to get the user's email address
-    $headers = array(
-        'Authorization: ' . $tokenType . ' ' . $accessToken
-    );
-    $curl = curl_init();
-    curl_setopt($curl, CURLOPT_URL, 'https://www.googleapis.com/plus/v1/people/me');
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_PORT, 443);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-    $resp = curl_exec($curl);
-
-    $httpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-    if ($httpStatus != 200) {
-        add_log("Get Google user email address request failed: $resp", 'googleAuthenticate', LOG_ERR);
-        return;
-    }
-
-    // Extract the user's email address from the response.
-    $resp = json_decode($resp);
-    $email = strtolower($resp->emails[0]->value);
 
     // Check if this email address appears in our user database
+    $email = strtolower($me->getEmail());
     $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
     pdo_select_db("$CDASH_DB_NAME", $db);
     $sql = 'SELECT id,password FROM ' . qid('user') . " WHERE email='" . pdo_real_escape_string($email) . "'";
@@ -137,14 +115,19 @@ function googleAuthenticate($code)
     if (pdo_num_rows($result) == 0) {
         // if no match is found, redirect to pre-filled out registration page
         pdo_free_result($result);
-        $firstname = $resp->name->givenName;
-        $lastname = $resp->name->familyName;
+        $firstname = $me->getGivenName();
+        $lastname = $me->getFamilyName();
         header("Location: register.php?firstname=$firstname&lastname=$lastname&email=$email");
         return false;
     }
 
     $user_array = pdo_fetch_array($result);
     $pass = $user_array['password'];
+
+    if ($state->rememberMe) {
+        require_once 'include/login_functions.php';
+        setRememberMeCookie($user_array['id']);
+    }
 
     $sessionArray = array(
         'login' => $email,
@@ -155,7 +138,7 @@ function googleAuthenticate($code)
     $_SESSION['cdash'] = $sessionArray;
     session_write_close();
     pdo_free_result($result);
-    header("Location: $requestedURI");
+    header("Location: $state->requestedURI");
     return true;                               // authentication succeeded
 }
 

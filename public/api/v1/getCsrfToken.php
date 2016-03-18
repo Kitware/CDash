@@ -17,9 +17,9 @@
 session_name('CDash');
 session_start();
 
-if (empty($_SESSION['cdash']) || empty($_SESSION['cdash']['state'])) {
+if (empty($_SESSION['cdash']) || empty($_SESSION['cdash']['csrfToken'])) {
     echo '';
     return;
 }
 
-echo $_SESSION['cdash']['state'];
+echo $_SESSION['cdash']['csrfToken'];

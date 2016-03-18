@@ -14,6 +14,29 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+function setRememberMeCookie($userId)
+{
+    $cookiename = 'CDash-' . $_SERVER['SERVER_NAME'];
+    $time = time() + 60 * 60 * 24 * 30; // 30 days;
+
+    // Create a new password
+    $keychars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    $length = 32;
+
+    $key = '';
+    $max = strlen($keychars) - 1;
+    for ($i = 0; $i <= $length; $i++) {
+        // random_int is available in PHP 7 and the random_compat PHP 5.x
+        // polyfill included in the Composer package.json dependencies.
+        $key .= substr($keychars, random_int(0, $max), 1);
+    }
+
+    // Update the user key
+    if (pdo_query('UPDATE ' . qid('user') . " SET cookiekey='" . $key . "' WHERE id=" . qnum($userId)) !== false) {
+        setcookie($cookiename, $userId . $key, $time);
+    }
+}
+
 /** Database authentication */
 function databaseAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
 {
@@ -45,26 +68,7 @@ function databaseAuthenticate($email, $password, $SessionCachePolicy, $rememberm
         return true;                               // authentication succeeded
     } elseif (md5($password) == $pass) {
         if ($rememberme) {
-            $cookiename = 'CDash-' . $_SERVER['SERVER_NAME'];
-            $time = time() + 60 * 60 * 24 * 30; // 30 days;
-
-            // Create a new password
-            $keychars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            $length = 32;
-
-            $key = '';
-            $max = strlen($keychars) - 1;
-            for ($i = 0; $i <= $length; $i++) {
-                // random_int is available in PHP 7 and the random_compat PHP 5.x
-                // polyfill included in the Composer package.json dependencies.
-                $key .= substr($keychars, random_int(0, $max), 1);
-            }
-
-            $value = $user_array['id'] . $key;
-            setcookie($cookiename, $value, $time);
-
-            // Update the user key
-            pdo_query('UPDATE ' . qid('user') . " SET cookiekey='" . $key . "' WHERE id=" . qnum($user_array['id']));
+            setRememberMeCookie($user_array['id']);
         }
 
         session_name('CDash');
@@ -235,7 +239,11 @@ function authenticate($email, $password, $SessionCachePolicy, $rememberme)
     }
 }
 
-/** Authentication function */
+/**
+ * Authentication function
+ * This is called on every page load where common.php is selected, as well as when
+ * submitting the login form.
+ **/
 function auth($SessionCachePolicy = 'private_no_expire')
 {
     include dirname(__DIR__) . '/config/config.php';
@@ -388,6 +396,8 @@ function LoginForm($loginerror)
     if ($GOOGLE_CLIENT_ID != '' && $GOOGLE_CLIENT_SECRET != '') {
         $xml .= '<oauth2>';
         $xml .= add_XML_value('client', $GOOGLE_CLIENT_ID);
+        // Google OAuth needs to know the base url to redirect back to
+        $xml .= add_XML_value('CDASH_BASE_URL', $CDASH_BASE_URL);
         $xml .= '</oauth2>';
     }
 
