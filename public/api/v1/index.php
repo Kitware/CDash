@@ -1023,16 +1023,16 @@ function echo_main_dashboard_JSON($project_instance, $date)
                 $npass = 0;
                 while ($label_row = pdo_fetch_array($labels_result)) {
                     switch ($label_row['status']) {
-                  case 'passed':
-                      $npass++;
-                      break;
-                  case 'failed':
-                      $nfail++;
-                      break;
-                  case 'notrun':
-                      $nnotrun++;
-                      break;
-                }
+                        case 'passed':
+                            $npass++;
+                            break;
+                        case 'failed':
+                            $nfail++;
+                            break;
+                        case 'notrun':
+                            $nnotrun++;
+                            break;
+                    }
                 }
 
                 $only_new_tests = ' AND build2test.newstatus=1 ';
