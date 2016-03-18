@@ -30,8 +30,10 @@ CDash.directive('linechart', function() {
     link: function(scope, element, attrs) {
       if (scope.groupname) {
         var data = JSON.parse(scope.data);
-        element[0].id = scope.groupname + "_" + scope.measurementname + "_chart";
-        makeLineChart(element[0].id, data, scope.project, scope.anchor, 0, scope.sort);
+        if (data.length > 0) {
+          element[0].id = scope.groupname + "_" + scope.measurementname + "_chart";
+          makeLineChart(element[0].id, data, scope.project, scope.anchor, 0, scope.sort);
+        }
       }
     }
   };
