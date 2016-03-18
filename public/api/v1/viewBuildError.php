@@ -14,6 +14,20 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+/**
+ * View errors of a particular build, does not support parent builds.
+ *
+ * GET /viewBuildError.php
+ * Required Params:
+ * buildid=[integer] The ID of the build
+ *
+ * Optional Params:
+ * type=[integer] (default 0) The type of build errors to view, 0 for errors, 1 for warnings
+ * date=[YYYY-mm-dd]
+ * onlydeltan=[anything] Only show errors that were resolved by this build
+ * onlydeltap=[anything] Only show new errors that arose from this build
+ **/
+
 $noforcelogin = 1;
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
@@ -39,7 +53,7 @@ $response['title'] = 'CDash : View Build Errors';
 // Checks
 if (!isset($buildid) || !is_numeric($buildid)) {
     $response['error'] = 'Not a valid buildid!';
-    echo json_encode($response);
+    echo json_encode($response); // @todo should return a 400
     return;
 }
 
