@@ -287,46 +287,9 @@ if (isset($_GET['onlydeltan'])) {
     }
 
     // Build error table
-    $errors = pdo_query("SELECT * FROM builderror WHERE buildid='$buildid' AND type='$type'" . $extrasql . ' ORDER BY logline ASC');
-    $errorid = 0;
-    while ($error_array = pdo_fetch_array($errors)) {
-        $error_response = array();
-        $error_response['id'] = $errorid;
-        $error_response['new'] = $error_array['newstatus'];
-        $error_response['logline'] = $error_array['logline'];
-
-        $projectCvsUrl = $project_array['cvsurl'];
-        $text = $error_array['text'];
-
-        // Detect if the source directory has already been replaced by CTest with /.../
-        $pattern = '&/.../(.*?)/&';
-        $matches = array();
-        preg_match($pattern, $text, $matches);
-        if (sizeof($matches) > 1) {
-            $file = $error_array['sourcefile'];
-            $directory = $matches[1];
-        } else {
-            $file = basename($error_array['sourcefile']);
-            $directory = dirname($error_array['sourcefile']);
-        }
-
-        $cvsurl = get_diff_url($projectid, $projectCvsUrl, $directory, $file, $revision);
-
-        $error_response['cvsurl'] = $cvsurl;
-        // when building without launchers, CTest truncates the source dir to /.../
-        // use this pattern to linkify compiler output.
-        $precontext = linkify_compiler_output($projectCvsUrl, "/\.\.\.", $revision, $error_array['precontext']);
-        $text = linkify_compiler_output($projectCvsUrl, "/\.\.\.", $revision, $error_array['text']);
-        $postcontext = linkify_compiler_output($projectCvsUrl, "/\.\.\.", $revision, $error_array['postcontext']);
-
-        $error_response['precontext'] = $precontext;
-        $error_response['text'] = $text;
-        $error_response['postcontext'] = $postcontext;
-        $error_response['sourcefile'] = $error_array['sourcefile'];
-        $error_response['sourceline'] = $error_array['sourceline'];
-
-        $errorid++;
-        $errors_response[] = $error_response;
+    $buildErrors = $build->GetBuildErrors($type, $extrasql);
+    while ($buildError = pdo_fetch_array($buildErrors)) {
+        $errors_response[] = builderror::marshal($buildError, $project_array, $revision);
     }
 
     // Build failure table
@@ -405,7 +368,13 @@ if (isset($_GET['onlydeltan'])) {
     }
 }
 
-$response['errors'] = $errors_response;
+// Add id to errors
+$response['errors'] = array();
+foreach ($errors_response as $key => $error) {
+    $error['id'] = $key;
+    $response['errors'][] = $error;
+}
+
 $end = microtime_float();
 $response['generationtime'] = round($end - $start, 3);
 
