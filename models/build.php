@@ -387,6 +387,15 @@ class build
         return 0;
     }
 
+    public function GetBuildErrors($type, $extrasql)
+    {
+        return pdo_query(
+            "SELECT * FROM builderror " .
+            "WHERE buildid = '" . $this->Id . "' AND " .
+            "type = '$type' $extrasql " .
+            "ORDER BY logline ASC");
+    }
+
     /** Get the build id from its name */
     public function GetIdFromName($subproject)
     {
