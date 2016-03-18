@@ -102,6 +102,7 @@ add_php_test(passwordcomplexity)
 add_php_test(crosssubprojectcoverage)
 add_php_test(aggregatesubprojectcoverage)
 add_php_test(configurewarnings)
+add_php_test(filtertestlabels)
 
 if(CDASH_GITHUB_USERNAME AND CDASH_GITHUB_PASSWORD)
   add_php_test(github_PR_comment)
