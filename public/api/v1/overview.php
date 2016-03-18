@@ -558,7 +558,7 @@ echo json_encode(cast_data_for_JSON($response));
 // Replace all non-word characters with underscores.
 function sanitize_string($input_string)
 {
-    return preg_replace('/\W/','_', $input_string);
+    return preg_replace('/\W/', '_', $input_string);
 }
 
 // Check if a given groupid belongs to one of our general overview groups.
