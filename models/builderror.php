@@ -74,4 +74,48 @@ class builderror
         }
         return true;
     }
+
+    public static function GetSourceFile($data) {
+        // Detect if the source directory has already been replaced by CTest with /.../
+        $sourceFile = array();
+        $pattern = '&/.../(.*?)/&';
+        $matches = array();
+        preg_match($pattern, $data['text'], $matches);
+
+        if (sizeof($matches) > 1) {
+            $sourceFile['file'] = $data['sourcefile'];
+            $sourceFile['directory'] = $matches[1];
+        } else {
+            $sourceFile['file'] = basename($data['sourcefile']);
+            $sourceFile['directory'] = dirname($data['sourcefile']);
+        }
+
+        return $sourceFile;
+    }
+
+    // Ideally $data would be loaded into $this
+    // need an id field?
+    /**
+     * Marshals the data of a particular build error into a serializable
+     * friendly format.
+     *
+     * Requires the $data of a build error, the $project, and the buildupdate.revision.
+     **/
+    public static function marshal($data, $project, $revision)
+    {
+        // Sets up access to $file and $directory
+        extract(self::GetSourceFile($data));
+        return array(
+            'new' => $data['newstatus'],
+            'logline' => $data['logline'],
+            'cvsurl' => get_diff_url($project['id'], $data['cvsurl'], $directory, $file, $revision),
+            // when building without launchers, CTest truncates the source dir to /.../
+            // use this pattern to linkify compiler output.
+            'precontext' => linkify_compiler_output($data['cvsurl'], "/\.\.\.", $revision, $data['precontext']),
+            'text' => linkify_compiler_output($data['cvsurl'], "/\.\.\.", $revision, $data['text']),
+            'postcontext' => linkify_compiler_output($data['cvsurl'], "/\.\.\.", $revision, $data['postcontext']),
+            'sourcefile' => $data['sourcefile'],
+            'sourceline' => $data['sourceline']
+        );
+    }
 }
