@@ -37,26 +37,12 @@ a:hover{
  margin-bottom: 0px;
  margin-left: auto;
 }
-.topline {
- background-image: url(../img/bg1.gif);
- background-repeat: repeat-x;
-}
 .paddl {
  margin: 0px;
  padding-top: 0px;
  padding-right: 0px;
  padding-bottom: 0px;
  padding-left: 11px;
-}
-
-.topbg {
- background-image: url(../img/topbg1.gif);
- background-repeat: repeat-x;
-}
-
-.topbgleft {
- background-image: url(../img/top_04.jpg);
- background-repeat: repeat-x;
 }
 
 .table-nobuild {
@@ -81,25 +67,11 @@ height: expression(this.height > 110 ? 110: true);
  font-weight: normal;
  color: #10365b;
 }
-.topbg2 {
- background-image: url(../img/topbg2.gif);
- background-repeat: repeat-x;
-}
-.footer {
- font-size: 14px;
- font-weight: normal;
- color: #666666;
- background-image: url(../img/bgfo.gif);
- background-repeat: repeat-x;
-}
-.footer img{
- vertical-align: middle;
-}
 
- .na { background-color : #cccccc; }
- .measurement { background-color : #b0c4de; }
+.na { background-color : #cccccc; }
+.measurement { background-color : #b0c4de; }
 
- .table-heading {
+.table-heading {
  background-color : #c7d7e7; /* #c1c1c1 */
  font-size: 13px;
  padding:0px;
@@ -341,10 +313,6 @@ background-color: #adcae6
  padding-right: 0px;
  padding-bottom: 0px;
  padding-left: 7px;
-}.insd {
- background-image: url(../img/top_02.jpg);
- margin: 0px;
- padding: 0px;
 }
 .inn1 {
  font-family: Arial, Helvetica, sans-serif;
@@ -353,7 +321,6 @@ background-color: #adcae6
  text-transform: uppercase;
  color: #fcdb34;
 }
-
 .inn2 {
  font-family: Arial, Helvetica, sans-serif;
  font-size: 24px;
@@ -361,43 +328,13 @@ background-color: #adcae6
  color: #FFFFFF;
  padding-left: 20px;
 }
-
-.insd2 {
- background-image: url(../img/top_03.jpg);
- background-repeat: no-repeat;
- background-position: left top;
-}
-.insd3 {
- background-image: url(../img/menu2_07.jpg);
- background-repeat: no-repeat;
- background-position: left top;
-}
-.insdd {
- background-image: url(../img/top_02.jpg);
- margin: 0px;
- padding-top: 32px;
- padding-right: 0px;
- padding-bottom: 0px;
- padding-left: 143px;
-}
-
 #submm{
  background-color: #3a596d;
  background-image: none;
 }
-.bgtm {
- background-image: url(../img/bgtm.gif);
- background-repeat: repeat-x;
- background-position: bottom;
-}
-
 a:hover#submm{
  background-color: #CCCCCC;
  background-image: none;
-}
-#activem{
- background-image: url(../img/menub2.gif);
- background-position: right bottom;
 }
 
 #JT_arrow_left{
