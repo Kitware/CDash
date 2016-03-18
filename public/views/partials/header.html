@@ -2,11 +2,11 @@
   <div id="headertop">
     <div id="topmenu">
       <a href="user.php">
-        <span ng-if="cdash.userid > 0">My CDash</span>
-        <span ng-if="!cdash.userid || cdash.userid == 0">Login</span>
+        <span ng-if="cdash.user.id > 0">My CDash</span>
+        <span ng-if="!cdash.user.id || cdash.user.id == 0">Login</span>
       </a>
       <a href="index.php">All Dashboards</a>
-      <a href="user.php?logout=1" ng-if="cdash.userid > 0">Log Out</a>
+      <a href="user.php?logout=1" ng-if="cdash.user.id > 0">Log Out</a>
     </div>
 
     <div id="datetime"> {{cdash.datetime}} </div>

@@ -1904,11 +1904,16 @@ function begin_JSON_response()
     $response = array();
     $response['version'] = $CDASH_VERSION;
 
+    $user_response = array();
     $userid = 0;
     if (isset($_SESSION['cdash']) and isset($_SESSION['cdash']['loginid'])) {
         $userid = $_SESSION['cdash']['loginid'];
+        $row = pdo_single_row_query(
+            "SELECT admin FROM user WHERE id='$userid'");
+        $user_response['admin'] = $row['admin'];
     }
-    $response['userid'] = $userid;
+    $user_response['id'] = $userid;
+    $response['user'] = $user_response;
 
     // Check for local overrides of common view partials.
     $files_to_check = array('header', 'footer');
@@ -1960,20 +1965,23 @@ function get_dashboard_JSON($projectname, $date, &$response)
         $project_array['nightlytime'] = '00:00:00';
     }
 
+    if (is_null($date)) {
+        $date = date(FMT_DATE);
+    }
     list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $project_array['nightlytime']);
 
     $response['datetime'] = date('l, F d Y H:i:s', time());
     $response['date'] = $date;
     $response['unixtimestamp'] = $currentstarttime;
     $response['startdate'] = date('l, F d Y H:i:s', $currentstarttime);
-    $response['svn'] = make_cdash_url(htmlentities($project_array['cvsurl']));
+    $response['vcs'] = make_cdash_url(htmlentities($project_array['cvsurl']));
     $response['bugtracker'] = make_cdash_url(htmlentities($project_array['bugtrackerurl']));
     $response['googletracker'] = htmlentities($project_array['googletracker']);
     $response['documentation'] = make_cdash_url(htmlentities($project_array['documentationurl']));
     $response['projectid'] = $projectid;
     $response['projectname'] = $project_array['name'];
     $response['projectname_encoded'] = urlencode($project_array['name']);
-    $response['projectpublic'] = $project_array['public'];
+    $response['public'] = $project_array['public'];
     $response['previousdate'] = $previousdate;
     $response['nextdate'] = $nextdate;
     $response['logoid'] = getLogoID($projectid);
@@ -1992,18 +2000,17 @@ function get_dashboard_JSON($projectname, $date, &$response)
     }
 
     $userid = 0;
-    if (isset($_SESSION['cdash'])) {
+    if (isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid'])) {
         $userid = $_SESSION['cdash']['loginid'];
-
-        // Is the user super administrator
-        $userquery = pdo_query('SELECT admin FROM ' . qid('user') . " WHERE id='$userid'");
-        $user_array = pdo_fetch_array($userquery);
-        $response['admin'] = $user_array[0];
-
-        // Is the user administrator of the project
-        $userquery = pdo_query('SELECT role FROM user2project WHERE userid=' . qnum($userid) . ' AND projectid=' . qnum($projectid));
-        $user_array = pdo_fetch_array($userquery);
-        $response['projectrole'] = $user_array[0];
+        // Is the user an administrator of this project?
+        $row = pdo_single_row_query(
+            'SELECT role FROM user2project
+            WHERE userid=' . qnum($userid) . ' AND
+            projectid=' . qnum($projectid));
+        $response['projectrole'] = $row[0];
+        if ($response['projectrole'] > 1) {
+            $response['user']['admin'] = 1;
+        }
     }
     $response['userid'] = $userid;
 }

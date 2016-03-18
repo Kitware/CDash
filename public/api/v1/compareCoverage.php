@@ -19,6 +19,8 @@ require_once 'include/pdo.php';
 include 'include/common.php';
 include 'include/version.php';
 require_once 'models/project.php';
+$noforcelogin = 1;
+include 'public/login.php';
 
 $start = microtime_float();
 $response = begin_JSON_response();
@@ -70,9 +72,7 @@ if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
 
 list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $project_instance->NightlyTime);
 
-$response['date'] = $date;
-$response['projectid'] = $projectid;
-$response['projectname'] = $projectname;
+get_dashboard_JSON($projectname, $date, $response);
 
 $page_id = 'compareCoverage.php';
 
@@ -82,9 +82,8 @@ $end_timestamp = $currentstarttime + 3600 * 24;
 $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
 $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
 
-$menu = array();
-
 // Menu
+$menu = array();
 $projectname_encoded = urlencode($projectname);
 if ($date == '') {
     $back = "index.php?project=$projectname_encoded";
@@ -92,7 +91,6 @@ if ($date == '') {
     $back = "index.php?project=$projectname_encoded&date=$date";
 }
 $menu['back'] = $back;
-
 $menu['previous'] = "$page_id?project=$projectname_encoded&date=$previousdate";
 
 $today = date(FMT_DATE, time());
@@ -103,29 +101,7 @@ if (has_next_date($date, $currentstarttime)) {
 } else {
     $menu['nonext'] = '1';
 }
-
 $response['menu'] = $menu;
-
-// User
-if (isset($_SESSION['cdash'])) {
-    $user_response = array();
-    $userid = $_SESSION['cdash']['loginid'];
-    $user2project = pdo_query(
-        "SELECT role FROM user2project
-            WHERE userid='$userid' AND projectid='$projectid'");
-    $user2project_array = pdo_fetch_array($user2project);
-    $user = pdo_query(
-        'SELECT admin FROM ' . qid('user') . "  WHERE id='$userid'");
-    $user_array = pdo_fetch_array($user);
-    $user_response['id'] = $userid;
-    $isadmin = 0;
-    if ($user2project_array['role'] > 1 || $user_array['admin']) {
-        $isadmin = 1;
-    }
-    $user_response['admin'] = $isadmin;
-    $user_response['projectrole'] = $user2project_array['role'];
-    $response['user'] = $user_response;
-}
 
 // Get the list of builds we're interested in.
 $parentid = null;

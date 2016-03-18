@@ -63,8 +63,6 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
     $Project = $project_instance;
     $projectid = $project_instance->Id;
 
-    $homeurl = make_cdash_url(htmlentities($Project->HomeUrl));
-
     if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
         $response['requirelogin'] = 1;
         echo json_encode($response);
@@ -97,43 +95,9 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
 
     list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $Project->NightlyTime);
 
-    $vcsurl = make_cdash_url(htmlentities($Project->CvsUrl));
-    $homeurl = make_cdash_url(htmlentities($Project->HomeUrl));
-    $bugurl = make_cdash_url(htmlentities($Project->BugTrackerUrl));
-    $googletracker = htmlentities($Project->GoogleTracker);
-    $docurl = make_cdash_url(htmlentities($Project->DocumentationUrl));
-
     // Main dashboard section
+    get_dashboard_JSON($Project->GetName(), $date, $response);
     $projectname_encoded = urlencode($Project->Name);
-    $response['datetime'] = date('l, F d Y H:i:s T', time());
-    $response['date'] = $date;
-    $response['unixtimestamp'] = $currentstarttime;
-    $response['vcs'] = $vcsurl;
-    $response['bugtracker'] = $bugurl;
-    $response['googletracker'] = $googletracker;
-    $response['documentation'] = $docurl;
-    $response['logoid'] = $Project->getLogoID();
-    $response['projectid'] = $projectid;
-    $response['projectname'] = $Project->Name;
-    $response['projectname_encoded'] = $projectname_encoded;
-    $response['previousdate'] = $previousdate;
-    $response['projectpublic'] = $Project->Public;
-    $response['nextdate'] = $nextdate;
-
-    if (empty($Project->HomeUrl)) {
-        $response['home'] =
-            'index.php?project=' . urlencode($Project->Name);
-    } else {
-        $response['home'] = $homeurl;
-    }
-
-    if ($CDASH_USE_LOCAL_DIRECTORY && file_exists('local/models/proProject.php')) {
-        include_once 'local/models/proProject.php';
-        $pro = new proProject;
-        $pro->ProjectId = $projectid;
-        $response['proedition'] = $pro->GetEdition(1);
-    }
-
     if ($currentstarttime > time()) {
         $response['future'] = 1;
     } else {
@@ -163,25 +127,6 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
 
     $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
     $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
-
-    // User
-    if (isset($_SESSION['cdash'])) {
-        $user_response = array();
-        $userid = $_SESSION['cdash']['loginid'];
-        $user2project = pdo_query("SELECT role FROM user2project WHERE userid='$userid' and projectid='$projectid'");
-        $user2project_array = pdo_fetch_array($user2project);
-        $user = pdo_query('SELECT admin FROM ' . qid('user') . "  WHERE id='$userid'");
-        $user_array = pdo_fetch_array($user);
-        $user_response['id'] = $userid;
-        $response['userid'] = $userid;
-        $isadmin = 0;
-        if ($user2project_array['role'] > 1 || $user_array['admin']) {
-            $isadmin = 1;
-        }
-        $user_response['admin'] = $isadmin;
-        $user_response['projectrole'] = $user2project_array['role'];
-        $response['user'] = $user_response;
-    }
 
     // Get some information about the project
     $project_response = array();

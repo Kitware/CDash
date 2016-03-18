@@ -24,7 +24,7 @@
       <img src="img/Info.png" alt="info" class="icon"></img>
     </a>
 
-    <div ng-if="cdash.userid > 0">
+    <div ng-if="cdash.user.id > 0">
       <!-- Display folder icon for logged in users -->
       <a ng-if="build.id" href="javascript:;" ng-click="toggleAdminOptions(build)">
         <img src="img/folder.png" class="icon"/>
