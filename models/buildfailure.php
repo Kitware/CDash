@@ -214,7 +214,6 @@ class buildfailure
             'outputfile' => $data['outputfile'],
             'outputtype' => $data['outputtype'],
             'workingdirectory' => $data['workingdirectory'],
-            'arguments' => self::GetBuildFailureArguments($data['id'], 'bf.id ASC'),
             'exitcondition' => $data['exitcondition']
         ), self::GetBuildFailureArguments($data['id']));
 
@@ -229,7 +228,7 @@ class buildfailure
 
             $source_dir = get_source_dir($project['id'], $project['cvsurl'], $directory);
 
-            if ($source_dir !== null) {
+            if ($source_dir !== null && $linkifyOutput) {
                 $marshaled['stderror'] = linkify_compiler_output($project['cvsurl'], $source_dir,
                                                                  $revision, $data['stderror']);
                 $marshaled['stdoutput'] = linkify_compiler_output($project['cvsurl'], $source_dir,

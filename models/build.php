@@ -388,6 +388,27 @@ class build
         return 0;
     }
 
+    /**
+     * Return the errors that have been resolved from this build.
+     **/
+    public function GetResolvedBuildErrors($type) {
+        $previousBuild = $this->GetPreviousBuildId();
+
+        if ($previousBuild === 0) {
+            throw new Exception('Build has no previous build to find resolved errors against.');
+        } else {
+            return pdo_query(
+                'SELECT * FROM
+                 (SELECT * FROM builderror
+                  WHERE buildid=' . $previousBuild . ' AND type=' . $type . ') AS builderrora
+                 LEFT JOIN
+                 (SELECT crc32 AS crc32b FROM builderror
+                  WHERE buildid=' . $this->Id . ' AND type=' . $type . ') AS builderrorb
+                  ON builderrora.crc32=builderrorb.crc32b
+                 WHERE builderrorb.crc32b IS NULL');
+        }
+    }
+
     public function GetBuildErrors($type, $extrasql)
     {
         return pdo_query(
@@ -412,6 +433,29 @@ class build
         add_last_sql_error('build.GetBuildFailures', $projectid, $this->Id);
 
         return $q;
+    }
+
+    /**
+     * Get build failures (with details) that occurred in the most recent build
+     * but NOT this build.
+     **/
+    public function GetResolvedBuildFailures($type) {
+        $currentFailuresQuery = "SELECT bf.detailsid FROM buildfailure AS bf
+                                 LEFT JOIN buildfailuredetails AS bfd ON (bf.detailsid=bfd.id)
+                                 WHERE bf.buildid=" . $this->Id . " AND bfd.type=$type";
+
+        $resolvedBuildFailures = pdo_query(
+                "SELECT bf.id, bfd.language, bf.sourcefile, bfd.targetname, bfd.outputfile,
+                bfd.outputtype, bf.workingdirectory, bfd.stderror, bfd.stdoutput,
+                bfd.exitcondition
+                FROM buildfailure AS bf
+                LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
+                WHERE bf.buildid=" . $this->GetPreviousBuildId() . "
+                AND bfd.type = $type
+                AND bfd.id NOT IN ($currentFailuresQuery)"
+        );
+
+        return $resolvedBuildFailures;
     }
 
     /** Get the build id from its name */

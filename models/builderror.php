@@ -106,7 +106,7 @@ class builderror
         // Sets up access to $file and $directory
         extract(self::GetSourceFile($data));
         return array(
-            'new' => $data['newstatus'],
+            'new' => (isset($data['newstatus'])) ? $data['newstatus'] : -1,
             'logline' => $data['logline'],
             'cvsurl' => get_diff_url($project['id'], $data['cvsurl'], $directory, $file, $revision),
             // when building without launchers, CTest truncates the source dir to /.../
