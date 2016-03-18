@@ -396,6 +396,24 @@ class build
             "ORDER BY logline ASC");
     }
 
+    public function GetBuildFailures($type, $extrasql, $orderby=false)
+    {
+        $orderby = ($orderby === false) ? '' : "ORDER BY $orderby";
+
+        $q = pdo_query(
+            "SELECT bf.id, bfd.language, bf.sourcefile, bfd.targetname, bfd.outputfile,
+            bfd.outputtype, bf.workingdirectory, bfd.stderror, bfd.stdoutput,
+            bfd.exitcondition
+            FROM buildfailure AS bf
+            LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
+            WHERE bf.buildid='" . $this->Id . "' AND bfd.type='$type' $extrasql $orderby");
+
+        // $this->Id should be projectid
+        add_last_sql_error('viewBuildError get_failures', $this->Id);
+
+        return $q;
+    }
+
     /** Get the build id from its name */
     public function GetIdFromName($subproject)
     {

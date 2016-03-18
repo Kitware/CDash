@@ -293,18 +293,10 @@ if (isset($_GET['onlydeltan'])) {
     }
 
     // Build failure table
-    $errors = pdo_query(
-        "SELECT bf.id, bfd.language, bf.sourcefile, bfd.targetname, bfd.outputfile,
-            bfd.outputtype, bf.workingdirectory, bfd.stderror, bfd.stdoutput,
-            bfd.exitcondition
-     FROM buildfailure AS bf
-     LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
-     WHERE bf.buildid='$buildid' AND bfd.type='$type'" . $extrasql . '
-     ORDER BY bf.id ASC');
-    add_last_sql_error('viewBuildError get_failures', $projectid);
-    while ($error_array = pdo_fetch_array($errors)) {
+    // getbuildfailures needs projectid for failure?
+    $buildFailures = $build->getBuildFailures($type, $extrasql, 'bf.id ASC');
+    while ($error_array = pdo_fetch_array($buildFailures)) {
         $error_response = array();
-        $error_response['id'] = $errorid;
         $error_response['language'] = $error_array['language'];
         $error_response['sourcefile'] = $error_array['sourcefile'];
         $error_response['targetname'] = $error_array['targetname'];
@@ -363,7 +355,6 @@ if (isset($_GET['onlydeltan'])) {
             $error_response['stdoutput'] = $stdoutput;
         }
         $error_response['exitcondition'] = $error_array['exitcondition'];
-        $errorid++;
         $errors_response[] = $error_response;
     }
 }
