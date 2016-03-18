@@ -85,14 +85,13 @@ if ($response['user']['admin'] != 1) {
 // Check if we are saving an overview layout.
 if (isset($_POST['saveLayout'])) {
     $inputRows = json_decode($_POST['saveLayout'], true);
+    if (!is_null($inputRows)) {
+        // Remove any old overview layout from this project.
+        pdo_query(
+                'DELETE FROM overview_components WHERE projectid=' .
+                qnum(pdo_real_escape_numeric($projectid)));
+        add_last_sql_error('manageOverview::saveLayout::DELETE', $projectid);
 
-    // Remove any old overview layout from this project.
-    pdo_query(
-        'DELETE FROM overview_components WHERE projectid=' .
-        qnum(pdo_real_escape_numeric($projectid)));
-    add_last_sql_error('manageOverview::saveLayout::DELETE', $projectid);
-
-    if (count($inputRows) > 0) {
         // Construct a query to insert the new layout.
         $query = 'INSERT INTO overview_components (projectid, buildgroupid, position, type) VALUES ';
         foreach ($inputRows as $inputRow) {
