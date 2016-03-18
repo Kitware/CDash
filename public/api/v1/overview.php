@@ -555,15 +555,10 @@ $end = microtime_float();
 $response['generationtime'] = round($end - $start, 3);
 echo json_encode(cast_data_for_JSON($response));
 
-// Replace various characters that trip up Javascript with underscores.
+// Replace all non-word characters with underscores.
 function sanitize_string($input_string)
 {
-    $retval = str_replace(' ', '_', $input_string);
-    $retval = str_replace('-', '_', $retval);
-    $retval = str_replace('.', '_', $retval);
-    $retval = str_replace('(', '_', $retval);
-    $retval = str_replace(')', '_', $retval);
-    return $retval;
+    return preg_replace('/\W/','_', $input_string);
 }
 
 // Check if a given groupid belongs to one of our general overview groups.
