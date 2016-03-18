@@ -78,8 +78,7 @@ class FilterTestLabelsTestCase extends KWWebTestCase
             if ($buildgroup['numtestpass'] != 0) {
                 throw new Exception('Expected numtestpass=0, found numtestpass= ' . qnum($buildgroup['numtestpass']));
             }
-
-         } catch (Exception $e) {
+        } catch (Exception $e) {
             $success = false;
             $error_msg = $e->getMessage();
         }

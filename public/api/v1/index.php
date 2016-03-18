@@ -357,9 +357,8 @@ function echo_main_dashboard_JSON($project_instance, $date)
             } elseif ($filter['compare'] == 93) {
                 $included_subprojects[] = $filter['value'];
             }
-        }
-        else if ($filter['field'] == 'label') {
-          $filter_on_labels = true;
+        } elseif ($filter['field'] == 'label') {
+            $filter_on_labels = true;
         }
     }
 
@@ -1008,22 +1007,22 @@ function echo_main_dashboard_JSON($project_instance, $date)
             }
 
             if ($filter_on_labels) {
-              $label_filter_sql = get_filterdata_from_request('queryTests.php')['sql'];
-              $label_query_base = "SELECT build2test.status, test.name AS testname
+                $label_filter_sql = get_filterdata_from_request('queryTests.php')['sql'];
+                $label_query_base = "SELECT build2test.status, test.name AS testname
                                     FROM build AS b
                                     JOIN build2test ON (b.id = build2test.buildid)
                                     JOIN test ON (test.id = build2test.testid)
                                     WHERE b.projectid = '" . $project_array['id'] . "' ";
 
-               $label_filter_query = $label_query_base . $parent_clause . $date_clause . ' ' .
+                $label_filter_query = $label_query_base . $parent_clause . $date_clause . ' ' .
                                      $label_filter_sql . $limit_sql;
 
-              $labels_result = pdo_query($label_filter_query);
-              $nnotrun = 0;
-              $nfail = 0;
-              $npass = 0;
-              while ($label_row = pdo_fetch_array($labels_result)) {
-                switch ($label_row['status']) {
+                $labels_result = pdo_query($label_filter_query);
+                $nnotrun = 0;
+                $nfail = 0;
+                $npass = 0;
+                while ($label_row = pdo_fetch_array($labels_result)) {
+                    switch ($label_row['status']) {
                   case 'passed':
                       $npass++;
                       break;
@@ -1034,21 +1033,21 @@ function echo_main_dashboard_JSON($project_instance, $date)
                       $nnotrun++;
                       break;
                 }
-              }
+                }
 
-              $only_new_tests = ' AND build2test.newstatus=1 ';
-              $label_filter_query = $label_query_base . $only_new_tests .
+                $only_new_tests = ' AND build2test.newstatus=1 ';
+                $label_filter_query = $label_query_base . $only_new_tests .
                                     $parent_clause . $date_clause . ' ' .
                                     $label_filter_sql . $limit_sql;
-              $labels_result = pdo_query($label_filter_query);
-              $test_response['nfaildiffp'] = 0;
-              $test_response['nfaildiffn'] = 0;
-              $test_response['npassdiffp'] = 0;
-              $test_response['npassdiffn'] = 0;
-              $test_response['nnotrundiffp'] = 0;
-              $test_response['nnotrundiffn'] = 0;
-              while ($label_row = pdo_fetch_array($labels_result)) {
-                switch ($label_row['status']) {
+                $labels_result = pdo_query($label_filter_query);
+                $test_response['nfaildiffp'] = 0;
+                $test_response['nfaildiffn'] = 0;
+                $test_response['npassdiffp'] = 0;
+                $test_response['npassdiffn'] = 0;
+                $test_response['nnotrundiffp'] = 0;
+                $test_response['nnotrundiffn'] = 0;
+                while ($label_row = pdo_fetch_array($labels_result)) {
+                    switch ($label_row['status']) {
                   case 'passed':
                       $test_response['npassdiffp']++;
                       break;
@@ -1059,7 +1058,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
                       $test_response['nnotrundiffp']++;
                       break;
                 }
-              }
+                }
             }
 
             $test_response['notrun'] = $nnotrun;
