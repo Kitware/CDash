@@ -108,7 +108,7 @@ if ($lockAcquired) {
     ResetApparentlyStalledSubmissions($projectid);
     echo "Done with ResetApparentlyStalledSubmissions\n";
 
-    ProcessSubmissions($projectid, $pid);
+    ProcessSubmissions($projectid, $pid, $multi);
     echo "Done with ProcessSubmissions\n";
 
     DeleteOldSubmissionRecords($projectid);
