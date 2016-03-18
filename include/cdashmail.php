@@ -21,6 +21,8 @@ function cdashmail($to, $subject, $body, $headers = false)
         return false;
     }
 
+    $to = explode(', ', $to);
+
     global $CDASH_EMAIL_FROM, $CDASH_EMAIL_REPLY;
 
     $message = Swift_Message::newInstance()
