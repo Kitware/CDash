@@ -19,6 +19,7 @@ include_once 'include/common.php';
 include_once 'include/ctestparserutils.php';
 include_once 'include/repository.php';
 include_once 'models/builderror.php';
+include_once 'models/buildfailure.php';
 include_once 'models/builderrordiff.php';
 include_once 'models/buildinformation.php';
 include_once 'models/buildusernote.php';
@@ -396,7 +397,7 @@ class build
             "ORDER BY logline ASC");
     }
 
-    public function GetBuildFailures($type, $extrasql, $orderby=false)
+    public function GetBuildFailures($projectid, $type, $extrasql, $orderby=false)
     {
         $orderby = ($orderby === false) ? '' : "ORDER BY $orderby";
 
@@ -408,8 +409,7 @@ class build
             LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
             WHERE bf.buildid='" . $this->Id . "' AND bfd.type='$type' $extrasql $orderby");
 
-        // $this->Id should be projectid
-        add_last_sql_error('viewBuildError get_failures', $this->Id);
+        add_last_sql_error('build.GetBuildFailures', $projectid, $this->Id);
 
         return $q;
     }

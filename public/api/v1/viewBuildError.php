@@ -293,69 +293,17 @@ if (isset($_GET['onlydeltan'])) {
     }
 
     // Build failure table
-    // getbuildfailures needs projectid for failure?
-    $buildFailures = $build->getBuildFailures($type, $extrasql, 'bf.id ASC');
-    while ($error_array = pdo_fetch_array($buildFailures)) {
-        $error_response = array();
-        $error_response['language'] = $error_array['language'];
-        $error_response['sourcefile'] = $error_array['sourcefile'];
-        $error_response['targetname'] = $error_array['targetname'];
-        $error_response['outputfile'] = $error_array['outputfile'];
-        $error_response['outputtype'] = $error_array['outputtype'];
-        $error_response['workingdirectory'] = $error_array['workingdirectory'];
-
-        $buildfailureid = $error_array['id'];
-        $arguments = pdo_query(
-            "SELECT bfa.argument FROM buildfailureargument AS bfa,
-              buildfailure2argument AS bf2a
-       WHERE bf2a.buildfailureid='$buildfailureid' AND bf2a.argumentid=bfa.id
-       ORDER BY bf2a.place ASC");
-        $i = 0;
-        $arguments_response = array();
-        while ($argument_array = pdo_fetch_array($arguments)) {
-            if ($i == 0) {
-                $error_response['argumentfirst'] = $argument_array['argument'];
-            } else {
-                $arguments_response[] = $argument_array['argument'];
-            }
-            $i++;
-        }
-        $error_response['arguments'] = $arguments_response;
+    $buildFailures = $build->getBuildFailures($projectid, $type, $extrasql, 'bf.id ASC');
+    while ($buildFailure = pdo_fetch_array($buildFailures)) {
+        $marshaledBuildFailure = buildfailure::marshal($buildFailure, $project_array, $revision);
 
         get_labels_JSON_from_query_results(
             "SELECT text FROM label, label2buildfailure
        WHERE label.id=label2buildfailure.labelid AND
-             label2buildfailure.buildfailureid='$buildfailureid'
-       ORDER BY text ASC", $error_response);
+             label2buildfailure.buildfailureid='" . $buildFailure['id']  . "'
+       ORDER BY text ASC", $marshaledBuildFailure);
 
-        $stderror = $error_array['stderror'];
-        $stdoutput = $error_array['stdoutput'];
-
-        if (isset($error_array['sourcefile'])) {
-            $projectCvsUrl = $project_array['cvsurl'];
-            $file = basename($error_array['sourcefile']);
-            $directory = dirname($error_array['sourcefile']);
-            $cvsurl =
-                get_diff_url($projectid, $projectCvsUrl, $directory, $file, $revision);
-            $error_response['cvsurl'] = $cvsurl;
-
-            $source_dir = get_source_dir($projectid, $projectCvsUrl, $directory);
-            if ($source_dir !== null) {
-                $stderror = linkify_compiler_output($projectCvsUrl, $source_dir,
-                    $revision, $stderror);
-                $stdoutput = linkify_compiler_output($projectCvsUrl, $source_dir,
-                    $revision, $stdoutput);
-            }
-        }
-
-        if ($stderror) {
-            $error_response['stderror'] = $stderror;
-        }
-        if ($stdoutput) {
-            $error_response['stdoutput'] = $stdoutput;
-        }
-        $error_response['exitcondition'] = $error_array['exitcondition'];
-        $errors_response[] = $error_response;
+        $errors_response[] = $marshaledBuildFailure;
     }
 }
 

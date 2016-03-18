@@ -174,4 +174,69 @@ class buildfailure
         $this->InsertLabelAssociations($id);
         return true;
     }
+
+    /**
+     * Retrieve the arguments from a build failure given its id.
+     **/
+    public static function GetBuildFailureArguments($buildFailureId)
+    {
+        $response = array('argumentfirst' => null,
+                          'arguments' => array());
+        $arguments = pdo_query(
+            "SELECT bfa.argument FROM buildfailureargument AS bfa,
+             buildfailure2argument AS bf2a
+             WHERE bf2a.buildfailureid='$buildFailureId'
+             AND bf2a.argumentid=bfa.id
+             ORDER BY bf2a.place ASC");
+
+        $i = 0;
+        while ($argument_array = pdo_fetch_array($arguments)) {
+            if ($i == 0) {
+                $response['argumentfirst'] = $argument_array['argument'];
+            } else {
+                $response['arguments'][] = $argument_array['argument'];
+            }
+            $i++;
+        }
+
+        return $response;
+    }
+
+    /**
+     * Marshal a build failure, this includes the build failure arguments.
+     **/
+    public static function marshal($data, $project, $revision, $linkifyOutput=false)
+    {
+        $marshaled = array_merge(array(
+            'language' => $data['language'],
+            'sourcefile' => $data['sourcefile'],
+            'targetname' => $data['targetname'],
+            'outputfile' => $data['outputfile'],
+            'outputtype' => $data['outputtype'],
+            'workingdirectory' => $data['workingdirectory'],
+            'arguments' => self::GetBuildFailureArguments($data['id'], 'bf.id ASC'),
+            'exitcondition' => $data['exitcondition']
+        ), self::GetBuildFailureArguments($data['id']));
+
+        if (isset($data['sourcefile'])) {
+            $file = basename($data['sourcefile']);
+            $directory = dirname($data['sourcefile']);
+            $marshaled['cvsurl'] = get_diff_url($project['id'],
+                                                $project['cvsurl'],
+                                                $directory,
+                                                $file,
+                                                $revision);
+
+            $source_dir = get_source_dir($project['id'], $project['cvsurl'], $directory);
+
+            if ($source_dir !== null) {
+                $marshaled['stderror'] = linkify_compiler_output($project['cvsurl'], $source_dir,
+                                                                 $revision, $data['stderror']);
+                $marshaled['stdoutput'] = linkify_compiler_output($project['cvsurl'], $source_dir,
+                                                                  $revision, $data['stdoutput']);
+            }
+        }
+
+        return $marshaled;
+    }
 }
