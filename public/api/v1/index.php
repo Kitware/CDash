@@ -1048,16 +1048,16 @@ function echo_main_dashboard_JSON($project_instance, $date)
                 $test_response['nnotrundiffn'] = 0;
                 while ($label_row = pdo_fetch_array($labels_result)) {
                     switch ($label_row['status']) {
-                  case 'passed':
-                      $test_response['npassdiffp']++;
-                      break;
-                  case 'failed':
-                      $test_response['nfaildiffp']++;
-                      break;
-                  case 'notrun':
-                      $test_response['nnotrundiffp']++;
-                      break;
-                }
+                        case 'passed':
+                            $test_response['npassdiffp']++;
+                            break;
+                        case 'failed':
+                            $test_response['nfaildiffp']++;
+                            break;
+                        case 'notrun':
+                            $test_response['nnotrundiffp']++;
+                            break;
+                    }
                 }
             }
 
