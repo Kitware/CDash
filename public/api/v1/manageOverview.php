@@ -108,8 +108,9 @@ if (isset($_POST['saveLayout'])) {
         add_last_sql_error('manageOverview::saveLayout::INSERT', $projectid);
     }
 
-    // Since this is called by AJAX we don't need to render the page below.
-    exit(0);
+    // Since this is called by AJAX we don't need to generate the JSON
+    // used to render this page.
+    return;
 }
 
 // Otherwise generate the JSON used to render this page.
