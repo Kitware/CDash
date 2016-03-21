@@ -164,7 +164,8 @@ $response['numErrors'] = 0;
  * @todo id should probably just be a unique id for the builderror?
  * builderror table currently has no integer that serves as a unique identifier.
  **/
-function addErrorResponse($data) {
+function addErrorResponse($data)
+{
     global $build, $response;
 
     $data['id'] = $response['numErrors'];

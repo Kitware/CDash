@@ -80,7 +80,8 @@ class build
         $this->Filled = false;
     }
 
-    public function IsParentBuild() {
+    public function IsParentBuild()
+    {
         return $this->ParentId == -1;
     }
 
@@ -395,7 +396,8 @@ class build
     /**
      * Return the errors that have been resolved from this build.
      **/
-    public function GetResolvedBuildErrors($type) {
+    public function GetResolvedBuildErrors($type)
+    {
         $previousBuild = $this->GetPreviousBuildId();
 
         if ($previousBuild === 0) {
@@ -443,7 +445,8 @@ class build
      * Get build failures (with details) that occurred in the most recent build
      * but NOT this build.
      **/
-    public function GetResolvedBuildFailures($type) {
+    public function GetResolvedBuildFailures($type)
+    {
         $currentFailuresQuery = "SELECT bf.detailsid FROM buildfailure AS bf
                                  LEFT JOIN buildfailuredetails AS bfd ON (bf.detailsid=bfd.id)
                                  WHERE bf.buildid=" . $this->Id . " AND bfd.type=$type";
@@ -462,7 +465,8 @@ class build
         return $resolvedBuildFailures;
     }
 
-    public function GetConfigures() {
+    public function GetConfigures()
+    {
         if ($this->IsParentBuild()) {
             return pdo_query("SELECT sp.name subprojectname, sp.id subprojectid, c.*
                               FROM configure c

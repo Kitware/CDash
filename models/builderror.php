@@ -75,7 +75,8 @@ class builderror
         return true;
     }
 
-    public static function GetSourceFile($data) {
+    public static function GetSourceFile($data)
+    {
         // Detect if the source directory has already been replaced by CTest with /.../
         $sourceFile = array();
         $pattern = '&/.../(.*?)/&';

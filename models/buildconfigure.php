@@ -214,7 +214,8 @@ class buildconfigure
         return $this->NumberOfErrors;
     }
 
-    public static function marshal($data) {
+    public static function marshal($data)
+    {
         $response = array(
             'status' => $data['status'],
             'command' => $data['command'],
