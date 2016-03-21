@@ -154,13 +154,29 @@ if ($type == 0) {
     $response['nonerrortype'] = 0;
 }
 
-$errors_response = array();
+$response['errors'] = array();
+$response['numErrors'] = 0;
+
+/**
+ * Add a new (marshaled) error to the response.
+ * Keeps track of the id necessary for frontend JS, and updates
+ * the numErrors response key.
+ * @todo id should probably just be a unique id for the builderror?
+ * builderror table currently has no integer that serves as a unique identifier.
+ **/
+function addErrorResponse($data) {
+    global $build, $response;
+
+    $data['id'] = $response['numErrors'];
+    $response['numErrors']++;
+    $response['errors'][] = $data;
+}
 
 if (isset($_GET['onlydeltan'])) {
     // Build error table
     $resolvedBuildErrors = $build->GetResolvedBuildErrors($type);
     while ($resolvedBuildError = pdo_fetch_array($resolvedBuildErrors)) {
-        $errors_response[] = builderror::marshal($resolvedBuildError, $project_array, $revision);
+        addErrorResponse(builderror::marshal($resolvedBuildError, $project_array, $revision));
     }
 
     // Build failure table
@@ -182,7 +198,7 @@ if (isset($_GET['onlydeltan'])) {
             'stdoutputrows' => min(10, substr_count($resolvedBuildFailure['stdoutputrows'], "\n") + 1),
         ));
 
-        $errors_response[] = $marshaledResolvedBuildFailure;
+        addErrorResponse($marshaledResolvedBuildFailure);
     }
 } else {
     $extrasql = '';
@@ -193,7 +209,7 @@ if (isset($_GET['onlydeltan'])) {
     // Build error table
     $buildErrors = $build->GetBuildErrors($type, $extrasql);
     while ($buildError = pdo_fetch_array($buildErrors)) {
-        $errors_response[] = builderror::marshal($buildError, $project_array, $revision);
+        addErrorResponse(builderror::marshal($buildError, $project_array, $revision));
     }
 
     // Build failure table
@@ -207,15 +223,10 @@ if (isset($_GET['onlydeltan'])) {
              label2buildfailure.buildfailureid='" . $buildFailure['id']  . "'
        ORDER BY text ASC", $marshaledBuildFailure);
 
-        $errors_response[] = $marshaledBuildFailure;
+        addErrorResponse($marshaledBuildFailure);
     }
 }
 
-// Add id to errors
-$response['errors'] = array();
-foreach ($errors_response as $key => $error) {
-    $error['id'] = $key;
-    $response['errors'][] = $error;
 }
 
 $end = microtime_float();
