@@ -21,6 +21,7 @@ include 'public/login.php';
 include_once 'include/common.php';
 include 'include/version.php';
 require_once 'models/build.php';
+require_once 'models/buildconfigure.php';
 
 @$buildid = $_GET['buildid'];
 if ($buildid != null) {
@@ -101,16 +102,20 @@ $xml .= add_XML_value('buildname', $build_array['name']);
 $xml .= add_XML_value('buildid', $build_array['id']);
 $xml .= '</build>';
 
-$xml .= '<configure>';
+$configures_response = array();
 
-$configure = pdo_query("SELECT * FROM configure WHERE buildid='$buildid'");
-$configure_array = pdo_fetch_array($configure);
+$configures = $build->GetConfigures();
+while ($configure = pdo_fetch_array($configures)) {
+    $configures_response[] = buildconfigure::marshal($configure);
+}
 
-$xml .= add_XML_value('status', $configure_array['status']);
-$xml .= add_XML_value('command', $configure_array['command']);
-$xml .= add_XML_value('output', $configure_array['log']);
-
-$xml .= '</configure>';
+$xml .= '<configures>';
+foreach ($configures_response as $configure) {
+    foreach ($configure as $key => $val) {
+        $xml .= add_XML_value($key, $val);
+    }
+}
+$xml .= '</configures>';
 $xml .= '</cdash>';
 
 // Now doing the xslt transition

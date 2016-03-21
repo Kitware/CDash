@@ -31,16 +31,21 @@
           </xsl:otherwise>
         </xsl:choose>
 
-        <br/>
-        <table border="0">
-          <tr><td align="left"><b>Site: </b><a><xsl:attribute name="href">viewSite.php?siteid=<xsl:value-of select="cdash/build/siteid"/></xsl:attribute>
-          <xsl:value-of select="cdash/build/site"/></a></td></tr>
-          <tr><td align="left"><b>Build Name: </b><xsl:value-of select="cdash/build/buildname"/></td></tr>
-          <tr><td align="left"><b>Configure Command: </b><xsl:value-of select="cdash/configure/command"/></td></tr>
-          <tr><td align="left"><b>Configure Return Value: </b><xsl:value-of select="cdash/configure/status"/></td></tr>
-          <tr><td align="left"><b>Configure Output:</b></td></tr>
-          <tr><td align="left"><pre><xsl:value-of select="cdash/configure/output"/></pre></td></tr>
-        </table>
+        <xsl:variable name="site" select="cdash/build/site"/>
+        <xsl:variable name="siteid" select="cdash/build/siteid"/>
+        <xsl:variable name="buildname" select="cdash/build/buildname"/>
+        <xsl:for-each select="cdash/configures">
+          <br/>
+          <table border="0">
+            <tr><td align="left"><b>Site: </b><a><xsl:attribute name="href">viewSite.php?siteid=<xsl:value-of select="$siteid"/></xsl:attribute>
+            <xsl:value-of select="$site"/></a></td></tr>
+            <tr><td align="left"><b>Build Name: </b><xsl:value-of select="$buildname"/></td></tr>
+            <tr><td align="left"><b>Configure Command: </b><xsl:value-of select="command"/></td></tr>
+            <tr><td align="left"><b>Configure Return Value: </b><xsl:value-of select="status"/></td></tr>
+            <tr><td align="left"><b>Configure Output:</b></td></tr>
+            <tr><td align="left"><pre><xsl:value-of select="output"/></pre></td></tr>
+          </table>
+        </xsl:for-each>
         <!-- FOOTER -->
         <br/>
 
