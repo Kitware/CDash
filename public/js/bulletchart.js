@@ -11,7 +11,7 @@ function makeBulletChart(chartName, elementName, min, avg, max, current,
 
     var chartData = {
       "ranges": [min, avg, max],
-      "rangeLabels": ["Satisfactory", "Medium", "Low"],
+      "rangeLabels": ["Low", "Medium", "Satisfactory"],
       "measures": [current],
       "markers": [previous],
       };
