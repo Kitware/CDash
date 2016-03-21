@@ -84,7 +84,7 @@ class FilterTestLabelsTestCase extends KWWebTestCase
         }
 
         // Delete the build
-        //remove_build($buildid);
+        remove_build($buildid);
 
         if (!$success) {
             $this->fail($error_msg);
