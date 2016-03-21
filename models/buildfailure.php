@@ -217,6 +217,9 @@ class buildfailure
             'exitcondition' => $data['exitcondition']
         ), self::GetBuildFailureArguments($data['id']));
 
+        $marshaled['stderror'] = $data['stderror'];
+        $marshaled['stdoutput'] = $data['stdoutput'];
+
         if (isset($data['sourcefile'])) {
             $file = basename($data['sourcefile']);
             $directory = dirname($data['sourcefile']);

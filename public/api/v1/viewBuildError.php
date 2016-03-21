@@ -227,8 +227,6 @@ if (isset($_GET['onlydeltan'])) {
     }
 }
 
-}
-
 $end = microtime_float();
 $response['generationtime'] = round($end - $start, 3);
 
