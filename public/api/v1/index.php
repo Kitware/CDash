@@ -1007,7 +1007,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
             }
 
             if ($filter_on_labels) {
-                $label_filter_sql = get_filterdata_from_request('queryTests.php')['sql'];
+                $test_filterdata = get_filterdata_from_request('queryTests.php');
+                $label_filter_sql = $test_filterdata['sql'];
+
                 $label_query_base = "SELECT build2test.status, test.name AS testname
                                     FROM build AS b
                                     JOIN build2test ON (b.id = build2test.buildid)
