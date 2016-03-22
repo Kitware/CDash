@@ -949,17 +949,6 @@ class build
                     if ($teststatus == 'passed') {
                         // if the current test passed
 
-                        if ($timestatus > 0 && $timestatus <= $projecttestmaxstatus) {
-                            // if we are currently detecting the time changed we should use previous mean std
-
-                            $timemean = $previoustimemean;
-                            $timestd = $previoustimestd;
-                        } else {
-                            // Update the mean and std
-                            $timemean = (1 - $weight) * $previoustimemean + $weight * $testtime;
-                            $timestd = sqrt((1 - $weight) * $previoustimestd * $previoustimestd + $weight * ($testtime - $timemean) * ($testtime - $timemean));
-                        }
-
                         // Check the current status
                         if ($previoustimestd < $projecttimestdthreshold) {
                             $previoustimestd = $projecttimestdthreshold;
@@ -971,6 +960,17 @@ class build
                             $timestatus = $previoustimestatus + 1; // flag
                         } else {
                             $timestatus = 0; // reset the time status to 0
+                        }
+
+                        if ($timestatus > 0 && $timestatus <= $projecttestmaxstatus) {
+                            // if we are currently detecting the time changed we should use previous mean std
+
+                            $timemean = $previoustimemean;
+                            $timestd = $previoustimestd;
+                        } else {
+                            // Update the mean and std
+                            $timemean = (1 - $weight) * $previoustimemean + $weight * $testtime;
+                            $timestd = sqrt((1 - $weight) * $previoustimestd * $previoustimestd + $weight * ($testtime - $timemean) * ($testtime - $timemean));
                         }
                     } else {
                         // the test failed so we just replicate the previous test time
