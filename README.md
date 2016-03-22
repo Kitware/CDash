@@ -22,6 +22,12 @@ git clone https://github.com/Kitware/CDash.git CDash
 cd CDash
 ```
 
+### Prerequisites
+
+CDash needs:
+  * A web server (Apache, NGINX, IIS) with PHP and SSL enabled.
+  * Access to a MySQL or PostgreSQL database server.
+
 ### Linux and OS X
 
 For production:
