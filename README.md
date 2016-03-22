@@ -30,6 +30,8 @@ git checkout release
 ```
 
 For development:
+
+[Install Node.js](https://nodejs.org/en/download/package-manager/).
 ```bash
 curl -sS https://getcomposer.org/installer | php
 php composer.phar install
