@@ -1909,7 +1909,7 @@ function begin_JSON_response()
     if (isset($_SESSION['cdash']) and isset($_SESSION['cdash']['loginid'])) {
         $userid = $_SESSION['cdash']['loginid'];
         $row = pdo_single_row_query(
-            "SELECT admin FROM user WHERE id='$userid'");
+            "SELECT admin FROM " . qid('user') . " WHERE id='$userid'");
         $user_response['admin'] = $row['admin'];
     }
     $user_response['id'] = $userid;

@@ -55,6 +55,7 @@ $CDASH_ASYNCHRONOUS_SUBMISSION = false;
 // Set to 0 to delete them right away.
 $CDASH_ASYNC_EXPIRATION_TIME = 691200; // 8 days.
 // How many asynchronous workers to use.
+// Only increase this above 1 for MySQL (not Postgres).
 $CDASH_ASYNC_WORKERS = 1;
 
 // Main title and subtitle for the index page
