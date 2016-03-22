@@ -27,7 +27,7 @@
               <label for="projectSelection">Project: </label>
               <select name="projectSelection" onchange="location = 'manageBuildGroup.php?projectid='+this.options[this.selectedIndex].value;" class="form-control">
                 <option value=-1>Choose...</option>
-                <option ng-repeat="proj in cdash.availableprojects" value="{{proj.id}}" ng-selected="proj.id==cdash.project.id">
+                <option ng-repeat="proj in cdash.availableprojects" value="{{proj.id}}" ng-selected="proj.id==cdash.projectid">
                   {{proj.name}}
                 </option>
               </select>
@@ -37,7 +37,7 @@
       </div>
 
       <!-- If a project has been selected -->
-      <div role="tabpanel" ng-if="cdash.project.id > -1">
+      <div role="tabpanel" ng-if="cdash.projectid > -1">
         <ul class="nav nav-tabs" role="tablist" id="tabs">
           <li role="presentation" class="active">
             <a href="#current" aria-controls="current" role="tab" data-toggle="tab">
