@@ -157,7 +157,9 @@ add_test(enable_async
   ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_enable_async.php
 )
 
-add_php_test(parallelsubmissions)
+if (NOT CDASH_DB_TYPE STREQUAL "pgsql")
+  add_php_test(parallelsubmissions)
+endif()
 
 if(COVERAGE_COMMAND)
   add_coverage_test(simple_async InsightExample simple manageCoverageTest.php enable_async)
