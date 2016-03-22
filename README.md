@@ -17,47 +17,58 @@ maintain large-scale software systems. Good examples of a CDash are the
 
 ## Installation
 
-### Linux and OS X
-
 ```bash
 git clone https://github.com/Kitware/CDash.git CDash
 cd CDash
-curl -sS https://getcomposer.org/installer | php
 ```
 
-For development:
-```bash
-php composer.phar install
-```
+### Prerequisites
+
+CDash needs:
+  * A web server (Apache, NGINX, IIS) with PHP and SSL enabled.
+  * Access to a MySQL or PostgreSQL database server.
+
+### Linux and OS X
 
 For production:
 ```bash
-php composer.phar install --no-dev --optimize-autoloader
+git checkout release
+```
+
+For development:
+
+[Install Node.js](https://nodejs.org/en/download/package-manager/).
+```bash
+curl -sS https://getcomposer.org/installer | php
+php composer.phar install
+npm install
+node_modules/.bin/gulp
 ```
 
 ### Windows
 
-Download and run [Composer-Setup.exe](https://getcomposer.org/Composer-Setup.exe).
-
+For production:
 ```cmd
-git clone https://github.com/Kitware/CDash.git CDash
-cd CDash
+git checkout release
 ```
 
 For development:
+
+Download and run [Composer-Setup.exe](https://getcomposer.org/Composer-Setup.exe).
+
+[Install Node.js](https://nodejs.org/en/download).
 ```cmd
 composer install
+npm install
+node_modules/.bin/gulp
 ```
 
-For production:
-```cmd
-composer install --no-dev --optimize-autoloader
-```
 
 ## Development
 
-TODO
+If you're interested in contributing to CDash, please begin by [introducing yourself on our mailing list](http://public.kitware.com/mailman/listinfo/cdash).
+
 
 ## Testing
 
-TODO
+[See here for information about our testing infrastructure](http://public.kitware.com/Wiki/CDash:Testing).

@@ -23,6 +23,7 @@
         <xsl:if test="/cdash/oauth2">
           <script>
             var CLIENTID = '<xsl:value-of select="cdash/oauth2/client"/>';
+            var CDASH_BASE_URL = '<xsl:value-of select="cdash/oauth2/CDASH_BASE_URL"/>';
           </script>
           <script src="js/cdashOauth2.js"></script>
         </xsl:if>
@@ -105,9 +106,14 @@
                 <tr class="table-heading">
                   <td width="10%" class="nob"></td>
                   <td width="70%" class="nob">
+                    <hr />
                     <a href="" id="oauth2LoginText" onClick='oauth2Login();'>
                       Log in with your Google account
                     </a>
+                    <br />
+                    <xsl:if test="/cdash/allowlogincookie=1">
+                      <input class="textbox" type="checkbox"  name="oauth-rememberme"/>Remember Me
+                    </xsl:if>
                   </td>
                   <td width="20%" class="nob"></td>
                 </tr>

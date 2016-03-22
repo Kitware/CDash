@@ -108,16 +108,20 @@ CDash.filter("showEmptyBuildsLast", function () {
     // Set title in root scope so the head controller can see it.
     $rootScope['title'] = cdash.title;
 
-    // Check if we have a cookie for sort order.
+    // Check if sort order was specified via query string or cookie.
     var sort_order = [];
-    if (cdash.childview == 1) {
-      $scope.sort_cookie_name = 'cdash_child_index_sort';
+    if ('sort' in $rootScope.queryString) {
+      sort_order = $rootScope.queryString.sort.split(",");
     } else {
-      $scope.sort_cookie_name = 'cdash_index_sort';
-    }
-    var sort_cookie_value = $.cookie($scope.sort_cookie_name);
-    if(sort_cookie_value) {
-      sort_order = sort_cookie_value.split(",");
+      if (cdash.childview == 1) {
+        $scope.sort_cookie_name = 'cdash_child_index_sort';
+      } else {
+        $scope.sort_cookie_name = 'cdash_index_sort';
+      }
+      var sort_cookie_value = $.cookie($scope.sort_cookie_name);
+      if(sort_cookie_value) {
+        sort_order = sort_cookie_value.split(",");
+      }
     }
 
     // Check if we have a cookie for number of rows to display.

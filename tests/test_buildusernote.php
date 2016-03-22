@@ -3,11 +3,11 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__).'/cdash_test_case.php');
+require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-require_once('include/common.php');
-require_once('include/pdo.php');
-require_once('models/buildusernote.php');
+require_once 'include/common.php';
+require_once 'include/pdo.php';
+require_once 'models/buildusernote.php';
 
 class BuildUserNoteTestCase extends KWWebTestCase
 {
@@ -28,10 +28,10 @@ class BuildUserNoteTestCase extends KWWebTestCase
         $output = ob_get_contents();
         ob_end_clean();
         if ($result) {
-            $this->fail("Insert() should return false when BuildId is 0");
+            $this->fail('Insert() should return false when BuildId is 0');
             return 1;
         }
-        if (strpos($output, "BuildUserNote::Insert(): BuildId is not set") === false) {
+        if (strpos($output, 'BuildUserNote::Insert(): BuildId is not set') === false) {
             $this->fail("'BuildId is not set' not found from Insert()");
             return 1;
         }
@@ -43,29 +43,29 @@ class BuildUserNoteTestCase extends KWWebTestCase
         $output = ob_get_contents();
         ob_end_clean();
         if ($result) {
-            $this->fail("Insert() should return false when UserId is 0");
+            $this->fail('Insert() should return false when UserId is 0');
             return 1;
         }
-        if (strpos($output, "BuildUserNote::Insert(): UserId is not set") === false) {
+        if (strpos($output, 'BuildUserNote::Insert(): UserId is not set') === false) {
             $this->fail("'UserId is not set' not found from Insert()");
             return 1;
         }
 
         $buildusernote->UserId = 1;
         if ($buildusernote->Insert()) {
-            $this->fail("Insert() should return false but returned true");
+            $this->fail('Insert() should return false but returned true');
             return 1;
         }
 
         $buildusernote->Note = 'test';
         if ($buildusernote->Insert()) {
-            $this->fail("Insert() should return false but returned true");
+            $this->fail('Insert() should return false but returned true');
             return 1;
         }
 
         $buildusernote->TimeStamp = '2010-10-10 10:10:10';
         if ($buildusernote->Insert()) {
-            $this->fail("Insert() should return false but returned true");
+            $this->fail('Insert() should return false but returned true');
             return 1;
         }
 
@@ -74,10 +74,9 @@ class BuildUserNoteTestCase extends KWWebTestCase
             $this->fail("Insert() returned false when it should be true.\n");
             return 1;
         }
-        $this->pass("Passed");
+        $this->pass('Passed');
 
         $this->stopCodeCoverage();
-
         return 0;
     }
 }

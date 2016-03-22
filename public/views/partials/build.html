@@ -55,7 +55,7 @@
       <img src="img/note.png" alt="note" class="icon"></img>
     </a>
 
-    <div ng-if="cdash.userid > 0">
+    <div ng-if="cdash.user.id > 0">
       <!-- Display folder icon for logged in users -->
       <a ng-if="build.id" href="javascript:;" ng-click="toggleAdminOptions(build)">
         <img src="img/folder.png" class="icon"/>
@@ -179,7 +179,7 @@
     <a ng-href="viewTest.php?onlynotrun&buildid={{build.id}}{{cdash.extrafilterurl}}">
       {{build.test.notrun}}
     </a>
-    <a ng-if="build.test.nnotrundiffp > 0" class="sup" ng-href="viewTest.php?onlydelta&buildid={{build.id}}">
+    <a ng-if="build.test.nnotrundiffp > 0" class="sup" ng-href="viewTest.php?onlydelta&buildid={{build.id}}{{cdash.extrafilterurl}}">
       +{{build.test.nnotrundiffp}}
     </a>
     <span ng-if="build.test.nnotrundiffn > 0" class="sub">-{{build.test.nnotrundiffn}}</span>

@@ -3,7 +3,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__).'/cdash_test_case.php');
+require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 class CreatePublicDashboardTestCase extends KWWebTestCase
 {
@@ -25,7 +25,7 @@ class CreatePublicDashboardTestCase extends KWWebTestCase
         }
 
         $this->setField('name', 'PublicDashboard');
-        $this->setField('description', 'This project is for CMake dashboards run on this machine to submit to from their test suites... CMake dashboards on this machine should set CMAKE_TESTS_CDASH_SERVER to "'.$this->url.'"');
+        $this->setField('description', 'This project is for CMake dashboards run on this machine to submit to from their test suites... CMake dashboards on this machine should set CMAKE_TESTS_CDASH_SERVER to "' . $this->url . '"');
         $this->setField('public', '1');
         $this->setField('emailAdministrator', '1');
         $this->clickSubmitByName('Submit');

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="release_coverage"
+	BuildStamp="20160216-0100-Nightly"
+	Name="localhost"
+	Generator="ctest-3.5.20160210-g06204"
+	CompilerName=""
+	CompilerVersion=""
+	OSName="Linux"
+	Hostname="elysium"
+	OSRelease="3.13.0-77-generic"
+	OSVersion="#121-Ubuntu SMP Wed Jan 20 10:50:42 UTC 2016"
+	OSPlatform="x86_64"
+	Is64Bits="1"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="45"
+	ProcessorCacheSize="12288"
+	NumberOfLogicalCPU="12"
+	NumberOfPhysicalCPU="1"
+	TotalVirtualMemory="32690"
+	TotalPhysicalMemory="32100"
+	LogicalProcessorsPerPhysical="12"
+	ProcessorClockFrequency="1200.00"
+	>
+	<Coverage>
+		<StartDateTime>Feb 16 11:06 EST</StartDateTime>
+		<StartTime>1455638789</StartTime>
+		<File Name="bar.cxx" FullPath="./bar.cxx" Covered="true">
+			<LOCTested>4</LOCTested>
+			<LOCUnTested>4</LOCUnTested>
+			<PercentCoverage>50.00</PercentCoverage>
+			<CoverageMetric>0.78</CoverageMetric>
+		</File>
+		<File Name="baz.cxx" FullPath="./baz.cxx" Covered="true">
+			<LOCTested>4</LOCTested>
+			<LOCUnTested>4</LOCUnTested>
+			<PercentCoverage>50.00</PercentCoverage>
+			<CoverageMetric>0.78</CoverageMetric>
+		</File>
+		<File Name="diff.cxx" FullPath="./diff.cxx" Covered="true">
+			<LOCTested>3</LOCTested>
+			<LOCUnTested>2</LOCUnTested>
+			<PercentCoverage>60.00</PercentCoverage>
+			<CoverageMetric>0.87</CoverageMetric>
+		</File>
+		<File Name="foo.cxx" FullPath="./foo.cxx" Covered="true">
+			<LOCTested>4</LOCTested>
+			<LOCUnTested>4</LOCUnTested>
+			<PercentCoverage>50.00</PercentCoverage>
+			<CoverageMetric>0.78</CoverageMetric>
+		</File>
+                <File Name="zero.cxx" FullPath="./zero.cxx" Covered="true">
+                        <LOCTested>0</LOCTested>
+                        <LOCUnTested>8</LOCUnTested>
+                        <PercentCoverage>0</PercentCoverage>
+                        <CoverageMetric>0</CoverageMetric>
+                </File>
+		<LOCTested>15</LOCTested>
+		<LOCUntested>22</LOCUntested>
+		<LOC>37</LOC>
+		<PercentCoverage>40.54</PercentCoverage>
+		<EndDateTime>Feb 16 11:06 EST</EndDateTime>
+		<EndTime>1455638789</EndTime>
+		<ElapsedMinutes>0.00</ElapsedMinutes>
+	</Coverage>
+</Site>

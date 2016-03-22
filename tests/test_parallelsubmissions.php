@@ -3,10 +3,10 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__).'/cdash_test_case.php');
-require_once('tests/trilinos_submission_test.php');
-require_once('include/common.php');
-require_once('include/pdo.php');
+require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once 'tests/trilinos_submission_test.php';
+require_once 'include/common.php';
+require_once 'include/pdo.php';
 
 class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
 {
@@ -22,7 +22,7 @@ class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
     {
         // Delete the existing Trilinos build.
         $row = pdo_single_row_query(
-                "SELECT id FROM build
+            "SELECT id FROM build
                 WHERE parentid=-1 AND
                 projectid=(SELECT id FROM project WHERE name='Trilinos') AND
                 name='Windows_NT-MSVC10-SERIAL_DEBUG_DEV' AND
@@ -35,22 +35,22 @@ class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
         // Re-submit the Trilinos build.
         $begin = time();
         $this->submitFiles('ActualTrilinosSubmission', true);
-        echo "Submission took " . (time() - $begin) . " seconds.\n";
+        echo 'Submission took ' . (time() - $begin) . " seconds.\n";
 
         // Re-enable submission processing and enable parallel processing
         $this->removeLineFromConfig($this->DisableProcessingConfig);
         $this->addLineToConfig($this->ParallelProcessingConfig);
 
         // Submit another file to Trilinos to start the processing loop.
-        $file = dirname(__FILE__)."/data/SubProjectNextPrevious/Build_1.xml";
+        $file = dirname(__FILE__) . '/data/SubProjectNextPrevious/Build_1.xml';
         $this->submission('Trilinos', $file);
 
         // Wait for processing to complete.
         $todo = 999;
         $begin = time();
         while ($todo > 0) {
-            $row = pdo_single_row_query("SELECT count(1) AS todo
-                    FROM submission WHERE status=0 OR status=1");
+            $row = pdo_single_row_query('SELECT count(1) AS todo
+                    FROM submission WHERE status=0 OR status=1');
             $todo = $row['todo'];
             sleep(1);
             if (time() - $begin > 120) {
@@ -58,7 +58,7 @@ class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
                 break;
             }
         }
-        echo "Processing took " . (time() - $begin) . " seconds.\n";
+        echo 'Processing took ' . (time() - $begin) . " seconds.\n";
 
         // Verify the results.
         $this->verifyResults();
@@ -67,7 +67,7 @@ class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
         // extra build that we created to trigger the processing.
         $this->removeLineFromConfig($this->ParallelProcessingConfig);
         $row = pdo_single_row_query(
-                "SELECT build.id FROM build
+            "SELECT build.id FROM build
                 WHERE build.parentid=-1 AND
                 projectid=(SELECT id FROM project WHERE name='Trilinos') AND
                 stamp='20110723-1515-Experimental'");

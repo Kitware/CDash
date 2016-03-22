@@ -3,12 +3,12 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__).'/cdash_test_case.php');
+require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-require_once('include/common.php');
-require_once('include/pdo.php');
-require_once('models/build.php');
-require_once('models/builderror.php');
+require_once 'include/common.php';
+require_once 'include/pdo.php';
+require_once 'models/build.php';
+require_once 'models/builderror.php';
 
 class BuildModelTestCase extends KWWebTestCase
 {
@@ -121,13 +121,14 @@ class BuildModelTestCase extends KWWebTestCase
         $build->SetSubProject('8567');
         global $CDASH_LOG_FILE;
         if ($CDASH_LOG_FILE !== false && strpos(file_get_contents($this->logfilename),
-              "New subproject detected") === false) {
+                'New subproject detected') === false
+        ) {
             $this->fail("'New subproject detected' not found in log after calling SetSubProject for invalid subproject id");
             return 1;
         }
 
         if ($build->Exists() == false) {
-            $this->fail("Exists returned false for a valid build id");
+            $this->fail('Exists returned false for a valid build id');
             return 1;
         }
 
@@ -135,12 +136,12 @@ class BuildModelTestCase extends KWWebTestCase
         $build->SetStamp('20100610-1901-Experimental');
         $build->Type = ''; //force this empty for coverage purposes
 
-    $build->StartTime = '2009-12-18 14:19:11';
+        $build->StartTime = '2009-12-18 14:19:11';
         $build->EndTime = '2009-12-18 14:20:23';
         $build->SubmitTime = '2012-01-25 16:43:11';
 
         if ($build->Exists() == true) {
-            $this->fail("Exists returned true for an invalid build id");
+            $this->fail('Exists returned true for an invalid build id');
             return 1;
         }
 
@@ -152,7 +153,6 @@ class BuildModelTestCase extends KWWebTestCase
         $build->Save();
 
         $this->stopCodeCoverage();
-
         return 0;
     }
 }

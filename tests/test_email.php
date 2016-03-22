@@ -3,7 +3,7 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__).'/cdash_test_case.php');
+require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 class EmailTestCase extends KWWebTestCase
 {
@@ -15,8 +15,8 @@ class EmailTestCase extends KWWebTestCase
     public function testCreateProjectTest()
     {
         $this->login();
-    // first project necessary for testing
-    $name = 'EmailProjectExample';
+        // first project necessary for testing
+        $name = 'EmailProjectExample';
         $description = 'Project EmailProjectExample test for cdash testing';
 
         $this->clickLink('Create new project');
@@ -27,7 +27,7 @@ class EmailTestCase extends KWWebTestCase
         $this->setField('emailRedundantFailures', '0');
         $this->clickSubmitByName('Submit');
 
-        $content = $this->connect($this->url.'/api/v1/index.php?project=EmailProjectExample');
+        $content = $this->connect($this->url . '/api/v1/index.php?project=EmailProjectExample');
         if (!$content) {
             return;
         }
@@ -39,7 +39,7 @@ class EmailTestCase extends KWWebTestCase
 
     public function testRegisterUser()
     {
-        $url = $this->url.'/register.php';
+        $url = $this->url . '/register.php';
         $content = $this->connect($url);
         if ($content == false) {
             return;
@@ -54,8 +54,8 @@ class EmailTestCase extends KWWebTestCase
         $this->clickSubmitByName('sent', array('url' => 'catchbot'));
         $this->assertText('Registration Complete. Please login with your email and password.');
 
-    // Login as the user and subscribe to the project
-    $this->get($this->url);
+        // Login as the user and subscribe to the project
+        $this->get($this->url);
         $this->clickLink('Login');
         $this->setField('login', 'user1@kw');
         $this->setField('passwd', 'user1');
@@ -73,7 +73,7 @@ class EmailTestCase extends KWWebTestCase
     public function testSubmissionFirstBuild()
     {
         $this->deleteLog($this->logfilename);
-        $rep  = dirname(__FILE__)."/data/EmailProjectExample";
+        $rep = dirname(__FILE__) . '/data/EmailProjectExample';
         $file = "$rep/1_build.xml";
         if (!$this->submission('EmailProjectExample', $file)) {
             return;
@@ -95,7 +95,7 @@ class EmailTestCase extends KWWebTestCase
     public function testSubmissionEmailBuild()
     {
         $this->deleteLog($this->logfilename);
-        $rep  = dirname(__FILE__)."/data/EmailProjectExample";
+        $rep = dirname(__FILE__) . '/data/EmailProjectExample';
         $file = "$rep/2_build.xml";
         if (!$this->submission('EmailProjectExample', $file)) {
             return;
@@ -106,16 +106,16 @@ class EmailTestCase extends KWWebTestCase
             return;
         }
 
-        if (!$this->compareLog($this->logfilename, $rep."/cdash_1.log")) {
+        if (!$this->compareLog($this->logfilename, $rep . '/cdash_1.log')) {
             return;
         }
-        $this->pass("Passed");
+        $this->pass('Passed');
     }
 
     public function testSubmissionEmailTest()
     {
         $this->deleteLog($this->logfilename);
-        $rep  = dirname(__FILE__)."/data/EmailProjectExample";
+        $rep = dirname(__FILE__) . '/data/EmailProjectExample';
         $file = "$rep/2_test.xml";
 
         if (!$this->submission('EmailProjectExample', $file)) {
@@ -125,13 +125,13 @@ class EmailTestCase extends KWWebTestCase
             return;
         }
 
-        $this->pass("Passed");
+        $this->pass('Passed');
     }
 
     public function testSubmissionEmailDynamicAnalysis()
     {
         $this->deleteLog($this->logfilename);
-        $rep  = dirname(__FILE__)."/data/EmailProjectExample";
+        $rep = dirname(__FILE__) . '/data/EmailProjectExample';
         $file = "$rep/2_dynamicanalysis.xml";
 
         if (!$this->submission('EmailProjectExample', $file)) {
@@ -140,12 +140,12 @@ class EmailTestCase extends KWWebTestCase
         if (!$this->compareLog($this->logfilename, "$rep/cdash_3.log")) {
             return;
         }
-        $this->pass("Passed");
+        $this->pass('Passed');
     }
 
     public function testEmailSentToGitCommitter()
     {
-        $rep = dirname(__FILE__)."/data/EmailProjectExample";
+        $rep = dirname(__FILE__) . '/data/EmailProjectExample';
         $file = "$rep/3_update.xml";
         if (!$this->submission('EmailProjectExample', $file)) {
             //return;
@@ -158,9 +158,9 @@ class EmailTestCase extends KWWebTestCase
         }
 
         if (!$this->compareLog($this->logfilename, "$rep/cdash_committeremail.log")) {
-            $this->fail("Log did not match cdash_committeremail.log");
+            $this->fail('Log did not match cdash_committeremail.log');
             return;
         }
-        $this->pass("Passed");
+        $this->pass('Passed');
     }
 }

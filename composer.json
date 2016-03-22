@@ -16,6 +16,7 @@
     "ext-json": "*",
     "ext-pdo": "*",
     "ext-xsl": "*",
+    "google/apiclient": "~1.1",
     "monolog/monolog": "~1.17",
     "paragonie/random_compat": "~1.2",
     "suin/php-rss-writer": "~1.3",

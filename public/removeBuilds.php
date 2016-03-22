@@ -14,11 +14,11 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include(dirname(__DIR__)."/config/config.php");
-require_once("include/pdo.php");
-include('public/login.php');
-include("include/version.php");
-require_once("include/common.php");
+include dirname(__DIR__) . '/config/config.php';
+require_once 'include/pdo.php';
+include 'public/login.php';
+include 'include/version.php';
+require_once 'include/common.php';
 
 set_time_limit(0);
 
@@ -33,7 +33,7 @@ if (pdo_select_db("$CDASH_DB_NAME", $db) === false) {
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'], 0); // only admin
 
-@$projectid = $_GET["projectid"];
+@$projectid = $_GET['projectid'];
 if ($projectid != null) {
     $projectid = pdo_real_escape_numeric($projectid);
 }
@@ -41,14 +41,14 @@ if ($projectid != null) {
 $xml = begin_XML_for_XSLT();
 
 //get date info here
-@$dayTo = pdo_real_escape_numeric($_POST["dayFrom"]);
+@$dayTo = pdo_real_escape_numeric($_POST['dayFrom']);
 if (empty($dayTo)) {
-    $time = strtotime("2000-01-01 00:00:00");
+    $time = strtotime('2000-01-01 00:00:00');
 
     if (isset($projectid)) {
         // find the first and last builds
 
-    $sql = "SELECT starttime FROM build WHERE projectid=".qnum($projectid)." ORDER BY starttime ASC LIMIT 1";
+        $sql = 'SELECT starttime FROM build WHERE projectid=' . qnum($projectid) . ' ORDER BY starttime ASC LIMIT 1';
         $startttime = pdo_query($sql);
         if ($startttime_array = pdo_fetch_array($startttime)) {
             $time = strtotime($startttime_array['starttime']);
@@ -61,49 +61,49 @@ if (empty($dayTo)) {
     $yearTo = date('Y');
     $monthTo = date('m');
 } else {
-    $dayFrom = pdo_real_escape_numeric($_POST["dayFrom"]);
-    $monthFrom = pdo_real_escape_numeric($_POST["monthFrom"]);
-    $yearFrom = pdo_real_escape_numeric($_POST["yearFrom"]);
-    $dayTo = pdo_real_escape_numeric($_POST["dayTo"]);
-    $monthTo = pdo_real_escape_numeric($_POST["monthTo"]);
-    $yearTo = pdo_real_escape_numeric($_POST["yearTo"]);
+    $dayFrom = pdo_real_escape_numeric($_POST['dayFrom']);
+    $monthFrom = pdo_real_escape_numeric($_POST['monthFrom']);
+    $yearFrom = pdo_real_escape_numeric($_POST['yearFrom']);
+    $dayTo = pdo_real_escape_numeric($_POST['dayTo']);
+    $monthTo = pdo_real_escape_numeric($_POST['monthTo']);
+    $yearTo = pdo_real_escape_numeric($_POST['yearTo']);
 }
 
-$xml = "<cdash>";
-$xml .= "<cssfile>".$CDASH_CSS_FILE."</cssfile>";
-$xml .= "<version>".$CDASH_VERSION."</version>";
-$xml .= "<title>CDash - Remove Builds</title>";
-$xml .= "<menutitle>CDash</menutitle>";
-$xml .= "<menusubtitle>Remove Builds</menusubtitle>";
-$xml .= "<backurl>manageBackup.php</backurl>";
+$xml = '<cdash>';
+$xml .= '<cssfile>' . $CDASH_CSS_FILE . '</cssfile>';
+$xml .= '<version>' . $CDASH_VERSION . '</version>';
+$xml .= '<title>CDash - Remove Builds</title>';
+$xml .= '<menutitle>CDash</menutitle>';
+$xml .= '<menusubtitle>Remove Builds</menusubtitle>';
+$xml .= '<backurl>manageBackup.php</backurl>';
 
 // List the available projects
-$sql = "SELECT id,name FROM project";
+$sql = 'SELECT id,name FROM project';
 $projects = pdo_query($sql);
 while ($projects_array = pdo_fetch_array($projects)) {
-    $xml .= "<availableproject>";
-    $xml .= add_XML_value("id", $projects_array['id']);
-    $xml .= add_XML_value("name", $projects_array['name']);
-    if ($projects_array['id']==$projectid) {
-        $xml .= add_XML_value("selected", "1");
+    $xml .= '<availableproject>';
+    $xml .= add_XML_value('id', $projects_array['id']);
+    $xml .= add_XML_value('name', $projects_array['name']);
+    if ($projects_array['id'] == $projectid) {
+        $xml .= add_XML_value('selected', '1');
     }
-    $xml .= "</availableproject>";
+    $xml .= '</availableproject>';
 }
 
-$xml .= "<dayFrom>".$dayFrom."</dayFrom>";
-$xml .= "<monthFrom>".$monthFrom."</monthFrom>";
-$xml .= "<yearFrom>".$yearFrom."</yearFrom>";
-$xml .= "<dayTo>".$dayTo."</dayTo>";
-$xml .= "<monthTo>".$monthTo."</monthTo>";
-$xml .= "<yearTo>".$yearTo."</yearTo>";
+$xml .= '<dayFrom>' . $dayFrom . '</dayFrom>';
+$xml .= '<monthFrom>' . $monthFrom . '</monthFrom>';
+$xml .= '<yearFrom>' . $yearFrom . '</yearFrom>';
+$xml .= '<dayTo>' . $dayTo . '</dayTo>';
+$xml .= '<monthTo>' . $monthTo . '</monthTo>';
+$xml .= '<yearTo>' . $yearTo . '</yearTo>';
 
-@$submit = $_POST["Submit"];
+@$submit = $_POST['Submit'];
 
 // Delete the builds
 if (isset($submit)) {
-    $begin = $yearFrom."-".$monthFrom."-".$dayFrom." 00:00:00";
-    $end = $yearTo."-".$monthTo."-".$dayTo." 00:00:00";
-    $sql = "SELECT id FROM build WHERE projectid=".qnum($projectid)." AND
+    $begin = $yearFrom . '-' . $monthFrom . '-' . $dayFrom . ' 00:00:00';
+    $end = $yearTo . '-' . $monthTo . '-' . $dayTo . ' 00:00:00';
+    $sql = 'SELECT id FROM build WHERE projectid=' . qnum($projectid) . " AND
         parentid IN (0, -1) AND starttime<='$end' AND starttime>='$begin'
         ORDER BY starttime ASC";
 
@@ -115,8 +115,8 @@ if (isset($submit)) {
     }
 
     remove_build($builds);
-    $xml .= add_XML_value("alert", "Removed ".count($builds)." builds.");
+    $xml .= add_XML_value('alert', 'Removed ' . count($builds) . ' builds.');
 }
 
-$xml .= "</cdash>";
-generate_XSLT($xml, "removeBuilds");
+$xml .= '</cdash>';
+generate_XSLT($xml, 'removeBuilds');

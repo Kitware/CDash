@@ -21,25 +21,26 @@ if (isset($_GET['method'])) {
     exit(0);
 }
 
-include(dirname(dirname(dirname(__DIR__)))."/config/config.php");
-require_once("include/pdo.php");
-include("include/common.php");
-include('include/version.php');
-require_once("models/project.php");
-require_once("models/buildfailure.php");
-require_once("include/filterdataFunctions.php");
-require_once("include/index_functions.php");
+include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
+require_once 'include/pdo.php';
+include 'include/common.php';
+include 'include/version.php';
+require_once 'models/project.php';
+require_once 'models/buildfailure.php';
+require_once 'include/filterdataFunctions.php';
+require_once 'include/index_functions.php';
 
 set_time_limit(0);
 
 // Check if we can connect to the database.
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 if (!$db ||
-        pdo_select_db("$CDASH_DB_NAME", $db) === false ||
-        pdo_query("SELECT id FROM ".qid("user")." LIMIT 1", $db) === false) {
+    pdo_select_db("$CDASH_DB_NAME", $db) === false ||
+    pdo_query('SELECT id FROM ' . qid('user') . ' LIMIT 1', $db) === false
+) {
     if ($CDASH_PRODUCTION_MODE) {
         $response = array();
-        $response['error'] = "CDash cannot connect to the database.";
+        $response['error'] = 'CDash cannot connect to the database.';
         echo json_encode($response);
         return;
     } else {
@@ -49,43 +50,42 @@ if (!$db ||
     return;
 }
 
-@$projectname = $_GET["project"];
+@$projectname = $_GET['project'];
 $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
 $projectid = get_project_id($projectname);
 $Project = new Project();
 $Project->Id = $projectid;
 $Project->Fill();
 
-@$date = $_GET["date"];
+@$date = $_GET['date'];
 if ($date != null) {
     $date = htmlspecialchars(pdo_real_escape_string($date));
 }
 
 echo_main_dashboard_JSON($Project, $date);
 
-
 // Generate the main dashboard JSON response.
 function echo_main_dashboard_JSON($project_instance, $date)
 {
     $start = microtime_float();
     $noforcelogin = 1;
-    include_once(dirname(dirname(dirname(__DIR__)))."/config/config.php");
-    require_once("include/pdo.php");
-    include('public/login.php');
-    include_once("models/banner.php");
-    include_once("models/build.php");
-    include_once("models/subproject.php");
+    include_once dirname(dirname(dirname(__DIR__))) . '/config/config.php';
+    require_once 'include/pdo.php';
+    include 'public/login.php';
+    include_once 'models/banner.php';
+    include_once 'models/build.php';
+    include_once 'models/subproject.php';
 
     $response = array();
 
     $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
     if (!$db) {
-        $response['error'] = "Error connecting to CDash database server";
+        $response['error'] = 'Error connecting to CDash database server';
         echo json_encode($response);
         return;
     }
     if (!pdo_select_db("$CDASH_DB_NAME", $db)) {
-        $response['error'] = "Error selecting CDash database";
+        $response['error'] = 'Error selecting CDash database';
         echo json_encode($response);
         return;
     }
@@ -93,15 +93,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
     $projectid = $project_instance->Id;
 
     $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
-    if (pdo_num_rows($project)>0) {
+    if (pdo_num_rows($project) > 0) {
         $project_array = pdo_fetch_array($project);
-        $svnurl = make_cdash_url(htmlentities($project_array["cvsurl"]));
-        $homeurl = make_cdash_url(htmlentities($project_array["homeurl"]));
-        $bugurl = make_cdash_url(htmlentities($project_array["bugtrackerurl"]));
-        $googletracker = htmlentities($project_array["googletracker"]);
-        $docurl = make_cdash_url(htmlentities($project_array["documentationurl"]));
-        $projectpublic =  $project_array["public"];
-        $projectname = $project_array["name"];
+        $projectname = $project_array['name'];
 
         if (isset($project_array['testingdataurl']) && $project_array['testingdataurl'] != '') {
             $testingdataurl = make_cdash_url(htmlentities($project_array['testingdataurl']));
@@ -113,7 +107,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
         return;
     }
 
-    if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $project_array["id"], 1)) {
+    if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $project_array['id'], 1)) {
         $response['requirelogin'] = 1;
         echo json_encode($response);
         return;
@@ -151,43 +145,23 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $response['parentid'] = -1;
     }
 
-    list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $project_array["nightlytime"]);
-    $logoid = getLogoID($projectid);
+    list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $project_array['nightlytime']);
 
     // Main dashboard section
-    $response['datetime'] = date("l, F d Y H:i:s T", time());
-    $response['date'] = $date;
-    $response['unixtimestamp'] = $currentstarttime;
-    $response['vcs'] = $svnurl;
-    $response['bugtracker'] = $bugurl;
-    $response['googletracker'] = $googletracker;
-    $response['documentation'] = $docurl;
-    $response['logoid'] = $logoid;
-    $response['projectid'] = $projectid;
-    $response['projectname'] = $projectname;
-    $response['projectname_encoded'] = urlencode($projectname);
-    $response['previousdate'] = $previousdate;
-    $response['public'] = $projectpublic;
-    $response['displaylabels'] = $project_array["displaylabels"];
-    $response['nextdate'] = $nextdate;
-
-    if (empty($project_array["homeurl"])) {
-        $response['home'] = "index.php?project=".urlencode($projectname);
-    } else {
-        $response['home'] = $homeurl;
-    }
+    get_dashboard_JSON($projectname, $date, $response);
+    $response['displaylabels'] = $project_array['displaylabels'];
 
     $page_id = 'index.php';
     $response['childview'] = 0;
 
-    if ($CDASH_USE_LOCAL_DIRECTORY && file_exists("local/models/proProject.php")) {
-        include_once("local/models/proProject.php");
-        $pro= new proProject;
-        $pro->ProjectId=$projectid;
+    if ($CDASH_USE_LOCAL_DIRECTORY && file_exists('local/models/proProject.php')) {
+        include_once 'local/models/proProject.php';
+        $pro = new proProject;
+        $pro->ProjectId = $projectid;
         $response['proedition'] = $pro->GetEdition(1);
     }
 
-    if ($currentstarttime>time()) {
+    if ($currentstarttime > time()) {
         $response['future'] = 1;
     } else {
         $response['future'] = 0;
@@ -196,7 +170,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
     // Menu definition
     $response['menu'] = array();
     $beginning_timestamp = $currentstarttime;
-    $end_timestamp = $currentstarttime+3600*24;
+    $end_timestamp = $currentstarttime + 3600 * 24;
     $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
     $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
     if ($project_instance->GetNumberOfSubProjects($end_UTCDate) > 0) {
@@ -213,11 +187,11 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $current_buildid = $parent_build->GetCurrentBuildId();
         $next_buildid = $parent_build->GetNextBuildId();
 
-        $base_url = "index.php?project=".urlencode($projectname);
+        $base_url = 'index.php?project=' . urlencode($projectname);
         if ($previous_buildid > 0) {
             $response['menu']['previous'] = "$base_url&parentid=$previous_buildid";
         } else {
-            $response['menu']['noprevious'] = "1";
+            $response['menu']['noprevious'] = '1';
         }
 
         $response['menu']['current'] = "$base_url&parentid=$current_buildid";
@@ -225,14 +199,14 @@ function echo_main_dashboard_JSON($project_instance, $date)
         if ($next_buildid > 0) {
             $response['menu']['next'] = "$base_url&parentid=$next_buildid";
         } else {
-            $response['menu']['nonext'] = "1";
+            $response['menu']['nonext'] = '1';
         }
     } elseif (!has_next_date($date, $currentstarttime)) {
         $response['menu']['nonext'] = 1;
     }
 
     // Check if a SubProject parameter was specified.
-    $subproject_name = @$_GET["subproject"];
+    $subproject_name = @$_GET['subproject'];
     $subprojectid = false;
     if ($subproject_name) {
         $SubProject = new SubProject();
@@ -243,11 +217,11 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
         if ($subprojectid) {
             // Add an extra URL argument for the menu
-            $response['extraurl'] = "&subproject=".urlencode($subproject_name);
+            $response['extraurl'] = '&subproject=' . urlencode($subproject_name);
             $response['subprojectname'] = $subproject_name;
 
             $subproject_response = array();
-            $subproject_response['name'] =  $SubProject->GetName();
+            $subproject_response['name'] = $SubProject->GetName();
 
             $dependencies = $SubProject->GetDependencies();
             if ($dependencies) {
@@ -268,7 +242,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
                     $dependency_response['ntestfail'] = $DependProject->GetNumberOfFailingTests($beginning_UTCDate, $end_UTCDate);
                     $dependency_response['ntestnotrun'] = $DependProject->GetNumberOfNotRunTests($beginning_UTCDate, $end_UTCDate);
                     if (strlen($DependProject->GetLastSubmission()) == 0) {
-                        $dependency_response['lastsubmission'] = "NA";
+                        $dependency_response['lastsubmission'] = 'NA';
                     } else {
                         $dependency_response['lastsubmission'] = $DependProject->GetLastSubmission();
                     }
@@ -279,8 +253,8 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $response['subproject'] = $subproject_response;
         } else {
             add_log("SubProject '$subproject_name' does not exist",
-                    __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__,
-                    LOG_WARNING);
+                __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__,
+                LOG_WARNING);
         }
     }
 
@@ -292,42 +266,21 @@ function echo_main_dashboard_JSON($project_instance, $date)
     $updates_response = array();
 
     $gmdate = gmdate(FMT_DATE, $currentstarttime);
-    $updates_response['url'] = "viewChanges.php?project=".urlencode($projectname)."&amp;date=".$gmdate;
+    $updates_response['url'] = 'viewChanges.php?project=' . urlencode($projectname) . '&amp;date=' . $gmdate;
 
     $dailyupdate = pdo_query("SELECT count(ds.dailyupdateid),count(distinct ds.author)
             FROM dailyupdate AS d LEFT JOIN dailyupdatefile AS ds ON (ds.dailyupdateid = d.id)
             WHERE d.date='$gmdate' and d.projectid='$projectid' GROUP BY ds.dailyupdateid");
 
-    if (pdo_num_rows($dailyupdate)>0) {
+    if (pdo_num_rows($dailyupdate) > 0) {
         $dailupdate_array = pdo_fetch_array($dailyupdate);
         $updates_response['nchanges'] = $dailupdate_array[0];
         $updates_response['nauthors'] = $dailupdate_array[1];
     } else {
         $updates_response['nchanges'] = -1;
     }
-    $updates_response['timestamp'] = date("l, F d Y - H:i T", $currentstarttime);
+    $updates_response['timestamp'] = date('l, F d Y - H:i T', $currentstarttime);
     $response['updates'] = $updates_response;
-
-    // User
-    if (isset($_SESSION['cdash']) && array_key_exists('loginid', $_SESSION['cdash'])) {
-        $user_response = array();
-        $userid = $_SESSION['cdash']['loginid'];
-        $user2project = pdo_query(
-                "SELECT role FROM user2project
-                WHERE userid='$userid' AND projectid='$projectid'");
-        $user2project_array = pdo_fetch_array($user2project);
-        $user = pdo_query(
-                "SELECT admin FROM ".qid("user")."  WHERE id='$userid'");
-        $user_array = pdo_fetch_array($user);
-        $user_response['id'] = $userid;
-        $isadmin = 0;
-        if ($user2project_array["role"] > 1 || $user_array["admin"]) {
-            $isadmin=1;
-        }
-        $user_response['admin'] = $isadmin;
-        $user_response['projectrole'] = $user2project_array['role'];
-        $response['user'] = $user_response;
-    }
 
     // This array is used to track if expected builds are found or not.
     $received_builds = array();
@@ -335,7 +288,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
     // Get info about our buildgroups.
     $buildgroups_response = array();
     $buildgroup_result = pdo_query(
-            "SELECT bg.id, bg.name, bgp.position FROM buildgroup AS bg
+        "SELECT bg.id, bg.name, bgp.position FROM buildgroup AS bg
             LEFT JOIN buildgroupposition AS bgp ON (bgp.buildgroupid=bg.id)
             WHERE bg.projectid=$projectid AND bg.starttime < '$beginning_UTCDate' AND
             (bg.endtime > '$beginning_UTCDate' OR
@@ -346,7 +299,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
         $buildgroup_response['id'] = $buildgroup_array['id'];
         $buildgroup_response['name'] = $groupname;
-        $buildgroup_response['linkname'] = str_replace(" ", "_", $groupname);
+        $buildgroup_response['linkname'] = str_replace(' ', '_', $groupname);
         $buildgroup_response['position'] = $buildgroup_array['position'];
 
         $buildgroup_response['numupdatedfiles'] = 0;
@@ -381,7 +334,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
     $filter_sql = $filterdata['sql'];
     $limit_sql = '';
     if ($filterdata['limit'] > 0) {
-        $limit_sql = ' LIMIT '.$filterdata['limit'];
+        $limit_sql = ' LIMIT ' . $filterdata['limit'];
     }
     unset($filterdata['xml']);
     $response['filterdata'] = $filterdata;
@@ -394,8 +347,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
     $exclude_subprojects = false;
     $included_subprojects = array();
     $excluded_subprojects = array();
-    $selected_subprojects = "";
+    $selected_subprojects = '';
     $num_selected_subprojects = 0;
+    $filter_on_labels = false;
     foreach ($filterdata['filters'] as $filter) {
         if ($filter['field'] == 'subprojects') {
             if ($filter['compare'] == 92) {
@@ -403,25 +357,28 @@ function echo_main_dashboard_JSON($project_instance, $date)
             } elseif ($filter['compare'] == 93) {
                 $included_subprojects[] = $filter['value'];
             }
+        } elseif ($filter['field'] == 'label') {
+            $filter_on_labels = true;
         }
     }
+
     // Include takes precedence over exclude.
     if (!empty($included_subprojects)) {
         $num_selected_subprojects = count($included_subprojects);
         $selected_subprojects = implode("','", $included_subprojects);
-        $selected_subprojects = "('".$selected_subprojects."')";
+        $selected_subprojects = "('" . $selected_subprojects . "')";
         $include_subprojects = true;
     } elseif (!empty($excluded_subprojects)) {
         $num_selected_subprojects = count($excluded_subprojects);
         $selected_subprojects = implode("','", $excluded_subprojects);
-        $selected_subprojects = "('".$selected_subprojects."')";
+        $selected_subprojects = "('" . $selected_subprojects . "')";
         $exclude_subprojects = true;
     }
 
     // add a request for the subproject
-    $subprojectsql = "";
+    $subprojectsql = '';
     if ($subproject_name && is_numeric($subprojectid)) {
-        $subprojectsql = " AND sp2b.subprojectid=".$subprojectid;
+        $subprojectsql = ' AND sp2b.subprojectid=' . $subprojectid;
     }
 
     // Use this as the default date clause, but if $filterdata has a date clause,
@@ -433,34 +390,34 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $date_clause = '';
     }
 
-    $parent_clause = "";
-    if (isset($_GET["parentid"])) {
+    $parent_clause = '';
+    if (isset($_GET['parentid'])) {
         // If we have a parentid, then we should only show children of that build.
         // Date becomes irrelevant in this case.
-        $parent_clause ="AND (b.parentid = " . qnum($_GET["parentid"]) . ") ";
-        $date_clause = "";
+        $parent_clause = 'AND (b.parentid = ' . qnum($_GET['parentid']) . ') ';
+        $date_clause = '';
     } elseif (empty($subprojectsql)) {
         // Only show builds that are not children.
-        $parent_clause ="AND (b.parentid = -1 OR b.parentid = 0) ";
+        $parent_clause = 'AND (b.parentid = -1 OR b.parentid = 0) ';
     }
 
     $build_rows = array();
 
     // If the user is logged in we display if the build has some changes for him
-    $userupdatesql = "";
+    $userupdatesql = '';
     if (isset($_SESSION['cdash']) && array_key_exists('loginid', $_SESSION['cdash'])) {
         $userupdatesql = "(SELECT count(updatefile.updateid) FROM updatefile,build2update,user2project,
             user2repository
                 WHERE build2update.buildid=b.id
                 AND build2update.updateid=updatefile.updateid
                 AND user2project.projectid=b.projectid
-                AND user2project.userid='".$_SESSION['cdash']['loginid']."'
+                AND user2project.userid='" . $_SESSION['cdash']['loginid'] . "'
                 AND user2repository.userid=user2project.userid
                 AND (user2repository.projectid=0 OR user2repository.projectid=b.projectid)
                 AND user2repository.credential=updatefile.author) AS userupdates,";
     }
 
-    $sql =  "SELECT b.id,b.siteid,b.parentid,b.done,
+    $sql = 'SELECT b.id,b.siteid,b.parentid,b.done,
         bu.status AS updatestatus,
         i.osname AS osname,
         bu.starttime AS updatestarttime,
@@ -483,8 +440,8 @@ function echo_main_dashboard_JSON($project_instance, $date)
         tstatusfailed_diff.difference_positive AS countteststimestatusfaileddiffp,
         tstatusfailed_diff.difference_negative AS countteststimestatusfaileddiffn,
         (SELECT count(buildid) FROM build2note WHERE buildid=b.id)  AS countnotes,
-        (SELECT count(buildid) FROM buildnote WHERE buildid=b.id) AS countbuildnotes,"
-            .$userupdatesql."
+        (SELECT count(buildid) FROM buildnote WHERE buildid=b.id) AS countbuildnotes,'
+        . $userupdatesql . "
             s.name AS sitename,
         s.outoforder AS siteoutoforder,
         b.stamp,b.name,b.type,b.generator,b.starttime,b.endtime,b.submittime,
@@ -521,15 +478,15 @@ function echo_main_dashboard_JSON($project_instance, $date)
             LEFT JOIN subproject as sp ON (sp2b.subprojectid = sp.id)
             WHERE b.projectid='$projectid' AND g.type='Daily'
             $parent_clause $date_clause
-            ".$subprojectsql." ".$filter_sql." ".$limit_sql;
+            " . $subprojectsql . ' ' . $filter_sql . ' ' . $limit_sql;
 
     // We shouldn't get any builds for group that have been deleted (otherwise something is wrong)
     $builds = pdo_query($sql);
 
     // Log any errors
     $pdo_error = pdo_error();
-    if (strlen($pdo_error)>0) {
-        add_log("SQL error: ".$pdo_error, "Index.php", LOG_ERR);
+    if (strlen($pdo_error) > 0) {
+        add_log('SQL error: ' . $pdo_error, 'Index.php', LOG_ERR);
     }
 
     // Gather up results from this query.
@@ -547,8 +504,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
     // This happens when we have subprojects and we're looking at the children
     // of a specific build.
     $coverage_groups = array();
-    if (isset($_GET["parentid"]) && $_GET["parentid"] > 0 &&
-            $project_instance->GetNumberOfSubProjects($end_UTCDate) > 0) {
+    if (isset($_GET['parentid']) && $_GET['parentid'] > 0 &&
+        $project_instance->GetNumberOfSubProjects($end_UTCDate) > 0
+    ) {
         $groups = $project_instance->GetSubProjectGroups();
         foreach ($groups as $group) {
             // Keep track of coverage info on a per-group basis.
@@ -625,20 +583,20 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
         // Updates
         if (!empty($build_row['updatestarttime'])) {
-            $build_row['updateduration'] = round((strtotime($build_row['updateendtime'])-strtotime($build_row['updatestarttime']))/60, 1);
+            $build_row['updateduration'] = round((strtotime($build_row['updateendtime']) - strtotime($build_row['updatestarttime'])) / 60, 1);
         } else {
             $build_row['updateduration'] = 0;
         }
 
-
-        if (strlen($build_row["updatestatus"]) > 0 &&
-                $build_row["updatestatus"]!="0") {
+        if (strlen($build_row['updatestatus']) > 0 &&
+            $build_row['updatestatus'] != '0'
+        ) {
             $build_row['countupdateerrors'] = 1;
         } else {
             $build_row['countupdateerrors'] = 0;
         }
 
-        $build_row['buildduration'] = round((strtotime($build_row['endtime'])-strtotime($build_row['starttime']))/60, 1);
+        $build_row['buildduration'] = round((strtotime($build_row['endtime']) - strtotime($build_row['starttime'])) / 60, 1);
 
         // Error/Warnings differences
         if (empty($build_row['countbuilderrordiffp'])) {
@@ -670,7 +628,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
         }
 
         $build_row['hastest'] = 0;
-        if ($build_row['counttestsfailed']!=-1) {
+        if ($build_row['counttestsfailed'] != -1) {
             $build_row['hastest'] = 1;
         }
 
@@ -687,8 +645,11 @@ function echo_main_dashboard_JSON($project_instance, $date)
     // Generate the JSON response from the rows of builds.
     $response['coverages'] = array();
     $response['dynamicanalyses'] = array();
+    $num_nightly_coverages_builds = 0;
+    $show_aggregate = false;
+    $response['comparecoverage'] = 0;
     foreach ($build_rows as $build_array) {
-        $groupid = $build_array["groupid"];
+        $groupid = $build_array['groupid'];
 
         // Find the buildgroup array for this build.
         $i = -1;
@@ -700,8 +661,8 @@ function echo_main_dashboard_JSON($project_instance, $date)
         }
         if ($i == -1) {
             add_log("BuildGroup '$groupid' not found for build #" . $build_array['id'],
-                    __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__,
-                    LOG_WARNING);
+                __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__,
+                LOG_WARNING);
             continue;
         }
 
@@ -710,17 +671,17 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $build_response = array();
 
         $received_builds[$groupname][] =
-            $build_array["sitename"]."_".$build_array["name"];
+            $build_array['sitename'] . '_' . $build_array['name'];
 
-        $buildid = $build_array["id"];
-        $siteid = $build_array["siteid"];
+        $buildid = $build_array['id'];
+        $siteid = $build_array['siteid'];
 
         $countChildrenResult = pdo_single_row_query(
-                "SELECT count(id) AS numchildren
-                FROM build WHERE parentid=".qnum($buildid));
+            'SELECT count(id) AS numchildren
+                FROM build WHERE parentid=' . qnum($buildid));
         $numchildren = $countChildrenResult['numchildren'];
         $build_response['numchildren'] = $numchildren;
-        $child_builds_hyperlink = "";
+        $child_builds_hyperlink = '';
 
         $selected_configure_errors = 0;
         $selected_configure_warnings = 0;
@@ -732,7 +693,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
         if ($numchildren > 0) {
             $child_builds_hyperlink =
-                get_child_builds_hyperlink($build_array["id"], $filterdata);
+                get_child_builds_hyperlink($build_array['id'], $filterdata);
             $build_response['multiplebuildshyperlink'] = $child_builds_hyperlink;
             $buildgroups_response[$i]['hasparentbuilds'] = true;
 
@@ -769,66 +730,67 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $buildgroups_response[$i]['hasnormalbuilds'] = true;
         }
 
-        if (strtolower($build_array["type"]) == 'continuous') {
+        if (strtolower($build_array['type']) == 'continuous') {
             $buildgroups_response[$i]['sorttype'] = 'time';
         }
 
         // Attempt to determine the platform based on the OSName and the buildname
         $buildplatform = '';
-        if (strtolower(substr($build_array["osname"], 0, 7)) == 'windows') {
-            $buildplatform='windows';
-        } elseif (strtolower(substr($build_array["osname"], 0, 8)) == 'mac os x') {
-            $buildplatform='mac';
-        } elseif (strtolower(substr($build_array["osname"], 0, 5)) == 'linux'
-                || strtolower(substr($build_array["osname"], 0, 3)) == 'aix'
-                ) {
-            $buildplatform='linux';
-        } elseif (strtolower(substr($build_array["osname"], 0, 7)) == 'freebsd') {
-            $buildplatform='freebsd';
-        } elseif (strtolower(substr($build_array["osname"], 0, 3)) == 'gnu') {
-            $buildplatform='gnu';
+        if (strtolower(substr($build_array['osname'], 0, 7)) == 'windows') {
+            $buildplatform = 'windows';
+        } elseif (strtolower(substr($build_array['osname'], 0, 8)) == 'mac os x') {
+            $buildplatform = 'mac';
+        } elseif (strtolower(substr($build_array['osname'], 0, 5)) == 'linux'
+            || strtolower(substr($build_array['osname'], 0, 3)) == 'aix'
+        ) {
+            $buildplatform = 'linux';
+        } elseif (strtolower(substr($build_array['osname'], 0, 7)) == 'freebsd') {
+            $buildplatform = 'freebsd';
+        } elseif (strtolower(substr($build_array['osname'], 0, 3)) == 'gnu') {
+            $buildplatform = 'gnu';
         }
 
-        if (isset($_GET["parentid"])) {
+        if (isset($_GET['parentid'])) {
             if (empty($site_response)) {
-                $site_response['site'] =  $build_array["sitename"];
-                $site_response['siteoutoforder'] =  $build_array["siteoutoforder"];
-                $site_response['siteid'] =  $siteid;
-                $site_response['buildname'] =  $build_array["name"];
+                $site_response['site'] = $build_array['sitename'];
+                $site_response['siteoutoforder'] = $build_array['siteoutoforder'];
+                $site_response['siteid'] = $siteid;
+                $site_response['buildname'] = $build_array['name'];
                 $site_response['buildplatform'] = $buildplatform;
-                $site_response['generator'] = $build_array["generator"];
+                $site_response['generator'] = $build_array['generator'];
             }
         } else {
-            $build_response['site'] =  $build_array["sitename"];
-            $build_response['siteoutoforder'] =  $build_array["siteoutoforder"];
-            $build_response['siteid'] =  $siteid;
-            $build_response['buildname'] =  $build_array["name"];
+            $build_response['site'] = $build_array['sitename'];
+            $build_response['siteoutoforder'] = $build_array['siteoutoforder'];
+            $build_response['siteid'] = $siteid;
+            $build_response['buildname'] = $build_array['name'];
             $build_response['buildplatform'] = $buildplatform;
         }
 
-        if (isset($build_array["userupdates"])) {
-            $build_response['userupdates'] =  $build_array["userupdates"];
+        if (isset($build_array['userupdates'])) {
+            $build_response['userupdates'] = $build_array['userupdates'];
         }
-        $build_response['id'] = $build_array["id"];
+        $build_response['id'] = $build_array['id'];
         $build_response['done'] = $build_array['done'];
-        $build_response['uploadfilecount'] = $build_array["builduploadfiles"];
+        $build_response['uploadfilecount'] = $build_array['builduploadfiles'];
 
         $build_response['buildnotes'] = $build_array['countbuildnotes'];
         $build_response['notes'] = $build_array['countnotes'];
 
         // Figure out how many labels to report for this build.
         if (!array_key_exists('numlabels', $build_array) ||
-                $build_array['numlabels'] == 0) {
+            $build_array['numlabels'] == 0
+        ) {
             $num_labels = 0;
         } else {
             $num_labels = $build_array['numlabels'];
         }
 
         $label_query =
-            "SELECT l.text FROM label AS l
+            'SELECT l.text FROM label AS l
             INNER JOIN label2build AS l2b ON (l.id=l2b.labelid)
             INNER JOIN build AS b ON (l2b.buildid=b.id)
-            WHERE b.id=" . qnum($buildid);
+            WHERE b.id=' . qnum($buildid);
 
         if ($num_selected_subprojects > 0) {
             // Special handling for whitelisting/blacklisting SubProjects.
@@ -839,12 +801,14 @@ function echo_main_dashboard_JSON($project_instance, $date)
             while ($label_row = pdo_fetch_array($labels_result)) {
                 // Whitelist case
                 if ($include_subprojects &&
-                        in_array($label_row['text'], $included_subprojects)) {
+                    in_array($label_row['text'], $included_subprojects)
+                ) {
                     $num_labels++;
                 }
                 // Blacklist case
                 if ($exclude_subprojects &&
-                        in_array($label_row['text'], $excluded_subprojects)) {
+                    in_array($label_row['text'], $excluded_subprojects)
+                ) {
                     $num_labels--;
                 }
             }
@@ -858,7 +822,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
         // Assign a label to this build based on how many labels it has.
         if ($num_labels == 0) {
-            $build_label = "(none)";
+            $build_label = '(none)';
         } elseif ($num_labels == 1) {
             // If exactly one label for this build, look it up here.
             $label_result = pdo_single_row_query($label_query);
@@ -872,42 +836,42 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $update_response = array();
 
         $countupdatefiles = $build_array['countupdatefiles'];
-        $update_response['files'] =  $countupdatefiles;
+        $update_response['files'] = $countupdatefiles;
         $buildgroups_response[$i]['numupdatedfiles'] += $countupdatefiles;
 
         if (!empty($build_array['updatestarttime'])) {
             $update_response['defined'] = 1;
 
-            if ($build_array['countupdateerrors']>0) {
-                $update_response['errors'] =  1;
+            if ($build_array['countupdateerrors'] > 0) {
+                $update_response['errors'] = 1;
                 $buildgroups_response[$i]['numupdateerror'] += 1;
             } else {
-                $update_response['errors'] =  0;
+                $update_response['errors'] = 0;
 
-                if ($build_array['countupdatewarnings']>0) {
-                    $update_response['warning'] =  1;
+                if ($build_array['countupdatewarnings'] > 0) {
+                    $update_response['warning'] = 1;
                     $buildgroups_response[$i]['numupdatewarning'] += 1;
                 }
             }
 
             $duration = $build_array['updateduration'];
-            $update_response['time'] =  time_difference($duration*60.0, true);
+            $update_response['time'] = time_difference($duration * 60.0, true);
             $update_response['timefull'] = $duration;
             $buildgroups_response[$i]['updateduration'] += $duration;
             $buildgroups_response[$i]['hasupdatedata'] = true;
             $build_response['update'] = $update_response;
-        } // end if we have an update
+        }
 
         $compilation_response = array();
 
-        if ($build_array['countbuilderrors']>=0) {
+        if ($build_array['countbuilderrors'] >= 0) {
             if ($include_subprojects) {
                 $nerrors = $selected_build_errors;
             } else {
                 $nerrors =
                     $build_array['countbuilderrors'] - $selected_build_errors;
             }
-            $compilation_response['error'] =  $nerrors;
+            $compilation_response['error'] = $nerrors;
             $buildgroups_response[$i]['numbuilderror'] += $nerrors;
 
             if ($include_subprojects) {
@@ -920,25 +884,25 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $buildgroups_response[$i]['numbuildwarning'] += $nwarnings;
 
             $duration = $build_array['buildduration'];
-            $compilation_response['time'] = time_difference($duration*60.0, true);
+            $compilation_response['time'] = time_difference($duration * 60.0, true);
             $compilation_response['timefull'] = $duration;
 
             $diff = $build_array['countbuilderrordiffp'];
-            if ($diff!=0) {
-                $compilation_response['nerrordiffp'] =  $diff;
+            if ($diff != 0) {
+                $compilation_response['nerrordiffp'] = $diff;
             }
             $diff = $build_array['countbuilderrordiffn'];
-            if ($diff!=0) {
-                $compilation_response['nerrordiffn'] =  $diff;
+            if ($diff != 0) {
+                $compilation_response['nerrordiffn'] = $diff;
             }
 
             $diff = $build_array['countbuildwarningdiffp'];
-            if ($diff!=0) {
-                $compilation_response['nwarningdiffp'] =  $diff;
+            if ($diff != 0) {
+                $compilation_response['nwarningdiffp'] = $diff;
             }
             $diff = $build_array['countbuildwarningdiffn'];
-            if ($diff!=0) {
-                $compilation_response['nwarningdiffn'] =  $diff;
+            if ($diff != 0) {
+                $compilation_response['nwarningdiffn'] = $diff;
             }
         }
         if (!empty($compilation_response)) {
@@ -967,12 +931,13 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $buildgroups_response[$i]['numconfigurewarning'] += $nconfigurewarnings;
 
         $diff = $build_array['countconfigurewarningdiff'];
-        if ($diff!=0) {
+        if ($diff != 0) {
             $configure_response['warningdiff'] = $diff;
         }
 
         if (array_key_exists('configureduration', $build_array) &&
-                $build_array['configureduration'] != 0) {
+            $build_array['configureduration'] != 0
+        ) {
             $duration = $build_array['configureduration'];
             $configure_response['time'] = time_difference($duration, true);
             $configure_response['timefull'] = $duration;
@@ -995,10 +960,10 @@ function echo_main_dashboard_JSON($project_instance, $date)
                     $selected_tests_not_run;
             }
 
-            if ($build_array['counttestsnotrundiffp']!=0) {
+            if ($build_array['counttestsnotrundiffp'] != 0) {
                 $test_response['nnotrundiffp'] = $build_array['counttestsnotrundiffp'];
             }
-            if ($build_array['counttestsnotrundiffn']!=0) {
+            if ($build_array['counttestsnotrundiffn'] != 0) {
                 $test_response['nnotrundiffn'] = $build_array['counttestsnotrundiffn'];
             }
 
@@ -1009,10 +974,10 @@ function echo_main_dashboard_JSON($project_instance, $date)
                     $selected_tests_failed;
             }
 
-            if ($build_array['counttestsfaileddiffp']!=0) {
+            if ($build_array['counttestsfaileddiffp'] != 0) {
                 $test_response['nfaildiffp'] = $build_array['counttestsfaileddiffp'];
             }
-            if ($build_array['counttestsfaileddiffn']!=0) {
+            if ($build_array['counttestsfaileddiffn'] != 0) {
                 $test_response['nfaildiffn'] = $build_array['counttestsfaileddiffn'];
             }
 
@@ -1023,21 +988,78 @@ function echo_main_dashboard_JSON($project_instance, $date)
                     $selected_tests_passed;
             }
 
-            if ($build_array['counttestspasseddiffp']!=0) {
+            if ($build_array['counttestspasseddiffp'] != 0) {
                 $test_response['npassdiffp'] = $build_array['counttestspasseddiffp'];
             }
-            if ($build_array['counttestspasseddiffn']!=0) {
+            if ($build_array['counttestspasseddiffn'] != 0) {
                 $test_response['npassdiffn'] = $build_array['counttestspasseddiffn'];
             }
 
-            if ($project_array["showtesttime"] == 1) {
+            if ($project_array['showtesttime'] == 1) {
                 $test_response['timestatus'] = $build_array['countteststimestatusfailed'];
 
-                if ($build_array['countteststimestatusfaileddiffp']!=0) {
+                if ($build_array['countteststimestatusfaileddiffp'] != 0) {
                     $test_response['ntimediffp'] = $build_array['countteststimestatusfaileddiffp'];
                 }
-                if ($build_array['countteststimestatusfaileddiffn']!=0) {
+                if ($build_array['countteststimestatusfaileddiffn'] != 0) {
                     $test_response['ntimediffn'] = $build_array['countteststimestatusfaileddiffn'];
+                }
+            }
+
+            if ($filter_on_labels) {
+                $test_filterdata = get_filterdata_from_request('queryTests.php');
+                $label_filter_sql = $test_filterdata['sql'];
+
+                $label_query_base = "SELECT build2test.status, test.name AS testname
+                                    FROM build AS b
+                                    JOIN build2test ON (b.id = build2test.buildid)
+                                    JOIN test ON (test.id = build2test.testid)
+                                    WHERE b.projectid = '" . $project_array['id'] . "' ";
+
+                $label_filter_query = $label_query_base . $parent_clause . $date_clause . ' ' .
+                                     $label_filter_sql . $limit_sql;
+
+                $labels_result = pdo_query($label_filter_query);
+                $nnotrun = 0;
+                $nfail = 0;
+                $npass = 0;
+                while ($label_row = pdo_fetch_array($labels_result)) {
+                    switch ($label_row['status']) {
+                        case 'passed':
+                            $npass++;
+                            break;
+                        case 'failed':
+                            $nfail++;
+                            break;
+                        case 'notrun':
+                            $nnotrun++;
+                            break;
+                    }
+                }
+
+                $only_new_tests = ' AND build2test.newstatus=1 ';
+                $label_filter_query = $label_query_base . $only_new_tests .
+                                    $parent_clause . $date_clause . ' ' .
+                                    $label_filter_sql . $limit_sql;
+                $labels_result = pdo_query($label_filter_query);
+                $test_response['nfaildiffp'] = 0;
+                $test_response['nfaildiffn'] = 0;
+                $test_response['npassdiffp'] = 0;
+                $test_response['npassdiffn'] = 0;
+                $test_response['nnotrundiffp'] = 0;
+                $test_response['nnotrundiffn'] = 0;
+                while ($label_row = pdo_fetch_array($labels_result)) {
+                    switch ($label_row['status']) {
+                        case 'passed':
+                            $test_response['npassdiffp']++;
+                            break;
+                        case 'failed':
+                            $test_response['nfaildiffp']++;
+                            break;
+                        case 'notrun':
+                            $test_response['nnotrundiffp']++;
+                            break;
+                    }
                 }
             }
 
@@ -1057,23 +1079,24 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $build_response['test'] = $test_response;
         }
 
-
-        $starttimestamp = strtotime($build_array["starttime"]." UTC");
-        $submittimestamp = strtotime($build_array["submittime"]." UTC");
+        $starttimestamp = strtotime($build_array['starttime'] . ' UTC');
+        $submittimestamp = strtotime($build_array['submittime'] . ' UTC');
         // Use the default timezone.
         $build_response['builddatefull'] = $starttimestamp;
 
         // If the data is more than 24h old then we switch from an elapsed to a normal representation
-        if (time()-$starttimestamp<86400) {
+        if (time() - $starttimestamp < 86400) {
             $build_response['builddate'] = date(FMT_DATETIMEDISPLAY, $starttimestamp);
-            $build_response['builddateelapsed'] = time_difference(time()-$starttimestamp, false, 'ago');
+            $build_response['builddateelapsed'] = time_difference(time() - $starttimestamp, false, 'ago');
         } else {
             $build_response['builddateelapsed'] = date(FMT_DATETIMEDISPLAY, $starttimestamp);
-            $build_response['builddate'] = time_difference(time()-$starttimestamp, false, 'ago');
+            $build_response['builddate'] = time_difference(time() - $starttimestamp, false, 'ago');
         }
         $build_response['submitdate'] = date(FMT_DATETIMEDISPLAY, $submittimestamp);
 
-        $buildgroups_response[$i]['builds'][] = $build_response;
+        if ($build_array['name'] != 'Aggregate Coverage') {
+            $buildgroups_response[$i]['builds'][] = $build_response;
+        }
 
         // Coverage
         //
@@ -1082,25 +1105,36 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $linkToChildCoverage = false;
         if ($numchildren > 0) {
             $countChildrenResult = pdo_single_row_query(
-                    "SELECT count(fileid) AS nfiles FROM coverage
-                    WHERE buildid=".qnum($buildid));
+                'SELECT count(fileid) AS nfiles FROM coverage
+                    WHERE buildid=' . qnum($buildid));
             if ($countChildrenResult['nfiles'] == 0) {
                 $linkToChildCoverage = true;
             }
         }
 
         $coverageIsGrouped = false;
+
         $coverages = pdo_query("SELECT * FROM coveragesummary WHERE buildid='$buildid'");
         while ($coverage_array = pdo_fetch_array($coverages)) {
             $coverage_response = array();
-            $coverage_response['buildid'] = $build_array["id"];
+            $coverage_response['buildid'] = $build_array['id'];
             if ($linkToChildCoverage) {
                 $coverage_response['childlink'] = "$child_builds_hyperlink#Coverage";
             }
 
+            if ($build_array['type'] === 'Nightly' && $build_array['name'] !== 'Aggregate Coverage') {
+                $num_nightly_coverages_builds++;
+                if ($num_nightly_coverages_builds > 1) {
+                    $show_aggregate = true;
+                    if ($linkToChildCoverage) {
+                        $response['comparecoverage'] = 1;
+                    }
+                }
+            }
+
             $percent = round(
-                    compute_percentcoverage($coverage_array['loctested'],
-                        $coverage_array['locuntested']), 2);
+                compute_percentcoverage($coverage_array['loctested'],
+                    $coverage_array['locuntested']), 2);
 
             if ($build_array['subprojectgroup']) {
                 $groupId = $build_array['subprojectgroup'];
@@ -1115,36 +1149,36 @@ function echo_main_dashboard_JSON($project_instance, $date)
             }
 
             $coverage_response['percentage'] = $percent;
-            $coverage_response['locuntested'] = intval($coverage_array["locuntested"]);
-            $coverage_response['loctested'] = intval($coverage_array["loctested"]);
+            $coverage_response['locuntested'] = intval($coverage_array['locuntested']);
+            $coverage_response['loctested'] = intval($coverage_array['loctested']);
 
             // Compute the diff
             $coveragediff = pdo_query("SELECT * FROM coveragesummarydiff WHERE buildid='$buildid'");
-            if (pdo_num_rows($coveragediff) >0) {
+            if (pdo_num_rows($coveragediff) > 0) {
                 $coveragediff_array = pdo_fetch_array($coveragediff);
                 $loctesteddiff = $coveragediff_array['loctested'];
                 $locuntesteddiff = $coveragediff_array['locuntested'];
                 @$previouspercent =
-                    round(($coverage_array["loctested"] - $loctesteddiff) /
-                            ($coverage_array["loctested"] - $loctesteddiff +
-                             $coverage_array["locuntested"] - $locuntesteddiff)
-                            * 100, 2);
+                    round(($coverage_array['loctested'] - $loctesteddiff) /
+                        ($coverage_array['loctested'] - $loctesteddiff +
+                            $coverage_array['locuntested'] - $locuntesteddiff)
+                        * 100, 2);
                 $percentdiff = round($percent - $previouspercent, 2);
                 $coverage_response['percentagediff'] = $percentdiff;
                 $coverage_response['locuntesteddiff'] = $locuntesteddiff;
                 $coverage_response['loctesteddiff'] = $loctesteddiff;
             }
 
-            $starttimestamp = strtotime($build_array["starttime"]." UTC");
+            $starttimestamp = strtotime($build_array['starttime'] . ' UTC');
             $coverage_response['datefull'] = $starttimestamp;
 
             // If the data is more than 24h old then we switch from an elapsed to a normal representation
-            if (time()-$starttimestamp<86400) {
+            if (time() - $starttimestamp < 86400) {
                 $coverage_response['date'] = date(FMT_DATETIMEDISPLAY, $starttimestamp);
-                $coverage_response['dateelapsed'] = time_difference(time()-$starttimestamp, false, 'ago');
+                $coverage_response['dateelapsed'] = time_difference(time() - $starttimestamp, false, 'ago');
             } else {
                 $coverage_response['dateelapsed'] = date(FMT_DATETIMEDISPLAY, $starttimestamp);
-                $coverage_response['date'] = time_difference(time()-$starttimestamp, false, 'ago');
+                $coverage_response['date'] = time_difference(time() - $starttimestamp, false, 'ago');
             }
 
             // Are there labels for this build?
@@ -1154,11 +1188,11 @@ function echo_main_dashboard_JSON($project_instance, $date)
             if ($coverageIsGrouped) {
                 $coverage_groups[$groupId]['coverages'][] = $coverage_response;
             } else {
-                $coverage_response['site'] = $build_array["sitename"];
-                $coverage_response['buildname'] = $build_array["name"];
+                $coverage_response['site'] = $build_array['sitename'];
+                $coverage_response['buildname'] = $build_array['name'];
                 $response['coverages'][] = $coverage_response;
             }
-        }  // end coverage
+        }
         if (!$coverageIsGrouped) {
             $coverageThreshold = $project_array['coveragethreshold'];
             $response['thresholdgreen'] = $coverageThreshold;
@@ -1170,12 +1204,12 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $dynanalysis = pdo_query("SELECT checker,status FROM dynamicanalysis WHERE buildid='$buildid' LIMIT 1");
         while ($dynanalysis_array = pdo_fetch_array($dynanalysis)) {
             $DA_response = array();
-            $DA_response['site'] = $build_array["sitename"];
-            $DA_response['buildname'] = $build_array["name"];
-            $DA_response['buildid'] = $build_array["id"];
+            $DA_response['site'] = $build_array['sitename'];
+            $DA_response['buildname'] = $build_array['name'];
+            $DA_response['buildid'] = $build_array['id'];
 
-            $DA_response['checker'] = $dynanalysis_array["checker"];
-            $DA_response['status'] = $dynanalysis_array["status"];
+            $DA_response['checker'] = $dynanalysis_array['checker'];
+            $DA_response['status'] = $dynanalysis_array['status'];
             $defect = pdo_query("SELECT sum(dd.value) FROM dynamicanalysisdefect AS dd,dynamicanalysis as d
                     WHERE d.buildid='$buildid' AND dd.dynamicanalysisid=d.id");
             $defectcount = pdo_fetch_array($defect);
@@ -1185,18 +1219,18 @@ function echo_main_dashboard_JSON($project_instance, $date)
                 $defectcounts = $defectcount[0];
             }
             $DA_response['defectcount'] = $defectcounts;
-            $starttimestamp = strtotime($build_array["starttime"]." UTC");
+            $starttimestamp = strtotime($build_array['starttime'] . ' UTC');
             $DA_response['datefull'] = $starttimestamp;
 
             // If the data is more than 24h old then we switch from an elapsed to a normal representation
-            if (time()-$starttimestamp<86400) {
+            if (time() - $starttimestamp < 86400) {
                 $DA_response['date'] = date(FMT_DATETIMEDISPLAY, $starttimestamp);
                 $DA_response['dateelapsed'] =
-                    time_difference(time()-$starttimestamp, false, 'ago');
+                    time_difference(time() - $starttimestamp, false, 'ago');
             } else {
                 $DA_response['dateelapsed'] = date(FMT_DATETIMEDISPLAY, $starttimestamp);
                 $DA_response['date'] =
-                    time_difference(time()-$starttimestamp, false, 'ago');
+                    time_difference(time() - $starttimestamp, false, 'ago');
             }
 
             // Are there labels for this build?
@@ -1204,8 +1238,8 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $DA_response['label'] = $build_label;
 
             $response['dynamicanalyses'][] = $DA_response;
-        }  // end dynamicanalysis
-    } // end looping through builds
+        }
+    }
 
     // Put some finishing touches on our buildgroups now that we're done
     // iterating over all the builds.
@@ -1213,16 +1247,16 @@ function echo_main_dashboard_JSON($project_instance, $date)
         empty($filter_sql) && (pdo_num_rows($builds) + count($dynamic_builds) > 0);
     for ($i = 0; $i < count($buildgroups_response); $i++) {
         $buildgroups_response[$i]['testduration'] = time_difference(
-                $buildgroups_response[$i]['testduration'], true);
+            $buildgroups_response[$i]['testduration'], true);
 
         if (!$filter_sql) {
             $groupname = $buildgroups_response[$i]['name'];
             $expected_builds =
                 add_expected_builds($buildgroups_response[$i]['id'], $currentstarttime,
-                        $received_builds[$groupname]);
+                    $received_builds[$groupname]);
             if (is_array($expected_builds)) {
                 $buildgroups_response[$i]['builds'] = array_merge(
-                        $buildgroups_response[$i]['builds'], $expected_builds);
+                    $buildgroups_response[$i]['builds'], $expected_builds);
             }
         }
     }
@@ -1240,13 +1274,24 @@ function echo_main_dashboard_JSON($project_instance, $date)
     {
         return !empty($group['builds']);
     }
+
     $buildgroups_response =
-        array_filter($buildgroups_response, "is_buildgroup_nonempty");
+        array_filter($buildgroups_response, 'is_buildgroup_nonempty');
 
     // Report buildgroups as a list, not an associative array.
     // Otherwise any missing buildgroups will cause our view to
     // not honor the order specified by the project admins.
     $buildgroups_response = array_values($buildgroups_response);
+
+    // Remove Aggregate Coverage if it should not be displayed.
+    if (!$show_aggregate) {
+        for ($i = 0; $i < count($response['coverages']); $i++) {
+            if ($response['coverages'][$i]['buildname'] === 'Aggregate Coverage') {
+                unset($response['coverages'][$i]);
+            }
+        }
+        $response['coverages'] = array_values($response['coverages']);
+    }
 
     // Generate coverage by group here.
     if (!empty($coverage_groups)) {
@@ -1266,17 +1311,16 @@ function echo_main_dashboard_JSON($project_instance, $date)
     }
 
     $response['buildgroups'] = $buildgroups_response;
-    $response['enableTestTiming'] = $project_array["showtesttime"];
+    $response['enableTestTiming'] = $project_array['showtesttime'];
 
     $end = microtime_float();
-    $response['generationtime'] = round($end-$start, 3);
+    $response['generationtime'] = round($end - $start, 3);
     if (!empty($site_response)) {
         $response = array_merge($response, $site_response);
     }
 
     echo json_encode(cast_data_for_JSON($response));
-} // end echo_main_dashboard_JSON
-
+}
 
 // Get a link to a page showing the children of a given parent build.
 function get_child_builds_hyperlink($parentid, $filterdata)
@@ -1284,12 +1328,12 @@ function get_child_builds_hyperlink($parentid, $filterdata)
     $baseurl = $_SERVER['REQUEST_URI'];
 
     // Strip /api/v#/ off of our URL to get the human-viewable version.
-    $baseurl = preg_replace("#/api/v[0-9]+#", "", $baseurl);
+    $baseurl = preg_replace('#/api/v[0-9]+#', '', $baseurl);
 
     // Trim off any filter parameters.  Previously we did this step with a simple
     // strpos check, but since the change to AngularJS query parameters are no
     // longer guaranteed to appear in any particular order.
-    $accepted_parameters = array("project", "parentid", "subproject");
+    $accepted_parameters = array('project', 'parentid', 'subproject');
 
     $parsed_url = parse_url($baseurl);
     $query = $parsed_url['query'];
@@ -1308,13 +1352,12 @@ function get_child_builds_hyperlink($parentid, $filterdata)
         $baseurl .= $trimmed_query;
     }
 
-
     // Preserve any filters the user had specified.
     $existing_filter_params = '';
     $n = 0;
     $count = count($filterdata['filters']);
     $num_includes = 0;
-    for ($i = 0; $i<$count; $i++) {
+    for ($i = 0; $i < $count; $i++) {
         $filter = $filterdata['filters'][$i];
 
         if ($filter['field'] == 'subprojects') {
@@ -1333,13 +1376,14 @@ function get_child_builds_hyperlink($parentid, $filterdata)
                 '&compare' . $n . '=' . $compare .
                 '&value' . $n . '=' . htmlspecialchars($filter['value']);
         } elseif ($filter['field'] != 'buildname' &&
-                $filter['field'] != 'site' &&
-                $filter['field'] != 'stamp' &&
-                $filter['compare'] != 0 &&
-                $filter['compare'] != 20 &&
-                $filter['compare'] != 40 &&
-                $filter['compare'] != 60 &&
-                $filter['compare'] != 80) {
+            $filter['field'] != 'site' &&
+            $filter['field'] != 'stamp' &&
+            $filter['compare'] != 0 &&
+            $filter['compare'] != 20 &&
+            $filter['compare'] != 40 &&
+            $filter['compare'] != 60 &&
+            $filter['compare'] != 80
+        ) {
             $n++;
 
             $existing_filter_params .=
@@ -1368,35 +1412,34 @@ function get_child_builds_hyperlink($parentid, $filterdata)
     return $url;
 }
 
-
 // Find expected builds that haven't submitted yet.
 function add_expected_builds($groupid, $currentstarttime, $received_builds)
 {
-    include(dirname(dirname(dirname(__DIR__)))."/config/config.php");
+    include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 
-    if (isset($_GET["parentid"])) {
+    if (isset($_GET['parentid'])) {
         // Don't add expected builds when viewing a single subproject result.
         return;
     }
 
-    $currentUTCTime =  gmdate(FMT_DATETIME, $currentstarttime+3600*24);
+    $currentUTCTime = gmdate(FMT_DATETIME, $currentstarttime + 3600 * 24);
     $response = array();
     $build2grouprule = pdo_query(
-            "SELECT g.siteid, g.buildname, g.buildtype, s.name, s.outoforder
+        "SELECT g.siteid, g.buildname, g.buildtype, s.name, s.outoforder
             FROM build2grouprule AS g, site AS s
             WHERE g.expected='1' AND g.groupid='$groupid' AND s.id=g.siteid AND
             g.starttime<'$currentUTCTime' AND
             (g.endtime>'$currentUTCTime' OR g.endtime='1980-01-01 00:00:00')");
     while ($build2grouprule_array = pdo_fetch_array($build2grouprule)) {
-        $key = $build2grouprule_array["name"]."_".$build2grouprule_array["buildname"];
+        $key = $build2grouprule_array['name'] . '_' . $build2grouprule_array['buildname'];
         if (array_search($key, $received_builds) === false) {
             // add only if not found
 
-            $site = $build2grouprule_array["name"];
-            $siteid = $build2grouprule_array["siteid"];
-            $siteoutoforder = $build2grouprule_array["outoforder"];
-            $buildtype = $build2grouprule_array["buildtype"];
-            $buildname = $build2grouprule_array["buildname"];
+            $site = $build2grouprule_array['name'];
+            $siteid = $build2grouprule_array['siteid'];
+            $siteoutoforder = $build2grouprule_array['outoforder'];
+            $buildtype = $build2grouprule_array['buildtype'];
+            $buildname = $build2grouprule_array['buildname'];
             $build_response = array();
             $build_response['site'] = $site;
             $build_response['siteoutoforder'] = $siteoutoforder;
@@ -1410,22 +1453,22 @@ function add_expected_builds($groupid, $currentstarttime, $received_builds)
             // PostgreSQL doesn't have the necessary functions for this.
             if ($CDASH_DB_TYPE == 'pgsql') {
                 $query = pdo_query(
-                        "SELECT submittime FROM build,build2group
+                    "SELECT submittime FROM build,build2group
                         WHERE build2group.buildid=build.id AND siteid='$siteid' AND
                         name='$buildname' AND type='$buildtype' AND
                         build2group.groupid='$groupid'
                         ORDER BY id DESC LIMIT 5");
                 $time = 0;
                 while ($query_array = pdo_fetch_array($query)) {
-                    $time += strtotime(date("H:i:s", strtotime($query_array['submittime'])));
+                    $time += strtotime(date('H:i:s', strtotime($query_array['submittime'])));
                 }
-                if (pdo_num_rows($query)>0) {
+                if (pdo_num_rows($query) > 0) {
                     $time /= pdo_num_rows($query);
                 }
-                $nextExpected = strtotime(date("H:i:s", $time)." UTC");
+                $nextExpected = strtotime(date('H:i:s', $time) . ' UTC');
             } else {
                 $query = pdo_query(
-                        "SELECT AVG(TIME_TO_SEC(TIME(submittime)))
+                    "SELECT AVG(TIME_TO_SEC(TIME(submittime)))
                         FROM
                         (SELECT submittime FROM build,build2group
                          WHERE build2group.buildid=build.id AND siteid='$siteid' AND
@@ -1435,21 +1478,21 @@ function add_expected_builds($groupid, $currentstarttime, $received_builds)
                         AS t");
                 $query_array = pdo_fetch_array($query);
                 $time = $query_array[0];
-                $hours = floor($time/3600);
-                $time = ($time%3600);
-                $minutes = floor($time/60);
-                $seconds = ($time%60);
-                $nextExpected = strtotime($hours.":".$minutes.":".$seconds." UTC");
+                $hours = floor($time / 3600);
+                $time = ($time % 3600);
+                $minutes = floor($time / 60);
+                $seconds = ($time % 60);
+                $nextExpected = strtotime($hours . ':' . $minutes . ':' . $seconds . ' UTC');
             }
 
-            $divname = $build2grouprule_array["siteid"]."_".$build2grouprule_array["buildname"];
-            $divname = str_replace("+", "_", $divname);
-            $divname = str_replace(".", "_", $divname);
-            $divname = str_replace(':', "_", $divname);
-            $divname = str_replace(' ', "_", $divname);
+            $divname = $build2grouprule_array['siteid'] . '_' . $build2grouprule_array['buildname'];
+            $divname = str_replace('+', '_', $divname);
+            $divname = str_replace('.', '_', $divname);
+            $divname = str_replace(':', '_', $divname);
+            $divname = str_replace(' ', '_', $divname);
 
             $build_response['expecteddivname'] = $divname;
-            $build_response['submitdate'] = "No Submission";
+            $build_response['submitdate'] = 'No Submission';
             $build_response['expectedstarttime'] = date(FMT_TIME, $nextExpected);
             $response[] = $build_response;
         }

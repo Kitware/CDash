@@ -15,58 +15,61 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once(dirname(dirname(__DIR__))."/config/config.php");
-require_once("include/pdo.php");
-require_once("include/common.php");
+require_once dirname(dirname(__DIR__)) . '/config/config.php';
+require_once 'include/pdo.php';
+require_once 'include/common.php';
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME", $db);
 
-$projectid = pdo_real_escape_numeric($_GET["projectid"]);
+$projectid = pdo_real_escape_numeric($_GET['projectid']);
 if (!isset($projectid) || !is_numeric($projectid)) {
-    echo "Not a valid projectid!";
+    echo 'Not a valid projectid!';
     return;
 }
 
-$search = pdo_real_escape_string($_GET["search"]);
+$search = pdo_real_escape_string($_GET['search']);
 
-if (isset($CDASH_FULL_EMAIL_WHEN_ADDING_USER) && $CDASH_FULL_EMAIL_WHEN_ADDING_USER==1) {
+if (isset($CDASH_FULL_EMAIL_WHEN_ADDING_USER) && $CDASH_FULL_EMAIL_WHEN_ADDING_USER == 1) {
     $sql = "email='$search'";
 } else {
     $sql = "(email LIKE '%$search%' OR firstname LIKE '%$search%' OR lastname LIKE '%$search%')";
 }
-$user = pdo_query("SELECT id,email,firstname,lastname FROM ".qid("user")." WHERE ".$sql." AND
+$user = pdo_query('SELECT id,email,firstname,lastname FROM ' . qid('user') . ' WHERE ' . $sql . " AND
                    id NOT IN (SELECT userid as id FROM user2project WHERE projectid='$projectid')");
 echo pdo_error();
 
 ?>
 
-  <table width="100%"  border="0">
-  <?php
-  if (pdo_num_rows($user)==0) {
-      echo "<tr><td>[none]</tr></td>";
-  }
-  while ($user_array = pdo_fetch_array($user)) {
-      ?>
-  <tr>
-  <td width="20%" bgcolor="#EEEEEE"><font size="2"><?php echo $user_array["firstname"]." ".$user_array["lastname"]." (".$user_array["email"].")";
-      ?></font></td>
-  <td bgcolor="#EEEEEE"><font size="2"><form method="post" action="" name="formuser_<?php echo $user_array["id"]?>">
-  <input name="userid" type="hidden" value="<?php echo $user_array["id"]?>">
-  role: <select name="role">
-    <option value="0">Normal User</option>
-    <option value="1">Site maintainer</option>
-    <option value="2">Project administrator</option>
-  </select>
-  Repository credential: <input name="repositoryCredential" type="text" size="20"/>
-  <input name="adduser" type="submit" value="add user">
-  </form></font></td>
-  </tr>
+<table width="100%" border="0">
+    <?php
+    if (pdo_num_rows($user) == 0) {
+        echo '<tr><td>[none]</tr></td>';
+    }
+    while ($user_array = pdo_fetch_array($user)) {
+        ?>
+        <tr>
+            <td width="20%" bgcolor="#EEEEEE"><font
+                    size="2"><?php echo $user_array['firstname'] . ' ' . $user_array['lastname'] . ' (' . $user_array['email'] . ')';
+        ?></font></td>
+            <td bgcolor="#EEEEEE"><font size="2">
+                    <form method="post" action="" name="formuser_<?php echo $user_array['id'] ?>">
+                        <input name="userid" type="hidden" value="<?php echo $user_array['id'] ?>">
+                        role: <select name="role">
+                            <option value="0">Normal User</option>
+                            <option value="1">Site maintainer</option>
+                            <option value="2">Project administrator</option>
+                        </select>
+                        Repository credential: <input name="repositoryCredential" type="text" size="20"/>
+                        <input name="adduser" type="submit" value="add user">
+                    </form>
+                </font></td>
+        </tr>
 
-  <?php
+        <?php
 
-  }
-  ?>
+    }
+    ?>
 
 </table>
 

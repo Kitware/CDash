@@ -15,9 +15,9 @@
 =========================================================================*/
 
 require_once 'xml_handlers/abstract_handler.php';
-require_once('models/build.php');
-require_once('models/site.php');
-require_once('models/buildnote.php');
+require_once 'models/build.php';
+require_once 'models/site.php';
+require_once 'models/buildnote.php';
 
 class NoteHandler extends AbstractHandler
 {
@@ -37,10 +37,10 @@ class NoteHandler extends AbstractHandler
     public function startElement($parser, $name, $attributes)
     {
         parent::startElement($parser, $name, $attributes);
-        if ($name=='SITE') {
+        if ($name == 'SITE') {
             $this->Site->Name = $attributes['NAME'];
             if (empty($this->Site->Name)) {
-                $this->Site->Name = "(empty)";
+                $this->Site->Name = '(empty)';
             }
             $this->Site->Insert();
 
@@ -48,7 +48,7 @@ class NoteHandler extends AbstractHandler
             $buildInformation = new BuildInformation();
 
             // Fill in the attribute
-            foreach ($attributes as $key=>$value) {
+            foreach ($attributes as $key => $value) {
                 $siteInformation->SetValue($key, $value);
                 $buildInformation->SetValue($key, $value);
             }
@@ -58,23 +58,23 @@ class NoteHandler extends AbstractHandler
             $this->Build->SiteId = $this->Site->Id;
             $this->Build->Name = $attributes['BUILDNAME'];
             if (empty($this->Build->Name)) {
-                $this->Build->Name = "(empty)";
+                $this->Build->Name = '(empty)';
             }
             $this->Build->SetStamp($attributes['BUILDSTAMP']);
             $this->Build->Generator = $attributes['GENERATOR'];
             $this->Build->Information = $buildInformation;
-        } elseif ($name=='NOTE') {
+        } elseif ($name == 'NOTE') {
             $this->Note = new BuildNote();
             $this->Note->Name =
                 isset($attributes['NAME']) ? $attributes['NAME'] : '';
         }
-    } // end startElement
+    }
 
     /** endElement function */
     public function endElement($parser, $name)
     {
         parent::endElement($parser, $name);
-        if ($name=='NOTE') {
+        if ($name == 'NOTE') {
             $this->Build->ProjectId = $this->projectid;
             $this->Build->GetIdFromName($this->SubProjectName);
             $this->Build->SetSubProject($this->SubProjectName);
@@ -97,10 +97,10 @@ class NoteHandler extends AbstractHandler
                 $this->Note->BuildId = $this->Build->Id;
                 $this->Note->Insert();
             } else {
-                add_log("Trying to add a note to a nonexistent build", "note_handler.php", LOG_ERR);
+                add_log('Trying to add a note to a nonexistent build', 'note_handler.php', LOG_ERR);
             }
         }
-    } // end endElement
+    }
 
     /** text function */
     public function text($parser, $data)
@@ -117,5 +117,5 @@ class NoteHandler extends AbstractHandler
                     break;
             }
         }
-    } // end function text
-} // end class;
+    }
+}

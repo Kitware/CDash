@@ -3,11 +3,11 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__).'/cdash_test_case.php');
+require_once dirname(__FILE__) . '/cdash_test_case.php';
 
-require_once('include/common.php');
-require_once('include/pdo.php');
-require_once('models/buildtestdiff.php');
+require_once 'include/common.php';
+require_once 'include/pdo.php';
+require_once 'models/buildtestdiff.php';
 
 class BuildTestDiffTestCase extends KWWebTestCase
 {
@@ -29,10 +29,10 @@ class BuildTestDiffTestCase extends KWWebTestCase
         $output = ob_get_contents();
         ob_end_clean();
         if ($result) {
-            $this->fail("Insert() should return false when BuildId is 0");
+            $this->fail('Insert() should return false when BuildId is 0');
             return 1;
         }
-        if (strpos($output, "BuildTestDiff::Insert(): BuildId is not set") === false) {
+        if (strpos($output, 'BuildTestDiff::Insert(): BuildId is not set') === false) {
             $this->fail("'BuildId is not set' not found from Insert()");
             return 1;
         }
@@ -51,16 +51,15 @@ class BuildTestDiffTestCase extends KWWebTestCase
         }
 
         $buildtestdiff->DifferencePositive = 0;
-    //call save twice to cover different execution paths
-    if (!$buildtestdiff->Insert()) {
-        $this->fail("Add() #3 returned false when it should be true.\n");
-        return 1;
-    }
+        //call save twice to cover different execution paths
+        if (!$buildtestdiff->Insert()) {
+            $this->fail("Add() #3 returned false when it should be true.\n");
+            return 1;
+        }
 
-        $this->pass("Passed");
+        $this->pass('Passed');
 
         $this->stopCodeCoverage();
-
         return 0;
     }
 }

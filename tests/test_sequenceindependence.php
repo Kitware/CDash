@@ -3,8 +3,8 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once(dirname(__FILE__).'/cdash_test_case.php');
-require_once('include/pdo.php');
+require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once 'include/pdo.php';
 
 class SequenceIndependenceTestCase extends KWWebTestCase
 {
@@ -18,154 +18,154 @@ class SequenceIndependenceTestCase extends KWWebTestCase
     public function testOriginalOrder()
     {
         $file_order = array(
-                'Build',
-                'Configure',
-                'Coverage',
-                'CoverageLog',
-                'DynamicAnalysis',
-                'Notes',
-                'Test',
-                'Update',
-                'Upload'
-                );
+            'Build',
+            'Configure',
+            'Coverage',
+            'CoverageLog',
+            'DynamicAnalysis',
+            'Notes',
+            'Test',
+            'Update',
+            'Upload'
+        );
         if ($this->PerformOrderTest($file_order)) {
-            $this->pass("Passed");
+            $this->pass('Passed');
         }
     }
 
     public function testReverseOrder()
     {
         $file_order = array(
-                'Upload',
-                'Update',
-                'Test',
-                'Notes',
-                'DynamicAnalysis',
-                'CoverageLog',
-                'Coverage',
-                'Configure',
-                'Build');
+            'Upload',
+            'Update',
+            'Test',
+            'Notes',
+            'DynamicAnalysis',
+            'CoverageLog',
+            'Coverage',
+            'Configure',
+            'Build');
         if ($this->PerformOrderTest($file_order)) {
-            $this->pass("Passed");
+            $this->pass('Passed');
         }
     }
 
     public function testConfigureFirst()
     {
         $file_order = array(
-                'Configure',
-                'Test',
-                'Notes',
-                'CoverageLog',
-                'Coverage',
-                'Build',
-                'DynamicAnalysis',
-                'Upload',
-                'Update');
+            'Configure',
+            'Test',
+            'Notes',
+            'CoverageLog',
+            'Coverage',
+            'Build',
+            'DynamicAnalysis',
+            'Upload',
+            'Update');
         if ($this->PerformOrderTest($file_order)) {
-            $this->pass("Passed");
+            $this->pass('Passed');
         }
     }
 
     public function testCoverageFirst()
     {
         $file_order = array(
-                'Coverage',
-                'DynamicAnalysis',
-                'Configure',
-                'Build',
-                'CoverageLog',
-                'Upload',
-                'Notes',
-                'Update',
-                'Test');
+            'Coverage',
+            'DynamicAnalysis',
+            'Configure',
+            'Build',
+            'CoverageLog',
+            'Upload',
+            'Notes',
+            'Update',
+            'Test');
         if ($this->PerformOrderTest($file_order)) {
-            $this->pass("Passed");
+            $this->pass('Passed');
         }
     }
 
     public function testCoverageLogFirst()
     {
         $file_order = array(
-                'CoverageLog',
-                'Notes',
-                'Coverage',
-                'Configure',
-                'Upload',
-                'Build',
-                'DynamicAnalysis',
-                'Update',
-                'Test');
+            'CoverageLog',
+            'Notes',
+            'Coverage',
+            'Configure',
+            'Upload',
+            'Build',
+            'DynamicAnalysis',
+            'Update',
+            'Test');
         if ($this->PerformOrderTest($file_order)) {
-            $this->pass("Passed");
+            $this->pass('Passed');
         }
     }
 
     public function testDynamicAnalysisFirst()
     {
         $file_order = array(
-                'DynamicAnalysis',
-                'Notes',
-                'Configure',
-                'Upload',
-                'Test',
-                'Coverage',
-                'Update',
-                'CoverageLog',
-                'Build');
+            'DynamicAnalysis',
+            'Notes',
+            'Configure',
+            'Upload',
+            'Test',
+            'Coverage',
+            'Update',
+            'CoverageLog',
+            'Build');
         if ($this->PerformOrderTest($file_order)) {
-            $this->pass("Passed");
+            $this->pass('Passed');
         }
     }
 
     public function testNotesFirst()
     {
         $file_order = array(
-                'Notes',
-                'DynamicAnalysis',
-                'CoverageLog',
-                'Update',
-                'Configure',
-                'Upload',
-                'Build',
-                'Test',
-                'Coverage');
+            'Notes',
+            'DynamicAnalysis',
+            'CoverageLog',
+            'Update',
+            'Configure',
+            'Upload',
+            'Build',
+            'Test',
+            'Coverage');
         if ($this->PerformOrderTest($file_order)) {
-            $this->pass("Passed");
+            $this->pass('Passed');
         }
     }
 
     public function testTestFirst()
     {
         $file_order = array(
-                'Test',
-                'CoverageLog',
-                'DynamicAnalysis',
-                'Build',
-                'Configure',
-                'Notes',
-                'Update',
-                'Coverage',
-                'Upload');
+            'Test',
+            'CoverageLog',
+            'DynamicAnalysis',
+            'Build',
+            'Configure',
+            'Notes',
+            'Update',
+            'Coverage',
+            'Upload');
         if ($this->PerformOrderTest($file_order)) {
-            $this->pass("Passed");
+            $this->pass('Passed');
         }
     }
 
     public function testUpdateFirst()
     {
         $file_order = array(
-                'Update',
-                'Notes',
-                'DynamicAnalysis',
-                'Upload',
-                'Configure',
-                'Test',
-                'CoverageLog',
-                'Build',
-                'Coverage');
+            'Update',
+            'Notes',
+            'DynamicAnalysis',
+            'Upload',
+            'Configure',
+            'Test',
+            'CoverageLog',
+            'Build',
+            'Coverage');
         if ($this->PerformOrderTest($file_order)) {
-            $this->pass("Passed");
+            $this->pass('Passed');
         }
     }
 
@@ -185,12 +185,12 @@ class SequenceIndependenceTestCase extends KWWebTestCase
             WHERE name='Linux-g++-4.1-LesionSizingSandbox_Debug'";
         pdo_query($update_query);
         if (!pdo_query($update_query)) {
-            $this->fail("update query returned false");
+            $this->fail('update query returned false');
             return false;
         }
 
         // Submit the files in the order specified.
-        $rep  = dirname(__FILE__)."/data/InsightExperimentalExample";
+        $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
         foreach ($file_order as $type) {
             $file = "$rep/Insight_Experimental_$type.xml";
             if (!$this->submission('InsightExample', $file)) {
@@ -210,7 +210,7 @@ class SequenceIndependenceTestCase extends KWWebTestCase
                 FROM build WHERE name='Linux-g++-4.1-LesionSizingSandbox_Debug'";
         $build_result = pdo_query($build_query);
         if (!$build_result) {
-            $this->fail("build query returned false");
+            $this->fail('build query returned false');
             return false;
         }
 
@@ -232,31 +232,31 @@ class SequenceIndependenceTestCase extends KWWebTestCase
             return false;
         }
         if ($build_row['configureerrors'] != 0) {
-            $this->fail("Expected configureerrors to be 0, found " . $build_row['configureerrors']);
+            $this->fail('Expected configureerrors to be 0, found ' . $build_row['configureerrors']);
             return false;
         }
         if ($build_row['configurewarnings'] != 0) {
-            $this->fail("Expected configurewarnings to be 0, found " . $build_row['configurewarnings']);
+            $this->fail('Expected configurewarnings to be 0, found ' . $build_row['configurewarnings']);
             return false;
         }
         if ($build_row['builderrors'] != 0) {
-            $this->fail("Expected builderrors to be 0, found " . $build_row['builderrors']);
+            $this->fail('Expected builderrors to be 0, found ' . $build_row['builderrors']);
             return false;
         }
         if ($build_row['buildwarnings'] != 3) {
-            $this->fail("Expected buildwarnings to be 3, found " . $build_row['buildwarnings']);
+            $this->fail('Expected buildwarnings to be 3, found ' . $build_row['buildwarnings']);
             return false;
         }
         if ($build_row['testnotrun'] != 1) {
-            $this->fail("Expected testnotrun to be 1, found " . $build_row['testnotrun']);
+            $this->fail('Expected testnotrun to be 1, found ' . $build_row['testnotrun']);
             return false;
         }
         if ($build_row['testfailed'] != 5) {
-            $this->fail("Expected testfailed to be 5, found " . $build_row['testfailed']);
+            $this->fail('Expected testfailed to be 5, found ' . $build_row['testfailed']);
             return false;
         }
         if ($build_row['testpassed'] != 46) {
-            $this->fail("Expected testpassed to be 46, found " . $build_row['testpassed']);
+            $this->fail('Expected testpassed to be 46, found ' . $build_row['testpassed']);
             return false;
         }
 
@@ -269,7 +269,7 @@ class SequenceIndependenceTestCase extends KWWebTestCase
             WHERE b2n.buildid=$buildid";
         $note_result = pdo_query($note_query);
         if (!$note_result) {
-            $this->fail("note query returned false");
+            $this->fail('note query returned false');
             return false;
         }
         $num_notes = pdo_num_rows($note_result);
@@ -294,35 +294,35 @@ class SequenceIndependenceTestCase extends KWWebTestCase
             WHERE d.buildid='$buildid' AND dd.dynamicanalysisid=d.id";
         $DA_result = pdo_query($DA_query);
         if (!$DA_result) {
-            $this->fail("dynamic analysis query returned false");
+            $this->fail('dynamic analysis query returned false');
             return false;
         }
         $DA_row = pdo_fetch_array($DA_result);
         if ($DA_row['numdefects'] != 225) {
-            $this->fail("Expected 225 defects, found " . $DA_row['numdefects']);
+            $this->fail('Expected 225 defects, found ' . $DA_row['numdefects']);
             return false;
         }
 
         // Verify coverage.
         $coverage_result = pdo_query(
-                "SELECT loctested, locuntested FROM coveragesummary
+            "SELECT loctested, locuntested FROM coveragesummary
                 WHERE buildid='$buildid'");
         if (!$coverage_result) {
-            $this->fail("coverage query returned false");
+            $this->fail('coverage query returned false');
             return false;
         }
         $coverage_row = pdo_fetch_array($coverage_result);
         if ($coverage_row['loctested'] != 2185) {
-            $this->fail("Expected 2185 loctested, found " . $coverage_row['loctested']);
+            $this->fail('Expected 2185 loctested, found ' . $coverage_row['loctested']);
             return false;
         }
         if ($coverage_row['locuntested'] != 674) {
-            $this->fail("Expected 674 locuntested, found " . $coverage_row['locuntested']);
+            $this->fail('Expected 674 locuntested, found ' . $coverage_row['locuntested']);
             return false;
         }
 
         $num_files_row = pdo_single_row_query(
-                "SELECT COUNT(1) AS numfiles
+            "SELECT COUNT(1) AS numfiles
                 FROM coveragefilelog
                 WHERE buildid='$buildid'");
         $num_files_covered = $num_files_row['numfiles'];
@@ -339,7 +339,7 @@ class SequenceIndependenceTestCase extends KWWebTestCase
             WHERE b2u.buildid='$buildid'";
         $update_result = pdo_query($update_query);
         if (!$update_result) {
-            $this->fail("update query returned false");
+            $this->fail('update query returned false');
             return false;
         }
         $num_updates = pdo_num_rows($update_result);
@@ -349,7 +349,7 @@ class SequenceIndependenceTestCase extends KWWebTestCase
         }
         $update_row = pdo_fetch_array($update_result);
         if ($update_row['nfiles'] != 0) {
-            $this->fail("Expected number of update files to be 0, found " . $update_row['nfiles']);
+            $this->fail('Expected number of update files to be 0, found ' . $update_row['nfiles']);
             return false;
         }
 
@@ -361,7 +361,7 @@ class SequenceIndependenceTestCase extends KWWebTestCase
             WHERE b2uf.buildid='$buildid'";
         $upload_result = pdo_query($upload_query);
         if (!$upload_result) {
-            $this->fail("upload query returned false");
+            $this->fail('upload query returned false');
             return false;
         }
         $num_uploads = pdo_num_rows($upload_result);
@@ -374,7 +374,6 @@ class SequenceIndependenceTestCase extends KWWebTestCase
             $this->fail("Expected uploaded file to be named 'tmp.txt', found " . $upload_row['filename']);
             return false;
         }
-
         return true;
     }
 }

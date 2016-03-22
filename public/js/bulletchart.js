@@ -5,8 +5,8 @@ function makeBulletChart(chartName, elementName, min, avg, max, current,
   nv.addGraph(function() {
     chart = nv.models.bulletChart()
     .options({
-      margin: {top: 0, right: 10, bottom: 5, left: 5},
-      height: chartHeight
+      margin: {top: 33, right: 10, bottom: 5, left: 5},
+      height: chartHeight + 33
     });
 
     var chartData = {

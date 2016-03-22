@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="debug_coverage"
+	BuildStamp="20160216-0105-Nightly"
+	Name="localhost"
+	Generator="ctest-3.5.20160210-g06204"
+	CompilerName=""
+	CompilerVersion=""
+	OSName="Linux"
+	Hostname="elysium"
+	OSRelease="3.13.0-77-generic"
+	OSVersion="#121-Ubuntu SMP Wed Jan 20 10:50:42 UTC 2016"
+	OSPlatform="x86_64"
+	Is64Bits="1"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="45"
+	ProcessorCacheSize="12288"
+	NumberOfLogicalCPU="12"
+	NumberOfPhysicalCPU="1"
+	TotalVirtualMemory="32690"
+	TotalPhysicalMemory="32100"
+	LogicalProcessorsPerPhysical="12"
+	ProcessorClockFrequency="1200.00"
+	>
+    <Subproject name="MyThirdPartyDependency"/>
+    <Labels>
+        <Label>MyThirdPartyDependency</Label>
+    </Labels>
+	<Coverage>
+		<StartDateTime>Feb 16 11:02 EST</StartDateTime>
+		<StartTime>1455638576</StartTime>
+		<File Name="diff.cxx" FullPath="./diff.cxx" Covered="true">
+			<LOCTested>5</LOCTested>
+			<LOCUnTested>0</LOCUnTested>
+			<PercentCoverage>100.00</PercentCoverage>
+			<CoverageMetric>1.00</CoverageMetric>
+		</File>
+		<LOCTested>5</LOCTested>
+		<LOCUntested>0</LOCUntested>
+		<LOC>5</LOC>
+		<PercentCoverage>100.00</PercentCoverage>
+		<EndDateTime>Feb 16 11:02 EST</EndDateTime>
+		<EndTime>1455638576</EndTime>
+		<ElapsedMinutes>0.00</ElapsedMinutes>
+	</Coverage>
+</Site>

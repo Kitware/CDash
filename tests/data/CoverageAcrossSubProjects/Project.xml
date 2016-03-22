@@ -10,4 +10,6 @@
     <Path>MyProductionCode</Path>
     <Dependency name="MyThirdPartyDependency"/>
   </SubProject>
+  <SubProject name="MyEmptyCoverage" group="Production">
+  </SubProject>
 </Project>

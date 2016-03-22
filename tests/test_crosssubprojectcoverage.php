@@ -20,7 +20,7 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
     {
         parent::__construct();
         $this->deleteLog($this->logfilename);
-        $this->DataDir = dirname(__FILE__)."/data/CoverageAcrossSubProjects";
+        $this->DataDir = dirname(__FILE__) . '/data/CoverageAcrossSubProjects';
     }
 
     public function testCreateProjectTest()
@@ -36,7 +36,7 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
         $this->setField('public', '1');
         $this->clickSubmitByName('Submit');
 
-        $content = $this->connect($this->url.'/index.php?project=CrossSubProjectExample');
+        $content = $this->connect($this->url . '/index.php?project=CrossSubProjectExample');
         if (!$content) {
             return;
         }
@@ -71,23 +71,21 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
 
     public function submitThirdParty()
     {
-        return $this->submitResults("MyThirdPartyDependency", "1455044903",
-                "1455044904", "121eb59d5dd9c1bf78c2a5e15eb669d0");
+        return $this->submitResults('MyThirdPartyDependency', '1455044903',
+            '1455044904', '121eb59d5dd9c1bf78c2a5e15eb669d0');
     }
 
     public function submitExperimental()
     {
-        return $this->submitResults("MyExperimentalFeature", "1455044906",
-                "1455044907", "6adbe63add1bc5171e9e2b9c6a4155de");
+        return $this->submitResults('MyExperimentalFeature', '1455044906',
+            '1455044907', '6adbe63add1bc5171e9e2b9c6a4155de');
     }
-
 
     public function submitProduction()
     {
-        return $this->submitResults("MyProductionCode", "1455044909",
-                "1455044909", "211f7e369cd2bfc983eaba847c1cab65");
+        return $this->submitResults('MyProductionCode', '1455044909',
+            '1455044909', '211f7e369cd2bfc983eaba847c1cab65');
     }
-
 
     public function submitResults($subproject, $starttime, $endtime, $md5)
     {
@@ -99,53 +97,53 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
 
         // Do the POST submission to get a pending buildid from CDash.
         $post_data = array(
-                "project" => "CrossSubProjectExample",
-                "subproject" => $subproject,
-                "build" => "subproject_coverage_example",
-                "site" => "localhost",
-                "stamp" => "20160209-1908-Experimental",
-                "starttime" => $starttime,
-                "endtime" => $endtime,
-                "track" => "Experimental",
-                "type" => "GcovTar",
-                "datafilesmd5[0]=" => $md5);
-        $post_result = $this->post($this->url."/submit.php", $post_data);
+            'project' => 'CrossSubProjectExample',
+            'subproject' => $subproject,
+            'build' => 'subproject_coverage_example',
+            'site' => 'localhost',
+            'stamp' => '20160209-1908-Experimental',
+            'starttime' => $starttime,
+            'endtime' => $endtime,
+            'track' => 'Experimental',
+            'type' => 'GcovTar',
+            'datafilesmd5[0]=' => $md5);
+        $post_result = $this->post($this->url . '/submit.php', $post_data);
         $post_json = json_decode($post_result, true);
-        if ($post_json["status"] != 0) {
+        if ($post_json['status'] != 0) {
             $this->fail(
-                    "POST returned " . $post_json["status"] . ":\n" .
-                    $post_json["description"]. "\n");
+                'POST returned ' . $post_json['status'] . ":\n" .
+                $post_json['description'] . "\n");
             return false;
         }
 
-        $buildid = $post_json["buildid"];
+        $buildid = $post_json['buildid'];
         if (!is_numeric($buildid) || $buildid < 1) {
             $this->fail(
-        "Expected positive integer for buildid, instead got $buildid");
+                "Expected positive integer for buildid, instead got $buildid");
             return false;
         }
 
         // Do the PUT submission to actually upload our data.
-        $puturl = $this->url."/submit.php?type=GcovTar&md5=$md5&filename=gcov.tar&buildid=$buildid";
-        $filename  = "$this->DataDir/$subproject/gcov.tar";
+        $puturl = $this->url . "/submit.php?type=GcovTar&md5=$md5&filename=gcov.tar&buildid=$buildid";
+        $filename = "$this->DataDir/$subproject/gcov.tar";
 
         $put_result = $this->uploadfile($puturl, $filename);
         $put_json = json_decode($put_result, true);
 
-        if ($put_json["status"] != 0) {
+        if ($put_json['status'] != 0) {
             $this->fail(
-                    "PUT returned " . $put_json["status"] . ":\n" .
-                    $put_json["description"]. "\n");
+                'PUT returned ' . $put_json['status'] . ":\n" .
+                $put_json['description'] . "\n");
             return 1;
         }
     }
 
     public function verifyResults()
     {
-        $success =  true;
+        $success = true;
 
         // Verify parent results.
-        $this->get($this->url . "/api/v1/index.php?project=CrossSubProjectExample&date=2016-02-09");
+        $this->get($this->url . '/api/v1/index.php?project=CrossSubProjectExample&date=2016-02-09');
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $num_parent_coverages = count($jsonobj['coverages']);
@@ -154,11 +152,11 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
             return false;
         }
         $coverage = array_pop($jsonobj['coverages']);
-        $success &= $this->checkCoverage($coverage, 25, 10, "parent");
+        $success &= $this->checkCoverage($coverage, 25, 10, 'parent');
 
         $parentid = $coverage['buildid'];
         if (empty($parentid) || $parentid < 1) {
-            $this->fail("No parentid found when expected");
+            $this->fail('No parentid found when expected');
             return false;
         }
 
@@ -195,13 +193,16 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
     }
 
     public function checkCoverage($coverage, $expected_loctested,
-            $expected_locuntested, $name)
+                                  $expected_locuntested, $name)
     {
         if ($coverage['loctested'] != $expected_loctested) {
             $this->fail("Expected $name loctested to be $expected_loctested, found " . $coverage['loctested']);
+            return false;
         }
         if ($coverage['locuntested'] != $expected_locuntested) {
             $this->fail("Expected $name locuntested to be $expected_locuntested, found " . $coverage['locuntested']);
+            return false;
         }
+        return true;
     }
 }
