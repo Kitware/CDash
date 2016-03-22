@@ -349,6 +349,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
     $excluded_subprojects = array();
     $selected_subprojects = '';
     $num_selected_subprojects = 0;
+    $filter_on_labels = false;
     foreach ($filterdata['filters'] as $filter) {
         if ($filter['field'] == 'subprojects') {
             if ($filter['compare'] == 92) {
@@ -356,8 +357,11 @@ function echo_main_dashboard_JSON($project_instance, $date)
             } elseif ($filter['compare'] == 93) {
                 $included_subprojects[] = $filter['value'];
             }
+        } elseif ($filter['field'] == 'label') {
+            $filter_on_labels = true;
         }
     }
+
     // Include takes precedence over exclude.
     if (!empty($included_subprojects)) {
         $num_selected_subprojects = count($included_subprojects);
@@ -999,6 +1003,63 @@ function echo_main_dashboard_JSON($project_instance, $date)
                 }
                 if ($build_array['countteststimestatusfaileddiffn'] != 0) {
                     $test_response['ntimediffn'] = $build_array['countteststimestatusfaileddiffn'];
+                }
+            }
+
+            if ($filter_on_labels) {
+                $test_filterdata = get_filterdata_from_request('queryTests.php');
+                $label_filter_sql = $test_filterdata['sql'];
+
+                $label_query_base = "SELECT build2test.status, test.name AS testname
+                                    FROM build AS b
+                                    JOIN build2test ON (b.id = build2test.buildid)
+                                    JOIN test ON (test.id = build2test.testid)
+                                    WHERE b.projectid = '" . $project_array['id'] . "' ";
+
+                $label_filter_query = $label_query_base . $parent_clause . $date_clause . ' ' .
+                                     $label_filter_sql . $limit_sql;
+
+                $labels_result = pdo_query($label_filter_query);
+                $nnotrun = 0;
+                $nfail = 0;
+                $npass = 0;
+                while ($label_row = pdo_fetch_array($labels_result)) {
+                    switch ($label_row['status']) {
+                        case 'passed':
+                            $npass++;
+                            break;
+                        case 'failed':
+                            $nfail++;
+                            break;
+                        case 'notrun':
+                            $nnotrun++;
+                            break;
+                    }
+                }
+
+                $only_new_tests = ' AND build2test.newstatus=1 ';
+                $label_filter_query = $label_query_base . $only_new_tests .
+                                    $parent_clause . $date_clause . ' ' .
+                                    $label_filter_sql . $limit_sql;
+                $labels_result = pdo_query($label_filter_query);
+                $test_response['nfaildiffp'] = 0;
+                $test_response['nfaildiffn'] = 0;
+                $test_response['npassdiffp'] = 0;
+                $test_response['npassdiffn'] = 0;
+                $test_response['nnotrundiffp'] = 0;
+                $test_response['nnotrundiffn'] = 0;
+                while ($label_row = pdo_fetch_array($labels_result)) {
+                    switch ($label_row['status']) {
+                        case 'passed':
+                            $test_response['npassdiffp']++;
+                            break;
+                        case 'failed':
+                            $test_response['nfaildiffp']++;
+                            break;
+                        case 'notrun':
+                            $test_response['nnotrundiffp']++;
+                            break;
+                    }
                 }
             }
 
