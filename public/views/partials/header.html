@@ -61,10 +61,10 @@
               </a>
             </li>
             <li>
-              <a ng-if="cdash.parentid == -1" href="queryTests.php?project={{cdash.projectname_encoded}}&date={{cdash.date}}&limit=200{{cdash.extraurl}}{{cdash.extrafilterurl}}">
+              <a ng-if="cdash.parentid == -1" href="queryTests.php?project={{cdash.projectname_encoded}}&date={{cdash.date}}{{cdash.extraurl}}{{cdash.extrafilterurl}}">
                 Tests Query
               </a>
-              <a ng-if="cdash.parentid != -1" href="queryTests.php?project={{cdash.projectname_encoded}}&parentid={{cdash.parentid}}&limit=200{{cdash.extraurl}}{{cdash.extrafilterurl}}">
+              <a ng-if="cdash.parentid != -1" href="queryTests.php?project={{cdash.projectname_encoded}}&parentid={{cdash.parentid}}{{cdash.extraurl}}{{cdash.extrafilterurl}}">
                 Tests Query
               </a>
             </li>
