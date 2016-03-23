@@ -94,4 +94,56 @@ class buildtest
         }
         return $sumerrors;
     }
+
+    public static function marshalStatus($status)
+    {
+        return array('passed' => array('Passed', 'normal'),
+                     'failed' => array('Failed', 'error'),
+                     'notrun' => array('Not Run', 'warning'))[$status];
+    }
+
+    public static function marshal($data, $buildid, $projectid, $projectshowttestime, $testtimemaxstatus, $testdate)
+    {
+        $marshaledData = array(
+            'id' => $data['id'],
+            'status' => self::marshalStatus($data['status'])[0],
+            'statusclass' => self::marshalStatus($data['status'])[1],
+            'name' => $data['name'],
+            'execTime' => time_difference($data['time'], true, '', true),
+            'execTimeFull' => floatval($data['time']),
+            'details' => $data['details'],
+            'summaryLink' => "testSummary.php?project=$projectid&name=" . urlencode($data['name']) . "&date=$testdate",
+            'detailsLink' => "testDetails.php?test=" . $data['id'] . "&build=$buildid");
+
+        if ($data['newstatus']) {
+            $marshaledData['new'] = '1';
+        }
+
+        if ($projectshowtesttime) {
+            if ($data['timestatus'] < $testtimemaxstatus) {
+                $marshaledData['timestatus'] = 'Passed';
+                $marshaledData['timestatusclass'] = 'normal';
+            } else {
+                $marshaledData['timestatus'] = 'Failed';
+                $marshaledData['timestatusclass'] = 'error';
+            }
+        }
+
+        if ($CDASH_DB_TYPE == 'pgsql') {
+            get_labels_JSON_from_query_results(
+                'SELECT text FROM label, label2test WHERE ' .
+                'label.id=label2test.labelid AND ' .
+                "label2test.testid=" . $marshaledData['id'] . " AND " .
+                "label2test.buildid='$buildid' " .
+                'ORDER BY text ASC',
+                $marshaledData);
+        } else {
+            if (!empty($data['labels'])) {
+                $labels = explode(',', $data['labels']);
+                $marshaledData['labels'] = $labels;
+            }
+        }
+
+        return $marshaledData;
+    }
 }

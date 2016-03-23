@@ -23,6 +23,34 @@ include 'include/version.php';
 require_once 'include/filterdataFunctions.php';
 include_once 'models/build.php';
 
+/**
+ * View tests of a particular build, does not support parent builds.
+ *
+ * GET /viewTest.php
+ * Required Params:
+ * buildid=[integer] The ID of the build
+ *
+ * Optional Params:
+ *
+ * date=[YYYY-mm-dd]
+ * tests=[array of test names]
+ *   If tests is passed the following parameters apply:
+ *       Required:
+ *         projectid=[integer]
+ *         groupid=[integer]
+ *       Optional:
+ *         previous_builds=[comma separated list of build ids]
+ *         time_begin=[SQL compliant comparable to timestamp]
+ *         time_end=[SQL compliant comparable to timestamp]
+ * onlypassed=[presence]
+ * onlyfailed=[presence]
+ * onlytimestatus=[presence]
+ * onlynotrun=[presence]
+ * onlydelta=[presence]
+ * filterstring
+ * export=[presence]
+ **/
+
 @$buildid = $_GET['buildid'];
 if ($buildid != null) {
     $buildid = pdo_real_escape_numeric($buildid);
@@ -352,58 +380,7 @@ if ($columncount > 0) {
 }
 
 if (@$_GET['export'] == 'csv') {
-    // If user wants to export as CSV file
-
-    header('Cache-Control: public');
-    header('Content-Description: File Transfer');
-    header('Content-Disposition: attachment; filename=testExport.csv'); // Prepare some headers to download
-    header('Content-Type: application/octet-stream;');
-    header('Content-Transfer-Encoding: binary');
-    $filecontent = 'Name,Time,Details,Status,Time Status'; // Standard columns
-
-    // Store named measurements in an array
-    while ($row = pdo_fetch_array($etestquery)) {
-        $etest[$row['id']][$row['name']] = $row['value'];
-    }
-
-    for ($c = 0; $c < count($columns); $c++) {
-        $filecontent .= ',' . $columns[$c]; // Add selected columns to the next
-    }
-    $filecontent .= "\n";
-
-    while ($row = pdo_fetch_array($result)) {
-        $currentStatus = $row['status'];
-        $testName = $row['name'];
-
-        $filecontent .= "$testName,{$row['time']},{$row['details']},";
-
-        if ($projectshowtesttime) {
-            if ($row['timestatus'] < $testtimemaxstatus) {
-                $filecontent .= 'Passed,';
-            } else {
-                $filecontent .= 'Failed,';
-            }
-        }
-
-        switch ($currentStatus) {
-            case 'passed':
-                $filecontent .= 'Passed,';
-                break;
-            case 'failed':
-                $filecontent .= 'Failed,';
-                break;
-            case 'notrun':
-                $filecontent .= 'Not Run,';
-                break;
-        }
-        // start writing test results
-        for ($t = 0; $t < count($columns); $t++) {
-            $filecontent .= $etest[$row['id']][$columns[$t]] . ',';
-        }
-        $filecontent .= "\n";
-    }
-    echo($filecontent); // Start file download
-    die; // to suppress unwanted output
+    export_as_csv($etestquery, $etest, $result, $projectshowtesttime, $testtimemaxstatus, $columns);
 }
 
 // Start creating etests for each column with matching buildid, testname and the value.
@@ -454,75 +431,22 @@ $labels_found = false;
 
 // Generate a response for each test found.
 while ($row = pdo_fetch_array($result)) {
-    $currentStatus = $row['status'];
-    $previousStatus;
-    $testName = $row['name'];
+    $marshaledTest = buildtest::marshal($row, $buildid, $projectid, $projectshowtesttime, $testtimemaxstatus, $testdate);
 
-    $test = array();
-    $test['name'] = $testName;
-    if ($row['newstatus']) {
-        $test['new'] = '1';
-    }
-    $test['execTimeFull'] = floatval($row['time']);
-    $test['execTime'] = time_difference($row['time'], true, '', true);
-    $test['details'] = $row['details'];
-    $summaryLink = "testSummary.php?project=$projectid&name=" . urlencode($testName) . "&date=$testdate";
-    $test['summaryLink'] = $summaryLink;
-    $testid = $row['id'];
-    $detailsLink = "testDetails.php?test=$testid&build=$buildid";
-    $test['detailsLink'] = $detailsLink;
-    $test['id'] = $testid;
-
-    if ($projectshowtesttime) {
-        if ($row['timestatus'] < $testtimemaxstatus) {
-            $test['timestatus'] = 'Passed';
-            $test['timestatusclass'] = 'normal';
-        } else {
-            $test['timestatus'] = 'Failed';
-            $test['timestatusclass'] = 'error';
-        }
-    }
-
-    switch ($currentStatus) {
-        case 'passed':
-            $test['status'] = 'Passed';
-            $test['statusclass'] = 'normal';
-            $numPassed++;
-            break;
-        case 'failed':
-            $test['status'] = 'Failed';
-            $test['statusclass'] = 'error';
-            $numFailed++;
-            break;
-        case 'notrun':
-            $test['status'] = 'Not Run';
-            $test['statusclass'] = 'warning';
-            $numNotRun++;
-            break;
+    if ($marshaledTest['status'] == 'Passed') {
+        $numPassed++;
+    } elseif ($marshaledTest['status'] == 'Failed') {
+        $numFailed++;
+    } elseif ($marshaledTest['status'] == 'Not Run') {
+        $numNotRun++;
     }
 
     if ($row['timestatus'] >= $testtimemaxstatus) {
         $numTimeFailed++;
     }
 
-    $testid = $row['id'];
-    $testname = $row['name'];
+    $labels_found = ($CDASH_DB_TYPE != 'pgsql' && !empty($marshaledTest['labels']));
 
-    if ($CDASH_DB_TYPE == 'pgsql') {
-        get_labels_JSON_from_query_results(
-            'SELECT text FROM label, label2test WHERE ' .
-            'label.id=label2test.labelid AND ' .
-            "label2test.testid='$testid' AND " .
-            "label2test.buildid='$buildid' " .
-            'ORDER BY text ASC',
-            $test);
-    } else {
-        if (!empty($row['labels'])) {
-            $labels = explode(',', $row['labels']);
-            $test['labels'] = $labels;
-            $labels_found = true;
-        }
-    }
 
     // Summary & history queries are somewhat expensive.
     // If we have more than 25 tests we lookup this data on-the-fly
@@ -530,25 +454,26 @@ while ($row = pdo_fetch_array($result)) {
     if ($num_tests < 26) {
         if ($previous_buildids_str != '') {
             // Get the recent history for this test.
-            $history = get_test_history($testname, $previous_buildids_str);
+            $history = get_test_history($marshaledTest['name'], $previous_buildids_str);
             if (!empty($history)) {
-                $test = array_merge($test, $history);
+                $marshaledTest = array_merge($marshaledTest, $history);
                 $response['displayhistory'] = true;
             }
         }
 
         // Check the status of this test on other current builds.
-        $summary = get_test_summary($testname, $projectid, $groupid,
-            $beginning_UTCDate, $end_UTCDate);
+        $summary = get_test_summary($marshaledTest['name'], $projectid, $groupid,
+                                    $beginning_UTCDate, $end_UTCDate);
         if (!empty($summary)) {
-            $test = array_merge($test, $summary);
+            $marshaledTest = array_merge($marshaledTest, $summary);
             $response['displaysummary'] = true;
         }
 
-        $test['detailsloaded'] = true;
+        $marshaledTest['detailsloaded'] = true;
     }
 
-    $tests[] = $test;
+
+    $tests[] = $marshaledTest;
 }
 
 $response['tests'] = $tests;
@@ -730,4 +655,60 @@ function load_test_details()
     }
 
     echo json_encode($response);
+}
+
+function export_as_csv($etestquery, $etest, $result, $projectshowtesttime, $testtimemaxstatus, $columns)
+{
+    // If user wants to export as CSV file
+
+    header('Cache-Control: public');
+    header('Content-Description: File Transfer');
+    header('Content-Disposition: attachment; filename=testExport.csv'); // Prepare some headers to download
+    header('Content-Type: application/octet-stream;');
+    header('Content-Transfer-Encoding: binary');
+    $filecontent = 'Name,Time,Details,Status,Time Status'; // Standard columns
+
+    // Store named measurements in an array
+    while ($row = pdo_fetch_array($etestquery)) {
+        $etest[$row['id']][$row['name']] = $row['value'];
+    }
+
+    for ($c = 0; $c < count($columns); $c++) {
+        $filecontent .= ',' . $columns[$c]; // Add selected columns to the next
+    }
+    $filecontent .= "\n";
+
+    while ($row = pdo_fetch_array($result)) {
+        $currentStatus = $row['status'];
+        $testName = $row['name'];
+
+        $filecontent .= "$testName,{$row['time']},{$row['details']},";
+
+        if ($projectshowtesttime) {
+            if ($row['timestatus'] < $testtimemaxstatus) {
+                $filecontent .= 'Passed,';
+            } else {
+                $filecontent .= 'Failed,';
+            }
+        }
+
+        switch ($currentStatus) {
+            case 'passed':
+                $filecontent .= 'Passed,';
+                break;
+            case 'failed':
+                $filecontent .= 'Failed,';
+                break;
+            case 'notrun':
+                $filecontent .= 'Not Run,';
+                break;
+        }
+        // start writing test results
+        for ($t = 0; $t < count($columns); $t++) {
+            $filecontent .= $etest[$row['id']][$columns[$t]] . ',';
+        }
+        $filecontent .= "\n";
+    }
+    echo($filecontent); // Start file download
+    die; // to suppress unwanted output
 }
