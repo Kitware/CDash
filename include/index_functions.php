@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-function get_dynamic_builds($projectid)
+function get_dynamic_builds($projectid, $end_UTCDate)
 {
     $builds = array();
 
@@ -53,6 +53,7 @@ function get_dynamic_builds($projectid)
             }
             if (!empty($whereClauses)) {
                 $where = 'WHERE ' . implode($whereClauses, ' AND ');
+                $where .= " AND b.starttime<'$end_UTCDate'";
             }
 
             // We only want the most recent build.
