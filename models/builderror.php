@@ -106,17 +106,22 @@ class builderror
     {
         // Sets up access to $file and $directory
         extract(self::GetSourceFile($data));
-        return array(
+        $response = array(
             'new' => (isset($data['newstatus'])) ? $data['newstatus'] : -1,
             'logline' => $data['logline'],
-            'cvsurl' => get_diff_url($project['id'], $data['cvsurl'], $directory, $file, $revision),
+            'cvsurl' => get_diff_url($project['id'], $project['cvsurl'], $directory, $file, $revision)
+        );
+
+        $response = array_merge($response, array(
             // when building without launchers, CTest truncates the source dir to /.../
             // use this pattern to linkify compiler output.
-            'precontext' => linkify_compiler_output($data['cvsurl'], "/\.\.\.", $revision, $data['precontext']),
-            'text' => linkify_compiler_output($data['cvsurl'], "/\.\.\.", $revision, $data['text']),
-            'postcontext' => linkify_compiler_output($data['cvsurl'], "/\.\.\.", $revision, $data['postcontext']),
+            'precontext' => linkify_compiler_output($response['cvsurl'], "/\.\.\.", $revision, $data['precontext']),
+            'text' => linkify_compiler_output($response['cvsurl'], "/\.\.\.", $revision, $data['text']),
+            'postcontext' => linkify_compiler_output($response['cvsurl'], "/\.\.\.", $revision, $data['postcontext']),
             'sourcefile' => $data['sourcefile'],
             'sourceline' => $data['sourceline']
-        );
+        ));
+
+        return $response;
     }
 }

@@ -401,7 +401,7 @@ class build
         $previousBuild = $this->GetPreviousBuildId();
 
         if ($previousBuild === 0) {
-            throw new Exception('Build has no previous build to find resolved errors against.');
+            return false;
         } else {
             return pdo_query(
                 'SELECT * FROM

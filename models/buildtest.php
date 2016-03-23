@@ -97,17 +97,20 @@ class buildtest
 
     public static function marshalStatus($status)
     {
-        return array('passed' => array('Passed', 'normal'),
-                     'failed' => array('Failed', 'error'),
-                     'notrun' => array('Not Run', 'warning'))[$status];
+        $statuses = array('passed' => array('Passed', 'normal'),
+                          'failed' => array('Failed', 'error'),
+                          'notrun' => array('Not Run', 'warning'));
+
+        return $statuses[$status];
     }
 
-    public static function marshal($data, $buildid, $projectid, $projectshowttestime, $testtimemaxstatus, $testdate)
+    public static function marshal($data, $buildid, $projectid, $projectshowtesttime, $testtimemaxstatus, $testdate)
     {
+        $marshaledStatus = self::marshalStatus($data['status']);
         $marshaledData = array(
             'id' => $data['id'],
-            'status' => self::marshalStatus($data['status'])[0],
-            'statusclass' => self::marshalStatus($data['status'])[1],
+            'status' => $marshaledStatus[0],
+            'statusclass' => $marshaledStatus[1],
             'name' => $data['name'],
             'execTime' => time_difference($data['time'], true, '', true),
             'execTimeFull' => floatval($data['time']),
@@ -129,6 +132,7 @@ class buildtest
             }
         }
 
+        global $CDASH_DB_TYPE;
         if ($CDASH_DB_TYPE == 'pgsql') {
             get_labels_JSON_from_query_results(
                 'SELECT text FROM label, label2test WHERE ' .

@@ -176,8 +176,10 @@ function addErrorResponse($data)
 if (isset($_GET['onlydeltan'])) {
     // Build error table
     $resolvedBuildErrors = $build->GetResolvedBuildErrors($type);
-    while ($resolvedBuildError = pdo_fetch_array($resolvedBuildErrors)) {
-        addErrorResponse(builderror::marshal($resolvedBuildError, $project_array, $revision));
+    if ($resolvedBuildErrors !== false) {
+        while ($resolvedBuildError = pdo_fetch_array($resolvedBuildErrors)) {
+            addErrorResponse(builderror::marshal($resolvedBuildError, $project_array, $revision));
+        }
     }
 
     // Build failure table
