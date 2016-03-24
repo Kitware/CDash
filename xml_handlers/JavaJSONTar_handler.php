@@ -180,7 +180,7 @@ class JavaJSONTarHandler
 
         foreach ($coverageLines as $coverageLine) {
             $sourceLine = $coverageLine['source'];
-            $coverageFile->File .= $sourceLine;
+            $coverageFile->File .= rtrim($sourceLine);
             $coverageFile->File .= '<br>';
 
             $timesHit = $coverageLine['covered'];
