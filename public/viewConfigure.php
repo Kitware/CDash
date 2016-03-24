@@ -33,6 +33,8 @@ if ($date != null) {
     $date = htmlspecialchars(pdo_real_escape_string($date));
 }
 
+$status = (isset($_GET['status'])) ? pdo_real_escape_numeric($_GET['status']) : false;
+
 // Checks
 if (!isset($buildid) || !is_numeric($buildid)) {
     echo 'Not a valid buildid!';
@@ -100,20 +102,24 @@ $xml .= add_XML_value('site', $site_array['name']);
 $xml .= add_XML_value('siteid', $siteid);
 $xml .= add_XML_value('buildname', $build_array['name']);
 $xml .= add_XML_value('buildid', $build_array['id']);
+$xml .= add_XML_value('parentid', $build_array['parentid']);
 $xml .= '</build>';
 
 $configures_response = array();
 
-$configures = $build->GetConfigures();
+$configures = $build->GetConfigures($status);
+$numConfigures = 0;
 while ($configure = pdo_fetch_array($configures)) {
     $configures_response[] = buildconfigure::marshal($configure);
 }
 
 $xml .= '<configures>';
 foreach ($configures_response as $configure) {
+    $xml .= '<configure>';
     foreach ($configure as $key => $val) {
         $xml .= add_XML_value($key, $val);
     }
+    $xml .= '</configure>';
 }
 $xml .= '</configures>';
 $xml .= '</cdash>';

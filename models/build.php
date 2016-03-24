@@ -461,9 +461,22 @@ class build
         return $resolvedBuildFailures;
     }
 
-    public function GetConfigures()
+    public function GetConfigures($status=false)
     {
-        return pdo_query("SELECT * FROM configure WHERE buildid = " . $this->Id);
+        if ($this->IsParentBuild()) {
+            $where = ($status !== false) ? "AND c.status = $status" : "";
+            return pdo_query("SELECT sp.name subprojectname, sp.id subprojectid, c.*, b.configureerrors,
+                              b.configurewarnings
+                              FROM configure c
+                              JOIN subproject2build sp2b ON sp2b.buildid = c.buildid
+                              JOIN subproject sp ON sp.id = sp2b.subprojectid
+                              JOIN build b ON b.id = c.buildid
+                              WHERE b.parentid = " . $this->Id . "
+                              $where");
+        } else {
+            $where = ($status !== false) ? "AND status = $status" : "";
+            return pdo_query("SELECT * FROM configure WHERE buildid = " . $this->Id . " $where");
+        }
     }
 
     /** Get the build id from its name */

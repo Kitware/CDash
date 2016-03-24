@@ -90,13 +90,13 @@
 
 <td ng-if="buildgroup.hasconfiguredata" align="center" ng-class="{'error': build.configure.error > 0, 'normal': build.configure.error == 0}">
   <div>
-    {{build.configure.error}}
+    <a href="viewConfigure.php?buildid={{build.id}}&status=1">{{build.configure.error}}</a>
   </div>
 </td>
 
 <td ng-if="buildgroup.hasconfiguredata" align="center" ng-class="{'warning': build.configure.warning > 0, 'normal': build.configure.warning == 0}">
   <div>
-    {{build.configure.warning}}
+    <a href="viewConfigure.php?buildid={{build.id}}">{{build.configure.warning}}</a>
   </div>
 </td>
 
