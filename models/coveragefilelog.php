@@ -116,6 +116,35 @@ class coveragefilelog
         }
 
         $log_entries = explode(';', $log);
+        // Make an initial pass through $log_entries to see what lines
+        // it contains.
+        $lines_retrieved = array();
+        foreach ($log_entries as $log_entry) {
+            if (empty($log_entry)) {
+                continue;
+            }
+            list($line, $value) = explode(':', $log_entry);
+            if (is_numeric($line)) {
+                $lines_retrieved[] = intval($line);
+            } else {
+                $lines_retrieved[] = $line;
+            }
+        }
+
+        // Use this info to remove any uncovered lines that
+        // the previous result considered uncoverable.
+        foreach ($this->Lines as $line_number => $times_hit) {
+            if ($times_hit == 0 &&
+                    !in_array($line_number, $lines_retrieved, true)) {
+                unset($this->Lines[$line_number]);
+            }
+        }
+
+        // Does $this already contain coverage?
+        // We use this information to distinguish between uncoverable lines
+        // vs. missed lines below.
+        $alreadyPopulated = !empty($this->Lines);
+
         foreach ($log_entries as $log_entry) {
             if (empty($log_entry)) {
                 continue;
@@ -128,6 +157,13 @@ class coveragefilelog
                 $this->AddBranch($line, $covered, $total);
             } else {
                 // Line coverage
+                if ($value == 0 && $alreadyPopulated &&
+                        !array_key_exists($line, $this->Lines)) {
+                    // This object already considers the line uncoverable,
+                    // so ignore the result from the database marking it as
+                    // missed.
+                    continue;
+                }
                 $this->AddLine($line, $value);
             }
         }
