@@ -209,6 +209,8 @@ class TestingJUnitHandler extends AbstractHandler
                 $stamp = $this->Build->GetStamp();
                 $timestamp = mktime(substr($stamp, 9, 2), substr($stamp, 11, 2), 0,
                     substr($stamp, 6, 2), substr($stamp, 4, 2), substr($stamp, 0, 4));
+            } else {
+                $timestamp = 0;
             }
 
             $this->StartTimeStamp = $timestamp;
