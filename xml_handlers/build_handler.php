@@ -28,6 +28,7 @@ class BuildHandler extends AbstractHandler
     private $Error;
     private $Label;
     private $Append;
+    private $Feed;
 
     public function __construct($projectid, $scheduleid)
     {

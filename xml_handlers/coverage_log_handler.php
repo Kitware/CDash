@@ -26,6 +26,9 @@ class CoverageLogHandler extends AbstractHandler
     private $CurrentCoverageFileLog;
     private $CoverageFiles;
 
+    private $UpdateEndTime;
+    private $CurrentLine;
+
     /** Constructor */
     public function __construct($projectID, $scheduleID)
     {

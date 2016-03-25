@@ -38,6 +38,8 @@ class TestingHandler extends AbstractHandler
     private $NumberTestsFailed;
     private $NumberTestsNotRun;
     private $NumberTestsPassed;
+    
+    private $Feed;
 
     /** Constructor */
     public function __construct($projectID, $scheduleID)

@@ -45,6 +45,8 @@ class UploadHandler extends AbstractHandler
 
     /** If True, means an error happened while processing the file */
     private $UploadError;
+    
+    private $UpdateEndTime;
 
     /** Constructor */
     public function __construct($projectID, $scheduleID)

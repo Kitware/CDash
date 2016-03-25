@@ -20,6 +20,10 @@ class CoverageSummary
     private $LocUntested = 0;
     public $BuildId;
     private $Coverages;
+    public $BranchesTested;
+    public $BranchesUntested;
+    public $FunctionsTested;
+    public $FunctionsUntested;
 
     public function __construct()
     {
