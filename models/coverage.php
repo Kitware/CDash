@@ -22,7 +22,7 @@ include_once 'models/coveragefilelog.php';
 include_once 'models/label.php';
 
 /** Coverage class. Used by CoverageSummary */
-class coverage
+class Coverage
 {
     public $BuildId;
     public $Covered;

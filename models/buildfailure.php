@@ -17,7 +17,7 @@
 include_once 'models/label.php';
 
 /** BuildFailure */
-class buildfailure
+class BuildFailure
 {
     public $BuildId;
     public $Type;

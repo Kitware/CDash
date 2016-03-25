@@ -16,7 +16,7 @@
 
 include_once 'models/build.php';
 
-class feed
+class Feed
 {
     public $Id;
     public $ProjectId;

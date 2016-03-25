@@ -16,7 +16,7 @@
 require_once 'models/coveragefile.php';
 require_once 'models/coveragesummary.php';
 
-class coveragefilelog
+class CoverageFileLog
 {
     public $BuildId;
     public $FileId;

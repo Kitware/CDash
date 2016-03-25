@@ -15,7 +15,7 @@
 =========================================================================*/
 
 // It is assumed that appropriate headers should be included before including this file
-class siteinformation
+class SiteInformation
 {
     public $TimeStamp;
     public $ProcessorIs64Bits;

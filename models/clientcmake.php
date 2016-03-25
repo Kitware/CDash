@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-class clientcmake
+class ClientCMake
 {
     public $Id;
     public $SiteId;

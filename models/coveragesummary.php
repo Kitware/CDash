@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-class coveragesummary
+class CoverageSummary
 {
     private $LocTested = 0;
     private $LocUntested = 0;

@@ -16,7 +16,7 @@
 
 // It is assumed that appropriate headers should be included before including this file
 
-class subprojectgroup
+class SubProjectGroup
 {
     private $Id;
     private $ProjectId;
