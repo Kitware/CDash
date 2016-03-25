@@ -25,7 +25,6 @@ class DynamicAnalysisHandler extends AbstractHandler
     private $StartTimeStamp;
     private $EndTimeStamp;
     private $Checker;
-    private $UpdateEndTime;
 
     private $DynamicAnalysis;
     private $DynamicAnalysisDefect;

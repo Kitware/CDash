@@ -29,10 +29,6 @@ class TestingNUnitHandler extends AbstractHandler
 
     private $Test;
     private $BuildTest;
-    private $BuildTestDiff;
-    private $TestImage;
-    private $TestMeasurement;
-    private $Label;
     private $Append;
 
     // Keep a record of the number of tests passed, failed and notrun

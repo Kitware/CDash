@@ -29,8 +29,6 @@ class TestingHandler extends AbstractHandler
 
     private $Test;
     private $BuildTest;
-    private $BuildTestDiff;
-    private $TestImage;
     private $TestMeasurement;
     private $Label;
     private $Append;
