@@ -132,7 +132,7 @@ class TestingHandler extends AbstractHandler
             $this->Label = new Label();
         } elseif ($name == 'TESTLIST' && $parent == 'TESTING') {
             $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
-            $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp); // The EndTimeStamp
+            // $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp); // The EndTimeStamp
 
             $this->Build->ProjectId = $this->projectid;
             $this->Build->StartTime = $start_time;

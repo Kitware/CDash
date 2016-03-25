@@ -66,7 +66,6 @@ class TestingNUnitHandler extends AbstractHandler
     public function startElement($parser, $name, $attributes)
     {
         parent::startElement($parser, $name, $attributes);
-        $parent = $this->getParent(); // should be before endElement
 
         if ($name == 'SITE') {
             $this->HasSiteTag = true;

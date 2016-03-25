@@ -135,8 +135,6 @@ class BuildHandler extends AbstractHandler
                     unset($this->Error->StdOutput);
                     $this->Error->StdOutput = $tmp .
                         "\n...\nCDash truncated output because it exceeded $threshold characters.\n";
-                    $outlen = strlen($this->Error->StdOutput);
-                    //add_log("truncated long out text", "build_handler", LOG_INFO);
                 }
 
                 $errlen = strlen($this->Error->StdError);
@@ -145,8 +143,6 @@ class BuildHandler extends AbstractHandler
                     unset($this->Error->StdError);
                     $this->Error->StdError = $tmp .
                         "\n...\nCDash truncated output because it exceeded $threshold characters.\n";
-                    $errlen = strlen($this->Error->StdError);
-                    //add_log("truncated long err text", "build_handler", LOG_INFO);
                 }
             }
 
