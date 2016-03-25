@@ -180,7 +180,7 @@ class JSCoverTarHandler
                     // Record this line of code if this is the first time that
                     // this file has been encountered.
                     $sourceLine = $coverageEntry['source'][$i - 1];
-                    $coverageFile->File .= $sourceLine;
+                    $coverageFile->File .= rtrim($sourceLine);
                     $coverageFile->File .= '<br>';
                 }
 

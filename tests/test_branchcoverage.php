@@ -66,7 +66,6 @@ class BranchCoverageTestCase extends KWWebTestCase
             $this->fail('\"<td align="right">Foo</td>\" not found when expected');
             return 1;
         }
-
         // Look up the ID of one of the coverage files that we just submitted.
         $fileid_result = $this->db->query("
       SELECT c.fileid FROM coverage AS c
@@ -77,8 +76,8 @@ class BranchCoverageTestCase extends KWWebTestCase
 
         // Make sure branch coverage is being displayed properly.
         $content = $this->get($this->url . "/viewCoverageFile.php?buildid=$buildid&fileid=$fileid");
-        if (strpos($content, '<span class="error">  1/2</span><span class="normal">    7 | if (x &lt;= 0)</span>') === false) {
-            $this->fail('\"<span class="error">  1/2</span><span class="normal">    7 | if (x &lt;= 0)</span>\" not found when expected');
+        if (strpos($content, '<span class="error">  1/2</span><span class="normal">    7 |   if (x &lt;= 0)</span>') === false) {
+            $this->fail('\"<span class="error">  1/2</span><span class="normal">    7 |   if (x &lt;= 0)</span>\" not found when expected');
             return 1;
         }
         return 0;

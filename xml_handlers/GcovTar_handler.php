@@ -245,8 +245,7 @@ class GCovTarHandler
                 // Separate out delimited values from this line.
                 $timesHit = trim($fields[0]);
                 $lineNumber = trim($fields[1]);
-
-                $sourceLine = trim($fields[2]);
+                $sourceLine = rtrim($fields[2]);
 
                 if ($lineNumber > 0) {
                     $coverageFile->File .= $sourceLine;
