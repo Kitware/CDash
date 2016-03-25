@@ -220,7 +220,6 @@ class TestingJUnitHandler extends AbstractHandler
     /** End Element */
     public function endElement($parser, $name)
     {
-        //$parent = $this->getParent(); // should be before endElement
         parent::endElement($parser, $name);
         if ($name == 'FAILURE') {
             $this->BuildTest->Status = 'failed';
@@ -258,7 +257,6 @@ class TestingJUnitHandler extends AbstractHandler
     /** Text function */
     public function text($parser, $data)
     {
-        //$parent = $this->getParent();
         $element = $this->getElement();
         if ($element == 'FAILURE') {
             $this->Test->Output .= $data;

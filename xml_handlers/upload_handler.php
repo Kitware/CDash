@@ -252,7 +252,6 @@ class UploadHandler extends AbstractHandler
                 $url_length = 255; // max length of 'uploadfile.filename' field
                 $this->UploadFile->Filename = trim(file_get_contents($this->TmpFilename, null, null, 0, $url_length));
                 cdash_unlink($this->TmpFilename);
-                //add_log("this->UploadFile->Filename '".$this->UploadFile->Filename."'", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_INFO);
             } else {
                 $this->UploadFile->IsUrl = false;
 
@@ -355,8 +354,6 @@ class UploadHandler extends AbstractHandler
         if ($parent == 'FILE') {
             switch ($element) {
                 case 'CONTENT':
-                    //add_log("Chunk size:" . strlen($data));
-                    //add_log("Chunk:" . $data);
                     // Write base64 encoded chunch to temporary file
                     $charsToReplace = array("\r\n", "\n", "\r");
                     fwrite($this->Base64TmpFileWriteHandle, str_replace($charsToReplace, '', $data));

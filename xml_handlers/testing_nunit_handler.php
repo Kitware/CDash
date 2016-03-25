@@ -195,7 +195,6 @@ class TestingNUnitHandler extends AbstractHandler
     /** End Element */
     public function endElement($parser, $name)
     {
-        //$parent = $this->getParent(); // should be before endElement
         parent::endElement($parser, $name);
 
         if ($name == 'TEST-CASE') {
@@ -227,7 +226,5 @@ class TestingNUnitHandler extends AbstractHandler
     /** Text function */
     public function text($parser, $data)
     {
-        //$parent = $this->getParent();
-        //$element = $this->getElement();
     }
 }

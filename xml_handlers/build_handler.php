@@ -219,7 +219,6 @@ class BuildHandler extends AbstractHandler
                 case 'STDOUT':
                     if ($threshold > 0) {
                         if (strlen($this->Error->StdOutput) > $threshold) {
-                            //add_log("avoiding append: long output", "build_handler", LOG_INFO);
                             $append = false;
                         }
                     }
@@ -232,7 +231,6 @@ class BuildHandler extends AbstractHandler
                 case 'STDERR':
                     if ($threshold > 0) {
                         if (strlen($this->Error->StdError) > $threshold) {
-                            //add_log("avoiding append: long error", "build_handler", LOG_INFO);
                             $append = false;
                         }
                     }
