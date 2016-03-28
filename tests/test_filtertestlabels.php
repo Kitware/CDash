@@ -27,6 +27,10 @@ class FilterTestLabelsTestCase extends KWWebTestCase
             return 1;
         }
 
+        // Turn this option on.
+        pdo_query("UPDATE project SET sharelabelfilters=1
+                WHERE name='EmailProjectExample'");
+
         // Get the buildid that we just created so we can delete it later.
         $buildids = array();
         $buildid_results = pdo_query(
@@ -85,6 +89,10 @@ class FilterTestLabelsTestCase extends KWWebTestCase
 
         // Delete the build
         remove_build($buildid);
+
+        // Turn the option back off.
+        pdo_query("UPDATE project SET sharelabelfilters=0
+                WHERE name='EmailProjectExample'");
 
         if (!$success) {
             $this->fail($error_msg);

@@ -350,6 +350,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
     $selected_subprojects = '';
     $num_selected_subprojects = 0;
     $filter_on_labels = false;
+    $share_label_filters = false;
     foreach ($filterdata['filters'] as $filter) {
         if ($filter['field'] == 'subprojects') {
             if ($filter['compare'] == 92) {
@@ -359,9 +360,13 @@ function echo_main_dashboard_JSON($project_instance, $date)
             }
         } elseif ($filter['field'] == 'label') {
             $filter_on_labels = true;
-            $label_ids_array = get_label_ids_from_filterdata($filterdata);
-            $label_ids = '(' . implode(', ', $label_ids_array) . ')';
         }
+    }
+    if ($filter_on_labels && $project_instance->ShareLabelFilters) {
+        $share_label_filters = true;
+        $response['sharelabelfilters'] = true;
+        $label_ids_array = get_label_ids_from_filterdata($filterdata);
+        $label_ids = '(' . implode(', ', $label_ids_array) . ')';
     }
 
     // Include takes precedence over exclude.
@@ -1008,7 +1013,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
                 }
             }
 
-            if ($filter_on_labels) {
+            if ($share_label_filters) {
                 $label_query_base =
                     "SELECT b2t.status, b2t.newstatus
                     FROM build2test AS b2t

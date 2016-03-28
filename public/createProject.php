@@ -150,6 +150,7 @@ if ($session_OK) {
             @$Project->EmailAdministrator = stripslashes_if_gpc_magic_quotes($_POST['emailAdministrator']);
             @$Project->ShowIPAddresses = stripslashes_if_gpc_magic_quotes($_POST['showIPAddresses']);
             @$Project->DisplayLabels = stripslashes_if_gpc_magic_quotes($_POST['displayLabels']);
+            @$Project->ShareLabelFilters = stripslashes_if_gpc_magic_quotes($_POST['shareLabelFilters']);
             @$Project->ShowCoverageCode = stripslashes_if_gpc_magic_quotes($_POST['showCoverageCode']);
             @$Project->AutoremoveTimeframe = stripslashes_if_gpc_magic_quotes($_POST['autoremoveTimeframe']);
             @$Project->AutoremoveMaxBuilds = stripslashes_if_gpc_magic_quotes($_POST['autoremoveMaxBuilds']);
@@ -328,6 +329,7 @@ if ($session_OK) {
         @$Project->EmailAdministrator = stripslashes_if_gpc_magic_quotes($_POST['emailAdministrator']);
         @$Project->ShowIPAddresses = stripslashes_if_gpc_magic_quotes($_POST['showIPAddresses']);
         @$Project->DisplayLabels = stripslashes_if_gpc_magic_quotes($_POST['displayLabels']);
+        @$Project->ShareLabelFilters = stripslashes_if_gpc_magic_quotes($_POST['shareLabelFilters']);
         @$Project->ShowCoverageCode = stripslashes_if_gpc_magic_quotes($_POST['showCoverageCode']);
         @$Project->AutoremoveTimeframe = stripslashes_if_gpc_magic_quotes($_POST['autoremoveTimeframe']);
         @$Project->AutoremoveMaxBuilds = stripslashes_if_gpc_magic_quotes($_POST['autoremoveMaxBuilds']);
