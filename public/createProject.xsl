@@ -1439,6 +1439,34 @@
                         <td></td>
                         <td>
                           <div align="right">
+                            <strong>Share Label Filters</strong>
+                          </div>
+                        </td>
+                        <td>
+                          <input onchange="saveChanges();" onfocus="showHelp('shareLabelFilters_help');"
+                            type="checkbox" name="shareLabelFilters" value="1">
+                            <xsl:if test="cdash/project/sharelabelfilters=1">
+                              <xsl:attribute name="checked"></xsl:attribute>
+                            </xsl:if>
+                          </input>
+                          <a
+                            href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                            target="blank">
+                            <img onmouseover="showHelp('shareLabelFilters_help');"
+                              src="img/help.gif" border="0" />
+                          </a>
+                          <span class="help_content" id="shareLabelFilters_help">
+                            <b>Share Label Filters</b>
+                            <br />
+                            Pass label filters set on index.php to other
+                            related pages like viewTest.php and queryTest.php.
+                          </span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td>
+                          <div align="right">
                             <strong>Show coverage code:</strong>
                           </div>
                         </td>

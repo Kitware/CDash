@@ -408,6 +408,7 @@ CREATE TABLE `project` (
   `webapikey` varchar(40),
   `tokenduration` int(11),
   `showcoveragecode` tinyint(4) default '1',
+  `sharelabelfilters` tinyint(1) default '0',
   PRIMARY KEY  (`id`),
   KEY `name` (`name`),
   KEY `public` (`public`)

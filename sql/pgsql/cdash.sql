@@ -323,6 +323,7 @@ CREATE TABLE "project" (
   "webapikey" character varying(40) DEFAULT '' NOT NULL,
   "tokenduration" integer DEFAULT '0',
   "showcoveragecode" smallint default '1',
+  "sharelabelfilters" smallint default '0',
   PRIMARY KEY ("id")
 );
 CREATE INDEX "name2" on "project" ("name");

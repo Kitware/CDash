@@ -52,6 +52,7 @@ class project
     public $EmailAdministrator;
     public $ShowIPAddresses;
     public $DisplayLabels;
+    public $ShareLabelFilters;
     public $ShowCoverageCode;
     public $AutoremoveTimeframe;
     public $AutoremoveMaxBuilds;
@@ -92,6 +93,9 @@ class project
         }
         if (empty($this->DisplayLabels)) {
             $this->DisplayLabels = 0;
+        }
+        if (empty($this->ShareLabelFilters)) {
+            $this->ShareLabelFilters = 0;
         }
         if (empty($this->ShowCoverageCode)) {
             $this->ShowCoverageCode = 0;
@@ -230,6 +234,7 @@ class project
             $query .= ',emailadministrator=' . qnum($this->EmailAdministrator);
             $query .= ',showipaddresses=' . qnum($this->ShowIPAddresses);
             $query .= ',displaylabels=' . qnum($this->DisplayLabels);
+            $query .= ',sharelabelfilters=' . qnum($this->ShareLabelFilters);
             $query .= ',showcoveragecode=' . qnum($this->ShowCoverageCode);
             $query .= ',autoremovetimeframe=' . qnum($this->AutoremoveTimeframe);
             $query .= ',autoremovemaxbuilds=' . qnum($this->AutoremoveMaxBuilds);
@@ -310,13 +315,13 @@ class project
                                     nightlytime,googletracker,emailbrokensubmission,emailredundantfailures,
                                     emaillowcoverage,emailtesttimingchanged,cvsviewertype,
                                     testtimestd,testtimestdthreshold,testtimemaxstatus,emailmaxitems,emailmaxchars,showtesttime,emailadministrator,showipaddresses
-                                    ,displaylabels,showcoveragecode,autoremovetimeframe,autoremovemaxbuilds,uploadquota,webapikey)
+                                    ,displaylabels,sharelabelfilters,showcoveragecode,autoremovetimeframe,autoremovemaxbuilds,uploadquota,webapikey)
                  VALUES (' . $idvalue . "'$Name','$Description','$HomeUrl','$CvsUrl','$BugTrackerUrl','$BugTrackerFileUrl','$DocumentationUrl',
                  " . qnum($this->Public) . ',' . qnum($this->ImageId) . ',' . qnum($this->CoverageThreshold) . ",'$TestingDataUrl','$NightlyTime',
                  '$GoogleTracker'," . qnum($this->EmailBrokenSubmission) . ',' . qnum($this->EmailRedundantFailures) . ','
                 . qnum($this->EmailLowCoverage) . ',' . qnum($this->EmailTestTimingChanged) . ",'$CvsViewerType'," . qnum($this->TestTimeStd)
                 . ',' . qnum($this->TestTimeStdThreshold) . ',' . qnum($this->TestTimeMaxStatus) . ',' . qnum($this->EmailMaxItems) . ',' . qnum($this->EmailMaxChars) . ','
-                . qnum($this->ShowTestTime) . ',' . qnum($this->EmailAdministrator) . ',' . qnum($this->ShowIPAddresses) . ',' . qnum($this->DisplayLabels) . ',' . qnum($this->ShowCoverageCode)
+                . qnum($this->ShowTestTime) . ',' . qnum($this->EmailAdministrator) . ',' . qnum($this->ShowIPAddresses) . ',' . qnum($this->DisplayLabels) . ',' . qnum($this->ShareLabelFilters) . ',' . qnum($this->ShowCoverageCode)
                 . ',' . qnum($this->AutoremoveTimeframe) . ',' . qnum($this->AutoremoveMaxBuilds) . ',' . qnum($this->UploadQuota) . ",'" . $this->WebApiKey . "')";
 
             if (!pdo_query($query)) {
@@ -426,6 +431,7 @@ class project
             $this->EmailAdministrator = $project_array['emailadministrator'];
             $this->ShowIPAddresses = $project_array['showipaddresses'];
             $this->DisplayLabels = $project_array['displaylabels'];
+            $this->ShareLabelFilters = $project_array['sharelabelfilters'];
             $this->ShowCoverageCode = $project_array['showcoveragecode'];
             $this->AutoremoveTimeframe = $project_array['autoremovetimeframe'];
             $this->AutoremoveMaxBuilds = $project_array['autoremovemaxbuilds'];
