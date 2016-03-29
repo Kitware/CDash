@@ -190,8 +190,12 @@
                     </tr>
                   </thead>
 
-                  <tbody>
-                    <tr class="form-group repeat-item" ng-repeat="group in cdash.groups | orderBy:'name'">
+                  <tbody id="sortable"
+                         ui-sortable="sortable"
+                         ng-model="cdash.groups">
+                    <tr class="form-group repeat-item" style="cursor: move;"
+                        ng-repeat="group in cdash.groups | orderBy:'position'"
+                        id={{group.id}}>
                       <td class="col-md-3">
                         <input name="group_name" type="text" class="form-control" ng-model="group.name"></input>
                       </td>
@@ -216,6 +220,8 @@
                     </tr>
                   </tbody>
                 </table>
+                <button class="btn btn-default" ng-click="updateGroupOrder()">Save Order</button>
+                <img id="order_updated" src="img/check.gif" style="display: none; height:16px; width=16px; margin-top:9px;" />
               </div>
             </div>
           </div> <!-- "groups" pane -->

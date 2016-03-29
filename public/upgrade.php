@@ -640,6 +640,8 @@ if (isset($_GET['upgrade-2-4'])) {
     // Support for subproject groups
     AddTableField('subproject', 'groupid', 'int(11)', 'bigint', '0');
     AddTableIndex('subproject', 'groupid');
+    AddTableField('subprojectgroup', 'position', 'int(11)', 'bigint', '0');
+    AddTableIndex('subprojectgroup', 'position');
     RemoveTableField('subproject', 'core');
     RemoveTableField('project', 'coveragethreshold2');
 

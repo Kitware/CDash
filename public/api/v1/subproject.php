@@ -225,6 +225,19 @@ function rest_post()
         $response['coverage_threshold'] = $Group->GetCoverageThreshold();
         echo json_encode(cast_data_for_JSON($response));
     }
+
+    if (isset($_POST['newLayout'])) {
+        // Update the order of the SubProject groups.
+        $inputRows = $_POST['newLayout'];
+        foreach ($inputRows as $inputRow) {
+            $id = qnum(pdo_real_escape_numeric($inputRow['id']));
+            $position = qnum(pdo_real_escape_numeric($inputRow['position']));
+            $query = "UPDATE subprojectgroup SET position=$position WHERE id=$id";
+            pdo_query($query);
+            add_last_sql_error('API::subproject::newLayout::INSERT', $projectid);
+        }
+        return;
+    }
 }
 
 /* Handle PUT requests */
