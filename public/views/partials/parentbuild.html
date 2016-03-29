@@ -107,7 +107,7 @@
 <td ng-if="buildgroup.hascompilationdata" align="center" ng-class="{'error': build.compilation.error > 0, 'normal': build.compilation.error == 0}">
   <div ng-class="{'valuewithsub': build.compilation.nerrordiffp > 0 || build.compilation.nerrordiffn > 0}">
     <div>
-      {{build.compilation.error}}
+      <a href="viewBuildError.php?buildid={{build.id}}">{{build.compilation.error}}</a>
     </div>
   </div>
 </td>
@@ -115,7 +115,7 @@
 <td ng-if="buildgroup.hascompilationdata" align="center" ng-class="{'warning': build.compilation.warning > 0, 'normal': build.compilation.warning == 0}">
   <div ng-class="{'valuewithsub': build.compilation.nwarningdiffp > 0 || build.compilation.nwarningdiffn > 0}">
     <div>
-      {{build.compilation.warning}}
+      <a href="viewBuildError.php?buildid={{build.id}}&type=1">{{build.compilation.warning}}</a>
     </div>
   </div>
 </td>
