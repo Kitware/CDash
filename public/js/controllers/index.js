@@ -213,7 +213,9 @@ CDash.filter("showEmptyBuildsLast", function () {
     }
 
     // Check for label filters
-    cdash.extrafilterurl = filters.getLabelString(cdash.filterdata);
+    if (cdash.sharelabelfilters) {
+      cdash.extrafilterurl = filters.getLabelString(cdash.filterdata);
+    }
 
     // Read simple/advanced view cookie setting.
     var advanced_cookie = $.cookie('cdash_'+cdash.projectname+'_advancedview');

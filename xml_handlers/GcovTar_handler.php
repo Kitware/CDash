@@ -60,19 +60,10 @@ class GCovTarHandler
     /**
      * Parse a tarball of .gcov files.
      **/
-    public function Parse($handle)
+    public function Parse($filename)
     {
-        global $CDASH_BACKUP_DIRECTORY;
-
-        // This function receives an open file handle, but we really just need
-        // the path to this file so that we can extract it.
-        $meta_data = stream_get_meta_data($handle);
-        $filename = $meta_data['uri'];
-        fclose($handle);
-
         // Create a new directory where we can extract our tarball.
-        $pathParts = pathinfo($filename);
-        $dirName = $CDASH_BACKUP_DIRECTORY . '/' . $pathParts['filename'];
+        $dirName = sys_get_temp_dir() . '/' . pathinfo($filename, PATHINFO_FILENAME);
         mkdir($dirName);
 
         // Extract the tarball.
@@ -245,8 +236,7 @@ class GCovTarHandler
                 // Separate out delimited values from this line.
                 $timesHit = trim($fields[0]);
                 $lineNumber = trim($fields[1]);
-
-                $sourceLine = trim($fields[2]);
+                $sourceLine = rtrim($fields[2]);
 
                 if ($lineNumber > 0) {
                     $coverageFile->File .= $sourceLine;

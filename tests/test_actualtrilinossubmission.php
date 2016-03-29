@@ -34,6 +34,7 @@ class ActualTrilinosSubmissionTestCase extends TrilinosSubmissionTestCase
         $this->setField('emailBrokenSubmission', '1');
         $this->setField('showIPAddresses', '1');
         $this->setField('displayLabels', '1');
+        $this->setField('shareLabelFilters', '1');
         $this->clickSubmitByName('Submit');
 
         $this->checkErrors();
