@@ -4,6 +4,7 @@
 // relative to the top of the CDash source tree
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once 'include/pdo.php';
 
 class BranchCoverageTestCase extends KWWebTestCase
 {
@@ -29,7 +30,7 @@ class BranchCoverageTestCase extends KWWebTestCase
             'endtime' => '1422455768',
             'track' => 'Experimental',
             'type' => 'GcovTar',
-            'datafilesmd5[0]=' => '2e5860e5be9682f1ced11ccac93b945b'));
+            'datafilesmd5[0]=' => '5454e16948a1d58d897e174b75cc5633'));
 
         $post_json = json_decode($post_result, true);
         if ($post_json['status'] != 0) {
@@ -47,7 +48,7 @@ class BranchCoverageTestCase extends KWWebTestCase
         }
 
         // Do the PUT submission to actually upload our data.
-        $puturl = $this->url . "/submit.php?type=GcovTar&md5=2e5860e5be9682f1ced11ccac93b945b&filename=gcov.tar&buildid=$buildid";
+        $puturl = $this->url . "/submit.php?type=GcovTar&md5=5454e16948a1d58d897e174b75cc5633&filename=gcov.tar&buildid=$buildid";
         $filename = dirname(__FILE__) . '/data/gcov.tar';
 
         $put_result = $this->uploadfile($puturl, $filename);
@@ -68,10 +69,10 @@ class BranchCoverageTestCase extends KWWebTestCase
         }
         // Look up the ID of one of the coverage files that we just submitted.
         $fileid_result = $this->db->query("
-      SELECT c.fileid FROM coverage AS c
-      INNER JOIN coveragefile AS cf ON c.fileid=cf.id
-      WHERE buildid=$buildid
-      AND cf.fullpath = './MathFunctions/mysqrt.cxx'");
+            SELECT c.fileid FROM coverage AS c
+            INNER JOIN coveragefile AS cf ON c.fileid=cf.id
+            WHERE buildid=$buildid
+            AND cf.fullpath = './MathFunctions/mysqrt.cxx'");
         $fileid = $fileid_result[0]['fileid'];
 
         // Make sure branch coverage is being displayed properly.
@@ -80,6 +81,21 @@ class BranchCoverageTestCase extends KWWebTestCase
             $this->fail('\"<span class="error">  1/2</span><span class="normal">    7 |   if (x &lt;= 0)</span>\" not found when expected');
             return 1;
         }
+
+        // Make sure our uncovered results also made it into the database.
+        $row = pdo_single_row_query(
+            "SELECT loctested, locuntested FROM coverage
+            INNER JOIN coveragefile ON (coverage.fileid=coveragefile.id)
+            WHERE coveragefile.fullpath LIKE '%uncovered1.cxx%'");
+        if (!$row || !array_key_exists('loctested', $row)) {
+            $this->fail("Expected 1 result for uncovered file, found 0");
+            return 1;
+        }
+        if ($row['loctested'] != 0 || $row['locuntested'] != 1) {
+            $this->fail("Uncovered results differ from expectation");
+            return 1;
+        }
+
         return 0;
     }
 }
