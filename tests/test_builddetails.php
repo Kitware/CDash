@@ -12,10 +12,7 @@ class BuildDetailsTestCase extends KWWebTestCase
     public function __construct()
     {
         parent::__construct();
-    }
 
-    public function setUp()
-    {
         $this->testDataDir = dirname(__FILE__) . '/data/BuildDetails';
         $this->testDataFiles = array('Subbuild1.xml', 'Subbuild2.xml', 'Subbuild3.xml');
 
@@ -35,7 +32,7 @@ class BuildDetailsTestCase extends KWWebTestCase
         }
     }
 
-    public function tearDown()
+    public function __destruct()
     {
         foreach ($this->builds as $build) {
             remove_build($build['id']);
@@ -79,5 +76,24 @@ class BuildDetailsTestCase extends KWWebTestCase
     // This will be specific to a test xml
     public function testViewTestReturnsProperFormat()
     {
+        if (!$this->submission('BuildDetails', $this->testDataDir . '/' . 'Insight_Experimental_Test.xml')) {
+            $this->fail('Failed to submit ' . $testDataFile);
+            return 1;
+        }
+
+        $buildId = pdo_single_row_query("SELECT id FROM build WHERE name = 'BuildDetails-Linux-g++-4.1-LesionSizingSandbox_Debug'");
+
+        $actualResponse = json_decode($this->get($this->url . '/api/v1/viewTest.php?buildid=' . $buildId['id']));
+        $expectedResponse = json_decode(
+            file_get_contents($this->testDataDir . '/' . 'InsightExperimentalExample_Expected.json'));
+
+        $this->assertEqual(count($actualResponse->tests), count($expectedResponse->tests));
+
+        $this->assertEqual($actualResponse->numPassed, $expectedResponse->numPassed);
+        $this->assertEqual($actualResponse->numFailed, $expectedResponse->numFailed);
+        $this->assertEqual($actualResponse->numNotRun, $expectedResponse->numNotRun);
+        $this->assertEqual($actualResponse->numTimeFailed, $expectedResponse->numTimeFailed);
+
+        remove_build($buildId['id']);
     }
 }
