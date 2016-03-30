@@ -80,6 +80,7 @@ class JSCoverTarHandler
             }
 
             // Save these models to the database.
+            $coverageFile->TrimLastNewline();
             $coverageFile->Update($this->Build->Id);
             $coverageFileLog->BuildId = $this->Build->Id;
             $coverageFileLog->FileId = $coverageFile->Id;

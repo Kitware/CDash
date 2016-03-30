@@ -336,6 +336,7 @@ class GCovTarHandler
         }
 
         // Save these models to the database.
+        $coverageFile->TrimLastNewline();
         $coverageFile->Update($buildid);
         $coverageFileLog->BuildId = $buildid;
         $coverageFileLog->FileId = $coverageFile->Id;
@@ -436,6 +437,7 @@ class GCovTarHandler
         }
 
         // Save these models to the database.
+        $coverageFile->TrimLastNewline();
         $coverageFile->Update($this->Build->Id);
         $coverageFileLog->BuildId = $this->Build->Id;
         $coverageFileLog->FileId = $coverageFile->Id;
