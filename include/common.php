@@ -1822,7 +1822,10 @@ function begin_XML_for_XSLT()
 
 function redirect_to_https()
 {
-    if (!isset($_SERVER['HTTPS']) || !$_SERVER['HTTPS']) {
+    global $CDASH_USE_HTTPS;
+
+    if ($CDASH_USE_HTTPS &&
+        (!isset($_SERVER['HTTPS']) || !$_SERVER['HTTPS'])) {
         // if request is not secure, redirect to secure url if available
         $url = 'https://' . $_SERVER['HTTP_HOST']
             . $_SERVER['REQUEST_URI'];
