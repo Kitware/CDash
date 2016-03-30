@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="buildmodel-test-build"
+      BuildStamp="20160330-1825-some-type"
+      Generator="ctest-3.4.20160121-g750ae8"
+      Name="buildmodel-test-sitename">
+  <Build>
+    <StartDateTime>Feb 23 05:02 Eastern Standard Time</StartDateTime>
+    <StartBuildTime>1235383323</StartBuildTime>
+    <BuildCommand>./build</BuildCommand>
+
+    <!-- This won't be submitted, so this build resolves this failure from build1.xml -->
+    <!-- <Failure type="Error"> -->
+    <!--   <Command> -->
+    <!-- 	<WorkingDirectory>/home/dan</WorkingDirectory> -->
+    <!-- 	<Argument>/usr/bin/g++</Argument> -->
+    <!--   </Command> -->
+
+    <!--   <Result> -->
+    <!-- 	<StdOut>Some stdout</StdOut> -->
+    <!-- 	<StdErr>This is a super bad error.</StdErr> -->
+    <!-- 	<ExitCondition>1</ExitCondition> -->
+    <!--   </Result> -->
+    <!-- </Failure> -->
+
+    <Failure type="Warning">
+      <Command>
+	<WorkingDirectory>/home/dan</WorkingDirectory>
+	<Argument>/usr/bin/g++</Argument>
+      </Command>
+
+      <Result>
+	<StdOut>Some stdout</StdOut>
+	<StdErr>This is a just a warning.</StdErr>
+	<ExitCondition>0</ExitCondition>
+      </Result>
+    </Failure>
+
+    <Error>
+      <BuildLogLine>1</BuildLogLine>
+      <Text>/.../src/foo.cxx:3:3: error: 'foo' was not declared in this scope</Text>
+      <SourceFile>foo.cxx</SourceFile>
+      <SourceLineNumber>3</SourceLineNumber>
+      <PreContext>Scanning dependencies of target foo
+      [ 50%] Building CXX object CMakeFiles/foo.dir/foo.cxx.o
+      /.../src/foo.cxx: In function ‘int main(int, char**)’:
+      </PreContext>
+      <PostContext>   foo = asdf;
+      ^
+      </PostContext>
+      <RepeatCount>0</RepeatCount>
+    </Error>
+    
+    <EndDateTime>Feb 23 05:04 Eastern Standard Time</EndDateTime>
+    <EndBuildTime>1235383451</EndBuildTime>
+    <ElapsedMinutes>2.1</ElapsedMinutes>
+  </Build>
+</Site>

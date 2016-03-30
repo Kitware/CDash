@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="buildmodel-test-build"
+      BuildStamp="20160331-1825-some-type"
+      Generator="ctest-3.4.20160121-g750ae8"
+      Name="buildmodel-test-sitename">
+  <Build>
+    <!-- This build has no errors, failures, or warnings -->
+    <StartDateTime>Feb 23 05:06 Eastern Standard Time</StartDateTime>
+    <StartBuildTime>1235383623</StartBuildTime>
+    <BuildCommand>./build</BuildCommand>
+    <EndDateTime>Feb 23 05:08 Eastern Standard Time</EndDateTime>
+    <EndBuildTime>1235383743</EndBuildTime>
+    <ElapsedMinutes>2.1</ElapsedMinutes>
+  </Build>
+</Site>

@@ -398,23 +398,19 @@ class build
      **/
     public function GetResolvedBuildErrors($type)
     {
-        $previousBuild = $this->GetPreviousBuildId();
-
-        if ($previousBuild === 0) {
-            return false;
-        } else {
-            return pdo_query(
-                'SELECT * FROM
-                 (SELECT * FROM builderror
-                  WHERE buildid=' . $previousBuild . ' AND type=' . $type . ') AS builderrora
-                 LEFT JOIN
-                 (SELECT crc32 AS crc32b FROM builderror
-                  WHERE buildid=' . $this->Id . ' AND type=' . $type . ') AS builderrorb
-                  ON builderrora.crc32=builderrorb.crc32b
-                 WHERE builderrorb.crc32b IS NULL');
-        }
+        // This returns an empty result if there was no previous build
+        return pdo_query(
+            'SELECT * FROM
+             (SELECT * FROM builderror
+              WHERE buildid=' . $this->GetPreviousBuildId() . ' AND type=' . $type . ') AS builderrora
+             LEFT JOIN
+             (SELECT crc32 AS crc32b FROM builderror
+              WHERE buildid=' . $this->Id . ' AND type=' . $type . ') AS builderrorb
+              ON builderrora.crc32=builderrorb.crc32b
+             WHERE builderrorb.crc32b IS NULL');
     }
 
+    // Is this redundant naming? Should it just be GetErrors?
     public function GetBuildErrors($type, $extrasql)
     {
         return pdo_query(
@@ -467,15 +463,7 @@ class build
 
     public function GetConfigures()
     {
-        if ($this->IsParentBuild()) {
-            return pdo_query("SELECT sp.name subprojectname, sp.id subprojectid, c.*
-                              FROM configure c
-                              JOIN subproject2build sp2b ON sp2b.buildid = c.buildid
-                              JOIN subproject sp ON sp.id = sp2b.subprojectid
-                              WHERE c.buildid IN (SELECT id FROM build WHERE parentid = " . $this->Id . ")");
-        } else {
-            return pdo_query("SELECT * FROM configure WHERE buildid = " . $this->Id);
-        }
+        return pdo_query("SELECT * FROM configure WHERE buildid = " . $this->Id);
     }
 
     /** Get the build id from its name */

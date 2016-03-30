@@ -75,4 +75,9 @@ class BuildDetailsTestCase extends KWWebTestCase
             $this->assertEqual($build_response->errors[$i], $expectedErrors[$i]);
         }
     }
+
+    // This will be specific to a test xml
+    public function testViewTestReturnsProperFormat()
+    {
+    }
 }
