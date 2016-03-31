@@ -94,12 +94,44 @@ class UploadHandler extends AbstractHandler
             $this->Build->Generator = $attributes['GENERATOR'];
             $this->Build->Information = $buildInformation;
         } elseif ($name == 'UPLOAD') {
-            $extracted_time =
+            // Setting start time and end time is tricky here, since all
+            // we have is the build stamp.  The strategy we take here is:
+            // Set the start time as late as possible, and set the end time
+            // as early as possible.
+            // This way we don't override any existing values for these fields
+            // when we call UpdateBuild() below.
+            //
+            // For end time, we use the start of the testing day.
+            // For start time, we use either the submit time (now) or
+            // one second before the start time of the *next* testing day
+            // (whichever is earlier).
+            // Yes, this means the build finished before it began.
+            //
+            // This associates the build with the correct day if it is only
+            // an upload.  Otherwise we defer to the values set by the
+            // other handlers.
+            $row = pdo_single_row_query(
+                "SELECT nightlytime FROM project where id='$this->projectid'");
+            $nightly_time = $row['nightlytime'];
+            $build_date =
                 extract_date_from_buildstamp($this->Build->GetStamp());
-            $build_time = gmdate(FMT_DATETIME, strtotime($extracted_time));
-            $this->Build->StartTime = $build_time;
-            $this->Build->EndTime = $build_time;
-            $this->Build->SubmitTime = gmdate(FMT_DATETIME);
+            list($prev, $nightly_start_time, $next) =
+                get_dates($build_date, $nightly_time);
+
+            $this->Build->EndTime = gmdate(FMT_DATETIME, $nightly_start_time);
+
+            $now = time();
+            $one_second_before_tomorrow =
+                strtotime('+1 day -1 second', $nightly_start_time);
+            if ($one_second_before_tomorrow < time()) {
+                $this->Build->StartTime =
+                    gmdate(FMT_DATETIME, $one_second_before_tomorrow);
+            } else {
+                $this->Build->StartTime = gmdate(FMT_DATETIME, $now);
+            }
+
+            $this->Build->SubmitTime = gmdate(FMT_DATETIME, $now);
+
             $this->Build->ProjectId = $this->projectid;
             $this->Build->SetSubProject($this->SubProjectName);
             $this->Build->GetIdFromName($this->SubProjectName);
