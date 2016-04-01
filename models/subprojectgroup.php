@@ -25,6 +25,7 @@ class subprojectgroup
     private $CoverageThreshold;
     private $StartTime;
     private $EndTime;
+    private $Position;
 
     public function __construct()
     {
@@ -32,6 +33,7 @@ class subprojectgroup
         $this->ProjectId = 0;
         $this->Name = '';
         $this->IsDefault = 0;
+        $this->Position = 1;
     }
 
     /** Get the Id of this subproject group. */
@@ -51,9 +53,8 @@ class subprojectgroup
         $this->Id = $id;
 
         $row = pdo_single_row_query(
-            'SELECT name, projectid, coveragethreshold, is_default, starttime
-       FROM subprojectgroup
-       WHERE id=' . qnum($this->Id) . " AND endtime='1980-01-01 00:00:00'");
+            'SELECT * FROM subprojectgroup
+            WHERE id=' . qnum($this->Id) . " AND endtime='1980-01-01 00:00:00'");
         if (empty($row)) {
             add_log(
                 "No subprojectgroup found with Id='$this->Id'",
@@ -67,6 +68,8 @@ class subprojectgroup
         $this->CoverageThreshold = $row['coveragethreshold'];
         $this->IsDefault = $row['is_default'];
         $this->StartTime = $row['starttime'];
+        $this->EndTime = $row['endtime'];
+        $this->Position = $row['position'];
         return true;
     }
 
@@ -315,12 +318,15 @@ class subprojectgroup
 
             $starttime = gmdate(FMT_DATETIME);
             $endtime = '1980-01-01 00:00:00';
+            $position = $this->GetNextPosition();
             $query =
-                'INSERT INTO subprojectgroup(' . $id . 'name,projectid,is_default,
-                                     coveragethreshold,starttime,endtime)
-         VALUES (' . $idvalue . "'$this->Name'," . qnum($this->ProjectId) . ',' .
-                qnum($this->IsDefault) . ',' . qnum($this->CoverageThreshold) . ",
-                 '$starttime','$endtime')";
+                'INSERT INTO subprojectgroup
+                (' . $id . 'name, projectid, is_default, coveragethreshold,
+                 starttime, endtime, position)
+                VALUES
+                (' . $idvalue . "'$this->Name'," . qnum($this->ProjectId) . ',' .
+                 qnum($this->IsDefault) . ',' . qnum($this->CoverageThreshold) . ",
+                 '$starttime', '$endtime', " . qnum($position).')';
 
             if (!pdo_query($query)) {
                 add_last_sql_error('SubProjectGroup::Save Insert');
@@ -343,5 +349,25 @@ class subprojectgroup
             }
         }
         return true;
+    }
+
+    public function GetPosition()
+    {
+        return $this->Position;
+    }
+
+    /** Get the next position available for this group. */
+    public function GetNextPosition()
+    {
+        $query = pdo_query(
+                "SELECT position FROM subprojectgroup
+                WHERE projectid='$this->ProjectId'
+                AND endtime='1980-01-01 00:00:00'
+                ORDER BY position DESC LIMIT 1");
+        if (pdo_num_rows($query) > 0) {
+            $query_array = pdo_fetch_array($query);
+            return $query_array['position'] + 1;
+        }
+        return 1;
     }
 }

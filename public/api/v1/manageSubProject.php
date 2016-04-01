@@ -127,6 +127,7 @@ foreach ($Project->GetSubProjectGroups() as $subProjectGroup) {
     $group = array();
     $group['id'] = $subProjectGroup->GetId();
     $group['name'] = $subProjectGroup->GetName();
+    $group['position'] = $subProjectGroup->GetPosition();
     $group['coverage_threshold'] = $subProjectGroup->GetCoverageThreshold();
     $groups[] = $group;
     if ($subProjectGroup->GetIsDefault()) {

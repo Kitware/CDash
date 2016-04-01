@@ -25,6 +25,22 @@ CDash.filter('filter_subproject_groups', function() {
     params: $rootScope.queryString
   }).success(function(cdash) {
     $scope.cdash = cdash;
+
+    // Sort groups by position.
+    if ($scope.cdash.groups) {
+      $scope.cdash.groups.sort(function (a, b) {
+        return Number(a.position) - Number(b.position);
+      });
+    }
+
+    // Update positions when the user stops dragging.
+    $scope.sortable = {
+      stop: function(e, ui) {
+        for (var index in $scope.cdash.groups) {
+          $scope.cdash.groups[index].position = index;
+        }
+      }
+    };
   }).finally(function() {
     $scope.loading = false;
   });
@@ -114,6 +130,25 @@ CDash.filter('filter_subproject_groups', function() {
       if (index > -1) {
         // Remove the group from our scope.
         $scope.cdash.groups.splice(index, 1);
+      }
+    });
+  };
+
+  /** Change the order that the groups appear in. */
+  $scope.updateGroupOrder = function() {
+    var newLayout = getSortedElements("#sortable");
+    var parameters = {
+      projectid: $scope.cdash.projectid,
+      newLayout: newLayout
+    };
+    $http.post('api/v1/subproject.php', parameters)
+    .success(function(resp) {
+      if (resp.error) {
+        $scope.cdash.error = resp.error;
+      }
+      else {
+        $("#order_updated").show();
+        $("#order_updated").delay(3000).fadeOut(400);
       }
     });
   };

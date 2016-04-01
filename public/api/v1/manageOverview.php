@@ -97,7 +97,7 @@ if (isset($_POST['saveLayout'])) {
         foreach ($inputRows as $inputRow) {
             $query .= '(' .
                 qnum(pdo_real_escape_numeric($projectid)) . ', ' .
-                qnum(pdo_real_escape_numeric($inputRow['buildgroupid'])) . ', ' .
+                qnum(pdo_real_escape_numeric($inputRow['id'])) . ', ' .
                 qnum(pdo_real_escape_numeric($inputRow['position'])) . ", '" .
                 pdo_real_escape_string($inputRow['type']) . "'), ";
         }

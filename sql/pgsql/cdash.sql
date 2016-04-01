@@ -814,10 +814,12 @@ CREATE TABLE "subprojectgroup" (
   "is_default" smallint NOT NULL,
   "starttime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
   "endtime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
+  "position" bigint DEFAULT '0' NOT NULL,
   PRIMARY KEY ("id")
 );
 CREATE INDEX "spgroupname" on "subprojectgroup" ("name");
 CREATE INDEX "spgroupprojectid" on "subprojectgroup" ("projectid");
+CREATE INDEX "spgroupposition" on "subprojectgroup" ("position");
 
 --
 -- Table: subproject2subproject

@@ -890,9 +890,11 @@ CREATE TABLE `subprojectgroup` (
   `is_default` tinyint(1) NOT NULL,
   `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
   `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
+  `position` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `name` (`name`),
-  KEY `projectid` (`projectid`)
+  KEY `projectid` (`projectid`),
+  KEY `position` (`position`)
 );
 
 

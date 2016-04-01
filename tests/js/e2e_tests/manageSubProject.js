@@ -78,8 +78,8 @@ describe("manageSubProject", function() {
 
     browser.get('manageSubProject.php?projectid=8#/groups');
     var rows = element(by.tagName('tbody')).all(by.tagName('tr'));
-    expect(rows.get(0).element(by.name("group_name")).getAttribute("value")).toBe("gorup2");
-    expect(rows.get(1).element(by.name("group_name")).getAttribute("value")).toBe("group1");
+    expect(rows.get(0).element(by.name("group_name")).getAttribute("value")).toBe("group1");
+    expect(rows.get(1).element(by.name("group_name")).getAttribute("value")).toBe("gorup2");
   });
 
 
@@ -88,12 +88,10 @@ describe("manageSubProject", function() {
 
     // Change name to group2, change its threshold to 65,
     // and make it the default group.
-    var row = element(by.tagName('tbody')).all(by.tagName('tr')).get(0);
+    var row = element(by.tagName('tbody')).all(by.tagName('tr')).get(1);
 
     row.element(by.name("group_name")).clear();
     row.element(by.name("group_name")).sendKeys("group2");
-    // Changing this name causes the row to be re-sorted
-    row = element(by.tagName('tbody')).all(by.tagName('tr')).get(1);
     row.element(by.name("groupRadio")).click();
     row.element(by.name("coverage_threshold")).clear();
     row.element(by.name("coverage_threshold")).sendKeys("65");

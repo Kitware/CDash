@@ -309,7 +309,8 @@ class subproject
     {
         $groupName = pdo_real_escape_string($groupName);
         $row = pdo_single_row_query(
-            "SELECT id from subprojectgroup WHERE name = '$groupName'");
+            "SELECT id from subprojectgroup
+            WHERE name = '$groupName' AND endtime='1980-01-01 00:00:00'");
         if (empty($row)) {
             // Create the group if it doesn't exist yet.
             $subprojectGroup = new SubProjectGroup();

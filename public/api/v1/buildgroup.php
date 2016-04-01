@@ -258,7 +258,7 @@ function rest_post()
             $query = 'INSERT INTO buildgroupposition (buildgroupid, position) VALUES ';
             foreach ($inputRows as $inputRow) {
                 $query .= '(' .
-                    qnum(pdo_real_escape_numeric($inputRow['buildgroupid'])) . ', ' .
+                    qnum(pdo_real_escape_numeric($inputRow['id'])) . ', ' .
                     qnum(pdo_real_escape_numeric($inputRow['position'])) . '), ';
             }
 
