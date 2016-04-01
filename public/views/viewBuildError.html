@@ -48,7 +48,7 @@
         </tr>
         <tr>
           <td align="left">
-            Found <b>{{cdash.numErrors}}</b>&#x20;{{cdash.errortypename}}s
+            Found <b>{{cdash.numErrors}}</b> {{cdash.errortypename}}s
             <span ng-if="cdash.parentBuild"> across <b>{{cdash.numSubprojects}}</b> subprojects</span>
           </td>
         </tr>
@@ -81,7 +81,7 @@
             <td style="vertical-align:top">{{subprojectName}}</td>
             <td><a href="#" ng-click="showErrors = !showErrors">{{errors.length}} {{cdash.errortypename}}s found.</a>
               <div ng-hide="!showErrors">
-                <ng-include src="'views/partials/buildError.html'" ng-repeat="error in errors"/>
+                <div build-error ng-repeat="error in errors"/>
               </div>
             </td>
           </tr>
@@ -90,7 +90,7 @@
 
       <!-- Otherwise just display all the errors for this build -->
       <div ng-if="!cdash.parentBuild">
-        <ng-include src="'views/partials/buildError.html'" ng-repeat="error in cdash.errors"/>
+        <div build-error ng-repeat="error in cdash.errors"/>
       </div>
     </div>
 
