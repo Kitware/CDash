@@ -349,6 +349,8 @@ function echo_main_dashboard_JSON($project_instance, $date)
     $excluded_subprojects = array();
     $selected_subprojects = '';
     $num_selected_subprojects = 0;
+    $filter_on_labels = false;
+    $share_label_filters = false;
     foreach ($filterdata['filters'] as $filter) {
         if ($filter['field'] == 'subprojects') {
             if ($filter['compare'] == 92) {
@@ -356,8 +358,17 @@ function echo_main_dashboard_JSON($project_instance, $date)
             } elseif ($filter['compare'] == 93) {
                 $included_subprojects[] = $filter['value'];
             }
+        } elseif ($filter['field'] == 'label') {
+            $filter_on_labels = true;
         }
     }
+    if ($filter_on_labels && $project_instance->ShareLabelFilters) {
+        $share_label_filters = true;
+        $response['sharelabelfilters'] = true;
+        $label_ids_array = get_label_ids_from_filterdata($filterdata);
+        $label_ids = '(' . implode(', ', $label_ids_array) . ')';
+    }
+
     // Include takes precedence over exclude.
     if (!empty($included_subprojects)) {
         $num_selected_subprojects = count($included_subprojects);
@@ -492,7 +503,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
     }
     $dynamic_builds = array();
     if (empty($filter_sql)) {
-        $dynamic_builds = get_dynamic_builds($projectid);
+        $dynamic_builds = get_dynamic_builds($projectid, $end_UTCDate);
         $build_data = array_merge($build_data, $dynamic_builds);
     }
 
@@ -999,6 +1010,50 @@ function echo_main_dashboard_JSON($project_instance, $date)
                 }
                 if ($build_array['countteststimestatusfaileddiffn'] != 0) {
                     $test_response['ntimediffn'] = $build_array['countteststimestatusfaileddiffn'];
+                }
+            }
+
+            if ($share_label_filters) {
+                $label_query_base =
+                    "SELECT b2t.status, b2t.newstatus
+                    FROM build2test AS b2t
+                    INNER JOIN label2test AS l2t ON
+                    (l2t.testid=b2t.testid AND l2t.buildid=b2t.buildid)
+                    WHERE b2t.buildid = '$buildid' AND
+                    l2t.labelid IN $label_ids";
+                $label_filter_query = $label_query_base . $limit_sql;
+                $labels_result = pdo_query($label_filter_query);
+
+                $nnotrun = 0;
+                $nfail = 0;
+                $npass = 0;
+                $test_response['nfaildiffp'] = 0;
+                $test_response['nfaildiffn'] = 0;
+                $test_response['npassdiffp'] = 0;
+                $test_response['npassdiffn'] = 0;
+                $test_response['nnotrundiffp'] = 0;
+                $test_response['nnotrundiffn'] = 0;
+                while ($label_row = pdo_fetch_array($labels_result)) {
+                    switch ($label_row['status']) {
+                        case 'passed':
+                            $npass++;
+                            if ($label_row['newstatus'] == 1) {
+                                $test_response['npassdiffp']++;
+                            }
+                            break;
+                        case 'failed':
+                            $nfail++;
+                            if ($label_row['newstatus'] == 1) {
+                                $test_response['nfaildiffp']++;
+                            }
+                            break;
+                        case 'notrun':
+                            $nnotrun++;
+                            if ($label_row['newstatus'] == 1) {
+                                $test_response['nnotrundiffp']++;
+                            }
+                            break;
+                    }
                 }
             }
 

@@ -109,4 +109,36 @@ describe("multiSort", function() {
     check_build_order('hut12.kitware', 'test.kitware', 'hut11.kitware');
   });
 
+  it("sort Query Tests", function() {
+    browser.get('queryTests.php?project=Trilinos&date=2011-07-22');
+
+    // Clear default sorting by clicking on the Site header.
+    var site_header = element.all(by.className('table-heading1')).all(by.tagName('th')).filter(function(elem) { return elem.isDisplayed(); }).get(0);
+    browser.actions().mouseMove(site_header).keyUp(protractor.Key.SHIFT).click().perform();
+
+    // Click on the Status header.
+    var status_header = element.all(by.className('table-heading1')).all(by.tagName('th')).filter(function(elem) { return elem.isDisplayed(); }).get(3);
+    expect(status_header.getText()).toBe('Status');
+    status_header.click();
+    expect(status_header.element(by.tagName('span')).getAttribute('class')).toContain("glyphicon-chevron-down");
+
+    // Check that the builds are in the expected order
+    var visible_tds_row0 = element(by.repeater('build in pagination.filteredBuilds').row(0)).all(by.tagName('td')).filter(function(elem) { return elem.isDisplayed(); });
+    expect(visible_tds_row0.get(3).getText()).toBe('Passed');
+
+    var visible_tds_row24 = element(by.repeater('build in pagination.filteredBuilds').row(24)).all(by.tagName('td')).filter(function(elem) { return elem.isDisplayed(); });
+    expect(visible_tds_row24.get(3).getText()).toBe('Passed');
+
+    // Click on the Status header again.
+    status_header.click();
+    expect(status_header.element(by.tagName('span')).getAttribute('class')).toContain("glyphicon-chevron-up");
+
+    // Check that the builds are in the expected order
+    visible_tds_row0 = element(by.repeater('build in pagination.filteredBuilds').row(0)).all(by.tagName('td')).filter(function(elem) { return elem.isDisplayed(); });
+    expect(visible_tds_row0.get(3).getText()).toBe('Failed');
+
+    visible_tds_row24 = element(by.repeater('build in pagination.filteredBuilds').row(24)).all(by.tagName('td')).filter(function(elem) { return elem.isDisplayed(); });
+    expect(visible_tds_row24.get(3).getText()).toBe('Failed');
+  });
+
 });

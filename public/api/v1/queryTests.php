@@ -91,7 +91,7 @@ if (isset($_GET['parentid'])) {
     $current_buildid = $parent_build->GetCurrentBuildId();
     $next_buildid = $parent_build->GetNextBuildId();
 
-    $menu['back'] = 'index.php?project=' . urlencode($project_array['name']) . '&parentid=' . $current_buildid;
+    $menu['back'] = 'index.php?project=' . urlencode($project_array['name']) . '&parentid=' . $_GET['parentid'];
 
     if ($previous_buildid > 0) {
         $menu['previous'] = "$base_url&parentid=$previous_buildid" . $limit_param;

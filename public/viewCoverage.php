@@ -244,8 +244,11 @@ $covfile_array = array();
 while ($coveragefile_array = pdo_fetch_array($coveragefile)) {
     $covfile['covered'] = 1;
 
-    // Compute the coverage metric for bullseye
-    if ($coveragefile_array['branchstested'] > 0 || $coveragefile_array['branchsuntested'] > 0 || $coveragefile_array['functionstested'] > 0 || $coveragefile_array['functionsuntested'] > 0) {
+    // Compute the coverage metric for bullseye.  (branch coverage without line coverage)
+    if (
+            ($coveragefile_array['loctested'] == 0 && $coveragefile_array['locuntested'] == 0) &&
+            $coveragefile_array['branchstested'] > 0 || $coveragefile_array['branchsuntested'] > 0 ||
+            $coveragefile_array['functionstested'] > 0 || $coveragefile_array['functionsuntested'] > 0) {
         // Metric coverage
         $metric = 0;
         if ($coveragefile_array['functionstested'] + $coveragefile_array['functionsuntested'] > 0) {

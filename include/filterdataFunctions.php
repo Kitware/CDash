@@ -352,7 +352,7 @@ class QueryTestsPhpFilters extends DefaultFilters
                 break;
 
             case 'label': {
-                $sql_field = "(SELECT $this->TextConcat FROM label, label2build WHERE label2build.buildid=b.id AND label2build.labelid=label.id)";
+                $sql_field = "(SELECT $this->TextConcat FROM label, label2test WHERE label2test.testid=test.id AND label2test.labelid = label.id)";
             }
                 break;
 
@@ -986,4 +986,37 @@ function get_filterdata_from_request($page_id = '')
 
     $filterdata['xml'] = $xml;
     return $filterdata;
+}
+
+// Return a list of label IDs that match the specified filterdata.
+function get_label_ids_from_filterdata($filterdata)
+{
+    $label_ids = array();
+    $clauses = 0;
+    $label_sql = '';
+    $sql_combine = $filterdata['filtercombine'];
+
+    foreach ($filterdata['filters'] as $filter) {
+        if ($filter['field'] == 'label') {
+            $cv = get_sql_compare_and_value($filter['compare'],
+                    $filter['value']);
+            $sql_compare = $cv[0];
+            $sql_value = $cv[1];
+            if ($clauses > 0) {
+                $label_sql .= " $sql_combine ";
+            }
+            $label_sql .= "text $sql_compare $sql_value";
+            ++$clauses;
+        }
+    }
+
+    if ($clauses > 0) {
+        $query_sql = "SELECT id FROM label WHERE $label_sql";
+        $result = pdo_query($query_sql);
+        while ($row = pdo_fetch_array($result)) {
+            $label_ids[] = $row['id'];
+        }
+    }
+
+    return $label_ids;
 }

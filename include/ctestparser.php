@@ -32,6 +32,9 @@ require_once 'xml_handlers/coverage_junit_handler.php';
 function displayReturnStatus($statusarray)
 {
     include 'include/version.php';
+ 
+    global $CDASH_VERSION;
+ 
     echo "<cdash version=\"$CDASH_VERSION\">\n";
     foreach ($statusarray as $key => $value) {
         echo '  <' . $key . '>' . $value . '</' . $key . ">\n";
@@ -193,7 +196,7 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
     $handler = new $className($buildid);
 
     // Parse the file.
-    $handler->Parse($filehandler);
+    $handler->Parse($filename);
     check_for_immediate_deletion($filename);
     return true;
 }
@@ -206,6 +209,8 @@ function ctest_parse($filehandler, $projectid, $expected_md5 = '', $do_checksum 
     require_once 'include/common.php';
     require_once 'models/project.php';
     include 'include/version.php';
+
+    global $CDASH_USE_LOCAL_DIRECTORY;
 
     if ($CDASH_USE_LOCAL_DIRECTORY && file_exists('local/ctestparser.php')) {
         require_once 'local/ctestparser.php';
@@ -280,7 +285,7 @@ function ctest_parse($filehandler, $projectid, $expected_md5 = '', $do_checksum 
 
         $Project->SendEmailToAdmin('Cannot create handler based on XML content',
             'An XML submission from ' . $ip . ' to the project ' . get_project_name($projectid) . ' cannot be parsed. The content of the file is as follow: ' . $content);
-        return;
+        return false;
     }
 
     xml_set_element_handler($parser, array($handler, 'startElement'), array($handler, 'endElement'));
@@ -307,10 +312,9 @@ function ctest_parse($filehandler, $projectid, $expected_md5 = '', $do_checksum 
             AND (ipaddress='' OR ipaddress='" . $_SERVER['REMOTE_ADDR'] . "')");
 
     if (pdo_num_rows($query) > 0) {
-        echo $query_array['id'];
         echo 'The submission is banned from this CDash server.';
         add_log('Submission is banned from this CDash server', 'ctestparser');
-        return;
+        return false;
     }
 
     // Write the file to the backup directory.
