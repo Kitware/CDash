@@ -66,6 +66,10 @@ if (pdo_num_rows($project) > 0) {
     $projectname = $project_array['name'];
     $nightlytime = $project_array['nightlytime'];
     $projectshowtesttime = $project_array['showtesttime'];
+} else {
+    $response['error'] = 'Not a valid projectid!';
+    echo json_encode($response);
+    return;
 }
 
 if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $project_array['id'], 1)) {

@@ -414,8 +414,6 @@ function get_source_dir($projectid, $projecturl, $file_path)
 
     if (function_exists($target_fn)) {
         return $target_fn($projecturl, $file_path);
-    } else {
-        return;
     }
 }
 

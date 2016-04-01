@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="linux"
+	BuildStamp="20160318-1825-Experimental"
+	Name="vagrant-ubuntu-trusty-64"
+	Generator="ctest-3.4.20160121-g750ae8"
+	Append="true"
+	CompilerName=""
+	CompilerVersion=""
+	OSName="Linux"
+	Hostname="vagrant-ubuntu-trusty-64"
+	OSRelease="3.13.0-83-generic"
+	OSVersion="#127-Ubuntu SMP Fri Mar 11 00:25:37 UTC 2016"
+	OSPlatform="x86_64"
+	Is64Bits="1"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="63"
+	ProcessorCacheSize="10240"
+	NumberOfLogicalCPU="2"
+	NumberOfPhysicalCPU="1"
+	TotalVirtualMemory="0"
+	TotalPhysicalMemory="7985"
+	LogicalProcessorsPerPhysical="2"
+	ProcessorClockFrequency="3092.84"
+	>
+	<Subproject name="subproject-1"/>
+	<Labels>
+		<Label>subproject-1</Label>
+	</Labels>
+	<Build>
+		<StartDateTime>Mar 18 18:26 UTC</StartDateTime>
+		<StartBuildTime>1458325566</StartBuildTime>
+		<BuildCommand>/opt/cmake/bin/cmake --build . --config "Debug" --target "tests" -- -j2 -l2</BuildCommand>
+		<Log Encoding="base64" Compression="bin/gzip"/>
+		<EndDateTime>Mar 18 18:26 UTC</EndDateTime>
+		<EndBuildTime>1458325566</EndBuildTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Build>
+</Site>

@@ -19,6 +19,7 @@ include_once 'include/common.php';
 include_once 'include/ctestparserutils.php';
 include_once 'include/repository.php';
 include_once 'models/builderror.php';
+include_once 'models/buildfailure.php';
 include_once 'models/builderrordiff.php';
 include_once 'models/buildinformation.php';
 include_once 'models/buildusernote.php';
@@ -77,6 +78,11 @@ class build
         $this->Append = false;
         $this->InsertErrors = true;
         $this->Filled = false;
+    }
+
+    public function IsParentBuild()
+    {
+        return $this->ParentId == -1;
     }
 
     public function AddError($error)
@@ -386,6 +392,78 @@ class build
             return $relatedbuild_array['id'];
         }
         return 0;
+    }
+
+    /**
+     * Return the errors that have been resolved from this build.
+     **/
+    public function GetResolvedBuildErrors($type)
+    {
+        // This returns an empty result if there was no previous build
+        return pdo_query(
+            'SELECT * FROM
+             (SELECT * FROM builderror
+              WHERE buildid=' . $this->GetPreviousBuildId() . ' AND type=' . $type . ') AS builderrora
+             LEFT JOIN
+             (SELECT crc32 AS crc32b FROM builderror
+              WHERE buildid=' . $this->Id . ' AND type=' . $type . ') AS builderrorb
+              ON builderrora.crc32=builderrorb.crc32b
+             WHERE builderrorb.crc32b IS NULL');
+    }
+
+    // Is this redundant naming? Should it just be GetErrors?
+    public function GetBuildErrors($type, $extrasql)
+    {
+        return pdo_query("SELECT * FROM builderror
+                          WHERE buildid = '" . $this->Id . "'
+                          AND type = '$type' $extrasql
+                          ORDER BY logline ASC");
+    }
+
+    public function GetBuildFailures($projectid, $type, $extrasql, $orderby=false)
+    {
+        $orderby = ($orderby === false) ? '' : "ORDER BY $orderby";
+
+        $q = pdo_query(
+            "SELECT bf.id, bfd.language, bf.sourcefile, bfd.targetname, bfd.outputfile,
+            bfd.outputtype, bf.workingdirectory, bfd.stderror, bfd.stdoutput,
+            bfd.exitcondition
+            FROM buildfailure AS bf
+            LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
+            WHERE bf.buildid='" . $this->Id . "' AND bfd.type='$type' $extrasql $orderby");
+
+        add_last_sql_error('build.GetBuildFailures', $projectid, $this->Id);
+
+        return $q;
+    }
+
+    /**
+     * Get build failures (with details) that occurred in the most recent build
+     * but NOT this build.
+     **/
+    public function GetResolvedBuildFailures($type)
+    {
+        $currentFailuresQuery = "SELECT bf.detailsid FROM buildfailure AS bf
+                                 LEFT JOIN buildfailuredetails AS bfd ON (bf.detailsid=bfd.id)
+                                 WHERE bf.buildid=" . $this->Id . " AND bfd.type=$type";
+
+        $resolvedBuildFailures = pdo_query(
+                "SELECT bf.id, bfd.language, bf.sourcefile, bfd.targetname, bfd.outputfile,
+                bfd.outputtype, bf.workingdirectory, bfd.stderror, bfd.stdoutput,
+                bfd.exitcondition
+                FROM buildfailure AS bf
+                LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
+                WHERE bf.buildid=" . $this->GetPreviousBuildId() . "
+                AND bfd.type = $type
+                AND bfd.id NOT IN ($currentFailuresQuery)"
+        );
+
+        return $resolvedBuildFailures;
+    }
+
+    public function GetConfigures()
+    {
+        return pdo_query("SELECT * FROM configure WHERE buildid = " . $this->Id);
     }
 
     /** Get the build id from its name */

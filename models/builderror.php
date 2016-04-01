@@ -74,4 +74,54 @@ class builderror
         }
         return true;
     }
+
+    public static function GetSourceFile($data)
+    {
+        // Detect if the source directory has already been replaced by CTest with /.../
+        $sourceFile = array();
+        $pattern = '&/.../(.*?)/&';
+        $matches = array();
+        preg_match($pattern, $data['text'], $matches);
+
+        if (sizeof($matches) > 1) {
+            $sourceFile['file'] = $data['sourcefile'];
+            $sourceFile['directory'] = $matches[1];
+        } else {
+            $sourceFile['file'] = basename($data['sourcefile']);
+            $sourceFile['directory'] = dirname($data['sourcefile']);
+        }
+
+        return $sourceFile;
+    }
+
+    // Ideally $data would be loaded into $this
+    // need an id field?
+    /**
+     * Marshals the data of a particular build error into a serializable
+     * friendly format.
+     *
+     * Requires the $data of a build error, the $project, and the buildupdate.revision.
+     **/
+    public static function marshal($data, $project, $revision)
+    {
+        // Sets up access to $file and $directory
+        extract(self::GetSourceFile($data));
+        $response = array(
+            'new' => (isset($data['newstatus'])) ? $data['newstatus'] : -1,
+            'logline' => $data['logline'],
+            'cvsurl' => get_diff_url($project['id'], $project['cvsurl'], $directory, $file, $revision)
+        );
+
+        $response = array_merge($response, array(
+            // when building without launchers, CTest truncates the source dir to /.../
+            // use this pattern to linkify compiler output.
+            'precontext' => linkify_compiler_output($response['cvsurl'], "/\.\.\.", $revision, $data['precontext']),
+            'text' => linkify_compiler_output($response['cvsurl'], "/\.\.\.", $revision, $data['text']),
+            'postcontext' => linkify_compiler_output($response['cvsurl'], "/\.\.\.", $revision, $data['postcontext']),
+            'sourcefile' => $data['sourcefile'],
+            'sourceline' => $data['sourceline']
+        ));
+
+        return $response;
+    }
 }

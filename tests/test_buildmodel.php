@@ -15,6 +15,40 @@ class BuildModelTestCase extends KWWebTestCase
     public function __construct()
     {
         parent::__construct();
+
+        $this->testDataDir = dirname(__FILE__) . '/data/BuildModel';
+        $this->testDataFiles = array('build1.xml', 'build2.xml', 'build3.xml', 'configure1.xml');
+
+        pdo_query("INSERT INTO project (name) VALUES ('BuildModel')");
+
+        foreach ($this->testDataFiles as $testDataFile) {
+            if (!$this->submission('BuildModel', $this->testDataDir . '/' . $testDataFile)) {
+                $this->fail('Failed to submit ' . $testDataFile);
+                return 1;
+            }
+        }
+
+        $this->builds = array();
+        $builds = pdo_query("SELECT * FROM build WHERE name = 'buildmodel-test-build'");
+        while ($build = pdo_fetch_array($builds)) {
+            $this->builds[] = $build;
+        }
+    }
+
+    public function __destruct()
+    {
+        foreach ($this->builds as $build) {
+            remove_build($build['id']);
+        }
+    }
+
+    public function getBuildModel($n)
+    {
+        $buildArray = $this->builds[$n];
+        $build = new build();
+        $build->Id = $buildArray['id'];
+        $build->FillFromId($buildArray['id']);
+        return $build;
     }
 
     public function testBuildModel()
@@ -154,5 +188,72 @@ class BuildModelTestCase extends KWWebTestCase
 
         $this->stopCodeCoverage();
         return 0;
+    }
+
+    public function testBuildModelGetsBuildFailures()
+    {
+        $build = $this->getBuildModel(0);
+
+        // One warning and one error (errors = 0, warnings = 1)
+        // Uses some bogus projectid (10)
+        $buildFailures = $build->GetBuildFailures(10, 0, '')->fetchAll();
+        $this->assertTrue(count($buildFailures) === 1);
+
+        $buildFailures = $build->GetBuildFailures(10, 1, '')->fetchAll();
+        $this->assertTrue(count($buildFailures) === 1);
+    }
+
+    public function testBuildModelGetsResolvedBuildFailures()
+    {
+        // Make sure the first build returns no resolved build failures since it can't have any
+        $build = $this->getBuildModel(0);
+        $this->assertTrue($build->GetResolvedBuildFailures(0)->fetchAll() === array());
+
+        // The second build resolves the errored failure, but not the warning failure
+        $build = $this->getBuildModel(1);
+        $this->assertTrue(count($build->GetResolvedBuildFailures(0)->fetchAll()) === 1);
+        $this->assertTrue($build->GetResolvedBuildFailures(1)->fetchAll() === array());
+
+        // The third build has a resolved failure of type warning
+        $build = $this->getBuildModel(2);
+        $this->assertTrue(count($build->GetResolvedBuildFailures(0)->fetchAll()) === 0);
+        $this->assertTrue(count($build->GetResolvedBuildFailures(1)->fetchAll()) === 1);
+    }
+
+    public function testBuildModelGetsBuildErrors()
+    {
+        // First build has no errors
+        $build = $this->getBuildModel(0);
+        $this->assertTrue(count($build->GetBuildErrors(0, '')->fetchAll()) === 0);
+        $this->assertTrue(count($build->GetBuildErrors(1, '')->fetchAll()) === 0);
+
+        // Second build has a single error of type 0
+        $build = $this->getBuildModel(1);
+        $this->assertTrue(count($build->GetBuildErrors(0, '')->fetchAll()) === 1);
+        $this->assertTrue(count($build->GetBuildErrors(1, '')->fetchAll()) === 0);
+
+        // Third build has no errors
+        $build = $this->getBuildModel(2);
+        $this->assertTrue(count($build->GetBuildErrors(0, '')->fetchAll()) === 0);
+        $this->assertTrue(count($build->GetBuildErrors(1, '')->fetchAll()) === 0);
+    }
+
+    public function testBuildModelGetsResolvedBuildErrors()
+    {
+        // Make sure the first build returns no resolved build errors since it can't have any
+        $build = $this->getBuildModel(0);
+        $this->assertTrue(count($build->GetResolvedBuildErrors(0)->fetchAll()) === 0);
+        $this->assertTrue(count($build->GetResolvedBuildErrors(1)->fetchAll()) === 0);
+
+        // Third build has a single resolved error of type 0
+        $build = $this->getBuildModel(2);
+        $this->assertTrue(count($build->GetResolvedBuildErrors(0)->fetchAll()) === 1);
+        $this->assertTrue(count($build->GetResolvedBuildErrors(1)->fetchAll()) === 0);
+    }
+
+    public function testBuildModelGetsConfigures()
+    {
+        $build = $this->getBuildModel(0);
+        $this->assertTrue(count($build->GetConfigures()->fetchAll()) === 1);
     }
 }

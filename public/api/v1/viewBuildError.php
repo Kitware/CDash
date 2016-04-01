@@ -14,6 +14,20 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+/**
+ * View errors of a particular build, does not support parent builds.
+ *
+ * GET /viewBuildError.php
+ * Required Params:
+ * buildid=[integer] The ID of the build
+ *
+ * Optional Params:
+ * type=[integer] (default 0) The type of build errors to view, 0 for errors, 1 for warnings
+ * date=[YYYY-mm-dd]
+ * onlydeltan=[anything] Only show errors that were resolved by this build
+ * onlydeltap=[anything] Only show new errors that arose from this build
+ **/
+
 $noforcelogin = 1;
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
@@ -39,7 +53,7 @@ $response['title'] = 'CDash : View Build Errors';
 // Checks
 if (!isset($buildid) || !is_numeric($buildid)) {
     $response['error'] = 'Not a valid buildid!';
-    echo json_encode($response);
+    echo json_encode($response); // @todo should return a 400
     return;
 }
 
@@ -140,145 +154,54 @@ if ($type == 0) {
     $response['nonerrortype'] = 0;
 }
 
-$errors_response = array();
+$response['errors'] = array();
+$response['numErrors'] = 0;
+
+/**
+ * Add a new (marshaled) error to the response.
+ * Keeps track of the id necessary for frontend JS, and updates
+ * the numErrors response key.
+ * @todo id should probably just be a unique id for the builderror?
+ * builderror table currently has no integer that serves as a unique identifier.
+ **/
+function addErrorResponse($data)
+{
+    global $build, $response;
+
+    $data['id'] = $response['numErrors'];
+    $response['numErrors']++;
+    $response['errors'][] = $data;
+}
 
 if (isset($_GET['onlydeltan'])) {
     // Build error table
-    $errors = pdo_query(
-        'SELECT * FROM
-      (SELECT * FROM builderror
-        WHERE buildid=' . $previous_buildid . ' AND type=' . $type . ') AS builderrora
-      LEFT JOIN (SELECT crc32 AS crc32b FROM builderror
-        WHERE buildid=' . $buildid . ' AND type=' . $type . ') AS builderrorb
-        ON builderrora.crc32=builderrorb.crc32b
-      WHERE builderrorb.crc32b IS NULL');
-
-    $errorid = 0;
-    while ($error_array = pdo_fetch_array($errors)) {
-        $error_response = array();
-        $error_response['id'] = $errorid;
-        $error_response['new'] = -1;
-        $error_response['logline'] = $error_array['logline'];
-        $error_response['text'] = $error_array['text'];
-        $error_response['sourcefile'] = $error_array['sourcefile'];
-        $error_response['sourceline'] = $error_array['sourceline'];
-        $error_response['precontext'] = $error_array['precontext'];
-        $error_response['postcontext'] = $error_array['postcontext'];
-
-        $projectCvsUrl = $project_array['cvsurl'];
-        $file = basename($error_array['sourcefile']);
-        $directory = dirname($error_array['sourcefile']);
-        $cvsurl =
-            get_diff_url($projectid, $projectCvsUrl, $directory, $file, $revision);
-
-        $error_response['cvsurl'] = $cvsurl;
-        $errorid++;
-
-        $errors_response[] = $error_response;
-    }
-
-    // Get buildfailures that occurred yesterday and not today.
-    $current_failures = array();
-    $previous_failures = array();
-
-    $query =
-        "SELECT bf.detailsid FROM buildfailure AS bf
-     LEFT JOIN buildfailuredetails AS bfd ON (bf.detailsid=bfd.id)
-     WHERE bf.buildid=$buildid AND bfd.type=$type";
-    $result = pdo_query($query);
-    add_last_sql_error('viewBuildError onlydeltan', 0, $buildid);
-    while ($row = pdo_fetch_array($result)) {
-        $current_failures[] = $row['detailsid'];
-    }
-
-    $query =
-        "SELECT bf.detailsid FROM buildfailure AS bf
-     LEFT JOIN buildfailuredetails AS bfd ON (bf.detailsid=bfd.id)
-     WHERE bf.buildid=$previous_buildid AND bfd.type=$type";
-    $result = pdo_query($query);
-    add_last_sql_error('viewBuildError onlydeltan', 0, $buildid);
-    while ($row = pdo_fetch_array($result)) {
-        $previous_failures[] = $row['detailsid'];
-    }
-
-    foreach ($previous_failures as $failure) {
-        if (!in_array($failure, $current_failures)) {
-            $error_array = pdo_single_row_query(
-                "SELECT bf.id, bfd.language, bf.sourcefile, bfd.targetname, bfd.outputfile,
-                bfd.outputtype, bf.workingdirectory, bfd.stderror, bfd.stdoutput,
-                bfd.exitcondition
-         FROM buildfailure AS bf
-         LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
-         WHERE bf.buildid=$previous_buildid AND bfd.id=$failure");
-            add_last_sql_error('viewBuildError onlydeltan', $projectid);
-
-            if (!$error_array) {
-                add_log('Expected results not returned', 'viewBuildError onlydeltan',
-                    LOG_ERR, $projectid, 0, $buildid);
-                continue;
-            }
-
-            $error_response = array();
-            $error_response['id'] = $errorid;
-            $error_response['language'] = $error_array['language'];
-            $error_response['sourcefile'] = $error_array['sourcefile'];
-            $error_response['targetname'] = $error_array['targetname'];
-            $error_response['outputfile'] = $error_array['outputfile'];
-            $error_response['outputtype'] = $error_array['outputtype'];
-            $error_response['workingdirectory'] = $error_array['workingdirectory'];
-
-            $buildfailureid = $error_array['id'];
-            $arguments = pdo_query(
-                "SELECT bfa.argument FROM buildfailureargument AS bfa,
-                buildfailure2argument AS bf2a
-         WHERE bf2a.buildfailureid='$buildfailureid' AND
-               bf2a.argumentid=bfa.id ORDER BY bf2a.place ASC");
-
-            $i = 0;
-            $arguments_response = array();
-            while ($argument_array = pdo_fetch_array($arguments)) {
-                if ($i == 0) {
-                    $error_response['argumentfirst'] = $argument_array['argument'];
-                } else {
-                    $arguments_response[] = $argument_array['argument'];
-                }
-                $i++;
-            }
-            $error_response['arguments'] = $arguments_response;
-
-            get_labels_xml_from_query_results(
-                "SELECT text FROM label, label2buildfailure
-         WHERE label.id=label2buildfailure.labelid AND
-               label2buildfailure.buildfailureid='$buildfailureid'
-         ORDER BY text ASC", $error_response);
-
-            $error_response['stderror'] = $error_array['stderror'];
-            $rows = substr_count($error_array['stderror'], "\n") + 1;
-            if ($rows > 10) {
-                $rows = 10;
-            }
-            $error_response['stderrorrows'] = $rows;
-
-            $error_response['stdoutput'] = $error_array['stdoutput'];
-            $rows = substr_count($error_array['stdoutput'], "\n") + 1;
-            if ($rows > 10) {
-                $rows = 10;
-            }
-            $error_response['stdoutputrows'] = $rows;
-
-            $error_response['exitcondition'] = $error_array['exitcondition'];
-
-            if (isset($error_array['sourcefile'])) {
-                $projectCvsUrl = $project_array['cvsurl'];
-                $file = basename($error_array['sourcefile']);
-                $directory = dirname($error_array['sourcefile']);
-                $cvsurl =
-                    get_diff_url($projectid, $projectCvsUrl, $directory, $file, $revision);
-                $error_response['cvsurl'] = $cvsurl;
-            }
-            $errorid++;
-            $errors_response[] = $error_response;
+    $resolvedBuildErrors = $build->GetResolvedBuildErrors($type);
+    if ($resolvedBuildErrors !== false) {
+        while ($resolvedBuildError = pdo_fetch_array($resolvedBuildErrors)) {
+            addErrorResponse(builderror::marshal($resolvedBuildError, $project_array, $revision));
         }
+    }
+
+    // Build failure table
+    $resolvedBuildFailures = $build->GetResolvedBuildFailures($type);
+    while ($resolvedBuildFailure = pdo_fetch_array($resolvedBuildFailures)) {
+        $marshaledResolvedBuildFailure = buildfailure::marshal($resolvedBuildFailure, $project_array, $revision);
+
+        // @todo This code does nothing, should probably be JSON counterpart
+        get_labels_xml_from_query_results(
+            "SELECT text FROM label, label2buildfailure
+         WHERE label.id=label2buildfailure.labelid AND
+               label2buildfailure.buildfailureid='" . $resolvedBuildFailure['id']  . "'
+         ORDER BY text ASC", $marshaledResolvedBuildFailure);
+
+        $marshaledResolvedBuildFailure = array_merge($marshaledResolvedBuildFailure, array(
+            'stderr' => $resolvedBuildFailure['stderror'],
+            'stderrorrows' => min(10, substr_count($resolvedBuildFailure['stderror'], "\n") + 1),
+            'stdoutput' => $resolvedBuildFailure['stdoutput'],
+            'stdoutputrows' => min(10, substr_count($resolvedBuildFailure['stdoutputrows'], "\n") + 1),
+        ));
+
+        addErrorResponse($marshaledResolvedBuildFailure);
     }
 } else {
     $extrasql = '';
@@ -287,125 +210,26 @@ if (isset($_GET['onlydeltan'])) {
     }
 
     // Build error table
-    $errors = pdo_query("SELECT * FROM builderror WHERE buildid='$buildid' AND type='$type'" . $extrasql . ' ORDER BY logline ASC');
-    $errorid = 0;
-    while ($error_array = pdo_fetch_array($errors)) {
-        $error_response = array();
-        $error_response['id'] = $errorid;
-        $error_response['new'] = $error_array['newstatus'];
-        $error_response['logline'] = $error_array['logline'];
-
-        $projectCvsUrl = $project_array['cvsurl'];
-        $text = $error_array['text'];
-
-        // Detect if the source directory has already been replaced by CTest with /.../
-        $pattern = '&/.../(.*?)/&';
-        $matches = array();
-        preg_match($pattern, $text, $matches);
-        if (sizeof($matches) > 1) {
-            $file = $error_array['sourcefile'];
-            $directory = $matches[1];
-        } else {
-            $file = basename($error_array['sourcefile']);
-            $directory = dirname($error_array['sourcefile']);
-        }
-
-        $cvsurl = get_diff_url($projectid, $projectCvsUrl, $directory, $file, $revision);
-
-        $error_response['cvsurl'] = $cvsurl;
-        // when building without launchers, CTest truncates the source dir to /.../
-        // use this pattern to linkify compiler output.
-        $precontext = linkify_compiler_output($projectCvsUrl, "/\.\.\.", $revision, $error_array['precontext']);
-        $text = linkify_compiler_output($projectCvsUrl, "/\.\.\.", $revision, $error_array['text']);
-        $postcontext = linkify_compiler_output($projectCvsUrl, "/\.\.\.", $revision, $error_array['postcontext']);
-
-        $error_response['precontext'] = $precontext;
-        $error_response['text'] = $text;
-        $error_response['postcontext'] = $postcontext;
-        $error_response['sourcefile'] = $error_array['sourcefile'];
-        $error_response['sourceline'] = $error_array['sourceline'];
-
-        $errorid++;
-        $errors_response[] = $error_response;
+    $buildErrors = $build->GetBuildErrors($type, $extrasql);
+    while ($buildError = pdo_fetch_array($buildErrors)) {
+        addErrorResponse(builderror::marshal($buildError, $project_array, $revision));
     }
 
     // Build failure table
-    $errors = pdo_query(
-        "SELECT bf.id, bfd.language, bf.sourcefile, bfd.targetname, bfd.outputfile,
-            bfd.outputtype, bf.workingdirectory, bfd.stderror, bfd.stdoutput,
-            bfd.exitcondition
-     FROM buildfailure AS bf
-     LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
-     WHERE bf.buildid='$buildid' AND bfd.type='$type'" . $extrasql . '
-     ORDER BY bf.id ASC');
-    add_last_sql_error('viewBuildError get_failures', $projectid);
-    while ($error_array = pdo_fetch_array($errors)) {
-        $error_response = array();
-        $error_response['id'] = $errorid;
-        $error_response['language'] = $error_array['language'];
-        $error_response['sourcefile'] = $error_array['sourcefile'];
-        $error_response['targetname'] = $error_array['targetname'];
-        $error_response['outputfile'] = $error_array['outputfile'];
-        $error_response['outputtype'] = $error_array['outputtype'];
-        $error_response['workingdirectory'] = $error_array['workingdirectory'];
-
-        $buildfailureid = $error_array['id'];
-        $arguments = pdo_query(
-            "SELECT bfa.argument FROM buildfailureargument AS bfa,
-              buildfailure2argument AS bf2a
-       WHERE bf2a.buildfailureid='$buildfailureid' AND bf2a.argumentid=bfa.id
-       ORDER BY bf2a.place ASC");
-        $i = 0;
-        $arguments_response = array();
-        while ($argument_array = pdo_fetch_array($arguments)) {
-            if ($i == 0) {
-                $error_response['argumentfirst'] = $argument_array['argument'];
-            } else {
-                $arguments_response[] = $argument_array['argument'];
-            }
-            $i++;
-        }
-        $error_response['arguments'] = $arguments_response;
+    $buildFailures = $build->getBuildFailures($projectid, $type, $extrasql, 'bf.id ASC');
+    while ($buildFailure = pdo_fetch_array($buildFailures)) {
+        $marshaledBuildFailure = buildfailure::marshal($buildFailure, $project_array, $revision, true);
 
         get_labels_JSON_from_query_results(
             "SELECT text FROM label, label2buildfailure
        WHERE label.id=label2buildfailure.labelid AND
-             label2buildfailure.buildfailureid='$buildfailureid'
-       ORDER BY text ASC", $error_response);
+             label2buildfailure.buildfailureid='" . $buildFailure['id']  . "'
+       ORDER BY text ASC", $marshaledBuildFailure);
 
-        $stderror = $error_array['stderror'];
-        $stdoutput = $error_array['stdoutput'];
-
-        if (isset($error_array['sourcefile'])) {
-            $projectCvsUrl = $project_array['cvsurl'];
-            $file = basename($error_array['sourcefile']);
-            $directory = dirname($error_array['sourcefile']);
-            $cvsurl =
-                get_diff_url($projectid, $projectCvsUrl, $directory, $file, $revision);
-            $error_response['cvsurl'] = $cvsurl;
-
-            $source_dir = get_source_dir($projectid, $projectCvsUrl, $directory);
-            if ($source_dir !== null) {
-                $stderror = linkify_compiler_output($projectCvsUrl, $source_dir,
-                    $revision, $stderror);
-                $stdoutput = linkify_compiler_output($projectCvsUrl, $source_dir,
-                    $revision, $stdoutput);
-            }
-        }
-
-        if ($stderror) {
-            $error_response['stderror'] = $stderror;
-        }
-        if ($stdoutput) {
-            $error_response['stdoutput'] = $stdoutput;
-        }
-        $error_response['exitcondition'] = $error_array['exitcondition'];
-        $errorid++;
-        $errors_response[] = $error_response;
+        addErrorResponse($marshaledBuildFailure);
     }
 }
 
-$response['errors'] = $errors_response;
 $end = microtime_float();
 $response['generationtime'] = round($end - $start, 3);
 

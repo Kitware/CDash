@@ -213,4 +213,20 @@ class buildconfigure
         }
         return $this->NumberOfErrors;
     }
+
+    public static function marshal($data)
+    {
+        $response = array(
+            'status' => $data['status'],
+            'command' => $data['command'],
+            'output' => $data['log']
+        );
+
+        if (isset($data['subprojectid'])) {
+            $response['subprojectid'] = $data['subprojectid'];
+            $response['subprojectname'] = $data['subprojectname'];
+        }
+
+        return $response;
+    }
 }
