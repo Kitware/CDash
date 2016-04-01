@@ -413,11 +413,10 @@ class build
     // Is this redundant naming? Should it just be GetErrors?
     public function GetBuildErrors($type, $extrasql)
     {
-        return pdo_query(
-            "SELECT * FROM builderror " .
-            "WHERE buildid = '" . $this->Id . "' AND " .
-            "type = '$type' $extrasql " .
-            "ORDER BY logline ASC");
+        return pdo_query("SELECT * FROM builderror
+                          WHERE buildid = '" . $this->Id . "'
+                          AND type = '$type' $extrasql
+                          ORDER BY logline ASC");
     }
 
     public function GetBuildFailures($projectid, $type, $extrasql, $orderby=false)
