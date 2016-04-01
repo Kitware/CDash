@@ -38,19 +38,10 @@ class JavaJSONTarHandler
     /**
      * Parse a tarball of JSON files.
      **/
-    public function Parse($handle)
+    public function Parse($filename)
     {
-        global $CDASH_BACKUP_DIRECTORY;
-
-        // This function receives an open file handle, but we really just need
-        // the path to this file so that we can extract it.
-        $meta_data = stream_get_meta_data($handle);
-        $filename = $meta_data['uri'];
-        fclose($handle);
-
         // Create a new directory where we can extract our tarball.
-        $pathParts = pathinfo($filename);
-        $dirName = $CDASH_BACKUP_DIRECTORY . '/' . $pathParts['filename'];
+        $dirName = sys_get_temp_dir() . '/' . pathinfo($filename, PATHINFO_FILENAME);
         mkdir($dirName);
 
         // Extract the tarball.
@@ -59,7 +50,6 @@ class JavaJSONTarHandler
 
         // Check if this submission included a  package_map.json file.
         // This tells us how Java packages correspond to CDash subprojects.
-        $mapFound = false;
         $iterator = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator($dirName),
             RecursiveIteratorIterator::CHILD_FIRST);
@@ -180,7 +170,7 @@ class JavaJSONTarHandler
 
         foreach ($coverageLines as $coverageLine) {
             $sourceLine = $coverageLine['source'];
-            $coverageFile->File .= $sourceLine;
+            $coverageFile->File .= rtrim($sourceLine);
             $coverageFile->File .= '<br>';
 
             $timesHit = $coverageLine['covered'];

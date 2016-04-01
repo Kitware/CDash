@@ -34,6 +34,7 @@ class CoverageLogHandler extends AbstractHandler
         $this->Site = new Site();
         $this->UpdateEndTime = false;
         $this->CoverageFiles = array();
+        $this->CurrentLine = "";
     }
 
     /** Start element */
@@ -61,6 +62,7 @@ class CoverageLogHandler extends AbstractHandler
             if ($attributes['COUNT'] >= 0) {
                 $this->CurrentCoverageFileLog->AddLine($attributes['NUMBER'], $attributes['COUNT']);
             }
+            $this->CurrentLine = "";
         }
     }
 
@@ -98,6 +100,7 @@ class CoverageLogHandler extends AbstractHandler
                 $coverageFileLog->Insert();
             }
         } elseif ($name == 'LINE') {
+            $this->CurrentCoverageFile->File .= rtrim($this->CurrentLine);
             // Cannot be <br/> for backward compatibility.
             $this->CurrentCoverageFile->File .= '<br>';
         } elseif ($name == 'FILE') {
@@ -121,7 +124,7 @@ class CoverageLogHandler extends AbstractHandler
         $element = $this->getElement();
         switch ($element) {
             case 'LINE':
-                $this->CurrentCoverageFile->File .= $data;
+                $this->CurrentLine .= $data;
                 break;
             case 'STARTDATETIME':
                 $this->StartTimeStamp =

@@ -280,7 +280,7 @@ class build
         }
 
         $query = pdo_query(
-            'SELECT projectid,starttime,siteid,name,stamp,type,parentid,done
+            'SELECT projectid,starttime,endtime,siteid,name,stamp,type,parentid,done
                 FROM build WHERE id=' . qnum($buildid));
 
         if (!$query) {
@@ -293,6 +293,7 @@ class build
         $this->SetStamp($build_array['stamp']);
         $this->Type = $build_array['type'];
         $this->StartTime = $build_array['starttime'];
+        $this->EndTime = $build_array['endtime'];
         $this->SiteId = $build_array['siteid'];
         $this->ProjectId = $build_array['projectid'];
         $this->ParentId = $build_array['parentid'];
@@ -413,11 +414,10 @@ class build
     // Is this redundant naming? Should it just be GetErrors?
     public function GetBuildErrors($type, $extrasql)
     {
-        return pdo_query(
-            "SELECT * FROM builderror " .
-            "WHERE buildid = '" . $this->Id . "' AND " .
-            "type = '$type' $extrasql " .
-            "ORDER BY logline ASC");
+        return pdo_query("SELECT * FROM builderror
+                          WHERE buildid = '" . $this->Id . "'
+                          AND type = '$type' $extrasql
+                          ORDER BY logline ASC");
     }
 
     public function GetBuildFailures($projectid, $type, $extrasql, $orderby=false)

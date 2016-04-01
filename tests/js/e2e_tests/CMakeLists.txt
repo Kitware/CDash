@@ -18,6 +18,7 @@ function(add_protractor_test test_name)
 endfunction()
 
 add_protractor_test(manageBuildGroup)
+add_protractor_test(manageOverview)
 add_protractor_test(manageSubProject)
 add_protractor_test(viewBuildError)
 add_protractor_test(viewTest)

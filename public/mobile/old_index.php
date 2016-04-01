@@ -698,7 +698,7 @@ function generate_main_dashboard_XML($project_instance, $date)
 
     $dynamic_builds = array();
     if (empty($filter_sql)) {
-        $dynamic_builds = get_dynamic_builds($projectid);
+        $dynamic_builds = get_dynamic_builds($projectid, $end_UTCDate);
         $build_data = array_merge($build_data, $dynamic_builds);
     }
 

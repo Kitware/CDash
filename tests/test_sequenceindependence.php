@@ -223,8 +223,8 @@ class SequenceIndependenceTestCase extends KWWebTestCase
 
         // Verify the result from the build table.
         $build_row = pdo_fetch_array($build_result);
-        if ($build_row['starttime'] != '2009-02-23 07:10:00') {
-            $this->fail("Expected starttime to be '2009-02-23 07:10:00', found " . $build_row['starttime']);
+        if ($build_row['starttime'] != '2009-02-23 07:10:37') {
+            $this->fail("Expected starttime to be '2009-02-23 07:10:37', found " . $build_row['starttime']);
             return false;
         }
         if ($build_row['endtime'] != '2009-02-23 12:32:00') {

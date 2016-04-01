@@ -1,6 +1,13 @@
 CDash.controller('QueryTestsController',
-  function QueryTestsController($scope, $rootScope, $http, filters, multisort) {
+  function QueryTestsController($scope, $rootScope, $http, $filter, filters, multisort) {
     $scope.loading = true;
+
+    // Pagination settings.
+    $scope.pagination = [];
+    $scope.pagination.filteredBuilds = [];
+    $scope.pagination.currentPage = 1;
+    $scope.pagination.numPerPage = 25;
+    $scope.pagination.maxSize = 5;
 
     // Hide filters by default.
     $scope.showfilters = false;
@@ -35,6 +42,8 @@ CDash.controller('QueryTestsController',
       $rootScope['title'] = cdash.title;
     }).finally(function() {
       $scope.loading = false;
+      $scope.cdash.builds = $filter('orderBy')($scope.cdash.builds, $scope.orderByFields);
+      $scope.pageChanged();
     });
 
     $scope.showfilters_toggle = function() {
@@ -42,8 +51,21 @@ CDash.controller('QueryTestsController',
       filters.toggle($scope.showfilters);
     };
 
+
+    $scope.pageChanged = function() {
+      var begin = (($scope.pagination.currentPage - 1) * $scope.pagination.numPerPage)
+      , end = begin + $scope.pagination.numPerPage;
+      if (end > 0) {
+        $scope.pagination.filteredBuilds = $scope.cdash.builds.slice(begin, end);
+      } else {
+        $scope.pagination.filteredBuilds = $scope.cdash.builds;
+      }
+    };
+
     $scope.updateOrderByFields = function(field, $event) {
       multisort.updateOrderByFields($scope, field, $event);
+      $scope.cdash.builds = $filter('orderBy')($scope.cdash.builds, $scope.orderByFields);
+      $scope.pageChanged();
       $.cookie('cdash_query_tests_sort', $scope.orderByFields);
     };
 });

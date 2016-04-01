@@ -179,7 +179,7 @@
     <a ng-href="viewTest.php?onlynotrun&buildid={{build.id}}{{cdash.extrafilterurl}}">
       {{build.test.notrun}}
     </a>
-    <a ng-if="build.test.nnotrundiffp > 0" class="sup" ng-href="viewTest.php?onlydelta&buildid={{build.id}}">
+    <a ng-if="build.test.nnotrundiffp > 0" class="sup" ng-href="viewTest.php?onlydelta&buildid={{build.id}}{{cdash.extrafilterurl}}">
       +{{build.test.nnotrundiffp}}
     </a>
     <span ng-if="build.test.nnotrundiffn > 0" class="sub">-{{build.test.nnotrundiffn}}</span>

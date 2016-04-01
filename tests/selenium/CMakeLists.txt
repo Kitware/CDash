@@ -22,7 +22,6 @@ endif()
 
 
 add_selenium_test(setup_repositories)
-add_selenium_test(overview)
 
 if(TEST_CLIENT_MANAGEMENT)
   add_test(registerclient ${CMAKE_CTEST_COMMAND} -VV -S ${CLIENT_TEST_SCRIPT1})

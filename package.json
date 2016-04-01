@@ -5,7 +5,8 @@
   "repository": "https://github.com/Kitware/CDash",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "protractor": "^2.0.0"
+    "protractor": "^2.0.0",
+    "as-jqplot": "^1.0.8"
   },
   "devDependencies": {
     "del": "^2.2.0",
