@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="linux"
+	BuildStamp="20160318-1825-Experimental"
+	Name="vagrant-ubuntu-trusty-64"
+	Generator="ctest-3.4.20160121-g750ae8"
+	Append="true"
+	CompilerName=""
+	CompilerVersion=""
+	OSName="Linux"
+	Hostname="vagrant-ubuntu-trusty-64"
+	OSRelease="3.13.0-83-generic"
+	OSVersion="#127-Ubuntu SMP Fri Mar 11 00:25:37 UTC 2016"
+	OSPlatform="x86_64"
+	Is64Bits="1"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="63"
+	ProcessorCacheSize="10240"
+	NumberOfLogicalCPU="2"
+	NumberOfPhysicalCPU="1"
+	TotalVirtualMemory="0"
+	TotalPhysicalMemory="7985"
+	LogicalProcessorsPerPhysical="2"
+	ProcessorClockFrequency="3092.84"
+	>
+	<Subproject name="my_subproject"/>
+	<Labels>
+		<Label>my_subproject</Label>
+	</Labels>
+	<Build>
+		<StartDateTime>Mar 18 18:34 UTC</StartDateTime>
+		<StartBuildTime>1458326061</StartBuildTime>
+		<BuildCommand>/opt/cmake/bin/cmake --build . --config "Debug" --target "tests" -- -j2 -l2</BuildCommand>
+		<Failure type="Error">
+			<!-- Meta-information about the build action -->
+			<Action>
+				<TargetName>setup_my_subproject_tests_DATA_test_data_awesomesauce_m0000002_pgm_</TargetName>
+				<OutputFile>test_data/awesomesauce/m0000002.pgm.sha1-stamp</OutputFile>
+			</Action>
+			<!-- Details of command -->
+			<Command>
+				<WorkingDirectory>/home/vagrant/serioussoftwareproject/build_linux/my_subproject</WorkingDirectory>
+				<Argument>/opt/cmake/bin/cmake</Argument>
+				<Argument>-Drelative_top=/home/vagrant/serioussoftwareproject/build_linux/my_subproject</Argument>
+				<Argument>-Dfile=/home/vagrant/serioussoftwareproject/build_linux/my_subproject/test_data/awesomesauce/m0000002.pgm</Argument>
+				<Argument>-Dname=/home/vagrant/serioussoftwareproject/SeriousSoftwareInternal/SeriousSoftware/common/cool-application/test_data/awesomesauce/m0000002.pgm</Argument>
+				<Argument>-Dext=.sha1</Argument>
+				<Argument>-DExternalData_ACTION=fetch</Argument>
+				<Argument>-DExternalData_CONFIG=/home/vagrant/serioussoftwareproject/build_linux/my_subproject/setup_my_subproject_tests_DATA_test_data_awesomesauce_m0000002_pgm__config.cmake</Argument>
+				<Argument>-P</Argument>
+				<Argument>/opt/cmake/share/cmake-3.4/Modules/ExternalData.cmake</Argument>
+			</Command>
+			<!-- Result of command -->
+			<Result>
+				<StdOut>-- Fetching "ExternalDataCustomScript://gcp/SHA1/e5d8cd51418a10b800a24f31a663e4c2fd245565"</StdOut>
+				<StdErr>CMake Error at /opt/cmake/share/cmake-3.4/Modules/ExternalData.cmake:1012 (message):
+  Object SHA1=e5d8cd51418a10b800a24f31a663e4c2fd245565 not found at:
+
+    ExternalDataCustomScript://gcp/SHA1/e5d8cd51418a10b800a24f31a663e4c2fd245565 (You are attempting to access protected data with no configured
+
+  credentials.  Please visit https://cloud.google.com/console#/project
+
+  and sign up for an account, and then run the "gcloud auth login"
+
+  command to configure gsutil to use these credentials.
+
+  )
+Call Stack (most recent call first):
+  /opt/cmake/share/cmake-3.4/Modules/ExternalData.cmake:1034 (_ExternalData_download_object)
+  
+
+</StdErr>
+				<ExitCondition>1</ExitCondition>
+			</Result>
+		</Failure>
+		<Failure type="Error">
+			<!-- Meta-information about the build action -->
+			<Action>
+				<TargetName>setup_my_subproject_tests_DATA_test_data_awesomesauce_m0000001_pgm_</TargetName>
+				<OutputFile>test_data/awesomesauce/m0000001.pgm.sha1-stamp</OutputFile>
+			</Action>
+			<!-- Details of command -->
+			<Command>
+				<WorkingDirectory>/home/vagrant/serioussoftwareproject/build_linux/my_subproject</WorkingDirectory>
+				<Argument>/opt/cmake/bin/cmake</Argument>
+				<Argument>-Drelative_top=/home/vagrant/serioussoftwareproject/build_linux/my_subproject</Argument>
+				<Argument>-Dfile=/home/vagrant/serioussoftwareproject/build_linux/my_subproject/test_data/awesomesauce/m0000001.pgm</Argument>
+				<Argument>-Dname=/home/vagrant/serioussoftwareproject/SeriousSoftwareInternal/SeriousSoftware/common/cool-application/test_data/awesomesauce/m0000001.pgm</Argument>
+				<Argument>-Dext=.sha1</Argument>
+				<Argument>-DExternalData_ACTION=fetch</Argument>
+				<Argument>-DExternalData_CONFIG=/home/vagrant/serioussoftwareproject/build_linux/my_subproject/setup_my_subproject_tests_DATA_test_data_awesomesauce_m0000001_pgm__config.cmake</Argument>
+				<Argument>-P</Argument>
+				<Argument>/opt/cmake/share/cmake-3.4/Modules/ExternalData.cmake</Argument>
+			</Command>
+			<!-- Result of command -->
+			<Result>
+				<StdOut>-- Fetching "ExternalDataCustomScript://gcp/SHA1/5722f2755c89fa22a6354cb0d33293b780d7f88c"</StdOut>
+				<StdErr>CMake Error at /opt/cmake/share/cmake-3.4/Modules/ExternalData.cmake:1012 (message):
+  Object SHA1=5722f2755c89fa22a6354cb0d33293b780d7f88c not found at:
+
+    ExternalDataCustomScript://gcp/SHA1/5722f2755c89fa22a6354cb0d33293b780d7f88c (You are attempting to access protected data with no configured
+
+  credentials.  Please visit https://cloud.google.com/console#/project
+
+  and sign up for an account, and then run the "gcloud auth login"
+
+  command to configure gsutil to use these credentials.
+
+  )
+Call Stack (most recent call first):
+  /opt/cmake/share/cmake-3.4/Modules/ExternalData.cmake:1034 (_ExternalData_download_object)
+  
+
+</StdErr>
+				<ExitCondition>1</ExitCondition>
+			</Result>
+		</Failure>
+		<Failure type="Error">
+			<!-- Meta-information about the build action -->
+			<Action>
+				<TargetName>setup_my_subproject_tests_DATA_test_data_awesomesauce_timestamps_txt_</TargetName>
+				<OutputFile>test_data/awesomesauce/timestamps.txt.sha1-stamp</OutputFile>
+			</Action>
+			<!-- Details of command -->
+			<Command>
+				<WorkingDirectory>/home/vagrant/serioussoftwareproject/build_linux/my_subproject</WorkingDirectory>
+				<Argument>/opt/cmake/bin/cmake</Argument>
+				<Argument>-Drelative_top=/home/vagrant/serioussoftwareproject/build_linux/my_subproject</Argument>
+				<Argument>-Dfile=/home/vagrant/serioussoftwareproject/build_linux/my_subproject/test_data/awesomesauce/timestamps.txt</Argument>
+				<Argument>-Dname=/home/vagrant/serioussoftwareproject/SeriousSoftwareInternal/SeriousSoftware/common/cool-application/test_data/awesomesauce/timestamps.txt</Argument>
+				<Argument>-Dext=.sha1</Argument>
+				<Argument>-DExternalData_ACTION=fetch</Argument>
+				<Argument>-DExternalData_CONFIG=/home/vagrant/serioussoftwareproject/build_linux/my_subproject/setup_my_subproject_tests_DATA_test_data_awesomesauce_timestamps_txt__config.cmake</Argument>
+				<Argument>-P</Argument>
+				<Argument>/opt/cmake/share/cmake-3.4/Modules/ExternalData.cmake</Argument>
+			</Command>
+			<!-- Result of command -->
+			<Result>
+				<StdOut>-- Fetching "ExternalDataCustomScript://gcp/SHA1/4897bfecd36ba786d132c65fcb9c4e8f58e3df8f"</StdOut>
+				<StdErr>CMake Error at /opt/cmake/share/cmake-3.4/Modules/ExternalData.cmake:1012 (message):
+  Object SHA1=4897bfecd36ba786d132c65fcb9c4e8f58e3df8f not found at:
+
+    ExternalDataCustomScript://gcp/SHA1/4897bfecd36ba786d132c65fcb9c4e8f58e3df8f (You are attempting to access protected data with no configured
+
+  credentials.  Please visit https://cloud.google.com/console#/project
+
+  and sign up for an account, and then run the "gcloud auth login"
+
+  command to configure gsutil to use these credentials.
+
+  )
+Call Stack (most recent call first):
+  /opt/cmake/share/cmake-3.4/Modules/ExternalData.cmake:1034 (_ExternalData_download_object)
+  
+
+</StdErr>
+				<ExitCondition>1</ExitCondition>
+			</Result>
+		</Failure>
+		<Log Encoding="base64" Compression="bin/gzip"/>
+		<EndDateTime>Mar 18 18:34 UTC</EndDateTime>
+		<EndBuildTime>1458326062</EndBuildTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Build>
+</Site>

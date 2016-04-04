@@ -4,7 +4,7 @@ function getSortedElements(parent) {
   var positions = [];
   $(parent).children().each(function() {
     var pos = {};
-    pos.buildgroupid = $(this).attr('id');
+    pos.id = $(this).attr('id');
     pos.position = $(this).index() + 1;
     positions.push(pos);
   });

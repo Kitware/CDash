@@ -526,6 +526,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $coverage_groups[$groupId]['label'] = $group->GetName();
             $coverage_groups[$groupId]['loctested'] = 0;
             $coverage_groups[$groupId]['locuntested'] = 0;
+            $coverage_groups[$groupId]['position'] = $group->GetPosition();
             $coverage_groups[$groupId]['coverages'] = array();
         }
     }

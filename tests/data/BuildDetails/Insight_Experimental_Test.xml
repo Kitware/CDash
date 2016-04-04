@@ -1,0 +1,2397 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="BuildDetails-Linux-g++-4.1-LesionSizingSandbox_Debug"
+  BuildStamp="20090223-0710-Experimental"
+  Name="camelot.kitware"
+  Generator="ctest2.7-20080827"  OSName="Linux"
+  Hostname="Camelot"
+  OSRelease="2.6.20-17-generic"
+  OSVersion="#2 SMP Wed Aug 20 16:47:34 UTC 2008"
+  OSPlatform="i686"
+  Is64Bits="0"
+  VendorString="GenuineIntel"
+  VendorID="Intel Corporation"
+  FamilyID="15"
+  ModelID="4"
+  ProcessorCacheSize="1024"
+  NumberOfLogicalCPU="2"
+  NumberOfPhysicalCPU="1"
+  TotalVirtualMemory="1906"
+  TotalPhysicalMemory="1003"
+  LogicalProcessorsPerPhysical="2"
+  ProcessorClockFrequency="2992.84"
+>
+<Testing>
+  <StartDateTime>Feb 23 03:02 EST</StartDateTime>
+  <StartTestTime>1235376142</StartTestTime>
+  <TestList>
+    <Test>./Testing/itkVectorFiniteDifferenceImageFilterTest1</Test>
+    <Test>./Testing/itkVectorFiniteDifferenceFunctionTest1</Test>
+    <Test>./Testing/itkVectorSegmentationLevelSetFunctionTest1</Test>
+    <Test>./Testing/itkVectorLevelSetFunctionTest1</Test>
+    <Test>./Testing/itkVectorLevelSetFunctionTest2</Test>
+    <Test>./Testing/itkVectorSparseFieldLevelSetImageFilterTest1</Test>
+    <Test>./Testing/itkVectorSparseFieldLevelSetImageFilterTest2</Test>
+    <Test>./Testing/itkVectorSparseFieldLevelSetNodeTest1</Test>
+    <Test>./Testing/itkVectorSparseFieldCityBlockNeighborListTest1</Test>
+    <Test>./Testing/itkVectorSegmentationLevelSetImageFilterTest1</Test>
+    <Test>./Testing/itkNumericTraitsMatrixPixelTest1</Test>
+    <Test>./Testing/itkMatrixLinearInterpolateImageFunctionTest1</Test>
+    <Test>./Testing/itkMatrixInterpolateImageFunctionTest1</Test>
+    <Test>./Testing/itkVectorShiftScaleImageFilterText1</Test>
+    <Test>./Testing/itkVectorZeroCrossingImageFilterTest1</Test>
+    <Test>./Testing/itkSystemInformationSandbox</Test>
+    <Test>./Testing/itkLesionSegmentationMethodTest1</Test>
+    <Test>./Testing/itkLesionSegmentationMethodTest2</Test>
+    <Test>./Testing/itkLesionSegmentationMethodTest3</Test>
+    <Test>./Testing/itkFeatureGeneratorTest1</Test>
+    <Test>./Testing/itkSegmentationModuleTest1</Test>
+    <Test>./Testing/itkRegionGrowingSegmentationModuleTest1</Test>
+    <Test>./Testing/itkSinglePhaseLevelSetSegmentationModuleTest1</Test>
+    <Test>./Testing/itkRegionCompetitionImageFilterTest1</Test>
+    <Test>./Testing/itkSegmentationVolumeEstimatorTest1</Test>
+    <Test>./Testing/itkGrayscaleImageSegmentationVolumeEstimatorTest1</Test>
+    <Test>./Testing/itkLandmarksReaderTest1</Test>
+    <Test>./Testing/itkVotingBinaryHoleFillFloodingImageFilterTest1</Test>
+    <Test>./Testing/itkConnectedThresholdSegmentationModuleTest1</Test>
+    <Test>./Testing/itkConfidenceConnectedSegmentationModuleTest1</Test>
+    <Test>./Testing/itkFastMarchingSegmentationModuleTest1-PartSolidLesion1</Test>
+    <Test>./Testing/itkGradientMagnitudeSigmoidFeatureGeneratorTest1</Test>
+    <Test>./Testing/GradientMagnitudeImageFilterTest1</Test>
+    <Test>./Testing/itkSigmoidFeatureGeneratorTest1</Test>
+    <Test>./Testing/itkLungWallFeatureGeneratorTest1</Test>
+    <Test>./Testing/itkMorphologicalOpenningFeatureGeneratorTest1</Test>
+    <Test>./Testing/LandmarkSpatialObjectWriterTest1</Test>
+    <Test>./Testing/CannyEdgeDetectionImageFilterTest1</Test>
+    <Test>./Testing/itkCannyEdgesDistanceFeatureGeneratorTest1</Test>
+    <Test>./Testing/itkCannyEdgesFeatureGeneratorTest1</Test>
+    <Test>./Testing/itkCannyEdgesDistanceAdvectionFieldFeatureGeneratorTest1</Test>
+    <Test>./Testing/itkSatoVesselnessFeatureGeneratorTest1</Test>
+    <Test>./Testing/itkSatoVesselnessSigmoidFeatureGeneratorTest1</Test>
+    <Test>./Testing/itkSatoLocalStructureFeatureGeneratorTest1</Test>
+    <Test>./Testing/itkLocalStructureImageFilterTest1</Test>
+    <Test>./Testing/itkDescoteauxSheetnessImageFilterTest1</Test>
+    <Test>./Testing/itkDescoteauxSheetnessImageFilterTest2</Test>
+    <Test>./Testing/itkDescoteauxSheetnessFeatureGeneratorTest1</Test>
+    <Test>./Testing/itkFrangiTubularnessFeatureGeneratorTest1</Test>
+    <Test>./Testing/itkGeodesicActiveContourLevelSetSegmentationModuleTest1</Test>
+    <Test>./Testing/itkShapeDetectionLevelSetSegmentationModuleTest1</Test>
+    <Test>./Testing/itkShapeDetectionLevelSetSegmentationModuleTest2</Test>
+  </TestList>
+  <Test Status="passed">
+    <Name>itkVectorFiniteDifferenceImageFilterTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkVectorFiniteDifferenceImageFilterTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkVectorFiniteDifferenceImageFilterTest1</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.223612</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkVectorFiniteDifferenceImageFilterTest1</Value></NamedMeasurement>
+      <Measurement>
+        <Value>VectorFiniteDifferenceImageFilter
+VectorFiniteDifferenceImageFilter (0x818a268)
+  RTTI typeinfo:   itk::VectorFiniteDifferenceImageFilter&lt;itk::Image&lt;itk::Vector&lt;float, 2u&gt;, 2u&gt;, itk::Image&lt;itk::Vector&lt;float, 2u&gt;, 2u&gt; &gt;
+  Reference Count: 1
+  Modified Time: 20
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 1
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: Off
+  Input 0: (0x818cba8)
+  Output 0: (0x818c980)
+  AbortGenerateData: Off
+  Progress: 0
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 2
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 128
+    Global Default Number Of Threads: 2
+  InPlace: Off
+  The input and output to this filter are the same type. The filter can be run in place.
+  ElapsedIterations: 0
+  UseImageSpacing: Off
+  State: 0
+  MaximumRMSError: 0
+  NumberOfIterations: 5
+  ManualReinitialization: 0
+  RMSChange: 0
+
+  DifferenceFunction: 
+    VectorLevelSetFunction (0x818caf&lt;itk::Image&lt;itk::Vector&lt;float, 2u&gt;&lt;TInputImage, TOutputImage&gt;&lt;itk::Vector&lt;float, 2u&gt;&lt;itk::Vector&lt;float, 2u&gt;...
+The rest of the test output was removed since it exceeds the threshold of 1024 characters.
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="notrun">
+    <Name>itkVectorFiniteDifferenceFunctionTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkVectorFiniteDifferenceFunctionTest1</FullName>
+    <FullCommandLine></FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
+      <Measurement>
+        <Value>Unable to find executable: /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkVectorFiniteDifferenceFunctionTest1</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="failed">
+    <Name>itkVectorSegmentationLevelSetFunctionTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkVectorSegmentationLevelSetFunctionTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkVectorSegmentationLevelSetFunctionTest1</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Exit Code"><Value>OTHER_FAULT</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Exit Value"><Value>5</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>1.96372</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkVectorSegmentationLevelSetFunctionTest1</Value></NamedMeasurement>
+      <Measurement>
+        <Value>HelperVectorSegmentationLevelSetFunction
+HelperVectorSegmentationLevelSetFunction (0x8162228)
+  RTTI typeinfo:   itk::HelperVectorSegmentationLevelSetFunction&lt;itk::Image&lt;itk::Vector&lt;float, 2u&gt;, 2u&gt;, itk::Image&lt;itk::Vector&lt;float, 2u&gt;, 2u&gt; &gt;
+  Reference Count: 1
+  Radius: [1, 1]
+  ScaleCoefficients: 0x8162250  WaveDT: 0.25
+  DT: 0.25
+  UseMinimalCurvature 0
+  EpsilonMagnitude: 1e-05
+  AdvectionWeights: 
+  PropagationWeights: 
+  CurvatureWeights: 
+  LaplacianSmoothingWeights: 
+terminate called after throwing an instance of 'itk::ExceptionObject'
+  what():  /home/ibanez/src/LesionSizingKit/Sandbox/Source/itkVectorLevelSetFunction.txx:377:
+itk::ERROR: HelperVectorSegmentationLevelSetFunction(0x8162228): Number of phases in a VectorLevelSet must be at least 1.
+
+*** Exception executing: Child aborted</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkVectorLevelSetFunctionTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkVectorLevelSetFunctionTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkVectorLevelSetFunctionTest1</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0600541</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkVectorLevelSetFunctionTest1</Value></NamedMeasurement>
+      <Measurement>
+        <Value>VectorLevelSetFunction
+VectorLevelSetFunction (0x813c228)
+  RTTI typeinfo:   itk::VectorLevelSetFunction&lt;itk::Image&lt;itk::Vector&lt;float, 2u&gt;, 2u&gt; &gt;
+  Reference Count: 1
+  Radius: [0, 0]
+  ScaleCoefficients: 0x813c250  WaveDT: 0.25
+  DT: 0.25
+  UseMinimalCurvature 0
+  EpsilonMagnitude: 1e-05
+  AdvectionWeights: 10 0 
+0 10 
+
+  PropagationWeights: 10 0 
+0 10 
+
+  CurvatureWeights: 10 0 
+0 10 
+
+  LaplacianSmoothingWeights: 10 0 
+0 10 
+
+Time Step: 0
+0 : 0 : 0 : 0 : 0 : 0
+1 : 0 : 0 : 0 : 0 : 0
+0 : 0 : 0 : 0 : 0 : 0
+1 : 0 : 0 : 0 : 0 : 0
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="failed">
+    <Name>itkVectorLevelSetFunctionTest2</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkVectorLevelSetFunctionTest2</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkVectorLevelSetFunctionTest2</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Exit Code"><Value>OTHER_FAULT</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Exit Value"><Value>5</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.160407</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkVectorLevelSetFunctionTest2</Value></NamedMeasurement>
+      <Measurement>
+        <Value>VectorLevelSetFunction
+VectorLevelSetFunction (0x813d228)
+  RTTI typeinfo:   itk::VectorLevelSetFunction&lt;itk::Image&lt;itk::Vector&lt;float, 2u&gt;, 3u&gt; &gt;
+  Reference Count: 1
+  Radius: [0, 0, 0]
+  ScaleCoefficients: 0x813d254  WaveDT: 0.166667
+  DT: 0.166667
+  UseMinimalCurvature 0
+  EpsilonMagnitude: 1e-05
+  AdvectionWeights: 10 0 
+0 10 
+
+  PropagationWeights: 10 0 
+0 10 
+
+  CurvatureWeights: 10 0 
+0 10 
+
+  LaplacianSmoothingWeights: 10 0 
+0 10 
+
+terminate called after throwing an instance of 'itk::ExceptionObject'
+  what():  /home/ibanez/src/LesionSizingKit/Sandbox/Source/itkVectorLevelSetFunction.txx:377:
+itk::ERROR: VectorLevelSetFunction(0x813d228): Number of phases in a VectorLevelSet must be at least 1.
+
+*** Exception executing: Child aborted</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="failed">
+    <Name>itkVectorSparseFieldLevelSetImageFilterTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkVectorSparseFieldLevelSetImageFilterTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkVectorSparseFieldLevelSetImageFilterTest1</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Exit Code"><Value>Failed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Exit Value"><Value>1</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.159183</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkVectorSparseFieldLevelSetImageFilterTest1</Value></NamedMeasurement>
+      <Measurement>
+        <Value>VectorSparseFieldLevelSetImageFilter
+VectorSparseFieldLevelSetImageFilter (0x8227268)
+  RTTI typeinfo:   itk::VectorSparseFieldLevelSetImageFilter&lt;itk::Image&lt;itk::Vector&lt;float, 3u&gt;, 2u&gt;, itk::Image&lt;itk::Vector&lt;float, 3u&gt;, 2u&gt; &gt;
+  Reference Count: 1
+  Modified Time: 27
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 1
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: Off
+  Input 0: (0x8229e68)
+  Output 0: (0x8229a40)
+  AbortGenerateData: Off
+  Progress: 0
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 2
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 128
+    Global Default Number Of Threads: 2
+  InPlace: Off
+  The input and output to this filter are the same type. The filter can be run in place.
+  ElapsedIterations: 0
+  UseImageSpacing: Off
+  State: 0
+  MaximumRMSError: 0
+  NumberOfIterations: 5
+  ManualReinitialization: 0
+  RMSChange: 0
+
+  DifferenceFunction: 
+    VectorLevelSetFunction (0x8229cc0)
+      RTTI typeinfo:   itk::VectorLevelSetFunction&lt;itk::Image&lt;itk::Vector&lt;float, 3u&gt;, 2u&gt; &gt;
+      Reference Count: 2
+      Radius: [0, 0]
+      ScaleCoefficients: 0x8229ce8      WaveDT: 0.25
+      DT: 0.25
+      UseMinimalCurvature 0
+      EpsilonMagnitude: 1e-05
+      AdvectionWeights: 
+      PropagationWeights: 
+      CurvatureWeights: 
+      LaplacianSmoothingWeights: 
+
+  m_IsoSurfaceValue: [0, 0, 0]
+  m_LayerNodeStore: 
+    ObjectStore (0x8229c68)
+      RTTI typeinfo:   itk::ObjectStore&lt;itk::SparseFieldLevelSetNode&lt;itk::Index&lt;2u&gt; &gt; &gt;
+      Reference Count: 1
+      Modified Time: 15
+      Debug: Off
+      Observers: 
+        none
+      m_GrowthStrategy: 1
+      m_Size: 0
+      m_LinearGrowthSize: 1024
+      Free list size: 0
+      Free list capacity: 0
+      Number of blocks in store: 0
+  m_BoundsCheckingActive: 0  m_UpdateBuffer: size=0 capacity=0
+NUMBER OF COMPONENTS = 3
+
+itk::ExceptionObject (0x822a940)
+Location: "void itk::VectorFiniteDifferenceImageFilter&lt;TInputImage, TOutputImage&gt;::GenerateData() [with TInputImage = itk::Image&lt;itk::Vector&lt;float, 3u&gt;, 2u&gt;, TOutputImage = itk::Image&lt;itk::Vector&lt;float, 3u&gt;, 2u&gt;]" 
+File: /home/ibanez/src/LesionSizingKit/Sandbox/Source/itkVectorFiniteDifferenceImageFilter.txx
+Line: 84
+Description: itk::ERROR: VectorSparseFieldLevelSetImageFilter(0x8227268): Number of difference functions must match the number of components in the image.
+
+
+Number of elapsed iterations = 0
+Error in GetValueOne()
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="failed">
+    <Name>itkVectorSparseFieldLevelSetImageFilterTest2</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkVectorSparseFieldLevelSetImageFilterTest2</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkVectorSparseFieldLevelSetImageFilterTest2</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Exit Code"><Value>Failed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Exit Value"><Value>1</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0804951</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkVectorSparseFieldLevelSetImageFilterTest2</Value></NamedMeasurement>
+      <Measurement>
+        <Value>VectorSparseFieldLevelSetImageFilter
+VectorSparseFieldLevelSetImageFilter (0x822b268)
+  RTTI typeinfo:   itk::VectorSparseFieldLevelSetImageFilter&lt;itk::Image&lt;itk::Vector&lt;float, 3u&gt;, 2u&gt;, itk::Image&lt;itk::Vector&lt;float, 3u&gt;, 2u&gt; &gt;
+  Reference Count: 1
+  Modified Time: 32
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 1
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: Off
+  Input 0: (0x822de68)
+  Output 0: (0x822da40)
+  AbortGenerateData: Off
+  Progress: 0
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 2
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 128
+    Global Default Number Of Threads: 2
+  InPlace: Off
+  The input and output to this filter are the same type. The filter can be run in place.
+  ElapsedIterations: 0
+  UseImageSpacing: Off
+  State: 0
+  MaximumRMSError: 0
+  NumberOfIterations: 5
+  ManualReinitialization: 0
+  RMSChange: 0
+
+  DifferenceFunction: 
+    VectorLevelSetFunction (0x822dcc0)
+      RTTI typeinfo:   itk::VectorLevelSetFunction&lt;itk::Image&lt;itk::Vector&lt;float, 3u&gt;, 2u&gt; &gt;
+      Reference Count: 2
+      Radius: [0, 0]
+      ScaleCoefficients: 0x822dce8      WaveDT: 0.25
+      DT: 0.25
+      UseMinimalCurvature 0
+      EpsilonMagnitude: 1e-05
+      AdvectionWeights: 
+      PropagationWeights: 
+      CurvatureWeights: 
+      LaplacianSmoothingWeights: 
+
+  m_IsoSurfaceValue: [0, 0, 0]
+  m_LayerNodeStore: 
+    ObjectStore (0x822dc68)
+      RTTI typeinfo:   itk::ObjectStore&lt;itk::SparseFieldLevelSetNode&lt;itk::Index&lt;2u&gt; &gt; &gt;
+      Reference Count: 1
+      Modified Time: 15
+      Debug: Off
+      Observers: 
+        none
+      m_GrowthStrategy: 1
+      m_Size: 0
+      m_LinearGrowthSize: 1024
+      Free list size: 0
+      Free list capacity: 0
+      Number of blocks in store: 0
+  m_BoundsCheckingActive: 0  m_UpdateBuffer: size=0 capacity=0
+NUMBER OF COMPONENTS = 3
+
+itk::ExceptionObject (0x822ef10)
+Location: "void itk::VectorFiniteDifferenceImageFilter&lt;TInputImage, TOutputImage&gt;::GenerateData() [with TInputImage = itk::Image&lt;itk::Vector&lt;float, 3u&gt;, 2u&gt;, TOutputImage = itk::Image&lt;itk::Vector&lt;float, 3u&gt;, 2u&gt;]" 
+File: /home/ibanez/src/LesionSizingKit/Sandbox/Source/itkVectorFiniteDifferenceImageFilter.txx
+Line: 84
+Description: itk::ERROR: VectorSparseFieldLevelSetImageFilter(0x822b268): Number of difference functions must match the number of components in the image.
+
+
+Number of elapsed iterations = 0
+Error in GetValueOne()
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkVectorSparseFieldLevelSetNodeTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkVectorSparseFieldLevelSetNodeTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkVectorSparseFieldLevelSetNodeTest1</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.00301797</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkVectorSparseFieldLevelSetNodeTest1</Value></NamedMeasurement>
+      <Measurement>
+        <Value></Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkVectorSparseFieldCityBlockNeighborListTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkVectorSparseFieldCityBlockNeighborListTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkVectorSparseFieldCityBlockNeighborListTest1</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0517079</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkVectorSparseFieldCityBlockNeighborListTest1</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Radius = [1, 1]
+Size = 4
+
+Index     Offset
+   1      [0, -1]
+   3      [-1, 0]
+   5      [1, 0]
+   7      [0, 1]
+
+Strides 
+0 : 1
+1 : 3
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="failed">
+    <Name>itkVectorSegmentationLevelSetImageFilterTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkVectorSegmentationLevelSetImageFilterTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkVectorSegmentationLevelSetImageFilterTest1</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Exit Code"><Value>Failed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Exit Value"><Value>1</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.141961</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkVectorSegmentationLevelSetImageFilterTest1</Value></NamedMeasurement>
+      <Measurement>
+        <Value>HelperVectorSegmentationLevelSetImageFilter
+HelperVectorSegmentationLevelSetImageFilter (0x825a268)
+  RTTI typeinfo:   itk::HelperVectorSegmentationLevelSetImageFilter&lt;itk::Image&lt;itk::Vector&lt;float, 2u&gt;, 2u&gt;, itk::Image&lt;itk::Vector&lt;float, 1u&gt;, 2u&gt;, itk::Image&lt;itk::Vector&lt;float, 2u&gt;, 2u&gt; &gt;
+  Reference Count: 1
+  Modified Time: 32
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 2
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: Off
+  Input 0: (0x825d158)
+  Output 0: (0x825ca38)
+  AbortGenerateData: Off
+  Progress: 0
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 2
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 128
+    Global Default Number Of Threads: 2
+  InPlace: Off
+  The input and output to this filter are the same type. The filter can be run in place.
+  ElapsedIterations: 0
+  UseImageSpacing: Off
+  State: 0
+  MaximumRMSError: 0.02
+  NumberOfIterations: 5
+  ManualReinitialization: 0
+  RMSChange: 0
+
+  DifferenceFunction: 
+    HelperVectorSegmentationLevelSetFunction (0x825ce60)
+      RTTI typeinfo:   itk::HelperVectorSegmentationLevelSetFunction&lt;itk::Image&lt;itk::Vector&lt;float, 2u&gt;, 2u&gt;, itk::Image&lt;itk::Vector&lt;float, 1u&gt;, 2u&gt; &gt;
+      Reference Count: 2
+      Radius: [1, 1]
+      ScaleCoefficients: 0x825ce88      WaveDT: 0.25
+      DT: 0.25
+      UseMinimalCurvature 0
+      EpsilonMagnitude: 1e-05
+      AdvectionWeights: 10 
+10 
+
+      PropagationWeights: 10 
+10 
+
+      CurvatureWeights: 1 0 
+0 1 
+
+      LaplacianSmoothingWeights: 10 
+10 
+
+
+  m_IsoSurfaceValue: [0, 0]
+  m_LayerNodeStore: 
+    ObjectStore (0x825cc60)
+      RTTI typeinfo:   itk::ObjectStore&lt;itk::SparseFieldLevelSetNode&lt;itk::Index&lt;2u&gt; &gt; &gt;
+      Reference Count: 1
+      Modified Time: 15
+      Debug: Off
+      Observers: 
+        none
+      m_GrowthStrategy: 1
+      m_Size: 0
+      m_LinearGrowthSize: 1024
+      Free list size: 0
+      Free list capacity: 0
+      Number of blocks in store: 0
+  m_BoundsCheckingActive: 0  m_UpdateBuffer: size=0 capacity=0
+  m_ReverseExpansionDirection = 0
+  m_AutoGenerateSpeedAdvection = 1
+  m_SegmentationFunction = 0x825ce60
+Name of Class = HelperVectorSegmentationLevelSetImageFilter
+Name of Superclass = VectorSegmentationLevelSetImageFilter
+NUMBER OF COMPONENTS = 2
+
+itk::ExceptionObject (0x825edc8)
+Location: "void itk::VectorFiniteDifferenceImageFilter&lt;TInputImage, TOutputImage&gt;::GenerateData() [with TInputImage = itk::Image&lt;itk::Vector&lt;float, 2u&gt;, 2u&gt;, TOutputImage = itk::Image&lt;itk::Vector&lt;float, 2u&gt;, 2u&gt;]" 
+File: /home/ibanez/src/LesionSizingKit/Sandbox/Source/itkVectorFiniteDifferenceImageFilter.txx
+Line: 84
+Description: itk::ERROR: HelperVectorSegmentationLevelSetImageFilter(0x825a268): Number of difference functions must match the number of components in the image.
+
+
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkNumericTraitsMatrixPixelTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkNumericTraitsMatrixPixelTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkNumericTraitsMatrixPixelTest1</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0188099</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkNumericTraitsMatrixPixelTest1</Value></NamedMeasurement>
+      <Measurement>
+        <Value></Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkMatrixLinearInterpolateImageFunctionTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkMatrixLinearInterpolateImageFunctionTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkMatrixLinearInterpolateImageFunctionTest1</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.242077</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkMatrixLinearInterpolateImageFunctionTest1</Value></NamedMeasurement>
+      <Measurement>
+        <Value>MatrixLinearInterpolateImageFunction (0x80f9228)
+  RTTI typeinfo:   itk::MatrixLinearInterpolateImageFunction&lt;itk::Image&lt;itk::Matrix&lt;char, 2u, 2u&gt;, 2u&gt;, double&gt;
+  Reference Count: 1
+  Modified Time: 1
+  Debug: Off
+  Observers: 
+    none
+  InputImage: 0x80f9360
+  StartIndex: [0, 0]
+  EndIndex: [9, 9]
+  StartContinuousIndex: [0, 0]
+  EndContinuousIndex: [9, 9]
+Name of Class MatrixLinearInterpolateImageFunction
+Name of SuperClass MatrixInterpolateImageFunction
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkMatrixInterpolateImageFunctionTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkMatrixInterpolateImageFunctionTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkMatrixInterpolateImageFunctionTest1</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.185192</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkMatrixInterpolateImageFunctionTest1</Value></NamedMeasurement>
+      <Measurement>
+        <Value>MatrixInterpolateImageFunctionTestHelper (0x80f9228)
+  RTTI typeinfo:   itk::MatrixInterpolateImageFunctionTestHelper&lt;itk::Image&lt;itk::Matrix&lt;char, 3u, 2u&gt;, 2u&gt;, double&gt;
+  Reference Count: 1
+  Modified Time: 1
+  Debug: Off
+  Observers: 
+    none
+  InputImage: 0x80f9360
+  StartIndex: [0, 0]
+  EndIndex: [9, 9]
+  StartContinuousIndex: [0, 0]
+  EndContinuousIndex: [9, 9]
+Name of Class MatrixInterpolateImageFunctionTestHelper
+Name of SuperClass MatrixInterpolateImageFunction
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkVectorShiftScaleImageFilterText1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkVectorShiftScaleImageFilterText1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkVectorShiftScaleImageFilterText1</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.259772</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkVectorShiftScaleImageFilterText1</Value></NamedMeasurement>
+      <Measurement>
+        <Value>VectorShiftScaleImageFilter
+VectorShiftScaleImageFilter (0x8158268)
+  RTTI typeinfo:   itk::VectorShiftScaleImageFilter&lt;itk::Image&lt;itk::Vector&lt;char, 3u&gt;, 2u&gt;, itk::Image&lt;itk::Vector&lt;char, 3u&gt;, 2u&gt; &gt;
+  Reference Count: 1
+  Modified Time: 19
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 1
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: Off
+  Input 0: (0x815ab28)
+  Output 0: (0x815a998)
+  AbortGenerateData: Off
+  Progress: 0
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 2
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 128
+    Global Default Number Of Threads: 2
+  Shift: [0, 1, 2]
+  Scale: [1, 2, 3]
+  Computed values follow:
+  UnderflowCount: 0
+  OverflowCount: 0
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkVectorZeroCrossingImageFilterTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkVectorZeroCrossingImageFilterTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkVectorZeroCrossingImageFilterTest1</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.35376</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkVectorZeroCrossingImageFilterTest1</Value></NamedMeasurement>
+      <Measurement>
+        <Value>VectorZeroCrossingImageFilter
+VectorZeroCrossingImageFilter (0x815d268)
+  RTTI typeinfo:   itk::VectorZeroCrossingImageFilter&lt;itk::Image&lt;itk::Vector&lt;signed char, 3u&gt;, 2u&gt;, itk::Image&lt;itk::Vector&lt;signed char, 3u&gt;, 2u&gt; &gt;
+  Reference Count: 1
+  Modified Time: 17
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 1
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: Off
+  Input 0: (0x815fab8)
+  Output 0: (0x815f948)
+  AbortGenerateData: Off
+  Progress: 0
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 2
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 128
+    Global Default Number Of Threads: 2
+  ForegroundValue: [&lt;1&gt;, &lt;1&gt;, &lt;1&gt;]
+  BackgroundValue: [</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkSystemInformationSandbox</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkSystemInformationSandbox</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkSystemInformationSandbox</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.0480481</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkSystemInformationSandbox</Value></NamedMeasurement>
+      <Measurement>
+        <Value>---------- System Information ----------
+VendorString:                 GenuineIntel
+VendorID:                     Intel Corporation
+TypeID:                       0
+FamilyID:                     15
+ModelID:                      4
+SteppingCode:                 0
+ExtendedProcessorName:        Unknown Pentium 4 family
+DoesCPUSupportCPUID:          0
+ProcessorSerialNumber:        
+ProcessorCacheSize:           1024
+LogicalProcessorsPerPhysical: 2
+ProcessorClockFrequency:      2992.84
+ProcessorAPICID:              0
+OSName:                       Linux
+Hostname:                     Camelot
+OSRelease:                    2.6.20-17-generic
+OSVersion:                    #2 SMP Wed Aug 20 16:47:34 UTC 2008
+OSPlatform:                   i686
+Is64Bits:                     0
+NumberOfLogicalCPU:           2
+NumberOfPhysicalCPU:          1
+TotalVirtualMemory:           1906
+AvailableVirtualMemory:       1655
+TotalPhysicalMemory:          1003
+AvailablePhysicalMemory:      897
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkLesionSegmentationMethodTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkLesionSegmentationMethodTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkLesionSegmentationMethodTest1</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.309289</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkLesionSegmentationMethodTest1</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Caught expected exception
+
+itk::ExceptionObject (0x81ae550)
+Location: "void itk::LesionSegmentationMethod&lt;NDimension&gt;::GenerateData() [with unsigned int NDimension = 3u]" 
+File: /home/ibanez/src/LesionSizingKit/Sandbox/Source/itkLesionSegmentationMethod.txx
+Line: 114
+Description: itk::ERROR: LesionSegmentationMethod(0x81a3268): Segmentation Module has not been connected
+
+
+LesionSegmentationMethod (0x81a3268)
+  RTTI typeinfo:   itk::LesionSegmentationMethod&lt;3u&gt;
+  Reference Count: 2
+  Modified Time: 247
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 0
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: On
+  No Inputs
+  Output 0: (0x81a5960)
+  AbortGenerateData: Off
+  Progress: 0
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 2
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 128
+    Global Default Number Of Threads: 2
+Region of Interest 0x81a7b88
+Init...
+The rest of the test output was removed since it exceeds the threshold of 1024 characters.
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkLesionSegmentationMethodTest2</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkLesionSegmentationMethodTest2</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkLesionSegmentationMethodTest2</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.389126</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkLesionSegmentationMethodTest2</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Caught expected exception
+
+itk::ExceptionObject (0x82f5e08)
+Location: "void itk::LesionSegmentationMethod&lt;NDimension&gt;::GenerateData() [with unsigned int NDimension = 3u]" 
+File: /home/ibanez/src/LesionSizingKit/Sandbox/Source/itkLesionSegmentationMethod.txx
+Line: 114
+Description: itk::ERROR: LesionSegmentationMethod(0x8283268): Segmentation Module has not been connected
+
+
+LesionSegmentationMethod (0x8283268)
+  RTTI typeinfo:   itk::LesionSegmentationMethod&lt;3u&gt;
+  Reference Count: 2
+  Modified Time: 982
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 0
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: On
+  No Inputs
+  Output 0: (0x8285960)
+  AbortGenerateData: Off
+  Progress: 0
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 2
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 128
+    Global Default Number Of Threads: 2
+Region of Interest 0x8287b88
+Init...
+The rest of the test output was removed since it exceeds the threshold of 1024 characters.
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkLesionSegmentationMethodTest3</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkLesionSegmentationMethodTest3</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkLesionSegmentationMethodTest3 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCroppedSeeds1.txt /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/LesionSegmentationMethodTest3_1.mha 0.5 1.0</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>38.3009</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkLesionSegmentationMethodTest3 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCroppedSeeds1.txt /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/LesionSegmentationMethodTest3_1.mha 0.5 1.0</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Used 21 iterations
+Changed 21424 pixels 
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkFeatureGeneratorTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkFeatureGeneratorTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkFeatureGeneratorTest1</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.227388</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkFeatureGeneratorTest1</Value></NamedMeasurement>
+      <Measurement>
+        <Value>FeatureGenerator (0x8179268)
+  RTTI typeinfo:   itk::FeatureGenerator&lt;3u&gt;
+  Reference Count: 1
+  Modified Time: 67
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 0
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+WARNING: In /home/ibanez/src/Insight/Code/Common/itkProcessObject.cxx, line 520
+FeatureGenerator (0x8179268): Output doesn't exist!
+
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: On
+  Input 0: (0)
+  Input 1: (0x817b948)
+  No Output
+  AbortGenerateData: Off
+  Progress: 0
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 2
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 128
+    Global Default Number Of Threads: 2
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkSegmentationModuleTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkSegmentationModuleTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkSegmentationModuleTest1</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.179099</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkSegmentationModuleTest1</Value></NamedMeasurement>
+      <Measurement>
+        <Value>SegmentationModule (0x8179268)
+  RTTI typeinfo:   itk::SegmentationModule&lt;3u&gt;
+  Reference Count: 1
+  Modified Time: 131
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 0
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+WARNING: In /home/ibanez/src/Insight/Code/Common/itkProcessObject.cxx, line 520
+SegmentationModule (0x8179268): Output doesn't exist!
+
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: On
+  Input 0: (0x817b948)
+  Input 1: (0x817db28)
+  No Output
+  AbortGenerateData: Off
+  Progress: 0
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 2
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 128
+    Global Default Number Of Threads: 2
+Class name = SegmentationModule
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkRegionGrowingSegmentationModuleTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkRegionGrowingSegmentationModuleTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkRegionGrowingSegmentationModuleTest1</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.374345</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkRegionGrowingSegmentationModuleTest1</Value></NamedMeasurement>
+      <Measurement>
+        <Value>RegionGrowingSegmentationModule (0x818e268)
+  RTTI typeinfo:   itk::RegionGrowingSegmentationModule&lt;3u&gt;
+  Reference Count: 1
+  Modified Time: 197
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 2
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: On
+  Input 0: (0x8192b28)
+  Input 1: (0x8194c48)
+  Output 0: (0x8190948)
+  AbortGenerateData: Off
+  Progress: 0
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 2
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 128
+    Global Default Number Of Threads: 2
+Class name = RegionGrowingSegmentationModule
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkSinglePhaseLevelSetSegmentationModuleTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkSinglePhaseLevelSetSegmentationModuleTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkSinglePhaseLevelSetSegmentationModuleTest1</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.122171</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkSinglePhaseLevelSetSegmentationModuleTest1</Value></NamedMeasurement>
+      <Measurement>
+        <Value>SinglePhaseLevelSetSegmentationModule (0x8194268)
+  RTTI typeinfo:   itk::SinglePhaseLevelSetSegmentationModule&lt;3u&gt;
+  Reference Count: 1
+  Modified Time: 206
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 2
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: On
+  Input 0: (0x8198b50)
+  Input 1: (0x819ac70)
+  Output 0: (0x8196970)
+  AbortGenerateData: Off
+  Progress: 0
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 2
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 128
+    Global Default Number Of Threads: 2
+  PropagationScaling = 1.3
+  CurvatureScaling = 1.7
+  AdvectionScaling = 1.9
+  MaximumRMSError = 0.01
+  MaximumNumberOfIterations = 179
+Class name = SinglePhaseLevelSetSegmentationModule
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkRegionCompetitionImageFilterTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkRegionCompetitionImageFilterTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkRegionCompetitionImageFilterTest1</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>1.20556</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkRegionCompetitionImageFilterTest1</Value></NamedMeasurement>
+      <Measurement>
+        <Value>GetInput(1) = 0x866c298
+inputLabelsImage 0x866c298
+GetInput(1).Print() = 
+Image (0x866c298)
+  RTTI typeinfo:   itk::Image&lt;unsigned long, 3u&gt;
+  Reference Count: 2
+  Modified Time: 456
+  Debug: Off
+  Observers: 
+    none
+  Source: (0x8669ba8) 
+  Source output index: 0
+  Release Data: Off
+  Data Released: False
+  Global Release Data: Off
+  PipelineMTime: 452
+  UpdateMTime: 457
+  LargestPossibleRegion: 
+    Dimension: 3
+    Index: [0, 0, 0]
+    Size: [21, 21, 42]
+  BufferedRegion: 
+    Dimension: 3
+    Index: [0, 0, 0]
+    Size: [21, 21, 42]
+  RequestedRegion: 
+    Dimension: 3
+    Index: [0, 0, 0]
+    Size: [21, 21, 42]
+  Spacing: [0.7, 0.9, 1.5]
+  Origin: [129.5, 137.5, 159.5]
+  Direction: 
+1 0 0
+0 1 0
+0 0 1
+
+  IndexToPointMatrix: 
+  0.7 0 0
+0 0.9 0
+0 0 1.5
+
+  PointToIndexMatrix: 
+  1.42857 0 0
+0 1.11111 0
+0 0 0.666667
+
+  PixelContainer: 
+    ImportImageContainer (0x866c450)
+      RTTI typeinfo:   itk::ImportImageContainer&lt;unsigned long, unsigned long&gt;
+      Reference Count: 1
+      Modified Time: 455
+      Debug: Off
+      Observers: 
+        none
+      Poin&lt;unsigned long, 3u&gt;&lt;unsigned long, unsigned long&gt;...
+The rest of the test output was removed since it exceeds the threshold of 1024 characters.
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkSegmentationVolumeEstimatorTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkSegmentationVolumeEstimatorTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkSegmentationVolumeEstimatorTest1</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.269589</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkSegmentationVolumeEstimatorTest1</Value></NamedMeasurement>
+      <Measurement>
+        <Value>SegmentationVolumeEstimator (0x817b268)
+  RTTI typeinfo:   itk::VolumeEstimatorSurrogate
+  Reference Count: 1
+  Modified Time: 72
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 1
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: On
+  Input 0: (0x817d9a8)
+  Output 0: (0x817d948)
+  AbortGenerateData: Off
+  Progress: 0
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 2
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 128
+    Global Default Number Of Threads: 2
+Class name = SegmentationVolumeEstimator
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkGrayscaleImageSegmentationVolumeEstimatorTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkGrayscaleImageSegmentationVolumeEstimatorTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkGrayscaleImageSegmentationVolumeEstimatorTest1</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>2.63979</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkGrayscaleImageSegmentationVolumeEstimatorTest1</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Caught expected exception
+
+itk::ExceptionObject (0x85f0278)
+Location: "void itk::GrayscaleImageSegmentationVolumeEstimator&lt;NDimension&gt;::GenerateData() [with unsigned int NDimension = 3u]" 
+File: /home/ibanez/src/LesionSizingKit/Sandbox/Source/itkGrayscaleImageSegmentationVolumeEstimator.txx
+Line: 73
+Description: itk::ERROR: GrayscaleImageSegmentationVolumeEstimator(0x85eb928): Missing input spatial object or incorrect type
+
+
+GrayscaleImageSegmentationVolumeEstimator (0x85eb928)
+  RTTI typeinfo:   itk::GrayscaleImageSegmentationVolumeEstimator&lt;3u&gt;
+  Reference Count: 1
+  Modified Time: 138
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 1
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: On
+  Input 0: (0x85f03e0)
+  Output 0: (0x85edff0)
+  AbortGenerateData: Off
+  Progress: 0
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 2
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maxim...
+The rest of the test output was removed since it exceeds the threshold of 1024 characters.
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkLandmarksReaderTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkLandmarksReaderTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkLandmarksReaderTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCroppedSeeds1.txt</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.413585</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkLandmarksReaderTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCroppedSeeds1.txt</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Number of object in the scene:1
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkVotingBinaryHoleFillFloodingImageFilterTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkVotingBinaryHoleFillFloodingImageFilterTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkVotingBinaryHoleFillFloodingImageFilterTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/VotingBinaryHoleFillFloodingImageFilterTest1_1.mha -400 2 1 100</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>43.0643</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkVotingBinaryHoleFillFloodingImageFilterTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/VotingBinaryHoleFillFloodingImageFilterTest1_1.mha -400 2 1 100</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Class name VotingBinaryHoleFillFloodingImageFilter
+VotingBinaryHoleFillFloodingImageFilter (0x860d3e8)
+  RTTI typeinfo:   itk::VotingBinaryHoleFillFloodingImageFilter&lt;itk::Image&lt;unsigned char, 3u&gt;, itk::Image&lt;unsigned char, 3u&gt; &gt;
+  Reference Count: 1
+  Modified Time: 409
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 1
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: Off
+  Input 0: (0x860d0e0)
+  Output 0: (0x860fb78)
+  AbortGenerateData: Off
+  Progress: 1
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 38
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 128
+    Global Default Number Of Threads: 2
+  Radius: [2, 2, 2]
+  Foreground value : 255
+  Background value : 0
+  Birth Threshold   : 63
+  Survival Threshold   : 1
+Iteration used = 45
+Pixels changes = 8674
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkConnectedThresholdSegmentationModuleTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkConnectedThresholdSegmentationModuleTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkConnectedThresholdSegmentationModuleTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCroppedSeeds1.txt /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/ConnectedThresholdSegmentationModuleTest1_1.mha -700 500</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>2.18476</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkConnectedThresholdSegmentationModuleTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCroppedSeeds1.txt /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/ConnectedThresholdSegmentationModuleTest1_1.mha -700 500</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Image (0x883cd90)
+  RTTI typeinfo:   itk::Image&lt;float, 3u&gt;
+  Reference Count: 1
+  Modified Time: 504
+  Debug: Off
+  Observers: 
+    none
+  Source: (none)
+  Source output index:  0
+  Release Data: Off
+  Data Released: False
+  Global Release Data: Off
+  PipelineMTime: 0
+  UpdateMTime: 328
+  LargestPossibleRegion: 
+    Dimension: 3
+    Index: [0, 0, 0]
+    Size: [97, 101, 59]
+  BufferedRegion: 
+    Dimension: 3
+    Index: [0, 0, 0]
+    Size: [97, 101, 59]
+  RequestedRegion: 
+    Dimension: 3
+    Index: [0, 0, 0]
+    Size: [97, 101, 59]
+  Spacing: [0.701172, 0.701172, 1.25]
+  Origin: [222.4, 214.2, -294]
+  Direction: 
+-1 0 0
+0 -1 0
+0 0 1
+
+  IndexToPointMatrix: 
+  -0.701172 0 0
+0 -0.701172 0
+0 0 1.25
+
+  PointToIndexMatrix: 
+  -1.42618 0 0
+0 -1.42618 0
+0 0 0.8
+
+  PixelContainer: 
+    ImportImageContainer (0x883cf48)
+      RTTI typeinfo:   itk::ImportImageContainer&lt;unsigned long, float&gt;
+      Reference Count: 1
+      Modified Time: 325
+      Debug: Off
+      Observers: 
+        none
+      Pointer: 0xb7a3e008
+      Container manages memory: true
+   &lt;3u&gt;...
+The rest of the test output was removed since it exceeds the threshold of 1024 characters.
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkConfidenceConnectedSegmentationModuleTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkConfidenceConnectedSegmentationModuleTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkConfidenceConnectedSegmentationModuleTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCroppedSeeds1.txt /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/ConfidenceConnectedSegmentationModuleTest1_1.mha 1.7</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>2.73075</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkConfidenceConnectedSegmentationModuleTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCroppedSeeds1.txt /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/ConfidenceConnectedSegmentationModuleTest1_1.mha 1.7</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Image (0x8830d90)
+  RTTI typeinfo:   itk::Image&lt;float, 3u&gt;
+  Reference Count: 1
+  Modified Time: 504
+  Debug: Off
+  Observers: 
+    none
+  Source: (none)
+  Source output index:  0
+  Release Data: Off
+  Data Released: False
+  Global Release Data: Off
+  PipelineMTime: 0
+  UpdateMTime: 328
+  LargestPossibleRegion: 
+    Dimension: 3
+    Index: [0, 0, 0]
+    Size: [97, 101, 59]
+  BufferedRegion: 
+    Dimension: 3
+    Index: [0, 0, 0]
+    Size: [97, 101, 59]
+  RequestedRegion: 
+    Dimension: 3
+    Index: [0, 0, 0]
+    Size: [97, 101, 59]
+  Spacing: [0.701172, 0.701172, 1.25]
+  Origin: [222.4, 214.2, -294]
+  Direction: 
+-1 0 0
+0 -1 0
+0 0 1
+
+  IndexToPointMatrix: 
+  -0.701172 0 0
+0 -0.701172 0
+0 0 1.25
+
+  PointToIndexMatrix: 
+  -1.42618 0 0
+0 -1.42618 0
+0 0 0.8
+
+  PixelContainer: 
+    ImportImageContainer (0x8830f48)
+      RTTI typeinfo:   itk::ImportImageContainer&lt;unsigned long, float&gt;
+      Reference Count: 1
+      Modified Time: 325
+      Debug: Off
+      Observers: 
+        none
+      Pointer: 0xb7a20008
+      Container manages memory: true
+   &lt;3u&gt;...
+The rest of the test output was removed since it exceeds the threshold of 1024 characters.
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkFastMarchingSegmentationModuleTest1-PartSolidLesion1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkFastMarchingSegmentationModuleTest1-PartSolidLesion1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkFastMarchingSegmentationModuleTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCroppedSeeds1.txt /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/FastMarchingSegmentationModuleTest1-PartSolidLesion1_1.mha 10.0 5.0</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>19.6302</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkFastMarchingSegmentationModuleTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCroppedSeeds1.txt /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/FastMarchingSegmentationModuleTest1-PartSolidLesion1_1.mha 10.0 5.0</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Image (0x883ad90)
+  RTTI typeinfo:   itk::Image&lt;float, 3u&gt;
+  Reference Count: 1
+  Modified Time: 569
+  Debug: Off
+  Observers: 
+    none
+  Source: (none)
+  Source output index:  0
+  Release Data: Off
+  Data Released: False
+  Global Release Data: Off
+  PipelineMTime: 0
+  UpdateMTime: 328
+  LargestPossibleRegion: 
+    Dimension: 3
+    Index: [0, 0, 0]
+    Size: [97, 101, 59]
+  BufferedRegion: 
+    Dimension: 3
+    Index: [0, 0, 0]
+    Size: [97, 101, 59]
+  RequestedRegion: 
+    Dimension: 3
+    Index: [0, 0, 0]
+    Size: [97, 101, 59]
+  Spacing: [0.701172, 0.701172, 1.25]
+  Origin: [222.4, 214.2, -294]
+  Direction: 
+-1 0 0
+0 -1 0
+0 0 1
+
+  IndexToPointMatrix: 
+  -0.701172 0 0
+0 -0.701172 0
+0 0 1.25
+
+  PointToIndexMatrix: 
+  -1.42618 0 0
+0 -1.42618 0
+0 0 0.8
+
+  PixelContainer: 
+    ImportImageContainer (0x883af48)
+      RTTI typeinfo:   itk::ImportImageContainer&lt;unsigned long, float&gt;
+      Reference Count: 1
+      Modified Time: 325
+      Debug: Off
+      Observers: 
+        none
+      Pointer: 0xb7ac8008
+      Container manages memory: true
+   &lt;3u&gt;...
+The rest of the test output was removed since it exceeds the threshold of 1024 characters.
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkGradientMagnitudeSigmoidFeatureGeneratorTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkGradientMagnitudeSigmoidFeatureGeneratorTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkGradientMagnitudeSigmoidFeatureGeneratorTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/GradientMagnitudeSigmoidFeatureGeneratorTest1_1.mha 0.7 -10.0 90.0</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>4.92553</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkGradientMagnitudeSigmoidFeatureGeneratorTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/GradientMagnitudeSigmoidFeatureGeneratorTest1_1.mha 0.7 -10.0 90.0</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Name Of Class = GradientMagnitudeSigmoidFeatureGenerator
+GradientMagnitudeSigmoidFeatureGenerator (0x868fc60)
+  RTTI typeinfo:   itk::GradientMagnitudeSigmoidFeatureGenerator&lt;3u&gt;
+  Reference Count: 1
+  Modified Time: 467
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 1
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: On
+  Input 0: (0x86a6568)
+  Output 0: (0x86a43b0)
+  AbortGenerateData: Off
+  Progress: 1
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 198
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 128
+    Global Default Number Of Threads: 2
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>GradientMagnitudeImageFilterTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/GradientMagnitudeImageFilterTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/GradientMagnitudeImageFilter /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/GradientMagnitudeImageFilterTest1_1.mha 0.7</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>2.77423</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/GradientMagnitudeImageFilter /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/GradientMagnitudeImageFilterTest1_1.mha 0.7</Value></NamedMeasurement>
+      <Measurement>
+        <Value></Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkSigmoidFeatureGeneratorTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkSigmoidFeatureGeneratorTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkSigmoidFeatureGeneratorTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/SigmoidFeatureGeneratorTest1_1.mha 1.0 -700.0</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>1.08164</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkSigmoidFeatureGeneratorTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/SigmoidFeatureGeneratorTest1_1.mha 1.0 -700.0</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Name Of Class = SigmoidFeatureGenerator
+SigmoidFeatureGenerator (0x8660c18)
+  RTTI typeinfo:   itk::SigmoidFeatureGenerator&lt;3u&gt;
+  Reference Count: 1
+  Modified Time: 396
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 1
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: On
+  Input 0: (0x8667de0)
+  Output 0: (0x8665ca0)
+  AbortGenerateData: Off
+  Progress: 1
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 198
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 128
+    Global Default Number Of Threads: 2
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkLungWallFeatureGeneratorTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkLungWallFeatureGeneratorTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkLungWallFeatureGeneratorTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/LungWallFeatureGeneratorTest1_1.mha -400.0</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>26.7876</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkLungWallFeatureGeneratorTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/LungWallFeatureGeneratorTest1_1.mha -400.0</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Used 21 iterations
+Changed 21424 pixels 
+Name Of Class = LungWallFeatureGenerator
+LungWallFeatureGenerator (0x86a8c18)
+  RTTI typeinfo:   itk::LungWallFeatureGenerator&lt;3u&gt;
+  Reference Count: 1
+  Modified Time: 410
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 1
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: On
+  Input 0: (0x86b2850)
+  Output 0: (0x86b06a0)
+  AbortGenerateData: Off
+  Progress: 1
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 198
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 128
+    Global Default Number Of Threads: 2
+  Lung threshold BinaryThresholdImageFilter (0x86a8ca8)
+  RTTI typeinfo:   itk::BinaryThresholdImageFilter&lt;itk::Image&lt;short, 3u&gt;, itk::Image&lt;float, 3u&gt; &gt;
+  Reference Count: 2
+  Modified Time: 427
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 1
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFl...
+The rest of the test output was removed since it exceeds the threshold of 1024 characters.
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkMorphologicalOpenningFeatureGeneratorTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkMorphologicalOpenningFeatureGeneratorTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkMorphologicalOpenningFeatureGeneratorTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/MorphologicalOpenningFeatureGeneratorTest1_1.mha -400.0</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>6.39302</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkMorphologicalOpenningFeatureGeneratorTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/MorphologicalOpenningFeatureGeneratorTest1_1.mha -400.0</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Used 12 iterations
+Changed 826 pixels 
+Name Of Class = MorphologicalOpenningFeatureGenerator
+MorphologicalOpenningFeatureGenerator (0x8730c60)
+  RTTI typeinfo:   itk::MorphologicalOpenningFeatureGenerator&lt;3u&gt;
+  Reference Count: 1
+  Modified Time: 432
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 1
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: On
+  Input 0: (0x873fbd0)
+  Output 0: (0x873da60)
+  AbortGenerateData: Off
+  Progress: 1
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 198
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 128
+    Global Default Number Of Threads: 2
+  Lung threshold BinaryThresholdImageFilter (0x8730cf8)
+  RTTI typeinfo:   itk::BinaryThresholdImageFilter&lt;itk::Image&lt;short, 3u&gt;, itk::Image&lt;unsigned char, 3u&gt; &gt;
+  Reference Count: 2
+  Modified Time: 452
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 1
+  Number Of Required Outputs: 1
+ ...
+The rest of the test output was removed since it exceeds the threshold of 1024 characters.
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>LandmarkSpatialObjectWriterTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/LandmarkSpatialObjectWriterTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/LandmarkSpatialObjectWriterTest /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/LandmarkSpatialObjectWriterTest1_1.txt</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>0.430638</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/LandmarkSpatialObjectWriterTest /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/LandmarkSpatialObjectWriterTest1_1.txt</Value></NamedMeasurement>
+      <Measurement>
+        <Value> [TEST DONE]
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>CannyEdgeDetectionImageFilterTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/CannyEdgeDetectionImageFilterTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/CannyEdgeDetectionImageFilter /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/CannyEdgeDetectionImageFilterTest1_1.mha 0.7 150 75 /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/CannyEdgeDetectionNonMaximumSuppressionImageFilterTest1_1.mha</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>15.2944</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/CannyEdgeDetectionImageFilter /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/CannyEdgeDetectionImageFilterTest1_1.mha 0.7 150 75 /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/CannyEdgeDetectionNonMaximumSuppressionImageFilterTest1_1.mha</Value></NamedMeasurement>
+      <Measurement>
+        <Value></Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkCannyEdgesDistanceFeatureGeneratorTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkCannyEdgesDistanceFeatureGeneratorTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkCannyEdgesDistanceFeatureGeneratorTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/CannyEdgesDistanceFeatureGeneratorTest1_1.mha 0.7 150 75</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>23.3353</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkCannyEdgesDistanceFeatureGeneratorTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/CannyEdgesDistanceFeatureGeneratorTest1_1.mha 0.7 150 75</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Name Of Class = CannyEdgesDistanceFeatureGenerator
+CannyEdgesDistanceFeatureGenerator (0x87a5e70)
+  RTTI typeinfo:   itk::CannyEdgesDistanceFeatureGenerator&lt;3u&gt;
+  Reference Count: 1
+  Modified Time: 447
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 1
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: On
+  Input 0: (0x87b77d8)
+  Output 0: (0x87b5538)
+  AbortGenerateData: Off
+  Progress: 0
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 198
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 128
+    Global Default Number Of Threads: 2
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkCannyEdgesFeatureGeneratorTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkCannyEdgesFeatureGeneratorTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkCannyEdgesFeatureGeneratorTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/CannyEdgesFeatureGeneratorTest1_1.mha 0.7 150 75</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>14.7256</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkCannyEdgesFeatureGeneratorTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/CannyEdgesFeatureGeneratorTest1_1.mha 0.7 150 75</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Name Of Class = CannyEdgesFeatureGenerator
+CannyEdgesFeatureGenerator (0x86efc58)
+  RTTI typeinfo:   itk::CannyEdgesFeatureGenerator&lt;3u&gt;
+  Reference Count: 1
+  Modified Time: 452
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 1
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: On
+  Input 0: (0x87015e8)
+  Output 0: (0x86ff300)
+  AbortGenerateData: Off
+  Progress: 0
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 198
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 128
+    Global Default Number Of Threads: 2
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkCannyEdgesDistanceAdvectionFieldFeatureGeneratorTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkCannyEdgesDistanceAdvectionFieldFeatureGeneratorTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkCannyEdgesDistanceAdvectionFieldFeatureGeneratorTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/CannyEdgesDistanceAdvectionFieldFeatureGeneratorTest1_1.mha 0.7 150 75</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>24.9171</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkCannyEdgesDistanceAdvectionFieldFeatureGeneratorTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/CannyEdgesDistanceAdvectionFieldFeatureGeneratorTest1_1.mha 0.7 150 75</Value></NamedMeasurement>
+      <Measurement>
+        <Value>itk::ImageSpatialObject() : PixelType not recognized
+Name Of Class = CannyEdgesDistanceAdvectionFieldFeatureGenerator
+CannyEdgesDistanceAdvectionFieldFeatureGenerator (0x87d1e28)
+  RTTI typeinfo:   itk::CannyEdgesDistanceAdvectionFieldFeatureGenerator&lt;3u&gt;
+  Reference Count: 1
+  Modified Time: 463
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 1
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: On
+  Input 0: (0x87e88d0)
+  Output 0: (0x87e67b0)
+  AbortGenerateData: Off
+  Progress: 0
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 198
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 128
+    Global Default Number Of Threads: 2
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkSatoVesselnessFeatureGeneratorTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkSatoVesselnessFeatureGeneratorTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkSatoVesselnessFeatureGeneratorTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/SatoVesselnessFeatureGeneratorTest1_1.mha 1.0 0.5 2.0</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>12.0139</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkSatoVesselnessFeatureGeneratorTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/SatoVesselnessFeatureGeneratorTest1_1.mha 1.0 0.5 2.0</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Name Of Class = SatoVesselnessFeatureGenerator
+SatoVesselnessFeatureGenerator (0x86c2c58)
+  RTTI typeinfo:   itk::SatoVesselnessFeatureGenerator&lt;3u&gt;
+  Reference Count: 1
+  Modified Time: 454
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 1
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: On
+  Input 0: (0x86d7028)
+  Output 0: (0x86d4ee8)
+  AbortGenerateData: Off
+  Progress: 0.7
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 198
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 128
+    Global Default Number Of Threads: 2
+  Vesselness Sigma 1
+  Vesselness Alpha1 0.5
+  Vesselness Alpha2 2
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkSatoVesselnessSigmoidFeatureGeneratorTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkSatoVesselnessSigmoidFeatureGeneratorTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkSatoVesselnessSigmoidFeatureGeneratorTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/SatoVesselnessSigmoidFeatureGeneratorTest1_1.mha 1.0 0.5 2.0 -10 80</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>12.9371</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkSatoVesselnessSigmoidFeatureGeneratorTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/SatoVesselnessSigmoidFeatureGeneratorTest1_1.mha 1.0 0.5 2.0 -10 80</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Name Of Class = SatoVesselnessSigmoidFeatureGenerator
+SatoVesselnessSigmoidFeatureGenerator (0x86d0c60)
+  RTTI typeinfo:   itk::SatoVesselnessSigmoidFeatureGenerator&lt;3u&gt;
+  Reference Count: 1
+  Modified Time: 467
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 1
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: On
+  Input 0: (0x86e7900)
+  Output 0: (0x86e2eb0)
+  AbortGenerateData: Off
+  Progress: 1
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 198
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 128
+    Global Default Number Of Threads: 2
+  Vesselness Sigma 1
+  Vesselness Alpha1 0.5
+  Vesselness Alpha2 2
+  Sigmoid Alpha -10
+  Sigmoid Beta 80
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkSatoLocalStructureFeatureGeneratorTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkSatoLocalStructureFeatureGeneratorTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkSatoLocalStructureFeatureGeneratorTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/SatoLocalStructureFeatureGeneratorTest1_1.mha 1.0 0.5 2.0</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>12.2609</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkSatoLocalStructureFeatureGeneratorTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/SatoLocalStructureFeatureGeneratorTest1_1.mha 1.0 0.5 2.0</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Name Of Class = SatoLocalStructureFeatureGenerator
+SatoLocalStructureFeatureGenerator (0x86c5c60)
+  RTTI typeinfo:   itk::SatoLocalStructureFeatureGenerator&lt;3u&gt;
+  Reference Count: 1
+  Modified Time: 457
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 1
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: On
+  Input 0: (0x86da058)
+  Output 0: (0x86d7eb0)
+  AbortGenerateData: Off
+  Progress: 0
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 198
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 128
+    Global Default Number Of Threads: 2
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkLocalStructureImageFilterTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkLocalStructureImageFilterTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkLocalStructureImageFilterTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/LocalStructureImageFilterTest1_1.mha 1.0 0.5 2.0</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>12.3582</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkLocalStructureImageFilterTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/LocalStructureImageFilterTest1_1.mha 1.0 0.5 2.0</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Name Of Class = LocalStructureImageFilter
+LocalStructureImageFilter (0x86404b0)
+  RTTI typeinfo:   itk::LocalStructureImageFilter&lt;itk::Image&lt;itk::FixedArray&lt;double, 3u&gt;, 3u&gt;, itk::Image&lt;float, 3u&gt; &gt;
+  Reference Count: 1
+  Modified Time: 90
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 1
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: Off
+  Input 0: (0x863d930)
+  Output 0: (0x8642b88)
+  AbortGenerateData: Off
+  Progress: 1
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 75
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 128
+    Global Default Number Of Threads: 2
+  InPlace: Off
+  The input and output to this filter are different types. The filter cannot be run in place.
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkDescoteauxSheetnessImageFilterTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkDescoteauxSheetnessImageFilterTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkDescoteauxSheetnessImageFilterTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/DescoteauxSheetnesImageFilterTest1_1.mha 1 1.0 100.0 100.0 100.0</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>12.7296</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkDescoteauxSheetnessImageFilterTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/DescoteauxSheetnesImageFilterTest1_1.mha 1 1.0 100.0 100.0 100.0</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Name Of Class = DescoteauxSheetnessImageFilter
+DescoteauxSheetnessImageFilter (0x86414b0)
+  RTTI typeinfo:   itk::DescoteauxSheetnessImageFilter&lt;itk::Image&lt;itk::FixedArray&lt;double, 3u&gt;, 3u&gt;, itk::Image&lt;float, 3u&gt; &gt;
+  Reference Count: 1
+  Modified Time: 90
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 1
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: Off
+  Input 0: (0x863e930)
+  Output 0: (0x8643b90)
+  AbortGenerateData: Off
+  Progress: 1
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 75
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 128
+    Global Default Number Of Threads: 2
+  InPlace: Off
+  The input and output to this filter are different types. The filter cannot be run in place.
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkDescoteauxSheetnessImageFilterTest2</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkDescoteauxSheetnessImageFilterTest2</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkDescoteauxSheetnessImageFilterTest2 /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/DescoteauxSheetnesImageFilterTest2_1.mha 1 1.0 1.0 0.5 0.5</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>16.1859</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkDescoteauxSheetnessImageFilterTest2 /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/DescoteauxSheetnesImageFilterTest2_1.mha 1 1.0 1.0 0.5 0.5</Value></NamedMeasurement>
+      <Measurement>
+        <Value>First pixel value = 0
+Name Of Class = DescoteauxSheetnessImageFilter
+DescoteauxSheetnessImageFilter (0x8606d40)
+  RTTI typeinfo:   itk::DescoteauxSheetnessImageFilter&lt;itk::Image&lt;itk::FixedArray&lt;double, 3u&gt;, 3u&gt;, itk::Image&lt;float, 3u&gt; &gt;
+  Reference Count: 1
+  Modified Time: 87
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 1
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: Off
+  Input 0: (0x8606930)
+  Output 0: (0x8609420)
+  AbortGenerateData: Off
+  Progress: 1
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 72
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 128
+    Global Default Number Of Threads: 2
+  InPlace: Off
+  The input and output to this filter are different types. The filter cannot be run in place.
+Output Image = 
+Image (0x8609420)
+  RTTI typeinfo:   itk::Image&lt;float, 3u&gt;
+  Reference Count: 3
+  Modified Time: 438
+  Debug: Off
+  Observers: 
+    none
+  Source: (0x8606d40) 
+  Source o&lt;unsigned long, float&gt;...
+The rest of the test output was removed since it exceeds the threshold of 1024 characters.
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkDescoteauxSheetnessFeatureGeneratorTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkDescoteauxSheetnessFeatureGeneratorTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkDescoteauxSheetnessFeatureGeneratorTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/DescoteauxSheetnessFeatureGeneratorTest1_1.mha 1 1.0 100.0 100.0 100.0</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>12.8828</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkDescoteauxSheetnessFeatureGeneratorTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/DescoteauxSheetnessFeatureGeneratorTest1_1.mha 1 1.0 100.0 100.0 100.0</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Name Of Class = DescoteauxSheetnessFeatureGenerator
+DescoteauxSheetnessFeatureGenerator (0x86d9c60)
+  RTTI typeinfo:   itk::DescoteauxSheetnessFeatureGenerator&lt;3u&gt;
+  Reference Count: 1
+  Modified Time: 475
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 1
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: On
+  Input 0: (0x86f0980)
+  Output 0: (0x86ee7b8)
+  AbortGenerateData: Off
+  Progress: 0
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 198
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 128
+    Global Default Number Of Threads: 2
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkFrangiTubularnessFeatureGeneratorTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkFrangiTubularnessFeatureGeneratorTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkFrangiTubularnessFeatureGeneratorTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/FrangiTubularnessFeatureGeneratorTest1_1.mha 1.0 0.5 2.0</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>12.2982</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkFrangiTubularnessFeatureGeneratorTest1 /home/ibanez/src/LesionSizingKit/Sandbox/../Data/Input/PartSolidLesionCropped.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/FrangiTubularnessFeatureGeneratorTest1_1.mha 1.0 0.5 2.0</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Name Of Class = FrangiTubularnessFeatureGenerator
+FrangiTubularnessFeatureGenerator (0x86c6c58)
+  RTTI typeinfo:   itk::FrangiTubularnessFeatureGenerator&lt;3u&gt;
+  Reference Count: 1
+  Modified Time: 455
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 1
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: On
+  Input 0: (0x86db060)
+  Output 0: (0x86d8eb8)
+  AbortGenerateData: Off
+  Progress: 1
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 198
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 128
+    Global Default Number Of Threads: 2
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkGeodesicActiveContourLevelSetSegmentationModuleTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkGeodesicActiveContourLevelSetSegmentationModuleTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkGeodesicActiveContourLevelSetSegmentationModuleTest1 /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/ConfidenceConnectedSegmentationModuleTest1_1.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/GradientMagnitudeSigmoidFeatureGeneratorTest1_1.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/GeodesicActiveContourLevelSetSegmentationModuleTest1_1.mha</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>72.4864</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkGeodesicActiveContourLevelSetSegmentationModuleTest1 /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/ConfidenceConnectedSegmentationModuleTest1_1.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/GradientMagnitudeSigmoidFeatureGeneratorTest1_1.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/GeodesicActiveContourLevelSetSegmentationModuleTest1_1.mha</Value></NamedMeasurement>
+      <Measurement>
+        <Value>
+Max. no. iterations: 100
+Max. RMS error: 1e-05
+
+No. elpased iterations: 100
+RMS change: 0.00146465
+GeodesicActiveContourLevelSetSegmentationModule (0x8747b38)
+  RTTI typeinfo:   itk::GeodesicActiveContourLevelSetSegmentationModule&lt;3u&gt;
+  Reference Count: 1
+  Modified Time: 649
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 2
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: On
+  Input 0: (0x87814f0)
+  Input 1: (0x87836a0)
+  Output 0: (0x874a228)
+  AbortGenerateData: Off
+  Progress: 1
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 2
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 128
+    Global Default Number Of Threads: 2
+  PropagationScaling = 100
+  CurvatureScaling = 75
+  AdvectionScaling = 1
+  MaximumRMSError = 1e-05
+  MaximumNumberOfIterations = 100
+Class name = GeodesicActiveContourLevelSetSegmentationModule
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkShapeDetectionLevelSetSegmentationModuleTest1</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkShapeDetectionLevelSetSegmentationModuleTest1</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkShapeDetectionLevelSetSegmentationModuleTest1 /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/ConfidenceConnectedSegmentationModuleTest1_1.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/GradientMagnitudeSigmoidFeatureGeneratorTest1_1.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/ShapeDetectionLevelSetSegmentationModuleTest1_1.mha 100.0 1.0</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>34.5421</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkShapeDetectionLevelSetSegmentationModuleTest1 /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/ConfidenceConnectedSegmentationModuleTest1_1.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/GradientMagnitudeSigmoidFeatureGeneratorTest1_1.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/ShapeDetectionLevelSetSegmentationModuleTest1_1.mha 100.0 1.0</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Propagation Scaling = 100
+Curvature Scaling = 1
+Max. no. iterations: 50
+Max. RMS error: 1e-05
+No. elpased iterations: 50
+RMS change: 0.00318777
+ShapeDetectionLevelSetSegmentationModule (0x86f1928)
+  RTTI typeinfo:   itk::ShapeDetectionLevelSetSegmentationModule&lt;3u&gt;
+  Reference Count: 1
+  Modified Time: 833
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 2
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: On
+  Input 0: (0x8738a40)
+  Input 1: (0x873aba0)
+  Output 0: (0x86f4018)
+  AbortGenerateData: Off
+  Progress: 0
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 2
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 128
+    Global Default Number Of Threads: 2
+  PropagationScaling = 100
+  CurvatureScaling = 1
+  AdvectionScaling = 1
+  MaximumRMSError = 1e-05
+  MaximumNumberOfIterations = 50
+Class name = ShapeDetectionLevelSetSegmentationModule
+...
+The rest of the test output was removed since it exceeds the threshold of 1024 characters.
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="passed">
+    <Name>itkShapeDetectionLevelSetSegmentationModuleTest2</Name>
+    <Path>./Testing</Path>
+    <FullName>./Testing/itkShapeDetectionLevelSetSegmentationModuleTest2</FullName>
+    <FullCommandLine>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkShapeDetectionLevelSetSegmentationModuleTest1 /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/ConfidenceConnectedSegmentationModuleTest1_1.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/CannyEdgesDistanceFeatureGeneratorTest1_1.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/ShapeDetectionLevelSetSegmentationModuleTest2_1.mha 100.0 1.0</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>37.7108</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/bin/itkShapeDetectionLevelSetSegmentationModuleTest1 /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/ConfidenceConnectedSegmentationModuleTest1_1.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/CannyEdgesDistanceFeatureGeneratorTest1_1.mha /home/ibanez/bin/LesionSizingKitGcc4.1/Sandbox/Debug/Testing/Temporary/ShapeDetectionLevelSetSegmentationModuleTest2_1.mha 100.0 1.0</Value></NamedMeasurement>
+      <Measurement>
+        <Value>Propagation Scaling = 100
+Curvature Scaling = 1
+Max. no. iterations: 50
+Max. RMS error: 1e-05
+No. elpased iterations: 50
+RMS change: 0.00478101
+ShapeDetectionLevelSetSegmentationModule (0x86f1928)
+  RTTI typeinfo:   itk::ShapeDetectionLevelSetSegmentationModule&lt;3u&gt;
+  Reference Count: 1
+  Modified Time: 833
+  Debug: Off
+  Observers: 
+    none
+  Number Of Required Inputs: 2
+  Number Of Required Outputs: 1
+  Number Of Threads: 2
+  ReleaseDataFlag: Off
+  ReleaseDataBeforeUpdateFlag: On
+  Input 0: (0x8738a40)
+  Input 1: (0x873aad8)
+  Output 0: (0x86f4018)
+  AbortGenerateData: Off
+  Progress: 0
+  Multithreader: 
+    RTTI typeinfo:   itk::MultiThreader
+    Reference Count: 1
+    Modified Time: 2
+    Debug: Off
+    Observers: 
+      none
+    Thread Count: 2
+    Global Maximum Number Of Threads: 128
+    Global Default Number Of Threads: 2
+  PropagationScaling = 100
+  CurvatureScaling = 1
+  AdvectionScaling = 1
+  MaximumRMSError = 1e-05
+  MaximumNumberOfIterations = 50
+Class name = ShapeDetectionLevelSetSegmentationModule
+...
+The rest of the test output was removed since it exceeds the threshold of 1024 characters.
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <EndDateTime>Feb 23 03:10 EST</EndDateTime>
+  <EndTestTime>1235376627</EndTestTime>
+<ElapsedMinutes>8</ElapsedMinutes></Testing>
+</Site>
