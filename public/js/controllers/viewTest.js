@@ -22,7 +22,7 @@ CDash.controller('ViewTestController',
       sort_order = sort_cookie_value.split(",");
     } else {
       // Default sorting : failed tests in alphabetical order.
-      sort_order = ['status', 'name'];
+      sort_order = ['subprojectname', 'status', 'name'];
     }
     $scope.orderByFields = sort_order;
 

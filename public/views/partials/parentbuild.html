@@ -126,20 +126,20 @@
 
 <td ng-if="buildgroup.hastestdata" align="center" ng-class="{'warning': build.test.notrun > 0, 'normal': build.test.notrun == 0}">
   <div ng-class="{'valuewithsub': build.test.nnotrundiffp > 0 || build.test.nnotrundiffn > 0}">
-    <span>{{build.test.notrun}}</span>
+    <span><a href="viewTest.php?buildid={{build.id}}&onlynotrun">{{build.test.notrun}}</a></span>
   </div>
 </td>
 
 <td ng-if="buildgroup.hastestdata" align="center" ng-class="{'error': build.test.fail > 0, 'normal': build.test.fail < 1}">
   <div ng-class="{'valuewithsub': build.test.nfaildiffp > 0 || build.test.nfaildiffn > 0}">
-    <span>{{build.test.fail}}</span>
+    <span><a href="viewTest.php?buildid={{build.id}}&onlyfailed">{{build.test.fail}}</a></span>
   </div>
 </td>
 
 <td ng-if="buildgroup.hastestdata" align="center" ng-class="{'normal': build.test.pass > -1}">
   <div ng-class="{'valuewithsub': build.test.npassdiffp > 0 || build.test.npassdiffn > 0}">
     <span>
-      {{build.test.pass}}
+      <a href="viewTest.php?buildid={{build.id}}&onlypassed">{{build.test.pass}}</a>
     <span>
   </div>
 </td>
