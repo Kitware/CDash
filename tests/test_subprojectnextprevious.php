@@ -288,6 +288,27 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
             $success = false;
         }
 
+        // Test the 'last clean build' feature.
+        $this->get("$this->url/api/v1/build.php?buildid=$third_parentid&getproblems=1");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        if ($jsonobj['hasErrors'] !== true) {
+            $error_msg = "Expected 'hasErrors' to be true";
+            $success = false;
+        }
+        if ($jsonobj['hasFailingTests'] !== false) {
+            $error_msg = "Expected 'hasFailingTests' to be false";
+            $success = false;
+        }
+        if ($jsonobj['daysWithErrors'] !== 1) {
+            $error_msg = "Expected 'daysWithErrors' to be 1, found " . $jsonobj['daysWithErrors'];
+            $success = false;
+        }
+        if ($jsonobj['failingDate'] !== '2011-07-23') {
+            $error_msg = "Expected 'failingDate' to be '2011-07-23', found " . $jsonobj['failingDate'];
+            $success = false;
+        }
+
         // Delete the builds that we created during this test.
         remove_build($second_parentid);
         remove_build($third_parentid);
