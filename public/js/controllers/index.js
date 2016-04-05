@@ -461,15 +461,29 @@ CDash.filter("showEmptyBuildsLast", function () {
   };
 
   $scope.moveToGroup = function(build, groupid) {
-    var parameters = {
-      buildid: build.id,
-      newgroupid: groupid,
-      expected: build.expected
-    };
-    $http.post('api/v1/build.php', parameters)
-    .success(function(data) {
-      window.location.reload();
-    });
+    if (build.expectedandmissing == 1) {
+      var parameters = {
+        siteid: build.siteid,
+        groupid: build.buildgroupid,
+        newgroupid: groupid,
+        name: build.buildname,
+        type: build.buildtype
+      };
+      $http.post('api/v1/expectedbuild.php', parameters)
+      .success(function(data) {
+        window.location.reload();
+      });
+    } else {
+      var parameters = {
+        buildid: build.id,
+        newgroupid: groupid,
+        expected: build.expected
+      };
+      $http.post('api/v1/build.php', parameters)
+      .success(function(data) {
+        window.location.reload();
+      });
+    }
   };
 
   $scope.colorblind_toggle = function() {

@@ -27,12 +27,15 @@ $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME", $db);
 
 // Check that required params were specified.
-$rest_json = file_get_contents('php://input');
-$_POST = json_decode($rest_json, true);
+$rest_json = json_decode(file_get_contents('php://input'), true);
+if (!is_null($rest_json)) {
+    $_REQUEST = array_merge($_REQUEST, $rest_json);
+}
 $required_params = array('siteid', 'groupid', 'name', 'type');
 foreach ($required_params as $param) {
     if (!array_key_exists($param, $_REQUEST)) {
         $response['error'] = "$param not specified.";
+        echo json_encode($response);
         return;
     }
 }
@@ -52,6 +55,7 @@ $row = pdo_single_row_query(
 if (!$row || !array_key_exists('projectid', $row)) {
     $response['error'] =
         "Could not find project for buildgroup #$buildgroupid";
+    echo json_encode($response);
     return;
 }
 $projectid = $row['projectid'];
@@ -102,4 +106,33 @@ function rest_delete()
 /* Handle POST requests */
 function rest_post()
 {
+    global $siteid;
+    global $buildgroupid;
+    global $buildname;
+    global $buildtype;
+
+    if (!array_key_exists('newgroupid', $_REQUEST)) {
+        $response = array();
+        $response['error'] = 'newgroupid not specified.';
+        echo json_encode($response);
+        return;
+    }
+
+    $newgroupid =
+        htmlspecialchars(pdo_real_escape_string($_REQUEST['newgroupid']));
+
+    // Change the group that this rule points to.
+    pdo_query(
+        "UPDATE build2grouprule SET groupid='$newgroupid'
+        WHERE groupid='$buildgroupid' AND
+        buildtype='$buildtype' AND
+        buildname='$buildname' AND siteid='$siteid' AND
+        endtime='1980-01-01 00:00:00'");
+
+    // Move any builds that follow this rule to the new group.
+    pdo_query(
+        "UPDATE build2group SET groupid='$newgroupid'
+        WHERE groupid='$buildgroupid' AND buildid IN
+        (SELECT id FROM build WHERE siteid='$siteid' AND
+         name='$buildname' AND type='$buildtype')");
 }
