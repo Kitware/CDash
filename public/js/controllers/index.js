@@ -287,7 +287,8 @@ CDash.filter("showEmptyBuildsLast", function () {
   };
 
   $scope.toggleAdminOptions = function(build) {
-    if (!("expected" in build) || (build.expected != 0 && build.expected != 1)) {
+    if (!("expectedandmissing" in build) &&
+        (!("expected" in build) || (build.expected != 0 && build.expected != 1))) {
       build.loadingExpected = 1;
       // Determine whether or not this is an expected build.
       $http({
@@ -323,21 +324,6 @@ CDash.filter("showEmptyBuildsLast", function () {
     $(group).fadeIn('slow');
     $(group).html("fetching...<img src=img/loading.gif></img>");
     $(group).load("ajax/addbuildgroup.php?buildid="+buildid,{},function(){$(this).fadeIn('slow');});
-  };
-
-  $scope.buildnosubmission_click = function(siteid,buildname,divname,buildgroupid,buildtype) {
-    buildname = $scope.URLencode(buildname);
-    buildtype = $scope.URLencode(buildtype);
-
-    var group = "#infoexpected_"+divname;
-    if($(group).html() != "" && $(group).is(":visible")) {
-      $(group).fadeOut('medium');
-      return;
-    }
-
-    $(group).fadeIn('slow');
-    $(group).html("fetching...<img src=img/loading.gif></img>");
-    $(group).load("ajax/expectedbuildgroup.php?siteid="+siteid+"&buildname="+buildname+"&buildtype="+buildtype+"&buildgroup="+buildgroupid+"&divname="+divname,{},function(){$(this).fadeIn('slow');});
   };
 
   $scope.buildinfo_click = function(buildid) {
@@ -411,19 +397,54 @@ CDash.filter("showEmptyBuildsLast", function () {
   };
 
   $scope.toggleExpected = function(build, groupid) {
-    var newExpectedValue = 1;
-    if (build.expected == 1) {
-      newExpectedValue = 0;
+    if (build.expectedandmissing == 1) {
+      // Delete a rule specifying a missing expected build.
+      var parameters = {
+        siteid: build.siteid,
+        groupid: build.buildgroupid,
+        name: build.buildname,
+        type: build.buildtype
+      };
+      $http({
+        url: 'api/v1/expectedbuild.php',
+        method: 'DELETE',
+        params: parameters
+      }).success(function() {
+        // Find the index of the build to remove.
+        var idx1 = -1;
+        var idx2 = -1;
+        for (var i in $scope.cdash.buildgroups) {
+          for (var j = 0, len = $scope.cdash.buildgroups[i].builds.length; j < len; j++) {
+            if ($scope.cdash.buildgroups[i].builds[j] === build) {
+              idx1 = i;
+              idx2 = j;
+              break;
+            }
+          }
+          if (idx1 != -1) {
+            break;
+          }
+        }
+        if (idx1 > -1 && idx2 > -1) {
+          // Remove the build from our scope.
+          $scope.cdash.buildgroups[idx1].builds.splice(idx2, 1);
+        }
+      });
+    } else {
+      var newExpectedValue = 1;
+      if (build.expected == 1) {
+        newExpectedValue = 0;
+      }
+      var parameters = {
+        buildid: build.id,
+        groupid: groupid,
+        expected: newExpectedValue
+      };
+      $http.post('api/v1/build.php', parameters)
+      .success(function(data) {
+        build.expected = newExpectedValue;
+      });
     }
-    var parameters = {
-      buildid: build.id,
-      groupid: groupid,
-      expected: newExpectedValue
-    };
-    $http.post('api/v1/build.php', parameters)
-    .success(function(data) {
-      build.expected = newExpectedValue;
-    });
   };
 
   $scope.toggleAutoRefresh = function() {

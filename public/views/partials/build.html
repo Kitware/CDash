@@ -4,7 +4,8 @@
     {{build.label}}
   </a>
   <!-- Icon for build errors / test failing -->
-  <a ng-if="build.compilation.error > 0 || build.test.fail > 0" href="javascript:;" ng-click="buildinfo_click(build.id)">
+  <a ng-if="build.compilation.error > 0 || build.test.fail > 0" href="javascript:;"
+     ng-click="buildinfo_click(build.id)">
     <img src="img/Info.png" alt="info" class="icon"></img>
   </a>
   <div ng-if="build.id" id="buildgroup_{{build.id}}"></div>
@@ -67,7 +68,7 @@
 
     <div style="float: left;" ng-if="cdash.user.id > 0">
       <!-- Display folder icon for logged in users -->
-      <a ng-if="build.id" href="javascript:;" ng-click="toggleAdminOptions(build)">
+      <a href="javascript:;" ng-click="toggleAdminOptions(build)">
         <img src="img/folder.png" class="icon"/>
       </a>
       <img ng-show="build.loadingExpected == 1" src="img/loading.gif"/>
@@ -79,10 +80,14 @@
           <b>{{group.name}}</b>:
         </td>
         <td ng-if="group.name == buildgroup.name" colspan="2">
-          <a ng-show="build.expected == 0" href="javascript:;" ng-click="toggleExpected(build, group.id)">
+          <a href="javascript:;"
+             ng-show="build.expected == 0 && !build.expectedandmissing"
+             ng-click="toggleExpected(build, group.id)">
             [mark as expected]
           </a>
-          <a ng-show="build.expected == 1" href="javascript:;" ng-click="toggleExpected(build, group.id)">
+          <a href="javascript:;"
+             ng-show="build.expected == 1 || build.expectedandmissing == 1"
+             ng-click="toggleExpected(build, group.id)">
             [mark as non expected]
           </a>
         </td>
@@ -93,13 +98,14 @@
           <a href="javascript:;" ng-click="moveToGroup(build, group.id)"> [move to group] </a>
         </td>
       </tr>
-      <tr>
+      <tr ng-if="build.expectedandmissing != 1">
         <td colspan="3" class="nob">
           <a href="javascript:;" ng-click="removeBuild(build)"> [remove this build] </a>
         </td>
       </tr>
     </table> <!-- end admin -->
-    <div ng-show="build.showAdminOptions == 1"
+    <div ng-if="build.expectedandmissing != 1"
+         ng-show="build.showAdminOptions == 1"
          tooltip-popup-delay="1500"
          tooltip-append-to-body="true"
          uib-tooltip="Done builds will be overwritten if a new one is submitted with the same site, build name, and timestamp."
@@ -111,10 +117,6 @@
         [mark as not done]
       </a>
     </div> <!-- end logged in -->
-
-    <a ng-if="!build.id" href="javascript:;" ng-click="buildnosubmission_click(build.siteid, build.buildname, build.expecteddivname, build.buildgroupid, build.buildtype)">
-      <img src="img/folder.png" class="icon"/>
-    </a>
   </div>
 </td>
 
