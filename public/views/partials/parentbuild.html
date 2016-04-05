@@ -18,75 +18,8 @@
 
   <div ng-if="!build.id" style="float: left; margin: 0px 4px;">{{build.buildname}}</div>
 
-  <div style="float:left;">
-
-    <!-- If the build has errors or test failing -->
-    <a href="javascript:;" style="float: left;"
-       ng-if="build.compilation.error > 0 || build.test.fail > 0"
-       ng-click="toggleBuildProblems(build)">
-      <img src="img/Info.png" alt="info" class="icon"></img>
-    </a>
-
-    <!-- If the build is expected and missing -->
-    <a href="javascript:;" style="float:left;"
-       ng-if="build.expectedandmissing == 1"
-       ng-click="expectedinfo_click(build.siteid, build.buildname, build.expecteddivname, cdash.projectid, build.buildtype, cdash.unixtimestamp)">
-      <img src="img/Info.png" alt="info" class="icon"></img>
-    </a>
-
-    <div style="float:left;" ng-if="cdash.user.id > 0">
-      <!-- Display folder icon for logged in users -->
-      <a ng-if="build.id" href="javascript:;" ng-click="toggleAdminOptions(build)">
-        <img src="img/folder.png" class="icon"/>
-      </a>
-      <img src="img/loading.gif"
-           ng-show="build.loadingExpected == 1 || build.loadingProblems == 1"/>
-    </div>
-
-    <!-- Problematic build history table -->
-    <last-clean-build></last-clean-build>
-
-    <!-- admin options table -->
-    <table width="100%" border="0" ng-show="build.showAdminOptions == 1 && cdash.user.admin == 1">
-      <!-- If user is admin of the project propose to group this build -->
-      <tr ng-repeat="group in cdash.all_buildgroups">
-        <td width="35%">
-          <b>{{group.name}}</b>:
-        </td>
-        <td ng-if="group.name == buildgroup.name" colspan="2">
-          <a ng-show="build.expected == 0" href="javascript:;" ng-click="toggleExpected(build, group.id)">
-            [mark as expected]
-          </a>
-          <a ng-show="build.expected == 1" href="javascript:;" ng-click="toggleExpected(build, group.id)">
-            [mark as non expected]
-          </a>
-        </td>
-        <td ng-if="group.name != buildgroup.name" colspan="2">
-          <input type="checkbox" ng-model="build.expected" ng-true-value="'1'" ng-false-value="'0'"> expected</input>
-        </td>
-        <td ng-if="group.name != buildgroup.name" class="nob">
-          <a href="javascript:;" ng-click="moveToGroup(build, group.id)"> [move to group] </a>
-        </td>
-      </tr>
-      <tr>
-        <td colspan="3" class="nob">
-          <a href="javascript:;" ng-click="removeBuild(build)"> [remove this build] </a>
-        </td>
-      </tr>
-    </table> <!-- end admin -->
-    <div ng-show="build.showAdminOptions == 1"
-         tooltip-popup-delay="1500"
-         tooltip-append-to-body="true"
-         uib-tooltip="Done builds will be overwritten if a new one is submitted with the same site, build name, and timestamp."
-    >
-      <a ng-show="build.done == 0" href="javascript:;" ng-click="toggleDone(build)">
-        [mark as done]
-      </a>
-      <a ng-show="build.done == 1" href="javascript:;" ng-click="toggleDone(build)">
-        [mark as not done]
-      </a>
-    </div>
-  </div>
+  <!-- Elements common to parent & standalone builds. -->
+  <build-name-elements></build-name-elements>
 </td>
 
 <td ng-if="buildgroup.hasupdatedata" align="center" ng-class="{'error': build.update.errors == 1, 'warning': build.update.warning == 1, 'normal': build.update.defined == 1}">

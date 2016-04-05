@@ -289,14 +289,14 @@ CDash.filter("showEmptyBuildsLast", function () {
   $scope.toggleAdminOptions = function(build) {
     if (!("expectedandmissing" in build) &&
         (!("expected" in build) || (build.expected != 0 && build.expected != 1))) {
-      build.loadingExpected = 1;
+      build.loading = 1;
       // Determine whether or not this is an expected build.
       $http({
         url: 'api/v1/is_build_expected.php',
         method: 'GET',
         params: { 'buildid': build.id }
       }).success(function(response) {
-        build.loadingExpected = 0;
+        build.loading = 0;
         if ("expected" in response) {
           build.expected = response.expected;
           if ( !("showAdminOptions" in build) || build.showAdminOptions == 0) {
@@ -317,7 +317,7 @@ CDash.filter("showEmptyBuildsLast", function () {
 
   $scope.toggleBuildProblems = function(build) {
     if (!('hasErrors' in build)) {
-      build.loadingProblems = 1;
+      build.loading = 1;
       $http({
         url: 'api/v1/build.php',
         method: 'GET',
@@ -326,7 +326,7 @@ CDash.filter("showEmptyBuildsLast", function () {
           'getproblems': 1
         }
       }).success(function(response) {
-        build.loadingProblems = 0;
+        build.loading = 0;
         build.showProblems = 1;
 
         build.hasErrors = response.hasErrors;
@@ -571,8 +571,8 @@ CDash.filter("showEmptyBuildsLast", function () {
     templateUrl: 'views/partials/parentbuild.html'
   }
 })
-.directive('lastCleanBuild', function() {
+.directive('buildNameElements', function() {
   return {
-    templateUrl: 'views/partials/lastcleanbuild.html'
+    templateUrl: 'views/partials/buildNameElements.html'
   }
 });
