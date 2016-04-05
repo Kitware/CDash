@@ -215,4 +215,84 @@ function rest_put()
 function rest_get()
 {
     global $buildid;
+    $response = array();
+
+    // Are we looking for what went wrong with this build?
+    if (isset($_GET['getproblems'])) {
+        $response['hasErrors'] = false;
+        $response['hasFailingTests'] = false;
+
+        // Lookup some details about this build.
+        $build_row = pdo_single_row_query(
+            "SELECT * FROM build WHERE id='$buildid'");
+        $buildtype = $build_row['type'];
+        $buildname = $build_row['name'];
+        $siteid = $build_row['siteid'];
+        $starttime = $build_row['starttime'];
+        $projectid = $build_row['projectid'];
+
+        // Check if this build has errors.
+        $buildHasErrors = $build_row['builderrors'] > 0;
+        if ($buildHasErrors) {
+            $response['hasErrors'] = true;
+            // Find the last occurrence of this build that had no errors.
+            $no_errors_result = pdo_query(
+                "SELECT starttime FROM build
+                WHERE siteid='$siteid' AND type='$buildtype' AND
+                name='$buildname' AND projectid='$projectid' AND
+                starttime<='$starttime' AND parentid<1 AND builderrors<1
+                ORDER BY starttime DESC LIMIT 1");
+
+            if (pdo_num_rows($no_errors_result) > 0) {
+                $no_errors_row = pdo_fetch_array($no_errors_result);
+                $gmtdate = strtotime($no_errors_row['starttime'] . ' UTC');
+            } else {
+                // Find the first build
+                $firstbuild = pdo_single_row_query(
+                        "SELECT starttime FROM build
+                        WHERE siteid='$siteid' AND type='$buildtype' AND
+                        name='$buildname' AND projectid='$projectid' AND
+                        starttime<='$starttime'
+                        ORDER BY starttime ASC LIMIT 1");
+                $gmtdate = strtotime($firstbuild['starttime'] . ' UTC');
+            }
+            $response['daysWithErrors'] =
+                round((strtotime($starttime) - $gmtdate) / (3600 * 24));
+            $response['failingSince'] = date(FMT_DATETIMETZ, $gmtdate);
+            $response['failingDate'] = substr($response['failingSince'], 0, 10);
+        }
+
+        // Check if this build has failed tests.
+        $buildHasFailingTests = $build_row['testfailed'] > 0;
+        if ($buildHasFailingTests) {
+            $response['hasFailingTests'] = true;
+            // Find the last occurrence of this build that had no test failures.
+            $no_fails_result = pdo_query(
+                "SELECT starttime FROM build
+                WHERE siteid='$siteid' AND type='$buildtype' AND
+                name='$buildname' AND projectid='$projectid' AND
+                starttime<='$starttime' AND parentid<1 AND testfailed<1
+                ORDER BY starttime DESC LIMIT 1");
+
+            if (pdo_num_rows($no_fails_result) > 0) {
+                $no_fails_row = pdo_fetch_array($no_fails_result);
+                $gmtdate = strtotime($no_fails_row['starttime'] . ' UTC');
+            } else {
+                // Find the first build
+                $firstbuild = pdo_single_row_query(
+                        "SELECT starttime FROM build
+                        WHERE siteid='$siteid' AND type='$buildtype' AND
+                        name='$buildname' AND projectid='$projectid' AND
+                        starttime<='$starttime' AND parentid<1
+                        ORDER BY starttime ASC LIMIT 1");
+                $gmtdate = strtotime($firstbuild['starttime'] . ' UTC');
+            }
+            $response['daysWithFailingTests'] =
+                round((strtotime($starttime) - $gmtdate) / (3600 * 24));
+            $response['testsFailingSince'] = date(FMT_DATETIMETZ, $gmtdate);
+            $response['testsFailingDate'] =
+                substr($response['testsFailingSince'], 0, 10);
+        }
+        echo json_encode(cast_data_for_JSON($response));
+    }
 }

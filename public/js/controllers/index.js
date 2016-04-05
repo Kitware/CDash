@@ -315,26 +315,37 @@ CDash.filter("showEmptyBuildsLast", function () {
     }
   };
 
-  $scope.buildgroup_click = function(buildid) {
-    var group = "#buildgroup_"+buildid;
-    if($(group).html() != "" && $(group).is(":visible")) {
-      $(group).fadeOut('medium');
-      return;
-    }
-    $(group).fadeIn('slow');
-    $(group).html("fetching...<img src=img/loading.gif></img>");
-    $(group).load("ajax/addbuildgroup.php?buildid="+buildid,{},function(){$(this).fadeIn('slow');});
-  };
+  $scope.toggleBuildProblems = function(build) {
+    if (!('hasErrors' in build)) {
+      build.loadingProblems = 1;
+      $http({
+        url: 'api/v1/build.php',
+        method: 'GET',
+        params: {
+          'buildid': build.id,
+          'getproblems': 1
+        }
+      }).success(function(response) {
+        build.loadingProblems = 0;
+        build.showProblems = 1;
 
-  $scope.buildinfo_click = function(buildid) {
-    var group = "#buildgroup_"+buildid;
-    if($(group).html() != "" && $(group).is(":visible")) {
-      $(group).fadeOut('medium');
-      return;
+        build.hasErrors = response.hasErrors;
+        build.failingSince = response.failingSince;
+        build.failingDate = response.failingDate;
+        build.daysWithErrors = response.daysWithErrors;
+
+        build.hasFailingTests = response.hasFailingTests;
+        build.testsFailingSince = response.testsFailingSince;
+        build.testsFailingDate = response.testsFailingDate;
+        build.daysWithFailingTests = response.daysWithFailingTests;
+      });
+    } else {
+      if (build.showProblems == 0) {
+        build.showProblems = 1;
+      } else {
+        build.showProblems = 0;
+      }
     }
-    $(group).fadeIn('slow');
-    $(group).html("fetching...<img src=img/loading.gif></img>");
-    $(group).load("ajax/buildinfogroup.php?buildid="+buildid,{},function(){$(this).fadeIn('slow');});
   };
 
   $scope.expectedinfo_click = function(siteid,buildname,divname,projectid,buildtype,currentime) {
@@ -558,5 +569,10 @@ CDash.filter("showEmptyBuildsLast", function () {
 .directive('parentBuild', function() {
   return {
     templateUrl: 'views/partials/parentbuild.html'
+  }
+})
+.directive('lastCleanBuild', function() {
+  return {
+    templateUrl: 'views/partials/lastcleanbuild.html'
   }
 });

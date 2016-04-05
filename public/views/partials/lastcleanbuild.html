@@ -1,0 +1,38 @@
+<table width="100%" border="0" ng-show="build.showProblems">
+  <tbody>
+    <tr ng-if="build.hasErrors">
+      <td bgcolor="#DDDDDD" id="nob">
+        <font size="2">
+          Build has been failing since
+          <b>
+            <a ng-href="index.php?project={{cdash.projectname}}&date={{build.failingDate}}">
+              {{build.failingSince}}
+            </a>
+            (<ng-pluralize count="build.daysWithErrors"
+                          when="{'0':     'today',
+                                 '1':     '{} day',
+                                 'other': '{} days'}">
+            </ng-pluralize>)
+          </b>
+        </font>
+      </td>
+    </tr>
+    <tr ng-if="build.hasFailingTests">
+      <td bgcolor="#DDDDDD" id="nob">
+        <font size="2">
+          Tests have been failing since
+          <b>
+            <a ng-href="index.php?project={{cdash.projectname}}&date={{build.testsFailingDate}}">
+              {{build.testsFailingSince}}
+            </a>
+            (<ng-pluralize count="build.daysWithFailingTests"
+                          when="{'0':     'today',
+                                 '1':     '{} day',
+                                 'other': '{} days'}">
+            </ng-pluralize>)
+          </b>
+        </font>
+      </td>
+    </tr>
+  </tbody>
+</table>

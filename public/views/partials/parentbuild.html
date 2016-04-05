@@ -19,6 +19,14 @@
   <div ng-if="!build.id" style="float: left; margin: 0px 4px;">{{build.buildname}}</div>
 
   <div style="float:left;">
+
+    <!-- If the build has errors or test failing -->
+    <a href="javascript:;" style="float: left;"
+       ng-if="build.compilation.error > 0 || build.test.fail > 0"
+       ng-click="toggleBuildProblems(build)">
+      <img src="img/Info.png" alt="info" class="icon"></img>
+    </a>
+
     <!-- If the build is expected and missing -->
     <a href="javascript:;" style="float:left;"
        ng-if="build.expectedandmissing == 1"
@@ -31,8 +39,14 @@
       <a ng-if="build.id" href="javascript:;" ng-click="toggleAdminOptions(build)">
         <img src="img/folder.png" class="icon"/>
       </a>
-      <img ng-show="build.loadingExpected == 1" src="img/loading.gif"/>
+      <img src="img/loading.gif"
+           ng-show="build.loadingExpected == 1 || build.loadingProblems == 1"/>
     </div>
+
+    <!-- Problematic build history table -->
+    <last-clean-build></last-clean-build>
+
+    <!-- admin options table -->
     <table width="100%" border="0" ng-show="build.showAdminOptions == 1 && cdash.user.admin == 1">
       <!-- If user is admin of the project propose to group this build -->
       <tr ng-repeat="group in cdash.all_buildgroups">
@@ -72,10 +86,6 @@
         [mark as not done]
       </a>
     </div>
-
-    <a ng-if="!build.id" href="javascript:;" ng-click="buildnosubmission_click(build.siteid, build.buildname, build.expecteddivname, build.buildgroupid, build.buildtype)">
-      <img src="img/folder.png" class="icon"/>
-    </a>
   </div>
 </td>
 
