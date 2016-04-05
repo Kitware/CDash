@@ -30,32 +30,42 @@
   <div ng-if="!build.id" style="float: left; margin: 0px 4px;">{{build.buildname}}</div>
 
   <div style="float:left;">
-    <a ng-if="build.notes.length > 0" ng-show="cdash.advancedview != 0" title="View notes" ng-href="viewNotes.php?buildid={{build.id}}">
+    <a title="View notes"
+       ng-if="build.notes.length > 0"
+       ng-show="cdash.advancedview != 0"
+       ng-href="viewNotes.php?buildid={{build.id}}">
       <img src="img/document.png" alt="Notes" class="icon"/>
     </a>
 
-    <a ng-if="build.uploadfilecount > 0"
+    <a href="javascript:;" style="float: left;"
+       ng-if="build.uploadfilecount > 0"
        ng-href="viewFiles.php?buildid={{build.id}}"
        title="{{upload-file-count}} files uploaded with this build">
       <img src="img/package.png" alt="Files" class="icon"/>
     </a>
 
     <!-- If the build has errors or test failing -->
-    <a ng-if="build.compilation.error > 0 || build.test.fail > 0" href="javascript:;" ng-click="buildinfo_click(build.id)">
+    <a href="javascript:;" style="float: left;"
+       ng-if="build.compilation.error > 0 || build.test.fail > 0"
+       ng-click="buildinfo_click(build.id)">
       <img src="img/Info.png" alt="info" class="icon"></img>
     </a>
 
     <!-- If the build is expected and missing -->
-    <a ng-if="build.expectedandmissing == 1" href="javascript:;" nc-click="expectedinfo_click(build.siteid, build.buildname, build.expecteddivname, cdash.projectid, build.buildtype, cdash.unixtimestamp)">
+    <a href="javascript:;" style="float: left;"
+       ng-if="build.expectedandmissing == 1"
+       ng-click="expectedinfo_click(build.siteid, build.buildname, build.expecteddivname, cdash.projectid, build.buildtype, cdash.unixtimestamp)">
       <img src="img/Info.png" alt="info" class="icon"></img>
     </a>
 
     <!-- Display the note icon -->
-    <a ng-if="build.buildnotes > 0" name="Build Notes" class="jTip" id="buildnote_{{build.id}}" ng-href="ajax/buildnote.php?buildid={{build.id}}&width=350&link=buildSummary.php%3Fbuildid%3D{{build.id}}">
+    <a name="Build Notes" class="jTip" id="buildnote_{{build.id}}"
+       ng-if="build.buildnotes > 0"
+       ng-href="ajax/buildnote.php?buildid={{build.id}}&width=350&link=buildSummary.php%3Fbuildid%3D{{build.id}}">
       <img src="img/note.png" alt="note" class="icon"></img>
     </a>
 
-    <div ng-if="cdash.user.id > 0">
+    <div style="float: left;" ng-if="cdash.user.id > 0">
       <!-- Display folder icon for logged in users -->
       <a ng-if="build.id" href="javascript:;" ng-click="toggleAdminOptions(build)">
         <img src="img/folder.png" class="icon"/>

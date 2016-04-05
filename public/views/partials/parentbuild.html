@@ -20,11 +20,13 @@
 
   <div style="float:left;">
     <!-- If the build is expected and missing -->
-    <a ng-if="build.expectedandmissing == 1" href="javascript:;" nc-click="expectedinfo_click(build.siteid, build.buildname, build.expecteddivname, cdash.projectid, build.buildtype, cdash.unixtimestamp)">
+    <a href="javascript:;" style="float:left;"
+       ng-if="build.expectedandmissing == 1"
+       ng-click="expectedinfo_click(build.siteid, build.buildname, build.expecteddivname, cdash.projectid, build.buildtype, cdash.unixtimestamp)">
       <img src="img/Info.png" alt="info" class="icon"></img>
     </a>
 
-    <div ng-if="cdash.user.id > 0">
+    <div style="float:left;" ng-if="cdash.user.id > 0">
       <!-- Display folder icon for logged in users -->
       <a ng-if="build.id" href="javascript:;" ng-click="toggleAdminOptions(build)">
         <img src="img/folder.png" class="icon"/>
