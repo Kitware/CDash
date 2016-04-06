@@ -17,7 +17,8 @@ class BuildModelTestCase extends KWWebTestCase
         parent::__construct();
 
         $this->testDataDir = dirname(__FILE__) . '/data/BuildModel';
-        $this->testDataFiles = array('build1.xml', 'build2.xml', 'build3.xml', 'configure1.xml');
+        $this->testDataFiles = array('build1.xml', 'build2.xml', 'build3.xml', 'build4.xml',
+                                     'build5.xml', 'configure1.xml');
 
         pdo_query("INSERT INTO project (name) VALUES ('BuildModel')");
 
@@ -33,6 +34,12 @@ class BuildModelTestCase extends KWWebTestCase
         while ($build = pdo_fetch_array($builds)) {
             $this->builds[] = $build;
         }
+
+        $this->parentBuilds = array();
+        $parentBuilds = pdo_query("SELECT * FROM build WHERE name = 'buildmodel-test-parent-build' AND parentid = -1");
+        while ($build = pdo_fetch_array($parentBuilds)) {
+            $this->parentBuilds[] = $build;
+        }
     }
 
     public function __destruct()
@@ -42,9 +49,13 @@ class BuildModelTestCase extends KWWebTestCase
         }
     }
 
-    public function getBuildModel($n)
+    public function getBuildModel($n, $builds=false)
     {
-        $buildArray = $this->builds[$n];
+        if ($builds === false) {
+            $builds = $this->builds;
+        }
+
+        $buildArray = $builds[$n];
         $build = new build();
         $build->Id = $buildArray['id'];
         $build->FillFromId($buildArray['id']);
@@ -203,6 +214,16 @@ class BuildModelTestCase extends KWWebTestCase
         $this->assertTrue(count($buildFailures) === 1);
     }
 
+    public function testBuildModelGetsBuildFailuresAcrossChildBuilds()
+    {
+        $build = $this->getBuildModel(0, $this->parentBuilds);
+
+        $buildFailures = $build->GetBuildFailures(10, 1, '')->fetchAll();
+        $this->assertTrue(count($buildFailures) === 1);
+
+        $this->assertTrue($buildFailures[0]['subprojectname'] == 'some-test-subproject');
+    }
+
     public function testBuildModelGetsResolvedBuildFailures()
     {
         // Make sure the first build returns no resolved build failures since it can't have any
@@ -236,6 +257,16 @@ class BuildModelTestCase extends KWWebTestCase
         $build = $this->getBuildModel(2);
         $this->assertTrue(count($build->GetBuildErrors(0, '')->fetchAll()) === 0);
         $this->assertTrue(count($build->GetBuildErrors(1, '')->fetchAll()) === 0);
+    }
+
+    public function testBuildModelGetsBuildErrorsAcrossChildBuilds()
+    {
+        $build = $this->getBuildModel(0, $this->parentBuilds);
+
+        $buildErrors = $build->GetBuildErrors(0, '')->fetchAll();
+        $this->assertTrue(count($buildErrors) === 1);
+
+        $this->assertTrue($buildErrors[0]['subprojectname'] == 'some-test-subproject');
     }
 
     public function testBuildModelGetsResolvedBuildErrors()

@@ -47,14 +47,26 @@ class BuildDetailsTestCase extends KWWebTestCase
         $this->assertTrue(strpos($response->error, 'This build does not exist') === 0);
     }
 
-    public function testViewBuildErrorReturnsArrayOfErrors()
+    public function testViewBuildErrorReturnsArrayOfErrorsOnChildBuilds()
     {
         foreach ($this->builds as $build) {
-            $response = json_decode($this->get(
-                $this->url . '/api/v1/viewBuildError.php?buildid=' . $build['id']));
+            if ($build['parentid'] != -1) {
+                $response = json_decode($this->get(
+                    $this->url . '/api/v1/viewBuildError.php?buildid=' . $build['id']));
 
-            $this->assertTrue(is_array($response->errors));
+                $this->assertTrue(is_array($response->errors));
+            }
         }
+    }
+
+    public function testViewBuildErrorReturnsErrorsGroupedBySubprojectForParentBuilds()
+    {
+        // First build is the parent build
+        $build = $this->builds[0];
+        $response = json_decode($this->get(
+            $this->url . '/api/v1/viewBuildError.php?buildid=' . $build['id']));
+
+        $this->assertTrue(count($response->errors->my_subproject) === 3);
     }
 
     public function testViewBuildErrorReturnsProperFormat()
@@ -71,6 +83,19 @@ class BuildDetailsTestCase extends KWWebTestCase
         for ($i=0; $i<count($expectedErrors); $i++) {
             $this->assertEqual($build_response->errors[$i], $expectedErrors[$i]);
         }
+    }
+
+    public function testViewBuildErrorReturnsProperFormatForParentBuilds()
+    {
+        $build = $this->builds[0];
+        $build_response = json_decode($this->get(
+            $this->url . '/api/v1/viewBuildError.php?buildid=' . $build['id']));
+
+        $errors = get_object_vars($build_response->errors);
+
+        $this->assertTrue(array_key_exists('my_subproject', $errors));
+        $this->assertTrue(count($errors['my_subproject']) === 3);
+        $this->assertTrue($build_response->numSubprojects === 1);
     }
 
     // This will be specific to a test xml

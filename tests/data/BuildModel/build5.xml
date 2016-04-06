@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="buildmodel-test-parent-build"
+      BuildStamp="20160331-1825-some-type"
+      Generator="ctest-3.4.20160121-g750ae8"
+      Name="buildmodel-test-sitename">
+  <Subproject name="some-test-subproject"/>
+  
+  <Build>
+    <!-- This build has no errors, failures, or warnings -->
+    <StartDateTime>Feb 23 05:06 Eastern Standard Time</StartDateTime>
+    <StartBuildTime>1235383623</StartBuildTime>
+    <BuildCommand>./build</BuildCommand>
+    <EndDateTime>Feb 23 05:08 Eastern Standard Time</EndDateTime>
+    <EndBuildTime>1235383743</EndBuildTime>
+    <ElapsedMinutes>2.1</ElapsedMinutes>
+
+    <Error>
+      <BuildLogLine>1</BuildLogLine>
+      <Text>/.../src/foo.cxx:3:3: error: 'foo' was not declared in this scope</Text>
+      <SourceFile>foo.cxx</SourceFile>
+      <SourceLineNumber>3</SourceLineNumber>
+      <PreContext>Scanning dependencies of target foo
+      [ 50%] Building CXX object CMakeFiles/foo.dir/foo.cxx.o
+      /.../src/foo.cxx: In function ‘int main(int, char**)’:
+      </PreContext>
+      <PostContext>   foo = asdf;
+      ^
+      </PostContext>
+      <RepeatCount>0</RepeatCount>
+    </Error>    
+
+    <Failure type="Warning">
+      <Command>
+	<WorkingDirectory>/home/dan</WorkingDirectory>
+	<Argument>/usr/bin/g++</Argument>
+      </Command>
+
+      <Result>
+	<StdOut>Some stdout</StdOut>
+	<StdErr>This is a just a warning.</StdErr>
+	<ExitCondition>0</ExitCondition>
+      </Result>
+    </Failure>
+  </Build>
+</Site>

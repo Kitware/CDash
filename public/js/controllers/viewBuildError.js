@@ -18,4 +18,8 @@ CDash.controller('BuildErrorController',
     }).finally(function() {
       $scope.loading = false;
     });
-});
+  }).directive('buildError', function () {
+      return {
+          templateUrl: 'views/partials/buildError.html'
+      };
+  });
