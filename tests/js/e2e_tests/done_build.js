@@ -37,11 +37,11 @@ describe("done_build", function() {
   it("toggle done for normal build", function() {
     var loginPage = new LoginPage();
     loginPage.login();
-    toggle_done('index.php?project=InsightExample', 1);
+    toggle_done('index.php?project=InsightExample', 2);
   });
 
   it("toggle done for parent build", function() {
-    toggle_done('index.php?project=Trilinos&date=2011-07-22', 0);
+    toggle_done('index.php?project=Trilinos&date=2011-07-22', 1);
   });
 
 });

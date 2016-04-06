@@ -287,15 +287,16 @@ CDash.filter("showEmptyBuildsLast", function () {
   };
 
   $scope.toggleAdminOptions = function(build) {
-    if (!("expected" in build) || (build.expected != 0 && build.expected != 1)) {
-      build.loadingExpected = 1;
+    if (!("expectedandmissing" in build) &&
+        (!("expected" in build) || (build.expected != 0 && build.expected != 1))) {
+      build.loading = 1;
       // Determine whether or not this is an expected build.
       $http({
         url: 'api/v1/is_build_expected.php',
         method: 'GET',
         params: { 'buildid': build.id }
       }).success(function(response) {
-        build.loadingExpected = 0;
+        build.loading = 0;
         if ("expected" in response) {
           build.expected = response.expected;
           if ( !("showAdminOptions" in build) || build.showAdminOptions == 0) {
@@ -314,53 +315,66 @@ CDash.filter("showEmptyBuildsLast", function () {
     }
   };
 
-  $scope.buildgroup_click = function(buildid) {
-    var group = "#buildgroup_"+buildid;
-    if($(group).html() != "" && $(group).is(":visible")) {
-      $(group).fadeOut('medium');
-      return;
+  $scope.toggleBuildProblems = function(build) {
+    if (!('hasErrors' in build)) {
+      build.loading = 1;
+      $http({
+        url: 'api/v1/build.php',
+        method: 'GET',
+        params: {
+          'buildid': build.id,
+          'getproblems': 1
+        }
+      }).success(function(response) {
+        build.loading = 0;
+        build.showProblems = 1;
+
+        build.hasErrors = response.hasErrors;
+        build.failingSince = response.failingSince;
+        build.failingDate = response.failingDate;
+        build.daysWithErrors = response.daysWithErrors;
+
+        build.hasFailingTests = response.hasFailingTests;
+        build.testsFailingSince = response.testsFailingSince;
+        build.testsFailingDate = response.testsFailingDate;
+        build.daysWithFailingTests = response.daysWithFailingTests;
+      });
+    } else {
+      if (build.showProblems == 0) {
+        build.showProblems = 1;
+      } else {
+        build.showProblems = 0;
+      }
     }
-    $(group).fadeIn('slow');
-    $(group).html("fetching...<img src=img/loading.gif></img>");
-    $(group).load("ajax/addbuildgroup.php?buildid="+buildid,{},function(){$(this).fadeIn('slow');});
   };
 
-  $scope.buildnosubmission_click = function(siteid,buildname,divname,buildgroupid,buildtype) {
-    buildname = $scope.URLencode(buildname);
-    buildtype = $scope.URLencode(buildtype);
-
-    var group = "#infoexpected_"+divname;
-    if($(group).html() != "" && $(group).is(":visible")) {
-      $(group).fadeOut('medium');
-      return;
+  $scope.toggleExpectedInfo = function(build) {
+    if (!('lastSubmission' in build)) {
+      build.loading = 1;
+      $http({
+        url: 'api/v1/expectedbuild.php',
+        method: 'GET',
+        params: {
+          'siteid': build.siteid,
+          'groupid': build.buildgroupid,
+          'name': build.buildname,
+          'type': build.buildtype,
+          'currenttime': $scope.cdash.unixtimestamp
+        }
+      }).success(function(response) {
+        build.loading = 0;
+        build.showExpectedInfo = 1;
+        build.lastSubmission = response.lastSubmission;
+        build.lastSubmissionDate = response.lastSubmissionDate;
+        build.daysSinceLastBuild = response.daysSinceLastBuild;
+      });
+    } else {
+      if (build.showExpectedInfo == 0) {
+        build.showExpectedInfo = 1;
+      } else {
+        build.showExpectedInfo = 0;
+      }
     }
-
-    $(group).fadeIn('slow');
-    $(group).html("fetching...<img src=img/loading.gif></img>");
-    $(group).load("ajax/expectedbuildgroup.php?siteid="+siteid+"&buildname="+buildname+"&buildtype="+buildtype+"&buildgroup="+buildgroupid+"&divname="+divname,{},function(){$(this).fadeIn('slow');});
-  };
-
-  $scope.buildinfo_click = function(buildid) {
-    var group = "#buildgroup_"+buildid;
-    if($(group).html() != "" && $(group).is(":visible")) {
-      $(group).fadeOut('medium');
-      return;
-    }
-    $(group).fadeIn('slow');
-    $(group).html("fetching...<img src=img/loading.gif></img>");
-    $(group).load("ajax/buildinfogroup.php?buildid="+buildid,{},function(){$(this).fadeIn('slow');});
-  };
-
-  $scope.expectedinfo_click = function(siteid,buildname,divname,projectid,buildtype,currentime) {
-    buildname = $scope.URLencode(buildname);
-    var group = "#infoexpected_"+divname;
-    if($(group).html() != "" && $(group).is(":visible")) {
-      $(group).fadeOut('medium');
-      return;
-    }
-    $(group).fadeIn('slow');
-    $(group).html("fetching...<img src=img/loading.gif></img>");
-    $(group).load("ajax/expectedinfo.php?siteid="+siteid+"&buildname="+buildname+"&projectid="+projectid+"&buildtype="+buildtype+"&currenttime="+currentime,{},function(){$(this).fadeIn('slow');});
   };
 
 
@@ -411,19 +425,54 @@ CDash.filter("showEmptyBuildsLast", function () {
   };
 
   $scope.toggleExpected = function(build, groupid) {
-    var newExpectedValue = 1;
-    if (build.expected == 1) {
-      newExpectedValue = 0;
+    if (build.expectedandmissing == 1) {
+      // Delete a rule specifying a missing expected build.
+      var parameters = {
+        siteid: build.siteid,
+        groupid: build.buildgroupid,
+        name: build.buildname,
+        type: build.buildtype
+      };
+      $http({
+        url: 'api/v1/expectedbuild.php',
+        method: 'DELETE',
+        params: parameters
+      }).success(function() {
+        // Find the index of the build to remove.
+        var idx1 = -1;
+        var idx2 = -1;
+        for (var i in $scope.cdash.buildgroups) {
+          for (var j = 0, len = $scope.cdash.buildgroups[i].builds.length; j < len; j++) {
+            if ($scope.cdash.buildgroups[i].builds[j] === build) {
+              idx1 = i;
+              idx2 = j;
+              break;
+            }
+          }
+          if (idx1 != -1) {
+            break;
+          }
+        }
+        if (idx1 > -1 && idx2 > -1) {
+          // Remove the build from our scope.
+          $scope.cdash.buildgroups[idx1].builds.splice(idx2, 1);
+        }
+      });
+    } else {
+      var newExpectedValue = 1;
+      if (build.expected == 1) {
+        newExpectedValue = 0;
+      }
+      var parameters = {
+        buildid: build.id,
+        groupid: groupid,
+        expected: newExpectedValue
+      };
+      $http.post('api/v1/build.php', parameters)
+      .success(function(data) {
+        build.expected = newExpectedValue;
+      });
     }
-    var parameters = {
-      buildid: build.id,
-      groupid: groupid,
-      expected: newExpectedValue
-    };
-    $http.post('api/v1/build.php', parameters)
-    .success(function(data) {
-      build.expected = newExpectedValue;
-    });
   };
 
   $scope.toggleAutoRefresh = function() {
@@ -440,15 +489,29 @@ CDash.filter("showEmptyBuildsLast", function () {
   };
 
   $scope.moveToGroup = function(build, groupid) {
-    var parameters = {
-      buildid: build.id,
-      newgroupid: groupid,
-      expected: build.expected
-    };
-    $http.post('api/v1/build.php', parameters)
-    .success(function(data) {
-      window.location.reload();
-    });
+    if (build.expectedandmissing == 1) {
+      var parameters = {
+        siteid: build.siteid,
+        groupid: build.buildgroupid,
+        newgroupid: groupid,
+        name: build.buildname,
+        type: build.buildtype
+      };
+      $http.post('api/v1/expectedbuild.php', parameters)
+      .success(function(data) {
+        window.location.reload();
+      });
+    } else {
+      var parameters = {
+        buildid: build.id,
+        newgroupid: groupid,
+        expected: build.expected
+      };
+      $http.post('api/v1/build.php', parameters)
+      .success(function(data) {
+        window.location.reload();
+      });
+    }
   };
 
   $scope.colorblind_toggle = function() {
@@ -523,5 +586,10 @@ CDash.filter("showEmptyBuildsLast", function () {
 .directive('parentBuild', function() {
   return {
     templateUrl: 'views/partials/parentbuild.html'
+  }
+})
+.directive('buildNameElements', function() {
+  return {
+    templateUrl: 'views/partials/buildNameElements.html'
   }
 });

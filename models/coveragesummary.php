@@ -314,9 +314,9 @@ class coveragesummary
     public function ComputeDifference()
     {
         $build = new Build();
-        $build->FillFromId($this->BuildId);
+        $build->Id = $this->BuildId;
         $previousBuildId = $build->GetPreviousBuildId();
-        if ($previousBuildId === false) {
+        if ($previousBuildId < 1) {
             return;
         }
 
@@ -344,7 +344,7 @@ class coveragesummary
                 $summaryDiff = new CoverageSummaryDiff();
                 $summaryDiff->BuildId = $this->BuildId;
                 $summaryDiff->LocTested = $loctesteddiff;
-                $summaryDiff->LocTested = $locuntesteddiff;
+                $summaryDiff->LocUntested = $locuntesteddiff;
                 $summaryDiff->Insert();
             }
         }
