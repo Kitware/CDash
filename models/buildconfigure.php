@@ -219,7 +219,9 @@ class buildconfigure
         $response = array(
             'status' => $data['status'],
             'command' => $data['command'],
-            'output' => $data['log']
+            'output' => $data['log'],
+            'configureerrors' => $data['configureerrors'],
+            'configurewarnings' => $data['configurewarnings']
         );
 
         if (isset($data['subprojectid'])) {

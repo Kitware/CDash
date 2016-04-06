@@ -286,5 +286,7 @@ class BuildModelTestCase extends KWWebTestCase
     {
         $build = $this->getBuildModel(0);
         $this->assertTrue(count($build->GetConfigures()->fetchAll()) === 1);
+
+        // Test configures work across child builds
     }
 }
