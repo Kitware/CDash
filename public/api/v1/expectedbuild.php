@@ -79,6 +79,9 @@ switch ($method) {
     case 'DELETE':
         rest_delete();
         break;
+    case 'GET':
+        rest_get();
+        break;
     case 'POST':
         rest_post();
         break;
@@ -101,6 +104,47 @@ function rest_delete()
         buildtype='$buildtype' AND
         buildname='$buildname' AND siteid='$siteid' AND
         endtime='1980-01-01 00:00:00'");
+}
+
+/* Handle GET requests */
+function rest_get()
+{
+    global $siteid;
+    global $buildgroupid;
+    global $buildname;
+    global $buildtype;
+    global $projectid;
+
+    $response = array();
+
+    if (!array_key_exists('currenttime', $_REQUEST)) {
+        $response['error'] = "currenttime not specified.";
+        echo json_encode($response);
+        return;
+    }
+    $currenttime = pdo_real_escape_numeric($_REQUEST['currenttime']);
+    $currentUTCtime = gmdate(FMT_DATETIME, $currenttime);
+
+    // Find the last time this expected build submitted.
+    $last_build_row = pdo_single_row_query(
+            "SELECT starttime FROM build
+            WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
+            AND projectid='$projectid' AND starttime<='$currentUTCtime'
+            ORDER BY starttime DESC LIMIT 1");
+    if (!$last_build_row || !array_key_exists('starttime', $last_build_row)) {
+        $response['lastSubmission'] = -1;
+        echo json_encode($response);
+        return;
+    }
+
+    $lastBuildDate = $last_build_row['starttime'];
+    $gmtime = strtotime($lastBuildDate . ' UTC');
+    $response['lastSubmission'] = date('M j, Y ', $gmtime);
+    $response['lastSubmissionDate'] = date('Y-m-d', $gmtime);
+    $response['daysSinceLastBuild'] =
+        round(($currenttime - strtotime($lastBuildDate)) / (3600 * 24));
+
+    echo json_encode(cast_data_for_JSON($response));
 }
 
 /* Handle POST requests */

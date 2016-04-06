@@ -85,6 +85,32 @@
   </tbody>
 </table>
 
+<!-- expected info table -->
+<table width="100%" border="0" ng-show="build.showExpectedInfo">
+  <tbody>
+    <tr>
+      <td bgcolor="#DDDDDD" id="nob">
+        <font size="2">
+          <span ng-if="build.lastSubmission == -1">
+            This build has never submitted.
+          </span>
+          <span ng-if="build.lastSubmission != -1">
+            This build has not submitted since
+              <b>
+                <a ng-href="index.php?project={{cdash.projectname}}&date={{build.lastSubmissionDate}}">
+                  {{build.lastSubmission}}
+                </a>
+            (<ng-pluralize count="build.daysSinceLastBuild"
+                          when="{'1':     '{} day',
+                                 'other': '{} days'}">
+            </ng-pluralize>)
+          </span>
+        </font>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
 <!-- admin options table -->
 <table width="100%" border="0" ng-show="build.showAdminOptions == 1 && cdash.user.admin == 1">
   <!-- If user is admin of the project propose to group this build -->

@@ -348,16 +348,33 @@ CDash.filter("showEmptyBuildsLast", function () {
     }
   };
 
-  $scope.expectedinfo_click = function(siteid,buildname,divname,projectid,buildtype,currentime) {
-    buildname = $scope.URLencode(buildname);
-    var group = "#infoexpected_"+divname;
-    if($(group).html() != "" && $(group).is(":visible")) {
-      $(group).fadeOut('medium');
-      return;
+  $scope.toggleExpectedInfo = function(build) {
+    if (!('lastSubmission' in build)) {
+      build.loading = 1;
+      $http({
+        url: 'api/v1/expectedbuild.php',
+        method: 'GET',
+        params: {
+          'siteid': build.siteid,
+          'groupid': build.buildgroupid,
+          'name': build.buildname,
+          'type': build.buildtype,
+          'currenttime': $scope.cdash.unixtimestamp
+        }
+      }).success(function(response) {
+        build.loading = 0;
+        build.showExpectedInfo = 1;
+        build.lastSubmission = response.lastSubmission;
+        build.lastSubmissionDate = response.lastSubmissionDate;
+        build.daysSinceLastBuild = response.daysSinceLastBuild;
+      });
+    } else {
+      if (build.showExpectedInfo == 0) {
+        build.showExpectedInfo = 1;
+      } else {
+        build.showExpectedInfo = 0;
+      }
     }
-    $(group).fadeIn('slow');
-    $(group).html("fetching...<img src=img/loading.gif></img>");
-    $(group).load("ajax/expectedinfo.php?siteid="+siteid+"&buildname="+buildname+"&projectid="+projectid+"&buildtype="+buildtype+"&currenttime="+currentime,{},function(){$(this).fadeIn('slow');});
   };
 
 
