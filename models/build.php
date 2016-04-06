@@ -1625,6 +1625,14 @@ class build
         // Update the parent's tally of build errors & warnings.
         $this->UpdateBuild($this->ParentId, $numErrors, $numWarnings);
 
+        // Give the parent a label for this build's subproject.
+        $label = new Label;
+        $label->Text = $this->SubProjectName;
+        $parent = new Build();
+        $parent->Id = $this->ParentId;
+        $parent->AddLabel($label);
+        $parent->InsertLabelAssociations();
+
         // Since we just created a parent we should also update any existing
         // builds that should be a child of this parent but aren't yet.
         // This happens when Update.xml is parsed first, because it doesn't
