@@ -46,7 +46,7 @@
 </div>
 
 <!-- Problematic build history table -->
-<table width="100%" border="0" ng-show="build.showProblems">
+<table width="100%" border="0" ng-show="build.showProblems" class="animate-show">
   <tbody>
     <tr ng-if="build.hasErrors">
       <td bgcolor="#DDDDDD" id="nob">
@@ -86,7 +86,7 @@
 </table>
 
 <!-- expected info table -->
-<table width="100%" border="0" ng-show="build.showExpectedInfo">
+<table width="100%" border="0" ng-show="build.showExpectedInfo" class="animate-show">
   <tbody>
     <tr>
       <td bgcolor="#DDDDDD" id="nob">
@@ -112,7 +112,8 @@
 </table>
 
 <!-- admin options table -->
-<table width="100%" border="0" ng-show="build.showAdminOptions == 1 && cdash.user.admin == 1">
+<table width="100%" border="0" class="animate-show"
+       ng-show="build.showAdminOptions == 1 && cdash.user.admin == 1">
   <!-- If user is admin of the project propose to group this build -->
   <tr ng-repeat="group in cdash.all_buildgroups">
     <td width="35%">
