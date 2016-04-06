@@ -21,7 +21,7 @@
     <div ng-if="cdash.requirelogin != 1 && !loading && !cdash.error">
       <h3>Testing started on {{cdash.build.testtime}}</h3>
 
-      <table border="0">
+      <table ng-if="!cdash.parentBuild" border="0">
         <tr>
           <td align="right">
             <b>Site Name:</b>
@@ -136,6 +136,11 @@
           <thead>
             <tr class="table-heading1">
 
+              <th ng-if="cdash.parentBuild" width="10%" class="header" ng-click="updateOrderByFields('subprojectname', $event)">
+                Subproject
+                <span class="glyphicon" ng-class="orderByFields.indexOf('-subprojectname') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('subprojectname') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+              </th>
+
               <th width="43%" class="header" ng-click="updateOrderByFields('name', $event)">
                 Name
                 <span class="glyphicon" ng-class="orderByFields.indexOf('-name') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('name') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
@@ -196,7 +201,11 @@
             </tr>
           </thead>
 
-          <tr ng-repeat="test in pagination.filteredTests" ng-class-odd="'odd'" ng-class-even="'even'">
+            <tr ng-repeat="test in pagination.filteredTests" ng-class-odd="'odd'" ng-class-even="'even'">
+              <td ng-if="cdash.parentBuild" align="left">
+                <a href="viewTest.php?buildid={{test.buildid}}">{{test.subprojectname}}</a>
+              </td>
+
             <td>
               <img ng-if="test.new == 1 && test.timestatus == 'Passed' && test.status == 'Passed'" src="img/flaggreen.gif" title="flag"/>
               <img ng-if="test.new == 1 && !(test.timestatus == 'Passed' && test.status == 'Passed')" src="img/flag.png" title="flag"/>
