@@ -44,12 +44,7 @@ $buildgroupid = pdo_real_escape_numeric($_REQUEST['groupid']);
 $buildname = htmlspecialchars(pdo_real_escape_string($_REQUEST['name']));
 $buildtype = htmlspecialchars(pdo_real_escape_string($_REQUEST['type']));
 
-// Make sure the user has admin access to this project.
-if (!isset($_SESSION['cdash']) || !isset($_SESSION['cdash']['loginid'])) {
-    $response['requirelogin'] = 1;
-    echo json_encode($response);
-    return;
-}
+// Make sure the user has access to this project.
 $row = pdo_single_row_query(
         "SELECT projectid FROM buildgroup WHERE id='$buildgroupid'");
 if (!$row || !array_key_exists('projectid', $row)) {
@@ -59,22 +54,37 @@ if (!$row || !array_key_exists('projectid', $row)) {
     return;
 }
 $projectid = $row['projectid'];
-$userid = pdo_real_escape_numeric($_SESSION['cdash']['loginid']);
-
-$Project = new Project;
-$User = new User;
-$User->Id = $userid;
-$Project->Id = $projectid;
-
-$role = $Project->GetUserRole($userid);
-if ($User->IsAdmin() === false && $role <= 1) {
-    $response['error'] = 'You do not have permission to access this page';
+if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
+    $response['requirelogin'] = 1;
     echo json_encode($response);
     return;
 }
 
-// Route based on what type of request this is.
 $method = $_SERVER['REQUEST_METHOD'];
+
+// Make sure the user is an admin before proceeding with non-read-only methods.
+if ($method != 'GET') {
+    if (!isset($_SESSION['cdash']) || !isset($_SESSION['cdash']['loginid'])) {
+        $response['error'] = 'No session found.';
+        echo json_encode($response);
+        return;
+    }
+    $userid = pdo_real_escape_numeric($_SESSION['cdash']['loginid']);
+
+    $Project = new Project;
+    $User = new User;
+    $User->Id = $userid;
+    $Project->Id = $projectid;
+
+    $role = $Project->GetUserRole($userid);
+    if ($User->IsAdmin() === false && $role <= 1) {
+        $response['error'] = 'You do not have permission to access this page';
+        echo json_encode($response);
+        return;
+    }
+}
+
+// Route based on what type of request this is.
 switch ($method) {
     case 'DELETE':
         rest_delete();
