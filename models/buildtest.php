@@ -109,6 +109,7 @@ class buildtest
         $marshaledStatus = self::marshalStatus($data['status']);
         $marshaledData = array(
             'id' => $data['id'],
+            'buildid' => $buildid,
             'status' => $marshaledStatus[0],
             'statusclass' => $marshaledStatus[1],
             'name' => $data['name'],
@@ -146,6 +147,14 @@ class buildtest
                 $labels = explode(',', $data['labels']);
                 $marshaledData['labels'] = $labels;
             }
+        }
+
+        if (isset($data['subprojectid'])) {
+            $marshaledData['subprojectid'] = $data['subprojectid'];
+        }
+
+        if (isset($data['subprojectname'])) {
+            $marshaledData['subprojectname'] = $data['subprojectname'];
         }
 
         return $marshaledData;

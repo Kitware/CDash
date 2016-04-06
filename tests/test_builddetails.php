@@ -121,4 +121,25 @@ class BuildDetailsTestCase extends KWWebTestCase
 
         remove_build($buildId['id']);
     }
+
+    public function testViewTestReturnsProperFormatForParentBuilds()
+    {
+        if (!$this->submission('BuildDetails', $this->testDataDir . '/' . 'Insight_Experimental_Test_Subbuild.xml')) {
+            $this->fail('Failed to submit ' . $testDataFile);
+            return 1;
+        }
+
+        $buildId = pdo_single_row_query("SELECT id FROM build WHERE name = 'BuildDetails-Linux-g++-4.1-LesionSizingSandbox_Debug-has-subbuild'");
+
+        $response = json_decode($this->get($this->url . '/api/v1/viewTest.php?buildid=' . $buildId['id']));
+
+        $this->assertTrue($response->parentBuild);
+
+        foreach ($response->tests as $test) {
+            $this->assertTrue(property_exists($test, 'subprojectid'));
+            $this->assertTrue($test->subprojectname == 'some-subproject');
+        }
+
+        remove_build($buildId['id']);
+    }
 }
