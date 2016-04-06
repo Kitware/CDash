@@ -15,7 +15,7 @@ describe("viewBuildError", function() {
     expect(browser.getPageSource()).toContain("0</b> Errors");
   });
 
-  it("type=1 shows 3 warnings", function() {
+  it("type=1 shows 10 warnings", function() {
     browser.get('viewBuildError.php?buildid=6&type=1');
     expect(browser.getPageSource()).toContain("10</b> Warnings");
   });

@@ -24,7 +24,7 @@
  * Optional Params:
  * type=[integer] (default 0) The type of build errors to view, 0 for errors, 1 for warnings
  * date=[YYYY-mm-dd]
- * onlydeltan=[anything] Only show errors that were resolved by this build
+ * onlydeltan=[anything] Only show errors that were resolved by this build (not supported for parent builds)
  * onlydeltap=[anything] Only show new errors that arose from this build
  **/
 
@@ -154,6 +154,7 @@ if ($type == 0) {
     $response['nonerrortype'] = 0;
 }
 
+$response['parentBuild'] = $build->IsParentBuild();
 $response['errors'] = array();
 $response['numErrors'] = 0;
 
@@ -170,7 +171,12 @@ function addErrorResponse($data)
 
     $data['id'] = $response['numErrors'];
     $response['numErrors']++;
-    $response['errors'][] = $data;
+
+    if ($build->IsParentBuild()) {
+        $response['errors'][$data['subprojectname']][] = $data;
+    } else {
+        $response['errors'][] = $data;
+    }
 }
 
 if (isset($_GET['onlydeltan'])) {
@@ -228,6 +234,10 @@ if (isset($_GET['onlydeltan'])) {
 
         addErrorResponse($marshaledBuildFailure);
     }
+}
+
+if ($build->IsParentBuild()) {
+    $response['numSubprojects'] = count($response['errors']);
 }
 
 $end = microtime_float();

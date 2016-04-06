@@ -24,7 +24,8 @@ require_once 'include/filterdataFunctions.php';
 include_once 'models/build.php';
 
 /**
- * View tests of a particular build, does not support parent builds.
+ * View tests of a particular build.
+ * etest functionality isn't supported for parent builds.
  *
  * GET /viewTest.php
  * Required Params:
@@ -81,7 +82,7 @@ $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME", $db);
 
 $build_array = pdo_fetch_array(pdo_query(
-    "SELECT projectid, siteid, type, name, starttime, endtime, groupid
+    "SELECT parentid, projectid, siteid, type, name, starttime, endtime, groupid
      FROM build AS b
      LEFT JOIN build2group AS b2g ON (b.id = b2g.buildid)
      WHERE id='$buildid'"));
@@ -245,6 +246,7 @@ $response['csvlink'] = htmlspecialchars($_SERVER['REQUEST_URI']) . '&export=csv'
 $project = array();
 $project['showtesttime'] = $projectshowtesttime;
 $response['project'] = $project;
+$response['parentBuild'] = $build_array['parentid'] == -1;
 
 $displaydetails = 1;
 $status = '';
@@ -300,13 +302,26 @@ if ($CDASH_DB_TYPE != 'pgsql') {
     $groupby_sql = ' GROUP BY t.id';
 }
 
+if ($build_array['parentid'] == -1) {
+    $parentBuildFieldSql = ', sp2b.subprojectid, sp.name subprojectname';
+    $parentBuildJoinSql = 'JOIN build b ON (b.id = bt.buildid)
+                           JOIN subproject2build sp2b on (sp2b.buildid = b.id)
+                           JOIN subproject sp on (sp.id = sp2b.subprojectid)';
+    $parentBuildWhere = "b.parentid = $buildid";
+} else {
+    $parentBuildFieldSql = '';
+    $parentBuildJoinSql = '';
+    $parentBuildWhere = "bt.buildid = $buildid";
+}
+
 $sql = "
-    SELECT bt.status, bt.newstatus, bt.timestatus, t.id, bt.time, t.details,
-           t.name $label_sql
+    SELECT bt.status, bt.newstatus, bt.timestatus, t.id, bt.time, bt.buildid, t.details,
+           t.name $label_sql $parentBuildFieldSql
     FROM build2test AS bt
     LEFT JOIN test AS t ON (t.id=bt.testid)
+    $parentBuildJoinSql
     $labeljoin_sql
-    WHERE bt.buildid='$buildid' $status $filter_sql $limitnew $groupby_sql
+    WHERE $parentBuildWhere $status $filter_sql $limitnew $groupby_sql
           $limit_sql";
 
 $result = pdo_query($sql);
@@ -431,7 +446,7 @@ $labels_found = false;
 
 // Generate a response for each test found.
 while ($row = pdo_fetch_array($result)) {
-    $marshaledTest = buildtest::marshal($row, $buildid, $projectid, $projectshowtesttime, $testtimemaxstatus, $testdate);
+    $marshaledTest = buildtest::marshal($row, $row['buildid'], $projectid, $projectshowtesttime, $testtimemaxstatus, $testdate);
 
     if ($marshaledTest['status'] == 'Passed') {
         $numPassed++;

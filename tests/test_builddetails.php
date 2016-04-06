@@ -47,14 +47,26 @@ class BuildDetailsTestCase extends KWWebTestCase
         $this->assertTrue(strpos($response->error, 'This build does not exist') === 0);
     }
 
-    public function testViewBuildErrorReturnsArrayOfErrors()
+    public function testViewBuildErrorReturnsArrayOfErrorsOnChildBuilds()
     {
         foreach ($this->builds as $build) {
-            $response = json_decode($this->get(
-                $this->url . '/api/v1/viewBuildError.php?buildid=' . $build['id']));
+            if ($build['parentid'] != -1) {
+                $response = json_decode($this->get(
+                    $this->url . '/api/v1/viewBuildError.php?buildid=' . $build['id']));
 
-            $this->assertTrue(is_array($response->errors));
+                $this->assertTrue(is_array($response->errors));
+            }
         }
+    }
+
+    public function testViewBuildErrorReturnsErrorsGroupedBySubprojectForParentBuilds()
+    {
+        // First build is the parent build
+        $build = $this->builds[0];
+        $response = json_decode($this->get(
+            $this->url . '/api/v1/viewBuildError.php?buildid=' . $build['id']));
+
+        $this->assertTrue(count($response->errors->my_subproject) === 3);
     }
 
     public function testViewBuildErrorReturnsProperFormat()
@@ -71,6 +83,19 @@ class BuildDetailsTestCase extends KWWebTestCase
         for ($i=0; $i<count($expectedErrors); $i++) {
             $this->assertEqual($build_response->errors[$i], $expectedErrors[$i]);
         }
+    }
+
+    public function testViewBuildErrorReturnsProperFormatForParentBuilds()
+    {
+        $build = $this->builds[0];
+        $build_response = json_decode($this->get(
+            $this->url . '/api/v1/viewBuildError.php?buildid=' . $build['id']));
+
+        $errors = get_object_vars($build_response->errors);
+
+        $this->assertTrue(array_key_exists('my_subproject', $errors));
+        $this->assertTrue(count($errors['my_subproject']) === 3);
+        $this->assertTrue($build_response->numSubprojects === 1);
     }
 
     // This will be specific to a test xml
@@ -93,6 +118,27 @@ class BuildDetailsTestCase extends KWWebTestCase
         $this->assertEqual($actualResponse->numFailed, $expectedResponse->numFailed);
         $this->assertEqual($actualResponse->numNotRun, $expectedResponse->numNotRun);
         $this->assertEqual($actualResponse->numTimeFailed, $expectedResponse->numTimeFailed);
+
+        remove_build($buildId['id']);
+    }
+
+    public function testViewTestReturnsProperFormatForParentBuilds()
+    {
+        if (!$this->submission('BuildDetails', $this->testDataDir . '/' . 'Insight_Experimental_Test_Subbuild.xml')) {
+            $this->fail('Failed to submit ' . $testDataFile);
+            return 1;
+        }
+
+        $buildId = pdo_single_row_query("SELECT id FROM build WHERE name = 'BuildDetails-Linux-g++-4.1-LesionSizingSandbox_Debug-has-subbuild'");
+
+        $response = json_decode($this->get($this->url . '/api/v1/viewTest.php?buildid=' . $buildId['id']));
+
+        $this->assertTrue($response->parentBuild);
+
+        foreach ($response->tests as $test) {
+            $this->assertTrue(property_exists($test, 'subprojectid'));
+            $this->assertTrue($test->subprojectname == 'some-subproject');
+        }
 
         remove_build($buildId['id']);
     }

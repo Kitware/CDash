@@ -396,6 +396,7 @@ class build
 
     /**
      * Return the errors that have been resolved from this build.
+     * @todo This doesn't support getting resolved build errors across parent builds.
      **/
     public function GetResolvedBuildErrors($type)
     {
@@ -412,34 +413,72 @@ class build
     }
 
     // Is this redundant naming? Should it just be GetErrors?
+    /**
+     * Get all the errors in a build, of a given type.
+     *
+     * If the build is a parent, it returns all errors of child builds
+     * as well as the subprojectid.
+     **/
     public function GetBuildErrors($type, $extrasql)
     {
-        return pdo_query("SELECT * FROM builderror
-                          WHERE buildid = '" . $this->Id . "'
-                          AND type = '$type' $extrasql
-                          ORDER BY logline ASC");
+        // @todo Needs to be profiled
+        if ($this->IsParentBuild()) {
+            return pdo_query("SELECT sp2b.subprojectid, sp.name subprojectname, be.* FROM builderror be
+                              JOIN build AS b ON b.id = be.buildid
+                              JOIN subproject2build AS sp2b ON sp2b.buildid = be.buildid
+                              JOIN subproject AS sp ON sp.id = sp2b.subprojectid
+                              WHERE b.parentid = " . $this->Id . "
+                              AND be.type = $type $extrasql
+                              ORDER BY be.logline ASC");
+        } else {
+            return pdo_query("SELECT * FROM builderror
+                              WHERE buildid = '" . $this->Id . "'
+                              AND type = '$type' $extrasql
+                              ORDER BY logline ASC");
+        }
     }
 
+    /**
+     * Get all the failures of a build, of a given type.
+     *
+     * If the build is a parent, it returns all failures of child builds as well
+     * as the subprojectid.
+     **/
     public function GetBuildFailures($projectid, $type, $extrasql, $orderby=false)
     {
+        $fields = '';
+        $from = '';
+        $where = "bfd.type = '$type'";
         $orderby = ($orderby === false) ? '' : "ORDER BY $orderby";
 
-        $q = pdo_query(
-            "SELECT bf.id, bfd.language, bf.sourcefile, bfd.targetname, bfd.outputfile,
-            bfd.outputtype, bf.workingdirectory, bfd.stderror, bfd.stdoutput,
-            bfd.exitcondition
-            FROM buildfailure AS bf
-            LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
-            WHERE bf.buildid='" . $this->Id . "' AND bfd.type='$type' $extrasql $orderby");
+        // @todo Needs to be profiled
+        if ($this->IsParentBuild()) {
+            $fields .= ', sp2b.subprojectid, sp.name subprojectname';
+            $from .= 'JOIN subproject2build AS sp2b ON bf.buildid = sp2b.buildid ';
+            $from .= 'JOIN subproject AS sp ON sp.id = sp2b.subprojectid ';
+            $from .= 'JOIN build b on bf.buildid = b.id ';
+            $where .= ' AND b.parentid = ' . $this->Id;
+        } else {
+            $where .= ' AND bf.buildid = ' . $this->Id;
+        }
+
+        $q = "SELECT bf.id, bfd.language, bf.sourcefile, bfd.targetname, bfd.outputfile,
+              bfd.outputtype, bf.workingdirectory, bfd.stderror, bfd.stdoutput,
+              bfd.exitcondition $fields
+              FROM buildfailure AS bf
+              LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid) $from
+              WHERE $where
+              $extrasql $orderby";
 
         add_last_sql_error('build.GetBuildFailures', $projectid, $this->Id);
 
-        return $q;
+        return pdo_query($q);
     }
 
     /**
      * Get build failures (with details) that occurred in the most recent build
      * but NOT this build.
+     * @todo This doesn't support getting resolved build failures across parent builds.
      **/
     public function GetResolvedBuildFailures($type)
     {
@@ -461,9 +500,22 @@ class build
         return $resolvedBuildFailures;
     }
 
-    public function GetConfigures()
+    public function GetConfigures($status=false)
     {
-        return pdo_query("SELECT * FROM configure WHERE buildid = " . $this->Id);
+        if ($this->IsParentBuild()) {
+            $where = ($status !== false) ? "AND c.status = $status" : "";
+            return pdo_query("SELECT sp.name subprojectname, sp.id subprojectid, c.*, b.configureerrors,
+                              b.configurewarnings
+                              FROM configure c
+                              JOIN subproject2build sp2b ON sp2b.buildid = c.buildid
+                              JOIN subproject sp ON sp.id = sp2b.subprojectid
+                              JOIN build b ON b.id = c.buildid
+                              WHERE b.parentid = " . $this->Id . "
+                              $where");
+        } else {
+            $where = ($status !== false) ? "AND status = $status" : "";
+            return pdo_query("SELECT * FROM configure WHERE buildid = " . $this->Id . " $where");
+        }
     }
 
     /** Get the build id from its name */

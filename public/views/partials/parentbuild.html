@@ -18,63 +18,8 @@
 
   <div ng-if="!build.id" style="float: left; margin: 0px 4px;">{{build.buildname}}</div>
 
-  <div style="float:left;">
-    <!-- If the build is expected and missing -->
-    <a ng-if="build.expectedandmissing == 1" href="javascript:;" nc-click="expectedinfo_click(build.siteid, build.buildname, build.expecteddivname, cdash.projectid, build.buildtype, cdash.unixtimestamp)">
-      <img src="img/Info.png" alt="info" class="icon"></img>
-    </a>
-
-    <div ng-if="cdash.user.id > 0">
-      <!-- Display folder icon for logged in users -->
-      <a ng-if="build.id" href="javascript:;" ng-click="toggleAdminOptions(build)">
-        <img src="img/folder.png" class="icon"/>
-      </a>
-      <img ng-show="build.loadingExpected == 1" src="img/loading.gif"/>
-    </div>
-    <table width="100%" border="0" ng-show="build.showAdminOptions == 1 && cdash.user.admin == 1">
-      <!-- If user is admin of the project propose to group this build -->
-      <tr ng-repeat="group in cdash.all_buildgroups">
-        <td width="35%">
-          <b>{{group.name}}</b>:
-        </td>
-        <td ng-if="group.name == buildgroup.name" colspan="2">
-          <a ng-show="build.expected == 0" href="javascript:;" ng-click="toggleExpected(build, group.id)">
-            [mark as expected]
-          </a>
-          <a ng-show="build.expected == 1" href="javascript:;" ng-click="toggleExpected(build, group.id)">
-            [mark as non expected]
-          </a>
-        </td>
-        <td ng-if="group.name != buildgroup.name" colspan="2">
-          <input type="checkbox" ng-model="build.expected" ng-true-value="'1'" ng-false-value="'0'"> expected</input>
-        </td>
-        <td ng-if="group.name != buildgroup.name" class="nob">
-          <a href="javascript:;" ng-click="moveToGroup(build, group.id)"> [move to group] </a>
-        </td>
-      </tr>
-      <tr>
-        <td colspan="3" class="nob">
-          <a href="javascript:;" ng-click="removeBuild(build)"> [remove this build] </a>
-        </td>
-      </tr>
-    </table> <!-- end admin -->
-    <div ng-show="build.showAdminOptions == 1"
-         tooltip-popup-delay="1500"
-         tooltip-append-to-body="true"
-         uib-tooltip="Done builds will be overwritten if a new one is submitted with the same site, build name, and timestamp."
-    >
-      <a ng-show="build.done == 0" href="javascript:;" ng-click="toggleDone(build)">
-        [mark as done]
-      </a>
-      <a ng-show="build.done == 1" href="javascript:;" ng-click="toggleDone(build)">
-        [mark as not done]
-      </a>
-    </div>
-
-    <a ng-if="!build.id" href="javascript:;" ng-click="buildnosubmission_click(build.siteid, build.buildname, build.expecteddivname, build.buildgroupid, build.buildtype)">
-      <img src="img/folder.png" class="icon"/>
-    </a>
-  </div>
+  <!-- Elements common to parent & standalone builds. -->
+  <build-name-elements></build-name-elements>
 </td>
 
 <td ng-if="buildgroup.hasupdatedata" align="center" ng-class="{'error': build.update.errors == 1, 'warning': build.update.warning == 1, 'normal': build.update.defined == 1}">
@@ -90,13 +35,13 @@
 
 <td ng-if="buildgroup.hasconfiguredata" align="center" ng-class="{'error': build.configure.error > 0, 'normal': build.configure.error == 0}">
   <div>
-    {{build.configure.error}}
+    <a href="viewConfigure.php?buildid={{build.id}}&status=1">{{build.configure.error}}</a>
   </div>
 </td>
 
 <td ng-if="buildgroup.hasconfiguredata" align="center" ng-class="{'warning': build.configure.warning > 0, 'normal': build.configure.warning == 0}">
   <div>
-    {{build.configure.warning}}
+    <a href="viewConfigure.php?buildid={{build.id}}">{{build.configure.warning}}</a>
   </div>
 </td>
 
@@ -107,7 +52,7 @@
 <td ng-if="buildgroup.hascompilationdata" align="center" ng-class="{'error': build.compilation.error > 0, 'normal': build.compilation.error == 0}">
   <div ng-class="{'valuewithsub': build.compilation.nerrordiffp > 0 || build.compilation.nerrordiffn > 0}">
     <div>
-      {{build.compilation.error}}
+      <a href="viewBuildError.php?buildid={{build.id}}">{{build.compilation.error}}</a>
     </div>
   </div>
 </td>
@@ -115,7 +60,7 @@
 <td ng-if="buildgroup.hascompilationdata" align="center" ng-class="{'warning': build.compilation.warning > 0, 'normal': build.compilation.warning == 0}">
   <div ng-class="{'valuewithsub': build.compilation.nwarningdiffp > 0 || build.compilation.nwarningdiffn > 0}">
     <div>
-      {{build.compilation.warning}}
+      <a href="viewBuildError.php?buildid={{build.id}}&type=1">{{build.compilation.warning}}</a>
     </div>
   </div>
 </td>
@@ -126,20 +71,20 @@
 
 <td ng-if="buildgroup.hastestdata" align="center" ng-class="{'warning': build.test.notrun > 0, 'normal': build.test.notrun == 0}">
   <div ng-class="{'valuewithsub': build.test.nnotrundiffp > 0 || build.test.nnotrundiffn > 0}">
-    <span>{{build.test.notrun}}</span>
+    <span><a href="viewTest.php?buildid={{build.id}}&onlynotrun">{{build.test.notrun}}</a></span>
   </div>
 </td>
 
 <td ng-if="buildgroup.hastestdata" align="center" ng-class="{'error': build.test.fail > 0, 'normal': build.test.fail < 1}">
   <div ng-class="{'valuewithsub': build.test.nfaildiffp > 0 || build.test.nfaildiffn > 0}">
-    <span>{{build.test.fail}}</span>
+    <span><a href="viewTest.php?buildid={{build.id}}&onlyfailed">{{build.test.fail}}</a></span>
   </div>
 </td>
 
 <td ng-if="buildgroup.hastestdata" align="center" ng-class="{'normal': build.test.pass > -1}">
   <div ng-class="{'valuewithsub': build.test.npassdiffp > 0 || build.test.npassdiffn > 0}">
     <span>
-      {{build.test.pass}}
+      <a href="viewTest.php?buildid={{build.id}}&onlypassed">{{build.test.pass}}</a>
     <span>
   </div>
 </td>

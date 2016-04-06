@@ -68,8 +68,10 @@
              'public/js/cdash_angular.js',
              'public/js/controllers/**.js'])
        .pipe(sourcemaps.init())
+       .pipe(uglify({mangle: false})).on('error', function(e) {
+           console.log(e);
+        })
        .pipe(concat('CDash.concat.js'))
-       .pipe(uglify({mangle: false}))
        .pipe(rename('CDash_' + version + '.min.js'))
        .pipe(sourcemaps.write('./'))
        .pipe(gulp.dest('public/js'));
