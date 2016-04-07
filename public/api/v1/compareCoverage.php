@@ -146,6 +146,7 @@ foreach ($subproject_groups as $group) {
         $coveragegroups[$groupId][$build['key']] = -1;
     }
     $coveragegroups[$groupId]['label'] = $group->GetName();
+    $coveragegroups[$groupId]['position'] = $group->GetPosition();
 }
 
 // First, get the coverage data for the aggregate build.
