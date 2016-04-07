@@ -14,7 +14,7 @@ describe("multiSort", function() {
     browser.manage().deleteAllCookies();
   }
 
-  it("sort by label column", function() {
+  it("sort by configure warnings", function() {
     browser.get('index.php?date=20110722&project=Trilinos');
 
     // Clear default sorting by clicking on the Site header.
@@ -24,11 +24,11 @@ describe("multiSort", function() {
     // Check that the builds are in the expected order
     check_build_order('test.kitware', 'hut12.kitware', 'hut11.kitware');
 
-    // Click on the Labels header.
-    var label_header = element.all(by.className('table-heading')).all(by.tagName('th')).filter(function(elem) { return elem.isDisplayed(); }).get(11);
-    expect(label_header.getText()).toBe('Labels');
-    label_header.click();
-    expect(label_header.element(by.tagName('span')).getAttribute('class')).toContain("glyphicon-chevron-down");
+    // Click on the Configure Warnings header.
+    var config_warn_header = element.all(by.className('table-heading')).all(by.tagName('th')).filter(function(elem) { return elem.isDisplayed(); }).get(4);
+    expect(config_warn_header.getText()).toBe('Warn');
+    config_warn_header.click();
+    expect(config_warn_header.element(by.tagName('span')).getAttribute('class')).toContain("glyphicon-chevron-down");
 
     // Check that the builds are in the expected order
     check_build_order('hut11.kitware', 'hut12.kitware', 'test.kitware');
@@ -39,15 +39,15 @@ describe("multiSort", function() {
     browser.actions().mouseMove(testfail_header).keyDown(protractor.Key.SHIFT).click().perform();
     expect(testfail_header.element(by.tagName('span')).getAttribute('class')).toContain("glyphicon-chevron-down");
 
-    // Labels should still be sorted
-    expect(label_header.element(by.tagName('span')).getAttribute('class')).toContain("glyphicon-chevron-down");
+    // Configure warnings should still be sorted
+    expect(config_warn_header.element(by.tagName('span')).getAttribute('class')).toContain("glyphicon-chevron-down");
 
     // Check that the builds are in the (same) expected order
     check_build_order('hut11.kitware', 'hut12.kitware', 'test.kitware');
 
-    // Now try clicking on Labels again to reverse order
-    label_header.click();
-    expect(label_header.element(by.tagName('span')).getAttribute('class')).toContain("glyphicon-chevron-up");
+    // Now try clicking on 'Configure Warn' again to reverse order
+    config_warn_header.click();
+    expect(config_warn_header.element(by.tagName('span')).getAttribute('class')).toContain("glyphicon-chevron-up");
 
     // Test Fail should still be sorted
     expect(testfail_header.element(by.tagName('span')).getAttribute('class')).toContain("glyphicon-chevron-down");
@@ -59,8 +59,8 @@ describe("multiSort", function() {
     browser.actions().mouseMove(testfail_header).keyUp(protractor.Key.SHIFT).click().perform();
     expect(testfail_header.element(by.tagName('span')).getAttribute('class')).toContain("glyphicon-chevron-up");
 
-    // Labels should not be sorted
-    expect(label_header.element(by.tagName('span')).getAttribute('class')).toContain("glyphicon-none");
+    // Configure warnings should not be sorted
+    expect(config_warn_header.element(by.tagName('span')).getAttribute('class')).toContain("glyphicon-none");
 
     // Check that the builds are in the expected order
     check_build_order('hut11.kitware', 'hut12.kitware', 'test.kitware');
