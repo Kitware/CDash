@@ -358,10 +358,10 @@ function get_coverage($build_data, $subproject_groups)
         if (!is_null($build_array['loctesteddiff']) || !is_null($build_array['locuntesteddiff'])) {
             $loctesteddiff = $build_array['loctesteddiff'];
             $locuntesteddiff = $build_array['locuntesteddiff'];
-            @$previouspercent =
-                round(($coverage_array['loctested'] - $loctesteddiff) /
-                    ($coverage_array['loctested'] - $loctesteddiff +
-                        $coverage_array['locuntested'] - $locuntesteddiff)
+            $previouspercent =
+                round(($coverage_response['loctested'] - $loctesteddiff) /
+                    ($coverage_response['loctested'] - $loctesteddiff +
+                        $coverage_response['locuntested'] - $locuntesteddiff)
                     * 100, 2);
             $percentdiff = round($percent - $previouspercent, 2);
             $coverage_response['percentagediff'] = $percentdiff;
