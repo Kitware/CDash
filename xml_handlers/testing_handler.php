@@ -29,8 +29,6 @@ class TestingHandler extends AbstractHandler
 
     private $Test;
     private $BuildTest;
-    private $BuildTestDiff;
-    private $TestImage;
     private $TestMeasurement;
     private $Label;
     private $Append;
@@ -40,6 +38,8 @@ class TestingHandler extends AbstractHandler
     private $NumberTestsFailed;
     private $NumberTestsNotRun;
     private $NumberTestsPassed;
+    
+    private $Feed;
 
     /** Constructor */
     public function __construct($projectID, $scheduleID)
@@ -132,7 +132,7 @@ class TestingHandler extends AbstractHandler
             $this->Label = new Label();
         } elseif ($name == 'TESTLIST' && $parent == 'TESTING') {
             $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
-            $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp); // The EndTimeStamp
+            // $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp); // The EndTimeStamp
 
             $this->Build->ProjectId = $this->projectid;
             $this->Build->StartTime = $start_time;

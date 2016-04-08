@@ -156,7 +156,6 @@ class JSCoverTarHandler
                 $this->CoverageFiles[$path] = $coverageFile;
                 $this->CoverageFileLogs[$path] = $coverageFileLog;
             } else {
-                $coverage = $this->Coverages[$path];
                 $coverageFile = $this->CoverageFiles[$path];
                 $coverageFileLog = $this->CoverageFileLogs[$path];
             }

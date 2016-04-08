@@ -29,7 +29,7 @@ include_once 'models/subproject.php';
 include_once 'models/test.php';
 include_once 'models/uploadfile.php';
 
-class build
+class Build
 {
     public $Id;
     public $SiteId;

@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-class clientsite
+class ClientSite
 {
     public $Id;
     public $Name;

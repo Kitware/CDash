@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-class buildinformation
+class BuildInformation
 {
     public $BuildId;
     public $OSName;

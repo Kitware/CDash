@@ -15,7 +15,7 @@
 =========================================================================*/
 
 // It is assumed that appropriate headers should be included before including this file
-class image
+class Image
 {
     public $Id;
     public $Filename;

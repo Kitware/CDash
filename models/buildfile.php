@@ -14,8 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-/** BuildError */
-class buildfile
+/** BuildFile */
+class BuildFile
 {
     public $Type;
     public $Filename;

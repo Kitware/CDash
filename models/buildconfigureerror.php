@@ -15,7 +15,7 @@
 =========================================================================*/
 
 /** BuildConfigureError class */
-class buildconfigureerror
+class BuildConfigureError
 {
     public $Type;
     public $Text;

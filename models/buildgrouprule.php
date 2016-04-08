@@ -15,7 +15,7 @@
 =========================================================================*/
 
 // It is assumed that appropriate headers should be included before including this file
-class buildgrouprule
+class BuildGroupRule
 {
     public $BuildType;
     public $BuildName;

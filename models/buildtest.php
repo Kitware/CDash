@@ -15,7 +15,7 @@
 =========================================================================*/
 
 /** Build Test class */
-class buildtest
+class BuildTest
 {
     public $TestId;
     public $Status;

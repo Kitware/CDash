@@ -28,6 +28,7 @@ class BuildHandler extends AbstractHandler
     private $Error;
     private $Label;
     private $Append;
+    private $Feed;
 
     public function __construct($projectid, $scheduleid)
     {
@@ -135,8 +136,6 @@ class BuildHandler extends AbstractHandler
                     unset($this->Error->StdOutput);
                     $this->Error->StdOutput = $tmp .
                         "\n...\nCDash truncated output because it exceeded $threshold characters.\n";
-                    $outlen = strlen($this->Error->StdOutput);
-                    //add_log("truncated long out text", "build_handler", LOG_INFO);
                 }
 
                 $errlen = strlen($this->Error->StdError);
@@ -145,8 +144,6 @@ class BuildHandler extends AbstractHandler
                     unset($this->Error->StdError);
                     $this->Error->StdError = $tmp .
                         "\n...\nCDash truncated output because it exceeded $threshold characters.\n";
-                    $errlen = strlen($this->Error->StdError);
-                    //add_log("truncated long err text", "build_handler", LOG_INFO);
                 }
             }
 
@@ -223,7 +220,6 @@ class BuildHandler extends AbstractHandler
                 case 'STDOUT':
                     if ($threshold > 0) {
                         if (strlen($this->Error->StdOutput) > $threshold) {
-                            //add_log("avoiding append: long output", "build_handler", LOG_INFO);
                             $append = false;
                         }
                     }
@@ -236,7 +232,6 @@ class BuildHandler extends AbstractHandler
                 case 'STDERR':
                     if ($threshold > 0) {
                         if (strlen($this->Error->StdError) > $threshold) {
-                            //add_log("avoiding append: long error", "build_handler", LOG_INFO);
                             $append = false;
                         }
                     }

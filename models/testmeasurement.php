@@ -17,7 +17,7 @@
 // It is assumed that appropriate headers should be included before including this file
 
 /** Test Measurement */
-class testmeasurement
+class TestMeasurement
 {
     public $Name;
     public $Type;

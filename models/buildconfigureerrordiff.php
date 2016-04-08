@@ -15,7 +15,7 @@
 =========================================================================*/
 
 /** BuildConfigureErrorDiff class */
-class buildconfigureerrordiff
+class BuildConfigureErrorDiff
 {
     public $Type;
     public $Difference;

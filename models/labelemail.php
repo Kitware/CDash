@@ -15,7 +15,7 @@
 =========================================================================*/
 
 // It is assumed that appropriate headers should be included before including this file
-class labelemail
+class LabelEmail
 {
     public $UserId;
     public $ProjectId;

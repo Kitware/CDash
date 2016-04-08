@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-class clientcompiler
+class ClientCompiler
 {
     public $Id;
     public $Name;

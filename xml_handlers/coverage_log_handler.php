@@ -26,6 +26,9 @@ class CoverageLogHandler extends AbstractHandler
     private $CurrentCoverageFileLog;
     private $CoverageFiles;
 
+    private $UpdateEndTime;
+    private $CurrentLine;
+
     /** Constructor */
     public function __construct($projectID, $scheduleID)
     {
@@ -69,7 +72,6 @@ class CoverageLogHandler extends AbstractHandler
     /** End Element */
     public function endElement($parser, $name)
     {
-        $parent = $this->getParent(); // should be before endElement
         parent::endElement($parser, $name);
 
         if ($name === 'SITE') {
@@ -121,7 +123,6 @@ class CoverageLogHandler extends AbstractHandler
     /** Text */
     public function text($parser, $data)
     {
-        $parent = $this->getParent();
         $element = $this->getElement();
         switch ($element) {
             case 'LINE':

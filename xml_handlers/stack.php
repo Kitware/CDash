@@ -52,7 +52,7 @@ class stack
     public function at($index)
     {
         if ($index < 0 || $index >= count($this->stack)) {
-            return;
+            return false;
         }
         return $this->stack[$index];
     }

@@ -15,7 +15,7 @@
 =========================================================================*/
 
 /** BuildErrorDiff */
-class builderrordiff
+class BuildErrorDiff
 {
     public $BuildId;
     public $Type;

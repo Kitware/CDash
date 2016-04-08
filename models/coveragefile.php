@@ -15,7 +15,7 @@
 =========================================================================*/
 
 /** This class shouldn't be used externally */
-class coveragefile
+class CoverageFile
 {
     public $Id;
     public $File;

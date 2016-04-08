@@ -15,7 +15,7 @@
 =========================================================================*/
 
 /** Build Test Diff */
-class buildtestdiff
+class BuildTestDiff
 {
     public $Type;
     public $DifferenceNegative;
