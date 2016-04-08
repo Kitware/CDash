@@ -214,7 +214,7 @@ $end_date = gmdate(FMT_DATETIME, $end_timestamp);
 // Perform a query to get info about all of our builds that fall within this
 // time range.
 $builds_query =
-    "SELECT b.id,
+    "SELECT b.id, b.type,
     b.builderrors AS build_errors,
     b.buildwarnings AS build_warnings,
     b.testfailed AS failing_tests,
@@ -227,10 +227,16 @@ $builds_query =
     LEFT JOIN coveragesummary AS cs ON (cs.buildid=b.id)
     WHERE b.projectid = '$projectid'
     AND b.starttime BETWEEN '$start_date' AND '$end_date'
-    AND b.parentid IN (-1, 0)";
+    AND b.parentid IN (-1, 0)
+    AND b.name != 'Aggregate Coverage'";
 
 $builds_array = pdo_query($builds_query);
 add_last_sql_error('gather_overview_data');
+
+// If we have multiple coverage builds in a single day we will also
+// show the aggregate.
+$aggregate_tracker = array();
+$show_aggregate = false;
 
 while ($build_row = pdo_fetch_array($builds_array)) {
     // get what day this build is for.
@@ -281,6 +287,16 @@ while ($build_row = pdo_fetch_array($builds_array)) {
 
     // Check if coverage was performed for this build.
     if ($build_row['loctested'] + $build_row['locuntested'] > 0) {
+
+        // Check for multiple nightly coverage builds in a single day.
+        if ($build_row['type'] === 'Nightly') {
+            if (array_key_exists($day, $aggregate_tracker)) {
+                $show_aggregate = true;
+            } else {
+                $aggregate_tracker[$day] = true;
+            }
+        }
+
         if ($has_subproject_groups) {
             // We need to query the children of this build to split up
             // coverage into subproject groups.
@@ -318,13 +334,34 @@ while ($build_row = pdo_fetch_array($builds_array)) {
     }
 }
 
+if ($show_aggregate) {
+    // Get aggregate coverage too.
+    $aggregate_query =
+        "SELECT starttime, loctested, locuntested
+        FROM build AS b
+        INNER JOIN coveragesummary AS cs ON (cs.buildid=b.id)
+        WHERE b.projectid = '$projectid'
+        AND b.starttime BETWEEN '$start_date' AND '$end_date'
+        AND b.parentid IN (-1, 0)
+        AND b.name = 'Aggregate Coverage'";
+
+    $aggregate_array = pdo_query($aggregate_query);
+    add_last_sql_error('gather_overview_coverage');
+
+    while ($aggregate_row = pdo_fetch_array($aggregate_array)) {
+        $day = get_day_index($aggregate_row['starttime']);
+        $coverage_data[$day]['Aggregate']['nightly coverage'] = array();
+        $coverage_data[$day]['Aggregate']['nightly coverage']['loctested'] =
+            $aggregate_row['loctested'];
+        $coverage_data[$day]['Aggregate']['nightly coverage']['locuntested'] =
+            $aggregate_row['locuntested'];
+    }
+}
+
 // Compute coverage percentages here.
 for ($i = 0; $i < $date_range; $i++) {
-    foreach ($build_groups as $build_group) {
-        $build_group_name = $build_group['name'];
-        foreach ($coverage_group_names as $coverage_group_name) {
-            $coverage_array =
-                &$coverage_data[$i][$build_group_name][$coverage_group_name];
+    foreach ($coverage_data[$i] as $build_group_name => &$build_group_data) {
+        foreach ($build_group_data as $coverage_group_name => &$coverage_array) {
             $total_loc =
                 $coverage_array['loctested'] + $coverage_array['locuntested'];
             if ($total_loc == 0) {
@@ -468,6 +505,29 @@ foreach ($build_groups as $build_group) {
         $coverages_response[] = $coverage_response;
     }
 }
+
+if ($show_aggregate) {
+    $coverage_response = array();
+    $coverage_response['name'] = 'nightly_coverage';
+    $coverage_response['nice_name'] = 'nightly coverage';
+    $coverage_response['group_name'] = 'Aggregate';
+    $coverage_response['group_name_clean'] = 'Aggregate';
+
+    $threshold = $project_array['coveragethreshold'];
+    $coverage_response['low'] = 0.7 * $threshold;
+    $coverage_response['medium'] = $threshold;
+    $coverage_response['satisfactory'] = 100;
+
+    list($current_value, $previous_value) =
+        get_recent_coverage_values('Aggregate', 'nightly coverage');
+    $coverage_response['current'] = $current_value;
+    $coverage_response['previous'] = $previous_value;
+
+    $chart_data = get_coverage_chart_data('Aggregate', 'nightly coverage');
+    $coverage_response['chart'] = $chart_data;
+    $coverages_response[] = $coverage_response;
+}
+
 $response['coverages'] = $coverages_response;
 
 // dynamic analysis

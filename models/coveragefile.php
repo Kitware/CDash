@@ -250,6 +250,17 @@ class coveragefile
         } else {
             $this->File = $row['file'];
         }
+
         return true;
+    }
+
+    // Remove the extra <br> tag that is added to the end of the file
+    // by some of our XML handlers.
+    public function TrimLastNewline()
+    {
+        // Remove trailing <br> tag.
+        if (substr($this->File, -4) === '<br>') {
+            $this->File = substr($this->File, 0, strlen($this->File) -4);
+        }
     }
 }

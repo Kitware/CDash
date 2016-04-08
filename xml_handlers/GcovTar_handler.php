@@ -111,6 +111,22 @@ class GCovTarHandler
             }
         }
 
+        // Search for uncovered files.
+        if (file_exists("$dirName/uncovered")) {
+            $iterator = new RecursiveIteratorIterator(
+                    new RecursiveDirectoryIterator("$dirName/uncovered"),
+                    RecursiveIteratorIterator::LEAVES_ONLY);
+            foreach ($iterator as $fileinfo) {
+                if ($fileinfo->isFile()) {
+                    // Get the path of this uncovered file relative to its
+                    // source directory.
+                    $relativePath =
+                        str_replace("$dirName/uncovered/", "./", $fileinfo);
+                    $this->ParseUncoveredSourceFile($fileinfo, $relativePath);
+                }
+            }
+        }
+
         // Insert coverage summary
         $this->CoverageSummary->Insert(true);
         $this->CoverageSummary->ComputeDifference();
@@ -320,6 +336,7 @@ class GCovTarHandler
         }
 
         // Save these models to the database.
+        $coverageFile->TrimLastNewline();
         $coverageFile->Update($buildid);
         $coverageFileLog->BuildId = $buildid;
         $coverageFileLog->FileId = $coverageFile->Id;
@@ -332,9 +349,7 @@ class GCovTarHandler
         $stats = $coverageFileLog->GetStats();
         $coverage->LocUntested = $stats['locuntested'];
         $coverage->LocTested = $stats['loctested'];
-        if ($coverage->LocTested > 0) {
-            $coverage->Covered = 1;
-        }
+        $coverage->Covered = 1;
         $coverage->BranchesUntested = $stats['branchesuntested'];
         $coverage->BranchesTested = $stats['branchestested'];
 
@@ -396,5 +411,52 @@ class GCovTarHandler
 
             $this->Labels[$path] = $source_labels;
         }
+    }
+
+    /**
+     * Parse an individual uncovered source file.
+     **/
+    public function ParseUncoveredSourceFile($fileinfo, $path)
+    {
+        $coverageFileLog = new CoverageFileLog();
+        $coverageFile = new CoverageFile();
+        $coverageFile->FullPath = $path;
+        $coverage = new Coverage();
+        $coverage->CoverageFile = $coverageFile;
+
+        // SplFileObject was giving me an erroneous extra line at the
+        // end of the file, so instead we use good old file().
+        $lines = file($fileinfo);
+        $lineNumber = 0;
+        foreach ($lines as $line) {
+            $sourceLine = rtrim($line);
+            $coverageFile->File .= $sourceLine;
+            $coverageFile->File .= '<br>';
+            $coverageFileLog->AddLine($lineNumber, 0);
+            $lineNumber++;
+        }
+
+        // Save these models to the database.
+        $coverageFile->TrimLastNewline();
+        $coverageFile->Update($this->Build->Id);
+        $coverageFileLog->BuildId = $this->Build->Id;
+        $coverageFileLog->FileId = $coverageFile->Id;
+        $coverageFileLog->Insert(true);
+
+        $coverage->LocUntested = $lineNumber;
+        $coverage->LocTested = 0;
+        $coverage->Covered = 1;
+
+        // Add any labels.
+        if (array_key_exists($path, $this->Labels)) {
+            foreach ($this->Labels[$path] as $labelText) {
+                $label = new Label();
+                $label->SetText($labelText);
+                $coverage->AddLabel($label);
+            }
+        }
+
+        // Add this Coverage to our summary.
+        $this->CoverageSummary->AddCoverage($coverage);
     }
 }

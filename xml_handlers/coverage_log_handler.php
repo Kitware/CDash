@@ -94,6 +94,7 @@ class CoverageLogHandler extends AbstractHandler
             foreach ($this->CoverageFiles as $coverageInfo) {
                 $coverageFile = $coverageInfo[0];
                 $coverageFileLog = $coverageInfo[1];
+                $coverageFile->TrimLastNewline();
                 $coverageFile->Update($this->Build->Id);
                 $coverageFileLog->BuildId = $this->Build->Id;
                 $coverageFileLog->FileId = $coverageFile->Id;
