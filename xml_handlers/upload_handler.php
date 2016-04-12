@@ -117,8 +117,21 @@ class UploadHandler extends AbstractHandler
             $nightly_time = $row['nightlytime'];
             $build_date =
                 extract_date_from_buildstamp($this->Build->GetStamp());
+
             list($prev, $nightly_start_time, $next) =
                 get_dates($build_date, $nightly_time);
+
+            // If the nightly start time is after noon (server time)
+            // and this buildstamp is on or after the nightly start time
+            // then this build belongs to the next testing day.
+            if (date(FMT_TIME, $nightly_start_time) > '12:00:00') {
+                $build_timestamp = strtotime($build_date);
+                $next_timestamp = strtotime($next);
+                if (strtotime(date(FMT_TIME, $build_timestamp), $next_timestamp) >=
+                    strtotime(date(FMT_TIME, $nightly_start_time), $next_timestamp)) {
+                    $nightly_start_time += 3600 * 24;
+                }
+            }
 
             $this->Build->EndTime = gmdate(FMT_DATETIME, $nightly_start_time);
 
