@@ -386,26 +386,31 @@ CDash.filter("showEmptyBuildsLast", function () {
           method: 'DELETE',
           params: parameters
         }).success(function() {
-          // Find the index of the build to remove.
-          var idx1 = -1;
-          var idx2 = -1;
-          for (var i in $scope.cdash.buildgroups) {
-            for (var j = 0, len = $scope.cdash.buildgroups[i].builds.length; j < len; j++) {
-              if ($scope.cdash.buildgroups[i].builds[j].id === build.id) {
-                idx1 = i;
-                idx2 = j;
-                break;
-              }
-            }
-            if (idx1 != -1) {
-              break;
-            }
-          }
-          if (idx1 > -1 && idx2 > -1) {
-            // Remove the build from our scope.
-            $scope.cdash.buildgroups[idx1].builds.splice(idx2, 1);
-          }
+          $scope.removeBuildFromScope(build);
       });
+    }
+  };
+
+  $scope.removeBuildFromScope = function(build) {
+    // Find the build to remove in its group.
+    var idx1 = -1;
+    var idx2 = -1;
+    for (var i = 0, len1 = $scope.cdash.buildgroups.length; i < len1; i++) {
+      for (var j = 0, len2 = $scope.cdash.buildgroups[i].builds.length; j < len2; j++) {
+        if ($scope.cdash.buildgroups[i].builds[j] === build) {
+          idx1 = i;
+          idx2 = j;
+          break;
+        }
+      }
+      if (idx1 != -1) {
+        break;
+      }
+    }
+    if (idx1 > -1 && idx2 > -1) {
+      // Remove the build from our scope.
+      $scope.cdash.buildgroups[idx1].builds.splice(idx2, 1);
+      $scope.pageChanged($scope.cdash.buildgroups[idx1]);
     }
   };
 
@@ -438,25 +443,7 @@ CDash.filter("showEmptyBuildsLast", function () {
         method: 'DELETE',
         params: parameters
       }).success(function() {
-        // Find the index of the build to remove.
-        var idx1 = -1;
-        var idx2 = -1;
-        for (var i in $scope.cdash.buildgroups) {
-          for (var j = 0, len = $scope.cdash.buildgroups[i].builds.length; j < len; j++) {
-            if ($scope.cdash.buildgroups[i].builds[j] === build) {
-              idx1 = i;
-              idx2 = j;
-              break;
-            }
-          }
-          if (idx1 != -1) {
-            break;
-          }
-        }
-        if (idx1 > -1 && idx2 > -1) {
-          // Remove the build from our scope.
-          $scope.cdash.buildgroups[idx1].builds.splice(idx2, 1);
-        }
+        $scope.removeBuildFromScope(build);
       });
     } else {
       var newExpectedValue = 1;
