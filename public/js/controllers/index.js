@@ -213,6 +213,7 @@ CDash.filter("showEmptyBuildsLast", function () {
     }
 
     // Check for label filters
+    cdash.extrafilterurl = '';
     if (cdash.sharelabelfilters) {
       cdash.extrafilterurl = filters.getLabelString(cdash.filterdata);
     }
@@ -275,6 +276,7 @@ CDash.filter("showEmptyBuildsLast", function () {
       $scope.cdash.advancedview = 1;
     }
     $.cookie('cdash_'+$scope.cdash.projectname+'_advancedview', $scope.cdash.advancedview);
+    window.location.reload(true);
   };
 
 
