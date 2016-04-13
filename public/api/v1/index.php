@@ -1076,6 +1076,30 @@ function echo_main_dashboard_JSON($project_instance, $date)
         }
         $build_response['submitdate'] = date(FMT_DATETIMEDISPLAY, $submittimestamp);
 
+        // Generate a string summarizing this build's timing.
+        $timesummary = $build_response['builddate'];
+        if ($build_response['hasupdate'] &&
+                array_key_exists('time', $build_response['update'])) {
+            $timesummary .= ', Update time: ' .
+                $build_response['update']['time'];
+        }
+        if ($build_response['hasconfigure'] &&
+                array_key_exists('time', $build_response['configure'])) {
+            $timesummary .= ', Configure time: ' .
+                $build_response['configure']['time'];
+        }
+        if ($build_response['hascompilation'] &&
+                array_key_exists('time', $build_response['compilation'])) {
+            $timesummary .= ', Compilation time: ' .
+                $build_response['compilation']['time'];
+        }
+        if ($build_response['hastest'] &&
+                array_key_exists('time', $build_response['test'])) {
+            $timesummary .= ', Test time: ' .
+                $build_response['test']['time'];
+        }
+        $build_response['timesummary'] = $timesummary;
+
         if ($build_array['name'] != 'Aggregate Coverage') {
             $buildgroups_response[$i]['builds'][] = $build_response;
         }
@@ -1426,6 +1450,7 @@ function add_expected_builds($groupid, $currentstarttime, $received_builds)
             $build_response['site'] = $site;
             $build_response['siteoutoforder'] = $siteoutoforder;
             $build_response['siteid'] = $siteid;
+            $build_response['id'] = false;
             $build_response['buildname'] = $buildname;
             $build_response['buildtype'] = $buildtype;
             $build_response['buildgroupid'] = $groupid;
