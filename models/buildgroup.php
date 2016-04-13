@@ -16,7 +16,7 @@
 
 include_once 'models/build.php';
 
-class buildgroup
+class BuildGroup
 {
     private $Id;
     private $ProjectId;

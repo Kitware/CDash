@@ -19,7 +19,7 @@
 include_once 'models/subprojectgroup.php';
 
 /** Main subproject class */
-class subproject
+class SubProject
 {
     private $Name;
     private $Id;

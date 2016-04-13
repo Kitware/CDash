@@ -18,7 +18,7 @@ include_once 'models/buildconfigureerror.php';
 include_once 'models/buildconfigureerrordiff.php';
 
 /** BuildConfigure class */
-class buildconfigure
+class BuildConfigure
 {
     public $StartTime;
     public $EndTime;

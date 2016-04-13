@@ -29,10 +29,6 @@ class TestingJUnitHandler extends AbstractHandler
 
     private $Test;
     private $BuildTest;
-    private $BuildTestDiff;
-    private $TestImage;
-    private $TestMeasurement;
-    private $Label;
     private $Append;
 
     // Keep a record of the number of tests passed, failed and notrun
@@ -213,6 +209,8 @@ class TestingJUnitHandler extends AbstractHandler
                 $stamp = $this->Build->GetStamp();
                 $timestamp = mktime(substr($stamp, 9, 2), substr($stamp, 11, 2), 0,
                     substr($stamp, 6, 2), substr($stamp, 4, 2), substr($stamp, 0, 4));
+            } else {
+                $timestamp = 0;
             }
 
             $this->StartTimeStamp = $timestamp;
@@ -224,7 +222,6 @@ class TestingJUnitHandler extends AbstractHandler
     /** End Element */
     public function endElement($parser, $name)
     {
-        //$parent = $this->getParent(); // should be before endElement
         parent::endElement($parser, $name);
         if ($name == 'FAILURE') {
             $this->BuildTest->Status = 'failed';
@@ -262,7 +259,6 @@ class TestingJUnitHandler extends AbstractHandler
     /** Text function */
     public function text($parser, $data)
     {
-        //$parent = $this->getParent();
         $element = $this->getElement();
         if ($element == 'FAILURE') {
             $this->Test->Output .= $data;

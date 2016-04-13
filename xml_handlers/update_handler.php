@@ -29,6 +29,7 @@ class UpdateHandler extends AbstractHandler
     private $Append;
     private $Update;
     private $UpdateFile;
+    private $Feed;
 
     /** Constructor */
     public function __construct($projectID, $scheduleID)

@@ -29,10 +29,6 @@ class TestingNUnitHandler extends AbstractHandler
 
     private $Test;
     private $BuildTest;
-    private $BuildTestDiff;
-    private $TestImage;
-    private $TestMeasurement;
-    private $Label;
     private $Append;
 
     // Keep a record of the number of tests passed, failed and notrun
@@ -66,7 +62,6 @@ class TestingNUnitHandler extends AbstractHandler
     public function startElement($parser, $name, $attributes)
     {
         parent::startElement($parser, $name, $attributes);
-        $parent = $this->getParent(); // should be before endElement
 
         if ($name == 'SITE') {
             $this->HasSiteTag = true;
@@ -200,7 +195,6 @@ class TestingNUnitHandler extends AbstractHandler
     /** End Element */
     public function endElement($parser, $name)
     {
-        //$parent = $this->getParent(); // should be before endElement
         parent::endElement($parser, $name);
 
         if ($name == 'TEST-CASE') {
@@ -232,7 +226,5 @@ class TestingNUnitHandler extends AbstractHandler
     /** Text function */
     public function text($parser, $data)
     {
-        //$parent = $this->getParent();
-        //$element = $this->getElement();
     }
 }

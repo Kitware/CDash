@@ -25,7 +25,6 @@ class DynamicAnalysisHandler extends AbstractHandler
     private $StartTimeStamp;
     private $EndTimeStamp;
     private $Checker;
-    private $UpdateEndTime;
 
     private $DynamicAnalysis;
     private $DynamicAnalysisDefect;
@@ -98,7 +97,7 @@ class DynamicAnalysisHandler extends AbstractHandler
             $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
             $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
             $this->Build->StartTime = $start_time;
-            $this->Build->EndTime = $start_time;
+            $this->Build->EndTime = $end_time;
             $this->Build->SubmitTime = gmdate(FMT_DATETIME);
             $this->Build->SetSubProject($this->SubProjectName);
             $this->Build->GetIdFromName($this->SubProjectName);

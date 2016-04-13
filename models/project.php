@@ -22,7 +22,7 @@ include_once 'models/buildgroupposition.php';
 require_once 'include/cdashmail.php';
 
 /** Main project class */
-class project
+class Project
 {
     public $Name;
     public $Id;

@@ -25,7 +25,7 @@ include_once 'models/image.php';
 include_once 'models/constants.php';
 
 /** Test */
-class test
+class Test
 {
     public $Id;
     public $Crc32;

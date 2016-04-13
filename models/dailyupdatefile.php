@@ -16,7 +16,7 @@
 
 // It is assumed that appropriate headers should be included before including this file
 
-class dailyupdatefile
+class DailyUpdateFile
 {
     public $Filename;
     public $CheckinDate;

@@ -14,12 +14,16 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-class coveragesummary
+class CoverageSummary
 {
     private $LocTested = 0;
     private $LocUntested = 0;
     public $BuildId;
     private $Coverages;
+    public $BranchesTested;
+    public $BranchesUntested;
+    public $FunctionsTested;
+    public $FunctionsUntested;
 
     public function __construct()
     {

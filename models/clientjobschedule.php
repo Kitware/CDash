@@ -16,7 +16,7 @@
 
 include_once 'models/constants.php';
 
-class clientjobschedule
+class ClientJobSchedule
 {
     public $Id;
     public $UserId;

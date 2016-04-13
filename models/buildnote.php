@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-class buildnote
+class BuildNote
 {
     public $Id;
     public $Time;

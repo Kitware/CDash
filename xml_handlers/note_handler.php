@@ -23,6 +23,7 @@ class NoteHandler extends AbstractHandler
 {
     private $BuildId;
     private $Note;
+    private $Configure;
 
     /** Constructor */
     public function __construct($projectID, $scheduleID)

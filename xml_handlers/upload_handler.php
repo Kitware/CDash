@@ -45,6 +45,8 @@ class UploadHandler extends AbstractHandler
 
     /** If True, means an error happened while processing the file */
     private $UploadError;
+    
+    private $UpdateEndTime;
 
     /** Constructor */
     public function __construct($projectID, $scheduleID)
@@ -115,8 +117,21 @@ class UploadHandler extends AbstractHandler
             $nightly_time = $row['nightlytime'];
             $build_date =
                 extract_date_from_buildstamp($this->Build->GetStamp());
+
             list($prev, $nightly_start_time, $next) =
                 get_dates($build_date, $nightly_time);
+
+            // If the nightly start time is after noon (server time)
+            // and this buildstamp is on or after the nightly start time
+            // then this build belongs to the next testing day.
+            if (date(FMT_TIME, $nightly_start_time) > '12:00:00') {
+                $build_timestamp = strtotime($build_date);
+                $next_timestamp = strtotime($next);
+                if (strtotime(date(FMT_TIME, $build_timestamp), $next_timestamp) >=
+                    strtotime(date(FMT_TIME, $nightly_start_time), $next_timestamp)) {
+                    $nightly_start_time += 3600 * 24;
+                }
+            }
 
             $this->Build->EndTime = gmdate(FMT_DATETIME, $nightly_start_time);
 
@@ -252,7 +267,6 @@ class UploadHandler extends AbstractHandler
                 $url_length = 255; // max length of 'uploadfile.filename' field
                 $this->UploadFile->Filename = trim(file_get_contents($this->TmpFilename, null, null, 0, $url_length));
                 cdash_unlink($this->TmpFilename);
-                //add_log("this->UploadFile->Filename '".$this->UploadFile->Filename."'", __FILE__.':'.__LINE__.' - '.__FUNCTION__, LOG_INFO);
             } else {
                 $this->UploadFile->IsUrl = false;
 
@@ -355,8 +369,6 @@ class UploadHandler extends AbstractHandler
         if ($parent == 'FILE') {
             switch ($element) {
                 case 'CONTENT':
-                    //add_log("Chunk size:" . strlen($data));
-                    //add_log("Chunk:" . $data);
                     // Write base64 encoded chunch to temporary file
                     $charsToReplace = array("\r\n", "\n", "\r");
                     fwrite($this->Base64TmpFileWriteHandle, str_replace($charsToReplace, '', $data));

@@ -17,7 +17,7 @@
 include_once 'models/dynamicanalysisdefect.php';
 include_once 'models/label.php';
 
-class dynamicanalysis
+class DynamicAnalysis
 {
     public $Id;
     public $Status;

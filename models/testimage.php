@@ -18,7 +18,7 @@
 
 /** Test Image
  *  Actually stores just the image id. The image is supposed to be already in the image table */
-class testimage
+class TestImage
 {
     public $Id;
     public $Role;

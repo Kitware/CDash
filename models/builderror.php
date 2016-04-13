@@ -15,7 +15,7 @@
 =========================================================================*/
 
 /** BuildError */
-class builderror
+class BuildError
 {
     public $Type;
     public $LogLine;

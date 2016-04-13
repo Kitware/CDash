@@ -156,8 +156,7 @@ class CoverageJUnitHandler extends AbstractHandler
     /** Text function */
     public function text($parser, $data)
     {
-        //$parent = $this->getParent();
-        //$element = $this->getElement();
+        $element = $this->getElement();
         if ($element == 'LABEL') {
             $this->Label->SetText($data);
         }

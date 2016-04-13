@@ -17,7 +17,7 @@
 // It is assumed that appropriate headers should be included before including this file
 include_once 'models/buildupdatefile.php';
 
-class buildupdate
+class BuildUpdate
 {
     private $Files;
     public $StartTime;

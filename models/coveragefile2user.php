@@ -15,7 +15,7 @@
 =========================================================================*/
 
 /** Coverage file to users */
-class coveragefile2user
+class CoverageFile2User
 {
     public $UserId;
     public $FileId;

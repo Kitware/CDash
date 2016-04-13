@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-class dailyupdate
+class DailyUpdate
 {
     public $Id;
     public $Date;

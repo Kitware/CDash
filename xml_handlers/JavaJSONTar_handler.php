@@ -196,6 +196,7 @@ class JavaJSONTarHandler
         }
 
         // Save these models to the database.
+        $coverageFile->TrimLastNewline();
         $coverageFile->Update($buildid);
         $coverageFileLog->BuildId = $buildid;
         $coverageFileLog->FileId = $coverageFile->Id;

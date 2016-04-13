@@ -111,6 +111,22 @@ class GCovTarHandler
             }
         }
 
+        // Search for uncovered files.
+        if (file_exists("$dirName/uncovered")) {
+            $iterator = new RecursiveIteratorIterator(
+                    new RecursiveDirectoryIterator("$dirName/uncovered"),
+                    RecursiveIteratorIterator::LEAVES_ONLY);
+            foreach ($iterator as $fileinfo) {
+                if ($fileinfo->isFile()) {
+                    // Get the path of this uncovered file relative to its
+                    // source directory.
+                    $relativePath =
+                        str_replace("$dirName/uncovered/", "./", $fileinfo);
+                    $this->ParseUncoveredSourceFile($fileinfo, $relativePath);
+                }
+            }
+        }
+
         // Insert coverage summary
         $this->CoverageSummary->Insert(true);
         $this->CoverageSummary->ComputeDifference();
@@ -152,16 +168,6 @@ class GCovTarHandler
             return;
         }
 
-        // If this source file isn't from the source or binary directory
-        // we shouldn't include it in our coverage report.
-        if (strpos($path, $this->SourceDirectory) !== false) {
-            $path = str_replace($this->SourceDirectory, '.', trim($path));
-        } elseif (strpos($path, $this->BinaryDirectory) !== false) {
-            $path = str_replace($this->BinaryDirectory, '.', trim($path));
-        } else {
-            return;
-        }
-
         // Check if this file belongs to a different SubProject.
         $buildid = $this->Build->Id;
         if (!empty($this->SubProjectPath) &&
@@ -169,20 +175,22 @@ class GCovTarHandler
         ) {
             // Find the SubProject that corresponds to this path.
             $query =
-                "SELECT id, name FROM subproject
+                "SELECT id, name, path FROM subproject
                 WHERE projectid = $this->ProjectId AND
                 endtime = '1980-01-01 00:00:00' AND
                 path != '' AND
                 '$path' LIKE CONCAT('%',path,'%')";
-            $row = pdo_single_row_query($query);
-            if (!$row || !array_key_exists('name', $row)) {
+            $result = pdo_query($query);
+            if (!$result || pdo_num_rows($result) == 0) {
                 add_log(
                     "No SubProject found for '$path'", 'ParseGcovFile',
-                    LOG_WARNING, $this->ProjectId, $this->Build->Id);
+                    LOG_INFO, $this->ProjectId, $this->Build->Id);
                 return;
             }
-            $subprojectname = $row['id'];
+            $row = pdo_fetch_array($result);
             $subprojectid = $row['id'];
+            $subprojectname = $row['name'];
+            $subprojectpath = $row['path'];
 
             // Find the sibling build that performed this SubProject.
             $query =
@@ -197,13 +205,38 @@ class GCovTarHandler
             } else {
                 // Build doesn't exist yet, add it here.
                 $siblingBuild = new Build();
-                $siblingBuild->SiteId = $this->Build->SiteId;
                 $siblingBuild->Name = $this->Build->Name;
-                $siblingBuild->SetStamp($this->Build->GetStamp());
+                $siblingBuild->ProjectId = $this->ProjectId;
+                $siblingBuild->SiteId = $this->Build->SiteId;
                 $siblingBuild->ParentId = $this->Build->ParentId;
+                $siblingBuild->SetStamp($this->Build->GetStamp());
                 $siblingBuild->SetSubProject($subprojectname);
+                $siblingBuild->StartTime = $this->Build->StartTime;
+                $siblingBuild->EndTime = $this->Build->EndTime;
+                $siblingBuild->SubmitTime = gmdate(FMT_DATETIME);
                 add_build($siblingBuild, 0);
                 $buildid = $siblingBuild->Id;
+            }
+            // Remove any part of the file path that comes before
+            // the subproject path.
+            $path = substr($path, strpos($path, $subprojectpath));
+
+            // Replace the subproject path with '.'
+            $path = substr_replace($path, '.', 0, strlen($subprojectpath));
+        } else {
+            // If this source file isn't from the source or binary directory
+            // we shouldn't include it in our coverage report.
+            if (!empty($this->SubProjectPath) &&
+                    strpos($path, $this->SubProjectPath) !== false) {
+                $path = substr($path, strpos($path, $this->SubProjectPath));
+                $path =
+                    substr_replace($path, '.', 0, strlen($this->SubProjectPath));
+            } elseif (strpos($path, $this->SourceDirectory) !== false) {
+                $path = str_replace($this->SourceDirectory, '.', trim($path));
+            } elseif (strpos($path, $this->BinaryDirectory) !== false) {
+                $path = str_replace($this->BinaryDirectory, '.', trim($path));
+            } else {
+                return;
             }
         }
 
@@ -303,6 +336,7 @@ class GCovTarHandler
         }
 
         // Save these models to the database.
+        $coverageFile->TrimLastNewline();
         $coverageFile->Update($buildid);
         $coverageFileLog->BuildId = $buildid;
         $coverageFileLog->FileId = $coverageFile->Id;
@@ -315,9 +349,7 @@ class GCovTarHandler
         $stats = $coverageFileLog->GetStats();
         $coverage->LocUntested = $stats['locuntested'];
         $coverage->LocTested = $stats['loctested'];
-        if ($coverage->LocTested > 0) {
-            $coverage->Covered = 1;
-        }
+        $coverage->Covered = 1;
         $coverage->BranchesUntested = $stats['branchesuntested'];
         $coverage->BranchesTested = $stats['branchestested'];
 
@@ -379,5 +411,52 @@ class GCovTarHandler
 
             $this->Labels[$path] = $source_labels;
         }
+    }
+
+    /**
+     * Parse an individual uncovered source file.
+     **/
+    public function ParseUncoveredSourceFile($fileinfo, $path)
+    {
+        $coverageFileLog = new CoverageFileLog();
+        $coverageFile = new CoverageFile();
+        $coverageFile->FullPath = $path;
+        $coverage = new Coverage();
+        $coverage->CoverageFile = $coverageFile;
+
+        // SplFileObject was giving me an erroneous extra line at the
+        // end of the file, so instead we use good old file().
+        $lines = file($fileinfo);
+        $lineNumber = 0;
+        foreach ($lines as $line) {
+            $sourceLine = rtrim($line);
+            $coverageFile->File .= $sourceLine;
+            $coverageFile->File .= '<br>';
+            $coverageFileLog->AddLine($lineNumber, 0);
+            $lineNumber++;
+        }
+
+        // Save these models to the database.
+        $coverageFile->TrimLastNewline();
+        $coverageFile->Update($this->Build->Id);
+        $coverageFileLog->BuildId = $this->Build->Id;
+        $coverageFileLog->FileId = $coverageFile->Id;
+        $coverageFileLog->Insert(true);
+
+        $coverage->LocUntested = $lineNumber;
+        $coverage->LocTested = 0;
+        $coverage->Covered = 1;
+
+        // Add any labels.
+        if (array_key_exists($path, $this->Labels)) {
+            foreach ($this->Labels[$path] as $labelText) {
+                $label = new Label();
+                $label->SetText($labelText);
+                $coverage->AddLabel($label);
+            }
+        }
+
+        // Add this Coverage to our summary.
+        $this->CoverageSummary->AddCoverage($coverage);
     }
 }
