@@ -56,28 +56,6 @@ CDash.filter("showEmptyBuildsLast", function () {
   $scope.showfilters = false;
   $scope.showsettings = false;
 
-  // Check for sorting cookies.
-  var sort_order = [];
-  var cookie_value = $.cookie('cdash_coverage_sort');
-  if(cookie_value) {
-    sort_order = cookie_value.split(",");
-  }
-  $scope.sortCoverage = { orderByFields: sort_order };
-
-  sort_order = [];
-  cookie_value = $.cookie('cdash_DA_sort');
-  if(cookie_value) {
-    sort_order = cookie_value.split(",");
-  }
-  $scope.sortDA = { orderByFields: sort_order };
-
-  sort_order = [];
-  cookie_value = $.cookie('cdash_subproject_sort');
-  if(cookie_value) {
-    sort_order = cookie_value.split(",");
-  }
-  $scope.sortSubProjects = { orderByFields: sort_order };
-
   // Show/hide feed based on cookie settings.
   var feed_cookie = $.cookie('cdash_hidefeed');
   if(feed_cookie) {
@@ -108,21 +86,33 @@ CDash.filter("showEmptyBuildsLast", function () {
     // Set title in root scope so the head controller can see it.
     $rootScope['title'] = cdash.title;
 
-    // Check if sort order was specified via query string or cookie.
-    var sort_order = [];
+    // Check if buildgroup sort order was specified via query string.
+    var query_sort_order = [];
     if ('sort' in $rootScope.queryString) {
-      sort_order = $rootScope.queryString.sort.split(",");
-    } else {
-      if (cdash.childview == 1) {
-        $scope.sort_cookie_name = 'cdash_child_index_sort';
-      } else {
-        $scope.sort_cookie_name = 'cdash_index_sort';
-      }
-      var sort_cookie_value = $.cookie($scope.sort_cookie_name);
-      if(sort_cookie_value) {
-        sort_order = sort_cookie_value.split(",");
-      }
+      query_sort_order = $rootScope.queryString.sort.split(",");
     }
+
+    // Check for more sorting cookies.  Buildgroup sorting is handled below.
+    var sort_order = [];
+    var cookie_value = $.cookie('cdash_' + cdash.projectname + '_coverage_sort');
+    if(cookie_value) {
+      sort_order = cookie_value.split(",");
+    }
+    $scope.sortCoverage = { orderByFields: sort_order };
+
+    sort_order = [];
+    cookie_value = $.cookie('cdash_' + cdash.projectname + '_DA_sort');
+    if(cookie_value) {
+      sort_order = cookie_value.split(",");
+    }
+    $scope.sortDA = { orderByFields: sort_order };
+
+    sort_order = [];
+    cookie_value = $.cookie('cdash_' + cdash.projectname + '_subproject_sort');
+    if(cookie_value) {
+      sort_order = cookie_value.split(",");
+    }
+    $scope.sortSubProjects = { orderByFields: sort_order };
 
     // Check if we have a cookie for number of rows to display.
     var num_per_page_cookie = $.cookie('num_builds_per_page');
@@ -144,9 +134,23 @@ CDash.filter("showEmptyBuildsLast", function () {
       }
 
       // Setup sorting.
-      if (sort_order.length > 0) {
-        cdash.buildgroups[i].orderByFields = sort_order;
+      var sorting_set = false;
+      if (query_sort_order.length > 0) {
+        // Use sort order was specified via query string.
+        cdash.buildgroups[i].orderByFields = query_sort_order;
+        sorting_set = true;
       } else {
+        // If sort order wasn't specified via query string, check to see
+        // if we have a cookie telling us how to sort this buildgroup.
+        var cookie_name = $scope.getCookieName(cdash.buildgroups[i], cdash.projectname, cdash.childview);
+        var sort_cookie_value = $.cookie(cookie_name);
+        if(sort_cookie_value) {
+          sort_order = sort_cookie_value.split(",");
+          cdash.buildgroups[i].orderByFields = sort_order;
+          sorting_set = true;
+        }
+      }
+      if (!sorting_set) {
         // Default sorting.
         cdash.buildgroups[i].orderByFields = [];
 
@@ -534,23 +538,24 @@ CDash.filter("showEmptyBuildsLast", function () {
 
   $scope.updateOrderByFields = function(obj, field, $event, whichTable) {
     whichTable = whichTable || 'buildgroup';
-    var cookie_name = $scope.sort_cookie_name;
+    var cookie_name = '';
     multisort.updateOrderByFields(obj, field, $event);
     switch (whichTable) {
       case 'buildgroup':
       default:
+        cookie_name = $scope.getCookieName(obj, $scope.cdash.projectname, $scope.cdash.childview);
         obj.builds = $filter('orderBy')(obj.builds, obj.orderByFields);
         obj.builds = $filter('showEmptyBuildsLast')(obj.builds, obj.orderByFields);
         $scope.pageChanged(obj);
         break;
       case 'coverage':
-        cookie_name = 'cdash_coverage_sort';
+        cookie_name = 'cdash_' + $scope.cdash.projectname + '_coverage_sort';
         break;
       case 'DA':
-        cookie_name = 'cdash_DA_sort';
+        cookie_name = 'cdash_' + $scope.cdash.projectname + '_DA_sort';
         break;
       case 'subproject':
-        cookie_name = 'cdash_subproject_sort';
+        cookie_name = 'cdash_' + $scope.cdash.projectname + '_subproject_sort';
         break;
     }
     // Save the new sort order in a cookie.
@@ -564,6 +569,19 @@ CDash.filter("showEmptyBuildsLast", function () {
   $scope.parentBuild = function(build) {
     return build.numchildren > 0 || build.expectedandmissing == 1;
   };
+
+  $scope.getCookieName = function(buildgroup, projectname, childview) {
+    var cookie_name = 'cdash_' + projectname;
+    if (childview == 1) {
+      cookie_name += '_child_index';
+    } else {
+      cookie_name += '_index';
+    }
+    cookie_name += buildgroup.name;
+    cookie_name += '_sort';
+    return cookie_name;
+  };
+
 })
 .directive('normalBuild', function() {
   return {
