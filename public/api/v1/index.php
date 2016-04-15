@@ -800,6 +800,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
             INNER JOIN build AS b ON (l2b.buildid=b.id)
             WHERE b.id=' . qnum($buildid);
 
+        $build_labels = array();
         if ($num_selected_subprojects > 0) {
             // Special handling for whitelisting/blacklisting SubProjects.
             if ($include_subprojects) {
@@ -812,12 +813,15 @@ function echo_main_dashboard_JSON($project_instance, $date)
                     in_array($label_row['text'], $included_subprojects)
                 ) {
                     $num_labels++;
+                    $build_labels[] = $label_row['text'];
                 }
                 // Blacklist case
-                if ($exclude_subprojects &&
-                    in_array($label_row['text'], $excluded_subprojects)
-                ) {
-                    $num_labels--;
+                if ($exclude_subprojects) {
+                    if (in_array($label_row['text'], $excluded_subprojects)) {
+                        $num_labels--;
+                    } else {
+                        $build_labels[] = $label_row['text'];
+                    }
                 }
             }
 
@@ -832,9 +836,16 @@ function echo_main_dashboard_JSON($project_instance, $date)
         if ($num_labels == 0) {
             $build_label = '(none)';
         } elseif ($num_labels == 1) {
-            // If exactly one label for this build, look it up here.
-            $label_result = pdo_single_row_query($label_query);
-            $build_label = $label_result['text'];
+            // Exactly one label for this build
+            if (!empty($build_labels)) {
+                // If we're whitelisting or blacklisting we've already figured
+                // out what this label is.
+                $build_label = $build_labels[0];
+            } else {
+                // Otherwise we look it up here.
+                $label_result = pdo_single_row_query($label_query);
+                $build_label = $label_result['text'];
+            }
         } else {
             // More than one label, just report the number.
             $build_label = "($num_labels labels)";
