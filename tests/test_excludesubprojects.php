@@ -80,6 +80,26 @@ class ExcludeSubProjectsTestCase extends KWWebTestCase
         return 0;
     }
 
+    public function testExcludeAllButOneSubProject()
+    {
+        // Show only the results from hut12.kitware,
+        // excluding Teuchos and TrilinosFramework.
+        $this->get($this->url . '/api/v1/index.php?project=Trilinos&date=2011-07-22&filtercount=3&showfilters=1&filtercombine=and&field1=subprojects&compare1=92&value1=TrilinosFramework&field2=subprojects&compare2=92&value2=Teuchos&field3=site&compare3=61&value3=hut12.kitware');
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $buildgroup = array_pop($jsonobj['buildgroups']);
+        $build = array_pop($buildgroup['builds']);
+
+        // Verify that the only label is 'ThreadPool'.
+        if ($build['label'] !== 'ThreadPool') {
+            $this->fail('Expected ThreadPool, found ' . $build['label']);
+            return 1;
+        }
+
+        $this->pass('Tests passed');
+        return 0;
+    }
+
     public function testIncludeSubProjects()
     {
         // Load filtered data from our API.
@@ -141,6 +161,26 @@ class ExcludeSubProjectsTestCase extends KWWebTestCase
         // Verify 4 labels (normally 36).
         if ($build['label'] !== '(4 labels)') {
             $this->pass('Expected (4 labels), found ' . $build['label']);
+            return 1;
+        }
+
+        $this->pass('Tests passed');
+        return 0;
+    }
+
+    public function testIncludeOneSubProject()
+    {
+        // Show only the results from hut12.kitware,
+        // including ony the TrilinosFramework SubProject.
+        $this->get($this->url . '/api/v1/index.php?project=Trilinos&date=2011-07-22&filtercount=2&showfilters=1&filtercombine=and&field1=subprojects&compare1=93&value1=TrilinosFramework&field2=site&compare2=61&value2=hut12.kitware');
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $buildgroup = array_pop($jsonobj['buildgroups']);
+        $build = array_pop($buildgroup['builds']);
+
+        // Verify that the only label is 'TrilinosFramework'.
+        if ($build['label'] !== 'TrilinosFramework') {
+            $this->fail('Expected TrilinosFramework, found ' . $build['label']);
             return 1;
         }
 
