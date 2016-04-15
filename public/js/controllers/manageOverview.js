@@ -1,11 +1,11 @@
-CDash.controller('ManageOverviewController', function ManageOverviewController($scope, $rootScope, $http) {
+CDash.controller('ManageOverviewController', function ManageOverviewController($scope, $rootScope, $http, renderTimer) {
   $scope.loading = true;
   $http({
     url: 'api/v1/manageOverview.php',
     method: 'GET',
     params: $rootScope.queryString
   }).success(function(cdash) {
-    $scope.cdash = cdash;
+    renderTimer.initialRender($scope, cdash);
     // Setup sortable elements.
     $scope.buildSortable = {
       stop: function(e, ui) {

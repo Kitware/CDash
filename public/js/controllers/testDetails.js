@@ -1,12 +1,13 @@
 CDash.controller('TestDetailsController',
-  function TestDetailsController($scope, $rootScope, $http) {
+  function TestDetailsController($scope, $rootScope, $http, renderTimer) {
     $scope.loading = true;
     $http({
       url: 'api/v1/testDetails.php',
       method: 'GET',
       params: $rootScope.queryString
     }).success(function(cdash) {
-      $scope.cdash = cdash;
+      renderTimer.initialRender($scope, cdash);
+
       // Set title in root scope so the head controller can see it.
       $rootScope['title'] = cdash.title;
       $scope.cdash.showgraph = false;

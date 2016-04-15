@@ -1,5 +1,5 @@
 CDash.controller('TestSummaryController',
-  function TestSummaryController($scope, $rootScope, $http, multisort) {
+  function TestSummaryController($scope, $rootScope, $http, multisort, renderTimer) {
     $scope.loading = true;
     // Hide filters and graph by default.
     $scope.showfilters = false;
@@ -22,7 +22,8 @@ CDash.controller('TestSummaryController',
       method: 'GET',
       params: $rootScope.queryString
     }).success(function(cdash) {
-      $scope.cdash = cdash;
+      renderTimer.initialRender($scope, cdash);
+
       // Set title in root scope so the head controller can see it.
       $rootScope['title'] = cdash.title;
       $scope.graphurl = $scope.failureGraphUrl();

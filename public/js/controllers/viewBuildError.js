@@ -1,5 +1,5 @@
 CDash.controller('BuildErrorController',
-  function BuildErrorController($scope, $rootScope, $http, $sce) {
+  function BuildErrorController($scope, $rootScope, $http, $sce, renderTimer) {
     $scope.loading = true;
     $http({
       url: 'api/v1/viewBuildError.php',
@@ -12,7 +12,8 @@ CDash.controller('BuildErrorController',
         cdash.errors[i].postcontext = $sce.trustAsHtml(cdash.errors[i].postcontext);
         cdash.errors[i].text = $sce.trustAsHtml(cdash.errors[i].text);
       }
-      $scope.cdash = cdash;
+      renderTimer.initialRender($scope, cdash);
+
       // Set title in root scope so the head controller can see it.
       $rootScope['title'] = cdash.title;
     }).finally(function() {
