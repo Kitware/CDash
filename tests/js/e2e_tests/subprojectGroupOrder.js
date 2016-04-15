@@ -34,6 +34,6 @@ describe("subProjectGroupOrder", function() {
     element(by.linkText('subproject_coverage_example')).click();
 
     // Make sure that Production is the first group listed.
-    expect(element(by.repeater('group in cdash.coveragegroups').row(0)).getInnerHtml()).toContain("Production");
+    expect(element(by.repeater('group in ::cdash.coveragegroups').row(0)).getInnerHtml()).toContain("Production");
   });
 });

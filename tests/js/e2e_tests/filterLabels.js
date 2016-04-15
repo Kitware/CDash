@@ -29,10 +29,10 @@ describe("filterLabels", function() {
 
     // Next, click on a specific test
     var build_failures = element.all(by.binding('build.test.fail'));
-    expect(build_failures.count()).toBe(5);
-    var test3 = build_failures.get(3);
-    expect(test3.getText()).toBe('10');
-    test3.click();
+    expect(build_failures.count()).toBe(2);
+    var test = build_failures.get(0);
+    expect(test.getText()).toBe('10');
+    test.click();
     browser.waitForAngular();
 
     // Make sure the expected number of tests are displayed
