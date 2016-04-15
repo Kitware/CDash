@@ -23,7 +23,14 @@
   </div>
 
   <div ng-if="::build.id" style="float: left; margin: 0px 4px;">
-    <a class="buildinfo" alt="generator" ng-href="buildSummary.php?buildid={{::build.id}}">
+    <a class="buildinfo" alt="generator"
+       ng-if="::build.numchildren == 0"
+       ng-href="buildSummary.php?buildid={{::build.id}}">
+      {{::build.buildname}}
+    </a>
+    <a class="buildinfo" alt="generator"
+       ng-if="::build.numchildren > 0"
+       ng-href="{{::build.multiplebuildshyperlink}}">
       {{::build.buildname}}
     </a>
   </div>

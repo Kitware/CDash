@@ -585,14 +585,9 @@ CDash.filter("showEmptyBuildsLast", function () {
   };
 
 })
-.directive('normalBuild', function() {
+.directive('build', function() {
   return {
     templateUrl: 'views/partials/build.html'
-  }
-})
-.directive('parentBuild', function() {
-  return {
-    templateUrl: 'views/partials/parentbuild.html'
   }
 })
 .directive('buildNameElements', function() {
