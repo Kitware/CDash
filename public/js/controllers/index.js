@@ -589,9 +589,4 @@ CDash.filter("showEmptyBuildsLast", function () {
   return {
     templateUrl: 'views/partials/build.html'
   }
-})
-.directive('buildNameElements', function() {
-  return {
-    templateUrl: 'views/partials/buildNameElements.html'
-  }
 });

@@ -35,8 +35,166 @@
     </a>
   </div>
 
-  <!-- Elements common to parent & standalone builds. -->
-  <build-name-elements></build-name-elements>
+  <div ng-if="::!build.id" style="float: left; margin: 0px 4px;">{{::build.buildname}}</div>
+
+  <div style="float:left;">
+    <a title="View notes"
+       ng-if="::build.notes > 0 && cdash.advancedview != 0"
+       ng-href="viewNotes.php?buildid={{::build.id}}">
+      <img src="img/document.png" alt="Notes" class="icon"/>
+    </a>
+
+    <a href="javascript:;" style="float: left;"
+       ng-if="::build.uploadfilecount > 0"
+       ng-href="viewFiles.php?buildid={{::build.id}}"
+       title="{{::build.uploadfilecount}} files uploaded with this build">
+      <img src="img/package.png" alt="Files" class="icon"/>
+    </a>
+
+    <!-- If the build has errors or test failing -->
+    <a href="javascript:;" style="float: left;"
+       ng-if="::build.compilation.error > 0 || build.test.fail > 0"
+       ng-click="toggleBuildProblems(build)">
+      <img src="img/Info.png" alt="info" class="icon"></img>
+    </a>
+
+    <!-- If the build is expected and missing -->
+    <a href="javascript:;" style="float: left;"
+       ng-if="::build.expectedandmissing == 1"
+       ng-click="toggleExpectedInfo(build)">
+      <img src="img/Info.png" alt="info" class="icon"></img>
+    </a>
+
+    <!-- Display the note icon -->
+    <a name="Build Notes" class="jTip" id="buildnote_{{::build.id}}"
+       ng-if="::build.buildnotes > 0"
+       ng-href="ajax/buildnote.php?buildid={{::build.id}}&width=350&link=buildSummary.php%3Fbuildid%3D{{::build.id}}">
+      <img src="img/note.png" alt="note" class="icon"></img>
+    </a>
+
+    <div style="float: left;" ng-if="::cdash.user.id > 0">
+      <!-- Display folder icon for logged in users -->
+      <a href="javascript:;" ng-click="toggleAdminOptions(build)">
+        <img src="img/folder.png" class="icon"/>
+      </a>
+      <img src="img/loading.gif" ng-show="build.loading == 1"/>
+    </div>
+  </div>
+
+  <!-- Problematic build history table -->
+  <div ng-if="::build.compilation.error > 0 || build.test.fail > 0">
+    <table width="100%" border="0" ng-if="build.showProblems" class="animate-show">
+      <tbody>
+        <tr ng-if="::build.hasErrors">
+          <td bgcolor="#DDDDDD" id="nob">
+            <font size="2">
+              Build has been failing since
+              <b>
+                <a ng-href="index.php?project={{::cdash.projectname}}&date={{::build.failingDate}}">
+                  {{::build.failingSince}}
+                </a>
+                (<ng-pluralize count="::build.daysWithErrors"
+                              when="{'0':     'today',
+                                     '1':     '{} day',
+                                     'other': '{} days'}">
+                </ng-pluralize>)
+              </b>
+            </font>
+          </td>
+        </tr>
+        <tr ng-if="::build.hasFailingTests">
+          <td bgcolor="#DDDDDD" id="nob">
+            <font size="2">
+              Tests have been failing since
+              <b>
+                <a ng-href="index.php?project={{::cdash.projectname}}&date={{::build.testsFailingDate}}">
+                  {{::build.testsFailingSince}}
+                </a>
+                (<ng-pluralize count="::build.daysWithFailingTests"
+                              when="{'0':     'today',
+                                     '1':     '{} day',
+                                     'other': '{} days'}">
+                </ng-pluralize>)
+              </b>
+            </font>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- expected info table -->
+  <div ng-if="::build.expectedandmissing == 1">
+    <table width="100%" border="0" ng-if="build.showExpectedInfo" class="animate-show">
+      <tbody>
+        <tr>
+          <td bgcolor="#DDDDDD" id="nob">
+            <font size="2">
+              <span ng-if="::build.lastSubmission == -1">
+                This build has never submitted.
+              </span>
+              <span ng-if="::build.lastSubmission != -1">
+                This build has not submitted since
+                  <b>
+                    <a ng-href="index.php?project={{::cdash.projectname}}&date={{::build.lastSubmissionDate}}">
+                      {{::build.lastSubmission}}
+                    </a>
+                (<ng-pluralize count="::build.daysSinceLastBuild"
+                              when="{'1':     '{} day',
+                                     'other': '{} days'}">
+                </ng-pluralize>)
+              </span>
+            </font>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- admin options table -->
+  <div ng-if="::cdash.user.admin == 1">
+    <div ng-if="build.showAdminOptions == 1">
+      <table width="100%" border="0" class="animate-show">
+        <!-- If user is admin of the project propose to group this build -->
+        <tr ng-repeat="group in ::cdash.all_buildgroups">
+          <td width="35%">
+            <b>{{::group.name}}</b>:
+          </td>
+          <td ng-if="::group.name == buildgroup.name" colspan="2">
+            <a ng-show="build.expected == 0" href="javascript:;" ng-click="toggleExpected(build, group.id)">
+              [mark as expected]
+            </a>
+            <a ng-show="build.expected == 1" href="javascript:;" ng-click="toggleExpected(build, group.id)">
+              [mark as non expected]
+            </a>
+          </td>
+          <td ng-if="::group.name != buildgroup.name" colspan="2">
+            <input type="checkbox" ng-model="build.expected" ng-true-value="'1'" ng-false-value="'0'"> expected</input>
+          </td>
+          <td ng-if="::group.name != buildgroup.name" class="nob">
+            <a href="javascript:;" ng-click="moveToGroup(build, group.id)"> [move to group] </a>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3" class="nob">
+            <a href="javascript:;" ng-click="removeBuild(build)"> [remove this build] </a>
+          </td>
+        </tr>
+      </table>
+
+      <div tooltip-popup-delay="1500"
+           tooltip-append-to-body="true"
+           uib-tooltip="Done builds will be overwritten if a new one is submitted with the same site, build name, and timestamp."
+      >
+        <a ng-show="build.done == 0" href="javascript:;" ng-click="toggleDone(build)">
+          [mark as done]
+        </a>
+        <a ng-show="build.done == 1" href="javascript:;" ng-click="toggleDone(build)">
+          [mark as not done]
+        </a>
+      </div>
+    </div>
+  </div>
 </td>
 
 <td ng-if="::buildgroup.hasupdatedata" align="center"
