@@ -1,5 +1,5 @@
 CDash.controller('QueryTestsController',
-  function QueryTestsController($scope, $rootScope, $http, $filter, filters, multisort) {
+  function QueryTestsController($scope, $rootScope, $http, $filter, filters, multisort, renderTimer) {
     $scope.loading = true;
 
     // Pagination settings.
@@ -37,7 +37,8 @@ CDash.controller('QueryTestsController',
       // Check for label filters
       cdash.extrafilterurl = filters.getLabelString(cdash.filterdata);
 
-      $scope.cdash = cdash;
+      renderTimer.initialRender($scope, cdash);
+
       // Set title in root scope so the head controller can see it.
       $rootScope['title'] = cdash.title;
     }).finally(function() {

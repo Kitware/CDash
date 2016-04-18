@@ -1,5 +1,5 @@
 CDash.controller('CompareCoverageController',
-  function CompareCoverageController($scope, $rootScope, $http, filters, multisort) {
+  function CompareCoverageController($scope, $rootScope, $http, filters, multisort, renderTimer) {
     $scope.loading = true;
 
     // Hide filters by default.
@@ -13,7 +13,7 @@ CDash.controller('CompareCoverageController',
       params: $rootScope.queryString
     }).success(function(cdash) {
 
-      $scope.cdash = cdash;
+      renderTimer.initialRender($scope, cdash);
 
       // Set title in root scope so the head controller can see it.
       $rootScope['title'] = cdash.title;

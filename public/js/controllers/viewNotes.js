@@ -1,11 +1,11 @@
-function ViewNotesController($scope, $rootScope, $http, $location, $anchorScroll) {
+function ViewNotesController($scope, $rootScope, $http, $location, $anchorScroll, renderTimer) {
   $scope.loading = true;
   $http({
     url: 'api/v1/viewNotes.php',
     method: 'GET',
     params: $rootScope.queryString
   }).success(function(cdash) {
-    $scope.cdash = cdash;
+    renderTimer.initialRender($scope, cdash);
   }).finally(function() {
     $scope.loading = false;
   });
@@ -24,5 +24,5 @@ function ViewNotesController($scope, $rootScope, $http, $location, $anchorScroll
   };
 }
 
-CDash.controller('ViewNotesController', ['$scope', '$rootScope', '$http', '$location', '$anchorScroll',
+CDash.controller('ViewNotesController', ['$scope', '$rootScope', '$http', '$location', '$anchorScroll', 'renderTimer',
                                           ViewNotesController]);
