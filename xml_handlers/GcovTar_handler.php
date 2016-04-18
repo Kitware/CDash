@@ -208,7 +208,7 @@ class GCovTarHandler
                 $siblingBuild->Name = $this->Build->Name;
                 $siblingBuild->ProjectId = $this->ProjectId;
                 $siblingBuild->SiteId = $this->Build->SiteId;
-                $siblingBuild->ParentId = $this->Build->ParentId;
+                $siblingBuild->SetParentId($this->Build->GetParentId());
                 $siblingBuild->SetStamp($this->Build->GetStamp());
                 $siblingBuild->SetSubProject($subprojectname);
                 $siblingBuild->StartTime = $this->Build->StartTime;

@@ -113,7 +113,7 @@ class JavaJSONTarHandler
          INNER JOIN subproject AS sp ON (sp.id = sp2b.subprojectid)
          INNER JOIN build AS b ON (b.id = sp2b.buildid)
          WHERE sp.name = '$subprojectName'
-         AND b.parentid=" . qnum($this->Build->ParentId);
+         AND b.parentid=" . qnum($this->Build->GetParentId());
             $buildid_result = pdo_single_row_query($query);
 
             // If we found a different buildid, create a new CoverageSummary.
