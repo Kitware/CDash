@@ -20,6 +20,7 @@ require_once 'include/pdo.php';
 include 'public/login.php';
 include_once 'models/banner.php';
 
+$start = microtime_float();
 $response = begin_JSON_response();
 
 $Banner = new Banner;
@@ -96,5 +97,9 @@ foreach ($projects as $project) {
     $projects_response[] = $project_response;
 }
 $response['projects'] = $projects_response;
+
+$end = microtime_float();
+$generation_time = round($end - $start, 2);
+$response['generationtime'] = $generation_time;
 
 echo json_encode(cast_data_for_JSON($response));

@@ -1,5 +1,5 @@
 CDash.controller('ViewProjectsController',
-  function ViewProjectsController($scope, $rootScope, $http) {
+  function ViewProjectsController($scope, $rootScope, $http, renderTimer) {
     $scope.loading = true;
     // Hide filters by default.
     $scope.showfilters = false;
@@ -8,7 +8,7 @@ CDash.controller('ViewProjectsController',
       method: 'GET',
       params: $rootScope.queryString
     }).success(function(cdash) {
-      $scope.cdash = cdash;
+      renderTimer.initialRender($scope, cdash);
     }).finally(function() {
       $scope.loading = false;
     });

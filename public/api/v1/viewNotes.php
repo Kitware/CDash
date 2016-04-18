@@ -22,6 +22,8 @@ include_once 'include/common.php';
 include 'include/version.php';
 require_once 'models/build.php';
 
+$start = microtime_float();
+
 @$buildid = $_GET['buildid'];
 if ($buildid != null) {
     $buildid = pdo_real_escape_numeric($buildid);
@@ -120,5 +122,9 @@ while ($build2note_array = pdo_fetch_array($build2note)) {
     $notes[] = $note;
 }
 $response['notes'] = $notes;
+
+$end = microtime_float();
+$generation_time = round($end - $start, 2);
+$response['generationtime'] = $generation_time;
 
 echo json_encode(cast_data_for_JSON($response));
