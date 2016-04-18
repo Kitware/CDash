@@ -71,11 +71,6 @@ class UploadFileTestCase extends KWWebTestCase
 
         $this->assertClickable('http://www.kitware.com/company/about.html');
 
-        $this->clickLink('CMakeCache.txt');
-        if (!$this->checkLog($this->logfilename)) {
-            return;
-        }
-
         //Verify symlink and content exist on disk
         $query = $this->db->query("SELECT id, sha1sum FROM uploadfile WHERE filename='CMakeCache.txt'");
         if (count($query) == 0) {
@@ -85,9 +80,8 @@ class UploadFileTestCase extends KWWebTestCase
         $this->FileId = $query[0]['id'];
         $this->Sha1Sum = $query[0]['sha1sum'];
 
-        global $cdashpath;
-        global $CDASH_DOWNLOAD_RELATIVE_URL;
-        $dirName = $cdashpath . '/' . $CDASH_DOWNLOAD_RELATIVE_URL . '/' . $this->Sha1Sum;
+        global $CDASH_UPLOAD_DIRECTORY, $CDASH_DOWNLOAD_RELATIVE_URL;
+        $dirName = $CDASH_UPLOAD_DIRECTORY . '/' . $this->Sha1Sum;
         if (!is_dir($dirName)) {
             $this->fail("Directory $dirName was not created");
             return;
@@ -100,6 +94,20 @@ class UploadFileTestCase extends KWWebTestCase
             $this->fail("File symlink was not written to $dirName/CMakeCache.txt");
             return;
         }
-        $this->pass('Uploaded file exists in database and on disk');
+
+        // Make sure the file is downloadable.
+        $content = $this->connect("$this->url/$CDASH_DOWNLOAD_RELATIVE_URL/$this->Sha1Sum/CMakeCache.txt");
+        if (!$content) {
+            $this->fail('No content returned when trying to download CMakeCache.txt');
+            return;
+        }
+
+        $pos = strpos($content, 'This is the CMakeCache file');
+        if ($pos === false) {
+            $this->fail('Expected content not found in CMakeCache.txt');
+            return;
+        }
+
+        $this->pass('Uploaded file exists in database, on disk, and is downloadable.');
     }
 }
