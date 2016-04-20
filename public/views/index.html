@@ -369,7 +369,7 @@
             <td align="center"></td>
           </tr>
 
-          <tr class="child_row" ng-show="!group.hidden" ng-repeat="coverage in ::group.coverages |orderBy:sortCoverage.orderByFields" ng-class-odd="'odd'" ng-class-even="'even'">
+          <tr class="child_row" ng-show="!group.hidden" ng-repeat="coverage in group.coverages |orderBy:sortCoverage.orderByFields" ng-class-odd="'odd'" ng-class-even="'even'">
             <td align="left" class="paddt">
               {{::coverage.label}}
             </td>
@@ -404,7 +404,7 @@
 
         <!-- Ungrouped coverage -->
         <tbody ng-if="::!cdash.coveragegroups || cdash.coveragegroups.length == 0" id="coveragebody">
-          <tr class="child_row" ng-repeat="coverage in ::cdash.coverages |orderBy:sortCoverage.orderByFields" ng-class-odd="'odd'" ng-class-even="'even'">
+          <tr class="child_row" ng-repeat="coverage in cdash.coverages |orderBy:sortCoverage.orderByFields" ng-class-odd="'odd'" ng-class-even="'even'">
             <td ng-if="::cdash.childview != 1" align="left" class="paddt">
               {{::coverage.site}}
             </td>
@@ -510,7 +510,7 @@
         </thead>
 
         <tbody>
-          <tr ng-repeat="da in ::cdash.dynamicanalyses |orderBy:sortDA.orderByFields"
+          <tr ng-repeat="da in cdash.dynamicanalyses |orderBy:sortDA.orderByFields"
               ng-class-odd="'odd'" ng-class-even="'even'">
             <td ng-if="::cdash.childview == 1" align="left">
               {{::da.label}}
