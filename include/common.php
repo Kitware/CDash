@@ -2117,3 +2117,20 @@ function cast_data_for_JSON($value)
     }
     return $value;
 }
+
+/* Get the site ID for 'CDash Server'.
+ * This is the site associated with Aggregate Coverage builds.
+ */
+function get_server_siteid()
+{
+    require_once 'models/site.php';
+    $server = new Site();
+    $server->Name = 'CDash Server';
+    if (!$server->Exists()) {
+        // Create it if it doesn't exist.
+        $server_ip = $_SERVER['SERVER_ADDR'];
+        $server->Ip = $server_ip;
+        $server->Insert();
+    }
+    return $server->Id;
+}

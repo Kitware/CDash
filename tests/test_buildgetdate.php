@@ -31,7 +31,7 @@ class BuildGetDateTestCase extends KWWebTestCase
 
         $expected_date = '2009-02-23';
         $date = $build->GetDate();
-        if ($build->GetDate() !== $expected_date) {
+        if ($date !== $expected_date) {
             $this->fail("Evening case: expected $expected_date, found $date");
             $retval = 1;
         }
@@ -39,8 +39,9 @@ class BuildGetDateTestCase extends KWWebTestCase
         $build->StartTime = date('Y-m-d H:i:s', strtotime('2009-02-23 20:00:00'));
 
         $expected_date = '2009-02-24';
+        $build->NightlyStartTime = false;
         $date = $build->GetDate();
-        if ($build->GetDate() !== $expected_date) {
+        if ($date !== $expected_date) {
             $this->fail("Evening case: expected $expected_date, found $date");
             $retval = 1;
         }
@@ -49,16 +50,18 @@ class BuildGetDateTestCase extends KWWebTestCase
         pdo_query("UPDATE project SET nightlytime = '09:00:00' WHERE id=1");
         $build->StartTime = date('Y-m-d H:i:s', strtotime('2009-02-23 08:59:59'));
         $expected_date = '2009-02-22';
+        $build->NightlyStartTime = false;
         $date = $build->GetDate();
-        if ($build->GetDate() !== $expected_date) {
+        if ($date !== $expected_date) {
             $this->fail("Morning case: expected $expected_date, found $date");
             $retval = 1;
         }
 
         $build->StartTime = date('Y-m-d H:i:s', strtotime('2009-02-23 09:00:00'));
         $expected_date = '2009-02-23';
+        $build->NightlyStartTime= false;
         $date = $build->GetDate();
-        if ($build->GetDate() !== $expected_date) {
+        if ($date !== $expected_date) {
             $this->fail("Morning case: expected $expected_date, found $date");
             $retval = 1;
         }
