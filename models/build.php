@@ -657,7 +657,7 @@ class Build
                  '$this->Uuid')";
 
             if (!pdo_query($query)) {
-                $error = pdo_error();
+                $error = pdo_error(null, false);
                 // This error might be due to a unique constraint violation
                 // for this UUID.  Query for such a previously existing build.
                 $existing_id_result = pdo_single_row_query(
