@@ -19,9 +19,11 @@ require_once 'models/coveragesummary.php';
 class CoverageFileLog
 {
     public $BuildId;
+    public $Build;
     public $FileId;
     public $Lines;
     public $Branches;
+    public $ServerSiteId;
 
     public function __construct()
     {
@@ -199,74 +201,58 @@ class CoverageFileLog
     /** Update the aggregate coverage build to include these results. */
     public function UpdateAggregate()
     {
-        $build = new Build();
-        $build->Id = $this->BuildId;
-        $build->FillFromId($this->BuildId);
+        if (!$this->Build) {
+            $this->Build = new Build();
+            $this->Build->Id = $this->BuildId;
+        }
+        $this->Build->FillFromId($this->BuildId);
 
         // Only nightly builds count towards aggregate coverage.
-        if ($build->Type !== 'Nightly' ||
-            $build->Name === 'Aggregate Coverage'
+        if ($this->Build->Type !== 'Nightly' ||
+            $this->Build->Name === 'Aggregate Coverage'
         ) {
             return;
         }
 
-        // Get the site ID for 'CDash Server'.
-        $server = new Site();
-        $server->Name = 'CDash Server';
-        if (!$server->Exists()) {
-            // Create it if it doesn't exist.
-            $server_ip = $_SERVER['SERVER_ADDR'];
-            $server->Ip = $server_ip;
-            $server->Insert();
+        // Find the build ID for this day's edition of 'Aggregate Coverage'.
+        if (!$this->ServerSiteId) {
+            $this->ServerSiteId = get_server_siteid();
         }
 
-        // Get the nightly start time for this project.
-        $row = pdo_single_row_query("SELECT nightlytime FROM project WHERE id='$build->ProjectId'");
-        if (!$row || !array_key_exists('nightlytime', $row)) {
-            return;
+        if (!$this->Build->BeginningOfDay) {
+            $this->Build->ComputeTestingDayBounds();
         }
-        $nightly_time = $row['nightlytime'];
 
-        // Get the beginning and end of this testing day.
-        $build_date = $build->GetDate();
-        list($previousdate, $currentstarttime, $nextdate) =
-            get_dates($build_date, $nightly_time);
-        $beginning_timestamp = $currentstarttime;
-        $end_timestamp = $currentstarttime + 3600 * 24;
-        $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
-        $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
-
-        // Use all this information to find the build ID for this day's edition
-        // of 'Aggregate Coverage'.
         $subproj_table = '';
         $subproj_criteria = '';
-        if ($build->SubProjectId) {
+        if ($this->Build->SubProjectId) {
             $subproj_table = ', subproject2build';
             $subproj_criteria =
                 'AND build.id=subproject2build.buildid ' .
-                'AND subproject2build.subprojectid=' . qnum($build->SubProjectId) . ' ';
+                'AND subproject2build.subprojectid=' . qnum($this->Build->SubProjectId) . ' ';
         }
         $query =
             "SELECT id FROM build$subproj_table
             WHERE name='Aggregate Coverage' AND
-            siteid='$server->Id' AND
-            projectid='$build->ProjectId' AND
-            starttime <'$end_UTCDate' AND starttime>='$beginning_UTCDate'
+            siteid='$this->ServerSiteId' AND
+            projectid='" . $this->Build->ProjectId ."' AND
+            starttime <'" . $this->Build->EndOfDay."' AND
+            starttime>='" . $this->Build->BeginningOfDay."'
             $subproj_criteria";
         $row = pdo_single_row_query($query);
         if (!$row || !array_key_exists('id', $row)) {
             // If the aggregate coverage build doesn't exist we add it here.
             $aggregateBuild = new Build();
             $aggregateBuild->Name = 'Aggregate Coverage';
-            $aggregateBuild->SiteId = $server->Id;
-            $date = substr($build->GetStamp(), 0, strpos($build->GetStamp(), '-'));
+            $aggregateBuild->SiteId = $this->ServerSiteId;
+            $date = substr($this->Build->GetStamp(), 0, strpos($this->Build->GetStamp(), '-'));
             $aggregateBuild->SetStamp($date."-0000-Nightly");
-            $aggregateBuild->ProjectId = $build->ProjectId;
+            $aggregateBuild->ProjectId = $this->Build->ProjectId;
 
-            $aggregateBuild->StartTime = $build->StartTime;
-            $aggregateBuild->EndTime = $build->EndTime;
+            $aggregateBuild->StartTime = $this->Build->StartTime;
+            $aggregateBuild->EndTime = $this->Build->EndTime;
             $aggregateBuild->SubmitTime = gmdate(FMT_DATETIME);
-            $aggregateBuild->SetSubProject($build->GetSubProjectName());
+            $aggregateBuild->SetSubProject($this->Build->GetSubProjectName());
             $aggregateBuild->InsertErrors = false;
             add_build($aggregateBuild);
             $aggregateBuildId = $aggregateBuild->Id;
@@ -296,6 +282,9 @@ class CoverageFileLog
         // Append these results to the aggregate coverage log.
         $aggregateLog = clone $this;
         $aggregateLog->BuildId = $aggregateBuildId;
+        $aggregateLog->Build = new Build();
+        $aggregateLog->Build->Id = $aggregateBuildId;
+        $aggregateLog->Build->FillFromId($aggregateBuildId);
         $aggregateLog->Insert(true);
 
         // Update the aggregate coverage summary.

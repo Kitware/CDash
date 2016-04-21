@@ -29,6 +29,7 @@ class GCovTarHandler
     private $Labels;
     private $SubProjectPath;
     private $SubProjectSummaries;
+    private $ServerSiteId;
 
     public function __construct($buildid)
     {
@@ -103,6 +104,10 @@ class GCovTarHandler
             }
         }
 
+        // Lookup some data used during coverage aggregation.
+        $this->ServerSiteId = get_server_siteid();
+        $this->Build->ComputeTestingDayBounds();
+
         // Recursively search for .gcov files and parse them.
         $iterator->rewind();
         foreach ($iterator as $fileinfo) {
@@ -146,6 +151,7 @@ class GCovTarHandler
     public function ParseGcovFile($fileinfo)
     {
         $coverageFileLog = new CoverageFileLog();
+        $coverageFileLog->ServerSiteId = $this->ServerSiteId;
         $coverageFile = new CoverageFile();
         $coverage = new Coverage();
         $coverage->CoverageFile = $coverageFile;
@@ -193,6 +199,7 @@ class GCovTarHandler
             $subprojectpath = $row['path'];
 
             // Find the sibling build that performed this SubProject.
+            $siblingBuild = new Build();
             $query =
                 'SELECT b.id FROM build AS b
                 INNER JOIN subproject2build AS sp2b ON (sp2b.buildid=b.id)
@@ -202,9 +209,10 @@ class GCovTarHandler
             $row = pdo_single_row_query($query);
             if ($row && array_key_exists('id', $row)) {
                 $buildid = $row['id'];
+                $siblingBuild->Id = $buildid;
+                $siblingBuild->FillFromId($buildid);
             } else {
                 // Build doesn't exist yet, add it here.
-                $siblingBuild = new Build();
                 $siblingBuild->Name = $this->Build->Name;
                 $siblingBuild->ProjectId = $this->ProjectId;
                 $siblingBuild->SiteId = $this->Build->SiteId;
@@ -217,6 +225,7 @@ class GCovTarHandler
                 add_build($siblingBuild, 0);
                 $buildid = $siblingBuild->Id;
             }
+            $coverageFileLog->Build = $siblingBuild;
             // Remove any part of the file path that comes before
             // the subproject path.
             $path = substr($path, strpos($path, $subprojectpath));
@@ -238,6 +247,7 @@ class GCovTarHandler
             } else {
                 return;
             }
+            $coverageFileLog->Build = $this->Build;
         }
 
         // Get a reference to the coverage summary for this build.

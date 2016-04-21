@@ -70,6 +70,12 @@ class Build
     // Used to mark whether this object already has its fields set.
     public $Filled;
 
+    // Not set by FillFromId(), but cached the first time they are
+    // computed.
+    public $NightlyStartTime;
+    public $BeginningOfDay;
+    public $EndOfDay;
+
     public function __construct()
     {
         $this->ProjectId = 0;
@@ -1963,22 +1969,24 @@ class Build
         }
         $this->FillFromId($this->Id);
 
-        $query =
-            'SELECT nightlytime FROM project WHERE id = ' .
-            qnum($this->ProjectId);
-        $row = pdo_single_row_query($query);
-        $nightly_start_time = strtotime($row['nightlytime']);
+        if (!$this->NightlyStartTime) {
+            $query =
+                'SELECT nightlytime FROM project WHERE id = ' .
+                qnum($this->ProjectId);
+            $row = pdo_single_row_query($query);
+            $this->NightlyStartTime = strtotime($row['nightlytime']);
+        }
 
         // If the build was started after the nightly start time
         // then it should appear on the dashboard results for the
         // subsequent day.
         $build_start_time = strtotime($this->StartTime);
 
-        if (date(FMT_TIME, $nightly_start_time) < '12:00:00') {
+        if (date(FMT_TIME, $this->NightlyStartTime) < '12:00:00') {
             // If the "nightly" start time is in the morning then any build
             // that occurs before it is part of the previous testing day.
             if (date(FMT_TIME, $build_start_time) <
-                date(FMT_TIME, $nightly_start_time)
+                date(FMT_TIME, $this->NightlyStartTime)
             ) {
                 $build_start_time -= (3600 * 24);
             }
@@ -1986,7 +1994,7 @@ class Build
             // If the nightly start time is NOT in the morning then any build
             // that occurs after it is part of the next testing day.
             if (date(FMT_TIME, $build_start_time) >=
-                date(FMT_TIME, $nightly_start_time)
+                date(FMT_TIME, $this->NightlyStartTime)
             ) {
                 $build_start_time += (3600 * 24);
             }
@@ -2063,5 +2071,31 @@ class Build
             return;
         }
         $this->ParentId = $parentid;
+    }
+
+
+    /* Get the beginning and the end of the testing day for this build
+     * in DATETIME format.
+     */
+    public function ComputeTestingDayBounds()
+    {
+        if ($this->ProjectId < 1) {
+            return false;
+        }
+
+        if (isset($this->BeginningOfDay) && isset($this->EndOfDay)) {
+            return true;
+        }
+
+        $build_date = $this->GetDate();
+        list($previousdate, $currentstarttime, $nextdate) =
+            get_dates($build_date, $this->NightlyStartTime);
+
+        $beginning_timestamp = $currentstarttime;
+        $end_timestamp = $currentstarttime + 3600 * 24;
+        $this->BeginningOfDay = gmdate(FMT_DATETIME, $beginning_timestamp);
+        $this->EndOfDay = gmdate(FMT_DATETIME, $end_timestamp);
+
+        return true;
     }
 }
