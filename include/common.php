@@ -2134,3 +2134,71 @@ function get_server_siteid()
     }
     return $server->Id;
 }
+
+/* Return the 'Aggregate Coverage' build for the day of the
+ * specified build.  If it doesn't exist yet, we create it here.
+ * If $build is for a subproject then we return the corresponding
+ * aggregate build for that same subproject.
+ */
+function get_aggregate_build($build)
+{
+    require_once 'models/build.php';
+
+    $siteid = get_server_siteid();
+    $build->ComputeTestingDayBounds();
+
+    $subproj_table = '';
+    $subproj_where = '';
+    if ($build->SubProjectId) {
+        $subproj_table =
+            "INNER JOIN subproject2build AS sp2b ON (build.id=sp2b.buildid)";
+        $subproj_where =
+            "AND subproject2build.subprojectid='$build->SubProjectId'";
+    }
+
+    $query =
+        "SELECT id FROM build
+        $subproj_table
+        WHERE name='Aggregate Coverage' AND
+        siteid = '$siteid' AND
+        parentid < '1' AND
+        projectid = '$build->ProjectId' AND
+        starttime < '$build->EndOfDay' AND
+        starttime >= '$build->BeginningOfDay'
+        $subproj_where";
+    $row = pdo_single_row_query($query);
+    if (!$row || !array_key_exists('id', $row)) {
+        // The aggregate build does not exist yet.
+        // Create it here.
+        $aggregate_build = create_aggregate_build($build, $siteid);
+    } else {
+        $aggregate_build = new Build();
+        $aggregate_build->Id = $row['id'];
+        $aggregate_build->FillFromId($row['id']);
+    }
+    return $aggregate_build;
+}
+
+function create_aggregate_build($build, $siteid=null)
+{
+    require_once 'include/ctestparserutils.php';
+
+    if (is_null($siteid)) {
+        $siteid = get_server_siteid();
+    }
+
+    $aggregate_build = new Build();
+    $aggregate_build->Name = 'Aggregate Coverage';
+    $aggregate_build->SiteId = $siteid;
+    $date = substr($build->GetStamp(), 0, strpos($build->GetStamp(), '-'));
+    $aggregate_build->SetStamp($date."-0000-Nightly");
+    $aggregate_build->ProjectId = $build->ProjectId;
+
+    $aggregate_build->StartTime = $build->StartTime;
+    $aggregate_build->EndTime = $build->EndTime;
+    $aggregate_build->SubmitTime = gmdate(FMT_DATETIME);
+    $aggregate_build->SetSubProject($build->GetSubProjectName());
+    $aggregate_build->InsertErrors = false;
+    add_build($aggregate_build);
+    return $aggregate_build;
+}

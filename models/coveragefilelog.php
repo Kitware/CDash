@@ -23,7 +23,7 @@ class CoverageFileLog
     public $FileId;
     public $Lines;
     public $Branches;
-    public $ServerSiteId;
+    public $AggregateBuildId;
 
     public function __construct()
     {
@@ -215,49 +215,39 @@ class CoverageFileLog
         }
 
         // Find the build ID for this day's edition of 'Aggregate Coverage'.
-        if (!$this->ServerSiteId) {
-            $this->ServerSiteId = get_server_siteid();
-        }
-
-        if (!$this->Build->BeginningOfDay) {
-            $this->Build->ComputeTestingDayBounds();
-        }
-
-        $subproj_table = '';
-        $subproj_criteria = '';
-        if ($this->Build->SubProjectId) {
-            $subproj_table = ', subproject2build';
-            $subproj_criteria =
-                'AND build.id=subproject2build.buildid ' .
-                'AND subproject2build.subprojectid=' . qnum($this->Build->SubProjectId) . ' ';
-        }
-        $query =
-            "SELECT id FROM build$subproj_table
-            WHERE name='Aggregate Coverage' AND
-            siteid='$this->ServerSiteId' AND
-            projectid='" . $this->Build->ProjectId ."' AND
-            starttime <'" . $this->Build->EndOfDay."' AND
-            starttime>='" . $this->Build->BeginningOfDay."'
-            $subproj_criteria";
-        $row = pdo_single_row_query($query);
-        if (!$row || !array_key_exists('id', $row)) {
-            // If the aggregate coverage build doesn't exist we add it here.
+        $aggregateBuildId = null;
+        if ($this->AggregateBuildId) {
+            if ($this->Build->SubProjectId) {
+                // For SubProject builds, AggregateBuildId refers to the parent.
+                // Look up the ID of the appropriate child.
+                $query =
+                    "SELECT id FROM build
+                    INNER JOIN subproject2build AS sp2b ON (build.id=sp2b.buildid)
+                    WHERE parentid='$this->AggregateBuildId' AND
+                    projectid='" . $this->Build->ProjectId ."' AND
+                    subproject2build.subprojectid='" . $this->Build->SubProjectId . "'";
+                $row = pdo_single_row_query($query);
+                if (!$row || !array_key_exists('id', $row)) {
+                    // An aggregate build for this SubProject doesn't exist yet.
+                    // Create it here.
+                    $aggregateBuild = create_aggregate_build($this->Build);
+                    $aggregateBuildId = $aggregateBuild->Id;
+                } else {
+                    $aggregateBuildId = $row['id'];
+                }
+            } else {
+                // For standalone builds AggregateBuildId is exactly what we're
+                // looking for.
+                $aggregateBuildId = $this->AggregateBuildId;
+            }
             $aggregateBuild = new Build();
-            $aggregateBuild->Name = 'Aggregate Coverage';
-            $aggregateBuild->SiteId = $this->ServerSiteId;
-            $date = substr($this->Build->GetStamp(), 0, strpos($this->Build->GetStamp(), '-'));
-            $aggregateBuild->SetStamp($date."-0000-Nightly");
-            $aggregateBuild->ProjectId = $this->Build->ProjectId;
-
-            $aggregateBuild->StartTime = $this->Build->StartTime;
-            $aggregateBuild->EndTime = $this->Build->EndTime;
-            $aggregateBuild->SubmitTime = gmdate(FMT_DATETIME);
-            $aggregateBuild->SetSubProject($this->Build->GetSubProjectName());
-            $aggregateBuild->InsertErrors = false;
-            add_build($aggregateBuild);
-            $aggregateBuildId = $aggregateBuild->Id;
+            $aggregateBuild->Id = $aggregateBuildId;
+            $aggregateBuild->FillFromId($aggregateBuildId);
         } else {
-            $aggregateBuildId = $row['id'];
+            // AggregateBuildId not specified, look it up here.
+            $aggregateBuild = get_aggregate_build($this->Build);
+            $aggregateBuildId = $aggregateBuild->Id;
+            $aggregateBuild->FillFromId($aggregateBuildId);
         }
 
         // Abort if this log refers to a different version of the file
@@ -282,9 +272,7 @@ class CoverageFileLog
         // Append these results to the aggregate coverage log.
         $aggregateLog = clone $this;
         $aggregateLog->BuildId = $aggregateBuildId;
-        $aggregateLog->Build = new Build();
-        $aggregateLog->Build->Id = $aggregateBuildId;
-        $aggregateLog->Build->FillFromId($aggregateBuildId);
+        $aggregateLog->Build = $aggregateBuild;
         $aggregateLog->Insert(true);
 
         // Update the aggregate coverage summary.

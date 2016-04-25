@@ -29,7 +29,7 @@ class GCovTarHandler
     private $Labels;
     private $SubProjectPath;
     private $SubProjectSummaries;
-    private $ServerSiteId;
+    private $AggregateBuildId;
 
     public function __construct($buildid)
     {
@@ -105,8 +105,14 @@ class GCovTarHandler
         }
 
         // Lookup some data used during coverage aggregation.
-        $this->ServerSiteId = get_server_siteid();
         $this->Build->ComputeTestingDayBounds();
+        $aggregateBuild = get_aggregate_build($this->Build);
+        $aggregateParentId = $aggregateBuild->GetParentId();
+        if ($aggregateParentId > 0) {
+            $this->AggregateBuildId = $aggregateParentId;
+        } else {
+            $this->AggregateBuildId = $aggregateBuild->Id;
+        }
 
         // Recursively search for .gcov files and parse them.
         $iterator->rewind();
@@ -151,7 +157,7 @@ class GCovTarHandler
     public function ParseGcovFile($fileinfo)
     {
         $coverageFileLog = new CoverageFileLog();
-        $coverageFileLog->ServerSiteId = $this->ServerSiteId;
+        $coverageFileLog->AggregateBuildId = $this->AggregateBuildId;
         $coverageFile = new CoverageFile();
         $coverage = new Coverage();
         $coverage->CoverageFile = $coverageFile;
