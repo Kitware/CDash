@@ -27,23 +27,36 @@ $loginerror = '';
 // --------------------------------------------------------------------------------------
 $mysession = array('login' => false, 'passwd' => false, 'ID' => false, 'valid' => false, 'langage' => false);
 $uri = basename($_SERVER['PHP_SELF']);
-$stamp = md5(random_bytes(8)); // Use 8 bytes of randomness, unsure if $stamp is used?
 $session_OK = 0;
 
 if (!auth(@$SessionCachePolicy) && !@$noforcelogin) {
     // authentication failed
 
-    // Create a session with a random "state" value.
-    // This is used by Google OAuth2 to prevent forged logins.
+
+    $csrfToken = null;
     if (session_id() != '') {
         session_destroy();
+        // Re-use any existing csrf token.  This prevents token mismatch
+        // when this page gets included multiple times during an authentication
+        // session.
+        if (!empty($_SESSION['cdash']) && !empty($_SESSION['cdash']['csrfToken'])) {
+            $csrfToken = $_SESSION['cdash']['csrfToken'];
+        }
     }
+
+    if (is_null($csrfToken)) {
+        // Generate a new random csrf token.
+        // This is used by Google OAuth2 to prevent forged logins.
+        $csrfToken = bin2hex(random_bytes(16));
+    }
+
     session_name('CDash');
     session_cache_limiter(@$SessionCachePolicy);
     session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
     @ini_set('session.gc_maxlifetime', $CDASH_COOKIE_EXPIRATION_TIME + 600);
     session_start();
-    $sessionArray = array('csrfToken' => bin2hex(random_bytes(16)));
+    $sessionArray = array('csrfToken' => $csrfToken);
+
     $_SESSION['cdash'] = $sessionArray;
     LoginForm($loginerror); // display login form
     $session_OK = 0;
