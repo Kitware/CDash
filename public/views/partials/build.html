@@ -164,7 +164,7 @@
             <a ng-show="build.expected == 0" href="javascript:;" ng-click="toggleExpected(build, group.id)">
               [mark as expected]
             </a>
-            <a ng-show="build.expected == 1" href="javascript:;" ng-click="toggleExpected(build, group.id)">
+            <a ng-show="build.expected == 1 || build.expectedandmissing == 1" href="javascript:;" ng-click="toggleExpected(build, group.id)">
               [mark as non expected]
             </a>
           </td>
