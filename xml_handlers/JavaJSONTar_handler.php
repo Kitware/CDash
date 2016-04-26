@@ -155,7 +155,7 @@ class JavaJSONTarHandler
         }
 
         $path = $jsonDecoded['file'];
-        $coverageFile->FullPath = $path;
+        $coverageFile->FullPath = trim($path);
 
         $packageName = str_replace('/', '.', $jsonDecoded['package']);
         if (array_key_exists($packageName, $this->CoverageSummaries)) {
