@@ -263,6 +263,17 @@ class GCovTarHandler
             }
         }
 
+        // Use a regexp to resolve any /../ in this path.
+        // We can't use realpath() because we're referencing a path that
+        // doesn't exist on the server.
+        // For a source file that contains:
+        //   #include "src/../include/foo.h"
+        // CDash will report the covered file as include/foo.h
+        $pattern = "#/[^/]*?/\.\./#";
+        while (strpos($path, "/../") !== false) {
+            $path = preg_replace($pattern, "/", $path, 1);
+        }
+
         $coverageFile->FullPath = trim($path);
         $lineNumber = 0;
 
