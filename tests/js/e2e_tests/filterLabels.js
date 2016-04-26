@@ -5,7 +5,7 @@ describe("filterLabels", function() {
     element(by.linkText('Windows_NT-MSVC10-SERIAL_DEBUG_DEV')).click();
 
     // First, verify the expected number of builds
-    expect(element(by.id('numbuilds')).getText()).toBe('Number of SubProjects Built: 36');
+    expect(element(by.id('numbuilds')).getText()).toBe('Number of SubProjects: 36');
     // Note: A maximum of 10 builds are displayed at a time
     expect(element.all(by.repeater('build in buildgroup.pagination.filteredBuilds')).count()).toBe(10);
 
@@ -24,7 +24,7 @@ describe("filterLabels", function() {
     browser.waitForAngular();
 
     // Make sure the expected number of builds are displayed
-    expect(element(by.id('numbuilds')).getText()).toBe('Number of SubProjects Built: 5');
+    expect(element(by.id('numbuilds')).getText()).toBe('Number of SubProjects: 5');
     expect(element.all(by.repeater('build in buildgroup.pagination.filteredBuilds')).count()).toBe(5);
 
     // Next, click on a specific test
@@ -45,7 +45,7 @@ describe("filterLabels", function() {
     element(by.linkText('Windows_NT-MSVC10-SERIAL_DEBUG_DEV')).click();
 
     // First, verify the expected number of builds
-    expect(element(by.id('numbuilds')).getText()).toBe('Number of SubProjects Built: 36');
+    expect(element(by.id('numbuilds')).getText()).toBe('Number of SubProjects: 36');
     // Note: A maximum of 10 builds are displayed at a time
     expect(element.all(by.repeater('build in buildgroup.pagination.filteredBuilds')).count()).toBe(10);
 
@@ -64,7 +64,7 @@ describe("filterLabels", function() {
     browser.waitForAngular();
 
     // Make sure the expected number of builds are displayed
-    expect(element(by.id('numbuilds')).getText()).toBe('Number of SubProjects Built: 5');
+    expect(element(by.id('numbuilds')).getText()).toBe('Number of SubProjects: 5');
     expect(element.all(by.repeater('build in buildgroup.pagination.filteredBuilds')).count()).toBe(5);
 
     // Next, hover on 'Dashboard' and click on 'Tests Query'

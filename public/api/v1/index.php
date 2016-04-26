@@ -1310,6 +1310,19 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $response['coverages'] = array_values($response['coverages']);
     }
 
+    if ($response['childview'] == 1) {
+        // Report number of children.
+        if (!empty($buildgroups_response)) {
+            $numchildren = count($buildgroups_response[0]['builds']);
+        } else {
+            $row = pdo_single_row_query(
+                    'SELECT count(id) AS numchildren
+                    FROM build WHERE parentid=' . qnum($parentid));
+            $numchildren = $row['numchildren'];
+        }
+        $response['numchildren'] = $numchildren;
+    }
+
     // Generate coverage by group here.
     if (!empty($coverage_groups)) {
         $response['coveragegroups'] = array();
