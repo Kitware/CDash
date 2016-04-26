@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Site BuildName="subproject_coverage_example"
-	BuildStamp="20160209-1908-Experimental"
+	BuildStamp="20160209-1908-Nightly"
 	Name="localhost"
 	Generator="ctest-3.4.20160121-g750ae8-dirty"
 	CompilerName=""
