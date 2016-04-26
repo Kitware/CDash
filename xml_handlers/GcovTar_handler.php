@@ -274,7 +274,7 @@ class GCovTarHandler
             $path = preg_replace($pattern, "/", $path, 1);
         }
 
-        $coverageFile->FullPath = $path;
+        $coverageFile->FullPath = trim($path);
         $lineNumber = 0;
 
         // The lack of rewind is intentional.
@@ -441,7 +441,7 @@ class GCovTarHandler
     {
         $coverageFileLog = new CoverageFileLog();
         $coverageFile = new CoverageFile();
-        $coverageFile->FullPath = $path;
+        $coverageFile->FullPath = trim($path);
         $coverage = new Coverage();
         $coverage->CoverageFile = $coverageFile;
 

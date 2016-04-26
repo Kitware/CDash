@@ -33,6 +33,8 @@ class CoverageFile
 
         include 'config/config.php';
 
+        $this->FullPath = trim($this->FullPath);
+
         // Compute the crc32 of the file (before compression for backward compatibility)
         $this->Crc32 = crc32($this->FullPath . $this->File);
 
