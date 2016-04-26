@@ -23,12 +23,16 @@ class CoverageFileLog
     public $FileId;
     public $Lines;
     public $Branches;
+    // The following members are used by GcovTar_handler & friends to
+    // speed up parsing for coverage across SubProjects.
     public $AggregateBuildId;
+    public $PreviousAggregateParentId;
 
     public function __construct()
     {
         $this->Lines = array();
         $this->Branches = array();
+        $this->PreviousAggregateParentId = null;
     }
 
     public function AddLine($number, $code)
@@ -306,6 +310,6 @@ class CoverageFileLog
 
         // Insert/Update the aggregate summary.
         $aggregateSummary->Insert(true);
-        $aggregateSummary->ComputeDifference();
+        $aggregateSummary->ComputeDifference($this->PreviousAggregateParentId);
     }
 }

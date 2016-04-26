@@ -315,11 +315,11 @@ class CoverageSummary
     }   // Insert()
 
     /** Compute the coverage summary diff */
-    public function ComputeDifference()
+    public function ComputeDifference($previous_parentid=null)
     {
         $build = new Build();
         $build->Id = $this->BuildId;
-        $previousBuildId = $build->GetPreviousBuildId();
+        $previousBuildId = $build->GetPreviousBuildId($previous_parentid);
         if ($previousBuildId < 1) {
             return;
         }

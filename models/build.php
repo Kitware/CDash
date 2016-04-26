@@ -317,7 +317,7 @@ class Build
     }
 
     /** Get the previous build id. */
-    public function GetPreviousBuildId()
+    public function GetPreviousBuildId($previous_parentid=null)
     {
         if (!$this->Id) {
             return 0;
@@ -326,11 +326,11 @@ class Build
 
         $previous_clause =
             "AND starttime<'$this->StartTime' ORDER BY starttime DESC";
-        return $this->GetRelatedBuildId($previous_clause);
+        return $this->GetRelatedBuildId($previous_clause, $previous_parentid);
     }
 
     /** Get the next build id. */
-    public function GetNextBuildId()
+    public function GetNextBuildId($next_parentid=null)
     {
         if (!$this->Id) {
             return 0;
@@ -338,11 +338,11 @@ class Build
         $this->FillFromId($this->Id);
 
         $next_clause = "AND starttime>'$this->StartTime' ORDER BY starttime";
-        return $this->GetRelatedBuildId($next_clause);
+        return $this->GetRelatedBuildId($next_clause, $next_parentid);
     }
 
     /** Get the most recent build id. */
-    public function GetCurrentBuildId()
+    public function GetCurrentBuildId($current_parentid=null)
     {
         if (!$this->Id) {
             return 0;
@@ -350,13 +350,14 @@ class Build
         $this->FillFromId($this->Id);
 
         $current_clause = 'ORDER BY starttime DESC';
-        return $this->GetRelatedBuildId($current_clause);
+        return $this->GetRelatedBuildId($current_clause, $current_parentid);
     }
 
     /** Private helper function to encapsulate the common parts of
      * Get{Previous,Next,Current}BuildId()
      **/
-    private function GetRelatedBuildId($which_build_criteria)
+    private function GetRelatedBuildId($which_build_criteria,
+            $related_parentid=null)
     {
         // Take subproject into account, such that if there is one, then the
         // previous build must be associated with the same subproject...
@@ -366,22 +367,32 @@ class Build
         $parent_criteria = '';
 
         if ($this->SubProjectId) {
-            $subproj_table = ', subproject2build';
+            $subproj_table =
+                'INNER JOIN subproject2build AS sp2b ON (build.id=sp2b.buildid)';
             $subproj_criteria =
-                'AND build.id=subproject2build.buildid ' .
-                'AND subproject2build.subprojectid=' . qnum($this->SubProjectId) . ' ';
+                'AND sp2b.subprojectid=' . qnum($this->SubProjectId) . ' ';
         }
         if ($this->ParentId == -1) {
             // Only search for other parents.
             $parent_criteria = 'AND build.parentid=-1';
         }
 
-        $query = pdo_query("
-                SELECT id FROM build$subproj_table
-                WHERE siteid=" . qnum($this->SiteId) . "
+
+        if ($related_parentid) {
+            $related_build_criteria =
+                "WHERE parentid=" . qnum($related_parentid);
+        } else {
+            $related_build_criteria =
+                "WHERE siteid=" . qnum($this->SiteId) . "
                 AND type='$this->Type'
                 AND name='$this->Name'
-                AND projectid=" . qnum($this->ProjectId) . "
+                AND projectid=" . qnum($this->ProjectId);
+        }
+
+        $query = pdo_query("
+                SELECT id FROM build
+                $subproj_table
+                $related_build_criteria
                 $subproj_criteria
                 $parent_criteria
                 $which_build_criteria

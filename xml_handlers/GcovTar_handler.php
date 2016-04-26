@@ -30,6 +30,7 @@ class GCovTarHandler
     private $SubProjectPath;
     private $SubProjectSummaries;
     private $AggregateBuildId;
+    private $PreviousAggregateParentId;
 
     public function __construct($buildid)
     {
@@ -56,6 +57,7 @@ class GCovTarHandler
             }
         }
         $this->SubProjectSummaries = array();
+        $this->PreviousAggregateParentId = null;
     }
 
     /**
@@ -110,6 +112,9 @@ class GCovTarHandler
         $aggregateParentId = $aggregateBuild->GetParentId();
         if ($aggregateParentId > 0) {
             $this->AggregateBuildId = $aggregateParentId;
+            $aggregateParent = new Build();
+            $aggregateParent->Id = $aggregateParentId;
+            $this->PreviousAggregateParentId = $aggregateParent->GetPreviousBuildId();
         } else {
             $this->AggregateBuildId = $aggregateBuild->Id;
         }
@@ -158,6 +163,8 @@ class GCovTarHandler
     {
         $coverageFileLog = new CoverageFileLog();
         $coverageFileLog->AggregateBuildId = $this->AggregateBuildId;
+        $coverageFileLog->PreviousAggregateParentId =
+            $this->PreviousAggregateParentId;
         $coverageFile = new CoverageFile();
         $coverage = new Coverage();
         $coverage->CoverageFile = $coverageFile;
