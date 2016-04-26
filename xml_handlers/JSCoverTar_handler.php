@@ -133,7 +133,7 @@ class JSCoverTarHandler
                 $coverageFileLog = new CoverageFileLog();
 
                 $coverageFile = new CoverageFile();
-                $coverageFile->FullPath = $path;
+                $coverageFile->FullPath = trim($path);
                 // Get the ID for this coverage file, or create a new empty one
                 //if it doesn't already exist.
                 $sql = pdo_query(

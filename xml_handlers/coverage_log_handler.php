@@ -60,7 +60,7 @@ class CoverageLogHandler extends AbstractHandler
         } elseif ($name == 'FILE') {
             $this->CurrentCoverageFile = new CoverageFile();
             $this->CurrentCoverageFileLog = new CoverageFileLog();
-            $this->CurrentCoverageFile->FullPath = $attributes['FULLPATH'];
+            $this->CurrentCoverageFile->FullPath = trim($attributes['FULLPATH']);
         } elseif ($name == 'LINE') {
             if ($attributes['COUNT'] >= 0) {
                 $this->CurrentCoverageFileLog->AddLine($attributes['NUMBER'], $attributes['COUNT']);
