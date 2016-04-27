@@ -461,33 +461,6 @@ while ($row = pdo_fetch_array($result)) {
     }
 
     $labels_found = ($CDASH_DB_TYPE != 'pgsql' && !empty($marshaledTest['labels']));
-
-
-    // Summary & history queries are somewhat expensive.
-    // If we have more than 25 tests we lookup this data on-the-fly
-    // using AJAX rather than loading it all right now.
-    if ($num_tests < 26) {
-        if ($previous_buildids_str != '') {
-            // Get the recent history for this test.
-            $history = get_test_history($marshaledTest['name'], $previous_buildids_str);
-            if (!empty($history)) {
-                $marshaledTest = array_merge($marshaledTest, $history);
-                $response['displayhistory'] = true;
-            }
-        }
-
-        // Check the status of this test on other current builds.
-        $summary = get_test_summary($marshaledTest['name'], $projectid, $groupid,
-                                    $beginning_UTCDate, $end_UTCDate);
-        if (!empty($summary)) {
-            $marshaledTest = array_merge($marshaledTest, $summary);
-            $response['displaysummary'] = true;
-        }
-
-        $marshaledTest['detailsloaded'] = true;
-    }
-
-
     $tests[] = $marshaledTest;
 }
 
