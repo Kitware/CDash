@@ -217,6 +217,8 @@ class CoverageSummary
         }
 
         $summary_updated = false;
+        $delta_tested = null;
+        $delta_untested = null;
         if ($append) {
             // Check if a coveragesummary already exists for this build.
             pdo_begin_transaction();
@@ -275,42 +277,8 @@ class CoverageSummary
         }
 
         // If this is a child build then update the parent's summary as well.
-        $parent = pdo_single_row_query(
-            'SELECT parentid FROM build WHERE id=' . qnum($this->BuildId));
-        if ($parent && array_key_exists('parentid', $parent)) {
-            $parentid = $parent['parentid'];
-            if ($parentid > 0) {
-                pdo_begin_transaction();
-                $exists = pdo_query(
-                    'SELECT * FROM coveragesummary
-                        WHERE buildid=' . qnum($parentid) . '
-                        FOR UPDATE');
-                if (pdo_num_rows($exists) == 0) {
-                    $query = 'INSERT INTO coveragesummary
-                        (buildid,loctested,locuntested)
-                        VALUES
-                        (' . qnum($parentid) . ',' . qnum($this->LocTested) . ',' . qnum($this->LocUntested) . ')';
-                } else {
-                    if (!isset($delta_tested)) {
-                        $delta_tested = $this->LocTested;
-                    }
-                    if (!isset($delta_untested)) {
-                        $delta_untested = $this->LocUntested;
-                    }
-                    $query =
-                        'UPDATE coveragesummary SET
-                        loctested = loctested + ' . qnum($delta_tested) . ',
-                        locuntested = locuntested + ' . qnum($delta_untested) . '
-                            WHERE buildid=' . qnum($parentid);
-                }
-                if (!pdo_query($query)) {
-                    add_last_sql_error('CoverageSummary Parent Update');
-                    pdo_rollback();
-                    return false;
-                }
-                pdo_commit();
-            }
-        }
+        $this->UpdateParent($delta_tested, $delta_untested);
+
         return true;
     }   // Insert()
 
@@ -340,16 +308,26 @@ class CoverageSummary
             $previousloctested = $previouscoverage_array['loctested'];
             $previouslocuntested = $previouscoverage_array['locuntested'];
 
-            // Don't log if no diff
             $loctesteddiff = $loctested - $previousloctested;
             $locuntesteddiff = $locuntested - $previouslocuntested;
 
-            if ($loctesteddiff != 0 && $locuntesteddiff != 0) {
+            // Don't log if no diff
+            if ($loctesteddiff != 0 || $locuntesteddiff != 0) {
                 $summaryDiff = new CoverageSummaryDiff();
                 $summaryDiff->BuildId = $this->BuildId;
                 $summaryDiff->LocTested = $loctesteddiff;
                 $summaryDiff->LocUntested = $locuntesteddiff;
                 $summaryDiff->Insert();
+            } else {
+                // If no diff, delete any previously existing results.
+                $row = pdo_single_row_query('
+                        SELECT buildid FROM coveragesummarydiff
+                        WHERE buildid=' . qnum($this->BuildId));
+                if ($row && array_key_exists('buildid', $row)) {
+                    pdo_query('
+                            DELETE FROM coveragesummarydiff
+                            WHERE buildid=' . qnum($this->BuildId));
+                }
             }
         }
     }
@@ -389,5 +367,72 @@ class CoverageSummary
             }
         }
         return false;
+    }
+
+    /** Update this build's parent to include its coverage summary info. */
+    public function UpdateParent($delta_tested=null, $delta_untested=null)
+    {
+        $parent = pdo_single_row_query(
+            'SELECT parentid FROM build WHERE id=' . qnum($this->BuildId));
+        if (!$parent || !array_key_exists('parentid', $parent)) {
+            return;
+        }
+
+        $parentid = $parent['parentid'];
+        if ($parentid < 1) {
+            return;
+        }
+
+        pdo_begin_transaction();
+        $exists = pdo_query(
+            'SELECT * FROM coveragesummary
+                WHERE buildid=' . qnum($parentid) . '
+                FOR UPDATE');
+        if (pdo_num_rows($exists) == 0) {
+            $query = 'INSERT INTO coveragesummary
+                (buildid,loctested,locuntested)
+                VALUES
+                (' . qnum($parentid) . ',' . qnum($this->LocTested) . ',' . qnum($this->LocUntested) . ')';
+        } else {
+            if (is_null($delta_tested)) {
+                $delta_tested = $this->LocTested;
+            }
+            if (is_null($delta_untested)) {
+                $delta_untested = $this->LocUntested;
+            }
+            $query =
+                'UPDATE coveragesummary SET
+                loctested = loctested + ' . qnum($delta_tested) . ',
+                locuntested = locuntested + ' . qnum($delta_untested) . '
+                    WHERE buildid=' . qnum($parentid);
+        }
+        if (!pdo_query($query)) {
+            add_last_sql_error('CoverageSummary Parent Update');
+            pdo_rollback();
+            return false;
+        }
+        pdo_commit();
+    }
+
+    /** Populate $this from the database. */
+    public function Load()
+    {
+        if (!$this->BuildId) {
+            return;
+        }
+
+        $row = pdo_single_row_query(
+                'SELECT loctested, locuntested FROM coveragesummary
+                WHERE buildid=' . qnum($this->BuildId));
+        if (!$row) {
+            return;
+        }
+
+        if (array_key_exists('loctested', $row)) {
+            $this->LocTested = $row['loctested'];
+        }
+        if (array_key_exists('locuntested', $row)) {
+            $this->LocUntested = $row['locuntested'];
+        }
     }
 }
