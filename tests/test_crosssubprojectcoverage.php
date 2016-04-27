@@ -13,6 +13,8 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once 'include/pdo.php';
 
 class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
 {
@@ -64,6 +66,7 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
         $success &= $this->submitExperimental();
         $success &= $this->submitProduction();
         $success &= $this->verifyResults();
+        $success &= $this->verifyAggregate();
         if ($success) {
             $this->pass('Test passed');
         }
@@ -101,10 +104,10 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
             'subproject' => $subproject,
             'build' => 'subproject_coverage_example',
             'site' => 'localhost',
-            'stamp' => '20160209-1908-Experimental',
+            'stamp' => '20160209-1908-Nightly',
             'starttime' => $starttime,
             'endtime' => $endtime,
-            'track' => 'Experimental',
+            'track' => 'Nightly',
             'type' => 'GcovTar',
             'datafilesmd5[0]=' => $md5);
         $post_result = $this->post($this->url . '/submit.php', $post_data);
@@ -187,6 +190,67 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
                     break;
                 default:
                     $this->fail("Unexpected group $group_name");
+            }
+        }
+        return $success;
+    }
+
+    public function verifyAggregate()
+    {
+        // Since we only have one nightly coverage build, the aggregate won't
+        // appear on index.php.  So instead we have to verify that it is correct
+        // by querying the database.
+        $success = true;
+
+        // Get parentid.
+        $row = pdo_single_row_query(
+                "SELECT id FROM build
+                WHERE name = 'Aggregate Coverage' AND
+                parentid=-1 AND
+                projectid=
+                (SELECT id FROM project WHERE name='CrossSubProjectExample')");
+        $parentid = $row['id'];
+        if (empty($parentid) || $parentid < 1) {
+            $this->fail('No aggregate parentid found when expected');
+            return false;
+        }
+
+        // Verify parent results.
+        $row = pdo_single_row_query("
+                SELECT * from coveragesummary WHERE buildid='$parentid'");
+        $success &= $this->checkCoverage($row, 25, 10, 'aggregate parent');
+
+        // Verify child results.
+        $result = pdo_query("
+                SELECT cs.loctested, cs.locuntested, spg.name
+                FROM build AS b
+                INNER JOIN coveragesummary AS cs ON (b.id=cs.buildid)
+                INNER JOIN subproject2build AS sp2b ON (b.id=sp2b.buildid)
+                INNER JOIN subproject AS sp ON (sp2b.subprojectid=sp.id)
+                INNER JOIN subprojectgroup AS spg ON (sp.groupid=spg.id)
+                WHERE parentid='$parentid'");
+        $num_builds = pdo_num_rows($result);
+        if ($num_builds != 3) {
+            $this->fail("Expected 3 aggregate children, found $num_builds");
+            return false;
+        }
+        while ($row = pdo_fetch_array($result)) {
+            $group_name = $row['name'];
+            switch ($group_name) {
+                case 'Third Party':
+                    $success &=
+                        $this->checkCoverage($row, 9, 4, "aggregate $group_name");
+                    break;
+                case 'Experimental':
+                    $success &=
+                        $this->checkCoverage($row, 8, 3, "aggregate $group_name");
+                    break;
+                case 'Production':
+                    $success &=
+                        $this->checkCoverage($row, 8, 3, "aggregate $group_name");
+                    break;
+                default:
+                    $this->fail("Unexpected aggregate group $group_name");
             }
         }
         return $success;
