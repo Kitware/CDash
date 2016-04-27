@@ -552,7 +552,6 @@ function get_test_summary($testname, $projectid, $groupid, $begin, $end)
 
     $num_statuses = pdo_num_rows($summary_results);
     if ($num_statuses > 0) {
-        $response['displaysummary'] = 1;
         if ($num_statuses > 1) {
             $retval['summary'] = 'Unstable';
             $retval['summaryclass'] = 'warning';
@@ -619,7 +618,6 @@ function load_test_details()
                 $time_begin, $time_end);
             if (!empty($summary_response)) {
                 $test_response = array_merge($test_response, $summary_response);
-                $response['displaysummary'] = true;
                 $data_found = true;
             }
         }
