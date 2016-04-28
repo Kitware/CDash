@@ -117,6 +117,7 @@ class BuildTest
             'execTimeFull' => floatval($data['time']),
             'details' => $data['details'],
             'summaryLink' => "testSummary.php?project=$projectid&name=" . urlencode($data['name']) . "&date=$testdate",
+            'summary' => 'Summary', /* Default value later replaced by AJAX */
             'detailsLink' => "testDetails.php?test=" . $data['id'] . "&build=$buildid");
 
         if ($data['newstatus']) {
