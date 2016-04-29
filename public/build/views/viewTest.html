@@ -188,7 +188,7 @@
                 <span class="glyphicon" ng-class="orderByFields.indexOf('-history') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('history') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
 
-              <th ng-if="cdash.displaysummary == 1" width="6%" class="header"
+              <th width="6%" class="header"
                 ng-click="updateOrderByFields('summary', $event)"
                 tooltip-popup-delay='1500'
                 tooltip-append-to-body="true"
@@ -237,7 +237,7 @@
               {{test.history}}
             </td>
 
-            <td ng-if="cdash.displaysummary == 1" align="center" ng-class="test.summaryclass">
+            <td align="center" ng-class="test.summaryclass">
               <a href="{{test.summaryLink}}">{{test.summary}}</a>
             </td>
 
