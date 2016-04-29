@@ -19,14 +19,20 @@ require_once 'models/coveragesummary.php';
 class CoverageFileLog
 {
     public $BuildId;
+    public $Build;
     public $FileId;
     public $Lines;
     public $Branches;
+    // The following members are used by GcovTar_handler & friends to
+    // speed up parsing for coverage across SubProjects.
+    public $AggregateBuildId;
+    public $PreviousAggregateParentId;
 
     public function __construct()
     {
         $this->Lines = array();
         $this->Branches = array();
+        $this->PreviousAggregateParentId = null;
     }
 
     public function AddLine($number, $code)
@@ -199,79 +205,53 @@ class CoverageFileLog
     /** Update the aggregate coverage build to include these results. */
     public function UpdateAggregate()
     {
-        $build = new Build();
-        $build->Id = $this->BuildId;
-        $build->FillFromId($this->BuildId);
+        if (!$this->Build) {
+            $this->Build = new Build();
+            $this->Build->Id = $this->BuildId;
+        }
+        $this->Build->FillFromId($this->BuildId);
 
         // Only nightly builds count towards aggregate coverage.
-        if ($build->Type !== 'Nightly' ||
-            $build->Name === 'Aggregate Coverage'
+        if ($this->Build->Type !== 'Nightly' ||
+            $this->Build->Name === 'Aggregate Coverage'
         ) {
             return;
         }
 
-        // Get the site ID for 'CDash Server'.
-        $server = new Site();
-        $server->Name = 'CDash Server';
-        if (!$server->Exists()) {
-            // Create it if it doesn't exist.
-            $server_ip = $_SERVER['SERVER_ADDR'];
-            $server->Ip = $server_ip;
-            $server->Insert();
-        }
-
-        // Get the nightly start time for this project.
-        $row = pdo_single_row_query("SELECT nightlytime FROM project WHERE id='$build->ProjectId'");
-        if (!$row || !array_key_exists('nightlytime', $row)) {
-            return;
-        }
-        $nightly_time = $row['nightlytime'];
-
-        // Get the beginning and end of this testing day.
-        $build_date = $build->GetDate();
-        list($previousdate, $currentstarttime, $nextdate) =
-            get_dates($build_date, $nightly_time);
-        $beginning_timestamp = $currentstarttime;
-        $end_timestamp = $currentstarttime + 3600 * 24;
-        $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
-        $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
-
-        // Use all this information to find the build ID for this day's edition
-        // of 'Aggregate Coverage'.
-        $subproj_table = '';
-        $subproj_criteria = '';
-        if ($build->SubProjectId) {
-            $subproj_table = ', subproject2build';
-            $subproj_criteria =
-                'AND build.id=subproject2build.buildid ' .
-                'AND subproject2build.subprojectid=' . qnum($build->SubProjectId) . ' ';
-        }
-        $query =
-            "SELECT id FROM build$subproj_table
-            WHERE name='Aggregate Coverage' AND
-            siteid='$server->Id' AND
-            projectid='$build->ProjectId' AND
-            starttime <'$end_UTCDate' AND starttime>='$beginning_UTCDate'
-            $subproj_criteria";
-        $row = pdo_single_row_query($query);
-        if (!$row || !array_key_exists('id', $row)) {
-            // If the aggregate coverage build doesn't exist we add it here.
+        // Find the build ID for this day's edition of 'Aggregate Coverage'.
+        $aggregateBuildId = null;
+        if ($this->AggregateBuildId) {
+            if ($this->Build->SubProjectId) {
+                // For SubProject builds, AggregateBuildId refers to the parent.
+                // Look up the ID of the appropriate child.
+                $query =
+                    "SELECT id FROM build
+                    INNER JOIN subproject2build AS sp2b ON (build.id=sp2b.buildid)
+                    WHERE parentid='$this->AggregateBuildId' AND
+                    projectid='" . $this->Build->ProjectId ."' AND
+                    subproject2build.subprojectid='" . $this->Build->SubProjectId . "'";
+                $row = pdo_single_row_query($query);
+                if (!$row || !array_key_exists('id', $row)) {
+                    // An aggregate build for this SubProject doesn't exist yet.
+                    // Create it here.
+                    $aggregateBuild = create_aggregate_build($this->Build);
+                    $aggregateBuildId = $aggregateBuild->Id;
+                } else {
+                    $aggregateBuildId = $row['id'];
+                }
+            } else {
+                // For standalone builds AggregateBuildId is exactly what we're
+                // looking for.
+                $aggregateBuildId = $this->AggregateBuildId;
+            }
             $aggregateBuild = new Build();
-            $aggregateBuild->Name = 'Aggregate Coverage';
-            $aggregateBuild->SiteId = $server->Id;
-            $date = substr($build->GetStamp(), 0, strpos($build->GetStamp(), '-'));
-            $aggregateBuild->SetStamp($date."-0000-Nightly");
-            $aggregateBuild->ProjectId = $build->ProjectId;
-
-            $aggregateBuild->StartTime = $build->StartTime;
-            $aggregateBuild->EndTime = $build->EndTime;
-            $aggregateBuild->SubmitTime = gmdate(FMT_DATETIME);
-            $aggregateBuild->SetSubProject($build->GetSubProjectName());
-            $aggregateBuild->InsertErrors = false;
-            add_build($aggregateBuild);
-            $aggregateBuildId = $aggregateBuild->Id;
+            $aggregateBuild->Id = $aggregateBuildId;
+            $aggregateBuild->FillFromId($aggregateBuildId);
         } else {
-            $aggregateBuildId = $row['id'];
+            // AggregateBuildId not specified, look it up here.
+            $aggregateBuild = get_aggregate_build($this->Build);
+            $aggregateBuildId = $aggregateBuild->Id;
+            $aggregateBuild->FillFromId($aggregateBuildId);
         }
 
         // Abort if this log refers to a different version of the file
@@ -296,6 +276,7 @@ class CoverageFileLog
         // Append these results to the aggregate coverage log.
         $aggregateLog = clone $this;
         $aggregateLog->BuildId = $aggregateBuildId;
+        $aggregateLog->Build = $aggregateBuild;
         $aggregateLog->Insert(true);
 
         // Update the aggregate coverage summary.
@@ -329,6 +310,6 @@ class CoverageFileLog
 
         // Insert/Update the aggregate summary.
         $aggregateSummary->Insert(true);
-        $aggregateSummary->ComputeDifference();
+        $aggregateSummary->ComputeDifference($this->PreviousAggregateParentId);
     }
 }

@@ -28,11 +28,17 @@ function copy_build_data($old_buildid, $new_buildid, $type)
 function copy_coverage_data($old_buildid, $new_buildid)
 {
     $tables_to_copy = array(
-        'coverage', 'coveragefilelog', 'coveragesummary', 'coveragesummarydiff');
+        'coverage', 'coveragefilelog', 'coveragesummary');
 
     foreach ($tables_to_copy as $table) {
         copy_build_table($old_buildid, $new_buildid, $table);
     }
+
+    // Compute difference in coverage from previous build.
+    require_once('models/coveragesummary.php');
+    $summary = new CoverageSummary();
+    $summary->BuildId = $new_buildid;
+    $summary->ComputeDifference();
 }
 
 /**

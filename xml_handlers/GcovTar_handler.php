@@ -29,6 +29,8 @@ class GCovTarHandler
     private $Labels;
     private $SubProjectPath;
     private $SubProjectSummaries;
+    private $AggregateBuildId;
+    private $PreviousAggregateParentId;
 
     public function __construct($buildid)
     {
@@ -55,6 +57,7 @@ class GCovTarHandler
             }
         }
         $this->SubProjectSummaries = array();
+        $this->PreviousAggregateParentId = null;
     }
 
     /**
@@ -103,6 +106,19 @@ class GCovTarHandler
             }
         }
 
+        // Lookup some data used during coverage aggregation.
+        $this->Build->ComputeTestingDayBounds();
+        $aggregateBuild = get_aggregate_build($this->Build);
+        $aggregateParentId = $aggregateBuild->GetParentId();
+        if ($aggregateParentId > 0) {
+            $this->AggregateBuildId = $aggregateParentId;
+            $aggregateParent = new Build();
+            $aggregateParent->Id = $aggregateParentId;
+            $this->PreviousAggregateParentId = $aggregateParent->GetPreviousBuildId();
+        } else {
+            $this->AggregateBuildId = $aggregateBuild->Id;
+        }
+
         // Recursively search for .gcov files and parse them.
         $iterator->rewind();
         foreach ($iterator as $fileinfo) {
@@ -146,6 +162,9 @@ class GCovTarHandler
     public function ParseGcovFile($fileinfo)
     {
         $coverageFileLog = new CoverageFileLog();
+        $coverageFileLog->AggregateBuildId = $this->AggregateBuildId;
+        $coverageFileLog->PreviousAggregateParentId =
+            $this->PreviousAggregateParentId;
         $coverageFile = new CoverageFile();
         $coverage = new Coverage();
         $coverage->CoverageFile = $coverageFile;
@@ -193,6 +212,7 @@ class GCovTarHandler
             $subprojectpath = $row['path'];
 
             // Find the sibling build that performed this SubProject.
+            $siblingBuild = new Build();
             $query =
                 'SELECT b.id FROM build AS b
                 INNER JOIN subproject2build AS sp2b ON (sp2b.buildid=b.id)
@@ -202,13 +222,14 @@ class GCovTarHandler
             $row = pdo_single_row_query($query);
             if ($row && array_key_exists('id', $row)) {
                 $buildid = $row['id'];
+                $siblingBuild->Id = $buildid;
+                $siblingBuild->FillFromId($buildid);
             } else {
                 // Build doesn't exist yet, add it here.
-                $siblingBuild = new Build();
                 $siblingBuild->Name = $this->Build->Name;
                 $siblingBuild->ProjectId = $this->ProjectId;
                 $siblingBuild->SiteId = $this->Build->SiteId;
-                $siblingBuild->ParentId = $this->Build->ParentId;
+                $siblingBuild->SetParentId($this->Build->GetParentId());
                 $siblingBuild->SetStamp($this->Build->GetStamp());
                 $siblingBuild->SetSubProject($subprojectname);
                 $siblingBuild->StartTime = $this->Build->StartTime;
@@ -217,6 +238,7 @@ class GCovTarHandler
                 add_build($siblingBuild, 0);
                 $buildid = $siblingBuild->Id;
             }
+            $coverageFileLog->Build = $siblingBuild;
             // Remove any part of the file path that comes before
             // the subproject path.
             $path = substr($path, strpos($path, $subprojectpath));
@@ -238,6 +260,7 @@ class GCovTarHandler
             } else {
                 return;
             }
+            $coverageFileLog->Build = $this->Build;
         }
 
         // Get a reference to the coverage summary for this build.
@@ -253,7 +276,18 @@ class GCovTarHandler
             }
         }
 
-        $coverageFile->FullPath = $path;
+        // Use a regexp to resolve any /../ in this path.
+        // We can't use realpath() because we're referencing a path that
+        // doesn't exist on the server.
+        // For a source file that contains:
+        //   #include "src/../include/foo.h"
+        // CDash will report the covered file as include/foo.h
+        $pattern = "#/[^/]*?/\.\./#";
+        while (strpos($path, "/../") !== false) {
+            $path = preg_replace($pattern, "/", $path, 1);
+        }
+
+        $coverageFile->FullPath = trim($path);
         $lineNumber = 0;
 
         // The lack of rewind is intentional.
@@ -420,7 +454,7 @@ class GCovTarHandler
     {
         $coverageFileLog = new CoverageFileLog();
         $coverageFile = new CoverageFile();
-        $coverageFile->FullPath = $path;
+        $coverageFile->FullPath = trim($path);
         $coverage = new Coverage();
         $coverage->CoverageFile = $coverageFile;
 

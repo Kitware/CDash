@@ -48,7 +48,7 @@ CDash.filter("showEmptyBuildsLast", function () {
 })
 
 
-.controller('IndexController', function IndexController($scope, $rootScope, $location, $anchorScroll, $http, $filter, $timeout, multisort, filters) {
+.controller('IndexController', function IndexController($scope, $rootScope, $location, $anchorScroll, $http, $filter, $timeout, multisort, filters, renderTimer) {
   // Show spinner while page is loading.
   $scope.loading = true;
 
@@ -78,6 +78,12 @@ CDash.filter("showEmptyBuildsLast", function () {
   // Check for filters
   $rootScope.queryString['filterstring'] = filters.getString();
 
+  // Check if buildgroup sort order was specified via query string.
+  var query_sort_order = [];
+  if ('sort' in $rootScope.queryString) {
+    query_sort_order = $rootScope.queryString.sort.split(",");
+  }
+
   $http({
     url: 'api/v1/index.php',
     method: 'GET',
@@ -85,12 +91,6 @@ CDash.filter("showEmptyBuildsLast", function () {
   }).success(function(cdash) {
     // Set title in root scope so the head controller can see it.
     $rootScope['title'] = cdash.title;
-
-    // Check if buildgroup sort order was specified via query string.
-    var query_sort_order = [];
-    if ('sort' in $rootScope.queryString) {
-      query_sort_order = $rootScope.queryString.sort.split(",");
-    }
 
     // Check for more sorting cookies.  Buildgroup sorting is handled below.
     var sort_order = [];
@@ -217,6 +217,7 @@ CDash.filter("showEmptyBuildsLast", function () {
     }
 
     // Check for label filters
+    cdash.extrafilterurl = '';
     if (cdash.sharelabelfilters) {
       cdash.extrafilterurl = filters.getLabelString(cdash.filterdata);
     }
@@ -229,7 +230,7 @@ CDash.filter("showEmptyBuildsLast", function () {
       cdash.advancedview = 0;
     }
 
-    $scope.cdash = cdash;
+    renderTimer.initialRender($scope, cdash);
 
     $rootScope.setupCalendar($scope.cdash.date);
 
@@ -279,6 +280,7 @@ CDash.filter("showEmptyBuildsLast", function () {
       $scope.cdash.advancedview = 1;
     }
     $.cookie('cdash_'+$scope.cdash.projectname+'_advancedview', $scope.cdash.advancedview);
+    window.location.reload(true);
   };
 
 
@@ -583,18 +585,8 @@ CDash.filter("showEmptyBuildsLast", function () {
   };
 
 })
-.directive('normalBuild', function() {
+.directive('build', function() {
   return {
     templateUrl: 'views/partials/build.html'
-  }
-})
-.directive('parentBuild', function() {
-  return {
-    templateUrl: 'views/partials/parentbuild.html'
-  }
-})
-.directive('buildNameElements', function() {
-  return {
-    templateUrl: 'views/partials/buildNameElements.html'
   }
 });

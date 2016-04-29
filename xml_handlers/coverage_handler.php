@@ -70,7 +70,7 @@ class CoverageHandler extends AbstractHandler
         } elseif ($name == 'FILE') {
             $this->CoverageFile = new CoverageFile();
             $this->Coverage = new Coverage();
-            $this->CoverageFile->FullPath = $attributes['FULLPATH'];
+            $this->CoverageFile->FullPath = trim($attributes['FULLPATH']);
             if ($attributes['COVERED'] == 1 || $attributes['COVERED'] == 'true') {
                 $this->Coverage->Covered = 1;
             } else {

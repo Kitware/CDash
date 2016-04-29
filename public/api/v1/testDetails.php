@@ -58,7 +58,11 @@ if (!$projectid) {
     return;
 }
 
-checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid);
+if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
+    $response['requirelogin'] = '1';
+    echo json_encode($response);
+    return;
+}
 
 // If we have a fileid we download it
 if (isset($_GET['fileid']) && is_numeric($_GET['fileid'])) {

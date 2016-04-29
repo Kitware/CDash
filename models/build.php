@@ -34,7 +34,7 @@ class Build
     public $Id;
     public $SiteId;
     public $ProjectId;
-    public $ParentId;
+    private $ParentId;
     public $Uuid;
     private $Stamp;
     public $Name;
@@ -69,6 +69,12 @@ class Build
 
     // Used to mark whether this object already has its fields set.
     public $Filled;
+
+    // Not set by FillFromId(), but cached the first time they are
+    // computed.
+    public $NightlyStartTime;
+    public $BeginningOfDay;
+    public $EndOfDay;
 
     public function __construct()
     {
@@ -146,7 +152,7 @@ class Build
         $this->AddLabel($label);
 
         // Add this subproject as a label on the parent build.
-        $this->ParentId = $this->GetParentBuildId();
+        $this->SetParentId($this->LookupParentBuildId());
         if ($this->ParentId > 0) {
             $parent = new Build();
             $parent->Id = $this->ParentId;
@@ -236,7 +242,7 @@ class Build
 
         // If this is a child build, add this duration
         // to the parent's test duration sum.
-        $this->ParentId = $this->GetParentBuildId();
+        $this->SetParentId($this->LookupParentBuildId());
         if ($this->ParentId > 0) {
             $parent = new Build();
             $parent->Id = $this->ParentId;
@@ -296,7 +302,7 @@ class Build
         $this->EndTime = $build_array['endtime'];
         $this->SiteId = $build_array['siteid'];
         $this->ProjectId = $build_array['projectid'];
-        $this->ParentId = $build_array['parentid'];
+        $this->SetParentId($build_array['parentid']);
         $this->Done = $build_array['done'];
 
         $subprojectid = $this->QuerySubProjectId($buildid);
@@ -311,7 +317,7 @@ class Build
     }
 
     /** Get the previous build id. */
-    public function GetPreviousBuildId()
+    public function GetPreviousBuildId($previous_parentid=null)
     {
         if (!$this->Id) {
             return 0;
@@ -320,11 +326,11 @@ class Build
 
         $previous_clause =
             "AND starttime<'$this->StartTime' ORDER BY starttime DESC";
-        return $this->GetRelatedBuildId($previous_clause);
+        return $this->GetRelatedBuildId($previous_clause, $previous_parentid);
     }
 
     /** Get the next build id. */
-    public function GetNextBuildId()
+    public function GetNextBuildId($next_parentid=null)
     {
         if (!$this->Id) {
             return 0;
@@ -332,11 +338,11 @@ class Build
         $this->FillFromId($this->Id);
 
         $next_clause = "AND starttime>'$this->StartTime' ORDER BY starttime";
-        return $this->GetRelatedBuildId($next_clause);
+        return $this->GetRelatedBuildId($next_clause, $next_parentid);
     }
 
     /** Get the most recent build id. */
-    public function GetCurrentBuildId()
+    public function GetCurrentBuildId($current_parentid=null)
     {
         if (!$this->Id) {
             return 0;
@@ -344,13 +350,14 @@ class Build
         $this->FillFromId($this->Id);
 
         $current_clause = 'ORDER BY starttime DESC';
-        return $this->GetRelatedBuildId($current_clause);
+        return $this->GetRelatedBuildId($current_clause, $current_parentid);
     }
 
     /** Private helper function to encapsulate the common parts of
      * Get{Previous,Next,Current}BuildId()
      **/
-    private function GetRelatedBuildId($which_build_criteria)
+    private function GetRelatedBuildId($which_build_criteria,
+            $related_parentid=null)
     {
         // Take subproject into account, such that if there is one, then the
         // previous build must be associated with the same subproject...
@@ -360,22 +367,32 @@ class Build
         $parent_criteria = '';
 
         if ($this->SubProjectId) {
-            $subproj_table = ', subproject2build';
+            $subproj_table =
+                'INNER JOIN subproject2build AS sp2b ON (build.id=sp2b.buildid)';
             $subproj_criteria =
-                'AND build.id=subproject2build.buildid ' .
-                'AND subproject2build.subprojectid=' . qnum($this->SubProjectId) . ' ';
+                'AND sp2b.subprojectid=' . qnum($this->SubProjectId) . ' ';
         }
         if ($this->ParentId == -1) {
             // Only search for other parents.
             $parent_criteria = 'AND build.parentid=-1';
         }
 
-        $query = pdo_query("
-                SELECT id FROM build$subproj_table
-                WHERE siteid=" . qnum($this->SiteId) . "
+
+        if ($related_parentid) {
+            $related_build_criteria =
+                "WHERE parentid=" . qnum($related_parentid);
+        } else {
+            $related_build_criteria =
+                "WHERE siteid=" . qnum($this->SiteId) . "
                 AND type='$this->Type'
                 AND name='$this->Name'
-                AND projectid=" . qnum($this->ProjectId) . "
+                AND projectid=" . qnum($this->ProjectId);
+        }
+
+        $query = pdo_query("
+                SELECT id FROM build
+                $subproj_table
+                $related_build_criteria
                 $subproj_criteria
                 $parent_criteria
                 $which_build_criteria
@@ -630,10 +647,10 @@ class Build
             $this->Type = pdo_real_escape_string($this->Type);
             $this->Generator = pdo_real_escape_string($this->Generator);
 
-            $this->ParentId = 0;
+            $this->SetParentId(0);
             $justCreatedParent = false;
             if ($this->SubProjectName) {
-                $this->ParentId = $this->GetParentBuildId();
+                $this->SetParentId($this->LookupParentBuildId());
                 if ($this->ParentId == 0) {
                     // This is the first subproject to submit for a new build.
                     // Create a new parent build for it.
@@ -657,7 +674,7 @@ class Build
                  '$this->Uuid')";
 
             if (!pdo_query($query)) {
-                $error = pdo_error();
+                $error = pdo_error(null, false);
                 // This error might be due to a unique constraint violation
                 // for this UUID.  Query for such a previously existing build.
                 $existing_id_result = pdo_single_row_query(
@@ -851,7 +868,7 @@ class Build
         $newFailed = $numberTestsFailed - $this->GetNumberOfFailedTests();
         $newNotRun = $numberTestsNotRun - $this->GetNumberOfNotRunTests();
         $newPassed = $numberTestsPassed - $this->GetNumberOfPassedTests();
-        $this->ParentId = $this->GetParentBuildId();
+        $this->SetParentId($this->LookupParentBuildId());
         $this->UpdateParentTestNumbers($newFailed, $newNotRun, $newPassed);
 
         // Update this build's test numbers.
@@ -1541,8 +1558,8 @@ class Build
         return $allUploadedFiles;
     }
 
-    /** Get the parent's build id */
-    public function GetParentBuildId()
+    /** Lookup this build's parentid, returning 0 if none is found. */
+    public function LookupParentBuildId()
     {
         if (!$this->SiteId || !$this->Name || !$this->Stamp) {
             return 0;
@@ -1581,7 +1598,7 @@ class Build
         $result = pdo_query($query);
         if (pdo_num_rows($result) > 0) {
             $result_array = pdo_fetch_array($result);
-            $this->ParentId = $result_array['id'];
+            $this->SetParentId($result_array['id']);
 
             // Mark it as a parent (parentid of -1).
             pdo_query("UPDATE build SET parentid = -1 WHERE id = $this->ParentId");
@@ -1610,7 +1627,7 @@ class Build
                 if ($existing_id_result &&
                     array_key_exists('id', $existing_id_result)
                 ) {
-                    $this->ParentId = $existing_id_result['id'];
+                    $this->SetParentId($existing_id_result['id']);
                     return false;
                 } else {
                     add_last_sql_error('Build Insert Parent', $this->ProjectId, $this->Id);
@@ -1618,7 +1635,7 @@ class Build
                 }
             }
             if (!$this->ParentId) {
-                $this->ParentId = pdo_insert_id('build');
+                $this->SetParentId(pdo_insert_id('build'));
             }
         }
 
@@ -1742,9 +1759,18 @@ class Build
         $row = pdo_single_row_query(
             "SELECT parentid FROM build WHERE id='$buildid'");
         if ($row && array_key_exists('parentid', $row) && $row['parentid'] > 0) {
+            if ($buildid == $row['parentid']) {
+                // Avoid infinite recursion.
+                // This should never happen, but we might as well be careful.
+                add_log("$buildid is its own parent",
+                        'Build::UpdateBuild', LOG_ERR,
+                        $this->ProjectId, $this->Id,
+                        CDASH_OBJECT_BUILD, $this->Id);
+                return;
+            }
             $this->UpdateBuild($row['parentid'], $newErrors, $newWarnings);
             if ($buildid == $this->Id) {
-                $this->ParentId = $row['parentid'];
+                $this->SetParentId($row['parentid']);
             }
         }
     }
@@ -1840,7 +1866,7 @@ class Build
      **/
     public function UpdateParentConfigureNumbers($newWarnings, $newErrors)
     {
-        $this->ParentId = $this->GetParentBuildId();
+        $this->SetParentId($this->LookupParentBuildId());
         if ($this->ParentId < 1) {
             return;
         }
@@ -1934,7 +1960,7 @@ class Build
 
         // If this is a child build, add this duration
         // to the parent's configure duration sum.
-        $this->ParentId = $this->GetParentBuildId();
+        $this->SetParentId($this->LookupParentBuildId());
         if ($this->ParentId > 0) {
             pdo_query(
                 "UPDATE build
@@ -1954,22 +1980,24 @@ class Build
         }
         $this->FillFromId($this->Id);
 
-        $query =
-            'SELECT nightlytime FROM project WHERE id = ' .
-            qnum($this->ProjectId);
-        $row = pdo_single_row_query($query);
-        $nightly_start_time = strtotime($row['nightlytime']);
+        if (!$this->NightlyStartTime) {
+            $query =
+                'SELECT nightlytime FROM project WHERE id = ' .
+                qnum($this->ProjectId);
+            $row = pdo_single_row_query($query);
+            $this->NightlyStartTime = strtotime($row['nightlytime']);
+        }
 
         // If the build was started after the nightly start time
         // then it should appear on the dashboard results for the
         // subsequent day.
         $build_start_time = strtotime($this->StartTime);
 
-        if (date(FMT_TIME, $nightly_start_time) < '12:00:00') {
+        if (date(FMT_TIME, $this->NightlyStartTime) < '12:00:00') {
             // If the "nightly" start time is in the morning then any build
             // that occurs before it is part of the previous testing day.
             if (date(FMT_TIME, $build_start_time) <
-                date(FMT_TIME, $nightly_start_time)
+                date(FMT_TIME, $this->NightlyStartTime)
             ) {
                 $build_start_time -= (3600 * 24);
             }
@@ -1977,7 +2005,7 @@ class Build
             // If the nightly start time is NOT in the morning then any build
             // that occurs after it is part of the next testing day.
             if (date(FMT_TIME, $build_start_time) >=
-                date(FMT_TIME, $nightly_start_time)
+                date(FMT_TIME, $this->NightlyStartTime)
             ) {
                 $build_start_time += (3600 * 24);
             }
@@ -2036,5 +2064,49 @@ class Build
             $stamp . '_' . $name . '_' . $siteid . '_' . '_' .
             $projectid . '_' . $subprojectname;
         return md5($input_string);
+    }
+
+    /** Get/set the parentid for this build. */
+    public function GetParentId()
+    {
+        return $this->ParentId;
+    }
+
+    public function SetParentId($parentid)
+    {
+        if ($parentid > 0 && $parentid == $this->Id) {
+            add_log("Attempt to mark build $this->Id as its own parent",
+                    'Build::SetParentId', LOG_ERR,
+                $this->ProjectId, $this->Id,
+                CDASH_OBJECT_BUILD, $this->Id);
+            return;
+        }
+        $this->ParentId = $parentid;
+    }
+
+
+    /* Get the beginning and the end of the testing day for this build
+     * in DATETIME format.
+     */
+    public function ComputeTestingDayBounds()
+    {
+        if ($this->ProjectId < 1) {
+            return false;
+        }
+
+        if (isset($this->BeginningOfDay) && isset($this->EndOfDay)) {
+            return true;
+        }
+
+        $build_date = $this->GetDate();
+        list($previousdate, $currentstarttime, $nextdate) =
+            get_dates($build_date, $this->NightlyStartTime);
+
+        $beginning_timestamp = $currentstarttime;
+        $end_timestamp = $currentstarttime + 3600 * 24;
+        $this->BeginningOfDay = gmdate(FMT_DATETIME, $beginning_timestamp);
+        $this->EndOfDay = gmdate(FMT_DATETIME, $end_timestamp);
+
+        return true;
     }
 }

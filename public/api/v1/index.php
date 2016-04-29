@@ -858,8 +858,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $update_response['files'] = $countupdatefiles;
         $buildgroups_response[$i]['numupdatedfiles'] += $countupdatefiles;
 
+        $build_response['hasupdate'] = false;
         if (!empty($build_array['updatestarttime'])) {
-            $update_response['defined'] = 1;
+            $build_response['hasupdate'] = true;
 
             if ($build_array['countupdateerrors'] > 0) {
                 $update_response['errors'] = 1;
@@ -906,25 +907,18 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $compilation_response['time'] = time_difference($duration * 60.0, true);
             $compilation_response['timefull'] = $duration;
 
-            $diff = $build_array['countbuilderrordiffp'];
-            if ($diff != 0) {
-                $compilation_response['nerrordiffp'] = $diff;
-            }
-            $diff = $build_array['countbuilderrordiffn'];
-            if ($diff != 0) {
-                $compilation_response['nerrordiffn'] = $diff;
-            }
-
-            $diff = $build_array['countbuildwarningdiffp'];
-            if ($diff != 0) {
-                $compilation_response['nwarningdiffp'] = $diff;
-            }
-            $diff = $build_array['countbuildwarningdiffn'];
-            if ($diff != 0) {
-                $compilation_response['nwarningdiffn'] = $diff;
-            }
+            $compilation_response['nerrordiffp'] =
+                $build_array['countbuilderrordiffp'];
+            $compilation_response['nerrordiffn'] =
+                $build_array['countbuilderrordiffn'];
+            $compilation_response['nwarningdiffp'] =
+                $build_array['countbuildwarningdiffp'];
+            $compilation_response['nwarningdiffn'] =
+                $build_array['countbuildwarningdiffn'];
         }
+        $build_response['hascompilation'] = false;
         if (!empty($compilation_response)) {
+            $build_response['hascompilation'] = true;
             $build_response['compilation'] = $compilation_response;
             $buildgroups_response[$i]['hascompilationdata'] = true;
         }
@@ -949,10 +943,8 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $configure_response['warning'] = $nconfigurewarnings;
         $buildgroups_response[$i]['numconfigurewarning'] += $nconfigurewarnings;
 
-        $diff = $build_array['countconfigurewarningdiff'];
-        if ($diff != 0) {
-            $configure_response['warningdiff'] = $diff;
-        }
+        $configure_response['warningdiff'] =
+            $build_array['countconfigurewarningdiff'];
 
         if (array_key_exists('configureduration', $build_array) &&
             $build_array['configureduration'] != 0
@@ -963,12 +955,16 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $buildgroups_response[$i]['configureduration'] += $duration;
             $hasconfiguredata = true;
         }
+        $build_response['hasconfigure'] = false;
         if ($hasconfiguredata) {
             $build_response['configure'] = $configure_response;
+            $build_response['hasconfigure'] = true;
             $buildgroups_response[$i]['hasconfiguredata'] = true;
         }
 
+        $build_response['hastest'] = false;
         if ($build_array['hastest'] != 0) {
+            $build_response['hastest'] = true;
             $buildgroups_response[$i]['hastestdata'] = true;
             $test_response = array();
 
@@ -979,12 +975,10 @@ function echo_main_dashboard_JSON($project_instance, $date)
                     $selected_tests_not_run;
             }
 
-            if ($build_array['counttestsnotrundiffp'] != 0) {
-                $test_response['nnotrundiffp'] = $build_array['counttestsnotrundiffp'];
-            }
-            if ($build_array['counttestsnotrundiffn'] != 0) {
-                $test_response['nnotrundiffn'] = $build_array['counttestsnotrundiffn'];
-            }
+            $test_response['nnotrundiffp'] =
+                $build_array['counttestsnotrundiffp'];
+            $test_response['nnotrundiffn'] =
+                $build_array['counttestsnotrundiffn'];
 
             if ($include_subprojects) {
                 $nfail = $selected_tests_failed;
@@ -993,12 +987,10 @@ function echo_main_dashboard_JSON($project_instance, $date)
                     $selected_tests_failed;
             }
 
-            if ($build_array['counttestsfaileddiffp'] != 0) {
-                $test_response['nfaildiffp'] = $build_array['counttestsfaileddiffp'];
-            }
-            if ($build_array['counttestsfaileddiffn'] != 0) {
-                $test_response['nfaildiffn'] = $build_array['counttestsfaileddiffn'];
-            }
+            $test_response['nfaildiffp'] =
+                $build_array['counttestsfaileddiffp'];
+            $test_response['nfaildiffn'] =
+                $build_array['counttestsfaileddiffn'];
 
             if ($include_subprojects) {
                 $npass = $selected_tests_passed;
@@ -1007,22 +999,17 @@ function echo_main_dashboard_JSON($project_instance, $date)
                     $selected_tests_passed;
             }
 
-            if ($build_array['counttestspasseddiffp'] != 0) {
-                $test_response['npassdiffp'] = $build_array['counttestspasseddiffp'];
-            }
-            if ($build_array['counttestspasseddiffn'] != 0) {
-                $test_response['npassdiffn'] = $build_array['counttestspasseddiffn'];
-            }
+            $test_response['npassdiffp'] =
+                $build_array['counttestspasseddiffp'];
+            $test_response['npassdiffn'] =
+                $build_array['counttestspasseddiffn'];
 
             if ($project_array['showtesttime'] == 1) {
                 $test_response['timestatus'] = $build_array['countteststimestatusfailed'];
-
-                if ($build_array['countteststimestatusfaileddiffp'] != 0) {
-                    $test_response['ntimediffp'] = $build_array['countteststimestatusfaileddiffp'];
-                }
-                if ($build_array['countteststimestatusfaileddiffn'] != 0) {
-                    $test_response['ntimediffn'] = $build_array['countteststimestatusfaileddiffn'];
-                }
+                $test_response['ntimediffp'] =
+                    $build_array['countteststimestatusfaileddiffp'];
+                $test_response['ntimediffn'] =
+                    $build_array['countteststimestatusfaileddiffn'];
             }
 
             if ($share_label_filters) {
@@ -1099,6 +1086,30 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $build_response['builddate'] = time_difference(time() - $starttimestamp, false, 'ago');
         }
         $build_response['submitdate'] = date(FMT_DATETIMEDISPLAY, $submittimestamp);
+
+        // Generate a string summarizing this build's timing.
+        $timesummary = $build_response['builddate'];
+        if ($build_response['hasupdate'] &&
+                array_key_exists('time', $build_response['update'])) {
+            $timesummary .= ', Update time: ' .
+                $build_response['update']['time'];
+        }
+        if ($build_response['hasconfigure'] &&
+                array_key_exists('time', $build_response['configure'])) {
+            $timesummary .= ', Configure time: ' .
+                $build_response['configure']['time'];
+        }
+        if ($build_response['hascompilation'] &&
+                array_key_exists('time', $build_response['compilation'])) {
+            $timesummary .= ', Compilation time: ' .
+                $build_response['compilation']['time'];
+        }
+        if ($build_response['hastest'] &&
+                array_key_exists('time', $build_response['test'])) {
+            $timesummary .= ', Test time: ' .
+                $build_response['test']['time'];
+        }
+        $build_response['timesummary'] = $timesummary;
 
         if ($build_array['name'] != 'Aggregate Coverage') {
             $buildgroups_response[$i]['builds'][] = $build_response;
@@ -1299,6 +1310,19 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $response['coverages'] = array_values($response['coverages']);
     }
 
+    if ($response['childview'] == 1) {
+        // Report number of children.
+        if (!empty($buildgroups_response)) {
+            $numchildren = count($buildgroups_response[0]['builds']);
+        } else {
+            $row = pdo_single_row_query(
+                    'SELECT count(id) AS numchildren
+                    FROM build WHERE parentid=' . qnum($parentid));
+            $numchildren = $row['numchildren'];
+        }
+        $response['numchildren'] = $numchildren;
+    }
+
     // Generate coverage by group here.
     if (!empty($coverage_groups)) {
         $response['coveragegroups'] = array();
@@ -1450,10 +1474,15 @@ function add_expected_builds($groupid, $currentstarttime, $received_builds)
             $build_response['site'] = $site;
             $build_response['siteoutoforder'] = $siteoutoforder;
             $build_response['siteid'] = $siteid;
+            $build_response['id'] = false;
             $build_response['buildname'] = $buildname;
             $build_response['buildtype'] = $buildtype;
             $build_response['buildgroupid'] = $groupid;
             $build_response['expectedandmissing'] = 1;
+            $build_response['hasupdate'] = false;
+            $build_response['hasconfigure'] = false;
+            $build_response['hascompilation'] = false;
+            $build_response['hastest'] = false;
 
             // Compute historical average to get approximate expected time.
             // PostgreSQL doesn't have the necessary functions for this.

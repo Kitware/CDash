@@ -71,7 +71,7 @@ class CoverageJUnitHandler extends AbstractHandler
         } elseif ($name == 'SOURCEFILE') {
             $this->CoverageFile = new CoverageFile();
             $this->Coverage = new Coverage();
-            $this->CoverageFile->FullPath = $attributes['NAME'];
+            $this->CoverageFile->FullPath = trim($attributes['NAME']);
             $this->Coverage->Covered = 1;
             $this->Coverage->CoverageFile = $this->CoverageFile;
         } elseif ($name == 'LABEL') {
