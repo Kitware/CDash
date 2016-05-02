@@ -693,11 +693,14 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
         $selected_configure_errors = 0;
         $selected_configure_warnings = 0;
+        $selected_configure_duration = 0;
         $selected_build_errors = 0;
         $selected_build_warnings = 0;
+        $selected_build_duration = 0;
         $selected_tests_not_run = 0;
         $selected_tests_failed = 0;
         $selected_tests_passed = 0;
+        $selected_test_duration = 0;
 
         if ($numchildren > 0) {
             $child_builds_hyperlink =
@@ -708,12 +711,14 @@ function echo_main_dashboard_JSON($project_instance, $date)
             // Compute selected (excluded or included) SubProject results.
             if ($selected_subprojects) {
                 $select_query = "
-                    SELECT configureerrors, configurewarnings, builderrors,
-                           buildwarnings, testnotrun, testfailed, testpassed,
+                    SELECT configureerrors, configurewarnings, configureduration,
+                           builderrors, buildwarnings, b.starttime, b.endtime,
+                           testnotrun, testfailed, testpassed, btt.time AS testduration,
                            sb.name
                     FROM build AS b
                     INNER JOIN subproject2build AS sb2b ON (b.id = sb2b.buildid)
                     INNER JOIN subproject AS sb ON (sb2b.subprojectid = sb.id)
+                    LEFT JOIN buildtesttime AS btt ON (b.id=btt.buildid)
                     WHERE b.parentid=$buildid
                     AND sb.name IN $selected_subprojects";
                 $select_results = pdo_query($select_query);
@@ -722,16 +727,22 @@ function echo_main_dashboard_JSON($project_instance, $date)
                         max(0, $select_array['configureerrors']);
                     $selected_configure_warnings +=
                         max(0, $select_array['configurewarnings']);
+                    $selected_configure_duration +=
+                        max(0, $select_array['configureduration']);
                     $selected_build_errors +=
                         max(0, $select_array['builderrors']);
                     $selected_build_warnings +=
                         max(0, $select_array['buildwarnings']);
+                    $selected_build_duration +=
+                        max(0, round((strtotime($select_array['endtime']) - strtotime($select_array['starttime'])) / 60, 1));
                     $selected_tests_not_run +=
                         max(0, $select_array['testnotrun']);
                     $selected_tests_failed +=
                         max(0, $select_array['testfailed']);
                     $selected_tests_passed +=
                         max(0, $select_array['testpassed']);
+                    $selected_test_duration +=
+                        max(0, $select_array['testduration']);
                 }
             }
         } else {
@@ -887,34 +898,36 @@ function echo_main_dashboard_JSON($project_instance, $date)
         if ($build_array['countbuilderrors'] >= 0) {
             if ($include_subprojects) {
                 $nerrors = $selected_build_errors;
+                $nwarnings = $selected_build_warnings;
+                $buildduration = $selected_build_duration;
             } else {
                 $nerrors =
                     $build_array['countbuilderrors'] - $selected_build_errors;
+                $nwarnings = $build_array['countbuildwarnings'] -
+                    $selected_build_warnings;
+                $buildduration = $build_array['buildduration'] -
+                    $selected_build_duration;
             }
             $compilation_response['error'] = $nerrors;
             $buildgroups_response[$i]['numbuilderror'] += $nerrors;
 
-            if ($include_subprojects) {
-                $nwarnings = $selected_build_warnings;
-            } else {
-                $nwarnings = $build_array['countbuildwarnings'] -
-                    $selected_build_warnings;
-            }
             $compilation_response['warning'] = $nwarnings;
             $buildgroups_response[$i]['numbuildwarning'] += $nwarnings;
 
-            $duration = $build_array['buildduration'];
-            $compilation_response['time'] = time_difference($duration * 60.0, true);
-            $compilation_response['timefull'] = $duration;
+            $compilation_response['time'] = time_difference($buildduration * 60.0, true);
+            $compilation_response['timefull'] = $buildduration;
 
-            $compilation_response['nerrordiffp'] =
-                $build_array['countbuilderrordiffp'];
-            $compilation_response['nerrordiffn'] =
-                $build_array['countbuilderrordiffn'];
-            $compilation_response['nwarningdiffp'] =
-                $build_array['countbuildwarningdiffp'];
-            $compilation_response['nwarningdiffn'] =
-                $build_array['countbuildwarningdiffn'];
+            if (!$include_subprojects && !$exclude_subprojects) {
+                // Don't show diff when filtering by SubProject.
+                $compilation_response['nerrordiffp'] =
+                    $build_array['countbuilderrordiffp'];
+                $compilation_response['nerrordiffn'] =
+                    $build_array['countbuilderrordiffn'];
+                $compilation_response['nwarningdiffp'] =
+                    $build_array['countbuildwarningdiffp'];
+                $compilation_response['nwarningdiffn'] =
+                    $build_array['countbuildwarningdiffn'];
+            }
         }
         $build_response['hascompilation'] = false;
         if (!empty($compilation_response)) {
@@ -927,34 +940,31 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
         if ($include_subprojects) {
             $nconfigureerrors = $selected_configure_errors;
+            $nconfigurewarnings = $selected_configure_warnings;
+            $configureduration = $selected_configure_duration;
         } else {
             $nconfigureerrors = $build_array['countconfigureerrors'] -
                 $selected_configure_errors;
+            $nconfigurewarnings = $build_array['countconfigurewarnings'] -
+                $selected_configure_warnings;
+            $configureduration = $build_array['configureduration'] -
+                $selected_configure_duration;
         }
         $configure_response['error'] = $nconfigureerrors;
         $buildgroups_response[$i]['numconfigureerror'] += $nconfigureerrors;
 
-        if ($include_subprojects) {
-            $nconfigurewarnings = $selected_configure_warnings;
-        } else {
-            $nconfigurewarnings = $build_array['countconfigurewarnings'] -
-                $selected_configure_warnings;
-        }
         $configure_response['warning'] = $nconfigurewarnings;
         $buildgroups_response[$i]['numconfigurewarning'] += $nconfigurewarnings;
 
-        $configure_response['warningdiff'] =
-            $build_array['countconfigurewarningdiff'];
-
-        if (array_key_exists('configureduration', $build_array) &&
-            $build_array['configureduration'] != 0
-        ) {
-            $duration = $build_array['configureduration'];
-            $configure_response['time'] = time_difference($duration, true);
-            $configure_response['timefull'] = $duration;
-            $buildgroups_response[$i]['configureduration'] += $duration;
-            $hasconfiguredata = true;
+        if (!$include_subprojects && !$exclude_subprojects) {
+            $configure_response['warningdiff'] =
+                $build_array['countconfigurewarningdiff'];
         }
+
+        $configure_response['time'] = time_difference($configureduration, true);
+        $configure_response['timefull'] = $configureduration;
+        $buildgroups_response[$i]['configureduration'] += $configureduration;
+
         $build_response['hasconfigure'] = false;
         if ($hasconfiguredata) {
             $build_response['configure'] = $configure_response;
@@ -970,39 +980,36 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
             if ($include_subprojects) {
                 $nnotrun = $selected_tests_not_run;
+                $nfail = $selected_tests_failed;
+                $npass = $selected_tests_passed;
+                $testduration = $selected_test_duration;
             } else {
                 $nnotrun = $build_array['counttestsnotrun'] -
                     $selected_tests_not_run;
-            }
-
-            $test_response['nnotrundiffp'] =
-                $build_array['counttestsnotrundiffp'];
-            $test_response['nnotrundiffn'] =
-                $build_array['counttestsnotrundiffn'];
-
-            if ($include_subprojects) {
-                $nfail = $selected_tests_failed;
-            } else {
                 $nfail = $build_array['counttestsfailed'] -
                     $selected_tests_failed;
-            }
-
-            $test_response['nfaildiffp'] =
-                $build_array['counttestsfaileddiffp'];
-            $test_response['nfaildiffn'] =
-                $build_array['counttestsfaileddiffn'];
-
-            if ($include_subprojects) {
-                $npass = $selected_tests_passed;
-            } else {
                 $npass = $build_array['counttestspassed'] -
                     $selected_tests_passed;
+                $testduration = $build_array['testduration'] -
+                    $selected_test_duration;
             }
 
-            $test_response['npassdiffp'] =
-                $build_array['counttestspasseddiffp'];
-            $test_response['npassdiffn'] =
-                $build_array['counttestspasseddiffn'];
+            if (!$include_subprojects && !$exclude_subprojects) {
+                $test_response['nnotrundiffp'] =
+                    $build_array['counttestsnotrundiffp'];
+                $test_response['nnotrundiffn'] =
+                    $build_array['counttestsnotrundiffn'];
+
+                $test_response['nfaildiffp'] =
+                    $build_array['counttestsfaileddiffp'];
+                $test_response['nfaildiffn'] =
+                    $build_array['counttestsfaileddiffn'];
+
+                $test_response['npassdiffp'] =
+                    $build_array['counttestspasseddiffp'];
+                $test_response['npassdiffn'] =
+                    $build_array['counttestspasseddiffn'];
+            }
 
             if ($project_array['showtesttime'] == 1) {
                 $test_response['timestatus'] = $build_array['countteststimestatusfailed'];
@@ -1064,10 +1071,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $buildgroups_response[$i]['numtestfail'] += $nfail;
             $buildgroups_response[$i]['numtestpass'] += $npass;
 
-            $duration = $build_array['testduration'];
-            $test_response['time'] = time_difference($duration, true);
-            $test_response['timefull'] = $duration;
-            $buildgroups_response[$i]['testduration'] += $duration;
+            $test_response['time'] = time_difference($testduration, true);
+            $test_response['timefull'] = $testduration;
+            $buildgroups_response[$i]['testduration'] += $testduration;
 
             $build_response['test'] = $test_response;
         }
