@@ -229,7 +229,7 @@ class CoverageFileLog
                     INNER JOIN subproject2build AS sp2b ON (build.id=sp2b.buildid)
                     WHERE parentid='$this->AggregateBuildId' AND
                     projectid='" . $this->Build->ProjectId ."' AND
-                    subproject2build.subprojectid='" . $this->Build->SubProjectId . "'";
+                    sp2b.subprojectid='" . $this->Build->SubProjectId . "'";
                 $row = pdo_single_row_query($query);
                 if (!$row || !array_key_exists('id', $row)) {
                     // An aggregate build for this SubProject doesn't exist yet.
