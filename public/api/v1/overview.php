@@ -316,8 +316,12 @@ while ($build_row = pdo_fetch_array($builds_array)) {
                     continue;
                 }
 
-                // Record coverage for this subproject group.
                 $subproject_group_id = $child_build_row['subprojectgroupid'];
+                if (is_null($subproject_group_id)) {
+                    continue;
+                }
+
+                // Record coverage for this subproject group.
                 $subproject_group_name =
                     $subproject_groups[$subproject_group_id]->GetName();
                 $coverage_data[$day][$group_name][$subproject_group_name]['loctested'] +=
