@@ -2153,7 +2153,7 @@ function get_aggregate_build($build)
         $subproj_table =
             "INNER JOIN subproject2build AS sp2b ON (build.id=sp2b.buildid)";
         $subproj_where =
-            "AND subproject2build.subprojectid='$build->SubProjectId'";
+            "AND sp2b.subprojectid='$build->SubProjectId'";
     }
 
     $query =
