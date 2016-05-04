@@ -470,9 +470,18 @@ class GCovTarHandler
             $lineNumber++;
         }
 
-        // Save these models to the database.
+        // Save this source file to the database.
         $coverageFile->TrimLastNewline();
         $coverageFile->Update($this->Build->Id);
+
+        // Check if this build already has coverage for this file.
+        // If so, return early so we don't overwrite it with a blank entry.
+        $coverage->BuildId = $this->Build->Id;
+        if ($coverage->Exists()) {
+            return false;
+        }
+
+        // Otherwise save the line-by-line coverage to the database.
         $coverageFileLog->BuildId = $this->Build->Id;
         $coverageFileLog->FileId = $coverageFile->Id;
         $coverageFileLog->Insert(true);
