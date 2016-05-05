@@ -116,7 +116,7 @@ class CoverageSummary
                     // This could happen if CoverageLog.xml was parsed before Coverage.xml.
                     $coveragefile = pdo_query(
                         "SELECT id FROM coveragefile AS cf
-                    INNSER JOIN coveragefilelog AS cfl ON (cfl.fileid=cf.id)
+                    INNER JOIN coveragefilelog AS cfl ON (cfl.fileid=cf.id)
                     WHERE cf.fullpath='$fullpath' AND cfl.buildid='$this->BuildId'");
                     if (pdo_num_rows($coveragefile) == 0) {
                         // Create an empty file if doesn't exist.

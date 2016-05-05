@@ -268,7 +268,7 @@ class CoverageFileLog
         ) {
             add_log("Not appending coverage of '$path' to aggregate as it " .
                 'already contains a different version of this file.',
-                'CoverageSummary::UpdateAggregate', LOG_INFO,
+                'CoverageFileLog::UpdateAggregate', LOG_INFO,
                 $this->BuildId);
             return;
         }
