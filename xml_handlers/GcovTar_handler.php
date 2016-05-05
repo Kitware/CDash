@@ -108,15 +108,17 @@ class GCovTarHandler
 
         // Lookup some data used during coverage aggregation.
         $this->Build->ComputeTestingDayBounds();
-        $aggregateBuild = get_aggregate_build($this->Build);
-        $aggregateParentId = $aggregateBuild->GetParentId();
-        if ($aggregateParentId > 0) {
-            $this->AggregateBuildId = $aggregateParentId;
-            $aggregateParent = new Build();
-            $aggregateParent->Id = $aggregateParentId;
-            $this->PreviousAggregateParentId = $aggregateParent->GetPreviousBuildId();
-        } else {
-            $this->AggregateBuildId = $aggregateBuild->Id;
+        if ($this->Build->Type === 'Nightly') {
+            $aggregateBuild = get_aggregate_build($this->Build);
+            $aggregateParentId = $aggregateBuild->GetParentId();
+            if ($aggregateParentId > 0) {
+                $this->AggregateBuildId = $aggregateParentId;
+                $aggregateParent = new Build();
+                $aggregateParent->Id = $aggregateParentId;
+                $this->PreviousAggregateParentId = $aggregateParent->GetPreviousBuildId();
+            } else {
+                $this->AggregateBuildId = $aggregateBuild->Id;
+            }
         }
 
         // Recursively search for .gcov files and parse them.
