@@ -193,11 +193,8 @@ class CoverageFileLog
 
         foreach ($this->Branches as $line => $value) {
             list($timesHit, $total) = explode('/', $value);
-            if ($timesHit > 0) {
-                $stats['branchestested'] += 1;
-            } else {
-                $stats['branchesuntested'] += 1;
-            }
+            $stats['branchestested'] += $timesHit;
+            $stats['branchesuntested'] += ($total - $timesHit);
         }
         return $stats;
     }
