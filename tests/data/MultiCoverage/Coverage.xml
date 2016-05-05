@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="multi_coverage_example"
+	BuildStamp="20160505-1541-Experimental"
+	Name="localhost"
+	Generator="ctest-3.5"
+	CompilerName=""
+	CompilerVersion=""
+	OSName="Linux"
+	Hostname="localhost"
+	OSRelease="3.13.0-77-generic"
+	OSVersion="#121-Ubuntu SMP Wed Jan 20 10:50:42 UTC 2016"
+	OSPlatform="x86_64"
+	Is64Bits="1"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="45"
+	ProcessorCacheSize="12288"
+	NumberOfLogicalCPU="12"
+	NumberOfPhysicalCPU="1"
+	TotalVirtualMemory="32690"
+	TotalPhysicalMemory="32100"
+	LogicalProcessorsPerPhysical="12"
+	ProcessorClockFrequency="1200.00"
+	>
+	<Coverage>
+		<StartDateTime>May 05 11:41 EDT</StartDateTime>
+		<StartTime>1462462884</StartTime>
+		<File Name="bar.py" FullPath="./bar.py" Covered="true">
+			<LOCTested>3</LOCTested>
+			<LOCUnTested>1</LOCUnTested>
+			<PercentCoverage>75.00</PercentCoverage>
+			<CoverageMetric>0.93</CoverageMetric>
+		</File>
+		<File Name="foo.cxx" FullPath="./foo.cxx" Covered="true">
+			<LOCTested>5</LOCTested>
+			<LOCUnTested>0</LOCUnTested>
+			<PercentCoverage>100.00</PercentCoverage>
+			<CoverageMetric>1.00</CoverageMetric>
+			<Labels>
+				<Label>aggro</Label>
+			</Labels>
+		</File>
+		<LOCTested>8</LOCTested>
+		<LOCUntested>1</LOCUntested>
+		<LOC>9</LOC>
+		<PercentCoverage>88.89</PercentCoverage>
+		<EndDateTime>May 05 11:41 EDT</EndDateTime>
+		<EndTime>1462462884</EndTime>
+		<ElapsedMinutes>0.00</ElapsedMinutes>
+	</Coverage>
+</Site>
