@@ -27,6 +27,9 @@ function copy_build_data($old_buildid, $new_buildid, $type)
  **/
 function copy_coverage_data($old_buildid, $new_buildid)
 {
+    require_once('models/coveragefilelog.php');
+    require_once('models/coveragesummary.php');
+
     $tables_to_copy = array(
         'coverage', 'coveragefilelog', 'coveragesummary');
 
@@ -35,10 +38,29 @@ function copy_coverage_data($old_buildid, $new_buildid)
     }
 
     // Compute difference in coverage from previous build.
-    require_once('models/coveragesummary.php');
     $summary = new CoverageSummary();
     $summary->BuildId = $new_buildid;
     $summary->ComputeDifference();
+
+    // Update parent build (if any).
+    $summary->Load();
+    $summary->UpdateParent();
+
+    // Update aggregate coverage if this is a nightly build.
+    $row = pdo_single_row_query(
+            "SELECT type FROM build WHERE id='$new_buildid'");
+    if ($row['type'] === 'Nightly') {
+        $result = pdo_query("
+                SELECT fileid FROM coveragefilelog
+                WHERE buildid='$new_buildid'");
+        while ($result_array = pdo_fetch_array($result)) {
+            $log = new CoverageFileLog();
+            $log->BuildId = $new_buildid;
+            $log->FileId = $result_array['fileid'];
+            $log->Load();
+            $log->UpdateAggregate();
+        }
+    }
 }
 
 /**

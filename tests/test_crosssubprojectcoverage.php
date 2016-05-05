@@ -62,9 +62,12 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
     {
         $this->deleteLog($this->logfilename);
         $success = true;
-        $success &= $this->submitThirdParty();
-        $success &= $this->submitExperimental();
-        $success &= $this->submitProduction();
+        $success &= $this->submitThirdPartyDay1();
+        $success &= $this->submitExperimentalDay1();
+        $success &= $this->submitProductionDay1();
+        $success &= $this->submitThirdPartyDay2();
+        $success &= $this->submitExperimentalDay2();
+        $success &= $this->submitProductionDay2();
         $success &= $this->verifyResults();
         $success &= $this->verifyAggregate();
         if ($success) {
@@ -72,25 +75,50 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
         }
     }
 
-    public function submitThirdParty()
+    public function submitThirdPartyDay1()
     {
-        return $this->submitResults('MyThirdPartyDependency', '1455044903',
-            '1455044904', '121eb59d5dd9c1bf78c2a5e15eb669d0');
+        return $this->submitResults(
+            'MyThirdPartyDependency', '20160209-1908-Nightly',
+            '1455044903', '1455044904', '121eb59d5dd9c1bf78c2a5e15eb669d0');
     }
 
-    public function submitExperimental()
+    public function submitExperimentalDay1()
     {
-        return $this->submitResults('MyExperimentalFeature', '1455044906',
-            '1455044907', '6adbe63add1bc5171e9e2b9c6a4155de');
+        return $this->submitResults(
+            'MyExperimentalFeature', '20160209-1908-Nightly',
+            '1455044906', '1455044907', '6adbe63add1bc5171e9e2b9c6a4155de');
     }
 
-    public function submitProduction()
+    public function submitProductionDay1()
     {
-        return $this->submitResults('MyProductionCode', '1455044909',
-            '1455044909', '211f7e369cd2bfc983eaba847c1cab65');
+        return $this->submitResults(
+            'MyProductionCode', '20160209-1908-Nightly',
+            '1455044909', '1455044909', '211f7e369cd2bfc983eaba847c1cab65');
     }
 
-    public function submitResults($subproject, $starttime, $endtime, $md5)
+    public function submitThirdPartyDay2()
+    {
+        return $this->submitResults(
+            'MyThirdPartyDependency', '20160210-1908-Nightly',
+            '1455131303', '1455131304', '121eb59d5dd9c1bf78c2a5e15eb669d0', true);
+    }
+
+
+    public function submitExperimentalDay2()
+    {
+        return $this->submitResults(
+            'MyExperimentalFeature', '20160210-1908-Nightly',
+            '1455131306', '1455131307', '6adbe63add1bc5171e9e2b9c6a4155de', true);
+    }
+
+    public function submitProductionDay2()
+    {
+        return $this->submitResults(
+            'MyProductionCode', '20160210-1908-Nightly',
+            '1455131309', '1455131309', '211f7e369cd2bfc983eaba847c1cab65', true);
+    }
+
+    public function submitResults($subproject, $stamp, $starttime, $endtime, $md5, $copy=false)
     {
         $file = "$this->DataDir/$subproject/Build.xml";
         if (!$this->submission('CrossSubProjectExample', $file)) {
@@ -104,7 +132,7 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
             'subproject' => $subproject,
             'build' => 'subproject_coverage_example',
             'site' => 'localhost',
-            'stamp' => '20160209-1908-Nightly',
+            'stamp' => $stamp,
             'starttime' => $starttime,
             'endtime' => $endtime,
             'track' => 'Nightly',
@@ -126,6 +154,16 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
             return false;
         }
 
+        if ($copy) {
+            $datafilesmd5 = $post_json['datafilesmd5'][0];
+            if ($datafilesmd5 != 1) {
+                $this->fail(
+                    "Expected datafilesmd5 to be 1, instead found $datafilesmd5");
+                return false;
+            }
+            return true;
+        }
+
         // Do the PUT submission to actually upload our data.
         $puturl = $this->url . "/submit.php?type=GcovTar&md5=$md5&filename=gcov.tar&buildid=$buildid";
         $filename = "$this->DataDir/$subproject/gcov.tar";
@@ -145,114 +183,133 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
     {
         $success = true;
 
-        // Verify parent results.
-        $this->get($this->url . '/api/v1/index.php?project=CrossSubProjectExample&date=2016-02-09');
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
-        $num_parent_coverages = count($jsonobj['coverages']);
-        if ($num_parent_coverages != 1) {
-            $this->fail("Expected one parent coverage, found $num_parent_coverages");
-            return false;
-        }
-        $coverage = array_pop($jsonobj['coverages']);
-        $success &= $this->checkCoverage($coverage, 25, 10, 'parent');
+        $dates = array('2016-02-09', '2016-02-10');
+        foreach ($dates as $date) {
+            // Verify parent results.
+            $this->get($this->url . "/api/v1/index.php?project=CrossSubProjectExample&date=$date");
+            $content = $this->getBrowser()->getContent();
+            $jsonobj = json_decode($content, true);
+            $num_parent_coverages = count($jsonobj['coverages']);
+            if ($num_parent_coverages != 1) {
+                $this->fail("Expected one parent coverage, found $num_parent_coverages");
+                return false;
+            }
+            $coverage = array_pop($jsonobj['coverages']);
+            $success &= $this->checkCoverage($coverage, 25, 10, 'parent');
 
-        $parentid = $coverage['buildid'];
-        if (empty($parentid) || $parentid < 1) {
-            $this->fail('No parentid found when expected');
-            return false;
-        }
+            $parentid = $coverage['buildid'];
+            if (empty($parentid) || $parentid < 1) {
+                $this->fail('No parentid found when expected');
+                return false;
+            }
 
-        // Verify child results.
-        $this->get($this->url . "/api/v1/index.php?project=CrossSubProjectExample&parentid=$parentid");
-        $content = $this->getBrowser()->getContent();
-        $jsonobj = json_decode($content, true);
-        $num_groups = count($jsonobj['coveragegroups']);
-        if ($num_groups != 3) {
-            $this->fail("Expected 3 coverage groups, found $num_groups");
-            return false;
-        }
-        foreach ($jsonobj['coveragegroups'] as $coverage_group) {
-            $coverage = array_pop($coverage_group['coverages']);
-            $group_name = $coverage_group['label'];
-            switch ($group_name) {
-                case 'Third Party':
-                    $success &=
-                        $this->checkCoverage($coverage, 9, 4, $group_name);
-                    break;
-                case 'Experimental':
-                    $success &=
-                        $this->checkCoverage($coverage, 8, 3, $group_name);
-                    break;
-                case 'Production':
-                    $success &=
-                        $this->checkCoverage($coverage, 8, 3, $group_name);
-                    break;
-                default:
-                    $this->fail("Unexpected group $group_name");
+            // Verify child results.
+            $this->get($this->url . "/api/v1/index.php?project=CrossSubProjectExample&parentid=$parentid");
+            $content = $this->getBrowser()->getContent();
+            $jsonobj = json_decode($content, true);
+            $num_groups = count($jsonobj['coveragegroups']);
+            if ($num_groups != 3) {
+                $this->fail("Expected 3 coverage groups, found $num_groups");
+                return false;
+            }
+            foreach ($jsonobj['coveragegroups'] as $coverage_group) {
+                $coverage = array_pop($coverage_group['coverages']);
+                $group_name = $coverage_group['label'];
+                switch ($group_name) {
+                    case 'Third Party':
+                        $success &=
+                            $this->checkCoverage($coverage, 9, 4, $group_name);
+                        break;
+                    case 'Experimental':
+                        $success &=
+                            $this->checkCoverage($coverage, 8, 3, $group_name);
+                        break;
+                    case 'Production':
+                        $success &=
+                            $this->checkCoverage($coverage, 8, 3, $group_name);
+                        break;
+                    default:
+                        $this->fail("Unexpected group $group_name");
+                }
             }
         }
+
         return $success;
     }
 
     public function verifyAggregate()
     {
-        // Since we only have one nightly coverage build, the aggregate won't
-        // appear on index.php.  So instead we have to verify that it is correct
-        // by querying the database.
         $success = true;
+        $dates = array('2016-02-09', '2016-02-10');
 
-        // Get parentid.
-        $row = pdo_single_row_query(
-                "SELECT id FROM build
-                WHERE name = 'Aggregate Coverage' AND
-                parentid=-1 AND
-                projectid=
-                (SELECT id FROM project WHERE name='CrossSubProjectExample')");
-        $parentid = $row['id'];
-        if (empty($parentid) || $parentid < 1) {
-            $this->fail('No aggregate parentid found when expected');
-            return false;
-        }
+        foreach ($dates as $date) {
+            // Since we only have one nightly coverage build the aggregate won't
+            // appear on index.php.  So instead we have to verify that it is correct
+            // by querying the database.
 
-        // Verify parent results.
-        $row = pdo_single_row_query("
-                SELECT * from coveragesummary WHERE buildid='$parentid'");
-        $success &= $this->checkCoverage($row, 25, 10, 'aggregate parent');
+            // Get parentid.
+            $row = pdo_single_row_query(
+                    "SELECT id FROM build
+                    WHERE name = 'Aggregate Coverage' AND
+                    parentid=-1 AND
+                    starttime>'$date 00:00:00' AND
+                    starttime<='$date 23:59:59' AND
+                    projectid=
+                    (SELECT id FROM project WHERE name='CrossSubProjectExample')");
+            $parentid = $row['id'];
+            if (empty($parentid) || $parentid < 1) {
+                $this->fail('No aggregate parentid found when expected');
+                return false;
+            }
 
-        // Verify child results.
-        $result = pdo_query("
-                SELECT cs.loctested, cs.locuntested, spg.name
-                FROM build AS b
-                INNER JOIN coveragesummary AS cs ON (b.id=cs.buildid)
-                INNER JOIN subproject2build AS sp2b ON (b.id=sp2b.buildid)
-                INNER JOIN subproject AS sp ON (sp2b.subprojectid=sp.id)
-                INNER JOIN subprojectgroup AS spg ON (sp.groupid=spg.id)
-                WHERE parentid='$parentid'");
-        $num_builds = pdo_num_rows($result);
-        if ($num_builds != 3) {
-            $this->fail("Expected 3 aggregate children, found $num_builds");
-            return false;
-        }
-        while ($row = pdo_fetch_array($result)) {
-            $group_name = $row['name'];
-            switch ($group_name) {
-                case 'Third Party':
-                    $success &=
-                        $this->checkCoverage($row, 9, 4, "aggregate $group_name");
-                    break;
-                case 'Experimental':
-                    $success &=
-                        $this->checkCoverage($row, 8, 3, "aggregate $group_name");
-                    break;
-                case 'Production':
-                    $success &=
-                        $this->checkCoverage($row, 8, 3, "aggregate $group_name");
-                    break;
-                default:
-                    $this->fail("Unexpected aggregate group $group_name");
+            // Verify parent results.
+            $row = pdo_single_row_query("
+                    SELECT * from coveragesummary WHERE buildid='$parentid'");
+            $success &= $this->checkCoverage($row, 25, 10, 'aggregate parent');
+
+            // Verify child results.
+            $result = pdo_query("
+                    SELECT b.id, cs.loctested, cs.locuntested, spg.name
+                    FROM build AS b
+                    INNER JOIN coveragesummary AS cs ON (b.id=cs.buildid)
+                    INNER JOIN subproject2build AS sp2b ON (b.id=sp2b.buildid)
+                    INNER JOIN subproject AS sp ON (sp2b.subprojectid=sp.id)
+                    INNER JOIN subprojectgroup AS spg ON (sp.groupid=spg.id)
+                    WHERE parentid='$parentid'");
+            $num_builds = pdo_num_rows($result);
+            if ($num_builds != 3) {
+                $this->fail("Expected 3 aggregate children, found $num_builds");
+                return false;
+            }
+            while ($row = pdo_fetch_array($result)) {
+                $group_name = $row['name'];
+                switch ($group_name) {
+                    case 'Third Party':
+                        $success &=
+                            $this->checkCoverage($row, 9, 4, "aggregate $group_name");
+                        break;
+                    case 'Experimental':
+                        $success &=
+                            $this->checkCoverage($row, 8, 3, "aggregate $group_name");
+                        break;
+                    case 'Production':
+                        $success &=
+                            $this->checkCoverage($row, 8, 3, "aggregate $group_name");
+                        break;
+                    default:
+                        $this->fail("Unexpected aggregate group $group_name");
+                }
+                // Make sure there's no coveragediff.
+                $count_query = "
+                    SELECT COUNT(buildid) AS numdiff
+                    FROM coveragesummarydiff WHERE buildid=" . $row['id'];
+                $count_results = pdo_single_row_query($count_query);
+                if ($count_results['numdiff'] != 0) {
+                    $this->fail("Expected no coveragediff for $group_name");
+                }
             }
         }
+
         return $success;
     }
 
