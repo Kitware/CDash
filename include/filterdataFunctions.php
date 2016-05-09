@@ -1020,3 +1020,17 @@ function get_label_ids_from_filterdata($filterdata)
 
     return $label_ids;
 }
+
+// Return a sanitized string of filter parameters to be used in a URL.
+function get_filterurl()
+{
+    if (!array_key_exists('filterstring', $_GET)) {
+        return '';
+    }
+
+    // htmlentities is used here to prevent XSS injection from filterstring content.
+    $filterurl = htmlentities($_GET['filterstring'], ENT_QUOTES);
+    // ...but we need ampersands to pass through unescaped, so convert them back.
+    $filterurl = str_replace('&amp;', '&', $filterurl);
+    return $filterurl;
+}
