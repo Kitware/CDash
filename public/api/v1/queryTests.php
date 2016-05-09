@@ -119,7 +119,7 @@ if (isset($_GET['parentid'])) {
     $menu['current'] = $base_url . $limit_param;
 
     if (has_next_date($date, $currentstarttime)) {
-        $menu['next'] = $base_url . $nextdate . $limit_param;
+        $menu['next'] = $base_url . '&date=' . $nextdate . $limit_param;
     } else {
         $menu['nonext'] = '1';
     }
