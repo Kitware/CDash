@@ -100,7 +100,7 @@ class CoverageLogHandler extends AbstractHandler
                 $coverageFile->Update($this->Build->Id);
                 $coverageFileLog->BuildId = $this->Build->Id;
                 $coverageFileLog->FileId = $coverageFile->Id;
-                $coverageFileLog->Insert();
+                $coverageFileLog->Insert(true);
             }
         } elseif ($name == 'LINE') {
             $this->CurrentCoverageFile->File .= rtrim($this->CurrentLine);
