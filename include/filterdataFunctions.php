@@ -171,17 +171,17 @@ class IndexPhpFilters extends DefaultFilters
                 break;
 
             case 'configureduration': {
-                $sql_field = '(SELECT ROUND(TIMESTAMPDIFF(SECOND,starttime,endtime)/60.0,1) FROM configure WHERE buildid=b.id)';
+                $sql_field = 'b.configureduration';
             }
                 break;
 
             case 'configureerrors': {
-                $sql_field = "(SELECT SUM(status) FROM configure WHERE buildid=b.id AND status!='0')";
+                $sql_field = "b.configureerrors";
             }
                 break;
 
             case 'configurewarnings': {
-                $sql_field = "(SELECT COUNT(buildid) FROM configureerror WHERE buildid=b.id AND type='1')";
+                $sql_field = "b.configurewarnings";
             }
                 break;
 
@@ -232,27 +232,27 @@ class IndexPhpFilters extends DefaultFilters
                 break;
 
             case 'testsfailed': {
-                $sql_field = "(SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id AND status='failed')";
+                $sql_field = "b.testfailed";
             }
                 break;
 
             case 'testsnotrun': {
-                $sql_field = "(SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id AND status='notrun')";
+                $sql_field = "b.testnotrun";
             }
                 break;
 
             case 'testspassed': {
-                $sql_field = "(SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id AND status='passed')";
+                $sql_field = "b.testpassed";
             }
                 break;
 
             case 'testsduration': {
-                $sql_field = 'IF((SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id)>0,(SELECT ROUND(SUM(time)/60.0,1) FROM build2test WHERE buildid=b.id),0)';
+                $sql_field = 'btt.time';
             }
                 break;
 
             case 'testtimestatus': {
-                $sql_field = 'IF((SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id)>0,(SELECT COUNT(buildid) FROM build2test WHERE buildid=b.id AND timestatus>=(SELECT testtimemaxstatus FROM project WHERE project.id=b.projectid)),0)';
+                $sql_field = 'b.testtimestatusfailed';
             }
                 break;
 
