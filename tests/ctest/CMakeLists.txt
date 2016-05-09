@@ -152,6 +152,7 @@ set_tests_properties(
   FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*")
 
 add_php_test(submitsortingdata)
+add_php_test(indexfilters)
 
 add_test(enable_async
   ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_enable_async.php
