@@ -16,6 +16,7 @@ Vagrant.configure(2) do |config|
   end
 
   config.vm.provision "ansible" do |ansible|
+    ansible.galaxy_role_file = "ansible/requirements.txt"
     ansible.playbook = "ansible/site.yml"
   end
 end
