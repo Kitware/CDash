@@ -1,5 +1,0 @@
-geerlingguy.mysql
-geerlingguy.apache
-geerlingguy.php
-geerlingguy.composer
-leonidas.nvm
