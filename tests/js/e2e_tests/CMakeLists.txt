@@ -8,7 +8,7 @@ configure_file(
   @ONLY)
 
 function(add_protractor_test test_name)
-  if(NOT PROTRACTOR_EXE)
+  if(NOT PROTRACTOR_EXE OR NOT CDASH_USE_PROTRACTOR)
     return()
   endif()
   add_test(
