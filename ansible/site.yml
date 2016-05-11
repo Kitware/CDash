@@ -15,7 +15,7 @@
     - role: geerlingguy.apache
       sudo: yes
       apache_vhosts:
-        - {servername: localhost, documentroot: "/var/www/CDash/public"}
+        - {servername: localhost, documentroot: "{{ cdash_install_path }}/public"}
 
     - role: geerlingguy.php
       sudo: yes

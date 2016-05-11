@@ -5,4 +5,4 @@ vagrant up
 
 vagrant ssh
 
-cd /var/www/CDash && mkdir build && cd build && cmake -DCDASH_SERVER=localhost -DCDASH_DIR_NAME="" -DCDASH_USE_SELENIUM=false -DCDASH_DB_LOGIN=cdash -DCDASH_DB_PASS=cdash .. && make
+cd /var/www/CDash && mkdir build && cd build && cmake -DCDASH_SERVER=localhost -DCDASH_DIR_NAME="" -DCDASH_USE_SELENIUM=false -DCDASH_DB_LOGIN=cdash -DCDASH_DB_PASS=cdash -DCDASH_USE_PROTRACTOR=false .. && make

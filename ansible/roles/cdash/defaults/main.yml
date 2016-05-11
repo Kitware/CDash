@@ -1,0 +1,2 @@
+cdash_version: "ansible-scripts"
+cdash_install_path: "/var/www/CDash"
