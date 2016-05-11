@@ -129,7 +129,7 @@ if ($filterdata['limit'] > 0) {
 }
 
 if (isset($_GET['dir']) && $_GET['dir'] != '') {
-    $SQLsearchTerm .= " AND cf.fullpath LIKE '%" . htmlspecialchars(pdo_real_escape_string($_GET['dir'])) . "%'";
+    $SQLsearchTerm .= " AND cf.fullpath LIKE '%" . htmlspecialchars(pdo_real_escape_string($_GET['dir'])) . "/%'";
 }
 
 // Coverage files
