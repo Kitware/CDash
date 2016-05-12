@@ -489,18 +489,19 @@ class Project
         //check if we already have a copy of this file in the database
         $sql = "SELECT id FROM image WHERE checksum = '$checksum'";
         $result = pdo_query("$sql");
+
+        $pdo = get_link_identifier()->getPdo();
         if ($row = pdo_fetch_array($result)) {
             $imgid = $row['id'];
             // Insert into the project
             pdo_query('UPDATE project SET imageid=' . qnum($imgid) . ' WHERE id=' . $this->Id);
             add_last_sql_error('Project AddLogo', $this->Id);
         } elseif ($imgid == 0) {
-            include 'config/config.php';
-            if ($CDASH_DB_TYPE == 'pgsql') {
-                $contents = pg_escape_bytea($contents);
-            }
-            $sql = "INSERT INTO image(img, extension, checksum) VALUES ('$contents', '$filetype', '$checksum')";
-            if (pdo_query("$sql")) {
+            $stmt = $pdo->prepare('INSERT INTO image(img, extension, checksum) VALUES (:img, :extension, :checksum)');
+            $stmt->bindParam(':img', $contents, PDO::PARAM_LOB);
+            $stmt->bindParam(':extension', $filetype);
+            $stmt->bindParam(':checksum', $checksum);
+            if ($stmt->execute()) {
                 $imgid = pdo_insert_id('image');
 
                 // Insert into the project
@@ -509,12 +510,12 @@ class Project
             }
         } else {
             // update the current image
-
-            include 'config/config.php';
-            if ($CDASH_DB_TYPE == 'pgsql') {
-                $contents = pg_escape_bytea($contents);
-            }
-            pdo_query("UPDATE image SET img='$contents',extension='$filetype',checksum='$checksum' WHERE id=" . qnum($imgid));
+            $stmt = $pdo->prepare('UPDATE image SET img=:img, extension=:extension, checksum=:checksum WHERE id=:id');
+            $stmt->bindParam(':img', $contents, PDO::PARAM_LOB);
+            $stmt->bindParam(':extension', $filetype);
+            $stmt->bindParam(':checksum', $checksum);
+            $stmt->bindParam(':id', $imgid);
+            $stmt->execute();
             add_last_sql_error('Project AddLogo', $this->Id);
         }
         return $imgid;

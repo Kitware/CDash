@@ -150,7 +150,7 @@ class Test
 
         if ($this->CompressedOutput) {
             if ($CDASH_DB_TYPE == 'pgsql') {
-                $output = pg_escape_bytea($this->Output);
+                $output = $this->Output;
             } else {
                 $output = base64_decode($this->Output);
             }
@@ -165,7 +165,7 @@ class Test
 
                         $output = $this->Output;
                     }
-                    $output = pg_escape_bytea(base64_encode($output)); // hopefully does the escaping correctly
+                    $output = base64_encode($output);
                 }
             }
         } else {
@@ -183,17 +183,39 @@ class Test
             }
         }
 
-        $output = pdo_real_escape_string($output);
-        $query = 'INSERT INTO test (' . $id . 'projectid,crc32,name,path,command,details,output)
-              VALUES (' . $idvalue . "'$this->ProjectId','$this->Crc32','$name','$path','$command','$details','$output')";
-
-        if (!pdo_query($query)) {
-            add_last_sql_error('Cannot insert test: ' . $name . ' into the database', $this->ProjectId);
-            return false;
+        $pdo = get_link_identifier()->getPdo();
+        if ($this->Id) {
+            $stmt = $pdo->prepare('
+                INSERT INTO test (id, projectid, crc32, name, path, command, details, output)
+                VALUES (:id, :projectid, :crc32, :name, :path, :command, :details, :output)');
+            $stmt->bindParam(':id', $this->Id);
+            $stmt->bindParam(':projectid', $this->ProjectId);
+            $stmt->bindParam(':crc32', $this->Crc32);
+            $stmt->bindParam(':name', $name);
+            $stmt->bindParam(':path', $path);
+            $stmt->bindParam(':command', $command);
+            $stmt->bindParam(':details', $details);
+            $stmt->bindParam(':output', $output, PDO::PARAM_LOB);
+            $success = $stmt->execute();
+        } else {
+            $stmt = $pdo->prepare('
+                INSERT INTO test (projectid, crc32, name, path, command, details, output)
+                VALUES (:projectid, :crc32, :name, :path, :command, :details, :output)');
+            $stmt->bindParam(':projectid', $this->ProjectId);
+            $stmt->bindParam(':crc32', $this->Crc32);
+            $stmt->bindParam(':name', $name);
+            $stmt->bindParam(':path', $path);
+            $stmt->bindParam(':command', $command);
+            $stmt->bindParam(':details', $details);
+            $stmt->bindParam(':output', $output, PDO::PARAM_LOB);
+            $success = $stmt->execute();
+            $this->Id = pdo_insert_id('test');
         }
 
-        if (!$this->Id) {
-            $this->Id = pdo_insert_id('test');
+        if (!$success) {
+            add_last_sql_error(
+                    "Cannot insert test: $name into the database", $this->ProjectId);
+            return false;
         }
 
         // Add the measurements

@@ -68,32 +68,34 @@ class Image
     /** Save the image */
     public function Save()
     {
-        include 'config/config.php';
         // Get the data from the file if necessary
         $this->GetData();
 
         if (!$this->Exists()) {
-            $id = '';
-            $idvalue = '';
+            $pdo = get_link_identifier()->getPdo();
+            $success = true;
             if ($this->Id) {
-                $id = 'id,';
-                $idvalue = "'" . $this->Id . "',";
+                $stmt = $pdo->prepare('
+                        INSERT INTO image (id, img, extension, checksum)
+                        VALUES (:id, :img, :extension, :checksum)');
+                $stmt->bindParam(':id', $this->Id);
+                $stmt->bindParam(':img', $this->Data, PDO::PARAM_LOB);
+                $stmt->bindParam(':extension', $this->Extension);
+                $stmt->bindParam(':checksum', $this->Checksum);
+                $success = $stmt->execute();
+            } else {
+                $stmt = $pdo->prepare('
+                        INSERT INTO image (img, extension, checksum)
+                        VALUES (:img, :extension, :checksum)');
+                $stmt->bindParam(':img', $this->Data, PDO::PARAM_LOB);
+                $stmt->bindParam(':extension', $this->Extension);
+                $stmt->bindParam(':checksum', $this->Checksum);
+                $success = $stmt->execute();
+                $this->Id = pdo_insert_id('image');
             }
-
-            $contents = $this->Data;
-            if ($CDASH_DB_TYPE == 'pgsql') {
-                $contents = pg_escape_bytea($this->Data);
-            }
-
-            if (!pdo_query('INSERT INTO image (' . $id . 'img,extension,checksum)
-                     VALUES (' . $idvalue . "'" . $contents . "','" . $this->Extension . "','" . $this->Checksum . "')")
-            ) {
+            if (!$success) {
                 add_last_sql_error('Image::Save');
                 return false;
-            }
-
-            if (!$this->Id) {
-                $this->Id = pdo_insert_id('image');
             }
         }
         return true;
