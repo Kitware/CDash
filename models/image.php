@@ -66,13 +66,13 @@ class Image
     }
 
     /** Save the image */
-    public function Save()
+    public function Save($update=false)
     {
         // Get the data from the file if necessary
         $this->GetData();
+        $pdo = get_link_identifier()->getPdo();
 
         if (!$this->Exists()) {
-            $pdo = get_link_identifier()->getPdo();
             $success = true;
             if ($this->Id) {
                 $stmt = $pdo->prepare('
@@ -95,6 +95,16 @@ class Image
             }
             if (!$success) {
                 add_last_sql_error('Image::Save');
+                return false;
+            }
+        } elseif ($update) {
+            // Update the current image.
+            $stmt = $pdo->prepare('UPDATE image SET img=:img, extension=:extension, checksum=:checksum WHERE id=:id');
+            $stmt->bindParam(':img', $this->Data, PDO::PARAM_LOB);
+            $stmt->bindParam(':extension', $this->Extension);
+            $stmt->bindParam(':checksum', $this->Checksum);
+            $stmt->bindParam(':id', $this->Id);
+            if (!$stmt->execute()) {
                 return false;
             }
         }

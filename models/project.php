@@ -483,42 +483,22 @@ class Project
             return;
         }
 
+        include_once 'models/image.php';
+        $image = new Image();
+        $image->Data = $contents;
+        $image->Checksum = crc32($contents);
+        $image->Extension = $filetype;
+
         $imgid = $this->GetLogoId();
-        $checksum = crc32($contents);
+        if ($imgid > 0) {
+            $image->Id = $imgid;
+        }
 
-        //check if we already have a copy of this file in the database
-        $sql = "SELECT id FROM image WHERE checksum = '$checksum'";
-        $result = pdo_query("$sql");
-
-        $pdo = get_link_identifier()->getPdo();
-        if ($row = pdo_fetch_array($result)) {
-            $imgid = $row['id'];
-            // Insert into the project
-            pdo_query('UPDATE project SET imageid=' . qnum($imgid) . ' WHERE id=' . $this->Id);
-            add_last_sql_error('Project AddLogo', $this->Id);
-        } elseif ($imgid == 0) {
-            $stmt = $pdo->prepare('INSERT INTO image(img, extension, checksum) VALUES (:img, :extension, :checksum)');
-            $stmt->bindParam(':img', $contents, PDO::PARAM_LOB);
-            $stmt->bindParam(':extension', $filetype);
-            $stmt->bindParam(':checksum', $checksum);
-            if ($stmt->execute()) {
-                $imgid = pdo_insert_id('image');
-
-                // Insert into the project
-                pdo_query('UPDATE project SET imageid=' . qnum($imgid) . ' WHERE id=' . qnum($this->Id));
-                add_last_sql_error('Project AddLogo', $this->Id);
-            }
-        } else {
-            // update the current image
-            $stmt = $pdo->prepare('UPDATE image SET img=:img, extension=:extension, checksum=:checksum WHERE id=:id');
-            $stmt->bindParam(':img', $contents, PDO::PARAM_LOB);
-            $stmt->bindParam(':extension', $filetype);
-            $stmt->bindParam(':checksum', $checksum);
-            $stmt->bindParam(':id', $imgid);
-            $stmt->execute();
+        if ($image->Save(true)) {
+            pdo_query('UPDATE project SET imageid=' . qnum($image->Id) . ' WHERE id=' . $this->Id);
             add_last_sql_error('Project AddLogo', $this->Id);
         }
-        return $imgid;
+        return $image->Id;
     }
 
     /** Add CVS/SVN repositories */
