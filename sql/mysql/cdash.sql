@@ -376,7 +376,7 @@ CREATE TABLE IF NOT EXISTS `build2uploadfile` (
 CREATE TABLE `project` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL default '',
-  `description` text NOT NULL,
+  `description` text NOT NULL default '',
   `homeurl` varchar(255) NOT NULL default '',
   `cvsurl` varchar(255) NOT NULL default '',
   `bugtrackerurl` varchar(255) NOT NULL default '',

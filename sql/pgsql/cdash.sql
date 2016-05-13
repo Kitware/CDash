@@ -291,7 +291,7 @@ CREATE INDEX "crc322" on "note" ("crc32");
 CREATE TABLE "project" (
   "id" serial NOT NULL,
   "name" character varying(255) DEFAULT '' NOT NULL,
-  "description" text NOT NULL,
+  "description" text DEFAULT '' NOT NULL,
   "homeurl" character varying(255) DEFAULT '' NOT NULL,
   "cvsurl" character varying(255) DEFAULT '' NOT NULL,
   "bugtrackerurl" character varying(255) DEFAULT '' NOT NULL,
