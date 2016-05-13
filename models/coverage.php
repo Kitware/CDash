@@ -92,4 +92,23 @@ class Coverage
         }
         return $fileids;
     }
+
+    /** Return true if this build already has coverage for this file,
+      * false otherwise.
+      **/
+    public function Exists()
+    {
+        if (!$this->BuildId || !$this->CoverageFile || !$this->CoverageFile->Id) {
+            return false;
+        }
+        $query =
+            'SELECT buildid FROM coverage
+            WHERE buildid=' . qnum($this->BuildId) . '
+            AND fileid=' . qnum($this->CoverageFile->Id);
+        $result = pdo_query($query);
+        if (pdo_num_rows($result) > 0) {
+            return true;
+        }
+        return false;
+    }
 }

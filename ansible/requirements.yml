@@ -1,0 +1,5 @@
+- src: geerlingguy.mysql
+- src: geerlingguy.apache
+- src: geerlingguy.php
+- src: geerlingguy.composer
+- src: leonidas.nvm

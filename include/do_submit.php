@@ -211,8 +211,6 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5 = '')
 /** Function to deal with the external tool mechanism */
 function post_submit()
 {
-    include 'models/buildfile.php';
-
     // We expect POST to contain the following values.
     $vars = array('project', 'build', 'stamp', 'site', 'track', 'type', 'starttime', 'endtime', 'datafilesmd5');
     foreach ($vars as $var) {
@@ -283,22 +281,9 @@ function post_submit()
     $response_array['status'] = 0;
     $response_array['buildid'] = $buildid;
 
-    $buildfile = new BuildFile();
-
-    // Check if the files exists
+    // Tell CTest to continue with the upload of this file.
     foreach ($_POST['datafilesmd5'] as $md5) {
-        $buildfile->md5 = $md5;
-        $old_buildid = $buildfile->MD5Exists();
-        if (!$old_buildid) {
-            $response_array['datafilesmd5'][] = 0;
-        } else {
-            $response_array['datafilesmd5'][] = 1;
-
-            // Associate this build file with the new build if it has been previously
-            // uploaded.
-            require_once 'copy_build_data.php';
-            copy_build_data($old_buildid, $buildid, $type);
-        }
+        $response_array['datafilesmd5'][] = 0;
     }
     echo json_encode(cast_data_for_JSON($response_array));
 }
@@ -320,32 +305,27 @@ function put_submit_file()
     }
 
     // Verify buildid.
-    if (!is_numeric($_GET['buildid'])) {
+    $buildid = pdo_real_escape_numeric($_GET['buildid']);
+    if (!is_numeric($_GET['buildid']) || $buildid < 1) {
         $response_array['status'] = 1;
         $response_array['description'] = 'Variable \'buildid\' is not numeric.';
         echo json_encode($response_array);
         return;
     }
 
-    // Abort early if we already have this file.
     $buildfile = new BuildFile();
-    $buildfile->BuildId = $_GET['buildid'];
+    $buildfile->BuildId = $buildid;
     $buildfile->Type = htmlspecialchars(pdo_real_escape_string($_GET['type']));
     $buildfile->md5 = htmlspecialchars(pdo_real_escape_string($_GET['md5']));
     $buildfile->Filename = htmlspecialchars(pdo_real_escape_string($_GET['filename']));
-    if (!$buildfile->Insert()) {
-        $response_array['status'] = 1;
-        $response_array['description'] = 'Cannot insert buildfile into database. The file might already exist.';
-        echo json_encode($response_array);
-        return;
-    }
+    $buildfile->Insert();
 
     // Get the ID of the project associated with this build.
     $row = pdo_single_row_query(
-        "SELECT projectid FROM build WHERE id = $buildfile->BuildId");
+        "SELECT projectid FROM build WHERE id = $buildid");
     if (empty($row)) {
         $response_array['status'] = 1;
-        $response_array['description'] = "Cannot find projectid for build #$buildfile->BuildId";
+        $response_array['description'] = "Cannot find projectid for build #$buildid";
         echo json_encode($response_array);
         return;
     }
@@ -355,7 +335,7 @@ function put_submit_file()
     global $CDASH_BACKUP_DIRECTORY;
     $uploadDir = $CDASH_BACKUP_DIRECTORY;
     $ext = pathinfo($buildfile->Filename, PATHINFO_EXTENSION);
-    $filename = $uploadDir . '/' . $buildfile->BuildId . '_' . $buildfile->md5
+    $filename = $uploadDir . '/' . $buildid . '_' . $buildfile->md5
         . ".$ext";
 
     if (!$handle = fopen($filename, 'w')) {

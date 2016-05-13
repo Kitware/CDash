@@ -32,9 +32,9 @@ require_once 'xml_handlers/coverage_junit_handler.php';
 function displayReturnStatus($statusarray)
 {
     include 'include/version.php';
- 
+
     global $CDASH_VERSION;
- 
+
     echo "<cdash version=\"$CDASH_VERSION\">\n";
     foreach ($statusarray as $key => $value) {
         echo '  <' . $key . '>' . $value . '</' . $key . ">\n";
@@ -150,7 +150,7 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
     }
 
     $buildfile_row = pdo_single_row_query(
-        "SELECT * FROM buildfile WHERE md5='$expected_md5'");
+        "SELECT * FROM buildfile WHERE md5='$expected_md5' LIMIT 1");
     if (empty($buildfile_row)) {
         return false;
     }
@@ -173,6 +173,13 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
     $filename = writeBackupFile($filehandler, '', $projectname, $buildname,
         $sitename, $stamp, $buildfile_row['filename']);
 
+    // Instantiate a buildfile object so we can delete it from the database
+    // once we're done parsing it.
+    require_once 'models/buildfile.php';
+    $buildfile = new BuildFile();
+    $buildfile->BuildId = $buildid;
+    $buildfile->md5 = $expected_md5;
+
     // Include the handler file for this type of submission.
     $type = $buildfile_row['type'];
     $include_file = 'xml_handlers/' . $type . '_handler.php';
@@ -181,6 +188,7 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
             'parse_put_submission',
             LOG_ERR, $projectid);
         check_for_immediate_deletion($filename);
+        $buildfile->Delete();
         return true;
     }
     require_once $include_file;
@@ -191,6 +199,7 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
         add_log("No handler class for $type", 'parse_put_submission',
             LOG_ERR, $projectid);
         check_for_immediate_deletion($filename);
+        $buildfile->Delete();
         return true;
     }
     $handler = new $className($buildid);
@@ -198,6 +207,7 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
     // Parse the file.
     $handler->Parse($filename);
     check_for_immediate_deletion($filename);
+    $buildfile->Delete();
     return true;
 }
 

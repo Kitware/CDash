@@ -193,11 +193,8 @@ class CoverageFileLog
 
         foreach ($this->Branches as $line => $value) {
             list($timesHit, $total) = explode('/', $value);
-            if ($timesHit > 0) {
-                $stats['branchestested'] += 1;
-            } else {
-                $stats['branchesuntested'] += 1;
-            }
+            $stats['branchestested'] += $timesHit;
+            $stats['branchesuntested'] += ($total - $timesHit);
         }
         return $stats;
     }
@@ -268,7 +265,7 @@ class CoverageFileLog
         ) {
             add_log("Not appending coverage of '$path' to aggregate as it " .
                 'already contains a different version of this file.',
-                'CoverageSummary::UpdateAggregate', LOG_INFO,
+                'CoverageFileLog::UpdateAggregate', LOG_INFO,
                 $this->BuildId);
             return;
         }

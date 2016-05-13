@@ -109,13 +109,9 @@ class CoverageHandler extends AbstractHandler
 
             $GLOBALS['PHP_ERROR_BUILD_ID'] = $this->Build->Id;
             $this->CoverageSummary->BuildId = $this->Build->Id;
-            if ($this->CoverageSummary->Exists()) {
-                // Remove any previous coverage information.
-                $this->CoverageSummary->RemoveAll();
-            }
 
             // Insert coverage summary
-            $this->CoverageSummary->Insert();
+            $this->CoverageSummary->Insert(true);
             $this->CoverageSummary->ComputeDifference();
         } elseif ($name == 'FILE') {
             $this->CoverageSummary->AddCoverage($this->Coverage);
