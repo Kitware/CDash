@@ -483,41 +483,22 @@ class Project
             return;
         }
 
+        include_once 'models/image.php';
+        $image = new Image();
+        $image->Data = $contents;
+        $image->Checksum = crc32($contents);
+        $image->Extension = $filetype;
+
         $imgid = $this->GetLogoId();
-        $checksum = crc32($contents);
+        if ($imgid > 0) {
+            $image->Id = $imgid;
+        }
 
-        //check if we already have a copy of this file in the database
-        $sql = "SELECT id FROM image WHERE checksum = '$checksum'";
-        $result = pdo_query("$sql");
-        if ($row = pdo_fetch_array($result)) {
-            $imgid = $row['id'];
-            // Insert into the project
-            pdo_query('UPDATE project SET imageid=' . qnum($imgid) . ' WHERE id=' . $this->Id);
-            add_last_sql_error('Project AddLogo', $this->Id);
-        } elseif ($imgid == 0) {
-            include 'config/config.php';
-            if ($CDASH_DB_TYPE == 'pgsql') {
-                $contents = pg_escape_bytea($contents);
-            }
-            $sql = "INSERT INTO image(img, extension, checksum) VALUES ('$contents', '$filetype', '$checksum')";
-            if (pdo_query("$sql")) {
-                $imgid = pdo_insert_id('image');
-
-                // Insert into the project
-                pdo_query('UPDATE project SET imageid=' . qnum($imgid) . ' WHERE id=' . qnum($this->Id));
-                add_last_sql_error('Project AddLogo', $this->Id);
-            }
-        } else {
-            // update the current image
-
-            include 'config/config.php';
-            if ($CDASH_DB_TYPE == 'pgsql') {
-                $contents = pg_escape_bytea($contents);
-            }
-            pdo_query("UPDATE image SET img='$contents',extension='$filetype',checksum='$checksum' WHERE id=" . qnum($imgid));
+        if ($image->Save(true)) {
+            pdo_query('UPDATE project SET imageid=' . qnum($image->Id) . ' WHERE id=' . $this->Id);
             add_last_sql_error('Project AddLogo', $this->Id);
         }
-        return $imgid;
+        return $image->Id;
     }
 
     /** Add CVS/SVN repositories */

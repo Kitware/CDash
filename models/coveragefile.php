@@ -31,7 +31,7 @@ class CoverageFile
             return;
         }
 
-        include 'config/config.php';
+        global $CDASH_USE_COMPRESSION;
 
         $this->FullPath = trim($this->FullPath);
 
@@ -44,20 +44,14 @@ class CoverageFile
             if ($file === false) {
                 $file = $this->File;
             } else {
-                if ($CDASH_DB_TYPE == 'pgsql') {
-                    if (strlen($this->File) < 2000) {
-                        // compression doesn't help for small chunk
-
-                        $file = $this->File;
-                    }
-                    $file = pg_escape_bytea(base64_encode($file)); // hopefully does the escaping correctly
+                if (strlen($this->File) < 2000) {
+                    // compression doesn't help for small chunk
+                    $file = $this->File;
                 }
+                $file = base64_encode($file);
             }
         } else {
             $file = $this->File;
-            if ($CDASH_DB_TYPE == 'pgsql') {
-                $file = pg_escape_bytea($file);
-            }
         }
         $file = pdo_real_escape_string($file);
 
@@ -120,7 +114,13 @@ class CoverageFile
                 $this->Id = pdo_insert_id('coveragefile');
             }
 
-            pdo_query("UPDATE coveragefile SET file='$file',crc32='$this->Crc32' WHERE id=" . qnum($this->Id));
+            $pdo = get_link_identifier()->getPdo();
+            $stmt = $pdo->prepare(
+                    'UPDATE coveragefile SET file=:file, crc32=:crc32 WHERE id=:id');
+            $stmt->bindParam(':file', $file, PDO::PARAM_LOB);
+            $stmt->bindParam(':crc32', $this->Crc32);
+            $stmt->bindParam(':id', $this->Id);
+            $stmt->execute();
             add_last_sql_error('CoverageFile:Update');
         }
         return true;
@@ -219,7 +219,7 @@ class CoverageFile
     // Populate $this from existing database results.
     public function Load()
     {
-        global $CDASH_USE_COMPRESSION, $CDASH_DB_TYPE;
+        global $CDASH_USE_COMPRESSION;
 
         if (!$this->Id) {
             return false;
@@ -235,14 +235,10 @@ class CoverageFile
         $this->Crc32 = $row['crc32'];
 
         if ($CDASH_USE_COMPRESSION) {
-            if ($CDASH_DB_TYPE == 'pgsql') {
-                if (is_resource($row['file'])) {
-                    $this->File = base64_decode(stream_get_contents($row['file']));
-                } else {
-                    $this->File = base64_decode($row['file']);
-                }
+            if (is_resource($row['file'])) {
+                $this->File = base64_decode(stream_get_contents($row['file']));
             } else {
-                $this->File = $row['file'];
+                $this->File = base64_decode($row['file']);
             }
 
             @$uncompressedrow = gzuncompress($this->File);

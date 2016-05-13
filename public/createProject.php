@@ -246,7 +246,7 @@ if ($session_OK) {
                 $handle = fopen($_FILES['logo']['tmp_name'], 'r');
                 $contents = 0;
                 if ($handle) {
-                    $contents = addslashes(fread($handle, $_FILES['logo']['size']));
+                    $contents = fread($handle, $_FILES['logo']['size']);
                     $filetype = $_FILES['logo']['type'];
                     fclose($handle);
                     unset($handle);
@@ -356,7 +356,7 @@ if ($session_OK) {
             $handle = fopen($_FILES['logo']['tmp_name'], 'r');
             $contents = 0;
             if ($handle) {
-                $contents = addslashes(fread($handle, $_FILES['logo']['size']));
+                $contents = fread($handle, $_FILES['logo']['size']);
                 $filetype = $_FILES['logo']['type'];
                 fclose($handle);
                 unset($handle);
