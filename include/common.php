@@ -155,6 +155,11 @@ function XMLStrFormat($str)
     $str = str_replace("'", '&apos;', $str);
     $str = str_replace('"', '&quot;', $str);
     $str = str_replace("\r", '', $str);
+
+    // Remove UTF-8 characters that are not valid in an XML document.
+    // https://www.w3.org/TR/REC-xml/#charsets
+    $str = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '', $str);
+
     return $str;
 }
 
