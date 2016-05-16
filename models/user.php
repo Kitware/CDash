@@ -26,6 +26,12 @@ class User
     public $LastName;
     public $Institution;
     public $Admin;
+    public $Filled;
+
+    public function __construct()
+    {
+        $this->Filled = false;
+    }
 
     /** Add a project to the user */
     public function AddProject($project)
@@ -198,5 +204,39 @@ class User
 
         $query_array = pdo_fetch_array($query);
         return $query_array['id'];
+    }
+
+    /** Load this user's details from the datbase. */
+    public function Fill()
+    {
+        if (!$this->Id) {
+            return false;
+        }
+        if ($this->Filled) {
+            // Already filled, no need to do it again.
+            return false;
+        }
+
+        $row = pdo_single_row_query('
+                SELECT email, password, firstname, lastname, institution
+                FROM ' . qid('user') . " WHERE id='$this->Id'");
+        if (!$row || !array_key_exists('password', $row)) {
+            return false;
+        }
+
+
+        $this->Email = $row['email'];
+        $this->Password = $row['password'];
+        $this->FirstName = $row['firstname'];
+        $this->LastName = $row['lastname'];
+        $this->Institution = $row['institution'];
+
+        $this->Admin = 0;
+        if ($this->IsAdmin()) {
+            $this->Admin = 1;
+        }
+
+        $this->Filled = true;
+        return true;
     }
 }
