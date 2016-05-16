@@ -6,8 +6,15 @@ CDash.controller('ViewTestController',
     $scope.pagination = [];
     $scope.pagination.filteredTests = [];
     $scope.pagination.currentPage = 1;
-    $scope.pagination.numPerPage = 25;
     $scope.pagination.maxSize = 5;
+
+    // Check if we have a cookie for number of tests to display.
+    var num_per_page_cookie = $.cookie('viewTest_num_per_page');
+      if(num_per_page_cookie) {
+        $scope.pagination.numPerPage = parseInt(num_per_page_cookie);
+      } else {
+        $scope.pagination.numPerPage = 25;
+      }
 
     // Hide filters by default.
     $scope.showfilters = false;
@@ -126,5 +133,10 @@ CDash.controller('ViewTestController',
       $scope.cdash.tests = $filter('orderBy')($scope.cdash.tests, $scope.orderByFields);
       $scope.pageChanged();
       $.cookie('cdash_view_test_sort', $scope.orderByFields);
+    };
+
+    $scope.numTestsPerPageChanged = function() {
+      $.cookie("viewTest_num_per_page", $scope.pagination.numPerPage, { expires: 365 });
+      $scope.pageChanged();
     };
 });
