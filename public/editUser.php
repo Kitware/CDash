@@ -19,6 +19,7 @@ require_once 'include/pdo.php';
 require_once 'include/login_functions.php';
 include 'public/login.php';
 include 'include/version.php';
+include_once 'models/user.php';
 include_once 'models/userproject.php';
 
 if ($session_OK) {
@@ -82,12 +83,15 @@ if ($session_OK) {
         } else {
             $md5pass = md5($passwd);
             $md5pass = pdo_real_escape_string($md5pass);
-            if (pdo_query('UPDATE ' . qid('user') . " SET password='$md5pass' WHERE id='$userid'")) {
+            $user = new User();
+            $user->Id = $userid;
+            $user->Fill();
+            $user->Password = $md5pass;
+            if ($user->Save()) {
                 $xml .= '<error>Your password has been updated.</error>';
             } else {
                 $xml .= '<error>Cannot update password.</error>';
             }
-
             add_last_sql_error('editUser.php');
         }
     }
