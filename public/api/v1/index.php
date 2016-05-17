@@ -338,8 +338,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
     }
     unset($filterdata['xml']);
     $response['filterdata'] = $filterdata;
-    // htmlentities used here to prevent XSS injection from filterstring content
-    $response['filterurl'] = htmlentities(@$_GET['filterstring'], ENT_QUOTES);
+    $response['filterurl'] = get_filterurl();
 
     // Check if we should be excluding some SubProjects from our
     // build results.
