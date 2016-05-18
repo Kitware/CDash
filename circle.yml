@@ -1,7 +1,7 @@
 ---
 machine:
   php:
-    version: 5.3.25
+    version: 5.5.11
 
 dependencies:
   cache_directories:
@@ -26,6 +26,8 @@ test:
   override:
     - mkdir _build
     - node_modules/.bin/webdriver-manager start:
+        background: true
+    - php -f /var/www/cdash/public/submissionConsumer.php:
         background: true
     - apache2 -v && cmake --version && mysql --version && php --version && psql --version
     - cd _build && cmake -DCDASH_DIR_NAME=cdash -DCDASH_DB_LOGIN=ubuntu -DBUILDNAME="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}_MySQL" -DSITE="CircleCI" ..

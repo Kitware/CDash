@@ -22,6 +22,7 @@
 
 // This file is 'config.php', in the directory 'config', in the root.
 // Therefore, the root of the CDash source tree on the web server is:
+require dirname(__DIR__) . '/vendor/autoload.php';
 $CDASH_ROOT_DIR = str_replace('\\', '/', dirname(dirname(__FILE__)));
 set_include_path(get_include_path() . PATH_SEPARATOR . $CDASH_ROOT_DIR);
 
@@ -48,6 +49,15 @@ $CDASH_SSL_CA = null;
 $CDASH_PRODUCTION_MODE = false;
 $CDASH_TESTING_MODE = false;
 $CDASH_TESTING_RENAME_LOGS = false;
+
+/**
+  * If a Bernard Driver is available then CDASH_BERNARD_SUBMISSION can be enabled
+  * to allow processing of submissions to take place in the background on other
+  * machines.
+  **/
+$CDASH_BERNARD_SUBMISSION = true;
+$CDASH_BERNARD_DRIVER = new \Bernard\Driver\PredisDriver(new \Predis\Client('tcp://localhost'));
+$CDASH_BERNARD_CONSUMERS_WHITELIST = array('127.0.0.1');
 
 // Should we use asynchronous submission
 $CDASH_ASYNCHRONOUS_SUBMISSION = false;

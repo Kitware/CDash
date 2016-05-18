@@ -14,6 +14,13 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use Bernard\Message\DefaultMessage;
+use Bernard\Producer;
+use Bernard\QueueFactory\PersistentFactory;
+use Bernard\Serializer;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Ramsey\Uuid\Uuid;
+
 // Open the database connection
 include dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
@@ -66,8 +73,37 @@ $expected_md5 = isset($_GET['MD5']) ? htmlspecialchars(pdo_real_escape_string($_
 $file_path = 'php://input';
 $fp = fopen($file_path, 'r');
 
-// If the submission is asynchronous we store in the database
-if ($CDASH_ASYNCHRONOUS_SUBMISSION) {
+if ($CDASH_BERNARD_SUBMISSION) {
+    // @todo what serializer should be used?
+    $factory = new PersistentFactory($CDASH_BERNARD_DRIVER, new Serializer());
+    $producer = new Producer($factory, new EventDispatcher());
+
+    $buildSubmissionId = Uuid::uuid4()->toString();
+    $destinationFilename = $CDASH_BACKUP_DIRECTORY . '/' . $buildSubmissionId . '.xml';
+
+    if (copy('php://input', $destinationFilename)) {
+        $producer->produce(new DefaultMessage('DoSubmit', array(
+            'buildsubmissionid' => $buildSubmissionId,
+            'filename' => $destinationFilename,
+            'projectid' => $projectid,
+            'expected_md5' => $expected_md5,
+            'do_checksum' => true,
+            'submission_id' => 0))); // The submit endpoint does not allow a submission_id
+        echo '<cdash version="' . $CDASH_VERSION . "\">\n";
+        echo " <status>OK</status>\n";
+        echo " <message>Build submitted successfully.</message>\n";
+        echo " <submissionId>$buildSubmissionId</submissionId>\n";
+        echo "</cdash>\n";
+    } else {
+        add_log('Failed to copy build submission XML', 'global:submit.php', LOG_ERR);
+        header('HTTP/1.1 500 Internal Server Error');
+        echo '<cdash version="' . $CDASH_VERSION . "\">\n";
+        echo " <status>ERROR</status>\n";
+        echo " <message>Failed to copy build submission XML.</message>\n";
+        echo "</cdash>\n";
+    }
+} else if ($CDASH_ASYNCHRONOUS_SUBMISSION) {
+    // If the submission is asynchronous we store in the database
     do_submit_asynchronous($fp, $projectid, $expected_md5);
 } else {
     do_submit($fp, $projectid, $expected_md5, true);
