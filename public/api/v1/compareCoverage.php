@@ -19,8 +19,6 @@ require_once 'include/pdo.php';
 include 'include/common.php';
 include 'include/version.php';
 require_once 'models/project.php';
-$noforcelogin = 1;
-include 'public/login.php';
 
 $start = microtime_float();
 $response = begin_JSON_response();
@@ -32,17 +30,14 @@ if (!$db ||
     pdo_select_db("$CDASH_DB_NAME", $db) === false ||
     pdo_query('SELECT id FROM ' . qid('user') . ' LIMIT 1', $db) === false
 ) {
-    if ($CDASH_PRODUCTION_MODE) {
-        $response = array();
-        $response['error'] = 'CDash cannot connect to the database.';
-        echo json_encode($response);
-        return;
-    } else {
-        // redirect to the install.php script
-        header('Location: install.php');
-    }
+    $response = array();
+    $response['error'] = 'CDash cannot connect to the database.';
+    echo json_encode($response);
     return;
 }
+
+$noforcelogin = 1;
+include 'public/login.php';
 
 // Check if a valid project was specified.
 $projectname = $_GET['project'];
