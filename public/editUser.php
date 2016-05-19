@@ -68,21 +68,56 @@ if ($session_OK) {
 
         global $CDASH_MINIMUM_PASSWORD_LENGTH,
                $CDASH_MINIMUM_PASSWORD_COMPLEXITY,
-               $CDASH_PASSWORD_COMPLEXITY_COUNT;
-        $complexity = getPasswordComplexity($passwd);
-        if ($complexity < $CDASH_MINIMUM_PASSWORD_COMPLEXITY) {
-            if ($CDASH_PASSWORD_COMPLEXITY_COUNT > 1) {
-                $xml .= "<error>Your password must contain at least $CDASH_PASSWORD_COMPLEXITY_COUNT characters from $CDASH_MINIMUM_PASSWORD_COMPLEXITY of the following types: uppercase, lowercase, numbers, and symbols.</error>";
-            } else {
-                $xml .= "<error>Your password must contain at least $CDASH_MINIMUM_PASSWORD_COMPLEXITY of the following: uppercase, lowercase, numbers, and symbols.</error>";
+               $CDASH_PASSWORD_COMPLEXITY_COUNT,
+               $CDASH_PASSWORD_EXPIRATION,
+               $CDASH_UNIQUE_PASSWORD_COUNT;
+
+        $password_is_good = true;
+        $error_msg = '';
+
+        if ($passwd != $passwd2) {
+            $password_is_good = false;
+            $error_msg = 'Passwords do not match.';
+        }
+
+        if ($password_is_good && strlen($passwd) < $CDASH_MINIMUM_PASSWORD_LENGTH) {
+            $password_is_good = false;
+            $error_msg = "Password must be at least $CDASH_MINIMUM_PASSWORD_LENGTH characters.";
+        }
+
+        $md5pass = md5($passwd);
+        $md5pass = pdo_real_escape_string($md5pass);
+
+        if ($password_is_good && $CDASH_PASSWORD_EXPIRATION > 0) {
+            $query = "SELECT password FROM password WHERE userid=$userid";
+            if ($CDASH_UNIQUE_PASSWORD_COUNT) {
+                $query .= " ORDER BY date DESC LIMIT $CDASH_UNIQUE_PASSWORD_COUNT";
             }
-        } elseif (strlen($passwd) < $CDASH_MINIMUM_PASSWORD_LENGTH) {
-            $xml .= "<error>Password must be at least $CDASH_MINIMUM_PASSWORD_LENGTH characters.</error>";
-        } elseif ($passwd != $passwd2) {
-            $xml .= "<error>Passwords don't match.</error>";
+            $result = pdo_query($query);
+            while ($row = pdo_fetch_array($result)) {
+                if ($md5pass == $row['password']) {
+                    $password_is_good = false;
+                    $error_msg = 'You have recently used this password.  Please select a new one.';
+                    break;
+                }
+            }
+        }
+
+        if ($password_is_good) {
+            $complexity = getPasswordComplexity($passwd);
+            if ($complexity < $CDASH_MINIMUM_PASSWORD_COMPLEXITY) {
+                $password_is_good = false;
+                if ($CDASH_PASSWORD_COMPLEXITY_COUNT > 1) {
+                    $error_msg = "Your password must contain at least $CDASH_PASSWORD_COMPLEXITY_COUNT characters from $CDASH_MINIMUM_PASSWORD_COMPLEXITY of the following types: uppercase, lowercase, numbers, and symbols.";
+                } else {
+                    $error_msg = "Your password must contain at least $CDASH_MINIMUM_PASSWORD_COMPLEXITY of the following: uppercase, lowercase, numbers, and symbols.";
+                }
+            }
+        }
+
+        if (!$password_is_good) {
+            $xml .= "<error>$error_msg</error>";
         } else {
-            $md5pass = md5($passwd);
-            $md5pass = pdo_real_escape_string($md5pass);
             $user = new User();
             $user->Id = $userid;
             $user->Fill();
