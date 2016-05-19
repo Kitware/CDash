@@ -64,6 +64,48 @@ if (!auth(@$SessionCachePolicy) && !@$noforcelogin) {
     // authentication was successful
     session_regenerate_id();
     $session_OK = 1;
+
+    // Check if we should be redirecting the user to another page.
+    // This happens when they have to change their password because it expired.
+    if (isset($_SESSION['cdash']) &&
+            array_key_exists('redirect', $_SESSION['cdash']) &&
+            !empty($_SESSION['cdash']['redirect'])) {
+        $destination = $_SESSION['cdash']['redirect'];
+
+        $dest_page = substr($destination, strrpos($destination, '/') + 1);
+        $pos = strpos($dest_page, '?');
+        if ($pos !== false) {
+            $dest_page = substr($dest_page, 0, $pos);
+        }
+        $redirect_from_here = true;
+        $redirect_from_api = false;
+        // Examine where we're coming from before redirecting.
+        foreach (get_included_files() as $included_file) {
+            if (strpos($included_file, $dest_page) !== false) {
+                // Avoid infinite redirection if we're already on the
+                // right page.
+                $redirect_from_here = false;
+                break;
+            }
+            if (strpos($included_file, '/api/') !== false) {
+                // If this is an API endpoint, record & return the page that
+                // we should go to.  The controller will handle the actual
+                // redirection.
+                $redirect_from_here = false;
+                $redirect_from_api = true;
+            }
+        }
+        if ($redirect_from_here) {
+            header("Location: $destination");
+            exit();
+        }
+        if ($redirect_from_api) {
+            $response = array();
+            $response['redirect'] = $destination;
+            echo json_encode($response);
+            exit();
+        }
+    }
 }
 
 if ($CDASH_USER_CREATE_PROJECTS && isset($_SESSION['cdash'])) {

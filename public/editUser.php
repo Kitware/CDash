@@ -89,6 +89,7 @@ if ($session_OK) {
             $user->Password = $md5pass;
             if ($user->Save()) {
                 $xml .= '<error>Your password has been updated.</error>';
+                unset($_SESSION['cdash']['redirect']);
             } else {
                 $xml .= '<error>Cannot update password.</error>';
             }
@@ -134,6 +135,11 @@ if ($session_OK) {
     }
 
     $xml .= '</user>';
+
+    if (array_key_exists('reason', $_GET) && $_GET['reason'] == 'expired') {
+        $xml .= '<error>Your password has expired.  Please set a new one.</error>';
+    }
+
     $xml .= '</cdash>';
 
     generate_XSLT($xml, 'editUser');
