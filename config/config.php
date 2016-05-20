@@ -55,9 +55,9 @@ $CDASH_TESTING_RENAME_LOGS = false;
   * to allow processing of submissions to take place in the background on other
   * machines.
   **/
-$CDASH_BERNARD_SUBMISSION = true;
-$CDASH_BERNARD_DRIVER = new \Bernard\Driver\PredisDriver(new \Predis\Client('tcp://localhost'));
-$CDASH_BERNARD_CONSUMERS_WHITELIST = array('127.0.0.1');
+$CDASH_BERNARD_SUBMISSION = false;
+$CDASH_BERNARD_DRIVER = false;
+$CDASH_BERNARD_CONSUMERS_WHITELIST = false;
 
 // Should we use asynchronous submission
 $CDASH_ASYNCHRONOUS_SUBMISSION = false;

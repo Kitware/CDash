@@ -13,6 +13,7 @@ set(CDASH_DB_HOST "localhost" CACHE STRING "Hostname of the database server")
 set(CDASH_DB_TYPE "mysql" CACHE STRING "Database type")
 option(CDASH_USE_SELENIUM "Should CDash use Selenium to test ajax functionality?" OFF)
 option(CDASH_USE_PROTRACTOR "Should CDash use Protractor to test angular functionality?" ON)
+option(CDASH_USE_REDIS_QUEUE "Should CDash use a message queue (Redis) for submitting/processing builds?" OFF)
 option(CDASH_PRO "Are we testing CDashPro?" OFF)
 set(CMake_SOURCE_DIR CACHE FILEPATH "Path to CMake source dir.  Set this to import tests from CMake")
 set(CLIENT_TEST_SCRIPT1 CACHE FILEPATH "Path to client management test script")
@@ -127,6 +128,16 @@ if(${CDASH_PRO})
   set(CDASH_USE_LOCAL_DIRECTORY 1)
 endif(${CDASH_PRO})
 
+if (CDASH_USE_REDIS_QUEUE)
+  set(CDASH_BERNARD_SUBMISSION "true")
+  set(CDASH_BERNARD_DRIVER "new \Bernard\Driver\PredisDriver(new \Predis\Client('tcp://localhost'))")
+  set(CDASH_BERNARD_CONSUMERS_WHITELIST "array('127.0.0.1')")
+else()
+  set(CDASH_BERNARD_SUBMISSION "false")
+  set(CDASH_BERNARD_DRIVER "false")
+  set(CDASH_BERNARD_CONSUMERS_WHITELIST "false")
+endif()
+
 file(WRITE "${CDash_SOURCE_DIR}/config/config.local.php"
 "<?php
 // WARNING: This file is unconditionally overwritten by the CMake configure
@@ -152,6 +163,9 @@ $CDASH_MANAGE_CLIENTS = '1';
 $CDASH_DEFAULT_GIT_DIRECTORY = '${CDash_BINARY_DIR}';
 $CDASH_USE_LOCAL_DIRECTORY = '${CDASH_USE_LOCAL_DIRECTORY}';
 $CDASH_BASE_URL = '${CDASH_TESTING_URL}';
+$CDASH_BERNARD_SUBMISSION = ${CDASH_BERNARD_SUBMISSION};
+$CDASH_BERNARD_DRIVER = ${CDASH_BERNARD_DRIVER};
+$CDASH_BERNARD_CONSUMERS_WHITELIST = ${CDASH_BERNARD_CONSUMERS_WHITELIST};
 ?>
 ")
 
