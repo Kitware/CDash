@@ -7,6 +7,7 @@
     - build-essential
     - cmake
     - git
+    - redis-server
 
 - name: ensure docroot exists
   sudo: yes
@@ -22,6 +23,13 @@
     name=www-data
     groups=vagrant
     append=yes
+
+- name: make vagrant the apache run user
+  sudo: yes
+  replace:
+    dest=/etc/apache2/envvars
+    regexp='www\-data'
+    replace='vagrant'
 
 - name: clone cdash
   git:
