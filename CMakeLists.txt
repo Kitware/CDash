@@ -130,7 +130,7 @@ endif(${CDASH_PRO})
 
 if (CDASH_USE_REDIS_QUEUE)
   set(CDASH_BERNARD_SUBMISSION "true")
-  set(CDASH_BERNARD_DRIVER "new \Bernard\Driver\PredisDriver(new \Predis\Client('tcp://localhost'))")
+  set(CDASH_BERNARD_DRIVER "new \\Bernard\\Driver\\PredisDriver(new \\Predis\\Client('tcp://localhost'))")
   set(CDASH_BERNARD_CONSUMERS_WHITELIST "array('127.0.0.1')")
 else()
   set(CDASH_BERNARD_SUBMISSION "false")
