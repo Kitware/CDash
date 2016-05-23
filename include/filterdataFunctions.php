@@ -128,10 +128,15 @@ class IndexPhpFilters extends DefaultFilters
 
     public function getSqlField($field)
     {
+        global $CDASH_DB_TYPE;
         $sql_field = '';
         switch (strtolower($field)) {
             case 'buildduration': {
-                $sql_field = 'ROUND(TIMESTAMPDIFF(SECOND,b.starttime,b.endtime)/60.0,1)';
+                if ($CDASH_DB_TYPE === 'pgsql') {
+                    $sql_field = 'ROUND(EXTRACT(EPOCH FROM (b.endtime - b.starttime))::numeric / 60, 1)';
+                } else {
+                    $sql_field = 'ROUND(TIMESTAMPDIFF(SECOND,b.starttime,b.endtime)/60.0,1)';
+                }
             }
                 break;
 
@@ -262,8 +267,11 @@ class IndexPhpFilters extends DefaultFilters
                 break;
 
             case 'updateduration': {
-                $sql_field = 'IF((SELECT COUNT(*) FROM buildupdate AS u, build2update AS b2u WHERE b2u.updateid=u.id AND b2u.buildid=b.id)>0,(SELECT ROUND(TIMESTAMPDIFF(SECOND,starttime,endtime)/60.0,1)
-                        FROM buildupdate AS u, build2update AS b2u WHERE b2u.updateid=u.id AND b2u.buildid=b.id),0)';
+                if ($CDASH_DB_TYPE === 'pgsql') {
+                    $sql_field = 'ROUND(EXTRACT(EPOCH FROM (bu.endtime - bu.starttime))::numeric / 60, 1)';
+                } else {
+                    $sql_field = 'ROUND(TIMESTAMPDIFF(SECOND,bu.starttime,bu.endtime)/60.0,1)';
+                }
             }
                 break;
 
