@@ -541,7 +541,7 @@
 
             <td align="center">{{::da.checker}}</td>
 
-            <td align="center" ng-class="::{'error': da.status != 'passed', 'warning': da.defectcount > 0, 'normal': da.defectcount < 1}">
+            <td align="center" ng-class="::{'error': da.defectcount > 0, 'normal': da.defectcount < 1}">
               <a ng-href="viewDynamicAnalysis.php?buildid={{::da.buildid}}">{{::da.defectcount}}</a>
             </td>
             <td align="center" ng-class="::{'nob': cdash.displaylabels == 0}">

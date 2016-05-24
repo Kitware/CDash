@@ -1230,24 +1230,16 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
         // Dynamic Analysis
         //
-        $dynanalysis = pdo_query("SELECT checker,status FROM dynamicanalysis WHERE buildid='$buildid' LIMIT 1");
-        while ($dynanalysis_array = pdo_fetch_array($dynanalysis)) {
+        $DA_summary = pdo_single_row_query(
+                "SELECT checker, numdefects FROM dynamicanalysissummary
+                WHERE buildid='$buildid'");
+        if ($DA_summary && array_key_exists('checker', $DA_summary)) {
             $DA_response = array();
             $DA_response['site'] = $build_array['sitename'];
             $DA_response['buildname'] = $build_array['name'];
             $DA_response['buildid'] = $build_array['id'];
-
-            $DA_response['checker'] = $dynanalysis_array['checker'];
-            $DA_response['status'] = $dynanalysis_array['status'];
-            $defect = pdo_query("SELECT sum(dd.value) FROM dynamicanalysisdefect AS dd,dynamicanalysis as d
-                    WHERE d.buildid='$buildid' AND dd.dynamicanalysisid=d.id");
-            $defectcount = pdo_fetch_array($defect);
-            if (!isset($defectcount[0])) {
-                $defectcounts = 0;
-            } else {
-                $defectcounts = $defectcount[0];
-            }
-            $DA_response['defectcount'] = $defectcounts;
+            $DA_response['checker'] = $DA_summary['checker'];
+            $DA_response['defectcount'] = $DA_summary['numdefects'];
             $starttimestamp = strtotime($build_array['starttime'] . ' UTC');
             $DA_response['datefull'] = $starttimestamp;
 
