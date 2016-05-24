@@ -46,6 +46,7 @@
              'public/js/linechart.js',
              'public/js/bulletchart.js',
              'public/js/cdash_angular.js',
+             'public/js/services/**.js',
              'public/js/controllers/**.js'])
        .pipe(sourcemaps.init())
        .pipe(newer('public/js/1stparty.min.js'))
