@@ -249,6 +249,16 @@ CREATE TABLE "dynamicanalysisdefect" (
 CREATE INDEX "buildid7" on "dynamicanalysisdefect" ("dynamicanalysisid");
 
 --
+-- Table: dynamicanalysissummary
+--
+CREATE TABLE "dynamicanalysissummary" (
+  "buildid" integer DEFAULT '0' NOT NULL,
+  "checker" character varying(60) DEFAULT '' NOT NULL,
+  "numdefects" integer DEFAULT '0' NOT NULL,
+  PRIMARY KEY ("buildid")
+);
+
+--
 -- Table: image
 --
 CREATE TABLE "image" (

@@ -56,3 +56,10 @@ CREATE TABLE "password" (
   "date" timestamp(0) DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 CREATE INDEX "password_userid" on "password" ("userid");
+
+CREATE TABLE "dynamicanalysissummary" (
+  "buildid" integer DEFAULT '0' NOT NULL,
+  "checker" character varying(60) DEFAULT '' NOT NULL,
+  "numdefects" integer DEFAULT '0' NOT NULL,
+  PRIMARY KEY ("buildid")
+);

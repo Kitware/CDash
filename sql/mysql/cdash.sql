@@ -301,6 +301,20 @@ CREATE TABLE `dynamicanalysisdefect` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `dynamicanalysissummary`
+--
+
+CREATE TABLE `dynamicanalysissummary` (
+  `buildid` int(11) NOT NULL DEFAULT '0',
+  `checker` varchar(60) NOT NULL default '',
+  `numdefects` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY `buildid` (`buildid`)
+);
+
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `image`
 --
 
