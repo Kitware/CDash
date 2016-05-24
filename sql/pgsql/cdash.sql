@@ -1358,7 +1358,7 @@ CREATE INDEX "buildfile_md5" on "buildfile" ("md5");
 -- Table: password
 --
 CREATE TABLE "password" (
-  "userid" serial NOT NULL,
+  "userid" integer NOT NULL,
   "password" character varying(255) DEFAULT '' NOT NULL,
   "date" timestamp(0) DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
