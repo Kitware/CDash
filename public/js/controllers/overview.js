@@ -43,7 +43,7 @@ CDash.directive('linechart', function() {
         var data = JSON.parse(scope.data);
         if (data.length > 0) {
           element[0].id = scope.groupname + "_" + scope.measurementname + "_chart";
-          makeLineChart(element[0].id, data, scope.project, scope.anchor, 0, scope.sort);
+          makeLineChart(element[0].id, data, scope.project, scope.anchor, scope.sort);
         }
       }
     }
