@@ -19,6 +19,7 @@ require_once 'models/build.php';
 require_once 'models/label.php';
 require_once 'models/site.php';
 require_once 'models/dynamicanalysis.php';
+require_once 'models/dynamicanalysissummary.php';
 
 class DynamicAnalysisHandler extends AbstractHandler
 {
@@ -28,6 +29,7 @@ class DynamicAnalysisHandler extends AbstractHandler
 
     private $DynamicAnalysis;
     private $DynamicAnalysisDefect;
+    private $DynamicAnalysisSummary;
     private $Label;
 
     /** Constructor */
@@ -36,6 +38,7 @@ class DynamicAnalysisHandler extends AbstractHandler
         parent::__construct($projectID, $scheduleID);
         $this->Build = new Build();
         $this->Site = new Site();
+        $this->DynamicAnalysisSummary = new DynamicAnalysisSummary();
     }
 
     /** Start element */
@@ -71,6 +74,7 @@ class DynamicAnalysisHandler extends AbstractHandler
             $this->Build->Information = $buildInformation;
         } elseif ($name == 'DYNAMICANALYSIS') {
             $this->Checker = $attributes['CHECKER'];
+            $this->DynamicAnalysisSummary->Checker = $this->Checker;
         } elseif ($name == 'TEST' && isset($attributes['STATUS'])) {
             $this->DynamicAnalysis = new DynamicAnalysis();
             $this->DynamicAnalysis->Checker = $this->Checker;
@@ -117,11 +121,14 @@ class DynamicAnalysisHandler extends AbstractHandler
                 unset($this->DynamicAnalysis);
             }
             $GLOBALS['PHP_ERROR_BUILD_ID'] = $this->Build->Id;
+            $this->DynamicAnalysisSummary->BuildId = $this->Build->Id;
         } elseif ($name == 'TEST' && $parent == 'DYNAMICANALYSIS') {
             $this->DynamicAnalysis->BuildId = $this->Build->Id;
             $this->DynamicAnalysis->Insert();
         } elseif ($name == 'DEFECT') {
             $this->DynamicAnalysis->AddDefect($this->DynamicAnalysisDefect);
+            $this->DynamicAnalysisSummary->AddDefects(
+                    $this->DynamicAnalysisDefect->Value);
             unset($this->DynamicAnalysisDefect);
         } elseif ($name == 'LABEL') {
             if (isset($this->DynamicAnalysis)) {
@@ -137,6 +144,7 @@ class DynamicAnalysisHandler extends AbstractHandler
                 $this->DynamicAnalysis->Checker = $this->Checker;
                 $this->DynamicAnalysis->Insert();
             }
+            $this->DynamicAnalysisSummary->Insert();
         }
     }
 
