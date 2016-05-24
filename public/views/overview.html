@@ -19,7 +19,11 @@
 
     <div ng-if="cdash.requirelogin != 1 && !loading && !cdash.error">
       <table class="table-bordered table-responsive table-condensed container-fluid">
-        <caption class="h4">Configure / Build / Test</caption>
+        <caption class="h4">
+          <a id="build" ng-click="jumpToAnchor('build')">
+            Configure / Build / Test
+          </a>
+        </caption>
         <tr class="row">
           <th class="col-md-1"> </th>
           <th ng-repeat="group in cdash.groups"
@@ -52,7 +56,11 @@
       <table ng-if="cdash.coverages.length > 0"
              class="table-bordered table-responsive table-condensed
                     container-fluid">
-        <caption class="h4">Coverage</caption>
+        <caption class="h4">
+          <a id="coverage" ng-click="jumpToAnchor('coverage')">
+            Coverage
+          </a>
+        </caption>
         <tr ng-repeat="coverage in cdash.coverages" class="row">
           <td class="col-md-1">
             <b>{{coverage.group_name}} {{coverage.nice_name}}</b>
@@ -80,7 +88,11 @@
              style="width:100%;"
              class="table-bordered table-responsive table-condensed
                     container-fluid">
-        <caption class="h4">Dynamic Analysis</caption>
+        <caption class="h4">
+          <a id="dynamic" ng-click="jumpToAnchor('dynamic')">
+            Dynamic Analysis
+          </a>
+        </caption>
         <tr ng-repeat="DA in cdash.dynamicanalyses" class="row">
           <td ng-repeat-start="group in DA.groups" class="col-md-1">
             <b>{{DA.nice_name}}</b>
@@ -108,7 +120,11 @@
              style="width:100%;"
              class="table-bordered table-responsive table-condensed
                     container-fluid">
-        <caption class="h4">Static Analysis</caption>
+        <caption class="h4">
+          <a id="static" ng-click="jumpToAnchor('static')">
+            Static Analysis
+          </a>
+        </caption>
         <tr ng-repeat="SA in cdash.staticanalyses" class="row">
           <td class="col-md-1">
             <b>{{SA.group_name}}</b>
