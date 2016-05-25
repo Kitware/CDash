@@ -1235,6 +1235,19 @@ function echo_main_dashboard_JSON($project_instance, $date)
         // Dynamic Analysis
         //
         if (!empty($build_array['checker'])) {
+
+            // Determine if this is a parent build with no dynamic analysis
+            // of its own.
+            $linkToChildren = false;
+            if ($numchildren > 0) {
+                $countChildrenResult = pdo_single_row_query(
+                        'SELECT count(id) AS num FROM dynamicanalysis
+                        WHERE buildid=' . qnum($build_array['id']));
+                if ($countChildrenResult['num'] == 0) {
+                    $linkToChildren = true;
+                }
+            }
+
             $DA_response = array();
             $DA_response['site'] = $build_array['sitename'];
             $DA_response['buildname'] = $build_array['name'];
@@ -1243,6 +1256,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $DA_response['defectcount'] = $build_array['numdefects'];
             $starttimestamp = strtotime($build_array['starttime'] . ' UTC');
             $DA_response['datefull'] = $starttimestamp;
+            if ($linkToChildren) {
+                $DA_response['childlink'] = "$child_builds_hyperlink##DynamicAnalysis";
+            }
 
             // If the data is more than 24h old then we switch from an elapsed to a normal representation
             if (time() - $starttimestamp < 86400) {

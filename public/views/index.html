@@ -542,7 +542,12 @@
             <td align="center">{{::da.checker}}</td>
 
             <td align="center" ng-class="::{'error': da.defectcount > 0, 'normal': da.defectcount < 1}">
-              <a ng-href="viewDynamicAnalysis.php?buildid={{::da.buildid}}">{{::da.defectcount}}</a>
+              <a ng-if="::da.childlink" ng-href="{{::da.childlink}}">
+                {{::da.defectcount}}
+              </a>
+              <a ng-if="::!da.childlink" ng-href="viewDynamicAnalysis.php?buildid={{::da.buildid}}">
+                {{::da.defectcount}}
+              </a>
             </td>
             <td align="center" ng-class="::{'nob': cdash.displaylabels == 0}">
               <span class="builddateelapsed" alt="{{::da.date}}">{{::da.dateelapsed}}</span>
