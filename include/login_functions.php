@@ -59,6 +59,11 @@ function databaseAuthenticate($email, $password, $SessionCachePolicy, $rememberm
     $user_array = pdo_fetch_array($result);
     $pass = $user_array['password'];
 
+    // Check if the account is locked out.
+    if (accountIsLocked($user_array['id'])) {
+        return false;
+    }
+
     // External authentication
     if ($password === null && isset($CDASH_EXTERNAL_AUTH) && $CDASH_EXTERNAL_AUTH) {
         // create the session array
@@ -67,6 +72,7 @@ function databaseAuthenticate($email, $password, $SessionCachePolicy, $rememberm
         pdo_free_result($result);
         return true;                               // authentication succeeded
     } elseif (md5($password) == $pass) {
+        // Authentication is successful.
         if ($rememberme) {
             setRememberMeCookie($user_array['id']);
         }
@@ -85,10 +91,11 @@ function databaseAuthenticate($email, $password, $SessionCachePolicy, $rememberm
         $_SESSION['cdash'] = $sessionArray;
 
         checkForExpiredPassword();
-
+        clearUnsuccessfulAttempts($user_array['id']);
         return true;
     }
 
+    incrementUnsuccessfulAttempts($user_array['id']);
     $loginerror = 'Wrong email or password.';
     return false;
 }
@@ -483,5 +490,139 @@ function checkForExpiredPassword()
         $_SESSION['cdash']['redirect'] = $uri;
         return true;
     }
+    return false;
+}
+
+/** Set the number of unsuccessful login attempts to 0 for a given user.
+  * Does nothing unless account lockout functionality is enabled.
+  */
+function clearUnsuccessfulAttempts($userid)
+{
+    global $CDASH_LOCKOUT_ATTEMPTS;
+    if ($CDASH_LOCKOUT_ATTEMPTS == 0) {
+        return;
+    }
+    $pdo = get_link_identifier()->getPdo();
+    createLockoutRow($userid, $pdo);
+    $stmt = $pdo->prepare(
+        'UPDATE lockout SET failedattempts = 0 WHERE userid=?');
+    if (!$stmt->execute(array($userid))) {
+        add_last_sql_error('clearUnsuccessfulAttempts');
+    }
+}
+
+/** Increment the number of unsuccessful login attempts for a given user,
+  * marking the account as locked if it exceeds our limit.
+  * Does nothing unless account lockout functionality is enabled.
+  */
+function incrementUnsuccessfulAttempts($userid)
+{
+    global $CDASH_LOCKOUT_ATTEMPTS, $CDASH_LOCKOUT_LENGTH;
+    if ($CDASH_LOCKOUT_ATTEMPTS == 0) {
+        return;
+    }
+    $pdo = get_link_identifier()->getPdo();
+    createLockoutRow($userid, $pdo);
+
+    $pdo->beginTransaction();
+
+    // Add one to the current number of failed attempts.
+    $stmt = $pdo->prepare('SELECT failedattempts FROM lockout WHERE userid=?');
+    if (!$stmt->execute(array($userid))) {
+        $pdo->rollBack();
+        return;
+    }
+    $row = $stmt->fetch();
+    $failedattempts = $row['failedattempts'] + 1;
+
+    if ($failedattempts >= $CDASH_LOCKOUT_ATTEMPTS) {
+        // Lock the account if it exceeds our number of failed attempts.
+        $unlocktime = gmdate(FMT_DATETIME, time() + $CDASH_LOCKOUT_LENGTH * 60);
+        $stmt = $pdo->prepare(
+                'UPDATE lockout SET failedattempts = :failedattempts,
+                islocked = 1, unlocktime=:unlocktime
+                WHERE userid=:userid');
+        $stmt->bindParam(':unlocktime', $unlocktime);
+    } else {
+        // Otherwise just increment the number of failed attempts.
+        $stmt = $pdo->prepare(
+                'UPDATE lockout SET failedattempts = :failedattempts
+                WHERE userid=:userid');
+    }
+
+    $stmt->bindParam(':userid', $userid);
+    $stmt->bindParam(':failedattempts', $failedattempts);
+    if (!$stmt->execute()) {
+        add_last_sql_error('incrementUnsuccessfulAttempts');
+        $pdo->rollBack();
+        return;
+    }
+    $pdo->commit();
+}
+
+/** Create a row in the lockout table for the given user if one does not
+  * exist already.
+  */
+function createLockoutRow($userid, $pdo)
+{
+    $pdo->beginTransaction();
+    $stmt = $pdo->prepare('SELECT userid FROM lockout WHERE userid=?');
+    if (!$stmt->execute(array($userid))) {
+        $pdo->rollBack();
+        return;
+    }
+    if ($stmt->rowCount() === 0) {
+        $stmt = $pdo->prepare('INSERT INTO lockout (userid) VALUES (?)');
+        if (!$stmt->execute(array($userid))) {
+            $pdo->rollBack();
+            return;
+        }
+    }
+    $pdo->commit();
+}
+
+/** Returns true and sets loginerror if the user's account is locked out.
+  * Unlocks the account if the expiration time has already passed.
+  */
+function accountIsLocked($userid)
+{
+    global $CDASH_LOCKOUT_ATTEMPTS;
+    if ($CDASH_LOCKOUT_ATTEMPTS == 0) {
+        return false;
+    }
+
+    global $loginerror;
+    $loginerror = '';
+
+    $pdo = get_link_identifier()->getPdo();
+    $pdo->beginTransaction();
+    $stmt = $pdo->prepare('SELECT islocked, unlocktime FROM lockout WHERE userid=?');
+    if (!$stmt->execute(array($userid))) {
+        $pdo->rollBack();
+        return false;
+    }
+    $row = $stmt->fetch();
+    if ($row['islocked'] == 1) {
+        $now = strtotime(gmdate(FMT_DATETIME));
+        $unlocktime = strtotime($row['unlocktime']);
+        if ($now > $unlocktime) {
+            // Lockout period has expired.
+            $stmt = $pdo->prepare(
+                    "UPDATE lockout SET failedattempts = 0,
+                    islocked = 0, unlocktime = '1980-01-01 00:00:00'
+                    WHERE userid=?");
+            if (!$stmt->execute(array($userid))) {
+                $pdo->rollBack();
+                return false;
+            }
+        } else {
+            // Account still locked.
+            $num_minutes = round(($unlocktime - $now) / 60, 0) + 1;
+            $loginerror = "Your account is locked due to failed login attempts.  Please try again in $num_minutes minutes.";
+            $pdo->commit();
+            return true;
+        }
+    }
+    $pdo->commit();
     return false;
 }
