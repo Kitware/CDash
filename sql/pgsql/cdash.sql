@@ -1373,3 +1373,15 @@ CREATE TABLE "password" (
   "date" timestamp(0) DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 CREATE INDEX "password_userid" on "password" ("userid");
+
+
+--
+-- Table: lockout
+--
+CREATE TABLE "lockout" (
+  "userid" integer NOT NULL,
+  "failedattempts" smallint DEFAULT '0',
+  "islocked" smallint DEFAULT '0',
+  "unlocktime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
+  PRIMARY KEY ("userid")
+);

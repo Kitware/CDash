@@ -63,3 +63,11 @@ CREATE TABLE "dynamicanalysissummary" (
   "numdefects" integer DEFAULT '0' NOT NULL,
   PRIMARY KEY ("buildid")
 );
+
+CREATE TABLE "lockout" (
+  "userid" integer NOT NULL,
+  "failedattempts" smallint DEFAULT '0',
+  "islocked" smallint DEFAULT '0',
+  "unlocktime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
+  PRIMARY KEY ("userid")
+);
