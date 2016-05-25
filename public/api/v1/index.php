@@ -1141,7 +1141,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $coverage_response = array();
             $coverage_response['buildid'] = $build_array['id'];
             if ($linkToChildCoverage) {
-                $coverage_response['childlink'] = "$child_builds_hyperlink#Coverage";
+                $coverage_response['childlink'] = "$child_builds_hyperlink##Coverage";
             }
 
             if ($build_array['type'] === 'Nightly' && $build_array['name'] !== 'Aggregate Coverage') {
