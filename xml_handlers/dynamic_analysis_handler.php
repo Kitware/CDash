@@ -145,6 +145,14 @@ class DynamicAnalysisHandler extends AbstractHandler
                 $this->DynamicAnalysis->Insert();
             }
             $this->DynamicAnalysisSummary->Insert();
+
+            // If this is a child build append these defects to the parent's
+            // summary.
+            $parentid = $this->Build->LookupParentBuildId();
+            if ($parentid > 0) {
+                $this->DynamicAnalysisSummary->BuildId = $parentid;
+                $this->DynamicAnalysisSummary->Insert(true);
+            }
         }
     }
 
