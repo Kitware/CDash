@@ -223,4 +223,102 @@ class ExcludeSubProjectsTestCase extends KWWebTestCase
         $this->pass('Tests passed');
         return 0;
     }
+
+    public function testExcludeHonorsOtherFilters()
+    {
+        $baseurl = "$this->url/api/v1/index.php?project=Trilinos&date=2011-07-22&filtercombine=and&field1=site&compare1=61&value1=hut11.kitware&showfilters=1";
+
+        $test_cases = array(
+            array(
+                'filter' => 'buildduration',
+                'compare' => 41,
+                'value' => 23.1,
+                'exclude' => 'Teuchos'
+            ),
+            array(
+                'filter' => 'builderrors',
+                'compare' => 43,
+                'value' => 5,
+                'exclude' => 'Mesquite'
+            ),
+            array(
+                'filter' => 'buildwarnings',
+                'compare' => 42,
+                'value' => 29,
+                'exclude' => 'Sacado'
+            ),
+            array(
+                'filter' => 'configureduration',
+                'compare' => 41,
+                'value' => 309,
+                'exclude' => 'Teuchos'
+            ),
+            array(
+                'filter' => 'configureerrors',
+                'compare' => 43,
+                'value' => 21,
+                'exclude' => 'Kokkos'
+            ),
+            array(
+                'filter' => 'configurewarnings',
+                'compare' => 42,
+                'value' => 35,
+                'exclude' => 'Sacado'
+            ),
+            array(
+                'filter' => 'testsduration',
+                'compare' => 41,
+                'value' => 48,
+                'exclude' => 'TrilinosFramework'
+            ),
+            array(
+                'filter' => 'testsfailed',
+                'compare' => 43,
+                'value' => 10,
+                'exclude' => 'TrilinosFramework'
+            ),
+            array(
+                'filter' => 'testsnotrun',
+                'compare' => 42,
+                'value' => 65,
+                'exclude' => 'Didasko'
+            ),
+            array(
+                'filter' => 'testspassed',
+                'compare' => 42,
+                'value' => 33,
+                'exclude' => 'Sacado'
+            )
+        );
+
+        foreach ($test_cases as $test_case) {
+            $filter = $test_case['filter'];
+            $compare = $test_case['compare'];
+            $value = $test_case['value'];
+            $exclude = $test_case['exclude'];
+
+            $exclude_filter = "&field3=subprojects&compare3=92&value3=$exclude";
+            $filter_to_test = "&field2=$filter&compare2=$compare&value2=$value";
+
+            // Verify that the build is shown without the exclude clause.
+            $this->get($baseurl . $filter_to_test . '&filtercount=2');
+            $content = $this->getBrowser()->getContent();
+            $jsonobj = json_decode($content, true);
+            $buildgroup = array_pop($jsonobj['buildgroups']);
+            $numbuilds = count($buildgroup['builds']);
+            if ($numbuilds != 1) {
+                $this->fail("Expected 1 build, found $numbuilds for $filter");
+            }
+
+            // Verify that the build is not shown when the exclude clause
+            // is added.
+            $this->get($baseurl . $filter_to_test . $exclude_filter .
+                    '&filtercount=3');
+            $content = $this->getBrowser()->getContent();
+            $jsonobj = json_decode($content, true);
+            if (!empty($jsonobj['buildgroups'])) {
+                $this->fail("buildgroups not empty when expected for $filter");
+            }
+        }
+    }
 }

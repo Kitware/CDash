@@ -1042,3 +1042,125 @@ function get_filterurl()
     $filterurl = str_replace('&amp;', '&', $filterurl);
     return $filterurl;
 }
+
+// Returns true if the build should be included based on the specified filters,
+// false otherwise.
+function build_survives_filter($build_response, $filterdata)
+{
+    $filters = $filterdata['filters'];
+    foreach ($filters as $filter) {
+        // Get the build value that's relevant to this filter.
+        // (number of configure warnings, number of test failures, etc.)
+        $build_value = false;
+        switch ($filter['field']) {
+            case 'buildduration':
+                if ($build_response['hascompilation']) {
+                    $build_value = $build_response['compilation']['timefull'];
+                }
+                break;
+
+            case 'builderrors':
+                if ($build_response['hascompilation']) {
+                    $build_value = $build_response['compilation']['error'];
+                }
+                break;
+
+            case 'buildwarnings':
+                if ($build_response['hascompilation']) {
+                    $build_value = $build_response['compilation']['warning'];
+                }
+                break;
+
+            case 'configureduration':
+                if ($build_response['hasconfigure']) {
+                    $build_value = $build_response['configure']['timefull'];
+                }
+                break;
+
+            case 'configureerrors':
+                if ($build_response['hasconfigure']) {
+                    $build_value = $build_response['configure']['error'];
+                }
+                break;
+
+            case 'configurewarnings':
+                if ($build_response['hasconfigure']) {
+                    $build_value = $build_response['configure']['warning'];
+                }
+                break;
+
+            case 'testsduration':
+                if ($build_response['hastest']) {
+                    $build_value = $build_response['test']['timefull'];
+                }
+                break;
+
+            case 'testsfailed':
+                if ($build_response['hastest']) {
+                    $build_value = $build_response['test']['fail'];
+                }
+                break;
+
+            case 'testsnotrun':
+                if ($build_response['hastest']) {
+                    $build_value = $build_response['test']['notrun'];
+                }
+                break;
+
+            case 'testspassed':
+                if ($build_response['hastest']) {
+                    $build_value = $build_response['test']['pass'];
+                }
+                break;
+
+            case 'testtimestatus':
+                if ($build_response['hastest']) {
+                    $build_value = $build_response['test']['timestatus'];
+                }
+                break;
+
+            default:
+                continue;
+                break;
+        }
+
+        // Get the filter's value for comparison.
+        $filter_value = $filter['value'];
+
+        // Compare the build & filter's values, returning false if
+        // they don't match the filter's expectation.
+        switch ($filter['compare']) {
+            case 41:
+                // The filter expects the numbers to be equal.
+                if ($build_value != $filter_value) {
+                    return false;
+                }
+                break;
+
+            case 42:
+                // The filter expects the numbers to not be equal.
+                if ($build_value == $filter_value) {
+                    return false;
+                }
+                break;
+
+            case 43:
+                // The filter expects the build value to be greater.
+                if ($build_value <= $filter_value) {
+                    return false;
+                }
+                break;
+
+            case 44:
+                // The filter expects the build value to be lesser.
+                if ($build_value >= $filter_value) {
+                    return false;
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
+    return true;
+}

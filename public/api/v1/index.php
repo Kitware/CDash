@@ -1123,6 +1123,15 @@ function echo_main_dashboard_JSON($project_instance, $date)
         }
         $build_response['timesummary'] = $timesummary;
 
+        if ($include_subprojects || $exclude_subprojects) {
+            // Check if this build should be filtered out now that its
+            // numbers have been updated by the SubProject include/exclude
+            // filter.
+            if (!build_survives_filter($build_response, $filterdata)) {
+                continue;
+            }
+        }
+
         if ($build_array['name'] != 'Aggregate Coverage') {
             $buildgroups_response[$i]['builds'][] = $build_response;
         }
