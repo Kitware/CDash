@@ -623,8 +623,11 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $build_row['countbuildwarningdiffn'] = 0;
         }
 
-        $hasconfiguredata = $build_row['countconfigureerrors'] != -1 ||
-            $build_row['countconfigurewarnings'] != -1;
+        $build_row['hasconfigure'] = 0;
+        if ($build_row['countconfigureerrors'] != -1 ||
+                $build_row['countconfigurewarnings'] != -1) {
+            $build_row['hasconfigure'] = 1;
+        }
 
         if ($build_row['countconfigureerrors'] < 0) {
             $build_row['countconfigureerrors'] = 0;
@@ -938,40 +941,41 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $buildgroups_response[$i]['hascompilationdata'] = true;
         }
 
-        $configure_response = array();
-
-        if ($include_subprojects) {
-            $nconfigureerrors = $selected_configure_errors;
-            $nconfigurewarnings = $selected_configure_warnings;
-            $configureduration = $selected_configure_duration;
-        } else {
-            $nconfigureerrors = $build_array['countconfigureerrors'] -
-                $selected_configure_errors;
-            $nconfigurewarnings = $build_array['countconfigurewarnings'] -
-                $selected_configure_warnings;
-            $configureduration = $build_array['configureduration'] -
-                $selected_configure_duration;
-        }
-        $configure_response['error'] = $nconfigureerrors;
-        $buildgroups_response[$i]['numconfigureerror'] += $nconfigureerrors;
-
-        $configure_response['warning'] = $nconfigurewarnings;
-        $buildgroups_response[$i]['numconfigurewarning'] += $nconfigurewarnings;
-
-        if (!$include_subprojects && !$exclude_subprojects) {
-            $configure_response['warningdiff'] =
-                $build_array['countconfigurewarningdiff'];
-        }
-
-        $configure_response['time'] = time_difference($configureduration, true);
-        $configure_response['timefull'] = $configureduration;
-        $buildgroups_response[$i]['configureduration'] += $configureduration;
-
         $build_response['hasconfigure'] = false;
-        if ($hasconfiguredata) {
-            $build_response['configure'] = $configure_response;
+        if ($build_array['hasconfigure'] != 0) {
             $build_response['hasconfigure'] = true;
+            $configure_response = array();
+
+            if ($include_subprojects) {
+                $nconfigureerrors = $selected_configure_errors;
+                $nconfigurewarnings = $selected_configure_warnings;
+                $configureduration = $selected_configure_duration;
+            } else {
+                $nconfigureerrors = $build_array['countconfigureerrors'] -
+                    $selected_configure_errors;
+                $nconfigurewarnings = $build_array['countconfigurewarnings'] -
+                    $selected_configure_warnings;
+                $configureduration = $build_array['configureduration'] -
+                    $selected_configure_duration;
+            }
+            $configure_response['error'] = $nconfigureerrors;
+            $buildgroups_response[$i]['numconfigureerror'] += $nconfigureerrors;
+
+            $configure_response['warning'] = $nconfigurewarnings;
+            $buildgroups_response[$i]['numconfigurewarning'] += $nconfigurewarnings;
+
+            if (!$include_subprojects && !$exclude_subprojects) {
+                $configure_response['warningdiff'] =
+                    $build_array['countconfigurewarningdiff'];
+            }
+
+            $configure_response['time'] =
+                time_difference($configureduration, true);
+            $configure_response['timefull'] = $configureduration;
+
+            $build_response['configure'] = $configure_response;
             $buildgroups_response[$i]['hasconfiguredata'] = true;
+            $buildgroups_response[$i]['configureduration'] += $configureduration;
         }
 
         $build_response['hastest'] = false;
