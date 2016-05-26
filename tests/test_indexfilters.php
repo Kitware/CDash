@@ -20,18 +20,22 @@ class IndexFiltersTestCase extends KWWebTestCase
     public function testIndexFilters()
     {
         $this->filter('buildduration', 43, 14.7, $this->win64);
+        $this->filter('buildduration', 43, '14m 47s', $this->win64);
         $this->filter('builderrors', 43, 1, $this->win32);
         $this->filter('buildwarnings', 43, 2, $this->win32);
         $this->filter('buildname', 63, 'Darwin', $this->mac);
         $this->filter('configureduration', 43, 11, $this->win32);
+        $this->filter('configureduration', 43, '11s', $this->win32);
         $this->filter('configureerrors', 43, 1, $this->win32);
         $this->filter('configurewarnings', 43, 1, $this->win32);
         $this->filter('site', 63, 'thurmite', $this->mac);
         $this->filter('testsduration', 43, 17, $this->win32);
+        $this->filter('testsduration', 43, '17s', $this->win32);
         $this->filter('testsfailed', 43, 2, $this->win32);
         $this->filter('testsnotrun', 43, 2, $this->win32);
         $this->filter('testspassed', 43, 2, $this->win32);
         $this->filter('updateduration', 43, 0.2, $this->win32);
+        $this->filter('updateduration', 43, '12s', $this->win32);
         $this->filter('updatedfiles', 43, 3, $this->win32);
     }
 

@@ -280,6 +280,40 @@ function time_difference($duration, $compact = false, $suffix = '', $displayms =
     return $diff;
 }
 
+/* Return the number of seconds represented by the specified time interval
+ * This function is the inverse of time_difference().
+ */
+function get_seconds_from_interval($input)
+{
+    if (is_numeric($input)) {
+        return $input;
+    }
+
+    // Check if strtotime understands the string.  It can handle our
+    // verbose interval strings, but not our compact ones.
+    $now = time();
+    $time_value = strtotime($input, $now);
+    if ($time_value) {
+        $duration = $time_value - $now;
+        return $duration;
+    }
+
+    // If not, convert the string from compact to verbose format
+    // and then use strtotime again.
+    $interval = preg_replace('/(\d+)h/', '$1 hours', $input);
+    $interval = preg_replace('/(\d+)m/', '$1 minutes', $interval);
+    $interval = preg_replace('/(\d+)s/', '$1 seconds', $interval);
+
+    $time_value = strtotime($interval, $now);
+    if ($time_value !== false) {
+        $duration = $time_value - $now;
+        return $duration;
+    }
+
+    add_log("Could not handle input: $input", 'get_seconds_from_interval', LOG_WARNING);
+    return null;
+}
+
 /** Microtime function */
 function microtime_float()
 {
