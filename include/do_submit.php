@@ -55,7 +55,7 @@ function getSubmissionFileHandle($fileHandleOrSubmissionId)
 {
     if (is_resource($fileHandleOrSubmissionId)) {
         return $fileHandleOrSubmissionId;
-    } else if (is_string($fileHandleOrSubmissionId)) {
+    } elseif (is_string($fileHandleOrSubmissionId)) {
         return fileHandleFromSubmissionId($fileHandleOrSubmissionId);
     } else {
         add_log('Failed to get a file handle for submission (was type ' . gettype($fileHandleOrSubmissionId) . ')',

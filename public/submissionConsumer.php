@@ -30,10 +30,10 @@ class CDashSubmissionService
         // If the submission didn't explicitly fail, delete the submission XML to avoid
         // duplicate submissions
         if ($result !== false) {
-             $client = new GuzzleHttp\Client();
-             $response = $client->request('DELETE',
-                                          $CDASH_BASE_URL . '/api/v1/deleteBuildSubmissionXml.php',
-                                          array('query' => array('buildsubmissionid' => $message['buildsubmissiondid'])));
+            $client = new GuzzleHttp\Client();
+            $response = $client->request('DELETE',
+                                         $CDASH_BASE_URL . '/api/v1/deleteBuildSubmissionXml.php',
+                                         array('query' => array('buildsubmissionid' => $message['buildsubmissiondid'])));
         }
     }
 }

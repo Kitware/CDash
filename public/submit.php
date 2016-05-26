@@ -103,7 +103,7 @@ if ($CDASH_BERNARD_SUBMISSION) {
         echo " <message>Failed to copy build submission XML.</message>\n";
         echo "</cdash>\n";
     }
-} else if ($CDASH_ASYNCHRONOUS_SUBMISSION) {
+} elseif ($CDASH_ASYNCHRONOUS_SUBMISSION) {
     // If the submission is asynchronous we store in the database
     do_submit_asynchronous($fp, $projectid, $expected_md5);
 } else {

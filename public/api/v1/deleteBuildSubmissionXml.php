@@ -33,7 +33,7 @@ if (is_array($CDASH_BERNARD_CONSUMERS_WHITELIST) &&
     !in_array($_SERVER['REMOTE_ADDR'], $CDASH_BERNARD_CONSUMERS_WHITELIST)) {
     header('HTTP/1.1 403 Forbidden');
     exit();
-} else if ($_SERVER['REQUEST_METHOD'] === 'DELETE' && isset($_REQUEST['buildsubmissionid']) &&
+} elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE' && isset($_REQUEST['buildsubmissionid']) &&
     preg_match('/([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})/', $_REQUEST['buildsubmissionid'])) {
     $filename = $CDASH_BACKUP_DIRECTORY . '/' . $_REQUEST['buildsubmissionid'] . '.xml';
 
