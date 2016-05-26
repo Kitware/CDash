@@ -26,6 +26,12 @@ class User
     public $LastName;
     public $Institution;
     public $Admin;
+    public $Filled;
+
+    public function __construct()
+    {
+        $this->Filled = false;
+    }
 
     /** Add a project to the user */
     public function AddProject($project)
@@ -50,16 +56,16 @@ class User
     /** Return if a user exists */
     public function Exists()
     {
-        // If no id specify return false
         if (!$this->Id) {
+            // If no id is set check if a user with this email address exists.
             if (strlen($this->Email) == 0) {
                 return false;
             }
 
             // Check if the email is already there
-            $query = pdo_query('SELECT count(*) FROM ' . qid('user') . " WHERE email='" . $this->Email . "'");
-            $query_array = pdo_fetch_array($query);
-            if ($query_array[0] > 0) {
+            $userid = $this->GetIdFromEmail($this->Email);
+            if ($userid) {
+                $this->Id = $userid;
                 return true;
             }
             return false;
@@ -82,6 +88,8 @@ class User
 
         // Check if the user exists already
         if ($this->Exists()) {
+            $oldPassword = $this->GetPassword();
+
             // Update the project
             $query = 'UPDATE ' . qid('user') . ' SET';
             $query .= " email='" . $this->Email . "'";
@@ -94,6 +102,9 @@ class User
             if (!pdo_query($query)) {
                 add_last_sql_error('User Update');
                 return false;
+            }
+            if ($this->Password != $oldPassword) {
+                $this->RecordPassword();
             }
         } else {
             // insert
@@ -121,6 +132,7 @@ class User
             if (!$this->Id) {
                 $this->Id = pdo_insert_id('user');
             }
+            $this->RecordPassword();
         }
         return true;
     }
@@ -149,6 +161,18 @@ class User
         $query = pdo_query('SELECT email FROM ' . qid('user') . ' WHERE id=' . qnum($this->Id));
         $query_array = pdo_fetch_array($query);
         return $query_array['email'];
+    }
+
+    /** Get the password */
+    public function GetPassword()
+    {
+        if (!$this->Id) {
+            return false;
+        }
+
+        $query = pdo_query('SELECT password FROM ' . qid('user') . ' WHERE id=' . qnum($this->Id));
+        $query_array = pdo_fetch_array($query);
+        return $query_array['password'];
     }
 
     /** Set a password */
@@ -198,5 +222,76 @@ class User
 
         $query_array = pdo_fetch_array($query);
         return $query_array['id'];
+    }
+
+    /** Load this user's details from the datbase. */
+    public function Fill()
+    {
+        if (!$this->Id) {
+            return false;
+        }
+        if ($this->Filled) {
+            // Already filled, no need to do it again.
+            return false;
+        }
+
+        $row = pdo_single_row_query('
+                SELECT email, password, firstname, lastname, institution
+                FROM ' . qid('user') . " WHERE id='$this->Id'");
+        if (!$row || !array_key_exists('password', $row)) {
+            return false;
+        }
+
+
+        $this->Email = $row['email'];
+        $this->Password = $row['password'];
+        $this->FirstName = $row['firstname'];
+        $this->LastName = $row['lastname'];
+        $this->Institution = $row['institution'];
+
+        $this->Admin = 0;
+        if ($this->IsAdmin()) {
+            $this->Admin = 1;
+        }
+
+        $this->Filled = true;
+        return true;
+    }
+
+    /** Record this user's password for the purposes of password rotation.
+      * Does nothing if this feature is disabled.
+      */
+    public function RecordPassword()
+    {
+        global $CDASH_PASSWORD_EXPIRATION, $CDASH_UNIQUE_PASSWORD_COUNT;
+        if ($CDASH_PASSWORD_EXPIRATION < 1 || !$this->Id || !$this->Password) {
+            return false;
+        }
+
+        $now = gmdate(FMT_DATETIME);
+        // Insert a row in the password table for this new password.
+        pdo_query("
+                INSERT INTO password(userid, password, date)
+                VALUES ($this->Id, '$this->Password', '$now')");
+
+        if ($CDASH_UNIQUE_PASSWORD_COUNT > 0) {
+            // Delete old records for this user if they have more than
+            // our limit.
+            // Check if there are too many old passwords for this user.
+            $row = pdo_single_row_query("SELECT COUNT(1) AS numrows
+                    FROM password WHERE userid=$this->Id");
+            $num_rows = $row['numrows'];
+            if ($num_rows > $CDASH_UNIQUE_PASSWORD_COUNT) {
+                // If so, get the cut-off date so we can delete the rest.
+                $offset = $CDASH_UNIQUE_PASSWORD_COUNT - 1;
+                $row = pdo_single_row_query("SELECT date FROM password
+                        WHERE userid=$this->Id ORDER BY date DESC
+                        LIMIT 1 OFFSET $offset");
+                $cutoff = $row['date'];
+                // Then delete the ones that are too old
+                pdo_query("DELETE FROM password
+                        WHERE userid=$this->Id AND date < '$cutoff'");
+            }
+        }
     }
 }

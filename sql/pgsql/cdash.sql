@@ -1352,3 +1352,14 @@ CREATE INDEX "buildfile_buildid" on "buildfile" ("buildid");
 CREATE INDEX "buildfile_filename" on "buildfile" ("filename");
 CREATE INDEX "buildfile_type" on "buildfile" ("type");
 CREATE INDEX "buildfile_md5" on "buildfile" ("md5");
+
+
+--
+-- Table: password
+--
+CREATE TABLE "password" (
+  "userid" integer NOT NULL,
+  "password" character varying(255) DEFAULT '' NOT NULL,
+  "date" timestamp(0) DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+CREATE INDEX "password_userid" on "password" ("userid");

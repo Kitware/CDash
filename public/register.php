@@ -21,6 +21,7 @@ include_once 'include/version.php';
 redirect_to_https();
 
 require_once 'include/cdashmail.php';
+require_once 'models/user.php';
 
 $reg = '';
 
@@ -41,19 +42,17 @@ function register()
         }
 
         $query_array = pdo_fetch_array($query);
-
         $email = $query_array['email'];
-        $passwd = $query_array['password'];
-        $fname = $query_array['firstname'];
-        $lname = $query_array['lastname'];
-        $institution = $query_array['institution'];
 
         // We copy the data from usertemp to user
-        $sql = 'INSERT INTO ' . qid('user') . " (email,password,firstname,lastname,institution)
-            VALUES ('$email','$passwd','$fname','$lname','$institution')";
-
-        if (pdo_query($sql)) {
-            pdo_query("DELETE FROM usertemp WHERE email='" . $email . "'");
+        $user = new User();
+        $user->Email = $email;
+        $user->Password = $query_array['passwd'];
+        $user->FirstName = $query_array['fname'];
+        $user->LastName = $query_array['lname'];
+        $user->Institution = $query_array['institution'];
+        if ($user->Save()) {
+            pdo_query("DELETE FROM usertemp WHERE email='$email'");
             return 1;
         } else {
             $reg = pdo_error();
@@ -134,8 +133,13 @@ function register()
                 $sql = 'INSERT INTO ' . qid('usertemp') . " (email,password,firstname,lastname,institution,registrationkey,registrationdate)
                     VALUES ('$email','$passwd','$fname','$lname','$institution','$key','$date')";
             } else {
-                $sql = 'INSERT INTO ' . qid('user') . " (email,password,firstname,lastname,institution)
-                    VALUES ('$email','$passwd','$fname','$lname','$institution')";
+                $user = new User();
+                $user->Email = $email;
+                $user->Password = $passwd;
+                $user->FirstName = $fname;
+                $user->LastName = $lname;
+                $user->Institution = $institution;
+                $user->Save();
             }
             if (pdo_query($sql)) {
                 if ($CDASH_REGISTRATION_EMAIL_VERIFY) {

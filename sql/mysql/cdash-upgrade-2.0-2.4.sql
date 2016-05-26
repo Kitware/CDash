@@ -48,3 +48,10 @@ CREATE TABLE IF NOT EXISTS `buildfailuredetails` (
   KEY `type` (`type`),
   KEY `crc32` (`crc32`)
 );
+
+CREATE TABLE IF NOT EXISTS `password` (
+  `userid` int(11) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `password` varchar(40) NOT NULL default '',
+  KEY `userid` (`userid`)
+);

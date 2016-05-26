@@ -1,4 +1,4 @@
-function ViewNotesController($scope, $rootScope, $http, $location, $anchorScroll, renderTimer) {
+function ViewNotesController($scope, $rootScope, $http, $location, anchors, renderTimer) {
   $scope.loading = true;
   $http({
     url: 'api/v1/viewNotes.php',
@@ -6,23 +6,19 @@ function ViewNotesController($scope, $rootScope, $http, $location, $anchorScroll
     params: $rootScope.queryString
   }).success(function(cdash) {
     renderTimer.initialRender($scope, cdash);
+    // Honor any intra-page anchor specified in the URI.
+    if ($location.hash() != '') {
+    anchors.jumpToAnchor($location.hash());
+    }
   }).finally(function() {
     $scope.loading = false;
   });
 
   $scope.gotoNote = function(x) {
     var newHash = 'note' + x;
-    if ($location.hash() !== newHash) {
-      // set the $location.hash to `newHash` and
-      // $anchorScroll will automatically scroll to it
-      $location.hash('note' + x);
-    } else {
-      // call $anchorScroll() explicitly,
-      // since $location.hash hasn't changed
-      $anchorScroll();
-    }
+    anchors.jumpToAnchor(newHash);
   };
 }
 
-CDash.controller('ViewNotesController', ['$scope', '$rootScope', '$http', '$location', '$anchorScroll', 'renderTimer',
+CDash.controller('ViewNotesController', ['$scope', '$rootScope', '$http', '$location', 'anchors', 'renderTimer',
                                           ViewNotesController]);
