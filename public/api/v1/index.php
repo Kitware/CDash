@@ -45,7 +45,10 @@ if (!$db ||
         return;
     } else {
         // redirect to the install.php script
-        header('Location: install.php');
+        $response = array();
+        $response['redirect'] = get_server_URI() . '/install.php';
+        echo json_encode($response);
+        return;
     }
     return;
 }

@@ -1410,6 +1410,13 @@ CREATE TABLE IF NOT EXISTS `buildfile` (
   KEY (`md5`)
 );
 
+CREATE TABLE IF NOT EXISTS `password` (
+  `userid` int(11) NOT NULL,
+  `password` varchar(40) NOT NULL default '',
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY `userid` (`userid`)
+);
+
 --
 -- Change the table maximum size to be more than 4GB
 --

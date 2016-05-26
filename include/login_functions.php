@@ -83,6 +83,9 @@ function databaseAuthenticate($email, $password, $SessionCachePolicy, $rememberm
         }
         $sessionArray = array('login' => $email, 'passwd' => $pass, 'ID' => session_id(), 'valid' => 1, 'loginid' => $user_array['id']);
         $_SESSION['cdash'] = $sessionArray;
+
+        checkForExpiredPassword();
+
         return true;
     }
 
@@ -441,4 +444,44 @@ function getPasswordComplexity($password)
         $complexity++;
     }
     return $complexity;
+}
+
+/** Sets a session variable forcing the redirect if the user needs
+ *  to change their password.
+ */
+function checkForExpiredPassword()
+{
+    global $CDASH_PASSWORD_EXPIRATION;
+    if ($CDASH_PASSWORD_EXPIRATION < 1) {
+        return false;
+    }
+
+    if (!isset($_SESSION['cdash']) || !array_key_exists('loginid', $_SESSION['cdash'])) {
+        return false;
+    }
+
+    unset($_SESSION['cdash']['redirect']);
+    $uri = get_server_URI(false);
+    $uri .= '/editUser.php?reason=expired';
+
+    $userid = $_SESSION['cdash']['loginid'];
+    $result = pdo_query("
+            SELECT date FROM password
+            WHERE userid=$userid ORDER BY date DESC LIMIT 1");
+    if (pdo_num_rows($result) < 1) {
+        // If no result, then password rotation must have been enabled
+        // after this user set their password.  Force them to change it now.
+        $_SESSION['cdash']['redirect'] = $uri;
+        return true;
+    }
+
+    $row = pdo_fetch_array($result);
+    $password_created_time = strtotime($row['date']);
+    $password_expiration_time =
+        strtotime("+$CDASH_PASSWORD_EXPIRATION days", $password_created_time);
+    if (time() > $password_expiration_time) {
+        $_SESSION['cdash']['redirect'] = $uri;
+        return true;
+    }
+    return false;
 }

@@ -622,6 +622,16 @@ function get_server_URI($localhost = false)
 
     // Truncate the URL based on the curentURI
     $currentURI = substr($currentURI, 0, strrpos($currentURI, '/'));
+
+    // Trim off any subdirectories too.
+    $subdirs = array('/ajax/', '/api/', '/iphone/', '/mobile/');
+    foreach ($subdirs as $subdir) {
+        $pos = strpos($currentURI, $subdir);
+        if ($pos !== false) {
+            $currentURI = substr($currentURI, 0, $pos);
+        }
+    }
+
     return $currentURI;
 }
 

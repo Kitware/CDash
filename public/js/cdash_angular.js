@@ -178,6 +178,12 @@ CDash.factory('filters', function () {
 // shown at the bottom of the page.
 CDash.factory('renderTimer', function ($timeout) {
   var initialRender = function(controllerScope, cdash) {
+    // Redirect if the API told us to.
+    if ('redirect' in cdash) {
+      window.location = cdash.redirect;
+      return;
+    }
+
     if (!"generationtime" in cdash) {
       return;
     }

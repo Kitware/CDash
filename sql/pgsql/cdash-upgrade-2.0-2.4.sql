@@ -49,3 +49,10 @@ CREATE TABLE "buildfailuredetails" (
 );
 CREATE INDEX "type5" on "buildfailuredetails" ("type");
 CREATE INDEX "buildfailuredetails_crc32" on "buildfailuredetails" ("crc32");
+
+CREATE TABLE "password" (
+  "userid" integer NOT NULL,
+  "password" character varying(255) DEFAULT '' NOT NULL,
+  "date" timestamp(0) DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+CREATE INDEX "password_userid" on "password" ("userid");
