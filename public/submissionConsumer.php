@@ -18,7 +18,11 @@ class CDashSubmissionService
 {
     public function doSubmit(DefaultMessage $message)
     {
-        global $CDASH_BASE_URL;
+        global $CDASH_BASE_URL, $CDASH_REMOTE_ADDR;
+
+        // Since this could be running on a remote machine, spoof the IP
+        // to appear as the IP that actually submitted the build
+        $CDASH_REMOTE_ADDR = $message['submission_ip'];
 
         $result = do_submit($message['buildsubmissionid'], $message['projectid'],
                             $message['expected_md5'], $message['do_checksum'], $message['submission_id']);

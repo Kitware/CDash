@@ -54,6 +54,8 @@ $CDASH_TESTING_RENAME_LOGS = false;
   * If a Bernard Driver is available then CDASH_BERNARD_SUBMISSION can be enabled
   * to allow processing of submissions to take place in the background on other
   * machines.
+  * Note: Enabling these require CDASH_SERVER_NAME be set properly for emails, since they may
+  * be constructed on other machines (with a different SERVER_NAME).
   **/
 $CDASH_BERNARD_SUBMISSION = false;
 $CDASH_BERNARD_DRIVER = false;
