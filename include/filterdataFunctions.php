@@ -894,6 +894,21 @@ function get_filterdata_from_request($page_id = '')
             $filterdata['hasdateclause'] = 1;
         }
 
+        // Time durations can either be specified as a number of seconds,
+        // or as a string representing a time interval.
+        if (strpos($field, 'duration') !== false) {
+            $input_value = trim($sql_value, "'");
+            $sql_value = get_seconds_from_interval($input_value);
+            if ($input_value !== $sql_value &&
+                    ($field === 'buildduration' || $field === 'updateduration')) {
+                // Build duration and update duration are stored as
+                // number of minutes (not seconds) so if we just converted
+                // this value from string to seconds we should also
+                // convert it from seconds to minutes here as well.
+                $sql_value /= 60.0;
+            }
+        }
+
         if ($sql_field != '' && $sql_compare != '') {
             if ($clauses > 0) {
                 $sql .= ' ' . $sql_combine . ' ';
