@@ -6,11 +6,25 @@ CDash.controller('BuildErrorController',
       method: 'GET',
       params: $rootScope.queryString
     }).success(function(cdash) {
-      for (var i in cdash.errors) {
-        // Handle the fact that we add HTML links to compiler output.
-        cdash.errors[i].precontext = $sce.trustAsHtml(cdash.errors[i].precontext);
-        cdash.errors[i].postcontext = $sce.trustAsHtml(cdash.errors[i].postcontext);
-        cdash.errors[i].text = $sce.trustAsHtml(cdash.errors[i].text);
+      // Handle the fact that we add HTML links to compiler output.
+      var trustErrorHtml = function (error) {
+          error.precontext = $sce.trustAsHtml(error.precontext);
+          error.postcontext = $sce.trustAsHtml(error.postcontext);
+          error.text = $sce.trustAsHtml(error.text);
+          return error;
+      };
+
+      // Errors are either cdash.errors, or all values in cdash.errors.*
+      if (Array.isArray(cdash.errors)) {
+          for (var i in cdash.errors) {
+              cdash.errors[i] = trustErrorHtml(cdash.errors[i]);
+          }
+      } else {
+          for (var subproject in cdash.errors) {
+              for (var error in cdash.errors[subproject]) {
+                  cdash.errors[subproject][error] = trustErrorHtml(cdash.errors[subproject][error]);
+              }
+          }
       }
       renderTimer.initialRender($scope, cdash);
 
