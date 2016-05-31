@@ -1431,6 +1431,14 @@ CREATE TABLE IF NOT EXISTS `password` (
   KEY `userid` (`userid`)
 );
 
+CREATE TABLE IF NOT EXISTS `lockout` (
+  `userid` int(11) NOT NULL,
+  `failedattempts` tinyint(1) DEFAULT '0',
+  `islocked` tinyint(1) NOT NULL DEFAULT '0',
+  `unlocktime` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
+  PRIMARY KEY  (`userid`)
+);
+
 --
 -- Change the table maximum size to be more than 4GB
 --
