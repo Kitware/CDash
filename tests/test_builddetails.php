@@ -26,7 +26,7 @@ class BuildDetailsTestCase extends KWWebTestCase
         }
 
         $this->builds = array();
-        $builds = pdo_query("SELECT * FROM build WHERE name = 'linux'");
+        $builds = pdo_query("SELECT * FROM build WHERE name = 'linux' ORDER BY id");
         while ($build = pdo_fetch_array($builds)) {
             $this->builds[] = $build;
         }
@@ -129,7 +129,7 @@ class BuildDetailsTestCase extends KWWebTestCase
             return 1;
         }
 
-        $buildId = pdo_single_row_query("SELECT id FROM build WHERE name = 'BuildDetails-Linux-g++-4.1-LesionSizingSandbox_Debug-has-subbuild'");
+        $buildId = pdo_single_row_query("SELECT id FROM build WHERE name = 'BuildDetails-Linux-g++-4.1-LesionSizingSandbox_Debug-has-subbuild' AND parentid=-1");
 
         $response = json_decode($this->get($this->url . '/api/v1/viewTest.php?buildid=' . $buildId['id']));
 

@@ -155,6 +155,11 @@ function XMLStrFormat($str)
     $str = str_replace("'", '&apos;', $str);
     $str = str_replace('"', '&quot;', $str);
     $str = str_replace("\r", '', $str);
+
+    // Remove UTF-8 characters that are not valid in an XML document.
+    // https://www.w3.org/TR/REC-xml/#charsets
+    $str = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '', $str);
+
     return $str;
 }
 
@@ -273,6 +278,40 @@ function time_difference($duration, $compact = false, $suffix = '', $displayms =
 
     $diff .= ' ' . $suffix;
     return $diff;
+}
+
+/* Return the number of seconds represented by the specified time interval
+ * This function is the inverse of time_difference().
+ */
+function get_seconds_from_interval($input)
+{
+    if (is_numeric($input)) {
+        return $input;
+    }
+
+    // Check if strtotime understands the string.  It can handle our
+    // verbose interval strings, but not our compact ones.
+    $now = time();
+    $time_value = strtotime($input, $now);
+    if ($time_value) {
+        $duration = $time_value - $now;
+        return $duration;
+    }
+
+    // If not, convert the string from compact to verbose format
+    // and then use strtotime again.
+    $interval = preg_replace('/(\d+)h/', '$1 hours', $input);
+    $interval = preg_replace('/(\d+)m/', '$1 minutes', $interval);
+    $interval = preg_replace('/(\d+)s/', '$1 seconds', $interval);
+
+    $time_value = strtotime($interval, $now);
+    if ($time_value !== false) {
+        $duration = $time_value - $now;
+        return $duration;
+    }
+
+    add_log("Could not handle input: $input", 'get_seconds_from_interval', LOG_WARNING);
+    return null;
 }
 
 /** Microtime function */
@@ -617,6 +656,16 @@ function get_server_URI($localhost = false)
 
     // Truncate the URL based on the curentURI
     $currentURI = substr($currentURI, 0, strrpos($currentURI, '/'));
+
+    // Trim off any subdirectories too.
+    $subdirs = array('/ajax/', '/api/', '/iphone/', '/mobile/');
+    foreach ($subdirs as $subdir) {
+        $pos = strpos($currentURI, $subdir);
+        if ($pos !== false) {
+            $currentURI = substr($currentURI, 0, $pos);
+        }
+    }
+
     return $currentURI;
 }
 
@@ -989,6 +1038,7 @@ function remove_build($buildid)
         pdo_query('DELETE FROM label2dynamicanalysis WHERE dynamicanalysisid IN ' . $dynids);
     }
     pdo_query('DELETE FROM dynamicanalysis WHERE buildid IN ' . $buildids);
+    pdo_query('DELETE FROM dynamicanalysissummary WHERE buildid IN ' . $buildids);
 
     // Delete the note if not shared
     $noteids = '(';
@@ -2153,7 +2203,7 @@ function get_aggregate_build($build)
         $subproj_table =
             "INNER JOIN subproject2build AS sp2b ON (build.id=sp2b.buildid)";
         $subproj_where =
-            "AND subproject2build.subprojectid='$build->SubProjectId'";
+            "AND sp2b.subprojectid='$build->SubProjectId'";
     }
 
     $query =

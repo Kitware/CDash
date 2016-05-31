@@ -1,0 +1,8 @@
+- src: geerlingguy.mysql
+  version: 2.2.1
+- src: geerlingguy.apache
+  version: 1.7.2
+- src: geerlingguy.php
+  version: 2.0.3
+- src: geerlingguy.composer
+- src: leonidas.nvm

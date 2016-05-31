@@ -61,18 +61,6 @@ set(protocol "http")
 set(server "${CDASH_SERVER}")
 set(path "/${CDASH_DIR_NAME}")
 
-add_cdash_test(CTestSubmitLargeOutput CTestSubmitLargeOutput)
-if("${CDASH_DB_TYPE}" STREQUAL "mysql")
-  # This test only passes if it fails to submit properly...
-  #
-  SET_TESTS_PROPERTIES(CTestSubmitLargeOutput PROPERTIES
-    PASS_REGULAR_EXPRESSION "Errors occurred during submission")
-else()
-  SET_TESTS_PROPERTIES(CTestSubmitLargeOutput PROPERTIES
-    PASS_REGULAR_EXPRESSION "Submission successful")
-endif()
-
-
 # Give this test plenty of time to run on slower machines:
 # Use 1500 or CTEST_TEST_TIMEOUT for long test timeout value,
 # whichever is greater.
@@ -83,8 +71,6 @@ ENDIF(CTEST_TEST_TIMEOUT)
 IF(CMAKE_LONG_TEST_TIMEOUT LESS 1500)
   SET(CMAKE_LONG_TEST_TIMEOUT 1500)
 ENDIF(CMAKE_LONG_TEST_TIMEOUT LESS 1500)
-SET_TESTS_PROPERTIES(CTestSubmitLargeOutput PROPERTIES
-  TIMEOUT ${CMAKE_LONG_TEST_TIMEOUT})
 
 if(CMake_SOURCE_DIR)
   #just so we don't pollute the CMake binary dir with our testing...
@@ -152,6 +138,7 @@ set_tests_properties(
   FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*")
 
 add_php_test(submitsortingdata)
+add_php_test(indexfilters)
 
 add_test(enable_async
   ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_enable_async.php
@@ -167,12 +154,6 @@ else(COVERAGE_COMMAND)
   add_ctest_test(simple_async InsightExample simple simple.php enable_async)
 endif(COVERAGE_COMMAND)
 add_ctest_test(simple2_async InsightExample simple2 simple2.php enable_async)
-
-add_cdash_test(CTestSubmitLargeOutput_async CTestSubmitLargeOutput)
-SET_TESTS_PROPERTIES(CTestSubmitLargeOutput_async PROPERTIES
-  PASS_REGULAR_EXPRESSION "Submission successful")
-SET_TESTS_PROPERTIES(CTestSubmitLargeOutput_async PROPERTIES
-  TIMEOUT ${CMAKE_LONG_TEST_TIMEOUT})
 
 if(CMake_SOURCE_DIR)
 

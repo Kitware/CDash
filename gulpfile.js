@@ -1,13 +1,14 @@
 (function () {
 
   var gulp = require('gulp'),
-      eslint = require('gulp-eslint'),
       del = require('del'),
-      sourcemaps = require('gulp-sourcemaps'),
       concat = require('gulp-concat'),
-      uglify = require('gulp-uglify'),
-      rename = require("gulp-rename"),
+      eslint = require('gulp-eslint'),
+      newer = require('gulp-newer'),
       replace = require('gulp-replace'),
+      rename = require("gulp-rename"),
+      sourcemaps = require('gulp-sourcemaps'),
+      uglify = require('gulp-uglify'),
       release = true, // Change to true when cutting a release.
       version;
 
@@ -37,8 +38,29 @@
   });
 
 
- gulp.task('uglify', function() {
-   gulp.src(['public/js/jquery-1.10.2.js',
+ gulp.task('uglify-1stparty', function() {
+   return gulp.src(['public/js/cdashmenu.js',
+             'public/js/cdashIndexTable.js',
+             'public/js/cdashSortable.js',
+             'public/js/tabNavigation.js',
+             'public/js/linechart.js',
+             'public/js/bulletchart.js',
+             'public/js/cdash_angular.js',
+             'public/js/services/**.js',
+             'public/js/controllers/**.js'])
+       .pipe(sourcemaps.init())
+       .pipe(newer('public/js/1stparty.min.js'))
+       .pipe(uglify({mangle: false})).on('error', function(e) {
+           console.log(e);
+        })
+       .pipe(concat('1stparty.min.js'))
+       .pipe(sourcemaps.write('./'))
+       .pipe(gulp.dest('public/js'));
+ });
+
+
+ gulp.task('uglify-3rdparty', function() {
+   return gulp.src(['public/js/jquery-1.10.2.js',
              'public/js/jquery-ui-1.10.4.min.js',
              'public/js/jquery.cookie.js',
              'public/js/jquery.flot.min.js',
@@ -49,28 +71,31 @@
              'public/js/jqModal.js',
              'public/js/bootstrap.min.js',
              'public/js/tooltip.js',
-             'public/js/cdashmenu.js',
-             'public/js/cdashIndexTable.js',
-             'public/js/cdashSortable.js',
-             'public/js/tabNavigation.js',
              'public/js/je_compare.js',
              'public/js/d3.min.js',
              'public/js/nv.d3.min.js',
-             'public/js/linechart.js',
-             'public/js/bulletchart.js',
              'node_modules/as-jqplot/dist/jquery.jqplot.js',
              'node_modules/as-jqplot/dist/plugins/jqplot.dateAxisRenderer.js',
              'node_modules/as-jqplot/dist/plugins/jqplot.highlighter.js',
              'public/js/angular-1.4.7.min.js',
              'public/js/angular-animate.min.js',
              'public/js/angular-ui-sortable.min.js',
-             'public/js/ui-bootstrap-tpls-0.14.2.min.js',
-             'public/js/cdash_angular.js',
-             'public/js/controllers/**.js'])
+             'public/js/ui-bootstrap-tpls-0.14.2.min.js'])
        .pipe(sourcemaps.init())
+       .pipe(newer('public/js/3rdparty.min.js'))
        .pipe(uglify({mangle: false})).on('error', function(e) {
            console.log(e);
         })
+       .pipe(concat('3rdparty.min.js'))
+       .pipe(sourcemaps.write('./'))
+       .pipe(gulp.dest('public/js'));
+ });
+
+
+ gulp.task('uglify', ['uglify-3rdparty', 'uglify-1stparty'], function() {
+   gulp.src(['public/js/3rdparty.min.js',
+             'public/js/1stparty.min.js'])
+       .pipe(sourcemaps.init({loadMaps: true}))
        .pipe(concat('CDash.concat.js'))
        .pipe(rename('CDash_' + version + '.min.js'))
        .pipe(sourcemaps.write('./'))
@@ -89,5 +114,5 @@
   });
 
 
-  gulp.task('default', ['quality', 'clean', 'uglify', 'replace']);
+  gulp.task('default', ['quality', 'uglify', 'clean', 'replace']);
 }());

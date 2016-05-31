@@ -19,4 +19,15 @@ describe("viewBuildError", function() {
     browser.get('viewBuildError.php?buildid=6&type=1');
     expect(browser.getPageSource()).toContain("10</b> Warnings");
   });
+
+  it("displays build errors inline", function() {
+    browser.get('viewBuildError.php?buildid=67&type=0');
+    expect(browser.getPageSource()).toContain("error: 'foo' was not declared in this scope");
+  });
+
+  it("displays build errors inline on parent builds", function() {
+    browser.get('viewBuildError.php?buildid=66&type=0');
+    expect(browser.getPageSource()).toContain("some-test-subproject");
+    expect(browser.getPageSource()).toContain("error: 'foo' was not declared in this scope");
+  });
 });

@@ -212,6 +212,24 @@ $CDASH_USE_PERSISTENT_MYSQL_CONNECTION = false;
 // mentioned by a newly uploaded Project.xml
 $CDASH_DELETE_OLD_SUBPROJECTS = true;
 
+// How long should passwords last for? (in days)
+// Password rotation is disabled when this is set to 0.
+$CDASH_PASSWORD_EXPIRATION = 0;
+
+// Unique password count (new password cannot match last X)
+// 0 means you can never reuse a password.
+$CDASH_UNIQUE_PASSWORD_COUNT = 0;
+
+// Lock user account after N failed login attempts.
+// Account lockout functionality is disabled when this is set to 0.
+// Note that account lockout functionality is only supported for authentication
+// using CDash's database (not LDAP or Google account login).
+$CDASH_LOCKOUT_ATTEMPTS = 0;
+
+// How long to lock an account for? (in minutes)
+$CDASH_LOCKOUT_LENGTH = 0;
+
+
 /* DO NOT EDIT AFTER THIS LINE */
 $localConfig = dirname(__FILE__) . '/config.local.php';
 if ((strpos(__FILE__, 'config.local.php') === false) && file_exists($localConfig)) {

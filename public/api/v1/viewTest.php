@@ -279,8 +279,7 @@ $limit_sql = '';
 if ($filterdata['limit'] > 0) {
     $limit_sql = ' LIMIT ' . $filterdata['limit'];
 }
-// htmlentities used here to prevent XSS injection from filterstring content
-$response['filterurl'] = htmlentities(@$_GET['filterstring'], ENT_QUOTES);
+$response['filterurl'] = get_filterurl();
 
 $limitnew = '';
 $onlydelta_extra = '';

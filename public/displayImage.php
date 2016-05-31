@@ -50,15 +50,9 @@ switch ($img_array['extension']) {
         echo $img_array['extension'];
         return;
 }
-
 if ($CDASH_DB_TYPE == 'pgsql') {
-    $buf = '';
-    while (!feof($img_array['img'])) {
-        $buf .= fread($img_array['img'], 2048);
-    }
-    $buf = stripslashes($buf);
+    $buf = stream_get_contents($img_array['img']);
 } else {
     $buf = $img_array['img'];
 }
 echo $buf;
-return;

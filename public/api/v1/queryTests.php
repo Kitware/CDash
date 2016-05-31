@@ -77,8 +77,7 @@ $limit_sql = '';
 if ($filterdata['limit'] > 0) {
     $limit_sql = ' LIMIT ' . $filterdata['limit'];
 }
-// htmlentities used here to prevent XSS injection from filterstring content
-$response['filterurl'] = htmlentities(@$_GET['filterstring'], ENT_QUOTES);
+$response['filterurl'] = get_filterurl();
 
 // Menu
 $menu = array();
@@ -119,7 +118,7 @@ if (isset($_GET['parentid'])) {
     $menu['current'] = $base_url . $limit_param;
 
     if (has_next_date($date, $currentstarttime)) {
-        $menu['next'] = $base_url . $nextdate . $limit_param;
+        $menu['next'] = $base_url . '&date=' . $nextdate . $limit_param;
     } else {
         $menu['nonext'] = '1';
     }

@@ -129,7 +129,7 @@ if ($filterdata['limit'] > 0) {
 }
 
 if (isset($_GET['dir']) && $_GET['dir'] != '') {
-    $SQLsearchTerm .= " AND cf.fullpath LIKE '%" . htmlspecialchars(pdo_real_escape_string($_GET['dir'])) . "%'";
+    $SQLsearchTerm .= " AND cf.fullpath LIKE '%" . htmlspecialchars(pdo_real_escape_string($_GET['dir'])) . "/%'";
 }
 
 // Coverage files
@@ -170,10 +170,10 @@ while ($coveragefile_array = pdo_fetch_array($coveragefile)) {
     // Compute the coverage metric for bullseye (branch coverage without line coverage)
     if (($coveragefile_array['loctested'] == 0 &&
                 $coveragefile_array['locuntested'] == 0) &&
-            $coveragefile_array['branchstested'] > 0 ||
+            ($coveragefile_array['branchstested'] > 0 ||
             $coveragefile_array['branchsuntested'] > 0 ||
             $coveragefile_array['functionstested'] > 0 ||
-            $coveragefile_array['functionsuntested'] > 0) {
+            $coveragefile_array['functionsuntested'] > 0)) {
         // Metric coverage
         $metric = 0;
         if ($coveragefile_array['functionstested'] + $coveragefile_array['functionsuntested'] > 0) {

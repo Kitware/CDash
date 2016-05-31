@@ -1,5 +1,5 @@
 CDash.controller('OverviewController',
-  function OverviewController($scope, $rootScope, $http, $filter, multisort, filters, renderTimer) {
+  function OverviewController($scope, $rootScope, $http, $filter, $location, anchors, filters, multisort, renderTimer) {
     $scope.loading = true;
     $http({
       url: 'api/v1/overview.php',
@@ -10,6 +10,16 @@ CDash.controller('OverviewController',
 
       // Set title in root scope so the head controller can see it.
       $rootScope['title'] = cdash.title;
+
+      // Expose the jumpToAnchor function to the scope.
+      // This allows us to call it from the HTML template.
+      $scope.jumpToAnchor = anchors.jumpToAnchor;
+
+      // Honor any intra-page anchor specified in the URI.
+      if ($location.hash() != '') {
+        anchors.jumpToAnchor($location.hash());
+      }
+
     }).finally(function() {
       $scope.loading = false;
     });
@@ -33,7 +43,7 @@ CDash.directive('linechart', function() {
         var data = JSON.parse(scope.data);
         if (data.length > 0) {
           element[0].id = scope.groupname + "_" + scope.measurementname + "_chart";
-          makeLineChart(element[0].id, data, scope.project, scope.anchor, 0, scope.sort);
+          makeLineChart(element[0].id, data, scope.project, scope.anchor, scope.sort);
         }
       }
     }

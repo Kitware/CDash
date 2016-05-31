@@ -193,11 +193,8 @@ class CoverageFileLog
 
         foreach ($this->Branches as $line => $value) {
             list($timesHit, $total) = explode('/', $value);
-            if ($timesHit > 0) {
-                $stats['branchestested'] += 1;
-            } else {
-                $stats['branchesuntested'] += 1;
-            }
+            $stats['branchestested'] += $timesHit;
+            $stats['branchesuntested'] += ($total - $timesHit);
         }
         return $stats;
     }
@@ -229,7 +226,7 @@ class CoverageFileLog
                     INNER JOIN subproject2build AS sp2b ON (build.id=sp2b.buildid)
                     WHERE parentid='$this->AggregateBuildId' AND
                     projectid='" . $this->Build->ProjectId ."' AND
-                    subproject2build.subprojectid='" . $this->Build->SubProjectId . "'";
+                    sp2b.subprojectid='" . $this->Build->SubProjectId . "'";
                 $row = pdo_single_row_query($query);
                 if (!$row || !array_key_exists('id', $row)) {
                     // An aggregate build for this SubProject doesn't exist yet.
@@ -268,7 +265,7 @@ class CoverageFileLog
         ) {
             add_log("Not appending coverage of '$path' to aggregate as it " .
                 'already contains a different version of this file.',
-                'CoverageSummary::UpdateAggregate', LOG_INFO,
+                'CoverageFileLog::UpdateAggregate', LOG_INFO,
                 $this->BuildId);
             return;
         }

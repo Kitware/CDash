@@ -721,6 +721,9 @@ if (isset($_GET['upgrade-2-4'])) {
     // Option to pass label filters from index.php to test pages.
     AddTableField('project', 'sharelabelfilters', 'tinyint(1)', 'smallint', '0');
 
+    // Summarize the number of dynamic analysis defects each build found.
+    PopulateDynamicAnalysisSummaryTable();
+
     // Set the database version
     setVersion();
 

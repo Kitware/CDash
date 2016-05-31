@@ -48,3 +48,25 @@ CREATE TABLE IF NOT EXISTS `buildfailuredetails` (
   KEY `type` (`type`),
   KEY `crc32` (`crc32`)
 );
+
+CREATE TABLE IF NOT EXISTS `password` (
+  `userid` int(11) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `password` varchar(40) NOT NULL default '',
+  KEY `userid` (`userid`)
+);
+
+CREATE TABLE IF NOT EXISTS `dynamicanalysissummary` (
+  `buildid` int(11) NOT NULL DEFAULT '0',
+  `checker` varchar(60) NOT NULL default '',
+  `numdefects` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY `buildid` (`buildid`)
+);
+
+CREATE TABLE IF NOT EXISTS `lockout` (
+  `userid` int(11) NOT NULL,
+  `failedattempts` tinyint(1) DEFAULT '0',
+  `islocked` tinyint(1) NOT NULL DEFAULT '0',
+  `unlocktime` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
+  PRIMARY KEY  (`userid`)
+);

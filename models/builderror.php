@@ -124,7 +124,7 @@ class BuildError
 
         if (isset($data['subprojectid'])) {
             $marshaled['subprojectid'] = $data['subprojectid'];
-            $marshaled['subprojectname'] = $data['name'];
+            $marshaled['subprojectname'] = $data['subprojectname'];
         }
 
         return $marshaled;

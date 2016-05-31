@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="multi_coverage_example"
+	BuildStamp="20160505-1541-Experimental"
+	Name="localhost"
+	Generator="ctest-3.5.20160407-g82c405"
+	CompilerName=""
+	CompilerVersion=""
+	OSName="Linux"
+	Hostname="elysium"
+	OSRelease="3.13.0-77-generic"
+	OSVersion="#121-Ubuntu SMP Wed Jan 20 10:50:42 UTC 2016"
+	OSPlatform="x86_64"
+	Is64Bits="1"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="45"
+	ProcessorCacheSize="12288"
+	NumberOfLogicalCPU="12"
+	NumberOfPhysicalCPU="1"
+	TotalVirtualMemory="32690"
+	TotalPhysicalMemory="32100"
+	LogicalProcessorsPerPhysical="12"
+	ProcessorClockFrequency="1200"
+	>
+	<CoverageLog>
+		<StartDateTime>May 05 11:41 EDT</StartDateTime>
+		<StartTime>1462462884</StartTime>
+		<File Name="bar.py" FullPath="./bar.py">
+			<Report>
+				<Line Number="0" Count="-1">#!/usr/bin/env python</Line>
+				<Line Number="1" Count="-1"></Line>
+				<Line Number="2" Count="1">i = 0</Line>
+				<Line Number="3" Count="1">if i &gt; 1:</Line>
+				<Line Number="4" Count="0">  print "this does not happen"</Line>
+				<Line Number="5" Count="-1">else:</Line>
+				<Line Number="6" Count="1">  print "this does happen"</Line>
+			</Report>
+		</File>
+		<File Name="foo.cxx" FullPath="./foo.cxx">
+			<Report>
+				<Line Number="0" Count="-1">#include &lt;iostream&gt;</Line>
+				<Line Number="1" Count="-1">int main()</Line>
+				<Line Number="2" Count="-1">{</Line>
+				<Line Number="3" Count="1">  int i = 0;</Line>
+				<Line Number="4" Count="1">  if (i == 0)</Line>
+				<Line Number="5" Count="-1">  {</Line>
+				<Line Number="6" Count="1">    std::cout &lt;&lt; "This gets covered.  We're all good, right?" &lt;&lt; std::endl;</Line>
+				<Line Number="7" Count="1">  }</Line>
+				<Line Number="8" Count="1">  return 0;</Line>
+				<Line Number="9" Count="-1">}</Line>
+			</Report>
+		</File>
+		<EndDateTime>May 05 11:41 EDT</EndDateTime>
+		<EndTime>1462462884</EndTime>
+	</CoverageLog>
+</Site>
