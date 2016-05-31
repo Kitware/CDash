@@ -55,3 +55,10 @@ CREATE TABLE IF NOT EXISTS `password` (
   `password` varchar(40) NOT NULL default '',
   KEY `userid` (`userid`)
 );
+
+CREATE TABLE IF NOT EXISTS `dynamicanalysissummary` (
+  `buildid` int(11) NOT NULL DEFAULT '0',
+  `checker` varchar(60) NOT NULL default '',
+  `numdefects` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY `buildid` (`buildid`)
+);

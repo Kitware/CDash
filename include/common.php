@@ -1038,6 +1038,7 @@ function remove_build($buildid)
         pdo_query('DELETE FROM label2dynamicanalysis WHERE dynamicanalysisid IN ' . $dynids);
     }
     pdo_query('DELETE FROM dynamicanalysis WHERE buildid IN ' . $buildids);
+    pdo_query('DELETE FROM dynamicanalysissummary WHERE buildid IN ' . $buildids);
 
     // Delete the note if not shared
     $noteids = '(';
