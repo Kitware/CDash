@@ -167,8 +167,8 @@ function getFiltersForPage($page_id)
                 'buildname', 'buildstamp', 'buildstarttime', 'buildtype',
                 'configureduration', 'configureerrors', 'configurewarnings',
                 'expected', 'groupname', 'hascoverage', 'hasctestnotes',
-                'hasdynamicanalysis', 'hasusernotes', 'label', 'site',
-                'buildgenerator', 'subprojects', 'testsduration',
+                'hasdynamicanalysis', 'hasusernotes', 'label', 'revision',
+                'site', 'buildgenerator', 'subprojects', 'testsduration',
                 'testsfailed', 'testsnotrun', 'testspassed',
                 'testtimestatus', 'updateduration', 'updatedfiles');
             break;
