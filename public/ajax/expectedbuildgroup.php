@@ -190,10 +190,10 @@ $group = pdo_query("SELECT name,id FROM buildgroup WHERE id!='$buildgroupid' AND
             <td bgcolor="#DDDDDD" width="65%" colspan="2" id="nob"><font size="2"><a href="#"
                                                                                      onclick="javascript:markasnonexpected_click('<?php echo $siteid ?>','<?php echo $buildname ?>','<?php echo $buildtype ?>','<?php echo $currentgroup_array['id'] ?>',
                                                                                      <?php if ($isexpected) {
-    echo '0';
-} else {
-    echo '1';
-} ?>,'<?php echo $divname ?>')">
+                echo '0';
+            } else {
+                echo '1';
+            } ?>,'<?php echo $divname ?>')">
                         [<?php
                         if ($isexpected) {
                             echo 'mark as non expected';

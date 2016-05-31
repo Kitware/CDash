@@ -141,64 +141,64 @@ $previousbuilds = pdo_query("SELECT build.id,build.starttime,build.endtime,build
         ?></center>
             </td>
             <td class=<?php if ($updateerrors > 0) {
-    echo 'error';
-} else {
-    echo 'normal';
-}
+            echo 'error';
+        } else {
+            echo 'normal';
+        }
         ?>>
                 <center><?php echo $updateerrors;
         ?></center>
             </td>
             <td class=<?php if ($updatewarnings > 0) {
-    echo 'warning';
-} else {
-    echo 'normal';
-}
+            echo 'warning';
+        } else {
+            echo 'normal';
+        }
         ?>>
                 <center><?php echo $updatewarnings;
         ?></center>
             </td>
             <td class=<?php if ($configureerrors > 0) {
-    echo 'error';
-} else {
-    echo 'normal';
-}
+            echo 'error';
+        } else {
+            echo 'normal';
+        }
         ?>>
                 <center><?php echo $configureerrors;
         ?></center>
             </td>
             <td class=<?php if ($configurewarnings > 0) {
-    echo 'warning';
-} else {
-    echo 'normal';
-}
+            echo 'warning';
+        } else {
+            echo 'normal';
+        }
         ?>>
                 <center><?php echo $configurewarnings;
         ?></center>
             </td>
             <td class=<?php if ($builderrors > 0) {
-    echo 'error';
-} else {
-    echo 'normal';
-}
+            echo 'error';
+        } else {
+            echo 'normal';
+        }
         ?>>
                 <center><?php echo $builderrors;
         ?></center>
             </td>
             <td class=<?php if ($buildwarnings > 0) {
-    echo 'warning';
-} else {
-    echo 'normal';
-}
+            echo 'warning';
+        } else {
+            echo 'normal';
+        }
         ?>>
                 <center><?php echo $buildwarnings;
         ?></center>
             </td>
             <td class=<?php if ($testfailed > 0) {
-    echo 'error';
-} else {
-    echo 'normal';
-}
+            echo 'error';
+        } else {
+            echo 'normal';
+        }
         ?>>
                 <center><?php echo $testfailed;
         ?></center>
