@@ -107,6 +107,7 @@ add_php_test(aggregatesubprojectcoverage)
 add_php_test(configurewarnings)
 add_php_test(filtertestlabels)
 add_php_test(seconds_from_interval)
+add_php_test(dynamicanalysissummary)
 
 if(CDASH_GITHUB_USERNAME AND CDASH_GITHUB_PASSWORD)
   add_php_test(github_PR_comment)
