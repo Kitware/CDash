@@ -55,14 +55,15 @@ CDash.directive('bulletchart', function() {
     restrict: 'E',
     replace: true,
     scope: {
-      data: '=data'
+      data: '=data',
+      categoryname: '=categoryname',
     },
     template: '<div class="overview-bullet-chart"><svg></svg></div>',
     link: function(scope, element, attrs) {
       if (scope.data) {
-        element[0].id = scope.data.group_name_clean + "_" + scope.data.name + "_bullet";
+        element[0].id = scope.data.name_clean + "_" + scope.categoryname + "_bullet";
         var chart_data = JSON.parse(scope.data.chart),
-            chart_name = scope.data.group_name + " " + scope.data.nice_name,
+            chart_name = scope.group_name + " " + scope.data.name,
             element_name = "#" + element[0].id + " svg";
         makeBulletChart(
           chart_name,

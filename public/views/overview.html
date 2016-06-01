@@ -27,17 +27,17 @@
         <tr class="row">
           <th class="col-md-1"> </th>
           <th ng-repeat="group in cdash.groups"
-              class="col-md-2 border-right border-left" colspan="2">
+              class="col-md-2 border-right border-left center-text" colspan="2">
             {{group.name}}
           </th>
         </tr>
 
         <tr ng-repeat="measurement in cdash.measurements" class="row">
-          <td class="col-md-1 border-right">
+          <td class="col-md-1 border-right center-text">
             <b>{{measurement.nice_name}}</b>
           </td>
           <td ng-repeat-start="group in measurement.groups"
-              class="col-md-1 border-left">
+              class="col-md-1 border-left center-text">
             {{group.value}}
           </td>
           <td ng-repeat-end class="col-md-1 border-right">
@@ -61,24 +61,36 @@
             Coverage
           </a>
         </caption>
+
+        <tr class="row">
+          <th class="col-md-1"> </th>
+          <th ng-repeat="buildgroup in cdash.coverage_buildgroups"
+              class="col-md-2 border-right border-left center-text" colspan="3">
+            {{buildgroup}}
+          </th>
+        </tr>
+
         <tr ng-repeat="coverage in cdash.coverages" class="row">
-          <td class="col-md-1">
-            <b>{{coverage.group_name}} {{coverage.nice_name}}</b>
+          <td class="col-md-1 border-right center-text">
+            <b>{{coverage.nice_name}}</b>
           </td>
-          <td class="col-md-1">
-            {{coverage.current}}%
+          <td ng-repeat-start="group in coverage.groups" class="col-md-1 center-text">
+            {{group.current}}%
           </td>
           <td class="col-md-1">
             <linechart
-              data=coverage.chart
-              groupname=coverage.group_name_clean
+              data=group.chart
+              groupname=group.name_clean
               measurementname=coverage.name
               project=cdash.projectname_encoded
               anchor="'Coverage'">
             </linechart>
           </td>
-          <td class="col-md-4" colspan="4">
-            <bulletchart data=coverage></bulletchart>
+          <td ng-repeat-end class="col-md-1 border-right">
+            <bulletchart
+              data=group
+              categoryname=coverage.name>
+            </bulletchart>
           </td>
         </tr>
       </table> <!-- end of coverage -->

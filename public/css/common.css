@@ -1112,6 +1112,9 @@ textarea {
 }
 
 /* used in overview.php */
+.center-text {
+  text-align: center;
+}
 .border-right {
   border-right: 2px black solid !important;
 }
@@ -1119,11 +1122,12 @@ textarea {
   border-left: 2px black solid !important;
 }
 .overview-line-chart {
-  height:100px;
-  width:200px;
+  height: 100px;
+  width: 200px;
 }
 .overview-bullet-chart {
-  height:100px;
+  height: 100px;
+  width: 150px;
 }
 
 /* for angular animations */

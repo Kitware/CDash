@@ -436,8 +436,16 @@ $response['measurements'] = $measurements_response;
 
 // coverage
 $coverages_response = array();
-foreach ($build_groups as $build_group) {
-    foreach ($coverage_group_names as $coverage_group_name) {
+$coverage_buildgroups = array();
+
+foreach ($coverage_group_names as $coverage_group_name) {
+    $coverage_category_response = array();
+    $coverage_category_response['name'] =
+        preg_replace('/[ -]/', '_', $coverage_group_name);
+    $coverage_category_response['nice_name'] = $coverage_group_name;
+    $coverage_category_response['groups'] = array();
+
+    foreach ($build_groups as $build_group) {
         // Skip groups that don't have any coverage.
         $found = false;
         for ($i = 0; $i < $date_range; $i++) {
@@ -453,10 +461,12 @@ foreach ($build_groups as $build_group) {
         }
 
         $coverage_response = array();
-        $coverage_response['name'] = preg_replace('/[ -]/', '_', $coverage_group_name);
-        $coverage_response['nice_name'] = $coverage_group_name;
-        $coverage_response['group_name'] = $build_group['name'];
-        $coverage_response['group_name_clean'] =
+
+        $coverage_response['name'] = $build_group['name'];
+        if (!in_array($build_group['name'], $coverage_buildgroups)) {
+            $coverage_buildgroups[] = $build_group['name'];
+        }
+        $coverage_response['name_clean'] =
             sanitize_string($build_group['name']);
         $coverage_response['low'] =
             $coverage_thresholds[$coverage_group_name]['low'];
@@ -474,33 +484,41 @@ foreach ($build_groups as $build_group) {
         $chart_data =
             get_coverage_chart_data($build_group['name'], $coverage_group_name);
         $coverage_response['chart'] = $chart_data;
+        $coverage_category_response['groups'][] = $coverage_response;
+    }
+
+/*
+    if ($show_aggregate) {
+        $coverage_response = array();
+        $coverage_response['name'] = 'nightly_coverage';
+        $coverage_response['nice_name'] = 'nightly coverage';
+        $coverage_response['group_name'] = 'Aggregate';
+        $coverage_response['group_name_clean'] = 'Aggregate';
+
+        $threshold = $project_array['coveragethreshold'];
+        $coverage_response['low'] = 0.7 * $threshold;
+        $coverage_response['medium'] = $threshold;
+        $coverage_response['satisfactory'] = 100;
+
+        list($current_value, $previous_value) =
+            get_recent_coverage_values('Aggregate', 'nightly coverage');
+        $coverage_response['current'] = $current_value;
+        $coverage_response['previous'] = $previous_value;
+
+        $chart_data = get_coverage_chart_data('Aggregate', 'nightly coverage');
+        $coverage_response['chart'] = $chart_data;
         $coverages_response[] = $coverage_response;
+    }
+*/
+
+
+    if (!empty($coverage_category_response['groups'])) {
+        $coverages_response[] = $coverage_category_response;
     }
 }
 
-if ($show_aggregate) {
-    $coverage_response = array();
-    $coverage_response['name'] = 'nightly_coverage';
-    $coverage_response['nice_name'] = 'nightly coverage';
-    $coverage_response['group_name'] = 'Aggregate';
-    $coverage_response['group_name_clean'] = 'Aggregate';
-
-    $threshold = $project_array['coveragethreshold'];
-    $coverage_response['low'] = 0.7 * $threshold;
-    $coverage_response['medium'] = $threshold;
-    $coverage_response['satisfactory'] = 100;
-
-    list($current_value, $previous_value) =
-        get_recent_coverage_values('Aggregate', 'nightly coverage');
-    $coverage_response['current'] = $current_value;
-    $coverage_response['previous'] = $previous_value;
-
-    $chart_data = get_coverage_chart_data('Aggregate', 'nightly coverage');
-    $coverage_response['chart'] = $chart_data;
-    $coverages_response[] = $coverage_response;
-}
-
 $response['coverages'] = $coverages_response;
+$response['coverage_buildgroups'] = $coverage_buildgroups;
 
 // dynamic analysis
 $dynamic_analyses_response = array();
