@@ -344,9 +344,7 @@ while ($build_row = pdo_fetch_array($builds_array)) {
     }
 
     // Check if this build performed dynamic analysis.
-    if (array_key_exists('checker', $build_row) &&
-            array_key_exists('numdefects', $build_row)) {
-
+    if (!empty($build_row['checker'])) {
         // Add this checker to our list if this is the first time we've
         // encountered it.
         $checker = $build_row['checker'];
