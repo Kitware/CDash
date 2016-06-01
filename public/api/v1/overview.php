@@ -355,9 +355,9 @@ while ($build_row = pdo_fetch_array($builds_array)) {
         // Record the number of defects for this day / checker / build group.
         $dynamic_analysis_array = &$dynamic_analysis_data[$day][$group_name];
         if (!array_key_exists($checker, $dynamic_analysis_array)) {
-            $dynamic_analysis_array[$checker] = $build_row['numdefects'];
+            $dynamic_analysis_array[$checker] = intval($build_row['numdefects']);
         } else {
-            $dynamic_analysis_array[$checker] += $build_row['numdefects'];
+            $dynamic_analysis_array[$checker] += intval($build_row['numdefects']);
         }
     }
 }
