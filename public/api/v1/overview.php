@@ -133,39 +133,40 @@ $project_array = pdo_fetch_array($project);
 $has_subproject_groups = false;
 $subproject_groups = array();
 $coverage_categories = array();
-$coverage_thresholds = array();
 $coverage_build_group_names = array();
 if ($has_subprojects) {
     // Detect if the subprojects are split up into groups.
     $groups = $Project->GetSubProjectGroups();
     if (is_array($groups) && !empty($groups)) {
         $has_subproject_groups = true;
-
-        // Store subproject groups in an array keyed by id.
-        // Also store the low, medium, satisfactory threshold values
-        // for this group.
-
         foreach ($groups as $group) {
+            // Store subproject groups in an array keyed by id.
             $subproject_groups[$group->GetId()] = $group;
+
+            // Also store the low, medium, satisfactory threshold values
+            // for this group.
             $group_name = $group->GetName();
             $threshold = $group->GetCoverageThreshold();
-            $coverage_categories[] = $group_name;
-
-            $coverage_thresholds[$group_name] = array();
-            $coverage_thresholds[$group_name]['low'] = 0.7 * $threshold;
-            $coverage_thresholds[$group_name]['medium'] = $threshold;
-            $coverage_thresholds[$group_name]['satisfactory'] = 100;
+            $coverage_category = array();
+            $coverage_category['name'] = $group_name;
+            $coverage_category['position'] = $group->GetPosition();
+            $coverage_category['low'] = 0.7 * $threshold;
+            $coverage_category['medium'] = $threshold;
+            $coverage_category['satisfactory'] = 100;
+            $coverage_categories[] = $coverage_category;
         }
     }
 }
 
 $threshold = $project_array['coveragethreshold'];
 if (!$has_subproject_groups) {
-    $coverage_categories = array('coverage');
-    $coverage_thresholds['coverage'] = array();
-    $coverage_thresholds['coverage']['low'] = 0.7 * $threshold;
-    $coverage_thresholds['coverage']['medium'] = $threshold;
-    $coverage_thresholds['coverage']['satisfactory'] = 100;
+    $coverage_category = array();
+    $coverage_category['name']  = 'coverage';
+    $coverage_category['position']  = 1;
+    $coverage_category['low'] = 0.7 * $threshold;
+    $coverage_category['medium'] = $threshold;
+    $coverage_category['satisfactory'] = 100;
+    $coverage_categories[] = $coverage_category;
 }
 
 foreach ($build_groups as $build_group) {
@@ -205,9 +206,10 @@ for ($i = 0; $i < $date_range; $i++) {
     // coverage
     foreach ($coverage_build_group_names as $build_group_name) {
         foreach ($coverage_categories as $coverage_category) {
-            $coverage_data[$i][$build_group_name][$coverage_category] = array();
+            $category_name = $coverage_category['name'];
+            $coverage_data[$i][$build_group_name][$category_name] = array();
             $coverage_array =
-                &$coverage_data[$i][$build_group_name][$coverage_category];
+                &$coverage_data[$i][$build_group_name][$category_name];
             $coverage_array['loctested'] = 0;
             $coverage_array['locuntested'] = 0;
             $coverage_array['percent'] = 0;
@@ -452,17 +454,18 @@ $coverages_response = array();
 $coverage_buildgroups = array();
 
 foreach ($coverage_categories as $coverage_category) {
+    $category_name = $coverage_category['name'];
     $coverage_category_response = array();
-    $coverage_category_response['name_clean'] =
-        sanitize_string($coverage_category);
-    $coverage_category_response['name'] = $coverage_category;
+    $coverage_category_response['name_clean'] = sanitize_string($category_name);
+    $coverage_category_response['name'] = $category_name;
+    $coverage_category_response['position'] = $coverage_category['position'];
     $coverage_category_response['groups'] = array();
 
     foreach ($coverage_build_group_names as $build_group_name) {
         // Skip groups that don't have any coverage.
         $found = false;
         for ($i = 0; $i < $date_range; $i++) {
-            $cov = &$coverage_data[$i][$build_group_name][$coverage_category];
+            $cov = &$coverage_data[$i][$build_group_name][$category_name];
             $loc_total = $cov['loctested'] + $cov['locuntested'];
             if ($loc_total > 0) {
                 $found = true;
@@ -481,20 +484,17 @@ foreach ($coverage_categories as $coverage_category) {
         }
         $coverage_response['name_clean'] =
             sanitize_string($build_group_name);
-        $coverage_response['low'] =
-            $coverage_thresholds[$coverage_category]['low'];
-        $coverage_response['medium'] =
-            $coverage_thresholds[$coverage_category]['medium'];
-        $coverage_response['satisfactory'] =
-            $coverage_thresholds[$coverage_category]['satisfactory'];
+        $coverage_response['low'] = $coverage_category['low'];
+        $coverage_response['medium'] = $coverage_category['medium'];
+        $coverage_response['satisfactory'] = $coverage_category['satisfactory'];
 
         list($current_value, $previous_value) =
-            get_recent_coverage_values($build_group_name, $coverage_category);
+            get_recent_coverage_values($build_group_name, $category_name);
         $coverage_response['current'] = $current_value;
         $coverage_response['previous'] = $previous_value;
 
         $chart_data =
-            get_coverage_chart_data($build_group_name, $coverage_category);
+            get_coverage_chart_data($build_group_name, $category_name);
         $coverage_response['chart'] = $chart_data;
         $coverage_category_response['groups'][] = $coverage_response;
     }

@@ -70,7 +70,8 @@
           </th>
         </tr>
 
-        <tr ng-repeat="coverage in cdash.coverages" class="row">
+        <tr ng-repeat="coverage in cdash.coverages | orderBy:'position'"
+            class="row">
           <td class="col-md-1 border-right center-text">
             <b>{{coverage.name}}</b>
           </td>
