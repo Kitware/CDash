@@ -80,19 +80,27 @@ $response['menu'] = $menu;
 $response['hasSubProjects'] = $has_subprojects;
 
 // configure/build/test data that we care about.
-$build_measurements = array('configure_warnings', 'configure_errors',
-    'build_warnings', 'build_errors', 'failing_tests');
+$build_measurements = array('configure warnings', 'configure errors',
+    'build warnings', 'build errors', 'failing tests');
+
+// sanitized versions of these measurements.
+$clean_measurements = array(
+    'configure warnings' => 'configure_warnings',
+    'configure errors'   => 'configure_errors',
+    'build warnings'     => 'build_warnings',
+    'build errors'       => 'build_errors',
+    'failing tests'      => 'failing_tests');
 
 // for static analysis, we only care about errors & warnings.
 $static_measurements = array('errors', 'warnings');
 
 // information on how to sort by the various build measurements
 $sort = array(
-    'configure_warnings' => '-configure.warning',
-    'configure_errors'   => '-configure.error',
-    'build_warnings'     => '-compilation.warning',
-    'build_errors'       => '-compilation.error',
-    'failing_tests'      => '-test.fail');
+    'configure warnings' => '-configure.warning',
+    'configure errors'   => '-configure.error',
+    'build warnings'     => '-compilation.warning',
+    'build errors'       => '-compilation.error',
+    'failing tests'      => '-test.fail');
 
 // get the build groups that are included in this project's overview,
 // split up by type (currently only static analysis and general builds).
@@ -287,19 +295,23 @@ while ($build_row = pdo_fetch_array($builds_array)) {
         continue;
     }
 
-    // From here on out, we're dealing with "build" (not static) groups.
-    foreach ($build_measurements as $measurement) {
-        if (!array_key_exists($measurement, $overview_data[$day][$group_name])) {
+    if ($group_name !== 'Aggregate') {
+        // From here on out, we're dealing with "build" (not static) groups.
+        foreach ($build_measurements as $measurement) {
+            $clean_measurement = $clean_measurements[$measurement];
+            if (!array_key_exists($measurement,
+                    $overview_data[$day][$group_name])) {
+                $overview_data[$day][$group_name][$measurement] =
+                    intval($build_row[$clean_measurement]);
+            } else {
+                $overview_data[$day][$group_name][$measurement] +=
+                    $build_row[$clean_measurement];
+            }
+            // Don't let our measurements be thrown off by CDash's tendency
+            // to store -1s in the database.
             $overview_data[$day][$group_name][$measurement] =
-                intval($build_row[$measurement]);
-        } else {
-            $overview_data[$day][$group_name][$measurement] +=
-                $build_row[$measurement];
+                max(0, $overview_data[$day][$group_name][$measurement]);
         }
-        // Don't let our measurements be thrown off by CDash's tendency
-        // to store -1s in the database.
-        $overview_data[$day][$group_name][$measurement] =
-            max(0, $overview_data[$day][$group_name][$measurement]);
     }
 
     // Check if coverage was performed for this build.
@@ -411,9 +423,10 @@ $response['groups'] = $groups;
 
 $measurements_response = array();
 foreach ($build_measurements as $measurement) {
+    $clean_measurement = $clean_measurements[$measurement];
     $measurement_response = array();
     $measurement_response['name'] = $measurement;
-    $measurement_response['nice_name'] = sanitize_string($measurement);
+    $measurement_response['name_clean'] = $clean_measurement;
     $measurement_response['sort'] = $sort[$measurement];
 
     $groups_response = array();
@@ -440,9 +453,9 @@ $coverage_buildgroups = array();
 
 foreach ($coverage_categories as $coverage_category) {
     $coverage_category_response = array();
-    $coverage_category_response['name'] =
-        preg_replace('/[ -]/', '_', $coverage_category);
-    $coverage_category_response['nice_name'] = $coverage_category;
+    $coverage_category_response['name_clean'] =
+        sanitize_string($coverage_category);
+    $coverage_category_response['name'] = $coverage_category;
     $coverage_category_response['groups'] = array();
 
     foreach ($coverage_build_group_names as $build_group_name) {
@@ -498,8 +511,8 @@ $response['coverage_buildgroups'] = $coverage_buildgroups;
 $dynamic_analyses_response = array();
 foreach ($dynamic_analysis_types as $checker) {
     $DA_response = array();
-    $DA_response['name'] = preg_replace('/[ -]/', '_', $checker);
-    $DA_response['nice_name'] = $checker;
+    $DA_response['name_clean'] = sanitize_string($checker);
+    $DA_response['name'] = $checker;
 
     $groups_response = array();
     foreach ($build_groups as $build_group) {
@@ -561,8 +574,8 @@ foreach ($static_groups as $static_group) {
     foreach ($static_measurements as $measurement) {
         $measurement_response = array();
         $measurement_response['name'] = $measurement;
-        $measurement_response['nice_name'] = sanitize_string($measurement);
-        $measurement_response['sort'] = $sort["build_$measurement"];
+        $measurement_response['name_clean'] = sanitize_string($measurement);
+        $measurement_response['sort'] = $sort["build $measurement"];
         $value = get_current_value($static_group['name'], $measurement);
         $measurement_response['value'] = $value;
 

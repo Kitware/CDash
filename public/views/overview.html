@@ -34,7 +34,7 @@
 
         <tr ng-repeat="measurement in cdash.measurements" class="row">
           <td class="col-md-1 border-right center-text">
-            <b>{{measurement.nice_name}}</b>
+            <b>{{measurement.name}}</b>
           </td>
           <td ng-repeat-start="group in measurement.groups"
               class="col-md-1 border-left center-text">
@@ -44,7 +44,7 @@
             <linechart
               data=group.chart
               groupname=group.name_clean
-              measurementname=measurement.name
+              measurementname=measurement.name_clean
               project=cdash.projectname_encoded
               anchor=group.name_clean
               sort=measurement.sort>
@@ -72,7 +72,7 @@
 
         <tr ng-repeat="coverage in cdash.coverages" class="row">
           <td class="col-md-1 border-right center-text">
-            <b>{{coverage.nice_name}}</b>
+            <b>{{coverage.name}}</b>
           </td>
           <td ng-repeat-start="group in coverage.groups" class="col-md-1 center-text">
             {{group.current}}%
@@ -81,7 +81,7 @@
             <linechart
               data=group.chart
               groupname=group.name_clean
-              measurementname=coverage.name
+              measurementname=coverage.name_clean
               project=cdash.projectname_encoded
               anchor="'Coverage'">
             </linechart>
@@ -89,7 +89,7 @@
           <td ng-repeat-end class="col-md-1 border-right">
             <bulletchart
               data=group
-              categoryname=coverage.name>
+              categoryname=coverage.name_clean>
             </bulletchart>
           </td>
         </tr>
@@ -105,20 +105,20 @@
           </a>
         </caption>
         <tr ng-repeat="DA in cdash.dynamicanalyses" class="row">
-          <td ng-repeat-start="group in DA.groups" class="col-md-1">
-            <b>{{DA.nice_name}}</b>
+          <td ng-repeat-start="group in DA.groups" class="col-md-1 center-text">
+            <b>{{DA.name}}</b>
           </td>
-          <td class="col-md-1">
+          <td class="col-md-1 center-text">
             {{group.name}}
           </td>
-          <td class="col-md-1">
+          <td class="col-md-1 center-text">
             {{group.value}}
           </td>
           <td ng-repeat-end class="col-md-1">
             <linechart
               data=group.chart
               groupname=group.name_clean
-              measurementname=DA.name
+              measurementname=DA.name_clean
               project=cdash.projectname_encoded
               anchor="'DynamicAnalysis'">
             </linechart>
@@ -136,20 +136,21 @@
           </a>
         </caption>
         <tr ng-repeat="SA in cdash.staticanalyses" class="row">
-          <td class="col-md-1">
+          <td class="col-md-1 center-text">
             <b>{{SA.group_name}}</b>
           </td>
-          <td ng-repeat-start="measurement in SA.measurements" class="col-md-1">
-            {{measurement.nice_name}}
+          <td ng-repeat-start="measurement in SA.measurements"
+              class="col-md-1 center-text">
+            {{measurement.name}}
           </td>
-          <td class="col-md-1">
+          <td class="col-md-1 center-text">
             {{measurement.value}}
           </td>
           <td ng-repeat-end class="col-md-1">
             <linechart
               data=measurement.chart
               groupname=SA.group_name_clean
-              measurementname=measurement.name
+              measurementname=measurement.name_clean
               project=cdash.projectname_encoded
               anchor=SA.group_name_clean
               sort=measurement.sort>
