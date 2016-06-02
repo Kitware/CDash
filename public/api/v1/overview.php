@@ -100,21 +100,21 @@ $query =
     "SELECT bg.id, bg.name, obg.type FROM overview_components AS obg
     LEFT JOIN buildgroup AS bg ON (obg.buildgroupid = bg.id)
     WHERE obg.projectid = '$projectid' ORDER BY obg.position";
-    $group_rows = pdo_query($query);
-    add_last_sql_error('overview', $projectid);
+$group_rows = pdo_query($query);
+add_last_sql_error('overview', $projectid);
 
-    $build_groups = array();
-    $static_groups = array();
+$build_groups = array();
+$static_groups = array();
 
-    while ($group_row = pdo_fetch_array($group_rows)) {
-        if ($group_row['type'] == 'build') {
-            $build_groups[] = array('id' => $group_row['id'],
-                'name' => $group_row['name']);
-        } elseif ($group_row['type'] == 'static') {
-            $static_groups[] = array('id' => $group_row['id'],
-                'name' => $group_row['name']);
-        }
+while ($group_row = pdo_fetch_array($group_rows)) {
+    if ($group_row['type'] == 'build') {
+        $build_groups[] = array('id' => $group_row['id'],
+            'name' => $group_row['name']);
+    } elseif ($group_row['type'] == 'static') {
+        $static_groups[] = array('id' => $group_row['id'],
+            'name' => $group_row['name']);
     }
+}
 
 // Get default coverage threshold for this project.
 $query = "SELECT coveragethreshold FROM project WHERE id='$projectid'";
@@ -124,8 +124,9 @@ $project_array = pdo_fetch_array($project);
 
 $has_subproject_groups = false;
 $subproject_groups = array();
-$coverage_group_names = array();
+$coverage_categories = array();
 $coverage_thresholds = array();
+$coverage_build_group_names = array();
 if ($has_subprojects) {
     // Detect if the subprojects are split up into groups.
     $groups = $Project->GetSubProjectGroups();
@@ -140,7 +141,7 @@ if ($has_subprojects) {
             $subproject_groups[$group->GetId()] = $group;
             $group_name = $group->GetName();
             $threshold = $group->GetCoverageThreshold();
-            $coverage_group_names[] = $group_name;
+            $coverage_categories[] = $group_name;
 
             $coverage_thresholds[$group_name] = array();
             $coverage_thresholds[$group_name]['low'] = 0.7 * $threshold;
@@ -150,14 +151,19 @@ if ($has_subprojects) {
     }
 }
 
+$threshold = $project_array['coveragethreshold'];
 if (!$has_subproject_groups) {
-    $coverage_group_names = array('coverage');
-    $threshold = $project_array['coveragethreshold'];
+    $coverage_categories = array('coverage');
     $coverage_thresholds['coverage'] = array();
     $coverage_thresholds['coverage']['low'] = 0.7 * $threshold;
     $coverage_thresholds['coverage']['medium'] = $threshold;
     $coverage_thresholds['coverage']['satisfactory'] = 100;
 }
+
+foreach ($build_groups as $build_group) {
+    $coverage_build_group_names[] = $build_group['name'];
+}
+$coverage_build_group_names[] = 'Aggregate';
 
 // Initialize our storage data structures.
 //
@@ -184,21 +190,23 @@ for ($i = 0; $i < $date_range; $i++) {
         // overview
         $overview_data[$i][$build_group_name] = array();
 
-        // coverage
-        foreach ($coverage_group_names as $coverage_group_name) {
-            $coverage_data[$i][$build_group_name][$coverage_group_name] = array();
-            $coverage_array =
-                &$coverage_data[$i][$build_group_name][$coverage_group_name];
-            $coverage_array['loctested'] = 0;
-            $coverage_array['locuntested'] = 0;
-            $coverage_array['percent'] = 0;
-        }
-
         // dynamic analysis
         $dynamic_analysis_data[$i][$build_group_name] = array();
     }
 
-    // overview_data also needs to represent the static groups (if any)
+    // coverage
+    foreach ($coverage_build_group_names as $build_group_name) {
+        foreach ($coverage_categories as $coverage_category) {
+            $coverage_data[$i][$build_group_name][$coverage_category] = array();
+            $coverage_array =
+                &$coverage_data[$i][$build_group_name][$coverage_category];
+            $coverage_array['loctested'] = 0;
+            $coverage_array['locuntested'] = 0;
+            $coverage_array['percent'] = 0;
+        }
+    }
+
+    // static analysis
     foreach ($static_groups as $static_group) {
         $static_group_name = $static_group['name'];
         $overview_data[$i][$static_group_name] = array();
@@ -214,7 +222,7 @@ $end_date = gmdate(FMT_DATETIME, $end_timestamp);
 // Perform a query to get info about all of our builds that fall within this
 // time range.
 $builds_query =
-    "SELECT b.id, b.type,
+    "SELECT b.id, b.type, b.name,
     b.builderrors AS build_errors,
     b.buildwarnings AS build_warnings,
     b.testfailed AS failing_tests,
@@ -229,8 +237,7 @@ $builds_query =
     LEFT JOIN dynamicanalysissummary AS das ON (das.buildid=b.id)
     WHERE b.projectid = '$projectid'
     AND b.starttime BETWEEN '$start_date' AND '$end_date'
-    AND b.parentid IN (-1, 0)
-    AND b.name != 'Aggregate Coverage'";
+    AND b.parentid IN (-1, 0)";
 
 $builds_array = pdo_query($builds_query);
 add_last_sql_error('gather_overview_data');
@@ -268,7 +275,11 @@ while ($build_row = pdo_fetch_array($builds_array)) {
         continue;
     }
 
-    $group_name = get_build_group_name($build_row['groupid']);
+    if ($build_row['name'] == 'Aggregate Coverage') {
+        $group_name = 'Aggregate';
+    } else {
+        $group_name = get_build_group_name($build_row['groupid']);
+    }
 
     // Skip this build if it's not from a group that is represented by
     // the overview dashboard.
@@ -295,7 +306,7 @@ while ($build_row = pdo_fetch_array($builds_array)) {
     if ($build_row['loctested'] + $build_row['locuntested'] > 0) {
 
         // Check for multiple nightly coverage builds in a single day.
-        if ($build_row['type'] === 'Nightly') {
+        if ($group_name !== 'Aggregate' && $build_row['type'] === 'Nightly') {
             if (array_key_exists($day, $aggregate_tracker)) {
                 $show_aggregate = true;
             } else {
@@ -362,34 +373,23 @@ while ($build_row = pdo_fetch_array($builds_array)) {
     }
 }
 
-if ($show_aggregate) {
-    // Get aggregate coverage too.
-    $aggregate_query =
-        "SELECT starttime, loctested, locuntested
-        FROM build AS b
-        INNER JOIN coveragesummary AS cs ON (cs.buildid=b.id)
-        WHERE b.projectid = '$projectid'
-        AND b.starttime BETWEEN '$start_date' AND '$end_date'
-        AND b.parentid IN (-1, 0)
-        AND b.name = 'Aggregate Coverage'";
-
-    $aggregate_array = pdo_query($aggregate_query);
-    add_last_sql_error('gather_overview_coverage');
-
-    while ($aggregate_row = pdo_fetch_array($aggregate_array)) {
-        $day = get_day_index($aggregate_row['starttime']);
-        $coverage_data[$day]['Aggregate']['nightly coverage'] = array();
-        $coverage_data[$day]['Aggregate']['nightly coverage']['loctested'] =
-            $aggregate_row['loctested'];
-        $coverage_data[$day]['Aggregate']['nightly coverage']['locuntested'] =
-            $aggregate_row['locuntested'];
+if (!$show_aggregate) {
+    // Remove the aggregate from our coverage data.
+    $key = array_search('Aggregate', $coverage_build_group_names);
+    if ($key !== false) {
+        unset($coverage_build_group_names[$key]);
+    }
+    for ($day = 0; $day < $date_range; $day++) {
+        if (array_key_exists('Aggregate', $coverage_data[$day])) {
+            unset($coverage_data[$day]['Aggregate']);
+        }
     }
 }
 
 // Compute coverage percentages here.
 for ($i = 0; $i < $date_range; $i++) {
     foreach ($coverage_data[$i] as $build_group_name => &$build_group_data) {
-        foreach ($build_group_data as $coverage_group_name => &$coverage_array) {
+        foreach ($build_group_data as $coverage_category => &$coverage_array) {
             $total_loc =
                 $coverage_array['loctested'] + $coverage_array['locuntested'];
             if ($total_loc == 0) {
@@ -438,18 +438,18 @@ $response['measurements'] = $measurements_response;
 $coverages_response = array();
 $coverage_buildgroups = array();
 
-foreach ($coverage_group_names as $coverage_group_name) {
+foreach ($coverage_categories as $coverage_category) {
     $coverage_category_response = array();
     $coverage_category_response['name'] =
-        preg_replace('/[ -]/', '_', $coverage_group_name);
-    $coverage_category_response['nice_name'] = $coverage_group_name;
+        preg_replace('/[ -]/', '_', $coverage_category);
+    $coverage_category_response['nice_name'] = $coverage_category;
     $coverage_category_response['groups'] = array();
 
-    foreach ($build_groups as $build_group) {
+    foreach ($coverage_build_group_names as $build_group_name) {
         // Skip groups that don't have any coverage.
         $found = false;
         for ($i = 0; $i < $date_range; $i++) {
-            $cov = &$coverage_data[$i][$build_group['name']][$coverage_group_name];
+            $cov = &$coverage_data[$i][$build_group_name][$coverage_category];
             $loc_total = $cov['loctested'] + $cov['locuntested'];
             if ($loc_total > 0) {
                 $found = true;
@@ -462,55 +462,29 @@ foreach ($coverage_group_names as $coverage_group_name) {
 
         $coverage_response = array();
 
-        $coverage_response['name'] = $build_group['name'];
-        if (!in_array($build_group['name'], $coverage_buildgroups)) {
-            $coverage_buildgroups[] = $build_group['name'];
+        $coverage_response['name'] = $build_group_name;
+        if (!in_array($build_group_name, $coverage_buildgroups)) {
+            $coverage_buildgroups[] = $build_group_name;
         }
         $coverage_response['name_clean'] =
-            sanitize_string($build_group['name']);
+            sanitize_string($build_group_name);
         $coverage_response['low'] =
-            $coverage_thresholds[$coverage_group_name]['low'];
+            $coverage_thresholds[$coverage_category]['low'];
         $coverage_response['medium'] =
-            $coverage_thresholds[$coverage_group_name]['medium'];
+            $coverage_thresholds[$coverage_category]['medium'];
         $coverage_response['satisfactory'] =
-            $coverage_thresholds[$coverage_group_name]['satisfactory'];
+            $coverage_thresholds[$coverage_category]['satisfactory'];
 
         list($current_value, $previous_value) =
-            get_recent_coverage_values($build_group['name'],
-                $coverage_group_name);
+            get_recent_coverage_values($build_group_name, $coverage_category);
         $coverage_response['current'] = $current_value;
         $coverage_response['previous'] = $previous_value;
 
         $chart_data =
-            get_coverage_chart_data($build_group['name'], $coverage_group_name);
+            get_coverage_chart_data($build_group_name, $coverage_category);
         $coverage_response['chart'] = $chart_data;
         $coverage_category_response['groups'][] = $coverage_response;
     }
-
-/*
-    if ($show_aggregate) {
-        $coverage_response = array();
-        $coverage_response['name'] = 'nightly_coverage';
-        $coverage_response['nice_name'] = 'nightly coverage';
-        $coverage_response['group_name'] = 'Aggregate';
-        $coverage_response['group_name_clean'] = 'Aggregate';
-
-        $threshold = $project_array['coveragethreshold'];
-        $coverage_response['low'] = 0.7 * $threshold;
-        $coverage_response['medium'] = $threshold;
-        $coverage_response['satisfactory'] = 100;
-
-        list($current_value, $previous_value) =
-            get_recent_coverage_values('Aggregate', 'nightly coverage');
-        $coverage_response['current'] = $current_value;
-        $coverage_response['previous'] = $previous_value;
-
-        $chart_data = get_coverage_chart_data('Aggregate', 'nightly coverage');
-        $coverage_response['chart'] = $chart_data;
-        $coverages_response[] = $coverage_response;
-    }
-*/
-
 
     if (!empty($coverage_category_response['groups'])) {
         $coverages_response[] = $coverage_category_response;
@@ -711,14 +685,14 @@ function get_chart_data($group_name, $measurement)
 }
 
 // Get line chart data for coverage
-function get_coverage_chart_data($build_group_name, $coverage_group_name)
+function get_coverage_chart_data($build_group_name, $coverage_category)
 {
     global $date_range, $coverage_data;
     $chart_data = array();
 
     for ($i = 0; $i < $date_range; $i++) {
         $coverage_array =
-            &$coverage_data[$i][$build_group_name][$coverage_group_name];
+            &$coverage_data[$i][$build_group_name][$coverage_category];
         $total_loc =
             $coverage_array['loctested'] + $coverage_array['locuntested'];
         if ($total_loc == 0) {
@@ -733,7 +707,7 @@ function get_coverage_chart_data($build_group_name, $coverage_group_name)
 
 // Get the current & previous coverage percentage value.
 // These are used by the bullet chart.
-function get_recent_coverage_values($build_group_name, $coverage_group_name)
+function get_recent_coverage_values($build_group_name, $coverage_category)
 {
     global $date_range, $coverage_data;
     $current_value_found = false;
@@ -741,7 +715,7 @@ function get_recent_coverage_values($build_group_name, $coverage_group_name)
 
     for ($i = $date_range - 1; $i > -1; $i--) {
         $coverage_array =
-            &$coverage_data[$i][$build_group_name][$coverage_group_name];
+            &$coverage_data[$i][$build_group_name][$coverage_category];
         $total_loc =
             $coverage_array['loctested'] + $coverage_array['locuntested'];
         if ($total_loc == 0) {
