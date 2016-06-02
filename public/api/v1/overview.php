@@ -155,6 +155,15 @@ if ($has_subprojects) {
             $coverage_category['satisfactory'] = 100;
             $coverage_categories[] = $coverage_category;
         }
+        // Also save a 'Total' category to summarize across groups.
+        $coverage_category = array();
+        $coverage_category['name'] = 'Total';
+        $coverage_category['position'] = 0;
+        $threshold = $project_array['coveragethreshold'];
+        $coverage_category['low'] = 0.7 * $threshold;
+        $coverage_category['medium'] = $threshold;
+        $coverage_category['satisfactory'] = 100;
+        $coverage_categories[] = $coverage_category;
     }
 }
 
@@ -329,6 +338,12 @@ while ($build_row = pdo_fetch_array($builds_array)) {
         }
 
         if ($has_subproject_groups) {
+            // Add this coverage to the Total group.
+            $coverage_data[$day][$group_name]['Total']['loctested'] +=
+                $build_row['loctested'];
+            $coverage_data[$day][$group_name]['Total']['locuntested'] +=
+                $build_row['locuntested'];
+
             // We need to query the children of this build to split up
             // coverage into subproject groups.
             $child_builds_query =
@@ -343,7 +358,9 @@ while ($build_row = pdo_fetch_array($builds_array)) {
             $child_builds_array = pdo_query($child_builds_query);
             add_last_sql_error('gather_overview_data');
             while ($child_build_row = pdo_fetch_array($child_builds_array)) {
-                if ($build_row['loctested'] + $build_row['locuntested'] == 0) {
+                $loctested = $child_build_row['loctested'];
+                $locuntested = $child_build_row['locuntested'];
+                if ($loctested + $locuntested == 0) {
                     continue;
                 }
 
@@ -356,9 +373,9 @@ while ($build_row = pdo_fetch_array($builds_array)) {
                 $subproject_group_name =
                     $subproject_groups[$subproject_group_id]->GetName();
                 $coverage_data[$day][$group_name][$subproject_group_name]['loctested'] +=
-                    $child_build_row['loctested'];
+                    $loctested;
                 $coverage_data[$day][$group_name][$subproject_group_name]['locuntested'] +=
-                    $child_build_row['locuntested'];
+                    $locuntested;
             }
         } else {
             $coverage_data[$day][$group_name]['coverage']['loctested'] +=
