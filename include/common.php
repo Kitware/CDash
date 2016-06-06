@@ -2152,10 +2152,8 @@ function cast_data_for_JSON($value)
         return $value;
     }
     if (is_numeric($value)) {
-        if (strpos($value, '.') !== false) {
-            return (float)$value;
-        }
-        return (int)$value;
+        // Return numeric value of this string.
+        return $value + 0;
     }
     if (is_string($value)) {
         $value = (string)$value;
