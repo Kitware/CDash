@@ -320,6 +320,7 @@ class KWWebTestCase extends WebTestCase
     {
         $contents = file_get_contents($this->configfilename);
         $handle = fopen($this->configfilename, 'w');
+
         $lines = explode("\n", $contents);
         foreach ($lines as $line) {
             if (strpos($line, '?>') !== false) {
