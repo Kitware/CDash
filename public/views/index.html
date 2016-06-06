@@ -141,7 +141,12 @@
           <thead>
             <tr class="table-heading1" >
               <td colspan="1" class="nob">
-                <h3 id="{{::buildgroup.linkname}}"><a href="#" class="grouptrigger">{{::buildgroup.name}}</a></h3>
+                <h3 id="{{::buildgroup.linkname}}">
+                  <a href="#" class="grouptrigger"
+                     ng-click="jumpToAnchor(buildgroup.linkname)">
+                    {{::buildgroup.name}}
+                  </a>
+                </h3>
               </td>
               <td align="right" class="nob" colspan="{{::cdash.displaylabels == 1 ? 15 : 14}}">
               </td>
@@ -290,12 +295,16 @@
       </div>  <!-- end BuildGroups -->
 
       <!-- Coverage -->
-      <a name="Coverage"></a>
+      <a id="Coverage"></a>
       <table ng-if="::cdash.coverages.length > 0 || cdash.coveragegroups.length > 0" border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="coveragetable">
         <thead>
           <tr class="table-heading2">
             <td colspan="1" class="nob">
-              <h3><a href="#" class="grouptrigger">Coverage</a>
+              <h3>
+                <a href="#" class="grouptrigger"
+                   ng-click="jumpToAnchor('Coverage')">
+                  Coverage
+                </a>
               <a ng-if="::cdash.comparecoverage == 1" href="compareCoverage.php?project={{::cdash.projectname}}&date={{::cdash.date}}">Compare Coverage</a></h3>
             </td>
             <td colspan="6" align="right" class="nob">
@@ -460,11 +469,17 @@
       </table>
 
       <!-- Dynamic analysis -->
+      <a id="DynamicAnalysis"></a>
       <table ng-if="::cdash.dynamicanalyses.length > 0" border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="dynamicanalysistable">
         <thead>
           <tr class="table-heading3">
             <td colspan="1" class="nob">
-              <h3><a href="#" class="grouptrigger">Dynamic Analysis</a></h3>
+              <h3>
+                <a href="#" class="grouptrigger"
+                   ng-click="jumpToAnchor('DynamicAnalysis')">
+                  Dynamic Analysis
+                </a>
+              </h3>
             </td>
             <td colspan="5" align="right" class="nob">
             </td>
@@ -526,8 +541,13 @@
 
             <td align="center">{{::da.checker}}</td>
 
-            <td align="center" ng-class="::{'error': da.status != 'passed', 'warning': da.defectcount > 0, 'normal': da.defectcount < 1}">
-              <a ng-href="viewDynamicAnalysis.php?buildid={{::da.buildid}}">{{::da.defectcount}}</a>
+            <td align="center" ng-class="::{'error': da.defectcount > 0, 'normal': da.defectcount < 1}">
+              <a ng-if="::da.childlink" ng-href="{{::da.childlink}}">
+                {{::da.defectcount}}
+              </a>
+              <a ng-if="::!da.childlink" ng-href="viewDynamicAnalysis.php?buildid={{::da.buildid}}">
+                {{::da.defectcount}}
+              </a>
             </td>
             <td align="center" ng-class="::{'nob': cdash.displaylabels == 0}">
               <span class="builddateelapsed" alt="{{::da.date}}">{{::da.dateelapsed}}</span>

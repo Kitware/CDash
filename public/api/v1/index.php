@@ -45,7 +45,10 @@ if (!$db ||
         return;
     } else {
         // redirect to the install.php script
-        header('Location: install.php');
+        $response = array();
+        $response['redirect'] = get_server_URI() . '/install.php';
+        echo json_encode($response);
+        return;
     }
     return;
 }
@@ -459,6 +462,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
         b.testfailed AS counttestsfailed,
         b.testpassed AS counttestspassed,
         b.testtimestatusfailed AS countteststimestatusfailed,
+        cs.loctested, cs.locuntested,
+        csd.loctested AS loctesteddiff, csd.locuntested AS locuntesteddiff,
+        das.checker, das.numdefects,
         sp.id AS subprojectid,
         sp.groupid AS subprojectgroup,
         g.name AS groupname,gp.position,g.id AS groupid,
@@ -472,6 +478,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
             LEFT JOIN build2update AS b2u ON (b2u.buildid=b.id)
             LEFT JOIN buildupdate AS bu ON (b2u.updateid=bu.id)
             LEFT JOIN buildinformation AS i ON (i.buildid=b.id)
+            LEFT JOIN coveragesummary AS cs ON (cs.buildid=b.id)
+            LEFT JOIN coveragesummarydiff AS csd ON (csd.buildid=b.id)
+            LEFT JOIN dynamicanalysissummary AS das ON (das.buildid=b.id)
             LEFT JOIN builderrordiff AS be_diff ON (be_diff.buildid=b.id AND be_diff.type=0)
             LEFT JOIN builderrordiff AS bw_diff ON (bw_diff.buildid=b.id AND bw_diff.type=1)
             LEFT JOIN configureerrordiff AS ce_diff ON (ce_diff.buildid=b.id AND ce_diff.type=1)
@@ -620,8 +629,11 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $build_row['countbuildwarningdiffn'] = 0;
         }
 
-        $hasconfiguredata = $build_row['countconfigureerrors'] != -1 ||
-            $build_row['countconfigurewarnings'] != -1;
+        $build_row['hasconfigure'] = 0;
+        if ($build_row['countconfigureerrors'] != -1 ||
+                $build_row['countconfigurewarnings'] != -1) {
+            $build_row['hasconfigure'] = 1;
+        }
 
         if ($build_row['countconfigureerrors'] < 0) {
             $build_row['countconfigureerrors'] = 0;
@@ -935,40 +947,41 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $buildgroups_response[$i]['hascompilationdata'] = true;
         }
 
-        $configure_response = array();
-
-        if ($include_subprojects) {
-            $nconfigureerrors = $selected_configure_errors;
-            $nconfigurewarnings = $selected_configure_warnings;
-            $configureduration = $selected_configure_duration;
-        } else {
-            $nconfigureerrors = $build_array['countconfigureerrors'] -
-                $selected_configure_errors;
-            $nconfigurewarnings = $build_array['countconfigurewarnings'] -
-                $selected_configure_warnings;
-            $configureduration = $build_array['configureduration'] -
-                $selected_configure_duration;
-        }
-        $configure_response['error'] = $nconfigureerrors;
-        $buildgroups_response[$i]['numconfigureerror'] += $nconfigureerrors;
-
-        $configure_response['warning'] = $nconfigurewarnings;
-        $buildgroups_response[$i]['numconfigurewarning'] += $nconfigurewarnings;
-
-        if (!$include_subprojects && !$exclude_subprojects) {
-            $configure_response['warningdiff'] =
-                $build_array['countconfigurewarningdiff'];
-        }
-
-        $configure_response['time'] = time_difference($configureduration, true);
-        $configure_response['timefull'] = $configureduration;
-        $buildgroups_response[$i]['configureduration'] += $configureduration;
-
         $build_response['hasconfigure'] = false;
-        if ($hasconfiguredata) {
-            $build_response['configure'] = $configure_response;
+        if ($build_array['hasconfigure'] != 0) {
             $build_response['hasconfigure'] = true;
+            $configure_response = array();
+
+            if ($include_subprojects) {
+                $nconfigureerrors = $selected_configure_errors;
+                $nconfigurewarnings = $selected_configure_warnings;
+                $configureduration = $selected_configure_duration;
+            } else {
+                $nconfigureerrors = $build_array['countconfigureerrors'] -
+                    $selected_configure_errors;
+                $nconfigurewarnings = $build_array['countconfigurewarnings'] -
+                    $selected_configure_warnings;
+                $configureduration = $build_array['configureduration'] -
+                    $selected_configure_duration;
+            }
+            $configure_response['error'] = $nconfigureerrors;
+            $buildgroups_response[$i]['numconfigureerror'] += $nconfigureerrors;
+
+            $configure_response['warning'] = $nconfigurewarnings;
+            $buildgroups_response[$i]['numconfigurewarning'] += $nconfigurewarnings;
+
+            if (!$include_subprojects && !$exclude_subprojects) {
+                $configure_response['warningdiff'] =
+                    $build_array['countconfigurewarningdiff'];
+            }
+
+            $configure_response['time'] =
+                time_difference($configureduration, true);
+            $configure_response['timefull'] = $configureduration;
+
+            $build_response['configure'] = $configure_response;
             $buildgroups_response[$i]['hasconfiguredata'] = true;
+            $buildgroups_response[$i]['configureduration'] += $configureduration;
         }
 
         $build_response['hastest'] = false;
@@ -1116,6 +1129,15 @@ function echo_main_dashboard_JSON($project_instance, $date)
         }
         $build_response['timesummary'] = $timesummary;
 
+        if ($include_subprojects || $exclude_subprojects) {
+            // Check if this build should be filtered out now that its
+            // numbers have been updated by the SubProject include/exclude
+            // filter.
+            if (!build_survives_filter($build_response, $filterdata)) {
+                continue;
+            }
+        }
+
         if ($build_array['name'] != 'Aggregate Coverage') {
             $buildgroups_response[$i]['builds'][] = $build_response;
         }
@@ -1136,12 +1158,13 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
         $coverageIsGrouped = false;
 
-        $coverages = pdo_query("SELECT * FROM coveragesummary WHERE buildid='$buildid'");
-        while ($coverage_array = pdo_fetch_array($coverages)) {
+        if (!empty($build_array['loctested'])) {
+            $loctested = $build_array['loctested'];
+            $locuntested = $build_array['locuntested'];
             $coverage_response = array();
             $coverage_response['buildid'] = $build_array['id'];
             if ($linkToChildCoverage) {
-                $coverage_response['childlink'] = "$child_builds_hyperlink#Coverage";
+                $coverage_response['childlink'] = "$child_builds_hyperlink##Coverage";
             }
 
             if ($build_array['type'] === 'Nightly' && $build_array['name'] !== 'Aggregate Coverage') {
@@ -1155,35 +1178,32 @@ function echo_main_dashboard_JSON($project_instance, $date)
             }
 
             $percent = round(
-                compute_percentcoverage($coverage_array['loctested'],
-                    $coverage_array['locuntested']), 2);
+                compute_percentcoverage($loctested,
+                    $locuntested), 2);
 
             if ($build_array['subprojectgroup']) {
                 $groupId = $build_array['subprojectgroup'];
                 if (array_key_exists($groupId, $coverage_groups)) {
                     $coverageIsGrouped = true;
-                    $coverageThreshold = $coverage_groups[$groupId]['thresholdgreen'];
-                    $coverage_groups[$groupId]['loctested'] +=
-                        $coverage_array['loctested'];
-                    $coverage_groups[$groupId]['locuntested'] +=
-                        $coverage_array['locuntested'];
+                    $coverageThreshold =
+                        $coverage_groups[$groupId]['thresholdgreen'];
+                    $coverage_groups[$groupId]['loctested'] += $loctested;
+                    $coverage_groups[$groupId]['locuntested'] += $locuntested;
                 }
             }
 
             $coverage_response['percentage'] = $percent;
-            $coverage_response['locuntested'] = intval($coverage_array['locuntested']);
-            $coverage_response['loctested'] = intval($coverage_array['loctested']);
+            $coverage_response['locuntested'] = intval($locuntested);
+            $coverage_response['loctested'] = intval($loctested);
 
             // Compute the diff
-            $coveragediff = pdo_query("SELECT * FROM coveragesummarydiff WHERE buildid='$buildid'");
-            if (pdo_num_rows($coveragediff) > 0) {
-                $coveragediff_array = pdo_fetch_array($coveragediff);
-                $loctesteddiff = $coveragediff_array['loctested'];
-                $locuntesteddiff = $coveragediff_array['locuntested'];
+            if (!empty($build_array['loctesteddiff'])) {
+                $loctesteddiff = $build_array['loctesteddiff'];
+                $locuntesteddiff = $build_array['locuntesteddiff'];
                 @$previouspercent =
-                    round(($coverage_array['loctested'] - $loctesteddiff) /
-                        ($coverage_array['loctested'] - $loctesteddiff +
-                            $coverage_array['locuntested'] - $locuntesteddiff)
+                    round(($loctested - $loctesteddiff) /
+                        ($loctested - $loctesteddiff +
+                            $locuntested - $locuntesteddiff)
                         * 100, 2);
                 $percentdiff = round($percent - $previouspercent, 2);
                 $coverage_response['percentagediff'] = $percentdiff;
@@ -1223,26 +1243,31 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
         // Dynamic Analysis
         //
-        $dynanalysis = pdo_query("SELECT checker,status FROM dynamicanalysis WHERE buildid='$buildid' LIMIT 1");
-        while ($dynanalysis_array = pdo_fetch_array($dynanalysis)) {
+        if (!empty($build_array['checker'])) {
+
+            // Determine if this is a parent build with no dynamic analysis
+            // of its own.
+            $linkToChildren = false;
+            if ($numchildren > 0) {
+                $countChildrenResult = pdo_single_row_query(
+                        'SELECT count(id) AS num FROM dynamicanalysis
+                        WHERE buildid=' . qnum($build_array['id']));
+                if ($countChildrenResult['num'] == 0) {
+                    $linkToChildren = true;
+                }
+            }
+
             $DA_response = array();
             $DA_response['site'] = $build_array['sitename'];
             $DA_response['buildname'] = $build_array['name'];
             $DA_response['buildid'] = $build_array['id'];
-
-            $DA_response['checker'] = $dynanalysis_array['checker'];
-            $DA_response['status'] = $dynanalysis_array['status'];
-            $defect = pdo_query("SELECT sum(dd.value) FROM dynamicanalysisdefect AS dd,dynamicanalysis as d
-                    WHERE d.buildid='$buildid' AND dd.dynamicanalysisid=d.id");
-            $defectcount = pdo_fetch_array($defect);
-            if (!isset($defectcount[0])) {
-                $defectcounts = 0;
-            } else {
-                $defectcounts = $defectcount[0];
-            }
-            $DA_response['defectcount'] = $defectcounts;
+            $DA_response['checker'] = $build_array['checker'];
+            $DA_response['defectcount'] = $build_array['numdefects'];
             $starttimestamp = strtotime($build_array['starttime'] . ' UTC');
             $DA_response['datefull'] = $starttimestamp;
+            if ($linkToChildren) {
+                $DA_response['childlink'] = "$child_builds_hyperlink##DynamicAnalysis";
+            }
 
             // If the data is more than 24h old then we switch from an elapsed to a normal representation
             if (time() - $starttimestamp < 86400) {

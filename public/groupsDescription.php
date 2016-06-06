@@ -56,10 +56,10 @@ $group = pdo_query("SELECT buildgroup.name,buildgroup.description
 while ($group_array = pdo_fetch_array($group)) {
     ?>
     <tr class="<?php if ($i % 2 == 0) {
-    echo 'treven';
-} else {
-    echo 'trodd';
-}
+        echo 'treven';
+    } else {
+        echo 'trodd';
+    }
     ?>">
         <td align="center" width="30%"><b><?php echo $group_array['name'];
     ?></b></td>

@@ -117,12 +117,12 @@ for ($beginning_timestamp = $starttime; $beginning_timestamp > $starttime - 3600
         });
 
         <?php if (isset($zoomout)) {
-    ?>
+            ?>
         $.plot($("#testfailuregrapholder"), [{label: "# builds failed", data: d1}], options);
         <?php
 
-} else {
-    ?>
+        } else {
+            ?>
         $.plot($("#testfailuregrapholder"), [{label: "# builds failed", data: d1}],
             $.extend(true, {}, options, {
                 xaxis: {
@@ -131,7 +131,7 @@ for ($beginning_timestamp = $starttime; $beginning_timestamp > $starttime - 3600
             }));
         <?php
 
-} ?>
+        } ?>
     });
 
 </script>

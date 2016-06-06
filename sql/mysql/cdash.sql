@@ -301,6 +301,20 @@ CREATE TABLE `dynamicanalysisdefect` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `dynamicanalysissummary`
+--
+
+CREATE TABLE `dynamicanalysissummary` (
+  `buildid` int(11) NOT NULL DEFAULT '0',
+  `checker` varchar(60) NOT NULL default '',
+  `numdefects` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY `buildid` (`buildid`)
+);
+
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `image`
 --
 
@@ -1408,6 +1422,21 @@ CREATE TABLE IF NOT EXISTS `buildfile` (
   KEY (`filename`),
   KEY (`type`),
   KEY (`md5`)
+);
+
+CREATE TABLE IF NOT EXISTS `password` (
+  `userid` int(11) NOT NULL,
+  `password` varchar(40) NOT NULL default '',
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  KEY `userid` (`userid`)
+);
+
+CREATE TABLE IF NOT EXISTS `lockout` (
+  `userid` int(11) NOT NULL,
+  `failedattempts` tinyint(1) DEFAULT '0',
+  `islocked` tinyint(1) NOT NULL DEFAULT '0',
+  `unlocktime` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
+  PRIMARY KEY  (`userid`)
 );
 
 --

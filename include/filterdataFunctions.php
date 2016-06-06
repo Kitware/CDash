@@ -113,6 +113,7 @@ class IndexPhpFilters extends DefaultFilters
         $xml .= getFilterDefinitionXML('hasdynamicanalysis', 'Has Dynamic Analysis', 'bool', '', '');
         $xml .= getFilterDefinitionXML('hasusernotes', 'Has User Notes', 'bool', '', '');
         $xml .= getFilterDefinitionXML('label', 'Label', 'string', '', '');
+        $xml .= getFilterDefinitionXML('revision', 'Revision', 'string', '', '');
         $xml .= getFilterDefinitionXML('site', 'Site', 'string', '', '');
         $xml .= getFilterDefinitionXML('buildgenerator', 'Submission Client', 'string', '', '2.8');
         $xml .= getFilterDefinitionXML('subproject', 'SubProject', 'string', '', '');
@@ -224,6 +225,10 @@ class IndexPhpFilters extends DefaultFilters
                 $sql_field = "(SELECT $this->TextConcat FROM label, label2build WHERE label2build.labelid=label.id AND label2build.buildid=b.id)";
 
             }
+                break;
+
+            case 'revision':
+                $sql_field = 'bu.revision';
                 break;
 
             case 'site': {
@@ -894,6 +899,21 @@ function get_filterdata_from_request($page_id = '')
             $filterdata['hasdateclause'] = 1;
         }
 
+        // Time durations can either be specified as a number of seconds,
+        // or as a string representing a time interval.
+        if (strpos($field, 'duration') !== false) {
+            $input_value = trim($sql_value, "'");
+            $sql_value = get_seconds_from_interval($input_value);
+            if ($input_value !== $sql_value &&
+                    ($field === 'buildduration' || $field === 'updateduration')) {
+                // Build duration and update duration are stored as
+                // number of minutes (not seconds) so if we just converted
+                // this value from string to seconds we should also
+                // convert it from seconds to minutes here as well.
+                $sql_value /= 60.0;
+            }
+        }
+
         if ($sql_field != '' && $sql_compare != '') {
             if ($clauses > 0) {
                 $sql .= ' ' . $sql_combine . ' ';
@@ -1041,4 +1061,126 @@ function get_filterurl()
     // ...but we need ampersands to pass through unescaped, so convert them back.
     $filterurl = str_replace('&amp;', '&', $filterurl);
     return $filterurl;
+}
+
+// Returns true if the build should be included based on the specified filters,
+// false otherwise.
+function build_survives_filter($build_response, $filterdata)
+{
+    $filters = $filterdata['filters'];
+    foreach ($filters as $filter) {
+        // Get the build value that's relevant to this filter.
+        // (number of configure warnings, number of test failures, etc.)
+        $build_value = false;
+        switch ($filter['field']) {
+            case 'buildduration':
+                if ($build_response['hascompilation']) {
+                    $build_value = $build_response['compilation']['timefull'];
+                }
+                break;
+
+            case 'builderrors':
+                if ($build_response['hascompilation']) {
+                    $build_value = $build_response['compilation']['error'];
+                }
+                break;
+
+            case 'buildwarnings':
+                if ($build_response['hascompilation']) {
+                    $build_value = $build_response['compilation']['warning'];
+                }
+                break;
+
+            case 'configureduration':
+                if ($build_response['hasconfigure']) {
+                    $build_value = $build_response['configure']['timefull'];
+                }
+                break;
+
+            case 'configureerrors':
+                if ($build_response['hasconfigure']) {
+                    $build_value = $build_response['configure']['error'];
+                }
+                break;
+
+            case 'configurewarnings':
+                if ($build_response['hasconfigure']) {
+                    $build_value = $build_response['configure']['warning'];
+                }
+                break;
+
+            case 'testsduration':
+                if ($build_response['hastest']) {
+                    $build_value = $build_response['test']['timefull'];
+                }
+                break;
+
+            case 'testsfailed':
+                if ($build_response['hastest']) {
+                    $build_value = $build_response['test']['fail'];
+                }
+                break;
+
+            case 'testsnotrun':
+                if ($build_response['hastest']) {
+                    $build_value = $build_response['test']['notrun'];
+                }
+                break;
+
+            case 'testspassed':
+                if ($build_response['hastest']) {
+                    $build_value = $build_response['test']['pass'];
+                }
+                break;
+
+            case 'testtimestatus':
+                if ($build_response['hastest']) {
+                    $build_value = $build_response['test']['timestatus'];
+                }
+                break;
+
+            default:
+                continue;
+                break;
+        }
+
+        // Get the filter's value for comparison.
+        $filter_value = $filter['value'];
+
+        // Compare the build & filter's values, returning false if
+        // they don't match the filter's expectation.
+        switch ($filter['compare']) {
+            case 41:
+                // The filter expects the numbers to be equal.
+                if ($build_value != $filter_value) {
+                    return false;
+                }
+                break;
+
+            case 42:
+                // The filter expects the numbers to not be equal.
+                if ($build_value == $filter_value) {
+                    return false;
+                }
+                break;
+
+            case 43:
+                // The filter expects the build value to be greater.
+                if ($build_value <= $filter_value) {
+                    return false;
+                }
+                break;
+
+            case 44:
+                // The filter expects the build value to be lesser.
+                if ($build_value >= $filter_value) {
+                    return false;
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
+    return true;
 }

@@ -784,3 +784,58 @@ function AddUniqueConstraintToSiteTable($site_table)
         pdo_query("ALTER TABLE $site_table ADD UNIQUE KEY (name,ip)");
     }
 }
+
+
+/** Fix builds that performed dynamic analysis but don't have a row in the
+ *  summary table.
+ **/
+function PopulateDynamicAnalysisSummaryTable()
+{
+    require_once 'models/dynamicanalysissummary.php';
+    $pdo = get_link_identifier()->getPdo();
+
+    // Find all the builds that need to have a row created in the
+    // dynamicanalysissummaryrows table.
+    $build_stmt = $pdo->prepare(
+        'SELECT DISTINCT da.buildid, da.checker FROM dynamicanalysis AS da
+        LEFT JOIN dynamicanalysissummary AS das ON (da.buildid=das.buildid)
+        WHERE das.buildid IS NULL');
+    $build_stmt->execute();
+    while ($build_row = $build_stmt->fetch()) {
+        $buildid= $build_row['buildid'];
+        // Get the number of defects for this build.
+        $defect_stmt = $pdo->prepare(
+            'SELECT sum(b.value) AS numdefects FROM dynamicanalysis AS a
+            INNER JOIN dynamicanalysisdefect AS b ON (a.id=b.dynamicanalysisid)
+            WHERE a.buildid=?');
+        $defect_stmt->execute(array($buildid));
+        $defect_row = $defect_stmt->fetch();
+
+        // Create the summary for this build.
+        $summary = new DynamicAnalysisSummary();
+        $summary->BuildId = $buildid;
+        $summary->Checker = $build_row['checker'];
+        $summary->AddDefects($defect_row['numdefects']);
+
+        // Determine whether this is a parent, child, or standalone build.
+        $parent_stmt = $pdo->prepare('SELECT parentid FROM build WHERE id=?');
+        $parent_stmt->execute(array($buildid));
+        $parent_row = $parent_stmt->fetch();
+        $parentid = $parent_row['parentid'];
+
+        // Insert the summary into the database.
+        if ($parentid == 0) {
+            // Standalone build.
+            $summary->Insert(false);
+        } elseif ($parentid == -1) {
+            // Parent build.
+            $summary->Insert(true);
+        } else {
+            // Child build.
+            $summary->Insert(false);
+            // Also add these defects to the parent.
+            $summary->BuildId = $parentid;
+            $summary->Insert(true);
+        }
+    }
+}

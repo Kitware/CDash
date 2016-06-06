@@ -48,7 +48,7 @@ CDash.filter("showEmptyBuildsLast", function () {
 })
 
 
-.controller('IndexController', function IndexController($scope, $rootScope, $location, $anchorScroll, $http, $filter, $timeout, multisort, filters, renderTimer) {
+.controller('IndexController', function IndexController($scope, $rootScope, $location, $http, $filter, $timeout, anchors, filters, multisort, renderTimer) {
   // Show spinner while page is loading.
   $scope.loading = true;
 
@@ -248,11 +248,13 @@ CDash.filter("showEmptyBuildsLast", function () {
       }, 30000); // 30s
     }
 
-    // Honor intra-page anchors.
-    if ($location.path() != '') {
-      $location.hash($location.path().replace('/',''));
-      $location.path("");
-      $anchorScroll();
+    // Expose the jumpToAnchor function to the scope.
+    // This allows us to call it from the HTML template.
+    $scope.jumpToAnchor = anchors.jumpToAnchor;
+
+    // Honor any intra-page anchor specified in the URI.
+    if ($location.hash() != '') {
+      anchors.jumpToAnchor($location.hash());
     }
 
   }).finally(function() {

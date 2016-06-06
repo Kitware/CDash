@@ -116,6 +116,11 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
       "type": "string",
       "defaultvalue": ""
     },
+    "revision": {
+      "text": "Revision",
+      "type": "string",
+      "defaultvalue": ""
+    },
     "site": {
       "text": "Site",
       "type": "string",

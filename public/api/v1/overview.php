@@ -221,10 +221,12 @@ $builds_query =
     b.configureerrors AS configure_errors,
     b.configurewarnings AS configure_warnings, b.starttime,
     cs.loctested AS loctested, cs.locuntested AS locuntested,
+    das.checker AS checker, das.numdefects AS numdefects,
     b2g.groupid AS groupid
     FROM build AS b
     LEFT JOIN build2group AS b2g ON (b2g.buildid=b.id)
     LEFT JOIN coveragesummary AS cs ON (cs.buildid=b.id)
+    LEFT JOIN dynamicanalysissummary AS das ON (das.buildid=b.id)
     WHERE b.projectid = '$projectid'
     AND b.starttime BETWEEN '$start_date' AND '$end_date'
     AND b.parentid IN (-1, 0)
@@ -237,6 +239,10 @@ add_last_sql_error('gather_overview_data');
 // show the aggregate.
 $aggregate_tracker = array();
 $show_aggregate = false;
+
+// Keep track of the different types of dynamic analysis that are being
+// performed on our build groups of interest.
+$dynamic_analysis_types = array();
 
 while ($build_row = pdo_fetch_array($builds_array)) {
     // get what day this build is for.
@@ -336,6 +342,24 @@ while ($build_row = pdo_fetch_array($builds_array)) {
                 $build_row['locuntested'];
         }
     }
+
+    // Check if this build performed dynamic analysis.
+    if (!empty($build_row['checker'])) {
+        // Add this checker to our list if this is the first time we've
+        // encountered it.
+        $checker = $build_row['checker'];
+        if (!in_array($checker, $dynamic_analysis_types)) {
+            $dynamic_analysis_types[] = $checker;
+        }
+
+        // Record the number of defects for this day / checker / build group.
+        $dynamic_analysis_array = &$dynamic_analysis_data[$day][$group_name];
+        if (!array_key_exists($checker, $dynamic_analysis_array)) {
+            $dynamic_analysis_array[$checker] = intval($build_row['numdefects']);
+        } else {
+            $dynamic_analysis_array[$checker] += intval($build_row['numdefects']);
+        }
+    }
 }
 
 if ($show_aggregate) {
@@ -374,62 +398,6 @@ for ($i = 0; $i < $date_range; $i++) {
             $coverage_array['percent'] =
                 round(($coverage_array['loctested'] / $total_loc) * 100, 2);
         }
-    }
-}
-
-// Dynamic analysis is handled here with a separate query.
-$defects_query =
-    "SELECT da.checker AS checker, dd.value AS defects,
-    b2g.groupid AS groupid, b.starttime AS starttime
-    FROM build AS b
-    LEFT JOIN build2group AS b2g ON (b2g.buildid=b.id)
-    LEFT JOIN dynamicanalysis as da ON (da.buildid = b.id)
-    LEFT JOIN dynamicanalysisdefect as dd ON (dd.dynamicanalysisid=da.id)
-    WHERE b.projectid = '$projectid'
-    AND b.starttime BETWEEN '$start_date' AND '$end_date'
-    AND checker IS NOT NULL";
-$defects_array = pdo_query($defects_query);
-add_last_sql_error('gather_dynamic_analysis_data');
-
-// Keep track of the different types of dynamic analysis that are being
-// performed on our build groups of interest.
-$dynamic_analysis_types = array();
-
-while ($defect_row = pdo_fetch_array($defects_array)) {
-    $group_name = get_build_group_name($defect_row['groupid']);
-    // Is this a valid groupid?
-    if (!$group_name) {
-        continue;
-    }
-
-    // make sure this row has both checker & defect info for us
-    if (!array_key_exists('checker', $defect_row) ||
-            !array_key_exists('defects', $defect_row)) {
-        continue;
-    }
-    if (is_null($defect_row['defects'])) {
-        $defect_row['defects'] = 0;
-    }
-    if (!is_numeric($defect_row['defects'])) {
-        continue;
-    }
-
-    // Get the day that these results are for.
-    $day = get_day_index($defect_row['starttime']);
-
-    // add this DA checker to our list if its the first time we've
-    // encountered it.
-    $checker = $defect_row['checker'];
-    if (!in_array($checker, $dynamic_analysis_types)) {
-        $dynamic_analysis_types[] = $checker;
-    }
-
-    // Record this defect value for this checker & build group.
-    $dynamic_analysis_array = &$dynamic_analysis_data[$day][$group_name];
-    if (!array_key_exists($checker, $dynamic_analysis_array)) {
-        $dynamic_analysis_array[$checker] = $defect_row['defects'];
-    } else {
-        $dynamic_analysis_array[$checker] += $defect_row['defects'];
     }
 }
 
