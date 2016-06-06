@@ -42,13 +42,6 @@ class OverrideHeaderTestCase extends KWWebTestCase
         touch("$CDASH_ROOT_DIR/public/local/views/header.html");
         touch("$CDASH_ROOT_DIR/public/local/views/footer.html");
 
-        add_log('brokentests: ' . $CDASH_ROOT_DIR, 'testOverrideHeader', LOG_ERR);
-
-        add_log('brokentests: ' . (string) file_exists("$CDASH_ROOT_DIR/public/local/views/header.html"),
-                'testOverrideHeader', LOG_ERR);
-        add_log('brokentests: ' . (string) is_readable("$CDASH_ROOT_DIR/public/local/views/header.html"),
-                'testOverrideHeader', LOG_ERR);
-
         // Verify that these are used.
         $this->get($this->url . '/api/v1/index.php?project=InsightExample');
         $content = $this->getBrowser()->getContent();
