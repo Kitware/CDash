@@ -227,8 +227,8 @@ class SequenceIndependenceTestCase extends KWWebTestCase
             $this->fail("Expected starttime to be '2009-02-23 07:10:37', found " . $build_row['starttime']);
             return false;
         }
-        if ($build_row['endtime'] != '2009-02-23 12:32:00') {
-            $this->fail("Expected endtime to be '2009-02-23 12:32:00', found " . $build_row['endtime']);
+        if ($build_row['endtime'] != '2009-02-23 12:32:22') {
+            $this->fail("Expected endtime to be '2009-02-23 12:32:22', found " . $build_row['endtime']);
             return false;
         }
         if ($build_row['configureerrors'] != 0) {
