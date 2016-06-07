@@ -2176,7 +2176,8 @@ function get_server_siteid()
     $server->Name = 'CDash Server';
     if (!$server->Exists()) {
         // Create it if it doesn't exist.
-        $server_ip = $_SERVER['SERVER_ADDR'];
+        // SERVER_ADDR is not guaranteed to exist on every web server
+        $server_ip = @$_SERVER['SERVER_ADDR'];
         $server->Ip = $server_ip;
         $server->Insert();
     }

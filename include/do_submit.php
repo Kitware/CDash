@@ -16,43 +16,85 @@
 
 //error_reporting(0); // disable error reporting
 
+require dirname(__DIR__) . '/vendor/autoload.php';
 include 'include/ctestparser.php';
 include_once 'include/common.php';
 include_once 'include/createRSS.php';
 include 'include/sendemail.php';
 
-function do_submit($filehandle, $projectid, $expected_md5 = '', $do_checksum = true,
+/**
+ * Given a filename, query the CDash API for its contents and return
+ * a read-only file handle.
+ * This is useful for workers running on other machines that need access to build xml.
+ **/
+function fileHandleFromSubmissionId($submissionId)
+{
+    global $CDASH_BASE_URL;
+
+    $tmpFilename = tempnam(sys_get_temp_dir(), 'cdash-submission-');
+    $client = new GuzzleHttp\Client();
+    $response = $client->request('GET',
+                                 $CDASH_BASE_URL . '/api/v1/viewBuildSubmissionXml.php',
+                                 array('query' => array('buildsubmissionid' => $submissionId),
+                                       'save_to' => $tmpFilename));
+
+    if ($response->getStatusCode() === 200) {
+        // @todo I'm sure Guzzle can be used to return a file handle from the stream, but for now
+        // I'm just creating a temporary file with the output
+        return fopen($tmpFilename, 'r');
+    } else {
+        // Log the status code and build submission UUID (404 means it's already been processed)
+        add_log('Failed to retrieve a file handle from build UUID ' .
+                $submissionId . '(' . (string) $response->getStatusCode() . ')',
+                'fileHandleFromSubmissionId', LOG_WARNING);
+        return false;
+    }
+}
+
+function getSubmissionFileHandle($fileHandleOrSubmissionId)
+{
+    if (is_resource($fileHandleOrSubmissionId)) {
+        return $fileHandleOrSubmissionId;
+    } elseif (is_string($fileHandleOrSubmissionId)) {
+        return fileHandleFromSubmissionId($fileHandleOrSubmissionId);
+    } else {
+        add_log('Failed to get a file handle for submission (was type ' . gettype($fileHandleOrSubmissionId) . ')',
+                'getSubmissionFileHandle', LOG_ERR);
+        return false;
+    }
+}
+
+/**
+ * This method could be running on a worker that is either remote or local, so it accepts
+ * a file handle or a filename that it can query the CDash API for.
+ **/
+function do_submit($fileHandleOrSubmissionId, $projectid, $expected_md5 = '', $do_checksum = true,
                    $submission_id = 0)
 {
     include 'config/config.php';
+    $filehandle = getSubmissionFileHandle($fileHandleOrSubmissionId);
+
+    if ($filehandle === false) {
+        // Logs will have already captured this issue at this point
+        return false;
+    }
 
     // We find the daily updates
     // If we have php curl we do it asynchronously
-    if (function_exists('curl_init') == true) {
-        $currentURI = get_server_URI(true);
-        if ($CDASH_ASYNCHRONOUS_SUBMISSION) {
-            $request = $currentURI . '/dailyupdatescurl.php?projectid=' . $projectid;
-        } else {
-            $request = $currentURI . '/ajax/dailyupdatescurl.php?projectid=' . $projectid;
-        }
+    $baseUrl = get_server_URI(false);
+    $request = $baseUrl . '/ajax/dailyupdatescurl.php?projectid=' . $projectid;
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $request);
-        curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 1);
-        if ($CDASH_USE_HTTPS) {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        }
-        curl_exec($ch);
-        curl_close($ch);
-    } else {
-        // synchronously
-
-        include 'include/dailyupdates.php';
-        addDailyChanges($projectid);
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $request);
+    curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+    if ($CDASH_USE_HTTPS) {
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
     }
+    curl_exec($ch);
+    curl_close($ch);
 
     if ($CDASH_USE_LOCAL_DIRECTORY && file_exists('local/submit.php')) {
         include 'local/submit.php';
@@ -74,7 +116,7 @@ function do_submit($filehandle, $projectid, $expected_md5 = '', $do_checksum = t
     //this is the md5 checksum fail case
     if ($handler == false) {
         //no need to log an error since ctest_parse already did
-        return;
+        return false;
     }
 
     // Send the emails if necessary
