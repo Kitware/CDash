@@ -58,9 +58,9 @@ class ExcludeSubProjectsTestCase extends KWWebTestCase
             return 1;
         }
 
-        // Verify build duration of 15.2 minutes (normally 23.1).
-        if ($build['compilation']['timefull'] !== 15.2) {
-            $this->fail('Expected build duration to be 15.2, found ' . $build['compilation']['timefull']);
+        // Verify build duration of 15.1 minutes (normally 23.1).
+        if ($build['compilation']['timefull'] !== 15.1) {
+            $this->fail('Expected build duration to be 15.1, found ' . $build['compilation']['timefull']);
             return 1;
         }
 
@@ -164,9 +164,9 @@ class ExcludeSubProjectsTestCase extends KWWebTestCase
             return 1;
         }
 
-        // Verify build duration of 7.9 minutes (normally 23.1).
-        if ($build['compilation']['timefull'] !== 7.9) {
-            $this->fail('Expected build duration to be 7.9, found ' . $build['compilation']['timefull']);
+        // Verify build duration of 8 minutes (normally 23.1).
+        if ($build['compilation']['timefull'] !== 8) {
+            $this->fail('Expected build duration to be 8, found ' . $build['compilation']['timefull']);
             return 1;
         }
 

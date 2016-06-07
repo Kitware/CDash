@@ -81,8 +81,8 @@ describe("sort_index", function() {
     sort_test('Pass', 9, '3', '1');
   });
 
-  it("sort by Build Time", function() {
-    sort_test('Build Time', 10, 'Jul 07, 2010 - 08:26 EDT', 'Jul 07, 2010 - 08:22 EDT');
+  it("sort by Start Time", function() {
+    sort_test('Start Time', 10, 'Jul 07, 2010 - 08:26 EDT', 'Jul 07, 2010 - 08:22 EDT');
   });
 
   it("sort by multiple columns", function() {
@@ -94,7 +94,7 @@ describe("sort_index", function() {
 
     // Click on the Build Time header.
     var buildtime_header = element.all(by.className('table-heading')).all(by.tagName('th')).filter(function(elem) { return elem.isDisplayed(); }).get(10);
-    expect(buildtime_header.getText()).toBe('Build Time');
+    expect(buildtime_header.getText()).toBe('Start Time');
     buildtime_header.click();
     expect(buildtime_header.element(by.tagName('span')).getAttribute('class')).toContain("glyphicon-chevron-down");
 
