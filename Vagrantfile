@@ -3,6 +3,7 @@
 
 Vagrant.configure(2) do |config|
   config.vm.box = "ubuntu/trusty64"
+  cdash_version = ENV["CDASH_VERSION"] || "master"
 
   if Vagrant.has_plugin?("vagrant-cachier")
     config.cache.scope = :box
@@ -19,5 +20,8 @@ Vagrant.configure(2) do |config|
   config.vm.provision "ansible" do |ansible|
     ansible.galaxy_role_file = "ansible/requirements.yml"
     ansible.playbook = "ansible/site.yml"
+    ansible.extra_vars = {
+      cdash_version: cdash_version
+    }
   end
 end

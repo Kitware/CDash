@@ -284,14 +284,15 @@ function ctest_parse($filehandler, $projectid, $expected_md5 = '', $do_checksum 
         $file = 'Test';
     }
 
+    // Try to get the IP of the build
+    global $CDASH_REMOTE_ADDR;
+    $ip = ($CDASH_REMOTE_ADDR) ? $CDASH_REMOTE_ADDR : $_SERVER['REMOTE_ADDR'];
+
     if ($handler == null) {
         echo 'no handler found';
         add_log('error: could not create handler based on xml content', 'ctest_parse', LOG_ERR);
         $Project = new Project();
         $Project->Id = $projectid;
-
-        // Try to get the IP of the build
-        $ip = $_SERVER['REMOTE_ADDR'];
 
         $Project->SendEmailToAdmin('Cannot create handler based on XML content',
             'An XML submission from ' . $ip . ' to the project ' . get_project_name($projectid) . ' cannot be parsed. The content of the file is as follow: ' . $content);
@@ -319,7 +320,7 @@ function ctest_parse($filehandler, $projectid, $expected_md5 = '', $do_checksum 
     $query = pdo_query('SELECT id FROM blockbuild WHERE projectid=' . qnum($projectid) . "
             AND (buildname='' OR buildname='" . $buildname . "')
             AND (sitename='' OR sitename='" . $sitename . "')
-            AND (ipaddress='' OR ipaddress='" . $_SERVER['REMOTE_ADDR'] . "')");
+            AND (ipaddress='' OR ipaddress='" . $ip . "')");
 
     if (pdo_num_rows($query) > 0) {
         echo 'The submission is banned from this CDash server.';
