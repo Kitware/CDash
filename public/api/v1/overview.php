@@ -15,6 +15,7 @@ include 'public/login.php';
 include_once 'include/common.php';
 include 'include/version.php';
 require_once 'models/project.php';
+require_once 'include/memcache_functions.php';
 
 // handle required project argument
 @$projectname = $_GET['project'];
@@ -37,6 +38,17 @@ if (!pdo_select_db("$CDASH_DB_NAME", $db)) {
     $response['error'] = 'Error selecting CDash database';
     echo json_encode($response);
     return;
+}
+
+// Connect to memcache
+if ($CDASH_MEMCACHE_ENABLED) {
+    list($server, $port) = $CDASH_MEMCACHE_SERVER;
+    $memcache = new Memcache;
+
+    // Disable memcache for this request if it fails to connect
+    if ($memcache->connect($server, $port) === false) {
+        $CDASH_MEMCACHE_ENABLED = false;
+    }
 }
 
 $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
@@ -67,6 +79,16 @@ list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $Project->N
 // Date range is currently hardcoded to two weeks in the past.
 // This could become a configurable value instead.
 $date_range = 14;
+
+// Use cache if it's enabled, use_cache isn't set to 0, and an entry exists in Memcache
+// Using cache is implied, but the user can set use_cache to 0 to explicitly disable it
+// (This is a good method of ensuring the cache for this page stays up)
+if ($CDASH_MEMCACHE_ENABLED &&
+    !(isset($_GET['use_cache']) && $_GET['use_cache'] == 0) &&
+    ($cachedResponse = $memcache->get(cdash_memcache_key('overview'))) !== false) {
+    echo $cachedResponse;
+    return;
+}
 
 // begin JSON response that is used to render this page
 $response = begin_JSON_response();
@@ -607,7 +629,14 @@ $response['staticanalyses'] = $static_analyses_response;
 
 $end = microtime_float();
 $response['generationtime'] = round($end - $start, 3);
-echo json_encode(cast_data_for_JSON($response));
+$response = json_encode(cast_data_for_JSON($response));
+
+// Cache the overview page for 6 hours
+if ($CDASH_MEMCACHE_ENABLED) {
+    $memcache->set(cdash_memcache_key('overview'), $response, MEMCACHE_COMPRESSED, 60 * 60 * 6);
+}
+
+echo $response;
 
 // Replace all non-word characters with underscores.
 function sanitize_string($input_string)
