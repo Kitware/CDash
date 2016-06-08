@@ -455,6 +455,9 @@ class GCovTarHandler
     public function ParseUncoveredSourceFile($fileinfo, $path)
     {
         $coverageFileLog = new CoverageFileLog();
+        $coverageFileLog->AggregateBuildId = $this->AggregateBuildId;
+        $coverageFileLog->PreviousAggregateParentId =
+            $this->PreviousAggregateParentId;
         $coverageFile = new CoverageFile();
         $coverageFile->FullPath = trim($path);
         $coverage = new Coverage();

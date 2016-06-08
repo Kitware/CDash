@@ -308,5 +308,12 @@ class CoverageFileLog
         // Insert/Update the aggregate summary.
         $aggregateSummary->Insert(true);
         $aggregateSummary->ComputeDifference($this->PreviousAggregateParentId);
+
+        if ($this->Build->SubProjectId && $this->AggregateBuildId) {
+            // Compute diff for the aggregate parent too.
+            $aggregateParentSummary = new CoverageSummary();
+            $aggregateParentSummary->BuildId = $this->AggregateBuildId;
+            $aggregateParentSummary->ComputeDifference();
+        }
     }
 }
