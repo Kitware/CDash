@@ -95,6 +95,9 @@ function get_dynamic_builds($projectid, $end_UTCDate)
               b.testfailed AS counttestsfailed,
               b.testpassed AS counttestspassed,
               b.testtimestatusfailed AS countteststimestatusfailed,
+              cs.loctested, cs.locuntested,
+              csd.loctested AS loctesteddiff, csd.locuntested AS locuntesteddiff,
+              das.checker, das.numdefects,
               sp.id AS subprojectid,
               sp.groupid AS subprojectgroup,
               (SELECT count(buildid) FROM build2uploadfile WHERE buildid=b.id) AS builduploadfiles
@@ -106,6 +109,9 @@ function get_dynamic_builds($projectid, $end_UTCDate)
               LEFT JOIN buildupdate AS bu ON (b2u.updateid=bu.id)
               LEFT JOIN configure AS c ON (c.buildid=b.id)
               LEFT JOIN buildinformation AS i ON (i.buildid=b.id)
+              LEFT JOIN coveragesummary AS cs ON (cs.buildid=b.id)
+              LEFT JOIN coveragesummarydiff AS csd ON (csd.buildid=b.id)
+              LEFT JOIN dynamicanalysissummary AS das ON (das.buildid=b.id)
               LEFT JOIN builderrordiff AS be_diff ON (be_diff.buildid=b.id AND be_diff.type=0)
               LEFT JOIN builderrordiff AS bw_diff ON (bw_diff.buildid=b.id AND bw_diff.type=1)
               LEFT JOIN configureerrordiff AS ce_diff ON (ce_diff.buildid=b.id AND ce_diff.type=1)

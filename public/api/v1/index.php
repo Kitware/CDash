@@ -1158,9 +1158,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
         $coverageIsGrouped = false;
 
-        if (!empty($build_array['loctested'])) {
-            $loctested = $build_array['loctested'];
-            $locuntested = $build_array['locuntested'];
+        $loctested = $build_array['loctested'];
+        $locuntested = $build_array['locuntested'];
+        if ($loctested + $locuntested > 0) {
             $coverage_response = array();
             $coverage_response['buildid'] = $build_array['id'];
             if ($linkToChildCoverage) {
