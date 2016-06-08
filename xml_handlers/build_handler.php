@@ -168,13 +168,7 @@ class BuildHandler extends AbstractHandler
                 case 'STARTBUILDTIME':
                     $this->StartTimeStamp = $data;
                     break;
-                case 'STARTDATETIME':
-                    $this->StartTimeStamp = str_to_time($data, $this->Build->GetStamp());
-                    break;
-                case 'ELAPSEDMINUTES':
-                    $this->EndTimeStamp = $this->StartTimeStamp + $data * 60;
-                    break;
-                case 'ENDDATETIME':
+                case 'ENDBUILDTIME':
                     $this->EndTimeStamp = $data;
                     break;
                 case 'BUILDCOMMAND':

@@ -99,9 +99,9 @@ class DynamicAnalysisHandler extends AbstractHandler
         if ($name == 'STARTTESTTIME' && $parent == 'DYNAMICANALYSIS') {
             $this->Build->ProjectId = $this->projectid;
             $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
-            $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
             $this->Build->StartTime = $start_time;
-            $this->Build->EndTime = $end_time;
+            // EndTimeStamp hasn't been parsed yet.  We update this value later.
+            $this->Build->EndTime = $start_time;
             $this->Build->SubmitTime = gmdate(FMT_DATETIME);
             $this->Build->SetSubProject($this->SubProjectName);
             $this->Build->GetIdFromName($this->SubProjectName);
@@ -135,6 +135,10 @@ class DynamicAnalysisHandler extends AbstractHandler
                 $this->DynamicAnalysis->AddLabel($this->Label);
             }
         } elseif ($name == 'DYNAMICANALYSIS') {
+            // Update this build's end time if necessary.
+            $this->Build->EndTime = gmdate(FMT_DATETIME, $this->EndTimeStamp);
+            $this->Build->UpdateBuild($this->Build->Id, -1, -1);
+
             // If everything is perfect CTest doesn't send any <test>
             // But we still want a line showing the current dynamic analysis
             if (!isset($this->DynamicAnalysis)) {
@@ -164,14 +168,11 @@ class DynamicAnalysisHandler extends AbstractHandler
 
         if ($parent == 'DYNAMICANALYSIS') {
             switch ($element) {
-                case 'STARTBUILDTIME':
-                    $this->StartTimeStamp .= $data;
+                case 'STARTTESTTIME':
+                    $this->StartTimeStamp = $data;
                     break;
-                case 'STARTDATETIME':
-                    $this->StartTimeStamp = str_to_time($data, $this->Build->GetStamp());
-                    break;
-                case 'ELAPSEDMINUTES':
-                    $this->EndTimeStamp = $this->StartTimeStamp + $data * 60;
+                case 'ENDTESTTIME':
+                    $this->EndTimeStamp = $data;
                     break;
             }
         } elseif ($parent == 'TEST') {
