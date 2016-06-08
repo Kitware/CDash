@@ -41,4 +41,24 @@ class CoverageSummaryDiff
         }
         add_last_sql_error('CoverageSummary:ComputeDifference');
     }
+
+    /** Return whether or not a CoverageSummaryDiff exists for this build. */
+    public function Exists()
+    {
+        if (!$this->BuildId) {
+            return false;
+        }
+
+        $exists_result = pdo_single_row_query(
+            'SELECT COUNT(1) AS numrows FROM coveragesummarydiff
+                WHERE buildid=' . qnum($this->BuildId));
+
+        if ($exists_result && array_key_exists('numrows', $exists_result)) {
+            $numrows = $exists_result['numrows'];
+            if ($numrows > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
