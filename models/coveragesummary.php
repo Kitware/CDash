@@ -340,13 +340,14 @@ class CoverageSummary
             $previousloctested = $previouscoverage_array['loctested'];
             $previouslocuntested = $previouscoverage_array['locuntested'];
 
-            // Don't log if no diff
+            $summaryDiff = new CoverageSummaryDiff();
+            $summaryDiff->BuildId = $this->BuildId;
             $loctesteddiff = $loctested - $previousloctested;
             $locuntesteddiff = $locuntested - $previouslocuntested;
 
-            if ($loctesteddiff != 0 && $locuntesteddiff != 0) {
-                $summaryDiff = new CoverageSummaryDiff();
-                $summaryDiff->BuildId = $this->BuildId;
+            // Don't log if no diff unless an entry already exists
+            // for this build.
+            if ($summaryDiff->Exists() || $loctesteddiff != 0 || $locuntesteddiff != 0) {
                 $summaryDiff->LocTested = $loctesteddiff;
                 $summaryDiff->LocUntested = $locuntesteddiff;
                 $summaryDiff->Insert();
