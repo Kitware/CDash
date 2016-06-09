@@ -85,11 +85,14 @@ namespace CDash {
         public function __construct($database_type, $hostname, $username, $password,
                                     $database_port = null, $database_name = null,
                                     $use_persistent_connections = false, $retries = 1,
-                                    $ssl_key = null, $ssl_cert = null, $ssl_ca = null)
+                                    $ssl_key = null, $ssl_cert = null, $ssl_ca = null, $connection_type = 'host')
         {
-            $dsn = $database_type . ':host=' . $hostname;
+            $dsn = $database_type . ':' . $connection_type . '=' . $hostname;
             $this->attributes = array(\PDO::ATTR_PERSISTENT => $use_persistent_connections);
-            if (!is_null($database_port) and $database_port !== '') {
+
+            // The unix_socket connection type can't be used with a port
+            // http://php.net/manual/en/ref.pdo-mysql.connection.php
+            if (!is_null($database_port) and $database_port !== '' and $connection_type != 'unix_socket') {
                 $dsn = $dsn . ';port=' . strval($database_port);
             }
             if (!is_null($database_name) and $database_name != '') {
