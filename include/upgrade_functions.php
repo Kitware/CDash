@@ -639,7 +639,7 @@ function UpgradeTestDuration()
 /**
  * Make sure each build has a duration.
  **/
-function UpgradeBuildDuration()
+function UpgradeBuildDuration($buildid=null)
 {
     global $CDASH_DB_TYPE;
     if ($CDASH_DB_TYPE === 'pgsql') {
@@ -649,6 +649,9 @@ function UpgradeBuildDuration()
     }
     $query = "UPDATE build SET buildduration = $end_minus_start
         WHERE buildduration = 0";
+    if (!is_null($buildid)) {
+        $query .= " AND id = $buildid";
+    }
     if (!pdo_query($query)) {
         add_last_sql_error('UpgradeTestDuration');
     }
