@@ -111,6 +111,7 @@ function get_index_query($userupdatesql='')
         b.configurewarnings AS countconfigurewarnings,
         b.builderrors AS countbuilderrors,
         b.buildwarnings AS countbuildwarnings,
+        b.buildduration,
         b.testnotrun AS counttestsnotrun,
         b.testfailed AS counttestsfailed,
         b.testpassed AS counttestspassed,

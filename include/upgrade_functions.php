@@ -636,6 +636,24 @@ function UpgradeTestDuration()
     }
 }
 
+/**
+ * Make sure each build has a duration.
+ **/
+function UpgradeBuildDuration()
+{
+    global $CDASH_DB_TYPE;
+    if ($CDASH_DB_TYPE === 'pgsql') {
+        $end_minus_start = 'EXTRACT(EPOCH FROM (endtime - starttime))::numeric';
+    } else {
+        $end_minus_start = 'TIMESTAMPDIFF(SECOND, starttime, endtime)';
+    }
+    $query = "UPDATE build SET buildduration = $end_minus_start
+        WHERE buildduration = 0";
+    if (!pdo_query($query)) {
+        add_last_sql_error('UpgradeTestDuration');
+    }
+}
+
 /** Support for compressed coverage.
  *  This is done in two steps.
  *  First step: Reducing the size of the coverage file by computing the crc32 in coveragefile

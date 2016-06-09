@@ -547,8 +547,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $build_row['countupdateerrors'] = 0;
         }
 
-        $build_row['buildduration'] = round((strtotime($build_row['endtime']) - strtotime($build_row['starttime'])) / 60, 1);
-
         // Error/Warnings differences
         if (empty($build_row['countbuilderrordiffp'])) {
             $build_row['countbuilderrordiffp'] = 0;
@@ -658,9 +656,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
             if ($selected_subprojects) {
                 $select_query = "
                     SELECT configureerrors, configurewarnings, configureduration,
-                           builderrors, buildwarnings, b.starttime, b.endtime,
-                           testnotrun, testfailed, testpassed, btt.time AS testduration,
-                           sb.name
+                           builderrors, buildwarnings, buildduration,
+                           b.starttime, b.endtime, testnotrun, testfailed, testpassed,
+                           btt.time AS testduration, sb.name
                     FROM build AS b
                     INNER JOIN subproject2build AS sb2b ON (b.id = sb2b.buildid)
                     INNER JOIN subproject AS sb ON (sb2b.subprojectid = sb.id)
@@ -680,7 +678,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
                     $selected_build_warnings +=
                         max(0, $select_array['buildwarnings']);
                     $selected_build_duration +=
-                        max(0, round((strtotime($select_array['endtime']) - strtotime($select_array['starttime'])) / 60, 1));
+                        max(0, $select_array['buildduration']);
                     $selected_tests_not_run +=
                         max(0, $select_array['testnotrun']);
                     $selected_tests_failed +=
@@ -809,6 +807,12 @@ function echo_main_dashboard_JSON($project_instance, $date)
         }
         $build_response['label'] = $build_label;
 
+        // Calculate this build's total duration.
+        $duration = strtotime($build_array['endtime']) -
+            strtotime($build_array['starttime']);
+        $build_response['time'] = time_difference($duration, true);
+        $build_response['timefull'] = $duration;
+
         $update_response = array();
 
         $countupdatefiles = $build_array['countupdatefiles'];
@@ -860,7 +864,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $compilation_response['warning'] = $nwarnings;
             $buildgroups_response[$i]['numbuildwarning'] += $nwarnings;
 
-            $compilation_response['time'] = time_difference($buildduration * 60.0, true);
+            $compilation_response['time'] = time_difference($buildduration, true);
             $compilation_response['timefull'] = $buildduration;
 
             if (!$include_subprojects && !$exclude_subprojects) {
@@ -1054,7 +1058,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
         }
         if ($build_response['hascompilation'] &&
                 array_key_exists('time', $build_response['compilation'])) {
-            $timesummary .= ', Compilation time: ' .
+            $timesummary .= ', Build time: ' .
                 $build_response['compilation']['time'];
         }
         if ($build_response['hastest'] &&
@@ -1062,6 +1066,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $timesummary .= ', Test time: ' .
                 $build_response['test']['time'];
         }
+
+        $timesummary .= ', Total time: ' . $build_response['time'];
+
         $build_response['timesummary'] = $timesummary;
 
         if ($include_subprojects || $exclude_subprojects) {
