@@ -206,8 +206,9 @@ class SequenceIndependenceTestCase extends KWWebTestCase
         // Get data from the build table.
         $build_query =
             "SELECT id, starttime, endtime, configureerrors, configurewarnings,
-            builderrors, buildwarnings, testnotrun, testfailed, testpassed
-                FROM build WHERE name='Linux-g++-4.1-LesionSizingSandbox_Debug'";
+            configureduration, builderrors, buildwarnings, buildduration, testnotrun,
+            testfailed, testpassed
+            FROM build WHERE name='Linux-g++-4.1-LesionSizingSandbox_Debug'";
         $build_result = pdo_query($build_query);
         if (!$build_result) {
             $this->fail('build query returned false');
@@ -239,12 +240,20 @@ class SequenceIndependenceTestCase extends KWWebTestCase
             $this->fail('Expected configurewarnings to be 0, found ' . $build_row['configurewarnings']);
             return false;
         }
+        if ($build_row['configureduration'] != 0.00) {
+            $this->fail('Expected configureduration to be 0.00, found ' . $build_row['configureduration']);
+            return false;
+        }
         if ($build_row['builderrors'] != 0) {
             $this->fail('Expected builderrors to be 0, found ' . $build_row['builderrors']);
             return false;
         }
         if ($build_row['buildwarnings'] != 3) {
             $this->fail('Expected buildwarnings to be 3, found ' . $build_row['buildwarnings']);
+            return false;
+        }
+        if ($build_row['buildduration'] != 3103) {
+            $this->fail('Expected buildduration to be 3103, found ' . $build_row['buildduration']);
             return false;
         }
         if ($build_row['testnotrun'] != 1) {

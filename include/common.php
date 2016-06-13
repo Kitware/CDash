@@ -277,7 +277,7 @@ function time_difference($duration, $compact = false, $suffix = '', $displayms =
     }
 
     $diff .= ' ' . $suffix;
-    return $diff;
+    return rtrim($diff);
 }
 
 /* Return the number of seconds represented by the specified time interval
