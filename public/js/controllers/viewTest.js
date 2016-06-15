@@ -65,7 +65,11 @@ CDash.controller('ViewTestController',
     $scope.setPage = function (pageNo) {
       var begin = ((pageNo - 1) * $scope.pagination.numPerPage)
       , end = begin + $scope.pagination.numPerPage;
-      $scope.pagination.filteredTests = $scope.cdash.tests.slice(begin, end);
+      if (end > 0) {
+        $scope.pagination.filteredTests = $scope.cdash.tests.slice(begin, end);
+      } else {
+        $scope.pagination.filteredTests = $scope.cdash.tests;
+      }
 
       // Load history & summary data for these newly revealed tests (if necessary).
       var tests_to_load = [];
