@@ -210,44 +210,34 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5 = '')
     $submissionid = pdo_insert_id('submission');
 
     // We find the daily updates
-    // If we have php curl we do it asynchronously
-    if (function_exists('curl_init') == true) {
-        $currentURI = get_server_URI(true);
-        $request = $currentURI . '/ajax/dailyupdatescurl.php?projectid=' . $projectid;
+    $currentURI = get_server_URI(true);
+    $request = $currentURI . '/ajax/dailyupdatescurl.php?projectid=' . $projectid;
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $request);
-        curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 1);
-        if ($CDASH_USE_HTTPS) {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        }
-        curl_exec($ch);
-        curl_close($ch);
-
-        $clientscheduleid = isset($_GET['clientscheduleid']) ? pdo_real_escape_numeric($_GET['clientscheduleid']) : 0;
-        if ($clientscheduleid !== 0) {
-            pdo_query('INSERT INTO client_jobschedule2submission (scheduleid,submissionid) ' .
-                "VALUES ('$clientscheduleid','$submissionid')");
-        }
-
-        // Save submitter IP in the database in the async case, so we have a valid
-        // IP at Site::Insert time when processing rather than 'localhost's IP:
-        pdo_insert_query('INSERT INTO submission2ip (submissionid, ip) ' .
-            "VALUES ('$submissionid', '" . $_SERVER['REMOTE_ADDR'] . "')");
-
-        // Call process submissions via cURL.
-        trigger_process_submissions($projectid);
-    } else {
-        // synchronously
-
-        add_log(
-            'Cannot submit asynchronously: php curl_init function does not exist',
-            'do_submit_asynchronous',
-            LOG_ERR, $projectid);
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $request);
+    curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+    if ($CDASH_USE_HTTPS) {
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
     }
+    curl_exec($ch);
+    curl_close($ch);
+
+    $clientscheduleid = isset($_GET['clientscheduleid']) ? pdo_real_escape_numeric($_GET['clientscheduleid']) : 0;
+    if ($clientscheduleid !== 0) {
+        pdo_query('INSERT INTO client_jobschedule2submission (scheduleid,submissionid) ' .
+            "VALUES ('$clientscheduleid','$submissionid')");
+    }
+
+    // Save submitter IP in the database in the async case, so we have a valid
+    // IP at Site::Insert time when processing rather than 'localhost's IP:
+    pdo_insert_query('INSERT INTO submission2ip (submissionid, ip) ' .
+        "VALUES ('$submissionid', '" . $_SERVER['REMOTE_ADDR'] . "')");
+
+    // Call process submissions via cURL.
+    trigger_process_submissions($projectid);
 }
 
 /** Function to deal with the external tool mechanism */

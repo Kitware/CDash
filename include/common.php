@@ -17,67 +17,64 @@
 require_once 'config/config.php';
 require_once 'include/log.php';
 
-if (PHP_VERSION >= 5) {
-    // Emulate the old xslt library functions
-    function xslt_create()
-    {
-        return new XsltProcessor();
-    }
 
-    function xslt_process($xsltproc,
-                          $xml_arg,
-                          $xsl_arg,
-                          $xslcontainer = null,
-                          $args = null,
-                          $params = null)
-    {
-        // Start with preparing the arguments
-        $xml_arg = str_replace('arg:', '', $xml_arg);
-        $xsl_arg = str_replace('arg:', '', $xsl_arg);
-
-        // Create instances of the DomDocument class
-        $xml = new DomDocument;
-        $xsl = new DomDocument;
-
-        $phpversion = explode('.', PHP_VERSION);
-        $phpversionid = $phpversion[0] * 10000 + $phpversion[1] * 100 + $phpversion[2];
-
-        // Load the xml document and the xsl template
-        if ($phpversionid >= 50302 && LIBXML_VERSION >= 20700) {
-            $xmlOptions = LIBXML_PARSEHUGE;
-        } else {
-            $xmlOptions = 0;
-        }
-
-        $xml->loadXML($args[$xml_arg], $xmlOptions);
-        $xsl->loadXML(file_get_contents($xsl_arg), $xmlOptions);
-
-        // Load the xsl template
-        $xsltproc->importStyleSheet($xsl);
-
-        // Set parameters when defined
-        if ($params) {
-            foreach ($params as $param => $value) {
-                $xsltproc->setParameter('', $param, $value);
-            }
-        }
-
-        // Start the transformation
-        $processed = $xsltproc->transformToXML($xml);
-
-        // Put the result in a file when specified
-        if ($xslcontainer) {
-            return @file_put_contents($xslcontainer, $processed);
-        } else {
-            return $processed;
-        }
-    }
-
-    function xslt_free($xsltproc)
-    {
-        unset($xsltproc);
-    }
+// Emulate the old xslt library functions
+function xslt_create()
+{
+    return new XsltProcessor();
 }
+
+function xslt_process($xsltproc,
+                      $xml_arg,
+                      $xsl_arg,
+                      $xslcontainer = null,
+                      $args = null,
+                      $params = null)
+{
+    // Start with preparing the arguments
+    $xml_arg = str_replace('arg:', '', $xml_arg);
+    $xsl_arg = str_replace('arg:', '', $xsl_arg);
+
+    // Create instances of the DomDocument class
+    $xml = new DomDocument;
+    $xsl = new DomDocument;
+
+    // Load the xml document and the xsl template
+    if (LIBXML_VERSION >= 20700) {
+        $xmlOptions = LIBXML_PARSEHUGE;
+    } else {
+        $xmlOptions = 0;
+    }
+
+    $xml->loadXML($args[$xml_arg], $xmlOptions);
+    $xsl->loadXML(file_get_contents($xsl_arg), $xmlOptions);
+
+    // Load the xsl template
+    $xsltproc->importStyleSheet($xsl);
+
+    // Set parameters when defined
+    if ($params) {
+        foreach ($params as $param => $value) {
+            $xsltproc->setParameter('', $param, $value);
+        }
+    }
+
+    // Start the transformation
+    $processed = $xsltproc->transformToXML($xml);
+
+    // Put the result in a file when specified
+    if ($xslcontainer) {
+        return @file_put_contents($xslcontainer, $processed);
+    }
+
+    return $processed;
+}
+
+function xslt_free($xsltproc)
+{
+    unset($xsltproc);
+}
+
 
 /** Do the XSLT translation and look in the local directory if the file
  *  doesn't exist */
@@ -107,11 +104,6 @@ function generate_XSLT($xml, $pageName, $only_in_local = false)
     }
 
     $xh = xslt_create();
-
-    if (PHP_VERSION < 5) {
-        $filebase = 'file://' . getcwd() . '/';
-        xslt_set_base($xh, $filebase);
-    }
 
     $arguments = array(
         '/_xml' => $xml
@@ -144,9 +136,7 @@ function generate_XSLT($xml, $pageName, $only_in_local = false)
 /** used to escape special XML characters */
 function XMLStrFormat($str)
 {
-    if (function_exists('mb_detect_encoding') &&
-        mb_detect_encoding($str, 'UTF-8', true) === false
-    ) {
+    if (mb_detect_encoding($str, 'UTF-8', true) === false) {
         $str = utf8_encode($str);
     }
     $str = str_replace('&', '&amp;', $str);
@@ -852,13 +842,6 @@ function get_geolocation($ip)
     include 'config/config.php';
     require_once 'include/pdo.php';
     $location = array();
-
-    // Test if curl exists
-    if (function_exists('curl_init') == false) {
-        $location['latitude'] = '';
-        $location['longitude'] = '';
-        return $location;
-    }
 
     // Ask hostip.info for geolocation
     $lat = '';
@@ -1886,68 +1869,6 @@ function redirect_to_https()
             exit;
         }
     }
-}
-
-// For PHP version < 5.2.0
-function __json_encode($data)
-{
-    if (is_array($data) || is_object($data)) {
-        $islist = is_array($data) && (empty($data) || array_keys($data) === range(0, count($data) - 1));
-
-        if ($islist) {
-            $json = '[' . implode(',', array_map('__json_encode', $data)) . ']';
-        } else {
-            $items = array();
-            foreach ($data as $key => $value) {
-                $items[] = __json_encode("$key") . ':' . __json_encode($value);
-            }
-            $json = '{' . implode(',', $items) . '}';
-        }
-    } elseif (is_string($data)) {
-        # Escape non-printable or Non-ASCII characters.
-        # Also put the \\ character first, as suggested in comments on the 'addclashes' page.
-        $string = '"' . addcslashes($data, "\\\"\n\r\t/" . chr(8) . chr(12)) . '"';
-        $json = '';
-        $len = strlen($string);
-        # Convert UTF-8 to Hexadecimal Codepoints.
-        for ($i = 0; $i < $len; $i++) {
-            $char = $string[$i];
-            $c1 = ord($char);
-
-            # Single byte;
-            if ($c1 < 128) {
-                $json .= ($c1 > 31) ? $char : sprintf('\\u%04x', $c1);
-                continue;
-            }
-
-            # Double byte
-            $c2 = ord($string[++$i]);
-            if (($c1 & 32) === 0) {
-                $json .= sprintf('\\u%04x', ($c1 - 192) * 64 + $c2 - 128);
-                continue;
-            }
-
-            # Triple
-            $c3 = ord($string[++$i]);
-            if (($c1 & 16) === 0) {
-                $json .= sprintf('\\u%04x', (($c1 - 224) << 12) + (($c2 - 128) << 6) + ($c3 - 128));
-                continue;
-            }
-
-            # Quadruple
-            $c4 = ord($string[++$i]);
-            if (($c1 & 8) === 0) {
-                $u = (($c1 & 15) << 2) + (($c2 >> 4) & 3) - 1;
-                $w1 = (54 << 10) + ($u << 6) + (($c2 & 15) << 2) + (($c3 >> 4) & 3);
-                $w2 = (55 << 10) + (($c3 & 15) << 6) + ($c4 - 128);
-                $json .= sprintf('\\u%04x\\u%04x', $w1, $w2);
-            }
-        }
-    } else {
-        # int, floats, bools, null
-        $json = strtolower(var_export($data, true));
-    }
-    return $json;
 }
 
 function begin_JSON_response()
