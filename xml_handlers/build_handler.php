@@ -29,14 +29,21 @@ class BuildHandler extends AbstractHandler
     private $Label;
     private $Append;
     private $Feed;
+    private $Builds;
+    private $BuildInformation;
+    private $BuildCommand;
+    private $BuildLog;
+    private $Labels;
 
     public function __construct($projectid, $scheduleid)
     {
         parent::__construct($projectid, $scheduleid);
-        $this->Build = new Build();
+        $this->Builds = array();
         $this->Site = new Site();
         $this->Append = false;
         $this->Feed = new Feed();
+        $this->BuildLog = '';
+        $this->Labels = array();
     }
 
     public function startElement($parser, $name, $attributes)
@@ -51,28 +58,15 @@ class BuildHandler extends AbstractHandler
             $this->Site->Insert();
 
             $siteInformation = new SiteInformation();
-            $buildInformation = new BuildInformation();
+            $this->BuildInformation = new BuildInformation();
 
             // Fill in the attribute
             foreach ($attributes as $key => $value) {
-                if ($key === 'CHANGEID') {
-                    $this->Build->SetPullRequest($value);
-                    continue;
-                }
                 $siteInformation->SetValue($key, $value);
-                $buildInformation->SetValue($key, $value);
+                $this->BuildInformation->SetValue($key, $value);
             }
 
             $this->Site->SetInformation($siteInformation);
-
-            $this->Build->SiteId = $this->Site->Id;
-            $this->Build->Name = $attributes['BUILDNAME'];
-            if (empty($this->Build->Name)) {
-                $this->Build->Name = '(empty)';
-            }
-            $this->Build->SetStamp($attributes['BUILDSTAMP']);
-            $this->Build->Generator = $attributes['GENERATOR'];
-            $this->Build->Information = $buildInformation;
 
             if (array_key_exists('APPEND', $attributes)) {
                 if (strtolower($attributes['APPEND']) == 'true') {
@@ -81,6 +75,31 @@ class BuildHandler extends AbstractHandler
             } else {
                 $this->Append = false;
             }
+        } elseif ($name == 'SUBPROJECT') {
+            $subprojectName = $attributes['NAME'];
+            $build = new Build();
+            if (!empty($this->BuildInformation->PullRequest)) {
+              $build->SetPullRequest($value);
+            }
+            $build->SiteId = $this->Site->Id;
+            $build->Name = $this->BuildInformation->BuildName;
+            $build->SetStamp($this->BuildInformation->BuildStamp);
+            $build->Generator = $this->BuildInformation->Generator;
+            $build->Information = $this->BuildInformation;
+            $this->Builds[$subprojectName] = $build;
+        } elseif ($name == 'BUILD') {
+          if (empty($this->Builds)) {
+            $build = new Build();
+            if (!empty($this->BuildInformation->PullRequest)) {
+              $build->SetPullRequest($value);
+            }
+            $build->SiteId = $this->Site->Id;
+            $build->Name = $this->BuildInformation->BuildName;
+            $build->SetStamp($this->BuildInformation->BuildStamp);
+            $build->Generator = $this->BuildInformation->Generator;
+            $build->Information = $this->BuildInformation;
+            $this->Builds[''] = $build;
+          }
         } elseif ($name == 'WARNING') {
             $this->Error = new BuildError();
             $this->Error->Type = 1;
@@ -108,23 +127,34 @@ class BuildHandler extends AbstractHandler
             $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
             $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
             $submit_time = gmdate(FMT_DATETIME);
+            foreach ($this->Builds as $subproject => $build) {
+                $build->ProjectId = $this->projectid;
+                $build->StartTime = $start_time;
+                $build->EndTime = $end_time;
+                $build->SubmitTime = $submit_time;
+                if (empty($subproject)) {
+                  $build->SetSubProject($this->SubProjectName);
+                }
+                else {
+                  $build->SetSubProject($subproject);
+                }
+                $build->Append = $this->Append;
+                $build->Command = $this->BuildCommand;
+                $build->Log .= $this->BuildLog;
 
-            $this->Build->ProjectId = $this->projectid;
-            $this->Build->StartTime = $start_time;
-            $this->Build->EndTime = $end_time;
-            $this->Build->SubmitTime = $submit_time;
-            $this->Build->SetSubProject($this->SubProjectName);
-            $this->Build->Append = $this->Append;
+                foreach ($this->Labels as $label) {
+                  $build->AddLabel($label);
+                }
+                add_build($build, $this->scheduleid);
+                $build->UpdateBuildDuration(
+                        $this->EndTimeStamp - $this->StartTimeStamp);
+                $build->ComputeDifferences();
 
-            add_build($this->Build, $this->scheduleid);
-            $this->Build->UpdateBuildDuration(
-                    $this->EndTimeStamp - $this->StartTimeStamp);
-            $this->Build->ComputeDifferences();
-
-            global $CDASH_ENABLE_FEED;
-            if ($CDASH_ENABLE_FEED) {
-                // Insert the build into the feed
-                $this->Feed->InsertBuild($this->projectid, $this->Build->Id);
+                global $CDASH_ENABLE_FEED;
+                if ($CDASH_ENABLE_FEED) {
+                    // Insert the build into the feed
+                    $this->Feed->InsertBuild($this->projectid, $build->Id);
+                }
             }
         } elseif ($name == 'WARNING' || $name == 'ERROR' || $name == 'FAILURE') {
             global $CDASH_LARGE_TEXT_LIMIT;
@@ -147,15 +177,15 @@ class BuildHandler extends AbstractHandler
                         "\n...\nCDash truncated output because it exceeded $threshold characters.\n";
                 }
             }
-
-            $this->Build->AddError($this->Error);
-
+            if (array_key_exists($this->SubProjectName, $this->Builds)) {
+              $this->Builds[$this->SubProjectName]->AddError($this->Error);
+            }
             unset($this->Error);
         } elseif ($name == 'LABEL') {
             if (isset($this->Error)) {
                 $this->Error->AddLabel($this->Label);
-            } elseif (isset($this->Build)) {
-                $this->Build->AddLabel($this->Label);
+            } else {
+              $this->Labels[] = $this->Label;
             }
         }
     }
@@ -171,12 +201,11 @@ class BuildHandler extends AbstractHandler
                     break;
                 case 'ENDBUILDTIME':
                     $this->EndTimeStamp = $data;
-                    break;
                 case 'BUILDCOMMAND':
-                    $this->Build->Command = $data;
+                    $this->BuildCommand = $data;
                     break;
                 case 'LOG':
-                    $this->Build->Log .= $data;
+                    $this->BuildLog .= $data;
                     break;
             }
         } elseif ($parent == 'ACTION') {
@@ -255,5 +284,15 @@ class BuildHandler extends AbstractHandler
         } elseif ($element == 'LABEL') {
             $this->Label->SetText($data);
         }
+    }
+
+    public function getBuildStamp()
+    {
+        return $this->BuildInformation->BuildStamp;
+    }
+
+    public function getBuildName()
+    {
+        return $this->BuildInformation->BuildName;
     }
 }

@@ -23,6 +23,10 @@ class BuildInformation
     public $OSVersion;
     public $CompilerName = 'unknown';
     public $CompilerVersion = 'unknown';
+    public $BuildName;
+    public $BuildStamp;
+    public $Generator;
+    public $PullRequest;
 
     public function SetValue($tag, $value)
     {
@@ -44,6 +48,21 @@ class BuildInformation
                 break;
             case 'COMPILERVERSION':
                 $this->CompilerVersion = $value;
+                break;
+            case 'BUILDNAME':
+              $this->BuildName = $value;
+              if (empty($this->BuildName)) {
+                  $this->BuildName = '(empty)';
+              }
+              break;
+            case 'BUILDSTAMP':
+                $this->BuildStamp = $value;
+                break;
+            case 'GENERATOR':
+                $this->Generator = $value;
+                break;
+            case 'CHANGEID':
+                $this->PullRequest = $value;
                 break;
         }
     }
