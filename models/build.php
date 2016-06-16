@@ -1972,6 +1972,36 @@ class Build
         }
     }
 
+    public function UpdateBuildDuration($duration)
+    {
+        if ($duration === 0 || !$this->Id || !is_numeric($this->Id)) {
+            return;
+        }
+
+        pdo_begin_transaction();
+
+        // Update build step duration for this build.
+        pdo_query(
+                "UPDATE build SET buildduration=buildduration + $duration
+                WHERE id=" . qnum($this->Id));
+        add_last_sql_error('Build:UpdateBuildDuration',
+            $this->ProjectId, $this->Id);
+
+        // If this is a child build, add this duration
+        // to the parent's sum.
+        $this->SetParentId($this->LookupParentBuildId());
+        if ($this->ParentId > 0) {
+            pdo_query(
+                "UPDATE build
+                    SET buildduration = buildduration + $duration
+                    WHERE id=" . qnum($this->ParentId));
+            add_last_sql_error('Build:UpdateBuildDuration',
+                $this->ProjectId, $this->ParentId);
+        }
+
+        pdo_commit();
+    }
+
     // Return the dashboard date (in Y-m-d format) for this build.
     public function GetDate()
     {

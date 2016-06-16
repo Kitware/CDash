@@ -277,7 +277,7 @@ function time_difference($duration, $compact = false, $suffix = '', $displayms =
     }
 
     $diff .= ' ' . $suffix;
-    return $diff;
+    return rtrim($diff);
 }
 
 /* Return the number of seconds represented by the specified time interval
@@ -2152,10 +2152,8 @@ function cast_data_for_JSON($value)
         return $value;
     }
     if (is_numeric($value)) {
-        if (strpos($value, '.') !== false) {
-            return (float)$value;
-        }
-        return (int)$value;
+        // Return numeric value of this string.
+        return $value + 0;
     }
     if (is_string($value)) {
         $value = (string)$value;
@@ -2178,7 +2176,8 @@ function get_server_siteid()
     $server->Name = 'CDash Server';
     if (!$server->Exists()) {
         // Create it if it doesn't exist.
-        $server_ip = $_SERVER['SERVER_ADDR'];
+        // SERVER_ADDR is not guaranteed to exist on every web server
+        $server_ip = @$_SERVER['SERVER_ADDR'];
         $server->Ip = $server_ip;
         $server->Insert();
     }

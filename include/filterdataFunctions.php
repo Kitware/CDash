@@ -113,6 +113,7 @@ class IndexPhpFilters extends DefaultFilters
         $xml .= getFilterDefinitionXML('hasdynamicanalysis', 'Has Dynamic Analysis', 'bool', '', '');
         $xml .= getFilterDefinitionXML('hasusernotes', 'Has User Notes', 'bool', '', '');
         $xml .= getFilterDefinitionXML('label', 'Label', 'string', '', '');
+        $xml .= getFilterDefinitionXML('revision', 'Revision', 'string', '', '');
         $xml .= getFilterDefinitionXML('site', 'Site', 'string', '', '');
         $xml .= getFilterDefinitionXML('buildgenerator', 'Submission Client', 'string', '', '2.8');
         $xml .= getFilterDefinitionXML('subproject', 'SubProject', 'string', '', '');
@@ -224,6 +225,10 @@ class IndexPhpFilters extends DefaultFilters
                 $sql_field = "(SELECT $this->TextConcat FROM label, label2build WHERE label2build.labelid=label.id AND label2build.buildid=b.id)";
 
             }
+                break;
+
+            case 'revision':
+                $sql_field = 'bu.revision';
                 break;
 
             case 'site': {

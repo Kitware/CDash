@@ -34,6 +34,7 @@ CREATE TABLE `build` (
   `configureduration` float(7,2) NOT NULL default '0.00',
   `builderrors` smallint(6) DEFAULT '-1',
   `buildwarnings` smallint(6) DEFAULT '-1',
+  `buildduration` int(11) NOT NULL default '0',
   `testnotrun` smallint(6) DEFAULT '-1',
   `testfailed` smallint(6) DEFAULT '-1',
   `testpassed` smallint(6) DEFAULT '-1',

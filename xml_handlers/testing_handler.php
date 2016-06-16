@@ -38,7 +38,7 @@ class TestingHandler extends AbstractHandler
     private $NumberTestsFailed;
     private $NumberTestsNotRun;
     private $NumberTestsPassed;
-    
+
     private $Feed;
 
     /** Constructor */
@@ -132,10 +132,10 @@ class TestingHandler extends AbstractHandler
             $this->Label = new Label();
         } elseif ($name == 'TESTLIST' && $parent == 'TESTING') {
             $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
-            // $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp); // The EndTimeStamp
 
             $this->Build->ProjectId = $this->projectid;
             $this->Build->StartTime = $start_time;
+            // EndTimeStamp hasn't been parsed yet.
             $this->Build->EndTime = $start_time;
             $this->Build->SubmitTime = gmdate(FMT_DATETIME);
             $this->Build->SetSubProject($this->SubProjectName);
@@ -230,6 +230,11 @@ class TestingHandler extends AbstractHandler
                     $this->EndTimeStamp - $this->StartTimeStamp);
             }
 
+            // Update the build's end time to extend through testing.
+            $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
+            $this->Build->EndTime = $end_time;
+            $this->Build->UpdateBuild($this->Build->Id, -1, -1);
+
             global $CDASH_ENABLE_FEED;
             if ($CDASH_ENABLE_FEED) {
                 // Insert the build into the feed
@@ -245,11 +250,19 @@ class TestingHandler extends AbstractHandler
         $element = $this->getElement();
 
         if ($parent == 'TESTING' && $element == 'STARTDATETIME') {
-            $this->StartTimeStamp = str_to_time($data, $this->Build->GetStamp());
+            // Defer to StartTestTime as it has higher precision.
+            if (!isset($this->StartTimeStamp)) {
+                $this->StartTimeStamp =
+                    str_to_time($data, $this->Build->GetStamp());
+            }
         } elseif ($parent == 'TESTING' && $element == 'STARTTESTTIME') {
             $this->StartTimeStamp = $data;
         } elseif ($parent == 'TESTING' && $element == 'ENDDATETIME') {
-            $this->EndTimeStamp = str_to_time($data, $this->Build->GetStamp());
+            // Defer to EndTestTime as it has higher precision.
+            if (!isset($this->EndTimeStamp)) {
+                $this->EndTimeStamp =
+                    str_to_time($data, $this->Build->GetStamp());
+            }
         } elseif ($parent == 'TESTING' && $element == 'ENDTESTTIME') {
             $this->EndTimeStamp = $data;
         } elseif ($parent == 'TEST') {

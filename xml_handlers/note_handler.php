@@ -78,19 +78,22 @@ class NoteHandler extends AbstractHandler
         if ($name == 'NOTE') {
             $this->Build->ProjectId = $this->projectid;
             $this->Build->GetIdFromName($this->SubProjectName);
-            $this->Build->SetSubProject($this->SubProjectName);
-            $this->Build->StartTime = $this->Note->Time;
-            $this->Build->EndTime = $this->Note->Time;
-            $this->Build->SubmitTime = gmdate(FMT_DATETIME);
             $this->Build->RemoveIfDone();
 
             // If the build doesn't exist we add it.
             if ($this->Build->Id == 0) {
+                $this->Build->SetSubProject($this->SubProjectName);
+
+                // Since we only have precision in minutes (not seconds) here,
+                // set the start time at the end of the minute so it can be overridden
+                // by any more precise XML file received later.
+                $start_time = gmdate(FMT_DATETIME, strtotime($this->Note->Time) + 59);
+                $this->Build->StartTime = $start_time;
+
+                $this->Build->EndTime = $this->Note->Time;
+                $this->Build->SubmitTime = gmdate(FMT_DATETIME);
                 $this->Build->InsertErrors = false;
                 add_build($this->Build, $this->scheduleid);
-            } else {
-                // Otherwise make sure that the build is up-to-date.
-                $this->Build->UpdateBuild($this->Build->Id, -1, -1);
             }
 
             if ($this->Build->Id > 0) {

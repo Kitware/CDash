@@ -298,6 +298,21 @@ class UpgradeTestCase extends KWWebTestCase
             $retval = 1;
         }
 
+        // Similarly test our buildduration upgrade function.
+        $query = "SELECT buildduration FROM build WHERE id = $id";
+        $row = pdo_single_row_query($query);
+        $saved_build_duration = $row['buildduration'];
+        pdo_query("UPDATE build SET buildduration = 0 WHERE id = $id");
+        UpgradeBuildDuration($id);
+        $row = pdo_single_row_query($query);
+        if ($row['buildduration'] != 1383) {
+            $this->fail(
+                'Expected build duration to be 1383, found ' . $row['buildduration']);
+            $retval = 1;
+        }
+        pdo_query("UPDATE build SET buildduration = $saved_build_duration
+                WHERE id = $id");
+
         // Remove the buildtesttime entry for our parent build.
         pdo_query("DELETE FROM buildtesttime WHERE buildid = $id");
 

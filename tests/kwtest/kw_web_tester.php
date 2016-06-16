@@ -267,8 +267,15 @@ class KWWebTestCase extends WebTestCase
 
     public function submission($projectname, $file)
     {
+        global $CDASH_BERNARD_SUBMISSION;
+
         $url = $this->url . "/submit.php?project=$projectname";
         $result = $this->uploadfile($url, $file);
+
+        if ($CDASH_BERNARD_SUBMISSION) {
+            sleep(1);
+        }
+
         if ($this->findString($result, 'error') ||
             $this->findString($result, 'Warning') ||
             $this->findString($result, 'Notice')
@@ -313,6 +320,7 @@ class KWWebTestCase extends WebTestCase
     {
         $contents = file_get_contents($this->configfilename);
         $handle = fopen($this->configfilename, 'w');
+
         $lines = explode("\n", $contents);
         foreach ($lines as $line) {
             if (strpos($line, '?>') !== false) {

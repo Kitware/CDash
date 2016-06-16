@@ -116,6 +116,11 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
       "type": "string",
       "defaultvalue": ""
     },
+    "revision": {
+      "text": "Revision",
+      "type": "string",
+      "defaultvalue": ""
+    },
     "site": {
       "text": "Site",
       "type": "string",
@@ -316,6 +321,7 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
 
   var url = window.location.pathname;
   var filename = url.substring(url.lastIndexOf('/')+1);
+  var filename_for_docs = filename;
   if (filename === 'index.php' && 'parentid' in $rootScope.queryString) {
     filename = 'indexchildren.php';
   }
@@ -333,6 +339,6 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
     });
 
     $scope.filterdata = filterdata;
+    $scope.cdash.page = filename_for_docs;
   });
-
 }

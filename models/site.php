@@ -88,7 +88,8 @@ class Site
 
     public function LookupIP()
     {
-        $this->Ip = $_SERVER['REMOTE_ADDR'];
+        global $CDASH_REMOTE_ADDR;
+        $this->Ip = ($CDASH_REMOTE_ADDR) ? $CDASH_REMOTE_ADDR : $_SERVER['REMOTE_ADDR'];
 
         // In the async case, look up the IP recorded when the file was
         // originally submitted...

@@ -686,6 +686,13 @@ if (isset($_GET['upgrade-2-4'])) {
         UpgradeConfigureDuration();
         UpgradeTestDuration();
     }
+    // Distinguish build step duration from (end time - start time).
+    $query = 'SELECT buildduration FROM build LIMIT 1';
+    $dbTest = pdo_query($query);
+    if ($dbTest === false) {
+        AddTableField('build', 'buildduration', 'int(11)', 'integer', '0');
+        UpgradeBuildDuration();
+    }
 
     // Support for marking a build as "done".
     AddTableField('build', 'done', 'tinyint(1)', 'smallint', '0');

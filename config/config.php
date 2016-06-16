@@ -22,6 +22,7 @@
 
 // This file is 'config.php', in the directory 'config', in the root.
 // Therefore, the root of the CDash source tree on the web server is:
+require dirname(__DIR__) . '/vendor/autoload.php';
 $CDASH_ROOT_DIR = str_replace('\\', '/', dirname(dirname(__FILE__)));
 set_include_path(get_include_path() . PATH_SEPARATOR . $CDASH_ROOT_DIR);
 
@@ -37,6 +38,8 @@ $CDASH_DB_PASS = '';
 $CDASH_DB_NAME = 'cdash';
 // Database type
 $CDASH_DB_TYPE = 'mysql';
+// Must be one of host, unix_socket
+$CDASH_DB_CONNECTION_TYPE = 'host';
 
 // Support for SSL database connections.
 $CDASH_SSL_KEY = null;
@@ -48,6 +51,17 @@ $CDASH_SSL_CA = null;
 $CDASH_PRODUCTION_MODE = false;
 $CDASH_TESTING_MODE = false;
 $CDASH_TESTING_RENAME_LOGS = false;
+
+/**
+  * If a Bernard Driver is available then CDASH_BERNARD_SUBMISSION can be enabled
+  * to allow processing of submissions to take place in the background on other
+  * machines.
+  * Note: Enabling these require CDASH_SERVER_NAME be set properly for emails, since they may
+  * be constructed on other machines (with a different SERVER_NAME).
+  **/
+$CDASH_BERNARD_SUBMISSION = false;
+$CDASH_BERNARD_DRIVER = false;
+$CDASH_BERNARD_CONSUMERS_WHITELIST = false;
 
 // Should we use asynchronous submission
 $CDASH_ASYNCHRONOUS_SUBMISSION = false;
