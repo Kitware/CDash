@@ -8,4 +8,6 @@ $baseDir = dirname($vendorDir);
 return array(
     'Suin\\RSSWriter' => array($vendorDir . '/suin/php-rss-writer/src'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log'),
+    'Predis' => array($vendorDir . '/predis/predis/lib'),
+    'Assert' => array($vendorDir . '/beberlei/assert/lib'),
 );

@@ -17,8 +17,11 @@ class Item implements ItemInterface
     /** @var string */
     protected $description;
 
+    /** @var string */
+    protected $contentEncoded;
+
     /** @var array */
-    protected $categories = array();
+    protected $categories = [];
 
     /** @var string */
     protected $guid;
@@ -53,9 +56,15 @@ class Item implements ItemInterface
         return $this;
     }
 
+    public function contentEncoded($content)
+    {
+        $this->contentEncoded = $content;
+        return $this;
+    }
+
     public function category($name, $domain = null)
     {
-        $this->categories[] = array($name, $domain);
+        $this->categories[] = [$name, $domain];
         return $this;
     }
 
@@ -74,7 +83,7 @@ class Item implements ItemInterface
 
     public function enclosure($url, $length = 0, $type = 'audio/mpeg')
     {
-        $this->enclosure = array('url' => $url, 'length' => $length, 'type' => $type);
+        $this->enclosure = ['url' => $url, 'length' => $length, 'type' => $type];
         return $this;
     }
 
@@ -97,6 +106,14 @@ class Item implements ItemInterface
         $xml->addChild('link', $this->url);
         $xml->addChild('description', $this->description);
 
+        if ($this->contentEncoded) {
+            // SimpleXMLElement does not support CDATA transformation
+            $element = $xml->addChild('encoded', null, 'http://purl.org/rss/1.0/modules/content/');
+            $element = dom_import_simplexml($element);
+            $elementOwner = $element->ownerDocument;
+            $element->appendChild($elementOwner->createCDATASection($this->contentEncoded));
+        }
+
         foreach ($this->categories as $category) {
             $element = $xml->addChild('category', $category[0]);
 
@@ -108,8 +125,8 @@ class Item implements ItemInterface
         if ($this->guid) {
             $guid = $xml->addChild('guid', $this->guid);
 
-            if ($this->isPermalink) {
-                $guid->addAttribute('isPermaLink', 'true');
+            if ($this->isPermalink === false) {
+                $guid->addAttribute('isPermaLink', 'false');
             }
         }
 
