@@ -11,8 +11,8 @@ describe("viewTestPagination", function() {
 
     // Next, click on a specific test
     var build_failures = element.all(by.binding('build.test.notrun'));
-    expect(build_failures.count()).toBe(5);
-    var test = build_failures.get(2);
+    expect(build_failures.count()).toBe(8);
+    var test = build_failures.get(3);
     expect(test.getText()).toBe('29');
     test.click();
     browser.waitForAngular();
