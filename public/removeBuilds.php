@@ -20,7 +20,7 @@ include 'public/login.php';
 include 'include/version.php';
 require_once 'include/common.php';
 
-set_time_limit(0);
+@set_time_limit(0);
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 if (!$db) {

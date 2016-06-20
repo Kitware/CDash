@@ -22,7 +22,7 @@ include 'models/coveragefile2user.php';
 include 'models/user.php';
 require_once 'include/filterdataFunctions.php';
 
-set_time_limit(0);
+@set_time_limit(0);
 
 $noforcelogin = 1;
 require 'public/login.php';
