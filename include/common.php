@@ -612,11 +612,11 @@ function get_server_URI($localhost = false)
 
     $currentPort = '';
     $httpprefix = 'http://';
-    if ($_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443) {
+    if (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443) {
         $currentPort = ':' . $_SERVER['SERVER_PORT'];
     }
 
-    if ($_SERVER['SERVER_PORT'] == 443 || $CDASH_USE_HTTPS) {
+    if ($CDASH_USE_HTTPS || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)) {
         $httpprefix = 'https://';
     }
 
