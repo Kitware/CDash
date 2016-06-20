@@ -840,34 +840,46 @@ function update_site($siteid, $name,
 function get_geolocation($ip)
 {
     include 'config/config.php';
-    require_once 'include/pdo.php';
     $location = array();
 
-    // Ask hostip.info for geolocation
     $lat = '';
     $long = '';
 
-    $curl = curl_init();
-    curl_setopt($curl, CURLOPT_URL, 'http://api.hostip.info/get_html.php?ip=' . $ip . '&position=true');
-    curl_setopt($curl, CURLOPT_TIMEOUT, 5); // if we cannot get the geolocation in 5 seconds we quit
+    global $CDASH_GEOLOCATE_IP_ADDRESSES;
 
-    ob_start();
-    curl_exec($curl);
-    $httpReply = ob_get_contents();
-    ob_end_clean();
+    if ($CDASH_GEOLOCATE_IP_ADDRESSES) {
+        // Ask hostip.info for geolocation
+        $url = 'http://api.hostip.info/get_html.php?ip=' . $ip . '&position=true';
 
-    $pos = strpos($httpReply, 'Latitude: ');
-    if ($pos !== false) {
-        $pos2 = strpos($httpReply, "\n", $pos);
-        $lat = substr($httpReply, $pos + 10, $pos2 - $pos - 10);
+        if (function_exists('curl_init')) {
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_TIMEOUT, 5); // if we cannot get the geolocation in 5 seconds we quit
+            ob_start();
+            curl_exec($curl);
+            $httpReply = ob_get_contents();
+            ob_end_clean();
+            curl_close($curl);
+        } else if (ini_get('allow_url_fopen')) {
+            $options = array('http' => array('timeout' => 5.0));
+            $context = stream_context_create($options);
+            $httpReply = file_get_contents($url, false, $context);
+        } else {
+            $httpReply = '';
+        }
+
+        $pos = strpos($httpReply, 'Latitude: ');
+        if ($pos !== false) {
+            $pos2 = strpos($httpReply, "\n", $pos);
+            $lat = substr($httpReply, $pos + 10, $pos2 - $pos - 10);
+        }
+
+        $pos = strpos($httpReply, 'Longitude: ');
+        if ($pos !== false) {
+            $pos2 = strpos($httpReply, "\n", $pos);
+            $long = substr($httpReply, $pos + 11, $pos2 - $pos - 11);
+        }
     }
-
-    $pos = strpos($httpReply, 'Longitude: ');
-    if ($pos !== false) {
-        $pos2 = strpos($httpReply, "\n", $pos);
-        $long = substr($httpReply, $pos + 11, $pos2 - $pos - 11);
-    }
-    curl_close($curl);
 
     $location['latitude'] = '';
     $location['longitude'] = '';

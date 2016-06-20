@@ -157,6 +157,8 @@ $CDASH_WARN_ABOUT_UNREGISTERED_COMMITTERS = '0';
 // Use getIPfromApache script to get IP addresses
 // when using forwarding script
 $CDASH_FORWARDING_IP = '192.%'; // should be an SQL format
+// Use hostip.info to geolocate IP addresses
+$CDASH_GEOLOCATE_IP_ADDRESSES = true;
 $CDASH_DEFAULT_IP_LOCATIONS = array();
 // Use compression (default on)
 $CDASH_USE_COMPRESSION = '1';
