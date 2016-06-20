@@ -79,7 +79,7 @@ function curl_request($request)
         }
         curl_exec($ch);
         curl_close($ch);
-    } else if (ini_get('allow_url_fopen')) {
+    } elseif (ini_get('allow_url_fopen')) {
         $options = array('http' => array('timeout' => 1.0));
         if ($CDASH_USE_HTTPS) {
             $options['ssl'] = array('verify_peer' => false);

@@ -860,7 +860,7 @@ function get_geolocation($ip)
             $httpReply = ob_get_contents();
             ob_end_clean();
             curl_close($curl);
-        } else if (ini_get('allow_url_fopen')) {
+        } elseif (ini_get('allow_url_fopen')) {
             $options = array('http' => array('timeout' => 5.0));
             $context = stream_context_create($options);
             $httpReply = file_get_contents($url, false, $context);
