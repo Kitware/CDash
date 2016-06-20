@@ -93,15 +93,18 @@ function writeBackupFile($filehandler, $content, $projectname, $buildname,
             $i++;
         } else {
             $got_lock = true;
-
-            // Make sure the file is in the right directory.
-            $pos = strpos(realpath(dirname($filename)), realpath($backupDir));
-            if ($pos === false || $pos != 0) {
-                echo "File cannot be stored in backup directory: $filename";
-                add_log("File cannot be stored in backup directory: $filename (realpath = " . realpath($backupDir) . ')', 'writeBackupFile', LOG_ERR);
-                flock($lockfp, LOCK_UN);
-                unlink($lockfilename);
-                return false;
+            // realpath() always returns false for Google Cloud Storage.
+            global $CDASH_DATA_ROOT_DIRECTORY;
+            if (realpath($CDASH_DATA_ROOT_DIRECTORY) !== false) {
+                // Make sure the file is in the right directory.
+                $pos = strpos(realpath(dirname($filename)), realpath($backupDir));
+                if ($pos === false || $pos != 0) {
+                    echo "File cannot be stored in backup directory: $filename";
+                    add_log("File cannot be stored in backup directory: $filename (realpath = " . realpath($backupDir) . ')', 'writeBackupFile', LOG_ERR);
+                    flock($lockfp, LOCK_UN);
+                    unlink($lockfilename);
+                    return false;
+                }
             }
 
             if (!$handle = fopen($filename, 'w')) {
