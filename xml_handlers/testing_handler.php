@@ -126,7 +126,7 @@ class TestingHandler extends AbstractHandler
             // Or a subproject specifically for this test
             // Or no subprojects.
             if (!array_key_exists($this->SubProjectName, $this->Builds)) {
-              $this->createBuild();
+                $this->createBuild();
             }
 
             $build = $this->Builds[$this->SubProjectName];
@@ -150,7 +150,7 @@ class TestingHandler extends AbstractHandler
                 $this->Test->InsertLabelAssociations($build->Id);
             } else {
                 add_log('Cannot insert test', 'Test XML parser', LOG_ERR,
-                    $this->projectid,$build->Id);
+                    $this->projectid, $build->Id);
             }
         } elseif ($name == 'LABEL' && $parent == 'LABELS') {
             if (isset($this->Test)) {
@@ -192,7 +192,7 @@ class TestingHandler extends AbstractHandler
             // If we've gotten this far without creating any builds, there's no
             // tests. Create a build anyway.
             if (empty($this->Builds)) {
-              $this->createBuild();
+                $this->createBuild();
             }
 
             foreach ($this->Builds as $subproject => $build) {
@@ -280,40 +280,40 @@ class TestingHandler extends AbstractHandler
 
     private function createBuild()
     {
-      if (!array_key_exists($subprojectName, $this->NumberTestsFailed)) {
-        $this->NumberTestsFailed[$subprojectName] = 0;
-      }
-      if (!array_key_exists($subprojectName, $this->NumberTestsNotRun)) {
-        $this->NumberTestsNotRun[$subprojectName] = 0;
-      }
-      if (!array_key_exists($subprojectName, $this->NumberTestsPassed)) {
-        $this->NumberTestsPassed[$subprojectName] = 0;
-      }
+        if (!array_key_exists($subprojectName, $this->NumberTestsFailed)) {
+            $this->NumberTestsFailed[$subprojectName] = 0;
+        }
+        if (!array_key_exists($subprojectName, $this->NumberTestsNotRun)) {
+            $this->NumberTestsNotRun[$subprojectName] = 0;
+        }
+        if (!array_key_exists($subprojectName, $this->NumberTestsPassed)) {
+            $this->NumberTestsPassed[$subprojectName] = 0;
+        }
 
-      $build = new Build();
+        $build = new Build();
 
-      if (!empty($this->BuildInformation->PullRequest)) {
-        $build->SetPullRequest($value);
-      }
+        if (!empty($this->BuildInformation->PullRequest)) {
+            $build->SetPullRequest($value);
+        }
 
-      $build->SiteId = $this->Site->Id;
-      $build->Name = $this->BuildInformation->BuildName;
+        $build->SiteId = $this->Site->Id;
+        $build->Name = $this->BuildInformation->BuildName;
 
-      $build->SetStamp($this->BuildInformation->BuildStamp);
-      $build->Generator = $this->BuildInformation->Generator;
-      $build->Information = $this->BuildInformation;
+        $build->SetStamp($this->BuildInformation->BuildStamp);
+        $build->Generator = $this->BuildInformation->Generator;
+        $build->Information = $this->BuildInformation;
 
-      $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
+        $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
 
-      $build->ProjectId = $this->projectid;
-      $build->StartTime = $start_time;
+        $build->ProjectId = $this->projectid;
+        $build->StartTime = $start_time;
       // EndTimeStamp hasn't been parsed yet.
       $build->EndTime = $start_time;
-      $build->SubmitTime = gmdate(FMT_DATETIME);
-      $build->SetSubProject($this->SubProjectName);
+        $build->SubmitTime = gmdate(FMT_DATETIME);
+        $build->SetSubProject($this->SubProjectName);
 
-      $build->GetIdFromName($this->SubProjectName);
-      $build->RemoveIfDone();
+        $build->GetIdFromName($this->SubProjectName);
+        $build->RemoveIfDone();
 
       // If the build doesn't exist we add it
       if ($build->Id == 0) {
@@ -331,6 +331,6 @@ class TestingHandler extends AbstractHandler
           $this->NumberTestsPassed[$this->SubProjectName] += $build->GetNumberOfPassedTests();
       }
 
-      $this->Builds[$this->SubProjectName] = $build;
+        $this->Builds[$this->SubProjectName] = $build;
     }
 }

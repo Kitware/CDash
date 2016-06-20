@@ -79,7 +79,7 @@ class BuildHandler extends AbstractHandler
             $subprojectName = $attributes['NAME'];
             $build = new Build();
             if (!empty($this->BuildInformation->PullRequest)) {
-              $build->SetPullRequest($value);
+                $build->SetPullRequest($value);
             }
             $build->SiteId = $this->Site->Id;
             $build->Name = $this->BuildInformation->BuildName;
@@ -88,18 +88,18 @@ class BuildHandler extends AbstractHandler
             $build->Information = $this->BuildInformation;
             $this->Builds[$subprojectName] = $build;
         } elseif ($name == 'BUILD') {
-          if (empty($this->Builds)) {
-            $build = new Build();
-            if (!empty($this->BuildInformation->PullRequest)) {
-              $build->SetPullRequest($value);
+            if (empty($this->Builds)) {
+                $build = new Build();
+                if (!empty($this->BuildInformation->PullRequest)) {
+                    $build->SetPullRequest($value);
+                }
+                $build->SiteId = $this->Site->Id;
+                $build->Name = $this->BuildInformation->BuildName;
+                $build->SetStamp($this->BuildInformation->BuildStamp);
+                $build->Generator = $this->BuildInformation->Generator;
+                $build->Information = $this->BuildInformation;
+                $this->Builds[''] = $build;
             }
-            $build->SiteId = $this->Site->Id;
-            $build->Name = $this->BuildInformation->BuildName;
-            $build->SetStamp($this->BuildInformation->BuildStamp);
-            $build->Generator = $this->BuildInformation->Generator;
-            $build->Information = $this->BuildInformation;
-            $this->Builds[''] = $build;
-          }
         } elseif ($name == 'WARNING') {
             $this->Error = new BuildError();
             $this->Error->Type = 1;
@@ -133,17 +133,16 @@ class BuildHandler extends AbstractHandler
                 $build->EndTime = $end_time;
                 $build->SubmitTime = $submit_time;
                 if (empty($subproject)) {
-                  $build->SetSubProject($this->SubProjectName);
-                }
-                else {
-                  $build->SetSubProject($subproject);
+                    $build->SetSubProject($this->SubProjectName);
+                } else {
+                    $build->SetSubProject($subproject);
                 }
                 $build->Append = $this->Append;
                 $build->Command = $this->BuildCommand;
                 $build->Log .= $this->BuildLog;
 
                 foreach ($this->Labels as $label) {
-                  $build->AddLabel($label);
+                    $build->AddLabel($label);
                 }
                 add_build($build, $this->scheduleid);
                 $build->UpdateBuildDuration(
@@ -178,14 +177,14 @@ class BuildHandler extends AbstractHandler
                 }
             }
             if (array_key_exists($this->SubProjectName, $this->Builds)) {
-              $this->Builds[$this->SubProjectName]->AddError($this->Error);
+                $this->Builds[$this->SubProjectName]->AddError($this->Error);
             }
             unset($this->Error);
         } elseif ($name == 'LABEL') {
             if (isset($this->Error)) {
                 $this->Error->AddLabel($this->Label);
             } else {
-              $this->Labels[] = $this->Label;
+                $this->Labels[] = $this->Label;
             }
         }
     }
