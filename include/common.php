@@ -2151,3 +2151,21 @@ function create_aggregate_build($build, $siteid=null)
     add_build($aggregate_build);
     return $aggregate_build;
 }
+
+function extract_tar($filename, $dirName)
+{
+    if (class_exists('PharData')) {
+        try {
+            $phar = new PharData($filename);
+            $phar->extractTo($dirName);
+        } catch (Exception $e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    $tar = new Archive_Tar($filename);
+    $tar->setErrorHandling(PEAR_ERROR_PRINT);
+    return $tar->extract($dirName);
+}

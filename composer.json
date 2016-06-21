@@ -23,6 +23,7 @@
     "guzzlehttp/guzzle": "~6.0",
     "monolog/monolog": "~1.19",
     "paragonie/random_compat": "~1.4",
+    "pear/archive_tar": "~1.4",
     "predis/predis": "~0.8",
     "ramsey/uuid": "~3.4",
     "suin/php-rss-writer": "~1.4",
@@ -38,7 +39,8 @@
   },
   "suggest": {
     "ext-pdo_mysql": "",
-    "ext-pdo_pgsql": ""
+    "ext-pdo_pgsql": "",
+    "ext-phar": ""
   },
   "autoload": {
     "psr-4": {"CDash\\": "include/CDash/"}

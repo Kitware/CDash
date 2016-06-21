@@ -45,8 +45,11 @@ class JavaJSONTarHandler
         mkdir($dirName);
 
         // Extract the tarball.
-        $phar = new PharData($filename);
-        $phar->extractTo($dirName);
+        $result = extract_tar($filename, $dirName);
+        if ($result === false) {
+            add_log('Could not extract ' . $filename . ' into ' . $dirName, 'JavaJSONTarHandler::Parse', LOG_ERR);
+            return false;
+        }
 
         // Check if this submission included a  package_map.json file.
         // This tells us how Java packages correspond to CDash subprojects.
