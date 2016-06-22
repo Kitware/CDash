@@ -20,8 +20,8 @@ class SVNInfoTestCase extends KWWebTestCase
     {
         $this->login();
         $this->get($this->url . '/gitinfo.php');
-        if (strpos($this->getBrowser()->getContentAsText(), 'phpinfo') === false) {
-            $this->fail("'phpinfo' not found when expected.");
+        if (strpos($this->getBrowser()->getContentAsText(), 'git version') === false) {
+            $this->fail("'git version' not found when expected.");
             return 1;
         }
         $this->pass('Passed');

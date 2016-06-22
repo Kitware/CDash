@@ -30,7 +30,7 @@ require_once 'models/buildfailure.php';
 require_once 'include/filterdataFunctions.php';
 require_once 'include/index_functions.php';
 
-set_time_limit(0);
+@set_time_limit(0);
 
 // Check if we can connect to the database.
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
@@ -426,74 +426,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
                 AND user2repository.credential=updatefile.author) AS userupdates,";
     }
 
-    $sql = 'SELECT b.id,b.siteid,b.parentid,b.done,
-        bu.status AS updatestatus,
-        i.osname AS osname,
-        bu.starttime AS updatestarttime,
-        bu.endtime AS updateendtime,
-        bu.nfiles AS countupdatefiles,
-        bu.warnings AS countupdatewarnings,
-        b.configureduration,
-        be_diff.difference_positive AS countbuilderrordiffp,
-        be_diff.difference_negative AS countbuilderrordiffn,
-        bw_diff.difference_positive AS countbuildwarningdiffp,
-        bw_diff.difference_negative AS countbuildwarningdiffn,
-        ce_diff.difference AS countconfigurewarningdiff,
-        btt.time AS testduration,
-        tnotrun_diff.difference_positive AS counttestsnotrundiffp,
-        tnotrun_diff.difference_negative AS counttestsnotrundiffn,
-        tfailed_diff.difference_positive AS counttestsfaileddiffp,
-        tfailed_diff.difference_negative AS counttestsfaileddiffn,
-        tpassed_diff.difference_positive AS counttestspasseddiffp,
-        tpassed_diff.difference_negative AS counttestspasseddiffn,
-        tstatusfailed_diff.difference_positive AS countteststimestatusfaileddiffp,
-        tstatusfailed_diff.difference_negative AS countteststimestatusfaileddiffn,
-        (SELECT count(buildid) FROM build2note WHERE buildid=b.id)  AS countnotes,
-        (SELECT count(buildid) FROM buildnote WHERE buildid=b.id) AS countbuildnotes,'
-        . $userupdatesql . "
-            s.name AS sitename,
-        s.outoforder AS siteoutoforder,
-        b.stamp,b.name,b.type,b.generator,b.starttime,b.endtime,b.submittime,
-        b.configureerrors AS countconfigureerrors,
-        b.configurewarnings AS countconfigurewarnings,
-        b.builderrors AS countbuilderrors,
-        b.buildwarnings AS countbuildwarnings,
-        b.testnotrun AS counttestsnotrun,
-        b.testfailed AS counttestsfailed,
-        b.testpassed AS counttestspassed,
-        b.testtimestatusfailed AS countteststimestatusfailed,
-        cs.loctested, cs.locuntested,
-        csd.loctested AS loctesteddiff, csd.locuntested AS locuntesteddiff,
-        das.checker, das.numdefects,
-        sp.id AS subprojectid,
-        sp.groupid AS subprojectgroup,
-        g.name AS groupname,gp.position,g.id AS groupid,
-        (SELECT count(buildid) FROM label2build WHERE buildid=b.id) AS numlabels,
-        (SELECT count(buildid) FROM build2uploadfile WHERE buildid=b.id) AS builduploadfiles
-            FROM build AS b
-            LEFT JOIN build2group AS b2g ON (b2g.buildid=b.id)
-            LEFT JOIN buildgroup AS g ON (g.id=b2g.groupid)
-            LEFT JOIN buildgroupposition AS gp ON (gp.buildgroupid=g.id)
-            LEFT JOIN site AS s ON (s.id=b.siteid)
-            LEFT JOIN build2update AS b2u ON (b2u.buildid=b.id)
-            LEFT JOIN buildupdate AS bu ON (b2u.updateid=bu.id)
-            LEFT JOIN buildinformation AS i ON (i.buildid=b.id)
-            LEFT JOIN coveragesummary AS cs ON (cs.buildid=b.id)
-            LEFT JOIN coveragesummarydiff AS csd ON (csd.buildid=b.id)
-            LEFT JOIN dynamicanalysissummary AS das ON (das.buildid=b.id)
-            LEFT JOIN builderrordiff AS be_diff ON (be_diff.buildid=b.id AND be_diff.type=0)
-            LEFT JOIN builderrordiff AS bw_diff ON (bw_diff.buildid=b.id AND bw_diff.type=1)
-            LEFT JOIN configureerrordiff AS ce_diff ON (ce_diff.buildid=b.id AND ce_diff.type=1)
-            LEFT JOIN buildtesttime AS btt ON (btt.buildid=b.id)
-            LEFT JOIN testdiff AS tnotrun_diff ON (tnotrun_diff.buildid=b.id AND tnotrun_diff.type=0)
-            LEFT JOIN testdiff AS tfailed_diff ON (tfailed_diff.buildid=b.id AND tfailed_diff.type=1)
-            LEFT JOIN testdiff AS tpassed_diff ON (tpassed_diff.buildid=b.id AND tpassed_diff.type=2)
-            LEFT JOIN testdiff AS tstatusfailed_diff ON (tstatusfailed_diff.buildid=b.id AND tstatusfailed_diff.type=3)
-            LEFT JOIN subproject2build AS sp2b ON (sp2b.buildid = b.id)
-            LEFT JOIN subproject as sp ON (sp2b.subprojectid = sp.id)
-            WHERE b.projectid='$projectid' AND g.type='Daily'
-            $parent_clause $date_clause
-            " . $subprojectsql . ' ' . $filter_sql . ' ' . $limit_sql;
+    $sql = get_index_query();
+    $sql .= "WHERE b.projectid='$projectid' AND g.type='Daily'
+        $parent_clause $date_clause $subprojectsql $filter_sql $limit_sql";
 
     // We shouldn't get any builds for group that have been deleted (otherwise something is wrong)
     $builds = pdo_query($sql);
@@ -612,8 +547,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $build_row['countupdateerrors'] = 0;
         }
 
-        $build_row['buildduration'] = round((strtotime($build_row['endtime']) - strtotime($build_row['starttime'])) / 60, 1);
-
         // Error/Warnings differences
         if (empty($build_row['countbuilderrordiffp'])) {
             $build_row['countbuilderrordiffp'] = 0;
@@ -723,9 +656,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
             if ($selected_subprojects) {
                 $select_query = "
                     SELECT configureerrors, configurewarnings, configureduration,
-                           builderrors, buildwarnings, b.starttime, b.endtime,
-                           testnotrun, testfailed, testpassed, btt.time AS testduration,
-                           sb.name
+                           builderrors, buildwarnings, buildduration,
+                           b.starttime, b.endtime, testnotrun, testfailed, testpassed,
+                           btt.time AS testduration, sb.name
                     FROM build AS b
                     INNER JOIN subproject2build AS sb2b ON (b.id = sb2b.buildid)
                     INNER JOIN subproject AS sb ON (sb2b.subprojectid = sb.id)
@@ -745,7 +678,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
                     $selected_build_warnings +=
                         max(0, $select_array['buildwarnings']);
                     $selected_build_duration +=
-                        max(0, round((strtotime($select_array['endtime']) - strtotime($select_array['starttime'])) / 60, 1));
+                        max(0, $select_array['buildduration']);
                     $selected_tests_not_run +=
                         max(0, $select_array['testnotrun']);
                     $selected_tests_failed +=
@@ -874,6 +807,12 @@ function echo_main_dashboard_JSON($project_instance, $date)
         }
         $build_response['label'] = $build_label;
 
+        // Calculate this build's total duration.
+        $duration = strtotime($build_array['endtime']) -
+            strtotime($build_array['starttime']);
+        $build_response['time'] = time_difference($duration, true);
+        $build_response['timefull'] = $duration;
+
         $update_response = array();
 
         $countupdatefiles = $build_array['countupdatefiles'];
@@ -925,7 +864,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $compilation_response['warning'] = $nwarnings;
             $buildgroups_response[$i]['numbuildwarning'] += $nwarnings;
 
-            $compilation_response['time'] = time_difference($buildduration * 60.0, true);
+            $compilation_response['time'] = time_difference($buildduration, true);
             $compilation_response['timefull'] = $buildduration;
 
             if (!$include_subprojects && !$exclude_subprojects) {
@@ -1119,7 +1058,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
         }
         if ($build_response['hascompilation'] &&
                 array_key_exists('time', $build_response['compilation'])) {
-            $timesummary .= ', Compilation time: ' .
+            $timesummary .= ', Build time: ' .
                 $build_response['compilation']['time'];
         }
         if ($build_response['hastest'] &&
@@ -1127,6 +1066,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $timesummary .= ', Test time: ' .
                 $build_response['test']['time'];
         }
+
+        $timesummary .= ', Total time: ' . $build_response['time'];
+
         $build_response['timesummary'] = $timesummary;
 
         if ($include_subprojects || $exclude_subprojects) {
@@ -1158,9 +1100,9 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
         $coverageIsGrouped = false;
 
-        if (!empty($build_array['loctested'])) {
-            $loctested = $build_array['loctested'];
-            $locuntested = $build_array['locuntested'];
+        $loctested = $build_array['loctested'];
+        $locuntested = $build_array['locuntested'];
+        if ($loctested + $locuntested > 0) {
             $coverage_response = array();
             $coverage_response['buildid'] = $build_array['id'];
             if ($linkToChildCoverage) {

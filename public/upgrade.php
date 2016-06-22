@@ -21,7 +21,7 @@ include_once 'include/common.php';
 include 'include/version.php';
 include_once 'include/upgrade_functions.php';
 
-set_time_limit(0);
+@set_time_limit(0);
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'], 0); // only admin
 
@@ -685,6 +685,13 @@ if (isset($_GET['upgrade-2-4'])) {
             'numeric(7,2)', '0.00');
         UpgradeConfigureDuration();
         UpgradeTestDuration();
+    }
+    // Distinguish build step duration from (end time - start time).
+    $query = 'SELECT buildduration FROM build LIMIT 1';
+    $dbTest = pdo_query($query);
+    if ($dbTest === false) {
+        AddTableField('build', 'buildduration', 'int(11)', 'integer', '0');
+        UpgradeBuildDuration();
     }
 
     // Support for marking a build as "done".

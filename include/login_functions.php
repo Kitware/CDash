@@ -338,14 +338,8 @@ function auth($SessionCachePolicy = 'private_no_expire')
         }
 
         // Return early if a session has already been started.
-        if (function_exists('session_status')) {
-            if (session_status() != PHP_SESSION_NONE) {
-                return;
-            }
-        } else {
-            if (session_id() != '') {
-                return;
-            }
+        if (session_status() != PHP_SESSION_NONE) {
+            return;
         }
 
         session_name('CDash');

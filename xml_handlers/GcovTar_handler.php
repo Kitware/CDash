@@ -70,8 +70,11 @@ class GCovTarHandler
         mkdir($dirName);
 
         // Extract the tarball.
-        $phar = new PharData($filename);
-        $phar->extractTo($dirName);
+        $result = extract_tar($filename, $dirName);
+        if ($result === false) {
+            add_log('Could not extract ' . $filename . ' into ' . $dirName, 'GCovTarHandler::Parse', LOG_ERR);
+            return false;
+        }
 
         // Find the data.json file and extract the source directory from it.
         $iterator = new RecursiveIteratorIterator(
@@ -455,6 +458,9 @@ class GCovTarHandler
     public function ParseUncoveredSourceFile($fileinfo, $path)
     {
         $coverageFileLog = new CoverageFileLog();
+        $coverageFileLog->AggregateBuildId = $this->AggregateBuildId;
+        $coverageFileLog->PreviousAggregateParentId =
+            $this->PreviousAggregateParentId;
         $coverageFile = new CoverageFile();
         $coverageFile->FullPath = trim($path);
         $coverage = new Coverage();

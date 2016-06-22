@@ -3,6 +3,7 @@
 .php_cs.cache
 .svn/
 /_build/
+/app.yaml
 /backup/
 /composer.phar
 /config/config.local.php

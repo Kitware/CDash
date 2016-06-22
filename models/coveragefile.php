@@ -31,6 +31,8 @@ class CoverageFile
             return;
         }
 
+        $pdo = get_link_identifier()->getPdo();
+
         global $CDASH_USE_COMPRESSION;
 
         $this->FullPath = trim($this->FullPath);
@@ -38,7 +40,6 @@ class CoverageFile
         // Compute the crc32 of the file (before compression for backward compatibility)
         $this->Crc32 = crc32($this->FullPath . $this->File);
 
-        $this->FullPath = pdo_real_escape_string($this->FullPath);
         if ($CDASH_USE_COMPRESSION) {
             $file = gzcompress($this->File);
             if ($file === false) {
@@ -53,68 +54,107 @@ class CoverageFile
         } else {
             $file = $this->File;
         }
-        $file = pdo_real_escape_string($file);
 
-        $coveragefile = pdo_query('SELECT id FROM coveragefile WHERE crc32=' . qnum($this->Crc32));
+        $stmt = $pdo->prepare(
+                'SELECT id FROM coveragefile WHERE crc32=:crc32');
+        $stmt->bindParam(':crc32', $this->Crc32);
+        $stmt->execute();
         add_last_sql_error('CoverageFile:Update');
+        $existing_file_row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (is_array($existing_file_row)) {
+            // A file already exists with this crc32.
+            // Update this object to use the previously existing result's id.
+            $this->Id = $existing_file_row['id'];
 
-        if (pdo_num_rows($coveragefile) > 0) {
-            // we have the same crc32
+            // Update the corresponding coverage row to use this fileid too.
+            // First we query for the old fileid used by this coverage entry,
+            // just to be sure that we're updating the correct record.
+            $stmt = $pdo->prepare(
+                    'SELECT c.fileid FROM coverage AS c
+                    INNER JOIN coveragefile AS cf ON (cf.id=c.fileid)
+                    WHERE c.buildid=:buildid AND cf.fullpath=:fullpath');
+            $stmt->bindParam(':buildid', $buildid);
+            $stmt->bindParam(':fullpath', $this->FullPath);
+            $stmt->execute();
+            $old_fileid_row = $stmt->fetch();
+            $prevfileid = $old_fileid_row['fileid'];
 
-            $coveragefile_array = pdo_fetch_array($coveragefile);
-            $this->Id = $coveragefile_array['id'];
-
-            // Update the current coverage.fileid
-            $coverage = pdo_query('SELECT c.fileid FROM coverage AS c,coveragefile AS cf
-                    WHERE c.fileid=cf.id AND c.buildid=' . qnum($buildid) . "
-                    AND cf.fullpath='$this->FullPath'");
-            $coverage_array = pdo_fetch_array($coverage);
-            $prevfileid = $coverage_array['fileid'];
-
-            pdo_query('UPDATE coverage SET fileid=' . qnum($this->Id) . ' WHERE buildid=' . qnum($buildid) . ' AND fileid=' . qnum($prevfileid));
+            $stmt = $pdo->prepare(
+                    'UPDATE coverage SET fileid=:fileid
+                    WHERE buildid=:buildid AND fileid=:prevfileid');
+            $stmt->bindParam(':fileid', $this->Id);
+            $stmt->bindParam(':buildid', $buildid);
+            $stmt->bindParam(':prevfileid', $prevfileid);
+            $stmt->execute();
             add_last_sql_error('CoverageFile:Update');
 
-            $row = pdo_single_row_query('SELECT COUNT(*) AS c FROM label2coveragefile WHERE buildid=' . qnum($buildid) . ' AND coveragefileid=' . qnum($prevfileid));
-            if (isset($row['c']) && $row['c'] > 0) {
-                pdo_query('UPDATE label2coveragefile SET coveragefileid=' . qnum($this->Id) . ' WHERE buildid=' . qnum($buildid) . ' AND coveragefileid=' . qnum($prevfileid));
+            // Similarly update any labels if necessary.
+            $stmt = $pdo->prepare(
+                    'SELECT COUNT(*) AS c FROM label2coveragefile
+                    WHERE buildid=:buildid AND coveragefileid=:prevfileid');
+            $stmt->bindParam(':buildid', $buildid);
+            $stmt->bindParam(':prevfileid', $prevfileid);
+            $stmt->execute();
+            $count_labels_row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($count_labels_row['c'] > 0) {
+                $stmt = $pdo->prepare(
+                        'UPDATE label2coveragefile SET coveragefileid=:fileid
+                        WHERE buildid=:buildid AND coveragefileid=:prevfileid');
+                $stmt->bindParam(':fileid', $this->Id);
+                $stmt->bindParam(':buildid', $buildid);
+                $stmt->bindParam(':prevfileid', $prevfileid);
+                $stmt->execute();
                 add_last_sql_error('CoverageFile:Update');
             }
 
             // Remove the file if the crc32 is NULL
-            pdo_query('DELETE FROM coveragefile WHERE id=' . qnum($prevfileid) . ' AND file IS NULL and crc32 IS NULL');
+            $stmt = $pdo->prepare(
+                    'DELETE FROM coveragefile
+                    WHERE id=:prevfileid AND file IS NULL AND crc32 IS NULL');
+            $stmt->bindParam(':prevfileid', $prevfileid);
+            $stmt->execute();
             add_last_sql_error('CoverageFile:Update');
         } else {
             // The file doesn't exist in the database
 
             // We find the current fileid based on the name and the file should be null
-            $coveragefile = pdo_query('SELECT cf.id,cf.file FROM coverage AS c,coveragefile AS cf
-                    WHERE c.fileid=cf.id AND c.buildid=' . qnum($buildid) . "
-                    AND cf.fullpath='$this->FullPath' ORDER BY cf.id ASC");
-            $coveragefile_array = pdo_fetch_array($coveragefile);
+            $stmt = $pdo->prepare(
+                    'SELECT cf.id, cf.file
+                    FROM coverage AS c
+                    INNER JOIN coveragefile AS cf ON (cf.id=c.fileid)
+                    WHERE c.buildid=:buildid AND cf.fullpath=:fullpath
+                    ORDER BY cf.id ASC');
+            $stmt->bindParam(':buildid', $buildid);
+            $stmt->bindParam(':fullpath', $this->FullPath);
+            $stmt->execute();
+            $coveragefile_row = $stmt->fetch(PDO::FETCH_ASSOC);
 
             // The GcovTarHandler creates coveragefiles before coverages
             // so we need a simpler query in this case.
-            if (!empty($coveragefile_array)) {
-                $this->Id = $coveragefile_array['id'];
+            if (is_array($coveragefile_row)) {
+                $this->Id = $coveragefile_row['id'];
             } else {
-                $coveragefile = pdo_query(
-                    "SELECT id, file FROM coveragefile
-                        WHERE fullpath='$this->FullPath' AND file IS NULL
-                        ORDER BY id ASC");
-                $coveragefile_array = pdo_fetch_array($coveragefile);
+                $stmt = $pdo->prepare(
+                        'SELECT id, file FROM coveragefile
+                        WHERE fullpath=:fullpath AND file IS NULL
+                        ORDER BY id ASC');
+                $stmt->bindParam(':fullpath', $this->FullPath);
+                $stmt->execute();
+                $coveragefile_row = $stmt->fetch(PDO::FETCH_ASSOC);
             }
-            if (!empty($coveragefile_array)) {
-                $this->Id = $coveragefile_array['id'];
+            if (is_array($coveragefile_row)) {
+                $this->Id = $coveragefile_row['id'];
             } else {
                 // If we still haven't found an existing fileid
                 // we insert one here.
-                pdo_query(
-                    "INSERT INTO coveragefile (fullpath)
-                        VALUES ('$this->FullPath')");
+                $stmt = $pdo->prepare(
+                        'INSERT INTO coveragefile (fullpath)
+                        VALUES (:fullpath)');
+                $stmt->bindParam(':fullpath', $this->FullPath);
+                $stmt->execute();
                 $this->Id = pdo_insert_id('coveragefile');
             }
 
-            $pdo = get_link_identifier()->getPdo();
             $stmt = $pdo->prepare(
                     'UPDATE coveragefile SET file=:file, crc32=:crc32 WHERE id=:id');
             $stmt->bindParam(':file', $file, PDO::PARAM_LOB);
@@ -134,14 +174,16 @@ class CoverageFile
             return false;
         }
 
-        $coverage = pdo_query('SELECT fullpath FROM coveragefile WHERE id=' . qnum($this->Id));
-        if (!$coverage) {
+        $pdo = get_link_identifier()->getPdo();
+        $stmt = $pdo->prepare(
+                'SELECT fullpath FROM coveragefile WHERE id=:id');
+        $stmt->bindParam(':id', $this->Id);
+        if (!$stmt->execute()) {
             add_last_sql_error('Coverage GetPath');
             return false;
         }
-
-        $coverage_array = pdo_fetch_array($coverage);
-        return $coverage_array['fullpath'];
+        $row = $stmt->fetch();
+        return $row['fullpath'];
     }  // GetPath
 
     /** Return the metric */
@@ -152,25 +194,29 @@ class CoverageFile
             return false;
         }
 
-        $coveragefile = pdo_query('SELECT loctested,locuntested,branchstested,branchsuntested,
-                functionstested,functionsuntested FROM coverage WHERE fileid=' . qnum($this->Id));
-        if (!$coveragefile) {
+        $pdo = get_link_identifier()->getPdo();
+        $stmt = $pdo->prepare(
+                'SELECT loctested, locuntested, branchstested, branchsuntested,
+                functionstested, functionsuntested
+                FROM coverage WHERE fileid=:id');
+        $stmt->bindParam(':id', $this->Id);
+        if (!$stmt->execute()) {
             add_last_sql_error('CoverageFile:GetMetric()');
             return false;
         }
 
-        if (pdo_num_rows($coveragefile) == 0) {
+        $row = $stmt->fetch();
+        if (!array_key_exists('loctested', $row)) {
             return false;
         }
 
         $coveragemetric = 1;
-        $coveragefile_array = pdo_fetch_array($coveragefile);
-        $loctested = $coveragefile_array['loctested'];
-        $locuntested = $coveragefile_array['locuntested'];
-        $branchstested = $coveragefile_array['branchstested'];
-        $branchsuntested = $coveragefile_array['branchsuntested'];
-        $functionstested = $coveragefile_array['functionstested'];
-        $functionsuntested = $coveragefile_array['functionsuntested'];
+        $loctested = $row['loctested'];
+        $locuntested = $row['locuntested'];
+        $branchstested = $row['branchstested'];
+        $branchsuntested = $row['branchsuntested'];
+        $functionstested = $row['functionstested'];
+        $functionsuntested = $row['functionsuntested'];
 
         // Compute the coverage metric for bullseye
         if ($branchstested > 0 || $branchsuntested > 0 || $functionstested > 0 || $functionsuntested > 0) {
@@ -203,17 +249,23 @@ class CoverageFile
     // Get the fileid from the name
     public function GetIdFromName($file, $buildid)
     {
-        $coveragefile = pdo_query("SELECT id FROM coveragefile,coverage WHERE fullpath LIKE '%" . $file . "%'
-                AND coverage.buildid=" . qnum($buildid) . ' AND coverage.fileid=coveragefile.id');
-        if (!$coveragefile) {
+        $pdo = get_link_identifier()->getPdo();
+        $stmt = $pdo->prepare(
+                'SELECT id FROM coveragefile
+                INNER JOIN coverage ON (coveragefile.id=coverage.fileid)
+                WHERE fullpath LIKE :fullpath AND coverage.buildid=:buildid');
+        $file_with_wildcard = "%$file%";
+        $stmt->bindParam(':fullpath', $file_with_wildcard);
+        $stmt->bindParam(':buildid', $buildid);
+        if (!$stmt->execute()) {
             add_last_sql_error('CoverageFile:GetIdFromName()');
             return false;
         }
-        if (pdo_num_rows($coveragefile) == 0) {
+        $row = $stmt->fetch();
+        if (!array_key_exists('id', $row)) {
             return false;
         }
-        $coveragefile_array = pdo_fetch_array($coveragefile);
-        return $coveragefile_array['id'];
+        return $row['id'];
     }
 
     // Populate $this from existing database results.
@@ -225,9 +277,12 @@ class CoverageFile
             return false;
         }
 
-        $row = pdo_single_row_query(
-            "SELECT * FROM coveragefile WHERE id='$this->Id'");
-        if (!$row || !array_key_exists('id', $row)) {
+        $pdo = get_link_identifier()->getPdo();
+        $stmt = $pdo->prepare('SELECT * FROM coveragefile WHERE id=:id');
+        $stmt->bindParam(':id', $this->Id);
+        $stmt->execute();
+        $row = $stmt->fetch();
+        if (!array_key_exists('id', $row)) {
             return false;
         }
 

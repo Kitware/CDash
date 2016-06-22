@@ -180,7 +180,7 @@ class Build
         $Label->Insert();
 
         add_log('New subproject detected: ' . $subproject, 'Build::SetSubProject',
-            LOG_WARNING, $this->ProjectId, $this->Id, CDASH_OBJECT_BUILD, $this->Id);
+            LOG_INFO, $this->ProjectId, $this->Id, CDASH_OBJECT_BUILD, $this->Id);
         return true;
     }
 
@@ -1970,6 +1970,36 @@ class Build
             add_last_sql_error('Build:SetConfigureDuration',
                 $this->ProjectId, $this->ParentId);
         }
+    }
+
+    public function UpdateBuildDuration($duration)
+    {
+        if ($duration === 0 || !$this->Id || !is_numeric($this->Id)) {
+            return;
+        }
+
+        pdo_begin_transaction();
+
+        // Update build step duration for this build.
+        pdo_query(
+                "UPDATE build SET buildduration=buildduration + $duration
+                WHERE id=" . qnum($this->Id));
+        add_last_sql_error('Build:UpdateBuildDuration',
+            $this->ProjectId, $this->Id);
+
+        // If this is a child build, add this duration
+        // to the parent's sum.
+        $this->SetParentId($this->LookupParentBuildId());
+        if ($this->ParentId > 0) {
+            pdo_query(
+                "UPDATE build
+                    SET buildduration = buildduration + $duration
+                    WHERE id=" . qnum($this->ParentId));
+            add_last_sql_error('Build:UpdateBuildDuration',
+                $this->ProjectId, $this->ParentId);
+        }
+
+        pdo_commit();
     }
 
     // Return the dashboard date (in Y-m-d format) for this build.

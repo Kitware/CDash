@@ -261,7 +261,7 @@ class CoverageFileLog
                 INNER JOIN coveragefilelog AS cfl ON (cfl.fileid=cf.id)
                 WHERE cfl.buildid='$aggregateBuildId' AND cf.fullpath='$path'");
         if ($row && array_key_exists('id', $row) &&
-            $row['id'] !== $this->FileId
+            $row['id'] != $this->FileId
         ) {
             add_log("Not appending coverage of '$path' to aggregate as it " .
                 'already contains a different version of this file.',
@@ -308,5 +308,12 @@ class CoverageFileLog
         // Insert/Update the aggregate summary.
         $aggregateSummary->Insert(true);
         $aggregateSummary->ComputeDifference($this->PreviousAggregateParentId);
+
+        if ($this->Build->SubProjectId && $this->AggregateBuildId) {
+            // Compute diff for the aggregate parent too.
+            $aggregateParentSummary = new CoverageSummary();
+            $aggregateParentSummary->BuildId = $this->AggregateBuildId;
+            $aggregateParentSummary->ComputeDifference();
+        }
     }
 }

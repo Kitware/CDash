@@ -26,7 +26,7 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 $CDASH_ROOT_DIR = str_replace('\\', '/', dirname(dirname(__FILE__)));
 set_include_path(get_include_path() . PATH_SEPARATOR . $CDASH_ROOT_DIR);
 
-// Hostname of the database server
+// Hostname of the database server or name of unix socket
 $CDASH_DB_HOST = 'localhost';
 // Login for database access
 $CDASH_DB_LOGIN = 'root';
@@ -38,6 +38,8 @@ $CDASH_DB_PASS = '';
 $CDASH_DB_NAME = 'cdash';
 // Database type
 $CDASH_DB_TYPE = 'mysql';
+// Must be one of host, unix_socket
+$CDASH_DB_CONNECTION_TYPE = 'host';
 
 // Support for SSL database connections.
 $CDASH_SSL_KEY = null;
@@ -119,10 +121,12 @@ $CDASH_BASE_URL = '';
 $CDASH_USE_LOCAL_DIRECTORY = '0';
 // CSS file
 $CDASH_CSS_FILE = 'css/cdash.css';
+// Must be writable by the web server
+$CDASH_DATA_ROOT_DIRECTORY = $CDASH_ROOT_DIR;
 // Backup directory
-$CDASH_BACKUP_DIRECTORY = $CDASH_ROOT_DIR . '/backup';
+$CDASH_BACKUP_DIRECTORY = $CDASH_DATA_ROOT_DIRECTORY . '/backup';
 // Log directory
-$CDASH_LOG_DIRECTORY = $CDASH_ROOT_DIR . '/log';
+$CDASH_LOG_DIRECTORY = $CDASH_DATA_ROOT_DIRECTORY . '/log';
 // Log file location. Set to false to log to the syslog.
 $CDASH_LOG_FILE = $CDASH_LOG_DIRECTORY . '/cdash.log';
 // Upload directory (absolute or relative)
@@ -153,6 +157,8 @@ $CDASH_WARN_ABOUT_UNREGISTERED_COMMITTERS = '0';
 // Use getIPfromApache script to get IP addresses
 // when using forwarding script
 $CDASH_FORWARDING_IP = '192.%'; // should be an SQL format
+// Use hostip.info to geolocate IP addresses
+$CDASH_GEOLOCATE_IP_ADDRESSES = true;
 $CDASH_DEFAULT_IP_LOCATIONS = array();
 // Use compression (default on)
 $CDASH_USE_COMPRESSION = '1';

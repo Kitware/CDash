@@ -117,7 +117,8 @@ class BuildHandler extends AbstractHandler
             $this->Build->Append = $this->Append;
 
             add_build($this->Build, $this->scheduleid);
-
+            $this->Build->UpdateBuildDuration(
+                    $this->EndTimeStamp - $this->StartTimeStamp);
             $this->Build->ComputeDifferences();
 
             global $CDASH_ENABLE_FEED;
@@ -168,13 +169,7 @@ class BuildHandler extends AbstractHandler
                 case 'STARTBUILDTIME':
                     $this->StartTimeStamp = $data;
                     break;
-                case 'STARTDATETIME':
-                    $this->StartTimeStamp = str_to_time($data, $this->Build->GetStamp());
-                    break;
-                case 'ELAPSEDMINUTES':
-                    $this->EndTimeStamp = $this->StartTimeStamp + $data * 60;
-                    break;
-                case 'ENDDATETIME':
+                case 'ENDBUILDTIME':
                     $this->EndTimeStamp = $data;
                     break;
                 case 'BUILDCOMMAND':
