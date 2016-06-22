@@ -24,7 +24,7 @@ require_once 'include/pdo.php';
 include_once 'include/common.php';
 require_once 'include/cdashmail.php';
 
-set_time_limit(0);
+@set_time_limit(0);
 
 function get_related_dates($projectnightlytime, $basedate)
 {

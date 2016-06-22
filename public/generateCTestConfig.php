@@ -22,7 +22,7 @@ include_once 'include/common.php';
 require_once 'models/project.php';
 require_once 'models/subproject.php';
 
-set_time_limit(0);
+@set_time_limit(0);
 
 @$projectid = $_GET['projectid'];
 if ($projectid != null) {

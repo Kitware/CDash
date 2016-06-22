@@ -30,7 +30,7 @@ require_once 'models/buildfailure.php';
 require_once 'include/filterdataFunctions.php';
 require_once 'include/index_functions.php';
 
-set_time_limit(0);
+@set_time_limit(0);
 
 // Check if we can connect to the database.
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");

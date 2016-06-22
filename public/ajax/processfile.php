@@ -21,7 +21,7 @@ require_once 'include/fnProcessFile.php';
 require_once 'include/pdo.php';
 
 ob_start();
-set_time_limit(0);
+@set_time_limit(0);
 ignore_user_abort(true);
 
 @$projectid = $_REQUEST['projectid'];

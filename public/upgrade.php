@@ -21,7 +21,7 @@ include_once 'include/common.php';
 include 'include/version.php';
 include_once 'include/upgrade_functions.php';
 
-set_time_limit(0);
+@set_time_limit(0);
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'], 0); // only admin
 
