@@ -401,7 +401,7 @@ function LoginForm($loginerror)
         $xml .= '<oauth2>';
         $xml .= add_XML_value('client', $GOOGLE_CLIENT_ID);
         // Google OAuth needs to know the base url to redirect back to
-        $xml .= add_XML_value('CDASH_BASE_URL', $CDASH_BASE_URL);
+        $xml .= add_XML_value('CDASH_BASE_URL', get_server_URI());
         $xml .= '</oauth2>';
     }
 
