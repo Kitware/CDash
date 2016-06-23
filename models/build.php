@@ -180,7 +180,7 @@ class Build
         $Label->Insert();
 
         add_log('New subproject detected: ' . $subproject, 'Build::SetSubProject',
-            LOG_WARNING, $this->ProjectId, $this->Id, CDASH_OBJECT_BUILD, $this->Id);
+            LOG_INFO, $this->ProjectId, $this->Id, CDASH_OBJECT_BUILD, $this->Id);
         return true;
     }
 

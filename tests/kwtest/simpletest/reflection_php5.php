@@ -75,12 +75,7 @@ class SimpleReflection
      */
     protected function classOrInterfaceExistsWithAutoload($interface, $autoload)
     {
-        if (function_exists('interface_exists')) {
-            if (interface_exists($this->interface, $autoload)) {
-                return true;
-            }
-        }
-        return class_exists($this->interface, $autoload);
+        return interface_exists($this->interface, $autoload) || class_exists($this->interface, $autoload);
     }
 
     /**
@@ -284,10 +279,8 @@ class SimpleReflection
         if ($name == '__call') {
             return 'function __call($method, $arguments)';
         }
-        if (version_compare(phpversion(), '5.1.0', '>=')) {
-            if (in_array($name, array('__get', '__isset', $name == '__unset'))) {
-                return "function {$name}(\$key)";
-            }
+        if (in_array($name, array('__get', '__isset', $name == '__unset'))) {
+            return "function {$name}(\$key)";
         }
         if ($name == '__toString') {
             return "function $name()";
@@ -338,7 +331,7 @@ class SimpleReflection
         foreach ($method->getParameters() as $parameter) {
             $signature = '';
             $type = $parameter->getClass();
-            if (is_null($type) && version_compare(phpversion(), '5.1.0', '>=') && $parameter->isArray()) {
+            if (is_null($type) && $parameter->isArray()) {
                 $signature .= 'array ';
             } elseif (!is_null($type)) {
                 $signature .= $type->getName() . ' ';

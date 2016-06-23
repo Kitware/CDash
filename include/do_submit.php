@@ -64,6 +64,39 @@ function getSubmissionFileHandle($fileHandleOrSubmissionId)
     }
 }
 
+function curl_request($request)
+{
+    global $CDASH_USE_HTTPS;
+    if (function_exists('curl_init')) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $request);
+        curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+        if ($CDASH_USE_HTTPS) {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        }
+        curl_exec($ch);
+        curl_close($ch);
+    } elseif (ini_get('allow_url_fopen')) {
+        $options = array('http' => array('timeout' => 1.0));
+        if ($CDASH_USE_HTTPS) {
+            $options['ssl'] = array('verify_peer' => false);
+        }
+        $context = stream_context_create($options);
+        $data = file_get_contents($request, false, $context);
+        if ($data === false) {
+            add_log('Error for request ' . $request, LOG_ERR);
+            return false;
+        }
+    } else {
+        add_log('Your PHP installation does not support cURL. Please install the cURL extension.', LOG_ERR);
+        return false;
+    }
+    return true;
+}
+
 /**
  * This method could be running on a worker that is either remote or local, so it accepts
  * a file handle or a filename that it can query the CDash API for.
@@ -84,17 +117,9 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $expected_md5 = '', $d
     $baseUrl = get_server_URI(false);
     $request = $baseUrl . '/ajax/dailyupdatescurl.php?projectid=' . $projectid;
 
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $request);
-    curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 1);
-    if ($CDASH_USE_HTTPS) {
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    if (curl_request($request) === false) {
+        return false;
     }
-    curl_exec($ch);
-    curl_close($ch);
 
     if ($CDASH_USE_LOCAL_DIRECTORY && file_exists('local/submit.php')) {
         include 'local/submit.php';
@@ -210,44 +235,26 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5 = '')
     $submissionid = pdo_insert_id('submission');
 
     // We find the daily updates
-    // If we have php curl we do it asynchronously
-    if (function_exists('curl_init') == true) {
-        $currentURI = get_server_URI(true);
-        $request = $currentURI . '/ajax/dailyupdatescurl.php?projectid=' . $projectid;
+    $currentURI = get_server_URI(true);
+    $request = $currentURI . '/ajax/dailyupdatescurl.php?projectid=' . $projectid;
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $request);
-        curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 1);
-        if ($CDASH_USE_HTTPS) {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        }
-        curl_exec($ch);
-        curl_close($ch);
-
-        $clientscheduleid = isset($_GET['clientscheduleid']) ? pdo_real_escape_numeric($_GET['clientscheduleid']) : 0;
-        if ($clientscheduleid !== 0) {
-            pdo_query('INSERT INTO client_jobschedule2submission (scheduleid,submissionid) ' .
-                "VALUES ('$clientscheduleid','$submissionid')");
-        }
-
-        // Save submitter IP in the database in the async case, so we have a valid
-        // IP at Site::Insert time when processing rather than 'localhost's IP:
-        pdo_insert_query('INSERT INTO submission2ip (submissionid, ip) ' .
-            "VALUES ('$submissionid', '" . $_SERVER['REMOTE_ADDR'] . "')");
-
-        // Call process submissions via cURL.
-        trigger_process_submissions($projectid);
-    } else {
-        // synchronously
-
-        add_log(
-            'Cannot submit asynchronously: php curl_init function does not exist',
-            'do_submit_asynchronous',
-            LOG_ERR, $projectid);
+    if (curl_request($request) === false) {
+        return;
     }
+
+    $clientscheduleid = isset($_GET['clientscheduleid']) ? pdo_real_escape_numeric($_GET['clientscheduleid']) : 0;
+    if ($clientscheduleid !== 0) {
+        pdo_query('INSERT INTO client_jobschedule2submission (scheduleid,submissionid) ' .
+            "VALUES ('$clientscheduleid','$submissionid')");
+    }
+
+    // Save submitter IP in the database in the async case, so we have a valid
+    // IP at Site::Insert time when processing rather than 'localhost's IP:
+    pdo_insert_query('INSERT INTO submission2ip (submissionid, ip) ' .
+        "VALUES ('$submissionid', '" . $_SERVER['REMOTE_ADDR'] . "')");
+
+    // Call process submissions via cURL.
+    trigger_process_submissions($projectid);
 }
 
 /** Function to deal with the external tool mechanism */
@@ -502,26 +509,6 @@ function trigger_process_submissions($projectid)
     } else {
         // Serial processing.
         $request = $currentURI . '/ajax/processsubmissions.php?projectid=' . $projectid;
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $request);
-        curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 1);
-        if ($CDASH_USE_HTTPS) {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        }
-
-        // It's likely that the process timesout because the processing takes more
-        // than 1s to run. This is OK as we just need to trigger it.
-        // 28 = CURLE_OPERATION_TIMEDOUT
-        if (curl_exec($ch) === false && curl_errno($ch) != 28) {
-            add_log(
-                'cURL error: ' . curl_error($ch) . ' for request: ' . $request,
-                'do_submit_asynchronous',
-                LOG_ERR, $projectid);
-        }
-        curl_close($ch);
+        curl_request($request);
     }
 }

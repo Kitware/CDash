@@ -232,7 +232,7 @@ class ExcludeSubProjectsTestCase extends KWWebTestCase
             array(
                 'filter' => 'buildduration',
                 'compare' => 41,
-                'value' => 23.1,
+                'value' => '10m 46s',
                 'exclude' => 'Teuchos'
             ),
             array(

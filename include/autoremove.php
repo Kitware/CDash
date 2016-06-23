@@ -25,7 +25,7 @@ function removeBuildsGroupwise($projectid, $maxbuilds, $force = false)
         return;
     }
 
-    set_time_limit(0);
+    @set_time_limit(0);
 
     $buildgroups = pdo_query('SELECT id,autoremovetimeframe FROM buildgroup WHERE projectid=' . qnum($projectid));
 
@@ -68,7 +68,7 @@ function removeFirstBuilds($projectid, $days, $maxbuilds, $force = false)
     require_once 'include/pdo.php';
     require_once 'include/common.php';
 
-    set_time_limit(0);
+    @set_time_limit(0);
 
     if (!$force && !isset($CDASH_AUTOREMOVE_BUILDS)) {
         return;

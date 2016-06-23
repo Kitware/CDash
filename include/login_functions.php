@@ -338,14 +338,8 @@ function auth($SessionCachePolicy = 'private_no_expire')
         }
 
         // Return early if a session has already been started.
-        if (function_exists('session_status')) {
-            if (session_status() != PHP_SESSION_NONE) {
-                return;
-            }
-        } else {
-            if (session_id() != '') {
-                return;
-            }
+        if (session_status() != PHP_SESSION_NONE) {
+            return;
         }
 
         session_name('CDash');
@@ -407,7 +401,7 @@ function LoginForm($loginerror)
         $xml .= '<oauth2>';
         $xml .= add_XML_value('client', $GOOGLE_CLIENT_ID);
         // Google OAuth needs to know the base url to redirect back to
-        $xml .= add_XML_value('CDASH_BASE_URL', $CDASH_BASE_URL);
+        $xml .= add_XML_value('CDASH_BASE_URL', get_server_URI());
         $xml .= '</oauth2>';
     }
 

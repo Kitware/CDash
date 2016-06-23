@@ -23,7 +23,7 @@ require_once 'models/buildfailure.php';
 require_once 'include/filterdataFunctions.php';
 require_once 'include/index_functions.php';
 
-set_time_limit(0);
+@set_time_limit(0);
 
 /** Generate the index table */
 function generate_index_table()

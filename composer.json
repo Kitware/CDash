@@ -11,34 +11,37 @@
     "wiki": "http://public.kitware.com/Wiki/CDash"
   },
   "require": {
-    "php": ">=5.3.6",
+    "php": ">=5.5.9",
+    "ext-bcmath": "*",
     "ext-curl": "*",
     "ext-json": "*",
+    "ext-mbstring": "*",
+    "ext-memcache": "*",
     "ext-pdo": "*",
     "ext-xsl": "*",
-    "ext-mbstring": "*",
-    "ext-bcmath": "*",
-    "predis/predis": "~0.8",
-    "google/apiclient": "~1.1",
-    "monolog/monolog": "~1.17",
-    "paragonie/random_compat": "~1.2",
-    "suin/php-rss-writer": "~1.3",
-    "swiftmailer/swiftmailer": "~5.4",
     "bernard/bernard": "dev-master#f30c0186f0fb391eb6c7ab28f515bb30d34f402d",
-    "ramsey/uuid": "^3.4",
-    "guzzlehttp/guzzle": "~6.0"
+    "google/apiclient": "~1.1",
+    "guzzlehttp/guzzle": "~6.0",
+    "monolog/monolog": "~1.19",
+    "paragonie/random_compat": "~1.4",
+    "pear/archive_tar": "~1.4",
+    "predis/predis": "~0.8",
+    "ramsey/uuid": "~3.4",
+    "suin/php-rss-writer": "~1.4",
+    "swiftmailer/swiftmailer": "~5.4"
   },
   "require-dev": {
     "ext-gd": "*",
     "ext-xdebug": "*",
-    "fabpot/php-cs-fixer": "~1.11",
+    "friendsofphp/php-cs-fixer": "~1.11",
+    "phpunit/phpunit-selenium": "~1.4",
     "phpunit/phpunit": "~4.8",
-    "sensiolabs/security-checker": "~3.0",
-    "phpunit/phpunit-selenium": "~1.4"
+    "sensiolabs/security-checker": "~3.0"
   },
   "suggest": {
     "ext-pdo_mysql": "",
-    "ext-pdo_pgsql": ""
+    "ext-pdo_pgsql": "",
+    "ext-phar": ""
   },
   "autoload": {
     "psr-4": {"CDash\\": "include/CDash/"}

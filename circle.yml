@@ -18,6 +18,7 @@ dependencies:
     - chmod a+rwx backup log public/rss public/upload
     - sudo composer self-update --no-interaction
     - test -n "${CIRCLE_PR_REPONAME}" || composer config --global --no-interaction github-oauth.github.com $GITHUB_OAUTH_TOKEN
+    - yes | pecl install -f memcache
     - composer install --no-interaction --no-progress --prefer-dist
     - npm install
     - node_modules/.bin/webdriver-manager update

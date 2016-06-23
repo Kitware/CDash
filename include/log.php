@@ -175,7 +175,11 @@ function add_log($text, $function, $type = LOG_INFO, $projectid = 0, $buildid = 
             }
         }
 
-        $context['pid'] = getmypid();
+        $pid = getmypid();
+
+        if ($pid !== false) {
+            $context['pid'] = getmypid();
+        }
     }
 
     if (Registry::hasLogger('cdash') === false) {
