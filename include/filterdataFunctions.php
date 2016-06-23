@@ -101,7 +101,7 @@ class IndexPhpFilters extends DefaultFilters
         $xml .= getFilterDefinitionXML('buildwarnings', 'Build Warnings', 'number', '', '0');
         $xml .= getFilterDefinitionXML('buildname', 'Build Name', 'string', '', '');
         $xml .= getFilterDefinitionXML('buildstamp', 'Build Stamp', 'string', '', '');
-        $xml .= getFilterDefinitionXML('buildstarttime', 'Build Time', 'date', '', '');
+        $xml .= getFilterDefinitionXML('buildstarttime', 'Build Start Time', 'date', '', '');
         $xml .= getFilterDefinitionXML('buildtype', 'Build Type', 'string', '', 'Nightly');
         $xml .= getFilterDefinitionXML('configureduration', 'Configure Duration', 'number', '', '0');
         $xml .= getFilterDefinitionXML('configureerrors', 'Configure Errors', 'number', '', '0');
@@ -329,7 +329,7 @@ class QueryTestsPhpFilters extends DefaultFilters
         $xml = '';
 
         $xml .= getFilterDefinitionXML('buildname', 'Build Name', 'string', '', '');
-        $xml .= getFilterDefinitionXML('buildstarttime', 'Build Time', 'date', '', '');
+        $xml .= getFilterDefinitionXML('buildstarttime', 'Build Start Time', 'date', '', '');
         $xml .= getFilterDefinitionXML('buildtype', 'Build Type', 'string', '', 'Nightly');
         $xml .= getFilterDefinitionXML('details', 'Details', 'string', '', '');
         $xml .= getFilterDefinitionXML('label', 'Label', 'string', '', '');
