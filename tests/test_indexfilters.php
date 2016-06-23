@@ -18,8 +18,8 @@ class IndexFiltersTestCase extends KWWebTestCase
 
     public function testIndexFilters()
     {
-        $this->filter('buildduration', 43, 14.7, 'Win64');
-        $this->filter('buildduration', 43, '14m 47s', 'Win64');
+        $this->filter('buildduration', 43, 293, 'Win32');
+        $this->filter('buildduration', 43, '4m 53s', 'Win32');
         $this->filter('builderrors', 43, 1, 'Win32');
         $this->filter('buildwarnings', 43, 2, 'Win32');
         $this->filter('buildname', 63, 'Darwin', 'Darwin');
