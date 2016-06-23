@@ -32,7 +32,7 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
       "defaultvalue": ""
     },
     "buildstarttime": {
-      "text": "Build Time",
+      "text": "Build Start Time",
       "type": "date",
       "defaultvalue": ""
     },
