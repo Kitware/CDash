@@ -133,11 +133,7 @@ class IndexPhpFilters extends DefaultFilters
         $sql_field = '';
         switch (strtolower($field)) {
             case 'buildduration': {
-                if ($CDASH_DB_TYPE === 'pgsql') {
-                    $sql_field = 'ROUND(EXTRACT(EPOCH FROM (b.endtime - b.starttime))::numeric / 60, 1)';
-                } else {
-                    $sql_field = 'ROUND(TIMESTAMPDIFF(SECOND,b.starttime,b.endtime)/60.0,1)';
-                }
+                $sql_field = 'b.buildduration';
             }
                 break;
 
@@ -904,12 +900,10 @@ function get_filterdata_from_request($page_id = '')
         if (strpos($field, 'duration') !== false) {
             $input_value = trim($sql_value, "'");
             $sql_value = get_seconds_from_interval($input_value);
-            if ($input_value !== $sql_value &&
-                    ($field === 'buildduration' || $field === 'updateduration')) {
-                // Build duration and update duration are stored as
-                // number of minutes (not seconds) so if we just converted
-                // this value from string to seconds we should also
-                // convert it from seconds to minutes here as well.
+            if ($input_value !== $sql_value && $field === 'updateduration') {
+                // Update duration is stored as number of minutes (not seconds)
+                // so if we just converted this value from string to seconds
+                // we should also convert it from seconds to minutes here as well.
                 $sql_value /= 60.0;
             }
         }
