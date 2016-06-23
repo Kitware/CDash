@@ -18,6 +18,7 @@ use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Tests\Fixtures\CircularReferenceDummy;
+use Symfony\Component\Serializer\Tests\Fixtures\MaxDepthDummy;
 use Symfony\Component\Serializer\Tests\Fixtures\SiblingHolder;
 use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
@@ -389,7 +390,7 @@ class GetSetMethodNormalizerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \Symfony\Component\Serializer\Exception\LogicException
-     * @expectedExceptionMessage Cannot normalize attribute "object" because injected serializer is not a normalizer
+     * @expectedExceptionMessage Cannot normalize attribute "object" because the injected serializer is not a normalizer
      */
     public function testUnableToNormalizeObjectAttribute()
     {
@@ -493,6 +494,46 @@ class GetSetMethodNormalizerTest extends \PHPUnit_Framework_TestCase
     {
         $obj = $this->normalizer->denormalize(array('foo' => 'foobar'), __NAMESPACE__.'\ObjectWithPrivateSetterDummy');
         $this->assertEquals('bar', $obj->getFoo());
+    }
+
+    public function testMaxDepth()
+    {
+        $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
+        $this->normalizer = new GetSetMethodNormalizer($classMetadataFactory);
+        $serializer = new Serializer(array($this->normalizer));
+        $this->normalizer->setSerializer($serializer);
+
+        $level1 = new MaxDepthDummy();
+        $level1->bar = 'level1';
+
+        $level2 = new MaxDepthDummy();
+        $level2->bar = 'level2';
+        $level1->child = $level2;
+
+        $level3 = new MaxDepthDummy();
+        $level3->bar = 'level3';
+        $level2->child = $level3;
+
+        $level4 = new MaxDepthDummy();
+        $level4->bar = 'level4';
+        $level3->child = $level4;
+
+        $result = $serializer->normalize($level1, null, array(GetSetMethodNormalizer::ENABLE_MAX_DEPTH => true));
+
+        $expected = array(
+            'bar' => 'level1',
+            'child' => array(
+                    'bar' => 'level2',
+                    'child' => array(
+                            'bar' => 'level3',
+                            'child' => array(
+                                    'child' => null,
+                                ),
+                        ),
+                ),
+            );
+
+        $this->assertEquals($expected, $result);
     }
 }
 

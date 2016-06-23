@@ -8,10 +8,10 @@ class ComposerStaticInitf4ecc77126561b9d317fecd2614b0f83
 {
     public static $files = array (
         '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
-        'a4ecaeafb8cfb009ad0e052c90355e98' => __DIR__ . '/..' . '/beberlei/assert/lib/Assert/functions.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
+        'a4ecaeafb8cfb009ad0e052c90355e98' => __DIR__ . '/..' . '/beberlei/assert/lib/Assert/functions.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
     );
 
@@ -118,6 +118,17 @@ class ComposerStaticInitf4ecc77126561b9d317fecd2614b0f83
             array (
                 0 => __DIR__ . '/..' . '/predis/predis/lib',
             ),
+            'PEAR' => 
+            array (
+                0 => __DIR__ . '/..' . '/pear/pear_exception',
+            ),
+        ),
+        'C' => 
+        array (
+            'Console' => 
+            array (
+                0 => __DIR__ . '/..' . '/pear/console_getopt',
+            ),
         ),
         'A' => 
         array (
@@ -125,10 +136,19 @@ class ComposerStaticInitf4ecc77126561b9d317fecd2614b0f83
             array (
                 0 => __DIR__ . '/..' . '/beberlei/assert/lib',
             ),
+            'Archive_Tar' => 
+            array (
+                0 => __DIR__ . '/..' . '/pear/archive_tar',
+            ),
         ),
     );
 
+    public static $fallbackDirsPsr0 = array (
+        0 => __DIR__ . '/..' . '/pear/pear-core-minimal/src',
+    );
+
     public static $classMap = array (
+        'Archive_Tar' => __DIR__ . '/..' . '/pear/archive_tar/Archive/Tar.php',
         'Assert\\Assertion' => __DIR__ . '/..' . '/beberlei/assert/lib/Assert/Assertion.php',
         'Assert\\AssertionChain' => __DIR__ . '/..' . '/beberlei/assert/lib/Assert/AssertionChain.php',
         'Assert\\AssertionFailedException' => __DIR__ . '/..' . '/beberlei/assert/lib/Assert/AssertionFailedException.php',
@@ -185,6 +205,7 @@ class ComposerStaticInitf4ecc77126561b9d317fecd2614b0f83
         'Bernard\\Serializer' => __DIR__ . '/..' . '/bernard/bernard/src/Serializer.php',
         'Bernard\\Util' => __DIR__ . '/..' . '/bernard/bernard/src/Util.php',
         'CDash\\Database' => __DIR__ . '/../..' . '/include/CDash/Database.php',
+        'Console_Getopt' => __DIR__ . '/..' . '/pear/console_getopt/Console/Getopt.php',
         'Google_Auth_Abstract' => __DIR__ . '/..' . '/google/apiclient/src/Google/Auth/Abstract.php',
         'Google_Auth_AppIdentity' => __DIR__ . '/..' . '/google/apiclient/src/Google/Auth/AppIdentity.php',
         'Google_Auth_AssertionCredentials' => __DIR__ . '/..' . '/google/apiclient/src/Google/Auth/AssertionCredentials.php',
@@ -3899,6 +3920,12 @@ class ComposerStaticInitf4ecc77126561b9d317fecd2614b0f83
         'Normalt\\Normalizer\\AggregateNormalizerAware' => __DIR__ . '/..' . '/bernard/normalt/src/Normalizer/AggregateNormalizerAware.php',
         'Normalt\\Normalizer\\DoctrineNormalizer' => __DIR__ . '/..' . '/bernard/normalt/src/Normalizer/DoctrineNormalizer.php',
         'Normalt\\Normalizer\\RecursiveReflectionNormalizer' => __DIR__ . '/..' . '/bernard/normalt/src/Normalizer/RecursiveReflectionNormalizer.php',
+        'OS_Guess' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/OS/Guess.php',
+        'PEAR' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/PEAR.php',
+        'PEAR_Error' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/PEAR.php',
+        'PEAR_ErrorStack' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/PEAR/ErrorStack.php',
+        'PEAR_Exception' => __DIR__ . '/..' . '/pear/pear_exception/PEAR/Exception.php',
+        'PEAR_ExceptionTest' => __DIR__ . '/..' . '/pear/pear_exception/tests/PEAR/ExceptionTest.php',
         'Predis\\Autoloader' => __DIR__ . '/..' . '/predis/predis/lib/Predis/Autoloader.php',
         'Predis\\BasicClientInterface' => __DIR__ . '/..' . '/predis/predis/lib/Predis/BasicClientInterface.php',
         'Predis\\Client' => __DIR__ . '/..' . '/predis/predis/lib/Predis/Client.php',
@@ -4244,6 +4271,7 @@ class ComposerStaticInitf4ecc77126561b9d317fecd2614b0f83
         'Symfony\\Component\\EventDispatcher\\GenericEvent' => __DIR__ . '/..' . '/symfony/event-dispatcher/GenericEvent.php',
         'Symfony\\Component\\EventDispatcher\\ImmutableEventDispatcher' => __DIR__ . '/..' . '/symfony/event-dispatcher/ImmutableEventDispatcher.php',
         'Symfony\\Component\\Serializer\\Annotation\\Groups' => __DIR__ . '/..' . '/symfony/serializer/Annotation/Groups.php',
+        'Symfony\\Component\\Serializer\\Annotation\\MaxDepth' => __DIR__ . '/..' . '/symfony/serializer/Annotation/MaxDepth.php',
         'Symfony\\Component\\Serializer\\Encoder\\ChainDecoder' => __DIR__ . '/..' . '/symfony/serializer/Encoder/ChainDecoder.php',
         'Symfony\\Component\\Serializer\\Encoder\\ChainEncoder' => __DIR__ . '/..' . '/symfony/serializer/Encoder/ChainEncoder.php',
         'Symfony\\Component\\Serializer\\Encoder\\DecoderInterface' => __DIR__ . '/..' . '/symfony/serializer/Encoder/DecoderInterface.php',
@@ -4267,8 +4295,10 @@ class ComposerStaticInitf4ecc77126561b9d317fecd2614b0f83
         'Symfony\\Component\\Serializer\\Mapping\\AttributeMetadataInterface' => __DIR__ . '/..' . '/symfony/serializer/Mapping/AttributeMetadataInterface.php',
         'Symfony\\Component\\Serializer\\Mapping\\ClassMetadata' => __DIR__ . '/..' . '/symfony/serializer/Mapping/ClassMetadata.php',
         'Symfony\\Component\\Serializer\\Mapping\\ClassMetadataInterface' => __DIR__ . '/..' . '/symfony/serializer/Mapping/ClassMetadataInterface.php',
+        'Symfony\\Component\\Serializer\\Mapping\\Factory\\CacheClassMetadataFactory' => __DIR__ . '/..' . '/symfony/serializer/Mapping/Factory/CacheClassMetadataFactory.php',
         'Symfony\\Component\\Serializer\\Mapping\\Factory\\ClassMetadataFactory' => __DIR__ . '/..' . '/symfony/serializer/Mapping/Factory/ClassMetadataFactory.php',
         'Symfony\\Component\\Serializer\\Mapping\\Factory\\ClassMetadataFactoryInterface' => __DIR__ . '/..' . '/symfony/serializer/Mapping/Factory/ClassMetadataFactoryInterface.php',
+        'Symfony\\Component\\Serializer\\Mapping\\Factory\\ClassResolverTrait' => __DIR__ . '/..' . '/symfony/serializer/Mapping/Factory/ClassResolverTrait.php',
         'Symfony\\Component\\Serializer\\Mapping\\Loader\\AnnotationLoader' => __DIR__ . '/..' . '/symfony/serializer/Mapping/Loader/AnnotationLoader.php',
         'Symfony\\Component\\Serializer\\Mapping\\Loader\\FileLoader' => __DIR__ . '/..' . '/symfony/serializer/Mapping/Loader/FileLoader.php',
         'Symfony\\Component\\Serializer\\Mapping\\Loader\\LoaderChain' => __DIR__ . '/..' . '/symfony/serializer/Mapping/Loader/LoaderChain.php',
@@ -4278,19 +4308,29 @@ class ComposerStaticInitf4ecc77126561b9d317fecd2614b0f83
         'Symfony\\Component\\Serializer\\NameConverter\\CamelCaseToSnakeCaseNameConverter' => __DIR__ . '/..' . '/symfony/serializer/NameConverter/CamelCaseToSnakeCaseNameConverter.php',
         'Symfony\\Component\\Serializer\\NameConverter\\NameConverterInterface' => __DIR__ . '/..' . '/symfony/serializer/NameConverter/NameConverterInterface.php',
         'Symfony\\Component\\Serializer\\Normalizer\\AbstractNormalizer' => __DIR__ . '/..' . '/symfony/serializer/Normalizer/AbstractNormalizer.php',
+        'Symfony\\Component\\Serializer\\Normalizer\\AbstractObjectNormalizer' => __DIR__ . '/..' . '/symfony/serializer/Normalizer/AbstractObjectNormalizer.php',
         'Symfony\\Component\\Serializer\\Normalizer\\ArrayDenormalizer' => __DIR__ . '/..' . '/symfony/serializer/Normalizer/ArrayDenormalizer.php',
         'Symfony\\Component\\Serializer\\Normalizer\\CustomNormalizer' => __DIR__ . '/..' . '/symfony/serializer/Normalizer/CustomNormalizer.php',
+        'Symfony\\Component\\Serializer\\Normalizer\\DataUriNormalizer' => __DIR__ . '/..' . '/symfony/serializer/Normalizer/DataUriNormalizer.php',
+        'Symfony\\Component\\Serializer\\Normalizer\\DateTimeNormalizer' => __DIR__ . '/..' . '/symfony/serializer/Normalizer/DateTimeNormalizer.php',
         'Symfony\\Component\\Serializer\\Normalizer\\DenormalizableInterface' => __DIR__ . '/..' . '/symfony/serializer/Normalizer/DenormalizableInterface.php',
+        'Symfony\\Component\\Serializer\\Normalizer\\DenormalizerAwareInterface' => __DIR__ . '/..' . '/symfony/serializer/Normalizer/DenormalizerAwareInterface.php',
+        'Symfony\\Component\\Serializer\\Normalizer\\DenormalizerAwareTrait' => __DIR__ . '/..' . '/symfony/serializer/Normalizer/DenormalizerAwareTrait.php',
         'Symfony\\Component\\Serializer\\Normalizer\\DenormalizerInterface' => __DIR__ . '/..' . '/symfony/serializer/Normalizer/DenormalizerInterface.php',
         'Symfony\\Component\\Serializer\\Normalizer\\GetSetMethodNormalizer' => __DIR__ . '/..' . '/symfony/serializer/Normalizer/GetSetMethodNormalizer.php',
+        'Symfony\\Component\\Serializer\\Normalizer\\JsonSerializableNormalizer' => __DIR__ . '/..' . '/symfony/serializer/Normalizer/JsonSerializableNormalizer.php',
         'Symfony\\Component\\Serializer\\Normalizer\\NormalizableInterface' => __DIR__ . '/..' . '/symfony/serializer/Normalizer/NormalizableInterface.php',
+        'Symfony\\Component\\Serializer\\Normalizer\\NormalizerAwareInterface' => __DIR__ . '/..' . '/symfony/serializer/Normalizer/NormalizerAwareInterface.php',
+        'Symfony\\Component\\Serializer\\Normalizer\\NormalizerAwareTrait' => __DIR__ . '/..' . '/symfony/serializer/Normalizer/NormalizerAwareTrait.php',
         'Symfony\\Component\\Serializer\\Normalizer\\NormalizerInterface' => __DIR__ . '/..' . '/symfony/serializer/Normalizer/NormalizerInterface.php',
         'Symfony\\Component\\Serializer\\Normalizer\\ObjectNormalizer' => __DIR__ . '/..' . '/symfony/serializer/Normalizer/ObjectNormalizer.php',
         'Symfony\\Component\\Serializer\\Normalizer\\PropertyNormalizer' => __DIR__ . '/..' . '/symfony/serializer/Normalizer/PropertyNormalizer.php',
         'Symfony\\Component\\Serializer\\Normalizer\\SerializerAwareNormalizer' => __DIR__ . '/..' . '/symfony/serializer/Normalizer/SerializerAwareNormalizer.php',
         'Symfony\\Component\\Serializer\\Serializer' => __DIR__ . '/..' . '/symfony/serializer/Serializer.php',
         'Symfony\\Component\\Serializer\\SerializerAwareInterface' => __DIR__ . '/..' . '/symfony/serializer/SerializerAwareInterface.php',
+        'Symfony\\Component\\Serializer\\SerializerAwareTrait' => __DIR__ . '/..' . '/symfony/serializer/SerializerAwareTrait.php',
         'Symfony\\Component\\Serializer\\SerializerInterface' => __DIR__ . '/..' . '/symfony/serializer/SerializerInterface.php',
+        'System' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/System.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
@@ -4299,6 +4339,7 @@ class ComposerStaticInitf4ecc77126561b9d317fecd2614b0f83
             $loader->prefixLengthsPsr4 = ComposerStaticInitf4ecc77126561b9d317fecd2614b0f83::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInitf4ecc77126561b9d317fecd2614b0f83::$prefixDirsPsr4;
             $loader->prefixesPsr0 = ComposerStaticInitf4ecc77126561b9d317fecd2614b0f83::$prefixesPsr0;
+            $loader->fallbackDirsPsr0 = ComposerStaticInitf4ecc77126561b9d317fecd2614b0f83::$fallbackDirsPsr0;
             $loader->classMap = ComposerStaticInitf4ecc77126561b9d317fecd2614b0f83::$classMap;
 
         }, null, ClassLoader::class);

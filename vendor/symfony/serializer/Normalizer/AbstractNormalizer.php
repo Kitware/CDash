@@ -17,13 +17,14 @@ use Symfony\Component\Serializer\Exception\RuntimeException;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactoryInterface;
 use Symfony\Component\Serializer\Mapping\AttributeMetadataInterface;
 use Symfony\Component\Serializer\NameConverter\NameConverterInterface;
+use Symfony\Component\Serializer\SerializerAwareInterface;
 
 /**
  * Normalizer implementation.
  *
  * @author Kévin Dunglas <dunglas@gmail.com>
  */
-abstract class AbstractNormalizer extends SerializerAwareNormalizer implements NormalizerInterface, DenormalizerInterface
+abstract class AbstractNormalizer extends SerializerAwareNormalizer implements NormalizerInterface, DenormalizerInterface, SerializerAwareInterface
 {
     const CIRCULAR_REFERENCE_LIMIT = 'circular_reference_limit';
     const OBJECT_TO_POPULATE = 'object_to_populate';
@@ -209,12 +210,32 @@ abstract class AbstractNormalizer extends SerializerAwareNormalizer implements N
 
         $allowedAttributes = array();
         foreach ($this->classMetadataFactory->getMetadataFor($classOrObject)->getAttributesMetadata() as $attributeMetadata) {
-            if (count(array_intersect($attributeMetadata->getGroups(), $context[static::GROUPS]))) {
-                $allowedAttributes[] = $attributesAsString ? $attributeMetadata->getName() : $attributeMetadata;
+            $name = $attributeMetadata->getName();
+
+            if (
+                count(array_intersect($attributeMetadata->getGroups(), $context[static::GROUPS])) &&
+                $this->isAllowedAttribute($classOrObject, $name, null, $context)
+            ) {
+                $allowedAttributes[] = $attributesAsString ? $name : $attributeMetadata;
             }
         }
 
         return $allowedAttributes;
+    }
+
+    /**
+     * Is this attribute allowed?
+     *
+     * @param object|string $classOrObject
+     * @param string        $attribute
+     * @param string|null   $format
+     * @param array         $context
+     *
+     * @return bool
+     */
+    protected function isAllowedAttribute($classOrObject, $attribute, $format = null, array $context = array())
+    {
+        return !in_array($attribute, $this->ignoredAttributes);
     }
 
     /**
