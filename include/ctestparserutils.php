@@ -97,14 +97,9 @@ function str_to_time($str, $stamp)
     }
 
     $strtotimefailed = 0;
-    if (PHP_VERSION >= 5.1) {
-        if (strtotime($str) === false) {
-            $strtotimefailed = 1;
-        }
-    } else {
-        if (strtotime($str) == -1) {
-            $strtotimefailed = 1;
-        }
+
+    if (strtotime($str) === false) {
+        $strtotimefailed = 1;
     }
 
     // If it's still failing we assume GMT and put the year at the end

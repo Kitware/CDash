@@ -64,9 +64,6 @@ if ($session_OK) {
         global $CDASH_ROOT_DIR;
         echo_file_contents($CDASH_ROOT_DIR . '/config/config.local.php');
         echo_file_contents($CDASH_ROOT_DIR . '/tests/config.test.local.php');
-
-        echo '<h3>phpinfo</h3>';
-        phpinfo();
         echo '<br/>';
     } else {
         echo 'Admin login required to display svn info.';

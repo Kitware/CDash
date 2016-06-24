@@ -59,12 +59,19 @@ The database already exists. Quitting installation script.<br/>
 Click here to access the <a href="index.php">main CDash page</a><br/><br/>
 </xsl:if>
 
-<xsl:if test="cdash/xslt=0">
-<font color="#FF0000">Your PHP installation doesn't support XSLT please install the PHP_XSLT package.</font><br/>
+<xsl:if test="cdash/extcurl=0">
+<font color="#FF0000">Your PHP installation does not support cURL. Please install the cURL extension.</font><br/>
 </xsl:if>
-<xsl:if test="cdash/phpcurl=0">
-<font color="#FF0000">Your PHP installation doesn't support Curl please install the PHP_CURL package if you want to support geolocation.</font><br/>
+<xsl:if test="cdash/extjson=0">
+<font color="#FF0000">Your PHP installation does not support JSON. Please install the JSON extension.</font><br/>
 </xsl:if>
+<xsl:if test="cdash/extmbstring=0">
+<font color="#FF0000">Your PHP installation does not support multibyte strings. Please install the multibyte string extension.</font><br/>
+</xsl:if>
+<xsl:if test="cdash/extpdo=0">
+<font color="#FF0000">Your PHP installation does not support PDO. Please install the PDO extension.</font><br/>
+</xsl:if>
+
 <xsl:if test="cdash/backupwritable=0">
 <font color="#FF0000">Your backup directory is not writable, make sure that the web process can write into the directory.</font><br/>
 </xsl:if>
@@ -84,7 +91,7 @@ Click here to access the <a href="index.php">main CDash page</a><br/><br/>
 Click here to  <a href="createProject.php">create a new project.</a>
 </xsl:when>
 <xsl:otherwise>
-<xsl:if test="cdash/database=0 and cdash/xslt=1 and cdash/connectiondb=1">
+<xsl:if test="cdash/database=0 and cdash/connectiondb=1">
 Please review the settings of your config.php file below and click install to install the SQL tables.<br/><br/>
 
 <xsl:if test="cdash/connectiondb=1">

@@ -29,7 +29,7 @@ require_once 'include/pdo.php';
 require_once 'include/submission_functions.php';
 
 ob_start();
-set_time_limit(0);
+@set_time_limit(0);
 ignore_user_abort(true);
 
 // Parse script arguments. This file can be run in a web browser or called

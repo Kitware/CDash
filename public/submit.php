@@ -36,7 +36,7 @@ if (!$db || !pdo_select_db("$CDASH_DB_NAME", $db)) {
     echo "</cdash>\n";
     return;
 }
-set_time_limit(0);
+@set_time_limit(0);
 
 // Send to the client submit
 if (client_submit()) {

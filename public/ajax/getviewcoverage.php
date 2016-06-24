@@ -22,7 +22,7 @@ include 'models/coveragefile2user.php';
 include 'models/user.php';
 require_once 'include/filterdataFunctions.php';
 
-set_time_limit(0);
+@set_time_limit(0);
 
 $noforcelogin = 1;
 require 'public/login.php';
@@ -738,8 +738,4 @@ switch ($status) {
         break;
 }
 
-if (function_exists('json_encode')) {
-    echo(json_encode(cast_data_for_JSON($output)));
-} else {
-    echo(__json_encode($output));
-}
+echo(json_encode(cast_data_for_JSON($output)));

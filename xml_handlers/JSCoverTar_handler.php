@@ -47,9 +47,13 @@ class JSCoverTarHandler
         // Create a new directory where we can extract our tarball.
         $dirName = sys_get_temp_dir() . '/' . pathinfo($filename, PATHINFO_FILENAME);
         mkdir($dirName);
+
         // Extract the tarball.
-        $phar = new PharData($filename);
-        $phar->extractTo($dirName);
+        $result = extract_tar($filename, $dirName);
+        if ($result === false) {
+            add_log('Could not extract ' . $filename . ' into ' . $dirName, 'JSCoverTarHandler::Parse', LOG_ERR);
+            return false;
+        }
 
         // Recursively search for .json files and parse them.
         $iterator = new RecursiveIteratorIterator(

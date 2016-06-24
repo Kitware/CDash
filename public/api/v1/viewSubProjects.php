@@ -19,7 +19,7 @@ require_once 'include/pdo.php';
 include 'include/common.php';
 require_once 'models/project.php';
 
-set_time_limit(0);
+@set_time_limit(0);
 
 @$projectname = $_GET['project'];
 $projectname = htmlspecialchars(pdo_real_escape_string($projectname));

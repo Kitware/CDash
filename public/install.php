@@ -14,12 +14,11 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-set_time_limit(0);
+@set_time_limit(0);
 
 // This is the installation script for CDash
-if (class_exists('XsltProcessor') == false) {
-    echo '<font color="#FF0000">Your PHP install does not support xslt, please install the PHP_XSLT package.<br>  ';
-    echo 'WAMP Hint: uncomment extension=php_xsl.dll in php.ini.<br></font>';
+if (class_exists('XsltProcessor') === false) {
+    echo '<font color="#FF0000">Your PHP installation does not support XSL. Please install the XSL extension.</font>';
     return;
 }
 
@@ -35,6 +34,30 @@ if ($CDASH_PRODUCTION_MODE) {
 }
 
 $xml = begin_XML_for_XSLT();
+
+if (function_exists('curl_init') === false) {
+    $xml .= '<extcurl>0</extcurl>';
+} else {
+    $xml .= '<extcurl>1</extcurl>';
+}
+
+if (function_exists('json_encode') === false) {
+    $xml .= '<extjson>0</extjson>';
+} else {
+    $xml .= '<extjson>1</extjson>';
+}
+
+if (function_exists('mb_detect_encoding') === false) {
+    $xml .= '<extmbstring>0</extmbstring>';
+} else {
+    $xml .= '<extmbstring>1</extmbstring>';
+}
+
+if (class_exists('PDO') === false) {
+    $xml .= '<extpdo>0</extpdo>';
+} else {
+    $xml .= '<extpdo>1</extpdo>';
+}
 
 if (!isset($CDASH_DB_TYPE)) {
     $db_type = 'mysql';
@@ -58,19 +81,6 @@ if (!$db) {
     } else {
         $xml .= '<connectiondb>1</connectiondb>';
     }
-}
-
-if (xslt_create() == false) {
-    $xml .= '<xslt>0</xslt>';
-} else {
-    $xml .= '<xslt>1</xslt>';
-}
-
-// Check if curl is installed
-if (function_exists('curl_init') == false) {
-    $xml .= '<phpcurl>0</phpcurl>';
-} else {
-    $xml .= '<phpcurl>1</phpcurl>';
 }
 
 // check if the backup directory is writable

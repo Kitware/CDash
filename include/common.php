@@ -17,67 +17,64 @@
 require_once 'config/config.php';
 require_once 'include/log.php';
 
-if (PHP_VERSION >= 5) {
-    // Emulate the old xslt library functions
-    function xslt_create()
-    {
-        return new XsltProcessor();
-    }
 
-    function xslt_process($xsltproc,
-                          $xml_arg,
-                          $xsl_arg,
-                          $xslcontainer = null,
-                          $args = null,
-                          $params = null)
-    {
-        // Start with preparing the arguments
-        $xml_arg = str_replace('arg:', '', $xml_arg);
-        $xsl_arg = str_replace('arg:', '', $xsl_arg);
-
-        // Create instances of the DomDocument class
-        $xml = new DomDocument;
-        $xsl = new DomDocument;
-
-        $phpversion = explode('.', PHP_VERSION);
-        $phpversionid = $phpversion[0] * 10000 + $phpversion[1] * 100 + $phpversion[2];
-
-        // Load the xml document and the xsl template
-        if ($phpversionid >= 50302 && LIBXML_VERSION >= 20700) {
-            $xmlOptions = LIBXML_PARSEHUGE;
-        } else {
-            $xmlOptions = 0;
-        }
-
-        $xml->loadXML($args[$xml_arg], $xmlOptions);
-        $xsl->loadXML(file_get_contents($xsl_arg), $xmlOptions);
-
-        // Load the xsl template
-        $xsltproc->importStyleSheet($xsl);
-
-        // Set parameters when defined
-        if ($params) {
-            foreach ($params as $param => $value) {
-                $xsltproc->setParameter('', $param, $value);
-            }
-        }
-
-        // Start the transformation
-        $processed = $xsltproc->transformToXML($xml);
-
-        // Put the result in a file when specified
-        if ($xslcontainer) {
-            return @file_put_contents($xslcontainer, $processed);
-        } else {
-            return $processed;
-        }
-    }
-
-    function xslt_free($xsltproc)
-    {
-        unset($xsltproc);
-    }
+// Emulate the old xslt library functions
+function xslt_create()
+{
+    return new XsltProcessor();
 }
+
+function xslt_process($xsltproc,
+                      $xml_arg,
+                      $xsl_arg,
+                      $xslcontainer = null,
+                      $args = null,
+                      $params = null)
+{
+    // Start with preparing the arguments
+    $xml_arg = str_replace('arg:', '', $xml_arg);
+    $xsl_arg = str_replace('arg:', '', $xsl_arg);
+
+    // Create instances of the DomDocument class
+    $xml = new DomDocument;
+    $xsl = new DomDocument;
+
+    // Load the xml document and the xsl template
+    if (LIBXML_VERSION >= 20700) {
+        $xmlOptions = LIBXML_PARSEHUGE;
+    } else {
+        $xmlOptions = 0;
+    }
+
+    $xml->loadXML($args[$xml_arg], $xmlOptions);
+    $xsl->loadXML(file_get_contents($xsl_arg), $xmlOptions);
+
+    // Load the xsl template
+    $xsltproc->importStyleSheet($xsl);
+
+    // Set parameters when defined
+    if ($params) {
+        foreach ($params as $param => $value) {
+            $xsltproc->setParameter('', $param, $value);
+        }
+    }
+
+    // Start the transformation
+    $processed = $xsltproc->transformToXML($xml);
+
+    // Put the result in a file when specified
+    if ($xslcontainer) {
+        return @file_put_contents($xslcontainer, $processed);
+    }
+
+    return $processed;
+}
+
+function xslt_free($xsltproc)
+{
+    unset($xsltproc);
+}
+
 
 /** Do the XSLT translation and look in the local directory if the file
  *  doesn't exist */
@@ -107,11 +104,6 @@ function generate_XSLT($xml, $pageName, $only_in_local = false)
     }
 
     $xh = xslt_create();
-
-    if (PHP_VERSION < 5) {
-        $filebase = 'file://' . getcwd() . '/';
-        xslt_set_base($xh, $filebase);
-    }
 
     $arguments = array(
         '/_xml' => $xml
@@ -144,9 +136,7 @@ function generate_XSLT($xml, $pageName, $only_in_local = false)
 /** used to escape special XML characters */
 function XMLStrFormat($str)
 {
-    if (function_exists('mb_detect_encoding') &&
-        mb_detect_encoding($str, 'UTF-8', true) === false
-    ) {
+    if (mb_detect_encoding($str, 'UTF-8', true) === false) {
         $str = utf8_encode($str);
     }
     $str = str_replace('&', '&amp;', $str);
@@ -622,11 +612,11 @@ function get_server_URI($localhost = false)
 
     $currentPort = '';
     $httpprefix = 'http://';
-    if ($_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443) {
+    if (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443) {
         $currentPort = ':' . $_SERVER['SERVER_PORT'];
     }
 
-    if ($_SERVER['SERVER_PORT'] == 443 || $CDASH_USE_HTTPS) {
+    if ($CDASH_USE_HTTPS || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)) {
         $httpprefix = 'https://';
     }
 
@@ -850,41 +840,46 @@ function update_site($siteid, $name,
 function get_geolocation($ip)
 {
     include 'config/config.php';
-    require_once 'include/pdo.php';
     $location = array();
 
-    // Test if curl exists
-    if (function_exists('curl_init') == false) {
-        $location['latitude'] = '';
-        $location['longitude'] = '';
-        return $location;
-    }
-
-    // Ask hostip.info for geolocation
     $lat = '';
     $long = '';
 
-    $curl = curl_init();
-    curl_setopt($curl, CURLOPT_URL, 'http://api.hostip.info/get_html.php?ip=' . $ip . '&position=true');
-    curl_setopt($curl, CURLOPT_TIMEOUT, 5); // if we cannot get the geolocation in 5 seconds we quit
+    global $CDASH_GEOLOCATE_IP_ADDRESSES;
 
-    ob_start();
-    curl_exec($curl);
-    $httpReply = ob_get_contents();
-    ob_end_clean();
+    if ($CDASH_GEOLOCATE_IP_ADDRESSES) {
+        // Ask hostip.info for geolocation
+        $url = 'http://api.hostip.info/get_html.php?ip=' . $ip . '&position=true';
 
-    $pos = strpos($httpReply, 'Latitude: ');
-    if ($pos !== false) {
-        $pos2 = strpos($httpReply, "\n", $pos);
-        $lat = substr($httpReply, $pos + 10, $pos2 - $pos - 10);
+        if (function_exists('curl_init')) {
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_TIMEOUT, 5); // if we cannot get the geolocation in 5 seconds we quit
+            ob_start();
+            curl_exec($curl);
+            $httpReply = ob_get_contents();
+            ob_end_clean();
+            curl_close($curl);
+        } elseif (ini_get('allow_url_fopen')) {
+            $options = array('http' => array('timeout' => 5.0));
+            $context = stream_context_create($options);
+            $httpReply = file_get_contents($url, false, $context);
+        } else {
+            $httpReply = '';
+        }
+
+        $pos = strpos($httpReply, 'Latitude: ');
+        if ($pos !== false) {
+            $pos2 = strpos($httpReply, "\n", $pos);
+            $lat = substr($httpReply, $pos + 10, $pos2 - $pos - 10);
+        }
+
+        $pos = strpos($httpReply, 'Longitude: ');
+        if ($pos !== false) {
+            $pos2 = strpos($httpReply, "\n", $pos);
+            $long = substr($httpReply, $pos + 11, $pos2 - $pos - 11);
+        }
     }
-
-    $pos = strpos($httpReply, 'Longitude: ');
-    if ($pos !== false) {
-        $pos2 = strpos($httpReply, "\n", $pos);
-        $long = substr($httpReply, $pos + 11, $pos2 - $pos - 11);
-    }
-    curl_close($curl);
 
     $location['latitude'] = '';
     $location['longitude'] = '';
@@ -1211,39 +1206,6 @@ function unlink_uploaded_file($fileid)
         cdash_unlink($CDASH_UPLOAD_DIRECTORY . '/' . $sha1sum . '/' . $symlinkname);
         return 0;
     }
-}
-
-/**
- * Recursive version of glob
- *
- * @return array containing all pattern-matched files.
- *
- * @param string $sDir Directory to start with.
- * @param string $sPattern Pattern to glob for.
- * @param int $nFlags Flags sent to glob.
- */
-function globr($sDir, $sPattern, $nFlags = null)
-{
-    $sDir = escapeshellcmd($sDir);
-
-    // Get the list of all matching files currently in the
-    // directory.
-
-    $aFiles = glob("$sDir/$sPattern", $nFlags);
-
-    // Then get a list of all directories in this directory, and
-    // run ourselves on the resulting array.  This is the
-    // recursion step, which will not execute if there are no
-    // directories.
-
-    foreach (glob("$sDir/*", GLOB_ONLYDIR) as $sSubDir) {
-        $aSubFiles = globr($sSubDir, $sPattern, $nFlags);
-        $aFiles = array_merge($aFiles, $aSubFiles);
-    }
-
-    // The array we return contains the files we found, and the
-    // files all of our children found.
-    return $aFiles;
 }
 
 /**
@@ -1888,68 +1850,6 @@ function redirect_to_https()
     }
 }
 
-// For PHP version < 5.2.0
-function __json_encode($data)
-{
-    if (is_array($data) || is_object($data)) {
-        $islist = is_array($data) && (empty($data) || array_keys($data) === range(0, count($data) - 1));
-
-        if ($islist) {
-            $json = '[' . implode(',', array_map('__json_encode', $data)) . ']';
-        } else {
-            $items = array();
-            foreach ($data as $key => $value) {
-                $items[] = __json_encode("$key") . ':' . __json_encode($value);
-            }
-            $json = '{' . implode(',', $items) . '}';
-        }
-    } elseif (is_string($data)) {
-        # Escape non-printable or Non-ASCII characters.
-        # Also put the \\ character first, as suggested in comments on the 'addclashes' page.
-        $string = '"' . addcslashes($data, "\\\"\n\r\t/" . chr(8) . chr(12)) . '"';
-        $json = '';
-        $len = strlen($string);
-        # Convert UTF-8 to Hexadecimal Codepoints.
-        for ($i = 0; $i < $len; $i++) {
-            $char = $string[$i];
-            $c1 = ord($char);
-
-            # Single byte;
-            if ($c1 < 128) {
-                $json .= ($c1 > 31) ? $char : sprintf('\\u%04x', $c1);
-                continue;
-            }
-
-            # Double byte
-            $c2 = ord($string[++$i]);
-            if (($c1 & 32) === 0) {
-                $json .= sprintf('\\u%04x', ($c1 - 192) * 64 + $c2 - 128);
-                continue;
-            }
-
-            # Triple
-            $c3 = ord($string[++$i]);
-            if (($c1 & 16) === 0) {
-                $json .= sprintf('\\u%04x', (($c1 - 224) << 12) + (($c2 - 128) << 6) + ($c3 - 128));
-                continue;
-            }
-
-            # Quadruple
-            $c4 = ord($string[++$i]);
-            if (($c1 & 8) === 0) {
-                $u = (($c1 & 15) << 2) + (($c2 >> 4) & 3) - 1;
-                $w1 = (54 << 10) + ($u << 6) + (($c2 & 15) << 2) + (($c3 >> 4) & 3);
-                $w2 = (55 << 10) + (($c3 & 15) << 6) + ($c4 - 128);
-                $json .= sprintf('\\u%04x\\u%04x', $w1, $w2);
-            }
-        }
-    } else {
-        # int, floats, bools, null
-        $json = strtolower(var_export($data, true));
-    }
-    return $json;
-}
-
 function begin_JSON_response()
 {
     global $CDASH_VERSION, $CDASH_USE_LOCAL_DIRECTORY, $CDASH_ROOT_DIR;
@@ -2250,4 +2150,22 @@ function create_aggregate_build($build, $siteid=null)
     $aggregate_build->InsertErrors = false;
     add_build($aggregate_build);
     return $aggregate_build;
+}
+
+function extract_tar($filename, $dirName)
+{
+    if (class_exists('PharData')) {
+        try {
+            $phar = new PharData($filename);
+            $phar->extractTo($dirName);
+        } catch (Exception $e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    $tar = new Archive_Tar($filename);
+    $tar->setErrorHandling(PEAR_ERROR_PRINT);
+    return $tar->extract($dirName);
 }

@@ -25,7 +25,7 @@ include 'models/coveragefile2user.php';
 include 'models/user.php';
 require_once 'include/filterdataFunctions.php';
 
-set_time_limit(0);
+@set_time_limit(0);
 
 @$buildid = $_GET['buildid'];
 if ($buildid != null) {
