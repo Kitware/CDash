@@ -280,14 +280,14 @@ class TestingHandler extends AbstractHandler
 
     private function createBuild()
     {
-        if (!array_key_exists($subprojectName, $this->NumberTestsFailed)) {
-            $this->NumberTestsFailed[$subprojectName] = 0;
+        if (!array_key_exists($this->SubProjectName, $this->NumberTestsFailed)) {
+            $this->NumberTestsFailed[$this->SubProjectName] = 0;
         }
-        if (!array_key_exists($subprojectName, $this->NumberTestsNotRun)) {
-            $this->NumberTestsNotRun[$subprojectName] = 0;
+        if (!array_key_exists($this->SubProjectName, $this->NumberTestsNotRun)) {
+            $this->NumberTestsNotRun[$this->SubProjectName] = 0;
         }
-        if (!array_key_exists($subprojectName, $this->NumberTestsPassed)) {
-            $this->NumberTestsPassed[$subprojectName] = 0;
+        if (!array_key_exists($this->SubProjectName, $this->NumberTestsPassed)) {
+            $this->NumberTestsPassed[$this->SubProjectName] = 0;
         }
 
         $build = new Build();
