@@ -25,6 +25,7 @@
         - php5-json
         - php5-xsl
         - php5-gd
+        - php5-memcache
         - php5-mysql
         - php5-xdebug
         - libapache2-mod-php5
