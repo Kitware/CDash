@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="multiple_subproject_example"
+	BuildStamp="20160624-0951-Experimental"
+	Name="localhost"
+	Generator="ctest-3.6.20160601-g9157c4-dirty"
+	CompilerName=""
+	CompilerVersion=""
+	OSName="Linux"
+	Hostname="livonia-linux"
+	OSRelease="3.13.0-35-generic"
+	OSVersion="#62-Ubuntu SMP Fri Aug 15 01:58:42 UTC 2014"
+	OSPlatform="x86_64"
+	Is64Bits="1"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="69"
+	ProcessorCacheSize="4096"
+	NumberOfLogicalCPU="4"
+	NumberOfPhysicalCPU="1"
+	TotalVirtualMemory="7627"
+	TotalPhysicalMemory="7890"
+	LogicalProcessorsPerPhysical="4"
+	ProcessorClockFrequency="2701"
+	>
+	<Configure>
+		<StartDateTime>Jun 24 05:51 EDT</StartDateTime>
+		<StartConfigureTime>1466761911</StartConfigureTime>
+		<ConfigureCommand>"/home/betsy/cmake_build/bin/cmake" "-DCTEST_USE_LAUNCHERS=1" "-GUnix Makefiles" "/home/betsy/cmake_subprojects/subproject_example_launcher/src"</ConfigureCommand>
+		<Log>-- The C compiler identification is GNU 4.8.4
+-- The CXX compiler identification is GNU 4.8.4
+-- Check for working C compiler: /usr/bin/cc
+-- Check for working C compiler: /usr/bin/cc -- works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Check for working CXX compiler: /usr/bin/c++
+-- Check for working CXX compiler: /usr/bin/c++ -- works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/betsy/cmake_subprojects/subproject_example_launcher/bin
+</Log>
+		<ConfigureStatus>0</ConfigureStatus>
+		<EndDateTime>Jun 24 05:51 EDT</EndDateTime>
+		<EndConfigureTime>1466761912</EndConfigureTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Configure>
+</Site>

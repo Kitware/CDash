@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="multiple_subproject_example"
+	BuildStamp="20160624-0951-Experimental"
+	Name="localhost"
+	Generator="ctest-3.6.20160601-g9157c4-dirty"
+	CompilerName=""
+	CompilerVersion=""
+	OSName="Linux"
+	Hostname="livonia-linux"
+	OSRelease="3.13.0-35-generic"
+	OSVersion="#62-Ubuntu SMP Fri Aug 15 01:58:42 UTC 2014"
+	OSPlatform="x86_64"
+	Is64Bits="1"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="69"
+	ProcessorCacheSize="4096"
+	NumberOfLogicalCPU="4"
+	NumberOfPhysicalCPU="1"
+	TotalVirtualMemory="7627"
+	TotalPhysicalMemory="7890"
+	LogicalProcessorsPerPhysical="4"
+	ProcessorClockFrequency="756"
+	>
+		<Subproject name="MyExperimentalFeature"/>
+		<Subproject name="MyProductionCode"/>
+		<Subproject name="MyThirdPartyDependency"/>
+	<Build>
+		<StartDateTime>Jun 24 05:51 EDT</StartDateTime>
+		<StartBuildTime>1466761912</StartBuildTime>
+		<BuildCommand>/home/betsy/cmake_build/bin/cmake --build . --config "Debug" -- -i</BuildCommand>
+		<Log Encoding="base64" Compression="bin/gzip"/>
+		<EndDateTime>Jun 24 05:51 EDT</EndDateTime>
+		<EndBuildTime>1466761912</EndBuildTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Build>
+</Site>
