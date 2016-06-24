@@ -49,7 +49,7 @@ class UppdateAppendTestCase extends KWWebTestCase
         if (count($buildids) != 4) {
             foreach ($buildids as $id) {
                 remove_build($id);
-           }
+            }
             $this->fail('Expected 4 builds, found ' . count($buildids));
             return 1;
         }
@@ -79,14 +79,14 @@ class UppdateAppendTestCase extends KWWebTestCase
             if ($numtestfail != 5) {
                 throw new Exception('Expected 5 tests to fail, found ' . $numtestfail);
             }
-        }  catch (Exception $e) {
+        } catch (Exception $e) {
             $success = false;
             $error_message = $e->getMessage();
         }
 
         // Delete the builds
         foreach ($buildids as $buildid) {
-          remove_build($buildid);
+            remove_build($buildid);
         }
 
         // Remove extra subprojects
