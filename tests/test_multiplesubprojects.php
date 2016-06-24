@@ -7,7 +7,7 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 
-class UppdateAppendTestCase extends KWWebTestCase
+class MultipleSubprojectsTestCase extends KWWebTestCase
 {
     public function __construct()
     {

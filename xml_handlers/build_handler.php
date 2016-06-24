@@ -200,6 +200,7 @@ class BuildHandler extends AbstractHandler
                     break;
                 case 'ENDBUILDTIME':
                     $this->EndTimeStamp = $data;
+                    break;
                 case 'BUILDCOMMAND':
                     $this->BuildCommand = $data;
                     break;
