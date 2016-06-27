@@ -309,6 +309,24 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
             $success = false;
         }
 
+        // Make sure the 'type' parameter is preserved across Previous/Next/Current
+        // on viewBuildError.php.
+        $this->get($this->url . "/api/v1/viewBuildError.php?type=1&buildid=$second_buildid");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        if (strpos($jsonobj['menu']['next'], "type=1") === false) {
+            $error_msg = "type=1 not found in Next link of viewBuildError.php";
+            $success = false;
+        }
+        if (strpos($jsonobj['menu']['previous'], "type=1") === false) {
+            $error_msg = "type=1 not found in Previous link of viewBuildError.php";
+            $success = false;
+        }
+        if (strpos($jsonobj['menu']['current'], "type=1") === false) {
+            $error_msg = "type=1 not found in Current link of viewBuildError.php";
+            $success = false;
+        }
+
         // Delete the builds that we created during this test.
         remove_build($second_parentid);
         remove_build($third_parentid);
