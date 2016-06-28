@@ -208,12 +208,14 @@ CREATE TABLE IF NOT EXISTS `build2update` (
 --
 
 CREATE TABLE `configure` (
-  `id` int(11) NOT NULL auto_increment,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `command` text NOT NULL,
   `log` MEDIUMTEXT NOT NULL,
-  `status` tinyint(4) NOT NULL default '0',
+  `status` tinyint(4) NOT NULL DEFAULT '0',
   `warnings` smallint(6) DEFAULT '-1',
-  PRIMARY KEY (`id`)
+  `crc32` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `crc32` (`crc32`)
 );
 
 -- --------------------------------------------------------
