@@ -138,34 +138,43 @@ class BuildConfigure
             return false;
         }
 
-        $command = pdo_real_escape_string($this->Command);
-        $log = pdo_real_escape_string($this->Log);
-        $status = pdo_real_escape_string($this->Status);
-        $this->Crc32 = crc32($command . $log . $status);
+        $this->Crc32 = crc32($this->Command . $this->Log . $this->Status);
+
+        $pdo = get_link_identifier()->getPdo();
+        $stmt = $pdo->prepare('SELECT id FROM configure WHERE crc32=:crc32');
+        $stmt->bindParam('crc32', $this->Crc32);
+        $stmt->execute();
+        $exists_row = $stmt->fetch(PDO::FETCH_ASSOC);
         $new_configure_inserted = false;
 
-        $exists_row = pdo_single_row_query(
-            "SELECT id FROM configure WHERE crc32=$this->Crc32");
-        if (!$exists_row || !array_key_exists('id', $exists_row)) {
+        if (is_array($exists_row)) {
+            $this->Id = $exists_row['id'];
+        } else {
             // No such configure exists yet, insert a new row.
-            $query =
-                "INSERT INTO configure (command, log, status, crc32)
-                VALUES ('$command','$log','$status', $this->Crc32)";
-            if (!pdo_query($query)) {
+            $stmt = $pdo->prepare('
+                INSERT INTO configure (command, log, status, crc32)
+                VALUES (:command, :log, :status, :crc32)');
+            $stmt->bindParam('command', $this->Command);
+            $stmt->bindParam('log', $this->Log);
+            $stmt->bindParam('status', $this->Status);
+            $stmt->bindParam('crc32', $this->Crc32);
+            if (!$stmt->execute()) {
                 add_last_sql_error('BuildConfigure Insert', 0, $this->BuildId);
                 return false;
             }
             $new_configure_inserted = true;
             $this->Id = pdo_insert_id('configure');
-        } else {
-            $this->Id = $exists_row['id'];
         }
 
         // Insert a new build2configure row for this build.
-        $query =
-            "INSERT INTO build2configure (buildid, configureid, starttime, endtime)
-            VALUES ($this->BuildId, $this->Id, '$this->StartTime', '$this->EndTime')";
-        if (!pdo_query($query)) {
+        $stmt = $pdo->prepare('
+            INSERT INTO build2configure (buildid, configureid, starttime, endtime)
+            VALUES (:buildid, :configureid, :starttime, :endtime)');
+        $stmt->bindParam('buildid', $this->BuildId);
+        $stmt->bindParam('configureid', $this->Id);
+        $stmt->bindParam('starttime', $this->StartTime);
+        $stmt->bindParam('endtime', $this->EndTime);
+        if (!$stmt->execute()) {
             add_last_sql_error('Build2Configure Insert', 0, $this->BuildId);
             return false;
         }
