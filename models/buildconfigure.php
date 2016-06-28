@@ -141,10 +141,12 @@ class BuildConfigure
         $this->Crc32 = crc32($this->Command . $this->Log . $this->Status);
 
         $pdo = get_link_identifier()->getPdo();
-        $stmt = $pdo->prepare('SELECT id FROM configure WHERE crc32=:crc32');
-        $stmt->bindParam('crc32', $this->Crc32);
-        $stmt->execute();
-        $exists_row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $pdo->beginTransaction();
+
+        $exists_stmt = $pdo->prepare(
+                'SELECT id FROM configure WHERE crc32=?');
+        $exists_stmt->execute(array($this->Crc32));
+        $exists_row = $exists_stmt->fetch(PDO::FETCH_ASSOC);
         $new_configure_inserted = false;
 
         if (is_array($exists_row)) {
@@ -159,8 +161,19 @@ class BuildConfigure
             $stmt->bindParam('status', $this->Status);
             $stmt->bindParam('crc32', $this->Crc32);
             if (!$stmt->execute()) {
-                add_last_sql_error('BuildConfigure Insert', 0, $this->BuildId);
-                return false;
+                $error = pdo_error(null, false);
+                // This error might be due to a unique constraint violation.
+                // Query again to see if this configure was created since
+                // the last time we checked.
+                $exists_stmt->execute(array($this->Crc32));
+                $exists_row = $exists_stmt->fetch(PDO::FETCH_ASSOC);
+                if (is_array($exists_row)) {
+                    $this->Id = $exists_row['id'];
+                } else {
+                    add_last_sql_error('BuildConfigure Insert', 0, $this->BuildId);
+                    $pdo->rollBack();
+                    return false;
+                }
             }
             $new_configure_inserted = true;
             $this->Id = pdo_insert_id('configure');
@@ -176,9 +189,11 @@ class BuildConfigure
         $stmt->bindParam('endtime', $this->EndTime);
         if (!$stmt->execute()) {
             add_last_sql_error('Build2Configure Insert', 0, $this->BuildId);
+            $pdo->rollBack();
             return false;
         }
 
+        $pdo->commit();
         $this->InsertLabelAssociations();
         return $new_configure_inserted;
     }
