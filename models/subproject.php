@@ -362,6 +362,32 @@ class SubProject
         return date(FMT_DATETIMESTD, strtotime($project_array['submittime'] . 'UTC'));
     }
 
+    /** Encapsulate common portion of the query used in GetNumberOf*Builds */
+    private function CommonBuildQuery($startUTCdate, $endUTCdate,
+                                      $search_term, $allSubProjects = false)
+    {
+        $query = 'SELECT ';
+        if ($allSubProjects) {
+            $query .= 'subprojectid, ';
+        }
+        $query .= 'count(*) FROM build
+        JOIN subproject2build ON (subproject2build.buildid=build.id)
+        JOIN build2group ON (build2group.buildid=build.id)
+        JOIN buildgroup ON (buildgroup.id=build2group.groupid)
+        WHERE ';
+        if (!$allSubProjects) {
+            $query .= 'subprojectid=' . qnum($this->Id) . 'AND ';
+        }
+        $query .=
+            "buildgroup.includesubprojectotal=1 AND
+            build.starttime>'$startUTCdate' AND
+            build.starttime<='$endUTCdate' AND $search_term";
+        if ($allSubProjects) {
+            $query .= ' GROUP BY subprojectid';
+        }
+        return $query;
+    }
+
     /** Get the number of warning builds given a date range */
     public function GetNumberOfWarningBuilds($startUTCdate, $endUTCdate, $allSubProjects = false)
     {
@@ -369,23 +395,10 @@ class SubProject
             echo 'SubProject GetNumberOfWarningBuilds(): Id not set';
             return false;
         }
-        $queryStr = 'SELECT ';
-        if ($allSubProjects) {
-            $queryStr .= 'subprojectid, ';
-        }
-        $queryStr .= 'count(build.id) FROM build,subproject2build,build2group,buildgroup WHERE ';
-        if (!$allSubProjects) {
-            $queryStr .= 'subprojectid=' . qnum($this->Id) . 'AND ';
-        }
-        $queryStr .= "build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                  AND buildgroup.includesubprojectotal=1
-                  AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate'
-                  AND build.starttime<='$endUTCdate' AND build.buildwarnings>0 ";
-        if ($allSubProjects) {
-            $queryStr .= 'GROUP BY subprojectid';
-        }
-        $project = pdo_query($queryStr);
 
+        $queryStr = $this->CommonBuildQuery($startUTCdate, $endUTCdate,
+                'build.buildwarnings>0', $allSubProjects);
+        $project = pdo_query($queryStr);
         if (!$project) {
             add_last_sql_error('SubProject GetNumberOfWarningBuilds');
             return false;
@@ -412,25 +425,9 @@ class SubProject
             return false;
         }
 
-        $queryStr = 'SELECT ';
-        if ($allSubProjects) {
-            $queryStr .= 'subprojectid, ';
-        }
-        $queryStr .= 'count(build.id) FROM build,subproject2build,build2group,buildgroup WHERE ';
-        if (!$allSubProjects) {
-            $queryStr .= 'subprojectid=' . qnum($this->Id) . 'AND ';
-        }
-
-        $queryStr .= "build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                  AND buildgroup.includesubprojectotal=1
-                  AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate'
-                  AND build.starttime<='$endUTCdate' AND build.builderrors>0 ";
-
-        if ($allSubProjects) {
-            $queryStr .= 'GROUP BY subprojectid';
-        }
+        $queryStr = $this->CommonBuildQuery($startUTCdate, $endUTCdate,
+                'build.builderrors>0', $allSubProjects);
         $project = pdo_query($queryStr);
-
         if (!$project) {
             add_last_sql_error('SubProject GetNumberOfErrorBuilds');
             return false;
@@ -456,23 +453,8 @@ class SubProject
             return false;
         }
 
-        $queryStr = 'SELECT ';
-        if ($allSubProjects) {
-            $queryStr .= 'subprojectid, ';
-        }
-        $queryStr .= 'count(build.id) FROM build,subproject2build,build2group,buildgroup WHERE ';
-        if (!$allSubProjects) {
-            $queryStr .= 'subprojectid=' . qnum($this->Id) . 'AND ';
-        }
-
-        $queryStr .= "build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                  AND buildgroup.includesubprojectotal=1
-                  AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate'
-                  AND build.starttime<='$endUTCdate' AND build.builderrors=0 AND build.buildwarnings=0 ";
-
-        if ($allSubProjects) {
-            $queryStr .= 'GROUP BY subprojectid';
-        }
+        $queryStr = $this->CommonBuildQuery($startUTCdate, $endUTCdate,
+                'build.builderrors=0 AND build.buildwarnings=0', $allSubProjects);
         $project = pdo_query($queryStr);
 
         if (!$project) {
@@ -492,6 +474,34 @@ class SubProject
         }
     }
 
+    /** Encapsulate common portion of the query used in GetNumberOf*Configures */
+    private function CommonConfigureQuery($startUTCdate, $endUTCdate,
+                                          $search_term, $allSubProjects = false)
+    {
+        $query = 'SELECT ';
+        if ($allSubProjects) {
+            $query .= 'subprojectid, ';
+        }
+        $query .= 'count(*) FROM build
+        JOIN build2configure ON (build2configure.buildid=build.id)
+        JOIN configure ON (configure.id=build2configure.configureid)
+        JOIN subproject2build ON (subproject2build.buildid=build.id)
+        JOIN build2group ON (build2group.buildid=build.id)
+        JOIN buildgroup ON (buildgroup.id=build2group.groupid)
+        WHERE ';
+        if (!$allSubProjects) {
+            $query .= 'subprojectid=' . qnum($this->Id) . 'AND ';
+        }
+        $query .=
+            "buildgroup.includesubprojectotal=1 AND
+            build.starttime>'$startUTCdate' AND
+            build.starttime<='$endUTCdate' AND $search_term";
+        if ($allSubProjects) {
+            $query .= ' GROUP BY subprojectid';
+        }
+        return $query;
+    }
+
     /** Get the number of failing configure given a date range */
     public function GetNumberOfWarningConfigures($startUTCdate, $endUTCdate, $allSubProjects = false)
     {
@@ -500,24 +510,8 @@ class SubProject
             return false;
         }
 
-        $queryStr = 'SELECT ';
-        if ($allSubProjects) {
-            $queryStr .= 'subprojectid, ';
-        }
-        $queryStr .= 'count(*) FROM configure,build,subproject2build,build2group,buildgroup WHERE ';
-        if (!$allSubProjects) {
-            $queryStr .= 'subprojectid=' . qnum($this->Id) . 'AND ';
-        }
-
-        $queryStr .= "build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                  AND configure.buildid=build.id
-                  AND buildgroup.includesubprojectotal=1
-                  AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate'
-                  AND build.starttime<='$endUTCdate' AND configure.warnings>0 ";
-
-        if ($allSubProjects) {
-            $queryStr .= 'GROUP BY subprojectid';
-        }
+        $queryStr = $this->CommonConfigureQuery($startUTCdate, $endUTCdate,
+                'configure.warnings>0', $allSubProjects);
         $project = pdo_query($queryStr);
 
         if (!$project) {
@@ -545,24 +539,8 @@ class SubProject
             return false;
         }
 
-        $queryStr = 'SELECT ';
-        if ($allSubProjects) {
-            $queryStr .= 'subprojectid, ';
-        }
-        $queryStr .= 'count(*) FROM configure,build,subproject2build,build2group,buildgroup WHERE ';
-        if (!$allSubProjects) {
-            $queryStr .= 'subprojectid=' . qnum($this->Id) . 'AND ';
-        }
-
-        $queryStr .= "build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                  AND configure.buildid=build.id
-                  AND buildgroup.includesubprojectotal=1
-                  AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate'
-                  AND build.starttime<='$endUTCdate' AND configure.status=1 ";
-
-        if ($allSubProjects) {
-            $queryStr .= 'GROUP BY subprojectid';
-        }
+        $queryStr = $this->CommonConfigureQuery($startUTCdate, $endUTCdate,
+                'configure.status=1', $allSubProjects);
         $project = pdo_query($queryStr);
 
         if (!$project) {
@@ -590,24 +568,8 @@ class SubProject
             return false;
         }
 
-        $queryStr = 'SELECT ';
-        if ($allSubProjects) {
-            $queryStr .= 'subprojectid, ';
-        }
-        $queryStr .= 'count(*) FROM configure,build,subproject2build,build2group,buildgroup WHERE ';
-        if (!$allSubProjects) {
-            $queryStr .= 'subprojectid=' . qnum($this->Id) . 'AND ';
-        }
-
-        $queryStr .= "build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                  AND configure.buildid=build.id
-                  AND buildgroup.includesubprojectotal=1
-                  AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate'
-                  AND build.starttime<='$endUTCdate' AND configure.status=0 ";
-
-        if ($allSubProjects) {
-            $queryStr .= 'GROUP BY subprojectid';
-        }
+        $queryStr = $this->CommonConfigureQuery($startUTCdate, $endUTCdate,
+                'configure.status=0', $allSubProjects);
         $project = pdo_query($queryStr);
 
         if (!$project) {
@@ -627,6 +589,32 @@ class SubProject
         }
     }
 
+    /** Encapsulate common portion of the query used in GetNumberOf*Tests */
+    private function CommonTestQuery($startUTCdate, $endUTCdate,
+                                     $field, $allSubProjects = false)
+    {
+        $query = 'SELECT ';
+        if ($allSubProjects) {
+            $query .= 'subprojectid, ';
+        }
+        $query .= "SUM($field) FROM build
+        JOIN subproject2build ON (subproject2build.buildid=build.id)
+        JOIN build2group ON (build2group.buildid=build.id)
+        JOIN buildgroup ON (buildgroup.id=build2group.groupid)
+        WHERE ";
+        if (!$allSubProjects) {
+            $query .= 'subprojectid=' . qnum($this->Id) . 'AND ';
+        }
+        $query .=
+            "buildgroup.includesubprojectotal=1 AND
+            build.starttime>'$startUTCdate' AND
+            build.starttime<='$endUTCdate' AND $field >= 0";
+        if ($allSubProjects) {
+            $query .= ' GROUP BY subprojectid';
+        }
+        return $query;
+    }
+
     /** Get the number of tests given a date range */
     public function GetNumberOfPassingTests($startUTCdate, $endUTCdate, $allSubProjects = false)
     {
@@ -635,23 +623,8 @@ class SubProject
             return false;
         }
 
-        $queryStr = 'SELECT ';
-        if ($allSubProjects) {
-            $queryStr .= 'subprojectid, ';
-        }
-        $queryStr .= 'SUM(build.testpassed) FROM build,subproject2build,build2group,buildgroup WHERE ';
-        if (!$allSubProjects) {
-            $queryStr .= 'subprojectid=' . qnum($this->Id) . 'AND ';
-        }
-
-        $queryStr .= "build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                  AND buildgroup.includesubprojectotal=1
-                  AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate'
-                  AND build.starttime<='$endUTCdate' AND build.testpassed>=0 ";
-
-        if ($allSubProjects) {
-            $queryStr .= 'GROUP BY subprojectid';
-        }
+        $queryStr = $this->CommonTestQuery($startUTCdate, $endUTCdate,
+                'build.testpassed', $allSubProjects);
         $project = pdo_query($queryStr);
 
         if (!$project) {
@@ -679,23 +652,8 @@ class SubProject
             return false;
         }
 
-        $queryStr = 'SELECT ';
-        if ($allSubProjects) {
-            $queryStr .= 'subprojectid, ';
-        }
-        $queryStr .= 'SUM(build.testfailed) FROM build,subproject2build,build2group,buildgroup WHERE ';
-        if (!$allSubProjects) {
-            $queryStr .= 'subprojectid=' . qnum($this->Id) . 'AND ';
-        }
-
-        $queryStr .= "build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                  AND buildgroup.includesubprojectotal=1
-                  AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate'
-                  AND build.starttime<='$endUTCdate' AND build.testfailed>=0 ";
-
-        if ($allSubProjects) {
-            $queryStr .= 'GROUP BY subprojectid';
-        }
+        $queryStr = $this->CommonTestQuery($startUTCdate, $endUTCdate,
+                'build.testfailed', $allSubProjects);
         $project = pdo_query($queryStr);
 
         if (!$project) {
@@ -723,23 +681,8 @@ class SubProject
             return false;
         }
 
-        $queryStr = 'SELECT ';
-        if ($allSubProjects) {
-            $queryStr .= 'subprojectid, ';
-        }
-        $queryStr .= 'SUM(build.testnotrun) FROM build,subproject2build,build2group,buildgroup WHERE ';
-        if (!$allSubProjects) {
-            $queryStr .= 'subprojectid=' . qnum($this->Id) . 'AND ';
-        }
-
-        $queryStr .= "build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                  AND buildgroup.includesubprojectotal=1
-                  AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate'
-                  AND build.starttime<='$endUTCdate' AND build.testnotrun>=0 ";
-
-        if ($allSubProjects) {
-            $queryStr .= 'GROUP BY subprojectid';
-        }
+        $queryStr = $this->CommonTestQuery($startUTCdate, $endUTCdate,
+                'build.testnotrun', $allSubProjects);
         $project = pdo_query($queryStr);
 
         if (!$project) {
