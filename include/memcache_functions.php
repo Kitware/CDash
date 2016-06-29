@@ -27,39 +27,31 @@ function cdash_memcache_key($page_name)
 function cdash_memcache_connect($server, $port)
 {
     if (class_exists('Memcached')) {
-        $memcache = new Memcached();
-        $memcache->setOption(Memcached::OPT_COMPRESSION, true);
+        $memcached = new Memcached();
+        $memcached->setOption(Memcached::OPT_COMPRESSION, true);
         global $CDASH_USE_ELASTICACHE_AUTO_DISCOVERY;
         if ($CDASH_USE_ELASTICACHE_AUTO_DISCOVERY) {
-            $memcache->setOption(Memcached::OPT_CLIENT_MODE, Memcached::DYNAMIC_CLIENT_MODE);
+            $memcached->setOption(Memcached::OPT_CLIENT_MODE, Memcached::DYNAMIC_CLIENT_MODE);
         }
-        if ($memcache->addServer($server, $port) !== false) {
-            return $memcache;
-        }
-    } elseif (class_exists('Memcache')) {
-        $memcache = new Memcache();
-        if ($memcache->connect($server, $port) !== false) {
-            return $memcache;
+        if ($memcached->addServer($server, $port) !== false) {
+            return $memcached;
         }
     }
     return false;
 }
 
-function cdash_memcache_get($memcache, $key)
+function cdash_memcache_get($memcached, $key)
 {
-    if ($memcache === false) {
+    if ($memcached === false) {
         return false;
     }
-    return $memcache->get($key);
+    return $memcached->get($key);
 }
 
-function cdash_memcache_set($memcache, $key, $var, $expire)
+function cdash_memcache_set($memcached, $key, $var, $expire)
 {
-    if ($memcache instanceof Memcached) {
-        return $memcache->set($key, $var, $expire);
+    if ($memcached === false) {
+        return false;
     }
-    if ($memcache instanceof Memcache) {
-        return $memcache->set($key, $var, MEMCACHE_COMPRESSED, $expire);
-    }
-    return false;
+    return $memcached->set($key, $var, $expire);
 }

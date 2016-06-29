@@ -38,8 +38,7 @@
     "sensiolabs/security-checker": "~3.0"
   },
   "suggest": {
-    "ext-memcache": "*",
-    "ext-memcached": "*",
+    "ext-memcached": "",
     "ext-pdo_mysql": "",
     "ext-pdo_pgsql": "",
     "ext-phar": ""
