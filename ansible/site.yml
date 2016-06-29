@@ -22,12 +22,12 @@
       php_packages:
         - php5
         - php5-curl
-        - php5-json
-        - php5-xsl
         - php5-gd
-        - php5-memcache
+        - php5-json
+        - php5-memcached
         - php5-mysql
         - php5-xdebug
+        - php5-xsl
         - libapache2-mod-php5
       php_memory_limit: "512M"
 
