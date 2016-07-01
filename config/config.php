@@ -53,8 +53,16 @@ $CDASH_TESTING_MODE = false;
 $CDASH_TESTING_RENAME_LOGS = false;
 
 // Whether or not CDash submissions should trigger daily updates.
+//
 // Disable this if you want more fine grained control over when/how
 // daily updates are triggered (e.g. cron).
+//
+// Note: Disabling the daily updates is useful to avoid costly call to
+// `addDailyChanges` implemented in `include/dailyupdates.php`. In
+// situation where a lot of submission are processed (e.g > 10000/days),
+// the overhead of the systematic call is not sustainable.
+// Instead a cronjob (or similar mechanism) should explicitly invoke
+// the call `<base_url>/ajax/dailyupdatescurl.php?projectid=<project_id>`.
 $CDASH_DAILY_UPDATES = true;
 
 /**
