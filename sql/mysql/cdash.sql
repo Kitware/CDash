@@ -782,10 +782,10 @@ CREATE TABLE `summaryemail` (
 
 
 CREATE TABLE `configureerror` (
-  `buildid` bigint(20) NOT NULL,
+  `configureid` int(11) NOT NULL,
   `type` tinyint(4) NOT NULL,
   `text` text NOT NULL,
-  KEY `buildid` (`buildid`),
+  KEY `configureid` (`configureid`),
   KEY `type` (`type`)
 );
 

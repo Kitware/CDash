@@ -111,11 +111,11 @@ class ConfigureHandler extends AbstractHandler
             if ($this->Configure->Exists()) {
                 $this->Configure->Delete();
             }
-            $this->Configure->Insert();
-
-            // Insert errors from the log file
-            $this->Configure->ComputeWarnings();
-            $this->Configure->ComputeErrors();
+            if ($this->Configure->Insert()) {
+                // Insert errors from the log file
+                $this->Configure->ComputeWarnings();
+                $this->Configure->ComputeErrors();
+            }
 
             $this->Build->ComputeConfigureDifferences();
 

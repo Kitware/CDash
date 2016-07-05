@@ -144,13 +144,15 @@ class BuildConfigure
         $pdo->beginTransaction();
 
         $exists_stmt = $pdo->prepare(
-                'SELECT id FROM configure WHERE crc32=?');
+                'SELECT * FROM configure WHERE crc32=?');
         $exists_stmt->execute(array($this->Crc32));
         $exists_row = $exists_stmt->fetch(PDO::FETCH_ASSOC);
         $new_configure_inserted = false;
 
         if (is_array($exists_row)) {
             $this->Id = $exists_row['id'];
+            $this->NumberOfWarnings = $exists_row['warnings'];
+            $this->NumberOfErrors = $exists_row['status'];
         } else {
             // No such configure exists yet, insert a new row.
             $stmt = $pdo->prepare('
@@ -238,8 +240,8 @@ class BuildConfigure
                 // Add the warnings in the configureerror table
                 $warning = pdo_real_escape_string($precontext . $log_lines[$l] . "\n" . $postcontext);
 
-                pdo_query("INSERT INTO configureerror (buildid,type,text)
-                        VALUES ('$this->BuildId','1','$warning')");
+                pdo_query("INSERT INTO configureerror (configureid,type,text)
+                        VALUES ('$this->Id','1','$warning')");
                 add_last_sql_error('BuildConfigure ComputeWarnings', 0, $this->BuildId);
                 $this->NumberOfWarnings++;
             }

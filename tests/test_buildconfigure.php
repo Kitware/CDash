@@ -36,7 +36,7 @@ class BuildConfigureTestCase extends KWWebTestCase
 
         $configure->BuildId = 1;
         $error = new BuildConfigureError();
-        $error->BuildId = 1;
+        $error->ConfigureId = 1;
         $error->Type = 1;
         $configure->AddError($error);
 
