@@ -744,6 +744,12 @@ class Project
             return false;
         }
         $build_array = pdo_fetch_array($build);
+
+        if (!is_array($build_array) ||
+                !array_key_exists('submittime', $build_array)) {
+            return false;
+        }
+
         return date(FMT_DATETIMESTD, strtotime($build_array['submittime'] . 'UTC'));
     }
 
