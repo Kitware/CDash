@@ -19,6 +19,7 @@ CDash.controller('ViewSubProjectsController',
       params: $rootScope.queryString
     }).success(function(cdash) {
       renderTimer.initialRender($scope, cdash);
+      $rootScope['title'] = cdash.title;
     }).finally(function() {
       $scope.loading = false;
     });
