@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="GithubUserStats"
+	BuildStamp="20160629-1726-Experimental"
+	Name="localhost"
+	Generator="ctest-3.6.20160606-gd5464"
+	CompilerName=""
+	CompilerVersion=""
+	OSName="Linux"
+	Hostname="localhost"
+	OSRelease="3.13.0-77-generic"
+	OSVersion="#121-Ubuntu SMP Wed Jan 20 10:50:42 UTC 2016"
+	OSPlatform="x86_64"
+	Is64Bits="1"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="45"
+	ProcessorCacheSize="12288"
+	NumberOfLogicalCPU="12"
+	NumberOfPhysicalCPU="1"
+	TotalVirtualMemory="32690"
+	TotalPhysicalMemory="32100"
+	LogicalProcessorsPerPhysical="12"
+	ProcessorClockFrequency="1200"
+	>
+	<Testing>
+		<StartDateTime>Jun 29 13:26 EDT</StartDateTime>
+		<StartTestTime>1467221185</StartTestTime>
+		<TestList>
+			<Test>./test1</Test>
+			<Test>./test2</Test>
+		</TestList>
+		<Test Status="failed">
+			<Name>test1</Name>
+			<Path>.</Path>
+			<FullName>./test1</FullName>
+			<FullCommandLine>/tmp/bin/main</FullCommandLine>
+			<Results>
+                <NamedMeasurement type="text/string" name="Exit Code">
+                    <Value>Failed</Value>
+                </NamedMeasurement>
+                <NamedMeasurement type="text/string" name="Exit Value">
+                    <Value>1</Value>
+                </NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="Execution Time">
+					<Value>0.00118613</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Completion Status">
+					<Value>Completed</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Command Line">
+					<Value>/tmp/bin/main</Value>
+				</NamedMeasurement>
+				<Measurement>
+					<Value></Value>
+				</Measurement>
+			</Results>
+		</Test>
+		<Test Status="notrun">
+			<Name>test2</Name>
+			<Path>.</Path>
+			<FullName>./test2</FullName>
+			<FullCommandLine>/tmp/bin/foo</FullCommandLine>
+			<Results>
+				<NamedMeasurement type="text/string" name="Command Line">
+					<Value>/tmp/bin/foo</Value>
+				</NamedMeasurement>
+				<Measurement>
+					<Value>Unable to find executable: foo</Value>
+				</Measurement>
+			</Results>
+		</Test>
+		<EndDateTime>Jun 29 13:26 EDT</EndDateTime>
+		<EndTestTime>1467221185</EndTestTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Testing>
+</Site>
