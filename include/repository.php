@@ -847,7 +847,7 @@ function perform_github_version_only_diff($project, $update, $previous_revision)
 {
     // Check if we have a Github account associated with this project.
     // If so, we are much less likely to get rate-limited by the API.
-    $auth = null;
+    $auth = array();
     $repositories = $project->GetRepositories();
     foreach ($repositories as $repo) {
         if (strlen($repo['username']) > 0 && strlen($repo['password']) > 0) {
