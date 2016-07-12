@@ -23,3 +23,35 @@ function cdash_memcache_key($page_name)
                               $page_name,
                               md5(serialize($_REQUEST))));
 }
+
+function cdash_memcache_connect($server, $port)
+{
+    if (class_exists('Memcached')) {
+        $memcached = new Memcached();
+        $memcached->setOption(Memcached::OPT_COMPRESSION, true);
+        global $CDASH_USE_ELASTICACHE_AUTO_DISCOVERY;
+        if ($CDASH_USE_ELASTICACHE_AUTO_DISCOVERY) {
+            $memcached->setOption(Memcached::OPT_CLIENT_MODE, Memcached::DYNAMIC_CLIENT_MODE);
+        }
+        if ($memcached->addServer($server, $port) !== false) {
+            return $memcached;
+        }
+    }
+    return false;
+}
+
+function cdash_memcache_get($memcached, $key)
+{
+    if ($memcached === false) {
+        return false;
+    }
+    return $memcached->get($key);
+}
+
+function cdash_memcache_set($memcached, $key, $var, $expire)
+{
+    if ($memcached === false) {
+        return false;
+    }
+    return $memcached->set($key, $var, $expire);
+}

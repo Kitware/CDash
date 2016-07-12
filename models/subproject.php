@@ -359,6 +359,12 @@ class SubProject
             return false;
         }
         $project_array = pdo_fetch_array($project);
+
+        if (!is_array($project_array) ||
+                !array_key_exists('submittime', $project_array)) {
+            return false;
+        }
+
         return date(FMT_DATETIMESTD, strtotime($project_array['submittime'] . 'UTC'));
     }
 

@@ -52,6 +52,11 @@ $CDASH_PRODUCTION_MODE = false;
 $CDASH_TESTING_MODE = false;
 $CDASH_TESTING_RENAME_LOGS = false;
 
+// Whether or not CDash submissions should trigger daily updates.
+// Disable this if you want more fine grained control over when/how
+// daily updates are triggered (e.g. cron).
+$CDASH_DAILY_UPDATES = true;
+
 /**
   * If a Bernard Driver is available then CDASH_BERNARD_SUBMISSION can be enabled
   * to allow processing of submissions to take place in the background on other
@@ -247,7 +252,6 @@ $CDASH_LOCKOUT_ATTEMPTS = 0;
 // How long to lock an account for? (in minutes)
 $CDASH_LOCKOUT_LENGTH = 0;
 
-
 // Whether or not to use Memcache for certain pages
 $CDASH_MEMCACHE_ENABLED = false;
 
@@ -258,6 +262,8 @@ $CDASH_MEMCACHE_SERVER = array('localhost', 11211);
 // Note: Memcache limits key size to 250 characters
 $CDASH_MEMCACHE_PREFIX = 'cdash';
 
+// Whether to use the AWS ElastiCache Auto Discovery feature
+$CDASH_USE_ELASTICACHE_AUTO_DISCOVERY = false;
 
 /* DO NOT EDIT AFTER THIS LINE */
 $localConfig = dirname(__FILE__) . '/config.local.php';

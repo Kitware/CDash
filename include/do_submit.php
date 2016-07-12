@@ -117,7 +117,7 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $expected_md5 = '', $d
     $baseUrl = get_server_URI(false);
     $request = $baseUrl . '/ajax/dailyupdatescurl.php?projectid=' . $projectid;
 
-    if (curl_request($request) === false) {
+    if ($CDASH_DAILY_UPDATES && curl_request($request) === false) {
         return false;
     }
 
@@ -238,7 +238,7 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5 = '')
     $currentURI = get_server_URI(true);
     $request = $currentURI . '/ajax/dailyupdatescurl.php?projectid=' . $projectid;
 
-    if (curl_request($request) === false) {
+    if ($CDASH_DAILY_UPDATES && curl_request($request) === false) {
         return;
     }
 

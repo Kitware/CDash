@@ -96,6 +96,12 @@ $buildname = $build_array['name'];
 $starttime = $build_array['starttime'];
 $revision = $build_array['revision'];
 
+if (isset($_GET['type'])) {
+    $type = pdo_real_escape_numeric($_GET['type']);
+} else {
+    $type = 0;
+}
+
 $date = get_dashboard_date_from_build_starttime($build_array['starttime'], $project_array['nightlytime']);
 get_dashboard_JSON_by_name($projectname, $date, $response);
 
@@ -109,15 +115,15 @@ $current_buildid = $build->GetCurrentBuildId();
 $next_buildid = $build->GetNextBuildId();
 
 if ($previous_buildid > 0) {
-    $menu['previous'] = "viewBuildError.php?buildid=$previous_buildid";
+    $menu['previous'] = "viewBuildError.php?type=$type&buildid=$previous_buildid";
 } else {
     $menu['noprevious'] = 1;
 }
 
-$menu['current'] = "viewBuildError.php?buildid=$current_buildid";
+$menu['current'] = "viewBuildError.php?type=$type&buildid=$current_buildid";
 
 if ($next_buildid > 0) {
-    $menu['next'] = "viewBuildError.php?buildid=$next_buildid";
+    $menu['next'] = "viewBuildError.php?type=$type&buildid=$next_buildid";
 } else {
     $menu['nonext'] = 1;
 }
@@ -134,14 +140,6 @@ $build_response['starttime'] =
     date(FMT_DATETIMETZ, strtotime($build_array['starttime'] . 'UTC'));
 $build_response['buildid'] = $build_array['id'];
 $response['build'] = $build_response;
-
-@$type = $_GET['type'];
-if ($type != null) {
-    $type = pdo_real_escape_numeric($type);
-}
-if (!isset($type)) {
-    $type = 0;
-}
 
 // Set the error
 if ($type == 0) {

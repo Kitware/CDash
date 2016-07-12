@@ -90,7 +90,15 @@ function googleAuthenticate($code)
     }
 
     try {
-        $client = new Google_Client();
+        $config = new Google_Config();
+        if ($CDASH_MEMCACHE_ENABLED) {
+            $config->setCacheClass('Google_Cache_Memcache');
+            list($server, $port) = $CDASH_MEMCACHE_SERVER;
+            $config->setClassConfig('Google_Cache_Memcache', 'host', $server);
+            $config->setClassConfig('Google_Cache_Memcache', 'port', $port);
+        }
+
+        $client = new Google_Client($config);
         $client->setClientId($GOOGLE_CLIENT_ID);
         $client->setClientSecret($GOOGLE_CLIENT_SECRET);
         $client->setRedirectUri($redirectURI);
