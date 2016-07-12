@@ -215,22 +215,28 @@ function compute_error_difference($buildid, $previousbuildid, $warning)
  *  for the previous and current build */
 function compute_configure_difference($buildid, $previousbuildid, $warning)
 {
-    // Look at the number of errors and warnings differences
-    $errors = pdo_query("SELECT count(*) FROM configureerror WHERE type='$warning'
-            AND buildid='$buildid'");
-    $errors_array = pdo_fetch_array($errors);
-    $nerrors = $errors_array[0];
+    $pdo = get_link_identifier()->getPdo();
 
-    $previouserrors = pdo_query("SELECT count(*) FROM configureerror WHERE type='$warning'
-            AND buildid='$previousbuildid'");
-    $previouserrors_array = pdo_fetch_array($previouserrors);
-    $npreviouserrors = $previouserrors_array[0];
+    // Compute the difference in the number of configure warnings/errors
+    // between this build and the previous one.
+    $stmt = $pdo->prepare(
+        'SELECT COUNT(*) FROM configureerror WHERE type=? AND buildid=?');
 
-    // Don't log if no diff
+    $stmt->execute(array($warning, $buildid));
+    $row = $stmt->fetch();
+    $nerrors = $row[0];
+
+    $stmt->execute(array($warning, $previousbuildid));
+    $row = $stmt->fetch();
+    $npreviouserrors = $row[0];
+
+    // Don't log if no diff.
     $errordiff = $nerrors - $npreviouserrors;
     if ($errordiff != 0) {
-        pdo_query("INSERT INTO configureerrordiff (buildid,type,difference)
-                VALUES('$buildid','$warning','$errordiff')");
+        $stmt = $pdo->prepare(
+            'INSERT INTO configureerrordiff (buildid, type, difference)
+            VALUES(?, ?, ?)');
+        $stmt->execute(array($buildid, $warning, $errordiff));
         add_last_sql_error('compute_configure_difference', 0, $buildid);
     }
 }
