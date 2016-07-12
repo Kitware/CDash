@@ -1183,76 +1183,85 @@ class Build
         }
 
         $previousbuildid = $this->GetPreviousBuildId();
-
-        // Find the errors, warnings and test failures
-        // Find the current number of errors
-        $errors = pdo_query('SELECT builderrors,buildwarnings,testnotrun,testfailed FROM build WHERE id=' . qnum($this->Id));
-        add_last_sql_error('Build:ComputeUpdateStatistics', $this->ProjectId, $this->Id);
-        $errors_array = pdo_fetch_array($errors);
-        $nerrors = $errors_array[0];
-        $nwarnings = $errors_array[1];
-        $ntests = $errors_array[2] + $errors_array[3];
-
-        // If we have a previous build
-        if ($previousbuildid > 0) {
-            $previouserrors = pdo_query('SELECT builderrors,buildwarnings,testnotrun,testfailed FROM build WHERE id=' . qnum($previousbuildid));
-            add_last_sql_error('Build:ComputeUpdateStatistics', $this->ProjectId, $this->Id);
-            $previouserrors_array = pdo_fetch_array($previouserrors);
-            $npreviouserrors = $previouserrors_array[0];
-            $npreviouswarnings = $previouserrors_array[1];
-            $nprevioustests = $previouserrors_array[2] + $previouserrors_array[3];
-
-            $warningdiff = $nwarnings - $npreviouswarnings;
-            $errordiff = $nerrors - $npreviouserrors;
-            $testdiff = $ntests - $nprevioustests;
-        } else {
-            // this is the first build
-
-            $warningdiff = $nwarnings;
-            $errordiff = $nerrors;
-            $testdiff = $ntests;
+        if ($previousbuildid < 1) {
+            // Nothing to compare the current results against.
+            return false;
         }
 
-        // Find the number of different users
-        $nauthors_array = pdo_fetch_array(pdo_query('SELECT count(author) FROM (SELECT uf.author FROM updatefile AS uf,build2update AS b2u
-            WHERE b2u.updateid=uf.updateid AND b2u.buildid=' . qnum($this->Id) . ' GROUP BY author) AS test'));
-        add_last_sql_error('Build:ComputeUpdateStatistics', $this->ProjectId, $this->Id);
+        // Find how the number of errors, warnings and test failures have changed.
+        $previousbuild = new Build();
+        $previousbuild->Id = $previousbuildid;
+
+        $errordiff = $this->GetNumberOfErrors() -
+            $previousbuild->GetNumberOfErrors();
+        $warningdiff = $this->GetNumberOfWarnings() -
+            $previousbuild->GetNumberOfWarnings();
+        $testdiff =
+            ($this->GetNumberOfFailedTests() + $this->GetNumberOfNotRunTests()) -
+            ($previousbuild->GetNumberOfFailedTests() + $previousbuild->GetNumberOfNotRunTests());
+
+        // Find the number of authors that contributed to this changeset.
+        $pdo = get_link_identifier()->getPdo();
+        $nauthors_stmt = $pdo->prepare(
+                'SELECT count(author) FROM
+                    (SELECT uf.author FROM updatefile AS uf
+                     JOIN build2update AS b2u ON (b2u.updateid=uf.updateid)
+                     WHERE b2u.buildid=? GROUP BY author)
+                 AS test');
+        $nauthors_stmt->execute(array($this->Id));
+        $nauthors_array = $nauthors_stmt->fetch();
         $nauthors = $nauthors_array[0];
 
         $newbuild = 1;
         $previousauthor = '';
-        // Loop through the updated files
-        $updatefiles = pdo_query('SELECT author,email,checkindate,filename FROM updatefile AS uf,build2update AS b2u
-                WHERE b2u.updateid=uf.updateid AND b2u.buildid=' . qnum($this->Id) .
-            " AND checkindate>'1980-01-01T00:00:00' ORDER BY author ASC, checkindate ASC");
+        // Record user statistics for each updated file.
+        $updatefiles_stmt = $pdo->prepare(
+            "SELECT author,email,checkindate,filename FROM updatefile AS uf
+            JOIN build2update AS b2u ON b2u.updateid=uf.updateid
+            WHERE b2u.buildid=? AND checkindate>'1980-01-01T00:00:00'
+            ORDER BY author ASC, checkindate ASC");
+        $updatefiles_stmt->execute(array($this->Id));
         add_last_sql_error('Build:ComputeUpdateStatistics', $this->ProjectId, $this->Id);
-        $nupdatedfiles = pdo_num_rows($updatefiles);
 
-        while ($updatefiles_array = pdo_fetch_array($updatefiles)) {
+        while ($updatefiles_array = $updatefiles_stmt->fetch()) {
             $checkindate = $updatefiles_array['checkindate'];
             $author = $updatefiles_array['author'];
             $filename = $updatefiles_array['filename'];
             $email = $updatefiles_array['email'];
+            $warnings = 0;
+            $errors = 0;
+            $tests = 0;
 
             if ($author != $previousauthor) {
                 $newbuild = 1;
             }
             $previousauthor = $author;
 
-            // If we have more than one author we need to find who caused the error
+            if ($warningdiff > 1) {
+                $warnings = $this->FindRealErrors('WARNING', $author, $this->Id, $filename);
+            } elseif ($warningdiff < 0) {
+                $warnings = $this->FindRealErrors('WARNING', $author, $previousbuildid, $filename) * -1;
+            }
+            if ($errordiff > 1) {
+                $errors = $this->FindRealErrors('ERROR', $author, $this->Id, $filename);
+            } elseif ($errordiff < 0) {
+                $errors = $this->FindRealErrors('ERROR', $author, $previousbuildid, $filename) * -1;
+            }
             if ($nauthors > 1) {
-                $warningdiff = $this->FindRealErrors('WARNING', $author, $this->Id, $filename);
-                $errordiff = $this->FindRealErrors('ERROR', $author, $this->Id, $filename);
-                $testdiff = 0; // no idea how to find if the update file is responsible for the test failure
+                // When multiple authors contribute to a changeset it is
+                // too difficult to determine which modified file caused a
+                // change in test behavior.
+                $tests = 0;
             } else {
-                $warningdiff /= $nupdatedfiles;
-                $errordiff /= $nupdatedfiles;
-                $testdiff /= $nupdatedfiles;
+                $tests = $testdiff;
             }
 
             $this->AddUpdateStatistics($author, $email, $checkindate, $newbuild,
-                $warningdiff, $errordiff, $testdiff);
+                $warnings, $errors, $tests);
 
+            $warningdiff -= $warnings;
+            $errordiff -= $errors;
+            $testdiff -= $tests;
             $newbuild = 0;
         }
         return true;
@@ -1262,137 +1271,126 @@ class Build
     private function AddUpdateStatistics($author, $email, $checkindate, $firstbuild,
                                          $warningdiff, $errordiff, $testdiff)
     {
-        // Find the userid from the author name
-        $user2project = pdo_query('SELECT up.userid FROM user2project AS up,user2repository AS ur
-                WHERE up.userid=ur.userid
-                AND up.projectid=' . qnum($this->ProjectId) . "
-                AND (ur.credential='$author' OR ur.credential='$email')
-                AND (ur.projectid=0 OR ur.projectid=" . qnum($this->ProjectId) . ')'
-        );
-        if (pdo_num_rows($user2project) == 0) {
-            return;
+        $pdo = get_link_identifier()->getPdo();
+
+        // Find user by email address.
+        $user_table = qid('user');
+        $stmt = $pdo->prepare("SELECT id FROM $user_table WHERE email=?");
+        $stmt->execute(array($email));
+        $row = $stmt->fetch();
+        if ($row) {
+            $userid = $row['id'];
+        } else {
+            // Find user by author name.
+            $stmt = $pdo->prepare(
+                'SELECT up.userid FROM user2project AS up
+                JOIN user2repository AS ur ON (ur.userid=up.userid)
+                WHERE up.projectid=:projectid
+                AND (ur.credential=:author OR ur.credential=:email)
+                AND (ur.projectid=0 OR ur.projectid=:projectid)');
+            $stmt->bindParam(':projectid', $this->ProjectId);
+            $stmt->bindParam(':author', $author);
+            $stmt->bindParam(':email', $email);
+            $stmt->execute();
+            $row = $stmt->fetch();
+            if (!$row) {
+                // Unable to find user, return early.
+                return;
+            }
+            $userid = $row['userid'];
         }
 
-        $user2project_array = pdo_fetch_array($user2project);
-        $userid = $user2project_array['userid'];
+        $totalbuilds = 0;
+        if ($firstbuild == 1) {
+            $totalbuilds = 1;
+        }
 
-        // Check if we already have a checkin date for this user
-        $userstatistics = pdo_query('SELECT totalupdatedfiles
-                FROM userstatistics WHERE userid=' . qnum($userid) . ' AND projectid=' . qnum($this->ProjectId) . " AND checkindate='$checkindate'");
-        add_last_sql_error('Build:AddUpdateStatistics', $this->ProjectId, $this->Id);
+        // Convert errordiff to nfailederrors & nfixederrors (etc).
+        $nfailedwarnings = 0;
+        $nfixedwarnings = 0;
+        $nfailederrors = 0;
+        $nfixederrors = 0;
+        $nfailedtests = 0;
+        $nfixedtests = 0;
+        if ($warningdiff > 0) {
+            $nfailedwarnings = $warningdiff;
+        } else {
+            $nfixedwarnings = abs($warningdiff);
+        }
+        if ($errordiff > 0) {
+            $nfailederrors = $errordiff;
+        } else {
+            $nfixederrors = abs($errordiff);
+        }
+        if ($testdiff > 0) {
+            $nfailedtests = $testdiff;
+        } else {
+            $nfixedtests = abs($testdiff);
+        }
 
-        if (pdo_num_rows($userstatistics) > 0) {
-            $userstatistics_array = pdo_fetch_array($userstatistics);
-            $totalbuilds = 0;
-            if ($firstbuild == 1) {
-                $totalbuilds = 1;
-            }
+        // Insert or update appropriately.
+        $pdo->beginTransaction();
+        $stmt = $pdo->prepare(
+                'SELECT totalupdatedfiles FROM userstatistics
+                WHERE userid=:userid AND projectid=:projectid AND
+                checkindate=:checkindate FOR UPDATE');
+        $stmt->bindParam(':userid', $userid);
+        $stmt->bindParam(':projectid', $this->ProjectId);
+        $stmt->bindParam(':checkindate', $checkindate);
+        $stmt->execute();
+        $row = $stmt->fetch();
 
-            $nfailedwarnings = 0;
-            $nfixedwarnings = 0;
-            $nfailederrors = 0;
-            $nfixederrors = 0;
-            $nfailedtests = 0;
-            $nfixedtests = 0;
-
-            if ($warningdiff > 0) {
-                $nfailedwarnings = $warningdiff;
-            } else {
-                $nfixedwarnings = abs($warningdiff);
-            }
-
-            if ($errordiff > 0) {
-                $nfailederrors = $errordiff;
-            } else {
-                $nfixederrors = abs($errordiff);
-            }
-
-            if ($testdiff > 0) {
-                $nfailedtests = $testdiff;
-            } else {
-                $nfixedtests = abs($testdiff);
-            }
-
-            pdo_query('UPDATE userstatistics
-                    SET totalupdatedfiles=totalupdatedfiles+' . qnum(1) . ',
-                    totalbuilds=totalbuilds+' . qnum($totalbuilds) . ',
-                    nfixedwarnings=nfixedwarnings+' . qnum($nfixedwarnings) . ',
-                    nfailedwarnings=nfailedwarnings+' . qnum($nfailedwarnings) . ',
-                    nfixederrors=nfixederrors+' . qnum($nfixederrors) . ',
-                    nfailederrors=nfailederrors+' . qnum($nfailederrors) . ',
-                    nfixedtests=nfixedtests+' . qnum($nfixedtests) . ',
-                    nfailedtests=nfailedtests+' . qnum($nfailedtests) . '
-                    WHERE userid=' . qnum($userid) . ' AND projectid=' . qnum($this->ProjectId) . " AND checkindate>='$checkindate'");
+        if ($row) {
+            // Update existing entry.
+            $stmt = $pdo->prepare(
+                    'UPDATE userstatistics SET
+                    totalupdatedfiles=totalupdatedfiles+1,
+                    totalbuilds=totalbuilds+:totalbuilds,
+                    nfixedwarnings=nfixedwarnings+:nfixedwarnings,
+                    nfailedwarnings=nfailedwarnings+:nfailedwarnings,
+                    nfixederrors=nfixederrors+:nfixederrors,
+                    nfailederrors=nfailederrors+:nfailederrors,
+                    nfixedtests=nfixedtests+:nfixedtests,
+                    nfailedtests=nfailedtests+:nfailedtests
+                    WHERE userid=:userid AND projectid=:projectid AND
+                    checkindate>=:checkindate');
+            $stmt->bindParam(':totalbuilds', $totalbuilds);
+            $stmt->bindParam(':nfixedwarnings', $nfixedwarnings);
+            $stmt->bindParam(':nfailedwarnings', $nfailedwarnings);
+            $stmt->bindParam(':nfixederrors', $nfixederrors);
+            $stmt->bindParam(':nfailederrors', $nfailederrors);
+            $stmt->bindParam(':nfixedtests', $nfixedtests);
+            $stmt->bindParam(':nfailedtests', $nfailedtests);
+            $stmt->bindParam(':userid', $userid);
+            $stmt->bindParam(':projectid', $this->ProjectId);
+            $stmt->bindParam(':checkindate', $checkindate);
+            $stmt->execute();
             add_last_sql_error('Build:AddUpdateStatistics', $this->ProjectId, $this->Id);
         } else {
-            // insert into the database
-
-            if ($warningdiff > 0) {
-                $nfixedwarnings = 0;
-                $nfailedwarnings = $warningdiff;
-            } else {
-                $nfixedwarnings = $warningdiff;
-                $nfailedwarnings = 0;
-            }
-
-            if ($errordiff > 0) {
-                $nfixederrors = 0;
-                $nfailederrors = $errordiff;
-            } else {
-                $nfixederrors = $errordiff;
-                $nfailederrors = 0;
-            }
-
-            if ($testdiff > 0) {
-                $nfixedtests = 0;
-                $nfailedtests = $testdiff;
-            } else {
-                $nfixedtests = $testdiff;
-                $nfailedtests = 0;
-            }
-
-            $totalupdatedfiles = 1;
-            $totalbuilds = 0;
-            if ($firstbuild == 1) {
-                $totalbuilds = 1;
-            }
-
-            pdo_query('UPDATE userstatistics
-                    SET totalupdatedfiles=totalupdatedfiles+' . qnum(1) . ',
-                    totalbuilds=totalbuilds+' . qnum(1) . ',
-                    nfixedwarnings=nfixedwarnings+' . qnum($nfixedwarnings) . ',
-                    nfailedwarnings=nfailedwarnings+' . qnum($nfailedwarnings) . ',
-                    nfixederrors=nfixederrors+' . qnum($nfixederrors) . ',
-                    nfailederrors=nfailederrors+' . qnum($nfailederrors) . ',
-                    nfixedtests=nfixedtests+' . qnum($nfixedtests) . ',
-                    nfailedtests=nfailedtests+' . qnum($nfailedtests) . '
-                    WHERE userid=' . qnum($userid) . ' AND projectid=' . qnum($this->ProjectId) . " AND checkindate>'$checkindate'");
-
-            add_last_sql_error('Build:AddUpdateStatistics', $this->ProjectId, $this->Id);
-
-            // Find the previous userstatistics
-            $previous = pdo_query("SELECT totalupdatedfiles,totalbuilds,nfixedwarnings,nfailedwarnings,nfixederrors,nfailederrors,nfixedtests,nfailedtests
-                    FROM userstatistics WHERE userid='$userid' AND projectid=" . qnum($this->ProjectId) . " AND checkindate<'$checkindate' ORDER BY checkindate DESC LIMIT 1");
-            add_last_sql_error('Build:AddUpdateStatistics', $this->ProjectId, $this->Id);
-            if (pdo_num_rows($previous) > 0) {
-                $previous_array = pdo_fetch_array($previous);
-                $totalupdatedfiles += $previous_array['totalupdatedfiles'];
-                $totalbuilds += $previous_array['totalbuilds'];
-                $nfixedwarnings += $previous_array['nfixedwarnings'];
-                $nfailedwarnings += $previous_array['nfailedwarnings'];
-                $nfixederrors += $previous_array['nfixederrors'];
-                $nfailederrors += $previous_array['nfailederrors'];
-                $nfixedtests += $previous_array['nfixedtests'];
-                $nfailedtests += $previous_array['nfailedtests'];
-            }
-
-            pdo_query('INSERT INTO userstatistics (userid,projectid,checkindate,totalupdatedfiles,totalbuilds,
-                nfixedwarnings,nfailedwarnings,nfixederrors,nfailederrors,nfixedtests,nfailedtests)
-                    VALUES (' . qnum($userid) . ',' . qnum($this->ProjectId) . ",'$checkindate',$totalupdatedfiles,$totalbuilds,$nfixedwarnings,
-                        $nfailedwarnings,$nfixederrors,$nfailederrors,$nfixedtests,$nfailedtests)
-                    ");
+            // Insert a new row into the database.
+            $stmt = $pdo->prepare(
+                    'INSERT INTO userstatistics
+                    (userid,projectid,checkindate,totalupdatedfiles,totalbuilds,
+                     nfixedwarnings,nfailedwarnings,nfixederrors,nfailederrors,
+                     nfixedtests,nfailedtests)
+                    VALUES
+                    (:userid,:projectid,:checkindate,1,:totalbuilds,
+                    :nfixedwarnings,:nfailedwarnings,:nfixederrors,
+                    :nfailederrors,:nfixedtests,:nfailedtests)');
+            $stmt->bindParam(':userid', $userid);
+            $stmt->bindParam(':projectid', $this->ProjectId);
+            $stmt->bindParam(':checkindate', $checkindate);
+            $stmt->bindParam(':totalbuilds', $totalbuilds);
+            $stmt->bindParam(':nfixedwarnings', $nfixedwarnings);
+            $stmt->bindParam(':nfailedwarnings', $nfailedwarnings);
+            $stmt->bindParam(':nfixederrors', $nfixederrors);
+            $stmt->bindParam(':nfailederrors', $nfailederrors);
+            $stmt->bindParam(':nfixedtests', $nfixedtests);
+            $stmt->bindParam(':nfailedtests', $nfailedtests);
+            $stmt->execute();
             add_last_sql_error('Build:AddUpdateStatistics', $this->ProjectId, $this->Id);
         }
+        $pdo->commit();
     }
 
     /** Find the errors associated with a user

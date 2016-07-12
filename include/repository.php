@@ -619,7 +619,12 @@ function get_gitorious_revision_url($projecturl, $revision, $priorrevision)
 /** Return the GitHub revision URL */
 function get_github_revision_url($projecturl, $revision, $priorrevision)
 {
-    return get_gitorious_revision_url($projecturl, $revision, $priorrevision);
+    if ($priorrevision) {
+        $revision_url = "$projecturl/compare/$priorrevision...$revision";
+    } else {
+        $revision_url = "$projecturl/commit/$revision";
+    }
+    return make_cdash_url($revision_url);
 }
 
 /** Return the GitLab revision URL */
@@ -709,6 +714,24 @@ function post_pull_request_comment($projectid, $pull_request, $comment, $cdash_u
     }
 }
 
+/** Convert GitHub repository viewer URL into corresponding API URL. */
+function get_github_api_url($github_url)
+{
+    /*
+     * For a URL of the form:
+     * ...://github.com/<user>/<repo>
+     * We return:
+     * ...://api.github.com/repos/<user>/<repo>
+     */
+    $idx1 = strpos($github_url, 'github.com');
+    $idx2 = $idx1 + strlen('github.com/');
+    $api_url = substr($github_url, 0, $idx2);
+    $api_url = str_replace('github.com', 'api.github.com', $api_url);
+    $api_url .= 'repos/';
+    $api_url .= substr($github_url, $idx2);
+    return $api_url;
+}
+
 function post_github_pull_request_comment($projectid, $pull_request, $comment, $cdash_url)
 {
     $row = pdo_single_row_query(
@@ -724,18 +747,10 @@ function post_github_pull_request_comment($projectid, $pull_request, $comment, $
         return;
     }
 
-    /* Massage our github url into the API endpoint that we need to POST to.
-     * For a URL of the form:
-     * ...://github.com/<user>/<repo>
-     * We want:
-     * ...://api.github.com/repos/<user>/<repo>/issues/<PR#>/comments
+    /* Massage our github url into the API endpoint that we need to POST to:
+     * .../repos/:owner/:repo/issues/:number/comments
      */
-    $idx1 = strpos($row['url'], 'github.com');
-    $idx2 = $idx1 + strlen('github.com/');
-    $post_url = substr($row['url'], 0, $idx2);
-    $post_url = str_replace('github.com', 'api.github.com', $post_url);
-    $post_url .= 'repos/';
-    $post_url .= substr($row['url'], $idx2);
+    $post_url = get_github_api_url($row['url']);
     $post_url .= "/issues/$pull_request/comments";
 
     // Format our comment using Github's comment syntax.
@@ -774,4 +789,223 @@ function post_github_pull_request_comment($projectid, $pull_request, $comment, $
     }
 
     curl_close($ch);
+}
+
+/** Find changes for a "version only" update. */
+function perform_version_only_diff($update, $projectid)
+{
+    // Return early if this project doesn't have a remote repository viewer.
+    require_once 'models/buildupdate.php';
+    require_once 'models/project.php';
+    $project = new Project();
+    $project->Id = $projectid;
+    $project->Fill();
+    if (strlen($project->CvsUrl) === 0 || strlen($project->CvsViewerType) === 0) {
+        return;
+    }
+
+    // Return early if we don't have an implementation for this repository viewer.
+    $viewertype = strtolower($project->CvsViewerType);
+    $function_name = 'perform_' . $viewertype . '_version_only_diff';
+    if (!function_exists($function_name)) {
+        return;
+    }
+
+    // Return early if we don't have a previous build to compare against.
+    require_once 'models/build.php';
+    $build = new Build();
+    $build->Id = $update->BuildId;
+    $previous_buildid = $build->GetPreviousBuildId();
+    if ($previous_buildid < 1) {
+        return;
+    }
+
+    // Get the revision for the previous build.
+    $pdo = get_link_identifier()->getPdo();
+    $stmt = $pdo->prepare(
+            'SELECT revision FROM buildupdate AS bu
+            INNER JOIN build2update AS b2u ON (b2u.updateid=bu.id)
+            WHERE b2u.buildid=?');
+    $stmt->execute(array($previous_buildid));
+    $row = $stmt->fetch();
+    if (empty($row) || !isset($row['revision'])) {
+        return;
+    }
+    $previous_revision = $row['revision'];
+
+    // Record the previous revision in the buildupdate table.
+    $stmt = $pdo->prepare(
+        'UPDATE buildupdate SET priorrevision=? WHERE id=?');
+    $stmt->execute(array($previous_revision, $update->UpdateId));
+
+    // Call the implementation specific to this repository viewer.
+    $update->Append = true;
+    return $function_name($project, $update, $previous_revision);
+}
+
+function perform_github_version_only_diff($project, $update, $previous_revision)
+{
+    // Check if we have a Github account associated with this project.
+    // If so, we are much less likely to get rate-limited by the API.
+    $auth = null;
+    $repositories = $project->GetRepositories();
+    foreach ($repositories as $repo) {
+        if (strlen($repo['username']) > 0 && strlen($repo['password']) > 0) {
+            $auth = ['auth' => [$repo['username'], $repo['password']]];
+            break;
+        }
+    }
+
+    // Use the GitHub API to find what changed between these two revisions.
+    // This API endpoint takes the following form:
+    // GET /repos/:owner/:repo/compare/:base...:head
+    $current_revision = $update->Revision;
+    $base_api_url = get_github_api_url($project->CvsUrl);
+    $client = new GuzzleHttp\Client();
+    $api_url = "$base_api_url/compare/$previous_revision...$current_revision";
+    try {
+        $response = $client->request('GET', $api_url, $auth);
+    } catch (GuzzleHttp\Exception\ClientException $e) {
+        // Typically this occurs due to a local commit that GitHub does not
+        // know about.
+        return;
+    }
+    $response_array = json_decode($response->getBody(), true);
+
+    // To do anything meaningful here our response needs to tell us about commits
+    // and the files that changed.  Abort early if either of these pieces of
+    // information are missing.
+    if (!is_array($response_array) ||
+            !array_key_exists('commits', $response_array) ||
+            !array_key_exists('files', $response_array)) {
+        return;
+    }
+
+    // Discard merge commits.  We want to assign credit to the author who did
+    // the actual work, not the approver who clicked the merge button.
+    foreach ($response_array['commits'] as $idx => $commit) {
+        if (strpos($commit['commit']['message'], 'Merge pull request')
+                !== false) {
+            unset($response_array['commits'][$idx]);
+        }
+    }
+
+    // If we still have more than one commit, we'll need to perform follow-up
+    // API calls to figure out which commit was likely responsible for each
+    // changed file.
+    $multiple_commits = false;
+    if (count($response_array['commits']) > 1) {
+        $multiple_commits = true;
+        // Generate list of commits contained by this changeset in reverse order
+        // (most recent first).
+        $list_of_commits = array_reverse($response_array['commits']);
+
+        // Also maintain a local cache of what files were changed by each commit.
+        // This prevents us from hitting the GitHub API more than necessary.
+        $cached_commits = array();
+    }
+
+    $pdo = get_link_identifier()->getPdo();
+
+    // Find the commit that changed each file.
+    foreach ($response_array['files'] as $modified_file) {
+        if ($multiple_commits) {
+            // Find the most recent commit that changed this file.
+            $commit = null;
+
+            // First check our local cache.
+            foreach ($cached_commits as $sha => $files) {
+                if (in_array($modified_file['filename'], $files)) {
+                    $idx = array_search($sha, array_column($list_of_commits, 'sha'));
+                    $commit = $list_of_commits[$idx]['commit'];
+                    break;
+                }
+            }
+
+            if (is_null($commit)) {
+                // Next, check the database.
+                $stmt = $pdo->prepare(
+                        'SELECT DISTINCT revision FROM updatefile
+                        WHERE filename=?');
+                $stmt->execute(array($modified_file['filename']));
+                while ($row = $stmt->fetch()) {
+                    foreach ($list_of_commits as $c) {
+                        if ($row['revision'] == $c['sha']) {
+                            $commit = $c['commit'];
+                            break;
+                        }
+                    }
+                    if (!is_null($commit)) {
+                        break;
+                    }
+                }
+            }
+
+            if (is_null($commit)) {
+                // Lastly, use the Github API to find what files this commit changed.
+                // To avoid being rate-limited, we only perform this lookup once
+                // per commit, caching the results as we go.
+                foreach ($list_of_commits as $c) {
+                    $sha = $c['sha'];
+
+                    if (array_key_exists($sha, $cached_commits)) {
+                        // We already looked up this commit.
+                        // Apparently it didn't modify the file we're looking for.
+                        continue;
+                    }
+
+                    $api_url = "$base_api_url/commits/$sha";
+                    $r = $client->request('GET', $api_url, $auth);
+                    $commit_response = json_decode($r->getBody(), true);
+
+                    if (!is_array($commit_response) ||
+                            !array_key_exists('files', $commit_response)) {
+                        // Skip to the next commit if no list of files was returned.
+                        $cached_commits[$sha] = array();
+                        continue;
+                    }
+
+                    // Cache what files this commit changed.
+                    $cached_commits[$sha] =
+                        array_column($commit_response['files'], 'filename');
+
+                    // Check if this commit modified the file in question.
+                    foreach ($commit_response['files'] as $file) {
+                        if ($file['filename'] === $modified_file['filename']) {
+                            $commit = $c['commit'];
+                            break;
+                        }
+                    }
+                    if (!is_null($commit)) {
+                        // Stop examining commits once we find one that matches.
+                        break;
+                    }
+                }
+            }
+
+            if (is_null($commit)) {
+                // Skip this file if we couldn't find a commit that modified it.
+                continue;
+            }
+        } else {
+            $commit = $response_array['commits'][0]['commit'];
+        }
+
+        // Record this modified file as part of the changeset.
+        $updateFile = new BuildUpdateFile();
+        $updateFile->Filename = $modified_file['filename'];
+        $updateFile->CheckinDate = $commit['author']['date'];
+        $updateFile->Author = $commit['author']['name'];
+        $updateFile->Email = $commit['author']['email'];
+        $updateFile->Committer = $commit['committer']['name'];
+        $updateFile->CommitterEmail = $commit['committer']['email'];
+        $updateFile->Log = $commit['message'];
+        $updateFile->Revision = $current_revision;
+        $updateFile->PriorRevision = $previous_revision;
+        $updateFile->Status = 'MODIFIED';
+        $update->AddFile($updateFile);
+    }
+
+    $update->Insert();
+    return true;
 }

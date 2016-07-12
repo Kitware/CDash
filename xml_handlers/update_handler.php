@@ -122,6 +122,15 @@ class UpdateHandler extends AbstractHandler
                 $this->Feed->InsertUpdate($this->projectid, $this->Build->Id);
             }
 
+            if ($this->Update->Command === '') {
+                // If the UpdateCommand was not set, then this was a
+                // "version only" update.  This means that CTest only told us
+                // what version of the code is being built, not what changed
+                // since last time.  In this case we need to query the remote
+                // repository to figure out what changed.
+                perform_version_only_diff($this->Update, $this->projectid);
+            }
+
             // Compute the update statistics
             $this->Build->ComputeUpdateStatistics();
         } elseif ($name == 'UPDATED' || $name == 'CONFLICTING' || $name == 'MODIFIED') {

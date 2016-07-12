@@ -113,6 +113,7 @@ add_php_test(viewsubprojects)
 
 if(CDASH_GITHUB_USERNAME AND CDASH_GITHUB_PASSWORD)
   add_php_test(github_PR_comment)
+  add_php_test(updateonlyuserstats)
 endif()
 
 add_subdirectory(ctest)

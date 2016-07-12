@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="GithubUserStats"
+	BuildStamp="20160629-1725-Experimental"
+	Name="localhost"
+	Generator="ctest-3.6.20160606-gd5464"
+	CompilerName=""
+	CompilerVersion=""
+	OSName="Linux"
+	Hostname="localhost"
+	OSRelease="3.13.0-77-generic"
+	OSVersion="#121-Ubuntu SMP Wed Jan 20 10:50:42 UTC 2016"
+	OSPlatform="x86_64"
+	Is64Bits="1"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="45"
+	ProcessorCacheSize="12288"
+	NumberOfLogicalCPU="12"
+	NumberOfPhysicalCPU="1"
+	TotalVirtualMemory="32690"
+	TotalPhysicalMemory="32100"
+	LogicalProcessorsPerPhysical="12"
+	ProcessorClockFrequency="1200"
+	>
+	<Build>
+		<StartDateTime>Jun 29 13:25 EDT</StartDateTime>
+		<StartBuildTime>1467221134</StartBuildTime>
+		<BuildCommand>/opt/cmake/bin/cmake --build . --config "Release" -- -i</BuildCommand>
+		<Error>
+			<BuildLogLine>4</BuildLogLine>
+			<Text>memcache error</Text>
+			<SourceFile>include/memcache_functions.php</SourceFile>
+			<SourceLineNumber>3</SourceLineNumber>
+			<PreContext>Checking for error...
+</PreContext>
+			<PostContext>Yeah, that's an error alright.
+</PostContext>
+			<RepeatCount>0</RepeatCount>
+		</Error>
+		<Warning>
+			<BuildLogLine>4</BuildLogLine>
+			<Text>submit warning</Text>
+			<SourceFile>include/do_submit.php</SourceFile>
+			<SourceLineNumber>3</SourceLineNumber>
+			<PreContext>Checking for warning...
+</PreContext>
+			<PostContext>Yeah, that's a warning alright.
+</PostContext>
+			<RepeatCount>0</RepeatCount>
+		</Warning>
+		<Log Encoding="base64" Compression="bin/gzip"/>
+		<EndDateTime>Jun 29 13:25 EDT</EndDateTime>
+		<EndBuildTime>1467221134</EndBuildTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Build>
+</Site>
