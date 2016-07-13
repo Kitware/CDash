@@ -1976,8 +1976,6 @@ class Build
             return;
         }
 
-        pdo_begin_transaction();
-
         // Update build step duration for this build.
         pdo_query(
                 "UPDATE build SET buildduration=buildduration + $duration
@@ -1996,8 +1994,6 @@ class Build
             add_last_sql_error('Build:UpdateBuildDuration',
                 $this->ProjectId, $this->ParentId);
         }
-
-        pdo_commit();
     }
 
     // Return the dashboard date (in Y-m-d format) for this build.
