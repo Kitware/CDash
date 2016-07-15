@@ -63,8 +63,7 @@ echo pdo_error();
         ?>
         <tr>
             <td width="20%" bgcolor="#EEEEEE"><font
-                    size="2"><?php echo $user_array['firstname'] . ' ' . $user_array['lastname'] . ' (' . $user_array['email'] . ')';
-        ?></font></td>
+                    size="2"><?php echo $user_array['firstname'] . ' ' . $user_array['lastname'] . ' (' . $user_array['email'] . ')'; ?></font></td>
             <td bgcolor="#EEEEEE"><font size="2">
                     <form method="post" action="" name="formuser_<?php echo $user_array['id'] ?>">
                         <input name="userid" type="hidden" value="<?php echo $user_array['id'] ?>">
@@ -84,8 +83,7 @@ echo pdo_error();
                             <input name="removeuser" type="submit" onclick="return confirmRemove()" value="remove user">
                             <?php
 
-        }
-        ?>
+        } ?>
                         <input name="search" type="hidden" value='<?php echo $search ?>'>
                     </form>
                 </font></td>

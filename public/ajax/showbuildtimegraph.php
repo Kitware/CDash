@@ -61,18 +61,11 @@ $previousbuilds = pdo_query("SELECT id,starttime,endtime,buildwarnings,builderro
         while ($build_array = pdo_fetch_array($previousbuilds)) {
             $t = strtotime($build_array['starttime']) * 1000; //flot expects milliseconds
         ?>
-        buildtime.push([<?php echo $t;
-            ?>,<?php echo(strtotime($build_array['endtime']) - strtotime($build_array['starttime'])) / 60;
-            ?>]);
-        builderrors.push([<?php echo $t;
-            ?>,<?php echo $build_array['builderrors'] ?>]);
-        buildwarnings.push([<?php echo $t;
-            ?>,<?php echo $build_array['buildwarnings'] ?>]);
-        testfailed.push([<?php echo $t;
-            ?>,<?php echo $build_array['testfailed'] ?>]);
-        buildids[<?php echo $t;
-            ?>] = <?php echo $build_array['id'];
-            ?>;
+        buildtime.push([<?php echo $t; ?>,<?php echo(strtotime($build_array['endtime']) - strtotime($build_array['starttime'])) / 60; ?>]);
+        builderrors.push([<?php echo $t; ?>,<?php echo $build_array['builderrors'] ?>]);
+        buildwarnings.push([<?php echo $t; ?>,<?php echo $build_array['buildwarnings'] ?>]);
+        testfailed.push([<?php echo $t; ?>,<?php echo $build_array['testfailed'] ?>]);
+        buildids[<?php echo $t; ?>] = <?php echo $build_array['id']; ?>;
         <?php
         $i++;
         }
