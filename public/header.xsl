@@ -97,7 +97,7 @@
         <xsl:attribute name="href">queryTests.php?project=<xsl:value-of select="cdash/dashboard/projectname_encoded"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/>&#38;limit=200<xsl:value-of select="cdash/extraurl"/></xsl:attribute>
         Tests Query</a></li>
         <li><a>
-        <xsl:attribute name="href">userStatistics.php?projectid=<xsl:value-of select="cdash/dashboard/projectid"/></xsl:attribute>
+        <xsl:attribute name="href">userStatistics.php?project=<xsl:value-of select="cdash/dashboard/projectname_encoded"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/></xsl:attribute>
         Statistics</a></li>
         <li class="endsubmenu"><a>
         <xsl:attribute name="href">viewMap.php?project=<xsl:value-of select="cdash/dashboard/projectname_encoded"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/><xsl:value-of select="cdash/extraurl"/></xsl:attribute>
