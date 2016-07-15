@@ -59,12 +59,9 @@ while ($group_array = pdo_fetch_array($group)) {
         echo 'treven';
     } else {
         echo 'trodd';
-    }
-    ?>">
-        <td align="center" width="30%"><b><?php echo $group_array['name'];
-    ?></b></td>
-        <td align="left"><?php echo $group_array['description'];
-    ?></td>
+    } ?>">
+        <td align="center" width="30%"><b><?php echo $group_array['name']; ?></b></td>
+        <td align="left"><?php echo $group_array['description']; ?></td>
     </tr>
     <?php
     $i++;
