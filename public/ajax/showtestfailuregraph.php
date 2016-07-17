@@ -90,9 +90,7 @@ for ($beginning_timestamp = $starttime; $beginning_timestamp > $starttime - 3600
         $tarray = array_reverse($tarray);
         foreach ($tarray as $axis) {
             ?>
-        d1.push([<?php echo $axis['x'];
-            ?>,<?php echo $axis['y'];
-            ?>]);
+        d1.push([<?php echo $axis['x']; ?>,<?php echo $axis['y']; ?>]);
         <?php
         $t = $axis['x'];
         } ?>

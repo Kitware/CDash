@@ -189,7 +189,8 @@ CREATE TABLE `buildupdate` (
   `revision` varchar(60) NOT NULL default '0',
   `priorrevision` varchar(60) NOT NULL default '0',
   `path` varchar(255) NOT NULL default '',
-  PRIMARY  KEY(`id`)
+  PRIMARY  KEY(`id`),
+  KEY `revision` (`revision`)
 );
 
 

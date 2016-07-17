@@ -210,8 +210,7 @@ $group = pdo_query("SELECT name,id FROM buildgroup WHERE id!='$buildgroupid' AND
                 <td bgcolor="#DDDDDD" width="35%"><font size="2"><b><?php echo $group_array['name'] ?></b>: </font></td>
                 <td bgcolor="#DDDDDD" width="20%"><font size="2"><input
                             id="expectednosubmission_<?php $expectedtag = rand();
-            echo $expectedtag;
-            ?>" type="checkbox"/> expected</font></td>
+            echo $expectedtag; ?>" type="checkbox"/> expected</font></td>
                 <td bgcolor="#DDDDDD" width="45%" id="nob"><font size="2">
                         <a href="#"
                            onclick="javascript:movenonexpectedbuildgroup_click('<?php echo $siteid ?>','<?php echo $buildname ?>','<?php echo $buildtype ?>','<?php echo $group_array['id'] ?>','<?php echo $currentgroup_array['id'] ?>','<?php echo $divname ?>','<?php echo $expectedtag ?>')">[move

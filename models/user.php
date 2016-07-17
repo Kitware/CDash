@@ -137,6 +137,18 @@ class User
         return true;
     }
 
+    // Remove this user from the database.
+    public function Delete()
+    {
+        if (!$this->Id) {
+            return false;
+        }
+        $pdo = get_link_identifier()->getPdo();
+        $user_table = qid('user');
+        $stmt = $pdo->prepare("DELETE FROM $user_table WHERE id=?");
+        $stmt->execute(array($this->Id));
+    }
+
     /** Get the name */
     public function GetName()
     {

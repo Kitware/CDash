@@ -109,19 +109,16 @@ foreach ($feeds as $f) {
         echo 'Just now: ';
     } else {
         echo '<b>' . $elapsedtime . ' ago: </b>';
-    }
-    ?>
+    } ?>
     <?php //echo get_feed_type($f["type"])?>
-    <?php echo get_feed_link($f['type'], $f['buildid'], $f['description']);
-    ?>
+    <?php echo get_feed_link($f['type'], $f['buildid'], $f['description']); ?>
     <br/>
     <?php
 
 } ?>
 <?php if (count($feeds) > 0) {
     ?>
-    <div id="feedmore"><a href="viewFeed.php?projectid=<?php echo $projectid;
-    ?>">See full feed</a></div>
+    <div id="feedmore"><a href="viewFeed.php?projectid=<?php echo $projectid; ?>">See full feed</a></div>
     <?php
 
 } ?>

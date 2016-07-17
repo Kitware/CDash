@@ -116,8 +116,7 @@ $previousbuilds = pdo_query("SELECT build.id,build.starttime,build.endtime,build
         $testfailed = $build_array['testfailed'];
         if ($testfailed == 0) {
             $testfailed = 0;
-        }
-        ?>
+        } ?>
         <tr>
             <td>
                 <center>
@@ -133,76 +132,60 @@ $previousbuilds = pdo_query("SELECT build.id,build.starttime,build.endtime,build
         echo date('Y-m-d H:i:d', strtotime($build_array['starttime']));
         if ($i > 0) {
             echo '</a>';
-        }
-        ?>
+        } ?>
                 </center>
             </td>
             <td>
-                <center><?php echo $build_array['nfiles'];
-        ?></center>
+                <center><?php echo $build_array['nfiles']; ?></center>
             </td>
             <td class=<?php if ($updateerrors > 0) {
             echo 'error';
         } else {
             echo 'normal';
-        }
-        ?>>
-                <center><?php echo $updateerrors;
-        ?></center>
+        } ?>>
+                <center><?php echo $updateerrors; ?></center>
             </td>
             <td class=<?php if ($updatewarnings > 0) {
             echo 'warning';
         } else {
             echo 'normal';
-        }
-        ?>>
-                <center><?php echo $updatewarnings;
-        ?></center>
+        } ?>>
+                <center><?php echo $updatewarnings; ?></center>
             </td>
             <td class=<?php if ($configureerrors > 0) {
             echo 'error';
         } else {
             echo 'normal';
-        }
-        ?>>
-                <center><?php echo $configureerrors;
-        ?></center>
+        } ?>>
+                <center><?php echo $configureerrors; ?></center>
             </td>
             <td class=<?php if ($configurewarnings > 0) {
             echo 'warning';
         } else {
             echo 'normal';
-        }
-        ?>>
-                <center><?php echo $configurewarnings;
-        ?></center>
+        } ?>>
+                <center><?php echo $configurewarnings; ?></center>
             </td>
             <td class=<?php if ($builderrors > 0) {
             echo 'error';
         } else {
             echo 'normal';
-        }
-        ?>>
-                <center><?php echo $builderrors;
-        ?></center>
+        } ?>>
+                <center><?php echo $builderrors; ?></center>
             </td>
             <td class=<?php if ($buildwarnings > 0) {
             echo 'warning';
         } else {
             echo 'normal';
-        }
-        ?>>
-                <center><?php echo $buildwarnings;
-        ?></center>
+        } ?>>
+                <center><?php echo $buildwarnings; ?></center>
             </td>
             <td class=<?php if ($testfailed > 0) {
             echo 'error';
         } else {
             echo 'normal';
-        }
-        ?>>
-                <center><?php echo $testfailed;
-        ?></center>
+        } ?>>
+                <center><?php echo $testfailed; ?></center>
             </td>
         </tr>
         <?php

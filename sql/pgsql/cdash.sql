@@ -159,6 +159,7 @@ CREATE TABLE "buildupdate" (
   "path" character varying(255) DEFAULT '' NOT NULL,
    PRIMARY KEY ("id")
 );
+CREATE INDEX "revision" on "buildupdate" ("revision");
 
 
 CREATE TABLE "build2update" (
