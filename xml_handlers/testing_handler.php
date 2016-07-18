@@ -307,8 +307,8 @@ class TestingHandler extends AbstractHandler
 
         $build->ProjectId = $this->projectid;
         $build->StartTime = $start_time;
-      // EndTimeStamp hasn't been parsed yet.
-      $build->EndTime = $start_time;
+        // EndTimeStamp hasn't been parsed yet.
+        $build->EndTime = $start_time;
         $build->SubmitTime = gmdate(FMT_DATETIME);
         $build->SetSubProject($this->SubProjectName);
 

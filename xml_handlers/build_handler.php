@@ -89,6 +89,7 @@ class BuildHandler extends AbstractHandler
             $this->Builds[$subprojectName] = $build;
         } elseif ($name == 'BUILD') {
             if (empty($this->Builds)) {
+                // No subprojects
                 $build = new Build();
                 if (!empty($this->BuildInformation->PullRequest)) {
                     $build->SetPullRequest($value);

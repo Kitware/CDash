@@ -23,10 +23,10 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             return;
         }
 
-        //if (!$this->submission('SubProjectExample', "$rep/Configure.xml")) {
-        //    $this->fail('failed to submit Configure.xml');
-        //    return 1;
-        //}
+        if (!$this->submission('SubProjectExample', "$rep/Configure.xml")) {
+            $this->fail('failed to submit Configure.xml');
+            return 1;
+        }
 
         if (!$this->submission('SubProjectExample', "$rep/Build.xml")) {
             $this->fail('failed to submit Build.xml');

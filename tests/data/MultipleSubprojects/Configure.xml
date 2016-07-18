@@ -23,6 +23,9 @@
 	LogicalProcessorsPerPhysical="4"
 	ProcessorClockFrequency="2701"
 	>
+                <Subproject name="MyExperimentalFeature"/>
+                <Subproject name="MyProductionCode"/>
+                <Subproject name="MyThirdPartyDependency"/>
 	<Configure>
 		<StartDateTime>Jun 24 05:51 EDT</StartDateTime>
 		<StartConfigureTime>1466761911</StartConfigureTime>
