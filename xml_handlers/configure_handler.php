@@ -93,48 +93,48 @@ class ConfigureHandler extends AbstractHandler
             $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
             $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
             foreach ($this->Builds as $subproject => $build) {
-              $build->ProjectId = $this->projectid;
-              $build->StartTime = $start_time;
-              $build->EndTime = $end_time;
-              $build->SubmitTime = gmdate(FMT_DATETIME);
-              if (empty($subproject)) {
+                $build->ProjectId = $this->projectid;
+                $build->StartTime = $start_time;
+                $build->EndTime = $end_time;
+                $build->SubmitTime = gmdate(FMT_DATETIME);
+                if (empty($subproject)) {
                     $build->SetSubProject($this->SubProjectName);
                     $build->GetIdFromName($this->SubProjectName);
                 } else {
                     $build->SetSubProject($subproject);
                     $build->GetIdFromName($subproject);
-              }
-              $build->InsertErrors = false;
+                }
+                $build->InsertErrors = false;
 
-              $build->RemoveIfDone();
-              if ($build->Id == 0) {
-                  // If the build doesn't exist we add it
+                $build->RemoveIfDone();
+                if ($build->Id == 0) {
+                    // If the build doesn't exist we add it
                   add_build($build, $this->scheduleid);
-              } else {
-                  // Otherwise we make sure that it's up-to-date.
+                } else {
+                    // Otherwise we make sure that it's up-to-date.
                   $build->UpdateBuild($build->Id, -1, -1);
-              }
-              $GLOBALS['PHP_ERROR_BUILD_ID'] = $build->Id;
-              $this->Configure->BuildId = $build->Id;
-              $this->Configure->StartTime = $start_time;
-              $this->Configure->EndTime = $end_time;
+                }
+                $GLOBALS['PHP_ERROR_BUILD_ID'] = $build->Id;
+                $this->Configure->BuildId = $build->Id;
+                $this->Configure->StartTime = $start_time;
+                $this->Configure->EndTime = $end_time;
 
               // Insert the configure
               if ($this->Configure->Exists()) {
                   $this->Configure->Delete();
               }
-              if ($this->Configure->Insert()) {
-                  // Insert errors from the log file
+                if ($this->Configure->Insert()) {
+                    // Insert errors from the log file
                   $this->Configure->ComputeWarnings();
-                  $this->Configure->ComputeErrors();
-              }
+                    $this->Configure->ComputeErrors();
+                }
 
-              $build->ComputeConfigureDifferences();
+                $build->ComputeConfigureDifferences();
 
               // Record the number of warnings & errors with the build.
               $build->SetNumberOfConfigureWarnings(
                   $this->Configure->NumberOfWarnings);
-              $build->SetNumberOfConfigureErrors(
+                $build->SetNumberOfConfigureErrors(
                   $this->Configure->NumberOfErrors);
 
               // Record configure duration with the build.
@@ -145,7 +145,7 @@ class ConfigureHandler extends AbstractHandler
               // if applicable.
               $build->UpdateParentConfigureNumbers(
                   $this->Configure->NumberOfWarnings, $this->Configure->NumberOfErrors);
-          }
+            }
         } elseif ($name == 'LABEL') {
             if (isset($this->Configure)) {
                 $this->Configure->AddLabel($this->Label);
