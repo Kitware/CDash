@@ -164,10 +164,10 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $response['proedition'] = $pro->GetEdition(1);
     }
 
-    if ($currentstarttime > time()) {
-        $response['future'] = 1;
-    } else {
-        $response['future'] = 0;
+    if ($currentstarttime > time() && !isset($_GET['parentid'])) {
+        $response['error'] = 'CDash cannot predict the future (yet)';
+        echo json_encode($response);
+        return;
     }
 
     // Menu definition

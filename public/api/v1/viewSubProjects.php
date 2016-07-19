@@ -99,9 +99,9 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
     get_dashboard_JSON($Project->GetName(), $date, $response);
     $projectname_encoded = urlencode($Project->Name);
     if ($currentstarttime > time()) {
-        $response['future'] = 1;
-    } else {
-        $response['future'] = 0;
+        $response['error'] = 'CDash cannot predict the future (yet)';
+        echo json_encode($response);
+        return;
     }
 
     $linkparams = 'project=' . urlencode($Project->Name);
