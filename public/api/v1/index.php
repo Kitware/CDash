@@ -1257,7 +1257,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $num_actual_builds = $num_builds - $num_expected_builds;
             $num_builds_label = "$num_actual_builds of $num_builds builds";
         } else {
-            $num_builds = count($buildgroups_response[$i]['builds']);
             if ($num_builds === 1) {
                 $num_builds_label = '1 build';
             } else {
