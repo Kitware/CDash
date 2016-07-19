@@ -19,11 +19,7 @@
 
     <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'views/partials/header.html'"></ng-include>
 
-    <div ng-if="::cdash.future == 1">
-      CDash cannot predict the future (yet)...
-    </div>
-
-    <div id="index_content" ng-if="!loading && cdash.requirelogin != 1 && cdash.future != 1 && !cdash.error">
+    <div id="index_content" ng-if="!loading && cdash.requirelogin != 1 && !cdash.error">
       <div id="index_top" ng-if="::cdash.updates">
         <div name="banner" ng-repeat="banner in ::cdash.banners">
           {{::banner.text}}
