@@ -1238,16 +1238,33 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $buildgroups_response[$i]['testduration'] = time_difference(
             $buildgroups_response[$i]['testduration'], true);
 
+        $num_expected_builds = 0;
         if (!$filter_sql) {
             $groupname = $buildgroups_response[$i]['name'];
             $expected_builds =
                 add_expected_builds($buildgroups_response[$i]['id'], $currentstarttime,
                     $received_builds[$groupname]);
             if (is_array($expected_builds)) {
+                $num_expected_builds = count($expected_builds);
                 $buildgroups_response[$i]['builds'] = array_merge(
                     $buildgroups_response[$i]['builds'], $expected_builds);
             }
         }
+        // Show how many builds this group has.
+        $num_builds = count($buildgroups_response[$i]['builds']);
+        $num_builds_label = '';
+        if ($num_expected_builds > 0) {
+            $num_actual_builds = $num_builds - $num_expected_builds;
+            $num_builds_label = "$num_actual_builds of $num_builds builds";
+        } else {
+            $num_builds = count($buildgroups_response[$i]['builds']);
+            if ($num_builds === 1) {
+                $num_builds_label = '1 build';
+            } else {
+                $num_builds_label = "$num_builds builds";
+            }
+        }
+        $buildgroups_response[$i]['numbuildslabel'] = $num_builds_label;
     }
 
     // Create a separate "all buildgroups" section of our response.
