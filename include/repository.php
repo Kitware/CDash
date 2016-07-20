@@ -868,6 +868,9 @@ function perform_github_version_only_diff($project, $update, $previous_revision)
     } catch (GuzzleHttp\Exception\ClientException $e) {
         // Typically this occurs due to a local commit that GitHub does not
         // know about.
+        add_log($e->getMessage(),
+                "perform_github_version_only_diff", LOG_WARNING,
+                $project->Id);
         return;
     }
     $response_array = json_decode($response->getBody(), true);
@@ -955,7 +958,14 @@ function perform_github_version_only_diff($project, $update, $previous_revision)
                     }
 
                     $api_url = "$base_api_url/commits/$sha";
-                    $r = $client->request('GET', $api_url, $auth);
+                    try {
+                        $r = $client->request('GET', $api_url, $auth);
+                    } catch (GuzzleHttp\Exception\ClientException $e) {
+                        add_log($e->getMessage(),
+                                "perform_github_version_only_diff", LOG_ERROR,
+                                $project->Id);
+                        break;
+                    }
                     $commit_response = json_decode($r->getBody(), true);
 
                     if (!is_array($commit_response) ||
