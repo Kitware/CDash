@@ -129,6 +129,7 @@ height: expression(this.height > 110 ? 110: true);
  padding-right: 0px;
  padding-bottom: 0px;
  padding-left: 7px;
+ display: inline-block;
 }
 
 .tabb {

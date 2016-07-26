@@ -868,6 +868,9 @@ function perform_github_version_only_diff($project, $update, $previous_revision)
     } catch (GuzzleHttp\Exception\ClientException $e) {
         // Typically this occurs due to a local commit that GitHub does not
         // know about.
+        add_log($e->getMessage(),
+                "perform_github_version_only_diff", LOG_WARNING,
+                $project->Id);
         return;
     }
     $response_array = json_decode($response->getBody(), true);
@@ -917,7 +920,7 @@ function perform_github_version_only_diff($project, $update, $previous_revision)
             foreach ($cached_commits as $sha => $files) {
                 if (in_array($modified_file['filename'], $files)) {
                     $idx = array_search($sha, array_column($list_of_commits, 'sha'));
-                    $commit = $list_of_commits[$idx]['commit'];
+                    $commit = $list_of_commits[$idx];
                     break;
                 }
             }
@@ -931,7 +934,7 @@ function perform_github_version_only_diff($project, $update, $previous_revision)
                 while ($row = $stmt->fetch()) {
                     foreach ($list_of_commits as $c) {
                         if ($row['revision'] == $c['sha']) {
-                            $commit = $c['commit'];
+                            $commit = $c;
                             break;
                         }
                     }
@@ -955,7 +958,14 @@ function perform_github_version_only_diff($project, $update, $previous_revision)
                     }
 
                     $api_url = "$base_api_url/commits/$sha";
-                    $r = $client->request('GET', $api_url, $auth);
+                    try {
+                        $r = $client->request('GET', $api_url, $auth);
+                    } catch (GuzzleHttp\Exception\ClientException $e) {
+                        add_log($e->getMessage(),
+                                "perform_github_version_only_diff", LOG_ERROR,
+                                $project->Id);
+                        break;
+                    }
                     $commit_response = json_decode($r->getBody(), true);
 
                     if (!is_array($commit_response) ||
@@ -972,7 +982,7 @@ function perform_github_version_only_diff($project, $update, $previous_revision)
                     // Check if this commit modified the file in question.
                     foreach ($commit_response['files'] as $file) {
                         if ($file['filename'] === $modified_file['filename']) {
-                            $commit = $c['commit'];
+                            $commit = $c;
                             break;
                         }
                     }
@@ -988,19 +998,19 @@ function perform_github_version_only_diff($project, $update, $previous_revision)
                 continue;
             }
         } else {
-            $commit = $response_array['commits'][0]['commit'];
+            $commit = $response_array['commits'][0];
         }
 
         // Record this modified file as part of the changeset.
         $updateFile = new BuildUpdateFile();
         $updateFile->Filename = $modified_file['filename'];
-        $updateFile->CheckinDate = $commit['author']['date'];
-        $updateFile->Author = $commit['author']['name'];
-        $updateFile->Email = $commit['author']['email'];
-        $updateFile->Committer = $commit['committer']['name'];
-        $updateFile->CommitterEmail = $commit['committer']['email'];
-        $updateFile->Log = $commit['message'];
-        $updateFile->Revision = $current_revision;
+        $updateFile->CheckinDate = $commit['commit']['author']['date'];
+        $updateFile->Author = $commit['commit']['author']['name'];
+        $updateFile->Email = $commit['commit']['author']['email'];
+        $updateFile->Committer = $commit['commit']['committer']['name'];
+        $updateFile->CommitterEmail = $commit['commit']['committer']['email'];
+        $updateFile->Log = $commit['commit']['message'];
+        $updateFile->Revision = $commit['sha'];
         $updateFile->PriorRevision = $previous_revision;
         $updateFile->Status = 'MODIFIED';
         $update->AddFile($updateFile);
