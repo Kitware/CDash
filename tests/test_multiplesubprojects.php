@@ -90,10 +90,10 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
 
             $subprojects = array("MyExperimentalFeature", "MyProductionCode", "MyThirdPartyDependency");
             foreach ($subprojects as $subproject) {
-              $pattern = "#td style=\"vertical-align:top\">$subproject</td>#";
-              if (preg_match($pattern, $content) !== 1) {
-                  throw new Exception('Missing subproject on viewConfigure');
-              }
+                $pattern = "#td style=\"vertical-align:top\">$subproject</td>#";
+                if (preg_match($pattern, $content) !== 1) {
+                    throw new Exception('Missing subproject on viewConfigure');
+                }
             }
         } catch (Exception $e) {
             $success = false;
