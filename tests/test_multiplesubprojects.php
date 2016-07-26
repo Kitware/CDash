@@ -79,6 +79,22 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             if ($numtestfail != 5) {
                 throw new Exception('Expected 5 tests to fail, found ' . $numtestfail);
             }
+
+            // Check the configure
+            $this->get($this->url . "/viewConfigure.php?buildid=$parentid");
+
+            $content = $this->getBrowser()->getContent();
+            if ($content == false) {
+                throw new Exception("Error retrieving content from viewConfigure.php");
+            }
+
+            $subprojects = array("MyExperimentalFeature", "MyProductionCode", "MyThirdPartyDependency");
+            foreach ($subprojects as $subproject) {
+              $pattern = "#td style=\"vertical-align:top\">$subproject</td>#";
+              if (preg_match($pattern, $content) !== 1) {
+                  throw new Exception('Missing subproject on viewConfigure');
+              }
+            }
         } catch (Exception $e) {
             $success = false;
             $error_message = $e->getMessage();
