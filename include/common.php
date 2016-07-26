@@ -947,8 +947,6 @@ function remove_build($buildid)
     pdo_query('DELETE FROM buildinformation WHERE buildid IN ' . $buildids);
     pdo_query('DELETE FROM builderrordiff WHERE buildid IN ' . $buildids);
 
-    pdo_query('DELETE FROM configure WHERE buildid IN ' . $buildids);
-    pdo_query('DELETE FROM configureerror WHERE buildid IN ' . $buildids);
     pdo_query('DELETE FROM configureerrordiff WHERE buildid IN ' . $buildids);
     pdo_query('DELETE FROM coveragesummarydiff WHERE buildid IN ' . $buildids);
     pdo_query('DELETE FROM testdiff WHERE buildid IN ' . $buildids);
@@ -993,6 +991,30 @@ function remove_build($buildid)
 
     // Remove the buildfailure.
     pdo_query('DELETE FROM buildfailure WHERE buildid IN ' . $buildids);
+
+    // Delete the configure if not shared.
+    $configureids = '(';
+    $build2configure = pdo_query(
+            "SELECT a.configureid, COUNT(b.configureid) AS c
+            FROM build2configure AS a
+            LEFT JOIN build2configure AS b
+            ON (a.configureid=b.configureid AND b.buildid NOT IN $buildids)
+            WHERE a.buildid IN $buildids
+            GROUP BY a.configureid HAVING count(b.configureid)=0");
+    while ($build2configure_array = pdo_fetch_array($build2configure)) {
+        // It is safe to delete this configure because it is only used
+        // by builds that are being deleted.
+        if ($configureids != '(') {
+            $configureids .= ',';
+        }
+        $configureids .= $build2configure_array['configureid'];
+    }
+    $configureids .= ')';
+    if (strlen($configureids) > 2) {
+        pdo_query("DELETE FROM configure WHERE id IN $configureids");
+        pdo_query("DELETE FROM configureerror WHERE id IN $configureids");
+    }
+    pdo_query("DELETE FROM build2configure WHERE buildid IN $buildids");
 
     // coverage file are kept unless they are shared
     $coveragefile = pdo_query('SELECT a.fileid,count(b.fileid) AS c

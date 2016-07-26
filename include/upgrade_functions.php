@@ -558,9 +558,9 @@ function UpgradeConfigureDuration()
 {
     // Do non-parent builds first.
     $query = '
-        SELECT b.id, c.starttime, c.endtime
+        SELECT b.id, b2c.starttime, b2c.endtime
         FROM build AS b
-        LEFT JOIN configure AS c ON b.id=c.buildid
+        LEFT JOIN build2configure AS b2c ON b.id=b2c.buildid
         WHERE b.configureduration = 0 AND b.parentid != -1';
     $result = pdo_query($query);
 
@@ -859,4 +859,112 @@ function PopulateDynamicAnalysisSummaryTable()
             $summary->Insert(true);
         }
     }
+}
+
+/** Move data from the configure table to the new build2configure table.
+ *  This function is parameterized to make it easier to test.
+ **/
+function PopulateBuild2Configure($configure_table, $b2c_table)
+{
+    // Set crc32 for configure rows.
+    $query =
+        "SELECT id, command, log, status FROM $configure_table";
+    $result = pdo_query($query);
+    while ($row = pdo_fetch_array($result)) {
+        $configureid = $row['id'];
+        $crc32 = crc32($row['command'] . $row['log'] . $row['status']);
+        pdo_query(
+            "UPDATE $configure_table SET crc32 = $crc32 WHERE id=$configureid");
+    }
+
+    // Find all configure rows that have duplicate crc32 values.
+    $query = "SELECT crc32, COUNT(*) FROM $configure_table
+        GROUP BY crc32 HAVING COUNT(*) > 1";
+    $result = pdo_query($query);
+    while ($row = pdo_fetch_array($result)) {
+        $crc32 = $row['crc32'];
+        $dupe_query =
+            "SELECT id, buildid, starttime, endtime FROM $configure_table
+            WHERE crc32 = $crc32";
+        $dupe_result = pdo_query($dupe_query);
+        $first = true;
+        $keeper_id = null;
+        while ($dupe_row = pdo_fetch_array($dupe_result)) {
+            $configureid = $dupe_row['id'];
+            $buildid = $dupe_row['buildid'];
+            $starttime = $dupe_row['starttime'];
+            $endtime = $dupe_row['endtime'];
+            // The first row survives, the rest of the duplicates get deleted.
+            if ($first) {
+                $keeper_id = $configureid;
+                $first = false;
+            } else {
+                pdo_query("DELETE FROM $configure_table WHERE id=$configureid");
+            }
+            pdo_query(
+                "INSERT INTO $b2c_table
+                (configureid, buildid, starttime, endtime)
+                VALUES ($keeper_id, $buildid, '$starttime', '$endtime')");
+        }
+    }
+
+    // Populate build2configure rows for non-duplicated configure rows.
+    $query =
+        "SELECT id, buildid, starttime, endtime FROM $configure_table
+        WHERE buildid NOT IN (SELECT buildid FROM $b2c_table)";
+    $result = pdo_query($query);
+    while ($row = pdo_fetch_array($result)) {
+        $configureid = $row['id'];
+        $buildid = $row['buildid'];
+        $starttime = $row['starttime'];
+        $endtime = $row['endtime'];
+        pdo_query(
+            "INSERT INTO $b2c_table
+            (configureid, buildid, starttime, endtime)
+            VALUES ($configureid, $buildid, '$starttime', '$endtime')");
+    }
+}
+
+/** Track configure errors by configureid, not buildid.
+ *  This function is parameterized to make it easier to test.
+ **/
+function UpgradeConfigureErrorTable($table = 'configureerror',
+        $b2c_table='build2configure')
+{
+    // Add the configureid field.
+    AddTableField($table, 'configureid', 'bigint(20)', 'BIGINT', '0');
+    AddTableIndex($table, 'configureid');
+
+    // Assign configureid to existing rows in this table.
+    pdo_query(
+        "UPDATE $table AS t
+        SET configureid=
+        (SELECT configureid FROM $b2c_table WHERE buildid=t.buildid)");
+
+    // Remove duplicates.
+    $query = "SELECT type, text, configureid, COUNT(*) FROM $table
+        GROUP BY type, text, configureid HAVING COUNT(*) > 1";
+    $result = pdo_query($query);
+    while ($row = pdo_fetch_array($result)) {
+        $type = $row['type'];
+        $text = $row['text'];
+        $configureid = $row['configureid'];
+        $dupe_query =
+            "SELECT buildid FROM $table
+            WHERE type=$type AND text='$text' AND configureid=$configureid";
+        $dupe_result = pdo_query($dupe_query);
+        $first = true;
+        while ($dupe_row = pdo_fetch_array($dupe_result)) {
+            $buildid = $dupe_row['buildid'];
+            // The first row survives, the rest of the duplicates get deleted.
+            if ($first) {
+                $first = false;
+            } else {
+                pdo_query("DELETE FROM $table WHERE buildid=$buildid AND type=$type AND text='$text' AND configureid=$configureid");
+            }
+        }
+    }
+
+    // Remove the buildid field.
+    RemoveTableField($table, 'buildid');
 }

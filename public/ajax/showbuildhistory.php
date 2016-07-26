@@ -49,7 +49,8 @@ $previousbuilds = pdo_query("SELECT build.id,build.starttime,build.endtime,build
                              FROM build
                              JOIN build2update ON (build2update.buildid=build.id)
                              JOIN buildupdate ON (build2update.updateid=buildupdate.id)
-                             JOIN configure ON (configure.buildid=build.id)
+                             JOIN build2configure ON (build2configure.buildid=build.id)
+                             JOIN configure ON (configure.id=build2configure.configureid)
                              WHERE build.siteid='$siteid' AND build.type='$buildtype' AND build.name='$buildname'
                              AND build.projectid='$projectid' AND build.starttime<='$starttime'
                              ORDER BY build.starttime DESC LIMIT 50");

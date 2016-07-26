@@ -519,19 +519,22 @@ class Build
 
     public function GetConfigures($status=false)
     {
+        $where = ($status !== false) ? "AND c.status = $status" : "";
         if ($this->IsParentBuild()) {
-            $where = ($status !== false) ? "AND c.status = $status" : "";
             return pdo_query("SELECT sp.name subprojectname, sp.id subprojectid, c.*, b.configureerrors,
                               b.configurewarnings
                               FROM configure c
-                              JOIN subproject2build sp2b ON sp2b.buildid = c.buildid
+                              JOIN build2configure b2c ON b2c.configureid=c.id
+                              JOIN subproject2build sp2b ON sp2b.buildid = b2c.buildid
                               JOIN subproject sp ON sp.id = sp2b.subprojectid
-                              JOIN build b ON b.id = c.buildid
+                              JOIN build b ON b.id = b2c.buildid
                               WHERE b.parentid = " . $this->Id . "
                               $where");
         } else {
-            $where = ($status !== false) ? "AND status = $status" : "";
-            return pdo_query("SELECT * FROM configure WHERE buildid = " . $this->Id . " $where");
+            return pdo_query(
+                    "SELECT * FROM configure c
+                    JOIN build2configure b2c ON b2c.configureid=c.id
+                    WHERE b2c.buildid = $this->Id $where");
         }
     }
 
