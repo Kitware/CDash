@@ -15,32 +15,14 @@ class ActualTrilinosSubmissionTestCase extends TrilinosSubmissionTestCase
 
     public function createProjectWithName($project)
     {
-        $content = $this->connect($this->url);
-        if (!$content) {
-            $this->fail('no content after connect');
-            return;
-        }
-
-        $this->login();
-        if (!$this->analyse($this->clickLink('Create new project'))) {
-            $this->fail('analyse failed after login then clickLink [Create new project]');
-            return;
-        }
-
-        $this->setField('name', $project);
-        $this->setField('description',
-            $project . ' project created by test code in file [' . __FILE__ . ']');
-        $this->setField('public', '1');
-        $this->setField('emailBrokenSubmission', '1');
-        $this->setField('showIPAddresses', '1');
-        $this->setField('displayLabels', '1');
-        $this->setField('shareLabelFilters', '1');
-        $this->clickSubmitByName('Submit');
-
-        $this->checkErrors();
-        $this->assertText('The project ' . $project . ' has been created successfully.');
-
-        $this->logout();
+        $settings = array(
+                'Name' => $project,
+                'Description' => $project . ' project created by test code in file [' . __FILE__ . ']',
+                'EmailBrokenSubmission' => '1',
+                'ShowIPAddresses' => '1',
+                'DisplayLabels' => '1',
+                'ShareLabelFilters' => '1');
+        $this->createProject($settings);
     }
 
     public function setEmailCommitters($projectname, $val)

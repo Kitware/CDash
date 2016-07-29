@@ -25,41 +25,28 @@ class UpdateOnlyUserStatsTestCase extends KWWebTestCase
     {
         parent::__construct();
         $this->DataDir = dirname(__FILE__) . '/data/UpdateOnlyUserStats';
-        $this->Project = null;
+        $this->ProjectId = null;
         $this->Users = array();
     }
 
     public function testSetup()
     {
-        // Create a project named CDash.
-        $this->login();
-        $name = 'CDash';
-        $description = 'CDash';
-        $svnviewerurl = 'https://github.com/Kitware/CDash';
-        $bugtrackerfileurl = 'http://public.kitware.com/Bug/view.php?id=';
-        $this->createProject($name, $description, $svnviewerurl, $bugtrackerfileurl);
-        $content = $this->connect($this->url . '/index.php?project=CDash');
-        if (!$content) {
-            return 1;
-        }
-
-        // Load details for this project.
-        $projectid = get_project_id('CDash');
-        $this->Project = new Project;
-        $this->Project->Id = $projectid;
-        $this->Project->Fill();
-
-        // Mark this as a GitHub project.
-        $this->Project->CvsViewerType = 'github';
-        $this->Project->Save();
-
-        // Add GitHub credentials for this repository so we don't get rate limited.
+        // Create a project with GitHub credentials named CDash.
         global $configure;
-        $this->Project->AddRepositories(
-                array('https://github.com/Kitware/CDash'),
-                array($configure['github_username']),
-                array($configure['github_password']),
-                array('master'));
+        $settings = [
+            'Name' => 'CDash',
+            'Description' => 'CDash',
+            'CvsUrl' => 'github.com/Kitware/CDash',
+            'CvsViewerType' => 'github',
+            'BugTrackerFileUrl' => 'http://public.kitware.com/Bug/view.php?id=',
+            'repositories' => [[
+                'url' => 'https://github.com/Kitware/CDash',
+                'branch' => 'master',
+                'username' => $configure['github_username'],
+                'password' => $configure['github_password']
+            ]]
+        ];
+        $this->ProjectId = $this->createProject($settings);
 
         // Create some users for the CDash project.
         $users_details = array(
@@ -76,7 +63,7 @@ class UpdateOnlyUserStatsTestCase extends KWWebTestCase
                     'firstname' => 'Zack',
                     'lastname' => 'Galbreath'));
         $userproject = new UserProject();
-        $userproject->ProjectId = $projectid;
+        $userproject->ProjectId = $this->ProjectId;
         foreach ($users_details as $user_details) {
             $user = new User();
             $user->Email = $user_details['email'];
@@ -176,6 +163,6 @@ class UpdateOnlyUserStatsTestCase extends KWWebTestCase
         }
 
         // Delete project.
-        $this->Project->Delete();
+        $this->deleteProject($this->ProjectId);
     }
 }
