@@ -41,16 +41,16 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
         // Get the buildids that we just created so we can delete it later.
         $buildids = array();
         $buildid_results = pdo_query(
-            "SELECT id FROM build WHERE name='multiple_subproject_example'");
+            "SELECT id FROM build WHERE name='CTestTest-Linux-c++-Subprojects'");
         while ($buildid_array = pdo_fetch_array($buildid_results)) {
             $buildids[] = $buildid_array['id'];
         }
 
-        if (count($buildids) != 4) {
+        if (count($buildids) != 5) {
             foreach ($buildids as $id) {
                 remove_build($id);
             }
-            $this->fail('Expected 4 builds, found ' . count($buildids));
+            $this->fail('Expected 5 builds, found ' . count($buildids));
             return 1;
         }
 
@@ -58,21 +58,46 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             $success = true;
 
             $parentid = $buildids[0];
-            $this->get($this->url . "/api/v1/index.php?project=SubProjectExample&parentid=$parentid");
+            // TODO: Add test for this -->
+            //$this->get($this->url . "/api/v1/index.php?project=SubProjectExample&parentid=$parentid");
+            $this->get($this->url . "/api/v1/index.php?project=SubProjectExample&date=2016-07-28");
             $content = $this->getBrowser()->getContent();
             $jsonobj = json_decode($content, true);
+
             $buildgroup = array_pop($jsonobj['buildgroups']);
 
-            $numchildren = $jsonobj['numchildren'];
-            if ($numchildren != 3) {
-                throw new Exception('Expected 3 children, found ' . $numchildren);
+            // Check number of subprojects
+            //$numchildren = $buildgroup['numchildren'];
+            //if ($numchildren != 4) {
+            //    throw new Exception('Expected 4 children, found ' . $numchildren);
+            //}
+
+            // Check configure
+            $numconfigureerror = $buildgroup['numconfigureerror'];
+            if ($numconfigureerror != 1) {
+                throw new Exception('Expected 1 configure error, found ' . $numconfigureerror);
             }
 
-            $builds = $buildgroup['builds'];
+            $numconfigurewarning = $buildgroup['numconfigurewarning'];
+            if ($numconfigurewarning != 1) {
+                throw new Exception('Expected 1 configure warnings, found ' . $numconfigurewarning);
+            }
 
+            // Check builds
+            $numbuilderror = $buildgroup['numbuilderror'];
+            if ($numbuilderror != 2) {
+                throw new Exception('Expected 2 build errors, found ' . $numbuilderror);
+            }
+
+            $numbuildwarning = $buildgroup['numbuildwarning'];
+            if ($numbuildwarning != 2) {
+                throw new Exception('Expected 2 build warnings, found ' . $numbuildwarning);
+            }
+
+            // Check tests
             $numtestpass = $buildgroup['numtestpass'];
-            if ($numtestpass != 2) {
-                throw new Exception('Expected 2 tests to pass, found ' . $numtestpass);
+            if ($numtestpass != 1) {
+                throw new Exception('Expected 1 test to pass, found ' . $numtestpass);
             }
 
             $numtestfail = $buildgroup['numtestfail'];
@@ -80,7 +105,12 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
                 throw new Exception('Expected 5 tests to fail, found ' . $numtestfail);
             }
 
-            // Check the configure
+            $numtestnotrun = $buildgroup['numtestnotrun'];
+            if ($numtestnotrun != 1) {
+                throw new Exception('Expected 1tests to not run, found ' . $numtestnotrun);
+            }
+
+            // viewConfigure
             $this->get($this->url . "/viewConfigure.php?buildid=$parentid");
 
             $content = $this->getBrowser()->getContent();
@@ -91,10 +121,13 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             $subprojects = array("MyExperimentalFeature", "MyProductionCode", "MyThirdPartyDependency");
             foreach ($subprojects as $subproject) {
                 $pattern = "#td style=\"vertical-align:top\">$subproject</td>#";
-                if (preg_match($pattern, $content) !== 1) {
-                    throw new Exception('Missing subproject on viewConfigure');
+                if (preg_match($pattern, $content) == 1) {
+                    throw new Exception('Subprojects should not be displayed on viewConfigure');
                 }
             }
+
+            // TODO: viewSubprojects
+
         } catch (Exception $e) {
             $success = false;
             $error_message = $e->getMessage();

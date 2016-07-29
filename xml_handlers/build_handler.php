@@ -76,17 +76,19 @@ class BuildHandler extends AbstractHandler
                 $this->Append = false;
             }
         } elseif ($name == 'SUBPROJECT') {
-            $subprojectName = $attributes['NAME'];
-            $build = new Build();
-            if (!empty($this->BuildInformation->PullRequest)) {
-                $build->SetPullRequest($value);
+            if (!array_key_exists($this->SubProjectName, $this->Builds)) {
+                $subprojectName = $attributes['NAME'];
+                $build = new Build();
+                if (!empty($this->BuildInformation->PullRequest)) {
+                    $build->SetPullRequest($value);
+                }
+                $build->SiteId = $this->Site->Id;
+                $build->Name = $this->BuildInformation->BuildName;
+                $build->SetStamp($this->BuildInformation->BuildStamp);
+                $build->Generator = $this->BuildInformation->Generator;
+                $build->Information = $this->BuildInformation;
+                $this->Builds[$subprojectName] = $build;
             }
-            $build->SiteId = $this->Site->Id;
-            $build->Name = $this->BuildInformation->BuildName;
-            $build->SetStamp($this->BuildInformation->BuildStamp);
-            $build->Generator = $this->BuildInformation->Generator;
-            $build->Information = $this->BuildInformation;
-            $this->Builds[$subprojectName] = $build;
         } elseif ($name == 'BUILD') {
             if (empty($this->Builds)) {
                 // No subprojects
@@ -178,6 +180,7 @@ class BuildHandler extends AbstractHandler
                 }
             }
             if (array_key_exists($this->SubProjectName, $this->Builds)) {
+                add_log("HANDLER ADD ERROR to ".$this->SubProjectName, LOG_ERR);
                 $this->Builds[$this->SubProjectName]->AddError($this->Error);
             }
             unset($this->Error);

@@ -123,29 +123,31 @@ class ConfigureHandler extends AbstractHandler
               if ($this->Configure->Exists()) {
                   $this->Configure->Delete();
               }
-                if ($this->Configure->Insert()) {
-                    // Insert errors from the log file
+              if ($this->Configure->Insert()) {
+                  // Insert errors from the log file
                   $this->Configure->ComputeWarnings();
-                    $this->Configure->ComputeErrors();
-                }
+                  $this->Configure->ComputeErrors();
+              }
 
-                $build->ComputeConfigureDifferences();
+              $build->ComputeConfigureDifferences();
 
               // Record the number of warnings & errors with the build.
               $build->SetNumberOfConfigureWarnings(
                   $this->Configure->NumberOfWarnings);
-                $build->SetNumberOfConfigureErrors(
+              $build->SetNumberOfConfigureErrors(
                   $this->Configure->NumberOfErrors);
 
               // Record configure duration with the build.
               $build->SetConfigureDuration(
                   $this->EndTimeStamp - $this->StartTimeStamp);
-
-              // Update the tally of warnings & errors in the parent build,
-              // if applicable.
-              $build->UpdateParentConfigureNumbers(
-                  $this->Configure->NumberOfWarnings, $this->Configure->NumberOfErrors);
             }
+
+            // Update the tally of warnings & errors in the parent build,
+            // if applicable.
+            // All subprojects share the same configure file and parent build,
+            // so only need to do this once
+            $build->UpdateParentConfigureNumbers(
+                $this->Configure->NumberOfWarnings, $this->Configure->NumberOfErrors);
         } elseif ($name == 'LABEL') {
             if (isset($this->Configure)) {
                 $this->Configure->AddLabel($this->Label);

@@ -1,246 +1,239 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Site BuildName="multiple_subproject_example"
-	BuildStamp="20160624-0951-Experimental"
-	Name="localhost"
-	Generator="ctest-3.6.20160601-g9157c4-dirty"
-	CompilerName=""
-	CompilerVersion=""
-	OSName="Linux"
-	Hostname="livonia-linux"
-	OSRelease="3.13.0-35-generic"
-	OSVersion="#62-Ubuntu SMP Fri Aug 15 01:58:42 UTC 2014"
-	OSPlatform="x86_64"
-	Is64Bits="1"
-	VendorString="GenuineIntel"
-	VendorID="Intel Corporation"
-	FamilyID="6"
-	ModelID="69"
-	ProcessorCacheSize="4096"
-	NumberOfLogicalCPU="4"
-	NumberOfPhysicalCPU="1"
-	TotalVirtualMemory="7627"
-	TotalPhysicalMemory="7890"
-	LogicalProcessorsPerPhysical="4"
-	ProcessorClockFrequency="756"
-	>
-	<Testing>
-		<StartDateTime>Jun 24 05:51 EDT</StartDateTime>
-		<StartTestTime>1466761912</StartTestTime>
-		<TestList>
-			<Test>./MyThirdPartyDependency/thirdparty</Test>
-			<Test>./MyExperimentalFeature/experimentalFail1</Test>
-			<Test>./MyExperimentalFeature/experimentalFail2</Test>
-			<Test>./MyExperimentalFeature/experimentalFail3</Test>
-			<Test>./MyExperimentalFeature/experimentalFail4</Test>
-			<Test>./MyExperimentalFeature/experimentalFail5</Test>
-			<Test>./MyProductionCode/production</Test>
-		</TestList>
-		<Test Status="passed">
-			<Name>thirdparty</Name>
-			<Path>./MyThirdPartyDependency</Path>
-			<FullName>./MyThirdPartyDependency/thirdparty</FullName>
-			<FullCommandLine>/home/betsy/cmake_subprojects/subproject_example_launcher/bin/MyThirdPartyDependency/thirdparty</FullCommandLine>
-			<Subproject name="MyThirdPartyDependency"/>
-			<Results>
-				<NamedMeasurement type="numeric/double" name="Execution Time">
-					<Value>0.000954151</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="text/string" name="Completion Status">
-					<Value>Completed</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="text/string" name="Command Line">
-					<Value>/home/betsy/cmake_subprojects/subproject_example_launcher/bin/MyThirdPartyDependency/thirdparty</Value>
-				</NamedMeasurement>
-				<Measurement>
-					<Value>This function doesn't do much.
-</Value>
-				</Measurement>
-			</Results>
-		</Test>
-		<Test Status="failed">
-			<Name>experimentalFail1</Name>
-			<Path>./MyExperimentalFeature</Path>
-			<FullName>./MyExperimentalFeature/experimentalFail1</FullName>
-			<FullCommandLine>/home/betsy/cmake_subprojects/subproject_example_launcher/bin/MyExperimentalFeature/experimental "5"</FullCommandLine>
-			<Subproject name="MyExperimentalFeature"/>
-			<Results>
-				<NamedMeasurement type="text/string" name="Exit Code">
-					<Value>Failed</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="text/string" name="Exit Value">
-					<Value>0</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="numeric/double" name="Execution Time">
-					<Value>0.000995159</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="text/string" name="Fail Reason">
-					<Value>Required regular expression not found.Regex=[Test!
+<Site BuildName="CTestTest-Linux-c++-Subprojects"
+        BuildStamp="20160728-1932-Experimental"
+        Name="livonia-linux"
+        Generator="ctest-3.6.20160726-g3e55f-dirty"
+        CompilerName=""
+        CompilerVersion=""
+        OSName="Linux"
+        Hostname="livonia-linux"
+        OSRelease="3.13.0-35-generic"
+        OSVersion="#62-Ubuntu SMP Fri Aug 15 01:58:42 UTC 2014"
+        OSPlatform="x86_64"
+        Is64Bits="1"
+        VendorString="GenuineIntel"
+        VendorID="Intel Corporation"
+        FamilyID="6"
+        ModelID="69"
+        ProcessorCacheSize="4096"
+        NumberOfLogicalCPU="4"
+        NumberOfPhysicalCPU="1"
+        TotalVirtualMemory="7627"
+        TotalPhysicalMemory="7890"
+        LogicalProcessorsPerPhysical="4"
+        ProcessorClockFrequency="756"
+        >
+        <Testing>
+                <StartDateTime>Jul 28 15:32 EDT</StartDateTime>
+                <StartTestTime>1469734335</StartTestTime>
+                <TestList>
+                        <Test>./MyThirdPartyDependency/thirdparty</Test>
+                        <Test>./MyExperimentalFeature/experimentalFail1</Test>
+                        <Test>./MyExperimentalFeature/experimentalFail2</Test>
+                        <Test>./MyExperimentalFeature/experimentalFail3</Test>
+                        <Test>./MyExperimentalFeature/experimentalFail4</Test>
+                        <Test>./MyExperimentalFeature/experimentalFail5</Test>
+                        <Test>./MyProductionCode/production</Test>
+                </TestList>
+                <Test Status="notrun">
+                        <Name>thirdparty</Name>
+                        <Path>./MyThirdPartyDependency</Path>
+                        <FullName>./MyThirdPartyDependency/thirdparty</FullName>
+                        <FullCommandLine></FullCommandLine>
+                        <Subproject name="MyThirdPartyDependency"/>
+                        <Results>
+                                <NamedMeasurement type="text/string" name="Command Line">
+                                        <Value></Value>
+                                </NamedMeasurement>
+                                <Measurement>
+                                        <Value>Unable to find executable: /home/betsy/cmake_build/Tests/CTestTestSubprojects/MyThirdPartyDependency/thirdparty</Value>
+                                </Measurement>
+                        </Results>
+                </Test>
+                <Test Status="failed">
+                        <Name>experimentalFail1</Name>
+                        <Path>./MyExperimentalFeature</Path>
+                        <FullName>./MyExperimentalFeature/experimentalFail1</FullName>
+                        <FullCommandLine>/home/betsy/cmake_build/Tests/CTestTestSubprojects/MyExperimentalFeature/experimental "5"</FullCommandLine>
+                        <Subproject name="MyExperimentalFeature"/>
+                        <Results>
+                                <NamedMeasurement type="text/string" name="Exit Code">
+                                        <Value>Failed</Value>
+                                </NamedMeasurement>
+                                <NamedMeasurement type="text/string" name="Exit Value">
+                                        <Value>0</Value>
+                                </NamedMeasurement>
+                                <NamedMeasurement type="numeric/double" name="Execution Time">
+                                        <Value>0.000917912</Value>
+                                </NamedMeasurement>
+                                <NamedMeasurement type="text/string" name="Fail Reason">
+                                        <Value>Required regular expression not found.Regex=[Test!
 ]</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="text/string" name="Completion Status">
-					<Value>Completed</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="text/string" name="Command Line">
-					<Value>/home/betsy/cmake_subprojects/subproject_example_launcher/bin/MyExperimentalFeature/experimental "5"</Value>
-				</NamedMeasurement>
-				<Measurement>
-					<Value>This does happen.
+                                </NamedMeasurement>
+                                <NamedMeasurement type="text/string" name="Completion Status">
+                                        <Value>Completed</Value>
+                                </NamedMeasurement>
+                                <NamedMeasurement type="text/string" name="Command Line">
+                                        <Value>/home/betsy/cmake_build/Tests/CTestTestSubprojects/MyExperimentalFeature/experimental "5"</Value>
+                                </NamedMeasurement>
+                                <Measurement>
+                                        <Value>This does happen.
 </Value>
-				</Measurement>
-			</Results>
-		</Test>
-		<Test Status="failed">
-			<Name>experimentalFail2</Name>
-			<Path>./MyExperimentalFeature</Path>
-			<FullName>./MyExperimentalFeature/experimentalFail2</FullName>
-			<FullCommandLine>/home/betsy/cmake_subprojects/subproject_example_launcher/bin/MyExperimentalFeature/experimental "-5"</FullCommandLine>
-			<Subproject name="MyExperimentalFeature"/>
-			<Results>
-				<NamedMeasurement type="text/string" name="Exit Code">
-					<Value>Failed</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="text/string" name="Exit Value">
-					<Value>0</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="numeric/double" name="Execution Time">
-					<Value>0.00220203</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="text/string" name="Fail Reason">
-					<Value>Required regular expression not found.Regex=[Test!
+                                </Measurement>
+                        </Results>
+                </Test>
+                <Test Status="failed">
+                        <Name>experimentalFail2</Name>
+                        <Path>./MyExperimentalFeature</Path>
+                        <FullName>./MyExperimentalFeature/experimentalFail2</FullName>
+                        <FullCommandLine>/home/betsy/cmake_build/Tests/CTestTestSubprojects/MyExperimentalFeature/experimental "-5"</FullCommandLine>
+                        <Subproject name="MyExperimentalFeature"/>
+                        <Results>
+                                <NamedMeasurement type="text/string" name="Exit Code">
+                                        <Value>Failed</Value>
+                                </NamedMeasurement>
+                                <NamedMeasurement type="text/string" name="Exit Value">
+                                        <Value>0</Value>
+                                </NamedMeasurement>
+                                <NamedMeasurement type="numeric/double" name="Execution Time">
+                                        <Value>0.000864029</Value>
+                                </NamedMeasurement>
+                                <NamedMeasurement type="text/string" name="Fail Reason">
+                                        <Value>Required regular expression not found.Regex=[Test!
 ]</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="text/string" name="Completion Status">
-					<Value>Completed</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="text/string" name="Command Line">
-					<Value>/home/betsy/cmake_subprojects/subproject_example_launcher/bin/MyExperimentalFeature/experimental "-5"</Value>
-				</NamedMeasurement>
-				<Measurement>
-					<Value>This does happen.
+                                </NamedMeasurement>
+                                <NamedMeasurement type="text/string" name="Completion Status">
+                                        <Value>Completed</Value>
+                                </NamedMeasurement>
+                                <NamedMeasurement type="text/string" name="Command Line">
+                                        <Value>/home/betsy/cmake_build/Tests/CTestTestSubprojects/MyExperimentalFeature/experimental "-5"</Value>
+                                </NamedMeasurement>
+                                <Measurement>
+                                        <Value>This does happen.
 </Value>
-				</Measurement>
-			</Results>
-		</Test>
-		<Test Status="failed">
-			<Name>experimentalFail3</Name>
-			<Path>./MyExperimentalFeature</Path>
-			<FullName>./MyExperimentalFeature/experimentalFail3</FullName>
-			<FullCommandLine>/home/betsy/cmake_subprojects/subproject_example_launcher/bin/MyExperimentalFeature/experimental "-5"</FullCommandLine>
-			<Subproject name="MyExperimentalFeature"/>
-			<Results>
-				<NamedMeasurement type="text/string" name="Exit Code">
-					<Value>Failed</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="text/string" name="Exit Value">
-					<Value>0</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="numeric/double" name="Execution Time">
-					<Value>0.00219297</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="text/string" name="Fail Reason">
-					<Value>Required regular expression not found.Regex=[Test!
+                                </Measurement>
+                        </Results>
+                </Test>
+                <Test Status="failed">
+                        <Name>experimentalFail3</Name>
+                        <Path>./MyExperimentalFeature</Path>
+                        <FullName>./MyExperimentalFeature/experimentalFail3</FullName>
+                        <FullCommandLine>/home/betsy/cmake_build/Tests/CTestTestSubprojects/MyExperimentalFeature/experimental "-5"</FullCommandLine>
+                        <Subproject name="MyExperimentalFeature"/>
+                        <Results>
+                                <NamedMeasurement type="text/string" name="Exit Code">
+                                        <Value>Failed</Value>
+                                </NamedMeasurement>
+                                <NamedMeasurement type="text/string" name="Exit Value">
+                                        <Value>0</Value>
+                                </NamedMeasurement>
+                                <NamedMeasurement type="numeric/double" name="Execution Time">
+                                        <Value>0.00123</Value>
+                                </NamedMeasurement>
+                                <NamedMeasurement type="text/string" name="Fail Reason">
+                                        <Value>Required regular expression not found.Regex=[Test!
 ]</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="text/string" name="Completion Status">
-					<Value>Completed</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="text/string" name="Command Line">
-					<Value>/home/betsy/cmake_subprojects/subproject_example_launcher/bin/MyExperimentalFeature/experimental "-5"</Value>
-				</NamedMeasurement>
-				<Measurement>
-					<Value>This does happen.
+                                </NamedMeasurement>
+                                <NamedMeasurement type="text/string" name="Completion Status">
+                                        <Value>Completed</Value>
+                                </NamedMeasurement>
+                                <NamedMeasurement type="text/string" name="Command Line">
+                                        <Value>/home/betsy/cmake_build/Tests/CTestTestSubprojects/MyExperimentalFeature/experimental "-5"</Value>
+                                </NamedMeasurement>
+                                <Measurement>
+                                        <Value>This does happen.
 </Value>
-				</Measurement>
-			</Results>
-		</Test>
-		<Test Status="failed">
-			<Name>experimentalFail4</Name>
-			<Path>./MyExperimentalFeature</Path>
-			<FullName>./MyExperimentalFeature/experimentalFail4</FullName>
-			<FullCommandLine>/home/betsy/cmake_subprojects/subproject_example_launcher/bin/MyExperimentalFeature/experimental "-5"</FullCommandLine>
-			<Subproject name="MyExperimentalFeature"/>
-			<Results>
-				<NamedMeasurement type="text/string" name="Exit Code">
-					<Value>Failed</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="text/string" name="Exit Value">
-					<Value>0</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="numeric/double" name="Execution Time">
-					<Value>0.0027082</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="text/string" name="Fail Reason">
-					<Value>Required regular expression not found.Regex=[Test!
+                                </Measurement>
+                        </Results>
+                </Test>
+                <Test Status="failed">
+                        <Name>experimentalFail4</Name>
+                        <Path>./MyExperimentalFeature</Path>
+                        <FullName>./MyExperimentalFeature/experimentalFail4</FullName>
+                        <FullCommandLine>/home/betsy/cmake_build/Tests/CTestTestSubprojects/MyExperimentalFeature/experimental "-5"</FullCommandLine>
+                        <Subproject name="MyExperimentalFeature"/>
+                        <Results>
+                                <NamedMeasurement type="text/string" name="Exit Code">
+                                        <Value>Failed</Value>
+                                </NamedMeasurement>
+                                <NamedMeasurement type="text/string" name="Exit Value">
+                                        <Value>0</Value>
+                                </NamedMeasurement>
+                                <NamedMeasurement type="numeric/double" name="Execution Time">
+                                        <Value>0.00120091</Value>
+                                </NamedMeasurement>
+                                <NamedMeasurement type="text/string" name="Fail Reason">
+                                        <Value>Required regular expression not found.Regex=[Test!
 ]</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="text/string" name="Completion Status">
-					<Value>Completed</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="text/string" name="Command Line">
-					<Value>/home/betsy/cmake_subprojects/subproject_example_launcher/bin/MyExperimentalFeature/experimental "-5"</Value>
-				</NamedMeasurement>
-				<Measurement>
-					<Value>This does happen.
+                                </NamedMeasurement>
+                                <NamedMeasurement type="text/string" name="Completion Status">
+                                        <Value>Completed</Value>
+                                </NamedMeasurement>
+                                <NamedMeasurement type="text/string" name="Command Line">
+                                        <Value>/home/betsy/cmake_build/Tests/CTestTestSubprojects/MyExperimentalFeature/experimental "-5"</Value>
+                                </NamedMeasurement>
+                                <Measurement>
+                                        <Value>This does happen.
 </Value>
-				</Measurement>
-			</Results>
-		</Test>
-		<Test Status="failed">
-			<Name>experimentalFail5</Name>
-			<Path>./MyExperimentalFeature</Path>
-			<FullName>./MyExperimentalFeature/experimentalFail5</FullName>
-			<FullCommandLine>/home/betsy/cmake_subprojects/subproject_example_launcher/bin/MyExperimentalFeature/experimental "-5"</FullCommandLine>
-			<Subproject name="MyExperimentalFeature"/>
-			<Results>
-				<NamedMeasurement type="text/string" name="Exit Code">
-					<Value>Failed</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="text/string" name="Exit Value">
-					<Value>0</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="numeric/double" name="Execution Time">
-					<Value>0.00230598</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="text/string" name="Fail Reason">
-					<Value>Required regular expression not found.Regex=[Test!
+                                </Measurement>
+                        </Results>
+                </Test>
+                <Test Status="failed">
+                        <Name>experimentalFail5</Name>
+                        <Path>./MyExperimentalFeature</Path>
+                        <FullName>./MyExperimentalFeature/experimentalFail5</FullName>
+                        <FullCommandLine>/home/betsy/cmake_build/Tests/CTestTestSubprojects/MyExperimentalFeature/experimental "-5"</FullCommandLine>
+                        <Subproject name="MyExperimentalFeature"/>
+                        <Results>
+                                <NamedMeasurement type="text/string" name="Exit Code">
+                                        <Value>Failed</Value>
+                                </NamedMeasurement>
+                                <NamedMeasurement type="text/string" name="Exit Value">
+                                        <Value>0</Value>
+                                </NamedMeasurement>
+                                <NamedMeasurement type="numeric/double" name="Execution Time">
+                                        <Value>0.00128794</Value>
+                                </NamedMeasurement>
+                                <NamedMeasurement type="text/string" name="Fail Reason">
+                                        <Value>Required regular expression not found.Regex=[Test!
 ]</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="text/string" name="Completion Status">
-					<Value>Completed</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="text/string" name="Command Line">
-					<Value>/home/betsy/cmake_subprojects/subproject_example_launcher/bin/MyExperimentalFeature/experimental "-5"</Value>
-				</NamedMeasurement>
-				<Measurement>
-					<Value>This does happen.
+                                </NamedMeasurement>
+                                <NamedMeasurement type="text/string" name="Completion Status">
+                                        <Value>Completed</Value>
+                                </NamedMeasurement>
+                                <NamedMeasurement type="text/string" name="Command Line">
+                                        <Value>/home/betsy/cmake_build/Tests/CTestTestSubprojects/MyExperimentalFeature/experimental "-5"</Value>
+                                </NamedMeasurement>
+                                <Measurement>
+                                        <Value>This does happen.
 </Value>
-				</Measurement>
-			</Results>
-		</Test>
-		<Test Status="passed">
-			<Name>production</Name>
-			<Path>./MyProductionCode</Path>
-			<FullName>./MyProductionCode/production</FullName>
-			<FullCommandLine>/home/betsy/cmake_subprojects/subproject_example_launcher/bin/MyProductionCode/production</FullCommandLine>
-			<Subproject name="MyProductionCode"/>
-			<Results>
-				<NamedMeasurement type="numeric/double" name="Execution Time">
-					<Value>0.00160098</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="text/string" name="Completion Status">
-					<Value>Completed</Value>
-				</NamedMeasurement>
-				<NamedMeasurement type="text/string" name="Command Line">
-					<Value>/home/betsy/cmake_subprojects/subproject_example_launcher/bin/MyProductionCode/production</Value>
-				</NamedMeasurement>
-				<Measurement>
-					<Value>This does happen.
+                                </Measurement>
+                        </Results>
+                </Test>
+                <Test Status="passed">
+                        <Name>production</Name>
+                        <Path>./MyProductionCode</Path>
+                        <FullName>./MyProductionCode/production</FullName>
+                        <FullCommandLine>/home/betsy/cmake_build/Tests/CTestTestSubprojects/MyProductionCode/production</FullCommandLine>
+                        <Subproject name="MyProductionCode"/>
+                        <Results>
+                                <NamedMeasurement type="numeric/double" name="Execution Time">
+                                        <Value>0.00126791</Value>
+                                </NamedMeasurement>
+                                <NamedMeasurement type="text/string" name="Completion Status">
+                                        <Value>Completed</Value>
+                                </NamedMeasurement>
+                                <NamedMeasurement type="text/string" name="Command Line">
+                                        <Value>/home/betsy/cmake_build/Tests/CTestTestSubprojects/MyProductionCode/production</Value>
+                                </NamedMeasurement>
+                                <Measurement>
+                                        <Value>This does happen.
 </Value>
-				</Measurement>
-			</Results>
-		</Test>
-		<EndDateTime>Jun 24 05:51 EDT</EndDateTime>
-		<EndTestTime>1466761912</EndTestTime>
-		<ElapsedMinutes>0</ElapsedMinutes>
-	</Testing>
+                                </Measurement>
+                        </Results>
+                </Test>
+                <EndDateTime>Jul 28 15:32 EDT</EndDateTime>
+                <EndTestTime>1469734335</EndTestTime>
+                <ElapsedMinutes>0</ElapsedMinutes>
+        </Testing>
 </Site>

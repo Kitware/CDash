@@ -684,4 +684,7 @@
   <SubProject name="MyProductionCode">
     <Dependency name="MyThirdPartyDependency"/>
   </SubProject>
+  <SubProject name="InvalidSubproject">
+    <Dependency name="MyThirdPartyDependency"/>
+  </SubProject>
 </Project>
