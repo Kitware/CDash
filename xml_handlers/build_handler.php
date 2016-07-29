@@ -180,7 +180,6 @@ class BuildHandler extends AbstractHandler
                 }
             }
             if (array_key_exists($this->SubProjectName, $this->Builds)) {
-                add_log("HANDLER ADD ERROR to ".$this->SubProjectName, LOG_ERR);
                 $this->Builds[$this->SubProjectName]->AddError($this->Error);
             }
             unset($this->Error);
