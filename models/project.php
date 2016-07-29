@@ -19,6 +19,7 @@ include_once 'models/dailyupdatefile.php';
 include_once 'models/buildgroup.php';
 include_once 'models/buildgrouprule.php';
 include_once 'models/buildgroupposition.php';
+require_once 'models/user.php';
 require_once 'include/cdashmail.php';
 
 /** Main project class */
@@ -1141,8 +1142,6 @@ class Project
         }
 
         // Find the site maintainers
-        include_once 'models/userproject.php';
-        include_once 'models/user.php';
         $UserProject = new UserProject();
         $UserProject->ProjectId = $this->Id;
 
@@ -1428,5 +1427,107 @@ class Project
             $subProjectGroups[] = $subProjectGroup;
         }
         return $subProjectGroups;
+    }
+
+    /**
+     * Return a JSON representation of this object.
+     */
+    public function ConvertToJSON()
+    {
+        $response = array();
+
+        foreach (get_object_vars($this) as $k => $v) {
+            $response[$k] = $v;
+        }
+        $response['name_encoded'] = urlencode($this->Name);
+
+        if (strlen($this->CTestTemplateScript) === 0) {
+            $response['ctesttemplatescript'] = $this->getDefaultJobTemplateScript();
+        }
+
+        $uploadQuotaGB = 0;
+        if ($this->UploadQuota > 0) {
+            $uploadQuotaGB = $this->UploadQuota / (1024 * 1024 * 1024);
+        }
+        global $CDASH_MAX_UPLOAD_QUOTA;
+        $response['UploadQuota'] = min($uploadQuotaGB, $CDASH_MAX_UPLOAD_QUOTA);
+        $response['MaxUploadQuota'] = $CDASH_MAX_UPLOAD_QUOTA;
+
+        return $response;
+    }
+
+    /**
+     * Called once when the project is initially created.
+     */
+    public function InitialSetup()
+    {
+        if (!$this->Id) {
+            return false;
+        }
+
+        // Add the default groups.
+        $BuildGroup = new BuildGroup();
+        $BuildGroup->SetName('Nightly');
+        $BuildGroup->SetDescription('Nightly builds');
+        $BuildGroup->SetSummaryEmail(0);
+        $this->AddBuildGroup($BuildGroup);
+
+        $BuildGroup = new BuildGroup();
+        $BuildGroup->SetName('Continuous');
+        $BuildGroup->SetDescription('Continuous builds');
+        $BuildGroup->SetSummaryEmail(0);
+        $this->AddBuildGroup($BuildGroup);
+
+        $BuildGroup = new BuildGroup();
+        $BuildGroup->SetName('Experimental');
+        $BuildGroup->SetDescription('Experimental builds');
+        // default to "No Email" for the Experimental group
+        $BuildGroup->SetSummaryEmail(2);
+        $this->AddBuildGroup($BuildGroup);
+
+        // Set up overview page to initially contain just the "Nightly" group.
+        $groups = $this->GetBuildGroups();
+        foreach ($groups as $group) {
+            if ($group->GetName() == 'Nightly') {
+                $buildgroupid = $group->GetId();
+                $query =
+                    "INSERT INTO overview_components (projectid, buildgroupid, position, type)
+                    VALUES ('$this->Id', '$buildgroupid', '1', 'build')";
+                pdo_query($query);
+                add_last_sql_error('CreateProject :: DefaultOverview', $this->Id);
+                break;
+            }
+        }
+
+        // Add administrator to the project.
+        $User = new User;
+        $UserProject = new UserProject();
+        $UserProject->Role = 2;
+        $UserProject->EmailType = 3;// receive all emails
+        $UserProject->ProjectId = $this->Id;
+        $User->Id = 1; // administrator
+        $User->AddProject($UserProject);
+    }
+
+    public function AddBlockedBuild($buildname, $sitename, $ip)
+    {
+        $pdo = get_link_identifier()->getPdo();
+        $stmt = $pdo->prepare(
+                'INSERT INTO blockbuild (projectid,buildname,sitename,ipaddress)
+                VALUES (:projectid, :buildname, :sitename, :ip)');
+        $stmt->bindParam(':projectid', $this->Id);
+        $stmt->bindParam(':buildname', $buildname);
+        $stmt->bindParam(':sitename', $sitename);
+        $stmt->bindParam(':ip', $ip);
+        $stmt->execute();
+        $blocked_id = pdo_insert_id('blockbuild');
+        return $blocked_id;
+    }
+
+    public function RemoveBlockedBuild($id)
+    {
+        $pdo = get_link_identifier()->getPdo();
+        $stmt = $pdo->prepare('DELETE FROM blockbuild WHERE id=?');
+        $stmt->execute(array($id));
     }
 }

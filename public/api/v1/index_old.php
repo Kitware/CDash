@@ -36,4 +36,4 @@ $class->Parameters = array_merge($_GET, $_POST);
 $results = $class->Run();
 
 // Return json by default
-echo json_encode(cast_data_for_JSON($results));
+echo json_encode(cast_data_for_JSON($results), JSON_UNESCAPED_SLASHES);
