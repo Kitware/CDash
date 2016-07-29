@@ -123,18 +123,18 @@ class ConfigureHandler extends AbstractHandler
               if ($this->Configure->Exists()) {
                   $this->Configure->Delete();
               }
-              if ($this->Configure->Insert()) {
-                  // Insert errors from the log file
+                if ($this->Configure->Insert()) {
+                    // Insert errors from the log file
                   $this->Configure->ComputeWarnings();
-                  $this->Configure->ComputeErrors();
-              }
+                    $this->Configure->ComputeErrors();
+                }
 
-              $build->ComputeConfigureDifferences();
+                $build->ComputeConfigureDifferences();
 
               // Record the number of warnings & errors with the build.
               $build->SetNumberOfConfigureWarnings(
                   $this->Configure->NumberOfWarnings);
-              $build->SetNumberOfConfigureErrors(
+                $build->SetNumberOfConfigureErrors(
                   $this->Configure->NumberOfErrors);
 
               // Record configure duration with the build.

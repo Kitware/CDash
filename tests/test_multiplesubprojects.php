@@ -127,7 +127,6 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             }
 
             // TODO: viewSubprojects
-
         } catch (Exception $e) {
             $success = false;
             $error_message = $e->getMessage();

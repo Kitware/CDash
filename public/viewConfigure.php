@@ -101,7 +101,7 @@ $configures = $build->GetConfigures($status);
 $has_subprojects = 0;
 while ($configure = pdo_fetch_array($configures)) {
     if (isset($configure['subprojectid'])) {
-      $has_subprojects = 1;
+        $has_subprojects = 1;
     }
     $configures_response[] = buildconfigure::marshal($configure);
 }
