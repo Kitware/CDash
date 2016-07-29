@@ -945,6 +945,11 @@ div#div_showfilters {
   margin-right: 1px;
 }
 
+.smallicon {
+  height: 16px;
+  width: 16px;
+}
+
 .builddateelapsed {
   cursor: pointer;
   text-align: center;

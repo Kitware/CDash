@@ -5,6 +5,8 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/common.php';
+require_once 'include/pdo.php';
+require_once 'models/build.php';
 
 class GithubCommentTestCase extends KWWebTestCase
 {
@@ -89,6 +91,42 @@ class GithubCommentTestCase extends KWWebTestCase
             dirname(__FILE__) . '/data/GithubPR/Configure.xml')
         ) {
             return 1;
+        }
+
+        // Make sure these builds link back to the GitHub PR.
+        $row = pdo_single_row_query(
+                "SELECT id, parentid FROM build
+                WHERE name = 'test_PR_comment' AND parentid>0 LIMIT 1");
+        $build = new Build();
+        $build->Id = $row['id'];
+        $build->FillFromId($build->Id);
+        $date = $build->GetDate();
+
+        // Parent view
+        $content = $this->connect($this->url .
+                "/api/v1/index.php?project=CDash&date=$date");
+        $jsonobj = json_decode($content, true);
+        $buildgroup = array_pop($jsonobj['buildgroups']);
+        $build_response = $buildgroup['builds'][0];
+        if ($build_response['changelink'] !==
+                'https://github.com/Kitware/CDash/pull/80') {
+            $this->fail("Expected changelink not found for parent build.  Found: " . $build_response['changelink']);
+        }
+        if ($build_response['changeicon'] !== 'img/Octocat.png') {
+            $this->fail("Expected changeicon not found for parent build.  Found: " . $build_response['changeicon']);
+        }
+
+        // Child view
+        $parentid = $row['parentid'];
+        $content = $this->connect($this->url .
+                "/api/v1/index.php?project=CDash&parentid=$parentid");
+        $jsonobj = json_decode($content, true);
+        if ($jsonobj['changelink'] !==
+                'https://github.com/Kitware/CDash/pull/80') {
+            $this->fail("Expected changelink not found for parent build");
+        }
+        if ($jsonobj['changeicon'] !== 'img/Octocat.png') {
+            $this->fail("Expected changeicon not found for parent build");
         }
 
         // Delete the project now that we're done with it.

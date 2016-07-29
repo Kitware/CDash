@@ -664,14 +664,14 @@ class Build
                 'INSERT INTO build
                 (' . $id . 'siteid, projectid, stamp, name, type, generator,
                  starttime, endtime, submittime, command, log, builderrors,
-                 buildwarnings, parentid, uuid)
+                 buildwarnings, parentid, uuid, changeid)
                 VALUES
                 (' . $idvalue . "'$this->SiteId', '$this->ProjectId',
                  '$this->Stamp', '$this->Name', '$this->Type',
                  '$this->Generator', '$this->StartTime', '$this->EndTime',
                  '$this->SubmitTime', '$this->Command', '$this->Log',
                  $nbuilderrors, $nbuildwarnings, $this->ParentId,
-                 '$this->Uuid')";
+                 '$this->Uuid', '$this->PullRequest')";
 
             if (!pdo_query($query)) {
                 $error = pdo_error(null, false);
@@ -1611,12 +1611,12 @@ class Build
             $query = "INSERT INTO build
                 (parentid, siteid, projectid, stamp, name, type, generator,
                  starttime, endtime, submittime, builderrors, buildwarnings,
-                 uuid)
+                 uuid, changeid)
                 VALUES
                 ('-1', '$this->SiteId', '$this->ProjectId', '$this->Stamp',
                  '$this->Name', '$this->Type', '$this->Generator',
                  '$this->StartTime', '$this->EndTime', '$this->SubmitTime',
-                 $numErrors, $numWarnings, '$uuid')";
+                 $numErrors, $numWarnings, '$uuid', '$this->PullRequest')";
 
             if (!pdo_query($query)) {
                 // Check if somebody else beat us to creating this parent build.

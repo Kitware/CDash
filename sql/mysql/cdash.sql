@@ -42,6 +42,7 @@ CREATE TABLE `build` (
   `notified` tinyint(1) default '0',
   `done` tinyint(1) default '0',
   `uuid` varchar(36) NOT NULL,
+  `changeid` varchar(40) DEFAULT '',
   PRIMARY KEY  (`id`),
   KEY `projectid` (`projectid`),
   KEY `starttime` (`starttime`),

@@ -195,6 +195,14 @@
       </div>
     </div>
   </div>
+
+  <!-- changeid link/icon -->
+  <div ng-if="::build.changelink">
+    <a target="_blank" ng-href="{{::build.changelink}}">
+      <img class="smallicon" ng-src="{{::build.changeicon}}"/>
+    </a>
+  </div>
+
 </td>
 
 <td ng-if="::buildgroup.hasupdatedata" align="center"

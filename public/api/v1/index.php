@@ -713,6 +713,16 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $buildplatform = 'gnu';
         }
 
+        // Add link based on changeid if appropriate.
+        $changelink = null;
+        $changeicon = null;
+        if ($build_array['changeid'] &&
+                $project_instance->CvsViewerType === 'github') {
+            $changelink = $project_instance->CvsUrl . '/pull/' .
+                $build_array['changeid'];
+            $changeicon = 'img/Octocat.png';
+        }
+
         if (isset($_GET['parentid'])) {
             if (empty($site_response)) {
                 $site_response['site'] = $build_array['sitename'];
@@ -721,6 +731,10 @@ function echo_main_dashboard_JSON($project_instance, $date)
                 $site_response['buildname'] = $build_array['name'];
                 $site_response['buildplatform'] = $buildplatform;
                 $site_response['generator'] = $build_array['generator'];
+                if (!is_null($changelink)) {
+                    $site_response['changelink'] = $changelink;
+                    $site_response['changeicon'] = $changeicon;
+                }
             }
         } else {
             $build_response['site'] = $build_array['sitename'];
@@ -728,6 +742,10 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $build_response['siteid'] = $siteid;
             $build_response['buildname'] = $build_array['name'];
             $build_response['buildplatform'] = $buildplatform;
+            if (!is_null($changelink)) {
+                $build_response['changelink'] = $changelink;
+                $build_response['changeicon'] = $changeicon;
+            }
         }
 
         if (isset($build_array['userupdates'])) {
