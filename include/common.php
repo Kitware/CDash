@@ -2053,7 +2053,11 @@ function cast_data_for_JSON($value)
         return $value;
     }
     if (is_numeric($value)) {
-        // Return numeric value of this string.
+        if (is_nan($value) || is_infinite($value)) {
+            // Special handling for values that are not supported by JSON.
+            return 0;
+        }
+        // Otherwise return the numeric value of this string.
         return $value + 0;
     }
     if (is_string($value)) {
