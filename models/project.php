@@ -905,7 +905,7 @@ class Project
                                           $childrenOnly = false)
     {
         $query =
-            'SELECT count(*) FROM build
+            'SELECT COUNT(DISTINCT configure.id) AS numconfigures FROM build
             JOIN build2configure ON (build2configure.buildid=build.id)
             JOIN configure ON (configure.id=build2configure.configureid)
             JOIN build2group ON (build2group.buildid=build.id)

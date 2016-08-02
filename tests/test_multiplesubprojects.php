@@ -58,19 +58,23 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             $success = true;
 
             $parentid = $buildids[0];
-            // TODO: Add test for this -->
-            //$this->get($this->url . "/api/v1/index.php?project=SubProjectExample&parentid=$parentid");
             $this->get($this->url . "/api/v1/index.php?project=SubProjectExample&date=2016-07-28");
             $content = $this->getBrowser()->getContent();
             $jsonobj = json_decode($content, true);
 
             $buildgroup = array_pop($jsonobj['buildgroups']);
 
-            // Check number of subprojects
-            //$numchildren = $buildgroup['numchildren'];
-            //if ($numchildren != 4) {
-            //    throw new Exception('Expected 4 children, found ' . $numchildren);
-            //}
+            // Check number of parent builds
+            $num_builds = count($buildgroup['builds']);
+            if ($num_builds !== 1) {
+                throw new Exception("Expected 1 parent build, found $num_builds");
+            }
+
+            // Check number of children builds
+            $num_children = $buildgroup['builds'][0]['numchildren'];
+            if ($num_children != 4) {
+                throw new Exception("Expected 4 children, found $num_children");
+            }
 
             // Check configure
             $numconfigureerror = $buildgroup['numconfigureerror'];
@@ -126,7 +130,88 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
                 }
             }
 
-            // TODO: viewSubprojects
+            // viewSubProjects
+            $this->get($this->url . "/api/v1/viewSubProjects.php?project=SubProjectExample&date=2016-07-28");
+            $content = $this->getBrowser()->getContent();
+            $jsonobj = json_decode($content, true);
+
+            if (!array_key_exists('project', $jsonobj)) {
+                throw new Exception('No project found on viewSubProjects.php');
+            }
+
+            // Check top-level project results.
+            $project = $jsonobj['project'];
+            $project_expected = array(
+                'nbuilderror' => 1,
+                'nbuildwarning' => 2,
+                'nbuildpass' => 0,
+                'nconfigureerror' => 1,
+                'nconfigurewarning' => 1,
+                'nconfigurepass' => 0,
+                'ntestpass' => 1,
+                'ntestfail' => 5,
+                'ntestnotrun' => 1);
+            foreach ($project_expected as $key => $expected) {
+                $found = $project[$key];
+                if ($found !== $expected) {
+                    throw new Exception("Expected $key to be $expected, found $found");
+                }
+            }
+
+            // Check results for each individual SubProject.
+            $subprojects_expected = array(
+                'MyThirdPartyDependency' => array(
+                    'nbuilderror' => 1,
+                    'nbuildwarning' => 0,
+                    'nbuildpass' => 0,
+                    'nconfigureerror' => 1,
+                    'nconfigurewarning' => 1,
+                    'nconfigurepass' => 0,
+                    'ntestpass' => 0,
+                    'ntestfail' => 0,
+                    'ntestnotrun' => 1),
+                'MyExperimentalFeature' => array(
+                    'nbuilderror' => 0,
+                    'nbuildwarning' => 1,
+                    'nbuildpass' => 0,
+                    'nconfigureerror' => 1,
+                    'nconfigurewarning' => 1,
+                    'nconfigurepass' => 0,
+                    'ntestpass' => 0,
+                    'ntestfail' => 5,
+                    'ntestnotrun' => 0),
+                'MyProductionCode' => array(
+                    'nbuilderror' => 0,
+                    'nbuildwarning' => 1,
+                    'nbuildpass' => 0,
+                    'nconfigureerror' => 1,
+                    'nconfigurewarning' => 1,
+                    'nconfigurepass' => 0,
+                    'ntestpass' => 1,
+                    'ntestfail' => 0,
+                    'ntestnotrun' => 0),
+                'InvalidSubproject' => array(
+                    'nbuilderror' => 0,
+                    'nbuildwarning' => 0,
+                    'nbuildpass' => 0,
+                    'nconfigureerror' => 1,
+                    'nconfigurewarning' => 1,
+                    'nconfigurepass' => 0,
+                    'ntestpass' => 0,
+                    'ntestfail' => 0,
+                    'ntestnotrun' => 0));
+            foreach ($jsonobj['subprojects'] as $subproj) {
+                $subproj_name = $subproj['name'];
+                if (!array_key_exists($subproj_name, $subprojects_expected)) {
+                    continue;
+                }
+                foreach ($subprojects_expected[$subproj_name] as $key => $expected) {
+                    $found = $subproj[$key];
+                    if ($found !== $expected) {
+                        throw new Exception("Expected $key to be $expected for $subproj_name, found $found");
+                    }
+                }
+            }
         } catch (Exception $e) {
             $success = false;
             $error_message = $e->getMessage();
