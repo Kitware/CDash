@@ -28,6 +28,7 @@ CREATE TABLE "build" (
   "notified" smallint DEFAULT '0' NOT NULL,
   "done" smallint DEFAULT '0' NOT NULL,
   "uuid" character varying(36) NOT NULL,
+  "changeid" character varying(40) DEFAULT '',
   PRIMARY KEY ("id"),
   CONSTRAINT "uuid" UNIQUE ("uuid")
 );
