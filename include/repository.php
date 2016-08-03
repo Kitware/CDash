@@ -837,6 +837,9 @@ function perform_version_only_diff($update, $projectid)
         return;
     }
     $previous_revision = $row['revision'];
+    if (empty($previous_revision)) {
+        return;
+    }
 
     // Record the previous revision in the buildupdate table.
     $stmt = $pdo->prepare(
