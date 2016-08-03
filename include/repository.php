@@ -794,6 +794,11 @@ function post_github_pull_request_comment($projectid, $pull_request, $comment, $
 /** Find changes for a "version only" update. */
 function perform_version_only_diff($update, $projectid)
 {
+    // Return early if we don't have a current revision.
+    if (empty($update->Revision)) {
+        return;
+    }
+
     // Return early if this project doesn't have a remote repository viewer.
     require_once 'models/buildupdate.php';
     require_once 'models/project.php';
