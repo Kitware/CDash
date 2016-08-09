@@ -853,6 +853,11 @@ function perform_version_only_diff($update, $projectid)
 
 function perform_github_version_only_diff($project, $update, $previous_revision)
 {
+    require_once 'include/memcache_functions.php';
+    global $CDASH_MEMCACHE_ENABLED, $CDASH_MEMCACHE_PREFIX, $CDASH_MEMCACHE_SERVER;
+
+    $current_revision = $update->Revision;
+
     // Check if we have a Github account associated with this project.
     // If so, we are much less likely to get rate-limited by the API.
     $auth = array();
@@ -864,24 +869,52 @@ function perform_github_version_only_diff($project, $update, $previous_revision)
         }
     }
 
-    // Use the GitHub API to find what changed between these two revisions.
-    // This API endpoint takes the following form:
-    // GET /repos/:owner/:repo/compare/:base...:head
-    $current_revision = $update->Revision;
-    $base_api_url = get_github_api_url($project->CvsUrl);
-    $client = new GuzzleHttp\Client();
-    $api_url = "$base_api_url/compare/$previous_revision...$current_revision";
-    try {
-        $response = $client->request('GET', $api_url, $auth);
-    } catch (GuzzleHttp\Exception\ClientException $e) {
-        // Typically this occurs due to a local commit that GitHub does not
-        // know about.
-        add_log($e->getMessage(),
-                "perform_github_version_only_diff", LOG_WARNING,
-                $project->Id);
-        return;
+    // Connect to memcache.
+    if ($CDASH_MEMCACHE_ENABLED) {
+        list($server, $port) = $CDASH_MEMCACHE_SERVER;
+        $memcache = cdash_memcache_connect($server, $port);
+        // Disable memcache for this request if it fails to connect.
+        if ($memcache === false) {
+            $CDASH_MEMCACHE_ENABLED = false;
+        }
     }
-    $response_array = json_decode($response->getBody(), true);
+
+    // Check if we've memcached the difference between these two revisions.
+    $diff_response = null;
+    $diff_key = "$CDASH_MEMCACHE_PREFIX:$project->Name:$current_revision:$previous_revision";
+    if ($CDASH_MEMCACHE_ENABLED) {
+        $cached_response = cdash_memcache_get($memcache, $diff_key);
+        if ($cached_response !== false) {
+            $diff_response = $cached_response;
+        }
+    }
+
+    if (is_null($diff_response)) {
+        // Use the GitHub API to find what changed between these two revisions.
+        // This API endpoint takes the following form:
+        // GET /repos/:owner/:repo/compare/:base...:head
+        $base_api_url = get_github_api_url($project->CvsUrl);
+        $client = new GuzzleHttp\Client();
+        $api_url = "$base_api_url/compare/$previous_revision...$current_revision";
+        try {
+            $response = $client->request('GET', $api_url, $auth);
+        } catch (GuzzleHttp\Exception\ClientException $e) {
+            // Typically this occurs due to a local commit that GitHub does not
+            // know about.
+            add_log($e->getMessage(),
+                    "perform_github_version_only_diff", LOG_WARNING,
+                    $project->Id);
+            return;
+        }
+        $diff_response = strval($response->getBody());
+
+        // Cache the response from the GitHub API for 24 hours.
+        if ($CDASH_MEMCACHE_ENABLED) {
+            cdash_memcache_set($memcache, $diff_key, $diff_response, 60 * 60 * 24);
+        }
+    }
+
+    $response_array = json_decode($diff_response, true);
 
     // To do anything meaningful here our response needs to tell us about commits
     // and the files that changed.  Abort early if either of these pieces of
@@ -965,30 +998,50 @@ function perform_github_version_only_diff($project, $update, $previous_revision)
                         continue;
                     }
 
-                    $api_url = "$base_api_url/commits/$sha";
-                    try {
-                        $r = $client->request('GET', $api_url, $auth);
-                    } catch (GuzzleHttp\Exception\ClientException $e) {
-                        add_log($e->getMessage(),
-                                "perform_github_version_only_diff", LOG_ERROR,
-                                $project->Id);
-                        break;
+                    $commit_response = null;
+                    $commit_key = "$CDASH_MEMCACHE_PREFIX:$project->Name:$sha";
+                    if ($CDASH_MEMCACHE_ENABLED) {
+                        // Check memcache if it is enabled before hitting
+                        // the GitHub API.
+                        $cached_response = cdash_memcache_get($memcache, $commit_key);
+                        if ($cached_response !== false) {
+                            $commit_response = $cached_response;
+                        }
                     }
-                    $commit_response = json_decode($r->getBody(), true);
 
-                    if (!is_array($commit_response) ||
-                            !array_key_exists('files', $commit_response)) {
+                    if (is_null($commit_response)) {
+                        $api_url = "$base_api_url/commits/$sha";
+                        try {
+                            $r = $client->request('GET', $api_url, $auth);
+                        } catch (GuzzleHttp\Exception\ClientException $e) {
+                            add_log($e->getMessage(),
+                                    "perform_github_version_only_diff", LOG_ERROR,
+                                    $project->Id);
+                            break;
+                        }
+                        $commit_response = strval($r->getBody());
+
+                        if ($CDASH_MEMCACHE_ENABLED) {
+                            // Cache this response for 24 hours.
+                            cdash_memcache_set($memcache, $commit_key, $commit_response, 60 * 60 * 24);
+                        }
+                    }
+
+                    $commit_array = json_decode($commit_response, true);
+
+                    if (!is_array($commit_array) ||
+                            !array_key_exists('files', $commit_array)) {
                         // Skip to the next commit if no list of files was returned.
                         $cached_commits[$sha] = array();
                         continue;
                     }
 
-                    // Cache what files this commit changed.
+                    // Locally cache what files this commit changed.
                     $cached_commits[$sha] =
-                        array_column($commit_response['files'], 'filename');
+                        array_column($commit_array['files'], 'filename');
 
                     // Check if this commit modified the file in question.
-                    foreach ($commit_response['files'] as $file) {
+                    foreach ($commit_array['files'] as $file) {
                         if ($file['filename'] === $modified_file['filename']) {
                             $commit = $c;
                             break;
