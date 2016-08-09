@@ -24,28 +24,12 @@ class SubProjectTestCase extends KWWebTestCase
 
     public function testAccessToWebPageProjectTest()
     {
-        $this->login();
-        // first project necessary for testing
-        $name = 'SubProjectExample';
-        $description = 'Project SubProjectExample test for cdash testing';
-
-        // Create the project
-        $this->clickLink('Create new project');
-        $this->setField('name', $name);
-        $this->setField('description', $description);
-        $this->setField('public', '1');
-        $this->setField('emailBrokenSubmission', '1');
-        $this->setField('emailRedundantFailures', '1');
-        $this->clickSubmitByName('Submit');
-
-        $content = $this->connect($this->url . '/index.php?project=SubProjectExample');
-        if (!$content) {
-            return;
-        }
-        if (!$this->checkLog($this->logfilename)) {
-            return;
-        }
-        $this->pass('Test passed');
+        $settings = array(
+                'Name' => 'SubProjectExample',
+                'Description' => 'Project SubProjectExample test for cdash testing',
+                'EmailBrokenSubmission' => 1,
+                'EmailRedundantFailures' => 1);
+        $this->createProject($settings);
     }
 
     public function testSubmissionProjectDependencies()

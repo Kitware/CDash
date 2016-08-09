@@ -14,20 +14,15 @@ class ProjectWebPageTestCase extends KWWebTestCase
 
     public function testAccessToWebPageProjectTest()
     {
-        $this->login();
-        // first project necessary for testing
-        $name = 'BatchmakeExample';
-        $description = 'Project Batchmake\'s test for cdash testing';
-        $this->createProject($name, $description);
-        $this->get($this->url . '/user.php'); // comes back to the my user page
-        $name = 'InsightExample';
-        $description = 'Project Insight test for cdash testing';
-        $this->createProject($name, $description);
-        $content = $this->connect($this->url . '/api/v1/index.php?project=BatchmakeExample');
-        if (!$content) {
-            return;
-        }
-        $this->assertText('CDash - BatchmakeExample');
+        $settings = array(
+                'Name' => 'BatchmakeExample',
+                'Description' => "Project Batchmake's test for cdash testing");
+        $this->createProject($settings);
+
+        $settings = array(
+                'Name' => 'InsightExample',
+                'Description' => 'Project Insight test for cdash testing');
+        $this->createProject($settings);
     }
 
     public function testSubmissionBatchmakeBuild()
