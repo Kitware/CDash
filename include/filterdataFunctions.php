@@ -1063,11 +1063,15 @@ function build_survives_filter($build_response, $filterdata)
 {
     $filters = $filterdata['filters'];
     foreach ($filters as $filter) {
+        // Get the filter's value for comparison.
+        $filter_value = $filter['value'];
+
         // Get the build value that's relevant to this filter.
         // (number of configure warnings, number of test failures, etc.)
         $build_value = false;
         switch ($filter['field']) {
             case 'buildduration':
+                $filter_value = get_seconds_from_interval($filter_value);
                 if ($build_response['hascompilation']) {
                     $build_value = $build_response['compilation']['timefull'];
                 }
@@ -1086,6 +1090,7 @@ function build_survives_filter($build_response, $filterdata)
                 break;
 
             case 'configureduration':
+                $filter_value = get_seconds_from_interval($filter_value);
                 if ($build_response['hasconfigure']) {
                     $build_value = $build_response['configure']['timefull'];
                 }
@@ -1104,6 +1109,7 @@ function build_survives_filter($build_response, $filterdata)
                 break;
 
             case 'testsduration':
+                $filter_value = get_seconds_from_interval($filter_value);
                 if ($build_response['hastest']) {
                     $build_value = $build_response['test']['timefull'];
                 }
@@ -1137,9 +1143,6 @@ function build_survives_filter($build_response, $filterdata)
                 continue;
                 break;
         }
-
-        // Get the filter's value for comparison.
-        $filter_value = $filter['value'];
 
         // Compare the build & filter's values, returning false if
         // they don't match the filter's expectation.

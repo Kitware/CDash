@@ -231,8 +231,8 @@ class ExcludeSubProjectsTestCase extends KWWebTestCase
         $test_cases = array(
             array(
                 'filter' => 'buildduration',
-                'compare' => 41,
-                'value' => '10m 46s',
+                'compare' => 43,
+                'value' => '10m%2045s',
                 'exclude' => 'Teuchos'
             ),
             array(
