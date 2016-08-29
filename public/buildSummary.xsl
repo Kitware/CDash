@@ -378,15 +378,37 @@ Add a Note to this Build</a>
 <div id="addnote"></div>
 <br/>
 
-<!-- Graph -->
-<div class="title-divider">Graph</div>
-<img src="img/graph.png" title="graph"/><a><xsl:attribute name="href">javascript:showgraph_click(<xsl:value-of select="cdash/build/id"/>)</xsl:attribute>
-Show Build Graphs</a>
-<div id="graphoptions"></div>
-<div id="graph"></div>
+<!-- Graphs -->
+<div class="title-divider">Graphs</div>
+<img src="img/graph.png" title="graph"/><a><xsl:attribute name="href">javascript:showbuildgraph_click(<xsl:value-of select="cdash/build/id"/>, "time")</xsl:attribute>
+Show Build Time Graph</a>
+<div id="buildtimegraphoptions"></div>
+<div id="buildtimegraph"></div>
 <center>
-<div id="grapholder"></div>
+<div id="buildtimegrapholder"></div>
 </center>
+<img src="img/graph.png" title="graph"/><a><xsl:attribute name="href">javascript:showbuildgraph_click(<xsl:value-of select="cdash/build/id"/>, "errors")</xsl:attribute>
+Show Build Errors Graph</a>
+<div id="builderrorsgraphoptions"></div>
+<div id="builderrorsgraph"></div>
+<center>
+<div id="builderrorsgrapholder"></div>
+</center>
+<img src="img/graph.png" title="graph"/><a><xsl:attribute name="href">javascript:showbuildgraph_click(<xsl:value-of select="cdash/build/id"/>, "warnings")</xsl:attribute>
+Show Build Warnings Graph</a>
+<div id="buildwarningsgraphoptions"></div>
+<div id="buildwarningsgraph"></div>
+<center>
+<div id="buildwarningsgrapholder"></div>
+</center>
+<img src="img/graph.png" title="graph"/><a><xsl:attribute name="href">javascript:showbuildgraph_click(<xsl:value-of select="cdash/build/id"/>, "testsfailed")</xsl:attribute>
+Show Build Tests Failed Graph</a>
+<div id="buildtestsfailedgraphoptions"></div>
+<div id="buildtestsfailedgraph"></div>
+<center>
+<div id="buildtestsfailedgrapholder"></div>
+</center>
+
 <br/>
 
 <!-- Update -->

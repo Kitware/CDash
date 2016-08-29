@@ -24,6 +24,12 @@ if (!isset($buildid) || !is_numeric($buildid)) {
     return;
 }
 
+$graphtype = pdo_real_escape_string($_GET['graphtype']);
+if (!isset($graphtype)) {
+    echo 'Not a valid graphtype!';
+    return;
+}
+
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME", $db);
 
@@ -71,16 +77,38 @@ $previousbuilds = pdo_query("SELECT id,starttime,endtime,buildwarnings,builderro
         }
         ?>
 
+        var buildgrapholder = "#build"+<?php echo json_encode($graphtype); ?>+"grapholder";
+        var graphtype = <?php echo json_encode($graphtype); ?>;
+
+        var label;
+        var data;
+        var color;
+        var yaxis = {minTickSize: 1};
+        if (graphtype == "time") {
+          label = "Build Time";
+          data = buildtime;
+          color = "#41A317";
+          yaxis = { tickFormatter: function (v, axis) {
+                    return v.toFixed(axis.tickDecimals) + " mins"} };
+        } else if (graphtype == "errors") {
+          label = "# errors";
+          data = builderrors;
+          color = "#FDD017";
+        } else if (graphtype == "warnings") {
+          label = "# warning";
+          data = buildwarnings;
+          color = "#FF0000";
+        } else if (graphtype == "testsfailed") {
+          label = "# tests failed";
+          data = testfailed;
+          color = "#0000FF";
+        }
+
         var options = {
             lines: {show: true},
             points: {show: true},
             xaxis: {mode: "time"},
-            yaxis: {
-                tickFormatter: function (v, axis) {
-                    return v.toFixed(axis.tickDecimals) + " mins"
-                }
-            },
-            y2axis: {min: 0},
+            yaxis: yaxis,
             grid: {
                 backgroundColor: "#fffaff",
                 clickable: true,
@@ -89,21 +117,15 @@ $previousbuilds = pdo_query("SELECT id,starttime,endtime,buildwarnings,builderro
                 hoverRadius: 4
             },
             selection: {mode: "x"},
-            colors: ["#41A317", "#FDD017", "#FF0000", "#0000FF"]
+            colors: [color]
         };
 
-        $("#grapholder").bind("selected", function (event, area) {
-            plot = $.plot($("#grapholder"), [{label: "Build Time", data: buildtime},
-                {label: "# warnings", data: buildwarnings, yaxis: 2},
-                {label: "# errors", data: builderrors, yaxis: 2},
-                {
-                    label: "# tests failed",
-                    data: testfailed,
-                    yaxis: 2
-                }], $.extend(true, {}, options, {xaxis: {min: area.x1, max: area.x2}}));
+        $(buildgrapholder).bind("selected", function (event, area) {
+            plot = $.plot($(buildgrapholder), [{label: label, data: data}],
+              $.extend(true, {}, options, {xaxis: {min: area.x1, max: area.x2}}));
         });
 
-        $("#grapholder").bind("plotclick", function (e, pos, item) {
+        $(buildgrapholder).bind("plotclick", function (e, pos, item) {
             if (item) {
                 plot.highlight(item.series, item.datapoint);
                 buildid = buildids[item.datapoint[0]];
@@ -111,10 +133,7 @@ $previousbuilds = pdo_query("SELECT id,starttime,endtime,buildwarnings,builderro
             }
         });
 
-        plot = $.plot($("#grapholder"), [{label: "Build Time", data: buildtime},
-                {label: "# warnings", data: buildwarnings, yaxis: 2},
-                {label: "# errors", data: builderrors, yaxis: 2},
-                {label: "# tests failed", data: testfailed, yaxis: 2}],
+        plot = $.plot($(buildgrapholder), [{label: label, data: data}],
             options);
     });
 </script>
