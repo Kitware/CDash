@@ -82,6 +82,39 @@ class DefaultFilters implements PageSpecificFilters
 
 class IndexPhpFilters extends DefaultFilters
 {
+    public function __construct()
+    {
+        parent::__construct();
+
+        // Check if the SubProject filter was specified.
+        // If so, we won't add SQL clauses for some other filters.
+        // Instead we handle them in PHP code via build_survives_filter().
+        $this->HasSubProjectsFilter = false;
+        $filtercount = pdo_real_escape_numeric(@$_REQUEST['filtercount']);
+        for ($i = 1; $i <= $filtercount; ++$i) {
+            if (empty($_REQUEST['field' . $i])) {
+                continue;
+            }
+            $field = htmlspecialchars(pdo_real_escape_string($_REQUEST['field' . $i]));
+            if ($field === 'subprojects') {
+                $this->HasSubProjectsFilter = true;
+                break;
+            }
+        }
+        $this->FiltersAffectedBySubProjects = array(
+                'buildduration',
+                'builderrors',
+                'buildwarnings',
+                'configureduration',
+                'configureerrors',
+                'configurewarnings',
+                'testsduration',
+                'testsfailed',
+                'testsnotrun',
+                'testspassed',
+                'testtimestatus');
+    }
+
     public function getDefaultFilter()
     {
         return array(
@@ -129,6 +162,15 @@ class IndexPhpFilters extends DefaultFilters
 
     public function getSqlField($field)
     {
+        // Some filters can return inaccurate results when we are also
+        // filtering by SubProjects.  In these cases we do not modify
+        // the SQL query and instead handle the filtration in PHP code as a
+        // subsequent step.
+        if ($this->HasSubProjectsFilter &&
+                in_array($field, $this->FiltersAffectedBySubProjects)) {
+            return '';
+        }
+
         global $CDASH_DB_TYPE;
         $sql_field = '';
         switch (strtolower($field)) {

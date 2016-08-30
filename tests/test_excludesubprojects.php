@@ -236,6 +236,13 @@ class ExcludeSubProjectsTestCase extends KWWebTestCase
                 'exclude' => 'Teuchos'
             ),
             array(
+                'filter' => 'buildduration',
+                'compare' => 44,
+                'value' => '6m%2026s',
+                'exclude' => 'Sacado',
+                'reverse' => true
+            ),
+            array(
                 'filter' => 'builderrors',
                 'compare' => 43,
                 'value' => 5,
@@ -300,24 +307,33 @@ class ExcludeSubProjectsTestCase extends KWWebTestCase
             $exclude_filter = "&field3=subprojects&compare3=92&value3=$exclude";
             $filter_to_test = "&field2=$filter&compare2=$compare&value2=$value";
 
-            // Verify that the build is shown without the exclude clause.
             $this->get($baseurl . $filter_to_test . '&filtercount=2');
             $content = $this->getBrowser()->getContent();
             $jsonobj = json_decode($content, true);
             $buildgroup = array_pop($jsonobj['buildgroups']);
             $numbuilds = count($buildgroup['builds']);
-            if ($numbuilds != 1) {
-                $this->fail("Expected 1 build, found $numbuilds for $filter");
+
+            if (array_key_exists('reverse', $test_case)) {
+                $expected_builds_without_filter = 0;
+                $empty_buildgroup_with_filter = false;
+            } else {
+                $expected_builds_without_filter = 1;
+                $empty_buildgroup_with_filter = true;
             }
 
-            // Verify that the build is not shown when the exclude clause
-            // is added.
+            // Verify number of builds shown without the exclude clause.
+            if ($numbuilds != $expected_builds_without_filter) {
+                $this->fail("Expected $expected_builds_without_filter build, found $numbuilds for $filter");
+            }
+
+            // Verify number of builds shown when the exclude clause is added.
             $this->get($baseurl . $filter_to_test . $exclude_filter .
                     '&filtercount=3');
             $content = $this->getBrowser()->getContent();
             $jsonobj = json_decode($content, true);
-            if (!empty($jsonobj['buildgroups'])) {
-                $this->fail("buildgroups not empty when expected for $filter");
+            if (empty($jsonobj['buildgroups']) !== $empty_buildgroup_with_filter) {
+                $bool_str = ($empty_buildgroup_with_filter) ? 'true' : 'false';
+                $this->fail("Expected empty(buildgroups)=$bool_str for $filter");
             }
         }
     }
