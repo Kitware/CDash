@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" ng-app="CDash">
+  <head ng-controller="HeadController">
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" type="text/css" ng-href="{{cssfile}}" />
+    <script src="js/CDash_@@version.min.js"></script>
+    <title ng-bind="title">CDash</title>
+  </head>
+
+  <body bgcolor="#ffffff" ng-controller="TestOverviewController">
+    <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'views/partials/header.html'"></ng-include>
+
+    <div ng-if="cdash.requirelogin != 1 && !loading && !cdash.error">
+
+      <!-- Group selection -->
+      <div>
+        <b>Group: </b>
+        <select name="groupSelection"
+                ng-model="cdash.groupSelection"
+                ng-change="groupSelectionChanged()">
+          <option ng-repeat="group in ::cdash.groups"
+                  value="{{::group.id}}"
+                  ng-selected="{{::group.selected}}">
+            {{::group.name}}
+          </option>
+        </select>
+      </div>
+
+      <span ng-if="::cdash.sections.length == 0">
+        No failing tests for this date.
+      </span>
+
+      <div ng-if="::cdash.sections.length > 0">
+
+        <h3>List of <u>{{::cdash.dashboard.projectname}}</u> tests that did not run cleanly on {{::cdash.startdate}}</h3>
+
+        <div ng-repeat="section in ::cdash.sections">
+          <h3>{{::section.name}}</h3>
+          <div ng-repeat="test in ::section.tests">
+            <a ng-href="{{::test.summaryLink}}">
+              {{::test.name}}
+            </a>
+            <br/>
+          </div>
+        </div>
+      </div>
+
+    <!-- FOOTER -->
+    <br/>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'views/partials/footer.html'"></ng-include>
+  </body>
+</html>
