@@ -119,6 +119,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
     $response = begin_JSON_response();
     $response['title'] = "CDash - $projectname";
     $response['feed'] = $CDASH_ENABLE_FEED;
+    $response['showcalendar'] = 1;
 
     $Banner = new Banner;
     $Banner->SetProjectId(0);

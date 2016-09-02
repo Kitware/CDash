@@ -62,9 +62,13 @@ CDash.controller('HeadController', function HeadController($rootScope, $document
       }
   };
 
-  // Display the date range from a multi-month inline date picker
+  // Navigate to a different date (from the inline date picker) for the current page.
   $rootScope.calendarSelected = function(dateStr) {
-    window.location = "index.php?project=" + $rootScope.queryString['project'] + "&date=" + dateStr.substr(6, 4) + "-" + dateStr.substr(0, 2) + "-" + dateStr.substr(3, 2);
+    var dateValue = dateStr.substr(6, 4) + "-" + dateStr.substr(0, 2) + "-" + dateStr.substr(3, 2);
+    var uri = window.location.href;
+    // Replace date value in current URI.
+    uri = uri.replace(/(date=)[^\&]+/, '$1' + dateValue);
+    window.location = uri;
     $('#calendar').hide();
   };
 

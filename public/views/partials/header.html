@@ -83,7 +83,7 @@
         <li id="Back" ng-if="cdash.menu.back">
           <a href="{{cdash.menu.back}}{{cdash.extrafilterurl}}">Back</a>
         </li>
-        <li ng-if="!cdash.hidenav">
+        <li ng-if="cdash.showcalendar">
           <a id="cal" href="javascript:;" ng-click="toggleCalendar()">Calendar</a>
           <span id="date_now" style="display:none;">{{cdash.date}}</span>
         </li>

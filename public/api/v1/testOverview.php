@@ -69,6 +69,7 @@ if (isset($_GET['groupSelection'])) {
 $response = begin_JSON_response();
 get_dashboard_JSON($projectname, $date, $response);
 $response['title'] = "$projectname : Test Overview";
+$response['showcalendar'] = 1;
 $response['groupSelection'] = strval($groupSelection);
 
 // Setup the menu of relevant links.
