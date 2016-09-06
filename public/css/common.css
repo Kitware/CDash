@@ -1180,7 +1180,7 @@ textarea {
 }
 
 /* testing graphs */
-#testfailuregrapholder, #graph_holder {
+#testfailuregrapholder, #graph_holder, .graph_holder {
   width:800px;
   height:400px;
 }
