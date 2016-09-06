@@ -32,25 +32,42 @@ if ($build->ProjectId < 1) {
     return;
 }
 
+// Take subproject into account, such that if there is one, then the
+// previous builds must be associated with the same subproject.
+//
+$subproj_table = '';
+$subproj_criteria = '';
+if ($build->SubProjectId > 0) {
+    $subproj_table =
+        'INNER JOIN subproject2build AS sp2b ON (b.id=sp2b.buildid)';
+    $subproj_criteria =
+        'AND sp2b.subprojectid=:subprojectid';
+}
+
 // Get details about previous builds.
 // Currently just grabbing the info used for the graphs and charts
 // on buildSummary.php.
 $pdo = get_link_identifier()->getPdo();
 $stmt = $pdo->prepare(
-    'SELECT b.id, nfiles, configureerrors, configurewarnings,
+    "SELECT b.id, nfiles, configureerrors, configurewarnings,
      buildwarnings, builderrors, testfailed, b.starttime, b.endtime
      FROM build AS b
      LEFT JOIN build2update AS b2u ON (b2u.buildid=b.id)
      LEFT JOIN buildupdate AS bu ON (b2u.updateid=bu.id)
+     $subproj_table
      WHERE siteid=:siteid AND b.type=:type AND name=:name AND
-     projectid=:projectid AND b.starttime<=:starttime ORDER BY starttime ASC
-     LIMIT 50');
+     projectid=:projectid AND b.starttime<=:starttime
+     $subproj_criteria
+     ORDER BY starttime ASC LIMIT 50");
 
 $stmt->bindParam(':siteid', $build->SiteId);
 $stmt->bindParam(':type', $build->Type);
 $stmt->bindParam(':name', $build->Name);
 $stmt->bindParam(':projectid', $build->ProjectId);
 $stmt->bindParam(':starttime', $build->StartTime);
+if ($build->SubProjectId > 0) {
+    $stmt->bindParam(':subprojectid', $build->SubProjectId);
+}
 $stmt->execute();
 
 $builds_response = array();
