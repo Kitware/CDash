@@ -224,9 +224,9 @@ class ProjectWebPageTestCase extends KWWebTestCase
 
         $buildgroup = array_pop($jsonobj['buildgroups']);
         $buildid = $buildgroup['builds'][0]['id'];
-        $content = $this->connect($this->url . "/buildSummary.php?buildid=$buildid");
+        $content = $this->connect($this->url . "/api/v1/buildSummary.php?buildid=$buildid");
 
-        $expected = 'f:\program files\microsoft sdks\windows\v6.0a\include\servprov.h(79) : warning C4068: unknown pragma';
+        $expected = 'warning C4068: unknown pragma';
         if (!$content) {
             return;
         } elseif (!$this->findString($content, $expected)) {
