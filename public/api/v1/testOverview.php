@@ -31,11 +31,14 @@ if (!isset($_GET['project'])) {
     http_response_code(400);
     return;
 }
-$projectname = htmlspecialchars(pdo_real_escape_string($_GET['project']));
+$projectname = $_GET['project'];
 
 // Make sure the project exists & get some info about it.
-$project_row = pdo_single_row_query(
-    "SELECT id, nightlytime FROM project WHERE name='$projectname'");
+$pdo = get_link_identifier()->getPdo();
+$stmt = $pdo->prepare('SELECT id, nightlytime FROM project WHERE name=?');
+$stmt->execute(array($projectname));
+$project_row = $stmt->fetch();
+
 if (!$project_row) {
     $response['error'] = 'Project does not exist.';
     echo json_encode($response);
@@ -53,132 +56,172 @@ if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
     return;
 }
 
-// Handle the optional date argument.
-$date = null;
-if (isset($_GET['date'])) {
-    $date = htmlspecialchars(pdo_real_escape_string($_GET['date']));
-}
-
-// Handle the optional buildgroup argument.
-$groupSelection = 0;
-if (isset($_GET['groupSelection'])) {
-    $groupSelection = pdo_real_escape_numeric($_GET['groupSelection']);
-}
-
 // Begin our JSON response.
 $response = begin_JSON_response();
-get_dashboard_JSON($projectname, $date, $response);
 $response['title'] = "$projectname : Test Overview";
 $response['showcalendar'] = 1;
-$response['groupSelection'] = strval($groupSelection);
+
+// Handle the optional arguments that dictate our time range.
+$date = null;
+$begin_date = null;
+$end_date = null;
+if (isset($_GET['from']) || isset($_GET['to'])) {
+    if (isset($_GET['from']) && isset($_GET['to'])) {
+        // If both arguments were specified, compute date range for SQL query.
+        $from = $_GET['from'];
+        list($unused, $beginning_timestamp, $unused, $unused) =
+            get_dates($from, $nightlytime);
+        $begin_date = gmdate(FMT_DATETIME, $beginning_timestamp);
+        $response['from_date'] = $from;
+
+        $date = $_GET['to'];
+        list($previousdate, $end_timestamp, $nextdate, $today) =
+            get_dates($date, $nightlytime);
+        $end_timestamp += (3600 * 24);
+        $end_date = gmdate(FMT_DATETIME, $end_timestamp);
+        $response['to_date'] = $date;
+    } else {
+        // If not, just use whichever one was set.
+        if (isset($_GET['from'])) {
+            $date = $_GET['from'];
+        } else {
+            $date = $_GET['to'];
+        }
+    }
+} elseif (isset($_GET['date'])) {
+    $date = $_GET['date'];
+}
+
+if (is_null($begin_date)) {
+    list($previousdate, $beginning_timestamp, $nextdate, $today) =
+        get_dates($date, $nightlytime);
+    $end_timestamp = $beginning_timestamp + 3600 * 24;
+    $begin_date = gmdate(FMT_DATETIME, $beginning_timestamp);
+    $end_date = gmdate(FMT_DATETIME, $end_timestamp);
+}
+
+// Check if the user specified a buildgroup.
+$groupid = 0;
+$group_join = '';
+$group_clause = "b.type != 'Experimental'";
+$group_link = '';
+if (isset($_GET['group']) && is_numeric($_GET['group']) && $_GET['group'] > 0) {
+    $groupid = $_GET['group'];
+    $group_join = 'JOIN build2group b2g ON (b2g.buildid=b.id)';
+    $group_clause = "b2g.groupid=:groupid";
+    $group_link = "&group=$groupid";
+}
+$response['groupid'] = $groupid;
+
+get_dashboard_JSON($projectname, $date, $response);
 
 // Setup the menu of relevant links.
-list($previousdate, $currentstarttime, $nextdate, $today) = get_dates($date, $nightlytime);
 $menu = array();
-$menu['previous'] = 'testOverview.php?project=' . urlencode($projectname) . "&date=$previousdate";
-if ($date != '' && date(FMT_DATE, $currentstarttime) != date(FMT_DATE)) {
-    $menu['next'] = 'testOverview.php?project=' . urlencode($projectname) . "&date=$nextdate";
+$menu['previous'] = 'testOverview.php?project=' . urlencode($projectname) . "&date=$previousdate$group_link";
+if ($date != '' && date(FMT_DATE, $beginning_timestamp) != date(FMT_DATE)) {
+    $menu['next'] = 'testOverview.php?project=' . urlencode($projectname) . "&date=$nextdate$group_link";
 } else {
     $menu['nonext'] = '1';
 }
 $currentdate = get_dashboard_date_from_project($projectname, $date);
-$menu['current'] = 'testOverview.php?project=' . urlencode($projectname) . "&date=$currentdate";
+$menu['current'] = 'testOverview.php?project=' . urlencode($projectname) . "&date=$currentdate$group_link";
 $menu['back'] = 'index.php?project=' . urlencode($projectname) . "&date=$currentdate";
 $response['menu'] = $menu;
 
-// Get all the active buildgroups for this project.
+// List all active buildgroups for this project.
+$stmt = $pdo->prepare(
+    "SELECT id, name, position FROM buildgroup bg
+    JOIN buildgroupposition bgp on (bgp.buildgroupid=bg.id)
+    WHERE projectid=?
+    AND bg.endtime='1980-01-01 00:00:00'");
+$stmt->execute(array($projectid));
 $groups_response = array();
-$all_group = array('id' => 0, 'name' => 'All');
-if ($groupSelection === 0) {
-    $all_group['selected'] = 1;
-}
-$groups_response[] = $all_group;
 
-$result = pdo_query(
-    "SELECT id,name FROM buildgroup
-    WHERE projectid='$projectid' AND endtime='1980-01-01 00:00:00'");
-while ($buildgroup_row = pdo_fetch_array($result)) {
+// Begin with an entry for the default "Non-Experimental Builds" selection.
+$default_group = array();
+$default_group['id'] = 0;
+$default_group['name'] = 'Non-Experimental Builds';
+$default_group['position'] = 0;
+$groups_response[] = $default_group;
+
+while ($row = $stmt->fetch()) {
     $group_response = array();
-    $group_response['id'] = $buildgroup_row['id'];
-    $group_response['name'] = $buildgroup_row['name'];
-    if ($groupSelection == $buildgroup_row['id']) {
-        $group_response['selected'] = '1';
-    }
+    $group_response['id'] = $row['id'];
+    $group_response['name'] = $row['name'];
+    $group_response['position'] = $row['position'];
     $groups_response[] = $group_response;
 }
 $response['groups'] = $groups_response;
 
-$groupSelectionSQL = '';
-if ($groupSelection > 0) {
-    $groupSelectionSQL = " AND b2g.groupid='$groupSelection' ";
+// Main query: find all the requested tests.
+$stmt = $pdo->prepare(
+    "SELECT t.name, t.details, b2t.status FROM build b
+    JOIN build2test b2t ON (b2t.buildid=b.id)
+    JOIN test t ON (t.id=b2t.testid)
+    $group_join
+    WHERE b.projectid = :projectid AND b.parentid != -1 AND $group_clause
+    AND b.starttime < :end AND b.starttime >= :begin");
+$stmt->bindParam(':projectid', $projectid);
+$stmt->bindParam(':begin', $begin_date);
+$stmt->bindParam(':end', $end_date);
+if ($groupid > 0) {
+    $stmt->bindParam(':groupid', $groupid);
 }
+$stmt->execute();
 
-// Get each build that was submitted on this date
-$rlike = 'RLIKE';
-if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE == 'pgsql') {
-    $rlike = '~';
-}
-
-$stamp = str_replace('-', '', $today);
-
-$buildQuery = "SELECT id FROM build,build2group as b2g WHERE projectid = '$projectid'
-               AND build.stamp " . $rlike . " '^$stamp-' AND b2g.buildid=build.id" . $groupSelectionSQL;
-
-$buildResult = pdo_query($buildQuery);
-$builds = array();
-while ($buildRow = pdo_fetch_array($buildResult)) {
-    array_push($builds, $buildRow['id']);
-}
-
-//find all the tests that were performed for this project on this date
-//skip tests that passed on all builds
-if (count($builds) > 0) {
-    $testQuery = 'SELECT DISTINCT test.name FROM test,build2test WHERE (';
-    $firstTime = true;
-    foreach ($builds as $id) {
-        if ($firstTime) {
-            $testQuery .= "build2test.buildid='$id'";
-            $firstTime = false;
-        } else {
-            $testQuery .= " OR build2test.buildid='$id'";
-        }
-    }
-    $testQuery .= ") AND build2test.testid=test.id AND build2test.status NOT LIKE 'passed'";
-    @$testResult = pdo_query($testQuery);
-} else {
-    $testResult = false;
-}
-
-$sections_response = array();
-
-if ($testResult !== false) {
-    $tests = array();
-    while ($testRow = pdo_fetch_array($testResult)) {
-        array_push($tests, $testRow['name']);
+$tests_response[] = array();
+$all_tests = array();
+while ($row = $stmt->fetch()) {
+    // Only track tests that passed or failed.
+    $status = $row['status'];
+    if ($status !== 'passed' && $status !== 'failed') {
+        continue;
     }
 
-    if (count($tests) > 0) {
-        natcasesort($tests);
+    $test_name = $row['name'];
+    if (!array_key_exists($test_name, $all_tests)) {
+        $test = array();
+        $test['name'] = $test_name;
+        $test['passed'] = 0;
+        $test['failed'] = 0;
+        $test['timeout'] = 0;
+        $all_tests[$test_name] = $test;
+    }
 
-        // Generate the tests response.
-        $letter = '';
-        foreach ($tests as $testName) {
-            $letter = strtolower(substr($testName, 0, 1));
-            if (!array_key_exists($letter, $sections_response)) {
-                $sections_response[$letter] = array();
-                $sections_response[$letter]['name'] = $letter;
-                $sections_response[$letter]['tests'] = array();
-            }
-            $test_response = array();
-            $test_response['name'] = $testName;
-            $summaryLink = "testSummary.php?project=$projectid&name=$testName&date=$today";
-            $test_response['summaryLink'] = $summaryLink;
-            $sections_response[$letter]['tests'][] = $test_response;
-        }
+    if ($status === 'passed') {
+        $all_tests[$test_name]['passed'] += 1;
+    } elseif (strpos($row['details'], 'Timeout') !== false) {
+        $all_tests[$test_name]['timeout'] += 1;
+    } else {
+        $all_tests[$test_name]['failed'] += 1;
     }
 }
 
-$response['sections'] = array_values($sections_response);
+// Compute fail percentage for each test found.
+$tests_response = array();
+foreach ($all_tests as $name => $test) {
+    $total_runs = $test['passed'] + $test['failed'] + $test['timeout'];
+    // Avoid divide by zero.
+    if ($total_runs === 0) {
+        continue;
+    }
+    // Only include tests that failed at least once.
+    if ($test['failed'] === 0 && $test['timeout'] === 0) {
+        continue;
+    }
+
+    $test_response = array();
+    $test_response['name'] = $name;
+    $test_response['failpercent'] =
+            round(($test['failed'] / $total_runs) * 100, 2);
+    $test_response['timeoutpercent'] =
+            round(($test['timeout'] / $total_runs) * 100, 2);
+    $test_response['link'] =
+            "testSummary.php?project=$projectid&name=$name&date=$today";
+    $tests_response[] = $test_response;
+}
+
+$response['tests'] = $tests_response;
 
 $end = microtime_float();
 $response['generationtime'] = round($end - $start, 3);
