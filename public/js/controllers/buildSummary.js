@@ -16,11 +16,13 @@ CDash.controller('BuildSummaryController',
       url: 'api/v1/buildSummary.php',
       method: 'GET',
       params: $rootScope.queryString
-    }).success(function(cdash) {
-      renderTimer.initialRender($scope, cdash);
+    }).then(function success(s) {
+      renderTimer.initialRender($scope, s.data);
       // Set title in root scope so the head controller can see it.
-      $rootScope['title'] = cdash.title;
-    }).finally(function() {
+      $rootScope['title'] = $scope.cdash.title;
+      $scope.loading = false;
+    }, function error(e) {
+      $scope.cdash = e.data;
       $scope.loading = false;
     });
 

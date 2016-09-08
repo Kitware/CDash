@@ -45,7 +45,7 @@ $build->FillFromId($build->Id);
 
 $projectid = $build->ProjectId;
 if (!isset($projectid) || $projectid < 1) {
-    $response['error'] = 'This build doesnot exist.  Maybe it has been deleted.';
+    $response['error'] = 'This build does not exist.  Maybe it has been deleted.';
     echo json_encode($response);
     http_response_code(400);
     return;
