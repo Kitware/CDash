@@ -84,6 +84,7 @@ while ($previous_build_row = $stmt->fetch()) {
     $build_response['buildwarnings'] = $previous_build_row['buildwarnings'];
     $build_response['builderrors'] = $previous_build_row['builderrors'];
     $build_response['starttime'] = $previous_build_row['starttime'];
+    $build_response['timestamp'] = strtotime($previous_build_row['starttime']) * 1000; // Milliseconds since epoch.
     $build_response['testfailed'] = $previous_build_row['testfailed'];
 
     $duration = strtotime($previous_build_row['endtime']) -

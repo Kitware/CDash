@@ -92,7 +92,7 @@ CDash.controller('BuildSummaryController',
       // Isolate data for each graph.
       for (var i = 0, len = builds.length; i < len; i++) {
         var build = builds[i];
-        var t = new Date(build['starttime']).getTime();
+        var t = build['timestamp'];
 
         buildtime.push([t, build['time'] / 60]);
         builderrors.push([t, build['builderrors']]);
