@@ -19,12 +19,12 @@ require_once 'include/pdo.php';
 require_once 'include/common.php';
 require_once 'models/build.php';
 
-$buildid = pdo_real_escape_numeric($_GET['buildid']);
-if (!isset($buildid) || !is_numeric($buildid)) {
+if (!isset($_GET['buildid']) || !is_numeric($_GET['buildid'])) {
     return;
 }
 
 // Get details about this build.
+$buildid = $_GET['buildid'];
 $build = new Build();
 $build->Id = $buildid;
 $build->FillFromId($build->Id);
