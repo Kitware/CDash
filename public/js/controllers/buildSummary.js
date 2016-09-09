@@ -117,7 +117,7 @@ CDash.controller('BuildSummaryController',
       $scope.cdash.buildhistory.reverse();
 
       // Options shared by all four graphs.
-      var options = {
+      var shared_options = {
           lines: {show: true},
           points: {show: true},
           xaxis: {mode: "time"},
@@ -130,8 +130,6 @@ CDash.controller('BuildSummaryController',
           },
           selection: {mode: "x"},
       };
-
-      var default_yaxis = {minTickSize: 1};
 
       // Settings specific to each graph.
       var graph_settings = [
@@ -170,18 +168,26 @@ CDash.controller('BuildSummaryController',
       ];
 
       // Render all of the graphs.
-      for (var i = 0, len = graph_settings.length; i < len; i++) {
-        var settings = graph_settings[i];
+      $.each(graph_settings, function(index, settings) {
+        var options = $.extend({}, shared_options);
         options['colors'] = settings['color'];
         if ('yaxis' in settings) {
           options['yaxis'] = settings['yaxis'];
         } else {
-          options['yaxis'] = default_yaxis;
+          options['yaxis'] = {minTickSize: 1};
         }
 
+        var plot = $.plot($(settings['element']), [{label: settings['label'], data: settings['data']}],
+          options);
+
         $(settings['element']).bind("selected", function (event, area) {
-          plot = $.plot($(settings['element']), [{label: settings['label'], data: settings['data']}],
-            $.extend(true, {}, options, {xaxis: {min: area.x1, max: area.x2}}));
+          // Set axis range to highlighted section and redraw plot.
+          var axes = plot.getAxes(),
+          xaxis = axes.xaxis.options;
+          xaxis.min = area.x1;
+          xaxis.max = area.x2;
+          plot.setupGrid();
+          plot.draw();
         });
 
         $(settings['element']).bind("plotclick", function (e, pos, item) {
@@ -192,9 +198,22 @@ CDash.controller('BuildSummaryController',
           }
         });
 
-        plot = $.plot($(settings['element']), [{label: settings['label'], data: settings['data']}],
-          options);
-      }
+        $(settings['element']).bind('dblclick', function(event) {
+          // Set axis range to null.  This makes all data points visible.
+          var axes = plot.getAxes(),
+          xaxis = axes.xaxis.options,
+          yaxis = axes.yaxis.options;
+          xaxis.min = null;
+          xaxis.max = null;
+          yaxis.min = null;
+          yaxis.max = null;
+
+          // Redraw the plot.
+          plot.setupGrid();
+          plot.draw();
+        });
+
+      });
     };
 
     $scope.toggleNote = function() {
