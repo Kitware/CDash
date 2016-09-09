@@ -1,5 +1,5 @@
 CDash.controller('BuildSummaryController',
-  function BuildSummaryController($scope, $rootScope, $http, renderTimer) {
+  function BuildSummaryController($scope, $rootScope, $http, $timeout, renderTimer) {
 
     // Support for the various graphs on this page.
     $scope.showTimeGraph = false;
@@ -11,6 +11,12 @@ CDash.controller('BuildSummaryController',
     $scope.graphLoading = false;
     $scope.graphLoaded = false;
     $scope.graphData = [];
+    $scope.graphRendered = {
+      'time': false,
+      'errors': false,
+      'warnings': false,
+      'tests': false
+    };
 
     $scope.loading = true;
     $http({
@@ -32,92 +38,114 @@ CDash.controller('BuildSummaryController',
     // Show/hide our various history graphs.
     $scope.toggleTimeGraph = function() {
       $scope.showTimeGraph = !$scope.showTimeGraph;
-
-      if (!$scope.graphLoaded) {
-        $scope.loadGraphs();
-      }
+      // Use a 1 ms timeout before loading graph data.
+      // This gives the holder div a chance to become visible before the graph
+      // is drawn.  Otherwise flot has trouble drawing the graph with the
+      // correct dimensions.
+      $timeout(function() {
+        if (!$scope.graphLoaded) {
+          $scope.loadGraphData('time');
+        } else {
+          $scope.renderGraph('time');
+        }
+      }, 1);
     };
     $scope.toggleErrorGraph = function() {
       $scope.showErrorGraph = !$scope.showErrorGraph;
-
-      if (!$scope.graphLoaded) {
-        $scope.loadGraphs();
-      }
+      $timeout(function() {
+        if (!$scope.graphLoaded) {
+          $scope.loadGraphData('errors');
+        } else {
+          $scope.renderGraph('errors');
+        }
+      }, 1);
     };
     $scope.toggleWarningGraph = function() {
       $scope.showWarningGraph = !$scope.showWarningGraph;
-
-      if (!$scope.graphLoaded) {
-        $scope.loadGraphs();
-      }
+      $timeout(function() {
+        if (!$scope.graphLoaded) {
+          $scope.loadGraphData('warnings');
+        } else {
+          $scope.renderGraph('warnings');
+        }
+      }, 1);
     };
     $scope.toggleTestGraph = function() {
       $scope.showTestGraph = !$scope.showTestGraph;
-
-      if (!$scope.graphLoaded) {
-        $scope.loadGraphs();
-      }
+      $timeout(function() {
+        if (!$scope.graphLoaded) {
+          $scope.loadGraphData('tests');
+        } else {
+          $scope.renderGraph('tests');
+        }
+      }, 1);
     };
     $scope.toggleHistoryGraph = function() {
       $scope.showHistoryGraph = !$scope.showHistoryGraph;
-
-      if (!$scope.graphLoaded) {
-        $scope.loadGraphs();
-      }
+      // Not rendered by flot, so no need for timeout.
+      $scope.loadGraphData();
     };
 
     // Load graph data via AJAX.
-    $scope.loadGraphs = function() {
+    $scope.loadGraphData = function(graphType) {
       $scope.graphLoading = true;
       $http({
         url: 'api/v1/getPreviousBuilds.php',
         method: 'GET',
         params: { buildid: $scope.cdash.build.id }
       }).success(function(resp) {
-        $scope.setupGraphs(resp['builds']);
+        $scope.cdash.buildtimes = [];
+        $scope.cdash.builderrors = [];
+        $scope.cdash.buildwarnings = [];
+        $scope.cdash.testfailed = [];
+        $scope.cdash.buildids = [];
+        $scope.cdash.buildhistory = [];
+
+        // Isolate data for each graph.
+        var builds = resp['builds'];
+        for (var i = 0, len = builds.length; i < len; i++) {
+          var build = builds[i];
+          var t = build['timestamp'];
+
+          $scope.cdash.buildtimes.push([t, build['time'] / 60]);
+          $scope.cdash.builderrors.push([t, build['builderrors']]);
+          $scope.cdash.buildwarnings.push([t, build['buildwarnings']]);
+          $scope.cdash.testfailed.push([t, build['testfailed']]);
+          $scope.cdash.buildids[t] = build['id'];
+
+          var history_build = [];
+          history_build['id'] = build['id'];
+          history_build['nfiles'] = build['nfiles'];
+          history_build['configureerrors'] = build['configureerrors'];
+          history_build['configurewarnings'] = build['configurewarnings'];
+          history_build['builderrors'] = build['builderrors'];
+          history_build['buildwarnings'] = build['buildwarnings'];
+          history_build['testfailed'] = build['testfailed'];
+          history_build['starttime'] = build['starttime'];
+          $scope.cdash.buildhistory.push(history_build);
+        }
+        $scope.cdash.buildhistory.reverse();
         $scope.graphLoaded = true;
+        if (graphType) {
+          // Render the graph that triggered this call.
+          $scope.renderGraph(graphType);
+        }
       }).finally(function() {
         $scope.graphLoading = false;
       });
     };
 
-    // Initialize each graph with newly loaded data.
-    $scope.setupGraphs = function (builds) {
-      var buildtime = [];
-      var builderrors = [];
-      var buildwarnings = [];
-      var testfailed = [];
-      var buildids = [];
+    // Initial render for one of our graphs.
+    $scope.renderGraph = function (graphType) {
 
-      $scope.cdash.buildhistory = [];
-
-      // Isolate data for each graph.
-      for (var i = 0, len = builds.length; i < len; i++) {
-        var build = builds[i];
-        var t = build['timestamp'];
-
-        buildtime.push([t, build['time'] / 60]);
-        builderrors.push([t, build['builderrors']]);
-        buildwarnings.push([t, build['buildwarnings']]);
-        testfailed.push([t, build['testfailed']]);
-        buildids[t] = build['id'];
-
-        var history_build = [];
-        history_build['id'] = build['id'];
-        history_build['nfiles'] = build['nfiles'];
-        history_build['configureerrors'] = build['configureerrors'];
-        history_build['configurewarnings'] = build['configurewarnings'];
-        history_build['builderrors'] = build['builderrors'];
-        history_build['buildwarnings'] = build['buildwarnings'];
-        history_build['testfailed'] = build['testfailed'];
-        history_build['starttime'] = build['starttime'];
-        $scope.cdash.buildhistory.push(history_build);
+      if ($scope.graphRendered[graphType]) {
+        // Already rendered, abort early.
+        return;
       }
 
-      $scope.cdash.buildhistory.reverse();
-
       // Options shared by all four graphs.
-      var shared_options = {
+      var data, element, label;
+      var options = {
           lines: {show: true},
           points: {show: true},
           xaxis: {mode: "time"},
@@ -131,89 +159,81 @@ CDash.controller('BuildSummaryController',
           selection: {mode: "x"},
       };
 
-      // Settings specific to each graph.
-      var graph_settings = [
-        // Build Time
-        {
-          color: ["#41A317"],
-          data: buildtime,
-          element: "#buildtimegrapholder",
-          label: "Build Time",
-          yaxis: {
+      switch (graphType) {
+        case 'time':
+          options['colors'] = ["#41A317"];
+          options['yaxis'] = {
             tickFormatter: function (v, axis) {
               return v.toFixed(axis.tickDecimals) + " mins"}
-            }
-        },
-        // Build Errors
-        {
-          color: ["#FDD017"],
-          data: builderrors,
-          element: "#builderrorsgrapholder",
-          label: "# errors"
-        },
-        // Build Warnings
-        {
-          color: ["#FF0000"],
-          data: buildwarnings,
-          element: "#buildwarningsgrapholder",
-          label: "# warnings"
-        },
-        // Tests Failed
-        {
-          color: ["#0000FF"],
-          data: testfailed,
-          element: "#buildtestsfailedgrapholder",
-          label: "# tests failed"
-        }
-      ];
-
-      // Render all of the graphs.
-      $.each(graph_settings, function(index, settings) {
-        var options = $.extend({}, shared_options);
-        options['colors'] = settings['color'];
-        if ('yaxis' in settings) {
-          options['yaxis'] = settings['yaxis'];
-        } else {
+          };
+          data = $scope.cdash.buildtimes;
+          element = "#buildtimegrapholder";
+          label = "Build Time";
+          break;
+        case 'errors':
+          options['colors'] = ["#FDD017"];
           options['yaxis'] = {minTickSize: 1};
-        }
+          data = $scope.cdash.builderrors;
+          element = "#builderrorsgrapholder";
+          label = "# errors";
+          break;
+        case 'warnings':
+          options['colors'] = ["#FF0000"];
+          options['yaxis'] = {minTickSize: 1};
+          data = $scope.cdash.buildwarnings;
+          element = "#buildwarningsgrapholder";
+          label = "# warnings";
+          break;
+        case 'tests':
+          options['colors'] = ["#0000FF"];
+          options['yaxis'] = {minTickSize: 1};
+          data = $scope.cdash.testfailed;
+          element = "#buildtestsfailedgrapholder";
+          label = "# tests failed";
+          break;
+        default:
+          return;
+      }
 
-        var plot = $.plot($(settings['element']), [{label: settings['label'], data: settings['data']}],
-          options);
+      // Render the graph.
+      var plot = $.plot($(element), [{label: label, data: data}],
+        options);
 
-        $(settings['element']).bind("selected", function (event, area) {
-          // Set axis range to highlighted section and redraw plot.
-          var axes = plot.getAxes(),
-          xaxis = axes.xaxis.options;
-          xaxis.min = area.x1;
-          xaxis.max = area.x2;
-          plot.setupGrid();
-          plot.draw();
-        });
-
-        $(settings['element']).bind("plotclick", function (e, pos, item) {
-          if (item) {
-            plot.highlight(item.series, item.datapoint);
-            buildid = buildids[item.datapoint[0]];
-            window.location = "buildSummary.php?buildid=" + buildid;
-          }
-        });
-
-        $(settings['element']).bind('dblclick', function(event) {
-          // Set axis range to null.  This makes all data points visible.
-          var axes = plot.getAxes(),
-          xaxis = axes.xaxis.options,
-          yaxis = axes.yaxis.options;
-          xaxis.min = null;
-          xaxis.max = null;
-          yaxis.min = null;
-          yaxis.max = null;
-
-          // Redraw the plot.
-          plot.setupGrid();
-          plot.draw();
-        });
-
+      $(element).bind("selected", function (event, area) {
+        // Set axis range to highlighted section and redraw plot.
+        var axes = plot.getAxes(),
+        xaxis = axes.xaxis.options;
+        xaxis.min = area.x1;
+        xaxis.max = area.x2;
+        plot.clearSelection();
+        plot.setupGrid();
+        plot.draw();
       });
+
+      $(element).bind("plotclick", function (e, pos, item) {
+        if (item) {
+          plot.highlight(item.series, item.datapoint);
+          buildid = buildids[item.datapoint[0]];
+          window.location = "buildSummary.php?buildid=" + buildid;
+        }
+      });
+
+      $(element).bind('dblclick', function(event) {
+        // Set axis range to null.  This makes all data points visible.
+        var axes = plot.getAxes(),
+        xaxis = axes.xaxis.options,
+        yaxis = axes.yaxis.options;
+        xaxis.min = null;
+        xaxis.max = null;
+        yaxis.min = null;
+        yaxis.max = null;
+
+        // Redraw the plot.
+        plot.setupGrid();
+        plot.draw();
+      });
+
+      $scope.graphRendered[graphType] = true;
     };
 
     $scope.toggleNote = function() {
