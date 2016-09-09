@@ -21,6 +21,7 @@ include 'public/login.php';
 include_once 'include/common.php';
 include 'include/version.php';
 require_once 'models/build.php';
+require_once 'models/buildusernote.php';
 
 $start = microtime_float();
 $response = array();
@@ -129,30 +130,11 @@ if ($logged_in) {
     $response['user'] = $user_response;
 }
 
-// Notes
+// Notes added by users.
 $notes_response = array();
-$note = pdo_query("SELECT * FROM buildnote WHERE buildid='$buildid' ORDER BY timestamp ASC");
-while ($note_array = pdo_fetch_array($note)) {
-    $note_response = array();
-    $userid = $note_array['userid'];
-    $user_array = pdo_fetch_array(pdo_query('SELECT firstname,lastname FROM ' . qid('user') . " WHERE id='$userid'"));
-    $timestamp = strtotime($note_array['timestamp'] . ' UTC');
-    $usernote = $user_array['firstname'] . ' ' . $user_array['lastname'];
-    switch ($note_array['status']) {
-        case 0:
-            $status = '[note]';
-            break;
-        case 1:
-            $status = '[fix in progress]';
-            break;
-        case 2:
-            $status = '[fixed]';
-            break;
-    }
-    $note_response['status'] = $status;
-    $note_response['user'] = $usernote;
-    $note_response['date'] = date('H:i:s T', $timestamp);
-    $note_response['text'] = $note_array['note'];
+$notes = BuildUserNote::getNotesForBuild($buildid);
+foreach ($notes as $note) {
+    $note_response = $note->marshal();
     $notes_response[] = $note_response;
 }
 $response['notes'] = $notes_response;

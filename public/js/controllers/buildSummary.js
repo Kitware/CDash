@@ -7,6 +7,7 @@ CDash.controller('BuildSummaryController',
     $scope.showWarningGraph = false;
     $scope.showTestGraph = false;
     $scope.showHistoryGraph = false;
+    $scope.showNote = false;
     $scope.graphLoading = false;
     $scope.graphLoaded = false;
     $scope.graphData = [];
@@ -18,6 +19,7 @@ CDash.controller('BuildSummaryController',
       params: $rootScope.queryString
     }).then(function success(s) {
       renderTimer.initialRender($scope, s.data);
+      $scope.cdash.noteStatus = "0";
       // Set title in root scope so the head controller can see it.
       $rootScope['title'] = $scope.cdash.title;
       $scope.loading = false;
@@ -194,4 +196,26 @@ CDash.controller('BuildSummaryController',
           options);
       }
     };
+
+    $scope.toggleNote = function() {
+      $scope.showNote = !$scope.showNote;
+    };
+
+    $scope.addNote = function() {
+      var parameters = {
+        buildid: $scope.cdash.build.id,
+        Status: $scope.cdash.noteStatus,
+        AddNote: $scope.cdash.noteText
+      };
+
+      $http.post('api/v1/addUserNote.php', parameters)
+      .then(function success(s) {
+        // Add the newly created note to our list.
+        $scope.cdash.notes.push(s.data.note);
+      }, function error(e) {
+        // Display the error.
+        $scope.cdash.error = e.data.error;
+      });
+    };
+
 });

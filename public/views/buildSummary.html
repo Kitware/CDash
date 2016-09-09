@@ -7,8 +7,6 @@
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="stylesheet" type="text/css" ng-href="{{cssfile}}" />
     <script src="js/CDash_@@version.min.js"></script>
-    <!-- Include JavaScript -->
-    <script src="js/cdashAddNote.js" type="text/javascript" charset="utf-8"></script>
     <title ng-bind="title">CDash</title>
   </head>
 
@@ -339,13 +337,14 @@
       <br/>
 
       <!-- Display notes for that build -->
-      <div class="title-divider">Notes</div>
+      <div class="title-divider"
+           ng-if="cdash.notes.length > 0 || cdash.user.id > 0">Notes</div>
 
-      <div ng-if="::cdash.note.length > 0">
+      <div ng-if="cdash.notes.length > 0">
         <div class="title-divider">
-          Users notes ({{::cdash.note.length}})
+          Users notes ({{cdash.notes.length}})
         </div>
-        <div ng-repeat="note in ::cdash.note">
+        <div ng-repeat="note in cdash.notes">
           <b>{{::note.status}}</b> by <b>{{::note.user}}</b> at {{::note.date}}
           <pre>{{::note.text}}</pre>
           <hr/>
@@ -353,12 +352,40 @@
       </div>
 
 
-      <!-- Add Notes -->
-      <a ng-href="javascript:addnote_click({{::cdash.build.id}}, '{{::cdash.user.id}}')">
-        Add a Note to this Build
-      </a>
-      <div id="addnote"></div>
-      <br/>
+      <div ng-if="::cdash.user.id > 0">
+        <!-- Add Notes -->
+        <a ng-click="toggleNote()">
+          Add a Note to this Build
+        </a>
+        <div id="addnote" ng-show="showNote">
+          <table>
+            <tr>
+              <td><b>Note:</b></td>
+              <td>
+                <textarea name="TextNote" cols="50" rows="5" ng-model="cdash.noteText"></textarea>
+              </td>
+            </tr>
+            <tr>
+              <td><b>Status:</b></td>
+              <td>
+                <select name="Status" ng-model="cdash.noteStatus">
+                  <option value="0">Simple Note</option>
+                  <option value="1">Fix in progress</option>
+                  <option value="2">Fixed</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>
+                <input name="AddNote" type="submit" value="Add Note"
+                       ng-click="addNote()" ng-disabled="!cdash.noteText">
+              </td>
+            </tr>
+          </table>
+        </div>
+        <br/>
+      </div>
 
       <!-- Graphs -->
       <div class="title-divider">Graphs</div>
