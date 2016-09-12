@@ -62,8 +62,8 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
         $success = true;
         $error_msg = '';
 
-        $old_style_pages = array('buildSummary', 'viewConfigure', 'viewUpdate');
-        $new_style_pages = array('viewBuildError', 'viewNotes');
+        $old_style_pages = array('viewConfigure', 'viewUpdate');
+        $new_style_pages = array('buildSummary', 'viewBuildError', 'viewNotes');
 
         foreach ($old_style_pages as $page) {
             $this->get($this->url . "/$page.php?buildid=" . $first_buildid);
