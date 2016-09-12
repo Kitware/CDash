@@ -1,6 +1,5 @@
 CDash.controller('BuildSummaryController',
-  function BuildSummaryController($scope, $rootScope, $http, $timeout, renderTimer) {
-
+  function BuildSummaryController($scope, $rootScope, $http, $location, $timeout, anchors, renderTimer) {
     // Support for the various graphs on this page.
     $scope.showTimeGraph = false;
     $scope.showErrorGraph = false;
@@ -29,6 +28,15 @@ CDash.controller('BuildSummaryController',
       // Set title in root scope so the head controller can see it.
       $rootScope['title'] = $scope.cdash.title;
       $scope.loading = false;
+
+      // Expose the jumpToAnchor function to the scope.
+      // This allows us to call it from the HTML template.
+      $scope.jumpToAnchor = anchors.jumpToAnchor;
+
+      // Honor any intra-page anchor specified in the URI.
+      if ($location.hash() != '') {
+        anchors.jumpToAnchor($location.hash());
+      }
     }, function error(e) {
       $scope.cdash = e.data;
       $scope.loading = false;

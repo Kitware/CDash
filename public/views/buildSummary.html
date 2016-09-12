@@ -89,7 +89,8 @@
               </tr>
               <tr class="tr-odd">
                 <td>
-                  <a ng-if="::cdash.hasupdate" href="#Stage0">
+                  <a ng-if="::cdash.hasupdate"
+                     ng-click="jumpToAnchor('Update')">
                     <b>Update</b>
                   </a>
                   <span ng-if="::!cdash.hasupdate">
@@ -115,7 +116,7 @@
               </tr>
               <tr class="tr-even">
                 <td>
-                  <a href="#Stage1">
+                  <a ng-click="jumpToAnchor('Configure')">
                     <b>Configure</b>
                   </a>
                 </td>
@@ -138,7 +139,7 @@
               </tr>
               <tr class="tr-odd">
                 <td>
-                  <a href="#Stage2">
+                  <a ng-click="jumpToAnchor('Build')">
                     <b>Build</b>
                   </a>
                 </td>
@@ -160,7 +161,7 @@
                 </td>
               </tr>
               <tr class="tr-even">
-                <td><a href="#Stage3"><b>Test</b></a></td>
+                <td><a ng-click="jumpToAnchor('Test')"><b>Test</b></a></td>
                 <td align="right"
                     ng-class="::cdash.test.nfailed > 0 ? 'error' : 'normal'">
                   <b>
@@ -433,7 +434,7 @@
 
       <!-- Update -->
       <div ng-if="::cdash.hasupdate">
-        <div class="title-divider" id="Stage0">
+        <div class="title-divider" id="Update">
           Stage: Update ({{::cdash.update.nerrors}} errors, {{::cdash.update.nwarnings}} warnings)
         </div>
         <br/>
@@ -463,7 +464,7 @@
       </div>
 
       <!-- Configure -->
-      <div class="title-divider" id="Stage1">
+      <div class="title-divider" id="Configure">
         Configure ({{::cdash.configure.nerrors}} errors, {{::cdash.configure.nwarnings}} warnings)
       </div>
       <br/>
@@ -493,7 +494,7 @@
       <br/>
 
       <!-- Build -->
-      <div class="title-divider" id="Stage2">
+      <div class="title-divider" id="Build">
         Build ({{::cdash.build.nerrors}} errors, {{::cdash.build.nwarnings}} warnings)
       </div>
       <br/>
@@ -537,7 +538,7 @@
       <br/>
 
       <!--  Warnings -->
-      <div class="title-divider" id="Stage2Warnings">
+      <div class="title-divider" id="Warnings">
         Build Warnings ({{::cdash.build.nwarnings}})
       </div>
 
@@ -569,7 +570,7 @@
       <br/>
 
       <!-- Test -->
-      <div class="title-divider" id="Stage3">
+      <div class="title-divider" id="Test">
         Test ({{::cdash.test.npassed}}  passed, {{::cdash.test.nfailed}} failed, {{::cdash.test.nnotrun}} not run)
       </div>
       <a ng-href="viewTest.php?buildid={{::cdash.build.id}}">
@@ -580,7 +581,7 @@
 
       <!-- Coverage -->
       <div ng-if="::cdash.hascoverage">
-      <div class="title-divider" id="Stage4">
+      <div class="title-divider" id="Coverage">
         Coverage ({{::cdash.coverage}}%)
       </div>
       <a ng-href="viewCoverage.php?buildid={{::cdash.build.id}}">
