@@ -47,9 +47,9 @@ function register()
         // We copy the data from usertemp to user
         $user = new User();
         $user->Email = $email;
-        $user->Password = $query_array['passwd'];
-        $user->FirstName = $query_array['fname'];
-        $user->LastName = $query_array['lname'];
+        $user->Password = $query_array['password'];
+        $user->FirstName = $query_array['firstname'];
+        $user->LastName = $query_array['lastname'];
         $user->Institution = $query_array['institution'];
         if ($user->Save()) {
             pdo_query("DELETE FROM usertemp WHERE email='$email'");
