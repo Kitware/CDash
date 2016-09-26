@@ -19,11 +19,7 @@
 
     <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'views/partials/header.html'"></ng-include>
 
-    <div ng-if="::cdash.future == 1">
-      CDash cannot predict the future (yet)...
-    </div>
-
-    <div id="index_content" ng-if="!loading && cdash.requirelogin != 1 && cdash.future != 1 && !cdash.error">
+    <div id="index_content" ng-if="!loading && cdash.requirelogin != 1 && !cdash.error">
       <div id="index_top" ng-if="::cdash.updates">
         <div name="banner" ng-repeat="banner in ::cdash.banners">
           {{::banner.text}}
@@ -128,6 +124,9 @@
         <div id="buildname" align="left">
           <b>Build Name</b>: {{::cdash.buildname}}
           <img ng-if="::cdash.buildplatform" class="icon" alt="platform" ng-src="img/platform_{{::cdash.buildplatform}}.png"/>
+          <a ng-if="::cdash.changelink" target="_blank" ng-href="{{::cdash.changelink}}">
+            <img class="smallicon" ng-src="{{::cdash.changeicon}}"/>
+          </a>
         </div>
 
         <div id="numbuilds" align="left">
@@ -153,6 +152,7 @@
                 </h3>
               </td>
               <td align="right" class="nob" colspan="{{::cdash.displaylabels == 1 ? 15 : 14}}">
+                {{::buildgroup.numbuildslabel}}
               </td>
             </tr>
 
