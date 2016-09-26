@@ -21,32 +21,26 @@ class BuildUserNoteTestCase extends KWWebTestCase
         $this->startCodeCoverage();
 
         $buildusernote = new BuildUserNote();
-
-        $buildusernote->BuildId = 0;
-        ob_start();
         $result = $buildusernote->Insert();
-        $output = ob_get_contents();
-        ob_end_clean();
         if ($result) {
             $this->fail('Insert() should return false when BuildId is 0');
             return 1;
         }
-        if (strpos($output, 'BuildUserNote::Insert(): BuildId is not set') === false) {
+
+        $log_contents = file_get_contents($this->logfilename);
+        if (strpos($log_contents, 'BuildId is not set') === false) {
             $this->fail("'BuildId is not set' not found from Insert()");
             return 1;
         }
 
         $buildusernote->BuildId = 1;
-        $buildusernote->UserId = 0;
-        ob_start();
         $result = $buildusernote->Insert();
-        $output = ob_get_contents();
-        ob_end_clean();
         if ($result) {
             $this->fail('Insert() should return false when UserId is 0');
             return 1;
         }
-        if (strpos($output, 'BuildUserNote::Insert(): UserId is not set') === false) {
+        $log_contents = file_get_contents($this->logfilename);
+        if (strpos($log_contents, 'UserId is not set') === false) {
             $this->fail("'UserId is not set' not found from Insert()");
             return 1;
         }
@@ -74,9 +68,5 @@ class BuildUserNoteTestCase extends KWWebTestCase
             $this->fail("Insert() returned false when it should be true.\n");
             return 1;
         }
-        $this->pass('Passed');
-
-        $this->stopCodeCoverage();
-        return 0;
     }
 }

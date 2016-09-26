@@ -20,7 +20,7 @@
   <div id="headerbottom">
     <div id="headerlogo">
       <a href="{{cdash.home}}">
-        <img ng-if="cdash.logoid>0" id="projectlogo" border="0" height="50px" ng-src="displayImage.php?imgid={{cdash.logoid}}"/>
+        <img ng-if="cdash.logoid != 0" id="projectlogo" border="0" height="50px" ng-src="displayImage.php?imgid={{cdash.logoid}}"/>
         <img ng-if="!cdash.logoid || cdash.logoid==0" id="projectlogo" border="0" height="50px" src="img/cdash.gif"/>
       </a>
     </div>
@@ -30,7 +30,7 @@
     </div>
     <div id="headermenu">
       <ul id="navigation">
-        <li>
+        <li ng-if="!cdash.noproject">
           <a href="index.php?project={{cdash.projectname_encoded}}&date={{cdash.date}}">
             Dashboard
           </a>
@@ -129,7 +129,7 @@
             </li>
           </ul>
         </li>
-        <li ng-if="cdash.user.admin == 1" id="admin">
+        <li ng-if="cdash.user.admin == 1 && !cdash.noproject" id="admin">
           <a href="#">Settings</a>
           <ul>
             <li>

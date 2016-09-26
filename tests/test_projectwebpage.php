@@ -14,20 +14,15 @@ class ProjectWebPageTestCase extends KWWebTestCase
 
     public function testAccessToWebPageProjectTest()
     {
-        $this->login();
-        // first project necessary for testing
-        $name = 'BatchmakeExample';
-        $description = 'Project Batchmake\'s test for cdash testing';
-        $this->createProject($name, $description);
-        $this->get($this->url . '/user.php'); // comes back to the my user page
-        $name = 'InsightExample';
-        $description = 'Project Insight test for cdash testing';
-        $this->createProject($name, $description);
-        $content = $this->connect($this->url . '/api/v1/index.php?project=BatchmakeExample');
-        if (!$content) {
-            return;
-        }
-        $this->assertText('CDash - BatchmakeExample');
+        $settings = array(
+                'Name' => 'BatchmakeExample',
+                'Description' => "Project Batchmake's test for cdash testing");
+        $this->createProject($settings);
+
+        $settings = array(
+                'Name' => 'InsightExample',
+                'Description' => 'Project Insight test for cdash testing');
+        $this->createProject($settings);
     }
 
     public function testSubmissionBatchmakeBuild()
@@ -229,9 +224,9 @@ class ProjectWebPageTestCase extends KWWebTestCase
 
         $buildgroup = array_pop($jsonobj['buildgroups']);
         $buildid = $buildgroup['builds'][0]['id'];
-        $content = $this->connect($this->url . "/buildSummary.php?buildid=$buildid");
+        $content = $this->connect($this->url . "/api/v1/buildSummary.php?buildid=$buildid");
 
-        $expected = 'f:\program files\microsoft sdks\windows\v6.0a\include\servprov.h(79) : warning C4068: unknown pragma';
+        $expected = 'warning C4068: unknown pragma';
         if (!$content) {
             return;
         } elseif (!$this->findString($content, $expected)) {

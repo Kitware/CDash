@@ -28,24 +28,10 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
     public function testCreateProjectTest()
     {
         // Create a new project for this test.
-        $name = 'CrossSubProjectExample';
-        $description = 'Example of coverage across SubProjects';
-
-        $this->login();
-        $this->clickLink('Create new project');
-        $this->setField('name', $name);
-        $this->setField('description', $description);
-        $this->setField('public', '1');
-        $this->clickSubmitByName('Submit');
-
-        $content = $this->connect($this->url . '/index.php?project=CrossSubProjectExample');
-        if (!$content) {
-            return;
-        }
-        if (!$this->checkLog($this->logfilename)) {
-            return;
-        }
-        $this->pass('Test passed');
+        $settings = array(
+                'Name' => 'CrossSubProjectExample',
+                'Description' => 'Example of coverage across SubProjects');
+        $this->createProject($settings);
     }
 
     public function testCreateSubProjects()

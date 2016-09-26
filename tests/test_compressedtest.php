@@ -15,49 +15,22 @@ class CompressedTestCase extends KWWebTestCase
     public function testSubmissionCompressedTest()
     {
         echo "1. testSubmissionCompressedTest\n";
-        $this->login();
-        // first project necessary for testing
-        $name = 'TestCompressionExample';
-        $description = 'Project compression example';
-        $svnviewerurl = 'public.kitware.com/cgi-bin/viewcvs.cgi/?cvsroot=TestCompressionExample';
-        $bugtrackerfileurl = 'http://public.kitware.com/Bug/view.php?id=';
-        $this->createProject($name, $description, $svnviewerurl, $bugtrackerfileurl);
-        $content = $this->connect($this->url . '/index.php?project=TestCompressionExample');
-        if (!$content) {
-            return;
-        }
 
+        // Create project.
+        $settings = array(
+                'Name' => 'TestCompressionExample',
+                'Description' => 'Project compression example',
+                'CvsUrl' => 'public.kitware.com/cgi-bin/viewcvs.cgi/?cvsroot=TestCompressionExample',
+                'BugTrackerFileUrl' =>  'http://public.kitware.com/Bug/view.php?id=',
+                'RobotName' => 'itkrobot',
+                'RobotRegex' => '^(?:(?:\w|\.)+)\s+((?:\w|\.|\@)+)^');
+        $projectid = $this->createProject($settings);
+
+        // Make sure we can submit to it.
         $file = dirname(__FILE__) . '/data/CompressedTest.xml';
         if (!$this->submission('TestCompressionExample', $file)) {
             return;
         }
-
-        // Test the robot submission
-        $query = "SELECT id FROM project WHERE name = '" . $name . "'";
-        $result = $this->db->query($query);
-        var_dump($result);
-        $projectid = $result[0]['id'];
-
-        $content = $this->connect($this->url . '/createProject.php?edit=1&projectid=' . $projectid);
-        if (!$content) {
-            $this->fail('Cannot connect to edit project page');
-            return;
-        }
-        $this->setField('robotname', 'itkrobot');
-        $this->setField('robotregex', '^(?:(?:\w|\.)+)\s+((?:\w|\.|\@)+)^');
-        $this->clickSubmitByName('Update');
-
-        $query = 'SELECT robotname,authorregex FROM projectrobot WHERE projectid=' . $projectid;
-        $result = $this->db->query($query);
-        if ($result[0]['robotname'] != 'itkrobot') {
-            $this->fail('Robot name not set correctly got' . $result[0]['robotname'] . ' instead of itkrobot');
-            return;
-        }
-        if ($result[0]['authorregex'] != '^(?:(?:\w|\.)+)\s+((?:\w|\.|\@)+)^') {
-            $this->fail('Robot regex not set correctly got ' . $result[0]['authorregex'] . ' instead of ^(?:(?:\w|\.)+)\s+((?:\w|\.|\@)+)^');
-            return;
-        }
-        $this->pass('Test passed');
     }
 
     /** */
