@@ -109,37 +109,37 @@ class ConfigureHandler extends AbstractHandler
                 $build->RemoveIfDone();
                 if ($build->Id == 0) {
                     // If the build doesn't exist we add it
-                  add_build($build, $this->scheduleid);
+                    add_build($build, $this->scheduleid);
                 } else {
                     // Otherwise we make sure that it's up-to-date.
-                  $build->UpdateBuild($build->Id, -1, -1);
+                    $build->UpdateBuild($build->Id, -1, -1);
                 }
                 $GLOBALS['PHP_ERROR_BUILD_ID'] = $build->Id;
                 $this->Configure->BuildId = $build->Id;
                 $this->Configure->StartTime = $start_time;
                 $this->Configure->EndTime = $end_time;
 
-              // Insert the configure
-              if ($this->Configure->Exists()) {
-                  $this->Configure->Delete();
-              }
+                // Insert the configure
+                if ($this->Configure->Exists()) {
+                    $this->Configure->Delete();
+                }
                 if ($this->Configure->Insert()) {
                     // Insert errors from the log file
-                  $this->Configure->ComputeWarnings();
+                    $this->Configure->ComputeWarnings();
                     $this->Configure->ComputeErrors();
                 }
 
                 $build->ComputeConfigureDifferences();
 
-              // Record the number of warnings & errors with the build.
-              $build->SetNumberOfConfigureWarnings(
-                  $this->Configure->NumberOfWarnings);
+                // Record the number of warnings & errors with the build.
+                $build->SetNumberOfConfigureWarnings(
+                        $this->Configure->NumberOfWarnings);
                 $build->SetNumberOfConfigureErrors(
-                  $this->Configure->NumberOfErrors);
+                        $this->Configure->NumberOfErrors);
 
-              // Record configure duration with the build.
-              $build->SetConfigureDuration(
-                  $this->EndTimeStamp - $this->StartTimeStamp);
+                // Record configure duration with the build.
+                $build->SetConfigureDuration(
+                        $this->EndTimeStamp - $this->StartTimeStamp);
             }
 
             // Update the tally of warnings & errors in the parent build,
@@ -147,7 +147,7 @@ class ConfigureHandler extends AbstractHandler
             // All subprojects share the same configure file and parent build,
             // so only need to do this once
             $build->UpdateParentConfigureNumbers(
-                $this->Configure->NumberOfWarnings, $this->Configure->NumberOfErrors);
+                    $this->Configure->NumberOfWarnings, $this->Configure->NumberOfErrors);
         } elseif ($name == 'LABEL') {
             if (isset($this->Configure)) {
                 $this->Configure->AddLabel($this->Label);
