@@ -28,6 +28,7 @@ class ConfigureHandler extends AbstractHandler
     private $BuildInformation;
     private $Configure;
     private $Label;
+    private $Notified;
 
     public function __construct($projectid, $scheduleid)
     {
@@ -37,6 +38,8 @@ class ConfigureHandler extends AbstractHandler
         $this->Configure = new BuildConfigure();
         $this->StartTimeStamp = 0;
         $this->EndTimeStamp = 0;
+        // Only complain about errors & warnings once.
+        $this->Notified = false;
     }
 
     public function startElement($parser, $name, $attributes)
@@ -130,6 +133,12 @@ class ConfigureHandler extends AbstractHandler
                 }
 
                 $build->ComputeConfigureDifferences();
+
+                if (!$this->Notified && !empty($this->BuildInformation->PullRequest)) {
+                    // Only perform PR notification for the first build parsed.
+                    $build->SetPullRequest($this->BuildInformation->PullRequest);
+                    $this->Notified = true;
+                }
 
                 // Record the number of warnings & errors with the build.
                 $build->SetNumberOfConfigureWarnings(

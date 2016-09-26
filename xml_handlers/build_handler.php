@@ -80,7 +80,7 @@ class BuildHandler extends AbstractHandler
                 $subprojectName = $attributes['NAME'];
                 $build = new Build();
                 if (!empty($this->BuildInformation->PullRequest)) {
-                    $build->SetPullRequest($value);
+                    $build->SetPullRequest($this->BuildInformation->PullRequest);
                 }
                 $build->SiteId = $this->Site->Id;
                 $build->Name = $this->BuildInformation->BuildName;
@@ -94,7 +94,7 @@ class BuildHandler extends AbstractHandler
                 // No subprojects
                 $build = new Build();
                 if (!empty($this->BuildInformation->PullRequest)) {
-                    $build->SetPullRequest($value);
+                    $build->SetPullRequest($this->BuildInformation->PullRequest);
                 }
                 $build->SiteId = $this->Site->Id;
                 $build->Name = $this->BuildInformation->BuildName;
