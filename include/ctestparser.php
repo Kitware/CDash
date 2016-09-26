@@ -331,11 +331,18 @@ function ctest_parse($filehandler, $projectid, $expected_md5 = '', $do_checksum 
         return false;
     }
 
-    // Write the file to the backup directory.
-    $filename = writeBackupFile($filehandler, $content, $projectname, $buildname,
-        $sitename, $stamp, $file . '.xml');
-    if ($filename === false) {
-        return $handler;
+    // If backups are disabled, switch the filename to that of the existing handle
+    // Otherwise, create a backup file and process from that
+    global $CDASH_BACKUP_TIMEFRAME;
+    if ($CDASH_BACKUP_TIMEFRAME == '0') {
+        $meta_data = stream_get_meta_data($filehandler);
+        $filename = $meta_data['uri'];
+    } else {
+        $filename = writeBackupFile($filehandler, $content, $projectname, $buildname,
+                                    $sitename, $stamp, $file . '.xml');
+        if ($filename === false) {
+            return $handler;
+        }
     }
 
     $statusarray = array();

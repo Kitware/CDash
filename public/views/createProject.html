@@ -1,0 +1,1395 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" ng-app="CDash">
+  <head ng-controller="HeadController">
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" type="text/css" ng-href="{{::cssfile}}" />
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <script src="js/CDash_@@version.min.js"></script>
+<!--
+    <script type="text/javascript" src="js/cdashCreateProject.js"></script>
+-->
+    <title ng-bind="::title">CDash</title>
+  </head>
+
+  <body bgcolor="#ffffff" ng-controller="CreateProjectController">
+    <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
+
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'views/partials/header.html'"></ng-include>
+    <br/>
+
+    <div ng-if="cdash.projectcreated == 1">
+      The project <b>{{cdash.project_name}}</b> has been created successfully.
+      <br/>
+      <br/>
+      Click here to access the
+      <a ng-href="index.php?project={{cdash.project.name_encoded}}">CDash project page</a>
+      <br />
+      Click here to
+      <a ng-href="createProject.php?projectid={{cdash.project.Id}}">edit the project</a>
+      <br />
+      Click here to
+      <a ng-href="generateCTestConfig.php?projectid={{cdash.project.Id}}">download the CTest configuration file</a>
+      <br />
+    </div>
+
+    <div ng-if="cdash.requirelogin != 1 && !loading && !cdash.error && !cdash.projectcreated == 1">
+
+      <table ng-if="::cdash.edit == 1">
+        <tr>
+          <td width="99"></td>
+          <td>
+            <div align="right">
+              <strong>Project:</strong>
+            </div>
+          </td>
+          <td>
+            <select name="projectSelection"
+                    onchange="location = 'createProject.php?projectid='+this.options[this.selectedIndex].value">
+              <option value="-1">Choose...</option>
+              <option ng-repeat="proj in ::cdash.availableprojects"
+                      value="{{::proj.id}}"
+                      ng-selected="proj.id == cdash.projectid">
+                {{::proj.name}}
+              </option>
+            </select>
+          </td>
+        </tr>
+      </table>
+
+      <form name="projectForm" ng-if="::cdash.project || cdash.edit == 0">
+        <uib-tabset>
+          <uib-tab id="tab1"
+                   heading="Information"
+                   select="clearHelp(); setTab(1)"
+                   active="cdash.tabs[0].active">
+            <div class="tab_help"></div>
+            <table width="550">
+              <tr ng-if="::cdash.edit == 0">
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Name:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input name="name" type="text" id="name"
+                         ng-model="cdash.project.Name"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('name_help')" />
+                  <span class="help_content" id="name_help">
+                    <strong>Name of the project.</strong>
+                    <br />
+                    CDash allows spaces for the name of the project but it is
+                    not recommended. If the project’s name contains space
+                    make sure you replace the space by the corresponding HTML
+                    entity, i.e. %20.
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Description:</strong>
+                  </div>
+                </td>
+                <td>
+                  <textarea name="description" id="description" rows="5" cols="40"
+                            ng-model="cdash.project.Description"
+                            ng-change="cdash.changesmade = true"
+                            ng-focus="clearHelp()">
+                  </textarea>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Home URL :</strong>
+                  </div>
+                </td>
+                <td>
+                  <input name="homeURL" size="50"
+                         ng-model="cdash.project.HomeUrl"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('homeurl_help')" type="text" id="homeURL"/>
+                  <span class="help_content" id="homeurl_help">
+                    <strong>Home URL</strong>
+                    <br />
+                    Home url of the project (with or without http://) . This
+                    URL is referred in the top menu of the dashboard for this
+                    project.
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Bug Tracker URL:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input name="bugURL" size="50" type="text" id="bugURL"
+                         ng-model="cdash.project.BugTrackerUrl"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="clearHelp()"/>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Bug Tracker File URL:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input name="bugFileURL" type="text" id="bugFileURL" size="50"
+                         ng-model="cdash.project.BugTrackerFilerUrl"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="clearHelp()"/>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Documentation URL:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input name="docURL" type="text" id="docURL" size="50"
+                         ng-model="cdash.project.DocumentationUrl"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="clearHelp()"/>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Public Dashboard:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input type="checkbox" name="public"
+                         ng-model="cdash.project.Public"
+                         ng-true-value="1" ng-false-value="0"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('public_help')"/>
+                  <a href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                     target="blank">
+                    <img ng-mouseover="showHelp('public_help')" src="img/help.gif"
+                         border="0" />
+                  </a>
+                  <span class="help_content" id="public_help">
+                    <b>Public dashboard</b>
+                    <br />
+                    if the box is checked that means that the dashboard is
+                    public and anybody can access the dashboard, claim sites
+                    and look at the current status. By default dashboards are
+                    private.
+                  </span>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td align="right">
+                  <img ng-if="::cdash.edit == 0"
+                       src="img/next.png" style="cursor:pointer;"
+                       alt="next" title="Next Step"
+                       ng-click="nextTab(0)" />
+                </td>
+              </tr>
+            </table>
+          </uib-tab>
+
+          <uib-tab id="tab2"
+                   heading="Logo"
+                   active="cdash.tabs[1].active"
+                   disable="cdash.tabs[1].disabled"
+                   select="clearHelp(); setTab(2)">
+            <div class="tab_help"></div>
+            <table width="550">
+              <tr>
+                <td></td>
+                <td>
+                  <label for="logo">Select Logo</label>
+                  <input type="file" name="logo"
+                         ngf-select="cdash.changesmade = true;"
+                         ng-model="cdash.logoFile"
+                         accept="image/*" ngf-max-height="100"
+                         ngf-model-invalid="errorFile"/>
+                  <i ng-show="projectForm.logo.$error.maxHeight">
+                    File too large ({{errorFile.$ngfHeight}}px).  Max height allowed is 100px
+                  </i>
+
+                  <img class="thumb"
+                       ng-show="projectForm.file.$valid"
+                       ngf-thumbnail="cdash.logoFile" />
+                  <button ng-click="cdash.logoFile = null"
+                          ng-show="cdash.logoFile">Remove</button>
+                  <span class="help_content" id="logo_help">
+                    <strong>Logo</strong>
+                    <br />
+                    Logo for this project. For best results choose an image with
+                    a transparent background.  The logo's height should be no
+                    more than 100 pixels.
+                  </span>
+                  <a
+                    href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                    ng-mouseover="showHelp('logo_help')" target="blank">
+                    <img src="img/help.gif" border="0" />
+                  </a>
+                </td>
+              </tr>
+              <tr ng-if="::cdash.edit == 1">
+                <td></td>
+                <td>
+                  <div valign="top">
+                    <strong>Current logo:</strong>
+                  </div>
+                  <span ng-if="cdash.project.ImageId == 0">
+                    [none]
+                  </span>
+                  <img ng-if="cdash.project.ImageId != 0"
+                       id="projectlogo" border="0"
+                       alt="{{::cdash.dashboard.project.name}}"
+                       ng-src="displayImage.php?imgid={{cdash.project.ImageId}}" />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td align="right">
+                  <br />
+                  <br />
+                  <br />
+                  <br />
+                  <br />
+                  <br />
+                  <div ng-if="::cdash.edit == 0">
+                    <img src="img/previous.png" title="Previous Step" alt="previous"
+                         style="cursor:pointer;" ng-click="previousTab(1)" />
+                    <img src="img/next.png" title="Next Step" alt="next"
+                         style="cursor:pointer;" ng-click="nextTab(1)" />
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </uib-tab>
+
+          <uib-tab heading="Repository"
+                   active="cdash.tabs[2].active"
+                   disable="cdash.tabs[2].disabled"
+                   select="clearHelp(); setTab(3)">
+            <div class="tab_help"></div>
+            <table width="550">
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Repository Viewer URL:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input name="cvsURL" type="text" id="cvsURL" size="50"
+                         ng-model="cdash.project.CvsUrl"
+                         ng-change="cdash.changesmade = true; changeViewerType()"
+                         ng-focus="showHelp('svnViewer_help')" />
+                  <a
+                    href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                    target="blank">
+                    <img ng-mouseover="showHelp('svnViewer_help')" src="img/help.gif"
+                      border="0" />
+                  </a>
+                  <span class="help_content" id="svnViewer_help">
+                    <b>Repository Viewer URL</b>
+                    URL of the Repository viewer
+                    <ul>
+                      <li> ViewCVS:
+                        public.kitware.com/cgi-bin/viewcvs.cgi/?cvsroot=CMake
+                      </li>
+                      <li>
+                        WebSVN:
+                        <a
+                          href="https://www.kitware.com/websvn/listing.php?repname=MyRepository"
+                          class="external free"
+                          title="https://www.kitware.com/websvn/listing.php?repname=MyRepository"
+                          rel="nofollow">https://www.kitware.com/websvn/listing.php?repname=MyRepository</a>
+                        <br />
+                        <b>(listing.php is important)</b>
+                      </li>
+                    </ul>
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Repository Viewer Type:</strong>
+                  </div>
+                </td>
+                <td>
+                  <select id="cvsviewertype" name="cvsviewertype"
+                          ng-model="cdash.selectedViewer"
+                          ng-options="viewer as viewer.description for viewer in ::cdash.vcsviewers track by viewer.value"
+                          ng-change="cdash.changesmade = true; changeViewerType()"
+                          ng-focus="showHelp('svnViewerType_help')">
+                  </select>
+                  <a
+                    href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                    target="blank">
+                    <img ng-mouseover="showHelp('svnViewerType_help')"
+                      src="img/help.gif" border="0" />
+                  </a>
+                  <span class="help_content" id="svnViewerType_help">
+                    <b>Repository View Type</b>
+                    <br />
+                    Select an appropriate repository viewer depending on
+                    your current configuration.
+                  </span>
+                  <span class="help_content" id="svnRepository_help">
+                    <b>Repository</b>
+                    <br />
+                    In order to get the daily updates, CDash should be able to
+                    access the current repository. It is recommended to use
+                    the anonymous access, for instance
+                    :pserver:anoncvs@myproject.org:/cvsroot/MyProject. If the
+                    project needs ssh access, make sure that the user running
+                    the webserver running CDash has the proper ssh keys.
+                  </span>
+                  <span class="help_content" id="svnUsername_help">
+                    <b>Username</b>
+                    <br />
+                    Optional. Provide a username if you do not wish to use anonymous access to your repository.
+                  </span>
+                  <span class="help_content" id="svnPassword_help">
+                    <b>Password</b>
+                    <br />
+                    The password corresponding to the above user.  WARNING: this password will be stored in plaintext in the database.
+                  </span>
+                </td>
+              </tr>
+               <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Test URL:</strong>
+                  </div>
+                  </td>
+                <td>
+                  <font size="1"><span>{{cdash.repositoryurlexample}}</span></font>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Repository Robot:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input name="robotname" type="text" id="robotname" size="15"
+                        ng-model="cdash.project.RobotName"
+                        ng-change="cdash.changesmade = true"
+                        ng-focus="showHelp('cvsrobot_help')">
+                  </input> regex:
+                  <input name="robotregex" type="text" id="robotregex" size="22"
+                         ng-model="cdash.project.RobotRegex"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('cvsrobot_help')" />
+                  <a
+                    href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                    target="blank">
+                    <img ng-mouseover="showHelp('cvsrobot_help')"
+                      src="img/help.gif" border="0" />
+                  </a>
+                  <span class="help_content" id="cvsrobot_help">
+                    <b>Repository Robot</b>
+                    <br />
+                    Some repositories have a robot in charge of checking in files
+                    from another repository. For CDash to be able to assign an author to the checkin
+                    files a regular expression must be defined to allow extraction of the author name
+                    from the robot checkin.
+                  </span>
+                </td>
+              </tr>
+              <tr ng-repeat-start="repo in cdash.project.repositories">
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Repository:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input type="text" size="50" name="vcsRepository[{{::repo.id}}]"
+                         ng-model="repo.url"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('svnRepository_help')" />
+                  <a
+                    href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                    target="blank">
+                    <img ng-mouseover="showHelp('svnRepository_help')"
+                      src="img/help.gif" border="0" />
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right"><strong>Branch:</strong></div>
+                </td>
+                <td>
+                  <input type="text" size="50" name="vcsBranch[{{::repo.id}}]"
+                         ng-model="repo.branch"
+                         ng-change="cdash.changesmade = true" />
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right"><strong>Username:</strong></div>
+                </td>
+                <td>
+                  <input type="text" size="50" name="vcsUsername[{{::repo.id}}]"
+                         ng-model="repo.username"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('svnUsername_help')" />
+                  <a href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project" target="blank">
+                  <img ng-mouseover="showHelp('svnUsername_help')" src="img/help.gif" border="0"/></a>
+                </td>
+              </tr>
+              <tr ng-repeat-end>
+                <td></td>
+                <td>
+                  <div align="right"><strong>Password:</strong></div>
+                </td>
+                <td>
+                  <input type="password" size="50" name="vcsPassword[{{::repo.id}}]"
+                         ng-model="repo.password"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('svnPassword_help')" />
+                  <a href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project" target="blank">
+                  <img ng-mouseover="showHelp('svnPassword_help')" src="img/help.gif" border="0"/></a>
+                </td>
+              </tr>
+              <tr ng-if="::cdash.edit == 1">
+                <td></td>
+                <td></td>
+                <td>
+                  <input name="addRepository" type="submit" value="Add another repository"
+                         ng-click="addRepository(repo)" />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td align="right">
+                  <div ng-if="::cdash.edit == 0">
+                    <img src="img/previous.png" title="Previous Step" alt="previous"
+                         style="cursor:pointer;"
+                         ng-click="previousTab(2)" />
+                    <img src="img/next.png" title="Next Step" alt="next"
+                         style="cursor:pointer;"
+                         ng-click="nextTab(2)" />
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </uib-tab>
+
+          <uib-tab heading="Testing"
+                   active="cdash.tabs[3].active"
+                   disable="cdash.tabs[3].disabled"
+                   select="clearHelp(); setTab(4)">
+            <div class="tab_help"></div>
+            <table width="550">
+            <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Testing Data URL:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input name="testingDataUrl" type="text" id="testingDataUrl" size="30"
+                         ng-model="cdash.project.TestingDataUrl"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('TestingDataUrl_help')" />
+                  <a
+                    href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                    target="blank">
+                    <img ng-mouseover="showHelp('TestingDataUrl_help')" src="img/help.gif"
+                      border="0" />
+                  </a>
+                  <span class="help_content" id="TestingDataUrl_help">
+                    <b>Testing Data URL:</b>
+                    <br />
+                    CDash can display a link on the main dashboard page
+                    to the URL of your testing data
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Nightly Start Time:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input name="nightlyTime" type="text" id="nightlyTime" size="20"
+                         ng-model="cdash.project.NightlyTime"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('NightlyStart_help')" />
+                  <a
+                    href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                    target="blank">
+                    <img ng-mouseover="showHelp('NightlyStart_help')" src="img/help.gif"
+                      border="0" />
+                  </a>
+                  <span class="help_content" id="NightlyStart_help">
+                    <b>Nightly start time:</b>
+                    <br />
+                    CDash displays the current dashboard using a 24hours
+                    window. The nightly start time defines the beginning of
+                    this window. Note that the start time is expressed in the
+                    form HH:MM:SS TZ, i.e. 21:00:00 EDT.
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Coverage Threshold:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input name="coverageThreshold" type="text" id="coverageThreshold" size="2"
+                         ng-model="cdash.project.CoverageThreshold"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('CoverageThres_help')" />
+                  <a
+                    href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                    target="blank">
+                    <img ng-mouseover="showHelp('CoverageThres_help')"
+                      src="img/help.gif" border="0" />
+                  </a>
+                  <span class="help_content" id="CoverageThres_help">
+                    <b>Coverage threshold</b>
+                    <br />
+                    CDash marks the coverage has passed (green) if the global
+                    coverage for a build or specific files is above this
+                    threshold. It is recommended to set the coverage threshold
+                    to a high value and increase it when the coverage is
+                    getting higher.
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Enable test timing:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input type="checkbox" name="showTestTime"
+                         ng-model="cdash.project.ShowTestTime"
+                         ng-true-value="1" ng-false-value="0"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('EnableTestTiming_help')" />
+                  <a
+                    href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                    target="blank">
+                    <img ng-mouseover="showHelp('EnableTestTiming_help')"
+                      src="img/help.gif" border="0" />
+                  </a>
+                  <span class="help_content" id="EnableTestTiming_help">
+                    <b>Enable test timing</b>
+                    <br />
+                    Enable/Disable test timing for this project
+                    <p>
+                      For more information about test timing see the
+                      <a href="http://www.cdash.org/Wiki/CDash:Administration#Test_Timing" title="CDash:Administration" target="blank">
+                        Test Timing</a>
+                      section.
+                    </p>
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Test time standard deviation multiplier:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input name="testTimeStd" type="text" id="testTimeStd" size="4"
+                         ng-model="cdash.project.TestTimeStd"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('TimeDeviation_help')" />
+                  <a
+                    href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                    target="blank">
+                    <img ng-mouseover="showHelp('TimeDeviation_help')"
+                      src="img/help.gif" border="0" />
+                  </a>
+                  <span class="help_content" id="TimeDeviation_help">
+                    <b>Test time standard deviation multiplier</b>
+                    <br />
+                    Set a multiplier for the standard deviation for a test
+                    time. If the time for a test is higher than
+                    mean+multiplier*standarddeviation, the test time status is
+                    marked as failed. Default is 4 if not specified. Note that
+                    changing this value doesn’t affect previous builds but
+                    only builds submitted after the modification.
+                    <p>
+                      For more information about test timing see the
+                      <a href="http://www.cdash.org/Wiki/CDash:Administration#Test_Timing" title="CDash:Administration" target="blank">
+                        Test Timing</a>
+                      section.
+                    </p>
+                  </span>
+                </td>
+              </tr>
+
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Test time standard deviation threshold:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input name="testTimeStdThreshold" type="text" id="testTimeStdThreshold" size="4"
+                         ng-model="cdash.project.TestTimeStdThreshold"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('TimeDeviationThreshold_help')" />
+                  <a
+                    href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                    target="blank">
+                    <img ng-mouseover="showHelp('TimeDeviationThreshold_help')"
+                      src="img/help.gif" border="0" />
+                  </a>
+                  <span class="help_content" id="TimeDeviationThreshold_help">
+                    <b>Test time standard deviation threshold</b>
+                    <br />
+                    Set a minimum standard deviation for a test time. If the
+                    current standard deviation for a test is lower than this
+                    threshold then the threshold is used instead. This is
+                    particularly important, for tests that have a very low
+                    standard deviation but still some variability. Default
+                    threshold is set to 2 if not specified. Note that changing
+                    this value doesn’t affect previous builds but only builds
+                    submitted after the modification.
+                    <p>
+                      For more information about test timing see the
+                      <a href="/Wiki/CDash:Administration#Test_Timing" title="CDash:Administration" target="blank">
+                        Test Timing</a>
+                      section.
+                    </p>
+                  </span>
+                </td>
+              </tr>
+
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Test time # max failures before flag:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input name="testTimeMaxStatus" type="text" id="testTimeMaxStatus" size="4"
+                         ng-model="cdash.project.TestTimeMaxStatus"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="clearHelp()" />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td align="right">
+                  <div ng-if="::cdash.edit == 0">
+                    <img src="img/previous.png" title="Previous Step" alt="previous"
+                         style="cursor:pointer;"
+                         ng-click="previousTab(3)" />
+                    <img src="img/next.png" title="Next Step" alt="next"
+                         style="cursor:pointer;"
+                         ng-click="nextTab(3)" />
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </uib-tab>
+
+          <uib-tab heading="Email"
+                   active="cdash.tabs[4].active"
+                   disable="cdash.tabs[4].disabled"
+                   select="clearHelp(); setTab(5)">
+            <div class="tab_help"></div>
+            <table width="550">
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Email submission failures:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input type="checkbox" name="emailBrokenSubmission"
+                         ng-model="cdash.project.EmailBrokenSubmission"
+                         ng-true-value="1" ng-false-value="0"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('emailBroken_help')" />
+                  <a
+                    href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                    target="blank">
+                    <img ng-mouseover="showHelp('emailBroken_help')" src="img/help.gif"
+                      border="0" />
+                  </a>
+                  <span class="help_content" id="emailBroken_help">
+                    <b>Email broken submission</b>
+                    <br />
+                    Enable/Disable sending email for broken submissions for
+                    this project. This is a general feature.
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Email redundant failures:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input type="checkbox" name="emailRedundantFailures"
+                         ng-model="cdash.project.EmailRedundantFailures"
+                         ng-true-value="1" ng-false-value="0"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('emailRedundant_help')" />
+                  <a
+                    href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                    target="blank">
+                    <img ng-mouseover="showHelp('emailRedundant_help')"
+                      src="img/help.gif" border="0" />
+                  </a>
+                  <span class="help_content" id="emailRedundant_help">
+                    <b>Email redundant failures</b>
+                    <br />
+                    Enable/Disable sending email even if a build has been
+                    failing previously. If not checked, CDash sends an email
+                    only on the first failure.
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Email administrator:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input type="checkbox" name="emailAdministrator"
+                         ng-model="cdash.project.EmailAdministrator"
+                         ng-true-value="1" ng-false-value="0"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('emailAdministrator_help')" />
+                  <a
+                    href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                    target="blank">
+                    <img ng-mouseover="showHelp('emailAdministrator_help')"
+                      src="img/help.gif" border="0" />
+                  </a>
+                  <span class="help_content" id="emailAdministrator_help">
+                    <b>Email administator</b>
+                    <br />
+                    Enable/Disable sending email when the XML parsing fails or
+                    any issues related to the project administration.
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Email low coverage:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input type="checkbox" name="emailLowCoverage"
+                         ng-model="cdash.project.EmailLowCoverage"
+                         ng-true-value="1" ng-false-value="0"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('emailCoverage_help')" />
+                  <a
+                    href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                    target="blank">
+                    <img ng-mouseover="showHelp('emailCoverage_help')"
+                      src="img/help.gif" border="0" />
+                  </a>
+                  <span class="help_content" id="emailCoverage_help">
+                    <b>Email low coverage</b>
+                    <br />
+                    Enable/Disable sending email when the coverage for files
+                    is lower than the "Coverage Threshold" value specified on
+                    the "Testing" tab.
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Email test timing changed:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input type="checkbox" name="emailTestTimingChanged"
+                         ng-model="cdash.project.EmailTestTimingChanged"
+                         ng-true-value="1" ng-false-value="0"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('emailTiming_help')" />
+                  </input>
+                  <a
+                    href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                    target="blank">
+                    <img ng-mouseover="showHelp('emailTiming_help')" src="img/help.gif"
+                      border="0" />
+                  </a>
+                  <span class="help_content" id="emailTiming_help">
+                    <b>Email test timing change</b>
+                    <br />
+                    Enable/Disable sending email when a test timing has
+                    changed. This feature is currently not implemented.
+                  </span>
+                </td>
+              </tr>
+
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Maximum number of items in email:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input name="emailMaxItems" type="text" id="emailMaxItems" size="4"
+                         ng-model="cdash.project.EmailMaxItems"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="clearHelp()" />
+                </td>
+              </tr>
+
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Maximum number of characters per item in email:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input name="emailMaxChars" type="text" id="emailMaxChars" size="4"
+                         ng-model="cdash.project.EmailMaxChars"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="clearHelp()" />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td align="right">
+                  <div ng-if="::cdash.edit == 0">
+                    <img src="img/previous.png" title="Previous Step" alt="previous"
+                         style="cursor:pointer;"
+                         ng-click="previousTab(4)" />
+                    <img src="img/next.png" title="Next Step" alt="next"
+                         style="cursor:pointer;"
+                         ng-click="nextTab(4)" />
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </uib-tab>
+
+          <uib-tab ng-if="::cdash.edit == 1"
+                   heading="Spam"
+                   active="cdash.tabs[5].active"
+                   select="clearHelp(); setTab(6)">
+            <div class="tab_help"></div>
+            <table width="550">
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>
+                      Block List
+                      <a
+                        href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                        target="blank">
+                        <img ng-mouseover="showHelp('blockList_help')"
+                          src="img/help.gif" border="0" />
+                      </a>
+                    </strong>
+                  </div>
+                </td>
+                <td>
+                  <table ng-if="cdash.project.blockedbuilds.length > 0"
+                         width="100%" border="0">
+                    <tr>
+                      <th>Name</th>
+                      <th>Site</th>
+                      <th>IP address</th>
+                      <th></th>
+                    </tr>
+                    <tr ng-repeat="blockedbuild in cdash.project.blockedbuilds">
+                      <td>
+                        {{::blockedbuild.buildname}}
+                      </td>
+                      <td>
+                        {{::blockedbuild.sitename}}
+                      </td>
+                      <td>
+                        {{::blockedbuild.ipaddress}}
+                      </td>
+                      <td>
+                        <span class="glyphicon glyphicon-trash"
+                              ng-click="removeBlockedBuild(blockedbuild)"/>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+                <span class="help_content" id="blockList_help">
+                  <b>Block List</b>
+                  <br />
+                  Submission to CDash can be blocked given a sitename,
+                  buildname and IP address in order to prevent submissions
+                  from an unwanted host.
+                </span>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Build Name:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input type="text" name="spambuildname"
+                         ng-model="cdash.spam.buildname" />
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Site Name:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input type="text" name="spamsitename"
+                         ng-model="cdash.spam.sitename" />
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>IP Address:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input type="text" name="spamip"
+                         ng-model="cdash.spam.ipaddress" />
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td>
+                  <input type="submit" name="SpamFilter" value="Add filter"
+                         ng-click="addBlockedBuild(cdash.spam)" />
+                  <img id="build_blocked" src="img/check.gif"
+                       ng-class="{fade: startFade}"
+                       ng-show="cdash.buildblocked" />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td align="right">
+                  <div ng-if="::cdash.edit == 0">
+                    <img src="img/previous.png" title="Previous Step" alt="previous"
+                         style="cursor:pointer;"
+                         ng-click="previousTab(5)" />
+                    <img src="img/next.png" title="Next Step" alt="next"
+                         style="cursor:pointer;"
+                         ng-click="nextTab(5)" />
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </uib-tab>
+
+          <uib-tab ng-if="::cdash.edit == 1"
+                   heading="Clients"
+                   active="cdash.tabs[6].active"
+                   select="clearHelp(); setTab(7)">
+            <div class="tab_help"></div>
+            <table width="100%">
+              <tr>
+                <td valign="top" align="right"><strong>CTest Template Script:</strong>
+                </td>
+                <td>
+                  <textarea name="ctestTemplateScript" id="ctestScript" wrap="off"
+                            cols="80" rows="30"
+                           ng-model="cdash.project.CTestTemplateScript"
+                            ng-change="cdash.changesmade = true"
+                            ng-focus="$('.ctesttemplatescript_help').html('')"/>
+                  </textarea>
+                </td>
+              </tr>
+            </table>
+          </uib-tab>
+
+          <uib-tab heading="Miscellaneous"
+                   active="cdash.tabs[cdash.tabs.length - 1].active"
+                   disable="cdash.tabs[cdash.tabs.length - 1].disabled"
+                   select="clearHelp(); setTab(cdash.tabs.length)">
+            <div class="tab_help"></div>
+            <table width="550">
+
+              <!-- downloading the CTestConfig.cmake -->
+              <tr ng-if="::cdash.edit == 1">
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Download CTestConfig:</strong>
+                  </div>
+                </td>
+                <td>
+                  <a ng-href="generateCTestConfig.php?projectid={{::cdash.project.Id}}">
+                    CTestConfig.cmake
+                  </a>
+                  <a
+                    href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                    target="blank">
+                    <img ng-mouseover="showHelp('ctestConfig_help')" src="img/help.gif"
+                      border="0" />
+                  </a>
+                </td>
+                <span class="help_content" id="ctestConfig_help">
+                  <b>Download CTest config</b>
+                  <br />
+                  Automatically generated CTest configuration file.
+                  downloading this file and putting it at the root of your
+                  project, allows to quickly get started with CTest/CDash
+                  and submitting to the dashboard.
+                </span>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Google Analytics Tracker:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input name="googleTracker" type="text" id="googleTracker" size="30"
+                         ng-model="cdash.project.GoogleTracker"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('google_help')" />
+                  <a
+                    href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                    target="blank">
+                    <img ng-mouseover="showHelp('google_help')" src="img/help.gif"
+                      border="0" />
+                  </a>
+                  <span class="help_content" id="google_help">
+                    <b>Google Analytics Tracker</b>
+                    <br />
+                    CDash supports visitor tracking through Google analytics.
+                    See “Adding Google Analytics” for more information.
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Show site IP addresses:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input type="checkbox" name="showIPAddresses"
+                         ng-model="cdash.project.ShowIPAddresses"
+                         ng-true-value="1" ng-false-value="0"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('showSiteIPAddresses_help')" />
+                  <a
+                    href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                    target="blank">
+                    <img ng-mouseover="showHelp('showSiteIPAddresses_help')"
+                      src="img/help.gif" border="0" />
+                  </a>
+                  <span class="help_content" id="showSiteIPAddresses_help">
+                    <b>Show Site IP Addresses</b>
+                    <br />
+                    Enable/Disable the display of IP addresses of the sites
+                    submitting to this project.
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Display Labels:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input type="checkbox" name="displayLabels"
+                         ng-model="cdash.project.DisplayLabels"
+                         ng-true-value="1" ng-false-value="0"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('displayLabels_help')" />
+                  <a
+                    href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                    target="blank">
+                    <img ng-mouseover="showHelp('displayLabels_help')"
+                      src="img/help.gif" border="0" />
+                  </a>
+                  <span class="help_content" id="displayLabels_help">
+                    <b>Display Labels</b>
+                    <br />
+                    Enable/Disable the display of the label column for the
+                    project. The labels are submitted by the client as part of
+                    the submission.
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Share Label Filters</strong>
+                  </div>
+                </td>
+                <td>
+                  <input type="checkbox" name="shareLabelFilters"
+                         ng-model="cdash.project.ShareLabelFilters"
+                         ng-true-value="1" ng-false-value="0"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('shareLabelFilters_help')" />
+                  </input>
+                  <a
+                    href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                    target="blank">
+                    <img ng-mouseover="showHelp('shareLabelFilters_help')"
+                      src="img/help.gif" border="0" />
+                  </a>
+                  <span class="help_content" id="shareLabelFilters_help">
+                    <b>Share Label Filters</b>
+                    <br />
+                    Pass label filters set on index.php to other
+                    related pages like viewTest.php and queryTest.php.
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Show coverage code:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input type="checkbox" name="showCoverageCode"
+                         ng-model="cdash.project.ShowCoverageCode"
+                         ng-true-value="1" ng-false-value="0"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('showCoverageCode_help')" />
+                  <a
+                    href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                    target="blank">
+                    <img ng-mouseover="showHelp('showCoverageCode_help')"
+                      src="img/help.gif" border="0" />
+                  </a>
+                  <span class="help_content" id="showCoverageCode_help">
+                    <b>Display Source Code in Coverage</b>
+                    <br />
+                    Enable/Disable the display of code coverage for the project. Only administrators
+                    of the projects can see the source code in the coverage section when this option is disabled.
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>AutoRemove Timeframe (days):</strong>
+                  </div>
+                </td>
+                <td>
+                  <input type="text" name="autoremoveTimeframe" id="autoremoveTimeframe"
+                         size="10"
+                         ng-model="cdash.project.AutoremoveTimeframe"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('autoremoveTimeframe_help')" />
+                  <a
+                    href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                    target="blank">
+                    <img ng-mouseover="showHelp('autoremoveTimeframe_help')"
+                      src="img/help.gif" border="0" />
+                  </a>
+                  <span class="help_content" id="autoremoveTimeframe_help">
+                    <b>AutoRemove Timeframe</b>
+                    <br />
+                    On the first submission of the day, remove builds that are
+                    older than X number of days.
+                    If this value is less than 2 days, no builds are removed.
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>AutoRemove Max Builds:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input type="text" name="autoremoveMaxBuilds" id="autoremoveMaxBuilds"
+                         size="10"
+                         ng-model="cdash.project.AutoremoveMaxBuilds"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('autoremoveMaxBuilds_help')" />
+                  <a
+                    href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                    target="blank">
+                    <img ng-mouseover="showHelp('autoremoveMaxBuilds_help')"
+                      src="img/help.gif" border="0" />
+                  </a>
+                  <span class="help_content" id="autoremoveMaxBuilds_help">
+                    <b>AutoRemove max builds</b>
+                    <br />
+                    On the first submission of the day, remove builds that are
+                    older than X number of days.
+                    The maximum number of builds that should be removed.
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>File upload quota (GB):</strong>
+                  </div>
+                </td>
+                <td>
+                  <input type="text" name="uploadQuota" id="uploadQuota" size="10"
+                         ng-model="cdash.project.UploadQuota"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('uploadQuota_help')" />
+                  <a
+                    href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                    target="blank">
+                    <img ng-mouseover="showHelp('uploadQuota_help')"
+                      src="img/help.gif" border="0" />
+                  </a>
+                  <span class="help_content" id="uploadQuota_help">
+                    <b>File upload quota</b>
+                    <br />
+                    Enter how many gigabytes of uploaded files to store with this project.
+                    If this quota is exceeded, older files will be deleted to make room when
+                    new ones are uploaded. The number must be less than or equal to the maximum
+                    per-project quota of {{::cdash.project.maxuploadquota}} GB.
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Web API Key:</strong>
+                  </div>
+                </td>
+                <td ng-mouseover="showHelp('webapikey_help')" >
+                  {{::cdash.project.webapikey}}
+                  <span class="help_content" id="webapikey_help">
+                    <b>Web API key</b>
+                    <br />
+                    Use this key when calling the login method of the web API.
+                    It will return a token that you can temporarily use for authenticated access
+                    to other web API methods.
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td align="right">
+
+                  <div ng-if="::cdash.edit == 0">
+                    <img src="img/previous.png" style="cursor:pointer;"
+                         alt="previous" title="Previous Step"
+                         ng-click="previousTab(5)" />
+                    <input type="submit" name="Submit" value="Create Project >> "
+                           ng-click="createProject()"
+                           ng-disabled="cdash.submitdisabled" />
+                  </div>
+                  <div ng-if="::cdash.edit == 1">
+                    <br />
+                    <br />
+                    <input type="submit" name="Delete" value="Delete Project"
+                           ng-click="deleteProject()" />
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </uib-tab>
+        </uib-tabset>
+
+        <div ng-if="::cdash.edit == 1"
+             style="width:900px;margin-left:auto;margin-right:auto;text-align:right;">
+          <br />
+          <span id="changesmade" style="color:red;" ng-show="cdash.changesmade">*Changes need to be updated </span>
+          <img id="project_updated" src="img/check.gif"
+               ng-class="{fade: startFade}"
+               ng-show="cdash.projectupdated" />
+          <input type="submit" name="Update" value="Update Project"
+                 ng-click="updateProject()" />
+        </div>
+
+      </form>
+    </div>
+
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'views/partials/footer.html'"></ng-include>
+  </body>
+</html>

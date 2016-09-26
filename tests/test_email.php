@@ -14,27 +14,12 @@ class EmailTestCase extends KWWebTestCase
 
     public function testCreateProjectTest()
     {
-        $this->login();
-        // first project necessary for testing
-        $name = 'EmailProjectExample';
-        $description = 'Project EmailProjectExample test for cdash testing';
-
-        $this->clickLink('Create new project');
-        $this->setField('name', $name);
-        $this->setField('description', $description);
-        $this->setField('public', '1');
-        $this->setField('emailBrokenSubmission', '1');
-        $this->setField('emailRedundantFailures', '0');
-        $this->clickSubmitByName('Submit');
-
-        $content = $this->connect($this->url . '/api/v1/index.php?project=EmailProjectExample');
-        if (!$content) {
-            return;
-        }
-        $this->assertText('CDash - EmailProjectExample');
-        if (!$this->checkLog($this->logfilename)) {
-            return;
-        }
+        $settings = array(
+                'Name' => 'EmailProjectExample',
+                'Description' => 'Project EmailProjectExample test for cdash testing',
+                'EmailBrokenSubmission' => 1,
+                'EmailRedundantFailures' => 0);
+        $this->createProject($settings);
     }
 
     public function testRegisterUser()

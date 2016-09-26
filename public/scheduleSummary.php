@@ -14,6 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+require_once dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
 include_once 'include/common.php';
 include 'include/version.php';

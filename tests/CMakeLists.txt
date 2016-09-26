@@ -109,9 +109,12 @@ add_php_test(filtertestlabels)
 add_php_test(seconds_from_interval)
 add_php_test(dynamicanalysissummary)
 add_php_test(accountlockout)
+add_php_test(viewsubprojects)
+add_php_test(truncateoutput)
 
 if(CDASH_GITHUB_USERNAME AND CDASH_GITHUB_PASSWORD)
   add_php_test(github_PR_comment)
+  add_php_test(updateonlyuserstats)
 endif()
 
 add_subdirectory(ctest)

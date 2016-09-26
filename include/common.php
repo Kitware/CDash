@@ -489,7 +489,8 @@ function get_projects($onlyactive = true)
 
     $projectres = pdo_query(
         "SELECT p.id, p.name, p.description,
-            (SELECT COUNT(1) FROM subproject WHERE projectid=p.id) AS nsubproj
+            (SELECT COUNT(1) FROM subproject WHERE projectid=p.id AND
+             endtime='1980-01-01 00:00:00') AS nsubproj
      FROM project AS p
      WHERE p.public='1' ORDER BY p.name");
     while ($project_array = pdo_fetch_array($projectres)) {
@@ -2052,7 +2053,11 @@ function cast_data_for_JSON($value)
         return $value;
     }
     if (is_numeric($value)) {
-        // Return numeric value of this string.
+        if (is_nan($value) || is_infinite($value)) {
+            // Special handling for values that are not supported by JSON.
+            return 0;
+        }
+        // Otherwise return the numeric value of this string.
         return $value + 0;
     }
     if (is_string($value)) {

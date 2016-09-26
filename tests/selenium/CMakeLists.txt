@@ -21,7 +21,7 @@ if(CLIENT_TEST_SCRIPT1 AND CLIENT_TEST_SCRIPT2)
 endif()
 
 
-add_selenium_test(setup_repositories)
+add_php_test(setup_repositories)
 
 if(TEST_CLIENT_MANAGEMENT)
   add_test(registerclient ${CMAKE_CTEST_COMMAND} -VV -S ${CLIENT_TEST_SCRIPT1})

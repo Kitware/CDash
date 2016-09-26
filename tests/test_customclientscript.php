@@ -4,6 +4,7 @@
 // relative to the top of the CDash source tree
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once 'models/project.php';
 
 class ManageClientTestCase extends KWWebTestCase
 {
@@ -15,10 +16,14 @@ class ManageClientTestCase extends KWWebTestCase
     public function testManageClientTest()
     {
         // set the repository for the project
-        $this->login();
-        $this->connect($this->url . '/createProject.php?edit=1&projectid=3');
-        $this->setField('cvsRepository[0]', 'git://fake/repo.git');
-        $this->clickSubmitByName('Update');
+        $project = new Project();
+        $project->Id = 3;
+        $project->Fill();
+        $project->AddRepositories(
+                array('git://fake/repo.git'),
+                array(''),
+                array(''),
+                array(''));
 
         // submit a mock machine config xml
         $machineDescription = dirname(__FILE__) . '/data/camelot.cdash.xml';
@@ -32,6 +37,7 @@ class ManageClientTestCase extends KWWebTestCase
         }
 
         // schedule a job for the machine
+        $this->login();
         $this->connect($this->url . '/manageClient.php?projectid=3');
         $scriptContents = 'message("hello world")';
         $this->setField('clientscript', $scriptContents);

@@ -113,8 +113,7 @@ if ($testfailing) {
                             echo '<a href="index.php?project=' . urlencode($project_array['name']) . '&date=' . $date . '">' . $datefirstbuildfailing . '</a> (' . $buildfailingdays . ' day)';
                         } else {
                             echo $datefirstbuildfailing . ' (today)';
-                        }
-    ?>
+                        } ?>
                     </b></font></td>
         </tr>
         <?php
@@ -133,8 +132,7 @@ if ($testfailing) {
                             echo $datefirsttestfailing . ' (' . $testfailingdays . ' day)';
                         } else {
                             echo $datefirsttestfailing . ' (today)';
-                        }
-    ?>
+                        } ?>
                     </b></font></td>
         </tr>
         <?php

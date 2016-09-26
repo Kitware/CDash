@@ -303,17 +303,154 @@ class KWWebTestCase extends WebTestCase
         return $page;
     }
 
-    // In case of the project does not exist yet
-    public function createProject($name, $description, $svnviewerurl = '', $bugtrackerfileurl = '')
+    // Create or update a project and verify the changes made.
+    public function createProject($input_settings, $update = false)
     {
-        $this->clickLink('Create new project');
-        $this->setField('name', $name);
-        $this->setField('description', $description);
-        $this->setField('cvsURL', $svnviewerurl);
-        $this->setField('bugFileURL', $bugtrackerfileurl);
-        $this->setField('public', '1');
-        $this->clickSubmitByName('Submit');
-        return $this->clickLink('Back');
+        require_once 'models/project.php';
+
+        if ($update) {
+            // Updating an existing project.
+            if (!array_key_exists('Id', $input_settings)) {
+                $this->fail("Project Id must be set");
+                return false;
+            }
+            // Load its current settings.
+            $project = new Project;
+            $project->Id = $input_settings['Id'];
+            $project->Fill();
+            $settings = get_object_vars($project);
+            $submit_button = 'Update';
+        } else {
+            // Create a new project.
+            if (!array_key_exists('Name', $input_settings)) {
+                $this->fail("Project name must be set");
+                return false;
+            }
+            // Specify some default settings.
+            $settings = array(
+                    'AutoremoveMaxBuilds' => 500,
+                    'AutoremoveTimeframe' => 60,
+                    'CoverageThreshold' => 70,
+                    'CvsViewerType' => 'viewcvs',
+                    'EmailBrokenSubmission' => 1,
+                    'EmailMaxChars' => 255,
+                    'EmailMaxItems' => 5,
+                    'NightlyTime' => '01:00:00 UTC',
+                    'Public' => 1,
+                    'ShowCoverageCode' => 1,
+                    'TestTimeMaxStatus' => 3,
+                    'TestTimeStd' => 4,
+                    'TestTimeStdThreshold' => 1,
+                    'UploadQuota' => 1);
+            $submit_button = 'Submit';
+        }
+
+        // Override default/existing settings with those we wish to change.
+        foreach ($input_settings as $k => $v) {
+            $settings[$k] = $v;
+        }
+
+        // Login as admin.
+        $client = new GuzzleHttp\Client(['cookies' => true]);
+        global $CDASH_BASE_URL;
+        try {
+            $response = $client->request('POST',
+                    $CDASH_BASE_URL . '/user.php',
+                    ['form_params' => [
+                        'login' => 'simpletest@localhost',
+                        'passwd' => 'simpletest',
+                        'sent' => 'Login >>']]);
+        } catch (GuzzleHttp\Exception\ClientException $e) {
+            $this->fail($e->getMessage());
+            return false;
+        }
+
+        // Create project.
+        try {
+            $response = $client->request('POST',
+                    $CDASH_BASE_URL . '/api/v1/project.php',
+                    ['json' => [$submit_button => true, 'project' => $settings]]);
+        } catch (GuzzleHttp\Exception\ClientException $e) {
+            $this->fail($e->getMessage());
+            return false;
+        }
+
+        $response_array = json_decode($response->getBody(), true);
+        $projectid = $response_array['project']['Id'];
+
+        // Make sure all of our settings were applied successfully.
+        $project = new Project();
+        $project->Id = $projectid;
+        $project->Fill();
+        if (!$project->Exists()) {
+            $this->fail("Project does not exist after it should have been created");
+        }
+        foreach ($input_settings as $k => $v) {
+            if ($k === 'repositories') {
+                // Special handling for repositories as these aren't
+                // simple project properties.
+                $added_repos = $v;
+                $num_added_repos = count($added_repos);
+                $project_repos = $project->GetRepositories();
+                $matches_found = 0;
+                foreach ($project_repos as $project_repo) {
+                    foreach ($added_repos as $added_repo) {
+                        if ($project_repo['url'] === $added_repo['url'] &&
+                                $project_repo['branch'] === $added_repo['branch'] &&
+                                $project_repo['username'] === $added_repo['username'] &&
+                                $project_repo['password'] === $added_repo['password']) {
+                            $matches_found++;
+                        }
+                    }
+                }
+                if ($matches_found != count($added_repos)) {
+                    $this->fail("Attempted to add $num_added_repos but only found $matches_found");
+                }
+            } else {
+                $found_value = $project->{$k};
+                if ($found_value != $v) {
+                    $this->fail("Expected $v but found $found_value for $k");
+                }
+            }
+        }
+        return $projectid;
+    }
+
+    // Delete project.
+    public function deleteProject($projectid)
+    {
+        // Login as admin.
+        $client = new GuzzleHttp\Client(['cookies' => true]);
+        global $CDASH_BASE_URL;
+        try {
+            $response = $client->request('POST',
+                    $CDASH_BASE_URL . '/user.php',
+                    ['form_params' => [
+                        'login' => 'simpletest@localhost',
+                        'passwd' => 'simpletest',
+                        'sent' => 'Login >>']]);
+        } catch (GuzzleHttp\Exception\ClientException $e) {
+            $this->fail($e->getMessage());
+            return false;
+        }
+
+        // Delete project.
+        $project_array = array('Id' => $projectid);
+        try {
+            $response = $client->delete(
+                    $CDASH_BASE_URL . '/api/v1/project.php',
+                    ['json' => ['project' => $project_array]]);
+        } catch (GuzzleHttp\Exception\ClientException $e) {
+            $this->fail($e->getMessage());
+            return false;
+        }
+
+        // Make sure the project doesn't exist anymore.
+        $project = new Project();
+        $project->Id = $projectid;
+        if ($project->Exists()) {
+            $this->fail("Project $projectid still exists after it should have been deleted");
+        }
     }
 
     public function addLineToConfig($line_to_add)

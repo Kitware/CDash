@@ -79,15 +79,10 @@ class ProjectInDbTestCase extends KWWebTestCase
 
     public function createProjectTest4Db()
     {
-        $this->get($this->url);
-        $this->clickLink('Login');
-        $this->setField('login', 'simpletest@localhost');
-        $this->setField('passwd', 'simpletest');
-        $this->clickSubmitByName('sent');
-        $this->clickLink('Create new project');
-        $this->setField('name', 'ProjectTest4Db');
-        $this->setField('description', 'This is a project test for cdash');
-        $this->setField('public', '0');
-        return $this->clickSubmitByName('Submit');
+        $settings = array(
+                'Name' => 'ProjectTest4Db',
+                'Description' => 'This is a project test for cdash',
+                'Public' => 0);
+        $this->createProject($settings);
     }
 }

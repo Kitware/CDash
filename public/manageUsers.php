@@ -93,9 +93,12 @@ if ($session_OK) {
         pdo_query('UPDATE ' . qid('user') . " SET admin=1 WHERE id='" . $postuserid . "'");
         $xml .= '<warning>' . $update_array['firstname'] . ' ' . $update_array['lastname'] . ' is now an administrator.</warning>';
     } elseif (isset($_POST['removeuser'])) {
-        $update_array = pdo_fetch_array(pdo_query('SELECT firstname,lastname FROM ' . qid('user') . " WHERE id='" . $postuserid . "'"));
-        pdo_query('DELETE FROM ' . qid('user') . " WHERE id='" . $postuserid . "'");
-        $xml .= '<warning>' . $update_array['firstname'] . ' ' . $update_array['lastname'] . ' has been removed.</warning>';
+        $user = new User();
+        $user->Id = $postuserid;
+        $user->Fill();
+        $name = $user->GetName();
+        $user->Delete();
+        $xml .= "<warning>$name has been removed.</warning>";
     }
 
     if (isset($_POST['search'])) {

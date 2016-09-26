@@ -42,6 +42,7 @@ CREATE TABLE `build` (
   `notified` tinyint(1) default '0',
   `done` tinyint(1) default '0',
   `uuid` varchar(36) NOT NULL,
+  `changeid` varchar(40) DEFAULT '',
   PRIMARY KEY  (`id`),
   KEY `projectid` (`projectid`),
   KEY `starttime` (`starttime`),
@@ -173,7 +174,8 @@ CREATE TABLE `buildupdate` (
   `revision` varchar(60) NOT NULL default '0',
   `priorrevision` varchar(60) NOT NULL default '0',
   `path` varchar(255) NOT NULL default '',
-  PRIMARY  KEY(`id`)
+  PRIMARY  KEY(`id`),
+  KEY `revision` (`revision`)
 );
 
 

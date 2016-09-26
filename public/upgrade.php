@@ -731,6 +731,12 @@ if (isset($_GET['upgrade-2-4'])) {
     // Summarize the number of dynamic analysis defects each build found.
     PopulateDynamicAnalysisSummaryTable();
 
+    // Add index to buildupdate::revision in support of this filter.
+    AddTableIndex('buildupdate', 'revision');
+
+    // Store CTEST_CHANGE_ID in the build table.
+    AddTableField('build', 'changeid', 'varchar(40)', 'character varying(40)', '');
+
     // Set the database version
     setVersion();
 

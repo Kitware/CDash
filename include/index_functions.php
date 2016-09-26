@@ -79,7 +79,7 @@ function get_dynamic_builds($projectid, $end_UTCDate)
 function get_index_query($userupdatesql='')
 {
     return
-        "SELECT b.id,b.siteid,b.parentid,b.done,
+        "SELECT b.id,b.siteid,b.parentid,b.done,b.changeid,
         bu.status AS updatestatus,
         i.osname AS osname,
         bu.starttime AS updatestarttime,

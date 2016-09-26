@@ -74,12 +74,14 @@
              'public/js/je_compare.js',
              'public/js/d3.min.js',
              'public/js/nv.d3.min.js',
+             'node_modules/angular/angular.js',
+             'node_modules/angular-animate/angular-animate.js',
+             'node_modules/angular-ui-bootstrap/dist/ui-boostrap.js',
+             'node_modules/angular-ui-sortable/dist/sortable.js',
              'node_modules/as-jqplot/dist/jquery.jqplot.js',
              'node_modules/as-jqplot/dist/plugins/jqplot.dateAxisRenderer.js',
              'node_modules/as-jqplot/dist/plugins/jqplot.highlighter.js',
-             'public/js/angular-1.4.7.min.js',
-             'public/js/angular-animate.min.js',
-             'public/js/angular-ui-sortable.min.js',
+             'node_modules/ng-file-upload/dist/ng-file-upload.js',
              'public/js/ui-bootstrap-tpls-0.14.2.min.js'])
        .pipe(sourcemaps.init())
        .pipe(newer('public/js/3rdparty.min.js'))

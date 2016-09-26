@@ -54,21 +54,11 @@ $previousbuilds = pdo_query("SELECT id,starttime,endtime,loctested,locuntested F
         $i = 0;
         while ($build_array = pdo_fetch_array($previousbuilds)) {
             $t = strtotime($build_array['starttime']) * 1000; //flot expects milliseconds
-        @$percent = round($build_array['loctested'] / ($build_array['loctested'] + $build_array['locuntested']) * 100, 2);
-
-            ?>
-        percent_array.push([<?php echo $t;
-            ?>,<?php echo $percent;
-            ?>]);
-        loctested_array.push([<?php echo $t;
-            ?>,<?php echo $build_array['loctested'];
-            ?>]);
-        locuntested_array.push([<?php echo $t;
-            ?>,<?php echo $build_array['locuntested'];
-            ?>]);
-        buildids[<?php echo $t;
-            ?>] = <?php echo $build_array['id'];
-            ?>;
+        @$percent = round($build_array['loctested'] / ($build_array['loctested'] + $build_array['locuntested']) * 100, 2); ?>
+        percent_array.push([<?php echo $t; ?>,<?php echo $percent; ?>]);
+        loctested_array.push([<?php echo $t; ?>,<?php echo $build_array['loctested']; ?>]);
+        locuntested_array.push([<?php echo $t; ?>,<?php echo $build_array['locuntested']; ?>]);
+        buildids[<?php echo $t; ?>] = <?php echo $build_array['id']; ?>;
         <?php
         $i++;
         }

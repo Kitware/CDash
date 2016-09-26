@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Update mode="Client" Generator="ctest-3.6.20160606-gd5464">
+	<Site>localhost</Site>
+	<BuildName>GithubUserStats</BuildName>
+	<BuildStamp>20160629-1727-Experimental</BuildStamp>
+	<StartDateTime>Jun 29 13:27 EDT</StartDateTime>
+	<StartTime>1467221254</StartTime>
+	<UpdateCommand></UpdateCommand>
+	<UpdateType>GIT</UpdateType>
+	<Revision>d1b8d774759d1ebc5805cd70eca48b76329462de</Revision>
+	<EndDateTime>Jun 29 13:27 EDT</EndDateTime>
+	<EndTime>1467221254</EndTime>
+	<ElapsedMinutes>0</ElapsedMinutes>
+	<UpdateReturnStatus/>
+</Update>

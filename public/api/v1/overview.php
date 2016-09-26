@@ -43,10 +43,10 @@ if (!pdo_select_db("$CDASH_DB_NAME", $db)) {
 // Connect to memcache
 if ($CDASH_MEMCACHE_ENABLED) {
     list($server, $port) = $CDASH_MEMCACHE_SERVER;
-    $memcache = new Memcache;
+    $memcache = cdash_memcache_connect($server, $port);
 
     // Disable memcache for this request if it fails to connect
-    if ($memcache->connect($server, $port) === false) {
+    if ($memcache === false) {
         $CDASH_MEMCACHE_ENABLED = false;
     }
 }
@@ -85,7 +85,7 @@ $date_range = 14;
 // (This is a good method of ensuring the cache for this page stays up)
 if ($CDASH_MEMCACHE_ENABLED &&
     !(isset($_GET['use_cache']) && $_GET['use_cache'] == 0) &&
-    ($cachedResponse = $memcache->get(cdash_memcache_key('overview'))) !== false) {
+    ($cachedResponse = cdash_memcache_get($memcache, cdash_memcache_key('overview'))) !== false) {
     echo $cachedResponse;
     return;
 }
@@ -633,7 +633,7 @@ $response = json_encode(cast_data_for_JSON($response));
 
 // Cache the overview page for 6 hours
 if ($CDASH_MEMCACHE_ENABLED) {
-    $memcache->set(cdash_memcache_key('overview'), $response, MEMCACHE_COMPRESSED, 60 * 60 * 6);
+    cdash_memcache_set($memcache, cdash_memcache_key('overview'), $response, 60 * 60 * 6);
 }
 
 echo $response;

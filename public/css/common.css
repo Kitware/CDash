@@ -129,6 +129,7 @@ height: expression(this.height > 110 ? 110: true);
  padding-right: 0px;
  padding-bottom: 0px;
  padding-left: 7px;
+ display: inline-block;
 }
 
 .tabb {
@@ -944,6 +945,11 @@ div#div_showfilters {
   margin-right: 1px;
 }
 
+.smallicon {
+  height: 16px;
+  width: 16px;
+}
+
 .builddateelapsed {
   cursor: pointer;
   text-align: center;
@@ -1156,6 +1162,11 @@ textarea {
 .animate-show.ng-hide {
   opacity:0;
 }
+.fade {
+  -webkit-transition: opacity 2s; /* For Safari 3.1 to 6.0 */
+  transition: opacity 2s;
+  opacity: 0;
+}
 
 /* used for angular table sorting */
 .glyphicon-none:before {
@@ -1169,7 +1180,7 @@ textarea {
 }
 
 /* testing graphs */
-#testfailuregrapholder, #graph_holder {
+#testfailuregrapholder, #graph_holder, .graph_holder {
   width:800px;
   height:400px;
 }
