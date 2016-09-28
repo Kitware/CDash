@@ -74,7 +74,6 @@ if(TEST_CLIENT_MANAGEMENT)
 endif()
 
 add_selenium_test(buildinfogroup)
-add_selenium_test(buildsummary)
 
 if(COVERAGE_COMMAND)
   add_selenium_test(showcoveragegraph)
