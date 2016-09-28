@@ -22,24 +22,6 @@ class Example extends CDashSeleniumTestCase
         $this->click('sent');
         $this->waitForPageToLoad('30000');
 
-        $this->click('//tr[4]/td[2]/a[4]/img');
-        // the 'Edit project' link for 'EmailProjectExample'
-        // "//tr[4]" is the EmailProjectExample table row (4th row, 2 rows of header-ish rows...)
-        // "//tr[4]/td[2]" is the Actions column in that row
-        // "//tr[4]/td[2]/a[4]/img" is the 4th image from the left in that column
-
-        $this->waitForPageToLoad('30000');
-        $this->click("//div[@id='wizard']/ul/li[5]/a/span");
-        // tab 5, the 'E-mail' tab
-        $this->click('emailBrokenSubmission');
-        $this->click('emailRedundantFailures');
-        $this->click('emailAdministrator');
-        $this->click('emailLowCoverage');
-        $this->click('emailTestTimingChanged');
-        $this->click('Update');
-        $this->click('link=My CDash');
-        $this->waitForPageToLoad('30000');
-
         $this->click('//tr[4]/td[2]/a[1]/img');
         // the 'Edit subscription' link for 'EmailProjectExample'
 
