@@ -143,6 +143,18 @@ foreach ($subproject_groups as $group) {
     $coveragegroups[$groupId]['label'] = $group->GetName();
     $coveragegroups[$groupId]['position'] = $group->GetPosition();
 }
+if (count($subproject_groups) > 1) {
+    // Add group for Total coverage.
+    $coveragegroups[0] = array();
+    $coverageThreshold = $project_instance->CoverageThreshold;
+    $coveragegroups[0]['thresholdgreen'] = $coverageThreshold;
+    $coveragegroups[0]['thresholdyellow'] = $coverageThreshold * 0.7;
+    foreach ($response['builds'] as $build) {
+        $coveragegroups[0][$build['key']] = -1;
+    }
+    $coveragegroups[0]['label'] = 'Total';
+    $coveragegroups[0]['position'] = 0;
+}
 
 // First, get the coverage data for the aggregate build.
 $build_data = get_build_data($aggregate_build['id'], $projectid, $beginning_UTCDate, $end_UTCDate);
@@ -156,6 +168,10 @@ if (array_key_exists('coveragegroups', $coverage_response)) {
     foreach ($coverage_response['coveragegroups'] as $group) {
         $coveragegroups[$group['id']][$aggregate_build['key']] = $group['percentage'];
         $coveragegroups[$group['id']]['label'] = $group['label'];
+        if ($group['id'] === 0) {
+            // 'Total' group is just a summary, does not contain coverages.
+            continue;
+        }
         foreach ($group['coverages'] as $coverage) {
             $subproject = create_subproject($coverage, $response['builds']);
             $coveragegroups[$group['id']]['coverages'][] =
@@ -189,6 +205,10 @@ foreach ($response['builds'] as $build_response) {
         foreach ($coverage_response['coveragegroups'] as $group) {
             $coveragegroups[$group['id']]['build' . $buildid] = $group['percentage'];
             $coveragegroups[$group['id']]['label'] = $group['label'];
+            if ($group['id'] === 0) {
+                // 'Total' group is just a summary, does not contain coverages.
+                continue;
+            }
             foreach ($group['coverages'] as $coverage) {
                 // Find this subproject in the response
                 foreach ($coveragegroups[$group['id']]['coverages'] as $key => $subproject_response) {
@@ -220,7 +240,7 @@ if (!empty($subproject_groups)) {
     // At this point it is safe to remove any empty $coveragegroups from our response.
     function is_coveragegroup_nonempty($group)
     {
-        return !empty($group['coverages']);
+        return $group['label'] === 'Total' || !empty($group['coverages']);
     }
 
     $coveragegroups_response =
@@ -322,6 +342,12 @@ function get_coverage($build_data, $subproject_groups)
         $coverage_groups[$groupId]['locuntested'] = 0;
         $coverage_groups[$groupId]['coverages'] = array();
     }
+    if (count($subproject_groups > 1)) {
+        $coverage_groups[0] = array();
+        $coverage_groups[0]['label'] = 'Total';
+        $coverage_groups[0]['loctested'] = 0;
+        $coverage_groups[0]['locuntested'] = 0;
+    }
 
     // Generate the JSON response from the rows of builds.
     foreach ($build_data as $build_array) {
@@ -342,6 +368,12 @@ function get_coverage($build_data, $subproject_groups)
                     $build_array['loctested'];
                 $coverage_groups[$groupId]['locuntested'] +=
                     $build_array['locuntested'];
+                if (count($subproject_groups > 1)) {
+                    $coverage_groups[0]['loctested'] +=
+                        $build_array['loctested'];
+                    $coverage_groups[0]['locuntested'] +=
+                        $build_array['locuntested'];
+                }
             }
         }
 
