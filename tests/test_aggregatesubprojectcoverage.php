@@ -215,8 +215,8 @@ class AggregateSubProjectCoverageTestCase extends KWWebTestCase
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $num_groups = count($jsonobj['coveragegroups']);
-        if ($num_groups != 3) {
-            $this->fail("Expected 3 coverage groups, found $num_groups");
+        if ($num_groups != 4) {
+            $this->fail("Expected 4 coverage groups, found $num_groups");
             return false;
         }
         foreach ($jsonobj['coveragegroups'] as $coverage_group) {
