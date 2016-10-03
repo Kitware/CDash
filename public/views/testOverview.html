@@ -15,8 +15,18 @@
   <body bgcolor="#ffffff" ng-controller="TestOverviewController">
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
     <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'views/partials/header.html'"></ng-include>
+    <br/>
 
     <div ng-if="cdash.requirelogin != 1 && !loading && !cdash.error">
+      <!-- Filters -->
+      <div id="labelshowfilters">
+        <a id="label_showfilters" ng-click="showfilters_toggle()">
+          <span ng-show="showfilters == 0">Show Filters</span>
+          <span ng-show="showfilters != 0">Hide Filters</span>
+        </a>
+      </div>
+      <ng-include src="'views/partials/filterdataTemplate.html'"></ng-include>
+
       <div class="form-inline pull-right">
         <select class="form-group"
           ng-model="cdash.selectedGroup"

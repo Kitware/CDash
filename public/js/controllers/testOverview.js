@@ -1,7 +1,13 @@
 CDash.controller('TestOverviewController',
-  function TestOverviewController($scope, $rootScope, $http, $filter, multisort, renderTimer) {
+  function TestOverviewController($scope, $rootScope, $http, $filter, filters, multisort, renderTimer) {
     $scope.loading = true;
     $scope.groupChanged = false;
+
+    // Hide filters by default.
+    $scope.showfilters = false;
+
+    // Check for filters.
+    $rootScope.queryString['filterstring'] = filters.getString();
 
     // Check for sort order cookie.
     var sort_order = [];
@@ -33,6 +39,11 @@ CDash.controller('TestOverviewController',
       method: 'GET',
       params: $rootScope.queryString
     }).success(function(cdash) {
+      // Check if we should display filters.
+      if (cdash.filterdata && cdash.filterdata.showfilters == 1) {
+        $scope.showfilters = true;
+      }
+
       renderTimer.initialRender($scope, cdash);
       // Set title in root scope so the head controller can see it.
       $rootScope['title'] = cdash.title;
@@ -65,6 +76,11 @@ CDash.controller('TestOverviewController',
       $scope.pageChanged();
     };
 
+    $scope.showfilters_toggle = function() {
+      $scope.showfilters = !$scope.showfilters;
+      filters.toggle($scope.showfilters);
+    };
+
     $scope.updateOrderByFields = function(field, $event) {
       multisort.updateOrderByFields($scope, field, $event);
       $scope.cdash.tests = $filter('orderBy')($scope.cdash.tests, $scope.orderByFields);
@@ -82,6 +98,7 @@ CDash.controller('TestOverviewController',
       if ($scope.cdash.selectedGroup.id > 0) {
         uri += '&group=' + $scope.cdash.selectedGroup.id;
       }
+      uri += filters.getString();
       window.location = uri;
     };
 });

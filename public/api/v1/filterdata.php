@@ -202,6 +202,11 @@ function getFiltersForPage($page_id)
             return array('details', 'label', 'status', 'testname',
                 'timestatus', 'time');
             break;
+
+        case 'testOverview.php':
+            return array('buildname');
+            break;
+
         case 'compareCoverage.php':
             return array('subproject');
             break;
@@ -230,6 +235,9 @@ function getDefaultFilter($page_id)
         case 'viewTest.php': {
             return array('key' => 'testname', 'value' => '', 'compare' => 63);
         }
+
+        case 'testOverview.php':
+            return array('key' => 'buildname', 'value' => '', 'compare' => 63);
 
         case 'viewCoverage.php':
         case 'getviewcoverage.php': {

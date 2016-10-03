@@ -14,12 +14,14 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-$noforcelogin = 1;
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
+require_once 'include/common.php';
+require_once 'include/filterdataFunctions.php';
+require_once 'include/version.php';
+
+$noforcelogin = 1;
 include 'public/login.php';
-include_once 'include/common.php';
-include 'include/version.php';
 
 $start = microtime_float();
 $response = array();
@@ -153,6 +155,13 @@ while ($row = $stmt->fetch()) {
 }
 $response['groups'] = $groups_response;
 
+// Filters
+$filterdata = get_filterdata_from_request();
+unset($filterdata['xml']);
+$response['filterdata'] = $filterdata;
+$filter_sql = $filterdata['sql'];
+$response['filterurl'] = get_filterurl();
+
 // Main query: find all the requested tests.
 $stmt = $pdo->prepare(
     "SELECT t.name, t.details, b2t.status FROM build b
@@ -160,7 +169,8 @@ $stmt = $pdo->prepare(
     JOIN test t ON (t.id=b2t.testid)
     $group_join
     WHERE b.projectid = :projectid AND b.parentid != -1 AND $group_clause
-    AND b.starttime < :end AND b.starttime >= :begin");
+    AND b.starttime < :end AND b.starttime >= :begin
+    $filter_sql");
 $stmt->bindParam(':projectid', $projectid);
 $stmt->bindParam(':begin', $begin_date);
 $stmt->bindParam(':end', $end_date);
