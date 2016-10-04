@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="nobackup"
+	BuildStamp="20161004-0500-Nightly"
+	Name="localhost"
+	Generator="ctest-3.6"
+	CompilerName=""
+	CompilerVersion=""
+	OSName="Linux"
+	Hostname="elysium"
+	OSRelease="3.13.0-92-generic"
+	OSVersion="#139-Ubuntu SMP Tue Jun 28 20:42:26 UTC 2016"
+	OSPlatform="x86_64"
+	Is64Bits="1"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="45"
+	ProcessorCacheSize="12288"
+	NumberOfLogicalCPU="12"
+	NumberOfPhysicalCPU="1"
+	TotalVirtualMemory="32690"
+	TotalPhysicalMemory="32100"
+	LogicalProcessorsPerPhysical="12"
+	ProcessorClockFrequency="1200"
+	>
+	<Build>
+		<StartDateTime>Oct 04 12:51 EDT</StartDateTime>
+		<StartBuildTime>1475599870</StartBuildTime>
+		<BuildCommand>/opt/cmake/bin/cmake --build . --config "Release" -- -i</BuildCommand>
+		<Log Encoding="base64" Compression="bin/gzip"/>
+		<EndDateTime>Oct 04 12:51 EDT</EndDateTime>
+		<EndBuildTime>1475599870</EndBuildTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Build>
+</Site>

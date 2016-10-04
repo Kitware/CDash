@@ -144,6 +144,8 @@ add_test(enable_async
   ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_enable_async.php
 )
 
+add_php_test(nobackup)
+
 if (NOT CDASH_DB_TYPE STREQUAL "pgsql")
   add_php_test(parallelsubmissions)
 endif()
