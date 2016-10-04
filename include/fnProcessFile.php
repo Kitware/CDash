@@ -40,8 +40,12 @@ function ProcessFile($projectid, $filename, $md5)
         @fclose($fp);
         unset($fp);
 
-        // delete the temporary backup file since we now have a better-named one
-        cdash_unlink($filename);
+        global $CDASH_BACKUP_TIMEFRAME;
+        if ($CDASH_BACKUP_TIMEFRAME != '0') {
+            // Delete the temporary backup file since we now have a better-named one.
+            cdash_unlink($filename);
+        }
+
         $new_status = 2; // done, did call do_submit, finished normally
     } else {
         add_log("Cannot open file '" . $filename . "'", 'ProcessFile',
