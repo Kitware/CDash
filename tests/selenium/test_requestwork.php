@@ -21,8 +21,7 @@ class Example extends CDashSeleniumTestCase
         $this->type('passwd', 'simpletest');
         $this->click('sent');
         $this->waitForPageToLoad('30000');
-        $this->click('//tr[5]/td[2]/a[3]/img');
-        $this->waitForPageToLoad('30000');
+        $this->open($this->webPath . '/manageClient.php?projectid=5');
         $this->addSelection('system_select', 'index=0');
         $this->click("//option[@value='1']");
         $this->addSelection('compiler_select', 'index=0');
