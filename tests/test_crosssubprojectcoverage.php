@@ -154,13 +154,22 @@ class CoverageAcrossSubProjectsTestCase extends KWWebTestCase
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $num_groups = count($jsonobj['coveragegroups']);
-        if ($num_groups != 3) {
-            $this->fail("Expected 3 coverage groups, found $num_groups");
+        if ($num_groups != 4) {
+            $this->fail("Expected 4 coverage groups, found $num_groups");
             return false;
         }
         foreach ($jsonobj['coveragegroups'] as $coverage_group) {
-            $coverage = array_pop($coverage_group['coverages']);
             $group_name = $coverage_group['label'];
+            if ($group_name === 'Total') {
+                if ($coverage_group['loctested'] !== 25) {
+                    $this->fail("Expected 25 total loctested");
+                }
+                if ($coverage_group['locuntested'] !== 10) {
+                    $this->fail("Expected 10 total locuntested");
+                }
+                continue;
+            }
+            $coverage = array_pop($coverage_group['coverages']);
             switch ($group_name) {
                 case 'Third Party':
                     $success &=

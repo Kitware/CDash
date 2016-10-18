@@ -590,6 +590,41 @@ class ViewTestPhpFilters extends DefaultFilters
     }
 }
 
+class CompareCoveragePhpFilters extends DefaultFilters
+{
+    public function getDefaultFilter()
+    {
+        return array(
+            'field' => 'subproject',
+            'fieldtype' => 'string',
+            'compare' => 61,
+            'value' => ''
+        );
+    }
+
+    public function getFilterDefinitionsXML()
+    {
+        $xml = '';
+        $xml .= getFilterDefinitionXML('subproject', 'SubProject', 'string', '', '');
+        return $xml;
+    }
+
+    public function getSqlField($field)
+    {
+        $sql_field = '';
+        switch (strtolower($field)) {
+            case 'subproject':
+                $sql_field = 'sp.name';
+                break;
+
+            default:
+                trigger_error("unknown field: $field", E_USER_WARNING);
+                break;
+        }
+        return $sql_field;
+    }
+}
+
 // Factory method to create page specific filters:
 //
 function createPageSpecificFilters($page_id)
@@ -598,33 +633,31 @@ function createPageSpecificFilters($page_id)
         case 'index.php':
         case 'project.php':
         case 'indexchildren.php':
-        case 'compareCoverage.php': {
             return new IndexPhpFilters();
-        }
             break;
 
-        case 'queryTests.php': {
+        case 'queryTests.php':
             return new QueryTestsPhpFilters();
-        }
             break;
 
         case 'viewCoverage.php':
-        case 'getviewcoverage.php': {
+        case 'getviewcoverage.php':
             return new ViewCoveragePhpFilters();
-        }
             break;
 
-        case 'viewTest.php': {
+        case 'viewTest.php':
             return new ViewTestPhpFilters();
-        }
             break;
 
-        default: {
+        case 'compareCoverage.php':
+            return new CompareCoveragePhpFilters();
+            break;
+
+        default:
             trigger_error('unknown $page_id value: ' . $page_id .
                 ' Add a new subclass of DefaultFilters for ' . $page_id,
                 E_USER_WARNING);
             return new DefaultFilters();
-        }
             break;
     }
 }

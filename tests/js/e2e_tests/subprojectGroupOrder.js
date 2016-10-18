@@ -33,7 +33,7 @@ describe("subProjectGroupOrder", function() {
     browser.get('index.php?project=CrossSubProjectExample&date=2016-02-09');
     element(by.linkText('subproject_coverage_example')).click();
 
-    // Make sure that Production is the first group listed.
-    expect(element(by.repeater('group in ::cdash.coveragegroups').row(0)).getInnerHtml()).toContain("Production");
+    // Make sure that Production is the first group listed after Total.
+    expect(element(by.repeater('group in ::cdash.coveragegroups').row(1)).getInnerHtml()).toContain("Production");
   });
 });

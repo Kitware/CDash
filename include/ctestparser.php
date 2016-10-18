@@ -173,8 +173,14 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
             (SELECT siteid FROM build WHERE id=$buildid)");
     $sitename = $row['name'];
 
-    $filename = writeBackupFile($filehandler, '', $projectname, $buildname,
-        $sitename, $stamp, $buildfile_row['filename']);
+    global $CDASH_BACKUP_TIMEFRAME;
+    if ($CDASH_BACKUP_TIMEFRAME == '0') {
+        $meta_data = stream_get_meta_data($filehandler);
+        $filename = $meta_data['uri'];
+    } else {
+        $filename = writeBackupFile($filehandler, '', $projectname, $buildname,
+            $sitename, $stamp, $buildfile_row['filename']);
+    }
 
     // Instantiate a buildfile object so we can delete it from the database
     // once we're done parsing it.
@@ -420,7 +426,7 @@ function check_for_immediate_deletion($filename)
     // Delete this file as soon as its been parsed (or an error occurs)
     // if CDASH_BACKUP_TIMEFRAME is set to '0'.
     global $CDASH_BACKUP_TIMEFRAME;
-    if ($CDASH_BACKUP_TIMEFRAME === '0') {
+    if ($CDASH_BACKUP_TIMEFRAME === '0' && is_file($filename)) {
         unlink($filename);
     }
 }
