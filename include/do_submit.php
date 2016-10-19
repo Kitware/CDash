@@ -15,6 +15,11 @@
 =========================================================================*/
 
 //error_reporting(0); // disable error reporting
+use Bernard\Message\DefaultMessage;
+use Bernard\Producer;
+use Bernard\QueueFactory\PersistentFactory;
+use Bernard\Serializer;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 include 'include/ctestparser.php';
@@ -416,8 +421,18 @@ function put_submit_file()
         return;
     }
 
-    global $CDASH_ASYNCHRONOUS_SUBMISSION;
-    if ($CDASH_ASYNCHRONOUS_SUBMISSION) {
+    global $CDASH_ASYNCHRONOUS_SUBMISSION, $CDASH_BERNARD_SUBMISSION, $CDASH_BERNARD_DRIVER;
+    if ($CDASH_BERNARD_SUBMISSION) {
+        $factory = new PersistentFactory($CDASH_BERNARD_DRIVER, new Serializer());
+        $producer = new Producer($factory, new EventDispatcher());
+
+        $producer->produce(new DefaultMessage('DoSubmit', array(
+            'coverage_submission' => true,
+            'filename' => $filename,
+            'md5' => $md5sum,
+            'projectid' => $projectid,
+            'submission_ip' => $_SERVER['REMOTE_ADDR'])));
+    } elseif ($CDASH_ASYNCHRONOUS_SUBMISSION) {
         // Create a new entry in the submission table for this file.
         $bytes = filesize($filename);
         $now_utc = gmdate(FMT_DATETIMESTD);

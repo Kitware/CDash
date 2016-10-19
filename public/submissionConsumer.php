@@ -22,18 +22,27 @@ class CDashSubmissionService
 
         // Since this could be running on a remote machine, spoof the IP
         // to appear as the IP that actually submitted the build
-        $CDASH_REMOTE_ADDR = $message['submission_ip'];
+        $CDASH_REMOTE_ADDR = $message->get('submission_ip');
 
-        $result = do_submit($message['buildsubmissionid'], $message['projectid'],
-                            $message['expected_md5'], $message['do_checksum'], $message['submission_id']);
+        if ($message->has('coverage_submission') && $message->get('coverage_submission')) {
+            $fileHandle = fileHandleFromSubmissionId($message->get('filename'), true);
+            $result = do_submit($fileHandle, $message->get('projectid'), $message->get('md5'), false);
+        } else {
+            $result = do_submit($message->get('buildsubmissionid'), $message->get('projectid'),
+                                $message->get('expected_md5'), $message->get('do_checksum'),
+                                $message->get('submission_id'));
+        }
 
         // If the submission didn't explicitly fail, delete the submission XML to avoid
         // duplicate submissions
         if ($result !== false) {
+            $filename = array_key_exists('filename', $message) ?
+                      $message->get('filename') : $message->get('buildsubmissionid') . '.xml';
             $client = new GuzzleHttp\Client();
             $response = $client->request('DELETE',
                                          $CDASH_BASE_URL . '/api/v1/deleteSubmissionFile.php',
-                                         array('query' => array('filename' => $message['buildsubmissiondid'] . '.xml')));
+                                         array('query' =>
+                                               array('filename' => $filename)));
         }
     }
 }
