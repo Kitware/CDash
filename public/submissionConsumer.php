@@ -32,8 +32,8 @@ class CDashSubmissionService
         if ($result !== false) {
             $client = new GuzzleHttp\Client();
             $response = $client->request('DELETE',
-                                         $CDASH_BASE_URL . '/api/v1/deleteBuildSubmissionXml.php',
-                                         array('query' => array('buildsubmissionid' => $message['buildsubmissiondid'])));
+                                         $CDASH_BASE_URL . '/api/v1/deleteSubmissionFile.php',
+                                         array('query' => array('filename' => $message['buildsubmissiondid'] . '.xml')));
         }
     }
 }
