@@ -57,53 +57,112 @@ class BuildConfigure
     /** Check if the configure exists */
     public function Exists()
     {
-        if (!$this->BuildId) {
-            echo 'BuildConfigure::Exists(): BuildId not set';
-            return false;
+        // Check by Id if it is set.
+        if ($this->Id > 0) {
+            return $this->ExistsHelper('id', $this->Id);
         }
 
-        if (!is_numeric($this->BuildId)) {
-            echo 'BuildConfigure::Exists(): Buildid is not numeric';
-            return false;
+        // Next, try crc32.
+        if (isset($this->Command) && isset($this->Log) && isset($this->Status)) {
+            return $this->ExistsByCrc32();
         }
 
-        $query = pdo_query('SELECT COUNT(*) FROM build2configure WHERE buildid=' . qnum($this->BuildId));
-        if (!$query) {
-            add_last_sql_error('BuildConfigure Exists()', 0, $this->BuildId);
-            return false;
-        }
+        // Lastly, try buildid.
+        return $this->ExistsByBuildId();
+    }
 
-        $query_array = pdo_fetch_array($query);
-        if ($query_array[0] > 0) {
+    /** Check if a configure record exists for a given field and value.
+     *  Populate this object from the database if such a record is found.
+     */
+    private function ExistsHelper($field, $value)
+    {
+        $pdo = get_link_identifier()->getPdo();
+        $stmt = $pdo->prepare("SELECT * FROM configure WHERE $field=?");
+        $stmt->execute(array($value));
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (is_array($row)) {
+            $this->Id = $row['id'];
+            $this->Command = $row['command'];
+            $this->Log = $row['log'];
+            $this->NumberOfErrors = $row['status'];
+            $this->NumberOfWarnings = $row['warnings'];
+            $this->Crc32 = $row['crc32'];
             return true;
         }
         return false;
     }
 
-    /** Delete a current configure given a buildid */
-    public function Delete()
+    /** Check if a configure record exists for these contents. */
+    public function ExistsByCrc32()
+    {
+        if (!isset($this->Command) || !isset($this->Log) || !isset($this->Status)) {
+            return false;
+        }
+        $this->Crc32 = crc32($this->Command . $this->Log . $this->Status);
+        return $this->ExistsHelper('crc32', $this->Crc32);
+    }
+
+    /** Check if a configure record exists for this Id. */
+    public function ExistsByBuildId()
     {
         if (!$this->BuildId) {
-            echo 'BuildConfigure::Delete(): BuildId not set';
+            add_log('BuildId not set',
+                    'BuildConfigure::Exists', LOG_ERR,
+                    0, 0, CDASH_OBJECT_CONFIGURE, 0);
             return false;
+        }
+        if (!is_numeric($this->BuildId)) {
+            add_log('BuildId is not numeric',
+                    'BuildConfigure::Exists', LOG_ERR,
+                    0, 0, CDASH_OBJECT_CONFIGURE, 0);
+            return false;
+        }
+
+        $pdo = get_link_identifier()->getPdo();
+        $stmt = $pdo->prepare(
+            'SELECT configureid FROM build2configure WHERE buildid=?');
+        if (!$stmt->execute(array($this->BuildId))) {
+            add_last_sql_error('BuildConfigure ExistsByBuildId()', 0, $this->BuildId);
+            return false;
+        }
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!is_array($row)) {
+            return false;
+        }
+        return $this->ExistsHelper('id', $row['configureid']);
+    }
+
+    /** Delete a current configure given a buildid
+      * Returns true if the configure row was deleted from the database.
+      */
+    public function Delete()
+    {
+        if (!$this->Exists()) {
+            add_log('this configure does not exist',
+                    'BuildConfigure::Delete', LOG_ERR,
+                    0, 0, CDASH_OBJECT_CONFIGURE, 0);
+            return false;
+        }
+
+        if ($this->BuildId) {
+            // Delete the build2configure row for this build.
+            $query = pdo_query('DELETE FROM build2configure WHERE buildid=' . qnum($this->BuildId));
+            if (!$query) {
+                add_last_sql_error('BuildConfigure Delete()', 0, $this->BuildId);
+                return false;
+            }
         }
 
         // Delete the configure row if it is not shared with any other build.
         $count_row = pdo_single_row_query(
-            'SELECT configureid, COUNT(*) AS c FROM build2configure
-            WHERE buildid=' . qnum($this->BuildId) . ' GROUP BY configureid');
-        if ($count_row['c'] > 1) {
+            'SELECT COUNT(*) AS c FROM build2configure
+            WHERE configureid=' . qnum($this->Id));
+        if ($count_row['c'] < 2) {
             pdo_query(
-                'DELETE FROM configure WHERE id = ' . qnum($count_row['configureid']));
+                'DELETE FROM configure WHERE id = ' . qnum($this->Id));
+            return true;
         }
-
-        // Delete the build2configure row for this build.
-        $query = pdo_query('DELETE FROM build2configure WHERE buildid=' . qnum($this->BuildId));
-        if (!$query) {
-            add_last_sql_error('BuildConfigure Delete()', 0, $this->BuildId);
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public function InsertLabelAssociations()
@@ -129,31 +188,23 @@ class BuildConfigure
     public function Insert()
     {
         if (!$this->BuildId) {
-            echo 'BuildConfigure::Insert(): BuildId not set';
+            add_log('BuildId not set',
+                    'BuildConfigure::Insert', LOG_ERR,
+                    0, 0, CDASH_OBJECT_CONFIGURE, $this->Id);
             return false;
         }
 
-        if ($this->Exists()) {
-            echo 'BuildConfigure::Exists(): Cannot insert new configure. Use Delete() first';
+        if ($this->ExistsByBuildId()) {
+            add_log('This build already has a configure',
+                    'BuildConfigure::Insert', LOG_ERR,
+                    0, $this->BuildId, CDASH_OBJECT_CONFIGURE, $this->Id);
             return false;
         }
-
-        $this->Crc32 = crc32($this->Command . $this->Log . $this->Status);
 
         $pdo = get_link_identifier()->getPdo();
         $pdo->beginTransaction();
-
-        $exists_stmt = $pdo->prepare(
-                'SELECT * FROM configure WHERE crc32=?');
-        $exists_stmt->execute(array($this->Crc32));
-        $exists_row = $exists_stmt->fetch(PDO::FETCH_ASSOC);
         $new_configure_inserted = false;
-
-        if (is_array($exists_row)) {
-            $this->Id = $exists_row['id'];
-            $this->NumberOfWarnings = $exists_row['warnings'];
-            $this->NumberOfErrors = $exists_row['status'];
-        } else {
+        if (!$this->ExistsByCrc32()) {
             // No such configure exists yet, insert a new row.
             $stmt = $pdo->prepare('
                 INSERT INTO configure (command, log, status, crc32)
@@ -256,23 +307,8 @@ class BuildConfigure
     /** Get the number of configure error for a build */
     public function ComputeErrors()
     {
-        if (!$this->BuildId) {
-            echo 'BuildConfigure::ComputeErrors(): BuildId not set';
-            return false;
-        }
-
-        $this->NumberOfErrors = 0;
-        $configure = pdo_query(
-            'SELECT status FROM configure c
-            JOIN build2configure b2c ON (b2c.configureid=c.id)
-            WHERE buildid=' . qnum($this->BuildId));
-        if (!$configure) {
-            add_last_sql_error('BuildConfigure ComputeErrors', 0, $this->BuildId);
-            return false;
-        }
-        $configure_array = pdo_fetch_array($configure);
-        if ($configure_array['status'] != 0) {
-            $this->NumberOfErrors = $configure_array['status'];
+        if (!$this->Exists()) {
+            return 0;
         }
         return $this->NumberOfErrors;
     }
