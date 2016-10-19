@@ -16,6 +16,7 @@
 
 include_once 'models/buildconfigureerror.php';
 include_once 'models/buildconfigureerrordiff.php';
+include_once 'models/constants.php';
 
 /** BuildConfigure class */
 class BuildConfigure
@@ -145,16 +146,8 @@ class BuildConfigure
         }
         $pdo = get_link_identifier()->getPdo();
 
-        if ($this->BuildId) {
-            // Delete the build2configure row for this build.
-            $stmt = $pdo->prepare('DELETE FROM build2configure WHERE buildid=?');
-            if (!$stmt->execute(array($this->BuildId))) {
-                add_last_sql_error('BuildConfigure Delete()', $this->BuildId, 0);
-                return false;
-            }
-        }
-
         // Delete the configure row if it is not shared with any other build.
+        $retval = false;
         $stmt = $pdo->prepare(
             'SELECT COUNT(*) AS c FROM build2configure
             WHERE configureid=?');
@@ -165,9 +158,19 @@ class BuildConfigure
             if (!$stmt->execute(array($this->Id))) {
                 add_last_sql_error('BuildConfigure Delete()', 0, $this->Id);
             }
-            return true;
+            $retval = true;
         }
-        return false;
+
+        if ($this->BuildId) {
+            // Delete the build2configure row for this build.
+            $stmt = $pdo->prepare('DELETE FROM build2configure WHERE buildid=?');
+            if (!$stmt->execute(array($this->BuildId))) {
+                add_last_sql_error('BuildConfigure Delete()', $this->BuildId, 0);
+                return false;
+            }
+        }
+
+        return $retval;
     }
 
     public function InsertLabelAssociations()
