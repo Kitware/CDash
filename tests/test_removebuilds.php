@@ -107,6 +107,8 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $configure->Insert();
         $configure->ComputeWarnings();
         $configure->ComputeErrors();
+        $configure->BuildId = $existing_build->Id;
+        $configure->Insert();
 
         // BuildNote
         $note = new BuildNote();
@@ -369,8 +371,10 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $this->verify('builderrordiff', 'buildid', '=', $build->Id, 1);
         $this->verify('buildinformation', 'buildid', '=', $build->Id, 1);
         $this->verify('buildtesttime', 'buildid', '=', $build->Id, 1);
-        $this->verify('configure', 'buildid', '=', $build->Id, 1);
-        $this->verify('configureerror', 'buildid', '=', $build->Id, 1);
+
+        $configureid =
+            $this->verify_get_rows('build2configure', 'configureid', 'buildid', '=', $build->Id, 1);
+        $this->verify('configureerror', 'configureid', '=', $configureid, 1);
         $this->verify('configureerrordiff', 'buildid', '=', $build->Id, 1);
         $this->verify('coveragesummary', 'buildid', '=', $build->Id, 1);
         $this->verify('coveragesummarydiff', 'buildid', '=', $build->Id, 1);
@@ -440,8 +444,8 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $this->verify('buildinformation', 'buildid', '=', $build->Id, 0, true);
         $this->verify('buildtesttime', 'buildid', '=', $build->Id, 0, true);
         $this->verify('buildupdate', 'id', '=', $updateid, 1, true);
-        $this->verify('configure', 'buildid', '=', $build->Id, 0, true);
-        $this->verify('configureerror', 'buildid', '=', $build->Id, 0, true);
+        $this->verify('configure', 'id', '=', $configureid, 1, true);
+        $this->verify('configureerror', 'configureid', '=', $configureid, 1, true);
         $this->verify('configureerrordiff', 'buildid', '=', $build->Id, 0, true);
         $this->verify('coverage', 'buildid', '=', $build->Id, 0, true);
         $this->verify('coveragefile', 'id', 'IN', $coveragefileids, 1, true);
