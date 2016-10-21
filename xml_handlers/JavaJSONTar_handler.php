@@ -95,7 +95,7 @@ class JavaJSONTarHandler
      **/
     public function ParsePackageMap($fileinfo)
     {
-        $jsonContents = file_get_contents($fileinfo->getRealPath());
+        $jsonContents = file_get_contents($fileinfo->getPath() . DIRECTORY_SEPARATOR . $fileinfo->getFilename());
         $jsonDecoded = json_decode($jsonContents, true);
         if (is_null($jsonDecoded)) {
             return;
@@ -145,7 +145,7 @@ class JavaJSONTarHandler
         $coverage->CoverageFile = $coverageFile;
 
         // Parse this JSON file.
-        $jsonContents = file_get_contents($fileinfo->getRealPath());
+        $jsonContents = file_get_contents($fileinfo->getPath() . DIRECTORY_SEPARATOR . $fileinfo->getFilename());
         $jsonDecoded = json_decode($jsonContents, true);
 
         // Make sure it has the fields we expect.

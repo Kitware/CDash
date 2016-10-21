@@ -119,7 +119,7 @@ class JSCoverTarHandler
     public function ParseJSCoverFile($fileinfo)
     {
         // Parse this JSON file.
-        $jsonContents = file_get_contents($fileinfo->getRealPath());
+        $jsonContents = file_get_contents($fileinfo->getPath() . DIRECTORY_SEPARATOR . $fileinfo->getFilename());
         $jsonDecoded = json_decode($jsonContents, true);
         foreach ($jsonDecoded as $path => $coverageEntry) {
             // Make sure it has the fields we expect.

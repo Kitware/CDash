@@ -82,7 +82,7 @@ class GCovTarHandler
             RecursiveIteratorIterator::CHILD_FIRST);
         foreach ($iterator as $fileinfo) {
             if ($fileinfo->getFilename() == 'data.json') {
-                $jsonContents = file_get_contents($fileinfo->getRealPath());
+                $jsonContents = file_get_contents($fileinfo->getPath() . DIRECTORY_SEPARATOR . $fileinfo->getFilename());
                 $jsonDecoded = json_decode($jsonContents, true);
                 if (is_null($jsonDecoded) || !array_key_exists('Source', $jsonDecoded)
                     || !array_key_exists('Binary', $jsonDecoded)
@@ -411,7 +411,7 @@ class GCovTarHandler
     public function ParseLabelsFile($fileinfo)
     {
         // read the file & decode the JSON.
-        $jsonContents = file_get_contents($fileinfo->getRealPath());
+        $jsonContents = file_get_contents($fileinfo->getPath() . DIRECTORY_SEPARATOR . $fileinfo->getFilename());
         $jsonDecoded = json_decode($jsonContents, true);
         if (is_null($jsonDecoded) || !array_key_exists('sources', $jsonDecoded)) {
             return;
