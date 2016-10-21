@@ -29,13 +29,14 @@ test:
     - node_modules/.bin/webdriver-manager start:
         background: true
     - apache2 -v && cmake --version && mysql --version && php --version && psql --version
-    - cd _build && cmake -DCDASH_DIR_NAME=cdash -DCDASH_DB_LOGIN=ubuntu -DBUILDNAME="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}_MySQL" -DSITE="CircleCI" ..
+    - cd _build && cmake -DCDASH_TESTING_RENAME_LOGS=true -DCDASH_DIR_NAME=cdash -DCDASH_DB_LOGIN=ubuntu -DBUILDNAME="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}_MySQL" -DSITE="CircleCI" ..
     - cd _build && ctest --extra-verbose --no-compress-output --track Continuous --test-action Test --test-action Submit .
     - rm -rf _build/*
-    - cd _build && cmake -DCDASH_DIR_NAME=cdash -DCDASH_DB_TYPE=pgsql -DCDASH_DB_LOGIN=ubuntu -DBUILDNAME="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}_Postgres" -DSITE="CircleCI" -DCDASH_USE_PROTRACTOR=OFF ..
+    - cd _build && cmake -DCDASH_TESTING_RENAME_LOGS=true -DCDASH_DIR_NAME=cdash -DCDASH_DB_TYPE=pgsql -DCDASH_DB_LOGIN=ubuntu -DBUILDNAME="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}_Postgres" -DSITE="CircleCI" -DCDASH_USE_PROTRACTOR=OFF ..
     - cd _build && ctest --extra-verbose --no-compress-output --track Continuous --test-action Test --test-action Submit .
 
   post:
     - cp _build/Testing/Temporary/* $CIRCLE_ARTIFACTS
+    - cp log/* $CIRCLE_ARTIFACTS
     - mkdir -p $CIRCLE_TEST_REPORTS/junit/
     - xsltproc tests/circle/conv.xsl _build/Testing/`head -n 1 < _build/Testing/TAG`/Test.xml > $CIRCLE_TEST_REPORTS/junit/Test.xml
