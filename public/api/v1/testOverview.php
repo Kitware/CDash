@@ -79,7 +79,7 @@ if (isset($_GET['from']) || isset($_GET['to'])) {
         $response['from_date'] = $from;
 
         $date = $_GET['to'];
-        list($previousdate, $end_timestamp, $nextdate, $today) =
+        list($previousdate, $end_timestamp, $nextdate, $unused) =
             get_dates($date, $Project->NightlyTime);
         $end_timestamp += (3600 * 24);
         $end_date = gmdate(FMT_DATETIME, $end_timestamp);
@@ -127,9 +127,9 @@ if ($date != '' && date(FMT_DATE, $beginning_timestamp) != date(FMT_DATE)) {
 } else {
     $menu['nonext'] = '1';
 }
-$currentdate = get_dashboard_date_from_project($projectname, $date);
-$menu['current'] = 'testOverview.php?project=' . urlencode($projectname) . "&date=$currentdate$group_link";
-$menu['back'] = 'index.php?project=' . urlencode($projectname) . "&date=$currentdate";
+$today = date(FMT_DATE);
+$menu['current'] = 'testOverview.php?project=' . urlencode($projectname) . "&date=$today$group_link";
+$menu['back'] = 'index.php?project=' . urlencode($projectname) . "&date=$date";
 $response['menu'] = $menu;
 
 // List all active buildgroups for this project.
@@ -246,7 +246,8 @@ foreach ($all_tests as $name => $test) {
     $test_response['timeoutpercent'] =
             round(($test['timeout'] / $total_runs) * 100, 2);
     $test_response['link'] =
-            "testSummary.php?project=$projectid&name=$name&date=$today";
+            "testSummary.php?project=$projectid&name=$name&date=$date";
+    $test_response['totalruns'] = $total_runs;
     $tests_response[] = $test_response;
 }
 
