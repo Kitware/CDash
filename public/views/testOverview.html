@@ -88,6 +88,14 @@
                       ng-class="orderByFields.indexOf('-timeoutpercent') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('timeoutpercent') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')">
                 </span>
               </th>
+
+              <th class="header text-center"
+                  ng-click="updateOrderByFields('totalruns', $event)">
+                Total Runs
+                <span class="glyphicon"
+                      ng-class="orderByFields.indexOf('-totalruns') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('totalruns') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')">
+                </span>
+              </th>
             </tr>
           </thead>
 
@@ -104,6 +112,7 @@
               </td>
               <td class="text-center">{{::test.failpercent}}%</td>
               <td class="text-center">{{::test.timeoutpercent}}%</td>
+              <td class="text-center">{{::test.totalruns}}</td>
             </tr>
           </tbody>
         </table>
