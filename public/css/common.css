@@ -1214,5 +1214,9 @@ textarea {
   cursor: move;
 }
 .spacer {
-    margin-top: 20px;
+  margin-top: 20px;
+}
+
+.pad4 {
+  padding: 4px;
 }

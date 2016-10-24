@@ -18,37 +18,39 @@
     <br/>
 
     <div ng-if="cdash.requirelogin != 1 && !loading && !cdash.error">
-      <!-- Filters -->
-      <div id="labelshowfilters">
-        <a id="label_showfilters" ng-click="showfilters_toggle()">
-          <span ng-show="showfilters == 0">Show Filters</span>
-          <span ng-show="showfilters != 0">Hide Filters</span>
-        </a>
-      </div>
-      <ng-include src="'views/partials/filterdataTemplate.html'"></ng-include>
+      <div class="pad4">
+        <!-- Filters -->
+        <div id="labelshowfilters">
+          <a id="label_showfilters" ng-click="showfilters_toggle()">
+            <span ng-show="showfilters == 0">Show Filters</span>
+            <span ng-show="showfilters != 0">Hide Filters</span>
+          </a>
+        </div>
+        <ng-include src="'views/partials/filterdataTemplate.html'"></ng-include>
 
-      <div class="form-inline pull-right">
-        <select class="form-group"
-          ng-model="cdash.selectedGroup"
-          ng-options="group as group.name for group in ::cdash.groups | orderBy: 'position' track by group.id"
-          ng-change="groupChanged = true">
-        </select>
-        <div class="form-group" daterange></div>
-        <button type="submit" class="btn btn-default"
-                ng-disabled="(!cdash.to_date || !cdash.from_date) && !groupChanged"
-                ng-click="formSubmit()">
-          Go
-        </button>
-      </div>
+        <div class="form-inline pull-right">
+          <select class="form-group"
+            ng-model="cdash.selectedGroup"
+            ng-options="group as group.name for group in ::cdash.groups | orderBy: 'position' track by group.id"
+            ng-change="groupChanged = true">
+          </select>
+          <div class="form-group" daterange></div>
+          <button type="submit" class="btn btn-default"
+                  ng-disabled="(!cdash.to_date || !cdash.from_date) && !groupChanged"
+                  ng-click="formSubmit()">
+            Go
+          </button>
+        </div>
 
-      <span>
-        <ng-pluralize count="cdash.tests.length"
-                      when="{'0':     'No tests',
-                             '1':     '{} test',
-                             'other': '{} tests'}">
-        </ng-pluralize>
-        failed during this time period.
-      </span>
+        <span>
+          <ng-pluralize count="cdash.tests.length"
+                        when="{'0':     'No tests',
+                               '1':     '{} test',
+                               'other': '{} tests'}">
+          </ng-pluralize>
+          failed during this time period.
+        </span>
+      </div>
 
       <div ng-if="::cdash.tests.length > 0">
         <table width="100%" class="tabb" cellspacing="0">
@@ -80,7 +82,7 @@
             </tr>
           </thead>
 
-          <tbody class="text-center">
+          <tbody class="test-table">
             <tr ng-repeat="test in pagination.filteredTests"
                 ng-class-odd="'odd'" ng-class-even="'even'">
               <td>
@@ -88,8 +90,8 @@
                   {{::test.name}}
                 </a>
               </td>
-              <td>{{::test.failpercent}}%</td>
-              <td>{{::test.timeoutpercent}}%</td>
+              <td class="text-center">{{::test.failpercent}}%</td>
+              <td class="text-center">{{::test.timeoutpercent}}%</td>
             </tr>
           </tbody>
         </table>
