@@ -52,10 +52,20 @@ $Project->Fill();
 $has_subprojects = $Project->GetNumberOfSubProjects() > 0;
 
 // Make sure the user has access to this project.
+$logged_in = false;
+if (isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid'])) {
+    $logged_in = true;
+}
 if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
-    $response['requirelogin'] = 1;
-    echo json_encode($response);
-    http_response_code(401);
+    if ($logged_in) {
+        $response['error'] = 'You do not have permission to access this page.';
+        echo json_encode($response);
+        http_response_code(403);
+    } else {
+        $response['requirelogin'] = 1;
+        echo json_encode($response);
+        http_response_code(401);
+    }
     return;
 }
 
