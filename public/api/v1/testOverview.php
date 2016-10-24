@@ -19,6 +19,7 @@ require_once 'include/pdo.php';
 require_once 'include/common.php';
 require_once 'include/filterdataFunctions.php';
 require_once 'include/version.php';
+require_once 'models/project.php';
 
 $noforcelogin = 1;
 include 'public/login.php';
@@ -33,22 +34,22 @@ if (!isset($_GET['project'])) {
     http_response_code(400);
     return;
 }
+
+// Make sure the project exists.
 $projectname = $_GET['project'];
-
-// Make sure the project exists & get some info about it.
-$pdo = get_link_identifier()->getPdo();
-$stmt = $pdo->prepare('SELECT id, nightlytime FROM project WHERE name=?');
-$stmt->execute(array($projectname));
-$project_row = $stmt->fetch();
-
-if (!$project_row) {
+$projectid = get_project_id($projectname);
+$Project = new Project();
+$Project->Id = $projectid;
+if (!$Project->Exists()) {
     $response['error'] = 'Project does not exist.';
     echo json_encode($response);
     http_response_code(400);
     return;
 }
-$nightlytime = $project_row['nightlytime'];
-$projectid = $project_row['id'];
+
+// Load project data.
+$Project->Fill();
+$has_subprojects = $Project->GetNumberOfSubProjects() > 0;
 
 // Make sure the user has access to this project.
 if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
@@ -62,6 +63,7 @@ if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
 $response = begin_JSON_response();
 $response['title'] = "$projectname : Test Overview";
 $response['showcalendar'] = 1;
+$response['hassubprojects'] = $has_subprojects;
 
 // Handle the optional arguments that dictate our time range.
 $date = null;
@@ -72,13 +74,13 @@ if (isset($_GET['from']) || isset($_GET['to'])) {
         // If both arguments were specified, compute date range for SQL query.
         $from = $_GET['from'];
         list($unused, $beginning_timestamp, $unused, $unused) =
-            get_dates($from, $nightlytime);
+            get_dates($from, $Project->NightlyTime);
         $begin_date = gmdate(FMT_DATETIME, $beginning_timestamp);
         $response['from_date'] = $from;
 
         $date = $_GET['to'];
         list($previousdate, $end_timestamp, $nextdate, $today) =
-            get_dates($date, $nightlytime);
+            get_dates($date, $Project->NightlyTime);
         $end_timestamp += (3600 * 24);
         $end_date = gmdate(FMT_DATETIME, $end_timestamp);
         $response['to_date'] = $date;
@@ -96,7 +98,7 @@ if (isset($_GET['from']) || isset($_GET['to'])) {
 
 if (is_null($begin_date)) {
     list($previousdate, $beginning_timestamp, $nextdate, $today) =
-        get_dates($date, $nightlytime);
+        get_dates($date, $Project->NightlyTime);
     $end_timestamp = $beginning_timestamp + 3600 * 24;
     $begin_date = gmdate(FMT_DATETIME, $beginning_timestamp);
     $end_date = gmdate(FMT_DATETIME, $end_timestamp);
@@ -131,6 +133,7 @@ $menu['back'] = 'index.php?project=' . urlencode($projectname) . "&date=$current
 $response['menu'] = $menu;
 
 // List all active buildgroups for this project.
+$pdo = get_link_identifier()->getPdo();
 $stmt = $pdo->prepare(
     "SELECT id, name, position FROM buildgroup bg
     JOIN buildgroupposition bgp on (bgp.buildgroupid=bg.id)
@@ -162,12 +165,22 @@ $response['filterdata'] = $filterdata;
 $filter_sql = $filterdata['sql'];
 $response['filterurl'] = get_filterurl();
 
+$sp_select = '';
+$sp_join = '';
+if ($has_subprojects) {
+    $sp_select = ', sp.name AS subproject';
+    $sp_join = '
+        JOIN subproject2build AS sp2b ON (sp2b.buildid=b.id)
+        JOIN subproject AS sp ON (sp2b.subprojectid=sp.id)';
+}
+
 // Main query: find all the requested tests.
 $stmt = $pdo->prepare(
-    "SELECT t.name, t.details, b2t.status FROM build b
+    "SELECT t.name, t.details, b2t.status $sp_select FROM build b
     JOIN build2test b2t ON (b2t.buildid=b.id)
     JOIN test t ON (t.id=b2t.testid)
     $group_join
+    $sp_join
     WHERE b.projectid = :projectid AND b.parentid != -1 AND $group_clause
     AND b.starttime < :end AND b.starttime >= :begin
     $filter_sql");
@@ -192,6 +205,9 @@ while ($row = $stmt->fetch()) {
     if (!array_key_exists($test_name, $all_tests)) {
         $test = array();
         $test['name'] = $test_name;
+        if ($has_subprojects) {
+            $test['subproject'] = $row['subproject'];
+        }
         $test['passed'] = 0;
         $test['failed'] = 0;
         $test['timeout'] = 0;
@@ -222,6 +238,9 @@ foreach ($all_tests as $name => $test) {
 
     $test_response = array();
     $test_response['name'] = $name;
+    if ($has_subprojects) {
+        $test_response['subproject'] = $test['subproject'];
+    }
     $test_response['failpercent'] =
             round(($test['failed'] / $total_runs) * 100, 2);
     $test_response['timeoutpercent'] =

@@ -57,6 +57,15 @@
           <thead>
             <tr class="table-heading">
               <th class="header text-center"
+                  ng-if="::cdash.hassubprojects"
+                  ng-click="updateOrderByFields('subproject', $event)">
+                SubProject
+                <span class="glyphicon"
+                      ng-class="orderByFields.indexOf('-subproject') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('subproject') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')">
+                </span>
+              </th>
+
+              <th class="header text-center"
                   ng-click="updateOrderByFields('name', $event)">
                 Test Name
                 <span class="glyphicon"
@@ -85,6 +94,9 @@
           <tbody class="test-table">
             <tr ng-repeat="test in pagination.filteredTests"
                 ng-class-odd="'odd'" ng-class-even="'even'">
+              <td ng-if="::cdash.hassubprojects">
+                {{::test.subproject}}
+              </td>
               <td>
                 <a ng-href="{{::test.link}}">
                   {{::test.name}}
