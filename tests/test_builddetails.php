@@ -59,16 +59,6 @@ class BuildDetailsTestCase extends KWWebTestCase
         }
     }
 
-    public function testViewBuildErrorReturnsErrorsGroupedBySubprojectForParentBuilds()
-    {
-        // First build is the parent build
-        $build = $this->builds[0];
-        $response = json_decode($this->get(
-            $this->url . '/api/v1/viewBuildError.php?buildid=' . $build['id']));
-
-        $this->assertTrue(count($response->errors->my_subproject) === 3);
-    }
-
     public function testViewBuildErrorReturnsProperFormat()
     {
         // This test is specific to Subbuild3.xml
@@ -91,11 +81,12 @@ class BuildDetailsTestCase extends KWWebTestCase
         $build_response = json_decode($this->get(
             $this->url . '/api/v1/viewBuildError.php?buildid=' . $build['id']));
 
-        $errors = get_object_vars($build_response->errors);
-
-        $this->assertTrue(array_key_exists('my_subproject', $errors));
-        $this->assertTrue(count($errors['my_subproject']) === 3);
         $this->assertTrue($build_response->numSubprojects === 1);
+        $this->assertTrue(count($build_response->errors) == 3);
+
+        foreach ($build_response->errors as $error) {
+            $this->assertTrue($error->subprojectname == 'my_subproject');
+        }
     }
 
     // This will be specific to a test xml
