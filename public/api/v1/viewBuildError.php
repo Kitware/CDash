@@ -170,11 +170,7 @@ function addErrorResponse($data)
     $data['id'] = $response['numErrors'];
     $response['numErrors']++;
 
-    if ($build->IsParentBuild()) {
-        $response['errors'][$data['subprojectname']][] = $data;
-    } else {
-        $response['errors'][] = $data;
-    }
+    $response['errors'][] = $data;
 }
 
 if (isset($_GET['onlydeltan'])) {
@@ -235,7 +231,9 @@ if (isset($_GET['onlydeltan'])) {
 }
 
 if ($build->IsParentBuild()) {
-    $response['numSubprojects'] = count($response['errors']);
+    $response['numSubprojects'] = count(array_unique(array_map(function ($buildError) {
+        return $buildError['subprojectid'];
+    }, $response['errors'])));
 }
 
 $end = microtime_float();

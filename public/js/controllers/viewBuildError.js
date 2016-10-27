@@ -1,6 +1,12 @@
 CDash.controller('BuildErrorController',
   function BuildErrorController($scope, $rootScope, $http, $sce, renderTimer) {
     $scope.loading = true;
+    $scope.pagination = [];
+    $scope.pagination.buildErrors = [];
+    $scope.pagination.currentPage = 1;
+    $scope.pagination.numPerPage = 25;
+    $scope.pagination.maxSize = 5;
+
     $http({
       url: 'api/v1/viewBuildError.php',
       method: 'GET',
@@ -32,7 +38,23 @@ CDash.controller('BuildErrorController',
       $rootScope['title'] = cdash.title;
     }).finally(function() {
       $scope.loading = false;
+      $scope.setPage(1);
     });
+
+    $scope.setPage = function (pageNo) {
+      var begin = ((pageNo - 1) * $scope.pagination.numPerPage),
+          end = begin + $scope.pagination.numPerPage;
+
+        if (end > 0) {
+            $scope.pagination.buildErrors = $scope.cdash.errors.slice(begin, end);
+        } else {
+            $scope.pagination.buildErrors = $scope.cdash.errors;
+        }
+    };
+
+    $scope.pageChanged = function() {
+      $scope.setPage($scope.pagination.currentPage);
+    };
   }).directive('buildError', function () {
       return {
           templateUrl: 'views/partials/buildError.html'

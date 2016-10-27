@@ -16,6 +16,9 @@ class SecondsFromIntervalTestCase extends KWWebTestCase
 
     public function testSecondsFromInterval()
     {
+        // Switch to GMT to avoid Daylight saving time whackiness.
+        date_default_timezone_set("GMT");
+
         $this->intervalTest('43s', 43);
         $this->intervalTest('24m', 1440);
         $this->intervalTest('24m 43s', 1483);
