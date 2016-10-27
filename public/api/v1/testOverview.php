@@ -107,8 +107,11 @@ if (isset($_GET['from']) || isset($_GET['to'])) {
 }
 
 if (is_null($begin_date)) {
-    list($previousdate, $beginning_timestamp, $nextdate, $today) =
+    list($previousdate, $beginning_timestamp, $nextdate, $d) =
         get_dates($date, $Project->NightlyTime);
+    if (is_null($date)) {
+        $date = $d;
+    }
     $end_timestamp = $beginning_timestamp + 3600 * 24;
     $begin_date = gmdate(FMT_DATETIME, $beginning_timestamp);
     $end_date = gmdate(FMT_DATETIME, $end_timestamp);
