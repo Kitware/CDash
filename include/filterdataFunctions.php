@@ -639,9 +639,7 @@ class TestOverviewPhpFilters extends DefaultFilters
 
     public function getFilterDefinitionsXML()
     {
-        $xml = '';
-        $xml .= getFilterDefinitionXML('buildname', 'Build Name', 'string', '', '');
-        return $xml;
+        return getFilterDefinitionXML('buildname', 'Build Name', 'string', '', '');
     }
 
     public function getSqlField($field)
