@@ -66,8 +66,12 @@ CDash.controller('HeadController', function HeadController($rootScope, $document
   $rootScope.calendarSelected = function(dateStr) {
     var dateValue = dateStr.substr(6, 4) + "-" + dateStr.substr(0, 2) + "-" + dateStr.substr(3, 2);
     var uri = window.location.href;
-    // Replace date value in current URI.
-    uri = uri.replace(/(date=)[^\&]+/, '$1' + dateValue);
+    // Insert/replace date value in current URI.
+    if (uri.indexOf('date=') == -1) {
+      uri += '&date=' + dateValue;
+    } else {
+      uri = uri.replace(/(date=)[^\&]+/, '$1' + dateValue);
+    }
     window.location = uri;
     $('#calendar').hide();
   };
