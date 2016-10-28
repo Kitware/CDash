@@ -860,3 +860,54 @@ function PopulateDynamicAnalysisSummaryTable()
         }
     }
 }
+
+// Add unique constraint (buildid and type) to the *diff tables.
+function AddUniqueConstraintToDiffTables($testing=false)
+{
+    global $CDASH_DB_TYPE;
+
+    $prefix = '';
+    if ($testing) {
+        $prefix = 'test_';
+    }
+
+    $tables = [$prefix . 'builderrordiff', $prefix . 'configureerrordiff', $prefix . 'testdiff'];
+
+    $pdo = get_link_identifier()->getPdo();
+    foreach ($tables as $table) {
+        // Find all the rows that will violate this new unique constraint.
+        $rows = $pdo->query(
+            "SELECT buildid, type, COUNT(*) AS c FROM $table
+            GROUP BY buildid, type HAVING COUNT(*) > 1");
+        foreach ($rows as $row) {
+            // Remove duplicates by deleting all but one row.
+            $buildid = $row['buildid'];
+            $type = $row['type'];
+            $limit = $row['c'] - 1;
+            if ($CDASH_DB_TYPE == 'pgsql') {
+                // Postgres doesn't allow DELETE with LIMIT, so we use
+                // ctid to get around this limitation.
+                $delete_stmt = $pdo->prepare(
+                    "DELETE FROM $table WHERE ctid IN
+                    (SELECT ctid FROM $table
+                     WHERE buildid=:buildid AND type=:type
+                     LIMIT $limit)");
+            } else {
+                $delete_stmt = $pdo->prepare(
+                    "DELETE FROM $table WHERE buildid=:buildid AND type=:type
+                    LIMIT $limit");
+            }
+            $delete_stmt->bindParam(':buildid', $buildid);
+            $delete_stmt->bindParam(':type', $type);
+            $delete_stmt->execute();
+        }
+        // It should be safe to add the constraints now.
+        if ($CDASH_DB_TYPE == 'pgsql') {
+            $pdo->query("ALTER TABLE $table ADD UNIQUE (buildid,type)");
+            $index_name = $table . '_buildid_type';
+            $pdo->query("CREATE INDEX \"$index_name\" ON \"$table\" (\"buildid\",\"type\")");
+        } else {
+            $pdo->query("ALTER TABLE $table ADD UNIQUE KEY (buildid,type)");
+        }
+    }
+}

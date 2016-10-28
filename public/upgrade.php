@@ -737,6 +737,9 @@ if (isset($_GET['upgrade-2-4'])) {
     // Store CTEST_CHANGE_ID in the build table.
     AddTableField('build', 'changeid', 'varchar(40)', 'character varying(40)', '');
 
+    // Add unique constraints to the *diff tables.
+    AddUniqueConstraintToDiffTables();
+
     // Set the database version
     setVersion();
 
