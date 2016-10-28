@@ -225,37 +225,57 @@ function compute_error_difference($buildid, $previousbuildid, $warning)
         }
     }
 
-    // Don't log if no diff
-    if ($npositives != 0 || $nnegatives != 0) {
-        // Check if it exists
-        $stmt = $pdo->prepare(
-            'SELECT COUNT(buildid) FROM builderrordiff
-            WHERE buildid=:buildid AND type=:type');
-        $stmt->bindValue(':buildid', $buildid);
-        $stmt->bindValue(':type', $warning);
-        $stmt->execute();
-        $row = $stmt->fetch();
-
-        if ($row[0] == 0) {
-            $stmt = $pdo->prepare(
-                'INSERT INTO builderrordiff
-                (buildid,type,difference_positive,difference_negative)
-                VALUES (:buildid, :type, :npositives, :nnegatives)');
-        } else {
-            $stmt = $pdo->prepare(
-                'UPDATE builderrordiff
-                SET difference_positive=:npositives,
-                    difference_negative=:nnegatives
-                WHERE buildid=:buildid AND type=:type');
-        }
-        $stmt->bindValue(':buildid', $buildid);
-        $stmt->bindValue(':type', $warning);
-        $stmt->bindValue(':npositives', $npositives);
-        $stmt->bindValue(':nnegatives', $nnegatives);
-        if (!$stmt->execute()) {
-            add_last_sql_error('compute_error_difference', 0, $buildid);
-        }
+    // Check if a diff already exists for this build.
+    $pdo->beginTransaction();
+    $stmt = $pdo->prepare(
+        'SELECT * FROM builderrordiff WHERE buildid=:buildid AND type=:type FOR UPDATE');
+    $stmt->bindParam(':buildid', $buildid);
+    $stmt->bindParam(':type', $warning);
+    $stmt->execute();
+    $row = $stmt->fetch();
+    $existing_npositives = 0;
+    $existing_nnegatives = 0;
+    if ($row) {
+        $existing_npositives = $row['difference_positive'];
+        $existing_nnegatives = $row['difference_negative'];
     }
+
+    // Only log if there's a diff since last build or an existing diff record.
+    if ($npositives == 0 && $nnegatives == 0 && $existing_npositives == 0 && $existing_nnegatives == 0) {
+        $pdo->commit();
+        return;
+    }
+
+    if ($row) {
+        // Update existing record.
+        $stmt = $pdo->prepare(
+            'UPDATE builderrordiff
+            SET difference_positive=:npositives, difference_negative=:nnegatives
+            WHERE buildid=:buildid AND type=:type');
+    } else {
+        // Insert new record.
+        $duplicate_sql = '';
+        global $CDASH_DB_TYPE;
+        if ($CDASH_DB_TYPE !== 'pgsql') {
+            $duplicate_sql =
+                'ON DUPLICATE KEY UPDATE difference_positive=:npositives, difference_negative=:nnegatives';
+        }
+        $stmt = $pdo->prepare(
+            "INSERT INTO builderrordiff
+            (buildid, type, difference_positive, difference_negative)
+            VALUES (:buildid, :type, :npositives, :nnegatives)
+            $duplicate_sql");
+    }
+    $stmt->bindValue(':buildid', $buildid);
+    $stmt->bindValue(':type', $warning);
+    $stmt->bindValue(':npositives', $npositives);
+    $stmt->bindValue(':nnegatives', $nnegatives);
+    if (!$stmt->execute()) {
+        add_last_sql_error('compute_error_difference', 0, $buildid);
+        $pdo->rollBack();
+        return;
+    }
+    $pdo->commit();
 }
 
 /** Add the difference between the numbers of configure warnings
@@ -282,19 +302,52 @@ function compute_configure_difference($buildid, $previousbuildid, $warning)
     $row = $stmt->fetch();
     $npreviouserrors = $row[0];
 
-    // Don't log if no diff
-    $errordiff = $nerrors - $npreviouserrors;
-    if ($errordiff != 0) {
-        $stmt = $pdo->prepare(
-            'INSERT INTO configureerrordiff (buildid, type, difference)
-            VALUES(:buildid, :type, :difference)');
-        $stmt->bindValue(':buildid', $previousbuildid);
-        $stmt->bindValue(':type', $warning);
-        $stmt->bindValue(':difference', $errordiff);
-        if (!$stmt->execute()) {
-            add_last_sql_error('compute_configure_difference', 0, $buildid);
-        }
+    // Check if a diff already exists for this build.
+    $pdo->beginTransaction();
+    $stmt = $pdo->prepare(
+        'SELECT * FROM configureerrordiff WHERE buildid=:buildid AND type=:type FOR UPDATE');
+    $stmt->bindParam(':buildid', $buildid);
+    $stmt->bindParam(':type', $warning);
+    $stmt->execute();
+    $row = $stmt->fetch();
+    $existing_diff = 0;
+    if ($row) {
+        $existing_diff = $row['difference'];
     }
+
+    // Don't log if no diff.
+    $errordiff = $nerrors - $npreviouserrors;
+    if ($errordiff == 0 && $existing_diff == 0) {
+        $pdo->commit();
+        return;
+    }
+
+    // UPDATE or INSERT a new record as necessary.
+    if ($row) {
+        $stmt = $pdo->prepare(
+            'UPDATE configureerrordiff SET difference=:difference
+            WHERE buildid=:buildid AND type=:type');
+    } else {
+        $duplicate_sql = '';
+        global $CDASH_DB_TYPE;
+        if ($CDASH_DB_TYPE !== 'pgsql') {
+            $duplicate_sql = 'ON DUPLICATE KEY UPDATE difference=:difference';
+        }
+        $stmt = $pdo->prepare(
+            "INSERT INTO configureerrordiff (buildid, type, difference)
+            VALUES(:buildid, :type, :difference)
+            $duplicate_sql");
+    }
+
+    $stmt->bindValue(':buildid', $previousbuildid);
+    $stmt->bindValue(':type', $warning);
+    $stmt->bindValue(':difference', $errordiff);
+    if (!$stmt->execute()) {
+        add_last_sql_error('compute_configure_difference', 0, $buildid);
+        $pdo->rollBack();
+        return;
+    }
+    $pdo->commit();
 }
 
 /** Add the difference between the numbers of tests
@@ -354,32 +407,57 @@ function compute_test_difference($buildid, $previousbuildid, $testtype, $project
     $row = $stmt->fetch();
     $nnegatives = $row[0];
 
-    // Don't log if no diff
-    if ($npositives != 0 || $nnegatives != 0) {
-        // Check that we don't have any duplicates (this messes up the first page)
-        $stmt = $pdo->prepare(
-            'SELECT COUNT(*) FROM testdiff
-            WHERE buildid=:buildid AND type=:type');
-        $stmt->bindParam(':buildid', $buildid);
-        $stmt->bindParam(':type', $testtype);
-        $row = $stmt->fetch();
-        if ($row[0] > 0) {
-            $stmt = $pdo->prepare(
-                'UPDATE testdiff SET difference_positive=:npositives,
-                                     difference_negative=:nnegatives
-                WHERE buildid=:buildid AND type=:type');
-        } else {
-            $stmt = $pdo->prepare(
-                'INSERT INTO testdiff
-                (buildid, type, difference_positive, difference_negative)
-                VALUES (:buildid, :type, :npositives, :nnegatives)');
-        }
-        $stmt->bindParam(':buildid', $buildid);
-        $stmt->bindParam(':type', $testtype);
-        $stmt->bindParam(':npositives', $npositives);
-        $stmt->bindParam(':nnegatives', $nnegatives);
-        if (!$stmt->execute()) {
-            add_last_sql_error('compute_test_difference', 0, $buildid);
-        }
+    // Check that we don't have any duplicates (this messes up index.php).
+    $pdo->beginTransaction();
+    $stmt = $pdo->prepare(
+        'SELECT * FROM testdiff WHERE buildid=:buildid AND type=:type FOR UPDATE');
+    $stmt->bindParam(':buildid', $buildid);
+    $stmt->bindParam(':type', $testtype);
+    $stmt->execute();
+    $row = $stmt->fetch();
+
+    $existing_npositives = 0;
+    $existing_nnegatives = 0;
+    if ($row) {
+        $existing_npositives = $row['difference_positive'];
+        $existing_nnegatives = $row['difference_negative'];
     }
+
+    // Don't log if no diff.
+    if ($npositives == 0 && $nnegatives == 0 && $existing_npositives == 0 && $existing_nnegatives == 0) {
+        $pdo->commit();
+        return;
+    }
+
+    if ($row) {
+        // Update existing record.
+        $stmt = $pdo->prepare(
+            'UPDATE testdiff
+            SET difference_positive=:npositives, difference_negative=:nnegatives
+            WHERE buildid=:buildid AND type=:type');
+    } else {
+        // Insert new record.
+        $duplicate_sql = '';
+        global $CDASH_DB_TYPE;
+        if ($CDASH_DB_TYPE !== 'pgsql') {
+            $duplicate_sql =
+                'ON DUPLICATE KEY UPDATE difference_positive=:npositives, difference_negative=:nnegatives';
+        }
+        $stmt = $pdo->prepare(
+            "INSERT INTO testdiff
+            (buildid, type, difference_positive, difference_negative)
+            VALUES (:buildid, :type, :npositives, :nnegatives)
+            $duplicate_sql");
+    }
+
+    $stmt->bindParam(':buildid', $buildid);
+    $stmt->bindParam(':type', $testtype);
+    $stmt->bindParam(':npositives', $npositives);
+    $stmt->bindParam(':nnegatives', $nnegatives);
+    if (!$stmt->execute()) {
+        add_last_sql_error('compute_test_difference', 0, $buildid);
+        $pdo->rollBack();
+        return;
+    }
+    $pdo->commit();
 }
