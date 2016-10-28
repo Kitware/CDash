@@ -29,6 +29,7 @@ include 'include/version.php';
 
 $response = begin_JSON_response();
 $response['title'] = 'CDash : Test Summary';
+$response['showcalendar'] = 1;
 
 // Checks
 $date = htmlspecialchars(pdo_real_escape_string($_GET['date']));

@@ -27,6 +27,7 @@ include 'public/login.php';
 $start = microtime_float();
 $response = begin_JSON_response();
 $response['title'] = 'CDash : Compare Coverage';
+$response['showcalendar'] = 1;
 
 // Check if a valid project was specified.
 $projectname = $_GET['project'];
