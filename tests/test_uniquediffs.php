@@ -49,6 +49,7 @@ class UniqueDiffsTestCase extends KWWebTestCase
             VALUES (?, ?, ?, ?)');
         $stmt->execute([$this->BuildId, 0, 1, -1]);
         $stmt->execute([$this->BuildId, 0, 2, -2]);
+        $this->checkIntegrityViolation($stmt);
         $this->checkRowCount($pdo, 'builderrordiff', 1);
 
         // configureerrordiff
@@ -57,6 +58,7 @@ class UniqueDiffsTestCase extends KWWebTestCase
             VALUES (?, ?, ?)');
         $stmt->execute([$this->BuildId, 0, -1]);
         $stmt->execute([$this->BuildId, 0, -2]);
+        $this->checkIntegrityViolation($stmt);
         $this->checkRowCount($pdo, 'configureerrordiff', 1);
 
         // testdiff
@@ -66,6 +68,7 @@ class UniqueDiffsTestCase extends KWWebTestCase
             VALUES (?, ?, ?, ?)');
         $stmt->execute([$this->BuildId, 0, 1, -1]);
         $stmt->execute([$this->BuildId, 0, 2, -2]);
+        $this->checkIntegrityViolation($stmt);
         $this->checkRowCount($pdo, 'testdiff', 1);
 
         // Cleanup
@@ -143,6 +146,20 @@ class UniqueDiffsTestCase extends KWWebTestCase
         $num_rows = $row['c'];
         if ($num_rows != $expected) {
             $this->fail("Expected $expected row(s) for $table, found $num_rows");
+        }
+    }
+
+    private function checkIntegrityViolation($stmt)
+    {
+        // Make sure our INSERT statement failed the way we expect it to.
+        // MySQL returns 23000 for an integrity constraint violation,
+        // while PostGres has a code specifically for unique violations (23505).
+        //
+        // Because of this difference, we only verify that the code belongs to
+        // class #23.
+        $errorClass = (int) ($stmt->errorCode() / 1000);
+        if ($errorClass !== 23) {
+            $this->fail("Expected error class 23, found $errorClass");
         }
     }
 }
