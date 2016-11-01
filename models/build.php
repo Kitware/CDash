@@ -1729,11 +1729,11 @@ class Build
 
         // Check if log or command has changed.
         if ($this->Log && $this->Log != $build['log']) {
-            $log = $build['log'] . $this->Log;
+            $log = pdo_real_escape_string($build['log'] . $this->Log);
             $clauses[] = "log = '$log'";
         }
         if ($this->Command && $this->Command != $build['command']) {
-            $command = $build['command'] . $this->Command;
+            $command = pdo_real_escape_string($build['command'] . $this->Command);
             $clauses[] = "command = '$command'";
         }
 
