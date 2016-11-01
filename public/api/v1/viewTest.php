@@ -294,7 +294,7 @@ if ($onlydelta) {
 $labeljoin_sql = '';
 $label_sql = '';
 $groupby_sql = '';
-if ($CDASH_DB_TYPE != 'pgsql') {
+if ($project_array['displaylabels'] && $CDASH_DB_TYPE != 'pgsql') {
     $labeljoin_sql = '
         LEFT JOIN label2test AS l2t ON (l2t.testid=t.id)
         LEFT JOIN label AS l ON (l.id=l2t.labelid)';
