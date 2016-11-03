@@ -9,6 +9,18 @@
     <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.4.css" />
     <link rel="stylesheet" type="text/css" href="css/jqModal.css" />
     <link rel="stylesheet" type="text/css" ng-href="{{cssfile}}" />
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <style type="text/css">
+     code {
+         background-color: transparent;
+         color: #333;
+     }
+
+     table {
+         border-collapse: separate;
+         border-spacing: 2px;
+     }
+    </style>
     <script src="js/CDash_2.3.0.min.js"></script>
     <title ng-bind="title">CDash</title>
   </head>
@@ -47,9 +59,15 @@
           </td>
         </tr>
         <tr>
-          <td align="left">
-            Found <b>{{cdash.numErrors}}</b> {{cdash.errortypename}}s
-            <span ng-if="cdash.parentBuild"> across <b>{{cdash.numSubprojects}}</b> subprojects</span>
+          <td align="left" class="num-errors">
+            Found <b>{{cdash.numErrors}}</b>
+            <ng-pluralize count="cdash.numErrors"
+                          when="{'1':     '{{cdash.errortypename}}',
+                                 'other': '{{cdash.errortypename}}s'}"></ng-pluralize>
+            <span ng-if="cdash.parentBuild"> across <b>{{cdash.numSubprojects}}</b>
+              <ng-pluralize count="cdash.numSubprojects"
+                              when="{'1':     'subproject',
+                                     'other': 'subprojects'}"></ng-pluralize>.</span>
           </td>
         </tr>
         <tr>
@@ -77,11 +95,14 @@
         </thead>
 
         <tbody>
-          <tr ng-repeat="(subprojectName, errors) in cdash.errors">
-            <td style="vertical-align:top">{{subprojectName}}</td>
-            <td><a href="#" ng-click="showErrors = !showErrors">{{errors.length}} {{cdash.errortypename}}s found.</a>
+          <tr ng-repeat="error in pagination.buildErrors">
+            <td style="vertical-align:top">{{error.subprojectname}}</td>
+            <td>
+              <a href="#" ng-click="showErrors = !showErrors">
+                Error building {{error.outputfile}}
+              </a>
               <div ng-hide="!showErrors">
-                <div build-error ng-repeat="error in errors"/>
+                <build-error>{{error}}</build-error>
               </div>
             </td>
           </tr>
@@ -90,7 +111,28 @@
 
       <!-- Otherwise just display all the errors for this build -->
       <div ng-if="!cdash.parentBuild">
-        <div build-error ng-repeat="error in cdash.errors"/>
+        <build-error ng-repeat="error in pagination.buildErrors"></build-error>
+      </div>
+
+      <div ng-if="cdash.numErrors > 25">
+        <uib-pagination
+            ng-model="pagination.currentPage"
+            total-items="cdash.numErrors"
+            max-size="pagination.maxSize"
+            items-per-page="pagination.numPerPage"
+            ng-change="pageChanged()"
+            boundary-links="true">
+          </uib-pagination>
+
+          <div>
+            <label>Items per page</label>
+            <select ng-model="pagination.numPerPage" convert-to-number ng-change="pageChanged()">
+              <option value="25">25</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+              <option value="-1">All</option>
+            </select>
+          </div>
       </div>
     </div>
 
