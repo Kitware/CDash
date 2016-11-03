@@ -98,6 +98,10 @@ $CDASH_EMAIL_SMTP_LOGIN = null;
 $CDASH_EMAIL_SMTP_PASS = null;
 // Should CDash only register valid emails
 $CDASH_REGISTRATION_EMAIL_VERIFY = true;
+// If CDash should use the SendGrid API for email
+$CDASH_USE_SENDGRID = false;
+// API Key for SendGrid
+$CDASH_SENDGRID_API_KEY = null;
 // Duration of the cookie session (in seconds)
 $CDASH_COOKIE_EXPIRATION_TIME = '3600';
 // Minimum password length for CDash accounts.
