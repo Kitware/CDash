@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "daf1d6cedb05df38d02507f4f103eed6",
-    "content-hash": "97d19cf1c2786edaaaa932c9b31f700b",
+    "hash": "f27bb9654be639a3fef6ded320367634",
+    "content-hash": "6a16c82df57a5c346065a8bc5662932d",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -939,6 +939,104 @@
                 "uuid"
             ],
             "time": "2016-04-24 00:30:41"
+        },
+        {
+            "name": "sendgrid/php-http-client",
+            "version": "3.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sendgrid/php-http-client.git",
+                "reference": "01c3fc4b94df008cfe03ffb467d4c6dbe6dcfb2c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sendgrid/php-http-client/zipball/01c3fc4b94df008cfe03ffb467d4c6dbe6dcfb2c",
+                "reference": "01c3fc4b94df008cfe03ffb467d4c6dbe6dcfb2c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.4",
+                "squizlabs/php_codesniffer": "2.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "SendGrid": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matt Bernier",
+                    "email": "dx@sendgrid.com"
+                },
+                {
+                    "name": "Elmer Thomas",
+                    "email": "elmer@thinkingserious.com"
+                }
+            ],
+            "description": "HTTP REST client, simplified for PHP",
+            "homepage": "http://github.com/sendgrid/php-http-client",
+            "keywords": [
+                "api",
+                "fluent",
+                "http",
+                "rest",
+                "sendgrid"
+            ],
+            "time": "2016-06-11 00:47:24"
+        },
+        {
+            "name": "sendgrid/sendgrid",
+            "version": "5.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sendgrid/sendgrid-php.git",
+                "reference": "1050d195525ff529036e7804f2c303261d65dca3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sendgrid/sendgrid-php/zipball/1050d195525ff529036e7804f2c303261d65dca3",
+                "reference": "1050d195525ff529036e7804f2c303261d65dca3",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3",
+                "sendgrid/php-http-client": "3.1.0"
+            },
+            "replace": {
+                "sendgrid/sendgrid-php": "*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.*",
+                "squizlabs/php_codesniffer": "2.*"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "lib/SendGrid.php",
+                    "lib/helpers/mail/Mail.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "This library allows you to quickly and easily send emails through SendGrid using PHP.",
+            "homepage": "http://github.com/sendgrid/sendgrid-php",
+            "keywords": [
+                "email",
+                "grid",
+                "send",
+                "sendgrid"
+            ],
+            "time": "2016-07-08 02:55:23"
         },
         {
             "name": "suin/php-rss-writer",
@@ -2748,7 +2846,7 @@
     "stability-flags": {
         "bernard/bernard": 20
     },
-    "prefer-stable": true,
+    "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": ">=5.5.9",
