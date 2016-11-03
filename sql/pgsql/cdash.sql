@@ -604,12 +604,14 @@ CREATE TABLE "builderrordiff" (
   "buildid" bigint NOT NULL,
   "type" smallint NOT NULL,
   "difference_positive" bigint NOT NULL,
-  "difference_negative" bigint NOT NULL
+  "difference_negative" bigint NOT NULL,
+  CONSTRAINT "unique_builddiff" UNIQUE ("buildid", "type")
 );
 CREATE INDEX "builderrordiff_buildid" on "builderrordiff" ("buildid");
 CREATE INDEX "builderrordiff_type" on "builderrordiff" ("type");
 CREATE INDEX "builderrordiff_difference_positive" on "builderrordiff" ("difference_positive");
 CREATE INDEX "builderrordiff_difference_negative" on "builderrordiff" ("difference_negative");
+CREATE INDEX "builderrordiff_buildid_type" on "builderrordiff" ("buildid", "type");
 
 --
 -- Table: testdiff
@@ -618,12 +620,14 @@ CREATE TABLE "testdiff" (
   "buildid" bigint NOT NULL,
   "type" smallint NOT NULL,
   "difference_positive" bigint NOT NULL,
-  "difference_negative" bigint NOT NULL
+  "difference_negative" bigint NOT NULL,
+  CONSTRAINT "unique_testdiff" UNIQUE ("buildid", "type")
 );
 CREATE INDEX "buildid13" on "testdiff" ("buildid", "type");
 CREATE INDEX "testdiff_type" on "testdiff" ("type");
 CREATE INDEX "testdiff_difference_positive" on "testdiff" ("difference_positive");
 CREATE INDEX "testdiff_difference_negative" on "testdiff" ("difference_negative");
+CREATE INDEX "testdiff_buildid_type" on "testdiff" ("buildid", "type");
 
 --
 -- Table: build2note
@@ -693,10 +697,12 @@ CREATE INDEX "type3" on "configureerror" ("type");
 CREATE TABLE "configureerrordiff" (
   "buildid" bigint NOT NULL,
   "type" smallint NOT NULL,
-  "difference" bigint NOT NULL
+  "difference" bigint NOT NULL,
+  CONSTRAINT "unique_configureerrordiff" UNIQUE ("buildid", "type")
 );
 CREATE INDEX "buildid16" on "configureerrordiff" ("buildid");
 CREATE INDEX "type4" on "configureerrordiff" ("type");
+CREATE INDEX "configureerrordiff_buildid_type" on "configureerrordiff" ("buildid", "type");
 
 --
 -- Table: coveragesummarydiff

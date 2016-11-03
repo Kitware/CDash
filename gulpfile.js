@@ -46,6 +46,8 @@
              'public/js/linechart.js',
              'public/js/bulletchart.js',
              'public/js/cdash_angular.js',
+             'public/js/directives/**.js',
+             'public/js/filters/**.js',
              'public/js/services/**.js',
              'public/js/controllers/**.js'])
        .pipe(sourcemaps.init())

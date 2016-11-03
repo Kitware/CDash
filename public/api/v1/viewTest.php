@@ -242,7 +242,8 @@ if (pdo_num_rows($buildinformation) > 0) {
     }
 }
 $response['build'] = $build;
-$response['csvlink'] = htmlspecialchars($_SERVER['REQUEST_URI']) . '&export=csv';
+$response['csvlink'] = "api/v1/viewTest.php?buildid=$buildid&export=csv";
+
 $project = array();
 $project['showtesttime'] = $projectshowtesttime;
 $response['project'] = $project;
@@ -293,7 +294,7 @@ if ($onlydelta) {
 $labeljoin_sql = '';
 $label_sql = '';
 $groupby_sql = '';
-if ($CDASH_DB_TYPE != 'pgsql') {
+if ($project_array['displaylabels'] && $CDASH_DB_TYPE != 'pgsql') {
     $labeljoin_sql = '
         LEFT JOIN label2test AS l2t ON (l2t.testid=t.id)
         LEFT JOIN label AS l ON (l.id=l2t.labelid)';
@@ -394,7 +395,7 @@ if ($columncount > 0) {
 }
 
 if (@$_GET['export'] == 'csv') {
-    export_as_csv($etestquery, $etest, $result, $projectshowtesttime, $testtimemaxstatus, $columns);
+    export_as_csv($etestquery, null, $result, $projectshowtesttime, $testtimemaxstatus, $columns);
 }
 
 // Start creating etests for each column with matching buildid, testname and the value.
@@ -642,58 +643,73 @@ function load_test_details()
     echo json_encode($response);
 }
 
+// Export test results as CSV file.
 function export_as_csv($etestquery, $etest, $result, $projectshowtesttime, $testtimemaxstatus, $columns)
 {
-    // If user wants to export as CSV file
-
-    header('Cache-Control: public');
-    header('Content-Description: File Transfer');
-    header('Content-Disposition: attachment; filename=testExport.csv'); // Prepare some headers to download
-    header('Content-Type: application/octet-stream;');
-    header('Content-Transfer-Encoding: binary');
-    $filecontent = 'Name,Time,Details,Status,Time Status'; // Standard columns
-
     // Store named measurements in an array
-    while ($row = pdo_fetch_array($etestquery)) {
-        $etest[$row['id']][$row['name']] = $row['value'];
+    if (!is_null($etestquery)) {
+        while ($row = pdo_fetch_array($etestquery)) {
+            $etest[$row['id']][$row['name']] = $row['value'];
+        }
+    }
+
+    $csv_contents = array();
+    // Standard columns.
+    $csv_headers = array('Name', 'Time' ,'Details' , 'Status');
+    if ($projectshowtesttime) {
+        $csv_headers[] = 'Time Status';
     }
 
     for ($c = 0; $c < count($columns); $c++) {
-        $filecontent .= ',' . $columns[$c]; // Add selected columns to the next
+        // Add extra coluns.
+        $csv_headers[] = $columns[$c];
     }
-    $filecontent .= "\n";
+    $csv_contents[] = $csv_headers;
 
     while ($row = pdo_fetch_array($result)) {
-        $currentStatus = $row['status'];
-        $testName = $row['name'];
+        $csv_row = array();
+        $csv_row[] = $row['name'];
+        $csv_row[] = $row['time'];
+        $csv_row[] = $row['details'];
 
-        $filecontent .= "$testName,{$row['time']},{$row['details']},";
+        switch ($row['status']) {
+            case 'passed':
+                $csv_row[] = 'Passed';
+                break;
+            case 'failed':
+                $csv_row[] = 'Failed';
+                break;
+            case 'notrun':
+            default:
+                $csv_row[] = 'Not Run';
+                break;
+        }
 
         if ($projectshowtesttime) {
             if ($row['timestatus'] < $testtimemaxstatus) {
-                $filecontent .= 'Passed,';
+                $csv_row[] = 'Passed';
             } else {
-                $filecontent .= 'Failed,';
+                $csv_row[] = 'Failed';
             }
         }
 
-        switch ($currentStatus) {
-            case 'passed':
-                $filecontent .= 'Passed,';
-                break;
-            case 'failed':
-                $filecontent .= 'Failed,';
-                break;
-            case 'notrun':
-                $filecontent .= 'Not Run,';
-                break;
-        }
-        // start writing test results
+        // Extra columns.
         for ($t = 0; $t < count($columns); $t++) {
-            $filecontent .= $etest[$row['id']][$columns[$t]] . ',';
+            $csv_row[] = $etest[$row['id']][$columns[$t]];
         }
-        $filecontent .= "\n";
+        $csv_contents[] = $csv_row;
     }
-    echo($filecontent); // Start file download
+
+    // Write out our data as CSV.
+    header('Content-type: text/csv');
+    header('Content-Disposition: attachment; filename="testExport.csv";');
+    header('Pragma: no-cache');
+    header('Expires: 0');
+
+    $output = fopen('php://output', 'w');
+    foreach ($csv_contents as $csv_row) {
+        fputcsv($output, $csv_row);
+    }
+    fclose($output);
     die; // to suppress unwanted output
 }

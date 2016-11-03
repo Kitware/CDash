@@ -236,8 +236,8 @@
     <a ng-href="viewConfigure.php?buildid={{::build.id}}">
       {{::build.configure.warning}}
     </a>
-    <sub ng-if="::build.configure.nwarningdiff > 0">+{{::build.configure.nwarningdiff}}</sub>
-    <sub ng-if="::build.configure.nwarningdiff < 0">{{::build.configure.nwarningdiff}}</sub>
+    <sub ng-if="::build.configure.warningdiff > 0">+{{::build.configure.warningdiff}}</sub>
+    <sub ng-if="::build.configure.warningdiff < 0">{{::build.configure.warningdiff}}</sub>
   </div>
 </td>
 

@@ -58,6 +58,7 @@ if (array_key_exists('date', $_GET)) {
 $response = begin_JSON_response();
 get_dashboard_JSON($projectname, $date, $response);
 $response['title'] = 'CDash - Developer Statistics';
+$response['showcalendar'] = 1;
 
 // Get the requested date range.
 // Default to 'week' for unexpected range values.

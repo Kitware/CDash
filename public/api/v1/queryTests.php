@@ -46,6 +46,7 @@ if ($projectname != null) {
 
 $response = begin_JSON_response();
 $response['title'] = "CDash : $projectname";
+$response['showcalendar'] = 1;
 
 $start = microtime_float();
 

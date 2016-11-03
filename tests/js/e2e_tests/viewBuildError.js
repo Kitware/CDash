@@ -2,22 +2,22 @@ describe("viewBuildError", function() {
 
   it("shows 0 errors'", function() {
     browser.get('viewBuildError.php?buildid=6');
-    expect(browser.getPageSource()).toContain("0</b> Errors");
+    expect(element(by.className('num-errors')).getText()).toContain("0 Errors");
   });
 
   it("deltan shows 0 errors'", function() {
     browser.get('viewBuildError.php?buildid=6&onlydeltan=1');
-    expect(browser.getPageSource()).toContain("0</b> Errors");
+    expect(element(by.className('num-errors')).getText()).toContain("0 Errors");
   });
 
   it("deltap shows 0 errors'", function() {
     browser.get('viewBuildError.php?buildid=6&onlydeltap=1');
-    expect(browser.getPageSource()).toContain("0</b> Errors");
+    expect(element(by.className('num-errors')).getText()).toContain("0 Errors");
   });
 
   it("type=1 shows 10 warnings", function() {
     browser.get('viewBuildError.php?buildid=6&type=1');
-    expect(browser.getPageSource()).toContain("10</b> Warnings");
+    expect(element(by.className('num-errors')).getText()).toContain("10 Warnings");
   });
 
   it("displays build errors inline", function() {

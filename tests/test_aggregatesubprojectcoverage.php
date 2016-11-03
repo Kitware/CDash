@@ -189,6 +189,107 @@ class AggregateSubProjectCoverageTestCase extends KWWebTestCase
         return $success;
     }
 
+    public function testCompareCoverage()
+    {
+        $answers = array(
+            'Total' => array(
+                'debug' => 68.97,
+                'release' => 51.35,
+                'aggregate' => 72.97),
+            'Third Party' => array(
+                'debug' => 100,
+                'release' => 53.85,
+                'aggregate' => 69.23),
+            'Experimental' => array(
+                'debug' => 62.5,
+                'release' => 50,
+                'aggregate' => 75),
+            'Production' => array(
+                'debug' => 62.5,
+                'release' => 50,
+                'aggregate' => 75));
+        $this->compareCoverageCheck('', $answers);
+    }
+
+    public function testCompareCoverageWithFilters()
+    {
+        $extra_url = '&filtercount=1&showfilters=1&field1=subproject&compare1=62&value1=MyReleaseOnlyFeature';
+        $answers = array(
+            'Total' => array(
+                'debug' => 68.97,
+                'release' => 51.72,
+                'aggregate' => 79.31),
+            'Third Party' => array(
+                'debug' => 100,
+                'release' => 60,
+                'aggregate' => 100),
+            'Experimental' => array(
+                'debug' => 62.5,
+                'release' => 50,
+                'aggregate' => 75),
+            'Production' => array(
+                'debug' => 62.5,
+                'release' => 50,
+                'aggregate' => 75));
+        $this->compareCoverageCheck($extra_url, $answers);
+    }
+
+    public function compareCoverageCheck($extra_url, $answers)
+    {
+        // Load test data from API.
+        $this->get($this->url . "/api/v1/compareCoverage.php?project=CrossSubProjectExample&date=2016-02-16$extra_url");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+
+        // Verify correct number of builds.
+        $num_builds = count($jsonobj['builds']);
+        if ($num_builds !== 3) {
+            $this->fail("Expected 3 builds, found $num_builds");
+        }
+
+        // Figure out how to distinguish between our coverage builds.
+        $builds = array();
+        foreach ($jsonobj['builds'] as $build) {
+            switch ($build['name']) {
+                case 'debug_coverage':
+                    $builds['debug'] = $build['key'];
+                    break;
+                case 'release_coverage':
+                    $builds['release'] = $build['key'];
+                    break;
+                case 'Aggregate Coverage':
+                    $builds['aggregate'] = $build['key'];
+                    break;
+                default:
+                    $this->fail('Unexpected build: ' . $build['name']);
+                    break;
+            }
+        }
+
+        // Verify number of groups.
+        $num_groups = count($jsonobj['coveragegroups']);
+        if ($num_groups !== 4) {
+            $this->fail("Expected 4 coveragegroups, found $num_groups");
+        }
+
+        // Verify coverage percentage numbers.
+        foreach ($jsonobj['coveragegroups'] as $group) {
+            $groupname = $group['label'];
+            if (!array_key_exists($groupname, $answers)) {
+                $this->fail("Unexpected group: $groupname");
+                continue;
+            }
+
+            foreach ($builds as $buildtype => $key) {
+                $expected = $answers[$groupname][$buildtype];
+                $found = $group[$key];
+                if ($expected !== $found) {
+                    $this->fail("Expected $expected but found $found for $buildtype $groupname");
+                }
+            }
+        }
+    }
+
     public function checkCoverage($coverage, $expected_loctested,
                                   $expected_locuntested, $expected_percentage,
                                   $name)
@@ -215,8 +316,8 @@ class AggregateSubProjectCoverageTestCase extends KWWebTestCase
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $num_groups = count($jsonobj['coveragegroups']);
-        if ($num_groups != 3) {
-            $this->fail("Expected 3 coverage groups, found $num_groups");
+        if ($num_groups != 4) {
+            $this->fail("Expected 4 coverage groups, found $num_groups");
             return false;
         }
         foreach ($jsonobj['coveragegroups'] as $coverage_group) {

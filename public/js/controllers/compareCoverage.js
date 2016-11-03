@@ -5,6 +5,9 @@ CDash.controller('CompareCoverageController',
     // Hide filters by default.
     $scope.showfilters = false;
 
+    // Check for filters.
+    $rootScope.queryString['filterstring'] = filters.getString();
+
     $scope.sortCoverage = { orderByFields: [] };
 
     $http({
@@ -12,11 +15,16 @@ CDash.controller('CompareCoverageController',
       method: 'GET',
       params: $rootScope.queryString
     }).success(function(cdash) {
+      // Check if we should display filters.
+      if (cdash.filterdata && cdash.filterdata.showfilters == 1) {
+        $scope.showfilters = true;
+      }
 
       renderTimer.initialRender($scope, cdash);
 
       // Set title in root scope so the head controller can see it.
       $rootScope['title'] = cdash.title;
+      $rootScope.setupCalendar($scope.cdash.date);
 
     }).finally(function() {
       $scope.loading = false;

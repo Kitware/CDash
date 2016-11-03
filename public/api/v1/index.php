@@ -119,6 +119,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
     $response = begin_JSON_response();
     $response['title'] = "CDash - $projectname";
     $response['feed'] = $CDASH_ENABLE_FEED;
+    $response['showcalendar'] = 1;
 
     $Banner = new Banner;
     $Banner->SetProjectId(0);
@@ -471,6 +472,17 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $coverage_groups[$groupId]['locuntested'] = 0;
             $coverage_groups[$groupId]['position'] = $group->GetPosition();
             $coverage_groups[$groupId]['coverages'] = array();
+        }
+        if (count($groups) > 1) {
+            // Add a Total group too.
+            $coverage_groups[0] = array();
+            $coverageThreshold = $project_array['coveragethreshold'];
+            $coverage_groups[0]['thresholdgreen'] = $coverageThreshold;
+            $coverage_groups[0]['thresholdyellow'] = $coverageThreshold * 0.7;
+            $coverage_groups[0]['label'] = 'Total';
+            $coverage_groups[0]['loctested'] = 0;
+            $coverage_groups[0]['locuntested'] = 0;
+            $coverage_groups[0]['position'] = 0;
         }
     }
 
@@ -1149,6 +1161,11 @@ function echo_main_dashboard_JSON($project_instance, $date)
                         $coverage_groups[$groupId]['thresholdgreen'];
                     $coverage_groups[$groupId]['loctested'] += $loctested;
                     $coverage_groups[$groupId]['locuntested'] += $locuntested;
+                    if (count($coverage_groups) > 1) {
+                        // Add to Total.
+                        $coverage_groups[0]['loctested'] += $loctested;
+                        $coverage_groups[0]['locuntested'] += $locuntested;
+                    }
                 }
             }
 

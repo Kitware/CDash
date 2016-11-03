@@ -39,11 +39,11 @@ if ($session_OK) {
     }
 
     $userid = $_SESSION['cdash']['loginid'];
+    $User = new User();
+    $User->Id = $userid;
 
     /* If we should remove a job */
     if (isset($_GET['removeschedule'])) {
-        $User = new User();
-        $User->Id = $userid;
         $ClientJobSchedule = new ClientJobSchedule();
         $ClientJobSchedule->Id = pdo_real_escape_numeric($_GET['removeschedule']);
 
@@ -69,13 +69,15 @@ if ($session_OK) {
         $projectid = $ClientJobSchedule->GetProjectId();
     }
 
-    // Make sure user has project admin privileges to use this page
-    $UserProject = new UserProject();
-    $UserProject->ProjectId = $projectid;
-    $projectAdmins = $UserProject->GetUsers(2); //get project admin users
-    if (!in_array($userid, $projectAdmins)) {
-        echo 'You are not a project administrator!';
-        return;
+    if (!$User->IsAdmin()) {
+        // Make sure user has project admin privileges to use this page
+        $UserProject = new UserProject();
+        $UserProject->ProjectId = $projectid;
+        $projectAdmins = $UserProject->GetUsers(2); //get project admin users
+        if (!in_array($userid, $projectAdmins)) {
+            echo 'You are not a project administrator!';
+            return;
+        }
     }
 
     $xml = begin_XML_for_XSLT();
