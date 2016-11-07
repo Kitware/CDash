@@ -851,9 +851,13 @@ div#topmenu a:hover {
   text-decoration: none;
 }
 
+#footerlogo img {
+  margin-top: 5px;
+}
+
 span#footertext {
   position: relative;
-  top: -13px;
+  top: -9px;
   font-size: 0.9em;
   left: 3px;
   color: #4A4A4A;
