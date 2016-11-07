@@ -359,9 +359,31 @@ class Build
     private function GetRelatedBuildId($which_build_criteria,
             $related_parentid=null)
     {
+        $related_build_criteria =
+            "WHERE siteid=" . qnum($this->SiteId) . "
+            AND type='$this->Type'
+            AND name='$this->Name'
+            AND projectid=" . qnum($this->ProjectId);
+
         // Take subproject into account, such that if there is one, then the
         // previous build must be associated with the same subproject...
         //
+        if ($this->SubProjectId && !$related_parentid) {
+            // Look up the related parent.  This makes it easy to find the
+            // corresponding child build.
+            $parent_query = pdo_query("
+                    SELECT id FROM build
+                    $related_build_criteria
+                    AND build.parentid=-1
+                    $which_build_criteria
+                    LIMIT 1");
+            if (pdo_num_rows($parent_query) < 1) {
+                return 0;
+            }
+            $parent_array = pdo_fetch_array($parent_query);
+            $related_parentid = $parent_array['id'];
+        }
+
         $subproj_table = '';
         $subproj_criteria = '';
         $parent_criteria = '';
@@ -377,16 +399,11 @@ class Build
             $parent_criteria = 'AND build.parentid=-1';
         }
 
-
+        // If we know the parent of the build we're looking for, use that as our
+        // search criteria rather than matching site, name, type, and project.
         if ($related_parentid) {
             $related_build_criteria =
                 "WHERE parentid=" . qnum($related_parentid);
-        } else {
-            $related_build_criteria =
-                "WHERE siteid=" . qnum($this->SiteId) . "
-                AND type='$this->Type'
-                AND name='$this->Name'
-                AND projectid=" . qnum($this->ProjectId);
         }
 
         $query = pdo_query("
