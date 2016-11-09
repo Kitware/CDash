@@ -611,8 +611,8 @@ class Build
         $this->StartTime = pdo_real_escape_string($this->StartTime);
         $this->EndTime = pdo_real_escape_string($this->EndTime);
         $this->SubmitTime = pdo_real_escape_string($this->SubmitTime);
-        $this->Command = pdo_real_escape_string($this->Command);
-        $this->Log = pdo_real_escape_string($this->Log);
+        $this->Command = pdo_real_escape_string(trim($this->Command));
+        $this->Log = pdo_real_escape_string(trim($this->Log));
 
         // Compute the number of errors and warnings.
         // This speeds up the display of the main table.
