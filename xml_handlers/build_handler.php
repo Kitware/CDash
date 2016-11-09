@@ -178,10 +178,10 @@ class BuildHandler extends AbstractHandler
                     $this->EndTimeStamp = $data;
                     break;
                 case 'BUILDCOMMAND':
-                    $this->Build->Command = $data;
+                    $this->Build->Command .= htmlspecialchars_decode($data);
                     break;
                 case 'LOG':
-                    $this->Build->Log .= $data;
+                    $this->Build->Log .= htmlspecialchars_decode($data);
                     break;
             }
         } elseif ($parent == 'ACTION') {
