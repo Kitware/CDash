@@ -766,9 +766,6 @@ class Build
             }
         } else {
             // Build already exists.
-            $this->Command = ' ' . $this->Command;
-            $this->Log = ' ' . $this->Log;
-
             // Update this build and its parent (if necessary).
             $this->UpdateBuild($this->Id, $nbuilderrors, $nbuildwarnings);
         }
@@ -1682,7 +1679,7 @@ class Build
 
         $build = pdo_single_row_query(
             "SELECT builderrors, buildwarnings, starttime, endtime,
-                submittime, log, command
+                submittime, log, command, parentid
                 FROM build WHERE id='$buildid' FOR UPDATE");
 
         // Special case: check if we should move from -1 to 0 errors/warnings.
@@ -1727,14 +1724,25 @@ class Build
             $clauses[] = "endtime = '$this->EndTime'";
         }
 
-        // Check if log or command has changed.
-        if ($this->Log && $this->Log != $build['log']) {
-            $log = pdo_real_escape_string($build['log'] . $this->Log);
-            $clauses[] = "log = '$log'";
-        }
-        if ($this->Command && $this->Command != $build['command']) {
-            $command = pdo_real_escape_string($build['command'] . $this->Command);
-            $clauses[] = "command = '$command'";
+        if ($build['parentid'] != -1) {
+            // If this is not a parent build, check if its log or command
+            // has changed.
+            if ($this->Log && $this->Log != $build['log']) {
+                if (!empty($build['log'])) {
+                    $log = $build['log'] . " " . $this->Log;
+                } else {
+                    $log = $this->Log;
+                }
+                $clauses[] = "log = '$log'";
+            }
+            if ($this->Command && $this->Command != $build['command']) {
+                if (!empty($build['command'])) {
+                    $command = $build['command'] . "; " . $this->Command;
+                } else {
+                    $command = $this->Command;
+                }
+                $clauses[] = "command = '$command'";
+            }
         }
 
         $num_clauses = count($clauses);
