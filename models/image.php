@@ -22,8 +22,8 @@ class Image
     public $Extension;
     public $Checksum;
 
-    public $Data; // In the file refered by Filename
-    public $Name; // Use to track the role for test
+    public $Data; // Loaded from database or the file referred by Filename.
+    public $Name; // Use to track the role for test.
 
     public function __construct()
     {
@@ -109,5 +109,28 @@ class Image
             }
         }
         return true;
+    }
+
+    /** Load the image from the database. */
+    public function Load()
+    {
+        if (!$this->Exists()) {
+            return false;
+        }
+
+        $pdo = get_link_identifier()->getPdo();
+        $stmt = $pdo->prepare('SELECT * FROM image WHERE id=?');
+        $stmt->execute([$this->Id]);
+        $row = $stmt->fetch();
+
+        $this->Extension = $row['extension'];
+        $this->Checksum = $row['checksum'];
+
+        global $CDASH_DB_TYPE;
+        if ($CDASH_DB_TYPE == 'pgsql') {
+            $this->Data = stream_get_contents($row['img']);
+        } else {
+            $this->Data = $row['img'];
+        }
     }
 }
