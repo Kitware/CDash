@@ -35,7 +35,7 @@ class Image
     {
         if (strlen($this->Filename) > 0) {
             $h = fopen($this->Filename, 'rb');
-            $this->Data = addslashes(fread($h, filesize($this->Filename)));
+            $this->Data = fread($h, filesize($this->Filename));
             fclose($h);
             unset($h);
         }
