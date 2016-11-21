@@ -112,9 +112,23 @@
         .pipe(replace('@@version', version))
         .pipe(gulp.dest('public/build/views/'));
 
+    gulp.src(['public/views/partials/*.html'])
+        .pipe(replace('@@version', version))
+        .pipe(rename(function (path) {
+          path.basename += "_" + version;
+        }))
+        .pipe(gulp.dest('public/build/views/partials/'));
+
     gulp.src(['public/local/views/*.html'])
         .pipe(replace('@@version', version))
         .pipe(gulp.dest('public/build/local/views/'));
+
+    gulp.src(['public/local/views/partials*.html'])
+        .pipe(replace('@@version', version))
+        .pipe(rename(function (path) {
+          path.basename += "_" + version;
+        }))
+        .pipe(gulp.dest('public/build/local/views/partials/'));
   });
 
 
