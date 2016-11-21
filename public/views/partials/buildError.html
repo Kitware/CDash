@@ -46,11 +46,11 @@
       <span class="nobr"> {{cdash.errortypename}} </span>
     </th>
     <td>
-      <pre ng-if="error.precontext" class="compiler-output">{{error.precontext}}</pre>
+      <pre ng-if="error.precontext" class="compiler-output" ng-bind-html="error.precontext"></pre>
       <b>
         <pre class="compiler-output" ng-bind-html="error.text"></pre>
       </b>
-      <pre ng-if="error.postcontext" class="compiler-output">{{error.postcontext}}</pre>
+      <pre ng-if="error.postcontext" class="compiler-output" ng-bind-html="error.postcontext"></pre>
     </td>
   </tr>
 
