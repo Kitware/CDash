@@ -587,8 +587,8 @@ CDash.filter("showEmptyBuildsLast", function () {
   };
 
 })
-.directive('build', function() {
+.directive('build', function(VERSION) {
   return {
-    templateUrl: 'views/partials/build.html'
+    templateUrl: 'build/views/partials/build_' + VERSION + '.html'
   }
 });

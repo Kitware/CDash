@@ -4,6 +4,7 @@
       del = require('del'),
       concat = require('gulp-concat'),
       eslint = require('gulp-eslint'),
+      fsPath = require('fs-path'),
       newer = require('gulp-newer'),
       replace = require('gulp-replace'),
       rename = require("gulp-rename"),
@@ -19,6 +20,12 @@
   } else {
       version = new Date().getTime();
   }
+
+
+  // Record timestamp for use by Angular.
+  gulp.task('record-version', function() {
+    fsPath.writeFileSync('public/build/js/version.js', "angular.module('CDash').constant('VERSION', '" + version + "');");
+  });
 
 
   gulp.task('quality', function() {
@@ -38,7 +45,7 @@
   });
 
 
- gulp.task('uglify-1stparty', function() {
+ gulp.task('uglify-1stparty', ['record-version'], function() {
    return gulp.src(['public/js/cdashmenu.js',
              'public/js/cdashIndexTable.js',
              'public/js/cdashSortable.js',
@@ -46,6 +53,7 @@
              'public/js/linechart.js',
              'public/js/bulletchart.js',
              'public/js/cdash_angular.js',
+             'public/build/js/version.js',
              'public/js/directives/**.js',
              'public/js/filters/**.js',
              'public/js/services/**.js',
@@ -132,5 +140,5 @@
   });
 
 
-  gulp.task('default', ['quality', 'uglify', 'clean', 'replace']);
+  gulp.task('default', ['clean', 'quality', 'uglify', 'replace']);
 }());
