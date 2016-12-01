@@ -27,7 +27,8 @@
             <b>Site Name:</b>
           </td>
           <td>
-            <a ng-href="viewSite.php?siteid={{::cdash.build.siteid}}">{{::cdash.build.site}}</a>
+            <a ng-href="viewSite.php?siteid={{::cdash.build.siteid}}"
+               ng-click="cancelAjax()">{{::cdash.build.site}}</a>
           </td>
         </tr>
 
@@ -36,7 +37,8 @@
             <b>Build Name:</b>
           </td>
           <td>
-            <a ng-href="buildSummary.php?buildid={{::cdash.build.buildid}}">{{::cdash.build.buildname}}</a>
+            <a ng-href="buildSummary.php?buildid={{::cdash.build.buildid}}"
+               ng-click="cancelAjax()">{{::cdash.build.buildname}}</a>
           </td>
         </tr>
 
@@ -211,16 +213,19 @@
                    src="img/flaggreen.gif" title="flag"/>
               <img ng-if="::test.new == 1 && !(test.timestatus == 'Passed' && test.status == 'Passed')"
                    src="img/flag.png" title="flag"/>
-              <a ng-href="{{::test.detailsLink}}">{{::test.name}}</a>
+              <a ng-href="{{::test.detailsLink}}"
+                 ng-click="cancelAjax()">{{::test.name}}</a>
             </td>
 
             <td align="center" ng-class="::test.statusclass">
-              <a ng-href="{{::test.detailsLink}}">{{::test.status}}</a>
+              <a ng-href="{{::test.detailsLink}}"
+                 ng-click="cancelAjax()">{{::test.status}}</a>
             </td>
 
             <td ng-if="::cdash.project.showtesttime == 1"
                 align="center" ng-class="::test.timestatusclass">
-              <a ng-href="{{::test.detailsLink}}">{{::test.timestatus}}</a>
+              <a ng-href="{{::test.detailsLink}}"
+                 ng-click="cancelAjax()">{{::test.timestatus}}</a>
             </td>
 
             <td align="right">
@@ -241,7 +246,8 @@
             </td>
 
             <td align="center" ng-class="test.summaryclass">
-              <a ng-href="{{test.summaryLink}}">{{test.summary}}</a>
+              <a ng-href="{{test.summaryLink}}"
+                 ng-click="cancelAjax()">{{test.summary}}</a>
             </td>
 
           </tr>
