@@ -25,6 +25,7 @@ CDash.controller('UserStatisticsController',
       $scope.cdash.users = $filter('orderBy')($scope.cdash.users, $scope.orderByFields);
       // Set title in root scope so the head controller can see it.
       $rootScope['title'] = cdash.title;
+      $rootScope.setupCalendar($scope.cdash.date);
     }).finally(function() {
       $scope.loading = false;
     });

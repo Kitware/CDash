@@ -119,15 +119,25 @@ function str_to_time($str, $stamp)
  *  for the previous and current build */
 function compute_error_difference($buildid, $previousbuildid, $warning)
 {
+    $pdo = get_link_identifier()->getPdo();
     // Look at the difference positive and negative test errors
-    $sqlquery = 'UPDATE builderror SET newstatus=1 WHERE buildid=' . $buildid . ' AND type=' . $warning . ' AND crc32 IN
-        (SELECT crc32 FROM (SELECT crc32 FROM builderror WHERE buildid=' . $buildid . '
-                            AND type=' . $warning . ') AS builderrora
-         LEFT JOIN (SELECT crc32 as crc32b FROM builderror WHERE buildid=' . $previousbuildid . '
-             AND type=' . $warning . ') AS builderrorb ON builderrora.crc32=builderrorb.crc32b
-         WHERE builderrorb.crc32b IS NULL)';
-    pdo_query($sqlquery);
-    add_last_sql_error('compute_error_difference', 0, $buildid);
+    $stmt = $pdo->prepare(
+        'UPDATE builderror SET newstatus=1
+        WHERE buildid=:buildid AND type=:type AND crc32 IN
+        (SELECT crc32 FROM
+        (SELECT crc32 FROM builderror WHERE buildid=:buildid AND type=:type)
+        AS builderrora
+        LEFT JOIN
+        (SELECT crc32 as crc32b FROM builderror
+        WHERE buildid=:previousbuildid AND type=:type)
+        AS builderrorb ON builderrora.crc32=builderrorb.crc32b
+        WHERE builderrorb.crc32b IS NULL)');
+    $stmt->bindValue(':buildid', $buildid);
+    $stmt->bindValue(':type', $warning);
+    $stmt->bindValue(':previousbuildid', $previousbuildid);
+    if (!$stmt->execute()) {
+        add_last_sql_error('compute_error_difference', 0, $buildid);
+    }
 
     // Recurring buildfailures are represented by the buildfailuredetails table.
     // Get a list of buildfailuredetails IDs for the current build and the
@@ -135,57 +145,78 @@ function compute_error_difference($buildid, $previousbuildid, $warning)
     $current_failures = array();
     $previous_failures = array();
 
-    $query =
-        "SELECT bf.detailsid FROM buildfailure AS bf
+    $stmt = $pdo->prepare(
+        'SELECT bf.detailsid FROM buildfailure AS bf
         LEFT JOIN buildfailuredetails AS bfd ON (bf.detailsid=bfd.id)
-        WHERE bf.buildid=$buildid AND bfd.type=$warning";
-    $result = pdo_query($query);
-    add_last_sql_error('compute_error_difference', 0, $buildid);
-    while ($row = pdo_fetch_array($result)) {
+        WHERE bf.buildid=:buildid AND bfd.type=:type');
+    $stmt->bindValue(':buildid', $buildid);
+    $stmt->bindValue(':type', $warning);
+    if (!$stmt->execute()) {
+        add_last_sql_error('compute_error_difference', 0, $buildid);
+    }
+    while ($row = $stmt->fetch()) {
         $current_failures[] = $row['detailsid'];
     }
 
-    $query =
-        "SELECT bf.detailsid FROM buildfailure AS bf
+    $stmt = $pdo->prepare(
+        'SELECT bf.detailsid FROM buildfailure AS bf
         LEFT JOIN buildfailuredetails AS bfd ON (bf.detailsid=bfd.id)
-        WHERE bf.buildid=$previousbuildid AND bfd.type=$warning";
-    $result = pdo_query($query);
-    add_last_sql_error('compute_error_difference', 0, $buildid);
-    while ($row = pdo_fetch_array($result)) {
+        WHERE bf.buildid=:previousbuildid AND bfd.type=:type');
+    $stmt->bindValue(':previousbuildid', $previousbuildid);
+    $stmt->bindValue(':type', $warning);
+    if (!$stmt->execute()) {
+        add_last_sql_error('compute_error_difference', 0, $buildid);
+    }
+    while ($row = $stmt->fetch()) {
         $previous_failures[] = $row['detailsid'];
     }
 
     // Check if any of these are new failures and mark them accordingly.
     foreach ($current_failures as $failure) {
         if (!in_array($failure, $previous_failures)) {
-            $query =
-                "UPDATE buildfailure SET newstatus=1
-                WHERE buildid=$buildid AND detailsid=$failure";
-            pdo_query($query);
-            add_last_sql_error('compute_error_difference', 0, $buildid);
+            $stmt = $pdo->prepare(
+                'UPDATE buildfailure SET newstatus=1
+                WHERE buildid=:buildid AND detailsid=:detailsid');
+            $stmt->bindValue(':buildid', $buildid);
+            $stmt->bindValue(':detailsid', $failure);
+            if (!$stmt->execute()) {
+                add_last_sql_error('compute_error_difference', 0, $buildid);
+            }
         }
     }
 
     // Maybe we can get that from the query (don't know).
-    $positives = pdo_query('SELECT count(*) FROM builderror WHERE buildid=' . $buildid . ' AND type=' . $warning . ' AND newstatus=1');
-    $positives_array = pdo_fetch_array($positives);
+    $stmt = $pdo->prepare(
+        'SELECT COUNT(*) FROM builderror
+        WHERE buildid=:buildid AND type=:type AND newstatus=1');
+    $stmt->bindValue(':buildid', $buildid);
+    $stmt->bindValue(':type', $warning);
+    $stmt->execute();
+    $positives_array = $stmt->fetch();
     $npositives = $positives_array[0];
-    $positives = pdo_query(
-        "SELECT COUNT(*) FROM buildfailure AS bf
+
+    $stmt = $pdo->prepare(
+        'SELECT COUNT(*) FROM buildfailure AS bf
         LEFT JOIN buildfailuredetails AS bfd ON (bf.detailsid=bfd.id)
-        WHERE bf.buildid=$buildid AND bfd.type=$warning AND bf.newstatus=1");
-    $positives_array = pdo_fetch_array($positives);
+        WHERE bf.buildid=:buildid AND bfd.type=:type AND bf.newstatus=1');
+    $stmt->bindValue(':buildid', $buildid);
+    $stmt->bindValue(':type', $warning);
+    $stmt->execute();
+    $positives_array = $stmt->fetch();
     $npositives += $positives_array[0];
 
     // Count how many build defects were fixed since the previous build.
-    $sqlquery = 'SELECT count(*)
-        FROM (SELECT crc32 FROM builderror WHERE buildid=' . $previousbuildid . '
-                AND type=' . $warning . ') AS builderrora
-        LEFT JOIN (SELECT crc32 as crc32b FROM builderror WHERE buildid=' . $buildid . '
-                AND type=' . $warning . ') AS builderrorb
-        ON builderrora.crc32=builderrorb.crc32b WHERE builderrorb.crc32b IS NULL';
-    $negatives = pdo_query($sqlquery);
-    $negatives_array = pdo_fetch_array($negatives);
+    $stmt = $pdo->prepare(
+        'SELECT COUNT(*) FROM
+        (SELECT crc32 FROM builderror WHERE buildid=:previousbuildid AND type=:type) AS builderrora
+        LEFT JOIN (SELECT crc32 as crc32b FROM builderror WHERE buildid=:buildid AND type=:type) AS builderrorb
+        ON builderrora.crc32=builderrorb.crc32b
+        WHERE builderrorb.crc32b IS NULL');
+    $stmt->bindValue(':buildid', $buildid);
+    $stmt->bindValue(':previousbuildid', $previousbuildid);
+    $stmt->bindValue(':type', $warning);
+    $stmt->execute();
+    $negatives_array = $stmt->fetch();
     $nnegatives = $negatives_array[0];
 
     foreach ($previous_failures as $failure) {
@@ -194,21 +225,57 @@ function compute_error_difference($buildid, $previousbuildid, $warning)
         }
     }
 
-    // Don't log if no diff
-    if ($npositives != 0 || $nnegatives != 0) {
-        // Check if it exists
-        $query = pdo_query('SELECT count(buildid) FROM builderrordiff WHERE buildid=' . qnum($buildid) . ' AND type=' . $warning);
-        $query_array = pdo_fetch_array($query);
-
-        if ($query_array[0] == 0) {
-            pdo_query("INSERT INTO builderrordiff (buildid,type,difference_positive,difference_negative)
-                    VALUES('$buildid','$warning','$npositives','$nnegatives')");
-        } else {
-            pdo_query("UPDATE builderrordiff SET difference_positive='" . $npositives . "',
-                    difference_negative='" . $nnegatives . "' WHERE buildid=" . qnum($buildid) . ' AND type=' . $warning);
-        }
-        add_last_sql_error('compute_error_difference', 0, $buildid);
+    // Check if a diff already exists for this build.
+    $pdo->beginTransaction();
+    $stmt = $pdo->prepare(
+        'SELECT * FROM builderrordiff WHERE buildid=:buildid AND type=:type FOR UPDATE');
+    $stmt->bindParam(':buildid', $buildid);
+    $stmt->bindParam(':type', $warning);
+    $stmt->execute();
+    $row = $stmt->fetch();
+    $existing_npositives = 0;
+    $existing_nnegatives = 0;
+    if ($row) {
+        $existing_npositives = $row['difference_positive'];
+        $existing_nnegatives = $row['difference_negative'];
     }
+
+    // Only log if there's a diff since last build or an existing diff record.
+    if ($npositives == 0 && $nnegatives == 0 && $existing_npositives == 0 && $existing_nnegatives == 0) {
+        $pdo->commit();
+        return;
+    }
+
+    if ($row) {
+        // Update existing record.
+        $stmt = $pdo->prepare(
+            'UPDATE builderrordiff
+            SET difference_positive=:npositives, difference_negative=:nnegatives
+            WHERE buildid=:buildid AND type=:type');
+    } else {
+        // Insert new record.
+        $duplicate_sql = '';
+        global $CDASH_DB_TYPE;
+        if ($CDASH_DB_TYPE !== 'pgsql') {
+            $duplicate_sql =
+                'ON DUPLICATE KEY UPDATE difference_positive=:npositives, difference_negative=:nnegatives';
+        }
+        $stmt = $pdo->prepare(
+            "INSERT INTO builderrordiff
+            (buildid, type, difference_positive, difference_negative)
+            VALUES (:buildid, :type, :npositives, :nnegatives)
+            $duplicate_sql");
+    }
+    $stmt->bindValue(':buildid', $buildid);
+    $stmt->bindValue(':type', $warning);
+    $stmt->bindValue(':npositives', $npositives);
+    $stmt->bindValue(':nnegatives', $nnegatives);
+    if (!$stmt->execute()) {
+        add_last_sql_error('compute_error_difference', 0, $buildid);
+        $pdo->rollBack();
+        return;
+    }
+    $pdo->commit();
 }
 
 /** Add the difference between the numbers of configure warnings
@@ -245,58 +312,110 @@ function compute_configure_difference($buildid, $previousbuildid, $warning)
  *  for the previous and current build */
 function compute_test_difference($buildid, $previousbuildid, $testtype, $projecttestmaxstatus)
 {
-    $sql = '';
+    $pdo = get_link_identifier()->getPdo();
+    $extra_sql = '';
     if ($testtype == 0) {
-        $status = "'notrun'";
+        $status = 'notrun';
     } elseif ($testtype == 1) {
-        $status = "'failed'";
+        $status = 'failed';
     } elseif ($testtype == 2) {
-        $status = "'passed'";
+        $status = 'passed';
     } elseif ($testtype == 3) {
-        $status = "'passed'";
-        $sql = ' AND timestatus>' . $projecttestmaxstatus;
+        $status = 'passed';
+        $extra_sql = " AND timestatus > $projecttestmaxstatus";
     }
 
     // Look at the difference positive and negative test errors
-    $sqlquery = 'UPDATE build2test SET newstatus=1 WHERE buildid=' . $buildid . ' AND testid IN
-        (SELECT testid FROM (SELECT test.id AS testid,name FROM build2test,test WHERE build2test.buildid=' . $buildid . '
-                             AND build2test.testid=test.id AND build2test.status=' . $status . $sql . ') AS testa
-         LEFT JOIN (SELECT name as name2 FROM build2test,test WHERE build2test.buildid=' . $previousbuildid . '
-             AND build2test.testid=test.id AND build2test.status=' . $status . $sql . ')
-         AS testb ON testa.name=testb.name2 WHERE testb.name2 IS NULL)';
-    pdo_query($sqlquery);
-    add_last_sql_error('compute_test_difference', 0, $buildid);
+    $stmt = $pdo->prepare(
+        "UPDATE build2test SET newstatus=1 WHERE buildid=:buildid AND testid IN
+        (SELECT testid FROM (SELECT test.id AS testid,name FROM build2test,test WHERE build2test.buildid=:buildid
+                             AND build2test.testid=test.id AND build2test.status=:status $extra_sql) AS testa
+         LEFT JOIN (SELECT name as name2 FROM build2test,test WHERE build2test.buildid=:previousbuildid
+             AND build2test.testid=test.id AND build2test.status=:status $extra_sql)
+         AS testb ON testa.name=testb.name2 WHERE testb.name2 IS NULL)");
+    $stmt->bindParam(':buildid', $buildid);
+    $stmt->bindParam(':previousbuildid', $previousbuildid);
+    $stmt->bindParam(':status', $status);
+    if (!$stmt->execute()) {
+        add_last_sql_error('compute_test_difference', 0, $buildid);
+    }
 
     // Maybe we can get that from the query (don't know).
-    $positives = pdo_query('SELECT count(*) FROM build2test WHERE buildid=' . $buildid . ' AND newstatus=1 AND status=' . $status . $sql);
-    $positives_array = pdo_fetch_array($positives);
-    $npositives = $positives_array[0];
+    $stmt = $pdo->prepare(
+        "SELECT COUNT(*) FROM build2test WHERE buildid=:buildid AND newstatus=1 AND status=:status $extra_sql");
+    $stmt->bindParam(':buildid', $buildid);
+    $stmt->bindParam(':status', $status);
+    $stmt->execute();
+    $row = $stmt->fetch();
+    $npositives = $row[0];
 
     // Count the difference between the number of tests that were passing (or failing)
     // and now that have a different one
-    $sqlquery = 'SELECT count(*)
-        FROM (SELECT name FROM build2test,test WHERE build2test.buildid=' . $previousbuildid . '
-                AND build2test.testid=test.id AND build2test.status=' . $status . $sql . ') AS testa
-        LEFT JOIN (SELECT name as name2 FROM build2test,test WHERE build2test.buildid=' . $buildid . '
-                AND build2test.testid=test.id AND build2test.status=' . $status . $sql . ')
-        AS testb ON testa.name=testb.name2 WHERE testb.name2 IS NULL';
+    $stmt = $pdo->prepare(
+        "SELECT COUNT(*) FROM
+            (SELECT name FROM build2test,test WHERE build2test.buildid=:previousbuildid AND
+             build2test.testid=test.id AND build2test.status=:status $extra_sql) AS testa
+        LEFT JOIN (SELECT name as name2 FROM build2test,test WHERE build2test.buildid=:buildid
+                AND build2test.testid=test.id AND build2test.status=:status $extra_sql)
+        AS testb ON testa.name=testb.name2 WHERE testb.name2 IS NULL");
+    $stmt->bindParam(':buildid', $buildid);
+    $stmt->bindParam(':previousbuildid', $previousbuildid);
+    $stmt->bindParam(':status', $status);
+    $stmt->execute();
+    $row = $stmt->fetch();
+    $nnegatives = $row[0];
 
-    $negatives = pdo_query($sqlquery);
-    $negatives_array = pdo_fetch_array($negatives);
-    $nnegatives = $negatives_array[0];
+    // Check that we don't have any duplicates (this messes up index.php).
+    $pdo->beginTransaction();
+    $stmt = $pdo->prepare(
+        'SELECT * FROM testdiff WHERE buildid=:buildid AND type=:type FOR UPDATE');
+    $stmt->bindParam(':buildid', $buildid);
+    $stmt->bindParam(':type', $testtype);
+    $stmt->execute();
+    $row = $stmt->fetch();
 
-    // Don't log if no diff
-    if ($npositives != 0 || $nnegatives != 0) {
-        // Check that we don't have any duplicates (this messes up the first page)
-        $query = pdo_query('SELECT count(*) FROM testdiff WHERE buildid=' . qnum($buildid) . 'AND type=' . qnum($testtype));
-        $query_array = pdo_fetch_array($query);
-        if ($query_array[0] > 0) {
-            pdo_query('UPDATE testdiff SET difference_positive=' . qnum($npositives) . ',difference_negative=' . qnum($nnegatives) . '
-                    WHERE buildid=' . qnum($buildid) . 'AND type=' . qnum($testtype));
-        } else {
-            pdo_query("INSERT INTO testdiff (buildid,type,difference_positive,difference_negative)
-                    VALUES('$buildid','$testtype','$npositives','$nnegatives')");
-        }
-        add_last_sql_error('compute_test_difference', 0, $buildid);
+    $existing_npositives = 0;
+    $existing_nnegatives = 0;
+    if ($row) {
+        $existing_npositives = $row['difference_positive'];
+        $existing_nnegatives = $row['difference_negative'];
     }
+
+    // Don't log if no diff.
+    if ($npositives == 0 && $nnegatives == 0 && $existing_npositives == 0 && $existing_nnegatives == 0) {
+        $pdo->commit();
+        return;
+    }
+
+    if ($row) {
+        // Update existing record.
+        $stmt = $pdo->prepare(
+            'UPDATE testdiff
+            SET difference_positive=:npositives, difference_negative=:nnegatives
+            WHERE buildid=:buildid AND type=:type');
+    } else {
+        // Insert new record.
+        $duplicate_sql = '';
+        global $CDASH_DB_TYPE;
+        if ($CDASH_DB_TYPE !== 'pgsql') {
+            $duplicate_sql =
+                'ON DUPLICATE KEY UPDATE difference_positive=:npositives, difference_negative=:nnegatives';
+        }
+        $stmt = $pdo->prepare(
+            "INSERT INTO testdiff
+            (buildid, type, difference_positive, difference_negative)
+            VALUES (:buildid, :type, :npositives, :nnegatives)
+            $duplicate_sql");
+    }
+
+    $stmt->bindParam(':buildid', $buildid);
+    $stmt->bindParam(':type', $testtype);
+    $stmt->bindParam(':npositives', $npositives);
+    $stmt->bindParam(':nnegatives', $nnegatives);
+    if (!$stmt->execute()) {
+        add_last_sql_error('compute_test_difference', 0, $buildid);
+        $pdo->rollBack();
+        return;
+    }
+    $pdo->commit();
 }

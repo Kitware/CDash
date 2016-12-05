@@ -22,12 +22,13 @@
     "google/apiclient": "~1.1",
     "guzzlehttp/guzzle": "~6.0",
     "monolog/monolog": "~1.19",
-    "paragonie/random_compat": "~1.4",
+    "paragonie/random_compat": "2.0.4",
     "pear/archive_tar": "~1.4",
     "predis/predis": "~0.8",
     "ramsey/uuid": "~3.4",
     "suin/php-rss-writer": "~1.4",
-    "swiftmailer/swiftmailer": "~5.4"
+    "swiftmailer/swiftmailer": "~5.4",
+    "sendgrid/sendgrid": "5.0.4"
   },
   "require-dev": {
     "ext-gd": "*",
