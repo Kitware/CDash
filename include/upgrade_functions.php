@@ -861,7 +861,6 @@ function PopulateDynamicAnalysisSummaryTable()
     }
 }
 
-<<<<<<< HEAD
 /** Move data from the configure table to the new build2configure table.
  *  This function is parameterized to make it easier to test.
  **/
