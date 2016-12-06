@@ -29,6 +29,9 @@ class ConfigureHandler extends AbstractHandler
     private $Configure;
     private $Label;
     private $Notified;
+    // Map SubProjects to Labels
+    private $SubProjects;
+    private $LabelIsSubproject;
 
     public function __construct($projectid, $scheduleid)
     {
@@ -40,11 +43,14 @@ class ConfigureHandler extends AbstractHandler
         $this->EndTimeStamp = 0;
         // Only complain about errors & warnings once.
         $this->Notified = false;
+        $this->SubProjects = array();
+        $this->LabelIsSubproject = true;
     }
 
     public function startElement($parser, $name, $attributes)
     {
         parent::startElement($parser, $name, $attributes);
+        $parent = $this->getParent(); // should be before endElement
 
         if ($name == 'SITE') {
             $this->Site->Name = $attributes['NAME'];
@@ -64,14 +70,17 @@ class ConfigureHandler extends AbstractHandler
 
             $this->Site->SetInformation($siteInformation);
         } elseif ($name == 'SUBPROJECT') {
-            $subprojectName = $attributes['NAME'];
+            $this->SubProjectName = $attributes['NAME'];
+            if (!array_key_exists($this->SubProjectName, $this->SubProjects)) {
+                $this->SubProjects[$this->SubProjectName] = array();
+            }
             $build = new Build();
             $build->SiteId = $this->Site->Id;
             $build->Name = $this->BuildInformation->BuildName;
             $build->SetStamp($this->BuildInformation->BuildStamp);
             $build->Generator = $this->BuildInformation->Generator;
             $build->Information = $this->BuildInformation;
-            $this->Builds[$subprojectName] = $build;
+            $this->Builds[$this->SubProjectName] = $build;
         } elseif ($name == 'CONFIGURE') {
             if (empty($this->Builds)) {
                 // No subprojects
@@ -83,13 +92,14 @@ class ConfigureHandler extends AbstractHandler
                 $build->Information = $this->BuildInformation;
                 $this->Builds[''] = $build;
             }
-        } elseif ($name == 'LABEL') {
+        } elseif ($name == 'LABEL' && $parent == 'LABELS') {
             $this->Label = new Label();
         }
     }
 
     public function endElement($parser, $name)
     {
+        $parent = $this->getParent(); // should be before endElement
         parent::endElement($parser, $name);
 
         if ($name == 'CONFIGURE') {
@@ -154,8 +164,8 @@ class ConfigureHandler extends AbstractHandler
             // so only need to do this once
             $build->UpdateParentConfigureNumbers(
                     $this->Configure->NumberOfWarnings, $this->Configure->NumberOfErrors);
-        } elseif ($name == 'LABEL') {
-            if (isset($this->Configure)) {
+        } elseif ($name == 'LABEL' && $parent == 'LABELS') {
+           if (!$this->LabelIsSubproject && isset($this->Configure)) {
                 $this->Configure->AddLabel($this->Label);
             }
         }
@@ -197,8 +207,19 @@ class ConfigureHandler extends AbstractHandler
             }
         }
 
-        if ($element == 'LABEL') {
-            $this->Label->SetText($data);
+        if ($parent == 'SUBPROJECT' && $element == 'LABEL') {
+           $this->SubProjects[$this->SubProjectName][] =  $data;
+        } elseif ($parent == 'LABELS' && $element == 'LABEL') {
+            // First, check if this label belongs to a SubProject
+            foreach ($this->SubProjects as $subproject => $labels) {
+              if (in_array($data, $labels)) {
+                $this->LabelIsSubproject = true;
+                break;
+              }
+            }
+            if ($this->LabelIsSubproject) {
+              $this->Label->SetText($data);
+            }
         }
     }
 

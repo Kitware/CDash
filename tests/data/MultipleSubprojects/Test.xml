@@ -23,6 +23,20 @@
         LogicalProcessorsPerPhysical="4"
         ProcessorClockFrequency="756"
         >
+        <Subproject name="MyExperimentalFeature">
+                <Label>MyExperimentalFeature</Label>
+        </Subproject>
+        <Subproject name="MyProductionCode">
+                <Label>MyProductionCode</Label>
+                <Label>AnotherLabel</Label>
+        </Subproject>
+        <Subproject name="MyThirdPartyDependency">
+                <Label>MyThirdPartyDependency1</Label>
+                <Label>MyThirdPartyDependency2</Label>
+        </Subproject>
+        <Subproject name="EmptySubproject">
+                <Label>EmptySubproject</Label>
+        </Subproject>
         <Testing>
                 <StartDateTime>Jul 28 15:32 EDT</StartDateTime>
                 <StartTestTime>1469734335</StartTestTime>
@@ -40,7 +54,6 @@
                         <Path>./MyThirdPartyDependency</Path>
                         <FullName>./MyThirdPartyDependency/thirdparty</FullName>
                         <FullCommandLine></FullCommandLine>
-                        <Subproject name="MyThirdPartyDependency"/>
                         <Results>
                                 <NamedMeasurement type="text/string" name="Command Line">
                                         <Value></Value>
@@ -49,13 +62,15 @@
                                         <Value>Unable to find executable: /home/betsy/cmake_build/Tests/CTestTestSubprojects/MyThirdPartyDependency/thirdparty</Value>
                                 </Measurement>
                         </Results>
+                        <Labels>
+                                <Label>MyThirdPartyDependency1</Label>
+                        </Labels>
                 </Test>
                 <Test Status="failed">
                         <Name>experimentalFail1</Name>
                         <Path>./MyExperimentalFeature</Path>
                         <FullName>./MyExperimentalFeature/experimentalFail1</FullName>
                         <FullCommandLine>/home/betsy/cmake_build/Tests/CTestTestSubprojects/MyExperimentalFeature/experimental "5"</FullCommandLine>
-                        <Subproject name="MyExperimentalFeature"/>
                         <Results>
                                 <NamedMeasurement type="text/string" name="Exit Code">
                                         <Value>Failed</Value>
@@ -81,13 +96,15 @@
 </Value>
                                 </Measurement>
                         </Results>
+                        <Labels>
+                                <Label>MyExperimentalFeature</Label>
+                        </Labels>
                 </Test>
                 <Test Status="failed">
                         <Name>experimentalFail2</Name>
                         <Path>./MyExperimentalFeature</Path>
                         <FullName>./MyExperimentalFeature/experimentalFail2</FullName>
                         <FullCommandLine>/home/betsy/cmake_build/Tests/CTestTestSubprojects/MyExperimentalFeature/experimental "-5"</FullCommandLine>
-                        <Subproject name="MyExperimentalFeature"/>
                         <Results>
                                 <NamedMeasurement type="text/string" name="Exit Code">
                                         <Value>Failed</Value>
@@ -113,13 +130,15 @@
 </Value>
                                 </Measurement>
                         </Results>
+                        <Labels>
+                                <Label>MyExperimentalFeature</Label>
+                        </Labels>
                 </Test>
                 <Test Status="failed">
                         <Name>experimentalFail3</Name>
                         <Path>./MyExperimentalFeature</Path>
                         <FullName>./MyExperimentalFeature/experimentalFail3</FullName>
                         <FullCommandLine>/home/betsy/cmake_build/Tests/CTestTestSubprojects/MyExperimentalFeature/experimental "-5"</FullCommandLine>
-                        <Subproject name="MyExperimentalFeature"/>
                         <Results>
                                 <NamedMeasurement type="text/string" name="Exit Code">
                                         <Value>Failed</Value>
@@ -145,13 +164,15 @@
 </Value>
                                 </Measurement>
                         </Results>
+                        <Labels>
+                                <Label>MyExperimentalFeature</Label>
+                        </Labels>
                 </Test>
                 <Test Status="failed">
                         <Name>experimentalFail4</Name>
                         <Path>./MyExperimentalFeature</Path>
                         <FullName>./MyExperimentalFeature/experimentalFail4</FullName>
                         <FullCommandLine>/home/betsy/cmake_build/Tests/CTestTestSubprojects/MyExperimentalFeature/experimental "-5"</FullCommandLine>
-                        <Subproject name="MyExperimentalFeature"/>
                         <Results>
                                 <NamedMeasurement type="text/string" name="Exit Code">
                                         <Value>Failed</Value>
@@ -177,13 +198,15 @@
 </Value>
                                 </Measurement>
                         </Results>
+                        <Labels>
+                                <Label>MyExperimentalFeature</Label>
+                        </Labels>
                 </Test>
                 <Test Status="failed">
                         <Name>experimentalFail5</Name>
                         <Path>./MyExperimentalFeature</Path>
                         <FullName>./MyExperimentalFeature/experimentalFail5</FullName>
                         <FullCommandLine>/home/betsy/cmake_build/Tests/CTestTestSubprojects/MyExperimentalFeature/experimental "-5"</FullCommandLine>
-                        <Subproject name="MyExperimentalFeature"/>
                         <Results>
                                 <NamedMeasurement type="text/string" name="Exit Code">
                                         <Value>Failed</Value>
@@ -209,13 +232,15 @@
 </Value>
                                 </Measurement>
                         </Results>
+                        <Labels>
+                                <Label>MyExperimentalFeature</Label>
+                        </Labels>
                 </Test>
                 <Test Status="passed">
                         <Name>production</Name>
                         <Path>./MyProductionCode</Path>
                         <FullName>./MyProductionCode/production</FullName>
                         <FullCommandLine>/home/betsy/cmake_build/Tests/CTestTestSubprojects/MyProductionCode/production</FullCommandLine>
-                        <Subproject name="MyProductionCode"/>
                         <Results>
                                 <NamedMeasurement type="numeric/double" name="Execution Time">
                                         <Value>0.00126791</Value>
@@ -231,6 +256,9 @@
 </Value>
                                 </Measurement>
                         </Results>
+                        <Labels>
+                                <Label>MyProductionCode</Label>
+                        </Labels>
                 </Test>
                 <EndDateTime>Jul 28 15:32 EDT</EndDateTime>
                 <EndTestTime>1469734335</EndTestTime>

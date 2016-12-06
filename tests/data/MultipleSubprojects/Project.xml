@@ -679,12 +679,9 @@
   <SubProject name="MyThirdPartyDependency">
   </SubProject>
   <SubProject name="MyExperimentalFeature">
-    <Dependency name="MyThirdPartyDependency"/>
   </SubProject>
   <SubProject name="MyProductionCode">
-    <Dependency name="MyThirdPartyDependency"/>
   </SubProject>
-  <SubProject name="InvalidSubproject">
-    <Dependency name="MyThirdPartyDependency"/>
+  <SubProject name="EmptySubproject">
   </SubProject>
 </Project>

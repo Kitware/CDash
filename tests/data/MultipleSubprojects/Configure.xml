@@ -23,10 +23,20 @@
         LogicalProcessorsPerPhysical="4"
         ProcessorClockFrequency="756"
         >
-        <Subproject name="InvalidSubproject"/>
-        <Subproject name="MyExperimentalFeature"/>
-        <Subproject name="MyProductionCode"/>
-        <Subproject name="MyThirdPartyDependency"/>
+        <Subproject name="MyExperimentalFeature">
+                <Label>MyExperimentalFeature</Label>
+        </Subproject>
+        <Subproject name="MyProductionCode">
+                <Label>MyProductionCode</Label>
+                <Label>AnotherLabel</Label>
+        </Subproject>
+        <Subproject name="MyThirdPartyDependency">
+                <Label>MyThirdPartyDependency1</Label>
+                <Label>MyThirdPartyDependency2</Label>
+        </Subproject>
+        <Subproject name="EmptySubproject">
+                <Label>EmptySubproject</Label>
+        </Subproject>
         <Configure>
                 <StartDateTime>Jul 28 15:32 EDT</StartDateTime>
                 <StartConfigureTime>1469734334</StartConfigureTime>

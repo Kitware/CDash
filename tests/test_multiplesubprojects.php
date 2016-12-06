@@ -46,13 +46,13 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             $buildids[] = $buildid_array['id'];
         }
 
-        if (count($buildids) != 5) {
-            foreach ($buildids as $id) {
+        if (count($buildids) != 5) {    // parent + 4 subprojects
+             foreach ($buildids as $id) {
                 remove_build($id);
-            }
+             }
             $this->fail('Expected 5 builds, found ' . count($buildids));
             return 1;
-        }
+         }
 
         try {
             $success = true;
@@ -144,7 +144,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             $project_expected = array(
                 'nbuilderror' => 1,
                 'nbuildwarning' => 2,
-                'nbuildpass' => 0,
+                'nbuildpass' => 1,
                 'nconfigureerror' => 1,
                 'nconfigurewarning' => 1,
                 'nconfigurepass' => 0,
@@ -188,16 +188,6 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
                     'nconfigurewarning' => 1,
                     'nconfigurepass' => 0,
                     'ntestpass' => 1,
-                    'ntestfail' => 0,
-                    'ntestnotrun' => 0),
-                'InvalidSubproject' => array(
-                    'nbuilderror' => 0,
-                    'nbuildwarning' => 0,
-                    'nbuildpass' => 0,
-                    'nconfigureerror' => 1,
-                    'nconfigurewarning' => 1,
-                    'nconfigurepass' => 0,
-                    'ntestpass' => 0,
                     'ntestfail' => 0,
                     'ntestnotrun' => 0));
             foreach ($jsonobj['subprojects'] as $subproj) {

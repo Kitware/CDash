@@ -34,6 +34,9 @@ class BuildHandler extends AbstractHandler
     private $BuildCommand;
     private $BuildLog;
     private $Labels;
+    // Map SubProjects to Labels
+    private $SubProjects;
+    private $ErrorSubProjectName;
 
     public function __construct($projectid, $scheduleid)
     {
@@ -44,6 +47,7 @@ class BuildHandler extends AbstractHandler
         $this->Feed = new Feed();
         $this->BuildLog = '';
         $this->Labels = array();
+        $this->SubProjects = array();
     }
 
     public function startElement($parser, $name, $attributes)
@@ -76,8 +80,11 @@ class BuildHandler extends AbstractHandler
                 $this->Append = false;
             }
         } elseif ($name == 'SUBPROJECT') {
+            $this->SubProjectName = $attributes['NAME'];
+             if (!array_key_exists($this->SubProjectName, $this->SubProjects)) {
+                $this->SubProjects[$this->SubProjectName] = array();
+            }
             if (!array_key_exists($this->SubProjectName, $this->Builds)) {
-                $subprojectName = $attributes['NAME'];
                 $build = new Build();
                 if (!empty($this->BuildInformation->PullRequest)) {
                     $build->SetPullRequest($this->BuildInformation->PullRequest);
@@ -87,7 +94,7 @@ class BuildHandler extends AbstractHandler
                 $build->SetStamp($this->BuildInformation->BuildStamp);
                 $build->Generator = $this->BuildInformation->Generator;
                 $build->Information = $this->BuildInformation;
-                $this->Builds[$subprojectName] = $build;
+                $this->Builds[$this->SubProjectName] = $build;
             }
         } elseif ($name == 'BUILD') {
             if (empty($this->Builds)) {
@@ -106,9 +113,11 @@ class BuildHandler extends AbstractHandler
         } elseif ($name == 'WARNING') {
             $this->Error = new BuildError();
             $this->Error->Type = 1;
+            $this->SubProjectName = "";
         } elseif ($name == 'ERROR') {
             $this->Error = new BuildError();
             $this->Error->Type = 0;
+            $this->SubProjectName = "";
         } elseif ($name == 'FAILURE') {
             $this->Error = new BuildFailure();
             $this->Error->Type = 0;
@@ -117,6 +126,7 @@ class BuildHandler extends AbstractHandler
             } elseif ($attributes['TYPE'] == 'Warning') {
                 $this->Error->Type = 1;
             }
+            $this->SubProjectName = "";
         } elseif ($name == 'LABEL') {
             $this->Label = new Label();
         }
@@ -124,6 +134,7 @@ class BuildHandler extends AbstractHandler
 
     public function endElement($parser, $name)
     {
+        $parent = $this->getParent(); // should be before endElement
         parent::endElement($parser, $name);
 
         if ($name == 'BUILD') {
@@ -188,8 +199,10 @@ class BuildHandler extends AbstractHandler
                 $this->Builds[$this->SubProjectName]->AddError($this->Error);
             }
             unset($this->Error);
-        } elseif ($name == 'LABEL') {
-            if (isset($this->Error)) {
+        } elseif ($name == 'LABEL' && $parent == 'LABELS') {
+            if (!empty($this->ErrorSubProjectName)) {
+                $this->SubProjectName = $this->ErrorSubProjectName;
+            } elseif (isset($this->Error)) {
                 $this->Error->AddLabel($this->Label);
             } else {
                 $this->Labels[] = $this->Label;
@@ -289,8 +302,19 @@ class BuildHandler extends AbstractHandler
             $this->Error->PreContext .= $data;
         } elseif ($element == 'POSTCONTEXT') {
             $this->Error->PostContext .= $data;
-        } elseif ($element == 'LABEL') {
-            $this->Label->SetText($data);
+        } elseif ($parent == 'SUBPROJECT' && $element == 'LABEL') {
+           $this->SubProjects[$this->SubProjectName][] =  $data;
+        } elseif ($parent == 'LABELS' && $element == 'LABEL') {
+            // First, check if this label belongs to a SubProject
+            foreach ($this->SubProjects as $subproject => $labels) {
+              if (in_array($data, $labels)) {
+                $this->ErrorSubProjectName = $subproject;
+                break;
+              }
+            }
+            if (empty($this->ErrorSubProjectName)) {
+              $this->Label->SetText($data);
+            }
         }
     }
 

@@ -36,6 +36,10 @@ class TestingHandler extends AbstractHandler
     private $Builds;
     private $BuildInformation;
 
+    // Map SubProjects to Labels
+    private $SubProjects;
+    private $TestSubProjectName;
+
     // Keep a record of the number of tests passed, failed and notrun
     // This works only because we have one test file per submission
     private $NumberTestsFailed;
@@ -49,6 +53,7 @@ class TestingHandler extends AbstractHandler
     {
         parent::__construct($projectID, $scheduleID);
         $this->Builds = array();
+        $this->SubProjects = array();
         $this->Site = new Site();
         $this->NumberTestsFailed = array();
         $this->NumberTestsNotRun = array();
@@ -92,11 +97,17 @@ class TestingHandler extends AbstractHandler
             } else {
                 $this->Append = false;
             }
+        } elseif ($name == 'SUBPROJECT') {
+            $this->SubProjectName = $attributes['NAME'];
+            if (!array_key_exists($this->SubProjectName, $this->SubProjects)) {
+                $this->SubProjects[$this->SubProjectName] = array();
+            }
         } elseif ($name == 'TEST' && count($attributes) > 0) {
             $this->Test = new Test();
             $this->Test->ProjectId = $this->projectid;
             $this->BuildTest = new BuildTest();
             $this->BuildTest->Status = $attributes['STATUS'];
+            $this->TestSubProjectName = "";
         } elseif ($name == 'NAMEDMEASUREMENT') {
             $this->TestMeasurement = new TestMeasurement();
 
@@ -153,7 +164,10 @@ class TestingHandler extends AbstractHandler
                     $this->projectid, $build->Id);
             }
         } elseif ($name == 'LABEL' && $parent == 'LABELS') {
-            if (isset($this->Test)) {
+            if (!empty($this->TestSubProjectName)) {
+                $this->SubProjectName = $this->TestSubProjectName;
+            }
+            elseif (isset($this->Test)) {
                 $this->Test->AddLabel($this->Label);
             }
         } elseif ($name == 'NAMEDMEASUREMENT') {
@@ -263,8 +277,19 @@ class TestingHandler extends AbstractHandler
             $this->TestMeasurement->Value .= $data;
         } elseif ($parent == 'MEASUREMENT' && $element == 'VALUE') {
             $this->Test->Output .= $data;
+        } elseif ($parent == 'SUBPROJECT' && $element == 'LABEL') {
+           $this->SubProjects[$this->SubProjectName][] =  $data;
         } elseif ($parent == 'LABELS' && $element == 'LABEL') {
-            $this->Label->SetText($data);
+            // First, check if this label belongs to a SubProject
+            foreach ($this->SubProjects as $subproject => $labels) {
+              if (in_array($data, $labels)) {
+                $this->TestSubProjectName = $subproject;
+                break;
+              }
+            }
+            if (empty($this->TestSubProjectName)) {
+              $this->Label->SetText($data);
+            }
         }
     }
 
