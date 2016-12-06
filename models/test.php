@@ -247,7 +247,7 @@ class Test
                     echo "Unknown image type: $type";
                     return;
             }
-            $imageVariable = addslashes(ob_get_contents());
+            $imageVariable = ob_get_contents();
             ob_end_clean();
 
             $image->Data = $imageVariable;

@@ -170,11 +170,7 @@ function addErrorResponse($data)
     $data['id'] = $response['numErrors'];
     $response['numErrors']++;
 
-    if ($build->IsParentBuild()) {
-        $response['errors'][$data['subprojectname']][] = $data;
-    } else {
-        $response['errors'][] = $data;
-    }
+    $response['errors'][] = $data;
 }
 
 if (isset($_GET['onlydeltan'])) {
@@ -191,12 +187,13 @@ if (isset($_GET['onlydeltan'])) {
     while ($resolvedBuildFailure = pdo_fetch_array($resolvedBuildFailures)) {
         $marshaledResolvedBuildFailure = buildfailure::marshal($resolvedBuildFailure, $project_array, $revision);
 
-        // @todo This code does nothing, should probably be JSON counterpart
-        get_labels_xml_from_query_results(
-            "SELECT text FROM label, label2buildfailure
-         WHERE label.id=label2buildfailure.labelid AND
-               label2buildfailure.buildfailureid='" . $resolvedBuildFailure['id']  . "'
-         ORDER BY text ASC", $marshaledResolvedBuildFailure);
+        if ($project_array['displaylabels']) {
+            get_labels_JSON_from_query_results(
+                    "SELECT text FROM label, label2buildfailure
+                    WHERE label.id=label2buildfailure.labelid AND
+                    label2buildfailure.buildfailureid='" . $resolvedBuildFailure['id']  . "'
+                    ORDER BY text ASC", $marshaledResolvedBuildFailure);
+        }
 
         $marshaledResolvedBuildFailure = array_merge($marshaledResolvedBuildFailure, array(
             'stderr' => $resolvedBuildFailure['stderror'],
@@ -224,18 +221,22 @@ if (isset($_GET['onlydeltan'])) {
     while ($buildFailure = pdo_fetch_array($buildFailures)) {
         $marshaledBuildFailure = buildfailure::marshal($buildFailure, $project_array, $revision, true);
 
-        get_labels_JSON_from_query_results(
-            "SELECT text FROM label, label2buildfailure
-       WHERE label.id=label2buildfailure.labelid AND
-             label2buildfailure.buildfailureid='" . $buildFailure['id']  . "'
-       ORDER BY text ASC", $marshaledBuildFailure);
+        if ($project_array['displaylabels']) {
+            get_labels_JSON_from_query_results(
+                    "SELECT text FROM label, label2buildfailure
+                    WHERE label.id=label2buildfailure.labelid AND
+                    label2buildfailure.buildfailureid='" . $buildFailure['id']  . "'
+                    ORDER BY text ASC", $marshaledBuildFailure);
+        }
 
         addErrorResponse($marshaledBuildFailure);
     }
 }
 
 if ($build->IsParentBuild()) {
-    $response['numSubprojects'] = count($response['errors']);
+    $response['numSubprojects'] = count(array_unique(array_map(function ($buildError) {
+        return $buildError['subprojectid'];
+    }, $response['errors'])));
 }
 
 $end = microtime_float();

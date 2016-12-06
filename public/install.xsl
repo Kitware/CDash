@@ -29,7 +29,7 @@
       <a>
         <xsl:attribute name="href">
         <xsl:value-of select="cdash/dashboard/home"/></xsl:attribute>
-        <img id="projectlogo" border="0" height="50px" src="img/cdash.gif"></img>
+        <img id="projectlogo" border="0" height="50px" src="img/cdash.png"></img>
       </a>
     </div>
     <div id="headername2">

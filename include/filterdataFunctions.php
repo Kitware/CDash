@@ -625,6 +625,39 @@ class CompareCoveragePhpFilters extends DefaultFilters
     }
 }
 
+class TestOverviewPhpFilters extends DefaultFilters
+{
+    public function getDefaultFilter()
+    {
+        return array(
+            'field' => 'buildname',
+            'fieldtype' => 'string',
+            'compare' => 63,
+            'value' => ''
+        );
+    }
+
+    public function getFilterDefinitionsXML()
+    {
+        return getFilterDefinitionXML('buildname', 'Build Name', 'string', '', '');
+    }
+
+    public function getSqlField($field)
+    {
+        $sql_field = '';
+        switch (strtolower($field)) {
+            case 'buildname':
+                $sql_field = 'b.name';
+                break;
+
+            default:
+                trigger_error("unknown field: $field", E_USER_WARNING);
+                break;
+        }
+        return $sql_field;
+    }
+}
+
 // Factory method to create page specific filters:
 //
 function createPageSpecificFilters($page_id)
@@ -647,6 +680,10 @@ function createPageSpecificFilters($page_id)
 
         case 'viewTest.php':
             return new ViewTestPhpFilters();
+            break;
+
+        case 'testOverview.php':
+            return new TestOverviewPhpFilters();
             break;
 
         case 'compareCoverage.php':

@@ -21,7 +21,7 @@
     <div id="headerlogo">
       <a href="{{cdash.home}}">
         <img ng-if="cdash.logoid != 0" id="projectlogo" border="0" height="50px" ng-src="displayImage.php?imgid={{cdash.logoid}}"/>
-        <img ng-if="!cdash.logoid || cdash.logoid==0" id="projectlogo" border="0" height="50px" src="img/cdash.gif"/>
+        <img ng-if="!cdash.logoid || cdash.logoid==0" id="projectlogo" border="0" height="50px" src="img/cdash.png"/>
       </a>
     </div>
     <div id="headername">
@@ -83,7 +83,7 @@
         <li id="Back" ng-if="cdash.menu.back">
           <a href="{{cdash.menu.back}}{{cdash.extrafilterurl}}">Back</a>
         </li>
-        <li ng-if="!cdash.hidenav">
+        <li ng-if="cdash.showcalendar">
           <a id="cal" href="javascript:;" ng-click="toggleCalendar()">Calendar</a>
           <span id="date_now" style="display:none;">{{cdash.date}}</span>
         </li>

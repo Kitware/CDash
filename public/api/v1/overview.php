@@ -94,6 +94,7 @@ if ($CDASH_MEMCACHE_ENABLED &&
 $response = begin_JSON_response();
 get_dashboard_JSON_by_name($projectname, $date, $response);
 $response['title'] = "CDash Overview : $projectname";
+$response['showcalendar'] = 1;
 
 $menu['previous'] = "overview.php?project=$projectname&date=$previousdate";
 $menu['current'] = "overview.php?project=$projectname";

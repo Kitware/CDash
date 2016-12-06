@@ -72,6 +72,7 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
     $response = begin_JSON_response();
 
     $response['title'] = 'CDash - ' . $Project->Name;
+    $response['showcalendar'] = 1;
 
     $banners = array();
     $Banner = new Banner;

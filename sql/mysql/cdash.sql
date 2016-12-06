@@ -727,7 +727,8 @@ CREATE TABLE `builderrordiff` (
   KEY `buildid` (`buildid`),
   KEY `type` (`type`),
   KEY `difference_positive` (`difference_positive`),
-  KEY `difference_negative` (`difference_negative`)
+  KEY `difference_negative` (`difference_negative`),
+  UNIQUE KEY `unique_builderrordiff` (`buildid`, `type`)
 );
 
 CREATE TABLE `testdiff` (
@@ -738,7 +739,8 @@ CREATE TABLE `testdiff` (
   KEY `buildid` (`buildid`),
   KEY `type` (`type`),
   KEY `difference_positive` (`difference_positive`),
-  KEY `difference_negative` (`difference_negative`)
+  KEY `difference_negative` (`difference_negative`),
+  UNIQUE KEY `unique_testdiff` (`buildid`, `type`)
 );
 
 CREATE TABLE `build2note` (
@@ -797,7 +799,8 @@ CREATE TABLE `configureerrordiff` (
   `type` tinyint(4) NOT NULL,
   `difference` int(11) NOT NULL,
   KEY `buildid` (`buildid`),
-  KEY `type` (`type`)
+  KEY `type` (`type`),
+  UNIQUE KEY `unique_configureerrordiff` (`buildid`, `type`)
 );
 
 
