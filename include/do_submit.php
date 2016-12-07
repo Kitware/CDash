@@ -429,7 +429,7 @@ function put_submit_file()
         $producer->produce(new DefaultMessage('DoSubmit', array(
             'coverage_submission' => true,
             'filename' => $filename,
-            'md5' => $md5sum,
+            'expected_md5' => $md5sum,
             'projectid' => $projectid,
             'submission_ip' => $_SERVER['REMOTE_ADDR'])));
     } elseif ($CDASH_ASYNCHRONOUS_SUBMISSION) {
