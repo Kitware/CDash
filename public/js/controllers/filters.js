@@ -286,19 +286,32 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
   };
 
   $scope.createHyperlink = function() {
-    // count the number of filters
-    var n = $scope.filterdata.filters.length;
+    // Count the number of filters.
+    var n = $scope.filterdata.filters.length,
+    // Read the current query string parameters.
+    params = window.location.search.replace('?', '').split(/[&;]/g);
 
-    s = new String(window.location);
-
-    // If the current window.location already has a &filtercount=... (and other
-    // filter stuff), trim it off and just use part that comes before it.
-    idx = s.indexOf("&filtercount=", 0);
-    if (idx > 0) {
-      s = s.substr(0, idx);
+    // Search for and remove any existing filter params.
+    var filterParams = ['filtercount', 'showfilters', 'field', 'compare', 'value', 'limit'];
+    // Reverse iteration because this is destructive.
+    for (var i = params.length; i-- > 0;) {
+      for (var j = 0; j < filterParams.length; j++) {
+        if (params[i].startsWith(filterParams[j])) {
+          params.splice(i, 1);
+          break;
+        }
+      }
     }
 
-    s = s + "&filtercount=" + n;
+    // Reconstruct the URL to include the query string parameters that survived
+    // the culling above.
+    var s = window.location.origin + window.location.pathname + '?';
+    for (var i = 0; i < params.length; i++) {
+      s += params[i] + '&';
+    }
+
+    // Now add filter params.
+    s = s + "filtercount=" + n;
     s = s + "&showfilters=1";
 
     l = $("#id_limit").val();
