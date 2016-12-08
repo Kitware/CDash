@@ -74,13 +74,15 @@ class ConfigureHandler extends AbstractHandler
             if (!array_key_exists($this->SubProjectName, $this->SubProjects)) {
                 $this->SubProjects[$this->SubProjectName] = array();
             }
-            $build = new Build();
-            $build->SiteId = $this->Site->Id;
-            $build->Name = $this->BuildInformation->BuildName;
-            $build->SetStamp($this->BuildInformation->BuildStamp);
-            $build->Generator = $this->BuildInformation->Generator;
-            $build->Information = $this->BuildInformation;
-            $this->Builds[$this->SubProjectName] = $build;
+            if (!array_key_exists($this->SubProjectName, $this->Builds)) {
+              $build = new Build();
+              $build->SiteId = $this->Site->Id;
+              $build->Name = $this->BuildInformation->BuildName;
+              $build->SetStamp($this->BuildInformation->BuildStamp);
+              $build->Generator = $this->BuildInformation->Generator;
+              $build->Information = $this->BuildInformation;
+              $this->Builds[$this->SubProjectName] = $build;
+            }
         } elseif ($name == 'CONFIGURE') {
             if (empty($this->Builds)) {
                 // No subprojects

@@ -113,11 +113,11 @@ class BuildHandler extends AbstractHandler
         } elseif ($name == 'WARNING') {
             $this->Error = new BuildError();
             $this->Error->Type = 1;
-            $this->SubProjectName = "";
+            $this->ErrorSubProjectName = "";
         } elseif ($name == 'ERROR') {
             $this->Error = new BuildError();
             $this->Error->Type = 0;
-            $this->SubProjectName = "";
+            $this->ErrorSubProjectName = "";
         } elseif ($name == 'FAILURE') {
             $this->Error = new BuildFailure();
             $this->Error->Type = 0;
@@ -126,7 +126,7 @@ class BuildHandler extends AbstractHandler
             } elseif ($attributes['TYPE'] == 'Warning') {
                 $this->Error->Type = 1;
             }
-            $this->SubProjectName = "";
+            $this->ErrorSubProjectName = "";
         } elseif ($name == 'LABEL') {
             $this->Label = new Label();
         }
