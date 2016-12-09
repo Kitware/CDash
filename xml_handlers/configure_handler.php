@@ -44,7 +44,7 @@ class ConfigureHandler extends AbstractHandler
         // Only complain about errors & warnings once.
         $this->Notified = false;
         $this->SubProjects = array();
-        $this->LabelIsSubproject = true;
+        $this->LabelIsSubproject = false;
     }
 
     public function startElement($parser, $name, $attributes)
@@ -95,6 +95,7 @@ class ConfigureHandler extends AbstractHandler
                 $this->Builds[''] = $build;
             }
         } elseif ($name == 'LABEL' && $parent == 'LABELS') {
+            $this->LabelIsSubproject = false;
             $this->Label = new Label();
         }
     }
@@ -219,7 +220,7 @@ class ConfigureHandler extends AbstractHandler
                 break;
               }
             }
-            if ($this->LabelIsSubproject) {
+            if (!$this->LabelIsSubproject) {
               $this->Label->SetText($data);
             }
         }
