@@ -305,10 +305,7 @@ function compute_configure_difference($buildid, $previousbuildid, $warning)
             VALUES(?, ?, ?)');
         $stmt->execute(array($buildid, $warning, $errordiff));
         add_last_sql_error('compute_configure_difference', 0, $buildid);
-        $pdo->rollBack();
-        return;
     }
-    $pdo->commit();
 }
 
 /** Add the difference between the numbers of tests
