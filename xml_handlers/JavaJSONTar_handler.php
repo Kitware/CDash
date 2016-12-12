@@ -40,8 +40,10 @@ class JavaJSONTarHandler
      **/
     public function Parse($filename)
     {
+        global $CDASH_BACKUP_DIRECTORY;
+
         // Create a new directory where we can extract our tarball.
-        $dirName = sys_get_temp_dir() . '/' . pathinfo($filename, PATHINFO_FILENAME);
+        $dirName = $CDASH_BACKUP_DIRECTORY . DIRECTORY_SEPARATOR . pathinfo($filename, PATHINFO_FILENAME);
         mkdir($dirName);
 
         // Extract the tarball.

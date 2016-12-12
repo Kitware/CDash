@@ -66,7 +66,8 @@ class GCovTarHandler
     public function Parse($filename)
     {
         // Create a new directory where we can extract our tarball.
-        $dirName = sys_get_temp_dir() . '/' . pathinfo($filename, PATHINFO_FILENAME);
+        global $CDASH_BACKUP_DIRECTORY;
+        $dirName = $CDASH_BACKUP_DIRECTORY . DIRECTORY_SEPARATOR . pathinfo($filename, PATHINFO_FILENAME);
         mkdir($dirName);
 
         // Extract the tarball.

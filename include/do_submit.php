@@ -34,9 +34,9 @@ include 'include/sendemail.php';
  **/
 function fileHandleFromSubmissionId($submissionId, $coverageFile=false)
 {
-    global $CDASH_BASE_URL;
+    global $CDASH_BACKUP_DIRECTORY, $CDASH_BASE_URL;
 
-    $tmpFilename = tempnam(sys_get_temp_dir(), 'cdash-submission-');
+    $tmpFilename = tempnam($CDASH_BACKUP_DIRECTORY, 'cdash-submission-');
     $filename = ($coverageFile) ? $submissionId : $submissionId . '.xml';
     $client = new GuzzleHttp\Client();
     $response = $client->request('GET',
