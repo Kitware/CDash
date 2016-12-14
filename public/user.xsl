@@ -110,7 +110,7 @@
             <img src="img/manageclient.png" border="0" alt="manageclient" /></a>
           </xsl:if>
           <a class="tooltip" title="Edit project" >
-          <xsl:attribute name="href">createProject.php?edit=1&amp;projectid=<xsl:value-of select="id"/></xsl:attribute>
+          <xsl:attribute name="href">createProject.php?projectid=<xsl:value-of select="id"/></xsl:attribute>
           <img  src="img/edit2.png" border="0" alt="editproject" /></a>
           <a class="tooltip" title="Manage subprojects" >
           <xsl:attribute name="href">manageSubProject.php?projectid=<xsl:value-of select="id"/></xsl:attribute>
@@ -323,7 +323,6 @@
 <tbody>
     <tr class="table-heading1"><td id="nob"><h3>Administration</h3></td></tr>
     <tr class="trodd"><td id="nob"><a href="createProject.php">Create new project</a></td></tr>
-    <tr class="treven"><td id="nob"><a href="createProject.php?edit=1">Edit project</a></td></tr>
     <tr class="trodd"><td id="nob"><a href="manageProjectRoles.php">Manage project roles</a></td></tr>
     <tr class="treven"><td id="nob"><a href="manageSubProject.php">Manage subproject</a></td></tr>
     <tr class="trodd"><td id="nob"><a href="manageBuildGroup.php">Manage project groups</a></td></tr>

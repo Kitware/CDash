@@ -44,22 +44,12 @@ if (!isset($userid) || !is_numeric($userid)) {
     return;
 }
 
-$edit = isset($_GET['edit']) && !empty($_GET['edit']);
-
 $projectid = null;
 if (isset($_GET['projectid']) && !empty($_GET['projectid'])) {
     $projectid = pdo_real_escape_numeric($_GET['projectid']);
 }
 
 $Project = new Project;
-
-// If the projectid is not set and there is only one project we go directly to the page
-if ($edit && is_null($projectid)) {
-    $projectids = $Project->GetIds();
-    if (count($projectids) == 1) {
-        $projectid = $projectids[0];
-    }
-}
 
 // If the projectid is set, make sure that it's valid
 $Project->Id = $projectid;
@@ -73,13 +63,15 @@ $User = new User;
 $User->Id = $userid;
 $role = $Project->GetUserRole($userid);
 
-// Check if the user has permission to create/edit the project.
+// Check if the user has the necessary permissions.
 $userHasAccess = false;
-if ($edit) {
+if (!is_null($projectid)) {
+    // Can they edit this project?
     if ($User->IsAdmin() || $role > 1) {
         $userHasAccess = true;
     }
 } else {
+    // Can they create a new project?
     if ($User->IsAdmin() ||
         (isset($_SESSION['cdash']['user_can_create_project']) &&
          $_SESSION['cdash']['user_can_create_project'] == 1)) {
@@ -105,7 +97,7 @@ $response['manageclient'] =  $CDASH_MANAGE_CLIENTS;
 $nRepositories = 0;
 $repositories_response = array();
 
-if ($edit || !is_null($projectid)) {
+if (!is_null($projectid)) {
     $response['title'] = 'CDash - Edit Project';
     $response['edit'] = 1;
 } else {
