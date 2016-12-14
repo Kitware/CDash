@@ -73,16 +73,20 @@ $User = new User;
 $User->Id = $userid;
 $role = $Project->GetUserRole($userid);
 
-// If we are editing a project make sure we have the right to do so
-if (!is_null($projectid)
-    && !(isset($_SESSION['cdash']['user_can_create_project']) &&
-        $_SESSION['cdash']['user_can_create_project'] == 1)
-    && !$User->IsAdmin()
-) {
-    $response['error'] = 'You do not have permission to access this page.';
-    echo json_encode($response);
-    return;
-} elseif (!is_null($projectid) && (!$User->IsAdmin() && $role <= 1)) {
+// Check if the user has permission to create/edit the project.
+$userHasAccess = false;
+if ($edit) {
+    if ($User->IsAdmin() || $role > 1) {
+        $userHasAccess = true;
+    }
+} else {
+    if ($User->IsAdmin() ||
+        (isset($_SESSION['cdash']['user_can_create_project']) &&
+         $_SESSION['cdash']['user_can_create_project'] == 1)) {
+        $userHasAccess = true;
+    }
+}
+if (!$userHasAccess) {
     $response['error'] = 'You do not have permission to access this page.';
     echo json_encode($response);
     return;
