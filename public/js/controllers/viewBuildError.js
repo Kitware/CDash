@@ -55,8 +55,8 @@ CDash.controller('BuildErrorController',
     $scope.pageChanged = function() {
       $scope.setPage($scope.pagination.currentPage);
     };
-  }).directive('buildError', function () {
+  }).directive('buildError', function (VERSION) {
       return {
-          templateUrl: 'views/partials/buildError.html'
+          templateUrl: 'build/views/partials/buildError_' + VERSION + '.html'
       };
   });
