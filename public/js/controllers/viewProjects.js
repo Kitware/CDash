@@ -7,8 +7,8 @@ CDash.controller('ViewProjectsController',
       url: 'api/v1/viewProjects.php',
       method: 'GET',
       params: $rootScope.queryString
-    }).success(function(cdash) {
-      renderTimer.initialRender($scope, cdash);
+    }).then(function success(s) {
+      renderTimer.initialRender($scope, s.data);
     }).finally(function() {
       $scope.loading = false;
     });

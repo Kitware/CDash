@@ -11,7 +11,8 @@ CDash.controller('BuildErrorController',
       url: 'api/v1/viewBuildError.php',
       method: 'GET',
       params: $rootScope.queryString
-    }).success(function(cdash) {
+    }).then(function success(s) {
+      var cdash = s.data;
       // Handle the fact that we add HTML links to compiler output.
       var trustErrorHtml = function (error) {
           error.precontext = $sce.trustAsHtml(error.precontext);

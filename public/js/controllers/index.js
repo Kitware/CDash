@@ -88,7 +88,9 @@ CDash.filter("showEmptyBuildsLast", function () {
     url: 'api/v1/index.php',
     method: 'GET',
     params: $rootScope.queryString
-  }).success(function(cdash) {
+  }).then(function success(s) {
+    var cdash = s.data;
+
     // Set title in root scope so the head controller can see it.
     $rootScope['title'] = cdash.title;
 
@@ -303,7 +305,8 @@ CDash.filter("showEmptyBuildsLast", function () {
         url: 'api/v1/is_build_expected.php',
         method: 'GET',
         params: { 'buildid': build.id }
-      }).success(function(response) {
+      }).then(function success(s) {
+        var response = s.data;
         build.loading = 0;
         if ("expected" in response) {
           build.expected = response.expected;
@@ -333,7 +336,8 @@ CDash.filter("showEmptyBuildsLast", function () {
           'buildid': build.id,
           'getproblems': 1
         }
-      }).success(function(response) {
+      }).then(function success(s) {
+        var response = s.data;
         build.loading = 0;
         build.showProblems = 1;
 
@@ -369,7 +373,8 @@ CDash.filter("showEmptyBuildsLast", function () {
           'type': build.buildtype,
           'currenttime': $scope.cdash.unixtimestamp
         }
-      }).success(function(response) {
+      }).then(function success(s) {
+        var response = s.data;
         build.loading = 0;
         build.showExpectedInfo = 1;
         build.lastSubmission = response.lastSubmission;
@@ -393,7 +398,7 @@ CDash.filter("showEmptyBuildsLast", function () {
           url: 'api/v1/build.php',
           method: 'DELETE',
           params: parameters
-        }).success(function() {
+        }).then(function success() {
           $scope.removeBuildFromScope(build);
       });
     }
@@ -432,7 +437,7 @@ CDash.filter("showEmptyBuildsLast", function () {
       done: newDoneValue
     };
     $http.post('api/v1/build.php', parameters)
-    .success(function(data) {
+    .then(function success() {
       build.done = newDoneValue;
     });
   };
@@ -450,7 +455,7 @@ CDash.filter("showEmptyBuildsLast", function () {
         url: 'api/v1/expectedbuild.php',
         method: 'DELETE',
         params: parameters
-      }).success(function() {
+      }).then(function success() {
         $scope.removeBuildFromScope(build);
       });
     } else {
@@ -464,7 +469,7 @@ CDash.filter("showEmptyBuildsLast", function () {
         expected: newExpectedValue
       };
       $http.post('api/v1/build.php', parameters)
-      .success(function(data) {
+      .then(function success() {
         build.expected = newExpectedValue;
       });
     }
@@ -493,7 +498,7 @@ CDash.filter("showEmptyBuildsLast", function () {
         type: build.buildtype
       };
       $http.post('api/v1/expectedbuild.php', parameters)
-      .success(function(data) {
+      .then(function success() {
         window.location.reload();
       });
     } else {
@@ -503,7 +508,7 @@ CDash.filter("showEmptyBuildsLast", function () {
         expected: build.expected
       };
       $http.post('api/v1/build.php', parameters)
-      .success(function(data) {
+      .then(function success() {
         window.location.reload();
       });
     }

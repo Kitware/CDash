@@ -17,7 +17,8 @@ CDash.controller('ViewSubProjectsController',
       url: 'api/v1/viewSubProjects.php',
       method: 'GET',
       params: $rootScope.queryString
-    }).success(function(cdash) {
+    }).then(function success(s) {
+      var cdash = s.data;
       renderTimer.initialRender($scope, cdash);
       $rootScope['title'] = cdash.title;
       $rootScope.setupCalendar($scope.cdash.date);
