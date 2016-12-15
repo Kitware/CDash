@@ -5,7 +5,8 @@ CDash.controller('TestDetailsController',
       url: 'api/v1/testDetails.php',
       method: 'GET',
       params: $rootScope.queryString
-    }).success(function(cdash) {
+    }).then(function success(s) {
+      var cdash = s.data;
       renderTimer.initialRender($scope, cdash);
 
       // Set title in root scope so the head controller can see it.
@@ -43,8 +44,8 @@ CDash.controller('TestDetailsController',
               testid: testid,
               buildid: buildid
             }
-          }).success(function(response) {
-            $scope.status_graph(response);
+          }).then(function success(s) {
+            $scope.status_graph(s.data);
           });
           break;
 
@@ -56,8 +57,8 @@ CDash.controller('TestDetailsController',
               testid: testid,
               buildid: buildid
             }
-          }).success(function(response) {
-            $scope.measurement_graph(response, "Execution Time (seconds)");
+          }).then(function success(s) {
+            $scope.measurement_graph(s.data, "Execution Time (seconds)");
           });
           break;
 
@@ -70,8 +71,8 @@ CDash.controller('TestDetailsController',
               buildid: buildid,
               measurement: measurementname
             }
-          }).success(function(response) {
-            $scope.measurement_graph(response, measurementname);
+          }).then(function success(s) {
+            $scope.measurement_graph(s.data, measurementname);
             $scope.cdash.csvlink = 'ajax/showtestmeasurementdatagraph.php?testid=' + testid + '&buildid=' + buildid + '&measurement=' + measurementname + '&export=csv';
           });
           break;

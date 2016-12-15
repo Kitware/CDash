@@ -345,8 +345,8 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
     url: 'api/v1/filterdata.php',
     method: 'GET',
     params: $rootScope.queryString
-  }).success(function(filterdata) {
-
+  }).then(function success(s) {
+    var filterdata = s.data;
     filterdata.filters.forEach(function(filter) {
       filter.compare = filter.compare.toString();
     });

@@ -40,7 +40,9 @@ CDash.filter('filter_builds', function() {
     url: 'api/v1/manageBuildGroup.php',
     method: 'GET',
     params: $rootScope.queryString
-  }).success(function(cdash) {
+  }).then(function success(s) {
+    var cdash = s.data;
+
     renderTimer.initialRender($scope, cdash);
 
     // Sort BuildGroups by position.
@@ -77,7 +79,8 @@ CDash.filter('filter_builds', function() {
       type: type
     };
     $http.post('api/v1/buildgroup.php', parameters)
-    .success(function(buildgroup) {
+    .then(function success(s) {
+      var buildgroup = s.data;
       if (buildgroup.error) {
         $scope.cdash.error = buildgroup.error;
       }
@@ -103,9 +106,9 @@ CDash.filter('filter_builds', function() {
       newLayout: newLayout
     };
     $http.post('api/v1/buildgroup.php', parameters)
-    .success(function(resp) {
-      if (resp.error) {
-        $scope.cdash.error = resp.error;
+    .then(function success(s) {
+      if (s.data.error) {
+        $scope.cdash.error = s.data.error;
       }
       else {
         $("#order_updated").show();
@@ -124,9 +127,9 @@ CDash.filter('filter_builds', function() {
       url: 'api/v1/buildgroup.php',
       method: 'PUT',
       params: parameters
-    }).success(function(resp) {
-      if (resp.error) {
-        $scope.cdash.error = resp.error;
+    }).then(function success(s) {
+      if (s.data.error) {
+        $scope.cdash.error = s.data.error;
       }
       else {
         $("#buildgroup_updated_" + buildgroup.id).show();
@@ -147,7 +150,7 @@ CDash.filter('filter_builds', function() {
         url: 'api/v1/buildgroup.php',
         method: 'DELETE',
         params: parameters
-      }).success(function() {
+      }).then(function success() {
         // Find the index of the group to remove.
         var index = -1;
         for(var i = 0, len = $scope.cdash.buildgroups.length; i < len; i++) {
@@ -174,9 +177,9 @@ CDash.filter('filter_builds', function() {
       expected: expected
     };
     $http.post('api/v1/buildgroup.php', parameters)
-    .success(function(buildgroup) {
-      if (buildgroup.error) {
-        $scope.cdash.error = buildgroup.error;
+    .then(function success(s) {
+      if (s.data.error) {
+        $scope.cdash.error = s.data.error;
       }
       else {
         $("#builds_moved").show();
@@ -195,9 +198,9 @@ CDash.filter('filter_builds', function() {
       nameMatch: nameMatch
     };
     $http.post('api/v1/buildgroup.php', parameters)
-    .success(function(buildgroup) {
-      if (buildgroup.error) {
-        $scope.cdash.error = buildgroup.error;
+    .then(function success(s) {
+      if (s.data.error) {
+        $scope.cdash.error = s.data.error;
       }
       else {
         $("#wildcard_defined").show();
@@ -217,7 +220,7 @@ CDash.filter('filter_builds', function() {
       url: 'api/v1/buildgroup.php',
       method: 'DELETE',
       params: parameters
-    }).success(function() {
+    }).then(function success() {
       // Find the index of the wildcard to remove.
       var index = $scope.cdash.wildcards.indexOf(wildcard);
       if (index > -1) {
@@ -238,9 +241,9 @@ CDash.filter('filter_builds', function() {
       match: match
     };
     $http.post('api/v1/buildgroup.php', parameters)
-    .success(function(rule) {
-      if (rule.error) {
-        $scope.cdash.error = rule.error;
+    .then(function success(s) {
+      if (s.data.error) {
+        $scope.cdash.error = s.data.error;
       }
       else {
         // Add this new rule to our scope.
@@ -268,7 +271,7 @@ CDash.filter('filter_builds', function() {
       url: 'api/v1/buildgroup.php',
       method: 'DELETE',
       params: parameters
-    }).success(function() {
+    }).then(function success() {
       // Find the index of the dynamic group in question.
       var idx1 = $scope.cdash.dynamics.indexOf(dynamic);
       if (idx1 > -1) {

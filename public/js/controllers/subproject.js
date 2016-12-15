@@ -12,8 +12,8 @@ CDash.controller('SubProjectController', function SubProjectController($scope, $
         url: 'api/v1/subproject.php',
         method: 'GET',
         params: $rootScope.queryString
-      }).success(function(details) {
-        $scope.details = details;
+      }).then(function success(s) {
+        $scope.details = s.data;
 
         // Create a reference to this subproject's group.
         var index = -1;
@@ -39,7 +39,7 @@ CDash.controller('SubProjectController', function SubProjectController($scope, $
       url: 'api/v1/subproject.php',
       method: 'DELETE',
       params: parameters
-    }).success(function(details) {
+    }).then(function success() {
       // Find the index of the subproject to remove.
       var index = -1;
       for(var i = 0, len = $scope.cdash.subprojects.length; i < len; i++) {
@@ -66,7 +66,7 @@ CDash.controller('SubProjectController', function SubProjectController($scope, $
       url: 'api/v1/subproject.php',
       method: 'PUT',
       params: parameters
-    }).success(function(details) {
+    }).then(function success() {
       // Find the index of the dependency we just added.
       var index = -1;
       for(var i = 0, len = $scope.details.available_dependencies.length; i < len; i++) {
@@ -95,7 +95,7 @@ CDash.controller('SubProjectController', function SubProjectController($scope, $
       url: 'api/v1/subproject.php',
       method: 'DELETE',
       params: parameters
-    }).success(function(details) {
+    }).then(function success() {
       // Find the index of the dependency to remove.
       var index = -1;
       for(var i = 0, len = $scope.details.dependencies.length; i < len; i++) {
@@ -123,7 +123,7 @@ CDash.controller('SubProjectController', function SubProjectController($scope, $
       url: 'api/v1/subproject.php',
       method: 'PUT',
       params: parameters
-    }).success(function(details) {
+    }).then(function success() {
       $("#group_changed_" + $scope.details.subprojectid).show();
       $("#group_changed_" + $scope.details.subprojectid).delay(3000).fadeOut(400);
     });

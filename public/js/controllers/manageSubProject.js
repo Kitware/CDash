@@ -23,7 +23,8 @@ CDash.filter('filter_subproject_groups', function() {
     url: 'api/v1/manageSubProject.php',
     method: 'GET',
     params: $rootScope.queryString
-  }).success(function(cdash) {
+  }).then(function success(s) {
+    var cdash = s.data;
     renderTimer.initialRender($scope, cdash);
 
     // Sort groups by position.
@@ -52,7 +53,8 @@ CDash.filter('filter_subproject_groups', function() {
       group: groupName
     };
     $http.post('api/v1/subproject.php', parameters)
-    .success(function(subproj) {
+    .then(function success(s) {
+      var subproj = s.data;
       if (subproj.error) {
         $scope.cdash.error = subproj.error;
       }
@@ -74,7 +76,8 @@ CDash.filter('filter_subproject_groups', function() {
       isdefault: isDefault
     };
     $http.post('api/v1/subproject.php', parameters)
-    .success(function(group) {
+    .then(function success(s) {
+      var group = s.data;
 
       // Update our default group if necessary.
       if (group.is_default) {
@@ -98,9 +101,9 @@ CDash.filter('filter_subproject_groups', function() {
       url: 'api/v1/subproject.php',
       method: 'PUT',
       params: parameters
-    }).success(function(resp) {
-      if (resp.error) {
-        $scope.cdash.error = resp.error;
+    }).then(function success(s) {
+      if (s.data.error) {
+        $scope.cdash.error = s.data.error;
       }
       else {
         $("#group_updated_" + group.id).show();
@@ -118,7 +121,7 @@ CDash.filter('filter_subproject_groups', function() {
       url: 'api/v1/subproject.php',
       method: 'DELETE',
       params: parameters
-    }).success(function() {
+    }).then(function success() {
       // Find the index of the group to remove.
       var index = -1;
       for(var i = 0, len = $scope.cdash.groups.length; i < len; i++) {
@@ -142,9 +145,9 @@ CDash.filter('filter_subproject_groups', function() {
       newLayout: newLayout
     };
     $http.post('api/v1/subproject.php', parameters)
-    .success(function(resp) {
-      if (resp.error) {
-        $scope.cdash.error = resp.error;
+    .then(function success(s) {
+      if (s.data.error) {
+        $scope.cdash.error = s.data.error;
       }
       else {
         $("#order_updated").show();

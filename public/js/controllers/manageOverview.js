@@ -4,7 +4,8 @@ CDash.controller('ManageOverviewController', function ManageOverviewController($
     url: 'api/v1/manageOverview.php',
     method: 'GET',
     params: $rootScope.queryString
-  }).success(function(cdash) {
+  }).then(function success(s) {
+    var cdash = s.data;
     renderTimer.initialRender($scope, cdash);
     // Setup sortable elements.
     $scope.buildSortable = {
@@ -70,8 +71,8 @@ CDash.controller('ManageOverviewController', function ManageOverviewController($
       saveLayout: newLayout
     };
     $http.post('api/v1/manageOverview.php', parameters)
-    .success(function(data) {
-        $("#loading").attr("src", "img/check.gif");
+    .then(function success() {
+      $("#loading").attr("src", "img/check.gif");
     });
   };
 });
