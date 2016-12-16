@@ -30,6 +30,11 @@ class CreateProjectPermissionsTestCase extends KWWebTestCase
         $response = json_decode($response);
         $this->assertFalse(property_exists($response, 'error'));
 
+        // Emits an error for invalid projectid.
+        $response = $this->get($this->url . '/api/v1/createProject.php?projectid=0');
+        $response = json_decode($response);
+        $this->assertTrue(property_exists($response, 'error'));
+
         // Tests for normal user.
         $this->logout();
         $this->login('user1@kw', 'user1');

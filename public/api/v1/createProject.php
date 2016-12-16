@@ -44,19 +44,18 @@ if (!isset($userid) || !is_numeric($userid)) {
     return;
 }
 
-$projectid = null;
-if (isset($_GET['projectid']) && !empty($_GET['projectid'])) {
-    $projectid = pdo_real_escape_numeric($_GET['projectid']);
-}
-
 $Project = new Project;
+$projectid = null;
+if (isset($_GET['projectid'])) {
+    $projectid = pdo_real_escape_numeric($_GET['projectid']);
 
-// If the projectid is set, make sure that it's valid
-$Project->Id = $projectid;
-if (!is_null($projectid) && $projectid > 0 && !$Project->Exists()) {
-    $response['error'] = 'This project does not exist.';
-    echo json_encode($response);
-    return;
+    // Make sure projectid is valid if one was specified.
+    $Project->Id = $projectid;
+    if (!$Project->Exists()) {
+        $response['error'] = 'This project does not exist.';
+        echo json_encode($response);
+        return;
+    }
 }
 
 $User = new User;
