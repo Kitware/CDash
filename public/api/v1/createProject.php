@@ -44,45 +44,40 @@ if (!isset($userid) || !is_numeric($userid)) {
     return;
 }
 
-$edit = isset($_GET['edit']) && !empty($_GET['edit']);
-
-$projectid = null;
-if (isset($_GET['projectid']) && !empty($_GET['projectid'])) {
-    $projectid = pdo_real_escape_numeric($_GET['projectid']);
-}
-
 $Project = new Project;
+$projectid = null;
+if (isset($_GET['projectid'])) {
+    $projectid = pdo_real_escape_numeric($_GET['projectid']);
 
-// If the projectid is not set and there is only one project we go directly to the page
-if ($edit && is_null($projectid)) {
-    $projectids = $Project->GetIds();
-    if (count($projectids) == 1) {
-        $projectid = $projectids[0];
+    // Make sure projectid is valid if one was specified.
+    $Project->Id = $projectid;
+    if (!$Project->Exists()) {
+        $response['error'] = 'This project does not exist.';
+        echo json_encode($response);
+        return;
     }
-}
-
-// If the projectid is set, make sure that it's valid
-$Project->Id = $projectid;
-if (!is_null($projectid) && $projectid > 0 && !$Project->Exists()) {
-    $response['error'] = 'This project does not exist.';
-    echo json_encode($response);
-    return;
 }
 
 $User = new User;
 $User->Id = $userid;
 $role = $Project->GetUserRole($userid);
 
-// If we are editing a project make sure we have the right to do so
-if (!is_null($projectid)
-    && !(isset($_SESSION['cdash']['user_can_create_project']) &&
-        $_SESSION['cdash']['user_can_create_project'] == 1)
-    && !$User->IsAdmin()
-) {
-    $response['error'] = 'You do not have permission to access this page.';
-    echo json_encode($response);
-    return;
-} elseif (!is_null($projectid) && (!$User->IsAdmin() && $role <= 1)) {
+// Check if the user has the necessary permissions.
+$userHasAccess = false;
+if (!is_null($projectid)) {
+    // Can they edit this project?
+    if ($User->IsAdmin() || $role > 1) {
+        $userHasAccess = true;
+    }
+} else {
+    // Can they create a new project?
+    if ($User->IsAdmin() ||
+        (isset($_SESSION['cdash']['user_can_create_project']) &&
+         $_SESSION['cdash']['user_can_create_project'] == 1)) {
+        $userHasAccess = true;
+    }
+}
+if (!$userHasAccess) {
     $response['error'] = 'You do not have permission to access this page.';
     echo json_encode($response);
     return;
@@ -101,7 +96,7 @@ $response['manageclient'] =  $CDASH_MANAGE_CLIENTS;
 $nRepositories = 0;
 $repositories_response = array();
 
-if ($edit || !is_null($projectid)) {
+if (!is_null($projectid)) {
     $response['title'] = 'CDash - Edit Project';
     $response['edit'] = 1;
 } else {

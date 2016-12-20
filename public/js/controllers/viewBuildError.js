@@ -11,7 +11,8 @@ CDash.controller('BuildErrorController',
       url: 'api/v1/viewBuildError.php',
       method: 'GET',
       params: $rootScope.queryString
-    }).success(function(cdash) {
+    }).then(function success(s) {
+      var cdash = s.data;
       // Handle the fact that we add HTML links to compiler output.
       var trustErrorHtml = function (error) {
           error.precontext = $sce.trustAsHtml(error.precontext);
@@ -55,8 +56,8 @@ CDash.controller('BuildErrorController',
     $scope.pageChanged = function() {
       $scope.setPage($scope.pagination.currentPage);
     };
-  }).directive('buildError', function () {
+  }).directive('buildError', function (VERSION) {
       return {
-          templateUrl: 'views/partials/buildError.html'
+          templateUrl: 'build/views/partials/buildError_' + VERSION + '.html'
       };
   });

@@ -37,7 +37,8 @@ CDash.controller('ViewTestController',
       url: 'api/v1/viewTest.php',
       method: 'GET',
       params: $rootScope.queryString
-    }).success(function(cdash) {
+    }).then(function success(s) {
+      var cdash = s.data;
 
       // Check if we should display filters.
       if (cdash.filterdata && cdash.filterdata.showfilters == 1) {
@@ -91,7 +92,8 @@ CDash.controller('ViewTestController',
             'projectid': $scope.cdash.projectid,
             'groupid': $scope.cdash.groupid
           }
-        }).success(function(response) {
+        }).then(function success(s) {
+          var response = s.data;
           $scope.cdash.displayhistory = $scope.cdash.displayhistory || response.displayhistory;
           $scope.cdash.displaysummary = $scope.cdash.displaysummary || response.displaysummary;
 

@@ -51,7 +51,7 @@
         <ul id="navigation">
         <li id="admin">
         <a href="#">Settings</a><ul>
-        <li><a><xsl:attribute name="href">createProject.php?edit=1&#x26;projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>Project</a></li>
+        <li><a><xsl:attribute name="href">createProject.php?projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>Project</a></li>
         <li><a><xsl:attribute name="href">manageProjectRoles.php?projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>Users</a></li>
         <li><a><xsl:attribute name="href">manageBuildGroup.php?projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>Groups</a></li>
         <li><a><xsl:attribute name="href">manageCoverage.php?projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>Coverage</a></li>

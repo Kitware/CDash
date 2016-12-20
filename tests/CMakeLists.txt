@@ -115,6 +115,7 @@ add_php_test(truncateoutput)
 add_php_test(csvexport)
 add_php_test(uniquediffs)
 add_php_test(imagecomparison)
+add_php_test(createprojectpermissions)
 
 if(CDASH_GITHUB_USERNAME AND CDASH_GITHUB_PASSWORD)
   add_php_test(github_PR_comment)

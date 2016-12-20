@@ -4,7 +4,8 @@ function ViewNotesController($scope, $rootScope, $http, $location, anchors, rend
     url: 'api/v1/viewNotes.php',
     method: 'GET',
     params: $rootScope.queryString
-  }).success(function(cdash) {
+  }).then(function success(s) {
+    var cdash = s.data;
     renderTimer.initialRender($scope, cdash);
     // Honor any intra-page anchor specified in the URI.
     if ($location.hash() != '') {

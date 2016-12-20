@@ -42,7 +42,7 @@
 <xsl:if test="count(cdash/project/repository)=0">
   You should set the <a>
   <xsl:attribute name="href">
-    createProject.php?edit=1&#38;projectid=<xsl:value-of select="cdash/project/id" />#fragment-3
+    createProject.php?projectid=<xsl:value-of select="cdash/project/id" />##tab3
   </xsl:attribute>
   project repository</a> before starting.<br/>
 </xsl:if>
