@@ -15,7 +15,7 @@
 
     <div ng-if="::cdash.requirelogin == 1" ng-include="'login.php'"></div>
 
-    <ng-include ng-if="::cdash.requirelogin != 1" src="::cdash.header || 'views/partials/header.html'"></ng-include>
+    <ng-include ng-if="::cdash.requirelogin != 1" src="::cdash.header || 'build/views/partials/header_@@version.html'"></ng-include>
     <br/>
 
     <div ng-if="cdash.requirelogin != 1 && !loading && !cdash.error">
@@ -115,7 +115,7 @@
           <span ng-show="showfilters != 0">Hide Filters</span>
         </a>
       </div>
-      <ng-include src="'views/partials/filterdataTemplate.html'"></ng-include>
+      <ng-include src="'build/views/partials/filterdataTemplate_@@version.html'"></ng-include>
 
       <div ng-switch="::cdash.display">
         <h3 ng-switch-when="onlypassed">{{::cdash.numPassed}} tests passed.</h3>
@@ -281,6 +281,6 @@
 
     <!-- FOOTER -->
     <br/>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'views/partials/footer.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_@@version.html'"></ng-include>
   </body>
 </html>

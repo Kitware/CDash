@@ -101,7 +101,8 @@ CDash.controller('BuildSummaryController',
         url: 'api/v1/getPreviousBuilds.php',
         method: 'GET',
         params: { buildid: $scope.cdash.build.id }
-      }).success(function(resp) {
+      }).then(function success(s) {
+        var resp = s.data;
         $scope.cdash.buildtimes = [];
         $scope.cdash.builderrors = [];
         $scope.cdash.buildwarnings = [];

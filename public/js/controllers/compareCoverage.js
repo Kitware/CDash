@@ -14,7 +14,8 @@ CDash.controller('CompareCoverageController',
       url: 'api/v1/compareCoverage.php',
       method: 'GET',
       params: $rootScope.queryString
-    }).success(function(cdash) {
+    }).then(function success(s) {
+      var cdash = s.data;
       // Check if we should display filters.
       if (cdash.filterdata && cdash.filterdata.showfilters == 1) {
         $scope.showfilters = true;

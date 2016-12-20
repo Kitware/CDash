@@ -17,7 +17,7 @@
   <body bgcolor="#ffffff" ng-controller="CreateProjectController">
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
 
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'views/partials/header.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_@@version.html'"></ng-include>
     <br/>
 
     <div ng-if="cdash.projectcreated == 1">
@@ -1390,6 +1390,6 @@
       </form>
     </div>
 
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'views/partials/footer.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_@@version.html'"></ng-include>
   </body>
 </html>

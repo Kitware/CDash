@@ -19,7 +19,7 @@
     "ext-pdo": "*",
     "ext-xsl": "*",
     "bernard/bernard": "dev-master#f30c0186f0fb391eb6c7ab28f515bb30d34f402d",
-    "google/apiclient": "~1.1",
+    "google/apiclient": "2.1.0",
     "guzzlehttp/guzzle": "~6.0",
     "monolog/monolog": "~1.19",
     "paragonie/random_compat": "2.0.4",
