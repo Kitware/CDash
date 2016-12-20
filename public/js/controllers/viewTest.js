@@ -1,5 +1,5 @@
 CDash.controller('ViewTestController',
-  function ViewTestController($scope, $rootScope, $http, $filter, multisort, filters, renderTimer) {
+  function ViewTestController($scope, $rootScope, $http, $filter, $q, multisort, filters, renderTimer) {
     $scope.loading = true;
 
     // Pagination settings.
@@ -32,6 +32,9 @@ CDash.controller('ViewTestController',
       sort_order = ['subprojectname', 'status', 'name'];
     }
     $scope.orderByFields = sort_order;
+
+    // Mechanism to cancel the summary/history AJAX query if the user loads another page.
+    $scope.canceler = $q.defer();
 
     $http({
       url: 'api/v1/viewTest.php',
@@ -91,7 +94,8 @@ CDash.controller('ViewTestController',
             'time_end': $scope.cdash.time_end,
             'projectid': $scope.cdash.projectid,
             'groupid': $scope.cdash.groupid
-          }
+          },
+          timeout: $scope.canceler.promise
         }).then(function success(s) {
           var response = s.data;
           $scope.cdash.displayhistory = $scope.cdash.displayhistory || response.displayhistory;
@@ -145,4 +149,8 @@ CDash.controller('ViewTestController',
       $.cookie("viewTest_num_per_page", $scope.pagination.numPerPage, { expires: 365 });
       $scope.pageChanged();
     };
+
+    $scope.cancelAjax = function() {
+      $scope.canceler.resolve();
+    }
 });
