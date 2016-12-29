@@ -7,7 +7,7 @@
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="stylesheet" type="text/css" ng-href="{{::cssfile}}" />
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <script src="js/CDash_2.3.0.min.js"></script>
+    <script src="js/CDash_2.5.0.min.js"></script>
     <title ng-bind="title">CDash</title>
   </head>
 
@@ -15,7 +15,7 @@
 
     <div ng-if="::cdash.requirelogin == 1" ng-include="'login.php'"></div>
 
-    <ng-include ng-if="::cdash.requirelogin != 1" src="::cdash.header || 'views/partials/header.html'"></ng-include>
+    <ng-include ng-if="::cdash.requirelogin != 1" src="::cdash.header || 'build/views/partials/header_2.5.0.html'"></ng-include>
     <br/>
 
     <div ng-if="cdash.requirelogin != 1 && !loading && !cdash.error">
@@ -27,7 +27,8 @@
             <b>Site Name:</b>
           </td>
           <td>
-            <a ng-href="viewSite.php?siteid={{::cdash.build.siteid}}">{{::cdash.build.site}}</a>
+            <a ng-href="viewSite.php?siteid={{::cdash.build.siteid}}"
+               ng-click="cancelAjax()">{{::cdash.build.site}}</a>
           </td>
         </tr>
 
@@ -36,7 +37,8 @@
             <b>Build Name:</b>
           </td>
           <td>
-            <a ng-href="buildSummary.php?buildid={{::cdash.build.buildid}}">{{::cdash.build.buildname}}</a>
+            <a ng-href="buildSummary.php?buildid={{::cdash.build.buildid}}"
+               ng-click="cancelAjax()">{{::cdash.build.buildname}}</a>
           </td>
         </tr>
 
@@ -113,7 +115,7 @@
           <span ng-show="showfilters != 0">Hide Filters</span>
         </a>
       </div>
-      <ng-include src="'views/partials/filterdataTemplate.html'"></ng-include>
+      <ng-include src="'build/views/partials/filterdataTemplate_2.5.0.html'"></ng-include>
 
       <div ng-switch="::cdash.display">
         <h3 ng-switch-when="onlypassed">{{::cdash.numPassed}} tests passed.</h3>
@@ -179,7 +181,7 @@
                 <span class="glyphicon" ng-class="orderByFields.indexOf('-label') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('label') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
 
-              <th ng-if="::cdash.displayhistory == 1" width="6%" class="header"
+              <th ng-if="::cdash.displayhistory" width="6%" class="header"
                 ng-click="updateOrderByFields('history', $event)"
                 tooltip-popup-delay='1500'
                 tooltip-append-to-body="true"
@@ -211,16 +213,19 @@
                    src="img/flaggreen.gif" title="flag"/>
               <img ng-if="::test.new == 1 && !(test.timestatus == 'Passed' && test.status == 'Passed')"
                    src="img/flag.png" title="flag"/>
-              <a ng-href="{{::test.detailsLink}}">{{::test.name}}</a>
+              <a ng-href="{{::test.detailsLink}}"
+                 ng-click="cancelAjax()">{{::test.name}}</a>
             </td>
 
             <td align="center" ng-class="::test.statusclass">
-              <a ng-href="{{::test.detailsLink}}">{{::test.status}}</a>
+              <a ng-href="{{::test.detailsLink}}"
+                 ng-click="cancelAjax()">{{::test.status}}</a>
             </td>
 
             <td ng-if="::cdash.project.showtesttime == 1"
                 align="center" ng-class="::test.timestatusclass">
-              <a ng-href="{{::test.detailsLink}}">{{::test.timestatus}}</a>
+              <a ng-href="{{::test.detailsLink}}"
+                 ng-click="cancelAjax()">{{::test.timestatus}}</a>
             </td>
 
             <td align="right">
@@ -236,12 +241,13 @@
               <span ng-repeat="label in ::test.labels">{{::label}}</span>
             </td>
 
-            <td ng-if="::cdash.displayhistory == 1" align="center" ng-class="test.historyclass">
+            <td ng-if="::cdash.displayhistory" align="center" ng-class="test.historyclass">
               {{test.history}}
             </td>
 
             <td align="center" ng-class="test.summaryclass">
-              <a ng-href="{{test.summaryLink}}">{{test.summary}}</a>
+              <a ng-href="{{test.summaryLink}}"
+                 ng-click="cancelAjax()">{{test.summary}}</a>
             </td>
 
           </tr>
@@ -275,6 +281,6 @@
 
     <!-- FOOTER -->
     <br/>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'views/partials/footer.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_2.5.0.html'"></ng-include>
   </body>
 </html>

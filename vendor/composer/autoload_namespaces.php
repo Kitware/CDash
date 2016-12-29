@@ -7,9 +7,12 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Suin\\RSSWriter' => array($vendorDir . '/suin/php-rss-writer/src'),
+    'SendGrid' => array($vendorDir . '/sendgrid/php-http-client/lib'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log'),
     'Predis' => array($vendorDir . '/predis/predis/lib'),
     'PEAR' => array($vendorDir . '/pear/pear_exception'),
+    'Google_Service_' => array($vendorDir . '/google/apiclient-services/src'),
+    'Google_' => array($vendorDir . '/google/apiclient/src'),
     'Console' => array($vendorDir . '/pear/console_getopt'),
     'Assert' => array($vendorDir . '/beberlei/assert/lib'),
     'Archive_Tar' => array($vendorDir . '/pear/archive_tar'),
