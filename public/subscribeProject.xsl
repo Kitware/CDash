@@ -204,7 +204,7 @@
             <td><font color="#900000">*This project has not been configured to send emails.
              <xsl:choose>
                <xsl:when test="/cdash/role>1"><a>
-               <xsl:attribute name="href">createProject.php?edit=1&#38;projectid=<xsl:value-of select="/cdash/project/id"/>#fragment-5</xsl:attribute>Change the project settings.
+               <xsl:attribute name="href">createProject.php?projectid=<xsl:value-of select="/cdash/project/id"/>##tab5</xsl:attribute>Change the project settings.
                </a></xsl:when>
                <xsl:otherwise> Contact the project administrator.</xsl:otherwise>
              </xsl:choose>
@@ -280,7 +280,7 @@
             <td><font color="#900000">*This project has not been configured to send emails.
              <xsl:choose>
                <xsl:when test="/cdash/role>1"><a>
-               <xsl:attribute name="href">createProject.php?edit=1&#38;projectid=<xsl:value-of select="/cdash/project/id"/>#fragment-5</xsl:attribute>Change the project settings.
+               <xsl:attribute name="href">createProject.php?projectid=<xsl:value-of select="/cdash/project/id"/>##tab5</xsl:attribute>Change the project settings.
                </a></xsl:when>
                <xsl:otherwise> Contact the project administrator.</xsl:otherwise>
              </xsl:choose>
@@ -351,7 +351,7 @@
             <td colspan="2"><font color="#900000">*This project has not been configured to send emails.
              <xsl:choose>
                <xsl:when test="/cdash/role>1"><a>
-               <xsl:attribute name="href">createProject.php?edit=1&#38;projectid=<xsl:value-of select="/cdash/project/id"/>#fragment-5</xsl:attribute>Change the project settings.
+               <xsl:attribute name="href">createProject.php?projectid=<xsl:value-of select="/cdash/project/id"/>##tab5</xsl:attribute>Change the project settings.
                </a></xsl:when>
                <xsl:otherwise> Contact the project administrator.</xsl:otherwise>
              </xsl:choose>

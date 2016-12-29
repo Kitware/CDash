@@ -5,7 +5,8 @@ CDash.controller('OverviewController',
       url: 'api/v1/overview.php',
       method: 'GET',
       params: $rootScope.queryString
-    }).success(function(cdash) {
+    }).then(function success(s) {
+      var cdash = s.data;
       renderTimer.initialRender($scope, cdash);
 
       // Set title in root scope so the head controller can see it.

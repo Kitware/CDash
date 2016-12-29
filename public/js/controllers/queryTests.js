@@ -34,7 +34,8 @@ CDash.controller('QueryTestsController',
       url: 'api/v1/queryTests.php',
       method: 'GET',
       params: $rootScope.queryString
-    }).success(function(cdash) {
+    }).then(function success(s) {
+      var cdash = s.data;
 
       // Check if we should display filters.
       if (cdash.filterdata && cdash.filterdata.showfilters == 1) {

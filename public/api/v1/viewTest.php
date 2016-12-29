@@ -609,6 +609,12 @@ function load_test_details()
     $tests_response = array();
 
     foreach ($tests as $test) {
+        // Send the client a character to see if they're still connected.
+        // If they disconnected this will cause the script to terminate early.
+        echo " ";
+        flush();
+        ob_flush();
+
         $test_response = array();
         $test_response['name'] = $test;
         $data_found = false;

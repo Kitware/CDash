@@ -1,7 +1,7 @@
-CDash.directive('daterange', function () {
+CDash.directive('daterange', function (VERSION) {
   return {
     restrict: 'A',
-    templateUrl: 'views/partials/daterange.html',
+    templateUrl: 'build/views/partials/daterange_' + VERSION + '.html',
     link: function (scope, element, attrs, ngModelCtrl) {
       var format = "yy-mm-dd",
 

@@ -359,9 +359,31 @@ class Build
     private function GetRelatedBuildId($which_build_criteria,
             $related_parentid=null)
     {
+        $related_build_criteria =
+            "WHERE siteid=" . qnum($this->SiteId) . "
+            AND type='$this->Type'
+            AND name='$this->Name'
+            AND projectid=" . qnum($this->ProjectId);
+
         // Take subproject into account, such that if there is one, then the
         // previous build must be associated with the same subproject...
         //
+        if ($this->SubProjectId && !$related_parentid) {
+            // Look up the related parent.  This makes it easy to find the
+            // corresponding child build.
+            $parent_query = pdo_query("
+                    SELECT id FROM build
+                    $related_build_criteria
+                    AND build.parentid=-1
+                    $which_build_criteria
+                    LIMIT 1");
+            if (pdo_num_rows($parent_query) < 1) {
+                return 0;
+            }
+            $parent_array = pdo_fetch_array($parent_query);
+            $related_parentid = $parent_array['id'];
+        }
+
         $subproj_table = '';
         $subproj_criteria = '';
         $parent_criteria = '';
@@ -377,16 +399,11 @@ class Build
             $parent_criteria = 'AND build.parentid=-1';
         }
 
-
+        // If we know the parent of the build we're looking for, use that as our
+        // search criteria rather than matching site, name, type, and project.
         if ($related_parentid) {
             $related_build_criteria =
                 "WHERE parentid=" . qnum($related_parentid);
-        } else {
-            $related_build_criteria =
-                "WHERE siteid=" . qnum($this->SiteId) . "
-                AND type='$this->Type'
-                AND name='$this->Name'
-                AND projectid=" . qnum($this->ProjectId);
         }
 
         $query = pdo_query("
@@ -611,8 +628,8 @@ class Build
         $this->StartTime = pdo_real_escape_string($this->StartTime);
         $this->EndTime = pdo_real_escape_string($this->EndTime);
         $this->SubmitTime = pdo_real_escape_string($this->SubmitTime);
-        $this->Command = pdo_real_escape_string($this->Command);
-        $this->Log = pdo_real_escape_string($this->Log);
+        $this->Command = pdo_real_escape_string(trim($this->Command));
+        $this->Log = pdo_real_escape_string(trim($this->Log));
 
         // Compute the number of errors and warnings.
         // This speeds up the display of the main table.
@@ -766,9 +783,6 @@ class Build
             }
         } else {
             // Build already exists.
-            $this->Command = ' ' . $this->Command;
-            $this->Log = ' ' . $this->Log;
-
             // Update this build and its parent (if necessary).
             $this->UpdateBuild($this->Id, $nbuilderrors, $nbuildwarnings);
         }
@@ -1682,7 +1696,7 @@ class Build
 
         $build = pdo_single_row_query(
             "SELECT builderrors, buildwarnings, starttime, endtime,
-                submittime, log, command
+                submittime, log, command, parentid
                 FROM build WHERE id='$buildid' FOR UPDATE");
 
         // Special case: check if we should move from -1 to 0 errors/warnings.
@@ -1727,14 +1741,25 @@ class Build
             $clauses[] = "endtime = '$this->EndTime'";
         }
 
-        // Check if log or command has changed.
-        if ($this->Log && $this->Log != $build['log']) {
-            $log = pdo_real_escape_string($build['log'] . $this->Log);
-            $clauses[] = "log = '$log'";
-        }
-        if ($this->Command && $this->Command != $build['command']) {
-            $command = pdo_real_escape_string($build['command'] . $this->Command);
-            $clauses[] = "command = '$command'";
+        if ($build['parentid'] != -1) {
+            // If this is not a parent build, check if its log or command
+            // has changed.
+            if ($this->Log && $this->Log != $build['log']) {
+                if (!empty($build['log'])) {
+                    $log = $build['log'] . " " . $this->Log;
+                } else {
+                    $log = $this->Log;
+                }
+                $clauses[] = "log = '$log'";
+            }
+            if ($this->Command && $this->Command != $build['command']) {
+                if (!empty($build['command'])) {
+                    $command = $build['command'] . "; " . $this->Command;
+                } else {
+                    $command = $this->Command;
+                }
+                $clauses[] = "command = '$command'";
+            }
         }
 
         $num_clauses = count($clauses);

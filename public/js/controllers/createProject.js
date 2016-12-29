@@ -6,7 +6,8 @@ CDash.controller('CreateProjectController',
       url: 'api/v1/createProject.php',
       method: 'GET',
       params: $rootScope.queryString
-    }).success(function(cdash) {
+    }).then(function success(s) {
+      var cdash = s.data;
       renderTimer.initialRender($scope, cdash);
       // Set title in root scope so the head controller can see it.
       $rootScope['title'] = cdash.title;
@@ -112,16 +113,15 @@ CDash.controller('CreateProjectController',
         project: $scope.cdash.project
       };
       $http.post('api/v1/project.php', parameters)
-      .success(function(cdash) {
+      .then(function success(s) {
+        var cdash = s.data;
         if (cdash.projectcreated && cdash.project) {
           $scope.cdash.projectcreated = cdash.projectcreated;
           $scope.cdash.project = cdash.project;
           $scope.setLogo();
         }
-      }).error(function(cdash) {
-        if (cdash.error) {
-          $scope.cdash.error = cdash.error;
-        }
+      }, function error(e) {
+        $scope.cdash.error = e.data.error;
       });
     };
 
@@ -131,7 +131,8 @@ CDash.controller('CreateProjectController',
         project: $scope.cdash.project
       };
       $http.post('api/v1/project.php', parameters)
-      .success(function(cdash) {
+      .then(function success(s) {
+        var cdash = s.data;
         if (cdash.projectupdated && cdash.project) {
           $scope.cdash.changesmade = false;
           $scope.cdash.projectupdated = true;
@@ -143,10 +144,8 @@ CDash.controller('CreateProjectController',
             $scope.startFade = true;
           }, 2000);
         }
-      }).error(function(cdash) {
-        if (cdash.error) {
-          $scope.cdash.error = cdash.error;
-        }
+      }, function error(e) {
+        $scope.cdash.error = e.data.error;
       });
     };
 
@@ -177,7 +176,7 @@ CDash.controller('CreateProjectController',
           url: 'api/v1/project.php',
           method: 'DELETE',
           params: parameters
-        }).success(function() {
+        }).then(function success() {
           // Redirect to user.php
           window.location = 'user.php';
         });
@@ -202,8 +201,8 @@ CDash.controller('CreateProjectController',
         url: 'api/v1/index_old.php',
         method: 'GET',
         params: parameters
-      }).success(function(data) {
-        $scope.cdash.repositoryurlexample = data;
+      }).then(function success(s) {
+        $scope.cdash.repositoryurlexample = s.data;
       });
     };
 
@@ -223,7 +222,8 @@ CDash.controller('CreateProjectController',
         AddBlockedBuild: blockedbuild
       };
       $http.post('api/v1/project.php', parameters)
-      .success(function(cdash) {
+      .then(function success(s) {
+        var cdash = s.data;
         if (cdash.blockedid > 0) {
           blockedbuild.id = cdash.blockedid;
           $scope.cdash.project.blockedbuilds.push(blockedbuild);
@@ -234,10 +234,8 @@ CDash.controller('CreateProjectController',
             $scope.startFade = true;
             }, 2000);
         }
-      }).error(function(cdash) {
-        if (cdash.error) {
-          $scope.cdash.error = cdash.error;
-        }
+      }, function error(e) {
+        $scope.cdash.error = e.data.error;
       });
     };
 
@@ -247,7 +245,8 @@ CDash.controller('CreateProjectController',
         RemoveBlockedBuild: blockedbuild
       };
       $http.post('api/v1/project.php', parameters)
-      .success(function(cdash) {
+      .then(function success(s) {
+        var cdash = s.data;
         // Find and remove this build.
         var index = -1;
         for(var i = 0, len = $scope.cdash.project.blockedbuilds.length; i < len; i++) {
@@ -259,10 +258,8 @@ CDash.controller('CreateProjectController',
         if (index > -1) {
           $scope.cdash.project.blockedbuilds.splice(index, 1);
         }
-      }).error(function(cdash) {
-        if (cdash.error) {
-          $scope.cdash.error = cdash.error;
-        }
+      }, function error(e) {
+        $scope.cdash.error = e.data.error;
       });
     };
 

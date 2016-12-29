@@ -20,7 +20,8 @@ CDash.controller('UserStatisticsController',
       url: 'api/v1/userStatistics.php',
       method: 'GET',
       params: $rootScope.queryString
-    }).success(function(cdash) {
+    }).then(function success(s) {
+      var cdash = s.data;
       renderTimer.initialRender($scope, cdash);
       $scope.cdash.users = $filter('orderBy')($scope.cdash.users, $scope.orderByFields);
       // Set title in root scope so the head controller can see it.

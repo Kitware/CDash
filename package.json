@@ -1,6 +1,6 @@
 {
   "name": "CDash",
-  "version": "2.3.0",
+  "version": "2.5.0",
   "description": "Continuous integration dashboard.",
   "repository": "https://github.com/Kitware/CDash",
   "license": "BSD-3-Clause",
@@ -10,6 +10,7 @@
     "angular-ui-bootstrap": "^2.0.0",
     "angular-ui-sortable": "^0.14.3",
     "as-jqplot": "^1.0.8",
+    "fs-path": "0.0.23",
     "ng-file-upload": "^12.0.4"
   },
   "devDependencies": {
