@@ -48,7 +48,6 @@ CDash.controller('TestOverviewController',
       renderTimer.initialRender($scope, cdash);
       // Set title in root scope so the head controller can see it.
       $rootScope['title'] = cdash.title;
-      $rootScope.setupCalendar($scope.cdash.date);
       $scope.cdash.tests = $filter('orderBy')($scope.cdash.tests, $scope.orderByFields);
       $scope.pageChanged();
 

@@ -234,8 +234,6 @@ CDash.filter("showEmptyBuildsLast", function () {
 
     renderTimer.initialRender($scope, cdash);
 
-    $rootScope.setupCalendar($scope.cdash.date);
-
     if (!$scope.cdash.feed) {
       $scope.showFeed = false;
     }

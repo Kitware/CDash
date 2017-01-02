@@ -69,6 +69,14 @@ CDash.controller('HeadController', function HeadController($rootScope, $document
   };
 
   $rootScope.toggleCalendar = function() {
+    if (!$("#calendar").hasClass("hasDatepicker")) {
+      // Setup the calendar the first time it is clicked.
+      if ("date" in $rootScope.queryString) {
+        $rootScope.setupCalendar($rootScope.queryString.date);
+      } else {
+        $rootScope.setupCalendar();
+      }
+    }
     $( "#calendar" ).toggle();
   };
 
