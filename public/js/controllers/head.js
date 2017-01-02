@@ -32,34 +32,26 @@ CDash.controller('HeadController', function HeadController($rootScope, $document
   }
 
   $rootScope.setupCalendar = function(date) {
-    if (date)
-      {
+    if (date) {
       year = date.substr(0, 4);
-      if (date.length == 8)
-        {
+      if (date.length == 8) {
         month = date.substr(4, 2);
         day = date.substr(6, 2);
-        }
-      else
-        {
+      } else {
         month = date.substr(5, 2);
         day = date.substr(8, 2);
-        }
-      $('#calendar').datepicker(
-        {
-          onSelect: $rootScope.calendarSelected,
-          defaultDate: new Date(month + '/' + day + '/' + year),
-          maxDate: "0D" // restrict to the past
-        });
       }
-    else
-      {
-      $('#calendar').datepicker(
-        {
+      $('#calendar').datepicker({
+        onSelect: $rootScope.calendarSelected,
+        defaultDate: new Date(month + '/' + day + '/' + year),
+        maxDate: "0D" // restrict to the past
+      });
+    } else {
+      $('#calendar').datepicker({
         onSelect: $rootScope.calendarSelected,
         maxDate: "0D" // restrict to the past
-        });
-      }
+      });
+    }
   };
 
   // Navigate to a different date (from the inline date picker) for the current page.
