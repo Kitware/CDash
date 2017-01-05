@@ -18,6 +18,9 @@ require_once dirname(dirname(__DIR__)) . '/config/config.php';
 require_once 'include/pdo.php';
 require_once 'include/common.php';
 
+$noforcelogin = 1;
+include 'public/login.php';
+
 $testid = pdo_real_escape_numeric($_GET['testid']);
 $buildid = pdo_real_escape_numeric($_GET['buildid']);
 
