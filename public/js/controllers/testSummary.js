@@ -27,7 +27,6 @@ CDash.controller('TestSummaryController',
 
       // Set title in root scope so the head controller can see it.
       $rootScope['title'] = cdash.title;
-      $rootScope.setupCalendar($scope.cdash.date);
       $scope.graphurl = $scope.failureGraphUrl();
     }).finally(function() {
       $scope.loading = false;

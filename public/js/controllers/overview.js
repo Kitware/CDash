@@ -11,7 +11,6 @@ CDash.controller('OverviewController',
 
       // Set title in root scope so the head controller can see it.
       $rootScope['title'] = cdash.title;
-      $rootScope.setupCalendar($scope.cdash.date);
 
       // Expose the jumpToAnchor function to the scope.
       // This allows us to call it from the HTML template.

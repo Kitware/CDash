@@ -21,7 +21,6 @@ CDash.controller('ViewSubProjectsController',
       var cdash = s.data;
       renderTimer.initialRender($scope, cdash);
       $rootScope['title'] = cdash.title;
-      $rootScope.setupCalendar($scope.cdash.date);
     }).finally(function() {
       $scope.loading = false;
     });
