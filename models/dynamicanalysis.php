@@ -145,6 +145,14 @@ class DynamicAnalysis
             $this->Log = '';
         }
 
+        // Only store 1MB of log.
+        if (strlen($this->Log) > 1024 * 1024) {
+            $truncated_msg = "\n(truncated)\n";
+            $keep_length = (1024 * 1024) - strlen($truncated_msg);
+            $this->Log = substr($this->Log, 0, $keep_length);
+            $this->Log .= $truncated_msg;
+        }
+
         $this->Status = pdo_real_escape_string($this->Status);
         $this->Checker = pdo_real_escape_string($this->Checker);
         $this->Name = pdo_real_escape_string($this->Name);
