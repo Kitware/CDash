@@ -56,7 +56,7 @@ function extract_type_from_buildstamp($buildstamp)
 /** Extract the date from the build stamp */
 function extract_date_from_buildstamp($buildstamp)
 {
-    return substr($buildstamp, 0, strrpos($buildstamp, '-'));
+    return substr($buildstamp, 0, strpos($buildstamp, '-', strpos($buildstamp, '-') + 1));
 }
 
 /** Return timestamp from string
