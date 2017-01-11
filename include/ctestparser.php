@@ -214,7 +214,10 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
     $handler = new $className($buildid);
 
     // Parse the file.
-    $handler->Parse($filename);
+    if ($handler->Parse($filename) === false) {
+        throw new Exception('Failed to parse file ' . $filename);
+    }
+
     check_for_immediate_deletion($filename);
     $buildfile->Delete();
     return true;
@@ -239,8 +242,13 @@ function ctest_parse($filehandler, $projectid, $expected_md5 = '', $do_checksum 
     }
 
     // Check if this is a new style PUT submission.
-    if (parse_put_submission($filehandler, $projectid, $expected_md5)) {
-        return true;
+    try {
+        if (parse_put_submission($filehandler, $projectid, $expected_md5)) {
+            return true;
+        }
+    } catch (Exception $e) {
+        add_log($e->getMessage(), 'ctest_parse', LOG_ERR);
+        return false;
     }
 
     $content = fread($filehandler, 8192);
