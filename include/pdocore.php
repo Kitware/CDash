@@ -84,11 +84,15 @@ function pdo_select_db($database, $link_identifier = null)
  */
 function pdo_error($link_identifier = null, $log_error = true)
 {
-    global $CDASH_PRODUCTION_MODE;
+    global $CDASH_PRODUCTION_MODE, $CDASH_CRITICAL_PDO_ERRORS;
     $error_info = get_link_identifier($link_identifier)->getPdo()->errorInfo();
     if (isset($error_info[2]) && $error_info[0] !== '00000') {
         if ($log_error) {
             add_log($error_info[2], 'pdo_error', LOG_ERR);
+        }
+        if (in_array($error_info[1], $CDASH_CRITICAL_PDO_ERRORS)) {
+            http_response_code(500);
+            exit();
         }
         if ($CDASH_PRODUCTION_MODE) {
             return 'SQL error encountered, query hidden.';
