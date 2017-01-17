@@ -421,8 +421,9 @@ function put_submit_file()
         return;
     }
 
-    global $CDASH_ASYNCHRONOUS_SUBMISSION, $CDASH_BERNARD_SUBMISSION, $CDASH_BERNARD_DRIVER;
-    if ($CDASH_BERNARD_SUBMISSION) {
+    global $CDASH_ASYNCHRONOUS_SUBMISSION, $CDASH_BERNARD_DRIVER, $CDASH_BERNARD_COVERAGE_SUBMISSION;
+
+    if ($CDASH_BERNARD_COVERAGE_SUBMISSION) {
         $factory = new PersistentFactory($CDASH_BERNARD_DRIVER, new Serializer());
         $producer = new Producer($factory, new EventDispatcher());
 
