@@ -116,6 +116,7 @@ add_php_test(uniquediffs)
 add_php_test(imagecomparison)
 add_php_test(createprojectpermissions)
 add_php_test(testgraphpermissions)
+add_php_test(extracttar)
 
 if(CDASH_GITHUB_USERNAME AND CDASH_GITHUB_PASSWORD)
   add_php_test(github_PR_comment)
