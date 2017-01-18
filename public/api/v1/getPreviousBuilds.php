@@ -68,7 +68,7 @@ $stmt->bindParam(':starttime', $build->StartTime);
 if ($build->SubProjectId > 0) {
     $stmt->bindParam(':subprojectid', $build->SubProjectId);
 }
-$stmt->execute();
+pdo_execute($stmt);
 
 $builds_response = array();
 while ($previous_build_row = $stmt->fetch()) {

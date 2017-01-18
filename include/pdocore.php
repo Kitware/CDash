@@ -315,6 +315,29 @@ function pdo_rollback($link_identifier = null)
     get_link_identifier($link_identifier)->getPdo()->rollBack();
 }
 
+/**
+ * Execute a prepared statement and log any errors that occur.
+ * @param PDOStatement $stmt
+ * @param array|null $input_parameters
+ * @return bool
+ */
+function pdo_execute($stmt, $input_parameters=null)
+{
+    global $CDASH_CRITICAL_PDO_ERRORS;
+    if (!$stmt->execute($input_parameters)) {
+        $error_info = $stmt->errorInfo();
+        if (isset($error_info[2]) && $error_info[0] !== '00000') {
+            add_log($error_info[2], 'pdo_execute', LOG_ERR);
+            if (in_array($error_info[1], $CDASH_CRITICAL_PDO_ERRORS)) {
+                http_response_code(500);
+                exit();
+            }
+        }
+        return false;
+    }
+    return true;
+}
+
 global $cdash_database_connection;
 global $CDASH_DB_HOST;
 global $CDASH_DB_LOGIN;
