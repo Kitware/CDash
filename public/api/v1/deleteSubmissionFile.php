@@ -33,7 +33,7 @@ global $CDASH_BACKUP_DIRECTORY, $CDASH_BERNARD_CONSUMERS_WHITELIST;
 
 if (is_array($CDASH_BERNARD_CONSUMERS_WHITELIST) &&
     !in_array($_SERVER['REMOTE_ADDR'], $CDASH_BERNARD_CONSUMERS_WHITELIST)) {
-    header('HTTP/1.1 403 Forbidden');
+    http_response_code(403);
     exit();
 } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE' && isset($_REQUEST['filename'])) {
     $filename = $CDASH_BACKUP_DIRECTORY . '/' . basename($_REQUEST['filename']);
@@ -42,11 +42,11 @@ if (is_array($CDASH_BERNARD_CONSUMERS_WHITELIST) &&
         $deleted = @unlink($filename);
 
         if (!$deleted) {
-            header('HTTP/1.1 500 Internal Server Error');
+            http_response_code(500);
             exit();
         }
     }
 } else {
-    header('HTTP/1.1 400 Bad Request');
+    http_response_code(400);
     exit();
 }
