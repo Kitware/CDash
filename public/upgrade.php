@@ -750,6 +750,9 @@ if (isset($_GET['upgrade-2-4'])) {
 
 // 2.6 Upgrade
 if (isset($_GET['upgrade-2-6'])) {
+    // Add index to label2test::buildid to improve performance of remove_build()
+    AddTableIndex('label2test', 'buildid');
+
     // Set the database version
     setVersion();
 
