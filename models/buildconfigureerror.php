@@ -19,13 +19,13 @@ class BuildConfigureError
 {
     public $Type;
     public $Text;
-    public $BuildId;
+    public $ConfigureId;
 
     /** Return if exists */
     public function Exists()
     {
-        if (!$this->BuildId || !is_numeric($this->BuildId)) {
-            echo 'BuildConfigureError::Save(): BuildId not set';
+        if (!$this->ConfigureId || !is_numeric($this->ConfigureId)) {
+            echo 'BuildConfigureError::Save(): ConfigureId not set';
             return false;
         }
 
@@ -34,9 +34,9 @@ class BuildConfigureError
             return false;
         }
 
-        $query = pdo_query("SELECT count(*) AS c FROM configureerror WHERE buildid='" . $this->BuildId . "'
+        $query = pdo_query("SELECT count(*) AS c FROM configureerror WHERE configureid='" . $this->ConfigureId . "'
                          AND type='" . $this->Type . "' AND text='" . $this->Text . "'");
-        add_last_sql_error('BuildConfigureError:Exists', 0, $this->BuildId);
+        add_last_sql_error('BuildConfigureError:Exists', 0, $this->ConfigureId);
         $query_array = pdo_fetch_array($query);
         if ($query_array['c'] > 0) {
             return true;
@@ -47,8 +47,8 @@ class BuildConfigureError
     /** Save in the database */
     public function Save()
     {
-        if (!$this->BuildId || !is_numeric($this->BuildId)) {
-            echo 'BuildConfigureError::Save(): BuildId not set';
+        if (!$this->ConfigureId || !is_numeric($this->ConfigureId)) {
+            echo 'BuildConfigureError::Save(): ConfigureId not set';
             return false;
         }
 
@@ -59,10 +59,10 @@ class BuildConfigureError
 
         if (!$this->Exists()) {
             $text = pdo_real_escape_string($this->Text);
-            $query = 'INSERT INTO configureerror (buildid,type,text)
-                VALUES (' . qnum($this->BuildId) . ',' . qnum($this->Type) . ",'$text')";
+            $query = 'INSERT INTO configureerror (configureid,type,text)
+                VALUES (' . qnum($this->ConfigureId) . ',' . qnum($this->Type) . ",'$text')";
             if (!pdo_query($query)) {
-                add_last_sql_error('BuildConfigureError:Save', 0, $this->BuildId);
+                add_last_sql_error('BuildConfigureError:Save', 0, $this->ConfigureId);
                 return false;
             }
         }

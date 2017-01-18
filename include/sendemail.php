@@ -360,7 +360,10 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
 
         $information = "\n\n*Configure*\n";
 
-        $configure = pdo_query('SELECT status,log FROM configure WHERE buildid=' . qnum($buildid));
+        $configure = pdo_query(
+            'SELECT status, log FROM configure AS c
+            INNER JOIN build2configure AS b2c ON (c.id=b2c.configureid)
+            WHERE b2c.buildid=' . qnum($buildid));
         $configure_array = pdo_fetch_array($configure);
 
         $information .= 'Status: ' . $configure_array['status'] . ' (' . $serverURI . '/viewConfigure.php?buildid=' . $buildid . ")\n";

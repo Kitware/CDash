@@ -677,6 +677,43 @@ if (isset($_GET['upgrade-2-4'])) {
     // This speeds up viewTest API for builds with lots of tests & labels.
     AddTableIndex('label2test', 'testid');
 
+    // Restructure configure table.
+    // This reduces the footprint of this table and allows multiple builds
+    // to share a configure.
+    if (!pdo_query('SELECT id FROM configure LIMIT 1')) {
+        // Add id column to configure table.
+        if ($CDASH_DB_TYPE != 'pgsql') {
+            pdo_query(
+                'ALTER TABLE configure ADD id int(11) NOT NULL AUTO_INCREMENT,
+                ADD PRIMARY KEY(id)');
+        } else {
+            pdo_query(
+                'ALTER TABLE configure ADD id SERIAL NOT NULL,
+                ADD PRIMARY KEY (id)');
+        }
+
+        // Add crc32 column to configure table.
+        AddTableField('configure', 'crc32', 'bigint(20)', 'BIGINT', '0');
+
+        // Populate build2configure table.
+        PopulateBuild2Configure('configure', 'build2configure');
+
+        // Add unique constraint to crc32 column.
+        if ($db_type === 'pgsql') {
+            pdo_query('ALTER TABLE configure ADD UNIQUE (crc32)');
+        } else {
+            pdo_query('ALTER TABLE configure ADD UNIQUE KEY (crc32)');
+        }
+
+        // Remove columns from configure that have been moved to build2configure.
+        RemoveTableField('configure', 'buildid');
+        RemoveTableField('configure', 'starttime');
+        RemoveTableField('configure', 'endtime');
+
+        // Change configureerror to use configureid instead of buildid.
+        UpgradeConfigureErrorTable('configureerror', 'build2configure');
+    }
+
     // Better caching of build & test time, particularly for parent builds.
     $query = 'SELECT configureduration FROM build LIMIT 1';
     $dbTest = pdo_query($query);
@@ -856,6 +893,7 @@ if ($Cleanup) {
     delete_unused_rows('user2project', 'projectid', 'project');
     delete_unused_rows('userstatistics', 'projectid', 'project');
 
+    delete_unused_rows('build2configure', 'buildid', 'build');
     delete_unused_rows('build2note', 'buildid', 'build');
     delete_unused_rows('build2test', 'buildid', 'build');
     delete_unused_rows('buildemail', 'buildid', 'build');
@@ -865,8 +903,8 @@ if ($Cleanup) {
     delete_unused_rows('buildinformation', 'buildid', 'build');
     delete_unused_rows('buildnote', 'buildid', 'build');
     delete_unused_rows('buildtesttime', 'buildid', 'build');
-    delete_unused_rows('configure', 'buildid', 'build');
-    delete_unused_rows('configureerror', 'buildid', 'build');
+    delete_unused_rows('configure', 'id', 'build2configure', 'configureid');
+    delete_unused_rows('configureerror', 'configureid', 'configure');
     delete_unused_rows('configureerrordiff', 'buildid', 'build');
     delete_unused_rows('coverage', 'buildid', 'build');
     delete_unused_rows('coveragefilelog', 'buildid', 'build');

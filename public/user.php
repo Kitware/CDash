@@ -233,7 +233,10 @@ if ($session_OK) {
             $xml .= add_XML_value('datelink', 'index.php?project=' . urlencode($projectname) . '&date=' . $date);
 
             // Configure
-            $configure = pdo_query("SELECT status FROM configure WHERE buildid='$buildid'");
+            $configure = pdo_query(
+                    "SELECT status FROM configure c
+                    JOIN build2configure b2c ON b2c.configureid=c.id
+                    WHERE buildid='$buildid'");
             if (pdo_num_rows($configure) > 0) {
                 $configure_array = pdo_fetch_array($configure);
                 $xml .= add_XML_value('configure', $configure_array['status']);

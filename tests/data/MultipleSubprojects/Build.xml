@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="CTestTest-Linux-c++-Subprojects"
+        BuildStamp="20160728-1932-Experimental"
+        Name="livonia-linux"
+        Generator="ctest-3.6.20160726-g3e55f-dirty"
+        CompilerName=""
+        CompilerVersion=""
+        OSName="Linux"
+        Hostname="livonia-linux"
+        OSRelease="3.13.0-35-generic"
+        OSVersion="#62-Ubuntu SMP Fri Aug 15 01:58:42 UTC 2014"
+        OSPlatform="x86_64"
+        Is64Bits="1"
+        VendorString="GenuineIntel"
+        VendorID="Intel Corporation"
+        FamilyID="6"
+        ModelID="69"
+        ProcessorCacheSize="4096"
+        NumberOfLogicalCPU="4"
+        NumberOfPhysicalCPU="1"
+        TotalVirtualMemory="7627"
+        TotalPhysicalMemory="7890"
+        LogicalProcessorsPerPhysical="4"
+        ProcessorClockFrequency="756"
+        >
+        <Subproject name="MyExperimentalFeature">
+                <Label>MyExperimentalFeature</Label>
+        </Subproject>
+        <Subproject name="MyProductionCode">
+                <Label>MyProductionCode</Label>
+                <Label>AnotherLabel</Label>
+        </Subproject>
+        <Subproject name="MyThirdPartyDependency">
+                <Label>MyThirdPartyDependency1</Label>
+                <Label>MyThirdPartyDependency2</Label>
+        </Subproject>
+        <Subproject name="EmptySubproject">
+                <Label>EmptySubproject</Label>
+        </Subproject>
+        <Build>
+                <StartDateTime>Jul 28 15:32 EDT</StartDateTime>
+                <StartBuildTime>1469734335</StartBuildTime>
+                <BuildCommand>/home/betsy/cmake_build/bin/cmake --build . --config "Debug" -- -i</BuildCommand>
+                <Failure type="Error">
+                        <Labels>
+                                <Label>MyThirdPartyDependency1</Label>
+                        </Labels>
+                        <!-- Meta-information about the build action -->
+                        <Action>
+                                <TargetName>thirdparty</TargetName>
+                                <Language>C++</Language>
+                                <SourceFile>MyThirdPartyDependency/thirdparty.cxx</SourceFile>
+                                <OutputFile>CMakeFiles/thirdparty.dir/thirdparty.cxx.o</OutputFile>
+                                <OutputType>object file</OutputType>
+                        </Action>
+                        <!-- Details of command -->
+                        <Command>
+                                <WorkingDirectory>/home/betsy/cmake_build/Tests/CTestTestSubprojects/MyThirdPartyDependency</WorkingDirectory>
+                                <Argument>/usr/bin/c++</Argument>
+                                <Argument>-Wnon-virtual-dtor</Argument>
+                                <Argument>-Wcast-align</Argument>
+                                <Argument>-Wchar-subscripts</Argument>
+                                <Argument>-Wall</Argument>
+                                <Argument>-W</Argument>
+                                <Argument>-Wshadow</Argument>
+                                <Argument>-Wpointer-arith</Argument>
+                                <Argument>-Wformat-security</Argument>
+                                <Argument>-Wundef</Argument>
+                                <Argument>-o</Argument>
+                                <Argument>CMakeFiles/thirdparty.dir/thirdparty.cxx.o</Argument>
+                                <Argument>-c</Argument>
+                                <Argument>/home/betsy/cmake/Tests/CTestTestSubprojects/MyThirdPartyDependency/thirdparty.cxx</Argument>
+                        </Command>
+                        <!-- Result of command -->
+                        <Result>
+                                <StdOut/>
+                                <StdErr>/home/betsy/cmake/Tests/CTestTestSubprojects/MyThirdPartyDependency/thirdparty.cxx: In function ‘int main(int, char**)’:
+/home/betsy/cmake/Tests/CTestTestSubprojects/MyThirdPartyDependency/thirdparty.cxx:6:3: error: ‘n’ was not declared in this scope
+   n = 5;
+   ^
+/home/betsy/cmake/Tests/CTestTestSubprojects/MyThirdPartyDependency/thirdparty.cxx: At global scope:
+/home/betsy/cmake/Tests/CTestTestSubprojects/MyThirdPartyDependency/thirdparty.cxx:3:5: warning: unused parameter ‘argc’ [-Wunused-parameter]
+ int main(int argc, char *argv[])
+     ^
+/home/betsy/cmake/Tests/CTestTestSubprojects/MyThirdPartyDependency/thirdparty.cxx:3:5: warning: unused parameter ‘argv’ [-Wunused-parameter]</StdErr>
+                                <ExitCondition>1</ExitCondition>
+                        </Result>
+                </Failure>
+                <Failure type="Error">
+                        <Labels>
+                                <Label>MyThirdPartyDependency2</Label>
+                        </Labels>
+                        <!-- Meta-information about the build action -->
+                        <Action>
+                                <TargetName>thirdparty</TargetName>
+                                <Language>C++</Language>
+                                <OutputFile>thirdparty</OutputFile>
+                                <OutputType>executable</OutputType>
+                        </Action>
+                        <!-- Details of command -->
+                        <Command>
+                                <WorkingDirectory>/home/betsy/cmake_build/Tests/CTestTestSubprojects/MyThirdPartyDependency</WorkingDirectory>
+                                <Argument>/usr/bin/c++</Argument>
+                                <Argument>-Wnon-virtual-dtor</Argument>
+                                <Argument>-Wcast-align</Argument>
+                                <Argument>-Wchar-subscripts</Argument>
+                                <Argument>-Wall</Argument>
+                                <Argument>-W</Argument>
+                                <Argument>-Wshadow</Argument>
+                                <Argument>-Wpointer-arith</Argument>
+                                <Argument>-Wformat-security</Argument>
+                                <Argument>-Wundef</Argument>
+                                <Argument>CMakeFiles/thirdparty.dir/thirdparty.cxx.o</Argument>
+                                <Argument>-o</Argument>
+                                <Argument>thirdparty</Argument>
+                                <Argument>-rdynamic</Argument>
+                        </Command>
+                        <!-- Result of command -->
+                        <Result>
+                                <StdOut/>
+                                <StdErr>c++: error: CMakeFiles/thirdparty.dir/thirdparty.cxx.o: No such file or directory
+c++: fatal error: no input files
+compilation terminated.</StdErr>
+                                <ExitCondition>4</ExitCondition>
+                        </Result>
+                </Failure>
+                <Failure type="Warning">
+                        <Labels>
+                                <Label>MyExperimentalFeature</Label>
+                        </Labels>
+                        <!-- Meta-information about the build action -->
+                        <Action>
+                                <TargetName>experimental</TargetName>
+                                <Language>C++</Language>
+                                <SourceFile>MyExperimentalFeature/experimental.cxx</SourceFile>
+                                <OutputFile>CMakeFiles/experimental.dir/experimental.cxx.o</OutputFile>
+                                <OutputType>object file</OutputType>
+                        </Action>
+                        <!-- Details of command -->
+                        <Command>
+                                <WorkingDirectory>/home/betsy/cmake_build/Tests/CTestTestSubprojects/MyExperimentalFeature</WorkingDirectory>
+                                <Argument>/usr/bin/c++</Argument>
+                                <Argument>-Wnon-virtual-dtor</Argument>
+                                <Argument>-Wcast-align</Argument>
+                                <Argument>-Wchar-subscripts</Argument>
+                                <Argument>-Wall</Argument>
+                                <Argument>-W</Argument>
+                                <Argument>-Wshadow</Argument>
+                                <Argument>-Wpointer-arith</Argument>
+                                <Argument>-Wformat-security</Argument>
+                                <Argument>-Wundef</Argument>
+                                <Argument>-o</Argument>
+                                <Argument>CMakeFiles/experimental.dir/experimental.cxx.o</Argument>
+                                <Argument>-c</Argument>
+                                <Argument>/home/betsy/cmake/Tests/CTestTestSubprojects/MyExperimentalFeature/experimental.cxx</Argument>
+                        </Command>
+                        <!-- Result of command -->
+                        <Result>
+                                <StdOut/>
+                                <StdErr>/home/betsy/cmake/Tests/CTestTestSubprojects/MyExperimentalFeature/experimental.cxx:2:5: warning: unused parameter ‘argc’ [-Wunused-parameter]
+ int main(int argc, char *argv[])
+     ^
+/home/betsy/cmake/Tests/CTestTestSubprojects/MyExperimentalFeature/experimental.cxx:2:5: warning: unused parameter ‘argv’ [-Wunused-parameter]</StdErr>
+                                <ExitCondition>0</ExitCondition>
+                        </Result>
+                </Failure>
+                <Failure type="Warning">
+                        <Labels>
+                                <Label>MyProductionCode</Label>
+                        </Labels>
+                        <!-- Meta-information about the build action -->
+                        <Action>
+                                <TargetName>production</TargetName>
+                                <Language>C++</Language>
+                                <SourceFile>MyProductionCode/production.cxx</SourceFile>
+                                <OutputFile>CMakeFiles/production.dir/production.cxx.o</OutputFile>
+                                <OutputType>object file</OutputType>
+                        </Action>
+                        <!-- Details of command -->
+                        <Command>
+                                <WorkingDirectory>/home/betsy/cmake_build/Tests/CTestTestSubprojects/MyProductionCode</WorkingDirectory>
+                                <Argument>/usr/bin/c++</Argument>
+                                <Argument>-Wnon-virtual-dtor</Argument>
+                                <Argument>-Wcast-align</Argument>
+                                <Argument>-Wchar-subscripts</Argument>
+                                <Argument>-Wall</Argument>
+                                <Argument>-W</Argument>
+                                <Argument>-Wshadow</Argument>
+                                <Argument>-Wpointer-arith</Argument>
+                                <Argument>-Wformat-security</Argument>
+                                <Argument>-Wundef</Argument>
+                                <Argument>-o</Argument>
+                                <Argument>CMakeFiles/production.dir/production.cxx.o</Argument>
+                                <Argument>-c</Argument>
+                                <Argument>/home/betsy/cmake/Tests/CTestTestSubprojects/MyProductionCode/production.cxx</Argument>
+                        </Command>
+                        <!-- Result of command -->
+                        <Result>
+                                <StdOut/>
+                                <StdErr>/home/betsy/cmake/Tests/CTestTestSubprojects/MyProductionCode/production.cxx:2:5: warning: unused parameter ‘argc’ [-Wunused-parameter]
+ int main(int argc, char *argv[])
+     ^
+/home/betsy/cmake/Tests/CTestTestSubprojects/MyProductionCode/production.cxx:2:5: warning: unused parameter ‘argv’ [-Wunused-parameter]</StdErr>
+                                <ExitCondition>0</ExitCondition>
+                        </Result>
+                </Failure>
+                <Log Encoding="base64" Compression="bin/gzip"/>
+                <EndDateTime>Jul 28 15:32 EDT</EndDateTime>
+                <EndBuildTime>1469734335</EndBuildTime>
+                <ElapsedMinutes>0</ElapsedMinutes>
+        </Build>
+</Site>
