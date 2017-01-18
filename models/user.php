@@ -146,7 +146,7 @@ class User
         $pdo = get_link_identifier()->getPdo();
         $user_table = qid('user');
         $stmt = $pdo->prepare("DELETE FROM $user_table WHERE id=?");
-        $stmt->execute(array($this->Id));
+        pdo_execute($stmt, [$this->Id]);
     }
 
     /** Get the name */

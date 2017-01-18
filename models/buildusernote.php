@@ -66,8 +66,7 @@ class BuildUserNote
         $stmt->bindParam(':TextNote', $this->Note);
         $stmt->bindParam(':now', $this->TimeStamp);
         $stmt->bindParam(':Status', $this->Status);
-        if (!$stmt->execute()) {
-            add_last_sql_error('BuildUserNote Insert', 0, $this->BuildId);
+        if (!pdo_execute($stmt)) {
             return false;
         }
 
@@ -116,7 +115,7 @@ class BuildUserNote
         $pdo = get_link_identifier()->getPdo();
         $stmt = $pdo->prepare(
             'SELECT * FROM buildnote WHERE buildid=? ORDER BY timestamp ASC');
-        $stmt->execute(array($buildid));
+        pdo_execute($stmt, [$buildid]);
 
         $notes = array();
         while ($row = $stmt->fetch()) {

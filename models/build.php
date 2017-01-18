@@ -1222,7 +1222,7 @@ class Build
                      JOIN build2update AS b2u ON (b2u.updateid=uf.updateid)
                      WHERE b2u.buildid=? GROUP BY author)
                  AS test');
-        $nauthors_stmt->execute(array($this->Id));
+        pdo_execute($nauthors_stmt, [$this->Id]);
         $nauthors_array = $nauthors_stmt->fetch();
         $nauthors = $nauthors_array[0];
 
@@ -1234,8 +1234,7 @@ class Build
             JOIN build2update AS b2u ON b2u.updateid=uf.updateid
             WHERE b2u.buildid=? AND checkindate>'1980-01-01T00:00:00'
             ORDER BY author ASC, checkindate ASC");
-        $updatefiles_stmt->execute(array($this->Id));
-        add_last_sql_error('Build:ComputeUpdateStatistics', $this->ProjectId, $this->Id);
+        pdo_execute($updatefiles_stmt, [$this->Id]);
 
         while ($updatefiles_array = $updatefiles_stmt->fetch()) {
             $checkindate = $updatefiles_array['checkindate'];
@@ -1290,7 +1289,7 @@ class Build
         // Find user by email address.
         $user_table = qid('user');
         $stmt = $pdo->prepare("SELECT id FROM $user_table WHERE email=?");
-        $stmt->execute(array($email));
+        pdo_execute($stmt, [$email]);
         $row = $stmt->fetch();
         if ($row) {
             $userid = $row['id'];
@@ -1305,7 +1304,7 @@ class Build
             $stmt->bindParam(':projectid', $this->ProjectId);
             $stmt->bindParam(':author', $author);
             $stmt->bindParam(':email', $email);
-            $stmt->execute();
+            pdo_execute($stmt);
             $row = $stmt->fetch();
             if (!$row) {
                 // Unable to find user, return early.
@@ -1351,7 +1350,7 @@ class Build
         $stmt->bindParam(':userid', $userid);
         $stmt->bindParam(':projectid', $this->ProjectId);
         $stmt->bindParam(':checkindate', $checkindate);
-        $stmt->execute();
+        pdo_execute($stmt);
         $row = $stmt->fetch();
 
         if ($row) {
@@ -1378,8 +1377,7 @@ class Build
             $stmt->bindParam(':userid', $userid);
             $stmt->bindParam(':projectid', $this->ProjectId);
             $stmt->bindParam(':checkindate', $checkindate);
-            $stmt->execute();
-            add_last_sql_error('Build:AddUpdateStatistics', $this->ProjectId, $this->Id);
+            pdo_execute($stmt);
         } else {
             // Insert a new row into the database.
             $stmt = $pdo->prepare(
@@ -1401,8 +1399,7 @@ class Build
             $stmt->bindParam(':nfailederrors', $nfailederrors);
             $stmt->bindParam(':nfixedtests', $nfixedtests);
             $stmt->bindParam(':nfailedtests', $nfailedtests);
-            $stmt->execute();
-            add_last_sql_error('Build:AddUpdateStatistics', $this->ProjectId, $this->Id);
+            pdo_execute($stmt);
         }
         $pdo->commit();
     }

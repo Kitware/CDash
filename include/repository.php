@@ -831,7 +831,7 @@ function perform_version_only_diff($update, $projectid)
             'SELECT revision FROM buildupdate AS bu
             INNER JOIN build2update AS b2u ON (b2u.updateid=bu.id)
             WHERE b2u.buildid=?');
-    $stmt->execute(array($previous_buildid));
+    pdo_execute($stmt, [$previous_buildid]);
     $row = $stmt->fetch();
     if (empty($row) || !isset($row['revision'])) {
         return;
@@ -844,7 +844,7 @@ function perform_version_only_diff($update, $projectid)
     // Record the previous revision in the buildupdate table.
     $stmt = $pdo->prepare(
         'UPDATE buildupdate SET priorrevision=? WHERE id=?');
-    $stmt->execute(array($previous_revision, $update->UpdateId));
+    pdo_execute($stmt, [$previous_revision, $update->UpdateId]);
 
     // Call the implementation specific to this repository viewer.
     $update->Append = true;
@@ -971,7 +971,7 @@ function perform_github_version_only_diff($project, $update, $previous_revision)
                 $stmt = $pdo->prepare(
                         'SELECT DISTINCT revision FROM updatefile
                         WHERE filename=?');
-                $stmt->execute(array($modified_file['filename']));
+                pdo_execute($stmt, [$modified_file['filename']]);
                 while ($row = $stmt->fetch()) {
                     foreach ($list_of_commits as $c) {
                         if ($row['revision'] == $c['sha']) {

@@ -82,7 +82,7 @@ class Image
                 $stmt->bindParam(':img', $this->Data, PDO::PARAM_LOB);
                 $stmt->bindParam(':extension', $this->Extension);
                 $stmt->bindParam(':checksum', $this->Checksum);
-                $success = $stmt->execute();
+                $success = pdo_execute($stmt);
             } else {
                 $stmt = $pdo->prepare('
                         INSERT INTO image (img, extension, checksum)
@@ -90,11 +90,10 @@ class Image
                 $stmt->bindParam(':img', $this->Data, PDO::PARAM_LOB);
                 $stmt->bindParam(':extension', $this->Extension);
                 $stmt->bindParam(':checksum', $this->Checksum);
-                $success = $stmt->execute();
+                $success = pdo_execute($stmt);
                 $this->Id = pdo_insert_id('image');
             }
             if (!$success) {
-                add_last_sql_error('Image::Save');
                 return false;
             }
         } elseif ($update) {
@@ -104,7 +103,7 @@ class Image
             $stmt->bindParam(':extension', $this->Extension);
             $stmt->bindParam(':checksum', $this->Checksum);
             $stmt->bindParam(':id', $this->Id);
-            if (!$stmt->execute()) {
+            if (!pdo_execute($stmt)) {
                 return false;
             }
         }
@@ -120,7 +119,7 @@ class Image
 
         $pdo = get_link_identifier()->getPdo();
         $stmt = $pdo->prepare('SELECT * FROM image WHERE id=?');
-        $stmt->execute([$this->Id]);
+        pdo_execute($stmt, [$this->Id]);
         $row = $stmt->fetch();
 
         $this->Extension = $row['extension'];

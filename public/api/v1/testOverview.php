@@ -152,7 +152,7 @@ $stmt = $pdo->prepare(
     JOIN buildgroupposition bgp on (bgp.buildgroupid=bg.id)
     WHERE projectid=?
     AND bg.endtime='1980-01-01 00:00:00'");
-$stmt->execute(array($projectid));
+pdo_execute($stmt, [$projectid]);
 $groups_response = array();
 
 // Begin with an entry for the default "Non-Experimental Builds" selection.
@@ -203,7 +203,7 @@ $stmt->bindParam(':end', $end_date);
 if ($groupid > 0) {
     $stmt->bindParam(':groupid', $groupid);
 }
-$stmt->execute();
+pdo_execute($stmt);
 
 $tests_response[] = array();
 $all_tests = array();

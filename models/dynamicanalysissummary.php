@@ -44,7 +44,7 @@ class DynamicAnalysisSummary
         $stmt = $this->PDO->prepare("
                 SELECT COUNT(*) AS c FROM dynamicanalysissummary
                 WHERE buildid = ?");
-        if ($stmt->execute(array($this->BuildId))) {
+        if (pdo_execute($stmt, [$this->BuildId])) {
             $row = $stmt->fetch();
             if ($row['c'] > 0) {
                 return true;
@@ -65,13 +65,7 @@ class DynamicAnalysisSummary
 
         $stmt = $this->PDO->prepare('
             DELETE FROM dynamicanalysissummary WHERE buildid = ?');
-        $success = $stmt->execute(array($this->BuildId));
-        if (!$stmt->execute()) {
-            add_last_sql_error('DynamicAnalysisSummary Remove',
-                    0, $this->BuildId);
-            return false;
-        }
-        return true;
+        return pdo_execute($stmt, [$this->BuildId]);
     }
 
     // Insert the DynamicAnalysisSummary
@@ -95,7 +89,7 @@ class DynamicAnalysisSummary
                 $stmt = $this->PDO->prepare("
                     SELECT checker, numdefects FROM dynamicanalysissummary
                     WHERE buildid = ? FOR UPDATE");
-                $stmt->execute(array($this->BuildId));
+                pdo_execute($stmt, [$this->BuildId]);
                 $row = $stmt->fetch();
                 if (!$row) {
                     $this->PDO->rollBack();
@@ -121,9 +115,8 @@ class DynamicAnalysisSummary
         $stmt->bindParam(':buildid', $this->BuildId);
         $stmt->bindParam(':checker', $this->Checker);
         $stmt->bindParam(':numdefects', $this->NumDefects);
-        if (!$stmt->execute()) {
+        if (!pdo_execute($stmt)) {
             $this->PDO->rollBack();
-            add_last_sql_error($error_name, 0, $this->BuildId);
             return false;
         }
         $this->PDO->commit();

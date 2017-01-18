@@ -1519,7 +1519,7 @@ class Project
         $stmt->bindParam(':buildname', $buildname);
         $stmt->bindParam(':sitename', $sitename);
         $stmt->bindParam(':ip', $ip);
-        $stmt->execute();
+        pdo_execute($stmt);
         $blocked_id = pdo_insert_id('blockbuild');
         return $blocked_id;
     }
@@ -1528,6 +1528,6 @@ class Project
     {
         $pdo = get_link_identifier()->getPdo();
         $stmt = $pdo->prepare('DELETE FROM blockbuild WHERE id=?');
-        $stmt->execute(array($id));
+        pdo_execute($stmt, [$id]);
     }
 }
