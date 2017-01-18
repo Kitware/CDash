@@ -40,8 +40,10 @@ class JavaJSONTarHandler
      **/
     public function Parse($filename)
     {
+        global $CDASH_BACKUP_DIRECTORY;
+
         // Create a new directory where we can extract our tarball.
-        $dirName = sys_get_temp_dir() . '/' . pathinfo($filename, PATHINFO_FILENAME);
+        $dirName = $CDASH_BACKUP_DIRECTORY . DIRECTORY_SEPARATOR . pathinfo($filename, PATHINFO_FILENAME);
         mkdir($dirName);
 
         // Extract the tarball.
@@ -95,7 +97,7 @@ class JavaJSONTarHandler
      **/
     public function ParsePackageMap($fileinfo)
     {
-        $jsonContents = file_get_contents($fileinfo->getRealPath());
+        $jsonContents = file_get_contents($fileinfo->getPath() . DIRECTORY_SEPARATOR . $fileinfo->getFilename());
         $jsonDecoded = json_decode($jsonContents, true);
         if (is_null($jsonDecoded)) {
             return;
@@ -145,7 +147,7 @@ class JavaJSONTarHandler
         $coverage->CoverageFile = $coverageFile;
 
         // Parse this JSON file.
-        $jsonContents = file_get_contents($fileinfo->getRealPath());
+        $jsonContents = file_get_contents($fileinfo->getPath() . DIRECTORY_SEPARATOR . $fileinfo->getFilename());
         $jsonDecoded = json_decode($jsonContents, true);
 
         // Make sure it has the fields we expect.
