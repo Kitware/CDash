@@ -996,14 +996,11 @@ function get_filterdata_from_request($page_id = '')
 
         $sql_field = $pageSpecificFilters->getSqlField($field);
 
-        if ($field == 'buildstarttime') {
-            $filterdata['hasdateclause'] = 1;
-        }
-
-        // Treat the buildstamp field as if it were a date clause so that the
+        // The following filter types are considered 'date clauses' so that the
         // default date clause of "builds from today only" is not used...
         //
-        if ($field == 'buildstamp') {
+        if ($field == 'buildstarttime' || $field == 'buildstamp' ||
+            $field == 'revision') {
             $filterdata['hasdateclause'] = 1;
         }
 
