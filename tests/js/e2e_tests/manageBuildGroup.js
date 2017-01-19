@@ -63,22 +63,6 @@ describe("manageBuildGroup", function() {
   });
 
 
-  it("can assign a build to a group", function() {
-    browser.get('manageBuildGroup.php?projectid=5#/move');
-
-    // Select a build & a destination group, and then click the move button.
-    element(by.name('movebuilds[]')).element(by.cssContainingText('option', 'simple')).click();
-    element(by.name('destBuildGroupSelection')).element(by.cssContainingText('option', 'aaaNewBuildGroup')).click();
-    element(by.buttonText('Move selected build(s) to group')).click();
-    browser.waitForAngular();
-
-    // Make sure that our moved build appears in the correct group when
-    // we reload the page.
-    browser.get('manageBuildGroup.php?projectid=5#/move');
-    expect(element(by.name('movebuilds[]')).element(by.cssContainingText('option', 'simple')).getText()).toEqual("CDashTestingSite CDash-CTest-simple [Experimental] aaaNewBuildGroup");
-  });
-
-
   it("can create a wildcard rule", function() {
     // Fill out the wildcard rule form & submit it.
     browser.get('manageBuildGroup.php?projectid=5#/wildcard');
@@ -119,10 +103,10 @@ describe("manageBuildGroup", function() {
     // Fill out the form & submit it.
     browser.get('manageBuildGroup.php?projectid=5#/dynamic');
     element(by.name('dynamicSelection')).element(by.cssContainingText('option', 'latestBuildGroup')).click();
-    element(by.name('parentBuildGroupSelection')).element(by.cssContainingText('option', 'aaaNewBuildGroup')).click();
+    element(by.name('parentBuildGroupSelection')).element(by.cssContainingText('option', 'Experimental')).click();
     var matchField = element(by.name('dynamicBuildNameMatch'));
     matchField.clear();
-    matchField.sendKeys('simple');
+    matchField.sendKeys('sameImage');
     element(by.buttonText('Add content to BuildGroup')).click();
     browser.waitForAngular();
   });
