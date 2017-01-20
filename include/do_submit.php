@@ -493,13 +493,13 @@ function curl_request_async($url, $params, $type = 'POST')
 
     $out = "$type " . $parts['path'] . " HTTP/1.1\r\n";
     $out .= 'Host: ' . $parts['host'] . "\r\n";
-    $out .= "Content-Type: application/x-www-form-urlencoded\r\n";
-    $out .= 'Content-Length: ' . strlen($post_string) . "\r\n";
-    $out .= "Connection: Close\r\n\r\n";
-    // Data goes in the request body for a POST request
     if ('POST' == $type && isset($post_string)) {
+        // Data goes in the request body for a POST request.
+        $out .= "Content-Type: application/x-www-form-urlencoded\r\n";
+        $out .= 'Content-Length: ' . strlen($post_string) . "\r\n";
         $out .= $post_string;
     }
+    $out .= "Connection: Close\r\n\r\n";
 
     fwrite($fp, $out);
     fclose($fp);
