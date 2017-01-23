@@ -228,67 +228,6 @@ function echo_submission_table()
     echo '<br/>';
 }
 
-function echo_project_data_sizes()
-{
-    echo '<h3>Project Data Sizes</h3>';
-    echo 'All sizes measured in millions of bytes<br/>';
-    $sep = ', ';
-
-    $sql = 'SELECT p.name, SUM(LENGTH(t.output)+LENGTH(t.details)+LENGTH(t.command)+LENGTH(t.path)+LENGTH(t.name)) AS testsize ' .
-        'FROM project AS p, test AS t ' .
-        'WHERE p.id=t.projectid ' .
-        'GROUP BY p.name';
-
-    $rows = pdo_all_rows_query($sql);
-
-    echo '<pre>';
-    echo 'project name, test size' . "\n";
-    echo "\n";
-    foreach ($rows as $row) {
-        echo $row['name'] .
-            $sep . $row['testsize'] / 1000000 .
-            "\n";
-    }
-    echo '</pre>';
-    echo '<br/>';
-
-    $sql = 'SELECT p.name, SUM(LENGTH(cov.log)) AS covsize ' .
-        'FROM project AS p, build AS b, coveragefilelog AS cov ' .
-        'WHERE p.id=b.projectid AND b.id=cov.buildid ' .
-        'GROUP BY p.name';
-
-    $rows = pdo_all_rows_query($sql);
-
-    echo '<pre>';
-    echo 'project name, coverage size' . "\n";
-    echo "\n";
-    foreach ($rows as $row) {
-        echo $row['name'] .
-            $sep . $row['covsize'] / 1000000 .
-            "\n";
-    }
-    echo '</pre>';
-    echo '<br/>';
-
-    $sql = 'SELECT p.name, SUM(LENGTH(da.log)) AS dasize ' .
-        'FROM project AS p, build AS b, dynamicanalysis AS da ' .
-        'WHERE p.id=b.projectid AND b.id=da.buildid ' .
-        'GROUP BY p.name';
-
-    $rows = pdo_all_rows_query($sql);
-
-    echo '<pre>';
-    echo 'project name, dynamic analysis size' . "\n";
-    echo "\n";
-    foreach ($rows as $row) {
-        echo $row['name'] .
-            $sep . $row['dasize'] / 1000000 .
-            "\n";
-    }
-    echo '</pre>';
-    echo '<br/>';
-}
-
 if ($session_OK) {
     $userid = $_SESSION['cdash']['loginid'];
 
@@ -300,7 +239,6 @@ if ($session_OK) {
     if ($user_is_admin) {
         echo_currently_processing_submissions();
         echo_pending_submissions();
-        echo_project_data_sizes();
         echo_average_wait_times();
         echo_submissionprocessor_table();
         echo_submission_table();
