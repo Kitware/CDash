@@ -1193,7 +1193,7 @@ function remove_children($parentid)
 function unlink_uploaded_file($fileid)
 {
     global $CDASH_UPLOAD_DIRECTORY;
-    $query = pdo_query("SELECT sha1sum, filename, filesize FROM uploadfile WHERE id='$fileid'");
+    $query = pdo_query("SELECT sha1sum, filename, filesize FROM uploadfile WHERE id='$fileid' AND isurl=0");
     $uploadfile_array = pdo_fetch_array($query);
     $sha1sum = $uploadfile_array['sha1sum'];
     $symlinkname = $uploadfile_array['filename'];
