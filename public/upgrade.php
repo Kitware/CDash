@@ -753,6 +753,13 @@ if (isset($_GET['upgrade-2-6'])) {
     // Add index to label2test::buildid to improve performance of remove_build()
     AddTableIndex('label2test', 'buildid');
 
+    // Expand size of password field to 255 characters.
+    if ($CDASH_DB_TYPE != 'pgsql') {
+        ModifyTableField('password', 'password', 'VARCHAR( 255 )', 'VARCHAR( 255 )', '', true, false);
+        ModifyTableField('user', 'password', 'VARCHAR( 255 )', 'VARCHAR( 255 )', '', true, false);
+        ModifyTableField('usertemp', 'password', 'VARCHAR( 255 )', 'VARCHAR( 255 )', '', true, false);
+    }
+
     // Set the database version
     setVersion();
 
