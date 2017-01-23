@@ -132,23 +132,23 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
     // Get some information about the project
     $project_response = array();
     $project_response['nbuilderror'] =
-        $Project->GetNumberOfErrorBuilds($beginning_UTCDate, $end_UTCDate, true);
+        $Project->GetNumberOfErrorBuilds($beginning_UTCDate, $end_UTCDate);
     $project_response['nbuildwarning'] =
-        $Project->GetNumberOfWarningBuilds($beginning_UTCDate, $end_UTCDate, true);
+        $Project->GetNumberOfWarningBuilds($beginning_UTCDate, $end_UTCDate);
     $project_response['nbuildpass'] =
-        $Project->GetNumberOfPassingBuilds($beginning_UTCDate, $end_UTCDate, true);
+        $Project->GetNumberOfPassingBuilds($beginning_UTCDate, $end_UTCDate);
     $project_response['nconfigureerror'] =
-        $Project->GetNumberOfErrorConfigures($beginning_UTCDate, $end_UTCDate, true);
+        $Project->GetNumberOfErrorConfigures($beginning_UTCDate, $end_UTCDate);
     $project_response['nconfigurewarning'] =
-        $Project->GetNumberOfWarningConfigures($beginning_UTCDate, $end_UTCDate, true);
+        $Project->GetNumberOfWarningConfigures($beginning_UTCDate, $end_UTCDate);
     $project_response['nconfigurepass'] =
-        $Project->GetNumberOfPassingConfigures($beginning_UTCDate, $end_UTCDate, true);
+        $Project->GetNumberOfPassingConfigures($beginning_UTCDate, $end_UTCDate);
     $project_response['ntestpass'] =
-        $Project->GetNumberOfPassingTests($beginning_UTCDate, $end_UTCDate, true);
+        $Project->GetNumberOfPassingTests($beginning_UTCDate, $end_UTCDate);
     $project_response['ntestfail'] =
-        $Project->GetNumberOfFailingTests($beginning_UTCDate, $end_UTCDate, true);
+        $Project->GetNumberOfFailingTests($beginning_UTCDate, $end_UTCDate);
     $project_response['ntestnotrun'] =
-        $Project->GetNumberOfNotRunTests($beginning_UTCDate, $end_UTCDate, true);
+        $Project->GetNumberOfNotRunTests($beginning_UTCDate, $end_UTCDate);
     if (strlen($Project->GetLastSubmission()) == 0) {
         $project_response['lastsubmission'] = 'NA';
     } else {
@@ -166,6 +166,7 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
         $subprojProp[$subprojectid] = array('name' => $SubProject->GetName());
     }
     $testSubProj = new SubProject();
+    $testSubProj->SetProjectId($projectid);
     $result = $testSubProj->GetNumberOfErrorBuilds($beginning_UTCDate, $end_UTCDate, true);
     if ($result) {
         foreach ($result as $row) {
