@@ -17,9 +17,9 @@
 include dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
 include 'public/login.php';
-include_once 'include/common.php';
-include 'include/version.php';
-include 'models/userproject.php';
+require_once 'include/common.php';
+require_once 'include/version.php';
+require_once 'models/userproject.php';
 require_once 'include/cdashmail.php';
 
 if ($session_OK) {

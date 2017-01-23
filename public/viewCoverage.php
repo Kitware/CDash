@@ -14,15 +14,17 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-$noforcelogin = 1;
 include dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
+
+$noforcelogin = 1;
 include 'public/login.php';
-include_once 'include/common.php';
-include 'include/version.php';
-include 'models/build.php';
-include 'models/coveragefile2user.php';
-include 'models/user.php';
+
+require_once 'include/common.php';
+require_once 'include/version.php';
+require_once 'models/build.php';
+require_once 'models/coveragefile2user.php';
+require_once 'models/user.php';
 require_once 'include/filterdataFunctions.php';
 
 @set_time_limit(0);
