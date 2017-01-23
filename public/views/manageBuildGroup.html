@@ -50,11 +50,6 @@
             </a>
           </li>
           <li role="presentation">
-            <a href="#move" aria-controls="move" role="tab" data-toggle="tab">
-              <strong>Move Builds</strong>
-            </a>
-          </li>
-          <li role="presentation">
             <a href="#wildcard" aria-controls="wildcard" role="tab" data-toggle="tab">
               <strong>Wildcard BuildGroups</strong>
             </a>
@@ -219,54 +214,6 @@
               </div>
             </div>
           </div> <!-- create new BuildGroup -->
-
-          <div role="tabpanel" class="tab-pane" id="move">
-            <div class="form-horizontal">
-
-              <div class="form-group">
-                <label for="globalMoveSelectionType"> Show:</label>
-                <select name="globalMoveSelectionType" ng-model="filteredBuildGroup" ng-options="buildgroup as buildgroup.name for buildgroup in cdash.buildgroups | orderBy:'name'" class="form-control">
-                  <option value="">All</option>
-                </select>
-                <p class="help-block">
-                  expected builds and those submitted in the past 7 days
-                </p>
-              </div>
-
-              <div class="form-group">
-                <select name="movebuilds[]" size="15" multiple="multiple" id="movebuilds" ng-model="movebuilds" ng-options="build as build.name for build in cdash.currentbuilds | orderBy:'name' | filter_builds:filteredBuildGroup" class="repeat-item form-control">
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="destBuildGroupSelection"> Move to BuildGroup: </label>
-                <select name="destBuildGroupSelection" ng-model="destBuildGroupSelection" ng-options="buildgroup as buildgroup.name for buildgroup in cdash.buildgroups | orderBy:'name'" class="form-control">
-                  <option value="">Choose...</option>
-                </select>
-                <p class="help-block">
-                  (select a group even if you want only expected)
-                </p>
-              </div>
-
-              <div class="form-group">
-                <div class="checkbox">
-                  <label>
-                    <input type="checkbox"
-                      ng-model="expected"
-                      name="expectedMove"
-                      ng-true-value="1"
-                      ng-false-value="0"/>
-                    Expected
-                  </label>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <button type="submit" class="btn btn-default" ng-click="moveBuilds(movebuilds, destBuildGroupSelection, expected)">Move selected build(s) to group</button>
-                <img id="builds_moved" src="img/check.gif" style="display: none; height:16px; width=16px; margin-top:9px;" />
-              </div>
-            </div>
-          </div> <!-- global move -->
 
           <div role="tabpanel" class="tab-pane" id="wildcard">
             <div class="form-horizontal">
