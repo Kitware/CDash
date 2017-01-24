@@ -786,7 +786,8 @@ if ($Upgrade) {
     }
 
     // check if the rss directory is writable
-    if (!is_writable('rss')) {
+    global $CDASH_ENABLE_FEED;
+    if ($CDASH_ENABLE_FEED > 0 && !is_writable('rss')) {
         $xml .= '<rsswritable>0</rsswritable>';
     } else {
         $xml .= '<rsswritable>1</rsswritable>';
