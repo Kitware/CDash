@@ -14,13 +14,16 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-$noforcelogin = 1;
 include dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
+
+$noforcelogin = 1;
 include 'public/login.php';
-include_once 'include/common.php';
-include 'include/version.php';
-include 'models/project.php';
+
+require_once 'include/common.php';
+require_once 'include/version.php';
+require_once 'models/project.php';
+require_once 'models/user.php';
 
 @$siteid = $_GET['siteid'];
 if ($siteid != null) {
@@ -256,10 +259,11 @@ if (isset($_SESSION['cdash'])) {
         }
     }
 
-    $user = pdo_query('SELECT admin FROM ' . qid('user') . " WHERE id='$userid'");
-    $user_array = pdo_fetch_array($user);
+    $user = new User();
+    $user->Id = $userid;
+    $user->Fill();
     $xml .= add_XML_value('id', $userid);
-    $xml .= add_XML_value('admin', $user_array['admin']);
+    $xml .= add_XML_value('admin', $user->Admin);
     $xml .= '</user>';
 }
 

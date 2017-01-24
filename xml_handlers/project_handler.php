@@ -202,7 +202,7 @@ class ProjectHandler extends AbstractHandler
                 $User->LastName = $this->Email;
             }
             $User->Email = $this->Email;
-            $User->Password = md5($this->Email);
+            $User->Password = password_hash($this->Email, PASSWORD_DEFAULT);
             $User->Admin = 0;
             $userid = $User->GetIdFromEmail($this->Email);
             if (!$userid) {

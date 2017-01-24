@@ -28,6 +28,7 @@ class User
     public $Admin;
     public $Filled;
     public $TableName;
+    public $TempTableName;
     private $PDO;
 
     public function __construct()
@@ -41,6 +42,7 @@ class User
         $this->Admin = 0;
         $this->Filled = false;
         $this->TableName = qid('user');
+        $this->TempTableName = qid('usertemp');
         $this->PDO = get_link_identifier()->getPdo();
     }
 
@@ -92,6 +94,18 @@ class User
         $stmt->bindParam(':firstname', $this->FirstName);
         $stmt->bindParam(':lastname', $this->LastName);
         pdo_execute($stmt);
+        if ($stmt->fetchColumn() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    /** Return if a temporary record for this user exists. */
+    public function TempExists()
+    {
+        $stmt = $this->PDO->prepare(
+            "SELECT COUNT(*) FROM $this->TempTableName WHERE email = ?");
+        pdo_execute($stmt, [$this->Email]);
         if ($stmt->fetchColumn() > 0) {
             return true;
         }
@@ -162,6 +176,53 @@ class User
             $this->RecordPassword();
         }
         return true;
+    }
+
+    // Save a temporary record for this user in the database.
+    public function SaveTemp($key, $date)
+    {
+        $stmt = $this->PDO->prepare(
+            "INSERT INTO $this->TempTableName
+            (email, password, firstname, lastname, institution,
+             registrationkey, registrationdate)
+            VALUES
+            (:email, :password, :firstname, :lastname, :institution,
+             :registrationkey, :registrationdate)");
+        $stmt->bindParam(':email', $this->Email);
+        $stmt->bindParam(':password', $this->Password);
+        $stmt->bindParam(':firstname', $this->FirstName);
+        $stmt->bindParam(':lastname', $this->LastName);
+        $stmt->bindParam(':institution', $this->Institution);
+        $stmt->bindParam(':registrationkey', $key);
+        $stmt->bindParam(':registrationdate', $date);
+        return pdo_execute($stmt);
+    }
+
+    // Move a row from usertemp to user.
+    public function Register($key)
+    {
+        $stmt = $this->PDO->prepare(
+            "SELECT * FROM $this->TempTableName WHERE registrationkey = ?");
+        if (!pdo_execute($stmt, [$key])) {
+            return false;
+        }
+        $row = $stmt->fetch();
+        if (!$row) {
+            return false;
+        }
+
+        $this->Email = $row['email'];
+        $this->Password = $row['password'];
+        $this->FirstName = $row['firstname'];
+        $this->LastName = $row['lastname'];
+        $this->Institution = $row['institution'];
+        if ($this->Save()) {
+            $stmt = $this->PDO->prepare(
+                "DELETE FROM $this->TempTableName WHERE email = ?");
+            pdo_execute($stmt, [$this->Email]);
+            return true;
+        }
+        return false;
     }
 
     // Remove this user from the database.

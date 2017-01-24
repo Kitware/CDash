@@ -15,12 +15,13 @@
 =========================================================================*/
 
 include_once dirname(__DIR__) . '/config/config.php';
-include_once 'include/common.php';
-include_once 'include/login_functions.php';
-include_once 'include/version.php';
+require_once 'include/common.php';
+require_once 'include/login_functions.php';
+require_once 'include/version.php';
 redirect_to_https();
 
 require_once 'include/cdashmail.php';
+require_once 'include/pdo.php';
 require_once 'models/user.php';
 
 $reg = '';
@@ -29,34 +30,14 @@ $reg = '';
 function register()
 {
     global $reg;
-    include dirname(__DIR__) . '/config/config.php';
-    require_once 'include/pdo.php';
+    $user = new User();
 
     if (isset($_GET['key'])) {
-        $key = pdo_real_escape_string($_GET['key']);
-        $sql = 'SELECT * FROM ' . qid('usertemp') . " WHERE registrationkey='$key'";
-        $query = pdo_query($sql);
-        if (pdo_num_rows($query) == 0) {
-            $reg = 'The key is invalid.';
-            return 0;
-        }
-
-        $query_array = pdo_fetch_array($query);
-        $email = $query_array['email'];
-
-        // We copy the data from usertemp to user
-        $user = new User();
-        $user->Email = $email;
-        $user->Password = $query_array['password'];
-        $user->FirstName = $query_array['firstname'];
-        $user->LastName = $query_array['lastname'];
-        $user->Institution = $query_array['institution'];
-        if ($user->Save()) {
-            pdo_query("DELETE FROM usertemp WHERE email='$email'");
-            return 1;
+        if ($user->Register($_GET['key'])) {
+            return true;
         } else {
-            $reg = pdo_error();
-            return 0;
+            $reg = 'The key is invalid.';
+            return false;
         }
     } elseif (isset($_POST['sent'])) {
         // arrive from register form
@@ -64,14 +45,14 @@ function register()
         $url = $_POST['url'];
         if ($url != 'catchbot') {
             $reg = 'Bots are not allowed to obtain CDash accounts!';
-            return 0;
+            return false;
         }
         $email = $_POST['email'];
         $passwd = $_POST['passwd'];
         $passwd2 = $_POST['passwd2'];
         if (!($passwd == $passwd2)) {
             $reg = 'Passwords do not match!';
-            return 0;
+            return false;
         }
 
         global $CDASH_MINIMUM_PASSWORD_LENGTH,
@@ -84,39 +65,37 @@ function register()
             } else {
                 $reg = "Your password must contain at least $CDASH_MINIMUM_PASSWORD_COMPLEXITY of the following: uppercase, lowercase, numbers, and symbols.";
             }
-            return 0;
+            return false;
         }
 
         if (strlen($passwd) < $CDASH_MINIMUM_PASSWORD_LENGTH) {
             $reg = "Your password must be at least $CDASH_MINIMUM_PASSWORD_LENGTH characters.";
-            return 0;
+            return false;
         }
 
         $fname = $_POST['fname'];
         $lname = $_POST['lname'];
         $institution = $_POST['institution'];
         if ($email && $passwd && $passwd2 && $fname && $lname && $institution) {
-            $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-            pdo_select_db("$CDASH_DB_NAME", $db);
-            $passwd = md5($passwd);
-            $email = pdo_real_escape_string($email);
 
-            $sql = 'SELECT email FROM ' . qid('user') . " WHERE email='$email'";
-            if (pdo_num_rows(pdo_query($sql)) > 0) {
+            $user->Email = $email;
+            if ($user->Exists()) {
                 $reg = "$email is already registered.";
-                return 0;
+                return false;
             }
-            $sql = 'SELECT email  FROM ' . qid('usertemp') . " WHERE email='$email'";
-            if (pdo_num_rows(pdo_query($sql)) > 0) {
+
+            if ($user->TempExists()) {
                 $reg = "$email is already registered. Check your email if you haven't received the link to activate yet.";
-                return 0;
+                return false;
             }
 
-            $passwd = pdo_real_escape_string($passwd);
-            $fname = pdo_real_escape_string($fname);
-            $lname = pdo_real_escape_string($lname);
-            $institution = pdo_real_escape_string($institution);
+            $user->Email = $email;
+            $user->Password = password_hash($passwd, PASSWORD_DEFAULT);
+            $user->FirstName = $fname;
+            $user->LastName = $lname;
+            $user->Institution = $institution;
 
+            global $CDASH_REGISTRATION_EMAIL_VERIFY, $CDASH_SERVER_NAME;
             if ($CDASH_REGISTRATION_EMAIL_VERIFY) {
                 $keychars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
                 $length = 40;
@@ -130,22 +109,10 @@ function register()
                 }
 
                 $date = date(FMT_DATETIME);
-                $sql = 'INSERT INTO ' . qid('usertemp') . " (email,password,firstname,lastname,institution,registrationkey,registrationdate)
-                    VALUES ('$email','$passwd','$fname','$lname','$institution','$key','$date')";
-            } else {
-                $user = new User();
-                $user->Email = $email;
-                $user->Password = $passwd;
-                $user->FirstName = $fname;
-                $user->LastName = $lname;
-                $user->Institution = $institution;
-                $user->Save();
-            }
-            if (pdo_query($sql)) {
-                if ($CDASH_REGISTRATION_EMAIL_VERIFY) {
+                if ($user->SaveTemp($key, $date)) {
+                    // Send the registration email.
                     $currentURI = get_server_URI();
 
-                    // Send the email
                     $emailtitle = 'Welcome to CDash!';
                     $emailbody = 'Hello ' . $fname . ",\n\n";
                     $emailbody .= "Welcome to CDash! In order to validate your registration please follow this link: \n";
@@ -165,27 +132,26 @@ function register()
 
                     $reg = "A confirmation email has been sent. Check your email (including your spam folder) to confirm your registration!\n";
                     $reg .= 'You need to activate your account within 24 hours.';
-                    return 0;
+                    return false;
+                } else {
+                    $reg = 'Error registering user';
+                    return false;
                 }
-                return 1;
             } else {
-                $reg = pdo_error();
-                return 0;
+                return $user->Save();
             }
         } else {
             $reg = 'Please fill in all of the required fields';
-            return 0;
+            return false;
         }
     }
-    return 0;
+    return false;
 }
 
 /** Login Form function */
 function RegisterForm($regerror)
 {
-    include dirname(__DIR__) . '/config/config.php';
-    require_once 'include/pdo.php';
-    include_once 'include/common.php';
+    global $CDASH_NO_REGISTRATION;
 
     if (isset($CDASH_NO_REGISTRATION) && $CDASH_NO_REGISTRATION == 1) {
         die("You cannot access this page. Contact your administrator if you think that's an error.");

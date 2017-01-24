@@ -1287,13 +1287,10 @@ class Build
         $pdo = get_link_identifier()->getPdo();
 
         // Find user by email address.
-        $user_table = qid('user');
-        $stmt = $pdo->prepare("SELECT id FROM $user_table WHERE email=?");
-        pdo_execute($stmt, [$email]);
-        $row = $stmt->fetch();
-        if ($row) {
-            $userid = $row['id'];
-        } else {
+        require_once('models/user.php');
+        $user = new User();
+        $userid = $user->GetIdFromEmail($email);
+        if (!$userid) {
             // Find user by author name.
             $stmt = $pdo->prepare(
                 'SELECT up.userid FROM user2project AS up

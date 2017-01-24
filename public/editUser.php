@@ -18,12 +18,12 @@ include dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
 require_once 'include/login_functions.php';
 include 'public/login.php';
-include 'include/version.php';
-include_once 'models/user.php';
-include_once 'models/userproject.php';
+require_once 'include/version.php';
+require_once 'models/user.php';
+require_once 'models/userproject.php';
 
 if ($session_OK) {
-    include_once 'include/common.php';
+    require_once 'include/common.php';
 
     $xml = begin_XML_for_XSLT();
     $xml .= '<title>CDash - My Profile</title>';
@@ -32,39 +32,36 @@ if ($session_OK) {
     $xml .= '<menutitle>CDash</menutitle>';
     $xml .= '<menusubtitle>My Profile</menusubtitle>';
 
-    $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-    pdo_select_db("$CDASH_DB_NAME", $db);
-
     $userid = $_SESSION['cdash']['loginid'];
+    $user = new User();
+    $user->Id = $userid;
+    $user->Fill();
+
+    $pdo = get_link_identifier()->getPdo();
 
     @$updateprofile = $_POST['updateprofile'];
     if ($updateprofile) {
-        $institution = pdo_real_escape_string($_POST['institution']);
-        $email = pdo_real_escape_string($_POST['email']);
-
+        $email = $_POST['email'];
         if (strlen($email) < 3 || strpos($email, '@') === false) {
             $xml .= '<error>Email should be a valid address.</error>';
         } else {
-            $lname = pdo_real_escape_string($_POST['lname']);
-            $fname = pdo_real_escape_string($_POST['fname']);
-
-            if (pdo_query('UPDATE ' . qid('user') . " SET email='$email',
-                        institution='$institution',
-                        firstname='$fname',
-                        lastname='$lname' WHERE id='$userid'")) {
+            $user->Email = $email;
+            $user->Institution = $_POST['institution'];
+            $user->LastName = $_POST['lname'];
+            $user->FirstName = $_POST['fname'];
+            if ($user->Save()) {
                 $xml .= '<error>Your profile has been updated.</error>';
             } else {
                 $xml .= '<error>Cannot update profile.</error>';
             }
-            add_last_sql_error('editUser.php');
         }
     }
 
     // Update the password
     @$updatepassword = $_POST['updatepassword'];
     if ($updatepassword) {
-        $passwd = htmlspecialchars(pdo_real_escape_string($_POST['passwd']));
-        $passwd2 = htmlspecialchars(pdo_real_escape_string($_POST['passwd2']));
+        $passwd = $_POST['passwd'];
+        $passwd2 = $_POST['passwd2'];
 
         global $CDASH_MINIMUM_PASSWORD_LENGTH,
                $CDASH_MINIMUM_PASSWORD_COMPLEXITY,
@@ -85,17 +82,18 @@ if ($session_OK) {
             $error_msg = "Password must be at least $CDASH_MINIMUM_PASSWORD_LENGTH characters.";
         }
 
-        $md5pass = md5($passwd);
-        $md5pass = pdo_real_escape_string($md5pass);
+        $password_hash = password_hash($passwd, PASSWORD_DEFAULT);
 
         if ($password_is_good && $CDASH_PASSWORD_EXPIRATION > 0) {
-            $query = "SELECT password FROM password WHERE userid=$userid";
+
+            $query = 'SELECT password FROM password WHERE userid=?';
             if ($CDASH_UNIQUE_PASSWORD_COUNT) {
                 $query .= " ORDER BY date DESC LIMIT $CDASH_UNIQUE_PASSWORD_COUNT";
             }
-            $result = pdo_query($query);
-            while ($row = pdo_fetch_array($result)) {
-                if ($md5pass == $row['password']) {
+            $stmt = $pdo->prepare($query);
+            pdo_execute($stmt, [$userid]);
+            while ($row = $stmt->fetch()) {
+                if (password_verify($passwd, $row['password'])) {
                     $password_is_good = false;
                     $error_msg = 'You have recently used this password.  Please select a new one.';
                     break;
@@ -118,28 +116,22 @@ if ($session_OK) {
         if (!$password_is_good) {
             $xml .= "<error>$error_msg</error>";
         } else {
-            $user = new User();
-            $user->Id = $userid;
-            $user->Fill();
-            $user->Password = $md5pass;
+            $user->Password = $password_hash;
             if ($user->Save()) {
                 $xml .= '<error>Your password has been updated.</error>';
                 unset($_SESSION['cdash']['redirect']);
             } else {
                 $xml .= '<error>Cannot update password.</error>';
             }
-            add_last_sql_error('editUser.php');
         }
     }
 
     $xml .= '<user>';
-    $user = pdo_query('SELECT * FROM ' . qid('user') . " WHERE id='$userid'");
-    $user_array = pdo_fetch_array($user);
     $xml .= add_XML_value('id', $userid);
-    $xml .= add_XML_value('firstname', $user_array['firstname']);
-    $xml .= add_XML_value('lastname', $user_array['lastname']);
-    $xml .= add_XML_value('email', $user_array['email']);
-    $xml .= add_XML_value('institution', $user_array['institution']);
+    $xml .= add_XML_value('firstname', $user->FirstName);
+    $xml .= add_XML_value('lastname', $user->LastName);
+    $xml .= add_XML_value('email', $user->Email);
+    $xml .= add_XML_value('institution', $user->Institution);
 
     // Update the credentials
     @$updatecredentials = $_POST['updatecredentials'];
@@ -148,25 +140,34 @@ if ($session_OK) {
         $UserProject = new UserProject();
         $UserProject->ProjectId = 0;
         $UserProject->UserId = $userid;
-        $credentials[] = $user_array['email'];
+        $credentials[] = $user->Email;
         $UserProject->UpdateCredentials($credentials);
     }
 
     // List the credentials
     // First the email one (which cannot be changed)
-    $credential = pdo_query("SELECT credential FROM user2repository WHERE userid='$userid'
-            AND projectid=0 AND credential='" . $user_array['email'] . "'");
-    if (pdo_num_rows($credential) == 0) {
+    $stmt = $pdo->prepare(
+        'SELECT credential FROM user2repository
+        WHERE userid = :userid AND projectid = 0 AND credential = :credential');
+    $stmt->bindParam(':userid', $userid);
+    $stmt->bindParam(':credential', $user->Email);
+    pdo_execute($stmt);
+    $row = $stmt->fetch();
+    if (!$row) {
         $xml .= add_XML_value('credential_0', 'Not found (you should really add it)');
     } else {
-        $xml .= add_XML_value('credential_0', $user_array['email']);
+        $xml .= add_XML_value('credential_0', $user->Email);
     }
 
-    $credential = pdo_query("SELECT credential FROM user2repository WHERE userid='$userid'
-            AND projectid=0 AND credential!='" . $user_array['email'] . "'");
+    $stmt = $pdo->prepare(
+        'SELECT credential FROM user2repository
+        WHERE userid = :userid AND projectid = 0 AND credential != :credential');
+    $stmt->bindParam(':userid', $userid);
+    $stmt->bindParam(':credential', $user->Email);
+    pdo_execute($stmt);
     $credential_num = 1;
-    while ($credential_array = pdo_fetch_array($credential)) {
-        $xml .= add_XML_value('credential_' . $credential_num++, stripslashes($credential_array['credential']));
+    while ($row = $stmt->fetch()) {
+        $xml .= add_XML_value('credential_' . $credential_num++, stripslashes($row['credential']));
     }
 
     $xml .= '</user>';

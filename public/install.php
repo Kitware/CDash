@@ -27,6 +27,7 @@ require_once 'include/pdo.php';
 require_once 'include/common.php';
 require_once 'include/login_functions.php';
 require_once 'include/version.php';
+require_once 'models/user.php';
 
 if ($CDASH_PRODUCTION_MODE) {
     echo 'CDash is in production mode. Install cannot be accessed. Change the variable in your config.php if you want to access the installation.';
@@ -128,8 +129,8 @@ if (true === @pdo_select_db("$CDASH_DB_NAME", $db)
         } else {
             pdo_select_db("$CDASH_DB_NAME");
         }
-        $admin_email = htmlspecialchars(pdo_real_escape_string($_POST['admin_email']));
-        $admin_password = htmlspecialchars(pdo_real_escape_string($_POST['admin_password']));
+        $admin_email = $_POST['admin_email'];
+        $admin_password = $_POST['admin_password'];
 
         $valid_email = true;
 
@@ -252,9 +253,13 @@ if (true === @pdo_select_db("$CDASH_DB_NAME", $db)
                         @pdo_query('ALTER DATABASE ' . $CDASH_DB_NAME . " SET bytea_output TO 'escape'");
                     }
                 }
-
-                pdo_query('INSERT INTO ' . qid('user') . " (email,password,firstname,lastname,institution,admin) VALUES ('" . $admin_email . "', '" . md5($admin_password) . "', 'administrator', '','Kitware Inc.', 1)");
-                echo pdo_error();
+                $user = new User();
+                $user->Email = $admin_email;
+                $user->Password = password_hash($admin_password, PASSWORD_DEFAULT);
+                $user->FirstName = 'administrator';
+                $user->Institution = 'Kitware Inc.';
+                $user->Admin = 1;
+                $user->Save();
 
                 $xml .= '<db_created>1</db_created>';
 

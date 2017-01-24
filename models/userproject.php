@@ -233,15 +233,14 @@ class UserProject
             return false;
         }
 
-        $sql = 'SELECT emailcategory,emailsuccess
-               FROM user2project
+        $sql = 'SELECT * FROM user2project
                WHERE projectid=' . qnum($this->ProjectId) . '
                AND userid=' . qnum($this->UserId) . '
                AND emailtype>0';
 
         $user = pdo_query($sql);
         if (!$user) {
-            add_last_sql_error('UserProject FillFromRepositoryCredential');
+            add_last_sql_error('UserProject FillFromUserId');
             return false;
         }
 
@@ -251,7 +250,10 @@ class UserProject
 
         $user_array = pdo_fetch_array($user);
         $this->EmailCategory = $user_array['emailcategory'];
+        $this->EmailMissingSites = $user_array['emailmissingsites'];
         $this->EmailSuccess = $user_array['emailsuccess'];
+        $this->EmailType = $user_array['emailtype'];
+        $this->Role = $user_array['role'];
         return true;
     }
 

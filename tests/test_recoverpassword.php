@@ -6,7 +6,7 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 require_once 'include/common.php';
-require_once 'include/pdo.php';
+require_once 'models/user.php';
 
 class RecoverPasswordTestCase extends KWWebTestCase
 {
@@ -33,10 +33,12 @@ class RecoverPasswordTestCase extends KWWebTestCase
             $this->fail('clicking recover returned false');
         }
 
-        //fix the password so others can still login...
-        $md5pass = md5('simpletest');
-        pdo_query('UPDATE ' . qid('user') . " SET password='$md5pass' WHERE email='simpletest@localhost'");
-        add_last_sql_error('test_recoverpassword');
-        $this->pass('Passed');
+        // fix the password so others can still login...
+        $user = new User();
+        $userid = $user->GetIdFromEmail('simpletest@localhost');
+        $user->Password = password_hash('simpletest', PASSWORD_DEFAULT);
+        if (!$user->Save()) {
+            $this->fail('user->Save() returned false');
+        }
     }
 }
