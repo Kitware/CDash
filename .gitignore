@@ -23,3 +23,4 @@ local/
 .vagrant
 ansible/roles/*
 ansible/site.retry
+.DS_Store
