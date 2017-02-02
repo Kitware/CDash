@@ -14,15 +14,15 @@ Tests failing: 2
 
 
 *Tests failing*
-SleepTimer1 (http://localhost/CDash/testDetails.php?test=<NA>&build=<NA>)
-SleepTimer2 (http://localhost/CDash/testDetails.php?test=<NA>&build=<NA>)
+SleepTimer1 (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
+SleepTimer2 (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
 
 
 
 *Test timeouts*
-SleepTimer1 (http://localhost/CDash/testDetails.php?test=<NA>&build=<NA>)
-SleepTimer2 (http://localhost/CDash/testDetails.php?test=<NA>&build=<NA>)
+SleepTimer1 (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
+SleepTimer2 (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
 
 
--CDash on localhost
+-CDash on <NA>
  {"function":"TESTING: EMAILBODY","build_id":"<NA>","pid":<NA>} 
