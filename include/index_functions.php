@@ -86,6 +86,7 @@ function get_index_query($userupdatesql='')
         bu.endtime AS updateendtime,
         bu.nfiles AS countupdatefiles,
         bu.warnings AS countupdatewarnings,
+        bu.revision,
         b.configureduration,
         be_diff.difference_positive AS countbuilderrordiffp,
         be_diff.difference_negative AS countbuilderrordiffn,
