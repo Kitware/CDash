@@ -11,6 +11,7 @@ set(CDASH_DB_PASS "" CACHE STRING "Password for database user")
 set(CDASH_DB_PORT "" CACHE STRING "Port to connect to the database")
 set(CDASH_DB_HOST "localhost" CACHE STRING "Hostname of the database server")
 set(CDASH_DB_TYPE "mysql" CACHE STRING "Database type")
+set(CDASH_DB_CONNECTION_TYPE "host" CACHE STRING "Connection type (e.g. host or unix_socket)")
 option(CDASH_USE_SELENIUM "Should CDash use Selenium to test ajax functionality?" OFF)
 option(CDASH_USE_PROTRACTOR "Should CDash use Protractor to test angular functionality?" ON)
 option(CDASH_USE_REDIS_QUEUE "Should CDash use a message queue (Redis) for submitting/processing builds?" OFF)
@@ -155,6 +156,7 @@ $CDASH_DB_LOGIN = '${CDASH_DB_LOGIN}';
 $CDASH_DB_PORT = '${CDASH_DB_PORT}';
 $CDASH_DB_PASS = '${CDASH_DB_PASS}';
 $CDASH_DB_TYPE = '${CDASH_DB_TYPE}';
+$CDASH_DB_CONNECTION_TYPE = '${CDASH_DB_CONNECTION_TYPE}';
 $CDASH_COVERAGE_DIR = '${CDASH_COVERAGE_DIR}';
 $CDASH_LOG_LEVEL = LOG_DEBUG;
 $PHP_EXE = '${PHP_EXE}';

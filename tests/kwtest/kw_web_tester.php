@@ -52,6 +52,7 @@ class KWWebTestCase extends WebTestCase
         $this->db->setPort($db['port']);
         $this->db->setUser($db['login']);
         $this->db->setPassword($db['pwd']);
+        $this->db->setConnection($db['connection']);
 
         global $CDASH_LOG_FILE, $cdashpath;
         $this->logfilename = $CDASH_LOG_FILE;
