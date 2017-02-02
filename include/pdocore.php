@@ -338,6 +338,21 @@ function pdo_execute($stmt, $input_parameters=null)
     return true;
 }
 
+function pdo_get_vendor_version($link_identifier = null) {
+    global $CDASH_DB_TYPE;
+
+    $version = get_link_identifier($link_identifier)->getPdo()->query('SELECT version()')->fetchColumn();
+
+    if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE === 'pgsql'){
+        // Postgress returns version string similar to:
+        //   PostgreSQL 9.6.1 on x86_64-apple-darwin16.1.0, compiled by Apple LLVM version 8.0.0 (clang-800.0.42.1), 64-bit
+        $build = explode(" ", $version);
+        $version = $build[1];
+    }
+
+    return $version;
+}
+
 global $cdash_database_connection;
 global $CDASH_DB_HOST;
 global $CDASH_DB_LOGIN;
