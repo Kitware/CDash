@@ -122,6 +122,11 @@ class database
     {
         return $this->dbo->query($query);
     }
+
+    public function setConnection($connection)
+    {
+        return $this->dbo->setConnection($connection);
+    }
 }
 
 class dbo
@@ -132,6 +137,7 @@ class dbo
     public $password = null;
     public $db = null;
     public $dbconnect = null;
+    public $connection = 'host';
 
     public function getDbConnect()
     {
@@ -162,6 +168,11 @@ class dbo
     {
         $this->password = $pasword;
     }
+
+    public function setConnection($connection)
+    {
+        $this->connection = $connection;
+    }
 }
 
 class dbo_mysql extends dbo
@@ -175,6 +186,11 @@ class dbo_mysql extends dbo
         pdo_connect($host, $this->user, $this->password);
     }
 
+    public function getDSN()
+    {
+        return "mysql:{$this->connection}={$this->host}";
+    }
+
     public function disconnect()
     {
         $this->dbconnect = null;
@@ -182,7 +198,7 @@ class dbo_mysql extends dbo
 
     public function create($db)
     {
-        $dbh = new PDO('mysql:host=' . $this->host, $this->user, $this->password);
+        $dbh = new PDO($this->getDSN(), $this->user, $this->password);
         if (!$dbh->query("CREATE DATABASE IF NOT EXISTS $db")) {
             $this->disconnect();
             return false;
@@ -193,7 +209,7 @@ class dbo_mysql extends dbo
 
     public function drop($db)
     {
-        $dbh = new PDO('mysql:host=' . $this->host, $this->user, $this->password);
+        $dbh = new PDO($this->getDSN(), $this->user, $this->password);
         if (!$dbh->query("DROP DATABASE IF EXISTS $db")) {
             $this->disconnect();
             return false;
