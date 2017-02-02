@@ -107,7 +107,6 @@ class UpgradeTestCase extends KWWebTestCase
 
         $this->assertTrue(is_numeric($major));
         $this->assertTrue(is_numeric($minor));
-        $this->assertTrue(is_numeric($patch));
 
         return;
     }

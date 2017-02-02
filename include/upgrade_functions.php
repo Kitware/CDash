@@ -182,7 +182,7 @@ function AddTablePrimaryKey($table, $field)
     // As of MySQL 5.7.4, the IGNORE clause for ALTER TABLE is removed and its use produces an error.
     // Retaining original query for backwards compatibility
     if ($CDASH_DB_TYPE == 'mysql') {
-        if($major >= 5 && $minor >= 7 && $patch >= 4) {
+        if($major >= 5 && $minor >= 7) {
             $query = "ALTER TABLE {$table} ADD PRIMARY KEY (`{$field}`)";
         } else {
             $query = "ALTER IGNORE TABLE {$table} ADD PRIMARY KEY (`{$field}`)";
