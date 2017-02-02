@@ -16,17 +16,17 @@ describe("viewBuildError", function() {
   });
 
   it("type=1 shows 10 warnings", function() {
-    browser.get('viewBuildError.php?buildid=6&type=1');
+    browser.get('viewBuildError.php?buildid=7&type=1');
     expect(element(by.className('num-errors')).getText()).toContain("10 Warnings");
   });
 
   it("displays build errors inline", function() {
-    browser.get('viewBuildError.php?buildid=67&type=0');
+    browser.get('viewBuildError.php?buildid=68&type=0');
     expect(browser.getPageSource()).toContain("error: 'foo' was not declared in this scope");
   });
 
   it("displays build errors inline on parent builds", function() {
-    browser.get('viewBuildError.php?buildid=66&type=0');
+    browser.get('viewBuildError.php?buildid=67&type=0');
     expect(browser.getPageSource()).toContain("some-test-subproject");
     expect(browser.getPageSource()).toContain("error: 'foo' was not declared in this scope");
   });

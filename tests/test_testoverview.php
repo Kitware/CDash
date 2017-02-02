@@ -39,7 +39,7 @@ class TestOverviewTestCase extends KWWebTestCase
         $content = $this->connect($this->url . '/api/v1/testOverview.php?project=EmailProjectExample&date=2009-02-23');
         $jsonobj = json_decode($content, true);
         $num_tests = count($jsonobj['tests']);
-        if ($num_tests !== 6) {
+        if ($num_tests !== 8) {
             $this->fail("Expected 6 failing tests, found $num_tests");
         }
 
