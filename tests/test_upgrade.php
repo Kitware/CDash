@@ -98,6 +98,20 @@ class UpgradeTestCase extends KWWebTestCase
         $this->assertText('Database cleanup complete.');
     }
 
+    public function testGetVendorVersion()
+    {
+        require_once 'include/pdo.php';
+
+        $version = pdo_get_vendor_version();
+        list($major, $minor, $patch) = $version? explode(".", $version) : array(null,null,null);
+
+        $this->assertTrue(is_numeric($major));
+        $this->assertTrue(is_numeric($minor));
+        $this->assertTrue(is_numeric($patch));
+
+        return;
+    }
+
     public function testUpgrade()
     {
         if (!$this->getMaintenancePage()) {
