@@ -68,6 +68,13 @@ class CreateProjectPermissionsTestCase extends KWWebTestCase
         $response = $this->get($this->url . '/api/v1/createProject.php?projectid=5');
         $response = json_decode($response);
         $this->assertFalse(property_exists($response, 'error'));
+        $username = 'user1@kw';
+        $password = 'user1';
+        $settings = ['Id' => 5, 'Description' => 'This is a new desc'];
+        $this->createProject($settings, true, $username, $password);
+        // Revert description back to its original value.
+        $settings = ['Id' => 5, 'Description' => 'Project Insight test for cdash testing'];
+        $this->createProject($settings, true, $username, $password);
 
         // Cannot edit other projects.
         $response = $this->get($this->url . '/api/v1/createProject.php?projectid=4');

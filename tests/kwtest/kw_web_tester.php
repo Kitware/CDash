@@ -305,7 +305,8 @@ class KWWebTestCase extends WebTestCase
     }
 
     // Create or update a project and verify the changes made.
-    public function createProject($input_settings, $update = false)
+    public function createProject($input_settings, $update = false,
+            $username = 'simpletest@localhost', $password = 'simpletest')
     {
         require_once 'models/project.php';
 
@@ -358,8 +359,8 @@ class KWWebTestCase extends WebTestCase
             $response = $client->request('POST',
                     $CDASH_BASE_URL . '/user.php',
                     ['form_params' => [
-                        'login' => 'simpletest@localhost',
-                        'passwd' => 'simpletest',
+                        'login' => $username,
+                        'passwd' => $password,
                         'sent' => 'Login >>']]);
         } catch (GuzzleHttp\Exception\ClientException $e) {
             $this->fail($e->getMessage());
