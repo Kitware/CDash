@@ -73,7 +73,7 @@ function rest_post()
 
     // If we should create a new project.
     if (isset($_REQUEST['Submit'])) {
-        if (!valid_user($reponse)) {
+        if (!valid_user($response)) {
             return;
         }
         create_project($response);
@@ -158,7 +158,7 @@ function get_project(&$response)
         return false;
     }
     // Make sure we have an authenticated user that has access to this project.
-    if (!valid_user($reponse, $projectid)) {
+    if (!valid_user($response, $Project)) {
         return false;
     }
 
