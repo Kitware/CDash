@@ -518,7 +518,24 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
             }
             $information .= "\n";
         }
+    } elseif ($errorkey === 'missing_tests') {
+        // sanity check
+        $missing = isset($errors['missing_tests']['count'])? $errors['missing_tests']['count'] : 0;
+
+        if ($missing) {
+            $information .= "\n\n*Missing tests*";
+            $length = $missing;
+            if ($errors['missing_tests']['count'] > $maxitems) {
+                $information .= " (first {$maxitems})";
+            }
+
+            $list = array_slice($errors['missing_tests']['list'],0,$maxitems);
+            $information .= PHP_EOL;
+            $information .= implode("\n", array_values($list));
+            $information .= PHP_EOL;
+        }
     }
+
     return $information;
 }
 
@@ -1002,6 +1019,7 @@ function send_email_to_address($emailaddress, $emailtext, $Build, $Project)
             && $key != 'build_errors'
             && $key != 'test_errors'
             && $key != 'dynamicanalysis_errors'
+            && $key != 'missing_tests'
         ) {
             continue;
         }
@@ -1035,6 +1053,13 @@ function send_email_to_address($emailaddress, $emailtext, $Build, $Project)
             case 'dynamicanalysis_errors':
                 $messagePlainText .= 'failing dynamic analysis tests';
                 $titleerrors .= 'd=' . $value;
+                break;
+            case 'missing_tests':
+                $missing = $value['count'];
+                if ($missing) {
+                    $messagePlainText .= 'missing tests';
+                    $titleerrors .= 'm=' . $missing;
+                }
                 break;
         }
         $i++;
@@ -1100,6 +1125,11 @@ function send_email_to_address($emailaddress, $emailtext, $Build, $Project)
             case 'dynamicanalysis_errors':
                 $messagePlainText .= "Dynamic analysis tests failing: $value\n";
                 break;
+            case 'missing_tests':
+                $missing = $value['count'];
+                if ($missing) {
+                    $messagePlainText .= "Missing tests: {$missing}\n";
+                }
         }
     }
 
@@ -1463,6 +1493,20 @@ function sendemail($handler, $projectid)
             if ($emailtext['nfixes'] == 1) {
                 send_email_fix_to_user($userid, $emailtext, $Build, $Project);
             }
+        }
+    }
+
+    // Check for missing tests
+    if ($handler instanceof TestingHandler) {
+        $Build->FillFromId($Build->Id);
+        $missing = $Build->GetNumberOfMissingTests();
+
+        if ($missing > 0) {
+            $errors['missing_tests'] = [
+                'count' => $missing,
+                'list' => $Build->MissingTests
+            ];
+            $errors['errors'] = true;
         }
     }
 
