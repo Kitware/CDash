@@ -480,6 +480,33 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
             $information .= "\n";
         }
 
+        // Differentiate failed tests based on timeout
+        $quoted_buildid = qnum($buildid);
+        $query = "
+            SELECT test.name, test.id, test.details 
+            FROM build2test, test
+            WHERE build2test.buildid={$quoted_buildid}
+            AND test.id=build2test.testid
+            AND build2test.status='failed'
+            AND test.details LIKE '%Timeout%'
+            ORDER BY test.id
+            LIMIT {$maxitems}
+         ";
+        $test_query = pdo_query($query);
+        $numrows = pdo_num_rows($test_query);
+        if($numrows > 0) {
+            $information .= "\n\n*Test timeouts*";
+            if ($numrows == $maxitems) {
+                $information .= " (first {$maxitems}";
+            }
+            $information .= "\n";
+            while ($test_array = pdo_fetch_array($test_query)) {
+                $info = "{$test_array['name']} ({$serverURI}/testDetails.php?test={$test_array['id']}&build={$buildid})\n";
+                $information .= substr($info, 0, $maxchars);
+            }
+            $information .= "\n";
+        }
+
         // Add the tests not run
         $test_query = pdo_query('SELECT test.name,test.id FROM build2test,test WHERE build2test.buildid=' . qnum($buildid) .
             " AND test.id=build2test.testid AND (build2test.status='notrun'" . $sql . ") ORDER BY test.id LIMIT $maxitems");
