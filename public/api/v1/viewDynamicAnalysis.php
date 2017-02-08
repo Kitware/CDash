@@ -34,11 +34,6 @@ if (!isset($_GET['buildid']) || !is_numeric($_GET['buildid'])) {
 }
 $buildid = $_GET['buildid'];
 
-@$date = $_GET['date'];
-if ($date != null) {
-    $date = htmlspecialchars(pdo_real_escape_string($date));
-}
-
 $build = new Build();
 $build->Id = $buildid;
 if (!$build->Exists()) {
