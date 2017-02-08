@@ -151,7 +151,11 @@ class KWWebTestCase extends WebTestCase
         if (file_exists($logfilename)) {
             $log = file_get_contents($logfilename);
             $log = str_replace("\r", '', $log);
+        } else {
+            $this->fail("Log file ${logfilename} does not exist: cannot continue");
+            return false;
         }
+
         $templateLog = file_get_contents($template);
         $templateLog = str_replace("\r", '', $templateLog);
 
