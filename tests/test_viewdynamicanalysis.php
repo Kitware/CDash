@@ -14,7 +14,7 @@ class ViewDynamicAnalysisTestCase extends KWWebTestCase
 
     public function testViewDynamicAnalysis()
     {
-        $this->get($this->url . '/viewDynamicAnalysis.php?buildid=1');
+        $this->get($this->url . '/api/v1/viewDynamicAnalysis.php?buildid=1');
         if (strpos($this->getBrowser()->getContentAsText(), 'Win32-VCExpress') === false) {
             $this->fail("'Win32-VCExpress' not found when expected");
             return 1;
