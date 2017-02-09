@@ -464,11 +464,24 @@ while ($row = pdo_fetch_array($result)) {
     $tests[] = $marshaledTest;
 }
 
+// Check for missing tests
+$Build = new Build();
+$Build->Id = $buildid;
+$numMissing = $Build->GetNumberOfMissingTests();
+
+if ($numMissing > 0) {
+    foreach ($Build->MissingTests as $name) {
+        $marshaledTest = buildtest::marshalMissing($name, $buildid, $projectid, $projectshowtesttime, $testtimemaxstatus, $testdate);
+        array_unshift($tests, $marshaledTest);
+    }
+}
+
 $response['tests'] = $tests;
 $response['numPassed'] = $numPassed;
 $response['numFailed'] = $numFailed;
 $response['numNotRun'] = $numNotRun;
 $response['numTimeFailed'] = $numTimeFailed;
+$response['numMissing'] = $numMissing;
 
 // Only show the labels column if some were found.
 $response['build']['displaylabels'] &= $labels_found;
