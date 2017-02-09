@@ -14,62 +14,47 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-$noforcelogin = 1;
-include dirname(__DIR__) . '/config/config.php';
+require_once dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
+$noforcelogin = 1;
 include 'public/login.php';
-include_once 'include/common.php';
-include_once 'include/repository.php';
-include 'include/version.php';
+require_once 'include/common.php';
+require_once 'include/repository.php';
+require_once 'include/version.php';
 require_once 'include/bugurl.php';
 require_once 'models/build.php';
+require_once 'models/buildupdate.php';
+require_once 'models/buildupdatefile.php';
+require_once 'models/project.php';
+require_once 'models/site.php';
 
-@$buildid = $_GET['buildid'];
-if ($buildid != null) {
-    $buildid = pdo_real_escape_numeric($buildid);
-}
-@$date = $_GET['date'];
-if ($date != null) {
-    $date = htmlspecialchars(pdo_real_escape_string($date));
-}
-
-// Checks
-if (!isset($buildid) || !is_numeric($buildid)) {
+// Make sure we have a valid build was specified.
+if (!isset($_GET['buildid']) || !is_numeric($_GET['buildid'])) {
     echo 'Not a valid buildid!';
     return;
 }
-
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
-
-$build_array = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$buildid'"));
-$projectid = $build_array['projectid'];
-checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid);
-
-$project = pdo_query("SELECT cvsurl,name,nightlytime,bugtrackerfileurl,bugtrackerurl
-                      FROM project WHERE id='$projectid'");
-if (pdo_num_rows($project) > 0) {
-    $project_array = pdo_fetch_array($project);
-    $svnurl = $project_array['cvsurl'];
-    $projectname = $project_array['name'];
-} else {
-    echo "This build doesn't exist. Maybe it has been deleted.";
+$buildid = $_GET['buildid'];
+$build = new Build();
+$build->Id = $buildid;
+if (!$build->Exists()) {
+    echo 'This build does not exist. Maybe it has been deleted.';
     return;
 }
 
+$build->FillFromId($build->Id);
+$project = new Project();
+$project->Id = $build->ProjectId;
+$project->Fill();
+checkUserPolicy(@$_SESSION['cdash']['loginid'], $project->Id);
+
 $xml = begin_XML_for_XSLT();
-$xml .= '<title>CDash : ' . $projectname . '</title>';
+$xml .= '<title>CDash : ' . $project->Name . '</title>';
 
-$siteid = $build_array['siteid'];
-$buildtype = $build_array['type'];
-$buildname = $build_array['name'];
-$starttime = $build_array['starttime'];
-
-$date = get_dashboard_date_from_build_starttime($build_array['starttime'], $project_array['nightlytime']);
+$date = get_dashboard_date_from_build_starttime($build->StartTime, $project->NightlyTime);
 
 // Menu
 $xml .= '<menu>';
-$xml .= add_XML_value('back', 'index.php?project=' . urlencode($projectname) . '&date=' . $date);
+$xml .= add_XML_value('back', 'index.php?project=' . urlencode($project->Name) . '&date=' . $date);
 
 $build = new Build();
 $build->Id = $buildid;
@@ -92,39 +77,39 @@ if ($next_buildid > 0) {
 }
 $xml .= '</menu>';
 
-$xml .= get_cdash_dashboard_xml_by_name($projectname, $date);
+$xml .= get_cdash_dashboard_xml_by_name($project->Name, $date);
 
 // Build
+$site = new Site();
+$site->Id = $build->SiteId;
+$site_name = $site->GetName();
 $xml .= '<build>';
-$site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
-$xml .= add_XML_value('site', $site_array['name']);
-$xml .= add_XML_value('siteid', $siteid);
-$xml .= add_XML_value('buildname', $build_array['name']);
-$xml .= add_XML_value('buildid', $build_array['id']);
-$xml .= add_XML_value('buildtime', date('D, d M Y H:i:s T', strtotime($build_array['starttime'] . ' UTC')));
+$xml .= add_XML_value('site', $site_name);
+$xml .= add_XML_value('siteid', $site->Id);
+$xml .= add_XML_value('buildname', $build->Name);
+$xml .= add_XML_value('buildid', $build->Id);
+$xml .= add_XML_value('buildtime', date('D, d M Y H:i:s T', strtotime($build->StartTime . ' UTC')));
 $xml .= '</build>';
 
+// Update
+$update = new BuildUpdate();
+$update->BuildId = $build->Id;
+$update->FillFromBuildId();
 $xml .= '<updates>';
-// Return the status
-$status_array = pdo_fetch_array(pdo_query("SELECT status,revision,priorrevision,path
-                                  FROM buildupdate,build2update AS b2u WHERE buildupdate.id=b2u.updateid AND b2u.buildid='$buildid'"));
-if (strlen($status_array['status']) > 0 && $status_array['status'] != '0') {
-    $xml .= add_XML_value('status', $status_array['status']);
+if (strlen($update->Status) > 0 && $update->Status != '0') {
+    $xml .= add_XML_value('status', $update->Status);
 } else {
     $xml .= add_XML_value('status', ''); // empty status
 }
-$xml .= add_XML_value('revision', $status_array['revision']);
-$xml .= add_XML_value('priorrevision', $status_array['priorrevision']);
-$xml .= add_XML_value('path', $status_array['path']);
+$xml .= add_XML_value('revision', $update->Revision);
+$xml .= add_XML_value('priorrevision', $update->PriorRevision);
+$xml .= add_XML_value('path', $update->Path);
 $xml .= add_XML_value('revisionurl',
-    get_revision_url($projectid, $status_array['revision'], $status_array['priorrevision']));
+    get_revision_url($project->Id, $update->Revision, $update->PriorRevision));
 $xml .= add_XML_value('revisiondiff',
-    get_revision_url($projectid, $status_array['priorrevision'], '')); // no prior prior revision...
+    get_revision_url($project->Id, $update->PriorRevision, '')); // no prior prior revision...
 
 $xml .= '<javascript>';
-
-$updatedfiles = pdo_query('SELECT * FROM updatefile AS uf,build2update AS b2u WHERE uf.updateid=b2u.updateid AND b2u.buildid=' . $buildid . "
-                              ORDER BY REVERSE(RIGHT(REVERSE(filename),LOCATE('/',REVERSE(filename)))) ");
 
 function sort_array_by_directory($a, $b)
 {
@@ -142,27 +127,27 @@ function sort_array_by_filename($a, $b)
 $directoryarray = array();
 $updatearray1 = array();
 // Create an array so we can sort it
-while ($file_array = pdo_fetch_array($updatedfiles)) {
+foreach ($update->GetFiles() as $update_file) {
     $file = array();
-    $file['filename'] = $file_array['filename'];
-    $file['author'] = $file_array['author'];
-    $file['status'] = $file_array['status'];
+    $file['filename'] = $update_file->Filename;
+    $file['author'] = $update_file->Author;
+    $file['status'] = $update_file->Status;
 
     // Only display email if the user is logged in
     if (isset($_SESSION['cdash'])) {
-        if ($file_array['email'] == '') {
-            $file['email'] = get_author_email($projectname, $file['author']);
+        if ($update_file->Email == '') {
+            $file['email'] = get_author_email($project->Name, $file['author']);
         } else {
-            $file['email'] = $file_array['email'];
+            $file['email'] = $update_file->Email;
         }
     } else {
         $file['email'] = '';
     }
 
-    $file['log'] = $file_array['log'];
-    $file['revision'] = $file_array['revision'];
+    $file['log'] = $update_file->Log;
+    $file['revision'] = $update_file->Revision;
     $updatearray1[] = $file;
-    $directoryarray[] = substr($file_array['filename'], 0, strrpos($file_array['filename'], '/'));
+    $directoryarray[] = substr($update_file->Filename, 0, strrpos($update_file->Filename, '/'));
 }
 
 $directoryarray = array_unique($directoryarray);
@@ -180,13 +165,12 @@ foreach ($directoryarray as $directory) {
     }
 }
 
-$projecturl = $svnurl;
 
 $locallymodified = array();
 $conflictingfiles = array();
 $updatedfiles = array();
 
-// locally cached query result same as get_project_property($projectname, "cvsurl");
+// locally cached query result same as get_project_property($project->Name, "cvsurl");
 foreach ($updatearray as $file) {
     $filename = $file['filename'];
     $filename = str_replace('\\', '/', $filename);
@@ -197,9 +181,9 @@ foreach ($updatearray as $file) {
         $filename = substr($filename, $pos + 1);
     }
 
-    $baseurl = $project_array['bugtrackerfileurl'];
+    $baseurl = $project->BugTrackerFileUrl;
     if (empty($baseurl)) {
-        $baseurl = $project_array['bugtrackerurl'];
+        $baseurl = $project->BugTrackerUrl;
     }
 
     $author = $file['author'];
@@ -235,19 +219,19 @@ foreach ($updatearray as $file) {
     }
 
     if ($status == 'UPDATED') {
-        $diff_url = get_diff_url($projectid, $projecturl, $directory, $filename, $revision);
+        $diff_url = get_diff_url($project->Id, $project->CvsUrl, $directory, $filename, $revision);
         $diff_url = XMLStrFormat($diff_url);
         $file['diff_url'] = $diff_url;
         $updatedfiles[] = $file;
     } elseif ($status == 'MODIFIED') {
-        $diff_url = get_diff_url($projectid, $projecturl, $directory, $filename);
+        $diff_url = get_diff_url($project->Id, $project->CvsUrl, $directory, $filename);
         $diff_url = XMLStrFormat($diff_url);
         $file['diff_url'] = $diff_url;
         $locallymodified[] = $file;
     } else {
         //CONFLICTED
 
-        $diff_url = get_diff_url($projectid, $projecturl, $directory, $filename);
+        $diff_url = get_diff_url($project->Id, $project->CvsUrl, $directory, $filename);
         $diff_url = XMLStrFormat($diff_url);
         $file['diff_url'] = $diff_url;
         $conflictingfiles[] = $file;
@@ -255,7 +239,7 @@ foreach ($updatearray as $file) {
 }
 
 // Updated files
-$xml .= 'dbAdd (true, "' . $projectname . ' Updated files  (' . count($updatedfiles) . ")\", \"\", 0, \"\", \"1\", \"\", \"\", \"\", \"\", \"\", \"\")\n";
+$xml .= 'dbAdd (true, "' . $project->Name . ' Updated files  (' . count($updatedfiles) . ")\", \"\", 0, \"\", \"1\", \"\", \"\", \"\", \"\", \"\", \"\")\n";
 $previousdir = '';
 foreach ($updatedfiles as $file) {
     $directory = $file['directory'];
