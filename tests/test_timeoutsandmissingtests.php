@@ -57,7 +57,7 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
 
         $id = $this->getLastBuildId();
 
-        $url = "${CDASH_BASE_URL}/api/v1/viewTest.php?buildid={$id}";
+        $url = "{$this->url}/api/v1/viewTest.php?buildid={$id}";
         $this->get($url);
         $json = $this->getBrowser()->getContent();
         $response = json_decode($json, true);
