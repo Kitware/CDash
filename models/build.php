@@ -924,6 +924,7 @@ class Build
             LEFT JOIN test B
               ON A.testid=B.id
             WHERE A.buildid=?
+            ORDER BY B.name
          ";
 
         $pdo = get_link_identifier()->getPdo();

@@ -158,7 +158,7 @@ class BuildTest
         }
 
         global $CDASH_DB_TYPE;
-        if ($CDASH_DB_TYPE == 'pgsql') {
+        if ($CDASH_DB_TYPE == 'pgsql' && $marshaledData['id']) {
             get_labels_JSON_from_query_results(
                 'SELECT text FROM label, label2test WHERE ' .
                 'label.id=label2test.labelid AND ' .

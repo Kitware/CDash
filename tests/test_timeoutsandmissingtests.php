@@ -23,10 +23,10 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
     private function getLastBuildId ()
     {
         $sql = "
-          SELECT `id` 
-          FROM `build` 
-          WHERE `name`='{$this->buildName}'
-          ORDER BY `starttime` DESC
+          SELECT id 
+          FROM build 
+          WHERE name='{$this->buildName}'
+          ORDER BY starttime DESC
           LIMIT 1
          ";
 
