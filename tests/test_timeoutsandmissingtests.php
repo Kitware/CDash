@@ -23,10 +23,10 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
     private function getLastBuildId ()
     {
         $sql = "
-          SELECT `id` 
-          FROM `build` 
-          WHERE `name`='{$this->buildName}'
-          ORDER BY `starttime` DESC
+          SELECT id 
+          FROM build 
+          WHERE name='{$this->buildName}'
+          ORDER BY starttime DESC
           LIMIT 1
          ";
 
@@ -53,13 +53,12 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
 
     public function testMissingTestsSummarizedInViewTestAPI()
     {
-        global $CDASH_BASE_URL;
-
         $id = $this->getLastBuildId();
 
-        $url = "${CDASH_BASE_URL}/api/v1/viewTest.php?buildid={$id}";
+        $url = "{$this->url}/api/v1/viewTest.php?buildid={$id}";
         $this->get($url);
         $json = $this->getBrowser()->getContent();
+
         $response = json_decode($json, true);
         $tests = [];
 

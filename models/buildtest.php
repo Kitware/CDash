@@ -100,6 +100,10 @@ class BuildTest
         $data = array();
         $data['name'] = $name;
         $data['status'] = 'missing';
+        $data['id'] = '';
+        $data['time'] = '';
+        $data['details'] = '';
+        $data["newstatus"] = false;
 
         $test = self::marshal($data, $buildid, $projectid, $projectshowtesttime, $testtimemaxstatus, $testdate);
 
@@ -154,7 +158,7 @@ class BuildTest
         }
 
         global $CDASH_DB_TYPE;
-        if ($CDASH_DB_TYPE == 'pgsql') {
+        if ($CDASH_DB_TYPE == 'pgsql' && $marshaledData['id']) {
             get_labels_JSON_from_query_results(
                 'SELECT text FROM label, label2test WHERE ' .
                 'label.id=label2test.labelid AND ' .
