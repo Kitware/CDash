@@ -22,9 +22,9 @@ MathActionsTest (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
 
 
 *Missing tests*
-Parser1Test1
-DashboardSendTest
-SystemInfoTest
+Parser1Test1 (http://<NA>/<NA>/viewTest.php?buildid=<NA>)
+DashboardSendTest (http://<NA>/<NA>/viewTest.php?buildid=<NA>)
+SystemInfoTest(http://<NA>/<NA>/viewTest.php?buildid=<NA>)
 
 -CDash on <NA>
  {"function":"TESTING: EMAILBODY","build_id":"<NA>","pid":<NA>} 

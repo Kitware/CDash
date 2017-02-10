@@ -558,7 +558,9 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
 
             $list = array_slice($errors['missing_tests']['list'],0,$maxitems);
             $information .= PHP_EOL;
-            $information .= implode("\n", array_values($list));
+            $url = "({$serverURI}/viewTest.php?buildid={$buildid})";
+            $information .= implode(" {$url}\n", array_values($list));
+            $information .= $url;
             $information .= PHP_EOL;
         }
     }
