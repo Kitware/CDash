@@ -327,7 +327,10 @@ function pdo_execute($stmt, $input_parameters=null)
     if (!$stmt->execute($input_parameters)) {
         $error_info = $stmt->errorInfo();
         if (isset($error_info[2]) && $error_info[0] !== '00000') {
-            add_log($error_info[2], 'pdo_execute', LOG_ERR);
+            $e = new Exception();
+            $stack_trace = $e->getTraceAsString();
+            $log_msg = $error_info[2] . "\n$stack_trace\n";
+            add_log($log_msg, 'pdo_execute', LOG_ERR);
             if (in_array($error_info[1], $CDASH_CRITICAL_PDO_ERRORS)) {
                 http_response_code(500);
                 exit();
