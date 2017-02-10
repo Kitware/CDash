@@ -33,7 +33,6 @@ class BuildUpdate
     public $Append;
     public $UpdateId;
     public $Errors;
-    public $PDO;
     private $PDO;
 
     public function __construct()
