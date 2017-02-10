@@ -59,8 +59,6 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
         $this->get($url);
         $json = $this->getBrowser()->getContent();
 
-        var_dump($json);
-
         $response = json_decode($json, true);
         $tests = [];
 

@@ -100,6 +100,10 @@ class BuildTest
         $data = array();
         $data['name'] = $name;
         $data['status'] = 'missing';
+        $data['id'] = '';
+        $data['time'] = '';
+        $data['details'] = '';
+        $data["newstatus"] = false;
 
         $test = self::marshal($data, $buildid, $projectid, $projectshowtesttime, $testtimemaxstatus, $testdate);
 
