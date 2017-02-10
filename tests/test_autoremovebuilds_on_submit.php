@@ -100,6 +100,12 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
             return 1;
         }
 
+        // Make sure we didn't inadvertently delete the whole upload directory.
+        global $CDASH_ROOT_DIR;
+        if (!file_exists("$CDASH_ROOT_DIR/public/upload")) {
+            $this->fail('upload diretory does not exist');
+        }
+
         $this->pass('Passed');
         $this->stopCodeCoverage();
     }
