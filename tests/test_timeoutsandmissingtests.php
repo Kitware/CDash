@@ -53,13 +53,14 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
 
     public function testMissingTestsSummarizedInViewTestAPI()
     {
-        global $CDASH_BASE_URL;
-
         $id = $this->getLastBuildId();
 
         $url = "{$this->url}/api/v1/viewTest.php?buildid={$id}";
         $this->get($url);
         $json = $this->getBrowser()->getContent();
+
+        var_dump($json);
+
         $response = json_decode($json, true);
         $tests = [];
 
