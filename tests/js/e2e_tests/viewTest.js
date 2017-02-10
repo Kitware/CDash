@@ -37,7 +37,7 @@ describe("viewTest", function() {
             }
           });
 
-          newPath = `viewTest.php?buildid=${buildId}`;
+          newPath = 'viewTest.php?buildid=' + buildId;
           browser.get(newPath);
 
           h3 = element(by.id('test-totals-indicator'));
