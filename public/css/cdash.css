@@ -2,10 +2,12 @@
 .normal { background-color : #8aba5a; }
 .warning { background-color : #fdb66d; }
 .error { background-color : #de6868; }
+.missing {background-color: #dfdfdf; }
 
 .tabb tbody tr.odd td.normal { background-color: #7DB04A; }
 .tabb tbody tr.odd td.warning { background-color: #FCA854; }
 .tabb tbody tr.odd td.error { background-color: #D95454; }
+.tabb tbody tr.odd td.missing { background-color: #cdcdcd; }
 
 .Passed { background-color : #8aba5a; }
 .Failed { background-color : #fdba76; }
