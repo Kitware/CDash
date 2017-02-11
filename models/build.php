@@ -53,6 +53,7 @@ class Build
     public $Errors;
     public $ErrorDiffs;
     public $MissingTests;
+    public $TimedoutTests;
 
     public $SubProjectId;
     public $SubProjectName;
@@ -910,7 +911,7 @@ class Build
     public function GetMissingTests()
     {
         if (!$this->Id) {
-            add_log('BuildId is not set', 'Build::GetErrorDifferences', LOG_ERR,
+            add_log('BuildId is not set', 'Build::GetMissingTests', LOG_ERR,
                 $this->ProjectId, $this->Id, CDASH_OBJECT_BUILD, $this->Id);
             return false;
         }
@@ -956,6 +957,65 @@ class Build
         }
 
         return count($this->MissingTests);
+    }
+
+    /**
+     * Get the number of tests whose details indicate a timeout
+     *
+     * @return int
+     */
+    public function GetNumberOfTimedoutTests()
+    {
+        if (!is_array($this->TimedoutTests)) {
+            $this->GetTimedoutTests();
+        }
+
+        return count($this->TimedoutTests);
+    }
+
+    public function GetTimedoutTests($maxitems = 0)
+    {
+        if (!$this->Id) {
+            add_log('BuildId is not set', 'Build::GetTimedoutTests', LOG_ERR,
+                $this->ProjectId, $this->Id, CDASH_OBJECT_BUILD, $this->Id);
+            return false;
+        }
+
+        $pdo = get_link_identifier()->getPdo();
+        $sql = "
+            SELECT test.name, test.id, test.details 
+            FROM build2test, test
+            WHERE build2test.buildid=:buildid
+            AND test.id=build2test.testid
+            AND build2test.status='failed'
+            AND test.details LIKE '%%Timeout%%'
+            ORDER BY test.id
+            %s
+         ";
+        $frmt = '';
+
+        if ($maxitems) {
+            $limit = (int) trim($maxitems);
+            $frmt = 'LIMIT :limit';
+        }
+
+        $sql = sprintf($sql, $frmt);
+        $query = $pdo->prepare($sql);
+
+        $query->bindParam(':buildid', $this->Id);
+
+        if ($maxitems) {
+            $query->bindParam(':limit', $limit, PDO::PARAM_INT);
+        }
+
+        if (!pdo_execute($query)) {
+            // how to log prepared statement errors?
+            return [];
+        }
+
+        $this->TimedoutTests = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        return $this->TimedoutTests;
     }
 
     /** Get the errors differences for the build */

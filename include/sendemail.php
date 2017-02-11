@@ -333,6 +333,9 @@ function lookup_emails_to_send($errors, $buildid, $projectid, $buildtype, $fixes
 function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $testtimemaxstatus, $emailtesttimingchanged)
 {
     include 'config/config.php';
+    include_once 'models/build.php';
+
+    global $CDASH_BASE_URL, $CDASH_ASYNCHRONOUS_SUBMISSION;
 
     $serverURI = get_server_URI();
     // In the case of asynchronous submission, the serverURI contains /cdash
@@ -340,6 +343,9 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
     if ($CDASH_BASE_URL == '' && $CDASH_ASYNCHRONOUS_SUBMISSION) {
         $serverURI = substr($serverURI, 0, strrpos($serverURI, '/'));
     }
+
+    $Build = new Build();
+    $Build->Id = $buildid;
 
     $information = '';
 
@@ -480,28 +486,16 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
             $information .= "\n";
         }
 
-        // Differentiate failed tests based on timeout
-        $quoted_buildid = qnum($buildid);
-        $query = "
-            SELECT test.name, test.id, test.details 
-            FROM build2test, test
-            WHERE build2test.buildid={$quoted_buildid}
-            AND test.id=build2test.testid
-            AND build2test.status='failed'
-            AND test.details LIKE '%Timeout%'
-            ORDER BY test.id
-            LIMIT {$maxitems}
-         ";
-        $test_query = pdo_query($query);
-        $numrows = pdo_num_rows($test_query);
+        $numrows = $Build->GetNumberOfTimedoutTests();
         if($numrows > 0) {
             $information .= "\n\n*Test timeouts*";
             if ($numrows == $maxitems) {
                 $information .= " (first {$maxitems}";
             }
             $information .= "\n";
-            while ($test_array = pdo_fetch_array($test_query)) {
-                $info = "{$test_array['name']} ({$serverURI}/testDetails.php?test={$test_array['id']}&build={$buildid})\n";
+            for ($i = 0; $i < $numrows; $i++) {
+                $test = $Build->TimedoutTests[$i];
+                $info = "{$test['name']} ({$serverURI}/testDetails.php?test={$test['id']}&build={$buildid})\n";
                 $information .= substr($info, 0, $maxchars);
             }
             $information .= "\n";
