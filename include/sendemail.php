@@ -541,7 +541,7 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
         }
     } elseif ($errorkey === 'missing_tests') {
         // sanity check
-        $missing = isset($errors['missing_tests']['count'])? $errors['missing_tests']['count'] : 0;
+        $missing = isset($errors['missing_tests']['count']) ? $errors['missing_tests']['count'] : 0;
 
         if ($missing) {
             $information .= "\n\n*Missing tests*";
@@ -550,7 +550,7 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
                 $information .= " (first {$maxitems})";
             }
 
-            $list = array_slice($errors['missing_tests']['list'],0,$maxitems);
+            $list = array_slice($errors['missing_tests']['list'], 0, $maxitems);
             $information .= PHP_EOL;
             $url = "({$serverURI}/viewTest.php?buildid={$buildid})";
             $information .= implode(" {$url}\n", array_values($list));

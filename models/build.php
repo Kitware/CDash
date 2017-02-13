@@ -931,12 +931,12 @@ class Build
         $pdo = get_link_identifier()->getPdo();
         $query = $pdo->prepare($sql);
 
-        $query->execute([$previous_build]);
+        pdo_execute($query, [$previous_build]);
         foreach ($query->fetchAll(PDO::FETCH_OBJ) as $test) {
             $previous_build_tests[$test->name] = $test->name;
         }
 
-        $query->execute([$this->Id]);
+        pdo_execute($query, [$this->Id]);
         foreach ($query->fetchAll(PDO::FETCH_OBJ) as $test) {
             $current_build_tests[$test->name] = $test->name;
         }
@@ -1009,7 +1009,6 @@ class Build
         }
 
         if (!pdo_execute($query)) {
-            // how to log prepared statement errors?
             return [];
         }
 
