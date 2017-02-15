@@ -231,29 +231,28 @@ class OpenCoverTarHandler extends AbstractHandler {
        $inlongComment= false;
        if ($this->coverageFile) {
            foreach($fileContents as $key=>$line) {
+              $trimmedLine = trim($line);
+              $displayLine = rtrim($line);
               // Matches the beginning of a comment block
-              if(preg_match("/\/[*]+/", trim($line))) {
+              if(preg_match("/\/[*]+/", $trimmedLine)) {
                   $inlongComment=true;
               }
 
-              $this->coverageFile->File .= rtrim($line).'<br>';
-              if((preg_match("/^\/\//", trim($line))) or
-                (preg_match("/using /", trim($line))) or
-                (preg_match("/^namespace/", trim($line))) or
-                (preg_match("/^public/", trim($line))) or
-                (preg_match("/^protected/", trim($line))) or
-                (preg_match("/^private/", trim($line))) or
-                (preg_match("/^\[/", trim($line))) or
-                (preg_match("/[{}]/", trim($line))) or
-                ("" == trim($line)) or
-                ($inlongComment)) {
-                // ignore these lines
-              } else {
-                  // Assumed to be executable code
+              $this->coverageFile->File .= $displayLine.'<br>';
+              if(!((preg_match("/^\/\//", $trimmedLine)) or
+                (preg_match("/using /", $trimmedLine)) or
+                (preg_match("/^namespace/", $trimmedLine)) or
+                (preg_match("/^public/", $trimmedLine)) or
+                (preg_match("/^protected/", $trimmedLine)) or
+                (preg_match("/^private/", $trimmedLine)) or
+                (preg_match("/^\[/", $trimmedLine)) or
+                (preg_match("/[{}]/", $trimmedLine)) or
+                ("" == $trimmedLine) or
+                ($inlongComment))) {
                   $this->coverageFileLog->AddLine($key,0);
               }
               // Captures the end of a comment block
-              if(preg_match("/[*]+\//", trim($line))) {
+              if(preg_match("/[*]+\//", $trimmedLine)) {
                   $inlongComment=false;
               }
            }
