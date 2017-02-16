@@ -79,19 +79,10 @@ class OpenCoverTarHandler extends AbstractHandler {
             $coverageFileLog->BuildId =  $this->Build->Id;
             $coverageFile = new CoverageFile();
             $coverageFile->FullPath = trim($path);
-            // Get the ID for this coverage file, or create a new empty one
-            //if it doesn't already exist.
-            $sql = pdo_query(
-            "SELECT id FROM coveragefile
-            WHERE fullpath='$path' AND file IS NULL");
-            if (pdo_num_rows($sql) == 0) {
-            pdo_query("INSERT INTO coveragefile (fullpath) VALUES ('$path')");
-            $fileid = pdo_insert_id('coveragefile');
-            } else {
-            $coveragefile_array = pdo_fetch_array($sql);
-            $fileid = $coveragefile_array['id'];
-            }
-            $coverageFile->Id = $fileid;
+
+            //Run update which will create a new entry if there
+            // isn't one for the current path
+            $coverageFile->Update($this->Build->Id);
 
             $coverage = new Coverage();
             $coverage->CoverageFile = $coverageFile;
