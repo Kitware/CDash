@@ -42,7 +42,7 @@ class OpenCoverTarHandler extends AbstractHandler {
     public function startElement($parser, $name, $attributes) {
         parent::startElement($parser, $name, $attributes);
         /**
-         *  SEQUENCEPOINT denotes a line in the source file that is exectuable and
+         *  SEQUENCEPOINT denotes a line in the source file that is executable and
          *  may have been executed.
          *
          *  VC -> Visit Count
