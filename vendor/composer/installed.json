@@ -14,7 +14,7 @@
             "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b",
             "shasum": ""
         },
-        "time": "2012-12-21 11:40:51",
+        "time": "2012-12-21T11:40:51+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -87,7 +87,7 @@
             "rollbar/rollbar": "Allow sending log messages to Rollbar",
             "ruflin/elastica": "Allow sending log messages to an Elastic Search server"
         },
-        "time": "2016-04-12 18:29:35",
+        "time": "2016-04-12T18:29:35+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -137,7 +137,7 @@
         "require": {
             "php": ">=5.4.0"
         },
-        "time": "2016-03-19 06:15:37",
+        "time": "2016-03-19T06:15:37+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -186,7 +186,7 @@
         "require-dev": {
             "mockery/mockery": "~0.9.1,<0.9.4"
         },
-        "time": "2016-05-01 08:45:47",
+        "time": "2016-05-01T08:45:47+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -242,7 +242,7 @@
             "doctrine/common": "^2.1",
             "phpspec/phpspec": "^2.5"
         },
-        "time": "2016-05-03 08:09:59",
+        "time": "2016-05-03T08:09:59+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -309,7 +309,7 @@
             "php-amqplib/php-amqplib": "Allow sending messages to an AMQP server using php-amqplib",
             "predis/predis": "Allow sending messages to Redis using predis"
         },
-        "time": "2016-05-02 14:05:21",
+        "time": "2016-05-02T14:05:21+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -353,7 +353,7 @@
         "require": {
             "php": ">=5.3.0"
         },
-        "time": "2015-05-04 20:22:00",
+        "time": "2015-05-04T20:22:00+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -407,7 +407,7 @@
         "require-dev": {
             "phpunit/phpunit": "~4.0"
         },
-        "time": "2016-05-18 16:56:05",
+        "time": "2016-05-18T16:56:05+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -464,7 +464,7 @@
             "phpunit/phpunit": "~4.0",
             "psr/log": "~1.0"
         },
-        "time": "2016-03-21 20:02:09",
+        "time": "2016-03-21T20:02:09+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -528,7 +528,7 @@
             "ext-curl": "Allows access to Webdis when paired with phpiredis",
             "ext-phpiredis": "Allows faster serialization and deserialization of the Redis protocol"
         },
-        "time": "2014-08-01 09:43:10",
+        "time": "2014-08-01T09:43:10+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -597,7 +597,7 @@
             "ramsey/uuid-console": "A console application for generating UUIDs with ramsey/uuid",
             "ramsey/uuid-doctrine": "Allows the use of Ramsey\\Uuid\\Uuid as Doctrine field type."
         },
-        "time": "2016-04-24 00:30:41",
+        "time": "2016-04-24T00:30:41+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -659,7 +659,7 @@
         "require-dev": {
             "phpunit/phpunit": "@stable"
         },
-        "time": "2016-06-20 12:01:28",
+        "time": "2016-06-20T12:01:28+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -721,7 +721,7 @@
             "symfony/dependency-injection": "",
             "symfony/http-kernel": ""
         },
-        "time": "2016-06-06 11:42:41",
+        "time": "2016-06-06T11:42:41+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -795,7 +795,7 @@
             "symfony/property-info": "To deserialize relations.",
             "symfony/yaml": "For using the default YAML mapping loader."
         },
-        "time": "2016-06-06 11:42:41",
+        "time": "2016-06-06T11:42:41+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -849,7 +849,7 @@
         "require-dev": {
             "phpunit/phpunit": "*"
         },
-        "time": "2015-02-10 20:07:52",
+        "time": "2015-02-10T20:07:52+00:00",
         "type": "class",
         "extra": {
             "branch-alias": {
@@ -900,7 +900,7 @@
             "reference": "82f05cd1aa3edf34e19aa7c8ca312ce13a6a577f",
             "shasum": ""
         },
-        "time": "2015-07-20 20:28:12",
+        "time": "2015-07-20T20:28:12+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -956,7 +956,7 @@
         "replace": {
             "rsky/pear-core-min": "self.version"
         },
-        "time": "2015-10-17 11:41:19",
+        "time": "2015-10-17T11:41:19+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -1007,7 +1007,7 @@
             "ext-xz": "lzma2 compression support.",
             "ext-zlib": "Gzip compression support."
         },
-        "time": "2016-02-25 10:30:39",
+        "time": "2016-02-25T10:30:39+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1073,7 +1073,7 @@
         "require-dev": {
             "phpunit/phpunit": "~4.0"
         },
-        "time": "2016-06-24 23:00:38",
+        "time": "2016-06-24T23:00:38+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1138,7 +1138,7 @@
             "ext-mcrypt": "Install the Mcrypt extension in order to speed up a few other cryptographic operations.",
             "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations."
         },
-        "time": "2016-10-04 00:57:04",
+        "time": "2016-10-04T00:57:04+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -1220,7 +1220,7 @@
         "require": {
             "php": ">=5.3.0"
         },
-        "time": "2016-08-06 20:24:11",
+        "time": "2016-08-06T20:24:11+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1268,7 +1268,7 @@
         "require": {
             "php": ">=5.3.0"
         },
-        "time": "2016-07-18 04:51:16",
+        "time": "2016-07-18T04:51:16+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -1322,7 +1322,7 @@
             "friendsofphp/php-cs-fixer": "^1.11",
             "phpunit/phpunit": "3.7.*"
         },
-        "time": "2016-11-02 14:59:14",
+        "time": "2016-11-02T14:59:14+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -1363,7 +1363,7 @@
         "require": {
             "php": ">=5.4"
         },
-        "time": "2016-10-18 01:01:16",
+        "time": "2016-10-18T01:01:16+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -1416,7 +1416,7 @@
         "suggest": {
             "cache/filesystem-adapter": "For caching certs and tokens (using Google_Client::setCache)"
         },
-        "time": "2016-11-02 14:28:02",
+        "time": "2016-11-02T14:28:02+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1466,7 +1466,7 @@
         "suggest": {
             "ext-libsodium": "Provides a modern crypto API that can be used to generate random bytes."
         },
-        "time": "2016-11-07 23:38:38",
+        "time": "2016-11-07T23:38:38+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -1514,7 +1514,7 @@
             "phpunit/phpunit": "~4.4",
             "squizlabs/php_codesniffer": "2.*"
         },
-        "time": "2016-06-11 00:47:24",
+        "time": "2016-06-11T00:47:24+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -1572,7 +1572,7 @@
             "phpunit/phpunit": "4.*",
             "squizlabs/php_codesniffer": "2.*"
         },
-        "time": "2016-07-08 02:55:23",
+        "time": "2016-07-08T02:55:23+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {

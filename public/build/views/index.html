@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.4.css" />
     <link rel="stylesheet" type="text/css" href="css/jqModal.css" />
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <script src="js/CDash_2.5.0.min.js"></script>
+    <script src="js/CDash_1487690593983.min.js"></script>
     <title ng-bind="::title">CDash</title>
   </head>
 
@@ -17,7 +17,7 @@
 
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
 
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_2.5.0.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1487690593983.html'"></ng-include>
 
     <div id="index_content" ng-if="!loading && cdash.requirelogin != 1 && !cdash.error">
       <div id="index_top" ng-if="::cdash.updates">
@@ -96,7 +96,7 @@
         </div>
 
         <!-- Filters -->
-        <ng-include src="'build/views/partials/filterdataTemplate_2.5.0.html'"></ng-include>
+        <ng-include src="'build/views/partials/filterdataTemplate_1487690593983.html'"></ng-include>
       </div> <!-- End index-top -->
 
       <div ng-show="showFeed" id="feed" ng-include="::'ajax/getfeed.php?projectid='+ cdash.projectid"></div>
@@ -136,7 +136,7 @@
       </div>
 
       <!-- Display subproject dependencies -->
-      <ng-include ng-if="::cdash.subproject.dependencies.length > 0" ng-init="cdash.tableName = 'SubProject Dependencies'; cdash.subprojects = cdash.subproject.dependencies" src="'build/views/partials/subProjectTable_2.5.0.html'"></ng-include>
+      <ng-include ng-if="::cdash.subproject.dependencies.length > 0" ng-init="cdash.tableName = 'SubProject Dependencies'; cdash.subprojects = cdash.subproject.dependencies" src="'build/views/partials/subProjectTable_1487690593983.html'"></ng-include>
 
       <!-- BuildGroups -->
       <div ng-repeat="buildgroup in ::cdash.buildgroups | orderBy:'position'">
@@ -184,7 +184,7 @@
 
             <tr class="table-heading">
               <th ng-if="::buildgroup.hasupdatedata" align="center" width="3%" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'update.files', $event)">
-                Files
+                {{::cdash.updatetype}}
                 <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-update.files') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('update.files') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
 
@@ -570,6 +570,6 @@
       </table>
     </div> <!-- end index content -->
 
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_2.5.0.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1487690593983.html'"></ng-include>
   </body>
 </html>

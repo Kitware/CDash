@@ -7,13 +7,13 @@
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="stylesheet" type="text/css" ng-href="{{cssfile}}" />
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <script src="js/CDash_2.5.0.min.js"></script>
+    <script src="js/CDash_1487690593983.min.js"></script>
     <title>CDash - Manage SubProjects</title>
   </head>
 
   <body bgcolor="#ffffff" ng-controller="ManageSubProjectController">
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_2.5.0.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1487690593983.html'"></ng-include>
     <br/>
 
     <div class="container" ng-if="!loading && cdash.requirelogin != 1">
@@ -201,7 +201,9 @@
                       </td>
 
                       <td class="col-md-1">
-                        <input type="radio" name="groupRadio" ng-model="cdash.default_group_id" value="{{group.id}}">
+                        <input name="groupRadio" type="radio" value="{{group.id}}"
+                          ng-model="cdash.default_group_id"
+                          ng-checked="cdash.default_group_id == group.id">
                       </td>
 
                       <td class="col-md-2">
@@ -231,6 +233,6 @@
 
     <!-- FOOTER -->
     <br/>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_2.5.0.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1487690593983.html'"></ng-include>
   </body>
 </html>

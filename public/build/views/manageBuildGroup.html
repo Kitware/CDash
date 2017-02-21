@@ -9,12 +9,12 @@
     <link rel="stylesheet" type="text/css" href="css/jquery.qtip.min.css" />
     <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.4.css" />
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
-    <script src="js/CDash_2.5.0.min.js"></script>
+    <script src="js/CDash_1487690593983.min.js"></script>
     <title>CDash - BuildGroups</title>
   </head>
   <body bgcolor="#ffffff" ng-controller="ManageBuildGroupController">
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_2.5.0.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1487690593983.html'"></ng-include>
     <br/>
 
     <div class="container" ng-if="cdash.requirelogin != 1 && !loading">
@@ -47,11 +47,6 @@
           <li role="presentation">
             <a href="#create" aria-controls="create" role="tab" data-toggle="tab">
               <strong>Create new BuildGroup</strong>
-            </a>
-          </li>
-          <li role="presentation">
-            <a href="#move" aria-controls="move" role="tab" data-toggle="tab">
-              <strong>Move Builds</strong>
             </a>
           </li>
           <li role="presentation">
@@ -107,7 +102,10 @@
 
                         <div class="radio">
                           <label>
-                            <input name="summaryEmail" type="radio" value="0" ng-model="buildgroup.summaryemail" ng-checked="buildgroup.summaryemail == 0"/> Normal email
+                            <input name="summaryEmail" type="radio" value="0"
+                             convert-to-number
+                             ng-model="buildgroup.summaryemail"
+                             ng-checked="buildgroup.summaryemail == 0"/> Normal email
                           </label>
                           <p class="help-block">
                             Defer to the Project's email settings.
@@ -116,7 +114,10 @@
 
                         <div class="radio">
                           <label>
-                            <input name="summaryEmail" type="radio" value="1" ng-model="buildgroup.summaryemail" ng-checked="buildgroup.summaryemail == 1"/> Summary email
+                            <input name="summaryEmail" type="radio" value="1"
+                             convert-to-number
+                             ng-model="buildgroup.summaryemail"
+                             ng-checked="buildgroup.summaryemail == 1"/> Summary email
                           </label>
                           <p class="help-block">
                             Send only one email per day when the first build fails.
@@ -125,7 +126,10 @@
 
                         <div class="radio">
                           <label>
-                            <input name="summaryEmail" type="radio" value="2" ng-model="buildgroup.summaryemail" ng-checked="buildgroup.summaryemail == 2"/> No email
+                            <input name="summaryEmail" type="radio" value="2"
+                             convert-to-number
+                             ng-model="buildgroup.summaryemail"
+                             ng-checked="buildgroup.summaryemail == 2"/> No email
                           </label>
                           <p class="help-block">
                             Don't send any email, regardless of users' preferences.
@@ -210,54 +214,6 @@
               </div>
             </div>
           </div> <!-- create new BuildGroup -->
-
-          <div role="tabpanel" class="tab-pane" id="move">
-            <div class="form-horizontal">
-
-              <div class="form-group">
-                <label for="globalMoveSelectionType"> Show:</label>
-                <select name="globalMoveSelectionType" ng-model="filteredBuildGroup" ng-options="buildgroup as buildgroup.name for buildgroup in cdash.buildgroups | orderBy:'name'" class="form-control">
-                  <option value="">All</option>
-                </select>
-                <p class="help-block">
-                  expected builds and those submitted in the past 7 days
-                </p>
-              </div>
-
-              <div class="form-group">
-                <select name="movebuilds[]" size="15" multiple="multiple" id="movebuilds" ng-model="movebuilds" ng-options="build as build.name for build in cdash.currentbuilds | orderBy:'name' | filter_builds:filteredBuildGroup" class="repeat-item form-control">
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label for="destBuildGroupSelection"> Move to BuildGroup: </label>
-                <select name="destBuildGroupSelection" ng-model="destBuildGroupSelection" ng-options="buildgroup as buildgroup.name for buildgroup in cdash.buildgroups | orderBy:'name'" class="form-control">
-                  <option value="">Choose...</option>
-                </select>
-                <p class="help-block">
-                  (select a group even if you want only expected)
-                </p>
-              </div>
-
-              <div class="form-group">
-                <div class="checkbox">
-                  <label>
-                    <input type="checkbox"
-                      ng-model="expected"
-                      name="expectedMove"
-                      ng-true-value="1"
-                      ng-false-value="0"/>
-                    Expected
-                  </label>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <button type="submit" class="btn btn-default" ng-click="moveBuilds(movebuilds, destBuildGroupSelection, expected)">Move selected build(s) to group</button>
-                <img id="builds_moved" src="img/check.gif" style="display: none; height:16px; width=16px; margin-top:9px;" />
-              </div>
-            </div>
-          </div> <!-- global move -->
 
           <div role="tabpanel" class="tab-pane" id="wildcard">
             <div class="form-horizontal">
@@ -380,6 +336,6 @@
 
     <!-- FOOTER -->
     <br/>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_2.5.0.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1487690593983.html'"></ng-include>
   </body>
 </html>
