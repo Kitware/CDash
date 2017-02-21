@@ -32,7 +32,7 @@ CDash needs:
 
 For production:
 ```bash
-git checkout release
+git checkout prebuilt
 ```
 
 For development:
@@ -49,7 +49,7 @@ node_modules/.bin/gulp
 
 For production:
 ```cmd
-git checkout release
+git checkout prebuilt
 ```
 
 For development:

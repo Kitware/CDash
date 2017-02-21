@@ -14,7 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-$noforcelogin = 1;
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 include_once 'include/common.php';
@@ -22,30 +21,31 @@ include_once 'include/common.php';
 global $CDASH_BACKUP_DIRECTORY, $CDASH_BERNARD_CONSUMERS_WHITELIST;
 
 /**
- * Delete the XML of a particular build submission.
+ * Delete the temporary file related to a particular submission.
  *
- * DELETE /deleteBuildSubmissionXml.php
+ * Related: getSubmissionFile.php
+ *
+ * DELETE /deleteSubmissionFile.php
  * Required Params:
- * buildsubmissionid=[string] UUID of a build submission
+ * filename=[string] Filename to delete, must live in tmp_submissions directory
  **/
 
 if (is_array($CDASH_BERNARD_CONSUMERS_WHITELIST) &&
     !in_array($_SERVER['REMOTE_ADDR'], $CDASH_BERNARD_CONSUMERS_WHITELIST)) {
-    header('HTTP/1.1 403 Forbidden');
+    http_response_code(403);
     exit();
-} elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE' && isset($_REQUEST['buildsubmissionid']) &&
-    preg_match('/([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})/', $_REQUEST['buildsubmissionid'])) {
-    $filename = $CDASH_BACKUP_DIRECTORY . '/' . $_REQUEST['buildsubmissionid'] . '.xml';
+} elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE' && isset($_REQUEST['filename'])) {
+    $filename = $CDASH_BACKUP_DIRECTORY . '/' . basename($_REQUEST['filename']);
 
     if (file_exists($filename)) {
         $deleted = @unlink($filename);
 
         if (!$deleted) {
-            header('HTTP/1.1 500 Internal Server Error');
+            http_response_code(500);
             exit();
         }
     }
 } else {
-    header('HTTP/1.1 400 Bad Request');
+    http_response_code(400);
     exit();
 }

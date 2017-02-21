@@ -184,7 +184,7 @@
 
             <tr class="table-heading">
               <th ng-if="::buildgroup.hasupdatedata" align="center" width="3%" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'update.files', $event)">
-                Files
+                {{::cdash.updatetype}}
                 <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-update.files') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('update.files') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
 

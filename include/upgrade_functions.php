@@ -172,12 +172,24 @@ function ModifyTableField($table, $field, $mySQLType, $pgSqlType, $default, $not
 function AddTablePrimaryKey($table, $field)
 {
     include dirname(__DIR__) . '/config/config.php';
+    global $CDASH_DB_TYPE;
+
     add_log("Adding primarykey $field to $table", 'AddTablePrimaryKey');
-    if ($CDASH_DB_TYPE == 'pgsql') {
-        pdo_query('ALTER TABLE "' . $table . '" ADD PRIMARY KEY ("' . $field . '")');
-    } else {
-        pdo_query('ALTER IGNORE TABLE ' . $table . ' ADD PRIMARY KEY ( ' . $field . ' )');
+    $query = 'ALTER TABLE "' . $table . '" ADD PRIMARY KEY ("' . $field . '")';
+    $version = pdo_get_vendor_version();
+    list($major, $minor, $patch) = explode(".", $version);
+
+    // As of MySQL 5.7.4, the IGNORE clause for ALTER TABLE is removed and its use produces an error.
+    // Retaining original query for backwards compatibility
+    if ($CDASH_DB_TYPE == 'mysql') {
+        if($major >= 5 && $minor >= 7) {
+            $query = "ALTER TABLE {$table} ADD PRIMARY KEY (`{$field}`)";
+        } else {
+            $query = "ALTER IGNORE TABLE {$table} ADD PRIMARY KEY (`{$field}`)";
+        }
     }
+
+    pdo_query($query);
     //add_last_sql_error("AddTablePrimaryKey");
     add_log("Done adding primarykey $field to $table", 'AddTablePrimaryKey');
 }
@@ -821,7 +833,7 @@ function PopulateDynamicAnalysisSummaryTable()
         'SELECT DISTINCT da.buildid, da.checker FROM dynamicanalysis AS da
         LEFT JOIN dynamicanalysissummary AS das ON (da.buildid=das.buildid)
         WHERE das.buildid IS NULL');
-    $build_stmt->execute();
+    pdo_execute($build_stmt);
     while ($build_row = $build_stmt->fetch()) {
         $buildid= $build_row['buildid'];
         // Get the number of defects for this build.
@@ -829,7 +841,7 @@ function PopulateDynamicAnalysisSummaryTable()
             'SELECT sum(b.value) AS numdefects FROM dynamicanalysis AS a
             INNER JOIN dynamicanalysisdefect AS b ON (a.id=b.dynamicanalysisid)
             WHERE a.buildid=?');
-        $defect_stmt->execute(array($buildid));
+        pdo_execute($defect_stmt, [$buildid]);
         $defect_row = $defect_stmt->fetch();
 
         // Create the summary for this build.
@@ -840,7 +852,7 @@ function PopulateDynamicAnalysisSummaryTable()
 
         // Determine whether this is a parent, child, or standalone build.
         $parent_stmt = $pdo->prepare('SELECT parentid FROM build WHERE id=?');
-        $parent_stmt->execute(array($buildid));
+        pdo_execute($parent_stmt, [$buildid]);
         $parent_row = $parent_stmt->fetch();
         $parentid = $parent_row['parentid'];
 
@@ -899,7 +911,7 @@ function AddUniqueConstraintToDiffTables($testing=false)
             }
             $delete_stmt->bindParam(':buildid', $buildid);
             $delete_stmt->bindParam(':type', $type);
-            $delete_stmt->execute();
+            pdo_execute($delete_stmt);
         }
         // It should be safe to add the constraints now.
         if ($CDASH_DB_TYPE == 'pgsql') {

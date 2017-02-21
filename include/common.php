@@ -1193,15 +1193,32 @@ function remove_children($parentid)
 function unlink_uploaded_file($fileid)
 {
     global $CDASH_UPLOAD_DIRECTORY;
-    $query = pdo_query("SELECT sha1sum, filename, filesize FROM uploadfile WHERE id='$fileid'");
-    $uploadfile_array = pdo_fetch_array($query);
-    $sha1sum = $uploadfile_array['sha1sum'];
-    $symlinkname = $uploadfile_array['filename'];
-    $filesize = $uploadfile_array['filesize'];
+    $pdo = get_link_identifier()->getPdo();
+    $stmt = $pdo->prepare(
+        'SELECT sha1sum, filename, filesize FROM uploadfile
+        WHERE id = ? AND isurl = 0');
 
-    $query = pdo_query("SELECT count(*) FROM uploadfile WHERE sha1sum='$sha1sum' AND id != '$fileid'");
-    $count_array = pdo_fetch_array($query);
-    $shareCount = $count_array[0];
+    if (!pdo_execute($stmt, [$fileid])) {
+        return 0;
+    }
+    $row = $stmt->fetch();
+    if (!$row) {
+        return 0;
+    }
+
+    $sha1sum = $row['sha1sum'];
+    $symlinkname = $row['filename'];
+    $filesize = $row['filesize'];
+
+    $shareCount = 0;
+    $stmt = $pdo->prepare(
+        'SELECT COUNT(*) FROM uploadfile
+        WHERE sha1sum = :sha1sum AND id != :fileid');
+    $stmt->bindParam(':sha1sum', $sha1sum);
+    $stmt->bindParam(':fileid', $fileid);
+    if (pdo_execute($stmt)) {
+        $shareCount = $stmt->fetchColumn();
+    }
 
     if ($shareCount == 0) {
         //If only one name maps to this content
@@ -2164,6 +2181,20 @@ function create_aggregate_build($build, $siteid=null)
     return $aggregate_build;
 }
 
+function extract_tar_archive_tar($filename, $dirName)
+{
+    try {
+        $tar = new Archive_Tar($filename);
+        $tar->setErrorHandling(PEAR_ERROR_CALLBACK, function ($pear_error) {
+            throw new PEAR_Exception($pear_error->getMessage());
+        });
+        return $tar->extract($dirName);
+    } catch (PEAR_Exception $e) {
+        add_log($e->getMessage(), 'extract_tar', LOG_ERR);
+        return false;
+    }
+}
+
 function extract_tar($filename, $dirName)
 {
     if (class_exists('PharData')) {
@@ -2175,9 +2206,7 @@ function extract_tar($filename, $dirName)
         }
 
         return true;
+    } else {
+        return extract_tar_archive_tar($filename, $dirName);
     }
-
-    $tar = new Archive_Tar($filename);
-    $tar->setErrorHandling(PEAR_ERROR_PRINT);
-    return $tar->extract($dirName);
 }

@@ -56,7 +56,7 @@ function extract_type_from_buildstamp($buildstamp)
 /** Extract the date from the build stamp */
 function extract_date_from_buildstamp($buildstamp)
 {
-    return substr($buildstamp, 0, strrpos($buildstamp, '-'));
+    return substr($buildstamp, 0, strpos($buildstamp, '-', strpos($buildstamp, '-') + 1));
 }
 
 /** Return timestamp from string
@@ -135,9 +135,7 @@ function compute_error_difference($buildid, $previousbuildid, $warning)
     $stmt->bindValue(':buildid', $buildid);
     $stmt->bindValue(':type', $warning);
     $stmt->bindValue(':previousbuildid', $previousbuildid);
-    if (!$stmt->execute()) {
-        add_last_sql_error('compute_error_difference', 0, $buildid);
-    }
+    pdo_execute($stmt);
 
     // Recurring buildfailures are represented by the buildfailuredetails table.
     // Get a list of buildfailuredetails IDs for the current build and the
@@ -151,9 +149,7 @@ function compute_error_difference($buildid, $previousbuildid, $warning)
         WHERE bf.buildid=:buildid AND bfd.type=:type');
     $stmt->bindValue(':buildid', $buildid);
     $stmt->bindValue(':type', $warning);
-    if (!$stmt->execute()) {
-        add_last_sql_error('compute_error_difference', 0, $buildid);
-    }
+    pdo_execute($stmt);
     while ($row = $stmt->fetch()) {
         $current_failures[] = $row['detailsid'];
     }
@@ -164,9 +160,7 @@ function compute_error_difference($buildid, $previousbuildid, $warning)
         WHERE bf.buildid=:previousbuildid AND bfd.type=:type');
     $stmt->bindValue(':previousbuildid', $previousbuildid);
     $stmt->bindValue(':type', $warning);
-    if (!$stmt->execute()) {
-        add_last_sql_error('compute_error_difference', 0, $buildid);
-    }
+    pdo_execute($stmt);
     while ($row = $stmt->fetch()) {
         $previous_failures[] = $row['detailsid'];
     }
@@ -179,9 +173,7 @@ function compute_error_difference($buildid, $previousbuildid, $warning)
                 WHERE buildid=:buildid AND detailsid=:detailsid');
             $stmt->bindValue(':buildid', $buildid);
             $stmt->bindValue(':detailsid', $failure);
-            if (!$stmt->execute()) {
-                add_last_sql_error('compute_error_difference', 0, $buildid);
-            }
+            pdo_execute($stmt);
         }
     }
 
@@ -191,7 +183,7 @@ function compute_error_difference($buildid, $previousbuildid, $warning)
         WHERE buildid=:buildid AND type=:type AND newstatus=1');
     $stmt->bindValue(':buildid', $buildid);
     $stmt->bindValue(':type', $warning);
-    $stmt->execute();
+    pdo_execute($stmt);
     $positives_array = $stmt->fetch();
     $npositives = $positives_array[0];
 
@@ -201,7 +193,7 @@ function compute_error_difference($buildid, $previousbuildid, $warning)
         WHERE bf.buildid=:buildid AND bfd.type=:type AND bf.newstatus=1');
     $stmt->bindValue(':buildid', $buildid);
     $stmt->bindValue(':type', $warning);
-    $stmt->execute();
+    pdo_execute($stmt);
     $positives_array = $stmt->fetch();
     $npositives += $positives_array[0];
 
@@ -215,7 +207,7 @@ function compute_error_difference($buildid, $previousbuildid, $warning)
     $stmt->bindValue(':buildid', $buildid);
     $stmt->bindValue(':previousbuildid', $previousbuildid);
     $stmt->bindValue(':type', $warning);
-    $stmt->execute();
+    pdo_execute($stmt);
     $negatives_array = $stmt->fetch();
     $nnegatives = $negatives_array[0];
 
@@ -231,7 +223,7 @@ function compute_error_difference($buildid, $previousbuildid, $warning)
         'SELECT * FROM builderrordiff WHERE buildid=:buildid AND type=:type FOR UPDATE');
     $stmt->bindParam(':buildid', $buildid);
     $stmt->bindParam(':type', $warning);
-    $stmt->execute();
+    pdo_execute($stmt);
     $row = $stmt->fetch();
     $existing_npositives = 0;
     $existing_nnegatives = 0;
@@ -270,8 +262,7 @@ function compute_error_difference($buildid, $previousbuildid, $warning)
     $stmt->bindValue(':type', $warning);
     $stmt->bindValue(':npositives', $npositives);
     $stmt->bindValue(':nnegatives', $nnegatives);
-    if (!$stmt->execute()) {
-        add_last_sql_error('compute_error_difference', 0, $buildid);
+    if (!pdo_execute($stmt)) {
         $pdo->rollBack();
         return;
     }
@@ -289,7 +280,7 @@ function compute_configure_difference($buildid, $previousbuildid, $warning)
         WHERE type=:type AND buildid=:buildid');
     $stmt->bindValue(':buildid', $buildid);
     $stmt->bindValue(':type', $warning);
-    $stmt->execute();
+    pdo_execute($stmt);
     $row = $stmt->fetch();
     $nerrors = $row[0];
 
@@ -298,7 +289,7 @@ function compute_configure_difference($buildid, $previousbuildid, $warning)
         WHERE type=:type AND buildid=:previousbuildid');
     $stmt->bindValue(':previousbuildid', $previousbuildid);
     $stmt->bindValue(':type', $warning);
-    $stmt->execute();
+    pdo_execute($stmt);
     $row = $stmt->fetch();
     $npreviouserrors = $row[0];
 
@@ -308,7 +299,7 @@ function compute_configure_difference($buildid, $previousbuildid, $warning)
         'SELECT * FROM configureerrordiff WHERE buildid=:buildid AND type=:type FOR UPDATE');
     $stmt->bindParam(':buildid', $buildid);
     $stmt->bindParam(':type', $warning);
-    $stmt->execute();
+    pdo_execute($stmt);
     $row = $stmt->fetch();
     $existing_diff = 0;
     if ($row) {
@@ -342,8 +333,7 @@ function compute_configure_difference($buildid, $previousbuildid, $warning)
     $stmt->bindValue(':buildid', $previousbuildid);
     $stmt->bindValue(':type', $warning);
     $stmt->bindValue(':difference', $errordiff);
-    if (!$stmt->execute()) {
-        add_last_sql_error('compute_configure_difference', 0, $buildid);
+    if (!pdo_execute($stmt)) {
         $pdo->rollBack();
         return;
     }
@@ -378,16 +368,14 @@ function compute_test_difference($buildid, $previousbuildid, $testtype, $project
     $stmt->bindParam(':buildid', $buildid);
     $stmt->bindParam(':previousbuildid', $previousbuildid);
     $stmt->bindParam(':status', $status);
-    if (!$stmt->execute()) {
-        add_last_sql_error('compute_test_difference', 0, $buildid);
-    }
+    pdo_execute($stmt);
 
     // Maybe we can get that from the query (don't know).
     $stmt = $pdo->prepare(
         "SELECT COUNT(*) FROM build2test WHERE buildid=:buildid AND newstatus=1 AND status=:status $extra_sql");
     $stmt->bindParam(':buildid', $buildid);
     $stmt->bindParam(':status', $status);
-    $stmt->execute();
+    pdo_execute($stmt);
     $row = $stmt->fetch();
     $npositives = $row[0];
 
@@ -403,7 +391,7 @@ function compute_test_difference($buildid, $previousbuildid, $testtype, $project
     $stmt->bindParam(':buildid', $buildid);
     $stmt->bindParam(':previousbuildid', $previousbuildid);
     $stmt->bindParam(':status', $status);
-    $stmt->execute();
+    pdo_execute($stmt);
     $row = $stmt->fetch();
     $nnegatives = $row[0];
 
@@ -413,7 +401,7 @@ function compute_test_difference($buildid, $previousbuildid, $testtype, $project
         'SELECT * FROM testdiff WHERE buildid=:buildid AND type=:type FOR UPDATE');
     $stmt->bindParam(':buildid', $buildid);
     $stmt->bindParam(':type', $testtype);
-    $stmt->execute();
+    pdo_execute($stmt);
     $row = $stmt->fetch();
 
     $existing_npositives = 0;
@@ -454,8 +442,7 @@ function compute_test_difference($buildid, $previousbuildid, $testtype, $project
     $stmt->bindParam(':type', $testtype);
     $stmt->bindParam(':npositives', $npositives);
     $stmt->bindParam(':nnegatives', $nnegatives);
-    if (!$stmt->execute()) {
-        add_last_sql_error('compute_test_difference', 0, $buildid);
+    if (!pdo_execute($stmt)) {
         $pdo->rollBack();
         return;
     }

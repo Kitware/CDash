@@ -750,6 +750,9 @@ if (isset($_GET['upgrade-2-4'])) {
 
 // 2.6 Upgrade
 if (isset($_GET['upgrade-2-6'])) {
+    // Add index to label2test::buildid to improve performance of remove_build()
+    AddTableIndex('label2test', 'buildid');
+
     // Set the database version
     setVersion();
 
@@ -783,7 +786,8 @@ if ($Upgrade) {
     }
 
     // check if the rss directory is writable
-    if (!is_writable('rss')) {
+    global $CDASH_ENABLE_FEED;
+    if ($CDASH_ENABLE_FEED > 0 && !is_writable('rss')) {
         $xml .= '<rsswritable>0</rsswritable>';
     } else {
         $xml .= '<rsswritable>1</rsswritable>';

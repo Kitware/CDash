@@ -762,7 +762,9 @@ class Project
             return false;
         }
 
-        $project = pdo_query('SELECT count(*) FROM build WHERE projectid=' . qnum($this->Id));
+        $project = pdo_query(
+            'SELECT count(*) FROM build
+            WHERE parentid IN (-1, 0) AND projectid=' . qnum($this->Id));
 
         if (!$project) {
             add_last_sql_error('Project GetTotalNumberOfBuilds', $this->Id);
@@ -780,9 +782,11 @@ class Project
             return false;
         }
 
-        $project = pdo_query('SELECT count(build.id) FROM build WHERE projectid=' . qnum($this->Id) .
-            " AND build.starttime>'$startUTCdate'
-                           AND build.starttime<='$endUTCdate'");
+        $project = pdo_query(
+            'SELECT count(build.id) FROM build WHERE projectid=' . qnum($this->Id) . "
+            AND build.starttime>'$startUTCdate'
+            AND build.starttime<='$endUTCdate'
+            AND parentid IN (-1, 0)");
 
         if (!$project) {
             add_last_sql_error('Project GetNumberOfBuilds', $this->Id);
@@ -800,11 +804,13 @@ class Project
             return false;
         }
         $nbuilds = $this->GetNumberOfBuilds($startUTCdate, $endUTCdate);
-        $project = pdo_query('SELECT starttime FROM build WHERE projectid=' . qnum($this->Id) .
-            " AND build.starttime>'$startUTCdate'
-                             AND build.starttime<='$endUTCdate'
-                             ORDER BY starttime ASC
-                             LIMIT 1");
+        $project = pdo_query(
+            'SELECT starttime FROM build
+            WHERE projectid=' . qnum($this->Id) . "
+            AND starttime>'$startUTCdate'
+            AND starttime<='$endUTCdate'
+            AND parentid IN (-1, 0)
+            ORDER BY starttime ASC LIMIT 1");
         $first_build = pdo_fetch_array($project);
         $first_build = $first_build['starttime'];
         $nb_days = strtotime($endUTCdate) - strtotime($first_build);
@@ -833,6 +839,8 @@ class Project
               AND build.buildwarnings>0";
         if ($childrenOnly) {
             $query .= ' AND build.parentid > 0';
+        } else {
+            $query .= ' AND build.parentid IN (-1, 0)';
         }
 
         $project = pdo_query($query);
@@ -865,6 +873,8 @@ class Project
        AND build.builderrors>0";
         if ($childrenOnly) {
             $query .= ' AND build.parentid > 0';
+        } else {
+            $query .= ' AND build.parentid IN (-1, 0)';
         }
 
         $project = pdo_query($query);
@@ -886,16 +896,20 @@ class Project
             return false;
         }
 
-        $query = 'SELECT count(*) FROM build,build2group,buildgroup
-              WHERE build.projectid=' . qnum($this->Id) . "
-              AND build.starttime>'$startUTCdate'
-              AND build.starttime<='$endUTCdate'
-              AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-              AND buildgroup.includesubprojectotal=1
-              AND build.builderrors=0
-              AND build.buildwarnings=0";
+        $query =
+            'SELECT count(*) FROM build b
+            JOIN build2group b2g ON (b2g.buildid=b.id)
+            JOIN buildgroup bg ON (bg.id=b2g.groupid)
+            WHERE b.projectid=' . qnum($this->Id) . "
+            AND b.starttime>'$startUTCdate'
+            AND b.starttime<='$endUTCdate'
+            AND bg.includesubprojectotal=1
+            AND b.builderrors=0
+            AND b.buildwarnings=0";
         if ($childrenOnly) {
-            $query .= ' AND build.parentid > 0';
+            $query .= ' AND b.parentid > 0';
+        } else {
+            $query .= ' AND b.parentid IN (-1, 0)';
         }
 
         $project = pdo_query($query);
@@ -916,15 +930,19 @@ class Project
             return false;
         }
 
-        $query = 'SELECT count(*) FROM build,configure,build2group,buildgroup
-              WHERE  configure.buildid=build.id  AND build.projectid=' . qnum($this->Id) . "
-              AND build.starttime>'$startUTCdate'
-              AND build.starttime<='$endUTCdate'
-              AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-              AND buildgroup.includesubprojectotal=1
-              AND  configure.warnings>0";
+        $query =
+            'SELECT COUNT(*) FROM build b
+            JOIN build2group b2g ON (b2g.buildid = b.id)
+            JOIN buildgroup bg ON (bg.id = b2g.groupid)
+            WHERE b.projectid = ' . qnum($this->Id) . "
+            AND b.starttime > '$startUTCdate'
+            AND b.starttime <= '$endUTCdate'
+            AND b.configurewarnings > 0
+            AND bg.includesubprojectotal = 1";
         if ($childrenOnly) {
-            $query .= ' AND build.parentid > 0';
+            $query .= ' AND b.parentid > 0';
+        } else {
+            $query .= ' AND b.parentid IN (-1, 0)';
         }
 
         $project = pdo_query($query);
@@ -945,15 +963,19 @@ class Project
             return false;
         }
 
-        $query = 'SELECT count(*) FROM build,configure,buildgroup,build2group
-              WHERE  configure.buildid=build.id  AND build.projectid=' . qnum($this->Id) . "
-              AND build.starttime>'$startUTCdate'
-              AND build.starttime<='$endUTCdate'
-              AND configure.status='1'
-              AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-              AND buildgroup.includesubprojectotal=1";
+        $query =
+            'SELECT COUNT(*) FROM build b
+            JOIN build2group b2g ON (b2g.buildid = b.id)
+            JOIN buildgroup bg ON (bg.id = b2g.groupid)
+            WHERE b.projectid = ' . qnum($this->Id) . "
+            AND b.starttime > '$startUTCdate'
+            AND b.starttime <= '$endUTCdate'
+            AND b.configureerrors > 0
+            AND bg.includesubprojectotal = 1";
         if ($childrenOnly) {
-            $query .= ' AND build.parentid > 0';
+            $query .= ' AND b.parentid > 0';
+        } else {
+            $query .= ' AND b.parentid IN (-1, 0)';
         }
 
         $project = pdo_query($query);
@@ -974,13 +996,20 @@ class Project
             return false;
         }
 
-        $query = 'SELECT count(*) FROM configure,build,build2group,buildgroup WHERE build.projectid=' . qnum($this->Id) . "
-              AND build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-              AND buildgroup.includesubprojectotal=1
-              AND configure.buildid=build.id AND build.starttime>'$startUTCdate'
-              AND build.starttime<='$endUTCdate' AND configure.status='0'";
+        $query =
+            'SELECT COUNT(*) FROM build b
+            JOIN build2group b2g ON (b2g.buildid = b.id)
+            JOIN buildgroup bg ON (bg.id = b2g.groupid)
+            WHERE b.projectid = ' . qnum($this->Id) . "
+            AND b.starttime > '$startUTCdate'
+            AND b.starttime <= '$endUTCdate'
+            AND b.configureerrors = 0
+            AND b.configurewarnings = 0
+            AND bg.includesubprojectotal = 1";
         if ($childrenOnly) {
-            $query .= ' AND build.parentid > 0';
+            $query .= ' AND b.parentid > 0';
+        } else {
+            $query .= ' AND b.parentid IN (-1, 0)';
         }
 
         $project = pdo_query($query);
@@ -1010,6 +1039,8 @@ class Project
               AND build.starttime<='$endUTCdate'";
         if ($childrenOnly) {
             $query .= ' AND build.parentid > 0';
+        } else {
+            $query .= ' AND build.parentid IN (-1, 0)';
         }
 
         $project = pdo_query($query);
@@ -1039,6 +1070,8 @@ class Project
               AND build.starttime<='$endUTCdate'";
         if ($childrenOnly) {
             $query .= ' AND build.parentid > 0';
+        } else {
+            $query .= ' AND build.parentid IN (-1, 0)';
         }
 
         $project = pdo_query($query);
@@ -1068,6 +1101,8 @@ class Project
               AND build.starttime<='$endUTCdate'";
         if ($childrenOnly) {
             $query .= ' AND build.parentid > 0';
+        } else {
+            $query .= ' AND build.parentid IN (-1, 0)';
         }
 
         $project = pdo_query($query);
@@ -1519,7 +1554,7 @@ class Project
         $stmt->bindParam(':buildname', $buildname);
         $stmt->bindParam(':sitename', $sitename);
         $stmt->bindParam(':ip', $ip);
-        $stmt->execute();
+        pdo_execute($stmt);
         $blocked_id = pdo_insert_id('blockbuild');
         return $blocked_id;
     }
@@ -1528,6 +1563,6 @@ class Project
     {
         $pdo = get_link_identifier()->getPdo();
         $stmt = $pdo->prepare('DELETE FROM blockbuild WHERE id=?');
-        $stmt->execute(array($id));
+        pdo_execute($stmt, [$id]);
     }
 }

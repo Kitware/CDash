@@ -196,7 +196,7 @@ class Test
             $stmt->bindParam(':command', $command);
             $stmt->bindParam(':details', $details);
             $stmt->bindParam(':output', $output, PDO::PARAM_LOB);
-            $success = $stmt->execute();
+            $success = pdo_execute($stmt);
         } else {
             $stmt = $pdo->prepare('
                 INSERT INTO test (projectid, crc32, name, path, command, details, output)
@@ -208,13 +208,11 @@ class Test
             $stmt->bindParam(':command', $command);
             $stmt->bindParam(':details', $details);
             $stmt->bindParam(':output', $output, PDO::PARAM_LOB);
-            $success = $stmt->execute();
+            $success = pdo_execute($stmt);
             $this->Id = pdo_insert_id('test');
         }
 
         if (!$success) {
-            add_last_sql_error(
-                    "Cannot insert test: $name into the database", $this->ProjectId);
             return false;
         }
 

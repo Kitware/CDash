@@ -52,6 +52,7 @@ class KWWebTestCase extends WebTestCase
         $this->db->setPort($db['port']);
         $this->db->setUser($db['login']);
         $this->db->setPassword($db['pwd']);
+        $this->db->setConnection($db['connection']);
 
         global $CDASH_LOG_FILE, $cdashpath;
         $this->logfilename = $CDASH_LOG_FILE;
@@ -150,7 +151,11 @@ class KWWebTestCase extends WebTestCase
         if (file_exists($logfilename)) {
             $log = file_get_contents($logfilename);
             $log = str_replace("\r", '', $log);
+        } else {
+            $this->fail("Log file ${logfilename} does not exist: cannot continue");
+            return false;
         }
+
         $templateLog = file_get_contents($template);
         $templateLog = str_replace("\r", '', $templateLog);
 
@@ -304,7 +309,8 @@ class KWWebTestCase extends WebTestCase
     }
 
     // Create or update a project and verify the changes made.
-    public function createProject($input_settings, $update = false)
+    public function createProject($input_settings, $update = false,
+            $username = 'simpletest@localhost', $password = 'simpletest')
     {
         require_once 'models/project.php';
 
@@ -357,8 +363,8 @@ class KWWebTestCase extends WebTestCase
             $response = $client->request('POST',
                     $CDASH_BASE_URL . '/user.php',
                     ['form_params' => [
-                        'login' => 'simpletest@localhost',
-                        'passwd' => 'simpletest',
+                        'login' => $username,
+                        'passwd' => $password,
                         'sent' => 'Login >>']]);
         } catch (GuzzleHttp\Exception\ClientException $e) {
             $this->fail($e->getMessage());

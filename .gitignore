@@ -15,6 +15,10 @@
 /public/js/3rdparty.min.js
 /public/js/3rdparty.min.js.map
 /public/js/CDash_*.min.js*
+/public/upload/
 /tests/config.test.local.php
-/upload/
 local/
+.vagrant
+ansible/roles/*
+ansible/site.retry
+.DS_Store

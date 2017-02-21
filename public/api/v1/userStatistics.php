@@ -101,7 +101,7 @@ $stmt = $pdo->prepare(
 $stmt->bindParam(':end', $end_UTCDate);
 $stmt->bindParam(':beginning', $beginning_UTCDate);
 $stmt->bindParam(':projectid', $projectid);
-$stmt->execute();
+pdo_execute($stmt);
 
 $users = array();
 while ($row = $stmt->fetch()) {

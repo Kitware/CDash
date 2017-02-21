@@ -237,7 +237,6 @@ class SubProject
         }
 
         if ($this->Id < 1) {
-            echo 'SubProject GetName(): Id not set';
             return false;
         }
 
@@ -291,7 +290,6 @@ class SubProject
     public function GetGroupId()
     {
         if ($this->Id < 1) {
-            echo 'SubProject GetGroupId(): Id not set';
             return false;
         }
 
@@ -346,7 +344,6 @@ class SubProject
         }
 
         if ($this->Id < 1) {
-            echo 'SubProject GetLastSubmission(): Id not set';
             return false;
         }
 
@@ -368,32 +365,39 @@ class SubProject
         return date(FMT_DATETIMESTD, strtotime($project_array['submittime'] . 'UTC'));
     }
 
-    /** Get the number of warning builds given a date range */
-    public function GetNumberOfWarningBuilds($startUTCdate, $endUTCdate, $allSubProjects = false)
+    /** Encapsulate common logic for build queries in this class. */
+    private function CommonBuildQuery($startUTCdate, $endUTCdate, $allSubProjects, $extraCriteria)
     {
         if (!$allSubProjects && $this->Id < 1) {
-            echo 'SubProject GetNumberOfWarningBuilds(): Id not set';
             return false;
         }
-        $queryStr = 'SELECT ';
+
+        $extraSelect = '';
+        $extraWhere = '';
         if ($allSubProjects) {
-            $queryStr .= 'subprojectid, ';
+            $extraSelect = 'subprojectid, ';
+        } else {
+            $extraWhere = 'subprojectid = ' . qnum($this->Id) . 'AND ';
         }
-        $queryStr .= 'count(build.id) FROM build,subproject2build,build2group,buildgroup WHERE ';
-        if (!$allSubProjects) {
-            $queryStr .= 'subprojectid=' . qnum($this->Id) . 'AND ';
-        }
-        $queryStr .= "build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                  AND buildgroup.includesubprojectotal=1
-                  AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate'
-                  AND build.starttime<='$endUTCdate' AND build.buildwarnings>0 ";
+
+        $query =
+            "SELECT $extraSelect COUNT(*) FROM build b
+            JOIN build2group b2g ON (b2g.buildid = b.id)
+            JOIN buildgroup bg ON (bg.id = b2g.groupid)
+            JOIN subproject2build sp2b ON (sp2b.buildid = b.id)
+            WHERE $extraWhere
+            b.projectid = $this->ProjectId AND
+            b.starttime > '$startUTCdate' AND
+            b.starttime <= '$endUTCdate' AND
+            $extraCriteria AND
+            bg.includesubprojectotal = 1";
         if ($allSubProjects) {
-            $queryStr .= 'GROUP BY subprojectid';
+            $query .= ' GROUP BY subprojectid';
         }
-        $project = pdo_query($queryStr);
+        $project = pdo_query($query);
 
         if (!$project) {
-            add_last_sql_error('SubProject GetNumberOfWarningBuilds');
+            add_last_sql_error("SubProject CommonBuildQuery($extraCriteria)");
             return false;
         }
         if ($allSubProjects) {
@@ -401,243 +405,60 @@ class SubProject
             while ($row = pdo_fetch_array($project)) {
                 $project_array[$row['subprojectid']] = $row;
             }
-
             pdo_free_result($project);
             return $project_array;
         } else {
             $project_array = pdo_fetch_array($project);
             return intval($project_array[0]);
         }
+    }
+
+    /** Get the number of warning builds given a date range */
+    public function GetNumberOfWarningBuilds($startUTCdate, $endUTCdate, $allSubProjects = false)
+    {
+        $criteria = 'b.buildwarnings > 0';
+        return $this->CommonBuildQuery($startUTCdate, $endUTCdate, $allSubProjects, $criteria);
     }
 
     /** Get the number of error builds given a date range */
     public function GetNumberOfErrorBuilds($startUTCdate, $endUTCdate, $allSubProjects = false)
     {
-        if (!$allSubProjects && $this->Id < 1) {
-            echo 'SubProject GetNumberOfErrorBuilds(): Id not set';
-            return false;
-        }
-
-        $queryStr = 'SELECT ';
-        if ($allSubProjects) {
-            $queryStr .= 'subprojectid, ';
-        }
-        $queryStr .= 'count(build.id) FROM build,subproject2build,build2group,buildgroup WHERE ';
-        if (!$allSubProjects) {
-            $queryStr .= 'subprojectid=' . qnum($this->Id) . 'AND ';
-        }
-
-        $queryStr .= "build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                  AND buildgroup.includesubprojectotal=1
-                  AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate'
-                  AND build.starttime<='$endUTCdate' AND build.builderrors>0 ";
-
-        if ($allSubProjects) {
-            $queryStr .= 'GROUP BY subprojectid';
-        }
-        $project = pdo_query($queryStr);
-
-        if (!$project) {
-            add_last_sql_error('SubProject GetNumberOfErrorBuilds');
-            return false;
-        }
-        if ($allSubProjects) {
-            $project_array = array();
-            while ($row = pdo_fetch_array($project)) {
-                $project_array[$row['subprojectid']] = $row;
-            }
-            pdo_free_result($project);
-            return $project_array;
-        } else {
-            $project_array = pdo_fetch_array($project);
-            return intval($project_array[0]);
-        }
+        $criteria = 'b.builderrors > 0';
+        return $this->CommonBuildQuery($startUTCdate, $endUTCdate, $allSubProjects, $criteria);
     }
 
     /** Get the number of failing builds given a date range */
     public function GetNumberOfPassingBuilds($startUTCdate, $endUTCdate, $allSubProjects = false)
     {
-        if (!$allSubProjects && $this->Id < 1) {
-            echo 'SubProject GetNumberOfPassingBuilds(): Id not set';
-            return false;
-        }
-
-        $queryStr = 'SELECT ';
-        if ($allSubProjects) {
-            $queryStr .= 'subprojectid, ';
-        }
-        $queryStr .= 'count(build.id) FROM build,subproject2build,build2group,buildgroup WHERE ';
-        if (!$allSubProjects) {
-            $queryStr .= 'subprojectid=' . qnum($this->Id) . 'AND ';
-        }
-
-        $queryStr .= "build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                  AND buildgroup.includesubprojectotal=1
-                  AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate'
-                  AND build.starttime<='$endUTCdate' AND build.builderrors=0 AND build.buildwarnings=0 ";
-
-        if ($allSubProjects) {
-            $queryStr .= 'GROUP BY subprojectid';
-        }
-        $project = pdo_query($queryStr);
-
-        if (!$project) {
-            add_last_sql_error('SubProject GetNumberOfPassingBuilds');
-            return false;
-        }
-        if ($allSubProjects) {
-            $project_array = array();
-            while ($row = pdo_fetch_array($project)) {
-                $project_array[$row['subprojectid']] = $row;
-            }
-            pdo_free_result($project);
-            return $project_array;
-        } else {
-            $project_array = pdo_fetch_array($project);
-            return intval($project_array[0]);
-        }
+        $criteria = 'b.builderrors = 0 AND b.buildwarnings = 0';
+        return $this->CommonBuildQuery($startUTCdate, $endUTCdate, $allSubProjects, $criteria);
     }
 
     /** Get the number of failing configure given a date range */
     public function GetNumberOfWarningConfigures($startUTCdate, $endUTCdate, $allSubProjects = false)
     {
-        if (!$allSubProjects && $this->Id < 1) {
-            echo 'SubProject GetNumberOfWarningConfigures(): Id not set';
-            return false;
-        }
-
-        $queryStr = 'SELECT ';
-        if ($allSubProjects) {
-            $queryStr .= 'subprojectid, ';
-        }
-        $queryStr .= 'count(*) FROM configure,build,subproject2build,build2group,buildgroup WHERE ';
-        if (!$allSubProjects) {
-            $queryStr .= 'subprojectid=' . qnum($this->Id) . 'AND ';
-        }
-
-        $queryStr .= "build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                  AND configure.buildid=build.id
-                  AND buildgroup.includesubprojectotal=1
-                  AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate'
-                  AND build.starttime<='$endUTCdate' AND configure.warnings>0 ";
-
-        if ($allSubProjects) {
-            $queryStr .= 'GROUP BY subprojectid';
-        }
-        $project = pdo_query($queryStr);
-
-        if (!$project) {
-            add_last_sql_error('SubProject GetNumberOfWarningConfigures');
-            return false;
-        }
-        if ($allSubProjects) {
-            $project_array = array();
-            while ($row = pdo_fetch_array($project)) {
-                $project_array[$row['subprojectid']] = $row;
-            }
-            pdo_free_result($project);
-            return $project_array;
-        } else {
-            $project_array = pdo_fetch_array($project);
-            return intval($project_array[0]);
-        }
+        $criteria = 'b.configurewarnings > 0';
+        return $this->CommonBuildQuery($startUTCdate, $endUTCdate, $allSubProjects, $criteria);
     }
 
     /** Get the number of failing configure given a date range */
     public function GetNumberOfErrorConfigures($startUTCdate, $endUTCdate, $allSubProjects = false)
     {
-        if (!$allSubProjects && $this->Id < 1) {
-            echo 'SubProject GetNumberOfErrorConfigures(): Id not set';
-            return false;
-        }
-
-        $queryStr = 'SELECT ';
-        if ($allSubProjects) {
-            $queryStr .= 'subprojectid, ';
-        }
-        $queryStr .= 'count(*) FROM configure,build,subproject2build,build2group,buildgroup WHERE ';
-        if (!$allSubProjects) {
-            $queryStr .= 'subprojectid=' . qnum($this->Id) . 'AND ';
-        }
-
-        $queryStr .= "build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                  AND configure.buildid=build.id
-                  AND buildgroup.includesubprojectotal=1
-                  AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate'
-                  AND build.starttime<='$endUTCdate' AND configure.status=1 ";
-
-        if ($allSubProjects) {
-            $queryStr .= 'GROUP BY subprojectid';
-        }
-        $project = pdo_query($queryStr);
-
-        if (!$project) {
-            add_last_sql_error('SubProject GetNumberOfErrorConfigures');
-            return false;
-        }
-        if ($allSubProjects) {
-            $project_array = array();
-            while ($row = pdo_fetch_array($project)) {
-                $project_array[$row['subprojectid']] = $row;
-            }
-            pdo_free_result($project);
-            return $project_array;
-        } else {
-            $project_array = pdo_fetch_array($project);
-            return intval($project_array[0]);
-        }
+        $criteria = 'b.configureerrors > 0';
+        return $this->CommonBuildQuery($startUTCdate, $endUTCdate, $allSubProjects, $criteria);
     }
 
     /** Get the number of failing configure given a date range */
     public function GetNumberOfPassingConfigures($startUTCdate, $endUTCdate, $allSubProjects = false)
     {
-        if (!$allSubProjects && $this->Id < 1) {
-            echo 'SubProject GetNumberOfPassingConfigures(): Id not set';
-            return false;
-        }
-
-        $queryStr = 'SELECT ';
-        if ($allSubProjects) {
-            $queryStr .= 'subprojectid, ';
-        }
-        $queryStr .= 'count(*) FROM configure,build,subproject2build,build2group,buildgroup WHERE ';
-        if (!$allSubProjects) {
-            $queryStr .= 'subprojectid=' . qnum($this->Id) . 'AND ';
-        }
-
-        $queryStr .= "build2group.buildid=build.id AND build2group.groupid=buildgroup.id
-                  AND configure.buildid=build.id
-                  AND buildgroup.includesubprojectotal=1
-                  AND subproject2build.buildid=build.id AND build.starttime>'$startUTCdate'
-                  AND build.starttime<='$endUTCdate' AND configure.status=0 ";
-
-        if ($allSubProjects) {
-            $queryStr .= 'GROUP BY subprojectid';
-        }
-        $project = pdo_query($queryStr);
-
-        if (!$project) {
-            add_last_sql_error('SubProject GetNumberOfPassingConfigures');
-            return false;
-        }
-        if ($allSubProjects) {
-            $project_array = array();
-            while ($row = pdo_fetch_array($project)) {
-                $project_array[$row['subprojectid']] = $row;
-            }
-            pdo_free_result($project);
-            return $project_array;
-        } else {
-            $project_array = pdo_fetch_array($project);
-            return intval($project_array[0]);
-        }
+        $criteria = 'b.configureerrors = 0 AND b.configurewarnings = 0';
+        return $this->CommonBuildQuery($startUTCdate, $endUTCdate, $allSubProjects, $criteria);
     }
 
     /** Get the number of tests given a date range */
     public function GetNumberOfPassingTests($startUTCdate, $endUTCdate, $allSubProjects = false)
     {
         if (!$allSubProjects && $this->Id < 1) {
-            echo 'SubProject GetNumberOfPassingTests(): Id not set';
             return false;
         }
 
@@ -681,7 +502,6 @@ class SubProject
     public function GetNumberOfFailingTests($startUTCdate, $endUTCdate, $allSubProjects = false)
     {
         if (!$allSubProjects && $this->Id < 1) {
-            echo 'SubProject GetNumberOfFailingTests(): Id not set';
             return false;
         }
 
@@ -725,7 +545,6 @@ class SubProject
     public function GetNumberOfNotRunTests($startUTCdate, $endUTCdate, $allSubProjects = false)
     {
         if (!$allSubProjects && $this->Id < 1) {
-            echo 'SubProject GetNumberOfNotRunTests(): Id not set';
             return false;
         }
 
@@ -799,13 +618,7 @@ class SubProject
     /** Add a dependency */
     public function AddDependency($subprojectid)
     {
-        if ($this->Id < 1) {
-            echo 'SubProject AddDependency(): Id not set';
-            return false;
-        }
-
-        if (!isset($subprojectid) || !is_numeric($subprojectid)) {
-            echo 'SubProject AddDependency(): subproject not set or invalid';
+        if ($this->Id < 1 || !isset($subprojectid) || !is_numeric($subprojectid)) {
             return false;
         }
 
@@ -820,7 +633,6 @@ class SubProject
 
         $project_array = pdo_fetch_array($project);
         if ($project_array[0] > 0) {
-            //echo "Dependency already exists";
             return false;
         }
 
@@ -841,12 +653,10 @@ class SubProject
     public function RemoveDependency($subprojectid)
     {
         if ($this->Id < 1) {
-            echo 'SubProject RemoveDependency(): Id not set';
             return false;
         }
 
         if (!isset($subprojectid) || !is_numeric($subprojectid)) {
-            echo 'SubProject RemoveDependency(): subproject not set or invalid';
             return false;
         }
 

@@ -500,9 +500,7 @@ function clearUnsuccessfulAttempts($userid)
     createLockoutRow($userid, $pdo);
     $stmt = $pdo->prepare(
         'UPDATE lockout SET failedattempts = 0 WHERE userid=?');
-    if (!$stmt->execute(array($userid))) {
-        add_last_sql_error('clearUnsuccessfulAttempts');
-    }
+    pdo_execute($stmt, [$userid]);
 }
 
 /** Increment the number of unsuccessful login attempts for a given user,
@@ -522,7 +520,7 @@ function incrementUnsuccessfulAttempts($userid)
 
     // Add one to the current number of failed attempts.
     $stmt = $pdo->prepare('SELECT failedattempts FROM lockout WHERE userid=?');
-    if (!$stmt->execute(array($userid))) {
+    if (!pdo_execute($stmt, [$userid])) {
         $pdo->rollBack();
         return;
     }
@@ -546,8 +544,7 @@ function incrementUnsuccessfulAttempts($userid)
 
     $stmt->bindParam(':userid', $userid);
     $stmt->bindParam(':failedattempts', $failedattempts);
-    if (!$stmt->execute()) {
-        add_last_sql_error('incrementUnsuccessfulAttempts');
+    if (!pdo_execute($stmt)) {
         $pdo->rollBack();
         return;
     }
@@ -561,13 +558,13 @@ function createLockoutRow($userid, $pdo)
 {
     $pdo->beginTransaction();
     $stmt = $pdo->prepare('SELECT userid FROM lockout WHERE userid=?');
-    if (!$stmt->execute(array($userid))) {
+    if (!pdo_execute($stmt, [$userid])) {
         $pdo->rollBack();
         return;
     }
     if ($stmt->rowCount() === 0) {
         $stmt = $pdo->prepare('INSERT INTO lockout (userid) VALUES (?)');
-        if (!$stmt->execute(array($userid))) {
+        if (!pdo_execute($stmt, [$userid])) {
             $pdo->rollBack();
             return;
         }
@@ -591,7 +588,7 @@ function accountIsLocked($userid)
     $pdo = get_link_identifier()->getPdo();
     $pdo->beginTransaction();
     $stmt = $pdo->prepare('SELECT islocked, unlocktime FROM lockout WHERE userid=?');
-    if (!$stmt->execute(array($userid))) {
+    if (!pdo_execute($stmt, [$userid])) {
         $pdo->rollBack();
         return false;
     }
@@ -605,7 +602,7 @@ function accountIsLocked($userid)
                     "UPDATE lockout SET failedattempts = 0,
                     islocked = 0, unlocktime = '1980-01-01 00:00:00'
                     WHERE userid=?");
-            if (!$stmt->execute(array($userid))) {
+            if (!pdo_execute($stmt, [$userid])) {
                 $pdo->rollBack();
                 return false;
             }

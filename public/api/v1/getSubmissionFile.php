@@ -14,7 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-$noforcelogin = 1;
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 include_once 'include/common.php';
@@ -22,28 +21,34 @@ include_once 'include/common.php';
 global $CDASH_BACKUP_DIRECTORY, $CDASH_BERNARD_CONSUMERS_WHITELIST;
 
 /**
- * Retrieve the XML of a particular build submission.
+ * Retrieve a file from a particular submission.
+ * This includes XML files as well as coverage tarballs, which are temporarily
+ * stored in $CDASH_BACKUP_DIRECTORY.
+ * These are temporarily stored files which are removed after they've been processed,
+ * usually by a queue.
  *
- * GET /viewBuildSubmissionXml.php
+ * Related: deleteSubmissionFile.php
+ *
+ * GET /getSubmissionFile.php
  * Required Params:
- * buildsubmissionid=[string] UUID of a build submission
+ * filename=[string] Filename to retrieve, must live in tmp_submissions directory
  **/
 
 if (is_array($CDASH_BERNARD_CONSUMERS_WHITELIST) &&
     !in_array($_SERVER['REMOTE_ADDR'], $CDASH_BERNARD_CONSUMERS_WHITELIST)) {
-    header('HTTP/1.1 403 Forbidden');
+    http_response_code(403);
     exit();
-} elseif (isset($_GET['buildsubmissionid']) &&
-    preg_match('/([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})/', $_GET['buildsubmissionid'])) {
-    $filename = $CDASH_BACKUP_DIRECTORY . '/' . $_GET['buildsubmissionid'] . '.xml';
+} elseif (isset($_GET['filename'])) {
+    $filename = $CDASH_BACKUP_DIRECTORY . '/' . basename($_REQUEST['filename']);
 
     if (!is_readable($filename)) {
-        header('HTTP/1.1 404 Not Found');
+        add_log('couldn\'t find ' . $filename, 'getSubmissionFile', LOG_ERR);
+        http_response_code(404);
         exit();
     } else {
         exit(file_get_contents($filename));
     }
 } else {
-    header('HTTP/1.1 400 Bad Request');
+    http_response_code(400);
     exit();
 }

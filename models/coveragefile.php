@@ -58,8 +58,7 @@ class CoverageFile
         $stmt = $pdo->prepare(
                 'SELECT id FROM coveragefile WHERE crc32=:crc32');
         $stmt->bindParam(':crc32', $this->Crc32);
-        $stmt->execute();
-        add_last_sql_error('CoverageFile:Update');
+        pdo_execute($stmt);
         $existing_file_row = $stmt->fetch(PDO::FETCH_ASSOC);
         if (is_array($existing_file_row)) {
             // A file already exists with this crc32.
@@ -75,7 +74,7 @@ class CoverageFile
                     WHERE c.buildid=:buildid AND cf.fullpath=:fullpath');
             $stmt->bindParam(':buildid', $buildid);
             $stmt->bindParam(':fullpath', $this->FullPath);
-            $stmt->execute();
+            pdo_execute($stmt);
             $old_fileid_row = $stmt->fetch();
             $prevfileid = $old_fileid_row['fileid'];
 
@@ -85,8 +84,7 @@ class CoverageFile
             $stmt->bindParam(':fileid', $this->Id);
             $stmt->bindParam(':buildid', $buildid);
             $stmt->bindParam(':prevfileid', $prevfileid);
-            $stmt->execute();
-            add_last_sql_error('CoverageFile:Update');
+            pdo_execute($stmt);
 
             // Similarly update any labels if necessary.
             $stmt = $pdo->prepare(
@@ -94,7 +92,7 @@ class CoverageFile
                     WHERE buildid=:buildid AND coveragefileid=:prevfileid');
             $stmt->bindParam(':buildid', $buildid);
             $stmt->bindParam(':prevfileid', $prevfileid);
-            $stmt->execute();
+            pdo_execute($stmt);
             $count_labels_row = $stmt->fetch(PDO::FETCH_ASSOC);
             if ($count_labels_row['c'] > 0) {
                 $stmt = $pdo->prepare(
@@ -103,8 +101,7 @@ class CoverageFile
                 $stmt->bindParam(':fileid', $this->Id);
                 $stmt->bindParam(':buildid', $buildid);
                 $stmt->bindParam(':prevfileid', $prevfileid);
-                $stmt->execute();
-                add_last_sql_error('CoverageFile:Update');
+                pdo_execute($stmt);
             }
 
             // Remove the file if the crc32 is NULL
@@ -112,8 +109,7 @@ class CoverageFile
                     'DELETE FROM coveragefile
                     WHERE id=:prevfileid AND file IS NULL AND crc32 IS NULL');
             $stmt->bindParam(':prevfileid', $prevfileid);
-            $stmt->execute();
-            add_last_sql_error('CoverageFile:Update');
+            pdo_execute($stmt);
         } else {
             // The file doesn't exist in the database
 
@@ -126,7 +122,7 @@ class CoverageFile
                     ORDER BY cf.id ASC');
             $stmt->bindParam(':buildid', $buildid);
             $stmt->bindParam(':fullpath', $this->FullPath);
-            $stmt->execute();
+            pdo_execute($stmt);
             $coveragefile_row = $stmt->fetch(PDO::FETCH_ASSOC);
 
             // The GcovTarHandler creates coveragefiles before coverages
@@ -139,7 +135,7 @@ class CoverageFile
                         WHERE fullpath=:fullpath AND file IS NULL
                         ORDER BY id ASC');
                 $stmt->bindParam(':fullpath', $this->FullPath);
-                $stmt->execute();
+                pdo_execute($stmt);
                 $coveragefile_row = $stmt->fetch(PDO::FETCH_ASSOC);
             }
             if (is_array($coveragefile_row)) {
@@ -151,7 +147,7 @@ class CoverageFile
                         'INSERT INTO coveragefile (fullpath)
                         VALUES (:fullpath)');
                 $stmt->bindParam(':fullpath', $this->FullPath);
-                $stmt->execute();
+                pdo_execute($stmt);
                 $this->Id = pdo_insert_id('coveragefile');
             }
 
@@ -160,8 +156,7 @@ class CoverageFile
             $stmt->bindParam(':file', $file, PDO::PARAM_LOB);
             $stmt->bindParam(':crc32', $this->Crc32);
             $stmt->bindParam(':id', $this->Id);
-            $stmt->execute();
-            add_last_sql_error('CoverageFile:Update');
+            pdo_execute($stmt);
         }
         return true;
     }
@@ -178,8 +173,7 @@ class CoverageFile
         $stmt = $pdo->prepare(
                 'SELECT fullpath FROM coveragefile WHERE id=:id');
         $stmt->bindParam(':id', $this->Id);
-        if (!$stmt->execute()) {
-            add_last_sql_error('Coverage GetPath');
+        if (!pdo_execute($stmt)) {
             return false;
         }
         $row = $stmt->fetch();
@@ -200,8 +194,7 @@ class CoverageFile
                 functionstested, functionsuntested
                 FROM coverage WHERE fileid=:id');
         $stmt->bindParam(':id', $this->Id);
-        if (!$stmt->execute()) {
-            add_last_sql_error('CoverageFile:GetMetric()');
+        if (!pdo_execute($stmt)) {
             return false;
         }
 
@@ -257,8 +250,7 @@ class CoverageFile
         $file_with_wildcard = "%$file%";
         $stmt->bindParam(':fullpath', $file_with_wildcard);
         $stmt->bindParam(':buildid', $buildid);
-        if (!$stmt->execute()) {
-            add_last_sql_error('CoverageFile:GetIdFromName()');
+        if (!pdo_execute($stmt)) {
             return false;
         }
         $row = $stmt->fetch();
@@ -280,7 +272,7 @@ class CoverageFile
         $pdo = get_link_identifier()->getPdo();
         $stmt = $pdo->prepare('SELECT * FROM coveragefile WHERE id=:id');
         $stmt->bindParam(':id', $this->Id);
-        $stmt->execute();
+        pdo_execute($stmt);
         $row = $stmt->fetch();
         if (!array_key_exists('id', $row)) {
             return false;

@@ -15,6 +15,11 @@
 =========================================================================*/
 
 //error_reporting(0); // disable error reporting
+use Bernard\Message\DefaultMessage;
+use Bernard\Producer;
+use Bernard\QueueFactory\PersistentFactory;
+use Bernard\Serializer;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 include 'include/ctestparser.php';
@@ -27,15 +32,16 @@ include 'include/sendemail.php';
  * a read-only file handle.
  * This is useful for workers running on other machines that need access to build xml.
  **/
-function fileHandleFromSubmissionId($submissionId)
+function fileHandleFromSubmissionId($submissionId, $coverageFile=false)
 {
-    global $CDASH_BASE_URL;
+    global $CDASH_BACKUP_DIRECTORY, $CDASH_BASE_URL;
 
-    $tmpFilename = tempnam(sys_get_temp_dir(), 'cdash-submission-');
+    $tmpFilename = tempnam($CDASH_BACKUP_DIRECTORY, 'cdash-submission-');
+    $filename = ($coverageFile) ? $submissionId : $submissionId . '.xml';
     $client = new GuzzleHttp\Client();
     $response = $client->request('GET',
-                                 $CDASH_BASE_URL . '/api/v1/viewBuildSubmissionXml.php',
-                                 array('query' => array('buildsubmissionid' => $submissionId),
+                                 $CDASH_BASE_URL . '/api/v1/getSubmissionFile.php',
+                                 array('query' => array('filename' => $filename),
                                        'save_to' => $tmpFilename));
 
     if ($response->getStatusCode() === 200) {
@@ -415,8 +421,19 @@ function put_submit_file()
         return;
     }
 
-    global $CDASH_ASYNCHRONOUS_SUBMISSION;
-    if ($CDASH_ASYNCHRONOUS_SUBMISSION) {
+    global $CDASH_ASYNCHRONOUS_SUBMISSION, $CDASH_BERNARD_DRIVER, $CDASH_BERNARD_COVERAGE_SUBMISSION;
+
+    if ($CDASH_BERNARD_COVERAGE_SUBMISSION) {
+        $factory = new PersistentFactory($CDASH_BERNARD_DRIVER, new Serializer());
+        $producer = new Producer($factory, new EventDispatcher());
+
+        $producer->produce(new DefaultMessage('DoSubmit', array(
+            'coverage_submission' => true,
+            'filename' => $filename,
+            'expected_md5' => $md5sum,
+            'projectid' => $projectid,
+            'submission_ip' => $_SERVER['REMOTE_ADDR'])));
+    } elseif ($CDASH_ASYNCHRONOUS_SUBMISSION) {
         // Create a new entry in the submission table for this file.
         $bytes = filesize($filename);
         $now_utc = gmdate(FMT_DATETIMESTD);
@@ -476,13 +493,13 @@ function curl_request_async($url, $params, $type = 'POST')
 
     $out = "$type " . $parts['path'] . " HTTP/1.1\r\n";
     $out .= 'Host: ' . $parts['host'] . "\r\n";
-    $out .= "Content-Type: application/x-www-form-urlencoded\r\n";
-    $out .= 'Content-Length: ' . strlen($post_string) . "\r\n";
-    $out .= "Connection: Close\r\n\r\n";
-    // Data goes in the request body for a POST request
     if ('POST' == $type && isset($post_string)) {
+        // Data goes in the request body for a POST request.
+        $out .= "Content-Type: application/x-www-form-urlencoded\r\n";
+        $out .= 'Content-Length: ' . strlen($post_string) . "\r\n";
         $out .= $post_string;
     }
+    $out .= "Connection: Close\r\n\r\n";
 
     fwrite($fp, $out);
     fclose($fp);

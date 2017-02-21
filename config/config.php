@@ -44,6 +44,9 @@ $CDASH_DB_TYPE = 'mysql';
 // Must be one of host, unix_socket
 $CDASH_DB_CONNECTION_TYPE = 'host';
 
+// PDO error codes which should result in an internal server error
+$CDASH_CRITICAL_PDO_ERRORS = array();
+
 // Support for SSL database connections.
 $CDASH_SSL_KEY = null;
 $CDASH_SSL_CERT = null;
@@ -70,6 +73,9 @@ $CDASH_DAILY_UPDATES = true;
 $CDASH_BERNARD_SUBMISSION = false;
 $CDASH_BERNARD_DRIVER = false;
 $CDASH_BERNARD_CONSUMERS_WHITELIST = false;
+
+// EXPERIMENTAL: Whether or not to use Bernard for submitting coverage jobs
+$CDASH_BERNARD_COVERAGE_SUBMISSION = false;
 
 // Should we use asynchronous submission
 $CDASH_ASYNCHRONOUS_SUBMISSION = false;

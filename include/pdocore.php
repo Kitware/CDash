@@ -84,11 +84,15 @@ function pdo_select_db($database, $link_identifier = null)
  */
 function pdo_error($link_identifier = null, $log_error = true)
 {
-    global $CDASH_PRODUCTION_MODE;
+    global $CDASH_PRODUCTION_MODE, $CDASH_CRITICAL_PDO_ERRORS;
     $error_info = get_link_identifier($link_identifier)->getPdo()->errorInfo();
     if (isset($error_info[2]) && $error_info[0] !== '00000') {
         if ($log_error) {
             add_log($error_info[2], 'pdo_error', LOG_ERR);
+        }
+        if (in_array($error_info[1], $CDASH_CRITICAL_PDO_ERRORS)) {
+            http_response_code(500);
+            exit();
         }
         if ($CDASH_PRODUCTION_MODE) {
             return 'SQL error encountered, query hidden.';
@@ -309,6 +313,47 @@ function pdo_commit($link_identifier = null)
 function pdo_rollback($link_identifier = null)
 {
     get_link_identifier($link_identifier)->getPdo()->rollBack();
+}
+
+/**
+ * Execute a prepared statement and log any errors that occur.
+ * @param PDOStatement $stmt
+ * @param array|null $input_parameters
+ * @return bool
+ */
+function pdo_execute($stmt, $input_parameters=null)
+{
+    global $CDASH_CRITICAL_PDO_ERRORS;
+    if (!$stmt->execute($input_parameters)) {
+        $error_info = $stmt->errorInfo();
+        if (isset($error_info[2]) && $error_info[0] !== '00000') {
+            $e = new Exception();
+            $stack_trace = $e->getTraceAsString();
+            $log_msg = $error_info[2] . "\n$stack_trace\n";
+            add_log($log_msg, 'pdo_execute', LOG_ERR);
+            if (in_array($error_info[1], $CDASH_CRITICAL_PDO_ERRORS)) {
+                http_response_code(500);
+                exit();
+            }
+        }
+        return false;
+    }
+    return true;
+}
+
+function pdo_get_vendor_version($link_identifier = null) {
+    global $CDASH_DB_TYPE;
+
+    $version = get_link_identifier($link_identifier)->getPdo()->query('SELECT version()')->fetchColumn();
+
+    if(isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE === 'pgsql'){
+        // Postgress returns version string similar to:
+        //   PostgreSQL 9.6.1 on x86_64-apple-darwin16.1.0, compiled by Apple LLVM version 8.0.0 (clang-800.0.42.1), 64-bit
+        $build = explode(" ", $version);
+        $version = $build[1];
+    }
+
+    return $version;
 }
 
 global $cdash_database_connection;

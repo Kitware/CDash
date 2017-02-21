@@ -103,94 +103,34 @@ if ($projectid < 1) {
     return;
 }
 
-// Find the recent builds for this project
+// Find sites that have recently submitted to this project.
 $currentUTCTime = gmdate(FMT_DATETIME);
 $beginUTCTime = gmdate(FMT_DATETIME, time() - 3600 * 7 * 24); // 7 days
 
-$sql = '';
-if ($show > 0) {
-    $sql = "AND g.id='$show'";
+$pdo = get_link_identifier()->getPdo();
+$stmt = $pdo->prepare(
+    'SELECT b.siteid, s.name
+    FROM build b
+    JOIN site s ON (b.siteid=s.id)
+    WHERE projectid=:projectid AND
+    starttime BETWEEN :start AND :end AND
+    parentid IN (-1, 0)
+    GROUP BY b.siteid');
+$stmt->bindParam(':projectid', $projectid);
+$stmt->bindParam(':start', $beginUTCTime);
+$stmt->bindParam(':end', $currentUTCTime);
+if (!pdo_execute($stmt)) {
+    $response['error'] = 'Database error during site lookup';
 }
 
-$builds = pdo_query("
-  SELECT b.id, s.name AS sitename, s.id AS siteid, b.name, b.type,
-         g.name as groupname, g.id as groupid
-  FROM build AS b, build2group AS b2g, buildgroup AS g,
-       buildgroupposition AS gp, site as s
-  WHERE b.starttime<'$currentUTCTime' AND b.starttime>'$beginUTCTime' AND
-        b.projectid='$projectid' AND b2g.buildid=b.id AND
-        gp.buildgroupid=g.id AND b2g.groupid=g.id AND
-        s.id = b.siteid " . $sql . '
-  ORDER BY b.name ASC');
-
-$err = pdo_error();
-if (!empty($err)) {
-    $response['error'] = $err;
-}
-
-$build_names = array();
-$currentbuilds = array();
 $sites = array();
-while ($build_array = pdo_fetch_array($builds)) {
-    // Avoid adding the same build twice
-    $build_name = $build_array['sitename'] . $build_array['name'] .
-        $build_array['type'];
-    if (!in_array($build_name, $build_names)) {
-        $build_names[] = $build_name;
-
-        $currentbuild = array();
-        $currentbuild['id'] = $build_array['id'];
-        $currentbuild['name'] = $build_array['sitename'] . ' ' .
-            $build_array['name'] . ' [' . $build_array['type'] . '] ' .
-            $build_array['groupname'];
-        $currentbuild['groupid'] = $build_array['groupid'];
-        $currentbuilds[] = $currentbuild;
-    }
+while ($row = $stmt->fetch()) {
     $site = array();
-    $site['id'] = $build_array['siteid'];
-    $site['name'] = $build_array['sitename'];
-    if (!in_array($site, $sites)) {
-        $sites[] = $site;
-    }
+    $site['id'] = $row['siteid'];
+    $site['name'] = $row['name'];
+    $sites[] = $site;
 }
 
-// Add expected builds
-$builds = pdo_query(
-    "SELECT b.id, s.name AS sitename, s.id AS siteid, b.name, b.type,
-          g.name as groupname, g.id as groupid
-   FROM site AS s, build AS b, build2group AS b2g, buildgroup AS g,
-          build2grouprule AS b2gr
-   WHERE g.id = b2g.groupid AND b2g.buildid = b.id AND
-         b2gr.expected = 1 AND b2gr.groupid = g.id AND
-         g.endtime='1980-01-01 00:00:00' AND b.projectid='$projectid' AND
-         s.id = b.siteid " . $sql . '
-   ORDER BY b.name ASC');
-$err = pdo_error();
-if (!empty($err)) {
-    $response['error'] = $err;
-}
-
-while ($build_array = pdo_fetch_array($builds)) {
-    $build_name = $build_array['sitename'] . $build_array['name'] .
-        $build_array['type'];
-    // Avoid adding the same build twice
-    if (!in_array($build_name, $build_names)) {
-        $build_names[] = $build_name;
-        $currentbuild = array();
-        $currentbuild['id'] = $build_array['id'];
-        $currentbuild['name'] = $build_array['sitename'] . ' ' .
-            $build_array['name'] . ' [' . $build_array['type'] . '] ' .
-            $build_array['groupname'] . ' (expected)';
-        $currentbuilds[] = $currentbuild;
-    }
-    $site = array();
-    $site['id'] = $build_array['siteid'];
-    $site['name'] = $build_array['sitename'];
-    if (!in_array($site, $sites)) {
-        $sites[] = $site;
-    }
-}
-$response['currentbuilds'] = $currentbuilds;
 $response['sites'] = $sites;
 
 // Get the BuildGroups for this Project.

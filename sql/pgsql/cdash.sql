@@ -792,6 +792,7 @@ CREATE TABLE "label2test" (
   "testid" bigint NOT NULL,
   PRIMARY KEY ("labelid", "buildid", "testid")
 );
+CREATE INDEX "label2test_buildid" on "label2test" ("buildid");
 CREATE INDEX "label2test_testid" on "label2test" ("testid");
 
 --
