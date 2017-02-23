@@ -333,6 +333,7 @@ function lookup_emails_to_send($errors, $buildid, $projectid, $buildtype, $fixes
 function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $testtimemaxstatus, $emailtesttimingchanged)
 {
     include 'config/config.php';
+    include_once 'models/buildconfigure.php';
 
     $serverURI = get_server_URI();
     // In the case of asynchronous submission, the serverURI contains /cdash
@@ -360,12 +361,13 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
 
         $information = "\n\n*Configure*\n";
 
-        $configure = pdo_query('SELECT status,log FROM configure WHERE buildid=' . qnum($buildid));
-        $configure_array = pdo_fetch_array($configure);
+        $buildConfigure = new BuildConfigure();
+        $buildConfigure->BuildId = $buildid;
+        $configure = $buildConfigure->GetConfigureForBuild(PDO::FETCH_OBJ);
 
-        $information .= 'Status: ' . $configure_array['status'] . ' (' . $serverURI . '/viewConfigure.php?buildid=' . $buildid . ")\n";
+        $information .= "Status: {$configure->status} ({$serverURI}/viewConfigure.php?buildid={$buildid})\n";
         $information .= 'Output: ';
-        $information .= substr($configure_array['log'], 0, $maxchars);
+        $information .= substr($configure->log, 0, $maxchars);
         $information .= "\n";
     } elseif ($errorkey == 'build_errors') {
         $information .= "\n\n*Error*";
