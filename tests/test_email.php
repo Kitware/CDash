@@ -148,4 +148,23 @@ class EmailTestCase extends KWWebTestCase
         }
         $this->pass('Passed');
     }
+
+    public function testTimeoutFailuresDifferentiatedInEmail()
+    {
+        $this->deleteLog($this->logfilename);
+
+        $rep = dirname(__FILE__) . '/data/EmailProjectExample';
+        $file = "{$rep}/4_test.xml";
+        
+        if (!$this->submission('EmailProjectExample', $file)) {
+            return;
+        }
+
+        if (!$this->compareLog($this->logfilename, "$rep/cdash_4.log")) {
+            return;
+        }
+
+        $this->pass('Passed');
+    }
+
 }

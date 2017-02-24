@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="OSX-SIERRA-10.12.1"
+  BuildStamp="20090224-0100-Nightly"
+  Name="Dash20.kitware"
+  Generator="ctest2.6-patch 0"  OSName="OSX"
+  Hostname="dash20"
+  OSRelease="OSX Sierra"
+  OSVersion="10.12.1 (16B2657)"
+  OSPlatform=""
+  Is64Bits="0"
+  VendorString="GenuineIntel"
+  VendorID="Intel Corporation"
+  FamilyID="6"
+  ModelID="15"
+  ProcessorCacheSize="-1"
+  NumberOfLogicalCPU="1"
+  NumberOfPhysicalCPU="4"
+  TotalVirtualMemory="2047"
+  TotalPhysicalMemory="15"
+  LogicalProcessorsPerPhysical="4"
+  ProcessorClockFrequency="2400"
+>
+<Testing>
+  <StartDateTime>Feb 24 05:04 Eastern Standard Time</StartDateTime>
+  <StartTestTime>1235383453</StartTestTime>
+  <TestList>
+    <Test>./Utilities/bmcurl/curl</Test>
+    <Test>./Testing/Code/SleepTimer1</Test>
+    <Test>./Testing/Code/SleepTimer2</Test>
+  </TestList>
+  <Test Status="passed">
+    <Name>curl</Name>
+    <Path>./Utilities/bmcurl</Path>
+    <FullName>./Utilities/bmcurl/curl</FullName>
+    <FullCommandLine>F:\Dashboards\BatchMake-Nightly\bin\Release\LIBCURL.exe</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>21.5</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>F:\Dashboards\BatchMake-Nightly\bin\Release\LIBCURL.exe</Value></NamedMeasurement>
+      <Measurement>
+        <Value>HTTP/1.1 404 Not Found
+Date: Mon, 23 Feb 2009 10:04:08 GMT
+Server: Apache/2.2.8 (Debian) PHP/5.2.6-2+b1 with Suhosin-Patch mod_python/3.3.1 Python/2.5.2
+X-Powered-By: PHP/5.2.6-2+b1
+Vary: Accept-Encoding
+Transfer-Encoding: chunked
+Content-Type: text/html
+
+&lt;HTML&gt;
+&lt;HEAD&gt;
+&lt;TITLE&gt;public.kitware.com: Welcome&lt;/TITLE&gt;
+&lt;META http-equiv="Content-Type" content="text/html; charset=iso-8859-1"&gt;
+&lt;LINK type="text/css" rel="stylesheet" href="http://public.kitware.com/styles/styles.css"&gt;
+&lt;/HEAD&gt;
+
+&lt;BODY bgcolor="#FFFFFF" text="#000000"&gt;
+&lt;TABLE width="670"&gt;
+  &lt;TR&gt;&lt;TD&gt;
+    &lt;DIV align="center"&gt; &lt;IMG src="http://public.kitware.com/images/logos/public-banner.jpg" width="817" height="122"&gt;
+    &lt;/DIV&gt;
+  &lt;/TD&gt;&lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD&gt; &lt;BR&gt;
+&lt;H1&gt;Sorry, error 404&lt;/H1&gt;
+  
+      If you experience further problems finding the new location of the requested resource, feel free to &lt;A href="mailto:webmaster@public.kitware.com"&gt;contact us&lt;/A&gt;.&lt;/P&gt;
+    &lt;P&gt; Welcome to &lt;A href="http://public.kitware.com"&gt;public.kitware.com&lt;/A&gt;.
+    Several projects are hosted here. &lt;A href="http://www.kitware.com"&gt;Kitware,
+    Inc.&lt;/A&gt; provides commercial support and consulting based on these tools. Additionally, you can check our &lt;A href='http://public.kitware.com/dashboard.php'&gt;testing dashboards&lt;/A&gt;, access our &lt;A href='http://public.kitware.com/download.php'&gt;download pages&lt;/A&gt;, or read &lt;a href="http://www.kitware.com/products/newsletter.html"&gt;Kitware's newsletter&lt;/a&gt; which features many of our projects.&lt;/P&gt;
+    &lt;TABLE border=0 cellpadding=0 cellspacing=0 align="center" width="600"&gt;
+    &lt;TR&gt;
+    &lt;TD valign="bottom"&gt;
+    &lt;DIV align="right"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_03.gif" width=21 height=54&gt;&lt;/DIV&gt;
+    &lt;/TD&gt;
+        &lt;TD width="50" valign="bottom"&gt;
+      &lt;DIV align="left"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_04.gif" width=20 height=54&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_05.gif" width=15 height=54&gt;&lt;/DIV&gt;
+    &lt;/TD&gt;
+  
+      &lt;TD valign="baseline" width="400" align="right"&gt;
+      &lt;H1&gt;VTK&lt;/H1&gt;
+    &lt;/TD&gt;
+    &lt;TD valign="bottom"&gt;
+    &lt;DIV align="right"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_07.gif" width=32 height=54&gt;&lt;/DIV&gt;
+    &lt;/TD&gt;
+    &lt;TD valign="bottom"&gt; &lt;IMG src="http://public.kitware.com/images/borders/frame_08.gif" width=24 height=54&gt;&lt;/TD&gt;
+  &lt;/TR&gt;
+  &lt;TR&gt;
+    &lt;TD background="http://public.kitware.com/images/borders/frame_10.gif"&gt;&amp;nbsp;&lt;/TD&gt;
+        &lt;TD colspan=3&gt;
+      &lt;TABLE width="100%" border="0"&gt;
+        &lt;TR&gt;
+        &lt;TD width='210'&gt;&lt;DIV align="center"&gt;&lt;A href="http://www.vtk.org"&gt;&lt;IMG src="http://public.kitware.com/images/logos/vtk-logo.jpg" width="123" height="48" align="center" border="0" alt="VTK" vspace="5" hspace="5"&gt;&lt;/A&gt;&lt;/DIV&gt;&lt;/TD&gt;
+        &lt;TD&gt;
+          &lt;P class="p-project-desc"&gt;The &lt;A href="http://www.vtk.org"&gt;Visualization
+          ToolKit&lt;/A&gt; (VTK) is an open source, freely available software
+    &lt;/P&gt;&lt;/TD&gt;&lt;/TR&gt;&lt;/TABLE&gt;&lt;/TD&gt;&lt;TD background="http://public.kitware.com/images/borders/frame_12.gif"&gt;&lt;/TD&gt;&lt;/TR&gt;&lt;TR&gt;&lt;TD&gt;&lt;DIV align="right"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_13.gif" width=21 height=23&gt;&lt;/DIV&gt;&lt;/TD&gt;&lt;TD colspan=3 background="http://public.kitware.com/images/borders/frame_14.gif"&gt;&lt;/TD&gt;&lt;TD&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_15.gif" width=24 height=23&gt;&lt;/TD&gt;&lt;/TR&gt;&lt;/TABLE&gt;&lt;BR&gt;&lt;BR&gt;&lt;TABLE border=0 cellpadding=0 cellspacing=0 align="center" width="600"&gt;&lt;TR&gt;&lt;TD valign="bottom"&gt;&lt;DIV align="right"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_03.gif" width=21 height=54&gt;&lt;/DIV&gt;&lt;/TD&gt;&lt;TD width="50" valign="bottom"&gt;&lt;DIV align="left"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_04.gif" width=20 height=54&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_05.gif" width=15 height=54&gt;&lt;/DIV&gt;&lt;/TD&gt;&lt;TD valign="baseline" width="400" align="right"&gt;&lt;H1&gt;&lt;/H1&gt;&lt;/TD&gt;&lt;TD valign="bottom"&gt;&lt;DIV align="right"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_07.gif" width=32 height=54&gt;&lt;/DIV&gt;&lt;/TD&gt;&lt;TD valign="bottom"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_08.gif" width=24 height=54&gt;&lt;/TD&gt;&lt;/TR&gt;&lt;TR&gt;&lt;TD background="http://public.kitware.com/images/borders/frame_10.gif"&gt;&lt;/TD&gt;&lt;TD colspan=3&gt;&lt;TABLE width="100%" border="0"&gt;&lt;TR&gt;&lt;TD width='210'&gt;&lt;DIV align="center"&gt;&lt;A href="http://www.itk.org"&gt;&lt;IMG src="http://public.kitware.com/images/logos/itk-logo.jpg" width="175" height="48" align="center" border="0" alt="ITK" vspace="5" hspace="5"&gt;&lt;/A&gt;&lt;/DIV&gt;&lt;/TD&gt;&lt;TD&gt;&lt;P class="p-project-desc"&gt;&lt;A href="http://www.itk.org"&gt;&lt;/A&gt;&lt;/P&gt;&lt;/TD&gt;&lt;/TR&gt;&lt;/TABLE&gt;&lt;/TD&gt;&lt;TD background="http://public.kitware.com/images/borders/frame_12.gif"&gt;&lt;/TD&gt;&lt;/TR&gt;&lt;TR&gt;&lt;TD&gt;&lt;DIV align="right"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_13.gif" width=21 height=23&gt;&lt;/DIV&gt;&lt;/TD&gt;&lt;TD colspan=3 background="http://public.kitware.com/images/borders/frame_14.gif"&gt;&lt;/TD&gt;&lt;TD&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_15.gif" width=24 height=23&gt;&lt;/TD&gt;&lt;/TR&gt;&lt;/TABLE&gt;&lt;BR&gt;&lt;BR&gt;&lt;TABLE border=0 cellpadding=0 cellspacing=0 align="center" width="600"&gt;&lt;TR&gt;&lt;TD valign="bottom"&gt;&lt;DIV align="right"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_03.gif" width=21 height=54&gt;&lt;/DIV&gt;&lt;/TD&gt;&lt;TD width="50" valign="bottom"&gt;&lt;DIV align="left"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_04.gif" width=20 height=54&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_05.gif" width=15 height=54&gt;&lt;/DIV&gt;&lt;/TD&gt;&lt;TD valign="baseline" width="400" align="right"&gt;&lt;H1&gt;&lt;/H1&gt;&lt;/TD&gt;&lt;TD valign="bottom"&gt;&lt;DIV align="right"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_07.gif" width=32 height=54&gt;&lt;/DIV&gt;&lt;/TD&gt;&lt;TD valign="bottom"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_08.gif" width=24 height=54&gt;&lt;/TD&gt;&lt;/TR&gt;&lt;TR&gt;&lt;TD background="http://public.kitware.com/images/borders/frame_10.gif"&gt;&lt;/TD&gt;&lt;TD colspan=3&gt;&lt;TABLE width="100%" border="0"&gt;&lt;TR&gt;&lt;TD width='210'&gt;&lt;DIV align="center"&gt;&lt;A href="http://www.paraview.org"&gt;&lt;IMG src="http://public.kitware.com/images/logos/paraview-logo.jpg" width="200" height="48" align="center" border="0" alt="Paraview" vspace="5" hspace="5"&gt;&lt;/A&gt;&lt;/DIV&gt;&lt;/TD&gt;&lt;TD&gt;&lt;P class="p-project-desc"&gt;&lt;A href="http://www.paraview.org"&gt;&lt;/A&gt;&lt;/P&gt;&lt;/TD&gt;&lt;/TR&gt;&lt;/TABLE&gt;&lt;/TD&gt;&lt;TD background="http://public.kitware.com/images/borders/frame_12.gif"&gt;&lt;/TD&gt;&lt;/TR&gt;&lt;TR&gt;&lt;TD&gt;&lt;DIV align="right"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_13.gif" width=21 height=23&gt;&lt;/DIV&gt;&lt;/TD&gt;&lt;TD colspan=3 background="http://public.kitware.com/images/borders/frame_14.gif"&gt;&lt;/TD&gt;&lt;TD&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_15.gif" width=24 height=23&gt;&lt;/TD&gt;&lt;/TR&gt;&lt;/TABLE&gt;&lt;BR&gt;&lt;BR&gt;&lt;TABLE border=0 cellpadding=0 cellspacing=0 align="center" width="600"&gt;&lt;TR&gt;&lt;TD valign="bottom"&gt;&lt;DIV align="right"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_03.gif" width=21 height=54&gt;&lt;/DIV&gt;&lt;/TD&gt;&lt;TD width="50" valign="bottom"&gt;&lt;DIV align="left"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_04.gif" width=20 height=54&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_05.gif" width=15 height=54&gt;&lt;/DIV&gt;&lt;/TD&gt;&lt;TD valign="baseline" width="400" align="right"&gt;&lt;H1&gt;&lt;/H1&gt;&lt;/TD&gt;&lt;TD valign="bottom"&gt;&lt;DIV align="right"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_07.gif" width=32 height=54&gt;&lt;/DIV&gt;&lt;/TD&gt;&lt;TD valign="bottom"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_08.gif" width=24 height=54&gt;&lt;/TD&gt;&lt;/TR&gt;&lt;TR&gt;&lt;TD background="http://public.kitware.com/images/borders/frame_10.gif"&gt;&lt;/TD&gt;&lt;TD colspan=3&gt;&lt;TABLE width="100%" border="0"&gt;&lt;TR&gt;&lt;TD width='210'&gt;&lt;DIV align="center"&gt;&lt;A href="http://www.cmake.org"&gt;&lt;IMG src="http://public.kitware.com/images/logos/cmake-logo.jpg" width="200" height="48" align="center" border="0" alt="CMake" vspace="5" hspace="5"&gt;&lt;/A&gt;&lt;/DIV&gt;&lt;/TD&gt;&lt;TD&gt;&lt;P class="p-project-desc"&gt;&lt;A href="http://www.cmake.org"&gt;&lt;/A&gt;&lt;/P&gt;&lt;/TD&gt;&lt;/TR&gt;&lt;/TABLE&gt;&lt;/TD&gt;&lt;TD background="http://public.kitware.com/images/borders/frame_12.gif"&gt;&lt;/TD&gt;&lt;/TR&gt;&lt;TR&gt;&lt;TD&gt;&lt;DIV align="right"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_13.gif" width=21 height=23&gt;&lt;/DIV&gt;&lt;/TD&gt;&lt;TD colspan=3 background="http://public.kitware.com/images/borders/frame_14.gif"&gt;&lt;/TD&gt;&lt;TD&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_15.gif" width=24 height=23&gt;&lt;/TD&gt;&lt;/TR&gt;&lt;/TABLE&gt;&lt;BR&gt;&lt;BR&gt;&lt;TABLE border=0 cellpadding=0 cellspacing=0 align="center" width="600"&gt;&lt;TR&gt;&lt;TD valign="bottom"&gt;&lt;DIV align="right"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_03.gif" width=21 height=54&gt;&lt;/DIV&gt;&lt;/TD&gt;&lt;TD width="50" valign="bottom"&gt;&lt;DIV align="left"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_04.gif" width=20 height=54&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_05.gif" width=15 height=54&gt;&lt;/DIV&gt;&lt;/TD&gt;&lt;TD valign="baseline" width="400" align="right"&gt;&lt;H1&gt;&lt;/H1&gt;&lt;/TD&gt;&lt;TD valign="bottom"&gt;&lt;DIV align="right"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_07.gif" width=32 height=54&gt;&lt;/DIV&gt;&lt;/TD&gt;&lt;TD valign="bottom"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_08.gif" width=24 height=54&gt;&lt;/TD&gt;&lt;/TR&gt;&lt;TR&gt;&lt;TD background="http://public.kitware.com/images/borders/frame_10.gif"&gt;&lt;/TD&gt;&lt;TD colspan=3&gt;&lt;TABLE width="100%" border="0"&gt;&lt;TR&gt;&lt;TD width='210'&gt;&lt;DIV align="center"&gt;&lt;A href="http://public.kitware.com/Dart/"&gt;&lt;IMG src="http://public.kitware.com/images/logos/dart-logo.jpg" width="200" height="48" align="center" border="0" alt="Dart" vspace="5" hspace="5"&gt;&lt;/A&gt;&lt;/DIV&gt;&lt;/TD&gt;&lt;TD&gt;&lt;P class="p-project-desc"&gt;&lt;A href="http://public.kitware.com/Dart/"&gt;&lt;/A&gt;&lt;/P&gt;&lt;/TD&gt;&lt;/TR&gt;&lt;/TABLE&gt;&lt;/TD&gt;&lt;TD background="http://public.kitware.com/images/borders/frame_12.gif"&gt;&lt;/TD&gt;&lt;/TR&gt;&lt;TR&gt;&lt;TD&gt;&lt;DIV align="right"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_13.gif" width=21 height=23&gt;&lt;/DIV&gt;&lt;/TD&gt;&lt;TD colspan=3 background="http://public.kitware.com/images/borders/frame_14.gif"&gt;&lt;/TD&gt;&lt;TD&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_15.gif" width=24 height=23&gt;&lt;/TD&gt;&lt;/TR&gt;&lt;/TABLE&gt;&lt;BR&gt;&lt;BR&gt;&lt;TABLE border=0 cellpadding=0 cellspacing=0 align="center" width="600"&gt;&lt;TR&gt;&lt;TD valign="bottom"&gt;&lt;DIV align="right"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_03.gif" width=21 height=54&gt;&lt;/DIV&gt;&lt;/TD&gt;&lt;TD width="50" valign="bottom"&gt;&lt;DIV align="left"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_04.gif" width=20 height=54&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_05.gif" width=15 height=54&gt;&lt;/DIV&gt;&lt;/TD&gt;&lt;TD valign="baseline" width="400" align="right"&gt;&lt;H1&gt;&lt;/H1&gt;&lt;/TD&gt;&lt;TD valign="bottom"&gt;&lt;DIV align="right"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_07.gif" width=32 height=54&gt;&lt;/DIV&gt;&lt;/TD&gt;&lt;TD valign="bottom"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_08.gif" width=24 height=54&gt;&lt;/TD&gt;&lt;/TR&gt;&lt;TR&gt;&lt;TD background="http://public.kitware.com/images/borders/frame_10.gif"&gt;&lt;/TD&gt;&lt;TD colspan=3&gt;&lt;TABLE width="100%" border="0"&gt;&lt;TR&gt;&lt;TD width='210'&gt;&lt;DIV align="center"&gt;&lt;A href="http://www.gccxml.org"&gt;&lt;IMG src="http://public.kitware.com/images/logos/gcc_xml-logo.jpg" width="200" height="48" align="center" border="0" alt="GCC_XML" vspace="5" hspace="5"&gt;&lt;/A&gt;&lt;/DIV&gt;&lt;/TD&gt;&lt;TD&gt;&lt;P class="p-project-desc"&gt;&lt;A href="http://www.gccxml.org"&gt;&lt;/A&gt;&lt;/P&gt;&lt;/TD&gt;&lt;/TR&gt;&lt;/TABLE&gt;&lt;/TD&gt;&lt;TD background="http://public.kitware.com/images/borders/frame_12.gif"&gt;&lt;/TD&gt;&lt;/TR&gt;&lt;TR&gt;&lt;TD&gt;&lt;DIV align="right"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_13.gif" width=21 height=23&gt;&lt;/DIV&gt;&lt;/TD&gt;&lt;TD colspan=3 background="http://public.kitware.com/images/borders/frame_14.gif"&gt;&lt;/TD&gt;&lt;TD&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_15.gif" width=24 height=23&gt;&lt;/TD&gt;&lt;/TR&gt;&lt;/TABLE&gt;&lt;BR&gt;&lt;BR&gt;&lt;TABLE border=0 cellpadding=0 cellspacing=0 align="center" width="600"&gt;&lt;TR&gt;&lt;TD valign="bottom"&gt;&lt;DIV align="right"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_03.gif" width=21 height=54&gt;&lt;/DIV&gt;&lt;/TD&gt;&lt;TD width="50" valign="bottom"&gt;&lt;DIV align="left"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_04.gif" width=20 height=54&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_05.gif" width=15 height=54&gt;&lt;/DIV&gt;&lt;/TD&gt;&lt;TD valign="baseline" width="400" align="right"&gt;&lt;H1&gt;&lt;/H1&gt;&lt;/TD&gt;&lt;TD valign="bottom"&gt;&lt;DIV align="right"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_07.gif" width=32 height=54&gt;&lt;/DIV&gt;&lt;/TD&gt;&lt;TD valign="bottom"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_08.gif" width=24 height=54&gt;&lt;/TD&gt;&lt;/TR&gt;&lt;TR&gt;&lt;TD background="http://public.kitware.com/images/borders/frame_10.gif"&gt;&lt;/TD&gt;&lt;TD colspan=3&gt;&lt;TABLE width="100%" border="0"&gt;&lt;TR&gt;&lt;TD width='210'&gt;&lt;DIV align="center"&gt;&lt;A href="http://public.kitware.com/Cable/"&gt;&lt;IMG src="http://public.kitware.com/images/logos/cable-logo.jpg" width="188" height="48" align="center" border="0" alt="CABLE" vspace="5" hspace="5"&gt;&lt;/A&gt;&lt;/DIV&gt;&lt;/TD&gt;&lt;TD&gt;&lt;P class="p-project-desc"&gt;&lt;A href="http://public.kitware.com/Cable/"&gt;&lt;/A&gt;&lt;/P&gt;&lt;/TD&gt;&lt;/TR&gt;&lt;/TABLE&gt;&lt;/TD&gt;&lt;TD background="http://public.kitware.com/images/borders/frame_12.gif"&gt;&lt;/TD&gt;&lt;/TR&gt;&lt;TR&gt;&lt;TD&gt;&lt;DIV align="right"&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_13.gif" width=21 height=23&gt;&lt;/DIV&gt;&lt;/TD&gt;&lt;TD colspan=3 background="http://public.kitware.com/images/borders/frame_14.gif"&gt;&lt;/TD&gt;&lt;TD&gt;&lt;IMG src="http://public.kitware.com/images/borders/frame_15.gif" width=24 height=23&gt;&lt;/TD&gt;&lt;/TR&gt;&lt;/TABLE&gt;&lt;/TD&gt;&lt;td style="vertical-align: top;"&gt;&lt;script type="text/javascript"&gt;&lt;!--
+google_ad_client = "pub-8240771869361540";
+/* 120x600, created 4/2/08 */
+google_ad_slot = "2183440326";
+google_ad_width = 120;
+google_ad_height = 600;
+//--&gt;&lt;/script&gt;&lt;script type="text/javascript"
+ src="http://pagead2.googlesyndication.com/pagead/show_ads.js"&gt;&lt;/script&gt;&lt;br&gt;&lt;/td&gt;&lt;/TR&gt;&lt;/TABLE&gt;&lt;/BODY&gt;&lt;/HTML&gt;&lt; HTTP/1.1 404 Not Found
+&lt; Date: Mon, 23 Feb 2009 10:04:08 GMT
+&lt; Server: Apache/2.2.8 (Debian) PHP/5.2.6-2+b1 with Suhosin-Patch mod_python/3.3.1 Python/2.5.2
+&lt; X-Powered-By: PHP/5.2.6-2+b1
+&lt; Vary: Accept-Encoding
+&lt; Transfer-Encoding: chunked
+&lt; Content-Type: text/html
+* Connection #0 to host www.cmake.org left intact
+* Closing connection #0
+* About to connect() to public.kitware.com port 21
+*   Trying 192.168.115.100... * Timed out
+* Closing connection #0
+...
+The rest of the test output was removed since it exceeds the threshold of 1024 characters.
+</Value>
+      </Measurement>
+    </Results>
+  </Test>
+  <Test Status="failed">
+    <Name>SleepTimer1</Name>
+    <Path>./Testing/Code</Path>
+    <FullName>./Testing/Code/SleepTimer1</FullName>
+    <FullCommandLine>/private/usr/bin/batchmake/make ActionsTest /private/usr/bin/batchmake/make/testing/code/testdata/SleepTimer1</FullCommandLine>
+    <Results>
+      <NamedMeasurement type="text/string" name="Exit Code"><Value>Timeout</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Exit Value"><Value>1</Value></NamedMeasurement>
+      <NamedMeasurement type="numeric/double" name="Execution Time"><Value>2.0000001</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+      <NamedMeasurement type="text/string" name="Command Line"><Value>/private/usr/bin/batchmake/make ActionsTest /private/usr/bin/batchmake/make/testing/code/testdata/SleepTimer1</Value></NamedMeasurement>
+      <Measurement>
+        <Value></Value>
+      </Measurement>
+    </Results>
+  </Test>
+    <Test Status="failed">
+        <Name>SleepTimer2</Name>
+        <Path>./Testing/Code</Path>
+        <FullName>./Testing/Code/SleepTimer2</FullName>
+        <FullCommandLine>/private/usr/bin/batchmake/make ActionsTest /private/usr/bin/batchmake/make/testing/code/testdata/SleepTimer2</FullCommandLine>
+        <Results>
+            <NamedMeasurement type="text/string" name="Exit Code"><Value>Timeout</Value></NamedMeasurement>
+            <NamedMeasurement type="text/string" name="Exit Value"><Value>1</Value></NamedMeasurement>
+            <NamedMeasurement type="numeric/double" name="Execution Time"><Value>2.0000001</Value></NamedMeasurement>
+            <NamedMeasurement type="text/string" name="Completion Status"><Value>Completed</Value></NamedMeasurement>
+            <NamedMeasurement type="text/string" name="Command Line"><Value>/private/usr/bin/batchmake/make ActionsTest /private/usr/bin/batchmake/make/testing/code/testdata/SleepTimer2</Value></NamedMeasurement>
+            <Measurement>
+                <Value></Value>
+            </Measurement>
+        </Results>
+    </Test>
+  <EndDateTime>Feb 23 05:04 Eastern Standard Time</EndDateTime>
+  <EndTestTime>1235383473</EndTestTime>
+<ElapsedMinutes>0.3</ElapsedMinutes></Testing>
+</Site>
