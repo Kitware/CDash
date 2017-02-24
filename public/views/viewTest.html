@@ -122,11 +122,12 @@
         <h3 ng-switch-when="onlyfailed">{{::cdash.numFailed}} tests failed.</h3>
         <h3 ng-switch-when="onlynotrun">{{::cdash.numNotRun}} tests not run.</h3>
         <h3 ng-switch-when="onlytimestatus">{{::cdash.numTimeFailed}} tests timed out.</h3>
-        <h3 ng-switch-default>
+        <h3 ng-switch-default id="test-totals-indicator">
           {{::cdash.numPassed}} passed,
           {{::cdash.numFailed}} failed,
           {{::cdash.numTimeFailed}} timed out,
-          {{::cdash.numNotRun}} not run.
+          {{::cdash.numNotRun}} not run,
+          {{::cdash.numMissing}} missing.
         </h3>
       </div>
 

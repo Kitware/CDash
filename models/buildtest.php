@@ -95,11 +95,34 @@ class BuildTest
         return $sumerrors;
     }
 
+    public static function marshalMissing($name, $buildid, $projectid, $projectshowtesttime, $testtimemaxstatus, $testdate)
+    {
+        $data = array();
+        $data['name'] = $name;
+        $data['status'] = 'missing';
+        $data['id'] = '';
+        $data['time'] = '';
+        $data['details'] = '';
+        $data["newstatus"] = false;
+
+        $test = self::marshal($data, $buildid, $projectid, $projectshowtesttime, $testtimemaxstatus, $testdate);
+
+        // Since these tests are missing they should
+        // not behave like other tests
+        $test['execTime'] = '';
+        $test['summary'] = '';
+        $test['detailsLink'] = '';
+        $test['summaryLink'] = '';
+
+        return $test;
+    }
+
     public static function marshalStatus($status)
     {
         $statuses = array('passed' => array('Passed', 'normal'),
                           'failed' => array('Failed', 'error'),
-                          'notrun' => array('Not Run', 'warning'));
+                          'notrun' => array('Not Run', 'warning'),
+                          'missing' => array('Missing', 'missing'));
 
         return $statuses[$status];
     }
@@ -135,7 +158,7 @@ class BuildTest
         }
 
         global $CDASH_DB_TYPE;
-        if ($CDASH_DB_TYPE == 'pgsql') {
+        if ($CDASH_DB_TYPE == 'pgsql' && $marshaledData['id']) {
             get_labels_JSON_from_query_results(
                 'SELECT text FROM label, label2test WHERE ' .
                 'label.id=label2test.labelid AND ' .

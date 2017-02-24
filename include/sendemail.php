@@ -480,6 +480,33 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
             $information .= "\n";
         }
 
+        // Differentiate failed tests based on timeout
+        $quoted_buildid = qnum($buildid);
+        $query = "
+            SELECT test.name, test.id, test.details 
+            FROM build2test, test
+            WHERE build2test.buildid={$quoted_buildid}
+            AND test.id=build2test.testid
+            AND build2test.status='failed'
+            AND test.details LIKE '%Timeout%'
+            ORDER BY test.id
+            LIMIT {$maxitems}
+         ";
+        $test_query = pdo_query($query);
+        $numrows = pdo_num_rows($test_query);
+        if($numrows > 0) {
+            $information .= "\n\n*Test timeouts*";
+            if ($numrows == $maxitems) {
+                $information .= " (first {$maxitems}";
+            }
+            $information .= "\n";
+            while ($test_array = pdo_fetch_array($test_query)) {
+                $info = "{$test_array['name']} ({$serverURI}/testDetails.php?test={$test_array['id']}&build={$buildid})\n";
+                $information .= substr($info, 0, $maxchars);
+            }
+            $information .= "\n";
+        }
+
         // Add the tests not run
         $test_query = pdo_query('SELECT test.name,test.id FROM build2test,test WHERE build2test.buildid=' . qnum($buildid) .
             " AND test.id=build2test.testid AND (build2test.status='notrun'" . $sql . ") ORDER BY test.id LIMIT $maxitems");
@@ -518,7 +545,26 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
             }
             $information .= "\n";
         }
+    } elseif ($errorkey === 'missing_tests') {
+        // sanity check
+        $missing = isset($errors['missing_tests']['count'])? $errors['missing_tests']['count'] : 0;
+
+        if ($missing) {
+            $information .= "\n\n*Missing tests*";
+            $length = $missing;
+            if ($errors['missing_tests']['count'] > $maxitems) {
+                $information .= " (first {$maxitems})";
+            }
+
+            $list = array_slice($errors['missing_tests']['list'],0,$maxitems);
+            $information .= PHP_EOL;
+            $url = "({$serverURI}/viewTest.php?buildid={$buildid})";
+            $information .= implode(" {$url}\n", array_values($list));
+            $information .= $url;
+            $information .= PHP_EOL;
+        }
     }
+
     return $information;
 }
 
@@ -1002,6 +1048,7 @@ function send_email_to_address($emailaddress, $emailtext, $Build, $Project)
             && $key != 'build_errors'
             && $key != 'test_errors'
             && $key != 'dynamicanalysis_errors'
+            && $key != 'missing_tests'
         ) {
             continue;
         }
@@ -1035,6 +1082,13 @@ function send_email_to_address($emailaddress, $emailtext, $Build, $Project)
             case 'dynamicanalysis_errors':
                 $messagePlainText .= 'failing dynamic analysis tests';
                 $titleerrors .= 'd=' . $value;
+                break;
+            case 'missing_tests':
+                $missing = $value['count'];
+                if ($missing) {
+                    $messagePlainText .= 'missing tests';
+                    $titleerrors .= 'm=' . $missing;
+                }
                 break;
         }
         $i++;
@@ -1100,6 +1154,11 @@ function send_email_to_address($emailaddress, $emailtext, $Build, $Project)
             case 'dynamicanalysis_errors':
                 $messagePlainText .= "Dynamic analysis tests failing: $value\n";
                 break;
+            case 'missing_tests':
+                $missing = $value['count'];
+                if ($missing) {
+                    $messagePlainText .= "Missing tests: {$missing}\n";
+                }
         }
     }
 
@@ -1463,6 +1522,20 @@ function sendemail($handler, $projectid)
             if ($emailtext['nfixes'] == 1) {
                 send_email_fix_to_user($userid, $emailtext, $Build, $Project);
             }
+        }
+    }
+
+    // Check for missing tests
+    if ($handler instanceof TestingHandler) {
+        $Build->FillFromId($Build->Id);
+        $missing = $Build->GetNumberOfMissingTests();
+
+        if ($missing > 0) {
+            $errors['missing_tests'] = [
+                'count' => $missing,
+                'list' => $Build->MissingTests
+            ];
+            $errors['errors'] = true;
         }
     }
 

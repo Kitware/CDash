@@ -52,6 +52,7 @@ class Build
 
     public $Errors;
     public $ErrorDiffs;
+    public $MissingTests;
 
     public $SubProjectId;
     public $SubProjectName;
@@ -899,6 +900,62 @@ class Build
                 "/viewTest.php?onlyfailed&buildid=$this->Id";
             $this->NotifyPullRequest($message, $url);
         }
+    }
+
+    /**
+     * Get missing tests' names relative to previous build
+     *
+     * @return array
+     */
+    public function GetMissingTests()
+    {
+        if (!$this->Id) {
+            add_log('BuildId is not set', 'Build::GetErrorDifferences', LOG_ERR,
+                $this->ProjectId, $this->Id, CDASH_OBJECT_BUILD, $this->Id);
+            return false;
+        }
+
+        $previous_build_tests = [];
+        $current_build_tests = [];
+
+        $previous_build = $this->GetPreviousBuildId();
+
+        $sql = "SELECT DISTINCT B.name FROM build2test A
+            LEFT JOIN test B
+              ON A.testid=B.id
+            WHERE A.buildid=?
+            ORDER BY B.name
+         ";
+
+        $pdo = get_link_identifier()->getPdo();
+        $query = $pdo->prepare($sql);
+
+        $query->execute([$previous_build]);
+        foreach ($query->fetchAll(PDO::FETCH_OBJ) as $test) {
+            $previous_build_tests[$test->name] = $test->name;
+        }
+
+        $query->execute([$this->Id]);
+        foreach ($query->fetchAll(PDO::FETCH_OBJ) as $test) {
+            $current_build_tests[$test->name] = $test->name;
+        }
+
+        $this->MissingTests = array_diff($previous_build_tests, $current_build_tests);
+        return $this->MissingTests;
+    }
+
+    /**
+     * Gut the number of missing tests relative to previous build
+     *
+     * @return int
+     */
+    public function GetNumberOfMissingTests()
+    {
+        if (!is_array($this->MissingTests)) {
+            $this->GetMissingTests();
+        }
+
+        return count($this->MissingTests);
     }
 
     /** Get the errors differences for the build */
