@@ -75,6 +75,7 @@ class Build
     public $NightlyStartTime;
     public $BeginningOfDay;
     public $EndOfDay;
+    private $Failures;
 
     public function __construct()
     {
@@ -470,6 +471,52 @@ class Build
                               AND type = '$type' $extrasql
                               ORDER BY logline ASC");
         }
+    }
+
+    /**
+     * Returns all errors, including warnings, for current build
+     *
+     * @param int $fetchStyle
+     * @return array|bool
+     */
+    public function GetErrors($fetchStyle = PDO::FETCH_ASSOC)
+    {
+        // This needs to take into account that this build may be a parent build
+        if (!$this->Errors) {
+            if (!$this->Id) {
+                echo 'Build::GetErrors(): BuildId not set';
+                return false;
+            }
+
+            $buildErrors = new BuildError();
+            $buildErrors->BuildId = $this->Id;
+            $this->Errors = $buildErrors->GetErrorsForBuild($fetchStyle);
+        }
+
+        return $this->Errors;
+    }
+
+    /**
+     * Returns all failures (errors), including warnings, for current build
+     *
+     * @param int $fetchStyle
+     * @return array|bool
+     */
+    public function GetFailures($fetchStyle = PDO::FETCH_ASSOC)
+    {
+        // This needs to take into account that this build may be a parent build
+        if (!$this->Failures) {
+            if (!$this->Id) {
+                echo 'Build::GetFailures(): BuildId not set';
+                return false;
+            }
+
+            $buildFailure = new BuildFailure();
+            $buildFailure->BuildId = $this->Id;
+            $this->Failures = $buildFailure->GetFailuresForBuild($fetchStyle);
+        }
+
+        return $this->Failures;
     }
 
     /**

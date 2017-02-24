@@ -33,9 +33,12 @@ class BuildFailure
     public $OutputType;
     public $Labels;
 
+    private $PDO;
+
     public function __construct()
     {
         $this->Arguments = array();
+        $this->PDO = get_link_identifier()->getPdo();
     }
 
     public function AddLabel($label)
@@ -173,6 +176,36 @@ class BuildFailure
 
         $this->InsertLabelAssociations($id);
         return true;
+    }
+
+    /**
+     * Returns all failures, including warnings, for current build
+     *
+     * @param int $fetchStyle
+     * @return array|bool
+     */
+    public function GetFailuresForBuild($fetchStyle = PDO::FETCH_ASSOC)
+    {
+        if (!$this->BuildId) {
+            echo 'BuildFailure::GetFailuresForBuild(): BuildId not set<br>';
+            return false;
+        }
+
+        $sql = "
+            SELECT 
+                bf.sourcefile, 
+                bfd.stdoutput, 
+                bfd.stderror
+            FROM buildfailuredetails AS bfd
+            LEFT JOIN buildfailure AS bf 
+                ON (bf.detailsid = bfd.id)
+            WHERE bf.buildid=:buildid
+        ";
+        $query = $this->PDO->prepare($sql);
+        $query->bindParam(':buildid', $this->BuildId);
+        $query->execute();
+
+        return $query->fetchAll($fetchStyle);
     }
 
     /**
