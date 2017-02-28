@@ -66,7 +66,7 @@ function databaseAuthenticate($email, $password, $SessionCachePolicy, $rememberm
     if ($password === null && isset($CDASH_EXTERNAL_AUTH) && $CDASH_EXTERNAL_AUTH) {
         // External authentication succeeded.
         // Create the session array.
-        $sessionArray = array('login' => $login, 'password' => 'this is not a valid password', 'passwd' => $row['password'], 'ID' => session_id(), 'valid' => 1, 'loginid' => $userid);
+        $sessionArray = array('login' => $email, 'passwd' => null, 'ID' => session_id(), 'valid' => 1, 'loginid' => $userid);
         $_SESSION['cdash'] = $sessionArray;
         return true;
     } else {
