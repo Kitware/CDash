@@ -253,14 +253,19 @@ if (true === @pdo_select_db("$CDASH_DB_NAME", $db)
                         @pdo_query('ALTER DATABASE ' . $CDASH_DB_NAME . " SET bytea_output TO 'escape'");
                     }
                 }
-                $user = new User();
-                $user->Email = $admin_email;
-                $user->Password = password_hash($admin_password, PASSWORD_DEFAULT);
-                $user->FirstName = 'administrator';
-                $user->Institution = 'Kitware Inc.';
-                $user->Admin = 1;
-                $user->Save();
 
+                $passwordHash = User::PasswordHash($admin_password);
+                if ($passwordHash === false) {
+                    $xml .= '<alert>Failed to hash password</alert>';
+                } else {
+                    $user = new User();
+                    $user->Email = $admin_email;
+                    $user->Password = $passwordHash;
+                    $user->FirstName = 'administrator';
+                    $user->Institution = 'Kitware Inc.';
+                    $user->Admin = 1;
+                    $user->Save();
+                }
                 $xml .= '<db_created>1</db_created>';
 
                 // Set the database version

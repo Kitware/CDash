@@ -66,15 +66,20 @@ if ($session_OK) {
                 if ($new_user->GetIdFromEmail($email)) {
                     $xml .= add_XML_value('error', 'Email already registered!');
                 } else {
-                    $new_user->Email = $email;
-                    $new_user->Password = password_hash($passwd, PASSWORD_DEFAULT);
-                    $new_user->FirstName = $fname;
-                    $new_user->LastName = $lname;
-                    $new_user->Institution = $institution;
-                    if ($new_user->Save()) {
-                        $xml .= add_XML_value('warning', 'User ' . $email . ' added successfully with password:' . $passwd);
+                    $passwordHash = User::PasswordHash($passwd);
+                    if ($passwordHash === false) {
+                        $xml .= add_XML_value('error', 'Failed to hash password');
                     } else {
-                        $xml .= add_XML_value('error', 'Cannot add user');
+                        $new_user->Email = $email;
+                        $new_user->Password = $passwordHash;
+                        $new_user->FirstName = $fname;
+                        $new_user->LastName = $lname;
+                        $new_user->Institution = $institution;
+                        if ($new_user->Save()) {
+                            $xml .= add_XML_value('warning', 'User ' . $email . ' added successfully with password:' . $passwd);
+                        } else {
+                            $xml .= add_XML_value('error', 'Cannot add user');
+                        }
                     }
                 }
             } else {

@@ -88,8 +88,13 @@ function databaseAuthenticate($email, $password, $SessionCachePolicy, $rememberm
                 }
             }
             if ($db_check) {
-                $user->Password = password_hash($password, PASSWORD_DEFAULT);
-                $user->Save();
+                $passwordHash = User::PasswordHash($password);
+                if ($passwordHash === false) {
+                    $loginerror = 'Failed to hash password.  Contact an admin.';
+                } else {
+                    $user->Password =  $passwordHash;
+                    $user->Save();
+                }
             }
             $success = true;
         }
@@ -170,18 +175,24 @@ function ldapAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
                         }
 
                         // Add the user in the database
-                        $storedPassword = password_hash($password, PASSWORD_DEFAULT);
-                        $user->Email = $email;
-                        $user->Password = $storedPassword;
-                        $user->Save();
-                        $userid = $user->Id;
+                        $storedPassword = User::PasswordHash($password);
+                        if ($storedPassword === false) {
+                            $loginerror = 'Failed to hash password.  Contact an admin.';
+                        } else {
+                            $user->Email = $email;
+                            $user->Password = $storedPassword;
+                            $user->Save();
+                            $userid = $user->Id;
+                        }
                     } else {
                         $user->Id = $userid;
                         $user->Fill();
 
                         // If the password has changed we update
-                        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-                        if ($user->Password != $passwordHash) {
+                        $passwordHash = User::PasswordHash($password);
+                        if ($passwordHash === false) {
+                            $loginerror = 'Failed to hash password.  Contact an admin.';
+                        } elseif ($user->Password != $passwordHash) {
                             $user->Password = $passwordHash;
                             $user->Save();
                         }

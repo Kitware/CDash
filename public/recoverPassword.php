@@ -59,11 +59,16 @@ if ($recover) {
 
         if (cdashmail("$email", 'CDash password recovery', $text)) {
             // If we can send the email we update the database
-            $user->Id = $userid;
-            $user->Fill();
-            $user->Password = password_hash($password, PASSWORD_DEFAULT);
-            $user->Save();
-            $xml .= '<message>A confirmation message has been sent to your inbox.</message>';
+            $passwordHash = User::PasswordHash($password);
+            if ($passwordHash === false) {
+                $xml .= '<warning>Failed to hash new password</warning>';
+            } else {
+                $user->Id = $userid;
+                $user->Fill();
+                $user->Password = $passwordHash;
+                $user->Save();
+                $xml .= '<message>A confirmation message has been sent to your inbox.</message>';
+            }
         } else {
             $xml .= '<warning>Cannot send recovery email</warning>';
         }

@@ -82,7 +82,11 @@ if ($session_OK) {
             $error_msg = "Password must be at least $CDASH_MINIMUM_PASSWORD_LENGTH characters.";
         }
 
-        $password_hash = password_hash($passwd, PASSWORD_DEFAULT);
+        $password_hash = User::PasswordHash($passwd);
+        if ($password_hash === false) {
+            $password_is_good = false;
+            $error_msg = 'Failed to hash password.  Contact an admin.';
+        }
 
         if ($password_is_good && $CDASH_PASSWORD_EXPIRATION > 0) {
 

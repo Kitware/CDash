@@ -89,8 +89,13 @@ function register()
                 return false;
             }
 
+            $passwordHash = User::PasswordHash($passwd);
+            if ($passwordHash === false) {
+                $reg = 'Failed to hash password.';
+                return false;
+            }
             $user->Email = $email;
-            $user->Password = password_hash($passwd, PASSWORD_DEFAULT);
+            $user->Password = $passwordHash;
             $user->FirstName = $fname;
             $user->LastName = $lname;
             $user->Institution = $institution;

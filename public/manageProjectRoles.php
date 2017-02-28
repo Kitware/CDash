@@ -147,8 +147,15 @@ if ($session_OK) {
             // polyfill included in the Composer package.json dependencies.
             $pass .= substr($keychars, random_int(0, $max), 1);
         }
+
+        $passwordHash = User::PasswordHash($pass);
+        if ($passwordHash === false) {
+            $xml .= '<error>Failed to hash password.</error>';
+            return false;
+        }
+
         $user = new User();
-        $user->Password = password_hash($pass, PASSWORD_DEFAULT);
+        $user->Password = $passwordHash;
         $user->Email = $email;
         $user->FirstName = $firstName;
         $user->LastName = $lastName;
