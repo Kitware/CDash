@@ -73,7 +73,7 @@ function databaseAuthenticate($email, $password, $SessionCachePolicy, $rememberm
         $success = false;
         if (password_verify($password, $user->Password)) {
             $success = true;
-        } else if (md5($password) == $user->Password) {
+        } elseif (md5($password) == $user->Password) {
             // Re-hash this password using an algorithm that's more secure than md5.
             // Do not attempt this before the database has been upgraded
             // to accommodate the increased length of this field.

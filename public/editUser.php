@@ -89,7 +89,6 @@ if ($session_OK) {
         }
 
         if ($password_is_good && $CDASH_PASSWORD_EXPIRATION > 0) {
-
             $query = 'SELECT password FROM password WHERE userid=?';
             if ($CDASH_UNIQUE_PASSWORD_COUNT) {
                 $query .= " ORDER BY date DESC LIMIT $CDASH_UNIQUE_PASSWORD_COUNT";

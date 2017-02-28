@@ -100,7 +100,6 @@ if ($session_OK) {
     // Register a user and send the email
     function register_user($projectid, $email, $firstName, $lastName, $repositoryCredential)
     {
-
         $UserProject = new UserProject();
         $UserProject->ProjectId = $projectid;
 

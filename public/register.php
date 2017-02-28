@@ -77,7 +77,6 @@ function register()
         $lname = $_POST['lname'];
         $institution = $_POST['institution'];
         if ($email && $passwd && $passwd2 && $fname && $lname && $institution) {
-
             $user->Email = $email;
             if ($user->Exists()) {
                 $reg = "$email is already registered.";
