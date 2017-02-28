@@ -25,6 +25,7 @@ class UserProject
     public $EmailSuccess; // email when my checkin are fixing something
     public $UserId;
     public $ProjectId;
+    private $PDO;
 
     public function __construct()
     {
@@ -35,6 +36,7 @@ class UserProject
         $this->EmailCategory = 126;
         $this->EmailMissingSites = 0;
         $this->EmailSuccess = 0;
+        $this->PDO = get_link_identifier()->getPdo();
     }
 
     /** Return if a project exists */
@@ -233,27 +235,27 @@ class UserProject
             return false;
         }
 
-        $sql = 'SELECT * FROM user2project
-               WHERE projectid=' . qnum($this->ProjectId) . '
-               AND userid=' . qnum($this->UserId) . '
-               AND emailtype>0';
-
-        $user = pdo_query($sql);
-        if (!$user) {
-            add_last_sql_error('UserProject FillFromUserId');
+        $stmt = $this->PDO->prepare(
+            'SELECT * FROM user2project
+            WHERE projectid = :projectid
+            AND userid = :userid
+            AND emailtype > 0');
+        $stmt->bindParam(':projectid', $this->ProjectId);
+        $stmt->bindParam(':userid', $this->UserId);
+        if (!pdo_execute($stmt)) {
             return false;
         }
 
-        if (pdo_num_rows($user) == 0) {
+        $row = $stmt->fetch();
+        if (!$row) {
             return false;
         }
 
-        $user_array = pdo_fetch_array($user);
-        $this->EmailCategory = $user_array['emailcategory'];
-        $this->EmailMissingSites = $user_array['emailmissingsites'];
-        $this->EmailSuccess = $user_array['emailsuccess'];
-        $this->EmailType = $user_array['emailtype'];
-        $this->Role = $user_array['role'];
+        $this->EmailCategory = $row['emailcategory'];
+        $this->EmailMissingSites = $row['emailmissingsites'];
+        $this->EmailSuccess = $row['emailsuccess'];
+        $this->EmailType = $row['emailtype'];
+        $this->Role = $row['role'];
         return true;
     }
 
