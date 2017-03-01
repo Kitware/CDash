@@ -31,6 +31,10 @@ include_once 'models/uploadfile.php';
 
 class Build
 {
+    const TYPE_ERROR = 0;
+    const TYPE_WARN = 1;
+    const STATUS_NEW = 1;
+
     public $Id;
     public $SiteId;
     public $ProjectId;
@@ -447,53 +451,34 @@ class Build
              WHERE builderrorb.crc32b IS NULL');
     }
 
-    // Is this redundant naming? Should it just be GetErrors?
     /**
-     * Get all the errors in a build, of a given type.
-     *
-     * If the build is a parent, it returns all errors of child builds
-     * as well as the subprojectid.
-     **/
-    public function GetBuildErrors($type, $extrasql)
-    {
-        // @todo Needs to be profiled
-        if ($this->IsParentBuild()) {
-            return pdo_query("SELECT sp2b.subprojectid, sp.name subprojectname, be.* FROM builderror be
-                              JOIN build AS b ON b.id = be.buildid
-                              JOIN subproject2build AS sp2b ON sp2b.buildid = be.buildid
-                              JOIN subproject AS sp ON sp.id = sp2b.subprojectid
-                              WHERE b.parentid = " . $this->Id . "
-                              AND be.type = $type $extrasql
-                              ORDER BY be.logline ASC");
-        } else {
-            return pdo_query("SELECT * FROM builderror
-                              WHERE buildid = '" . $this->Id . "'
-                              AND type = '$type' $extrasql
-                              ORDER BY logline ASC");
-        }
-    }
-
-    /**
-     * Returns all errors, including warnings, for current build
+     * Returns all errors, including warnings, from the database, caches, and
+     * returns the filtered results
      *
      * @param int $fetchStyle
+     * @param array $filters
      * @return array|bool
      */
-    public function GetErrors($fetchStyle = PDO::FETCH_ASSOC)
+    public function GetErrors(array $propertyFilters = [], $fetchStyle = PDO::FETCH_ASSOC)
     {
         // This needs to take into account that this build may be a parent build
         if (!$this->Errors) {
             if (!$this->Id) {
-                echo 'Build::GetErrors(): BuildId not set';
+                add_log('BuildId not set', 'Build::GetErrors', LOG_WARNING);
                 return false;
             }
 
-            $buildErrors = new BuildError();
-            $buildErrors->BuildId = $this->Id;
-            $this->Errors = $buildErrors->GetErrorsForBuild($fetchStyle);
+            if ($this->IsParentBuild()) {
+                $subproject = new SubProject();
+                $subproject->SetParentBuildId($this->Id);
+                $this->Errors = $subproject->GetErrorsForParentBuild($fetchStyle);
+            } else {
+                $buildErrors = new BuildError();
+                $buildErrors->BuildId = $this->Id;
+                $this->Errors = $buildErrors->GetErrorsForBuild($fetchStyle);
+            }
         }
-
-        return $this->Errors;
+        return $this->PropertyFilter($this->Errors, $propertyFilters);
     }
 
     /**
@@ -502,58 +487,60 @@ class Build
      * @param int $fetchStyle
      * @return array|bool
      */
-    public function GetFailures($fetchStyle = PDO::FETCH_ASSOC)
+    public function GetFailures(array $propertyFilters = [], $fetchStyle = PDO::FETCH_ASSOC)
     {
         // This needs to take into account that this build may be a parent build
         if (!$this->Failures) {
             if (!$this->Id) {
-                echo 'Build::GetFailures(): BuildId not set';
+                add_log('BuildId not set', 'Build::GetFailures', LOG_WARNING);
                 return false;
             }
 
-            $buildFailure = new BuildFailure();
-            $buildFailure->BuildId = $this->Id;
-            $this->Failures = $buildFailure->GetFailuresForBuild($fetchStyle);
+            if ($this->isParentBuild()) {
+                $subproject = new SubProject();
+                $subproject->SetParentBuildId($this->Id);
+                $this->Failures = $subproject->GetFailuresForParentBuild($fetchStyle);
+            } else {
+                $buildFailure = new BuildFailure();
+                $buildFailure->BuildId = $this->Id;
+                $this->Failures = $buildFailure->GetFailuresForBuild($fetchStyle);
+            }
         }
-
-        return $this->Failures;
+        return $this->PropertyFilter($this->Failures, $propertyFilters);
     }
 
     /**
-     * Get all the failures of a build, of a given type.
+     * Apply filter to rows
      *
-     * If the build is a parent, it returns all failures of child builds as well
-     * as the subprojectid.
-     **/
-    public function GetBuildFailures($projectid, $type, $extrasql, $orderby=false)
+     * @param array $filters
+     * @return array
+     */
+    protected function PropertyFilter(array $rows, array $filters)
     {
-        $fields = '';
-        $from = '';
-        $where = "bfd.type = '$type'";
-        $orderby = ($orderby === false) ? '' : "ORDER BY $orderby";
+        return array_filter($rows, function ($row) use ($filters) {
+            foreach ($filters as $prop => $value) {
+                if (is_object($row)) {
+                    if (!property_exists($row, $prop)) {
+                        add_log("Cannot filter on {$prop}: property does not exist", 'Build::PropertyFilter', LOG_WARNING);
+                        continue;
+                    }
 
-        // @todo Needs to be profiled
-        if ($this->IsParentBuild()) {
-            $fields .= ', sp2b.subprojectid, sp.name subprojectname';
-            $from .= 'JOIN subproject2build AS sp2b ON bf.buildid = sp2b.buildid ';
-            $from .= 'JOIN subproject AS sp ON sp.id = sp2b.subprojectid ';
-            $from .= 'JOIN build b on bf.buildid = b.id ';
-            $where .= ' AND b.parentid = ' . $this->Id;
-        } else {
-            $where .= ' AND bf.buildid = ' . $this->Id;
-        }
+                    if ($row->$prop != $value) {
+                        return false;
+                    }
+                } elseif (is_array($row)) {
+                    if (!array_key_exists($prop, $row)) {
+                        add_log("Cannot filter on {$prop}: property does not exist", 'Build::PropertyFilter', LOG_WARNING);
+                        continue;
+                    }
 
-        $q = "SELECT bf.id, bfd.language, bf.sourcefile, bfd.targetname, bfd.outputfile,
-              bfd.outputtype, bf.workingdirectory, bfd.stderror, bfd.stdoutput,
-              bfd.exitcondition $fields
-              FROM buildfailure AS bf
-              LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid) $from
-              WHERE $where
-              $extrasql $orderby";
-
-        add_last_sql_error('build.GetBuildFailures', $projectid, $this->Id);
-
-        return pdo_query($q);
+                    if ($row[$prop] != $value) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        });
     }
 
     /**

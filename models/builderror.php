@@ -91,14 +91,14 @@ class BuildError
     public function GetErrorsForBuild($fetchStyle = PDO::FETCH_ASSOC)
     {
         if (!$this->BuildId) {
-            echo 'BuildError::GetErrorsForBuild(): BuildId not set<br>';
+            add_log('BuildId not set', 'BuildError::GetErrorsForBuild', LOG_WARNING);
             return false;
         }
 
-        $sql = "SELECT * FROM builderror WHERE buildid=:buildid";
+        $sql = "SELECT * FROM builderror WHERE buildid=? ORDER BY logline ASC";
+
         $query = $this->PDO->prepare($sql);
-        $query->bindParam(':buildid', $this->BuildId);
-        $query->execute();
+        pdo_execute($query, [$this->BuildId]);
 
         return $query->fetchAll($fetchStyle);
     }

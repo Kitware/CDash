@@ -26,6 +26,8 @@ class SubProject
     private $ProjectId;
     private $GroupId;
     private $Path;
+    private $ParentBuildId;
+    private $PDO;
 
     public function __construct()
     {
@@ -34,12 +36,25 @@ class SubProject
         $this->ProjectId = 0;
         $this->Name = '';
         $this->Path = '';
+        $this->PDO = get_link_identifier()->getPdo();
     }
 
     /** Function to get the id */
     public function GetId()
     {
         return $this->Id;
+    }
+
+    /**
+     * ParentBuildId property setter
+     *
+     * @param $parentBuildId
+     * @return $this
+     */
+    public function SetParentBuildId($parentBuildId)
+    {
+        $this->ParentBuildId = $parentBuildId;
+        return $this;
     }
 
     /** Function to set the id.  Also loads remaining data for this
@@ -65,6 +80,82 @@ class SubProject
         $this->GroupId = $row['groupid'];
         $this->Path = $row['path'];
         return true;
+    }
+
+    /**
+     * Get all errors, including warnings, for all subprojects of parent build
+     *
+     * @param int $fetchStyle
+     * @return array|bool
+     */
+    public function GetErrorsForParentBuild($fetchStyle = PDO::FETCH_ASSOC)
+    {
+        if (!$this->ParentBuildId) {
+            add_log('ParentBuildId not set', 'SubProject::GetErrorsForParentBuild', LOG_WARNING);
+            return false;
+        }
+
+        $sql = '
+            SELECT sp2b.subprojectid, sp.name subprojectname, be.*
+            FROM builderror be
+            JOIN build AS b
+                ON b.id = be.buildid
+            JOIN subproject2build AS sp2b
+                ON sp2b.buildid = be.buildid
+            JOIN subproject AS sp
+                ON sp.id = sp2b.subprojectid
+            WHERE b.parentid = ?
+        ';
+
+        $query = $this->PDO->prepare($sql);
+        pdo_execute($query, [$this->ParentBuildId]);
+
+        return $query->fetchAll($fetchStyle);
+    }
+
+    /**
+     * Get all failures, including warnings, for all subprojects of parent build
+     *
+     * @param int $fetchStyle
+     * @return array|bool
+     */
+    public function GetFailuresForParentBuild($fetchStyle = PDO::FETCH_ASSOC)
+    {
+        if (!$this->ParentBuildId) {
+            add_log('ParentBuildId not set', 'SubProject::GetFailuresForParentBuild', LOG_WARNING);
+            return false;
+        }
+
+        $sql = '
+            SELECT
+                bf.id,
+                bf.sourcefile,
+                bfd.language,
+                bfd.targetname,
+                bfd.outputfile,
+                bfd.outputtype,
+                bf.workingdirectory,
+                bfd.stderror,
+                bfd.stdoutput,
+                bfd.exitcondition,
+                sp2b.subprojectid,
+                sp.name subprojectname
+             FROM buildfailure AS bf
+             LEFT JOIN buildfailuredetails AS bfd
+                ON (bfd.id=bf.detailsid)
+            JOIN subproject2build AS sp2b
+                ON bf.buildid = sp2b.buildid
+            JOIN subproject AS sp
+                ON sp.id = sp2b.subprojectid
+            JOIN build b on bf.buildid = b.id
+            WHERE b.parentid = ?
+        ';
+
+        $query = $this->PDO->prepare($sql);
+
+        pdo_execute($query, [$this->ParentBuildId]);
+
+        return $query->fetchAll($fetchStyle);
     }
 
     /** Function to get the project id */

@@ -187,23 +187,34 @@ class BuildFailure
     public function GetFailuresForBuild($fetchStyle = PDO::FETCH_ASSOC)
     {
         if (!$this->BuildId) {
-            echo 'BuildFailure::GetFailuresForBuild(): BuildId not set<br>';
+            add_log('BuildId not set', 'BuildFailure::GetFailuresForBuild', LOG_WARNING);
             return false;
         }
 
         $sql = "
             SELECT 
-                bf.sourcefile, 
+                bf.id,
+                bf.buildid,
+                bf.workingdirectory,
+                bf.sourcefile,
+                bf.newstatus,
                 bfd.stdoutput, 
-                bfd.stderror
+                bfd.stderror,
+                bfd.type,
+                bfd.exitcondition,
+                bfd.language,
+                bfd.targetname,
+                bfd.outputfile,
+                bfd.outputtype
             FROM buildfailuredetails AS bfd
             LEFT JOIN buildfailure AS bf 
                 ON (bf.detailsid = bfd.id)
-            WHERE bf.buildid=:buildid
+            WHERE bf.buildid=?
+            ORDER BY bf.id
         ";
         $query = $this->PDO->prepare($sql);
-        $query->bindParam(':buildid', $this->BuildId);
-        $query->execute();
+
+        pdo_execute($query, [$this->BuildId]);
 
         return $query->fetchAll($fetchStyle);
     }

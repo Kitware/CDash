@@ -36,6 +36,7 @@ include 'public/login.php';
 include_once 'include/repository.php';
 include 'include/version.php';
 require_once 'models/build.php';
+require_once 'models/label.php';
 
 @$buildid = $_GET['buildid'];
 if ($buildid != null) {
@@ -205,31 +206,37 @@ if (isset($_GET['onlydeltan'])) {
         addErrorResponse($marshaledResolvedBuildFailure);
     }
 } else {
-    $extrasql = '';
+    $filters = ['type' => $type];
+
     if (isset($_GET['onlydeltap'])) {
-        $extrasql = " AND newstatus='1'";
+        $filters['newstatus'] = Build::STATUS_NEW;
     }
 
     // Build error table
-    $buildErrors = $build->GetBuildErrors($type, $extrasql);
-    while ($buildError = pdo_fetch_array($buildErrors)) {
-        addErrorResponse(builderror::marshal($buildError, $project_array, $revision));
+    $buildErrors = $build->GetErrors($filters);
+
+    foreach ($buildErrors as $error) {
+        addErrorResponse(builderror::marshal($error, $project_array, $revision));
     }
 
     // Build failure table
-    $buildFailures = $build->getBuildFailures($projectid, $type, $extrasql, 'bf.id ASC');
-    while ($buildFailure = pdo_fetch_array($buildFailures)) {
-        $marshaledBuildFailure = buildfailure::marshal($buildFailure, $project_array, $revision, true);
+    $buildFailures = $build->GetFailures(['type' => $type]);
+
+    foreach ($buildFailures as $fail) {
+        $failure = buildfailure::marshal($fail, $project_array, $revision, true);
 
         if ($project_array['displaylabels']) {
-            get_labels_JSON_from_query_results(
-                    "SELECT text FROM label, label2buildfailure
-                    WHERE label.id=label2buildfailure.labelid AND
-                    label2buildfailure.buildfailureid='" . $buildFailure['id']  . "'
-                    ORDER BY text ASC", $marshaledBuildFailure);
+            $label = new Label();
+            $label->BuildFailureId = $fail['id'];
+            $rows = $label->GetTextFromBuildFailure(PDO::FETCH_OBJ);
+            if ($rows && count($rows)) {
+                $failure['labels'] = [];
+                foreach ($rows as $row) {
+                    $failure['labels'][] = $row->text;
+                }
+            }
         }
-
-        addErrorResponse($marshaledBuildFailure);
+        addErrorResponse($failure);
     }
 }
 

@@ -333,6 +333,8 @@ function lookup_emails_to_send($errors, $buildid, $projectid, $buildtype, $fixes
 function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $testtimemaxstatus, $emailtesttimingchanged)
 {
     include 'config/config.php';
+    $build = new Build();
+    $build->Id = $buildid;
 
     $serverURI = get_server_URI();
     // In the case of asynchronous submission, the serverURI contains /cdash
@@ -370,18 +372,10 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
     } elseif ($errorkey == 'build_errors') {
         $information .= "\n\n*Error*";
 
-        $build = new Build();
-        $build->Id = $buildid;
-
         // type 0 = error
         // type 1 = warning
         // filter out errors of type error
-        $errors = array_filter(
-            $build->GetErrors(PDO::FETCH_OBJ),
-            (function ($e) {
-                return $e->type == 0;
-            })
-        );
+        $errors = $build->GetErrors(['type' => Build::TYPE_ERROR], PDO::FETCH_OBJ);
 
         if (count($errors) > $maxitems) {
             $errors = array_slice($errors, 0, $maxitems);
@@ -402,12 +396,7 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
         }
 
         // filter out just failures of type error
-        $failures = array_filter(
-            $build->GetFailures(PDO::FETCH_OBJ),
-            (function ($f) {
-                return $f->type == 0;
-            })
-        );
+        $failures = $build->GetFailures(['type' => Build::TYPE_ERROR], PDO::FETCH_OBJ);
 
         // not yet accounted for in integration tests
         if (count($failures) > $maxitems) {
@@ -432,44 +421,49 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
     } elseif ($errorkey == 'build_warnings') {
         $information .= "\n\n*Warnings*";
 
-        $error_query = pdo_query('SELECT sourcefile,text,sourceline,postcontext FROM builderror
-                              WHERE buildid=' . qnum($buildid) . " AND type=1 ORDER BY logline LIMIT $maxitems");
-        add_last_sql_error('sendmail');
+        $warnings = $build->GetErrors(['type' => Build::TYPE_WARN], PDO::FETCH_OBJ);
 
-        if (pdo_num_rows($error_query) == $maxitems) {
+        if (count($warnings) > $maxitems) {
             $information .= ' (first ' . $maxitems . ')';
+            $warnings = array_slice($warnings, 0, $maxitems);
         }
-        $information .= "\n";
 
-        while ($error_array = pdo_fetch_array($error_query)) {
+        if (!empty($warnings)) {
+            $information .= "\n";
+        }
+
+        foreach ($warnings as $warning) {
             $info = '';
-            if (strlen($error_array['sourcefile']) > 0) {
-                $info .= $error_array['sourcefile'] . ' line ' . $error_array['sourceline'] . ' (' . $serverURI . '/viewBuildError.php?type=1&buildid=' . $buildid . ")\n";
-                $info .= $error_array['text'] . "\n";
+            if (strlen($warning->sourcefile) > 0) {
+                $info .= "{$warning->sourcefile} line {$warning->sourceline} ({$serverURI}/viewBuildError.php?type=1&buildid={$buildid})\n";
+                $info .= "{$warning->text}\n";
             } else {
-                $info .= $error_array['text'] . "\n" . $error_array['postcontext'] . "\n";
+                $info .= "{$warning->text}\n{$warning->postcontext}\n";
             }
             $information .= substr($info, 0, $maxchars);
         }
 
-        // New error format
-        $error_query = pdo_query(
-            'SELECT bf.sourcefile, bfd.stdoutput, bfd.stderror
-       FROM buildfailuredetails AS bfd
-       LEFT JOIN buildfailure AS bf ON (bf.detailsid = bfd.id)
-       WHERE bf.buildid=' . qnum($buildid) . " AND bfd.type=1
-       ORDER BY bf.id LIMIT $maxitems");
-        add_last_sql_error('sendmail');
-        while ($error_array = pdo_fetch_array($error_query)) {
+        $failures = $build->GetFailures(['type' => Build::TYPE_WARN], PDO::FETCH_OBJ);
+
+        if (count($failures) > $maxitems) {
+            $information .= ' (first ' . $maxitems . ')';
+            $failures = array_slice($failures, 0, $maxitems);
+        }
+
+        if (!empty($failures)) {
+            $information .= "\n";
+        }
+
+        foreach ($failures as $fail) {
             $info = '';
-            if (strlen($error_array['sourcefile']) > 0) {
-                $info .= $error_array['sourcefile'] . ' (' . $serverURI . '/viewBuildError.php?type=1&buildid=' . $buildid . ")\n";
+            if (strlen($fail->sourcefile) > 0) {
+                $info .= "{$fail->sourcefile} ({$serverURI}/viewBuildError.php?type=1&buildid={$buildid})\n";
             }
-            if (strlen($error_array['stdoutput']) > 0) {
-                $info .= $error_array['stdoutput'] . "\n";
+            if (strlen($fail->stdoutput) > 0) {
+                $info .= "{$fail->stdoutput}\n";
             }
-            if (strlen($error_array['stderror']) > 0) {
-                $info .= $error_array['stderror'] . "\n";
+            if (strlen($fail->stderror) > 0) {
+                $info .= "{$fail->stderror}\n";
             }
             $information .= substr($info, 0, $maxchars) . "\n";
         }
