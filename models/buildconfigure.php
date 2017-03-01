@@ -176,9 +176,10 @@ class BuildConfigure
             return false;
         }
 
-        $sql = "SELECT * FROM configure WHERE buildid=:buildid";
+        $sql = "SELECT * FROM configure WHERE buildid=?";
         $query = $this->PDO->prepare($sql);
-        $query->bindParam(':buildid', $this->BuildId);
+
+        pdo_execute($query, [$this->BuildId]);
 
         return $query->fetch($fetchType);
     }

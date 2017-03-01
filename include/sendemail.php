@@ -365,10 +365,14 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
         $buildConfigure->BuildId = $buildid;
         $configure = $buildConfigure->GetConfigureForBuild(PDO::FETCH_OBJ);
 
-        $information .= "Status: {$configure->status} ({$serverURI}/viewConfigure.php?buildid={$buildid})\n";
-        $information .= 'Output: ';
-        $information .= substr($configure->log, 0, $maxchars);
-        $information .= "\n";
+        // If this is false pdo_execute called in BuildConfigure will
+        // have already logged the error.
+        if (is_object($configure)) {
+            $information .= "Status: {$configure->status} ({$serverURI}/viewConfigure.php?buildid={$buildid})\n";
+            $information .= 'Output: ';
+            $information .= substr($configure->log, 0, $maxchars);
+            $information .= "\n";
+        }
     } elseif ($errorkey == 'build_errors') {
         $information .= "\n\n*Error*";
 
