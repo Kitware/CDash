@@ -172,7 +172,7 @@ class BuildConfigure
     public function GetConfigureForBuild($fetchType = PDO::FETCH_ASSOC)
     {
         if (!$this->BuildId) {
-            echo 'BuildConfigure::GetConfigureForBuild(): BuildId not set';
+            add_log('BuildId not set', 'BuildConfigure::GetConfigureForBuild()', LOG_WARNING);
             return false;
         }
 
