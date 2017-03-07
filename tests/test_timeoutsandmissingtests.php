@@ -20,7 +20,7 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
         $this->buildName = 'Win32-MSVC2009';
     }
 
-    private function getLastBuildId ()
+    private function getLastBuildId()
     {
         $sql = "
           SELECT id 
@@ -47,7 +47,6 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
         if (!$this->compareLog($this->logfilename, "{$rep}/cdash_5.log")) {
             return;
         }
-
         $this->pass('Passed');
     }
 

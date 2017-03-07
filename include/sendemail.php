@@ -463,23 +463,40 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
         }
         $information .= "\n";
     } elseif ($errorkey == 'test_errors') {
-        $sql = '';
+        $tmpl = "
+            SELECT test.name, test.id
+            FROM build2test,test
+            WHERE build2test.buildid=?
+            AND test.id=build2test.testid
+            AND (build2test.status=?%s)
+            AND test.details NOT LIKE '%%Timeout%%'
+            ORDER BY test.id LIMIT $maxitems
+        ";
+
+        $or = '';
+        $params = [$buildid, 'failed'];
+
         if ($emailtesttimingchanged) {
-            $sql = 'OR timestatus>' . qnum($testtimemaxstatus);
+            $or = ' OR timestatus>?';
+            $params[] = $testtimemaxstatus;
         }
-        $test_query = pdo_query('SELECT test.name,test.id FROM build2test,test WHERE build2test.buildid=' . qnum($buildid) .
-            " AND test.id=build2test.testid AND (build2test.status='failed'" . $sql . ") ORDER BY test.id LIMIT $maxitems");
-        add_last_sql_error('sendmail');
-        $numrows = pdo_num_rows($test_query);
+
+        $sql = sprintf($tmpl, $or);
+        $pdo = get_link_identifier()->getPdo();
+        $query = $pdo->prepare($sql);
+
+        pdo_execute($query, $params);
+
+        $numrows = pdo_num_rows($query);
 
         if ($numrows > 0) {
             $information .= "\n\n*Tests failing*";
-            if (pdo_num_rows($test_query) == $maxitems) {
+            if (pdo_num_rows($query) == $maxitems) {
                 $information .= ' (first ' . $maxitems . ')';
             }
             $information .= "\n";
 
-            while ($test_array = pdo_fetch_array($test_query)) {
+            while ($test_array = pdo_fetch_array($query)) {
                 $info = $test_array['name'] . ' (' . $serverURI . '/testDetails.php?test=' . $test_array['id'] . '&build=' . $buildid . ")\n";
                 $information .= substr($info, 0, $maxchars);
             }
@@ -487,7 +504,7 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
         }
 
         $numrows = $Build->GetNumberOfTimedoutTests();
-        if($numrows > 0) {
+        if ($numrows > 0) {
             $information .= "\n\n*Test timeouts*";
             if ($numrows == $maxitems) {
                 $information .= " (first {$maxitems}";
@@ -502,19 +519,24 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
         }
 
         // Add the tests not run
+        /*
         $test_query = pdo_query('SELECT test.name,test.id FROM build2test,test WHERE build2test.buildid=' . qnum($buildid) .
             " AND test.id=build2test.testid AND (build2test.status='notrun'" . $sql . ") ORDER BY test.id LIMIT $maxitems");
         add_last_sql_error('sendmail');
-        $numrows = pdo_num_rows($test_query);
+        */
+        $params[1] = 'notrun';
+        pdo_execute($query, $params);
+
+        $numrows = pdo_num_rows($query);
 
         if ($numrows > 0) {
             $information .= "\n\n*Tests not run*";
-            if (pdo_num_rows($test_query) == $maxitems) {
+            if (pdo_num_rows($query) == $maxitems) {
                 $information .= ' (first ' . $maxitems . ')';
             }
             $information .= "\n";
 
-            while ($test_array = pdo_fetch_array($test_query)) {
+            while ($test_array = pdo_fetch_array($query)) {
                 $info = $test_array['name'] . ' (' . $serverURI . '/testDetails.php?test=' . $test_array['id'] . '&build=' . $buildid . ")\n";
                 $information .= substr($info, 0, $maxchars);
             }

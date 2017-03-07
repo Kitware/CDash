@@ -13,12 +13,6 @@ Type: Nightly
 Tests failing: 2
 
 
-*Tests failing*
-SleepTimer1 (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
-SleepTimer2 (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
-
-
-
 *Test timeouts*
 SleepTimer1 (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
 SleepTimer2 (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
