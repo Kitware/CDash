@@ -27,6 +27,13 @@ class BuildError
     public $RepeatCount;
     public $BuildId;
 
+    private $PDO;
+
+    public function __construct()
+    {
+        $this->PDO = get_link_identifier()->getPdo();
+    }
+
     // Insert in the database (no update possible)
     public function Insert()
     {
@@ -73,6 +80,27 @@ class BuildError
             return false;
         }
         return true;
+    }
+
+    /**
+     * Returns all errors from builderror for current build
+     *
+     * @param int $fetchStyle
+     * @return array|bool
+     */
+    public function GetErrorsForBuild($fetchStyle = PDO::FETCH_ASSOC)
+    {
+        if (!$this->BuildId) {
+            add_log('BuildId not set', 'BuildError::GetErrorsForBuild', LOG_WARNING);
+            return false;
+        }
+
+        $sql = "SELECT * FROM builderror WHERE buildid=? ORDER BY logline ASC";
+
+        $query = $this->PDO->prepare($sql);
+        pdo_execute($query, [$this->BuildId]);
+
+        return $query->fetchAll($fetchStyle);
     }
 
     public static function GetSourceFile($data)

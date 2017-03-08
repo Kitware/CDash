@@ -26,6 +26,7 @@ class SubProject
     private $ProjectId;
     private $GroupId;
     private $Path;
+    private $PDO;
 
     public function __construct()
     {
@@ -34,6 +35,7 @@ class SubProject
         $this->ProjectId = 0;
         $this->Name = '';
         $this->Path = '';
+        $this->PDO = get_link_identifier()->getPdo();
     }
 
     /** Function to get the id */
