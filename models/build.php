@@ -57,7 +57,6 @@ class Build
     public $Errors;
     public $ErrorDiffs;
     public $MissingTests;
-    public $TimedoutTests;
 
     public $SubProjectId;
     public $SubProjectName;
@@ -992,61 +991,86 @@ class Build
     }
 
     /**
-     * Get the number of tests whose details indicate a timeout
+     * Get this build's tests that match the supplied WHERE clause.
      *
-     * @return int
+     * @return array
      */
-    public function GetNumberOfTimedoutTests()
-    {
-        if (!is_array($this->TimedoutTests)) {
-            $this->GetTimedoutTests();
-        }
-
-        return count($this->TimedoutTests);
-    }
-
-    public function GetTimedoutTests($maxitems = 0)
+    private function GetTests($criteria, $maxitems = 0)
     {
         if (!$this->Id) {
-            add_log('BuildId is not set', 'Build::GetTimedoutTests', LOG_ERR,
+            add_log('BuildId is not set', 'Build::GetTests', LOG_ERR,
                 $this->ProjectId, $this->Id, CDASH_OBJECT_BUILD, $this->Id);
             return false;
         }
 
-        $pdo = get_link_identifier()->getPdo();
+        $limit_clause = '';
+        $maxitems = intval($maxitems);
+        $limit = (int) trim($maxitems);
+        if ($limit > 0) {
+            $limit_clause = "LIMIT $limit";
+        }
+
         $sql = "
-            SELECT test.name, test.id, test.details 
-            FROM build2test, test
-            WHERE build2test.buildid=:buildid
-            AND test.id=build2test.testid
-            AND build2test.status='failed'
-            AND test.details LIKE '%%Timeout%%'
-            ORDER BY test.id
-            %s
-         ";
-        $frmt = '';
+            SELECT t.name, t.id, t.details
+            FROM test t
+            JOIN build2test b2t ON t.id = b2t.testid
+            WHERE b2t.buildid = :buildid
+            AND $criteria
+            ORDER BY t.id
+            $limit_clause";
 
-        if ($maxitems) {
-            $limit = (int) trim($maxitems);
-            $frmt = 'LIMIT :limit';
-        }
-
-        $sql = sprintf($sql, $frmt);
-        $query = $pdo->prepare($sql);
-
+        $query = $this->PDO->prepare($sql);
         $query->bindParam(':buildid', $this->Id);
-
-        if ($maxitems) {
-            $query->bindParam(':limit', $limit, PDO::PARAM_INT);
-        }
 
         if (!pdo_execute($query)) {
             return [];
         }
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
 
-        $this->TimedoutTests = $query->fetchAll(PDO::FETCH_ASSOC);
+    /**
+     * Get this build's tests that failed but did not timeout.
+     *
+     * @return array
+     */
+    public function GetFailedTests($maxitems = 0)
+    {
+        $criteria = "b2t.status = 'failed' AND t.details NOT LIKE '%%Timeout%%'";
+        return $this->GetTests($criteria, $maxitems);
+    }
 
-        return $this->TimedoutTests;
+    /**
+     * Get this build's tests that failed the time status check.
+     *
+     * @return array
+     */
+    public function GetFailedTimeStatusTests($maxitems = 0, $max_time_status = 3)
+    {
+        $max_time_status = (int) trim($max_time_status);
+        $criteria = "b2t.timestatus > $max_time_status";
+        return $this->GetTests($criteria, $maxitems);
+    }
+
+    /**
+     * Get this build's tests whose details indicate a timeout.
+     *
+     * @return array
+     */
+    public function GetTimedoutTests($maxitems = 0)
+    {
+        $criteria = "b2t.status = 'failed' AND t.details LIKE '%%Timeout%%'";
+        return $this->GetTests($criteria, $maxitems);
+    }
+
+    /**
+     * Get this build's tests whose status is "Not Run".
+     *
+     * @return array
+     */
+    public function GetNotRunTests($maxitems = 0)
+    {
+        $criteria = "b2t.status = 'notrun'";
+        return $this->GetTests($criteria, $maxitems);
     }
 
     /** Get the errors differences for the build */
