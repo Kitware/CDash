@@ -349,9 +349,6 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
         $serverURI = substr($serverURI, 0, strrpos($serverURI, '/'));
     }
 
-    $Build = new Build();
-    $Build->Id = $buildid;
-
     $information = '';
 
     // Update information
@@ -523,7 +520,7 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
             $information .= "\n";
         }
 
-        $numrows = $Build->GetNumberOfTimedoutTests();
+        $numrows = $build->GetNumberOfTimedoutTests();
         if ($numrows > 0) {
             $information .= "\n\n*Test timeouts*";
             if ($numrows == $maxitems) {
