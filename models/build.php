@@ -31,6 +31,10 @@ include_once 'models/uploadfile.php';
 
 class Build
 {
+    const TYPE_ERROR = 0;
+    const TYPE_WARN = 1;
+    const STATUS_NEW = 1;
+
     public $Id;
     public $SiteId;
     public $ProjectId;
@@ -77,6 +81,8 @@ class Build
     public $NightlyStartTime;
     public $BeginningOfDay;
     public $EndOfDay;
+    private $Failures;
+    private $PDO;
 
     public function __construct()
     {
@@ -86,6 +92,7 @@ class Build
         $this->Append = false;
         $this->InsertErrors = true;
         $this->Filled = false;
+        $this->PDO = get_link_identifier()->getPdo();
     }
 
     public function IsParentBuild()
@@ -448,67 +455,92 @@ class Build
              WHERE builderrorb.crc32b IS NULL');
     }
 
-    // Is this redundant naming? Should it just be GetErrors?
     /**
-     * Get all the errors in a build, of a given type.
+     * Returns all errors, including warnings, from the database, caches, and
+     * returns the filtered results
      *
-     * If the build is a parent, it returns all errors of child builds
-     * as well as the subprojectid.
-     **/
-    public function GetBuildErrors($type, $extrasql)
+     * @param int $fetchStyle
+     * @param array $filters
+     * @return array|bool
+     */
+    public function GetErrors(array $propertyFilters = [], $fetchStyle = PDO::FETCH_ASSOC)
     {
-        // @todo Needs to be profiled
-        if ($this->IsParentBuild()) {
-            return pdo_query("SELECT sp2b.subprojectid, sp.name subprojectname, be.* FROM builderror be
-                              JOIN build AS b ON b.id = be.buildid
-                              JOIN subproject2build AS sp2b ON sp2b.buildid = be.buildid
-                              JOIN subproject AS sp ON sp.id = sp2b.subprojectid
-                              WHERE b.parentid = " . $this->Id . "
-                              AND be.type = $type $extrasql
-                              ORDER BY be.logline ASC");
-        } else {
-            return pdo_query("SELECT * FROM builderror
-                              WHERE buildid = '" . $this->Id . "'
-                              AND type = '$type' $extrasql
-                              ORDER BY logline ASC");
+        // This needs to take into account that this build may be a parent build
+        if (!$this->Errors) {
+            if (!$this->Id) {
+                add_log('BuildId not set', 'Build::GetErrors', LOG_WARNING);
+                return false;
+            }
+
+            if ($this->IsParentBuild()) {
+                $this->Errors = $this->GetErrorsForChildren($fetchStyle);
+            } else {
+                $buildErrors = new BuildError();
+                $buildErrors->BuildId = $this->Id;
+                $this->Errors = $buildErrors->GetErrorsForBuild($fetchStyle);
+            }
         }
+        return $this->PropertyFilter($this->Errors, $propertyFilters);
     }
 
     /**
-     * Get all the failures of a build, of a given type.
+     * Returns all failures (errors), including warnings, for current build
      *
-     * If the build is a parent, it returns all failures of child builds as well
-     * as the subprojectid.
-     **/
-    public function GetBuildFailures($projectid, $type, $extrasql, $orderby=false)
+     * @param int $fetchStyle
+     * @return array|bool
+     */
+    public function GetFailures(array $propertyFilters = [], $fetchStyle = PDO::FETCH_ASSOC)
     {
-        $fields = '';
-        $from = '';
-        $where = "bfd.type = '$type'";
-        $orderby = ($orderby === false) ? '' : "ORDER BY $orderby";
+        // This needs to take into account that this build may be a parent build
+        if (!$this->Failures) {
+            if (!$this->Id) {
+                add_log('BuildId not set', 'Build::GetFailures', LOG_WARNING);
+                return false;
+            }
 
-        // @todo Needs to be profiled
-        if ($this->IsParentBuild()) {
-            $fields .= ', sp2b.subprojectid, sp.name subprojectname';
-            $from .= 'JOIN subproject2build AS sp2b ON bf.buildid = sp2b.buildid ';
-            $from .= 'JOIN subproject AS sp ON sp.id = sp2b.subprojectid ';
-            $from .= 'JOIN build b on bf.buildid = b.id ';
-            $where .= ' AND b.parentid = ' . $this->Id;
-        } else {
-            $where .= ' AND bf.buildid = ' . $this->Id;
+            if ($this->isParentBuild()) {
+                $this->Failures = $this->GetFailuresForChildren($fetchStyle);
+            } else {
+                $buildFailure = new BuildFailure();
+                $buildFailure->BuildId = $this->Id;
+                $this->Failures = $buildFailure->GetFailuresForBuild($fetchStyle);
+            }
         }
+        return $this->PropertyFilter($this->Failures, $propertyFilters);
+    }
 
-        $q = "SELECT bf.id, bfd.language, bf.sourcefile, bfd.targetname, bfd.outputfile,
-              bfd.outputtype, bf.workingdirectory, bfd.stderror, bfd.stdoutput,
-              bfd.exitcondition $fields
-              FROM buildfailure AS bf
-              LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid) $from
-              WHERE $where
-              $extrasql $orderby";
+    /**
+     * Apply filter to rows
+     *
+     * @param array $filters
+     * @return array
+     */
+    protected function PropertyFilter(array $rows, array $filters)
+    {
+        return array_filter($rows, function ($row) use ($filters) {
+            foreach ($filters as $prop => $value) {
+                if (is_object($row)) {
+                    if (!property_exists($row, $prop)) {
+                        add_log("Cannot filter on {$prop}: property does not exist", 'Build::PropertyFilter', LOG_WARNING);
+                        continue;
+                    }
 
-        add_last_sql_error('build.GetBuildFailures', $projectid, $this->Id);
+                    if ($row->$prop != $value) {
+                        return false;
+                    }
+                } elseif (is_array($row)) {
+                    if (!array_key_exists($prop, $row)) {
+                        add_log("Cannot filter on {$prop}: property does not exist", 'Build::PropertyFilter', LOG_WARNING);
+                        continue;
+                    }
 
-        return pdo_query($q);
+                    if ($row[$prop] != $value) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        });
     }
 
     /**
@@ -1331,8 +1363,7 @@ class Build
             ($previousbuild->GetNumberOfFailedTests() + $previousbuild->GetNumberOfNotRunTests());
 
         // Find the number of authors that contributed to this changeset.
-        $pdo = get_link_identifier()->getPdo();
-        $nauthors_stmt = $pdo->prepare(
+        $nauthors_stmt = $this->PDO->prepare(
                 'SELECT count(author) FROM
                     (SELECT uf.author FROM updatefile AS uf
                      JOIN build2update AS b2u ON (b2u.updateid=uf.updateid)
@@ -1345,7 +1376,7 @@ class Build
         $newbuild = 1;
         $previousauthor = '';
         // Record user statistics for each updated file.
-        $updatefiles_stmt = $pdo->prepare(
+        $updatefiles_stmt = $this->PDO->prepare(
             "SELECT author,email,checkindate,filename FROM updatefile AS uf
             JOIN build2update AS b2u ON b2u.updateid=uf.updateid
             WHERE b2u.buildid=? AND checkindate>'1980-01-01T00:00:00'
@@ -1400,18 +1431,16 @@ class Build
     private function AddUpdateStatistics($author, $email, $checkindate, $firstbuild,
                                          $warningdiff, $errordiff, $testdiff)
     {
-        $pdo = get_link_identifier()->getPdo();
-
         // Find user by email address.
         $user_table = qid('user');
-        $stmt = $pdo->prepare("SELECT id FROM $user_table WHERE email=?");
+        $stmt = $this->PDO->prepare("SELECT id FROM $user_table WHERE email=?");
         pdo_execute($stmt, [$email]);
         $row = $stmt->fetch();
         if ($row) {
             $userid = $row['id'];
         } else {
             // Find user by author name.
-            $stmt = $pdo->prepare(
+            $stmt = $this->PDO->prepare(
                 'SELECT up.userid FROM user2project AS up
                 JOIN user2repository AS ur ON (ur.userid=up.userid)
                 WHERE up.projectid=:projectid
@@ -1458,8 +1487,8 @@ class Build
         }
 
         // Insert or update appropriately.
-        $pdo->beginTransaction();
-        $stmt = $pdo->prepare(
+        $this->PDO->beginTransaction();
+        $stmt = $this->PDO->prepare(
                 'SELECT totalupdatedfiles FROM userstatistics
                 WHERE userid=:userid AND projectid=:projectid AND
                 checkindate=:checkindate FOR UPDATE');
@@ -1471,7 +1500,7 @@ class Build
 
         if ($row) {
             // Update existing entry.
-            $stmt = $pdo->prepare(
+            $stmt = $this->PDO->prepare(
                     'UPDATE userstatistics SET
                     totalupdatedfiles=totalupdatedfiles+1,
                     totalbuilds=totalbuilds+:totalbuilds,
@@ -1496,7 +1525,7 @@ class Build
             pdo_execute($stmt);
         } else {
             // Insert a new row into the database.
-            $stmt = $pdo->prepare(
+            $stmt = $this->PDO->prepare(
                     'INSERT INTO userstatistics
                     (userid,projectid,checkindate,totalupdatedfiles,totalbuilds,
                      nfixedwarnings,nfailedwarnings,nfixederrors,nfailederrors,
@@ -1517,7 +1546,7 @@ class Build
             $stmt->bindParam(':nfailedtests', $nfailedtests);
             pdo_execute($stmt);
         }
-        $pdo->commit();
+        $this->PDO->commit();
     }
 
     /** Find the errors associated with a user
@@ -2270,5 +2299,81 @@ class Build
         $this->EndOfDay = gmdate(FMT_DATETIME, $end_timestamp);
 
         return true;
+    }
+
+    /**
+     * Get all errors, including warnings, for all children builds of this build.
+     *
+     * @param int $fetchStyle
+     * @return array|bool
+     */
+    public function GetErrorsForChildren($fetchStyle = PDO::FETCH_ASSOC)
+    {
+        if (!$this->Id) {
+            add_log('Id not set', 'Build::GetErrorsForChildren', LOG_WARNING);
+            return false;
+        }
+
+        $sql = '
+            SELECT sp2b.subprojectid, sp.name subprojectname, be.*
+            FROM builderror be
+            JOIN build AS b
+                ON b.id = be.buildid
+            JOIN subproject2build AS sp2b
+                ON sp2b.buildid = be.buildid
+            JOIN subproject AS sp
+                ON sp.id = sp2b.subprojectid
+            WHERE b.parentid = ?
+        ';
+
+        $query = $this->PDO->prepare($sql);
+        pdo_execute($query, [$this->Id]);
+
+        return $query->fetchAll($fetchStyle);
+    }
+
+    /**
+     * Get all failures, including warnings, for all children builds of this build.
+     *
+     * @param int $fetchStyle
+     * @return array|bool
+     */
+    public function GetFailuresForChildren($fetchStyle = PDO::FETCH_ASSOC)
+    {
+        if (!$this->Id) {
+            add_log('Id not set', 'Build::GetFailuresForChildren', LOG_WARNING);
+            return false;
+        }
+
+        $sql = '
+            SELECT
+                bf.id,
+                bf.sourcefile,
+                bfd.language,
+                bfd.targetname,
+                bfd.outputfile,
+                bfd.outputtype,
+                bf.workingdirectory,
+                bfd.stderror,
+                bfd.stdoutput,
+                bfd.exitcondition,
+                sp2b.subprojectid,
+                sp.name subprojectname
+             FROM buildfailure AS bf
+             LEFT JOIN buildfailuredetails AS bfd
+                ON (bfd.id=bf.detailsid)
+            JOIN subproject2build AS sp2b
+                ON bf.buildid = sp2b.buildid
+            JOIN subproject AS sp
+                ON sp.id = sp2b.subprojectid
+            JOIN build b on bf.buildid = b.id
+            WHERE b.parentid = ?
+        ';
+
+        $query = $this->PDO->prepare($sql);
+
+        pdo_execute($query, [$this->Id]);
+
+        return $query->fetchAll($fetchStyle);
     }
 }

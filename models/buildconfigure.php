@@ -30,6 +30,16 @@ class BuildConfigure
     public $NumberOfWarnings;
     public $NumberOfErrors;
 
+    private $PDO;
+
+    /**
+     * BuildConfigure constructor.
+     */
+    public function __construct()
+    {
+        $this->PDO = get_link_identifier()->getPdo();
+    }
+
     public function AddError($error)
     {
         $error->BuildId = $this->BuildId;
@@ -151,6 +161,27 @@ class BuildConfigure
             return true;
         }
         return false;
+    }
+
+    /**
+     * Returns configurations for the build
+     *
+     * @param int $fetchType
+     * @return bool|mixed
+     */
+    public function GetConfigureForBuild($fetchType = PDO::FETCH_ASSOC)
+    {
+        if (!$this->BuildId) {
+            add_log('BuildId not set', 'BuildConfigure::GetConfigureForBuild()', LOG_WARNING);
+            return false;
+        }
+
+        $sql = "SELECT * FROM configure WHERE buildid=?";
+        $query = $this->PDO->prepare($sql);
+
+        pdo_execute($query, [$this->BuildId]);
+
+        return $query->fetch($fetchType);
     }
 
     /** Compute the warnings from the log. In the future we might want to add errors */

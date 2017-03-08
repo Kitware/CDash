@@ -29,6 +29,14 @@ class Label
     public $TestBuildId;
     public $UpdateFileKey;
 
+    private $PDO;
+
+
+    public function __construct()
+    {
+        $this->PDO = get_link_identifier()->getPdo();
+    }
+
     public function SetText($text)
     {
         $this->Text = $text;
@@ -44,6 +52,26 @@ class Label
     public function GetIdFromText()
     {
         return pdo_get_field_value("SELECT id FROM label WHERE text='" . $this->Text . "'", 'id', 0);
+    }
+
+    public function GetTextFromBuildFailure($fetchType = PDO::FETCH_ASSOC)
+    {
+        if (!$this->BuildFailureId) {
+            add_log('BuildFailureId not set', 'Label::GetTestFromBuildFailure', LOG_WARNING);
+            return;
+        }
+
+        $sql = '
+            SELECT text FROM label, label2buildfailure
+            WHERE label.id=label2buildfailure.labelid AND
+            label2buildfailure.buildfailureid=?
+            ORDER BY text ASC
+        ';
+
+        $query = $this->PDO->prepare($sql);
+        pdo_execute($query, [$this->BuildFailureId]);
+
+        return $query->fetchAll($fetchType);
     }
 
     public function InsertAssociation($table, $field1, $value1 = null, $field2 = null, $value2 = null)
