@@ -2260,5 +2260,4 @@ class Build
 
         return $query->fetchAll($fetchStyle);
     }
-
 }
