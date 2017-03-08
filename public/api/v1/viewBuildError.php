@@ -206,14 +206,14 @@ if (isset($_GET['onlydeltan'])) {
         addErrorResponse($marshaledResolvedBuildFailure);
     }
 } else {
-    $filters = ['type' => $type];
+    $filter_error_properties = ['type' => $type];
 
     if (isset($_GET['onlydeltap'])) {
-        $filters['newstatus'] = Build::STATUS_NEW;
+        $filter_error_properties['newstatus'] = Build::STATUS_NEW;
     }
 
     // Build error table
-    $buildErrors = $build->GetErrors($filters);
+    $buildErrors = $build->GetErrors($filter_error_properties);
 
     foreach ($buildErrors as $error) {
         addErrorResponse(builderror::marshal($error, $project_array, $revision));
