@@ -334,6 +334,9 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
 {
     include 'config/config.php';
     include_once 'models/buildconfigure.php';
+    include_once 'models/buildupdate.php';
+
+    global $CDASH_BASE_URL, $CDASH_ASYNCHRONOUS_SUBMISSION;
 
     $serverURI = get_server_URI();
     // In the case of asynchronous submission, the serverURI contains /cdash
@@ -348,13 +351,13 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
     if ($errorkey == 'update_errors') {
         $information = "\n\n*Update*\n";
 
-        $update = pdo_query('SELECT command,status FROM buildupdate AS u,build2update AS b2u
-                            WHERE b2u.updateid=u.id AND b2u.buildid=' . qnum($buildid));
-        $update_array = pdo_fetch_array($update);
+        $buildUpdate = new BuildUpdate();
+        $buildUpdate->BuildId = $buildid;
+        $update = $buildUpdate->GetUpdateForBuild(PDO::FETCH_OBJ);
 
-        $information .= 'Status: ' . $update_array['status'] . ' (' . $serverURI . '/viewUpdate.php?buildid=' . $buildid . ")\n";
+        $information .= "Status: {$update->status} ({$serverURI}/viewUpdate.php?buildid={$buildid})\n";
         $information .= 'Command: ';
-        $information .= substr($update_array['command'], 0, $maxchars);
+        $information .= substr($update->command, 0, $maxchars);
         $information .= "\n";
     } elseif ($errorkey == 'configure_errors') {
         // Configure information
