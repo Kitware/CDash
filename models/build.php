@@ -80,6 +80,7 @@ class Build
     public $BeginningOfDay;
     public $EndOfDay;
     private $Failures;
+    private $PDO;
 
     public function __construct()
     {
@@ -89,6 +90,7 @@ class Build
         $this->Append = false;
         $this->InsertErrors = true;
         $this->Filled = false;
+        $this->PDO = get_link_identifier()->getPdo();
     }
 
     public function IsParentBuild()
@@ -469,9 +471,7 @@ class Build
             }
 
             if ($this->IsParentBuild()) {
-                $subproject = new SubProject();
-                $subproject->SetParentBuildId($this->Id);
-                $this->Errors = $subproject->GetErrorsForParentBuild($fetchStyle);
+                $this->Errors = $this->GetErrorsForChildren($fetchStyle);
             } else {
                 $buildErrors = new BuildError();
                 $buildErrors->BuildId = $this->Id;
@@ -497,9 +497,7 @@ class Build
             }
 
             if ($this->isParentBuild()) {
-                $subproject = new SubProject();
-                $subproject->SetParentBuildId($this->Id);
-                $this->Failures = $subproject->GetFailuresForParentBuild($fetchStyle);
+                $this->Failures = $this->GetFailuresForChildren($fetchStyle);
             } else {
                 $buildFailure = new BuildFailure();
                 $buildFailure->BuildId = $this->Id;
@@ -1249,8 +1247,7 @@ class Build
             ($previousbuild->GetNumberOfFailedTests() + $previousbuild->GetNumberOfNotRunTests());
 
         // Find the number of authors that contributed to this changeset.
-        $pdo = get_link_identifier()->getPdo();
-        $nauthors_stmt = $pdo->prepare(
+        $nauthors_stmt = $this->PDO->prepare(
                 'SELECT count(author) FROM
                     (SELECT uf.author FROM updatefile AS uf
                      JOIN build2update AS b2u ON (b2u.updateid=uf.updateid)
@@ -1263,7 +1260,7 @@ class Build
         $newbuild = 1;
         $previousauthor = '';
         // Record user statistics for each updated file.
-        $updatefiles_stmt = $pdo->prepare(
+        $updatefiles_stmt = $this->PDO->prepare(
             "SELECT author,email,checkindate,filename FROM updatefile AS uf
             JOIN build2update AS b2u ON b2u.updateid=uf.updateid
             WHERE b2u.buildid=? AND checkindate>'1980-01-01T00:00:00'
@@ -1318,18 +1315,16 @@ class Build
     private function AddUpdateStatistics($author, $email, $checkindate, $firstbuild,
                                          $warningdiff, $errordiff, $testdiff)
     {
-        $pdo = get_link_identifier()->getPdo();
-
         // Find user by email address.
         $user_table = qid('user');
-        $stmt = $pdo->prepare("SELECT id FROM $user_table WHERE email=?");
+        $stmt = $this->PDO->prepare("SELECT id FROM $user_table WHERE email=?");
         pdo_execute($stmt, [$email]);
         $row = $stmt->fetch();
         if ($row) {
             $userid = $row['id'];
         } else {
             // Find user by author name.
-            $stmt = $pdo->prepare(
+            $stmt = $this->PDO->prepare(
                 'SELECT up.userid FROM user2project AS up
                 JOIN user2repository AS ur ON (ur.userid=up.userid)
                 WHERE up.projectid=:projectid
@@ -1376,8 +1371,8 @@ class Build
         }
 
         // Insert or update appropriately.
-        $pdo->beginTransaction();
-        $stmt = $pdo->prepare(
+        $this->PDO->beginTransaction();
+        $stmt = $this->PDO->prepare(
                 'SELECT totalupdatedfiles FROM userstatistics
                 WHERE userid=:userid AND projectid=:projectid AND
                 checkindate=:checkindate FOR UPDATE');
@@ -1389,7 +1384,7 @@ class Build
 
         if ($row) {
             // Update existing entry.
-            $stmt = $pdo->prepare(
+            $stmt = $this->PDO->prepare(
                     'UPDATE userstatistics SET
                     totalupdatedfiles=totalupdatedfiles+1,
                     totalbuilds=totalbuilds+:totalbuilds,
@@ -1414,7 +1409,7 @@ class Build
             pdo_execute($stmt);
         } else {
             // Insert a new row into the database.
-            $stmt = $pdo->prepare(
+            $stmt = $this->PDO->prepare(
                     'INSERT INTO userstatistics
                     (userid,projectid,checkindate,totalupdatedfiles,totalbuilds,
                      nfixedwarnings,nfailedwarnings,nfixederrors,nfailederrors,
@@ -1435,7 +1430,7 @@ class Build
             $stmt->bindParam(':nfailedtests', $nfailedtests);
             pdo_execute($stmt);
         }
-        $pdo->commit();
+        $this->PDO->commit();
     }
 
     /** Find the errors associated with a user
@@ -2189,4 +2184,81 @@ class Build
 
         return true;
     }
+
+    /**
+     * Get all errors, including warnings, for all children builds of this build.
+     *
+     * @param int $fetchStyle
+     * @return array|bool
+     */
+    public function GetErrorsForChildren($fetchStyle = PDO::FETCH_ASSOC)
+    {
+        if (!$this->Id) {
+            add_log('Id not set', 'Build::GetErrorsForChildren', LOG_WARNING);
+            return false;
+        }
+
+        $sql = '
+            SELECT sp2b.subprojectid, sp.name subprojectname, be.*
+            FROM builderror be
+            JOIN build AS b
+                ON b.id = be.buildid
+            JOIN subproject2build AS sp2b
+                ON sp2b.buildid = be.buildid
+            JOIN subproject AS sp
+                ON sp.id = sp2b.subprojectid
+            WHERE b.parentid = ?
+        ';
+
+        $query = $this->PDO->prepare($sql);
+        pdo_execute($query, [$this->Id]);
+
+        return $query->fetchAll($fetchStyle);
+    }
+
+    /**
+     * Get all failures, including warnings, for all children builds of this build.
+     *
+     * @param int $fetchStyle
+     * @return array|bool
+     */
+    public function GetFailuresForChildren($fetchStyle = PDO::FETCH_ASSOC)
+    {
+        if (!$this->Id) {
+            add_log('Id not set', 'Build::GetFailuresForChildren', LOG_WARNING);
+            return false;
+        }
+
+        $sql = '
+            SELECT
+                bf.id,
+                bf.sourcefile,
+                bfd.language,
+                bfd.targetname,
+                bfd.outputfile,
+                bfd.outputtype,
+                bf.workingdirectory,
+                bfd.stderror,
+                bfd.stdoutput,
+                bfd.exitcondition,
+                sp2b.subprojectid,
+                sp.name subprojectname
+             FROM buildfailure AS bf
+             LEFT JOIN buildfailuredetails AS bfd
+                ON (bfd.id=bf.detailsid)
+            JOIN subproject2build AS sp2b
+                ON bf.buildid = sp2b.buildid
+            JOIN subproject AS sp
+                ON sp.id = sp2b.subprojectid
+            JOIN build b on bf.buildid = b.id
+            WHERE b.parentid = ?
+        ';
+
+        $query = $this->PDO->prepare($sql);
+
+        pdo_execute($query, [$this->Id]);
+
+        return $query->fetchAll($fetchStyle);
+    }
+
 }
