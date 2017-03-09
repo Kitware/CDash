@@ -333,6 +333,7 @@ function lookup_emails_to_send($errors, $buildid, $projectid, $buildtype, $fixes
 function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $testtimemaxstatus, $emailtesttimingchanged)
 {
     include 'config/config.php';
+    include_once 'models/build.php';
     include_once 'models/buildconfigure.php';
     include_once 'models/buildupdate.php';
 
@@ -479,48 +480,35 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
         }
         $information .= "\n";
     } elseif ($errorkey == 'test_errors') {
-        $sql = '';
+
+        // Local function to add a set of tests to our email message body.
+        // This reduces copied & pasted code below.
+        $AddTestsToEmail = function ($tests, $section_title) use ($maxitems, $buildid, $maxchars, $maxitems, $serverURI) {
+            $num_tests = count($tests);
+            if ($num_tests < 1) {
+                return '';
+            }
+
+            $information = "\n\n*$section_title*";
+            if ($num_tests == $maxitems) {
+                $information .= " (first $maxitems)";
+            }
+            $information .= "\n";
+
+            foreach ($tests as $test) {
+                $info = $test['name'] . ' (' . $serverURI . '/testDetails.php?test=' . $test['id'] . '&build=' . $buildid . ")\n";
+                $information .= substr($info, 0, $maxchars);
+            }
+            $information .= "\n";
+            return $information;
+        };
+
+        $information .= $AddTestsToEmail($build->GetFailedTests($maxitems), 'Tests failing');
         if ($emailtesttimingchanged) {
-            $sql = 'OR timestatus>' . qnum($testtimemaxstatus);
+            $information .= $AddTestsToEmail($build->GetFailedTimeStatusTests($maxitems, $testtimemaxstatus), 'Tests failing time status');
         }
-        $test_query = pdo_query('SELECT test.name,test.id FROM build2test,test WHERE build2test.buildid=' . qnum($buildid) .
-            " AND test.id=build2test.testid AND (build2test.status='failed'" . $sql . ") ORDER BY test.id LIMIT $maxitems");
-        add_last_sql_error('sendmail');
-        $numrows = pdo_num_rows($test_query);
-
-        if ($numrows > 0) {
-            $information .= "\n\n*Tests failing*";
-            if (pdo_num_rows($test_query) == $maxitems) {
-                $information .= ' (first ' . $maxitems . ')';
-            }
-            $information .= "\n";
-
-            while ($test_array = pdo_fetch_array($test_query)) {
-                $info = $test_array['name'] . ' (' . $serverURI . '/testDetails.php?test=' . $test_array['id'] . '&build=' . $buildid . ")\n";
-                $information .= substr($info, 0, $maxchars);
-            }
-            $information .= "\n";
-        }
-
-        // Add the tests not run
-        $test_query = pdo_query('SELECT test.name,test.id FROM build2test,test WHERE build2test.buildid=' . qnum($buildid) .
-            " AND test.id=build2test.testid AND (build2test.status='notrun'" . $sql . ") ORDER BY test.id LIMIT $maxitems");
-        add_last_sql_error('sendmail');
-        $numrows = pdo_num_rows($test_query);
-
-        if ($numrows > 0) {
-            $information .= "\n\n*Tests not run*";
-            if (pdo_num_rows($test_query) == $maxitems) {
-                $information .= ' (first ' . $maxitems . ')';
-            }
-            $information .= "\n";
-
-            while ($test_array = pdo_fetch_array($test_query)) {
-                $info = $test_array['name'] . ' (' . $serverURI . '/testDetails.php?test=' . $test_array['id'] . '&build=' . $buildid . ")\n";
-                $information .= substr($info, 0, $maxchars);
-            }
-            $information .= "\n";
-        }
+        $information .= $AddTestsToEmail($build->GetTimedoutTests($maxitems), 'Test timeouts');
+        $information .= $AddTestsToEmail($build->GetNotRunTests($maxitems), 'Tests not run');
     } elseif ($errorkey == 'dynamicanalysis_errors') {
         $da_query = pdo_query("SELECT name,id FROM dynamicanalysis WHERE status IN ('failed','notrun') AND buildid="
             . qnum($buildid) . " ORDER BY name LIMIT $maxitems");
@@ -540,7 +528,26 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
             }
             $information .= "\n";
         }
+    } elseif ($errorkey === 'missing_tests') {
+        // sanity check
+        $missing = isset($errors['missing_tests']['count']) ? $errors['missing_tests']['count'] : 0;
+
+        if ($missing) {
+            $information .= "\n\n*Missing tests*";
+            $length = $missing;
+            if ($errors['missing_tests']['count'] > $maxitems) {
+                $information .= " (first {$maxitems})";
+            }
+
+            $list = array_slice($errors['missing_tests']['list'], 0, $maxitems);
+            $information .= PHP_EOL;
+            $url = "({$serverURI}/viewTest.php?buildid={$buildid})";
+            $information .= implode(" {$url}\n", array_values($list));
+            $information .= $url;
+            $information .= PHP_EOL;
+        }
     }
+
     return $information;
 }
 
@@ -1024,6 +1031,7 @@ function send_email_to_address($emailaddress, $emailtext, $Build, $Project)
             && $key != 'build_errors'
             && $key != 'test_errors'
             && $key != 'dynamicanalysis_errors'
+            && $key != 'missing_tests'
         ) {
             continue;
         }
@@ -1057,6 +1065,13 @@ function send_email_to_address($emailaddress, $emailtext, $Build, $Project)
             case 'dynamicanalysis_errors':
                 $messagePlainText .= 'failing dynamic analysis tests';
                 $titleerrors .= 'd=' . $value;
+                break;
+            case 'missing_tests':
+                $missing = $value['count'];
+                if ($missing) {
+                    $messagePlainText .= 'missing tests';
+                    $titleerrors .= 'm=' . $missing;
+                }
                 break;
         }
         $i++;
@@ -1122,6 +1137,11 @@ function send_email_to_address($emailaddress, $emailtext, $Build, $Project)
             case 'dynamicanalysis_errors':
                 $messagePlainText .= "Dynamic analysis tests failing: $value\n";
                 break;
+            case 'missing_tests':
+                $missing = $value['count'];
+                if ($missing) {
+                    $messagePlainText .= "Missing tests: {$missing}\n";
+                }
         }
     }
 
@@ -1485,6 +1505,20 @@ function sendemail($handler, $projectid)
             if ($emailtext['nfixes'] == 1) {
                 send_email_fix_to_user($userid, $emailtext, $Build, $Project);
             }
+        }
+    }
+
+    // Check for missing tests
+    if ($handler instanceof TestingHandler) {
+        $Build->FillFromId($Build->Id);
+        $missing = $Build->GetNumberOfMissingTests();
+
+        if ($missing > 0) {
+            $errors['missing_tests'] = [
+                'count' => $missing,
+                'list' => $Build->MissingTests
+            ];
+            $errors['errors'] = true;
         }
     }
 

@@ -56,6 +56,7 @@ class Build
 
     public $Errors;
     public $ErrorDiffs;
+    public $MissingTests;
 
     public $SubProjectId;
     public $SubProjectName;
@@ -931,6 +932,144 @@ class Build
                 "/viewTest.php?onlyfailed&buildid=$this->Id";
             $this->NotifyPullRequest($message, $url);
         }
+    }
+
+    /**
+     * Get missing tests' names relative to previous build
+     *
+     * @return array
+     */
+    public function GetMissingTests()
+    {
+        if (!$this->Id) {
+            add_log('BuildId is not set', 'Build::GetMissingTests', LOG_ERR,
+                $this->ProjectId, $this->Id, CDASH_OBJECT_BUILD, $this->Id);
+            return false;
+        }
+
+        $previous_build_tests = [];
+        $current_build_tests = [];
+
+        $previous_build = $this->GetPreviousBuildId();
+
+        $sql = "SELECT DISTINCT B.name FROM build2test A
+            LEFT JOIN test B
+              ON A.testid=B.id
+            WHERE A.buildid=?
+            ORDER BY B.name
+         ";
+
+        $pdo = get_link_identifier()->getPdo();
+        $query = $pdo->prepare($sql);
+
+        pdo_execute($query, [$previous_build]);
+        foreach ($query->fetchAll(PDO::FETCH_OBJ) as $test) {
+            $previous_build_tests[$test->name] = $test->name;
+        }
+
+        pdo_execute($query, [$this->Id]);
+        foreach ($query->fetchAll(PDO::FETCH_OBJ) as $test) {
+            $current_build_tests[$test->name] = $test->name;
+        }
+
+        $this->MissingTests = array_diff($previous_build_tests, $current_build_tests);
+        return $this->MissingTests;
+    }
+
+    /**
+     * Gut the number of missing tests relative to previous build
+     *
+     * @return int
+     */
+    public function GetNumberOfMissingTests()
+    {
+        if (!is_array($this->MissingTests)) {
+            $this->GetMissingTests();
+        }
+
+        return count($this->MissingTests);
+    }
+
+    /**
+     * Get this build's tests that match the supplied WHERE clause.
+     *
+     * @return array
+     */
+    private function GetTests($criteria, $maxitems = 0)
+    {
+        if (!$this->Id) {
+            add_log('BuildId is not set', 'Build::GetTests', LOG_ERR,
+                $this->ProjectId, $this->Id, CDASH_OBJECT_BUILD, $this->Id);
+            return false;
+        }
+
+        $limit_clause = '';
+        $limit = (int) trim($maxitems);
+        if ($limit > 0) {
+            $limit_clause = "LIMIT $limit";
+        }
+
+        $sql = "
+            SELECT t.name, t.id, t.details
+            FROM test t
+            JOIN build2test b2t ON t.id = b2t.testid
+            WHERE b2t.buildid = :buildid
+            AND $criteria
+            ORDER BY t.id
+            $limit_clause";
+
+        $query = $this->PDO->prepare($sql);
+        $query->bindParam(':buildid', $this->Id);
+
+        if (!pdo_execute($query)) {
+            return [];
+        }
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Get this build's tests that failed but did not timeout.
+     *
+     * @return array
+     */
+    public function GetFailedTests($maxitems = 0)
+    {
+        $criteria = "b2t.status = 'failed' AND t.details NOT LIKE '%%Timeout%%'";
+        return $this->GetTests($criteria, $maxitems);
+    }
+
+    /**
+     * Get this build's tests that failed the time status check.
+     *
+     * @return array
+     */
+    public function GetFailedTimeStatusTests($maxitems = 0, $max_time_status = 3)
+    {
+        $max_time_status = (int) trim($max_time_status);
+        $criteria = "b2t.timestatus > $max_time_status";
+        return $this->GetTests($criteria, $maxitems);
+    }
+
+    /**
+     * Get this build's tests whose details indicate a timeout.
+     *
+     * @return array
+     */
+    public function GetTimedoutTests($maxitems = 0)
+    {
+        $criteria = "b2t.status = 'failed' AND t.details LIKE '%%Timeout%%'";
+        return $this->GetTests($criteria, $maxitems);
+    }
+
+    /**
+     * Get this build's tests whose status is "Not Run".
+     *
+     * @return array
+     */
+    public function GetNotRunTests($maxitems = 0)
+    {
+        $criteria = "b2t.status = 'notrun'";
+        return $this->GetTests($criteria, $maxitems);
     }
 
     /** Get the errors differences for the build */
