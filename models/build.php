@@ -1004,7 +1004,6 @@ class Build
         }
 
         $limit_clause = '';
-        $maxitems = intval($maxitems);
         $limit = (int) trim($maxitems);
         if ($limit > 0) {
             $limit_clause = "LIMIT $limit";
