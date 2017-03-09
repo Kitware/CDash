@@ -3,11 +3,13 @@
 .warning { background-color : #fdb66d; }
 .error { background-color : #de6868; }
 .missing {background-color: #dfdfdf; }
+.disabled-test { background-color : #ffff99; }
 
-.tabb tbody tr.odd td.normal { background-color: #7DB04A; }
-.tabb tbody tr.odd td.warning { background-color: #FCA854; }
-.tabb tbody tr.odd td.error { background-color: #D95454; }
+.tabb tbody tr.odd td.normal { background-color: #7db04a; }
+.tabb tbody tr.odd td.warning { background-color: #fca854; }
+.tabb tbody tr.odd td.error { background-color: #d95454; }
 .tabb tbody tr.odd td.missing { background-color: #cdcdcd; }
+.tabb tbody tr.odd td.disabled-test { background-color: #eeee00; }
 
 .Passed { background-color : #8aba5a; }
 .Failed { background-color : #fdba76; }

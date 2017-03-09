@@ -121,6 +121,7 @@ add_php_test(extracttar)
 add_php_test(pdoexecutelogserrors)
 add_php_test(revisionfilteracrossdates)
 add_php_test(timeoutsandmissingtests)
+add_php_test(disabledtests)
 
 if(CDASH_GITHUB_USERNAME AND CDASH_GITHUB_PASSWORD)
   add_php_test(github_PR_comment)

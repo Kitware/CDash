@@ -1062,13 +1062,14 @@ class Build
     }
 
     /**
-     * Get this build's tests whose status is "Not Run".
+     * Get this build's tests whose status is "Not Run" and whose details
+     * is not 'Disabled'.
      *
      * @return array
      */
     public function GetNotRunTests($maxitems = 0)
     {
-        $criteria = "b2t.status = 'notrun'";
+        $criteria = "b2t.status = 'notrun' AND t.details != 'Disabled'";
         return $this->GetTests($criteria, $maxitems);
     }
 
