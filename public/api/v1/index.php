@@ -508,6 +508,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
         //  countupdatefiles
         //  updatestatus
         //  countupdatewarnings
+        //  revision
         //  countbuildwarnings
         //  countbuilderrors
         //  countbuilderrordiff
@@ -846,12 +847,31 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $update_response = array();
 
         $countupdatefiles = $build_array['countupdatefiles'];
-        $update_response['files'] = $countupdatefiles;
         $buildgroups_response[$i]['numupdatedfiles'] += $countupdatefiles;
 
         $build_response['hasupdate'] = false;
         if (!empty($build_array['updatestarttime'])) {
             $build_response['hasupdate'] = true;
+
+            // Record what type of update to report for this project.
+            if (!array_key_exists('updatetype', $response) ||
+                empty($response['updatetype'])) {
+                if (!empty($build_array['revision'])) {
+                    $response['updatetype'] = 'Revision';
+                } else {
+                    $response['updatetype'] = 'Files';
+                }
+            }
+            if ($response['updatetype'] === 'Revision') {
+                $revision = $build_array['revision'];
+                // Trim revision to six characters.
+                $revision = substr($revision, 0, 6);
+                // Note that this field is still called 'files' so as not to
+                // break our previously released API.
+                $update_response['files'] = $revision;
+            } else {
+                $update_response['files'] = $countupdatefiles;
+            }
 
             if ($build_array['countupdateerrors'] > 0) {
                 $update_response['errors'] = 1;

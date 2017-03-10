@@ -1,10 +1,12 @@
 @import url("common.css");
 .normal  { background-color : #91bfdb; }
 .warning { background-color : #ffffbf; }
+.disabled-test { background-color : #fee090; }
 .error   { background-color : #fc8d59; }
 
 .tabb tbody tr.odd td.normal { background-color: #88b3ce; }
 .tabb tbody tr.odd td.warning { background-color: #eeeeb3; }
+.tabb tbody tr.odd td.disabled-test { background-color: #edcf7f; }
 .tabb tbody tr.odd td.error { background-color: #ef8553; }
 
 .Passed  { background-color : #91bfdb; }

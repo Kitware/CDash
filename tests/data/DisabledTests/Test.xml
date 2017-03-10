@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="test_disabled"
+	BuildStamp="20170213-0100-Nightly"
+	Name="localhost"
+	Generator="ctest-3.8.20170206-gb4a85"
+	CompilerName=""
+	CompilerVersion=""
+	OSName="Linux"
+	Hostname="elysium"
+	OSRelease="3.13.0-106-generic"
+	OSVersion="#153-Ubuntu SMP Tue Dec 6 15:44:32 UTC 2016"
+	OSPlatform="x86_64"
+	Is64Bits="1"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="45"
+	ProcessorCacheSize="12288"
+	NumberOfLogicalCPU="12"
+	NumberOfPhysicalCPU="1"
+	TotalVirtualMemory="32690"
+	TotalPhysicalMemory="32100"
+	LogicalProcessorsPerPhysical="12"
+	ProcessorClockFrequency="1200"
+	>
+	<Testing>
+		<StartDateTime>Feb 13 10:17 EST</StartDateTime>
+		<StartTestTime>1486999078</StartTestTime>
+		<TestList>
+			<Test>./ThisTestWillNotRun</Test>
+			<Test>./ThisTestIsDisabled</Test>
+		</TestList>
+		<Test Status="notrun">
+			<Name>ThisTestWillNotRun</Name>
+			<Path>.</Path>
+			<FullName>./ThisTestWillNotRun</FullName>
+			<FullCommandLine></FullCommandLine>
+			<Results>
+				<NamedMeasurement type="text/string" name="Completion Status">
+					<Value>Unable to find executable</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Command Line">
+					<Value></Value>
+				</NamedMeasurement>
+				<Measurement>
+					<Value>Unable to find executable: /tmp/bin/main</Value>
+				</Measurement>
+			</Results>
+		</Test>
+		<Test Status="notrun">
+			<Name>ThisTestIsDisabled</Name>
+			<Path>.</Path>
+			<FullName>./ThisTestIsDisabled</FullName>
+			<FullCommandLine></FullCommandLine>
+			<Results>
+				<NamedMeasurement type="text/string" name="Completion Status">
+					<Value>Disabled</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Command Line">
+					<Value></Value>
+				</NamedMeasurement>
+				<Measurement>
+					<Value></Value>
+				</Measurement>
+			</Results>
+		</Test>
+		<EndDateTime>Feb 13 10:17 EST</EndDateTime>
+		<EndTestTime>1486999078</EndTestTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Testing>
+</Site>

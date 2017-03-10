@@ -31,6 +31,8 @@ class BuildUpdate
     public $BuildId;
     public $Append;
     public $UpdateId;
+    public $Errors;
+    public $PDO;
 
     public function __construct()
     {
@@ -38,6 +40,7 @@ class BuildUpdate
         $this->Command = '';
         $this->Append = false;
         $this->DuplicateSQL = '';
+        $this->PDO = get_link_identifier()->getPdo();
         global $CDASH_DB_TYPE;
         if ($CDASH_DB_TYPE !== 'pgsql') {
             $this->DuplicateSQL = 'ON DUPLICATE KEY UPDATE buildid=buildid';
@@ -235,6 +238,36 @@ class BuildUpdate
             return 0;
         }
         return $files_array[0];
+    }
+
+    /**
+     * Returns the update for the buildid
+     *
+     * @param int $fetchType
+     * @return bool|mixed
+     */
+    public function GetUpdateForBuild($fetchType = PDO::FETCH_ASSOC)
+    {
+        if (!$this->BuildId) {
+            echo 'BuildUpdate::GetUpdateStatusForBuild(): BuildId not set';
+            return false;
+        }
+
+        $sql = "
+            SELECT 
+                A.*,
+                B.buildid
+            FROM 
+                buildupdate A, 
+                build2update B
+            WHERE B.updateid=A.id
+              AND B.buildid=:buildid
+        ";
+
+        $query = $this->PDO->prepare($sql);
+        $query->bindParam(':buildid', $this->BuildId);
+
+        return $query->fetch($fetchType);
     }
 
     /** Get the number of warnings for an update */

@@ -1,0 +1,3 @@
+preset: psr2
+disabled:
+  - psr4

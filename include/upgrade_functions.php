@@ -172,12 +172,24 @@ function ModifyTableField($table, $field, $mySQLType, $pgSqlType, $default, $not
 function AddTablePrimaryKey($table, $field)
 {
     include dirname(__DIR__) . '/config/config.php';
+    global $CDASH_DB_TYPE;
+
     add_log("Adding primarykey $field to $table", 'AddTablePrimaryKey');
-    if ($CDASH_DB_TYPE == 'pgsql') {
-        pdo_query('ALTER TABLE "' . $table . '" ADD PRIMARY KEY ("' . $field . '")');
-    } else {
-        pdo_query('ALTER IGNORE TABLE ' . $table . ' ADD PRIMARY KEY ( ' . $field . ' )');
+    $query = 'ALTER TABLE "' . $table . '" ADD PRIMARY KEY ("' . $field . '")';
+    $version = pdo_get_vendor_version();
+    list($major, $minor, $patch) = explode(".", $version);
+
+    // As of MySQL 5.7.4, the IGNORE clause for ALTER TABLE is removed and its use produces an error.
+    // Retaining original query for backwards compatibility
+    if ($CDASH_DB_TYPE == 'mysql') {
+        if ($major >= 5 && $minor >= 7) {
+            $query = "ALTER TABLE {$table} ADD PRIMARY KEY (`{$field}`)";
+        } else {
+            $query = "ALTER IGNORE TABLE {$table} ADD PRIMARY KEY (`{$field}`)";
+        }
     }
+
+    pdo_query($query);
     //add_last_sql_error("AddTablePrimaryKey");
     add_log("Done adding primarykey $field to $table", 'AddTablePrimaryKey');
 }

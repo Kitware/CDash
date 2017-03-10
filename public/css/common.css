@@ -1178,6 +1178,11 @@ textarea {
   color: transparent !important;
 }
 
+/* add border to bottom of table */
+.test-table {
+    border-bottom: 1px solid #555555;
+}
+
 /* padding for test table cells */
 .test-table td, .test-table th{
   padding: 4px !important;
