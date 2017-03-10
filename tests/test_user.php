@@ -23,11 +23,6 @@ class UserTestCase extends KWWebTestCase
         $user = new User();
         $user->Id = 'non_numeric';
 
-        if (!($user->SetPassword('blah') === false)) {
-            $this->fail("User::SetPassword didn't return false for non-numeric user id");
-            return 1;
-        }
-
         if (!($user->IsAdmin() === false)) {
             $this->fail("User::IsAdmin didn't return false for non-numeric user id");
             return 1;
@@ -70,13 +65,10 @@ class UserTestCase extends KWWebTestCase
             return 1;
         }
 
-        $user->Password = md5('simpletest');
+        $user->Password = User::PasswordHash('simpletest');
 
         // Coverage for update save
         $user->Save();
-
-        // Coverage for SetPassword
-        $user->SetPassword(md5('simpletest'));
 
         $this->stopCodeCoverage();
         return 0;

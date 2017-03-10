@@ -577,7 +577,7 @@ CREATE TABLE `updatefile` (
 CREATE TABLE `user` (
   `id` int(11) NOT NULL auto_increment,
   `email` varchar(255) NOT NULL default '',
-  `password` varchar(40) NOT NULL default '',
+  `password` varchar(255) NOT NULL default '',
   `firstname` varchar(40) NOT NULL default '',
   `lastname` varchar(40) NOT NULL default '',
   `institution` varchar(255) NOT NULL default '',
@@ -590,7 +590,7 @@ CREATE TABLE `user` (
 
 CREATE TABLE `usertemp` (
   `email` varchar(255) NOT NULL default '',
-  `password` varchar(40) NOT NULL default '',
+  `password` varchar(255) NOT NULL default '',
   `firstname` varchar(40) NOT NULL default '',
   `lastname` varchar(40) NOT NULL default '',
   `institution` varchar(255) NOT NULL default '',
@@ -1433,7 +1433,7 @@ CREATE TABLE IF NOT EXISTS `buildfile` (
 
 CREATE TABLE IF NOT EXISTS `password` (
   `userid` int(11) NOT NULL,
-  `password` varchar(40) NOT NULL default '',
+  `password` varchar(255) NOT NULL default '',
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   KEY `userid` (`userid`)
 );

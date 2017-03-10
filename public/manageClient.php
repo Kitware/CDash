@@ -93,12 +93,13 @@ if ($session_OK) {
     $xml .= '<date>' . date('r') . '</date>';
     $xml .= '<backurl>user.php</backurl>';
 
-    $xml .= '<user>';
     $userid = $_SESSION['cdash']['loginid'];
-    $user = pdo_query('SELECT admin FROM ' . qid('user') . " WHERE id='$userid'");
-    $user_array = pdo_fetch_array($user);
+    $user = new User();
+    $user->Id = $userid;
+    $user->Fill();
+    $xml .= '<user>';
     $xml .= add_XML_value('id', $userid);
-    $xml .= add_XML_value('admin', $user_array['admin']);
+    $xml .= add_XML_value('admin', $user->Admin);
     $xml .= '</user>';
 
     if (isset($scheduleid)) {

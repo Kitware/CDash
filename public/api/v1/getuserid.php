@@ -17,6 +17,7 @@
 require_once dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
+require_once 'models/user.php';
 
 // Don't display the login form.
 $noforcelogin = 1;
@@ -47,8 +48,9 @@ $author = htmlspecialchars(pdo_real_escape_string($_GET['author']));
 // First, try the simplest query, where the author string is simply exactly
 // equal to the user's email:
 //
-$userid = pdo_get_field_value('SELECT id FROM ' . qid('user') . " WHERE email='$author'", 'id', '-1');
-if ($userid !== '-1') {
+$user = new User();
+$userid = $user->GetIdFromEmail($author);
+if ($userid) {
     echo $userid . '</userid>';
     return;
 }

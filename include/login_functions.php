@@ -14,6 +14,9 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+require_once 'models/user.php';
+$pdo = get_link_identifier()->getPdo();
+
 function setRememberMeCookie($userId)
 {
     $cookiename = 'CDash-' . $_SERVER['SERVER_NAME'];
@@ -32,7 +35,9 @@ function setRememberMeCookie($userId)
     }
 
     // Update the user key
-    if (pdo_query('UPDATE ' . qid('user') . " SET cookiekey='" . $key . "' WHERE id=" . qnum($userId)) !== false) {
+    $user = new User();
+    $user->Id = $userId;
+    if ($user->SetCookieKey($key)) {
         setcookie($cookiename, $userId . $key, $time);
     }
 }
@@ -40,62 +45,83 @@ function setRememberMeCookie($userId)
 /** Database authentication */
 function databaseAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
 {
-    global $loginerror;
+    global $CDASH_COOKIE_EXPIRATION_TIME, $CDASH_EXTERNAL_AUTH, $loginerror;
     $loginerror = '';
 
-    include dirname(__DIR__) . '/config/config.php';
-
-    $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-    pdo_select_db("$CDASH_DB_NAME", $db);
-    $sql = 'SELECT id,password FROM ' . qid('user') . " WHERE email='" . pdo_real_escape_string($email) . "'";
-    $result = pdo_query("$sql");
-
-    if (pdo_num_rows($result) == 0) {
-        pdo_free_result($result);
+    $user = new User();
+    $userid = $user->GetIdFromEmail($email);
+    if (!$userid) {
         $loginerror = 'Wrong email or password.';
         return false;
     }
 
-    $user_array = pdo_fetch_array($result);
-    $pass = $user_array['password'];
+    $user->Id = $userid;
+    $user->Fill();
 
     // Check if the account is locked out.
-    if (accountIsLocked($user_array['id'])) {
+    if (accountIsLocked($userid)) {
         return false;
     }
 
-    // External authentication
     if ($password === null && isset($CDASH_EXTERNAL_AUTH) && $CDASH_EXTERNAL_AUTH) {
-        // create the session array
-        $sessionArray = array('login' => $login, 'password' => 'this is not a valid password', 'passwd' => $user_array['password'], 'ID' => session_id(), 'valid' => 1, 'loginid' => $user_array['id']);
+        // External authentication succeeded.
+        // Create the session array.
+        $sessionArray = array('login' => $email, 'passwd' => null, 'ID' => session_id(), 'valid' => 1, 'loginid' => $userid);
         $_SESSION['cdash'] = $sessionArray;
-        pdo_free_result($result);
-        return true;                               // authentication succeeded
-    } elseif (md5($password) == $pass) {
-        // Authentication is successful.
-        if ($rememberme) {
-            setRememberMeCookie($user_array['id']);
-        }
-
-        session_name('CDash');
-        session_cache_limiter($SessionCachePolicy);
-        session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
-        @ini_set('session.gc_maxlifetime', $CDASH_COOKIE_EXPIRATION_TIME + 600);
-        session_start();
-
-        // create the session array
-        if (isset($_SESSION['cdash']['password'])) {
-            $password = $_SESSION['cdash']['password'];
-        }
-        $sessionArray = array('login' => $email, 'passwd' => $pass, 'ID' => session_id(), 'valid' => 1, 'loginid' => $user_array['id']);
-        $_SESSION['cdash'] = $sessionArray;
-
-        checkForExpiredPassword();
-        clearUnsuccessfulAttempts($user_array['id']);
         return true;
+    } else {
+        $success = false;
+        if (password_verify($password, $user->Password)) {
+            $success = true;
+        } elseif (md5($password) == $user->Password) {
+            // Re-hash this password using an algorithm that's more secure than md5.
+            // Do not attempt this before the database has been upgraded
+            // to accommodate the increased length of this field.
+            global $CDASH_DB_TYPE, $pdo;
+            $db_check = true;
+            if ($CDASH_DB_TYPE != 'pgsql') {
+                $table_name = qid('user');
+                $select = $pdo->query("SELECT password FROM $table_name LIMIT 1");
+                $meta = $select->getColumnMeta(0);
+                if ($meta['len'] < 255) {
+                    $db_check = false;
+                }
+            }
+            if ($db_check) {
+                $passwordHash = User::PasswordHash($password);
+                if ($passwordHash === false) {
+                    $loginerror = 'Failed to hash password.  Contact an admin.';
+                } else {
+                    $user->Password =  $passwordHash;
+                    $user->Save();
+                }
+            }
+            $success = true;
+        }
+
+        if ($success) {
+            // Authentication is successful.
+            if ($rememberme) {
+                setRememberMeCookie($userid);
+            }
+
+            session_name('CDash');
+            session_cache_limiter($SessionCachePolicy);
+            session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
+            @ini_set('session.gc_maxlifetime', $CDASH_COOKIE_EXPIRATION_TIME + 600);
+            session_start();
+
+            // Create the session array.
+            $sessionArray = array('login' => $email, 'passwd' => $user->Password, 'ID' => session_id(), 'valid' => 1, 'loginid' => $userid);
+            $_SESSION['cdash'] = $sessionArray;
+
+            checkForExpiredPassword();
+            clearUnsuccessfulAttempts($userid);
+            return true;
+        }
     }
 
-    incrementUnsuccessfulAttempts($user_array['id']);
+    incrementUnsuccessfulAttempts($userid);
     $loginerror = 'Wrong email or password.';
     return false;
 }
@@ -107,7 +133,6 @@ function ldapAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
     $loginerror = '';
 
     include dirname(__DIR__) . '/config/config.php';
-    include_once 'models/user.php';
 
     $ldap = ldap_connect($CDASH_LDAP_HOSTNAME);
     ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, $CDASH_LDAP_PROTOCOL_VERSION);
@@ -127,11 +152,11 @@ function ldapAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
             if (isset($principal)) {
                 // bind as this user
                 if (@ldap_bind($ldap, $principal, $password) and strlen(trim($password)) != 0) {
-                    $sql = 'SELECT id,password FROM ' . qid('user') . " WHERE email='" . pdo_real_escape_string($email) . "'";
-                    $result = pdo_query("$sql");
+                    $user = new User();
+                    $userid = $user->GetIdFromEmail($email);
 
                     // If the user doesn't exist we add it
-                    if (pdo_num_rows($result) == 0) {
+                    if (!$userid) {
                         @$givenname = $entries[0]['cn'][0];
                         if (!isset($givenname)) {
                             $loginerror = 'No givenname (cn) set in LDAP, cannot register user into CDash';
@@ -139,34 +164,37 @@ function ldapAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
                         }
                         $names = explode(' ', $givenname);
 
-                        $User = new User;
-
                         if (count($names) > 1) {
-                            $User->FirstName = $names[0];
-                            $User->LastName = $names[1];
+                            $user->FirstName = $names[0];
+                            $user->LastName = $names[1];
                             for ($i = 2; $i < count($names); $i++) {
-                                $User->LastName .= ' ' . $names[$i];
+                                $user->LastName .= ' ' . $names[$i];
                             }
                         } else {
-                            $User->LastName = $names[0];
+                            $user->LastName = $names[0];
                         }
 
                         // Add the user in the database
-                        $storedPassword = md5($password);
-                        $User->Email = $email;
-                        $User->Password = $storedPassword;
-                        $User->Save();
-                        $userid = $User->Id;
+                        $storedPassword = User::PasswordHash($password);
+                        if ($storedPassword === false) {
+                            $loginerror = 'Failed to hash password.  Contact an admin.';
+                        } else {
+                            $user->Email = $email;
+                            $user->Password = $storedPassword;
+                            $user->Save();
+                            $userid = $user->Id;
+                        }
                     } else {
-                        $user_array = pdo_fetch_array($result);
-                        $storedPassword = $user_array['password'];
-                        $userid = $user_array['id'];
+                        $user->Id = $userid;
+                        $user->Fill();
 
                         // If the password has changed we update
-                        if ($storedPassword != md5($password)) {
-                            $User = new User;
-                            $User->Id = $userid;
-                            $User->SetPassword(md5($password));
+                        $passwordHash = User::PasswordHash($password);
+                        if ($passwordHash === false) {
+                            $loginerror = 'Failed to hash password.  Contact an admin.';
+                        } elseif ($user->Password != $passwordHash) {
+                            $user->Password = $passwordHash;
+                            $user->Save();
                         }
                     }
 
@@ -190,7 +218,9 @@ function ldapAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
                         setcookie($cookiename, $value, $time);
 
                         // Update the user key
-                        pdo_query('UPDATE ' . qid('user') . " SET cookiekey='" . $key . "' WHERE id=" . qnum($userid));
+                        $user = new User();
+                        $user->Id = $userid;
+                        $user->SetCookieKey($key);
                     }
 
                     session_name('CDash');
@@ -234,14 +264,10 @@ function authenticate($email, $password, $SessionCachePolicy, $rememberme)
 
     if ($CDASH_USE_LDAP) {
         // If the user is '1' we use it to login
-        $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-        pdo_select_db("$CDASH_DB_NAME", $db);
-        $query = pdo_query('SELECT id FROM ' . qid('user') . " WHERE email='$email'");
-        if ($query && pdo_num_rows($query) > 0) {
-            $user_array = pdo_fetch_array($query);
-            if ($user_array['id'] == 1) {
-                return databaseAuthenticate($email, $password, $SessionCachePolicy, $rememberme);
-            }
+        $user = new User();
+        $userid = $user->GetIdFromEmail($email);
+        if ($userid == 1) {
+            return databaseAuthenticate($email, $password, $SessionCachePolicy, $rememberme);
         }
         return ldapAuthenticate($email, $password, $SessionCachePolicy, $rememberme);
     } else {
@@ -279,10 +305,9 @@ function auth($SessionCachePolicy = 'private_no_expire')
             if (isset($_COOKIE[$cookiename])) {
                 $cookievalue = $_COOKIE[$cookiename];
                 $cookieuseridkey = substr($cookievalue, 0, strlen($cookievalue) - 33);
-                $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-                pdo_select_db("$CDASH_DB_NAME", $db);
-
-                pdo_query('UPDATE ' . qid('user') . " SET cookiekey='' WHERE id=" . qnum($cookieuseridkey));
+                $user = new User();
+                $user->Id = $cookieuseridkey;
+                $user->SetCookieKey('');
                 setcookie('CDash-' . $_SERVER['SERVER_NAME'], '', time() - 3600);
             }
         }
@@ -292,46 +317,27 @@ function auth($SessionCachePolicy = 'private_no_expire')
 
     if (isset($_POST['sent'])) {
         // arrive from login form
-
         @$login = $_POST['login'];
-        if ($login != null) {
-            $login = htmlspecialchars(pdo_real_escape_string($login));
-        }
-
         @$passwd = $_POST['passwd'];
-        if ($passwd != null) {
-            $passwd = htmlspecialchars(pdo_real_escape_string($passwd));
-        }
-
         return authenticate($login, $passwd, $SessionCachePolicy, isset($_POST['rememberme']));
     } else {                                         // arrive from session var
         $cookiename = str_replace('.', '_', 'CDash-' . $_SERVER['SERVER_NAME']); // php doesn't like dot in cookie names
         if (isset($_COOKIE[$cookiename])) {
-            $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-            pdo_select_db("$CDASH_DB_NAME", $db);
-
             $cookievalue = $_COOKIE[$cookiename];
             $cookiekey = substr($cookievalue, strlen($cookievalue) - 33);
             if (strlen($cookiekey) < 1) {
                 return false;
             }
             $cookieuseridkey = substr($cookievalue, 0, strlen($cookievalue) - 33);
-            $sql =
-                'SELECT email,password,id FROM ' . qid('user') . "
-                WHERE cookiekey='" . pdo_real_escape_string($cookiekey) . "'";
-            if (!empty($cookieuseridkey)) {
-                $sql .= " AND id='" . pdo_real_escape_string($cookieuseridkey) . "'";
-            }
-            $result = pdo_query("$sql");
-            if (pdo_num_rows($result) == 1) {
-                $user_array = pdo_fetch_array($result);
+            $user = new User();
+            if ($user->FillFromCookie($cookiekey, $cookieuseridkey)) {
                 session_name('CDash');
                 session_cache_limiter($SessionCachePolicy);
                 session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
                 @ini_set('session.gc_maxlifetime', $CDASH_COOKIE_EXPIRATION_TIME + 600);
                 session_start();
 
-                $sessionArray = array('login' => $user_array['email'], 'passwd' => $user_array['password'], 'ID' => session_id(), 'valid' => 1, 'loginid' => $user_array['id']);
+                $sessionArray = array('login' => $user->Email, 'passwd' => $user->Password, 'ID' => session_id(), 'valid' => 1, 'loginid' => $user->Id);
                 $_SESSION['cdash'] = $sessionArray;
                 return true;
             }
@@ -351,19 +357,17 @@ function auth($SessionCachePolicy = 'private_no_expire')
         $email = @$_SESSION['cdash']['login'];
 
         if (!empty($email)) {
-            $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-            pdo_select_db("$CDASH_DB_NAME", $db);
-            $sql = 'SELECT id,password FROM ' . qid('user') . " WHERE email='" . pdo_real_escape_string($email) . "'";
-            $result = pdo_query("$sql");
-
-            if (pdo_num_rows($result) == 0) {
-                pdo_free_result($result);
+            $user = new User();
+            $userid = $user->GetIdFromEmail($email);
+            if (!$userid) {
                 $loginerror = 'Wrong email or password.';
                 return false;
             }
 
-            $user_array = pdo_fetch_array($result);
-            if ($user_array['password'] == $_SESSION['cdash']['passwd']) {
+            $user->Id = $userid;
+            $user->Fill();
+
+            if ($user->Password == $_SESSION['cdash']['passwd']) {
                 return true;
             }
             $loginerror = 'Wrong email or password.';
@@ -452,7 +456,7 @@ function getPasswordComplexity($password)
  */
 function checkForExpiredPassword()
 {
-    global $CDASH_PASSWORD_EXPIRATION;
+    global $CDASH_PASSWORD_EXPIRATION, $pdo;
     if ($CDASH_PASSWORD_EXPIRATION < 1) {
         return false;
     }
@@ -466,17 +470,19 @@ function checkForExpiredPassword()
     $uri .= '/editUser.php?reason=expired';
 
     $userid = $_SESSION['cdash']['loginid'];
-    $result = pdo_query("
-            SELECT date FROM password
-            WHERE userid=$userid ORDER BY date DESC LIMIT 1");
-    if (pdo_num_rows($result) < 1) {
+    $stmt = $pdo->prepare(
+        'SELECT date FROM password WHERE userid = ?
+        ORDER BY date DESC LIMIT 1');
+    pdo_execute($stmt, [$userid]);
+    $row = $stmt->fetch();
+
+    if (!$row) {
         // If no result, then password rotation must have been enabled
         // after this user set their password.  Force them to change it now.
         $_SESSION['cdash']['redirect'] = $uri;
         return true;
     }
 
-    $row = pdo_fetch_array($result);
     $password_created_time = strtotime($row['date']);
     $password_expiration_time =
         strtotime("+$CDASH_PASSWORD_EXPIRATION days", $password_created_time);
@@ -492,11 +498,10 @@ function checkForExpiredPassword()
   */
 function clearUnsuccessfulAttempts($userid)
 {
-    global $CDASH_LOCKOUT_ATTEMPTS;
+    global $CDASH_LOCKOUT_ATTEMPTS, $pdo;
     if ($CDASH_LOCKOUT_ATTEMPTS == 0) {
         return;
     }
-    $pdo = get_link_identifier()->getPdo();
     createLockoutRow($userid, $pdo);
     $stmt = $pdo->prepare(
         'UPDATE lockout SET failedattempts = 0 WHERE userid=?');
@@ -509,11 +514,10 @@ function clearUnsuccessfulAttempts($userid)
   */
 function incrementUnsuccessfulAttempts($userid)
 {
-    global $CDASH_LOCKOUT_ATTEMPTS, $CDASH_LOCKOUT_LENGTH;
+    global $CDASH_LOCKOUT_ATTEMPTS, $CDASH_LOCKOUT_LENGTH, $pdo;
     if ($CDASH_LOCKOUT_ATTEMPTS == 0) {
         return;
     }
-    $pdo = get_link_identifier()->getPdo();
     createLockoutRow($userid, $pdo);
 
     $pdo->beginTransaction();
@@ -577,7 +581,7 @@ function createLockoutRow($userid, $pdo)
   */
 function accountIsLocked($userid)
 {
-    global $CDASH_LOCKOUT_ATTEMPTS;
+    global $CDASH_LOCKOUT_ATTEMPTS, $pdo;
     if ($CDASH_LOCKOUT_ATTEMPTS == 0) {
         return false;
     }
@@ -585,7 +589,6 @@ function accountIsLocked($userid)
     global $loginerror;
     $loginerror = '';
 
-    $pdo = get_link_identifier()->getPdo();
     $pdo->beginTransaction();
     $stmt = $pdo->prepare('SELECT islocked, unlocktime FROM lockout WHERE userid=?');
     if (!pdo_execute($stmt, [$userid])) {

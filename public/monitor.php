@@ -14,7 +14,9 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once 'login.php';
+require_once dirname(__DIR__) . '/config/config.php';
+require_once 'models/user.php';
+require_once 'public/login.php';
 
 function echo_currently_processing_submissions()
 {
@@ -230,13 +232,9 @@ function echo_submission_table()
 
 if ($session_OK) {
     $userid = $_SESSION['cdash']['loginid'];
-
-    $user_is_admin = pdo_get_field_value(
-        'SELECT admin FROM ' . qid('user') . " WHERE id='$userid'",
-        'admin',
-        0);
-
-    if ($user_is_admin) {
+    $user = new User();
+    $user->Id = $userid;
+    if ($user->IsAdmin()) {
         echo_currently_processing_submissions();
         echo_pending_submissions();
         echo_average_wait_times();

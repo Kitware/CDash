@@ -1456,13 +1456,10 @@ class Build
                                          $warningdiff, $errordiff, $testdiff)
     {
         // Find user by email address.
-        $user_table = qid('user');
-        $stmt = $this->PDO->prepare("SELECT id FROM $user_table WHERE email=?");
-        pdo_execute($stmt, [$email]);
-        $row = $stmt->fetch();
-        if ($row) {
-            $userid = $row['id'];
-        } else {
+        require_once('models/user.php');
+        $user = new User();
+        $userid = $user->GetIdFromEmail($email);
+        if (!$userid) {
             // Find user by author name.
             $stmt = $this->PDO->prepare(
                 'SELECT up.userid FROM user2project AS up

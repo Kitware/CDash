@@ -201,6 +201,7 @@ function check_email_update_errors($buildid)
 /** Return the list of user id and committer emails who should get emails */
 function lookup_emails_to_send($errors, $buildid, $projectid, $buildtype, $fixes = false, $collectUnregisteredCommitters = false)
 {
+    require_once 'models/user.php';
     require_once 'models/userproject.php';
 
     $userids = array();
@@ -233,11 +234,9 @@ function lookup_emails_to_send($errors, $buildid, $projectid, $buildtype, $fixes
 
             $filled = false;
             if ($email != '') {
-                $result = pdo_query('SELECT id FROM ' . qid('user') . " WHERE email='$email'");
-
-                if (pdo_num_rows($result) != 0) {
-                    $user_array = pdo_fetch_array($result);
-                    $id = $user_array['id'];
+                $user = new User();
+                $id = $user->GetIdFromEmail($email);
+                if ($id) {
                     $UserProject->UserId = $id;
                     $filled = $UserProject->FillFromUserId();
                 }

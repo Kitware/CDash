@@ -22,6 +22,7 @@ include_once 'include/common.php';
 include 'include/version.php';
 require_once 'models/build.php';
 require_once 'models/buildusernote.php';
+require_once 'models/user.php';
 
 $start = microtime_float();
 $response = array();
@@ -123,10 +124,11 @@ get_dashboard_JSON($projectname, $date, $response);
 if ($logged_in) {
     $user_response = array();
     $userid = $_SESSION['cdash']['loginid'];
-    $user = pdo_query('SELECT admin FROM ' . qid('user') . " WHERE id='$userid'");
-    $user_array = pdo_fetch_array($user);
+    $user = new User();
+    $user->Id = $userid;
+    $user->Fill();
     $user_response['id'] = $userid;
-    $user_response['admin'] = $user_array['admin'];
+    $user_response['admin'] = $user->Admin;
     $response['user'] = $user_response;
 }
 

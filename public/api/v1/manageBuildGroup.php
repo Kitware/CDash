@@ -14,13 +14,17 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-$noforcelogin = 1;
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
-include_once 'include/common.php';
+require_once 'include/common.php';
+
+$noforcelogin = 1;
 include 'public/login.php';
-include 'include/version.php';
-include 'models/project.php';
+
+require_once 'include/version.php';
+require_once 'models/project.php';
+require_once 'models/user.php';
+require_once 'models/userproject.php';
 
 $start = microtime_float();
 $response = array();
@@ -58,21 +62,16 @@ if (!isset($projectid)) {
 
 @$show = $_GET['show'];
 
-$role = 0;
-
-$user_array = pdo_fetch_array(pdo_query(
-    'SELECT admin FROM ' . qid('user') . " WHERE id='$userid'"));
+$user = new User();
+$user->Id = $userid;
 if ($projectid && is_numeric($projectid)) {
-    $user2project = pdo_query(
-        "SELECT role FROM user2project
-     WHERE userid='$userid' AND projectid='$projectid'");
-    if (pdo_num_rows($user2project) > 0) {
-        $user2project_array = pdo_fetch_array($user2project);
-        $role = $user2project_array['role'];
-    }
+    $user2project = new UserProject();
+    $user2project->UserId = $userid;
+    $user2project->ProjectId = $projectid;
+    $user2project->FillFromUserId();
 }
 
-if ($user_array['admin'] != 1 && $role <= 1) {
+if (!$user->IsAdmin() && $user2project->Role <= 1) {
     $response['error'] = "You don't have the permissions to access this page";
     echo json_encode($response);
     return;
@@ -80,7 +79,7 @@ if ($user_array['admin'] != 1 && $role <= 1) {
 
 // List the available projects that this user has admin rights to.
 $sql = 'SELECT id,name FROM project';
-if ($user_array['admin'] != 1) {
+if (!$user->IsAdmin()) {
     $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$userid' AND role>0)";
 }
 $projects = pdo_query($sql);

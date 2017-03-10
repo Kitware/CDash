@@ -20,6 +20,7 @@ include dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
 include 'include/common.php';
 include 'include/version.php';
+include 'models/user.php';
 
 $xml = begin_XML_for_XSLT();
 $xml .= add_XML_value('title', 'CDash');
@@ -38,12 +39,14 @@ $xml .= '</dashboard> ';
 // User
 $userid = 0;
 if (isset($_SESSION['cdash'])) {
-    $xml .= '<user>';
     $userid = $_SESSION['cdash']['loginid'];
-    $user = pdo_query('SELECT admin FROM ' . qid('user') . " WHERE id='$userid'");
-    $user_array = pdo_fetch_array($user);
+    $user = new User();
+    $user->Id = $userid;
+    $user->Fill();
+
+    $xml .= '<user>';
     $xml .= add_XML_value('id', $userid);
-    $xml .= add_XML_value('admin', $user_array['admin']);
+    $xml .= add_XML_value('admin', $user->Admin);
     $xml .= '</user>';
 }
 
