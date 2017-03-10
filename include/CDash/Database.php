@@ -23,7 +23,7 @@ namespace CDash {
     /**
      * Class Database
      * This class is meant to serve as a minimal lazy database abstraction. The
-     * file pdocore.php will use this extensively.
+     * file pdo.php will use this extensively.
      */
     class Database
     {

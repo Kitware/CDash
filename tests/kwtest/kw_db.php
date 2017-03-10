@@ -15,7 +15,7 @@
 =========================================================================*/
 
 require_once dirname(dirname(__FILE__)) . '/config.test.php';
-require_once dirname(dirname(dirname(__FILE__))) . '/include/pdocore.php';
+require_once dirname(dirname(dirname(__FILE__))) . '/include/pdo.php';
 
 /**
  *    db object to allow the user to interact with
