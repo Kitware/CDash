@@ -18,6 +18,7 @@ include dirname(__DIR__) . '/config/config.php';
 require dirname(__DIR__) . '/vendor/autoload.php';
 include_once 'include/common.php';
 require_once 'include/pdo.php';
+require_once 'models/user.php';
 
 function getGoogleAuthenticateState()
 {
@@ -107,12 +108,10 @@ function googleAuthenticate($code)
 
     // Check if this email address appears in our user database
     $email = strtolower($me->getEmail());
-    $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-    pdo_select_db("$CDASH_DB_NAME", $db);
-    $sql = 'SELECT id,password FROM ' . qid('user') . " WHERE email='" . pdo_real_escape_string($email) . "'";
-    $result = pdo_query("$sql");
 
-    if (pdo_num_rows($result) == 0) {
+    $user = new User();
+    $userid = $user->GetIdFromEmail($email);
+    if (!$userid) {
         // if no match is found, redirect to pre-filled out registration page
         pdo_free_result($result);
         $firstname = $me->getGivenName();
@@ -121,20 +120,20 @@ function googleAuthenticate($code)
         return false;
     }
 
-    $user_array = pdo_fetch_array($result);
-    $pass = $user_array['password'];
+    $user->Id = $userid;
+    $user->Fill();
 
     if ($state->rememberMe) {
         require_once 'include/login_functions.php';
-        setRememberMeCookie($user_array['id']);
+        setRememberMeCookie($user->Id);
     }
 
     $sessionArray = array(
         'login' => $email,
-        'passwd' => $user_array['password'],
+        'passwd' => $user->Password,
         'ID' => session_id(),
         'valid' => 1,
-        'loginid' => $user_array['id']);
+        'loginid' => $user->Id);
     $_SESSION['cdash'] = $sessionArray;
     session_write_close();
     pdo_free_result($result);

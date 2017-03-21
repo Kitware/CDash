@@ -102,6 +102,12 @@ CDash.controller('ViewTestController',
           $scope.cdash.displaysummary = $scope.cdash.displaysummary || response.displaysummary;
 
           function copy_test_details(test, response) {
+
+            // Don't display extra data for missing tests
+            if (test['status'] === 'Missing') {
+                return;
+            }
+
             if ('history' in response) {
               test['history'] = response['history'];
               test['historyclass'] = response['historyclass'];

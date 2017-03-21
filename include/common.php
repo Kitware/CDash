@@ -402,8 +402,15 @@ function checkUserPolicy($userid, $projectid, $onlyreturn = 0)
         return;
     }
 
+    require_once 'models/project.php';
+    require_once 'models/userproject.php';
+    require_once 'models/user.php';
+
+    $user = new User();
+    $user->Id = $userid;
+
     // If the projectid=0 only admin can access the page
-    if ($projectid == 0 && pdo_num_rows(pdo_query('SELECT admin FROM ' . qid('user') . " WHERE id='$userid' AND admin='1'")) == 0) {
+    if ($projectid == 0 && !$user->IsAdmin()) {
         if (!$onlyreturn) {
             echo 'You cannot access this page';
             exit(0);
@@ -411,16 +418,17 @@ function checkUserPolicy($userid, $projectid, $onlyreturn = 0)
             return false;
         }
     } elseif (@$projectid > 0) {
-        $project = pdo_query("SELECT public FROM project WHERE id='$projectid'");
-        $project_array = pdo_fetch_array($project);
+        $project = new Project();
+        $project->Id = $projectid;
+        $project->Fill();
 
         // If the project is public we quit
-        if ($project_array['public'] == 1) {
+        if ($project->Public) {
             return true;
         }
 
         // If the project is private and the user is not logged in we quit
-        if (!$userid && $project_array['public'] != 1) {
+        if (!$userid && !$project->Public) {
             if (!$onlyreturn) {
                 LoginForm(0);
                 exit(0);
@@ -428,8 +436,10 @@ function checkUserPolicy($userid, $projectid, $onlyreturn = 0)
                 return false;
             }
         } elseif ($userid) {
-            $user2project = pdo_query("SELECT projectid FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
-            if (pdo_num_rows($user2project) == 0) {
+            $userproject = new UserProject();
+            $userproject->UserId = $userid;
+            $userproject->ProjectId = $projectid;
+            if (!$userproject->Exists()) {
                 if (!$onlyreturn) {
                     echo 'You cannot access this project';
                     exit(0);
@@ -1608,14 +1618,19 @@ function get_cdash_dashboard_xml($projectname, $date)
         $xml .= add_XML_value('id', $userid);
 
         // Is the user super administrator
-        $userquery = pdo_query('SELECT admin FROM ' . qid('user') . " WHERE id='$userid'");
-        $user_array = pdo_fetch_array($userquery);
-        $xml .= add_XML_value('admin', $user_array[0]);
+        require_once 'models/user.php';
+        $user = new User();
+        $user->Id = $userid;
+        $user->Fill();
+        $xml .= add_XML_value('admin', $user->Admin);
 
         // Is the user administrator of the project
-        $userquery = pdo_query('SELECT role FROM user2project WHERE userid=' . qnum($userid) . ' AND projectid=' . qnum($projectid));
-        $user_array = pdo_fetch_array($userquery);
-        $xml .= add_XML_value('projectrole', $user_array[0]);
+        require_once 'models/userproject.php';
+        $userproject = new UserProject();
+        $userproject->UserId = $userid;
+        $userproject->ProjectId = $projectid;
+        $userproject->FillFromUserId();
+        $xml .= add_XML_value('projectrole', $userproject->Role);
 
         $xml .= '</user>';
     }
@@ -1886,9 +1901,11 @@ function begin_JSON_response()
     $userid = 0;
     if (isset($_SESSION['cdash']) and isset($_SESSION['cdash']['loginid'])) {
         $userid = $_SESSION['cdash']['loginid'];
-        $row = pdo_single_row_query(
-            "SELECT admin FROM " . qid('user') . " WHERE id='$userid'");
-        $user_response['admin'] = $row['admin'];
+        require_once 'models/user.php';
+        $user = new User();
+        $user->Id = $userid;
+        $user->Fill();
+        $user_response['admin'] = $user->Admin;
     }
     $user_response['id'] = $userid;
     $response['user'] = $user_response;
@@ -2076,7 +2093,9 @@ function cast_data_for_JSON($value)
         $value = array_map('cast_data_for_JSON', $value);
         return $value;
     }
-    if (is_numeric($value)) {
+    // Do not support E notation for numbers (ie 6.02e23).
+    // This can cause checksums (such as git commits) to be converted to 0.
+    if (is_numeric($value) && strpos($value, 'e') === false) {
         if (is_nan($value) || is_infinite($value)) {
             // Special handling for values that are not supported by JSON.
             return 0;

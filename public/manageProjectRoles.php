@@ -17,15 +17,14 @@
 include dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
 include 'public/login.php';
-include_once 'include/common.php';
-include 'include/version.php';
-include 'models/userproject.php';
+require_once 'include/common.php';
+require_once 'include/version.php';
+require_once 'models/project.php';
+require_once 'models/user.php';
+require_once 'models/userproject.php';
 require_once 'include/cdashmail.php';
 
 if ($session_OK) {
-    @$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-    pdo_select_db("$CDASH_DB_NAME", $db);
-
     $usersessionid = $_SESSION['cdash']['loginid'];
     // Checks
     if (!isset($usersessionid) || !is_numeric($usersessionid)) {
@@ -38,26 +37,29 @@ if ($session_OK) {
         $projectid = pdo_real_escape_numeric($projectid);
     }
 
+    $project = new Project();
+
     // If the projectid is not set and there is only one project we go directly to the page
     if (!isset($projectid)) {
-        $project = pdo_query('SELECT id FROM project');
-        if (pdo_num_rows($project) == 1) {
-            $project_array = pdo_fetch_array($project);
-            $projectid = $project_array['id'];
+        $projectids = $project->GetIds();
+        if (count($projectids) == 1) {
+            $projectid = $projectids[0];
         }
     }
 
     $role = 0;
-    $user_array = pdo_fetch_array(pdo_query('SELECT admin FROM ' . qid('user') . " WHERE id='$usersessionid'"));
+    $current_user = new User();
+    $current_user->Id = $usersessionid;
+
     if ($projectid && is_numeric($projectid)) {
-        $user2project = pdo_query("SELECT role FROM user2project WHERE userid='$usersessionid' AND projectid='$projectid'");
-        if (pdo_num_rows($user2project) > 0) {
-            $user2project_array = pdo_fetch_array($user2project);
-            $role = $user2project_array['role'];
-        }
+        $current_user_project = new UserProject();
+        $current_user_project->ProjectId = $projectid;
+        $current_user_project->UserId = $usersessionid;
+        $current_user_project->FillFromUserId();
+        $role = $current_user_project->Role;
     }
 
-    if ($user_array['admin'] != 1 && $role <= 1) {
+    if (!$current_user->IsAdmin() && $role <= 1) {
         echo "You don't have the permissions to access this page";
         return;
     }
@@ -68,7 +70,7 @@ if ($session_OK) {
     $xml .= '<menutitle>CDash</menutitle>';
     $xml .= '<menusubtitle>Project Roles</menusubtitle>';
 
-// Form post
+    // Form post
     @$adduser = $_POST['adduser'];
     @$removeuser = $_POST['removeuser'];
 
@@ -95,29 +97,27 @@ if ($session_OK) {
 
     @$registerUser = $_POST['registerUser'];
 
-// Register a user and send the email
+    // Register a user and send the email
     function register_user($projectid, $email, $firstName, $lastName, $repositoryCredential)
     {
-        include dirname(__DIR__) . '/config/config.php';
         $UserProject = new UserProject();
         $UserProject->ProjectId = $projectid;
 
+        $user = new User();
+        $userid = $user->GetIdFromEmail($email);
         // Check if the user is already registered
-        $user = pdo_query('SELECT id FROM ' . qid('user') . " WHERE email='$email'");
-        if (pdo_num_rows($user) > 0) {
+        if ($userid) {
             // Check if the user has been registered to the project
-            $user_array2 = pdo_fetch_array($user);
-            $userid = $user_array2['id'];
-            $user = pdo_query("SELECT userid FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
-            if (pdo_num_rows($user) == 0) {
+            $UserProject->UserId = $userid;
+            if (!$UserProject->Exists()) {
                 // not registered
 
                 // We register the user to the project
-                pdo_query("INSERT INTO user2project (userid,projectid,role,emailtype)
-                                  VALUES ('$userid','$projectid','0','1')");
+                $UserProject->Role = 0;
+                $UserProject->EmailType = 1;
+                $UserProject->Save();
 
                 // We add the credentials if not already added
-                $UserProject->UserId = $userid;
                 $UserProject->AddCredential($repositoryCredential);
                 $UserProject->ProjectId = 0;
                 $UserProject->AddCredential($email); // Add the email by default
@@ -146,20 +146,29 @@ if ($session_OK) {
             // polyfill included in the Composer package.json dependencies.
             $pass .= substr($keychars, random_int(0, $max), 1);
         }
-        $encrypted = md5($pass);
 
-        pdo_query('INSERT INTO ' . qid('user') . " (email,password,firstname,lastname,institution,admin)
-                 VALUES ('$email','$encrypted','$firstName','$lastName','','0')");
-        add_last_sql_error('register_user');
-        $userid = pdo_insert_id('user');
+        $passwordHash = User::PasswordHash($pass);
+        if ($passwordHash === false) {
+            $xml .= '<error>Failed to hash password.</error>';
+            return false;
+        }
+
+        $user = new User();
+        $user->Password = $passwordHash;
+        $user->Email = $email;
+        $user->FirstName = $firstName;
+        $user->LastName = $lastName;
+        $user->Save();
+        $userid = $user->Id;
 
         // Insert the user into the project
-        pdo_query("INSERT INTO user2project (userid,projectid,role,emailtype)
-                                VALUES ('$userid','$projectid','0','1')");
-        add_last_sql_error('register_user');
+        $UserProject->UserId = $userid;
+        $UserProject->ProjectId = $projectid;
+        $UserProject->Role = 0;
+        $UserProject->EmailType = 1;
+        $UserProject->Save();
 
         // We add the credentials if not already added
-        $UserProject->UserId = $userid;
         $UserProject->AddCredential($repositoryCredential);
         $UserProject->ProjectId = 0;
         $UserProject->AddCredential($email); // Add the email by default
@@ -171,9 +180,9 @@ if ($session_OK) {
             $prefix = ' ';
         }
 
-        $project = pdo_query("SELECT name FROM project WHERE id='$projectid'");
-        $project_array = pdo_fetch_array($project);
-        $projectname = $project_array['name'];
+        $project = new Project();
+        $project->Id = $projectid;
+        $projectname = $project->GetName();
 
         // Send the email
         $text = 'Hello' . $prefix . $firstName . ",\n\n";
@@ -197,15 +206,14 @@ if ($session_OK) {
             $xml .= '<error>The email should be more than 50 characters.</error>';
         } else {
             $maintainerids = find_site_maintainers($projectid);
-
             $email = '';
             foreach ($maintainerids as $maintainerid) {
-                $user2 = pdo_query('SELECT email FROM ' . qid('user') . " WHERE id='$maintainerid'");
-                $user_array2 = pdo_fetch_array($user2);
                 if (strlen($email) > 0) {
                     $email .= ', ';
                 }
-                $email .= $user_array2['email'];
+                $maintainer = new User();
+                $maintainer->Id = $maintainerid;
+                $email .= $maintainer->GetEmail();
             }
 
             $projectname = get_project_name($projectid);
@@ -245,7 +253,7 @@ if ($session_OK) {
         }
     }
 
-// Register CVS users
+    // Register CVS users
     if ($registerUsers) {
         $cvslogins = $_POST['cvslogin'];
         $emails = $_POST['email'];
@@ -268,21 +276,20 @@ if ($session_OK) {
         }
     }
 
-// Add a user
+    // Add a user
     if ($adduser) {
-        $user2project = pdo_query("SELECT userid FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
-
-        if (pdo_num_rows($user2project) == 0) {
-            pdo_query("INSERT INTO user2project (userid,role,projectid,emailtype) VALUES ('$userid','$role','$projectid','1')");
-
-            $UserProject = new UserProject();
-            $UserProject->ProjectId = $projectid;
-            $UserProject->UserId = $userid;
+        $UserProject = new UserProject();
+        $UserProject->ProjectId = $projectid;
+        $UserProject->UserId = $userid;
+        if (!$UserProject->Exists()) {
+            $UserProject->Role = $role;
+            $UserProject->EmailType = 1;
+            $UserProject->Save();
             $UserProject->AddCredential($repositoryCredential);
         }
     }
 
-// Remove the user
+    // Remove the user
     if ($removeuser) {
         pdo_query("DELETE FROM user2project WHERE userid='$userid' AND projectid='$projectid'");
         pdo_query("DELETE FROM user2repository WHERE userid='$userid' AND projectid='$projectid'");
@@ -299,8 +306,9 @@ if ($session_OK) {
         $credentials_array = explode(';', $credentials);
         $UserProject->UpdateCredentials($credentials_array);
 
-        pdo_query("UPDATE user2project SET role='$role',emailtype='$emailtype' WHERE userid='$userid' AND projectid='$projectid'");
-        echo pdo_error();
+        $UserProject->Role = $role;
+        $UserProject->EmailType = $emailtype;
+        $UserProject->Save();
     }
 
 // Import the users from CVS
@@ -368,7 +376,7 @@ if ($session_OK) {
     }
 
     $sql = 'SELECT id,name FROM project';
-    if ($user_array['admin'] != 1) {
+    if (!$current_user->IsAdmin()) {
         $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$usersessionid' AND role>0)";
     }
     $sql .= ' ORDER BY name';
@@ -383,14 +391,15 @@ if ($session_OK) {
         $xml .= '</availableproject>';
     }
 
-// If we have a project id
+    // If we have a project id
     if ($projectid > 0) {
-        $project = pdo_query("SELECT id,name FROM project WHERE id='$projectid'");
-        $project_array = pdo_fetch_array($project);
+        $project = new Project();
+        $project->Id = $projectid;
+        $projectname = $project->GetName();
         $xml .= '<project>';
-        $xml .= add_XML_value('id', $project_array['id']);
-        $xml .= add_XML_value('name', $project_array['name']);
-        $xml .= add_XML_value('name_encoded', urlencode($project_array['name']));
+        $xml .= add_XML_value('id', $projectid);
+        $xml .= add_XML_value('name', $projectname);
+        $xml .= add_XML_value('name_encoded', urlencode($projectname));
         $xml .= '</project>';
 
         // List the users for that project

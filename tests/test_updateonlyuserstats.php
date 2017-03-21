@@ -69,7 +69,7 @@ class UpdateOnlyUserStatsTestCase extends KWWebTestCase
             $user->Email = $user_details['email'];
             $user->FirstName = $user_details['firstname'];
             $user->LastName = $user_details['lastname'];
-            $user->Password = md5('12345');
+            $user->Password = User::PasswordHash('12345');
             $user->Institution = 'Kitware';
             $user->Admin = 0;
             $user->Save();

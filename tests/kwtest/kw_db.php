@@ -261,7 +261,7 @@ class dbo_mysql extends dbo
                 }
             }
         }
-        pdo_query("INSERT INTO user VALUES (1, 'simpletest@localhost', '" . md5('simpletest') . "', 'administrator', '','Kitware Inc.', 1, '')");
+        pdo_query("INSERT INTO user VALUES (1, 'simpletest@localhost', '" . password_hash('simpletest', PASSWORD_DEFAULT) . "', 'administrator', '','Kitware Inc.', 1, '')");
         echo pdo_error();
         $this->disconnect();
         return true;
@@ -379,7 +379,7 @@ class dbo_pgsql extends dbo
             }
             $line_number++;
         }
-        $pwd = md5('simpletest');
+        $pwd = password_hash('simpletest', PASSWORD_DEFAULT);
         $query = 'INSERT INTO "user" (email, password, firstname, lastname, institution, admin) ';
         $query .= "VALUES ('simpletest@localhost', '$pwd', 'administrator', '','Kitware Inc.', 1)";
         pdo_query($query);

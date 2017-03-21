@@ -28,6 +28,7 @@ include_once 'models/clientjobschedule.php';
 include_once 'models/clientsite.php';
 include_once 'models/clientjob.php';
 include_once 'models/build.php';
+include_once 'models/user.php';
 
 if ($session_OK) {
     $userid = $_SESSION['cdash']['loginid'];
@@ -38,10 +39,11 @@ if ($session_OK) {
     pdo_select_db("$CDASH_DB_NAME", $db);
     $xml .= add_XML_value('title', 'CDash - My Profile');
 
-    $user = pdo_query('SELECT * FROM ' . qid('user') . " WHERE id='$userid'");
-    $user_array = pdo_fetch_array($user);
-    $xml .= add_XML_value('user_name', $user_array['firstname']);
-    $xml .= add_XML_value('user_is_admin', $user_array['admin']);
+    $user = new User();
+    $user->Id = $userid;
+    $user->Fill();
+    $xml .= add_XML_value('user_name', $user->FirstName);
+    $xml .= add_XML_value('user_is_admin', $user->Admin);
 
     if ($CDASH_USER_CREATE_PROJECTS) {
         $xml .= add_XML_value('user_can_create_projects', 1);

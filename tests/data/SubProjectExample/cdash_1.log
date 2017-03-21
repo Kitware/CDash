@@ -14,7 +14,7 @@ Type: Nightly
 Warnings: 21
 
 
-*Warnings*
+*Warnings* (first 5)
 packages/epetraext/src/transform/EpetraExt_BlockAdjacencyGraph.cpp (http://<NA>/<NA>/viewBuildError.php?type=1&buildid=<NA>)
 /home/rabartl/PROJECTS/dashboards/Trilinos.base/SERIAL_RELEASE/Trilinos/packages/epetraext/src/transform/<NA>
 packages/epetraext/src/block/EpetraExt_BlockDiagMatrix.cpp (http://<NA>/<NA>/viewBuildError.php?type=1&buildid=<NA>)

@@ -201,6 +201,7 @@ function check_email_update_errors($buildid)
 /** Return the list of user id and committer emails who should get emails */
 function lookup_emails_to_send($errors, $buildid, $projectid, $buildtype, $fixes = false, $collectUnregisteredCommitters = false)
 {
+    require_once 'models/user.php';
     require_once 'models/userproject.php';
 
     $userids = array();
@@ -233,11 +234,9 @@ function lookup_emails_to_send($errors, $buildid, $projectid, $buildtype, $fixes
 
             $filled = false;
             if ($email != '') {
-                $result = pdo_query('SELECT id FROM ' . qid('user') . " WHERE email='$email'");
-
-                if (pdo_num_rows($result) != 0) {
-                    $user_array = pdo_fetch_array($result);
-                    $id = $user_array['id'];
+                $user = new User();
+                $id = $user->GetIdFromEmail($email);
+                if ($id) {
                     $UserProject->UserId = $id;
                     $filled = $UserProject->FillFromUserId();
                 }
@@ -333,6 +332,14 @@ function lookup_emails_to_send($errors, $buildid, $projectid, $buildtype, $fixes
 function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $testtimemaxstatus, $emailtesttimingchanged)
 {
     include 'config/config.php';
+    include_once 'models/build.php';
+    include_once 'models/buildconfigure.php';
+    include_once 'models/buildupdate.php';
+
+    global $CDASH_BASE_URL, $CDASH_ASYNCHRONOUS_SUBMISSION;
+
+    $build = new Build();
+    $build->Id = $buildid;
 
     $serverURI = get_server_URI();
     // In the case of asynchronous submission, the serverURI contains /cdash
@@ -347,66 +354,76 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
     if ($errorkey == 'update_errors') {
         $information = "\n\n*Update*\n";
 
-        $update = pdo_query('SELECT command,status FROM buildupdate AS u,build2update AS b2u
-                            WHERE b2u.updateid=u.id AND b2u.buildid=' . qnum($buildid));
-        $update_array = pdo_fetch_array($update);
+        $buildUpdate = new BuildUpdate();
+        $buildUpdate->BuildId = $buildid;
+        $update = $buildUpdate->GetUpdateForBuild(PDO::FETCH_OBJ);
 
-        $information .= 'Status: ' . $update_array['status'] . ' (' . $serverURI . '/viewUpdate.php?buildid=' . $buildid . ")\n";
+        $information .= "Status: {$update->status} ({$serverURI}/viewUpdate.php?buildid={$buildid})\n";
         $information .= 'Command: ';
-        $information .= substr($update_array['command'], 0, $maxchars);
+        $information .= substr($update->command, 0, $maxchars);
         $information .= "\n";
     } elseif ($errorkey == 'configure_errors') {
         // Configure information
 
         $information = "\n\n*Configure*\n";
 
-        $configure = pdo_query('SELECT status,log FROM configure WHERE buildid=' . qnum($buildid));
-        $configure_array = pdo_fetch_array($configure);
+        $buildConfigure = new BuildConfigure();
+        $buildConfigure->BuildId = $buildid;
+        $configure = $buildConfigure->GetConfigureForBuild(PDO::FETCH_OBJ);
 
-        $information .= 'Status: ' . $configure_array['status'] . ' (' . $serverURI . '/viewConfigure.php?buildid=' . $buildid . ")\n";
-        $information .= 'Output: ';
-        $information .= substr($configure_array['log'], 0, $maxchars);
-        $information .= "\n";
+        // If this is false pdo_execute called in BuildConfigure will
+        // have already logged the error.
+        if (is_object($configure)) {
+            $information .= "Status: {$configure->status} ({$serverURI}/viewConfigure.php?buildid={$buildid})\n";
+            $information .= 'Output: ';
+            $information .= substr($configure->log, 0, $maxchars);
+            $information .= "\n";
+        }
     } elseif ($errorkey == 'build_errors') {
         $information .= "\n\n*Error*";
 
-        // Old error format
-        $error_query = pdo_query('SELECT sourcefile,text,sourceline,postcontext FROM builderror WHERE buildid=' . qnum($buildid) . " AND type=0 LIMIT $maxitems");
-        add_last_sql_error('sendmail');
+        // type 0 = error
+        // type 1 = warning
+        // filter out errors of type error
+        $errors = $build->GetErrors(['type' => Build::TYPE_ERROR], PDO::FETCH_OBJ);
 
-        if (pdo_num_rows($error_query) == $maxitems) {
+        if (count($errors) > $maxitems) {
+            $errors = array_slice($errors, 0, $maxitems);
             $information .= ' (first ' . $maxitems . ')';
         }
+
         $information .= "\n";
 
-        while ($error_array = pdo_fetch_array($error_query)) {
+        foreach ($errors as $error) {
             $info = '';
-            if (strlen($error_array['sourcefile']) > 0) {
-                $info .= $error_array['sourcefile'] . ' line ' . $error_array['sourceline'] . ' (' . $serverURI . '/viewBuildError.php?type=0&buildid=' . $buildid . ")\n";
-                $info .= $error_array['text'] . "\n";
+            if (strlen($error->sourcefile) > 0) {
+                $info .= "{$error->sourcefile} line {$error->sourceline} ({$serverURI}/viewBuildError.php?{$buildid})";
+                $info .= "{$error->text}\n";
             } else {
-                $info .= $error_array['text'] . "\n" . $error_array['postcontext'] . "\n";
+                $info .= "{$error->text}\n{$error->postcontext}\n";
             }
             $information .= substr($info, 0, $maxchars);
         }
 
-        // New error format
-        $error_query = pdo_query(
-            'SELECT bf.sourcefile, bfd.stdoutput, bfd.stderror
-       FROM buildfailuredetails AS bfd
-       LEFT JOIN buildfailure AS bf ON (bf.detailsid = bfd.id)
-       WHERE bf.buildid=' . qnum($buildid) . " AND bfd.type=0 LIMIT $maxitems");
-        add_last_sql_error('sendmail');
-        while ($error_array = pdo_fetch_array($error_query)) {
+        // filter out just failures of type error
+        $failures = $build->GetFailures(['type' => Build::TYPE_ERROR], PDO::FETCH_OBJ);
+
+        // not yet accounted for in integration tests
+        if (count($failures) > $maxitems) {
+            $failures = array_slice($failures, 0, $maxitems);
+            $information .= " (first {$maxitems})";
+        }
+
+        foreach ($failures as $fail) {
             $info = '';
-            if (strlen($error_array['sourcefile']) > 0) {
-                $info .= $error_array['sourcefile'] . ' (' . $serverURI . '/viewBuildError.php?type=0&buildid=' . $buildid . ")\n";
+            if (strlen($fail->sourcefile) > 0) {
+                $info .= "{$fail->sourcefile} ({$serverURI}/viewBuildError.php?type=0&build={$buildid})\n";
             }
-            if (strlen($error_array['stdoutput']) > 0) {
-                $info .= $error_array['stdoutput'] . "\n";
+            if (strlen($fail->stdoutput) > 0) {
+                $info .= "{$fail->stdoutput}\n";
             }
-            if (strlen($error_array['stderror']) > 0) {
-                $info .= $error_array['stderror'] . "\n";
+            if (strlen($fail->stderror) > 0) {
+                $info .= "{$fail->stderror}\n";
             }
             $information .= substr($info, 0, $maxchars);
         }
@@ -414,91 +431,83 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
     } elseif ($errorkey == 'build_warnings') {
         $information .= "\n\n*Warnings*";
 
-        $error_query = pdo_query('SELECT sourcefile,text,sourceline,postcontext FROM builderror
-                              WHERE buildid=' . qnum($buildid) . " AND type=1 ORDER BY logline LIMIT $maxitems");
-        add_last_sql_error('sendmail');
+        $warnings = $build->GetErrors(['type' => Build::TYPE_WARN], PDO::FETCH_OBJ);
 
-        if (pdo_num_rows($error_query) == $maxitems) {
+        if (count($warnings) > $maxitems) {
             $information .= ' (first ' . $maxitems . ')';
+            $warnings = array_slice($warnings, 0, $maxitems);
         }
-        $information .= "\n";
 
-        while ($error_array = pdo_fetch_array($error_query)) {
+        if (!empty($warnings)) {
+            $information .= "\n";
+        }
+
+        foreach ($warnings as $warning) {
             $info = '';
-            if (strlen($error_array['sourcefile']) > 0) {
-                $info .= $error_array['sourcefile'] . ' line ' . $error_array['sourceline'] . ' (' . $serverURI . '/viewBuildError.php?type=1&buildid=' . $buildid . ")\n";
-                $info .= $error_array['text'] . "\n";
+            if (strlen($warning->sourcefile) > 0) {
+                $info .= "{$warning->sourcefile} line {$warning->sourceline} ({$serverURI}/viewBuildError.php?type=1&buildid={$buildid})\n";
+                $info .= "{$warning->text}\n";
             } else {
-                $info .= $error_array['text'] . "\n" . $error_array['postcontext'] . "\n";
+                $info .= "{$warning->text}\n{$warning->postcontext}\n";
             }
             $information .= substr($info, 0, $maxchars);
         }
 
-        // New error format
-        $error_query = pdo_query(
-            'SELECT bf.sourcefile, bfd.stdoutput, bfd.stderror
-       FROM buildfailuredetails AS bfd
-       LEFT JOIN buildfailure AS bf ON (bf.detailsid = bfd.id)
-       WHERE bf.buildid=' . qnum($buildid) . " AND bfd.type=1
-       ORDER BY bf.id LIMIT $maxitems");
-        add_last_sql_error('sendmail');
-        while ($error_array = pdo_fetch_array($error_query)) {
+        $failures = $build->GetFailures(['type' => Build::TYPE_WARN], PDO::FETCH_OBJ);
+
+        if (count($failures) > $maxitems) {
+            $information .= ' (first ' . $maxitems . ')';
+            $failures = array_slice($failures, 0, $maxitems);
+        }
+
+        if (!empty($failures)) {
+            $information .= "\n";
+        }
+
+        foreach ($failures as $fail) {
             $info = '';
-            if (strlen($error_array['sourcefile']) > 0) {
-                $info .= $error_array['sourcefile'] . ' (' . $serverURI . '/viewBuildError.php?type=1&buildid=' . $buildid . ")\n";
+            if (strlen($fail->sourcefile) > 0) {
+                $info .= "{$fail->sourcefile} ({$serverURI}/viewBuildError.php?type=1&buildid={$buildid})\n";
             }
-            if (strlen($error_array['stdoutput']) > 0) {
-                $info .= $error_array['stdoutput'] . "\n";
+            if (strlen($fail->stdoutput) > 0) {
+                $info .= "{$fail->stdoutput}\n";
             }
-            if (strlen($error_array['stderror']) > 0) {
-                $info .= $error_array['stderror'] . "\n";
+            if (strlen($fail->stderror) > 0) {
+                $info .= "{$fail->stderror}\n";
             }
             $information .= substr($info, 0, $maxchars) . "\n";
         }
         $information .= "\n";
     } elseif ($errorkey == 'test_errors') {
-        $sql = '';
+
+        // Local function to add a set of tests to our email message body.
+        // This reduces copied & pasted code below.
+        $AddTestsToEmail = function ($tests, $section_title) use ($maxitems, $buildid, $maxchars, $maxitems, $serverURI) {
+            $num_tests = count($tests);
+            if ($num_tests < 1) {
+                return '';
+            }
+
+            $information = "\n\n*$section_title*";
+            if ($num_tests == $maxitems) {
+                $information .= " (first $maxitems)";
+            }
+            $information .= "\n";
+
+            foreach ($tests as $test) {
+                $info = $test['name'] . ' (' . $serverURI . '/testDetails.php?test=' . $test['id'] . '&build=' . $buildid . ")\n";
+                $information .= substr($info, 0, $maxchars);
+            }
+            $information .= "\n";
+            return $information;
+        };
+
+        $information .= $AddTestsToEmail($build->GetFailedTests($maxitems), 'Tests failing');
         if ($emailtesttimingchanged) {
-            $sql = 'OR timestatus>' . qnum($testtimemaxstatus);
+            $information .= $AddTestsToEmail($build->GetFailedTimeStatusTests($maxitems, $testtimemaxstatus), 'Tests failing time status');
         }
-        $test_query = pdo_query('SELECT test.name,test.id FROM build2test,test WHERE build2test.buildid=' . qnum($buildid) .
-            " AND test.id=build2test.testid AND (build2test.status='failed'" . $sql . ") ORDER BY test.id LIMIT $maxitems");
-        add_last_sql_error('sendmail');
-        $numrows = pdo_num_rows($test_query);
-
-        if ($numrows > 0) {
-            $information .= "\n\n*Tests failing*";
-            if (pdo_num_rows($test_query) == $maxitems) {
-                $information .= ' (first ' . $maxitems . ')';
-            }
-            $information .= "\n";
-
-            while ($test_array = pdo_fetch_array($test_query)) {
-                $info = $test_array['name'] . ' (' . $serverURI . '/testDetails.php?test=' . $test_array['id'] . '&build=' . $buildid . ")\n";
-                $information .= substr($info, 0, $maxchars);
-            }
-            $information .= "\n";
-        }
-
-        // Add the tests not run
-        $test_query = pdo_query('SELECT test.name,test.id FROM build2test,test WHERE build2test.buildid=' . qnum($buildid) .
-            " AND test.id=build2test.testid AND (build2test.status='notrun'" . $sql . ") ORDER BY test.id LIMIT $maxitems");
-        add_last_sql_error('sendmail');
-        $numrows = pdo_num_rows($test_query);
-
-        if ($numrows > 0) {
-            $information .= "\n\n*Tests not run*";
-            if (pdo_num_rows($test_query) == $maxitems) {
-                $information .= ' (first ' . $maxitems . ')';
-            }
-            $information .= "\n";
-
-            while ($test_array = pdo_fetch_array($test_query)) {
-                $info = $test_array['name'] . ' (' . $serverURI . '/testDetails.php?test=' . $test_array['id'] . '&build=' . $buildid . ")\n";
-                $information .= substr($info, 0, $maxchars);
-            }
-            $information .= "\n";
-        }
+        $information .= $AddTestsToEmail($build->GetTimedoutTests($maxitems), 'Test timeouts');
+        $information .= $AddTestsToEmail($build->GetNotRunTests($maxitems), 'Tests not run');
     } elseif ($errorkey == 'dynamicanalysis_errors') {
         $da_query = pdo_query("SELECT name,id FROM dynamicanalysis WHERE status IN ('failed','notrun') AND buildid="
             . qnum($buildid) . " ORDER BY name LIMIT $maxitems");
@@ -518,7 +527,26 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
             }
             $information .= "\n";
         }
+    } elseif ($errorkey === 'missing_tests') {
+        // sanity check
+        $missing = isset($errors['missing_tests']['count']) ? $errors['missing_tests']['count'] : 0;
+
+        if ($missing) {
+            $information .= "\n\n*Missing tests*";
+            $length = $missing;
+            if ($errors['missing_tests']['count'] > $maxitems) {
+                $information .= " (first {$maxitems})";
+            }
+
+            $list = array_slice($errors['missing_tests']['list'], 0, $maxitems);
+            $information .= PHP_EOL;
+            $url = "({$serverURI}/viewTest.php?buildid={$buildid})";
+            $information .= implode(" {$url}\n", array_values($list));
+            $information .= $url;
+            $information .= PHP_EOL;
+        }
     }
+
     return $information;
 }
 
@@ -1002,6 +1030,7 @@ function send_email_to_address($emailaddress, $emailtext, $Build, $Project)
             && $key != 'build_errors'
             && $key != 'test_errors'
             && $key != 'dynamicanalysis_errors'
+            && $key != 'missing_tests'
         ) {
             continue;
         }
@@ -1035,6 +1064,13 @@ function send_email_to_address($emailaddress, $emailtext, $Build, $Project)
             case 'dynamicanalysis_errors':
                 $messagePlainText .= 'failing dynamic analysis tests';
                 $titleerrors .= 'd=' . $value;
+                break;
+            case 'missing_tests':
+                $missing = $value['count'];
+                if ($missing) {
+                    $messagePlainText .= 'missing tests';
+                    $titleerrors .= 'm=' . $missing;
+                }
                 break;
         }
         $i++;
@@ -1100,6 +1136,11 @@ function send_email_to_address($emailaddress, $emailtext, $Build, $Project)
             case 'dynamicanalysis_errors':
                 $messagePlainText .= "Dynamic analysis tests failing: $value\n";
                 break;
+            case 'missing_tests':
+                $missing = $value['count'];
+                if ($missing) {
+                    $messagePlainText .= "Missing tests: {$missing}\n";
+                }
         }
     }
 
@@ -1463,6 +1504,20 @@ function sendemail($handler, $projectid)
             if ($emailtext['nfixes'] == 1) {
                 send_email_fix_to_user($userid, $emailtext, $Build, $Project);
             }
+        }
+    }
+
+    // Check for missing tests
+    if ($handler instanceof TestingHandler) {
+        $Build->FillFromId($Build->Id);
+        $missing = $Build->GetNumberOfMissingTests();
+
+        if ($missing > 0) {
+            $errors['missing_tests'] = [
+                'count' => $missing,
+                'list' => $Build->MissingTests
+            ];
+            $errors['errors'] = true;
         }
     }
 

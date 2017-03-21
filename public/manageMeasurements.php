@@ -19,6 +19,7 @@ require_once 'include/pdo.php';
 include 'public/login.php';
 include_once 'include/common.php';
 include_once 'models/project.php';
+include_once 'models/user.php';
 
 if ($session_OK) {
     $projectid = pdo_real_escape_numeric($_REQUEST['projectid']);
@@ -101,12 +102,12 @@ if ($session_OK) {
     $xml .= add_XML_value('nonext', '1');
     $xml .= '</menu>';
     {
-        $xml .= '<user>';
         $userid = $_SESSION['cdash']['loginid'];
-        $user = pdo_query('SELECT admin FROM ' . qid('user') . " WHERE id='$userid'");
-        $user_array = pdo_fetch_array($user);
+        $user->Id = $userid;
+        $user->Fill();
+        $xml .= '<user>';
         $xml .= add_XML_value('id', $userid);
-        $xml .= add_XML_value('admin', $user_array['admin']);
+        $xml .= add_XML_value('admin', $user->Admin);
         $xml .= '</user>';
     }
 

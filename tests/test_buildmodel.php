@@ -12,6 +12,11 @@ require_once 'models/builderror.php';
 
 class BuildModelTestCase extends KWWebTestCase
 {
+    private $testDataFiles;
+    private $testDataDir;
+    private $builds;
+    private $parentBuilds;
+
     public function __construct()
     {
         parent::__construct();
@@ -201,16 +206,19 @@ class BuildModelTestCase extends KWWebTestCase
         return 0;
     }
 
-    public function testBuildModelGetsBuildFailures()
+    public function testBuildModelGetsFailures()
     {
         $build = $this->getBuildModel(0);
 
+        $errorFilter = ['type' => Build::TYPE_ERROR];
+        $warnFilter = ['type' => Build::TYPE_WARN];
+
         // One warning and one error (errors = 0, warnings = 1)
         // Uses some bogus projectid (10)
-        $buildFailures = $build->GetBuildFailures(10, 0, '')->fetchAll();
+        $buildFailures = $build->GetFailures($errorFilter);
         $this->assertTrue(count($buildFailures) === 1);
 
-        $buildFailures = $build->GetBuildFailures(10, 1, '')->fetchAll();
+        $buildFailures = $build->GetFailures($warnFilter);
         $this->assertTrue(count($buildFailures) === 1);
     }
 
@@ -218,7 +226,7 @@ class BuildModelTestCase extends KWWebTestCase
     {
         $build = $this->getBuildModel(0, $this->parentBuilds);
 
-        $buildFailures = $build->GetBuildFailures(10, 1, '')->fetchAll();
+        $buildFailures = $build->GetFailures(['type' => Build::TYPE_WARN]);
         $this->assertTrue(count($buildFailures) === 1);
 
         $this->assertTrue($buildFailures[0]['subprojectname'] == 'some-test-subproject');
@@ -241,29 +249,32 @@ class BuildModelTestCase extends KWWebTestCase
         $this->assertTrue(count($build->GetResolvedBuildFailures(1)->fetchAll()) === 1);
     }
 
-    public function testBuildModelGetsBuildErrors()
+    public function testBuildModelGetErrors()
     {
+        $errorFilter = ['type' => Build::TYPE_ERROR];
+        $warnFilter = ['type' => Build::TYPE_WARN];
+
         // First build has no errors
         $build = $this->getBuildModel(0);
-        $this->assertTrue(count($build->GetBuildErrors(0, '')->fetchAll()) === 0);
-        $this->assertTrue(count($build->GetBuildErrors(1, '')->fetchAll()) === 0);
+        $this->assertTrue(count($build->GetErrors($errorFilter)) === 0);
+        $this->assertTrue(count($build->GetErrors($warnFilter)) === 0);
 
         // Second build has a single error of type 0
         $build = $this->getBuildModel(1);
-        $this->assertTrue(count($build->GetBuildErrors(0, '')->fetchAll()) === 1);
-        $this->assertTrue(count($build->GetBuildErrors(1, '')->fetchAll()) === 0);
+        $this->assertTrue(count($build->GetErrors($errorFilter)) === 1);
+        $this->assertTrue(count($build->GetErrors($warnFilter)) === 0);
 
         // Third build has no errors
         $build = $this->getBuildModel(2);
-        $this->assertTrue(count($build->GetBuildErrors(0, '')->fetchAll()) === 0);
-        $this->assertTrue(count($build->GetBuildErrors(1, '')->fetchAll()) === 0);
+        $this->assertTrue(count($build->GetErrors($errorFilter)) === 0);
+        $this->assertTrue(count($build->GetErrors($warnFilter)) === 0);
     }
 
     public function testBuildModelGetsBuildErrorsAcrossChildBuilds()
     {
         $build = $this->getBuildModel(0, $this->parentBuilds);
 
-        $buildErrors = $build->GetBuildErrors(0, '')->fetchAll();
+        $buildErrors = $build->GetErrors(['type' => Build::TYPE_ERROR]);
         $this->assertTrue(count($buildErrors) === 1);
 
         $this->assertTrue($buildErrors[0]['subprojectname'] == 'some-test-subproject');

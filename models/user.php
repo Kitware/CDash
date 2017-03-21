@@ -27,10 +27,23 @@ class User
     public $Institution;
     public $Admin;
     public $Filled;
+    public $TableName;
+    public $TempTableName;
+    private $PDO;
 
     public function __construct()
     {
+        $this->Id = null;
+        $this->Email = '';
+        $this->Password = '';
+        $this->FirstName = '';
+        $this->LastName = '';
+        $this->Institution = '';
+        $this->Admin = 0;
         $this->Filled = false;
+        $this->TableName = qid('user');
+        $this->TempTableName = qid('usertemp');
+        $this->PDO = get_link_identifier()->getPdo();
     }
 
     /** Add a project to the user */
@@ -46,8 +59,11 @@ class User
         if (!$this->Id || !is_numeric($this->Id)) {
             return false;
         }
-        $user_array = pdo_fetch_array(pdo_query('SELECT admin FROM ' . qid('user') . " WHERE id='" . $this->Id . "'"));
-        if ($user_array['admin'] == 1) {
+        $stmt = $this->PDO->prepare(
+            "SELECT admin FROM $this->TableName WHERE id = ?");
+        pdo_execute($stmt, [$this->Id]);
+        $row = $stmt->fetch();
+        if ($row && array_key_exists('admin', $row) && $row['admin'] == 1) {
             return true;
         }
         return false;
@@ -71,9 +87,26 @@ class User
             return false;
         }
 
-        $query = pdo_query('SELECT count(*) FROM ' . qid('user') . " WHERE id='" . $this->Id . "' OR (firstname='" . $this->FirstName . "' AND lastname='" . $this->LastName . "')");
-        $query_array = pdo_fetch_array($query);
-        if ($query_array[0] > 0) {
+        $stmt = $this->PDO->prepare(
+            "SELECT COUNT(*) FROM $this->TableName WHERE id = :id OR
+            (firstname = :firstname AND lastname = :lastname)");
+        $stmt->bindParam(':id', $this->Id);
+        $stmt->bindParam(':firstname', $this->FirstName);
+        $stmt->bindParam(':lastname', $this->LastName);
+        pdo_execute($stmt);
+        if ($stmt->fetchColumn() > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    /** Return if a temporary record for this user exists. */
+    public function TempExists()
+    {
+        $stmt = $this->PDO->prepare(
+            "SELECT COUNT(*) FROM $this->TempTableName WHERE email = ?");
+        pdo_execute($stmt, [$this->Email]);
+        if ($stmt->fetchColumn() > 0) {
             return true;
         }
         return false;
@@ -91,16 +124,19 @@ class User
             $oldPassword = $this->GetPassword();
 
             // Update the project
-            $query = 'UPDATE ' . qid('user') . ' SET';
-            $query .= " email='" . $this->Email . "'";
-            $query .= ",password='" . $this->Password . "'";
-            $query .= ",firstname='" . $this->FirstName . "'";
-            $query .= ",lastname='" . $this->LastName . "'";
-            $query .= ",institution='" . $this->Institution . "'";
-            $query .= ",admin='" . $this->Admin . "'";
-            $query .= " WHERE id='" . $this->Id . "'";
-            if (!pdo_query($query)) {
-                add_last_sql_error('User Update');
+            $stmt = $this->PDO->prepare(
+                "UPDATE $this->TableName SET
+                email = :email, password = :password, firstname = :firstname,
+                lastname = :lastname, institution = :institution, admin = :admin
+                WHERE id = :id");
+            $stmt->bindParam(':email', $this->Email);
+            $stmt->bindParam(':password', $this->Password);
+            $stmt->bindParam(':firstname', $this->FirstName);
+            $stmt->bindParam(':lastname', $this->LastName);
+            $stmt->bindParam(':institution', $this->Institution);
+            $stmt->bindParam(':admin', $this->Admin);
+            $stmt->bindParam(':id', $this->Id);
+            if (!pdo_execute($stmt)) {
                 return false;
             }
             if ($this->Password != $oldPassword) {
@@ -112,20 +148,25 @@ class User
             $id = '';
             $idvalue = '';
             if ($this->Id) {
-                $id = 'id,';
-                $idvalue = "'" . $this->Id . "',";
+                $id = 'id, ';
+                $idvalue = ':id, ';
             }
 
-            $email = pdo_real_escape_string($this->Email);
-            $passwd = pdo_real_escape_string($this->Password);
-            $fname = pdo_real_escape_string($this->FirstName);
-            $lname = pdo_real_escape_string($this->LastName);
-            $institution = pdo_real_escape_string($this->Institution);
+            $stmt = $this->PDO->prepare(
+                "INSERT INTO $this->TableName
+                ($id email, password, firstname, lastname, institution, admin)
+                VALUES ($idvalue :email, :password, :firstname, :lastname, :institution, :admin)");
+            $stmt->bindParam(':email', $this->Email);
+            $stmt->bindParam(':password', $this->Password);
+            $stmt->bindParam(':firstname', $this->FirstName);
+            $stmt->bindParam(':lastname', $this->LastName);
+            $stmt->bindParam(':institution', $this->Institution);
+            $stmt->bindParam(':admin', $this->Admin);
+            if ($this->Id) {
+                $stmt->bindParam(':id', $this->Id);
+            }
 
-            $query = 'INSERT INTO ' . qid('user') . ' (' . $id . 'email,password,firstname,lastname,institution,admin)
-                 VALUES (' . $idvalue . "'" . $email . "','" . $passwd . "','" . $fname . "','" . $lname . "','" . $institution . "','$this->Admin')";
-            if (!pdo_query($query)) {
-                add_last_sql_error('User Create');
+            if (!pdo_execute($stmt)) {
                 return false;
             }
 
@@ -137,42 +178,91 @@ class User
         return true;
     }
 
+    // Save a temporary record for this user in the database.
+    public function SaveTemp($key, $date)
+    {
+        $stmt = $this->PDO->prepare(
+            "INSERT INTO $this->TempTableName
+            (email, password, firstname, lastname, institution,
+             registrationkey, registrationdate)
+            VALUES
+            (:email, :password, :firstname, :lastname, :institution,
+             :registrationkey, :registrationdate)");
+        $stmt->bindParam(':email', $this->Email);
+        $stmt->bindParam(':password', $this->Password);
+        $stmt->bindParam(':firstname', $this->FirstName);
+        $stmt->bindParam(':lastname', $this->LastName);
+        $stmt->bindParam(':institution', $this->Institution);
+        $stmt->bindParam(':registrationkey', $key);
+        $stmt->bindParam(':registrationdate', $date);
+        return pdo_execute($stmt);
+    }
+
+    // Move a row from usertemp to user.
+    public function Register($key)
+    {
+        $stmt = $this->PDO->prepare(
+            "SELECT * FROM $this->TempTableName WHERE registrationkey = ?");
+        if (!pdo_execute($stmt, [$key])) {
+            return false;
+        }
+        $row = $stmt->fetch();
+        if (!$row) {
+            return false;
+        }
+
+        $this->Email = $row['email'];
+        $this->Password = $row['password'];
+        $this->FirstName = $row['firstname'];
+        $this->LastName = $row['lastname'];
+        $this->Institution = $row['institution'];
+        if ($this->Save()) {
+            $stmt = $this->PDO->prepare(
+                "DELETE FROM $this->TempTableName WHERE email = ?");
+            pdo_execute($stmt, [$this->Email]);
+            return true;
+        }
+        return false;
+    }
+
     // Remove this user from the database.
     public function Delete()
     {
         if (!$this->Id) {
             return false;
         }
-        $pdo = get_link_identifier()->getPdo();
-        $user_table = qid('user');
-        $stmt = $pdo->prepare("DELETE FROM $user_table WHERE id=?");
+        $stmt = $this->PDO->prepare("DELETE FROM $this->TableName WHERE id = ?");
         pdo_execute($stmt, [$this->Id]);
     }
 
     /** Get the name */
     public function GetName()
     {
-        // If no id specify return false
+        // If no id specified return false.
         if (!$this->Id) {
             return false;
         }
 
-        $query = pdo_query('SELECT firstname,lastname FROM ' . qid('user') . ' WHERE id=' . qnum($this->Id));
-        $query_array = pdo_fetch_array($query);
-        return trim($query_array['firstname'] . ' ' . $query_array['lastname']);
+        $stmt = $this->PDO->prepare(
+            "SELECT firstname, lastname FROM $this->TableName WHERE id = ?");
+        pdo_execute($stmt, [$this->Id]);
+        $row = $stmt->fetch();
+        return trim($row['firstname'] . ' ' . $row['lastname']);
     }
 
     /** Get the email */
     public function GetEmail()
     {
-        // If no id specify return false
+        // If no id specified return false.
         if (!$this->Id) {
             return false;
         }
 
-        $query = pdo_query('SELECT email FROM ' . qid('user') . ' WHERE id=' . qnum($this->Id));
-        $query_array = pdo_fetch_array($query);
-        return $query_array['email'];
+        $stmt = $this->PDO->prepare(
+            "SELECT email FROM $this->TableName WHERE id = ?");
+        pdo_execute($stmt, [$this->Id]);
+        $row = $stmt->fetch();
+        return $row['email'];
     }
 
     /** Get the password */
@@ -182,58 +272,47 @@ class User
             return false;
         }
 
-        $query = pdo_query('SELECT password FROM ' . qid('user') . ' WHERE id=' . qnum($this->Id));
-        $query_array = pdo_fetch_array($query);
-        return $query_array['password'];
-    }
-
-    /** Set a password */
-    public function SetPassword($newPassword)
-    {
-        if (!$this->Id || !is_numeric($this->Id)) {
-            return false;
-        }
-        $query = pdo_query('UPDATE ' . qid('user') . " SET password='" . $newPassword . "' WHERE id='" . $this->Id . "'");
-        if (!$query) {
-            add_last_sql_error('User:SetPassword');
-            return false;
-        }
-        return true;
+        $stmt = $this->PDO->prepare(
+            "SELECT password FROM $this->TableName WHERE id = ?");
+        pdo_execute($stmt, [$this->Id]);
+        $row = $stmt->fetch();
+        return $row['password'];
     }
 
     /** Get the user id from the name */
     public function GetIdFromName($name)
     {
-        $query = pdo_query('SELECT id FROM ' . qid('user') . " WHERE firstname='" . $name . "' OR lastname='" . $name . "'");
-        if (!$query) {
-            add_last_sql_error('User:GetIdFromName');
+        $stmt = $this->PDO->prepare(
+            "SELECT id FROM $this->TableName
+            WHERE firstname = :name OR lastname = :name");
+        $stmt->bindParam(':name', $name);
+        if (!pdo_execute($stmt)) {
             return false;
         }
 
-        if (pdo_num_rows($query) == 0) {
+        $row = $stmt->fetch();
+        if (!$row) {
             return false;
         }
-
-        $query_array = pdo_fetch_array($query);
-        return $query_array['id'];
+        return $row['id'];
     }
 
     /** Get the user id from the email */
     public function GetIdFromEmail($email)
     {
-        $email = pdo_real_escape_string($email);
-        $query = pdo_query('SELECT id FROM ' . qid('user') . " WHERE email='" . trim($email) . "'");
-        if (!$query) {
-            add_last_sql_error('User:GetIdFromEmail');
+        $email = trim($email);
+        $stmt = $this->PDO->prepare(
+            "SELECT id FROM $this->TableName WHERE email = :email");
+        $stmt->bindParam(':email', $email);
+        if (!pdo_execute($stmt)) {
             return false;
         }
 
-        if (pdo_num_rows($query) == 0) {
+        $row = $stmt->fetch();
+        if (!$row) {
             return false;
         }
-
-        $query_array = pdo_fetch_array($query);
-        return $query_array['id'];
+        return $row['id'];
     }
 
     /** Load this user's details from the datbase. */
@@ -247,22 +326,24 @@ class User
             return false;
         }
 
-        $row = pdo_single_row_query('
-                SELECT email, password, firstname, lastname, institution
-                FROM ' . qid('user') . " WHERE id='$this->Id'");
+        $stmt = $this->PDO->prepare(
+            "SELECT email, password, firstname, lastname, institution, admin
+            FROM $this->TableName WHERE id = ?");
+        if (!pdo_execute($stmt, [$this->Id])) {
+            return false;
+        }
+        $row = $stmt->fetch();
         if (!$row || !array_key_exists('password', $row)) {
             return false;
         }
-
 
         $this->Email = $row['email'];
         $this->Password = $row['password'];
         $this->FirstName = $row['firstname'];
         $this->LastName = $row['lastname'];
         $this->Institution = $row['institution'];
-
         $this->Admin = 0;
-        if ($this->IsAdmin()) {
+        if ($row['admin'] == 1) {
             $this->Admin = 1;
         }
 
@@ -282,28 +363,98 @@ class User
 
         $now = gmdate(FMT_DATETIME);
         // Insert a row in the password table for this new password.
-        pdo_query("
-                INSERT INTO password(userid, password, date)
-                VALUES ($this->Id, '$this->Password', '$now')");
+        $stmt = $this->PDO->prepare(
+            'INSERT INTO password(userid, password, date)
+            VALUES (:userid, :password, :date)');
+        $stmt->bindParam(':userid', $this->Id);
+        $stmt->bindParam(':password', $this->Password);
+        $stmt->bindParam(':date', $now);
+        pdo_execute($stmt);
 
         if ($CDASH_UNIQUE_PASSWORD_COUNT > 0) {
             // Delete old records for this user if they have more than
             // our limit.
             // Check if there are too many old passwords for this user.
-            $row = pdo_single_row_query("SELECT COUNT(1) AS numrows
-                    FROM password WHERE userid=$this->Id");
-            $num_rows = $row['numrows'];
+            $stmt = $this->PDO->prepare(
+                'SELECT COUNT(*) AS numrows FROM password WHERE userid = ?');
+            pdo_execute($stmt, [$this->Id]);
+            $num_rows = $stmt->fetchColumn();
             if ($num_rows > $CDASH_UNIQUE_PASSWORD_COUNT) {
                 // If so, get the cut-off date so we can delete the rest.
                 $offset = $CDASH_UNIQUE_PASSWORD_COUNT - 1;
-                $row = pdo_single_row_query("SELECT date FROM password
-                        WHERE userid=$this->Id ORDER BY date DESC
-                        LIMIT 1 OFFSET $offset");
+                $stmt = $this->PDO->prepare(
+                    "SELECT date FROM password
+                    WHERE userid = ?
+                    ORDER BY date DESC
+                    LIMIT 1 OFFSET $offset");
+                pdo_execute($stmt, [$this->Id]);
+                $row = $stmt->fetch();
                 $cutoff = $row['date'];
                 // Then delete the ones that are too old
-                pdo_query("DELETE FROM password
-                        WHERE userid=$this->Id AND date < '$cutoff'");
+                $stmt = $this->PDO->prepare(
+                    'DELETE FROM password
+                    WHERE userid= :userid AND date < :date');
+                $stmt->bindParam(':userid', $this->Id);
+                $stmt->bindParam(':date', $cutoff);
+                pdo_execute($stmt);
             }
         }
+    }
+
+    /** Set the cookie key for the current user.
+      */
+    public function SetCookieKey($key)
+    {
+        if (!$this->Id) {
+            return false;
+        }
+        $stmt = $this->PDO->prepare(
+            "UPDATE $this->TableName SET cookiekey = :key WHERE id = :id");
+        $stmt->bindParam(':key', $key);
+        $stmt->bindParam(':id', $this->Id);
+        return pdo_execute($stmt);
+    }
+
+    /** Populate $this from cookie values.
+      */
+    public function FillFromCookie($cookiekey, $cookieuserid)
+    {
+        $sql = "SELECT * FROM $this->TableName WHERE cookiekey = :cookiekey";
+        if (!empty($cookieuserid)) {
+            $sql .= ' AND id = :id';
+        }
+        $stmt = $this->PDO->prepare($sql);
+        $stmt->bindParam(':cookiekey', $cookiekey);
+        if (!empty($cookieuserid)) {
+            $stmt->bindParam(':id', $cookieuserid);
+        }
+        if (!pdo_execute($stmt)) {
+            return false;
+        }
+        $row = $stmt->fetch();
+        if (!$row) {
+            return false;
+        }
+        $this->Id = $row['id'];
+        $this->Email = $row['email'];
+        $this->Password = $row['password'];
+        $this->FirstName = $row['firstname'];
+        $this->LastName = $row['lastname'];
+        $this->Institution = $row['institution'];
+        $this->Admin = $row['admin'];
+        $this->Filled = true;
+        return true;
+    }
+
+    /** Wrapper around PHP's builtin password_hash function.
+      * Logs an error if it returns FALSE.
+      */
+    public static function PasswordHash($password)
+    {
+        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+        if ($passwordHash === false) {
+            add_log('password_hash returned false', 'PasswordHash', LOG_ERR);
+        }
+        return $passwordHash;
     }
 }

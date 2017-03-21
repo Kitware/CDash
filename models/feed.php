@@ -83,7 +83,7 @@ class Feed
 
         // If we do have a previous build then we use the builderrordiff table
         // Check if we have any fixes or errors
-        $query = pdo_query("SELECT * FROM testdiff AS td JOIN build AS b ON (bd.buildid=b.id) WHERE bd.buildid='$buildid'");
+        $query = pdo_query("SELECT * FROM testdiff AS td JOIN build AS b ON (td.buildid=b.id) WHERE td.buildid='$buildid'");
         if (!$query) {
             add_last_sql_error('Feed::InsertTest');
             return false;
