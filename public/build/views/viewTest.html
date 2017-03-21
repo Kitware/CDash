@@ -7,7 +7,7 @@
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="stylesheet" type="text/css" ng-href="{{::cssfile}}" />
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <script src="js/CDash_1487860217557.min.js"></script>
+    <script src="js/CDash_1490104752973.min.js"></script>
     <title ng-bind="title">CDash</title>
   </head>
 
@@ -15,7 +15,7 @@
 
     <div ng-if="::cdash.requirelogin == 1" ng-include="'login.php'"></div>
 
-    <ng-include ng-if="::cdash.requirelogin != 1" src="::cdash.header || 'build/views/partials/header_1487860217557.html'"></ng-include>
+    <ng-include ng-if="::cdash.requirelogin != 1" src="::cdash.header || 'build/views/partials/header_1490104752973.html'"></ng-include>
     <br/>
 
     <div ng-if="cdash.requirelogin != 1 && !loading && !cdash.error">
@@ -115,18 +115,19 @@
           <span ng-show="showfilters != 0">Hide Filters</span>
         </a>
       </div>
-      <ng-include src="'build/views/partials/filterdataTemplate_1487860217557.html'"></ng-include>
+      <ng-include src="'build/views/partials/filterdataTemplate_1490104752973.html'"></ng-include>
 
       <div ng-switch="::cdash.display">
         <h3 ng-switch-when="onlypassed">{{::cdash.numPassed}} tests passed.</h3>
         <h3 ng-switch-when="onlyfailed">{{::cdash.numFailed}} tests failed.</h3>
         <h3 ng-switch-when="onlynotrun">{{::cdash.numNotRun}} tests not run.</h3>
         <h3 ng-switch-when="onlytimestatus">{{::cdash.numTimeFailed}} tests timed out.</h3>
-        <h3 ng-switch-default>
+        <h3 ng-switch-default id="test-totals-indicator">
           {{::cdash.numPassed}} passed,
           {{::cdash.numFailed}} failed,
           {{::cdash.numTimeFailed}} timed out,
-          {{::cdash.numNotRun}} not run.
+          {{::cdash.numNotRun}} not run,
+          {{::cdash.numMissing}} missing.
         </h3>
       </div>
 
@@ -281,6 +282,6 @@
 
     <!-- FOOTER -->
     <br/>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1487860217557.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1490104752973.html'"></ng-include>
   </body>
 </html>

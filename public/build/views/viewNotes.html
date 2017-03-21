@@ -7,14 +7,14 @@
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="stylesheet" type="text/css" ng-href="{{cssfile}}" />
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <script src="js/CDash_1487860217557.min.js"></script>
+    <script src="js/CDash_1490104752973.min.js"></script>
     <title>{{cdash.title || "CDash : View notes"}}</title>
   </head>
 
   <body bgcolor="#ffffff" ng-controller="ViewNotesController">
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
 
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1487860217557.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1490104752973.html'"></ng-include>
 
     <div ng-if="cdash.requirelogin != 1 && !cdash.error">
       <br/>
@@ -67,6 +67,6 @@
     </div>
 
     <!-- FOOTER -->
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1487860217557.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1490104752973.html'"></ng-include>
   </body>
 </html>
