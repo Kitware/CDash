@@ -16,7 +16,7 @@
 
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
-require_once 'include/common.php';
+require_once 'include/api_common.php';
 require_once 'models/build.php';
 
 if (!isset($_GET['buildid']) || !is_numeric($_GET['buildid'])) {
@@ -29,6 +29,10 @@ $build = new Build();
 $build->Id = $buildid;
 $build->FillFromId($build->Id);
 if ($build->ProjectId < 1) {
+    return;
+}
+
+if (!can_access_project($build->ProjectId)) {
     return;
 }
 

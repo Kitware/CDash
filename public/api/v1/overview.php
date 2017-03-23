@@ -8,11 +8,9 @@
   PURPOSE. See the above copyright notices for more information.
   =========================================================================*/
 
-$noforcelogin = 1;
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
-include 'public/login.php';
-include_once 'include/common.php';
+require_once 'include/api_common.php';
 include 'include/version.php';
 require_once 'models/project.php';
 require_once 'include/memcache_functions.php';
@@ -58,9 +56,7 @@ $Project->Id = $projectid;
 $Project->Fill();
 
 // Make sure the user has access to this project
-if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
-    $response['requirelogin'] = 1;
-    echo json_encode($response);
+if (!can_access_project($projectid)) {
     return;
 }
 

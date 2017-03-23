@@ -14,11 +14,9 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-$noforcelogin = 1;
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
-include_once 'include/common.php';
-include 'public/login.php';
+require_once 'include/api_common.php';
 include_once 'models/project.php';
 include_once 'models/user.php';
 
@@ -59,20 +57,13 @@ if (!isset($projectid) || $projectid == 0) {
 }
 
 // And that the user has access to it.
-if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
-    $response['requirelogin'] = 1;
-    echo json_encode($response);
+if (!can_access_project($projectid)) {
     return;
 }
 
 $method = $_SERVER['REQUEST_METHOD'];
 // Make sure the user is an admin before procedding with non-read-only methods.
 if ($method != 'GET') {
-    if (!$session_OK) {
-        $response['error'] = 'No session found.';
-        echo json_encode($response);
-        return;
-    }
     $userid = $_SESSION['cdash']['loginid'];
     if (!isset($userid) || !is_numeric($userid)) {
         $response['error'] = 'Not a valid userid!';
