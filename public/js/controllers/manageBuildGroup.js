@@ -34,17 +34,9 @@ CDash.filter('filter_builds', function() {
   };
 })
 
-.controller('ManageBuildGroupController', function ManageBuildGroupController($scope, $rootScope, $http, renderTimer) {
-  $scope.loading = true;
-  $http({
-    url: 'api/v1/manageBuildGroup.php',
-    method: 'GET',
-    params: $rootScope.queryString
-  }).then(function success(s) {
-    var cdash = s.data;
-
-    renderTimer.initialRender($scope, cdash);
-
+.controller('ManageBuildGroupController', function ManageBuildGroupController($scope, $http, apiLoader) {
+  apiLoader.loadPageData($scope, 'api/v1/manageBuildGroup.php');
+  $scope.finishSetup = function() {
     // Sort BuildGroups by position.
     if ($scope.cdash.buildgroups) {
       $scope.cdash.buildgroups.sort(function (a, b) {
@@ -67,9 +59,7 @@ CDash.filter('filter_builds', function() {
       {name: "Latest", value: "Latest"}
     ];
     $scope.buildType = $scope.cdash.buildgrouptypes[0];
-  }).finally(function() {
-    $scope.loading = false;
-  });
+  };
 
   /** create a new buildgroup */
   $scope.createBuildGroup = function(newBuildGroup, type) {

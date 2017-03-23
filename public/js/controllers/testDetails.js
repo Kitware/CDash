@@ -1,23 +1,11 @@
 CDash.controller('TestDetailsController',
-  function TestDetailsController($scope, $rootScope, $http, renderTimer) {
-    $scope.loading = true;
-    $http({
-      url: 'api/v1/testDetails.php',
-      method: 'GET',
-      params: $rootScope.queryString
-    }).then(function success(s) {
-      var cdash = s.data;
-      renderTimer.initialRender($scope, cdash);
-
-      // Set title in root scope so the head controller can see it.
-      $rootScope['title'] = cdash.title;
+  function TestDetailsController($scope, $http, apiLoader) {
+    apiLoader.loadPageData($scope, 'api/v1/testDetails.php');
+    $scope.finishSetup = function() {
       $scope.cdash.showgraph = false;
       $scope.cdash.showcommandline = false;
       $scope.cdash.csvlink = '';
-    }).finally(function() {
-      $scope.loading = false;
-    });
-
+    };
 
     $scope.toggle_commandline = function() {
       $scope.cdash.showcommandline = !($scope.cdash.showcommandline);

@@ -1,5 +1,5 @@
 CDash.controller('ViewTestController',
-  function ViewTestController($scope, $rootScope, $http, $filter, $q, multisort, filters, renderTimer) {
+  function ViewTestController($scope, $rootScope, $http, $filter, $q, apiLoader, multisort, filters) {
     $scope.loading = true;
 
     // Pagination settings.
@@ -36,30 +36,13 @@ CDash.controller('ViewTestController',
     // Mechanism to cancel the summary/history AJAX query if the user loads another page.
     $scope.canceler = $q.defer();
 
-    $http({
-      url: 'api/v1/viewTest.php',
-      method: 'GET',
-      params: $rootScope.queryString
-    }).then(function success(s) {
-      var cdash = s.data;
-
-      // Check if we should display filters.
-      if (cdash.filterdata && cdash.filterdata.showfilters == 1) {
-        $scope.showfilters = true;
-      }
-
+    apiLoader.loadPageData($scope, 'api/v1/viewTest.php');
+    $scope.finishSetup = function() {
       // Check for label filters
-      cdash.extrafilterurl = filters.getLabelString(cdash.filterdata);
-
-      renderTimer.initialRender($scope, cdash);
-
-      // Set title in root scope so the head controller can see it.
-      $rootScope['title'] = cdash.title;
-    }).finally(function() {
-      $scope.loading = false;
+      $scope.cdash.extrafilterurl = filters.getLabelString($scope.cdash.filterdata);
       $scope.cdash.tests = $filter('orderBy')($scope.cdash.tests, $scope.orderByFields);
       $scope.setPage(1);
-    });
+    };
 
     $scope.showfilters_toggle = function() {
       $scope.showfilters = !$scope.showfilters;

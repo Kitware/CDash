@@ -48,7 +48,7 @@ CDash.filter("showEmptyBuildsLast", function () {
 })
 
 
-.controller('IndexController', function IndexController($scope, $rootScope, $location, $http, $filter, $timeout, anchors, filters, multisort, renderTimer) {
+.controller('IndexController', function IndexController($scope, $rootScope, $location, $http, $filter, $timeout, anchors, apiLoader, filters, multisort) {
   // Show spinner while page is loading.
   $scope.loading = true;
 
@@ -84,33 +84,26 @@ CDash.filter("showEmptyBuildsLast", function () {
     query_sort_order = $rootScope.queryString.sort.split(",");
   }
 
-  $http({
-    url: 'api/v1/index.php',
-    method: 'GET',
-    params: $rootScope.queryString
-  }).then(function success(s) {
-    var cdash = s.data;
+  apiLoader.loadPageData($scope, 'api/v1/index.php');
 
-    // Set title in root scope so the head controller can see it.
-    $rootScope['title'] = cdash.title;
-
+  $scope.finishSetup = function() {
     // Check for more sorting cookies.  Buildgroup sorting is handled below.
     var sort_order = [];
-    var cookie_value = $.cookie('cdash_' + cdash.projectname + '_coverage_sort');
+    var cookie_value = $.cookie('cdash_' + $scope.cdash.projectname + '_coverage_sort');
     if(cookie_value) {
       sort_order = cookie_value.split(",");
     }
     $scope.sortCoverage = { orderByFields: sort_order };
 
     sort_order = [];
-    cookie_value = $.cookie('cdash_' + cdash.projectname + '_DA_sort');
+    cookie_value = $.cookie('cdash_' + $scope.cdash.projectname + '_DA_sort');
     if(cookie_value) {
       sort_order = cookie_value.split(",");
     }
     $scope.sortDA = { orderByFields: sort_order };
 
     sort_order = [];
-    cookie_value = $.cookie('cdash_' + cdash.projectname + '_subproject_sort');
+    cookie_value = $.cookie('cdash_' + $scope.cdash.projectname + '_subproject_sort');
     if(cookie_value) {
       sort_order = cookie_value.split(",");
     }
@@ -119,120 +112,113 @@ CDash.filter("showEmptyBuildsLast", function () {
     // Check if we have a cookie for number of rows to display.
     var num_per_page_cookie = $.cookie('num_builds_per_page');
 
-    for (var i in cdash.buildgroups) {
-      if (!cdash.buildgroups.hasOwnProperty(i)) {
+    for (var i in $scope.cdash.buildgroups) {
+      if (!$scope.cdash.buildgroups.hasOwnProperty(i)) {
         continue;
       }
 
       // Initialize pagination settings.
-      cdash.buildgroups[i].pagination = [];
-      cdash.buildgroups[i].pagination.filteredBuilds = [];
-      cdash.buildgroups[i].pagination.currentPage = 1;
-      cdash.buildgroups[i].pagination.maxSize = 5;
+      $scope.cdash.buildgroups[i].pagination = [];
+      $scope.cdash.buildgroups[i].pagination.filteredBuilds = [];
+      $scope.cdash.buildgroups[i].pagination.currentPage = 1;
+      $scope.cdash.buildgroups[i].pagination.maxSize = 5;
       if(num_per_page_cookie) {
-        cdash.buildgroups[i].pagination.numPerPage = parseInt(num_per_page_cookie);
+        $scope.cdash.buildgroups[i].pagination.numPerPage = parseInt(num_per_page_cookie);
       } else {
-        cdash.buildgroups[i].pagination.numPerPage = 10;
+        $scope.cdash.buildgroups[i].pagination.numPerPage = 10;
       }
 
       // Setup sorting.
       var sorting_set = false;
       if (query_sort_order.length > 0) {
-        // Use sort order was specified via query string.
-        cdash.buildgroups[i].orderByFields = query_sort_order;
+        // Use sort order that was specified via query string.
+        $scope.cdash.buildgroups[i].orderByFields = query_sort_order;
         sorting_set = true;
       } else {
         // If sort order wasn't specified via query string, check to see
         // if we have a cookie telling us how to sort this buildgroup.
-        var cookie_name = $scope.getCookieName(cdash.buildgroups[i], cdash.projectname, cdash.childview);
+        var cookie_name = $scope.getCookieName($scope.cdash.buildgroups[i], $scope.cdash.projectname, $scope.cdash.childview);
         var sort_cookie_value = $.cookie(cookie_name);
         if(sort_cookie_value) {
           sort_order = sort_cookie_value.split(",");
-          cdash.buildgroups[i].orderByFields = sort_order;
+          $scope.cdash.buildgroups[i].orderByFields = sort_order;
           sorting_set = true;
         }
       }
       if (!sorting_set) {
         // Default sorting.
-        cdash.buildgroups[i].orderByFields = [];
+        $scope.cdash.buildgroups[i].orderByFields = [];
 
         // When viewing the children of a single build, show problematic
         // SubProjects sorted oldest to newest.
-        if (cdash.childview == 1) {
-          if (cdash.buildgroups[i].numbuilderror > 0) {
-            cdash.buildgroups[i].orderByFields.push('-compilation.error');
-          } else if (cdash.buildgroups[i].numconfigureerror > 0) {
-            cdash.buildgroups[i].orderByFields.push('-configure.error');
-          } if (cdash.buildgroups[i].numtestfail > 0) {
-            cdash.buildgroups[i].orderByFields.push('-test.fail');
+        if ($scope.cdash.childview == 1) {
+          if ($scope.cdash.buildgroups[i].numbuilderror > 0) {
+            $scope.cdash.buildgroups[i].orderByFields.push('-compilation.error');
+          } else if ($scope.cdash.buildgroups[i].numconfigureerror > 0) {
+            $scope.cdash.buildgroups[i].orderByFields.push('-configure.error');
+          } if ($scope.cdash.buildgroups[i].numtestfail > 0) {
+            $scope.cdash.buildgroups[i].orderByFields.push('-test.fail');
           }
-          cdash.buildgroups[i].orderByFields.push('builddatefull');
-        } else if (!('sorttype' in cdash.buildgroups[i])) {
+          $scope.cdash.buildgroups[i].orderByFields.push('builddatefull');
+        } else if (!('sorttype' in $scope.cdash.buildgroups[i])) {
           // By default, sort by errors & such in the following priority order:
           // configure errors
-          if (cdash.buildgroups[i].numconfigureerror > 0) {
-            cdash.buildgroups[i].orderByFields.push('-configure.error');
+          if ($scope.cdash.buildgroups[i].numconfigureerror > 0) {
+            $scope.cdash.buildgroups[i].orderByFields.push('-configure.error');
           }
           // build errors
-          if (cdash.buildgroups[i].numbuilderror > 0) {
-            cdash.buildgroups[i].orderByFields.push('-compilation.error');
+          if ($scope.cdash.buildgroups[i].numbuilderror > 0) {
+            $scope.cdash.buildgroups[i].orderByFields.push('-compilation.error');
           }
           // tests failed
-          if (cdash.buildgroups[i].numtestfail > 0) {
-            cdash.buildgroups[i].orderByFields.push('-test.fail');
+          if ($scope.cdash.buildgroups[i].numtestfail > 0) {
+            $scope.cdash.buildgroups[i].orderByFields.push('-test.fail');
           }
           // tests not run
-          if (cdash.buildgroups[i].numtestnotrun > 0) {
-            cdash.buildgroups[i].orderByFields.push('-test.notrun');
+          if ($scope.cdash.buildgroups[i].numtestnotrun > 0) {
+            $scope.cdash.buildgroups[i].orderByFields.push('-test.notrun');
           }
           // configure warnings
-          if (cdash.buildgroups[i].numconfigurewarning > 0) {
-            cdash.buildgroups[i].orderByFields.push('-configure.warning');
+          if ($scope.cdash.buildgroups[i].numconfigurewarning > 0) {
+            $scope.cdash.buildgroups[i].orderByFields.push('-configure.warning');
           }
           // build warnings
-          if (cdash.buildgroups[i].numbuildwarning > 0) {
-            cdash.buildgroups[i].orderByFields.push('-compilation.warning');
+          if ($scope.cdash.buildgroups[i].numbuildwarning > 0) {
+            $scope.cdash.buildgroups[i].orderByFields.push('-compilation.warning');
           }
-          cdash.buildgroups[i].orderByFields.push('-builddatefull');
-        } else if (cdash.buildgroups[i]['sorttype'] == 'time') {
+          $scope.cdash.buildgroups[i].orderByFields.push('-builddatefull');
+        } else if ($scope.cdash.buildgroups[i]['sorttype'] == 'time') {
           // For continuous integration groups, the most recent builds
           // should be at the top of the list.
-          cdash.buildgroups[i].orderByFields.push('-builddatefull');
+          $scope.cdash.buildgroups[i].orderByFields.push('-builddatefull');
         }
       }
 
       // Initialize paginated results.
-      cdash.buildgroups[i].builds = $filter('orderBy')(cdash.buildgroups[i].builds, cdash.buildgroups[i].orderByFields);
-      cdash.buildgroups[i].builds = $filter('showEmptyBuildsLast')(cdash.buildgroups[i].builds, cdash.buildgroups[i].orderByFields);
+      $scope.cdash.buildgroups[i].builds = $filter('orderBy')($scope.cdash.buildgroups[i].builds, $scope.cdash.buildgroups[i].orderByFields);
+      $scope.cdash.buildgroups[i].builds = $filter('showEmptyBuildsLast')($scope.cdash.buildgroups[i].builds, $scope.cdash.buildgroups[i].orderByFields);
 
       // Mark this group has having "normal" builds if it only contains missing & expected builds.
-      if (!cdash.buildgroups[i].hasnormalbuilds && !cdash.buildgroups[i].hasparentbuilds && cdash.buildgroups[i].builds.length > 0) {
-        cdash.buildgroups[i].hasnormalbuilds = true;
+      if (!$scope.cdash.buildgroups[i].hasnormalbuilds && !$scope.cdash.buildgroups[i].hasparentbuilds && $scope.cdash.buildgroups[i].builds.length > 0) {
+        $scope.cdash.buildgroups[i].hasnormalbuilds = true;
       }
 
-      $scope.pageChanged(cdash.buildgroups[i]);
-    }
-
-    // Check if we should display filters.
-    if (cdash.filterdata && cdash.filterdata.showfilters == 1) {
-      $scope.showfilters = true;
+      $scope.pageChanged($scope.cdash.buildgroups[i]);
     }
 
     // Check for label filters
-    cdash.extrafilterurl = '';
-    if (cdash.sharelabelfilters) {
-      cdash.extrafilterurl = filters.getLabelString(cdash.filterdata);
+    $scope.cdash.extrafilterurl = '';
+    if ($scope.cdash.sharelabelfilters) {
+      $scope.cdash.extrafilterurl = filters.getLabelString($scope.cdash.filterdata);
     }
 
     // Read simple/advanced view cookie setting.
-    var advanced_cookie = $.cookie('cdash_'+cdash.projectname+'_advancedview');
+    var advanced_cookie = $.cookie('cdash_'+$scope.cdash.projectname+'_advancedview');
     if(advanced_cookie == 1) {
-      cdash.advancedview = 1;
+      $scope.cdash.advancedview = 1;
     } else {
-      cdash.advancedview = 0;
+      $scope.cdash.advancedview = 0;
     }
-
-    renderTimer.initialRender($scope, cdash);
 
     if (!$scope.cdash.feed) {
       $scope.showFeed = false;
@@ -257,9 +243,7 @@ CDash.filter("showEmptyBuildsLast", function () {
       anchors.jumpToAnchor($location.hash());
     }
 
-  }).finally(function() {
-    $scope.loading = false; // hide the "loading" spinner
-  });
+  };
 
 
   $scope.toggleFeed = function() {

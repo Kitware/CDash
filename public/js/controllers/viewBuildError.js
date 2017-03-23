@@ -1,5 +1,5 @@
 CDash.controller('BuildErrorController',
-  function BuildErrorController($scope, $rootScope, $http, $sce, renderTimer) {
+  function BuildErrorController($scope, $sce, apiLoader) {
     $scope.loading = true;
     $scope.pagination = [];
     $scope.pagination.buildErrors = [];
@@ -7,13 +7,11 @@ CDash.controller('BuildErrorController',
     $scope.pagination.numPerPage = 25;
     $scope.pagination.maxSize = 5;
 
-    $http({
-      url: 'api/v1/viewBuildError.php',
-      method: 'GET',
-      params: $rootScope.queryString
-    }).then(function success(s) {
-      var cdash = s.data;
+    apiLoader.loadPageData($scope, 'api/v1/viewBuildError.php');
+    $scope.finishSetup = function() {
       // Handle the fact that we add HTML links to compiler output.
+      // TODO: this might have to become a pre-render hook?
+      // TODO: TEST IF THIS BROKE LINKIFIED OUTPUT!!!!
       var trustErrorHtml = function (error) {
           error.precontext = $sce.trustAsHtml(error.precontext);
           error.postcontext = $sce.trustAsHtml(error.postcontext);
@@ -21,26 +19,20 @@ CDash.controller('BuildErrorController',
           return error;
       };
 
-      // Errors are either cdash.errors, or all values in cdash.errors.*
-      if (Array.isArray(cdash.errors)) {
-          for (var i in cdash.errors) {
-              cdash.errors[i] = trustErrorHtml(cdash.errors[i]);
+      // Errors are either $scope.cdash.errors, or all values in $scope.cdash.errors.*
+      if (Array.isArray($scope.cdash.errors)) {
+          for (var i in $scope.cdash.errors) {
+              $scope.cdash.errors[i] = trustErrorHtml($scope.cdash.errors[i]);
           }
       } else {
-          for (var subproject in cdash.errors) {
-              for (var error in cdash.errors[subproject]) {
-                  cdash.errors[subproject][error] = trustErrorHtml(cdash.errors[subproject][error]);
+          for (var subproject in $scope.cdash.errors) {
+              for (var error in $scope.cdash.errors[subproject]) {
+                  $scope.cdash.errors[subproject][error] = trustErrorHtml($scope.cdash.errors[subproject][error]);
               }
           }
       }
-      renderTimer.initialRender($scope, cdash);
-
-      // Set title in root scope so the head controller can see it.
-      $rootScope['title'] = cdash.title;
-    }).finally(function() {
-      $scope.loading = false;
       $scope.setPage(1);
-    });
+    };
 
     $scope.setPage = function (pageNo) {
       var begin = ((pageNo - 1) * $scope.pagination.numPerPage),

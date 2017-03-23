@@ -1,5 +1,5 @@
 CDash.controller('UserStatisticsController',
-  function UserStatisticsController($scope, $rootScope, $http, $filter, $location, multisort, renderTimer) {
+  function UserStatisticsController($scope, $filter, apiLoader, multisort) {
     // Check for sort order cookie.
     var sort_order = [];
     var sort_cookie_value = $.cookie('cdash_user_stats_sort');
@@ -15,20 +15,10 @@ CDash.controller('UserStatisticsController',
     }
     $scope.orderByFields = sort_order;
 
-    $scope.loading = true;
-    $http({
-      url: 'api/v1/userStatistics.php',
-      method: 'GET',
-      params: $rootScope.queryString
-    }).then(function success(s) {
-      var cdash = s.data;
-      renderTimer.initialRender($scope, cdash);
+    apiLoader.loadPageData($scope, 'api/v1/userStatistics.php');
+    $scope.finishSetup = function() {
       $scope.cdash.users = $filter('orderBy')($scope.cdash.users, $scope.orderByFields);
-      // Set title in root scope so the head controller can see it.
-      $rootScope['title'] = cdash.title;
-    }).finally(function() {
-      $scope.loading = false;
-    });
+    };
 
     $scope.defaultSorting = function() {
       $scope.orderByFields =

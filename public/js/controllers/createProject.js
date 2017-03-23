@@ -1,18 +1,8 @@
 CDash.controller('CreateProjectController',
-  function CreateProjectController($scope, $rootScope, $http, $location, $timeout, renderTimer, Upload) {
+  function CreateProjectController($scope, $http, $location, $timeout, apiLoader, Upload) {
+    apiLoader.loadPageData($scope, 'api/v1/createProject.php');
 
-    $scope.loading = true;
-    $http({
-      url: 'api/v1/createProject.php',
-      method: 'GET',
-      params: $rootScope.queryString
-    }).then(function success(s) {
-      var cdash = s.data;
-      renderTimer.initialRender($scope, cdash);
-      // Set title in root scope so the head controller can see it.
-      $rootScope['title'] = cdash.title;
-    }).finally(function() {
-      $scope.loading = false;
+    $scope.finishSetup = function() {
       $scope.cdash.changesmade = false;
       var activeTab = 1;
       var disableTabs = false;
@@ -68,7 +58,7 @@ CDash.controller('CreateProjectController',
           'active': activeTab == 8
         });
       }
-    });
+    };
 
     $scope.showHelp = function(id_div) {
       $(".tab_help").html($("#"+id_div).html()).show();
