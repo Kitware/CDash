@@ -630,7 +630,7 @@ function get_github_revision_url($projecturl, $revision, $priorrevision)
 /** Return the GitLab revision URL */
 function get_gitlab_revision_url($projecturl, $revision, $priorrevision)
 {
-    return get_gitorious_revision_url($projecturl, $revision, $priorrevision);
+    return get_github_revision_url($projecturl, $revision, $priorrevision);
 }
 
 /** Return the cgit revision URL */
