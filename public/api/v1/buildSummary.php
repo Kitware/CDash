@@ -312,7 +312,10 @@ $response['update'] = $update_response;
 
 // Configure
 $configure_response = array();
-$configure = pdo_query("SELECT * FROM configure WHERE buildid='$buildid'");
+$configure = pdo_query(
+        "SELECT * FROM configure c
+        JOIN build2configure b2c ON b2c.configureid=c.id
+        WHERE b2c.buildid='$buildid'");
 $configure_array = pdo_fetch_array($configure);
 
 $nerrors = 0;
@@ -401,7 +404,10 @@ if ($previous_buildid > 0) {
     $previous_response['nupdateerrors'] = $nupdateerrors;
     $previous_response['nupdatewarnings'] = $nupdatewarnings;
 
-    $configure = pdo_query("SELECT * FROM configure WHERE buildid='$previous_buildid'");
+    $configure = pdo_query(
+            "SELECT * FROM configure c
+            JOIN build2configure b2c ON b2c.configureid=c.id
+            WHERE b2c.buildid='$previous_buildid'");
     $configure_array = pdo_fetch_array($configure);
 
     $nconfigureerrors = 0;
