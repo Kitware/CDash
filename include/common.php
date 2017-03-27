@@ -957,7 +957,6 @@ function remove_build($buildid)
     pdo_query('DELETE FROM buildinformation WHERE buildid IN ' . $buildids);
     pdo_query('DELETE FROM builderrordiff WHERE buildid IN ' . $buildids);
 
-    pdo_query('DELETE FROM configureerror WHERE buildid IN ' . $buildids);
     pdo_query('DELETE FROM configureerrordiff WHERE buildid IN ' . $buildids);
     pdo_query('DELETE FROM coveragesummarydiff WHERE buildid IN ' . $buildids);
     pdo_query('DELETE FROM testdiff WHERE buildid IN ' . $buildids);
@@ -1023,6 +1022,7 @@ function remove_build($buildid)
     $configureids .= ')';
     if (strlen($configureids) > 2) {
         pdo_query("DELETE FROM configure WHERE id IN $configureids");
+        pdo_query("DELETE FROM configureerror WHERE configureid IN $configureids");
     }
     pdo_query("DELETE FROM build2configure WHERE buildid IN $buildids");
 

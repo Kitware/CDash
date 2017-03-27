@@ -709,6 +709,9 @@ if (isset($_GET['upgrade-2-4'])) {
         RemoveTableField('configure', 'buildid');
         RemoveTableField('configure', 'starttime');
         RemoveTableField('configure', 'endtime');
+
+        // Change configureerror to use configureid instead of buildid.
+        UpgradeConfigureErrorTable('configureerror', 'build2configure');
     }
 
     // Better caching of build & test time, particularly for parent builds.
@@ -901,6 +904,7 @@ if ($Cleanup) {
     delete_unused_rows('user2project', 'projectid', 'project');
     delete_unused_rows('userstatistics', 'projectid', 'project');
 
+    delete_unused_rows('build2configure', 'buildid', 'build');
     delete_unused_rows('build2note', 'buildid', 'build');
     delete_unused_rows('build2test', 'buildid', 'build');
     delete_unused_rows('buildemail', 'buildid', 'build');
@@ -910,8 +914,8 @@ if ($Cleanup) {
     delete_unused_rows('buildinformation', 'buildid', 'build');
     delete_unused_rows('buildnote', 'buildid', 'build');
     delete_unused_rows('buildtesttime', 'buildid', 'build');
-    delete_unused_rows('configure', 'buildid', 'build');
-    delete_unused_rows('configureerror', 'buildid', 'build');
+    delete_unused_rows('configure', 'id', 'build2configure', 'configureid');
+    delete_unused_rows('configureerror', 'configureid', 'configure');
     delete_unused_rows('configureerrordiff', 'buildid', 'build');
     delete_unused_rows('coverage', 'buildid', 'build');
     delete_unused_rows('coveragefilelog', 'buildid', 'build');

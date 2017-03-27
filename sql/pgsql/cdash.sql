@@ -695,11 +695,11 @@ CREATE INDEX "groupid3" on "summaryemail" ("groupid");
 -- Table: configureerror
 --
 CREATE TABLE "configureerror" (
-  "buildid" bigint NOT NULL,
+  "configureid" integer NOT NULL,
   "type" smallint NOT NULL,
   "text" text NOT NULL
 );
-CREATE INDEX "buildid15" on "configureerror" ("buildid");
+CREATE INDEX "configureid2" on "configureerror" ("configureid");
 CREATE INDEX "type3" on "configureerror" ("type");
 
 --
