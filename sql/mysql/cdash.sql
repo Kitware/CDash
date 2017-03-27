@@ -97,6 +97,22 @@ CREATE TABLE `buildgroupposition` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `build2configure`
+--
+
+CREATE TABLE `build2configure` (
+  `configureid` int(11) NOT NULL default '0',
+  `buildid` int(11) NOT NULL default '0',
+  `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
+  `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
+  PRIMARY KEY  (`buildid`),
+  KEY `configureid` (`configureid`)
+);
+
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `build2group`
 --
 
@@ -194,14 +210,12 @@ CREATE TABLE IF NOT EXISTS `build2update` (
 --
 
 CREATE TABLE `configure` (
-  `buildid` int(11) NOT NULL default '0',
-  `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
-  `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
+  `id` int(11) NOT NULL auto_increment,
   `command` text NOT NULL,
   `log` MEDIUMTEXT NOT NULL,
   `status` tinyint(4) NOT NULL default '0',
   `warnings` smallint(6) DEFAULT '-1',
-  KEY `buildid` (`buildid`)
+  PRIMARY KEY (`id`)
 );
 
 -- --------------------------------------------------------

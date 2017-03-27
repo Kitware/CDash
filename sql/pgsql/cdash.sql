@@ -78,6 +78,17 @@ CREATE INDEX "endtime2" on "buildgroupposition" ("endtime");
 CREATE INDEX "starttime3" on "buildgroupposition" ("starttime");
 CREATE INDEX "position" on "buildgroupposition" ("position");
 
+-- Table: build2configure
+--
+CREATE TABLE "build2configure" (
+  "configureid" integer DEFAULT '0' NOT NULL,
+  "buildid" integer DEFAULT '0' NOT NULL,
+  "starttime" timestamp(0) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  "endtime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
+  PRIMARY KEY ("buildid")
+);
+CREATE INDEX "configureid" on "build2configure" ("configureid");
+
 --
 -- Table: build2group
 --
@@ -163,15 +174,13 @@ CREATE INDEX "build2update_updateid" on "build2update" ("updateid");
 -- Table: configure
 --
 CREATE TABLE "configure" (
-  "buildid" bigint DEFAULT '0' NOT NULL,
-  "starttime" timestamp(0) DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  "endtime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
+  "id" SERIAL NOT NULL,
   "command" text NOT NULL,
   "log" text NOT NULL,
   "status" smallint DEFAULT '0' NOT NULL,
-  "warnings" smallint DEFAULT '-1'
+  "warnings" smallint DEFAULT '-1',
+   PRIMARY KEY ("id")
 );
-CREATE INDEX "buildid3" on "configure" ("buildid");
 
 --
 -- Table: coverage
