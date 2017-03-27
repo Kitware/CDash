@@ -150,10 +150,12 @@ class BuildConfigure
 
         $this->Crc32 = crc32($this->Command . $this->Log . $this->Status);
 
-        $stmt = $this->PDO->prepare('SELECT id FROM configure WHERE crc32=:crc32');
-        $stmt->bindParam('crc32', $this->Crc32);
-        pdo_execute($stmt);
-        $exists_row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $this->PDO->beginTransaction();
+
+        $exists_stmt = $this->PDO->prepare(
+                'SELECT id FROM configure WHERE crc32=?');
+        pdo_execute($exists_stmt, [$this->Crc32]);
+        $exists_row = $exists_stmt->fetch(PDO::FETCH_ASSOC);
         $new_configure_inserted = false;
 
         if (is_array($exists_row)) {
@@ -167,8 +169,20 @@ class BuildConfigure
             $stmt->bindParam(':log', $this->Log);
             $stmt->bindParam(':status', $this->Status);
             $stmt->bindParam(':crc32', $this->Crc32);
-            if (!pdo_execute($stmt)) {
-                return false;
+            if (!$stmt->execute()) {
+                $error = pdo_error(null, false);
+                // This error might be due to a unique constraint violation.
+                // Query again to see if this configure was created since
+                // the last time we checked.
+                pdo_execute($exists_stmt, [$this->Crc32]);
+                $exists_row = $exists_stmt->fetch(PDO::FETCH_ASSOC);
+                if (is_array($exists_row)) {
+                    $this->Id = $exists_row['id'];
+                } else {
+                    add_last_sql_error('BuildConfigure Insert', 0, $this->BuildId);
+                    $this->PDO->rollBack();
+                    return false;
+                }
             }
             $new_configure_inserted = true;
             $this->Id = pdo_insert_id('configure');
@@ -182,10 +196,12 @@ class BuildConfigure
         $stmt->bindParam(':configureid', $this->Id);
         $stmt->bindParam(':starttime', $this->StartTime);
         $stmt->bindParam(':endtime', $this->EndTime);
-        if (!pdo_execute($stmt)) {
+        if (!$stmt->execute()) {
+            $this->PDO->rollBack();
             return false;
         }
 
+        $this->PDO->commit();
         $this->InsertLabelAssociations();
         return $new_configure_inserted;
     }
