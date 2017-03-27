@@ -179,8 +179,10 @@ CREATE TABLE "configure" (
   "log" text NOT NULL,
   "status" smallint DEFAULT '0' NOT NULL,
   "warnings" smallint DEFAULT '-1',
+  "crc32" bigint DEFAULT NULL,
    PRIMARY KEY ("id")
 );
+CREATE UNIQUE INDEX "configure_crc32" on "configure" ("crc32");
 
 --
 -- Table: coverage

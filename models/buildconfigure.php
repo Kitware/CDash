@@ -30,6 +30,7 @@ class BuildConfigure
     public $Labels;
     public $NumberOfWarnings;
     public $NumberOfErrors;
+    private $Crc32;
 
     private $PDO;
 
@@ -150,16 +151,16 @@ class BuildConfigure
         $command = pdo_real_escape_string($this->Command);
         $log = pdo_real_escape_string($this->Log);
         $status = pdo_real_escape_string($this->Status);
-
+        $this->Crc32 = crc32($command . $log . $status);
         $new_configure_inserted = false;
+
         $exists_row = pdo_single_row_query(
-            "SELECT id FROM configure
-            WHERE command='$command' AND log='$log' AND status=$status");
+            "SELECT id FROM configure WHERE crc32=$this->Crc32");
         if (!$exists_row || !array_key_exists('id', $exists_row)) {
             // No such configure exists yet, insert a new row.
             $query =
-                "INSERT INTO configure (command, log, status)
-                VALUES ('$command','$log','$status')";
+                "INSERT INTO configure (command, log, status, crc32)
+                VALUES ('$command','$log','$status', $this->Crc32)";
             if (!pdo_query($query)) {
                 add_last_sql_error('BuildConfigure Insert', 0, $this->BuildId);
                 return false;
