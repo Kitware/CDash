@@ -20,6 +20,7 @@ include_once 'models/buildconfigureerrordiff.php';
 /** BuildConfigure class */
 class BuildConfigure
 {
+    public $Id;
     public $StartTime;
     public $EndTime;
     public $Command;
@@ -75,7 +76,7 @@ class BuildConfigure
             return false;
         }
 
-        $query = pdo_query('SELECT COUNT(*) FROM configure WHERE buildid=' . qnum($this->BuildId));
+        $query = pdo_query('SELECT COUNT(*) FROM build2configure WHERE buildid=' . qnum($this->BuildId));
         if (!$query) {
             add_last_sql_error('BuildConfigure Exists()', 0, $this->BuildId);
             return false;
@@ -96,7 +97,17 @@ class BuildConfigure
             return false;
         }
 
-        $query = pdo_query('DELETE FROM configure WHERE buildid=' . qnum($this->BuildId));
+        // Delete the configure row if it is not shared with any other build.
+        $count_row = pdo_single_row_query(
+            'SELECT configureid, COUNT(*) AS c FROM build2configure
+            WHERE buildid=' . qnum($this->BuildId) . ' GROUP BY configureid');
+        if ($count_row['c'] > 1) {
+            pdo_query(
+                'DELETE FROM configure WHERE id = ' . qnum($count_row['configureid']));
+        }
+
+        // Delete the build2configure row for this build.
+        $query = pdo_query('DELETE FROM build2configure WHERE buildid=' . qnum($this->BuildId));
         if (!$query) {
             add_last_sql_error('BuildConfigure Delete()', 0, $this->BuildId);
             return false;
@@ -122,7 +133,8 @@ class BuildConfigure
         }
     }
 
-    // Save in the database
+    // Save in the database.  Returns true is a new configure row was created,
+    // false otherwise.
     public function Insert()
     {
         if (!$this->BuildId) {
@@ -139,15 +151,36 @@ class BuildConfigure
         $log = pdo_real_escape_string($this->Log);
         $status = pdo_real_escape_string($this->Status);
 
-        $query = 'INSERT INTO configure (buildid,starttime,endtime,command,log,status)
-            VALUES (' . qnum($this->BuildId) . ",'$this->StartTime','$this->EndTime','$command','$log','$status')";
+        $new_configure_inserted = false;
+        $exists_row = pdo_single_row_query(
+            "SELECT id FROM configure
+            WHERE command='$command' AND log='$log' AND status=$status");
+        if (!$exists_row || !array_key_exists('id', $exists_row)) {
+            // No such configure exists yet, insert a new row.
+            $query =
+                "INSERT INTO configure (command, log, status)
+                VALUES ('$command','$log','$status')";
+            if (!pdo_query($query)) {
+                add_last_sql_error('BuildConfigure Insert', 0, $this->BuildId);
+                return false;
+            }
+            $new_configure_inserted = true;
+            $this->Id = pdo_insert_id('configure');
+        } else {
+            $this->Id = $exists_row['id'];
+        }
+
+        // Insert a new build2configure row for this build.
+        $query =
+            "INSERT INTO build2configure (buildid, configureid, starttime, endtime)
+            VALUES ($this->BuildId, $this->Id, '$this->StartTime', '$this->EndTime')";
         if (!pdo_query($query)) {
-            add_last_sql_error('BuildConfigure Insert', 0, $this->BuildId);
+            add_last_sql_error('Build2Configure Insert', 0, $this->BuildId);
             return false;
         }
 
         $this->InsertLabelAssociations();
-        return true;
+        return $new_configure_inserted;
     }
 
     /** Return true if the specified line contains a configure warning,
@@ -220,7 +253,7 @@ class BuildConfigure
 
         pdo_query(
             'UPDATE configure SET warnings=' . qnum($this->NumberOfWarnings) . '
-                WHERE buildid=' . qnum($this->BuildId));
+                WHERE id=' . qnum($this->Id));
         add_last_sql_error('BuildConfigure ComputeWarnings', 0, $this->BuildId);
     }
 
@@ -233,7 +266,10 @@ class BuildConfigure
         }
 
         $this->NumberOfErrors = 0;
-        $configure = pdo_query('SELECT status FROM configure WHERE buildid=' . qnum($this->BuildId));
+        $configure = pdo_query(
+            'SELECT status FROM configure c
+            JOIN build2configure b2c ON (b2c.configureid=c.id)
+            WHERE buildid=' . qnum($this->BuildId));
         if (!$configure) {
             add_last_sql_error('BuildConfigure ComputeErrors', 0, $this->BuildId);
             return false;
