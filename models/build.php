@@ -1163,13 +1163,16 @@ class Build
         compute_error_difference($this->Id, $previousbuildid, 1); // warnings
     }
 
-    /** Compute the build errors differences */
+    /** Compute the difference in configure warnings between this build and the
+     *  previous one.
+     *  TODO: we should probably also do configure errors here too.
+     */
     public function ComputeConfigureDifferences()
     {
         if (!$this->Id) {
-            add_log('BuildId is not set', 'Build::ComputeConfigureDifferences', LOG_ERR,
-                $this->ProjectId, $this->Id,
-                CDASH_OBJECT_BUILD, $this->Id);
+            add_log('BuildId is not set', 'Build::ComputeConfigureDifferences',
+                LOG_ERR, $this->ProjectId, $this->Id, CDASH_OBJECT_BUILD,
+                $this->Id);
             return false;
         }
 
@@ -1177,7 +1180,64 @@ class Build
         if ($previousbuildid == 0) {
             return;
         }
-        compute_configure_difference($this->Id, $previousbuildid, 1); // warnings
+
+        // Look up the number of configure warnings for this build
+        // and the previous one.
+        $stmt = $this->PDO->prepare(
+            'SELECT configurewarnings FROM build WHERE id = ?');
+
+        pdo_execute($stmt, [$this->Id]);
+        $row = $stmt->fetch();
+        $nwarnings = $row['configurewarnings'];
+
+        pdo_execute($stmt, [$previousbuildid]);
+        $row = $stmt->fetch();
+        $npreviouswarnings = $row['configurewarnings'];
+
+        // Check if a diff already exists for this build.
+        $this->PDO->beginTransaction();
+        $stmt = $this->PDO->prepare(
+                'SELECT * FROM configureerrordiff
+                WHERE buildid = :buildid AND type = 1 FOR UPDATE');
+        $stmt->bindParam(':buildid', $this->Id);
+        pdo_execute($stmt);
+        $row = $stmt->fetch();
+        $existing_diff = 0;
+        if ($row) {
+            $existing_diff = $row['difference'];
+        }
+
+        // Don't log if no diff.
+        $warningdiff = $nwarnings - $npreviouswarnings;
+        if ($warningdiff == 0 && $existing_diff == 0) {
+            $this->PDO->commit();
+            return;
+        }
+
+        // UPDATE or INSERT a new record as necessary.
+        if ($row) {
+            $stmt = $this->PDO->prepare(
+                    'UPDATE configureerrordiff SET difference = :difference
+                    WHERE buildid = :buildid AND type = 1');
+        } else {
+            $duplicate_sql = '';
+            global $CDASH_DB_TYPE;
+            if ($CDASH_DB_TYPE !== 'pgsql') {
+                $duplicate_sql = 'ON DUPLICATE KEY UPDATE difference = :difference';
+            }
+            $stmt = $this->PDO->prepare(
+                    "INSERT INTO configureerrordiff (buildid, type, difference)
+                    VALUES(:buildid, 1, :difference)
+                    $duplicate_sql");
+        }
+
+        $stmt->bindValue(':buildid', $previousbuildid);
+        $stmt->bindValue(':difference', $warningdiff);
+        if (!pdo_execute($stmt)) {
+            $this->PDO->rollBack();
+            return;
+        }
+        $this->PDO->commit();
     }
 
     /** Compute the test timing as a weighted average of the previous test.
