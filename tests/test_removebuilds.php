@@ -108,6 +108,13 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $configure->ComputeWarnings();
         $configure->ComputeErrors();
 
+        $configure->BuildId = $existing_build->Id;
+
+        $time2 = gmdate(FMT_DATETIME, time() + 1);
+        $configure->StartTime = $time2;
+        $configure->EndTime = $time2;
+        $configure->Insert();
+
         // BuildNote
         $note = new BuildNote();
         $note->Name = 'my note';
@@ -369,8 +376,6 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $this->verify('builderrordiff', 'buildid', '=', $build->Id, 1);
         $this->verify('buildinformation', 'buildid', '=', $build->Id, 1);
         $this->verify('buildtesttime', 'buildid', '=', $build->Id, 1);
-        $this->verify('configure', 'buildid', '=', $build->Id, 1);
-        $this->verify('configureerror', 'buildid', '=', $build->Id, 1);
         $this->verify('configureerrordiff', 'buildid', '=', $build->Id, 1);
         $this->verify('coveragesummary', 'buildid', '=', $build->Id, 1);
         $this->verify('coveragesummarydiff', 'buildid', '=', $build->Id, 1);
@@ -384,6 +389,12 @@ class RemoveBuildsTestCase extends KWWebTestCase
             $this->verify_get_columns('buildfailure', ['id', 'detailsid'], 'buildid', '=', $build->Id, 1);
         $this->verify('buildfailure2argument', 'buildfailureid', '=', $buildfailureid, 1);
         $this->verify('buildfailuredetails', 'id', '=', $detailsid, 1);
+
+        $configureid =
+            $this->verify_get_rows('build2configure', 'configureid', 'buildid', '=', $build->Id, 1);
+        $this->verify('build2configure', 'configureid', '=', $configureid, 2);
+        $this->verify('configure', 'id', '=', $configureid, 1);
+        $this->verify('configureerror', 'configureid', '=', $configureid, 1);
 
         $noteids =
             $this->verify_get_rows('build2note', 'noteid', 'buildid', '=', $build->Id, 2);
@@ -426,6 +437,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
 
         // Check that everything was deleted properly.
         $this->verify('build', 'id', '=', $build->Id, 0, true);
+        $this->verify('build2configure', 'buildid', '=', $build->Id, 0, true);
         $this->verify('build2group', 'buildid', '=', $build->Id, 0, true);
         $this->verify('build2note', 'buildid', '=', $build->Id, 0, true);
         $this->verify('build2test', 'buildid', '=', $build->Id, 0, true);
@@ -440,8 +452,8 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $this->verify('buildinformation', 'buildid', '=', $build->Id, 0, true);
         $this->verify('buildtesttime', 'buildid', '=', $build->Id, 0, true);
         $this->verify('buildupdate', 'id', '=', $updateid, 1, true);
-        $this->verify('configure', 'buildid', '=', $build->Id, 0, true);
-        $this->verify('configureerror', 'buildid', '=', $build->Id, 0, true);
+        $this->verify('configure', 'id', '=', $configureid, 1, true);
+        $this->verify('configureerror', 'configureid', '=', $configureid, 1, true);
         $this->verify('configureerrordiff', 'buildid', '=', $build->Id, 0, true);
         $this->verify('coverage', 'buildid', '=', $build->Id, 0, true);
         $this->verify('coveragefile', 'id', 'IN', $coveragefileids, 1, true);
