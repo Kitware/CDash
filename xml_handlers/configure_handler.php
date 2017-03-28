@@ -108,9 +108,6 @@ class ConfigureHandler extends AbstractHandler
             $this->Configure->EndTime = $end_time;
 
             // Insert the configure
-            if ($this->Configure->Exists()) {
-                $this->Configure->Delete();
-            }
             if ($this->Configure->Insert()) {
                 // Insert errors from the log file
                 $this->Configure->ComputeWarnings();
