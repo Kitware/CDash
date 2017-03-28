@@ -20,25 +20,37 @@ class BuildConfigureError
     public $Type;
     public $Text;
     public $ConfigureId;
+    private $PDO;
+
+    public function __construct()
+    {
+        $this->PDO = get_link_identifier()->getPdo();
+    }
 
     /** Return if exists */
     public function Exists()
     {
         if (!$this->ConfigureId || !is_numeric($this->ConfigureId)) {
-            echo 'BuildConfigureError::Save(): ConfigureId not set';
+            add_log('ConfigureId not set',
+                    'BuildConfigureError::Exists', LOG_ERR);
             return false;
         }
 
         if (!$this->Type || !is_numeric($this->Type)) {
-            echo 'BuildConfigureError::Save(): Type not set';
+            add_log('Type not set',
+                    'BuildConfigureError::Exists', LOG_ERR);
             return false;
         }
 
-        $query = pdo_query("SELECT count(*) AS c FROM configureerror WHERE configureid='" . $this->ConfigureId . "'
-                         AND type='" . $this->Type . "' AND text='" . $this->Text . "'");
-        add_last_sql_error('BuildConfigureError:Exists', 0, $this->ConfigureId);
-        $query_array = pdo_fetch_array($query);
-        if ($query_array['c'] > 0) {
+        $stmt = $this->PDO->prepare(
+            'SELECT COUNT(*) AS c FROM configureerror
+            WHERE configureid = :configureid AND type = :type AND text = :text');
+        $stmt->bindParam(':configureid', $this->ConfigureId);
+        $stmt->bindParam(':type', $this->Type);
+        $stmt->bindParam(':text', $this->Text);
+        pdo_execute($stmt);
+        $row = $stmt->fetch();
+        if ($row['c'] > 0) {
             return true;
         }
         return false;
@@ -48,21 +60,25 @@ class BuildConfigureError
     public function Save()
     {
         if (!$this->ConfigureId || !is_numeric($this->ConfigureId)) {
-            echo 'BuildConfigureError::Save(): ConfigureId not set';
+            add_log('ConfigureId not set',
+                    'BuildConfigureError::Save', LOG_ERR);
             return false;
         }
 
         if (!$this->Type || !is_numeric($this->Type)) {
-            echo 'BuildConfigureError::Save(): Type not set';
+            add_log('Type not set',
+                    'BuildConfigureError::Save', LOG_ERR);
             return false;
         }
 
         if (!$this->Exists()) {
-            $text = pdo_real_escape_string($this->Text);
-            $query = 'INSERT INTO configureerror (configureid,type,text)
-                VALUES (' . qnum($this->ConfigureId) . ',' . qnum($this->Type) . ",'$text')";
-            if (!pdo_query($query)) {
-                add_last_sql_error('BuildConfigureError:Save', 0, $this->ConfigureId);
+            $stmt = $this->PDO->prepare(
+                'INSERT INTO configureerror (configureid, type, text)
+                VALUES (:configureid, :type, :text)');
+            $stmt->bindParam(':configureid', $this->ConfigureId);
+            $stmt->bindParam(':type', $this->Type);
+            $stmt->bindParam(':text', $this->Text);
+            if (!pdo_execute($stmt)) {
                 return false;
             }
         }
