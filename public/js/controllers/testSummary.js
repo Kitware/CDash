@@ -1,6 +1,5 @@
 CDash.controller('TestSummaryController',
-  function TestSummaryController($scope, $rootScope, $http, multisort, renderTimer) {
-    $scope.loading = true;
+  function TestSummaryController($scope, apiLoader, multisort) {
     // Hide filters and graph by default.
     $scope.showfilters = false;
     $scope.showgraph = false;
@@ -17,20 +16,10 @@ CDash.controller('TestSummaryController',
     }
     $scope.orderByFields = sort_order;
 
-    $http({
-      url: 'api/v1/testSummary.php',
-      method: 'GET',
-      params: $rootScope.queryString
-    }).then(function success(s) {
-      var cdash = s.data;
-      renderTimer.initialRender($scope, cdash);
-
-      // Set title in root scope so the head controller can see it.
-      $rootScope['title'] = cdash.title;
+    apiLoader.loadPageData($scope, 'api/v1/testSummary.php');
+    $scope.finishSetup = function() {
       $scope.graphurl = $scope.failureGraphUrl();
-    }).finally(function() {
-      $scope.loading = false;
-    });
+    };
 
     $scope.updateOrderByFields = function(field, $event) {
       multisort.updateOrderByFields($scope, field, $event);

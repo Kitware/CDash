@@ -16,7 +16,8 @@
 
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
-include 'include/common.php';
+require_once 'include/api_common.php';
+require_once 'include/common.php';
 require_once 'models/project.php';
 
 @set_time_limit(0);
@@ -38,14 +39,15 @@ echo_subprojects_dashboard_JSON($Project, $date);
 // Gather up the data for a SubProjects dashboard.
 function echo_subprojects_dashboard_JSON($project_instance, $date)
 {
-    $start = microtime_float();
-    $noforcelogin = 1;
-    include_once dirname(dirname(dirname(__DIR__))) . '/config/config.php';
+    require_once dirname(dirname(dirname(__DIR__))) . '/config/config.php';
     require_once 'include/pdo.php';
-    include 'public/login.php';
-    include_once 'models/banner.php';
-    include_once 'models/subproject.php';
+    require_once 'models/banner.php';
+    require_once 'models/subproject.php';
 
+    global $CDASH_DB_HOST, $CDASH_DB_LOGIN, $CDASH_DB_NAME, $CDASH_DB_PASS,
+           $CDASH_SHOW_LAST_SUBMISSION;
+
+    $start = microtime_float();
     $response = array();
 
     $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
@@ -63,9 +65,7 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
     $Project = $project_instance;
     $projectid = $project_instance->Id;
 
-    if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
-        $response['requirelogin'] = 1;
-        echo json_encode($response);
+    if (!can_access_project($projectid)) {
         return;
     }
 
@@ -89,7 +89,6 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
     }
     $response['banners'] = $banners;
 
-    global $CDASH_SHOW_LAST_SUBMISSION;
     if ($CDASH_SHOW_LAST_SUBMISSION) {
         $response['showlastsubmission'] = 1;
     }

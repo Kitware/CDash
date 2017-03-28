@@ -16,11 +16,9 @@
 
 // queryTests.php displays test results based on query parameters
 //
-$noforcelogin = 1;
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
-include 'public/login.php';
-include_once 'include/common.php';
+require_once 'include/api_common.php';
 include 'include/version.php';
 require_once 'include/filterdataFunctions.php';
 include_once 'models/build.php';
@@ -59,7 +57,9 @@ if ($projectname == '') {
     $project_array = pdo_single_row_query("SELECT * FROM project WHERE name='$projectname'");
 }
 
-checkUserPolicy(@$_SESSION['cdash']['loginid'], $project_array['id']);
+if (!can_access_project($project_array['id'])) {
+    return;
+}
 
 list($previousdate, $currentstarttime, $nextdate) =
     get_dates($date, $project_array['nightlytime']);

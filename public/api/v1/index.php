@@ -23,7 +23,7 @@ if (isset($_GET['method'])) {
 
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
-include 'include/common.php';
+require_once 'include/api_common.php';
 include 'include/version.php';
 require_once 'models/project.php';
 require_once 'models/buildfailure.php';
@@ -70,14 +70,14 @@ echo_main_dashboard_JSON($Project, $date);
 // Generate the main dashboard JSON response.
 function echo_main_dashboard_JSON($project_instance, $date)
 {
+    global $CDASH_DB_HOST, $CDASH_DB_LOGIN, $CDASH_DB_NAME, $CDASH_DB_PASS,
+           $CDASH_DB_TYPE, $CDASH_ENABLE_FEED, $CDASH_USE_LOCAL_DIRECTORY;
+
     $start = microtime_float();
-    $noforcelogin = 1;
-    include_once dirname(dirname(dirname(__DIR__))) . '/config/config.php';
     require_once 'include/pdo.php';
-    include 'public/login.php';
-    include_once 'models/banner.php';
-    include_once 'models/build.php';
-    include_once 'models/subproject.php';
+    require_once 'models/banner.php';
+    require_once 'models/build.php';
+    require_once 'models/subproject.php';
 
     $response = array();
 
@@ -110,9 +110,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
         return;
     }
 
-    if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $project_array['id'], 1)) {
-        $response['requirelogin'] = 1;
-        echo json_encode($response);
+    if (!can_access_project($project_array['id'])) {
         return;
     }
 

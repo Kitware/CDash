@@ -15,7 +15,7 @@
 =========================================================================*/
 
 require_once 'include/defines.php';
-require_once 'include/pdocore.php';
+require_once 'include/pdo.php';
 
 use \Monolog\Formatter\LineFormatter;
 use \Monolog\Handler\StreamHandler;

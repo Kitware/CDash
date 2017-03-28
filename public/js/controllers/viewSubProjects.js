@@ -1,7 +1,5 @@
 CDash.controller('ViewSubProjectsController',
-  function ViewSubProjectsController($scope, $rootScope, $http, multisort, renderTimer) {
-    $scope.loading = true;
-
+  function ViewSubProjectsController($scope, multisort, apiLoader) {
     // Hide filters by default.
     $scope.showfilters = false;
 
@@ -13,17 +11,7 @@ CDash.controller('ViewSubProjectsController',
     }
     $scope.sortSubProjects = { orderByFields: sort_order };
 
-    $http({
-      url: 'api/v1/viewSubProjects.php',
-      method: 'GET',
-      params: $rootScope.queryString
-    }).then(function success(s) {
-      var cdash = s.data;
-      renderTimer.initialRender($scope, cdash);
-      $rootScope['title'] = cdash.title;
-    }).finally(function() {
-      $scope.loading = false;
-    });
+    apiLoader.loadPageData($scope, 'api/v1/viewSubProjects.php');
 
     $scope.updateOrderByFields = function(obj, field, $event) {
       multisort.updateOrderByFields(obj, field, $event);
