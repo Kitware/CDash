@@ -153,20 +153,22 @@ class BuildConfigure
 
         if ($this->BuildId) {
             // Delete the build2configure row for this build.
-            $query = pdo_query('DELETE FROM build2configure WHERE buildid=' . qnum($this->BuildId));
-            if (!$query) {
-                add_last_sql_error('BuildConfigure Delete()', 0, $this->BuildId);
+            $stmt = $this->PDO->prepare(
+                'DELETE FROM build2configure WHERE buildid = ?');
+            if (!pdo_execute($stmt, [$this->BuildId])) {
                 return false;
             }
         }
 
         // Delete the configure row if it is not shared with any other build.
-        $count_row = pdo_single_row_query(
+        $stmt = $this->PDO->prepare(
             'SELECT COUNT(*) AS c FROM build2configure
-            WHERE configureid=' . qnum($this->Id));
-        if ($count_row['c'] < 2) {
-            pdo_query(
-                'DELETE FROM configure WHERE id = ' . qnum($this->Id));
+            WHERE configureid = ?');
+        pdo_execute($stmt, [$this->Id]);
+        $row = $stmt->fetch();
+        if ($row['c'] < 2) {
+            $stmt = $this->PDO->prepare('DELETE FROM configure WHERE id = ?');
+            pdo_execute($stmt, [$this->Id]);
             return true;
         }
         return false;
@@ -296,6 +298,11 @@ class BuildConfigure
         $log_lines = explode("\n", $this->Log);
         $numlines = count($log_lines);
 
+        $stmt = $this->PDO->prepare(
+            'INSERT INTO configureerror (configureid, type, text)
+             VALUES (:id, 1, :text)');
+        $stmt->bindParam(':id', $this->Id);
+
         for ($l = 0; $l < $numlines; $l++) {
             if ($this->IsConfigureWarning($log_lines[$l])) {
                 $precontext = '';
@@ -314,19 +321,19 @@ class BuildConfigure
                 }
 
                 // Add the warnings in the configureerror table
-                $warning = pdo_real_escape_string($precontext . $log_lines[$l] . "\n" . $postcontext);
+                $warning = $precontext . $log_lines[$l] . "\n" . $postcontext;
+                $stmt->bindParam(':text', $warning);
+                pdo_execute($stmt);
 
-                pdo_query("INSERT INTO configureerror (configureid,type,text)
-                        VALUES ('$this->Id','1','$warning')");
-                add_last_sql_error('BuildConfigure ComputeWarnings', 0, $this->BuildId);
                 $this->NumberOfWarnings++;
             }
         }
 
-        pdo_query(
-            'UPDATE configure SET warnings=' . qnum($this->NumberOfWarnings) . '
-                WHERE id=' . qnum($this->Id));
-        add_last_sql_error('BuildConfigure ComputeWarnings', 0, $this->BuildId);
+        $stmt = $this->PDO->prepare(
+            'UPDATE configure SET warnings = :numwarnings WHERE id = :id');
+        $stmt->bindParam(':numwarnings', $this->NumberOfWarnings);
+        $stmt->bindParam(':id', $this->Id);
+        pdo_execute($stmt);
     }
 
     /** Get the number of configure error for a build */
