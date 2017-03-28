@@ -21,20 +21,35 @@ class BuildConfigureTestCase extends KWWebTestCase
 
     public function testBuildConfigure()
     {
-        $this->startCodeCoverage();
-
         $configure = new BuildConfigure();
         $configure->BuildId = 'foo';
-        ob_start();
-        $configure->Exists();
-        $output = ob_get_contents();
-        ob_end_clean();
-        if ($output !== 'BuildConfigure::Exists(): Buildid is not numeric') {
+        if ($configure->Exists()) {
+            $this->fail("configure with invalid buildid should not exist");
+        }
+        $log_contents = file_get_contents($this->logfilename);
+        if (strpos($log_contents, 'BuildId is not numeric') === false) {
             $this->fail("'BuildId is not numeric' not found from Exists()");
-            return 1;
+        }
+
+        $configure->BuildId = null;
+        if ($configure->Exists()) {
+            $this->fail("Configure exists with null buildid");
+        }
+        $log_contents = file_get_contents($this->logfilename);
+        if (strpos($log_contents, 'BuildId is not numeric') === false) {
+            $this->fail("'BuildId is not numeric' not found from Exists()");
         }
 
         $configure->BuildId = 1;
+        $configure->Command = "cmake .";
+        $configure->Log = "configure log";
+        $configure->StartTime = gmdate(FMT_DATETIME);
+        $configure->EndTime = gmdate(FMT_DATETIME);
+        $configure->Status = 0;
+        if (!$configure->Insert()) {
+            $this->fail("configure->Insert returned false");
+        }
+
         $error = new BuildConfigureError();
         $error->ConfigureId = 1;
         $error->Type = 1;
@@ -47,21 +62,26 @@ class BuildConfigureTestCase extends KWWebTestCase
         $label = new Label();
         $configure->AddLabel($label);
 
-        $configure->BuildId = false;
-        ob_start();
-        $configure->Exists();
-        $output = ob_get_contents();
-        ob_end_clean();
-        if ($output !== 'BuildConfigure::Exists(): BuildId not set') {
-            $this->fail("'BuildId not set' not found from Exists()");
-            return 1;
+
+        $configure->BuildId = 2;
+        // This is expected to return false because the configure row already exists.
+        if ($configure->Insert()) {
+            $this->fail("configure->Insert returned true");
         }
-        $configure->BuildId = 1;
-        $configure->Delete();
 
-        $this->pass('Passed');
+        if ($configure->Delete()) {
+            $this->fail("configure->Delete returned true");
+        }
 
-        $this->stopCodeCoverage();
-        return 0;
+        $configure->BuildId = 2;
+        if (!$configure->Delete()) {
+            $this->fail("configure->Delete returned false");
+        }
+
+        if ($configure->Exists()) {
+            $this->fail("configure exists after delete");
+        }
+
+        $this->deleteLog($this->logfilename);
     }
 }

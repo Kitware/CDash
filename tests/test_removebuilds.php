@@ -438,6 +438,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
         // Check that everything was deleted properly.
         $this->verify('build', 'id', '=', $build->Id, 0, true);
         $this->verify('build2configure', 'buildid', '=', $build->Id, 0, true);
+        $this->verify('build2configure', 'buildid', '=', $existing_build->Id, 1, true);
         $this->verify('build2group', 'buildid', '=', $build->Id, 0, true);
         $this->verify('build2note', 'buildid', '=', $build->Id, 0, true);
         $this->verify('build2test', 'buildid', '=', $build->Id, 0, true);
