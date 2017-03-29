@@ -26,8 +26,7 @@ include 'include/version.php';
 require_once 'models/build.php';
 
 $start = microtime_float();
-$response = begin_JSON_response();
-$response['title'] = 'CDash : Test Details';
+$response = [];
 
 $testid = pdo_real_escape_numeric($_GET['test']);
 // Checks
@@ -59,6 +58,9 @@ if (!$projectid) {
 if (!can_access_project($projectid)) {
     return;
 }
+
+$response = begin_JSON_response();
+$response['title'] = 'CDash : Test Details';
 
 // If we have a fileid we download it
 if (isset($_GET['fileid']) && is_numeric($_GET['fileid'])) {

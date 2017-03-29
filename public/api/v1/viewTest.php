@@ -65,8 +65,7 @@ if (isset($_GET['tests'])) {
     exit(0);
 }
 
-$response = begin_JSON_response();
-$response['title'] = 'CDash : View Tests';
+$response = [];
 
 // Checks
 if (!isset($buildid) || !is_numeric($buildid)) {
@@ -103,6 +102,7 @@ if (pdo_num_rows($project) > 0) {
     $testtimemaxstatus = $project_array['testtimemaxstatus'];
 }
 
+$response = begin_JSON_response();
 $response['title'] = "CDash : $projectname";
 $siteid = $build_array['siteid'];
 $buildtype = $build_array['type'];
