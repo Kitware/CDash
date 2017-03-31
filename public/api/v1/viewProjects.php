@@ -33,18 +33,9 @@ if ($text !== false) {
 $response['hostname'] = $_SERVER['SERVER_NAME'];
 $response['date'] = date('r');
 
-// Check if the database is up to date.
-$db_check = true;
-if ($CDASH_DB_TYPE != 'pgsql') {
-    $pdo = get_link_identifier()->getPdo();
-    $table_name = qid('user');
-    $select = $pdo->query("SELECT password FROM $table_name LIMIT 1");
-    $meta = $select->getColumnMeta(0);
-    if ($meta['len'] != 255) {
-        $db_check = false;
-    }
-}
-if (!$db_check) {
+// Check if the database is up to date
+$pdo = get_link_identifier()->getPdo();
+if ($pdo->query('SELECT id FROM configure LIMIT 1') === false) {
     $response['upgradewarning'] = 1;
 }
 

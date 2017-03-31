@@ -585,4 +585,169 @@ class UpgradeTestCase extends KWWebTestCase
         }
         return $retval;
     }
+
+    public function testBuild2ConfigureUpgrade()
+    {
+        require_once dirname(__FILE__) . '/cdash_test_case.php';
+        require_once 'include/common.php';
+        require_once 'include/pdo.php';
+
+        $retval = 0;
+        $configure_table_name = 'testconfigure';
+        $b2c_table_name = 'testbuild2configure';
+        $error_table_name = 'testconfigureerror';
+
+        global $CDASH_DB_TYPE;
+        if ($CDASH_DB_TYPE == 'pgsql') {
+            $create_query_1 = '
+                CREATE TABLE "' . $configure_table_name . '" (
+                "id" serial NOT NULL,
+                "buildid" integer DEFAULT \'0\' NOT NULL,
+                "command" text NOT NULL,
+                "log" text NOT NULL,
+                "status" smallint DEFAULT \'0\' NOT NULL,
+                "warnings" smallint DEFAULT \'-1\',
+                "starttime" timestamp(0) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+                "endtime" timestamp(0) DEFAULT \'1980-01-01 00:00:00\' NOT NULL,
+                "crc32" bigint DEFAULT NULL,
+                PRIMARY KEY ("id"))';
+            $create_query_2 = '
+                CREATE TABLE "' . $b2c_table_name . '" (
+                "configureid" integer DEFAULT \'0\' NOT NULL,
+                "buildid" integer DEFAULT \'0\' NOT NULL,
+                "starttime" timestamp(0) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+                "endtime" timestamp(0) DEFAULT \'1980-01-01 00:00:00\' NOT NULL,
+                PRIMARY KEY ("buildid"))';
+            $create_query_3 = '
+                CREATE TABLE "' . $error_table_name . '" (
+                  "buildid" bigint NOT NULL,
+                  "type" smallint NOT NULL,
+                  "text" text NOT NULL
+                )';
+        } else {
+            // MySQL
+            $create_query_1 = "
+                CREATE TABLE `$configure_table_name` (
+                `id` int(11) NOT NULL auto_increment,
+                `buildid` bigint(11) NOT NULL,
+                `command` text NOT NULL,
+                `log` MEDIUMTEXT NOT NULL,
+                `status` tinyint(4) NOT NULL DEFAULT '0',
+                `warnings` smallint(6) DEFAULT '-1',
+                `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
+                `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
+                `crc32` bigint(20) NOT NULL,
+                PRIMARY KEY  (`id`))";
+            $create_query_2 = "
+                CREATE TABLE `$b2c_table_name` (
+                `configureid` int(11) NOT NULL default '0',
+                `buildid` int(11) NOT NULL default '0',
+                `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
+                `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
+                PRIMARY KEY  (`buildid`))";
+            $create_query_3 = "
+                CREATE TABLE `$error_table_name` (
+                `buildid` int(11) NOT NULL,
+                `type` tinyint(4) NOT NULL,
+                `text` text NOT NULL,
+                KEY `buildid` (`buildid`),
+                KEY `type` (`type`))";
+        }
+
+        // Create testing tables.
+        if (!pdo_query($create_query_1)) {
+            $this->fail('pdo_query returned false');
+            $retval = 1;
+        }
+        if (!pdo_query($create_query_2)) {
+            $this->fail('pdo_query returned false');
+            $retval = 1;
+        }
+        if (!pdo_query($create_query_3)) {
+            $this->fail('pdo_query returned false');
+            $retval = 1;
+        }
+
+        // Insert testing data in configure table.
+        // Two rows that duplicate each other
+        $dupe_buildids = array(1, 2);
+        foreach ($dupe_buildids as $buildid) {
+            pdo_query(
+                "INSERT INTO $configure_table_name
+                (buildid, command, log, status, crc32)
+                VALUES ($buildid, 'dupe command', 'dupe log', 0, 0)");
+            pdo_query(
+                "INSERT INTO $error_table_name
+                (buildid, type, text)
+                VALUES ($buildid, 0, 'dupe error')");
+        }
+
+        // ...and one that does not.
+        pdo_query(
+            "INSERT INTO $configure_table_name
+            (buildid, command, log, status, crc32)
+            VALUES (3, 'unique command', 'unique log', 0, 0)");
+        pdo_query(
+            "INSERT INTO $error_table_name
+            (buildid, type, text)
+            VALUES (3, 0, 'unique error')");
+
+        // Verify that the right number of testing rows made it into the database.
+        foreach (array($configure_table_name, $error_table_name) as $table_name) {
+            $count_query = "
+                SELECT COUNT(*) AS numrows FROM $table_name";
+            $count_results = pdo_single_row_query($count_query);
+            if ($count_results['numrows'] != 3) {
+                $this->fail(
+                        "Expected 3 rows in $table_name, found " . $count_results['numrows']);
+                $retval = 1;
+            }
+        }
+
+        // Run the build2configure upgrade function.
+        PopulateBuild2Configure($configure_table_name, $b2c_table_name);
+
+        // Verify that we now have only two configure rows.
+        $count_query = "
+            SELECT COUNT(id) AS numrows FROM $configure_table_name";
+        $count_results = pdo_single_row_query($count_query);
+        if ($count_results['numrows'] != 2) {
+            $this->fail(
+                'Expected 2 configure rows, found ' . $count_results['numrows']);
+            $retval = 1;
+        }
+
+        // Verify that we have three build2configure rows.
+        $count_query = "
+            SELECT COUNT(buildid) AS numrows FROM $b2c_table_name";
+        $count_results = pdo_single_row_query($count_query);
+        if ($count_results['numrows'] != 3) {
+            $this->fail(
+                'Expected three b2c rows, found ' . $count_results['numrows']);
+            $retval = 1;
+        }
+
+        // Run the configureerror upgrade function.
+        UpgradeConfigureErrorTable($error_table_name, $b2c_table_name);
+
+        // Verify only two configureerror rows.
+        $count_query = "
+            SELECT COUNT(*) AS numrows FROM $error_table_name";
+        $count_results = pdo_single_row_query($count_query);
+        if ($count_results['numrows'] != 2) {
+            $this->fail(
+                'Expected 2 configureerror rows, found ' . $count_results['numrows']);
+            $retval = 1;
+        }
+
+        // Drop testing tables.
+        pdo_query("DROP TABLE $configure_table_name");
+        pdo_query("DROP TABLE $b2c_table_name");
+        pdo_query("DROP TABLE $error_table_name");
+
+        if ($retval == 0) {
+            $this->pass('Passed');
+        }
+        return $retval;
+    }
 }
