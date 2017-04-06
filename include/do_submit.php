@@ -286,6 +286,28 @@ function post_submit()
     $starttime = htmlspecialchars(pdo_real_escape_string($_POST['starttime']));
     $endtime = htmlspecialchars(pdo_real_escape_string($_POST['endtime']));
 
+    // Make sure this is a valid project.
+    $projectid = get_project_id($projectname);
+    if ($projectid == -1) {
+        $response_array['status'] = 1;
+        $response_array['description'] = 'Not a valid project.';
+        echo json_encode($response_array);
+        return;
+    }
+
+    // Do not process this submission if the project has too many builds.
+    require_once 'models/project.php';
+    $project = new Project();
+    $project->Name = $projectname;
+    $project->Id = $projectid;
+    $message = '';
+    if ($project->HasTooManyBuilds($message)) {
+        $response_array['status'] = 1;
+        $response_array['description'] = $message;
+        echo json_encode($response_array);
+        return;
+    }
+
     // Check if we have the CDash@Home scheduleid
     $scheduleid = 0;
     if (isset($_POST['clientscheduleid'])) {

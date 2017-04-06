@@ -1580,4 +1580,29 @@ class Project
         $stmt = $pdo->prepare('DELETE FROM blockbuild WHERE id=?');
         pdo_execute($stmt, [$id]);
     }
+
+    // Return true and set error message if this project has too many builds.
+    public function HasTooManyBuilds(&$message)
+    {
+        if (!$this->Id) {
+            return false;
+        }
+
+        global $CDASH_BUILDS_PER_PROJECT, $CDASH_EMAILADMIN,
+               $CDASH_UNLIMITED_PROJECTS;
+
+        if ($CDASH_BUILDS_PER_PROJECT == 0 ||
+                in_array($this->GetName(), $CDASH_UNLIMITED_PROJECTS)) {
+            return false;
+        }
+
+        if ($this->GetNumberOfBuilds() < $CDASH_BUILDS_PER_PROJECT) {
+            return false;
+        }
+
+        $message = "Maximum number of builds reached for $this->Name.  Contact $CDASH_EMAILADMIN for support.";
+        add_log("Too many builds for $this->Name", 'project_has_too_many_builds',
+                LOG_INFO, $this->Id);
+        return true;
+    }
 }
