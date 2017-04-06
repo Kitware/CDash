@@ -188,7 +188,7 @@
 
       <div style="float:left;">
       <xsl:if test="string-length(note)>0 and countchildren=0">
-        <a class="advancedviewitem" title="View notes"><xsl:attribute name="href">viewNotes.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><img src="img/document.png" alt="Notes" class="icon"/></a>
+        <a title="View notes"><xsl:attribute name="href">viewNotes.php?buildid=<xsl:value-of select="buildid"/> </xsl:attribute><img src="img/document.png" alt="Notes" class="icon"/></a>
       </xsl:if>
 
       <xsl:if test="upload-file-count>0 and countchildren=0">
