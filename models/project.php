@@ -777,7 +777,7 @@ class Project
     }
 
     /** Get the number of builds given a date range */
-    public function GetNumberOfBuilds($startUTCdate, $endUTCdate)
+    public function GetNumberOfBuilds($startUTCdate = null, $endUTCdate = null)
     {
         if (!$this->Id) {
             add_log('Id not set', 'Project::GetNumberOfBuilds', LOG_ERR,
@@ -785,16 +785,25 @@ class Project
             return false;
         }
 
-        $stmt = $this->PDO->prepare(
-            'SELECT COUNT(build.id) FROM build
-            WHERE projectid = :projectid
-            AND build.starttime > :start
-            AND build.starttime <= :end
-            AND parentid IN (-1, 0)');
+        // Construct our query given the optional parameters of this function.
+        $sql = 'SELECT COUNT(build.id) FROM build
+                WHERE projectid = :projectid AND parentid IN (-1, 0)';
+        if (!is_null($startUTCdate)) {
+            $sql .= ' AND build.starttime > :start';
+        }
+        if (!is_null($endUTCdate)) {
+            $sql .= ' AND build.starttime <= :end';
+        }
 
+        $stmt = $this->PDO->prepare($sql);
         $stmt->bindParam(':projectid', $this->Id);
-        $stmt->bindParam(':start', $startUTCdate);
-        $stmt->bindParam(':end', $endUTCdate);
+        if (!is_null($startUTCdate)) {
+            $stmt->bindParam(':start', $startUTCdate);
+        }
+        if (!is_null($endUTCdate)) {
+            $stmt->bindParam(':end', $endUTCdate);
+        }
+
         if (!pdo_execute($stmt)) {
             return false;
         }
