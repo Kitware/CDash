@@ -62,6 +62,7 @@ class Project
     public $RobotRegex;
     public $CTestTemplateScript;
     public $WebApiKey;
+    private $PDO;
 
     public function __construct()
     {
@@ -113,6 +114,7 @@ class Project
         if (empty($this->WebApiKey)) {
             $this->WebApiKey = '';
         }
+        $this->PDO = get_link_identifier()->getPdo();
     }
 
     /** Add a build group */
@@ -778,22 +780,26 @@ class Project
     public function GetNumberOfBuilds($startUTCdate, $endUTCdate)
     {
         if (!$this->Id) {
-            echo 'Project GetNumberOfBuilds(): Id not set';
+            add_log('Id not set', 'Project::GetNumberOfBuilds', LOG_ERR,
+                    $this->Id);
             return false;
         }
 
-        $project = pdo_query(
-            'SELECT count(build.id) FROM build WHERE projectid=' . qnum($this->Id) . "
-            AND build.starttime>'$startUTCdate'
-            AND build.starttime<='$endUTCdate'
-            AND parentid IN (-1, 0)");
+        $stmt = $this->PDO->prepare(
+            'SELECT COUNT(build.id) FROM build
+            WHERE projectid = :projectid
+            AND build.starttime > :start
+            AND build.starttime <= :end
+            AND parentid IN (-1, 0)');
 
-        if (!$project) {
-            add_last_sql_error('Project GetNumberOfBuilds', $this->Id);
+        $stmt->bindParam(':projectid', $this->Id);
+        $stmt->bindParam(':start', $startUTCdate);
+        $stmt->bindParam(':end', $endUTCdate);
+        if (!pdo_execute($stmt)) {
             return false;
         }
-        $project_array = pdo_fetch_array($project);
-        return intval($project_array[0]);
+
+        return intval($stmt->fetchColumn());
     }
 
     /** Get the number of builds given per day */
