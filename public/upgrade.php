@@ -806,6 +806,9 @@ if (isset($_GET['upgrade-2-6'])) {
         UpgradeConfigureErrorTable('configureerror', 'build2configure');
     }
 
+    // Support for authenticated submissions.
+    AddTableField('project', 'authenticatesubmissions', 'tinyint(1)', 'smallint', '0');
+
     // Set the database version
     setVersion();
 

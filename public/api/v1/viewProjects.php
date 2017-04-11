@@ -33,9 +33,9 @@ if ($text !== false) {
 $response['hostname'] = $_SERVER['SERVER_NAME'];
 $response['date'] = date('r');
 
-// Check if the database is up to date
+// Check if the database is up to date.
 $pdo = get_link_identifier()->getPdo();
-if ($pdo->query('SELECT id FROM configure LIMIT 1') === false) {
+if ($pdo->query('SELECT authenticatesubmissions FROM project LIMIT 1') === false) {
     $response['upgradewarning'] = 1;
 }
 
