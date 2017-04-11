@@ -101,17 +101,7 @@ function register()
 
             global $CDASH_REGISTRATION_EMAIL_VERIFY, $CDASH_SERVER_NAME;
             if ($CDASH_REGISTRATION_EMAIL_VERIFY) {
-                $keychars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-                $length = 40;
-
-                $key = '';
-                $max = strlen($keychars) - 1;
-                for ($i = 0; $i < $length; $i++) {
-                    // random_int is available in PHP 7 and the random_compat PHP 5.x
-                    // polyfill included in the Composer package.json dependencies.
-                    $key .= substr($keychars, random_int(0, $max), 1);
-                }
-
+                $key = generate_password(40);
                 $date = date(FMT_DATETIME);
                 if ($user->SaveTemp($key, $date)) {
                     // Send the registration email.
