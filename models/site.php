@@ -99,18 +99,22 @@ class Site
 
     public function LookupIP()
     {
-        global $CDASH_REMOTE_ADDR;
-        $this->Ip = ($CDASH_REMOTE_ADDR) ? $CDASH_REMOTE_ADDR : $_SERVER['REMOTE_ADDR'];
+        global $CDASH_REMOTE_ADDR, $PHP_ERROR_SUBMISSION_ID;
+        $submission_id = $PHP_ERROR_SUBMISSION_ID;
 
         // In the async case, look up the IP recorded when the file was
         // originally submitted...
-        global $PHP_ERROR_SUBMISSION_ID;
-        $submission_id = $PHP_ERROR_SUBMISSION_ID;
         if ($submission_id) {
             $stmt = $this->PDO->prepare(
                 'SELECT ip FROM submission2ip WHERE submissionid = ?');
             pdo_execute($stmt, [$submission_id]);
             $this->Ip = $stmt->fetchColumn();
+        } elseif ($CDASH_REMOTE_ADDR) {
+            $this->Ip = $CDASH_REMOTE_ADDR;
+        } elseif (!empty($_SERVER['REMOTE_ADDR'])) {
+            $this->Ip = $_SERVER['REMOTE_ADDR'];
+        } else {
+            $this->Ip = '';
         }
     }
 
@@ -167,6 +171,7 @@ class Site
         } else {
             $this->Id = pdo_insert_id('site');
         }
+
         return true;
     }
 
