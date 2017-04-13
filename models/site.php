@@ -106,6 +106,11 @@ class Site
     /** Insert a new site */
     public function Insert()
     {
+        // Don't attempt to save a Site that doesn't have a name.
+        if (!$this->Name) {
+            return false;
+        }
+
         $justSetIP = false;
 
         if (strlen($this->Ip) == 0) {
