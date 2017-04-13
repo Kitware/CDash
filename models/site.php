@@ -25,10 +25,15 @@ class Site
     public $Latitude;
     public $Longitude;
     public $OutOfOrder;
+    private $PDO;
 
     public function __construct()
     {
+        $this->Ip = '';
+        $this->Latitude = '';
+        $this->Longitude = '';
         $this->OutOfOrder = 0;
+        $this->PDO = get_link_identifier()->getPdo();
     }
 
     public function SetInformation($information)
@@ -40,23 +45,26 @@ class Site
     /** Check if the site already exists */
     public function Exists()
     {
-        // If no id specify return false
+        // If no id or name were specified return false.
         if (!$this->Id && !$this->Name) {
             return false;
         }
 
         if ($this->Id) {
-            $query = pdo_query('SELECT count(*) AS c FROM site WHERE id=' . qnum($this->Id));
-            $query_array = pdo_fetch_array($query);
-            if ($query_array['c'] > 0) {
+            $stmt = $this->PDO->prepare(
+                'SELECT COUNT(*) AS c FROM site WHERE id = ?');
+            pdo_execute($stmt, [$this->Id]);
+            if ($stmt->fetchColumn() > 0) {
                 return true;
             }
         }
         if ($this->Name) {
-            $query = pdo_query("SELECT id FROM site WHERE name='" . $this->Name . "'");
-            if (pdo_num_rows($query) > 0) {
-                $query_array = pdo_fetch_array($query);
-                $this->Id = $query_array['id'];
+            $stmt = $this->PDO->prepare(
+                'SELECT id FROM site WHERE name = ?');
+            pdo_execute($stmt, [$this->Name]);
+            $id = $stmt->fetchColumn();
+            if ($id !== false) {
+                $this->Id = $id;
                 return true;
             }
         }
@@ -67,23 +75,26 @@ class Site
     public function Update()
     {
         if (!$this->Exists()) {
-            return;
-        }
-
-        // Update the project
-        $query = 'UPDATE site SET';
-        $query .= " name='" . $this->Name . "'";
-        $query .= ",ip='" . $this->Ip . "'";
-        $query .= ",latitude='" . $this->Latitude . "'";
-        $query .= ",longitude='" . $this->Longitude . "'";
-        $query .= ",outoforder='" . $this->OutOfOrder . "'";
-
-        $query .= " WHERE id='" . $this->Id . "'";
-
-        if (!pdo_query($query)) {
-            add_last_sql_error('Site Update');
             return false;
         }
+
+        // Update the site.
+        $stmt = $this->PDO->prepare(
+            'UPDATE site
+             SET name = :name, ip = :ip, latitude = :latitude,
+                 longitude = :longitude, outoforder = :outoforder
+            WHERE id= :id');
+        $stmt->bindParam(':name', $this->Name);
+        $stmt->bindParam(':ip', $this->Ip);
+        $stmt->bindParam(':latitude', $this->Latitude);
+        $stmt->bindParam(':longitude', $this->Longitude);
+        $stmt->bindParam(':outoforder', $this->OutOfOrder);
+        $stmt->bindParam(':id', $this->Id);
+
+        if (!pdo_execute($stmt)) {
+            return false;
+        }
+        return true;
     }
 
     public function LookupIP()
@@ -96,10 +107,10 @@ class Site
         global $PHP_ERROR_SUBMISSION_ID;
         $submission_id = $PHP_ERROR_SUBMISSION_ID;
         if ($submission_id) {
-            $this->Ip = pdo_get_field_value(
-                'SELECT ip FROM submission2ip WHERE submissionid=' . qnum($submission_id),
-                'ip', ''
-            );
+            $stmt = $this->PDO->prepare(
+                'SELECT ip FROM submission2ip WHERE submissionid = ?');
+            pdo_execute($stmt, [$submission_id]);
+            $this->Ip = $stmt->fetchColumn();
         }
     }
 
@@ -132,21 +143,23 @@ class Site
             $this->Longitude = $location['longitude'];
         }
 
-        $query =
-            "INSERT INTO site (name,ip,latitude,longitude)
-            VALUES
-            ('$this->Name','$this->Ip','$this->Latitude','$this->Longitude')";
-        if (!pdo_query($query)) {
+        $stmt = $this->PDO->prepare(
+            'INSERT INTO site (name, ip, latitude, longitude)
+            VALUES (:name, :ip, :latitude, :longitude)');
+        $stmt->bindParam(':name', $this->Name);
+        $stmt->bindParam(':ip', $this->Ip);
+        $stmt->bindParam(':latitude', $this->Latitude);
+        $stmt->bindParam(':longitude', $this->Longitude);
+        if (!$stmt->execute()) {
             $error = pdo_error();
             // This error might be due to a unique constraint violation.
             // Query for a previously existing site with this name & ip.
-            $existing_id_result = pdo_single_row_query(
-                "SELECT id FROM site WHERE name='$this->Name'
-                    AND ip='$this->Ip'");
-            if ($existing_id_result &&
-                array_key_exists('id', $existing_id_result)
-            ) {
-                $this->Id = $existing_id_result['id'];
+            $exists_stmt = $this->PDO->prepare(
+                'SELECT id FROM site WHERE name = ? AND ip = ?');
+            pdo_execute($exists_stmt, [$this->Name, $this->Ip]);
+            $id = $exists_stmt->fetchColumn();
+            if ($id !== false) {
+                $this->Id = $id;
                 return true;
             }
             add_log("SQL error: $error", 'Site Insert', LOG_ERR);
@@ -154,6 +167,7 @@ class Site
         } else {
             $this->Id = pdo_insert_id('site');
         }
+        return true;
     }
 
     // Get the name of the size
@@ -164,13 +178,11 @@ class Site
             return false;
         }
 
-        $query = pdo_query('SELECT name FROM site WHERE id=' . qnum($this->Id));
-        if (!$query) {
-            add_last_sql_error('Site GetName');
+        $stmt = $this->PDO->prepare(
+            'SELECT name FROM site WHERE id = ?');
+        if (!pdo_execute($stmt, [$this->Id])) {
             return false;
         }
-
-        $site_array = pdo_fetch_array($query);
-        return $site_array['name'];
+        return $stmt->fetchColumn();
     }
 }
