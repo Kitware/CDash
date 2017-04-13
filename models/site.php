@@ -174,7 +174,7 @@ class Site
     public function GetName()
     {
         if (!$this->Id) {
-            echo 'Site::GetName(): Id not set';
+            add_log('Id not set', 'Site::GetName', LOG_ERR);
             return false;
         }
 
