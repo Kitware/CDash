@@ -114,6 +114,17 @@ if (isset($_GET['group']) && is_numeric($_GET['group']) && $_GET['group'] > 0) {
 }
 $response['groupid'] = $groupid;
 
+// Handle optional "showpassed" argument.
+$showpassed = false;
+if (isset($_GET['showpassed']) && intval($_GET['showpassed']) === 1) {
+    $showpassed = true;
+}
+if ($showpassed) {
+    $response['showpassed'] = 1;
+} else {
+    $response['showpassed'] = 0;
+}
+
 get_dashboard_JSON($projectname, $date, $response);
 
 // Setup the menu of relevant links.
@@ -173,7 +184,7 @@ if ($has_subprojects) {
 
 // Main query: find all the requested tests.
 $stmt = $pdo->prepare(
-    "SELECT t.name, t.details, b2t.status $sp_select FROM build b
+    "SELECT t.name, t.details, b2t.status, b2t.time $sp_select FROM build b
     JOIN build2test b2t ON (b2t.buildid=b.id)
     JOIN test t ON (t.id=b2t.testid)
     $group_join
@@ -208,6 +219,7 @@ while ($row = $stmt->fetch()) {
         $test['passed'] = 0;
         $test['failed'] = 0;
         $test['timeout'] = 0;
+        $test['time'] = $row['time'];
         $all_tests[$test_name] = $test;
     }
 
@@ -217,6 +229,9 @@ while ($row = $stmt->fetch()) {
         $all_tests[$test_name]['timeout'] += 1;
     } else {
         $all_tests[$test_name]['failed'] += 1;
+    }
+    if ($row['time'] > $all_tests[$test_name]['time']) {
+        $all_tests[$test_name]['time'] = $row['time'];
     }
 }
 
@@ -228,8 +243,9 @@ foreach ($all_tests as $name => $test) {
     if ($total_runs === 0) {
         continue;
     }
-    // Only include tests that failed at least once.
-    if ($test['failed'] === 0 && $test['timeout'] === 0) {
+    // Unless the user specified otherwise, only include tests that failed
+    // at least once.
+    if (!$showpassed && $test['failed'] === 0 && $test['timeout'] === 0) {
         continue;
     }
 
@@ -245,6 +261,8 @@ foreach ($all_tests as $name => $test) {
     $test_response['link'] =
             "testSummary.php?project=$projectid&name=$name&date=$date";
     $test_response['totalruns'] = $total_runs;
+    $test_response['prettytime'] = time_difference($test['time'], true, '', true);
+    $test_response['time'] = $test['time'];
     $tests_response[] = $test_response;
 }
 

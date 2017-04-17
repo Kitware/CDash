@@ -36,6 +36,7 @@ CDash.controller('TestOverviewController',
     apiLoader.loadPageData($scope, 'api/v1/testOverview.php');
 
     $scope.finishSetup = function() {
+      $scope.cdash.showpassedinitialvalue = $scope.cdash.showpassed;
       $scope.cdash.tests = $filter('orderBy')($scope.cdash.tests, $scope.orderByFields);
       $scope.pageChanged();
 
@@ -83,6 +84,9 @@ CDash.controller('TestOverviewController',
       }
       if ($scope.cdash.selectedGroup.id > 0) {
         uri += '&group=' + $scope.cdash.selectedGroup.id;
+      }
+      if ($scope.cdash.showpassed == 1) {
+        uri += '&showpassed=1';
       }
       uri += filters.getString();
       window.location = uri;
