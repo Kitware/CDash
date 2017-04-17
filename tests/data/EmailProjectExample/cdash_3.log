@@ -11,7 +11,7 @@ Build Name: Win32-MSVC2009
 Build Time: 2009-02-23T05:02:04 EST
 Type: Nightly
 Warnings: 3
-Tests failing: 3
+Tests not passing: 3
 Dynamic analysis tests failing: 10
 
 
@@ -30,10 +30,10 @@ Dynamic analysis tests failing: 10
 
 
 
-*Tests failing*
-DashboardSendTest (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
-StringActionsTest (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
-MathActionsTest (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
+*Tests not passing*
+DashboardSendTest Completed (OTHER_FAULT) (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
+StringActionsTest Completed (OTHER_FAULT) (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
+MathActionsTest Completed (OTHER_FAULT) (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
 
 
 
