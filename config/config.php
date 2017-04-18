@@ -278,6 +278,11 @@ $CDASH_MEMCACHE_PREFIX = 'cdash';
 // Whether to use the AWS ElastiCache Auto Discovery feature
 $CDASH_USE_ELASTICACHE_AUTO_DISCOVERY = false;
 
+// How long authentication tokens should last before expiring (in seconds).
+// Default is six months.
+// 0 here means that tokens do not expire.
+$CDASH_TOKEN_DURATION = 15811200;
+
 /* DO NOT EDIT AFTER THIS LINE */
 $localConfig = dirname(__FILE__) . '/config.local.php';
 if ((strpos(__FILE__, 'config.local.php') === false) && file_exists($localConfig)) {
