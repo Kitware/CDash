@@ -12,10 +12,9 @@
   </head>
 
   <body bgcolor="#ffffff" ng-controller="ViewTestController">
+    <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
 
-    <div ng-if="::cdash.requirelogin == 1" ng-include="'login.php'"></div>
-
-    <ng-include ng-if="::cdash.requirelogin != 1" src="::cdash.header || 'build/views/partials/header_@@version.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="::cdash.header || 'build/views/partials/header_@@version.html'"></ng-include>
     <br/>
 
     <div ng-if="cdash.requirelogin != 1 && !loading && !cdash.error">
