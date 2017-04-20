@@ -46,8 +46,7 @@ if ($date != null) {
     $date = htmlspecialchars(pdo_real_escape_string($date));
 }
 
-$response = begin_JSON_response();
-$response['title'] = 'CDash : View Build Errors';
+$response = [];
 
 // Checks
 if (!isset($buildid) || !is_numeric($buildid)) {
@@ -87,6 +86,7 @@ if (!can_access_project($project_array['id'])) {
     return;
 }
 
+$response = begin_JSON_response();
 $response['title'] = "CDash : $projectname";
 $siteid = $build_array['siteid'];
 $buildtype = $build_array['type'];
