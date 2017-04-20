@@ -929,15 +929,35 @@ function AddUniqueConstraintToDiffTables($testing=false)
  **/
 function PopulateBuild2Configure($configure_table, $b2c_table)
 {
+    global $CDASH_DB_TYPE;
+
     // Set crc32 for configure rows.
-    $query =
-        "SELECT id, command, log, status FROM $configure_table";
-    $result = pdo_query($query);
-    while ($row = pdo_fetch_array($result)) {
-        $configureid = $row['id'];
-        $crc32 = crc32($row['command'] . $row['log'] . $row['status']);
+    if ($CDASH_DB_TYPE != 'pgsql') {
+        // For MySQL, we use the CRC32 function provided by the database.
         pdo_query(
-            "UPDATE $configure_table SET crc32 = $crc32 WHERE id=$configureid");
+            "UPDATE $configure_table
+            SET crc32 = CRC32(CONCAT(command, log, status))");
+    } else {
+        // For Postgres, we have to compute crc32 using PHP.
+        // We do this in batches of 1024 rows at a time
+        // so we don't consume all the available memory.
+        $count_query = pdo_query("SELECT COUNT(*) FROM $configure_table");
+        $count_row = pdo_fetch_array($count_query);
+        $num_configures = $count_row[0];
+        $batch_size = 1024;
+        for ($i = 0; $i < $num_configures; $i += $batch_size) {
+            $query =
+                "SELECT id, command, log, status FROM $configure_table
+                ORDER BY id ASC LIMIT $batch_size OFFSET $i";
+            $result = pdo_query($query);
+            while ($row = pdo_fetch_array($result)) {
+                $configureid = $row['id'];
+                $crc32 = crc32($row['command'] . $row['log'] . $row['status']);
+                pdo_query(
+                    "UPDATE $configure_table
+                    SET crc32 = $crc32 WHERE id = $configureid");
+            }
+        }
     }
 
     // Find all configure rows that have duplicate crc32 values.
