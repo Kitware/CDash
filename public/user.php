@@ -51,25 +51,21 @@ if ($CDASH_USER_CREATE_PROJECTS) {
 } else {
     $xml .= add_XML_value('user_can_create_projects', 0);
 }
-// Go through the list of project the user is part of
-$project2user = pdo_query("SELECT user2project.projectid AS projectid,role,name
-                         FROM user2project,project
-                         WHERE project.id=user2project.projectid
-                         AND userid='$userid' ORDER BY project.name ASC");
 
-echo pdo_error();
-$condition_list_projects = '';
-$Project = new Project();
+// Go through the list of project the user is part of.
+$UserProject = new UserProject();
+$UserProject->UserId = $userid;
+$project_rows = $UserProject->GetProjects();
 $start = gmdate(FMT_DATETIME, strtotime(date('r')) - (3600 * 24));
-while ($project2user_array = pdo_fetch_array($project2user)) {
-    $Project->Id = $project2user_array['projectid'];
-    $projectid = $project2user_array['projectid'];
-    $projectname = $project2user_array['name'];
+$Project = new Project();
+foreach ($project_rows as $project_row) {
+    $Project->Id = $project_row['id'];
+    $Project->Name = $project_row['name'];
     $xml .= '<project>';
-    $xml .= add_XML_value('id', $projectid);
-    $xml .= add_XML_value('role', $project2user_array['role']); // 0 is normal user, 1 is maintainer, 2 is administrator
-    $xml .= add_XML_value('name', $projectname);
-    $xml .= add_XML_value('name_encoded', urlencode($projectname));
+    $xml .= add_XML_value('id', $Project->Id);
+    $xml .= add_XML_value('role', $project_row['role']); // 0 is normal user, 1 is maintainer, 2 is administrator
+    $xml .= add_XML_value('name', $Project->Name);
+    $xml .= add_XML_value('name_encoded', urlencode($Project->Name));
     $xml .= add_XML_value('nbuilds', $Project->GetTotalNumberOfBuilds());
     $xml .= add_XML_value('average_builds', round($Project->GetBuildsDailyAverage(gmdate(FMT_DATETIME, time() - (3600 * 24 * 7)), gmdate(FMT_DATETIME), 2)));
     $xml .= add_XML_value('success', $Project->GetNumberOfPassingBuilds($start, gmdate(FMT_DATETIME)));
