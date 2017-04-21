@@ -29,6 +29,7 @@ include_once 'models/clientsite.php';
 include_once 'models/clientjob.php';
 include_once 'models/build.php';
 include_once 'models/user.php';
+include_once 'models/site.php';
 
 if (!$session_OK) {
     return;
@@ -164,17 +165,22 @@ while ($row = $stmt->fetch()) {
 }
 
 //Go through the claimed sites
-$claimedsiteprojects = array();
+$claimedsiteprojects = [];
 $siteidwheresql = '';
-$claimedsites = array();
-$site2user = pdo_query("SELECT siteid FROM site2user WHERE userid='$userid'");
-while ($site2user_array = pdo_fetch_array($site2user)) {
-    $siteid = $site2user_array['siteid'];
-    $site['id'] = $siteid;
-    $site_array = pdo_fetch_array(pdo_query("SELECT name,outoforder FROM site WHERE id='$siteid'"));
-    $site['name'] = $site_array['name'];
-    $site['outoforder'] = $site_array['outoforder'];
-    $claimedsites[] = $site;
+$claimedsites = [];
+$stmt = $pdo->prepare('SELECT siteid FROM site2user WHERE userid = ?');
+pdo_execute($stmt, [$userid]);
+while ($row = $stmt->fetch()) {
+    $siteid = $row['siteid'];
+    $Site = new Site();
+    $Site->Id = $siteid;
+    $Site->Fill();
+
+    $site_response = [];
+    $site_response['id'] = $Site->Id;
+    $site_response['name'] = $Site->Name;
+    $site_response['outoforder'] = $Site->OutOfOrder;
+    $claimedsites[] = $site_response;
 
     if (strlen($siteidwheresql) > 0) {
         $siteidwheresql .= ' OR ';
