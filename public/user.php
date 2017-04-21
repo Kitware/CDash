@@ -189,18 +189,22 @@ while ($row = $stmt->fetch()) {
 }
 
 // Look for all the projects
-if (pdo_num_rows($site2user) > 0) {
-    $site2project = pdo_query("SELECT build.projectid FROM build,user2project WHERE ($siteidwheresql)
-                 AND user2project.projectid=build.projectid AND user2project.userid='$userid'
-                 AND user2project.role>0
-                 GROUP BY build.projectid");
-    while ($site2project_array = pdo_fetch_array($site2project)) {
-        $projectid = $site2project_array['projectid'];
-        $project_array = pdo_fetch_array(pdo_query("SELECT name,nightlytime FROM project WHERE id='$projectid'"));
-        $claimedproject = array();
-        $claimedproject['id'] = $projectid;
-        $claimedproject['name'] = $project_array['name'];
-        $claimedproject['nightlytime'] = $project_array['nightlytime'];
+if (count($claimedsites) > 0) {
+    $stmt = $pdo->prepare(
+        "SELECT b.projectid FROM build b
+        JOIN user2project u2p ON (b.projectid = u2p.projectid)
+        WHERE ($siteidwheresql) AND u2p.userid = ? AND u2p.role > 0
+        GROUP BY b.projectid");
+    pdo_execute($stmt, [$userid]);
+    while ($row = $stmt->fetch()) {
+        $Project = new Project();
+        $Project->Id = $row['projectid'];
+        $Project->Fill();
+
+        $claimedproject = [];
+        $claimedproject['id'] = $Project->Id;
+        $claimedproject['name'] = $Project->Name;
+        $claimedproject['nightlytime'] = $Project->NightlyTime;
         $claimedsiteprojects[] = $claimedproject;
     }
 }
