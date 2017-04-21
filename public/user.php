@@ -132,17 +132,22 @@ if ($CDASH_MANAGE_CLIENTS) {
     }
 }
 
-// Go through the public projects
-$project = pdo_query("SELECT name,id FROM project WHERE id
-                    NOT IN (SELECT projectid as id FROM user2project
-                    WHERE userid='$userid') AND public='1' ORDER BY name");
+// Find all the public projects that this user is not subscribed to.
+$pdo = get_link_identifier()->getPdo();
+$stmt = $pdo->prepare(
+    'SELECT name, id FROM project
+    WHERE public = 1
+    AND id NOT IN (SELECT projectid AS id FROM user2project WHERE userid = ?)
+    ORDER BY name');
+pdo_execute($stmt, [$userid]);
+
 $j = 0;
 if ($CDASH_USE_LOCAL_DIRECTORY == '1') {
     if (file_exists('local/user.php')) {
         include_once 'local/user.php';
     }
 }
-while ($project_array = pdo_fetch_array($project)) {
+while ($row = $stmt->fetch()) {
     $xml .= '<publicproject>';
     if ($j % 2 == 0) {
         $xml .= add_XML_value('trparity', 'trodd');
@@ -150,10 +155,10 @@ while ($project_array = pdo_fetch_array($project)) {
         $xml .= add_XML_value('trparity', 'treven');
     }
     if (function_exists('getAdditionalPublicProject')) {
-        $xml .= getAdditionalPublicProject($project_array['id']);
+        $xml .= getAdditionalPublicProject($row['id']);
     }
-    $xml .= add_XML_value('id', $project_array['id']);
-    $xml .= add_XML_value('name', $project_array['name']);
+    $xml .= add_XML_value('id', $row['id']);
+    $xml .= add_XML_value('name', $row['name']);
     $xml .= '</publicproject>';
     $j++;
 }
