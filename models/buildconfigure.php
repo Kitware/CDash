@@ -286,7 +286,10 @@ class BuildConfigure
             return false;
         }
 
-        $sql = "SELECT * FROM configure WHERE buildid=?";
+        $sql =
+            'SELECT * FROM configure c
+            JOIN build2configure b2c ON c.id = b2c.configureid
+            WHERE buildid = ?';
         $query = $this->PDO->prepare($sql);
 
         pdo_execute($query, [$this->BuildId]);
