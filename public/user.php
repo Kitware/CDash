@@ -29,6 +29,7 @@ include_once 'models/clientsite.php';
 include_once 'models/clientjob.php';
 include_once 'models/build.php';
 include_once 'models/buildconfigure.php';
+include_once 'models/buildupdate.php';
 include_once 'models/site.php';
 include_once 'models/user.php';
 
@@ -272,20 +273,22 @@ function ReportLastBuild($type, $projectid, $siteid, $projectname, $nightlytime)
         }
 
         // Update
-        $update = pdo_query('SELECT uf.updateid FROM updatefile AS uf,build2update AS b2u WHERE uf.updateid=b2u.updateid AND b2u.buildid=' . $buildid);
-        $nupdates = pdo_num_rows($update);
-        $xml .= add_XML_value('update', $nupdates);
-
-        // Find locally modified files
-        $updatelocal = pdo_query('SELECT uf.updateid FROM updatefile AS uf,build2update AS b2u WHERE uf.updateid=b2u.updateid AND b2u.buildid=' . $buildid .
-            " AND uf.author='Local User'");
-
-        // Set the color
-        if (pdo_num_rows($updatelocal) > 0) {
-            $xml .= add_XML_value('updateclass', 'error');
-        } else {
-            $xml .= add_XML_value('updateclass', 'normal');
+        $nupdates = 0;
+        $updateclass = 'normal';
+        $BuildUpdate = new BuildUpdate();
+        $BuildUpdate->BuildId = $buildid;
+        $update_row = $BuildUpdate->GetUpdateForBuild();
+        if ($update_row) {
+            $nupdates = $update_row['nfiles'];
+            if ($nupdates < 0) {
+                $nupdates = 0;
+            }
+            if ($update_row['warnings'] > 0) {
+                $updateclass = 'error';
+            }
         }
+        $xml .= add_XML_value('update', $nupdates);
+        $xml .= add_XML_value('updateclass', $updateclass);
 
         // Find the number of errors and warnings
         $Build = new Build();
