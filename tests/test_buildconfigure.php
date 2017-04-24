@@ -69,6 +69,10 @@ class BuildConfigureTestCase extends KWWebTestCase
             $this->fail("configure->Insert returned true");
         }
 
+        if (!$configure->GetConfigureForBuild(PDO::FETCH_ASSOC)) {
+            $this->fail("configure->GetConfigureForBuild returned false");
+        }
+
         if ($configure->Delete()) {
             $this->fail("configure->Delete returned true");
         }
