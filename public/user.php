@@ -28,8 +28,9 @@ include_once 'models/clientjobschedule.php';
 include_once 'models/clientsite.php';
 include_once 'models/clientjob.php';
 include_once 'models/build.php';
-include_once 'models/user.php';
+include_once 'models/buildconfigure.php';
 include_once 'models/site.php';
+include_once 'models/user.php';
 
 if (!$session_OK) {
     return;
@@ -216,13 +217,21 @@ function ReportLastBuild($type, $projectid, $siteid, $projectname, $nightlytime)
     $nightlytime = strtotime($nightlytime);
 
     // Find the last build
-    $build = pdo_query("SELECT starttime,id FROM build WHERE siteid='$siteid' AND projectid='$projectid' AND type='$type' ORDER BY submittime DESC LIMIT 1");
-    if (pdo_num_rows($build) > 0) {
-        $build_array = pdo_fetch_array($build);
-        $buildid = $build_array['id'];
+    global $pdo;
+    $stmt = $pdo->prepare(
+        'SELECT starttime, id FROM build
+        WHERE siteid = :siteid AND projectid = :projectid AND type = :type
+        ORDER BY submittime DESC LIMIT 1');
+    $stmt->bindParam(':siteid', $siteid);
+    $stmt->bindParam(':projectid', $projectid);
+    $stmt->bindParam(':type', $type);
+    pdo_execute($stmt);
+    $row = $stmt->fetch();
+    if ($row) {
+        $buildid = $row['id'];
 
         // Express the date in terms of days (makes more sens)
-        $buildtime = strtotime($build_array['starttime'] . ' UTC');
+        $buildtime = strtotime($row['starttime'] . ' UTC');
         $builddate = $buildtime;
 
         if (date(FMT_TIME, $buildtime) > date(FMT_TIME, $nightlytime)) {
@@ -247,14 +256,12 @@ function ReportLastBuild($type, $projectid, $siteid, $projectname, $nightlytime)
         $xml .= add_XML_value('datelink', 'index.php?project=' . urlencode($projectname) . '&date=' . $date);
 
         // Configure
-        $configure = pdo_query(
-                "SELECT status FROM configure c
-                JOIN build2configure b2c ON b2c.configureid=c.id
-                WHERE buildid='$buildid'");
-        if (pdo_num_rows($configure) > 0) {
-            $configure_array = pdo_fetch_array($configure);
-            $xml .= add_XML_value('configure', $configure_array['status']);
-            if ($configure_array['status'] != 0) {
+        $BuildConfigure = new BuildConfigure();
+        $BuildConfigure->BuildId = $buildid;
+        $configure_row = $BuildConfigure->GetConfigureForBuild();
+        if ($configure_row) {
+            $xml .= add_XML_value('configure', $configure_row['status']);
+            if ($configure_row['status'] != 0) {
                 $xml .= add_XML_value('configureclass', 'error');
             } else {
                 $xml .= add_XML_value('configureclass', 'normal');
