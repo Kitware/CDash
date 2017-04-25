@@ -14,8 +14,10 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include dirname(__DIR__) . '/config/config.php';
+include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
+
+$noforcelogin = 1;
 $SessionCachePolicy = 'nocache';
 include 'public/login.php';
 
@@ -33,7 +35,7 @@ include_once 'models/buildupdate.php';
 include_once 'models/site.php';
 include_once 'models/user.php';
 
-if (!$session_OK) {
+if (!$session_OK || !array_key_exists('loginid', $_SESSION['cdash'])) {
     return;
 }
 
