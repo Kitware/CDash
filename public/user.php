@@ -37,24 +37,28 @@ if (!$session_OK) {
     return;
 }
 
+$script_start_time = microtime_float();
 $PDO = get_link_identifier()->getPdo();
 
 $userid = $_SESSION['cdash']['loginid'];
 $xml = begin_XML_for_XSLT();
 $xml .= add_XML_value('manageclient', $CDASH_MANAGE_CLIENTS);
 
-$xml .= add_XML_value('title', 'CDash - My Profile');
+$userid = $_SESSION['cdash']['loginid'];
+$response = begin_JSON_response();
+$response['manageclient'] = $CDASH_MANAGE_CLIENTS;
+$response['title'] = 'CDash - My Profile';
 
 $user = new User();
 $user->Id = $userid;
 $user->Fill();
-$xml .= add_XML_value('user_name', $user->FirstName);
-$xml .= add_XML_value('user_is_admin', $user->Admin);
+$response['user_name'] = $user->FirstName;
+$response['user_is_admin'] = $user->Admin;
 
 if ($CDASH_USER_CREATE_PROJECTS) {
-    $xml .= add_XML_value('user_can_create_projects', 1);
+    $response['user_can_create_projects'] = 1;
 } else {
-    $xml .= add_XML_value('user_can_create_projects', 0);
+    $response['user_can_create_projects'] = 0;
 }
 
 // Go through the list of project the user is part of.
@@ -66,23 +70,24 @@ $Project = new Project();
 foreach ($project_rows as $project_row) {
     $Project->Id = $project_row['id'];
     $Project->Name = $project_row['name'];
-    $xml .= '<project>';
-    $xml .= add_XML_value('id', $Project->Id);
-    $xml .= add_XML_value('role', $project_row['role']); // 0 is normal user, 1 is maintainer, 2 is administrator
-    $xml .= add_XML_value('name', $Project->Name);
-    $xml .= add_XML_value('name_encoded', urlencode($Project->Name));
-    $xml .= add_XML_value('nbuilds', $Project->GetTotalNumberOfBuilds());
-    $xml .= add_XML_value('average_builds', round($Project->GetBuildsDailyAverage(gmdate(FMT_DATETIME, time() - (3600 * 24 * 7)), gmdate(FMT_DATETIME), 2)));
-    $xml .= add_XML_value('success', $Project->GetNumberOfPassingBuilds($start, gmdate(FMT_DATETIME)));
-    $xml .= add_XML_value('error', $Project->GetNumberOfErrorBuilds($start, gmdate(FMT_DATETIME)));
-    $xml .= add_XML_value('warning', $Project->GetNumberOfWarningBuilds($start, gmdate(FMT_DATETIME)));
-    $xml .= '</project>';
+    $project_response = [];
+    $project_response['id'] = $Project->Id;
+    $project_response['role'] = $project_row['role']; // 0 is normal user, 1 is maintainer, 2 is administrator
+    $project_response['name'] = $Project->Name;
+    $project_response['name_encoded'] = urlencode($Project->Name);
+    $project_response['nbuilds'] = $Project->GetTotalNumberOfBuilds();
+    $project_response['average_builds'] = round($Project->GetBuildsDailyAverage(gmdate(FMT_DATETIME, time() - (3600 * 24 * 7)), gmdate(FMT_DATETIME), 2));
+    $project_response['success'] = $Project->GetNumberOfPassingBuilds($start, gmdate(FMT_DATETIME));
+    $project_response['error'] = $Project->GetNumberOfErrorBuilds($start, gmdate(FMT_DATETIME));
+    $project_response['warning'] = $Project->GetNumberOfWarningBuilds($start, gmdate(FMT_DATETIME));
+    $response['project'] = $project_response;
 }
 
 // Go through the jobs
 if ($CDASH_MANAGE_CLIENTS) {
     $ClientJobSchedule = new ClientJobSchedule();
     $userJobSchedules = $ClientJobSchedule->getAll($userid, 1000);
+    $schedule_response = [];
     foreach ($userJobSchedules as $scheduleid) {
         $ClientJobSchedule = new ClientJobSchedule();
         $ClientJobSchedule->Id = $scheduleid;
@@ -125,16 +130,16 @@ if ($CDASH_MANAGE_CLIENTS) {
                     break;
             }
         }
-
-        $xml .= '<jobschedule>';
-        $xml .= add_XML_value('id', $scheduleid);
-        $xml .= add_XML_value('projectid', $Project->Id);
-        $xml .= add_XML_value('projectname', $Project->GetName());
-        $xml .= add_XML_value('status', $status);
-        $xml .= add_XML_value('lastrun', $lastrun);
-        $xml .= add_XML_value('description', $ClientJobSchedule->GetDescription());
-        $xml .= '</jobschedule>';
+        $job_response = [];
+        $job_response['id'] = $scheduleid;
+        $job_response['projectid'] = $Project->Id;
+        $job_response['projectname'] = $Project->GetName();
+        $job_response['status'] = $status;
+        $job_response['lastrun'] = $lastrun;
+        $job_response['description'] = $ClientJobSchedule->GetDescription();
+        $schedule_response[] = $job_response;
     }
+    $response['jobschedule'] = $schedule_response;
 }
 
 // Find all the public projects that this user is not subscribed to.
@@ -151,21 +156,21 @@ if ($CDASH_USE_LOCAL_DIRECTORY == '1') {
         include_once 'local/user.php';
     }
 }
+$publicprojects_response = [];
 while ($row = $stmt->fetch()) {
-    $xml .= '<publicproject>';
+    $publicproject_response = [];
     if ($j % 2 == 0) {
-        $xml .= add_XML_value('trparity', 'trodd');
+        $publicproject_response['trparity'] = 'trodd';
     } else {
-        $xml .= add_XML_value('trparity', 'treven');
+        $publicproject_response['trparity'] = 'treven';
     }
-    if (function_exists('getAdditionalPublicProject')) {
-        $xml .= getAdditionalPublicProject($row['id']);
-    }
-    $xml .= add_XML_value('id', $row['id']);
-    $xml .= add_XML_value('name', $row['name']);
-    $xml .= '</publicproject>';
+
+    $publicproject_response['id'] = $row['id'];
+    $publicproject_response['name'] = $row['name'];
     $j++;
+    $publicprojects_response[] = $publicproject_response;
 }
+$response['publicprojects'] = $publicprojects_response;
 
 //Go through the claimed sites
 $claimedsiteprojects = [];
@@ -215,7 +220,7 @@ if (count($claimedsites) > 0) {
 /** Report statistics about the last build */
 function ReportLastBuild($type, $projectid, $siteid, $projectname, $nightlytime)
 {
-    $xml = '<' . strtolower($type) . '>';
+    $response = [];
     $nightlytime = strtotime($nightlytime);
 
     // Find the last build
@@ -254,23 +259,23 @@ function ReportLastBuild($type, $projectid, $siteid, $projectname, $nightlytime)
         } else {
             $day = round($days) . ' days';
         }
-        $xml .= add_XML_value('date', $day);
-        $xml .= add_XML_value('datelink', 'index.php?project=' . urlencode($projectname) . '&date=' . $date);
+        $response['date'] = $day;
+        $response['datelink'] = 'index.php?project=' . urlencode($projectname) . '&date=' . $date;
 
         // Configure
         $BuildConfigure = new BuildConfigure();
         $BuildConfigure->BuildId = $buildid;
         $configure_row = $BuildConfigure->GetConfigureForBuild();
         if ($configure_row) {
-            $xml .= add_XML_value('configure', $configure_row['status']);
+            $response['configure'] = $configure_row['status'];
             if ($configure_row['status'] != 0) {
-                $xml .= add_XML_value('configureclass', 'error');
+                $response['configureclass'] = 'error';
             } else {
-                $xml .= add_XML_value('configureclass', 'normal');
+                $response['configureclass'] = 'normal';
             }
         } else {
-            $xml .= add_XML_value('configure', '-');
-            $xml .= add_XML_value('configureclass', 'normal');
+            $response['configure'] = '-';
+            $response['configureclass'] = 'normal';
         }
 
         // Update
@@ -288,24 +293,24 @@ function ReportLastBuild($type, $projectid, $siteid, $projectname, $nightlytime)
                 $updateclass = 'error';
             }
         }
-        $xml .= add_XML_value('update', $nupdates);
-        $xml .= add_XML_value('updateclass', $updateclass);
+        $response['update'] = $nupdates;
+        $response['updateclass'] = $updateclass;
 
         // Find the number of errors and warnings
         $Build = new Build();
         $Build->Id = $buildid;
         $nerrors = $Build->GetNumberOfErrors();
-        $xml .= add_XML_value('error', $nerrors);
+        $response['error'] = $nerrors;
         $nwarnings = $Build->GetNumberOfWarnings();
-        $xml .= add_XML_value('warning', $nwarnings);
+        $response['warning'] = $nwarnings;
 
         // Set the color
         if ($nerrors > 0) {
-            $xml .= add_XML_value('errorclass', 'error');
+            $response['errorclass'] = 'error';
         } elseif ($nwarnings > 0) {
-            $xml .= add_XML_value('errorclass', 'warning');
+            $response['errorclass'] = 'warning';
         } else {
-            $xml .= add_XML_value('errorclass', 'normal');
+            $response['errorclass'] = 'normal';
         }
 
         // Find the test
@@ -314,68 +319,71 @@ function ReportLastBuild($type, $projectid, $siteid, $projectname, $nightlytime)
 
         // Display the failing tests then the not run
         if ($nfail > 0) {
-            $xml .= add_XML_value('testfail', $nfail);
-            $xml .= add_XML_value('testfailclass', 'error');
+            $response['testfail'] = $nfail;
+            $response['testfailclass'] = 'error';
         } elseif ($nnotrun > 0) {
-            $xml .= add_XML_value('testfail', $nnotrun);
-            $xml .= add_XML_value('testfailclass', 'warning');
+            $response['testfail'] = $nnotrun;
+            $response['testfailclass'] = 'warning';
         } else {
-            $xml .= add_XML_value('testfail', '0');
-            $xml .= add_XML_value('testfailclass', 'normal');
+            $response['testfail'] = '0';
+            $response['testfailclass'] = 'normal';
         }
-        $xml .= add_XML_value('NA', '0');
+        $response['NA'] = '0';
     } else {
-        $xml .= add_XML_value('NA', '1');
+        $response['NA'] = '1';
     }
 
-    $xml .= '</' . strtolower($type) . '>';
-    return $xml;
+    return $response;
 }
 
 // List the claimed sites
+$claimedsites_response = [];
 foreach ($claimedsites as $site) {
-    $xml .= '<claimedsite>';
-    $xml .= add_XML_value('id', $site['id']);
-    $xml .= add_XML_value('name', $site['name']);
-    $xml .= add_XML_value('outoforder', $site['outoforder']);
+    $claimedsite_response = [];
+    $claimedsite_response['id'] = $site['id'];
+    $claimedsite_response['name'] = $site['name'];
+    $claimedsite_response['outoforder'] = $site['outoforder'];
 
     $siteid = $site['id'];
 
+    $siteprojects_response = [];
     foreach ($claimedsiteprojects as $project) {
-        $xml .= '<project>';
+        $siteproject_response = [];
 
         $projectid = $project['id'];
         $projectname = $project['name'];
         $nightlytime = $project['nightlytime'];
 
-        $xml .= ReportLastBuild('Nightly', $projectid, $siteid, $projectname, $nightlytime);
-        $xml .= ReportLastBuild('Continuous', $projectid, $siteid, $projectname, $nightlytime);
-        $xml .= ReportLastBuild('Experimental', $projectid, $siteid, $projectname, $nightlytime);
-
-        $xml .= '</project>';
+        $siteproject_response['Nightly'] =
+            ReportLastBuild('Nightly', $projectid, $siteid, $projectname, $nightlytime);
+        $siteproject_response['Continuous'] =
+            ReportLastBuild('Continuous', $projectid, $siteid, $projectname, $nightlytime);
+        $siteproject_response['Experimental'] =
+            ReportLastBuild('Experimental', $projectid, $siteid, $projectname, $nightlytime);
+        $siteprojects_response[] = $siteproject_response;
     }
-
-    $xml .= '</claimedsite>';
+    $claimedsite_response['projects'] = $siteprojects_response;
+    $claimedsites_response[] = $claimedsite_response;
 }
+$response['claimedsites'] = $claimedsites_response;
 
 // Use to build the site/project matrix
+$claimedsiteprojects_response = [];
 foreach ($claimedsiteprojects as $project) {
-    $xml .= '<claimedsiteproject>';
-    $xml .= add_XML_value('id', $project['id']);
-    $xml .= add_XML_value('name', $project['name']);
-    $xml .= add_XML_value('name_encoded', urlencode($project['name']));
-    $xml .= '</claimedsiteproject>';
+    $claimedsiteproject_response = [];
+    $claimedsiteproject_response['id'] = $project['id'];
+    $claimedsiteproject_response['name'] = $project['name'];
+    $claimedsiteproject_response['name_encoded'] = urlencode($project['name']);
+    $claimedsiteprojects_response[] = $claimedsiteproject_response;
 }
+$response['claimedsiteprojects'] = $claimedsiteprojects_response;
 
 if (@$_GET['note'] == 'subscribedtoproject') {
-    $xml .= '<message>You have subscribed to a project.</message>';
+    $response['message'] = 'You have subscribed to a project.';
 } elseif (@$_GET['note'] == 'subscribedtoproject') {
-    $xml .= '<message>You have been unsubscribed from a project.</message>';
+    $response['message'] = 'You have been unsubscribed from a project.';
 }
 
-$xml .= '</cdash>';
-
-// Now doing the xslt transition
-if (!isset($NoXSLGenerate)) {
-    generate_XSLT($xml, 'user');
-}
+$script_end_time = microtime_float();
+$response['generationtime'] = round($script_end_time - $script_start_time, 3);
+echo json_encode(cast_data_for_JSON($response));
