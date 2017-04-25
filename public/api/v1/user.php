@@ -35,7 +35,18 @@ include_once 'models/buildupdate.php';
 include_once 'models/site.php';
 include_once 'models/user.php';
 
-if (!$session_OK || !array_key_exists('loginid', $_SESSION['cdash'])) {
+$response = [];
+if (!$session_OK || !isset($_SESSION['cdash']) || !isset($_SESSION['cdash']['loginid'])) {
+    $response['requirelogin'] = 1;
+    // Special handling for the fact that this is where new users are sent
+    // when they first create their account.
+    if (@$_GET['note'] == 'register') {
+        $response['registered'] = 1;
+    } else {
+        $response['registered'] = 0;
+    }
+    http_response_code(401);
+    echo json_encode($response);
     return;
 }
 
@@ -69,6 +80,7 @@ $UserProject->UserId = $userid;
 $project_rows = $UserProject->GetProjects();
 $start = gmdate(FMT_DATETIME, strtotime(date('r')) - (3600 * 24));
 $Project = new Project();
+$projects_response = [];
 foreach ($project_rows as $project_row) {
     $Project->Id = $project_row['id'];
     $Project->Name = $project_row['name'];
@@ -82,8 +94,9 @@ foreach ($project_rows as $project_row) {
     $project_response['success'] = $Project->GetNumberOfPassingBuilds($start, gmdate(FMT_DATETIME));
     $project_response['error'] = $Project->GetNumberOfErrorBuilds($start, gmdate(FMT_DATETIME));
     $project_response['warning'] = $Project->GetNumberOfWarningBuilds($start, gmdate(FMT_DATETIME));
-    $response['project'] = $project_response;
+    $projects_response[] = $project_response;
 }
+$response['projects'] = $projects_response;
 
 // Go through the jobs
 if ($CDASH_MANAGE_CLIENTS) {
@@ -139,6 +152,9 @@ if ($CDASH_MANAGE_CLIENTS) {
         $job_response['status'] = $status;
         $job_response['lastrun'] = $lastrun;
         $job_response['description'] = $ClientJobSchedule->GetDescription();
+        if (strlen($job_response['description']) === 0) {
+            $job_response['description'] = 'NA';
+        }
         $schedule_response[] = $job_response;
     }
     $response['jobschedule'] = $schedule_response;
@@ -152,7 +168,6 @@ $stmt = $PDO->prepare(
     ORDER BY name');
 pdo_execute($stmt, [$userid]);
 
-$j = 0;
 if ($CDASH_USE_LOCAL_DIRECTORY == '1') {
     if (file_exists('local/user.php')) {
         include_once 'local/user.php';
@@ -161,15 +176,8 @@ if ($CDASH_USE_LOCAL_DIRECTORY == '1') {
 $publicprojects_response = [];
 while ($row = $stmt->fetch()) {
     $publicproject_response = [];
-    if ($j % 2 == 0) {
-        $publicproject_response['trparity'] = 'trodd';
-    } else {
-        $publicproject_response['trparity'] = 'treven';
-    }
-
     $publicproject_response['id'] = $row['id'];
     $publicproject_response['name'] = $row['name'];
-    $j++;
     $publicprojects_response[] = $publicproject_response;
 }
 $response['publicprojects'] = $publicprojects_response;
@@ -356,11 +364,11 @@ foreach ($claimedsites as $site) {
         $projectname = $project['name'];
         $nightlytime = $project['nightlytime'];
 
-        $siteproject_response['Nightly'] =
+        $siteproject_response['nightly'] =
             ReportLastBuild('Nightly', $projectid, $siteid, $projectname, $nightlytime);
-        $siteproject_response['Continuous'] =
+        $siteproject_response['continuous'] =
             ReportLastBuild('Continuous', $projectid, $siteid, $projectname, $nightlytime);
-        $siteproject_response['Experimental'] =
+        $siteproject_response['experimental'] =
             ReportLastBuild('Experimental', $projectid, $siteid, $projectname, $nightlytime);
         $siteprojects_response[] = $siteproject_response;
     }
