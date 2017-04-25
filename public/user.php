@@ -16,4 +16,13 @@
 
 require_once dirname(__DIR__) . '/config/config.php';
 include_once 'include/common.php';
+
+if (isset($_GET['logout'])) {
+    // User requested logout.
+    require_once 'include/login_functions.php';
+    logout();
+    header('Location: viewProjects.php');
+    exit;
+}
+
 load_view('user');

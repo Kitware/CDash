@@ -293,25 +293,7 @@ function auth($SessionCachePolicy = 'private_no_expire')
     }
 
     if (@$_GET['logout']) {                             // user requested logout
-        session_name('CDash');
-        session_cache_limiter('nocache');
-        @session_start();
-        unset($_SESSION['cdash']);
-        session_destroy();
-
-        // Remove the cookie if we have one
-        $cookienames = array('CDash', str_replace('.', '_', 'CDash-' . $_SERVER['SERVER_NAME'])); // php doesn't like dot in cookie names
-        foreach ($cookienames as $cookiename) {
-            if (isset($_COOKIE[$cookiename])) {
-                $cookievalue = $_COOKIE[$cookiename];
-                $cookieuseridkey = substr($cookievalue, 0, strlen($cookievalue) - 33);
-                $user = new User();
-                $user->Id = $cookieuseridkey;
-                $user->SetCookieKey('');
-                setcookie('CDash-' . $_SERVER['SERVER_NAME'], '', time() - 3600);
-            }
-        }
-        echo "<script language=\"javascript\">window.location='index.php'</script>";
+        logout();
         return 0;
     }
 
@@ -372,6 +354,29 @@ function auth($SessionCachePolicy = 'private_no_expire')
             }
             $loginerror = 'Wrong email or password.';
             return false;
+        }
+    }
+}
+
+/** Log out the current user. */
+function logout()
+{
+    session_name('CDash');
+    session_cache_limiter('nocache');
+    @session_start();
+    unset($_SESSION['cdash']);
+    session_destroy();
+
+    // Remove the cookie if we have one
+    $cookienames = array('CDash', str_replace('.', '_', 'CDash-' . $_SERVER['SERVER_NAME'])); // php doesn't like dot in cookie names
+    foreach ($cookienames as $cookiename) {
+        if (isset($_COOKIE[$cookiename])) {
+            $cookievalue = $_COOKIE[$cookiename];
+            $cookieuseridkey = substr($cookievalue, 0, strlen($cookievalue) - 33);
+            $user = new User();
+            $user->Id = $cookieuseridkey;
+            $user->SetCookieKey('');
+            setcookie('CDash-' . $_SERVER['SERVER_NAME'], '', time() - 3600);
         }
     }
 }
