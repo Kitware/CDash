@@ -4,6 +4,7 @@
 // relative to the top of the CDash source tree
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once 'include/pdo.php';
 
 class EmailTestCase extends KWWebTestCase
 {
@@ -37,16 +38,24 @@ class EmailTestCase extends KWWebTestCase
         $this->setField('passwd2', 'user1');
         $this->setField('institution', 'Kitware Inc');
         $this->clickSubmitByName('sent', array('url' => 'catchbot'));
-        $this->assertText('Registration Complete. Please login with your email and password.');
 
-        // Login as the user and subscribe to the project
-        $this->get($this->url);
-        $this->clickLink('Login');
-        $this->setField('login', 'user1@kw');
-        $this->setField('passwd', 'user1');
-        $this->clickSubmitByName('sent');
+        // Make sure the user was created successfully.
+        if (!$this->userExists('user1@kw')) {
+            $this->fail("Failed to register new user");
+        }
 
-        $this->clickLink('Subscribe to this project');
+        // Login as the user.
+        $this->login('user1@kw', 'user1');
+
+        // Subscribe to the project.
+        $pdo = get_link_identifier()->getPdo();
+        $stmt = $pdo->query("SELECT id FROM project WHERE name = 'EmailProjectExample'");
+        $row = $stmt->fetch();
+        if (!$row) {
+            $this->fail('Could not lookup projectid');
+        }
+        $projectid = $row['id'];
+        $this->connect($this->url . "/subscribeProject.php?projectid=$projectid");
         $this->setField('credentials[0]', 'user1kw');
         $this->setField('emailsuccess', '1');
         $this->clickSubmitByName('subscribe');

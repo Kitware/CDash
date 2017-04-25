@@ -51,7 +51,11 @@ class AccountLockoutTestCase extends KWWebTestCase
 
         // Make sure we can successfully log in now.
         $this->login('simpletest@localhost', 'simpletest');
-        $this->assertText('Log Out');
+        $response = $this->get($this->url . '/api/v1/viewProjects.php');
+        $response = json_decode($response, true);
+        if ($response['user']['id'] < 1) {
+            $this->fail("Failed to login after lock expiration");
+        }
 
         $this->removeLineFromConfig($this->AttemptsConfig);
         $this->removeLineFromConfig($this->LengthConfig);
