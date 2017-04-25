@@ -85,6 +85,7 @@
              'public/js/nv.d3.min.js',
              'node_modules/angular/angular.js',
              'node_modules/angular-animate/angular-animate.js',
+             'node_modules/angular-clipboard/angular-clipboard.js',
              'node_modules/angular-ui-bootstrap/dist/ui-boostrap.js',
              'node_modules/angular-ui-sortable/dist/sortable.js',
              'node_modules/as-jqplot/dist/jquery.jqplot.js',
