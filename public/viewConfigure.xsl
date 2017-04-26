@@ -43,10 +43,10 @@
         <xsl:variable name="site" select="cdash/build/site"/>
         <xsl:variable name="siteid" select="cdash/build/siteid"/>
         <xsl:variable name="buildname" select="cdash/build/buildname"/>
-        <xsl:variable name="parentid" select="cdash/build/parentid"/>
+        <xsl:variable name="hassubprojects" select="cdash/build/hassubprojects"/>
 
 
-        <xsl:if test="$parentid!=-1">
+        <xsl:if test="$hassubprojects=0">
           <table border="0">
             <tr><td align="left"><b>Site: </b><a><xsl:attribute name="href">viewSite.php?siteid=<xsl:value-of select="$siteid"/></xsl:attribute>
             <xsl:value-of select="$site"/></a></td></tr>
@@ -59,7 +59,7 @@
         </xsl:if>
 
 
-        <xsl:if test="$parentid=-1">
+        <xsl:if test="$hassubprojects=1">
           <table style="width:100%">
             <thead>
               <tr class="table-heading">
