@@ -960,52 +960,48 @@ function PopulateBuild2Configure($configure_table, $b2c_table)
         }
     }
 
-    // Find all configure rows that have duplicate crc32 values.
-    $query = "SELECT crc32, COUNT(*) FROM $configure_table
-        GROUP BY crc32 HAVING COUNT(*) > 1";
+    // Insert build2configure rows for duplicate configures that are about to
+    // be deleted.
+    $query = "SELECT id, buildid, starttime, endtime, crc32
+        FROM $configure_table
+        WHERE crc32 IN
+            (SELECT crc32 FROM $configure_table GROUP BY crc32 HAVING COUNT(*) > 1)
+        ORDER BY crc32, id";
     $result = pdo_query($query);
+    $inserts = [];
+    $configureid = null;
+    $previous_crc32 = null;
     while ($row = pdo_fetch_array($result)) {
-        $crc32 = $row['crc32'];
-        $dupe_query =
-            "SELECT id, buildid, starttime, endtime FROM $configure_table
-            WHERE crc32 = $crc32";
-        $dupe_result = pdo_query($dupe_query);
-        $first = true;
-        $keeper_id = null;
-        while ($dupe_row = pdo_fetch_array($dupe_result)) {
-            $configureid = $dupe_row['id'];
-            $buildid = $dupe_row['buildid'];
-            $starttime = $dupe_row['starttime'];
-            $endtime = $dupe_row['endtime'];
-            // The first row survives, the rest of the duplicates get deleted.
-            if ($first) {
-                $keeper_id = $configureid;
-                $first = false;
-            } else {
-                pdo_query("DELETE FROM $configure_table WHERE id=$configureid");
-            }
-            pdo_query(
-                "INSERT INTO $b2c_table
-                (configureid, buildid, starttime, endtime)
-                VALUES ($keeper_id, $buildid, '$starttime', '$endtime')");
+        if ($configureid === null) {
+            // Initialize some values the first time through the loop.
+            $configureid = $row['id'];
+            $previous_crc32 = $row['crc32'];
+        } elseif ($previous_crc32 !== $row['crc32']) {
+            // crc32 changed.  We can skip this row because its b2c entry
+            // will be handled later.
+            $previous_crc32 = $row['crc32'];
+            continue;
+        } else {
+            $inserts[] = "($configureid, {$row['buildid']}, '{$row['starttime']}', '{$row['endtime']}')";
         }
     }
-
-    // Populate build2configure rows for non-duplicated configure rows.
-    $query =
-        "SELECT id, buildid, starttime, endtime FROM $configure_table
-        WHERE buildid NOT IN (SELECT buildid FROM $b2c_table)";
-    $result = pdo_query($query);
-    while ($row = pdo_fetch_array($result)) {
-        $configureid = $row['id'];
-        $buildid = $row['buildid'];
-        $starttime = $row['starttime'];
-        $endtime = $row['endtime'];
+    if (!empty($inserts)) {
         pdo_query(
-            "INSERT INTO $b2c_table
-            (configureid, buildid, starttime, endtime)
-            VALUES ($configureid, $buildid, '$starttime', '$endtime')");
+        "INSERT INTO $b2c_table (configureid, buildid, starttime, endtime)
+         VALUES " . implode(',', $inserts));
     }
+
+    // Delete configure rows that have duplicate crc32 values.
+    pdo_query("
+        DELETE FROM $configure_table WHERE id NOT IN
+            (SELECT * FROM
+                (SELECT MIN(c.id) FROM $configure_table c GROUP BY c.crc32)
+            x)");
+
+    // Populate build2configure for surviving configure rows.
+    pdo_query(
+        "INSERT INTO $b2c_table (configureid, buildid, starttime, endtime)
+        SELECT id, buildid, starttime, endtime FROM $configure_table");
 }
 
 /** Track configure errors by configureid, not buildid.
