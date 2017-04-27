@@ -931,6 +931,8 @@ function PopulateBuild2Configure($configure_table, $b2c_table)
 {
     global $CDASH_DB_TYPE;
 
+    add_log('Compute crc32', 'PopulateBuild2Configure');
+
     // Set crc32 for configure rows.
     if ($CDASH_DB_TYPE != 'pgsql') {
         // For MySQL, we use the CRC32 function provided by the database.
@@ -962,6 +964,7 @@ function PopulateBuild2Configure($configure_table, $b2c_table)
 
     // Insert build2configure rows for duplicate configures that are about to
     // be deleted.
+    add_log('Detect duplicate crc32s', 'PopulateBuild2Configure');
     $query = "SELECT id, buildid, starttime, endtime, crc32
         FROM $configure_table
         WHERE crc32 IN
@@ -971,6 +974,7 @@ function PopulateBuild2Configure($configure_table, $b2c_table)
     $inserts = [];
     $configureid = null;
     $previous_crc32 = null;
+    add_log('Generate b2c INSERT for duplicate crc32s', 'PopulateBuild2Configure');
     while ($row = pdo_fetch_array($result)) {
         if ($configureid === null) {
             // Initialize some values the first time through the loop.
@@ -986,12 +990,14 @@ function PopulateBuild2Configure($configure_table, $b2c_table)
         }
     }
     if (!empty($inserts)) {
+        add_log('Execute b2c INSERT for duplicate crc32s', 'PopulateBuild2Configure');
         pdo_query(
         "INSERT INTO $b2c_table (configureid, buildid, starttime, endtime)
          VALUES " . implode(',', $inserts));
     }
 
     // Delete configure rows that have duplicate crc32 values.
+    add_log('Delete duplicate crc32s', 'PopulateBuild2Configure');
     pdo_query("
         DELETE FROM $configure_table WHERE id NOT IN
             (SELECT * FROM
@@ -999,9 +1005,11 @@ function PopulateBuild2Configure($configure_table, $b2c_table)
             x)");
 
     // Populate build2configure for surviving configure rows.
+    add_log('Insert remaining b2c rows', 'PopulateBuild2Configure');
     pdo_query(
         "INSERT INTO $b2c_table (configureid, buildid, starttime, endtime)
         SELECT id, buildid, starttime, endtime FROM $configure_table");
+    add_log('Migration complete!', 'PopulateBuild2Configure');
 }
 
 /** Track configure errors by configureid, not buildid.
