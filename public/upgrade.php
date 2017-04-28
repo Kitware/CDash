@@ -764,19 +764,20 @@ if (isset($_GET['upgrade-2-6'])) {
     // This reduces the footprint of this table and allows multiple builds
     // to share a configure.
     if (!pdo_query('SELECT id FROM configure LIMIT 1')) {
-        // Add id column to configure table.
+        // Add id and crc32 columns to configure table.
         if ($CDASH_DB_TYPE != 'pgsql') {
             pdo_query(
-                'ALTER TABLE configure ADD id int(11) NOT NULL AUTO_INCREMENT,
+                'ALTER TABLE configure
+                ADD id int(11) NOT NULL AUTO_INCREMENT,
+                ADD crc32 bigint(20) NOT NULL DEFAULT \'0\',
                 ADD PRIMARY KEY(id)');
         } else {
             pdo_query(
-                'ALTER TABLE configure ADD id SERIAL NOT NULL,
+                'ALTER TABLE configure
+                ADD id SERIAL NOT NULL,
+                ADD crc32 BIGINT DEFAULT \'0\' NOT NULL,
                 ADD PRIMARY KEY (id)');
         }
-
-        // Add crc32 column to configure table.
-        AddTableField('configure', 'crc32', 'bigint(20)', 'BIGINT', '0');
 
         // Populate build2configure table.
         PopulateBuild2Configure('configure', 'build2configure');
@@ -789,9 +790,17 @@ if (isset($_GET['upgrade-2-6'])) {
         }
 
         // Remove columns from configure that have been moved to build2configure.
-        RemoveTableField('configure', 'buildid');
-        RemoveTableField('configure', 'starttime');
-        RemoveTableField('configure', 'endtime');
+        if ($CDASH_DB_TYPE == 'pgsql') {
+            pdo_query('ALTER TABLE "configure"
+                        DROP COLUMN "buildid",
+                        DROP COLUMN "starttime",
+                        DROP COLUMN "endtime"');
+        } else {
+            pdo_query('ALTER TABLE configure
+                        DROP buildid,
+                        DROP starttime,
+                        DROP endtime');
+        }
 
         // Change configureerror to use configureid instead of buildid.
         UpgradeConfigureErrorTable('configureerror', 'build2configure');

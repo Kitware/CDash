@@ -929,63 +929,112 @@ function AddUniqueConstraintToDiffTables($testing=false)
  **/
 function PopulateBuild2Configure($configure_table, $b2c_table)
 {
-    // Set crc32 for configure rows.
-    $query =
-        "SELECT id, command, log, status FROM $configure_table";
-    $result = pdo_query($query);
-    while ($row = pdo_fetch_array($result)) {
-        $configureid = $row['id'];
-        $crc32 = crc32($row['command'] . $row['log'] . $row['status']);
-        pdo_query(
-            "UPDATE $configure_table SET crc32 = $crc32 WHERE id=$configureid");
-    }
+    global $CDASH_DB_TYPE;
 
-    // Find all configure rows that have duplicate crc32 values.
-    $query = "SELECT crc32, COUNT(*) FROM $configure_table
-        GROUP BY crc32 HAVING COUNT(*) > 1";
-    $result = pdo_query($query);
-    while ($row = pdo_fetch_array($result)) {
-        $crc32 = $row['crc32'];
-        $dupe_query =
-            "SELECT id, buildid, starttime, endtime FROM $configure_table
-            WHERE crc32 = $crc32";
-        $dupe_result = pdo_query($dupe_query);
-        $first = true;
-        $keeper_id = null;
-        while ($dupe_row = pdo_fetch_array($dupe_result)) {
-            $configureid = $dupe_row['id'];
-            $buildid = $dupe_row['buildid'];
-            $starttime = $dupe_row['starttime'];
-            $endtime = $dupe_row['endtime'];
-            // The first row survives, the rest of the duplicates get deleted.
-            if ($first) {
-                $keeper_id = $configureid;
-                $first = false;
-            } else {
-                pdo_query("DELETE FROM $configure_table WHERE id=$configureid");
+    add_log('Computing crc32', 'PopulateBuild2Configure');
+
+    // Set crc32 for configure rows.
+    if ($CDASH_DB_TYPE != 'pgsql') {
+        // For MySQL, we use the CRC32 function provided by the database.
+        pdo_query(
+            "UPDATE $configure_table
+            SET crc32 = CRC32(CONCAT(command, log, status))");
+    } else {
+        // For Postgres, we have to compute crc32 using PHP.
+        // We do this in batches of 1024 rows at a time
+        // so we don't consume all the available memory.
+        $count_query = pdo_query("SELECT COUNT(*) FROM $configure_table");
+        $count_row = pdo_fetch_array($count_query);
+        $num_configures = $count_row[0];
+        $batch_size = 1024;
+        for ($i = 0; $i < $num_configures; $i += $batch_size) {
+            $query =
+                "SELECT id, command, log, status FROM $configure_table
+                ORDER BY id ASC LIMIT $batch_size OFFSET $i";
+            $result = pdo_query($query);
+            while ($row = pdo_fetch_array($result)) {
+                $configureid = $row['id'];
+                $crc32 = crc32($row['command'] . $row['log'] . $row['status']);
+                pdo_query(
+                    "UPDATE $configure_table
+                    SET crc32 = $crc32 WHERE id = $configureid");
             }
-            pdo_query(
-                "INSERT INTO $b2c_table
-                (configureid, buildid, starttime, endtime)
-                VALUES ($keeper_id, $buildid, '$starttime', '$endtime')");
         }
     }
 
-    // Populate build2configure rows for non-duplicated configure rows.
-    $query =
-        "SELECT id, buildid, starttime, endtime FROM $configure_table
-        WHERE buildid NOT IN (SELECT buildid FROM $b2c_table)";
+    // Insert build2configure rows for duplicate configures that are about to
+    // be deleted.
+
+
+    add_log('Finding duplicate crc32s', 'PopulateBuild2Configure');
+    $query = "SELECT id, buildid, starttime, endtime, crc32
+        FROM $configure_table
+        WHERE crc32 IN
+            (SELECT crc32 FROM $configure_table GROUP BY crc32 HAVING COUNT(*) > 1)
+        ORDER BY crc32, id";
     $result = pdo_query($query);
+
+    $inserts = [];
+    $configureid = null;
+    $previous_crc32 = null;
+    // Used to split inserts into batches of 5,000 rows.
+    $num_rows = pdo_num_rows($result);
+    $current_batch_size = 0;
+    // used to report progress every 10%.
+    $total_inserted = 0;
+    $next_report = 10;
     while ($row = pdo_fetch_array($result)) {
-        $configureid = $row['id'];
-        $buildid = $row['buildid'];
-        $starttime = $row['starttime'];
-        $endtime = $row['endtime'];
-        pdo_query(
-            "INSERT INTO $b2c_table
-            (configureid, buildid, starttime, endtime)
-            VALUES ($configureid, $buildid, '$starttime', '$endtime')");
+        $current_batch_size++;
+        if ($configureid === null) {
+            // Initialize some values the first time through the loop.
+            $configureid = $row['id'];
+            $previous_crc32 = $row['crc32'];
+        } elseif ($previous_crc32 !== $row['crc32']) {
+            // crc32 changed.  We can skip this row because its b2c entry
+            // will be handled later.
+            $previous_crc32 = $row['crc32'];
+            continue;
+        } else {
+            $inserts[] = "($configureid, {$row['buildid']}, '{$row['starttime']}', '{$row['endtime']}')";
+        }
+        if ($current_batch_size >= 5000) {
+            // Insert this batch.
+            pdo_query(
+            "INSERT INTO $b2c_table (configureid, buildid, starttime, endtime)
+             VALUES " . implode(',', $inserts));
+            $total_inserted += $current_batch_size;
+            $inserts = [];
+            $current_batch_size = 0;
+
+            // Calculate percentage inserted.
+            $percent = round(($total_inserted / $num_rows) * 100, -1);
+            if ($percent > $next_report) {
+                add_log("Inserting b2c rows for duplicate crc32s ($percent%)", 'PopulateBuild2Configure');
+                $next_report = $percent + 10;
+            }
+        }
     }
+    if (!empty($inserts)) {
+        add_log("Inserting b2c rows for duplicate crc32s (100%)", 'PopulateBuild2Configure');
+        pdo_query(
+        "INSERT INTO $b2c_table (configureid, buildid, starttime, endtime)
+         VALUES " . implode(',', $inserts));
+    }
+
+    // Delete configure rows that have duplicate crc32 values.
+    add_log('Deleting duplicate crc32s', 'PopulateBuild2Configure');
+    pdo_query("
+        DELETE FROM $configure_table WHERE id NOT IN
+            (SELECT * FROM
+                (SELECT MIN(c.id) FROM $configure_table c GROUP BY c.crc32)
+            x)");
+
+    // Populate build2configure for surviving configure rows.
+    add_log('Inserting remaining b2c rows', 'PopulateBuild2Configure');
+    pdo_query(
+        "INSERT INTO $b2c_table (configureid, buildid, starttime, endtime)
+        SELECT id, buildid, starttime, endtime FROM $configure_table");
+    add_log('Migration complete!', 'PopulateBuild2Configure');
 }
 
 /** Track configure errors by configureid, not buildid.
@@ -1005,29 +1054,24 @@ function UpgradeConfigureErrorTable($table = 'configureerror',
         (SELECT configureid FROM $b2c_table WHERE buildid=t.buildid)");
 
     // Remove duplicates.
-    $query = "SELECT type, text, configureid, COUNT(*) FROM $table
-        GROUP BY type, text, configureid HAVING COUNT(*) > 1";
-    $result = pdo_query($query);
-    while ($row = pdo_fetch_array($result)) {
-        $type = $row['type'];
-        $text = $row['text'];
-        $configureid = $row['configureid'];
-        $dupe_query =
-            "SELECT buildid FROM $table
-            WHERE type=$type AND text='$text' AND configureid=$configureid";
-        $dupe_result = pdo_query($dupe_query);
-        $first = true;
-        while ($dupe_row = pdo_fetch_array($dupe_result)) {
-            $buildid = $dupe_row['buildid'];
-            // The first row survives, the rest of the duplicates get deleted.
-            if ($first) {
-                $first = false;
-            } else {
-                pdo_query("DELETE FROM $table WHERE buildid=$buildid AND type=$type AND text='$text' AND configureid=$configureid");
-            }
-        }
+    // Step 1: create an empty table with the same structure as configureerror.
+    global $CDASH_DB_TYPE;
+    if ($CDASH_DB_TYPE == 'pgsql') {
+        pdo_query(
+            "CREATE TABLE temp$table
+            (LIKE $table INCLUDING DEFAULTS INCLUDING CONSTRAINTS INCLUDING INDEXES)");
+    } else {
+        pdo_query("CREATE TABLE temp$table LIKE $table");
     }
+    // Remove the buildid field from the new table.
+    RemoveTableField("temp$table", 'buildid');
 
-    // Remove the buildid field.
-    RemoveTableField($table, 'buildid');
+    // Step 2: copy distinct values into this new table.
+    pdo_query("
+        INSERT INTO temp$table (type, text, configureid)
+        (SELECT DISTINCT type, text, configureid FROM $table)");
+
+    // Step 3: drop the old table and rename the new one to take its place.
+    pdo_query("DROP TABLE $table");
+    pdo_query("ALTER TABLE temp$table RENAME TO $table");
 }
