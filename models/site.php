@@ -25,6 +25,7 @@ class Site
     public $Latitude;
     public $Longitude;
     public $OutOfOrder;
+    private $Filled;
     private $PDO;
 
     public function __construct()
@@ -33,6 +34,7 @@ class Site
         $this->Latitude = '';
         $this->Longitude = '';
         $this->OutOfOrder = 0;
+        $this->Filled = false;
         $this->PDO = get_link_identifier()->getPdo();
     }
 
@@ -178,16 +180,33 @@ class Site
     // Get the name of the size
     public function GetName()
     {
-        if (!$this->Id) {
-            add_log('Id not set', 'Site::GetName', LOG_ERR);
+        if (!$this->Fill()) {
             return false;
         }
+        return $this->Name;
+    }
 
+    public function Fill()
+    {
+        if ($this->Filled) {
+            return true;
+        }
+        if (!$this->Id) {
+            add_log('Id not set', 'Site::Fill', LOG_ERR);
+            return false;
+        }
         $stmt = $this->PDO->prepare(
-            'SELECT name FROM site WHERE id = ?');
+            'SELECT * FROM site WHERE id = ?');
         if (!pdo_execute($stmt, [$this->Id])) {
             return false;
         }
-        return $stmt->fetchColumn();
+        $row = $stmt->fetch();
+        $this->Name = $row['name'];
+        $this->Ip = $row['ip'];
+        $this->Latitude = $row['latitude'];
+        $this->Longitude = $row['longitude'];
+        $this->OutOfOrder = $row['outoforder'];
+        $this->Filled = true;
+        return true;
     }
 }

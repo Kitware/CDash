@@ -282,7 +282,7 @@ class UserProject
         return $category_array['emailcategory'];
     }
 
-    /** Get the projects associated with the user */
+    /** Get information about the projects associated with this user. */
     public function GetProjects()
     {
         if (!$this->UserId) {
@@ -290,16 +290,13 @@ class UserProject
             return false;
         }
 
-        $project = pdo_query('SELECT projectid FROM user2project WHERE userid=' . qnum($this->UserId));
-        if (!$project) {
-            add_last_sql_error('UserProject GetProjects');
-            return false;
-        }
-
-        $projectids = array();
-        while ($project_array = pdo_fetch_array($project)) {
-            $projectids[] = $project_array['projectid'];
-        }
-        return $projectids;
+        $stmt = $this->PDO->prepare(
+            'SELECT u2p.projectid AS id, role, name
+            FROM user2project u2p
+            JOIN project p on u2p.projectid = p.id
+            WHERE userid = ?
+            ORDER BY p.name ASC');
+        pdo_execute($stmt, [$this->UserId]);
+        return $stmt->fetchAll();
     }
 }
