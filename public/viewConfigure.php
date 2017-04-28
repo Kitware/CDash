@@ -33,8 +33,6 @@ if ($date != null) {
     $date = htmlspecialchars(pdo_real_escape_string($date));
 }
 
-$status = (isset($_GET['status'])) ? pdo_real_escape_numeric($_GET['status']) : false;
-
 // Checks
 if (!isset($buildid) || !is_numeric($buildid)) {
     echo 'Not a valid buildid!';
@@ -97,7 +95,7 @@ $xml .= '</menu>';
 
 
 $configures_response = array();
-$configures = $build->GetConfigures($status);
+$configures = $build->GetConfigures();
 $has_subprojects = 0;
 while ($configure = pdo_fetch_array($configures)) {
     if (isset($configure['subprojectid'])) {
