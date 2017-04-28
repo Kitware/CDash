@@ -931,7 +931,7 @@ function PopulateBuild2Configure($configure_table, $b2c_table)
 {
     global $CDASH_DB_TYPE;
 
-    add_log('Compute crc32', 'PopulateBuild2Configure');
+    add_log('Computing crc32', 'PopulateBuild2Configure');
 
     // Set crc32 for configure rows.
     if ($CDASH_DB_TYPE != 'pgsql') {
@@ -964,18 +964,27 @@ function PopulateBuild2Configure($configure_table, $b2c_table)
 
     // Insert build2configure rows for duplicate configures that are about to
     // be deleted.
-    add_log('Detect duplicate crc32s', 'PopulateBuild2Configure');
+
+
+    add_log('Finding duplicate crc32s', 'PopulateBuild2Configure');
     $query = "SELECT id, buildid, starttime, endtime, crc32
         FROM $configure_table
         WHERE crc32 IN
             (SELECT crc32 FROM $configure_table GROUP BY crc32 HAVING COUNT(*) > 1)
         ORDER BY crc32, id";
     $result = pdo_query($query);
+
     $inserts = [];
     $configureid = null;
     $previous_crc32 = null;
-    add_log('Generate b2c INSERT for duplicate crc32s', 'PopulateBuild2Configure');
+    // Used to split inserts into batches of 5,000 rows.
+    $num_rows = pdo_num_rows($result);
+    $current_batch_size = 0;
+    // used to report progress every 10%.
+    $total_inserted = 0;
+    $next_report = 10;
     while ($row = pdo_fetch_array($result)) {
+        $current_batch_size++;
         if ($configureid === null) {
             // Initialize some values the first time through the loop.
             $configureid = $row['id'];
@@ -988,16 +997,32 @@ function PopulateBuild2Configure($configure_table, $b2c_table)
         } else {
             $inserts[] = "($configureid, {$row['buildid']}, '{$row['starttime']}', '{$row['endtime']}')";
         }
+        if ($current_batch_size >= 5000) {
+            // Insert this batch.
+            pdo_query(
+            "INSERT INTO $b2c_table (configureid, buildid, starttime, endtime)
+             VALUES " . implode(',', $inserts));
+            $total_inserted += $current_batch_size;
+            $inserts = [];
+            $current_batch_size = 0;
+
+            // Calculate percentage inserted.
+            $percent = round(($total_inserted / $num_rows) * 100, -1);
+            if ($percent > $next_report) {
+                add_log("Inserting b2c rows for duplicate crc32s ($percent%)", 'PopulateBuild2Configure');
+                $next_report = $percent + 10;
+            }
+        }
     }
     if (!empty($inserts)) {
-        add_log('Execute b2c INSERT for duplicate crc32s', 'PopulateBuild2Configure');
+        add_log("Inserting b2c rows for duplicate crc32s (100%)", 'PopulateBuild2Configure');
         pdo_query(
         "INSERT INTO $b2c_table (configureid, buildid, starttime, endtime)
          VALUES " . implode(',', $inserts));
     }
 
     // Delete configure rows that have duplicate crc32 values.
-    add_log('Delete duplicate crc32s', 'PopulateBuild2Configure');
+    add_log('Deleting duplicate crc32s', 'PopulateBuild2Configure');
     pdo_query("
         DELETE FROM $configure_table WHERE id NOT IN
             (SELECT * FROM
@@ -1005,7 +1030,7 @@ function PopulateBuild2Configure($configure_table, $b2c_table)
             x)");
 
     // Populate build2configure for surviving configure rows.
-    add_log('Insert remaining b2c rows', 'PopulateBuild2Configure');
+    add_log('Inserting remaining b2c rows', 'PopulateBuild2Configure');
     pdo_query(
         "INSERT INTO $b2c_table (configureid, buildid, starttime, endtime)
         SELECT id, buildid, starttime, endtime FROM $configure_table");
