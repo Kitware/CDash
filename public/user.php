@@ -37,6 +37,8 @@ if (!$session_OK) {
     return;
 }
 
+$PDO = get_link_identifier()->getPdo();
+
 $userid = $_SESSION['cdash']['loginid'];
 $xml = begin_XML_for_XSLT();
 $xml .= add_XML_value('manageclient', $CDASH_MANAGE_CLIENTS);
@@ -136,8 +138,7 @@ if ($CDASH_MANAGE_CLIENTS) {
 }
 
 // Find all the public projects that this user is not subscribed to.
-$pdo = get_link_identifier()->getPdo();
-$stmt = $pdo->prepare(
+$stmt = $PDO->prepare(
     'SELECT name, id FROM project
     WHERE public = 1
     AND id NOT IN (SELECT projectid AS id FROM user2project WHERE userid = ?)
@@ -170,7 +171,7 @@ while ($row = $stmt->fetch()) {
 $claimedsiteprojects = [];
 $siteidwheresql = '';
 $claimedsites = [];
-$stmt = $pdo->prepare('SELECT siteid FROM site2user WHERE userid = ?');
+$stmt = $PDO->prepare('SELECT siteid FROM site2user WHERE userid = ?');
 pdo_execute($stmt, [$userid]);
 while ($row = $stmt->fetch()) {
     $siteid = $row['siteid'];
@@ -192,7 +193,7 @@ while ($row = $stmt->fetch()) {
 
 // Look for all the projects
 if (count($claimedsites) > 0) {
-    $stmt = $pdo->prepare(
+    $stmt = $PDO->prepare(
         "SELECT b.projectid FROM build b
         JOIN user2project u2p ON (b.projectid = u2p.projectid)
         WHERE ($siteidwheresql) AND u2p.userid = ? AND u2p.role > 0
@@ -218,8 +219,8 @@ function ReportLastBuild($type, $projectid, $siteid, $projectname, $nightlytime)
     $nightlytime = strtotime($nightlytime);
 
     // Find the last build
-    global $pdo;
-    $stmt = $pdo->prepare(
+    global $PDO;
+    $stmt = $PDO->prepare(
         'SELECT starttime, id FROM build
         WHERE siteid = :siteid AND projectid = :projectid AND type = :type
         ORDER BY submittime DESC LIMIT 1');
