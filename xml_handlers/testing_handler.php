@@ -96,21 +96,20 @@ class TestingHandler extends AbstractHandler
             foreach ($attributes as $key => $value) {
                 if ($key === 'BUILDNAME') {
                     $this->BuildName = $value;
-                } else if ($key === 'BUILDSTAMP') {
+                } elseif ($key === 'BUILDSTAMP') {
                     $this->BuildStamp = $value;
-                } else if ($key === 'GENERATOR') {
+                } elseif ($key === 'GENERATOR') {
                     $this->Generator = $value;
-                } else if ($key == 'CHANGEID') {
+                } elseif ($key == 'CHANGEID') {
                     $this->PullRequest = $value;
-                }
-                else {
+                } else {
                     $siteInformation->SetValue($key, $value);
                     $this->BuildInformation->SetValue($key, $value);
                 }
             }
 
             if (empty($this->BuildName)) {
-                  $this->BuildName = '(empty)';
+                $this->BuildName = '(empty)';
             }
             $this->Site->SetInformation($siteInformation);
 
