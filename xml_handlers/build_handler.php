@@ -37,6 +37,10 @@ class BuildHandler extends AbstractHandler
     // Map SubProjects to Labels
     private $SubProjects;
     private $ErrorSubProjectName;
+    private $BuildName;
+    private $BuildStamp;
+    private $Generator;
+    private $PullRequest;
 
     public function __construct($projectid, $scheduleid)
     {
@@ -63,11 +67,30 @@ class BuildHandler extends AbstractHandler
 
             $siteInformation = new SiteInformation();
             $this->BuildInformation = new BuildInformation();
+            $this->BuildName = "";
+            $this->BuildStamp = "";
+            $this->Generator = "";
+            $this->PullRequest = "";
 
             // Fill in the attribute
             foreach ($attributes as $key => $value) {
-                $siteInformation->SetValue($key, $value);
-                $this->BuildInformation->SetValue($key, $value);
+                if ($key === 'BUILDNAME') {
+                    $this->BuildName = $value;
+                } else if ($key === 'BUILDSTAMP') {
+                    $this->BuildStamp = $value;
+                } else if ($key === 'GENERATOR') {
+                    $this->Generator = $value;
+                } else if ($key == 'CHANGEID') {
+                    $this->PullRequest = $value;
+                }
+                else {
+                    $siteInformation->SetValue($key, $value);
+                    $this->BuildInformation->SetValue($key, $value);
+                }
+            }
+
+            if (empty($this->BuildName)) {
+                  $this->BuildName = '(empty)';
             }
 
             $this->Site->SetInformation($siteInformation);
@@ -86,13 +109,13 @@ class BuildHandler extends AbstractHandler
             }
             if (!array_key_exists($this->SubProjectName, $this->Builds)) {
                 $build = new Build();
-                if (!empty($this->BuildInformation->PullRequest)) {
-                    $build->SetPullRequest($this->BuildInformation->PullRequest);
+                if (!empty($this->PullRequest)) {
+                    $build->SetPullRequest($this->PullRequest);
                 }
                 $build->SiteId = $this->Site->Id;
-                $build->Name = $this->BuildInformation->BuildName;
-                $build->SetStamp($this->BuildInformation->BuildStamp);
-                $build->Generator = $this->BuildInformation->Generator;
+                $build->Name = $this->BuildName;
+                $build->SetStamp($this->BuildStamp);
+                $build->Generator = $this->Generator;
                 $build->Information = $this->BuildInformation;
                 $this->Builds[$this->SubProjectName] = $build;
             }
@@ -100,13 +123,13 @@ class BuildHandler extends AbstractHandler
             if (empty($this->Builds)) {
                 // No subprojects
                 $build = new Build();
-                if (!empty($this->BuildInformation->PullRequest)) {
-                    $build->SetPullRequest($this->BuildInformation->PullRequest);
+                if (!empty($this->PullRequest)) {
+                    $build->SetPullRequest($this->PullRequest);
                 }
                 $build->SiteId = $this->Site->Id;
-                $build->Name = $this->BuildInformation->BuildName;
-                $build->SetStamp($this->BuildInformation->BuildStamp);
-                $build->Generator = $this->BuildInformation->Generator;
+                $build->Name = $this->BuildName;
+                $build->SetStamp($this->BuildStamp);
+                $build->Generator = $this->Generator;
                 $build->Information = $this->BuildInformation;
                 $this->Builds[''] = $build;
             }
@@ -320,11 +343,11 @@ class BuildHandler extends AbstractHandler
 
     public function getBuildStamp()
     {
-        return $this->BuildInformation->BuildStamp;
+        return $this->BuildStamp;
     }
 
     public function getBuildName()
     {
-        return $this->BuildInformation->BuildName;
+        return $this->BuildName;
     }
 }

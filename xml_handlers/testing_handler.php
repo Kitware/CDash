@@ -39,6 +39,10 @@ class TestingHandler extends AbstractHandler
     // Map SubProjects to Labels
     private $SubProjects;
     private $TestSubProjectName;
+    private $BuildName;
+    private $BuildStamp;
+    private $Generator;
+    private $PullRequest;
 
     // Keep a record of the number of tests passed, failed and notrun
     // This works only because we have one test file per submission
@@ -83,13 +87,31 @@ class TestingHandler extends AbstractHandler
 
             $siteInformation = new SiteInformation();
             $this->BuildInformation = new BuildInformation();
+            $this->BuildName = "";
+            $this->BuildStamp = "";
+            $this->Generator = "";
+            $this->PullRequest = "";
 
             // Fill in the attribute
             foreach ($attributes as $key => $value) {
-                $siteInformation->SetValue($key, $value);
-                $this->BuildInformation->SetValue($key, $value);
+                if ($key === 'BUILDNAME') {
+                    $this->BuildName = $value;
+                } else if ($key === 'BUILDSTAMP') {
+                    $this->BuildStamp = $value;
+                } else if ($key === 'GENERATOR') {
+                    $this->Generator = $value;
+                } else if ($key == 'CHANGEID') {
+                    $this->PullRequest = $value;
+                }
+                else {
+                    $siteInformation->SetValue($key, $value);
+                    $this->BuildInformation->SetValue($key, $value);
+                }
             }
 
+            if (empty($this->BuildName)) {
+                  $this->BuildName = '(empty)';
+            }
             $this->Site->SetInformation($siteInformation);
 
             if (array_key_exists('APPEND', $attributes)) {
@@ -294,12 +316,12 @@ class TestingHandler extends AbstractHandler
 
     public function getBuildStamp()
     {
-        return $this->BuildInformation->BuildStamp;
+        return $this->BuildStamp;
     }
 
     public function getBuildName()
     {
-        return $this->BuildInformation->BuildName;
+        return $this->BuildName;
     }
 
     private function createBuild()
@@ -321,10 +343,10 @@ class TestingHandler extends AbstractHandler
         }
 
         $build->SiteId = $this->Site->Id;
-        $build->Name = $this->BuildInformation->BuildName;
+        $build->Name = $this->BuildName;
 
-        $build->SetStamp($this->BuildInformation->BuildStamp);
-        $build->Generator = $this->BuildInformation->Generator;
+        $build->SetStamp($this->BuildStamp);
+        $build->Generator = $this->Generator;
         $build->Information = $this->BuildInformation;
 
         $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);

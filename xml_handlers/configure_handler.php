@@ -31,6 +31,10 @@ class ConfigureHandler extends AbstractHandler
     private $Configure;
     private $Label;
     private $Notified;
+    private $BuildName;
+    private $BuildStamp;
+    private $Generator;
+    private $PullRequest;
 
     public function __construct($projectid, $scheduleid)
     {
@@ -58,11 +62,31 @@ class ConfigureHandler extends AbstractHandler
 
             $siteInformation = new SiteInformation();
             $this->BuildInformation = new BuildInformation();
+            $this->BuildInformation = new BuildInformation();
+            $this->BuildName = "";
+            $this->BuildStamp = "";
+            $this->Generator = "";
+            $this->PullRequest = "";
 
             // Fill in the attribute
             foreach ($attributes as $key => $value) {
-                $siteInformation->SetValue($key, $value);
-                $this->BuildInformation->SetValue($key, $value);
+                if ($key === 'BUILDNAME') {
+                    $this->BuildName = $value;
+                } else if ($key === 'BUILDSTAMP') {
+                    $this->BuildStamp = $value;
+                } else if ($key === 'GENERATOR') {
+                    $this->Generator = $value;
+                } else if ($key == 'CHANGEID') {
+                    $this->PullRequest = $value;
+                }
+                else {
+                    $siteInformation->SetValue($key, $value);
+                    $this->BuildInformation->SetValue($key, $value);
+                }
+            }
+
+            if (empty($this->BuildName)) {
+                  $this->BuildName = '(empty)';
             }
 
             $this->Site->SetInformation($siteInformation);
@@ -74,9 +98,9 @@ class ConfigureHandler extends AbstractHandler
             if (!array_key_exists($this->SubProjectName, $this->Builds)) {
                 $build = new Build();
                 $build->SiteId = $this->Site->Id;
-                $build->Name = $this->BuildInformation->BuildName;
-                $build->SetStamp($this->BuildInformation->BuildStamp);
-                $build->Generator = $this->BuildInformation->Generator;
+                $build->Name = $this->BuildName;
+                $build->SetStamp($this->BuildStamp);
+                $build->Generator = $this->Generator;
                 $build->Information = $this->BuildInformation;
                 $this->Builds[$this->SubProjectName] = $build;
             }
@@ -85,9 +109,9 @@ class ConfigureHandler extends AbstractHandler
                 // No subprojects
                 $build = new Build();
                 $build->SiteId = $this->Site->Id;
-                $build->Name = $this->BuildInformation->BuildName;
-                $build->SetStamp($this->BuildInformation->BuildStamp);
-                $build->Generator = $this->BuildInformation->Generator;
+                $build->Name = $this->BuildName;
+                $build->SetStamp($this->BuildStamp);
+                $build->Generator = $this->Generator;
                 $build->Information = $this->BuildInformation;
                 $this->Builds[''] = $build;
             }
@@ -146,9 +170,9 @@ class ConfigureHandler extends AbstractHandler
 
                 $build->ComputeConfigureDifferences();
 
-                if (!$this->Notified && !empty($this->BuildInformation->PullRequest)) {
+                if (!$this->Notified && !empty($this->PullRequest)) {
                     // Only perform PR notification for the first build parsed.
-                    $build->SetPullRequest($this->BuildInformation->PullRequest);
+                    $build->SetPullRequest($this->PullRequest);
                     $this->Notified = true;
                 }
 
@@ -178,7 +202,7 @@ class ConfigureHandler extends AbstractHandler
         if ($parent == 'CONFIGURE') {
             switch ($element) {
                 case 'STARTDATETIME':
-                    $this->StartTimeStamp = str_to_time($data, $this->BuildInformation->BuildStamp);
+                    $this->StartTimeStamp = str_to_time($data, $this->BuildStamp);
                     break;
                 case 'STARTCONFIGURETIME':
                     $this->StartTimeStamp = $data;
@@ -223,11 +247,11 @@ class ConfigureHandler extends AbstractHandler
 
     public function getBuildStamp()
     {
-        return $this->BuildInformation->BuildStamp;
+        return $this->BuildStamp;
     }
 
     public function getBuildName()
     {
-        return $this->BuildInformation->BuildName;
+        return $this->BuildName;
     }
 }
