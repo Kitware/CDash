@@ -1054,29 +1054,24 @@ function UpgradeConfigureErrorTable($table = 'configureerror',
         (SELECT configureid FROM $b2c_table WHERE buildid=t.buildid)");
 
     // Remove duplicates.
-    $query = "SELECT type, text, configureid, COUNT(*) FROM $table
-        GROUP BY type, text, configureid HAVING COUNT(*) > 1";
-    $result = pdo_query($query);
-    while ($row = pdo_fetch_array($result)) {
-        $type = $row['type'];
-        $text = $row['text'];
-        $configureid = $row['configureid'];
-        $dupe_query =
-            "SELECT buildid FROM $table
-            WHERE type=$type AND text='$text' AND configureid=$configureid";
-        $dupe_result = pdo_query($dupe_query);
-        $first = true;
-        while ($dupe_row = pdo_fetch_array($dupe_result)) {
-            $buildid = $dupe_row['buildid'];
-            // The first row survives, the rest of the duplicates get deleted.
-            if ($first) {
-                $first = false;
-            } else {
-                pdo_query("DELETE FROM $table WHERE buildid=$buildid AND type=$type AND text='$text' AND configureid=$configureid");
-            }
-        }
+    // Step 1: create an empty table with the same structure as configureerror.
+    global $CDASH_DB_TYPE;
+    if ($CDASH_DB_TYPE == 'pgsql') {
+        pdo_query(
+            "CREATE TABLE temp$table
+            (LIKE $table INCLUDING DEFAULTS INCLUDING CONSTRAINTS INCLUDING INDEXES)");
+    } else {
+        pdo_query("CREATE TABLE temp$table LIKE $table");
     }
+    // Remove the buildid field from the new table.
+    RemoveTableField("temp$table", 'buildid');
 
-    // Remove the buildid field.
-    RemoveTableField($table, 'buildid');
+    // Step 2: copy distinct values into this new table.
+    pdo_query("
+        INSERT INTO temp$table (type, text, configureid)
+        (SELECT DISTINCT type, text, configureid FROM $table)");
+
+    // Step 3: drop the old table and rename the new one to take its place.
+    pdo_query("DROP TABLE $table");
+    pdo_query("ALTER TABLE temp$table RENAME TO $table");
 }
