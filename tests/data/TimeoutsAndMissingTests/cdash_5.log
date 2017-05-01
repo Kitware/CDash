@@ -14,7 +14,7 @@ Tests not passing: 3
 Missing tests: 3
 
 
-*Tests not passing*
+*Tests failing*
 curl Completed (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
 StringActionsTest Completed (OTHER_FAULT) (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
 MathActionsTest Completed (OTHER_FAULT) (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)

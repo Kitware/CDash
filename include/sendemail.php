@@ -495,14 +495,14 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
             $information .= "\n";
 
             foreach ($tests as $test) {
-                $info = "{$test['name']} {$test['details']} ({$serverURI}/testDetails.php?test={$test['id']}&build={$buildid}\n";
+                $info = "{$test['name']} {$test['details']} ({$serverURI}/testDetails.php?test={$test['id']}&build={$buildid})\n";
                 $information .= substr($info, 0, $maxchars);
             }
             $information .= "\n";
             return $information;
         };
 
-        $information .= $AddTestsToEmail($build->GetFailedTests($maxitems), 'Tests not passing');
+        $information .= $AddTestsToEmail($build->GetFailedTests($maxitems), 'Tests failing');
         if ($emailtesttimingchanged) {
             $information .= $AddTestsToEmail($build->GetFailedTimeStatusTests($maxitems, $testtimemaxstatus), 'Tests failing time status');
         }

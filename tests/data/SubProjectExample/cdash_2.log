@@ -14,7 +14,7 @@ Type: Nightly
 Tests not passing: 1
 
 
-*Tests not passing*
+*Tests failing*
 NOX_FiniteDifferenceIsorropiaColoring Completed (Failed) (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
 
 
@@ -36,7 +36,7 @@ Type: Nightly
 Tests not passing: 1
 
 
-*Tests not passing*
+*Tests failing*
 NOX_FiniteDifferenceIsorropiaColoring Completed (Failed) (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
 
 

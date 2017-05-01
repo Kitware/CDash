@@ -30,7 +30,7 @@ Dynamic analysis tests failing: 10
 
 
 
-*Tests not passing*
+*Tests failing*
 DashboardSendTest Completed (OTHER_FAULT) (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
 StringActionsTest Completed (OTHER_FAULT) (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
 MathActionsTest Completed (OTHER_FAULT) (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
