@@ -15,7 +15,7 @@ Tests not passing: 1
 
 
 *Tests failing*
-NOX_FiniteDifferenceIsorropiaColoring Completed (Failed) (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
+NOX_FiniteDifferenceIsorropiaColoring | Completed (Failed) | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
 
 
 -CDash on <NA>
@@ -37,7 +37,7 @@ Tests not passing: 1
 
 
 *Tests failing*
-NOX_FiniteDifferenceIsorropiaColoring Completed (Failed) (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
+NOX_FiniteDifferenceIsorropiaColoring | Completed (Failed) | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
 
 
 -CDash on <NA>
