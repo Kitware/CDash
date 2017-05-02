@@ -10,12 +10,12 @@ Site: Dash20.kitware
 Build Name: OSX-SIERRA-10.12.1
 Build Time: 2009-02-23T05:04:13 EST
 Type: Nightly
-Tests failing: 2
+Tests not passing: 2
 
 
-*Test timeouts*
-SleepTimer1 (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
-SleepTimer2 (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
+*Tests failing*
+SleepTimer1 | Completed (Timeout) | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
+SleepTimer2 | Completed (Timeout) | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
 
 
 -CDash on <NA>
