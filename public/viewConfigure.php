@@ -95,6 +95,17 @@ if ($next_buildid > 0) {
 }
 $xml .= '</menu>';
 
+
+$configures_response = array();
+$configures = $build->GetConfigures($status);
+$has_subprojects = 0;
+while ($configure = pdo_fetch_array($configures)) {
+    if (isset($configure['subprojectid'])) {
+        $has_subprojects = 1;
+    }
+    $configures_response[] = buildconfigure::marshal($configure);
+}
+
 // Build
 $xml .= '<build>';
 $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
@@ -102,16 +113,9 @@ $xml .= add_XML_value('site', $site_array['name']);
 $xml .= add_XML_value('siteid', $siteid);
 $xml .= add_XML_value('buildname', $build_array['name']);
 $xml .= add_XML_value('buildid', $build_array['id']);
-$xml .= add_XML_value('parentid', $build_array['parentid']);
+$xml .= add_XML_value('hassubprojects', $has_subprojects);
 $xml .= '</build>';
 
-$configures_response = array();
-
-$configures = $build->GetConfigures($status);
-$numConfigures = 0;
-while ($configure = pdo_fetch_array($configures)) {
-    $configures_response[] = buildconfigure::marshal($configure);
-}
 
 $xml .= '<configures>';
 foreach ($configures_response as $configure) {
