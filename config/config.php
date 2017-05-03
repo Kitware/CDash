@@ -283,6 +283,12 @@ $CDASH_USE_ELASTICACHE_AUTO_DISCOVERY = false;
 // 0 here means that tokens do not expire.
 $CDASH_TOKEN_DURATION = 15811200;
 
+// By default, should newly created projects require an authentication token
+// for submissions?
+// 0 means that the default will be to accept all submissions from any site.
+// 1 means that newly created projects will require authentication by default.
+$CDASH_DEFAULT_AUTHENTICATE_SUBMISSIONS = 0;
+
 /* DO NOT EDIT AFTER THIS LINE */
 $localConfig = dirname(__FILE__) . '/config.local.php';
 if ((strpos(__FILE__, 'config.local.php') === false) && file_exists($localConfig)) {
