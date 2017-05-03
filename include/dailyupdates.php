@@ -1007,6 +1007,9 @@ function addDailyChanges($projectid)
         // Clean the backup directory
         clean_backup_directory();
 
+        // Delete expired authentication tokens.
+        pdo_query('DELETE FROM authtoken WHERE expires < NOW()');
+
         // Remove the first builds of the project
         include_once 'include/autoremove.php';
         removeFirstBuilds($projectid, $project_array['autoremovetimeframe'], $project_array['autoremovemaxbuilds']);
