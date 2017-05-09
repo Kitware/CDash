@@ -567,37 +567,40 @@ class Build
         return $resolvedBuildFailures;
     }
 
-    public function GetConfigures($status=false)
+    public function GetConfigures()
     {
-        $where = ($status !== false) ? "AND c.status = $status" : "";
         if ($this->IsParentBuild()) {
             $configures = pdo_query("SELECT c.id FROM configure c
-                                    JOIN build2configure b2c ON b2c.configureid=c.id
+                                    JOIN build2configure b2c ON b2c.configureid = c.id
                                     JOIN subproject2build sp2b ON sp2b.buildid = b2c.buildid
                                     JOIN subproject sp ON sp.id = sp2b.subprojectid
                                     JOIN build b ON b.id = b2c.buildid
-                                    WHERE b.parentid = " . $this->Id . "
-                                            $where");
+                                    WHERE b.parentid = $this->Id");
             $configures_array = pdo_fetch_array($configures);
             if (count(array_unique($configures_array)) > 1) {
                 return pdo_query("SELECT sp.name subprojectname, sp.id subprojectid, c.*, b.configureerrors,
                                   b.configurewarnings
                                   FROM configure c
-                                  JOIN build2configure b2c ON b2c.configureid=c.id
+                                  JOIN build2configure b2c ON b2c.configureid = c.id
                                   JOIN subproject2build sp2b ON sp2b.buildid = b2c.buildid
                                   JOIN subproject sp ON sp.id = sp2b.subprojectid
                                   JOIN build b ON b.id = b2c.buildid
-                                  WHERE b.parentid = " . $this->Id . "
-                                  $where");
+                                  WHERE b.parentid = $this->Id");
             } else {
                 return pdo_query(
-                    "SELECT * FROM configure c WHERE id = " . $configures_array[0] . $where);
+                    "SELECT c.*, b.configureerrors, b.configurewarnings
+                     FROM configure c
+                     JOIN build2configure b2c ON b2c.configureid = c.id
+                     JOIN build b ON b.id = b2c.buildid
+                     WHERE c.id = " . $configures_array[0]);
             }
         } else {
             return pdo_query(
-                    "SELECT * FROM configure c
-                    JOIN build2configure b2c ON b2c.configureid=c.id
-                    WHERE b2c.buildid = $this->Id $where");
+                    "SELECT c.*, b.configureerrors, b.configurewarnings
+                    FROM configure c
+                    JOIN build2configure b2c ON b2c.configureid = c.id
+                    JOIN build b ON b.id = b2c.buildid
+                    WHERE b2c.buildid = $this->Id");
         }
     }
 
