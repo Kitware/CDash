@@ -243,8 +243,8 @@ foreach ($all_tests as $name => $test) {
     if ($total_runs === 0) {
         continue;
     }
-    // Unless the user specified otherwise, only include tests that failed
-    // at least once.
+    // Only include tests that failed at least once unless the user requests
+    // all tests.
     if (!$showpassed && $test['failed'] === 0 && $test['timeout'] === 0) {
         continue;
     }
