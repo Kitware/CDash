@@ -61,7 +61,7 @@ function rest_delete()
         return;
     }
 
-    remove_project_builds($Project);
+    remove_project_builds($Project->Id);
     $Project->Delete();
     http_response_code(200);
 }

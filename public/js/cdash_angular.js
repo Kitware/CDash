@@ -1,7 +1,8 @@
 var CDash = angular
 .module('CDash', [
-    'ui.sortable',
-    'ui.bootstrap',
+    'angular-clipboard',
     'ngAnimate',
-    'ngFileUpload'
+    'ngFileUpload',
+    'ui.sortable',
+    'ui.bootstrap'
     ]);

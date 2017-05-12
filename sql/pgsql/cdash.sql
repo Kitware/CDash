@@ -348,6 +348,7 @@ CREATE TABLE "project" (
   "tokenduration" integer DEFAULT '0',
   "showcoveragecode" smallint default '1',
   "sharelabelfilters" smallint default '0',
+  "authenticatesubmissions" smallint default '0',
   PRIMARY KEY ("id")
 );
 CREATE INDEX "name2" on "project" ("name");
@@ -1406,3 +1407,18 @@ CREATE TABLE "lockout" (
   "unlocktime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
   PRIMARY KEY ("userid")
 );
+
+
+--
+-- Table: authtoken
+--
+CREATE TABLE "authtoken" (
+  "hash" character varying(128) NOT NULL,
+  "userid" integer DEFAULT '0' NOT NULL ,
+  "created" timestamp(0) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  "expires" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
+  "description" character varying(255)
+);
+CREATE INDEX "authtokenhash" on "authtoken" ("hash");
+CREATE INDEX "authtokenuserid" on "authtoken" ("userid");
+CREATE INDEX "authtokenexpires" on "authtoken" ("expires");

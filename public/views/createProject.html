@@ -197,6 +197,31 @@
               </tr>
 
               <tr>
+                <!-- Checkbox to enable/disable the "Authenticated Submissions"
+                     feature for this project -->
+                <td colspan="2">
+                  <div align="right">
+                    <strong>Authenticate Submissions</strong>
+                  </div>
+                </td>
+                <td>
+                  <input type="checkbox" name="authenticateSubmissions"
+                         ng-model="cdash.project.AuthenticateSubmissions"
+                         ng-true-value="1" ng-false-value="0"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('authenticateSubmissions_help')" />
+                  </input>
+                  <img ng-mouseover="showHelp('authenticateSubmissions_help')"
+                    src="img/help.gif" border="0" />
+                  <span class="help_content" id="authenticateSubmissions_help">
+                    <b>Authenticate Submissions</b>
+                    <br />
+                    Only accept submissions bearing a valid authentication token.
+                  </span>
+                </td>
+              </tr>
+
+              <tr>
                 <td>
                 </td>
                 <td>

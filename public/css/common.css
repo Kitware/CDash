@@ -1229,3 +1229,7 @@ textarea {
 .pad4 {
   padding: 4px;
 }
+
+.bordertop {
+  border-top: 1px solid black;
+}

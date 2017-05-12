@@ -283,12 +283,15 @@ class KWWebTestCase extends WebTestCase
         return true;
     }
 
-    public function submission($projectname, $file)
+    public function submission($projectname, $file, $header = null)
     {
         global $CDASH_BERNARD_SUBMISSION;
 
         $url = $this->url . "/submit.php?project=$projectname";
-        $result = $this->uploadfile($url, $file);
+        $result = $this->uploadfile($url, $file, $header);
+        if ($result === false) {
+            return false;
+        }
 
         if ($CDASH_BERNARD_SUBMISSION) {
             sleep(1);
@@ -304,7 +307,7 @@ class KWWebTestCase extends WebTestCase
         return true;
     }
 
-    public function uploadfile($url, $filename)
+    public function uploadfile($url, $filename, $header = null)
     {
         set_time_limit(0); // sometimes this is slow when access the local webserver from external URL
         $fp = fopen($filename, 'r');
@@ -314,7 +317,16 @@ class KWWebTestCase extends WebTestCase
         curl_setopt($ch, CURLOPT_INFILE, $fp);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_INFILESIZE, filesize($filename));
+        if (!is_null($header)) {
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+        }
+        curl_setopt($ch, CURLOPT_HEADER, true);
         $page = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if ($httpcode != 200) {
+            return false;
+        }
+
         curl_close($ch);
         fclose($fp);
         unset($fp);

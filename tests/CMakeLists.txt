@@ -124,6 +124,7 @@ add_php_test(revisionfilteracrossdates)
 add_php_test(timeoutsandmissingtests)
 add_php_test(disabledtests)
 add_php_test(multiplesubprojects)
+add_php_test(authtoken)
 
 if(CDASH_GITHUB_USERNAME AND CDASH_GITHUB_PASSWORD)
   add_php_test(github_PR_comment)

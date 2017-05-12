@@ -164,6 +164,8 @@ if ($projectid > 0) {
     }
 } else {
     // Initialize some variables for project creation.
+    global $CDASH_DEFAULT_AUTHENTICATE_SUBMISSIONS;
+    $project_response['AuthenticateSubmissions'] = $CDASH_DEFAULT_AUTHENTICATE_SUBMISSIONS;
     $project_response['AutoremoveMaxBuilds'] = 500;
     $project_response['AutoremoveTimeframe'] = 60;
     $project_response['CoverageThreshold'] = 70;

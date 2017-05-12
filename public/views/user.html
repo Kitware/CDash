@@ -14,7 +14,7 @@
   <body bgcolor="#ffffff" ng-controller="UserController">
     <div ng-if="cdash.requirelogin == 1 && cdash.registered == 1" ng-include="'login.php?note=register'"></div>
     <div ng-if="cdash.requirelogin == 1 && cdash.registered == 0" ng-include="'login.php'"></div>
-    <div ng-if="cdash.requirelogin != 1 && !loading && !cdash.error">
+    <div ng-if="cdash.requirelogin != 1 && !loading">
       <!-- Header -->
       <div id="header">
         <div id="headertop">
@@ -275,6 +275,69 @@
                 <a ng-href="subscribeProject.php?projectid={{::project.id}}">
                   Subscribe to this project
                 </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <br/>
+      </div>
+
+      <div ng-if="::cdash.showauthtokens">
+        <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
+          <tbody>
+            <tr class="table-heading1">
+              <td colspan="4" id="nob">
+                <h3>Authentication Tokens</h3>
+              </td>
+            </tr>
+            <tr class="table-heading"
+                ng-if-start="cdash.authtokens.length > 0">
+              <td align="center" class="botl">Description</td>
+              <td align="center" class="botl">Expires</td>
+              <td align="center" class="botl">Revoke</td>
+            </tr>
+            <tr
+                ng-repeat-start="authtoken in cdash.authtokens"
+                ng-class-odd="'trodd'" ng-class-even="'treven'">
+              <td align="center">{{::authtoken.description}}</td>
+              <td align="center">{{::authtoken.expires}}</td>
+              <td align="center">
+                <span class="glyphicon glyphicon-trash"
+                      ng-click="revokeToken(authtoken)"
+                      tooltip-popup-delay="1500"
+                      tooltip-append-to-body="true"
+                      uib-tooltip="Revoke this token" />
+              </td>
+            </tr>
+            <tr ng-if="authtoken.token !== undefined"
+                ng-repeat-end>
+              <td align="center">
+                Token for <strong>{{authtoken.description}}</strong>: <code>{{authtoken.token}}</code>
+              </td>
+              <td align="center">
+                <strong ng-show="!authtoken.copied" class="animate-show">
+                  Copy this token. It cannot be retrieved later if you leave this page!
+                </strong>
+              </td>
+              <td align="center">
+                <button class="btn btn-default"
+                        clipboard text="authtoken.token"
+                        on-copied="copyTokenSuccess(authtoken)">Copy</button>
+                <span class="glyphicon"
+                      ng-class="authtoken.showcheck ? 'glyphicon-ok' : 'glyphicon-none'"></span>
+              </td>
+            </tr>
+            <tr ng-if-end></tr>
+            <tr class="bordertop">
+              <td align="center"><strong>New Token</strong></td>
+              <td align="center">
+                <input type="text" id="tokenDescription" class="form-control"
+                       placeholder="Description (site, project, etc)"
+                       ng-model="cdash.tokendescription" />
+              </td>
+              <td align="center">
+                <button class="btn btn-default"
+                        ng-click="generateToken()">Generate Token</button>
               </td>
             </tr>
           </tbody>

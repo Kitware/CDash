@@ -252,6 +252,4 @@ CDash.controller('CreateProjectController',
         $scope.cdash.error = e.data.error;
       });
     };
-
-
 });

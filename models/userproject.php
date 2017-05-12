@@ -291,7 +291,7 @@ class UserProject
         }
 
         $stmt = $this->PDO->prepare(
-            'SELECT u2p.projectid AS id, role, name
+            'SELECT u2p.projectid AS id, role, name, p.authenticatesubmissions
             FROM user2project u2p
             JOIN project p on u2p.projectid = p.id
             WHERE userid = ?

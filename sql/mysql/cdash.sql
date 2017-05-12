@@ -442,6 +442,7 @@ CREATE TABLE `project` (
   `tokenduration` int(11),
   `showcoveragecode` tinyint(4) default '1',
   `sharelabelfilters` tinyint(1) default '0',
+  `authenticatesubmissions` tinyint(1) default '0',
   PRIMARY KEY  (`id`),
   KEY `name` (`name`),
   KEY `public` (`public`)
@@ -1460,6 +1461,17 @@ CREATE TABLE IF NOT EXISTS `lockout` (
   `islocked` tinyint(1) NOT NULL DEFAULT '0',
   `unlocktime` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
   PRIMARY KEY  (`userid`)
+);
+
+CREATE TABLE IF NOT EXISTS `authtoken` (
+  `hash` varchar(128) NOT NULL,
+  `userid` int(11) NOT NULL DEFAULT '0',
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `expires` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
+  `description` varchar(255),
+  KEY `hash` (`hash`),
+  KEY `userid` (`userid`),
+  KEY `expires` (`expires`)
 );
 
 --
