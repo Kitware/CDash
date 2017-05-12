@@ -13,8 +13,12 @@ CDash.controller('UserController', function UserController($scope, $http, $timeo
         var index = -1;
         for(var i = 0, len = $scope.cdash.jobschedule.length; i < len; i++) {
           if ($scope.cdash.jobschedule[i].id === job.id) {
-            $scope.cdash.jobschedule.splice(index, 1);
+            index = i;
+            break;
           }
+        }
+        if (index > -1) {
+          $scope.cdash.jobschedule.splice(index, 1);
         }
       }, function error(e) {
         $scope.cdash.message = e.data.error;
