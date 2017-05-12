@@ -257,8 +257,7 @@ class KWWebTestCase extends WebTestCase
 
     public function login($user = 'simpletest@localhost', $passwd = 'simpletest')
     {
-        $this->get($this->url);
-        $this->clickLink('Login');
+        $this->get($this->url . '/login.php');
         $this->setField('login', $user);
         $this->setField('passwd', $passwd);
         return $this->clickSubmitByName('sent');
@@ -268,6 +267,20 @@ class KWWebTestCase extends WebTestCase
     {
         $this->get($this->url);
         return $this->clickLink('Log Out');
+    }
+
+    public function userExists($email)
+    {
+        require_once('include/common.php');
+        require_once('include/pdo.php');
+        $pdo = get_link_identifier()->getPdo();
+        $user_table = qid('user');
+        $stmt = $pdo->prepare("SELECT id FROM $user_table WHERE email = ?");
+        $stmt->execute([$email]);
+        if (!$stmt->fetch()) {
+            return false;
+        }
+        return true;
     }
 
     public function submission($projectname, $file)
