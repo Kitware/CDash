@@ -1417,7 +1417,7 @@ CREATE TABLE "authtoken" (
   "userid" integer DEFAULT '0' NOT NULL ,
   "created" timestamp(0) DEFAULT CURRENT_TIMESTAMP NOT NULL,
   "expires" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
-  "description" character varying(255),
+  "description" character varying(255)
 );
 CREATE INDEX "authtokenhash" on "authtoken" ("hash");
 CREATE INDEX "authtokenuserid" on "authtoken" ("userid");

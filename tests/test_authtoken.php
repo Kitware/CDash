@@ -23,7 +23,7 @@ class AuthTokenTestCase extends KWWebTestCase
     public function __destruct()
     {
         if ($this->Project) {
-            remove_project_builds($this->Project);
+            remove_project_builds($this->Project->Id);
             $this->Project->Delete();
         }
     }
@@ -61,7 +61,7 @@ class AuthTokenTestCase extends KWWebTestCase
 
         // Subscribe a non-administrative user to it.
         $stmt = $this->PDO->query(
-            "SELECT * FROM user WHERE email = 'user1@kw'");
+            'SELECT * FROM ' . qid('user') . " WHERE email = 'user1@kw'");
         $row = $stmt->fetch();
         if (!$row) {
             $this->fail('Failed to find non-admin user');
