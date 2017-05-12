@@ -565,8 +565,7 @@ function getAuthorizationHeader()
     $headers = null;
     if (isset($_SERVER['Authorization'])) {
         $headers = trim($_SERVER['Authorization']);
-    }
-    else if (isset($_SERVER['HTTP_AUTHORIZATION'])) { //Nginx or fast CGI
+    } elseif (isset($_SERVER['HTTP_AUTHORIZATION'])) { //Nginx or fast CGI
         $headers = trim($_SERVER['HTTP_AUTHORIZATION']);
     } else {
         $requestHeaders = getallheaders();
@@ -580,7 +579,8 @@ function getAuthorizationHeader()
 /**
  * Get access token from header.
  **/
-function getBearerToken() {
+function getBearerToken()
+{
     $headers = getAuthorizationHeader();
     if (!empty($headers)) {
         $matches = [];
