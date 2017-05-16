@@ -20,6 +20,7 @@ require_once 'include/api_common.php';
 include_once 'models/project.php';
 include_once 'models/user.php';
 
+init_api_request();
 $response = array();
 
 // Connect to database.
@@ -27,24 +28,7 @@ $response = array();
 pdo_select_db("$CDASH_DB_NAME", $db);
 
 // Check that a buildid was specified.
-$buildid_ok = false;
-@$buildid = $_GET['buildid'];
-if (!isset($buildid)) {
-    $rest_json = file_get_contents('php://input');
-    $_POST = json_decode($rest_json, true);
-    @$buildid = $_POST['buildid'];
-}
-if (isset($buildid)) {
-    $buildid = pdo_real_escape_numeric($buildid);
-    if (is_numeric($buildid)) {
-        $buildid_ok = true;
-    }
-}
-if (!$buildid_ok) {
-    $response['error'] = 'buildid not specified.';
-    echo json_encode($response);
-    return;
-}
+$buildid = get_request_build_id();
 
 // Make sure this build actually exists.
 $build_array = pdo_fetch_array(pdo_query(

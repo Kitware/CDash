@@ -25,14 +25,7 @@ require_once 'models/user.php';
 $start = microtime_float();
 $response = array();
 
-// Checks
-if (!isset($_GET['buildid']) || !is_numeric($_GET['buildid'])) {
-    $response['error'] = 'Invalid buildid specified.';
-    echo json_encode($response);
-    http_response_code(400);
-    return;
-}
-$buildid = pdo_real_escape_numeric($_GET['buildid']);
+$buildid = get_request_build_id();
 
 $date = null;
 if (isset($_GET['date'])) {

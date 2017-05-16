@@ -16,6 +16,27 @@
 
 require_once 'include/common.php';
 
+/**
+ *
+ * XHR post/put/delete data not available through the traditional
+ * $_POST global, this method pulls that data straight from the
+ * php://input stream.
+ *
+ * @return void
+ *
+ */
+function init_api_request()
+{
+    $method = $_SERVER['REQUEST_METHOD'];
+    $isGET = $method === 'GET';
+
+    if (!$isGET && empty($_POST)) {
+        $request = file_get_contents('php://input');
+        $_POST = empty($request) ? [] : json_decode($request, true);
+        $_REQUEST = array_merge($_GET, $_COOKIE, $_POST);
+    }
+}
+
 // Make sure this user has access to this project.
 // Return true if the current user has access to view this project, or if
 // the project is public (allows anonymous read access).
@@ -34,15 +55,41 @@ function can_access_project($projectid)
     }
     if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
         if ($logged_in) {
-            $response['error'] = 'You do not have permission to access this page.';
-            echo json_encode($response);
-            http_response_code(403);
+            $response = ['error' => 'You do not have permission to access this page.'];
+            json_error_response($response, 403);
         } else {
-            $response['requirelogin'] = 1;
-            echo json_encode($response);
-            http_response_code(401);
+            $response = ['requirelogin' => 1];
+            json_error_response($response, 401);
         }
         return false;
     }
     return true;
+}
+
+/**
+ * Pulls the buildid from the request
+ *
+ * @param bool $required
+ * @return int
+ */
+function get_request_build_id($required = true)
+{
+    $buildid = isset($_REQUEST['buildid']) ? $_REQUEST['buildid'] : null;
+    if ($required && (!$buildid || !is_numeric($buildid))) {
+        json_error_response(['error' => 'Valid build ID required']);
+    }
+    return (int)pdo_real_escape_string($buildid);
+}
+
+/**
+ * Issues JSON response then exits
+ *
+ * @param $response
+ * @param int $code
+ */
+function json_error_response($response, $code = 400)
+{
+    echo json_encode($response);
+    http_response_code($code);
+    exit(0);
 }

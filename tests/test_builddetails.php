@@ -41,10 +41,18 @@ class BuildDetailsTestCase extends KWWebTestCase
 
     public function testViewBuildErrorReturnsErrorForNonexistentBuild()
     {
-        $response = $this->get($this->url . '/api/v1/viewBuildError.php?buildid=some-non-existent-build-id');
+        $response = $this->get($this->url . '/api/v1/viewBuildError.php?buildid=80000001');
         $response = json_decode($response);
 
         $this->assertTrue(strpos($response->error, 'This build does not exist') === 0);
+    }
+
+    public function testViewBuildErrorReturnsErrorForInvalidBuildId()
+    {
+        $response = $this->get($this->url . '/api/v1/viewBuildError.php?buildid=im-non-numeric');
+        $response = json_decode($response);
+
+        $this->assertTrue(strpos($response->error, 'Valid build ID required') === 0);
     }
 
     public function testViewBuildErrorReturnsArrayOfErrorsOnChildBuilds()

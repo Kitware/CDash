@@ -50,10 +50,8 @@ include_once 'models/build.php';
  * export=[presence]
  **/
 
-@$buildid = $_GET['buildid'];
-if ($buildid != null) {
-    $buildid = pdo_real_escape_numeric($buildid);
-}
+$buildid = get_request_build_id(false);
+
 @$date = $_GET['date'];
 if ($date != null) {
     $date = htmlspecialchars(pdo_real_escape_string($date));
@@ -67,12 +65,6 @@ if (isset($_GET['tests'])) {
 
 $response = [];
 
-// Checks
-if (!isset($buildid) || !is_numeric($buildid)) {
-    $response['error'] = 'Not a valid buildid!';
-    echo json_encode($response);
-    return;
-}
 
 $start = microtime_float();
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");

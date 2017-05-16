@@ -19,12 +19,8 @@ require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 require_once 'models/build.php';
 
-if (!isset($_GET['buildid']) || !is_numeric($_GET['buildid'])) {
-    return;
-}
-
 // Get details about this build.
-$buildid = $_GET['buildid'];
+$buildid = get_request_build_id();
 $build = new Build();
 $build->Id = $buildid;
 $build->FillFromId($build->Id);

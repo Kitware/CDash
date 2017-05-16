@@ -16,16 +16,11 @@
 
 require_once dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
-require_once 'include/common.php';
+require_once 'include/api_common.php';
 
 $response = array();
 
-$buildid = pdo_real_escape_numeric($_GET['buildid']);
-if (!isset($buildid) || !is_numeric($buildid)) {
-    $response['error'] = 'Not a valid buildid!';
-    echo json_encode($response);
-    return;
-}
+$buildid = get_request_build_id();
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME", $db);

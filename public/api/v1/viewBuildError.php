@@ -36,10 +36,7 @@ include 'include/version.php';
 require_once 'models/build.php';
 require_once 'models/label.php';
 
-@$buildid = $_GET['buildid'];
-if ($buildid != null) {
-    $buildid = pdo_real_escape_numeric($buildid);
-}
+$buildid = get_request_build_id();
 
 @$date = $_GET['date'];
 if ($date != null) {
@@ -47,13 +44,6 @@ if ($date != null) {
 }
 
 $response = [];
-
-// Checks
-if (!isset($buildid) || !is_numeric($buildid)) {
-    $response['error'] = 'Not a valid buildid!';
-    echo json_encode($response); // @todo should return a 400
-    return;
-}
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME", $db);

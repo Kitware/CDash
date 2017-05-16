@@ -21,24 +21,14 @@ include 'include/version.php';
 require_once 'models/build.php';
 
 $start = microtime_float();
+$buildid = get_request_build_id();
 
-@$buildid = $_GET['buildid'];
-if ($buildid != null) {
-    $buildid = pdo_real_escape_numeric($buildid);
-}
 @$date = $_GET['date'];
 if ($date != null) {
     $date = htmlspecialchars(pdo_real_escape_string($date));
 }
 
 $response = [];
-
-// Checks
-if (!isset($buildid) || !is_numeric($buildid)) {
-    $response['error'] = 'Not a valid buildid!';
-    echo json_encode($response);
-    return;
-}
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME", $db);
