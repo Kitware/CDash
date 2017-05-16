@@ -1,1 +1,2 @@
-Options -Indexes
+php_value auto_prepend_file "/projects/CDash_release_bin/prepend_coverage.php"
+php_value opcache.enable 0

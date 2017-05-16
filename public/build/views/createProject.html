@@ -7,7 +7,7 @@
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="stylesheet" type="text/css" ng-href="{{::cssfile}}" />
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <script src="js/CDash_1490104752973.min.js"></script>
+    <script src="js/CDash_1494955344931.min.js"></script>
 <!--
     <script type="text/javascript" src="js/cdashCreateProject.js"></script>
 -->
@@ -17,7 +17,7 @@
   <body bgcolor="#ffffff" ng-controller="CreateProjectController">
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
 
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1490104752973.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1494955344931.html'"></ng-include>
     <br/>
 
     <div ng-if="cdash.projectcreated == 1">
@@ -192,6 +192,31 @@
                     public and anybody can access the dashboard, claim sites
                     and look at the current status. By default dashboards are
                     private.
+                  </span>
+                </td>
+              </tr>
+
+              <tr>
+                <!-- Checkbox to enable/disable the "Authenticated Submissions"
+                     feature for this project -->
+                <td colspan="2">
+                  <div align="right">
+                    <strong>Authenticate Submissions</strong>
+                  </div>
+                </td>
+                <td>
+                  <input type="checkbox" name="authenticateSubmissions"
+                         ng-model="cdash.project.AuthenticateSubmissions"
+                         ng-true-value="1" ng-false-value="0"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('authenticateSubmissions_help')" />
+                  </input>
+                  <img ng-mouseover="showHelp('authenticateSubmissions_help')"
+                    src="img/help.gif" border="0" />
+                  <span class="help_content" id="authenticateSubmissions_help">
+                    <b>Authenticate Submissions</b>
+                    <br />
+                    Only accept submissions bearing a valid authentication token.
                   </span>
                 </td>
               </tr>
@@ -1390,6 +1415,6 @@
       </form>
     </div>
 
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1490104752973.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1494955344931.html'"></ng-include>
   </body>
 </html>

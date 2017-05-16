@@ -8,13 +8,13 @@
     <link rel="stylesheet" type="text/css" ng-href="{{cssfile}}" />
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.4.css" />
-    <script src="js/CDash_1490104752973.min.js"></script>
+    <script src="js/CDash_1494955344931.min.js"></script>
     <title ng-bind="title">CDash : Test Overview</title>
   </head>
 
   <body bgcolor="#ffffff" ng-controller="TestOverviewController">
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1490104752973.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1494955344931.html'"></ng-include>
     <br/>
 
     <div ng-if="cdash.requirelogin != 1 && !loading && !cdash.error">
@@ -26,17 +26,26 @@
             <span ng-show="showfilters != 0">Hide Filters</span>
           </a>
         </div>
-        <ng-include src="'build/views/partials/filterdataTemplate_1490104752973.html'"></ng-include>
+        <ng-include src="'build/views/partials/filterdataTemplate_1494955344931.html'"></ng-include>
 
         <div class="form-inline pull-right">
           <select class="form-group"
             ng-model="cdash.selectedGroup"
             ng-options="group as group.name for group in ::cdash.groups | orderBy: 'position' track by group.id"
-            ng-change="groupChanged = true">
+            ng-change="selectionChanged = true">
           </select>
           <div class="form-group" daterange></div>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" name="showpassed"
+                     ng-model="cdash.showpassed"
+                     ng-true-value="1"
+                     ng-false-value="0"
+                     ng-change="selectionChanged = true"> Include passing tests
+            </label>
+          </div>
           <button type="submit" class="btn btn-default"
-                  ng-disabled="(!cdash.to_date || !cdash.from_date) && !groupChanged"
+                  ng-disabled="(!cdash.to_date || !cdash.from_date) && !selectionChanged"
                   ng-click="formSubmit()">
             Go
           </button>
@@ -48,7 +57,7 @@
                                '1':     '{} test',
                                'other': '{} tests'}">
           </ng-pluralize>
-          failed during this time period.
+          {{::cdash.showpassedinitialvalue === 1 ? "ran" : "failed"}} during this time period.
         </span>
       </div>
 
@@ -96,6 +105,16 @@
                       ng-class="orderByFields.indexOf('-totalruns') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('totalruns') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')">
                 </span>
               </th>
+
+              <th class="header text-center"
+                  ng-click="updateOrderByFields('time', $event)"
+                  tooltip-popup-delay="1500"
+                  tooltip-append-to-body="true"
+                  uib-tooltip="Maximum amount of time that this test took to run">
+                Time
+                <span class="glyphicon"
+                      ng-class="orderByFields.indexOf('-time') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('time') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+              </th>
             </tr>
           </thead>
 
@@ -113,6 +132,7 @@
               <td class="text-center">{{::test.failpercent}}%</td>
               <td class="text-center">{{::test.timeoutpercent}}%</td>
               <td class="text-center">{{::test.totalruns}}</td>
+              <td class="text-center">{{::test.prettytime}}</td>
             </tr>
           </tbody>
         </table>
@@ -141,6 +161,6 @@
 
     <!-- FOOTER -->
     <br/>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1490104752973.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1494955344931.html'"></ng-include>
   </body>
 </html>
