@@ -37,7 +37,10 @@ class PasswordRotationTestCase extends KWWebTestCase
         $this->setField('passwd2', '12345');
         $this->setField('institution', 'me');
         $this->clickSubmitByName('sent', array('url' => 'catchbot'));
-        $this->assertText('Registration Complete. Please login with your email and password.');
+        // Make sure the user was created successfully.
+        if (!$this->userExists('jane@smith')) {
+            $this->fail('Failed to register jane@smith');
+        }
 
         // Get the id for this user.
         $user = new User();
@@ -62,7 +65,7 @@ class PasswordRotationTestCase extends KWWebTestCase
 
         // Make sure we get redirected when visiting a non-Angular page.
         $this->login('jane@smith', '12345');
-        $content = $this->get($this->url . '/user.php');
+        $content = $this->get($this->url . '/upgrade.php');
         if (strpos($content, 'Your password has expired') === false) {
             $this->fail("'Your password has expired' not found when expected");
             return 1;

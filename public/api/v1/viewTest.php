@@ -14,11 +14,9 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-$noforcelogin = 1;
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
-include 'public/login.php';
-include_once 'include/common.php';
+require_once 'include/api_common.php';
 include 'include/version.php';
 require_once 'include/filterdataFunctions.php';
 include_once 'models/build.php';
@@ -67,8 +65,7 @@ if (isset($_GET['tests'])) {
     exit(0);
 }
 
-$response = begin_JSON_response();
-$response['title'] = 'CDash : View Tests';
+$response = [];
 
 // Checks
 if (!isset($buildid) || !is_numeric($buildid)) {
@@ -93,9 +90,7 @@ if (!isset($projectid) || $projectid == 0) {
     return;
 }
 
-if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
-    $response['requirelogin'] = 1;
-    echo json_encode($response);
+if (!can_access_project($projectid)) {
     return;
 }
 
@@ -107,6 +102,7 @@ if (pdo_num_rows($project) > 0) {
     $testtimemaxstatus = $project_array['testtimemaxstatus'];
 }
 
+$response = begin_JSON_response();
 $response['title'] = "CDash : $projectname";
 $siteid = $build_array['siteid'];
 $buildtype = $build_array['type'];

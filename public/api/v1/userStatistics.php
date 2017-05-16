@@ -14,12 +14,11 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-$noforcelogin = 1;
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
+require_once 'include/api_common.php';
 require_once 'models/project.php';
 require_once 'models/user.php';
-include 'public/login.php';
 include 'include/version.php';
 
 $start = microtime_float();
@@ -42,10 +41,8 @@ if (!$project_ok) {
 }
 
 // Check permissions.
-if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
-    $response['requirelogin'] = '1';
-    echo json_encode($response);
-    return 400;
+if (!can_access_project($projectid)) {
+    return;
 }
 
 // Handle optional date argument.

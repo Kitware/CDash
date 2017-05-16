@@ -1,12 +1,6 @@
-CDash.controller('ManageOverviewController', function ManageOverviewController($scope, $rootScope, $http, renderTimer) {
-  $scope.loading = true;
-  $http({
-    url: 'api/v1/manageOverview.php',
-    method: 'GET',
-    params: $rootScope.queryString
-  }).then(function success(s) {
-    var cdash = s.data;
-    renderTimer.initialRender($scope, cdash);
+CDash.controller('ManageOverviewController', function ManageOverviewController($scope, $http, apiLoader) {
+  apiLoader.loadPageData($scope, 'api/v1/manageOverview.php');
+  $scope.finishSetup = function() {
     // Setup sortable elements.
     $scope.buildSortable = {
       stop: function(e, ui) {
@@ -22,9 +16,7 @@ CDash.controller('ManageOverviewController', function ManageOverviewController($
         }
       }
     };
-  }).finally(function() {
-    $scope.loading = false;
-  });
+  };
 
   $scope.addBuildColumn = function(column) {
     var index = $scope.cdash.availablegroups.indexOf(column);

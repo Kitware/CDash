@@ -567,21 +567,40 @@ class Build
         return $resolvedBuildFailures;
     }
 
-    public function GetConfigures($status=false)
+    public function GetConfigures()
     {
         if ($this->IsParentBuild()) {
-            $where = ($status !== false) ? "AND c.status = $status" : "";
-            return pdo_query("SELECT sp.name subprojectname, sp.id subprojectid, c.*, b.configureerrors,
-                              b.configurewarnings
-                              FROM configure c
-                              JOIN subproject2build sp2b ON sp2b.buildid = c.buildid
-                              JOIN subproject sp ON sp.id = sp2b.subprojectid
-                              JOIN build b ON b.id = c.buildid
-                              WHERE b.parentid = " . $this->Id . "
-                              $where");
+            $configures = pdo_query("SELECT c.id FROM configure c
+                                    JOIN build2configure b2c ON b2c.configureid = c.id
+                                    JOIN subproject2build sp2b ON sp2b.buildid = b2c.buildid
+                                    JOIN subproject sp ON sp.id = sp2b.subprojectid
+                                    JOIN build b ON b.id = b2c.buildid
+                                    WHERE b.parentid = $this->Id");
+            $configures_array = pdo_fetch_array($configures);
+            if (count(array_unique($configures_array)) > 1) {
+                return pdo_query("SELECT sp.name subprojectname, sp.id subprojectid, c.*, b.configureerrors,
+                                  b.configurewarnings
+                                  FROM configure c
+                                  JOIN build2configure b2c ON b2c.configureid = c.id
+                                  JOIN subproject2build sp2b ON sp2b.buildid = b2c.buildid
+                                  JOIN subproject sp ON sp.id = sp2b.subprojectid
+                                  JOIN build b ON b.id = b2c.buildid
+                                  WHERE b.parentid = $this->Id");
+            } else {
+                return pdo_query(
+                    "SELECT c.*, b.configureerrors, b.configurewarnings
+                     FROM configure c
+                     JOIN build2configure b2c ON b2c.configureid = c.id
+                     JOIN build b ON b.id = b2c.buildid
+                     WHERE c.id = " . $configures_array[0]);
+            }
         } else {
-            $where = ($status !== false) ? "AND status = $status" : "";
-            return pdo_query("SELECT * FROM configure WHERE buildid = " . $this->Id . " $where");
+            return pdo_query(
+                    "SELECT c.*, b.configureerrors, b.configurewarnings
+                    FROM configure c
+                    JOIN build2configure b2c ON b2c.configureid = c.id
+                    JOIN build b ON b.id = b2c.buildid
+                    WHERE b2c.buildid = $this->Id");
         }
     }
 
@@ -1034,7 +1053,7 @@ class Build
      */
     public function GetFailedTests($maxitems = 0)
     {
-        $criteria = "b2t.status = 'failed' AND t.details NOT LIKE '%%Timeout%%'";
+        $criteria = "b2t.status = 'failed'";
         return $this->GetTests($criteria, $maxitems);
     }
 
@@ -1160,13 +1179,16 @@ class Build
         compute_error_difference($this->Id, $previousbuildid, 1); // warnings
     }
 
-    /** Compute the build errors differences */
+    /** Compute the difference in configure warnings between this build and the
+     *  previous one.
+     *  TODO: we should probably also do configure errors here too.
+     */
     public function ComputeConfigureDifferences()
     {
         if (!$this->Id) {
-            add_log('BuildId is not set', 'Build::ComputeConfigureDifferences', LOG_ERR,
-                $this->ProjectId, $this->Id,
-                CDASH_OBJECT_BUILD, $this->Id);
+            add_log('BuildId is not set', 'Build::ComputeConfigureDifferences',
+                LOG_ERR, $this->ProjectId, $this->Id, CDASH_OBJECT_BUILD,
+                $this->Id);
             return false;
         }
 
@@ -1174,7 +1196,64 @@ class Build
         if ($previousbuildid == 0) {
             return;
         }
-        compute_configure_difference($this->Id, $previousbuildid, 1); // warnings
+
+        // Look up the number of configure warnings for this build
+        // and the previous one.
+        $stmt = $this->PDO->prepare(
+            'SELECT configurewarnings FROM build WHERE id = ?');
+
+        pdo_execute($stmt, [$this->Id]);
+        $row = $stmt->fetch();
+        $nwarnings = $row['configurewarnings'];
+
+        pdo_execute($stmt, [$previousbuildid]);
+        $row = $stmt->fetch();
+        $npreviouswarnings = $row['configurewarnings'];
+
+        // Check if a diff already exists for this build.
+        $this->PDO->beginTransaction();
+        $stmt = $this->PDO->prepare(
+                'SELECT * FROM configureerrordiff
+                WHERE buildid = :buildid AND type = 1 FOR UPDATE');
+        $stmt->bindParam(':buildid', $this->Id);
+        pdo_execute($stmt);
+        $row = $stmt->fetch();
+        $existing_diff = 0;
+        if ($row) {
+            $existing_diff = $row['difference'];
+        }
+
+        // Don't log if no diff.
+        $warningdiff = $nwarnings - $npreviouswarnings;
+        if ($warningdiff == 0 && $existing_diff == 0) {
+            $this->PDO->commit();
+            return;
+        }
+
+        // UPDATE or INSERT a new record as necessary.
+        if ($row) {
+            $stmt = $this->PDO->prepare(
+                    'UPDATE configureerrordiff SET difference = :difference
+                    WHERE buildid = :buildid AND type = 1');
+        } else {
+            $duplicate_sql = '';
+            global $CDASH_DB_TYPE;
+            if ($CDASH_DB_TYPE !== 'pgsql') {
+                $duplicate_sql = 'ON DUPLICATE KEY UPDATE difference = :difference';
+            }
+            $stmt = $this->PDO->prepare(
+                    "INSERT INTO configureerrordiff (buildid, type, difference)
+                    VALUES(:buildid, 1, :difference)
+                    $duplicate_sql");
+        }
+
+        $stmt->bindValue(':buildid', $previousbuildid);
+        $stmt->bindValue(':difference', $warningdiff);
+        if (!pdo_execute($stmt)) {
+            $this->PDO->rollBack();
+            return;
+        }
+        $this->PDO->commit();
     }
 
     /** Compute the test timing as a weighted average of the previous test.

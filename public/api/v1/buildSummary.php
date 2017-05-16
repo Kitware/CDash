@@ -14,11 +14,9 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-$noforcelogin = 1;
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
-include 'public/login.php';
-include_once 'include/common.php';
+require_once 'include/api_common.php';
 include 'include/version.php';
 require_once 'models/build.php';
 require_once 'models/buildusernote.php';
@@ -54,21 +52,7 @@ if (!isset($projectid) || $projectid < 1) {
 }
 $siteid = $build->SiteId;
 
-$logged_in = false;
-if (isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid'])) {
-    $logged_in = true;
-}
-
-if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
-    if ($logged_in) {
-        $response['error'] = 'You do not have permission to access this page.';
-        echo json_encode($response);
-        http_response_code(403);
-    } else {
-        $response['requirelogin'] = 1;
-        echo json_encode($response);
-        http_response_code(401);
-    }
+if (!can_access_project($projectid)) {
     return;
 }
 
@@ -121,7 +105,7 @@ $response['menu'] = $menu;
 get_dashboard_JSON($projectname, $date, $response);
 
 // User
-if ($logged_in) {
+if (isset($_SESSION['cdash']['loginid'])) {
     $user_response = array();
     $userid = $_SESSION['cdash']['loginid'];
     $user = new User();
@@ -312,7 +296,10 @@ $response['update'] = $update_response;
 
 // Configure
 $configure_response = array();
-$configure = pdo_query("SELECT * FROM configure WHERE buildid='$buildid'");
+$configure = pdo_query(
+        "SELECT * FROM configure c
+        JOIN build2configure b2c ON b2c.configureid=c.id
+        WHERE b2c.buildid='$buildid'");
 $configure_array = pdo_fetch_array($configure);
 
 $nerrors = 0;
@@ -401,7 +388,10 @@ if ($previous_buildid > 0) {
     $previous_response['nupdateerrors'] = $nupdateerrors;
     $previous_response['nupdatewarnings'] = $nupdatewarnings;
 
-    $configure = pdo_query("SELECT * FROM configure WHERE buildid='$previous_buildid'");
+    $configure = pdo_query(
+            "SELECT * FROM configure c
+            JOIN build2configure b2c ON b2c.configureid=c.id
+            WHERE b2c.buildid='$previous_buildid'");
     $configure_array = pdo_fetch_array($configure);
 
     $nconfigureerrors = 0;

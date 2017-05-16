@@ -18,18 +18,15 @@
 * testDetails.php shows more detailed information for a particular test that
 * was run.  This includes test output and image comparison information
 */
-$noforcelogin = 1;
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
-include 'public/login.php';
-include_once 'include/common.php';
+require_once 'include/api_common.php';
 include_once 'include/repository.php';
 include 'include/version.php';
 require_once 'models/build.php';
 
 $start = microtime_float();
-$response = begin_JSON_response();
-$response['title'] = 'CDash : Test Details';
+$response = [];
 
 $testid = pdo_real_escape_numeric($_GET['test']);
 // Checks
@@ -58,11 +55,12 @@ if (!$projectid) {
     return;
 }
 
-if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
-    $response['requirelogin'] = '1';
-    echo json_encode($response);
+if (!can_access_project($projectid)) {
     return;
 }
+
+$response = begin_JSON_response();
+$response['title'] = 'CDash : Test Details';
 
 // If we have a fileid we download it
 if (isset($_GET['fileid']) && is_numeric($_GET['fileid'])) {

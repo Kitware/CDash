@@ -28,11 +28,9 @@
  * onlydeltap=[anything] Only show new errors that arose from this build
  **/
 
-$noforcelogin = 1;
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
-include_once 'include/common.php';
-include 'public/login.php';
+require_once 'include/api_common.php';
 include_once 'include/repository.php';
 include 'include/version.php';
 require_once 'models/build.php';
@@ -48,8 +46,7 @@ if ($date != null) {
     $date = htmlspecialchars(pdo_real_escape_string($date));
 }
 
-$response = begin_JSON_response();
-$response['title'] = 'CDash : View Build Errors';
+$response = [];
 
 // Checks
 if (!isset($buildid) || !is_numeric($buildid)) {
@@ -84,12 +81,12 @@ if (pdo_num_rows($project) > 0) {
     $projectname = $project_array['name'];
 }
 
-if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $project_array['id'], 1)) {
-    $response['requirelogin'] = '1';
-    echo json_encode($response);
+// Check permissions.
+if (!can_access_project($project_array['id'])) {
     return;
 }
 
+$response = begin_JSON_response();
 $response['title'] = "CDash : $projectname";
 $siteid = $build_array['siteid'];
 $buildtype = $build_array['type'];

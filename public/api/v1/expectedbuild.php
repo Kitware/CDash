@@ -16,11 +16,9 @@
 
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
-require_once 'include/common.php';
+require_once 'include/api_common.php';
 include_once 'models/project.php';
 include_once 'models/user.php';
-$noforcelogin = 1;
-include 'public/login.php';
 
 // Connect to the database.
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
@@ -54,9 +52,7 @@ if (!$row || !array_key_exists('projectid', $row)) {
     return;
 }
 $projectid = $row['projectid'];
-if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
-    $response['requirelogin'] = 1;
-    echo json_encode($response);
+if (!can_access_project($projectid)) {
     return;
 }
 

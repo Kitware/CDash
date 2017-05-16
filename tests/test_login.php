@@ -48,7 +48,9 @@ class LoginTestCase extends KWWebTestCase
         }
         $this->fillOutRegisterForm('test@kw', 'kitware');
         $this->clickSubmitByName('sent', array('url' => 'catchbot'));
-        $this->assertText('Registration Complete. Please login with your email and password.');
+        if (!$this->userExists('test@kw')) {
+            $this->fail('Failed to register test@kw');
+        }
     }
 
     public function testPasswordTooShort()
@@ -104,7 +106,9 @@ class LoginTestCase extends KWWebTestCase
             return $this->fail('Failed to load verification page.');
         }
 
-        $this->assertText('Registration Complete.');
+        if (!$this->userExists('verifytest@kw')) {
+            $this->fail('Failed to register verifytest@kw');
+        }
 
         // Try to login
         $this->testLogin($email, $password);

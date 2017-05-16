@@ -17,16 +17,9 @@ CDash.filter('filter_subproject_groups', function() {
     return output;
   };
 })
-.controller('ManageSubProjectController', function ManageSubProjectController($scope, $rootScope, $http, renderTimer) {
-  $scope.loading = true;
-  $http({
-    url: 'api/v1/manageSubProject.php',
-    method: 'GET',
-    params: $rootScope.queryString
-  }).then(function success(s) {
-    var cdash = s.data;
-    renderTimer.initialRender($scope, cdash);
-
+.controller('ManageSubProjectController', function ManageSubProjectController($scope, $http, apiLoader) {
+  apiLoader.loadPageData($scope, 'api/v1/manageSubProject.php');
+  $scope.finishSetup = function() {
     // Sort groups by position.
     if ($scope.cdash.groups) {
       $scope.cdash.groups.sort(function (a, b) {
@@ -42,9 +35,7 @@ CDash.filter('filter_subproject_groups', function() {
         }
       }
     };
-  }).finally(function() {
-    $scope.loading = false;
-  });
+  };
 
   $scope.createSubProject = function(newSubProject, groupName) {
     var parameters = {

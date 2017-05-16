@@ -16,11 +16,9 @@
 
 // queryTests.php displays test results based on query parameters
 //
-$noforcelogin = 1;
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
-include 'public/login.php';
-include_once 'include/common.php';
+require_once 'include/api_common.php';
 include 'include/version.php';
 require_once 'include/filterdataFunctions.php';
 include_once 'models/build.php';
@@ -44,10 +42,6 @@ if ($projectname != null) {
     $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
 }
 
-$response = begin_JSON_response();
-$response['title'] = "CDash : $projectname";
-$response['showcalendar'] = 1;
-
 $start = microtime_float();
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
@@ -59,12 +53,18 @@ if ($projectname == '') {
     $project_array = pdo_single_row_query("SELECT * FROM project WHERE name='$projectname'");
 }
 
-checkUserPolicy(@$_SESSION['cdash']['loginid'], $project_array['id']);
+if (!can_access_project($project_array['id'])) {
+    return;
+}
 
 list($previousdate, $currentstarttime, $nextdate) =
     get_dates($date, $project_array['nightlytime']);
 
 $projectname = $project_array['name'];
+
+$response = begin_JSON_response();
+$response['title'] = "CDash : $projectname";
+$response['showcalendar'] = 1;
 
 get_dashboard_JSON_by_name($projectname, $date, $response);
 

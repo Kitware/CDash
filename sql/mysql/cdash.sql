@@ -97,6 +97,22 @@ CREATE TABLE `buildgroupposition` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `build2configure`
+--
+
+CREATE TABLE `build2configure` (
+  `configureid` int(11) NOT NULL default '0',
+  `buildid` int(11) NOT NULL default '0',
+  `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
+  `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
+  PRIMARY KEY  (`buildid`),
+  KEY `configureid` (`configureid`)
+);
+
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `build2group`
 --
 
@@ -194,14 +210,14 @@ CREATE TABLE IF NOT EXISTS `build2update` (
 --
 
 CREATE TABLE `configure` (
-  `buildid` int(11) NOT NULL default '0',
-  `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
-  `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `command` text NOT NULL,
   `log` MEDIUMTEXT NOT NULL,
-  `status` tinyint(4) NOT NULL default '0',
+  `status` tinyint(4) NOT NULL DEFAULT '0',
   `warnings` smallint(6) DEFAULT '-1',
-  KEY `buildid` (`buildid`)
+  `crc32` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `crc32` (`crc32`)
 );
 
 -- --------------------------------------------------------
@@ -426,6 +442,7 @@ CREATE TABLE `project` (
   `tokenduration` int(11),
   `showcoveragecode` tinyint(4) default '1',
   `sharelabelfilters` tinyint(1) default '0',
+  `authenticatesubmissions` tinyint(1) default '0',
   PRIMARY KEY  (`id`),
   KEY `name` (`name`),
   KEY `public` (`public`)
@@ -770,10 +787,10 @@ CREATE TABLE `summaryemail` (
 
 
 CREATE TABLE `configureerror` (
-  `buildid` bigint(20) NOT NULL,
+  `configureid` int(11) NOT NULL,
   `type` tinyint(4) NOT NULL,
   `text` text NOT NULL,
-  KEY `buildid` (`buildid`),
+  KEY `configureid` (`configureid`),
   KEY `type` (`type`)
 );
 
@@ -1444,6 +1461,17 @@ CREATE TABLE IF NOT EXISTS `lockout` (
   `islocked` tinyint(1) NOT NULL DEFAULT '0',
   `unlocktime` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
   PRIMARY KEY  (`userid`)
+);
+
+CREATE TABLE IF NOT EXISTS `authtoken` (
+  `hash` varchar(128) NOT NULL,
+  `userid` int(11) NOT NULL DEFAULT '0',
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `expires` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
+  `description` varchar(255),
+  KEY `hash` (`hash`),
+  KEY `userid` (`userid`),
+  KEY `expires` (`expires`)
 );
 
 --

@@ -16,18 +16,13 @@
 
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
-require_once 'include/common.php';
+require_once 'include/api_common.php';
 require_once 'include/filterdataFunctions.php';
 require_once 'include/version.php';
 require_once 'models/project.php';
 
-$noforcelogin = 1;
-include 'public/login.php';
-
 $start = microtime_float();
-$response = begin_JSON_response();
-$response['title'] = 'CDash : Compare Coverage';
-$response['showcalendar'] = 1;
+$response = [];
 
 // Check if a valid project was specified.
 $projectname = $_GET['project'];
@@ -41,6 +36,10 @@ if ($projectid < 1) {
     return;
 }
 
+if (!can_access_project($projectid)) {
+    return;
+}
+
 $project_instance = new Project();
 $project_instance->Id = $projectid;
 $project_instance->Fill();
@@ -50,25 +49,11 @@ if ($date != null) {
     $date = htmlspecialchars(pdo_real_escape_string($date));
 }
 
-$logged_in = false;
-if (isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid'])) {
-    $logged_in = true;
-}
-if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
-    if ($logged_in) {
-        $response['error'] = 'You do not have permission to access this page.';
-        echo json_encode($response);
-        http_response_code(403);
-    } else {
-        $response['requirelogin'] = 1;
-        echo json_encode($response);
-        http_response_code(401);
-    }
-    return;
-}
-
 list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $project_instance->NightlyTime);
 
+$response = begin_JSON_response();
+$response['title'] = 'CDash : Compare Coverage';
+$response['showcalendar'] = 1;
 get_dashboard_JSON($projectname, $date, $response);
 
 $page_id = 'compareCoverage.php';

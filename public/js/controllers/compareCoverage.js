@@ -1,7 +1,5 @@
 CDash.controller('CompareCoverageController',
-  function CompareCoverageController($scope, $rootScope, $http, filters, multisort, renderTimer) {
-    $scope.loading = true;
-
+  function CompareCoverageController($scope, $rootScope, apiLoader, filters, multisort) {
     // Hide filters by default.
     $scope.showfilters = false;
 
@@ -10,24 +8,7 @@ CDash.controller('CompareCoverageController',
 
     $scope.sortCoverage = { orderByFields: [] };
 
-    $http({
-      url: 'api/v1/compareCoverage.php',
-      method: 'GET',
-      params: $rootScope.queryString
-    }).then(function success(s) {
-      var cdash = s.data;
-      // Check if we should display filters.
-      if (cdash.filterdata && cdash.filterdata.showfilters == 1) {
-        $scope.showfilters = true;
-      }
-
-      renderTimer.initialRender($scope, cdash);
-
-      // Set title in root scope so the head controller can see it.
-      $rootScope['title'] = cdash.title;
-    }).finally(function() {
-      $scope.loading = false;
-    });
+    apiLoader.loadPageData($scope, 'api/v1/compareCoverage.php');
 
     $scope.showfilters_toggle = function() {
       $scope.showfilters = !$scope.showfilters;

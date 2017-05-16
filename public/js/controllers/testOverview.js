@@ -1,6 +1,5 @@
 CDash.controller('TestOverviewController',
-  function TestOverviewController($scope, $rootScope, $http, $filter, filters, multisort, renderTimer) {
-    $scope.loading = true;
+  function TestOverviewController($scope, $rootScope, $filter, apiLoader, filters, multisort) {
     $scope.groupChanged = false;
 
     // Hide filters by default.
@@ -9,14 +8,20 @@ CDash.controller('TestOverviewController',
     // Check for filters.
     $rootScope.queryString['filterstring'] = filters.getString();
 
-    // Check for sort order cookie.
+    // Handle sort order.
     var sort_order = [];
-    var sort_cookie_value = $.cookie('cdash_test_overview_sort');
-    if(sort_cookie_value) {
-      sort_order = sort_cookie_value.split(",");
+    // First check if one was specified via query string.
+    if ('sort' in $rootScope.queryString) {
+      sort_order = $rootScope.queryString.sort.split(",");
     } else {
-      // Default sorting: put the most broken tests at the top of the list.
-      sort_order = ['-failpercent'];
+      // Next check for a sort order cookie.
+      var sort_cookie_value = $.cookie('cdash_test_overview_sort');
+      if(sort_cookie_value) {
+        sort_order = sort_cookie_value.split(",");
+      } else {
+        // Default sorting: put the most broken tests at the top of the list.
+        sort_order = ['-failpercent'];
+      }
     }
     $scope.orderByFields = sort_order;
 
@@ -34,20 +39,10 @@ CDash.controller('TestOverviewController',
       $scope.pagination.numPerPage = 10;
     }
 
-    $http({
-      url: 'api/v1/testOverview.php',
-      method: 'GET',
-      params: $rootScope.queryString
-    }).then(function success(s) {
-      var cdash = s.data;
-      // Check if we should display filters.
-      if (cdash.filterdata && cdash.filterdata.showfilters == 1) {
-        $scope.showfilters = true;
-      }
+    apiLoader.loadPageData($scope, 'api/v1/testOverview.php');
 
-      renderTimer.initialRender($scope, cdash);
-      // Set title in root scope so the head controller can see it.
-      $rootScope['title'] = cdash.title;
+    $scope.finishSetup = function() {
+      $scope.cdash.showpassedinitialvalue = $scope.cdash.showpassed;
       $scope.cdash.tests = $filter('orderBy')($scope.cdash.tests, $scope.orderByFields);
       $scope.pageChanged();
 
@@ -57,9 +52,7 @@ CDash.controller('TestOverviewController',
         idx = 0;
       }
       $scope.cdash.selectedGroup = $scope.cdash.groups[idx];
-    }).finally(function() {
-      $scope.loading = false;
-    });
+    };
 
     $scope.pageChanged = function() {
       var begin = (($scope.pagination.currentPage - 1) * $scope.pagination.numPerPage)
@@ -97,6 +90,9 @@ CDash.controller('TestOverviewController',
       }
       if ($scope.cdash.selectedGroup.id > 0) {
         uri += '&group=' + $scope.cdash.selectedGroup.id;
+      }
+      if ($scope.cdash.showpassed == 1) {
+        uri += '&showpassed=1';
       }
       uri += filters.getString();
       window.location = uri;

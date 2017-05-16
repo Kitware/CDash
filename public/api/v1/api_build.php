@@ -135,11 +135,17 @@ class BuildAPI extends CDashAPI
             }
 
             // Finds the configuration errors
-            $configquery = pdo_query("SELECT count(*) AS c FROM configureerror WHERE buildid='" . $build['id'] . "' AND type='0'");
+            $configquery = pdo_query(
+                "SELECT count(*) AS c FROM configureerror AS ce
+                JOIN build2configure AS b2c ON (b2c.configureid=ce.configureid)
+                WHERE b2c.buildid='" . $build['id'] . "' AND type='0'");
             $query_configarray = pdo_fetch_array($configquery);
             $build['configureerrors'] = $query_configarray['c'];
 
-            $configquery = pdo_query("SELECT count(*) AS c FROM configureerror WHERE buildid='" . $build['id'] . "' AND type='1'");
+            $configquery = pdo_query(
+                "SELECT count(*) AS c FROM configureerror AS ce
+                JOIN build2configure AS b2c ON (b2c.configureid=ce.configureid)
+                WHERE b2c.buildid='" . $build['id'] . "' AND type='1'");
             $query_configarray = pdo_fetch_array($configquery);
             $build['configurewarnings'] = $query_configarray['c'];
 

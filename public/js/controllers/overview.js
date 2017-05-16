@@ -1,17 +1,7 @@
 CDash.controller('OverviewController',
-  function OverviewController($scope, $rootScope, $http, $filter, $location, anchors, filters, multisort, renderTimer) {
-    $scope.loading = true;
-    $http({
-      url: 'api/v1/overview.php',
-      method: 'GET',
-      params: $rootScope.queryString
-    }).then(function success(s) {
-      var cdash = s.data;
-      renderTimer.initialRender($scope, cdash);
-
-      // Set title in root scope so the head controller can see it.
-      $rootScope['title'] = cdash.title;
-
+  function OverviewController($scope, $location, anchors, apiLoader) {
+    apiLoader.loadPageData($scope, 'api/v1/overview.php');
+    $scope.finishSetup = function() {
       // Expose the jumpToAnchor function to the scope.
       // This allows us to call it from the HTML template.
       $scope.jumpToAnchor = anchors.jumpToAnchor;
@@ -20,10 +10,7 @@ CDash.controller('OverviewController',
       if ($location.hash() != '') {
         anchors.jumpToAnchor($location.hash());
       }
-
-    }).finally(function() {
-      $scope.loading = false;
-    });
+    };
 });
 
 CDash.directive('linechart', function() {

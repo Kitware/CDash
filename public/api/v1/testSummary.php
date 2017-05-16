@@ -19,17 +19,13 @@
  * on a specific day.  It also displays information (success, execution time)
  * about each copy of the test that was run.
  */
-$noforcelogin = 1;
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
-include 'public/login.php';
-include_once 'include/common.php';
+require_once 'include/api_common.php';
 include_once 'include/repository.php';
 include 'include/version.php';
 
-$response = begin_JSON_response();
-$response['title'] = 'CDash : Test Summary';
-$response['showcalendar'] = 1;
+$response = [];
 
 // Checks
 $date = htmlspecialchars(pdo_real_escape_string($_GET['date']));
@@ -73,12 +69,12 @@ if (pdo_num_rows($project) > 0) {
     return;
 }
 
-if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $project_array['id'], 1)) {
-    $response['requirelogin'] = 1;
-    echo json_encode($response);
+if (!can_access_project($projectid)) {
     return;
 }
 
+$response = begin_JSON_response();
+$response['showcalendar'] = 1;
 $response['title'] = "CDash : $projectname";
 get_dashboard_JSON_by_name($projectname, $date, $response);
 $response['testName'] = $testName;

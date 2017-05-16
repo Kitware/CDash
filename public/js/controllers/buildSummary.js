@@ -1,5 +1,5 @@
 CDash.controller('BuildSummaryController',
-  function BuildSummaryController($scope, $rootScope, $http, $location, $timeout, anchors, renderTimer) {
+  function BuildSummaryController($scope, $http, $location, $timeout, anchors, apiLoader) {
     // Support for the various graphs on this page.
     $scope.showTimeGraph = false;
     $scope.showErrorGraph = false;
@@ -17,17 +17,10 @@ CDash.controller('BuildSummaryController',
       'tests': false
     };
 
-    $scope.loading = true;
-    $http({
-      url: 'api/v1/buildSummary.php',
-      method: 'GET',
-      params: $rootScope.queryString
-    }).then(function success(s) {
-      renderTimer.initialRender($scope, s.data);
+    apiLoader.loadPageData($scope, 'api/v1/buildSummary.php');
+
+    $scope.finishSetup = function() {
       $scope.cdash.noteStatus = "0";
-      // Set title in root scope so the head controller can see it.
-      $rootScope['title'] = $scope.cdash.title;
-      $scope.loading = false;
 
       // Expose the jumpToAnchor function to the scope.
       // This allows us to call it from the HTML template.
@@ -37,11 +30,7 @@ CDash.controller('BuildSummaryController',
       if ($location.hash() != '') {
         anchors.jumpToAnchor($location.hash());
       }
-    }, function error(e) {
-      $scope.cdash = e.data;
-      $scope.loading = false;
-    });
-
+    };
 
     // Show/hide our various history graphs.
     $scope.toggleTimeGraph = function() {

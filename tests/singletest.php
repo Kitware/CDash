@@ -17,4 +17,5 @@ $manager = new HtmlTestManager();
 $manager->removeLogAndBackupFiles($logfilename);
 //$manager->setTestDirectory(getcwd());
 $manager->setDatabase($db);
-$manager->runFileTest(new TextReporter(), $argv[1]);
+$reporter = new TextReporter();
+$manager->runFileTest($reporter, $argv[1]);

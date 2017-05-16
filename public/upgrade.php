@@ -760,6 +760,55 @@ if (isset($_GET['upgrade-2-6'])) {
         ModifyTableField('usertemp', 'password', 'VARCHAR( 255 )', 'VARCHAR( 255 )', '', true, false);
     }
 
+    // Restructure configure table.
+    // This reduces the footprint of this table and allows multiple builds
+    // to share a configure.
+    if (!pdo_query('SELECT id FROM configure LIMIT 1')) {
+        // Add id and crc32 columns to configure table.
+        if ($CDASH_DB_TYPE != 'pgsql') {
+            pdo_query(
+                'ALTER TABLE configure
+                ADD id int(11) NOT NULL AUTO_INCREMENT,
+                ADD crc32 bigint(20) NOT NULL DEFAULT \'0\',
+                ADD PRIMARY KEY(id)');
+        } else {
+            pdo_query(
+                'ALTER TABLE configure
+                ADD id SERIAL NOT NULL,
+                ADD crc32 BIGINT DEFAULT \'0\' NOT NULL,
+                ADD PRIMARY KEY (id)');
+        }
+
+        // Populate build2configure table.
+        PopulateBuild2Configure('configure', 'build2configure');
+
+        // Add unique constraint to crc32 column.
+        if ($db_type === 'pgsql') {
+            pdo_query('ALTER TABLE configure ADD UNIQUE (crc32)');
+        } else {
+            pdo_query('ALTER TABLE configure ADD UNIQUE KEY (crc32)');
+        }
+
+        // Remove columns from configure that have been moved to build2configure.
+        if ($CDASH_DB_TYPE == 'pgsql') {
+            pdo_query('ALTER TABLE "configure"
+                        DROP COLUMN "buildid",
+                        DROP COLUMN "starttime",
+                        DROP COLUMN "endtime"');
+        } else {
+            pdo_query('ALTER TABLE configure
+                        DROP buildid,
+                        DROP starttime,
+                        DROP endtime');
+        }
+
+        // Change configureerror to use configureid instead of buildid.
+        UpgradeConfigureErrorTable('configureerror', 'build2configure');
+    }
+
+    // Support for authenticated submissions.
+    AddTableField('project', 'authenticatesubmissions', 'tinyint(1)', 'smallint', '0');
+
     // Set the database version
     setVersion();
 
@@ -867,6 +916,7 @@ if ($Cleanup) {
     delete_unused_rows('user2project', 'projectid', 'project');
     delete_unused_rows('userstatistics', 'projectid', 'project');
 
+    delete_unused_rows('build2configure', 'buildid', 'build');
     delete_unused_rows('build2note', 'buildid', 'build');
     delete_unused_rows('build2test', 'buildid', 'build');
     delete_unused_rows('buildemail', 'buildid', 'build');
@@ -876,8 +926,8 @@ if ($Cleanup) {
     delete_unused_rows('buildinformation', 'buildid', 'build');
     delete_unused_rows('buildnote', 'buildid', 'build');
     delete_unused_rows('buildtesttime', 'buildid', 'build');
-    delete_unused_rows('configure', 'buildid', 'build');
-    delete_unused_rows('configureerror', 'buildid', 'build');
+    delete_unused_rows('configure', 'id', 'build2configure', 'configureid');
+    delete_unused_rows('configureerror', 'configureid', 'configure');
     delete_unused_rows('configureerrordiff', 'buildid', 'build');
     delete_unused_rows('coverage', 'buildid', 'build');
     delete_unused_rows('coveragefilelog', 'buildid', 'build');
