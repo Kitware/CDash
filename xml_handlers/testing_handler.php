@@ -337,8 +337,8 @@ class TestingHandler extends AbstractHandler
 
         $build = new Build();
 
-        if (!empty($this->BuildInformation->PullRequest)) {
-            $build->SetPullRequest($this->BuildInformation->PullRequest);
+        if (!empty($this->PullRequest)) {
+            $build->SetPullRequest($this->PullRequest);
         }
 
         $build->SiteId = $this->Site->Id;
