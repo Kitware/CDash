@@ -201,10 +201,13 @@ class TestingJUnitHandler extends AbstractHandler
             // Mark this test as failed if it has a <failure> tag.
             $this->CurrentBuildTest->Status = 'failed';
         } elseif ($name == 'TESTCASE') {
+            // Update our tally of passing/failing/notrun tests.
             if ($this->CurrentBuildTest->Status == 'passed') {
                 $this->NumberTestsPassed++;
             } elseif ($this->CurrentBuildTest->Status == 'failed') {
                 $this->NumberTestsFailed++;
+            } elseif ($this->CurrentBuildTest->Status == 'notrun') {
+                $this->NumberTestsNotRun++;
             }
             // Record this test in the database.
             $this->CurrentTest->Insert();
