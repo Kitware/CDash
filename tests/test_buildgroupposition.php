@@ -17,8 +17,6 @@ class BuildGroupPositionTestCase extends KWWebTestCase
 
     public function testBuildGroupPosition()
     {
-        $this->startCodeCoverage();
-
         $buildgroupposition = new BuildGroupPosition();
 
         $buildgroupposition->GroupId = 0;
@@ -43,7 +41,6 @@ class BuildGroupPositionTestCase extends KWWebTestCase
         }
         $this->pass('Passed');
 
-        $this->stopCodeCoverage();
         return 0;
     }
 }

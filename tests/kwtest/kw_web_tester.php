@@ -59,6 +59,16 @@ class KWWebTestCase extends WebTestCase
         $this->configfilename = $cdashpath . '/config/config.local.php';
     }
 
+    public function setUp()
+    {
+        $this->startCodeCoverage();
+    }
+
+    public function tearDown()
+    {
+        $this->stopCodeCoverage();
+    }
+
     public function startCodeCoverage()
     {
         //echo "startCodeCoverage called...\n";

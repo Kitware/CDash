@@ -17,8 +17,6 @@ class BuildGroupRuleTestCase extends KWWebTestCase
 
     public function testBuildGroupRule()
     {
-        $this->startCodeCoverage();
-
         $buildgrouprule = new BuildGroupRule();
 
         $buildgrouprule->GroupId = 0;
@@ -50,8 +48,6 @@ class BuildGroupRuleTestCase extends KWWebTestCase
         }
 
         $this->pass('Passed');
-
-        $this->stopCodeCoverage();
         return 0;
     }
 }

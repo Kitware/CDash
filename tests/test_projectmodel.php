@@ -18,8 +18,6 @@ class ProjectModelTestCase extends KWWebTestCase
 
     public function testProjectModel()
     {
-        $this->startCodeCoverage();
-
         $project = new Project();
 
         $this->assertTrue($project->GetNumberOfErrorConfigures(0, 0) === false, 'GetNumberOfErrorConfigures!=false');
@@ -53,8 +51,6 @@ class ProjectModelTestCase extends KWWebTestCase
         $project->AddLogo($contents1, 'gif');
 
         @$project->SendEmailToAdmin('foo', 'hello world');
-
-        $this->stopCodeCoverage();
         return 0;
     }
 }

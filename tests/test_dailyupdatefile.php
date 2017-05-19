@@ -18,8 +18,6 @@ class DailyUpdateFileTestCase extends KWWebTestCase
 
     public function testDailyUpdateFile()
     {
-        $this->startCodeCoverage();
-
         $dailyupdatefile = new DailyUpdateFile();
 
         //no id, no matching database entry
@@ -79,8 +77,6 @@ class DailyUpdateFileTestCase extends KWWebTestCase
         }
 
         $this->pass('Passed');
-
-        $this->stopCodeCoverage();
         return 0;
     }
 }
