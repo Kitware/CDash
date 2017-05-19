@@ -10,6 +10,9 @@
     <testcase name="AlsoFails" classname="bar4" status="run" time="0.2">
       <failure type="NotEnoughFoo"> details about failure </failure>
     </testcase>
-    <testcase name="DoesNotRun" classname="bar5" status="notrun" time="0.0"></testcase>
+    <testcase name="AnotherFailure" classname="bar5" status="run" time="0.0">
+      <error type="TooMuchFoo"> details about error </error>
+    </testcase>
+    <testcase name="DoesNotRun" classname="bar6" status="notrun" time="0.0"></testcase>
   </testsuite>
 </testsuites>

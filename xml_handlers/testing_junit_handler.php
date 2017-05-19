@@ -111,7 +111,7 @@ class TestingJUnitHandler extends AbstractHandler
             } else {
                 $this->Append = false;
             }
-        } elseif ($name == 'FAILURE') {
+        } elseif ($name == 'FAILURE' || $name == 'ERROR') {
             $this->CurrentTest->Details = $attributes['TYPE'];
         } elseif ($name == 'PROPERTY' && $parent == 'PROPERTIES') {
             $this->TestProperties .= $attributes['NAME'] . '=' . $attributes['VALUE'] . "\n";
@@ -207,8 +207,8 @@ class TestingJUnitHandler extends AbstractHandler
     public function endElement($parser, $name)
     {
         parent::endElement($parser, $name);
-        if ($name == 'FAILURE') {
-            // Mark this test as failed if it has a <failure> tag.
+        if ($name == 'FAILURE' || $name == 'ERROR') {
+            // Mark this test as failed if it has a <failure> or <error> tag.
             $this->CurrentBuildTest->Status = 'failed';
         } elseif ($name == 'TESTCASE') {
             // Update our tally of passing/failing/notrun tests.

@@ -2,10 +2,7 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
-require_once 'models/authtoken.php';
 require_once 'models/project.php';
-require_once 'models/user.php';
-require_once 'models/userproject.php';
 
 
 class JUnitHandlerTestCase extends KWWebTestCase
@@ -70,8 +67,8 @@ class JUnitHandlerTestCase extends KWWebTestCase
         if ($jsonobj['numPassed'] !== 2) {
             $this->fail("Did not find 2 'Passed' tests when expected");
         }
-        if ($jsonobj['numFailed'] !== 2) {
-            $this->fail("Did not find 2 'Failed' tests when expected");
+        if ($jsonobj['numFailed'] !== 3) {
+            $this->fail("Did not find 3 'Failed' tests when expected");
         }
         if ($jsonobj['numNotRun'] !== 1) {
             $this->fail("Did not find 1 'Not Run' test when expected");
