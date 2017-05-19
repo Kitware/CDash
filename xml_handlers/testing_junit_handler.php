@@ -27,6 +27,8 @@ class TestingJUnitHandler extends AbstractHandler
     private $EndTimeStamp;
     // Should we update the end time of the build?
     private $UpdateEndTime;
+    // The buildgroup to submit to (defaults to Nightly).
+    private $Track;
 
     private $Tests;
     private $CurrentTest;
@@ -54,6 +56,7 @@ class TestingJUnitHandler extends AbstractHandler
         $this->Tests = [];
 
         $this->UpdateEndTime = false;
+        $this->Track = 'Nightly';
         $this->NumberTestsFailed = 0;
         $this->NumberTestsNotRun = 0;
         $this->NumberTestsPassed = 0;
@@ -133,6 +136,9 @@ class TestingJUnitHandler extends AbstractHandler
                             $this->Build->SiteId = $this->Site->Id;
                         }
                         break;
+                    case 'track':
+                        $this->Track = $attributes['VALUE'];
+                        break;
                 }
             }
         } elseif ($name == 'TESTCASE' && count($attributes) > 0) {
@@ -174,19 +180,14 @@ class TestingJUnitHandler extends AbstractHandler
                 }
 
                 $this->Build->Information = new BuildInformation();
-
                 $this->Build->Name = $attributes['NAME'];
 
-                // Construct a CMake-Like build stamp
-                // We assume Nightly
-                // If the TIMESTAMP attribute is not defined we take the current timestamp
+                // If the TIMESTAMP attribute is not defined we take the current timestamp.
                 if (!isset($attributes['TIMESTAMP'])) {
                     $timestamp = time();
                 } else {
                     $timestamp = strtotime($attributes['TIMESTAMP']);
                 }
-                $stamp = date('Ymd-Hi', $timestamp) . '-Nightly';
-                $this->Build->SetStamp($stamp);
                 $this->Append = false;
             } elseif (!isset($attributes['TIMESTAMP'])) {
                 $stamp = $this->Build->GetStamp();
@@ -250,6 +251,11 @@ class TestingJUnitHandler extends AbstractHandler
                     $this->Build->SetSubProject($this->SubProjectName);
                     $this->Build->Append = $this->Append;
                     $this->Build->InsertErrors = false;
+                    if ($this->HasSiteTag == false) {
+                        // Construct the build stamp.
+                        $stamp = date('Ymd-Hi', $this->StartTimeStamp) . "-$this->Track";
+                        $this->Build->SetStamp($stamp);
+                    }
                     add_build($this->Build, $this->scheduleid);
                     $this->UpdateEndTime = true;
                 } else {
