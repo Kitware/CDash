@@ -145,8 +145,17 @@ class TestingJUnitHandler extends AbstractHandler
                 $this->CurrentBuildTest->Time = $attributes['TIME'];
             }
 
-            // Default is that the test passes unless there is a <failure> tag
+            // Default is that the test passes.
             $this->CurrentBuildTest->Status = 'passed';
+            if (array_key_exists('STATUS', $attributes)) {
+                $status = $attributes['STATUS'];
+                if (stripos($status, 'fail') !== false) {
+                    $this->CurrentBuildTest->Status = 'failed';
+                }
+                if (strcasecmp($status, 'notrun') === 0) {
+                    $this->CurrentBuildTest->Status = 'notrun';
+                }
+            }
 
             $this->CurrentTest->Name = $attributes['NAME'];
             $this->CurrentTest->Path = $attributes['CLASSNAME'];
