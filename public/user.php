@@ -25,4 +25,13 @@ if (isset($_GET['logout'])) {
     exit;
 }
 
-load_view('user');
+angular_login();
+global $loginerror;
+if ($loginerror != '') {
+    // Display error on login page.
+    require_once('include/login_functions.php');
+    LoginForm($loginerror);
+    exit;
+}
+
+load_view('user', false);

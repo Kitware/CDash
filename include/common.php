@@ -2085,11 +2085,13 @@ function DeleteDirectory($dirName)
     rmdir($dirName);
 }
 
-function load_view($viewName)
+function load_view($viewName, $login=true)
 {
     global $CDASH_USE_LOCAL_DIRECTORY;
 
-    angular_login();
+    if ($login) {
+        angular_login();
+    }
 
     if ($CDASH_USE_LOCAL_DIRECTORY &&
         file_exists("build/local/views/$viewName.html")
