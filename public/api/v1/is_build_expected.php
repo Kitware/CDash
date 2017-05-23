@@ -20,17 +20,16 @@ require_once 'include/api_common.php';
 
 $response = array();
 
-$buildid = get_request_build_id();
+$build = get_request_build();
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME", $db);
 
 // Get details about this build.
-$build = pdo_query("SELECT name, type, siteid FROM build WHERE id='$buildid'");
-$build_array = pdo_fetch_array($build);
-$buildtype = $build_array['type'];
-$buildname = $build_array['name'];
-$siteid = $build_array['siteid'];
+$buildid = $build->Id;
+$buildtype = $build->Type;
+$buildname = $build->Name;
+$siteid = $build->SiteId;
 
 // Lookup what group this build currently belongs to.
 $currentgroup = pdo_query(

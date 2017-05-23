@@ -50,7 +50,8 @@ include_once 'models/build.php';
  * export=[presence]
  **/
 
-$buildid = get_request_build_id(false);
+// $buildid = get_request_build_id(false);
+$build = get_request_build(false);
 
 @$date = $_GET['date'];
 if ($date != null) {
@@ -65,28 +66,11 @@ if (isset($_GET['tests'])) {
 
 $response = [];
 
-
 $start = microtime_float();
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME", $db);
 
-$build_array = pdo_fetch_array(pdo_query(
-    "SELECT parentid, projectid, siteid, type, name, starttime, endtime, groupid
-     FROM build AS b
-     LEFT JOIN build2group AS b2g ON (b.id = b2g.buildid)
-     WHERE id='$buildid'"));
-$projectid = $build_array['projectid'];
-if (!isset($projectid) || $projectid == 0) {
-    $response['error'] = "This build doesn't exist. Maybe it has been deleted.";
-    echo json_encode($response);
-    return;
-}
-
-if (!can_access_project($projectid)) {
-    return;
-}
-
-$project = pdo_query("SELECT name,showtesttime,testtimemaxstatus,nightlytime,displaylabels FROM project WHERE id='$projectid'");
+$project = pdo_query("SELECT name,showtesttime,testtimemaxstatus,nightlytime,displaylabels FROM project WHERE id='{$build->ProjectId}'");
 if (pdo_num_rows($project) > 0) {
     $project_array = pdo_fetch_array($project);
     $projectname = $project_array['name'];
@@ -96,12 +80,12 @@ if (pdo_num_rows($project) > 0) {
 
 $response = begin_JSON_response();
 $response['title'] = "CDash : $projectname";
-$siteid = $build_array['siteid'];
-$buildtype = $build_array['type'];
-$buildname = $build_array['name'];
-$starttime = $build_array['starttime'];
-$endtime = $build_array['endtime'];
-$groupid = $build_array['groupid'];
+$siteid = $build->SiteId;
+$buildtype = $build->Type;
+$buildname = $build->Name;
+$starttime = $build->StartTime;
+$endtime = $build->EndTime;
+$groupid = $build->GroupId;
 $response['groupid'] = $groupid;
 
 $date = get_dashboard_date_from_build_starttime($starttime, $project_array['nightlytime']);
@@ -148,9 +132,8 @@ $menu['back'] = 'index.php?project=' . urlencode($projectname) . '&date=' . get_
 
 // Get the IDs of the four previous builds.
 // These are used to check the recent history of this test.
-$build = new Build();
 $n = 3;
-$id = $buildid;
+$id = $buildid = $build->Id;
 $previous_buildid = 0;
 $previous_buildids = array();
 
@@ -197,45 +180,48 @@ if ($next_buildid > 0) {
 
 $response['menu'] = $menu;
 
-$build = array();
 $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
-$build['displaylabels'] = $project_array['displaylabels'];
-$build['site'] = $site_array['name'];
-$build['siteid'] = $siteid;
-$build['buildname'] = $buildname;
-$build['buildid'] = $buildid;
-$build['testtime'] = $endtime;
+
+// Reset the build to the original build
+$build->Id = $buildid;
+$build->FillFromId($buildid);
+
+$build_response = Build::MarshalResponseArray($build, [
+    'displaylabels' => $project_array['displaylabels'],
+    'site' => $site_array['name'],
+    'testtime' => $endtime,
+]);
 
 // Find the OS and compiler information
 $buildinformation = pdo_query("SELECT * FROM buildinformation WHERE buildid='$buildid'");
 if (pdo_num_rows($buildinformation) > 0) {
     $buildinformation_array = pdo_fetch_array($buildinformation);
     if ($buildinformation_array['osname'] != '') {
-        $build['osname'] = $buildinformation_array['osname'];
+        $build_response['osname'] = $buildinformation_array['osname'];
     }
     if ($buildinformation_array['osplatform'] != '') {
-        $build['osplatform'] = $buildinformation_array['osplatform'];
+        $build_response['osplatform'] = $buildinformation_array['osplatform'];
     }
     if ($buildinformation_array['osrelease'] != '') {
-        $build['osrelease'] = $buildinformation_array['osrelease'];
+        $build_response['osrelease'] = $buildinformation_array['osrelease'];
     }
     if ($buildinformation_array['osversion'] != '') {
-        $build['osversion'] = $buildinformation_array['osversion'];
+        $build_response['osversion'] = $buildinformation_array['osversion'];
     }
     if ($buildinformation_array['compilername'] != '') {
-        $build['compilername'] = $buildinformation_array['compilername'];
+        $build_response['compilername'] = $buildinformation_array['compilername'];
     }
     if ($buildinformation_array['compilerversion'] != '') {
-        $build['compilerversion'] = $buildinformation_array['compilerversion'];
+        $build_response['compilerversion'] = $buildinformation_array['compilerversion'];
     }
 }
-$response['build'] = $build;
+$response['build'] = $build_response;
 $response['csvlink'] = "api/v1/viewTest.php?buildid=$buildid&export=csv";
 
 $project = array();
 $project['showtesttime'] = $projectshowtesttime;
 $response['project'] = $project;
-$response['parentBuild'] = $build_array['parentid'] == -1;
+$response['parentBuild'] = $build->GetParentId() == -1;
 
 $displaydetails = 1;
 $status = '';
@@ -289,7 +275,7 @@ if ($project_array['displaylabels'] && $CDASH_DB_TYPE != 'pgsql') {
     $groupby_sql = ' GROUP BY t.id';
 }
 
-if ($build_array['parentid'] == -1) {
+if ($build->GetParentId() == -1) {
     $parentBuildFieldSql = ', sp2b.subprojectid, sp.name subprojectname';
     $parentBuildJoinSql = 'JOIN build b ON (b.id = bt.buildid)
                            JOIN subproject2build sp2b on (sp2b.buildid = b.id)
@@ -433,7 +419,7 @@ $labels_found = false;
 
 // Generate a response for each test found.
 while ($row = pdo_fetch_array($result)) {
-    $marshaledTest = buildtest::marshal($row, $row['buildid'], $projectid, $projectshowtesttime, $testtimemaxstatus, $testdate);
+    $marshaledTest = buildtest::marshal($row, $row['buildid'], $build->ProjectId, $projectshowtesttime, $testtimemaxstatus, $testdate);
 
     if ($marshaledTest['status'] == 'Passed') {
         $numPassed++;
@@ -452,13 +438,11 @@ while ($row = pdo_fetch_array($result)) {
 }
 
 // Check for missing tests
-$Build = new Build();
-$Build->Id = $buildid;
-$numMissing = $Build->GetNumberOfMissingTests();
+$numMissing = $build->GetNumberOfMissingTests();
 
 if ($numMissing > 0) {
-    foreach ($Build->MissingTests as $name) {
-        $marshaledTest = buildtest::marshalMissing($name, $buildid, $projectid, $projectshowtesttime, $testtimemaxstatus, $testdate);
+    foreach ($build->MissingTests as $name) {
+        $marshaledTest = buildtest::marshalMissing($name, $buildid, $build->ProjectId, $projectshowtesttime, $testtimemaxstatus, $testdate);
         array_unshift($tests, $marshaledTest);
     }
 }

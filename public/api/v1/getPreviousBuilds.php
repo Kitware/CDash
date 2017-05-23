@@ -20,17 +20,7 @@ require_once 'include/api_common.php';
 require_once 'models/build.php';
 
 // Get details about this build.
-$buildid = get_request_build_id();
-$build = new Build();
-$build->Id = $buildid;
-$build->FillFromId($build->Id);
-if ($build->ProjectId < 1) {
-    return;
-}
-
-if (!can_access_project($build->ProjectId)) {
-    return;
-}
+$build = get_request_build();
 
 // Take subproject into account, such that if there is one, then the
 // previous builds must be associated with the same subproject.

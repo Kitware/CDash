@@ -27,23 +27,7 @@ $response = array();
 @$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME", $db);
 
-// Check that a buildid was specified.
-$buildid = get_request_build_id();
-
-// Make sure this build actually exists.
-$build_array = pdo_fetch_array(pdo_query(
-    "SELECT * FROM build WHERE id='$buildid'"));
-$projectid = $build_array['projectid'];
-if (!isset($projectid) || $projectid == 0) {
-    $response['error'] = "This build doesn't exist. Maybe it has been deleted.";
-    echo json_encode($response);
-    return;
-}
-
-// And that the user has access to it.
-if (!can_access_project($projectid)) {
-    return;
-}
+$build = get_request_build();
 
 $method = $_SERVER['REQUEST_METHOD'];
 // Make sure the user is an admin before procedding with non-read-only methods.
@@ -58,7 +42,7 @@ if ($method != 'GET') {
     $Project = new Project;
     $User = new User;
     $User->Id = $userid;
-    $Project->Id = $projectid;
+    $Project->Id = $build->ProjectId;
 
     $role = $Project->GetUserRole($userid);
     if ($User->IsAdmin() === false && $role <= 1) {
@@ -88,24 +72,20 @@ switch ($method) {
 /* Handle DELETE requests */
 function rest_delete()
 {
-    global $buildid;
-    add_log('Build #' . $buildid . ' removed manually', 'buildAPI');
-    remove_build($buildid);
+    global $build;
+    add_log('Build #' . $build->Id . ' removed manually', 'buildAPI');
+    remove_build($build->Id);
 }
 
 /* Handle POST requests */
 function rest_post()
 {
-    global $buildid;
+    /** @var Build $build */
+    global $build;
 
-    // Lookup some details about this build.
-    $build = pdo_query(
-        "SELECT name, type, siteid, projectid FROM build WHERE id='$buildid'");
-    $build_array = pdo_fetch_array($build);
-    $buildtype = $build_array['type'];
-    $buildname = $build_array['name'];
-    $siteid = $build_array['siteid'];
-    $projectid = $build_array['projectid'];
+    $buildtype = $build->Type;
+    $buildname = $build->Name;
+    $siteid = $build->SiteId;
 
     // Should we change whether or not this build is expected?
     if (isset($_POST['expected']) && isset($_POST['groupid'])) {
@@ -176,7 +156,7 @@ function rest_post()
     // Should we change the 'done' setting for this build?
     if (isset($_POST['done'])) {
         $done = pdo_real_escape_numeric($_POST['done']);
-        pdo_query("UPDATE build SET done='$done' WHERE id='$buildid'");
+        pdo_query("UPDATE build SET done='$done' WHERE id='{$build->Id}'");
     }
 }
 
@@ -189,7 +169,7 @@ function rest_put()
 /* Handle GET requests */
 function rest_get()
 {
-    global $buildid;
+    global $build;
     $response = array();
 
     // Are we looking for what went wrong with this build?
@@ -198,16 +178,14 @@ function rest_get()
         $response['hasFailingTests'] = false;
 
         // Lookup some details about this build.
-        $build_row = pdo_single_row_query(
-            "SELECT * FROM build WHERE id='$buildid'");
-        $buildtype = $build_row['type'];
-        $buildname = $build_row['name'];
-        $siteid = $build_row['siteid'];
-        $starttime = $build_row['starttime'];
-        $projectid = $build_row['projectid'];
+        $buildtype = $build->Type;
+        $buildname = $build->Name;
+        $siteid = $build->SiteId;
+        $starttime = $build->StartTime;
+        $projectid = $build->ProjectId;
 
         // Check if this build has errors.
-        $buildHasErrors = $build_row['builderrors'] > 0;
+        $buildHasErrors = $build->BuildErrorCount > 0;
         if ($buildHasErrors) {
             $response['hasErrors'] = true;
             // Find the last occurrence of this build that had no errors.
@@ -238,7 +216,7 @@ function rest_get()
         }
 
         // Check if this build has failed tests.
-        $buildHasFailingTests = $build_row['testfailed'] > 0;
+        $buildHasFailingTests = $build->TestFailedCount > 0;
         if ($buildHasFailingTests) {
             $response['hasFailingTests'] = true;
             // Find the last occurrence of this build that had no test failures.

@@ -15,6 +15,7 @@
 =========================================================================*/
 
 require_once 'include/common.php';
+require_once 'models/build.php';
 
 /**
  *
@@ -43,16 +44,19 @@ function init_api_request()
 // Return false and respond with the correct HTTP status (401 or 403) if not.
 function can_access_project($projectid)
 {
+    if (!$projectid) {
+        return true;
+    }
+
     $response = array();
     $logged_in = false;
     $userid = '';
 
     $noforcelogin = 1;
     include 'public/login.php';
-    if (isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid'])) {
-        $userid = $_SESSION['cdash']['loginid'];
-        $logged_in = true;
-    }
+    $userid = get_userid_from_session(false);
+    $logged_in = is_null($userid) ? false : true;
+
     if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
         if ($logged_in) {
             $response = ['error' => 'You do not have permission to access this page.'];
@@ -64,6 +68,25 @@ function can_access_project($projectid)
         return false;
     }
     return true;
+}
+
+/**
+ * Checks for the user id in the session, if none, and required, exits programe with 401
+ *
+ * @return int|null
+ */
+function get_userid_from_session($required = true)
+{
+    $userid = null;
+    if (isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid'])) {
+        $userid = $_SESSION['cdash']['loginid'];
+    }
+
+    if ($required && is_null($userid)) {
+        $response = ['error' => 'Permission denied'];
+        json_error_response($response, 403);
+    }
+    return $userid;
 }
 
 /**
@@ -79,6 +102,31 @@ function get_request_build_id($required = true)
         json_error_response(['error' => 'Valid build ID required']);
     }
     return (int)pdo_real_escape_string($buildid);
+}
+
+/**
+ * Returns a build based on the id extracted from the request and returns it if the user has
+ * necessary access to the project
+ *
+ * @param bool $required
+ * @return Build|null
+ */
+function get_request_build($required = true)
+{
+    $id = get_request_build_id($required);
+    $build = new Build();
+    $build->Id = $id;
+
+    if ($required && !$build->Exists()) {
+        $response = ['error' => 'This build does not exist. Maybe it has been deleted.'];
+        json_error_response($response, 400);
+    }
+
+    if ($id) {
+        $build->FillFromId($id);
+    }
+
+    return can_access_project($build->ProjectId) ? $build : null;
 }
 
 /**

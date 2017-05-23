@@ -25,19 +25,8 @@ require 'public/login.php';
 init_api_request();
 $response = array();
 
-// Make sure we have an authenticated user.
-$userid = null;
-if (isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid'])) {
-    $userid = $_SESSION['cdash']['loginid'];
-}
-if (is_null($userid)) {
-    $response['error'] = 'Permission denied';
-    echo json_encode($response);
-    http_response_code(401);
-    return;
-}
-
-$buildid = get_request_build_id();
+$userid = get_userid_from_session();
+$build = get_request_build();
 
 if (!isset($_REQUEST['AddNote']) || !isset($_REQUEST['Status']) ||
         strlen($_REQUEST['AddNote']) < 1 ||  strlen($_REQUEST['Status']) < 1) {
@@ -49,7 +38,7 @@ if (!isset($_REQUEST['AddNote']) || !isset($_REQUEST['Status']) ||
 
 // Add the note.
 $userNote = new BuildUserNote();
-$userNote->BuildId = $buildid;
+$userNote->BuildId = $build->Id;
 $userNote->UserId = $userid;
 $userNote->Note = $_REQUEST['AddNote'];
 $userNote->Status = $_REQUEST['Status'];

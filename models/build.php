@@ -50,6 +50,8 @@ class Build
     public $Command;
     public $Log;
     public $Information;
+    public $BuildErrorCount;
+    public $TestFailedCount;
 
     // For the moment we accept only one group per build
     public $GroupId;
@@ -294,8 +296,22 @@ class Build
         }
 
         $query = pdo_query(
-            'SELECT projectid,starttime,endtime,siteid,name,stamp,type,parentid,done
-                FROM build WHERE id=' . qnum($buildid));
+            'SELECT 
+                projectid,
+                starttime,
+                endtime,
+                siteid,
+                name,
+                stamp,
+                type,
+                parentid,
+                done,
+                builderrors,
+                testfailed,
+                generator,
+                command
+            FROM build 
+            WHERE id=' . qnum($buildid));
 
         if (!$query) {
             add_last_sql_error('Build:FillFromId()', $this->ProjectId, $this->Id);
@@ -312,6 +328,10 @@ class Build
         $this->ProjectId = $build_array['projectid'];
         $this->SetParentId($build_array['parentid']);
         $this->Done = $build_array['done'];
+        $this->Generator = $build_array['generator'];
+        $this->Command = $build_array['command'];
+        $this->BuildErrorCount = $build_array['builderrors'];
+        $this->TestFailedCount = $build_array['testfailed'];
 
         $subprojectid = $this->QuerySubProjectId($buildid);
         if ($subprojectid) {
@@ -322,6 +342,30 @@ class Build
             "SELECT groupid FROM build2group WHERE buildid='$buildid'"));
         $this->GroupId = $result['groupid'];
         $this->Filled = true;
+    }
+
+    /**
+     * @param Build $build
+     * @param array $optional_values
+     * @return array
+     */
+    public static function MarshalResponseArray($build, $optional_values = [])
+    {
+        $response = [
+            'id' => $build->Id,
+            'buildid' => $build->Id,
+            'siteid' => $build->SiteId,
+            'name' => $build->Name,
+            'buildname' => $build->Name,
+            'stamp' => $build->Stamp,
+            'projectid' => $build->ProjectId,
+            'starttime' => $build->StartTime,
+            'endtime' => $build->EndTime,
+            'groupid' => $build->GroupId,
+
+        ];
+
+        return array_merge($response, $optional_values);
     }
 
     /** Get the previous build id. */
