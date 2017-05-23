@@ -15,6 +15,7 @@
 =========================================================================*/
 
 require_once 'models/user.php';
+global $pdo;
 $pdo = get_link_identifier()->getPdo();
 
 function setRememberMeCookie($userId)
