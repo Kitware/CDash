@@ -19,8 +19,6 @@ class ImportBuildsTestCase extends KWWebTestCase
 
     public function testImportBuilds()
     {
-        $this->startCodeCoverage();
-
         global $configure;
         $dir = $configure['svnroot'];
         chdir($dir);
@@ -65,8 +63,6 @@ class ImportBuildsTestCase extends KWWebTestCase
         $this->pass('Passed');
         cdash_testsuite_unlink($checkFile);
         $this->deleteLog($this->logfilename);
-
-        $this->stopCodeCoverage();
         return 0;
     }
 }

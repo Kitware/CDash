@@ -19,8 +19,6 @@ class ImageTestCase extends KWWebTestCase
 
     public function testImage()
     {
-        $this->startCodeCoverage();
-
         $image = new Image();
 
         //no id, no matching checksum
@@ -74,8 +72,6 @@ class ImageTestCase extends KWWebTestCase
         }
 
         $this->pass('Passed');
-
-        $this->stopCodeCoverage();
         return 0;
     }
 }

@@ -18,8 +18,6 @@ class BannerTestCase extends KWWebTestCase
 
     public function testBanner()
     {
-        $this->startCodeCoverage();
-
         $banner = new Banner();
 
         ob_start();
@@ -50,8 +48,6 @@ class BannerTestCase extends KWWebTestCase
         }
 
         $this->pass('Passed');
-
-        $this->stopCodeCoverage();
         return 0;
     }
 }

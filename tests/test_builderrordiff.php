@@ -18,8 +18,6 @@ class BuildErrorDiffTestCase extends KWWebTestCase
 
     public function testBuildErrorDiff()
     {
-        $this->startCodeCoverage();
-
         $builderrordiff = new BuildErrorDiff();
 
         //no buildid
@@ -59,8 +57,6 @@ class BuildErrorDiffTestCase extends KWWebTestCase
         }
 
         $this->pass('Passed');
-
-        $this->stopCodeCoverage();
         return 0;
     }
 }
