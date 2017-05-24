@@ -296,7 +296,7 @@ class Build
         }
 
         $query = pdo_query(
-            'SELECT 
+            'SELECT
                 projectid,
                 starttime,
                 endtime,
@@ -310,7 +310,7 @@ class Build
                 testfailed,
                 generator,
                 command
-            FROM build 
+            FROM build
             WHERE id=' . qnum($buildid));
 
         if (!$query) {
@@ -2500,6 +2500,7 @@ class Build
                 bf.workingdirectory,
                 bfd.stderror,
                 bfd.stdoutput,
+                bfd.type,
                 bfd.exitcondition,
                 sp2b.subprojectid,
                 sp.name subprojectname
