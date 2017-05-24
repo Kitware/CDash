@@ -6,6 +6,7 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
+require_once 'models/project.php';
 
 class NotesAPICase extends KWWebTestCase
 {
@@ -62,5 +63,59 @@ class NotesAPICase extends KWWebTestCase
 
         $this->pass('Passed');
         return 0;
+    }
+
+    public function testAddNoteRequiresAuth()
+    {
+        // Change the Trilinos project to a private project
+        $id = pdo_get_field_value('SELECT id FROM project WHERE name="TrilinosDriver"', 'id', null);
+        $project = new Project();
+        $project->Id = $id;
+        $project->Fill();
+        $project->Public = 0;
+        $project->Save();
+
+        $endpoint = "{$this->url}/api/v1/addUserNote.php?buildid={$id}";
+        $response = $this->get($endpoint);
+        $actual = json_decode($response);
+        $expected = 'Permission denied';
+
+        $this->assertTrue(isset($actual->error));
+        $this->assertEqual($actual->error, $expected);
+
+        $this->login();
+
+        $buildUserNote = [
+            'AddNote' => 'testAddNoteRequiresAuth',
+            'Status' => 1
+        ];
+
+        $response = $this->post($endpoint, $buildUserNote);
+        $actual = json_decode($response);
+        $expected = 'testAddNoteRequiresAuth';
+
+        $this->assertTrue(isset($actual->note->text));
+        $this->assertEqual($actual->note->text, $expected);
+
+        // Change the Trilinos project back to public
+        $project->Public = 1;
+        $project->Save();
+
+        $query = "DELETE FROM buildnote WHERE note='{$expected}'";
+        if (!pdo_delete_query($query)) {
+            $this->fail("Test successful but delete of data failed [sql: {$query}");
+        }
+    }
+
+    public function testAddNoteRequiresBuildId()
+    {
+        $this->login();
+        $endpoint = "{$this->url}/api/v1/addUserNote.php?";
+
+        $response = $this->get($endpoint);
+        $actual = json_decode($response);
+        $expected = 'Valid build ID required';
+        $this->assertTrue(isset($actual->error));
+        $this->assertEqual($actual->error, $expected);
     }
 }
