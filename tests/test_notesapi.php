@@ -68,7 +68,7 @@ class NotesAPICase extends KWWebTestCase
     public function testAddNoteRequiresAuth()
     {
         // Change the Trilinos project to a private project
-        $id = pdo_get_field_value('SELECT id FROM project WHERE name="TrilinosDriver"', 'id', null);
+        $id = pdo_get_field_value("SELECT id FROM project WHERE name='TrilinosDriver'", 'id', null);
         $project = new Project();
         $project->Id = $id;
         $project->Fill();
