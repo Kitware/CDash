@@ -25,30 +25,7 @@ require_once 'models/site.php';
 $start = microtime_float();
 $response = [];
 
-// Make sure a valid buildid was specified.
-if (!isset($_GET['buildid']) || !is_numeric($_GET['buildid'])) {
-    $response['error'] = 'Not a valid buildid!';
-    echo json_encode($response);
-    http_response_code(400);
-    return;
-}
-$buildid = $_GET['buildid'];
-
-$build = new Build();
-$build->Id = $buildid;
-if (!$build->Exists()) {
-    $response['error'] = 'This build does not exist. Maybe it has been deleted.';
-    echo json_encode($response);
-    http_response_code(400);
-    return;
-}
-
-$build->FillFromId($buildid);
-
-// Make sure the user has access to this project.
-if (!can_access_project($build->ProjectId)) {
-    return;
-}
+$build = get_request_build();
 
 $pdo = get_link_identifier()->getPdo();
 
@@ -98,14 +75,14 @@ $site_name = $site->GetName();
 $build_response = [];
 $build_response['site'] = $site_name;
 $build_response['buildname'] = $build->Name;
-$build_response['buildid'] = $buildid;
+$build_response['buildid'] = $build->Id;
 $build_response['buildtime'] = $build->StartTime;
 $response['build'] = $build_response;
 
 // Dynamic Analysis
 $DA_stmt = $pdo->prepare(
     'SELECT * FROM dynamicanalysis WHERE buildid = ? ORDER BY status DESC');
-pdo_execute($DA_stmt, [$buildid]);
+pdo_execute($DA_stmt, [$build->Id]);
 
 $defect_types = [];
 $dynamic_analyses = [];
