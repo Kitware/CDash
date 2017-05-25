@@ -91,7 +91,7 @@ class BuildGroupRuleTestCase extends KWWebTestCase
         // Make sure the longer rule wins.
         $groupid = $group1->GetGroupIdFromRule($build);
         $expectedid = $group2->GetId();
-        if ($groupid !== $expectedid) {
+        if ($groupid != $expectedid) {
             $this->fail("Expected $expectedid, found $groupid");
         }
 
