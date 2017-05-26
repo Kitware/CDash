@@ -962,6 +962,7 @@ function remove_build($buildid)
 
     pdo_query('DELETE FROM buildinformation WHERE buildid IN ' . $buildids);
     pdo_query('DELETE FROM builderrordiff WHERE buildid IN ' . $buildids);
+    pdo_query('DELETE FROM buildproperties WHERE buildid IN ' . $buildids);
 
     pdo_query('DELETE FROM configureerrordiff WHERE buildid IN ' . $buildids);
     pdo_query('DELETE FROM coveragesummarydiff WHERE buildid IN ' . $buildids);
