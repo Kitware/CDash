@@ -124,12 +124,7 @@ function rest_post()
         $newgroupid = pdo_real_escape_numeric($_POST['newgroupid']);
 
         // Remove the build from its previous group.
-        $prevgroup = pdo_fetch_array(pdo_query(
-            "SELECT groupid as id FROM build2group WHERE buildid='$buildid'"));
-        $prevgroupid = $prevgroup['id'];
-        pdo_query(
-            "DELETE FROM build2group
-                WHERE groupid='$prevgroupid' AND buildid='$buildid'");
+        pdo_query("DELETE FROM build2group WHERE buildid='$buildid'");
 
         // Insert it into the new group.
         pdo_query(
@@ -140,9 +135,8 @@ function rest_post()
         $now = gmdate(FMT_DATETIME);
         pdo_query(
             "UPDATE build2grouprule SET endtime='$now'
-                WHERE groupid='$prevgroupid' AND buildtype='$buildtype' AND
-                buildname='$buildname' AND siteid='$siteid' AND
-                endtime='1980-01-01 00:00:00'");
+                WHERE buildtype='$buildtype' AND buildname='$buildname' AND
+                siteid='$siteid' AND endtime='1980-01-01 00:00:00'");
 
         // Create the rule for the new buildgroup.
         // (begin time is set by default by mysql)
