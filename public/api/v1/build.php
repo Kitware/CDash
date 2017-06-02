@@ -124,12 +124,12 @@ function rest_post()
         $newgroupid = pdo_real_escape_numeric($_POST['newgroupid']);
 
         // Remove the build from its previous group.
-        pdo_query("DELETE FROM build2group WHERE buildid='$buildid'");
+        pdo_query("DELETE FROM build2group WHERE buildid='$build->Id'");
 
         // Insert it into the new group.
         pdo_query(
             "INSERT INTO build2group(groupid,buildid)
-                VALUES ('$newgroupid','$buildid')");
+                VALUES ('$newgroupid','$build->Id')");
 
         // Mark any previous buildgroup rule as finished as of this time.
         $now = gmdate(FMT_DATETIME);
