@@ -140,9 +140,8 @@ function rest_post()
         $now = gmdate(FMT_DATETIME);
         pdo_query(
             "UPDATE build2grouprule SET endtime='$now'
-                WHERE groupid='$prevgroupid' AND buildtype='$buildtype' AND
-                buildname='$buildname' AND siteid='$siteid' AND
-                endtime='1980-01-01 00:00:00'");
+                WHERE buildtype='$buildtype' AND buildname='$buildname' AND
+                siteid='$siteid' AND endtime='1980-01-01 00:00:00'");
 
         // Create the rule for the new buildgroup.
         // (begin time is set by default by mysql)
