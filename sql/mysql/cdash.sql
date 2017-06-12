@@ -414,6 +414,8 @@ CREATE TABLE `project` (
   `cvsurl` varchar(255) NOT NULL default '',
   `bugtrackerurl` varchar(255) NOT NULL default '',
   `bugtrackerfileurl` varchar(255) NOT NULL DEFAULT '',
+  `bugtrackernewissueurl` varchar(255) NOT NULL DEFAULT '',
+  `bugtrackertype` varchar(16) DEFAULT NULL,
   `documentationurl` varchar(255) NOT NULL default '',
   `imageid` int(11) NOT NULL default '0',
   `public` tinyint(4) NOT NULL default '1',

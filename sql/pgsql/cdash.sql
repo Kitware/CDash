@@ -320,6 +320,8 @@ CREATE TABLE "project" (
   "cvsurl" character varying(255) DEFAULT '' NOT NULL,
   "bugtrackerurl" character varying(255) DEFAULT '' NOT NULL,
   "bugtrackerfileurl" character varying(255) DEFAULT '' NOT NULL,
+  "bugtrackernewissueurl" character varying(255) DEFAULT '' NOT NULL,
+  "bugtrackertype" character varying(16) DEFAULT NULL,
   "documentationurl" character varying(255) DEFAULT '' NOT NULL,
   "imageid" bigint DEFAULT '0' NOT NULL,
   "public" smallint DEFAULT '1' NOT NULL,
