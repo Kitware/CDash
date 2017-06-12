@@ -33,6 +33,8 @@ class Project
     public $DocumentationUrl;
     public $BugTrackerUrl;
     public $BugTrackerFileUrl;
+    public $BugTrackerNewIssueUrl;
+    public $BugTrackerType;
     public $ImageId;
     public $Public;
     public $CoverageThreshold;
@@ -206,6 +208,8 @@ class Project
         $DocumentationUrl = pdo_real_escape_string($this->DocumentationUrl);
         $BugTrackerUrl = pdo_real_escape_string($this->BugTrackerUrl);
         $BugTrackerFileUrl = pdo_real_escape_string($this->BugTrackerFileUrl);
+        $BugTrackerNewIssueUrl = pdo_real_escape_string($this->BugTrackerNewIssueUrl);
+        $BugTrackerType = pdo_real_escape_string($this->BugTrackerType);
         $TestingDataUrl = pdo_real_escape_string($this->TestingDataUrl);
         $NightlyTime = pdo_real_escape_string($this->NightlyTime);
         $GoogleTracker = pdo_real_escape_string($this->GoogleTracker);
@@ -227,6 +231,8 @@ class Project
             $query .= ",documentationurl='" . $DocumentationUrl . "'";
             $query .= ",bugtrackerurl='" . $BugTrackerUrl . "'";
             $query .= ",bugtrackerfileurl='" . $BugTrackerFileUrl . "'";
+            $query .= ",bugtrackernewissueurl='" . $BugTrackerNewIssueUrl . "'";
+            $query .= ",bugtrackertype='" . $BugTrackerType . "'";
             $query .= ',public=' . qnum($this->Public);
             $query .= ',coveragethreshold=' . qnum($this->CoverageThreshold);
             $query .= ",testingdataurl='" . $TestingDataUrl . "'";
@@ -317,12 +323,12 @@ class Project
             // Trim the name
             $this->Name = trim($this->Name);
             $this->Initialize();
-            $query = 'INSERT INTO project(' . $id . 'name,description,homeurl,cvsurl,bugtrackerurl,bugtrackerfileurl,documentationurl,public,imageid,coveragethreshold,testingdataurl,
+            $query = 'INSERT INTO project(' . $id . 'name,description,homeurl,cvsurl,bugtrackerurl,bugtrackerfileurl,bugtrackernewissueurl,bugtrackertype,documentationurl,public,imageid,coveragethreshold,testingdataurl,
                                     nightlytime,googletracker,emailbrokensubmission,emailredundantfailures,
                                     emaillowcoverage,emailtesttimingchanged,cvsviewertype,
                                     testtimestd,testtimestdthreshold,testtimemaxstatus,emailmaxitems,emailmaxchars,showtesttime,emailadministrator,showipaddresses
                                     ,displaylabels,sharelabelfilters,authenticatesubmissions,showcoveragecode,autoremovetimeframe,autoremovemaxbuilds,uploadquota,webapikey)
-                 VALUES (' . $idvalue . "'$Name','$Description','$HomeUrl','$CvsUrl','$BugTrackerUrl','$BugTrackerFileUrl','$DocumentationUrl',
+                 VALUES (' . $idvalue . "'$Name','$Description','$HomeUrl','$CvsUrl','$BugTrackerUrl','$BugTrackerFileUrl','$BugTrackerNewIssueUrl','$BugTrackerType','$DocumentationUrl',
                  " . qnum($this->Public) . ',' . qnum($this->ImageId) . ',' . qnum($this->CoverageThreshold) . ",'$TestingDataUrl','$NightlyTime',
                  '$GoogleTracker'," . qnum($this->EmailBrokenSubmission) . ',' . qnum($this->EmailRedundantFailures) . ','
                 . qnum($this->EmailLowCoverage) . ',' . qnum($this->EmailTestTimingChanged) . ",'$CvsViewerType'," . qnum($this->TestTimeStd)
@@ -424,6 +430,8 @@ class Project
             $this->DocumentationUrl = $project_array['documentationurl'];
             $this->BugTrackerUrl = $project_array['bugtrackerurl'];
             $this->BugTrackerFileUrl = $project_array['bugtrackerfileurl'];
+            $this->BugTrackerNewIssueUrl = $project_array['bugtrackernewissueurl'];
+            $this->BugTrackerType = $project_array['bugtrackertype'];
             $this->ImageId = $project_array['imageid'];
             $this->Public = $project_array['public'];
             $this->CoverageThreshold = $project_array['coveragethreshold'];
