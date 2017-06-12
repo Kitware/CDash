@@ -20,6 +20,7 @@ require_once 'include/api_common.php';
 include 'include/version.php';
 require_once 'models/build.php';
 require_once 'models/buildusernote.php';
+require_once 'models/project.php';
 require_once 'models/user.php';
 
 $start = microtime_float();
@@ -33,12 +34,11 @@ if (isset($_GET['date'])) {
 }
 
 $buildid = $build->Id;
-$projectid = $build->ProjectId;
 $siteid = $build->SiteId;
 
-if (!can_access_project($projectid)) {
-    return;
-}
+$project = new Project();
+$project->Id = $build->ProjectId;
+$project->Fill();
 
 // Format the text to fit the iPhone
 function format_for_iphone($text)
@@ -52,16 +52,14 @@ function format_for_iphone($text)
 }
 
 $response = begin_JSON_response();
-$projectname = get_project_name($projectid);
-$response['title'] = "CDash : $projectname";
+$response['title'] = "CDash : $project->Name";
 
 $previous_buildid = $build->GetPreviousBuildId();
 $current_buildid = $build->GetCurrentBuildId();
 $next_buildid = $build->GetNextBuildId();
 
 $menu = array();
-$nightlytime = get_project_property($projectname, 'nightlytime');
-$menu['back'] = 'index.php?project=' . urlencode($projectname) . '&date=' . get_dashboard_date_from_build_starttime($build->StartTime, $nightlytime);
+$menu['back'] = 'index.php?project=' . urlencode($project->Name) . '&date=' . get_dashboard_date_from_build_starttime($build->StartTime, $project->NightlyTime);
 
 if ($previous_buildid > 0) {
     $menu['previous'] = "buildSummary.php?buildid=$previous_buildid";
@@ -86,7 +84,7 @@ if ($next_buildid > 0) {
 
 $response['menu'] = $menu;
 
-get_dashboard_JSON($projectname, $date, $response);
+get_dashboard_JSON($project->Name, $date, $response);
 
 $userid = get_userid_from_session(false);
 if ($userid) {
@@ -378,6 +376,23 @@ if ($previous_buildid > 0) {
 
     $response['previousbuild'] = $previous_response;
 }
+
+// Check if this project uses a supported bug tracker.
+$generate_issue_link = false;
+$new_issue_url = '';
+switch ($project->BugTrackerType) {
+    case 'Buganizer':
+    case 'JIRA':
+    case 'GitHub':
+        $generate_issue_link = true;
+        break;
+}
+if ($generate_issue_link) {
+    require_once('include/repository.php');
+    $new_issue_url = generate_bugtracker_new_issue_link($build, $project);
+    $response['bugtracker'] = $project->BugTrackerType;
+}
+$response['newissueurl'] = $new_issue_url;
 
 $end = microtime_float();
 $response['generationtime'] = round($end - $start, 3);

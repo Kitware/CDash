@@ -17,6 +17,14 @@
 
     <div ng-if="cdash.requirelogin != 1 && !loading && !cdash.error">
 
+      <!-- Display link to create bug tracker issue if supported. -->
+      <div ng-if="::cdash.newissueurl">
+        <a href="{{::cdash.newissueurl}}">
+          <b>Create {{::cdash.bugtracker}} issue for this build</b>
+        </a>
+        <br/>
+      </div>
+
       <!-- Build log for a single submission -->
       <br/><br/>
       <b>Site Name: </b>
