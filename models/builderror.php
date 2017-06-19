@@ -56,6 +56,11 @@ class BuildError
             $postcontext = "'" . pdo_real_escape_string($this->PostContext) . "'";
         }
 
+        $sourcefile = '';
+        if (strlen($this->SourceFile) > 0) {
+            $sourcefile = pdo_real_escape_string($this->SourceFile);
+        }
+
         if (empty($this->SourceLine)) {
             $this->SourceLine = 0;
         }
@@ -73,7 +78,7 @@ class BuildError
 
         $query = 'INSERT INTO builderror (buildid,type,logline,text,sourcefile,sourceline,precontext,
                                       postcontext,repeatcount,newstatus,crc32)
-              VALUES (' . qnum($this->BuildId) . ',' . qnum($this->Type) . ',' . qnum($this->LogLine) . ",'$text','$this->SourceFile'," . qnum($this->SourceLine) . ',
+              VALUES (' . qnum($this->BuildId) . ',' . qnum($this->Type) . ',' . qnum($this->LogLine) . ",'$text','$sourcefile'," . qnum($this->SourceLine) . ',
               ' . $precontext . ',' . $postcontext . ',' . qnum($this->RepeatCount) . ',0,' . qnum($crc32) . ')';
         if (!pdo_query($query)) {
             add_last_sql_error('BuildError Insert', 0, $this->BuildId);
