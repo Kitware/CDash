@@ -26,6 +26,7 @@ class SubProject
     private $ProjectId;
     private $GroupId;
     private $Path;
+    private $Position;
     private $PDO;
 
     public function __construct()
@@ -33,6 +34,7 @@ class SubProject
         $this->Id = 0;
         $this->GroupId = 0;
         $this->ProjectId = 0;
+        $this->Position = 0;
         $this->Name = '';
         $this->Path = '';
         $this->PDO = get_link_identifier()->getPdo();
@@ -148,34 +150,45 @@ class SubProject
     {
         // Assign it to the default group if necessary.
         if ($this->GroupId < 1) {
-            $row = pdo_single_row_query(
+            $stmt = $this->PDO->prepare(
                 'SELECT id from subprojectgroup
-         WHERE projectid=' . qnum($this->ProjectId) . ' AND is_default=1');
-            if (!empty($row)) {
-                $this->GroupId = $row['id'];
+                 WHERE projectid = ? AND is_default = 1');
+            pdo_execute($stmt, [$this->ProjectId]);
+            $groupid = $stmt->fetchColumn();
+            if ($groupid) {
+                $this->GroupId = $groupid;
             }
         }
 
+        // Trim the name.
+        $this->Name = trim($this->Name);
+
         // Check if the subproject already exists.
         if ($this->Exists()) {
-            // Trim the name
-            $this->Name = trim($this->Name);
-
             // Update the subproject
-            $query = 'UPDATE subproject SET ';
-            $query .= "name='" . $this->Name . "'";
-            $query .= ',projectid=' . qnum($this->ProjectId);
-            $query .= ',groupid=' . qnum($this->GroupId);
-            $query .= ",path='" . $this->Path . "'";
-            $query .= ' WHERE id=' . qnum($this->Id) . '';
-
-            if (!pdo_query($query)) {
-                add_last_sql_error('SubProject Update');
+            $stmt = $this->PDO->prepare(
+                'UPDATE subproject SET
+                    name = ?, projectid = ?, groupid = ?, path = ?, position = ?
+                WHERE id = ?');
+            return pdo_execute($stmt,
+                [$this->Name, $this->ProjectId, $this->GroupId, $this->Path,
+                 $this->Position, $this->Id]);
+        } else {
+            // Double check that it's not already in the database.
+            $exists_stmt = $this->PDO->prepare(
+                "SELECT id FROM subproject
+                WHERE name = ? AND projectid = ? AND
+                      endtime = '1980-01-01 00:00:00'");
+            if (!pdo_execute($exists_stmt, [$this->Name, $this->ProjectId])) {
                 return false;
             }
-        } else {
-            // insert the subproject
+            $existing_id = $exists_stmt->fetchColumn();
+            if ($existing_id) {
+                $this->Id = $existing_id;
+                return true;
+            }
 
+            // Insert the subproject.
             $id = '';
             $idvalue = '';
             if ($this->Id) {
@@ -183,45 +196,35 @@ class SubProject
                 $idvalue = "'" . $this->Id . "',";
             }
 
-            // Trim the name
-            $this->Name = trim($this->Name);
-
-            // Double check that it's not already in the database.
-            $select_query =
-                "SELECT id FROM subproject WHERE name='$this->Name' AND
-            projectid=" . qnum($this->ProjectId) . " AND
-            endtime='1980-01-01 00:00:00'";
-            $result = pdo_query($select_query);
-
-            if (!$result) {
-                add_last_sql_error('SubProject Update');
-                return false;
-            }
-
-            if (pdo_num_rows($result) > 0) {
-                $row = pdo_fetch_array($result);
-                $this->Id = $row['id'];
-                return true;
-            }
-
             $starttime = gmdate(FMT_DATETIME);
             $endtime = '1980-01-01 00:00:00';
-            $insert_query =
-                'INSERT INTO subproject(' . $id . 'name,projectid,groupid,path,starttime,endtime)
-                VALUES (' . $idvalue . "'$this->Name'," . qnum($this->ProjectId) . ',' .
-                qnum($this->GroupId) . ",'$this->Path','$starttime','$endtime')";
 
-            if (!pdo_query($insert_query)) {
+            $stmt = $this->PDO->prepare(
+                "INSERT INTO subproject
+                    ($id name, projectid, groupid, path, position, starttime,
+                     endtime)
+                VALUES ($idvalue ?, ?, ?, ?, ?, ?, ?)");
+            $params = [$this->Name, $this->ProjectId, $this->GroupId,
+                       $this->Path, $this->Position, $starttime, $endtime];
+
+            if (!$stmt->execute($params)) {
                 $error = pdo_error();
                 // Check if the query failed due to a race condition during
                 // parallel submission processing.
-                $result = pdo_query($select_query);
-                if (!$result || pdo_num_rows($result) == 0) {
+                $failed = false;
+                if (!pdo_execute($exists_stmt, [$this->Name, $this->ProjectId])) {
+                    $failed = true;
+                } else {
+                    $existing_id = $exists_stmt->fetchColumn();
+                    if (!$existing_id) {
+                        $failed = true;
+                    }
+                }
+                if ($failed) {
                     add_log("SQL error: $error", 'SubProject Create', LOG_ERR, $this->ProjectId);
                     return false;
                 }
-                $row = pdo_fetch_array($result);
-                $this->Id = $row['id'];
+                $this->Id = $existing_id;
             }
 
             if ($this->Id < 1) {
@@ -274,17 +277,23 @@ class SubProject
             return false;
         }
 
-        $row = pdo_single_row_query(
-            'SELECT id, groupid FROM subproject
-       WHERE projectid=' . qnum($this->ProjectId) . "
-       AND name='$this->Name' AND endtime='1980-01-01 00:00:00'");
+        $stmt = $this->PDO->prepare(
+           "SELECT * FROM subproject
+           WHERE projectid = ?  AND name = ? AND
+                 endtime = '1980-01-01 00:00:00'");
 
-        if (empty($row)) {
+        if (!pdo_execute($stmt, [$this->ProjectId, $this->Name])) {
+            return false;
+        }
+        $row = $stmt->fetch();
+        if (!$row) {
             return false;
         }
 
         $this->Id = $row['id'];
         $this->GroupId = $row['groupid'];
+        $this->Path = $row['path'];
+        $this->Position = $row['position'];
         return true;
     }
 
@@ -335,6 +344,17 @@ class SubProject
     public function SetPath($path)
     {
         $this->Path = $path;
+    }
+
+    /** Get/Set this SubProject's position. */
+    public function GetPosition()
+    {
+        return $this->Position;
+    }
+
+    public function SetPosition($position)
+    {
+        $this->Position = $position;
     }
 
     /** Get the last submission of the subproject*/
