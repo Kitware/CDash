@@ -121,7 +121,6 @@ for ($beginning_timestamp = $starttime; $beginning_timestamp > $starttime - 3600
             ?>
         $.plot($("#testfailuregrapholder"), [{label: "# builds failed", data: d1}], options);
         <?php
-
         } else {
             ?>
         $.plot($("#testfailuregrapholder"), [{label: "# builds failed", data: d1}],
@@ -131,7 +130,6 @@ for ($beginning_timestamp = $starttime; $beginning_timestamp > $starttime - 3600
                     max: <?php echo $t + 100000000 ?>}
             }));
         <?php
-
         } ?>
     });
 
