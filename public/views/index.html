@@ -124,6 +124,11 @@
         <div id="buildname" align="left">
           <b>Build Name</b>: {{::cdash.buildname}}
           <img ng-if="::cdash.buildplatform" class="icon" alt="platform" ng-src="img/platform_{{::cdash.buildplatform}}.png"/>
+          <a title="View notes"
+             ng-if="::cdash.parenthasnotes"
+             ng-href="viewNotes.php?buildid={{::cdash.parentid}}">
+            <img src="img/document.png" alt="Notes" class="icon"/>
+          </a>
           <a ng-if="::cdash.changelink" target="_blank" ng-href="{{::cdash.changelink}}">
             <img class="smallicon" ng-src="{{::cdash.changeicon}}"/>
           </a>

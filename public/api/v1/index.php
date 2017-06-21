@@ -79,6 +79,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
     require_once 'models/build.php';
     require_once 'models/subproject.php';
 
+    $PDO = get_link_identifier()->getPdo();
     $response = array();
 
     $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
@@ -143,6 +144,16 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $parent_build->Id = $parentid;
         $date = $parent_build->GetDate();
         $response['parentid'] = $parentid;
+
+        // Check if the parent build has any notes.
+        $stmt = $PDO->prepare(
+            'SELECT COUNT(buildid) FROM build2note WHERE buildid = ?');
+        pdo_execute($stmt, [$parentid]);
+        if ($stmt->fetchColumn() > 0) {
+            $response['parenthasnotes'] = true;
+        } else {
+            $response['parenthasnotes'] = false;
+        }
     } else {
         $response['parentid'] = -1;
     }
