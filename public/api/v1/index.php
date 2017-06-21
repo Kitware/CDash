@@ -847,6 +847,13 @@ function echo_main_dashboard_JSON($project_instance, $date)
         }
         $build_response['label'] = $build_label;
 
+        // Report subproject position for this build (if any).
+        if ($build_array['subprojectposition']) {
+            $build_response['position'] = $build_array['subprojectposition'];
+        } else {
+            $build_response['position'] = 0;
+        }
+
         // Calculate this build's total duration.
         $duration = strtotime($build_array['endtime']) -
             strtotime($build_array['starttime']);
