@@ -25,6 +25,7 @@ class ProjectHandler extends AbstractHandler
 {
     private $Project;
     private $SubProject;
+    private $SubProjectPosition;
     private $Dependencies; // keep an array of dependencies in order to remove them
     private $SubProjects; // keep an array of subprojects in order to remove them
     private $CurrentDependencies; // The dependencies of the current SubProject.
@@ -44,6 +45,8 @@ class ProjectHandler extends AbstractHandler
         $this->Project = new Project();
         $this->Project->Id = $projectid;
         $this->Project->Fill();
+
+        $this->SubProjectPosition = 1;
     }
 
     /** startElement function */
@@ -162,7 +165,9 @@ class ProjectHandler extends AbstractHandler
             }
         } elseif ($name == 'SUBPROJECT') {
             // Insert the SubProject.
+            $this->SubProject->SetPosition($this->SubProjectPosition);
             $this->SubProject->Save();
+            $this->SubProjectPosition++;
 
             // Insert the label.
             $Label = new Label;
