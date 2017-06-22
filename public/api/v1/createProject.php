@@ -16,6 +16,7 @@
 
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
+$noforcelogin = 1;
 include 'public/login.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';

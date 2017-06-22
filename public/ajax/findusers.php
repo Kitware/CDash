@@ -82,7 +82,6 @@ echo pdo_error();
             ?>
                             <input name="removeuser" type="submit" onclick="return confirmRemove()" value="remove user">
                             <?php
-
         } ?>
                         <input name="search" type="hidden" value='<?php echo $search ?>'>
                     </form>
@@ -90,7 +89,6 @@ echo pdo_error();
         </tr>
 
         <?php
-
     }
     ?>
 

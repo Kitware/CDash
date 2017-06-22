@@ -511,7 +511,8 @@ class BuildGroup
                                  WHERE b2g.buildtype='$type' AND b2g.siteid='-1' AND '$name' LIKE b2g.buildname
                                  AND (b2g.groupid=bg.id AND bg.projectid='$projectid')
                                  AND '$starttime'>b2g.starttime
-                                 AND ('$starttime'<b2g.endtime OR b2g.endtime='1980-01-01 00:00:00')");
+                                 AND ('$starttime'<b2g.endtime OR b2g.endtime='1980-01-01 00:00:00')
+                                 ORDER BY LENGTH(b2g.buildname) DESC");
 
         if (pdo_num_rows($build2grouprule) > 0) {
             $build2grouprule_array = pdo_fetch_array($build2grouprule);

@@ -69,8 +69,6 @@ class BuildModelTestCase extends KWWebTestCase
 
     public function testBuildModel()
     {
-        $this->startCodeCoverage();
-
         $build = new Build();
         $builderror = new BuildError();
         $builderror->Type = 0;
@@ -202,7 +200,6 @@ class BuildModelTestCase extends KWWebTestCase
         $build->AddError($buildwarning);
         $build->Save();
 
-        $this->stopCodeCoverage();
         return 0;
     }
 

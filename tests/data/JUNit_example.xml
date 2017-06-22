@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="junit-test-build" timestamp="2017-05-17T12:00:00" hostname="localhost" tests="5" failures="2" disabled="1" errors="0" time="0.0">
+    <properties>
+      <property name="track" value="my-custom-track"/>
+    </properties>
+    <testcase name="Passes" classname="bar1" status="run" time="0.0"></testcase>
+    <testcase name="PassesToo" classname="bar2" status="run" time="0.1"></testcase>
+    <testcase name="Fails" classname="bar3" status="fail" time="0.2"></testcase>
+    <testcase name="AlsoFails" classname="bar4" status="run" time="0.2">
+      <failure type="NotEnoughFoo"> details about failure </failure>
+    </testcase>
+    <testcase name="AnotherFailure" classname="bar5" status="run" time="0.0">
+      <error type="TooMuchFoo"> details about error </error>
+    </testcase>
+    <testcase name="DoesNotRun" classname="bar6" status="notrun" time="0.0"></testcase>
+  </testsuite>
+</testsuites>

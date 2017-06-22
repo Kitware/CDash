@@ -20,46 +20,14 @@ require_once 'include/api_common.php';
 include_once 'models/project.php';
 include_once 'models/user.php';
 
+init_api_request();
 $response = array();
 
 // Connect to database.
 @$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME", $db);
 
-// Check that a buildid was specified.
-$buildid_ok = false;
-@$buildid = $_GET['buildid'];
-if (!isset($buildid)) {
-    $rest_json = file_get_contents('php://input');
-    $_POST = json_decode($rest_json, true);
-    @$buildid = $_POST['buildid'];
-}
-if (isset($buildid)) {
-    $buildid = pdo_real_escape_numeric($buildid);
-    if (is_numeric($buildid)) {
-        $buildid_ok = true;
-    }
-}
-if (!$buildid_ok) {
-    $response['error'] = 'buildid not specified.';
-    echo json_encode($response);
-    return;
-}
-
-// Make sure this build actually exists.
-$build_array = pdo_fetch_array(pdo_query(
-    "SELECT * FROM build WHERE id='$buildid'"));
-$projectid = $build_array['projectid'];
-if (!isset($projectid) || $projectid == 0) {
-    $response['error'] = "This build doesn't exist. Maybe it has been deleted.";
-    echo json_encode($response);
-    return;
-}
-
-// And that the user has access to it.
-if (!can_access_project($projectid)) {
-    return;
-}
+$build = get_request_build();
 
 $method = $_SERVER['REQUEST_METHOD'];
 // Make sure the user is an admin before procedding with non-read-only methods.
@@ -74,7 +42,7 @@ if ($method != 'GET') {
     $Project = new Project;
     $User = new User;
     $User->Id = $userid;
-    $Project->Id = $projectid;
+    $Project->Id = $build->ProjectId;
 
     $role = $Project->GetUserRole($userid);
     if ($User->IsAdmin() === false && $role <= 1) {
@@ -104,24 +72,20 @@ switch ($method) {
 /* Handle DELETE requests */
 function rest_delete()
 {
-    global $buildid;
-    add_log('Build #' . $buildid . ' removed manually', 'buildAPI');
-    remove_build($buildid);
+    global $build;
+    add_log('Build #' . $build->Id . ' removed manually', 'buildAPI');
+    remove_build($build->Id);
 }
 
 /* Handle POST requests */
 function rest_post()
 {
-    global $buildid;
+    /** @var Build $build */
+    global $build;
 
-    // Lookup some details about this build.
-    $build = pdo_query(
-        "SELECT name, type, siteid, projectid FROM build WHERE id='$buildid'");
-    $build_array = pdo_fetch_array($build);
-    $buildtype = $build_array['type'];
-    $buildname = $build_array['name'];
-    $siteid = $build_array['siteid'];
-    $projectid = $build_array['projectid'];
+    $buildtype = $build->Type;
+    $buildname = $build->Name;
+    $siteid = $build->SiteId;
 
     // Should we change whether or not this build is expected?
     if (isset($_POST['expected']) && isset($_POST['groupid'])) {
@@ -160,25 +124,19 @@ function rest_post()
         $newgroupid = pdo_real_escape_numeric($_POST['newgroupid']);
 
         // Remove the build from its previous group.
-        $prevgroup = pdo_fetch_array(pdo_query(
-            "SELECT groupid as id FROM build2group WHERE buildid='$buildid'"));
-        $prevgroupid = $prevgroup['id'];
-        pdo_query(
-            "DELETE FROM build2group
-                WHERE groupid='$prevgroupid' AND buildid='$buildid'");
+        pdo_query("DELETE FROM build2group WHERE buildid='$build->Id'");
 
         // Insert it into the new group.
         pdo_query(
             "INSERT INTO build2group(groupid,buildid)
-                VALUES ('$newgroupid','$buildid')");
+                VALUES ('$newgroupid','$build->Id')");
 
         // Mark any previous buildgroup rule as finished as of this time.
         $now = gmdate(FMT_DATETIME);
         pdo_query(
             "UPDATE build2grouprule SET endtime='$now'
-                WHERE groupid='$prevgroupid' AND buildtype='$buildtype' AND
-                buildname='$buildname' AND siteid='$siteid' AND
-                endtime='1980-01-01 00:00:00'");
+                WHERE buildtype='$buildtype' AND buildname='$buildname' AND
+                siteid='$siteid' AND endtime='1980-01-01 00:00:00'");
 
         // Create the rule for the new buildgroup.
         // (begin time is set by default by mysql)
@@ -192,7 +150,7 @@ function rest_post()
     // Should we change the 'done' setting for this build?
     if (isset($_POST['done'])) {
         $done = pdo_real_escape_numeric($_POST['done']);
-        pdo_query("UPDATE build SET done='$done' WHERE id='$buildid'");
+        pdo_query("UPDATE build SET done='$done' WHERE id='{$build->Id}'");
     }
 }
 
@@ -205,7 +163,7 @@ function rest_put()
 /* Handle GET requests */
 function rest_get()
 {
-    global $buildid;
+    global $build;
     $response = array();
 
     // Are we looking for what went wrong with this build?
@@ -214,16 +172,14 @@ function rest_get()
         $response['hasFailingTests'] = false;
 
         // Lookup some details about this build.
-        $build_row = pdo_single_row_query(
-            "SELECT * FROM build WHERE id='$buildid'");
-        $buildtype = $build_row['type'];
-        $buildname = $build_row['name'];
-        $siteid = $build_row['siteid'];
-        $starttime = $build_row['starttime'];
-        $projectid = $build_row['projectid'];
+        $buildtype = $build->Type;
+        $buildname = $build->Name;
+        $siteid = $build->SiteId;
+        $starttime = $build->StartTime;
+        $projectid = $build->ProjectId;
 
         // Check if this build has errors.
-        $buildHasErrors = $build_row['builderrors'] > 0;
+        $buildHasErrors = $build->BuildErrorCount > 0;
         if ($buildHasErrors) {
             $response['hasErrors'] = true;
             // Find the last occurrence of this build that had no errors.
@@ -254,7 +210,7 @@ function rest_get()
         }
 
         // Check if this build has failed tests.
-        $buildHasFailingTests = $build_row['testfailed'] > 0;
+        $buildHasFailingTests = $build->TestFailedCount > 0;
         if ($buildHasFailingTests) {
             $response['hasFailingTests'] = true;
             // Find the last occurrence of this build that had no test failures.

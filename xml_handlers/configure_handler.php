@@ -140,6 +140,11 @@ class ConfigureHandler extends AbstractHandler
                     $build->GetIdFromName($subproject);
                 }
                 $build->InsertErrors = false;
+                if (!$this->Notified && !empty($this->PullRequest)) {
+                    // Only perform PR notification for the first build parsed.
+                    $build->SetPullRequest($this->PullRequest);
+                    $this->Notified = true;
+                }
 
                 $build->RemoveIfDone();
                 if ($build->Id == 0) {
@@ -168,12 +173,6 @@ class ConfigureHandler extends AbstractHandler
                         $this->Configure->NumberOfErrors);
 
                 $build->ComputeConfigureDifferences();
-
-                if (!$this->Notified && !empty($this->PullRequest)) {
-                    // Only perform PR notification for the first build parsed.
-                    $build->SetPullRequest($this->PullRequest);
-                    $this->Notified = true;
-                }
 
                 // Record configure duration with the build.
                 $build->SetConfigureDuration(

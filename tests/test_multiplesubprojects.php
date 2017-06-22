@@ -38,6 +38,11 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             return 1;
         }
 
+        if (!$this->submission('SubProjectExample', "$rep/Notes.xml")) {
+            $this->fail('failed to submit Notes.xml');
+            return 1;
+        }
+
         // Get the buildids that we just created so we can delete it later.
         $buildids = array();
         $buildid_results = pdo_query(
@@ -130,6 +135,10 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             $num_children = $jsonobj['numchildren'];
             if ($num_children != 4) {
                 throw new Exception("Expected 4 subprojects, found $num_children");
+            }
+
+            if ($jsonobj['parenthasnotes'] !== true) {
+                throw new Exception("parenthasnotes not set to true when expected");
             }
 
             $buildgroup = array_pop($jsonobj['buildgroups']);

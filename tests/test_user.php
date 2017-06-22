@@ -18,8 +18,6 @@ class UserTestCase extends KWWebTestCase
 
     public function testUser()
     {
-        $this->startCodeCoverage();
-
         $user = new User();
         $user->Id = 'non_numeric';
 
@@ -69,8 +67,6 @@ class UserTestCase extends KWWebTestCase
 
         // Coverage for update save
         $user->Save();
-
-        $this->stopCodeCoverage();
         return 0;
     }
 }

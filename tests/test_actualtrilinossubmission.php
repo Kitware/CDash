@@ -54,4 +54,32 @@ class ActualTrilinosSubmissionTestCase extends TrilinosSubmissionTestCase
         $this->setEmailCommitters('Trilinos', 0);
         $this->deleteLog($this->logfilename);
     }
+
+    public function testSubProjectBuildErrors()
+    {
+        // Get the parent build that we just created.
+        $query = $this->db->query(
+            "SELECT id FROM build
+            WHERE name = 'Windows_NT-MSVC10-SERIAL_DEBUG_DEV'
+            AND parentid = -1");
+        $buildid = $query[0]['id'];
+
+        // Verify 8 build errors.
+        $this->get($this->url . "/api/v1/viewBuildError.php?buildid=$buildid");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $num_errors = count($jsonobj['errors']);
+        if ($num_errors !== 8) {
+            $this->fail("Expected 8 build errors, found $num_errors");
+        }
+
+        // Verify 296 build warnings.
+        $this->get($this->url . "/api/v1/viewBuildError.php?buildid=$buildid&type=1");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $num_warnings = count($jsonobj['errors']);
+        if ($num_warnings !== 296) {
+            $this->fail("Expected 296 build warnings, found $num_warnings");
+        }
+    }
 }

@@ -17,6 +17,14 @@ class CreateProjectPermissionsTestCase extends KWWebTestCase
 
     public function testCreateProjectPermissions()
     {
+        // Test the unauthenticated case.
+        $response = $this->get($this->url . '/api/v1/createProject.php');
+        $response = json_decode($response);
+        $this->assertTrue(property_exists($response, 'requirelogin'));
+        $response = $this->get($this->url . '/api/v1/createProject.php?projectid=5');
+        $response = json_decode($response);
+        $this->assertTrue(property_exists($response, 'requirelogin'));
+
         // Tests for global administrator.
         $this->login();
 

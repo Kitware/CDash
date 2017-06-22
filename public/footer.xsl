@@ -23,7 +23,7 @@
    </xsl:choose>
    <xsl:text disable-output-escaping="yes"> &amp;copy;</xsl:text>
    <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text> <a href="http://www.kitware.com">Kitware</a>
-   | <a href="http://www.cdash.org/Bug" target="blank">Report problems</a>
+   | <a href="https://github.com/Kitware/CDash/issues" target="blank">Report problems</a>
    <xsl:choose>
    <xsl:when test="string-length(/cdash/generationtime)>0">
      | <xsl:value-of select="/cdash/generationtime"/>s
