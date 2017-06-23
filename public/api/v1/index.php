@@ -622,6 +622,10 @@ function echo_main_dashboard_JSON($project_instance, $date)
     $num_nightly_coverages_builds = 0;
     $show_aggregate = false;
     $response['comparecoverage'] = 0;
+    // We maintain a list of distinct build start times when viewing the children
+    // of a specified parent build.  We do this because our view differs slightly
+    // if the subprojects were built one at a time vs. all at once.
+    $build_start_times = [];
     foreach ($build_rows as $build_array) {
         $groupid = $build_array['groupid'];
 
@@ -852,6 +856,12 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $build_response['position'] = $build_array['subprojectposition'];
         } else {
             $build_response['position'] = 0;
+        }
+
+        // Update our list of distinct start times for child builds.
+        if ($response['childview'] == 1 &&
+                !in_array($build_array['starttime'], $build_start_times)) {
+            $build_start_times[] = $build_array['starttime'];
         }
 
         // Calculate this build's total duration.
@@ -1369,6 +1379,8 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $response['coverages'] = array_values($response['coverages']);
     }
 
+    $response['showorder'] = false;
+    $response['showstarttime'] = true;
     if ($response['childview'] == 1) {
         // Report number of children.
         if (!empty($buildgroups_response)) {
@@ -1380,6 +1392,13 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $numchildren = $row['numchildren'];
         }
         $response['numchildren'] = $numchildren;
+
+        // If all our children share the same start time, then this was an "all at once" subproject build.
+        // In that case, tell our view to display the "Order" column instead of the "Start Time" column.
+        if (count($build_start_times) === 1) {
+            $response['showorder'] = true;
+            $response['showstarttime'] = false;
+        }
     }
 
     // Generate coverage by group here.
