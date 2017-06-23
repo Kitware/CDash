@@ -626,6 +626,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
     // of a specified parent build.  We do this because our view differs slightly
     // if the subprojects were built one at a time vs. all at once.
     $build_start_times = [];
+    $subproject_positions = [];
     foreach ($build_rows as $build_array) {
         $groupid = $build_array['groupid'];
 
@@ -854,6 +855,10 @@ function echo_main_dashboard_JSON($project_instance, $date)
         // Report subproject position for this build (if any).
         if ($build_array['subprojectposition']) {
             $build_response['position'] = $build_array['subprojectposition'];
+            // Keep track of all positions encountered so we can normalize later.
+            if (!in_array($build_array['subprojectposition'], $subproject_positions)) {
+                $subproject_positions[] = $build_array['subprojectposition'];
+            }
         } else {
             $build_response['position'] = 0;
         }
@@ -1398,6 +1403,14 @@ function echo_main_dashboard_JSON($project_instance, $date)
         if (count($build_start_times) === 1) {
             $response['showorder'] = true;
             $response['showstarttime'] = false;
+            // Normalize subproject order so it's always 1 to N with no gaps.
+            sort($subproject_positions);
+            for ($i = 0; $i < count($buildgroups_response); $i++) {
+                for ($j = 0; $j < count($buildgroups_response[$i]['builds']); $j++) {
+                    $idx = array_search($buildgroups_response[$i]['builds'][$j]['position'], $subproject_positions);
+                    $buildgroups_response[$i]['builds'][$j]['position'] = $idx + 1;
+                }
+            }
         }
     }
 
