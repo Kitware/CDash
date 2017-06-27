@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/
+    working_directory: ~/CDash
     docker:
       - image: circleci/php:7.0.18-apache-browsers
     steps:
