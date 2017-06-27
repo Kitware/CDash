@@ -7,10 +7,11 @@ jobs:
     steps:
       - checkout
       - run: sudo apt-get update --quiet && sudo apt-get install --no-install-recommends --quiet --yes cmake && sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-4.9 90
-      - run: wget -O ~/xdebug-2.5.4.tgz http://xdebug.org/files/xdebug-2.5.4.tgz && tar -xvzf ~/xdebug-2.5.4.tgz
-      - run: cd ~/xdebug-2.5.4 && phpize && ./configure && make
-      - run: sudo cp ~/xdebug-2.5.4/modules/xdebug.so /usr/local/lib/php/extensions/no-debug-non-zts-20151012/xdebug.so
+      - run: wget http://xdebug.org/files/xdebug-2.5.4.tgz && tar -xvzf xdebug-2.5.4.tgz
+      - run: cd xdebug-2.5.4 && phpize && ./configure && make
+      - run: sudo cp ~/CDash/xdebug-2.5.4/modules/xdebug.so /usr/local/lib/php/extensions/no-debug-non-zts-20151012/xdebug.so
       - run: echo "\nzend_extension = /usr/local/lib/php/extensions/no-debug-non-zts-20151012/xdebug.so\n" >> ~/CDash/tests/circle/php.ini
+      - run: cd .. && rm -rf ./xdebug-2.5.4
       - run: sudo cp ~/CDash/tests/circle/php.ini /usr/local/etc/php
       - run: sudo ln -s ~/CDash/public /var/www/cdash
       - run: sudo apachectl restart
