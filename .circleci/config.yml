@@ -1,9 +1,13 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/cdash
+    working_directory: ~/
     docker:
       - image: circleci/php:7.0.18-apache-browsers
     steps:
       - checkout
-      - run: echo "hello world"
+      - run: sudo apt-get update --quiet && sudo apt-get install --no-install-recommends --quiet --yes cmake && sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-4.9 90
+      - run: cp ~/CDash/tests/circle/default /etc/apache2/sites-available
+      - run: sudo ln -s ~/CDash/public /var/www/cdash
+      - run: sudo apachectl restart
+      - run: echo "Hello world"
