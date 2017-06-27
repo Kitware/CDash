@@ -9,8 +9,7 @@ jobs:
       - run: sudo apt-get update --quiet && sudo apt-get install --no-install-recommends --quiet --yes cmake && sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-4.9 90
       - run: wget http://xdebug.org/files/xdebug-2.5.4.tgz && tar -xvzf xdebug-2.5.4.tgz
       - run: cd ./xdebug-2.5.4 && phpize && ./configure && make
-      - run: cp modules/xdebug.so /usr/local/lib/php/extensions/no-debug-non-zts-20151012/xdebug.so
-      - run: cd ~/Kitware/CDash
+      - run: cp ~/Kitware/xdebug-2.5.4/modules/xdebug.so /usr/local/lib/php/extensions/no-debug-non-zts-20151012/xdebug.so
       - run: echo "\nzend_extension = /usr/local/lib/php/extensions/no-debug-non-zts-20151012/xdebug.so\n" >> ~/Kitware/CDash/.circleci/php.ini
       - run: cp ~/Kitware/CDash/.circleci/php.ini /usr/local/etc/php
       - run: sudo ln -s ~/Kitware/CDash/public /var/www/cdash
