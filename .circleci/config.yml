@@ -1,0 +1,9 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/cdash
+    docker:
+      - image: circleci/php:7.0.18-apache-browsers
+    steps:
+      - checkout
+      - run: echo "hello world"
