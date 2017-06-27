@@ -6,4 +6,10 @@ jobs:
       - image: bbeanatkitware/cdash-host:v0.0.1
     steps:
       - checkout
-      - run: echo "hello world"
+      - run: php -i
+      - run: sudo ln -s ~/CDash/public /var/www/html
+      - run: chmod a+rwx backup log public/rss public/upload
+      - run: php /usr/local/bin/composer install --no-interaction --no-progress --prefer-dist
+      - run: npm install
+
+
