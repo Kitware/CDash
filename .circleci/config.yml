@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/CDash
     docker:
-      - image: bbeanatkitware/cdash-host
+      - image: bbeanatkitware/cdash-host:v0.0.1
     steps:
       - checkout
       - run: echo "hello world"
