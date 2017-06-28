@@ -61,7 +61,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
 
         try {
             $success = true;
-            $subprojects = array("EmptySubproject", "MyExperimentalFeature", "MyProductionCode", "MyThirdPartyDependency");
+            $subprojects = array("MyThirdPartyDependency", "MyExperimentalFeature", "MyProductionCode", "EmptySubproject");
 
             //
             $this->get($this->url . "/api/v1/index.php?project=SubProjectExample&date=2016-07-28");
@@ -146,8 +146,13 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
 
             foreach ($builds as $build) {
                 $label = $build['label'];
-                if (!in_array($label, $subprojects)) {
+                $index = array_search($label, $subprojects);
+                if ($index === false) {
                     throw new Exception("Invalid label ($label)!");
+                }
+                $index += 1;
+                if ($build['position'] !== $index) {
+                    throw new Exception("Expected $index but found ${build['position']} for $label position");
                 }
             }
 
@@ -241,6 +246,31 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
         } catch (Exception $e) {
             $success = false;
             $error_message = $e->getMessage();
+        }
+
+        // Test changing subproject order.
+        if (!$this->submission('SubProjectExample', "$rep/Project_2.xml")) {
+            $this->fail("failed to submit Project_2.xml");
+            return;
+        }
+        $new_order = ["MyProductionCode", "MyExperimentalFeature", "EmptySubproject", "MyThirdPartyDependency"];
+        $this->get($this->url . "/api/v1/index.php?project=SubProjectExample&parentid=".$parentid);
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $buildgroup = array_pop($jsonobj['buildgroups']);
+        $builds = $buildgroup['builds'];
+        foreach ($builds as $build) {
+            $label = $build['label'];
+            $index = array_search($label, $new_order);
+            if ($index === false) {
+                $success = false;
+                $error_message = "Invalid label ($label)!";
+            }
+            $index += 1;
+            if ($build['position'] !== $index) {
+                $success = false;
+                $error_message = "Expected $index but found ${build['position']} for $label position";
+            }
         }
 
         // Delete the builds

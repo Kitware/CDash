@@ -622,6 +622,11 @@ function echo_main_dashboard_JSON($project_instance, $date)
     $num_nightly_coverages_builds = 0;
     $show_aggregate = false;
     $response['comparecoverage'] = 0;
+    // We maintain a list of distinct build start times when viewing the children
+    // of a specified parent build.  We do this because our view differs slightly
+    // if the subprojects were built one at a time vs. all at once.
+    $build_start_times = [];
+    $subproject_positions = [];
     foreach ($build_rows as $build_array) {
         $groupid = $build_array['groupid'];
 
@@ -846,6 +851,23 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $build_label = "($num_labels labels)";
         }
         $build_response['label'] = $build_label;
+
+        // Report subproject position for this build (if any).
+        if ($build_array['subprojectposition']) {
+            $build_response['position'] = $build_array['subprojectposition'];
+            // Keep track of all positions encountered so we can normalize later.
+            if (!in_array($build_array['subprojectposition'], $subproject_positions)) {
+                $subproject_positions[] = $build_array['subprojectposition'];
+            }
+        } else {
+            $build_response['position'] = 0;
+        }
+
+        // Update our list of distinct start times for child builds.
+        if ($response['childview'] == 1 &&
+                !in_array($build_array['starttime'], $build_start_times)) {
+            $build_start_times[] = $build_array['starttime'];
+        }
 
         // Calculate this build's total duration.
         $duration = strtotime($build_array['endtime']) -
@@ -1362,6 +1384,8 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $response['coverages'] = array_values($response['coverages']);
     }
 
+    $response['showorder'] = false;
+    $response['showstarttime'] = true;
     if ($response['childview'] == 1) {
         // Report number of children.
         if (!empty($buildgroups_response)) {
@@ -1373,6 +1397,21 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $numchildren = $row['numchildren'];
         }
         $response['numchildren'] = $numchildren;
+
+        // If all our children share the same start time, then this was an "all at once" subproject build.
+        // In that case, tell our view to display the "Order" column instead of the "Start Time" column.
+        if (count($build_start_times) === 1) {
+            $response['showorder'] = true;
+            $response['showstarttime'] = false;
+            // Normalize subproject order so it's always 1 to N with no gaps.
+            sort($subproject_positions);
+            for ($i = 0; $i < count($buildgroups_response); $i++) {
+                for ($j = 0; $j < count($buildgroups_response[$i]['builds']); $j++) {
+                    $idx = array_search($buildgroups_response[$i]['builds'][$j]['position'], $subproject_positions);
+                    $buildgroups_response[$i]['builds'][$j]['position'] = $idx + 1;
+                }
+            }
+        }
     }
 
     // Generate coverage by group here.
