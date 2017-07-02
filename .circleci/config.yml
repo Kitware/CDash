@@ -13,6 +13,12 @@ jobs:
     steps:
       - checkout
       - run: sudo apt-get update && sudo apt-get install nodejs npm
+      - run: sudo npm cache clean -f
+      - run: sudo npm install -g n
+      - run: sudo n 0.12.7
+      - run: echo "*** NODE VERSION ***"
+      - run: nodejs --version
+      - run: sudo su
       - run: sudo touch /etc/apt/sources.list.d/jessie-all.list
       - run: echo 'deb http://packages.dotdeb.org jessie all' | sudo tee -a /etc/apt/sources.list.d/jessie-all.list
       - run: echo 'deb-src http://packages.dotdeb.org jessie all' | sudo tee -a /etc/apt/sources.list.d/jessie-all.list
