@@ -1,15 +1,41 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/CDash
+    working_directory: /home/circleci/cdash
     docker:
-      - image: bbeanatkitware/cdash-host:v0.0.1
+      - image: circleci/php:7.0.18-apache-browsers
+      - image: mysql/mysql-server:5.5
+        environment:
+          MYSQL_DATABASE: cdash4simpletest
+          MYSQL_USER: cdash
+          MYSQL_USER_PASSWORD: ''
+          MYSQL_RANDOM_ROOT_PASSWORD: YES
     steps:
       - checkout
-      - run: php -i
-      - run: sudo ln -s ~/CDash/public /var/www/html
-      - run: chmod a+rwx backup log public/rss public/upload
-      - run: php /usr/local/bin/composer install --no-interaction --no-progress --prefer-dist
+      - run: sudo apt-get update && sudo apt-get install nodejs npm
+      - run: sudo touch /etc/apt/sources.list.d/jessie-all.list
+      - run: echo 'deb http://packages.dotdeb.org jessie all' | sudo tee -a /etc/apt/sources.list.d/jessie-all.list
+      - run: echo 'deb-src http://packages.dotdeb.org jessie all' | sudo tee -a /etc/apt/sources.list.d/jessie-all.list
+      - run: sudo apt-get update && sudo apt-get install -y php7.0-xdebug php7.0-bcmath php7.0-gd php7.0-xsl php7.0-mysql
+      - run: sudo cp /usr/lib/php/20151012/pdo_mysql.so /usr/local/lib/php/extensions/no-debug-non-zts-20151012/
+      - run: sudo cp /usr/lib/php/20151012/xdebug.so /usr/local/lib/php/extensions/no-debug-non-zts-20151012/
+      - run: sudo cp /usr/lib/php/20151012/xsl.so /usr/local/lib/php/extensions/no-debug-non-zts-20151012/
+      - run: sudo cp /usr/lib/php/20151012/bcmath.so /usr/local/lib/php/extensions/no-debug-non-zts-20151012/
+      - run: sudo cp /usr/lib/php/20151012/gd.so /usr/local/lib/php/extensions/no-debug-non-zts-20151012/
+      - run: sudo cp /etc/php/7.0/mods-available/xdebug.ini /usr/local/etc/php/conf.d/
+      - run: sudo cp /etc/php/7.0/mods-available/pdo_mysql.ini /usr/local/etc/php/conf.d/
+      - run: sudo cp /etc/php/7.0/mods-available/gd.ini /usr/local/etc/php/conf.d/
+      - run: sudo cp /etc/php/7.0/mods-available/xsl.ini /usr/local/etc/php/conf.d/
+      - run: sudo cp /etc/php/7.0/mods-available/bcmath.ini /usr/local/etc/php/conf.d/
+      - run: php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+      - run: php -r "if (hash_file('SHA384', 'composer-setup.php') === '669656bab3166a7aff8a7506b8cb2d1c292f042046c5a994c43155c0be6190fa0355160742ab2e1c88d40d5be660b410') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+      - run: sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+      - run: php -r "unlink('composer-setup.php');"
+      - run: sudo apt-get install cmake
+      - run: sudo chmod a+rwx backup log public/rss public/upload
+      - run: sudo ln -s /home/circleci/cdash/public /var/www/html/cdash
       - run: npm install
-
+      - run: sudo /etc/init.d/apache2 restart
+      - run: mkdir ~/cdash/_build && cd ~/cdash/_build && cmake -DCDASH_TESTING_RENAME_LOGS=true -DCDASH_DIR_NAME=cdash -DCDASH_DB_LOGIN=cdash -DBUILDNAME="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}_MySQL" -DSITE="CircleCI" ..
+      - run: cd ~/cdash/_build ctest --extra-verbose --no-compress-output --track Continuous --test-action Test .
 
