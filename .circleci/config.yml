@@ -11,10 +11,11 @@ jobs:
       - run: ln -s /usr/bin/google-chrome /usr/bin/chrome
       - run: /etc/init.d/mysql start
       - run: /etc/init.d/apache2 start
+      - run: chown -R kitware:kitware .
       - run: chmod a+rwx backup log public/rss public/upload
       - run: composer self-update --no-interaction
-      - run: sudo -u kitware composer install --no-interaction --no-progress --prefer-dist
-      - run: sudo -u kitware npm install
+      - run: composer install --no-interaction --no-progress --prefer-dist
+      - run: npm install
       - run: cp tests/circle/protractor.config.json node_modules/protractor/config.json
       - run: node_modules/.bin/webdriver-manager update
       - run:
