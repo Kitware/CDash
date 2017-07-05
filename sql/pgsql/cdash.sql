@@ -827,6 +827,7 @@ CREATE TABLE "subproject" (
   "projectid" bigint NOT NULL,
   "groupid" bigint NOT NULL,
   "path" character varying(512) DEFAULT '' NOT NULL,
+  "position" smallint DEFAULT '0' NOT NULL,
   "starttime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
   "endtime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
   PRIMARY KEY ("id"),

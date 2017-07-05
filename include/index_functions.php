@@ -122,6 +122,7 @@ function get_index_query($userupdatesql='')
         das.checker, das.numdefects,
         sp.id AS subprojectid,
         sp.groupid AS subprojectgroup,
+        sp.position AS subprojectposition,
         g.name AS groupname,gp.position,g.id AS groupid,
         (SELECT count(buildid) FROM label2build WHERE buildid=b.id) AS numlabels,
         (SELECT count(buildid) FROM build2uploadfile WHERE buildid=b.id) AS builduploadfiles

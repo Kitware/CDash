@@ -909,6 +909,7 @@ CREATE TABLE `subproject` (
   `projectid` int(11) NOT NULL,
   `groupid` int(11) NOT NULL,
   `path` varchar(512) NOT NULL default '',
+  `position` smallint(6) unsigned NOT NULL default '0',
   `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
   `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
   PRIMARY KEY  (`id`),

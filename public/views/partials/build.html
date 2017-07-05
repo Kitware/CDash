@@ -362,7 +362,7 @@
   </div>
 </td>
 
-<td align="center">
+<td align="center" ng-if="::cdash.showstarttime">
   <span ng-if="::!build.builddate" class="builddateelapsed" alt="Expected submit time: {{::build.expectedstarttime}}">
     Expected build
   </span>
@@ -372,6 +372,10 @@
       {{::build.builddateelapsed}}
     </span>
   </div>
+</td>
+
+<td align="center" ng-if="::cdash.showorder">
+  {{::build.position}}
 </td>
 
 <!-- display the labels -->
