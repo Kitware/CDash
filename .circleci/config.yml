@@ -22,7 +22,7 @@ jobs:
           background: true
           command: node_modules/.bin/webdriver-manager start
       - run: mkdir _build
-      - run: cd _build && sudo -u kitware cmake -DCDASH_TESTING_RENAME_LOGS=true -DCDASH_DIR_NAME=cdash -DCDASH_DB_LOGIN=root -DBUILDNAME="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}_MySQL" -DSITE="CircleCI" ..
+      - run: cd _build && cmake -DCDASH_TESTING_RENAME_LOGS=true -DCDASH_DIR_NAME=cdash -DCDASH_DB_LOGIN=root -DBUILDNAME="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}_MySQL" -DSITE="CircleCI" ..
       - run: cd _build && ctest -I 1,1 -VV
       - run: ps -aux
-      # - run: cd _build && ctest -I 1,116,115 --extra-verbose --no-compress-output --track Continuous --test-action Test .
+      - run: cd _build && ctest -I 1,116,115 --extra-verbose --no-compress-output --track Continuous --test-action Test .
