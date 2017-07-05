@@ -205,23 +205,12 @@ class GCovTarHandler
                 return;
             }
             $subprojectid = $subproject->GetId();
-            $subprojectpath = $subproject->GetPath();
 
             // Find the sibling build that performed this SubProject.
-            $siblingBuild = new Build();
-            $query =
-                'SELECT b.id FROM build AS b
-                INNER JOIN subproject2build AS sp2b ON (sp2b.buildid=b.id)
-                WHERE b.parentid=
-                (SELECT parentid FROM build WHERE id=' . $this->Build->Id . ")
-                AND sp2b.subprojectid=$subprojectid";
-            $row = pdo_single_row_query($query);
-            if ($row && array_key_exists('id', $row)) {
-                $buildid = $row['id'];
-                $siblingBuild->Id = $buildid;
-                $siblingBuild->FillFromId($buildid);
-            } else {
+            $siblingBuild = Build::GetSubProjectBuild($this->Build->GetParentId(), $subprojectid);
+            if (is_null($siblingBuild)) {
                 // Build doesn't exist yet, add it here.
+                $siblingBuild = new Build();
                 $siblingBuild->Name = $this->Build->Name;
                 $siblingBuild->ProjectId = $this->ProjectId;
                 $siblingBuild->SiteId = $this->Build->SiteId;
@@ -232,11 +221,12 @@ class GCovTarHandler
                 $siblingBuild->EndTime = $this->Build->EndTime;
                 $siblingBuild->SubmitTime = gmdate(FMT_DATETIME);
                 add_build($siblingBuild, 0);
-                $buildid = $siblingBuild->Id;
             }
+            $buildid = $siblingBuild->Id;
             $coverageFileLog->Build = $siblingBuild;
             // Remove any part of the file path that comes before
             // the subproject path.
+            $subprojectpath = $subproject->GetPath();
             $path = substr($path, strpos($path, $subprojectpath));
 
             // Replace the subproject path with '.'
