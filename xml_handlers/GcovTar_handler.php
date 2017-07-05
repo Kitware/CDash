@@ -199,23 +199,13 @@ class GCovTarHandler
             strpos($path, $this->SubProjectPath) === false
         ) {
             // Find the SubProject that corresponds to this path.
-            $query =
-                "SELECT id, name, path FROM subproject
-                WHERE projectid = $this->ProjectId AND
-                endtime = '1980-01-01 00:00:00' AND
-                path != '' AND
-                '$path' LIKE CONCAT('%',path,'%')";
-            $result = pdo_query($query);
-            if (!$result || pdo_num_rows($result) == 0) {
-                add_log(
-                    "No SubProject found for '$path'", 'ParseGcovFile',
-                    LOG_INFO, $this->ProjectId, $this->Build->Id);
+            $subproject = SubProject::GetSubProjectFromPath($path, $this->ProjectId);
+            if (is_null($subproject)) {
+                // Error already logged.
                 return;
             }
-            $row = pdo_fetch_array($result);
-            $subprojectid = $row['id'];
-            $subprojectname = $row['name'];
-            $subprojectpath = $row['path'];
+            $subprojectid = $subproject->GetId();
+            $subprojectpath = $subproject->GetPath();
 
             // Find the sibling build that performed this SubProject.
             $siblingBuild = new Build();
@@ -237,7 +227,7 @@ class GCovTarHandler
                 $siblingBuild->SiteId = $this->Build->SiteId;
                 $siblingBuild->SetParentId($this->Build->GetParentId());
                 $siblingBuild->SetStamp($this->Build->GetStamp());
-                $siblingBuild->SetSubProject($subprojectname);
+                $siblingBuild->SetSubProject($subproject->GetName());
                 $siblingBuild->StartTime = $this->Build->StartTime;
                 $siblingBuild->EndTime = $this->Build->EndTime;
                 $siblingBuild->SubmitTime = gmdate(FMT_DATETIME);
