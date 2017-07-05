@@ -639,7 +639,11 @@ class TestOverviewPhpFilters extends DefaultFilters
 
     public function getFilterDefinitionsXML()
     {
-        return getFilterDefinitionXML('buildname', 'Build Name', 'string', '', '');
+        $xml = '';
+        $xml .= getFilterDefinitionXML('buildname', 'Build Name', 'string', '', '');
+        $xml .= getFilterDefinitionXML('subproject', 'SubProject', 'string', '', '');
+        $xml .= getFilterDefinitionXML('testname', 'Test Name', 'string', '', '');
+        return $xml;
     }
 
     public function getSqlField($field)
@@ -649,7 +653,12 @@ class TestOverviewPhpFilters extends DefaultFilters
             case 'buildname':
                 $sql_field = 'b.name';
                 break;
-
+            case 'subproject':
+                $sql_field = 'sp.name';
+                break;
+            case 'testname':
+                $sql_field = 't.name';
+                break;
             default:
                 trigger_error("unknown field: $field", E_USER_WARNING);
                 break;
