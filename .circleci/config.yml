@@ -1,4 +1,5 @@
 version: 2
+
 jobs:
   build:
     docker:
@@ -6,11 +7,10 @@ jobs:
     working_directory: /home/kitware/cdash
     steps:
       - checkout
-      - run: /etc/init.d/apache2 start
-      - run: curl -v http://localhost/info.php
-      - run: ln -s /home/kitware/cdash/public /var/www/cdash
+      - run: ln -s /home/kitware/cdash/public /var/www/html/cdash
       - run: ln -s /usr/bin/google-chrome /usr/bin/chrome
       - run: /etc/init.d/mysql start
+      - run: /etc/init.d/apache2 start
       - run: chmod a+rwx backup log public/rss public/upload
       - run: composer self-update --no-interaction
       - run: sudo -u kitware composer install --no-interaction --no-progress --prefer-dist
@@ -22,6 +22,6 @@ jobs:
           command: node_modules/.bin/webdriver-manager start
       - run: mkdir _build
       - run: cd _build && sudo -u kitware cmake -DCDASH_TESTING_RENAME_LOGS=true -DCDASH_DIR_NAME=cdash -DCDASH_DB_LOGIN=root -DBUILDNAME="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}_MySQL" -DSITE="CircleCI" ..
-      - run: curl -v http://localhost/cdash
+      - run: cd _build && ctest -I 1,1 -VV
       - run: ps -aux
       # - run: cd _build && ctest -I 1,116,115 --extra-verbose --no-compress-output --track Continuous --test-action Test .
