@@ -6,11 +6,11 @@ jobs:
     working_directory: /home/kitware/cdash
     steps:
       - checkout
-      - run: curl -v http://127.0.0.1/info.php
+      - run: /etc/init.d/apache2 start
+      - run: curl -v http://localhost/info.php
       - run: ln -s /home/kitware/cdash/public /var/www/cdash
       - run: ln -s /usr/bin/google-chrome /usr/bin/chrome
       - run: /etc/init.d/mysql start
-      - run: /etc/init.d/apache2 start
       - run: chmod a+rwx backup log public/rss public/upload
       - run: composer self-update --no-interaction
       - run: sudo -u kitware composer install --no-interaction --no-progress --prefer-dist
