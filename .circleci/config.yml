@@ -13,7 +13,7 @@ jobs:
     working_directory: /home/kitware/cdash
     steps:
       - checkout
-      - run: sudo /etc/init.d/apache2 reload
+      - run: sudo /etc/init.d/apache2 restart
       - run: sudo ln -s /home/kitware/cdash/public /var/www/html/cdash
       - run: chmod a+rwx backup log public/rss public/upload
       - run: composer self-update --no-interaction
