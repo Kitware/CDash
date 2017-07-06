@@ -8,6 +8,7 @@ jobs:
         environment:
           MYSQL_ROOT_PASSWORD: ''
           MYSQL_DATABASE: 'cdash4simpletest'
+          MYSQL_ROOT_HOST: '%'
     working_directory: /home/kitware/cdash
     steps:
       - checkout
