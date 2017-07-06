@@ -6,6 +6,7 @@ jobs:
       - image: bbeanatkitware/cdash-host:v0.1.0
       - image: mysql/mysql-server:5.5
         environment:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
           MYSQL_ROOT_PASSWORD: ''
           MYSQL_DATABASE: 'cdash4simpletest'
           MYSQL_ROOT_HOST: '%'
