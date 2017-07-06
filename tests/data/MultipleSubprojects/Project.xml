@@ -677,11 +677,15 @@
     </EmailAddresses>
   </SubProject>
   <SubProject name="MyThirdPartyDependency">
+    <Path>packages/with_subpackages</Path>
   </SubProject>
   <SubProject name="MyExperimentalFeature">
+      <Path>MyExperimentalFeature</Path>
   </SubProject>
   <SubProject name="MyProductionCode">
+    <Path>MyProductionCode</Path>
   </SubProject>
   <SubProject name="EmptySubproject">
+      <Path>EmptySubproject</Path>
   </SubProject>
 </Project>
