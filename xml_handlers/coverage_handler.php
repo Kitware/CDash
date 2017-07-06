@@ -175,8 +175,8 @@ class CoverageHandler extends AbstractHandler
 
         if ($parent == 'COVERAGE') {
             switch ($element) {
-                case 'STARTBUILDTIME':
-                    $this->StartTimeStamp .= $data;
+                case 'STARTTIME':
+                    $this->StartTimeStamp = $data;
                     break;
                 case 'STARTDATETIME':
                     $this->StartTimeStamp = str_to_time($data, $this->Build->GetStamp());
