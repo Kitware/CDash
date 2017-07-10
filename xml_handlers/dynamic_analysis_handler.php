@@ -29,16 +29,24 @@ class DynamicAnalysisHandler extends AbstractHandler
 
     private $DynamicAnalysis;
     private $DynamicAnalysisDefect;
-    private $DynamicAnalysisSummary;
+    private $DynamicAnalysisSummaries;
     private $Label;
+
+    private $Builds;
+    private $BuildInformation;
+
+    // Map SubProjects to Labels
+    private $SubProjects;
+    private $TestSubProjectName;
 
     /** Constructor */
     public function __construct($projectID, $scheduleID)
     {
         parent::__construct($projectID, $scheduleID);
-        $this->Build = new Build();
+        $this->Builds = [];
+        $this->SubProjects = [];
         $this->Site = new Site();
-        $this->DynamicAnalysisSummary = new DynamicAnalysisSummary();
+        $this->DynamicAnalysisSummaries = [];
     }
 
     /** Start element */
@@ -54,31 +62,50 @@ class DynamicAnalysisHandler extends AbstractHandler
             $this->Site->Insert();
 
             $siteInformation = new SiteInformation();
-            $buildInformation = new BuildInformation();
+            $this->BuildInformation = new BuildInformation();
 
             // Fill in the attribute
             foreach ($attributes as $key => $value) {
-                $siteInformation->SetValue($key, $value);
-                $buildInformation->SetValue($key, $value);
+                if ($key === 'BUILDNAME') {
+                    $this->BuildName = $value;
+                } elseif ($key === 'BUILDSTAMP') {
+                    $this->BuildStamp = $value;
+                } elseif ($key === 'GENERATOR') {
+                    $this->Generator = $value;
+                } elseif ($key == 'CHANGEID') {
+                    $this->PullRequest = $value;
+                } else {
+                    $siteInformation->SetValue($key, $value);
+                    $this->BuildInformation->SetValue($key, $value);
+                }
             }
 
+            if (empty($this->BuildName)) {
+                $this->BuildName = '(empty)';
+            }
             $this->Site->SetInformation($siteInformation);
-
-            $this->Build->SiteId = $this->Site->Id;
-            $this->Build->Name = $attributes['BUILDNAME'];
-            if (empty($this->Build->Name)) {
-                $this->Build->Name = '(empty)';
+        } elseif ($name == 'SUBPROJECT') {
+            $this->SubProjectName = $attributes['NAME'];
+            if (!array_key_exists($this->SubProjectName, $this->SubProjects)) {
+                $this->SubProjects[$this->SubProjectName] = [];
             }
-            $this->Build->SetStamp($attributes['BUILDSTAMP']);
-            $this->Build->Generator = $attributes['GENERATOR'];
-            $this->Build->Information = $buildInformation;
         } elseif ($name == 'DYNAMICANALYSIS') {
             $this->Checker = $attributes['CHECKER'];
-            $this->DynamicAnalysisSummary->Checker = $this->Checker;
+            if (empty($this->DynamicAnalysisSummaries)) {
+                $summary = new DynamicAnalysisSummary();
+                $summary->Empty = true;
+                $summary->Checker = $this->Checker;
+                $this->DynamicAnalysisSummaries[$this->SubProjectName] = $summary;
+            } else {
+                foreach ($this->DynamicAnalysisSummaries as $subprojectName => $summary) {
+                    $summary->Checker = $this->Checker;
+                }
+            }
         } elseif ($name == 'TEST' && isset($attributes['STATUS'])) {
             $this->DynamicAnalysis = new DynamicAnalysis();
             $this->DynamicAnalysis->Checker = $this->Checker;
             $this->DynamicAnalysis->Status = $attributes['STATUS'];
+            $this->TestSubProjectName = "";
         } elseif ($name == 'DEFECT') {
             $this->DynamicAnalysisDefect = new DynamicAnalysisDefect();
             $this->DynamicAnalysisDefect->Type = $attributes['TYPE'];
@@ -97,65 +124,58 @@ class DynamicAnalysisHandler extends AbstractHandler
         parent::endElement($parser, $name);
 
         if ($name == 'STARTTESTTIME' && $parent == 'DYNAMICANALYSIS') {
-            $this->Build->ProjectId = $this->projectid;
-            $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
-            $this->Build->StartTime = $start_time;
-            // EndTimeStamp hasn't been parsed yet.  We update this value later.
-            $this->Build->EndTime = $start_time;
-            $this->Build->SubmitTime = gmdate(FMT_DATETIME);
-            $this->Build->SetSubProject($this->SubProjectName);
-            $this->Build->GetIdFromName($this->SubProjectName);
-            $this->Build->RemoveIfDone();
-            // If the build doesn't exist we add it
-            if ($this->Build->Id == 0) {
-                $this->Build->InsertErrors = false;
-                add_build($this->Build, $this->scheduleid);
+            if (empty($this->SubProjects)) {
+                // Not a SubProject build.
+                $this->createBuild('');
             } else {
-                // Otherwise make sure that the build is up-to-date.
-                $this->Build->UpdateBuild($this->Build->Id, -1, -1);
-
-                // Remove all the previous analysis
-                $this->DynamicAnalysis = new DynamicAnalysis();
-                $this->DynamicAnalysis->BuildId = $this->Build->Id;
-                $this->DynamicAnalysis->RemoveAll();
-                unset($this->DynamicAnalysis);
+                // Make sure we have a build for each SubProject.
+                foreach ($this->SubProjects as $subproject => $labels) {
+                    $this->createBuild($subproject);
+                }
             }
-            $GLOBALS['PHP_ERROR_BUILD_ID'] = $this->Build->Id;
-            $this->DynamicAnalysisSummary->BuildId = $this->Build->Id;
         } elseif ($name == 'TEST' && $parent == 'DYNAMICANALYSIS') {
-            $this->DynamicAnalysis->BuildId = $this->Build->Id;
+            $build = $this->Builds[$this->SubProjectName];
+            $GLOBALS['PHP_ERROR_BUILD_ID'] = $build->Id;
+            $this->DynamicAnalysisSummaries[$this->SubProjectName]->Empty = false;
+            foreach ($this->DynamicAnalysis->GetDefects() as $defect) {
+                $this->DynamicAnalysisSummaries[$this->SubProjectName]->AddDefects(
+                    $defect->Value);
+            }
+            $this->DynamicAnalysis->BuildId = $build->Id;
             $this->DynamicAnalysis->Insert();
         } elseif ($name == 'DEFECT') {
             $this->DynamicAnalysis->AddDefect($this->DynamicAnalysisDefect);
-            $this->DynamicAnalysisSummary->AddDefects(
-                    $this->DynamicAnalysisDefect->Value);
             unset($this->DynamicAnalysisDefect);
         } elseif ($name == 'LABEL') {
-            if (isset($this->DynamicAnalysis)) {
+            if (!empty($this->TestSubProjectName)) {
+                $this->SubProjectName = $this->TestSubProjectName;
+            } elseif (isset($this->DynamicAnalysis)) {
                 $this->DynamicAnalysis->AddLabel($this->Label);
             }
         } elseif ($name == 'DYNAMICANALYSIS') {
-            // Update this build's end time if necessary.
-            $this->Build->EndTime = gmdate(FMT_DATETIME, $this->EndTimeStamp);
-            $this->Build->UpdateBuild($this->Build->Id, -1, -1);
+            foreach ($this->Builds as $subprojectName => $build) {
+                // Update this build's end time if necessary.
+                $build->EndTime = gmdate(FMT_DATETIME, $this->EndTimeStamp);
+                $build->UpdateBuild($build->Id, -1, -1);
 
-            // If everything is perfect CTest doesn't send any <test>
-            // But we still want a line showing the current dynamic analysis
-            if (!isset($this->DynamicAnalysis)) {
-                $this->DynamicAnalysis = new DynamicAnalysis();
-                $this->DynamicAnalysis->BuildId = $this->Build->Id;
-                $this->DynamicAnalysis->Status = 'passed';
-                $this->DynamicAnalysis->Checker = $this->Checker;
-                $this->DynamicAnalysis->Insert();
-            }
-            $this->DynamicAnalysisSummary->Insert();
+                // If everything is perfect CTest doesn't send any <test>
+                // But we still want a line showing the current dynamic analysis
+                if ($this->DynamicAnalysisSummaries[$subprojectName]->Empty) {
+                    $this->DynamicAnalysis = new DynamicAnalysis();
+                    $this->DynamicAnalysis->BuildId = $build->Id;
+                    $this->DynamicAnalysis->Status = 'passed';
+                    $this->DynamicAnalysis->Checker = $this->Checker;
+                    $this->DynamicAnalysis->Insert();
+                }
+                $this->DynamicAnalysisSummaries[$subprojectName]->Insert();
 
-            // If this is a child build append these defects to the parent's
-            // summary.
-            $parentid = $this->Build->LookupParentBuildId();
-            if ($parentid > 0) {
-                $this->DynamicAnalysisSummary->BuildId = $parentid;
-                $this->DynamicAnalysisSummary->Insert(true);
+                // If this is a child build append these defects to the parent's
+                // summary.
+                $parentid = $build->LookupParentBuildId();
+                if ($parentid > 0) {
+                    $this->DynamicAnalysisSummaries[$subprojectName]->BuildId = $parentid;
+                    $this->DynamicAnalysisSummaries[$subprojectName]->Insert(true);
+                }
             }
         }
     }
@@ -194,8 +214,76 @@ class DynamicAnalysisHandler extends AbstractHandler
             if ($element == 'DEFECT') {
                 $this->DynamicAnalysisDefect->Value .= $data;
             }
+        } elseif ($parent == 'SUBPROJECT' && $element == 'LABEL') {
+            $this->SubProjects[$this->SubProjectName][] =  $data;
         } elseif ($element == 'LABEL') {
-            $this->Label->SetText($data);
+            // Check if this label belongs to a SubProject.
+            foreach ($this->SubProjects as $subproject => $labels) {
+                if (in_array($data, $labels)) {
+                    $this->TestSubProjectName = $subproject;
+                    break;
+                }
+            }
+            if (empty($this->TestSubProjectName)) {
+                $this->Label->SetText($data);
+            }
         }
+    }
+
+    public function getBuildStamp()
+    {
+        return $this->BuildStamp;
+    }
+
+    public function getBuildName()
+    {
+        return $this->BuildName;
+    }
+
+    private function createBuild($subprojectName)
+    {
+        $build = new Build();
+
+        $build->SiteId = $this->Site->Id;
+        $build->Name = $this->BuildName;
+
+        $build->SetStamp($this->BuildStamp);
+        $build->Generator = $this->Generator;
+        $build->Information = $this->BuildInformation;
+
+        $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
+
+        $build->ProjectId = $this->projectid;
+        $build->StartTime = $start_time;
+        // EndTimeStamp hasn't been parsed yet.  We update this value later.
+        $build->EndTime = $start_time;
+        $build->SubmitTime = gmdate(FMT_DATETIME);
+        $build->SetSubProject($subprojectName);
+
+        $build->GetIdFromName($subprojectName);
+        $build->RemoveIfDone();
+
+        // If the build doesn't exist we add it
+        if ($build->Id == 0) {
+            $build->InsertErrors = false;
+            add_build($build, $this->scheduleid);
+        } else {
+            // Otherwise make sure that the build is up-to-date.
+            $build->UpdateBuild($build->Id, -1, -1);
+
+            // Remove any previous analysis.
+            $DA = new DynamicAnalysis();
+            $DA->BuildId = $build->Id;
+            $DA->RemoveAll();
+        }
+
+        $this->Builds[$subprojectName] = $build;
+
+        // Initialize a dynamic analysis summary for this build.
+        $summary = new DynamicAnalysisSummary();
+        $summary->Empty = true;
+        $summary->BuildId = $build->Id;
+        $summary->Checker = $this->Checker;
+        $this->DynamicAnalysisSummaries[$subprojectName] = $summary;
     }
 }

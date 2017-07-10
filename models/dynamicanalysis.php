@@ -32,11 +32,21 @@ class DynamicAnalysis
     public $LogCompression;
     public $LogEncoding;
 
+    public function __construct()
+    {
+        $this->Defects = [];
+    }
+
     /** Add a defect */
     public function AddDefect($defect)
     {
         $defect->DynamicAnalysisId = $this->Id;
         $this->Defects[] = $defect;
+    }
+
+    public function GetDefects()
+    {
+        return $this->Defects;
     }
 
     public function AddLabel($label)
