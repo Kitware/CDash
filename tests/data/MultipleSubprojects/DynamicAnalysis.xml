@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="CTestTest-Linux-c++-Subprojects"
+        BuildStamp="20160728-1932-Experimental"
+        Name="livonia-linux"
+        Generator="ctest-3.6.20160726-g3e55f-dirty"
+        CompilerName=""
+        CompilerVersion=""
+        OSName="Linux"
+        Hostname="livonia-linux"
+        OSRelease="3.13.0-35-generic"
+        OSVersion="#62-Ubuntu SMP Fri Aug 15 01:58:42 UTC 2014"
+        OSPlatform="x86_64"
+        Is64Bits="1"
+        VendorString="GenuineIntel"
+        VendorID="Intel Corporation"
+        FamilyID="6"
+        ModelID="69"
+        ProcessorCacheSize="4096"
+        NumberOfLogicalCPU="4"
+        NumberOfPhysicalCPU="1"
+        TotalVirtualMemory="7627"
+        TotalPhysicalMemory="7890"
+        LogicalProcessorsPerPhysical="4"
+        ProcessorClockFrequency="756"
+        >
+	<Subproject name="MyExperimentalFeature">
+		<Label>MyExperimentalFeature</Label>
+	</Subproject>
+	<Subproject name="MyProductionCode">
+		<Label>MyProductionCode</Label>
+	</Subproject>
+	<Subproject name="MyThirdPartyDependency">
+		<Label>MyThirdPartyDependency</Label>
+	</Subproject>
+	<DynamicAnalysis Checker="Valgrind">
+        <StartDateTime>Jul 28 15:32 EDT</StartDateTime>
+        <StartTestTime>1469734335</StartTestTime>
+		<TestList>
+			<Test>./MyExperimentalFeature/experimentalFail1</Test>
+			<Test>./MyProductionCode/production</Test>
+			<Test>./MyThirdPartyDependency/src/thirdparty</Test>
+		</TestList>
+		<Test Status="failed">
+			<Name>experimentalFail1</Name>
+			<Path>./MyExperimentalFeature</Path>
+			<FullName>./MyExperimentalFeature/experimentalFail1</FullName>
+			<FullCommandLine>/usr/bin/valgrind "--log-file=/projects/tmp_for_cdash/bin/Testing/Temporary/MemoryChecker.1.log" "-q" "--tool=memcheck" "--leak-check=yes" "--show-reachable=yes" "--num-callers=50" "/projects/tmp_for_cdash/bin/MyExperimentalFeature/testapp" "5"</FullCommandLine>
+			<Results>
+				<Defect type="IPW">1</Defect>
+			</Results>
+			<Log compression="gzip" encoding="base64">eJx1j8FugzAMhu88hXdaeygJiDFUlUq0u/S2w6QdJ4eYEjUElARG9/RLpU3tpNU3W/78+9uI7eH1fcPEFsoyzdMiKUs4mAm1kvBplSfoG3DqiyCLrhuh0AOfM87zpFpDh8rAguaBrOrIeNRxvU6K5S1SSWnJuUA9JU3D8wJUaECcPTnAxpMFBKH7+nSN5IA6TB7lf9n7tNoV/BJ+2YFFeIGNzjKtBAsCR6uMZNNxsKR7lB8ddXVL9WmFncyzlVZmnGPXL/+eFucfLf5yT+v5Fone2qAh++DQ4jCQiaOWcPgVmcja0YAP+EP0DaSgbfo=</Log>
+			<Labels>
+				<Label>MyExperimentalFeature</Label>
+				<Label>NotASubproject</Label>
+			</Labels>
+		</Test>
+		<Test Status="passed">
+			<Name>thirdparty</Name>
+			<Path>./MyThirdPartyDependency/src</Path>
+			<FullName>./MyThirdPartyDependency/src/thirdparty</FullName>
+			<FullCommandLine>/usr/bin/valgrind "--log-file=/projects/tmp_for_cdash/bin/Testing/Temporary/MemoryChecker.7.log" "-q" "--tool=memcheck" "--leak-check=yes" "--show-reachable=yes" "--num-callers=50" "/projects/tmp_for_cdash/bin/MyThirdPartyDependency/src/thirdparty"</FullCommandLine>
+			<Results>
+				<Defect type="Memory Leak">2</Defect>
+			</Results>
+			<Log compression="gzip" encoding="base64">eJxVjz1PwzAQhvf8incsQ2M3Cm2omkrAhICNHfnj0lh17Mp2qvrf43QBbrmT3uce3R3k8fPj/cDkEX3fbJtu1/doOWROFGEcNpDWq3OECARNg3Emkc2wPqYlLz0ikPJBF9YP2FS/olIigd/a1+b5peN7TMIWG1Zlkc0xMGskuwp7CsZpdj1dAlkv9PdEkxpJnddi0tt2bY2bb3X0D//VMi9qzh+fusVcnKs0mqAvIqRcq/3uL199jSZimJ1KxjuU+c7iDkN5TTXwlmBJlGfLAT7kuvoBgR1ZWQ==</Log>
+			<Labels>
+				<Label>MyThirdPartyDependency</Label>
+				<Label>NotASubproject</Label>
+			</Labels>
+		</Test>
+		<DefectList>
+			<Defect Type="IPW"/>
+			<Defect Type="Memory Leak"/>
+		</DefectList>
+        <EndDateTime>Jul 28 15:32 EDT</EndDateTime>
+        <EndTestTime>1469734335</EndTestTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</DynamicAnalysis>
+</Site>
