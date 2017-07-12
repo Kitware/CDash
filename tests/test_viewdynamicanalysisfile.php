@@ -14,12 +14,9 @@ class ViewDynamicAnalysisFileTestCase extends KWWebTestCase
 
     public function testViewDynamicAnalysisFile()
     {
-        $this->get($this->url . '/viewDynamicAnalysisFile.php?id=1');
-        if (strpos($this->getBrowser()->getContentAsText(), 'Dynamic analysis started on') === false) {
-            $this->fail("'Dynamic analysis started on' not found when expected");
-            return 1;
-        }
-        $this->pass('Passed');
+        $response = $this->get($this->url . '/api/v1/viewDynamicAnalysisFile.php?id=1');
+        $response = json_decode($response);
+        $this->assertTrue(property_exists($response, 'dynamicanalysis'));
     }
 
     public function testNextPrevious()
