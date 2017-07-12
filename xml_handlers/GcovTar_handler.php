@@ -199,54 +199,34 @@ class GCovTarHandler
             strpos($path, $this->SubProjectPath) === false
         ) {
             // Find the SubProject that corresponds to this path.
-            $query =
-                "SELECT id, name, path FROM subproject
-                WHERE projectid = $this->ProjectId AND
-                endtime = '1980-01-01 00:00:00' AND
-                path != '' AND
-                '$path' LIKE CONCAT('%',path,'%')";
-            $result = pdo_query($query);
-            if (!$result || pdo_num_rows($result) == 0) {
-                add_log(
-                    "No SubProject found for '$path'", 'ParseGcovFile',
-                    LOG_INFO, $this->ProjectId, $this->Build->Id);
+            $subproject = SubProject::GetSubProjectFromPath($path, $this->ProjectId);
+            if (is_null($subproject)) {
+                // Error already logged.
                 return;
             }
-            $row = pdo_fetch_array($result);
-            $subprojectid = $row['id'];
-            $subprojectname = $row['name'];
-            $subprojectpath = $row['path'];
+            $subprojectid = $subproject->GetId();
 
             // Find the sibling build that performed this SubProject.
-            $siblingBuild = new Build();
-            $query =
-                'SELECT b.id FROM build AS b
-                INNER JOIN subproject2build AS sp2b ON (sp2b.buildid=b.id)
-                WHERE b.parentid=
-                (SELECT parentid FROM build WHERE id=' . $this->Build->Id . ")
-                AND sp2b.subprojectid=$subprojectid";
-            $row = pdo_single_row_query($query);
-            if ($row && array_key_exists('id', $row)) {
-                $buildid = $row['id'];
-                $siblingBuild->Id = $buildid;
-                $siblingBuild->FillFromId($buildid);
-            } else {
+            $siblingBuild = Build::GetSubProjectBuild($this->Build->GetParentId(), $subprojectid);
+            if (is_null($siblingBuild)) {
                 // Build doesn't exist yet, add it here.
+                $siblingBuild = new Build();
                 $siblingBuild->Name = $this->Build->Name;
                 $siblingBuild->ProjectId = $this->ProjectId;
                 $siblingBuild->SiteId = $this->Build->SiteId;
                 $siblingBuild->SetParentId($this->Build->GetParentId());
                 $siblingBuild->SetStamp($this->Build->GetStamp());
-                $siblingBuild->SetSubProject($subprojectname);
+                $siblingBuild->SetSubProject($subproject->GetName());
                 $siblingBuild->StartTime = $this->Build->StartTime;
                 $siblingBuild->EndTime = $this->Build->EndTime;
                 $siblingBuild->SubmitTime = gmdate(FMT_DATETIME);
                 add_build($siblingBuild, 0);
-                $buildid = $siblingBuild->Id;
             }
+            $buildid = $siblingBuild->Id;
             $coverageFileLog->Build = $siblingBuild;
             // Remove any part of the file path that comes before
             // the subproject path.
+            $subprojectpath = $subproject->GetPath();
             $path = substr($path, strpos($path, $subprojectpath));
 
             // Replace the subproject path with '.'

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="CTestTest-Linux-c++-Subprojects"
+        BuildStamp="20160728-1932-Experimental"
+        Name="livonia-linux"
+        Generator="ctest-3.6.20160726-g3e55f-dirty"
+        CompilerName=""
+        CompilerVersion=""
+        OSName="Linux"
+        Hostname="livonia-linux"
+        OSRelease="3.13.0-35-generic"
+        OSVersion="#62-Ubuntu SMP Fri Aug 15 01:58:42 UTC 2014"
+        OSPlatform="x86_64"
+        Is64Bits="1"
+        VendorString="GenuineIntel"
+        VendorID="Intel Corporation"
+        FamilyID="6"
+        ModelID="69"
+        ProcessorCacheSize="4096"
+        NumberOfLogicalCPU="4"
+        NumberOfPhysicalCPU="1"
+        TotalVirtualMemory="7627"
+        TotalPhysicalMemory="7890"
+        LogicalProcessorsPerPhysical="4"
+        ProcessorClockFrequency="756"
+        >
+	<CoverageLog>
+		<StartDateTime>Jul 28 15:32 EDT</StartDateTime>
+		<StartTime>1469734335</StartTime>
+		<File Name="experimental.c" FullPath="./MyExperimentalFeature/experimental.c">
+			<Report>
+				<Line Number="0" Count="-1">#include &lt;stdio.h&gt;</Line>
+				<Line Number="1" Count="-1"></Line>
+				<Line Number="2" Count="-1">int main(void)</Line>
+				<Line Number="3" Count="-1">{</Line>
+				<Line Number="4" Count="5">  int i = 0;</Line>
+				<Line Number="5" Count="5">  if (i &gt; 0) {</Line>
+				<Line Number="6" Count="0">    printf("This doesn't happen.\n");</Line>
+				<Line Number="7" Count="0">    printf("Neither does this.\n");</Line>
+				<Line Number="8" Count="0">  }</Line>
+				<Line Number="9" Count="5">  i = i + 1;</Line>
+				<Line Number="10" Count="5">  if (i &gt; 0) {</Line>
+				<Line Number="11" Count="5">    printf("This does happen.\n");</Line>
+				<Line Number="12" Count="5">  }</Line>
+				<Line Number="13" Count="-1"></Line>
+				<Line Number="14" Count="5">  return 0;</Line>
+				<Line Number="15" Count="-1">}</Line>
+			</Report>
+		</File>
+		<File Name="production.c" FullPath="./MyProductionCode/production.c">
+			<Report>
+				<Line Number="0" Count="-1">#include &lt;stdio.h&gt;</Line>
+				<Line Number="1" Count="-1"></Line>
+				<Line Number="2" Count="-1">int main(void)</Line>
+				<Line Number="3" Count="-1">{</Line>
+				<Line Number="4" Count="1">  int j = 0;</Line>
+				<Line Number="5" Count="1">  if (j &gt; 0) {</Line>
+				<Line Number="6" Count="0">    printf("This doesn't happen.\n");</Line>
+				<Line Number="7" Count="0">    printf("Neither does this.\n");</Line>
+				<Line Number="8" Count="0">  }</Line>
+				<Line Number="9" Count="1">  j = j + 1;</Line>
+				<Line Number="10" Count="1">  if (j &gt; 0) {</Line>
+				<Line Number="11" Count="1">    printf("This does happen.\n");</Line>
+				<Line Number="12" Count="1">  }</Line>
+				<Line Number="13" Count="-1"></Line>
+				<Line Number="14" Count="1">  return 0;</Line>
+				<Line Number="15" Count="-1">}</Line>
+			</Report>
+		</File>
+		<EndDateTime>Jul 28 15:32 EDT</EndDateTime>
+		<EndTime>1469734335</EndTime>
+	</CoverageLog>
+</Site>

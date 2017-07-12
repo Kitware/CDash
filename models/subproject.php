@@ -58,7 +58,7 @@ class SubProject
         $this->Id = $id;
 
         $row = pdo_single_row_query(
-            'SELECT name, projectid, groupid, path FROM subproject
+            'SELECT name, projectid, groupid, path, position FROM subproject
        WHERE id=' . qnum($this->Id) . " AND endtime='1980-01-01 00:00:00'");
         if (empty($row)) {
             return false;
@@ -68,6 +68,7 @@ class SubProject
         $this->ProjectId = $row['projectid'];
         $this->GroupId = $row['groupid'];
         $this->Path = $row['path'];
+        $this->Position = $row['position'];
         return true;
     }
 
@@ -692,5 +693,31 @@ class SubProject
             return false;
         }
         return true;
+    }
+
+    /** Return a subproject object for a given file path and projectid. */
+    public static function GetSubProjectFromPath($path, $projectid)
+    {
+        $pdo = get_link_identifier()->getPdo();
+        $stmt = $pdo->prepare(
+            "SELECT id FROM subproject
+            WHERE projectid = :projectid AND
+            endtime = '1980-01-01 00:00:00' AND
+            path != '' AND
+            :path LIKE CONCAT('%',path,'%')");
+
+        $stmt->bindValue(':projectid', $projectid);
+        $stmt->bindValue(':path', $path);
+        pdo_execute($stmt);
+        $id = $stmt->fetchColumn();
+        if (!$id) {
+            add_log(
+                    "No SubProject found for '$path'", 'GetSubProjectFromPath',
+                    LOG_INFO, $projectid, 0);
+            return null;
+        }
+        $subproject = new SubProject();
+        $subproject->SetId($id);
+        return $subproject;
     }
 }

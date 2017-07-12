@@ -17,6 +17,7 @@
 require_once 'xml_handlers/abstract_handler.php';
 require_once 'models/coverage.php';
 require_once 'models/label.php';
+require_once 'models/project.php';
 
 class CoverageHandler extends AbstractHandler
 {
@@ -24,8 +25,9 @@ class CoverageHandler extends AbstractHandler
     private $EndTimeStamp;
 
     private $Coverage;
+    private $Coverages;
     private $CoverageFile;
-    private $CoverageSummary;
+    private $CoverageSummaries;
     private $Label;
 
     /** Constructor */
@@ -34,7 +36,11 @@ class CoverageHandler extends AbstractHandler
         parent::__construct($projectID, $scheduleID);
         $this->Build = new Build();
         $this->Site = new Site();
-        $this->CoverageSummary = new CoverageSummary();
+        $this->Coverages = [];
+        $this->CoverageSummaries = [];
+        $this->Project = new Project();
+        $this->Project->Id = $this->projectid;
+        $this->HasSubProjects = $this->Project->GetNumberOfSubProjects() > 0;
     }
 
     /** startElement */
@@ -107,14 +113,53 @@ class CoverageHandler extends AbstractHandler
                 $this->Build->UpdateBuild($this->Build->Id, -1, -1);
             }
 
-            $GLOBALS['PHP_ERROR_BUILD_ID'] = $this->Build->Id;
-            $this->CoverageSummary->BuildId = $this->Build->Id;
+            foreach ($this->Coverages as $coverageInfo) {
+                $coverage = $coverageInfo[0];
+                $coverageFile = $coverageInfo[1];
+                $buildid = $this->Build->Id;
+                if ($this->HasSubProjects) {
+                    // Make sure this file gets associated with the correct SubProject.
+                    $subproject = SubProject::GetSubProjectFromPath(
+                            $coverageFile->FullPath, $this->projectid);
+                    if (!is_null($subproject)) {
+                        // Find the sibling build that performed this SubProject.
+                        $subprojectBuild = Build::GetSubProjectBuild(
+                                $this->Build->GetParentId(), $subproject->GetId());
+                        if (is_null($subprojectBuild)) {
+                            // Build doesn't exist yet, add it here.
+                            $subprojectBuild = new Build();
+                            $subprojectBuild->Name = $this->Build->Name;
+                            $subprojectBuild->ProjectId = $this->projectid;
+                            $subprojectBuild->SiteId = $this->Build->SiteId;
+                            $subprojectBuild->SetParentId($this->Build->GetParentId());
+                            $subprojectBuild->SetStamp($this->Build->GetStamp());
+                            $subprojectBuild->SetSubProject($subproject->GetName());
+                            $subprojectBuild->StartTime = $this->Build->StartTime;
+                            $subprojectBuild->EndTime = $this->Build->EndTime;
+                            $subprojectBuild->SubmitTime = gmdate(FMT_DATETIME);
+                            add_build($subprojectBuild, 0);
+                        }
+                        $buildid = $subprojectBuild->Id;
+                    }
+                }
+                if (!array_key_exists($buildid, $this->CoverageSummaries)) {
+                    $coverageSummary = new CoverageSummary();
+                    $coverageSummary->BuildId = $buildid;
+                    $this->CoverageSummaries[$buildid] = $coverageSummary;
+                }
+                $this->CoverageSummaries[$buildid]->AddCoverage($coverage);
+            }
 
-            // Insert coverage summary
-            $this->CoverageSummary->Insert(true);
-            $this->CoverageSummary->ComputeDifference();
+            // Insert coverage summaries
+            foreach ($this->CoverageSummaries as $coverageSummary) {
+                $GLOBALS['PHP_ERROR_BUILD_ID'] = $coverageSummary->BuildId;
+                $coverageSummary->Insert(true);
+                $coverageSummary->ComputeDifference();
+            }
         } elseif ($name == 'FILE') {
-            $this->CoverageSummary->AddCoverage($this->Coverage);
+            // Store this data.
+            // We will insert it once we're done parsing the whole file.
+            $this->Coverages[] = [$this->Coverage, $this->CoverageFile];
         } elseif ($name == 'LABEL') {
             if (isset($this->Coverage)) {
                 $this->Coverage->AddLabel($this->Label);
@@ -130,8 +175,8 @@ class CoverageHandler extends AbstractHandler
 
         if ($parent == 'COVERAGE') {
             switch ($element) {
-                case 'STARTBUILDTIME':
-                    $this->StartTimeStamp .= $data;
+                case 'STARTTIME':
+                    $this->StartTimeStamp = $data;
                     break;
                 case 'STARTDATETIME':
                     $this->StartTimeStamp = str_to_time($data, $this->Build->GetStamp());

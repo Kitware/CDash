@@ -2519,4 +2519,25 @@ class Build
 
         return $query->fetchAll($fetchStyle);
     }
+
+    /**
+     * Return a SubProject build for a particular parent if it exists.
+     */
+    public static function GetSubProjectBuild($parentid, $subprojectid)
+    {
+        $pdo = get_link_identifier()->getPdo();
+        $stmt = $pdo->prepare(
+            'SELECT b.id FROM build b
+            JOIN subproject2build sp2b ON (sp2b.buildid = b.id)
+            WHERE b.parentid = ? AND sp2b.subprojectid = ?');
+        pdo_execute($stmt, [$parentid, $subprojectid]);
+        $row = $stmt->fetch();
+        if (!$row) {
+            return null;
+        }
+        $build = new Build();
+        $build->Id = $row['id'];
+        $build->FillFromId($build->Id);
+        return $build;
+    }
 }

@@ -33,6 +33,16 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             return 1;
         }
 
+        if (!$this->submission('SubProjectExample', "$rep/Coverage.xml")) {
+            $this->fail('failed to submit Coverage.xml');
+            return 1;
+        }
+
+        if (!$this->submission('SubProjectExample', "$rep/CoverageLog.xml")) {
+            $this->fail('failed to submit CoverageLog.xml');
+            return 1;
+        }
+
         if (!$this->submission('SubProjectExample', "$rep/Test.xml")) {
             $this->fail('failed to submit Test.xml');
             return 1;
@@ -124,7 +134,26 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
 
             $numtestnotrun = $buildgroup['numtestnotrun'];
             if ($numtestnotrun != 1) {
-                throw new Exception('Expected 1tests to not run, found ' . $numtestnotrun);
+                throw new Exception('Expected 1 test not run, found ' . $numtestnotrun);
+            }
+
+            // Check coverage
+            $numcoverages = count($jsonobj['coverages']);
+            if ($numcoverages != 1) {
+                throw new Exception("Expected 1 coverage build, found $numcoverages");
+            }
+            $cov = $jsonobj['coverages'][0];
+            $percent = $cov['percentage'];
+            if ($percent != 70) {
+                throw new Exception("Expected 70% coverage, found $percent");
+            }
+            $loctested = $cov['loctested'];
+            if ($loctested != 14) {
+                throw new Exception("Expected 14 LOC tested, found $loctested");
+            }
+            $locuntested = $cov['locuntested'];
+            if ($locuntested != 6) {
+                throw new Exception("Expected 6 LOC untested, found $locuntested");
             }
 
             // View parent build
@@ -139,6 +168,11 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
 
             if ($jsonobj['parenthasnotes'] !== true) {
                 throw new Exception("parenthasnotes not set to true when expected");
+            }
+
+            $numcoverages = count($jsonobj['coverages']);
+            if ($numcoverages != 2) {
+                throw new Exception("Expected 2 subproject coverages, found $numcoverages");
             }
 
             $buildgroup = array_pop($jsonobj['buildgroups']);
