@@ -226,4 +226,56 @@ class DynamicAnalysis
 
         return true;
     }
+
+    /* Encapsulate common bits of functions below. */
+    private function GetRelatedId($build, $order, $time_clause = null)
+    {
+        $stmt = $this->PDO->prepare(
+        "SELECT dynamicanalysis.id FROM dynamicanalysis
+        JOIN build ON (dynamicanalysis.buildid = build.id)
+        WHERE build.siteid = :siteid AND
+              build.type = :buildtype AND
+              build.name = :buildname AND
+              build.projectid = :projectid AND
+              $time_clause
+              dynamicanalysis.name = :filename
+        ORDER BY build.starttime $order LIMIT 1");
+
+        $stmt->bindParam(':siteid', $build->SiteId);
+        $stmt->bindParam(':buildtype', $build->Type);
+        $stmt->bindParam(':buildname', $build->Name);
+        $stmt->bindParam(':projectid', $build->ProjectId);
+        if ($time_clause) {
+            $stmt->bindParam(':starttime', $build->StartTime);
+        }
+        $stmt->bindParam(':filename', $this->Name);
+        if (!pdo_execute($stmt)) {
+            return 0;
+        }
+        $row = $stmt->fetch();
+        if (!$row) {
+            return 0;
+        }
+        return $row['id'];
+    }
+
+    /* Get the previous id for this DA */
+    public function GetPreviousId($build)
+    {
+        $time_clause = 'build.starttime < :starttime AND';
+        return $this->GetRelatedId($build, 'DESC', $time_clause);
+    }
+
+    /* Get the next id for this DA */
+    public function GetNextId($build)
+    {
+        $time_clause = 'build.starttime > :starttime AND';
+        return $this->GetRelatedId($build, 'ASC', $time_clause);
+    }
+
+    /* Get the most recent id for this DA */
+    public function GetLastId($build)
+    {
+        return $this->GetRelatedId($build, 'DESC');
+    }
 }

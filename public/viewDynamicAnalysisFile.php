@@ -45,57 +45,6 @@ if (!$DA->Fill()) {
 }
 
 
-/** Get the previous file id dynamicanalysis*/
-function get_previous_fileid_dynamicanalysis($filename, $projectid, $siteid, $buildtype, $buildname, $starttime)
-{
-    $previousbuild = pdo_query("SELECT dynamicanalysis.id FROM build,dynamicanalysis
-                              WHERE build.siteid='$siteid' AND build.type='$buildtype' AND build.name='$buildname'
-                              AND build.projectid='$projectid' AND build.starttime<'$starttime'
-                              AND dynamicanalysis.buildid=build.id
-                              AND dynamicanalysis.name='$filename'
-                              ORDER BY build.starttime DESC LIMIT 1");
-
-    if (pdo_num_rows($previousbuild) > 0) {
-        $previousbuild_array = pdo_fetch_array($previousbuild);
-        return $previousbuild_array['id'];
-    }
-    return 0;
-}
-
-/** Get the next file id dynamicanalysis*/
-function get_next_fileid_dynamicanalysis($filename, $projectid, $siteid, $buildtype, $buildname, $starttime)
-{
-    $nextbuild = pdo_query("SELECT dynamicanalysis.id FROM build,dynamicanalysis
-                          WHERE build.siteid='$siteid' AND build.type='$buildtype' AND build.name='$buildname'
-                          AND build.projectid='$projectid' AND build.starttime>'$starttime'
-                          AND dynamicanalysis.buildid=build.id
-                          AND dynamicanalysis.name='$filename'
-                          ORDER BY build.starttime ASC LIMIT 1");
-
-    if (pdo_num_rows($nextbuild) > 0) {
-        $nextbuild_array = pdo_fetch_array($nextbuild);
-        return $nextbuild_array['id'];
-    }
-    return 0;
-}
-
-/** Get the last file id dynamicanalysis */
-function get_last_fileid_dynamicanalysis($filename, $projectid, $siteid, $buildtype, $buildname, $starttime)
-{
-    $nextbuild = pdo_query("SELECT dynamicanalysis.id FROM build,dynamicanalysis
-                          WHERE build.siteid='$siteid' AND build.type='$buildtype' AND build.name='$buildname'
-                          AND build.projectid='$projectid'
-                          AND dynamicanalysis.buildid=build.id
-                          AND dynamicanalysis.name='$filename'
-                          ORDER BY build.starttime DESC LIMIT 1");
-
-    if (pdo_num_rows($nextbuild) > 0) {
-        $nextbuild_array = pdo_fetch_array($nextbuild);
-        return $nextbuild_array['id'];
-    }
-    return 0;
-}
-
 $build = new Build();
 $build->Id = $DA->BuildId;
 if (!$build->Exists()) {
@@ -129,16 +78,17 @@ $xml .= '</build>';
 
 $xml .= '<menu>';
 $xml .= add_XML_value('back', 'viewDynamicAnalysis.php?buildid=' . $build->Id);
-$previousfileid = get_previous_fileid_dynamicanalysis($DA->Name, $project->Id, $build->SiteId, $build->Type, $build->Name, $build->StartTime);
-if ($previousfileid > 0) {
-    $xml .= add_XML_value('previous', 'viewDynamicAnalysisFile.php?id=' . $previousfileid);
+$previous_id = $DA->GetPreviousId($build);
+if ($previous_id > 0) {
+    $xml .= add_XML_value('previous', 'viewDynamicAnalysisFile.php?id=' . $previous_id);
 } else {
     $xml .= add_XML_value('noprevious', '1');
 }
-$xml .= add_XML_value('current', 'viewDynamicAnalysisFile.php?id=' . get_last_fileid_dynamicanalysis($DA->Name, $project->Id, $build->SiteId, $build->Type, $build->Name, $build->StartTime));
-$nextfileid = get_next_fileid_dynamicanalysis($DA->Name, $project->Id, $build->SiteId, $build->Type, $build->Name, $build->StartTime);
-if ($nextfileid > 0) {
-    $xml .= add_XML_value('next', 'viewDynamicAnalysisFile.php?id=' . $nextfileid);
+$current_id = $DA->GetLastId($build);
+$xml .= add_XML_value('current', 'viewDynamicAnalysisFile.php?id=' . $current_id);
+$next_id = $DA->GetNextId($build);
+if ($next_id > 0) {
+    $xml .= add_XML_value('next', 'viewDynamicAnalysisFile.php?id=' . $next_id);
 } else {
     $xml .= add_XML_value('nonext', '1');
 }
