@@ -31,6 +31,15 @@ class DynamicAnalysis
     public $Labels;
     public $LogCompression;
     public $LogEncoding;
+    private $Filled;
+    private $PDO;
+
+    public function __construct()
+    {
+        $this->Id = null;
+        $this->Filled = false;
+        $this->PDO = get_link_identifier()->getPdo();
+    }
 
     /** Add a defect */
     public function AddDefect($defect)
@@ -183,6 +192,38 @@ class DynamicAnalysis
 
         // Add the labels
         $this->InsertLabelAssociations();
+        return true;
+    }
+
+    // Populate $this from the database based on $Id.
+    public function Fill()
+    {
+        if (!$this->Id) {
+            return false;
+        }
+        if ($this->Filled) {
+            return true;
+        }
+
+        $stmt = $this->PDO->prepare(
+            'SELECT * FROM dynamicanalysis WHERE id = ?');
+        if (!pdo_execute($stmt, [$this->Id])) {
+            return false;
+        }
+
+        $row = $stmt->fetch();
+        if (!$row) {
+            return false;
+        }
+
+        $this->BuildId = $row['buildid'];
+        $this->Status = $row['status'];
+        $this->Checker = $row['checker'];
+        $this->Name = $row['name'];
+        $this->Path = $row['path'];
+        $this->FullCommandLine = $row['fullcommandline'];
+        $this->Log = $row['log'];
+
         return true;
     }
 }
