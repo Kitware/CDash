@@ -28,7 +28,7 @@ jobs:
       - run: node_modules/.bin/webdriver-manager update
       - run:
           background: true
-          command: Xvfb :1 -ac -screen 0 800x600x16
+          command: sudo Xvfb :0 -screen 0 800x600x16
       - run:
           background: true
           command: xvfb-run node_modules/.bin/webdriver-manager start
