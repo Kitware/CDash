@@ -31,7 +31,7 @@ jobs:
           command: node_modules/.bin/webdriver-manager start
       - run: mkdir _build
       - run: cd _build && cmake -DCDASH_TESTING_RENAME_LOGS=true -DCDASH_DB_HOST=127.0.0.1 -DCDASH_DIR_NAME=cdash -DCDASH_DB_LOGIN=root -DBUILDNAME="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}_MySQL" -DSITE="CircleCI-2.0" ..
-      - run: cd _build && ctest --extra-verbose --no-compress-output --track Continuous --test-action Test --test-action Submit .
+      - run: cd _build && DISPLAY=:0.0 ctest --extra-verbose --no-compress-output --track Continuous --test-action Test --test-action Submit .
       - run: rm -rf _build && mkdir _build
       - run: cd _build && cmake -DCDASH_TESTING_RENAME_LOGS=true -DCDASH_DIR_NAME=cdash -DCDASH_DB_TYPE=pgsql -DCDASH_DB_LOGIN=kitware -DBUILDNAME="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}_PostgreSQL" -DSITE="CircleCI-2.0" ..
-      - run: cd _build && ctest -I 1,5 --extra-verbose --no-compress-output --track Continuous --test-action Test --test-action Submit .
+      - run: cd _build && DISPLAY=:0.0 ctest -I 1,5 --extra-verbose --no-compress-output --track Continuous --test-action Test --test-action Submit .
