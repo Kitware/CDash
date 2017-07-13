@@ -3,7 +3,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: bbeanatkitware/cdash-host:v0.1.0
+      - image: bbeanatkitware/cdash-host:latest
       - image: mysql/mysql-server:5.5
         environment:
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
