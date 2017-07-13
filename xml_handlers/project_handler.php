@@ -217,13 +217,15 @@ class ProjectHandler extends AbstractHandler
                     $userid = $User->Id;
                 }
 
-                // Insert into the UserProject
                 $UserProject = new UserProject();
-                $UserProject->EmailType = 3; // any build
-                $UserProject->EmailCategory = 54; // everything except warnings
                 $UserProject->UserId = $userid;
                 $UserProject->ProjectId = $this->projectid;
-                $UserProject->Save();
+                if (!$UserProject->FillFromUserId()) {
+                    // This user wasn't already subscribed to this project.
+                    $UserProject->EmailType = 3; // any build
+                    $UserProject->EmailCategory = 54; // everything except warnings
+                    $UserProject->Save();
+                }
 
                 // Insert the labels for this user
                 $LabelEmail = new LabelEmail;
