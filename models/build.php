@@ -614,14 +614,15 @@ class Build
     public function GetConfigures()
     {
         if ($this->IsParentBuild()) {
-            $configures = pdo_query("SELECT c.id FROM configure c
-                                    JOIN build2configure b2c ON b2c.configureid = c.id
-                                    JOIN subproject2build sp2b ON sp2b.buildid = b2c.buildid
-                                    JOIN subproject sp ON sp.id = sp2b.subprojectid
-                                    JOIN build b ON b.id = b2c.buildid
-                                    WHERE b.parentid = $this->Id");
-            $configures_array = pdo_fetch_array($configures);
-            if (count(array_unique($configures_array)) > 1) {
+            // Count how many separate configure rows are associated with
+            // this parent build.
+            $configures = pdo_query("
+                SELECT DISTINCT c.id FROM configure c
+                JOIN build2configure b2c ON b2c.configureid = c.id
+                JOIN build b ON b.id = b2c.buildid
+                WHERE b.parentid = $this->Id");
+            if (pdo_num_rows($configures) > 1) {
+                // The SubProject builds have separate configure rows.
                 return pdo_query("SELECT sp.name subprojectname, sp.id subprojectid, c.*, b.configureerrors,
                                   b.configurewarnings
                                   FROM configure c
@@ -631,6 +632,7 @@ class Build
                                   JOIN build b ON b.id = b2c.buildid
                                   WHERE b.parentid = $this->Id");
             } else {
+                // One configure row is shared by all the SubProjects.
                 return pdo_query(
                     "SELECT c.*, b.configureerrors, b.configurewarnings
                      FROM configure c
