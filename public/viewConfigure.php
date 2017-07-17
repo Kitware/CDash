@@ -30,11 +30,6 @@ if ($buildid != null) {
     $buildid = pdo_real_escape_numeric($buildid);
 }
 
-@$date = $_GET['date'];
-if ($date != null) {
-    $date = htmlspecialchars(pdo_real_escape_string($date));
-}
-
 // Checks
 if (!isset($buildid) || !is_numeric($buildid)) {
     echo 'Not a valid buildid!';
