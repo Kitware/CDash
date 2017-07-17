@@ -15,7 +15,7 @@ class ViewConfigureTestCase extends KWWebTestCase
     public function testViewConfigure()
     {
         $this->login();
-        $this->get($this->url . '/viewConfigure.php?buildid=1');
+        $this->get($this->url . '/api/v1/viewConfigure.php?buildid=1');
         if (strpos($this->getBrowser()->getContentAsText(), 'Win32-VCExpress') === false) {
             $this->fail("'Win32-VCExpress' not found when expected.");
             return 1;
