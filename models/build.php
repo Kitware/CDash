@@ -616,38 +616,45 @@ class Build
         if ($this->IsParentBuild()) {
             // Count how many separate configure rows are associated with
             // this parent build.
-            $configures = pdo_query("
+            $configures_stmt = $this->PDO->prepare('
                 SELECT DISTINCT c.id FROM configure c
                 JOIN build2configure b2c ON b2c.configureid = c.id
                 JOIN build b ON b.id = b2c.buildid
-                WHERE b.parentid = $this->Id");
-            if (pdo_num_rows($configures) > 1) {
-                // The SubProject builds have separate configure rows.
-                return pdo_query("SELECT sp.name subprojectname, sp.id subprojectid, c.*, b.configureerrors,
-                                  b.configurewarnings
-                                  FROM configure c
-                                  JOIN build2configure b2c ON b2c.configureid = c.id
-                                  JOIN subproject2build sp2b ON sp2b.buildid = b2c.buildid
-                                  JOIN subproject sp ON sp.id = sp2b.subprojectid
-                                  JOIN build b ON b.id = b2c.buildid
-                                  WHERE b.parentid = $this->Id");
+                WHERE b.parentid = ?');
+            pdo_execute($configures_stmt, [$this->Id]);
+            $configure_rows = $configures_stmt->fetchAll();
+            if (count($configure_rows) > 1) {
+                // Each SubProject build has its own configure row.
+                $stmt = $this->PDO->prepare('
+                    SELECT sp.name subprojectname, sp.id subprojectid, c.*,
+                           b.configureerrors, b.configurewarnings
+                    FROM configure c
+                    JOIN build2configure b2c ON b2c.configureid = c.id
+                    JOIN subproject2build sp2b ON sp2b.buildid = b2c.buildid
+                    JOIN subproject sp ON sp.id = sp2b.subprojectid
+                    JOIN build b ON b.id = b2c.buildid
+                    WHERE b.parentid = ?');
             } else {
                 // One configure row is shared by all the SubProjects.
-                return pdo_query(
-                    "SELECT c.*, b.configureerrors, b.configurewarnings
-                     FROM configure c
-                     JOIN build2configure b2c ON b2c.configureid = c.id
-                     JOIN build b ON b.id = b2c.buildid
-                     WHERE c.id = " . $configures_array[0]);
-            }
-        } else {
-            return pdo_query(
-                    "SELECT c.*, b.configureerrors, b.configurewarnings
+                $stmt = $this->PDO->prepare('
+                    SELECT c.*, b.configureerrors, b.configurewarnings
                     FROM configure c
                     JOIN build2configure b2c ON b2c.configureid = c.id
                     JOIN build b ON b.id = b2c.buildid
-                    WHERE b2c.buildid = $this->Id");
+                    WHERE c.id = ?');
+                pdo_execute($stmt, [$configure_rows[0]['id']]);
+                return $stmt;
+            }
+        } else {
+            $stmt = $this->PDO->prepare('
+                SELECT c.*, b.configureerrors, b.configurewarnings
+                FROM configure c
+                JOIN build2configure b2c ON b2c.configureid = c.id
+                JOIN build b ON b.id = b2c.buildid
+                WHERE b2c.buildid = ?');
         }
+        pdo_execute($stmt, [$this->Id]);
+        return $stmt;
     }
 
     /** Get the build id from its name */

@@ -14,14 +14,16 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-$noforcelogin = 1;
-include dirname(__DIR__) . '/config/config.php';
+require_once dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
-include 'public/login.php';
-include_once 'include/common.php';
-include 'include/version.php';
+$noforcelogin = 1;
+require_once 'public/login.php';
+require_once 'include/common.php';
+require_once 'include/version.php';
 require_once 'models/build.php';
 require_once 'models/buildconfigure.php';
+require_once 'models/project.php';
+require_once 'models/site.php';
 
 @$buildid = $_GET['buildid'];
 if ($buildid != null) {
@@ -39,41 +41,32 @@ if (!isset($buildid) || !is_numeric($buildid)) {
     return;
 }
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
-
-$build_array = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id='$buildid'"));
-$projectid = $build_array['projectid'];
-if (!isset($projectid) || $projectid == 0) {
-    echo "This build doesn't exist. Maybe it has been deleted.";
-    exit();
+$buildid = $_GET['buildid'];
+$build = new Build();
+$build->Id = $buildid;
+if (!$build->Exists()) {
+    echo 'This build does not exist. Maybe it has been deleted.';
+    return;
 }
 
-checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid);
+$build->FillFromId($build->Id);
+checkUserPolicy(@$_SESSION['cdash']['loginid'], $build->ProjectId);
 
-$project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
-if (pdo_num_rows($project) > 0) {
-    $project_array = pdo_fetch_array($project);
-    $projectname = $project_array['name'];
-}
+$project = new Project();
+$project->Id = $build->ProjectId;
+$project->Fill();
 
 $xml = begin_XML_for_XSLT();
-$xml .= '<title>CDash : ' . $projectname . '</title>';
+$xml .= '<title>CDash : ' . $project->Name . '</title>';
 
-$date = get_dashboard_date_from_build_starttime($build_array['starttime'], $project_array['nightlytime']);
-$xml .= get_cdash_dashboard_xml_by_name($projectname, $date);
+$date = get_dashboard_date_from_build_starttime($build->StartTime, $project->NightlyTime);
+$xml .= get_cdash_dashboard_xml_by_name($project->Name, $date);
 
-$siteid = $build_array['siteid'];
-$buildtype = $build_array['type'];
-$buildname = $build_array['name'];
-$starttime = $build_array['starttime'];
 
 // Menu
 $xml .= '<menu>';
-$xml .= add_XML_value('back', 'index.php?project=' . urlencode($projectname) . '&date=' . $date);
+$xml .= add_XML_value('back', 'index.php?project=' . urlencode($project->Name) . '&date=' . $date);
 
-$build = new Build();
-$build->Id = $buildid;
 $previous_buildid = $build->GetPreviousBuildId();
 $next_buildid = $build->GetNextBuildId();
 $current_buildid = $build->GetCurrentBuildId();
@@ -105,15 +98,21 @@ while ($configure = pdo_fetch_array($configures)) {
 }
 
 // Build
+$site = new Site();
+$site->Id = $build->SiteId;
 $xml .= '<build>';
-$site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
-$xml .= add_XML_value('site', $site_array['name']);
-$xml .= add_XML_value('siteid', $siteid);
-$xml .= add_XML_value('buildname', $build_array['name']);
-$xml .= add_XML_value('buildid', $build_array['id']);
+$xml .= add_XML_value('site', $site_name);
+$xml .= add_XML_value('siteid', $site->GetName());
+$xml .= add_XML_value('buildname', $build->Name);
+$xml .= add_XML_value('buildid', $build->Id);
 $xml .= add_XML_value('hassubprojects', $has_subprojects);
 $xml .= '</build>';
 
+$configures_response = [];
+$configures = $build->GetConfigures();
+while ($configure = $configures->fetch()) {
+    $configures_response[] = buildconfigure::marshal($configure);
+}
 
 $xml .= '<configures>';
 foreach ($configures_response as $configure) {
