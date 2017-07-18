@@ -70,10 +70,30 @@ class IssueCreationTestCase extends KWWebTestCase
         $build->FillFromId($build->Id);
         $this->Builds['standalone'] = $build;
 
+        // Add user1@kw as a project administrator.
+        require_once 'models/user.php';
+        $user = new User();
+        $userid = $user->GetIdFromEmail('user1@kw');
+        $userproject = new UserProject();
+        $userproject->UserId = $userid;
+        $userproject->ProjectId = $this->Projects['CDash']->Id;
+        $userproject->Role = 2;
+        $userproject->Save();
+
         // Setup subprojects.
         $file = dirname(__FILE__) . '/data/GithubPR/Project.xml';
         if (!$this->submission('CDash', $file)) {
             $this->fail("Failed to submit $file");
+        }
+
+        // Verify that administrative access to this project was not overwritten
+        // by the Project.xml handler.
+        $userproject = new UserProject();
+        $userproject->UserId = $userid;
+        $userproject->ProjectId = $this->Projects['CDash']->Id;
+        $userproject->FillFromUserId();
+        if ($userproject->Role != 2) {
+            $this->fail("Expected userproject role to be 2, found $userproject->Role");
         }
 
         // Submit subproject XML file.
