@@ -97,7 +97,14 @@ while ($DA_row = $DA_stmt->fetch()) {
         'SELECT * FROM dynamicanalysisdefect WHERE dynamicanalysisid = ?');
     pdo_execute($defects_stmt, [$dynid]);
     // Initialize defects array as zero for each type.
-    $defects = array_fill(0, count($defect_types), 0);
+    $num_types = count($defect_types);
+    if ($num_types > 0) {
+        // Work around a bug in older versions of PHP where the 2nd argument to
+        // array_fill must be greater than zero.
+        $defects = array_fill(0, count($defect_types), 0);
+    } else {
+        $defects = [];
+    }
     while ($defects_row = $defects_stmt->fetch()) {
         // Figure out how many defects of each type were found for this test.
         $defect_type = $defects_row['type'];

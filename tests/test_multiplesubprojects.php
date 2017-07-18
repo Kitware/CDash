@@ -43,6 +43,11 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             return 1;
         }
 
+        if (!$this->submission('SubProjectExample', "$rep/DynamicAnalysis.xml")) {
+            $this->fail('failed to submit DynamicAnalysis.xml');
+            return 1;
+        }
+
         if (!$this->submission('SubProjectExample', "$rep/Test.xml")) {
             $this->fail('failed to submit Test.xml');
             return 1;
@@ -54,10 +59,12 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
         }
 
         // Get the buildids that we just created so we can delete it later.
+        $pdo = get_link_identifier()->getPdo();
         $buildids = array();
-        $buildid_results = pdo_query(
+
+        $buildid_results = $pdo->query(
             "SELECT id FROM build WHERE name='CTestTest-Linux-c++-Subprojects'");
-        while ($buildid_array = pdo_fetch_array($buildid_results)) {
+        while ($buildid_array = $buildid_results->fetch()) {
             $buildids[] = $buildid_array['id'];
         }
 
@@ -156,6 +163,17 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
                 throw new Exception("Expected 6 LOC untested, found $locuntested");
             }
 
+            // Check dynamic analysis.
+            $numdynamicanalyses = count($jsonobj['dynamicanalyses']);
+            if ($numdynamicanalyses != 1) {
+                throw new Exception("Expected 1 DA build, found $numdynamicanalyses");
+            }
+            $DA = $jsonobj['dynamicanalyses'][0];
+            $defectcount = $DA['defectcount'];
+            if ($defectcount != 3) {
+                throw new Exception("Expected 3 DA defects, found $defectcount");
+            }
+
             // View parent build
             $this->get($this->url . "/api/v1/index.php?project=SubProjectExample&parentid=".$parentid);
             $content = $this->getBrowser()->getContent();
@@ -173,6 +191,11 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             $numcoverages = count($jsonobj['coverages']);
             if ($numcoverages != 2) {
                 throw new Exception("Expected 2 subproject coverages, found $numcoverages");
+            }
+
+            $numdynamicanalyses = count($jsonobj['dynamicanalyses']);
+            if ($numdynamicanalyses != 3) {
+                throw new Exception("Expected 3 subproject dynamic analyses, found $numdynamicanalyses");
             }
 
             $buildgroup = array_pop($jsonobj['buildgroups']);
@@ -274,6 +297,63 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
                     $found = $subproj[$key];
                     if ($found !== $expected) {
                         throw new Exception("Expected $key to be $expected for $subproj_name, found $found");
+                    }
+                }
+            }
+
+            // Verify that dynamic analysis data was correctly split across SubProjects.
+            foreach ($builds as $build) {
+                $stmt = $pdo->query("SELECT numdefects FROM dynamicanalysissummary WHERE buildid = {$build['id']}");
+                $summary_total = $stmt->fetchColumn();
+                $this->get($this->url . "/api/v1/viewDynamicAnalysis.php?buildid={$build['id']}");
+                $content = $this->getBrowser()->getContent();
+                $jsonobj = json_decode($content, true);
+                $expected_defect_type = null;
+                switch ($build['label']) {
+                    case 'MyExperimentalFeature':
+                        $expected_num_analyses = 1;
+                        $expected_num_defect_types = 1;
+                        $expected_num_defects = 1;
+                        $expected_defect_type = 'Invalid Pointer Write';
+                        break;
+                    case 'MyProductionCode':
+                        $expected_num_analyses = 1;
+                        $expected_num_defect_types = 0;
+                        $expected_num_defects = 0;
+                        break;
+                    case 'MyThirdPartyDependency':
+                        $expected_num_analyses = 1;
+                        $expected_num_defect_types = 1;
+                        $expected_num_defects = 2;
+                        $expected_defect_type = 'Memory Leak';
+                        break;
+                    case 'EmptySubproject':
+                        $expected_num_analyses = 0;
+                        $expected_num_defect_types = 0;
+                        $expected_num_defects = 0;
+                        break;
+                }
+                $num_analyses = count($jsonobj['dynamicanalyses']);
+                if ($num_analyses != $expected_num_analyses) {
+                    throw new Exception("Expected $expected_num_analyses analyses for {$build['label']}, found $num_analyses");
+                }
+                if ($expected_num_analyses > 0) {
+                    if ($summary_total != $expected_num_defects) {
+                        throw new Exception("Expected $expected_num_defects defects for {$build['label']} but summary reports $summary_total");
+                    }
+                }
+                $num_defect_types = count($jsonobj['defecttypes']);
+                if ($num_defect_types != $expected_num_defect_types) {
+                    throw new Exception("Expected $expected_num_defect_types type of defect for {$build['label']}, found $num_defect_types");
+                }
+                if ($expected_num_defects > 0) {
+                    $num_defects = $jsonobj['dynamicanalyses'][0]['defects'][0];
+                    if ($num_defects != $expected_num_defects) {
+                        throw new Exception("Expected $expected_num_defects defects for {$build['label']}, found $num_defects");
+                    }
+                    $defect_type = $jsonobj['defecttypes'][0]['type'];
+                    if ($expected_defect_type != $defect_type) {
+                        throw new Exception("Expected type $expected_defect_type for {$build['label']}, found $defect_type");
                     }
                 }
             }
