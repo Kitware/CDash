@@ -169,19 +169,12 @@ describe("manageBuildGroup", function() {
 
         // Click on it.
         deleteIcon.click();
-
-        // This generates a confirmation dialog which we have to accept.
-        // Wait for it to appear.
         browser.wait(function() {
-          return browser.switchTo().alert().then(
-            function() { return true; },
-            function() { return false; }
-          );
-        }, opt_timeout=1000);
+          "use strict";
+          return element(by.id('modal-delete-group-button')).isPresent();
+        });
 
-        // Then switch to it & click on it.
-        var alertDialog = browser.switchTo().alert();
-        alertDialog.accept();
+        element(by.id('modal-delete-group-button')).click();
 
         // Make sure that this BuildGroup doesn't appear on the page anymore.
         browser.waitForAngular();

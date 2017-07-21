@@ -48,7 +48,7 @@ CDash.filter("showEmptyBuildsLast", function () {
 })
 
 
-.controller('IndexController', function IndexController($scope, $rootScope, $location, $http, $filter, $timeout, anchors, apiLoader, filters, multisort) {
+.controller('IndexController', function IndexController($scope, $rootScope, $location, $http, $filter, $timeout, anchors, apiLoader, filters, multisort, $uibModal) {
   // Show spinner while page is loading.
   $scope.loading = true;
 
@@ -372,18 +372,37 @@ CDash.filter("showEmptyBuildsLast", function () {
     }
   };
 
+  $scope.showModal = function (buildid) {
+    $modal = $uibModal.open({
+      animation: true,
+      size: 'sm',
+      backdrop: true,
+      templateUrl: 'modal-template',
+      controller: function() {
+        var $ctrl = this;
+        $ctrl.ok = function() {
+          "use strict";
+          $scope.removeBuild(buildid)
+          $modal.close();
+        };
+        $ctrl.cancel = function () {
+          "use strict";
+          $modal.close();
+        }
+      },
+      controllerAs: '$ctrl',
+    });
+  };
 
   $scope.removeBuild = function(build) {
-    if (window.confirm("Are you sure you want to remove this build?")) {
-      var parameters = { buildid: build.id };
-        $http({
-          url: 'api/v1/build.php',
-          method: 'DELETE',
-          params: parameters
-        }).then(function success() {
-          $scope.removeBuildFromScope(build);
-      });
-    }
+    var parameters = { buildid: build.id };
+      $http({
+        url: 'api/v1/build.php',
+        method: 'DELETE',
+        params: parameters
+      }).then(function success() {
+        $scope.removeBuildFromScope(build);
+    });
   };
 
   $scope.removeBuildFromScope = function(build) {
