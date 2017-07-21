@@ -28,10 +28,7 @@ jobs:
       - run: node_modules/.bin/webdriver-manager update
       - run:
           background: true
-          command: sudo Xvfb :0 -screen 0 800x600x16
-      - run:
-          background: true
-          command: xvfb-run node_modules/.bin/webdriver-manager start
+          command: node_modules/.bin/webdriver-manager start
       - run: mkdir _build
       - run: cd _build && cmake -DCDASH_TESTING_RENAME_LOGS=true -DCDASH_DB_HOST=127.0.0.1 -DCDASH_DIR_NAME=cdash -DCDASH_DB_LOGIN=root -DBUILDNAME="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}_MySQL" -DSITE="CircleCI-2.0" ..
       - run: cd _build && ctest --extra-verbose --no-compress-output --track Continuous --test-action Test --test-action Submit .
