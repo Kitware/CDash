@@ -18,8 +18,6 @@ class BuildUserNoteTestCase extends KWWebTestCase
 
     public function testBuildUserNote()
     {
-        $this->startCodeCoverage();
-
         $buildusernote = new BuildUserNote();
         $result = $buildusernote->Insert();
         if ($result) {

@@ -22,9 +22,7 @@ require_once 'include/version.php';
 require_once 'models/project.php';
 
 $start = microtime_float();
-$response = begin_JSON_response();
-$response['title'] = 'CDash : Compare Coverage';
-$response['showcalendar'] = 1;
+$response = [];
 
 // Check if a valid project was specified.
 $projectname = $_GET['project'];
@@ -53,6 +51,9 @@ if ($date != null) {
 
 list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $project_instance->NightlyTime);
 
+$response = begin_JSON_response();
+$response['title'] = 'CDash : Compare Coverage';
+$response['showcalendar'] = 1;
 get_dashboard_JSON($projectname, $date, $response);
 
 $page_id = 'compareCoverage.php';

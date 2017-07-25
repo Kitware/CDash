@@ -54,11 +54,21 @@ if (isset($_GET['buildid'])) {
     return;
 }
 
-$projectname = htmlspecialchars(pdo_real_escape_string($_GET['project']));
-$projectid = get_project_id($projectname);
+$pdo = get_link_identifier()->getPdo();
+$stmt = $pdo->prepare(
+    'SELECT id, authenticatesubmissions FROM project WHERE name = ?');
+
+$projectid = null;
+if (pdo_execute($stmt, [$_GET['project']])) {
+    $row = $stmt->fetch();
+    if ($row) {
+        $projectid = $row['id'];
+        $authenticate_submissions = $row['authenticatesubmissions'];
+    }
+}
 
 // If not a valid project we return
-if ($projectid == -1) {
+if (!$projectid) {
     echo '<cdash version="' . $CDASH_VERSION . "\">\n";
     echo " <status>ERROR</status>\n";
     echo " <message>Not a valid project.</message>\n";
@@ -82,6 +92,11 @@ if ($project->HasTooManyBuilds($message)) {
 
 // Catch the fatal errors during submission
 register_shutdown_function('PHPErrorHandler', $projectid);
+
+// Check for valid authentication token if this project requires one.
+if ($authenticate_submissions && !valid_token_for_submission($projectid)) {
+    return;
+}
 
 $expected_md5 = isset($_GET['MD5']) ? htmlspecialchars(pdo_real_escape_string($_GET['MD5'])) : '';
 $file_path = 'php://input';

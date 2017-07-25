@@ -8,14 +8,20 @@ CDash.controller('TestOverviewController',
     // Check for filters.
     $rootScope.queryString['filterstring'] = filters.getString();
 
-    // Check for sort order cookie.
+    // Handle sort order.
     var sort_order = [];
-    var sort_cookie_value = $.cookie('cdash_test_overview_sort');
-    if(sort_cookie_value) {
-      sort_order = sort_cookie_value.split(",");
+    // First check if one was specified via query string.
+    if ('sort' in $rootScope.queryString) {
+      sort_order = $rootScope.queryString.sort.split(",");
     } else {
-      // Default sorting: put the most broken tests at the top of the list.
-      sort_order = ['-failpercent'];
+      // Next check for a sort order cookie.
+      var sort_cookie_value = $.cookie('cdash_test_overview_sort');
+      if(sort_cookie_value) {
+        sort_order = sort_cookie_value.split(",");
+      } else {
+        // Default sorting: put the most broken tests at the top of the list.
+        sort_order = ['-failpercent'];
+      }
     }
     $scope.orderByFields = sort_order;
 
@@ -36,6 +42,7 @@ CDash.controller('TestOverviewController',
     apiLoader.loadPageData($scope, 'api/v1/testOverview.php');
 
     $scope.finishSetup = function() {
+      $scope.cdash.showpassedinitialvalue = $scope.cdash.showpassed;
       $scope.cdash.tests = $filter('orderBy')($scope.cdash.tests, $scope.orderByFields);
       $scope.pageChanged();
 
@@ -83,6 +90,9 @@ CDash.controller('TestOverviewController',
       }
       if ($scope.cdash.selectedGroup.id > 0) {
         uri += '&group=' + $scope.cdash.selectedGroup.id;
+      }
+      if ($scope.cdash.showpassed == 1) {
+        uri += '&showpassed=1';
       }
       uri += filters.getString();
       window.location = uri;

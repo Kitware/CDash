@@ -16,23 +16,14 @@ class ManageCoverageTestCase extends KWWebTestCase
     {
         $this->login();
 
-        //get projectid for InsightExamples
-        $content = $this->connect($this->url . '/user.php');
-        $lines = explode("\n", $content);
-        $rightSpot = false;
+        // Get projectid for InsightExample.
         $projectid = -1;
-        foreach ($lines as $line) {
-            if ($rightSpot === false) {
-                if (strpos($line, 'InsightExample') !== false) {
-                    $rightSpot = true;
-                }
-                continue;
-            } else {
-                if (strpos($line, 'projectid') !== false) {
-                    preg_match('#projectid=([0-9.]+)#', $line, $matches);
-                    $projectid = $matches[1];
-                    break;
-                }
+        $content = $this->connect($this->url . '/api/v1/user.php');
+        $jsonobj = json_decode($content, true);
+        foreach ($jsonobj['projects'] as $project) {
+            if ($project['name'] === 'InsightExample') {
+                $projectid = $project['id'];
+                break;
             }
         }
 

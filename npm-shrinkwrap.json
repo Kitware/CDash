@@ -12,6 +12,11 @@
       "from": "angular-animate@>=1.4.7 <2.0.0",
       "resolved": "http://registry.npmjs.org/angular-animate/-/angular-animate-1.6.1.tgz"
     },
+    "angular-clipboard": {
+      "version": "1.5.0",
+      "from": "angular-clipboard@>=1.5.0 <2.0.0",
+      "resolved": "http://registry.npmjs.org/angular-clipboard/-/angular-clipboard-1.5.0.tgz"
+    },
     "angular-ui-bootstrap": {
       "version": "2.4.0",
       "from": "angular-ui-bootstrap@>=2.0.0 <3.0.0",

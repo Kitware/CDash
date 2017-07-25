@@ -35,64 +35,39 @@ include_once 'include/repository.php';
 include 'include/version.php';
 require_once 'models/build.php';
 require_once 'models/label.php';
+require_once 'models/buildupdate.php';
 
-@$buildid = $_GET['buildid'];
-if ($buildid != null) {
-    $buildid = pdo_real_escape_numeric($buildid);
-}
+$build = get_request_build();
+$update = new BuildUpdate();
+$update->BuildId = $build->Id;
+$build_update = $update->GetUpdateForBuild();
 
 @$date = $_GET['date'];
 if ($date != null) {
     $date = htmlspecialchars(pdo_real_escape_string($date));
 }
 
-$response = begin_JSON_response();
-$response['title'] = 'CDash : View Build Errors';
-
-// Checks
-if (!isset($buildid) || !is_numeric($buildid)) {
-    $response['error'] = 'Not a valid buildid!';
-    echo json_encode($response); // @todo should return a 400
-    return;
-}
+$response = [];
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME", $db);
 
 $start = microtime_float();
-
-$build_query = "SELECT build.id, build.projectid, build.siteid, build.type,
-                       build.name, build.starttime, buildupdate.revision
-                FROM build
-                LEFT JOIN build2update ON (build2update.buildid = build.id)
-                LEFT JOIN buildupdate ON (buildupdate.id = build2update.updateid)
-                WHERE build.id = '$buildid'";
-$build_array = pdo_fetch_array(pdo_query($build_query));
-
-if (empty($build_array)) {
-    $response['error'] = 'This build does not exist. Maybe it has been deleted.';
-    echo json_encode($response);
-    return;
-}
-
-$projectid = $build_array['projectid'];
-$project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
+$project_array = [];
+$project = pdo_query("SELECT * FROM project WHERE id='{$build->ProjectId}'");
 if (pdo_num_rows($project) > 0) {
     $project_array = pdo_fetch_array($project);
     $projectname = $project_array['name'];
 }
 
-// Check permissions.
-if (!can_access_project($project_array['id'])) {
-    return;
-}
-
+$response = begin_JSON_response();
 $response['title'] = "CDash : $projectname";
-$siteid = $build_array['siteid'];
-$buildtype = $build_array['type'];
-$buildname = $build_array['name'];
-$starttime = $build_array['starttime'];
-$revision = $build_array['revision'];
+
+$siteid = $build->SiteId;
+$buildtype = $build->Type;
+$buildname = $build->Name;
+$starttime = $build->StartTime;
+$revision = $build_update['revision'];
 
 if (isset($_GET['type'])) {
     $type = pdo_real_escape_numeric($_GET['type']);
@@ -100,14 +75,12 @@ if (isset($_GET['type'])) {
     $type = 0;
 }
 
-$date = get_dashboard_date_from_build_starttime($build_array['starttime'], $project_array['nightlytime']);
+$date = get_dashboard_date_from_build_starttime($build->StartTime, $project_array['nightlytime']);
 get_dashboard_JSON_by_name($projectname, $date, $response);
 
 $menu = array();
 $menu['back'] = 'index.php?project=' . urlencode($projectname) . '&date=' . $date;
 
-$build = new Build();
-$build->Id = $buildid;
 $previous_buildid = $build->GetPreviousBuildId();
 $current_buildid = $build->GetCurrentBuildId();
 $next_buildid = $build->GetNextBuildId();
@@ -133,11 +106,11 @@ $build_response = array();
 $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
 $build_response['site'] = $site_array['name'];
 $build_response['siteid'] = $siteid;
-$build_response['buildname'] = $build_array['name'];
+$build_response['buildname'] = $build->Name;
 $build_response['starttime'] =
-    date(FMT_DATETIMETZ, strtotime($build_array['starttime'] . 'UTC'));
-$build_response['buildid'] = $build_array['id'];
-$response['build'] = $build_response;
+    date(FMT_DATETIMETZ, strtotime($build->StartTime . 'UTC'));
+$build_response['buildid'] = $build->Id;
+$response['build'] = Build::MarshalResponseArray($build, ['revision' => $build_update['revision']]);
 
 // Set the error
 if ($type == 0) {

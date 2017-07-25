@@ -278,6 +278,17 @@ $CDASH_MEMCACHE_PREFIX = 'cdash';
 // Whether to use the AWS ElastiCache Auto Discovery feature
 $CDASH_USE_ELASTICACHE_AUTO_DISCOVERY = false;
 
+// How long authentication tokens should last before expiring (in seconds).
+// Default is six months.
+// 0 here means that tokens do not expire.
+$CDASH_TOKEN_DURATION = 15811200;
+
+// By default, should newly created projects require an authentication token
+// for submissions?
+// 0 means that the default will be to accept all submissions from any site.
+// 1 means that newly created projects will require authentication by default.
+$CDASH_DEFAULT_AUTHENTICATE_SUBMISSIONS = 0;
+
 // Maximum number of builds allowed per project.
 // When set to 0 projects are not limited by number of builds.
 $CDASH_BUILDS_PER_PROJECT = 0;

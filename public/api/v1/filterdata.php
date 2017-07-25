@@ -204,7 +204,7 @@ function getFiltersForPage($page_id)
             break;
 
         case 'testOverview.php':
-            return array('buildname');
+            return array('buildname', 'subproject', 'testname');
             break;
 
         case 'compareCoverage.php':

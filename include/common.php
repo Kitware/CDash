@@ -953,6 +953,7 @@ function remove_build($buildid)
     pdo_query('DELETE FROM build2group WHERE buildid IN ' . $buildids);
     pdo_query('DELETE FROM builderror WHERE buildid IN ' . $buildids);
     pdo_query('DELETE FROM buildemail WHERE buildid IN ' . $buildids);
+    pdo_query('DELETE FROM buildfile WHERE buildid IN ' . $buildids);
 
     pdo_query('DELETE FROM buildinformation WHERE buildid IN ' . $buildids);
     pdo_query('DELETE FROM builderrordiff WHERE buildid IN ' . $buildids);
@@ -2084,11 +2085,13 @@ function DeleteDirectory($dirName)
     rmdir($dirName);
 }
 
-function load_view($viewName)
+function load_view($viewName, $login=true)
 {
     global $CDASH_USE_LOCAL_DIRECTORY;
 
-    angular_login();
+    if ($login) {
+        angular_login();
+    }
 
     if ($CDASH_USE_LOCAL_DIRECTORY &&
         file_exists("build/local/views/$viewName.html")
@@ -2231,7 +2234,7 @@ function extract_tar_archive_tar($filename, $dirName)
         });
         return $tar->extract($dirName);
     } catch (PEAR_Exception $e) {
-        add_log($e->getMessage(), 'extract_tar', LOG_ERR);
+        add_log($e->getMessage(), 'extract_tar_archive_tar', LOG_ERR);
         return false;
     }
 }
@@ -2243,6 +2246,7 @@ function extract_tar($filename, $dirName)
             $phar = new PharData($filename);
             $phar->extractTo($dirName);
         } catch (Exception $e) {
+            add_log($e->getMessage(), 'extract_tar', LOG_ERR);
             return false;
         }
 

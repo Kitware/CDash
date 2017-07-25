@@ -16,6 +16,7 @@
 
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
+$noforcelogin = 1;
 include 'public/login.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
@@ -164,6 +165,8 @@ if ($projectid > 0) {
     }
 } else {
     // Initialize some variables for project creation.
+    global $CDASH_DEFAULT_AUTHENTICATE_SUBMISSIONS;
+    $project_response['AuthenticateSubmissions'] = $CDASH_DEFAULT_AUTHENTICATE_SUBMISSIONS;
     $project_response['AutoremoveMaxBuilds'] = 500;
     $project_response['AutoremoveTimeframe'] = 60;
     $project_response['CoverageThreshold'] = 70;

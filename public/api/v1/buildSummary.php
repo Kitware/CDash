@@ -20,41 +20,25 @@ require_once 'include/api_common.php';
 include 'include/version.php';
 require_once 'models/build.php';
 require_once 'models/buildusernote.php';
+require_once 'models/project.php';
 require_once 'models/user.php';
 
 $start = microtime_float();
 $response = array();
 
-// Checks
-if (!isset($_GET['buildid']) || !is_numeric($_GET['buildid'])) {
-    $response['error'] = 'Invalid buildid specified.';
-    echo json_encode($response);
-    http_response_code(400);
-    return;
-}
-$buildid = pdo_real_escape_numeric($_GET['buildid']);
+$build = get_request_build();
 
 $date = null;
 if (isset($_GET['date'])) {
     $date = $_GET['date'];
 }
 
-$build = new Build();
-$build->Id = $buildid;
-$build->FillFromId($build->Id);
-
-$projectid = $build->ProjectId;
-if (!isset($projectid) || $projectid < 1) {
-    $response['error'] = 'This build does not exist.  Maybe it has been deleted.';
-    echo json_encode($response);
-    http_response_code(400);
-    return;
-}
+$buildid = $build->Id;
 $siteid = $build->SiteId;
 
-if (!can_access_project($projectid)) {
-    return;
-}
+$project = new Project();
+$project->Id = $build->ProjectId;
+$project->Fill();
 
 // Format the text to fit the iPhone
 function format_for_iphone($text)
@@ -68,16 +52,14 @@ function format_for_iphone($text)
 }
 
 $response = begin_JSON_response();
-$projectname = get_project_name($projectid);
-$response['title'] = "CDash : $projectname";
+$response['title'] = "CDash : $project->Name";
 
 $previous_buildid = $build->GetPreviousBuildId();
 $current_buildid = $build->GetCurrentBuildId();
 $next_buildid = $build->GetNextBuildId();
 
 $menu = array();
-$nightlytime = get_project_property($projectname, 'nightlytime');
-$menu['back'] = 'index.php?project=' . urlencode($projectname) . '&date=' . get_dashboard_date_from_build_starttime($build->StartTime, $nightlytime);
+$menu['back'] = 'index.php?project=' . urlencode($project->Name) . '&date=' . get_dashboard_date_from_build_starttime($build->StartTime, $project->NightlyTime);
 
 if ($previous_buildid > 0) {
     $menu['previous'] = "buildSummary.php?buildid=$previous_buildid";
@@ -102,12 +84,10 @@ if ($next_buildid > 0) {
 
 $response['menu'] = $menu;
 
-get_dashboard_JSON($projectname, $date, $response);
+get_dashboard_JSON($project->Name, $date, $response);
 
-// User
-if (isset($_SESSION['cdash']['loginid'])) {
-    $user_response = array();
-    $userid = $_SESSION['cdash']['loginid'];
+$userid = get_userid_from_session(false);
+if ($userid) {
     $user = new User();
     $user->Id = $userid;
     $user->Fill();
@@ -115,6 +95,7 @@ if (isset($_SESSION['cdash']['loginid'])) {
     $user_response['admin'] = $user->Admin;
     $response['user'] = $user_response;
 }
+
 
 // Notes added by users.
 $notes_response = array();
@@ -127,17 +108,17 @@ $response['notes'] = $notes_response;
 
 // Build
 $build_response = array();
-$build = pdo_query("SELECT * FROM build WHERE id='$buildid'");
-$build_array = pdo_fetch_array($build);
+
 $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
 $build_response['site'] = $site_array['name'];
 $build_response['sitename_encoded'] = urlencode($site_array['name']);
 $build_response['siteid'] = $siteid;
-$build_response['name'] = $build_array['name'];
-$build_response['id'] = $build_array['id'];
-$build_response['stamp'] = $build_array['stamp'];
-$build_response['time'] = date(FMT_DATETIMETZ, strtotime($build_array['starttime'] . ' UTC'));
-$build_response['type'] = $build_array['type'];
+
+$build_response['name'] = $build->Name;
+$build_response['id'] = $buildid;
+$build_response['stamp'] = $build->GetStamp();
+$build_response['time'] = date(FMT_DATETIMETZ, strtotime($build->StartTime . ' UTC'));
+$build_response['type'] = $build->Type;
 
 $note = pdo_query("SELECT count(buildid) AS c FROM build2note WHERE buildid='$buildid'");
 $note_array = pdo_fetch_array($note);
@@ -167,43 +148,33 @@ if (pdo_num_rows($buildinformation) > 0) {
     }
 }
 
-$build_response['generator'] = $build_array['generator'];
-$build_response['command'] = $build_array['command'];
-$build_response['starttime'] = date(FMT_DATETIMETZ, strtotime($build_array['starttime'] . ' UTC'));
-$build_response['endtime'] = date(FMT_DATETIMETZ, strtotime($build_array['endtime'] . ' UTC'));
+$build_response['generator'] = $build->Generator;
+$build_response['command'] = $build->Command;
+$build_response['starttime'] = date(FMT_DATETIMETZ, strtotime($build->StartTime . ' UTC'));
+$build_response['endtime'] = date(FMT_DATETIMETZ, strtotime($build->EndTime . ' UTC'));
 
 $build_response['lastsubmitbuild'] = $previous_buildid;
 $build_response['lastsubmitdate'] = $lastsubmitdate;
 
-// Number of errors and warnings
-$builderror = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$buildid' AND type='0'");
-$builderror_array = pdo_fetch_array($builderror);
-$nerrors = $builderror_array[0];
-$builderror = pdo_query(
-    "SELECT count(*) FROM buildfailure AS bf
-     LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
-     WHERE bf.buildid='$buildid' AND bfd.type='0'");
-$builderror_array = pdo_fetch_array($builderror);
-$nerrors += $builderror_array[0];
+$e_errors = $build->GetErrors(['type' => Build::TYPE_ERROR]);
+$e_warnings = $build->GetErrors(['type' => Build::TYPE_WARN]);
+
+$f_errors = $build->GetFailures(['type' => Build::TYPE_ERROR]);
+$f_warnings = $build->GetFailures(['type' => Build::TYPE_WARN]);
+
+$nerrors = count($e_errors) + count($f_errors);
+$nwarnings = count($e_warnings) + count($f_warnings);
 
 $build_response['error'] = $nerrors;
-$buildwarning = pdo_query("SELECT count(*) FROM builderror WHERE buildid='$buildid' AND type='1'");
-$buildwarning_array = pdo_fetch_array($buildwarning);
-$nwarnings = $buildwarning_array[0];
-$buildwarning = pdo_query(
-    "SELECT count(*) FROM buildfailure AS bf
-     LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
-     WHERE bf.buildid='$buildid' AND bfd.type='1'");
-$buildwarning_array = pdo_fetch_array($buildwarning);
-$nwarnings += $buildwarning_array[0];
 
 $build_response['nerrors'] = $nerrors;
 $build_response['nwarnings'] = $nwarnings;
 
 // Display the build errors
+
 $errors_response = array();
-$errors = pdo_query("SELECT * FROM builderror WHERE buildid='$buildid' and type='0'");
-while ($error_array = pdo_fetch_array($errors)) {
+
+foreach ($e_errors as $error_array) {
     $error_response = array();
     $error_response['logline'] = $error_array['logline'];
     $error_response['text'] = format_for_iphone($error_array['text']);
@@ -215,23 +186,21 @@ while ($error_array = pdo_fetch_array($errors)) {
 }
 
 // Display the build failure error
-$errors = pdo_query(
-    "SELECT bf.sourcefile, bfd.stdoutput, bfd.stderror FROM buildfailure AS bf
-     LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
-     WHERE bf.buildid='$buildid' AND bfd.type='0'");
-while ($error_array = pdo_fetch_array($errors)) {
+
+foreach ($f_errors as $error_array) {
     $error_response = array();
     $error_response['sourcefile'] = $error_array['sourcefile'];
     $error_response['stdoutput'] = format_for_iphone($error_array['stdoutput']);
     $error_response['stderror'] = $error_array['stderror'];
     $errors_response[] = $error_response;
 }
+
 $build_response['errors'] = $errors_response;
 
 // Display the warnings
 $warnings_response = array();
-$errors = pdo_query("SELECT * FROM builderror WHERE buildid='$buildid' and type='1'");
-while ($error_array = pdo_fetch_array($errors)) {
+
+foreach ($e_warnings as $error_array) {
     $warning_response = array();
     $warning_response['logline'] = $error_array['logline'];
     $warning_response['text'] = format_for_iphone($error_array['text']);
@@ -243,17 +212,15 @@ while ($error_array = pdo_fetch_array($errors)) {
 }
 
 // Display the build failure warnings
-$errors = pdo_query(
-    "SELECT bf.sourcefile, bfd.stdoutput, bfd.stderror FROM buildfailure AS bf
-     LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
-     WHERE bf.buildid='$buildid' AND bfd.type='1'");
-while ($error_array = pdo_fetch_array($errors)) {
+
+foreach ($f_warnings as $error_array) {
     $warning_response = array();
     $warning_response['sourcefile'] = $error_array['sourcefile'];
     $warning_response['stdoutput'] = format_for_iphone($error_array['stdoutput']);
     $warning_response['stderror'] = $error_array['stderror'];
     $warnings_response[] = $warning_response;
 }
+
 $build_response['warnings'] = $warnings_response;
 $response['build'] = $build_response;
 
@@ -409,6 +376,23 @@ if ($previous_buildid > 0) {
 
     $response['previousbuild'] = $previous_response;
 }
+
+// Check if this project uses a supported bug tracker.
+$generate_issue_link = false;
+$new_issue_url = '';
+switch ($project->BugTrackerType) {
+    case 'Buganizer':
+    case 'JIRA':
+    case 'GitHub':
+        $generate_issue_link = true;
+        break;
+}
+if ($generate_issue_link) {
+    require_once('include/repository.php');
+    $new_issue_url = generate_bugtracker_new_issue_link($build, $project);
+    $response['bugtracker'] = $project->BugTrackerType;
+}
+$response['newissueurl'] = $new_issue_url;
 
 $end = microtime_float();
 $response['generationtime'] = round($end - $start, 3);

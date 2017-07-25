@@ -25,10 +25,11 @@ class ProjectHandler extends AbstractHandler
 {
     private $Project;
     private $SubProject;
+    private $SubProjectPosition;
     private $Dependencies; // keep an array of dependencies in order to remove them
     private $SubProjects; // keep an array of subprojects in order to remove them
     private $CurrentDependencies; // The dependencies of the current SubProject.
-    private $Email; // Email address associated with the current SubProject.
+    private $Emails; // Email addresses associated with the current SubProject.
     private $ProjectNameMatches;
 
     /** Constructor */
@@ -44,6 +45,8 @@ class ProjectHandler extends AbstractHandler
         $this->Project = new Project();
         $this->Project->Id = $projectid;
         $this->Project->Fill();
+
+        $this->SubProjectPosition = 1;
     }
 
     /** startElement function */
@@ -75,6 +78,7 @@ class ProjectHandler extends AbstractHandler
             if (array_key_exists('GROUP', $attributes)) {
                 $this->SubProject->SetGroup($attributes['GROUP']);
             }
+            $this->Emails = [];
         } elseif ($name == 'DEPENDENCY') {
             // A DEPENDENCY is expected to be:
             //
@@ -88,7 +92,7 @@ class ProjectHandler extends AbstractHandler
             // are set.
             $this->CurrentDependencies[] = $dependentProject->GetId();
         } elseif ($name == 'EMAIL') {
-            $this->Email = $attributes['ADDRESS'];
+            $this->Emails[] = $attributes['ADDRESS'];
         }
     }
 
@@ -162,7 +166,9 @@ class ProjectHandler extends AbstractHandler
             }
         } elseif ($name == 'SUBPROJECT') {
             // Insert the SubProject.
+            $this->SubProject->SetPosition($this->SubProjectPosition);
             $this->SubProject->Save();
+            $this->SubProjectPosition++;
 
             // Insert the label.
             $Label = new Label;
@@ -190,45 +196,49 @@ class ProjectHandler extends AbstractHandler
                 }
             }
 
-            // Check if the user is in the database.
-            $User = new User();
+            foreach ($this->Emails as $email) {
+                // Check if the user is in the database.
+                $User = new User();
 
-            $posat = strpos($this->Email, '@');
-            if ($posat !== false) {
-                $User->FirstName = substr($this->Email, 0, $posat);
-                $User->LastName = substr($this->Email, $posat + 1);
-            } else {
-                $User->FirstName = $this->Email;
-                $User->LastName = $this->Email;
-            }
-            $User->Email = $this->Email;
-            $User->Password = User::PasswordHash($this->Email);
-            $User->Admin = 0;
-            $userid = $User->GetIdFromEmail($this->Email);
-            if (!$userid) {
-                $User->Save();
-                $userid = $User->Id;
-            }
+                $posat = strpos($email, '@');
+                if ($posat !== false) {
+                    $User->FirstName = substr($email, 0, $posat);
+                    $User->LastName = substr($email, $posat + 1);
+                } else {
+                    $User->FirstName = $email;
+                    $User->LastName = $email;
+                }
+                $User->Email = $email;
+                $User->Password = User::PasswordHash($email);
+                $User->Admin = 0;
+                $userid = $User->GetIdFromEmail($email);
+                if (!$userid) {
+                    $User->Save();
+                    $userid = $User->Id;
+                }
 
-            // Insert into the UserProject
-            $UserProject = new UserProject();
-            $UserProject->EmailType = 3; // any build
-            $UserProject->EmailCategory = 54; // everything except warnings
-            $UserProject->UserId = $userid;
-            $UserProject->ProjectId = $this->projectid;
-            $UserProject->Save();
+                $UserProject = new UserProject();
+                $UserProject->UserId = $userid;
+                $UserProject->ProjectId = $this->projectid;
+                if (!$UserProject->FillFromUserId()) {
+                    // This user wasn't already subscribed to this project.
+                    $UserProject->EmailType = 3; // any build
+                    $UserProject->EmailCategory = 54; // everything except warnings
+                    $UserProject->Save();
+                }
 
-            // Insert the labels for this user
-            $LabelEmail = new LabelEmail;
-            $LabelEmail->UserId = $userid;
-            $LabelEmail->ProjectId = $this->projectid;
+                // Insert the labels for this user
+                $LabelEmail = new LabelEmail;
+                $LabelEmail->UserId = $userid;
+                $LabelEmail->ProjectId = $this->projectid;
 
-            $Label = new Label;
-            $Label->SetText($this->SubProject->GetName());
-            $labelid = $Label->GetIdFromText();
-            if (!empty($labelid)) {
-                $LabelEmail->LabelId = $labelid;
-                $LabelEmail->Insert();
+                $Label = new Label;
+                $Label->SetText($this->SubProject->GetName());
+                $labelid = $Label->GetIdFromText();
+                if (!empty($labelid)) {
+                    $LabelEmail->LabelId = $labelid;
+                    $LabelEmail->Insert();
+                }
             }
         }
     }

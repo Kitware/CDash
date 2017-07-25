@@ -117,11 +117,10 @@ if ($testfailing) {
                     </b></font></td>
         </tr>
         <?php
-
 } // end buildfailing?>
 
     <?php if ($testfailing) {
-    ?>
+                            ?>
         <tr>
             <td bgcolor="#DDDDDD" id="nob"><font size="2">Tests have been failing since <b>
                         <?php
@@ -136,8 +135,7 @@ if ($testfailing) {
                     </b></font></td>
         </tr>
         <?php
-
-} ?>
+                        } ?>
 
 
 </table>

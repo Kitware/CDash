@@ -50,6 +50,8 @@ class Build
     public $Command;
     public $Log;
     public $Information;
+    public $BuildErrorCount;
+    public $TestFailedCount;
 
     // For the moment we accept only one group per build
     public $GroupId;
@@ -294,8 +296,22 @@ class Build
         }
 
         $query = pdo_query(
-            'SELECT projectid,starttime,endtime,siteid,name,stamp,type,parentid,done
-                FROM build WHERE id=' . qnum($buildid));
+            'SELECT
+                projectid,
+                starttime,
+                endtime,
+                siteid,
+                name,
+                stamp,
+                type,
+                parentid,
+                done,
+                builderrors,
+                testfailed,
+                generator,
+                command
+            FROM build
+            WHERE id=' . qnum($buildid));
 
         if (!$query) {
             add_last_sql_error('Build:FillFromId()', $this->ProjectId, $this->Id);
@@ -312,6 +328,10 @@ class Build
         $this->ProjectId = $build_array['projectid'];
         $this->SetParentId($build_array['parentid']);
         $this->Done = $build_array['done'];
+        $this->Generator = $build_array['generator'];
+        $this->Command = $build_array['command'];
+        $this->BuildErrorCount = $build_array['builderrors'];
+        $this->TestFailedCount = $build_array['testfailed'];
 
         $subprojectid = $this->QuerySubProjectId($buildid);
         if ($subprojectid) {
@@ -322,6 +342,30 @@ class Build
             "SELECT groupid FROM build2group WHERE buildid='$buildid'"));
         $this->GroupId = $result['groupid'];
         $this->Filled = true;
+    }
+
+    /**
+     * @param Build $build
+     * @param array $optional_values
+     * @return array
+     */
+    public static function MarshalResponseArray($build, $optional_values = [])
+    {
+        $response = [
+            'id' => $build->Id,
+            'buildid' => $build->Id,
+            'siteid' => $build->SiteId,
+            'name' => $build->Name,
+            'buildname' => $build->Name,
+            'stamp' => $build->Stamp,
+            'projectid' => $build->ProjectId,
+            'starttime' => $build->StartTime,
+            'endtime' => $build->EndTime,
+            'groupid' => $build->GroupId,
+
+        ];
+
+        return array_merge($response, $optional_values);
     }
 
     /** Get the previous build id. */
@@ -567,59 +611,73 @@ class Build
         return $resolvedBuildFailures;
     }
 
-    public function GetConfigures($status=false)
+    public function GetConfigures()
     {
-        $where = ($status !== false) ? "AND c.status = $status" : "";
         if ($this->IsParentBuild()) {
-            return pdo_query("SELECT sp.name subprojectname, sp.id subprojectid, c.*, b.configureerrors,
-                              b.configurewarnings
-                              FROM configure c
-                              JOIN build2configure b2c ON b2c.configureid=c.id
-                              JOIN subproject2build sp2b ON sp2b.buildid = b2c.buildid
-                              JOIN subproject sp ON sp.id = sp2b.subprojectid
-                              JOIN build b ON b.id = b2c.buildid
-                              WHERE b.parentid = " . $this->Id . "
-                              $where");
+            $configures = pdo_query("SELECT c.id FROM configure c
+                                    JOIN build2configure b2c ON b2c.configureid = c.id
+                                    JOIN subproject2build sp2b ON sp2b.buildid = b2c.buildid
+                                    JOIN subproject sp ON sp.id = sp2b.subprojectid
+                                    JOIN build b ON b.id = b2c.buildid
+                                    WHERE b.parentid = $this->Id");
+            $configures_array = pdo_fetch_array($configures);
+            if (count(array_unique($configures_array)) > 1) {
+                return pdo_query("SELECT sp.name subprojectname, sp.id subprojectid, c.*, b.configureerrors,
+                                  b.configurewarnings
+                                  FROM configure c
+                                  JOIN build2configure b2c ON b2c.configureid = c.id
+                                  JOIN subproject2build sp2b ON sp2b.buildid = b2c.buildid
+                                  JOIN subproject sp ON sp.id = sp2b.subprojectid
+                                  JOIN build b ON b.id = b2c.buildid
+                                  WHERE b.parentid = $this->Id");
+            } else {
+                return pdo_query(
+                    "SELECT c.*, b.configureerrors, b.configurewarnings
+                     FROM configure c
+                     JOIN build2configure b2c ON b2c.configureid = c.id
+                     JOIN build b ON b.id = b2c.buildid
+                     WHERE c.id = " . $configures_array[0]);
+            }
         } else {
             return pdo_query(
-                    "SELECT * FROM configure c
-                    JOIN build2configure b2c ON b2c.configureid=c.id
-                    WHERE b2c.buildid = $this->Id $where");
+                    "SELECT c.*, b.configureerrors, b.configurewarnings
+                    FROM configure c
+                    JOIN build2configure b2c ON b2c.configureid = c.id
+                    JOIN build b ON b.id = b2c.buildid
+                    WHERE b2c.buildid = $this->Id");
         }
     }
 
     /** Get the build id from its name */
     public function GetIdFromName($subproject)
     {
-        $buildid = 0;
-
         // Make sure subproject name and id fields are set:
         //
         $this->SetSubProject($subproject);
 
-        if ($this->SubProjectId != 0) {
-            $build = pdo_query('SELECT id FROM build, subproject2build' .
-                ' WHERE projectid=' . qnum($this->ProjectId) .
-                ' AND siteid=' . qnum($this->SiteId) .
-                " AND name='" . $this->Name . "'" .
-                " AND stamp='" . $this->Stamp . "'" .
-                ' AND build.id=subproject2build.buildid' .
-                ' AND subproject2build.subprojectid=' . qnum($this->SubProjectId));
-        } else {
-            $build = pdo_query('SELECT id FROM build' .
-                ' WHERE projectid=' . qnum($this->ProjectId) .
-                ' AND siteid=' . qnum($this->SiteId) .
-                " AND name='" . $this->Name . "'" .
-                " AND stamp='" . $this->Stamp . "'");
-        }
+        $stmt = null;
+        $params = [$this->ProjectId, $this->SiteId, $this->Name, $this->Stamp];
 
-        if (pdo_num_rows($build) > 0) {
-            $build_array = pdo_fetch_array($build);
-            $this->Id = $build_array['id'];
+        if ($this->SubProjectId != 0) {
+            $stmt = $this->PDO->prepare(
+                'SELECT id FROM build
+                JOIN subproject2build ON subproject2build.buildid = build.id
+                WHERE projectid = ? AND siteid = ? AND name = ? AND
+                      stamp = ? AND subprojectid = ?');
+            $params[] = $this->SubProjectId;
+        } else {
+            $stmt = $this->PDO->prepare(
+                'SELECT id FROM build
+                WHERE projectid = ? AND siteid = ? AND name = ? AND stamp = ?
+                AND parentid IN (0, -1)');
+        }
+        pdo_execute($stmt, $params);
+        $id = $stmt->fetchColumn();
+        if ($id > 0) {
+            $this->Id = $id;
             return $this->Id;
         }
 
-        add_last_sql_error('GetIdFromName', $this->ProjectId);
         return 0;
     }
 
@@ -1037,7 +1095,7 @@ class Build
      */
     public function GetFailedTests($maxitems = 0)
     {
-        $criteria = "b2t.status = 'failed' AND t.details NOT LIKE '%%Timeout%%'";
+        $criteria = "b2t.status = 'failed'";
         return $this->GetTests($criteria, $maxitems);
     }
 
@@ -2440,6 +2498,7 @@ class Build
                 bf.workingdirectory,
                 bfd.stderror,
                 bfd.stdoutput,
+                bfd.type,
                 bfd.exitcondition,
                 sp2b.subprojectid,
                 sp.name subprojectname
@@ -2459,5 +2518,26 @@ class Build
         pdo_execute($query, [$this->Id]);
 
         return $query->fetchAll($fetchStyle);
+    }
+
+    /**
+     * Return a SubProject build for a particular parent if it exists.
+     */
+    public static function GetSubProjectBuild($parentid, $subprojectid)
+    {
+        $pdo = get_link_identifier()->getPdo();
+        $stmt = $pdo->prepare(
+            'SELECT b.id FROM build b
+            JOIN subproject2build sp2b ON (sp2b.buildid = b.id)
+            WHERE b.parentid = ? AND sp2b.subprojectid = ?');
+        pdo_execute($stmt, [$parentid, $subprojectid]);
+        $row = $stmt->fetch();
+        if (!$row) {
+            return null;
+        }
+        $build = new Build();
+        $build->Id = $row['id'];
+        $build->FillFromId($build->Id);
+        return $build;
     }
 }

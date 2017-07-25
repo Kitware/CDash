@@ -20,8 +20,6 @@ class TestModelTestCase extends KWWebTestCase
 
     public function testTestModel()
     {
-        $this->startCodeCoverage();
-
         $test = new Test();
         $test->Id = '8967';
         $test->Name = 'dummytest';
@@ -46,8 +44,6 @@ class TestModelTestCase extends KWWebTestCase
         $test->Insert();
 
         $test->GetCrc32();
-
-        $this->stopCodeCoverage();
         return 0;
     }
 }

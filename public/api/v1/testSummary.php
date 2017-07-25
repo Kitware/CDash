@@ -25,9 +25,7 @@ require_once 'include/api_common.php';
 include_once 'include/repository.php';
 include 'include/version.php';
 
-$response = begin_JSON_response();
-$response['title'] = 'CDash : Test Summary';
-$response['showcalendar'] = 1;
+$response = [];
 
 // Checks
 $date = htmlspecialchars(pdo_real_escape_string($_GET['date']));
@@ -75,6 +73,8 @@ if (!can_access_project($projectid)) {
     return;
 }
 
+$response = begin_JSON_response();
+$response['showcalendar'] = 1;
 $response['title'] = "CDash : $projectname";
 get_dashboard_JSON_by_name($projectname, $date, $response);
 $response['testName'] = $testName;

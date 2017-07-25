@@ -16,6 +16,7 @@
 
 require_once 'xml_handlers/abstract_handler.php';
 require_once 'models/coverage.php';
+require_once 'models/project.php';
 
 class CoverageLogHandler extends AbstractHandler
 {
@@ -92,13 +93,46 @@ class CoverageLogHandler extends AbstractHandler
                 // Otherwise make sure that it's up-to-date.
                 $this->Build->UpdateBuild($this->Build->Id, -1, -1);
             }
+
+            // Does this project have subprojects?
+            $project = new Project();
+            $project->Id = $this->projectid;
+            $has_subprojects = $project->GetNumberOfSubProjects() > 0;
+
             // Record the coverage data that we parsed from this file.
             foreach ($this->CoverageFiles as $coverageInfo) {
                 $coverageFile = $coverageInfo[0];
                 $coverageFileLog = $coverageInfo[1];
                 $coverageFile->TrimLastNewline();
-                $coverageFile->Update($this->Build->Id);
-                $coverageFileLog->BuildId = $this->Build->Id;
+
+                $buildid = $this->Build->Id;
+                if ($has_subprojects) {
+                    // Make sure this file gets associated with the correct
+                    // subproject based on its path.
+                    $subproject = SubProject::GetSubProjectFromPath(
+                            $coverageFile->FullPath, $this->projectid);
+                    if (!is_null($subproject)) {
+                        $subprojectBuild = Build::GetSubProjectBuild(
+                                $this->Build->GetParentId(), $subproject->GetId());
+                        if (is_null($subprojectBuild)) {
+                            // This SubProject build doesn't exist yet, add it here.
+                            $subprojectBuild = new Build();
+                            $subprojectBuild->ProjectId = $this->projectid;
+                            $subprojectBuild->Name = $this->Build->Name;
+                            $subprojectBuild->SiteId = $this->Build->SiteId;
+                            $subprojectBuild->SetParentId($this->Build->GetParentId());
+                            $subprojectBuild->SetStamp($this->Build->GetStamp());
+                            $subprojectBuild->SetSubProject($subproject->GetName());
+                            $subprojectBuild->StartTime = $this->Build->StartTime;
+                            $subprojectBuild->EndTime = $this->Build->EndTime;
+                            $subprojectBuild->SubmitTime = gmdate(FMT_DATETIME);
+                            add_build($subprojectBuild, 0);
+                        }
+                        $buildid = $subprojectBuild->Id;
+                    }
+                }
+                $coverageFile->Update($buildid);
+                $coverageFileLog->BuildId = $buildid;
                 $coverageFileLog->FileId = $coverageFile->Id;
                 $coverageFileLog->Insert(true);
             }
@@ -127,6 +161,9 @@ class CoverageLogHandler extends AbstractHandler
         switch ($element) {
             case 'LINE':
                 $this->CurrentLine .= $data;
+                break;
+            case 'STARTTIME':
+                $this->StartTimeStamp = $data;
                 break;
             case 'STARTDATETIME':
                 $this->StartTimeStamp =

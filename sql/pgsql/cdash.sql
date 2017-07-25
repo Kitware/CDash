@@ -320,6 +320,8 @@ CREATE TABLE "project" (
   "cvsurl" character varying(255) DEFAULT '' NOT NULL,
   "bugtrackerurl" character varying(255) DEFAULT '' NOT NULL,
   "bugtrackerfileurl" character varying(255) DEFAULT '' NOT NULL,
+  "bugtrackernewissueurl" character varying(255) DEFAULT '' NOT NULL,
+  "bugtrackertype" character varying(16) DEFAULT NULL,
   "documentationurl" character varying(255) DEFAULT '' NOT NULL,
   "imageid" bigint DEFAULT '0' NOT NULL,
   "public" smallint DEFAULT '1' NOT NULL,
@@ -348,6 +350,7 @@ CREATE TABLE "project" (
   "tokenduration" integer DEFAULT '0',
   "showcoveragecode" smallint default '1',
   "sharelabelfilters" smallint default '0',
+  "authenticatesubmissions" smallint default '0',
   PRIMARY KEY ("id")
 );
 CREATE INDEX "name2" on "project" ("name");
@@ -824,6 +827,7 @@ CREATE TABLE "subproject" (
   "projectid" bigint NOT NULL,
   "groupid" bigint NOT NULL,
   "path" character varying(512) DEFAULT '' NOT NULL,
+  "position" smallint DEFAULT '0' NOT NULL,
   "starttime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
   "endtime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
   PRIMARY KEY ("id"),
@@ -1406,3 +1410,18 @@ CREATE TABLE "lockout" (
   "unlocktime" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
   PRIMARY KEY ("userid")
 );
+
+
+--
+-- Table: authtoken
+--
+CREATE TABLE "authtoken" (
+  "hash" character varying(128) NOT NULL,
+  "userid" integer DEFAULT '0' NOT NULL ,
+  "created" timestamp(0) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  "expires" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
+  "description" character varying(255)
+);
+CREATE INDEX "authtokenhash" on "authtoken" ("hash");
+CREATE INDEX "authtokenuserid" on "authtoken" ("userid");
+CREATE INDEX "authtokenexpires" on "authtoken" ("expires");

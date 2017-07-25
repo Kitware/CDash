@@ -42,10 +42,6 @@ if ($projectname != null) {
     $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
 }
 
-$response = begin_JSON_response();
-$response['title'] = "CDash : $projectname";
-$response['showcalendar'] = 1;
-
 $start = microtime_float();
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
@@ -65,6 +61,10 @@ list($previousdate, $currentstarttime, $nextdate) =
     get_dates($date, $project_array['nightlytime']);
 
 $projectname = $project_array['name'];
+
+$response = begin_JSON_response();
+$response['title'] = "CDash : $projectname";
+$response['showcalendar'] = 1;
 
 get_dashboard_JSON_by_name($projectname, $date, $response);
 

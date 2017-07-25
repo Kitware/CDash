@@ -31,8 +31,6 @@ class AutoRemoveBuildsTestCase extends KWWebTestCase
 
     public function testAutoRemoveBuilds()
     {
-        $this->startCodeCoverage();
-
         global $configure;
         $dir = $configure['svnroot'];
 
@@ -70,7 +68,6 @@ class AutoRemoveBuildsTestCase extends KWWebTestCase
             $error = 0;
         }
 
-        $this->stopCodeCoverage();
         return $error;
     }
 }

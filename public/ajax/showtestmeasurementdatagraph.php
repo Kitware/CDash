@@ -23,7 +23,7 @@ include 'public/login.php';
 
 $testid = pdo_real_escape_numeric($_GET['testid']);
 $buildid = pdo_real_escape_numeric($_GET['buildid']);
-$measurement = preg_replace('/[^\da-z]/i', '', $_GET['measurement']);
+$measurement = trim(preg_replace('/[^\da-z ]/i', '', $_GET['measurement']));
 $measurementname = htmlspecialchars(pdo_real_escape_string(stripslashes($measurement)));
 
 if (!isset($buildid) || !is_numeric($buildid)) {

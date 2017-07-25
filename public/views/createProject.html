@@ -153,6 +153,79 @@
                          ng-focus="clearHelp()"/>
                 </td>
               </tr>
+
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Bug Tracker Issue Creation:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input type="checkbox" name="public"
+                         ng-model="cdash.issuecreation"
+                         ng-focus="showHelp('public_help')"/>
+                  <a href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                     target="blank">
+                    <img ng-mouseover="showHelp('issuecreation_help')" src="img/help.gif"
+                         border="0" />
+                  </a>
+                  <span class="help_content" id="issuecreation_help">
+                    <b>Enable Issue Creation</b>
+                    <br />
+                    CDash can display a link on buildSummary.php if you use a
+                    supported bug tracking system.  This makes it easy to create
+                    a new issue when you notice that a build is broken.
+                  </span>
+                </td>
+              </tr>
+              <tr ng-show="cdash.issuecreation" class="animate-show">
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Bug Tracker Type:</strong>
+                  </div>
+                </td>
+                <td>
+                  <select id="bugtrackertype" name="bugtrackertype"
+                          ng-model="cdash.project.BugTrackerType"
+                          ng-change="cdash.changesmade = true; changeTrackerType()"
+                          ng-focus="showHelp('issuecreation_help')">
+                    <option value="" selected>Other</option>
+                    <option ng-repeat="type in ::cdash.bugtrackertypes"
+                            value="{{::type}}"
+                            ng-selected="type == cdash.project.BugTrackerType">
+                      {{::type}}
+                    </option>
+                  </select>
+                  <a href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                     target="blank">
+                    <img ng-mouseover="showHelp('issuecreation_help')" src="img/help.gif"
+                         border="0" />
+                  </a>
+                </td>
+              </tr>
+              <tr ng-show="cdash.issuecreation" class="animate-show">
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>New Issue URL:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input name="newissueURL" type="text" id="newissueURL" size="50"
+                         ng-model="cdash.project.BugTrackerNewIssueUrl"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('newissueurl_help')"/>
+                  <span class="help_content" id="newissueurl_help">
+                    <b>New Issue URL</b>
+                    Link to create a new issue in your bug tracker.
+                    <br />
+                    {{cdash.newissuehelp}}
+                  </span>
+                </td>
+              </tr>
+
               <tr>
                 <td></td>
                 <td>
@@ -192,6 +265,31 @@
                     public and anybody can access the dashboard, claim sites
                     and look at the current status. By default dashboards are
                     private.
+                  </span>
+                </td>
+              </tr>
+
+              <tr>
+                <!-- Checkbox to enable/disable the "Authenticated Submissions"
+                     feature for this project -->
+                <td colspan="2">
+                  <div align="right">
+                    <strong>Authenticate Submissions</strong>
+                  </div>
+                </td>
+                <td>
+                  <input type="checkbox" name="authenticateSubmissions"
+                         ng-model="cdash.project.AuthenticateSubmissions"
+                         ng-true-value="1" ng-false-value="0"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('authenticateSubmissions_help')" />
+                  </input>
+                  <img ng-mouseover="showHelp('authenticateSubmissions_help')"
+                    src="img/help.gif" border="0" />
+                  <span class="help_content" id="authenticateSubmissions_help">
+                    <b>Authenticate Submissions</b>
+                    <br />
+                    Only accept submissions bearing a valid authentication token.
                   </span>
                 </td>
               </tr>

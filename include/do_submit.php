@@ -278,6 +278,24 @@ function post_submit()
     }
 
     $projectname = htmlspecialchars(pdo_real_escape_string($_POST['project']));
+
+    // Get the projectid.
+    $row = pdo_single_row_query(
+        "SELECT id, authenticatesubmissions FROM project WHERE name = '$projectname'");
+    if (empty($row)) {
+        $response_array['status'] = 1;
+        $response_array['description'] = 'Project does not exist';
+        http_response_code(400);
+        echo json_encode($response_array);
+        return;
+    }
+    $projectid = $row['id'];
+
+    // Check if this submission requires a valid authentication token.
+    if ($row['authenticatesubmissions'] && !valid_token_for_submission($projectid)) {
+        return;
+    }
+
     $buildname = htmlspecialchars(pdo_real_escape_string($_POST['build']));
     $buildstamp = htmlspecialchars(pdo_real_escape_string($_POST['stamp']));
     $sitename = htmlspecialchars(pdo_real_escape_string($_POST['site']));
@@ -399,14 +417,22 @@ function put_submit_file()
 
     // Get the ID of the project associated with this build.
     $row = pdo_single_row_query(
-        "SELECT projectid FROM build WHERE id = $buildid");
+        "SELECT p.id, p.authenticatesubmissions
+        FROM project p
+        JOIN build b on b.projectid = p.id
+        WHERE b.id = $buildid");
     if (empty($row)) {
         $response_array['status'] = 1;
         $response_array['description'] = "Cannot find projectid for build #$buildid";
         echo json_encode($response_array);
         return;
     }
-    $projectid = $row[0];
+    $projectid = $row['id'];
+
+    // Check if this submission requires a valid authentication token.
+    if ($row['authenticatesubmissions'] && !valid_token_for_submission($projectid)) {
+        return;
+    }
 
     // Begin writing this file to the backup directory.
     global $CDASH_BACKUP_DIRECTORY;
@@ -550,4 +576,74 @@ function trigger_process_submissions($projectid)
         $request = $currentURI . '/ajax/processsubmissions.php?projectid=' . $projectid;
         curl_request($request);
     }
+}
+
+/**
+ * Get Authorization header.
+ * Adapted from http://stackoverflow.com/a/40582472
+ **/
+function getAuthorizationHeader()
+{
+    $headers = null;
+    if (isset($_SERVER['Authorization'])) {
+        $headers = trim($_SERVER['Authorization']);
+    } elseif (isset($_SERVER['HTTP_AUTHORIZATION'])) { //Nginx or fast CGI
+        $headers = trim($_SERVER['HTTP_AUTHORIZATION']);
+    } else {
+        $requestHeaders = getallheaders();
+        if (isset($requestHeaders['Authorization'])) {
+            $headers = trim($requestHeaders['Authorization']);
+        }
+    }
+    return $headers;
+}
+
+/**
+ * Get access token from header.
+ **/
+function getBearerToken()
+{
+    $headers = getAuthorizationHeader();
+    if (!empty($headers)) {
+        $matches = [];
+        if (preg_match('/Bearer\s(\S+)/', $headers, $matches)) {
+            return $matches[1];
+        }
+    }
+    return null;
+}
+
+/**
+ * Return true if the header contains a valid authentication token
+ * for this project.  Otherwise return false and set the appropriate
+ * response code.
+ **/
+function valid_token_for_submission($projectid)
+{
+    $token = getBearerToken();
+    if (!$token) {
+        http_response_code(401);
+        return false;
+    }
+    require_once 'models/authtoken.php';
+    $authtoken = new AuthToken();
+    $authtoken->Hash = $authtoken->HashToken($token);
+    if (!$authtoken->Exists()) {
+        http_response_code(403);
+        return false;
+    }
+    if ($authtoken->Expired()) {
+        $authtoken->Delete();
+        http_response_code(403);
+        return false;
+    }
+
+    // Make sure that the user associated with this token is allowed to access
+    // the project in question.
+    if (!checkUserPolicy($authtoken->UserId, $projectid, 1)) {
+        http_response_code(403);
+        return false;
+    }
+
+    return true;
 }

@@ -677,43 +677,6 @@ if (isset($_GET['upgrade-2-4'])) {
     // This speeds up viewTest API for builds with lots of tests & labels.
     AddTableIndex('label2test', 'testid');
 
-    // Restructure configure table.
-    // This reduces the footprint of this table and allows multiple builds
-    // to share a configure.
-    if (!pdo_query('SELECT id FROM configure LIMIT 1')) {
-        // Add id column to configure table.
-        if ($CDASH_DB_TYPE != 'pgsql') {
-            pdo_query(
-                'ALTER TABLE configure ADD id int(11) NOT NULL AUTO_INCREMENT,
-                ADD PRIMARY KEY(id)');
-        } else {
-            pdo_query(
-                'ALTER TABLE configure ADD id SERIAL NOT NULL,
-                ADD PRIMARY KEY (id)');
-        }
-
-        // Add crc32 column to configure table.
-        AddTableField('configure', 'crc32', 'bigint(20)', 'BIGINT', '0');
-
-        // Populate build2configure table.
-        PopulateBuild2Configure('configure', 'build2configure');
-
-        // Add unique constraint to crc32 column.
-        if ($db_type === 'pgsql') {
-            pdo_query('ALTER TABLE configure ADD UNIQUE (crc32)');
-        } else {
-            pdo_query('ALTER TABLE configure ADD UNIQUE KEY (crc32)');
-        }
-
-        // Remove columns from configure that have been moved to build2configure.
-        RemoveTableField('configure', 'buildid');
-        RemoveTableField('configure', 'starttime');
-        RemoveTableField('configure', 'endtime');
-
-        // Change configureerror to use configureid instead of buildid.
-        UpgradeConfigureErrorTable('configureerror', 'build2configure');
-    }
-
     // Better caching of build & test time, particularly for parent builds.
     $query = 'SELECT configureduration FROM build LIMIT 1';
     $dbTest = pdo_query($query);
@@ -796,6 +759,62 @@ if (isset($_GET['upgrade-2-6'])) {
         ModifyTableField('user', 'password', 'VARCHAR( 255 )', 'VARCHAR( 255 )', '', true, false);
         ModifyTableField('usertemp', 'password', 'VARCHAR( 255 )', 'VARCHAR( 255 )', '', true, false);
     }
+
+    // Restructure configure table.
+    // This reduces the footprint of this table and allows multiple builds
+    // to share a configure.
+    if (!pdo_query('SELECT id FROM configure LIMIT 1')) {
+        // Add id and crc32 columns to configure table.
+        if ($CDASH_DB_TYPE != 'pgsql') {
+            pdo_query(
+                'ALTER TABLE configure
+                ADD id int(11) NOT NULL AUTO_INCREMENT,
+                ADD crc32 bigint(20) NOT NULL DEFAULT \'0\',
+                ADD PRIMARY KEY(id)');
+        } else {
+            pdo_query(
+                'ALTER TABLE configure
+                ADD id SERIAL NOT NULL,
+                ADD crc32 BIGINT DEFAULT \'0\' NOT NULL,
+                ADD PRIMARY KEY (id)');
+        }
+
+        // Populate build2configure table.
+        PopulateBuild2Configure('configure', 'build2configure');
+
+        // Add unique constraint to crc32 column.
+        if ($db_type === 'pgsql') {
+            pdo_query('ALTER TABLE configure ADD UNIQUE (crc32)');
+        } else {
+            pdo_query('ALTER TABLE configure ADD UNIQUE KEY (crc32)');
+        }
+
+        // Remove columns from configure that have been moved to build2configure.
+        if ($CDASH_DB_TYPE == 'pgsql') {
+            pdo_query('ALTER TABLE "configure"
+                        DROP COLUMN "buildid",
+                        DROP COLUMN "starttime",
+                        DROP COLUMN "endtime"');
+        } else {
+            pdo_query('ALTER TABLE configure
+                        DROP buildid,
+                        DROP starttime,
+                        DROP endtime');
+        }
+
+        // Change configureerror to use configureid instead of buildid.
+        UpgradeConfigureErrorTable('configureerror', 'build2configure');
+    }
+
+    // Support for authenticated submissions.
+    AddTableField('project', 'authenticatesubmissions', 'tinyint(1)', 'smallint', '0');
+
+    // Add position field to subproject table.
+    AddTableField('subproject', 'position', 'smallint(6) unsigned', 'smallint', '0');
+
+    // Support for bugtracker issue creation.
+    AddTableField('project', 'bugtrackernewissueurl', 'varchar(255)', 'character varying(255)', '');
+    AddTableField('project', 'bugtrackertype', 'varchar(16)', 'character varying(16)', '');
 
     // Set the database version
     setVersion();

@@ -10,14 +10,14 @@ Site: Dash20.kitware
 Build Name: Win32-MSVC2009
 Build Time: 2009-02-23T05:02:05 EST
 Type: Nightly
-Tests failing: 4
+Tests not passing: 4
 
 
 *Tests failing*
-curl (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
-DashboardSendTest (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
-StringActionsTest (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
-MathActionsTest (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
+curl | Completed | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
+DashboardSendTest | Completed (OTHER_FAULT) | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
+StringActionsTest | Completed (OTHER_FAULT) | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
+MathActionsTest | Completed (OTHER_FAULT) | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
 
 
 -CDash on <NA>
@@ -34,14 +34,14 @@ Site: Dash20.kitware
 Build Name: Win32-MSVC2009
 Build Time: 2009-02-23T05:02:05 EST
 Type: Nightly
-Tests failing: 4
+Tests not passing: 4
 
 
 *Tests failing*
-curl (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
-DashboardSendTest (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
-StringActionsTest (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
-MathActionsTest (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
+curl | Completed | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
+DashboardSendTest | Completed (OTHER_FAULT) | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
+StringActionsTest | Completed (OTHER_FAULT) | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
+MathActionsTest | Completed (OTHER_FAULT) | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
 
 
 -CDash on <NA>

@@ -1,5 +1,9 @@
 <Project name="CDash">
   <SubProject name="SubProject1">
+    <EmailAddresses>
+      <Email address="simpletest@localhost"/>
+      <Email address="user1@kw"/>
+    </EmailAddresses>
   </SubProject>
   <SubProject name="SubProject2">
   </SubProject>

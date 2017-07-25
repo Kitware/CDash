@@ -16,55 +16,27 @@
 
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
-require_once 'include/common.php';
+require_once 'include/api_common.php';
 require_once 'models/buildusernote.php';
 
 $noforcelogin = 1;
 require 'public/login.php';
 
+init_api_request();
 $response = array();
 
-// Read input parameters (if any).
-$rest_input = file_get_contents('php://input');
-if (!is_array($rest_input)) {
-    $rest_input = json_decode($rest_input, true);
-}
-if (is_array($rest_input)) {
-    $_REQUEST = array_merge($_REQUEST, $rest_input);
-}
-
-// Make sure we have an authenticated user.
-$userid = null;
-if (isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid'])) {
-    $userid = $_SESSION['cdash']['loginid'];
-}
-if (is_null($userid)) {
-    $response['error'] = 'Permission denied';
-    echo json_encode($response);
-    http_response_code(401);
-    return;
-}
-
-// Check that all of our required parameters were specified.
-if (!isset($_REQUEST['buildid']) || !is_numeric($_REQUEST['buildid'])) {
-    $response['error'] = 'Build lookup error';
-    echo json_encode($response);
-    http_response_code(400);
-    return;
-}
-$buildid = $_REQUEST['buildid'];
+$userid = get_userid_from_session();
+$build = get_request_build();
 
 if (!isset($_REQUEST['AddNote']) || !isset($_REQUEST['Status']) ||
         strlen($_REQUEST['AddNote']) < 1 ||  strlen($_REQUEST['Status']) < 1) {
     $response['error'] = 'No note specified';
-    echo json_encode($response);
-    http_response_code(400);
-    return;
+    json_error_response($response, 400);
 }
 
 // Add the note.
 $userNote = new BuildUserNote();
-$userNote->BuildId = $buildid;
+$userNote->BuildId = $build->Id;
 $userNote->UserId = $userid;
 $userNote->Note = $_REQUEST['AddNote'];
 $userNote->Status = $_REQUEST['Status'];

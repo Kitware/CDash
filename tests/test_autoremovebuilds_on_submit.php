@@ -49,7 +49,6 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         $this->enableAutoRemoveConfigSetting();
         $this->setAutoRemoveTimeFrame();
         $this->deleteLog($this->logfilename);
-        $this->startCodeCoverage();
 
         $result = $this->db->query("SELECT id FROM project WHERE name = 'EmailProjectExample'");
         $projectid = $result[0]['id'];
@@ -59,7 +58,6 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         $testxml1 = "$rep/1_test.xml";
         if (!$this->submission('EmailProjectExample', $testxml1)) {
             $this->fail('submission 1 failed');
-            $this->stopCodeCoverage();
             return;
         }
 
@@ -81,7 +79,6 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         $testxml2 = "$rep/2_test.xml";
         if (!$this->submission('EmailProjectExample', $testxml2)) {
             $this->fail('submission 2 failed');
-            $this->stopCodeCoverage();
             return 1;
         }
 
@@ -107,6 +104,5 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         }
 
         $this->pass('Passed');
-        $this->stopCodeCoverage();
     }
 }

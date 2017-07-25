@@ -414,6 +414,8 @@ CREATE TABLE `project` (
   `cvsurl` varchar(255) NOT NULL default '',
   `bugtrackerurl` varchar(255) NOT NULL default '',
   `bugtrackerfileurl` varchar(255) NOT NULL DEFAULT '',
+  `bugtrackernewissueurl` varchar(255) NOT NULL DEFAULT '',
+  `bugtrackertype` varchar(16) DEFAULT NULL,
   `documentationurl` varchar(255) NOT NULL default '',
   `imageid` int(11) NOT NULL default '0',
   `public` tinyint(4) NOT NULL default '1',
@@ -442,6 +444,7 @@ CREATE TABLE `project` (
   `tokenduration` int(11),
   `showcoveragecode` tinyint(4) default '1',
   `sharelabelfilters` tinyint(1) default '0',
+  `authenticatesubmissions` tinyint(1) default '0',
   PRIMARY KEY  (`id`),
   KEY `name` (`name`),
   KEY `public` (`public`)
@@ -906,6 +909,7 @@ CREATE TABLE `subproject` (
   `projectid` int(11) NOT NULL,
   `groupid` int(11) NOT NULL,
   `path` varchar(512) NOT NULL default '',
+  `position` smallint(6) unsigned NOT NULL default '0',
   `starttime` timestamp NOT NULL default '1980-01-01 00:00:00',
   `endtime` timestamp NOT NULL default '1980-01-01 00:00:00',
   PRIMARY KEY  (`id`),
@@ -1460,6 +1464,17 @@ CREATE TABLE IF NOT EXISTS `lockout` (
   `islocked` tinyint(1) NOT NULL DEFAULT '0',
   `unlocktime` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
   PRIMARY KEY  (`userid`)
+);
+
+CREATE TABLE IF NOT EXISTS `authtoken` (
+  `hash` varchar(128) NOT NULL,
+  `userid` int(11) NOT NULL DEFAULT '0',
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `expires` timestamp NOT NULL DEFAULT '1980-01-01 00:00:00',
+  `description` varchar(255),
+  KEY `hash` (`hash`),
+  KEY `userid` (`userid`),
+  KEY `expires` (`expires`)
 );
 
 --

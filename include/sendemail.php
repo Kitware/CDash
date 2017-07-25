@@ -495,7 +495,7 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
             $information .= "\n";
 
             foreach ($tests as $test) {
-                $info = $test['name'] . ' (' . $serverURI . '/testDetails.php?test=' . $test['id'] . '&build=' . $buildid . ")\n";
+                $info = "{$test['name']} | {$test['details']} | ({$serverURI}/testDetails.php?test={$test['id']}&build={$buildid})\n";
                 $information .= substr($info, 0, $maxchars);
             }
             $information .= "\n";
@@ -506,7 +506,6 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
         if ($emailtesttimingchanged) {
             $information .= $AddTestsToEmail($build->GetFailedTimeStatusTests($maxitems, $testtimemaxstatus), 'Tests failing time status');
         }
-        $information .= $AddTestsToEmail($build->GetTimedoutTests($maxitems), 'Test timeouts');
         $information .= $AddTestsToEmail($build->GetNotRunTests($maxitems), 'Tests not run');
     } elseif ($errorkey == 'dynamicanalysis_errors') {
         $da_query = pdo_query("SELECT name,id FROM dynamicanalysis WHERE status IN ('failed','notrun') AND buildid="
@@ -1004,9 +1003,9 @@ function send_email_fix_to_user($userid, $emailtext, $Build, $Project)
     }
 }
 
-// Send one broken submission email to one email address
+// Generate the title and body for a broken build.
 //
-function send_email_to_address($emailaddress, $emailtext, $Build, $Project)
+function generate_broken_build_message($emailtext, $Build, $Project)
 {
     include 'config/config.php';
     include_once 'include/common.php';
@@ -1019,7 +1018,7 @@ function send_email_to_address($emailaddress, $emailtext, $Build, $Project)
         $serverURI = substr($serverURI, 0, strrpos($serverURI, '/'));
     }
 
-    $messagePlainText = 'A submission to CDash for the project ' . $Project->Name . ' has ';
+    $preamble = 'A submission to CDash for the project ' . $Project->Name . ' has ';
     $titleerrors = '(';
 
     $i = 0;
@@ -1036,39 +1035,39 @@ function send_email_to_address($emailaddress, $emailtext, $Build, $Project)
         }
 
         if ($i > 0) {
-            $messagePlainText .= ' and ';
+            $preamble .= ' and ';
             $titleerrors .= ', ';
         }
 
         switch ($key) {
             case 'update_errors':
-                $messagePlainText .= 'update errors';
+                $preamble .= 'update errors';
                 $titleerrors .= 'u=' . $value;
                 break;
             case 'configure_errors':
-                $messagePlainText .= 'configure errors';
+                $preamble .= 'configure errors';
                 $titleerrors .= 'c=' . $value;
                 break;
             case 'build_warnings':
-                $messagePlainText .= 'build warnings';
+                $preamble .= 'build warnings';
                 $titleerrors .= 'w=' . $value;
                 break;
             case 'build_errors':
-                $messagePlainText .= 'build errors';
+                $preamble .= 'build errors';
                 $titleerrors .= 'b=' . $value;
                 break;
             case 'test_errors':
-                $messagePlainText .= 'failing tests';
+                $preamble .= 'failing tests';
                 $titleerrors .= 't=' . $value;
                 break;
             case 'dynamicanalysis_errors':
-                $messagePlainText .= 'failing dynamic analysis tests';
+                $preamble .= 'failing dynamic analysis tests';
                 $titleerrors .= 'd=' . $value;
                 break;
             case 'missing_tests':
                 $missing = $value['count'];
                 if ($missing) {
-                    $messagePlainText .= 'missing tests';
+                    $preamble .= 'missing tests';
                     $titleerrors .= 'm=' . $missing;
                 }
                 break;
@@ -1076,9 +1075,9 @@ function send_email_to_address($emailaddress, $emailtext, $Build, $Project)
         $i++;
     }
 
-    // Nothing to send we stop
+    // Nothing to send so we stop.
     if ($i == 0) {
-        return;
+        return false;
     }
 
     // Title
@@ -1090,69 +1089,86 @@ function send_email_to_address($emailaddress, $emailtext, $Build, $Project)
     }
     $title .= ' - ' . $Build->Name . ' - ' . $Build->Type;
 
-    //$title = "CDash [".$project_array["name"]."] - ".$site_array["name"];
-    //$title .= " - ".$buildname." - ".$buildtype." - ".date(FMT_DATETIMETZ,strtotime($starttime." UTC"));
+    $preamble .= ".\n";
+    $preamble .= 'You have been identified as one of the authors who ';
+    $preamble .= 'have checked in changes that are part of this submission ';
+    $preamble .= "or you are listed in the default contact list.\n\n";
 
-    $messagePlainText .= ".\n";
-    $messagePlainText .= 'You have been identified as one of the authors who ';
-    $messagePlainText .= 'have checked in changes that are part of this submission ';
-    $messagePlainText .= "or you are listed in the default contact list.\n\n";
-    $messagePlainText .= 'Details on the submission can be found at ';
+    $body = 'Details on the submission can be found at ';
 
-    $messagePlainText .= $serverURI;
-    $messagePlainText .= '/buildSummary.php?buildid=' . $Build->Id;
-    $messagePlainText .= "\n\n";
+    $body .= $serverURI;
+    $body .= '/buildSummary.php?buildid=' . $Build->Id;
+    $body .= "\n\n";
 
-    $messagePlainText .= 'Project: ' . $Project->Name . "\n";
+    $body .= 'Project: ' . $Project->Name . "\n";
     if ($Build->GetSubProjectName()) {
-        $messagePlainText .= 'SubProject: ' . $Build->GetSubProjectName() . "\n";
+        $body .= 'SubProject: ' . $Build->GetSubProjectName() . "\n";
     }
 
     $Site = new Site();
     $Site->Id = $Build->SiteId;
 
-    $messagePlainText .= 'Site: ' . $Site->GetName() . "\n";
-    $messagePlainText .= 'Build Name: ' . $Build->Name . "\n";
-    $messagePlainText .= 'Build Time: ' . date(FMT_DATETIMETZ, strtotime($Build->StartTime . ' UTC')) . "\n";
-    $messagePlainText .= 'Type: ' . $Build->Type . "\n";
+    $body .= 'Site: ' . $Site->GetName() . "\n";
+    $body .= 'Build Name: ' . $Build->Name . "\n";
+    $body .= 'Build Time: ' . date(FMT_DATETIMETZ, strtotime($Build->StartTime . ' UTC')) . "\n";
+    $body .= 'Type: ' . $Build->Type . "\n";
 
     foreach ($emailtext['category'] as $key => $value) {
         switch ($key) {
             case 'update_errors':
-                $messagePlainText .= "Update errors: $value\n";
+                $body .= "Update errors: $value\n";
                 break;
             case 'configure_errors':
-                $messagePlainText .= "Configure errors: $value\n";
+                $body .= "Configure errors: $value\n";
                 break;
             case 'build_warnings':
-                $messagePlainText .= "Warnings: $value\n";
+                $body .= "Warnings: $value\n";
                 break;
             case 'build_errors':
-                $messagePlainText .= "Errors: $value\n";
+                $body .= "Errors: $value\n";
                 break;
             case 'test_errors':
-                $messagePlainText .= "Tests failing: $value\n";
+                $body .= "Tests not passing: $value\n";
                 break;
             case 'dynamicanalysis_errors':
-                $messagePlainText .= "Dynamic analysis tests failing: $value\n";
+                $body .= "Dynamic analysis tests failing: $value\n";
                 break;
             case 'missing_tests':
                 $missing = $value['count'];
                 if ($missing) {
-                    $messagePlainText .= "Missing tests: {$missing}\n";
+                    $body .= "Missing tests: {$missing}\n";
                 }
         }
     }
 
     foreach ($emailtext['summary'] as $summary) {
-        $messagePlainText .= $summary;
+        $body .= $summary;
     }
 
     $serverName = $CDASH_SERVER_NAME;
-    if (strlen($serverName) == 0) {
+    if (!$CDASH_TESTING_MODE && strlen($serverName) == 0) {
         $serverName = $_SERVER['SERVER_NAME'];
     }
-    $messagePlainText .= "\n-CDash on " . $serverName . "\n";
+
+    $footer = "\n-CDash on " . $serverName . "\n";
+    return ['title' => $title, 'preamble' => $preamble, 'body' => $body,
+            'footer' => $footer];
+}
+
+
+// Send one broken submission email to one email address
+//
+function send_email_to_address($emailaddress, $emailtext, $Build, $Project)
+{
+    include 'config/config.php';
+
+    $message = generate_broken_build_message($emailtext, $Build, $Project);
+    if (!$message) {
+        return false;
+    }
+
+    $title = $message['title'];
+    $body = $message['preamble'] . $message['body'] . $message['footer'];
 
     $sent = false;
 
@@ -1160,12 +1176,12 @@ function send_email_to_address($emailaddress, $emailtext, $Build, $Project)
     if ($CDASH_TESTING_MODE) {
         add_log($emailaddress, 'TESTING: EMAIL', LOG_DEBUG);
         add_log($title, 'TESTING: EMAILTITLE', LOG_DEBUG);
-        add_log($messagePlainText, 'TESTING: EMAILBODY', LOG_DEBUG);
+        add_log($body, 'TESTING: EMAILBODY', LOG_DEBUG);
         $sent = true;
     } else {
         // Send the email
-        if (cdashmail("$emailaddress", $title, $messagePlainText)) {
-            add_log('email sent to: ' . $emailaddress . ' with errors ' . $titleerrors . ' for build ' . $Build->Id, 'sendemail ' . $Project->Name, LOG_INFO);
+        if (cdashmail("$emailaddress", $title, $body)) {
+            add_log('email sent to: ' . $emailaddress . ' with errors ' . $title . ' for build ' . $Build->Id, 'sendemail ' . $Project->Name, LOG_INFO);
             $sent = true;
         } else {
             add_log('cannot send email to: ' . $emailaddress, 'sendemail ' . $Project->Name, LOG_ERR);
