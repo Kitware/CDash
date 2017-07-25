@@ -59,7 +59,8 @@ $stmt = $pdo->prepare(
     'SELECT id, authenticatesubmissions FROM project WHERE name = ?');
 
 $projectid = null;
-if (pdo_execute($stmt, [$_GET['project']])) {
+$projectname = $_GET['project'];
+if (pdo_execute($stmt, [$projectname])) {
     $row = $stmt->fetch();
     if ($row) {
         $projectid = $row['id'];
