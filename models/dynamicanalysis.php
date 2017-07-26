@@ -31,6 +31,15 @@ class DynamicAnalysis
     public $Labels;
     public $LogCompression;
     public $LogEncoding;
+    private $Filled;
+    private $PDO;
+
+    public function __construct()
+    {
+        $this->Id = null;
+        $this->Filled = false;
+        $this->PDO = get_link_identifier()->getPdo();
+    }
 
     public function __construct()
     {
@@ -194,5 +203,89 @@ class DynamicAnalysis
         // Add the labels
         $this->InsertLabelAssociations();
         return true;
+    }
+
+    // Populate $this from the database based on $Id.
+    public function Fill()
+    {
+        if (!$this->Id) {
+            return false;
+        }
+        if ($this->Filled) {
+            return true;
+        }
+
+        $stmt = $this->PDO->prepare(
+            'SELECT * FROM dynamicanalysis WHERE id = ?');
+        if (!pdo_execute($stmt, [$this->Id])) {
+            return false;
+        }
+
+        $row = $stmt->fetch();
+        if (!$row) {
+            return false;
+        }
+
+        $this->BuildId = $row['buildid'];
+        $this->Status = $row['status'];
+        $this->Checker = $row['checker'];
+        $this->Name = $row['name'];
+        $this->Path = $row['path'];
+        $this->FullCommandLine = $row['fullcommandline'];
+        $this->Log = $row['log'];
+
+        return true;
+    }
+
+    /* Encapsulate common bits of functions below. */
+    private function GetRelatedId($build, $order, $time_clause = null)
+    {
+        $stmt = $this->PDO->prepare(
+        "SELECT dynamicanalysis.id FROM dynamicanalysis
+        JOIN build ON (dynamicanalysis.buildid = build.id)
+        WHERE build.siteid = :siteid AND
+              build.type = :buildtype AND
+              build.name = :buildname AND
+              build.projectid = :projectid AND
+              $time_clause
+              dynamicanalysis.name = :filename
+        ORDER BY build.starttime $order LIMIT 1");
+
+        $stmt->bindParam(':siteid', $build->SiteId);
+        $stmt->bindParam(':buildtype', $build->Type);
+        $stmt->bindParam(':buildname', $build->Name);
+        $stmt->bindParam(':projectid', $build->ProjectId);
+        if ($time_clause) {
+            $stmt->bindParam(':starttime', $build->StartTime);
+        }
+        $stmt->bindParam(':filename', $this->Name);
+        if (!pdo_execute($stmt)) {
+            return 0;
+        }
+        $row = $stmt->fetch();
+        if (!$row) {
+            return 0;
+        }
+        return $row['id'];
+    }
+
+    /* Get the previous id for this DA */
+    public function GetPreviousId($build)
+    {
+        $time_clause = 'build.starttime < :starttime AND';
+        return $this->GetRelatedId($build, 'DESC', $time_clause);
+    }
+
+    /* Get the next id for this DA */
+    public function GetNextId($build)
+    {
+        $time_clause = 'build.starttime > :starttime AND';
+        return $this->GetRelatedId($build, 'ASC', $time_clause);
+    }
+
+    /* Get the most recent id for this DA */
+    public function GetLastId($build)
+    {
+        return $this->GetRelatedId($build, 'DESC');
     }
 }

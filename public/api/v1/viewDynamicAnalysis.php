@@ -43,6 +43,7 @@ $response['displaylabels'] = $project->DisplayLabels;
 
 $date = get_dashboard_date_from_build_starttime($build->StartTime, $project->NightlyTime);
 
+$response = begin_JSON_response();
 get_dashboard_JSON($project->Name, $date, $response);
 $response['title'] = "$project->Name : Dynamic Analysis";
 
