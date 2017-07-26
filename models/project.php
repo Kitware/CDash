@@ -65,6 +65,7 @@ class Project
     public $RobotRegex;
     public $CTestTemplateScript;
     public $WebApiKey;
+    private $PDO;
 
     public function __construct()
     {
@@ -119,6 +120,7 @@ class Project
         if (empty($this->WebApiKey)) {
             $this->WebApiKey = '';
         }
+        $this->PDO = get_link_identifier()->getPdo();
     }
 
     /** Add a build group */
@@ -789,25 +791,38 @@ class Project
     }
 
     /** Get the number of builds given a date range */
-    public function GetNumberOfBuilds($startUTCdate, $endUTCdate)
+    public function GetNumberOfBuilds($startUTCdate = null, $endUTCdate = null)
     {
         if (!$this->Id) {
-            echo 'Project GetNumberOfBuilds(): Id not set';
+            add_log('Id not set', 'Project::GetNumberOfBuilds', LOG_ERR,
+                    $this->Id);
             return false;
         }
 
-        $project = pdo_query(
-            'SELECT count(build.id) FROM build WHERE projectid=' . qnum($this->Id) . "
-            AND build.starttime>'$startUTCdate'
-            AND build.starttime<='$endUTCdate'
-            AND parentid IN (-1, 0)");
+        // Construct our query given the optional parameters of this function.
+        $sql = 'SELECT COUNT(build.id) FROM build
+                WHERE projectid = :projectid AND parentid IN (-1, 0)';
+        if (!is_null($startUTCdate)) {
+            $sql .= ' AND build.starttime > :start';
+        }
+        if (!is_null($endUTCdate)) {
+            $sql .= ' AND build.starttime <= :end';
+        }
 
-        if (!$project) {
-            add_last_sql_error('Project GetNumberOfBuilds', $this->Id);
+        $stmt = $this->PDO->prepare($sql);
+        $stmt->bindParam(':projectid', $this->Id);
+        if (!is_null($startUTCdate)) {
+            $stmt->bindParam(':start', $startUTCdate);
+        }
+        if (!is_null($endUTCdate)) {
+            $stmt->bindParam(':end', $endUTCdate);
+        }
+
+        if (!pdo_execute($stmt)) {
             return false;
         }
-        $project_array = pdo_fetch_array($project);
-        return intval($project_array[0]);
+
+        return intval($stmt->fetchColumn());
     }
 
     /** Get the number of builds given per day */
@@ -1578,5 +1593,30 @@ class Project
         $pdo = get_link_identifier()->getPdo();
         $stmt = $pdo->prepare('DELETE FROM blockbuild WHERE id=?');
         pdo_execute($stmt, [$id]);
+    }
+
+    // Return true and set error message if this project has too many builds.
+    public function HasTooManyBuilds(&$message)
+    {
+        if (!$this->Id) {
+            return false;
+        }
+
+        global $CDASH_BUILDS_PER_PROJECT, $CDASH_EMAILADMIN,
+               $CDASH_UNLIMITED_PROJECTS;
+
+        if ($CDASH_BUILDS_PER_PROJECT == 0 ||
+                in_array($this->GetName(), $CDASH_UNLIMITED_PROJECTS)) {
+            return false;
+        }
+
+        if ($this->GetNumberOfBuilds() < $CDASH_BUILDS_PER_PROJECT) {
+            return false;
+        }
+
+        $message = "Maximum number of builds reached for $this->Name.  Contact $CDASH_EMAILADMIN for support.";
+        add_log("Too many builds for $this->Name", 'project_has_too_many_builds',
+                LOG_INFO, $this->Id);
+        return true;
     }
 }
