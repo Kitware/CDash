@@ -59,7 +59,11 @@ $current_buildid = $build->GetCurrentBuildId();
 $next_buildid = $build->GetNextBuildId();
 
 $menu = array();
-$menu['back'] = 'index.php?project=' . urlencode($project->Name) . '&date=' . get_dashboard_date_from_build_starttime($build->StartTime, $project->NightlyTime);
+if ($build->GetParentId() > 0) {
+    $menu['back'] = 'index.php?project=' . urlencode($project->Name) . "&parentid={$build->GetParentId()}";
+} else {
+    $menu['back'] = 'index.php?project=' . urlencode($project->Name) . '&date=' . get_dashboard_date_from_build_starttime($build->StartTime, $project->NightlyTime);
+}
 
 if ($previous_buildid > 0) {
     $menu['previous'] = "buildSummary.php?buildid=$previous_buildid";

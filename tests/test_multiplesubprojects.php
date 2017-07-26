@@ -357,6 +357,27 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
                     }
                 }
             }
+
+            // Verify that 'Back' links to the parent build.
+            $pages = [
+                'buildSummary.php',
+                'viewBuildError.php',
+                'viewDynamicAnalysis.php',
+                'viewNotes.php',
+                'viewTest.php'
+            ];
+            $child_buildid = $builds[0]['id'];
+
+            foreach ($pages as $page) {
+                $this->get($this->url . "/api/v1/$page?buildid=$child_buildid");
+                $content = $this->getBrowser()->getContent();
+                $jsonobj = json_decode($content, true);
+                $expected = "index.php?project=SubProjectExample&parentid=$parentid";
+                $found = $jsonobj['menu']['back'];
+                if (strpos($found, $expected) === false) {
+                    throw new Exception("$expected not found in back link for $page ($found)");
+                }
+            }
         } catch (Exception $e) {
             $success = false;
             $error_message = $e->getMessage();

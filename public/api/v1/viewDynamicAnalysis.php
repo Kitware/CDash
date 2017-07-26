@@ -47,7 +47,11 @@ get_dashboard_JSON($project->Name, $date, $response);
 $response['title'] = "$project->Name : Dynamic Analysis";
 
 $menu = [];
-$menu['back'] = "index.php?project=$project->Name&date=$date";
+if ($build->GetParentId() > 0) {
+    $menu['back'] = 'index.php?project=' . urlencode($project->Name) . "&parentid={$build->GetParentId()}";
+} else {
+    $menu['back'] = 'index.php?project=' . urlencode($project->Name) . "&date=$date";
+}
 
 $previousbuildid = get_previous_buildid_dynamicanalysis($build->ProjectId, $build->SiteId, $build->Type, $build->Name, $build->StartTime);
 if ($previousbuildid > 0) {

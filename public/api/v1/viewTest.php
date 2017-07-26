@@ -128,7 +128,11 @@ if (isset($_GET['onlypassed'])) {
 }
 
 $nightlytime = get_project_property($projectname, 'nightlytime');
-$menu['back'] = 'index.php?project=' . urlencode($projectname) . '&date=' . get_dashboard_date_from_build_starttime($starttime, $nightlytime);
+if ($build->GetParentId() > 0) {
+    $menu['back'] = 'index.php?project=' . urlencode($projectname) . "&parentid={$build->GetParentId()}";
+} else {
+    $menu['back'] = 'index.php?project=' . urlencode($projectname) . '&date=' . get_dashboard_date_from_build_starttime($starttime, $nightlytime);
+}
 
 // Get the IDs of the four previous builds.
 // These are used to check the recent history of this test.
