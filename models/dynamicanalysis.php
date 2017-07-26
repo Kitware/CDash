@@ -39,10 +39,6 @@ class DynamicAnalysis
         $this->Id = null;
         $this->Filled = false;
         $this->PDO = get_link_identifier()->getPdo();
-    }
-
-    public function __construct()
-    {
         $this->Defects = [];
     }
 
