@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" ng-app="CDash">
+  <head ng-controller="HeadController">
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" type="text/css" ng-href="{{cssfile}}" />
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <script src="js/CDash_@@version.min.js"></script>
+    <title ng-bind="title">CDash : Configure</title>
+  </head>
+
+  <body bgcolor="#ffffff" ng-controller="ViewConfigureController">
+    <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_@@version.html'"></ng-include>
+    <br/>
+
+    <div ng-if="cdash.requirelogin != 1 && !loading && !cdash.error">
+      <table border="0" ng-if="::!cdash.build.hassubprojects">
+        <tr>
+          <td align="left">
+            <b>Site: </b>
+            <a ng-href="viewSite.php?siteid={{::cdash.build.siteid}}">
+              {{::cdash.build.site}}
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td align="left">
+            <b>Build Name: </b>{{::cdash.build.buildname}}
+          </td>
+        </tr>
+        <tr>
+          <td align="left">
+            <b>Configure Command: </b>{{::cdash.configures[0].command}}
+          </td>
+        </tr>
+        <tr>
+          <td align="left">
+            <b>Configure Return Value: </b>{{::cdash.configures[0].status}}
+          </td>
+        </tr>
+        <tr>
+          <td align="left">
+            <b>Configure Output:</b>
+          </td>
+        </tr>
+        <tr>
+          <td align="left">
+            <pre>{{::cdash.configures[0].output}}</pre>
+          </td>
+        </tr>
+      </table>
+
+      <table style="width:100%" ng-if="::cdash.build.hassubprojects">
+        <thead>
+          <tr class="table-heading">
+            <th align="left" width="15%">
+              Subproject
+            </th>
+            <th align="left" width="5%">
+              Error
+            </th>
+            <th align="left" width="5%">
+              Warn
+            </th>
+            <th align="left">
+              Configure
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr ng-repeat="configure in ::cdash.configures">
+            <td style="vertical-align:top">{{::configure.subprojectname}}</td>
+            <td style="vertical-align:top">{{::configure.configureerrors}}</td>
+            <td style="vertical-align:top">{{::configure.configurewarnings}}</td>
+            <td>
+              <a ng-click="configure.show = !configure.show">
+                <span ng-show="!configure.show">View</span>
+                <span ng-show="configure.show">Hide</span>
+              </a>
+              <table class="configure tabb" border="0" cellpadding="4" cellspacing="0" width="100%"
+                     ng-show="configure.show">
+                <tr>
+                  <td align="left">
+                    <b>Site: </b>
+                    <a ng-href="viewSite.php?siteid={{::cdash.build.siteid}}">
+                      {{::cdash.build.site}}
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td align="left">
+                    <b>Build Name: </b>{{::cdash.build.buildname}}
+                  </td>
+                </tr>
+                <tr>
+                  <td align="left">
+                    <b>Configure Command: </b>{{::configure.command}}
+                  </td>
+                </tr>
+                <tr>
+                  <td align="left">
+                    <b>Configure Return Value: </b>{{::configure.status}}
+                  </td>
+                </tr>
+                <tr>
+                  <td align="left">
+                    <b>Configure Output:</b>
+                  </td>
+                </tr>
+                <tr>
+                  <td align="left">
+                    <pre>{{::configure.output}}</pre>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <br/>
+    </div>
+
+    <!-- FOOTER -->
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_@@version.html'"></ng-include>
+  </body>
+</html>

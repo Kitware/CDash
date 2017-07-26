@@ -26,16 +26,6 @@ class ViewDynamicAnalysisFileTestCase extends KWWebTestCase
         require_once('models/build.php');
         require_once('models/dynamicanalysis.php');
 
-        // Submit testing data.
-        $filenames = ['previous', 'next'];
-        $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
-        foreach ($filenames as $filename) {
-            $file = "$rep/$filename-DA.xml";
-            if (!$this->submission('InsightExample', $file)) {
-                $this->fail("Failed to submit $file");
-            }
-        }
-
         // Get id of existing build.
         $pdo = get_link_identifier()->getPdo();
         $stmt = $pdo->query(
@@ -55,6 +45,16 @@ class ViewDynamicAnalysisFileTestCase extends KWWebTestCase
         $id = $row['id'];
         if ($id < 1) {
             $this->fail('Could not find existing id');
+        }
+
+        // Submit testing data.
+        $filenames = ['previous', 'next'];
+        $rep = dirname(__FILE__) . '/data/InsightExperimentalExample';
+        foreach ($filenames as $filename) {
+            $file = "$rep/$filename-DA.xml";
+            if (!$this->submission('InsightExample', $file)) {
+                $this->fail("Failed to submit $file");
+            }
         }
 
         // Test that previous/next/current function return meaningful values.
