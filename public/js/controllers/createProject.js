@@ -58,6 +58,19 @@ CDash.controller('CreateProjectController',
           'active': activeTab == 8
         });
       }
+
+      // Example URLs to create a new issue on a supported bug tracking system.
+      $scope.cdash.bugtrackerexamples = {
+        Buganizer: '<bug-url>/new?component=###&template=###',
+        GitHub: 'https://github.com/:owner/:repo/issues/new?',
+        JIRA: '<bug-url>/secure/CreateIssueDetails!init.jspa?pid=###&issuetype=#'
+      };
+      $scope.cdash.bugtrackertypes = Object.keys($scope.cdash.bugtrackerexamples);
+      if ($scope.cdash.project.BugTrackerType && $scope.cdash.project.BugTrackerNewIssueUrl) {
+        $scope.cdash.issuecreation = true;
+      } else {
+        $scope.cdash.issuecreation = false;
+      }
     };
 
     $scope.showHelp = function(id_div) {
@@ -252,4 +265,16 @@ CDash.controller('CreateProjectController',
         $scope.cdash.error = e.data.error;
       });
     };
+
+    $scope.changeTrackerType = function() {
+      if (!$scope.cdash.project.BugTrackerType) {
+        return;
+      }
+      if (!$scope.cdash.project.BugTrackerType in $scope.cdash.bugtrackerexamples) {
+        $scope.cdash.newissuehelp = '';
+      } else {
+        $scope.cdash.newissuehelp = $scope.cdash.bugtrackerexamples[$scope.cdash.project.BugTrackerType];
+      }
+    };
+
 });

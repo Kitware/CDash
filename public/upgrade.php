@@ -809,6 +809,13 @@ if (isset($_GET['upgrade-2-6'])) {
     // Support for authenticated submissions.
     AddTableField('project', 'authenticatesubmissions', 'tinyint(1)', 'smallint', '0');
 
+    // Add position field to subproject table.
+    AddTableField('subproject', 'position', 'smallint(6) unsigned', 'smallint', '0');
+
+    // Support for bugtracker issue creation.
+    AddTableField('project', 'bugtrackernewissueurl', 'varchar(255)', 'character varying(255)', '');
+    AddTableField('project', 'bugtrackertype', 'varchar(16)', 'character varying(16)', '');
+
     // Set the database version
     setVersion();
 

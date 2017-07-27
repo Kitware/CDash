@@ -289,6 +289,14 @@ $CDASH_TOKEN_DURATION = 15811200;
 // 1 means that newly created projects will require authentication by default.
 $CDASH_DEFAULT_AUTHENTICATE_SUBMISSIONS = 0;
 
+// Maximum number of builds allowed per project.
+// When set to 0 projects are not limited by number of builds.
+$CDASH_BUILDS_PER_PROJECT = 0;
+
+// Whitelist of projects that are allowed to have unlimited builds.
+$CDASH_UNLIMITED_PROJECTS = [];
+
+
 /* DO NOT EDIT AFTER THIS LINE */
 $localConfig = dirname(__FILE__) . '/config.local.php';
 if ((strpos(__FILE__, 'config.local.php') === false) && file_exists($localConfig)) {

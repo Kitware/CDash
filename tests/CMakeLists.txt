@@ -126,6 +126,8 @@ add_php_test(disabledtests)
 add_php_test(multiplesubprojects)
 add_php_test(authtoken)
 add_php_test(junithandler)
+add_php_test(issuecreation)
+add_php_test(limitedbuilds)
 
 if(CDASH_GITHUB_USERNAME AND CDASH_GITHUB_PASSWORD)
   add_php_test(github_PR_comment)

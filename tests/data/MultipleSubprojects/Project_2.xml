@@ -1,0 +1,10 @@
+<Project name="SubProjectExample">
+  <SubProject name="MyProductionCode">
+  </SubProject>
+  <SubProject name="MyExperimentalFeature">
+  </SubProject>
+  <SubProject name="EmptySubproject">
+  </SubProject>
+  <SubProject name="MyThirdPartyDependency">
+  </SubProject>
+</Project>

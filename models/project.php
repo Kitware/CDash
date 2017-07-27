@@ -33,6 +33,8 @@ class Project
     public $DocumentationUrl;
     public $BugTrackerUrl;
     public $BugTrackerFileUrl;
+    public $BugTrackerNewIssueUrl;
+    public $BugTrackerType;
     public $ImageId;
     public $Public;
     public $CoverageThreshold;
@@ -63,6 +65,7 @@ class Project
     public $RobotRegex;
     public $CTestTemplateScript;
     public $WebApiKey;
+    private $PDO;
 
     public function __construct()
     {
@@ -117,6 +120,7 @@ class Project
         if (empty($this->WebApiKey)) {
             $this->WebApiKey = '';
         }
+        $this->PDO = get_link_identifier()->getPdo();
     }
 
     /** Add a build group */
@@ -206,6 +210,8 @@ class Project
         $DocumentationUrl = pdo_real_escape_string($this->DocumentationUrl);
         $BugTrackerUrl = pdo_real_escape_string($this->BugTrackerUrl);
         $BugTrackerFileUrl = pdo_real_escape_string($this->BugTrackerFileUrl);
+        $BugTrackerNewIssueUrl = pdo_real_escape_string($this->BugTrackerNewIssueUrl);
+        $BugTrackerType = pdo_real_escape_string($this->BugTrackerType);
         $TestingDataUrl = pdo_real_escape_string($this->TestingDataUrl);
         $NightlyTime = pdo_real_escape_string($this->NightlyTime);
         $GoogleTracker = pdo_real_escape_string($this->GoogleTracker);
@@ -227,6 +233,8 @@ class Project
             $query .= ",documentationurl='" . $DocumentationUrl . "'";
             $query .= ",bugtrackerurl='" . $BugTrackerUrl . "'";
             $query .= ",bugtrackerfileurl='" . $BugTrackerFileUrl . "'";
+            $query .= ",bugtrackernewissueurl='" . $BugTrackerNewIssueUrl . "'";
+            $query .= ",bugtrackertype='" . $BugTrackerType . "'";
             $query .= ',public=' . qnum($this->Public);
             $query .= ',coveragethreshold=' . qnum($this->CoverageThreshold);
             $query .= ",testingdataurl='" . $TestingDataUrl . "'";
@@ -317,12 +325,12 @@ class Project
             // Trim the name
             $this->Name = trim($this->Name);
             $this->Initialize();
-            $query = 'INSERT INTO project(' . $id . 'name,description,homeurl,cvsurl,bugtrackerurl,bugtrackerfileurl,documentationurl,public,imageid,coveragethreshold,testingdataurl,
+            $query = 'INSERT INTO project(' . $id . 'name,description,homeurl,cvsurl,bugtrackerurl,bugtrackerfileurl,bugtrackernewissueurl,bugtrackertype,documentationurl,public,imageid,coveragethreshold,testingdataurl,
                                     nightlytime,googletracker,emailbrokensubmission,emailredundantfailures,
                                     emaillowcoverage,emailtesttimingchanged,cvsviewertype,
                                     testtimestd,testtimestdthreshold,testtimemaxstatus,emailmaxitems,emailmaxchars,showtesttime,emailadministrator,showipaddresses
                                     ,displaylabels,sharelabelfilters,authenticatesubmissions,showcoveragecode,autoremovetimeframe,autoremovemaxbuilds,uploadquota,webapikey)
-                 VALUES (' . $idvalue . "'$Name','$Description','$HomeUrl','$CvsUrl','$BugTrackerUrl','$BugTrackerFileUrl','$DocumentationUrl',
+                 VALUES (' . $idvalue . "'$Name','$Description','$HomeUrl','$CvsUrl','$BugTrackerUrl','$BugTrackerFileUrl','$BugTrackerNewIssueUrl','$BugTrackerType','$DocumentationUrl',
                  " . qnum($this->Public) . ',' . qnum($this->ImageId) . ',' . qnum($this->CoverageThreshold) . ",'$TestingDataUrl','$NightlyTime',
                  '$GoogleTracker'," . qnum($this->EmailBrokenSubmission) . ',' . qnum($this->EmailRedundantFailures) . ','
                 . qnum($this->EmailLowCoverage) . ',' . qnum($this->EmailTestTimingChanged) . ",'$CvsViewerType'," . qnum($this->TestTimeStd)
@@ -424,6 +432,8 @@ class Project
             $this->DocumentationUrl = $project_array['documentationurl'];
             $this->BugTrackerUrl = $project_array['bugtrackerurl'];
             $this->BugTrackerFileUrl = $project_array['bugtrackerfileurl'];
+            $this->BugTrackerNewIssueUrl = $project_array['bugtrackernewissueurl'];
+            $this->BugTrackerType = $project_array['bugtrackertype'];
             $this->ImageId = $project_array['imageid'];
             $this->Public = $project_array['public'];
             $this->CoverageThreshold = $project_array['coveragethreshold'];
@@ -781,25 +791,38 @@ class Project
     }
 
     /** Get the number of builds given a date range */
-    public function GetNumberOfBuilds($startUTCdate, $endUTCdate)
+    public function GetNumberOfBuilds($startUTCdate = null, $endUTCdate = null)
     {
         if (!$this->Id) {
-            echo 'Project GetNumberOfBuilds(): Id not set';
+            add_log('Id not set', 'Project::GetNumberOfBuilds', LOG_ERR,
+                    $this->Id);
             return false;
         }
 
-        $project = pdo_query(
-            'SELECT count(build.id) FROM build WHERE projectid=' . qnum($this->Id) . "
-            AND build.starttime>'$startUTCdate'
-            AND build.starttime<='$endUTCdate'
-            AND parentid IN (-1, 0)");
+        // Construct our query given the optional parameters of this function.
+        $sql = 'SELECT COUNT(build.id) FROM build
+                WHERE projectid = :projectid AND parentid IN (-1, 0)';
+        if (!is_null($startUTCdate)) {
+            $sql .= ' AND build.starttime > :start';
+        }
+        if (!is_null($endUTCdate)) {
+            $sql .= ' AND build.starttime <= :end';
+        }
 
-        if (!$project) {
-            add_last_sql_error('Project GetNumberOfBuilds', $this->Id);
+        $stmt = $this->PDO->prepare($sql);
+        $stmt->bindParam(':projectid', $this->Id);
+        if (!is_null($startUTCdate)) {
+            $stmt->bindParam(':start', $startUTCdate);
+        }
+        if (!is_null($endUTCdate)) {
+            $stmt->bindParam(':end', $endUTCdate);
+        }
+
+        if (!pdo_execute($stmt)) {
             return false;
         }
-        $project_array = pdo_fetch_array($project);
-        return intval($project_array[0]);
+
+        return intval($stmt->fetchColumn());
     }
 
     /** Get the number of builds given per day */
@@ -1570,5 +1593,30 @@ class Project
         $pdo = get_link_identifier()->getPdo();
         $stmt = $pdo->prepare('DELETE FROM blockbuild WHERE id=?');
         pdo_execute($stmt, [$id]);
+    }
+
+    // Return true and set error message if this project has too many builds.
+    public function HasTooManyBuilds(&$message)
+    {
+        if (!$this->Id) {
+            return false;
+        }
+
+        global $CDASH_BUILDS_PER_PROJECT, $CDASH_EMAILADMIN,
+               $CDASH_UNLIMITED_PROJECTS;
+
+        if ($CDASH_BUILDS_PER_PROJECT == 0 ||
+                in_array($this->GetName(), $CDASH_UNLIMITED_PROJECTS)) {
+            return false;
+        }
+
+        if ($this->GetNumberOfBuilds() < $CDASH_BUILDS_PER_PROJECT) {
+            return false;
+        }
+
+        $message = "Maximum number of builds reached for $this->Name.  Contact $CDASH_EMAILADMIN for support.";
+        add_log("Too many builds for $this->Name", 'project_has_too_many_builds',
+                LOG_INFO, $this->Id);
+        return true;
     }
 }

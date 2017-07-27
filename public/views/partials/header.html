@@ -81,7 +81,11 @@
           </ul>
         </li>
         <li id="Back" ng-if="cdash.menu.back">
-          <a href="{{cdash.menu.back}}{{cdash.extrafilterurl}}">Back</a>
+          <a ng-href="{{cdash.menu.back}}{{cdash.extrafilterurl}}"
+             tooltip-popup-delay="1500"
+             tooltip-append-to-body="true"
+             tooltip-placement="bottom"
+             uib-tooltip="Go back up one level in the hierarchy of results">Up</a>
         </li>
         <li ng-if="cdash.showcalendar">
           <a id="cal" href="javascript:;" ng-click="toggleCalendar()">Calendar</a>

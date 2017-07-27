@@ -27,6 +27,7 @@ require_once 'include/pdo.php';
 include 'include/do_submit.php';
 include 'include/clientsubmit.php';
 include 'include/version.php';
+require_once 'models/project.php';
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 if (!$db || !pdo_select_db("$CDASH_DB_NAME", $db)) {
@@ -58,7 +59,8 @@ $stmt = $pdo->prepare(
     'SELECT id, authenticatesubmissions FROM project WHERE name = ?');
 
 $projectid = null;
-if (pdo_execute($stmt, [$_GET['project']])) {
+$projectname = $_GET['project'];
+if (pdo_execute($stmt, [$projectname])) {
     $row = $stmt->fetch();
     if ($row) {
         $projectid = $row['id'];
@@ -73,6 +75,19 @@ if (!$projectid) {
     echo " <message>Not a valid project.</message>\n";
     echo "</cdash>\n";
     add_log('Not a valid project. projectname: ' . $projectname, 'global:submit.php');
+    return;
+}
+
+// Do not process this submission if the project has too many builds.
+$project = new Project();
+$project->Name = $projectname;
+$project->Id = $projectid;
+$message = '';
+if ($project->HasTooManyBuilds($message)) {
+    echo '<cdash version="' . $CDASH_VERSION . "\">\n";
+    echo " <status>ERROR</status>\n";
+    echo " <message>$message</message>\n";
+    echo "</cdash>\n";
     return;
 }
 

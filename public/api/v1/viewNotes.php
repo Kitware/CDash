@@ -43,7 +43,11 @@ get_dashboard_JSON_by_name($projectname, $date, $response);
 
 // Menu
 $menu = array();
-$menu['back'] = 'index.php?project=' . urlencode($projectname) . '&date=' . $date;
+if ($build->GetParentId() > 0) {
+    $menu['back'] = 'index.php?project=' . urlencode($projectname) . "&parentid={$build->GetParentId()}";
+} else {
+    $menu['back'] = 'index.php?project=' . urlencode($projectname) . '&date=' . $date;
+}
 
 $previous_buildid = $build->GetPreviousBuildId();
 $current_buildid = $build->GetCurrentBuildId();

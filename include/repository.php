@@ -1080,3 +1080,112 @@ function perform_github_version_only_diff($project, $update, $previous_revision)
     $update->Insert();
     return true;
 }
+
+/** Create a bugtracker issue for a broken build. */
+function generate_bugtracker_new_issue_link($build, $project)
+{
+    // Make sure that we have a valid build.
+    require_once 'models/build.php';
+    if (!$build->Filled && !$build->Exists()) {
+        return false;
+    }
+
+    // Return early if we don't have an implementation for this type
+    // of bug tracker.
+    require_once 'models/project.php';
+    $project->Fill();
+    $function_name = "generate_{$project->BugTrackerType}_new_issue_link";
+    if (!function_exists($function_name)) {
+        return false;
+    }
+
+    // Use our email functions to generate a message body and title for this build.
+    require_once('include/sendemail.php');
+    $errors = check_email_errors($build->Id, false, 0, true);
+    $emailtext = [];
+    foreach ($errors as $errorkey => $nerrors) {
+        if ($nerrors < 1) {
+            continue;
+        }
+        $emailtext['nerror'] = 1;
+        $emailtext['summary'][$errorkey] =
+            get_email_summary($build->Id, $errors, $errorkey, 1, 500, 0, false);
+        $emailtext['category'][$errorkey] = $nerrors;
+    }
+    $msg_parts = generate_broken_build_message($emailtext, $build, $project);
+    $title = $msg_parts['title'];
+    $body = $msg_parts['body'];
+
+    $users = [];
+    $subproject_name = $build->GetSubProjectName();
+    if ($subproject_name) {
+        // Get users to notify for this SubProject.
+        $pdo = get_link_identifier()->getPdo();
+        $user_table = qid('user');
+        $stmt = $pdo->prepare(
+            "SELECT email FROM $user_table
+            JOIN labelemail ON labelemail.userid = $user_table.id
+            JOIN label ON label.id = labelemail.labelid
+            WHERE label.text = ?  AND labelemail.projectid = ?");
+        pdo_execute($stmt, [$subproject_name, $project->Id]);
+        while ($row = $stmt->fetch()) {
+            $users[] = $row['email'];
+        }
+        // Sort alphabetically.
+        sort($users);
+    }
+
+    // Escape text fields that will be passed in the query string.
+    $title = urlencode($title);
+    $body = urlencode($body);
+
+    // Call the implementation specific to this bug tracker.
+    return $function_name($project->BugTrackerNewIssueUrl, $title, $body, $users);
+}
+
+function generate_Buganizer_new_issue_link($baseurl, $title, $body, $users)
+{
+    $url = "$baseurl&type=BUG&priority=P0&severity=S0&title=$title&description=$body";
+    if (!empty($users)) {
+        $cc = "&cc=";
+        $cc .= implode(',', $users);
+        $url .= $cc;
+    }
+    return $url;
+}
+
+function generate_JIRA_new_issue_link($baseurl, $title, $body, $users)
+{
+    $url = "$baseurl&summary=$title";
+    if (!empty($users)) {
+        /* By default, JIRA doesn't have a "CC" field. So we will add mentions
+         * to the description field instead.
+         * It also only supports mentions by user name, not email.
+         * So for first.last@domain.com, we will add [~first.last] to the body.
+         **/
+        foreach ($users as $user) {
+            $parts = explode("@", $user, 2);
+            $user_name = $parts[0];
+            $body .= urlencode("[~$user_name] ");
+        }
+    }
+    $url .= "&description=$body";
+    return $url;
+}
+
+function generate_GitHub_new_issue_link($baseurl, $title, $body, $users)
+{
+    $url = "{$baseurl}title=$title";
+    if (!empty($users)) {
+        /* Similar to JIRA (above), we need to put any mentioned users
+         * in the body of the issue.
+         **/
+        foreach ($users as $user) {
+            $parts = explode("@", $user, 2);
+            $user_name = $parts[0];
+            $body .= urlencode("@$user_name ");
+        }
+    }
+    $url .= "&body=$body";
+    return $url;
+}

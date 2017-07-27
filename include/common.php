@@ -2234,7 +2234,7 @@ function extract_tar_archive_tar($filename, $dirName)
         });
         return $tar->extract($dirName);
     } catch (PEAR_Exception $e) {
-        add_log($e->getMessage(), 'extract_tar', LOG_ERR);
+        add_log($e->getMessage(), 'extract_tar_archive_tar', LOG_ERR);
         return false;
     }
 }
@@ -2246,6 +2246,7 @@ function extract_tar($filename, $dirName)
             $phar = new PharData($filename);
             $phar->extractTo($dirName);
         } catch (Exception $e) {
+            add_log($e->getMessage(), 'extract_tar', LOG_ERR);
             return false;
         }
 
