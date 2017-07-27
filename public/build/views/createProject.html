@@ -7,7 +7,7 @@
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="stylesheet" type="text/css" ng-href="{{::cssfile}}" />
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <script src="js/CDash_1498145400479.min.js"></script>
+    <script src="js/CDash_1501162445585.min.js"></script>
 <!--
     <script type="text/javascript" src="js/cdashCreateProject.js"></script>
 -->
@@ -17,7 +17,7 @@
   <body bgcolor="#ffffff" ng-controller="CreateProjectController">
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
 
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1498145400479.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1501162445585.html'"></ng-include>
     <br/>
 
     <div ng-if="cdash.projectcreated == 1">
@@ -153,6 +153,79 @@
                          ng-focus="clearHelp()"/>
                 </td>
               </tr>
+
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Bug Tracker Issue Creation:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input type="checkbox" name="public"
+                         ng-model="cdash.issuecreation"
+                         ng-focus="showHelp('public_help')"/>
+                  <a href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                     target="blank">
+                    <img ng-mouseover="showHelp('issuecreation_help')" src="img/help.gif"
+                         border="0" />
+                  </a>
+                  <span class="help_content" id="issuecreation_help">
+                    <b>Enable Issue Creation</b>
+                    <br />
+                    CDash can display a link on buildSummary.php if you use a
+                    supported bug tracking system.  This makes it easy to create
+                    a new issue when you notice that a build is broken.
+                  </span>
+                </td>
+              </tr>
+              <tr ng-show="cdash.issuecreation" class="animate-show">
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Bug Tracker Type:</strong>
+                  </div>
+                </td>
+                <td>
+                  <select id="bugtrackertype" name="bugtrackertype"
+                          ng-model="cdash.project.BugTrackerType"
+                          ng-change="cdash.changesmade = true; changeTrackerType()"
+                          ng-focus="showHelp('issuecreation_help')">
+                    <option value="" selected>Other</option>
+                    <option ng-repeat="type in ::cdash.bugtrackertypes"
+                            value="{{::type}}"
+                            ng-selected="type == cdash.project.BugTrackerType">
+                      {{::type}}
+                    </option>
+                  </select>
+                  <a href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                     target="blank">
+                    <img ng-mouseover="showHelp('issuecreation_help')" src="img/help.gif"
+                         border="0" />
+                  </a>
+                </td>
+              </tr>
+              <tr ng-show="cdash.issuecreation" class="animate-show">
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>New Issue URL:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input name="newissueURL" type="text" id="newissueURL" size="50"
+                         ng-model="cdash.project.BugTrackerNewIssueUrl"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('newissueurl_help')"/>
+                  <span class="help_content" id="newissueurl_help">
+                    <b>New Issue URL</b>
+                    Link to create a new issue in your bug tracker.
+                    <br />
+                    {{cdash.newissuehelp}}
+                  </span>
+                </td>
+              </tr>
+
               <tr>
                 <td></td>
                 <td>
@@ -1415,6 +1488,6 @@
       </form>
     </div>
 
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1498145400479.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1501162445585.html'"></ng-include>
   </body>
 </html>
