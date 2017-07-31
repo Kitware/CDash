@@ -27,18 +27,14 @@ $start = microtime_float();
 $response = array();
 
 $build = get_request_build();
-
-$date = null;
-if (isset($_GET['date'])) {
-    $date = $_GET['date'];
-}
-
 $buildid = $build->Id;
 $siteid = $build->SiteId;
 
 $project = new Project();
 $project->Id = $build->ProjectId;
 $project->Fill();
+
+$date = get_dashboard_date_from_build_starttime($build->StartTime, $project->NightlyTime);
 
 // Format the text to fit the iPhone
 function format_for_iphone($text)
@@ -62,7 +58,7 @@ $menu = array();
 if ($build->GetParentId() > 0) {
     $menu['back'] = 'index.php?project=' . urlencode($project->Name) . "&parentid={$build->GetParentId()}";
 } else {
-    $menu['back'] = 'index.php?project=' . urlencode($project->Name) . '&date=' . get_dashboard_date_from_build_starttime($build->StartTime, $project->NightlyTime);
+    $menu['back'] = 'index.php?project=' . urlencode($project->Name) . "&date=$date";
 }
 
 if ($previous_buildid > 0) {
