@@ -160,6 +160,12 @@ function echo_main_dashboard_JSON($project_instance, $date)
         } else {
             $response['parenthasnotes'] = false;
         }
+
+        // Check if the parent build has any uploaded files.
+        $stmt = $PDO->prepare(
+            'SELECT COUNT(buildid) FROM build2uploadfile WHERE buildid = ?');
+        pdo_execute($stmt, [$parentid]);
+        $response['uploadfilecount'] = $stmt->fetchColumn();
     } else {
         $response['parentid'] = -1;
     }
@@ -775,6 +781,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $build_response['siteid'] = $siteid;
             $build_response['buildname'] = $build_array['name'];
             $build_response['buildplatform'] = $buildplatform;
+            $build_response['uploadfilecount'] = $build_array['builduploadfiles'];
             if (!is_null($changelink)) {
                 $build_response['changelink'] = $changelink;
                 $build_response['changeicon'] = $changeicon;
@@ -786,7 +793,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
         }
         $build_response['id'] = $build_array['id'];
         $build_response['done'] = $build_array['done'];
-        $build_response['uploadfilecount'] = $build_array['builduploadfiles'];
 
         $build_response['buildnotes'] = $build_array['countbuildnotes'];
         $build_response['notes'] = $build_array['countnotes'];

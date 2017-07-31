@@ -58,6 +58,11 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             return 1;
         }
 
+        if (!$this->submission('SubProjectExample', "$rep/Upload.xml")) {
+            $this->fail('failed to submit Upload.xml');
+            return 1;
+        }
+
         // Get the buildids that we just created so we can delete it later.
         $pdo = get_link_identifier()->getPdo();
         $buildids = array();
@@ -186,6 +191,11 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
 
             if ($jsonobj['parenthasnotes'] !== true) {
                 throw new Exception("parenthasnotes not set to true when expected");
+            }
+
+            $num_uploaded_files = $jsonobj['uploadfilecount'];
+            if ($num_uploaded_files  !== 1) {
+                throw new Exception("Expected 1 uploaded file, found $num_uploaded_files");
             }
 
             $numcoverages = count($jsonobj['coverages']);

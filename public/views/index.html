@@ -129,6 +129,13 @@
              ng-href="viewNotes.php?buildid={{::cdash.parentid}}">
             <img src="img/document.png" alt="Notes" class="icon"/>
           </a>
+
+          <a ng-if="::cdash.uploadfilecount > 0"
+             ng-href="viewFiles.php?buildid={{::cdash.parentid}}"
+             title="{{::cdash.uploadfilecount}} files uploaded with this build">
+            <img src="img/package.png" alt="Files" class="icon"/>
+          </a>
+
           <a ng-if="::cdash.changelink" target="_blank" ng-href="{{::cdash.changelink}}">
             <img class="smallicon" ng-src="{{::cdash.changeicon}}"/>
           </a>
