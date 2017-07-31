@@ -23,6 +23,19 @@ class BuildInformation
     public $OSVersion;
     public $CompilerName = 'unknown';
     public $CompilerVersion = 'unknown';
+    private $PDO;
+
+    public function __construct()
+    {
+        $this->BuildId = 0;
+        $this->OSName = '';
+        $this->OSPlatform = '';
+        $this->OSRelease = '';
+        $this->OSVersion = '';
+        $this->CompilerName = 'unknown';
+        $this->CompilerVersion = 'unknown';
+        $this->PDO = get_link_identifier()->getPdo();
+    }
 
     public function SetValue($tag, $value)
     {
@@ -51,21 +64,37 @@ class BuildInformation
     /** Save the site information */
     public function Save()
     {
-        if ($this->OSName != '' || $this->OSPlatform != '' || $this->OSRelease != '' || $this->OSVersion != '') {
-            if (empty($this->BuildId)) {
-                return false;
-            }
+        if ($this->BuildId < 1) {
+            return false;
+        }
+        if ($this->OSName == '' && $this->OSPlatform == '' &&
+                $this->OSRelease == '' && $this->OSVersion == '') {
+            return false;
+        }
 
-            // Check if we already have a buildinformation for that build. If yes we just skip it
-            $query = pdo_query('SELECT buildid FROM buildinformation WHERE buildid=' . qnum($this->BuildId));
-            add_last_sql_error('BuildInformation Insert', 0, $this->BuildId);
-            if (pdo_num_rows($query) == 0) {
-                pdo_query('INSERT INTO buildinformation (buildid,osname,osrelease,osversion,osplatform,compilername,compilerversion)
-                    VALUES (' . qnum($this->BuildId) . ",'$this->OSName','$this->OSRelease',
-                            '$this->OSVersion','$this->OSPlatform','$this->CompilerName','$this->CompilerVersion')");
-                add_last_sql_error('BuildInformation Insert', 0, $this->BuildId);
-            }
+        // Check if we already have a buildinformation for this build.
+        $stmt = $this->PDO->prepare(
+            'SELECT COUNT(*) FROM buildinformation WHERE buildid = ?');
+        pdo_execute($stmt, [$this->BuildId]);
+        if ($stmt->fetchColumn() > 0) {
+            // If so we just skip it.
             return true;
         }
+
+        $stmt = $this->PDO->prepare(
+            'INSERT INTO buildinformation
+            (buildid, osname, osrelease, osversion, osplatform, compilername,
+             compilerversion)
+            VALUES
+            (:buildid, :osname, :osrelease, :osversion, :osplatform, :compilername,
+             :compilerversion)');
+        $stmt->bindValue(':buildid', $this->BuildId);
+        $stmt->bindValue(':osname', $this->OSName);
+        $stmt->bindValue(':osrelease', $this->OSRelease);
+        $stmt->bindValue(':osversion', $this->OSVersion);
+        $stmt->bindValue(':osplatform', $this->OSPlatform);
+        $stmt->bindValue(':compilername', $this->CompilerName);
+        $stmt->bindValue(':compilerversion', $this->CompilerVersion);
+        return pdo_execute($stmt);
     }
 }
