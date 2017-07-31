@@ -214,11 +214,18 @@ CDash.filter("showEmptyBuildsLast", function () {
 
     // Read simple/advanced view cookie setting.
     var advanced_cookie = $.cookie('cdash_'+$scope.cdash.projectname+'_advancedview');
+    var show_time_columns = 0;
     if(advanced_cookie == 1) {
       $scope.cdash.advancedview = 1;
+      if ($scope.cdash.showstarttime) {
+        // Don't show time columns for all-at-once subproject builds.
+        // This situation is identified by showstarttime being false.
+        show_time_columns = 1;
+      }
     } else {
       $scope.cdash.advancedview = 0;
     }
+    $scope.cdash.showtimecolumns = show_time_columns;
 
     if (!$scope.cdash.feed) {
       $scope.showFeed = false;
