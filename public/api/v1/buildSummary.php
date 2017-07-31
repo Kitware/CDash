@@ -129,28 +129,15 @@ $note_array = pdo_fetch_array($note);
 $build_response['note'] = $note_array['c'];
 
 // Find the OS and compiler information
-$buildinformation = pdo_query("SELECT * FROM buildinformation WHERE buildid='$buildid'");
-if (pdo_num_rows($buildinformation) > 0) {
-    $buildinformation_array = pdo_fetch_array($buildinformation);
-    if ($buildinformation_array['osname'] != '') {
-        $build_response['osname'] = $buildinformation_array['osname'];
-    }
-    if ($buildinformation_array['osplatform'] != '') {
-        $build_response['osplatform'] = $buildinformation_array['osplatform'];
-    }
-    if ($buildinformation_array['osrelease'] != '') {
-        $build_response['osrelease'] = $buildinformation_array['osrelease'];
-    }
-    if ($buildinformation_array['osversion'] != '') {
-        $build_response['osversion'] = $buildinformation_array['osversion'];
-    }
-    if ($buildinformation_array['compilername'] != '') {
-        $build_response['compilername'] = $buildinformation_array['compilername'];
-    }
-    if ($buildinformation_array['compilerversion'] != '') {
-        $build_response['compilerversion'] = $buildinformation_array['compilerversion'];
-    }
-}
+$buildinfo = new BuildInformation();
+$buildinfo->BuildId = $buildid;
+$buildinfo->Fill();
+$build_response['osname'] = $buildinfo->OSName;
+$build_response['osplatform'] = $buildinfo->OSPlatform;
+$build_response['osrelease'] = $buildinfo->OSRelease;
+$build_response['osversion'] = $buildinfo->OSVersion;
+$build_response['compilername'] = $buildinfo->CompilerName;
+$build_response['compilerversion'] = $buildinfo->CompilerVersion;
 
 $build_response['generator'] = $build->Generator;
 $build_response['command'] = $build->Command;
