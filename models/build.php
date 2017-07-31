@@ -2264,7 +2264,7 @@ class Build
         pdo_query("UPDATE build SET notified='1' WHERE id=" . qnum($idToNotify));
     }
 
-    public function SetConfigureDuration($duration)
+    public function SetConfigureDuration($duration, $update_parent=true)
     {
         if (!$this->Id || !is_numeric($this->Id)) {
             return;
@@ -2278,6 +2278,9 @@ class Build
         add_last_sql_error('Build:SetConfigureDuration',
             $this->ProjectId, $this->Id);
 
+        if (!$update_parent) {
+            return;
+        }
         // If this is a child build, add this duration
         // to the parent's configure duration sum.
         $this->SetParentId($this->LookupParentBuildId());
@@ -2292,7 +2295,7 @@ class Build
         }
     }
 
-    public function UpdateBuildDuration($duration)
+    public function UpdateBuildDuration($duration, $update_parent=true)
     {
         if ($duration === 0 || !$this->Id || !is_numeric($this->Id)) {
             return;
@@ -2305,6 +2308,9 @@ class Build
         add_last_sql_error('Build:UpdateBuildDuration',
             $this->ProjectId, $this->Id);
 
+        if (!$update_parent) {
+            return;
+        }
         // If this is a child build, add this duration
         // to the parent's sum.
         $this->SetParentId($this->LookupParentBuildId());

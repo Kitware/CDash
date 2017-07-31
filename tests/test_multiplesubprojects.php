@@ -67,10 +67,19 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
         $pdo = get_link_identifier()->getPdo();
         $buildids = array();
 
-        $buildid_results = $pdo->query(
-            "SELECT id FROM build WHERE name='CTestTest-Linux-c++-Subprojects'");
-        while ($buildid_array = $buildid_results->fetch()) {
-            $buildids[] = $buildid_array['id'];
+        $build_results = $pdo->query(
+            "SELECT id, buildduration, configureduration FROM build
+            WHERE name='CTestTest-Linux-c++-Subprojects'");
+        while ($build_array = $build_results->fetch()) {
+            $buildids[] = $build_array['id'];
+            $build_duration = $build_array['buildduration'];
+            if ($build_duration != 5) {
+                $this->fail("Expected 5 but found $build_duration for {$build_array['id']}'s build duration");
+            }
+            $configure_duration = $build_array['configureduration'];
+            if ($configure_duration != 1) {
+                $this->fail("Expected 5 but found $configure_duration for {$build_array['id']}'s configure duration");
+            }
         }
 
         if (count($buildids) != 5) {    // parent + 4 subprojects
