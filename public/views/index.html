@@ -144,6 +144,34 @@
         <div id="numbuilds" align="left">
           <b>Number of SubProjects</b>: {{::cdash.numchildren}}
         </div>
+
+        <div ng-if="::cdash.advancedview != 0">
+          <div id="buildstamp" align="left">
+            <b>Stamp</b>: {{::cdash.stamp}}
+          </div>
+          <div id="buildstarttime" align="left">
+            <b>Build Start Time</b>: {{::cdash.starttime}}
+          </div>
+          <div id="buildtype" align="left">
+            <b>Type</b>: {{::cdash.type}}
+          </div>
+          <div id="osname" align="left">
+            <b>OS Name</b>: {{::cdash.osname}}
+          </div>
+          <div id="osplatform" align="left">
+            <b>OS Platform</b>: {{::cdash.osplatform}}
+          </div>
+          <div id="osrelease" align="left">
+            <b>OS Release</b>: {{::cdash.osrelease}}
+          </div>
+          <div id="osversion" align="left">
+            <b>OS Version</b>: {{::cdash.osversion}}
+          </div>
+          <div id="generator" align="left">
+          <b>CTest version: </b>{{::cdash.generator}}
+          </div>
+        </div>
+
         <br/>
       </div>
 

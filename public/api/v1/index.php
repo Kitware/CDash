@@ -148,8 +148,25 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $parentid = pdo_real_escape_numeric($_GET['parentid']);
         $parent_build = new Build();
         $parent_build->Id = $parentid;
+        $parent_build->FillFromId($parent_build->Id);
         $date = $parent_build->GetDate();
         $response['parentid'] = $parentid;
+
+        $response['stamp'] = $parent_build->GetStamp();
+        $response['starttime'] = $parent_build->StartTime;
+        $response['type'] = $parent_build->Type;
+
+        // Include data about this build from the buildinformation table.
+        require_once 'models/buildinformation.php';
+        $buildinfo = new BuildInformation();
+        $buildinfo->BuildId = $parentid;
+        $buildinfo->Fill();
+        $response['osname'] = $buildinfo->OSName;
+        $response['osplatform'] = $buildinfo->OSPlatform;
+        $response['osrelease'] = $buildinfo->OSRelease;
+        $response['osversion'] = $buildinfo->OSVersion;
+        $response['compilername'] = $buildinfo->CompilerName;
+        $response['compilerversion'] = $buildinfo->CompilerVersion;
 
         // Check if the parent build has any notes.
         $stmt = $PDO->prepare(
