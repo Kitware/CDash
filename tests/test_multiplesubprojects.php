@@ -320,8 +320,8 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
                 }
             }
 
-            // Verify that dynamic analysis data was correctly split across SubProjects.
             foreach ($builds as $build) {
+                // Verify that dynamic analysis data was correctly split across SubProjects.
                 $stmt = $pdo->query("SELECT numdefects FROM dynamicanalysissummary WHERE buildid = {$build['id']}");
                 $summary_total = $stmt->fetchColumn();
                 $this->get($this->url . "/api/v1/viewDynamicAnalysis.php?buildid={$build['id']}");
@@ -374,6 +374,13 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
                     if ($expected_defect_type != $defect_type) {
                         throw new Exception("Expected type $expected_defect_type for {$build['label']}, found $defect_type");
                     }
+                }
+
+                // Verify that test duration is calculated correctly.
+                $stmt = $pdo->query("SELECT time FROM buildtesttime WHERE buildid = {$build['id']}");
+                $found = $stmt->fetchColumn();
+                if ($found !== false && $found != 4) {
+                    throw new Exception("Expected 4 but found $found for {$build['id']}'s test duration");
                 }
             }
 

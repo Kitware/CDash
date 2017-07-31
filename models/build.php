@@ -221,7 +221,7 @@ class Build
     }
 
     /** Update the total testing duration */
-    public function SaveTotalTestsTime($duration)
+    public function SaveTotalTestsTime($duration, $update_parent=true)
     {
         if (!$this->Id || !is_numeric($this->Id)) {
             return false;
@@ -250,6 +250,9 @@ class Build
             return false;
         }
 
+        if (!$update_parent) {
+            return true;
+        }
         // If this is a child build, add this duration
         // to the parent's test duration sum.
         $this->SetParentId($this->LookupParentBuildId());
