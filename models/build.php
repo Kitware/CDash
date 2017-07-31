@@ -871,7 +871,11 @@ class Build
 
             // Save the information
             if (!empty($this->Information)) {
-                $this->Information->BuildId = $this->Id;
+                if ($this->ParentId > 0) {
+                    $this->Information->BuildId = $this->ParentId;
+                } else {
+                    $this->Information->BuildId = $this->Id;
+                }
                 $this->Information->Save();
             }
 

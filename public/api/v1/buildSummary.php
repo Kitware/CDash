@@ -130,7 +130,11 @@ $build_response['note'] = $note_array['c'];
 
 // Find the OS and compiler information
 $buildinfo = new BuildInformation();
-$buildinfo->BuildId = $buildid;
+if ($build->GetParentId() > 0) {
+    $buildinfo->BuildId = $build->GetParentId();
+} else {
+    $buildinfo->BuildId = $buildid;
+}
 $buildinfo->Fill();
 $build_response['osname'] = $buildinfo->OSName;
 $build_response['osplatform'] = $buildinfo->OSPlatform;
