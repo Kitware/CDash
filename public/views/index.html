@@ -170,6 +170,25 @@
           <div id="generator" align="left">
           <b>CTest version: </b>{{::cdash.generator}}
           </div>
+
+          <div ng-if="::cdash.showorder">
+            <div ng-if="::cdash.updateduration != false"
+                 id="updateduration" align="left">
+              <b>Update Time: </b>{{::cdash.updateduration}}
+            </div>
+            <div ng-if="::cdash.configureduration != false"
+                 id="configureduration" align="left">
+              <b>Configure Time: </b>{{::cdash.configureduration}}
+            </div>
+            <div ng-if="::cdash.buildduration != false"
+                 id="buildduration" align="left">
+              <b>Build Time: </b>{{::cdash.buildduration}}
+            </div>
+            <div ng-if="::cdash.testduration != false"
+                 id="testduration" align="left">
+              <b>Test Time: </b>{{::cdash.testduration}}
+            </div>
+          </div>
         </div>
 
         <br/>

@@ -1427,8 +1427,10 @@ function echo_main_dashboard_JSON($project_instance, $date)
         }
         $response['numchildren'] = $numchildren;
 
-        // If all our children share the same start time, then this was an "all at once" subproject build.
-        // In that case, tell our view to display the "Order" column instead of the "Start Time" column.
+        // If all our children share the same start time, then this was an
+        // "all at once" subproject build.
+        // In that case, tell our view to display the "Order" column instead of
+        // the "Start Time" column.
         if (count($build_start_times) === 1) {
             $response['showorder'] = true;
             $response['showstarttime'] = false;
@@ -1438,6 +1440,47 @@ function echo_main_dashboard_JSON($project_instance, $date)
                 for ($j = 0; $j < count($buildgroups_response[$i]['builds']); $j++) {
                     $idx = array_search($buildgroups_response[$i]['builds'][$j]['position'], $subproject_positions);
                     $buildgroups_response[$i]['builds'][$j]['position'] = $idx + 1;
+                }
+            }
+
+            // Update duration, configure duration, build duration, and
+            // test duration do not vary among children builds in this case.
+            // Find the single value (if any) for each and report it at the top
+            // of the page.
+            $buildgroup_response = $buildgroups_response[0];
+            $need_update = $buildgroup_response['hasupdatedata'];
+            $need_configure = $buildgroup_response['hasconfiguredata'];
+            $need_build = $buildgroup_response['hascompilationdata'];
+            $need_test = $buildgroup_response['hastestdata'];
+            $response['updateduration'] = false;
+            $response['configureduration'] = false;
+            $response['buildduration'] = false;
+            $response['testduration'] = false;
+            foreach ($buildgroup_response['builds'] as $build_response) {
+                if ($build_response['hasupdate']) {
+                    $response['updateduration'] =
+                        $build_response['update']['time'];
+                    $need_update = false;
+                }
+                if ($build_response['hasconfigure']) {
+                    $response['configureduration'] =
+                        $build_response['configure']['time'];
+                    $need_configure = false;
+                }
+                if ($build_response['hascompilation']) {
+                    $response['buildduration'] =
+                        $build_response['compilation']['time'];
+                    $need_build = false;
+                }
+                if ($build_response['hastest']) {
+                    $response['testduration'] =
+                        $build_response['test']['time'];
+                    $need_test = false;
+                }
+                // Break out of the loop once we have all the data we need.
+                if (!$need_update && !$need_configure && !$need_build &&
+                        !$need_test) {
+                    break;
                 }
             }
         }

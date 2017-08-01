@@ -217,6 +217,19 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
                 throw new Exception("Expected 3 subproject dynamic analyses, found $numdynamicanalyses");
             }
 
+            if ($jsonobj['updateduration'] !== false) {
+                throw new Exception("Expected updateduration to be false, found {$jsonobj['updateduration']}");
+            }
+            if ($jsonobj['configureduration'] != '1s') {
+                throw new Exception("Expected configureduration to be 1s, found {$jsonobj['configureduration']}");
+            }
+            if ($jsonobj['buildduration'] != '5s') {
+                throw new Exception("Expected buildduration to be 5s, found {$jsonobj['buildduration']}");
+            }
+            if ($jsonobj['testduration'] != '4s') {
+                throw new Exception("Expected testduration to be 4s, found {$jsonobj['testduration']}");
+            }
+
             $buildgroup = array_pop($jsonobj['buildgroups']);
             $builds = $buildgroup['builds'];
 
