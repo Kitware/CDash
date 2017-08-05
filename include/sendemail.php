@@ -1432,8 +1432,10 @@ function send_update_email($handler, $projectid)
 }
 
 /** Main function to send email if necessary */
-function sendemail($handler, $projectid)
+function sendemail(ActionableBuildInterface $handler, $projectid)
 {
+    global $CDASH_USE_LOCAL_DIRECTORY;
+
     include 'config/config.php';
     include_once 'include/common.php';
     require_once 'include/pdo.php';
@@ -1458,137 +1460,117 @@ function sendemail($handler, $projectid)
         return;
     }
 
-    // If the handler has a buildid (it should), we use it
-    if (isset($handler->BuildId) && $handler->BuildId > 0) {
-        $buildid = $handler->BuildId;
-    } else {
-        // Get the build id
-        $name = $handler->getBuildName();
-        $stamp = $handler->getBuildStamp();
-        $sitename = $handler->getSiteName();
-        $buildid = get_build_id($name, $stamp, $projectid, $sitename);
-    }
+    /** @var  Build $Build */
+    foreach ($handler->getActionableBuilds() as $label => $Build)  {
+        $groupid = $Build->GetGroup();
 
-    if ($buildid < 0) {
-        return;
-    }
+        $BuildGroup = new BuildGroup();
+        $BuildGroup->SetId($groupid);
 
-    //add_log("Buildid ".$buildid,"sendemail ".$Project->Name,LOG_INFO);
+        // If we specified no email we stop here
+        if ($BuildGroup->GetSummaryEmail() == 2) {
+            return;
+        }
 
-    //  Check if the group as no email
-    $Build = new Build();
-    $Build->Id = $buildid;
-    $groupid = $Build->GetGroup();
+        $emailCommitters = $BuildGroup->GetEmailCommitters();
 
-    $BuildGroup = new BuildGroup();
-    $BuildGroup->SetId($groupid);
+        $errors = check_email_errors($Build->Id, $Project->EmailTestTimingChanged,
+            $Project->TestTimeMaxStatus, !$Project->EmailRedundantFailures);
 
-    // If we specified no email we stop here
-    if ($BuildGroup->GetSummaryEmail() == 2) {
-        return;
-    }
+        // We have some fixes
+        if ($errors['hasfixes']) {
+            $Build->FillFromId($Build->Id);
+            // Get the list of person who should get the email
+            $lookup_result = lookup_emails_to_send($errors, $Build->Id, $projectid,
+                $Build->Type, true, $emailCommitters);
+            $userids = $lookup_result['userids'];
+            foreach ($userids as $userid) {
+                $emailtext = array();
+                $emailtext['nfixes'] = 0;
 
-    $emailCommitters = $BuildGroup->GetEmailCommitters();
+                // Check if an email has been sent already for this user
+                foreach ($errors['fixes'] as $fixkey => $nfixes) {
+                    if ($nfixes == 0) {
+                        continue;
+                    }
 
-    $errors = check_email_errors($buildid, $Project->EmailTestTimingChanged,
-        $Project->TestTimeMaxStatus, !$Project->EmailRedundantFailures);
-
-    // We have some fixes
-    if ($errors['hasfixes']) {
-        $Build->FillFromId($Build->Id);
-        // Get the list of person who should get the email
-        $lookup_result = lookup_emails_to_send($errors, $buildid, $projectid,
-            $Build->Type, true, $emailCommitters);
-        $userids = $lookup_result['userids'];
-        foreach ($userids as $userid) {
-            $emailtext = array();
-            $emailtext['nfixes'] = 0;
-
-            // Check if an email has been sent already for this user
-            foreach ($errors['fixes'] as $fixkey => $nfixes) {
-                if ($nfixes == 0) {
-                    continue;
+                    if (!check_email_sent($userid, $Build->Id, $fixkey)) {
+                        $emailtext['category'][$fixkey] = $nfixes;
+                        $emailtext['nfixes'] = 1;
+                    }
                 }
 
-                if (!check_email_sent($userid, $buildid, $fixkey)) {
-                    $emailtext['category'][$fixkey] = $nfixes;
-                    $emailtext['nfixes'] = 1;
+                // Send the email
+                if ($emailtext['nfixes'] == 1) {
+                    send_email_fix_to_user($userid, $emailtext, $Build, $Project);
                 }
             }
+        }
 
-            // Send the email
-            if ($emailtext['nfixes'] == 1) {
-                send_email_fix_to_user($userid, $emailtext, $Build, $Project);
+        // Check for missing tests
+        if ($handler instanceof TestingHandler) {
+            $missing = $Build->GetNumberOfMissingTests();
+
+            if ($missing > 0) {
+                $errors['missing_tests'] = [
+                    'count' => $missing,
+                    'list' => $Build->MissingTests
+                ];
+                $errors['errors'] = true;
             }
         }
-    }
 
-    // Check for missing tests
-    if ($handler instanceof TestingHandler) {
-        $Build->FillFromId($Build->Id);
-        $missing = $Build->GetNumberOfMissingTests();
-
-        if ($missing > 0) {
-            $errors['missing_tests'] = [
-                'count' => $missing,
-                'list' => $Build->MissingTests
-            ];
-            $errors['errors'] = true;
+        // No error we return
+        if (!$errors['errors']) {
+            return;
         }
-    }
-
-    // No error we return
-    if (!$errors['errors']) {
-        return;
-    }
-
-    if ($CDASH_USE_LOCAL_DIRECTORY && file_exists('local/sendemail.php')) {
-        $sendEmail->BuildId = $Build->Id;
-        $sendEmail->Errors = $errors;
-    }
-
-    // If we should send a summary email
-    if ($BuildGroup->GetSummaryEmail() == 1) {
-        // Send the summary email
-        sendsummaryemail($projectid, $groupid, $errors, $buildid);
 
         if ($CDASH_USE_LOCAL_DIRECTORY && file_exists('local/sendemail.php')) {
-            $sendEmail->SendSummary();
+            $sendEmail->BuildId = $Build->Id;
+            $sendEmail->Errors = $errors;
         }
-        return;
-    }
 
-    $Build->FillFromId($Build->Id);
+        // If we should send a summary email
+        if ($BuildGroup->GetSummaryEmail() == 1) {
+            // Send the summary email
+            sendsummaryemail($projectid, $groupid, $errors, $Build->Id);
 
-    // Send build error
-    if ($CDASH_USE_LOCAL_DIRECTORY && file_exists('local/sendemail.php')) {
-        $sendEmail->SendBuildError();
-    }
+            if ($CDASH_USE_LOCAL_DIRECTORY && file_exists('local/sendemail.php')) {
+                $sendEmail->SendSummary();
+            }
+            return;
+        }
 
-    // Lookup the list of people who should get the email, both registered
-    // users *and* committers:
-    //
-    $lookup_result = lookup_emails_to_send($errors, $buildid, $projectid,
-        $Build->Type, false, $emailCommitters);
+        // Send build error
+        if ($CDASH_USE_LOCAL_DIRECTORY && file_exists('local/sendemail.php')) {
+            $sendEmail->SendBuildError();
+        }
 
-    // Loop through the *registered* users:
-    //
-    $userids = $lookup_result['userids'];
-    foreach ($userids as $userid) {
-        send_error_email($userid, '', $sendEmail, $errors,
-            $Build, $Project);
-    }
+        // Lookup the list of people who should get the email, both registered
+        // users *and* committers:
+        //
+        $lookup_result = lookup_emails_to_send($errors, $Build->Id, $projectid,
+            $Build->Type, false, $emailCommitters);
 
-    // Loop through "other" users, if necessary:
-    //
-    // ...people who committed code, but are *not* registered CDash users, but
-    // only if the 'emailcommitters' field is on for this build group.
-    //
-    if ($emailCommitters) {
-        $committeremails = $lookup_result['committeremails'];
-        foreach ($committeremails as $committeremail) {
-            send_error_email(0, $committeremail, $sendEmail, $errors,
-                $Build, $Project, getHandlerErrorKeyPrefix($handler));
+        // Loop through the *registered* users:
+        //
+        $userids = $lookup_result['userids'];
+        foreach ($userids as $userid) {
+            send_error_email($userid, '', $sendEmail, $errors,
+                $Build, $Project);
+        }
+
+        // Loop through "other" users, if necessary:
+        //
+        // ...people who committed code, but are *not* registered CDash users, but
+        // only if the 'emailcommitters' field is on for this build group.
+        //
+        if ($emailCommitters) {
+            $committeremails = $lookup_result['committeremails'];
+            foreach ($committeremails as $committeremail) {
+                send_error_email(0, $committeremail, $sendEmail, $errors,
+                    $Build, $Project, getHandlerErrorKeyPrefix($handler));
+            }
         }
     }
 }

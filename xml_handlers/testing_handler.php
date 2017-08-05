@@ -15,6 +15,7 @@
 =========================================================================*/
 
 require_once 'xml_handlers/abstract_handler.php';
+require_once 'xml_handlers/actionable_build_interface.php';
 require_once 'models/build.php';
 require_once 'models/label.php';
 require_once 'models/site.php';
@@ -22,7 +23,7 @@ require_once 'models/test.php';
 require_once 'models/image.php';
 require_once 'models/feed.php';
 
-class TestingHandler extends AbstractHandler
+class TestingHandler extends AbstractHandler implements ActionableBuildInterface
 {
     private $StartTimeStamp;
     private $EndTimeStamp;
@@ -377,5 +378,13 @@ class TestingHandler extends AbstractHandler
       }
 
         $this->Builds[$this->SubProjectName] = $build;
+    }
+
+    /**
+     * @return Build[]
+     */
+    public function getActionableBuilds()
+    {
+        return $this->Builds;
     }
 }
