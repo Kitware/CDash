@@ -1499,8 +1499,11 @@ class Project
     public function ConvertToJSON()
     {
         $response = array();
-
-        foreach (get_object_vars($this) as $k => $v) {
+        $clone = new ReflectionObject($this);
+        $properties = $clone->getProperties(ReflectionProperty::IS_PUBLIC);
+        foreach ($properties as $property) {
+            $k = $property->getName();
+            $v = $this->$k;
             $response[$k] = $v;
         }
         $response['name_encoded'] = urlencode($this->Name);
