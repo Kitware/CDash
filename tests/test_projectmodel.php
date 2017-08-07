@@ -53,4 +53,14 @@ class ProjectModelTestCase extends KWWebTestCase
         @$project->SendEmailToAdmin('foo', 'hello world');
         return 0;
     }
+
+    public function testConvertToJsonHasNoPrivateMembers()
+    {
+        $project = new Project();
+        $project->Id = 0;
+
+        $output = $project->ConvertToJSON();
+
+        $this->assertFalse(in_array('PDO', array_keys($output)));
+    }
 }
