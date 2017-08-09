@@ -402,7 +402,7 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
             } else {
                 $info .= "{$error->text}\n{$error->postcontext}\n";
             }
-            $information .= substr($info, 0, $maxchars);
+            $information .= mb_substr($info, 0, $maxchars);
         }
 
         // filter out just failures of type error
@@ -425,7 +425,7 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
             if (strlen($fail->stderror) > 0) {
                 $info .= "{$fail->stderror}\n";
             }
-            $information .= substr($info, 0, $maxchars);
+            $information .= mb_substr($info, 0, $maxchars);
         }
         $information .= "\n";
     } elseif ($errorkey == 'build_warnings') {
@@ -1101,7 +1101,16 @@ function generate_broken_build_message($emailtext, $Build, $Project)
     $body .= "\n\n";
 
     $body .= 'Project: ' . $Project->Name . "\n";
-    if ($Build->GetSubProjectName()) {
+
+    // In the sendmail.php file, in the sendmail function configure errors are now handled
+    // with their own logic, and the sendmail logic removes the 'configure_error' key therefore
+    // we should be able to verify that the following is a configure category by checking to see
+    // if the 'configure_error' key exists in the category array of keys.
+    $categories = array_keys($emailtext['category']);
+
+    // Because a configure error is not subproject specific, remove this from the output
+    // if this is a configure_error.
+    if ($Build->GetSubProjectName() && !in_array('configure_errors', $categories)) {
         $body .= 'SubProject: ' . $Build->GetSubProjectName() . "\n";
     }
 
@@ -1231,6 +1240,7 @@ function send_error_email($userid, $emailaddress, $sendEmail, $errors,
 
         if ($userid != 0) {
             // If the user doesn't want to get the email
+
             switch ($errorkey) {
                 case 'update_errors':
                     if (!check_email_category('update', $useremailcategory)) {
@@ -1460,10 +1470,12 @@ function sendemail(ActionableBuildInterface $handler, $projectid)
         return;
     }
 
+    $config_subscribers = [];
+
     /** @var  Build $Build */
     foreach ($handler->getActionableBuilds() as $label => $Build)  {
+        $Build->FillFromId($Build->Id);
         $groupid = $Build->GetGroup();
-
         $BuildGroup = new BuildGroup();
         $BuildGroup->SetId($groupid);
 
@@ -1479,7 +1491,6 @@ function sendemail(ActionableBuildInterface $handler, $projectid)
 
         // We have some fixes
         if ($errors['hasfixes']) {
-            $Build->FillFromId($Build->Id);
             // Get the list of person who should get the email
             $lookup_result = lookup_emails_to_send($errors, $Build->Id, $projectid,
                 $Build->Type, true, $emailCommitters);
@@ -1530,7 +1541,7 @@ function sendemail(ActionableBuildInterface $handler, $projectid)
             $sendEmail->Errors = $errors;
         }
 
-        // If we should send a summary email
+        // If we should send a summary email from yesterday's builds
         if ($BuildGroup->GetSummaryEmail() == 1) {
             // Send the summary email
             sendsummaryemail($projectid, $groupid, $errors, $Build->Id);
@@ -1551,6 +1562,20 @@ function sendemail(ActionableBuildInterface $handler, $projectid)
         //
         $lookup_result = lookup_emails_to_send($errors, $Build->Id, $projectid,
             $Build->Type, false, $emailCommitters);
+
+        // If these are configure errors send only one email per project, per user
+        if ($handler instanceof ConfigureHandler) {
+            foreach ($lookup_result['userids'] as $userid) {
+                if (!isset($config_subscribers[$userid])) {
+                    send_error_email($userid, '', $sendEmail, $errors,
+                        $Build, $Project);
+                    $config_subscribers[$userid] = true;
+                }
+            }
+            continue;
+        }
+
+        unset($errors['configure_errors']);
 
         // Loop through the *registered* users:
         //
