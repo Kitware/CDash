@@ -1473,7 +1473,7 @@ function sendemail(ActionableBuildInterface $handler, $projectid)
     $config_subscribers = [];
 
     /** @var  Build $Build */
-    foreach ($handler->getActionableBuilds() as $label => $Build)  {
+    foreach ($handler->getActionableBuilds() as $label => $Build) {
         $Build->FillFromId($Build->Id);
         $groupid = $Build->GetGroup();
         $BuildGroup = new BuildGroup();

@@ -50,7 +50,6 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
 
     private function submitBuild()
     {
-
         if (!$this->tearDown) {
             $this->restoreState();
         }
