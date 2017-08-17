@@ -229,7 +229,7 @@ if ($session_OK) {
         }
     }
 
-// Register a user
+    // Register a user
     if ($registerUser) {
         @$email = $_POST['registeruseremail'];
         if ($email != null) {
@@ -296,7 +296,7 @@ if ($session_OK) {
         echo pdo_error();
     }
 
-// Update the user
+    // Update the user
     if ($updateuser) {
         // Update the credentials
         $UserProject = new UserProject();
@@ -311,7 +311,7 @@ if ($session_OK) {
         $UserProject->Save();
     }
 
-// Import the users from CVS
+    // Import the users from CVS
     if ($importUsers) {
         $contents = file_get_contents($_FILES['cvsUserFile']['tmp_name']);
         if (strlen($contents) > 0) {
@@ -470,6 +470,6 @@ if ($session_OK) {
     }
     $xml .= '</cdash>';
 
-// Now doing the xslt transition
+    // Now doing the xslt transition
     generate_XSLT($xml, 'manageProjectRoles');
 }

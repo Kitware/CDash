@@ -36,6 +36,6 @@ if ($session_OK) {
     $xml .= '<backurl>user.php</backurl>';
     $xml .= '</cdash>';
 
-// Now doing the xslt transition
+    // Now doing the xslt transition
     generate_XSLT($xml, 'manageBackup');
 }

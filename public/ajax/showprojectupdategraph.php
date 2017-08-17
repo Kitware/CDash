@@ -45,8 +45,7 @@ $files = pdo_query('SELECT d.date,count(df.dailyupdateid) FROM dailyupdate as d
         <?php
         $i = 0;
         while ($files_array = pdo_fetch_array($files)) {
-            $t = strtotime($files_array[0]) * 1000; //flot expects milliseconds
-        ?>
+            $t = strtotime($files_array[0]) * 1000; //flot expects milliseconds ?>
         d1.push([<?php echo $t; ?>,<?php echo $files_array[1]; ?>]);
         dates[<?php echo $t; ?>] = '<?php echo $files_array[0]; ?>';
         <?php

@@ -361,21 +361,21 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
         $build->GetIdFromName($this->SubProjectName);
         $build->RemoveIfDone();
 
-      // If the build doesn't exist we add it
-      if ($build->Id == 0) {
-          $build->Append = $this->Append;
-          $build->InsertErrors = false;
-          add_build($build, $this->scheduleid);
-      } else {
-          // Otherwise make sure that the build is up-to-date.
-          $build->UpdateBuild($build->Id, -1, -1);
+        // If the build doesn't exist we add it
+        if ($build->Id == 0) {
+            $build->Append = $this->Append;
+            $build->InsertErrors = false;
+            add_build($build, $this->scheduleid);
+        } else {
+            // Otherwise make sure that the build is up-to-date.
+            $build->UpdateBuild($build->Id, -1, -1);
 
-          // If the build already exists factor the number of tests
-          // that have already been run into our running total.
-          $this->NumberTestsFailed[$this->SubProjectName] += $build->GetNumberOfFailedTests();
-          $this->NumberTestsNotRun[$this->SubProjectName] += $build->GetNumberOfNotRunTests();
-          $this->NumberTestsPassed[$this->SubProjectName] += $build->GetNumberOfPassedTests();
-      }
+            // If the build already exists factor the number of tests
+            // that have already been run into our running total.
+            $this->NumberTestsFailed[$this->SubProjectName] += $build->GetNumberOfFailedTests();
+            $this->NumberTestsNotRun[$this->SubProjectName] += $build->GetNumberOfNotRunTests();
+            $this->NumberTestsPassed[$this->SubProjectName] += $build->GetNumberOfPassedTests();
+        }
 
         $this->Builds[$this->SubProjectName] = $build;
     }
