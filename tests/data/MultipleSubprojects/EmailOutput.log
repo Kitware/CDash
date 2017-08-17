@@ -1,5 +1,5 @@
-[<NA> <NA>] cdash.DEBUG: simpletest@localhost {"function":"TESTING: EMAIL","build_id":"<NA>","pid":<NA>}
-[<NA> <NA>] cdash.DEBUG: FAILED (c=1): SubProjectExample/MyExperimentalFeature - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","build_id":"<NA>","pid":<NA>}
+[<NA> <NA>] cdash.DEBUG: simpletest@localhost {"function":"TESTING: EMAIL","build_id":"<NA>","pid":<NA>} 
+[<NA> <NA>] cdash.DEBUG: FAILED (c=1): SubProjectExample/MyExperimentalFeature - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","build_id":"<NA>","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: A submission to CDash for the project SubProjectExample has configure errors.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
@@ -37,10 +37,10 @@ Fltk resources not found, GUI application will not respond to mouse events
 Error: example error #1
 
 
--CDash on
- {"function":"TESTING: EMAILBODY","build_id":"<NA>","pid":<NA>}
-[<NA> <NA>] cdash.DEBUG: nox-noemail@noemail {"function":"TESTING: EMAIL","build_id":"<NA>","pid":<NA>}
-[<NA> <NA>] cdash.DEBUG: FAILED (c=1): SubProjectExample/MyExperimentalFeature - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","build_id":"<NA>","pid":<NA>}
+-CDash on 
+ {"function":"TESTING: EMAILBODY","build_id":"<NA>","pid":<NA>} 
+[<NA> <NA>] cdash.DEBUG: nox-noemail@noemail {"function":"TESTING: EMAIL","build_id":"<NA>","pid":<NA>} 
+[<NA> <NA>] cdash.DEBUG: FAILED (c=1): SubProjectExample/MyExperimentalFeature - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","build_id":"<NA>","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: A submission to CDash for the project SubProjectExample has configure errors.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
@@ -78,10 +78,10 @@ Fltk resources not found, GUI application will not respond to mouse events
 Error: example error #1
 
 
--CDash on
- {"function":"TESTING: EMAILBODY","build_id":"<NA>","pid":<NA>}
-[<NA> <NA>] cdash.DEBUG: optika-noemail@noemail {"function":"TESTING: EMAIL","build_id":"<NA>","pid":<NA>}
-[<NA> <NA>] cdash.DEBUG: FAILED (c=1): SubProjectExample/MyThirdPartyDependency - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","build_id":"<NA>","pid":<NA>}
+-CDash on 
+ {"function":"TESTING: EMAILBODY","build_id":"<NA>","pid":<NA>} 
+[<NA> <NA>] cdash.DEBUG: optika-noemail@noemail {"function":"TESTING: EMAIL","build_id":"<NA>","pid":<NA>} 
+[<NA> <NA>] cdash.DEBUG: FAILED (c=1): SubProjectExample/MyThirdPartyDependency - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","build_id":"<NA>","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: A submission to CDash for the project SubProjectExample has configure errors.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
@@ -119,10 +119,10 @@ Fltk resources not found, GUI application will not respond to mouse events
 Error: example error #1
 
 
--CDash on
- {"function":"TESTING: EMAILBODY","build_id":"<NA>","pid":<NA>}
-[<NA> <NA>] cdash.DEBUG: simpletest@localhost {"function":"TESTING: EMAIL","pid":<NA>}
-[<NA> <NA>] cdash.DEBUG: FAILED (w=1): SubProjectExample/MyExperimentalFeature - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","pid":<NA>}
+-CDash on 
+ {"function":"TESTING: EMAILBODY","build_id":"<NA>","pid":<NA>} 
+[<NA> <NA>] cdash.DEBUG: simpletest@localhost {"function":"TESTING: EMAIL","pid":<NA>} 
+[<NA> <NA>] cdash.DEBUG: FAILED (w=1): SubProjectExample/MyExperimentalFeature - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: A submission to CDash for the project SubProjectExample has build warnings.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
@@ -146,10 +146,10 @@ MyExperimentalFeature/experimental.cxx (http://localhost/CDash/viewBuildError.ph
 
 
 
--CDash on
- {"function":"TESTING: EMAILBODY","pid":<NA>}
-[<NA> <NA>] cdash.DEBUG: simpletest@localhost {"function":"TESTING: EMAIL","pid":<NA>}
-[<NA> <NA>] cdash.DEBUG: FAILED (w=1): SubProjectExample/MyProductionCode - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","pid":<NA>}
+-CDash on 
+ {"function":"TESTING: EMAILBODY","pid":<NA>} 
+[<NA> <NA>] cdash.DEBUG: simpletest@localhost {"function":"TESTING: EMAIL","pid":<NA>} 
+[<NA> <NA>] cdash.DEBUG: FAILED (w=1): SubProjectExample/MyProductionCode - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: A submission to CDash for the project SubProjectExample has build warnings.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
@@ -173,10 +173,10 @@ MyProductionCode/production.cxx (http://localhost/CDash/viewBuildError.php?type=
 
 
 
--CDash on
- {"function":"TESTING: EMAILBODY","pid":<NA>}
-[<NA> <NA>] cdash.DEBUG: simpletest@localhost {"function":"TESTING: EMAIL","pid":<NA>}
-[<NA> <NA>] cdash.DEBUG: FAILED (b=2): SubProjectExample/MyThirdPartyDependency - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","pid":<NA>}
+-CDash on 
+ {"function":"TESTING: EMAILBODY","pid":<NA>} 
+[<NA> <NA>] cdash.DEBUG: simpletest@localhost {"function":"TESTING: EMAIL","pid":<NA>} 
+[<NA> <NA>] cdash.DEBUG: FAILED (b=2): SubProjectExample/MyThirdPartyDependency - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: A submission to CDash for the project SubProjectExample has build errors.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
@@ -207,10 +207,10 @@ c++: fatal error: no input files
 compilation terminated.
 
 
--CDash on
- {"function":"TESTING: EMAILBODY","pid":<NA>}
-[<NA> <NA>] cdash.DEBUG: optika-noemail@noemail {"function":"TESTING: EMAIL","pid":<NA>}
-[<NA> <NA>] cdash.DEBUG: FAILED (b=2): SubProjectExample/MyThirdPartyDependency - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","pid":<NA>}
+-CDash on 
+ {"function":"TESTING: EMAILBODY","pid":<NA>} 
+[<NA> <NA>] cdash.DEBUG: optika-noemail@noemail {"function":"TESTING: EMAIL","pid":<NA>} 
+[<NA> <NA>] cdash.DEBUG: FAILED (b=2): SubProjectExample/MyThirdPartyDependency - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: A submission to CDash for the project SubProjectExample has build errors.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
@@ -241,10 +241,10 @@ c++: fatal error: no input files
 compilation terminated.
 
 
--CDash on
- {"function":"TESTING: EMAILBODY","pid":<NA>}
-[<NA> <NA>] cdash.DEBUG: simpletest@localhost {"function":"TESTING: EMAIL","build_id":"<NA>","pid":<NA>}
-[<NA> <NA>] cdash.DEBUG: FAILED (d=1): SubProjectExample/MyExperimentalFeature - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","build_id":"<NA>","pid":<NA>}
+-CDash on 
+ {"function":"TESTING: EMAILBODY","pid":<NA>} 
+[<NA> <NA>] cdash.DEBUG: simpletest@localhost {"function":"TESTING: EMAIL","build_id":"<NA>","pid":<NA>} 
+[<NA> <NA>] cdash.DEBUG: FAILED (d=1): SubProjectExample/MyExperimentalFeature - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","build_id":"<NA>","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: A submission to CDash for the project SubProjectExample has failing dynamic analysis tests.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
@@ -263,32 +263,10 @@ Dynamic analysis tests failing: 1
 experimentalFail1 (http://localhost/CDash/viewDynamicAnalysisFile.php?id=<NA>)
 
 
--CDash on
- {"function":"TESTING: EMAILBODY","build_id":"<NA>","pid":<NA>}
-[<NA> <NA>] cdash.DEBUG: simpletest@localhost {"function":"TESTING: EMAIL","build_id":"<NA>","pid":<NA>}
-[<NA> <NA>] cdash.DEBUG: FAILED (t=1): SubProjectExample/MyThirdPartyDependency - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","build_id":"<NA>","pid":<NA>}
-[<NA> <NA>] cdash.DEBUG: A submission to CDash for the project SubProjectExample has failing tests.
-You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
-
-Details on the submission can be found at http://localhost/CDash/buildSummary.php?buildid=<NA>
-
-Project: SubProjectExample
-SubProject: MyThirdPartyDependency
-Site: livonia-linuxq
-Build Name: CTestTest-Linux-c++-Subprojects
-Build Time: 2016-07-28T15:32:14 EDT
-Type: Experimental
-Tests not passing: 1
-
-
-*Tests not run*
-thirdparty |  | (http://localhost/CDash/testDetails.php?test=<NA>&build=<NA>)
-
-
--CDash on
- {"function":"TESTING: EMAILBODY","build_id":"<NA>","pid":<NA>}
-[<NA> <NA>] cdash.DEBUG: optika-noemail@noemail {"function":"TESTING: EMAIL","build_id":"<NA>","pid":<NA>}
-[<NA> <NA>] cdash.DEBUG: FAILED (t=1): SubProjectExample/MyThirdPartyDependency - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","build_id":"<NA>","pid":<NA>}
+-CDash on 
+ {"function":"TESTING: EMAILBODY","build_id":"<NA>","pid":<NA>} 
+[<NA> <NA>] cdash.DEBUG: simpletest@localhost {"function":"TESTING: EMAIL","build_id":"<NA>","pid":<NA>} 
+[<NA> <NA>] cdash.DEBUG: FAILED (t=1): SubProjectExample/MyThirdPartyDependency - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","build_id":"<NA>","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: A submission to CDash for the project SubProjectExample has failing tests.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
@@ -307,10 +285,32 @@ Tests not passing: 1
 thirdparty |  | (http://localhost/CDash/testDetails.php?test=<NA>&build=<NA>)
 
 
--CDash on
- {"function":"TESTING: EMAILBODY","build_id":"<NA>","pid":<NA>}
-[<NA> <NA>] cdash.DEBUG: simpletest@localhost {"function":"TESTING: EMAIL","build_id":"<NA>","pid":<NA>}
-[<NA> <NA>] cdash.DEBUG: FAILED (t=5): SubProjectExample/MyExperimentalFeature - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","build_id":"<NA>","pid":<NA>}
+-CDash on 
+ {"function":"TESTING: EMAILBODY","build_id":"<NA>","pid":<NA>} 
+[<NA> <NA>] cdash.DEBUG: optika-noemail@noemail {"function":"TESTING: EMAIL","build_id":"<NA>","pid":<NA>} 
+[<NA> <NA>] cdash.DEBUG: FAILED (t=1): SubProjectExample/MyThirdPartyDependency - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","build_id":"<NA>","pid":<NA>} 
+[<NA> <NA>] cdash.DEBUG: A submission to CDash for the project SubProjectExample has failing tests.
+You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
+
+Details on the submission can be found at http://localhost/CDash/buildSummary.php?buildid=<NA>
+
+Project: SubProjectExample
+SubProject: MyThirdPartyDependency
+Site: livonia-linux
+Build Name: CTestTest-Linux-c++-Subprojects
+Build Time: 2016-07-28T15:32:14 EDT
+Type: Experimental
+Tests not passing: 1
+
+
+*Tests not run*
+thirdparty |  | (http://localhost/CDash/testDetails.php?test=<NA>&build=<NA>)
+
+
+-CDash on 
+ {"function":"TESTING: EMAILBODY","build_id":"<NA>","pid":<NA>} 
+[<NA> <NA>] cdash.DEBUG: simpletest@localhost {"function":"TESTING: EMAIL","build_id":"<NA>","pid":<NA>} 
+[<NA> <NA>] cdash.DEBUG: FAILED (t=5): SubProjectExample/MyExperimentalFeature - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","build_id":"<NA>","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: A submission to CDash for the project SubProjectExample has failing tests.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
@@ -333,10 +333,10 @@ experimentalFail4 | Completed (Failed) | (http://localhost/CDash/testDetails.php
 experimentalFail5 | Completed (Failed) | (http://localhost/CDash/testDetails.php?test=<NA>&build=<NA>)
 
 
--CDash on
- {"function":"TESTING: EMAILBODY","build_id":"<NA>","pid":<NA>}
-[<NA> <NA>] cdash.DEBUG: nox-noemail@noemail {"function":"TESTING: EMAIL","build_id":"<NA>","pid":<NA>}
-[<NA> <NA>] cdash.DEBUG: FAILED (t=5): SubProjectExample/MyExperimentalFeature - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","build_id":"<NA>","pid":<NA>}
+-CDash on 
+ {"function":"TESTING: EMAILBODY","build_id":"<NA>","pid":<NA>} 
+[<NA> <NA>] cdash.DEBUG: nox-noemail@noemail {"function":"TESTING: EMAIL","build_id":"<NA>","pid":<NA>} 
+[<NA> <NA>] cdash.DEBUG: FAILED (t=5): SubProjectExample/MyExperimentalFeature - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","build_id":"<NA>","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: A submission to CDash for the project SubProjectExample has failing tests.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
@@ -359,6 +359,6 @@ experimentalFail4 | Completed (Failed) | (http://localhost/CDash/testDetails.php
 experimentalFail5 | Completed (Failed) | (http://localhost/CDash/testDetails.php?test=<NA>&build=<NA>)
 
 
--CDash on
- {"function":"TESTING: EMAILBODY","build_id":"<NA>","pid":<NA>}
+-CDash on 
+ {"function":"TESTING: EMAILBODY","build_id":"<NA>","pid":<NA>} 
 
