@@ -21,7 +21,7 @@ jobs:
       - run: sudo /etc/init.d/apache2 restart
       - run: sudo ln -s /home/kitware/cdash/public /var/www/html/cdash
       - run: chmod a+rwx backup log public/rss public/upload
-      - run: composer self-update --no-interaction
+      - run: sudo composer self-update --no-interaction
       - run: composer install --no-interaction --no-progress --prefer-dist
       - run: npm install
       - run: cp tests/circle/protractor.config.json node_modules/protractor/config.json
