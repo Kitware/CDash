@@ -34,7 +34,7 @@ CDash.filter('filter_builds', function() {
   };
 })
 
-.controller('ManageBuildGroupController', function ManageBuildGroupController($scope, $http, apiLoader, $uibModal) {
+.controller('ManageBuildGroupController', function ManageBuildGroupController($scope, $http, apiLoader, modalSvc) {
   apiLoader.loadPageData($scope, 'api/v1/manageBuildGroup.php');
   $scope.finishSetup = function() {
     // Sort BuildGroups by position.
@@ -157,25 +157,7 @@ CDash.filter('filter_builds', function() {
 
   /** displays confirmation modal **/
   $scope.showModal = function(buildgroupid) {
-    $modal = $uibModal.open({
-      animation: true,
-      size: 'sm',
-      backdrop: true,
-      templateUrl: 'modal-template',
-      controller: function() {
-        var $ctrl = this;
-        $ctrl.ok = function() {
-          "use strict";
-          $scope.deleteBuildGroup(buildgroupid)
-          $modal.close();
-        };
-        $ctrl.cancel = function () {
-          "use strict";
-          $modal.close();
-        }
-      },
-      controllerAs: '$ctrl',
-    });
+    modalSvc.showModal(buildgroupid, $scope.deleteBuildGroup, 'modal-template');
   };
 
   /** move builds to a different group */
