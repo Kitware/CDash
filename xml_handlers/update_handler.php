@@ -15,6 +15,7 @@
 =========================================================================*/
 
 require_once 'xml_handlers/abstract_handler.php';
+require_once 'xml_handlers/actionable_build_interface.php';
 require_once 'models/build.php';
 require_once 'models/site.php';
 require_once 'models/buildupdate.php';
@@ -22,7 +23,7 @@ require_once 'models/feed.php';
 
 /** Write the updates in one block
  *  In case of a lot of updates this might take up some memory */
-class UpdateHandler extends AbstractHandler
+class UpdateHandler extends AbstractHandler implements ActionableBuildInterface
 {
     private $StartTimeStamp;
     private $EndTimeStamp;
@@ -217,5 +218,13 @@ class UpdateHandler extends AbstractHandler
             }
             $this->UpdateFile->PriorRevision = $data;
         }
+    }
+
+    /**
+     * @return Build[]
+     */
+    public function getActionableBuilds()
+    {
+        return [$this->Build];
     }
 }

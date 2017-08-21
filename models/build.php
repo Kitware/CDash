@@ -1923,7 +1923,7 @@ class Build
                 ('-1', '$this->SiteId', '$this->ProjectId', '$this->Stamp',
                  '$this->Name', '$this->Type', '$this->Generator',
                  '$this->StartTime', '$this->EndTime', '$this->SubmitTime',
-                 $numErrors, $numWarnings, '$uuid', '$this->PullRequest')";
+                 0, 0, '$uuid', '$this->PullRequest')";
 
             if (!pdo_query($query)) {
                 // Check if somebody else beat us to creating this parent build.

@@ -31,7 +31,7 @@ if ($session_OK) {
     pdo_select_db("$CDASH_DB_NAME", $db);
 
     $userid = $_SESSION['cdash']['loginid'];
-// Checks
+    // Checks
     if (!isset($userid) || !is_numeric($userid)) {
         echo 'Not a valid userid!';
         return;
@@ -55,7 +55,7 @@ if ($session_OK) {
         $buildid = pdo_real_escape_numeric($_GET['buildid']);
     }
 
-// If the projectid is not set and there is only one project we go directly to the page
+    // If the projectid is not set and there is only one project we go directly to the page
     if (isset($edit) && !isset($projectid)) {
         $projectids = $Project->GetIds();
         if (count($projectids) == 1) {
@@ -89,14 +89,14 @@ if ($session_OK) {
         $xml .= '</availableproject>';
     }
 
-// Display the current builds who have coverage for the past 7 days
+    // Display the current builds who have coverage for the past 7 days
     $currentUTCTime = gmdate(FMT_DATETIME);
     $beginUTCTime = gmdate(FMT_DATETIME, time() - 3600 * 7 * 24); // 7 days
 
     $CoverageFile2User = new CoverageFile2User();
     $CoverageFile2User->ProjectId = $projectid;
 
-// Change the priority of selected files
+    // Change the priority of selected files
     if (isset($_POST['changePrioritySelected'])) {
         foreach ($_POST['selectionFiles'] as $key => $value) {
             $CoverageFile2User->FullPath = htmlspecialchars(pdo_real_escape_string($value));
@@ -104,7 +104,7 @@ if ($session_OK) {
         }
     }
 
-// Remove the selected authors
+    // Remove the selected authors
     if (isset($_POST['removeAuthorsSelected'])) {
         foreach ($_POST['selectionFiles'] as $key => $value) {
             $CoverageFile2User->FullPath = htmlspecialchars(pdo_real_escape_string($value));
@@ -112,7 +112,7 @@ if ($session_OK) {
         }
     }
 
-// Add the selected authors
+    // Add the selected authors
     if (isset($_POST['addAuthorsSelected'])) {
         foreach ($_POST['selectionFiles'] as $key => $value) {
             $CoverageFile2User->UserId = pdo_real_escape_numeric($_POST['userSelectedSelection']);
@@ -121,31 +121,31 @@ if ($session_OK) {
         }
     }
 
-// Add an author manually
+    // Add an author manually
     if (isset($_POST['addAuthor'])) {
         $CoverageFile2User->UserId = pdo_real_escape_numeric($_POST['userSelection']);
         $CoverageFile2User->FullPath = htmlspecialchars(pdo_real_escape_string($_POST['fullpath']));
         $CoverageFile2User->Insert();
     }
 
-// Remove an author manually
+    // Remove an author manually
     if (isset($_GET['removefileid'])) {
         $CoverageFile2User->UserId = pdo_real_escape_numeric($_GET['removeuserid']);
         $CoverageFile2User->FileId = pdo_real_escape_numeric($_GET['removefileid']);
         $CoverageFile2User->Remove();
     }
 
-// Assign last author
+    // Assign last author
     if (isset($_POST['assignLastAuthor'])) {
         $CoverageFile2User->AssignLastAuthor($buildid, $beginUTCTime, $currentUTCTime);
     }
 
-// Assign all authors
+    // Assign all authors
     if (isset($_POST['assignAllAuthors'])) {
         $CoverageFile2User->AssignAllAuthors($buildid, $beginUTCTime, $currentUTCTime);
     }
 
-// Upload file
+    // Upload file
     if (isset($_POST['uploadAuthorsFile'])) {
         $contents = file_get_contents($_FILES['authorsFile']['tmp_name']);
         if (strlen($contents) > 0) {
@@ -195,7 +195,7 @@ if ($session_OK) {
         }
     }
 
-// Send an email
+    // Send an email
     if (isset($_POST['sendEmail'])) {
         $coverageThreshold = $Project->GetCoverageThreshold();
 
@@ -258,7 +258,7 @@ if ($session_OK) {
         }
     }
 
-// If we change the priority
+    // If we change the priority
     if (isset($_POST['prioritySelection'])) {
         $CoverageFile2User = new CoverageFile2User();
         $CoverageFile2User->ProjectId = $projectid;
@@ -268,7 +268,7 @@ if ($session_OK) {
 
     /* We start generating the XML here */
 
-// Find the recent builds for this project
+    // Find the recent builds for this project
     if ($projectid > 0) {
         $xml .= '<project>';
         $xml .= add_XML_value('id', $Project->Id);
@@ -358,6 +358,6 @@ if ($session_OK) {
     }
     $xml .= '</cdash>';
 
-// Now doing the xslt transition
+    // Now doing the xslt transition
     generate_XSLT($xml, 'manageCoverage');
 }

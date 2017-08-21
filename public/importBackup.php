@@ -102,7 +102,7 @@ if ($session_OK) {
         $xml .= add_XML_value('alert', $alert);
     }
 
-// Now doing the xslt transition
+    // Now doing the xslt transition
     $xml .= '</cdash>';
     generate_XSLT($xml, 'importBackup');
 }

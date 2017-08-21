@@ -12,8 +12,7 @@ class TruncateOutputTestCase extends KWWebTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->ConfigLine = '$CDASH_LARGE_TEXT_LIMIT = \'44\';
-';
+        $this->ConfigLine = "\$CDASH_LARGE_TEXT_LIMIT = '44';\n";
         $this->Expected = "The beginning survives\n...\nCDash truncated output because it exceeded 44 characters.\n...\nThis part is preserved\n";
         $this->BuildId = 0;
     }

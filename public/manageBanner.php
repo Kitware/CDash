@@ -28,7 +28,7 @@ if ($session_OK) {
     pdo_select_db("$CDASH_DB_NAME", $db);
 
     $userid = $_SESSION['cdash']['loginid'];
-// Checks
+    // Checks
     if (!isset($userid) || !is_numeric($userid)) {
         echo 'Not a valid userid!';
         return;
@@ -51,7 +51,7 @@ if ($session_OK) {
 
     $Project = new Project;
 
-// If the projectid is not set and there is only one project we go directly to the page
+    // If the projectid is not set and there is only one project we go directly to the page
     if (isset($edit) && !isset($projectid)) {
         $projectids = $Project->GetIds();
         if (count($projectids) == 1) {
@@ -70,7 +70,7 @@ if ($session_OK) {
         return;
     }
 
-// If user is admin then we can add a banner for all projects
+    // If user is admin then we can add a banner for all projects
     if ($User->IsAdmin() == true) {
         $xml .= '<availableproject>';
         $xml .= add_XML_value('id', '0');
@@ -99,14 +99,14 @@ if ($session_OK) {
     $Banner = new Banner();
     $Banner->SetProjectId($projectid);
 
-// If submit has been pressed
+    // If submit has been pressed
     @$updateMessage = $_POST['updateMessage'];
     if (isset($updateMessage)) {
         $Banner->SetText(htmlspecialchars(pdo_real_escape_string($_POST['message'])));
     }
 
     /* We start generating the XML here */
-// List the available project
+    // List the available project
     if ($projectid >= 0) {
         $xml .= '<project>';
         $xml .= add_XML_value('id', $Project->Id);
@@ -122,6 +122,6 @@ if ($session_OK) {
 
     $xml .= '</cdash>';
 
-// Now doing the xslt transition
+    // Now doing the xslt transition
     generate_XSLT($xml, 'manageBanner');
 }

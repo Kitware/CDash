@@ -25,7 +25,7 @@ if ($session_OK) {
     $projectid = pdo_real_escape_numeric($_REQUEST['projectid']);
     checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid);
 
-// Checks
+    // Checks
     if (!isset($projectid) || !is_numeric($projectid)) {
         echo 'Not a valid projectid!';
         return;
@@ -46,7 +46,7 @@ if ($session_OK) {
     $id = $_POST['id'];
     $name = $_POST['name'];
 
-// Start operation if it is submitted
+    // Start operation if it is submitted
     if ($submit == 'Save') {
         if ($nameN) {
             pdo_query("INSERT INTO measurement (projectid,name,testpage,summarypage) VALUES ('$projectid','$nameN','$showTN','$showSN')"); // only write a new entry if new field is filled
@@ -92,7 +92,7 @@ if ($session_OK) {
         $xml .= '</project>';
     }
 
-// Menu
+    // Menu
     $xml .= '<menu>';
 
     $nightlytime = get_project_property($projectname, 'nightlytime');
@@ -111,7 +111,7 @@ if ($session_OK) {
         $xml .= '</user>';
     }
 
-//get any measurements associated with this test
+    //get any measurements associated with this test
     $xml .= '<measurements>';
     $query = "SELECT id,name,testpage,summarypage FROM measurement WHERE projectid='$projectid' ORDER BY name ASC";
     $result = pdo_query($query);
@@ -126,6 +126,6 @@ if ($session_OK) {
     $xml .= '</measurements>';
     $xml .= '</cdash>';
 
-// Now doing the xslt transition
+    // Now doing the xslt transition
     generate_XSLT($xml, 'manageMeasurements');
 }

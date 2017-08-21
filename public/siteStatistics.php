@@ -84,6 +84,6 @@ if ($session_OK) {
 
     $xml .= '</cdash>';
 
-// Now doing the xslt transition
+    // Now doing the xslt transition
     generate_XSLT($xml, 'siteStatistics');
 }

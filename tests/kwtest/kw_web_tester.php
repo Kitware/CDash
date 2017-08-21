@@ -515,11 +515,18 @@ class KWWebTestCase extends WebTestCase
 
     public function removeLineFromConfig($line_to_remove)
     {
+        if (empty($line_to_remove)) {
+            return;
+        }
+
         $contents = file_get_contents($this->configfilename);
         $handle = fopen($this->configfilename, 'w');
         $lines = explode("\n", $contents);
         foreach ($lines as $line) {
-            if (strpos($line, $line_to_remove) !== false) {
+            if (empty($line)) {
+                continue;
+            }
+            if (strpos($line_to_remove, $line) !== false) {
                 continue;
             } elseif ($line != '') {
                 fwrite($handle, "$line\n");
