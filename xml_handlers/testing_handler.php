@@ -15,6 +15,7 @@
 =========================================================================*/
 
 require_once 'xml_handlers/abstract_handler.php';
+require_once 'xml_handlers/actionable_build_interface.php';
 require_once 'models/build.php';
 require_once 'models/label.php';
 require_once 'models/site.php';
@@ -22,7 +23,7 @@ require_once 'models/test.php';
 require_once 'models/image.php';
 require_once 'models/feed.php';
 
-class TestingHandler extends AbstractHandler
+class TestingHandler extends AbstractHandler implements ActionableBuildInterface
 {
     private $StartTimeStamp;
     private $EndTimeStamp;
@@ -360,22 +361,30 @@ class TestingHandler extends AbstractHandler
         $build->GetIdFromName($this->SubProjectName);
         $build->RemoveIfDone();
 
-      // If the build doesn't exist we add it
-      if ($build->Id == 0) {
-          $build->Append = $this->Append;
-          $build->InsertErrors = false;
-          add_build($build, $this->scheduleid);
-      } else {
-          // Otherwise make sure that the build is up-to-date.
-          $build->UpdateBuild($build->Id, -1, -1);
+        // If the build doesn't exist we add it
+        if ($build->Id == 0) {
+            $build->Append = $this->Append;
+            $build->InsertErrors = false;
+            add_build($build, $this->scheduleid);
+        } else {
+            // Otherwise make sure that the build is up-to-date.
+            $build->UpdateBuild($build->Id, -1, -1);
 
-          // If the build already exists factor the number of tests
-          // that have already been run into our running total.
-          $this->NumberTestsFailed[$this->SubProjectName] += $build->GetNumberOfFailedTests();
-          $this->NumberTestsNotRun[$this->SubProjectName] += $build->GetNumberOfNotRunTests();
-          $this->NumberTestsPassed[$this->SubProjectName] += $build->GetNumberOfPassedTests();
-      }
+            // If the build already exists factor the number of tests
+            // that have already been run into our running total.
+            $this->NumberTestsFailed[$this->SubProjectName] += $build->GetNumberOfFailedTests();
+            $this->NumberTestsNotRun[$this->SubProjectName] += $build->GetNumberOfNotRunTests();
+            $this->NumberTestsPassed[$this->SubProjectName] += $build->GetNumberOfPassedTests();
+        }
 
         $this->Builds[$this->SubProjectName] = $build;
+    }
+
+    /**
+     * @return Build[]
+     */
+    public function getActionableBuilds()
+    {
+        return $this->Builds;
     }
 }

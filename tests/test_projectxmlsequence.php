@@ -42,14 +42,14 @@ class ProjectXmlSequenceTestCase extends KWWebTestCase
 
         // Preserve the cdash.log for post-test-inspection:
         //
-//    global $cdashpath;
-//    $logcopy = $cdashpath."/backup/cdash.testProjectXmlSequence.log";
-//    echo "copying log file to [$logcopy]\n";
-//    if(file_exists($logcopy))
-//      {
-//      cdash_testsuite_unlink($logcopy);
-//      }
-//    copy($this->logfilename, $logcopy);
+        //    global $cdashpath;
+        //    $logcopy = $cdashpath."/backup/cdash.testProjectXmlSequence.log";
+        //    echo "copying log file to [$logcopy]\n";
+        //    if(file_exists($logcopy))
+        //      {
+        //      cdash_testsuite_unlink($logcopy);
+        //      }
+        //    copy($this->logfilename, $logcopy);
 
         $this->deleteLog($this->logfilename);
     }

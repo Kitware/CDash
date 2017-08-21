@@ -53,8 +53,7 @@ $previousbuilds = pdo_query("SELECT b.id,b.starttime,bu.nfiles FROM build as b,b
         <?php
         $i = 0;
         while ($build_array = pdo_fetch_array($previousbuilds)) {
-            $t = strtotime($build_array['starttime']) * 1000; //flot expects milliseconds
-        ?>
+            $t = strtotime($build_array['starttime']) * 1000; //flot expects milliseconds?>
         d1.push([<?php echo $t; ?>,<?php echo $build_array['nfiles']; ?>]);
         buildids[<?php echo $t; ?>] = <?php echo $build_array['id']; ?>;
         <?php
