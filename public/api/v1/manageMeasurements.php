@@ -11,10 +11,9 @@
   This software is distributed WITHOUT ANY WARRANTY; without even
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
-  Copyright (c) 2012 Volkan Gezer <volkangezer@gmail.com>
 =========================================================================*/
 
-include dirname(__DIR__) . '/config/config.php';
+include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 include 'public/login.php';
 include_once 'include/common.php';
