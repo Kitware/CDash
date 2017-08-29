@@ -23,17 +23,20 @@
           <th>Show Test Summary Page</th>
           <th>Delete</th>
         </tr>
-        <tr ng-repeat="measurement in ::cdash.measurements" class="animate-show">
+        <tr ng-repeat="measurement in cdash.measurements">
           <td align="center">
-            <input type="text" size="25" ng-model="measurement.name" />
+            <input type="text" size="25" ng-model="measurement.name"
+                   ng-change="measurement.dirty = true" />
           </td>
           <td align="center">
             <input type="checkbox" ng-model="measurement.testpage"
-                   ng-true-value="1" ng-false-value="0" />
+                   ng-true-value="1" ng-false-value="0"
+                   ng-change="measurement.dirty = true" />
           </td>
           <td align="center">
             <input type="checkbox" ng-model="measurement.summarypage"
-                    ng-true-value="1" ng-false-value="0" />
+                   ng-true-value="1" ng-false-value="0"
+                   ng-change="measurement.dirty = true" />
           </td>
           <td align="center">
             <span class="glyphicon glyphicon-trash" style="cursor: pointer;"
@@ -43,21 +46,24 @@
         <tr bgcolor="#CADBD9">
           <td align="center">
             <input name="newMeasurement" type="text" id="newMeasurement" size="25"
-                   ng-model="cdash.newMeasurement"/>
+                   ng-model="cdash.newmeasurement.name"/>
           </td>
           <td align="center">
             <input type="checkbox" name="showTestPage" value="1"
-                   ng-model="cdash.showTestPage"/>
+                   ng-true-value="1" ng-false-value="0"
+                   ng-model="cdash.newmeasurement.testpage"/>
           </td>
           <td align="center">
             <input type="checkbox" name="showSummaryPage" value="1"
-                  ng-model="cdash.showSummaryPage"/>
+                   ng-true-value="1" ng-false-value="0"
+                   ng-model="cdash.newmeasurement.summarypage"/>
           </td>
           <td></td>
         </tr>
       </table>
       <div class="center-text">
         <input name='submit' value='Save' type='submit' ng-click="save()"/>
+        <img id="save_complete" src="img/check.gif" style="display: none; height:16px; width=16px; margin-top:9px;" />
       </div>
       <br/>
     </div>

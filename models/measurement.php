@@ -27,6 +27,7 @@ class Measurement
 
     public function __construct()
     {
+        $this->Id = 0;
         $this->ProjectId = 0;
         $this->Name = '';
         $this->TestPage = 0;
@@ -34,38 +35,39 @@ class Measurement
         $this->PDO = get_link_identifier()->getPdo();
     }
 
-    // Save this measurement in the database.
-    public function Insert()
+    // Save this measurement to the database.
+    public function Save()
     {
         if ($this->ProjectId < 1 || !$this->Name) {
             return false;
         }
 
-        $stmt = $this->PDO->prepare(
-            'INSERT INTO measurement
-            (projectid, name, testpage, summarypage)
-            VALUES (:projectid, :name, :testpage, :summarypage)');
-        $stmt->bindValue(':projectid', $this->ProjectId);
-        $stmt->bindValue(':name', $this->Name);
-        $stmt->bindValue(':testpage', $this->TestPage);
-        $stmt->bindValue(':summarypage', $this->SummaryPage);
-        return pdo_execute($stmt);
-    }
-
-    // Update an existing measurement.
-    public function Update()
-    {
-        if ($this->ProjectId < 1 || $this->Id < 1 || !$this->Name) {
-            return false;
+        if ($this->Id) {
+            // Update an existing record.
+            $stmt = $this->PDO->prepare(
+                'UPDATE measurement SET name = :name, testpage = :testpage,
+                        summarypage = :summarypage
+                WHERE id = :id');
+            $stmt->bindValue(':id', $this->Id);
+        } else {
+            // Create a new measurement.
+            $stmt = $this->PDO->prepare(
+                'INSERT INTO measurement
+                (projectid, name, testpage, summarypage)
+                VALUES (:projectid, :name, :testpage, :summarypage)');
+            $stmt->bindValue(':projectid', $this->ProjectId);
         }
 
-        $stmt = $this->PDO->prepare(
-            'UPDATE measurement SET name = :name, testpage = :testpage, summarypage = :summarypage WHERE id = :id');
         $stmt->bindValue(':name', $this->Name);
         $stmt->bindValue(':testpage', $this->TestPage);
         $stmt->bindValue(':summarypage', $this->SummaryPage);
-        $stmt->bindValue(':id', $this->Id);
-        return pdo_execute($stmt);
+        if (!pdo_execute($stmt)) {
+            return false;
+        }
+        if (!$this->Id) {
+            $this->Id = pdo_insert_id('measurement');
+        }
+        return true;
     }
 
     // Delete an existing measurement.
