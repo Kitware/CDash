@@ -10,16 +10,9 @@
     <title ng-bind="title">CDash : Manage Measurements</title>
   </head>
 
-<body bgcolor="#ffffff">
-
-<xsl:choose>
-<xsl:when test="/cdash/uselocaldirectory=1">
-  <xsl:call-template name="headeradminproject_local"/>
-</xsl:when>
-<xsl:otherwise>
-  <xsl:call-template name="headeradminproject"/>
-</xsl:otherwise>
-</xsl:choose>
+  <body bgcolor="#ffffff" ng-controller="ManageMeasurementsController">
+    <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_@@version.html'"></ng-include>
 
 <form method='POST'>
 <xsl:attribute name="action">manageMeasurements.php?projectid=<xsl:value-of select="cdash/project/id" /></xsl:attribute>
@@ -84,17 +77,10 @@
   </input>
 </form>
 
-<!-- FOOTER -->
-<br/>
-<xsl:choose>
-<xsl:when test="/cdash/uselocaldirectory=1">
-  <xsl:call-template name="footer_local"/>
-</xsl:when>
-<xsl:otherwise>
-  <xsl:call-template name="footer"/>
-</xsl:otherwise>
-</xsl:choose>
-</body>
+      <br/>
+    </div>
+
+    <!-- FOOTER -->
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_@@version.html'"></ng-include>
+  </body>
 </html>
-</xsl:template>
-</xsl:stylesheet>
