@@ -28,6 +28,7 @@ require_once 'models/user.php';
 $start = microtime_float();
 
 // Require administrative access to view this page.
+init_api_request();
 $projectid = pdo_real_escape_numeric($_REQUEST['projectid']);
 if (!can_administrate_project($projectid)) {
     return;
@@ -36,6 +37,36 @@ if (!can_administrate_project($projectid)) {
 $project = new Project();
 $project->Id = $projectid;
 $project->Fill();
+
+// Route based on what type of request this is.
+$method = $_SERVER['REQUEST_METHOD'];
+switch ($method) {
+    case 'DELETE':
+        rest_delete();
+        break;
+    case 'POST':
+        rest_post();
+        break;
+    case 'GET':
+    default:
+        rest_get();
+        break;
+}
+
+/* Handle DELETE requests */
+function rest_delete()
+{
+}
+
+/* Handle POST requests */
+function rest_post()
+{
+}
+
+/* Handle GET requests */
+function rest_get()
+{
+}
 
 if (array_key_exists('submit', $_POST)) {
     $submit = $_POST['submit'];
