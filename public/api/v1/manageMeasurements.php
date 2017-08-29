@@ -25,18 +25,12 @@ require_once 'models/measurement.php';
 require_once 'models/project.php';
 require_once 'models/user.php';
 
-$start = microtime_float();
-
 // Require administrative access to view this page.
 init_api_request();
 $projectid = pdo_real_escape_numeric($_REQUEST['projectid']);
 if (!can_administrate_project($projectid)) {
     return;
 }
-
-$project = new Project();
-$project->Id = $projectid;
-$project->Fill();
 
 // Route based on what type of request this is.
 $method = $_SERVER['REQUEST_METHOD'];
@@ -75,6 +69,41 @@ function rest_post()
 /* Handle GET requests */
 function rest_get()
 {
+    $start = microtime_float();
+    $response = begin_JSON_response();
+
+    global $projectid;
+    $project = new Project();
+    $project->Id = $projectid;
+    $project->Fill();
+
+    get_dashboard_JSON($project->GetName(), null, $response);
+    $response['title'] = "CDash - $project->Name Measurements";
+
+    // Menu
+    $menu_response = [];
+    $menu_response['back'] = 'user.php';
+    $menu_response['noprevious'] =  1;
+    $menu_response['nonext'] = 1;
+    $response['menu'] = $menu_response;
+
+    // Get any measurements associated with this project's tests.
+    $measurements_response = [];
+    $measurement = new Measurement();
+    $measurement->ProjectId = $projectid;
+    foreach ($measurement->GetMeasurementsForProject() as $row) {
+        $measurement_response = [];
+        $measurement_response['id'] = $row['id'];
+        $measurement_response['name'] = $row['name'];
+        $measurement_response['showT'] = $row['testpage'];
+        $measurement_response['showS'] = $row['summarypage'];
+        $measurements_response[] = $measurement_response;
+    }
+    $response['measurements'] = $measurements_response;
+    $end = microtime_float();
+    $response['generationtime'] = round($end - $start, 3);
+
+    echo json_encode(cast_data_for_JSON($response));
 }
 
 if (array_key_exists('submit', $_POST)) {
@@ -123,31 +152,3 @@ if (array_key_exists('submit', $_POST)) {
     }
 }
 
-$response = begin_JSON_response();
-get_dashboard_JSON($project->GetName(), null, $response);
-$response['title'] = "CDash - $project->Name Measurements";
-
-// Menu
-$menu_response = [];
-$menu_response['back'] = 'user.php';
-$menu_response['noprevious'] =  1;
-$menu_response['nonext'] = 1;
-$response['menu'] = $menu_response;
-
-// Get any measurements associated with this project's tests.
-$measurements_response = [];
-$measurement = new Measurement();
-$measurement->ProjectId = $projectid;
-foreach ($measurement->GetMeasurementsForProject() as $row) {
-    $measurement_response = [];
-    $measurement_response['id'] = $row['id'];
-    $measurement_response['name'] = $row['name'];
-    $measurement_response['showT'] = $row['testpage'];
-    $measurement_response['showS'] = $row['summarypage'];
-    $measurements_response[] = $measurement_response;
-}
-$response['measurements'] = $measurements_response;
-$end = microtime_float();
-$response['generationtime'] = round($end - $start, 3);
-
-echo json_encode(cast_data_for_JSON($response));
