@@ -73,54 +73,30 @@ if (array_key_exists('submit', $_POST)) {
     }
 }
 
-
-$xml = begin_XML_for_XSLT();
-$xml .= '<backurl>user.php</backurl>';
-$xml .= "<title>CDash - $project->Name Measurements</title>";
-$xml .= "<menutitle>$project->Name</menutitle>";
-$xml .= '<menusubtitle>Measurements</menusubtitle>';
-
-if ($projectid > 0) {
-    $Project = new Project;
-    $Project->Id = $projectid;
-    $xml .= '<project>';
-    $xml .= add_XML_value('id', $projectid);
-    $xml .= add_XML_value('name', $Project->GetName());
-    $xml .= add_XML_value('name_encoded', urlencode($Project->GetName()));
-
-    $xml .= '</project>';
-}
+$response = begin_JSON_response();
+get_dashboard_JSON($project->GetName(), null, $response);
+$response['title'] = "CDash - $project->Name Measurements";
 
 // Menu
-$xml .= '<menu>';
-$xml .= add_XML_value('noprevious', '1');
-$xml .= add_XML_value('nonext', '1');
-$xml .= '</menu>';
-{
-    $userid = $_SESSION['cdash']['loginid'];
-    $user = new User();
-    $user->Id = $userid;
-    $user->Fill();
-    $xml .= '<user>';
-    $xml .= add_XML_value('id', $userid);
-    $xml .= add_XML_value('admin', $user->Admin);
-    $xml .= '</user>';
-}
+$menu_response = [];
+$menu_response['back'] = 'user.php';
+$menu_response['noprevious'] =  1;
+$menu_response['nonext'] = 1;
+$response['menu'] = $menu_response;
 
 //get any measurements associated with this test
+$measurements_response = [];
 $xml .= '<measurements>';
 $query = "SELECT id,name,testpage,summarypage FROM measurement WHERE projectid='$projectid' ORDER BY name ASC";
 $result = pdo_query($query);
 while ($row = pdo_fetch_array($result)) {
-    $xml .= '<measurement>';
-    $xml .= add_XML_value('id', $row['id']);
-    $xml .= add_XML_value('name', $row['name']);
-    $xml .= add_XML_value('showT', $row['testpage']);
-    $xml .= add_XML_value('showS', $row['summarypage']);
-    $xml .= '</measurement>';
+    $measurement_response = [];
+    $measurement_response['id'] = $row['id'];
+    $measurement_response['name'] = $row['name'];
+    $measurement_response['showT'] = $row['testpage'];
+    $measurement_response['showS'] = $row['summarypage'];
+    $measurements_response[] = $measurement_response;
 }
-$xml .= '</measurements>';
-$xml .= '</cdash>';
+$response['measurements'] = $measurements_response;
 
-// Now doing the xslt transition
-generate_XSLT($xml, 'manageMeasurements');
+echo json_encode(cast_data_for_JSON($response));
