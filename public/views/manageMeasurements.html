@@ -14,68 +14,58 @@
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
     <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_@@version.html'"></ng-include>
 
-<form method='POST'>
-<xsl:attribute name="action">manageMeasurements.php?projectid=<xsl:value-of select="cdash/project/id" /></xsl:attribute>
-
-  <br/>
-<table width="800px" align='center'>
-<tr bgcolor="#CCCCCC"><th>Measurement Name</th><th>Show on Test Page</th><th>Show Test Summary Page</th><th>Delete</th></tr>
-  <xsl:for-each select="/cdash/measurements/measurement">
-     <tr>
-       <td align="center">
-         <input name="name[]" type="text" id="name[]" size="25">
-           <xsl:attribute name="value"><xsl:value-of select="name" /></xsl:attribute>
-         </input>
-         <input type='hidden' name='id[]'>
-       <xsl:attribute name="value"><xsl:value-of select="id" /></xsl:attribute>
-         </input>
-       </td>
-       <td align="center">
-        <input type="checkbox" value="1">
-          <xsl:attribute name="name">showT[<xsl:value-of select="id" />]</xsl:attribute>
-            <xsl:if test="showT=1">
-              <xsl:attribute name="checked"></xsl:attribute>
-            </xsl:if>
-        </input>
-       </td>
-       <td align="center">
-        <input type="checkbox" value="1">
-          <xsl:attribute name="name">showS[<xsl:value-of select="id" />]</xsl:attribute>
-            <xsl:if test="showS=1">
-              <xsl:attribute name="checked"></xsl:attribute>
-            </xsl:if>
-        </input>
-       </td>
-       <td align="center">
-         <input type="checkbox" name="select[]">
-           <xsl:attribute name='value'><xsl:value-of select='id'/></xsl:attribute>
-         </input>
-       </td>
-   </tr>
-   </xsl:for-each>
-   <tr bgcolor="#CADBD9">
-      <td align="center">
-        <input name="nameN" type="text" id="nameN" size="25"/>
-      </td>
-      <td align="center">
-        <input type="checkbox" name="showTN" value="1"/>
-      </td>
-      <td align="center">
-        <input type="checkbox" name="showSN" value="1"/>
-      </td>
-      <td></td>
-   </tr>
-</table>
+    <table width="800px" align='center'>
+    <tr bgcolor="#CCCCCC"><th>Measurement Name</th><th>Show on Test Page</th><th>Show Test Summary Page</th><th>Delete</th></tr>
+      <xsl:for-each select="/cdash/measurements/measurement">
+         <tr>
+           <td align="center">
+             <input name="name[]" type="text" id="name[]" size="25">
+               <xsl:attribute name="value"><xsl:value-of select="name" /></xsl:attribute>
+             </input>
+             <input type='hidden' name='id[]'>
+           <xsl:attribute name="value"><xsl:value-of select="id" /></xsl:attribute>
+             </input>
+           </td>
+           <td align="center">
+            <input type="checkbox" value="1">
+              <xsl:attribute name="name">showT[<xsl:value-of select="id" />]</xsl:attribute>
+                <xsl:if test="showT=1">
+                  <xsl:attribute name="checked"></xsl:attribute>
+                </xsl:if>
+            </input>
+           </td>
+           <td align="center">
+            <input type="checkbox" value="1">
+              <xsl:attribute name="name">showS[<xsl:value-of select="id" />]</xsl:attribute>
+                <xsl:if test="showS=1">
+                  <xsl:attribute name="checked"></xsl:attribute>
+                </xsl:if>
+            </input>
+           </td>
+           <td align="center">
+             <input type="checkbox" name="select[]">
+               <xsl:attribute name='value'><xsl:value-of select='id'/></xsl:attribute>
+             </input>
+           </td>
+       </tr>
+       </xsl:for-each>
+       <tr bgcolor="#CADBD9">
+          <td align="center">
+            <input name="nameN" type="text" id="nameN" size="25"/>
+          </td>
+          <td align="center">
+            <input type="checkbox" name="showTN" value="1"/>
+          </td>
+          <td align="center">
+            <input type="checkbox" name="showSN" value="1"/>
+          </td>
+          <td></td>
+       </tr>
+    </table>
 <center>
   <input name='submit' value='Save' type='submit'/>
   <input name='del' value='Delete Selected' onClick='javascript:return Ask()' type='submit'/>
 </center>
-  <input type='hidden' name='projectid'>
-    <xsl:attribute name="value">
-      <xsl:value-of select="/cdash/project/id" />
-    </xsl:attribute>
-  </input>
-</form>
 
       <br/>
     </div>
