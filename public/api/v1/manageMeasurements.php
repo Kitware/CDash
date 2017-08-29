@@ -24,6 +24,8 @@ require_once 'include/api_common.php';
 require_once 'models/project.php';
 require_once 'models/user.php';
 
+$start = microtime_float();
+
 // Require administrative access to view this page.
 $projectid = pdo_real_escape_numeric($_REQUEST['projectid']);
 if (!can_administrate_project($projectid)) {
@@ -98,5 +100,7 @@ while ($row = pdo_fetch_array($result)) {
     $measurements_response[] = $measurement_response;
 }
 $response['measurements'] = $measurements_response;
+$end = microtime_float();
+$response['generationtime'] = round($end - $start, 3);
 
 echo json_encode(cast_data_for_JSON($response));
