@@ -64,47 +64,40 @@ function rest_delete()
 /* Handle POST requests */
 function rest_post()
 {
-    $submit = $_REQUEST['submit'];
-    $nameN = htmlspecialchars(pdo_real_escape_string($_REQUEST['nameN']));
-    $showTN = htmlspecialchars(pdo_real_escape_string($_REQUEST['showTN']));
-    $showSN = htmlspecialchars(pdo_real_escape_string($_REQUEST['showSN']));
+    if (!array_key_exists('measurements', $_REQUEST)) {
+        return;
+    }
 
-    $id = $_REQUEST['id'];
-    $name = $_REQUEST['name'];
-
-    // Start operation if it is submitted
-    if ($submit == 'Save') {
-        if ($nameN) {
-            // Only write a new entry if new field is filled.
-            $measurement = new Measurement();
-            $measurement->ProjectId = $projectid;
-            $measurement->Name = $nameN;
-            $measurement->TestPage = $showTN;
-            $measurement->SummaryPage = $showSN;
-            $measurement->Insert();
+    global $projectid;
+    $OK = true;
+    $new_ID = null;
+    foreach ($_REQUEST['measurements'] as $measurement_data) {
+        $measurement = new Measurement();
+        $measurement->ProjectId = $projectid;
+        $measurement->Name = $measurement_data['name'];
+        $measurement->TestPage = $measurement_data['testpage'];
+        $measurement->SummaryPage = $measurement_data['summarypage'];
+        $id = $measurement_data['id'];
+        if ($id > 0) {
+            // Update an existing measurement rather than creating a new one.
+            $measurement->Id = $id;
         }
-        $i = 0;
+        if (!$measurement->Save()) {
+            $OK = false;
+        }
+        if ($id < 1) {
+            // Report the ID of the newly created measurement (if any).
+            $new_ID = $measurement->Id;
+        }
+    }
 
-        if (count($_REQUEST['name'])) {
-            foreach ($name as $newName) { // everytime update all test attributes
-                $showT = $_REQUEST['showT'];
-                $showS = $_REQUEST['showS'];
-                if ($showT[$id[$i]] == '') {
-                    $showT[$id[$i]] = 0;
-                }
-                if ($showS[$id[$i]] == '') {
-                    $showS[$id[$i]] = 0;
-                }
-
-                $measurement = new Measurement();
-                $measurement->ProjectId = $projectid;
-                $measurement->Name = $newName;
-                $measurement->TestPage = $showT[$id[$i]];
-                $measurement->SummaryPage = $showS[$id[$i]];
-                $measurement->Update();
-
-                $i++;
-            }
+    if (!$OK) {
+        http_response_code(500);
+    } else {
+        http_response_code(200);
+        if (!is_null($new_ID)) {
+            $response = ['id' => $measurement->Id];
+            echo json_encode($response);
         }
     }
 }
@@ -138,8 +131,8 @@ function rest_get()
         $measurement_response = [];
         $measurement_response['id'] = $row['id'];
         $measurement_response['name'] = $row['name'];
-        $measurement_response['showT'] = $row['testpage'];
-        $measurement_response['showS'] = $row['summarypage'];
+        $measurement_response['testpage'] = $row['testpage'];
+        $measurement_response['summarypage'] = $row['summarypage'];
         $measurements_response[] = $measurement_response;
     }
     $response['measurements'] = $measurements_response;
