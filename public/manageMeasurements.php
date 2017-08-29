@@ -38,42 +38,45 @@ if ($session_OK) {
         $nightlytime = $project_array['nightlytime'];
     }
 
-    $submit = $_POST['submit'];
-    $nameN = htmlspecialchars(pdo_real_escape_string($_POST['nameN']));
-    $showTN = htmlspecialchars(pdo_real_escape_string($_POST['showTN']));
-    $showSN = htmlspecialchars(pdo_real_escape_string($_POST['showSN']));
+    if (array_key_exists('submit', $_POST)) {
+        $submit = $_POST['submit'];
+        $nameN = htmlspecialchars(pdo_real_escape_string($_POST['nameN']));
+        $showTN = htmlspecialchars(pdo_real_escape_string($_POST['showTN']));
+        $showSN = htmlspecialchars(pdo_real_escape_string($_POST['showSN']));
 
-    $id = $_POST['id'];
-    $name = $_POST['name'];
+        $id = $_POST['id'];
+        $name = $_POST['name'];
 
-    // Start operation if it is submitted
-    if ($submit == 'Save') {
-        if ($nameN) {
-            pdo_query("INSERT INTO measurement (projectid,name,testpage,summarypage) VALUES ('$projectid','$nameN','$showTN','$showSN')"); // only write a new entry if new field is filled
+        // Start operation if it is submitted
+        if ($submit == 'Save') {
+            if ($nameN) {
+                pdo_query("INSERT INTO measurement (projectid,name,testpage,summarypage) VALUES ('$projectid','$nameN','$showTN','$showSN')"); // only write a new entry if new field is filled
+            }
+            $i = 0;
+
+            if (count($_POST['name'])) {
+                foreach ($name as $newName) { // everytime update all test attributes
+                    $showT = $_POST['showT'];
+                    $showS = $_POST['showS'];
+                    if ($showT[$id[$i]] == '') {
+                        $showT[$id[$i]] = 0;
+                    }
+                    if ($showS[$id[$i]] == '') {
+                        $showS[$id[$i]] = 0;
+                    }
+                    pdo_query("UPDATE measurement SET name='$newName', testpage='" . $showT[$id[$i]] . "', summarypage='" . $showS[$id[$i]] . "' WHERE id='" . $id[$i] . "'");
+                    $i++;
+                }
+            }
         }
-        $i = 0;
-
-        if (count($_POST['name'])) {
-            foreach ($name as $newName) { // everytime update all test attributes
-                $showT = $_POST['showT'];
-                $showS = $_POST['showS'];
-                if ($showT[$id[$i]] == '') {
-                    $showT[$id[$i]] = 0;
-                }
-                if ($showS[$id[$i]] == '') {
-                    $showS[$id[$i]] = 0;
-                }
-                pdo_query("UPDATE measurement SET name='$newName', testpage='" . $showT[$id[$i]] . "', summarypage='" . $showS[$id[$i]] . "' WHERE id='" . $id[$i] . "'");
-                $i++;
+        $selection = $_POST['select'];
+        if ($_POST['del'] && count($selection) > 0) { // if user chose any named measurement delete them
+            foreach ($selection as $del) {
+                pdo_query("DELETE FROM measurement WHERE id='$del'");
             }
         }
     }
-    $selection = $_POST['select'];
-    if ($_POST['del'] && count($selection) > 0) { // if user chose any named measurement delete them
-        foreach ($selection as $del) {
-            pdo_query("DELETE FROM measurement WHERE id='$del'");
-        }
-    }
+
 
     $xml = begin_XML_for_XSLT();
     $xml .= '<backurl>user.php</backurl>';
@@ -94,15 +97,12 @@ if ($session_OK) {
 
     // Menu
     $xml .= '<menu>';
-
-    $nightlytime = get_project_property($projectname, 'nightlytime');
-    $xml .= add_XML_value('back', 'index.php?project=' . urlencode($projectname) . '&date=' . get_dashboard_date_from_build_starttime($build_array['starttime'], $nightlytime));
-
     $xml .= add_XML_value('noprevious', '1');
     $xml .= add_XML_value('nonext', '1');
     $xml .= '</menu>';
     {
         $userid = $_SESSION['cdash']['loginid'];
+        $user = new User();
         $user->Id = $userid;
         $user->Fill();
         $xml .= '<user>';
