@@ -30,12 +30,9 @@ if (!can_administrate_project($projectid)) {
     return;
 }
 
-$project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
-if (pdo_num_rows($project) > 0) {
-    $project_array = pdo_fetch_array($project);
-    $projectname = $project_array['name'];
-    $nightlytime = $project_array['nightlytime'];
-}
+$project = new Project();
+$project->Id = $projectid;
+$project->Fill();
 
 if (array_key_exists('submit', $_POST)) {
     $submit = $_POST['submit'];
@@ -79,8 +76,8 @@ if (array_key_exists('submit', $_POST)) {
 
 $xml = begin_XML_for_XSLT();
 $xml .= '<backurl>user.php</backurl>';
-$xml .= '<title>CDash - ' . $projectname . ' Measurements</title>';
-$xml .= '<menutitle>' . $projectname . '</menutitle>';
+$xml .= "<title>CDash - $project->Name Measurements</title>";
+$xml .= "<menutitle>$project->Name</menutitle>";
 $xml .= '<menusubtitle>Measurements</menusubtitle>';
 
 if ($projectid > 0) {
