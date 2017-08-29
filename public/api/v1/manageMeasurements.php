@@ -64,6 +64,49 @@ function rest_delete()
 /* Handle POST requests */
 function rest_post()
 {
+    $submit = $_REQUEST['submit'];
+    $nameN = htmlspecialchars(pdo_real_escape_string($_REQUEST['nameN']));
+    $showTN = htmlspecialchars(pdo_real_escape_string($_REQUEST['showTN']));
+    $showSN = htmlspecialchars(pdo_real_escape_string($_REQUEST['showSN']));
+
+    $id = $_REQUEST['id'];
+    $name = $_REQUEST['name'];
+
+    // Start operation if it is submitted
+    if ($submit == 'Save') {
+        if ($nameN) {
+            // Only write a new entry if new field is filled.
+            $measurement = new Measurement();
+            $measurement->ProjectId = $projectid;
+            $measurement->Name = $nameN;
+            $measurement->TestPage = $showTN;
+            $measurement->SummaryPage = $showSN;
+            $measurement->Insert();
+        }
+        $i = 0;
+
+        if (count($_REQUEST['name'])) {
+            foreach ($name as $newName) { // everytime update all test attributes
+                $showT = $_REQUEST['showT'];
+                $showS = $_REQUEST['showS'];
+                if ($showT[$id[$i]] == '') {
+                    $showT[$id[$i]] = 0;
+                }
+                if ($showS[$id[$i]] == '') {
+                    $showS[$id[$i]] = 0;
+                }
+
+                $measurement = new Measurement();
+                $measurement->ProjectId = $projectid;
+                $measurement->Name = $newName;
+                $measurement->TestPage = $showT[$id[$i]];
+                $measurement->SummaryPage = $showS[$id[$i]];
+                $measurement->Update();
+
+                $i++;
+            }
+        }
+    }
 }
 
 /* Handle GET requests */
@@ -105,50 +148,3 @@ function rest_get()
 
     echo json_encode(cast_data_for_JSON($response));
 }
-
-if (array_key_exists('submit', $_POST)) {
-    $submit = $_POST['submit'];
-    $nameN = htmlspecialchars(pdo_real_escape_string($_POST['nameN']));
-    $showTN = htmlspecialchars(pdo_real_escape_string($_POST['showTN']));
-    $showSN = htmlspecialchars(pdo_real_escape_string($_POST['showSN']));
-
-    $id = $_POST['id'];
-    $name = $_POST['name'];
-
-    // Start operation if it is submitted
-    if ($submit == 'Save') {
-        if ($nameN) {
-            // Only write a new entry if new field is filled.
-            $measurement = new Measurement();
-            $measurement->ProjectId = $projectid;
-            $measurement->Name = $nameN;
-            $measurement->TestPage = $showTN;
-            $measurement->SummaryPage = $showSN;
-            $measurement->Insert();
-        }
-        $i = 0;
-
-        if (count($_POST['name'])) {
-            foreach ($name as $newName) { // everytime update all test attributes
-                $showT = $_POST['showT'];
-                $showS = $_POST['showS'];
-                if ($showT[$id[$i]] == '') {
-                    $showT[$id[$i]] = 0;
-                }
-                if ($showS[$id[$i]] == '') {
-                    $showS[$id[$i]] = 0;
-                }
-
-                $measurement = new Measurement();
-                $measurement->ProjectId = $projectid;
-                $measurement->Name = $newName;
-                $measurement->TestPage = $showT[$id[$i]];
-                $measurement->SummaryPage = $showS[$id[$i]];
-                $measurement->Update();
-
-                $i++;
-            }
-        }
-    }
-}
-
