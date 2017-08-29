@@ -42,22 +42,39 @@
         </tr>
         <tr bgcolor="#CADBD9">
           <td align="center">
-            <input name="newMeasurement" type="text" id="newMeasurement" size="25"/>
+            <input name="newMeasurement" type="text" id="newMeasurement" size="25"
+                   ng-model="cdash.newMeasurement"/>
           </td>
           <td align="center">
-            <input type="checkbox" name="showTestPage" value="1"/>
+            <input type="checkbox" name="showTestPage" value="1"
+                   ng-model="cdash.showTestPage"/>
           </td>
           <td align="center">
-            <input type="checkbox" name="showSummaryPage" value="1"/>
+            <input type="checkbox" name="showSummaryPage" value="1"
+                  ng-model="cdash.showSummaryPage"/>
           </td>
           <td></td>
         </tr>
       </table>
       <div class="center-text">
-        <input name='submit' value='Save' type='submit'/>
+        <input name='submit' value='Save' type='submit' ng-click="save()"/>
       </div>
       <br/>
     </div>
+
+    <!-- confirm delete measurement modal template -->
+    <script type="text/ng-template" id="modal-template">
+      <div class="modal-header">
+        <h4 class="modal-title">Remove Measurement</h4>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to remove this Measurement?</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-danger" id="modal-delete-measurement-button" ng-click="$ctrl.ok()">Delete</button>
+        <button class="btn" ng-click="$ctrl.cancel()">cancel</button>
+      </div>
+    </script>
 
     <!-- FOOTER -->
     <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_@@version.html'"></ng-include>
