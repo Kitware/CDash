@@ -21,6 +21,7 @@ include 'public/login.php';
 
 require_once 'include/common.php';
 require_once 'include/api_common.php';
+require_once 'models/measurement.php';
 require_once 'models/project.php';
 require_once 'models/user.php';
 
@@ -48,7 +49,13 @@ if (array_key_exists('submit', $_POST)) {
     // Start operation if it is submitted
     if ($submit == 'Save') {
         if ($nameN) {
-            pdo_query("INSERT INTO measurement (projectid,name,testpage,summarypage) VALUES ('$projectid','$nameN','$showTN','$showSN')"); // only write a new entry if new field is filled
+            // Only write a new entry if new field is filled.
+            $measurement = new Measurement();
+            $measurement->ProjectId = $projectid;
+            $measurement->Name = $nameN;
+            $measurement->TestPage = $showTN;
+            $measurement->SummaryPage = $showSN;
+            $measurement->Insert();
         }
         $i = 0;
 
@@ -62,7 +69,14 @@ if (array_key_exists('submit', $_POST)) {
                 if ($showS[$id[$i]] == '') {
                     $showS[$id[$i]] = 0;
                 }
-                pdo_query("UPDATE measurement SET name='$newName', testpage='" . $showT[$id[$i]] . "', summarypage='" . $showS[$id[$i]] . "' WHERE id='" . $id[$i] . "'");
+
+                $measurement = new Measurement();
+                $measurement->ProjectId = $projectid;
+                $measurement->Name = $newName;
+                $measurement->TestPage = $showT[$id[$i]];
+                $measurement->SummaryPage = $showS[$id[$i]];
+                $measurement->Update();
+
                 $i++;
             }
         }
@@ -70,7 +84,9 @@ if (array_key_exists('submit', $_POST)) {
     $selection = $_POST['select'];
     if ($_POST['del'] && count($selection) > 0) { // if user chose any named measurement delete them
         foreach ($selection as $del) {
-            pdo_query("DELETE FROM measurement WHERE id='$del'");
+            $measurement = new Measurement();
+            $measurement->Id = $del;
+            $measurement->Delete();
         }
     }
 }
@@ -86,12 +102,11 @@ $menu_response['noprevious'] =  1;
 $menu_response['nonext'] = 1;
 $response['menu'] = $menu_response;
 
-//get any measurements associated with this test
+// Get any measurements associated with this project's tests.
 $measurements_response = [];
-$xml .= '<measurements>';
-$query = "SELECT id,name,testpage,summarypage FROM measurement WHERE projectid='$projectid' ORDER BY name ASC";
-$result = pdo_query($query);
-while ($row = pdo_fetch_array($result)) {
+$measurement = new Measurement();
+$measurement->ProjectId = $projectid;
+foreach ($measurement->GetMeasurementsForProject() as $row) {
     $measurement_response = [];
     $measurement_response['id'] = $row['id'];
     $measurement_response['name'] = $row['name'];
