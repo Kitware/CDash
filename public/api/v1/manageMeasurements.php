@@ -56,6 +56,15 @@ switch ($method) {
 /* Handle DELETE requests */
 function rest_delete()
 {
+    $id = $_REQUEST['id'];
+    if (!$id) {
+        $response = ['error' => 'Invalid measurement ID provided.'];
+        json_error_response($response, 400);
+    }
+    $measurement = new Measurement();
+    $measurement->Id = $id;
+    $measurement->Delete();
+    http_response_code(200);
 }
 
 /* Handle POST requests */
@@ -110,14 +119,6 @@ if (array_key_exists('submit', $_POST)) {
 
                 $i++;
             }
-        }
-    }
-    $selection = $_POST['select'];
-    if ($_POST['del'] && count($selection) > 0) { // if user chose any named measurement delete them
-        foreach ($selection as $del) {
-            $measurement = new Measurement();
-            $measurement->Id = $del;
-            $measurement->Delete();
         }
     }
 }
