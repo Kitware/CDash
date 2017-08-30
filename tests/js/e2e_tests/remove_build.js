@@ -26,7 +26,6 @@ describe("remove_build", function() {
     });
 
     element(by.id('modal-delete-build-button')).click();
-
     browser.waitForAngular();
 
     // Refresh the page to make sure this build is gone now.
