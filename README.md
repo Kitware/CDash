@@ -17,51 +17,7 @@ maintain large-scale software systems. Good examples of a CDash are the
 
 ## Installation
 
-```bash
-git clone https://github.com/Kitware/CDash.git CDash
-cd CDash
-```
-
-### Prerequisites
-
-CDash needs:
-  * A web server (Apache, NGINX, IIS) with PHP and SSL enabled.
-  * Access to a MySQL or PostgreSQL database server.
-
-### Linux and OS X
-
-For production:
-```bash
-git checkout prebuilt
-```
-
-For development:
-
-[Install Node.js](https://nodejs.org/en/download/package-manager/).
-```bash
-curl -sS https://getcomposer.org/installer | php
-php composer.phar install
-npm install
-node_modules/.bin/gulp
-```
-
-### Windows
-
-For production:
-```cmd
-git checkout prebuilt
-```
-
-For development:
-
-Download and run [Composer-Setup.exe](https://getcomposer.org/Composer-Setup.exe).
-
-[Install Node.js](https://nodejs.org/en/download).
-```cmd
-composer install
-npm install
-node_modules/.bin/gulp
-```
+[See here for installation instructions](http://public.kitware.com/Wiki/CDash:Installation).
 
 
 ## Development
