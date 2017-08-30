@@ -128,6 +128,7 @@ add_php_test(authtoken)
 add_php_test(junithandler)
 add_php_test(issuecreation)
 add_php_test(limitedbuilds)
+add_php_test(managemeasurements)
 
 if(CDASH_GITHUB_USERNAME AND CDASH_GITHUB_PASSWORD)
   add_php_test(github_PR_comment)
