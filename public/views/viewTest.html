@@ -199,7 +199,9 @@
                 <span class="glyphicon" ng-class="orderByFields.indexOf('-summary') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('summary') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
 
-              <!-- TODO: test measurements -->
+              <th ng-repeat = "columnname in ::cdash.columnnames">
+                {{::columnname}}
+              </th>
             </tr>
           </thead>
 
@@ -249,7 +251,9 @@
               <a ng-href="{{test.summaryLink}}"
                  ng-click="cancelAjax()">{{test.summary}}</a>
             </td>
-
+            <td ng-repeat="measurement in ::test.measurements">
+              {{::measurement}}
+            </td>
           </tr>
         </table>
 

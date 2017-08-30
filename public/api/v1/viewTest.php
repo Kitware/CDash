@@ -23,7 +23,6 @@ include_once 'models/build.php';
 
 /**
  * View tests of a particular build.
- * etest functionality isn't supported for parent builds.
  *
  * GET /viewTest.php
  * Required Params:
@@ -344,12 +343,13 @@ $getalltestlistsql = "SELECT test.id
   ORDER BY test.id
 ";
 
-// Allocate empty array for all possible measurements
-$tmpr = array();
+// Allocate empty array for all possible measurements.
+$test_measurements = [];
 $getalltestlist = pdo_query($getalltestlistsql);
 while ($row = pdo_fetch_array($getalltestlist)) {
+    $test_measurements[$row['id']] = [];
     for ($i = 0; $i < $columncount; $i++) {
-        $tmpr[$row['id']][$columns[$i]] = '';
+        $test_measurements[$row['id']][$i] = '';
     }
 }
 
@@ -375,29 +375,15 @@ if (@$_GET['export'] == 'csv') {
     export_as_csv($etestquery, null, $result, $projectshowtesttime, $testtimemaxstatus, $columns);
 }
 
-// Start creating etests for each column with matching buildid, testname and the value.
-$etests = array();
-$i = 0;
-$currentcolumn = -1;
-$prevtestid = 0;
-$checkarray = array();
-
-// Overwrite the empty values with the correct ones if exists
+// Keep track of extra measurements for each test.
+// Overwrite the empty values with the correct ones if exists.
 while ($etestquery && $row = pdo_fetch_array($etestquery)) {
-    $tmpr[$row['id']][$row['name']] = $row['value'];
-}
+    // Get the index of this measurement in the list of columns.
+    $idx = array_search($row['name'], $columns);
 
-// Write everything we have in the array
-foreach ($tmpr as $testid => $testname) {
-    foreach ($testname as $val) {
-        $etest = array();
-        $etest['name'] = key($testname);
-        $etest['testid'] = $testid;
-        $etest['value'] = $val;
-        $etests[] = $etest;
-    }
+    // Fill in this measurement value for this test.
+    $test_measurements[$row['id']][$idx] = $row['value'];
 }
-$response['etests'] = $etests;
 
 // Gather test info
 $tests = array();
@@ -438,6 +424,7 @@ while ($row = pdo_fetch_array($result)) {
     }
 
     $labels_found = ($CDASH_DB_TYPE != 'pgsql' && !empty($marshaledTest['labels']));
+    $marshaledTest['measurements'] = $test_measurements[$marshaledTest['id']];
     $tests[] = $marshaledTest;
 }
 
