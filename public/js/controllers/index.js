@@ -48,7 +48,7 @@ CDash.filter("showEmptyBuildsLast", function () {
 })
 
 
-.controller('IndexController', function IndexController($scope, $rootScope, $location, $http, $filter, $timeout, anchors, apiLoader, filters, multisort, $uibModal) {
+.controller('IndexController', function IndexController($scope, $rootScope, $location, $http, $filter, $timeout, anchors, apiLoader, filters, multisort, modalSvc) {
   // Show spinner while page is loading.
   $scope.loading = true;
 
@@ -373,26 +373,8 @@ CDash.filter("showEmptyBuildsLast", function () {
   };
 
   $scope.showModal = function (buildid) {
-    $modal = $uibModal.open({
-      animation: true,
-      size: 'sm',
-      backdrop: true,
-      templateUrl: 'modal-template',
-      controller: function() {
-        var $ctrl = this;
-        $ctrl.ok = function() {
-          "use strict";
-          $scope.removeBuild(buildid)
-          $modal.close();
-        };
-        $ctrl.cancel = function () {
-          "use strict";
-          $modal.close();
-        }
-      },
-      controllerAs: '$ctrl',
-    });
-  };
+    modalSvc.showModal(buildid, $scope.removeBuild, 'modal-template');
+  }
 
   $scope.removeBuild = function(build) {
     var parameters = { buildid: build.id };

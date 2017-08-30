@@ -678,9 +678,15 @@
   </SubProject>
   <SubProject name="MyThirdPartyDependency">
     <Path>packages/with_subpackages</Path>
+    <EmailAddresses>
+        <Email address="optika-noemail@noemail"/>
+    </EmailAddresses>
   </SubProject>
   <SubProject name="MyExperimentalFeature">
       <Path>MyExperimentalFeature</Path>
+      <EmailAddresses>
+          <Email address="nox-noemail@noemail"/>
+      </EmailAddresses>
   </SubProject>
   <SubProject name="MyProductionCode">
     <Path>MyProductionCode</Path>

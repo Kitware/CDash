@@ -176,22 +176,6 @@ describe("manageBuildGroup", function() {
 
         element(by.id('modal-delete-group-button')).click();
 
-        /*
-        // This generates a confirmation dialog which we have to accept.
-        // Wait for it to appear.
-        browser.wait(function() {
-          return browser.switchTo().alert().then(
-            function() { return true; },
-            function() { return false; }
-          );
-        }, opt_timeout=1000);
-
-
-        // Then switch to it & click on it.
-        var alertDialog = browser.switchTo().alert();
-        alertDialog.accept();
-        */
-
         // Make sure that this BuildGroup doesn't appear on the page anymore.
         browser.waitForAngular();
         expect(element(by.id('current')).getInnerHtml()).not.toContain(buildGroupName);

@@ -110,6 +110,8 @@ function curl_request($request)
 function do_submit($fileHandleOrSubmissionId, $projectid, $expected_md5 = '', $do_checksum = true,
                    $submission_id = 0)
 {
+    global $CDASH_DAILY_UPDATES, $CDASH_USE_LOCAL_DIRECTORY;
+
     include 'config/config.php';
     $filehandle = getSubmissionFileHandle($fileHandleOrSubmissionId);
 
