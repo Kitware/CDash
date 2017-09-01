@@ -115,8 +115,14 @@ $getcolumnnumber = pdo_query(
         ");
 
 $columns = array();
+$response['hasprocessors'] = false;
+$processors_idx = -1;
 while ($row = pdo_fetch_array($getcolumnnumber)) {
     $columns[] = $row['name'];
+    if ($row['name'] == 'Processors') {
+        $processors_idx = count($columns) - 1;
+        $response['hasprocessors'] = true;
+    }
 }
 $response['columns'] = $columns;
 
@@ -321,6 +327,16 @@ if ($columncount > 0) {
 foreach($builds_response as $i => $build_response) {
     $buildid = $builds_response[$i]['buildid'];
     $builds_response[$i]['measurements'] = $test_measurements[$buildid];
+    if ($response['hasprocessors']) {
+        // Show an additional column "proc time" if these tests have
+        // the Processor measurement.
+        $num_procs = $test_measurements[$buildid][$processors_idx];
+        if (!$num_procs) {
+            $num_procs = 1;
+        }
+        $builds_response[$i]['proctime'] =
+            floatval($builds_response[$i]['time'] * $num_procs);
+    }
 }
 
 $response['builds'] = $builds_response;
