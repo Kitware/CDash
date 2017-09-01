@@ -74,6 +74,15 @@
               <span class="glyphicon" ng-class="orderByFields.indexOf('-time') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('time') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
             </th>
 
+            <th ng-if="::cdash.hasprocessors" class="header"
+                ng-click="updateOrderByFields('time', $event)"
+                tooltip-popup-delay="1500"
+                tooltip-append-to-body="true"
+                uib-tooltip="Seconds * number of processors">
+              Proc Time
+              <span class="glyphicon" ng-class="orderByFields.indexOf('-proctime') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('proctime') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+            </th>
+
             <th class="header" ng-click="updateOrderByFields('update.revision', $event)">
               Build Revision
               <span class="glyphicon" ng-class="orderByFields.indexOf('-update.revision') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('update.revision') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
@@ -108,6 +117,10 @@
 
           <td>
             {{::build.time}}
+          </td>
+
+          <td ng-if="::cdash.hasprocessors">
+            {{::build.proctime}}
           </td>
 
           <td>
