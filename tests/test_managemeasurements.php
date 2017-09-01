@@ -121,13 +121,20 @@ class ManageMeasurementsTestCase extends KWWebTestCase
         foreach ($jsonobj['tests'] as $test) {
             $test_name = $test['name'];
             $num_procs = $test['measurements'][0];
+            $proc_time = $test['procTimeFull'];
             if ($test_name == 'Test3Procs') {
                 if ($num_procs != 3) {
                     $this->fail("Expected 3 processors on viewTest.php, found $num_procs");
                 }
+                if ($proc_time != 4.2) {
+                    $this->fail("Expected 4.2 proc time, found $proc_time");
+                }
             } elseif ($test_name == 'Test5Procs') {
                 if ($num_procs != 5) {
                     $this->fail("Expected 5 processors on viewTest.php, found $num_procs");
+                }
+                if ($proc_time != 6.5) {
+                    $this->fail("Expected 6.5 proc time, found $proc_time");
                 }
             } else {
                 $this->fail("Unexpected test $test_name");
@@ -153,6 +160,10 @@ class ManageMeasurementsTestCase extends KWWebTestCase
         $found = $jsonobj['builds'][0]['measurements'][0];
         if ($found != 5) {
             $this->fail("Expected 5 processors on testSummary.php, found $found");
+        }
+        $found = $jsonobj['builds'][0]['proctime'];
+        if ($found != 6.5) {
+            $this->fail("Expected proctime to be 6.5, found $found");
         }
     }
 }
