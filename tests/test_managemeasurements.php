@@ -93,5 +93,66 @@ class ManageMeasurementsTestCase extends KWWebTestCase
         if (!$this->MeasurementId > 0) {
             $this->fail("Expected positive integer for measurement ID, found $this->MeasurementId");
         }
+
+        // Check that the measurement actually got added to the database.
+        $stmt = $this->PDO->query(
+            "SELECT id FROM measurement WHERE id = $this->MeasurementId");
+        $found = $stmt->fetchColumn();
+        if ($found != $this->MeasurementId) {
+            $this->fail("Expected $this->MeasurementId but found $found for DB measurement ID");
+        }
+
+        // Verify that the 'Processors' measurement is displayed on viewTest.php.
+        $this->get($this->url . "/api/v1/viewTest.php?buildid=$this->BuildId");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $found = $jsonobj['columncount'];
+        if ($found != 1) {
+            $this->fail("Expected 1 extra column on viewTest.php, found $found");
+        }
+        $found = $jsonobj['columnnames'][0];
+        if ($found != 'Processors') {
+            $this->fail("Expected extra column to be called 'Processors', found $found");
+        }
+        $found = count($jsonobj['tests']);
+        if ($found != 2) {
+            $this->fail("Expected two tests, found $found");
+        }
+        foreach ($jsonobj['tests'] as $test) {
+            $test_name = $test['name'];
+            $num_procs = $test['measurements'][0];
+            if ($test_name == 'Test3Procs') {
+                if ($num_procs != 3) {
+                    $this->fail("Expected 3 processors on viewTest.php, found $num_procs");
+                }
+            } else if ($test_name == 'Test5Procs') {
+                if ($num_procs != 5) {
+                    $this->fail("Expected 5 processors on viewTest.php, found $num_procs");
+                }
+            } else {
+                $this->fail("Unexpected test $test_name");
+            }
+        }
+
+        // Verify that 'Processors' is also displayed on testSummary.php.
+        $this->get($this->url . "/api/v1/testSummary.php?project=$projectid&name=Test5Procs&date=2017-08-29");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $found = $jsonobj['columncount'];
+        if ($found != 1) {
+            $this->fail("Expected 1 extra column on testSummary.php, found $found");
+        }
+        $found = $jsonobj['columns'][0];
+        if ($found != 'Processors') {
+            $this->fail("Expected extra column to be called 'Processors', found $found");
+        }
+        $found = count($jsonobj['builds']);
+        if ($found != 1) {
+            $this->fail("Expected one build, found $found");
+        }
+        $found = $jsonobj['builds'][0]['measurements'][0];
+        if ($found != 5) {
+            $this->fail("Expected 5 processors on testSummary.php, found $found");
+        }
     }
 }
