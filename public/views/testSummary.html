@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="robots" content="noindex,nofollow" />
     <link rel="shortcut icon" href="favicon.ico" />
-    <link rel="stylesheet" type="text/css" ng-href="{{cssfile}}" />
+    <link rel="stylesheet" type="text/css" ng-href="{{::cssfile}}" />
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.4.css" />
     <script src="js/CDash_@@version.min.js"></script>
@@ -20,10 +20,10 @@
 
     <div ng-if="cdash.requirelogin != 1 && !loading">
       <h3>
-        Testing summary for <u>{{cdash.testName}}</u> performed between {{cdash.teststarttime}} and {{cdash.testendtime}}
+        Testing summary for <u>{{::cdash.testName}}</u> performed between {{::cdash.teststarttime}} and {{::cdash.testendtime}}
       </h3>
       <h4>
-        {{cdash.percentagepassed}}% passed, {{cdash.numfailed}} failed out of {{cdash.numtotal}}.
+        {{::cdash.percentagepassed}}% passed, {{::cdash.numfailed}} failed out of {{::cdash.numtotal}}.
       </h4>
 
       <!-- Failure Graph -->
@@ -42,7 +42,7 @@
       </div>
 
       <br/>
-      <a ng-href="{{cdash.csvlink}}">Download Table as CSV File</a>
+      <a ng-href="{{::cdash.csvlink}}">Download Table as CSV File</a>
       <br/>
 
       <!-- Test Summary table -->
@@ -85,34 +85,34 @@
           </tr>
         </thead>
 
-        <tr ng-repeat="build in cdash.builds |orderBy:orderByFields" ng-class-odd="'odd'" ng-class-even="'even'">
+        <tr ng-repeat="build in ::cdash.builds |orderBy:orderByFields" ng-class-odd="'odd'" ng-class-even="'even'">
           <td>
-            {{build.site}}
+            {{::build.site}}
           </td>
 
           <td>
-            <a ng-href="{{build.buildLink}}">
-              {{build.buildName}}
+            <a ng-href="{{::build.buildLink}}">
+              {{::build.buildName}}
             </a>
           </td>
 
           <td>
-            {{build.buildStamp}}
+            {{::build.buildStamp}}
           </td>
 
-          <td ng-class="build.statusclass">
-            <a ng-href="{{build.testLink}}">
-              {{build.status}}
+          <td ng-class="::build.statusclass">
+            <a ng-href="{{::build.testLink}}">
+              {{::build.status}}
             </a>
           </td>
 
           <td>
-            {{build.time}}
+            {{::build.time}}
           </td>
 
           <td>
-            <a ng-href="{{build.update.revisionurl}}">
-              {{build.update.revision}}
+            <a ng-href="{{::build.update.revisionurl}}">
+              {{::build.update.revision}}
             </a>
           </td>
           <td ng-repeat="measurement in ::build.measurements">
