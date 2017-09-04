@@ -307,13 +307,21 @@ $numFailed = 0;
 $numNotRun = 0;
 $numTimeFailed = 0;
 
+// Are we looking for tests that were performed by this build,
+// or tests that were performed by children of this build?
+if ($build->GetParentId() == -1) {
+    $buildid_field = 'parentid';
+} else {
+    $buildid_field = 'id';
+}
+
 $columns = array();
 $getcolumnnumber = pdo_query("SELECT testmeasurement.name, COUNT(DISTINCT test.name) as xxx FROM test
 JOIN testmeasurement ON (test.id = testmeasurement.testid)
 JOIN build2test ON (build2test.testid = test.id)
 JOIN build ON (build.id = build2test.buildid)
 JOIN measurement ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
-WHERE build.id='$buildid'
+WHERE build.$buildid_field = '$buildid'
 AND measurement.testpage=1
 GROUP by testmeasurement.name
 "); // We need to keep the count of columns for correct column-data assign
@@ -344,7 +352,7 @@ $getalltestlistsql = "SELECT test.id
   FROM test
   JOIN build2test ON (build2test.testid = test.id)
   JOIN build ON (build.id = build2test.buildid)
-  WHERE build.id='$buildid' $onlydelta_extra
+  WHERE build.$buildid_field='$buildid' $onlydelta_extra
   $extras
   ORDER BY test.id
 ";
@@ -370,7 +378,7 @@ if ($columncount > 0) {
   JOIN build2test ON (build2test.testid = test.id)
   JOIN build ON (build.id = build2test.buildid)
   JOIN measurement ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
-  WHERE build.id= '$buildid'
+  WHERE build.$buildid_field = '$buildid'
   AND measurement.testpage=1 $onlydelta_extra
   $extras
   ORDER BY test.id, testmeasurement.name
