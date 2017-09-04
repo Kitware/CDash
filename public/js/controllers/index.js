@@ -227,6 +227,14 @@ CDash.filter("showEmptyBuildsLast", function () {
     }
     $scope.cdash.showtimecolumns = show_time_columns;
 
+    // Determine if we should display an extra column in the 'Test' section.
+    $scope.cdash.extratestcolumns = 0;
+    if ($scope.cdash.advancedview) {
+      if ($scope.cdash.showtimecolumns || $scope.cdash.showProcTime) {
+        $scope.cdash.extratestcolumns = 1;
+      }
+    }
+
     if (!$scope.cdash.feed) {
       $scope.showFeed = false;
     }

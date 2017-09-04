@@ -141,6 +141,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
     }
     $response['banners'] = $banners;
     $site_response = array();
+    $show_proc_time = false;
 
     // If parentid is set we need to lookup the date for this build
     // because it is not specified as a query string parameter.
@@ -183,6 +184,17 @@ function echo_main_dashboard_JSON($project_instance, $date)
             'SELECT COUNT(buildid) FROM build2uploadfile WHERE buildid = ?');
         pdo_execute($stmt, [$parentid]);
         $response['uploadfilecount'] = $stmt->fetchColumn();
+
+        // For parent builds, we support an additional advanced column called
+        // 'Proc Time'.  This is only shown if this project is setup to display
+        // an extra test measurement called 'Processors'.
+        $stmt = $PDO->prepare(
+            "SELECT id FROM measurement
+            WHERE projectid = ? and name = 'Processors'");
+        pdo_execute($stmt, [$projectid]);
+        if ($stmt->fetchColumn() !== false) {
+            $show_proc_time = true;
+        }
     } else {
         $response['parentid'] = -1;
     }
@@ -1502,6 +1514,68 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $response['coveragegroups'][] = $group;
         }
     }
+
+    // Compute 'Proc Time' here (if necessary).
+    $proc_time_verified = false;
+    if ($show_proc_time) {
+        $test_timing = [];
+        // Look up how long each test took for each build.
+        $stmt = $PDO->prepare(
+            'SELECT b2t.buildid, b2t.testid, b2t.time
+            FROM build2test b2t
+            JOIN build b on (b.id = b2t.buildid)
+            WHERE b.parentid = ?');
+        pdo_execute($stmt, [$parentid]);
+        while ($row = $stmt->fetch()) {
+            $buildid = $row['buildid'];
+            $testid = $row['testid'];
+            $test_duration = $row['time'];
+            if (!array_key_exists($buildid, $test_timing)) {
+                $test_timing[$buildid] = [];
+            }
+            $test_timing[$buildid][$testid] = $test_duration;
+        }
+
+        // Multiply test duration by number of processors for any tests
+        // that have the 'Processor' measurement defined.
+        $stmt = $PDO->prepare(
+            "SELECT b2t.buildid, b2t.testid, tm.value
+            FROM build2test b2t
+            JOIN testmeasurement tm ON (b2t.testid = tm.testid)
+            JOIN build b ON (b.id = b2t.buildid)
+            WHERE b.parentid = ?
+            AND tm.name = 'Processors'");
+        pdo_execute($stmt, [$parentid]);
+        while ($row = $stmt->fetch()) {
+            $buildid = $row['buildid'];
+            $testid = $row['testid'];
+            $nprocs = $row['value'];
+            if (!is_numeric($nprocs)) {
+                continue;
+            }
+            $proc_time_verified = true;
+            $test_timing[$buildid][$testid] *= $nprocs;
+        }
+
+        // Compute procTime = duration * nprocs and record it for each build.
+        // We assume only one buildgroup for subproject results.
+        foreach($buildgroups_response[0]['builds'] as $i => $build_response) {
+            $buildid = $build_response['id'];
+            if (!array_key_exists('test', $build_response)) {
+                continue;
+            }
+            if (!array_key_exists($buildid, $test_timing)) {
+                continue;
+            }
+
+            $proc_time = array_sum($test_timing[$buildid]);
+            $buildgroups_response[0]['builds'][$i]['test']['procTime'] =
+                time_difference($proc_time, true);
+            $buildgroups_response[0]['builds'][$i]['test']['procTimeFull'] =
+                $proc_time;
+        }
+    }
+    $response['showProcTime'] = $proc_time_verified;
 
     $response['buildgroups'] = $buildgroups_response;
     $response['enableTestTiming'] = $project_array['showtesttime'];
