@@ -49,7 +49,7 @@ class OpenCoverCoverageTestCase extends KWWebTestCase
             return 1;
         }
 
-      // Do the PUT submission to actually upload our data.
+        // Do the PUT submission to actually upload our data.
         $puturl = $this->url."/submit.php?type=OpenCoverTar&md5=c0eeaf6be9838eacc75e652d6c85f925&filename=OpenCoverTest.tar&buildid=$buildid";
         $filename  = dirname(__FILE__)."/data/OpenCoverTest.tar";
 

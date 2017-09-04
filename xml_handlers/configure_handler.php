@@ -15,12 +15,13 @@
 =========================================================================*/
 
 require_once 'xml_handlers/abstract_handler.php';
+require_once 'xml_handlers/actionable_build_interface.php';
 require_once 'models/build.php';
 require_once 'models/label.php';
 require_once 'models/site.php';
 require_once 'models/buildconfigure.php';
 
-class ConfigureHandler extends AbstractHandler
+class ConfigureHandler extends AbstractHandler implements ActionableBuildInterface
 {
     private $StartTimeStamp;
     private $EndTimeStamp;
@@ -265,5 +266,13 @@ class ConfigureHandler extends AbstractHandler
     public function getBuildName()
     {
         return $this->BuildName;
+    }
+
+    /**
+     * @return Build[]
+     */
+    public function getActionableBuilds()
+    {
+        return $this->Builds;
     }
 }

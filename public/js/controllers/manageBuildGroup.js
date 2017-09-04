@@ -34,7 +34,7 @@ CDash.filter('filter_builds', function() {
   };
 })
 
-.controller('ManageBuildGroupController', function ManageBuildGroupController($scope, $http, apiLoader) {
+.controller('ManageBuildGroupController', function ManageBuildGroupController($scope, $http, apiLoader, modalSvc) {
   apiLoader.loadPageData($scope, 'api/v1/manageBuildGroup.php');
   $scope.finishSetup = function() {
     // Sort BuildGroups by position.
@@ -129,34 +129,36 @@ CDash.filter('filter_builds', function() {
   };
 
   /** delete a buildgroup */
-  $scope.deleteBuildGroup = function(buildgroupid) {
-    if (window.confirm("Are you sure you want to delete this BuildGroup? If the BuildGroup is not empty, builds will be put in their original BuildGroup.")) {
-
-      var parameters = {
-        projectid: $scope.cdash.projectid,
-        buildgroupid: buildgroupid
-      };
-      $http({
-        url: 'api/v1/buildgroup.php',
-        method: 'DELETE',
-        params: parameters
-      }).then(function success() {
-        // Find the index of the group to remove.
-        var index = -1;
-        for(var i = 0, len = $scope.cdash.buildgroups.length; i < len; i++) {
-          if ($scope.cdash.buildgroups[i].id === buildgroupid) {
-            index = i;
-            break;
-          }
+  $scope.deleteBuildGroup = function (buildgroupid) {
+    "use strict";
+    var parameters = {
+      projectid: $scope.cdash.projectid,
+      buildgroupid: buildgroupid
+    };
+    $http({
+      url: 'api/v1/buildgroup.php',
+      method: 'DELETE',
+      params: parameters
+    }).then(function success() {
+      // Find the index of the group to remove.
+      var index = -1;
+      for(var i = 0, len = $scope.cdash.buildgroups.length; i < len; i++) {
+        if ($scope.cdash.buildgroups[i].id === buildgroupid) {
+          index = i;
+          break;
         }
-        if (index > -1) {
-          // Remove the buildgroup from our scope.
-          $scope.cdash.buildgroups.splice(index, 1);
-        }
-      });
-    }
+      }
+      if (index > -1) {
+        // Remove the buildgroup from our scope.
+        $scope.cdash.buildgroups.splice(index, 1);
+      }
+    });
   };
 
+  /** displays confirmation modal **/
+  $scope.showModal = function(buildgroupid) {
+    modalSvc.showModal(buildgroupid, $scope.deleteBuildGroup, 'modal-template');
+  };
 
   /** move builds to a different group */
   $scope.moveBuilds = function(builds, group, expected) {
