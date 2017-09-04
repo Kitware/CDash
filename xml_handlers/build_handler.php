@@ -164,6 +164,10 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
             $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
             $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
             $submit_time = gmdate(FMT_DATETIME);
+            // Do not add each build's duration to the parent's tally if this
+            // XML file represents multiple "all-at-once" SubProject builds.
+            $all_at_once = count($this->Builds) > 1;
+            $parent_duration_set = false;
             foreach ($this->Builds as $subproject => $build) {
                 $build->ProjectId = $this->projectid;
                 $build->StartTime = $start_time;
@@ -182,8 +186,16 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
                     $build->AddLabel($label);
                 }
                 add_build($build, $this->scheduleid);
-                $build->UpdateBuildDuration(
-                        $this->EndTimeStamp - $this->StartTimeStamp);
+
+                $duration = $this->EndTimeStamp - $this->StartTimeStamp;
+                $build->UpdateBuildDuration($duration, !$all_at_once);
+                if ($all_at_once && !$parent_duration_set) {
+                    $parent_build = new Build();
+                    $parent_build->Id = $build->GetParentId();
+                    $parent_build->UpdateBuildDuration($duration, false);
+                    $parent_duration_set = true;
+                }
+
                 $build->ComputeDifferences();
 
                 global $CDASH_ENABLE_FEED;

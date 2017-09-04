@@ -97,12 +97,28 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             return 1;
         }
 
+        if (!$this->submission('SubProjectExample', "{$this->dataDir}/Upload.xml")) {
+            $this->fail('failed to submit Upload.xml');
+            return 1;
+        }
+
         // Get the buildids that we just created so we can delete it later.
         $pdo = get_link_identifier()->getPdo();
-        $sql = "SELECT id FROM build WHERE name='CTestTest-Linux-c++-Subprojects'";
-        $buildid_results = $pdo->query($sql);
+        $build_results = $pdo->query(
+            "SELECT id, buildduration, configureduration FROM build
+            WHERE name='CTestTest-Linux-c++-Subprojects'");
+        while ($build_array = $build_results->fetch()) {
+            $this->buildIds[] = $build_array['id'];
+            $build_duration = $build_array['buildduration'];
+            if ($build_duration != 5) {
+                $this->fail("Expected 5 but found $build_duration for {$build_array['id']}'s build duration");
+            }
+            $configure_duration = $build_array['configureduration'];
+            if ($configure_duration != 1) {
+                $this->fail("Expected 5 but found $configure_duration for {$build_array['id']}'s configure duration");
+            }
+        }
 
-        $this->buildIds = $buildid_results->fetchAll(PDO::FETCH_NUM);
         $total_builds = count($this->buildIds);
 
         if ($total_builds != 5) {    // parent + 4 subprojects
@@ -327,6 +343,11 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
                 throw new Exception("parenthasnotes not set to true when expected");
             }
 
+            $num_uploaded_files = $jsonobj['uploadfilecount'];
+            if ($num_uploaded_files  !== 1) {
+                throw new Exception("Expected 1 uploaded file, found $num_uploaded_files");
+            }
+
             $numcoverages = count($jsonobj['coverages']);
             if ($numcoverages != 2) {
                 throw new Exception("Expected 2 subproject coverages, found {$numcoverages}");
@@ -335,6 +356,19 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             $numdynamicanalyses = count($jsonobj['dynamicanalyses']);
             if ($numdynamicanalyses != 3) {
                 throw new Exception("Expected 3 subproject dynamic analyses, found {$numdynamicanalyses}");
+            }
+
+            if ($jsonobj['updateduration'] !== false) {
+                throw new Exception("Expected updateduration to be false, found {$jsonobj['updateduration']}");
+            }
+            if ($jsonobj['configureduration'] != '1s') {
+                throw new Exception("Expected configureduration to be 1s, found {$jsonobj['configureduration']}");
+            }
+            if ($jsonobj['buildduration'] != '5s') {
+                throw new Exception("Expected buildduration to be 5s, found {$jsonobj['buildduration']}");
+            }
+            if ($jsonobj['testduration'] != '4s') {
+                throw new Exception("Expected testduration to be 4s, found {$jsonobj['testduration']}");
             }
 
             $buildgroup = array_pop($jsonobj['buildgroups']);
@@ -440,8 +474,8 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
                 }
             }
 
-            // Verify that dynamic analysis data was correctly split across SubProjects.
             foreach ($builds as $build) {
+                // Verify that dynamic analysis data was correctly split across SubProjects.
                 $stmt = $pdo->query("SELECT numdefects FROM dynamicanalysissummary WHERE buildid = {$build['id']}");
                 $summary_total = $stmt->fetchColumn();
                 $this->get($this->url . "/api/v1/viewDynamicAnalysis.php?buildid={$build['id']}");
@@ -494,6 +528,13 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
                     if ($expected_defect_type != $defect_type) {
                         throw new Exception("Expected type {$expected_defect_type} for {$build['label']}, found {$defect_type}");
                     }
+                }
+
+                // Verify that test duration is calculated correctly.
+                $stmt = $pdo->query("SELECT time FROM buildtesttime WHERE buildid = {$build['id']}");
+                $found = $stmt->fetchColumn();
+                if ($found !== false && $found != 4) {
+                    throw new Exception("Expected 4 but found $found for {$build['id']}'s test duration");
                 }
             }
 

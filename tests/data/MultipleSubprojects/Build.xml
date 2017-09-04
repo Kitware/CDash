@@ -205,8 +205,8 @@ compilation terminated.</StdErr>
                         </Labels>
                 </Failure>
                 <Log Encoding="base64" Compression="bin/gzip"/>
-                <EndDateTime>Jul 28 15:32 EDT</EndDateTime>
-                <EndBuildTime>1469734335</EndBuildTime>
+                <EndDateTime>Jul 28 15:37 EDT</EndDateTime>
+                <EndBuildTime>1469734340</EndBuildTime>
                 <ElapsedMinutes>0</ElapsedMinutes>
         </Build>
 </Site>

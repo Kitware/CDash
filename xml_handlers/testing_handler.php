@@ -230,6 +230,10 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
                 $this->createBuild();
             }
 
+            // Do not accumulate the parent's testing duration if this
+            // XML file represents multiple "all-at-once" SubProject builds.
+            $all_at_once = count($this->Builds) > 1;
+            $parent_duration_set = false;
             foreach ($this->Builds as $subproject => $build) {
                 // Update the number of tests in the Build table
                 $build->UpdateTestNumbers($this->NumberTestsPassed[$subproject],
@@ -239,8 +243,14 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
 
                 if ($this->StartTimeStamp > 0 && $this->EndTimeStamp > 0) {
                     // Update test duration in the Build table.
-                    $build->SaveTotalTestsTime(
-                        $this->EndTimeStamp - $this->StartTimeStamp);
+                    $duration = $this->EndTimeStamp - $this->StartTimeStamp;
+                    $build->SaveTotalTestsTime($duration, !$all_at_once);
+                    if ($all_at_once && !$parent_duration_set) {
+                        $parent_build = new Build();
+                        $parent_build->Id = $build->GetParentId();
+                        $parent_build->SaveTotalTestsTime($duration, false);
+                        $parent_duration_set = true;
+                    }
                 }
 
                 // Update the build's end time to extend through testing.

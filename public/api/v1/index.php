@@ -148,8 +148,25 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $parentid = pdo_real_escape_numeric($_GET['parentid']);
         $parent_build = new Build();
         $parent_build->Id = $parentid;
+        $parent_build->FillFromId($parent_build->Id);
         $date = $parent_build->GetDate();
         $response['parentid'] = $parentid;
+
+        $response['stamp'] = $parent_build->GetStamp();
+        $response['starttime'] = $parent_build->StartTime;
+        $response['type'] = $parent_build->Type;
+
+        // Include data about this build from the buildinformation table.
+        require_once 'models/buildinformation.php';
+        $buildinfo = new BuildInformation();
+        $buildinfo->BuildId = $parentid;
+        $buildinfo->Fill();
+        $response['osname'] = $buildinfo->OSName;
+        $response['osplatform'] = $buildinfo->OSPlatform;
+        $response['osrelease'] = $buildinfo->OSRelease;
+        $response['osversion'] = $buildinfo->OSVersion;
+        $response['compilername'] = $buildinfo->CompilerName;
+        $response['compilerversion'] = $buildinfo->CompilerVersion;
 
         // Check if the parent build has any notes.
         $stmt = $PDO->prepare(
@@ -160,6 +177,12 @@ function echo_main_dashboard_JSON($project_instance, $date)
         } else {
             $response['parenthasnotes'] = false;
         }
+
+        // Check if the parent build has any uploaded files.
+        $stmt = $PDO->prepare(
+            'SELECT COUNT(buildid) FROM build2uploadfile WHERE buildid = ?');
+        pdo_execute($stmt, [$parentid]);
+        $response['uploadfilecount'] = $stmt->fetchColumn();
     } else {
         $response['parentid'] = -1;
     }
@@ -775,6 +798,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $build_response['siteid'] = $siteid;
             $build_response['buildname'] = $build_array['name'];
             $build_response['buildplatform'] = $buildplatform;
+            $build_response['uploadfilecount'] = $build_array['builduploadfiles'];
             if (!is_null($changelink)) {
                 $build_response['changelink'] = $changelink;
                 $build_response['changeicon'] = $changeicon;
@@ -786,7 +810,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
         }
         $build_response['id'] = $build_array['id'];
         $build_response['done'] = $build_array['done'];
-        $build_response['uploadfilecount'] = $build_array['builduploadfiles'];
 
         $build_response['buildnotes'] = $build_array['countbuildnotes'];
         $build_response['notes'] = $build_array['countnotes'];
@@ -1404,8 +1427,10 @@ function echo_main_dashboard_JSON($project_instance, $date)
         }
         $response['numchildren'] = $numchildren;
 
-        // If all our children share the same start time, then this was an "all at once" subproject build.
-        // In that case, tell our view to display the "Order" column instead of the "Start Time" column.
+        // If all our children share the same start time, then this was an
+        // "all at once" subproject build.
+        // In that case, tell our view to display the "Order" column instead of
+        // the "Start Time" column.
         if (count($build_start_times) === 1) {
             $response['showorder'] = true;
             $response['showstarttime'] = false;
@@ -1415,6 +1440,47 @@ function echo_main_dashboard_JSON($project_instance, $date)
                 for ($j = 0; $j < count($buildgroups_response[$i]['builds']); $j++) {
                     $idx = array_search($buildgroups_response[$i]['builds'][$j]['position'], $subproject_positions);
                     $buildgroups_response[$i]['builds'][$j]['position'] = $idx + 1;
+                }
+            }
+
+            // Update duration, configure duration, build duration, and
+            // test duration do not vary among children builds in this case.
+            // Find the single value (if any) for each and report it at the top
+            // of the page.
+            $buildgroup_response = $buildgroups_response[0];
+            $need_update = $buildgroup_response['hasupdatedata'];
+            $need_configure = $buildgroup_response['hasconfiguredata'];
+            $need_build = $buildgroup_response['hascompilationdata'];
+            $need_test = $buildgroup_response['hastestdata'];
+            $response['updateduration'] = false;
+            $response['configureduration'] = false;
+            $response['buildduration'] = false;
+            $response['testduration'] = false;
+            foreach ($buildgroup_response['builds'] as $build_response) {
+                if ($build_response['hasupdate']) {
+                    $response['updateduration'] =
+                        $build_response['update']['time'];
+                    $need_update = false;
+                }
+                if ($build_response['hasconfigure']) {
+                    $response['configureduration'] =
+                        $build_response['configure']['time'];
+                    $need_configure = false;
+                }
+                if ($build_response['hascompilation']) {
+                    $response['buildduration'] =
+                        $build_response['compilation']['time'];
+                    $need_build = false;
+                }
+                if ($build_response['hastest']) {
+                    $response['testduration'] =
+                        $build_response['test']['time'];
+                    $need_test = false;
+                }
+                // Break out of the loop once we have all the data we need.
+                if (!$need_update && !$need_configure && !$need_build &&
+                        !$need_test) {
+                    break;
                 }
             }
         }

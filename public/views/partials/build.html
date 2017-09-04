@@ -217,7 +217,8 @@
   </div>
 </td>
 
-<td ng-if="::buildgroup.hasupdatedata && cdash.advancedview != 0" align="right">
+<td ng-if="::buildgroup.hasupdatedata && cdash.advancedview != 0 && cdash.showstarttime"
+    align="center">
   <div ng-if="::build.hasupdate">
     {{::build.update.time}}
   </div>
@@ -241,7 +242,8 @@
   </div>
 </td>
 
-<td ng-if="::buildgroup.hasconfiguredata && cdash.advancedview != 0" align="center">
+<td ng-if="::buildgroup.hasconfiguredata && cdash.advancedview != 0 && cdash.showstarttime"
+    align="center">
   <div ng-if="::build.hasconfigure">
     {{::build.configure.time}}
   </div>
@@ -279,7 +281,8 @@
   </div>
 </td>
 
-<td ng-if="::buildgroup.hascompilationdata && cdash.advancedview != 0" align="center">
+<td ng-if="::buildgroup.hascompilationdata && cdash.advancedview != 0 && cdash.showstarttime"
+    align="center">
   <div ng-if="::build.hascompilation">
     {{::build.compilation.time}}
   </div>
@@ -330,7 +333,7 @@
 </td>
 
 <td align="center"
-    ng-if="::buildgroup.hastestdata && cdash.advancedview != 0"
+    ng-if="::buildgroup.hastestdata && cdash.advancedview != 0 && cdash.showstarttime"
     ng-class="::{'error': build.test.timestatus > 0, 'normal': build.test.timestatus == 0}">
   <div ng-if="::build.hastest"
        ng-class="::{'valuewithsub': build.build.test.ntimediffp > 0 || build.test.ntimediffn > 0}">
