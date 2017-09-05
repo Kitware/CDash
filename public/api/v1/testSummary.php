@@ -324,7 +324,7 @@ if ($columncount > 0) {
 }
 
 // Assign these extra measurements to each build.
-foreach($builds_response as $i => $build_response) {
+foreach ($builds_response as $i => $build_response) {
     $buildid = $builds_response[$i]['buildid'];
     $builds_response[$i]['measurements'] = $test_measurements[$buildid];
     if ($response['hasprocessors']) {

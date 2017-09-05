@@ -93,5 +93,4 @@ class Measurement
 
         return $stmt->fetchAll($fetchStyle);
     }
-
 }

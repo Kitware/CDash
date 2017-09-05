@@ -1559,7 +1559,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
         // Compute procTime = duration * nprocs and record it for each build.
         // We assume only one buildgroup for subproject results.
-        foreach($buildgroups_response[0]['builds'] as $i => $build_response) {
+        foreach ($buildgroups_response[0]['builds'] as $i => $build_response) {
             $buildid = $build_response['id'];
             if (!array_key_exists('test', $build_response)) {
                 continue;

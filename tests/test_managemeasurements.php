@@ -155,7 +155,7 @@ class ManageMeasurementsTestCase extends KWWebTestCase
                 if ($proc_time != 4.2) {
                     $this->fail("Expected 4.2 proc time, found $proc_time");
                 }
-            } else if ($test_name == 'Test5Procs') {
+            } elseif ($test_name == 'Test5Procs') {
                 if ($num_procs != 5) {
                     $this->fail("Expected 5 processors on viewTest.php, found $num_procs");
                 }
@@ -219,14 +219,14 @@ class ManageMeasurementsTestCase extends KWWebTestCase
                 if ($proc_time != 2.2) {
                     $this->fail("Expected 2.2 proc time, found $proc_time");
                 }
-            } else if ($test_name == 'experimentalFail2') {
+            } elseif ($test_name == 'experimentalFail2') {
                 if ($num_procs != 3) {
                     $this->fail("Expected 3 processors on viewTest.php, found $num_procs");
                 }
                 if ($proc_time != 6.6) {
                     $this->fail("Expected 6.6 proc time, found $proc_time");
                 }
-            } else if ($test_name == 'production') {
+            } elseif ($test_name == 'production') {
                 if ($num_procs != 4) {
                     $this->fail("Expected 4 processors on viewTest.php, found $num_procs");
                 }
@@ -250,7 +250,7 @@ class ManageMeasurementsTestCase extends KWWebTestCase
             $expected = null;
             if ($label == 'MyExperimentalFeature') {
                 $expected = 8.8;
-            } else if ($label == 'MyProductionCode') {
+            } elseif ($label == 'MyProductionCode') {
                 $expected = 13.2;
             } else {
                 $this->fail("Unexpected build label $label");
