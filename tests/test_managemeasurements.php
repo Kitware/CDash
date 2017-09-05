@@ -28,7 +28,6 @@ class ManageMeasurementsTestCase extends KWWebTestCase
 
     public function __destruct()
     {
-    /*
         if (!is_null($this->BuildId)) {
             remove_build($this->BuildId);
         }
@@ -39,7 +38,6 @@ class ManageMeasurementsTestCase extends KWWebTestCase
             $this->PDO->exec(
                 "DELETE FROM measurement WHERE id = $measurement_id");
         }
-        */
     }
 
     public function testManageMeasurements()
@@ -237,6 +235,28 @@ class ManageMeasurementsTestCase extends KWWebTestCase
                 }
             } else {
                 $this->fail("Unexpected test $test_name");
+            }
+        }
+
+        // Verify that correct Proc Time values are shown on index.php for
+        // subproject builds.
+        $this->get($this->url . "/api/v1/index.php?project=SubProjectExample&parentid=$this->SubProjectBuildId");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $buildgroup = array_pop($jsonobj['buildgroups']);
+        foreach ($buildgroup['builds'] as $build) {
+            $label = $build['label'];
+            $found = $build['test']['procTimeFull'];
+            $expected = null;
+            if ($label == 'MyExperimentalFeature') {
+                $expected = 8.8;
+            } else if ($label == 'MyProductionCode') {
+                $expected = 13.2;
+            } else {
+                $this->fail("Unexpected build label $label");
+            }
+            if ($expected != $found) {
+                $this->fail("Expected proc time to be $expected but found $found for subproject build $label");
             }
         }
     }
