@@ -25,16 +25,19 @@
         </tr>
         <tr ng-repeat="measurement in cdash.measurements">
           <td align="center">
-            <input type="text" size="25" ng-model="measurement.name"
+            <input type="text" size="25" name="measurement_name"
+                   ng-model="measurement.name"
                    ng-change="measurement.dirty = true" />
           </td>
           <td align="center">
-            <input type="checkbox" ng-model="measurement.testpage"
+            <input type="checkbox" name="testpage"
+                   ng-model="measurement.testpage"
                    ng-true-value="1" ng-false-value="0"
                    ng-change="measurement.dirty = true" />
           </td>
           <td align="center">
-            <input type="checkbox" ng-model="measurement.summarypage"
+            <input type="checkbox" name="summarypage"
+                   ng-model="measurement.summarypage"
                    ng-true-value="1" ng-false-value="0"
                    ng-change="measurement.dirty = true" />
           </td>
