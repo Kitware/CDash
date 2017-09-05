@@ -23,7 +23,6 @@ include_once 'models/build.php';
 
 /**
  * View tests of a particular build.
- * etest functionality isn't supported for parent builds.
  *
  * GET /viewTest.php
  * Required Params:
@@ -308,19 +307,33 @@ $numFailed = 0;
 $numNotRun = 0;
 $numTimeFailed = 0;
 
+// Are we looking for tests that were performed by this build,
+// or tests that were performed by children of this build?
+if ($build->GetParentId() == -1) {
+    $buildid_field = 'parentid';
+} else {
+    $buildid_field = 'id';
+}
+
 $columns = array();
 $getcolumnnumber = pdo_query("SELECT testmeasurement.name, COUNT(DISTINCT test.name) as xxx FROM test
 JOIN testmeasurement ON (test.id = testmeasurement.testid)
 JOIN build2test ON (build2test.testid = test.id)
 JOIN build ON (build.id = build2test.buildid)
 JOIN measurement ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
-WHERE build.id='$buildid'
+WHERE build.$buildid_field = '$buildid'
 AND measurement.testpage=1
 GROUP by testmeasurement.name
 "); // We need to keep the count of columns for correct column-data assign
 
+$response['hasprocessors'] = false;
+$processors_idx = -1;
 while ($row = pdo_fetch_array($getcolumnnumber)) {
     $columns[] = $row['name'];
+    if ($row['name'] == 'Processors') {
+        $processors_idx = count($columns) - 1;
+        $response['hasprocessors'] = true;
+    }
 }
 $response['columnnames'] = $columns;
 
@@ -339,17 +352,18 @@ $getalltestlistsql = "SELECT test.id
   FROM test
   JOIN build2test ON (build2test.testid = test.id)
   JOIN build ON (build.id = build2test.buildid)
-  WHERE build.id='$buildid' $onlydelta_extra
+  WHERE build.$buildid_field='$buildid' $onlydelta_extra
   $extras
   ORDER BY test.id
 ";
 
-// Allocate empty array for all possible measurements
-$tmpr = array();
+// Allocate empty array for all possible measurements.
+$test_measurements = [];
 $getalltestlist = pdo_query($getalltestlistsql);
 while ($row = pdo_fetch_array($getalltestlist)) {
+    $test_measurements[$row['id']] = [];
     for ($i = 0; $i < $columncount; $i++) {
-        $tmpr[$row['id']][$columns[$i]] = '';
+        $test_measurements[$row['id']][$i] = '';
     }
 }
 
@@ -364,7 +378,7 @@ if ($columncount > 0) {
   JOIN build2test ON (build2test.testid = test.id)
   JOIN build ON (build.id = build2test.buildid)
   JOIN measurement ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
-  WHERE build.id= '$buildid'
+  WHERE build.$buildid_field = '$buildid'
   AND measurement.testpage=1 $onlydelta_extra
   $extras
   ORDER BY test.id, testmeasurement.name
@@ -375,29 +389,15 @@ if (@$_GET['export'] == 'csv') {
     export_as_csv($etestquery, null, $result, $projectshowtesttime, $testtimemaxstatus, $columns);
 }
 
-// Start creating etests for each column with matching buildid, testname and the value.
-$etests = array();
-$i = 0;
-$currentcolumn = -1;
-$prevtestid = 0;
-$checkarray = array();
-
-// Overwrite the empty values with the correct ones if exists
+// Keep track of extra measurements for each test.
+// Overwrite the empty values with the correct ones if exists.
 while ($etestquery && $row = pdo_fetch_array($etestquery)) {
-    $tmpr[$row['id']][$row['name']] = $row['value'];
-}
+    // Get the index of this measurement in the list of columns.
+    $idx = array_search($row['name'], $columns);
 
-// Write everything we have in the array
-foreach ($tmpr as $testid => $testname) {
-    foreach ($testname as $val) {
-        $etest = array();
-        $etest['name'] = key($testname);
-        $etest['testid'] = $testid;
-        $etest['value'] = $val;
-        $etests[] = $etest;
-    }
+    // Fill in this measurement value for this test.
+    $test_measurements[$row['id']][$idx] = $row['value'];
 }
-$response['etests'] = $etests;
 
 // Gather test info
 $tests = array();
@@ -438,6 +438,19 @@ while ($row = pdo_fetch_array($result)) {
     }
 
     $labels_found = ($CDASH_DB_TYPE != 'pgsql' && !empty($marshaledTest['labels']));
+    $marshaledTest['measurements'] = $test_measurements[$marshaledTest['id']];
+    if ($response['hasprocessors']) {
+        // Show an additional column "proc time" if these tests have
+        // the Processor measurement.
+        $num_procs = $test_measurements[$marshaledTest['id']][$processors_idx];
+        if (!$num_procs) {
+            $num_procs = 1;
+        }
+        $marshaledTest['procTimeFull'] =
+            $marshaledTest['execTimeFull'] * $num_procs;
+        $marshaledTest['procTime'] =
+            time_difference($marshaledTest['procTimeFull'], true, '', true);
+    }
     $tests[] = $marshaledTest;
 }
 

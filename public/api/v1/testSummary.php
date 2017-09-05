@@ -99,6 +99,7 @@ $end_timestamp = $currentstarttime + 3600 * 24;
 $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
 $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
 
+// Count how many extra test measurements we have.
 $getcolumnnumber = pdo_query(
     "SELECT testmeasurement.name, COUNT(DISTINCT test.name) as xxx FROM test
         JOIN testmeasurement ON (test.id = testmeasurement.testid)
@@ -111,129 +112,21 @@ $getcolumnnumber = pdo_query(
         AND test.projectid=$projectid
         AND measurement.summarypage= 1
         GROUP by testmeasurement.name
-        "); // We need to keep the count of columns for correct column-data assign
+        ");
 
 $columns = array();
+$response['hasprocessors'] = false;
+$processors_idx = -1;
 while ($row = pdo_fetch_array($getcolumnnumber)) {
     $columns[] = $row['name'];
+    if ($row['name'] == 'Processors') {
+        $processors_idx = count($columns) - 1;
+        $response['hasprocessors'] = true;
+    }
 }
 $response['columns'] = $columns;
 
 $columncount = pdo_num_rows($getcolumnnumber);
-// If at least one column is selected
-if ($columncount > 0) {
-    $etestquery = pdo_query(
-        "SELECT test.id, test.projectid, build2test.buildid,
-            build2test.status, build2test.timestatus, test.name,
-            testmeasurement.name, testmeasurement.value, build.starttime,
-            build2test.time, measurement.testpage FROM test
-            JOIN testmeasurement ON (test.id = testmeasurement.testid)
-            JOIN build2test ON (build2test.testid = test.id)
-            JOIN build ON (build.id = build2test.buildid)
-            JOIN measurement ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
-            WHERE test.name='$testName'
-            AND build.starttime>='$beginning_UTCDate'
-            AND build.starttime<'$end_UTCDate'
-            AND test.projectid=$projectid
-            AND measurement.summarypage= 1
-            ORDER BY build2test.buildid, testmeasurement.name
-            ");
-
-    // Start creating etests for each column with matching buildid, testname
-    // and the value.
-    $etests = array();
-    $i = 0;
-    $currentcolumn = -1;
-    $prevtestid = 0;
-    $checkarray = array();
-    while ($etestquery && $row = pdo_fetch_array($etestquery)) {
-        if (!isset($checkarray[$row['name']]) || !in_array($row['id'], $checkarray[$row['name']])) {
-            for ($columnkey = 0; $columnkey < $columncount; $columnkey++) {
-                if ($columns[$columnkey] == $row['name']) {
-                    $columnkey += 1;
-                    break;
-                }
-            }
-            $currentcolumn = ($currentcolumn + 1) % $columncount; // Go to next column
-            if ($currentcolumn == 0) {
-                $prevtestid = $row['id'];
-            }
-            if ($currentcolumn != $columnkey - 1) {
-                // If data does not belong to this column
-                for ($t = 0; $t < $columncount; $t++) {
-                    if (($currentcolumn + $t) % $columncount != $columnkey - 1) {
-                        // Add blank values till you find the required column
-                        $etest = array();
-                        $etest['name'] = '';
-                        $etest['testid'] = $row['id'];
-                        $etest['buildid'] = $row['buildid'];
-                        $etest['value'] = '';
-                        $etests[] = $etest;
-                        $prevtestid = $row['id'];
-                    } else {
-                        // Go to next column again.
-                        $currentcolumn = ($currentcolumn + $t) % $columncount;
-                        break;
-                    }
-                }
-                // Add correct values to correct column
-                if ($prevtestid == $row['id'] and $currentcolumn != 0) {
-                    $etest = array();
-                    $etest['name'] = $row['name'];
-                    $etest['testid'] = $row['id'];
-                    $etest['buildid'] = $row['buildid'];
-                    $etest['value'] = $row['value'];
-                    $etests[] = $etest;
-
-                    $checkarray[$row['name']][$i] = $row['id'];
-                    $prevtestid = $row['id'];
-                } else {
-                    if ($prevtestid != $row['id'] and $prevtestid != 0 and $currentcolumn != 0) {
-                        for ($t = 0; $t < $columncount; $t++) {
-                            $etest = array();
-                            $etest['name'] = '';
-                            $etest['testid'] = '';
-                            $etest['buildid'] = '';
-                            $etest['rowcheck'] = '-';
-                            $etests[] = $etest;
-                        }
-                    }
-
-                    $etest = array();
-                    $etest['name'] = $row['name'];
-                    $etest['testid'] = $row['id'];
-                    $etest['buildid'] = $row['buildid'];
-                    $etest['value'] = $row['value'];
-                    $etests[] = $etest;
-                    $checkarray[$row['name']][$i] = $row['id'];
-                    $prevtestid = $row['id'];
-                }
-            } else {
-                if ($prevtestid != $row['id'] and $prevtestid != 0 and $currentcolumn != 0) {
-                    for ($t = 0; $t < $columncount; $t++) {
-                        $etest = array();
-                        $etest['name'] = '';
-                        $etest['testid'] = '';
-                        $etest['buildid'] = '';
-                        $etest['value'] = '';
-                        $etests[] = $etest;
-                    }
-                }
-                // Add correct values to correct column
-                $etest = array();
-                $etest['name'] = $row['name'];
-                $etest['testid'] = $row['id'];
-                $etest['buildid'] = $row['buildid'];
-                $etest['value'] = $row['value'];
-                $etests[] = $etest;
-                $checkarray[$row['name']][$i] = $row['id'];
-                $prevtestid = $row['id'];
-            }
-        }
-        $i++;
-    }
-    $response['etests'] = $etests;
-}
 
 // Add the date/time
 $response['projectid'] = $projectid;
@@ -338,6 +231,7 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
 $numpassed = 0;
 $numfailed = 0;
 $numtotal = 0;
+$test_measurements = [];
 
 while ($row = pdo_fetch_array($result)) {
     $buildid = $row['buildid'];
@@ -392,7 +286,57 @@ while ($row = pdo_fetch_array($result)) {
             break;
     }
     $numtotal += 1;
+
+    // Initialize an empty array of extra test measurements for this build.
+    $test_measurements[$buildid] = [];
+    for ($i = 0; $i < $columncount; $i++) {
+        $test_measurements[$buildid][$i] = '';
+    }
+
     $builds_response[] = $build_response;
+}
+
+// Fill in extra test measurements for each build.
+if ($columncount > 0) {
+    $etestquery = pdo_query(
+        "SELECT test.id, test.projectid, build2test.buildid,
+            build2test.status, build2test.timestatus, test.name,
+            testmeasurement.name, testmeasurement.value, build.starttime,
+            build2test.time, measurement.testpage FROM test
+            JOIN testmeasurement ON (test.id = testmeasurement.testid)
+            JOIN build2test ON (build2test.testid = test.id)
+            JOIN build ON (build.id = build2test.buildid)
+            JOIN measurement ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
+            WHERE test.name='$testName'
+            AND build.starttime>='$beginning_UTCDate'
+            AND build.starttime<'$end_UTCDate'
+            AND test.projectid=$projectid
+            AND measurement.summarypage= 1
+            ORDER BY build2test.buildid, testmeasurement.name
+            ");
+    while ($etestquery && $row = pdo_fetch_array($etestquery)) {
+        // Get the index of this measurement in the list of columns.
+        $idx = array_search($row['name'], $columns);
+
+        // Fill in this measurement value for this build's run of the test.
+        $test_measurements[$row['buildid']][$idx] = $row['value'];
+    }
+}
+
+// Assign these extra measurements to each build.
+foreach ($builds_response as $i => $build_response) {
+    $buildid = $builds_response[$i]['buildid'];
+    $builds_response[$i]['measurements'] = $test_measurements[$buildid];
+    if ($response['hasprocessors']) {
+        // Show an additional column "proc time" if these tests have
+        // the Processor measurement.
+        $num_procs = $test_measurements[$buildid][$processors_idx];
+        if (!$num_procs) {
+            $num_procs = 1;
+        }
+        $builds_response[$i]['proctime'] =
+            floatval($builds_response[$i]['time'] * $num_procs);
+    }
 }
 
 $response['builds'] = $builds_response;

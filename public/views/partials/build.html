@@ -365,6 +365,11 @@
   </div>
 </td>
 
+<td align="center"
+    ng-if="::buildgroup.hastestdata && cdash.advancedview != 0 && cdash.showProcTime">
+  {{::build.test.procTime}}
+</td>
+
 <td align="center" ng-if="::cdash.showstarttime">
   <span ng-if="::!build.builddate" class="builddateelapsed" alt="Expected submit time: {{::build.expectedstarttime}}">
     Expected build
