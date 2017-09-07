@@ -224,7 +224,7 @@ $response['csvlink'] = "api/v1/viewTest.php?buildid=$buildid&export=csv";
 $project = array();
 $project['showtesttime'] = $projectshowtesttime;
 $response['project'] = $project;
-$response['parentBuild'] = $build->GetParentId() == -1;
+$response['parentBuild'] = $build->GetParentId() == Build::PARENT_BUILD;
 
 $displaydetails = 1;
 $status = '';
@@ -278,7 +278,7 @@ if ($project_array['displaylabels'] && $CDASH_DB_TYPE != 'pgsql') {
     $groupby_sql = ' GROUP BY t.id';
 }
 
-if ($build->GetParentId() == -1) {
+if ($build->GetParentId() == Build::PARENT_BUILD) {
     $parentBuildFieldSql = ', sp2b.subprojectid, sp.name subprojectname';
     $parentBuildJoinSql = 'JOIN build b ON (b.id = bt.buildid)
                            JOIN subproject2build sp2b on (sp2b.buildid = b.id)
@@ -309,7 +309,7 @@ $numTimeFailed = 0;
 
 // Are we looking for tests that were performed by this build,
 // or tests that were performed by children of this build?
-if ($build->GetParentId() == -1) {
+if ($build->GetParentId() == Build::PARENT_BUILD) {
     $buildid_field = 'parentid';
 } else {
     $buildid_field = 'id';

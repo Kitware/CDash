@@ -35,6 +35,9 @@ class Build
     const TYPE_WARN = 1;
     const STATUS_NEW = 1;
 
+    const PARENT_BUILD = -1;
+    const STANDALONE_BUILD = 0;
+
     public $Id;
     public $SiteId;
     public $ProjectId;
