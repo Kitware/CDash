@@ -418,6 +418,11 @@ function checkUserPolicy($userid, $projectid, $onlyreturn = 0)
             return false;
         }
     } elseif (@$projectid > 0) {
+        // Global admins have access to all projects.
+        if ($user->IsAdmin()) {
+            return true;
+        }
+
         $project = new Project();
         $project->Id = $projectid;
         $project->Fill();
