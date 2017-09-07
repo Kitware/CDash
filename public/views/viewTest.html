@@ -171,6 +171,15 @@
                 <span class="glyphicon" ng-class="orderByFields.indexOf('-execTimeFull') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('execTimeFull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
 
+              <th ng-if="::cdash.hasprocessors" width="9%" class="header"
+                  ng-click="updateOrderByFields('procTimeFull', $event)"
+                  tooltip-popup-delay="1500"
+                  tooltip-append-to-body="true"
+                  uib-tooltip="Elapsed time * number of processors">
+                Proc Time
+                <span class="glyphicon" ng-class="orderByFields.indexOf('-procTimeFull') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('procTimeFull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+              </th>
+
               <th ng-if="::cdash.displaydetails == 1" width="13%" class="header" ng-click="updateOrderByFields('details', $event)">
                 Details
                 <span class="glyphicon" ng-class="orderByFields.indexOf('-details') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('details') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
@@ -233,6 +242,11 @@
             <td align="right">
               <span style="display:none">{{::test.execTimeFull}}</span>
               {{::test.execTime}}
+            </td>
+
+            <td ng-if="::cdash.hasprocessors" align="right">
+              <span style="display:none">{{::test.procTimeFull}}</span>
+              {{::test.procTime}}
             </td>
 
             <td ng-if="::cdash.displaydetails == 1">

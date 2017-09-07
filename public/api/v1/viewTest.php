@@ -326,8 +326,14 @@ AND measurement.testpage=1
 GROUP by testmeasurement.name
 "); // We need to keep the count of columns for correct column-data assign
 
+$response['hasprocessors'] = false;
+$processors_idx = -1;
 while ($row = pdo_fetch_array($getcolumnnumber)) {
     $columns[] = $row['name'];
+    if ($row['name'] == 'Processors') {
+        $processors_idx = count($columns) - 1;
+        $response['hasprocessors'] = true;
+    }
 }
 $response['columnnames'] = $columns;
 
@@ -433,6 +439,18 @@ while ($row = pdo_fetch_array($result)) {
 
     $labels_found = ($CDASH_DB_TYPE != 'pgsql' && !empty($marshaledTest['labels']));
     $marshaledTest['measurements'] = $test_measurements[$marshaledTest['id']];
+    if ($response['hasprocessors']) {
+        // Show an additional column "proc time" if these tests have
+        // the Processor measurement.
+        $num_procs = $test_measurements[$marshaledTest['id']][$processors_idx];
+        if (!$num_procs) {
+            $num_procs = 1;
+        }
+        $marshaledTest['procTimeFull'] =
+            $marshaledTest['execTimeFull'] * $num_procs;
+        $marshaledTest['procTime'] =
+            time_difference($marshaledTest['procTimeFull'], true, '', true);
+    }
     $tests[] = $marshaledTest;
 }
 
