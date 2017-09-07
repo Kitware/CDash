@@ -7,14 +7,14 @@
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="stylesheet" type="text/css" ng-href="{{::cssfile}}" />
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <script src="js/CDash_1502125565649.min.js"></script>
+    <script src="js/CDash_1504804002319.min.js"></script>
     <title ng-bind="title">CDash</title>
   </head>
 
   <body bgcolor="#ffffff" ng-controller="ViewTestController">
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
 
-    <ng-include ng-if="cdash.requirelogin != 1" src="::cdash.header || 'build/views/partials/header_1502125565649.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="::cdash.header || 'build/views/partials/header_1504804002319.html'"></ng-include>
     <br/>
 
     <div ng-if="cdash.requirelogin != 1 && !loading && !cdash.error">
@@ -114,7 +114,7 @@
           <span ng-show="showfilters != 0">Hide Filters</span>
         </a>
       </div>
-      <ng-include src="'build/views/partials/filterdataTemplate_1502125565649.html'"></ng-include>
+      <ng-include src="'build/views/partials/filterdataTemplate_1504804002319.html'"></ng-include>
 
       <div ng-switch="::cdash.display">
         <h3 ng-switch-when="onlypassed">{{::cdash.numPassed}} tests passed.</h3>
@@ -171,6 +171,15 @@
                 <span class="glyphicon" ng-class="orderByFields.indexOf('-execTimeFull') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('execTimeFull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
 
+              <th ng-if="::cdash.hasprocessors" width="9%" class="header"
+                  ng-click="updateOrderByFields('procTimeFull', $event)"
+                  tooltip-popup-delay="1500"
+                  tooltip-append-to-body="true"
+                  uib-tooltip="Elapsed time * number of processors">
+                Proc Time
+                <span class="glyphicon" ng-class="orderByFields.indexOf('-procTimeFull') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('procTimeFull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+              </th>
+
               <th ng-if="::cdash.displaydetails == 1" width="13%" class="header" ng-click="updateOrderByFields('details', $event)">
                 Details
                 <span class="glyphicon" ng-class="orderByFields.indexOf('-details') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('details') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
@@ -199,7 +208,9 @@
                 <span class="glyphicon" ng-class="orderByFields.indexOf('-summary') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('summary') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
 
-              <!-- TODO: test measurements -->
+              <th ng-repeat = "columnname in ::cdash.columnnames">
+                {{::columnname}}
+              </th>
             </tr>
           </thead>
 
@@ -233,6 +244,11 @@
               {{::test.execTime}}
             </td>
 
+            <td ng-if="::cdash.hasprocessors" align="right">
+              <span style="display:none">{{::test.procTimeFull}}</span>
+              {{::test.procTime}}
+            </td>
+
             <td ng-if="::cdash.displaydetails == 1">
               {{::test.details}}
             </td>
@@ -249,7 +265,9 @@
               <a ng-href="{{test.summaryLink}}"
                  ng-click="cancelAjax()">{{test.summary}}</a>
             </td>
-
+            <td ng-repeat="measurement in ::test.measurements">
+              {{::measurement}}
+            </td>
           </tr>
         </table>
 
@@ -281,6 +299,6 @@
 
     <!-- FOOTER -->
     <br/>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1502125565649.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1504804002319.html'"></ng-include>
   </body>
 </html>

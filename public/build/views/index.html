@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.4.css" />
     <link rel="stylesheet" type="text/css" href="css/jqModal.css" />
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <script src="js/CDash_1502125565649.min.js"></script>
+    <script src="js/CDash_1504804002319.min.js"></script>
     <title ng-bind="::title">CDash</title>
   </head>
 
@@ -17,7 +17,7 @@
 
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
 
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1502125565649.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1504804002319.html'"></ng-include>
 
     <div id="index_content" ng-if="!loading && cdash.requirelogin != 1 && !cdash.error">
       <div id="index_top" ng-if="::cdash.updates">
@@ -96,7 +96,7 @@
         </div>
 
         <!-- Filters -->
-        <ng-include src="'build/views/partials/filterdataTemplate_1502125565649.html'"></ng-include>
+        <ng-include src="'build/views/partials/filterdataTemplate_1504804002319.html'"></ng-include>
       </div> <!-- End index-top -->
 
       <div ng-show="showFeed" id="feed" ng-include="::'ajax/getfeed.php?projectid='+ cdash.projectid"></div>
@@ -129,6 +129,13 @@
              ng-href="viewNotes.php?buildid={{::cdash.parentid}}">
             <img src="img/document.png" alt="Notes" class="icon"/>
           </a>
+
+          <a ng-if="::cdash.uploadfilecount > 0"
+             ng-href="viewFiles.php?buildid={{::cdash.parentid}}"
+             title="{{::cdash.uploadfilecount}} files uploaded with this build">
+            <img src="img/package.png" alt="Files" class="icon"/>
+          </a>
+
           <a ng-if="::cdash.changelink" target="_blank" ng-href="{{::cdash.changelink}}">
             <img class="smallicon" ng-src="{{::cdash.changeicon}}"/>
           </a>
@@ -137,11 +144,58 @@
         <div id="numbuilds" align="left">
           <b>Number of SubProjects</b>: {{::cdash.numchildren}}
         </div>
+
+        <div ng-if="::cdash.advancedview != 0">
+          <div id="buildstamp" align="left">
+            <b>Stamp</b>: {{::cdash.stamp}}
+          </div>
+          <div id="buildstarttime" align="left">
+            <b>Build Start Time</b>: {{::cdash.starttime}}
+          </div>
+          <div id="buildtype" align="left">
+            <b>Type</b>: {{::cdash.type}}
+          </div>
+          <div id="osname" align="left">
+            <b>OS Name</b>: {{::cdash.osname}}
+          </div>
+          <div id="osplatform" align="left">
+            <b>OS Platform</b>: {{::cdash.osplatform}}
+          </div>
+          <div id="osrelease" align="left">
+            <b>OS Release</b>: {{::cdash.osrelease}}
+          </div>
+          <div id="osversion" align="left">
+            <b>OS Version</b>: {{::cdash.osversion}}
+          </div>
+          <div id="generator" align="left">
+          <b>CTest version: </b>{{::cdash.generator}}
+          </div>
+
+          <div ng-if="::cdash.showorder">
+            <div ng-if="::cdash.updateduration != false"
+                 id="updateduration" align="left">
+              <b>Update Time: </b>{{::cdash.updateduration}}
+            </div>
+            <div ng-if="::cdash.configureduration != false"
+                 id="configureduration" align="left">
+              <b>Configure Time: </b>{{::cdash.configureduration}}
+            </div>
+            <div ng-if="::cdash.buildduration != false"
+                 id="buildduration" align="left">
+              <b>Build Time: </b>{{::cdash.buildduration}}
+            </div>
+            <div ng-if="::cdash.testduration != false"
+                 id="testduration" align="left">
+              <b>Test Time: </b>{{::cdash.testduration}}
+            </div>
+          </div>
+        </div>
+
         <br/>
       </div>
 
       <!-- Display subproject dependencies -->
-      <ng-include ng-if="::cdash.subproject.dependencies.length > 0" ng-init="cdash.tableName = 'SubProject Dependencies'; cdash.subprojects = cdash.subproject.dependencies" src="'build/views/partials/subProjectTable_1502125565649.html'"></ng-include>
+      <ng-include ng-if="::cdash.subproject.dependencies.length > 0" ng-init="cdash.tableName = 'SubProject Dependencies'; cdash.subprojects = cdash.subproject.dependencies" src="'build/views/partials/subProjectTable_1504804002319.html'"></ng-include>
 
       <!-- BuildGroups -->
       <div ng-repeat="buildgroup in ::cdash.buildgroups | orderBy:'position'">
@@ -179,10 +233,10 @@
                 <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-buildname') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('buildname') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
 
-              <td ng-if="::buildgroup.hasupdatedata" align="center" colspan="{{::1 + cdash.advancedview}}" width="5%" class="timeheader botl">Update</td>
-              <td ng-if="::buildgroup.hasconfiguredata" align="center" colspan="{{::2 + cdash.advancedview}}" width="10%" class="timeheader botl">Configure</td>
-              <td ng-if="::buildgroup.hascompilationdata" align="center" colspan="{{::2 + cdash.advancedview}}" width="10%" class="timeheader botl">Build</td>
-              <td ng-if="::buildgroup.hastestdata" align="center" colspan="{{::3 +  + cdash.advancedview}}" width="15%" class="timeheader botl">Test</td>
+              <td ng-if="::buildgroup.hasupdatedata" align="center" colspan="{{::1 + cdash.showtimecolumns}}" width="5%" class="timeheader botl">Update</td>
+              <td ng-if="::buildgroup.hasconfiguredata" align="center" colspan="{{::2 + cdash.showtimecolumns}}" width="10%" class="timeheader botl">Configure</td>
+              <td ng-if="::buildgroup.hascompilationdata" align="center" colspan="{{::2 + cdash.showtimecolumns}}" width="10%" class="timeheader botl">Build</td>
+              <td ng-if="::buildgroup.hastestdata" align="center" colspan="{{::3 + cdash.extratestcolumns}}" width="15%" class="timeheader botl">Test</td>
               <td ng-if="::cdash.showstarttime" align="center" width="20%" class="timeheader botl"></td>
               <td ng-if="::cdash.showorder" align="center" width="5%" class="timeheader botl"></td>
               <td ng-if="::cdash.childview != 1 && cdash.displaylabels == 1" align="center" width="5%" class="timeheader botl"></td>
@@ -195,7 +249,7 @@
               </th>
 
               <th align="center" width="5%" style="cursor: pointer"
-                  ng-if="::buildgroup.hasupdatedata && cdash.advancedview != 0"
+                  ng-if="::buildgroup.hasupdatedata && cdash.advancedview != 0 && cdash.showstarttime"
                   ng-click="updateOrderByFields(buildgroup, 'update.timefull', $event)">
                 Time
                 <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-update.timefull') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('update.timefull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
@@ -212,7 +266,7 @@
               </th>
 
               <th align="center" width="5%" style="cursor: pointer"
-                  ng-if="::buildgroup.hasconfiguredata && cdash.advancedview != 0"
+                  ng-if="::buildgroup.hasconfiguredata && cdash.advancedview != 0 && cdash.showstarttime"
                   ng-click="updateOrderByFields(buildgroup, 'configure.timefull', $event)">
                 Time
                 <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-configure.timefull') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('configure.timefull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
@@ -229,7 +283,7 @@
               </th>
 
               <th align="center" width="5%" style="cursor: pointer"
-                  ng-if="::buildgroup.hascompilationdata && cdash.advancedview != 0"
+                  ng-if="::buildgroup.hascompilationdata && cdash.advancedview != 0 && cdash.showstarttime"
                   ng-click="updateOrderByFields(buildgroup, 'compilation.timefull', $event)">
                 Time
                 <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-compilation.timefull') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('compilation.timefull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
@@ -251,10 +305,17 @@
               </th>
 
               <th align="center" width="5%" style="cursor: pointer"
-                  ng-if="::buildgroup.hastestdata && cdash.advancedview != 0"
+                  ng-if="::buildgroup.hastestdata && cdash.advancedview != 0 && cdash.showstarttime"
                   ng-click="updateOrderByFields(buildgroup, 'test.timefull', $event)">
                 Time
                 <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-test.timefull') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('test.timefull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+              </th>
+
+              <th align="center" width="5%" style="cursor: pointer"
+                  ng-if="::buildgroup.hastestdata && cdash.advancedview != 0 && cdash.showProcTime"
+                  ng-click="updateOrderByFields(buildgroup, 'test.procTimeFull', $event)">
+                Proc Time
+                <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-test.procTimeFull') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('test.procTimeFull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
 
               <th align="center" width="20%" style="cursor: pointer"
@@ -585,6 +646,19 @@
       </table>
     </div> <!-- end index content -->
 
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1502125565649.html'"></ng-include>
+    <!-- confirm delete build modal template -->
+    <script type="text/ng-template" id="modal-template">
+      <div class="modal-header">
+        <h4 class="modal-title">Remove Build</h4>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to remove this Build?</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-danger" id="modal-delete-build-button" ng-click="$ctrl.ok()">Delete</button>
+        <button class="btn" ng-click="$ctrl.cancel()">cancel</button>
+      </div>
+    </script>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1504804002319.html'"></ng-include>
   </body>
 </html>

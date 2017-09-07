@@ -9,12 +9,12 @@
     <link rel="stylesheet" type="text/css" href="css/jquery.qtip.min.css" />
     <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.4.css" />
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
-    <script src="js/CDash_1502125565649.min.js"></script>
+    <script src="js/CDash_1504804002319.min.js"></script>
     <title>CDash - BuildGroups</title>
   </head>
   <body bgcolor="#ffffff" ng-controller="ManageBuildGroupController">
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1502125565649.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1504804002319.html'"></ng-include>
     <br/>
 
     <div class="container" ng-if="cdash.requirelogin != 1 && !loading">
@@ -74,7 +74,8 @@
                       <span ng-click="showOptions = !showOptions" ng-class="showOptions ? 'glyphicon glyphicon-chevron-down' : 'glyphicon glyphicon-chevron-right'" style="cursor: pointer;"></span> {{buildgroup.name}}
 
                       <!-- Display delete icon if this isn't a default build group -->
-                      <span ng-if="buildgroup.name != 'Nightly' && buildgroup.name != 'Continuous' && buildgroup.name != 'Experimental'" ng-show="showOptions" ng-click="deleteBuildGroup(buildgroup.id)" class="glyphicon glyphicon-trash animate-show" style="cursor: pointer;"></span>
+                      <span ng-if="buildgroup.name != 'Nightly' && buildgroup.name != 'Continuous' && buildgroup.name != 'Experimental'" ng-show="showOptions" ng-click="showModal(buildgroup.id)" class="glyphicon glyphicon-trash animate-show" style="cursor: pointer;"></span>
+
                     </div>
 
                     <div class="col-md-8 animate-show" ng-show="showOptions">
@@ -334,8 +335,23 @@
       </div> <!-- tabpanel -->
     </div> <!-- container -->
 
+    <!-- confirm delete build modal template -->
+    <script type="text/ng-template" id="modal-template">
+      <div class="modal-header">
+        <h4 class="modal-title">Delete BuildGroup</h4>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete this BuildGroup? (If the BuildGroup is not empty its builds
+          will be moved to their original BuildGroup.)</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-danger" id="modal-delete-group-button" ng-click="$ctrl.ok()">Delete</button>
+        <button class="btn" ng-click="$ctrl.cancel()">cancel</button>
+      </div>
+    </script>
+
     <!-- FOOTER -->
     <br/>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1502125565649.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1504804002319.html'"></ng-include>
   </body>
 </html>
