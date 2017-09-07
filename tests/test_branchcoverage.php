@@ -61,10 +61,14 @@ class BranchCoverageTestCase extends KWWebTestCase
             return 1;
         }
 
+        $url = "{$this->url}/viewCoverage.php?buildid={$buildid}";
+
         // Make sure that it recorded the source file's label in our submission.
-        $content = $this->get($this->url . "/viewCoverage.php?buildid=$buildid");
+        $content = $this->get($url);
         if (strpos($content, '<td align="right">Foo</td>') === false) {
-            $this->fail('\"<td align="right">Foo</td>\" not found when expected');
+            $msg = '\"<td align="right">Foo</td>\" not found when expected'
+                . PHP_EOL . 'URL: ' . $url;
+            $this->fail($msg);
             return 1;
         }
         // Look up the ID of one of the coverage files that we just submitted.

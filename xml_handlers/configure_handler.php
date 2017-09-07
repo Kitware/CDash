@@ -15,12 +15,13 @@
 =========================================================================*/
 
 require_once 'xml_handlers/abstract_handler.php';
+require_once 'xml_handlers/actionable_build_interface.php';
 require_once 'models/build.php';
 require_once 'models/label.php';
 require_once 'models/site.php';
 require_once 'models/buildconfigure.php';
 
-class ConfigureHandler extends AbstractHandler
+class ConfigureHandler extends AbstractHandler implements ActionableBuildInterface
 {
     private $StartTimeStamp;
     private $EndTimeStamp;
@@ -127,6 +128,14 @@ class ConfigureHandler extends AbstractHandler
         if ($name == 'CONFIGURE') {
             $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
             $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
+            // Configure Duration is handled differently if this XML
+            // file represents multiple builds.  We refer to this situation
+            // as an "all at once" SubProject build.  In this case, we do
+            // not want to add each build's configure duration to the parent's
+            // tally.
+            $all_at_once = count($this->Builds) > 1;
+            $parent_duration_set = false;
+
             foreach ($this->Builds as $subproject => $build) {
                 $build->ProjectId = $this->projectid;
                 $build->StartTime = $start_time;
@@ -175,8 +184,14 @@ class ConfigureHandler extends AbstractHandler
                 $build->ComputeConfigureDifferences();
 
                 // Record configure duration with the build.
-                $build->SetConfigureDuration(
-                        $this->EndTimeStamp - $this->StartTimeStamp);
+                $duration = $this->EndTimeStamp - $this->StartTimeStamp;
+                $build->SetConfigureDuration($duration, !$all_at_once);
+                if ($all_at_once && !$parent_duration_set) {
+                    $parent_build = new Build();
+                    $parent_build->Id = $build->GetParentId();
+                    $parent_build->SetConfigureDuration($duration, false);
+                    $parent_duration_set = true;
+                }
             }
 
             // Update the tally of warnings & errors in the parent build,
@@ -251,5 +266,13 @@ class ConfigureHandler extends AbstractHandler
     public function getBuildName()
     {
         return $this->BuildName;
+    }
+
+    /**
+     * @return Build[]
+     */
+    public function getActionableBuilds()
+    {
+        return $this->Builds;
     }
 }

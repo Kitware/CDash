@@ -20,10 +20,12 @@ describe("remove_build", function() {
 
     // This generates a confirmation dialog which we have to accept.
     // Wait for it to appear.
-    browser.wait(protractor.ExpectedConditions.alertIsPresent(), 10000);
+    browser.wait(function() {
+      "use strict";
+      return element(by.id('modal-delete-build-button')).isPresent();
+    });
 
-    // Then switch to it & click on it.
-    browser.switchTo().alert().accept();
+    element(by.id('modal-delete-build-button')).click();
     browser.waitForAngular();
 
     // Refresh the page to make sure this build is gone now.

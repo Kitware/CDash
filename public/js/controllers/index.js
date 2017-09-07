@@ -48,7 +48,7 @@ CDash.filter("showEmptyBuildsLast", function () {
 })
 
 
-.controller('IndexController', function IndexController($scope, $rootScope, $location, $http, $filter, $timeout, anchors, apiLoader, filters, multisort) {
+.controller('IndexController', function IndexController($scope, $rootScope, $location, $http, $filter, $timeout, anchors, apiLoader, filters, multisort, modalSvc) {
   // Show spinner while page is loading.
   $scope.loading = true;
 
@@ -214,10 +214,25 @@ CDash.filter("showEmptyBuildsLast", function () {
 
     // Read simple/advanced view cookie setting.
     var advanced_cookie = $.cookie('cdash_'+$scope.cdash.projectname+'_advancedview');
+    var show_time_columns = 0;
     if(advanced_cookie == 1) {
       $scope.cdash.advancedview = 1;
+      if ($scope.cdash.showstarttime) {
+        // Don't show time columns for all-at-once subproject builds.
+        // This situation is identified by showstarttime being false.
+        show_time_columns = 1;
+      }
     } else {
       $scope.cdash.advancedview = 0;
+    }
+    $scope.cdash.showtimecolumns = show_time_columns;
+
+    // Determine if we should display an extra column in the 'Test' section.
+    $scope.cdash.extratestcolumns = 0;
+    if ($scope.cdash.advancedview) {
+      if ($scope.cdash.showtimecolumns || $scope.cdash.showProcTime) {
+        $scope.cdash.extratestcolumns = 1;
+      }
     }
 
     if (!$scope.cdash.feed) {
@@ -372,18 +387,19 @@ CDash.filter("showEmptyBuildsLast", function () {
     }
   };
 
+  $scope.showModal = function (buildid) {
+    modalSvc.showModal(buildid, $scope.removeBuild, 'modal-template');
+  }
 
   $scope.removeBuild = function(build) {
-    if (window.confirm("Are you sure you want to remove this build?")) {
-      var parameters = { buildid: build.id };
-        $http({
-          url: 'api/v1/build.php',
-          method: 'DELETE',
-          params: parameters
-        }).then(function success() {
-          $scope.removeBuildFromScope(build);
-      });
-    }
+    var parameters = { buildid: build.id };
+      $http({
+        url: 'api/v1/build.php',
+        method: 'DELETE',
+        params: parameters
+      }).then(function success() {
+        $scope.removeBuildFromScope(build);
+    });
   };
 
   $scope.removeBuildFromScope = function(build) {

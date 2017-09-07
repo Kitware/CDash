@@ -70,6 +70,44 @@ function can_access_project($projectid)
     return true;
 }
 
+// Return true if this user has administrative access to this project.
+// Respond with the correct HTTP status (401 or 403) and exit if not.
+function can_administrate_project($projectid)
+{
+    // Check that we were supplied a reasonable looking projectid.
+    if (!isset($projectid) || !is_numeric($projectid) || $projectid < 1) {
+        json_error_response(['error' => 'Valid project ID required'], 400);
+    }
+
+    // Make sure the user is logged in.
+    $userid = get_userid_from_session(false);
+    if (is_null($userid)) {
+        $response = ['requirelogin' => 1];
+        json_error_response($response, 401);
+    }
+
+    // Check if this user is a global admin.
+    require_once 'models/user.php';
+    $user = new User();
+    $user->Id = $userid;
+    if ($user->IsAdmin()) {
+        return true;
+    }
+
+    // Check if this user is a project admin.
+    require_once 'models/userproject.php';
+    $user2project = new UserProject();
+    $user2project->UserId = $userid;
+    $user2project->ProjectId = $projectid;
+    $user2project->FillFromUserId();
+    if ($user2project->Role == UserProject::PROJECT_ADMIN) {
+        return true;
+    }
+
+    $response = ['error' => 'You do not have permission to access this page.'];
+    json_error_response($response, 403);
+}
+
 /**
  * Checks for the user id in the session, if none, and required, exits programe with 401
  *

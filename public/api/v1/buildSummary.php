@@ -27,18 +27,14 @@ $start = microtime_float();
 $response = array();
 
 $build = get_request_build();
-
-$date = null;
-if (isset($_GET['date'])) {
-    $date = $_GET['date'];
-}
-
 $buildid = $build->Id;
 $siteid = $build->SiteId;
 
 $project = new Project();
 $project->Id = $build->ProjectId;
 $project->Fill();
+
+$date = get_dashboard_date_from_build_starttime($build->StartTime, $project->NightlyTime);
 
 // Format the text to fit the iPhone
 function format_for_iphone($text)
@@ -62,7 +58,7 @@ $menu = array();
 if ($build->GetParentId() > 0) {
     $menu['back'] = 'index.php?project=' . urlencode($project->Name) . "&parentid={$build->GetParentId()}";
 } else {
-    $menu['back'] = 'index.php?project=' . urlencode($project->Name) . '&date=' . get_dashboard_date_from_build_starttime($build->StartTime, $project->NightlyTime);
+    $menu['back'] = 'index.php?project=' . urlencode($project->Name) . "&date=$date";
 }
 
 if ($previous_buildid > 0) {
@@ -129,28 +125,19 @@ $note_array = pdo_fetch_array($note);
 $build_response['note'] = $note_array['c'];
 
 // Find the OS and compiler information
-$buildinformation = pdo_query("SELECT * FROM buildinformation WHERE buildid='$buildid'");
-if (pdo_num_rows($buildinformation) > 0) {
-    $buildinformation_array = pdo_fetch_array($buildinformation);
-    if ($buildinformation_array['osname'] != '') {
-        $build_response['osname'] = $buildinformation_array['osname'];
-    }
-    if ($buildinformation_array['osplatform'] != '') {
-        $build_response['osplatform'] = $buildinformation_array['osplatform'];
-    }
-    if ($buildinformation_array['osrelease'] != '') {
-        $build_response['osrelease'] = $buildinformation_array['osrelease'];
-    }
-    if ($buildinformation_array['osversion'] != '') {
-        $build_response['osversion'] = $buildinformation_array['osversion'];
-    }
-    if ($buildinformation_array['compilername'] != '') {
-        $build_response['compilername'] = $buildinformation_array['compilername'];
-    }
-    if ($buildinformation_array['compilerversion'] != '') {
-        $build_response['compilerversion'] = $buildinformation_array['compilerversion'];
-    }
+$buildinfo = new BuildInformation();
+if ($build->GetParentId() > 0) {
+    $buildinfo->BuildId = $build->GetParentId();
+} else {
+    $buildinfo->BuildId = $buildid;
 }
+$buildinfo->Fill();
+$build_response['osname'] = $buildinfo->OSName;
+$build_response['osplatform'] = $buildinfo->OSPlatform;
+$build_response['osrelease'] = $buildinfo->OSRelease;
+$build_response['osversion'] = $buildinfo->OSVersion;
+$build_response['compilername'] = $buildinfo->CompilerName;
+$build_response['compilerversion'] = $buildinfo->CompilerVersion;
 
 $build_response['generator'] = $build->Generator;
 $build_response['command'] = $build->Command;

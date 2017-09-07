@@ -30,7 +30,7 @@ if ($session_OK) {
 
     checkUserPolicy(@$_SESSION['cdash']['loginid'], 0); // only admin
 
-//get date info here
+    //get date info here
     @$dayFrom = $_POST['dayFrom'];
     if (!isset($dayFrom)) {
         $dayFrom = date('d', strtotime('yesterday'));
@@ -149,6 +149,6 @@ if ($session_OK) {
         return;
     }
 
-// Now doing the xslt transition
+    // Now doing the xslt transition
     generate_XSLT($xml, 'import');
 }

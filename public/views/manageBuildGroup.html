@@ -74,7 +74,8 @@
                       <span ng-click="showOptions = !showOptions" ng-class="showOptions ? 'glyphicon glyphicon-chevron-down' : 'glyphicon glyphicon-chevron-right'" style="cursor: pointer;"></span> {{buildgroup.name}}
 
                       <!-- Display delete icon if this isn't a default build group -->
-                      <span ng-if="buildgroup.name != 'Nightly' && buildgroup.name != 'Continuous' && buildgroup.name != 'Experimental'" ng-show="showOptions" ng-click="deleteBuildGroup(buildgroup.id)" class="glyphicon glyphicon-trash animate-show" style="cursor: pointer;"></span>
+                      <span ng-if="buildgroup.name != 'Nightly' && buildgroup.name != 'Continuous' && buildgroup.name != 'Experimental'" ng-show="showOptions" ng-click="showModal(buildgroup.id)" class="glyphicon glyphicon-trash animate-show" style="cursor: pointer;"></span>
+
                     </div>
 
                     <div class="col-md-8 animate-show" ng-show="showOptions">
@@ -333,6 +334,21 @@
         </div> <!-- tab-content -->
       </div> <!-- tabpanel -->
     </div> <!-- container -->
+
+    <!-- confirm delete build modal template -->
+    <script type="text/ng-template" id="modal-template">
+      <div class="modal-header">
+        <h4 class="modal-title">Delete BuildGroup</h4>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete this BuildGroup? (If the BuildGroup is not empty its builds
+          will be moved to their original BuildGroup.)</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-danger" id="modal-delete-group-button" ng-click="$ctrl.ok()">Delete</button>
+        <button class="btn" ng-click="$ctrl.cancel()">cancel</button>
+      </div>
+    </script>
 
     <!-- FOOTER -->
     <br/>

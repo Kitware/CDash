@@ -141,6 +141,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
     }
     $response['banners'] = $banners;
     $site_response = array();
+    $show_proc_time = false;
 
     // If parentid is set we need to lookup the date for this build
     // because it is not specified as a query string parameter.
@@ -148,8 +149,25 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $parentid = pdo_real_escape_numeric($_GET['parentid']);
         $parent_build = new Build();
         $parent_build->Id = $parentid;
+        $parent_build->FillFromId($parent_build->Id);
         $date = $parent_build->GetDate();
         $response['parentid'] = $parentid;
+
+        $response['stamp'] = $parent_build->GetStamp();
+        $response['starttime'] = $parent_build->StartTime;
+        $response['type'] = $parent_build->Type;
+
+        // Include data about this build from the buildinformation table.
+        require_once 'models/buildinformation.php';
+        $buildinfo = new BuildInformation();
+        $buildinfo->BuildId = $parentid;
+        $buildinfo->Fill();
+        $response['osname'] = $buildinfo->OSName;
+        $response['osplatform'] = $buildinfo->OSPlatform;
+        $response['osrelease'] = $buildinfo->OSRelease;
+        $response['osversion'] = $buildinfo->OSVersion;
+        $response['compilername'] = $buildinfo->CompilerName;
+        $response['compilerversion'] = $buildinfo->CompilerVersion;
 
         // Check if the parent build has any notes.
         $stmt = $PDO->prepare(
@@ -159,6 +177,23 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $response['parenthasnotes'] = true;
         } else {
             $response['parenthasnotes'] = false;
+        }
+
+        // Check if the parent build has any uploaded files.
+        $stmt = $PDO->prepare(
+            'SELECT COUNT(buildid) FROM build2uploadfile WHERE buildid = ?');
+        pdo_execute($stmt, [$parentid]);
+        $response['uploadfilecount'] = $stmt->fetchColumn();
+
+        // For parent builds, we support an additional advanced column called
+        // 'Proc Time'.  This is only shown if this project is setup to display
+        // an extra test measurement called 'Processors'.
+        $stmt = $PDO->prepare(
+            "SELECT id FROM measurement
+            WHERE projectid = ? and name = 'Processors'");
+        pdo_execute($stmt, [$projectid]);
+        if ($stmt->fetchColumn() !== false) {
+            $show_proc_time = true;
         }
     } else {
         $response['parentid'] = -1;
@@ -775,6 +810,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $build_response['siteid'] = $siteid;
             $build_response['buildname'] = $build_array['name'];
             $build_response['buildplatform'] = $buildplatform;
+            $build_response['uploadfilecount'] = $build_array['builduploadfiles'];
             if (!is_null($changelink)) {
                 $build_response['changelink'] = $changelink;
                 $build_response['changeicon'] = $changeicon;
@@ -786,7 +822,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
         }
         $build_response['id'] = $build_array['id'];
         $build_response['done'] = $build_array['done'];
-        $build_response['uploadfilecount'] = $build_array['builduploadfiles'];
 
         $build_response['buildnotes'] = $build_array['countbuildnotes'];
         $build_response['notes'] = $build_array['countnotes'];
@@ -1404,8 +1439,10 @@ function echo_main_dashboard_JSON($project_instance, $date)
         }
         $response['numchildren'] = $numchildren;
 
-        // If all our children share the same start time, then this was an "all at once" subproject build.
-        // In that case, tell our view to display the "Order" column instead of the "Start Time" column.
+        // If all our children share the same start time, then this was an
+        // "all at once" subproject build.
+        // In that case, tell our view to display the "Order" column instead of
+        // the "Start Time" column.
         if (count($build_start_times) === 1) {
             $response['showorder'] = true;
             $response['showstarttime'] = false;
@@ -1415,6 +1452,47 @@ function echo_main_dashboard_JSON($project_instance, $date)
                 for ($j = 0; $j < count($buildgroups_response[$i]['builds']); $j++) {
                     $idx = array_search($buildgroups_response[$i]['builds'][$j]['position'], $subproject_positions);
                     $buildgroups_response[$i]['builds'][$j]['position'] = $idx + 1;
+                }
+            }
+
+            // Update duration, configure duration, build duration, and
+            // test duration do not vary among children builds in this case.
+            // Find the single value (if any) for each and report it at the top
+            // of the page.
+            $buildgroup_response = $buildgroups_response[0];
+            $need_update = $buildgroup_response['hasupdatedata'];
+            $need_configure = $buildgroup_response['hasconfiguredata'];
+            $need_build = $buildgroup_response['hascompilationdata'];
+            $need_test = $buildgroup_response['hastestdata'];
+            $response['updateduration'] = false;
+            $response['configureduration'] = false;
+            $response['buildduration'] = false;
+            $response['testduration'] = false;
+            foreach ($buildgroup_response['builds'] as $build_response) {
+                if ($build_response['hasupdate']) {
+                    $response['updateduration'] =
+                        $build_response['update']['time'];
+                    $need_update = false;
+                }
+                if ($build_response['hasconfigure']) {
+                    $response['configureduration'] =
+                        $build_response['configure']['time'];
+                    $need_configure = false;
+                }
+                if ($build_response['hascompilation']) {
+                    $response['buildduration'] =
+                        $build_response['compilation']['time'];
+                    $need_build = false;
+                }
+                if ($build_response['hastest']) {
+                    $response['testduration'] =
+                        $build_response['test']['time'];
+                    $need_test = false;
+                }
+                // Break out of the loop once we have all the data we need.
+                if (!$need_update && !$need_configure && !$need_build &&
+                        !$need_test) {
+                    break;
                 }
             }
         }
@@ -1436,6 +1514,68 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $response['coveragegroups'][] = $group;
         }
     }
+
+    // Compute 'Proc Time' here (if necessary).
+    $proc_time_verified = false;
+    if ($show_proc_time) {
+        $test_timing = [];
+        // Look up how long each test took for each build.
+        $stmt = $PDO->prepare(
+            'SELECT b2t.buildid, b2t.testid, b2t.time
+            FROM build2test b2t
+            JOIN build b on (b.id = b2t.buildid)
+            WHERE b.parentid = ?');
+        pdo_execute($stmt, [$parentid]);
+        while ($row = $stmt->fetch()) {
+            $buildid = $row['buildid'];
+            $testid = $row['testid'];
+            $test_duration = $row['time'];
+            if (!array_key_exists($buildid, $test_timing)) {
+                $test_timing[$buildid] = [];
+            }
+            $test_timing[$buildid][$testid] = $test_duration;
+        }
+
+        // Multiply test duration by number of processors for any tests
+        // that have the 'Processor' measurement defined.
+        $stmt = $PDO->prepare(
+            "SELECT b2t.buildid, b2t.testid, tm.value
+            FROM build2test b2t
+            JOIN testmeasurement tm ON (b2t.testid = tm.testid)
+            JOIN build b ON (b.id = b2t.buildid)
+            WHERE b.parentid = ?
+            AND tm.name = 'Processors'");
+        pdo_execute($stmt, [$parentid]);
+        while ($row = $stmt->fetch()) {
+            $buildid = $row['buildid'];
+            $testid = $row['testid'];
+            $nprocs = $row['value'];
+            if (!is_numeric($nprocs)) {
+                continue;
+            }
+            $proc_time_verified = true;
+            $test_timing[$buildid][$testid] *= $nprocs;
+        }
+
+        // Compute procTime = duration * nprocs and record it for each build.
+        // We assume only one buildgroup for subproject results.
+        foreach ($buildgroups_response[0]['builds'] as $i => $build_response) {
+            $buildid = $build_response['id'];
+            if (!array_key_exists('test', $build_response)) {
+                continue;
+            }
+            if (!array_key_exists($buildid, $test_timing)) {
+                continue;
+            }
+
+            $proc_time = array_sum($test_timing[$buildid]);
+            $buildgroups_response[0]['builds'][$i]['test']['procTime'] =
+                time_difference($proc_time, true);
+            $buildgroups_response[0]['builds'][$i]['test']['procTimeFull'] =
+                $proc_time;
+        }
+    }
+    $response['showProcTime'] = $proc_time_verified;
 
     $response['buildgroups'] = $buildgroups_response;
     $response['enableTestTiming'] = $project_array['showtesttime'];

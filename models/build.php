@@ -35,6 +35,9 @@ class Build
     const TYPE_WARN = 1;
     const STATUS_NEW = 1;
 
+    const PARENT_BUILD = -1;
+    const STANDALONE_BUILD = 0;
+
     public $Id;
     public $SiteId;
     public $ProjectId;
@@ -221,7 +224,7 @@ class Build
     }
 
     /** Update the total testing duration */
-    public function SaveTotalTestsTime($duration)
+    public function SaveTotalTestsTime($duration, $update_parent=true)
     {
         if (!$this->Id || !is_numeric($this->Id)) {
             return false;
@@ -250,6 +253,9 @@ class Build
             return false;
         }
 
+        if (!$update_parent) {
+            return true;
+        }
         // If this is a child build, add this duration
         // to the parent's test duration sum.
         $this->SetParentId($this->LookupParentBuildId());
@@ -871,7 +877,11 @@ class Build
 
             // Save the information
             if (!empty($this->Information)) {
-                $this->Information->BuildId = $this->Id;
+                if ($this->ParentId > 0) {
+                    $this->Information->BuildId = $this->ParentId;
+                } else {
+                    $this->Information->BuildId = $this->Id;
+                }
                 $this->Information->Save();
             }
 
@@ -1923,7 +1933,7 @@ class Build
                 ('-1', '$this->SiteId', '$this->ProjectId', '$this->Stamp',
                  '$this->Name', '$this->Type', '$this->Generator',
                  '$this->StartTime', '$this->EndTime', '$this->SubmitTime',
-                 $numErrors, $numWarnings, '$uuid', '$this->PullRequest')";
+                 0, 0, '$uuid', '$this->PullRequest')";
 
             if (!pdo_query($query)) {
                 // Check if somebody else beat us to creating this parent build.
@@ -2260,7 +2270,7 @@ class Build
         pdo_query("UPDATE build SET notified='1' WHERE id=" . qnum($idToNotify));
     }
 
-    public function SetConfigureDuration($duration)
+    public function SetConfigureDuration($duration, $update_parent=true)
     {
         if (!$this->Id || !is_numeric($this->Id)) {
             return;
@@ -2274,6 +2284,9 @@ class Build
         add_last_sql_error('Build:SetConfigureDuration',
             $this->ProjectId, $this->Id);
 
+        if (!$update_parent) {
+            return;
+        }
         // If this is a child build, add this duration
         // to the parent's configure duration sum.
         $this->SetParentId($this->LookupParentBuildId());
@@ -2288,7 +2301,7 @@ class Build
         }
     }
 
-    public function UpdateBuildDuration($duration)
+    public function UpdateBuildDuration($duration, $update_parent=true)
     {
         if ($duration === 0 || !$this->Id || !is_numeric($this->Id)) {
             return;
@@ -2301,6 +2314,9 @@ class Build
         add_last_sql_error('Build:UpdateBuildDuration',
             $this->ProjectId, $this->Id);
 
+        if (!$update_parent) {
+            return;
+        }
         // If this is a child build, add this duration
         // to the parent's sum.
         $this->SetParentId($this->LookupParentBuildId());
