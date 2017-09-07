@@ -100,7 +100,7 @@ function can_administrate_project($projectid)
     $user2project->UserId = $userid;
     $user2project->ProjectId = $projectid;
     $user2project->FillFromUserId();
-    if ($user2project->Role == 2) {
+    if ($user2project->Role == UserProject::PROJECT_ADMIN) {
         return true;
     }
 
