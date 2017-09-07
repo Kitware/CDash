@@ -88,7 +88,6 @@ function can_administrate_project($projectid)
 
     // Check if this user is a global admin.
     require_once 'models/user.php';
-    $userid = get_userid_from_session(true);
     $user = new User();
     $user->Id = $userid;
     if ($user->IsAdmin()) {
