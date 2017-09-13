@@ -1,5 +1,6 @@
 set(testing_dir "${CDash_SOURCE_DIR}/tests")
 set(binary_testing_dir "${CDash_BINARY_DIR}/tests")
+set(PHPUNIT "${CDash_SOURCE_DIR}/vendor/bin/phpunit")
 
 # function to add a new PHP based coverage test to CDash
 #
@@ -23,6 +24,12 @@ function(add_configured_php_test TestName)
     FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*"
   )
 endfunction(add_configured_php_test)
+function(add_unit_test TestName)
+  add_test(
+    ${TestName}
+    ${PHP_EXE} ${PHPUNIT}  -c ${testing_dir}/phpunit.xml ${testing_dir}/${TestName}Test.php
+  )
+endfunction(add_unit_test TestName)
 
 add_php_test(install)
 add_php_test(compressedtest)
@@ -129,6 +136,7 @@ add_php_test(junithandler)
 add_php_test(issuecreation)
 add_php_test(limitedbuilds)
 add_php_test(managemeasurements)
+add_unit_test(PHPUnitTest)
 
 if(CDASH_GITHUB_USERNAME AND CDASH_GITHUB_PASSWORD)
   add_php_test(github_PR_comment)
