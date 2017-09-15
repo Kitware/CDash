@@ -44,8 +44,7 @@ class Config extends Singleton
     {
         $protocol = 'http';
         if ($this->get('CDASH_USE_HTTPS') ||
-            (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443))
-        {
+            (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)) {
             $protocol = 'https';
         }
         return $protocol;
@@ -58,8 +57,7 @@ class Config extends Singleton
     {
         if (isset($_SERVER['SERVER_PORT'])
             && $_SERVER['SERVER_PORT'] != 80
-            && $_SERVER['SERVER_PORT'] != 443)
-        {
+            && $_SERVER['SERVER_PORT'] != 443) {
             return $_SERVER['SERVER_PORT'];
         }
     }
