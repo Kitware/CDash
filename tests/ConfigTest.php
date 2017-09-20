@@ -4,14 +4,6 @@ use CDash\Singleton;
 
 class ConfigTest extends PHPUnit_Framework_TestCase
 {
-    /**
-     * @expectedException Error
-     */
-    public function testConstructorWithKeywordNew()
-    {
-        $config = new Config();
-    }
-
     public function testGetInstance()
     {
         $config = Config::getInstance();
