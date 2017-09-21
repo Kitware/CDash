@@ -108,13 +108,12 @@ $beginUTCTime = gmdate(FMT_DATETIME, time() - 3600 * 7 * 24); // 7 days
 
 $pdo = get_link_identifier()->getPdo();
 $stmt = $pdo->prepare(
-    'SELECT b.siteid, s.name
+    'SELECT DISTINCT b.siteid, s.name
     FROM build b
     JOIN site s ON (b.siteid=s.id)
     WHERE projectid=:projectid AND
     starttime BETWEEN :start AND :end AND
-    parentid IN (-1, 0)
-    GROUP BY b.siteid');
+    parentid IN (-1, 0)');
 $stmt->bindParam(':projectid', $projectid);
 $stmt->bindParam(':start', $beginUTCTime);
 $stmt->bindParam(':end', $currentUTCTime);
