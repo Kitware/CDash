@@ -122,7 +122,7 @@ class Database extends Singleton
      */
     public function getPdo($log_error = true)
     {
-        if (is_null($this->pdo) || strpos($this->dsn,'dbname') === false) {
+        if (is_null($this->pdo) || strpos($this->dsn, 'dbname') === false) {
             $this->dsn = $this->buildDsn($this->database_name);
             try {
                 // try to connect with database name

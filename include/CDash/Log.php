@@ -5,18 +5,21 @@ require_once 'include/log.php';
 
 class Log extends Singleton
 {
-    protected function write(\Exception $e, $level) {
+    protected function write(\Exception $e, $level)
+    {
         $message = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
         $trace = $e->getTrace();
         $function = $trace[0]['function'];
         add_log($message, $function, $level);
     }
 
-    public function info(\Exception $e) {
+    public function info(\Exception $e)
+    {
         $this->write($e, LOG_INFO);
     }
 
-    public function error(\Exception $e) {
+    public function error(\Exception $e)
+    {
         $this->write($e, LOG_ERR);
     }
 
