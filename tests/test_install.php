@@ -24,7 +24,11 @@ class InstallTestCase extends KWWebTestCase
         }
 
         //drop any old testing database before testing install
-        $this->db->drop($this->databaseName);
+        $success = $this->db->drop($this->databaseName);
+        if (!$success) {
+            $this->fail('Error dropping database');
+            return 1;
+        }
 
         // Create the database
         if ($this->db->type == 'pgsql') {
@@ -47,8 +51,9 @@ class InstallTestCase extends KWWebTestCase
             return 1;
         }
         $this->clickSubmitByName('Submit');
-        if (strpos($this->getBrowser()->getContentAsText(), 'successfully created') === false) {
-            $this->fail("'successfully created' not found when expected\nHere's what I see instead:\n");
+        $response = $this->getBrowser()->getContentAsText();
+        if (strpos($response, 'successfully created') === false) {
+            $this->fail("Unable to create database.");
             return 1;
         }
         $this->pass('Passed');

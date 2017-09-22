@@ -14,6 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use CDash\Database;
+
 require dirname(__DIR__) . '/vendor/autoload.php';
 require_once 'config/config.php';
 require_once 'include/log.php';
@@ -140,51 +142,18 @@ function pdo_delete_query($qry)
  */
 function pdo_connect($server = null, $username = null, $password = null, $database = null)
 {
-    global $CDASH_DB_PORT, $CDASH_DB_TYPE, $CDASH_MAX_QUERY_RETRIES,
-           $CDASH_USE_PERSISTENT_MYSQL_CONNECTION, $CDASH_DB_NAME,
-           $CDASH_SSL_KEY, $CDASH_SSL_CERT, $CDASH_SSL_CA, $CDASH_DB_CONNECTION_TYPE;
-    $db_name = is_null($database) ? $CDASH_DB_NAME : $database;
-    return new CDash\Database(
-        $CDASH_DB_TYPE, $server, $username, $password, $CDASH_DB_PORT,
-        $db_name, $CDASH_USE_PERSISTENT_MYSQL_CONNECTION,
-        $CDASH_MAX_QUERY_RETRIES, $CDASH_SSL_KEY, $CDASH_SSL_CERT,
-        $CDASH_SSL_CA, $CDASH_DB_CONNECTION_TYPE
-    );
+    return Database::getInstance();
 }
 
 function get_link_identifier($link_identifier = null)
 {
-    global $CDASH_DB_HOST,
-           $CDASH_DB_LOGIN,
-           $CDASH_DB_PASS,
-           $CDASH_DB_NAME,
-           $cdash_database_connection;
-    if (!is_null($link_identifier) and $link_identifier instanceof CDash\Database) {
-        $cdash_database_connection = $link_identifier;
-    } elseif (isset($cdash_database_connection) and $cdash_database_connection instanceof CDash\Database) {
-        // $cdash_database_connection is good to go
-    } else {
-        $cdash_database_connection = pdo_connect(
-            $CDASH_DB_HOST, $CDASH_DB_LOGIN, $CDASH_DB_PASS, $CDASH_DB_NAME);
-    }
-    return $cdash_database_connection;
+    return Database::getInstance();
 }
 
 function pdo_select_db($database, $link_identifier = null)
 {
-    global $CDASH_DB_HOST,
-           $CDASH_DB_LOGIN,
-           $CDASH_DB_PASS,
-           $cdash_database_connection;
-    if (!is_null($link_identifier) and
-        $link_identifier instanceof CDash\Database and
-        $cdash_database_connection->getDatabaseName() === $database
-    ) {
-        $cdash_database_connection = $link_identifier;
-    } else {
-        $cdash_database_connection = pdo_connect($CDASH_DB_HOST, $CDASH_DB_LOGIN, $CDASH_DB_PASS, $database);
-    }
-    return true;
+    $db = Database::getInstance();
+    return ($db->getPdo() instanceof PDO);
 }
 
 /**
@@ -465,15 +434,4 @@ function pdo_get_vendor_version($link_identifier = null)
     }
 
     return $version;
-}
-
-global $cdash_database_connection;
-global $CDASH_DB_HOST;
-global $CDASH_DB_LOGIN;
-global $CDASH_DB_PASS;
-global $CDASH_DB_NAME;
-global $CDASH_DB_PORT;
-
-if (!isset($cdash_database_connection)) {
-    $cdash_database_connection = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS", $CDASH_DB_NAME);
 }
