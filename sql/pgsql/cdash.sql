@@ -447,6 +447,7 @@ CREATE TABLE "build2test" (
   "timestd" numeric(7,2) DEFAULT '0.00' NOT NULL,
   "timestatus" smallint DEFAULT '0' NOT NULL,
   "newstatus" smallint DEFAULT '0' NOT NULL
+  PRIMARY KEY ("buildid", "testid")
 );
 CREATE INDEX "buildid8" on "build2test" ("buildid");
 CREATE INDEX "testid2" on "build2test" ("testid");

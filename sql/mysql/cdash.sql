@@ -548,6 +548,7 @@ CREATE TABLE `build2test` (
   `timestd` float(7,2) NOT NULL default '0.00',
   `timestatus` tinyint(4) NOT NULL default '0',
   `newstatus` tinyint(4) NOT NULL default '0',
+  PRIMARY KEY (`buildid`, `testid`),
   KEY `buildid` (`buildid`),
   KEY `testid` (`testid`),
   KEY `status` (`status`),
