@@ -65,8 +65,8 @@
 
   <tr ng-if="error.labels">
     <th class="measurement">
-      <div ng-if="error.labels.length=1">Label</div>
-      <div ng-if="error.labels.length>1">Labels</div>
+      <div ng-if="error.labels.length == 1">Label</div>
+      <div ng-if="error.labels.length > 1">Labels</div>
     </th>
     <td>
       <div ng-repeat="label in error.labels">
