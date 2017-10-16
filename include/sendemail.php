@@ -1533,7 +1533,7 @@ function sendemail(ActionableBuildInterface $handler, $projectid)
 
         // No error we return
         if (!$errors['errors']) {
-            return;
+            continue;
         }
 
         if ($CDASH_USE_LOCAL_DIRECTORY && file_exists('local/sendemail.php')) {
