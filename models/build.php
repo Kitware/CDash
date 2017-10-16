@@ -1876,16 +1876,18 @@ class Build
     /** Lookup this build's parentid, returning 0 if none is found. */
     public function LookupParentBuildId()
     {
-        if (!$this->SiteId || !$this->Name || !$this->Stamp) {
+        if (!$this->SiteId || !$this->Name || !$this->Stamp || !$this->ProjectId) {
             return 0;
         }
 
-        $parent = pdo_single_row_query(
-            "SELECT id FROM build WHERE parentid=-1 AND
-                siteid='$this->SiteId' AND name='$this->Name' AND stamp='$this->Stamp'");
+        $stmt = $this->PDO->prepare(
+            'SELECT id FROM build WHERE parentid = -1 AND projectid = ? AND
+            siteid = ? AND name = ? AND stamp = ?');
+        pdo_execute($stmt, [$this->ProjectId, $this->SiteId, $this->Name, $this->Stamp]);
+        $parentid = $stmt->fetchColumn();
 
-        if ($parent && array_key_exists('id', $parent)) {
-            return $parent['id'];
+        if ($parentid !== false) {
+            return $parentid;
         }
         return 0;
     }
