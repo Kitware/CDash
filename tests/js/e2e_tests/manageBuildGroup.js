@@ -99,7 +99,7 @@ describe("manageBuildGroup", function() {
   });
 
 
-  it("can define a dynamic row", function() {
+  it("can define dynamic rows", function() {
     // Fill out the form & submit it.
     browser.get('manageBuildGroup.php?projectid=5#/dynamic');
     element(by.name('dynamicSelection')).element(by.cssContainingText('option', 'latestBuildGroup')).click();
@@ -109,31 +109,44 @@ describe("manageBuildGroup", function() {
     matchField.sendKeys('sameImage');
     element(by.buttonText('Add content to BuildGroup')).click();
     browser.waitForAngular();
+
+    element(by.name('dynamicSelection')).element(by.cssContainingText('option', 'latestBuildGroup')).click();
+    element(by.name('parentBuildGroupSelection')).element(by.cssContainingText('option', 'Experimental')).click();
+    matchField.clear();
+    element(by.buttonText('Add content to BuildGroup')).click();
+    browser.waitForAngular();
   });
 
 
-  it("can verify a dynamic row", function() {
+  it("can verify dynamic rows", function() {
     // Find the "latestBuildGroup" table on this page and verify that it has
-    // exactly one row.
+    // exactly two rows`.
     browser.get("index.php?project=InsightExample");
-    expect(element(By.partialLinkText("latestBuildGroup")).element(by.xpath('../../../../..')).all(by.repeater('build in buildgroup.pagination.filteredBuilds')).count()).toBe(1);
+    expect(element(By.partialLinkText("latestBuildGroup")).element(by.xpath('../../../../..')).all(by.repeater('build in buildgroup.pagination.filteredBuilds')).count()).toBe(2);
   });
 
 
-  it("can delete a dynamic row", function() {
+  it("can delete dynamic rows", function() {
     // Select our dynamic group.
     browser.get('manageBuildGroup.php?projectid=5#/dynamic');
     element(by.name('dynamicSelection')).element(by.cssContainingText('option', 'latestBuildGroup')).click();
 
-    // Wait for its delete icon to appear.
+    // Wait for delete icons to appear.
     var deleteIcon = element(by.id('dynamic')).all(by.className('glyphicon-trash')).get(0);
     deleteIcon.isDisplayed().then(function () {
-
-      // Click on it & verify that no rows are present.
+      // Click on them & verify that no rows are present.
+      deleteIcon.click();
+      browser.waitForAngular();
+      deleteIcon = element(by.id('dynamic')).all(by.className('glyphicon-trash')).get(0);
       deleteIcon.click();
       browser.waitForAngular();
       expect(element(by.name("existingdynamicrows")).isPresent()).toBeFalsy();
-      });
+
+      // Reload the page to make sure they're really gone.
+      browser.get('manageBuildGroup.php?projectid=5#/dynamic');
+      element(by.name('dynamicSelection')).element(by.cssContainingText('option', 'latestBuildGroup')).click();
+      expect(element(by.name("existingdynamicrows")).isPresent()).toBeFalsy();
+    });
   });
 
 
