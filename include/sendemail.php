@@ -1484,6 +1484,11 @@ function sendemail(ActionableBuildInterface $handler, $projectid)
             return;
         }
 
+        // Don't send an additional email if this build is a SubProject parent.
+        if ($Build->GetParentId() == -1 && $handler instanceof UpdateHandler) {
+            continue;
+        }
+
         $emailCommitters = $BuildGroup->GetEmailCommitters();
 
         $errors = check_email_errors($Build->Id, $Project->EmailTestTimingChanged,
