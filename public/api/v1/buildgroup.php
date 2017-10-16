@@ -178,12 +178,15 @@ function rest_delete()
 
         $rule = json_decode($_GET['rule'], true);
         $match = htmlspecialchars(pdo_real_escape_string($rule['match']));
+        if (!empty($match)) {
+            $match = "%$match%";
+        }
         $parentgroupid = pdo_real_escape_numeric($rule['parentgroupid']);
         $siteid = pdo_real_escape_numeric($rule['siteid']);
 
         $sql =
             "DELETE FROM build2grouprule
-       WHERE groupid='$buildgroupid' AND buildname = '%$match%'";
+            WHERE groupid='$buildgroupid' AND buildname = '$match'";
         if ($siteid > 0) {
             $sql .= " AND siteid = '$siteid'";
         }
