@@ -184,8 +184,9 @@ function rest_post()
 
         // Avoid creating a group that uses one of the default names.
         if ($name == 'Nightly' || $name == 'Experimental' || $name == 'Continuous') {
-            echo_error("You cannot create a group named 'Nightly','Experimental' or 'Continuous'");
-            return;
+            $error_msg =
+                "You cannot create a group named 'Nightly','Experimental' or 'Continuous'";
+            json_error_response(['error' => $error_msg], 400);
         }
 
         $type = htmlspecialchars(pdo_real_escape_string($_POST['type']));
@@ -248,8 +249,8 @@ function rest_post()
         // Move builds to a new group.
         $group = $_POST['group'];
         if ($group['id'] < 1) {
-            echo_error('Please select a group for these builds');
-            return;
+            $error_msg = 'Please select a group for these builds';
+            json_error_response(['error' => $error_msg], 400);
         }
 
         $builds = $_POST['builds'];
@@ -299,8 +300,8 @@ function rest_post()
         $group = $_POST['group'];
         $groupid = $group['id'];
         if ($groupid < 1) {
-            echo_error('Please select a BuildGroup to define.');
-            return;
+            $error_msg = 'Please select a BuildGroup to define.';
+            json_error_response(['error' => $error_msg], 400);
         }
 
         $nameMatch = '%' .
@@ -404,11 +405,4 @@ function rest_put()
             json_error_response(['error' => 'Failed to save BuildGroup'], 500);
         }
     }
-}
-
-function echo_error($msg)
-{
-    $response = [];
-    $response['error'] = $msg;
-    echo json_encode($response);
 }
