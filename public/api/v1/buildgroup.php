@@ -14,56 +14,24 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-$noforcelogin = 1;
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
-include_once 'include/common.php';
+
+$noforcelogin = 1;
 include 'public/login.php';
-include 'include/version.php';
-include_once 'models/project.php';
-include_once 'models/buildgroup.php';
-include_once 'models/user.php';
 
-// Make sure we have a valid login.
-if (!$session_OK) {
-    return;
-}
-$userid = $_SESSION['cdash']['loginid'];
-if (!isset($userid) || !is_numeric($userid)) {
-    echo_error('Not a valid userid!');
+require_once 'include/api_common.php';
+require_once 'include/version.php';
+require_once 'models/buildgroup.php';
+
+// Require administrative access to view this page.
+init_api_request();
+$projectid = pdo_real_escape_numeric($_REQUEST['projectid']);
+if (!can_administrate_project($projectid)) {
     return;
 }
 
-// Connect to database.
-@$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
-
-// Check required parameter.
-@$projectid = $_GET['projectid'];
-if (!isset($projectid)) {
-    $rest_json = file_get_contents('php://input');
-    $_POST = json_decode($rest_json, true);
-    @$projectid = $_POST['projectid'];
-}
-if (!isset($projectid)) {
-    echo_error('projectid not specified.');
-    return;
-}
-$projectid = pdo_real_escape_numeric($projectid);
-
-// Make sure the user has access to this page.
-$Project = new Project;
-
-$User = new User;
-$User->Id = $userid;
-$Project->Id = $projectid;
-
-$role = $Project->GetUserRole($userid);
-
-if ($User->IsAdmin() === false && $role <= 1) {
-    echo_error("You don't have the permissions to access this page");
-    return;
-}
+$pdo = get_link_identifier()->getPdo();
 
 // Route based on what type of request this is.
 $method = $_SERVER['REQUEST_METHOD'];
