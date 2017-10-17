@@ -55,12 +55,12 @@ switch ($method) {
 /* Handle GET requests */
 function rest_get()
 {
-    global $projectid;
+    global $pdo, $projectid;
 
-    $buildgroupid = get_buildgroupid();
-    if ($buildgroupid === false) {
-        return;
+    if (!isset($_GET['buildgroupid'])) {
+        json_error_response(['error' => 'buildgroupid not specified'], 400);
     }
+    $buildgroupid = pdo_real_escape_numeric($_GET['buildgroupid']);
 
     $start = microtime_float();
     $response = begin_JSON_response();
@@ -72,20 +72,16 @@ function rest_get()
     $response['name'] = $BuildGroup->GetName();
     $response['group'] = $BuildGroup->GetGroupId();
 
-    $query = pdo_query('
-    SELECT id, name FROM buildgroup WHERE projectid=' . qnum($projectid) . "
-    AND endtime='1980-01-01 00:00:00'");
-
-    if (!$query) {
-        add_last_sql_error('getBuildGroup Select');
-        return false;
-    }
+    $stmt = $pdo->prepare(
+        "SELECT id, name FROM buildgroup
+        WHERE projectid = ? AND endtime='1980-01-01 00:00:00'");
+    pdo_execute($stmt, [$projectid]);
 
     $dependencies = $BuildGroup->GetDependencies();
     $dependencies_response = [];
     $available_dependencies_response = [];
 
-    while ($row = pdo_fetch_array($query)) {
+    while ($row = $stmt->fetch()) {
         if ($row['id'] == $buildgroupid) {
             continue;
         }
@@ -113,6 +109,7 @@ function rest_get()
 /* Handle DELETE requests */
 function rest_delete()
 {
+    global $pdo;
     if (isset($_GET['buildgroupid'])) {
         // Delete the specified BuildGroup.
         $buildgroupid = pdo_real_escape_numeric($_GET['buildgroupid']);
@@ -127,15 +124,17 @@ function rest_delete()
         $wildcard = json_decode($_GET['wildcard'], true);
         $buildgroupid = pdo_real_escape_numeric($wildcard['buildgroupid']);
         $match = htmlspecialchars(pdo_real_escape_string($wildcard['match']));
+        if (!empty($match)) {
+            $match = "%$match%";
+        }
         $buildtype =
             htmlspecialchars(pdo_real_escape_string($wildcard['buildtype']));
 
-        $sql =
-            "DELETE FROM build2grouprule
-       WHERE groupid='$buildgroupid' AND buildtype = '$buildtype' AND
-             buildname = '%$match%'";
-        if (!pdo_query($sql)) {
-            echo_error(pdo_error());
+        $stmt = $pdo->prepare(
+            'DELETE FROM build2grouprule
+            WHERE groupid = ? AND buildtype = ? AND buildname = ?');
+        if (!pdo_execute($stmt, [$buildgroupid, $buildtype, $match])) {
+            json_error_response(['error' => pdo_error()], 500);
         }
     }
 
@@ -153,17 +152,20 @@ function rest_delete()
         $siteid = pdo_real_escape_numeric($rule['siteid']);
 
         $sql =
-            "DELETE FROM build2grouprule
-            WHERE groupid='$buildgroupid' AND buildname = '$match'";
+            'DELETE FROM build2grouprule WHERE groupid = ? AND buildname = ?';
+        $params = [$buildgroupid, $match];
         if ($siteid > 0) {
-            $sql .= " AND siteid = '$siteid'";
+            $sql .= ' AND siteid = ?';
+            $params[] = $siteid;
         }
         if ($parentgroupid > 0) {
-            $sql .= " AND parentgroupid = '$parentgroupid'";
+            $sql .= ' AND parentgroupid = ?';
+            $params[] = $parentgroupid;
         }
 
-        if (!pdo_query($sql)) {
-            echo_error(pdo_error());
+        $stmt = $pdo->prepare($sql);
+        if (!pdo_execute($stmt, $params)) {
+            json_error_response(['error' => pdo_error()], 500);
         }
     }
 }
@@ -171,7 +173,7 @@ function rest_delete()
 /* Handle POST requests */
 function rest_post()
 {
-    global $projectid;
+    global $pdo, $projectid;
 
     if (isset($_POST['newbuildgroup'])) {
         // Create a new buildgroup
@@ -212,31 +214,32 @@ function rest_post()
                 // We use a subquery here because postgres doesn't support
                 // JOINs in a DELETE statement.
                 $sql = "
-          DELETE FROM buildgroupposition WHERE buildgroupid IN
-            (SELECT bgp.buildgroupid FROM buildgroupposition AS bgp
-             LEFT JOIN buildgroup AS bg ON (bgp.buildgroupid = bg.id)
-             WHERE bg.projectid = '$projectid')";
+                    DELETE FROM buildgroupposition WHERE buildgroupid IN
+                    (SELECT bgp.buildgroupid FROM buildgroupposition AS bgp
+                    LEFT JOIN buildgroup AS bg ON (bgp.buildgroupid = bg.id)
+                    WHERE bg.projectid = ?)";
             } else {
                 $sql = "
-          DELETE bgp FROM buildgroupposition AS bgp
-          LEFT JOIN buildgroup AS bg ON (bgp.buildgroupid = bg.id)
-          WHERE bg.projectid = '$projectid'";
+                    DELETE bgp FROM buildgroupposition AS bgp
+                    LEFT JOIN buildgroup AS bg ON (bgp.buildgroupid = bg.id)
+                    WHERE bg.projectid = ?";
             }
-            pdo_query($sql);
-            add_last_sql_error('manageBuildGroup::newLayout::DELETE', $projectid);
+            $stmt = $pdo->prepare($sql);
+            pdo_execute($stmt, [$projectid]);
 
-            // construct query to insert the new layout
+            // Construct query to insert the new layout.
+            $params = [];
             $query = 'INSERT INTO buildgroupposition (buildgroupid, position) VALUES ';
             foreach ($inputRows as $inputRow) {
-                $query .= '(' .
-                    qnum(pdo_real_escape_numeric($inputRow['id'])) . ', ' .
-                    qnum(pdo_real_escape_numeric($inputRow['position'])) . '), ';
+                $query .= '(?, ?), ';
+                $params[] = $inputRow['id'];
+                $params[] = $inputRow['position'];
             }
 
-            // remove the trailing comma and space, then insert our new values
+            // Remove the trailing comma and space, then insert our new values.
             $query = rtrim($query, ', ');
-            pdo_query($query);
-            add_last_sql_error('API::buildgroup::newLayout::INSERT', $projectid);
+            $stmt = $pdo->prepare($query);
+            pdo_execute($stmt, $params);
         }
         return;
     }
@@ -266,23 +269,28 @@ function rest_post()
             $prevgroupid = $Build->GroupId;
 
             // Change the group for this build.
-            pdo_query(
-                "UPDATE build2group SET groupid='$groupid'
-         WHERE groupid='$prevgroupid' AND buildid='$buildid'");
+            $stmt = $pdo->prepare(
+                'UPDATE build2group SET groupid = ?
+                WHERE groupid = ? AND buildid = ?');
+            pdo_execute($stmt, [$groupid, $prevgroupid, $buildid]);
 
             // Delete any previous rules
-            pdo_query("
-        DELETE FROM build2grouprule
-        WHERE groupid='$prevgroupid' AND buildtype='$Build->Type' AND
-              buildname='$Build->Name' AND siteid='$Build->SiteId'");
+            $stmt = $pdo->prepare(
+                'DELETE FROM build2grouprule
+                WHERE groupid = ? AND buildtype = ? AND buildname = ? AND
+                siteid =  ?');
+            pdo_execute($stmt,
+                [$prevgroupid, $Build->Type, $Build->Name, $Build->SiteId]);
 
             // Add the new rule
-            pdo_query("
-        INSERT INTO build2grouprule
-          (groupid,buildtype,buildname,siteid,expected,starttime,endtime)
-        VALUES
-          ('$groupid','$Build->Type','$Build->Name','$Build->SiteId',
-           '$expected','1980-01-01 00:00:00','1980-01-01 00:00:00')");
+            $stmt = $pdo->prepare(
+                'INSERT INTO build2grouprule
+                    (groupid, buildtype, buildname, siteid, expected,
+                     starttime, endtime)
+                VALUES (?, ?, ?, ?, ?, ?, ?)');
+            pdo_execute($stmt,
+                [$groupid, $Build->Type, $Build->Name, $Build->SiteId,
+                 $expected, '1980-01-01 00:00:00', '1980-01-01 00:00:00']);
         }
     }
 
@@ -298,11 +306,11 @@ function rest_post()
         $nameMatch = '%' .
             htmlspecialchars(pdo_real_escape_string($_POST['nameMatch'])) . '%';
         $type = htmlspecialchars(pdo_real_escape_string($_POST['type']));
-        $sql =
-            "INSERT INTO build2grouprule (groupid, buildtype, buildname, siteid)
-       VALUES ('$groupid', '$type', '$nameMatch', '-1')";
-        if (!pdo_query($sql)) {
-            echo_error(pdo_error());
+        $stmt = $pdo->prepare(
+            'INSERT INTO build2grouprule (groupid, buildtype, buildname, siteid)
+            VALUES (?, ?, ?, ?)');
+        if (!pdo_execute($stmt, [$groupid, $type, $nameMatch, -1])) {
+            json_error_response(['error' => pdo_error()], 500);
         }
     }
 
@@ -329,33 +337,34 @@ function rest_post()
                 htmlspecialchars(pdo_real_escape_string($_POST['match'])) . '%';
         }
 
-        $sql =
-            "INSERT INTO build2grouprule (groupid, buildname, siteid, parentgroupid)
-       VALUES ('$groupid', '$match', '$siteid', '$parentgroupid')";
-        if (!pdo_query($sql)) {
-            echo_error(pdo_error());
-        } else {
-            // Respond with a JSON representation of this new rule.
-            $response = [];
-            $response['match'] =
-                htmlspecialchars(pdo_real_escape_string($_POST['match']));
-            $response['siteid'] = $siteid;
-            if ($siteid > 0) {
-                $response['sitename'] =
-                    htmlspecialchars(pdo_real_escape_string($_POST['site']['name']));
-            } else {
-                $response['sitename'] = 'Any';
-            }
-            $response['parentgroupid'] = $parentgroupid;
-            if ($parentgroupid > 0) {
-                $response['parentgroupname'] =
-                    htmlspecialchars(pdo_real_escape_string($_POST['buildgroup']['name']));
-            } else {
-                $response['parentgroupname'] = 'Any';
-            }
-            echo json_encode(cast_data_for_JSON($response));
-            return;
-        }
+        $stmt = $pdo->prepare(
+            'INSERT INTO build2grouprule
+            (groupid, buildname, siteid, parentgroupid)
+            VALUES (?, ?, ?, ?)');
+       if (!pdo_execute($stmt, [$groupid, $match, $siteid, $parentgroupid])) {
+            json_error_response(['error' => pdo_error()], 500);
+       }
+
+       // Respond with a JSON representation of this new rule.
+       $response = [];
+       $response['match'] =
+           htmlspecialchars(pdo_real_escape_string($_POST['match']));
+       $response['siteid'] = $siteid;
+       if ($siteid > 0) {
+           $response['sitename'] =
+               htmlspecialchars(pdo_real_escape_string($_POST['site']['name']));
+       } else {
+           $response['sitename'] = 'Any';
+       }
+       $response['parentgroupid'] = $parentgroupid;
+       if ($parentgroupid > 0) {
+           $response['parentgroupname'] =
+               htmlspecialchars(pdo_real_escape_string($_POST['buildgroup']['name']));
+       } else {
+           $response['parentgroupname'] = 'Any';
+       }
+       echo json_encode(cast_data_for_JSON($response));
+       return;
     }
 }
 
@@ -392,20 +401,9 @@ function rest_put()
             pdo_real_escape_numeric($buildgroup['autoremovetimeframe']));
 
         if (!$BuildGroup->Save()) {
-            echo_error('Failed to save BuildGroup');
+            json_error_response(['error' => 'Failed to save BuildGroup'], 500);
         }
-        return;
     }
-}
-
-function get_buildgroupid()
-{
-    if (!isset($_GET['buildgroupid'])) {
-        echo_error('buildgroupid not specified.');
-        return false;
-    }
-    $buildgroupid = pdo_real_escape_numeric($_GET['buildgroupid']);
-    return $buildgroupid;
 }
 
 function echo_error($msg)
