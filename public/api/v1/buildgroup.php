@@ -339,27 +339,27 @@ function rest_post()
             'INSERT INTO build2grouprule
             (groupid, buildname, siteid, parentgroupid)
             VALUES (?, ?, ?, ?)');
-       if (!pdo_execute($stmt, [$groupid, $match, $siteid, $parentgroupid])) {
+        if (!pdo_execute($stmt, [$groupid, $match, $siteid, $parentgroupid])) {
             json_error_response(['error' => pdo_error()], 500);
-       }
+        }
 
-       // Respond with a JSON representation of this new rule.
-       $response = [];
-       $response['match'] = $_POST['match'];
-       $response['siteid'] = $siteid;
-       if ($siteid > 0) {
-           $response['sitename'] = $_POST['site']['name'];
-       } else {
-           $response['sitename'] = 'Any';
-       }
-       $response['parentgroupid'] = $parentgroupid;
-       if ($parentgroupid > 0) {
-           $response['parentgroupname'] = $_POST['buildgroup']['name'];
-       } else {
-           $response['parentgroupname'] = 'Any';
-       }
-       echo json_encode(cast_data_for_JSON($response));
-       return;
+        // Respond with a JSON representation of this new rule.
+        $response = [];
+        $response['match'] = $_POST['match'];
+        $response['siteid'] = $siteid;
+        if ($siteid > 0) {
+            $response['sitename'] = $_POST['site']['name'];
+        } else {
+            $response['sitename'] = 'Any';
+        }
+        $response['parentgroupid'] = $parentgroupid;
+        if ($parentgroupid > 0) {
+            $response['parentgroupname'] = $_POST['buildgroup']['name'];
+        } else {
+            $response['parentgroupname'] = 'Any';
+        }
+        echo json_encode(cast_data_for_JSON($response));
+        return;
     }
 }
 
