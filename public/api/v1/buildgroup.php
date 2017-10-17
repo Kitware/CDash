@@ -122,13 +122,12 @@ function rest_delete()
     if (isset($_GET['wildcard'])) {
         // Delete a wildcard build group rule.
         $wildcard = json_decode($_GET['wildcard'], true);
-        $buildgroupid = pdo_real_escape_numeric($wildcard['buildgroupid']);
-        $match = htmlspecialchars(pdo_real_escape_string($wildcard['match']));
+        $buildgroupid = $wildcard['buildgroupid'];
+        $match = $wildcard['match'];
         if (!empty($match)) {
             $match = "%$match%";
         }
-        $buildtype =
-            htmlspecialchars(pdo_real_escape_string($wildcard['buildtype']));
+        $buildtype = $wildcard['buildtype'];
 
         $stmt = $pdo->prepare(
             'DELETE FROM build2grouprule
@@ -141,15 +140,15 @@ function rest_delete()
     if (isset($_GET['dynamic'])) {
         // Delete a dynamic build group rule.
         $dynamic = json_decode($_GET['dynamic'], true);
-        $buildgroupid = pdo_real_escape_numeric($dynamic['id']);
+        $buildgroupid = $dynamic['id'];
 
         $rule = json_decode($_GET['rule'], true);
-        $match = htmlspecialchars(pdo_real_escape_string($rule['match']));
+        $match = $rule['match'];
         if (!empty($match)) {
             $match = "%$match%";
         }
-        $parentgroupid = pdo_real_escape_numeric($rule['parentgroupid']);
-        $siteid = pdo_real_escape_numeric($rule['siteid']);
+        $parentgroupid = $rule['parentgroupid'];
+        $siteid = $rule['siteid'];
 
         $sql =
             'DELETE FROM build2grouprule WHERE groupid = ? AND buildname = ?';
@@ -261,7 +260,7 @@ function rest_post()
         }
 
         foreach ($builds as $buildinfo) {
-            $groupid = pdo_real_escape_numeric($group['id']);
+            $groupid = $group['id'];
 
             $Build = new Build();
             $buildid = pdo_real_escape_numeric($buildinfo['id']);
@@ -304,9 +303,8 @@ function rest_post()
             json_error_response(['error' => $error_msg], 400);
         }
 
-        $nameMatch = '%' .
-            htmlspecialchars(pdo_real_escape_string($_POST['nameMatch'])) . '%';
-        $type = htmlspecialchars(pdo_real_escape_string($_POST['type']));
+        $nameMatch = '%' . $_POST['nameMatch'] . '%';
+        $type = $_POST['type'];
         $stmt = $pdo->prepare(
             'INSERT INTO build2grouprule (groupid, buildtype, buildname, siteid)
             VALUES (?, ?, ?, ?)');
@@ -317,25 +315,24 @@ function rest_post()
 
     if (isset($_POST['dynamic']) && !empty($_POST['dynamic'])) {
         // Add a build row to a dynamic group
-        $groupid = pdo_real_escape_numeric($_POST['dynamic']['id']);
+        $groupid = $_POST['dynamic']['id'];
 
         if (empty($_POST['buildgroup'])) {
             $parentgroupid = 0;
         } else {
-            $parentgroupid = pdo_real_escape_numeric($_POST['buildgroup']['id']);
+            $parentgroupid = $_POST['buildgroup']['id'];
         }
 
         if (empty($_POST['site'])) {
             $siteid = 0;
         } else {
-            $siteid = pdo_real_escape_numeric($_POST['site']['id']);
+            $siteid = $_POST['site']['id'];
         }
 
         if (empty($_POST['match'])) {
             $match = '';
         } else {
-            $match = '%' .
-                htmlspecialchars(pdo_real_escape_string($_POST['match'])) . '%';
+            $match = '%' . $_POST['match'] . '%';
         }
 
         $stmt = $pdo->prepare(
@@ -348,19 +345,16 @@ function rest_post()
 
        // Respond with a JSON representation of this new rule.
        $response = [];
-       $response['match'] =
-           htmlspecialchars(pdo_real_escape_string($_POST['match']));
+       $response['match'] = $_POST['match'];
        $response['siteid'] = $siteid;
        if ($siteid > 0) {
-           $response['sitename'] =
-               htmlspecialchars(pdo_real_escape_string($_POST['site']['name']));
+           $response['sitename'] = $_POST['site']['name'];
        } else {
            $response['sitename'] = 'Any';
        }
        $response['parentgroupid'] = $parentgroupid;
        if ($parentgroupid > 0) {
-           $response['parentgroupname'] =
-               htmlspecialchars(pdo_real_escape_string($_POST['buildgroup']['name']));
+           $response['parentgroupname'] = $_POST['buildgroup']['name'];
        } else {
            $response['parentgroupname'] = 'Any';
        }
