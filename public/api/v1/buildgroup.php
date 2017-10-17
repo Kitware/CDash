@@ -82,20 +82,20 @@ function rest_get()
     }
 
     $dependencies = $BuildGroup->GetDependencies();
-    $dependencies_response = array();
-    $available_dependencies_response = array();
+    $dependencies_response = [];
+    $available_dependencies_response = [];
 
     while ($row = pdo_fetch_array($query)) {
         if ($row['id'] == $buildgroupid) {
             continue;
         }
         if (is_array($dependencies) && in_array($row['id'], $dependencies)) {
-            $dep = array();
+            $dep = [];
             $dep['id'] = $row['id'];
             $dep['name'] = $row['name'];
             $dependencies_response[] = $dep;
         } else {
-            $avail = array();
+            $avail = [];
             $avail['id'] = $row['id'];
             $avail['name'] = $row['name'];
             $available_dependencies_response[] = $avail;
@@ -193,7 +193,7 @@ function rest_post()
         $BuildGroup->Save();
 
         // Respond with a JSON representation of this new buildgroup
-        $response = array();
+        $response = [];
         $response['id'] = $BuildGroup->GetId();
         $response['name'] = $BuildGroup->GetName();
         $response['autoremovetimeframe'] = $BuildGroup->GetAutoRemoveTimeFrame();
@@ -336,7 +336,7 @@ function rest_post()
             echo_error(pdo_error());
         } else {
             // Respond with a JSON representation of this new rule.
-            $response = array();
+            $response = [];
             $response['match'] =
                 htmlspecialchars(pdo_real_escape_string($_POST['match']));
             $response['siteid'] = $siteid;
@@ -410,7 +410,7 @@ function get_buildgroupid()
 
 function echo_error($msg)
 {
-    $response = array();
+    $response = [];
     $response['error'] = $msg;
     echo json_encode($response);
 }
