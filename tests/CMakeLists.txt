@@ -136,6 +136,7 @@ add_php_test(junithandler)
 add_php_test(issuecreation)
 add_php_test(limitedbuilds)
 add_php_test(managemeasurements)
+add_php_test(subprojectemail)
 add_unit_test(PHPUnitTest)
 add_unit_test(Config)
 
