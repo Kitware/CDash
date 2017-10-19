@@ -1997,12 +1997,15 @@ class Build
         // Avoid a race condition when parallel processing.
         pdo_begin_transaction();
 
-        $clauses = array();
+        $clauses = [];
+        $params = [];
 
-        $build = pdo_single_row_query(
-            "SELECT builderrors, buildwarnings, starttime, endtime,
-                submittime, log, command, parentid
-                FROM build WHERE id='$buildid' FOR UPDATE");
+        $stmt = $this->PDO->prepare('
+            SELECT builderrors, buildwarnings, starttime, endtime,
+            submittime, log, command, parentid
+            FROM build WHERE id = ? FOR UPDATE');
+        pdo_execute($stmt, [$buildid]);
+        $build = $stmt->fetch();
 
         // Special case: check if we should move from -1 to 0 errors/warnings.
         $errorsHandled = false;
@@ -2025,7 +2028,8 @@ class Build
             }
             if ($newErrors > 0) {
                 $numErrors = $build['builderrors'] + $newErrors;
-                $clauses[] = "builderrors = $numErrors";
+                $clauses[] = 'builderrors = ?';
+                $params[] = $numErrors;
             }
         }
         if (!$warningsHandled) {
@@ -2034,16 +2038,19 @@ class Build
             }
             if ($newWarnings > 0) {
                 $numWarnings = $build['buildwarnings'] + $newWarnings;
-                $clauses[] = "buildwarnings = $numWarnings";
+                $clauses[] = 'buildwarnings = ?';
+                $params[] = $numWarnings;
             }
         }
 
         // Check if we need to modify starttime or endtime.
         if (strtotime($build['starttime']) > strtotime($this->StartTime)) {
-            $clauses[] = "starttime = '$this->StartTime'";
+            $clauses[] = 'starttime = ?';
+            $params[] = $this->StartTime;
         }
         if (strtotime($build['endtime']) < strtotime($this->EndTime)) {
-            $clauses[] = "endtime = '$this->EndTime'";
+            $clauses[] = 'endtime = ?';
+            $params[] = $this->EndTime;
         }
 
         if ($build['parentid'] != -1) {
@@ -2055,7 +2062,8 @@ class Build
                 } else {
                     $log = $this->Log;
                 }
-                $clauses[] = "log = '$log'";
+                $clauses[] = 'log = ?';
+                $params[] = $log;
             }
             if ($this->Command && $this->Command != $build['command']) {
                 if (!empty($build['command'])) {
@@ -2063,7 +2071,8 @@ class Build
                 } else {
                     $command = $this->Command;
                 }
-                $clauses[] = "command = '$command'";
+                $clauses[] = 'command = ?';
+                $params[] = $command;
             }
         }
 
@@ -2073,9 +2082,10 @@ class Build
             for ($i = 1; $i < $num_clauses; $i++) {
                 $query .= ', ' . $clauses[$i];
             }
-            $query .= " WHERE id = '$buildid'";
-            if (!pdo_query($query)) {
-                add_last_sql_error('UpdateBuild', $this->ProjectId, $buildid);
+            $query .= ' WHERE id = ?';
+            $params[] = $buildid;
+            $stmt = $this->PDO->prepare($query);
+            if (!pdo_execute($stmt, $params)) {
                 pdo_rollback();
                 return false;
             }
@@ -2084,10 +2094,11 @@ class Build
         pdo_commit();
 
         // Also update the parent if necessary.
-        $row = pdo_single_row_query(
-            "SELECT parentid FROM build WHERE id='$buildid'");
-        if ($row && array_key_exists('parentid', $row) && $row['parentid'] > 0) {
-            if ($buildid == $row['parentid']) {
+        $stmt = $this->PDO->prepare('SELECT parentid FROM build WHERE id = ?');
+        pdo_execute($stmt, [$buildid]);
+        $parentid = $stmt->fetchColumn();
+        if ($parentid > 0) {
+            if ($buildid == $parentid) {
                 // Avoid infinite recursion.
                 // This should never happen, but we might as well be careful.
                 add_log("$buildid is its own parent",
@@ -2096,9 +2107,9 @@ class Build
                         CDASH_OBJECT_BUILD, $this->Id);
                 return;
             }
-            $this->UpdateBuild($row['parentid'], $newErrors, $newWarnings);
+            $this->UpdateBuild($parentid, $newErrors, $newWarnings);
             if ($buildid == $this->Id) {
-                $this->SetParentId($row['parentid']);
+                $this->SetParentId($parentid);
             }
         }
     }
