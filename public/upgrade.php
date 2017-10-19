@@ -816,6 +816,11 @@ if (isset($_GET['upgrade-2-6'])) {
     AddTableField('project', 'bugtrackernewissueurl', 'varchar(255)', 'character varying(255)', '');
     AddTableField('project', 'bugtrackertype', 'varchar(16)', 'character varying(16)', '');
 
+    // Add new multi-column index to build2test table.
+    // This improves the query speed on several queries.
+    $multi_index = array('buildid', 'testid');
+    AddTableIndex('build2test', $multi_index);
+
     // Set the database version
     setVersion();
 

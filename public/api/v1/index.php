@@ -1093,13 +1093,17 @@ function echo_main_dashboard_JSON($project_instance, $date)
             }
 
             if ($share_label_filters) {
+
+                $testids = pdo_query(
+                  "SELECT testid FROM label2test
+                   WHERE label2test.buildid=$buildid
+                   AND label2test.labelid IN $label_ids") ;
+                $test_ids = implode("','", $testids) ;
                 $label_query_base =
-                    "SELECT b2t.status, b2t.newstatus
-                    FROM build2test AS b2t
-                    INNER JOIN label2test AS l2t ON
-                    (l2t.testid=b2t.testid AND l2t.buildid=b2t.buildid)
-                    WHERE b2t.buildid = '$buildid' AND
-                    l2t.labelid IN $label_ids";
+                  "SELECT status, newstatus
+                   FROM build2test WHERE buildid = $buildid
+                   AND testid in $test_ids" ;
+
                 $label_filter_query = $label_query_base . $limit_sql;
                 $labels_result = pdo_query($label_filter_query);
 
