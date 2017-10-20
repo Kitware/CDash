@@ -4,6 +4,7 @@
   <BuildName>test_updateappend</BuildName>
   <BuildStamp>20150823-2202-10_PM</BuildStamp>
   <StartDateTime>Sun Aug 23 22:04:14 MDT 2015</StartDateTime>
+  <StartTime>1440389054</StartTime>
   <UpdateCommand>Command 1</UpdateCommand>
   <UpdateType>GIT</UpdateType>
   <UpdateReturnStatus></UpdateReturnStatus>
@@ -12,6 +13,7 @@
   <PriorRevision>2</PriorRevision>
   <Path>mypath</Path>
   <EndDateTime>Sun Aug 23 22:04:15 MDT 2015</EndDateTime>
+  <EndTime>1440389055</EndTime>
 </Update>
 
 

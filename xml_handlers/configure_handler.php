@@ -214,19 +214,11 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
 
         if ($parent == 'CONFIGURE') {
             switch ($element) {
-                case 'STARTDATETIME':
-                    $this->StartTimeStamp = str_to_time($data, $this->BuildStamp);
-                    break;
                 case 'STARTCONFIGURETIME':
                     $this->StartTimeStamp = $data;
                     break;
                 case 'ENDCONFIGURETIME':
                     $this->EndTimeStamp = $data;
-                    break;
-                case 'ELAPSEDMINUTES':
-                    if ($this->EndTimeStamp === 0) {
-                        $this->EndTimeStamp = $this->StartTimeStamp + $data * 60;
-                    }
                     break;
                 case 'BUILDCOMMAND':
                     $this->Configure->Command .= $data;

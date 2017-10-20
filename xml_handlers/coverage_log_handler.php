@@ -165,13 +165,8 @@ class CoverageLogHandler extends AbstractHandler
             case 'STARTTIME':
                 $this->StartTimeStamp = $data;
                 break;
-            case 'STARTDATETIME':
-                $this->StartTimeStamp =
-                    str_to_time($data, $this->Build->GetStamp());
-                break;
-            case 'ENDDATETIME':
-                $this->EndTimeStamp =
-                    str_to_time($data, $this->Build->GetStamp());
+            case 'ENDTIME':
+                $this->EndTimeStamp = $data;
                 break;
         }
     }

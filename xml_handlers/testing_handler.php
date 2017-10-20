@@ -273,22 +273,15 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
         $parent = $this->getParent();
         $element = $this->getElement();
 
-        if ($parent == 'TESTING' && $element == 'STARTDATETIME') {
-            // Defer to StartTestTime as it has higher precision.
-            if (!isset($this->StartTimeStamp)) {
-                $this->StartTimeStamp =
-                    str_to_time($data, $this->BuildInformation->BuildStamp);
+        if ($parent == 'TESTING') {
+            switch ($element) {
+                case 'STARTTESTTIME':
+                    $this->StartTimeStamp = $data;
+                    break;
+                case 'ENDTESTTIME':
+                    $this->EndTimeStamp = $data;
+                    break;
             }
-        } elseif ($parent == 'TESTING' && $element == 'STARTTESTTIME') {
-            $this->StartTimeStamp = $data;
-        } elseif ($parent == 'TESTING' && $element == 'ENDDATETIME') {
-            // Defer to EndTestTime as it has higher precision.
-            if (!isset($this->EndTimeStamp)) {
-                $this->EndTimeStamp =
-                    str_to_time($data, $this->BuildInformation->BuildStamp);
-            }
-        } elseif ($parent == 'TESTING' && $element == 'ENDTESTTIME') {
-            $this->EndTimeStamp = $data;
         } elseif ($parent == 'TEST') {
             switch ($element) {
                 case 'NAME':
