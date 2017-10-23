@@ -296,7 +296,7 @@ class Build
             return false;
         }
 
-        $query = pdo_query(
+        $stmt = $this->PDO->prepare(
             'SELECT
                 projectid,
                 starttime,
@@ -312,14 +312,13 @@ class Build
                 generator,
                 command
             FROM build
-            WHERE id=' . qnum($buildid));
+            WHERE id = ?');
 
-        if (!$query) {
-            add_last_sql_error('Build:FillFromId()', $this->ProjectId, $this->Id);
+        if (!pdo_execute($stmt, [$buildid])) {
             return false;
         }
 
-        $build_array = pdo_fetch_array($query);
+        $build_array = $stmt->fetch();
         $this->Name = $build_array['name'];
         $this->SetStamp($build_array['stamp']);
         $this->Type = $build_array['type'];
@@ -339,9 +338,10 @@ class Build
             $this->SubProjectId = $subprojectid;
         }
 
-        $result = pdo_fetch_array(pdo_query(
-            "SELECT groupid FROM build2group WHERE buildid='$buildid'"));
-        $this->GroupId = $result['groupid'];
+        $stmt = $this->PDO->prepare(
+            'SELECT groupid FROM build2group WHERE buildid = ?');
+        pdo_execute($stmt, [$buildid]);
+        $this->GroupId = $stmt->fetchColumn();
         $this->Filled = true;
     }
 
