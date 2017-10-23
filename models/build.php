@@ -983,11 +983,14 @@ class Build
         $this->UpdateParentTestNumbers($newFailed, $newNotRun, $newPassed);
 
         // Update this build's test numbers.
-        pdo_query("UPDATE build SET testnotrun='$numberTestsNotRun',
-                testfailed='$numberTestsFailed',
-                testpassed='$numberTestsPassed' WHERE id=" . qnum($this->Id));
-
-        add_last_sql_error('Build:UpdateTestNumbers', $this->ProjectId, $this->Id);
+        $stmt = $this->PDO->prepare(
+            'UPDATE build SET testnotrun = ?, testfailed = ?, testpassed = ?
+            WHERE id = ?');
+        if (!pdo_execute($stmt,
+                [$numberTestsNotRun, $numberTestsFailed, $numberTestsPassed,
+                $this->Id])) {
+            return false;
+        }
 
         // Should we should post test failures to a pull request?
         if (isset($this->PullRequest) && $numberTestsFailed > 0) {
