@@ -20,16 +20,15 @@ class BannerTestCase extends KWWebTestCase
     {
         $banner = new Banner();
 
-        ob_start();
         $result = $banner->SetText('banner');
-        $output = ob_get_contents();
-        ob_end_clean();
         if ($result) {
             $this->fail('SetText() should return false when ProjectId is -1');
             return 1;
         }
-        if (strpos($output, 'Banner::SetText(): no ProjectId specified') === false) {
-            $this->fail("'no ProjectId specified' not found from SetText()");
+
+        $log_contents = file_get_contents($this->logfilename);
+        if (strpos($log_contents, 'No ProjectId specified') === false) {
+            $this->fail("'No ProjectId specified' not found from SetText()");
             return 1;
         }
 
@@ -37,10 +36,14 @@ class BannerTestCase extends KWWebTestCase
         $banner->SetProjectId(1);
 
         //test insert
-        $banner->SetText('banner');
+        if (!$banner->SetText('banner')) {
+            $this->fail('SetText #1 returned false');
+        }
 
         //test update
-        $banner->SetText('banner');
+        if (!$banner->SetText('banner')) {
+            $this->fail('SetText #2 returned false');
+        }
 
         if ($banner->GetText() != 'banner') {
             $this->fail("GetText() should have returned 'banner'.");

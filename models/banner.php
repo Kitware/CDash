@@ -20,21 +20,23 @@ class Banner
 {
     private $ProjectId;
     private $Text;
+    private $PDO;
 
     public function __construct()
     {
         $this->ProjectId = -1;
+        $this->PDO = get_link_identifier()->getPdo();
     }
 
     /** Return the text */
     public function GetText()
     {
-        $query = pdo_query('SELECT text FROM banner WHERE projectid=' . qnum($this->ProjectId));
-        if (pdo_num_rows($query) == 0) {
+        $stmt = $this->PDO->prepare(
+          'SELECT text FROM banner WHERE projectid = ?');
+        if (!pdo_execute($stmt, [$this->ProjectId])) {
             return false;
         }
-        $query_array = pdo_fetch_array($query);
-        $this->Text = $query_array['text'];
+        $this->Text = $stmt->fetchColumn();
         if (strlen($this->Text) == 0) {
             return false;
         }
@@ -50,9 +52,13 @@ class Banner
     /** Return if exists */
     public function Exists()
     {
-        $query = pdo_query('SELECT count(*) AS c FROM banner WHERE projectid=' . qnum($this->ProjectId));
-        $query_array = pdo_fetch_array($query);
-        if ($query_array['c'] > 0) {
+        $stmt = $this->PDO->prepare(
+            'SELECT COUNT(*) FROM banner WHERE projectid = ?');
+        if (!pdo_execute($stmt, [$this->ProjectId])) {
+            return false;
+        }
+        $count = $stmt->fetchColumn();
+        if ($count > 0) {
             return true;
         }
         return false;
@@ -62,31 +68,25 @@ class Banner
     public function SetText($text)
     {
         if ($this->ProjectId == -1) {
-            echo 'Banner::SetText(): no ProjectId specified';
+            add_log('No ProjectId specified', 'Banner::SetText', LOG_ERR);
             return false;
         }
 
-        $this->Text = pdo_real_escape_string($text);
+        $this->Text = $text;
 
         // Check if the project is already
         if ($this->Exists()) {
-            // Update the project
-            $query = 'UPDATE banner SET';
-            $query .= " text='" . $this->Text . "'";
-            $query .= " WHERE projectid='" . $this->ProjectId . "'";
-            if (!pdo_query($query)) {
-                add_last_sql_error('Banner:SetText', $this->ProjectId);
-                echo $query;
+            // Change the banner for this project.
+            $stmt = $this->PDO->prepare(
+                'UPDATE banner SET text = ? WHERE projectid = ?');
+            if (!pdo_execute($stmt, [$this->Text, $this->ProjectId])) {
                 return false;
             }
         } else {
-            // insert
-
-            $query = 'INSERT INTO banner (projectid,text)
-                VALUES (' . qnum($this->ProjectId) . ",'" . $this->Text . "')";
-            if (!pdo_query($query)) {
-                add_last_sql_error('Banner:SetText', $this->ProjectId);
-                echo $query;
+            // Insert a banner for this project.
+            $stmt = $this->PDO->prepare(
+                'INSERT INTO banner (projectid, text) VALUES (?, ?)');
+            if (!pdo_execute($stmt, [$this->ProjectId, $this->Text])) {
                 return false;
             }
         }
