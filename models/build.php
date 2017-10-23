@@ -1738,7 +1738,7 @@ class Build
     public function GetName()
     {
         if (!$this->Id) {
-            echo 'Build GetName(): Id not set';
+            add_log('Id not set', 'Build GetName()', LOG_ERR);
             return false;
         }
 
@@ -1755,7 +1755,7 @@ class Build
     public function GetLabels($labelarray = array())
     {
         if (!$this->Id) {
-            echo 'Build GetLabels(): Id not set';
+            add_log('Id not set', 'Build GetLabels()', LOG_ERR);
             return false;
         }
 
@@ -1807,7 +1807,7 @@ class Build
     public function GetGroup()
     {
         if (!$this->Id) {
-            echo 'Build GetGroup(): Id not set';
+            add_log('Id not set', 'Build GetGroup()', LOG_ERR);
             return false;
         }
         $group = pdo_query('SELECT groupid FROM build2group WHERE buildid=' . qnum($this->Id));
@@ -1824,7 +1824,7 @@ class Build
     public function GetNumberOfErrors()
     {
         if (!$this->Id) {
-            echo 'Build::GetNumberOfErrors(): Id not set';
+            add_log('Id not set', 'Build GetNumberOfErrors()', LOG_ERR);
             return false;
         }
 
@@ -1841,7 +1841,7 @@ class Build
     public function GetNumberOfWarnings()
     {
         if (!$this->Id) {
-            echo 'Build::GetNumberOfWarnings(): Id not set';
+            add_log('Id not set', 'Build GetNumberOfWarnings()', LOG_ERR);
             return false;
         }
 
@@ -1858,7 +1858,7 @@ class Build
     public function GetUploadedFilesOrUrls()
     {
         if (!$this->Id) {
-            echo 'Build::GetUploadedFilesOrUrls(): Id not set';
+            add_log('Id not set', 'Build GetUploadedFilesOrUrls()', LOG_ERR);
             return false;
         }
 
