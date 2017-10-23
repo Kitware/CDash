@@ -1151,23 +1151,26 @@ class Build
 
         $diff = [];
 
-        $sqlquery = 'SELECT id,builderrordiff.type AS builderrortype,
-            builderrordiff.difference_positive AS builderrorspositive,
-            builderrordiff.difference_negative AS builderrorsnegative,
-            configureerrordiff.type AS configureerrortype,
-            configureerrordiff.difference AS configureerrors,
-            testdiff.type AS testerrortype,
-            testdiff.difference_positive AS testerrorspositive,
-            testdiff.difference_negative AS testerrorsnegative
-                FROM build
-                LEFT JOIN builderrordiff ON builderrordiff.buildid=build.id
-                LEFT JOIN configureerrordiff ON configureerrordiff.buildid=build.id
-                LEFT JOIN testdiff ON testdiff.buildid=build.id
-                WHERE id=' . qnum($this->Id);
-        $query = pdo_query($sqlquery);
-        add_last_sql_error('Build:GetErrorDifferences', $this->ProjectId, $this->Id);
+        $stmt = $this->PDO->prepare(
+            'SELECT id,
+                    builderrordiff.type AS builderrortype,
+                    builderrordiff.difference_positive AS builderrorspositive,
+                    builderrordiff.difference_negative AS builderrorsnegative,
+                    configureerrordiff.type AS configureerrortype,
+                    configureerrordiff.difference AS configureerrors,
+                    testdiff.type AS testerrortype,
+                    testdiff.difference_positive AS testerrorspositive,
+                    testdiff.difference_negative AS testerrorsnegative
+              FROM build
+              LEFT JOIN builderrordiff ON builderrordiff.buildid=build.id
+              LEFT JOIN configureerrordiff ON configureerrordiff.buildid=build.id
+              LEFT JOIN testdiff ON testdiff.buildid=build.id
+              WHERE id = ?');
+        if (!pdo_execute($stmt, [$this->Id])) {
+            return false;
+        }
 
-        while ($query_array = pdo_fetch_array($query)) {
+        while ($query_array = $stmt->fetch()) {
             if ($query_array['builderrortype'] == 0) {
                 $diff['builderrorspositive'] = $query_array['builderrorspositive'];
                 $diff['builderrorsnegative'] = $query_array['builderrorsnegative'];
@@ -1195,12 +1198,12 @@ class Build
         }
 
         // If some of the errors are not set default to zero
-        $variables = array('builderrorspositive', 'builderrorsnegative',
+        $variables = ['builderrorspositive', 'builderrorsnegative',
             'buildwarningspositive', 'buildwarningsnegative',
             'configureerrors', 'configurewarnings',
             'testpassedpositive', 'testpassednegative',
             'testfailedpositive', 'testfailednegative',
-            'testnotrunpositive', 'testnotrunnegative');
+            'testnotrunpositive', 'testnotrunnegative'];
         foreach ($variables as $var) {
             if (!isset($diff[$var])) {
                 $diff[$var] = 0;
