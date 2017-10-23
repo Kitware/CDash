@@ -278,15 +278,14 @@ class Build
 
     public function QuerySubProjectId($buildid)
     {
-        $query = pdo_query(
-            'SELECT id FROM subproject, subproject2build ' .
-            'WHERE subproject.id=subproject2build.subprojectid AND subproject2build.buildid=' . qnum($buildid));
-        if (!$query) {
-            add_last_sql_error('Build:QuerySubProjectId', $this->ProjectId, $buildid);
+        $stmt = $this->PDO->prepare(
+            'SELECT sp.id FROM subproject sp
+            JOIN subproject2build sp2b ON sp.id = sp2b.subprojectid
+            WHERE sp2b.buildid = ?');
+        if (!pdo_execute($stmt, [$buildid])) {
             return false;
         }
-        $query_array = pdo_fetch_array($query);
-        return $query_array['id'];
+        return $stmt->fetchColumn();
     }
 
     /** Fill the current build information from the buildid */
