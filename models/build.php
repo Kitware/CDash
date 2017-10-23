@@ -928,52 +928,44 @@ class Build
         return true;
     }
 
+    /** Helper function for test number accessors. */
+    private function GetNumberOfTestsByField($field)
+    {
+        if ($field != 'testpassed' && $field != 'testfailed' &&
+                $field != 'testnotrun') {
+            return false;
+        }
+        $stmt = $this->PDO->prepare(
+            "SELECT $field FROM build WHERE id = ?");
+        if (!pdo_execute($stmt, [$this->Id])) {
+            return false;
+        }
+        $numTests = $stmt->fetchColumn();
+        if ($numTests === false) {
+            return 0;
+        }
+        if ($numTests < 0) {
+            return 0;
+        }
+        return $numTests;
+    }
+
     /** Get number of failed tests */
     public function GetNumberOfFailedTests()
     {
-        $result =
-            pdo_query('SELECT testfailed FROM build WHERE id=' . qnum($this->Id));
-        if (pdo_num_rows($result) > 0) {
-            $build_array = pdo_fetch_array($result);
-            $numTestsFailed = $build_array['testfailed'];
-            if ($numTestsFailed < 0) {
-                return 0;
-            }
-            return $numTestsFailed;
-        }
-        return 0;
+        return $this->GetNumberOfTestsByField('testfailed');
     }
 
     /** Get number of passed tests */
     public function GetNumberOfPassedTests()
     {
-        $result =
-            pdo_query('SELECT testpassed FROM build WHERE id=' . qnum($this->Id));
-        if (pdo_num_rows($result) > 0) {
-            $build_array = pdo_fetch_array($result);
-            $numTestsPassed = $build_array['testpassed'];
-            if ($numTestsPassed < 0) {
-                return 0;
-            }
-            return $numTestsPassed;
-        }
-        return 0;
+        return $this->GetNumberOfTestsByField('testpassed');
     }
 
     /** Get number of not run tests */
     public function GetNumberOfNotRunTests()
     {
-        $result =
-            pdo_query('SELECT testnotrun FROM build WHERE id=' . qnum($this->Id));
-        if (pdo_num_rows($result) > 0) {
-            $build_array = pdo_fetch_array($result);
-            $numTestsNotRun = $build_array['testnotrun'];
-            if ($numTestsNotRun < 0) {
-                return 0;
-            }
-            return $numTestsNotRun;
-        }
-        return 0;
+        return $this->GetNumberOfTestsByField('testnotrun');
     }
 
     /** Update the test numbers */
