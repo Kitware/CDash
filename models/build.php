@@ -150,12 +150,10 @@ class Build
             return false;
         }
 
-        $query = pdo_query(
-            "SELECT id FROM subproject WHERE name='$subproject' AND " .
-            'projectid=' . qnum($this->ProjectId) . " AND endtime='1980-01-01 00:00:00'"
-        );
-        if (!$query) {
-            add_last_sql_error('Build:SetSubProject()', $this->ProjectId);
+        $stmt = $this->PDO->prepare(
+            "SELECT id FROM subproject WHERE name = ? AND projectid = ? AND
+            endtime='1980-01-01 00:00:00'");
+        if (!pdo_execute($stmt, [$subproject, $this->ProjectId])) {
             return false;
         }
 
@@ -173,9 +171,9 @@ class Build
             $parent->InsertLabelAssociations();
         }
 
-        if (pdo_num_rows($query) > 0) {
-            $query_array = pdo_fetch_array($query);
-            $this->SubProjectId = $query_array['id'];
+        $subprojectid = $stmt->fetchColumn();
+        if ($subprojectid !== false) {
+            $this->SubProjectId = $subprojectid;
             return $this->SubProjectId;
         }
 
