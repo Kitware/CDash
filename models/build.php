@@ -716,14 +716,11 @@ class Build
         if (!$this->Id) {
             return false;
         }
-        $query = pdo_query("SELECT count(*) FROM build WHERE id='" . $this->Id . "'");
-        add_last_sql_error('Build::Exists', $this->ProjectId, $this->Id);
-
-        $query_array = pdo_fetch_array($query);
-        if ($query_array[0] > 0) {
-            return true;
+        $stmt = $this->PDO->prepare('SELECT COUNT(*) FROM build WHERE id = ?');
+        if (!pdo_execute($stmt, [$this->Id])) {
+            return false;
         }
-        return false;
+        return $stmt->fetchColumn() > 0;
     }
 
     // Save in the database
