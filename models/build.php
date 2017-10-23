@@ -230,25 +230,21 @@ class Build
         }
 
         // Check if an entry already exists for this build.
-        $query = pdo_query(
-            'SELECT buildid FROM buildtesttime
-                WHERE buildid=' . qnum($this->Id));
-        if (!$query) {
-            add_last_sql_error('SaveTotalTestsTime',
-                $this->ProjectId, $this->Id);
+        $exists_stmt = $this->PDO->prepare(
+            'SELECT buildid FROM buildtesttime WHERE buildid = ?');
+        if (!pdo_execute($exists_stmt, [$this->Id])) {
             return false;
         }
-
-        if (pdo_num_rows($query) > 0) {
-            $query =
-                "UPDATE buildtesttime SET time = time + $duration
-                WHERE buildid=" . qnum($this->Id);
+        if ($exists_stmt->fetchColumn() !== false) {
+            $stmt = $this->PDO->prepare(
+                'UPDATE buildtesttime SET time = time + ? WHERE buildid = ?');
+            $params = [$duration, $this->Id];
         } else {
-            $query = "INSERT INTO buildtesttime (buildid, time)
-                VALUES ('" . $this->Id . "','" . $duration . "')";
+            $stmt = $this->PDO->prepare(
+                'INSERT INTO buildtesttime (buildid, time) VALUES (?, ?)');
+            $params = [$this->Id, $duration];
         }
-        if (!pdo_query($query)) {
-            add_last_sql_error('Build:SaveTotalTestsTime', $this->ProjectId, $this->Id);
+        if (!pdo_execute($stmt, $params)) {
             return false;
         }
 
