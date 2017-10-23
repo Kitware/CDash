@@ -206,16 +206,17 @@ class Build
             return $this->SubProjectName;
         }
 
-        $query = pdo_query('SELECT name FROM subproject,subproject2build WHERE subproject.id=subproject2build.subprojectid
-                AND subproject2build.buildid=' . qnum($this->Id));
-        if (!$query) {
-            add_last_sql_error('Build:GetSubProjectName()', $this->ProjectId, $this->Id);
+        $stmt = $this->PDO->prepare(
+            'SELECT sp.name FROM subproject sp
+            JOIN subproject2build sp2b ON sp.id = sp2b.subprojectid
+            WHERE sp2b.buildid = ?');
+        if (!pdo_execute($stmt, [$this->Id])) {
             return false;
         }
 
-        if (pdo_num_rows($query) > 0) {
-            $query_array = pdo_fetch_array($query);
-            $this->SubProjectName = $query_array['name'];
+        $subproject_name = $stmt->fetchColumn();
+        if ($subproject_name !== false) {
+            $this->SubProjectName = $subproject_name;
             return $this->SubProjectName;
         }
         return false;
