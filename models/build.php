@@ -91,8 +91,8 @@ class Build
     public function __construct()
     {
         $this->ProjectId = 0;
-        $this->Errors = array();
-        $this->ErrorDiffs = array();
+        $this->Errors = [];
+        $this->ErrorDiffs = [];
         $this->Append = false;
         $this->InsertErrors = true;
         $this->Filled = false;
@@ -113,7 +113,7 @@ class Build
     public function AddLabel($label)
     {
         if (!isset($this->Labels)) {
-            $this->Labels = array();
+            $this->Labels = [];
         }
         $label->BuildId = $this->Id;
         $this->Labels[] = $label;
@@ -1149,7 +1149,7 @@ class Build
             return false;
         }
 
-        $diff = array();
+        $diff = [];
 
         $sqlquery = 'SELECT id,builderrordiff.type AS builderrortype,
             builderrordiff.difference_positive AS builderrorspositive,
@@ -1372,9 +1372,9 @@ class Build
                     ');
             add_last_sql_error('Build:ComputeTestTiming', $this->ProjectId, $this->Id);
 
-            $testarray = array();
+            $testarray = [];
             while ($test_array = pdo_fetch_array($previoustest)) {
-                $test = array();
+                $test = [];
                 $test['id'] = $test_array['testid'];
                 $test['name'] = $test_array['name'];
                 $testarray[] = $test;
@@ -1739,7 +1739,7 @@ class Build
     }
 
     /** Get all the labels for a given build */
-    public function GetLabels($labelarray = array())
+    public function GetLabels($labelarray = [])
     {
         if (!$this->Id) {
             add_log('Id not set', 'Build GetLabels()', LOG_ERR);
@@ -1783,7 +1783,7 @@ class Build
             return false;
         }
 
-        $labelids = array();
+        $labelids = [];
         while ($label_array = pdo_fetch_array($labels)) {
             $labelids[] = $label_array['labelid'];
         }
@@ -1850,7 +1850,7 @@ class Build
         }
 
         $results = pdo_query("SELECT fileid FROM build2uploadfile WHERE buildid='$this->Id'");
-        $allUploadedFiles = array();
+        $allUploadedFiles = [];
         while ($uploadfiles_array = pdo_fetch_array($results)) {
             $UploadFile = new UploadFile();
             $UploadFile->Id = $uploadfiles_array['fileid'];
