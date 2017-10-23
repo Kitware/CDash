@@ -268,11 +268,12 @@ class Build
             return false;
         }
 
-        $query = "UPDATE build SET endtime='$end_time' WHERE id='$this->Id'";
-        if (!pdo_query($query)) {
-            add_last_sql_error('Build:UpdateEndTime', $this->ProjectId, $this->Id);
+        $stmt = $this->PDO->preapre(
+          'UPDATE build SET endtime = ? WHERE id = ?');
+        if (!pdo_execute($stmt, [$end_time, $this->Id])) {
             return false;
         }
+        return true;
     }
 
     public function QuerySubProjectId($buildid)
