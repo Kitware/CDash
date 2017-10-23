@@ -1328,21 +1328,29 @@ class Build
 
         // TEST TIMING
         $weight = 0.3; // weight of the current test compared to the previous mean/std (this defines a window)
-        $build = pdo_query('SELECT projectid,starttime,siteid,name,type FROM build WHERE id=' . qnum($this->Id));
-        add_last_sql_error('Build:ComputeTestTiming', $this->ProjectId, $this->Id);
+        $stmt = $this->PDO->prepare(
+            'SELECT projectid, starttime, siteid, name, type
+            FROM build WHERE id = ?');
+        if (!pdo_execute($stmt, [$this->Id])) {
+            return false;
+        }
 
         $buildid = $this->Id;
-        $build_array = pdo_fetch_array($build);
+        $build_array = $stmt->fetch();
         $buildname = $build_array['name'];
         $buildtype = $build_array['type'];
         $starttime = $build_array['starttime'];
         $siteid = $build_array['siteid'];
         $projectid = $build_array['projectid'];
 
-        $project = pdo_query('SELECT testtimestd,testtimestdthreshold,testtimemaxstatus FROM project WHERE id=' . qnum($this->ProjectId));
-        add_last_sql_error('Build:ComputeTestTiming', $this->ProjectId, $this->Id);
+        $project_stmt = $this->PDO->prepare(
+            'SELECT testtimestd, testtimestdthreshold, testtimemaxstatus
+            FROM project WHERE id = ?');
+        if (!pdo_execute($project_stmt, [$this->ProjectId])) {
+            return false;
+        }
 
-        $project_array = pdo_fetch_array($project);
+        $project_array = $project_stmt->fetch();
         $projecttimestd = $project_array['testtimestd'];
         $projecttimestdthreshold = $project_array['testtimestdthreshold'];
         $projecttestmaxstatus = $project_array['testtimemaxstatus'];
@@ -1360,36 +1368,41 @@ class Build
             compute_test_difference($buildid, $previousbuildid, 2, $projecttestmaxstatus); // pass
             compute_test_difference($buildid, $previousbuildid, 3, $projecttestmaxstatus); // time
 
-            // Loop through the tests
-            $tests = pdo_query('SELECT build2test.time,build2test.testid,test.name,build2test.status,
-                    build2test.timestatus
-                    FROM build2test,test WHERE build2test.buildid=' . qnum($this->Id) . '
-                    AND build2test.testid=test.id
-                    ');
-            add_last_sql_error('Build:ComputeTestTiming', $this->ProjectId, $this->Id);
-
-            // Find the previous test
-            $previoustest = pdo_query('SELECT build2test.testid,test.name FROM build2test,test
-                    WHERE build2test.buildid=' . qnum($previousbuildid) . '
-                    AND test.id=build2test.testid
-                    ');
-            add_last_sql_error('Build:ComputeTestTiming', $this->ProjectId, $this->Id);
+            // Get the tests performed by the previous build.
+            $previous_tests_stmt = $this->PDO->prepare(
+                'SELECT b2t.testid, t.name
+                FROM build2test b2t
+                JOIN test t ON t.id = b2t.testid
+                WHERE b2t.buildid = ?');
+            if (!pdo_execute($previous_tests_stmt, [$previousbuildid])) {
+                return false;
+            }
 
             $testarray = [];
-            while ($test_array = pdo_fetch_array($previoustest)) {
+            while ($row = $previous_tests_stmt->fetch()) {
                 $test = [];
-                $test['id'] = $test_array['testid'];
-                $test['name'] = $test_array['name'];
+                $test['id'] = $row['testid'];
+                $test['name'] = $row['name'];
                 $testarray[] = $test;
             }
 
-            while ($test_array = pdo_fetch_array($tests)) {
-                $testtime = $test_array['time'];
-                $testid = $test_array['testid'];
-                $teststatus = $test_array['status'];
-                $testname = $test_array['name'];
+            // Loop through the tests performed by this build.
+            $tests_stmt = $this->PDO->prepare(
+                'SELECT b2t.time, b2t.testid, t.name, b2t.status,
+                        b2t.timestatus
+                FROM build2test b2t
+                JOIN test t ON b2t.testid = t.id
+                WHERE b2t.buildid = ?');
+            if (!pdo_execute($tests_stmt, [$this->Id])) {
+                return false;
+            }
+            while ($row = $tests_stmt->fetch()) {
+                $testtime = $row['time'];
+                $testid = $row['testid'];
+                $teststatus = $row['status'];
+                $testname = $row['name'];
                 $previoustestid = 0;
-                $timestatus = $test_array['timestatus'];
+                $timestatus = $row['timestatus'];
 
                 foreach ($testarray as $test) {
                     if ($test['name'] == $testname) {
@@ -1399,13 +1412,16 @@ class Build
                 }
 
                 if ($previoustestid > 0) {
-                    $previoustest = pdo_query('SELECT timemean,timestd,timestatus FROM build2test
-                            WHERE buildid=' . qnum($previousbuildid) . '
-                            AND build2test.testid=' . qnum($previoustestid)
-                    );
-                    add_last_sql_error('Build:ComputeTestTiming', $this->ProjectId, $this->Id);
+                    $previous_test_stmt = $this->PDO->prepare(
+                        'SELECT timemean, timestd, timestatus
+                        FROM build2test
+                        WHERE buildid = ? AND testid = ?');
+                    if (!pdo_execute($previous_test_stmt,
+                            [$previousbuildid, $previoustestid])) {
+                        continue;
+                    }
 
-                    $previoustest_array = pdo_fetch_array($previoustest);
+                    $previoustest_array = $previous_test_stmt->fetch();
                     $previoustimemean = $previoustest_array['timemean'];
                     $previoustimestd = $previoustest_array['timestd'];
                     $previoustimestatus = $previoustest_array['timestatus'];
@@ -1451,9 +1467,15 @@ class Build
                     $timemean = $testtime;
                 }
 
-                pdo_query('UPDATE build2test SET timemean=' . qnum($timemean) . ',timestd=' . qnum($timestd) . ',timestatus=' . qnum($timestatus) . '
-                        WHERE buildid=' . qnum($this->Id) . ' AND testid=' . qnum($testid));
-                add_last_sql_error('Build:ComputeTestTiming', $this->ProjectId, $this->Id);
+                $update_stmt = $this->PDO->prepare(
+                    'UPDATE build2test
+                    SET timemean = ?, timestd = ?, timestatus = ?
+                    WHERE buildid = ? AND testid = ?');
+                if (!pdo_execute($update_stmt,
+                        [$timemean, $timestd, $timestatus, $this->Id,
+                         $testid])) {
+                    continue;
+                }
                 if ($timestatus >= $projecttestmaxstatus) {
                     $testtimestatusfailed++;
                 }
@@ -1464,23 +1486,35 @@ class Build
             $timestd = 0;
             $timestatus = 0;
 
-            // Loop throught the tests
-            $tests = pdo_query('SELECT time,testid FROM build2test WHERE buildid=' . qnum($this->Id));
-            while ($test_array = pdo_fetch_array($tests)) {
+            // Loop through the tests.
+            $tests_stmt = $this->PDO->prepare(
+                'SELECT time, testid FROM build2test WHERE buildid = ?');
+            if (!pdo_execute($tests_stmt, [$this->Id])) {
+                return false;
+            }
+            while ($test_array = $tests_stmt->fetch()) {
                 $timemean = $test_array['time'];
                 $testid = $test_array['testid'];
-
-                pdo_query('UPDATE build2test SET timemean=' . qnum($timemean) . ',timestd=' . qnum($timestd) . ',timestatus=' . qnum($timestatus) . '
-                        WHERE buildid=' . qnum($this->Id) . ' AND testid=' . qnum($testid));
-                add_last_sql_error('Build:ComputeTestTiming', $this->ProjectId, $this->Id);
+                $update_stmt = $this->PDO->prepare(
+                    'UPDATE build2test
+                    SET timemean = ?, timestd = ?, timestatus = ?
+                    WHERE buildid = ? AND testid = ?');
+                if (!pdo_execute($update_stmt,
+                        [$timemean, $timestd, $timestatus, $this->Id,
+                         $testid])) {
+                    continue;
+                }
                 if ($timestatus >= $projecttestmaxstatus) {
                     $testtimestatusfailed++;
                 }
-            } // loop through the tests
+            }
         }
 
-        pdo_query('UPDATE build SET testtimestatusfailed=' . qnum($testtimestatusfailed) . ' WHERE id=' . $this->Id);
-        add_last_sql_error('Build:ComputeTestTiming', $this->ProjectId, $this->Id);
+        $stmt = $this->PDO->prepare(
+            'UPDATE build SET testtimestatusfailed = ? WHERE id = ?');
+        if (!pdo_execute($stmt, [$testtimestatusfailed, $this->Id])) {
+            return false;
+        }
         return true;
     }
 
