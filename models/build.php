@@ -1886,13 +1886,17 @@ class Build
             return false;
         }
 
-        $builderror = pdo_query('SELECT buildwarnings FROM build WHERE id=' . qnum($this->Id));
-        add_last_sql_error('Build:GetNumberOfWarnings', $this->ProjectId, $this->Id);
-        $builderror_array = pdo_fetch_array($builderror);
-        if ($builderror_array[0] == -1) {
-            return 0;
+        $stmt = $this->PDO->prepare(
+            'SELECT buildwarnings FROM build WHERE id = ?');
+        if (!pdo_execute($stmt, [$this->Id])) {
+            return false;
         }
-        return $builderror_array[0];
+
+        $num_warnings = $stmt->fetchColumn();
+        if ($num_warnings == -1) {
+            $num_warnings = 0;
+        }
+        return $num_warnings;
     }
 
     /* Return all uploaded files or URLs for this build */
