@@ -1907,9 +1907,14 @@ class Build
             return false;
         }
 
-        $results = pdo_query("SELECT fileid FROM build2uploadfile WHERE buildid='$this->Id'");
+        $stmt = $this->PDO->prepare(
+            'SELECT fileid FROM build2uploadfile WHERE buildid = ?');
+        if (!pdo_execute($stmt, [$this->Id])) {
+            return false;
+        }
+
         $allUploadedFiles = [];
-        while ($uploadfiles_array = pdo_fetch_array($results)) {
+        while ($uploadfiles_array = $stmt->fetch()) {
             $UploadFile = new UploadFile();
             $UploadFile->Id = $uploadfiles_array['fileid'];
             $UploadFile->Fill();
