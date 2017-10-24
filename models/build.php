@@ -1743,18 +1743,24 @@ class Build
             $errortype = 1;
         }
 
-        $errors = pdo_query('SELECT count(*) FROM builderror WHERE type=' . qnum($errortype) . "
-                AND sourcefile LIKE '%$filename%' AND buildid=" . qnum($buildid));
-        $errors_array = pdo_fetch_array($errors);
-        $nerrors = $errors_array[0];
-        // Adding the buildfailure
-        $failures = pdo_query(
-            'SELECT count(*) FROM buildfailure AS bf
-                LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
-                WHERE bfd.type=' . qnum($errortype) . " AND
-                bf.sourcefile LIKE '%$filename%' AND bf.buildid=" . qnum($buildid));
-        $failures_array = pdo_fetch_array($failures);
-        $nerrors += $failures_array[0];
+        // Get number of builderrors.
+        $stmt = $this->PDO->prepare(
+            'SELECT COUNT(*) FROM builderror
+            WHERE type = ? AND sourcefile LIKE ? AND buildid = ?');
+        if (!pdo_execute($stmt, [$errortype, "%$filename%", $buildid])) {
+            return false;
+        }
+        $nerrors = $stmt->fetchColumn();
+
+        // Get number of buildfailures.
+        $stmt = $this->PDO->prepare(
+            'SELECT COUNT(*) FROM buildfailure AS bf
+            LEFT JOIN buildfailuredetails AS bfd ON (bfd.id = bf.detailsid)
+            WHERE bfd.type = ? AND bf.sourcefile LIKE ? AND bf.buildid = ?');
+        if (!pdo_execute($stmt, [$errortype, "%$filename%", $buildid])) {
+            return false;
+        }
+        $nerrors += $stmt->fetchColumn();
         return $nerrors;
     }
 
