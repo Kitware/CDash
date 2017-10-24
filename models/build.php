@@ -2183,9 +2183,11 @@ class Build
         $numNotRun = 0;
         $numPassed = 0;
 
-        $parent = pdo_single_row_query(
+        $stmt = $this->PDO->prepare(
             'SELECT testfailed, testnotrun, testpassed
-                FROM build WHERE id=' . qnum($this->ParentId) . ' FOR UPDATE');
+            FROM build WHERE id = ? FOR UPDATE');
+        pdo_execute($stmt, [$this->ParentId]);
+        $parent = $stmt->fetch();
 
         // Don't let the -1 default value screw up our math.
         if ($parent['testfailed'] == -1) {
@@ -2202,16 +2204,11 @@ class Build
         $numNotRun = $newNotRun + $parent['testnotrun'];
         $numPassed = $newPassed + $parent['testpassed'];
 
-        pdo_query(
-            "UPDATE build SET testnotrun='$numNotRun',
-                testfailed='$numFailed',
-                testpassed='$numPassed'
-                WHERE id=" . qnum($this->ParentId));
-
-        add_last_sql_error('Build:UpdateParentTestNumbers', $this->ProjectId, $this->Id);
-
+        $stmt = $this->PDO->prepare(
+            'UPDATE build SET testnotrun = ?, testfailed = ?, testpassed = ?
+            WHERE id = ?');
+        pdo_execute($stmt, [$numNotRun, $numFailed, $numPassed, $this->ParentId]);
         pdo_commit();
-
         // NOTE: as far as I can tell, build.testtimestatusfailed isn't used,
         // so for now it isn't being updated for parent builds.
     }
