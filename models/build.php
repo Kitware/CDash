@@ -1850,14 +1850,12 @@ class Build
             add_log('Id not set', 'Build GetGroup()', LOG_ERR);
             return false;
         }
-        $group = pdo_query('SELECT groupid FROM build2group WHERE buildid=' . qnum($this->Id));
-        if (!$group) {
-            add_last_sql_error('Build:GetGroup', $this->ProjectId, $this->Id);
+        $stmt = $this->PDO->prepare(
+            'SELECT groupid FROM build2group WHERE buildid = ?');
+        if (!pdo_execute($stmt, [$this->Id])) {
             return false;
         }
-
-        $buildgroup_array = pdo_fetch_array($group);
-        return $buildgroup_array['groupid'];
+        return $stmt->fetchColumn();
     }
 
     /** Get the number of errors for a build */
