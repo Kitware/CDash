@@ -1957,43 +1957,48 @@ class Build
         // Check if there's an existing build that should be the parent.
         // This would be a standalone build (parent=0) with no subproject
         // that matches our name, site, stamp, and projectid.
-        $query = "SELECT id FROM build
-            WHERE parentid = 0 AND name = '$this->Name' AND
-            siteid = '$this->SiteId' AND stamp = '$this->Stamp' AND
-            projectid = '$this->ProjectId'
-            ";
-        $result = pdo_query($query);
-        if (pdo_num_rows($result) > 0) {
+        $stmt = $this->PDO->prepare(
+            'SELECT id FROM build
+            WHERE parentid = 0 AND name = ? AND siteid = ? AND stamp = ? AND
+                  projectid = ?');
+        if (!pdo_execute($stmt,
+                [$this->Name, $this->SiteId, $this->Stamp, $this->ProjectId])) {
+            return false;
+        }
+        $existing_buildid = $stmt->fetchColumn();
+        if ($existing_buildid !== false) {
             $result_array = pdo_fetch_array($result);
-            $this->SetParentId($result_array['id']);
+            $this->SetParentId($existing_buildid);
 
             // Mark it as a parent (parentid of -1).
-            pdo_query("UPDATE build SET parentid = -1 WHERE id = $this->ParentId");
+            $stmt = $this->PDO->prepare(
+                'UPDATE build SET parentid = ' . Build::PARENT_BUILD . '
+                WHERE id = ?');
+            pdo_execute($stmt, [$this->ParentId]);
         } else {
             // Generate a UUID for the parent build.  It is distinguished
             // from its children by the lack of SubProject (final parameter).
             $uuid = Build::GenerateUuid($this->Stamp, $this->Name,
                 $this->SiteId, $this->ProjectId, '');
 
-            // Create the parent build here.  Note how parent builds
-            // are indicated by parentid == -1.
-            $query = "INSERT INTO build
+            // Create the parent build here.
+            $stmt = $this->PDO->prepare(
+                'INSERT INTO build
                 (parentid, siteid, projectid, stamp, name, type, generator,
                  starttime, endtime, submittime, builderrors, buildwarnings,
                  uuid, changeid)
-                VALUES
-                ('-1', '$this->SiteId', '$this->ProjectId', '$this->Stamp',
-                 '$this->Name', '$this->Type', '$this->Generator',
-                 '$this->StartTime', '$this->EndTime', '$this->SubmitTime',
-                 0, 0, '$uuid', '$this->PullRequest')";
-
-            if (!pdo_query($query)) {
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+            if (! $stmt->execute(
+                    [Build::PARENT_BUILD, $this->SiteId, $this->ProjectId,
+                     $this->Stamp, $this->Name, $this->Type, $this->Generator,
+                     $this->StartTime, $this->EndTime, $this->SubmitTime, 0, 0,
+                     $uuid, $this->PullRequest])) {
                 // Check if somebody else beat us to creating this parent build.
-                $existing_id_result = pdo_single_row_query(
-                    "SELECT id FROM build WHERE uuid = '$uuid'");
-                if ($existing_id_result &&
-                    array_key_exists('id', $existing_id_result)
-                ) {
+                $existing_id_stmt = $this->PDO->prepare(
+                    'SELECT id FROM build WHERE uuid = ?');
+                pdo_execute($existing_id_stmt, [$uuid]);
+                $existing_parentid = $existing_id_stmt->fetchColumn();
+                if ($existing_parentid !== false) {
                     $this->SetParentId($existing_id_result['id']);
                     return false;
                 } else {
@@ -2022,14 +2027,14 @@ class Build
         // This happens when Update.xml is parsed first, because it doesn't
         // contain info about what subproject it came from.
         // TODO: maybe we don't need this any more?
-        $query =
-            "UPDATE build SET parentid=$this->ParentId
-            WHERE parentid=0 AND siteid='$this->SiteId' AND
-            name='$this->Name' AND stamp='$this->Stamp' AND
-            projectid=$this->ProjectId";
-        if (!pdo_query($query)) {
-            add_last_sql_error(
-                'Build Insert Update Parent', $this->ProjectId, $this->ParentId);
+        $stmt = $this->PDO->prepare(
+            'UPDATE build SET parentid = ?
+            WHERE parentid = ' . Build::STANDALONE_BUILD . ' AND
+                  siteid = ? AND name = ? AND stamp = ? AND projectid = ?');
+        if (!pdo_execute($stmt,
+                [$this->ParentId, $this->SiteId, $this->Name, $this->Stamp,
+                 $this->ProjectId])) {
+            return false;
         }
         return true;
     }
