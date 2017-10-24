@@ -1772,13 +1772,11 @@ class Build
             return false;
         }
 
-        $build = pdo_query('SELECT name FROM build WHERE id=' . qnum($this->Id));
-        if (!$build) {
-            add_last_sql_error('Build:GetName', $this->ProjectId, $this->Id);
+        $stmt = $this->PDO->prepare('SELECT name FROM build WHERE id = ?');
+        if (!pdo_execute($stmt, [$this->Id])) {
             return false;
         }
-        $build_array = pdo_fetch_array($build);
-        return $build_array['name'];
+        return $stmt->fetchColumn();
     }
 
     /** Get all the labels for a given build */
