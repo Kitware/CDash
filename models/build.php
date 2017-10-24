@@ -1787,45 +1787,57 @@ class Build
             return false;
         }
 
-        $sql = 'SELECT label.id as labelid FROM label WHERE
-            label.id IN (SELECT labelid AS id FROM label2build WHERE label2build.buildid=' . qnum($this->Id) . ')';
+        $sql =
+            'SELECT label.id as labelid FROM label WHERE label.id IN
+                (SELECT labelid AS id FROM label2build
+                 WHERE label2build.buildid = :buildid)';
 
         if (empty($labelarray) || isset($labelarray['test']['errors'])) {
-            $sql .= ' OR label.id IN (SELECT labelid AS id FROM label2test WHERE label2test.buildid=' . qnum($this->Id) . ')';
+            $sql .=
+                ' OR label.id IN
+                    (SELECT labelid AS id FROM label2test
+                     WHERE label2test.buildid = :buildid)';
         }
         if (empty($labelarray) || isset($labelarray['coverage']['errors'])) {
-            $sql .= ' OR label.id IN (SELECT labelid AS id FROM label2coveragefile WHERE label2coveragefile.buildid=' . qnum($this->Id) . ')';
+            $sql .=
+                ' OR label.id IN
+                    (SELECT labelid AS id FROM label2coveragefile
+                     WHERE label2coveragefile.buildid = :buildid)';
         }
         if (empty($labelarray) || isset($labelarray['build']['errors'])) {
-            $sql .= "  OR label.id IN (
-                SELECT l2bf.labelid AS id
-                FROM label2buildfailure AS l2bf
-                LEFT JOIN buildfailure AS bf ON (bf.id=l2bf.buildfailureid)
-                LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
-                WHERE bfd.type='0' AND bf.buildid=" . qnum($this->Id) . ')';
+            $sql .=
+                " OR label.id IN (
+                    SELECT l2bf.labelid AS id
+                    FROM label2buildfailure AS l2bf
+                    LEFT JOIN buildfailure AS bf ON (bf.id=l2bf.buildfailureid)
+                    LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
+                    WHERE bfd.type='0' AND bf.buildid = :buildid)";
         }
         if (empty($labelarray) || isset($labelarray['build']['warnings'])) {
-            $sql .= "  OR label.id IN (
-                SELECT l2bf.labelid AS id
-                FROM label2buildfailure AS l2bf
-                LEFT JOIN buildfailure AS bf ON (bf.id=l2bf.buildfailureid)
-                LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
-                WHERE bfd.type='1' AND bf.buildid=" . qnum($this->Id) . ')';
+            $sql .=
+                " OR label.id IN (
+                    SELECT l2bf.labelid AS id
+                    FROM label2buildfailure AS l2bf
+                    LEFT JOIN buildfailure AS bf ON (bf.id=l2bf.buildfailureid)
+                    LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
+                    WHERE bfd.type='1' AND bf.buildid = :buildid)";
         }
         if (empty($labelarray) || isset($labelarray['dynamicanalysis']['errors'])) {
-            $sql .= ' OR label.id IN (SELECT labelid AS id FROM label2dynamicanalysis,dynamicanalysis
-                WHERE label2dynamicanalysis.dynamicanalysisid=dynamicanalysis.id AND dynamicanalysis.buildid=' . qnum($this->Id) . ')';
+            $sql .=
+                ' OR label.id IN
+                  (SELECT labelid AS id FROM label2dynamicanalysis l2da
+                     JOIN dynamicanalysis da ON l2da.dynamicanalysisid = da.id
+                     WHERE da.buildid = :buildid)';
         }
 
-        $labels = pdo_query($sql);
-
-        if (!$labels) {
-            add_last_sql_error('Build:GetLabels', $this->ProjectId, $this->Id);
+        $stmt = $this->PDO->prepare($sql);
+        $stmt->bindValue(':buildid', $this->Id);
+        if (!pdo_execute($stmt)) {
             return false;
         }
 
         $labelids = [];
-        while ($label_array = pdo_fetch_array($labels)) {
+        while ($label_array = $stmt->fetch()) {
             $labelids[] = $label_array['labelid'];
         }
         return array_unique($labelids);
