@@ -2306,11 +2306,10 @@ class Build
 
         // Return early if this build already posted a comment on this PR.
         $notified = true;
-        $row = pdo_single_row_query(
-            'SELECT notified FROM build WHERE id=' . qnum($idToNotify));
-        if ($row && array_key_exists('notified', $row)) {
-            $notified = $row['notified'];
-        }
+        $stmt = $this->PDO->prepare(
+            'SELECT notified FROM build WHERE id = ?');
+        pdo_execute($stmt, [$idToNotify]);
+        $notified = $stmt->fetchColumn();
         if ($notified) {
             return;
         }
@@ -2324,7 +2323,9 @@ class Build
         // Post the PR comment & mark this build as 'notified'.
         post_pull_request_comment($this->ProjectId, $this->PullRequest,
             $message, $url);
-        pdo_query("UPDATE build SET notified='1' WHERE id=" . qnum($idToNotify));
+        $stmt = $this->PDO->prepare(
+            "UPDATE build SET notified='1' WHERE id = ?");
+        pdo_execute($stmt, [$idToNotify]);
     }
 
     public function SetConfigureDuration($duration, $update_parent=true)
