@@ -2261,9 +2261,11 @@ class Build
         $numErrors = 0;
         $numWarnings = 0;
 
-        $parent = pdo_single_row_query(
+        $stmt = $this->PDO->prepare(
             'SELECT configureerrors, configurewarnings
-                FROM build WHERE id=' . qnum($this->ParentId) . ' FOR UPDATE');
+            FROM build WHERE id = ? FOR UPDATE');
+        pdo_execute($stmt, [$this->ParentId]);
+        $parent = $stmt->fetch();
 
         // Don't let the -1 default value screw up our math.
         if ($parent['configureerrors'] == -1) {
@@ -2276,14 +2278,10 @@ class Build
         $numErrors = $newErrors + $parent['configureerrors'];
         $numWarnings = $newWarnings + $parent['configurewarnings'];
 
-        pdo_query(
-            "UPDATE build SET configureerrors='$numErrors',
-                configurewarnings='$numWarnings'
-                WHERE id=" . qnum($this->ParentId));
-
-        add_last_sql_error('Build:UpdateParentConfigureNumbers',
-            $this->ProjectId, $this->Id);
-
+        $stmt = $this->PDO->prepare(
+            'UPDATE build SET configureerrors = ?, configurewarnings = ?
+            WHERE id = ?');
+        pdo_execute($stmt, [$numErrors, $numWarnings, $this->ParentId]);
         pdo_commit();
     }
 
