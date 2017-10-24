@@ -2220,12 +2220,9 @@ class Build
             return;
         }
 
-        pdo_query(
-            "UPDATE build SET configurewarnings='$numWarnings'
-                WHERE id=" . qnum($this->Id));
-
-        add_last_sql_error('Build:SetNumberOfConfigureWarnings',
-            $this->ProjectId, $this->Id);
+        $stmt = $this->PDO->prepare(
+            'UPDATE build SET configurewarnings = ? WHERE id = ?');
+        pdo_execute($stmt, [$numWarnings, $this->Id]);
     }
 
     /** Set number of configure errors for this build. */
@@ -2235,12 +2232,9 @@ class Build
             return;
         }
 
-        pdo_query(
-            "UPDATE build SET configureerrors='$numErrors'
-                WHERE id=" . qnum($this->Id));
-
-        add_last_sql_error('Build:SetNumberOfConfigureErrors',
-            $this->ProjectId, $this->Id);
+        $stmt = $this->PDO->prepare(
+            'UPDATE build SET configureerrors = ? WHERE id = ?');
+        pdo_execute($stmt, [$numErrors, $this->Id]);
 
         // Should we post configure errors to a pull request?
         if (isset($this->PullRequest) && $numErrors > 0) {
