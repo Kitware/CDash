@@ -2386,11 +2386,10 @@ class Build
         $this->FillFromId($this->Id);
 
         if (!$this->NightlyStartTime) {
-            $query =
-                'SELECT nightlytime FROM project WHERE id = ' .
-                qnum($this->ProjectId);
-            $row = pdo_single_row_query($query);
-            $this->NightlyStartTime = strtotime($row['nightlytime']);
+            $stmt = $this->PDO->prepare(
+                'SELECT nightlytime FROM project WHERE id = ?');
+            pdo_execute($stmt, [$this->ProjectId]);
+            $this->NightlyStartTime = strtotime($stmt->fetchColumn());
         }
 
         // If the build was started after the nightly start time
