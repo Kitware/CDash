@@ -378,8 +378,10 @@ class Build
         $this->FillFromId($this->Id);
 
         $previous_clause =
-            "AND starttime<'$this->StartTime' ORDER BY starttime DESC";
-        return $this->GetRelatedBuildId($previous_clause, $previous_parentid);
+            "AND starttime < :starttime ORDER BY starttime DESC";
+        $values_to_bind = [':starttime' => $this->StartTime];
+        return $this->GetRelatedBuildId($previous_clause, $values_to_bind,
+                                        $previous_parentid);
     }
 
     /** Get the next build id. */
@@ -390,8 +392,10 @@ class Build
         }
         $this->FillFromId($this->Id);
 
-        $next_clause = "AND starttime>'$this->StartTime' ORDER BY starttime";
-        return $this->GetRelatedBuildId($next_clause, $next_parentid);
+        $next_clause = "AND starttime > :starttime ORDER BY starttime";
+        $values_to_bind = [':starttime' => $this->StartTime];
+        return $this->GetRelatedBuildId($next_clause, $values_to_bind,
+                                        $next_parentid);
     }
 
     /** Get the most recent build id. */
@@ -403,20 +407,27 @@ class Build
         $this->FillFromId($this->Id);
 
         $current_clause = 'ORDER BY starttime DESC';
-        return $this->GetRelatedBuildId($current_clause, $current_parentid);
+        return $this->GetRelatedBuildId($current_clause, [], $current_parentid);
     }
 
     /** Private helper function to encapsulate the common parts of
      * Get{Previous,Next,Current}BuildId()
      **/
     private function GetRelatedBuildId($which_build_criteria,
-            $related_parentid=null)
+                                       $extra_values_to_bind = [],
+                                       $related_parentid = null)
     {
         $related_build_criteria =
-            "WHERE siteid=" . qnum($this->SiteId) . "
-            AND type='$this->Type'
-            AND name='$this->Name'
-            AND projectid=" . qnum($this->ProjectId);
+            'WHERE siteid = :siteid
+            AND type = :type
+            AND name = :name
+            AND projectid = :projectid';
+
+        $values_to_bind = [
+            ':siteid' => $this->SiteId,
+            ':type' => $this->Type,
+            ':name' => $this->Name,
+            ':projectid' => $this->ProjectId];
 
         // Take subproject into account, such that if there is one, then the
         // previous build must be associated with the same subproject...
@@ -424,61 +435,71 @@ class Build
         if ($this->SubProjectId && !$related_parentid) {
             // Look up the related parent.  This makes it easy to find the
             // corresponding child build.
-            $parent_query = pdo_query("
-                    SELECT id FROM build
-                    $related_build_criteria
-                    AND build.parentid=-1
-                    $which_build_criteria
-                    LIMIT 1");
-            if (pdo_num_rows($parent_query) < 1) {
+            $stmt = $this->PDO->prepare(
+                "SELECT id FROM build
+                $related_build_criteria
+                AND build.parentid = " . Build::PARENT_BUILD . "
+                $which_build_criteria
+                LIMIT 1");
+
+            foreach (array_merge($values_to_bind, $extra_values_to_bind)
+                     as $parameter => $value) {
+                $stmt->bindValue($parameter, $value);
+            }
+            if (!pdo_execute($stmt)) {
                 return 0;
             }
-            $parent_array = pdo_fetch_array($parent_query);
-            $related_parentid = $parent_array['id'];
+            $related_parentid = $stmt->fetchColumn();
+            if (!$related_parentid) {
+                return 0;
+            }
         }
 
         $subproj_table = '';
         $subproj_criteria = '';
         $parent_criteria = '';
 
+        // If we know the parent of the build we're looking for, use that as our
+        // search criteria rather than matching site, name, type, and project.
+        if ($related_parentid) {
+            $related_build_criteria = 'WHERE parentid = :parentid';
+            $values_to_bind = [':parentid' => $related_parentid];
+        }
+
         if ($this->SubProjectId) {
             $subproj_table =
                 'INNER JOIN subproject2build AS sp2b ON (build.id=sp2b.buildid)';
             $subproj_criteria =
-                'AND sp2b.subprojectid=' . qnum($this->SubProjectId) . ' ';
+                'AND sp2b.subprojectid = :subprojectid';
+            $values_to_bind['subprojectid'] = $this->SubProjectId;
         }
-        if ($this->ParentId == -1) {
+        if ($this->ParentId == Build::PARENT_BUILD) {
             // Only search for other parents.
-            $parent_criteria = 'AND build.parentid=-1';
+            $parent_criteria = 'AND build.parentid = ' . Build::PARENT_BUILD;
         }
 
-        // If we know the parent of the build we're looking for, use that as our
-        // search criteria rather than matching site, name, type, and project.
-        if ($related_parentid) {
-            $related_build_criteria =
-                "WHERE parentid=" . qnum($related_parentid);
+        $stmt = $this->PDO->prepare("
+            SELECT id FROM build
+            $subproj_table
+            $related_build_criteria
+            $subproj_criteria
+            $parent_criteria
+            $which_build_criteria
+            LIMIT 1");
+
+        foreach (array_merge($values_to_bind, $extra_values_to_bind)
+                 as $parameter => $value) {
+            $stmt->bindValue($parameter, $value);
         }
-
-        $query = pdo_query("
-                SELECT id FROM build
-                $subproj_table
-                $related_build_criteria
-                $subproj_criteria
-                $parent_criteria
-                $which_build_criteria
-                LIMIT 1");
-
-        if (!$query) {
-            add_last_sql_error(
-                'Build:GetRelatedBuildId', $this->ProjectId, $this->Id);
+        if (!pdo_execute($stmt)) {
             return 0;
         }
 
-        if (pdo_num_rows($query) > 0) {
-            $relatedbuild_array = pdo_fetch_array($query);
-            return $relatedbuild_array['id'];
+        $related_buildid = $stmt->fetchColumn();
+        if (!$related_buildid) {
+            return 0;
         }
-        return 0;
+        return $related_buildid;
     }
 
     /**
@@ -602,7 +623,7 @@ class Build
              LEFT JOIN buildfailuredetails AS bfd ON (bf.detailsid=bfd.id)
              WHERE bf.buildid = :id AND bfd.type = :type';
 
-        $resolvedBuildFailures = $this->PDO->prepare(
+        $stmt = $this->PDO->prepare(
             "SELECT bf.id, bfd.language, bf.sourcefile, bfd.targetname,
                     bfd.outputfile, bfd.outputtype, bf.workingdirectory,
                     bfd.stderror, bfd.stdoutput, bfd.exitcondition
