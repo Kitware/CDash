@@ -2361,11 +2361,10 @@ class Build
         }
 
         // Update build step duration for this build.
-        pdo_query(
-                "UPDATE build SET buildduration=buildduration + $duration
-                WHERE id=" . qnum($this->Id));
-        add_last_sql_error('Build:UpdateBuildDuration',
-            $this->ProjectId, $this->Id);
+        $stmt = $this->PDO->prepare(
+            'UPDATE build SET buildduration = buildduration + ?
+            WHERE id = ?');
+        pdo_execute($stmt, [$duration, $this->Id]);
 
         if (!$update_parent) {
             return;
@@ -2374,12 +2373,7 @@ class Build
         // to the parent's sum.
         $this->SetParentId($this->LookupParentBuildId());
         if ($this->ParentId > 0) {
-            pdo_query(
-                "UPDATE build
-                    SET buildduration = buildduration + $duration
-                    WHERE id=" . qnum($this->ParentId));
-            add_last_sql_error('Build:UpdateBuildDuration',
-                $this->ProjectId, $this->ParentId);
+            pdo_execute($stmt, [$duration, $this->ParentId]);
         }
     }
 
