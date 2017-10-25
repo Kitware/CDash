@@ -2335,12 +2335,9 @@ class Build
         }
 
         // Set configure duration for this build.
-        pdo_query(
-            "UPDATE build SET configureduration=$duration
-                WHERE id=" . qnum($this->Id));
-
-        add_last_sql_error('Build:SetConfigureDuration',
-            $this->ProjectId, $this->Id);
+        $stmt = $this->PDO->prepare(
+            'UPDATE build SET configureduration = ? WHERE id = ?');
+        pdo_execute($stmt, [$duration, $this->Id]);
 
         if (!$update_parent) {
             return;
@@ -2349,13 +2346,11 @@ class Build
         // to the parent's configure duration sum.
         $this->SetParentId($this->LookupParentBuildId());
         if ($this->ParentId > 0) {
-            pdo_query(
-                "UPDATE build
-                    SET configureduration = configureduration + $duration
-                    WHERE id=" . qnum($this->ParentId));
-
-            add_last_sql_error('Build:SetConfigureDuration',
-                $this->ProjectId, $this->ParentId);
+            $stmt = $this->PDO->prepare(
+                'UPDATE build
+                SET configureduration = configureduration + ?
+                WHERE id = ?');
+            pdo_execute($stmt, [$duration, $this->ParentId]);
         }
     }
 
