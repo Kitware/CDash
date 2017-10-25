@@ -2430,19 +2430,13 @@ class Build
             return $this->Done;
         }
 
-        $query = pdo_query(
-            'SELECT done FROM build WHERE build.id=' . qnum($this->Id));
-        if (!$query) {
-            add_last_sql_error('Build:GetDone()', $this->ProjectId, $this->Id);
+        $stmt = $this->PDO->prepare('SELECT done FROM build WHERE id = ?');
+        if (!pdo_execute($stmt, [$this->Id])) {
             return false;
         }
 
-        if (pdo_num_rows($query) > 0) {
-            $query_array = pdo_fetch_array($query);
-            $this->Done = $query_array['done'];
-            return $this->Done;
-        }
-        return false;
+        $this->Done = $stmt->fetchColumn();
+        return $this->Done;
     }
 
     /** Remove this build if it exists and has been marked as done.
