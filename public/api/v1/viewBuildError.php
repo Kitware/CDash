@@ -159,7 +159,7 @@ if (isset($_GET['onlydeltan'])) {
 
     // Build failure table
     $resolvedBuildFailures = $build->GetResolvedBuildFailures($type);
-    while ($resolvedBuildFailure = pdo_fetch_array($resolvedBuildFailures)) {
+    while ($resolvedBuildFailure = $resolvedBuildFailures->fetch()) {
         $marshaledResolvedBuildFailure = buildfailure::marshal($resolvedBuildFailure, $project_array, $revision);
 
         if ($project_array['displaylabels']) {

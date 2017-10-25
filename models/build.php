@@ -597,22 +597,26 @@ class Build
      **/
     public function GetResolvedBuildFailures($type)
     {
-        $currentFailuresQuery = "SELECT bf.detailsid FROM buildfailure AS bf
-                                 LEFT JOIN buildfailuredetails AS bfd ON (bf.detailsid=bfd.id)
-                                 WHERE bf.buildid=" . $this->Id . " AND bfd.type=$type";
+        $currentFailuresQuery =
+            'SELECT bf.detailsid FROM buildfailure AS bf
+             LEFT JOIN buildfailuredetails AS bfd ON (bf.detailsid=bfd.id)
+             WHERE bf.buildid = :id AND bfd.type = :type';
 
-        $resolvedBuildFailures = pdo_query(
-                "SELECT bf.id, bfd.language, bf.sourcefile, bfd.targetname, bfd.outputfile,
-                bfd.outputtype, bf.workingdirectory, bfd.stderror, bfd.stdoutput,
-                bfd.exitcondition
-                FROM buildfailure AS bf
-                LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
-                WHERE bf.buildid=" . $this->GetPreviousBuildId() . "
-                AND bfd.type = $type
-                AND bfd.id NOT IN ($currentFailuresQuery)"
+        $resolvedBuildFailures = $this->PDO->prepare(
+            "SELECT bf.id, bfd.language, bf.sourcefile, bfd.targetname,
+                    bfd.outputfile, bfd.outputtype, bf.workingdirectory,
+                    bfd.stderror, bfd.stdoutput, bfd.exitcondition
+            FROM buildfailure AS bf
+            LEFT JOIN buildfailuredetails AS bfd ON (bfd.id=bf.detailsid)
+            WHERE bf.buildid = :previousid
+            AND bfd.type = :type
+            AND bfd.id NOT IN ($currentFailuresQuery)"
         );
-
-        return $resolvedBuildFailures;
+        $stmt->bindValue(':id', $this->Id);
+        $stmt->bindValue(':type', $type);
+        $stmt->bindValue(':previousid', $this->GetPreviousBuildId());
+        pdo_execute($stmt);
+        return $stmt;
     }
 
     public function GetConfigures()
