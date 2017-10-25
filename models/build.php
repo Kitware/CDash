@@ -90,12 +90,26 @@ class Build
 
     public function __construct()
     {
-        $this->ProjectId = 0;
+        $this->Append = false;
+        $this->Command = '';
+        $this->EndTime = '1980-01-01 00:00:00';
         $this->Errors = [];
         $this->ErrorDiffs = [];
-        $this->Append = false;
-        $this->InsertErrors = true;
         $this->Filled = false;
+        $this->Generator = '';
+        $this->InsertErrors = true;
+        $this->Log = '';
+        $this->Name = '';
+        $this->ParentId = 0;
+        $this->ProjectId = 0;
+        $this->PullRequest = '';
+        $this->SiteId = 0;
+        $this->Stamp = '';
+        $this->StartTime = '1980-01-01 00:00:00';
+        $this->SubmitTime = '1980-01-01 00:00:00';
+        $this->Type = '';
+        $this->Uuid = '';
+
         $this->PDO = get_link_identifier()->getPdo();
     }
 
@@ -754,12 +768,6 @@ class Build
     // Save in the database
     public function Save()
     {
-        $this->StartTime = pdo_real_escape_string($this->StartTime);
-        $this->EndTime = pdo_real_escape_string($this->EndTime);
-        $this->SubmitTime = pdo_real_escape_string($this->SubmitTime);
-        $this->Command = pdo_real_escape_string(trim($this->Command));
-        $this->Log = pdo_real_escape_string(trim($this->Log));
-
         // Compute the number of errors and warnings.
         // This speeds up the display of the main table.
         $nbuilderrors = -1;
@@ -779,19 +787,13 @@ class Build
         if (!$this->Exists()) {
             $id = '';
             $idvalue = '';
-            if ($this->Id) {
-                $id = 'id,';
-                $idvalue = qnum($this->Id) . ',';
-            }
+
+            $this->Uuid = Build::GenerateUuid($this->Stamp, $this->Name,
+                $this->SiteId, $this->ProjectId, $this->SubProjectName);
 
             if (strlen($this->Type) == 0) {
                 $this->Type = extract_type_from_buildstamp($this->Stamp);
             }
-
-            $this->Name = pdo_real_escape_string($this->Name);
-            $this->Stamp = pdo_real_escape_string($this->Stamp);
-            $this->Type = pdo_real_escape_string($this->Type);
-            $this->Generator = pdo_real_escape_string($this->Generator);
 
             $this->SetParentId(0);
             $justCreatedParent = false;
@@ -803,32 +805,51 @@ class Build
                     $justCreatedParent = $this->CreateParentBuild($nbuilderrors, $nbuildwarnings);
                 }
             }
-            $this->Uuid = Build::GenerateUuid($this->Stamp, $this->Name,
-                $this->SiteId, $this->ProjectId, $this->SubProjectName);
 
-            $query =
-                'INSERT INTO build
-                (' . $id . 'siteid, projectid, stamp, name, type, generator,
+            $query_params = [
+                ':siteid' => $this->SiteId,
+                ':projectid' => $this->ProjectId,
+                ':stamp' => $this->Stamp,
+                ':name' => $this->Name,
+                ':type' => $this->Type,
+                ':generator' => $this->Generator,
+                ':starttime' => $this->StartTime,
+                ':endtime' => $this->EndTime,
+                ':submittime' => $this->SubmitTime,
+                ':command' => $this->Command,
+                ':log' => $this->Log,
+                ':nbuilderrors' => $nbuilderrors,
+                ':nbuildwarnings' => $nbuildwarnings,
+                ':parentid' => $this->ParentId,
+                ':uuid' => $this->Uuid,
+                ':pullrequest' => $this->PullRequest
+            ];
+            if ($this->Id) {
+                $id = 'id, ';
+                $idvalue = ':id, ';
+                $query_params[':id'] = $this->Id;
+            }
+
+            $insert_stmt = $this->PDO->prepare(
+                "INSERT INTO build
+                ($id siteid, projectid, stamp, name, type, generator,
                  starttime, endtime, submittime, command, log, builderrors,
                  buildwarnings, parentid, uuid, changeid)
                 VALUES
-                (' . $idvalue . "'$this->SiteId', '$this->ProjectId',
-                 '$this->Stamp', '$this->Name', '$this->Type',
-                 '$this->Generator', '$this->StartTime', '$this->EndTime',
-                 '$this->SubmitTime', '$this->Command', '$this->Log',
-                 $nbuilderrors, $nbuildwarnings, $this->ParentId,
-                 '$this->Uuid', '$this->PullRequest')";
-
-            if (!pdo_query($query)) {
+                ($idvalue :siteid, :projectid, :stamp, :name, :type,
+                 :generator, :starttime, :endtime, :submittime, :command,
+                 :log, :nbuilderrors, :nbuildwarnings, :parentid, :uuid,
+                 :pullrequest)");
+            if (!$insert_stmt->execute($query_params)) {
                 $error = pdo_error(null, false);
                 // This error might be due to a unique constraint violation
                 // for this UUID.  Query for such a previously existing build.
-                $existing_id_result = pdo_single_row_query(
-                    "SELECT id FROM build WHERE uuid = '$this->Uuid'");
-                if ($existing_id_result &&
-                    array_key_exists('id', $existing_id_result)
-                ) {
-                    $this->Id = $existing_id_result['id'];
+                $existing_id_stmt = $this->PDO->prepare(
+                    'SELECT id FROM build WHERE uuid = ?');
+                pdo_execute($existing_id_stmt, [$this->Uuid]);
+                $existing_id = $existing_id_stmt->fetchColumn();
+                if ($existing_id) {
+                    $this->Id = $existing_id;
                     // If a previously existing build with this UUID was found
                     // call UpdateBuild() on it.  This also sets ParentId
                     // if an existing parent was found.
@@ -861,38 +882,39 @@ class Build
 
             // Add the groupid
             if ($this->GroupId) {
-                $query = "INSERT INTO build2group (groupid,buildid) VALUES ('$this->GroupId','$this->Id')";
-                if (!pdo_query($query)) {
-                    add_last_sql_error('Build2Group Insert', $this->ProjectId, $this->Id);
-                }
+                $stmt = $this->PDO->prepare(
+                    'INSERT INTO build2group (groupid, buildid)
+                    VALUES (?, ?)');
+                pdo_execute($stmt, [$this->GroupId, $this->Id]);
+
                 // Associate the parent with this group too.
                 if ($this->ParentId > 0) {
-                    $result = pdo_query(
-                        'SELECT groupid FROM build2group WHERE buildid=' . qnum($this->ParentId));
-                    if (pdo_num_rows($result) == 0) {
+                    $stmt = $this->PDO->prepare(
+                        'SELECT groupid FROM build2group WHERE buildid = ?');
+                    pdo_execute($stmt, [$this->ParentId]);
+                    $groupid = $stmt->fetchColumn();
+                    if ($groupid === false) {
                         global $CDASH_DB_TYPE;
                         $duplicate_sql = '';
                         if ($CDASH_DB_TYPE !== 'pgsql') {
                             $duplicate_sql =
-                                'ON DUPLICATE KEY UPDATE groupid=groupid';
+                                'ON DUPLICATE KEY UPDATE groupid = groupid';
                         }
-                        $query =
-                            "INSERT INTO build2group (groupid,buildid)
-                            VALUES ('$this->GroupId','$this->ParentId')
-                            $duplicate_sql";
-                        if (!pdo_query($query)) {
-                            add_last_sql_error('Parent Build2Group Insert', $this->ProjectId, $this->ParentId);
-                        }
+                        $stmt = $this->PDO->prepare(
+                            "INSERT INTO build2group (groupid, buildid)
+                            VALUES (?, ?)
+                            $duplicate_sql");
+                        pdo_execute($stmt, [$this->GroupId, $this->ParentId]);
                     }
                 }
             }
 
             // Add the subproject2build relationship:
             if ($this->SubProjectId) {
-                $query = "INSERT INTO subproject2build (subprojectid,buildid) VALUES ('$this->SubProjectId','$this->Id')";
-                if (!pdo_query($query)) {
-                    add_last_sql_error('SubProject2Build Insert', $this->ProjectId, $this->Id);
-                }
+                $stmt = $this->PDO->prepare(
+                    'INSERT INTO subproject2build (subprojectid,buildid)
+                    VALUES (?, ?)');
+                pdo_execute($stmt, [$this->SubProjectId, $this->Id]);
             }
 
             // Save the information
@@ -937,7 +959,7 @@ class Build
         $this->InsertLabelAssociations();
 
         // Should we post build errors to a pull request?
-        if (isset($this->PullRequest)) {
+        if (!empty($this->PullRequest)) {
             $hasErrors = false;
             foreach ($this->Errors as $error) {
                 if ($error->Type == 0) {
@@ -1021,7 +1043,7 @@ class Build
         }
 
         // Should we should post test failures to a pull request?
-        if (isset($this->PullRequest) && $numberTestsFailed > 0) {
+        if (!empty($this->PullRequest) && $numberTestsFailed > 0) {
             $message = 'This build experienced failing tests';
             $url = get_server_URI(false) .
                 "/viewTest.php?onlyfailed&buildid=$this->Id";
@@ -2265,7 +2287,7 @@ class Build
         pdo_execute($stmt, [$numErrors, $this->Id]);
 
         // Should we post configure errors to a pull request?
-        if (isset($this->PullRequest) && $numErrors > 0) {
+        if (!empty($this->PullRequest) && $numErrors > 0) {
             $message = 'This build failed to configure';
             $url = get_server_URI(false) .
                 "/viewConfigure.php?buildid=$this->Id";
