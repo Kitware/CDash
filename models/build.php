@@ -488,15 +488,18 @@ class Build
     public function GetResolvedBuildErrors($type)
     {
         // This returns an empty result if there was no previous build
-        return pdo_query(
+        $stmt = $this->PDO->prepare(
             'SELECT * FROM
              (SELECT * FROM builderror
-              WHERE buildid=' . $this->GetPreviousBuildId() . ' AND type=' . $type . ') AS builderrora
+              WHERE buildid = ? AND type = ?) AS builderrora
              LEFT JOIN
              (SELECT crc32 AS crc32b FROM builderror
-              WHERE buildid=' . $this->Id . ' AND type=' . $type . ') AS builderrorb
+              WHERE buildid = ? AND type = ?) AS builderrorb
               ON builderrora.crc32=builderrorb.crc32b
              WHERE builderrorb.crc32b IS NULL');
+        pdo_execute($stmt,
+            [$this->GetPreviousBuildId(), $type, $this->Id, $type]);
+        return $stmt;
     }
 
     /**
