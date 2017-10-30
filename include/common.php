@@ -1920,10 +1920,12 @@ function redirect_to_https()
 
 function begin_JSON_response()
 {
-    global $CDASH_VERSION, $CDASH_USE_LOCAL_DIRECTORY, $CDASH_ROOT_DIR;
+    global $CDASH_VERSION, $CDASH_USE_LOCAL_DIRECTORY, $CDASH_ROOT_DIR,
+           $CDASH_ENABLE_FEED;
 
     $response = array();
     $response['version'] = $CDASH_VERSION;
+    $response['feed_enabled'] = $CDASH_ENABLE_FEED === 1;
 
     $user_response = array();
     $userid = 0;

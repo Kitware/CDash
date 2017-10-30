@@ -74,7 +74,7 @@
                 <span ng-show="showfilters != 0">Hide Filters</span>
               </a>
             </li>
-            <li>
+            <li ng-if="::cdash.feed_enabled">
               <a href="" ng-click="toggleFeed()" ng-show="!showFeed">
                 Show Feed
               </a>
