@@ -16,6 +16,16 @@ abstract class Singleton
         return self::$_instances[static::class];
     }
 
+    /**
+     * @param $class
+     * @param $instance
+     * @return void
+     */
+    public static function setInstance($class, $instance)
+    {
+        self::$_instances[$class] = $instance;
+    }
+
     private function __construct()
     {
     }

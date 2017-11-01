@@ -27,9 +27,15 @@ endfunction(add_configured_php_test)
 function(add_unit_test TestName)
   add_test(
     ${TestName}
-    ${PHP_EXE} ${PHPUNIT}  -c ${testing_dir}/phpunit.xml ${testing_dir}/${TestName}Test.php
+    ${PHP_EXE} ${PHPUNIT}  -c ${testing_dir}/phpunit.xml ${testing_dir}/case/${TestName}Test.php
   )
 endfunction(add_unit_test TestName)
+
+# phpunit tests
+add_unit_test(/PHPUnitTest)
+add_unit_test(/CDash/Config)
+add_unit_test(/CDash/Log)
+add_unit_test(/CDash/Database)
 
 add_php_test(install)
 add_php_test(compressedtest)
@@ -137,8 +143,6 @@ add_php_test(issuecreation)
 add_php_test(limitedbuilds)
 add_php_test(managemeasurements)
 add_php_test(subprojectemail)
-add_unit_test(PHPUnitTest)
-add_unit_test(Config)
 
 if(CDASH_GITHUB_USERNAME AND CDASH_GITHUB_PASSWORD)
   add_php_test(github_PR_comment)
