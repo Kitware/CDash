@@ -242,9 +242,9 @@ CDash.filter('filter_builds', function() {
         var idx = $scope.cdash.dynamics.indexOf(dynamic);
         if (idx > -1) {
           if ($scope.cdash.dynamics[idx].rules) {
-            $scope.cdash.dynamics[idx].rules.push(rule);
+            $scope.cdash.dynamics[idx].rules.push(s.data);
           } else {
-            $scope.cdash.dynamics[idx].rules = [rule];
+            $scope.cdash.dynamics[idx].rules = [s.data];
           }
         }
         $("#dynamic_defined").show();
