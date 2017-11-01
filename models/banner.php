@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-// It is assumed that appropriate headers should be included before including this file
+use CDash\Database;
 
 class Banner
 {
@@ -25,7 +25,7 @@ class Banner
     public function __construct()
     {
         $this->ProjectId = -1;
-        $this->PDO = get_link_identifier()->getPdo();
+        $this->PDO = Database::getInstance()->getPdo();
     }
 
     /** Return the text */
