@@ -14,7 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-// It is assumed that appropriate headers should be included before including this file
+use CDash\Database;
+
 include_once 'include/common.php';
 include_once 'include/ctestparserutils.php';
 include_once 'include/repository.php';
@@ -110,7 +111,7 @@ class Build
         $this->Type = '';
         $this->Uuid = '';
 
-        $this->PDO = get_link_identifier()->getPdo();
+        $this->PDO = Database::getInstance()->getPdo();
     }
 
     public function IsParentBuild()
@@ -1076,8 +1077,7 @@ class Build
             ORDER BY B.name
          ";
 
-        $pdo = get_link_identifier()->getPdo();
-        $query = $pdo->prepare($sql);
+        $query = $this->PDO->prepare($sql);
 
         pdo_execute($query, [$previous_build]);
         foreach ($query->fetchAll(PDO::FETCH_OBJ) as $test) {
@@ -2640,7 +2640,7 @@ class Build
      */
     public static function GetSubProjectBuild($parentid, $subprojectid)
     {
-        $pdo = get_link_identifier()->getPdo();
+        $pdo = Database::getInstance()->getPdo();
         $stmt = $pdo->prepare(
             'SELECT b.id FROM build b
             JOIN subproject2build sp2b ON (sp2b.buildid = b.id)
