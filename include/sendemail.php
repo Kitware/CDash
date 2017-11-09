@@ -1485,7 +1485,8 @@ function sendemail(ActionableBuildInterface $handler, $projectid)
         }
 
         // Don't send an additional email if this build is a SubProject parent.
-        if ($Build->GetParentId() == -1 && $handler instanceof UpdateHandler) {
+        if ($Build->GetParentId() == Build::PARENT_BUILD &&
+            $handler instanceof UpdateHandler) {
             continue;
         }
 
