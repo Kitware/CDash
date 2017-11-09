@@ -1567,13 +1567,12 @@ class Project
         }
 
         // Add administrator to the project.
-        $User = new User;
         $UserProject = new UserProject();
         $UserProject->Role = 2;
         $UserProject->EmailType = 3;// receive all emails
         $UserProject->ProjectId = $this->Id;
-        $User->Id = 1; // administrator
-        $User->AddProject($UserProject);
+        $UserProject->UserId = 1; // administrator
+        $UserProject->Save();
     }
 
     public function AddBlockedBuild($buildname, $sitename, $ip)
