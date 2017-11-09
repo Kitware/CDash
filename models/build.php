@@ -2005,12 +2005,12 @@ class Build
         }
 
         // Check if there's an existing build that should be the parent.
-        // This would be a standalone build (parent=0) with no subproject
-        // that matches our name, site, stamp, and projectid.
+        // This would be a standalone build with no subproject that matches
+        // our name, site, stamp, and projectid.
         $stmt = $this->PDO->prepare(
             'SELECT id FROM build
-            WHERE parentid = 0 AND name = ? AND siteid = ? AND stamp = ? AND
-                  projectid = ?');
+            WHERE parentid = ' . Build::STANDALONE_BUILD . ' AND name = ? AND
+                  siteid = ? AND stamp = ? AND projectid = ?');
         if (!pdo_execute($stmt,
                 [$this->Name, $this->SiteId, $this->Stamp, $this->ProjectId])) {
             return false;
