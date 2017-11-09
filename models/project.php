@@ -464,7 +464,7 @@ class Project
             if ($this->WebApiKey == '') {
                 // If no web API key exists, we add one
                 include_once 'include/common.php';
-                $newKey = generate_web_api_key();
+                $newKey = generate_password(40);
                 pdo_query("UPDATE project SET webapikey='$newKey' WHERE id=" . $this->Id);
                 $this->WebApiKey = $newKey;
             }
