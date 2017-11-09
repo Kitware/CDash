@@ -46,13 +46,6 @@ class User
         $this->PDO = get_link_identifier()->getPdo();
     }
 
-    /** Add a project to the user */
-    public function AddProject($project)
-    {
-        $project->UserId = $this->Id;
-        $project->Save();
-    }
-
     /** Return if the user is admin */
     public function IsAdmin()
     {
