@@ -235,7 +235,7 @@ CDash.filter("showEmptyBuildsLast", function () {
       }
     }
 
-    if (!$scope.cdash.feed) {
+    if (!$scope.cdash.feed_enabled) {
       $scope.showFeed = false;
     }
 

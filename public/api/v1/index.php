@@ -71,7 +71,7 @@ echo_main_dashboard_JSON($Project, $date);
 function echo_main_dashboard_JSON($project_instance, $date)
 {
     global $CDASH_DB_HOST, $CDASH_DB_LOGIN, $CDASH_DB_NAME, $CDASH_DB_PASS,
-           $CDASH_DB_TYPE, $CDASH_ENABLE_FEED, $CDASH_USE_LOCAL_DIRECTORY;
+           $CDASH_DB_TYPE, $CDASH_USE_LOCAL_DIRECTORY;
 
     $start = microtime_float();
     require_once 'include/pdo.php';
@@ -117,7 +117,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
     $response = begin_JSON_response();
     $response['title'] = "CDash - $projectname";
-    $response['feed'] = $CDASH_ENABLE_FEED;
     $response['showcalendar'] = 1;
 
     // Let the user know if this project has maxed out its quota of builds.
