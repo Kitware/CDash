@@ -165,14 +165,8 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface
                 case 'STARTTIME':
                     $this->StartTimeStamp = $data;
                     break;
-                case 'STARTDATETIME':
-                    $this->StartTimeStamp = str_to_time($data, $this->getBuildStamp());
-                    break;
                 case 'ENDTIME':
                     $this->EndTimeStamp = $data;
-                    break;
-                case 'ENDDATETIME':
-                    $this->EndTimeStamp = str_to_time($data, $this->getBuildStamp());
                     break;
                 case 'UPDATECOMMAND':
                     $this->Update->Command .= $data;
