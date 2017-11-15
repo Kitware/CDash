@@ -9,7 +9,7 @@
 <Notes>
 <Note Name="C:/K/Trilinos/cmake/ctest/drivers/hut11/serial_debug.cmake">
 <Time>1.31135e+009</Time>
-<DateTime>Jul 24 11:34 Eastern Daylight Time</DateTime>
+<DateTime>Jul 24 11:38 Eastern Daylight Time</DateTime>
 <Text>
 
 INCLUDE(&quot;${CTEST_SCRIPT_DIRECTORY}/TrilinosCTestDriverCore.hut11.cl.cmake&quot;)
