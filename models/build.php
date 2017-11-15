@@ -454,6 +454,7 @@ class Build
                 "SELECT id FROM build
                 $related_build_criteria
                 AND build.parentid = " . Build::PARENT_BUILD . "
+                AND build.id != :parentid
                 $which_build_criteria
                 LIMIT 1");
 
@@ -461,6 +462,7 @@ class Build
                      as $parameter => $value) {
                 $stmt->bindValue($parameter, $value);
             }
+            $stmt->bindValue(':parentid', $this->GetParentId());
             if (!pdo_execute($stmt)) {
                 return 0;
             }
