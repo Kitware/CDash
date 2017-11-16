@@ -152,14 +152,14 @@ if (isset($_GET['onlydeltan'])) {
     // Build error table
     $resolvedBuildErrors = $build->GetResolvedBuildErrors($type);
     if ($resolvedBuildErrors !== false) {
-        while ($resolvedBuildError = pdo_fetch_array($resolvedBuildErrors)) {
+        while ($resolvedBuildError = $resolvedBuildErrors->fetch()) {
             addErrorResponse(builderror::marshal($resolvedBuildError, $project_array, $revision));
         }
     }
 
     // Build failure table
     $resolvedBuildFailures = $build->GetResolvedBuildFailures($type);
-    while ($resolvedBuildFailure = pdo_fetch_array($resolvedBuildFailures)) {
+    while ($resolvedBuildFailure = $resolvedBuildFailures->fetch()) {
         $marshaledResolvedBuildFailure = buildfailure::marshal($resolvedBuildFailure, $project_array, $revision);
 
         if ($project_array['displaylabels']) {

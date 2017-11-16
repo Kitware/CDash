@@ -73,7 +73,8 @@ class UpdateOnlyUserStatsTestCase extends KWWebTestCase
             $user->Institution = 'Kitware';
             $user->Admin = 0;
             $user->Save();
-            $user->AddProject($userproject);
+            $userproject->UserId = $user->Id;
+            $userproject->Save();
             $this->Users[] = $user;
         }
     }

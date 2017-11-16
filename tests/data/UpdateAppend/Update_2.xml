@@ -4,6 +4,7 @@
   <BuildName>test_updateappend</BuildName>
   <BuildStamp>20150823-2202-10_PM</BuildStamp>
   <StartDateTime>Sun Aug 23 22:05:10 MDT 2015</StartDateTime>
+  <StartTime>1440389110</StartTime>
   <UpdateCommand>Command 2</UpdateCommand>
   <UpdateType>SVN</UpdateType>
   <Directory>
@@ -52,4 +53,5 @@
   <UpdateReturnStatus>FAILED</UpdateReturnStatus>
   <ElapsedMinutes>0.4</ElapsedMinutes>
   <EndDateTime>Sun Aug 23 22:08:10 MDT 2015</EndDateTime>
+  <EndTime>1440389290</EndTime>
 </Update>

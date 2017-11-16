@@ -1835,13 +1835,11 @@ function get_labels_xml_from_query_results($qry)
     return $xml;
 }
 
-function generate_web_api_key()
+function generate_password($length)
 {
     $keychars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    $length = 40;
-
-    $key = '';
     $max = strlen($keychars) - 1;
+    $key = '';
     for ($i = 0; $i < $length; $i++) {
         // random_int is available in PHP 7 and the random_compat PHP 5.x
         // polyfill included in the Composer package.json dependencies.
@@ -1920,10 +1918,12 @@ function redirect_to_https()
 
 function begin_JSON_response()
 {
-    global $CDASH_VERSION, $CDASH_USE_LOCAL_DIRECTORY, $CDASH_ROOT_DIR;
+    global $CDASH_VERSION, $CDASH_USE_LOCAL_DIRECTORY, $CDASH_ROOT_DIR,
+           $CDASH_ENABLE_FEED;
 
     $response = array();
     $response['version'] = $CDASH_VERSION;
+    $response['feed_enabled'] = $CDASH_ENABLE_FEED === 1;
 
     $user_response = array();
     $userid = 0;

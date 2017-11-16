@@ -309,25 +309,22 @@ class dbo_pgsql extends dbo
 
     public function create($db)
     {
-        $this->connectToHostDb();
-        if (!pdo_query("CREATE DATABASE $db")) {
-            $this->disconnect();
-            return false;
-        }
-        $this->disconnect();
-        $this->setDb($db);
-        return true;
+        $sql = "CREATE DATABASE $db";
+        $dsn = "pgsql:{$this->connection}={$this->host}";
+        $pdo = new PDO($dsn, $this->user, $this->password);
+        $pdo->exec($sql);
+
+        return $pdo->errorCode() === PDO::ERR_NONE;
     }
 
     public function drop($db)
     {
-        $this->connectToHostDb();
-        if (!pdo_query("DROP DATABASE $db")) {
-            $this->disconnect();
-            return false;
-        }
-        $this->disconnect();
-        return true;
+        $sql = "DROP DATABASE IF EXISTS $db";
+        $dsn = "pgsql:{$this->connection}={$this->host}";
+        $pdo = new PDO($dsn, $this->user, $this->password);
+        $pdo->exec($sql);
+
+        return $pdo->errorCode() === PDO::ERR_NONE;
     }
 
     public function connectToDb()

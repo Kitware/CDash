@@ -178,11 +178,8 @@ class CoverageHandler extends AbstractHandler
                 case 'STARTTIME':
                     $this->StartTimeStamp = $data;
                     break;
-                case 'STARTDATETIME':
-                    $this->StartTimeStamp = str_to_time($data, $this->Build->GetStamp());
-                    break;
-                case 'ELAPSEDMINUTES':
-                    $this->EndTimeStamp = $this->StartTimeStamp + $data * 60;
+                case 'ENDTIME':
+                    $this->EndTimeStamp = $data;
                     break;
             }
         } elseif ($parent == 'FILE') {

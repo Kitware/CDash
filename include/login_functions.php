@@ -24,16 +24,8 @@ function setRememberMeCookie($userId)
     $time = time() + 60 * 60 * 24 * 30; // 30 days;
 
     // Create a new password
-    $keychars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    $length = 32;
-
-    $key = '';
-    $max = strlen($keychars) - 1;
-    for ($i = 0; $i <= $length; $i++) {
-        // random_int is available in PHP 7 and the random_compat PHP 5.x
-        // polyfill included in the Composer package.json dependencies.
-        $key .= substr($keychars, random_int(0, $max), 1);
-    }
+    require_once('include/common.php');
+    $key = generate_password(32);
 
     // Update the user key
     $user = new User();
@@ -204,17 +196,8 @@ function ldapAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
                         $time = time() + 60 * 60 * 24 * 30; // 30 days;
 
                         // Create a new password
-                        $keychars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-                        $length = 32;
-
-                        $key = '';
-                        $max = strlen($keychars) - 1;
-                        for ($i = 0; $i <= $length; $i++) {
-                            // random_int is available in PHP 7 and the random_compat PHP 5.x
-                            // polyfill included in the Composer package.json dependencies.
-                            $key .= substr($keychars, random_int(0, $max), 1);
-                        }
-
+                        require_once('include/common.php');
+                        $key = generate_password(32);
                         $value = $userid . $key;
                         setcookie($cookiename, $value, $time);
 

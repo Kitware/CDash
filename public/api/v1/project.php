@@ -248,12 +248,12 @@ function create_project(&$response)
     global $userid;
     if ($userid != 1) {
         // Global admin is already added, so no need to do it again.
-        $User->Id = $userid;
         $UserProject = new UserProject();
+        $UserProject->UserId = $userid;
         $UserProject->ProjectId = $Project->Id;
         $UserProject->Role = 2;
         $UserProject->EmailType = 3;// receive all emails
-        $User->AddProject($UserProject);
+        $UserProject->Save();
     }
 
     $response['projectcreated'] = 1;

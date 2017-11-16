@@ -22,11 +22,13 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
         // Build_3.xml creates a build of Mesquite.  The purpose of this is
         // to keep the 'Current' link honest.  This test will fail if the
         // underlying functionality ignores the subproject & finds the
-        // most recently submitted build instead.
+        // most recently submitted build instead.  By having an earlier start
+        // time than Didasko, it also helps validate that the previous parentid
+        // is successfully selected.
         $filesToSubmit =
-            array('Build_1.xml', 'Configure_1.xml', 'Notes_1.xml', 'Test_1.xml',
-                'Build_2.xml', 'Configure_2.xml', 'Notes_2.xml', 'Test_2.xml',
-                'Build_3.xml');
+            ['Build_1.xml', 'Configure_1.xml', 'Notes_1.xml', 'Test_1.xml',
+             'Build_3.xml', 'Build_2.xml', 'Configure_2.xml', 'Notes_2.xml',
+             'Test_2.xml'];
         $dir = dirname(__FILE__) . '/data/SubProjectNextPrevious';
         foreach ($filesToSubmit as $file) {
             if (!$this->submission('Trilinos', "$dir/$file")) {
@@ -252,6 +254,30 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
         if (strpos($jsonobj['menu']['previous'], "parentid=$second_parentid") === false) {
             $error_msg = "Expected 'Previous' link not found for third parent build";
             $success = false;
+        }
+
+        // Verify that build diffs were properly recorded.
+        // +1 warning, -1 notrun test, +1 passed test.
+        $build_found = false;
+        $buildgroup = array_pop($jsonobj['buildgroups']);
+        foreach ($buildgroup['builds'] as $build) {
+            if ($build['label'] == 'Didasko') {
+                $build_found = true;
+                $checks = [
+                    'nwarningdiffp' => $build['compilation']['nwarningdiffp'],
+                    'nnotrundiffn' => $build['test']['nnotrundiffn'],
+                    'npassdiffp' => $build['test']['npassdiffp']
+                ];
+                foreach ($checks as $field => $found) {
+                    if ($found != 1) {
+                        $this->fail("Expected 1 but found $found for $field");
+                    }
+                }
+                break;
+            }
+        }
+        if (!$build_found) {
+            $this->fail("Could not find Didasko on 3rd day");
         }
 
         // Make sure that a build is not displayed when it does not

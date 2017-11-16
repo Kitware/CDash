@@ -1484,6 +1484,12 @@ function sendemail(ActionableBuildInterface $handler, $projectid)
             return;
         }
 
+        // Don't send an additional email if this build is a SubProject parent.
+        if ($Build->GetParentId() == Build::PARENT_BUILD &&
+            $handler instanceof UpdateHandler) {
+            continue;
+        }
+
         $emailCommitters = $BuildGroup->GetEmailCommitters();
 
         $errors = check_email_errors($Build->Id, $Project->EmailTestTimingChanged,
@@ -1533,7 +1539,7 @@ function sendemail(ActionableBuildInterface $handler, $projectid)
 
         // No error we return
         if (!$errors['errors']) {
-            return;
+            continue;
         }
 
         if ($CDASH_USE_LOCAL_DIRECTORY && file_exists('local/sendemail.php')) {

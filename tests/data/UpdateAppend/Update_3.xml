@@ -4,6 +4,7 @@
   <BuildName>test_updateappend</BuildName>
   <BuildStamp>20150823-2202-10_PM</BuildStamp>
   <StartDateTime>Sun Aug 23 22:15:00 MDT 2015</StartDateTime>
+  <StartTime>1440389700</StartTime>
   <UpdateCommand>Command 3</UpdateCommand>
   <Revision>3</Revision>
   <PriorRevision>4</PriorRevision>
@@ -32,4 +33,5 @@
   <UpdateReturnStatus></UpdateReturnStatus>
   <ElapsedMinutes>5.5</ElapsedMinutes>
   <EndDateTime>Sun Aug 23 22:20:30 MDT 2015</EndDateTime>
+  <EndTime>1440390030</EndTime>
 </Update>

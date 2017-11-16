@@ -464,7 +464,7 @@ class Project
             if ($this->WebApiKey == '') {
                 // If no web API key exists, we add one
                 include_once 'include/common.php';
-                $newKey = generate_web_api_key();
+                $newKey = generate_password(40);
                 pdo_query("UPDATE project SET webapikey='$newKey' WHERE id=" . $this->Id);
                 $this->WebApiKey = $newKey;
             }
@@ -1567,13 +1567,12 @@ class Project
         }
 
         // Add administrator to the project.
-        $User = new User;
         $UserProject = new UserProject();
         $UserProject->Role = 2;
         $UserProject->EmailType = 3;// receive all emails
         $UserProject->ProjectId = $this->Id;
-        $User->Id = 1; // administrator
-        $User->AddProject($UserProject);
+        $UserProject->UserId = 1; // administrator
+        $UserProject->Save();
     }
 
     public function AddBlockedBuild($buildname, $sitename, $ip)

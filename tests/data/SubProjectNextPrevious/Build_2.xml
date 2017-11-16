@@ -29,12 +29,41 @@
   <Label>Didasko</Label>
 </Labels>
 <Build>
-	<StartDateTime>Jul 24 11:34 Eastern Daylight Time</StartDateTime>
-	<StartBuildTime>1311521698</StartBuildTime>
+	<StartDateTime>Jul 24 11:38 Eastern Daylight Time</StartDateTime>
+	<StartBuildTime>1311521938</StartBuildTime>
 <BuildCommand>nmake /NOLOGO  -i</BuildCommand>
+	<Failure type="Warning">
+		<!-- Meta-information about the build action -->
+		<Action>
+			<TargetName>didasko</TargetName>
+			<Language>C++</Language>
+			<SourceFile>packages/didasko/src/fake.cpp</SourceFile>
+			<OutputFile>CMakeFiles\didasko.dir\fake.cpp.obj</OutputFile>
+			<OutputType>object file</OutputType>
+		</Action>
+
+		<!-- Details of command -->
+		<Command>
+			<WorkingDirectory>C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/src</WorkingDirectory>
+			<Argument>C:\PROGRA~2\MICROS~2.0\VC\bin\cl.exe</Argument>
+		</Command>
+
+		<!-- Result of command -->
+		<Result>
+			<StdOut>fake.cpp
+warning</StdOut>
+			<StdErr></StdErr>
+			<ExitCondition>2</ExitCondition>
+		</Result>
+
+		<!-- Interested parties -->
+		<Labels>
+			<Label>Didasko</Label>
+		</Labels>
+	</Failure>
 	<Log Encoding="base64" Compression="/bin/gzip">
 	</Log>
-	<EndDateTime>Jul 24 11:35 Eastern Daylight Time</EndDateTime>
-	<EndBuildTime>1311521721</EndBuildTime>
+	<EndDateTime>Jul 24 11:39 Eastern Daylight Time</EndDateTime>
+	<EndBuildTime>1311521961</EndBuildTime>
 <ElapsedMinutes>0.3</ElapsedMinutes></Build>
 </Site>
