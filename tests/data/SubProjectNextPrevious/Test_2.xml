@@ -28,8 +28,8 @@
   <Label>Didasko</Label>
 </Labels>
 <Testing>
-	<StartDateTime>Jul 24 11:35 Eastern Daylight Time</StartDateTime>
-	<StartTestTime>1311521721</StartTestTime>
+	<StartDateTime>Jul 24 11:39 Eastern Daylight Time</StartDateTime>
+	<StartTestTime>1311521961</StartTestTime>
 	<TestList>
 		<Test>./packages/didasko/examples/aztecoo/Didasko_AztecOO_ex1</Test>
 		<Test>./packages/didasko/examples/aztecoo/Didasko_AztecOO_ex2</Test>
@@ -62,7 +62,7 @@
 		<Test>./packages/didasko/examples/ml/Didasko_ML_ex1</Test>
 		<Test>./packages/didasko/examples/ml/Didasko_ML_ex2</Test>
 	</TestList>
-	<Test Status="notrun">
+	<Test Status="passed">
 		<Name>Didasko_AztecOO_ex1</Name>
 		<Path>./packages/didasko/examples/aztecoo</Path>
 		<FullName>./packages/didasko/examples/aztecoo/Didasko_AztecOO_ex1</FullName>
@@ -70,7 +70,7 @@
 		<Results>
 			<NamedMeasurement type="text/string" name="Command Line"><Value></Value></NamedMeasurement>
 			<Measurement>
-				<Value>Unable to find executable: C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/examples/aztecoo/Didasko_AztecOO_ex1.exe</Value>
+				<Value>C:/K/SERIAL_DEBUG_DEV/BUILD/packages/didasko/examples/aztecoo/Didasko_AztecOO_ex1.exe</Value>
 			</Measurement>
 		</Results>
 		<Labels>
@@ -512,7 +512,7 @@
 			<Label>Didasko</Label>
 		</Labels>
 	</Test>
-	<EndDateTime>Jul 24 11:35 Eastern Daylight Time</EndDateTime>
-	<EndTestTime>1311521721</EndTestTime>
+	<EndDateTime>Jul 24 11:39 Eastern Daylight Time</EndDateTime>
+	<EndTestTime>1311521961</EndTestTime>
 <ElapsedMinutes>0</ElapsedMinutes></Testing>
 </Site>

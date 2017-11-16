@@ -28,8 +28,8 @@
   <Label>Didasko</Label>
 </Labels>
 <Configure>
-	<StartDateTime>Jul 24 11:34 Eastern Daylight Time</StartDateTime>
-	<StartConfigureTime>1311521675</StartConfigureTime>
+	<StartDateTime>Jul 24 11:38 Eastern Daylight Time</StartDateTime>
+	<StartConfigureTime>1311521915</StartConfigureTime>
 <ConfigureCommand>"C:/K/tools/cmake-dev/bin/cmake.exe" "-DCTEST_USE_LAUNCHERS:BOOL=1" "-DTrilinos_ENABLE_ALL_OPTIONAL_PACKAGES:BOOL=ON" "-DTrilinos_ENABLE_TESTS:BOOL=ON" "-DTrilinos_WARNINGS_AS_ERRORS_FLAGS:STRING=" "-DTrilinos_ALLOW_NO_PACKAGES:BOOL=OFF" "-DTrilinos_DEPS_XML_OUTPUT_FILE:FILEPATH=" "-DTrilinos_ENABLE_SECONDARY_STABLE_CODE:BOOL=ON" "-DMPI_EXEC_MAX_NUMPROCS:STRING=4" "-DTrilinos_EXTRAREPOS_FILE:STRING=C:/K/Trilinos/cmake/ExtraExternalRepositories.cmake" "-DTrilinos_ENABLE_KNOWN_EXTERNAL_REPOS_TYPE:STRING=Experimental" "-DTrilinos_ENABLE_CTrilinos:BOOL=" "-DTrilinos_ENABLE_Teuchos:BOOL=OFF" "-DTrilinos_ENABLE_RTOp:BOOL=OFF" "-DTrilinos_ENABLE_Kokkos:BOOL=OFF" "-DTrilinos_ENABLE_GlobiPack:BOOL=OFF" "-DTrilinos_ENABLE_EpetraExt:BOOL=OFF" "-DTrilinos_ENABLE_Thyra:BOOL=OFF" "-DTrilinos_ENABLE_OptiPack:BOOL=OFF" "-DTrilinos_ENABLE_Galeri:BOOL=OFF" "-DTrilinos_ENABLE_Amesos:BOOL=OFF" "-DTrilinos_ENABLE_Ifpack:BOOL=OFF" "-DTrilinos_ENABLE_Komplex:BOOL=OFF" "-DTrilinos_ENABLE_Belos:BOOL=OFF" "-DTrilinos_ENABLE_Stratimikos:BOOL=OFF" "-DTrilinos_ENABLE_FEI:BOOL=OFF" "-DTrilinos_ENABLE_RBGen:BOOL=OFF" "-DTrilinos_ENABLE_Intrepid:BOOL=OFF" "-DTrilinos_ENABLE_NOX:BOOL=OFF" "-DTrilinos_ENABLE_Moertel:BOOL=OFF" "-DTrilinos_ENABLE_Rythmos:BOOL=OFF" "-DTrilinos_ENABLE_Stokhos:BOOL=OFF" "-DTrilinos_ENABLE_Piro:BOOL=OFF" "-DTrilinos_ENABLE_CTrilinos:BOOL=OFF" "-DCLAPACK_DIR:PATH=C:/K/clapack/build-vs10/clapack-prefix/src/clapack-build" "-DCMAKE_BUILD_TYPE:STRING=DEBUG" "-DTrilinos_ENABLE_DEPENCENCY_UNIT_TESTS:BOOL=OFF" "-DCMAKE_CXX_COMPILER:FILEPATH=C:/Program Files (x86)/Microsoft Visual Studio 10.0/VC/bin/cl.exe" "-DCMAKE_C_COMPILER:FILEPATH=C:/Program Files (x86)/Microsoft Visual Studio 10.0/VC/bin/cl.exe" "-DDART_TESTING_TIMEOUT:STRING=600" "-DTrilinos_ENABLE_EXPLICIT_INSTANTIATION:BOOL=ON" "-DTrilinos_ENABLE_Didasko:BOOL=ON" "-GNMake Makefiles" "C:/K/SERIAL_DEBUG_DEV/Trilinos"</ConfigureCommand>
 <Log>
 Configuring Trilinos build directory
@@ -192,7 +192,7 @@ CMake Warning:
 
 </Log>
 	<ConfigureStatus>0</ConfigureStatus>
-	<EndDateTime>Jul 24 11:34 Eastern Daylight Time</EndDateTime>
-	<EndConfigureTime>1311521687</EndConfigureTime>
+	<EndDateTime>Jul 24 11:38 Eastern Daylight Time</EndDateTime>
+	<EndConfigureTime>1311521927</EndConfigureTime>
 <ElapsedMinutes>0.2</ElapsedMinutes></Configure>
 </Site>
