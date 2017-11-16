@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.4.css" />
     <link rel="stylesheet" type="text/css" href="css/jqModal.css" />
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <script src="js/CDash_1510847638118.min.js"></script>
+    <script src="js/CDash_1510850867431.min.js"></script>
     <title ng-bind="title">CDash : Compare Coverage</title>
   </head>
 
@@ -17,7 +17,7 @@
 
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
 
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1510847638118.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1510850867431.html'"></ng-include>
 
     <br/>
 
@@ -30,7 +30,7 @@
           <span ng-show="showfilters != 0">Hide Filters</span>
         </a>
       </div>
-      <ng-include src="'build/views/partials/filterdataTemplate_1510847638118.html'"></ng-include>
+      <ng-include src="'build/views/partials/filterdataTemplate_1510850867431.html'"></ng-include>
 
       <!-- Coverage -->
       <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="coveragetable">
@@ -121,6 +121,6 @@
       </table>
 
       <!-- FOOTER -->
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1510847638118.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1510850867431.html'"></ng-include>
   </body>
 </html>
