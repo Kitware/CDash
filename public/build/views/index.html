@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.4.css" />
     <link rel="stylesheet" type="text/css" href="css/jqModal.css" />
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <script src="js/CDash_1504804002319.min.js"></script>
+    <script src="js/CDash_1510847638118.min.js"></script>
     <title ng-bind="::title">CDash</title>
   </head>
 
@@ -17,7 +17,7 @@
 
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
 
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1504804002319.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1510847638118.html'"></ng-include>
 
     <div id="index_content" ng-if="!loading && cdash.requirelogin != 1 && !cdash.error">
       <div id="index_top" ng-if="::cdash.updates">
@@ -74,7 +74,7 @@
                 <span ng-show="showfilters != 0">Hide Filters</span>
               </a>
             </li>
-            <li>
+            <li ng-if="::cdash.feed_enabled">
               <a href="" ng-click="toggleFeed()" ng-show="!showFeed">
                 Show Feed
               </a>
@@ -96,7 +96,7 @@
         </div>
 
         <!-- Filters -->
-        <ng-include src="'build/views/partials/filterdataTemplate_1504804002319.html'"></ng-include>
+        <ng-include src="'build/views/partials/filterdataTemplate_1510847638118.html'"></ng-include>
       </div> <!-- End index-top -->
 
       <div ng-show="showFeed" id="feed" ng-include="::'ajax/getfeed.php?projectid='+ cdash.projectid"></div>
@@ -195,7 +195,7 @@
       </div>
 
       <!-- Display subproject dependencies -->
-      <ng-include ng-if="::cdash.subproject.dependencies.length > 0" ng-init="cdash.tableName = 'SubProject Dependencies'; cdash.subprojects = cdash.subproject.dependencies" src="'build/views/partials/subProjectTable_1504804002319.html'"></ng-include>
+      <ng-include ng-if="::cdash.subproject.dependencies.length > 0" ng-init="cdash.tableName = 'SubProject Dependencies'; cdash.subprojects = cdash.subproject.dependencies" src="'build/views/partials/subProjectTable_1510847638118.html'"></ng-include>
 
       <!-- BuildGroups -->
       <div ng-repeat="buildgroup in ::cdash.buildgroups | orderBy:'position'">
@@ -655,10 +655,10 @@
         <p>Are you sure you want to remove this Build?</p>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-danger" id="modal-delete-build-button" ng-click="$ctrl.ok()">Delete</button>
         <button class="btn" ng-click="$ctrl.cancel()">cancel</button>
+        <button class="btn btn-danger" id="modal-delete-build-button" ng-click="$ctrl.ok()">Delete</button>
       </div>
     </script>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1504804002319.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1510847638118.html'"></ng-include>
   </body>
 </html>

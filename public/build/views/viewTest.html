@@ -7,14 +7,14 @@
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="stylesheet" type="text/css" ng-href="{{::cssfile}}" />
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <script src="js/CDash_1504804002319.min.js"></script>
+    <script src="js/CDash_1510847638118.min.js"></script>
     <title ng-bind="title">CDash</title>
   </head>
 
   <body bgcolor="#ffffff" ng-controller="ViewTestController">
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
 
-    <ng-include ng-if="cdash.requirelogin != 1" src="::cdash.header || 'build/views/partials/header_1504804002319.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="::cdash.header || 'build/views/partials/header_1510847638118.html'"></ng-include>
     <br/>
 
     <div ng-if="cdash.requirelogin != 1 && !loading && !cdash.error">
@@ -114,7 +114,7 @@
           <span ng-show="showfilters != 0">Hide Filters</span>
         </a>
       </div>
-      <ng-include src="'build/views/partials/filterdataTemplate_1504804002319.html'"></ng-include>
+      <ng-include src="'build/views/partials/filterdataTemplate_1510847638118.html'"></ng-include>
 
       <div ng-switch="::cdash.display">
         <h3 ng-switch-when="onlypassed">{{::cdash.numPassed}} tests passed.</h3>
@@ -299,6 +299,6 @@
 
     <!-- FOOTER -->
     <br/>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1504804002319.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1510847638118.html'"></ng-include>
   </body>
 </html>

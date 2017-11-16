@@ -9,12 +9,12 @@
     <link rel="stylesheet" type="text/css" href="css/jquery.qtip.min.css" />
     <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.4.css" />
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
-    <script src="js/CDash_1504804002319.min.js"></script>
+    <script src="js/CDash_1510847638118.min.js"></script>
     <title>CDash - BuildGroups</title>
   </head>
   <body bgcolor="#ffffff" ng-controller="ManageBuildGroupController">
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1504804002319.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1510847638118.html'"></ng-include>
     <br/>
 
     <div class="container" ng-if="cdash.requirelogin != 1 && !loading">
@@ -345,13 +345,13 @@
           will be moved to their original BuildGroup.)</p>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-danger" id="modal-delete-group-button" ng-click="$ctrl.ok()">Delete</button>
         <button class="btn" ng-click="$ctrl.cancel()">cancel</button>
+        <button class="btn btn-danger" id="modal-delete-group-button" ng-click="$ctrl.ok()">Delete</button>
       </div>
     </script>
 
     <!-- FOOTER -->
     <br/>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1504804002319.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1510847638118.html'"></ng-include>
   </body>
 </html>
