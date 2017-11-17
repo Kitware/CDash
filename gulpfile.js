@@ -81,8 +81,6 @@
              'public/js/bootstrap.min.js',
              'public/js/tooltip.js',
              'public/js/je_compare.js',
-             'public/js/d3.min.js',
-             'public/js/nv.d3.min.js',
              'node_modules/angular/angular.js',
              'node_modules/angular-animate/angular-animate.js',
              'node_modules/angular-clipboard/angular-clipboard.js',
@@ -91,7 +89,9 @@
              'node_modules/as-jqplot/dist/jquery.jqplot.js',
              'node_modules/as-jqplot/dist/plugins/jqplot.dateAxisRenderer.js',
              'node_modules/as-jqplot/dist/plugins/jqplot.highlighter.js',
+             'node_modules/d3/d3.js',
              'node_modules/ng-file-upload/dist/ng-file-upload.js',
+             'node_modules/nvd3/build/nv.d3.js',
              'public/js/ui-bootstrap-tpls-0.14.2.min.js'])
        .pipe(sourcemaps.init())
        .pipe(newer('public/js/3rdparty.min.js'))
