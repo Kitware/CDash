@@ -18,6 +18,11 @@
     <br/>
 
     <div ng-if="cdash.requirelogin != 1 && !loading && !cdash.error">
+      <!-- Timeline chart -->
+      <div class="container">
+        <div timeline></div>
+      </div>
+
       <div class="pad4">
         <!-- Filters -->
         <div id="labelshowfilters">
@@ -34,7 +39,6 @@
             ng-options="group as group.name for group in ::cdash.groups | orderBy: 'position' track by group.id"
             ng-change="selectionChanged = true">
           </select>
-          <div class="form-group" daterange></div>
           <div class="checkbox">
             <label>
               <input type="checkbox" name="showpassed"
@@ -44,11 +48,6 @@
                      ng-change="selectionChanged = true"> Include passing tests
             </label>
           </div>
-          <button type="submit" class="btn btn-default"
-                  ng-disabled="(!cdash.to_date || !cdash.from_date) && !selectionChanged"
-                  ng-click="formSubmit()">
-            Go
-          </button>
         </div>
 
         <span>

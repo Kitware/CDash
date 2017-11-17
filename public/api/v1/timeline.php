@@ -50,6 +50,9 @@ switch ($_GET['page']) {
     case 'index.php':
         $response = chart_for_index($Project, $begin, $end);
         break;
+    case 'testOverview.php':
+        $response = chart_for_testOverview($Project, $begin, $end);
+        break;
     default:
         json_error_response('Unexpected value for page');
         break;
@@ -92,6 +95,37 @@ function chart_for_index($Project, $begin, $end)
     }
     return get_timeline_chart_data($defect_types, $stmt, $Project, $begin, $end,
                                    true);
+}
+
+function chart_for_testOverview($Project, $begin, $end)
+{
+    $defect_types = [
+        [
+            'name' => 'testfailed',
+            'prettyname' => 'Failing Tests',
+        ],
+        [
+            'name' => 'testnotrun',
+            'prettyname' => 'Not Run Tests',
+        ],
+        [
+            'name' => 'testpassed',
+            'prettyname' => 'Passing Tests',
+        ]
+    ];
+
+    $pdo = Database::getInstance()->getPdo();
+    $stmt = $pdo->prepare('
+        SELECT b.id, b.starttime, b.testfailed, b.testnotrun, b.testpassed
+        FROM build b
+        WHERE b.projectid = :projectid AND b.parentid IN (0, -1)
+        ORDER BY starttime');
+    if (!pdo_execute($stmt, [':projectid' => $Project->Id])) {
+        json_error_response('Failed to load results');
+        return [];
+    }
+    return get_timeline_chart_data($defect_types, $stmt, $Project, $begin, $end,
+                                   false);
 }
 
 function get_timeline_chart_data($defect_types, $input_stmt, $Project, $begin,
