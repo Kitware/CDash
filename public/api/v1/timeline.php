@@ -47,11 +47,52 @@ $end = $end_datetime->format('Y-m-d');
 // Generate data based on the page that's requesting this chart.
 $response = [];
 switch ($_GET['page']) {
+    case 'index.php':
+        $response = chart_for_index($Project, $begin, $end);
+        break;
     default:
         json_error_response('Unexpected value for page');
         break;
 }
 echo json_encode(cast_data_for_JSON($response));
+
+
+function chart_for_index($Project, $begin, $end)
+{
+    $defect_types = [
+        [
+            'name' => 'builderrors',
+            'prettyname' => 'Errors',
+        ],
+        [
+            'name' => 'buildwarnings',
+            'prettyname' => 'Warnings',
+        ],
+        [
+            'name' => 'testfailed',
+            'prettyname' => 'Test Failures',
+        ]
+    ];
+
+    // Query for defects on expected builds only.
+    $pdo = Database::getInstance()->getPdo();
+    $stmt = $pdo->prepare('
+        SELECT b.id, b.starttime, b.builderrors, b.buildwarnings, b.testfailed
+        FROM build b
+        JOIN build2group b2g ON b2g.buildid = b.id
+        JOIN build2grouprule b2gr ON
+                b2g.groupid = b2gr.groupid AND b2gr.buildtype = b.type AND
+                b2gr.buildname = b.name AND b2gr.siteid = b.siteid
+        WHERE b.projectid = :projectid AND b.parentid IN (0, -1)
+        AND b2gr.expected = 1
+        ORDER BY starttime');
+    if (!pdo_execute($stmt, [':projectid' => $Project->Id])) {
+        json_error_response('Failed to load results');
+        return [];
+    }
+    return get_timeline_chart_data($defect_types, $stmt, $Project, $begin, $end,
+                                   true);
+}
 
 function get_timeline_chart_data($defect_types, $input_stmt, $Project, $begin,
                                  $end, $include_clean_builds)

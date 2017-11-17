@@ -83,6 +83,14 @@
               </a>
             </li>
             <li>
+              <a href="" ng-click="toggleTimelineChart()" ng-show="!showTimelineChart">
+                Show Timeline
+              </a>
+              <a href="" ng-click="toggleTimelineChart()" ng-show="showTimelineChart">
+                Hide Timeline
+              </a>
+            </li>
+            <li>
               <a href="http://public.kitware.com/Wiki/CDash:Documentation" class="helptrigger" target="_blank">
                 Help
               </a>
@@ -100,6 +108,13 @@
       </div> <!-- End index-top -->
 
       <div ng-show="showFeed" id="feed" ng-include="::'ajax/getfeed.php?projectid='+ cdash.projectid"></div>
+
+      <!-- Timeline chart -->
+      <div class="container"
+           ng-if="showTimelineChart"
+           style="margin-top: 30px; margin-bottom: 20px;">
+        <div timeline></div>
+      </div>
 
       <table ng-if="::cdash.testingdataurl" width="100%" cellpadding="11" cellspacing="0">
         <tr>
