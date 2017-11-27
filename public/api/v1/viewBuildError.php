@@ -36,6 +36,7 @@ include 'include/version.php';
 require_once 'models/build.php';
 require_once 'models/label.php';
 require_once 'models/buildupdate.php';
+require_once 'models/site.php';
 
 $build = get_request_build();
 $update = new BuildUpdate();
@@ -106,15 +107,13 @@ if ($next_buildid > 0) {
 $response['menu'] = $menu;
 
 // Build
-$build_response = array();
-$site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
-$build_response['site'] = $site_array['name'];
-$build_response['siteid'] = $siteid;
-$build_response['buildname'] = $build->Name;
-$build_response['starttime'] =
-    date(FMT_DATETIMETZ, strtotime($build->StartTime . 'UTC'));
-$build_response['buildid'] = $build->Id;
-$response['build'] = Build::MarshalResponseArray($build, ['revision' => $build_update['revision']]);
+$site = new Site();
+$site->Id = $siteid;
+$extra_build_fields = [
+    'revision' => $build_update['revision'],
+    'site' => $site->GetName()
+];
+$response['build'] = Build::MarshalResponseArray($build, $extra_build_fields);
 
 // Set the error
 if ($type == 0) {
