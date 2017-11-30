@@ -315,26 +315,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $response['testingdataurl'] = $testingdataurl;
     }
 
-    // updates
-    $updates_response = array();
-
-    $gmdate = gmdate(FMT_DATE, $currentstarttime);
-    $updates_response['url'] = 'viewChanges.php?project=' . urlencode($projectname) . '&amp;date=' . $gmdate;
-
-    $dailyupdate = pdo_query("SELECT count(ds.dailyupdateid),count(distinct ds.author)
-            FROM dailyupdate AS d LEFT JOIN dailyupdatefile AS ds ON (ds.dailyupdateid = d.id)
-            WHERE d.date='$gmdate' and d.projectid='$projectid' GROUP BY ds.dailyupdateid");
-
-    if (pdo_num_rows($dailyupdate) > 0) {
-        $dailupdate_array = pdo_fetch_array($dailyupdate);
-        $updates_response['nchanges'] = $dailupdate_array[0];
-        $updates_response['nauthors'] = $dailupdate_array[1];
-    } else {
-        $updates_response['nchanges'] = -1;
-    }
-    $updates_response['timestamp'] = date('l, F d Y - H:i T', $currentstarttime);
-    $response['updates'] = $updates_response;
-
     // This array is used to track if expected builds are found or not.
     $received_builds = array();
 
