@@ -664,7 +664,7 @@ function get_server_URI($localhost = false)
     $currentURI = substr($currentURI, 0, strrpos($currentURI, '/'));
 
     // Trim off any subdirectories too.
-    $subdirs = array('/ajax/', '/api/', '/iphone/', '/mobile/');
+    $subdirs = array('/ajax/', '/api/');
     foreach ($subdirs as $subdir) {
         $pos = strpos($currentURI, $subdir);
         if ($pos !== false) {
