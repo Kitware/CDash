@@ -228,6 +228,59 @@ class BazelJSONTestCase extends KWWebTestCase
         remove_build($buildid);
     }
 
+    public function testBazelTimeout()
+    {
+        // Submit testing data.
+        $buildid = $this->submit_data('InsightExample', 'BazelJSON',
+            'c0bd82ecbd65043f2a7f2cc0d638871f',
+            dirname(__FILE__) . '/data/Bazel/bazel_timeout.json');
+        if (!$buildid) {
+            return false;
+        }
+
+        // Validate the build.
+        $stmt = $this->PDO->query(
+                "SELECT builderrors, buildwarnings, testfailed, testpassed
+                FROM build WHERE id = $buildid");
+        $row = $stmt->fetch();
+
+        $answer_key = [
+            'builderrors' => 0,
+            'buildwarnings' => 1,
+            'testfailed' => 1,
+            'testpassed' => 18
+        ];
+        foreach ($answer_key as $key => $expected) {
+            $found = $row[$key];
+            if ($found != $expected) {
+                $this->fail("Expected $expected for $key but found $found");
+            }
+        }
+
+        // Lookup specific test ID
+        $test_stmt = $this->PDO->prepare(
+            'SELECT t.id FROM test t
+            JOIN build2test b2t on b2t.testid = t.id
+            JOIN build b on b.id = b2t.buildid
+            WHERE b.id = ? AND t.name = ?');
+        pdo_execute($test_stmt, [$buildid, '//drake/bindings:pydrake_common_install_test']);
+        $testid = $test_stmt->fetchColumn();
+
+        // Use the API to verify that the 'TIMEOUT' message is displayed
+        $this->get($this->url . "/api/v1/testDetails.php?test=$testid&build=$buildid");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $output = $jsonobj['test']['output'];
+
+        $expected = "TIMEOUT";
+        if (strpos($output, $expected) === false) {
+            $this->fail("Expected output to include '$expected'");
+        }
+
+        // Cleanup.
+        remove_build($buildid);
+    }
+
     private function submit_data($project_name, $upload_type, $md5, $file_path)
     {
         $fields = [

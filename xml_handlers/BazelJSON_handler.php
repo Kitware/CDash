@@ -256,7 +256,7 @@ class BazelJSONHandler
 
                 if (array_key_exists('stderr', $json_array[$message_id])) {
                     // Parse through stderr line-by-line,
-                    //searching for build warnings and errors.
+                    // searching for build warnings and errors.
                     $stderr = $json_array[$message_id]['stderr'];
                     $warning_pattern = '/(.*?) warning: (.*?)$/';
                     $error_pattern = '/(.*?) error: (.*?)$/';
@@ -445,6 +445,13 @@ class BazelJSONHandler
                 if ($buildtest->Status === 'failed') {
                     $this->NumTestsFailed[$subproject_name]++;
                     $test->Details = 'Completed (Failed)';
+                } elseif ($buildtest->Status === 'timeout') {
+                    $buildtest->Status = 'failed';
+                    $this->NumTestsFailed[$subproject_name]++;
+                    $test->Details = 'Completed (Timeout)';
+                    // "TIMEOUT" message is only in stderr, not stdout
+                    // Make sure that it is displayed.
+                    $this->TestsOutput[$test->Name] = "TIMEOUT\n";
                 } else {
                     $this->NumTestsPassed[$subproject_name]++;
                     $test->Details = 'Completed';
