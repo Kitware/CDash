@@ -145,15 +145,15 @@ $previous_buildids = array();
 $previous_buildids[] = $id;
 
 for ($i = 0; $i < $n; $i++) {
-    $build->Id = $id;
-    $build->Filled = false;
+    $b = new Build();
+    $b->Id = $id;
 
-    $id = $build->GetPreviousBuildId();
+    $id = $b->GetPreviousBuildId();
 
     if ($i == 0) {
         $previous_buildid = $id;
-        $current_buildid = $build->GetCurrentBuildId();
-        $next_buildid = $build->GetNextBuildId();
+        $current_buildid = $b->GetCurrentBuildId();
+        $next_buildid = $b->GetNextBuildId();
     }
 
     if ($id == 0) {
@@ -184,10 +184,6 @@ if ($next_buildid > 0) {
 $response['menu'] = $menu;
 
 $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
-
-// Reset the build to the original build
-$build->Id = $buildid;
-$build->FillFromId($buildid);
 
 $build_response = Build::MarshalResponseArray($build, [
     'displaylabels' => $project_array['displaylabels'],
