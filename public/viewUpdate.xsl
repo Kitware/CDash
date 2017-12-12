@@ -68,12 +68,6 @@ Nightly Changes as of <xsl:value-of select="cdash/updates/timestamp"/>
 Show Activity Graph
 </a>
 </xsl:if>
-<xsl:if test="cdash/updates/timestamp">
-<a>
-<xsl:attribute name="href">javascript:showprojectgraph_click(<xsl:value-of select="cdash/dashboard/projectid"/>,<xsl:value-of select="cdash/dashboard/unixtimestamp"/>)</xsl:attribute>
-Show Activity Graph
-</a>
-</xsl:if>
 
 <div id="graphoptions"></div>
 <div id="graph"></div>

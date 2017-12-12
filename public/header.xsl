@@ -86,8 +86,6 @@
         <li><a>
         <xsl:attribute name="href">overview.php?project=<xsl:value-of select="cdash/dashboard/projectname_encoded"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/><xsl:value-of select="cdash/extraurl"/></xsl:attribute>Overview</a></li>
         <li><a>
-        <xsl:attribute name="href">viewChanges.php?project=<xsl:value-of select="cdash/dashboard/projectname_encoded"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/><xsl:value-of select="cdash/extraurl"/></xsl:attribute>Updates</a></li>
-        <li><a>
         <xsl:attribute name="href">buildOverview.php?project=<xsl:value-of select="cdash/dashboard/projectname_encoded"/>&#38;date=<xsl:value-of select="cdash/dashboard/date"/><xsl:value-of select="cdash/extraurl"/></xsl:attribute>
         Builds</a></li>
         <li><a>

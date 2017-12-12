@@ -20,30 +20,9 @@
     <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_@@version.html'"></ng-include>
 
     <div id="index_content" ng-if="!loading && cdash.requirelogin != 1 && !cdash.error">
-      <div id="index_top" ng-if="::cdash.updates">
+      <div id="index_top">
         <div name="banner" ng-repeat="banner in ::cdash.banners">
           {{::banner.text}}
-        </div>
-
-        <div id="updatechanges">
-          <span>
-            <span ng-if="::cdash.updates.nchanges == -1">No update data</span>
-            <span ng-if="::cdash.updates.nchanges == 0">No file changed</span>
-            <span ng-if="::cdash.updates.nchanges > 0">
-              <a ng-href="{{::cdash.updates.url}}">
-                <ng-pluralize count="cdash.updates.nchanges"
-                              when="{'1':     '{} file',
-                                     'other': '{} files'}">
-                </ng-pluralize>
-                changed by
-                <ng-pluralize count="cdash.updates.nauthors"
-                              when="{'1':     '{} author',
-                                     'other': '{} authors'}">
-                </ng-pluralize>
-              </a>
-            </span>
-            as of <b>{{::cdash.updates.timestamp}}</b>
-          </span>
         </div>
 
         <div id="settings" ng-click="showsettings = ! showsettings">
