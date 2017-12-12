@@ -207,7 +207,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
         list($previousdate, $end_timestamp, $nextdate) =
             get_dates($end_date, $project_array['nightlytime']);
         $currentstarttime = $end_timestamp;
-        $end_timestamp += (3600 * 24);
         $date = $end_date;
         $response['begin'] = $beginning_date;
         $response['end'] = $end_date;
@@ -219,8 +218,11 @@ function echo_main_dashboard_JSON($project_instance, $date)
             return;
         }
         $beginning_timestamp = $currentstarttime;
-        $end_timestamp = $currentstarttime + 3600 * 24;
     }
+    $datetime = new DateTime();
+    $datetime->setTimeStamp($currentstarttime);
+    $datetime->add(new DateInterval('P1D'));
+    $end_timestamp = $datetime->getTimestamp();
 
     // Main dashboard section
     get_dashboard_JSON($projectname, $date, $response);
