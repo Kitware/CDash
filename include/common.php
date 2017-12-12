@@ -2035,7 +2035,7 @@ function get_dashboard_JSON($projectname, $date, &$response)
             $response['user']['admin'] = 1;
         }
     }
-    $response['userid'] = $userid;
+    $response['user']['id'] = $userid;
 }
 
 function get_dashboard_JSON_by_name($projectname, $date, &$response)

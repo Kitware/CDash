@@ -64,84 +64,9 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
         $success = true;
         $error_msg = '';
 
-        $old_style_pages = array('viewUpdate');
-        $new_style_pages = array('buildSummary', 'viewBuildError', 'viewConfigure', 'viewNotes');
-
-        foreach ($old_style_pages as $page) {
-            $this->get($this->url . "/$page.php?buildid=" . $first_buildid);
-            $content = $this->getBrowser()->getContent();
-            if ($content == false) {
-                $error_msg = "Error retrieving content from $page.php";
-                $success = false;
-                break;
-            }
-
-            // Verify 'Next' from build #1 points to build #2
-            $pattern = "#<a href=\"[a-zA-Z.]+\?buildid=$second_buildid\">\s*Next\s*</a>#";
-            if (preg_match($pattern, $content) !== 1) {
-                $error_msg = "Expected 'Next' link not found on $page for $first_buildid";
-                $success = false;
-                break;
-            }
-
-            // Verify 'Current' from build #1 points to build #3
-            $pattern = "#<a href=\"[a-zA-Z.]+\?buildid=$third_buildid\">\s*Current\s*</a>#";
-            if (preg_match($pattern, $content) !== 1) {
-                $error_msg = "Expected 'Current' link not found on $page for $first_buildid";
-                $success = false;
-                break;
-            }
-
-            $this->get($this->url . "/$page.php?buildid=" . $second_buildid);
-            $content = $this->getBrowser()->getContent();
-            if ($content == false) {
-                $error_msg = "Error retrieving content from $page.php";
-                $success = false;
-                break;
-            }
-
-            // Verify 'Previous' from build #2 points to build #1
-            $pattern = "#<a href=\"[a-zA-Z.]+\?buildid=$first_buildid\">\s*Previous\s*</a>#";
-            if (preg_match($pattern, $content) !== 1) {
-                $error_msg = "Expected 'Previous' link not found on $page for $second_buildid";
-                $success = false;
-                break;
-            }
-
-            // Verify 'Next' from build #2 points to build #3
-            $pattern = "#<a href=\"[a-zA-Z.]+\?buildid=$third_buildid\">\s*Next\s*</a>#";
-            if (preg_match($pattern, $content) !== 1) {
-                $error_msg = "Expected 'Next' link not found on $page for $second_buildid";
-                $success = false;
-                break;
-            }
-
-            // Verify 'Current' from build #2 points to build #3
-            $pattern = "#<a href=\"[a-zA-Z.]+\?buildid=$third_buildid\">\s*Current\s*</a>#";
-            if (preg_match($pattern, $content) !== 1) {
-                $error_msg = "Expected 'Current' link not found on $page for $second_buildid";
-                $success = false;
-                break;
-            }
-
-            $this->get($this->url . "/$page.php?buildid=" . $third_buildid);
-            $content = $this->getBrowser()->getContent();
-            if ($content == false) {
-                $error_msg = "Error retrieving content from $page.php";
-                $success = false;
-                break;
-            }
-
-            // Verify 'Previous' from build #3 points to build #2
-            $pattern = "#<a href=\"[a-zA-Z.]+\?buildid=$second_buildid\">\s*Previous\s*</a>#";
-            if (preg_match($pattern, $content) !== 1) {
-                $error_msg = "Expected 'Previous' link not found on $page for $third_buildid";
-                $success = false;
-                break;
-            }
-        }
-
-        foreach ($new_style_pages as $page) {
+        $pages = ['buildSummary', 'viewBuildError', 'viewConfigure',
+                  'viewNotes', 'viewUpdate'];
+        foreach ($pages as $page) {
             $this->get($this->url . "/api/v1/$page.php?buildid=" . $first_buildid);
             $content = $this->getBrowser()->getContent();
             $jsonobj = json_decode($content, true);

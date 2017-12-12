@@ -1225,6 +1225,9 @@ textarea {
 .spacer {
   margin-top: 20px;
 }
+.spacer-bottom {
+  margin-bottom: 20px;
+}
 
 .pad4 {
   padding: 4px;
