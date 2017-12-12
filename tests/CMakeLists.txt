@@ -141,6 +141,7 @@ add_php_test(issuecreation)
 add_php_test(limitedbuilds)
 add_php_test(managemeasurements)
 add_php_test(subprojectemail)
+add_php_test(timeline)
 
 if(CDASH_GITHUB_USERNAME AND CDASH_GITHUB_PASSWORD)
   add_php_test(github_PR_comment)

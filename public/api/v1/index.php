@@ -198,7 +198,31 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $response['parentid'] = -1;
     }
 
-    list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $project_array['nightlytime']);
+    if (is_null($date) && isset($_GET['from']) && isset($_GET['to'])) {
+        // Honor 'to' & 'from' parameters to specify a range of dates.
+        $beginning_date = $_GET['from'];
+        $end_date = $_GET['to'];
+        list($unused, $beginning_timestamp, $unused) =
+            get_dates($beginning_date, $project_array['nightlytime']);
+        list($previousdate, $end_timestamp, $nextdate) =
+            get_dates($end_date, $project_array['nightlytime']);
+        $currentstarttime = $end_timestamp;
+        $date = $end_date;
+        $response['begin'] = $beginning_date;
+        $response['end'] = $end_date;
+    } else {
+        list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $project_array['nightlytime']);
+        if ($currentstarttime > time() && !isset($_GET['parentid'])) {
+            $response['error'] = 'CDash cannot predict the future (yet)';
+            echo json_encode($response);
+            return;
+        }
+        $beginning_timestamp = $currentstarttime;
+    }
+    $datetime = new DateTime();
+    $datetime->setTimeStamp($currentstarttime);
+    $datetime->add(new DateInterval('P1D'));
+    $end_timestamp = $datetime->getTimestamp();
 
     // Main dashboard section
     get_dashboard_JSON($projectname, $date, $response);
@@ -214,16 +238,8 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $response['proedition'] = $pro->GetEdition(1);
     }
 
-    if ($currentstarttime > time() && !isset($_GET['parentid'])) {
-        $response['error'] = 'CDash cannot predict the future (yet)';
-        echo json_encode($response);
-        return;
-    }
-
     // Menu definition
     $response['menu'] = array();
-    $beginning_timestamp = $currentstarttime;
-    $end_timestamp = $currentstarttime + 3600 * 24;
     $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
     $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
     if ($project_instance->GetNumberOfSubProjects($end_UTCDate) > 0) {

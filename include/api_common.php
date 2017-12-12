@@ -16,6 +16,7 @@
 
 require_once 'include/common.php';
 require_once 'models/build.php';
+require_once 'models/project.php';
 
 /**
  *
@@ -140,6 +141,27 @@ function get_request_build_id($required = true)
         json_error_response(['error' => 'Valid build ID required']);
     }
     return (int)pdo_real_escape_string($buildid);
+}
+
+/**
+ * Pull projectname from request and lookup its ID.
+ *
+ * @param bool $required
+ * @return Project
+ */
+function get_project_from_request($required = true)
+{
+    if (!isset($_REQUEST['project'])) {
+        json_error_response(['error' => 'Valid project required']);
+    }
+    $projectname = $_GET['project'];
+    $projectid = get_project_id($projectname);
+    $Project = new Project();
+    $Project->Id = $projectid;
+    if (!$Project->Exists()) {
+        json_error_response(['error' => 'Project does not exist']);
+    }
+    return $Project;
 }
 
 /**

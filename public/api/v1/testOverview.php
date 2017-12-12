@@ -70,14 +70,14 @@ if (isset($_GET['from']) || isset($_GET['to'])) {
         list($unused, $beginning_timestamp, $unused, $unused) =
             get_dates($from, $Project->NightlyTime);
         $begin_date = gmdate(FMT_DATETIME, $beginning_timestamp);
-        $response['from_date'] = $from;
+        $response['begin'] = $from;
 
         $date = $_GET['to'];
         list($previousdate, $end_timestamp, $nextdate, $unused) =
             get_dates($date, $Project->NightlyTime);
         $end_timestamp += (3600 * 24);
         $end_date = gmdate(FMT_DATETIME, $end_timestamp);
-        $response['to_date'] = $date;
+        $response['end'] = $date;
     } else {
         // If not, just use whichever one was set.
         if (isset($_GET['from'])) {
