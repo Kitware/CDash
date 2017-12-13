@@ -79,7 +79,6 @@ if(COVERAGE_COMMAND)
   add_selenium_test(showcoveragegraph)
 endif()
 
-add_selenium_test(showupdategraph)
 add_selenium_test(finduserproject)
 add_selenium_test(findusers)
 
