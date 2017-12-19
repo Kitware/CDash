@@ -44,6 +44,9 @@ $end = $end_datetime->format('Y-m-d');
 // Generate data based on the page that's requesting this chart.
 $response = [];
 switch ($_GET['page']) {
+    case 'buildProperties.php':
+        $response = chart_for_buildProperties($Project, $begin, $end);
+        break;
     case 'index.php':
         $response = chart_for_index($Project, $begin, $end);
         break;
@@ -56,6 +59,33 @@ switch ($_GET['page']) {
 }
 echo json_encode(cast_data_for_JSON($response));
 
+
+function chart_for_buildProperties($Project, $begin, $end)
+{
+    if (!isset($_SESSION['defecttypes'])) {
+        json_error_response('No defecttypes defined in your session');
+    }
+    $defect_types = $_SESSION['defecttypes'];
+
+    // Construct an SQL SELECT clause for the requested types of defects.
+    $defect_keys = [];
+    foreach ($defect_types as $type) {
+        $defect_keys[] = "{$type['name']}";
+    }
+    $defect_selection = implode(', ', $defect_keys);
+    $query =
+        "SELECT id, $defect_selection, starttime
+        FROM build b WHERE projectid = ? AND parentid IN (0, -1)
+        ORDER BY starttime";
+    $pdo = Database::getInstance()->getPdo();
+    $stmt = $pdo->prepare($query);
+    if (!pdo_execute($stmt, [$Project->Id])) {
+        json_error_response('Failed to load results');
+    }
+
+    return get_timeline_chart_data($defect_types, $stmt, $Project, $begin, $end,
+                                   true);
+}
 
 function chart_for_index($Project, $begin, $end)
 {

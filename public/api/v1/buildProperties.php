@@ -186,6 +186,11 @@ while ($row = $stmt->fetch()) {
 $response['builds'] = $builds_response;
 $response['properties'] = $all_properties;
 
+// Timeline chart needs to know what defects we care about
+// and what page we're coming from.
+$_SESSION['defecttypes'] = $defect_types;
+$response['filterdata']['pageId'] = 'buildProperties.php';
+
 $end = microtime_float();
 $response['generationtime'] = round($end - $start, 3);
 echo json_encode(cast_data_for_JSON($response));
