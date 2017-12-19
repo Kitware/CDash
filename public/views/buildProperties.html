@@ -78,8 +78,131 @@
             <b>Error applying selection: {{selection.error}}</b>
           </div>
         </div>
+
+        <div class="text-center">
+          <p class="spacer50">
+            <button type="button" class="btn btn-default"
+                    ng-click="toggleDefects()">
+              <span ng-show="!cdash.showDefects">Show Defects</span>
+              <span ng-show="cdash.showDefects">Hide Defects</span>
+            </button>
+          </p>
+
+          <img id="spinner" src="img/loading.gif" ng-show="cdash.loadingDefects" />
+
+          <div ng-show="cdash.defectsError" class="text-danger">
+            <b>Error: {{cdash.defectsError}}</b>
+          </div>
+
+          <p ng-show="cdash.showDefects && cdash.defects.length == 0">
+            No defects found.
+          </p>
+
+          <div class="animate-show"
+               ng-show="cdash.showDefects && cdash.defects.length > 0">
+            <table class="table table-striped">
+              <th class="text-center col-md-4" ng-click="updateOrderByFields('descr', $event)">
+                <span class="glyphicon"
+                      ng-class="orderByFields.indexOf('-descr') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('descr') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')">
+                </span>
+                Description
+              </th>
+              <th class="text-center col-md-2" ng-click="updateOrderByFields('type', $event)">
+                <span class="glyphicon"
+                      ng-class="orderByFields.indexOf('-type') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('type') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')">
+                </span>
+                Type
+              </th>
+              <th class="text-center col-md-2" ng-click="updateOrderByFields('builds.length', $event)">
+                <span class="glyphicon"
+                      ng-class="orderByFields.indexOf('-builds.length') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('builds.length') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')">
+                </span>
+                Number of Builds
+              </th>
+              <th class="text-center col-md-4" class="text-center">
+                What's causing this?
+              </th>
+              <tr ng-repeat="defect in pagination.filteredDefects"
+                  ng-class-od="'odd'" ng-class-even="'even'">
+                <td class="text-center">{{::defect.descr}}</td>
+                <td class="text-center">{{::defect.type}}</td>
+                <td class="text-center">{{::defect.builds.length}}</td>
+                <td class="text-center">
+                  <span class = "glyphicon"
+                        style="cursor: pointer"
+                        ng-class = "defect.showClassifiers ? 'glyphicon-eye-close' : 'glyphicon-eye-open'"
+                        ng-click="toggleClassifiers(defect)"></span>
+                  <img id="spinner" src="img/loading.gif"
+                       ng-show="defect.loadingClassifiers" />
+                  <table ng-show="defect.showClassifiers && !defect.loadingClassifiers"
+                         class="table table-condensed animate-show"
+                         style="background-color: inherit">
+                    <th class="text-center">Condition</th>
+                    <th class="text-center">Correlation</th>
+                    <tr ng-repeat="entry in defect.classifiers | orderBy: '-accuracy' | limitTo: 3">
+                      <td class="text-center">{{entry.classifier}}</td>
+                      <td class="text-center">{{entry.accuracy}}%</td>
+                    </tr>
+                  </table>
+                  <span ng-show="defect.showClassifiers && !defect.loadingClassifiers && defect.classifiers.length > 3"
+                        ng-click="showModal(defect)"
+                        class="animate-show"
+                        style="cursor: pointer">
+                    More...
+                  </span>
+                </td>
+              </tr>
+            </table>
+            <div ng-if="::cdash.defects.length > 25">
+              <uib-pagination
+                ng-model="pagination.currentPage"
+                total-items="cdash.defects.length"
+                max-size="pagination.maxSize"
+                items-per-page="pagination.numPerPage"
+                ng-change="pageChanged()"
+                boundary-links="true">
+              </uib-pagination>
+              <div>
+                <label>Items per page</label>
+                <select name="itemsPerPage"
+                        convert-to-number
+                        ng-model="pagination.numPerPage"
+                        ng-change="numDefectsPerPageChanged()">
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                  <option value="-1">All</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
+
+    <!-- Modal to show correlation between defects and properties -->
+    <script type="text/ng-template" id="modal-template">
+      <div class="modal-header">
+        <h4 class="modal-title text-center">Properties Associated With Defect</h4>
+      </div>
+      <div class="modal-body">
+        <p class="text-center">
+          <b>{{cdash.currentDefect.type}}</b>: {{cdash.currentDefect.descr}}
+        </p>
+        <table class="table table-striped table-condensed">
+          <th>Condition</th>
+          <th>Correlation</th>
+          <tr ng-repeat="entry in cdash.currentDefect.classifiers | orderBy: '-accuracy'">
+            <td>{{entry.classifier}}</td>
+            <td>{{entry.accuracy}}%</td>
+          </tr>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="dismiss-modal-button" ng-click="$ctrl.ok()">OK</button>
+      </div>
+    </script>
 
     <!-- FOOTER -->
     <br/>

@@ -6,6 +6,9 @@ CDash.controller('BuildPropertiesController',
         return;
       }
 
+      $scope.cdash.showDefects = false;
+      $scope.cdash.defectsLoaded = false;
+
       $scope.cdash.selections = [];
       $scope.addSelection();
 
@@ -14,6 +17,26 @@ CDash.controller('BuildPropertiesController',
 
       // A different set of comparators for each possible type of build property.
       $scope.comparators = comparators.getComparators();
+
+      // Pagination settings for defects table.
+      $scope.pagination = [];
+      $scope.pagination.filteredTests = [];
+      $scope.pagination.currentPage = 1;
+      $scope.pagination.maxSize = 5;
+      var num_per_page_cookie = $.cookie('buildProperties_num_per_page');
+      if(num_per_page_cookie) {
+        $scope.pagination.numPerPage = parseInt(num_per_page_cookie);
+      } else {
+        $scope.pagination.numPerPage = 10;
+      }
+
+      // Sorting for defects table.
+      var sort_cookie_value = $.cookie('cdash_buildProperties_sort');
+      if(sort_cookie_value) {
+        $scope.orderByFields = sort_cookie_value.split(",");
+      } else {
+        $scope.orderByFields = ['-builds.length'];
+      }
 
       $scope.chart_data = [];
       $scope.groups = [];
@@ -308,4 +331,118 @@ CDash.controller('BuildPropertiesController',
       }
     };
 
+    $scope.showModal = function(defect) {
+      $scope.cdash.currentDefect = defect;
+      modalSvc.showModal(null, function(){}, 'modal-template', $scope, 'lg');
+    };
+
+    $scope.toggleDefects = function() {
+      if (!$scope.cdash.defectsLoaded) {
+        $scope.loadDefects();
+      } else {
+        $scope.cdash.showDefects = !$scope.cdash.showDefects;
+      }
+    };
+
+    $scope.loadDefects = function() {
+      $scope.cdash.loadingDefects = true;
+
+      var buildids = [];
+      for (var i = 0; i < $scope.cdash.builds.length ; ++i) {
+        buildids.push($scope.cdash.builds[i].id);
+      }
+
+      var defect_types = [];
+      for (var i = 0; i < $scope.cdash.defecttypes.length; ++i) {
+        var defect_type = $scope.cdash.defecttypes[i];
+        if (defect_type.selected) {
+          defect_types.push(defect_type.name);
+        }
+      }
+
+      // Query the API to get the types of defects suffered by these builds.
+      var parameters = {
+        "buildid[]": buildids,
+        "defect[]": defect_types
+      };
+      $scope.cdash.defectsError = '';
+      $http({
+        url: 'api/v1/buildProperties.php',
+        method: 'GET',
+        params: parameters
+      }).then(function success(s) {
+        $scope.cdash.defects = s.data.defects;
+        for (var i = 0; i < $scope.cdash.defects.length; ++i) {
+          $scope.cdash.defects[i].classifiersLoaded = false;
+          $scope.cdash.defects[i].loadingClassifiers = false;
+          $scope.cdash.defects[i].showClassifiers = false;
+        }
+        $scope.cdash.defects = $filter('orderBy')($scope.cdash.defects, $scope.orderByFields);
+        $scope.cdash.defectsLoaded = true;
+        $scope.cdash.showDefects = true;
+        $scope.pageChanged();
+      }, function error(e) {
+        $scope.cdash.defectsError = e.data;
+      }).finally(function() {
+        $scope.cdash.loadingDefects = false;
+      });
+    };
+
+    $scope.toggleClassifiers = function(defect) {
+      if (!defect.classifiersLoaded) {
+        $scope.computeClassifiers(defect);
+      }
+      defect.showClassifiers = !defect.showClassifiers;
+    };
+
+    $scope.computeClassifiers = function(defect) {
+      defect.loadingClassifiers = true;
+      // Mark each build as passing or failing.
+      for (var i = 0; i < $scope.cdash.builds.length; ++i) {
+        if (defect.builds.indexOf($scope.cdash.builds[i].id) === -1) {
+          $scope.cdash.builds[i].success = true;
+        } else {
+          $scope.cdash.builds[i].success = false;
+        }
+      }
+      // Send the builds back to our API, which will figure out what properties are
+      // most informative in distinguishing between passing & failing.
+      var parameters = {
+        "builds[]": $scope.cdash.builds
+      };
+      $http({
+        url: 'api/v1/computeClassifier.php',
+        method: 'GET',
+        params: parameters
+      }).then(function success(s) {
+        defect.classifiers = s.data;
+        defect.classifiersLoaded = true;
+      }, function error(e) {
+        $scope.cdash.warning = e.data;
+      }).finally(function() {
+        defect.loadingClassifiers = false;
+      });
+    };
+
+    $scope.pageChanged = function() {
+      var begin = (($scope.pagination.currentPage - 1) * $scope.pagination.numPerPage)
+      , end = begin + $scope.pagination.numPerPage;
+      if (end > 0) {
+        $scope.pagination.filteredDefects = $scope.cdash.defects.slice(begin, end);
+      } else {
+        $scope.pagination.filteredDefects = $scope.cdash.defects;
+      }
+    };
+
+    $scope.numDefectsPerPageChanged = function() {
+      $.cookie("buildProperties_num_per_page", $scope.pagination.numPerPage, { expires: 365 });
+      $scope.pageChanged();
+    };
+
+    $scope.updateOrderByFields = function(field, $event) {
+      multisort.updateOrderByFields($scope, field, $event);
+      $scope.cdash.defects = $filter('orderBy')($scope.cdash.defects, $scope.orderByFields);
+      $scope.pageChanged();
+      $.cookie('cdash_buildProperties_sort', $scope.orderByFields);
+    };
 });
