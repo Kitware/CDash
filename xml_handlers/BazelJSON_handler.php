@@ -42,6 +42,7 @@ class BazelJSONHandler
     private $TestsOutput;
     private $TestName;
     private $WorkingDirectory;
+    private $ParseConfigure;
 
     private $PDO;
 
@@ -79,6 +80,7 @@ class BazelJSONHandler
         $this->Tests = [];
         $this->TestsOutput = [];
         $this->TestName = '';
+        $this->ParseConfigure = true;
 
         $this->PDO = get_link_identifier()->getPdo();
     }
@@ -256,78 +258,92 @@ class BazelJSONHandler
 
                 if (array_key_exists('stderr', $json_array[$message_id])) {
                     // Parse through stderr line-by-line,
-                    // searching for build warnings and errors.
+                    // searching for configure and build warnings and errors.
                     $stderr = $json_array[$message_id]['stderr'];
                     $warning_pattern = '/(.*?) warning: (.*?)$/';
                     $error_pattern = '/(.*?) error: (.*?)$/';
+
+                    // The first two phases of a Bazel build, Loading and
+                    // Analysis, will be treated as the 'Configure' step by
+                    // CDash. The final phase, Execution, will be treated as
+                    // the 'Build' step by CDash.
                     $configure_error_pattern = '/\s*ERROR: (.*?)BUILD/';
-                    $configure_warning_pattern = '/\s*ERROR: (.*?)BUILD/';
-                    $recording_configure_output = false;
+                    $analysis_warning_pattern = '/\s*WARNING: errors encountered while analyzing target \'(.*?)\': it will not be built.*?$/';
+                    // Look for the report printed at the end of the analysis phase.
+                    $analysis_report_pattern = '/(.*?)Found (.*?)target(.*?)/';
+
                     $log_line_number = 1;
                     $lines = explode("\n", $stderr);
                     $build_error = null;
                     $subproject_name = '';
 
+
                     foreach ($lines as $line) {
                         // Remove ANSI color codes.
                         $line = preg_replace('/\033\[[0-9;]*m/', '', $line);
 
-                        $record_configure_error = false;
                         $matches = [];
-                        if (preg_match($configure_error_pattern, $line, $matches) === 1
-                                && count($matches) === 2) {
-                            // This line contains a configure error.
-                            $record_configure_error = true;
-                            $type = 0;
-                        } elseif (preg_match($configure_warning_pattern, $line, $matches) === 1
-                                && count($matches) === 2) {
-                            // This line contains a configure warning.
-                            $record_configure_error = true;
-                            $type = 0;
+
+                        // Check if we're done with the 'Configure' step
+                        if (preg_match($analysis_report_pattern, $line, $matches) === 1) {
+                            $this->ParseConfigure = false;
                         }
 
-                        if ($record_configure_error) {
-                            $source_file = $matches[1] . "BUILD";
-                            $subproject_name = '';
-                            if ($this->HasSubProjects) {
-                                $subproject_name = SubProject::GetSubProjectForPath(
-                                        $source_file, $this->Project->Id);
-                                // Skip this defect if we cannot deduce what SubProject
-                                // it belongs to.
-                                if (empty($subproject_name)) {
-                                    continue;
+                        $record_configure_error = false;
+                        if ($this->ParseConfigure) {
+                            if (preg_match($analysis_warning_pattern, $line, $matches) === 1
+                                    && count($matches) === 2) {
+                                $source_file = str_replace(":", "/", $matches[1]);
+                                $record_configure_error = true;
+                                $type = 1;
+                            } elseif (preg_match($configure_error_pattern, $line, $matches) === 1
+                                    && count($matches) === 2) {
+                                $source_file = $matches[1] . "BUILD";
+                                $record_configure_error = true;
+                                $type = 0;
+                            }
+                            if ($record_configure_error) {
+                                $subproject_name = '';
+                                if ($this->HasSubProjects) {
+                                    $subproject_name = SubProject::GetSubProjectForPath(
+                                            $source_file, $this->Project->Id);
+                                    // Skip this defect if we cannot deduce what SubProject
+                                    // it belongs to.
+                                    if (empty($subproject_name)) {
+                                        continue;
+                                    }
+                                    $this->InitializeSubProjectBuild($subproject_name);
                                 }
-                                $this->InitializeSubProjectBuild($subproject_name);
-                            }
-                            if ($type === 0) {
-                                $this->Configures[$subproject_name]->Status += 1;
-                            } else {
-                                $this->Configures[$subproject_name]->NumberOfWarnings += 1;
-                            }
+                                if ($type === 0) {
+                                    // We don't know what the status should be,
+                                    // other than non-zero. Use 1 as a reasonable
+                                    // default.
+                                    $this->Configures[$subproject_name]->Status = 1;
+                                    $this->Configures[$subproject_name]->NumberOfErrors += 1;
+                                } else {
+                                    $this->Configures[$subproject_name]->NumberOfWarnings += 1;
+                                }
 
-                            // Capture subsequent lines as this configure's log.
-                            $recording_configure_output = true;
+                                // Capture line as this configure's log.
+                                $this->Configures[$subproject_name]->Log .= "$line\n";
+                            }
+                            // Check next line
+                            $log_line_number++;
                             continue;
                         }
 
+                        // Done with configure, parsing build errors and warnings
                         $record_error = false;
                         if (preg_match($warning_pattern, $line, $matches) === 1
                                 && count($matches) === 3) {
                             // This line contains a warning.
                             $record_error = true;
                             $type = 1;
-                            $recording_configure_output = false;
                         } elseif (preg_match($error_pattern, $line, $matches) === 1
                                 && count($matches) === 3) {
                             // This line contains an error.
                             $record_error = true;
                             $type = 0;
-                            $recording_configure_output = false;
-                        }
-
-                        if ($recording_configure_output) {
-                            $this->Configures[$subproject_name]->Log .= "$line\n";
-                            continue;
                         }
 
                         if ($record_error) {
