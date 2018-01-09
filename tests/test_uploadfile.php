@@ -92,4 +92,21 @@ class UploadFileTestCase extends KWWebTestCase
 
         $this->pass('Uploaded file exists in database, on disk, and is downloadable.');
     }
+
+    // Make sure the build label has been set
+    public function testVerifyLabel()
+    {
+        $this->get($this->url . '/api/v1/index.php?project=EmailProjectExample&date=2009-02-23&filtercount=1&showfilters=1&field1=label&compare1=63&value1=UploadBuild');
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $buildgroup = array_pop($jsonobj['buildgroups']);
+        $build = array_pop($buildgroup['builds']);
+
+        // Verify label
+        if ($build['label'] !== 'UploadBuild') {
+            $this->fail('Expected UploadBuild, found ' . $build['label']);
+        }
+
+        $this->pass("Build label has been set via upload handler");
+    }
 }
