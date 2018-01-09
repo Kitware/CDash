@@ -124,13 +124,13 @@ if ($session_OK) {
         $systems = $ClientJobSchedule->GetSystems();
         $repository = $ClientJobSchedule->GetRepository();
 
-        /*$builds = $ClientJobSchedule->GetAssociatedBuilds();
-        foreach($builds as $buildid)
-          {
-          $xml .= '<build>';
-          $xml .= add_XML_value("id", $buildid);
-          $xml .= '</build>';
-          }*/
+    /*$builds = $ClientJobSchedule->GetAssociatedBuilds();
+    foreach($builds as $buildid)
+      {
+      $xml .= '<build>';
+      $xml .= add_XML_value("id", $buildid);
+      $xml .= '</build>';
+      }*/
     } else {
         $xml .= add_XML_value('startdate', date('Y-m-d H:i:s'));
         $xml .= add_XML_value('enddate', date('1980-01-01 00:00:00'));
