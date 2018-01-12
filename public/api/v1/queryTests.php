@@ -202,6 +202,8 @@ while ($row = $stmt->fetch()) {
     // use the default timezone, same as index.php
 
     $build['time'] = $row['time'];
+    $build['prettyTime'] = time_difference($build['time'], true, '', true);
+
     $build['details'] = $row['details'] . "\n";
 
     $siteLink = 'viewSite.php?siteid=' . $row['siteid'];
@@ -247,6 +249,7 @@ while ($row = $stmt->fetch()) {
         }
         $build['nprocs'] = $num_procs;
         $build['procTime'] = $row['time'] * $num_procs;
+        $build['prettyProcTime'] = time_difference($build['procTime'], true, '', true);
     }
 
     $builds[] = $build;
