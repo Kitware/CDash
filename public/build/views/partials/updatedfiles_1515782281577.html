@@ -1,0 +1,52 @@
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+            <span class="glyphicon"
+                 ng-click="group.hidden = !group.hidden"
+                 ng-class="{'glyphicon-chevron-down': !group.hidden, 'glyphicon-chevron-right': group.hidden}"></span>
+            <b>{{::group.description}}</b>
+          </div>
+        </div>
+        <div ng-show="!group.hidden"
+             ng-repeat="directory in ::group.directories"
+             class="animate-show">
+          <div class="row">
+            <div class="col-md-12 col-md-offset-1">
+              <span class="glyphicon"
+                   ng-click="directory.hidden = !directory.hidden"
+                   ng-class="{'glyphicon-chevron-down': !directory.hidden, 'glyphicon-chevron-right': directory.hidden}"></span>
+              {{::directory.name}}
+            </div>
+          </div>
+          <div ng-show="!directory.hidden"
+               ng-repeat="file in ::directory.files"
+               class="animate-show">
+            <div class="row">
+              <div class="col-md-12 col-md-offset-2">
+                <span ng-if="::file.diffurl">
+                  <a ng-href="{{::file.diffurl}}">
+                    <span>{{::file.filename}} Revision: {{::file.revision}}</span>
+                  </a>
+                </span>
+                <span ng-if="::!file.diffurl">
+                  <span>{{::file.filename}} Revision: {{::file.revision}}</span>
+                </span>
+                <span ng-if="::file.author">
+                  by
+                  <a ng-if="::file.email" ng-href="mailto:{{::file.email}}">
+                    {{::file.author}}
+                  </a>
+                  <span ng-if="::!file.email">
+                    {{::file.author}}
+                  </span>
+                </span>
+              </div>
+            </div>
+            <div class="row spacer-bottom">
+              <div class="col-md-12 col-md-offset-2">
+                {{::file.log}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>

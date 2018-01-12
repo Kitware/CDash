@@ -7,13 +7,13 @@
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="stylesheet" type="text/css" ng-href="{{cssfile}}" />
     <link rel="stylesheet" href="css/je_compare_style-1.0.0.css" />
-    <script src="js/CDash_1510850867431.min.js"></script>
+    <script src="js/CDash_1515782281577.min.js"></script>
     <title ng-bind="title">CDash</title>
   </head>
 
   <body bgcolor="#ffffff" ng-controller="TestDetailsController">
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1510850867431.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1515782281577.html'"></ng-include>
 
     <div ng-if="cdash.requirelogin != 1 && !loading && !cdash.error">
 
@@ -152,6 +152,6 @@
 
     <!-- FOOTER -->
     <br/>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1510850867431.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1515782281577.html'"></ng-include>
   </body>
 </html>

@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.4.css" />
     <link rel="stylesheet" type="text/css" href="css/jqModal.css" />
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <script src="js/CDash_1510850867431.min.js"></script>
+    <script src="js/CDash_1515782281577.min.js"></script>
     <title ng-bind="::title">CDash</title>
   </head>
 
@@ -17,38 +17,16 @@
 
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
 
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1510850867431.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1515782281577.html'"></ng-include>
 
     <div id="index_content" ng-if="!loading && cdash.requirelogin != 1 && !cdash.error">
-      <div id="index_top" ng-if="::cdash.updates">
+      <div id="index_top">
         <div name="banner" ng-repeat="banner in ::cdash.banners">
           {{::banner.text}}
         </div>
 
-        <div id="updatechanges">
-          <span>
-            <span ng-if="::cdash.updates.nchanges == -1">No update data</span>
-            <span ng-if="::cdash.updates.nchanges == 0">No file changed</span>
-            <span ng-if="::cdash.updates.nchanges > 0">
-              <a ng-href="{{::cdash.updates.url}}">
-                <ng-pluralize count="cdash.updates.nchanges"
-                              when="{'1':     '{} file',
-                                     'other': '{} files'}">
-                </ng-pluralize>
-                changed by
-                <ng-pluralize count="cdash.updates.nauthors"
-                              when="{'1':     '{} author',
-                                     'other': '{} authors'}">
-                </ng-pluralize>
-              </a>
-            </span>
-            as of <b>{{::cdash.updates.timestamp}}</b>
-          </span>
-        </div>
-
         <div id="settings" ng-click="showsettings = ! showsettings">
-
-          <img src="img/settings.png"/>
+          <span class="glyphicon glyphicon-cog"></span>
           <ul ng-show="showsettings">
             <li>
               <a id="label_advancedview" ng-click="toggleAdvancedView()">
@@ -83,6 +61,14 @@
               </a>
             </li>
             <li>
+              <a href="" ng-click="toggleTimelineChart()" ng-show="!showTimelineChart">
+                Show Timeline
+              </a>
+              <a href="" ng-click="toggleTimelineChart()" ng-show="showTimelineChart">
+                Hide Timeline
+              </a>
+            </li>
+            <li>
               <a href="http://public.kitware.com/Wiki/CDash:Documentation" class="helptrigger" target="_blank">
                 Help
               </a>
@@ -96,10 +82,17 @@
         </div>
 
         <!-- Filters -->
-        <ng-include src="'build/views/partials/filterdataTemplate_1510850867431.html'"></ng-include>
+        <ng-include src="'build/views/partials/filterdataTemplate_1515782281577.html'"></ng-include>
       </div> <!-- End index-top -->
 
       <div ng-show="showFeed" id="feed" ng-include="::'ajax/getfeed.php?projectid='+ cdash.projectid"></div>
+
+      <!-- Timeline chart -->
+      <div class="container"
+           ng-if="showTimelineChart"
+           style="margin-top: 30px; margin-bottom: 20px;">
+        <div timeline></div>
+      </div>
 
       <table ng-if="::cdash.testingdataurl" width="100%" cellpadding="11" cellspacing="0">
         <tr>
@@ -195,7 +188,7 @@
       </div>
 
       <!-- Display subproject dependencies -->
-      <ng-include ng-if="::cdash.subproject.dependencies.length > 0" ng-init="cdash.tableName = 'SubProject Dependencies'; cdash.subprojects = cdash.subproject.dependencies" src="'build/views/partials/subProjectTable_1510850867431.html'"></ng-include>
+      <ng-include ng-if="::cdash.subproject.dependencies.length > 0" ng-init="cdash.tableName = 'SubProject Dependencies'; cdash.subprojects = cdash.subproject.dependencies" src="'build/views/partials/subProjectTable_1515782281577.html'"></ng-include>
 
       <!-- BuildGroups -->
       <div ng-repeat="buildgroup in ::cdash.buildgroups | orderBy:'position'">
@@ -659,6 +652,6 @@
         <button class="btn btn-danger" id="modal-delete-build-button" ng-click="$ctrl.ok()">Delete</button>
       </div>
     </script>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1510850867431.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1515782281577.html'"></ng-include>
   </body>
 </html>

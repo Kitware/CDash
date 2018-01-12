@@ -8,16 +8,21 @@
     <link rel="stylesheet" type="text/css" ng-href="{{cssfile}}" />
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.4.css" />
-    <script src="js/CDash_1510850867431.min.js"></script>
+    <script src="js/CDash_1515782281577.min.js"></script>
     <title ng-bind="title">CDash : Test Overview</title>
   </head>
 
   <body bgcolor="#ffffff" ng-controller="TestOverviewController">
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1510850867431.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1515782281577.html'"></ng-include>
     <br/>
 
     <div ng-if="cdash.requirelogin != 1 && !loading && !cdash.error">
+      <!-- Timeline chart -->
+      <div class="container">
+        <div timeline></div>
+      </div>
+
       <div class="pad4">
         <!-- Filters -->
         <div id="labelshowfilters">
@@ -26,7 +31,7 @@
             <span ng-show="showfilters != 0">Hide Filters</span>
           </a>
         </div>
-        <ng-include src="'build/views/partials/filterdataTemplate_1510850867431.html'"></ng-include>
+        <ng-include src="'build/views/partials/filterdataTemplate_1515782281577.html'"></ng-include>
 
         <div class="form-inline pull-right">
           <select class="form-group"
@@ -34,7 +39,6 @@
             ng-options="group as group.name for group in ::cdash.groups | orderBy: 'position' track by group.id"
             ng-change="selectionChanged = true">
           </select>
-          <div class="form-group" daterange></div>
           <div class="checkbox">
             <label>
               <input type="checkbox" name="showpassed"
@@ -44,11 +48,6 @@
                      ng-change="selectionChanged = true"> Include passing tests
             </label>
           </div>
-          <button type="submit" class="btn btn-default"
-                  ng-disabled="(!cdash.to_date || !cdash.from_date) && !selectionChanged"
-                  ng-click="formSubmit()">
-            Go
-          </button>
         </div>
 
         <span>
@@ -161,6 +160,6 @@
 
     <!-- FOOTER -->
     <br/>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1510850867431.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1515782281577.html'"></ng-include>
   </body>
 </html>

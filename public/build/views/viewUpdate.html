@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" ng-app="CDash">
+  <head ng-controller="HeadController">
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" type="text/css" ng-href="{{cssfile}}" />
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <script src="js/CDash_1515782281577.min.js"></script>
+    <title ng-bind="title">CDash : Update</title>
+  </head>
+
+  <body bgcolor="#ffffff" ng-controller="ViewUpdateController">
+    <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1515782281577.html'"></ng-include>
+
+    <div ng-if="cdash.requirelogin != 1 && !loading && !cdash.error">
+      <br/>
+
+      <h4 ng-if="::cdash.build.site">
+        Files changed on <a ng-href="viewSite.php?siteid={{::cdash.build.siteid}}">{{::cdash.build.site}}</a>
+        ({{::cdash.build.buildname}}) as of {{::cdash.build.buildtime}}
+      </h4>
+      <h4 ng-if="::cdash.update.timestamp">
+        Nightly Changes as of {{::cdash.updates.timestamp}}
+      </h4>
+
+      <div ng-if="::cdash.updates.revision">
+        <b>Revision: </b>
+        <a ng-href="::cdash.update.revisionurl">{{::cdash.update.revision}}</a>
+        <div ng-if="::cdash.update.priorrevision">
+          <br/>
+          <b>Prior Revision: </b>
+          <a ng-href="::cdash.update.revisiondiff">{{::cdash.update.priorrevision}}</a>
+          <br/>
+          <br/>
+        </div>
+      </div>
+
+      <!-- Graph -->
+      <a ng-click="toggleGraph()">
+        <span ng-show="!showGraph">Show Activity Graph</span>
+        <span ng-show="showGraph">Hide Activity Graph</span>
+      </a>
+      <img id="spinner" src="img/loading.gif" ng-show="graphLoading" />
+      <div id="graphoptions"></div>
+      <div id="graph"></div>
+      <div class="center-text" id="graph_holder" ng-show="showGraph"></div>
+
+      <h3 ng-if="::cdash.update.status" class="error">
+        {{::cdash.update.status}}
+      </h3>
+
+      <!-- Display lists of updated files -->
+      <div ng-repeat="group in ::cdash.updategroups"
+           updated-files>
+      </div>
+
+      <br/>
+    </div>
+    <!-- FOOTER -->
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1515782281577.html'"></ng-include>
+  </body>
+</html>
