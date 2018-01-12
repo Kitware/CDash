@@ -66,7 +66,7 @@ if ($filterdata['limit'] > 0) {
 $response['filterurl'] = get_filterurl();
 
 // Menu
-$menu = array();
+$menu = [];
 $limit_param = '&limit=' . $filterdata['limit'];
 $base_url = 'queryTests.php?project=' . urlencode($project->Name);
 if (isset($_GET['parentid'])) {
@@ -113,12 +113,12 @@ if (isset($_GET['parentid'])) {
 $response['menu'] = $menu;
 
 // Project
-$project_response = array();
+$project_response = [];
 $project_response['showtesttime'] = $project->ShowTestTime;
 $response['project'] = $project_response;
 
 //get information about all the builds for the given date and project
-$builds = array();
+$builds = [];
 
 $beginning_timestamp = $currentstarttime;
 $end_timestamp = $currentstarttime + 3600 * 24;
@@ -163,12 +163,12 @@ $query = "SELECT
 $result = pdo_query($query);
 
 // Builds
-$builds = array();
+$builds = [];
 while ($row = pdo_fetch_array($result)) {
     $buildid = $row['id'];
     $testid = $row['testid'];
 
-    $build = array();
+    $build = [];
 
     $build['testname'] = $row['testname'];
     $build['site'] = $row['sitename'];
