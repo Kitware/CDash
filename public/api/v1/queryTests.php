@@ -24,6 +24,8 @@ require_once 'include/filterdataFunctions.php';
 include_once 'models/build.php';
 include_once 'models/project.php';
 
+use CDash\Database;
+
 $start = microtime_float();
 
 // Handle required parameters: project and page.
@@ -132,39 +134,42 @@ $builds['currentstarttime'] = $currentstarttime;
 $builds['teststarttime'] = date(FMT_DATETIME, $beginning_timestamp);
 $builds['testendtime'] = date(FMT_DATETIME, $end_timestamp);
 
+$query_params = [];
 $date_clause = '';
-if (!$filterdata['hasdateclause']) {
-    $date_clause = "AND b.starttime>='$beginning_UTCDate' AND b.starttime<'$end_UTCDate'";
-}
-
 $parent_clause = '';
 if (isset($_GET['parentid'])) {
     // If we have a parentid, then we should only show children of that build.
     // Date becomes irrelevant in this case.
-    $parent_clause = 'AND (b.parentid = ' . qnum($_GET['parentid']) . ') ';
-    $date_clause = '';
+    $parent_clause = 'AND b.parentid = :parentid';
+    $query_params[':parentid'] = $_GET['parentid'];
+} elseif (!$filterdata['hasdateclause']) {
+    $date_clause = 'AND b.starttime >= :starttime AND b.starttime < :endtime';
+    $query_params[':starttime'] = $beginning_UTCDate;
+    $query_params[':endtime'] = $end_UTCDate;
 }
 
-$query = "SELECT
-            b.id, b.name, b.starttime, b.siteid,b.parentid,
-            build2test.testid AS testid, build2test.status, build2test.time, build2test.timestatus,
-            site.name AS sitename,
-            test.name AS testname, test.details
-          FROM build AS b
-          JOIN build2test ON (b.id = build2test.buildid)
-          JOIN site ON (b.siteid = site.id)
-          JOIN test ON (test.id = build2test.testid)
-          WHERE b.projectid = '" . $project->Id . "' " .
-    $parent_clause . $date_clause . ' ' .
-    $filter_sql .
-    'ORDER BY build2test.status, test.name' .
-    $limit_sql;
+$pdo = Database::getInstance()->getPdo();
 
-$result = pdo_query($query);
+$sql = "SELECT b.id, b.name, b.starttime, b.siteid,b.parentid,
+               build2test.testid AS testid, build2test.status,
+               build2test.time, build2test.timestatus, site.name AS sitename,
+               test.name AS testname, test.details
+        FROM build AS b
+        JOIN build2test ON (b.id = build2test.buildid)
+        JOIN site ON (b.siteid = site.id)
+        JOIN test ON (test.id = build2test.testid)
+        WHERE b.projectid = :projectid
+              $parent_clause $date_clause $filter_sql
+        ORDER BY build2test.status, test.name
+        $limit_sql";
+$query_params[':projectid'] = $project->Id;
+
+$stmt = $pdo->prepare($sql);
+pdo_execute($stmt, $query_params);
 
 // Builds
 $builds = [];
-while ($row = pdo_fetch_array($result)) {
+while ($row = $stmt->fetch()) {
     $buildid = $row['id'];
     $testid = $row['testid'];
 
