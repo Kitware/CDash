@@ -134,7 +134,27 @@ $builds['currentstarttime'] = $currentstarttime;
 $builds['teststarttime'] = date(FMT_DATETIME, $beginning_timestamp);
 $builds['testendtime'] = date(FMT_DATETIME, $end_timestamp);
 
+// Start constructing the main SQL query for this page.
+$pdo = Database::getInstance()->getPdo();
 $query_params = [];
+
+// Check if we should display 'Proc Time'.
+$response['hasprocessors'] = false;
+$proc_select = '';
+$proc_join = '';
+$proc_clause = '';
+$stmt = $pdo->prepare(
+    "SELECT * FROM measurement WHERE projectid = ? AND name = 'Processors'");
+pdo_execute($stmt, [$project->Id]);
+$row = $stmt->fetch();
+if ($row['summarypage'] == 1) {
+    $response['hasprocessors'] = true;
+    $proc_select = ', tm.value';
+    $proc_join =
+        'JOIN testmeasurement tm ON (test.id = tm.testid)';
+    $proc_clause = "AND tm.name = 'Processors'";
+}
+
 $date_clause = '';
 $parent_clause = '';
 if (isset($_GET['parentid'])) {
@@ -148,22 +168,20 @@ if (isset($_GET['parentid'])) {
     $query_params[':endtime'] = $end_UTCDate;
 }
 
-$pdo = Database::getInstance()->getPdo();
-
 $sql = "SELECT b.id, b.name, b.starttime, b.siteid,b.parentid,
                build2test.testid AS testid, build2test.status,
                build2test.time, build2test.timestatus, site.name AS sitename,
-               test.name AS testname, test.details
+               test.name AS testname, test.details $proc_select
         FROM build AS b
         JOIN build2test ON (b.id = build2test.buildid)
         JOIN site ON (b.siteid = site.id)
         JOIN test ON (test.id = build2test.testid)
+        $proc_join
         WHERE b.projectid = :projectid
-              $parent_clause $date_clause $filter_sql
+              $parent_clause $date_clause $proc_clause $filter_sql
         ORDER BY build2test.status, test.name
         $limit_sql";
 $query_params[':projectid'] = $project->Id;
-
 $stmt = $pdo->prepare($sql);
 pdo_execute($stmt, $query_params);
 
@@ -220,6 +238,15 @@ while ($row = $stmt->fetch()) {
             $build['timestatus'] = 'Failed';
             $build['timestatusclass'] = 'error';
         }
+    }
+
+    if ($response['hasprocessors']) {
+        $num_procs = $row['value'];
+        if (!$num_procs) {
+            $num_procs = 1;
+        }
+        $build['nprocs'] = $num_procs;
+        $build['procTime'] = $row['time'] * $num_procs;
     }
 
     $builds[] = $build;
