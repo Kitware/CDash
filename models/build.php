@@ -2444,30 +2444,39 @@ class Build
             $this->NightlyStartTime = strtotime($stmt->fetchColumn());
         }
 
+        return Build::GetTestingDate($this->StartTime, $this->NightlyStartTime);
+    }
+
+    public static function GetTestingDate($build_start_time,
+                                          $nightly_start_timestamp)
+    {
         // If the build was started after the nightly start time
         // then it should appear on the dashboard results for the
         // subsequent day.
-        $build_start_time = strtotime($this->StartTime);
+        $build_datetime = new DateTime($build_start_time);
+        $build_start_timestamp = $build_datetime->getTimestamp();
 
-        if (date(FMT_TIME, $this->NightlyStartTime) < '12:00:00') {
+        if (date(FMT_TIME, $nightly_start_timestamp) < '12:00:00') {
             // If the "nightly" start time is in the morning then any build
             // that occurs before it is part of the previous testing day.
-            if (date(FMT_TIME, $build_start_time) <
-                date(FMT_TIME, $this->NightlyStartTime)
+            if (date(FMT_TIME, $build_start_timestamp) <
+                date(FMT_TIME, $nightly_start_timestamp)
             ) {
-                $build_start_time -= (3600 * 24);
+                $build_datetime->sub(new DateInterval('P1D'));
+                $build_start_timestamp = $build_datetime->getTimestamp();
             }
         } else {
             // If the nightly start time is NOT in the morning then any build
             // that occurs after it is part of the next testing day.
-            if (date(FMT_TIME, $build_start_time) >=
-                date(FMT_TIME, $this->NightlyStartTime)
+            if (date(FMT_TIME, $build_start_timestamp) >=
+                date(FMT_TIME, $nightly_start_timestamp)
             ) {
-                $build_start_time += (3600 * 24);
+                $build_datetime->add(new DateInterval('P1D'));
+                $build_start_timestamp = $build_datetime->getTimestamp();
             }
         }
 
-        $build_date = date(FMT_DATE, $build_start_time);
+        $build_date = date(FMT_DATE, $build_start_timestamp);
         return $build_date;
     }
 

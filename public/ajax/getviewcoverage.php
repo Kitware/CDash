@@ -340,7 +340,7 @@ if ($status == -1) {
     }
 
     $covfile_array = array_merge($covfile_array, $directory_array);
-    //$covfile_array = $directory_array;
+//$covfile_array = $directory_array;
 } elseif ($status == 0) {
     // Add the untested files if the coverage is low
 

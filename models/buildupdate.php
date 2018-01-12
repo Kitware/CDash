@@ -16,6 +16,7 @@
 
 // It is assumed that appropriate headers should be included before including this file
 include_once 'models/buildupdatefile.php';
+use CDash\Database;
 
 class BuildUpdate
 {
@@ -32,7 +33,7 @@ class BuildUpdate
     public $Append;
     public $UpdateId;
     public $Errors;
-    public $PDO;
+    private $PDO;
 
     public function __construct()
     {
@@ -40,7 +41,7 @@ class BuildUpdate
         $this->Command = '';
         $this->Append = false;
         $this->DuplicateSQL = '';
-        $this->PDO = get_link_identifier()->getPdo();
+        $this->PDO = Database::getInstance()->getPdo();
         global $CDASH_DB_TYPE;
         if ($CDASH_DB_TYPE !== 'pgsql') {
             $this->DuplicateSQL = 'ON DUPLICATE KEY UPDATE buildid=buildid';
@@ -50,6 +51,11 @@ class BuildUpdate
     public function AddFile($file)
     {
         $this->Files[] = $file;
+    }
+
+    public function GetFiles()
+    {
+        return $this->Files;
     }
 
     // Insert the update
@@ -254,11 +260,11 @@ class BuildUpdate
         }
 
         $sql = "
-            SELECT 
+            SELECT
                 A.*,
                 B.buildid
-            FROM 
-                buildupdate A, 
+            FROM
+                buildupdate A,
                 build2update B
             WHERE B.updateid=A.id
               AND B.buildid=:buildid
@@ -397,5 +403,60 @@ class BuildUpdate
         if (!pdo_query($query)) {
             add_last_sql_error('AssignUpdateToChild', 0, $childid);
         }
+    }
+
+    public function FillFromBuildId()
+    {
+        if (!$this->BuildId) {
+            return false;
+        }
+
+        $stmt = $this->PDO->prepare(
+            'SELECT bu.* FROM buildupdate bu
+            JOIN build2update b2u ON bu.id = b2u.updateid
+            WHERE b2u.buildid = ?');
+        if (!pdo_execute($stmt, [$this->BuildId])) {
+            return false;
+        }
+
+        $row = $stmt->fetch();
+        if (!$row) {
+            return false;
+        }
+
+        $this->UpdateId = $row['id'];
+        $this->StartTime = $row['starttime'];
+        $this->EndTime = $row['endtime'];
+        $this->Command = $row['command'];
+        $this->Type = $row['type'];
+        $this->Status = $row['status'];
+        $this->Revision = $row['revision'];
+        $this->PriorRevision = $row['priorrevision'];
+        $this->Path = $row['path'];
+
+        // Get updated files too.
+        $stmt = $this->PDO->prepare(
+            "SELECT uf.* FROM updatefile uf
+            JOIN build2update b2u ON uf.updateid = b2u.updateid
+            WHERE b2u.buildid = ?
+            ORDER BY REVERSE(RIGHT(REVERSE(filename),LOCATE('/',REVERSE(filename))))");
+        pdo_execute($stmt, [$this->BuildId]);
+        while ($row = $stmt->fetch()) {
+            $file = new BuildUpdateFile();
+            $file->Filename = $row['filename'];
+            $file->CheckinDate = $row['checkindate'];
+            $file->Author = $row['author'];
+            $file->Email = $row['email'];
+            $file->Committer = $row['committer'];
+            $file->CommitterEmail = $row['committeremail'];
+            $file->Log = $row['log'];
+            $file->Revision = $row['revision'];
+            $file->PriorRevision = $row['priorrevision'];
+            $file->Status = $row['status'];
+            $file->UpdateId = $row['updateid'];
+            $this->AddFile($file);
+        }
+
+        return true;
     }
 }

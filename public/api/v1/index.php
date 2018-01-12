@@ -198,7 +198,31 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $response['parentid'] = -1;
     }
 
-    list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $project_array['nightlytime']);
+    if (is_null($date) && isset($_GET['from']) && isset($_GET['to'])) {
+        // Honor 'to' & 'from' parameters to specify a range of dates.
+        $beginning_date = $_GET['from'];
+        $end_date = $_GET['to'];
+        list($unused, $beginning_timestamp, $unused) =
+            get_dates($beginning_date, $project_array['nightlytime']);
+        list($previousdate, $end_timestamp, $nextdate) =
+            get_dates($end_date, $project_array['nightlytime']);
+        $currentstarttime = $end_timestamp;
+        $date = $end_date;
+        $response['begin'] = $beginning_date;
+        $response['end'] = $end_date;
+    } else {
+        list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $project_array['nightlytime']);
+        if ($currentstarttime > time() && !isset($_GET['parentid'])) {
+            $response['error'] = 'CDash cannot predict the future (yet)';
+            echo json_encode($response);
+            return;
+        }
+        $beginning_timestamp = $currentstarttime;
+    }
+    $datetime = new DateTime();
+    $datetime->setTimeStamp($currentstarttime);
+    $datetime->add(new DateInterval('P1D'));
+    $end_timestamp = $datetime->getTimestamp();
 
     // Main dashboard section
     get_dashboard_JSON($projectname, $date, $response);
@@ -214,16 +238,8 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $response['proedition'] = $pro->GetEdition(1);
     }
 
-    if ($currentstarttime > time() && !isset($_GET['parentid'])) {
-        $response['error'] = 'CDash cannot predict the future (yet)';
-        echo json_encode($response);
-        return;
-    }
-
     // Menu definition
     $response['menu'] = array();
-    $beginning_timestamp = $currentstarttime;
-    $end_timestamp = $currentstarttime + 3600 * 24;
     $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
     $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
     if ($project_instance->GetNumberOfSubProjects($end_UTCDate) > 0) {
@@ -314,26 +330,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
     if (isset($testingdataurl)) {
         $response['testingdataurl'] = $testingdataurl;
     }
-
-    // updates
-    $updates_response = array();
-
-    $gmdate = gmdate(FMT_DATE, $currentstarttime);
-    $updates_response['url'] = 'viewChanges.php?project=' . urlencode($projectname) . '&amp;date=' . $gmdate;
-
-    $dailyupdate = pdo_query("SELECT count(ds.dailyupdateid),count(distinct ds.author)
-            FROM dailyupdate AS d LEFT JOIN dailyupdatefile AS ds ON (ds.dailyupdateid = d.id)
-            WHERE d.date='$gmdate' and d.projectid='$projectid' GROUP BY ds.dailyupdateid");
-
-    if (pdo_num_rows($dailyupdate) > 0) {
-        $dailupdate_array = pdo_fetch_array($dailyupdate);
-        $updates_response['nchanges'] = $dailupdate_array[0];
-        $updates_response['nauthors'] = $dailupdate_array[1];
-    } else {
-        $updates_response['nchanges'] = -1;
-    }
-    $updates_response['timestamp'] = date('l, F d Y - H:i T', $currentstarttime);
-    $response['updates'] = $updates_response;
 
     // This array is used to track if expected builds are found or not.
     $received_builds = array();

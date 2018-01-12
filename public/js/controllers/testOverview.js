@@ -81,12 +81,13 @@ CDash.controller('TestOverviewController',
       $.cookie('cdash_test_overview_sort', $scope.orderByFields);
     };
 
-    $scope.formSubmit = function() {
+    $scope.updateSelection = function() {
       var uri = '//' + location.host + location.pathname + '?project=' + $scope.cdash.projectname_encoded;
-      if ($scope.cdash.to_date && $scope.cdash.from_date) {
-        uri += '&from=' + $scope.cdash.from_date + '&to=' + $scope.cdash.to_date;
+      // Include date range from time chart.
+      if ($scope.cdash.begin_date == $scope.cdash.end_date) {
+        uri += '&date=' + $scope.cdash.begin_date;
       } else {
-        uri += '&date=' + $scope.cdash.date;
+        uri += '&from=' + $scope.cdash.begin_date + '&to=' + $scope.cdash.end_date;
       }
       if ($scope.cdash.selectedGroup.id > 0) {
         uri += '&group=' + $scope.cdash.selectedGroup.id;

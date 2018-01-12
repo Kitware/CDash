@@ -664,7 +664,7 @@ function get_server_URI($localhost = false)
     $currentURI = substr($currentURI, 0, strrpos($currentURI, '/'));
 
     // Trim off any subdirectories too.
-    $subdirs = array('/ajax/', '/api/', '/iphone/', '/mobile/');
+    $subdirs = array('/ajax/', '/api/');
     foreach ($subdirs as $subdir) {
         $pos = strpos($currentURI, $subdir);
         if ($pos !== false) {
@@ -2035,7 +2035,7 @@ function get_dashboard_JSON($projectname, $date, &$response)
             $response['user']['admin'] = 1;
         }
     }
-    $response['userid'] = $userid;
+    $response['user']['id'] = $userid;
 }
 
 function get_dashboard_JSON_by_name($projectname, $date, &$response)

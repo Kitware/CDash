@@ -167,8 +167,7 @@ $query = "
     LEFT JOIN site AS s ON (s.id = b.siteid)
     WHERE t.name='$testName' AND
         b.projectid = '$projectid' AND
-        b.starttime BETWEEN '$beginning_UTCDate' AND '$end_UTCDate'
-    ORDER BY buildid";
+        b.starttime BETWEEN '$beginning_UTCDate' AND '$end_UTCDate'";
 $result = pdo_query($query);
 
 // If user wants to export as CSV file.

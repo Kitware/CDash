@@ -30,7 +30,7 @@ pdo_select_db("$CDASH_DB_NAME", $db);
 $build = get_request_build();
 
 $method = $_SERVER['REQUEST_METHOD'];
-// Make sure the user is an admin before procedding with non-read-only methods.
+// Make sure the user is an admin before proceeding with non-read-only methods.
 if ($method != 'GET') {
     $userid = $_SESSION['cdash']['loginid'];
     if (!isset($userid) || !is_numeric($userid)) {

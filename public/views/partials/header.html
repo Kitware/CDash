@@ -2,11 +2,11 @@
   <div id="headertop">
     <div id="topmenu">
       <a href="user.php">
-        <span ng-if="::cdash.user.id > 0">My CDash</span>
-        <span ng-if="::!cdash.user.id || cdash.user.id == 0">Login</span>
+        <span ng-if="cdash.user.id > 0">My CDash</span>
+        <span ng-if="!cdash.user.id || cdash.user.id == 0">Login</span>
       </a>
       <a href="index.php">All Dashboards</a>
-      <a href="user.php?logout=1" ng-if="::cdash.user.id > 0">Log Out</a>
+      <a href="user.php?logout=1" ng-if="cdash.user.id > 0">Log Out</a>
     </div>
 
     <div id="datetime"> {{::cdash.datetime}} </div>
@@ -20,8 +20,8 @@
   <div id="headerbottom">
     <div id="headerlogo">
       <a ng-href="{{::cdash.home}}">
-        <img ng-if="::cdash.logoid != 0" id="projectlogo" border="0" height="50px" ng-src="displayImage.php?imgid={{::cdash.logoid}}"/>
-        <img ng-if="::!cdash.logoid || cdash.logoid==0" id="projectlogo" border="0" height="50px" src="img/cdash.png"/>
+        <img ng-if="cdash.logoid != 0" id="projectlogo" border="0" height="50px" ng-src="displayImage.php?imgid={{::cdash.logoid}}"/>
+        <img ng-if="!cdash.logoid || cdash.logoid==0" id="projectlogo" border="0" height="50px" src="img/cdash.png"/>
       </a>
     </div>
     <div id="headername">
@@ -43,11 +43,6 @@
             <li>
               <a ng-href="overview.php?project={{::cdash.projectname_encoded}}&date={{::cdash.date}}">
                 Overview
-              </a>
-            </li>
-            <li>
-              <a ng-href="viewChanges.php?project={{::cdash.projectname_encoded}}&date={{::cdash.date}}{{::cdash.extraurl}}">
-                Updates
               </a>
             </li>
             <li>
