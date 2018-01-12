@@ -44,9 +44,6 @@ if ($projectname != null) {
 
 $start = microtime_float();
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
-
 if ($projectname == '') {
     $project_array = pdo_single_row_query('SELECT * FROM project LIMIT 1');
 } else {
