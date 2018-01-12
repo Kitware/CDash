@@ -160,7 +160,7 @@ function get_project_from_request()
     if (!$Project->Exists()) {
         json_error_response(['error' => 'Project does not exist']);
     }
-    return $Project;
+    return can_access_project($Project->Id) ? $Project : null;
 }
 
 /**
