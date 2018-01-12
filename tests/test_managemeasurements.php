@@ -128,6 +128,28 @@ class ManageMeasurementsTestCase extends KWWebTestCase
             }
         }
 
+        // Local function to validate test results returned by the API.
+        function validate_test($test_name, $num_procs, $proc_time, $page)
+        {
+            if ($test_name == 'Test3Procs') {
+                if ($num_procs != 3) {
+                    $this->fail("Expected 3 processors on $page, found $num_procs");
+                }
+                if ($proc_time != 4.2) {
+                    $this->fail("Expected 4.2 proc time on $page, found $proc_time");
+                }
+            } elseif ($test_name == 'Test5Procs') {
+                if ($num_procs != 5) {
+                    $this->fail("Expected 5 processors on $page, found $num_procs");
+                }
+                if ($proc_time != 6.5) {
+                    $this->fail("Expected 6.5 proc time on $page, found $proc_time");
+                }
+            } else {
+                $this->fail("Unexpected test $test_name on $page");
+            }
+        }
+
         // Verify that the 'Processors' measurement is displayed on viewTest.php.
         $this->get($this->url . "/api/v1/viewTest.php?buildid=$this->BuildId");
         $content = $this->getBrowser()->getContent();
@@ -148,23 +170,7 @@ class ManageMeasurementsTestCase extends KWWebTestCase
             $test_name = $test['name'];
             $num_procs = $test['measurements'][0];
             $proc_time = $test['procTimeFull'];
-            if ($test_name == 'Test3Procs') {
-                if ($num_procs != 3) {
-                    $this->fail("Expected 3 processors on viewTest.php, found $num_procs");
-                }
-                if ($proc_time != 4.2) {
-                    $this->fail("Expected 4.2 proc time, found $proc_time");
-                }
-            } elseif ($test_name == 'Test5Procs') {
-                if ($num_procs != 5) {
-                    $this->fail("Expected 5 processors on viewTest.php, found $num_procs");
-                }
-                if ($proc_time != 6.5) {
-                    $this->fail("Expected 6.5 proc time, found $proc_time");
-                }
-            } else {
-                $this->fail("Unexpected test $test_name");
-            }
+            validate_test($test_name, $num_procs, $proc_time, 'viewTest.php');
         }
 
         // Verify that 'Processors' is also displayed on testSummary.php.
@@ -192,7 +198,46 @@ class ManageMeasurementsTestCase extends KWWebTestCase
             $this->fail("Expected proctime to be 6.5, found $found");
         }
 
+        // Check queryTests.php for this extra data too.
+        $this->get($this->url . '/api/v1/queryTests.php?project=InsightExample&date=2017-08-29');
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        if ($jsonobj['hasprocessors'] !== true) {
+            $this->fail("hasprocessors not true for queryTests.php");
+        }
+        foreach ($jsonobj['builds'] as $build) {
+            validate_test($build['testname'], $build['nprocs'], $build['procTime'], 'queryTests.php');
+        }
+
         // Perform similar checks for the subproject case.
+        function validate_subproject_test($test_name, $num_procs, $proc_time, $page)
+        {
+            if ($test_name == 'experimentalFail1') {
+                if ($num_procs != 2) {
+                    $this->fail("Expected 2 processors on $page, found $num_procs");
+                }
+                if ($proc_time != 2.2) {
+                    $this->fail("Expected 2.2 proc time on $page, found $proc_time");
+                }
+            } elseif ($test_name == 'experimentalFail2') {
+                if ($num_procs != 3) {
+                    $this->fail("Expected 3 processors on $page, found $num_procs");
+                }
+                if ($proc_time != 6.6) {
+                    $this->fail("Expected 6.6 proc time on $page, found $proc_time");
+                }
+            } elseif ($test_name == 'production') {
+                if ($num_procs != 4) {
+                    $this->fail("Expected 4 processors on $page, found $num_procs");
+                }
+                if ($proc_time != 13.2) {
+                    $this->fail("Expected 13.2 proc time on $page, found $proc_time");
+                }
+            } else {
+                $this->fail("Unexpected test $test_name on $page");
+            }
+        }
+
         $this->get($this->url . "/api/v1/viewTest.php?buildid=$this->SubProjectBuildId");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
@@ -212,30 +257,17 @@ class ManageMeasurementsTestCase extends KWWebTestCase
             $test_name = $test['name'];
             $num_procs = $test['measurements'][0];
             $proc_time = $test['procTimeFull'];
-            if ($test_name == 'experimentalFail1') {
-                if ($num_procs != 2) {
-                    $this->fail("Expected 2 processors on viewTest.php, found $num_procs");
-                }
-                if ($proc_time != 2.2) {
-                    $this->fail("Expected 2.2 proc time, found $proc_time");
-                }
-            } elseif ($test_name == 'experimentalFail2') {
-                if ($num_procs != 3) {
-                    $this->fail("Expected 3 processors on viewTest.php, found $num_procs");
-                }
-                if ($proc_time != 6.6) {
-                    $this->fail("Expected 6.6 proc time, found $proc_time");
-                }
-            } elseif ($test_name == 'production') {
-                if ($num_procs != 4) {
-                    $this->fail("Expected 4 processors on viewTest.php, found $num_procs");
-                }
-                if ($proc_time != 13.2) {
-                    $this->fail("Expected 13.2 proc time, found $proc_time");
-                }
-            } else {
-                $this->fail("Unexpected test $test_name");
-            }
+            validate_subproject_test($test_name, $num_procs, $proc_time, 'viewTest.php');
+        }
+
+        $this->get($this->url . '/api/v1/queryTests.php?project=SubProjectExample&date=2017-08-29');
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        if ($jsonobj['hasprocessors'] !== true) {
+            $this->fail("hasprocessors not true for queryTests.php");
+        }
+        foreach ($jsonobj['builds'] as $build) {
+            validate_subproject_test($build['testname'], $build['nprocs'], $build['procTime'], 'queryTests.php');
         }
 
         // Verify that correct Proc Time values are shown on index.php for
