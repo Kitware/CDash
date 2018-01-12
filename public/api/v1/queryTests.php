@@ -22,6 +22,13 @@ require_once 'include/api_common.php';
 include 'include/version.php';
 require_once 'include/filterdataFunctions.php';
 include_once 'models/build.php';
+include_once 'models/project.php';
+
+$start = microtime_float();
+
+// Handle required parameters: project and page.
+$project = get_project_from_request();
+$project->Fill();
 
 @$date = $_GET['date'];
 if ($date != null) {
@@ -37,33 +44,14 @@ if (isset($_GET['parentid'])) {
     $date = $parent_build->GetDate();
 }
 
-@$projectname = $_GET['project'];
-if ($projectname != null) {
-    $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
-}
-
-$start = microtime_float();
-
-if ($projectname == '') {
-    $project_array = pdo_single_row_query('SELECT * FROM project LIMIT 1');
-} else {
-    $project_array = pdo_single_row_query("SELECT * FROM project WHERE name='$projectname'");
-}
-
-if (!can_access_project($project_array['id'])) {
-    return;
-}
-
 list($previousdate, $currentstarttime, $nextdate) =
-    get_dates($date, $project_array['nightlytime']);
-
-$projectname = $project_array['name'];
+    get_dates($date, $project->NightlyTime);
 
 $response = begin_JSON_response();
-$response['title'] = "CDash : $projectname";
+$response['title'] = "CDash : $project->Name";
 $response['showcalendar'] = 1;
 
-get_dashboard_JSON_by_name($projectname, $date, $response);
+get_dashboard_JSON_by_name($project->Name, $date, $response);
 
 // Filters:
 //
@@ -80,7 +68,7 @@ $response['filterurl'] = get_filterurl();
 // Menu
 $menu = array();
 $limit_param = '&limit=' . $filterdata['limit'];
-$base_url = 'queryTests.php?project=' . urlencode($project_array['name']);
+$base_url = 'queryTests.php?project=' . urlencode($project->Name);
 if (isset($_GET['parentid'])) {
     // When a parentid is specified, we should link to the next build,
     // not the next day.
@@ -88,7 +76,7 @@ if (isset($_GET['parentid'])) {
     $current_buildid = $parent_build->GetCurrentBuildId();
     $next_buildid = $parent_build->GetNextBuildId();
 
-    $menu['back'] = 'index.php?project=' . urlencode($project_array['name']) . '&parentid=' . $_GET['parentid'];
+    $menu['back'] = 'index.php?project=' . urlencode($project->Name) . '&parentid=' . $_GET['parentid'];
 
     if ($previous_buildid > 0) {
         $menu['previous'] = "$base_url&parentid=$previous_buildid" . $limit_param;
@@ -105,9 +93,9 @@ if (isset($_GET['parentid'])) {
     }
 } else {
     if ($date == '') {
-        $back = 'index.php?project=' . urlencode($project_array['name']);
+        $back = 'index.php?project=' . urlencode($project->Name);
     } else {
-        $back = 'index.php?project=' . urlencode($project_array['name']) . '&date=' . $date;
+        $back = 'index.php?project=' . urlencode($project->Name) . '&date=' . $date;
     }
     $menu['back'] = $back;
 
@@ -125,9 +113,9 @@ if (isset($_GET['parentid'])) {
 $response['menu'] = $menu;
 
 // Project
-$project = array();
-$project['showtesttime'] = $project_array['showtesttime'];
-$response['project'] = $project;
+$project_response = array();
+$project_response['showtesttime'] = $project->ShowTestTime;
+$response['project'] = $project_response;
 
 //get information about all the builds for the given date and project
 $builds = array();
@@ -139,7 +127,7 @@ $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
 $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
 
 // Add the date/time
-$builds['projectid'] = $project_array['id'];
+$builds['projectid'] = $project->Id;
 $builds['currentstarttime'] = $currentstarttime;
 $builds['teststarttime'] = date(FMT_DATETIME, $beginning_timestamp);
 $builds['testendtime'] = date(FMT_DATETIME, $end_timestamp);
@@ -166,7 +154,7 @@ $query = "SELECT
           JOIN build2test ON (b.id = build2test.buildid)
           JOIN site ON (b.siteid = site.id)
           JOIN test ON (test.id = build2test.testid)
-          WHERE b.projectid = '" . $project_array['id'] . "' " .
+          WHERE b.projectid = '" . $project->Id . "' " .
     $parent_clause . $date_clause . ' ' .
     $filter_sql .
     'ORDER BY build2test.status, test.name' .
@@ -219,8 +207,8 @@ while ($row = pdo_fetch_array($result)) {
             break;
     }
 
-    if ($project_array['showtesttime']) {
-        if ($row['timestatus'] < $project_array['testtimemaxstatus']) {
+    if ($project->ShowTestTime) {
+        if ($row['timestatus'] < $project->TestTimeMaxStatus) {
             $build['timestatus'] = 'Passed';
             $build['timestatusclass'] = 'normal';
         } else {
