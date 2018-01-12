@@ -49,7 +49,7 @@ function can_access_project($projectid)
         return true;
     }
 
-    $response = array();
+    $response = [];
     $logged_in = false;
     $userid = '';
 
@@ -146,10 +146,9 @@ function get_request_build_id($required = true)
 /**
  * Pull projectname from request and lookup its ID.
  *
- * @param bool $required
  * @return Project
  */
-function get_project_from_request($required = true)
+function get_project_from_request()
 {
     if (!isset($_REQUEST['project'])) {
         json_error_response(['error' => 'Valid project required']);
