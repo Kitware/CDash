@@ -22,6 +22,15 @@ require_once 'include/api_common.php';
 include 'include/version.php';
 require_once 'include/filterdataFunctions.php';
 include_once 'models/build.php';
+include_once 'models/project.php';
+
+use CDash\Database;
+
+$start = microtime_float();
+
+// Handle required parameters: project and page.
+$project = get_project_from_request();
+$project->Fill();
 
 @$date = $_GET['date'];
 if ($date != null) {
@@ -37,36 +46,14 @@ if (isset($_GET['parentid'])) {
     $date = $parent_build->GetDate();
 }
 
-@$projectname = $_GET['project'];
-if ($projectname != null) {
-    $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
-}
-
-$start = microtime_float();
-
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
-
-if ($projectname == '') {
-    $project_array = pdo_single_row_query('SELECT * FROM project LIMIT 1');
-} else {
-    $project_array = pdo_single_row_query("SELECT * FROM project WHERE name='$projectname'");
-}
-
-if (!can_access_project($project_array['id'])) {
-    return;
-}
-
 list($previousdate, $currentstarttime, $nextdate) =
-    get_dates($date, $project_array['nightlytime']);
-
-$projectname = $project_array['name'];
+    get_dates($date, $project->NightlyTime);
 
 $response = begin_JSON_response();
-$response['title'] = "CDash : $projectname";
+$response['title'] = "CDash : $project->Name";
 $response['showcalendar'] = 1;
 
-get_dashboard_JSON_by_name($projectname, $date, $response);
+get_dashboard_JSON_by_name($project->Name, $date, $response);
 
 // Filters:
 //
@@ -81,9 +68,9 @@ if ($filterdata['limit'] > 0) {
 $response['filterurl'] = get_filterurl();
 
 // Menu
-$menu = array();
+$menu = [];
 $limit_param = '&limit=' . $filterdata['limit'];
-$base_url = 'queryTests.php?project=' . urlencode($project_array['name']);
+$base_url = 'queryTests.php?project=' . urlencode($project->Name);
 if (isset($_GET['parentid'])) {
     // When a parentid is specified, we should link to the next build,
     // not the next day.
@@ -91,7 +78,7 @@ if (isset($_GET['parentid'])) {
     $current_buildid = $parent_build->GetCurrentBuildId();
     $next_buildid = $parent_build->GetNextBuildId();
 
-    $menu['back'] = 'index.php?project=' . urlencode($project_array['name']) . '&parentid=' . $_GET['parentid'];
+    $menu['back'] = 'index.php?project=' . urlencode($project->Name) . '&parentid=' . $_GET['parentid'];
 
     if ($previous_buildid > 0) {
         $menu['previous'] = "$base_url&parentid=$previous_buildid" . $limit_param;
@@ -108,9 +95,9 @@ if (isset($_GET['parentid'])) {
     }
 } else {
     if ($date == '') {
-        $back = 'index.php?project=' . urlencode($project_array['name']);
+        $back = 'index.php?project=' . urlencode($project->Name);
     } else {
-        $back = 'index.php?project=' . urlencode($project_array['name']) . '&date=' . $date;
+        $back = 'index.php?project=' . urlencode($project->Name) . '&date=' . $date;
     }
     $menu['back'] = $back;
 
@@ -128,12 +115,12 @@ if (isset($_GET['parentid'])) {
 $response['menu'] = $menu;
 
 // Project
-$project = array();
-$project['showtesttime'] = $project_array['showtesttime'];
-$response['project'] = $project;
+$project_response = [];
+$project_response['showtesttime'] = $project->ShowTestTime;
+$response['project'] = $project_response;
 
 //get information about all the builds for the given date and project
-$builds = array();
+$builds = [];
 
 $beginning_timestamp = $currentstarttime;
 $end_timestamp = $currentstarttime + 3600 * 24;
@@ -142,48 +129,69 @@ $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
 $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
 
 // Add the date/time
-$builds['projectid'] = $project_array['id'];
+$builds['projectid'] = $project->Id;
 $builds['currentstarttime'] = $currentstarttime;
 $builds['teststarttime'] = date(FMT_DATETIME, $beginning_timestamp);
 $builds['testendtime'] = date(FMT_DATETIME, $end_timestamp);
 
-$date_clause = '';
-if (!$filterdata['hasdateclause']) {
-    $date_clause = "AND b.starttime>='$beginning_UTCDate' AND b.starttime<'$end_UTCDate'";
+// Start constructing the main SQL query for this page.
+$pdo = Database::getInstance()->getPdo();
+$query_params = [];
+
+// Check if we should display 'Proc Time'.
+$response['hasprocessors'] = false;
+$proc_select = '';
+$proc_join = '';
+$proc_clause = '';
+$stmt = $pdo->prepare(
+    "SELECT * FROM measurement WHERE projectid = ? AND name = 'Processors'");
+pdo_execute($stmt, [$project->Id]);
+$row = $stmt->fetch();
+if ($row['summarypage'] == 1) {
+    $response['hasprocessors'] = true;
+    $proc_select = ', tm.value';
+    $proc_join =
+        'JOIN testmeasurement tm ON (test.id = tm.testid)';
+    $proc_clause = "AND tm.name = 'Processors'";
 }
 
+$date_clause = '';
 $parent_clause = '';
 if (isset($_GET['parentid'])) {
     // If we have a parentid, then we should only show children of that build.
     // Date becomes irrelevant in this case.
-    $parent_clause = 'AND (b.parentid = ' . qnum($_GET['parentid']) . ') ';
-    $date_clause = '';
+    $parent_clause = 'AND b.parentid = :parentid';
+    $query_params[':parentid'] = $_GET['parentid'];
+} elseif (!$filterdata['hasdateclause']) {
+    $date_clause = 'AND b.starttime >= :starttime AND b.starttime < :endtime';
+    $query_params[':starttime'] = $beginning_UTCDate;
+    $query_params[':endtime'] = $end_UTCDate;
 }
 
-$query = "SELECT
-            b.id, b.name, b.starttime, b.siteid,b.parentid,
-            build2test.testid AS testid, build2test.status, build2test.time, build2test.timestatus,
-            site.name AS sitename,
-            test.name AS testname, test.details
-          FROM build AS b
-          JOIN build2test ON (b.id = build2test.buildid)
-          JOIN site ON (b.siteid = site.id)
-          JOIN test ON (test.id = build2test.testid)
-          WHERE b.projectid = '" . $project_array['id'] . "' " .
-    $parent_clause . $date_clause . ' ' .
-    $filter_sql .
-    'ORDER BY build2test.status, test.name' .
-    $limit_sql;
-
-$result = pdo_query($query);
+$sql = "SELECT b.id, b.name, b.starttime, b.siteid,b.parentid,
+               build2test.testid AS testid, build2test.status,
+               build2test.time, build2test.timestatus, site.name AS sitename,
+               test.name AS testname, test.details $proc_select
+        FROM build AS b
+        JOIN build2test ON (b.id = build2test.buildid)
+        JOIN site ON (b.siteid = site.id)
+        JOIN test ON (test.id = build2test.testid)
+        $proc_join
+        WHERE b.projectid = :projectid
+              $parent_clause $date_clause $proc_clause $filter_sql
+        ORDER BY build2test.status, test.name
+        $limit_sql";
+$query_params[':projectid'] = $project->Id;
+$stmt = $pdo->prepare($sql);
+pdo_execute($stmt, $query_params);
 
 // Builds
-$builds = array();
-while ($row = pdo_fetch_array($result)) {
+$builds = [];
+while ($row = $stmt->fetch()) {
     $buildid = $row['id'];
     $testid = $row['testid'];
 
-    $build = array();
+    $build = [];
 
     $build['testname'] = $row['testname'];
     $build['site'] = $row['sitename'];
@@ -194,6 +202,8 @@ while ($row = pdo_fetch_array($result)) {
     // use the default timezone, same as index.php
 
     $build['time'] = $row['time'];
+    $build['prettyTime'] = time_difference($build['time'], true, '', true);
+
     $build['details'] = $row['details'] . "\n";
 
     $siteLink = 'viewSite.php?siteid=' . $row['siteid'];
@@ -222,14 +232,24 @@ while ($row = pdo_fetch_array($result)) {
             break;
     }
 
-    if ($project_array['showtesttime']) {
-        if ($row['timestatus'] < $project_array['testtimemaxstatus']) {
+    if ($project->ShowTestTime) {
+        if ($row['timestatus'] < $project->TestTimeMaxStatus) {
             $build['timestatus'] = 'Passed';
             $build['timestatusclass'] = 'normal';
         } else {
             $build['timestatus'] = 'Failed';
             $build['timestatusclass'] = 'error';
         }
+    }
+
+    if ($response['hasprocessors']) {
+        $num_procs = $row['value'];
+        if (!$num_procs) {
+            $num_procs = 1;
+        }
+        $build['nprocs'] = $num_procs;
+        $build['procTime'] = $row['time'] * $num_procs;
+        $build['prettyProcTime'] = time_difference($build['procTime'], true, '', true);
     }
 
     $builds[] = $build;
