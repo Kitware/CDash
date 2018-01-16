@@ -22,9 +22,6 @@ use CDash\Database;
 
 // Handle required parameters: project and page.
 $Project = get_project_from_request();
-if (!can_access_project($Project->Id)) {
-    return;
-}
 $Project->Fill();
 
 if (!isset($_GET['page'])) {
