@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Linux-c++"
+	BuildStamp="20180119-1440-Experimental"
+	Name="nagas"
+	Generator="ctest-3.9.6"
+	CompilerName="/usr/bin/c++"
+	CompilerVersion="5.4.0"
+	OSName="Linux"
+	Hostname="nagas"
+	OSRelease="4.13.0-26-generic"
+	OSVersion="#29~16.04.2-Ubuntu SMP Tue Jan 9 22:00:44 UTC 2018"
+	OSPlatform="x86_64"
+	Is64Bits="1"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="158"
+	ProcessorCacheSize="8192"
+	NumberOfLogicalCPU="8"
+	NumberOfPhysicalCPU="4"
+	TotalVirtualMemory="32618"
+	TotalPhysicalMemory="32020"
+	LogicalProcessorsPerPhysical="2"
+	ProcessorClockFrequency="2900.00"
+	>
+	<Coverage>
+		<StartDateTime>Jan 19 09:41 EST</StartDateTime>
+		<StartTime>1516372865</StartTime>
+		<File Name="goodbye.cpp" FullPath="./core/utils/goodbye.cpp" Covered="true">
+			<LOCTested>3</LOCTested>
+			<LOCUnTested>0</LOCUnTested>
+			<PercentCoverage>100.00</PercentCoverage>
+			<CoverageMetric>1.00</CoverageMetric>
+		</File>
+		<File Name="main.cpp" FullPath="./main.cpp" Covered="true">
+			<LOCTested>4</LOCTested>
+			<LOCUnTested>0</LOCUnTested>
+			<PercentCoverage>100.00</PercentCoverage>
+			<CoverageMetric>1.00</CoverageMetric>
+		</File>
+		<File Name="hello.cpp" FullPath="./utils/hello.cpp" Covered="true">
+			<LOCTested>3</LOCTested>
+			<LOCUnTested>0</LOCUnTested>
+			<PercentCoverage>100.00</PercentCoverage>
+			<CoverageMetric>1.00</CoverageMetric>
+		</File>
+		<LOCTested>10</LOCTested>
+		<LOCUntested>0</LOCUntested>
+		<LOC>10</LOC>
+		<PercentCoverage>100.00</PercentCoverage>
+		<EndDateTime>Jan 19 09:41 EST</EndDateTime>
+		<EndTime>1516372865</EndTime>
+		<ElapsedMinutes>0.00</ElapsedMinutes>
+	</Coverage>
+</Site>
