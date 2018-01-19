@@ -2412,20 +2412,44 @@ class Build
             return;
         }
 
+        // Avoid a race condition when parallel processing.
+        pdo_begin_transaction();
+        $select_stmt = $this->PDO->prepare(
+            'SELECT id FROM build WHERE id = :id FOR UPDATE');
+        if (!pdo_execute($select_stmt, [':id' => $this->Id])) {
+            $this->PDO->rollBack();
+            return;
+        }
+
         // Update build step duration for this build.
-        $stmt = $this->PDO->prepare(
-            'UPDATE build SET buildduration = buildduration + ?
-            WHERE id = ?');
-        pdo_execute($stmt, [$duration, $this->Id]);
+        $update_stmt = $this->PDO->prepare(
+            'UPDATE build SET buildduration = buildduration + :duration
+            WHERE id = :id');
+        if (!pdo_execute($update_stmt,
+                    [':duration' => $duration, ':id' => $this->Id])) {
+            $this->PDO->rollBack();
+            return;
+        }
+        $this->PDO->commit();
 
         if (!$update_parent) {
             return;
         }
-        // If this is a child build, add this duration
-        // to the parent's sum.
+
+        // If this is a child build, add this duration to the parent's sum.
         $this->SetParentId($this->LookupParentBuildId());
         if ($this->ParentId > 0) {
-            pdo_execute($stmt, [$duration, $this->ParentId]);
+            pdo_begin_transaction();
+            if (!pdo_execute($select_stmt, [':id' => $this->ParentId])) {
+                $this->PDO->rollBack();
+                return;
+            }
+            if (!pdo_execute($update_stmt,
+                        [':duration' => $duration, ':id' => $this->ParentId])) {
+                $this->PDO->rollBack();
+                return;
+            }
+            $this->PDO->commit();
         }
     }
 
