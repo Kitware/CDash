@@ -151,6 +151,12 @@ if (false === $coveragefile) {
         __FILE__, LOG_ERR);
 }
 
+// Add the coverage type
+$status = -1;
+if (isset($_GET['status'])) {
+    $status = pdo_real_escape_numeric($_GET['status']);
+}
+
 $covfile_array = array();
 while ($coveragefile_array = pdo_fetch_array($coveragefile)) {
     $covfile['filename'] = substr($coveragefile_array['fullpath'], strrpos($coveragefile_array['fullpath'], '/') + 1);
@@ -211,13 +217,9 @@ while ($coveragefile_array = pdo_fetch_array($coveragefile)) {
     if (isset($coveragefile_array['userid'])) {
         $covfile['user'] = $coveragefile_array['userid'];
     }
-    $covfile_array[] = $covfile;
-}
-
-// Add the coverage type
-$status = -1;
-if (isset($_GET['status'])) {
-    $status = pdo_real_escape_numeric($_GET['status']);
+    if ($covfile['coveragemetric'] != 1.0 || $status != -1) {
+        $covfile_array[] = $covfile;
+    }
 }
 
 // Do the sorting
