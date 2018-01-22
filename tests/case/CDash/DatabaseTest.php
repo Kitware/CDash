@@ -144,4 +144,42 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $actual);
     }
+
+    public function testExecute()
+    {
+        $input_params = ['param1', 'param2'];
+        /** @var PDOStatement|PHPUnit_Framework_MockObject_MockObject $stmt */
+        $stmt = $this->getMock('\PDOStatement');
+        $stmt
+            ->expects($this->once())
+            ->method('execute')
+            ->with($this->equalTo($input_params));
+
+        $db = Database::getInstance();
+        $db->execute($stmt, $input_params);
+    }
+
+    public function testExecuteStatementLogsRuntimeException()
+    {
+        $input_params = ['param1', 'param2'];
+
+        /** @var PDOStatement|PHPUnit_Framework_MockObject_MockObject $stmt */
+        $stmt = $this->getMock('\PDOStatement');
+        $stmt
+            ->expects($this->once())
+            ->method('execute')
+            ->with($this->equalTo($input_params))
+            ->willReturn(false);
+
+        $stmt
+            ->expects($this->once())
+            ->method('errorInfo')
+            ->willReturn(['54321', '12345', 'This is an exceptional message' ]);
+
+        $db = Database::getInstance();
+        $db->execute($stmt, $input_params);
+
+        $log = Log::getInstance()->getLogEntries();
+        $this->assertContains('This is an exceptional message', $log[0]['message']);
+    }
 }
