@@ -182,7 +182,7 @@ $test_response['details'] = $testRow['details'];
 // Helper function to remove bad characters for XML parser
 function utf8_for_xml($string)
 {
-    return preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', ' ', $string);
+    return preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{001b}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', ' ', $string);
 }
 
 if ($CDASH_USE_COMPRESSION) {

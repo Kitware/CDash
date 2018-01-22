@@ -86,6 +86,7 @@
              'node_modules/angular-clipboard/angular-clipboard.js',
              'node_modules/angular-ui-bootstrap/dist/ui-boostrap.js',
              'node_modules/angular-ui-sortable/dist/sortable.js',
+             'node_modules/ansi_up/ansi_up.js',
              'node_modules/as-jqplot/dist/jquery.jqplot.js',
              'node_modules/as-jqplot/dist/plugins/jqplot.dateAxisRenderer.js',
              'node_modules/as-jqplot/dist/plugins/jqplot.highlighter.js',

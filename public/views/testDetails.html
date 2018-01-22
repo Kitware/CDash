@@ -147,7 +147,7 @@
 
       <br/>
       <b>Test output</b>
-      <pre>{{cdash.test.output}}</pre>
+      <pre ng-bind-html="cdash.test.output | ctestNonXmlCharEscape | terminalColors | trustAsHtml"></pre>
     </div>
 
     <!-- FOOTER -->
