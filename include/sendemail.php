@@ -1083,8 +1083,18 @@ function generate_broken_build_message($emailtext, $Build, $Project)
     // Title
     $titleerrors .= '):';
     $title = 'FAILED ' . $titleerrors . ' ' . $Project->Name;
+    // In the sendmail.php file, in the sendmail function configure errors are now handled
+    // with their own logic, and the sendmail logic removes the 'configure_error' key therefore
+    // we should be able to verify that the following is a configure category by checking to see
+    // if the 'configure_error' key exists in the category array of keys.
+    $categories = array_keys($emailtext['category']);
 
-    if ($Build->GetSubProjectName()) {
+    $useSubProjectName = $Build->GetSubProjectName() &&
+        !in_array('configure_errors', $categories);
+
+    // Because a configure error is not subproject specific, remove this from the output
+    // if this is a configure_error.
+    if ($useSubProjectName) {
         $title .= '/' . $Build->GetSubProjectName();
     }
     $title .= ' - ' . $Build->Name . ' - ' . $Build->Type;
@@ -1102,15 +1112,9 @@ function generate_broken_build_message($emailtext, $Build, $Project)
 
     $body .= 'Project: ' . $Project->Name . "\n";
 
-    // In the sendmail.php file, in the sendmail function configure errors are now handled
-    // with their own logic, and the sendmail logic removes the 'configure_error' key therefore
-    // we should be able to verify that the following is a configure category by checking to see
-    // if the 'configure_error' key exists in the category array of keys.
-    $categories = array_keys($emailtext['category']);
-
     // Because a configure error is not subproject specific, remove this from the output
     // if this is a configure_error.
-    if ($Build->GetSubProjectName() && !in_array('configure_errors', $categories)) {
+    if ($useSubProjectName) {
         $body .= 'SubProject: ' . $Build->GetSubProjectName() . "\n";
     }
 
