@@ -10,7 +10,7 @@ describe("viewSubProjects", function() {
     element(by.linkText('SubProjects')).click();
     browser.sleep(2000);
 
-    element(by.linkText('NOX')).click();
+    element(by.linkText('Teuchos')).click();
     browser.sleep(2000);
   });
 
