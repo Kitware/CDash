@@ -10,4 +10,21 @@ describe("testDetails", function() {
     select.$('[value="TestTimeGraph"]').click();
     select.$('[value="TestPassingGraph"]').click();
   });
+
+  it("colorizes test output", function() {
+    var outputXpath = '//pre[@ng-bind-html="cdash.test.output | ctestNonXmlCharEscape | terminalColors | trustAsHtml"]';
+
+    browser.get('index.php?project=OutputColor&date=2018-01-17');
+    element(by.linkText('Linux-c++')).click();
+    element(by.linkText('View Tests Summary')).click();
+    element(by.linkText('colortest_short')).click();
+    expect(element.all(by.xpath(outputXpath + '/span')).count()).toBe(2);
+
+    browser.get('index.php?project=OutputColor&date=2018-01-17');
+    element(by.linkText('Linux-c++')).click();
+    element(by.linkText('View Tests Summary')).click();
+    element(by.linkText('colortest_long')).click();
+    expect(element.all(by.xpath(outputXpath + '/span')).count()).toBe(2);
+    expect(element.all(by.xpath(outputXpath + '/script')).count()).toBe(0);
+  });
 });
