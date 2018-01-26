@@ -90,6 +90,10 @@ class PasswordRotationTestCase extends KWWebTestCase
     {
         $this->login('jane@smith', $current);
         $content = $this->get($this->url . '/editUser.php');
+        if (!$this->SetFieldByName('oldpasswd', $current)) {
+            $this->fail('SetFieldByName on password returned false');
+            return false;
+        }
         if (!$this->SetFieldByName('passwd', $new)) {
             $this->fail('SetFieldByName on password returned false');
             return false;
