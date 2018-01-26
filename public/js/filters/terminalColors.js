@@ -5,8 +5,11 @@ CDash.filter('ctestNonXmlCharEscape', function() {
   };
 })
 .filter('terminalColors', function() {
-  return function(input) {
+  return function(input, htmlEscape) {
     var ansiUp = new AnsiUp;
+    if (htmlEscape !== undefined) {
+      ansiUp.escape_for_html = htmlEscape;
+    }
     return ansiUp.ansi_to_html(input);
   };
 })

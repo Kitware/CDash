@@ -75,5 +75,12 @@ class OutputColorTestCase extends KWWebTestCase
         }
 
         $this->assertTrue(true, 'All escape sequences found');
+
+        // Submit build data for later check in viewBuildErrors.
+        $file = dirname(__FILE__) . '/data/OutputColor/Build.xml';
+        if (!$this->submission('OutputColor', $file)) {
+            $this->fail("Failed to submit $file");
+            return;
+        }
     }
 }

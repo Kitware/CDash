@@ -30,4 +30,14 @@ describe("viewBuildError", function() {
     expect(browser.getPageSource()).toContain("some-test-subproject");
     expect(browser.getPageSource()).toContain("error: 'foo' was not declared in this scope");
   });
+
+  it("colorizes output", function() {
+    var outputXpath = '//pre[@ng-bind-html="error.precontext | ctestNonXmlCharEscape | terminalColors:false | trustAsHtml"]';
+
+    browser.get('index.php?project=OutputColor&date=2018-01-26');
+    element(by.linkText('Linux-unknown')).click();
+    element(by.linkText('View Errors Summary')).click();
+    expect(element.all(by.xpath(outputXpath + '/span')).count()).toBe(2);
+    expect(browser.getPageSource()).toContain('<a href="https://www.kitware.com/">Kitware</a>');
+  });
 });
