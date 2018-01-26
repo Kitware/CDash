@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="test_timing"
+	BuildStamp="20180125-1724-Experimental"
+	Name="elysium"
+	>
+	<Testing>
+		<StartDateTime>Jan 25 12:24 EST</StartDateTime>
+		<StartTestTime>1516901059</StartTestTime>
+		<TestList>
+			<Test>./nap</Test>
+		</TestList>
+		<Test Status="passed">
+			<Name>nap</Name>
+			<Path>.</Path>
+			<FullName>./nap</FullName>
+			<FullCommandLine>/opt/cmake/bin/cmake "-E" "sleep" "2"</FullCommandLine>
+			<Results>
+				<NamedMeasurement type="numeric/double" name="Execution Time">
+					<Value>2.00447</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Completion Status">
+					<Value>Completed</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Command Line">
+					<Value>/opt/cmake/bin/cmake "-E" "sleep" "2"</Value>
+				</NamedMeasurement>
+				<Measurement>
+					<Value></Value>
+				</Measurement>
+			</Results>
+		</Test>
+		<EndDateTime>Jan 25 12:24 EST</EndDateTime>
+		<EndTestTime>1516901061</EndTestTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Testing>
+</Site>
