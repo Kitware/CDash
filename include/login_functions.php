@@ -181,6 +181,12 @@ function ldapAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
                         $user->Id = $userid;
                         $user->Fill();
 
+                        // Prevent them from logging in with a locked password
+                        if ($user->Password == '*') {
+                            $loginerror = 'Wrong email or password.';
+                            return false;
+                        }
+
                         // If the password has changed we update
                         $passwordHash = User::PasswordHash($password);
                         if ($passwordHash === false) {

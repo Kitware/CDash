@@ -101,6 +101,7 @@ class ProjectHandler extends AbstractHandler
     {
         parent::endElement($parser, $name);
         global $CDASH_DELETE_OLD_SUBPROJECTS;
+        global $CDASH_NO_REGISTRATION;
 
         if (!$this->ProjectNameMatches) {
             return;
@@ -209,7 +210,11 @@ class ProjectHandler extends AbstractHandler
                     $User->LastName = $email;
                 }
                 $User->Email = $email;
-                $User->Password = User::PasswordHash($email);
+                if (isset($CDASH_NO_REGISTRATION) && $CDASH_NO_REGISTRATION == 1) {
+                    $User->Password = '*'; // This will never be a valid password hash
+                } else {
+                    $User->Password = User::PasswordHash($email);
+                }
                 $User->Admin = 0;
                 $userid = $User->GetIdFromEmail($email);
                 if (!$userid) {

@@ -1,0 +1,7 @@
+<Project name="NoLoginEmail">
+  <SubProject name="SubProject">
+    <EmailAddresses>
+      <Email address="sampleuser@noemail"/>
+    </EmailAddresses>
+  </SubProject>
+</Project>
