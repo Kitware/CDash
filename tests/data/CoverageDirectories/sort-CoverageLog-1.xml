@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Linux-c++"
+	BuildStamp="20180122-2022-Experimental"
+	Name="nagas"
+	Generator="ctest-3.9.6"
+	CompilerName="/usr/bin/c++"
+	CompilerVersion="5.4.0"
+	OSName="Linux"
+	Hostname="nagas"
+	OSRelease="4.13.0-26-generic"
+	OSVersion="#29~16.04.2-Ubuntu SMP Tue Jan 9 22:00:44 UTC 2018"
+	OSPlatform="x86_64"
+	Is64Bits="1"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="158"
+	ProcessorCacheSize="8192"
+	NumberOfLogicalCPU="8"
+	NumberOfPhysicalCPU="4"
+	TotalVirtualMemory="32618"
+	TotalPhysicalMemory="32020"
+	LogicalProcessorsPerPhysical="2"
+	ProcessorClockFrequency="2900"
+	>
+	<CoverageLog>
+		<StartDateTime>Jan 22 15:22 EST</StartDateTime>
+		<StartTime>1516652576</StartTime>
+		<File Name="func.cpp" FullPath="./func_99/func.cpp">
+			<Report>
+				<Line Number="0" Count="-1">#include "func.hpp"</Line>
+				<Line Number="1" Count="-1"></Line>
+				<Line Number="2" Count="-1">#include &lt;iostream&gt;</Line>
+				<Line Number="3" Count="-1"></Line>
+				<Line Number="4" Count="0">void func_99()</Line>
+				<Line Number="5" Count="-1">{</Line>
+				<Line Number="6" Count="0">  std::cout &lt;&lt; 99 &lt;&lt; std::endl;</Line>
+				<Line Number="7" Count="3">}</Line>
+			</Report>
+		</File>
+		<File Name="main.cpp" FullPath="./main.cpp">
+			<Report>
+				<Line Number="0" Count="-1">#include "func_2/func.hpp"</Line>
+				<Line Number="1" Count="-1">#include "func_4/func.hpp"</Line>
+				<Line Number="2" Count="-1">#include "func_6/func.hpp"</Line>
+				<Line Number="3" Count="-1">#include "func_8/func.hpp"</Line>
+				<Line Number="4" Count="-1">#include "func_10/func.hpp"</Line>
+				<Line Number="5" Count="-1">#include "func_12/func.hpp"</Line>
+				<Line Number="6" Count="-1">#include "func_14/func.hpp"</Line>
+				<Line Number="7" Count="-1">#include "func_16/func.hpp"</Line>
+				<Line Number="8" Count="-1">#include "func_18/func.hpp"</Line>
+				<Line Number="9" Count="-1">#include "func_20/func.hpp"</Line>
+				<Line Number="10" Count="-1">#include "func_22/func.hpp"</Line>
+				<Line Number="11" Count="-1">#include "func_24/func.hpp"</Line>
+				<Line Number="12" Count="-1">#include "func_26/func.hpp"</Line>
+				<Line Number="13" Count="-1">#include "func_28/func.hpp"</Line>
+				<Line Number="14" Count="-1">#include "func_30/func.hpp"</Line>
+				<Line Number="15" Count="-1">#include "func_32/func.hpp"</Line>
+				<Line Number="16" Count="-1">#include "func_34/func.hpp"</Line>
+				<Line Number="17" Count="-1">#include "func_36/func.hpp"</Line>
+				<Line Number="18" Count="-1">#include "func_38/func.hpp"</Line>
+				<Line Number="19" Count="-1">#include "func_40/func.hpp"</Line>
+				<Line Number="20" Count="-1">#include "func_42/func.hpp"</Line>
+				<Line Number="21" Count="-1">#include "func_44/func.hpp"</Line>
+				<Line Number="22" Count="-1">#include "func_46/func.hpp"</Line>
+				<Line Number="23" Count="-1">#include "func_48/func.hpp"</Line>
+				<Line Number="24" Count="-1">#include "func_50/func.hpp"</Line>
+				<Line Number="25" Count="-1">#include "func_52/func.hpp"</Line>
+				<Line Number="26" Count="-1">#include "func_54/func.hpp"</Line>
+				<Line Number="27" Count="-1">#include "func_56/func.hpp"</Line>
+				<Line Number="28" Count="-1">#include "func_58/func.hpp"</Line>
+				<Line Number="29" Count="-1">#include "func_60/func.hpp"</Line>
+				<Line Number="30" Count="-1">#include "func_62/func.hpp"</Line>
+				<Line Number="31" Count="-1">#include "func_64/func.hpp"</Line>
+				<Line Number="32" Count="-1">#include "func_66/func.hpp"</Line>
+				<Line Number="33" Count="-1">#include "func_68/func.hpp"</Line>
+				<Line Number="34" Count="-1">#include "func_70/func.hpp"</Line>
+				<Line Number="35" Count="-1">#include "func_72/func.hpp"</Line>
+				<Line Number="36" Count="-1">#include "func_74/func.hpp"</Line>
+				<Line Number="37" Count="-1">#include "func_76/func.hpp"</Line>
+				<Line Number="38" Count="-1">#include "func_78/func.hpp"</Line>
+				<Line Number="39" Count="-1">#include "func_80/func.hpp"</Line>
+				<Line Number="40" Count="-1">#include "func_82/func.hpp"</Line>
+				<Line Number="41" Count="-1">#include "func_84/func.hpp"</Line>
+				<Line Number="42" Count="-1">#include "func_86/func.hpp"</Line>
+				<Line Number="43" Count="-1">#include "func_88/func.hpp"</Line>
+				<Line Number="44" Count="-1">#include "func_90/func.hpp"</Line>
+				<Line Number="45" Count="-1">#include "func_92/func.hpp"</Line>
+				<Line Number="46" Count="-1">#include "func_94/func.hpp"</Line>
+				<Line Number="47" Count="-1">#include "func_96/func.hpp"</Line>
+				<Line Number="48" Count="-1">#include "func_98/func.hpp"</Line>
+				<Line Number="49" Count="-1">#include "func_100/func.hpp"</Line>
+				<Line Number="50" Count="-1"></Line>
+				<Line Number="51" Count="1">int main()</Line>
+				<Line Number="52" Count="-1">{</Line>
+				<Line Number="53" Count="1">  func_2();</Line>
+				<Line Number="54" Count="1">  func_4();</Line>
+				<Line Number="55" Count="1">  func_6();</Line>
+				<Line Number="56" Count="1">  func_8();</Line>
+				<Line Number="57" Count="1">  func_10();</Line>
+				<Line Number="58" Count="1">  func_12();</Line>
+				<Line Number="59" Count="1">  func_14();</Line>
+				<Line Number="60" Count="1">  func_16();</Line>
+				<Line Number="61" Count="1">  func_18();</Line>
+				<Line Number="62" Count="1">  func_20();</Line>
+				<Line Number="63" Count="1">  func_22();</Line>
+				<Line Number="64" Count="1">  func_24();</Line>
+				<Line Number="65" Count="1">  func_26();</Line>
+				<Line Number="66" Count="1">  func_28();</Line>
+				<Line Number="67" Count="1">  func_30();</Line>
+				<Line Number="68" Count="1">  func_32();</Line>
+				<Line Number="69" Count="1">  func_34();</Line>
+				<Line Number="70" Count="1">  func_36();</Line>
+				<Line Number="71" Count="1">  func_38();</Line>
+				<Line Number="72" Count="1">  func_40();</Line>
+				<Line Number="73" Count="1">  func_42();</Line>
+				<Line Number="74" Count="1">  func_44();</Line>
+				<Line Number="75" Count="1">  func_46();</Line>
+				<Line Number="76" Count="1">  func_48();</Line>
+				<Line Number="77" Count="1">  func_50();</Line>
+				<Line Number="78" Count="1">  func_52();</Line>
+				<Line Number="79" Count="1">  func_54();</Line>
+				<Line Number="80" Count="1">  func_56();</Line>
+				<Line Number="81" Count="1">  func_58();</Line>
+				<Line Number="82" Count="1">  func_60();</Line>
+				<Line Number="83" Count="1">  func_62();</Line>
+				<Line Number="84" Count="1">  func_64();</Line>
+				<Line Number="85" Count="1">  func_66();</Line>
+				<Line Number="86" Count="1">  func_68();</Line>
+				<Line Number="87" Count="1">  func_70();</Line>
+				<Line Number="88" Count="1">  func_72();</Line>
+				<Line Number="89" Count="1">  func_74();</Line>
+				<Line Number="90" Count="1">  func_76();</Line>
+				<Line Number="91" Count="1">  func_78();</Line>
+				<Line Number="92" Count="1">  func_80();</Line>
+				<Line Number="93" Count="1">  func_82();</Line>
+				<Line Number="94" Count="1">  func_84();</Line>
+				<Line Number="95" Count="1">  func_86();</Line>
+				<Line Number="96" Count="1">  func_88();</Line>
+				<Line Number="97" Count="1">  func_90();</Line>
+				<Line Number="98" Count="1">  func_92();</Line>
+				<Line Number="99" Count="1">  func_94();</Line>
+				<Line Number="100" Count="1">  func_96();</Line>
+				<Line Number="101" Count="1">  func_98();</Line>
+				<Line Number="102" Count="1">  func_100();</Line>
+				<Line Number="103" Count="1">  return 0;</Line>
+				<Line Number="104" Count="-1">}</Line>
+			</Report>
+		</File>
+		<EndDateTime>Jan 22 15:22 EST</EndDateTime>
+		<EndTime>1516652576</EndTime>
+	</CoverageLog>
+</Site>
