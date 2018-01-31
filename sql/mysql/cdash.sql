@@ -1477,6 +1477,12 @@ CREATE TABLE IF NOT EXISTS `authtoken` (
   KEY `expires` (`expires`)
 );
 
+CREATE TABLE IF NOT EXISTS `buildproperties` (
+  `buildid` int(11) NOT NULL DEFAULT '0',
+  `properties` mediumtext NOT NULL DEFAULT '',
+  PRIMARY KEY  (`buildid`)
+);
+
 --
 -- Change the table maximum size to be more than 4GB
 --

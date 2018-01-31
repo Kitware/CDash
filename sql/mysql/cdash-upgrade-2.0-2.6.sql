@@ -17,3 +17,9 @@ CREATE TABLE IF NOT EXISTS `authtoken` (
   KEY `userid` (`userid`),
   KEY `expires` (`expires`)
 );
+
+CREATE TABLE IF NOT EXISTS `buildproperties` (
+  `buildid` int(11) NOT NULL DEFAULT '0',
+  `properties` mediumtext NOT NULL DEFAULT '',
+  PRIMARY KEY  (`buildid`)
+);

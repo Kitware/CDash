@@ -144,6 +144,7 @@ add_php_test(subprojectemail)
 add_php_test(timeline)
 add_php_test(coveragedirectories)
 add_php_test(outputcolor)
+add_php_test(buildproperties)
 
 if(CDASH_GITHUB_USERNAME AND CDASH_GITHUB_PASSWORD)
   add_php_test(github_PR_comment)
