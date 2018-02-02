@@ -152,7 +152,7 @@ $test_response['buildstarttime'] = date(FMT_DATETIMESTD, strtotime($build->Start
 $test_response['site'] = $site->Name;
 $test_response['siteid'] = $site->Id;
 $test_response['test'] = $testName;
-$test_response['time'] = $testRow['time'];
+$test_response['time'] = time_difference($testRow['time'], true, '', true);
 $test_response['command'] = $testRow['command'];
 $test_response['details'] = $testRow['details'];
 
@@ -227,7 +227,7 @@ if ($testRow['timestatus'] == 0) {
 } else {
     $threshold = $test_response['timemean'] +
         $project->TestTimeStd * $test_response['timestd'];
-    $test_response['threshold'] = $threshold;
+    $test_response['threshold'] = time_difference($threshold, true, '', true);
     if ($testRow['timestatus'] >= $testtimemaxstatus) {
         $test_response['timestatus'] = 'Failed';
         $test_response['timeStatusColor'] = 'error-text';
