@@ -1382,19 +1382,19 @@ class Build
             return false;
         }
 
-        // The weight of the current test compared to the previous mean/std
-        // (this defines a window).
-        $weight = 0.3;
-        // Whether or not this build has any tests that failed
-        // the time status check.
-        $testtimestatusfailed = 0;
-
         $project_stmt = $this->PDO->prepare(
             'SELECT testtimestd, testtimestdthreshold, testtimemaxstatus
             FROM project WHERE id = ?');
         if (!pdo_execute($project_stmt, [$this->ProjectId])) {
             return false;
         }
+
+        // The weight of the current test compared to the previous mean/std
+        // (this defines a window).
+        $weight = 0.3;
+        // Whether or not this build has any tests that failed
+        // the time status check.
+        $testtimestatusfailed = 0;
 
         $project_array = $project_stmt->fetch();
         $projecttimestd = $project_array['testtimestd'];
