@@ -1376,6 +1376,12 @@ class Build
             return false;
         }
 
+        // Find the previous build
+        $previousbuildid = $this->GetPreviousBuildId();
+        if ($previousbuildid == 0) {
+            return false;
+        }
+
         $testtimestatusfailed = 0;
 
         // TEST TIMING
@@ -1406,12 +1412,6 @@ class Build
         $projecttimestd = $project_array['testtimestd'];
         $projecttimestdthreshold = $project_array['testtimestdthreshold'];
         $projecttestmaxstatus = $project_array['testtimemaxstatus'];
-
-        // Find the previous build
-        $previousbuildid = $this->GetPreviousBuildId();
-        if ($previousbuildid == 0) {
-            return;
-        }
 
         // Record test differences from the previous build.
         // (+/- number of tests that failed, etc.)
