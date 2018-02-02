@@ -27,30 +27,19 @@ require_once 'models/build.php';
 require_once 'models/project.php';
 
 $start = microtime_float();
-$response = [];
+
+$_REQUEST['buildid'] = $_GET['build'];
+$build = get_request_build();
 
 $testid = pdo_real_escape_numeric($_GET['test']);
 // Checks
 if (!isset($testid) || !is_numeric($testid)) {
-    $response['error'] = 'A valid test was not specified.';
-    echo json_encode($response);
-    return;
+    json_error_response(['error' => 'A valid test was not specified.']);
 }
 
-$buildid = pdo_real_escape_numeric($_GET['build']);
-if (!isset($buildid) || !is_numeric($buildid)) {
-    $response['error'] = 'A valid buildid was not specified.';
-    echo json_encode($response);
-    return;
-}
-
-$testRow = pdo_fetch_array(pdo_query("SELECT * FROM build2test,test WHERE build2test.testid = '$testid' AND build2test.buildid = '$buildid' AND build2test.testid=test.id"));
-$buildRow = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id = '$buildid'"));
-$projectid = $buildRow['projectid'];
-
+$projectid = $build->ProjectId;
 if (!$projectid) {
-    echo "This build doesn't exist.";
-    return;
+    json_error_response(['error' => 'This build does not exist.']);
 }
 
 if (!can_access_project($projectid)) {
@@ -83,7 +72,7 @@ if (isset($_GET['fileid']) && is_numeric($_GET['fileid'])) {
     return;
 }
 
-$siteid = $buildRow['siteid'];
+$siteid = $build->SiteId;
 
 $project = new Project();
 $project->Id = $projectid;
@@ -93,7 +82,7 @@ $siteQuery = "SELECT name FROM site WHERE id = '$siteid'";
 $siteResult = pdo_query($siteQuery);
 $siteRow = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id = '$siteid'"));
 
-$date = get_dashboard_date_from_build_starttime($buildRow['starttime'], $project->NightlyTime);
+$date = get_dashboard_date_from_build_starttime($build->StartTime, $project->NightlyTime);
 list($previousdate, $currenttime, $nextdate) = get_dates($date, $project->NightlyTime);
 $logoid = getLogoID($projectid);
 
@@ -104,10 +93,8 @@ $project_response = [];
 $project_response['showtesttime'] = $project->ShowTestTime;
 $response['project'] = $project_response;
 
+$testRow = pdo_fetch_array(pdo_query("SELECT * FROM build2test,test WHERE build2test.testid = '$testid' AND build2test.buildid = '$build->Id' AND build2test.testid=test.id"));
 $testName = $testRow['name'];
-$buildtype = $buildRow['type'];
-$buildname = $buildRow['name'];
-$starttime = $buildRow['starttime'];
 
 // Helper function
 function findTest($buildid, $testName)
@@ -124,10 +111,8 @@ function findTest($buildid, $testName)
 }
 
 $menu = [];
-$menu['back'] = "viewTest.php?buildid=$buildid";
+$menu['back'] = "viewTest.php?buildid=$build->Id";
 
-$build = new Build();
-$build->Id = $buildid;
 $previous_buildid = $build->GetPreviousBuildId();
 $current_buildid = $build->GetCurrentBuildId();
 $next_buildid = $build->GetNextBuildId();
@@ -162,9 +147,9 @@ $summaryLink = "testSummary.php?project=$projectid&name=$testName&date=$date";
 
 $test_response = [];
 $test_response['id'] = $testid;
-$test_response['buildid'] = $buildid;
-$test_response['build'] = $buildname;
-$test_response['buildstarttime'] = date(FMT_DATETIMESTD, strtotime($starttime . ' UTC'));
+$test_response['buildid'] = $build->Id;
+$test_response['build'] = $build->Name;
+$test_response['buildstarttime'] = date(FMT_DATETIMESTD, strtotime($build->StartTime . ' UTC'));
 $test_response['site'] = $siteRow['name'];
 $test_response['siteid'] = $siteid;
 $test_response['test'] = $testName;
@@ -218,7 +203,7 @@ $update_response = [];
 $status_array = pdo_fetch_array(pdo_query("SELECT status,revision,priorrevision,path
                                               FROM buildupdate,build2update AS b2u
                                               WHERE b2u.updateid=buildupdate.id
-                                              AND b2u.buildid='$buildid'"));
+                                              AND b2u.buildid='$build->Id'"));
 if (strlen($status_array['status']) > 0 && $status_array['status'] != '0') {
     $update_response['status'] = $status_array['status'];
 } else {
