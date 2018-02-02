@@ -25,6 +25,7 @@ include_once 'include/repository.php';
 include 'include/version.php';
 require_once 'models/build.php';
 require_once 'models/project.php';
+require_once 'models/site.php';
 
 $start = microtime_float();
 
@@ -72,15 +73,13 @@ if (isset($_GET['fileid']) && is_numeric($_GET['fileid'])) {
     return;
 }
 
-$siteid = $build->SiteId;
-
 $project = new Project();
 $project->Id = $projectid;
 $project->Fill();
 
-$siteQuery = "SELECT name FROM site WHERE id = '$siteid'";
-$siteResult = pdo_query($siteQuery);
-$siteRow = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id = '$siteid'"));
+$site = new Site();
+$site->Id = $build->SiteId;
+$site->Fill();
 
 $date = get_dashboard_date_from_build_starttime($build->StartTime, $project->NightlyTime);
 list($previousdate, $currenttime, $nextdate) = get_dates($date, $project->NightlyTime);
@@ -150,8 +149,8 @@ $test_response['id'] = $testid;
 $test_response['buildid'] = $build->Id;
 $test_response['build'] = $build->Name;
 $test_response['buildstarttime'] = date(FMT_DATETIMESTD, strtotime($build->StartTime . ' UTC'));
-$test_response['site'] = $siteRow['name'];
-$test_response['siteid'] = $siteid;
+$test_response['site'] = $site->Name;
+$test_response['siteid'] = $site->Id;
 $test_response['test'] = $testName;
 $test_response['time'] = $testRow['time'];
 $test_response['command'] = $testRow['command'];
