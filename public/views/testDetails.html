@@ -29,9 +29,9 @@
       <a ng-href="{{cdash.test.summaryLink}}">
         {{cdash.test.test}}
       </a>
-      <font color="{{cdash.test.statusColor}}">
+      <b ng-class="::cdash.test.statusColor">
         ({{cdash.test.status}})
-      </font>
+      </b>
       <br/>
 
       <b>Build: </b>
@@ -61,9 +61,9 @@
       <div ng-if="cdash.project.showtesttime == 1">
         <br/>
         <b>Test Timing: </b>
-        <font color="{{cdash.test.timeStatusColor}}">
+        <b ng-class="::cdash.test.timeStatusColor">
           {{cdash.test.timestatus}}
-        </font>
+        </b>
       </div>
       <br/>
 

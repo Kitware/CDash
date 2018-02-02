@@ -4,6 +4,10 @@
 .disabled-test { background-color : #fee090; }
 .error   { background-color : #fc8d59; }
 
+.normal-text  { color : #91bfdb; }
+.warning-text { color : #ffffbf; }
+.error-text   { color : #fc8d59; }
+
 .tabb tbody tr.odd td.normal { background-color: #88b3ce; }
 .tabb tbody tr.odd td.warning { background-color: #eeeeb3; }
 .tabb tbody tr.odd td.disabled-test { background-color: #edcf7f; }

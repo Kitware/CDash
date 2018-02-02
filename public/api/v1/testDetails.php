@@ -207,15 +207,15 @@ $test_response['summaryLink'] = $summaryLink;
 switch ($testRow['status']) {
     case 'passed':
         $test_response['status'] = 'Passed';
-        $test_response['statusColor'] = '#00aa00';
+        $test_response['statusColor'] = 'normal-text';
         break;
     case 'failed':
         $test_response['status'] = 'Failed';
-        $test_response['statusColor'] = '#aa0000';
+        $test_response['statusColor'] = 'error-text';
         break;
     case 'notrun':
         $test_response['status'] = 'Not Run';
-        $test_response['statusColor'] = '#ffcc66';
+        $test_response['statusColor'] = 'warning-text';
         break;
 }
 
@@ -244,12 +244,18 @@ $test_response['timemean'] = $testRow['timemean'];
 $test_response['timestd'] = $testRow['timestd'];
 
 $testtimemaxstatus = $projectRow['testtimemaxstatus'];
-if ($testRow['timestatus'] < $testtimemaxstatus) {
+if ($testRow['timestatus'] == 0) {
     $test_response['timestatus'] = 'Passed';
-    $test_response['timeStatusColor'] = '#00aa00';
+    $test_response['timeStatusColor'] = 'normal-text';
 } else {
-    $test_response['timestatus'] = 'Failed';
-    $test_response['timeStatusColor'] = '#aa0000';
+    // $threshold = ...
+    if ($testRow['timestatus'] >= $testtimemaxstatus) {
+        $test_response['timestatus'] = 'Failed';
+        $test_response['timeStatusColor'] = 'error-text';
+    } else {
+        $test_response['timestatus'] = 'Warning';
+        $test_response['timeStatusColor'] = 'warning-text';
+    }
 }
 
 //get any images associated with this test
