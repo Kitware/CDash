@@ -123,7 +123,7 @@ function findTest($buildid, $testName)
     return 0;
 }
 
-$menu = array();
+$menu = [];
 $menu['back'] = "viewTest.php?buildid=$buildid";
 
 $build = new Build();
@@ -160,7 +160,7 @@ $response['menu'] = $menu;
 
 $summaryLink = "testSummary.php?project=$projectid&name=$testName&date=$date";
 
-$test_response = array();
+$test_response = [];
 $test_response['id'] = $testid;
 $test_response['buildid'] = $buildid;
 $test_response['build'] = $buildname;
@@ -213,7 +213,7 @@ switch ($testRow['status']) {
 }
 
 // Find the repository revision
-$update_response = array();
+$update_response = [];
 // Return the status
 $status_array = pdo_fetch_array(pdo_query("SELECT status,revision,priorrevision,path
                                               FROM buildupdate,build2update AS b2u
@@ -258,9 +258,9 @@ $query = "SELECT imgid,role FROM test2image WHERE testid = '$testid' AND (role='
     . "OR role='ValidImage' OR role='BaselineImage' OR role='DifferenceImage2') ORDER BY id";
 $result = pdo_query($query);
 if (pdo_num_rows($result) > 0) {
-    $compareimages_response = array();
+    $compareimages_response = [];
     while ($row = pdo_fetch_array($result)) {
-        $image_response = array();
+        $image_response = [];
         $image_response['imgid'] = $row['imgid'];
         $image_response['role'] = $row['role'];
         $compareimages_response[] = $image_response;
@@ -268,12 +268,12 @@ if (pdo_num_rows($result) > 0) {
     $test_response['compareimages'] = $compareimages_response;
 }
 
-$images_response = array();
+$images_response = [];
 $query = "SELECT imgid,role FROM test2image WHERE testid = '$testid' "
     . "AND role!='ValidImage' AND role!='BaselineImage' AND role!='DifferenceImage2' ORDER BY id";
 $result = pdo_query($query);
 while ($row = pdo_fetch_array($result)) {
-    $image_response = array();
+    $image_response = [];
     $image_response['imgid'] = $row['imgid'];
     $image_response['role'] = $row['role'];
     $images_response[] = $image_response;
@@ -283,12 +283,12 @@ if (!empty($images_response)) {
 }
 
 //get any measurements associated with this test
-$measurements_response = array();
+$measurements_response = [];
 $query = "SELECT name,type,value FROM testmeasurement WHERE testid = '$testid' ORDER BY id";
 $result = pdo_query($query);
 $fileid = 1;
 while ($row = pdo_fetch_array($result)) {
-    $measurement_response = array();
+    $measurement_response = [];
     $measurement_response['name'] = $row['name'];
     $measurement_response['type'] = $row['type'];
 
