@@ -1382,24 +1382,12 @@ class Build
             return false;
         }
 
+        // The weight of the current test compared to the previous mean/std
+        // (this defines a window).
+        $weight = 0.3;
+        // Whether or not this build has any tests that failed
+        // the time status check.
         $testtimestatusfailed = 0;
-
-        // TEST TIMING
-        $weight = 0.3; // weight of the current test compared to the previous mean/std (this defines a window)
-        $stmt = $this->PDO->prepare(
-            'SELECT projectid, starttime, siteid, name, type
-            FROM build WHERE id = ?');
-        if (!pdo_execute($stmt, [$this->Id])) {
-            return false;
-        }
-
-        $buildid = $this->Id;
-        $build_array = $stmt->fetch();
-        $buildname = $build_array['name'];
-        $buildtype = $build_array['type'];
-        $starttime = $build_array['starttime'];
-        $siteid = $build_array['siteid'];
-        $projectid = $build_array['projectid'];
 
         $project_stmt = $this->PDO->prepare(
             'SELECT testtimestd, testtimestdthreshold, testtimemaxstatus
@@ -1415,10 +1403,10 @@ class Build
 
         // Record test differences from the previous build.
         // (+/- number of tests that failed, etc.)
-        compute_test_difference($buildid, $previousbuildid, 0, $projecttestmaxstatus); // not run
-        compute_test_difference($buildid, $previousbuildid, 1, $projecttestmaxstatus); // fail
-        compute_test_difference($buildid, $previousbuildid, 2, $projecttestmaxstatus); // pass
-        compute_test_difference($buildid, $previousbuildid, 3, $projecttestmaxstatus); // time
+        compute_test_difference($this->Id, $previousbuildid, 0, $projecttestmaxstatus); // not run
+        compute_test_difference($this->Id, $previousbuildid, 1, $projecttestmaxstatus); // fail
+        compute_test_difference($this->Id, $previousbuildid, 2, $projecttestmaxstatus); // pass
+        compute_test_difference($this->Id, $previousbuildid, 3, $projecttestmaxstatus); // time
 
         // Get the tests performed by the previous build.
         $previous_tests_stmt = $this->PDO->prepare(
