@@ -64,6 +64,9 @@
         <b ng-class="::cdash.test.timeStatusColor">
           {{cdash.test.timestatus}}
         </b>
+        <div ng-if="::cdash.test.timestatus != 'Passed'">
+          This test took longer to complete ({{::cdash.test.time}}) than the threshold allows ({{::cdash.test.threshold}}).
+        </div>
       </div>
       <br/>
 

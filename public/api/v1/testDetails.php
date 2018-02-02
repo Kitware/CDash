@@ -24,6 +24,7 @@ require_once 'include/api_common.php';
 include_once 'include/repository.php';
 include 'include/version.php';
 require_once 'models/build.php';
+require_once 'models/project.php';
 
 $start = microtime_float();
 $response = [];
@@ -87,29 +88,24 @@ if (isset($_GET['fileid']) && is_numeric($_GET['fileid'])) {
 
 $siteid = $buildRow['siteid'];
 
-$project = pdo_query("SELECT name,nightlytime,showtesttime FROM project WHERE id='$projectid'");
-if (pdo_num_rows($project) > 0) {
-    $project_array = pdo_fetch_array($project);
-    $projectname = $project_array['name'];
-}
-
-$projectRow = pdo_fetch_array(pdo_query("SELECT name,testtimemaxstatus FROM project WHERE id = '$projectid'"));
-$projectname = $projectRow['name'];
+$project = new Project();
+$project->Id = $projectid;
+$project->Fill();
 
 $siteQuery = "SELECT name FROM site WHERE id = '$siteid'";
 $siteResult = pdo_query($siteQuery);
 $siteRow = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id = '$siteid'"));
 
-$date = get_dashboard_date_from_build_starttime($buildRow['starttime'], $project_array['nightlytime']);
-list($previousdate, $currenttime, $nextdate) = get_dates($date, $project_array['nightlytime']);
+$date = get_dashboard_date_from_build_starttime($buildRow['starttime'], $project->NightlyTime);
+list($previousdate, $currenttime, $nextdate) = get_dates($date, $project->NightlyTime);
 $logoid = getLogoID($projectid);
 
-$response['title'] = "CDash : $projectname";
-get_dashboard_JSON_by_name($projectname, $date, $response);
+$response['title'] = "CDash : $project->Name";
+get_dashboard_JSON_by_name($project->Name, $date, $response);
 
-$project = array();
-$project['showtesttime'] = $project_array['showtesttime'];
-$response['project'] = $project;
+$project_response = [];
+$project_response['showtesttime'] = $project->ShowTestTime;
+$response['project'] = $project_response;
 
 $testName = $testRow['name'];
 $buildtype = $buildRow['type'];
@@ -243,12 +239,14 @@ $test_response['update'] = $update_response;
 $test_response['timemean'] = $testRow['timemean'];
 $test_response['timestd'] = $testRow['timestd'];
 
-$testtimemaxstatus = $projectRow['testtimemaxstatus'];
+$testtimemaxstatus = $project->TestTimeMaxStatus;
 if ($testRow['timestatus'] == 0) {
     $test_response['timestatus'] = 'Passed';
     $test_response['timeStatusColor'] = 'normal-text';
 } else {
-    // $threshold = ...
+    $threshold = $test_response['timemean'] +
+        $project->TestTimeStd * $test_response['timestd'];
+    $test_response['threshold'] = $threshold;
     if ($testRow['timestatus'] >= $testtimemaxstatus) {
         $test_response['timestatus'] = 'Failed';
         $test_response['timeStatusColor'] = 'error-text';
