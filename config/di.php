@@ -1,18 +1,16 @@
 <?php
 
-use DI\Factory\RequestedEntry;
-
-$modelFactory = function (RequestedEntry $entry) {
-    $model = $entry->getName();
-    return new $model();
-};
+use function DI\object;
 
 return [
-    Site::class => $modelFactory,
-    SiteInformation::class => $modelFactory,
-    BuildInformation::class => $modelFactory,
-    Test::class => $modelFactory,
-    Label::class => $modelFactory,
-    BuildTest::class => $modelFactory,
-    TestMeasurement::class => $modelFactory,
+    Site::class => object()->scope(DI\Scope::PROTOTYPE),
+    Build::class => object()->scope(DI\Scope::PROTOTYPE),
+    SiteInformation::class => object()->scope(DI\Scope::PROTOTYPE),
+    BuildInformation::class => object()->scope(DI\Scope::PROTOTYPE),
+    Test::class => object()->scope(DI\Scope::PROTOTYPE),
+    Label::class => object()->scope(DI\Scope::PROTOTYPE),
+    BuildTest::class => object()->scope(DI\Scope::PROTOTYPE),
+    TestMeasurement::class => object()->scope(DI\Scope::PROTOTYPE),
+    Image::class => object()->scope(DI\Scope::PROTOTYPE),
+    Feed::class => object()->scope(DI\Scope::PROTOTYPE),
 ];
