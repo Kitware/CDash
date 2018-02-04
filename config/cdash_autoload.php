@@ -2,7 +2,7 @@
 
 function cdash_autoload($className)
 {
-    global $cdash_root;
+    $cdash_root = realpath(dirname(__FILE__) . '/..');
     $inc_dir =  "{$cdash_root}/include";
     $model_dir = "{$cdash_root}/models";
     $filename = null;
