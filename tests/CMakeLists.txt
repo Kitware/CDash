@@ -37,6 +37,7 @@ add_unit_test(/CDash/Config)
 add_unit_test(/CDash/Log)
 add_unit_test(/CDash/Database)
 add_unit_test(/CDash/ServiceContainer)
+add_unit_test(/CDash/TestUseCase)
 
 add_php_test(install)
 add_php_test(compressedtest)

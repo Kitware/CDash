@@ -1,55 +1,55 @@
 <?php
 namespace CDash\Test;
 
+use CDash\Database;
+
 class CDashTestCase extends \PHPUnit_Framework_TestCase
 {
     protected $mockPDO;
     private $queries;
 
-    public static function buildUseCase()
-    {
-        return new UseCase();
-    }
-
-    public function setUp()
-    {
-        parent::setUp();
-        global $cdash_database_connection;
-
-        $this->queries = [];
-
-        $database = $this->getMockBuilder('CDash\Database')
-            ->disableOriginalConstructor()
-            ->setMethods(['getPdo'])
-            ->getMock();
-
-        $this->mockPDO = $this->getMockBuilder('CDash\Test\MockPDO')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->mockPDO
-            ->expects($this->any())
-            ->method('prepare')
-            ->willReturnCallback([$this, 'prepare']);
-
-        $this->mockPDO
-            ->expects($this->any())
-            ->method('query')
-            ->willReturnCallback([$this, 'prepare']);
-
-        $database
-            ->expects($this->any())
-            ->method('getPdo')
-            ->willReturn($this->mockPDO);
-
-        $cdash_database_connection = $database;
-    }
+    /** @var  Database $originalDatabase*/
+    private static $originalDatabase;
 
     public function tearDown()
     {
         global $cdash_database_connection;
         $cdash_database_connection = null;
         parent::tearDown();
+    }
+
+    protected function setDatabaseMocked()
+    {
+        self::$originalDatabase = Database::getInstance();
+
+        $mock_stmt = $this->getMockBuilder(\PDOStatement::class)
+            ->disableOriginalConstructor()
+            ->setMethods([
+                'prepare', 'fetch', 'fetchAll', 'fetchColumn'])
+            ->getMock();
+
+        $mock_pdo = $this->getMockBuilder(Database::class)
+            ->setMethods(
+                ['getPdo', 'prepare', 'execute', 'query', 'beginTransaction', 'commit', 'rollBack']
+            )
+            ->getMock();
+
+        $mock_pdo
+            ->expects($this->any())
+            ->method('getPdo')
+            ->willReturnSelf();
+
+        $mock_pdo
+            ->expects($this->any())
+            ->method('prepare')
+            ->willReturn($mock_stmt);
+
+        $mock_pdo
+            ->expects($this->any())
+            ->method('query')
+            ->willReturn($mock_stmt);
+
+        Database::setInstance(Database::class, $mock_pdo);
     }
 
     protected function getMockStmt()
