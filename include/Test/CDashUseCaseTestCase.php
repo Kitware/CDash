@@ -12,7 +12,6 @@ class CDashUseCaseTestCase extends CDashTestCase
     public function __construct($name = null, array $data = array(), $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
-
     }
 
     public function setUseCaseModelFactory(UseCase $useCase)
@@ -28,7 +27,6 @@ class CDashUseCaseTestCase extends CDashTestCase
             ->expects($this->any())
             ->method('create')
             ->willReturnCallback(function ($class_name) use ($useCase) {
-
                 $model = $this->getMockBuilder($class_name)
                     ->setMethods(['Insert', 'Update', 'Save'])
                     ->getMock();
