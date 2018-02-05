@@ -2,6 +2,7 @@
 namespace CDash\Collection;
 
 use Test;
+
 class TestCollection extends Collection
 {
     public function add(Test $test)

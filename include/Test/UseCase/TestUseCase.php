@@ -25,15 +25,12 @@ class TestUseCase extends UseCase
     const TIMEOUT = 'Timeout';
     const NOTRUN = 'notrun';
 
-    private $status;
-    private $name;
-    private $results;
     private $startTime;
     private $endTime;
 
     private $namedMeasurements = [];
 
-    function addTests(array $tests)
+    public function addTests(array $tests)
     {
         $this->tests = $tests;
         return $this;
@@ -95,8 +92,6 @@ class TestUseCase extends UseCase
     {
         $path_info = pathinfo($attributes['FullName']);
 
-        $status_text = $attributes['Status'] !== self::PASSED ? "failed" : "passed";
-
         /** @var DOMElement $test */
         $test = $parent->appendChild(new DOMElement('Test'));
         $this->setTestStatus($test, $attributes['Status']);
@@ -124,7 +119,7 @@ class TestUseCase extends UseCase
 
     protected function setTestStatus(DOMElement $test, $status)
     {
-        switch($status) {
+        switch ($status) {
             case self::FAILED:
             case self::TIMEOUT:
             case self::OTHERFAULT:
@@ -197,30 +192,4 @@ class TestUseCase extends UseCase
                 $measurement_value->appendChild(new DOMText('Segmentation fault: exited with 127'));
         }
     }
-
-    /*
-    public function addNamedMeasurement($name, $value, $type)
-    {
-        array_push($this->namedMeasurements, [$name, $value, $type]);
-        return $this;
-    }
-
-    public function addExitCode($exit_code)
-    {
-        $this->addNamedMeasurement(self::EXIT_CODE, $exit_code, self::TEXT_STRING);
-        return $this;
-    }
-
-    public function addExitValue($exit_value)
-    {
-        $this->addNamedMeasurement(self::EXIT_VALUE, $exit_value, self::TEXT_STRING);
-        return $this;
-    }
-
-    public function addCompletionStatus($status)
-    {
-        $this->addNamedMeasurement(self::COMPLETION_STATUS, $status, self::TEXT_STRING);
-        return $this;
-    }
-    */
 }

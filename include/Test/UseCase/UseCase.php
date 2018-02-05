@@ -31,8 +31,7 @@ abstract class UseCase
      */
     public static function createBuilder(CDashUseCaseTestCase $testCase, $type)
     {
-        switch ($type)
-        {
+        switch ($type) {
             case self::TEST:
                 $useCase = new TestUseCase();
                 $testCase->setUseCaseModelFactory($useCase);
