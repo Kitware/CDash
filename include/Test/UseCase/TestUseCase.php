@@ -1,8 +1,6 @@
 <?php
 namespace CDash\Test\UseCase;
 
-require_once "/Users/bryonbean/Projects/CDash/xml_handlers/testing_handler.php";
-
 use DOMDocument;
 use DOMElement;
 use DOMText;
@@ -27,8 +25,6 @@ class TestUseCase extends UseCase
 
     private $startTime;
     private $endTime;
-
-    private $namedMeasurements = [];
 
     public function addTests(array $tests)
     {
