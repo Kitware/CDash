@@ -27,16 +27,6 @@ class TestUseCase extends UseCase
     private $endTime;
 
     /**
-     * @param array $tests
-     * @return $this
-     */
-    public function addTests(array $tests)
-    {
-        $this->tests = $tests;
-        return $this;
-    }
-
-    /**
      * @param $start_time
      * @return TestUseCase
      */
@@ -141,7 +131,6 @@ class TestUseCase extends UseCase
                 break;
             case self::PASSED:
                 $test->setAttribute('Status', self::PASSED);
-
         }
     }
 
@@ -169,6 +158,16 @@ class TestUseCase extends UseCase
         $code->setAttribute('name', 'Exit Code');
         $code->setAttribute('type', 'text/string');
         $code_value = $code->appendChild(new DOMElement('Value'));
+
+        /** @var DOMElement $exectime */
+        $exectime_text = isset($attributes['Execution Time']) ?
+            $attributes['Execution Time'] : '0.012004';
+
+        $exectime = $results->appendChild(new DOMElement('NamedMeasurement'));
+        $exectime->setAttribute('name', 'Execution Time');
+        $exectime->setAttribute('type', 'numeric/double');
+        $exectime_value = $exectime->appendChild(new DOMElement('Value'));
+        $exectime_value->appendChild(new DOMText($exectime_text));
 
         /** @var DOMElement $exit */
         $exit = $results->appendChild(new DOMElement('NamedMeasurement'));
