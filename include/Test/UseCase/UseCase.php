@@ -39,6 +39,10 @@ abstract class UseCase
         }
     }
 
+    /**
+     * @param $class_name
+     * @return mixed
+     */
     public function getIdForClass($class_name)
     {
         if (!isset($this->ids[$class_name])) {
@@ -47,37 +51,37 @@ abstract class UseCase
         return ++$this->ids[$class_name];
     }
 
+    /**
+     * @param $projectId
+     * @return $this
+     */
     public function setProjectId($projectId)
     {
         $this->projectId = $projectId;
         return $this;
     }
 
-
+    /**
+     * @param $attribute
+     * @param $value
+     * @return $this
+     */
     public function setSiteAttribute($attribute, $value)
     {
         $this->siteAttributes[$attribute] = $value;
         return $this;
     }
 
+    /**
+     * @param $class_name
+     * @param array $properties
+     * @return $this
+     */
     public function setModel($class_name, array $properties)
     {
         if (!isset($this->properties[$class_name])) {
             $this->properties[$class_name] = [];
         }
-
-        /*
-        $model = $this->testCase->getMockBuilder($class_name)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $model_properties = get_object_vars($model);
-
-        foreach ($properties as $property_name => $property) {
-            if (in_array($property_name, $model_properties)) {
-                $model->$property_name = $property;
-            }
-        }
-        */
 
         $this->properties[$class_name][] = $properties;
 
@@ -94,6 +98,11 @@ abstract class UseCase
         return $this;
     }
 
+    /**
+     * @param $name
+     * @param array $labels
+     * @return $this
+     */
     public function createSubproject($name, array $labels = [])
     {
         if (empty($labels)) {
@@ -104,6 +113,12 @@ abstract class UseCase
         return $this;
     }
 
+    /**
+     * @param $subproject
+     * @param array $subjects
+     * @return $this
+     * @throws \Exception
+     */
     public function assignToSubproject($subproject, array $subjects = [])
     {
         $label = isset($subjects['label']) ? $subjects['label'] : $subproject;
@@ -215,6 +230,11 @@ abstract class UseCase
         return $this;
     }
 
+    /**
+     * @param AbstractHandler $handler
+     * @param $xml
+     * @return AbstractHandler
+     */
     public function getXmlHandler(AbstractHandler $handler, $xml)
     {
         $parser = xml_parser_create();
@@ -228,6 +248,11 @@ abstract class UseCase
         return $handler;
     }
 
+    /**
+     * @param DOMDocument $document
+     * @return DOMElement
+     * @throws \Exception
+     */
     protected function getSiteElement(DOMDocument $document)
     {
         if (!isset($this->properties['Site'])) {
@@ -253,6 +278,10 @@ abstract class UseCase
         return $site;
     }
 
+    /**
+     * @param DOMElement $parent
+     * @param array $label_names
+     */
     protected function createLabelsElement(DOMElement $parent, array $label_names)
     {
         foreach ($label_names as $name) {

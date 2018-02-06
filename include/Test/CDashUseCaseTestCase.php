@@ -9,11 +9,6 @@ class CDashUseCaseTestCase extends CDashTestCase
     /** @var  ServiceContainer $originalServiceContainer */
     private static $originalServiceContainer;
 
-    public function __construct($name = null, array $data = array(), $dataName = '')
-    {
-        parent::__construct($name, $data, $dataName);
-    }
-
     public function setUseCaseModelFactory(UseCase $useCase)
     {
         self::$originalServiceContainer = ServiceContainer::getInstance();

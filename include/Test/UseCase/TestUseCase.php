@@ -26,6 +26,10 @@ class TestUseCase extends UseCase
     private $startTime;
     private $endTime;
 
+    /**
+     * @param array $tests
+     * @return $this
+     */
     public function addTests(array $tests)
     {
         $this->tests = $tests;
@@ -52,6 +56,9 @@ class TestUseCase extends UseCase
         return $this;
     }
 
+    /**
+     * @return \AbstractHandler
+     */
     public function build()
     {
         $xml = new DOMDocument('1.0', 'UTF-8');
@@ -84,6 +91,10 @@ class TestUseCase extends UseCase
         return $this->getXmlHandler($handler, $xml_str);
     }
 
+    /**
+     * @param DOMElement $parent
+     * @param $attributes
+     */
     protected function createTestElement(DOMElement $parent, $attributes)
     {
         $path_info = pathinfo($attributes['FullName']);
@@ -113,6 +124,10 @@ class TestUseCase extends UseCase
         }
     }
 
+    /**
+     * @param DOMElement $test
+     * @param $status
+     */
     protected function setTestStatus(DOMElement $test, $status)
     {
         switch ($status) {
@@ -130,6 +145,10 @@ class TestUseCase extends UseCase
         }
     }
 
+    /**
+     * @param DOMElement $parent
+     * @param $attributes
+     */
     protected function createResultsElement(DOMElement $parent, $attributes)
     {
         $results = $parent->appendChild(new DOMElement('Results'));
@@ -138,7 +157,6 @@ class TestUseCase extends UseCase
             return;
         }
 
-        // TODO: move to own method
         /** @var DOMElement $status */
         $status = $results->appendChild(new DOMElement('NamedMeasurement'));
         $status->setAttribute('name', 'Completion Status');
@@ -146,26 +164,22 @@ class TestUseCase extends UseCase
         $status_value = $status->appendChild(new DOMElement('Value'));
         $status_value->appendChild(new DOMText('Completed'));
 
-        // TODO: move to own method
         /** @var DOMElement $code */
         $code = $results->appendChild(new DOMElement('NamedMeasurement'));
         $code->setAttribute('name', 'Exit Code');
         $code->setAttribute('type', 'text/string');
         $code_value = $code->appendChild(new DOMElement('Value'));
 
-        // TODO: move to own method
         /** @var DOMElement $exit */
         $exit = $results->appendChild(new DOMElement('NamedMeasurement'));
         $exit->setAttribute('name', 'Exit Value');
         $exit->setAttribute('type', 'text/string');
         $exit_value = $results->appendChild(new DOMElement('Value'));
 
-        // TODO: move to own method
         /** @var DOMElement $measurement */
         $measurement = $results->appendChild(new DOMElement('Measurement'));
         $measurement_value = $measurement->appendChild(new DOMElement('Value'));
 
-        // TODO: move to own method
         switch ($attributes['Status']) {
             case self::PASSED:
                 $measurement_value->appendChild(new DOMText('PASS'));
@@ -175,8 +189,6 @@ class TestUseCase extends UseCase
                 $exit_value->appendChild(new DOMText('127'));
                 $measurement_value->appendChild(new DOMText('FAIL'));
                 break;
-            case self::NOTRUN:
-
             case self::TIMEOUT:
                 $code_value->appendChild(new DOMText('Timeout'));
                 $exit_value->appendChild(new DOMText('127'));
