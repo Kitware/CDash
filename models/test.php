@@ -307,4 +307,13 @@ class Test
         }
         return $this->TestMeasurementCollection;
     }
+
+    /**
+     * @return
+     */
+    public function GetExecutionTime()
+    {
+        $buildTest = $this->GetBuildTest();
+        return (double)$buildTest->Time;
+    }
 }
