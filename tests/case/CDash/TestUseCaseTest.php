@@ -123,7 +123,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
             ->createSubproject('NOX', ['Non-linear', 'Transient', 'Optimization'])
             ->createSubproject('Teuchos', ['Linear']);
 
-        /** @var ActionableBuildInterface $handler */
+        /** @var TestingHandler $handler */
         $handler = $sut->build();
 
         /** @var BuildCollection $builds */
@@ -132,6 +132,8 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $this->assertInstanceOf(BuildCollection::class, $builds);
         $this->assertTrue($builds->has('NOX'));
         $this->assertTrue($builds->has('Teuchos'));
+        $this->assertInstanceOf(Build::class, $builds->get('NOX'));
+        $this->assertInstanceOf(Build::class, $builds->get('Teuchos'));
     }
 
     public function testTestUseCaseCreatesTestPassed()
@@ -143,7 +145,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
             ->createSite(['Name' => 'Site.Name'])
             ->createTestPassed('some.test.name');
 
-        /** @var ActionableBuildInterface $handler */
+        /** @var TestingHandler $handler */
         $handler = $sut->build();
         /** @var BuildCollection $builds */
         $builds = $handler->GetBuildCollection();
@@ -167,7 +169,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
             ->createSite(['Name' => 'Site.Name'])
             ->createTestFailed('some.test.name');
 
-        /** @var ActionableBuildInterface $handler */
+        /** @var TestingHandler $handler */
         $handler = $sut->build();
         /** @var BuildCollection $builds */
         $builds = $handler->GetBuildCollection();
@@ -191,7 +193,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
             ->createSite(['Name' => 'Site.Name'])
             ->createTestTimedout('some.test.name');
 
-        /** @var ActionableBuildInterface $handler */
+        /** @var TestingHandler $handler */
         $handler = $sut->build();
         /** @var BuildCollection $builds */
         $builds = $handler->GetBuildCollection();
@@ -215,7 +217,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
             ->createSite(['Name' => 'Site.Name'])
             ->createTestNotRun('some.test.name');
 
-        /** @var ActionableBuildInterface $handler */
+        /** @var TestingHandler $handler */
         $handler = $sut->build();
         /** @var BuildCollection $builds */
         $builds = $handler->GetBuildCollection();
@@ -230,7 +232,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $this->assertNull($test->Details);
     }
 
-    public function testTestUseCaseCreatesTests()
+    public function testTestUseCaseCreatesMultisubprojectTestXMLFile()
     {
         $sut = UseCase::createBuilder($this, UseCase::TEST);
 
@@ -255,7 +257,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
             ->createTestNotRun('thirdparty', ['MyThirdPartyDependency1'])
             ->createTestTimedout('test4', ['MyExperimentalFeature']);
 
-        /** @var ActionableBuildInterface $handler */
+        /** @var TestingHandler $handler */
         $handler = $sut->build();
 
         /** @var BuildCollection $builds */
@@ -285,5 +287,31 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $tests = $build->GetTestCollection();
         $test = $tests->get('thirdparty');
         $this->assertEquals(TestUseCase::NOTRUN, $test->GetStatus());
+    }
+
+    public function testUseCaseSetsPropertiesByTestName()
+    {
+        /** @var TestUseCase $sut */
+        $sut = UseCase::createBuilder($this, UseCase::TEST);
+        $sut
+            ->createSite([
+                'Name' => 'elysium',
+                'BuildName' => 'test_timing',
+                'BuildStamp' => '20180125-1723-Experimental',
+            ])
+            ->setStartTime(1516900999)
+            ->setEndTime(1516901001)
+            ->createTestPassed('nap');
+
+        $sut->setTestProperties('nap', ['Execution Time' => '2.00447']);
+        /** @var TestingHandler $handler */
+        $handler = $sut->build();
+
+        $builds = $handler->GetBuildCollection();
+        $build = $builds->current();
+        $tests = $build->GetTestCollection();
+        $test = $tests->get('nap');
+
+        $this->assertEquals(2.00447, $test->GetExecutionTime());
     }
 }
