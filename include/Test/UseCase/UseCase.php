@@ -12,7 +12,6 @@ abstract class UseCase
     const TEST = 1;
 
     private $ids;
-    protected $tests = [];
     protected $subprojects = [];
     protected $properties = [];
     protected $projectId = 321;
@@ -110,48 +109,6 @@ abstract class UseCase
         }
 
         $this->subprojects[$name] = $labels;
-        return $this;
-    }
-
-    /**
-     * @param $subproject
-     * @param array $subjects
-     * @return $this
-     * @throws \Exception
-     */
-    public function assignToSubproject($subproject, array $subjects = [])
-    {
-        $label = isset($subjects['label']) ? $subjects['label'] : $subproject;
-
-        if (!isset($this->subprojects[$subproject])) {
-            throw new \Exception("Subproject {$subproject} does not exist");
-        }
-
-        if (!in_array($label, $this->subprojects[$subproject])) {
-            throw new \Exception("{$label} is not a label of {$subproject}");
-        }
-
-        foreach ($subjects as $type => $subject) {
-            if ($type === 'label') {
-                continue;
-            }
-
-            $type = ucfirst($type);
-            if (!isset($this->properties[$type])) {
-                throw new \Exception("{$type} is not a property of UseCase");
-            }
-
-            foreach ($this->properties[$type] as &$entry) {
-                if ($subject === $entry['Name']) {
-                    if (!isset($entry['Labels'])) {
-                        $entry['Labels'] = [];
-                    }
-
-                    $entry['Labels'][] = $label;
-                    break;
-                }
-            }
-        }
         return $this;
     }
 
@@ -289,5 +246,20 @@ abstract class UseCase
             $label = $parent->appendChild(new DOMElement('Label'));
             $label->appendChild(new DOMText($name));
         }
+    }
+
+    /**
+     * @param $test_name
+     * @param array $properties
+     * @return $this
+     */
+    public function setTestProperties($test_name, array $properties)
+    {
+        foreach ($this->properties['Test'] as &$test) {
+            if ($test['Name'] === $test_name) {
+                $test = array_merge($properties, $test);
+            }
+        }
+        return $this;
     }
 }
