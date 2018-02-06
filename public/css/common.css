@@ -1239,3 +1239,6 @@ textarea {
 .bordertop {
   border-top: 1px solid black;
 }
+
+.missing {background-color: #dfdfdf; }
+.tabb tbody tr.odd td.missing { background-color: #cdcdcd; }

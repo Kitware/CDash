@@ -151,9 +151,12 @@ class BuildTest
         }
 
         if ($projectshowtesttime) {
-            if ($data['timestatus'] < $testtimemaxstatus) {
+            if ($data['timestatus'] == 0) {
                 $marshaledData['timestatus'] = 'Passed';
                 $marshaledData['timestatusclass'] = 'normal';
+            } elseif ($data['timestatus'] < $testtimemaxstatus) {
+                $marshaledData['timestatus'] = 'Warning';
+                $marshaledData['timestatusclass'] = 'warning';
             } else {
                 $marshaledData['timestatus'] = 'Failed';
                 $marshaledData['timestatusclass'] = 'error';
