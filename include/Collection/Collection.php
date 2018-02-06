@@ -136,5 +136,6 @@ abstract class Collection implements CollectionInterface
         if ($this->has($key)) {
             return $this->collection[$key];
         }
+        return null;
     }
 }
