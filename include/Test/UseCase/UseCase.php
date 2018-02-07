@@ -17,8 +17,6 @@ abstract class UseCase
     protected $projectId = 321;
     protected $scheduleId = 0;
 
-    private $siteAttributes = [];
-
     protected $testCase;
 
     abstract public function build();
@@ -61,13 +59,19 @@ abstract class UseCase
     }
 
     /**
+     * Sets a site attribute, BuildStamp, for example. Because there is only one site per
+     * submission, all work is performed only on the first entry of the array.
+     *
      * @param $attribute
      * @param $value
      * @return $this
      */
     public function setSiteAttribute($attribute, $value)
     {
-        $this->siteAttributes[$attribute] = $value;
+        if (!isset($this->properties['Site'][0])) {
+            $this->properties['Site'][0] = [];
+        }
+        $this->properties['Site'][0][$attribute] = $value;
         return $this;
     }
 
@@ -257,7 +261,7 @@ abstract class UseCase
     {
         foreach ($this->properties['Test'] as &$test) {
             if ($test['Name'] === $test_name) {
-                $test = array_merge($properties, $test);
+                $test = array_merge($test, $properties);
             }
         }
         return $this;

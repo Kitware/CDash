@@ -115,6 +115,21 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         );
     }
 
+    public function testTestUseCaseSetsSiteProperty()
+    {
+        $sut = UseCase::createBuilder($this, UseCase::TEST);
+        $useCaseReflection = new ReflectionClass(TestUseCase::class);
+        $property = $useCaseReflection->getProperty('properties');
+        $property->setAccessible(true);
+        $actual = $property->getValue($sut);
+        $this->assertEmpty($actual);
+
+        $sut->setSiteAttribute('BuildStamp', '20180125-1724-Experimental');
+        $expected = ['Site' => [['BuildStamp' => '20180125-1724-Experimental']]];
+        $actual = $property->getValue($sut);
+        $this->assertEquals($expected, $actual);
+    }
+
     public function testTestUseCaseCreatesSubproject()
     {
         /** @var UseCase $sut */
@@ -313,5 +328,17 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $test = $tests->get('nap');
 
         $this->assertEquals(2.00447, $test->GetExecutionTime());
+
+        // Test again to ensure that the previous value is replaced with the new value
+        $sut->setTestProperties('nap', ['Execution Time' => '9.123456']);
+        /** @var TestingHandler $handler */
+        $handler = $sut->build();
+
+        $builds = $handler->GetBuildCollection();
+        $build = $builds->current();
+        $tests = $build->GetTestCollection();
+        $test = $tests->get('nap');
+
+        $this->assertEquals(9.123456, $test->GetExecutionTime());
     }
 }
