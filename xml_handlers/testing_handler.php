@@ -263,11 +263,6 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
                     }
                 }
 
-                // Update the build's end time to extend through testing.
-                $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
-                $build->EndTime = $end_time;
-                $build->UpdateBuild($build->Id, -1, -1);
-
                 $config = \CDash\Config::getInstance();
                 if ($config->get('CDASH_ENABLE_FEED')) {
                     // Insert the build into the feed
