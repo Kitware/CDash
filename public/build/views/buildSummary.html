@@ -7,14 +7,14 @@
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="stylesheet" type="text/css" ng-href="{{cssfile}}" />
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <script src="js/CDash_1516118307704.min.js"></script>
+    <script src="js/CDash_1518207754942.min.js"></script>
     <title ng-bind="title">CDash</title>
   </head>
 
 
   <body bgcolor="#ffffff" ng-controller="BuildSummaryController">
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1516118307704.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1518207754942.html'"></ng-include>
 
     <div ng-if="cdash.requirelogin != 1 && !loading && !cdash.error">
 
@@ -601,6 +601,6 @@
 
     <!-- FOOTER -->
     <br/>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1516118307704.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1518207754942.html'"></ng-include>
   </body>
 </html>

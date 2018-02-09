@@ -7,20 +7,20 @@
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="stylesheet" type="text/css" ng-href="{{cssfile}}" />
     <link rel="stylesheet" href="css/je_compare_style-1.0.0.css" />
-    <script src="js/CDash_1516118307704.min.js"></script>
+    <script src="js/CDash_1518207754942.min.js"></script>
     <title ng-bind="title">CDash</title>
   </head>
 
   <body bgcolor="#ffffff" ng-controller="TestDetailsController">
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1516118307704.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1518207754942.html'"></ng-include>
 
     <div ng-if="cdash.requirelogin != 1 && !loading && !cdash.error">
 
       <div id="executiontime">
         <img src="img/clock.png" alt="Execution Time" title="Execution Time" />
         <span class="builddateelapsed" alt="Mean time: {{cdash.test.timemean}}s<br/>STD time: {{cdash.test.timestd}}s">
-          {{cdash.test.time}}s
+          {{cdash.test.time}}
         </span>
       </div>
       <br/>
@@ -29,9 +29,9 @@
       <a ng-href="{{cdash.test.summaryLink}}">
         {{cdash.test.test}}
       </a>
-      <font color="{{cdash.test.statusColor}}">
+      <b ng-class="::cdash.test.statusColor">
         ({{cdash.test.status}})
-      </font>
+      </b>
       <br/>
 
       <b>Build: </b>
@@ -61,9 +61,12 @@
       <div ng-if="cdash.project.showtesttime == 1">
         <br/>
         <b>Test Timing: </b>
-        <font color="{{cdash.test.timeStatusColor}}">
+        <b ng-class="::cdash.test.timeStatusColor">
           {{cdash.test.timestatus}}
-        </font>
+        </b>
+        <div ng-if="::cdash.test.timestatus != 'Passed'">
+          This test took longer to complete ({{::cdash.test.time}}) than the threshold allows ({{::cdash.test.threshold}}).
+        </div>
       </div>
       <br/>
 
@@ -147,11 +150,11 @@
 
       <br/>
       <b>Test output</b>
-      <pre>{{cdash.test.output}}</pre>
+      <pre ng-bind-html="cdash.test.output | ctestNonXmlCharEscape | terminalColors | trustAsHtml"></pre>
     </div>
 
     <!-- FOOTER -->
     <br/>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1516118307704.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1518207754942.html'"></ng-include>
   </body>
 </html>

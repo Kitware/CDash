@@ -2,18 +2,19 @@
 
 <html lang="en" ng-app="CDash">
   <head ng-controller="HeadController">
+    <meta charset="UTF-8">
     <meta name="robots" content="noindex,nofollow" />
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="stylesheet" type="text/css" ng-href="{{cssfile}}" />
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.4.css" />
-    <script src="js/CDash_1516118307704.min.js"></script>
+    <script src="js/CDash_1518207754942.min.js"></script>
     <title ng-bind="title">CDash</title>
   </head>
 
   <body ng-controller="ViewSubProjectsController">
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1516118307704.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1518207754942.html'"></ng-include>
 
     <div id="content" ng-if="!loading && cdash.requirelogin != 1">
       <table ng-show="cdash.banners.length > 0" border="0" width="100%">
@@ -130,7 +131,7 @@
 
 
       <!-- SubProjects table -->
-      <ng-include ng-init="cdash.tableName = 'SubProjects'" src="'build/views/partials/subProjectTable_1516118307704.html'"></ng-include>
+      <ng-include ng-init="cdash.tableName = 'SubProjects'" src="'build/views/partials/subProjectTable_1518207754942.html'"></ng-include>
 
       <table width="100%" cellspacing="0" cellpadding="0">
         <tr>
@@ -152,6 +153,6 @@
     <br/>
     <!-- FOOTER -->
     <br/>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1516118307704.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1518207754942.html'"></ng-include>
   </body>
 </html>
