@@ -14,8 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-use CDash\Database;
-
 include_once 'include/common.php';
 include_once 'include/ctestparserutils.php';
 include_once 'include/repository.php';
@@ -29,6 +27,13 @@ include_once 'models/label.php';
 include_once 'models/subproject.php';
 include_once 'models/test.php';
 include_once 'models/uploadfile.php';
+include_once 'models/user.php';
+include_once 'models/userproject.php';
+
+use CDash\Config;
+use CDash\Log;
+use CDash\Collection\TestCollection;
+use CDash\Database;
 
 class Build
 {
@@ -86,8 +91,10 @@ class Build
     public $NightlyStartTime;
     public $BeginningOfDay;
     public $EndOfDay;
+    private $TestCollection;
     private $Failures;
     private $PDO;
+    private $Site;
 
     public function __construct()
     {
@@ -110,6 +117,7 @@ class Build
         $this->SubmitTime = '1980-01-01 00:00:00';
         $this->Type = '';
         $this->Uuid = '';
+        $this->TestCollection = new TestCollection();
 
         $this->PDO = Database::getInstance()->getPdo();
     }
@@ -972,7 +980,7 @@ class Build
             }
 
             if ($hasErrors) {
-                $message = 'This build experienced errors';
+                $message = "$this->Name experienced errors";
                 $url = get_server_URI(false) .
                     "/viewBuildError.php?buildid=$this->Id";
                 $this->NotifyPullRequest($message, $url);
@@ -1047,7 +1055,7 @@ class Build
 
         // Should we should post test failures to a pull request?
         if (!empty($this->PullRequest) && $numberTestsFailed > 0) {
-            $message = 'This build experienced failing tests';
+            $message = "$this->Name experienced failing tests";
             $url = get_server_URI(false) .
                 "/viewTest.php?onlyfailed&buildid=$this->Id";
             $this->NotifyPullRequest($message, $url);
@@ -1360,7 +1368,7 @@ class Build
     }
 
     /** Compute the test timing as a weighted average of the previous test.
-     *  Also compute the difference in errors and tests between builds.
+     *  Also compute the difference in tests between builds.
      *  We do that in one shot for speed reasons. */
     public function ComputeTestTiming()
     {
@@ -1376,24 +1384,11 @@ class Build
             return false;
         }
 
-        $testtimestatusfailed = 0;
-
-        // TEST TIMING
-        $weight = 0.3; // weight of the current test compared to the previous mean/std (this defines a window)
-        $stmt = $this->PDO->prepare(
-            'SELECT projectid, starttime, siteid, name, type
-            FROM build WHERE id = ?');
-        if (!pdo_execute($stmt, [$this->Id])) {
+        // Find the previous build
+        $previousbuildid = $this->GetPreviousBuildId();
+        if ($previousbuildid == 0) {
             return false;
         }
-
-        $buildid = $this->Id;
-        $build_array = $stmt->fetch();
-        $buildname = $build_array['name'];
-        $buildtype = $build_array['type'];
-        $starttime = $build_array['starttime'];
-        $siteid = $build_array['siteid'];
-        $projectid = $build_array['projectid'];
 
         $project_stmt = $this->PDO->prepare(
             'SELECT testtimestd, testtimestdthreshold, testtimemaxstatus
@@ -1402,163 +1397,135 @@ class Build
             return false;
         }
 
+        // The weight of the current test compared to the previous mean/std
+        // (this defines a window).
+        $weight = 0.3;
+        // Whether or not this build has any tests that failed
+        // the time status check.
+        $testtimestatusfailed = 0;
+
         $project_array = $project_stmt->fetch();
         $projecttimestd = $project_array['testtimestd'];
         $projecttimestdthreshold = $project_array['testtimestdthreshold'];
         $projecttestmaxstatus = $project_array['testtimemaxstatus'];
 
-        // Find the previous build
-        $previousbuildid = $this->GetPreviousBuildId();
-        if ($previousbuildid == 0) {
-            return;
+        // Record test differences from the previous build.
+        // (+/- number of tests that failed, etc.)
+        compute_test_difference($this->Id, $previousbuildid, 0, $projecttestmaxstatus); // not run
+        compute_test_difference($this->Id, $previousbuildid, 1, $projecttestmaxstatus); // fail
+        compute_test_difference($this->Id, $previousbuildid, 2, $projecttestmaxstatus); // pass
+        compute_test_difference($this->Id, $previousbuildid, 3, $projecttestmaxstatus); // time
+
+        // Get the tests performed by the previous build.
+        $previous_tests_stmt = $this->PDO->prepare(
+            'SELECT b2t.testid, t.name
+            FROM build2test b2t
+            JOIN test t ON t.id = b2t.testid
+            WHERE b2t.buildid = ?');
+        if (!pdo_execute($previous_tests_stmt, [$previousbuildid])) {
+            return false;
         }
 
-        // If we have one
-        if ($previousbuildid > 0) {
-            compute_test_difference($buildid, $previousbuildid, 0, $projecttestmaxstatus); // not run
-            compute_test_difference($buildid, $previousbuildid, 1, $projecttestmaxstatus); // fail
-            compute_test_difference($buildid, $previousbuildid, 2, $projecttestmaxstatus); // pass
-            compute_test_difference($buildid, $previousbuildid, 3, $projecttestmaxstatus); // time
+        $testarray = [];
+        while ($row = $previous_tests_stmt->fetch()) {
+            $test = [];
+            $test['id'] = $row['testid'];
+            $test['name'] = $row['name'];
+            $testarray[] = $test;
+        }
 
-            // Get the tests performed by the previous build.
-            $previous_tests_stmt = $this->PDO->prepare(
-                'SELECT b2t.testid, t.name
-                FROM build2test b2t
-                JOIN test t ON t.id = b2t.testid
-                WHERE b2t.buildid = ?');
-            if (!pdo_execute($previous_tests_stmt, [$previousbuildid])) {
-                return false;
+        // Loop through the tests performed by this build.
+        $tests_stmt = $this->PDO->prepare(
+            'SELECT b2t.time, b2t.testid, t.name, b2t.status,
+                    b2t.timestatus
+            FROM build2test b2t
+            JOIN test t ON b2t.testid = t.id
+            WHERE b2t.buildid = ?');
+        if (!pdo_execute($tests_stmt, [$this->Id])) {
+            return false;
+        }
+        while ($row = $tests_stmt->fetch()) {
+            $testtime = $row['time'];
+            $testid = $row['testid'];
+            $teststatus = $row['status'];
+            $testname = $row['name'];
+            $previoustestid = 0;
+            $timestatus = $row['timestatus'];
+
+            foreach ($testarray as $test) {
+                if ($test['name'] == $testname) {
+                    $previoustestid = $test['id'];
+                    break;
+                }
             }
 
-            $testarray = [];
-            while ($row = $previous_tests_stmt->fetch()) {
-                $test = [];
-                $test['id'] = $row['testid'];
-                $test['name'] = $row['name'];
-                $testarray[] = $test;
-            }
-
-            // Loop through the tests performed by this build.
-            $tests_stmt = $this->PDO->prepare(
-                'SELECT b2t.time, b2t.testid, t.name, b2t.status,
-                        b2t.timestatus
-                FROM build2test b2t
-                JOIN test t ON b2t.testid = t.id
-                WHERE b2t.buildid = ?');
-            if (!pdo_execute($tests_stmt, [$this->Id])) {
-                return false;
-            }
-            while ($row = $tests_stmt->fetch()) {
-                $testtime = $row['time'];
-                $testid = $row['testid'];
-                $teststatus = $row['status'];
-                $testname = $row['name'];
-                $previoustestid = 0;
-                $timestatus = $row['timestatus'];
-
-                foreach ($testarray as $test) {
-                    if ($test['name'] == $testname) {
-                        $previoustestid = $test['id'];
-                        break;
-                    }
+            if ($previoustestid > 0) {
+                $previous_test_stmt = $this->PDO->prepare(
+                    'SELECT timemean, timestd, timestatus
+                    FROM build2test
+                    WHERE buildid = ? AND testid = ?');
+                if (!pdo_execute($previous_test_stmt,
+                        [$previousbuildid, $previoustestid])) {
+                    continue;
                 }
 
-                if ($previoustestid > 0) {
-                    $previous_test_stmt = $this->PDO->prepare(
-                        'SELECT timemean, timestd, timestatus
-                        FROM build2test
-                        WHERE buildid = ? AND testid = ?');
-                    if (!pdo_execute($previous_test_stmt,
-                            [$previousbuildid, $previoustestid])) {
-                        continue;
+                $previoustest_array = $previous_test_stmt->fetch();
+                $previoustimemean = $previoustest_array['timemean'];
+                $previoustimestd = $previoustest_array['timestd'];
+                $previoustimestatus = $previoustest_array['timestatus'];
+
+                if ($teststatus == 'passed') {
+                    // if the current test passed
+
+                    // Check the current status
+                    if ($previoustimestd < $projecttimestdthreshold) {
+                        $previoustimestd = $projecttimestdthreshold;
                     }
 
-                    $previoustest_array = $previous_test_stmt->fetch();
-                    $previoustimemean = $previoustest_array['timemean'];
-                    $previoustimestd = $previoustest_array['timestd'];
-                    $previoustimestatus = $previoustest_array['timestatus'];
+                    if ($testtime > $previoustimemean + $projecttimestd * $previoustimestd) {
+                        // only do positive std
 
-                    if ($teststatus == 'passed') {
-                        // if the current test passed
-
-                        // Check the current status
-                        if ($previoustimestd < $projecttimestdthreshold) {
-                            $previoustimestd = $projecttimestdthreshold;
-                        }
-
-                        if ($testtime > $previoustimemean + $projecttimestd * $previoustimestd) {
-                            // only do positive std
-
-                            $timestatus = $previoustimestatus + 1; // flag
-                        } else {
-                            $timestatus = 0; // reset the time status to 0
-                        }
-
-                        if ($timestatus > 0 && $timestatus <= $projecttestmaxstatus) {
-                            // if we are currently detecting the time changed we should use previous mean std
-
-                            $timemean = $previoustimemean;
-                            $timestd = $previoustimestd;
-                        } else {
-                            // Update the mean and std
-                            $timemean = (1 - $weight) * $previoustimemean + $weight * $testtime;
-                            $timestd = sqrt((1 - $weight) * $previoustimestd * $previoustimestd + $weight * ($testtime - $timemean) * ($testtime - $timemean));
-                        }
+                        $timestatus = $previoustimestatus + 1; // flag
                     } else {
-                        // the test failed so we just replicate the previous test time
+                        $timestatus = 0; // reset the time status to 0
+                    }
+
+                    if ($timestatus > 0 && $timestatus <= $projecttestmaxstatus) {
+                        // if we are currently detecting the time changed we should use previous mean std
 
                         $timemean = $previoustimemean;
                         $timestd = $previoustimestd;
-                        $timestatus = 0;
+                    } else {
+                        // Update the mean and std
+                        $timemean = (1 - $weight) * $previoustimemean + $weight * $testtime;
+                        $timestd = sqrt((1 - $weight) * $previoustimestd * $previoustimestd + $weight * ($testtime - $timemean) * ($testtime - $timemean));
                     }
                 } else {
-                    // the test doesn't exist
+                    // the test failed so we just replicate the previous test time
 
-                    $timestd = 0;
+                    $timemean = $previoustimemean;
+                    $timestd = $previoustimestd;
                     $timestatus = 0;
-                    $timemean = $testtime;
                 }
+            } else {
+                // the test doesn't exist
 
-                $update_stmt = $this->PDO->prepare(
-                    'UPDATE build2test
-                    SET timemean = ?, timestd = ?, timestatus = ?
-                    WHERE buildid = ? AND testid = ?');
-                if (!pdo_execute($update_stmt,
-                        [$timemean, $timestd, $timestatus, $this->Id,
-                         $testid])) {
-                    continue;
-                }
-                if ($timestatus >= $projecttestmaxstatus) {
-                    $testtimestatusfailed++;
-                }
+                $timestd = 0;
+                $timestatus = 0;
+                $timemean = $testtime;
             }
-        } else {
-            // this is the first build
 
-            $timestd = 0;
-            $timestatus = 0;
-
-            // Loop through the tests.
-            $tests_stmt = $this->PDO->prepare(
-                'SELECT time, testid FROM build2test WHERE buildid = ?');
-            if (!pdo_execute($tests_stmt, [$this->Id])) {
-                return false;
+            $update_stmt = $this->PDO->prepare(
+                'UPDATE build2test
+                SET timemean = ?, timestd = ?, timestatus = ?
+                WHERE buildid = ? AND testid = ?');
+            if (!pdo_execute($update_stmt,
+                    [$timemean, $timestd, $timestatus, $this->Id,
+                     $testid])) {
+                continue;
             }
-            while ($test_array = $tests_stmt->fetch()) {
-                $timemean = $test_array['time'];
-                $testid = $test_array['testid'];
-                $update_stmt = $this->PDO->prepare(
-                    'UPDATE build2test
-                    SET timemean = ?, timestd = ?, timestatus = ?
-                    WHERE buildid = ? AND testid = ?');
-                if (!pdo_execute($update_stmt,
-                        [$timemean, $timestd, $timestatus, $this->Id,
-                         $testid])) {
-                    continue;
-                }
-                if ($timestatus >= $projecttestmaxstatus) {
-                    $testtimestatusfailed++;
-                }
+            if ($timestatus >= $projecttestmaxstatus) {
+                $testtimestatusfailed++;
             }
         }
 
@@ -2151,6 +2118,7 @@ class Build
         }
 
         // Check if we need to modify starttime or endtime.
+        // TODO: reference testing_handler.php line 368
         if (strtotime($build['starttime']) > strtotime($this->StartTime)) {
             $clauses[] = 'starttime = ?';
             $params[] = $this->StartTime;
@@ -2290,7 +2258,7 @@ class Build
 
         // Should we post configure errors to a pull request?
         if (!empty($this->PullRequest) && $numErrors > 0) {
-            $message = 'This build failed to configure';
+            $message = "$this->Name failed to configure";
             $url = get_server_URI(false) .
                 "/viewConfigure.php?buildid=$this->Id";
             $this->NotifyPullRequest($message, $url);
@@ -2412,20 +2380,44 @@ class Build
             return;
         }
 
+        // Avoid a race condition when parallel processing.
+        pdo_begin_transaction();
+        $select_stmt = $this->PDO->prepare(
+            'SELECT id FROM build WHERE id = :id FOR UPDATE');
+        if (!pdo_execute($select_stmt, [':id' => $this->Id])) {
+            $this->PDO->rollBack();
+            return;
+        }
+
         // Update build step duration for this build.
-        $stmt = $this->PDO->prepare(
-            'UPDATE build SET buildduration = buildduration + ?
-            WHERE id = ?');
-        pdo_execute($stmt, [$duration, $this->Id]);
+        $update_stmt = $this->PDO->prepare(
+            'UPDATE build SET buildduration = buildduration + :duration
+            WHERE id = :id');
+        if (!pdo_execute($update_stmt,
+                    [':duration' => $duration, ':id' => $this->Id])) {
+            $this->PDO->rollBack();
+            return;
+        }
+        $this->PDO->commit();
 
         if (!$update_parent) {
             return;
         }
-        // If this is a child build, add this duration
-        // to the parent's sum.
+
+        // If this is a child build, add this duration to the parent's sum.
         $this->SetParentId($this->LookupParentBuildId());
         if ($this->ParentId > 0) {
-            pdo_execute($stmt, [$duration, $this->ParentId]);
+            pdo_begin_transaction();
+            if (!pdo_execute($select_stmt, [':id' => $this->ParentId])) {
+                $this->PDO->rollBack();
+                return;
+            }
+            if (!pdo_execute($update_stmt,
+                        [':duration' => $duration, ':id' => $this->ParentId])) {
+                $this->PDO->rollBack();
+                return;
+            }
+            $this->PDO->commit();
         }
     }
 
@@ -2665,5 +2657,38 @@ class Build
         $build->Id = $row['id'];
         $build->FillFromId($build->Id);
         return $build;
+    }
+
+    /**
+     * @return Site
+     */
+    public function GetSite()
+    {
+        if (!$this->Site) {
+            $this->Site = new Site();
+            $this->Site->Id = $this->SiteId;
+        }
+        return $this->Site;
+    }
+
+    public function SetSite(Site $site)
+    {
+        $this->Site = $site;
+    }
+
+    /**
+     * @param Test $test
+     */
+    public function AddTest(Test $test)
+    {
+        $this->TestCollection->add($test);
+    }
+
+    /**
+     * @return TestCollection
+     */
+    public function GetTestCollection()
+    {
+        return $this->TestCollection;
     }
 }

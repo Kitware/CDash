@@ -26,6 +26,7 @@ class Site
     public $Longitude;
     public $OutOfOrder;
     private $Filled;
+    private $Information;
     private $PDO;
 
     public function __construct()
@@ -38,10 +39,22 @@ class Site
         $this->PDO = get_link_identifier()->getPdo();
     }
 
-    public function SetInformation($information)
+    /**
+     * @param SiteInformation $information
+     */
+    public function SetInformation(SiteInformation $information)
     {
         $information->SiteId = $this->Id;
         $information->Save();
+        $this->Information = $information;
+    }
+
+    /**
+     * @return SiteInformation
+     */
+    public function GetInformation()
+    {
+        return $this->Information;
     }
 
     /** Check if the site already exists */

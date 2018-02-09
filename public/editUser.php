@@ -60,6 +60,7 @@ if ($session_OK) {
     // Update the password
     @$updatepassword = $_POST['updatepassword'];
     if ($updatepassword) {
+        $oldpasswd = $_POST['oldpasswd'];
         $passwd = $_POST['passwd'];
         $passwd2 = $_POST['passwd2'];
 
@@ -72,7 +73,12 @@ if ($session_OK) {
         $password_is_good = true;
         $error_msg = '';
 
-        if ($passwd != $passwd2) {
+        if (!password_verify($oldpasswd, $user->Password) && md5($oldpasswd) != $user->Password) {
+            $password_is_good = false;
+            $error_msg = 'Your old password is incorrect.';
+        }
+
+        if ($password_is_good && $passwd != $passwd2) {
             $password_is_good = false;
             $error_msg = 'Passwords do not match.';
         }

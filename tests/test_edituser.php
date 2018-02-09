@@ -58,7 +58,30 @@ class EditUserTestCase extends KWWebTestCase
         $this->login('simpletest2@localhost', 'simpletest');
         $content = $this->get($this->url . '/editUser.php');
 
+        // test incorrect old password
+        if (!$this->SetFieldByName('oldpasswd', 'incorrect')) {
+            $this->fail('SetFieldByName on password returned false');
+            return 1;
+        }
+        if (!$this->SetFieldByName('passwd', '12345')) {
+            $this->fail('SetFieldByName on password returned false');
+            return 1;
+        }
+        if (!$this->SetFieldByName('passwd2', '12345')) {
+            $this->fail('SetFieldByName on password returned false');
+            return 1;
+        }
+        $content = $this->clickSubmitByName('updatepassword');
+        if (strpos($content, 'Your old password is incorrect') === false) {
+            $this->fail("'Your old password is incorrect' not found in output.  Here's what we got instead:\n$content");
+            return 1;
+        }
+
         // test minimum password length.
+        if (!$this->SetFieldByName('oldpasswd', 'simpletest')) {
+            $this->fail('SetFieldByName on password returned false');
+            return 1;
+        }
         if (!$this->SetFieldByName('passwd', '1234')) {
             $this->fail('SetFieldByName on password returned false');
             return 1;
@@ -74,6 +97,10 @@ class EditUserTestCase extends KWWebTestCase
         }
 
         //change password
+        if (!$this->SetFieldByName('oldpasswd', 'simpletest')) {
+            $this->fail('SetFieldByName on password returned false');
+            return 1;
+        }
         if (!$this->SetFieldByName('passwd', '12345')) {
             $this->fail('SetFieldByName on password returned false');
             return 1;
@@ -120,6 +147,10 @@ class EditUserTestCase extends KWWebTestCase
         $this->logout();
         $this->login('simpletest@localhost', '12345');
         $content = $this->get($this->url . '/editUser.php');
+        if (!$this->SetFieldByName('oldpasswd', '12345')) {
+            $this->fail('SetFieldByName on password returned false');
+            return 1;
+        }
         if (!$this->SetFieldByName('passwd', 'simpletest')) {
             $this->fail('SetFieldByName on password returned false');
             return 1;

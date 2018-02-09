@@ -129,7 +129,8 @@ if ($filterdata['limit'] > 0) {
 }
 
 if (isset($_GET['dir']) && $_GET['dir'] != '') {
-    $SQLsearchTerm .= " AND cf.fullpath LIKE '%" . htmlspecialchars(pdo_real_escape_string($_GET['dir'])) . "/%'";
+    $escaped_dir = htmlspecialchars(pdo_real_escape_string($_GET['dir']));
+    $SQLsearchTerm .= " AND (cf.fullpath LIKE '$escaped_dir/%' OR cf.fullpath LIKE './$escaped_dir/%')";
 }
 
 // Coverage files
@@ -148,6 +149,12 @@ $coveragefile = pdo_query($sql);
 if (false === $coveragefile) {
     add_log('error: pdo_query failed: ' . pdo_error(),
         __FILE__, LOG_ERR);
+}
+
+// Add the coverage type
+$status = -1;
+if (isset($_GET['status'])) {
+    $status = pdo_real_escape_numeric($_GET['status']);
 }
 
 $covfile_array = array();
@@ -210,13 +217,9 @@ while ($coveragefile_array = pdo_fetch_array($coveragefile)) {
     if (isset($coveragefile_array['userid'])) {
         $covfile['user'] = $coveragefile_array['userid'];
     }
-    $covfile_array[] = $covfile;
-}
-
-// Add the coverage type
-$status = -1;
-if (isset($_GET['status'])) {
-    $status = pdo_real_escape_numeric($_GET['status']);
+    if ($covfile['coveragemetric'] != 1.0 || $status != -1) {
+        $covfile_array[] = $covfile;
+    }
 }
 
 // Do the sorting

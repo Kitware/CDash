@@ -15,6 +15,8 @@
 =========================================================================*/
 
 // It is assumed that appropriate headers should be included before including this file
+use CDash\Collection\TestMeasurementCollection;
+
 include_once 'models/testimage.php';
 include_once 'models/testmeasurement.php';
 include_once 'models/buildtestdiff.php';
@@ -41,11 +43,15 @@ class Test
     public $Labels;
     public $Measurements;
 
+    private $TestMeasurementCollection;
+    private $Status;
+    private $BuildTest;
+
     public function __construct()
     {
-        $this->Images = array();
-        $this->Labels = array();
-        $this->Measurements = array();
+        $this->Images = [];
+        $this->Labels = [];
+        $this->Measurements = [];
         $this->CompressedOutput = false;
     }
 
@@ -242,7 +248,7 @@ class Test
                     imagepng($img);
                     break;
                 default:
-                    echo "Unknown image type: $type";
+                    echo "Unknown image type: {$image->Extension}";
                     return;
             }
             $imageVariable = ob_get_contents();
@@ -259,5 +265,55 @@ class Test
             $testImage->Insert();
         }
         return true;
+    }
+
+    /**
+     * @return BuildTest
+     */
+    public function GetBuildTest()
+    {
+        if (!$this->BuildTest) {
+            $this->BuildTest = new BuildTest();
+            $this->BuildTest->TestId = $this->Id;
+        }
+        return $this->BuildTest;
+    }
+
+    /**
+     * @param BuildTest $BuildTest
+     */
+    public function SetBuildTest(BuildTest $BuildTest)
+    {
+        $this->BuildTest = $BuildTest;
+    }
+
+    public function GetStatus()
+    {
+        $buildTest = $this->GetBuildTest();
+        return $buildTest->Status;
+    }
+
+    /**
+     * @return TestMeasurementCollection
+     */
+    public function GetTestMeasurementCollection()
+    {
+        if (!$this->TestMeasurementCollection) {
+            $collection = new TestMeasurementCollection();
+            foreach ($this->Measurements as $m) {
+                $collection->add($m);
+            }
+            $this->TestMeasurementCollection = $collection;
+        }
+        return $this->TestMeasurementCollection;
+    }
+
+    /**
+     * @return
+     */
+    public function GetExecutionTime()
+    {
+        $buildTest = $this->GetBuildTest();
+        return (double)$buildTest->Time;
     }
 }

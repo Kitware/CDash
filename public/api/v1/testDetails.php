@@ -24,35 +24,23 @@ require_once 'include/api_common.php';
 include_once 'include/repository.php';
 include 'include/version.php';
 require_once 'models/build.php';
+require_once 'models/project.php';
+require_once 'models/site.php';
 
 $start = microtime_float();
-$response = [];
+
+$_REQUEST['buildid'] = $_GET['build'];
+$build = get_request_build();
 
 $testid = pdo_real_escape_numeric($_GET['test']);
 // Checks
 if (!isset($testid) || !is_numeric($testid)) {
-    $response['error'] = 'A valid test was not specified.';
-    echo json_encode($response);
-    return;
+    json_error_response(['error' => 'A valid test was not specified.']);
 }
 
-$buildid = pdo_real_escape_numeric($_GET['build']);
-if (!isset($buildid) || !is_numeric($buildid)) {
-    $response['error'] = 'A valid buildid was not specified.';
-    echo json_encode($response);
-    return;
-}
-
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
-
-$testRow = pdo_fetch_array(pdo_query("SELECT * FROM build2test,test WHERE build2test.testid = '$testid' AND build2test.buildid = '$buildid' AND build2test.testid=test.id"));
-$buildRow = pdo_fetch_array(pdo_query("SELECT * FROM build WHERE id = '$buildid'"));
-$projectid = $buildRow['projectid'];
-
+$projectid = $build->ProjectId;
 if (!$projectid) {
-    echo "This build doesn't exist.";
-    return;
+    json_error_response(['error' => 'This build does not exist.']);
 }
 
 if (!can_access_project($projectid)) {
@@ -85,36 +73,27 @@ if (isset($_GET['fileid']) && is_numeric($_GET['fileid'])) {
     return;
 }
 
-$siteid = $buildRow['siteid'];
+$project = new Project();
+$project->Id = $projectid;
+$project->Fill();
 
-$project = pdo_query("SELECT name,nightlytime,showtesttime FROM project WHERE id='$projectid'");
-if (pdo_num_rows($project) > 0) {
-    $project_array = pdo_fetch_array($project);
-    $projectname = $project_array['name'];
-}
+$site = new Site();
+$site->Id = $build->SiteId;
+$site->Fill();
 
-$projectRow = pdo_fetch_array(pdo_query("SELECT name,testtimemaxstatus FROM project WHERE id = '$projectid'"));
-$projectname = $projectRow['name'];
-
-$siteQuery = "SELECT name FROM site WHERE id = '$siteid'";
-$siteResult = pdo_query($siteQuery);
-$siteRow = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id = '$siteid'"));
-
-$date = get_dashboard_date_from_build_starttime($buildRow['starttime'], $project_array['nightlytime']);
-list($previousdate, $currenttime, $nextdate) = get_dates($date, $project_array['nightlytime']);
+$date = get_dashboard_date_from_build_starttime($build->StartTime, $project->NightlyTime);
+list($previousdate, $currenttime, $nextdate) = get_dates($date, $project->NightlyTime);
 $logoid = getLogoID($projectid);
 
-$response['title'] = "CDash : $projectname";
-get_dashboard_JSON_by_name($projectname, $date, $response);
+$response['title'] = "CDash : $project->Name";
+get_dashboard_JSON_by_name($project->Name, $date, $response);
 
-$project = array();
-$project['showtesttime'] = $project_array['showtesttime'];
-$response['project'] = $project;
+$project_response = [];
+$project_response['showtesttime'] = $project->ShowTestTime;
+$response['project'] = $project_response;
 
+$testRow = pdo_fetch_array(pdo_query("SELECT * FROM build2test,test WHERE build2test.testid = '$testid' AND build2test.buildid = '$build->Id' AND build2test.testid=test.id"));
 $testName = $testRow['name'];
-$buildtype = $buildRow['type'];
-$buildname = $buildRow['name'];
-$starttime = $buildRow['starttime'];
 
 // Helper function
 function findTest($buildid, $testName)
@@ -130,11 +109,9 @@ function findTest($buildid, $testName)
     return 0;
 }
 
-$menu = array();
-$menu['back'] = "viewTest.php?buildid=$buildid";
+$menu = [];
+$menu['back'] = "viewTest.php?buildid=$build->Id";
 
-$build = new Build();
-$build->Id = $buildid;
 $previous_buildid = $build->GetPreviousBuildId();
 $current_buildid = $build->GetCurrentBuildId();
 $next_buildid = $build->GetNextBuildId();
@@ -167,22 +144,22 @@ $response['menu'] = $menu;
 
 $summaryLink = "testSummary.php?project=$projectid&name=$testName&date=$date";
 
-$test_response = array();
+$test_response = [];
 $test_response['id'] = $testid;
-$test_response['buildid'] = $buildid;
-$test_response['build'] = $buildname;
-$test_response['buildstarttime'] = date(FMT_DATETIMESTD, strtotime($starttime . ' UTC'));
-$test_response['site'] = $siteRow['name'];
-$test_response['siteid'] = $siteid;
+$test_response['buildid'] = $build->Id;
+$test_response['build'] = $build->Name;
+$test_response['buildstarttime'] = date(FMT_DATETIMESTD, strtotime($build->StartTime . ' UTC'));
+$test_response['site'] = $site->Name;
+$test_response['siteid'] = $site->Id;
 $test_response['test'] = $testName;
-$test_response['time'] = $testRow['time'];
+$test_response['time'] = time_difference($testRow['time'], true, '', true);
 $test_response['command'] = $testRow['command'];
 $test_response['details'] = $testRow['details'];
 
 // Helper function to remove bad characters for XML parser
 function utf8_for_xml($string)
 {
-    return preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', ' ', $string);
+    return preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{001b}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', ' ', $string);
 }
 
 if ($CDASH_USE_COMPRESSION) {
@@ -207,25 +184,25 @@ $test_response['summaryLink'] = $summaryLink;
 switch ($testRow['status']) {
     case 'passed':
         $test_response['status'] = 'Passed';
-        $test_response['statusColor'] = '#00aa00';
+        $test_response['statusColor'] = 'normal-text';
         break;
     case 'failed':
         $test_response['status'] = 'Failed';
-        $test_response['statusColor'] = '#aa0000';
+        $test_response['statusColor'] = 'error-text';
         break;
     case 'notrun':
         $test_response['status'] = 'Not Run';
-        $test_response['statusColor'] = '#ffcc66';
+        $test_response['statusColor'] = 'warning-text';
         break;
 }
 
 // Find the repository revision
-$update_response = array();
+$update_response = [];
 // Return the status
 $status_array = pdo_fetch_array(pdo_query("SELECT status,revision,priorrevision,path
                                               FROM buildupdate,build2update AS b2u
                                               WHERE b2u.updateid=buildupdate.id
-                                              AND b2u.buildid='$buildid'"));
+                                              AND b2u.buildid='$build->Id'"));
 if (strlen($status_array['status']) > 0 && $status_array['status'] != '0') {
     $update_response['status'] = $status_array['status'];
 } else {
@@ -243,13 +220,21 @@ $test_response['update'] = $update_response;
 $test_response['timemean'] = $testRow['timemean'];
 $test_response['timestd'] = $testRow['timestd'];
 
-$testtimemaxstatus = $projectRow['testtimemaxstatus'];
-if ($testRow['timestatus'] < $testtimemaxstatus) {
+$testtimemaxstatus = $project->TestTimeMaxStatus;
+if ($testRow['timestatus'] == 0) {
     $test_response['timestatus'] = 'Passed';
-    $test_response['timeStatusColor'] = '#00aa00';
+    $test_response['timeStatusColor'] = 'normal-text';
 } else {
-    $test_response['timestatus'] = 'Failed';
-    $test_response['timeStatusColor'] = '#aa0000';
+    $threshold = $test_response['timemean'] +
+        $project->TestTimeStd * $test_response['timestd'];
+    $test_response['threshold'] = time_difference($threshold, true, '', true);
+    if ($testRow['timestatus'] >= $testtimemaxstatus) {
+        $test_response['timestatus'] = 'Failed';
+        $test_response['timeStatusColor'] = 'error-text';
+    } else {
+        $test_response['timestatus'] = 'Warning';
+        $test_response['timeStatusColor'] = 'warning-text';
+    }
 }
 
 //get any images associated with this test
@@ -257,9 +242,9 @@ $query = "SELECT imgid,role FROM test2image WHERE testid = '$testid' AND (role='
     . "OR role='ValidImage' OR role='BaselineImage' OR role='DifferenceImage2') ORDER BY id";
 $result = pdo_query($query);
 if (pdo_num_rows($result) > 0) {
-    $compareimages_response = array();
+    $compareimages_response = [];
     while ($row = pdo_fetch_array($result)) {
-        $image_response = array();
+        $image_response = [];
         $image_response['imgid'] = $row['imgid'];
         $image_response['role'] = $row['role'];
         $compareimages_response[] = $image_response;
@@ -267,12 +252,12 @@ if (pdo_num_rows($result) > 0) {
     $test_response['compareimages'] = $compareimages_response;
 }
 
-$images_response = array();
+$images_response = [];
 $query = "SELECT imgid,role FROM test2image WHERE testid = '$testid' "
     . "AND role!='ValidImage' AND role!='BaselineImage' AND role!='DifferenceImage2' ORDER BY id";
 $result = pdo_query($query);
 while ($row = pdo_fetch_array($result)) {
-    $image_response = array();
+    $image_response = [];
     $image_response['imgid'] = $row['imgid'];
     $image_response['role'] = $row['role'];
     $images_response[] = $image_response;
@@ -282,12 +267,12 @@ if (!empty($images_response)) {
 }
 
 //get any measurements associated with this test
-$measurements_response = array();
+$measurements_response = [];
 $query = "SELECT name,type,value FROM testmeasurement WHERE testid = '$testid' ORDER BY id";
 $result = pdo_query($query);
 $fileid = 1;
 while ($row = pdo_fetch_array($result)) {
-    $measurement_response = array();
+    $measurement_response = [];
     $measurement_response['name'] = $row['name'];
     $measurement_response['type'] = $row['type'];
 

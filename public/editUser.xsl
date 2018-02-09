@@ -78,49 +78,53 @@
 </form>
 <form method="post" action="" name="updatemail_form">
 <tr class="trodd">
-    <td width="20%" height="2" ><div align="right">Password</div></td>
-    <td width="80%" height="2" id="nob"><input class="textbox" type="password"  name="passwd" size="20"/></td>
+    <td width="20%" height="2" ><div align="right">Current Password</div></td>
+    <td width="80%" height="2" id="nob"><input class="textbox" type="password" name="oldpasswd" size="20"/></td>
 </tr>
 <tr class="treven">
+    <td width="20%" height="2" ><div align="right">New Password</div></td>
+    <td width="80%" height="2" id="nob"><input class="textbox" type="password"  name="passwd" size="20"/></td>
+</tr>
+<tr class="trodd">
     <td width="20%" height="2" ><div align="right">Confirm Password</div></td>
     <td width="80%" height="2" id="nob"><input class="textbox" type="password"  name="passwd2" size="20"/></td>
 </tr>
-<tr>
+<tr class="treven">
   <td width="20%" id="nob"></td>
   <td width="80%" id="nob"><input type="submit" value="Update Password" name="updatepassword" class="textbox"/>
  </td>
 </tr>
-<tr class="treven">
+<tr class="trodd">
     <td width="20%" height="2" ><div align="right">Repository Credential #1</div></td>
     <td width="80%" height="2" id="nob"><xsl:value-of select="cdash/user/credential_0"/></td>
 </tr>
-<tr class="trodd">
+<tr class="treven">
     <td width="20%" height="2" ><div align="right">Repository Credential #2</div></td>
     <td width="80%" height="2" id="nob"><input class="textbox" type="text" name="credentials[1]">
     <xsl:attribute name="value"><xsl:value-of select="cdash/user/credential_1"/></xsl:attribute>
     </input>
     </td>
 </tr>
-<tr class="treven">
+<tr class="trodd">
     <td width="20%" height="2" ><div align="right">Repository Credential #3</div></td>
     <td width="80%" height="2" id="nob"><input class="textbox" type="text" name="credentials[2]">
     <xsl:attribute name="value"><xsl:value-of select="cdash/user/credential_2"/></xsl:attribute>
     </input>
     </td>
 </tr>
-<tr class="trodd">
+<tr class="treven">
     <td width="20%" height="2" ><div align="right">Repository Credential #4</div></td>
     <td width="80%" height="2" id="nob"><input class="textbox" type="text" name="credentials[3]">
     <xsl:attribute name="value"><xsl:value-of select="cdash/user/credential_3"/></xsl:attribute>
     </input>
     </td>
 </tr>
-<tr class="treven">
+<tr class="trodd">
   <td width="20%" id="nob"></td>
   <td width="80%" id="nob"><input type="submit" value="Update Credentials" name="updatecredentials" class="textbox"/>
  </td>
 </tr>
-<tr class="trodd">
+<tr class="treven">
   <td width="20%" height="2"><div align="right">Internal Id</div></td>
   <td  width="80%" height="2" id="nob"><xsl:value-of select="cdash/user/id"/></td>
 </tr>

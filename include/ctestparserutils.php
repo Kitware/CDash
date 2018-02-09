@@ -50,7 +50,9 @@ function extract_type_from_buildstamp($buildstamp)
 {
     // We assume that the time stamp is always of the form
     // 20080912-1810-this-is-a-type
-    return substr($buildstamp, strpos($buildstamp, '-', strpos($buildstamp, '-') + 1) + 1);
+    if (!empty($buildstamp)) {
+        return substr($buildstamp, strpos($buildstamp, '-', strpos($buildstamp, '-') + 1) + 1);
+    }
 }
 
 /** Extract the date from the build stamp */

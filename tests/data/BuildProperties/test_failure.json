@@ -1,0 +1,10 @@
+{
+  "debug": true,
+  "buildtime": 10.02,
+  "files":
+    [
+      "abc",
+      "def",
+      "ghi"
+    ]
+}

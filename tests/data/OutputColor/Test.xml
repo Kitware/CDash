@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Linux-c++"
+	BuildStamp="20180117-1754-Experimental"
+	Name="nagas"
+	Generator="ctest-3.9.6"
+	CompilerName="/usr/bin/c++"
+	CompilerVersion="5.4.0"
+	OSName="Linux"
+	Hostname="nagas"
+	OSRelease="4.13.0-26-generic"
+	OSVersion="#29~16.04.2-Ubuntu SMP Tue Jan 9 22:00:44 UTC 2018"
+	OSPlatform="x86_64"
+	Is64Bits="1"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="158"
+	ProcessorCacheSize="8192"
+	NumberOfLogicalCPU="8"
+	NumberOfPhysicalCPU="4"
+	TotalVirtualMemory="32618"
+	TotalPhysicalMemory="32020"
+	LogicalProcessorsPerPhysical="2"
+	ProcessorClockFrequency="2900"
+	>
+	<Testing>
+		<StartDateTime>Jan 17 12:54 EST</StartDateTime>
+		<StartTestTime>1516211668</StartTestTime>
+		<TestList>
+			<Test>./colortest_short</Test>
+			<Test>./colortest_long</Test>
+		</TestList>
+		<Test Status="passed">
+			<Name>colortest_short</Name>
+			<Path>.</Path>
+			<FullName>./colortest_short</FullName>
+			<FullCommandLine>/home/kyle/development/terminal-test/build/colortest_short</FullCommandLine>
+			<Results>
+				<NamedMeasurement type="numeric/double" name="Execution Time">
+					<Value>0.00128317</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Completion Status">
+					<Value>Completed</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Command Line">
+					<Value>/home/kyle/development/terminal-test/build/colortest_short</Value>
+				</NamedMeasurement>
+				<Measurement>
+					<Value>[NON-XML-CHAR-0x1B][32mHello world!
+[NON-XML-CHAR-0x1B][31mThis is a test
+</Value>
+				</Measurement>
+			</Results>
+		</Test>
+		<Test Status="passed">
+			<Name>colortest_long</Name>
+			<Path>.</Path>
+			<FullName>./colortest_long</FullName>
+			<FullCommandLine>/home/kyle/development/terminal-test/build/colortest_long</FullCommandLine>
+			<Results>
+				<NamedMeasurement type="numeric/double" name="Execution Time">
+					<Value>0.00133395</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Completion Status">
+					<Value>Completed</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Command Line">
+					<Value>/home/kyle/development/terminal-test/build/colortest_long</Value>
+				</NamedMeasurement>
+				<Measurement>
+					<Value encoding="base64" compression="gzip">eJyTjjY2yvVIzcnJVyjPL8pJUeSSjrY0zLUpTi7KLChRKKksSLVVKkmtKNHPSixLhIgq2SXn5xXn56Tq5eSnayj5Ovp4Onv6hwYreDmGOQY7B3kGhCgqKippWtvoQzTYAQ01yHXPz09RSKpMhVkEANe8J6Q=</Value>
+				</Measurement>
+			</Results>
+		</Test>
+		<EndDateTime>Jan 17 12:54 EST</EndDateTime>
+		<EndTestTime>1516211668</EndTestTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Testing>
+</Site>

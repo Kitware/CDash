@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Linux-c++"
+	BuildStamp="20180119-1440-Experimental"
+	Name="nagas"
+	Generator="ctest-3.9.6"
+	CompilerName="/usr/bin/c++"
+	CompilerVersion="5.4.0"
+	OSName="Linux"
+	Hostname="nagas"
+	OSRelease="4.13.0-26-generic"
+	OSVersion="#29~16.04.2-Ubuntu SMP Tue Jan 9 22:00:44 UTC 2018"
+	OSPlatform="x86_64"
+	Is64Bits="1"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="158"
+	ProcessorCacheSize="8192"
+	NumberOfLogicalCPU="8"
+	NumberOfPhysicalCPU="4"
+	TotalVirtualMemory="32618"
+	TotalPhysicalMemory="32020"
+	LogicalProcessorsPerPhysical="2"
+	ProcessorClockFrequency="2900"
+	>
+	<CoverageLog>
+		<StartDateTime>Jan 19 09:41 EST</StartDateTime>
+		<StartTime>1516372865</StartTime>
+		<File Name="goodbye.cpp" FullPath="./core/utils/goodbye.cpp">
+			<Report>
+				<Line Number="0" Count="-1">#include "goodbye.hpp"</Line>
+				<Line Number="1" Count="-1"></Line>
+				<Line Number="2" Count="-1">#include &lt;iostream&gt;</Line>
+				<Line Number="3" Count="-1"></Line>
+				<Line Number="4" Count="1">void goodbye() {</Line>
+				<Line Number="5" Count="1">  std::cout &lt;&lt; "Good bye!" &lt;&lt; std::endl;</Line>
+				<Line Number="6" Count="4">}</Line>
+			</Report>
+		</File>
+		<File Name="main.cpp" FullPath="./main.cpp">
+			<Report>
+				<Line Number="0" Count="-1">#include "utils/hello.hpp"</Line>
+				<Line Number="1" Count="-1">#include "core/utils/goodbye.hpp"</Line>
+				<Line Number="2" Count="-1"></Line>
+				<Line Number="3" Count="1">int main(int argc, char** argv) {</Line>
+				<Line Number="4" Count="1">  hello();</Line>
+				<Line Number="5" Count="1">  goodbye();</Line>
+				<Line Number="6" Count="1">  return 0;</Line>
+				<Line Number="7" Count="-1">}</Line>
+			</Report>
+		</File>
+		<File Name="hello.cpp" FullPath="./utils/hello.cpp">
+			<Report>
+				<Line Number="0" Count="-1">#include "hello.hpp"</Line>
+				<Line Number="1" Count="-1"></Line>
+				<Line Number="2" Count="-1">#include &lt;iostream&gt;</Line>
+				<Line Number="3" Count="-1"></Line>
+				<Line Number="4" Count="1">void hello() {</Line>
+				<Line Number="5" Count="1">  std::cout &lt;&lt; "Hello world!" &lt;&lt; std::endl;</Line>
+				<Line Number="6" Count="4">}</Line>
+			</Report>
+		</File>
+		<EndDateTime>Jan 19 09:41 EST</EndDateTime>
+		<EndTime>1516372865</EndTime>
+	</CoverageLog>
+</Site>
