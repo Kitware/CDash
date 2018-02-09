@@ -14,8 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-use CDash\Database;
-
 include_once 'include/common.php';
 include_once 'include/ctestparserutils.php';
 include_once 'include/repository.php';
@@ -29,6 +27,13 @@ include_once 'models/label.php';
 include_once 'models/subproject.php';
 include_once 'models/test.php';
 include_once 'models/uploadfile.php';
+include_once 'models/user.php';
+include_once 'models/userproject.php';
+
+use CDash\Config;
+use CDash\Log;
+use CDash\Collection\TestCollection;
+use CDash\Database;
 
 class Build
 {
@@ -86,8 +91,10 @@ class Build
     public $NightlyStartTime;
     public $BeginningOfDay;
     public $EndOfDay;
+    private $TestCollection;
     private $Failures;
     private $PDO;
+    private $Site;
 
     public function __construct()
     {
@@ -110,6 +117,7 @@ class Build
         $this->SubmitTime = '1980-01-01 00:00:00';
         $this->Type = '';
         $this->Uuid = '';
+        $this->TestCollection = new TestCollection();
 
         $this->PDO = Database::getInstance()->getPdo();
     }
@@ -2110,6 +2118,7 @@ class Build
         }
 
         // Check if we need to modify starttime or endtime.
+        // TODO: reference testing_handler.php line 368
         if (strtotime($build['starttime']) > strtotime($this->StartTime)) {
             $clauses[] = 'starttime = ?';
             $params[] = $this->StartTime;
@@ -2648,5 +2657,38 @@ class Build
         $build->Id = $row['id'];
         $build->FillFromId($build->Id);
         return $build;
+    }
+
+    /**
+     * @return Site
+     */
+    public function GetSite()
+    {
+        if (!$this->Site) {
+            $this->Site = new Site();
+            $this->Site->Id = $this->SiteId;
+        }
+        return $this->Site;
+    }
+
+    public function SetSite(Site $site)
+    {
+        $this->Site = $site;
+    }
+
+    /**
+     * @param Test $test
+     */
+    public function AddTest(Test $test)
+    {
+        $this->TestCollection->add($test);
+    }
+
+    /**
+     * @return TestCollection
+     */
+    public function GetTestCollection()
+    {
+        return $this->TestCollection;
     }
 }

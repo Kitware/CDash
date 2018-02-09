@@ -7,7 +7,9 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 require_once 'models/project.php';
+
 use CDash\Database;
+use CDash\Test\UseCase\TestUseCase;
 
 class TimeStatusTestCase extends KWWebTestCase
 {
@@ -38,15 +40,52 @@ class TimeStatusTestCase extends KWWebTestCase
             return;
         }
 
-        // Submit testing data.
-        $filesToSubmit = ['Test_1.xml', 'Test_2.xml', 'Test_3.xml', 'Test_4.xml', 'Test_5.xml'];
-        $dir = dirname(__FILE__) . '/data/TimeStatus';
-        foreach ($filesToSubmit as $file) {
-            if (!$this->submission('TimeStatus', "$dir/$file")) {
-                $this->fail("Failed to submit $file");
-                return;
-            }
-        }
+        $use_case = new TestUseCase();
+        $use_case
+            ->createSite([
+                'BuildName' => 'test_timing',
+                'BuildStamp' => '20180127-1723-Experimental',
+                'Name' => 'elysium'
+            ])
+            ->setProjectId($projectid)
+            ->setStartTime(1516900999)
+            ->setEndTime(1516901001)
+            ->createTestPassed('nap')
+            ->setTestProperties('nap', ['Execution Time' => 2.00447]);
+
+        $use_case->build();
+
+        $use_case
+            ->setSiteAttribute('BuildStamp', '20180127-1724-Experimental')
+            ->setStartTime(1516901059)
+            ->setEndTime(1516901061)
+            ->setTestProperties('nap', ['Execution Time' => 2.00447]);
+
+        $use_case->build();
+
+        $use_case
+            ->setSiteAttribute('BuildStamp', '20180127-1725-Experimental')
+            ->setStartTime(1516901119)
+            ->setEndTime(1516901188)
+            ->setTestProperties('nap', ['Execution Time' => 9.00447]);
+
+        $use_case->build();
+
+        $use_case
+            ->setSiteAttribute('BuildStamp', '20180127-1726-Experimental')
+            ->setStartTime(1516901179)
+            ->setEndTime(1516901248)
+            ->setTestProperties('nap', ['Execution Time' => 9.00447]);
+
+        $use_case->build();
+
+        $use_case
+            ->setSiteAttribute('BuildStamp', '20180127-1727-Experimental')
+            ->setStartTime(1516901239)
+            ->setEndTime(1516901308)
+            ->setTestProperties('nap', ['Execution Time' => 9.00447]);
+
+        $use_case->build();
 
         // Verify results.
         $stmt = $this->PDO->prepare(

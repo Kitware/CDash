@@ -25,9 +25,13 @@ abstract class AbstractHandler implements SaxHandler
     protected $stack;
     protected $projectid;
     protected $scheduleid;
+    /** @var  Build $Build */
     protected $Build;
+    /** @var  Site $Site */
     protected $Site;
     protected $SubProjectName;
+
+    protected $ModelFactory;
 
     public function __construct($projectid, $scheduleid)
     {
@@ -98,5 +102,13 @@ abstract class AbstractHandler implements SaxHandler
     public function getBuildName()
     {
         return $this->Build->Name;
+    }
+
+    protected function getModelFactory()
+    {
+        if (!$this->ModelFactory) {
+            $this->ModelFactory = \CDash\ServiceContainer::getInstance();
+        }
+        return $this->ModelFactory;
     }
 }

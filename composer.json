@@ -28,7 +28,8 @@
     "ramsey/uuid": "~3.4",
     "suin/php-rss-writer": "~1.4",
     "swiftmailer/swiftmailer": "~5.4",
-    "sendgrid/sendgrid": "5.0.4"
+    "sendgrid/sendgrid": "5.0.4",
+    "php-di/php-di": "^5.4"
   },
   "require-dev": {
     "ext-gd": "*",
