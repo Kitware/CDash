@@ -32,6 +32,7 @@ abstract class AbstractHandler implements SaxHandler
     protected $SubProjectName;
 
     protected $ModelFactory;
+    protected $Project;
 
     public function __construct($projectid, $scheduleid)
     {

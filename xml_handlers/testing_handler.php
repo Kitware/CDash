@@ -81,7 +81,11 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
         $factory = $this->getModelFactory();
 
         if ($name == 'SITE') {
+
             $this->Site = $factory->create(Site::class);
+            $this->Project = $factory->create(Project::class);
+            $this->Project->Id = $this->projectid;
+
             $this->Site->Name = $attributes['NAME'];
             if (empty($this->Site->Name)) {
                 $this->Site->Name = '(empty)';
@@ -358,6 +362,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
         $build->Generator = $this->Generator;
         $build->Information = $this->BuildInformation;
         $build->ProjectId = $this->projectid;
+        $build->SetProject($this->Project);
         $build->SubmitTime = gmdate(FMT_DATETIME);
 
         // TODO: dark days lie in waiting for this...
