@@ -1679,6 +1679,11 @@ class Project
         return true;
     }
 
+    public function GetProjectSubscribers()
+    {
+        // TODO: create method
+    }
+
     // Modify the build error/warning filters for this project if necessary.
     public function UpdateBuildFilters()
     {

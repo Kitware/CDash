@@ -422,4 +422,9 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
     {
         return new BuildCollection($this->Builds);
     }
+
+    public function getProjectId()
+    {
+        // TODO: remove
+    }
 }
