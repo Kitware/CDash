@@ -23,7 +23,6 @@ require_once 'models/label.php';
 
 class ProjectHandler extends AbstractHandler
 {
-    private $Project;
     private $SubProject;
     private $SubProjectPosition;
     private $Dependencies; // keep an array of dependencies in order to remove them
