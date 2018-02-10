@@ -81,7 +81,6 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
         $factory = $this->getModelFactory();
 
         if ($name == 'SITE') {
-
             $this->Site = $factory->create(Site::class);
             $this->Project = $factory->create(Project::class);
             $this->Project->Id = $this->projectid;
