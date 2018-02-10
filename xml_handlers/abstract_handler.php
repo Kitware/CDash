@@ -35,6 +35,7 @@ abstract class AbstractHandler implements SaxHandler, CDashSubmissionHandlerInte
     protected $SubProjectName;
 
     protected $ModelFactory;
+    protected $Project;
     protected $conifg;
 
     public function __construct($projectid, $scheduleid)
