@@ -142,7 +142,6 @@ $query_params = [];
 $response['hasprocessors'] = false;
 $proc_select = '';
 $proc_join = '';
-$proc_clause = '';
 $stmt = $pdo->prepare(
     "SELECT * FROM measurement WHERE projectid = ? AND name = 'Processors'");
 pdo_execute($stmt, [$project->Id]);
@@ -151,8 +150,7 @@ if ($row['summarypage'] == 1) {
     $response['hasprocessors'] = true;
     $proc_select = ', tm.value';
     $proc_join =
-        'JOIN testmeasurement tm ON (test.id = tm.testid)';
-    $proc_clause = "AND tm.name = 'Processors'";
+        "LEFT JOIN testmeasurement tm ON (test.id = tm.testid AND tm.name = 'Processors')";
 }
 
 $date_clause = '';
@@ -178,7 +176,7 @@ $sql = "SELECT b.id, b.name, b.starttime, b.siteid,b.parentid,
         JOIN test ON (test.id = build2test.testid)
         $proc_join
         WHERE b.projectid = :projectid
-              $parent_clause $date_clause $proc_clause $filter_sql
+              $parent_clause $date_clause $filter_sql
         ORDER BY build2test.status, test.name
         $limit_sql";
 $query_params[':projectid'] = $project->Id;
