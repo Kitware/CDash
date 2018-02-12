@@ -242,10 +242,11 @@ while ($row = $stmt->fetch()) {
 
     if ($response['hasprocessors']) {
         $num_procs = $row['value'];
+        $build['nprocs'] = $num_procs;
         if (!$num_procs) {
             $num_procs = 1;
+            $build['nprocs'] = 'N/A';
         }
-        $build['nprocs'] = $num_procs;
         $build['procTime'] = $row['time'] * $num_procs;
         $build['prettyProcTime'] = time_difference($build['procTime'], true, '', true);
     }
