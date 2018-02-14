@@ -482,7 +482,7 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
 
         // Local function to add a set of tests to our email message body.
         // This reduces copied & pasted code below.
-        $AddTestsToEmail = function ($tests, $section_title) use ($maxitems, $buildid, $maxchars, $maxitems, $serverURI) {
+        $AddTestsToEmail = function ($tests, $section_title) use ($buildid, $maxchars, $maxitems, $serverURI) {
             $num_tests = count($tests);
             if ($num_tests < 1) {
                 return '';
