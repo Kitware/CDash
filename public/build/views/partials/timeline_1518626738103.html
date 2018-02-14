@@ -1,0 +1,21 @@
+<div>
+  <img ng-show="loading" id="spinner" src="img/loading.gif"/>
+  <div ng-show="::error">
+    <b>Error loading timeline: {{::error}}</b>
+  </div>
+  <div ng-show="!loading && !error">
+    <div id="timechart" class="row">
+      <div class="col-md-12">
+        <svg width="100%" style="height:125px"></svg>
+      </div>
+    </div>
+    <div class="row">
+      <div class="text-center">
+        <button type="submit" class="btn btn-default"
+                ng-click="updateSelection()">
+          Update
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
