@@ -156,6 +156,23 @@ CDash.controller('TestDetailsController',
         $("#graph_holder"),
         [{label: measurementName, data: d1}],
         options);
+
+      // Show tooltip on hover.
+      date_formatter = d3.time.format("%b %d, %I:%M:%S %p");
+      $("#graph_holder").bind("plothover", function (event, pos, item) {
+        if (item) {
+          var x = date_formatter(new Date(item.datapoint[0])),
+              y = item.datapoint[1].toFixed(2);
+
+          $("#tooltip").html(
+              "<b>" + x + "</b><br/>" +
+              item.series.label + ": <b>" + y + "</b>")
+            .css({top: item.pageY+5, left: item.pageX+5})
+            .fadeIn(200);
+        } else {
+          $("#tooltip").hide();
+        }
+      });
     };
 
     $scope.setup_compare = function() {
