@@ -1,5 +1,5 @@
 CDash.controller('TestDetailsController',
-  function TestDetailsController($scope, $http, apiLoader) {
+  function TestDetailsController($scope, $http, $window, apiLoader) {
     apiLoader.loadPageData($scope, 'api/v1/testDetails.php');
     $scope.finishSetup = function() {
       $scope.cdash.showgraph = false;
@@ -148,7 +148,8 @@ CDash.controller('TestDetailsController',
           plot.highlight(item.series, item.datapoint);
           buildid = buildids[item.datapoint[0]];
           testid = testids[item.datapoint[0]];
-          window.location = "testDetails.php?test="+testid+"&build="+buildid;
+          var url = "testDetails.php?test="+testid+"&build="+buildid;
+          $window.open(url);
         }
        });
 
