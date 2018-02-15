@@ -126,10 +126,10 @@ CDash.controller('TestDetailsController',
       var options = {
         lines: { show: true },
         points: { show: true },
-        xaxis: {
-          mode: "time",
-          min: max - 2000000000,
-          max: max + 50000000
+        xaxis: { mode: "time", },
+        yaxis: {
+          zoomRange: false,
+          panRange: false
         },
         grid: {
           backgroundColor: "#fffaff",
@@ -139,8 +139,8 @@ CDash.controller('TestDetailsController',
           hoverRadius: 4
         },
         colors: ["#0000FF", "#dba255", "#919733"],
-        zoom: { interactive: true },
-        pan: { interactive: true }
+        zoom: { interactive: true, amount: 1.1 },
+        pan: { interactive: true },
       };
 
       $("#graph_holder").bind("plotclick", function (e, pos, item) {
