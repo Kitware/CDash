@@ -51,7 +51,6 @@ $extra_wheres = '';
 $query_params = [
     ':siteid'=> $build->SiteId,
     ':projectid' => $project->Id,
-    ':starttime' => $build->StartTime,
     ':type' => $build->Type,
     ':buildname' => $build->Name,
     ':testname' => $test_name
@@ -105,7 +104,6 @@ $query =
         $extra_joins
         WHERE b.siteid = :siteid
         AND b.projectid = :projectid
-        AND b.starttime <= :starttime
         AND b.type = :type
         AND b.name = :buildname
         AND b2t.testid IN (SELECT id FROM test WHERE name = :testname)
