@@ -133,8 +133,8 @@
               ng-change="display_graph()"
               ng-model="cdash.graphSelection">
         <option value="">Select...</option>
-        <option value="TestTimeGraph">Test Time</option>
-        <option value="TestPassingGraph">Failing/Passing</option>
+        <option value="time">Test Time</option>
+        <option value="status">Failing/Passing</option>
         <option ng-repeat="measurement in cdash.test.measurements | filter:{ type: 'numeric/double'}">{{measurement.name}}</option>
       </select>
       <br/>

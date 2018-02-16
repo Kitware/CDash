@@ -235,7 +235,7 @@
 
             <td ng-if="::cdash.project.showtesttime == 1"
                 align="center" ng-class="::test.timestatusclass">
-              <a ng-href="{{::test.detailsLink}}"
+              <a ng-href="{{::test.detailsLink}}&graph=time"
                  ng-click="cancelAjax()">{{::test.timestatus}}</a>
             </td>
 

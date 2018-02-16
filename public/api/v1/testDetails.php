@@ -116,11 +116,18 @@ $previous_buildid = $build->GetPreviousBuildId();
 $current_buildid = $build->GetCurrentBuildId();
 $next_buildid = $build->GetNextBuildId();
 
+// Did the user request a specific chart?
+// If so we should make that chart appear when they click next or previous.
+$extra_url = '';
+if (array_key_exists('graph', $_GET)) {
+    $extra_url = "&graph=" . $_GET['graph'];
+}
+
 // Previous build
 if ($previous_buildid > 0) {
     $previous_testid = findTest($previous_buildid, $testName);
     if ($previous_testid) {
-        $menu['previous'] = "testDetails.php?test=$previous_testid&build=$previous_buildid";
+        $menu['previous'] = "testDetails.php?test=$previous_testid&build=$previous_buildid$extra_url";
     }
 } else {
     $menu['noprevious'] = '1';
@@ -128,13 +135,13 @@ if ($previous_buildid > 0) {
 
 // Current build
 if ($current_testid = findTest($current_buildid, $testName)) {
-    $menu['current'] = "testDetails.php?test=$current_testid&build=$current_buildid";
+    $menu['current'] = "testDetails.php?test=$current_testid&build=$current_buildid$extra_url";
 }
 
 // Next build
 if ($next_buildid > 0) {
     if ($next_testid = findTest($next_buildid, $testName)) {
-        $menu['next'] = "testDetails.php?test=$next_testid&build=$next_buildid";
+        $menu['next'] = "testDetails.php?test=$next_testid&build=$next_buildid$extra_url";
     }
 } else {
     $menu['nonext'] = '1';

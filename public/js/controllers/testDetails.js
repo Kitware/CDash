@@ -5,6 +5,10 @@ CDash.controller('TestDetailsController',
       $scope.cdash.showgraph = false;
       $scope.cdash.showcommandline = false;
       $scope.cdash.csvlink = '';
+      if ($scope.queryString.graph) {
+        $scope.cdash.graphSelection = $scope.queryString.graph;
+        $scope.display_graph();
+      }
     };
 
     $scope.toggle_commandline = function() {
@@ -30,10 +34,10 @@ CDash.controller('TestDetailsController',
 
       var graph_type = '';
       switch ($scope.cdash.graphSelection) {
-        case "TestPassingGraph":
+        case "status":
           graph_type = 'status';
           break;
-        case "TestTimeGraph":
+        case "time":
           graph_type = 'time';
           break;
         default:
@@ -124,7 +128,7 @@ CDash.controller('TestDetailsController',
           plot.highlight(item.series, item.datapoint);
           buildid = buildids[item.datapoint[0]];
           testid = testids[item.datapoint[0]];
-          var url = "testDetails.php?test="+testid+"&build="+buildid;
+          var url = "testDetails.php?test=" + testid + "&build=" + buildid + "&graph=" + $scope.cdash.graphSelection;
           $window.open(url);
         }
        });
