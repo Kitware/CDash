@@ -4,7 +4,7 @@ CDash.controller('TestDetailsController',
     $scope.finishSetup = function() {
       $scope.cdash.showgraph = false;
       $scope.cdash.showcommandline = false;
-      $scope.cdash.csvlink = '';
+      $scope.cdash.rawdatalink = '';
       if ($scope.queryString.graph) {
         $scope.cdash.graphSelection = $scope.queryString.graph;
         $scope.display_graph();
@@ -33,6 +33,7 @@ CDash.controller('TestDetailsController',
       };
 
       var graph_type = '';
+      $scope.cdash.rawdatalink = 'api/v1/testGraph.php?testid=' + testid + '&buildid=' + buildid;
       switch ($scope.cdash.graphSelection) {
         case "status":
           graph_type = 'status';
@@ -43,8 +44,10 @@ CDash.controller('TestDetailsController',
         default:
           graph_type = 'measurement';
           query_params.measurementname = measurementname;
+          $scope.cdash.rawdatalink += '&measurementname=' + measurementname;
           break;
       }
+      $scope.cdash.rawdatalink += '&type=' + graph_type;
 
       query_params.type = graph_type;
       $http({
