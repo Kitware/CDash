@@ -120,11 +120,11 @@
         <h3 ng-switch-when="onlypassed">{{::cdash.numPassed}} tests passed.</h3>
         <h3 ng-switch-when="onlyfailed">{{::cdash.numFailed}} tests failed.</h3>
         <h3 ng-switch-when="onlynotrun">{{::cdash.numNotRun}} tests not run.</h3>
-        <h3 ng-switch-when="onlytimestatus">{{::cdash.numTimeFailed}} tests timed out.</h3>
+        <h3 ng-switch-when="onlytimestatus">{{::cdash.numTimeFailed}} tests failed the time status check.</h3>
         <h3 ng-switch-default id="test-totals-indicator">
           {{::cdash.numPassed}} passed,
           {{::cdash.numFailed}} failed,
-          {{::cdash.numTimeFailed}} timed out,
+          {{::cdash.numTimeFailed}} failed the time status check,
           {{::cdash.numNotRun}} not run,
           {{::cdash.numMissing}} missing.
         </h3>
@@ -161,7 +161,7 @@
                 ng-click="updateOrderByFields('timestatus', $event)"
                 tooltip-popup-delay="1500"
                 tooltip-append-to-body="true"
-                uib-tooltip="Whether or not the test timed out">
+                uib-tooltip="Whether or not the test failed the time status check">
                 Time Status
                 <span class="glyphicon" ng-class="orderByFields.indexOf('-timestatus') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('timestatus') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')">
               </th>
