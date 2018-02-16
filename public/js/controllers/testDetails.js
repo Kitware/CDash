@@ -23,114 +23,57 @@ CDash.controller('TestDetailsController',
 
       $scope.cdash.showgraph = true;
 
-      switch ($scope.cdash.graphSelection) {
-        case "TestPassingGraph":
-          $http({
-            url: 'ajax/showtestpassinggraph.php',
-            method: 'GET',
-            params: {
-              testid: testid,
-              buildid: buildid
-            }
-          }).then(function success(s) {
-            $scope.status_graph(s.data);
-          });
-          break;
-
-        case "TestTimeGraph":
-          $http({
-            url: 'ajax/showtesttimegraph.php',
-            method: 'GET',
-            params: {
-              testid: testid,
-              buildid: buildid
-            }
-          }).then(function success(s) {
-            $scope.measurement_graph(s.data, "Execution Time (seconds)");
-          });
-          break;
-
-        default:
-          $http({
-            url: 'ajax/showtestmeasurementdatagraph.php',
-            method: 'GET',
-            params: {
-              testid: testid,
-              buildid: buildid,
-              measurement: measurementname
-            }
-          }).then(function success(s) {
-            $scope.measurement_graph(s.data, measurementname);
-            $scope.cdash.csvlink = 'ajax/showtestmeasurementdatagraph.php?testid=' + testid + '&buildid=' + buildid + '&measurement=' + measurementname + '&export=csv';
-          });
-          break;
-      }
-    };
-
-    $scope.status_graph = function(response) {
-      var d1 = [];
-      var ty = [];
-      var max = 0;
-      ty.push([-1,"Failed"]);
-      ty.push([1,"Passed"]);
-
-      for (var i = 0; i < response.length; i++) {
-        d1.push([response[i]['x'], response[i]['y']]);
-        if (response[i]['x'] > max) {
-          max = response[i]['x'];
-        }
-      }
-
-      var options = {
-        bars: {
-          show: true,
-          barWidth: 35000000,
-          lineWidth: 0.9
-        },
-        yaxis: {
-          ticks: ty,
-          min: -1.2,
-          max: 1.2,
-          zoomRange: false,
-          panRange: false
-        },
-        xaxis: {
-          mode: "time",
-          min: max - 2000000000,
-          max: max + 50000000
-        },
-        grid: {backgroundColor: "#fffaff"},
-        colors: ["#0000FF", "#dba255", "#919733"],
-        zoom: { interactive: true },
-        pan: { interactive: true }
+      var query_params = {
+        testid: testid,
+        buildid: buildid
       };
 
-      $.plot($("#graph_holder"), [{label: "Failed/Passed",  data: d1}], options);
-    };
-
-    $scope.measurement_graph = function(response, measurementName) {
-      var d1 = [];
-      var buildids = {};
-      var testids = {};
-      var max = 0;
-
-      for (var i = 0; i < response.length; i++) {
-        d1.push([response[i]['x'], response[i]['y']]);
-        buildids[response[i]['x']] = response[i]['buildid'];
-        testids[response[i]['x']] = response[i]['testid'];
-        if (response[i]['x'] > max) {
-          max = response[i]['x'];
-        }
+      var graph_type = '';
+      switch ($scope.cdash.graphSelection) {
+        case "TestPassingGraph":
+          graph_type = 'status';
+          break;
+        case "TestTimeGraph":
+          graph_type = 'time';
+          break;
+        default:
+          graph_type = 'measurement';
+          query_params.measurementname = measurementname;
+          break;
       }
 
+      query_params.type = graph_type;
+      $http({
+        url: 'api/v1/testGraph.php',
+        method: 'GET',
+        params: query_params
+      }).then(function success(s) {
+        $scope.test_graph(s.data, graph_type);
+      });
+
+    };
+
+    $scope.test_graph = function(response, graph_type) {
+      // Separate out build & test ids from the actual data points.
+      var buildids = {};
+      var testids = {};
+      var chart_data = [];
+      for (var i = 0; i < response.length; i++) {
+        var series = {};
+        series.label = response[i].label;
+        series.data = [];
+        for (var j = 0; j < response[i].data.length; j++) {
+          series.data.push([response[i].data[j]['x'], response[i].data[j]['y']]);
+          if (i == 0) {
+            buildids[response[i].data[j]['x']] = response[i].data[j]['buildid'];
+            testids[response[i].data[j]['x']] = response[i].data[j]['testid'];
+          }
+        }
+        chart_data.push(series);
+      }
+
+      // Options that are shared by all of our different types of charts.
       var options = {
-        lines: { show: true },
-        points: { show: true },
-        xaxis: { mode: "time", },
-        yaxis: {
-          zoomRange: false,
-          panRange: false
-        },
         grid: {
           backgroundColor: "#fffaff",
           clickable: true,
@@ -138,10 +81,43 @@ CDash.controller('TestDetailsController',
           hoverFill: '#444',
           hoverRadius: 4
         },
-        colors: ["#0000FF", "#dba255", "#919733"],
-        zoom: { interactive: true, amount: 1.1 },
         pan: { interactive: true },
+        zoom: { interactive: true, amount: 1.1 },
+        xaxis: { mode: "time" },
+        yaxis: {
+          zoomRange: false,
+          panRange: false
+        }
       };
+
+      switch (graph_type) {
+        case "status":
+          // Circles for passed tests, crosses for failed tests.
+          chart_data[0].points = { symbol: 'circle'};
+          chart_data[1].points = { symbol: 'cross'};
+          options.series = {
+            points: {
+              show: true,
+              radius: 5
+            }
+          };
+          options.yaxis.ticks = [[-1, "Failed"], [1, "Passed"]];
+          options.yaxis.min = -1.2;
+          options.yaxis.max = 1.2;
+          options.colors = ["#8aba5a", "#de6868"];
+          break;
+
+        case "time":
+          // Show threshold series as a filled area.
+          chart_data[1].lines = { fill: true };
+          // The lack of a 'break' here is intentional.
+          // time & measurement charts share common options.
+        case "measurement":
+          options.lines = { show: true };
+          options.points = { show: true };
+          options.colors = ["#0000FF", "#dba255", "#919733"];
+          break;
+      }
 
       $("#graph_holder").bind("plotclick", function (e, pos, item) {
         if (item) {
@@ -154,9 +130,7 @@ CDash.controller('TestDetailsController',
        });
 
       plot = $.plot(
-        $("#graph_holder"),
-        [{label: measurementName, data: d1}],
-        options);
+        $("#graph_holder"), chart_data, options);
 
       // Show tooltip on hover.
       date_formatter = d3.time.format("%b %d, %I:%M:%S %p");

@@ -30,12 +30,12 @@ class TestGraphPermissionsTestCase extends KWWebTestCase
         $stmt->execute([$projectid]);
 
         // Verify that we cannot access the graphs (because we're not logged in)
-        $response = $this->get($this->url . "/ajax/showtesttimegraph.php?buildid=$buildid&testid=$testid");
-        if ($response !== 'You are not authorized to view this page.') {
+        $response = json_decode($this->get($this->url . "/api/v1/testGraph.php?buildid=$buildid&testid=$testid&type=time"), true);
+        if ($response['requirelogin'] != 1) {
             $this->fail("Unauthorized case #1 fails");
         }
-        $response = $this->get($this->url . "/ajax/showtestpassinggraph.php?buildid=$buildid&testid=$testid");
-        if ($response !== 'You are not authorized to view this page.') {
+        $response = json_decode($this->get($this->url . "/api/v1/testGraph.php?buildid=$buildid&testid=$testid&type=status"), true);
+        if ($response['requirelogin'] != 1) {
             $this->fail("Unauthorized case #2 fails");
         }
         $response = $this->get($this->url . "/ajax/showtestfailuregraph.php?testname=itkVectorSegmentationLevelSetFunctionTest1&projectid=$projectid&starttime=1235350800");
@@ -45,12 +45,12 @@ class TestGraphPermissionsTestCase extends KWWebTestCase
 
         // Login and make sure we can see the graphs now.
         $this->login();
-        $response = $this->get($this->url . "/ajax/showtesttimegraph.php?buildid=$buildid&testid=$testid");
-        if (!json_decode($response)) {
+        $response = json_decode($this->get($this->url . "/api/v1/testGraph.php?buildid=$buildid&testid=$testid&type=time"), true);
+        if (array_key_exists('requirelogin', $response)) {
             $this->fail("Authorized case #1 fails");
         }
-        $response = $this->get($this->url . "/ajax/showtestpassinggraph.php?buildid=$buildid&testid=$testid");
-        if (!json_decode($response)) {
+        $response = json_decode($this->get($this->url . "/api/v1/testGraph.php?buildid=$buildid&testid=$testid&type=status"), true);
+        if (array_key_exists('requirelogin', $response)) {
             $this->fail("Authorized case #2 fails");
         }
         $response = $this->get($this->url . "/ajax/showtestfailuregraph.php?testname=itkVectorSegmentationLevelSetFunctionTest1&projectid=$projectid&starttime=1235350800");

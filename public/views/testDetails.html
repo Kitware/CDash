@@ -135,9 +135,7 @@
         <option value="">Select...</option>
         <option value="TestTimeGraph">Test Time</option>
         <option value="TestPassingGraph">Failing/Passing</option>
-        <option ng-repeat="measurement in cdash.test.measurements | filter:{ type: 'numeric/double'}">
-          {{measurement.name}}
-        </option>
+        <option ng-repeat="measurement in cdash.test.measurements | filter:{ type: 'numeric/double'}">{{measurement.name}}</option>
       </select>
       <br/>
 
