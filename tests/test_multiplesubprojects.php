@@ -585,6 +585,40 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             }
         }
 
+        // Adding tests to ensure that labels associated with subprojects and tests were saved
+        foreach ($builds as $build) {
+            $sql = "
+                SELECT `label`.`text`
+                FROM `label2test`
+                JOIN `label`
+                ON
+                    `label`.`id`=`label2test`.`labelid`
+                WHERE `label2test`.`buildid`=:buildid;
+            ";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':buildid', $build['id'], PDO::PARAM_INT);
+            $stmt->execute();
+            $rows = array_unique($stmt->fetchAll(PDO::FETCH_COLUMN, 'text'));
+
+            switch ($build['label']) {
+                case 'MyExperimentalFeature':
+                    $success = count($rows) === 1 && in_array('MyExperimentalFeature', $rows);
+                    break;
+                case 'MyProductionCode':
+                    $success = count($rows) === 1 && in_array('MyProductionCode', $rows);
+                    break;
+                case 'MyThirdPartyDependency':
+                    $success = count($rows) === 1 && in_array('MyThirdPartyDependency1', $rows);
+                    break;
+                case 'EmptySubproject':
+                    $success = count($rows) === 0;
+                    break;
+            }
+            if (!$success) {
+                $error_message = 'Unexpected label associations';
+                break;
+            }
+        }
         if ($success) {
             $this->pass('Test passed');
             return 0;
@@ -592,5 +626,21 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             $this->fail($error_message);
             return 1;
         }
+    }
+
+    public function testMultipleSubprojectsWithNormalEmail()
+    {
+        $summary = $this->setEmailPreference(self::EMAIL_NORMAL, 2147483647);
+
+        if ($summary === false) {
+            throw new Exception('Error setting email preferences.');
+        }
+
+        $this->submitBuild();
+        $emailoutput  = "{$this->dataDir}/EmailOutput.log";
+        if (!$this->compareLog($this->logfilename, $emailoutput)) {
+            return 1;
+        }
+        return 0;
     }
 }
