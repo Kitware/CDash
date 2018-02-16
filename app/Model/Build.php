@@ -89,6 +89,7 @@ class Build
     private $BuildUpdate;
     private $Project;
     private $BuildConfigure;
+    private $CommitAuthors;
 
     public function __construct()
     {
@@ -112,6 +113,7 @@ class Build
         $this->Type = '';
         $this->Uuid = '';
         $this->TestCollection = new TestCollection();
+        $this->CommitAuthors = [];
 
         $this->PDO = Database::getInstance()->getPdo();
     }
@@ -976,6 +978,8 @@ class Build
             return;
         }
 
+        $this->TestFailedCount = $numberTestsFailed;
+
         // If this is a subproject build, we also have to update its parents test numbers.
         $newFailed = $numberTestsFailed - $this->GetNumberOfFailedTests();
         $newNotRun = $numberTestsNotRun - $this->GetNumberOfNotRunTests();
@@ -1538,6 +1542,9 @@ class Build
             $warnings = 0;
             $errors = 0;
             $tests = 0;
+
+            // cache the author, email results
+            array_push($this->CommitAuthors, array_unique([$author, $email]));
 
             if ($author != $previousauthor) {
                 $newbuild = 1;
@@ -2867,5 +2874,32 @@ class Build
     public function SetProject(Project $project)
     {
         $this->Project = $project;
+    }
+
+    public function GetTestFailedCount()
+    {
+        return $this->TestFailedCount;
+    }
+
+    public function GetBuildType()
+    {
+        return $this->Type;
+    }
+
+    public function GetCommitAuthors()
+    {
+        // TODO: implement GetCommitAuthors
+        // note: Per Zack: Depending on the type of submission (i.e. test, build error, etc)
+        // this information may not yet be available as it is contained in the update xml
+        // file submission. It should have already been handled by which
+        return $this->CommitAuthors;
+    }
+
+    public function GetLabelNames()
+    {
+        // TODO: This method reveals that Labels are being set twice, probably in the handler, fix
+        return array_unique(array_map(function ($label) {
+            return $label->Text;
+        }, $this->Labels));
     }
 }

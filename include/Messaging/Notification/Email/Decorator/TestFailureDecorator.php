@@ -35,4 +35,12 @@ class TestFailureDecorator extends Decorator
         $subject = str_replace($search, $replace, $this->subject);
         return $subject;
     }
+
+    /**
+     * @return mixed[][]
+     */
+    protected function getSubjectData()
+    {
+        // TODO: Implement getSubjectData() method.
+    }
 }

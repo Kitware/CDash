@@ -14,8 +14,7 @@ class CheckinIssueNightlyOnlyTopic extends Topic implements CancelationInterface
      */
     public function subscribesToBuild(Build $build)
     {
-        $build_group = $build->GetBuildGroup();
-        $subscribe = $build_group->GetName() === BuildGroup::TYPE_NIGHTLY;
+        $subscribe = $build->GetBuildType() === BuildGroup::NIGHTLY;
         $this->cancelSubscription = !$subscribe;
         return $subscribe;
     }

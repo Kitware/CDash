@@ -5,11 +5,11 @@ use CDash\Messaging\Topic\Topic;
 
 class DecoratorFactory
 {
-    public static function createFromTopic(Topic $topic)
+    public static function createFromTopic(Topic $topic, DecoratorInterface $decorator)
     {
         switch ($topic->getTopicName()) {
             case 'TestFailure':
-                return new TestFailureDecorator();
+                return new TestFailureDecorator($decorator);
         }
     }
 

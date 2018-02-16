@@ -1,6 +1,9 @@
 <?php
 namespace CDash\Messaging\Topic;
 
+use CDash\Collection\BuildCollection;
+use CDash\Collection\TestCollection;
+use CDash\Messaging\Notification\Email\Decorator\TestFailureDecorator;
 use CDash\Messaging\Preferences\NotificationPreferences;
 
 class TopicFactory
@@ -63,7 +66,7 @@ class TopicFactory
             case 'MyCheckinIssue':
                 return new MyCheckinIssueTopic();
             case 'TestFailure':
-                return new TestFailureTopic();
+                return new TestFailureTopic(new TestCollection());
             case 'UpdateError':
                 return new UpdateErrorTopic();
             default:

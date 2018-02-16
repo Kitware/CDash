@@ -5,8 +5,8 @@ use CDash\Collection\Collection;
 
 class TopicCollection extends Collection
 {
-    public function add(Topic $item)
+    public function add(TopicInterface $item)
     {
-        parent::addItem($item);
+        parent::addItem($item, $item->getTopicName());
     }
 }

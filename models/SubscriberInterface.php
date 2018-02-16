@@ -36,4 +36,9 @@ interface SubscriberInterface
      * @return mixed
      */
     public function setAddress($address);
+
+    /**
+     * @return \CDash\Collection\LabelCollection
+     */
+    public function getLabels();
 }

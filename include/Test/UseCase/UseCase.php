@@ -27,6 +27,7 @@ abstract class UseCase
     protected $startTime;
     protected $endTime;
 
+    protected $authors = [];
     protected $testCase;
 
     abstract public function build();
@@ -78,6 +79,32 @@ abstract class UseCase
     public function setEndTime($end_time)
     {
         $this->endTime = $end_time;
+        return $this;
+    }
+
+    public function setAuthors(array $authors)
+    {
+        $this->authors = $authors;
+        return $this;
+    }
+
+    public function getAuthors($build)
+    {
+        if (isset($this->authors[$build])) {
+            return $this->authors[$build];
+        }
+        return [];
+    }
+
+    public function createAuthor(string $author, array $builds = [])
+    {
+        $builds = empty($builds) ? ['all'] : $builds;
+        foreach ($builds as $build) {
+            if (!isset($this->authors[$build])) {
+                $this->authors[$build] = [];
+            }
+            $this->authors[$build][] = $author;
+        }
         return $this;
     }
 

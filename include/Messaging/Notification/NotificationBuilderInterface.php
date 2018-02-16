@@ -1,8 +1,11 @@
 <?php
 namespace CDash\Messaging\Notification;
 
+use CDash\Collection\Collection;
 use CDash\Collection\CollectionInterface;
+use CDash\Collection\SubscriberCollection;
 use CDash\Messaging\FactoryInterface;
+use CDash\Messaging\Subscription\SubscriptionInterface;
 
 interface NotificationBuilderInterface
 {
@@ -14,33 +17,17 @@ interface NotificationBuilderInterface
     public function __construct(FactoryInterface $factory, CollectionInterface $collection);
 
     /**
-     * @return void
+     * @return NotificationInterface
      */
-    public function createNotification();
+    public function createNotification(SubscriptionInterface $subscription);
 
     /**
-     * @return void
+     * @return SubscriberCollection
      */
-    public function addPreamble();
+    public function getSubscriptions();
 
     /**
-     * @return void
+     * @return NotificationCollection
      */
-    public function addSummary();
-
-    /**
-     * @return void
-     */
-    public function addTopics();
-
-    /**
-     * @return void
-     */
-    public function addSubject();
-
-
-    /**
-     * @return void
-     */
-    public function addDeliveryInformation();
+    public function getNotifications();
 }

@@ -10,5 +10,9 @@ interface ActionableBuildInterface
      * @deprecated Use GetBuildCollection() 02/04/18
      */
     public function getActionableBuilds();
-    public function getProjectId();
+
+    /**
+     * @return Project
+     */
+    public function GetProject();
 }

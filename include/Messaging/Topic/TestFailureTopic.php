@@ -2,11 +2,21 @@
 namespace CDash\Messaging\Topic;
 
 use Build;
+use CDash\Collection\TestCollection;
 use CDash\Config;
+use CDash\Messaging\DecoratorInterface;
 use CDash\Messaging\Subscription\Subscription;
 
 class TestFailureTopic extends Topic
 {
+    private $collection;
+
+    public function __construct(TestCollection $collection)
+    {
+        $this->collection = $collection;
+    }
+
+    // TODO: does not really belong here, consider decorator's responsibility
     public function getTopicDescription()
     {
         return 'Tests Failing';
@@ -18,15 +28,18 @@ class TestFailureTopic extends Topic
      */
     public function subscribesToBuild(Build $build)
     {
-        $subscribe = $build->GetNumberOfFailedTests() > 0;
+        $subscribe = $build->GetTestFailedCount() > 0;
         if ($subscribe) {
-            $data = $build->GetFailedTests(Subscription::getMaxDisplayItems());
-            $base_url = Config::getInstance()->getBaseUrl();
-            foreach ($data as &$row) {
-                // TODO: url should not be hardcoded this way, consider Route class
-                $row['url'] = "{$base_url}/testDetails.php?test={$row['id']}&buildid={$build->Id}";
-            }
-            $this->setTopicData($data);
+            // TODO: refactor so that this is possible
+            $tests = $build->GetTestCollection();
+            $max_items = $build->GetProject()->EmailMaxItems;
+            do {
+                $test = $tests->current();
+                if ($test->HasFailed()) {
+                    $this->collection->add($test);
+                }
+                $tests->next();
+            } while (--$max_items && $tests->valid());
         }
         return $subscribe;
     }

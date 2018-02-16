@@ -6,16 +6,13 @@ class NotificationDirector
 {
     public function build(NotificationBuilderInterface $builder)
     {
-        /*
-        $builder->createNotification();
-        $builder->addTopics();
-        $builder->addSummary();
-        $builder->addPreamble();
-        $builder->addSubject();
+        $subscriptions = $builder->getSubscriptions();
+        $notifications = $builder->getNotifications();
 
-        $builder->addDeliveryInformation();
-        */
-
-        return $builder->createNotifications();
+        foreach ($subscriptions as $recipient => $subscription) {
+            $notification = $builder->createNotification($subscription);
+            $notifications->add($notification);
+        }
+        return $notifications;
     }
 }

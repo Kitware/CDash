@@ -14,6 +14,12 @@ interface TopicInterface
     public function subscribesToBuild(Build $build);
 
     /**
+     * @param Build $build
+     * @return $this
+     */
+    public function addBuild(Build $build);
+
+    /**
      * @param SubscriberInterface $subscriber
      * @return self
      */

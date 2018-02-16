@@ -5,13 +5,13 @@ use Build;
 
 class LabelTopic extends Topic
 {
-
     /**
      * @param Build $build
      * @return bool
      */
     public function subscribesToBuild(Build $build)
     {
-        // TODO: Implement subscribesToBuild() method.
+        $subscribe = in_array($this->subscriber->getLabels(), $build->GetLabelNames());
+        return $subscribe;
     }
 }

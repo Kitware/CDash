@@ -18,6 +18,9 @@ abstract class NotificationPreferences implements
         'onMyCheckinIssue',
         'onCheckinIssueNightlyOnly',
         'onAnyCheckinIssue',
+        '',
+        '',
+        'onLabel',
     ];
 
     protected $settings = [];

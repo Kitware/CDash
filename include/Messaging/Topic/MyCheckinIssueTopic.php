@@ -13,8 +13,7 @@ class MyCheckinIssueTopic extends Topic implements CancelationInterface
      */
     public function subscribesToBuild(Build $build)
     {
-        $subscribe = $build->buildHasAuthor($this->subscriber->getAddress());
-        ;
+        $subscribe = in_array($this->subscriber->getAddress(), $build->GetCommitAuthors());
         $this->cancelSubscription =  !$subscribe;
         return $subscribe;
     }

@@ -47,12 +47,20 @@ abstract class SubscriptionNotificationBuilder implements SubscriptionNotificati
     /**
      * Sets a SubscriptionCollection
      *
-     * @param SubscriptionCollection $subscription
-     * @return SubscriptionNotificationBuilderInterface
+     * @param SubscriptionCollection $subscriptions
+     * @return $this
      */
     public function setSubscriptions(SubscriptionCollection $subscriptions)
     {
         $this->subscriptions = $subscriptions;
         return $this;
+    }
+
+    /**
+     * @return \CDash\Messaging\Subscription\SubscriptionCollection
+     */
+    public function getSubscriptions()
+    {
+        return $this->subscriptions;
     }
 }

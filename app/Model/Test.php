@@ -23,6 +23,12 @@ use PDO;
 /** Test */
 class Test
 {
+    const FAILED = 'failed';
+    const PASSED = 'passed';
+    const OTHER_FAULT = 'OTHER_FAULT';
+    const TIMEOUT = 'Timeout';
+    const NOTRUN = 'notrun';
+
     public $Id;
     public $Crc32;
     public $ProjectId;
@@ -308,5 +314,20 @@ class Test
     {
         $buildTest = $this->GetBuildTest();
         return (double)$buildTest->Time;
+    }
+
+    public function HasFailed()
+    {
+        return $this->GetStatus() === self::FAILED;
+    }
+
+    public function HasNotRun()
+    {
+        return $this->GetStatus() === self::NOTRUN;
+    }
+
+    public function HasPassed()
+    {
+        return $this->GetStatus() === self::PASSED;
     }
 }

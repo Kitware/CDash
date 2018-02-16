@@ -33,31 +33,33 @@ class Subscriber implements SubscriberInterface
     }
 
     /**
-     * @param ActionableBuildInterface $actionableBuild
+     * @param ActionableBuildInterface $submission
      * @return bool
      */
-    public function hasBuildTopics(ActionableBuildInterface $actionableBuild)
+    public function hasBuildTopics(ActionableBuildInterface $submission)
     {
-        $hasBuildTopics = false;
         $topics = $this->getTopics();
-        /** @var Build $build */
-        foreach ($actionableBuild->getActionableBuilds() as $build) {
-            /** @var \CDash\Messaging\Topic\Topic|CancelationInterface $topic */
-            foreach (TopicFactory::createFrom($this->preferences) as $topic) {
+        $builds = $submission->GetBuildCollection();
+        $user_topics = TopicFactory::createFrom($this->preferences);
+
+        foreach ($user_topics as $topic) {
+            $topic->setSubscriber($this);
+            foreach ($builds as $build) {
                 if (is_a($topic, CancelationInterface::class)) {
                     if ($topic->subscribesToBuild($build) === false) {
                         return false;
                     }
-                } else {
-                    if ($topic->subscribesToBuild($build)) {
-                        $hasBuildTopics = true;
-                        $topic->setBuild($build);
+                    continue;
+                }
+                if ($topic->subscribesToBuild($build)) {
+                    $topic->addBuild($build);
+                    if (!$topics->has($topic->getTopicName())) {
                         $topics->add($topic);
                     }
                 }
             }
         }
-        return $hasBuildTopics;
+        return $topics->count() > 0;
     }
 
     protected function initializeTopics()

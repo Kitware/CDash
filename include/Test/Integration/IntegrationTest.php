@@ -6,6 +6,7 @@ use CDash\Messaging\Notification\Email\EmailBuilder;
 use CDash\Messaging\Notification\Email\EmailNotificationFactory;
 use CDash\Messaging\Notification\NotificationCollection;
 use CDash\Messaging\Notification\NotificationDirector;
+use CDash\Messaging\Notification\NotificationInterface;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Subscription\SubscriptionBuilder;
 use CDash\Test\UseCase\TestUseCase;
@@ -21,8 +22,8 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
     /** @var  Database|PHPUnit_Framework_MockObject_MockObject $db */
     private $db;
 
-    /** @var  ActionableBuildInterface|PHPUnit_Framework_MockObject_MockObject $handler */
-    private $handler;
+    /** @var  ActionableBuildInterface $submission */
+    private $submission;
 
     /** @var  Project|PHPUnit_Framework_MockObject_MockObject $project */
     private $project;
@@ -55,7 +56,6 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
 
     public function setUp()
     {
-        parent::setUp();
         $mock_stmt = $this->createMock(PDOStatement::class);
         $mock_stmt
             ->expects($this->any())
@@ -80,16 +80,35 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
             ->willReturn($mock_pdo);
 
         Database::setInstance(Database::class, $this->db);
-
-        $this->handler = $this->getMockForAbstractClass(ActionableBuildInterface::class);
-        $this->project = $this->getMockProject();
-        $this->project->EmailMaxItems = 5;
+        parent::setUp();
     }
 
-    private function getNotifications()
+    /**
+     * @param UseCase $useCase
+     * @return NotificationCollection
+     */
+    private function getNotifications(array $subscribers)
     {
-        $this->project->Id = $this->handler->getProjectId();
-        $builder = new SubscriptionBuilder($this->handler, $this->project);
+        $this->submission = $this->useCase->build();
+        $project = $this->submission->GetProject();
+        $project->EmailMaxItems = 5;
+        $subscriberCollection = new SubscriberCollection();
+
+        foreach ($subscribers as $entry) {
+            $email = $entry[0];
+            $settings = $entry[1];
+            $labels = isset($entry[2]) ? $entry[2] : [];
+            $preferences = new BitmaskNotificationPreferences($settings);
+            $subscriber = new Subscriber($preferences);
+            $subscriber
+                ->setAddress($email)
+                ->setLabels($labels);
+            $subscriberCollection->add($subscriber);
+        }
+
+        $project->SetSubscriberCollection($subscriberCollection);
+
+        $builder = new SubscriptionBuilder($this->submission);
 
         $subscriptions = $builder->build();
         $director = new NotificationDirector();
@@ -98,7 +117,7 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
         $builder = new EmailBuilder(new EmailNotificationFactory(), new NotificationCollection());
         $builder
             ->setSubscriptions($subscriptions)
-            ->setProject($this->project);
+            ->setProject($this->submission->GetProject());
 
         return $director->build($builder);
     }
@@ -112,7 +131,7 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
      *   - User IS NOT subscribed to any labels
      *   - Build contains a single TestFailure
      */
-    public function testTopicTestFailure()
+    public function bestTopicTestFailure()
     {
         $author = $this->getMockUserProject();
 
@@ -175,12 +194,12 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
             ->method('GetName')
             ->willReturn('OphaeleaSite');
 
-        $this->handler
+        $this->submission
             ->expects($this->once())
             ->method('getActionableBuilds')
             ->willReturn([$mock_test_failure]);
 
-        $this->handler
+        $this->submission
             ->expects($this->once())
             ->method('getProjectId')
             ->willReturn(self::$projectId);
@@ -188,7 +207,7 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
         // return a list of all authors associated with the project
         $this->project
             ->expects($this->once())
-            ->method('GetProjectSubscribers')
+            ->method('GetSubscriberCollection')
             ->willReturnCallback(function (SubscriberCollection $subscribers) use ($project_subscribers) {
                 foreach ($project_subscribers as $email => $userProject) {
                     $mask = BitmaskNotificationPreferences::EMAIL_TEST |
@@ -256,17 +275,102 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
      */
     public function testMultipleTestFailuresWithMultipleSubscribers()
     {
-        $useCase = UseCase::createBuilder($this, UseCase::TEST)
+        $this->useCase = UseCase::createBuilder($this, UseCase::TEST)
             ->createSite([
                 'BuildName' => 'SomeOS-SomeBuild',
                 'BuildStamp' => '20180122-0100-Experimental',
                 'Name' => 'mirror.site',
             ])
+            ->createAuthor(
+                'user_1@company.tld',
+                ['BuildOne', 'BuildTwo', 'BuildThree', 'BuildFour', 'BuildFive']
+            )
+            ->createAuthor(
+                'user_4@company.tld',
+                ['BuildOne', 'BuildTwo', 'BuildThree', 'BuildFour', 'BuildFive']
+            )
+            ->createAuthor(
+                'user_6@company.tld',
+                ['BuildThree']
+            )
+            ->createAuthor(
+                'user_7@company.tld',
+                ['BuildTwo']
+            )
+            ->createSubproject('BuildOne')
+            ->createSubproject('BuildTwo')
+            ->createSubproject('BuildThree', ['BuildThree', 'BuildTres'])
+            ->createSubproject('BuildFour')
+            ->createSubproject('BuildFive')
+            ->createTestFailed('test_fail_one', ['BuildOne'])
+            ->createTestTimedout('test_timedout_one', ['BuildOne'])
+            ->createTestPassed('test_passed_one', ['BuildOne'])
+            ->createTestFailed('test_fail_two', ['BuildTwo'])
+            ->createTestPassed('test_passed_two', ['BuildTwo'])
+            ->createTestFailed('test_fail_three', ['BuildTres'])
+            ->createTestTimedout('test_timedout_two', ['BuildTwo'])
+            ->createTestFailed('test_fail_four', ['BuildFive'])
             ->setStartTime(1518276772)
-            ->setEndTime(1518276773)
-            ->createTestFailed('test_fail_one');
+            ->setEndTime(1518276773);
 
-        $handler = $useCase->build();
-        $this->assertInstanceOf(TestingHandler::class, $handler);
+        $subscribers = [
+            [ // This user should receive email
+                'user_1@company.tld',
+                BitmaskNotificationPreferences::EMAIL_ANY_USER_CHECKIN_ISSUE_ANY_SECTION |
+                BitmaskNotificationPreferences::EMAIL_TEST
+            ],
+            [ // This user should *not* receive email, as BuildGroup is Experimental
+                'user_2@company.tld',
+                BitmaskNotificationPreferences::EMAIL_ANY_USER_CHECKIN_ISSUE_NIGHTLY_SECTION |
+                BitmaskNotificationPreferences::EMAIL_TEST
+            ],
+            [ // This user should *not* receive email, not subscribed to Test
+                'user_3@company.tld',
+                BitmaskNotificationPreferences::EMAIL_ANY_USER_CHECKIN_ISSUE_ANY_SECTION |
+                BitmaskNotificationPreferences::EMAIL_CONFIGURE |
+                BitmaskNotificationPreferences::EMAIL_DYNAMIC_ANALYSIS |
+                BitmaskNotificationPreferences::EMAIL_ERROR |
+                BitmaskNotificationPreferences::EMAIL_UPDATE |
+                BitmaskNotificationPreferences::EMAIL_WARNING
+            ],
+            [ // This user should receive an email, the user is the author
+                'user_4@company.tld',
+                BitmaskNotificationPreferences::EMAIL_USER_CHECKIN_ISSUE_ANY_SECTION |
+                BitmaskNotificationPreferences::EMAIL_TEST
+            ],
+            [ // This user should *not* receive an email, not the author
+                'user_5@company.tld',
+                BitmaskNotificationPreferences::EMAIL_USER_CHECKIN_ISSUE_ANY_SECTION |
+                BitmaskNotificationPreferences::EMAIL_TEST
+            ],
+            [ // This user should receive an email, the user is subscribed to BuildTres
+                'user_6@company.tld',
+                BitmaskNotificationPreferences::EMAIL_SUBSCRIBED_LABELS |
+                BitmaskNotificationPreferences::EMAIL_TEST,
+                ['BuildTres']
+            ],
+            [ // This user should *not* receive an email, though subscribed to 'BuildTres' and
+              // being an author, the other settings do not warrent an email a) because not
+              // subscribed to EMAIL_TEST; b) Not subscribed to other's issues
+                'user_7@company.tld',
+                BitmaskNotificationPreferences::EMAIL_SUBSCRIBED_LABELS |
+                BitmaskNotificationPreferences::EMAIL_ERROR |
+                BitmaskNotificationPreferences::EMAIL_WARNING |
+                BitmaskNotificationPreferences::EMAIL_CONFIGURE |
+                BitmaskNotificationPreferences::EMAIL_DYNAMIC_ANALYSIS |
+                BitmaskNotificationPreferences::EMAIL_USER_CHECKIN_ISSUE_ANY_SECTION,
+                ['BuildTres']
+            ],
+
+        ];
+
+        $notifications = $this->getNotifications($subscribers);
+        $this->assertCount(3, $notifications);
+
+        $notification = $notifications->get('user_1@company.tld');
+        $this->assertInstanceOf(NotificationInterface::class, $notification);
+
+        $notification = $notifications->get('user_4@company.tld');
+        $this->assertInstanceOf(NotificationInterface::class, $notification);
     }
 }

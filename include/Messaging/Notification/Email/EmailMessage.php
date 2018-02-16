@@ -83,11 +83,11 @@ class EmailMessage implements NotificationInterface
     }
 
     /**
-     * @return string
+     * @return DecoratorInterface
      */
     public function getBody()
     {
-        return "{$this->body}";
+        return $this->body;
     }
 
     /**

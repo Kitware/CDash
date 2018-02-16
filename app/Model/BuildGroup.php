@@ -19,6 +19,9 @@ use CDash\Database;
 
 class BuildGroup
 {
+    const NIGHTLY = 'Nightly';
+    const EXPERIMENTAL = 'Experimental';
+
     private $Id;
     private $ProjectId;
     private $Name;

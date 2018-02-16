@@ -8,7 +8,7 @@ use Build;
 use Project;
 use SubscriberInterface;
 
-class Subscription
+class Subscription implements SubscriptionInterface
 {
     protected static $max_display_items = 5;
 
@@ -139,47 +139,11 @@ class Subscription
         }
     }
 
-
-    /** @var  Build $build //
-    private $build;
-
-    /** @var  Project $project //
-    private $project;
-
     /**
-     * @param Build $build
-     * @return Subscription
-     //
-    public function setBuild(Build $build)
+     * @return string
+     */
+    public function getBuildSummary()
     {
-        $this->build = $build;
-        return $this;
+        // TODO: Implement getBuildSummary() method.
     }
-
-    /**
-     * @return Build
-     //
-    public function getBuild()
-    {
-        return $this->build;
-    }
-
-    /**
-     * @param Project $project
-     * @return Subscription
-     //
-    public function setProject(Project $project)
-    {
-        $this->project = $project;
-        return $this;
-    }
-
-    /**
-     * @return Project
-     //
-    public function getProject()
-    {
-        return $this->project;
-    }
-    */
 }

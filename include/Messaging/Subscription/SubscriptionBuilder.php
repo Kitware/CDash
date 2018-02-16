@@ -3,15 +3,11 @@ namespace CDash\Messaging\Subscription;
 
 use ActionableBuildInterface;
 use CDash\Collection\SubscriberCollection;
-use Project;
 
 class SubscriptionBuilder
 {
-    /** @var  \ActionableBuildInterface $handler */
-    private $build;
-
-    /** @var  \Project $project */
-    private $project;
+    /** @var  \ActionableBuildInterface $submission */
+    private $submission;
 
     /** @var SubscriptionFactory $subscriptionFactory */
     private $subscriptionFactory;
@@ -19,26 +15,19 @@ class SubscriptionBuilder
     /** @var  SubscriptionCollection $subscriptions */
     private $subscriptions;
 
-    /** @var SubscriberCollection $subscribers */
-    private $subscribers;
-
     /**
      * SubscriptionBuilder constructor.
-     * @param ActionableBuildInterface $build
-     * @param Project $project
+     * @param ActionableBuildInterface $submission
      * @param SubscriptionCollection|null $subscriptions
-     * @param SubscriberCollection|null $subscribers
      * @param SubscriptionFactory|null $subscriptionFactory
      */
     public function __construct(
-        ActionableBuildInterface $build,
-        Project $project,
+        ActionableBuildInterface $submission,
         SubscriptionCollection $subscriptions = null,
         SubscriberCollection $subscribers = null,
         SubscriptionFactory $subscriptionFactory = null
     ) {
-        $this->build = $build;
-        $this->project = $project;
+        $this->submission = $submission;
         $this->subscriptions = $subscriptions;
         $this->subscribers = $subscribers;
         $this->subscriptionFactory = $subscriptionFactory;
@@ -50,21 +39,21 @@ class SubscriptionBuilder
     public function build()
     {
         $subscriptions = $this->getSubscriptions();
-        $subscribers = $this->getSubscribers();
         $factory = $this->getSubscriptionFactory();
 
-        $this->project->GetProjectSubscribers($subscribers);
+        $project = $this->submission->GetProject();
+        $subscribers = $project->GetSubscriberCollection();
 
-        Subscription::setMaxDisplayItems($this->project->EmailMaxItems);
+        Subscription::setMaxDisplayItems($project->EmailMaxItems);
 
         foreach ($subscribers as $subscriber) {
             /** @var \SubscriberInterface $subscriber */
-            if ($subscriber->hasBuildTopics($this->build)) {
+            if ($subscriber->hasBuildTopics($this->submission)) {
                 $subscription = $factory->create();
                 $subscription
                     ->setSubscriber($subscriber)
                     ->setTopicCollection($subscriber->getTopics())
-                    ->setProject($this->project);
+                    ->setProject($project);
 
                 $subscriptions->add($subscription);
             }
@@ -78,14 +67,6 @@ class SubscriptionBuilder
             $this->subscriptions = new SubscriptionCollection();
         }
         return $this->subscriptions;
-    }
-
-    protected function getSubscribers()
-    {
-        if (is_null($this->subscribers)) {
-            $this->subscribers = new SubscriberCollection();
-        }
-        return $this->subscribers;
     }
 
     protected function getSubscriptionFactory()

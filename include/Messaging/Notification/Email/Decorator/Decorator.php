@@ -1,7 +1,7 @@
 <?php
 namespace CDash\Messaging\Notification\Email\Decorator;
 
-use CDash\Messaging\Notification\Email\EmailMessage;
+use CDash\Collection\CollectionInterface;
 use CDash\Messaging\Topic\TopicInterface;
 
 abstract class Decorator implements DecoratorInterface
@@ -9,7 +9,7 @@ abstract class Decorator implements DecoratorInterface
     /** @var  DecoratorInterface $decorator */
     protected $decorator;
 
-    /** @var  string $body */
+    /** @var  DecoratorInterface $body */
     protected $body = '';
 
     protected $description = '';
@@ -23,6 +23,11 @@ abstract class Decorator implements DecoratorInterface
      */
     abstract protected function getTemplate();
 
+    public function __construct(DecoratorInterface $body = null)
+    {
+        $this->body = $body;
+    }
+
     /**
      * @param DecoratorInterface $decorator
      * @return DecoratorInterface
@@ -31,6 +36,14 @@ abstract class Decorator implements DecoratorInterface
     {
         $this->decorator = $decorator;
         return $this;
+    }
+
+    /**
+     * @param mixed $data
+     */
+    public function setTemplateData($data)
+    {
+        // TODO: Implement setTemplateData() method.
     }
 
     /**
@@ -64,6 +77,11 @@ abstract class Decorator implements DecoratorInterface
         $this->rows_processed = count($topic);
         $this->body .= $body;
         return $this;
+    }
+
+    public function addSubject($subject)
+    {
+        $this->subject_collection->add($subject);
     }
 
     /**

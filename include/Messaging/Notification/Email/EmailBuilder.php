@@ -6,12 +6,18 @@ use CDash\Messaging\Notification\Email\Decorator\Decorator;
 use CDash\Messaging\Notification\Email\Decorator\DecoratorFactory;
 use CDash\Collection\CollectionInterface;
 use CDash\Messaging\FactoryInterface;
+use CDash\Messaging\Notification\Email\Decorator\FooterDecorator;
+use CDash\Messaging\Notification\Email\Decorator\PreambleDecorator;
+use CDash\Messaging\Notification\Email\Decorator\SummaryDecorator;
 use CDash\Messaging\Notification\NotificationCollection;
+use CDash\Messaging\Notification\NotificationInterface;
+use CDash\Messaging\Subscription\SubscriptionInterface;
 use CDash\Messaging\Subscription\SubscriptionNotificationBuilder;
 use CDash\Messaging\Subscription\Subscription;
 use CDash\Messaging\Subscription\SubscriptionCollection;
 use CDash\Messaging\Topic\Topic;
 use Project;
+use SendGrid\Email;
 use Site;
 
 class EmailBuilder extends SubscriptionNotificationBuilder
@@ -92,37 +98,59 @@ class EmailBuilder extends SubscriptionNotificationBuilder
     }
 
     /**
-     * @return void
+     * @return NotificationInterface
      */
-    public function createNotification()
+    public function createNotification(SubscriptionInterface $subscription)
     {
-        $this->notification = new EmailMessage();
+        $message = new EmailMessage();
+
+        $this->setPreamble($message);
+        $this->setSummary($message, $subscription);
+        $this->setTopics($message, $subscription);
+        $this->setFooter($message);
+        $this->setSubject($message, $subscription);
+        $this->setRecipient($message, $subscription);
+        $this->setSender();
+        return $message;
     }
 
     /**
      * @return void
      */
-    public function addPreamble()
+    protected function setPreamble(EmailMessage $email)
     {
-        // TODO: Implement addPreamble() method.
+        $preamble = new PreambleDecorator(null);
+        $email->setBody($preamble);
     }
 
-    public function addTopics()
+    protected function setTopics(EmailMessage $email, SubscriptionInterface $subscription)
     {
-        // TODO: Implement addTopics() method.
+        $topics = $subscription->getTopicCollection();
+        foreach ($topics as $topic) {
+            $decorator = DecoratorFactory::createFromTopic($topic, $email->getBody());
+            $email->setBody($decorator);
+        }
     }
 
-    public function addSummary()
+    protected function setFooter(EmailMessage $email)
     {
-        // TODO: Implement addSummary() method.
+        $footer = new FooterDecorator($email->getBody());
+        $email->setBody($footer);
     }
 
-    public function addSubject()
+    protected function setSummary(EmailMessage $email, SubscriptionInterface $subscription)
+    {
+        $summary = new SummaryDecorator($email->getBody());
+        $summary->setTemplateData($subscription);
+        $email->setBody($summary);
+    }
+
+    protected function setSubject(EmailMessage $emailMessage, SubscriptionInterface $subscription)
     {
         // TODO: Implement addSubject() method.
     }
 
-    public function addDeliveryInformation()
+    protected function addDeliveryInformation()
     {
         // TODO: Implement addDeliveryInformation() method.
     }
@@ -130,7 +158,7 @@ class EmailBuilder extends SubscriptionNotificationBuilder
     /**
      * @return void
      */
-    public function setSender()
+    protected function setSender()
     {
         // TODO: Implement setSender() method.
     }
@@ -138,23 +166,15 @@ class EmailBuilder extends SubscriptionNotificationBuilder
     /**
      * @return void
      */
-    public function setRecipient()
+    protected function setRecipient(EmailMessage $email, SubscriptionInterface $subscription)
     {
-        // TODO: Implement setRecipient() method.
+        $email->setRecipient($subscription->getRecipient());
     }
 
     /**
      * @return void
      */
-    public function setSubject()
-    {
-        // TODO: Implement setSubject() method.
-    }
-
-    /**
-     * @return void
-     */
-    public function setBody()
+    protected function setBody()
     {
     }
 

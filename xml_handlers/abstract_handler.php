@@ -122,4 +122,9 @@ abstract class AbstractHandler implements SaxHandler, CDashSubmissionHandlerInte
         }
         return $this->ModelFactory;
     }
+
+    public function GetProject()
+    {
+        return $this->Project;
+    }
 }
