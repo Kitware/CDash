@@ -24,6 +24,5 @@ class BuildCollectionTest extends \PHPUnit_Framework_TestCase
         foreach ($sut as $name => $build) {
             $this->assertEquals($name, $names[$count++]);
         }
-
     }
 }
