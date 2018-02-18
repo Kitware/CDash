@@ -3,9 +3,8 @@ namespace CDash\Messaging\Topic;
 
 use Build;
 
-class DynamicAnalysisTopic extends Topic
+class DynamicAnalysisTopic extends Topic implements DecoratableInterface
 {
-
     /**
      * @param Build $build
      * @return bool

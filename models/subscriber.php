@@ -1,6 +1,5 @@
 <?php
 use CDash\Messaging\Preferences\NotificationPreferences;
-use CDash\Messaging\Topic\CancelationInterface;
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Messaging\Topic\TopicFactory;
 
@@ -17,7 +16,6 @@ class Subscriber implements SubscriberInterface
 
     /** @var  string[] */
     private $labels;
-
 
     /**
      * SubscriberInterface constructor.
@@ -45,12 +43,6 @@ class Subscriber implements SubscriberInterface
         foreach ($user_topics as $topic) {
             $topic->setSubscriber($this);
             foreach ($builds as $build) {
-                if (is_a($topic, CancelationInterface::class)) {
-                    if ($topic->subscribesToBuild($build) === false) {
-                        return false;
-                    }
-                    continue;
-                }
                 if ($topic->subscribesToBuild($build)) {
                     $topic->addBuild($build);
                     if (!$topics->has($topic->getTopicName())) {
@@ -116,5 +108,13 @@ class Subscriber implements SubscriberInterface
     {
         $this->labels = $labels;
         return $this;
+    }
+
+    /**
+     * @return \CDash\Messaging\Preferences\NotificationPreferencesInterface
+     */
+    public function getNotificationPreferences()
+    {
+        return $this->preferences;
     }
 }

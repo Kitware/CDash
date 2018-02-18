@@ -21,15 +21,15 @@ interface TopicInterface
 
     /**
      * @param SubscriberInterface $subscriber
-     * @return self
+     * @return $this
      */
     public function setSubscriber(SubscriberInterface $subscriber);
 
     /**
-     * @param $data
-     * @return mixed
+     * @param Build $build
+     * @return $this
      */
-    public function setTopicData($data);
+    public function setTopicData(Build $build);
 
     /**
      * @return mixed

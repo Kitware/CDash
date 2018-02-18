@@ -291,7 +291,7 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
             )
             ->createAuthor(
                 'user_6@company.tld',
-                ['BuildThree']
+                ['BuildFour']
             )
             ->createAuthor(
                 'user_7@company.tld',
@@ -316,7 +316,6 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
         $subscribers = [
             [ // This user should receive email
                 'user_1@company.tld',
-                BitmaskNotificationPreferences::EMAIL_ANY_USER_CHECKIN_ISSUE_ANY_SECTION |
                 BitmaskNotificationPreferences::EMAIL_TEST
             ],
             [ // This user should *not* receive email, as BuildGroup is Experimental
@@ -326,7 +325,6 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
             ],
             [ // This user should *not* receive email, not subscribed to Test
                 'user_3@company.tld',
-                BitmaskNotificationPreferences::EMAIL_ANY_USER_CHECKIN_ISSUE_ANY_SECTION |
                 BitmaskNotificationPreferences::EMAIL_CONFIGURE |
                 BitmaskNotificationPreferences::EMAIL_DYNAMIC_ANALYSIS |
                 BitmaskNotificationPreferences::EMAIL_ERROR |
@@ -343,8 +341,10 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
                 BitmaskNotificationPreferences::EMAIL_USER_CHECKIN_ISSUE_ANY_SECTION |
                 BitmaskNotificationPreferences::EMAIL_TEST
             ],
-            [ // This user should receive an email, the user is subscribed to BuildTres
+            [ // This user should receive an email, the user is subscribed to BuildTres and
+              // test failures, of which BuildTres has
                 'user_6@company.tld',
+                BitmaskNotificationPreferences::EMAIL_USER_CHECKIN_ISSUE_ANY_SECTION |
                 BitmaskNotificationPreferences::EMAIL_SUBSCRIBED_LABELS |
                 BitmaskNotificationPreferences::EMAIL_TEST,
                 ['BuildTres']
@@ -353,6 +353,7 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
               // being an author, the other settings do not warrent an email a) because not
               // subscribed to EMAIL_TEST; b) Not subscribed to other's issues
                 'user_7@company.tld',
+                BitmaskNotificationPreferences::EMAIL_USER_CHECKIN_ISSUE_ANY_SECTION |
                 BitmaskNotificationPreferences::EMAIL_SUBSCRIBED_LABELS |
                 BitmaskNotificationPreferences::EMAIL_ERROR |
                 BitmaskNotificationPreferences::EMAIL_WARNING |
@@ -361,7 +362,6 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
                 BitmaskNotificationPreferences::EMAIL_USER_CHECKIN_ISSUE_ANY_SECTION,
                 ['BuildTres']
             ],
-
         ];
 
         $notifications = $this->getNotifications($subscribers);

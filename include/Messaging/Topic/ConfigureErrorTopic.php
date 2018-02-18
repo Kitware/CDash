@@ -3,9 +3,8 @@ namespace CDash\Messaging\Topic;
 
 use Build;
 
-class ConfigureErrorTopic extends Topic
+class ConfigureErrorTopic extends Topic implements DecoratableInterface
 {
-
     /**
      * @param Build $build
      * @return bool

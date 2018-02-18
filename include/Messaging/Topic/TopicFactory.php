@@ -1,10 +1,14 @@
 <?php
 namespace CDash\Messaging\Topic;
 
+use BuildGroup;
 use CDash\Collection\BuildCollection;
 use CDash\Collection\TestCollection;
 use CDash\Messaging\Notification\Email\Decorator\TestFailureDecorator;
+use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Preferences\NotificationPreferences;
+use CDash\ServiceContainer;
+use CDash\Messaging\Topic\TestFailureTopic;
 
 class TopicFactory
 {
@@ -12,6 +16,7 @@ class TopicFactory
      * @param NotificationPreferences $preferences
      * @return TopicInterface[]
      */
+    /*
     public static function createFrom(NotificationPreferences $preferences)
     {
         $topics = [];
@@ -28,6 +33,53 @@ class TopicFactory
                 }
             }
         }
+        return $topics;
+    }
+    */
+
+    public static function createFrom(NotificationPreferences $preferences)
+    {
+        $topics = [];
+        $container = ServiceContainer::getInstance();
+        $settings = $preferences->getPropertyNames();
+
+        foreach ($settings as $topic) {
+            if ($preferences->notifyOn($topic)) {
+                $class_name = "{$topic}Topic";
+                $instance = $container->create($class_name);
+                // these topics are special cases to be handled later
+                if (is_a($instance, DecoratableInterface::class)) {
+                    $topics[] = $instance;
+                }
+            }
+        }
+
+        if ($preferences->get(NotifyOn::GROUP_NIGHTLY)) {
+            $decorated = [];
+            foreach ($topics as $topic) {
+                $groupTopic = new GroupMembershipTopic($topic);
+                $groupTopic->setGroup(BuildGroup::NIGHTLY);
+                $decorated[] = $groupTopic;
+            }
+            $topics = $decorated;
+        }
+
+        if ($preferences->get(NotifyOn::LABELED)) {
+            $decorated = [];
+            foreach ($topics as $topic) {
+                $decorated[] = new LabeledTopic($topic);
+            }
+            $topics = $decorated;
+        }
+
+        if ($preferences->get(NotifyOn::AUTHORED)) {
+            $decorated = [];
+            foreach ($topics as $topic) {
+                $decorated[] = new AuthoredTopic($topic);
+            }
+            $topics = $decorated;
+        }
+
         return $topics;
     }
 
@@ -62,9 +114,9 @@ class TopicFactory
             case 'Fixed':
                 return new FixedTopic();
             case 'Label':
-                return new LabelTopic();
+                return new LabeledTopic();
             case 'MyCheckinIssue':
-                return new MyCheckinIssueTopic();
+                return new AuthoredTopic();
             case 'TestFailure':
                 return new TestFailureTopic(new TestCollection());
             case 'UpdateError':

@@ -3,7 +3,7 @@ namespace CDash\Messaging\Topic;
 
 use Build;
 
-class FixedTopic extends Topic
+class FixedTopic extends Topic implements AuthoredByInterface
 {
 
     /**

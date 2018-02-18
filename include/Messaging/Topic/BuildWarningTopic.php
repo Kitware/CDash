@@ -3,9 +3,8 @@ namespace CDash\Messaging\Topic;
 
 use Build;
 
-class BuildWarningTopic extends Topic
+class BuildWarningTopic extends Topic implements DecoratableInterface
 {
-
     /**
      * @param Build $build
      * @return bool

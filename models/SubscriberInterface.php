@@ -38,7 +38,12 @@ interface SubscriberInterface
     public function setAddress($address);
 
     /**
-     * @return \CDash\Collection\LabelCollection
+     * @return string[]
      */
     public function getLabels();
+
+    /**
+     * @return \CDash\Messaging\Preferences\NotificationPreferencesInterface
+     */
+    public function getNotificationPreferences();
 }

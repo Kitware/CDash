@@ -52,7 +52,6 @@ class SubscriptionBuilder
                 $subscription = $factory->create();
                 $subscription
                     ->setSubscriber($subscriber)
-                    ->setTopicCollection($subscriber->getTopics())
                     ->setProject($project);
 
                 $subscriptions->add($subscription);

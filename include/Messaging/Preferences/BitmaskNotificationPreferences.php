@@ -18,10 +18,7 @@ class BitmaskNotificationPreferences extends NotificationPreferences
     const EMAIL_USER_CHECKIN_ISSUE_ANY_SECTION = 512;            // 2^9
     const EMAIL_ANY_USER_CHECKIN_ISSUE_NIGHTLY_SECTION = 1024;   // 2^10
     const EMAIL_ANY_USER_CHECKIN_ISSUE_ANY_SECTION = 2048;       // 2^11
-    const EMAIL_USER_CHECKIN_FIX = 4096;                         // 2^12
-    const EMAIL_EXPECTED_SITE_NOT_SUBMITTING = 8192;             // 2^13
-
-    const EMAIL_SUBSCRIBED_LABELS = 16384;                       // 2^14
+    const EMAIL_SUBSCRIBED_LABELS = 4096;                        // 2^12
 
     protected $preferences = [];
 

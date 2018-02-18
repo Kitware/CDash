@@ -1,26 +1,27 @@
 <?php
 namespace CDash\Messaging\Preferences;
 
+use CDash\Messaging\Notification\NotifyOn;
+
 abstract class NotificationPreferences implements
     PreferencesInterface,
     NotificationPreferencesInterface
 {
     protected $properties = [
-        'onFiltered',
-        'onUpdateError',
-        'onConfigureError',
-        'onBuildWarning',
-        'onBuildError',
-        'onTestFailure',
-        'onDynamicAnalysis',
-        'onFixed',
-        'onExpectedSiteSubmitMissing',
-        'onMyCheckinIssue',
-        'onCheckinIssueNightlyOnly',
-        'onAnyCheckinIssue',
-        '',
-        '',
-        'onLabel',
+        NotifyOn::FILTERED,
+        NotifyOn::UPDATE_ERROR,
+        NotifyOn::CONFIGURE_ERROR,
+        NotifyOn::BUILD_WARNING,
+        NotifyOn::BUILD_ERROR,
+        NotifyOn::TEST_FAILURE,
+        NotifyOn::DYNAMIC_ANALYSIS,
+        NotifyOn::FIXED,
+        NotifyOn::SITE_MISSING,
+        NotifyOn::AUTHORED,
+        NotifyOn::GROUP_NIGHTLY,
+        NotifyOn::ANY,
+        NotifyOn::LABELED,
+        NotifyOn::NEVER,
     ];
 
     protected $settings = [];
@@ -47,7 +48,7 @@ abstract class NotificationPreferences implements
 
     public function notifyOn($name)
     {
-        return $this->get("on{$name}");
+        return $this->get($name);
     }
 
     public function __call($name, $arguments)
@@ -60,8 +61,6 @@ abstract class NotificationPreferences implements
 
     public function getPropertyNames()
     {
-        return array_map(function ($p) {
-            return substr($p, 2);
-        }, $this->properties);
+        return $this->properties;
     }
 }

@@ -2,29 +2,15 @@
 namespace CDash\Messaging\Topic;
 
 use Build;
+use BuildGroup;
 use CDash\Collection\BuildCollection;
 use CDash\Collection\CollectionInterface;
 use SubscriberInterface;
 
 abstract class Topic implements TopicInterface
 {
-    const TOPIC_NEVER    = 0;
-    const TOPIC_FILTERED = 1;                                    // 2^0
-    const TOPIC_UPDATE = 2;                                      // 2^1
-    const TOPIC_CONFIGURE = 4;                                   // 2^2
-    const TOPIC_WARNING = 8;                                     // 2^3
-    const TOPIC_ERROR = 16;                                      // 2^4
-    const TOPIC_TEST = 32;                                       // 2^5
-    const TOPIC_DYNAMIC_ANALYSIS = 64;                           // 2^6
-    const TOPIC_FIXES = 128;                                     // 2^7
-    const TOPIC_MISSING_SITES = 256;                             // 2^8
-
-    // NEW MASKS
-    const TOPIC_USER_CHECKIN_ISSUE_ANY_SECTION = 512;            // 2^9
-    const TOPIC_ANY_USER_CHECKIN_ISSUE_NIGHTLY_SECTION = 1024;   // 2^10
-    const TOPIC_ANY_USER_CHECKIN_ISSUE_ANY_SECTION = 2048;       // 2^11
-    const TOPIC_USER_CHECKIN_FIX = 4096;                         // 2^12
-    const TOPIC_EXPECTED_SITE_NOT_SUBMITTING = 8192;             // 2^12
+    const TEST_FAILURE = 'TestFailure';
+    const LABELED = 'Labeled';
 
     /** @var  SubscriberInterface $subscriber */
     protected $subscriber;
@@ -38,10 +24,26 @@ abstract class Topic implements TopicInterface
     /** @var  BuildCollection */
     private $buildCollection;
 
+    /** @var Topic $topic */
+    protected $topic;
+
+    /** @var  string[] $labels */
+    protected $labels;
+
+    /**
+     * Topic constructor.
+     * @param TopicInterface|null $topic
+     */
+    public function __construct(TopicInterface $topic = null)
+    {
+        $this->topic = $topic;
+    }
+
     public function addBuild(Build $build)
     {
         $collection = $this->getBuildCollection();
         $collection->add($build);
+        $this->setTopicData($build);
         return $this;
     }
 
@@ -70,16 +72,21 @@ abstract class Topic implements TopicInterface
     public function setSubscriber(SubscriberInterface $subscriber)
     {
         $this->subscriber = $subscriber;
+        if ($this->topic) {
+            $this->topic->setSubscriber($subscriber);
+        }
         return $this;
     }
 
     /**
-     * @param $topicData
-     * @return Topic
+     * @param Build $build
+     * @return $this
      */
-    public function setTopicData($topicData)
+    public function setTopicData(Build $build)
     {
-        $this->topicData = $topicData;
+        if ($this->topic) {
+            $this->topic->setTopicData($build);
+        }
         return $this;
     }
 
@@ -100,9 +107,11 @@ abstract class Topic implements TopicInterface
      */
     public function getTopicName()
     {
-        $start = strlen(__NAMESPACE__) + 1; // +1 for trailing separator
-        $end = -strlen(substr(self::class, $start)); // abstract class name
-        return substr(static::class, $start, $end);
+        $name = '';
+        if ($this->topic) {
+            $name = $this->topic->getTopicName();
+        }
+        return $name;
     }
 
     public function getTopicDescription()
@@ -120,5 +129,16 @@ abstract class Topic implements TopicInterface
         }
 
         return $this->buildCollection;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasSubscribedLabels()
+    {
+        if ($this->topic) {
+            return $this->topic->hasSubscribedLabels();
+        }
+        return (bool)(count($this->labels));
     }
 }

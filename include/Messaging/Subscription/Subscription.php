@@ -57,7 +57,7 @@ class Subscription implements SubscriptionInterface
      */
     public function getTopicCollection()
     {
-        return $this->topicCollection;
+        return $this->subscriber->getTopics();
     }
 
     /**
