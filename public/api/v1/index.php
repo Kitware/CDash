@@ -228,6 +228,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
     // Main dashboard section
     get_dashboard_JSON($projectname, $date, $response);
     $response['displaylabels'] = $project_array['displaylabels'];
+    $response['showtesttime'] = $project_instance->ShowTestTime;
 
     $page_id = 'index.php';
     $response['childview'] = 0;
