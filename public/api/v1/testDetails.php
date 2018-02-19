@@ -53,11 +53,15 @@ $pdo = Database::getInstance()->getPdo();
 $response = begin_JSON_response();
 $response['title'] = 'CDash : Test Details';
 
-// If we have a fileid we download it
+// If we have a fileid we download it.
 if (isset($_GET['fileid']) && is_numeric($_GET['fileid'])) {
-    $result = pdo_query("SELECT id,value,name FROM testmeasurement WHERE testid=$testid AND type='file' ORDER BY id");
+    $stmt = $pdo->prepare(
+        "SELECT id, value, name FROM testmeasurement
+        WHERE testid = :testid AND type = 'file'
+        ORDER BY id");
+    pdo_execute($stmt, [':testid' => $testid]);
     for ($i = 0; $i < $_GET['fileid']; $i++) {
-        $result_array = pdo_fetch_array($result);
+        $result_array = $stmt->fetch();
     }
     header('Content-type: tar/gzip');
     header('Content-Disposition: attachment; filename="' . $result_array['name'] . '.tgz"');
