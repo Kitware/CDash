@@ -124,7 +124,9 @@
         <h3 ng-switch-default id="test-totals-indicator">
           {{::cdash.numPassed}} passed,
           {{::cdash.numFailed}} failed,
-          {{::cdash.numTimeFailed}} failed the time status check,
+          <span ng-if="::cdash.project.showtesttime">
+            {{::cdash.numTimeFailed}} failed the time status check,
+          </span>
           {{::cdash.numNotRun}} not run,
           {{::cdash.numMissing}} missing.
         </h3>
