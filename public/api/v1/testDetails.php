@@ -24,8 +24,10 @@ require_once 'include/api_common.php';
 include_once 'include/repository.php';
 include 'include/version.php';
 
+use CDash\Model\Build;
 use CDash\Model\Project;
 use CDash\Model\Site;
+use CDash\Database;
 
 $start = microtime_float();
 
@@ -47,6 +49,7 @@ if (!can_access_project($projectid)) {
     return;
 }
 
+$pdo = Database::getInstance()->getPdo();
 $response = begin_JSON_response();
 $response['title'] = 'CDash : Test Details';
 
@@ -92,21 +95,28 @@ $project_response = [];
 $project_response['showtesttime'] = $project->ShowTestTime;
 $response['project'] = $project_response;
 
-$testRow = pdo_fetch_array(pdo_query("SELECT * FROM build2test,test WHERE build2test.testid = '$testid' AND build2test.buildid = '$build->Id' AND build2test.testid=test.id"));
+$stmt = $pdo->prepare(
+    'SELECT * FROM build2test b2t
+    JOIN test t ON t.id = b2t.testid
+    WHERE b2t.testid = :testid AND b2t.buildid = :buildid');
+pdo_execute($stmt, [':testid' => $testid, ':buildid' => $build->Id]);
+$testRow = $stmt->fetch();
 $testName = $testRow['name'];
 
 // Helper function
-function findTest($buildid, $testName)
+function findTest($buildid, $testName, $pdo)
 {
-    $test = pdo_query('SELECT build2test.testid FROM build2test
-                            WHERE build2test.buildid=' . qnum($buildid) . "
-                            AND build2test.testid IN (SELECT id FROM test
-                                 WHERE name='$testName')");
-    if (pdo_num_rows($test) > 0) {
-        $test_array = pdo_fetch_array($test);
-        return $test_array['testid'];
+    $stmt = $pdo->prepare(
+        'SELECT build2test.testid FROM build2test
+        WHERE build2test.buildid = :buildid
+        AND build2test.testid IN
+            (SELECT id FROM test WHERE name = :testname)');
+    pdo_execute($stmt, [':buildid' => $buildid, ':testname' => $testName]);
+    $testid = $stmt->fetchColumn();
+    if ($testid === false) {
+        return 0;
     }
-    return 0;
+    return $testid;
 }
 
 $menu = [];
@@ -125,7 +135,7 @@ if (array_key_exists('graph', $_GET)) {
 
 // Previous build
 if ($previous_buildid > 0) {
-    $previous_testid = findTest($previous_buildid, $testName);
+    $previous_testid = findTest($previous_buildid, $testName, $pdo);
     if ($previous_testid) {
         $menu['previous'] = "testDetails.php?test=$previous_testid&build=$previous_buildid$extra_url";
     }
@@ -134,13 +144,13 @@ if ($previous_buildid > 0) {
 }
 
 // Current build
-if ($current_testid = findTest($current_buildid, $testName)) {
+if ($current_testid = findTest($current_buildid, $testName, $pdo)) {
     $menu['current'] = "testDetails.php?test=$current_testid&build=$current_buildid$extra_url";
 }
 
 // Next build
 if ($next_buildid > 0) {
-    if ($next_testid = findTest($next_buildid, $testName)) {
+    if ($next_testid = findTest($next_buildid, $testName, $pdo)) {
         $menu['next'] = "testDetails.php?test=$next_testid&build=$next_buildid$extra_url";
     }
 } else {
@@ -203,13 +213,15 @@ switch ($testRow['status']) {
         break;
 }
 
-// Find the repository revision
+// Find the repository revision.
 $update_response = [];
-// Return the status
-$status_array = pdo_fetch_array(pdo_query("SELECT status,revision,priorrevision,path
-                                              FROM buildupdate,build2update AS b2u
-                                              WHERE b2u.updateid=buildupdate.id
-                                              AND b2u.buildid='$build->Id'"));
+$stmt = $pdo->prepare(
+    'SELECT status, revision, priorrevision, path
+     FROM buildupdate bu
+     JOIN build2update b2u ON (b2u.updateid = bu.id)
+     WHERE b2u.buildid = :buildid');
+pdo_execute($stmt, [':buildid' => $build->Id]);
+$status_array = $stmt->fetch();
 if (strlen($status_array['status']) > 0 && $status_array['status'] != '0') {
     $update_response['status'] = $status_array['status'];
 } else {
@@ -244,26 +256,34 @@ if ($testRow['timestatus'] == 0) {
     }
 }
 
-//get any images associated with this test
-$query = "SELECT imgid,role FROM test2image WHERE testid = '$testid' AND (role='TestImage' "
-    . "OR role='ValidImage' OR role='BaselineImage' OR role='DifferenceImage2') ORDER BY id";
-$result = pdo_query($query);
-if (pdo_num_rows($result) > 0) {
-    $compareimages_response = [];
-    while ($row = pdo_fetch_array($result)) {
-        $image_response = [];
-        $image_response['imgid'] = $row['imgid'];
-        $image_response['role'] = $row['role'];
-        $compareimages_response[] = $image_response;
-    }
+// Get any images associated with this test.
+$compareimages_response = [];
+$stmt = $pdo->prepare(
+    "SELECT imgid, role FROM test2image
+    WHERE testid = :testid AND
+        (role = 'TestImage' OR role = 'ValidImage' OR role = 'BaselineImage' OR
+         role ='DifferenceImage2')
+    ORDER BY id");
+pdo_execute($stmt, [':testid' => $testid]);
+while ($row = $stmt->fetch()) {
+    $image_response = [];
+    $image_response['imgid'] = $row['imgid'];
+    $image_response['role'] = $row['role'];
+    $compareimages_response[] = $image_response;
+}
+if (!empty($compareimages_response)) {
     $test_response['compareimages'] = $compareimages_response;
 }
 
 $images_response = [];
-$query = "SELECT imgid,role FROM test2image WHERE testid = '$testid' "
-    . "AND role!='ValidImage' AND role!='BaselineImage' AND role!='DifferenceImage2' ORDER BY id";
-$result = pdo_query($query);
-while ($row = pdo_fetch_array($result)) {
+$stmt = $pdo->prepare(
+    "SELECT imgid, role FROM test2image
+    WHERE testid = :testid AND
+          role != 'ValidImage' AND role != 'BaselineImage' AND
+          role != 'DifferenceImage2'
+    ORDER BY id");
+pdo_execute($stmt, [':testid' => $testid]);
+while ($row = $stmt->fetch()) {
     $image_response = [];
     $image_response['imgid'] = $row['imgid'];
     $image_response['role'] = $row['role'];
@@ -273,12 +293,15 @@ if (!empty($images_response)) {
     $test_response['images'] = $images_response;
 }
 
-//get any measurements associated with this test
+// Get any measurements associated with this test.
 $measurements_response = [];
-$query = "SELECT name,type,value FROM testmeasurement WHERE testid = '$testid' ORDER BY id";
-$result = pdo_query($query);
+$stmt = $pdo->prepare(
+    'SELECT name, type, value FROM testmeasurement
+    WHERE testid = :testid
+    ORDER BY id');
+pdo_execute($stmt, [':testid' => $testid]);
 $fileid = 1;
-while ($row = pdo_fetch_array($result)) {
+while ($row = $stmt->fetch()) {
     $measurement_response = [];
     $measurement_response['name'] = $row['name'];
     $measurement_response['type'] = $row['type'];
