@@ -18,8 +18,9 @@
     <div ng-if="cdash.requirelogin != 1 && !loading && !cdash.error">
 
       <div id="executiontime">
-        <img src="img/clock.png" alt="Execution Time" title="Execution Time" />
-        <span class="builddateelapsed" alt="Mean time: {{cdash.test.timemean}}s<br/>STD time: {{cdash.test.timestd}}s">
+        <img src="img/clock.png"
+             title="Average: {{::cdash.test.timemean}}, SD: {{::cdash.test.timestd}}"></img>
+        <span class="builddateelapsed">
           {{cdash.test.time}}
         </span>
       </div>
