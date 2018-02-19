@@ -817,7 +817,21 @@
                   <input name="testTimeMaxStatus" type="text" id="testTimeMaxStatus" size="4"
                          ng-model="cdash.project.TestTimeMaxStatus"
                          ng-change="cdash.changesmade = true"
-                         ng-focus="clearHelp()" />
+                         ng-focus="showHelp('TimeMaxStatus_help')" />
+                  <a
+                    href="https://public.kitware.com/Wiki/CDash:Design#Test_Timing"
+                    target="blank">
+                    <img ng-mouseover="showHelp('TimeMaxStatus_help')"
+                      src="img/help.gif" border="0" />
+                  </a>
+                  <span class="help_content" id="TimeMaxStatus_help">
+                    <b>Test time max status</b>
+                    <br />
+                    Set the number of times a test must violate the time status check
+                    before it is flagged. For example, if this is set to 2, then a test
+                    will need to run more slowly than expected twice in a row before it
+                    is marked as having failed the time status check.
+                  </span>
                 </td>
               </tr>
               <tr>
