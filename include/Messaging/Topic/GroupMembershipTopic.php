@@ -25,4 +25,15 @@ class GroupMembershipTopic extends Topic
     {
         $this->group = $group;
     }
+
+    /**
+     * @return int
+     */
+    public function getTopicCount()
+    {
+        if ($this->topic) {
+            return $this->topic->getTopicCount();
+        }
+        return 0;
+    }
 }

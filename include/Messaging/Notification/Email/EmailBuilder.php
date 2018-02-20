@@ -104,7 +104,7 @@ class EmailBuilder extends SubscriptionNotificationBuilder
     {
         $message = new EmailMessage();
 
-        $this->setPreamble($message);
+        $this->setPreamble($message, $subscription);
         $this->setSummary($message, $subscription);
         $this->setTopics($message, $subscription);
         $this->setFooter($message);
@@ -117,17 +117,30 @@ class EmailBuilder extends SubscriptionNotificationBuilder
     /**
      * @return void
      */
-    protected function setPreamble(EmailMessage $email)
+    protected function setPreamble(EmailMessage $email, SubscriptionInterface $subscription)
     {
         $preamble = new PreambleDecorator(null);
+        $preamble->addSubject($subscription->getBuildSummary());
         $email->setBody($preamble);
+    }
+
+    protected function setSummary(EmailMessage $email, SubscriptionInterface $subscription)
+    {
+        $summary = new SummaryDecorator($email->getBody());
+        $summary->addSubject($subscription);
+        $email->setBody($summary);
     }
 
     protected function setTopics(EmailMessage $email, SubscriptionInterface $subscription)
     {
         $topics = $subscription->getTopicCollection();
+        $project = $subscription->getProject();
+        $maxItems = $project->EmailMaxItems;
         foreach ($topics as $topic) {
             $decorator = DecoratorFactory::createFromTopic($topic, $email->getBody());
+            $decorator
+                ->setMaxTopicItems($maxItems)
+                ->addSubject($topic);
             $email->setBody($decorator);
         }
     }
@@ -135,15 +148,10 @@ class EmailBuilder extends SubscriptionNotificationBuilder
     protected function setFooter(EmailMessage $email)
     {
         $footer = new FooterDecorator($email->getBody());
+        $footer->addSubject(Config::getInstance());
         $email->setBody($footer);
     }
 
-    protected function setSummary(EmailMessage $email, SubscriptionInterface $subscription)
-    {
-        $summary = new SummaryDecorator($email->getBody());
-        $summary->setTemplateData($subscription);
-        $email->setBody($summary);
-    }
 
     protected function setSubject(EmailMessage $emailMessage, SubscriptionInterface $subscription)
     {

@@ -356,4 +356,11 @@ class Test
     {
         return $this->GetStatus() === self::PASSED;
     }
+
+    public function GetUrl()
+    {
+        $config = \CDash\Config::getInstance();
+        $host_base = $config->getBaseUrl();
+        return "{$host_base}/testDetails.php?test={$this->Id}&build={$this->BuildTest->BuildId}";
+    }
 }

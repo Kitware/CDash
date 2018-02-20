@@ -6,6 +6,7 @@ use CDash\Messaging\Notification\NotificationInterface;
 use CDash\Messaging\Topic\TopicCollection;
 use Build;
 use Project;
+use Site;
 use SubscriberInterface;
 
 class Subscription implements SubscriptionInterface
@@ -23,6 +24,12 @@ class Subscription implements SubscriptionInterface
 
     /** @var  Project $project */
     private $project;
+
+    /** @var  array $summary */
+    private $summary;
+
+    /** @var  Site $site */
+    private $site;
 
     /**
      * @param SubscriberInterface $subscriber
@@ -121,6 +128,24 @@ class Subscription implements SubscriptionInterface
     }
 
     /**
+     * @param Site $site
+     * @return $this
+     */
+    public function setSite(Site $site)
+    {
+        $this->site = $site;
+        return $this;
+    }
+
+    /**
+     * @return Site
+     */
+    public function getSite()
+    {
+        return $this->site;
+    }
+
+    /**
      * @return int
      */
     public static function getMaxDisplayItems()
@@ -144,6 +169,52 @@ class Subscription implements SubscriptionInterface
      */
     public function getBuildSummary()
     {
-        // TODO: Implement getBuildSummary() method.
+        if (!$this->summary) {
+            $project = $this->project;
+
+            $summary = [];
+            $topics = $this->subscriber->getTopics();
+            $summary['topics'] = [];
+            $summary['project_name'] = $project->GetName();
+            $summary['project_url'] = "/CDash/viewProject?projectid={$project->Id}";
+            $summary['site_name'] = $this->site->Name;
+            $summary['build_name'] = '';
+            $summary['build_subproject_names'] = [];
+            $summary['labels'] = [];
+            $summary['build_time'] = '';
+            $summary['build_type'] = '';
+
+            foreach ($topics as $topic) {
+                $name = $topic->getTopicName();
+                $summary['topics'][$name] = [
+                    'description' => $topic->getTopicDescription(),
+                    'count' => $topic->getTopicCount(),
+                ];
+
+                $builds = $topic->getBuildCollection();
+
+                $summary['labels'] = array_merge($summary['labels'], $topic->getLabels());
+
+                foreach ($builds as $build) {
+                    if ($build->SubProjectName) {
+                        $summary['build_subproject_names'][] = $build->SubProjectName;
+                    }
+
+                    if (empty($summary['build_name'])) {
+                        $summary['build_name'] = $build->Name;
+                    }
+
+                    if (empty($summary['build_time'])) {
+                        $summary['build_time'] = $build->StartTime;
+                    }
+
+                    if (empty($summary['build_type'])) {
+                        $summary['build_type'] = $build->Type;
+                    }
+                }
+            }
+            $this->summary = $summary;
+        }
+        return $this->summary;
     }
 }

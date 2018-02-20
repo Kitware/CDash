@@ -63,6 +63,9 @@ class LabeledTopic extends Topic
         return $collection && $collection->hasItems();
     }
 
+    /**
+     * @return TestCollection
+     */
     protected function getTestCollection()
     {
         if (!$this->testCollection) {
@@ -71,8 +74,22 @@ class LabeledTopic extends Topic
         return $this->testCollection;
     }
 
+    /**
+     * @return string
+     */
     public function getTopicName()
     {
         return self::LABELED;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTopicCount()
+    {
+        if ($this->topic) {
+            return $this->topic->getTopicCount();
+        }
+        return 0;
     }
 }

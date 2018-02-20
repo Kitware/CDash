@@ -3,12 +3,7 @@ namespace CDash\Messaging\Notification\Email\Decorator;
 
 class LabeledDecorator extends Decorator
 {
-
-    /**
-     * @return string
-     */
-    protected function getTemplate()
+    public function addSubject($subject)
     {
-        // TODO: Implement getTemplate() method.
     }
 }

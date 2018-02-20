@@ -3,12 +3,12 @@ namespace CDash\Messaging\Notification\Email\Decorator;
 
 class FooterDecorator extends Decorator
 {
+    private $template = "-CDash on {{ server_name }}";
 
-    /**
-     * @return string
-     */
-    protected function getTemplate()
+    public function addSubject($subject)
     {
-        return "-CDash on {{ server_name }}";
+        $data = ['server_name' => $subject->getServer()];
+        $this->text = $this->decorateWith($this->template, $data);
+
     }
 }

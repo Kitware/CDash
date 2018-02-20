@@ -1,8 +1,7 @@
 <?php
 namespace CDash\Messaging\Notification\Email\Decorator;
 
-use CDash\Messaging\Notification\Email\EmailMessage;
-use CDash\Messaging\Topic\TopicInterface;
+use CDash\Messaging\Topic\Topic;
 
 class TestFailureDecorator extends Decorator
 {
@@ -15,32 +14,26 @@ class TestFailureDecorator extends Decorator
      */
     private $template = "{{ name }} | {{ details }} | ({{ url }})\n";
 
-    protected $description = 'Tests Failing';
-
-    protected $subject = 'FAILED (t={{ count }}): {{ project_name }} - {{ build_name }}';
-
-    /**
-     * @return string
-     */
-    protected function getTemplate()
+    public function addSubject($subject)
     {
-        return $this->template;
-    }
+        /** @var Topic $subject */
+        $tests = $subject->getTopicCollection();
+        $counter = 0;
+        $data = [];
 
-    public function getSubject($project_name, $build_name)
-    {
-        // TODO: refactor, not
-        $search = ['{{ count }}', '{{ project_name }}', '{{ build_name }}'];
-        $replace = [$this->rows_processed, $project_name, $build_name];
-        $subject = str_replace($search, $replace, $this->subject);
-        return $subject;
-    }
+        foreach ($tests as $test) {
+            $data[] = [
+                'name' => $test->Name,
+                'details' => $test->Details,
+                'url' => $test->GetUrl(),
+            ];
+            if (++$counter === $this->maxTopicItems) {
+                break;
+            }
+        }
 
-    /**
-     * @return mixed[][]
-     */
-    protected function getSubjectData()
-    {
-        // TODO: Implement getSubjectData() method.
+        $maxReachedText = $this->maxTopicItems < $tests->count() ?
+            "(first $this->maxTopicItems included)" : '';
+        $this->text = "\n*Tests Failing* {$maxReachedText}\n{$this->decorateWith($this->template, $data)}\n";
     }
 }

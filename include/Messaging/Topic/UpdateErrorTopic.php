@@ -14,4 +14,12 @@ class UpdateErrorTopic extends Topic implements DecoratableInterface
     {
         // TODO: Implement subscribesToBuild() method.
     }
+
+    /**
+     * @return int
+     */
+    public function getTopicCount()
+    {
+        // TODO: Implement getTopicCount() method.
+    }
 }

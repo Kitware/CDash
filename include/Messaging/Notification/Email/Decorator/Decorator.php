@@ -6,64 +6,51 @@ use CDash\Messaging\Topic\TopicInterface;
 
 abstract class Decorator implements DecoratorInterface
 {
-    /** @var  DecoratorInterface $decorator */
-    protected $decorator;
-
     /** @var  DecoratorInterface $body */
-    protected $body = '';
+    protected $body;
 
-    protected $description = '';
+    /** @var string $text */
+    protected $text = '';
 
-    protected $subject = '';
-
-    protected $rows_processed = 0;
+    /** @var  int $maxTopicItems */
+    protected $maxTopicItems;
 
     /**
-     * @return string
+     * Decorator constructor.
+     * @param DecoratorInterface|null $body
      */
-    abstract protected function getTemplate();
-
     public function __construct(DecoratorInterface $body = null)
     {
         $this->body = $body;
     }
 
     /**
-     * @param DecoratorInterface $decorator
-     * @return DecoratorInterface
+     * @param int $maxTopicItems
+     * @return $this
      */
-    public function setDecorator(DecoratorInterface $decorator)
+    public function setMaxTopicItems(int $maxTopicItems)
     {
-        $this->decorator = $decorator;
+        $this->maxTopicItems = $maxTopicItems;
         return $this;
     }
 
     /**
-     * @param mixed $data
+     * @param string $template
+     * @param array $data
+     * @return string
      */
-    public function setTemplateData($data)
-    {
-        // TODO: Implement setTemplateData() method.
-    }
-
-    /**
-     * @param array $topic
-     * @return Decorator
-     */
-    public function decorateWith(array $topic)
+    public function decorateWith(string $template, array $data)
     {
         // This prevents users from having to create multi-dimensional arrays where none
         // are needed.
-        if (!isset($topic[0])) {
-            $topic = [$topic];
+        if (!isset($data[0])) {
+            $data = [$data];
         }
-
-        $template = $this->getTemplate();
 
         $rx = '/{{ (.*?) }}/';
         $body = '';
 
-        foreach ($topic as $row) {
+        foreach ($data as $row) {
             if (preg_match_all($rx, $template, $match)) {
                 $tmpl = $template;
                 foreach ($match[1] as $property_name) {
@@ -74,14 +61,7 @@ abstract class Decorator implements DecoratorInterface
             }
         }
 
-        $this->rows_processed = count($topic);
-        $this->body .= $body;
-        return $this;
-    }
-
-    public function addSubject($subject)
-    {
-        $this->subject_collection->add($subject);
+        return $body;
     }
 
     /**
@@ -89,24 +69,12 @@ abstract class Decorator implements DecoratorInterface
      */
     public function __toString()
     {
-        $string = $this->decorator ? "{$this->decorator}" : '';
+        $string = $this->body ? "{$this->body}" : '';
 
-        if (!empty($this->description)) {
-            $string .= "*{$this->description}*\n";
-        }
-
-        if (!empty($this->body)) {
-            $string .= "{$this->body}\n";
+        if (!empty($this->text)) {
+            $string .= "{$this->text}\n";
         }
 
         return $string;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
     }
 }

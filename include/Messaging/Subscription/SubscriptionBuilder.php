@@ -42,6 +42,7 @@ class SubscriptionBuilder
         $factory = $this->getSubscriptionFactory();
 
         $project = $this->submission->GetProject();
+        $site = $this->submission->GetSite();
         $subscribers = $project->GetSubscriberCollection();
 
         Subscription::setMaxDisplayItems($project->EmailMaxItems);
@@ -52,8 +53,8 @@ class SubscriptionBuilder
                 $subscription = $factory->create();
                 $subscription
                     ->setSubscriber($subscriber)
-                    ->setProject($project);
-
+                    ->setProject($project)
+                    ->setSite($site);
                 $subscriptions->add($subscription);
             }
         }

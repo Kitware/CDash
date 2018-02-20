@@ -3,16 +3,11 @@ namespace CDash\Messaging\Topic;
 
 use Build;
 use CDash\Collection\TestCollection;
-use CDash\Config;
-use CDash\Messaging\DecoratorInterface;
-use CDash\Messaging\Notification\NotifyOn;
-use CDash\Messaging\Subscription\Subscription;
 
 class TestFailureTopic extends Topic implements DecoratableInterface
 {
     private $collection;
 
-    // TODO: does not really belong here, consider decorator's responsibility
     public function getTopicDescription()
     {
         return 'Tests Failing';
@@ -32,19 +27,14 @@ class TestFailureTopic extends Topic implements DecoratableInterface
 
     public function setTopicData(Build $build)
     {
-        $collection = $this->getTestCollection();
+        $collection = $this->getTopicCollection();
         $tests = $build->GetTestCollection();
-        $max_items = $build->GetProject()->EmailMaxItems;
-        do {
-            $test = $tests->current();
-            if ($test->HasFailed()) {
-                $collection->add($test);
-            }
-            $tests->next();
-        } while ($collection->count() <= $max_items && $tests->valid());
+        foreach ($tests as $test) {
+            $collection->add($test);
+        }
     }
 
-    protected function getTestCollection()
+    public function getTopicCollection()
     {
         if (!$this->collection) {
             $this->collection = new TestCollection();
@@ -72,5 +62,24 @@ class TestFailureTopic extends Topic implements DecoratableInterface
             }
         }
         return (bool)(count($this->labels));
+    }
+
+    /**
+     * @return \string[]
+     */
+    public function getLabels()
+    {
+        if (!$this->labels) {
+            $this->labels = [];
+        }
+        return $this->labels;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTopicCount()
+    {
+        return $this->getTopicCollection()->count();
     }
 }

@@ -2,7 +2,6 @@
 namespace CDash\Messaging\Topic;
 
 use Build;
-use BuildGroup;
 use CDash\Collection\BuildCollection;
 use CDash\Collection\CollectionInterface;
 use SubscriberInterface;
@@ -39,6 +38,10 @@ abstract class Topic implements TopicInterface
         $this->topic = $topic;
     }
 
+    /**
+     * @param Build $build
+     * @return $this
+     */
     public function addBuild(Build $build)
     {
         $collection = $this->getBuildCollection();
@@ -91,11 +94,13 @@ abstract class Topic implements TopicInterface
     }
 
     /**
-     * @return mixed
+     * @return CollectionInterface
      */
-    public function getTopicData()
+    public function getTopicCollection()
     {
-        return $this->topicData;
+        if ($this->topic) {
+            return $this->topic->getTopicCollection();
+        }
     }
 
     /**
@@ -116,13 +121,16 @@ abstract class Topic implements TopicInterface
 
     public function getTopicDescription()
     {
+        if ($this->topic) {
+            return $this->topic->getTopicDescription();
+        }
         return '';
     }
 
     /**
      * @return BuildCollection
      */
-    protected function getBuildCollection()
+    public function getBuildCollection()
     {
         if (!$this->buildCollection) {
             $this->buildCollection = new BuildCollection();
@@ -140,5 +148,21 @@ abstract class Topic implements TopicInterface
             return $this->topic->hasSubscribedLabels();
         }
         return (bool)(count($this->labels));
+    }
+
+    public function getLabels()
+    {
+        if ($this->topic) {
+            return $this->topic->getLabels();
+        }
+        return [];
+    }
+
+    public function getTopicCount()
+    {
+        if ($this->topic) {
+            return $this->topic->getTopicCount();
+        }
+        return 0;
     }
 }

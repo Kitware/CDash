@@ -96,6 +96,6 @@ class EmailMessage implements NotificationInterface
      */
     public function __toString()
     {
-        return $this->body;
+        return $this->body->__toString();
     }
 }

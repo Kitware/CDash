@@ -19,4 +19,9 @@ interface SubscriptionInterface
      * @return string
      */
     public function getRecipient();
+
+    /**
+     * @return \Project
+     */
+    public function getProject();
 }

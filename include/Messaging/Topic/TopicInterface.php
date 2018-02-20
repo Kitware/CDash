@@ -34,10 +34,15 @@ interface TopicInterface
     /**
      * @return mixed
      */
-    public function getTopicData();
+    public function getTopicCollection();
 
     /**
      * @return string
      */
     public function getTopicDescription();
+
+    /**
+     * @return int
+     */
+    public function getTopicCount();
 }
