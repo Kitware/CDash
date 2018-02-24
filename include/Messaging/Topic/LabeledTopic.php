@@ -2,12 +2,17 @@
 namespace CDash\Messaging\Topic;
 
 use Build;
+use CDash\Collection\CollectionCollection;
+use CDash\Collection\LabelCollection;
 use CDash\Collection\TestCollection;
 
 class LabeledTopic extends Topic
 {
     /** @var  TestCollection $testCollection */
     private $testCollection;
+
+    /** @var  CollectionCollection $labeledCollection */
+    private $labeledCollection;
 
     /**
      * @param Build $build
@@ -23,44 +28,25 @@ class LabeledTopic extends Topic
         if ($this->topic->subscribesToBuild($build)) {
             $subscribe = $this->topic->hasLabels($build);
         }
+
         return $subscribe;
     }
 
-    /**
-     * @param Build $build
-     * @return bool
-     */
-    protected function checkBuildLabels(Build $build)
+    public function getLabeledCollection()
     {
-        $preferences = $this->subscriber->getNotificationPreferences();
-        $checkBuilds = $preferences->notifyOn('BuildWarning')
-            || $preferences->notifyOn('BuildError');
-        $hasLabels = (bool)count(array_intersect($this->labels, $build->GetLabelNames()));
-        return $checkBuilds && $hasLabels;
+        if (!$this->labeledCollection) {
+            $this->labeledCollection = new CollectionCollection();
+        }
+        return $this->labeledCollection;
     }
 
-    /**
-     * @param Build $build
-     * @return bool
-     */
-    protected function checkTestLabels(Build $build)
+    public function setTopicData(Build $build)
     {
-        $preferences = $this->subscriber->getNotificationPreferences();
-        $collection = false;
-        if ($preferences->notifyOn('TestFailure')) {
-            foreach ($build->GetTestCollection() as $test) {
-                foreach ($test->GetLabelCollection() as $label) {
-                    if (in_array($label->Text, $this->labels)) {
-                        $collection = $this->getTestCollection();
-                        if (!$collection->has($test->Name)) {
-                            $collection->add($test);
-                        }
-                        break;
-                    }
-                }
-            }
+        if ($this->topic) {
+            $this->topic->setTopicData($build);
         }
-        return $collection && $collection->hasItems();
+
+        // now remove topics that do not
     }
 
     /**
@@ -91,5 +77,23 @@ class LabeledTopic extends Topic
             return $this->topic->getTopicCount();
         }
         return 0;
+    }
+
+    /**
+     * @param Build $build
+     * @param $item
+     * @return boolean
+     */
+    public function itemHasTopicSubject(Build $build, $item)
+    {
+        /** @var LabelCollection $labels */
+        $labels = $this->topic->getSubjectLabelCollection($item);
+        $subscribed = $this->subscriber->getLabels();
+        foreach ($subscribed as $label) {
+            if ($labels->has($label)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -1,6 +1,7 @@
 <?php
 namespace CDash\Messaging\Notification\Email\Decorator;
 
+use CDash\Collection\CollectionInterface;
 use CDash\Messaging\Topic\Topic;
 
 class DecoratorFactory
@@ -15,8 +16,15 @@ class DecoratorFactory
         }
     }
 
-    public static function createFromDecorator(DecoratorInterface $decorator)
+    public static function createFromCollection(CollectionInterface $collection,
+                                                DecoratorInterface $decorator)
     {
+        $namespace = explode('\\', get_class($collection));
+        $class_name = array_pop($namespace);
+        switch ($class_name) {
+            case 'TestCollection':
+                return new TestFailureDecorator($decorator);
+        }
     }
 
     public static function create($name)

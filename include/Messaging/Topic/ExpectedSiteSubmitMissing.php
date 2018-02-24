@@ -24,4 +24,14 @@ class ExpectedSiteSubmitMissing extends Topic
     {
         return $this->priority;
     }
+
+    /**
+     * @param Build $build
+     * @param $item
+     * @return boolean
+     */
+    public function itemHasTopicSubject(Build $build, $item)
+    {
+        // TODO: Implement itemHasTopicSubject() method.
+    }
 }

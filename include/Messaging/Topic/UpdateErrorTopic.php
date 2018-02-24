@@ -22,4 +22,14 @@ class UpdateErrorTopic extends Topic implements DecoratableInterface
     {
         // TODO: Implement getTopicCount() method.
     }
+
+    /**
+     * @param Build $build
+     * @param $item
+     * @return boolean
+     */
+    public function itemHasTopicSubject(Build $build, $item)
+    {
+        // TODO: Implement itemHasTopicSubject() method.
+    }
 }

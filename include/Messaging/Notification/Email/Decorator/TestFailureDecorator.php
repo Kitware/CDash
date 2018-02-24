@@ -33,7 +33,8 @@ class TestFailureDecorator extends Decorator
         }
 
         $maxReachedText = $this->maxTopicItems < $tests->count() ?
-            "(first $this->maxTopicItems included)" : '';
-        $this->text = "\n*Tests Failing* {$maxReachedText}\n{$this->decorateWith($this->template, $data)}\n";
+            " (first $this->maxTopicItems included)" : '';
+        $this->text = "\n*Tests Failing*{$maxReachedText}\n{$this->decorateWith($this->template, $data)}\n";
+        return $this->text;
     }
 }

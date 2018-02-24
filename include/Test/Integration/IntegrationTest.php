@@ -287,7 +287,7 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
             )
             ->createAuthor(
                 'user_4@company.tld',
-                ['BuildOne', 'BuildTwo', 'BuildThree', 'BuildFour', 'BuildFive']
+                ['BuildTwo', 'BuildFive']
             )
             ->createAuthor(
                 'user_6@company.tld',
@@ -369,31 +369,89 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
         $notification = $notifications->get('user_1@company.tld');
         $this->assertInstanceOf(NotificationInterface::class, $notification);
 
-        $expected = "A submission to CDash for the project CDashUseCaseProject has tests failing. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
+        $body = [
+            'A submission to CDash for the project CDashUseCaseProject has tests failing. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.',
+            '',
+            'Details on the submission can be found at /CDash/viewProject?projectid=321',
+            '',
+            'Project: CDashUseCaseProject',
+            'Site: mirror.site',
+            'Build Name: SomeOS-SomeBuild',
+            'Build Time: 2018-02-10T15:32:52',
+            'Type: Experimental',
+            'Total Tests Failing: 6',
+            '',
+            '',
+            '*Tests Failing* (first 5 included)',
+            'test_fail_one | Completed (Failed) | (http://open.cdash.org/testDetails.php?test=&build=)',
+            'test_timedout_one | Completed (Timeout) | (http://open.cdash.org/testDetails.php?test=&build=)',
+            'test_fail_two | Completed (Failed) | (http://open.cdash.org/testDetails.php?test=&build=)',
+            'test_timedout_two | Completed (Timeout) | (http://open.cdash.org/testDetails.php?test=&build=)',
+            'test_fail_three | Completed (Failed) | (http://open.cdash.org/testDetails.php?test=&build=)',
+            '',
+            '',
+            '-CDash on open.cdash.org',
+            '',
+        ];
 
-Details on the submission can be found at /CDash/viewProject?projectid=321
+        $expected = implode("\n", $body);
+        $actual = "{$notification}";
+        $this->assertEquals($expected, $actual);
 
-Project: CDashUseCaseProject
-Site: mirror.site
-Build Name: SomeOS-SomeBuild
-Build Time: 2018-02-10T15:32:52
-Type: Experimental
-Total Tests Failing: 8
-
-
-*Tests Failing* (first 5 included)
-test_fail_one | Completed (Failed) | (http://open.cdash.org/testDetails.php?test=&build=)
-test_timedout_one | Completed (Timeout) | (http://open.cdash.org/testDetails.php?test=&build=)
-test_passed_one | Completed | (http://open.cdash.org/testDetails.php?test=&build=)
-test_fail_two | Completed (Failed) | (http://open.cdash.org/testDetails.php?test=&build=)
-test_passed_two | Completed | (http://open.cdash.org/testDetails.php?test=&build=)
-
-
--CDash on open.cdash.org
-";
-
-        $this->assertEquals($expected, "{$notification}");
         $notification = $notifications->get('user_4@company.tld');
         $this->assertInstanceOf(NotificationInterface::class, $notification);
+        $body = [
+            'A submission to CDash for the project CDashUseCaseProject has tests failing. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.',
+            '',
+            'Details on the submission can be found at /CDash/viewProject?projectid=321',
+            '',
+            'Project: CDashUseCaseProject',
+            'Site: mirror.site',
+            'Build Name: SomeOS-SomeBuild',
+            'Build Time: 2018-02-10T15:32:52',
+            'Type: Experimental',
+            'Total Tests Failing: 3',
+            '',
+            '',
+            '*Tests Failing*',
+            'test_fail_two | Completed (Failed) | (http://open.cdash.org/testDetails.php?test=&build=)',
+            'test_timedout_two | Completed (Timeout) | (http://open.cdash.org/testDetails.php?test=&build=)',
+            'test_fail_four | Completed (Failed) | (http://open.cdash.org/testDetails.php?test=&build=)',
+            '',
+            '',
+            '-CDash on open.cdash.org',
+            '',
+        ];
+
+        $expected = implode("\n", $body);
+        $actual = "{$notification}";
+        $this->assertEquals($expected, $actual);
+
+        $notification = $notifications->get('user_6@company.tld');
+        $body = [
+            'A submission to CDash for the project CDashUseCaseProject has tests failing. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.',
+            '',
+            'Details on the submission can be found at /CDash/viewProject?projectid=321',
+            '',
+            'Project: CDashUseCaseProject',
+            'Site: mirror.site',
+            'Build Name: SomeOS-SomeBuild',
+            'Build Time: 2018-02-10T15:32:52',
+            'Type: Experimental',
+            'Total Tests Failing: 1',
+            '',
+            '',
+            '*Tests Failing*',
+            'test_fail_three | Completed (Failed) | (http://open.cdash.org/testDetails.php?test=&build=)',
+            '',
+            '',
+            '-CDash on open.cdash.org',
+            '',
+        ];
+        $expected = implode("\n", $body);
+        $actual = "{$notification}";
+        $this->assertEquals($expected, $actual);
+
+
     }
 }

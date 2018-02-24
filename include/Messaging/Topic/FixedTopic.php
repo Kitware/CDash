@@ -3,7 +3,7 @@ namespace CDash\Messaging\Topic;
 
 use Build;
 
-class FixedTopic extends Topic implements AuthoredByInterface
+class FixedTopic extends Topic
 {
 
     /**
@@ -13,5 +13,15 @@ class FixedTopic extends Topic implements AuthoredByInterface
     public function subscribesToBuild(Build $build)
     {
         // TODO: Implement subscribesToBuild() method.
+    }
+
+    /**
+     * @param Build $build
+     * @param $item
+     * @return boolean
+     */
+    public function itemHasTopicSubject(Build $build, $item)
+    {
+        // TODO: Implement itemHasTopicSubject() method.
     }
 }

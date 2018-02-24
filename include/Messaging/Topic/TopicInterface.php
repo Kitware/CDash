@@ -2,6 +2,7 @@
 namespace CDash\Messaging\Topic;
 
 use Build;
+use CDash\Collection\CallableCollection;
 use CDash\Messaging\Email\Decorator\DecoratorInterface;
 use SubscriberInterface;
 
@@ -45,4 +46,15 @@ interface TopicInterface
      * @return int
      */
     public function getTopicCount();
+
+    /**
+     * @return CallableCollection
+     */
+    public function getTopicCallables();
+
+    /**
+     * @param $item
+     * @return boolean
+     */
+    public function itemHasTopicSubject(Build $build, $item);
 }

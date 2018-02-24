@@ -26,4 +26,18 @@ class AuthoredTopic extends Topic
                 in_array($this->subscriber->getAddress(), $build->GetCommitAuthors());
         }
     }
+
+    /**
+     * @param Build $build
+     * @param $item
+     * @return boolean
+     */
+    public function itemHasTopicSubject(Build $build, $item)
+    {
+        // TODO: q: do we need to do this again here?
+        // a: Only if subscribesToBuild has not yet been called, but if it has been called
+        //    how do we determine that the build passed in here is the same build that was
+        //    verified in subscribesToBuild?
+        return in_array($this->subscriber->getAddress(), $build->GetCommitAuthors());
+    }
 }

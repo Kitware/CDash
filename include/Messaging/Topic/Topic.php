@@ -3,6 +3,8 @@ namespace CDash\Messaging\Topic;
 
 use Build;
 use CDash\Collection\BuildCollection;
+use CDash\Collection\CallableCollection;
+use CDash\Collection\CollectionCollection;
 use CDash\Collection\CollectionInterface;
 use SubscriberInterface;
 
@@ -29,12 +31,19 @@ abstract class Topic implements TopicInterface
     /** @var  string[] $labels */
     protected $labels;
 
+    /** @var  CallableCollection $topicCallables */
+    protected $topicCallables;
+
     /**
      * Topic constructor.
      * @param TopicInterface|null $topic
      */
     public function __construct(TopicInterface $topic = null)
     {
+        if ($topic) {
+            $callables = $topic->getTopicCallables();
+            $callables->add([$this, 'itemHasTopicSubject']);
+        }
         $this->topic = $topic;
     }
 
@@ -142,10 +151,10 @@ abstract class Topic implements TopicInterface
     /**
      * @return bool
      */
-    public function hasSubscribedLabels()
+    public function hasLabels(Build $build)
     {
         if ($this->topic) {
-            return $this->topic->hasSubscribedLabels();
+            return $this->topic->hasLabels($build);
         }
         return (bool)(count($this->labels));
     }
@@ -164,5 +173,13 @@ abstract class Topic implements TopicInterface
             return $this->topic->getTopicCount();
         }
         return 0;
+    }
+
+    public function getTopicCallables()
+    {
+        if (!$this->topicCallables) {
+            $this->topicCallables = new CallableCollection();
+        }
+        return $this->topicCallables;
     }
 }
