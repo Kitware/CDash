@@ -363,4 +363,13 @@ class Test
         $host_base = $config->getBaseUrl();
         return "{$host_base}/testDetails.php?test={$this->Id}&build={$this->BuildTest->BuildId}";
     }
+
+    public function isLabeled($label)
+    {
+      $labels = array_unique(array_map(function ($label) {
+        return $label->Text;
+      }, $this->GetLabelCollection()->toArray()));
+
+      return in_array($label, $labels);
+    }
 }

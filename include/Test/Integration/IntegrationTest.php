@@ -316,7 +316,9 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
         $subscribers = [
             [ // This user should receive email
                 'user_1@company.tld',
-                BitmaskNotificationPreferences::EMAIL_TEST
+              BitmaskNotificationPreferences::EMAIL_SUBSCRIBED_LABELS |
+              BitmaskNotificationPreferences::EMAIL_TEST,
+                ['BuildTres']
             ],
             [ // This user should *not* receive email, as BuildGroup is Experimental
                 'user_2@company.tld',
@@ -349,18 +351,6 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
                 BitmaskNotificationPreferences::EMAIL_TEST,
                 ['BuildTres']
             ],
-            [ // This user should *not* receive an email, though subscribed to 'BuildTres' and
-              // being an author, the other settings do not warrent an email a) because not
-              // subscribed to EMAIL_TEST; b) Not subscribed to other's issues
-                'user_7@company.tld',
-                BitmaskNotificationPreferences::EMAIL_USER_CHECKIN_ISSUE_ANY_SECTION |
-                BitmaskNotificationPreferences::EMAIL_SUBSCRIBED_LABELS |
-                BitmaskNotificationPreferences::EMAIL_ERROR |
-                BitmaskNotificationPreferences::EMAIL_WARNING |
-                BitmaskNotificationPreferences::EMAIL_CONFIGURE |
-                BitmaskNotificationPreferences::EMAIL_DYNAMIC_ANALYSIS,
-                ['BuildTres']
-            ],
         ];
 
         $notifications = $this->getNotifications($subscribers);
@@ -370,7 +360,7 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
         $this->assertInstanceOf(NotificationInterface::class, $notification);
 
         $body = [
-            'A submission to CDash for the project CDashUseCaseProject has tests failing. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.',
+            'A submission to CDash for the project CDashUseCaseProject has failing tests. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.',
             '',
             'Details on the submission can be found at /CDash/viewProject?projectid=321',
             '',
@@ -379,7 +369,7 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
             'Build Name: SomeOS-SomeBuild',
             'Build Time: 2018-02-10T15:32:52',
             'Type: Experimental',
-            'Total Tests Failing: 6',
+            'Total Failing Tests: 6',
             '',
             '',
             '*Tests Failing* (first 5 included)',
@@ -397,11 +387,14 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
         $expected = implode("\n", $body);
         $actual = "{$notification}";
         $this->assertEquals($expected, $actual);
+        $expected = 'FAILED (t=6) CDashUseCaseProject - SomeOS-SomeBuild - Experimental';
+        $actual = $notification->getSubject();
+        $this->assertEquals($expected, $actual);
 
         $notification = $notifications->get('user_4@company.tld');
         $this->assertInstanceOf(NotificationInterface::class, $notification);
         $body = [
-            'A submission to CDash for the project CDashUseCaseProject has tests failing. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.',
+            'A submission to CDash for the project CDashUseCaseProject has failing tests. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.',
             '',
             'Details on the submission can be found at /CDash/viewProject?projectid=321',
             '',
@@ -410,7 +403,7 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
             'Build Name: SomeOS-SomeBuild',
             'Build Time: 2018-02-10T15:32:52',
             'Type: Experimental',
-            'Total Tests Failing: 3',
+            'Total Failing Tests: 3',
             '',
             '',
             '*Tests Failing*',
@@ -426,10 +419,13 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
         $expected = implode("\n", $body);
         $actual = "{$notification}";
         $this->assertEquals($expected, $actual);
+        $expected = 'FAILED (t=3) CDashUseCaseProject - SomeOS-SomeBuild - Experimental';
+        $actual = $notification->getSubject();
+        $this->assertEquals($expected, $actual);
 
         $notification = $notifications->get('user_6@company.tld');
         $body = [
-            'A submission to CDash for the project CDashUseCaseProject has tests failing. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.',
+            'A submission to CDash for the project CDashUseCaseProject has failing tests. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.',
             '',
             'Details on the submission can be found at /CDash/viewProject?projectid=321',
             '',
@@ -438,7 +434,7 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
             'Build Name: SomeOS-SomeBuild',
             'Build Time: 2018-02-10T15:32:52',
             'Type: Experimental',
-            'Total Tests Failing: 1',
+            'Total Failing Tests: 1',
             '',
             '',
             '*Tests Failing*',
@@ -451,7 +447,8 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
         $expected = implode("\n", $body);
         $actual = "{$notification}";
         $this->assertEquals($expected, $actual);
-
-
+        $expected = 'FAILED (t=1) CDashUseCaseProject - SomeOS-SomeBuild - Experimental';
+        $actual = $notification->getSubject();
+        $this->assertEquals($expected, $actual);
     }
 }

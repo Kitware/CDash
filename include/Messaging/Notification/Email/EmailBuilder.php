@@ -26,84 +26,12 @@ class EmailBuilder extends SubscriptionNotificationBuilder
     private $project;
 
     /**
-     * @return NotificationCollection
-     */
-    public function createNotifications()
-    {
-        $project_name = null;
-        /** @var Config $config */
-        $config = Config::getInstance();
-
-        /** @var Subscription $subscription */
-        foreach ($this->subscriptions as $subscription) {
-            $site_name = null;
-            $project_name = $project_name ? $project_name : $subscription->getProject()->GetName();
-
-            /** @var Topic $topic */
-            foreach ($subscription->getTopics() as $topic) {
-                $build = $topic->getBuild();
-                $site_name = $site_name ? $site_name : $build->GetSite()->GetName();
-
-                $subproject_name = $build->GetSubProjectName();
-                $build_name = $subproject_name ? $subproject_name : $build->GetName();
-                $build_time = date(FMT_DATETIMETZ, strtotime($build->StartTime . ' UTC'));
-                $topic_data = $topic->getTopicData();
-
-                // create initial message
-                $notification = new EmailMessage();
-
-                // create body preamble
-                $body = DecoratorFactory::create('PreambleDecorator');
-                $body->decorateWith([['url' => $build->GetSummaryUrl()]]);
-
-                //create body summary
-                $body_summary = DecoratorFactory::create('SummaryDecorator');
-                $body_summary
-                    ->setDecorator($body)
-                    ->decorateWith([
-                        'project_name' => $project_name,
-                        'site_name' => $site_name,
-                        'build_name' => $build_name,
-                        'build_time' => $build_time,
-                        'build_group' => $build->Type,
-                        'summary_description' => $topic->getTopicDescription(),
-                        'summary_count' => count($topic_data),
-                    ]);
-
-                //create body topic
-                $body_topics = DecoratorFactory::createFromTopic($topic);
-                $body_topics
-                    ->setDecorator($body_summary)
-                    ->decorateWith($topic_data);
-                $subject = $body_topics->getSubject($project_name, $build_name);
-
-                // create body footer
-                $body_footer = DecoratorFactory::create('FooterDecorator');
-                $body_footer
-                    ->setDecorator($body_topics)
-                    ->decorateWith(['server_name' => $config->getServer()]);
-
-                // set delivery information
-                $notification
-                    ->setSender($subscription->getSender())
-                    ->setRecipient($subscription->getRecipient())
-                    ->setBody($body_footer)
-                    ->setSubject($subject);
-
-                $this->notifications->add($notification);
-            }
-        }
-
-        return $this->notifications;
-    }
-
-    /**
      * @return NotificationInterface
      */
     public function createNotification(SubscriptionInterface $subscription)
     {
         $message = new EmailMessage();
-
+        $this->uniquifyTopics($subscription);
         $this->setPreamble($message, $subscription);
         $this->setSummary($message, $subscription);
         $this->setTopics($message, $subscription);
@@ -112,6 +40,16 @@ class EmailBuilder extends SubscriptionNotificationBuilder
         $this->setRecipient($message, $subscription);
         $this->setSender();
         return $message;
+    }
+
+    protected function uniquifyTopics(SubscriptionInterface $subscription)
+    {
+      $topics = $subscription->getTopicCollection();
+
+      $labeled = $topics->remove('Labeled');
+      if ($labeled) {
+        $labeled->mergeTopics($topics);
+      }
     }
 
     /**
@@ -136,6 +74,7 @@ class EmailBuilder extends SubscriptionNotificationBuilder
         $topics = $subscription->getTopicCollection();
         $project = $subscription->getProject();
         $maxItems = $project->EmailMaxItems;
+
         foreach ($topics as $topic) {
             $decorator = DecoratorFactory::createFromTopic($topic, $email->getBody());
             $decorator
@@ -155,7 +94,27 @@ class EmailBuilder extends SubscriptionNotificationBuilder
 
     protected function setSubject(EmailMessage $emailMessage, SubscriptionInterface $subscription)
     {
-        // TODO: Implement addSubject() method.
+        $template = 'FAILED (%s) %s - %s - %s';
+        $totals = [];
+        $summary = $subscription->getBuildSummary();
+        foreach ($summary['topics'] as $topic) {
+            $description = $topic['description'];
+            switch ($description) {
+              case 'Failing Tests':
+                  $totals[] = "t={$topic['count']}";
+                  break;
+            }
+        }
+
+        $subject = sprintf(
+          $template,
+          implode(", ", $totals),
+          $summary['project_name'],
+          $summary['build_name'],
+          $summary['build_type']
+        );
+
+        $emailMessage->setSubject($subject);
     }
 
     protected function addDeliveryInformation()

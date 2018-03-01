@@ -38,6 +38,8 @@ class DecoratorFactory
                 return new PreambleDecorator();
             case 'FooterDecorator':
                 return new FooterDecorator();
+            case 'LabledDecorator':
+              return new LabeledDecorator();
         }
     }
 }

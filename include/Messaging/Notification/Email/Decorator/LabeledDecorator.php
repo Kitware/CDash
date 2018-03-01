@@ -10,9 +10,11 @@ class LabeledDecorator extends Decorator
         $factory = $this->getDecoratorFactory();
         $topics = $subject->getTopicCollection();
         $decorator = $factory::createFromCollection($topics, $this);
+        /*
         $this->text = $decorator
             ->setMaxTopicItems($this->maxTopicItems)
             ->addSubject($subject);
+        */
     }
 
     protected function getDecoratorFactory()

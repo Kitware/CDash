@@ -15,4 +15,27 @@ interface CollectionInterface extends \Iterator, \Countable
      * @return boolean
      */
     public function hasItems();
+
+    /**
+     * @param $key
+     * @return bool
+     */
+    public function has($key);
+
+    /**
+     * @param $key
+     * @return mixed
+     */
+    public function get($key);
+
+      /**
+       * @param $key
+       * @return mixed
+       */
+      public function remove($key);
+
+      /**
+       * @return array
+       */
+      public function toArray();
 }

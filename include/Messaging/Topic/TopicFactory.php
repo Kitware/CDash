@@ -64,17 +64,14 @@ class TopicFactory
             $topics = $decorated;
         }
 
-        if ($preferences->get(NotifyOn::LABELED)) {
-            $decorated = [];
-            foreach ($topics as $topic) {
-                $decorated[] = new LabeledTopic($topic);
-            }
-            $topics = $decorated;
-        }
-
         if ($preferences->get(NotifyOn::AUTHORED)) {
             $decorated = [];
             foreach ($topics as $topic) {
+                // do not decorate LabeledTopic
+                if (get_class($topic) === LabeledTopic::class) {
+                  $decorated[] = $topic;
+                  continue;
+                }
                 $decorated[] = new AuthoredTopic($topic);
             }
             $topics = $decorated;

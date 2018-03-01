@@ -89,8 +89,10 @@ abstract class Collection implements CollectionInterface
      */
     public function addItem($item, $name = null)
     {
-        $key = is_null($name) ? count($this->collection) : $name;
-        $this->keys[] = $key;
+        $ptr = count($this->collection);
+        $key = is_null($name) ? $ptr : $name;
+
+        $this->keys[$ptr] = $key;
         $this->collection[$key] = $item;
         return $this;
     }
@@ -137,5 +139,27 @@ abstract class Collection implements CollectionInterface
             return $this->collection[$key];
         }
         return null;
+    }
+
+    /**
+     * @param $key
+     * @return mixed
+     */
+    public function remove($key)
+    {
+        $item = null;
+        if ($this->has($key)) {
+            $item = $this->collection[$key];
+            unset($this->collection[$key], $this->keys[array_search($key, $this->keys)]);
+        }
+        return $item;
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        return array_values($this->collection);
     }
 }

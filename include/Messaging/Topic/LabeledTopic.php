@@ -2,17 +2,16 @@
 namespace CDash\Messaging\Topic;
 
 use Build;
+use CDash\Collection\ArrayCollection;
+use CDash\Collection\Collection;
 use CDash\Collection\CollectionCollection;
 use CDash\Collection\LabelCollection;
 use CDash\Collection\TestCollection;
 
-class LabeledTopic extends Topic
+class LabeledTopic extends Topic implements DecoratableInterface
 {
-    /** @var  TestCollection $testCollection */
-    private $testCollection;
-
-    /** @var  CollectionCollection $labeledCollection */
-    private $labeledCollection;
+    /** @var  ArrayCollection $labeledCollection */
+    protected $topicCollection;
 
     /**
      * @param Build $build
@@ -20,44 +19,86 @@ class LabeledTopic extends Topic
      */
     public function subscribesToBuild(Build $build)
     {
-        $subscribe = false;
-        if (!count($this->subscriber->getLabels())) {
-            return $subscribe;
+        $labels = $this->subscriber->getLabels();
+        if (!count($labels)) {
+            return false;
         }
-
+        /*
         if ($this->topic->subscribesToBuild($build)) {
             $subscribe = $this->topic->hasLabels($build);
         }
-
-        return $subscribe;
-    }
-
-    public function getLabeledCollection()
-    {
-        if (!$this->labeledCollection) {
-            $this->labeledCollection = new CollectionCollection();
+        */
+      $buildLabels = $build->GetAggregatedLabels();
+        foreach ($labels as $label) {
+          if (in_array($label, $buildLabels)) {
+            return true;
+          }
         }
-        return $this->labeledCollection;
+        return false;
     }
 
     public function setTopicData(Build $build)
     {
-        if ($this->topic) {
-            $this->topic->setTopicData($build);
-        }
+        $subscriberLabels = $this->subscriber->getLabels();
+        $actionableCollection = $build->GetActionableCollection();
 
-        // now remove topics that do not
+        foreach ($subscriberLabels as $label) {
+            foreach ($actionableCollection as $item) {
+                if ($item->isLabeled($label)) {
+                    $collection = $this->getItemCollection($actionableCollection);
+                    $collection->addItem($item, $label);
+                }
+            }
+        }
     }
 
-    /**
-     * @return TestCollection
-     */
-    protected function getTestCollection()
+    protected function getItemCollection(Collection $collection)
     {
-        if (!$this->testCollection) {
-            $this->testCollection = new TestCollection();
+      $collectionClass = get_class($collection);
+      $topics = $this->getTopicCollection();
+      if (!$topics->has($collectionClass)) {
+        $topics->add(new $collectionClass());
+      }
+      return $topics->get($collectionClass);
+    }
+
+    public function mergeTopics(TopicCollection $topics)
+    {
+        foreach ($topics as $topic) {
+            $collection = $topic->getTopicCollection();
+            $itemCollection = $this->getItemCollection($collection);
+            if ($itemCollection) {
+                foreach ($itemCollection as $item) {
+                    $collection->add($item);
+                }
+                $this->topicCollection->remove(get_class($itemCollection));
+            }
         }
-        return $this->testCollection;
+
+        if ($this->topicCollection->hasItems()) {
+            foreach ($this->getTopicCollection() as $collection) {
+                switch (get_class($collection)) {
+                    case TestCollection::class:
+                        $topic = new TestFailureTopic();
+                        break;
+                }
+
+                if ($topic) {
+                    foreach ($this->getBuildCollection() as $build) {
+                        $topic->addBuild($build);
+                    }
+                    $topics->add($topic);
+                }
+            }
+        }
+    }
+
+    public function getTopicCollection()
+    {
+      if (!$this->topicCollection) {
+        $this->topicCollection = new CollectionCollection();
+      }
+      return $this->topicCollection;
     }
 
     /**

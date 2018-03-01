@@ -11,7 +11,7 @@ class TestFailureTopic extends Topic implements DecoratableInterface
 
     public function getTopicDescription()
     {
-        return 'Tests Failing';
+        return 'Failing Tests';
     }
 
     /**
@@ -67,6 +67,7 @@ class TestFailureTopic extends Topic implements DecoratableInterface
     {
         return $subject->GetLabelCollection();
     }
+
     /**
      * @return \string[]
      */

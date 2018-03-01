@@ -66,6 +66,7 @@ class Build
     public $Done;
     public $Labels;
 
+
     // Only the build.xml has information about errors and warnings
     // when the InsertErrors is false the build is created but not the errors and warnings
     public $InsertErrors;
@@ -90,6 +91,8 @@ class Build
     private $Project;
     private $BuildConfigure;
     private $CommitAuthors;
+    private $AggregateLabels;
+    private $ActionableType;
 
     public function __construct()
     {
@@ -2895,11 +2898,40 @@ class Build
         return $this->CommitAuthors;
     }
 
-    public function GetLabelNames(array $labels = [])
+    public function GetAggregatedLabels()
     {
         // TODO: This method reveals that Labels are being set twice, probably in the handler, fix
-        return array_unique(array_map(function ($label) {
-            return $label->Text;
-        }, $this->Labels));
+        if (!$this->AggregateLabels) {
+          $labels = $this->Labels ? $this->Labels : [];
+
+          foreach ($this->GetTestCollection() as $test) {
+            foreach ($test->GetLabelCollection() as $label) {
+              $labels[] = $label;
+            }
+          }
+
+          $labels = array_unique(array_map(
+            function ($label) {
+              return $label->Text;
+            },
+            $labels
+          ));
+
+          $this->AggregateLabels = $labels;
+        }
+        return $this->AggregateLabels;
+    }
+
+    public function GetActionableType()
+    {
+      return ActionableTypes::TEST;
+    }
+
+    public function GetActionableCollection()
+    {
+      switch ($this->getActionableType()) {
+        case ActionableTypes::TEST:
+          return $this->GetTestCollection();
+      }
     }
 }

@@ -5,7 +5,6 @@ class CollectionCollection extends Collection
 {
     public function add(CollectionInterface $collection)
     {
-        $name = strtolower(substr(get_class($collection), 0, -strlen('Collection')));
-        $this->addItem($collection, $name);
+        $this->addItem($collection, get_class($collection));
     }
 }
