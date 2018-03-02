@@ -106,10 +106,26 @@ class EmailBuilder extends SubscriptionNotificationBuilder
             }
         }
 
+        $subscriberLabels = $subscription
+            ->getSubscriber()
+            ->getLabels();
+
+        $projectName = $summary['project_name'];
+
+        // What's happening here is a little strange. What we're trying to accomplish is this:
+        // if a user is subscribed to just one subproject, concat the subproject's name to the
+        // project in the subject. The problem with just testing the number of label subscriptions
+        // is that the user may have other criteria, besides label subscriptions, that increase
+        // the number of subprojects associated with this notification.
+        // TODO: does it make sense that this is the logic?
+        if (count($subscriberLabels) === 1 && count($summary['build_subproject_names']) === 1) {
+            $projectName .= "/{$subscriberLabels[0]}";
+        }
+
         $subject = sprintf(
           $template,
           implode(", ", $totals),
-          $summary['project_name'],
+          $projectName,
           $summary['build_name'],
           $summary['build_type']
         );
