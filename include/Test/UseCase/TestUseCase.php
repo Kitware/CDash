@@ -27,27 +27,8 @@ class TestUseCase extends UseCase
     private $endTime;
 
     /**
-     * @param $start_time
-     * @return TestUseCase
-     */
-    public function setStartTime($start_time)
-    {
-        $this->startTime = $start_time;
-        return $this;
-    }
-
-    /**
-     * @param $end_time
-     * @return TestUseCase
-     */
-    public function setEndTime($end_time)
-    {
-        $this->endTime = $end_time;
-        return $this;
-    }
-
-    /**
      * @return \AbstractHandler
+     * @throws \Exception
      */
     public function build()
     {
