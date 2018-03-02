@@ -16,6 +16,8 @@ abstract class UseCase
     protected $properties = [];
     protected $projectId = 321;
     protected $scheduleId = 0;
+    protected $startTime;
+    protected $endTime;
 
     protected $testCase;
 
@@ -34,6 +36,26 @@ abstract class UseCase
                 $testCase->setUseCaseModelFactory($useCase);
                 return $useCase;
         }
+    }
+
+    /**
+     * @param $start_time
+     * @return $this
+     */
+    public function setStartTime($start_time)
+    {
+        $this->startTime = $start_time;
+        return $this;
+    }
+
+    /**
+     * @param $end_time
+     * @return $this
+     */
+    public function setEndTime($end_time)
+    {
+        $this->endTime = $end_time;
+        return $this;
     }
 
     /**
