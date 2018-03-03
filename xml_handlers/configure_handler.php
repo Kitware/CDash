@@ -16,10 +16,12 @@
 
 require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
-require_once 'models/build.php';
 require_once 'models/label.php';
 require_once 'models/site.php';
 require_once 'models/buildconfigure.php';
+
+use CDash\Collection\BuildCollection;
+use CDash\ServiceContainer;
 
 class ConfigureHandler extends AbstractHandler implements ActionableBuildInterface
 {
@@ -40,10 +42,8 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
     public function __construct($projectid, $scheduleid)
     {
         parent::__construct($projectid, $scheduleid);
-        $this->Builds = array();
-        $this->SubProjects = array();
-        $this->Site = new Site();
-        $this->Configure = new BuildConfigure();
+        $this->Builds = [];
+        $this->SubProjects = [];
         $this->StartTimeStamp = 0;
         $this->EndTimeStamp = 0;
         // Only complain about errors & warnings once.
@@ -53,17 +53,18 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
     public function startElement($parser, $name, $attributes)
     {
         parent::startElement($parser, $name, $attributes);
+        $factory = $this->getModelFactory();
 
         if ($name == 'SITE') {
+            $this->Site = $factory->create(Site::class);
             $this->Site->Name = $attributes['NAME'];
             if (empty($this->Site->Name)) {
                 $this->Site->Name = '(empty)';
             }
             $this->Site->Insert();
 
-            $siteInformation = new SiteInformation();
-            $this->BuildInformation = new BuildInformation();
-            $this->BuildInformation = new BuildInformation();
+            $siteInformation = $factory->create(SiteInformation::class);
+            $this->BuildInformation = $factory->create(BuildInformation::class);
             $this->BuildName = "";
             $this->BuildStamp = "";
             $this->Generator = "";
@@ -96,7 +97,7 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
                 $this->SubProjects[$this->SubProjectName] = array();
             }
             if (!array_key_exists($this->SubProjectName, $this->Builds)) {
-                $build = new Build();
+                $build = $factory->create(Build::class); // new Build();
                 $build->SiteId = $this->Site->Id;
                 $build->Name = $this->BuildName;
                 $build->SetStamp($this->BuildStamp);
@@ -105,9 +106,10 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
                 $this->Builds[$this->SubProjectName] = $build;
             }
         } elseif ($name == 'CONFIGURE') {
+            $this->Configure = $factory->create(BuildConfigure::class);
             if (empty($this->Builds)) {
                 // No subprojects
-                $build = new Build();
+                $build = $factory->create(Build::class);
                 $build->SiteId = $this->Site->Id;
                 $build->Name = $this->BuildName;
                 $build->SetStamp($this->BuildStamp);
@@ -116,13 +118,15 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
                 $this->Builds[''] = $build;
             }
         } elseif ($name == 'LABEL') {
-            $this->Label = new Label();
+            $this->Label = $factory->create(Label::class);
         }
     }
 
     public function endElement($parser, $name)
     {
         $parent = $this->getParent();
+        $factory = $this->getModelFactory();
+
         parent::endElement($parser, $name);
 
         if ($name == 'CONFIGURE') {
@@ -137,6 +141,7 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
             $parent_duration_set = false;
 
             foreach ($this->Builds as $subproject => $build) {
+                $build->SetBuildConfigure($this->Configure);
                 $build->ProjectId = $this->projectid;
                 $build->StartTime = $start_time;
                 $build->EndTime = $end_time;
@@ -187,7 +192,7 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
                 $duration = $this->EndTimeStamp - $this->StartTimeStamp;
                 $build->SetConfigureDuration($duration, !$all_at_once);
                 if ($all_at_once && !$parent_duration_set) {
-                    $parent_build = new Build();
+                    $parent_build = $factory->create(Build::class);
                     $parent_build->Id = $build->GetParentId();
                     $parent_build->SetConfigureDuration($duration, false);
                     $parent_duration_set = true;
@@ -200,6 +205,7 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
             // so only need to do this once
             $build->UpdateParentConfigureNumbers(
                     $this->Configure->NumberOfWarnings, $this->Configure->NumberOfErrors);
+
         } elseif ($name == 'LABEL' && $parent == 'LABELS') {
             if (isset($this->Configure)) {
                 $this->Configure->AddLabel($this->Label);
@@ -230,7 +236,16 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
                     $this->Configure->Command .= $data;
                     break;
                 case 'CONFIGURESTATUS':
+                    // TODO: discuss
+                    // What is the .= here for? Are there ever more than
+                    // one ConfigureStatus or is this method fed data from a buffer?
+                    // That StartTimeStamp is not .= leads me to believe
+                    // that this is not necessary and asking for trouble. Further
+                    // investigation reveals that these properties are not initialized
+                    // so the concat operation is appending a null with (presumably) a string;
+                    // also not desirable.
                     $this->Configure->Status .= $data;
+                    $this->Configure->NumberOfErrors = $data;
                     break;
             }
         } elseif ($parent == 'SUBPROJECT' && $element == 'LABEL') {
@@ -262,9 +277,19 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
 
     /**
      * @return Build[]
+     * @deprecated use GetBuildCollection
      */
     public function getActionableBuilds()
     {
         return $this->Builds;
+    }
+
+    /**
+     * @return BuildCollection
+     * TODO: Looks like this method can be moved into AbstractHandler
+     */
+    public function GetBuildCollection()
+    {
+        return new BuildCollection($this->Builds);
     }
 }
