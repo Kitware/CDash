@@ -42,12 +42,14 @@ class CDashUseCaseTestCase extends CDashTestCase
                     ->method('Save')
                     ->willReturnCallback(function () use ($class_name, $model, $useCase) {
                         $model->Id = $useCase->getIdForClass($class_name);
+                        return $model->Id;
                     });
 
                 $model->expects($this->any())
                     ->method('Insert')
                     ->willReturnCallback(function () use ($class_name, $model, $useCase) {
                         $model->Id = $useCase->getIdForClass($class_name);
+                        return $model->Id;
                     });
 
                 return $model;
