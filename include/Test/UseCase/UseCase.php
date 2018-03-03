@@ -10,6 +10,7 @@ use DOMText;
 abstract class UseCase
 {
     const TEST = 1;
+    const CONFIG = 2;
 
     private $ids;
     protected $subprojects = [];
@@ -26,7 +27,7 @@ abstract class UseCase
     /**
      * @param CDashUseCaseTestCase $testCase
      * @param $type
-     * @return UseCase
+     * @return static
      */
     public static function createBuilder(CDashUseCaseTestCase $testCase, $type)
     {
@@ -35,12 +36,16 @@ abstract class UseCase
                 $useCase = new TestUseCase();
                 $testCase->setUseCaseModelFactory($useCase);
                 return $useCase;
+            case self::CONFIG:
+                $useCase = new ConfigUseCase();
+                $testCase->setUseCaseModelFactory($useCase);
+                return $useCase;
         }
     }
 
     /**
      * @param $start_time
-     * @return $this
+     * @return self
      */
     public function setStartTime($start_time)
     {
@@ -50,7 +55,7 @@ abstract class UseCase
 
     /**
      * @param $end_time
-     * @return $this
+     * @return self
      */
     public function setEndTime($end_time)
     {
@@ -286,6 +291,46 @@ abstract class UseCase
                 $test = array_merge($test, $properties);
             }
         }
+        return $this;
+    }
+
+    /**
+     * @param string $command
+     * @return $this
+     */
+    public function setConfigureCommand(string $command)
+    {
+        $this->properties['Config']['command'] = $command;
+        return $this;
+    }
+
+    /**
+     * @param int $status
+     * @return $this
+     */
+    public function setConfigureStatus(int $status)
+    {
+        $this->properties['Config']['status'] = $status;
+        return $this;
+    }
+
+    /**
+     * @param string $log
+     * @return $this
+     */
+    public function setConfigureLog(string $log)
+    {
+        $this->properties['Config']['log'] = $log;
+        return $this;
+    }
+
+    /**
+     * @param int $minutes
+     * @return $this
+     */
+    public function setConfigureElapsedMinutes(int $minutes)
+    {
+        $this->properties['Config']['elapsed'] = $minutes;
         return $this;
     }
 }
