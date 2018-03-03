@@ -23,9 +23,6 @@ class TestUseCase extends UseCase
     const TIMEOUT = 'Timeout';
     const NOTRUN = 'notrun';
 
-    private $startTime;
-    private $endTime;
-
     /**
      * @return \AbstractHandler
      * @throws \Exception
