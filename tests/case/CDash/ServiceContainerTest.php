@@ -43,12 +43,12 @@ class ServiceContainerTest extends PHPUnit_Framework_TestCase
     {
         $mock_di = $this->getMockBuilder(DI\Container::class)
             ->disableOriginalConstructor()
-            ->setMethods(['get'])
+            ->setMethods(['make'])
             ->getMock();
 
         $mock_di
             ->expects($this->once())
-            ->method('get')
+            ->method('make')
             ->with($this->equalTo('SomeClassName'));
 
         $container = ServiceContainer::getInstance();
