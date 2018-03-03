@@ -2146,16 +2146,19 @@ class Build
     }
 
     /** Get/Set number of configure warnings for this build. */
+    /**
+     * @return int|null
+     */
     public function GetNumberOfConfigureWarnings()
     {
-        if (!$this->Id || !is_numeric($this->Id)) {
-            return false;
+        if ($this->BuildConfigure) {
+            return $this->BuildConfigure->NumberOfWarnings;
         }
 
         $stmt = $this->PDO->prepare(
             'SELECT configurewarnings FROM build WHERE id = ?');
         if (!pdo_execute($stmt, [$this->Id])) {
-            return false;
+            return null;
         }
         $num_warnings = $stmt->fetchColumn();
         if ($num_warnings == -1) {
@@ -2163,6 +2166,7 @@ class Build
         }
         return $num_warnings;
     }
+
 
     public function SetNumberOfConfigureWarnings($numWarnings)
     {
@@ -2175,25 +2179,7 @@ class Build
         pdo_execute($stmt, [$numWarnings, $this->Id]);
     }
 
-    /** Get/Set number of configure errors for this build. */
-    public function GetNumberOfConfigureErrors()
-    {
-        if (!$this->Id || !is_numeric($this->Id)) {
-            return false;
-        }
-
-        $stmt = $this->PDO->prepare(
-            'SELECT configureerrors FROM build WHERE id = ?');
-        if (!pdo_execute($stmt, [$this->Id])) {
-            return false;
-        }
-        $num_errors = $stmt->fetchColumn();
-        if ($num_errors == -1) {
-            $num_errors = 0;
-        }
-        return $num_errors;
-    }
-
+    /** Set number of configure errors for this build. */
     public function SetNumberOfConfigureErrors($numErrors)
     {
         if (!$this->Id || !is_numeric($this->Id)) {
@@ -2211,6 +2197,26 @@ class Build
                 "/viewConfigure.php?buildid=$this->Id";
             $this->NotifyPullRequest($message, $url);
         }
+    }
+
+    /**
+     * @return int|null
+     */
+    public function GetNumberOfConfigureErrors()
+    {
+        if ($this->BuildConfigure) {
+            return $this->BuildConfigure->NumberOfErrors;
+        }
+        $stmt = $this->PDO->prepare(
+            'SELECT configureerrors FROM build WHERE id = ?');
+        if (!pdo_execute($stmt, [$this->Id])) {
+            return null;
+        }
+        $num_errors = $stmt->fetchColumn();
+        if ($num_errors == -1) {
+            $num_errors = 0;
+        }
+        return $num_errors;
     }
 
     /**
@@ -2814,5 +2820,25 @@ class Build
             $value = 0;
         }
         return $value;
+    }
+
+    /**
+     * @return BuildConfigure
+     */
+    public function GetBuildConfigure()
+    {
+        if (!$this->BuildConfigure) {
+            $this->BuildConfigure = new BuildConfigure();
+            $this->BuildConfigure->BuildId = $this->Id;
+        }
+        return $this->BuildConfigure;
+    }
+
+    /**
+     * @param BuildConfigure $buildConfigure
+     */
+    public function SetBuildConfigure(BuildConfigure $buildConfigure)
+    {
+        $this->BuildConfigure = $buildConfigure;
     }
 }
