@@ -35,22 +35,27 @@ class SecondsFromIntervalTestCase extends KWWebTestCase
         $this->intervalTest('8 days 17h 24m', 753840);
         $this->intervalTest('8 days 17h 24m 43s', 753883);
         // Not testing months since they have a variable number of seconds.
-        $this->intervalTest('2 years', 63072000);
-        $this->intervalTest('2 years 43s', 63072043);
-        $this->intervalTest('2 years 24m', 63073440);
-        $this->intervalTest('2 years 24m 43s', 63073483);
-        $this->intervalTest('2 years 17h', 63133200);
-        $this->intervalTest('2 years 17h 43s', 63133243);
-        $this->intervalTest('2 years 17h 24m', 63134640);
-        $this->intervalTest('2 years 17h 24m 43s', 63134683);
-        $this->intervalTest('2 years 8 days', 63763200);
-        $this->intervalTest('2 years 8 days 43s', 63763243);
-        $this->intervalTest('2 years 8 days 24m', 63764640);
-        $this->intervalTest('2 years 8 days 24m 43s', 63764683);
-        $this->intervalTest('2 years 8 days 17h', 63824400);
-        $this->intervalTest('2 years 8 days 17h 43s', 63824443);
-        $this->intervalTest('2 years 8 days 17h 24m', 63825840);
-        $this->intervalTest('2 years 8 days 17h 24m 43s', 63825883);
+
+        // if 2 years ago was a leap year and the month is greater than Feb (2)
+        $extraDay = date('L', strtotime('2 years')) && date('n') > 2;
+        
+        $leapYearSeconds = $extraDay ? 86400 : 0;
+        $this->intervalTest('2 years', 63072000 + $leapYearSeconds);
+        $this->intervalTest('2 years 43s', 63072043 + $leapYearSeconds);
+        $this->intervalTest('2 years 24m', 63073440 + $leapYearSeconds);
+        $this->intervalTest('2 years 24m 43s', 63073483 + $leapYearSeconds);
+        $this->intervalTest('2 years 17h', 63133200 + $leapYearSeconds);
+        $this->intervalTest('2 years 17h 43s', 63133243 + $leapYearSeconds);
+        $this->intervalTest('2 years 17h 24m', 63134640 + $leapYearSeconds);
+        $this->intervalTest('2 years 17h 24m 43s', 63134683 + $leapYearSeconds);
+        $this->intervalTest('2 years 8 days', 63763200 + $leapYearSeconds);
+        $this->intervalTest('2 years 8 days 43s', 63763243 + $leapYearSeconds);
+        $this->intervalTest('2 years 8 days 24m', 63764640 + $leapYearSeconds);
+        $this->intervalTest('2 years 8 days 24m 43s', 63764683 + $leapYearSeconds);
+        $this->intervalTest('2 years 8 days 17h', 63824400 + $leapYearSeconds);
+        $this->intervalTest('2 years 8 days 17h 43s', 63824443 + $leapYearSeconds);
+        $this->intervalTest('2 years 8 days 17h 24m', 63825840 + $leapYearSeconds);
+        $this->intervalTest('2 years 8 days 17h 24m 43s', 63825883 + $leapYearSeconds);
     }
 
     public function intervalTest($input, $expected)
