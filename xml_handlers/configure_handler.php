@@ -25,7 +25,6 @@ use CDash\Model\Site;
 use CDash\Model\SiteInformation;
 
 use CDash\Collection\BuildCollection;
-use CDash\ServiceContainer;
 
 class ConfigureHandler extends AbstractHandler implements ActionableBuildInterface
 {
@@ -209,7 +208,6 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
             // so only need to do this once
             $build->UpdateParentConfigureNumbers(
                     $this->Configure->NumberOfWarnings, $this->Configure->NumberOfErrors);
-
         } elseif ($name == 'LABEL' && $parent == 'LABELS') {
             if (isset($this->Configure)) {
                 $this->Configure->AddLabel($this->Label);

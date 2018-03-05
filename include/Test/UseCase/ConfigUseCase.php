@@ -8,7 +8,6 @@ use ConfigureHandler;
 
 class ConfigUseCase extends UseCase
 {
-
     public function __construct(array $properties = [])
     {
         $this->properties['Config'] = $properties;
