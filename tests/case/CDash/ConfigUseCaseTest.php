@@ -9,13 +9,13 @@ class ConfigUseCaseTest extends CDashUseCaseTestCase
 {
     public function testUseCaseCreateBuilderReturnsInstanceOfConfigUseCase()
     {
-        $sut = UseCase::createBuilder($this, UseCase::CONFIG);
+        $sut = UseCase::createBuilder($this, UseCase::CONFIGURE);
         $this->assertInstanceOf(ConfigUseCase::class, $sut);
     }
 
     public function testConfigUseCaseBuild()
     {
-        $sut = UseCase::createBuilder($this, UseCase::CONFIG)
+        $sut = UseCase::createBuilder($this, UseCase::CONFIGURE)
             ->createSite(['Name' => 'Site.name'])
             ->createSubproject('MyExperimentalFeature')
             ->createSubproject(

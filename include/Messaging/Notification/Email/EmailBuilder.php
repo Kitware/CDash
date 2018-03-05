@@ -42,6 +42,10 @@ class EmailBuilder extends SubscriptionNotificationBuilder
         return $message;
     }
 
+    /**
+     * @param SubscriptionInterface $subscription
+     * @return void
+     */
     protected function uniquifyTopics(SubscriptionInterface $subscription)
     {
       $topics = $subscription->getTopicCollection();
@@ -58,14 +62,14 @@ class EmailBuilder extends SubscriptionNotificationBuilder
     protected function setPreamble(EmailMessage $email, SubscriptionInterface $subscription)
     {
         $preamble = new PreambleDecorator(null);
-        $preamble->addSubject($subscription->getBuildSummary());
+        $preamble->createPreamble($subscription);
         $email->setBody($preamble);
     }
 
     protected function setSummary(EmailMessage $email, SubscriptionInterface $subscription)
     {
         $summary = new SummaryDecorator($email->getBody());
-        $summary->addSubject($subscription);
+        $summary->createSummary($subscription);
         $email->setBody($summary);
     }
 
@@ -74,12 +78,13 @@ class EmailBuilder extends SubscriptionNotificationBuilder
         $topics = $subscription->getTopicCollection();
         $project = $subscription->getProject();
         $maxItems = $project->EmailMaxItems;
-
+        $maxChars = $project->EmailMaxChars;
         foreach ($topics as $topic) {
             $decorator = DecoratorFactory::createFromTopic($topic, $email->getBody());
             $decorator
                 ->setMaxTopicItems($maxItems)
-                ->addSubject($topic);
+                ->setMaxChars($maxChars)
+                ->setTopic($topic);
             $email->setBody($decorator);
         }
     }
@@ -87,7 +92,7 @@ class EmailBuilder extends SubscriptionNotificationBuilder
     protected function setFooter(EmailMessage $email)
     {
         $footer = new FooterDecorator($email->getBody());
-        $footer->addSubject(Config::getInstance());
+        $footer->createFooter(Config::getInstance());
         $email->setBody($footer);
     }
 
@@ -103,6 +108,9 @@ class EmailBuilder extends SubscriptionNotificationBuilder
               case 'Failing Tests':
                   $totals[] = "t={$topic['count']}";
                   break;
+                case 'Configure Errors':
+                    $totals[] = "c={$topic['count']}";
+                    break;
             }
         }
 

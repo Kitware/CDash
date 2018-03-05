@@ -103,7 +103,7 @@ class TopicFactory
             case 'CheckinIssueNightlyOnly':
                 return new CheckinIssueNightlyOnlyTopic();
             case 'ConfigureError':
-                return new ConfigureErrorTopic();
+                return new ConfigureTopic();
             case 'DynamicAnalysis':
                 return new DynamicAnalysisTopic();
             case 'ExpectedSiteSubmitMissing':

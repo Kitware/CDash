@@ -23,6 +23,7 @@ class AuthoredTopic extends Topic
      */
     public function itemHasTopicSubject(Build $build, $item)
     {
+        // b808c5746ff9f69e3bfc78f01f5880bf13456ebe
         // TODO: q: do we need to do this again here?
         // a: Only if subscribesToBuild has not yet been called, but if it has been called
         //    how do we determine that the build passed in here is the same build that was

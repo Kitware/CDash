@@ -97,7 +97,7 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
         } elseif ($name == 'SUBPROJECT') {
             $this->SubProjectName = $attributes['NAME'];
             if (!array_key_exists($this->SubProjectName, $this->SubProjects)) {
-                $this->SubProjects[$this->SubProjectName] = array();
+                $this->SubProjects[$this->SubProjectName] = [];
             }
             if (!array_key_exists($this->SubProjectName, $this->Builds)) {
                 $build = $factory->create(Build::class); // new Build();
@@ -107,6 +107,7 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
                 $build->Generator = $this->Generator;
                 $build->Information = $this->BuildInformation;
                 $this->Builds[$this->SubProjectName] = $build;
+                $build->SetActionableType(ActionableTypes::CONFIGURE);
             }
         } elseif ($name == 'CONFIGURE') {
             $this->Configure = $factory->create(BuildConfigure::class);
@@ -118,7 +119,7 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
                 $build->SetStamp($this->BuildStamp);
                 $build->Generator = $this->Generator;
                 $build->Information = $this->BuildInformation;
-                $this->Builds[''] = $build;
+                $this->Builds[] = $build;
             }
         } elseif ($name == 'LABEL') {
             $this->Label = $factory->create(Label::class);
@@ -219,6 +220,7 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
     {
         $parent = $this->getParent();
         $element = $this->getElement();
+        $factory = $this->getModelFactory();
 
         if ($parent == 'CONFIGURE') {
             switch ($element) {
@@ -252,6 +254,10 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
             }
         } elseif ($parent == 'SUBPROJECT' && $element == 'LABEL') {
             $this->SubProjects[$this->SubProjectName][] =  $data;
+            $build = $this->Builds[$this->SubProjectName];
+            $label = $factory->create(Label::class);
+            $label->Text = $data;
+            $build->AddLabel($label);
         } elseif ($parent == 'LABELS' && $element == 'LABEL') {
             // First, check if this label belongs to a SubProject
             $subproject_name = "";

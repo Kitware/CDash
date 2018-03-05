@@ -1,11 +1,14 @@
 <?php
 namespace CDash\Messaging\Notification\Email\Decorator;
 
+use CDash\Messaging\Subscription\SubscriptionInterface;
+use CDash\Messaging\Topic\Topic;
+
 class SummaryDecorator extends Decorator
 {
     private $counts_template = 'Total {{ description }}: {{ count }}';
     private $summary_template = [
-        'Project: {{ project_name }}',
+        'Project: {{ project_name }}%s',
         'Site: {{ site_name }}',
         'Build Name: {{ build_name }}',
         'Build Time: {{ build_time }}',
@@ -14,9 +17,13 @@ class SummaryDecorator extends Decorator
         '',
     ];
 
-    public function addSubject($subject)
+    /**
+     * @param SubscriptionInterface $subscription
+     * @return string
+     */
+    public function createSummary(SubscriptionInterface $subscription)
     {
-        $summary = $subject->getBuildSummary();
+        $summary = $subscription->getBuildSummary();
 
         $counts = $this->decorateWith($this->counts_template, array_values($summary['topics']));
         $data = [
@@ -28,6 +35,22 @@ class SummaryDecorator extends Decorator
             'counts' => $counts,
         ];
         $template = implode("\n", $this->summary_template);
+
+        // Add the name of the subproject if there is only one
+        $subproject = count($summary['build_subproject_names']) === 1 ?
+            "\nSubProject Name: {$summary['build_subproject_names'][0]}" :
+            '';
+        $template = sprintf($template, $subproject);
         $this->text = $this->decorateWith($template, $data);
+        return $this->text;
+    }
+
+    /**
+     * @param Topic $topic
+     * @return string|void
+     */
+    public function setTopic(Topic $topic)
+    {
+        // TODO: Implement setTopic() method.
     }
 }

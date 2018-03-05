@@ -11,6 +11,8 @@ class DecoratorFactory
         switch ($topic->getTopicName()) {
             case 'TestFailure':
                 return new TestFailureDecorator($decorator);
+            case 'Configure':
+                return new ConfigureDecorator($decorator);
             case 'Labeled':
                 return new LabeledDecorator($decorator);
         }

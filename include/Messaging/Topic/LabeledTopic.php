@@ -5,6 +5,7 @@ use Build;
 use CDash\Collection\ArrayCollection;
 use CDash\Collection\Collection;
 use CDash\Collection\CollectionCollection;
+use CDash\Collection\ConfigureCollection;
 use CDash\Collection\LabelCollection;
 use CDash\Collection\TestCollection;
 
@@ -23,12 +24,8 @@ class LabeledTopic extends Topic implements DecoratableInterface
         if (!count($labels)) {
             return false;
         }
-        /*
-        if ($this->topic->subscribesToBuild($build)) {
-            $subscribe = $this->topic->hasLabels($build);
-        }
-        */
-      $buildLabels = $build->GetAggregatedLabels();
+
+        $buildLabels = $build->GetAggregatedLabels();
         foreach ($labels as $label) {
           if (in_array($label, $buildLabels)) {
             return true;
@@ -39,15 +36,49 @@ class LabeledTopic extends Topic implements DecoratableInterface
 
     public function setTopicData(Build $build)
     {
-        $subscriberLabels = $this->subscriber->getLabels();
-        $actionableCollection = $build->GetActionableCollection();
+        switch ($build->GetActionableType()) {
+            case \ActionableTypes::TEST:
+                $this->setTestItems($build);
+                break;
+            case \ActionableTypes::CONFIGURE:
+                $this->setConfigureItems($build);
+                break;
+        }
+    }
 
-        foreach ($subscriberLabels as $label) {
-            foreach ($actionableCollection as $item) {
-                if ($item->isLabeled($label)) {
-                    $collection = $this->getItemCollection($actionableCollection);
-                    $collection->addItem($item, $label);
+    protected function setTestItems(Build $build)
+    {
+        $tests = $build->GetTestCollection();
+        $labels = $this->subscriber->getLabels();
+        $topics = $this->getTopicCollection();
+        $collection = $topics->get(TestCollection::class);
+
+        foreach ($labels as $label) {
+            foreach ($tests as $test) {
+                if ($test->isLabeled($label)) {
+                    if (!$collection) {
+                        $collection = new TestCollection();
+                        $topics->addItem($collection, TestCollection::class);
+                    }
+                    $collection->addItem($test, $label);
                 }
+            }
+        }
+    }
+
+    protected function setConfigureItems(Build $build)
+    {
+        $labels = $this->subscriber->getLabels();
+        $topics = $this->getTopicCollection();
+        $collection = $topics->get(ConfigureCollection::class);
+
+        foreach ($labels as $label) {
+            if ($build->isLabeled($label)) {
+                if (!$collection) {
+                    $collection = new ConfigureCollection();
+                    $topics->add($collection, ConfigureCollection::class);
+                }
+                $collection->addItem($build->GetBuildConfigure(), $label);
             }
         }
     }
@@ -75,11 +106,16 @@ class LabeledTopic extends Topic implements DecoratableInterface
             }
         }
 
-        if ($this->topicCollection->hasItems()) {
+        $collection = $this->getTopicCollection();
+
+        if ($collection->hasItems()) {
             foreach ($this->getTopicCollection() as $collection) {
                 switch (get_class($collection)) {
                     case TestCollection::class:
                         $topic = new TestFailureTopic();
+                        break;
+                    case ConfigureCollection::class:
+                        $topic = new ConfigureTopic();
                         break;
                 }
 

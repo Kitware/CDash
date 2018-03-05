@@ -1,6 +1,9 @@
 <?php
 namespace CDash\Messaging\Notification\Email\Decorator;
 
+use CDash\Messaging\Subscription\SubscriptionInterface;
+use CDash\Messaging\Topic\Topic;
+
 class PreambleDecorator extends Decorator
 {
     private $template = 'A submission to CDash for the project {{ project_name }} has '
@@ -9,15 +12,23 @@ class PreambleDecorator extends Decorator
                 . 'or you are listed in the default contact list.' . "\n\n"
                 . 'Details on the submission can be found at {{ project_url }}' . "\n";
 
-    public function addSubject($subject)
+    public function createPreamble(SubscriptionInterface $subscription)
     {
-        $descriptions = array_column($subject['topics'], 'description');
+        $summary = $subscription->getBuildSummary();
+        $descriptions = array_column($summary['topics'], 'description');
         $data = [
-            'project_name' => $subject['project_name'],
+            'project_name' => $summary['project_name'],
             'topic_list' => implode(' and ', array_map('strtolower', $descriptions)),
-            'project_url' => $subject['project_url'],
+            'project_url' => $summary['project_url'],
         ];
-
         $this->text = $this->decorateWith($this->template, $data);
+    }
+
+    /**
+     * @param Topic $topic
+     * @return string|void
+     */
+    public function setTopic(Topic $topic)
+    {
     }
 }

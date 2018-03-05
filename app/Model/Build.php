@@ -19,6 +19,9 @@ include_once 'include/common.php';
 include_once 'include/ctestparserutils.php';
 include_once 'include/repository.php';
 
+use CDash\Collection\LabelCollection;
+use CDash\Config;
+use CDash\Log;
 use CDash\Collection\TestCollection;
 use CDash\Config;
 use CDash\Database;
@@ -66,7 +69,6 @@ class Build
     public $Done;
     public $Labels;
 
-
     // Only the build.xml has information about errors and warnings
     // when the InsertErrors is false the build is created but not the errors and warnings
     public $InsertErrors;
@@ -89,10 +91,11 @@ class Build
     private $Site;
     private $BuildUpdate;
     private $Project;
-    private $BuildConfigure;
     private $CommitAuthors;
     private $AggregateLabels;
     private $ActionableType;
+    private $BuildConfigure;
+    private $LabelCollection;
 
     public function __construct()
     {
@@ -2922,16 +2925,33 @@ class Build
         return $this->AggregateLabels;
     }
 
-    public function GetActionableType()
+    public function SetActionableType(string $type)
     {
-      return ActionableTypes::TEST;
+        $this->ActionableType = $type;
     }
 
-    public function GetActionableCollection()
+    public function GetActionableType()
     {
-      switch ($this->getActionableType()) {
-        case ActionableTypes::TEST:
-          return $this->GetTestCollection();
-      }
+      return $this->ActionableType;
+    }
+
+    public function GetLabelCollection()
+    {
+        if (!$this->LabelCollection) {
+            $this->LabelCollection = new LabelCollection();
+            foreach ($this->Labels as $label) {
+                $this->LabelCollection->add($label);
+            }
+        }
+        return $this->LabelCollection;
+    }
+
+    public function isLabeled(string $label)
+    {
+        $labels = array_map(function ($lbl) {
+            return $lbl->Text;
+        }, $this->Labels);
+
+        return in_array($label,$labels);
     }
 }

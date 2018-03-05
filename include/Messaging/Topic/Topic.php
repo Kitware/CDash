@@ -4,13 +4,13 @@ namespace CDash\Messaging\Topic;
 use Build;
 use CDash\Collection\BuildCollection;
 use CDash\Collection\CallableCollection;
-use CDash\Collection\CollectionCollection;
 use CDash\Collection\CollectionInterface;
 use SubscriberInterface;
 
 abstract class Topic implements TopicInterface
 {
     const TEST_FAILURE = 'TestFailure';
+    const CONFIGURE = 'Configure';
     const LABELED = 'Labeled';
 
     /** @var  SubscriberInterface $subscriber */

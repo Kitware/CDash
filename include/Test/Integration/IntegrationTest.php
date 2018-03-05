@@ -92,6 +92,7 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
         $this->submission = $this->useCase->build();
         $project = $this->submission->GetProject();
         $project->EmailMaxItems = 5;
+        $project->EmailMaxChars = 255;
         $subscriberCollection = new SubscriberCollection();
 
         foreach ($subscribers as $entry) {
@@ -122,16 +123,7 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
         return $director->build($builder);
     }
 
-    /**
-     * Use case:
-     *   - Single user
-     *   - Single build
-     *   - Build IS of type Test
-     *   - User IS subscribed to TestFailure
-     *   - User IS NOT subscribed to any labels
-     *   - Build contains a single TestFailure
-     */
-    public function testMultipleTestFailuresWithMultipleSubscribers()
+    public function testAllAtOnceMultipleTestFailures()
     {
         $this->useCase = UseCase::createBuilder($this, UseCase::TEST)
             ->createSite([
@@ -288,6 +280,7 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
             'Details on the submission can be found at /CDash/viewProject?projectid=321',
             '',
             'Project: CDashUseCaseProject',
+            'SubProject Name: BuildThree',
             'Site: mirror.site',
             'Build Name: SomeOS-SomeBuild',
             'Build Time: 2018-02-10T15:32:52',
@@ -307,6 +300,168 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
         $this->assertEquals($expected, $actual);
         $expected = 'FAILED (t=1) CDashUseCaseProject/BuildTres - SomeOS-SomeBuild - Experimental';
         $actual = $notification->getSubject();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testAllAtOnceConfigureErrors()
+    {
+        $this->useCase = UseCase::createBuilder($this, UseCase::CONFIGURE)
+            ->createSite([
+                'BuildName' => 'SomeOS-SomeBuild',
+                'BuildStamp' => '20180122-0100-Experimental',
+                'Name' => 'mirror.site',
+            ])
+            ->createAuthor(
+                'user_1@company.tld',
+                ['BuildOne', 'BuildTwo', 'BuildThree', 'BuildFour', 'BuildFive']
+            )
+            ->createAuthor(
+                'user_4@company.tld',
+                ['BuildTwo', 'BuildFive']
+            )
+            ->createAuthor(
+                'user_6@company.tld',
+                ['BuildFour']
+            )
+            ->createAuthor(
+                'user_7@company.tld',
+                ['BuildTwo']
+            )
+            ->createSubproject('BuildOne')
+            ->createSubproject('BuildTwo')
+            ->createSubproject('BuildThree', ['BuildTrois', 'BuildTres'])
+            ->createSubproject('BuildFour')
+            ->createSubproject('BuildFive')
+            ->setStartTime(1518276772)
+            ->setEndTime(1518276773)
+            ->setConfigureCommand('"cmake" "-GUnix Makefiles" "/home/kitware/builds/cmake"')
+            ->setConfigureLog('
+                Running CMake to regenerate build system...
+                CDASH_DIR_NAME = CDash
+                Using url: http://localhost/CDash
+                Loading composer repositories with package information
+                Installing dependencies (including require-dev) from lock file
+                CMake Warning: cannot install dependecy whatevs...
+                Warning bada-bing
+                Error: Missing dependencies
+                FATAL ERROR: Cannot continue exiting with status 127 
+            ')
+            ->setConfigureStatus(2)
+            ->setConfigureElapsedMinutes(0);
+
+        $subscribers = [
+            [ // This user should receive email
+                'user_1@company.tld',
+                BitmaskNotificationPreferences::EMAIL_SUBSCRIBED_LABELS |
+                BitmaskNotificationPreferences::EMAIL_CONFIGURE,
+                ['BuildTres']
+            ],
+            [
+                // This user should not receive an email as they are not an author
+                'user_2@company.tld',
+                BitmaskNotificationPreferences::EMAIL_CONFIGURE |
+                BitmaskNotificationPreferences::EMAIL_USER_CHECKIN_ISSUE_ANY_SECTION,
+                []
+            ],
+            [
+                // This user should receive an email, subscribed to two labels
+                'user_3@company.tld',
+                BitmaskNotificationPreferences::EMAIL_SUBSCRIBED_LABELS,
+                ['BuildOne', 'BuildTwo']
+            ],
+            [
+                // This user should receive an email, with BuildTres appened to subject
+                'user_4@company.tld',
+                BitmaskNotificationPreferences::EMAIL_SUBSCRIBED_LABELS,
+                ['BuildTres']
+            ],
+        ];
+
+        $notifications = $this->getNotifications($subscribers);
+
+        $notification = $notifications->get('user_1@company.tld');
+        $this->assertNotNull($notification);
+
+        $expected = 'FAILED (c=2) CDashUseCaseProject - SomeOS-SomeBuild - Experimental';
+        $actual = $notification->getSubject();
+        $this->assertEquals($expected, $actual);
+
+        $body = [
+            'A submission to CDash for the project CDashUseCaseProject has configure errors. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.',
+            '',
+            'Details on the submission can be found at /CDash/viewProject?projectid=321',
+            '',
+            'Project: CDashUseCaseProject',
+            'Site: mirror.site',
+            'Build Name: SomeOS-SomeBuild',
+            'Build Time: 1970-01-01T00:00:00',
+            'Type: Experimental',
+            'Total Configure Errors: 2',
+            '',
+            '*Configure*',
+            'Status: 2 (http://open.cdash.org/viewConfigure.php?buildid=)',
+            'Output: Running CMake to regenerate build system...',
+            '        CDASH_DIR_NAME = CDash',
+            '        Using url: http://localhost/CDash',
+            '        Loading composer repositories with package information',
+            '        Installing depende',
+            '',
+            '-CDash on open.cdash.org',
+            '',
+        ];
+
+        $expected = implode("\n", $body);
+        $actual = "{$notification->getBody()}";
+        $this->assertEquals($expected, $actual);
+
+        $notification = $notifications->get('user_2@company.tld');
+        $this->assertNull($notification);
+
+        $notification = $notifications->get('user_3@company.tld');
+        $this->assertNotNull($notification);
+
+        $expected = 'FAILED (c=2) CDashUseCaseProject - SomeOS-SomeBuild - Experimental';
+        $actual = $notification->getSubject();
+        $this->assertEquals($expected, $actual);
+
+        $expected = implode("\n", $body);
+        $actual = "{$notification->getBody()}";
+        $this->assertEquals($expected, $actual);
+
+        $notification = $notifications->get('user_4@company.tld');
+        $this->assertNotNull($notification);
+
+        $expected = 'FAILED (c=2) CDashUseCaseProject/BuildTres - SomeOS-SomeBuild - Experimental';
+        $actual = $notification->getSubject();
+        $this->assertEquals($expected, $actual);
+
+        $body = [
+            'A submission to CDash for the project CDashUseCaseProject has configure errors. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.',
+            '',
+            'Details on the submission can be found at /CDash/viewProject?projectid=321',
+            '',
+            'Project: CDashUseCaseProject',
+            'SubProject Name: BuildThree',
+            'Site: mirror.site',
+            'Build Name: SomeOS-SomeBuild',
+            'Build Time: 1970-01-01T00:00:00',
+            'Type: Experimental',
+            'Total Configure Errors: 2',
+            '',
+            '*Configure*',
+            'Status: 2 (http://open.cdash.org/viewConfigure.php?buildid=)',
+            'Output: Running CMake to regenerate build system...',
+            '        CDASH_DIR_NAME = CDash',
+            '        Using url: http://localhost/CDash',
+            '        Loading composer repositories with package information',
+            '        Installing depende',
+            '',
+            '-CDash on open.cdash.org',
+            '',
+        ];
+
+        $expected = implode("\n", $body);
+        $actual = "{$notification->getBody()}";
         $this->assertEquals($expected, $actual);
     }
 }

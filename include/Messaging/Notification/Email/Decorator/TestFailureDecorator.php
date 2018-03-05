@@ -14,10 +14,9 @@ class TestFailureDecorator extends Decorator
      */
     private $template = "{{ name }} | {{ details }} | ({{ url }})\n";
 
-    public function addSubject($subject)
+    public function setTopic(Topic $topic)
     {
-        /** @var Topic $subject */
-        $tests = $subject->getTopicCollection();
+        $tests = $topic->getTopicCollection();
         $counter = 0;
         $data = [];
 

@@ -15,6 +15,9 @@ abstract class Decorator implements DecoratorInterface
     /** @var  int $maxTopicItems */
     protected $maxTopicItems;
 
+    /** @var int $maxChars */
+    protected $maxChars;
+
     /**
      * Decorator constructor.
      * @param DecoratorInterface|null $body
@@ -31,6 +34,16 @@ abstract class Decorator implements DecoratorInterface
     public function setMaxTopicItems(int $maxTopicItems)
     {
         $this->maxTopicItems = $maxTopicItems;
+        return $this;
+    }
+
+    /**
+     * @param int $maxChars
+     * @return $this
+     */
+    public function setMaxChars(int $maxChars)
+    {
+        $this->maxChars = $maxChars;
         return $this;
     }
 
