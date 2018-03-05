@@ -45,7 +45,7 @@ class TopicFactory
 
         foreach ($settings as $topic) {
             if ($preferences->notifyOn($topic)) {
-                $class_name = "{$topic}Topic";
+                $class_name = __NAMESPACE__ . "\\{$topic}Topic";
                 $instance = $container->create($class_name);
                 // these topics are special cases to be handled later
                 if (is_a($instance, DecoratableInterface::class)) {
