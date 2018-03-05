@@ -7,7 +7,7 @@ use CDash\Test\UseCase\UseCase;
 class CDashUseCaseTestCase extends CDashTestCase
 {
     /** @var  ServiceContainer $originalServiceContainer */
-    private  $originalServiceContainer;
+    private $originalServiceContainer;
 
     public function tearDown()
     {
