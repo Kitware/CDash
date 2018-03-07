@@ -69,8 +69,8 @@ class TopicFactory
             foreach ($topics as $topic) {
                 // do not decorate LabeledTopic
                 if (get_class($topic) === LabeledTopic::class) {
-                  $decorated[] = $topic;
-                  continue;
+                    $decorated[] = $topic;
+                    continue;
                 }
                 $decorated[] = new AuthoredTopic($topic);
             }

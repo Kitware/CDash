@@ -48,12 +48,12 @@ class EmailBuilder extends SubscriptionNotificationBuilder
      */
     protected function uniquifyTopics(SubscriptionInterface $subscription)
     {
-      $topics = $subscription->getTopicCollection();
+        $topics = $subscription->getTopicCollection();
 
-      $labeled = $topics->remove('Labeled');
-      if ($labeled) {
-        $labeled->mergeTopics($topics);
-      }
+        $labeled = $topics->remove('Labeled');
+        if ($labeled) {
+            $labeled->mergeTopics($topics);
+        }
     }
 
     /**

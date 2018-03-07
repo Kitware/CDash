@@ -28,14 +28,14 @@ interface CollectionInterface extends \Iterator, \Countable
      */
     public function get($key);
 
-      /**
-       * @param $key
-       * @return mixed
-       */
-      public function remove($key);
+    /**
+     * @param $key
+     * @return mixed
+     */
+    public function remove($key);
 
-      /**
-       * @return array
-       */
-      public function toArray();
+    /**
+     * @return array
+     */
+    public function toArray();
 }

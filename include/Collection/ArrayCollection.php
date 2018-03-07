@@ -8,7 +8,6 @@
 
 namespace CDash\Collection;
 
-
 class ArrayCollection extends Collection
 {
 }

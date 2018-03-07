@@ -27,9 +27,9 @@ class LabeledTopic extends Topic implements DecoratableInterface
 
         $buildLabels = $build->GetAggregatedLabels();
         foreach ($labels as $label) {
-          if (in_array($label, $buildLabels)) {
-            return true;
-          }
+            if (in_array($label, $buildLabels)) {
+                return true;
+            }
         }
         return false;
     }
@@ -85,12 +85,12 @@ class LabeledTopic extends Topic implements DecoratableInterface
 
     protected function getItemCollection(Collection $collection)
     {
-      $collectionClass = get_class($collection);
-      $topics = $this->getTopicCollection();
-      if (!$topics->has($collectionClass)) {
-        $topics->add(new $collectionClass());
-      }
-      return $topics->get($collectionClass);
+        $collectionClass = get_class($collection);
+        $topics = $this->getTopicCollection();
+        if (!$topics->has($collectionClass)) {
+            $topics->add(new $collectionClass());
+        }
+        return $topics->get($collectionClass);
     }
 
     public function mergeTopics(TopicCollection $topics)
@@ -131,10 +131,10 @@ class LabeledTopic extends Topic implements DecoratableInterface
 
     public function getTopicCollection()
     {
-      if (!$this->topicCollection) {
-        $this->topicCollection = new CollectionCollection();
-      }
-      return $this->topicCollection;
+        if (!$this->topicCollection) {
+            $this->topicCollection = new CollectionCollection();
+        }
+        return $this->topicCollection;
     }
 
     /**

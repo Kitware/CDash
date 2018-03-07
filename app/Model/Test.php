@@ -366,10 +366,10 @@ class Test
 
     public function isLabeled($label)
     {
-      $labels = array_unique(array_map(function ($label) {
-        return $label->Text;
-      }, $this->GetLabelCollection()->toArray()));
+        $labels = array_unique(array_map(function ($label) {
+            return $label->Text;
+        }, $this->GetLabelCollection()->toArray()));
 
-      return in_array($label, $labels);
+        return in_array($label, $labels);
     }
 }

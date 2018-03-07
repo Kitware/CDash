@@ -2905,22 +2905,22 @@ class Build
     {
         // TODO: This method reveals that Labels are being set twice, probably in the handler, fix
         if (!$this->AggregateLabels) {
-          $labels = $this->Labels ? $this->Labels : [];
+            $labels = $this->Labels ? $this->Labels : [];
 
-          foreach ($this->GetTestCollection() as $test) {
-            foreach ($test->GetLabelCollection() as $label) {
-              $labels[] = $label;
+            foreach ($this->GetTestCollection() as $test) {
+                foreach ($test->GetLabelCollection() as $label) {
+                    $labels[] = $label;
+                }
             }
-          }
 
-          $labels = array_unique(array_map(
+            $labels = array_unique(array_map(
             function ($label) {
-              return $label->Text;
+                return $label->Text;
             },
             $labels
           ));
 
-          $this->AggregateLabels = $labels;
+            $this->AggregateLabels = $labels;
         }
         return $this->AggregateLabels;
     }
@@ -2932,7 +2932,7 @@ class Build
 
     public function GetActionableType()
     {
-      return $this->ActionableType;
+        return $this->ActionableType;
     }
 
     public function GetLabelCollection()
@@ -2952,6 +2952,6 @@ class Build
             return $lbl->Text;
         }, $this->Labels);
 
-        return in_array($label,$labels);
+        return in_array($label, $labels);
     }
 }
