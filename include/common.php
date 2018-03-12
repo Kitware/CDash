@@ -1336,7 +1336,7 @@ function time2second($time)
  */
 function get_dates($date, $nightlytime)
 {
-    $nightlytime = strtotime($nightlytime);
+    $nightlytime = strtotime($nightlytime, strtotime($date));
 
     $nightlyhour = date('H', $nightlytime);
     $nightlyminute = date('i', $nightlytime);
