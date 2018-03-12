@@ -97,11 +97,10 @@ class CoverageSummary
         // Add the coverages
         // Construct the SQL query
         if (count($this->Coverages) > 0) {
-            $sql = 'INSERT INTO coverage (buildid,fileid,covered,loctested,locuntested,branchstested,branchsuntested,
-                functionstested,functionsuntested) VALUES ';
-
-            $i = 0;
             foreach ($this->Coverages as &$coverage) {
+                $sql = 'INSERT INTO coverage (buildid,fileid,covered,loctested,locuntested,branchstested,branchsuntested,
+                    functionstested,functionsuntested) VALUES ';
+
                 $fullpath = $coverage->CoverageFile->FullPath;
 
                 // GcovTarHandler creates its own coveragefiles, no need to do
@@ -193,16 +192,10 @@ class CoverageSummary
                     pdo_commit();
                 }
 
-                if ($i > 0) {
-                    $sql .= ', ';
-                } else {
-                    $i = 1;
-                }
                 $sql .= '(' . qnum($this->BuildId) . ',' . qnum($fileid) . ',' . qnum($covered) . ',' . qnum($loctested) . ',' . qnum($locuntested) . ',
                     ' . qnum($branchstested) . ',' . qnum($branchsuntested) .
                     ',' . qnum($functionstested) . ',' . qnum($functionsuntested) . ')';
-            }
-            if ($i > 0) {
+
                 // Insert into coverage
                 if (!pdo_query($sql)) {
                     add_last_sql_error('CoverageSummary Insert Coverage');
