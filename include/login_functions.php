@@ -252,7 +252,8 @@ function ldapAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
             }
             ldap_free_result($result);
         } else {
-            $loginerror = 'Error occured searching the LDAP';
+            $error = ldap_error($ldap);
+            $loginerror = "Error occured searching the LDAP: $error";
         }
         ldap_close($ldap);
     } else {
