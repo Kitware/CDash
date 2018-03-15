@@ -260,7 +260,7 @@ while ($row = pdo_fetch_array($result)) {
     $build_response['site'] = $row['sitename'];
     $build_response['buildName'] = $row['name'];
     $build_response['buildStamp'] = $row['stamp'];
-    $build_response['time'] = $row['time'];
+    $build_response['time'] = floatval($row['time']);
 
     $buildLink = "viewTest.php?buildid=$buildid";
     $build_response['buildid'] = $buildid;
