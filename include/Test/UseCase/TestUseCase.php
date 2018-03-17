@@ -23,6 +23,11 @@ class TestUseCase extends UseCase
     const TIMEOUT = 'Timeout';
     const NOTRUN = 'notrun';
 
+    public function __construct(array $properties = [])
+    {
+        parent::__construct('Test', $properties);
+    }
+
     /**
      * @return \AbstractHandler
      * @throws \Exception
