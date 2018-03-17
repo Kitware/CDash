@@ -222,7 +222,7 @@ class UpdateUseCase extends UseCase
     public function createPackage(array $properties)
     {
         if ($this->isSequential($properties)) {
-            list ($name, $file, $author) = $properties;
+            list($name, $file, $author) = $properties;
             $properties = [
                 'Name' => $name,
                 'File' => $file,
