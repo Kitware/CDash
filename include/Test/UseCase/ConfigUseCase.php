@@ -10,7 +10,7 @@ class ConfigUseCase extends UseCase
 {
     public function __construct(array $properties = [])
     {
-        $this->properties['Config'] = $properties;
+        parent::__construct('Config', $properties);
     }
 
     public function build()

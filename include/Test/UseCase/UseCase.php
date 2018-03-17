@@ -9,8 +9,15 @@ use DOMText;
 
 abstract class UseCase
 {
-    const TEST = 1;
-    const CONFIG = 2;
+    /* actionable steps */
+    const TEST = 'Test';
+    const CONFIG = 'Config';
+    const UPDATE = 'Update';
+
+    /* build types (modes) */
+    const NIGHTLY = 'Nightly';
+    const CONTINUOUS = 'Continuous';
+    const EXPERIMENTAL = 'Experimental';
 
     private $ids;
     protected $subprojects = [];
@@ -24,6 +31,14 @@ abstract class UseCase
 
     abstract public function build();
 
+    public function __construct($name, array $properties = [])
+    {
+        $this->properties[$name] = $properties;
+
+        $this->setStartTime(time());
+        $this->setEndTime(time()+1);
+    }
+
     /**
      * @param CDashUseCaseTestCase $testCase
      * @param $type
@@ -34,13 +49,16 @@ abstract class UseCase
         switch ($type) {
             case self::TEST:
                 $useCase = new TestUseCase();
-                $testCase->setUseCaseModelFactory($useCase);
-                return $useCase;
+                break;
             case self::CONFIG:
                 $useCase = new ConfigUseCase();
-                $testCase->setUseCaseModelFactory($useCase);
-                return $useCase;
+                break;
+            case self::UPDATE:
+                $useCase = new UpdateUseCase();
+                break;
         }
+        $testCase->setUseCaseModelFactory($useCase);
+        return $useCase;
     }
 
     /**
@@ -332,5 +350,18 @@ abstract class UseCase
     {
         $this->properties['Config']['elapsed'] = $minutes;
         return $this;
+    }
+
+    /**
+     * Checks if an array is associative, sequential or a mixture of both. Will return true
+     * only if all array keys are ints.
+     *
+     * @param array $array
+     * @return bool
+     * @ref https://gist.github.com/Thinkscape/1965669
+     */
+    public function isSequential(array $array)
+    {
+        return $array === array_values($array);
     }
 }
