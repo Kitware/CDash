@@ -20,6 +20,7 @@ class UpdateUseCaseTest extends CDashUseCaseTestCase
                 $sut->createPackage(['Src', 'NewFeature.cxx', 'Ricky Bobby']),
             ]);
 
+        // TODO: of course, make test more robust
         $handler = $sut->build();
         $this->assertInstanceOf(UpdateHandler::class, $handler);
     }
