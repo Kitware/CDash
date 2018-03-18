@@ -14,6 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use CDash\Collection\BuildCollection;
+
 require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
 require_once 'models/build.php';
@@ -36,16 +38,18 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface
     public function __construct($projectID, $scheduleID)
     {
         parent::__construct($projectID, $scheduleID);
-        $this->Build = new Build();
-        $this->Site = new Site();
+        $factory = $this->getModelFactory();
+        $this->Build = $factory->create(Build::class);
+        $this->Site = $factory->create(Site::class);
         $this->Append = false;
-        $this->Feed = new Feed();
+        $this->Feed = $factory->create(Feed::class);
     }
 
     /** Start element */
     public function startElement($parser, $name, $attributes)
     {
         parent::startElement($parser, $name, $attributes);
+        $factory = $this->getModelFactory();
         if ($name == 'UPDATE') {
             if (isset($attributes['GENERATOR'])) {
                 $this->Build->Generator = $attributes['GENERATOR'];
@@ -59,10 +63,10 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface
                 $this->Append = false;
             }
 
-            $this->Update = new BuildUpdate();
+            $this->Update = $factory->create(BuildUpdate::class);
             $this->Update->Append = $this->Append;
         } elseif ($name == 'UPDATED' || $name == 'CONFLICTING' || $name == 'MODIFIED') {
-            $this->UpdateFile = new BuildUpdateFile();
+            $this->UpdateFile = $factory->create(BuildUpdateFile::class);
             $this->UpdateFile->Status = $name;
         } elseif ($name == 'UPDATERETURNSTATUS') {
             $this->Update->Status = '';
@@ -216,9 +220,22 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface
 
     /**
      * @return Build[]
+     * @deprecated
      */
     public function getActionableBuilds()
     {
         return [$this->Build];
+    }
+
+    /**
+     * @return BuildCollection
+     */
+    public function GetBuildCollection()
+    {
+        $factory = $this->getModelFactory();
+        /** @var BuildCollection $collection */
+        $collection = $factory->create(BuildCollection::class);
+        $collection->add($this->Build);
+        return $collection;
     }
 }
