@@ -63,6 +63,7 @@ add_unit_test(/CDash/Model/Repository)
 add_unit_test(/CDash/Service/RepositoryService)
 add_unit_test(/CDash/ServiceContainer)
 add_unit_test(/CDash/TestUseCase)
+add_unit_test(/CDash/UpdateUseCase)
 
 add_php_test(install)
 add_php_test(compressedtest)

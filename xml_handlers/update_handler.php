@@ -14,6 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use CDash\Collection\BuildCollection;
+
 require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
 
@@ -40,8 +42,11 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface
     public function __construct($projectID, $scheduleID)
     {
         parent::__construct($projectID, $scheduleID);
+        $factory = $this->getModelFactory();
+        $this->Build = $factory->create(Build::class);
+        $this->Site = $factory->create(Site::class);
         $this->Append = false;
-        $this->Feed = new Feed();
+        $this->Feed = $factory->create(Feed::class);
     }
 
     /** Start element */
@@ -71,8 +76,6 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface
             $this->UpdateFile->Status = $name;
         } elseif ($name == 'UPDATERETURNSTATUS') {
             $this->Update->Status = '';
-        } elseif ($name == 'SITE') {
-            $this->Site = $factory->create(Site::class);
         }
     }
 
@@ -229,9 +232,22 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface
 
     /**
      * @return Build[]
+     * @deprecated
      */
     public function getActionableBuilds()
     {
         return $this->getBuilds();
+    }
+
+    /**
+     * @return BuildCollection
+     */
+    public function GetBuildCollection()
+    {
+        $factory = $this->getModelFactory();
+        /** @var BuildCollection $collection */
+        $collection = $factory->create(BuildCollection::class);
+        $collection->add($this->Build);
+        return $collection;
     }
 }
