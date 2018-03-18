@@ -123,10 +123,12 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $property = $useCaseReflection->getProperty('properties');
         $property->setAccessible(true);
         $actual = $property->getValue($sut);
-        $this->assertEmpty($actual);
+        $this->assertArrayHasKey('Test', $actual);
+        $this->assertEmpty($actual['Test']);
 
         $sut->setSiteAttribute('BuildStamp', '20180125-1724-Experimental');
-        $expected = ['Site' => [['BuildStamp' => '20180125-1724-Experimental']]];
+        // TODO: This is not what I would expect this structure to look like, Test -> [Site -> []]
+        $expected = ['Site' => [['BuildStamp' => '20180125-1724-Experimental']], 'Test' => []];
         $actual = $property->getValue($sut);
         $this->assertEquals($expected, $actual);
     }
