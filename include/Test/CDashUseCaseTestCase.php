@@ -35,7 +35,7 @@ class CDashUseCaseTestCase extends CDashTestCase
     {
         if (isset($model->SubProjectName)) {
             $this->model_id_cache[$model->SubProjectName] = $model->Id;
-        } else if (isset($model->Name)) {
+        } elseif (isset($model->Name)) {
             $this->model_id_cache[$model->Name] = (int) $model->Id;
         }
     }
