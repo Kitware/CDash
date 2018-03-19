@@ -7,11 +7,28 @@ use CDash\Test\UseCase\UseCase;
 
 class ConfigUseCaseTest extends CDashUseCaseTestCase
 {
+    private $cmd = '"/home/betsy/cmake_build/bin/cmake" "-DCTEST_USE_LAUNCHERS=1" "-GUnix Makefiles" "/home/betsy/cmake/Tests/CTestTestSubprojects"';
+    private $log = '
+        This is my configure. There is no other configure like it
+         CMake Warning: CMake is forcing CMAKE_CXX_COMPILER to "/usr/bin/c++"
+    ';
+    private $errors = 2;
+    private $warnings = 1;
+
     public function testUseCaseCreateBuilderReturnsInstanceOfConfigUseCase()
     {
         $sut = UseCase::createBuilder($this, UseCase::CONFIG);
         $this->assertInstanceOf(ConfigUseCase::class, $sut);
     }
+
+    private function checkConfigureForSameness(BuildConfigure $configure)
+    {
+        $this->assertEquals($this->errors, $configure->NumberOfErrors);
+        $this->assertEquals($this->warnings, $configure->NumberOfWarnings);
+        $this->assertEquals($this->log, $configure->Log);
+        $this->assertEquals($this->cmd, $configure->Command);
+    }
+
 
     public function testConfigUseCaseBuild()
     {
@@ -29,12 +46,9 @@ class ConfigUseCaseTest extends CDashUseCaseTestCase
             ->createSubproject('EmptySubproject')
             ->setStartTime(1469734334)
             ->setEndTime(1469734335)
-            ->setConfigureCommand('"/home/betsy/cmake_build/bin/cmake" "-DCTEST_USE_LAUNCHERS=1" "-GUnix Makefiles" "/home/betsy/cmake/Tests/CTestTestSubprojects"')
-            ->setConfigureStatus(2)
-            ->setConfigureLog('
-                This is my configure. There is no other configure like it
-                CMake Warning: CMake is forcing CMAKE_CXX_COMPILER to "/usr/bin/c++"
-            ');
+            ->setConfigureCommand($this->cmd)
+            ->setConfigureStatus($this->errors)
+            ->setConfigureLog($this->log);
         $handler = $sut->build();
         $this->assertInstanceOf(ConfigureHandler::class, $handler);
 
@@ -44,22 +58,18 @@ class ConfigUseCaseTest extends CDashUseCaseTestCase
         $this->assertCount(4, $buildCollection);
         $build = $buildCollection->get('MyExperimentalFeature');
         $buildConfiguration = $build->GetBuildConfigure();
+        $this->checkConfigureForSameness($buildConfiguration);
 
         $build = $buildCollection->get('MyProductionCode');
-        $this->assertSame($buildConfiguration, $build->GetBuildConfigure());
+        $buildConfiguration = $build->GetBuildConfigure();
+        $this->checkConfigureForSameness($buildConfiguration);
 
         $build = $buildCollection->get('MyThirdPartyDependency');
-        $this->assertSame($buildConfiguration, $build->GetBuildConfigure());
+        $buildConfiguration = $build->GetBuildConfigure();
+        $this->checkConfigureForSameness($buildConfiguration);
 
         $build = $buildCollection->get('EmptySubproject');
-        $this->assertSame($buildConfiguration, $build->GetBuildConfigure());
-
-        $expected = 2;
-        $actual = $buildConfiguration->NumberOfErrors;
-        $this->assertEquals($expected, $actual);
-
-        $expected = 1;
-        $actual = $buildConfiguration->NumberOfWarnings;
-        $this->assertEquals($expected, $actual);
+        $buildConfiguration = $build->GetBuildConfigure();
+        $this->checkConfigureForSameness($buildConfiguration);
     }
 }

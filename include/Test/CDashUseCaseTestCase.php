@@ -78,6 +78,11 @@ class CDashUseCaseTestCase extends CDashTestCase
                 $model->expects($this->any())
                     ->method('Insert')
                     ->willReturnCallback(function () use ($class_name, $model, $useCase) {
+                        // TODO: discuss
+                        if (!property_exists($model, 'Id')) {
+                            $model->Id = null;
+                        }
+
                         if (!$model->Id) {
                             $model->Id = $useCase->getIdForClass($class_name);
                             $this->setCachedModelId($model);
