@@ -93,6 +93,8 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
         $project = $this->submission->GetProject();
         $project->EmailMaxItems = 5;
         $project->EmailMaxChars = 255;
+        $project->Name = 'CDashUseCaseProject';
+
         $subscriberCollection = new SubscriberCollection();
 
         foreach ($subscribers as $entry) {
@@ -209,6 +211,19 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
         $notification = $notifications->get('user_1@company.tld');
         $this->assertInstanceOf(NotificationInterface::class, $notification);
 
+        $id = [
+            'BuildOne' => $this->getCachedModelId('BuildOne'),
+            'BuildTwo' => $this->getCachedModelId('BuildTwo'),
+            'BuildThree' => $this->getCachedModelId('BuildThree'),
+            'BuildFive' => $this->getCachedModelId('BuildFive'),
+            'test_fail_one' => $this->getCachedModelId('test_fail_one'),
+            'test_timedout_one' => $this->getCachedModelId('test_timedout_one'),
+            'test_fail_two' => $this->getCachedModelId('test_fail_two'),
+            'test_timedout_two' => $this->getCachedModelId('test_timedout_two'),
+            'test_fail_three' => $this->getCachedModelId('test_fail_three'),
+            'test_fail_four' => $this->getCachedModelId('test_fail_four'),
+        ];
+
         $body = [
             'A submission to CDash for the project CDashUseCaseProject has failing tests. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.',
             '',
@@ -223,11 +238,11 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
             '',
             '',
             '*Tests Failing* (first 5 included)',
-            'test_fail_one | Completed (Failed) | (http://open.cdash.org/testDetails.php?test=&build=)',
-            'test_timedout_one | Completed (Timeout) | (http://open.cdash.org/testDetails.php?test=&build=)',
-            'test_fail_two | Completed (Failed) | (http://open.cdash.org/testDetails.php?test=&build=)',
-            'test_timedout_two | Completed (Timeout) | (http://open.cdash.org/testDetails.php?test=&build=)',
-            'test_fail_three | Completed (Failed) | (http://open.cdash.org/testDetails.php?test=&build=)',
+            "test_fail_one | Completed (Failed) | (http://open.cdash.org/testDetails.php?test={$id['test_fail_one']}&build={$id['BuildOne']})",
+            "test_timedout_one | Completed (Timeout) | (http://open.cdash.org/testDetails.php?test={$id['test_timedout_one']}&build={$id['BuildOne']})",
+            "test_fail_two | Completed (Failed) | (http://open.cdash.org/testDetails.php?test={$id['test_fail_two']}&build={$id['BuildTwo']})",
+            "test_timedout_two | Completed (Timeout) | (http://open.cdash.org/testDetails.php?test={$id['test_timedout_two']}&build={$id['BuildTwo']})",
+            "test_fail_three | Completed (Failed) | (http://open.cdash.org/testDetails.php?test={$id['test_fail_three']}&build={$id['BuildThree']})",
             '',
             '',
             '-CDash on open.cdash.org',
@@ -257,9 +272,9 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
             '',
             '',
             '*Tests Failing*',
-            'test_fail_two | Completed (Failed) | (http://open.cdash.org/testDetails.php?test=&build=)',
-            'test_timedout_two | Completed (Timeout) | (http://open.cdash.org/testDetails.php?test=&build=)',
-            'test_fail_four | Completed (Failed) | (http://open.cdash.org/testDetails.php?test=&build=)',
+            "test_fail_two | Completed (Failed) | (http://open.cdash.org/testDetails.php?test={$id['test_fail_two']}&build={$id['BuildTwo']})",
+            "test_timedout_two | Completed (Timeout) | (http://open.cdash.org/testDetails.php?test={$id['test_timedout_two']}&build={$id['BuildTwo']})",
+            "test_fail_four | Completed (Failed) | (http://open.cdash.org/testDetails.php?test={$id['test_fail_four']}&build={$id['BuildFive']})",
             '',
             '',
             '-CDash on open.cdash.org',
@@ -289,7 +304,7 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
             '',
             '',
             '*Tests Failing*',
-            'test_fail_three | Completed (Failed) | (http://open.cdash.org/testDetails.php?test=&build=)',
+            "test_fail_three | Completed (Failed) | (http://open.cdash.org/testDetails.php?test={$id['test_fail_three']}&build={$id['BuildThree']})",
             '',
             '',
             '-CDash on open.cdash.org',
@@ -305,7 +320,7 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
 
     public function testAllAtOnceConfigureErrors()
     {
-        $this->useCase = UseCase::createBuilder($this, UseCase::CONFIGURE)
+        $this->useCase = UseCase::createBuilder($this, UseCase::CONFIG)
             ->createSite([
                 'BuildName' => 'SomeOS-SomeBuild',
                 'BuildStamp' => '20180122-0100-Experimental',
@@ -386,6 +401,11 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
         $actual = $notification->getSubject();
         $this->assertEquals($expected, $actual);
 
+        // In the test environment a buildid of 0 implies that the build is a parent build
+        // which is maybe not ideal, but does suggest that the correct id is being set because
+        // in the test environment, where models are mocked, the ParentId property is initialized
+        // to 0 and is only updated with actual calls to the database.
+        // TODO: determine if using the initialized ParentId is prone to error
         $body = [
             'A submission to CDash for the project CDashUseCaseProject has configure errors. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.',
             '',
@@ -399,7 +419,7 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
             'Total Configure Errors: 2',
             '',
             '*Configure*',
-            'Status: 2 (http://open.cdash.org/viewConfigure.php?buildid=)',
+            "Status: 2 (http://open.cdash.org/viewConfigure.php?buildid=0)",
             'Output: Running CMake to regenerate build system...',
             '        CDASH_DIR_NAME = CDash',
             '        Using url: http://localhost/CDash',
@@ -431,10 +451,7 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
         $notification = $notifications->get('user_4@company.tld');
         $this->assertNotNull($notification);
 
-        $expected = 'FAILED (c=2) CDashUseCaseProject/BuildTres - SomeOS-SomeBuild - Experimental';
-        $actual = $notification->getSubject();
-        $this->assertEquals($expected, $actual);
-
+        $buildid = $this->getCachedModelId('BuildThree');
         $body = [
             'A submission to CDash for the project CDashUseCaseProject has configure errors. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.',
             '',
@@ -449,7 +466,7 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
             'Total Configure Errors: 2',
             '',
             '*Configure*',
-            'Status: 2 (http://open.cdash.org/viewConfigure.php?buildid=)',
+            "Status: 2 (http://open.cdash.org/viewConfigure.php?buildid={$buildid})",
             'Output: Running CMake to regenerate build system...',
             '        CDASH_DIR_NAME = CDash',
             '        Using url: http://localhost/CDash',
@@ -462,6 +479,10 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
 
         $expected = implode("\n", $body);
         $actual = "{$notification->getBody()}";
+        $this->assertEquals($expected, $actual);
+
+        $expected = 'FAILED (c=2) CDashUseCaseProject/BuildTres - SomeOS-SomeBuild - Experimental';
+        $actual = $notification->getSubject();
         $this->assertEquals($expected, $actual);
     }
 }
