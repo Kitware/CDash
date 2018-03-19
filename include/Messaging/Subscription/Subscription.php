@@ -183,6 +183,7 @@ class Subscription implements SubscriptionInterface
             $summary['labels'] = [];
             $summary['build_time'] = '';
             $summary['build_type'] = '';
+            $summary['build_parent_id'] = null;
 
             foreach ($topics as $topic) {
                 $name = $topic->getTopicName();
@@ -195,6 +196,7 @@ class Subscription implements SubscriptionInterface
 
                 $summary['labels'] = array_merge($summary['labels'], $topic->getLabels());
 
+                /** @var Build $build */
                 foreach ($builds as $build) {
                     if ($build->SubProjectName) {
                         $summary['build_subproject_names'][] = $build->SubProjectName;
@@ -210,6 +212,10 @@ class Subscription implements SubscriptionInterface
 
                     if (empty($summary['build_type'])) {
                         $summary['build_type'] = $build->Type;
+                    }
+
+                    if (is_null($summary['build_parent_id'])) {
+                        $summary['build_parent_id'] = $build->GetParentId();
                     }
                 }
             }
