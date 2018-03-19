@@ -11,11 +11,25 @@ class ConfigureDecorator extends Decorator
     public function setTopic(Topic $topic)
     {
         $collection = $topic->getTopicCollection();
+        /** @var \BuildConfigure $configure */
         $configure = $collection->current();
         $log = $this->processLog($configure->Log);
+        $builds = $topic->getBuildCollection();
+        $id = null;
+
+        // if the builds are subprojects we want to point to the url of the parent
+        // which will display all of the subproject configurations (which themselves are
+        // identical to one another).
+        if ($builds->count() > 1) {
+            /** @var \Build $build */
+            $builds->rewind();
+            $build = $builds->current();
+            $id = $build->GetParentId();
+        }
+
         $data = [
             'status' => $configure->Status,
-            'url' => $configure->getURL(),
+            'url' => $configure->getURL($id),
             'log' => $log,
         ];
 

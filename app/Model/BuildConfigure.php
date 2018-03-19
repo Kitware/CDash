@@ -378,9 +378,10 @@ class BuildConfigure
         return $response;
     }
 
-    public function getURL()
+    public function getURL(int $default_id = null)
     {
         $config = \CDash\Config::getInstance();
-        return "{$config->getBaseUrl()}/viewConfigure.php?buildid={$this->BuildId}";
+        $id = is_null($default_id) ? $this->BuildId : $default_id;
+        return "{$config->getBaseUrl()}/viewConfigure.php?buildid={$id}";
     }
 }
