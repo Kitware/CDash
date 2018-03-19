@@ -103,6 +103,7 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
                 $build = $factory->create(Build::class); // new Build();
                 $build->SiteId = $this->Site->Id;
                 $build->Name = $this->BuildName;
+                $build->SubProjectName = $this->SubProjectName;
                 $build->SetStamp($this->BuildStamp);
                 $build->Generator = $this->Generator;
                 $build->Information = $this->BuildInformation;
@@ -144,8 +145,11 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
             $all_at_once = count($this->Builds) > 1;
             $parent_duration_set = false;
 
+            /**
+             * @var string $subproject
+             * @var  Build $build
+             */
             foreach ($this->Builds as $subproject => $build) {
-                $build->SetBuildConfigure($this->Configure);
                 $build->ProjectId = $this->projectid;
                 $build->StartTime = $start_time;
                 $build->EndTime = $end_time;
@@ -201,6 +205,9 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
                     $parent_build->SetConfigureDuration($duration, false);
                     $parent_duration_set = true;
                 }
+
+                $configure = clone $this->Configure;
+                $build->SetBuildConfigure($configure);
             }
 
             // Update the tally of warnings & errors in the parent build,
