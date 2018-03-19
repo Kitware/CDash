@@ -12,43 +12,15 @@ use CDash\Messaging\Topic\TestFailureTopic;
 
 class TopicFactory
 {
-    /**
-     * @param NotificationPreferences $preferences
-     * @return TopicInterface[]
-     */
-    /*
     public static function createFrom(NotificationPreferences $preferences)
     {
         $topics = [];
-        foreach ($preferences->getPropertyNames() as $topic) {
-            if ($preferences->notifyOn($topic)) {
-                $instance = self::create($topic);
-                // Putting our subscription killer at the front of the queue
-                // will prevent the unnecessary checking of other topics
-                // should the topic not meet the specified criteria (e.g. not the author)
-                if (is_a($instance, CancelationInterface::class)) {
-                    array_unshift($topics, $instance);
-                } else {
-                    $topics[] = $instance;
-                }
-            }
-        }
-        return $topics;
-    }
-    */
-
-    public static function createFrom(NotificationPreferences $preferences)
-    {
-        $topics = [];
-        $container = ServiceContainer::getInstance();
         $settings = $preferences->getPropertyNames();
 
         foreach ($settings as $topic) {
             if ($preferences->notifyOn($topic)) {
-                $class_name = __NAMESPACE__ . "\\{$topic}Topic";
-                $instance = $container->create($class_name);
-                // these topics are special cases to be handled later
-                if (is_a($instance, DecoratableInterface::class)) {
+                $instance = self::create($topic);
+                if ($instance) {
                     $topics[] = $instance;
                 }
             }
@@ -86,23 +58,16 @@ class TopicFactory
      * considering the future and what the FilterTopic might look like.)
      *
      * @param $topicName
-     * @return TopicInterface
-     * @throws \Exception
-     *
-     * TODO: consider DI package
+     * @return TopicInterface|null
      */
     protected static function create($topicName)
     {
         switch ($topicName) {
-            case 'AnyCheckinIssue':
-                return new AnyCheckinIssueTopic();
             case 'BuildError':
                 return new BuildErrorTopic();
             case 'BuildWarning':
                 return new BuildWarningTopic();
-            case 'CheckinIssueNightlyOnly':
-                return new CheckinIssueNightlyOnlyTopic();
-            case 'ConfigureError':
+            case 'Configure':
                 return new ConfigureTopic();
             case 'DynamicAnalysis':
                 return new DynamicAnalysisTopic();
@@ -110,16 +75,14 @@ class TopicFactory
                 return new ExpectedSiteSubmitMissing();
             case 'Fixed':
                 return new FixedTopic();
-            case 'Label':
+            case 'Labeled':
                 return new LabeledTopic();
-            case 'MyCheckinIssue':
-                return new AuthoredTopic();
             case 'TestFailure':
-                return new TestFailureTopic(new TestCollection());
+                return new TestFailureTopic();
             case 'UpdateError':
                 return new UpdateErrorTopic();
             default:
-                throw new \Exception("{$topicName} is not a known topic.");
+                return null;
         }
     }
 }

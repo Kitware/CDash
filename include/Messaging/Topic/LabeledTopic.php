@@ -93,6 +93,12 @@ class LabeledTopic extends Topic implements DecoratableInterface
         return $topics->get($collectionClass);
     }
 
+    /**
+     * When a LabeledTopic's collection is removed from the subscription, its contents must be
+     * merged back into the subscriber's topic collection avoiding duplication of topics.
+     *
+     * @param TopicCollection $topics
+     */
     public function mergeTopics(TopicCollection $topics)
     {
         foreach ($topics as $topic) {

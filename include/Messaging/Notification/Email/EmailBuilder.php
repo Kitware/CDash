@@ -43,6 +43,12 @@ class EmailBuilder extends SubscriptionNotificationBuilder
     }
 
     /**
+     * The purpose of this method is to remove duplicate topics from the topic collection. It is
+     * possible to have duplicate topics under the conditions where, say, a build was included
+     * because the build was authored by the user then included again because it matched a label
+     * to which the user is subscribed. Duplicates must be removed so that they are not output
+     * multiple times by the notification decorators.
+     *
      * @param SubscriptionInterface $subscription
      * @return void
      */
