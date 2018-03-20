@@ -1,7 +1,8 @@
 <?php
 use CDash\Collection\BuildCollection;
+use CDash\Test\CDashTestCase;
 
-class BuildCollectionTest extends \PHPUnit_Framework_TestCase
+class BuildCollectionTest extends CDashTestCase
 {
     public function testForeachReturnsNextItemInCollection()
     {

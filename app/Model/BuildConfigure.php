@@ -18,6 +18,8 @@ namespace CDash\Model;
 use PDO;
 use CDash\Database;
 
+use CDash\Database;
+
 /** BuildConfigure class */
 class BuildConfigure
 {

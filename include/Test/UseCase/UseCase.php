@@ -13,6 +13,7 @@ abstract class UseCase
     const TEST = 'Test';
     const CONFIG = 'Config';
     const UPDATE = 'Update';
+    const BUILD = 'Build';
 
     /* build types (modes) */
     const NIGHTLY = 'Nightly';

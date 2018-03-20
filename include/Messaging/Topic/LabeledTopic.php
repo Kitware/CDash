@@ -2,7 +2,6 @@
 namespace CDash\Messaging\Topic;
 
 use Build;
-use CDash\Collection\ArrayCollection;
 use CDash\Collection\Collection;
 use CDash\Collection\CollectionCollection;
 use CDash\Collection\ConfigureCollection;
@@ -11,7 +10,7 @@ use CDash\Collection\TestCollection;
 
 class LabeledTopic extends Topic implements DecoratableInterface
 {
-    /** @var  ArrayCollection $labeledCollection */
+    /** @var  CollectionCollection $labeledCollection */
     protected $topicCollection;
 
     /**

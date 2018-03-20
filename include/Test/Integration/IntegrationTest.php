@@ -10,6 +10,7 @@ use CDash\Messaging\Notification\NotificationInterface;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Subscription\SubscriptionBuilder;
 use CDash\Test\UseCase\TestUseCase;
+use CDash\Test\UseCase\UpdateUseCase;
 use CDash\Test\UseCase\UseCase;
 
 class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
@@ -27,6 +28,8 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
 
     /** @var  Project|PHPUnit_Framework_MockObject_MockObject $project */
     private $project;
+
+    private $useCase;
 
     public static function setUpBeforeClass()
     {
@@ -484,5 +487,30 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
         $expected = 'FAILED (c=2) CDashUseCaseProject/BuildTres - SomeOS-SomeBuild - Experimental';
         $actual = $notification->getSubject();
         $this->assertEquals($expected, $actual);
+    }
+
+    public function testUpdateUseCaseBuild()
+    {
+        $this->useCase = UseCase::createBuilder($this, UseCase::UPDATE);
+        $this->useCase
+            ->setSite('site.mirror')
+            ->setBuildName('Linux-g++-0.1-NewFeature_Dev')
+            ->setBuildType(UseCase::EXPERIMENTAL)
+            ->setUpdateCommand('git fetch')
+            ->setRevision($this->useCase->createRevisionHash())
+            ->setPriorRevision($this->useCase->createRevisionHash())
+            ->setPackages([
+               $this->useCase->createPackage(['Doxygen', 'ADoc.i', 'Ricky Bobby']),
+               $this->useCase->createPackage(['Doxygen', 'BDoc.i', 'Texas R. Bobby']),
+               $this->useCase->createPackage(['Src', 'NewFeature.cxx', 'Ricky Bobby']),
+            ]);
+        $handler = $this->useCase->build();
+        $this->assertInstanceOf(UpdateHandler::class, $handler);
+    }
+
+    public function testBuildUseCase()
+    {
+        $this->useCase = UseCase::createBuilder($this, UseCase::BUILD);
+
     }
 }
