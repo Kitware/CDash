@@ -14,9 +14,13 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use CDash\Config;
+use CDash\Controller\Auth\Session;
+use CDash\ServiceContainer;
+use CDash\Database;
+
 require_once 'models/user.php';
-global $pdo;
-$pdo = get_link_identifier()->getPdo();
+$pdo = Database::getInstance()->getPdo();
 
 function setRememberMeCookie($userId)
 {
@@ -38,10 +42,15 @@ function setRememberMeCookie($userId)
 /** Database authentication */
 function databaseAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
 {
-    global $CDASH_COOKIE_EXPIRATION_TIME, $CDASH_EXTERNAL_AUTH, $loginerror;
+    global $loginerror;
     $loginerror = '';
 
-    $user = new User();
+    $config = Config::getInstance();
+    $service = ServiceContainer::getInstance();
+    /** @var Session $session */
+    $session = $service->get(Session::class);
+    $user = $service->create(User::class);
+
     $userid = $user->GetIdFromEmail($email);
     if (!$userid) {
         $loginerror = 'Wrong email or password.';
@@ -56,11 +65,17 @@ function databaseAuthenticate($email, $password, $SessionCachePolicy, $rememberm
         return false;
     }
 
-    if ($password === null && isset($CDASH_EXTERNAL_AUTH) && $CDASH_EXTERNAL_AUTH) {
+    if ($password === null && $config->get('CDASH_EXTERNAL_AUTH')) {
         // External authentication succeeded.
         // Create the session array.
-        $sessionArray = array('login' => $email, 'passwd' => null, 'ID' => session_id(), 'valid' => 1, 'loginid' => $userid);
-        $_SESSION['cdash'] = $sessionArray;
+        $session->setSessionVar('cdash', [
+            'login' => $email,
+            'passwd' => null,
+            'ID' => $session->getSessionId(),
+            'valid' => 1,
+            'loginid' => $userid,
+        ]);
+
         return true;
     } else {
         $success = false;
@@ -70,6 +85,8 @@ function databaseAuthenticate($email, $password, $SessionCachePolicy, $rememberm
             // Re-hash this password using an algorithm that's more secure than md5.
             // Do not attempt this before the database has been upgraded
             // to accommodate the increased length of this field.
+
+            // TODO: clean up globals
             global $CDASH_DB_TYPE, $pdo;
             $db_check = true;
             if ($CDASH_DB_TYPE != 'pgsql') {
@@ -98,22 +115,24 @@ function databaseAuthenticate($email, $password, $SessionCachePolicy, $rememberm
                 setRememberMeCookie($userid);
             }
 
-            session_name('CDash');
-            session_cache_limiter($SessionCachePolicy);
-            session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
-            @ini_set('session.gc_maxlifetime', $CDASH_COOKIE_EXPIRATION_TIME + 600);
-            session_start();
+            $session->start($SessionCachePolicy);
+            $session->setSessionVar('cdash', [
+                'login' => $email,
+                'passwd' => $user->Password,
+                'ID' => $session->getSessionId(),
+                'valid' => 1,
+                'loginid' => $userid,
+            ]);
 
-            // Create the session array.
-            $sessionArray = array('login' => $email, 'passwd' => $user->Password, 'ID' => session_id(), 'valid' => 1, 'loginid' => $userid);
-            $_SESSION['cdash'] = $sessionArray;
-
+            // TODO: responsibility probably belongs to user model
             checkForExpiredPassword();
+
+            // TODO: responsibility probably belongs to session class
             clearUnsuccessfulAttempts($userid);
             return true;
         }
     }
-
+    // TODO: resposibility probably belongs to session class
     incrementUnsuccessfulAttempts($userid);
     $loginerror = 'Wrong email or password.';
     return false;
@@ -122,23 +141,35 @@ function databaseAuthenticate($email, $password, $SessionCachePolicy, $rememberm
 /** LDAP authentication */
 function ldapAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
 {
+    $config = Config::getInstance();
     global $loginerror;
     $loginerror = '';
 
-    include dirname(__DIR__) . '/config/config.php';
+    $ldap = ldap_connect($config->get('CDASH_LDAP_HOSTNAME'));
+    ldap_set_option(
+        $ldap,
+        LDAP_OPT_PROTOCOL_VERSION,
+        $config->get('CDASH_LDAP_PROTOCOL_VERSION')
+    );
+    ldap_set_option(
+        $ldap,
+        LDAP_OPT_REFERRALS,
+        $config->get('CDASH_LDAP_OPT_REFERRALS')
+    );
 
-    $ldap = ldap_connect($CDASH_LDAP_HOSTNAME);
-    ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, $CDASH_LDAP_PROTOCOL_VERSION);
-    ldap_set_option($ldap, LDAP_OPT_REFERRALS, $CDASH_LDAP_OPT_REFERRALS);
     // Bind as the LDAP user if authenticated ldap is enabled
-    if ($CDASH_LDAP_AUTHENTICATED) {
-        ldap_bind($ldap, $CDASH_LDAP_BIND_DN, $CDASH_LDAP_BIND_PASSWORD);
+    if ($config->get('CDASH_LDAP_AUTHENTICATED')) {
+        ldap_bind(
+            $ldap,
+            $config->get('CDASH_LDAP_BIND_DN'),
+            $config->get('CDASH_LDAP_BIND_PASSWORD')
+        );
     }
 
     if (isset($ldap) && $ldap != '') {
         /* search for pid dn */
-        $result = ldap_search($ldap, $CDASH_LDAP_BASEDN,
-            '(&(mail=' . $email . ')' . $CDASH_LDAP_FILTER . ')', array('dn', 'cn'));
+        $result = ldap_search($ldap, $config->get('CDASH_LDAP_BASEDN'),
+            '(&(mail=' . $email . ')' . $config->get('CDASH_LDAP_FILTER') . ')', array('dn', 'cn'));
         if ($result != 0) {
             $entries = ldap_get_entries($ldap, $result);
             @$principal = $entries[0]['dn'];
@@ -207,18 +238,17 @@ function ldapAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
                         $user->SetCookieKey($key);
                     }
 
-                    session_name('CDash');
-                    session_cache_limiter($SessionCachePolicy);
-                    session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
-                    @ini_set('session.gc_maxlifetime', $CDASH_COOKIE_EXPIRATION_TIME + 600);
-                    session_start();
-
-                    // create the session array
-                    if (isset($_SESSION['cdash']['password'])) {
-                        $password = $_SESSION['cdash']['password'];
-                    }
-                    $sessionArray = array('login' => $email, 'passwd' => $storedPassword, 'ID' => session_id(), 'valid' => 1, 'loginid' => $userid);
-                    $_SESSION['cdash'] = $sessionArray;
+                    $service = ServiceContainer::getInstance();
+                    /** @var  Session $session */
+                    $session = $service->create(\CDash\Controller\Auth\Session::class);
+                    $session->start($SessionCachePolicy);
+                    $session->setSessionVar('cdash', [
+                        'login' => $email,
+                        'passwd' => $storedPassword,
+                        'ID' => $session->getSessionId(),
+                        'valid' => 1,
+                        'loginid' => $userid
+                    ]);
                     return true;
                 } else {
                     $loginerror = 'Wrong email or password.';
@@ -233,7 +263,7 @@ function ldapAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
         }
         ldap_close($ldap);
     } else {
-        $loginerror = 'Could not connect to LDAP at ' . $CDASH_LDAP_HOSTNAME;
+        $loginerror = 'Could not connect to LDAP at ' . $config->get('CDASH_LDAP_HOSTNAME');
     }
     return false;
 }
@@ -241,14 +271,18 @@ function ldapAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
 /** authentication */
 function authenticate($email, $password, $SessionCachePolicy, $rememberme)
 {
+    $config = Config::getInstance();
+    $service = ServiceContainer::getInstance();
     if (empty($email)) {
         return 0;
     }
     include dirname(__DIR__) . '/config/config.php';
 
-    if ($CDASH_USE_LDAP) {
+    if ($config->get('CDASH_USE_LDAP')) {
         // If the user is '1' we use it to login
-        $user = new User();
+        // $user = new User();
+        /** @var User $user */
+        $user = $service->create(User::class);
         $userid = $user->GetIdFromEmail($email);
         if ($userid == 1) {
             return databaseAuthenticate($email, $password, $SessionCachePolicy, $rememberme);
@@ -266,11 +300,9 @@ function authenticate($email, $password, $SessionCachePolicy, $rememberme)
  **/
 function auth($SessionCachePolicy = 'private_no_expire')
 {
-    include dirname(__DIR__) . '/config/config.php';
-    $loginid = 1231564132;
+    $config = Config::getInstance();
 
-    if (isset($CDASH_EXTERNAL_AUTH) && $CDASH_EXTERNAL_AUTH
-        && isset($_SERVER['REMOTE_USER'])
+    if ($config->get('CDASH_EXTERNAL_AUTH') && isset($_SERVER['REMOTE_USER'])
     ) {
         $login = $_SERVER['REMOTE_USER'];
         return authenticate($login, null, $SessionCachePolicy, 0); // we don't remember
@@ -288,6 +320,10 @@ function auth($SessionCachePolicy = 'private_no_expire')
         return authenticate($login, $passwd, $SessionCachePolicy, isset($_POST['rememberme']));
     } else {                                         // arrive from session var
         $cookiename = str_replace('.', '_', 'CDash-' . $_SERVER['SERVER_NAME']); // php doesn't like dot in cookie names
+        $service = ServiceContainer::getInstance();
+        /** @var Session $session */
+        $session = $service->get(Session::class);
+
         if (isset($_COOKIE[$cookiename])) {
             $cookievalue = $_COOKIE[$cookiename];
             $cookiekey = substr($cookievalue, strlen($cookievalue) - 33);
@@ -295,16 +331,18 @@ function auth($SessionCachePolicy = 'private_no_expire')
                 return false;
             }
             $cookieuseridkey = substr($cookievalue, 0, strlen($cookievalue) - 33);
-            $user = new User();
+            // $user = new User();
+            /** @var \User $userid */
+            $user = $service->create(User::class);
             if ($user->FillFromCookie($cookiekey, $cookieuseridkey)) {
-                session_name('CDash');
-                session_cache_limiter($SessionCachePolicy);
-                session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
-                @ini_set('session.gc_maxlifetime', $CDASH_COOKIE_EXPIRATION_TIME + 600);
-                session_start();
-
-                $sessionArray = array('login' => $user->Email, 'passwd' => $user->Password, 'ID' => session_id(), 'valid' => 1, 'loginid' => $user->Id);
-                $_SESSION['cdash'] = $sessionArray;
+                $session->start($SessionCachePolicy);
+                $session->setSessionVar('cdash', [
+                    'login' => $user->Email,
+                    'passwd' => $user->Password,
+                    'ID' => session_id(),
+                    'valid' => 1,
+                    'loginid' => $user->Id
+                ]);
                 return true;
             }
         }
@@ -314,16 +352,12 @@ function auth($SessionCachePolicy = 'private_no_expire')
             return;
         }
 
-        session_name('CDash');
-        session_cache_limiter($SessionCachePolicy);
-        session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
-        @ini_set('session.gc_maxlifetime', $CDASH_COOKIE_EXPIRATION_TIME + 600);
-        session_start();
-
-        $email = @$_SESSION['cdash']['login'];
+        $session->start($SessionCachePolicy);
+        $email = $session->getSessionVar('cdash.login');
 
         if (!empty($email)) {
-            $user = new User();
+            /** @var \User $userid */
+            $user = $service->create(User::class);
             $userid = $user->GetIdFromEmail($email);
             if (!$userid) {
                 $loginerror = 'Wrong email or password.';
@@ -333,7 +367,7 @@ function auth($SessionCachePolicy = 'private_no_expire')
             $user->Id = $userid;
             $user->Fill();
 
-            if ($user->Password == $_SESSION['cdash']['passwd']) {
+            if ($user->Password == $session->getSessionVar('cdash.passwd')) {
                 return true;
             }
             $loginerror = 'Wrong email or password.';
@@ -345,11 +379,11 @@ function auth($SessionCachePolicy = 'private_no_expire')
 /** Log out the current user. */
 function logout()
 {
-    session_name('CDash');
-    session_cache_limiter('nocache');
-    @session_start();
-    unset($_SESSION['cdash']);
-    session_destroy();
+    $service = ServiceContainer::getInstance();
+    /** @var Session $session */
+    $session = $service->get(Session::class);
+    $session->start(Session::CACHE_NOCACHE);
+    $session->destroy();
 
     // Remove the cookie if we have one
     $cookienames = array('CDash', str_replace('.', '_', 'CDash-' . $_SERVER['SERVER_NAME'])); // php doesn't like dot in cookie names
@@ -357,7 +391,9 @@ function logout()
         if (isset($_COOKIE[$cookiename])) {
             $cookievalue = $_COOKIE[$cookiename];
             $cookieuseridkey = substr($cookievalue, 0, strlen($cookievalue) - 33);
-            $user = new User();
+            // $user = new User();
+            /** @var User $user */
+            $user = $service->create(User::class);
             $user->Id = $cookieuseridkey;
             $user->SetCookieKey('');
             setcookie('CDash-' . $_SERVER['SERVER_NAME'], '', time() - 3600);

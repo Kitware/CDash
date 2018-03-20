@@ -14,6 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use CDash\ServiceContainer;
+
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 $noforcelogin = 1;
@@ -24,6 +26,7 @@ require_once 'include/version.php';
 require_once 'models/project.php';
 
 $start = microtime_float();
+$service = ServiceContainer::getInstance();
 
 $response = array();
 if (!$session_OK) {
@@ -45,7 +48,7 @@ if (!isset($userid) || !is_numeric($userid)) {
     return;
 }
 
-$Project = new Project;
+$Project = $service->create(Project::class);
 $projectid = null;
 if (isset($_GET['projectid'])) {
     $projectid = pdo_real_escape_numeric($_GET['projectid']);
@@ -59,7 +62,8 @@ if (isset($_GET['projectid'])) {
     }
 }
 
-$User = new User;
+$User = $service->create(User::class);
+
 $User->Id = $userid;
 $role = $Project->GetUserRole($userid);
 
