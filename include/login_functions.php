@@ -326,11 +326,11 @@ function auth($SessionCachePolicy = 'private_no_expire')
 
         if (isset($_COOKIE[$cookiename])) {
             $cookievalue = $_COOKIE[$cookiename];
-            $cookiekey = substr($cookievalue, strlen($cookievalue) - 33);
+            $cookiekey = substr($cookievalue, strlen($cookievalue) - 32);
             if (strlen($cookiekey) < 1) {
                 return false;
             }
-            $cookieuseridkey = substr($cookievalue, 0, strlen($cookievalue) - 33);
+            $cookieuseridkey = substr($cookievalue, 0, strlen($cookievalue) - 32);
             // $user = new User();
             /** @var \User $userid */
             $user = $service->create(User::class);
@@ -339,7 +339,7 @@ function auth($SessionCachePolicy = 'private_no_expire')
                 $session->setSessionVar('cdash', [
                     'login' => $user->Email,
                     'passwd' => $user->Password,
-                    'ID' => session_id(),
+                    'ID' => $session->getSessionId(),
                     'valid' => 1,
                     'loginid' => $user->Id
                 ]);
