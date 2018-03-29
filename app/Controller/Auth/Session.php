@@ -17,6 +17,7 @@ namespace CDash\Controller\Auth;
 
 use CDash\Config;
 use CDash\System;
+use User;
 
 /**
  * Class Session
@@ -49,7 +50,7 @@ class Session
     {
         $lifetime = $this->config->get('CDASH_COOKIE_EXPIRATION_TIME');
         $maxlife = $lifetime + self::EXTEND_GC_LIFETIME;
-        $baseUrl = Config::getInstance()->getBaseUrl();
+        $baseUrl = $this->config->getBaseUrl();
         $url = parse_url($baseUrl);
         $secure = false; // send only over a https connection
         $httponly = true; // make cookie only accessible via http, e.g. not javascript
@@ -117,5 +118,22 @@ class Session
     public function setSessionVar($name, $value)
     {
         $_SESSION[$name] = $value;
+    }
+
+    public function setRememberMeCookie(User $user, $key)
+    {
+        $time = time() + 60 * 60 * 24 * 30; // 30 days;
+        $cookie_value = $user->Id . $key;
+        $baseUrl = $this->config->getBaseUrl();
+        $url = parse_url($baseUrl);
+        $cookie_name = "CDash-{$url['host']}";
+
+        // This hack will prevent the xsrf possible with this cookie
+        // @reference https://stackoverflow.com/a/46971326/1373710
+        $path = "{$url['path']}; samesite=strict";
+
+        if ($user->SetCookieKey($key)) {
+            setcookie($cookie_name, $cookie_value, $time, $path);
+        }
     }
 }

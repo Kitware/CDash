@@ -20,6 +20,8 @@ use CDash\ServiceContainer;
 use CDash\Database;
 
 require_once 'models/user.php';
+require_once('include/common.php');
+
 $pdo = Database::getInstance()->getPdo();
 
 function setRememberMeCookie($userId)
@@ -112,7 +114,8 @@ function databaseAuthenticate($email, $password, $SessionCachePolicy, $rememberm
         if ($success) {
             // Authentication is successful.
             if ($rememberme) {
-                setRememberMeCookie($userid);
+                $key = generate_password(32);
+                $session->setRememberMeCookie($user, $key);
             }
 
             $session->start($SessionCachePolicy);
@@ -222,25 +225,15 @@ function ldapAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
                         }
                     }
 
-                    if ($rememberme) {
-                        $cookiename = 'CDash-' . $_SERVER['SERVER_NAME'];
-                        $time = time() + 60 * 60 * 24 * 30; // 30 days;
-
-                        // Create a new password
-                        require_once('include/common.php');
-                        $key = generate_password(32);
-                        $value = $userid . $key;
-                        setcookie($cookiename, $value, $time);
-
-                        // Update the user key
-                        $user = new User();
-                        $user->Id = $userid;
-                        $user->SetCookieKey($key);
-                    }
-
                     $service = ServiceContainer::getInstance();
                     /** @var  Session $session */
                     $session = $service->create(\CDash\Controller\Auth\Session::class);
+
+                    if ($rememberme) {
+                        $key = generate_password(32);
+                        $session->setRememberMeCookie($user, $key);
+                    }
+
                     $session->start($SessionCachePolicy);
                     $session->setSessionVar('cdash', [
                         'login' => $email,
