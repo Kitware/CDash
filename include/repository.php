@@ -665,7 +665,7 @@ function get_revision_url($projectid, $revision, $priorrevision)
         return $revisionfonction($projecturl, $revision, $priorrevision);
     } else {
         // default is viewcvs
-        return get_viewcvs_revision_url($projecturl, $revision);
+        return get_viewcvs_revision_url($projecturl, $revision, $priorrevision);
     }
 }
 
