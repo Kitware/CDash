@@ -94,7 +94,7 @@
           </tr>
         </thead>
 
-        <tr ng-repeat="build in ::cdash.builds |orderBy:orderByFields" ng-class-odd="'odd'" ng-class-even="'even'">
+        <tr ng-repeat="build in cdash.builds |orderBy:orderByFields" ng-class-odd="'odd'" ng-class-even="'even'">
           <td>
             {{::build.site}}
           </td>
