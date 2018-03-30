@@ -4,28 +4,35 @@ function cdash_autoload($className)
 {
     $cdash_root = realpath(dirname(__FILE__) . '/..');
     $inc_dir = "{$cdash_root}/include";
+    $app_dir = "{$cdash_root}/app";
     $model_dir = "{$cdash_root}/models";
     $xml_dir = "{$cdash_root}/xml_handlers";
-    $filename = null;
+    $filenames = null;
 
     if (strpos($className, 'CDash\\') !== false) {
-        $filename = substr($className, 5);
-        $filename = preg_replace('/\\\/', '/', $filename);
-        $filename = "{$inc_dir}/{$filename}.php";
+        $loc1 = substr($className, 5);
+        $loc1 = $loc2 = preg_replace('/\\\/', '/', $loc1);
+        $loc1 = "{$inc_dir}/{$loc1}.php";
+        $loc2 = "{$app_dir}/{$loc2}.php";
+
+        $filenames = [realpath($loc1), realpath($loc2)];
     } elseif (preg_match('/Handler$/', $className)) {
         $name_parts = preg_split('/(?=[A-Z])/', $className);
-        $filename = "{$xml_dir}/" . strtolower(implode('_', array_slice($name_parts, 1))) . '.php';
+        $filenames = "{$xml_dir}/" . strtolower(implode('_', array_slice($name_parts, 1))) . '.php';
     } else {
         if (strpos($className, '\\') !== false) {
-            $filename = preg_replace('/\\\/', '/', $className);
+            $filenames = preg_replace('/\\\/', '/', $className);
         } else {
-            $filename = strtolower($className);
+            $filenames = strtolower($className);
         }
-        $filename = "{$model_dir}/{$filename}.php";
+        $filenames = "{$model_dir}/{$filenames}.php";
     }
 
-    if (file_exists($filename)) {
-        require_once $filename;
+    // TODO: based on CakePHP (il)logic, remove a soon as possible locations become standardized
+    foreach ((array)$filenames as $file) {
+        if (file_exists($file)) {
+            require_once $file;
+        }
     }
 }
 
