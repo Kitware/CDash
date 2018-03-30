@@ -149,6 +149,7 @@ class Session
         $baseUrl = $this->config->getBaseUrl();
         $url = parse_url($baseUrl);
         $cookie_name = self::REMEMBER_ME_PREFIX . $url['host'];
+        $https = $this->config->get('CDASH_USE_HTTPS');
 
         // This hack will prevent the xsrf possible with this cookie
         // @reference https://stackoverflow.com/a/46971326/1373710
@@ -156,7 +157,7 @@ class Session
         // $name, $value, $expire, $path, $domain, $secure, $httponly
 
         if ($user->SetCookieKey($key)) {
-            $this->system->setcookie($cookie_name, $cookie_value, $time, $path, $url['host'], false, true);
+            $this->system->setcookie($cookie_name, $cookie_value, $time, $path, $url['host'], $https, true);
         }
     }
 }

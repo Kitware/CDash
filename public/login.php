@@ -64,7 +64,7 @@ if (!auth(@$SessionCachePolicy) && !@$noforcelogin) {
     $session_OK = 0;
 } else {
     // authentication was successful
-    // $session->regenerateId();
+    $session->regenerateId();
     $session_OK = 1;
 
     // Check if we should be redirecting the user to another page.
