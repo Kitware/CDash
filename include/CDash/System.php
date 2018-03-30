@@ -13,15 +13,27 @@
 =========================================================================*/
 
 namespace CDash;
-
+/**
+ * Class System
+ * @package CDash
+ */
 class System
 {
+    /**
+     * @param callable $process_name
+     * @param array $args
+     * @return mixed
+     */
     final private static function call(callable $process_name, array $args)
     {
         $args = empty($args) ? $args : self::trimNullArguments($args);
         return call_user_func_array($process_name, $args);
     }
 
+    /**
+     * @param array $args
+     * @return array
+     */
     final private static function trimNullArguments(array $args)
     {
         $reversed = array_reverse($args);
@@ -38,36 +50,69 @@ class System
         return array_splice($args, 0, $length);
     }
 
+    /**
+     * @param $varname
+     * @param $newvalue
+     * @return void
+     */
     public function ini_set($varname, $newvalue)
     {
         ini_set($varname, $newvalue);
     }
 
+    /**
+     * @param null $name
+     * @return void
+     */
     public function session_name($name = null)
     {
         self::call('session_name', [$name]);
     }
 
+    /**
+     * @param null $cache_limiter
+     * @return void
+     */
     public function session_cache_limiter($cache_limiter = null)
     {
         self::call('session_cache_limiter', [$cache_limiter]);
     }
 
+    /**
+     * @param $lifetime
+     * @param $path
+     * @param $domain
+     * @param $secure
+     * @param $httponly
+     * @return void
+     */
     public function session_set_cookie_params($lifetime, $path, $domain, $secure, $httponly)
     {
         session_set_cookie_params($lifetime, $path, $domain, $secure, $httponly);
     }
 
+    /**
+     * @param array $options
+     * @return void
+     */
     public function session_start($options = [])
     {
         self::call('session_start', $options);
     }
 
+    /**
+     * @return void
+     */
     public function session_regenerate_id()
     {
         session_regenerate_id();
     }
 
+    /**
+     * @param null $id
+     * @return string
+     * @return void
+     */
     public function session_id($id = null)
     {
         // This seems trivial, but it is definitely not
@@ -78,8 +123,26 @@ class System
         }
     }
 
+    /**
+     * @return void
+     */
     public function session_destroy()
     {
         session_destroy();
+    }
+
+    /**
+     * @param $name
+     * @param $value
+     * @param $expire
+     * @param $path
+     * @param $domain
+     * @param $secure
+     * @param $httponly
+     * @return void
+     */
+    public function setcookie($name, $value, $expire, $path, $domain, $secure, $httponly)
+    {
+        setcookie($name, $value, $expire, $path, $domain, $secure, $httponly);
     }
 }

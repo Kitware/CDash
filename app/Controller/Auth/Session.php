@@ -29,6 +29,8 @@ class Session
     const CACHE_NOCACHE = 'nocache';
     const CACHE_PRIVATE_NO_EXPIRE = 'private_no_expire';
 
+    const REMEMBER_ME_PREFIX = 'CDash-';
+    const REMEMBER_ME_EXPIRATION = 2592000; // 60 * 60 * 24 * 30, 1 MONTH
     private $config;
     private $system;
 
@@ -76,16 +78,26 @@ class Session
         $this->system->session_regenerate_id();
     }
 
+    /**
+     * @return string
+     */
     public function getSessionId()
     {
         return $this->system->session_id();
     }
 
+    /**
+     * @return bool
+     */
     public function exists()
     {
-        return !empty($this->getSessionId());
+        $id = $this->getSessionId();
+        return !empty($id);
     }
 
+    /**
+     * @return void
+     */
     public function destroy()
     {
         $this->system->session_destroy();
@@ -115,25 +127,36 @@ class Session
         return $session;
     }
 
+    /**
+     * @param $name
+     * @param $value
+     * @return void
+     */
     public function setSessionVar($name, $value)
     {
         $_SESSION[$name] = $value;
     }
 
+    /**
+     * @param User $user
+     * @param $key
+     * @return void
+     */
     public function setRememberMeCookie(User $user, $key)
     {
-        $time = time() + 60 * 60 * 24 * 30; // 30 days;
+        $time = time() + self::REMEMBER_ME_EXPIRATION; // 30 days;
         $cookie_value = $user->Id . $key;
         $baseUrl = $this->config->getBaseUrl();
         $url = parse_url($baseUrl);
-        $cookie_name = "CDash-{$url['host']}";
+        $cookie_name = self::REMEMBER_ME_PREFIX . $url['host'];
 
         // This hack will prevent the xsrf possible with this cookie
         // @reference https://stackoverflow.com/a/46971326/1373710
         $path = "{$url['path']}; samesite=strict";
+        // $name, $value, $expire, $path, $domain, $secure, $httponly
 
         if ($user->SetCookieKey($key)) {
-            setcookie($cookie_name, $cookie_value, $time, $path);
+            $this->system->setcookie($cookie_name, $cookie_value, $time, $path, $url['host'], false, true);
         }
     }
 }
