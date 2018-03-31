@@ -21,10 +21,10 @@ require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 include 'include/version.php';
 require_once 'include/filterdataFunctions.php';
-include_once 'models/build.php';
-include_once 'models/project.php';
 
 use CDash\Database;
+use CDash\Model\Build;
+use CDash\Model\Project;
 
 $start = microtime_float();
 

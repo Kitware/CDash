@@ -20,17 +20,15 @@ include 'public/login.php';
 include_once 'include/common.php';
 include 'include/version.php';
 
-include_once 'models/project.php';
-include_once 'models/clientsite.php';
-include_once 'models/clientjobschedule.php';
-include_once 'models/clientos.php';
-include_once 'models/clientcmake.php';
-include_once 'models/clientcompiler.php';
-include_once 'models/clientlibrary.php';
-require_once 'models/project.php';
-require_once 'models/constants.php';
-require_once 'models/user.php';
-require_once 'models/userproject.php';
+use CDash\Model\ClientJobSchedule;
+use CDash\Model\ClientSite;
+use CDash\Model\ClientOS;
+use CDash\Model\ClientCMake;
+use CDash\Model\ClientCompiler;
+use CDash\Model\ClientLibrary;
+use CDash\Model\Project;
+use CDash\Model\User;
+use CDash\Model\UserProject;
 
 if ($session_OK) {
     if (!$CDASH_MANAGE_CLIENTS) {

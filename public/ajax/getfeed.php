@@ -20,7 +20,8 @@ include_once 'include/common.php';
 include 'include/version.php';
 $noforcelogin = 1;
 include 'public/login.php';
-include 'models/feed.php';
+
+use CDash\Model\Feed;
 
 $projectid = pdo_real_escape_numeric($_GET['projectid']);
 if (!isset($projectid) || !is_numeric($projectid)) {

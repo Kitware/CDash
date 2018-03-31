@@ -14,6 +14,9 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use CDash\Model\ClientJob;
+use CDash\Model\ClientJobSchedule;
+
 /** Remove builds by their group-specific auto-remove timeframe setting */
 function removeBuildsGroupwise($projectid, $maxbuilds, $force = false)
 {
@@ -108,7 +111,6 @@ function removeFirstBuilds($projectid, $days, $maxbuilds, $force = false)
     // Remove any job schedules that are older than our cutoff date
     // and not due to repeat again.
     require_once 'models/constants.php';
-    require_once 'models/clientjobschedule.php';
     $sql =
         'SELECT scheduleid FROM client_job AS cj
     LEFT JOIN client_jobschedule AS cjs ON cj.scheduleid = cjs.id
@@ -127,7 +129,7 @@ function removeFirstBuilds($projectid, $days, $maxbuilds, $force = false)
     // Remove any jobs that are older than our cutoff date.
     // This occurs when a job schedule is set to continue repeating, but
     // some of its past runs are older than our autoremove threshold.
-    require_once 'models/clientjob.php';
+
     $sql =
         'SELECT cj.id FROM client_job AS cj
     LEFT JOIN client_jobschedule AS cjs ON cj.scheduleid = cjs.id

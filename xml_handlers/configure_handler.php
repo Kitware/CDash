@@ -16,10 +16,13 @@
 
 require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
-require_once 'models/build.php';
-require_once 'models/label.php';
-require_once 'models/site.php';
-require_once 'models/buildconfigure.php';
+
+use CDash\Model\Build;
+use CDash\Model\BuildConfigure;
+use CDash\Model\BuildInformation;
+use CDash\Model\Label;
+use CDash\Model\Site;
+use CDash\Model\SiteInformation;
 
 class ConfigureHandler extends AbstractHandler implements ActionableBuildInterface
 {
@@ -62,7 +65,6 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
             $this->Site->Insert();
 
             $siteInformation = new SiteInformation();
-            $this->BuildInformation = new BuildInformation();
             $this->BuildInformation = new BuildInformation();
             $this->BuildName = "";
             $this->BuildStamp = "";

@@ -4,9 +4,9 @@
 // relative to the top of the CDash source tree
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
-
 require_once 'include/common.php';
-require_once 'models/user.php';
+
+use CDash\Model\User;
 
 class RecoverPasswordTestCase extends KWWebTestCase
 {

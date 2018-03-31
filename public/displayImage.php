@@ -16,7 +16,8 @@
 
 include dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
-require_once 'models/image.php';
+
+use CDash\Model\Image;
 
 if (array_key_exists('imgid', $_GET)) {
     $imgid = $_GET['imgid'];

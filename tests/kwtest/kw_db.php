@@ -232,7 +232,7 @@ class dbo_mysql extends dbo
             return false;
         }
         $result = array();
-        while ($row = pdo_fetch_array($resource, \PDO::FETCH_ASSOC)) {
+        while ($row = pdo_fetch_array($resource, PDO::FETCH_ASSOC)) {
             $result[] = $row;
         }
         $this->disconnect();
@@ -344,7 +344,7 @@ class dbo_pgsql extends dbo
             return false;
         }
         $result = array();
-        while ($row = pdo_fetch_array($resource, \PDO::FETCH_ASSOC)) {
+        while ($row = pdo_fetch_array($resource, PDO::FETCH_ASSOC)) {
             $result[] = $row;
         }
         $this->disconnect();

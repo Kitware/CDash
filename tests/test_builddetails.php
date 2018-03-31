@@ -106,8 +106,8 @@ class BuildDetailsTestCase extends KWWebTestCase
         }
 
         $buildId = pdo_single_row_query("SELECT id FROM build WHERE name = 'BuildDetails-Linux-g++-4.1-LesionSizingSandbox_Debug'");
-
-        $actualResponse = json_decode($this->get($this->url . '/api/v1/viewTest.php?buildid=' . $buildId['id']));
+        $json = $this->get("{$this->url}/api/v1/viewTest.php?buildid={$buildId['id']}");
+        $actualResponse = json_decode($json);
         $expectedResponse = json_decode(
             file_get_contents($this->testDataDir . '/' . 'InsightExperimentalExample_Expected.json'));
 

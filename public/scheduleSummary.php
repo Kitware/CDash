@@ -19,8 +19,7 @@ require_once 'include/pdo.php';
 include_once 'include/common.php';
 include 'include/version.php';
 
-include_once 'models/project.php';
-include_once 'models/clientjobschedule.php';
+use CDash\Model\ClientJobSchedule;
 
 if (!$CDASH_MANAGE_CLIENTS) {
     echo 'CDash has not been setup to allow client management';

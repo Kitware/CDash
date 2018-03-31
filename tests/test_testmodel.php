@@ -7,9 +7,10 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 require_once 'include/common.php';
 require_once 'include/pdo.php';
-require_once 'models/image.php';
-require_once 'models/test.php';
-require_once 'models/testmeasurement.php';
+
+use CDash\Model\Image;
+use CDash\Model\Test;
+use CDash\Model\TestMeasurement;
 
 class TestModelTestCase extends KWWebTestCase
 {

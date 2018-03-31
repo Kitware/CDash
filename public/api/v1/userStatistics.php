@@ -17,9 +17,9 @@
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
-require_once 'models/project.php';
-require_once 'models/user.php';
 include 'include/version.php';
+
+use CDash\Model\User;
 
 $start = microtime_float();
 $response = array();

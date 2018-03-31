@@ -18,7 +18,8 @@ include dirname(__DIR__) . '/config/config.php';
 require dirname(__DIR__) . '/vendor/autoload.php';
 include_once 'include/common.php';
 require_once 'include/pdo.php';
-require_once 'models/user.php';
+
+use CDash\Model\User;
 
 function getGoogleAuthenticateState()
 {

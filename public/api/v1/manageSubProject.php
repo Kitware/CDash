@@ -20,9 +20,10 @@ require_once 'include/pdo.php';
 include_once 'include/common.php';
 include 'public/login.php';
 include 'include/version.php';
-include_once 'models/project.php';
-include_once 'models/subproject.php';
-include_once 'models/user.php';
+
+use CDash\Model\Project;
+use CDash\Model\SubProject;
+use CDash\Model\User;
 
 $start = microtime_float();
 

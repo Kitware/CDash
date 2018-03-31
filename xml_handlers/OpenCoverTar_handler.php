@@ -15,9 +15,13 @@
 =========================================================================*/
 
 require_once 'xml_handlers/abstract_handler.php';
-require_once 'models/coverage.php';
 require_once 'config/config.php';
-require_once 'models/build.php';
+
+use CDash\Model\Build;
+use CDash\Model\Coverage;
+use CDash\Model\CoverageFile;
+use CDash\Model\CoverageFileLog;
+use CDash\Model\CoverageSummary;
 
 class OpenCoverTarHandler extends AbstractHandler
 {

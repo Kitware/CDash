@@ -12,8 +12,9 @@ include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 include 'include/version.php';
-require_once 'models/project.php';
 require_once 'include/memcache_functions.php';
+
+use CDash\Model\Project;
 
 // handle required project argument
 @$projectname = $_GET['project'];

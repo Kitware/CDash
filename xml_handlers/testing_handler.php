@@ -18,24 +18,31 @@ use CDash\Collection\BuildCollection;
 
 require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
-require_once 'models/build.php';
-require_once 'models/label.php';
-require_once 'models/site.php';
-require_once 'models/test.php';
-require_once 'models/image.php';
-require_once 'models/feed.php';
+
+use CDash\Model\Build;
+use CDash\Model\BuildInformation;
+use CDash\Model\BuildTest;
+use CDash\Model\Feed;
+use CDash\Model\Image;
+use CDash\Model\Label;
+use CDash\Model\Site;
+use CDash\Model\SiteInformation;
+use CDash\Model\Test;
+use CDash\Model\TestMeasurement;
 
 class TestingHandler extends AbstractHandler implements ActionableBuildInterface
 {
     private $StartTimeStamp;
     private $EndTimeStamp;
 
+    /** @var Test Test */
     private $Test;
     private $BuildTest;
     private $TestMeasurement;
     private $Label;
     private $Append;
 
+    /** @var Build[] Builds */
     private $Builds;
     private $BuildInformation;
 
@@ -134,7 +141,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
             $this->BuildTest->Status = $attributes['STATUS'];
             $this->TestSubProjectName = "";
         } elseif ($name == 'NAMEDMEASUREMENT') {
-            $this->TestMeasurement = $factory->create('TestMeasurement');
+            $this->TestMeasurement = $factory->create(TestMeasurement::class);
 
             if ($attributes['TYPE'] == 'file') {
                 $this->TestMeasurement->Name = $attributes['FILENAME'];
@@ -291,20 +298,24 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
         } elseif ($parent == 'TEST') {
             switch ($element) {
                 case 'NAME':
-                    $this->Test->Name .= $data;
+                    $this->Test->Name = $data;
                     break;
                 case 'PATH':
-                    $this->Test->Path .= $data;
+                    $this->Test->Path = $data;
                     break;
                 case 'FULLNAME':
                     //$this->Test->Command = $data;
                     break;
                 case 'FULLCOMMANDLINE':
-                    $this->Test->Command .= $data;
+                    $this->Test->Command = $data;
                     break;
             }
         } elseif ($parent == 'NAMEDMEASUREMENT' && $element == 'VALUE') {
-            $this->TestMeasurement->Value .= $data;
+            if (!isset($this->TestMeasurement->Value)) {
+                $this->TestMeasurement->Value = $data;
+            } else {
+                $this->TestMeasurement->Value .= $data;
+            }
         } elseif ($parent == 'MEASUREMENT' && $element == 'VALUE') {
             $this->Test->Output .= $data;
         } elseif ($parent == 'SUBPROJECT' && $element == 'LABEL') {

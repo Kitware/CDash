@@ -25,16 +25,17 @@ include_once 'include/common.php';
 redirect_to_https();
 
 include 'include/version.php';
-include_once 'models/project.php';
-include_once 'models/authtoken.php';
-include_once 'models/clientjobschedule.php';
-include_once 'models/clientsite.php';
-include_once 'models/clientjob.php';
-include_once 'models/build.php';
-include_once 'models/buildconfigure.php';
-include_once 'models/buildupdate.php';
-include_once 'models/site.php';
-include_once 'models/user.php';
+
+use CDash\Model\Project;
+use CDash\Model\AuthToken;
+use CDash\Model\ClientJobSchedule;
+use CDash\Model\ClientSite;
+use CDash\Model\ClientJob;
+use CDash\Model\Build;
+use CDash\Model\BuildConfigure;
+use CDash\Model\Site;
+use CDash\Model\User;
+use CDash\Model\UserProject;
 
 $response = [];
 if (!$session_OK || !isset($_SESSION['cdash']) || !isset($_SESSION['cdash']['loginid'])) {

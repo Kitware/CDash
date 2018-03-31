@@ -17,7 +17,7 @@ namespace CDash\Controller\Auth;
 
 use CDash\Config;
 use CDash\System;
-use User;
+use CDash\Model\User;
 
 /**
  * Class Session

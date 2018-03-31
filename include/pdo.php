@@ -16,7 +16,6 @@
 
 use CDash\Database;
 
-require dirname(__DIR__) . '/vendor/autoload.php';
 require_once 'config/config.php';
 require_once 'include/log.php';
 
@@ -204,7 +203,8 @@ function pdo_fetch_array($result, $result_type = PDO::FETCH_BOTH)
  */
 function pdo_fetch_row($result)
 {
-    return pdo_fetch_array($result, PDO::FETCH_NUM);
+    return pdo_fetch_array($result,
+        PDO::FETCH_NUM);
 }
 
 /**
