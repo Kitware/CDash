@@ -92,7 +92,7 @@ function generate_XSLT($xml, $pageName, $only_in_local = false)
     // For common xsl pages not referenced directly
     // i.e. header, headerback, etc...
     // look if they are in the local directory, and set
-    // an XML value accordinglyClientLibrary
+    // an XML value accordingly
     include 'config/config.php';
     if ($CDASH_USE_LOCAL_DIRECTORY && !$only_in_local) {
         $pos = strpos($xml, '</cdash>'); // this should be the last
