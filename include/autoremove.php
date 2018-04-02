@@ -111,7 +111,6 @@ function removeFirstBuilds($projectid, $days, $maxbuilds, $force = false)
 
     // Remove any job schedules that are older than our cutoff date
     // and not due to repeat again.
-    require_once 'models/constants.php';
     $sql =
         'SELECT scheduleid FROM client_job AS cj
     LEFT JOIN client_jobschedule AS cjs ON cj.scheduleid = cjs.id
