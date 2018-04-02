@@ -16,6 +16,7 @@
 
 use CDash\Model\ClientJob;
 use CDash\Model\ClientJobSchedule;
+use CDash\Model\Job;
 
 /** Remove builds by their group-specific auto-remove timeframe setting */
 function removeBuildsGroupwise($projectid, $maxbuilds, $force = false)
@@ -114,7 +115,7 @@ function removeFirstBuilds($projectid, $days, $maxbuilds, $force = false)
     $sql =
         'SELECT scheduleid FROM client_job AS cj
     LEFT JOIN client_jobschedule AS cjs ON cj.scheduleid = cjs.id
-    WHERE cj.status > ' . CDASH_JOB_RUNNING . "
+    WHERE cj.status > ' . Job::RUNNING . "
     AND cjs.projectid=$projectid AND cj.startdate < '$startdate'
     AND (cjs.repeattime = 0.00 OR
       (cjs.enddate < '$startdate' AND cjs.enddate != '1980-01-01 00:00:00'))";
@@ -133,7 +134,7 @@ function removeFirstBuilds($projectid, $days, $maxbuilds, $force = false)
     $sql =
         'SELECT cj.id FROM client_job AS cj
     LEFT JOIN client_jobschedule AS cjs ON cj.scheduleid = cjs.id
-    WHERE cj.status > ' . CDASH_JOB_RUNNING . "
+    WHERE cj.status > ' . Job::RUNNING . "
     AND cjs.projectid=$projectid AND cj.startdate < '$startdate'";
 
     $jobs = pdo_query($sql);

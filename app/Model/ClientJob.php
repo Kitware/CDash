@@ -15,6 +15,8 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use CDash\Model\Job;
+
 class ClientJob
 {
     public $Id;
@@ -96,7 +98,7 @@ class ClientJob
     public function SetFinished()
     {
         $now = date('Y-m-d H:i:s');
-        $sql = 'UPDATE client_job SET status=' . CDASH_JOB_FINISHED . ",enddate='" . $now . "' WHERE siteid=" . $this->SiteId . ' AND status=' . CDASH_JOB_RUNNING;
+        $sql = 'UPDATE client_job SET status=' . Job::FINISHED . ",enddate='" . $now . "' WHERE siteid=" . $this->SiteId . ' AND status=' . Job::RUNNING;
         pdo_query($sql);
         add_last_sql_error('ClientJob::SetFinished');
     }
@@ -105,7 +107,7 @@ class ClientJob
     public function SetFailed()
     {
         $now = date('Y-m-d H:i:s');
-        $sql = 'UPDATE client_job SET status=' . CDASH_JOB_FAILED . ",enddate='" . $now . "' WHERE siteid=" . $this->SiteId . ' AND status=' . CDASH_JOB_RUNNING;
+        $sql = 'UPDATE client_job SET status=' . Job::FAILED . ",enddate='" . $now . "' WHERE siteid=" . $this->SiteId . ' AND status=' . Job::RUNNING;
         pdo_query($sql);
         add_last_sql_error('ClientJob::SetFailed');
     }
