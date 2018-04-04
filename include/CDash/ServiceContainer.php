@@ -32,6 +32,14 @@ class ServiceContainer extends Singleton
     }
 
     /**
+     * @return Container
+     */
+    public static function container()
+    {
+        return self::getInstance()->getContainer();
+    }
+
+    /**
      * The create method will return a new instance of a class.
      *
      * @param $class_name
