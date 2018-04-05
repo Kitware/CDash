@@ -55,7 +55,8 @@ class UserProject
         /** @var \PDO $pdo */
         $pdo = Database::getInstance()->getPdo();
         $sql = 'SELECT id, name FROM project';
-        if (!$user->IsAdmin()) {
+        $admin = $user->IsAdmin();
+        if (!$admin) {
             $sql .= "
                 WHERE id IN (
                     SELECT projectid AS id
@@ -66,9 +67,12 @@ class UserProject
             ";
         }
         $sql .= ' ORDER BY name ASC';
+
         /** @var \PDOStatement $stmt */
         $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':userid', $user->id);
+        if (!$admin) {
+            $stmt->bindParam(':userid', $id);
+        }
         $stmt->execute();
         $projects = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         return is_array($projects) ? $projects : [];
