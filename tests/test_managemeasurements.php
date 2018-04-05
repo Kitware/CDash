@@ -41,6 +41,33 @@ class ManageMeasurementsTestCase extends KWWebTestCase
         }
     }
 
+    // function to validate test results returned by the API.
+    private function validate_test($test_name, $num_procs, $proc_time, $page)
+    {
+        if ($test_name == 'TestNoProcs') {
+            if ($proc_time != 1.4) {
+                $this->fail("Expected 1.4 proc time on $page, found $proc_time");
+            }
+        } elseif ($test_name == 'Test3Procs') {
+            if ($num_procs != 3) {
+                $this->fail("Expected 3 processors on $page, found $num_procs");
+            }
+            if ($proc_time != 4.2) {
+                $this->fail("Expected 4.2 proc time on $page, found $proc_time");
+            }
+        } elseif ($test_name == 'Test5Procs') {
+            if ($num_procs != 5) {
+                $this->fail("Expected 5 processors on $page, found $num_procs");
+            }
+            if ($proc_time != 6.5) {
+                $this->fail("Expected 6.5 proc time on $page, found $proc_time");
+            }
+        } else {
+            $this->fail("Unexpected test $test_name on $page");
+        }
+    }
+
+
     public function testManageMeasurements()
     {
         // Submit a test file with a named measurement.
@@ -129,28 +156,6 @@ class ManageMeasurementsTestCase extends KWWebTestCase
             }
         }
 
-        // Local function to validate test results returned by the API.
-        function validate_test($test_name, $num_procs, $proc_time, $page)
-        {
-            if ($test_name == 'Test3Procs') {
-                if ($num_procs != 3) {
-                    $this->fail("Expected 3 processors on $page, found $num_procs");
-                }
-                if ($proc_time != 4.2) {
-                    $this->fail("Expected 4.2 proc time on $page, found $proc_time");
-                }
-            } elseif ($test_name == 'Test5Procs') {
-                if ($num_procs != 5) {
-                    $this->fail("Expected 5 processors on $page, found $num_procs");
-                }
-                if ($proc_time != 6.5) {
-                    $this->fail("Expected 6.5 proc time on $page, found $proc_time");
-                }
-            } else {
-                $this->fail("Unexpected test $test_name on $page");
-            }
-        }
-
         // Verify that the 'Processors' measurement is displayed on viewTest.php.
         $this->get($this->url . "/api/v1/viewTest.php?buildid=$this->BuildId");
         $content = $this->getBrowser()->getContent();
@@ -164,14 +169,14 @@ class ManageMeasurementsTestCase extends KWWebTestCase
             $this->fail("Expected extra column to be called 'Processors', found $found");
         }
         $found = count($jsonobj['tests']);
-        if ($found != 2) {
-            $this->fail("Expected two tests, found $found");
+        if ($found != 3) {
+            $this->fail("Expected three tests, found $found");
         }
         foreach ($jsonobj['tests'] as $test) {
             $test_name = $test['name'];
             $num_procs = $test['measurements'][0];
             $proc_time = $test['procTimeFull'];
-            validate_test($test_name, $num_procs, $proc_time, 'viewTest.php');
+            $this->validate_test($test_name, $num_procs, $proc_time, 'viewTest.php');
         }
 
         // Verify that 'Processors' is also displayed on testSummary.php.
@@ -206,8 +211,12 @@ class ManageMeasurementsTestCase extends KWWebTestCase
         if ($jsonobj['hasprocessors'] !== true) {
             $this->fail("hasprocessors not true for queryTests.php");
         }
+        $found = count($jsonobj['builds']);
+        if ($found != 3) {
+            $this->fail("Expected three tests on queryTests.php, found $found");
+        }
         foreach ($jsonobj['builds'] as $build) {
-            validate_test($build['testname'], $build['nprocs'], $build['procTime'], 'queryTests.php');
+            $this->validate_test($build['testname'], $build['nprocs'], $build['procTime'], 'queryTests.php');
         }
 
         // Perform similar checks for the subproject case.
