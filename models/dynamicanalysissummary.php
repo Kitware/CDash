@@ -79,7 +79,6 @@ class DynamicAnalysisSummary
         $this->PDO->beginTransaction();
         if ($this->Exists()) {
             if ($append) {
-                // $this->PDO->rollBack();
                 // Load the existing results for this build.
                 $stmt = $this->PDO->prepare("
                     SELECT checker, numdefects FROM dynamicanalysissummary
@@ -111,7 +110,6 @@ class DynamicAnalysisSummary
                 $error_name = 'DynamicAnalysisSummary Insert';
             }
         } else {
-            // Seems like we could just have this statement
             $stmt = $this->PDO->prepare('
                 INSERT INTO dynamicanalysissummary
                 (buildid, checker, numdefects)
