@@ -326,7 +326,7 @@ function auth($SessionCachePolicy = 'private_no_expire')
             }
             $cookieuseridkey = substr($cookievalue, 0, strlen($cookievalue) - 32);
             // $user = new User();
-            /** @var \User $userid */
+            /** @var User $userid */
             $user = $service->create(User::class);
             if ($user->FillFromCookie($cookiekey, $cookieuseridkey)) {
                 $session->start($SessionCachePolicy);
@@ -350,7 +350,7 @@ function auth($SessionCachePolicy = 'private_no_expire')
         $email = $session->getSessionVar('cdash.login');
 
         if (!empty($email)) {
-            /** @var \User $userid */
+            /** @var User $userid */
             $user = $service->create(User::class);
             $userid = $user->GetIdFromEmail($email);
             if (!$userid) {

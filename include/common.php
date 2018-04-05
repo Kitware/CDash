@@ -16,6 +16,7 @@
 
 use CDash\Config;
 use CDash\Controller\Auth\Session;
+use CDash\Database;
 use CDash\ServiceContainer;
 use CDash\Model\Build;
 use CDash\Model\Project;
@@ -1960,40 +1961,25 @@ function begin_JSON_response()
     return $response;
 }
 
+// TODO: pass in project object, not just name, prevents yet another unecessary query to db.
 function get_dashboard_JSON($projectname, $date, &$response)
 {
-    include 'config/config.php';
-    require_once 'include/pdo.php';
+    $config = Config::getInstance();
+    $service = ServiceContainer::getInstance();
+    $session = $service->get(Session::class);
 
-    $projectid = get_project_id($projectname);
-    if ($projectid == -1) {
-        return;
-    }
+    /** @var Project $project */
+    $project = $service->create(Project::class);
+    $project->FindByName($projectname);
 
-    $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-    if (!$db) {
-        echo "Error connecting to CDash database server<br>\n";
-        exit(0);
-    }
-
-    if (!pdo_select_db("$CDASH_DB_NAME", $db)) {
-        echo "Error selecting CDash database<br>\n";
-        exit(0);
-    }
-
-    $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
-    if (pdo_num_rows($project) > 0) {
-        $project_array = pdo_fetch_array($project);
-    } else {
-        $project_array = array();
-        $project_array['cvsurl'] = 'unknown';
-        $project_array['bugtrackerurl'] = 'unknown';
-        $project_array['documentationurl'] = 'unknown';
-        $project_array['homeurl'] = 'unknown';
-        $project_array['googletracker'] = 'unknown';
-        $project_array['name'] = $projectname;
-        $project_array['nightlytime'] = '00:00:00';
-    }
+    $project_array = [];
+    $project_array['cvsurl'] = $project->Id ? $project->CvsUrl : 'unknown';
+    $project_array['bugtrackerurl'] = $project->Id ? $project->BugTrackerUrl : 'unknown';
+    $project_array['documentationurl'] = $project->Id ? $project->DocumentationUrl : 'unknown';
+    $project_array['homeurl'] = $project->Id ? $project->HomeUrl : 'unknown';
+    $project_array['googletracker'] = $project->Id ? $project->GoogleTracker : 'unknown';
+    $project_array['name'] = $projectname;
+    $project_array['nightlytime'] =  $project->Id ? $project->NightlyTime : '00:00:00';
 
     if (is_null($date)) {
         $date = date(FMT_DATE);
@@ -2008,13 +1994,13 @@ function get_dashboard_JSON($projectname, $date, &$response)
     $response['bugtracker'] = make_cdash_url(htmlentities($project_array['bugtrackerurl']));
     $response['googletracker'] = htmlentities($project_array['googletracker']);
     $response['documentation'] = make_cdash_url(htmlentities($project_array['documentationurl']));
-    $response['projectid'] = $projectid;
+    $response['projectid'] = $project->Id;
     $response['projectname'] = $project_array['name'];
     $response['projectname_encoded'] = urlencode($project_array['name']);
-    $response['public'] = $project_array['public'];
+    $response['public'] = $project->Public;
     $response['previousdate'] = $previousdate;
     $response['nextdate'] = $nextdate;
-    $response['logoid'] = getLogoID($projectid);
+    $response['logoid'] = getLogoID($project->Id);
 
     if (empty($project_array['homeurl'])) {
         $response['home'] = 'index.php?project=' . urlencode($project_array['name']);
@@ -2022,23 +2008,23 @@ function get_dashboard_JSON($projectname, $date, &$response)
         $response['home'] = make_cdash_url(htmlentities($project_array['homeurl']));
     }
 
-    if ($CDASH_USE_LOCAL_DIRECTORY && file_exists('local/models/proProject.php')) {
+    if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/models/proProject.php')) {
         include_once 'local/models/proProject.php';
         $pro = new proProject;
-        $pro->ProjectId = $projectid;
+        $pro->ProjectId = $project->Id;
         $response['proedition'] = $pro->GetEdition(1);
     }
 
-    $userid = 0;
-    if (isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid'])) {
-        $userid = $_SESSION['cdash']['loginid'];
-        // Is the user an administrator of this project?
-        $row = pdo_single_row_query(
-            'SELECT role FROM user2project
-            WHERE userid=' . qnum($userid) . ' AND
-            projectid=' . qnum($projectid));
-        $response['projectrole'] = $row[0];
-        if ($response['projectrole'] > 1) {
+    $userid = $session->getSessionVar('cdash.loginid');
+    if ($userid) {
+        /** @var UserProject $user_project */
+        $user_project = $service->create(UserProject::class);
+        $user_project->UserId = $userid;
+        $user_project->ProjectId = $project->Id;
+        $user_project->FillFromUserId();
+
+        $response['projectrole'] = $user_project->Role;
+        if ($response['projectrole'] > Project::SITE_MAINTAINER) {
             $response['user']['admin'] = 1;
         }
     }
@@ -2263,4 +2249,19 @@ function extract_tar($filename, $dirName)
     } else {
         return extract_tar_archive_tar($filename, $dirName);
     }
+}
+
+/** Strip the HTTP */
+function stripHTTP($url)
+{
+    $pos = strpos($url, 'http://');
+    if ($pos !== false) {
+        return substr($url, 7);
+    } else {
+        $pos = strpos($url, 'https://');
+        if ($pos !== false) {
+            return substr($url, 8);
+        }
+    }
+    return $url;
 }

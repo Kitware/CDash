@@ -18,11 +18,17 @@ namespace CDash\Model;
 require_once  'include/common.php';
 require_once 'include/cdashmail.php';
 
+use CDash\Config;
 use CDash\Database;
+use CDash\ServiceContainer;
 
 /** Main project class */
 class Project
 {
+    const PROJECT_ADMIN = 2;
+    const SITE_MAINTAINER = 1;
+    const PROJECT_USER = 0;
+
     public $Name;
     public $Id;
     public $Description;
@@ -63,6 +69,7 @@ class Project
     public $RobotRegex;
     public $CTestTemplateScript;
     public $WebApiKey;
+    /** @var \PDO $PDO */
     private $PDO;
 
     public function __construct()
@@ -189,9 +196,11 @@ class Project
         if (!$this->Id) {
             return false;
         }
-
-        $query = pdo_query("SELECT count(*) FROM project WHERE id='" . $this->Id . "'");
-        $query_array = pdo_fetch_array($query);
+        /** @var \PDOStatement $stmt */
+        $stmt = $this->PDO->prepare("SELECT count(*) FROM project WHERE id=:id");
+        $stmt->bindParam(':id', $this->Id);
+        $stmt->execute();
+        $query_array = pdo_fetch_array($stmt);
         if ($query_array[0] > 0) {
             return true;
         }
@@ -381,6 +390,18 @@ class Project
             $role = $user2project_array['role'];
         }
         return $role;
+    }
+
+    public function FindByName($name)
+    {
+        $sql = "SELECT id FROM project WHERE name=:name";
+        /** @var \PDOStatement $stmt $stmt */
+        $stmt = $this->PDO->prepare($sql);
+        $stmt->bindParam(':name', $name);
+        $stmt->execute();
+        $stmt->bindColumn('id', $this->Id);
+        $stmt->fetch(\PDO::FETCH_BOUND);
+        $this->Fill();
     }
 
     /** Return true if the project exists */
@@ -1492,9 +1513,10 @@ class Project
     /**
      * Return a JSON representation of this object.
      */
-    public function ConvertToJSON()
+    public function ConvertToJSON(User $user)
     {
-        $response = array();
+        $config = Config::getInstance();
+        $response = [];
         $clone = new \ReflectionObject($this);
         $properties = $clone->getProperties(\ReflectionProperty::IS_PUBLIC);
         foreach ($properties as $property) {
@@ -1508,14 +1530,21 @@ class Project
             $response['ctesttemplatescript'] = $this->getDefaultJobTemplateScript();
         }
 
-        $uploadQuotaGB = 0;
-        if ($this->UploadQuota > 0) {
-            $uploadQuotaGB = $this->UploadQuota / (1024 * 1024 * 1024);
-        }
-        global $CDASH_MAX_UPLOAD_QUOTA;
-        $response['UploadQuota'] = min($uploadQuotaGB, $CDASH_MAX_UPLOAD_QUOTA);
-        $response['MaxUploadQuota'] = $CDASH_MAX_UPLOAD_QUOTA;
+        $includeQuota = !$config->get('CDASH_USER_CREATE_PROJECTS') || $user->IsAdmin();
 
+        if ($includeQuota) {
+            $uploadQuotaGB = 0;
+
+            if ($this->UploadQuota > 0) {
+                $uploadQuotaGB = $this->UploadQuota / (1024 * 1024 * 1024);
+            }
+
+            $max = $config->get('CDASH_MAX_UPLOAD_QUOTA');
+            $response['UploadQuota'] = min($uploadQuotaGB, $max);
+            $response['MaxUploadQuota'] = $max;
+        } else {
+            unset($response['UploadQuota']);
+        }
         return $response;
     }
 
