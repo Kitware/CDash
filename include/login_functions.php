@@ -202,12 +202,12 @@ function ldapAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
                         }
 
                         // Add the user in the database
-                        $storedPassword = User::PasswordHash($password);
-                        if ($storedPassword === false) {
+                        $passwordHash = User::PasswordHash($password);
+                        if ($passwordHash === false) {
                             $loginerror = 'Failed to hash password.  Contact an admin.';
                         } else {
                             $user->Email = $email;
-                            $user->Password = $storedPassword;
+                            $user->Password = $passwordHash;
                             $user->Save();
                             $userid = $user->Id;
                         }
@@ -237,7 +237,7 @@ function ldapAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
                     $session->start($SessionCachePolicy);
                     $session->setSessionVar('cdash', [
                         'login' => $email,
-                        'passwd' => $storedPassword,
+                        'passwd' => $passwordHash,
                         'ID' => $session->getSessionId(),
                         'valid' => 1,
                         'loginid' => $userid
@@ -252,7 +252,8 @@ function ldapAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
             }
             ldap_free_result($result);
         } else {
-            $loginerror = 'Error occured searching the LDAP';
+            $error = ldap_error($ldap);
+            $loginerror = "Error occured searching the LDAP: $error";
         }
         ldap_close($ldap);
     } else {
