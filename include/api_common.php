@@ -15,8 +15,11 @@
 =========================================================================*/
 
 require_once 'include/common.php';
-require_once 'models/build.php';
-require_once 'models/project.php';
+
+use CDash\Model\Build;
+use CDash\Model\Project;
+use CDash\Model\User;
+use CDash\Model\UserProject;
 
 /**
  *
@@ -88,7 +91,6 @@ function can_administrate_project($projectid)
     }
 
     // Check if this user is a global admin.
-    require_once 'models/user.php';
     $user = new User();
     $user->Id = $userid;
     if ($user->IsAdmin()) {
@@ -96,7 +98,6 @@ function can_administrate_project($projectid)
     }
 
     // Check if this user is a project admin.
-    require_once 'models/userproject.php';
     $user2project = new UserProject();
     $user2project->UserId = $userid;
     $user2project->ProjectId = $projectid;

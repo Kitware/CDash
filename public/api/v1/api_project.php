@@ -16,6 +16,8 @@
 
 include_once 'api.php';
 
+use CDash\Model\Project;
+
 class ProjectAPI extends CDashAPI
 {
     /** Return the list of all public projects */
@@ -75,7 +77,6 @@ class ProjectAPI extends CDashAPI
     public function ListFiles()
     {
         include_once 'include/common.php';
-        include_once 'models/project.php';
 
         global $CDASH_DOWNLOAD_RELATIVE_URL;
 

@@ -16,11 +16,15 @@
 
 require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
-require_once 'models/build.php';
-require_once 'models/label.php';
-require_once 'models/site.php';
-require_once 'models/dynamicanalysis.php';
-require_once 'models/dynamicanalysissummary.php';
+
+use CDash\Model\Build;
+use CDash\Model\Label;
+use CDash\Model\Site;
+use CDash\Model\DynamicAnalysis;
+use CDash\Model\DynamicAnalysisSummary;
+use CDash\Model\DynamicAnalysisDefect;
+use CDash\Model\SiteInformation;
+use CDash\Model\BuildInformation;
 
 class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildInterface
 {

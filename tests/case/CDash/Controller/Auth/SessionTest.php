@@ -3,6 +3,7 @@ namespace CDash\Controller\Auth;
 
 use CDash\Config;
 use CDash\System;
+use CDash\Model\User;
 
 class SessionTest extends \PHPUnit_Framework_TestCase
 {
@@ -115,8 +116,8 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $name = Session::REMEMBER_ME_PREFIX . $url['host'];
         $path = "{$url['path']}; samesite=strict";
 
-        /** @var \User|\PHPUnit_Framework_MockObject_MockObject $mock_user */
-        $mock_user = $this->getMockBuilder(\User::class)
+        /** @var User|\PHPUnit_Framework_MockObject_MockObject $mock_user */
+        $mock_user = $this->getMockBuilder(User::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -159,8 +160,8 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $name = Session::REMEMBER_ME_PREFIX . $url['host'];
         $path = "{$url['path']}; samesite=strict";
 
-        /** @var \User|\PHPUnit_Framework_MockObject_MockObject $mock_user */
-        $mock_user = $this->getMockBuilder(\User::class)
+        /** @var User|\PHPUnit_Framework_MockObject_MockObject $mock_user */
+        $mock_user = $this->getMockBuilder(User::class)
             ->disableOriginalConstructor()
             ->getMock();
 

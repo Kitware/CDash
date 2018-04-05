@@ -25,10 +25,14 @@ include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 include 'include/version.php';
-require_once 'models/project.php';
-require_once 'models/buildfailure.php';
 require_once 'include/filterdataFunctions.php';
 require_once 'include/index_functions.php';
+
+use CDash\Model\Banner;
+use CDash\Model\Build;
+use CDash\Model\BuildInformation;
+use CDash\Model\Project;
+use CDash\Model\SubProject;
 
 @set_time_limit(0);
 
@@ -75,9 +79,6 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
     $start = microtime_float();
     require_once 'include/pdo.php';
-    require_once 'models/banner.php';
-    require_once 'models/build.php';
-    require_once 'models/subproject.php';
 
     $PDO = get_link_identifier()->getPdo();
     $response = array();
@@ -157,7 +158,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
         $response['type'] = $parent_build->Type;
 
         // Include data about this build from the buildinformation table.
-        require_once 'models/buildinformation.php';
+
         $buildinfo = new BuildInformation();
         $buildinfo->BuildId = $parentid;
         $buildinfo->Fill();

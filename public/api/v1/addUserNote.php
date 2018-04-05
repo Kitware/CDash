@@ -17,7 +17,8 @@
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
-require_once 'models/buildusernote.php';
+
+use CDash\Model\BuildUserNote;
 
 $noforcelogin = 1;
 require 'public/login.php';

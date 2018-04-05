@@ -17,7 +17,8 @@
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
-require_once 'models/build.php';
+
+use CDash\Model\Build;
 
 // Get details about this build.
 $build = get_request_build();

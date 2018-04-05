@@ -7,8 +7,9 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 require_once 'include/common.php';
 require_once 'include/pdo.php';
-require_once 'models/image.php';
-require_once 'models/testimage.php';
+
+use CDash\Model\Image;
+use CDash\Model\TestImage;
 
 class ImageTestCase extends KWWebTestCase
 {

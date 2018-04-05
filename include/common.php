@@ -17,6 +17,11 @@
 use CDash\Config;
 use CDash\Controller\Auth\Session;
 use CDash\ServiceContainer;
+use CDash\Model\Build;
+use CDash\Model\Project;
+use CDash\Model\User;
+use CDash\Model\UserProject;
+use CDash\Model\Site;
 
 require_once 'config/config.php';
 require_once 'include/log.php';
@@ -406,10 +411,6 @@ function checkUserPolicy($userid, $projectid, $onlyreturn = 0)
         return;
     }
 
-    require_once 'models/project.php';
-    require_once 'models/userproject.php';
-    require_once 'models/user.php';
-
     $user = new User();
     $user->Id = $userid;
 
@@ -501,7 +502,6 @@ function get_projects($onlyactive = true)
 
     include 'config/config.php';
     require_once 'include/pdo.php';
-    require_once 'models/project.php';
 
     $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
     pdo_select_db("$CDASH_DB_NAME", $db);
@@ -1651,14 +1651,14 @@ function get_cdash_dashboard_xml($projectname, $date)
         $xml .= add_XML_value('id', $userid);
 
         // Is the user super administrator
-        require_once 'models/user.php';
+
         $user = new User();
         $user->Id = $userid;
         $user->Fill();
         $xml .= add_XML_value('admin', $user->Admin);
 
         // Is the user administrator of the project
-        require_once 'models/userproject.php';
+
         $userproject = new UserProject();
         $userproject->UserId = $userid;
         $userproject->ProjectId = $projectid;
@@ -2156,7 +2156,6 @@ function cast_data_for_JSON($value)
  */
 function get_server_siteid()
 {
-    require_once 'models/site.php';
     $server = new Site();
     $server->Name = 'CDash Server';
     if (!$server->Exists()) {
@@ -2176,8 +2175,6 @@ function get_server_siteid()
  */
 function get_aggregate_build($build)
 {
-    require_once 'models/build.php';
-
     $siteid = get_server_siteid();
     $build->ComputeTestingDayBounds();
 

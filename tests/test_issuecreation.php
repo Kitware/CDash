@@ -4,8 +4,11 @@ require_once 'config/config.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 require_once 'include/repository.php';
-require_once 'models/build.php';
-require_once 'models/project.php';
+
+use CDash\Model\Build;
+use CDash\Model\Project;
+use CDash\Model\User;
+use CDash\Model\UserProject;
 
 class IssueCreationTestCase extends KWWebTestCase
 {
@@ -71,7 +74,7 @@ class IssueCreationTestCase extends KWWebTestCase
         $this->Builds['standalone'] = $build;
 
         // Add user1@kw as a project administrator.
-        require_once 'models/user.php';
+
         $user = new User();
         $userid = $user->GetIdFromEmail('user1@kw');
         $userproject = new UserProject();

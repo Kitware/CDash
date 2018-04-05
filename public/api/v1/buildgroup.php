@@ -22,7 +22,8 @@ include 'public/login.php';
 
 require_once 'include/api_common.php';
 require_once 'include/version.php';
-require_once 'models/buildgroup.php';
+
+use CDash\Model\BuildGroup;
 
 // Require administrative access to view this page.
 init_api_request();
