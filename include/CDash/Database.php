@@ -15,7 +15,6 @@
 =========================================================================*/
 namespace CDash;
 
-use CDash\Log;
 use PDO;
 use PDOException;
 

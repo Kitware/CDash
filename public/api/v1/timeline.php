@@ -19,6 +19,7 @@ require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 
 use CDash\Database;
+use CDash\Model\Build;
 
 // Handle required parameters: project and page.
 $Project = get_project_from_request();

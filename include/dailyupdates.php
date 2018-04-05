@@ -24,6 +24,8 @@ require_once 'include/pdo.php';
 include_once 'include/common.php';
 require_once 'include/cdashmail.php';
 
+use CDash\Model\UserProject;
+
 @set_time_limit(0);
 
 function get_related_dates($projectnightlytime, $basedate)
@@ -833,7 +835,7 @@ function cleanUserTemp()
 function sendEmailUnregisteredUsers($projectid, $cvsauthors)
 {
     include 'config/config.php';
-    require_once 'models/userproject.php';
+
     include_once 'include/common.php';
 
     $unregisteredusers = array();

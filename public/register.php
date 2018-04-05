@@ -22,7 +22,8 @@ redirect_to_https();
 
 require_once 'include/cdashmail.php';
 require_once 'include/pdo.php';
-require_once 'models/user.php';
+
+use CDash\Model\User;
 
 $reg = '';
 

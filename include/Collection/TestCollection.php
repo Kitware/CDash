@@ -1,7 +1,7 @@
 <?php
 namespace CDash\Collection;
 
-use Test;
+use CDash\Model\Test;
 
 class TestCollection extends Collection
 {

@@ -22,9 +22,10 @@ $noforcelogin = 1;
 include 'public/login.php';
 
 require_once 'include/version.php';
-require_once 'models/project.php';
-require_once 'models/user.php';
-require_once 'models/userproject.php';
+
+use CDash\Model\Project;
+use CDash\Model\User;
+use CDash\Model\UserProject;
 
 $start = microtime_float();
 $response = array();

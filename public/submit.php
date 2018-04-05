@@ -27,7 +27,8 @@ require_once 'include/pdo.php';
 include 'include/do_submit.php';
 include 'include/clientsubmit.php';
 include 'include/version.php';
-require_once 'models/project.php';
+
+use CDash\Model\Project;
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 if (!$db || !pdo_select_db("$CDASH_DB_NAME", $db)) {

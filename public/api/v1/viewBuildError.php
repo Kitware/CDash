@@ -33,10 +33,13 @@ require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 include_once 'include/repository.php';
 include 'include/version.php';
-require_once 'models/build.php';
-require_once 'models/label.php';
-require_once 'models/buildupdate.php';
-require_once 'models/site.php';
+
+use CDash\Model\Build;
+use CDash\Model\BuildError;
+use CDash\Model\BuildFailure;
+use CDash\Model\Label;
+use CDash\Model\BuildUpdate;
+use CDash\Model\Site;
 
 $build = get_request_build();
 $update = new BuildUpdate();
@@ -189,14 +192,14 @@ if (isset($_GET['onlydeltan'])) {
     $buildErrors = $build->GetErrors($filter_error_properties);
 
     foreach ($buildErrors as $error) {
-        addErrorResponse(builderror::marshal($error, $project_array, $revision));
+        addErrorResponse(BuildError::marshal($error, $project_array, $revision));
     }
 
     // Build failure table
     $buildFailures = $build->GetFailures(['type' => $type]);
 
     foreach ($buildFailures as $fail) {
-        $failure = buildfailure::marshal($fail, $project_array, $revision, true);
+        $failure = BuildFailure::marshal($fail, $project_array, $revision, true);
 
         if ($project_array['displaylabels']) {
             $label = new Label();

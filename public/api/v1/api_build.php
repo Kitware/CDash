@@ -16,6 +16,12 @@
 
 include_once 'api.php';
 
+use CDash\Model\ClientJobSchedule;
+use CDash\Model\ClientOS;
+use CDash\Model\ClientCMake;
+use CDash\Model\ClientCompiler;
+use CDash\Model\ClientLibrary;
+
 class BuildAPI extends CDashAPI
 {
     /** Return the defects: builderrors, buildwarnings, testnotrun, testfailed. */
@@ -318,11 +324,6 @@ class BuildAPI extends CDashAPI
     {
         include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
         include_once 'include/common.php';
-        include_once 'models/clientjobschedule.php';
-        include_once 'models/clientos.php';
-        include_once 'models/clientcmake.php';
-        include_once 'models/clientcompiler.php';
-        include_once 'models/clientlibrary.php';
 
         if (!isset($this->Parameters['token'])) {
             return array('status' => false, 'message' => 'You must specify a token parameter.');
@@ -487,11 +488,6 @@ class BuildAPI extends CDashAPI
     {
         include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
         include_once 'include/common.php';
-        include_once 'models/clientjobschedule.php';
-        include_once 'models/clientos.php';
-        include_once 'models/clientcmake.php';
-        include_once 'models/clientcompiler.php';
-        include_once 'models/clientlibrary.php';
 
         $status = array();
         $status['scheduled'] = 0;

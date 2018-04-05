@@ -14,13 +14,13 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+require_once('include/common.php');
+
 use CDash\Config;
 use CDash\Controller\Auth\Session;
 use CDash\ServiceContainer;
 use CDash\Database;
-
-require_once 'models/user.php';
-require_once('include/common.php');
+use CDash\Model\User;
 
 $pdo = Database::getInstance()->getPdo();
 

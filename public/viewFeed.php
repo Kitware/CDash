@@ -20,8 +20,9 @@ require_once 'include/pdo.php';
 include 'public/login.php';
 include_once 'include/common.php';
 include 'include/version.php';
-include 'models/project.php';
-include 'models/user.php';
+
+use CDash\Model\Project;
+use CDash\Model\User;
 
 @$projectid = $_GET['projectid'];
 if ($projectid != null) {

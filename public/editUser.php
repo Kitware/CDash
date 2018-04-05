@@ -19,8 +19,9 @@ require_once 'include/pdo.php';
 require_once 'include/login_functions.php';
 include 'public/login.php';
 require_once 'include/version.php';
-require_once 'models/user.php';
-require_once 'models/userproject.php';
+
+use CDash\Model\User;
+use CDash\Model\UserProject;
 
 if ($session_OK) {
     require_once 'include/common.php';

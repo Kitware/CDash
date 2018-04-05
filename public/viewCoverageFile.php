@@ -20,8 +20,9 @@ require_once 'include/pdo.php';
 include 'public/login.php';
 include_once 'include/common.php';
 include 'include/version.php';
-require_once 'models/coveragefile.php';
-require_once 'models/coveragefilelog.php';
+
+use CDash\Model\CoverageFile;
+use CDash\Model\CoverageFileLog;
 
 @$buildid = $_GET['buildid'];
 if ($buildid != null) {

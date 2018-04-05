@@ -23,7 +23,9 @@ include 'public/login.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 require_once 'include/version.php';
-require_once 'models/project.php';
+
+use CDash\Model\Project;
+use CDash\Model\User;
 
 $start = microtime_float();
 $service = ServiceContainer::getInstance();

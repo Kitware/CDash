@@ -23,9 +23,9 @@ require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 include_once 'include/repository.php';
 include 'include/version.php';
-require_once 'models/build.php';
-require_once 'models/project.php';
-require_once 'models/site.php';
+
+use CDash\Model\Project;
+use CDash\Model\Site;
 
 $start = microtime_float();
 

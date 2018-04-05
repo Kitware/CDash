@@ -20,7 +20,7 @@ require_once 'include/common.php';
 require_once 'include/api_common.php';
 $noforcelogin = 1;
 include 'public/login.php';
-require_once 'models/build.php';
+
 use CDash\Database;
 
 $build = get_request_build();
