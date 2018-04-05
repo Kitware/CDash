@@ -75,6 +75,7 @@
              'public/js/jquery.flot.min.js',
              'public/js/jquery.flot.navigate.min.js',
              'public/js/jquery.flot.selection.min.js',
+             'public/js/jquery.flot.symbol.min.js',
              'public/js/jquery.flot.time.min.js',
              'public/js/jquery.qtip.min.js',
              'public/js/jqModal.js',
