@@ -16,8 +16,9 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
-require_once 'models/project.php';
-require_once 'models/user.php';
+
+use CDash\Model\User;
+use CDash\Model\UserProject;
 
 class UpdateOnlyUserStatsTestCase extends KWWebTestCase
 {

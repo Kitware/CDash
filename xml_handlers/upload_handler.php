@@ -16,10 +16,13 @@
 
 require_once 'config/config.php';
 require_once 'xml_handlers/abstract_handler.php';
-require_once 'models/build.php';
-require_once 'models/uploadfile.php';
-require_once 'models/site.php';
-require_once 'models/project.php';
+
+use CDash\Model\Build;
+use CDash\Model\BuildInformation;
+use CDash\Model\Site;
+use CDash\Model\SiteInformation;
+use CDash\Model\Project;
+use CDash\Model\UploadFile;
 
 /**
  * For each uploaded file the following steps occur:
@@ -45,7 +48,7 @@ class UploadHandler extends AbstractHandler
 
     /** If True, means an error happened while processing the file */
     private $UploadError;
-    
+
     private $UpdateEndTime;
 
     /** Constructor */

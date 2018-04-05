@@ -2,13 +2,18 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
-require_once 'models/build.php';
-require_once 'models/buildtest.php';
-require_once 'models/project.php';
-require_once 'models/test.php';
+
+use CDash\Model\Build;
+use CDash\Model\BuildError;
+use CDash\Model\BuildFailure;
+use CDash\Model\BuildTest;
+use CDash\Model\Project;
+use CDash\Model\Test;
 
 class BuildPropertiesTestCase extends KWWebTestCase
 {
+    /** @var Project Project */
+    private $Project;
     public function __construct()
     {
         parent::__construct();

@@ -16,6 +16,13 @@
 
 require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
+
+use CDash\Model\Build;
+use CDash\Model\BuildConfigure;
+use CDash\Model\BuildInformation;
+use CDash\Model\Label;
+use CDash\Model\Site;
+use CDash\Model\SiteInformation;
 require_once 'models/label.php';
 require_once 'models/site.php';
 require_once 'models/buildconfigure.php';
@@ -64,6 +71,8 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
 
             $siteInformation = $factory->create(SiteInformation::class);
             $this->BuildInformation = $factory->create(BuildInformation::class);
+            $siteInformation = new SiteInformation();
+            $this->BuildInformation = new BuildInformation();
             $this->BuildName = "";
             $this->BuildStamp = "";
             $this->Generator = "";

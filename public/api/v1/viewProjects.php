@@ -18,7 +18,8 @@ $noforcelogin = 1;
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 include 'public/login.php';
-include_once 'models/banner.php';
+
+use CDash\Model\Banner;
 
 $start = microtime_float();
 $response = begin_JSON_response();

@@ -45,7 +45,7 @@
     <th class="measurement">
       <span class="nobr"> {{cdash.errortypename}} </span>
     </th>
-    <td>
+    <td ng-if="error.text">
       <pre ng-if="error.precontext" class="compiler-output" ng-bind-html="error.precontext | ctestNonXmlCharEscape | terminalColors:false | trustAsHtml"></pre>
       <b>
         <pre class="compiler-output" ng-bind-html="error.text | ctestNonXmlCharEscape | terminalColors:false | trustAsHtml"></pre>

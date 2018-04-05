@@ -19,7 +19,8 @@ require_once 'include/pdo.php';
 include_once 'include/common.php';
 include_once 'include/version.php';
 require_once 'include/cdashmail.php';
-require_once 'models/user.php';
+
+use CDash\Model\User;
 
 $xml = begin_XML_for_XSLT();
 $xml .= '<title>Recover password</title>';

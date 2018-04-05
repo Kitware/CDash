@@ -21,10 +21,9 @@ require_once 'include/pdo.php';
 include_once 'include/common.php';
 include 'include/version.php';
 include 'public/login.php';
-include_once 'models/project.php';
-include_once 'models/build.php';
-include_once 'models/site.php';
-include_once 'models/uploadfile.php';
+
+use CDash\Model\Build;
+use CDash\Model\Site;
 
 if (!isset($_GET['buildid'])) {
     echo 'Build id not set';

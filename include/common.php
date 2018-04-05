@@ -14,6 +14,15 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use CDash\Config;
+use CDash\Controller\Auth\Session;
+use CDash\ServiceContainer;
+use CDash\Model\Build;
+use CDash\Model\Project;
+use CDash\Model\User;
+use CDash\Model\UserProject;
+use CDash\Model\Site;
+
 require_once 'config/config.php';
 require_once 'include/log.php';
 
@@ -402,10 +411,6 @@ function checkUserPolicy($userid, $projectid, $onlyreturn = 0)
         return;
     }
 
-    require_once 'models/project.php';
-    require_once 'models/userproject.php';
-    require_once 'models/user.php';
-
     $user = new User();
     $user->Id = $userid;
 
@@ -497,7 +502,6 @@ function get_projects($onlyactive = true)
 
     include 'config/config.php';
     require_once 'include/pdo.php';
-    require_once 'models/project.php';
 
     $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
     pdo_select_db("$CDASH_DB_NAME", $db);
@@ -1647,14 +1651,14 @@ function get_cdash_dashboard_xml($projectname, $date)
         $xml .= add_XML_value('id', $userid);
 
         // Is the user super administrator
-        require_once 'models/user.php';
+
         $user = new User();
         $user->Id = $userid;
         $user->Fill();
         $xml .= add_XML_value('admin', $user->Admin);
 
         // Is the user administrator of the project
-        require_once 'models/userproject.php';
+
         $userproject = new UserProject();
         $userproject->UserId = $userid;
         $userproject->ProjectId = $projectid;
@@ -1919,19 +1923,18 @@ function redirect_to_https()
 
 function begin_JSON_response()
 {
-    global $CDASH_VERSION, $CDASH_USE_LOCAL_DIRECTORY, $CDASH_ROOT_DIR,
-           $CDASH_ENABLE_FEED;
+    $config = Config::getInstance();
+    $service = ServiceContainer::getInstance();
+    $session = $service->get(Session::class);
 
     $response = array();
-    $response['version'] = $CDASH_VERSION;
-    $response['feed_enabled'] = $CDASH_ENABLE_FEED === 1;
+    $response['version'] = $config->get('CDASH_VERSION');
+    $response['feed_enabled'] = $config->get('CDASH_ENABLE_FEED') === 1;
 
     $user_response = array();
-    $userid = 0;
-    if (isset($_SESSION['cdash']) and isset($_SESSION['cdash']['loginid'])) {
-        $userid = $_SESSION['cdash']['loginid'];
-        require_once 'models/user.php';
-        $user = new User();
+    $userid = $session->getSessionVar('cdash.loginid');
+    if ($userid) {
+        $user = $service->create(User::class);
         $user->Id = $userid;
         $user->Fill();
         $user_response['admin'] = $user->Admin;
@@ -1942,13 +1945,16 @@ function begin_JSON_response()
     // Check for local overrides of common view partials.
     $files_to_check = array('header', 'footer');
     foreach ($files_to_check as $file_to_check) {
-        $local_file = "local/views/$file_to_check.html";
-        if ($CDASH_USE_LOCAL_DIRECTORY == '1' &&
-            file_exists("$CDASH_ROOT_DIR/public/$local_file")
+        $local_file = "local/views/{$file_to_check}.html";
+        $use_local = $config->get('CDASH_USE_LOCAL_DIRECTORY');
+        $root_dir = $config->get('CDASH_ROOT_DIR');
+
+        if ($use_local == '1' &&
+            file_exists("{$root_dir}/public/{$local_file}")
         ) {
             $response[$file_to_check] = $local_file;
         } else {
-            $response[$file_to_check] = "views/partials/$file_to_check.html";
+            $response[$file_to_check] = "views/partials/{$file_to_check}.html";
         }
     }
     return $response;
@@ -2150,7 +2156,6 @@ function cast_data_for_JSON($value)
  */
 function get_server_siteid()
 {
-    require_once 'models/site.php';
     $server = new Site();
     $server->Name = 'CDash Server';
     if (!$server->Exists()) {
@@ -2170,8 +2175,6 @@ function get_server_siteid()
  */
 function get_aggregate_build($build)
 {
-    require_once 'models/build.php';
-
     $siteid = get_server_siteid();
     $build->ComputeTestingDayBounds();
 

@@ -17,8 +17,9 @@
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
-include_once 'models/project.php';
-include_once 'models/user.php';
+
+use CDash\Model\Project;
+use CDash\Model\User;
 
 init_api_request();
 $response = array();

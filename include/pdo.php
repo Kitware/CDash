@@ -16,7 +16,6 @@
 
 use CDash\Database;
 
-require dirname(__DIR__) . '/vendor/autoload.php';
 require_once 'config/config.php';
 require_once 'include/log.php';
 
@@ -204,7 +203,8 @@ function pdo_fetch_array($result, $result_type = PDO::FETCH_BOTH)
  */
 function pdo_fetch_row($result)
 {
-    return pdo_fetch_array($result, PDO::FETCH_NUM);
+    return pdo_fetch_array($result,
+        PDO::FETCH_NUM);
 }
 
 /**
@@ -395,29 +395,19 @@ function pdo_rollback($link_identifier = null)
 }
 
 /**
+ * DEPRECATED - use Database::getInstance()->execute(...)
+ *
  * Execute a prepared statement and log any errors that occur.
+ *
  * @param PDOStatement $stmt
  * @param array|null $input_parameters
  * @return bool
+ * @deprecated v2.5.0 01/22/2018
  */
 function pdo_execute($stmt, $input_parameters=null)
 {
-    global $CDASH_CRITICAL_PDO_ERRORS;
-    if (!$stmt->execute($input_parameters)) {
-        $error_info = $stmt->errorInfo();
-        if (isset($error_info[2]) && $error_info[0] !== '00000') {
-            $e = new Exception();
-            $stack_trace = $e->getTraceAsString();
-            $log_msg = $error_info[2] . "\n$stack_trace\n";
-            add_log($log_msg, 'pdo_execute', LOG_ERR);
-            if (in_array($error_info[1], $CDASH_CRITICAL_PDO_ERRORS)) {
-                http_response_code(500);
-                exit();
-            }
-        }
-        return false;
-    }
-    return true;
+    $db = Database::getInstance();
+    return $db->execute($stmt, $input_parameters);
 }
 
 function pdo_get_vendor_version($link_identifier = null)

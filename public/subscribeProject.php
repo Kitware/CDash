@@ -22,11 +22,12 @@ include_once 'include/common.php';
 redirect_to_https();
 
 require_once 'include/version.php';
-require_once 'models/project.php';
-require_once 'models/user.php';
-require_once 'models/label.php';
-require_once 'models/labelemail.php';
-include_once 'models/userproject.php';
+
+use CDash\Model\Project;
+use CDash\Model\User;
+use CDash\Model\Label;
+use CDash\Model\LabelEmail;
+use CDash\Model\UserProject;
 
 if ($session_OK) {
     $userid = $_SESSION['cdash']['loginid'];

@@ -40,6 +40,7 @@ add_unit_test(/CDash/ServiceContainer)
 add_unit_test(/CDash/UpdateUseCase)
 add_unit_test(/CDash/TestUseCase)
 add_unit_test(/CDash/ConfigUseCase)
+add_unit_test(/CDash/Controller/Auth/Session)
 
 add_php_test(install)
 add_php_test(compressedtest)

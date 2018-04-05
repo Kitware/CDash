@@ -5,6 +5,29 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
+use CDash\Model\Build;
+use CDash\Model\BuildConfigure;
+use CDash\Model\BuildError;
+use CDash\Model\BuildFailure;
+use CDash\Model\BuildGroup;
+use CDash\Model\BuildInformation;
+use CDash\Model\BuildNote;
+use CDash\Model\BuildTest;
+use CDash\Model\BuildUpdate;
+use CDash\Model\BuildUpdateFile;
+use CDash\Model\Coverage;
+use CDash\Model\CoverageFile;
+use CDash\Model\CoverageFileLog;
+use CDash\Model\CoverageSummary;
+use CDash\Model\DynamicAnalysis;
+use CDash\Model\DynamicAnalysisDefect;
+use CDash\Model\DynamicAnalysisSummary;
+use CDash\Model\Image;
+use CDash\Model\Label;
+use CDash\Model\Test;
+use CDash\Model\TestMeasurement;
+use CDash\Model\UploadFile;
+
 class RemoveBuildsTestCase extends KWWebTestCase
 {
     public function __construct()
@@ -28,20 +51,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
     {
         require_once 'include/common.php';
         require_once 'include/pdo.php';
-        require_once 'models/build.php';
-        require_once 'models/buildconfigure.php';
-        require_once 'models/builderror.php';
-        require_once 'models/buildfailure.php';
-        require_once 'models/buildgroup.php';
-        require_once 'models/buildnote.php';
-        require_once 'models/buildupdate.php';
-        require_once 'models/coverage.php';
-        require_once 'models/dynamicanalysis.php';
-        require_once 'models/dynamicanalysissummary.php';
-        require_once 'models/image.php';
-        require_once 'models/label.php';
-        require_once 'models/test.php';
-        require_once 'models/uploadfile.php';
+
 
         $time = gmdate(FMT_DATETIME);
 

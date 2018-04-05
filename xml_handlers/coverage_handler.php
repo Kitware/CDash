@@ -15,9 +15,17 @@
 =========================================================================*/
 
 require_once 'xml_handlers/abstract_handler.php';
-require_once 'models/coverage.php';
-require_once 'models/label.php';
-require_once 'models/project.php';
+
+use CDash\Model\Build;
+use CDash\Model\BuildInformation;
+use CDash\Model\Coverage;
+use CDash\Model\CoverageFile;
+use CDash\Model\CoverageSummary;
+use CDash\Model\Label;
+use CDash\Model\Project;
+use CDash\Model\Site;
+use CDash\Model\SiteInformation;
+use CDash\Model\SubProject;
 
 class CoverageHandler extends AbstractHandler
 {
