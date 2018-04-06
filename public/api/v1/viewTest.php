@@ -19,7 +19,9 @@ require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 include 'include/version.php';
 require_once 'include/filterdataFunctions.php';
-include_once 'models/build.php';
+
+use CDash\Model\Build;
+use CDash\Model\BuildTest;
 
 /**
  * View tests of a particular build.
@@ -419,7 +421,7 @@ $labels_found = false;
 
 // Generate a response for each test found.
 while ($row = pdo_fetch_array($result)) {
-    $marshaledTest = buildtest::marshal($row, $row['buildid'], $build->ProjectId, $projectshowtesttime, $testtimemaxstatus, $testdate);
+    $marshaledTest = BuildTest::marshal($row, $row['buildid'], $build->ProjectId, $projectshowtesttime, $testtimemaxstatus, $testdate);
 
     if ($marshaledTest['status'] == 'Passed') {
         $numPassed++;

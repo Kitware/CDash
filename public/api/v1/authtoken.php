@@ -19,8 +19,9 @@ require_once 'include/pdo.php';
 include 'public/login.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
-require_once 'models/authtoken.php';
-require_once 'models/user.php';
+
+use CDash\Model\AuthToken;
+use CDash\Model\User;
 
 // Make sure we have a valid login.
 if (!$session_OK) {

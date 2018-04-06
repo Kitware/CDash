@@ -15,8 +15,9 @@
 =========================================================================*/
 
 require_once dirname(__DIR__) . '/config/config.php';
-require_once 'models/user.php';
 require_once 'public/login.php';
+
+use CDash\Model\User;
 
 function echo_currently_processing_submissions()
 {

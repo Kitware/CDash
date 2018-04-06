@@ -28,6 +28,9 @@ require_once 'xml_handlers/testing_nunit_handler.php';
 require_once 'xml_handlers/testing_junit_handler.php';
 require_once 'xml_handlers/coverage_junit_handler.php';
 
+use CDash\Model\BuildFile;
+use CDash\Model\Project;
+
 // Helper function to display the message
 function displayReturnStatus($statusarray)
 {
@@ -184,7 +187,6 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
 
     // Instantiate a buildfile object so we can delete it from the database
     // once we're done parsing it.
-    require_once 'models/buildfile.php';
     $buildfile = new BuildFile();
     $buildfile->BuildId = $buildid;
     $buildfile->md5 = $expected_md5;
@@ -229,7 +231,6 @@ function ctest_parse($filehandler, $projectid, $expected_md5 = '', $do_checksum 
 {
     include 'config/config.php';
     require_once 'include/common.php';
-    require_once 'models/project.php';
     include 'include/version.php';
 
     global $CDASH_USE_LOCAL_DIRECTORY;

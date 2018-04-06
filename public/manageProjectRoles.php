@@ -19,10 +19,11 @@ require_once 'include/pdo.php';
 include 'public/login.php';
 require_once 'include/common.php';
 require_once 'include/version.php';
-require_once 'models/project.php';
-require_once 'models/user.php';
-require_once 'models/userproject.php';
 require_once 'include/cdashmail.php';
+
+use CDash\Model\Project;
+use CDash\Model\User;
+use CDash\Model\UserProject;
 
 if ($session_OK) {
     $usersessionid = $_SESSION['cdash']['loginid'];

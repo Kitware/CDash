@@ -14,6 +14,9 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use CDash\Controller\Auth\Session;
+use CDash\ServiceContainer;
+
 include dirname(__DIR__) . '/config/config.php';
 include_once 'include/common.php';
 require_once 'include/pdo.php';
@@ -25,23 +28,23 @@ $loginerror = '';
 // --------------------------------------------------------------------------------------
 // main
 // --------------------------------------------------------------------------------------
-$mysession = array('login' => false, 'passwd' => false, 'ID' => false, 'valid' => false, 'langage' => false);
+$mysession = ['login' => false, 'passwd' => false, 'ID' => false, 'valid' => false, 'langage' => false];
 $uri = basename($_SERVER['PHP_SELF']);
 $session_OK = 0;
+$service = ServiceContainer::getInstance();
+/** @var Session $session */
+$session = $service->get(Session::class);
 
 if (!auth(@$SessionCachePolicy) && !@$noforcelogin) {
     // authentication failed
 
-
     $csrfToken = null;
-    if (session_id() != '') {
-        session_destroy();
+    if ($session->exists()) {
+        $session->destroy();
         // Re-use any existing csrf token.  This prevents token mismatch
         // when this page gets included multiple times during an authentication
         // session.
-        if (!empty($_SESSION['cdash']) && !empty($_SESSION['cdash']['csrfToken'])) {
-            $csrfToken = $_SESSION['cdash']['csrfToken'];
-        }
+        $csrfToken = $session->getSessionVar('cdash.csrfToken');
     }
 
     if (is_null($csrfToken)) {
@@ -50,28 +53,24 @@ if (!auth(@$SessionCachePolicy) && !@$noforcelogin) {
         $csrfToken = bin2hex(random_bytes(16));
     }
 
-    session_name('CDash');
-    session_cache_limiter(@$SessionCachePolicy);
-    session_set_cookie_params($CDASH_COOKIE_EXPIRATION_TIME);
-    @ini_set('session.gc_maxlifetime', $CDASH_COOKIE_EXPIRATION_TIME + 600);
-    session_start();
-    $sessionArray = array('csrfToken' => $csrfToken);
+    // TODO: exists to satisfy a couple of tests and should be removed with extreme prejudice asap
+    if (!isset($SessionCachePolicy)) {
+        $SessionCachePolicy = Session::CACHE_PRIVATE_NO_EXPIRE;
+    }
 
-    $_SESSION['cdash'] = $sessionArray;
+    $session->start($SessionCachePolicy);
+    $session->setSessionVar('cdash', ['csrfToken' => $csrfToken]);
     LoginForm($loginerror); // display login form
     $session_OK = 0;
 } else {
     // authentication was successful
-    session_regenerate_id();
+    $session->regenerateId();
     $session_OK = 1;
 
     // Check if we should be redirecting the user to another page.
     // This happens when they have to change their password because it expired.
-    if (isset($_SESSION['cdash']) &&
-            array_key_exists('redirect', $_SESSION['cdash']) &&
-            !empty($_SESSION['cdash']['redirect'])) {
-        $destination = $_SESSION['cdash']['redirect'];
-
+    $destination = $session->getSessionVar('cdash.redirect');
+    if ($destination) {
         $dest_page = substr($destination, strrpos($destination, '/') + 1);
         $pos = strpos($dest_page, '?');
         if ($pos !== false) {

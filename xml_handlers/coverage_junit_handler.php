@@ -15,8 +15,9 @@
 =========================================================================*/
 
 require_once 'xml_handlers/abstract_handler.php';
-require_once 'models/coverage.php';
-require_once 'models/label.php';
+
+use CDash\Model\Coverage;
+use CDash\Model\Label;
 
 class CoverageJUnitHandler extends AbstractHandler
 {

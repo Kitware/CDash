@@ -21,10 +21,10 @@ require_once 'public/login.php';
 require_once 'include/common.php';
 require_once 'include/api_common.php';
 require_once 'include/version.php';
-require_once 'models/build.php';
-require_once 'models/buildconfigure.php';
-require_once 'models/project.php';
-require_once 'models/site.php';
+
+use CDash\Model\BuildConfigure;
+use CDash\Model\Project;
+use CDash\Model\Site;
 
 $start = microtime_float();
 

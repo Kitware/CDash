@@ -7,10 +7,13 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 require_once 'include/common.php';
 require_once 'include/pdo.php';
-require_once 'models/project.php';
-require_once 'models/subproject.php';
-require_once 'models/user.php';
-require_once 'models/labelemail.php';
+
+use CDash\Model\Label;
+use CDash\Model\LabelEmail;
+use CDash\Model\Project;
+use CDash\Model\SubProject;
+use CDash\Model\User;
+use CDash\Model\UserProject;
 
 class SubProjectEmailTestCase extends KWWebTestCase
 {

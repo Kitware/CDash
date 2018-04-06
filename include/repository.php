@@ -17,6 +17,10 @@
 require_once 'config/config.php';
 require_once 'include/log.php';
 
+use CDash\Model\Build;
+use CDash\Model\BuildUpdateFile;
+use CDash\Model\Project;
+
 function get_previous_revision($revision)
 {
     // Split revision into components based on any "." separators:
@@ -665,7 +669,7 @@ function get_revision_url($projectid, $revision, $priorrevision)
         return $revisionfonction($projecturl, $revision, $priorrevision);
     } else {
         // default is viewcvs
-        return get_viewcvs_revision_url($projecturl, $revision);
+        return get_viewcvs_revision_url($projecturl, $revision, $priorrevision);
     }
 }
 
@@ -800,8 +804,6 @@ function perform_version_only_diff($update, $projectid)
     }
 
     // Return early if this project doesn't have a remote repository viewer.
-    require_once 'models/buildupdate.php';
-    require_once 'models/project.php';
     $project = new Project();
     $project->Id = $projectid;
     $project->Fill();
@@ -817,7 +819,7 @@ function perform_version_only_diff($update, $projectid)
     }
 
     // Return early if we don't have a previous build to compare against.
-    require_once 'models/build.php';
+
     $build = new Build();
     $build->Id = $update->BuildId;
     $previous_buildid = $build->GetPreviousBuildId();
@@ -1085,14 +1087,12 @@ function perform_github_version_only_diff($project, $update, $previous_revision)
 function generate_bugtracker_new_issue_link($build, $project)
 {
     // Make sure that we have a valid build.
-    require_once 'models/build.php';
     if (!$build->Filled && !$build->Exists()) {
         return false;
     }
 
     // Return early if we don't have an implementation for this type
     // of bug tracker.
-    require_once 'models/project.php';
     $project->Fill();
     $function_name = "generate_{$project->BugTrackerType}_new_issue_link";
     if (!function_exists($function_name)) {

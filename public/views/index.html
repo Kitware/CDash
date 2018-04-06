@@ -298,7 +298,7 @@
               </th>
 
               <th align="center" width="5%" style="cursor: pointer"
-                  ng-if="::buildgroup.hastestdata && cdash.advancedview != 0 && cdash.showstarttime"
+                  ng-if="::buildgroup.hastestdata && cdash.showtesttime"
                   ng-click="updateOrderByFields(buildgroup, 'test.timefull', $event)">
                 Time
                 <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-test.timefull') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('test.timefull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>

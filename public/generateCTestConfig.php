@@ -19,8 +19,9 @@ include dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
 include 'public/login.php';
 include_once 'include/common.php';
-require_once 'models/project.php';
-require_once 'models/subproject.php';
+
+use CDash\Model\Project;
+use CDash\Model\SubProject;
 
 @set_time_limit(0);
 

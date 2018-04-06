@@ -6,11 +6,10 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
-require_once 'models/build.php';
-require_once 'models/buildgrouprule.php';
 
 use CDash\Config;
 use CDash\Database;
+use CDash\Model\Build;
 
 class TimelineTestCase extends KWWebTestCase
 {

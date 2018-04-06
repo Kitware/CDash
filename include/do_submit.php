@@ -21,11 +21,16 @@ use Bernard\QueueFactory\PersistentFactory;
 use Bernard\Serializer;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-require dirname(__DIR__) . '/vendor/autoload.php';
 include 'include/ctestparser.php';
 include_once 'include/common.php';
 include_once 'include/createRSS.php';
 include 'include/sendemail.php';
+
+use CDash\Model\AuthToken;
+use CDash\Model\Build;
+use CDash\Model\BuildFile;
+use CDash\Model\Project;
+use CDash\Model\Site;
 
 /**
  * Given a filename, query the CDash API for its contents and return
@@ -316,7 +321,7 @@ function post_submit()
     }
 
     // Do not process this submission if the project has too many builds.
-    require_once 'models/project.php';
+
     $project = new Project();
     $project->Name = $projectname;
     $project->Id = $projectid;
@@ -388,8 +393,6 @@ function post_submit()
 /** Function to deal with the external tool mechanism */
 function put_submit_file()
 {
-    include 'models/buildfile.php';
-
     // We expect GET to contain the following values:
     $vars = array('buildid', 'type');
     foreach ($vars as $var) {
@@ -627,7 +630,7 @@ function valid_token_for_submission($projectid)
         http_response_code(401);
         return false;
     }
-    require_once 'models/authtoken.php';
+
     $authtoken = new AuthToken();
     $authtoken->Hash = $authtoken->HashToken($token);
     if (!$authtoken->Exists()) {

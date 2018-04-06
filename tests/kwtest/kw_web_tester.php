@@ -16,6 +16,8 @@
 
 require_once dirname(__FILE__) . '/kw_unlink.php';
 
+use CDash\Model\Project;
+
 /**#@+
  *  include other SimpleTest class files
  */
@@ -347,8 +349,6 @@ class KWWebTestCase extends WebTestCase
     public function createProject($input_settings, $update = false,
             $username = 'simpletest@localhost', $password = 'simpletest')
     {
-        require_once 'models/project.php';
-
         if ($update) {
             // Updating an existing project.
             if (!array_key_exists('Id', $input_settings)) {
