@@ -25,6 +25,7 @@ use CDash\Model\BuildTest;
 use CDash\Model\Feed;
 use CDash\Model\Image;
 use CDash\Model\Label;
+use CDash\Model\Project;
 use CDash\Model\Site;
 use CDash\Model\SiteInformation;
 use CDash\Model\Test;
