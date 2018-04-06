@@ -10,7 +10,7 @@
     "angular-clipboard": "^1.5.0",
     "angular-ui-bootstrap": "^2.0.0",
     "angular-ui-sortable": "^0.14.3",
-    "ansi_up": "^2.0.2",
+    "ansi_up": "^3.0.0",
     "as-jqplot": "^1.0.8",
     "d3": "^3.5.17",
     "fs-path": "0.0.23",
