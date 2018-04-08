@@ -190,4 +190,35 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $sut->setRememberMeCookie($mock_user, $key);
         $config->set('CDASH_USE_HTTPS', $orig_https);
     }
+
+    public function testIsActive()
+    {
+        $this->system
+            ->expects($this->exactly(3))
+            ->method('session_status')
+            ->willReturnOnConsecutiveCalls(
+                PHP_SESSION_DISABLED,
+                PHP_SESSION_NONE,
+                PHP_SESSION_ACTIVE
+            );
+
+        $sut = new Session($this->system, Config::getInstance());
+        $this->assertFalse($sut->isActive());
+        $this->assertFalse($sut->isActive());
+        $this->assertTrue($sut->isActive());
+    }
+
+    public function testSetSessionVarWithDottedPath()
+    {
+        if (!isset($_SESSION)) {
+            $_SESSION = [];
+        }
+
+        $path = "cdash.oauth2.github";
+        $expected = ['id' => 1, 'email' => 'ricky.bobby@talladega.tld'];
+        $sut = new Session($this->system, Config::getInstance());
+        $sut->setSessionVar($path, $expected);
+        $actual = $sut->getSessionVar($path);
+        $this->assertEquals($expected, $actual);
+    }
 }
