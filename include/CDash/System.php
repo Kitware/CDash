@@ -87,9 +87,9 @@ class System
      * @param $httponly
      * @return void
      */
-    public function session_set_cookie_params($lifetime, $path, $domain, $secure, $httponly)
+    public function session_set_cookie_params($lifetime)
     {
-        session_set_cookie_params($lifetime, $path, $domain, $secure, $httponly);
+        session_set_cookie_params($lifetime);
     }
 
     /**

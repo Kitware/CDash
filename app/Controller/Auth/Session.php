@@ -52,20 +52,10 @@ class Session
     {
         $lifetime = $this->config->get('CDASH_COOKIE_EXPIRATION_TIME');
         $maxlife = $lifetime + self::EXTEND_GC_LIFETIME;
-        $baseUrl = $this->config->getBaseUrl();
-        $url = parse_url($baseUrl);
-        $secure = false; // send only over a https connection
-        $httponly = true; // make cookie only accessible via http, e.g. not javascript
 
         $this->system->session_name('CDash');
         $this->system->session_cache_limiter($cache_policy);
-        $this->system->session_set_cookie_params(
-            $lifetime,
-            $url['path'],
-            $url['host'],
-            $secure,
-            $httponly
-        );
+        $this->system->session_set_cookie_params($lifetime);
         $this->system->ini_set('session.gc_maxlifetime', $maxlife);
         $this->system->session_start();
     }
