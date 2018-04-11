@@ -7,8 +7,8 @@ endif()
 #
 function(add_selenium_test TestName)
   add_test(
-    ${TestName}
-    ${PHPUNIT_EXE} ${testing_dir}/selenium/test_${TestName}.php ${BROWSER}
+    NAME ${TestName}
+    COMMAND ${PHPUNIT_EXE} ${testing_dir}/selenium/test_${TestName}.php ${BROWSER}
   )
   set_tests_properties(
     ${TestName} PROPERTIES

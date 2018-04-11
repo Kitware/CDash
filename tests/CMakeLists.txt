@@ -6,8 +6,8 @@ set(PHPUNIT "${CDash_SOURCE_DIR}/vendor/bin/phpunit")
 #
 function(add_php_test TestName)
   add_test(
-    ${TestName}
-    ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_${TestName}.php
+    NAME ${TestName}
+    COMMAND ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_${TestName}.php
   )
   set_tests_properties(
     ${TestName} PROPERTIES
@@ -16,8 +16,8 @@ function(add_php_test TestName)
 endfunction(add_php_test)
 function(add_configured_php_test TestName)
   add_test(
-    ${TestName}
-    ${PHP_EXE} ${testing_dir}/singletest.php ${binary_testing_dir}/test_${TestName}.php
+    NAME ${TestName}
+    COMMAND ${PHP_EXE} ${testing_dir}/singletest.php ${binary_testing_dir}/test_${TestName}.php
   )
   set_tests_properties(
     ${TestName} PROPERTIES
@@ -26,8 +26,8 @@ function(add_configured_php_test TestName)
 endfunction(add_configured_php_test)
 function(add_unit_test TestName)
   add_test(
-    ${TestName}
-    ${PHP_EXE} ${phpunit_extra_arg} ${PHPUNIT} -c ${testing_dir}/phpunit.xml ${testing_dir}/case/${TestName}Test.php
+    NAME ${TestName}
+    COMMAND ${PHP_EXE} ${phpunit_extra_arg} ${PHPUNIT} -c ${testing_dir}/phpunit.xml ${testing_dir}/case/${TestName}Test.php
   )
 endfunction(add_unit_test TestName)
 
