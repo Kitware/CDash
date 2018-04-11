@@ -10,8 +10,9 @@ function(add_ctest_test TestName ProjectName Directory CDashVerifyScript)
     )
   set(extra_test_count 1)
   foreach(ctest_exe ${CMAKE_CTEST_COMMAND} ${CTEST_EXTRA_EXECUTABLES})
-    add_test(${TestName}_${extra_test_count}
-      ${ctest_exe} -S "${DriverScript}" -V)
+    add_test(
+      NAME ${TestName}_${extra_test_count}
+      COMMAND ${ctest_exe} -S "${DriverScript}" -V)
     math(EXPR extra_test_count "${extra_test_count} + 1")
   endforeach(ctest_exe ${CMAKE_CTEST_COMMAND} ${CTEST_EXTRA_EXECUTABLES})
 endfunction(add_ctest_test)
@@ -26,8 +27,9 @@ function(add_coverage_test TestName ProjectName Directory CDashVerifyScript)
     "${DriverScript}"
     @ONLY
     )
-  add_test(${TestName}
-    ${CMAKE_CTEST_COMMAND} -S "${DriverScript}" -V)
+  add_test(
+    NAME ${TestName}
+    COMMAND ${CMAKE_CTEST_COMMAND} -S "${DriverScript}" -V)
 endfunction(add_coverage_test)
 
 set(CTEST_EXTRA_EXECUTABLES "" CACHE STRING "List of other CTest executables to test")
@@ -95,7 +97,9 @@ if(CMake_SOURCE_DIR)
     set(source "${source}")
     set(build "${build}")
     configure_file("${in}" "${out}" @ONLY)
-    add_test(${name} ${CMAKE_CTEST_COMMAND} -S "${out}" -V --output-log "${log}")
+    add_test(
+      NAME ${name}
+      COMMAND ${CMAKE_CTEST_COMMAND} -S "${out}" -V --output-log "${log}")
     set_tests_properties(${name} PROPERTIES PASS_REGULAR_EXPRESSION "${regex}")
   endmacro()
 
@@ -131,8 +135,9 @@ if(CMake_SOURCE_DIR)
   endforeach()
 endif()
 
-add_test(recoverpassword
-  ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_recoverpassword.php)
+add_test(
+  NAME recoverpassword
+  COMMAND ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_recoverpassword.php)
 set_tests_properties(
   recoverpassword PROPERTIES
   FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*")
@@ -140,8 +145,9 @@ set_tests_properties(
 add_php_test(submitsortingdata)
 add_php_test(indexfilters)
 
-add_test(enable_async
-  ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_enable_async.php
+add_test(
+  NAME enable_async
+  COMMAND ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_enable_async.php
 )
 
 add_php_test(nobackup)
