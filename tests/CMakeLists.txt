@@ -27,11 +27,15 @@ endfunction(add_configured_php_test)
 function(add_unit_test TestName)
   add_test(
     ${TestName}
-    ${PHP_EXE} ${PHPUNIT}  -c ${testing_dir}/phpunit.xml ${testing_dir}/case/${TestName}Test.php
+    ${PHP_EXE} ${phpunit_extra_arg} ${PHPUNIT} -c ${testing_dir}/phpunit.xml ${testing_dir}/case/${TestName}Test.php
   )
 endfunction(add_unit_test TestName)
 
 # phpunit tests
+set(phpunit_extra_arg "")
+if (CDASH_CONFIGURE_HTACCESS_FILE)
+    set(phpunit_extra_arg "-d auto_prepend_file=${CMAKE_BINARY_DIR}/prepend_coverage.php")
+endif()
 add_unit_test(/PHPUnitTest)
 add_unit_test(/CDash/Config)
 add_unit_test(/CDash/Log)
