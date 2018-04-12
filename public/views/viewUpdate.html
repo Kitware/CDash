@@ -22,9 +22,6 @@
         Files changed on <a ng-href="viewSite.php?siteid={{::cdash.build.siteid}}">{{::cdash.build.site}}</a>
         ({{::cdash.build.buildname}}) as of {{::cdash.build.buildtime}}
       </h4>
-      <h4 ng-if="::cdash.update.timestamp">
-        Nightly Changes as of {{::cdash.updates.timestamp}}
-      </h4>
 
       <div ng-if="::cdash.update.revision">
         <b>Revision: </b>
