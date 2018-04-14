@@ -67,6 +67,7 @@ return array(
     'CDash\\Log' => $baseDir . '/include/CDash/Log.php',
     'CDash\\ServiceContainer' => $baseDir . '/include/CDash/ServiceContainer.php',
     'CDash\\Singleton' => $baseDir . '/include/CDash/Singleton.php',
+    'CDash\\System' => $baseDir . '/include/CDash/System.php',
     'CDash\\Test\\Log' => $baseDir . '/include/CDash/Test/Log.php',
     'Console_Getopt' => $vendorDir . '/pear/console_getopt/Console/Getopt.php',
     'DI\\Annotation\\Inject' => $vendorDir . '/php-di/php-di/src/DI/Annotation/Inject.php',

@@ -7,7 +7,7 @@
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="stylesheet" type="text/css" ng-href="{{::cssfile}}" />
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <script src="js/CDash_1522424981554.min.js"></script>
+    <script src="js/CDash_1523706539263.min.js"></script>
 <!--
     <script type="text/javascript" src="js/cdashCreateProject.js"></script>
 -->
@@ -17,7 +17,7 @@
   <body bgcolor="#ffffff" ng-controller="CreateProjectController">
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
 
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1522424981554.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1523706539263.html'"></ng-include>
     <br/>
 
     <div ng-if="cdash.projectcreated == 1">
@@ -712,7 +712,7 @@
                          ng-change="cdash.changesmade = true"
                          ng-focus="showHelp('EnableTestTiming_help')" />
                   <a
-                    href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                    href="https://public.kitware.com/Wiki/CDash:Design#Test_Timing"
                     target="blank">
                     <img ng-mouseover="showHelp('EnableTestTiming_help')"
                       src="img/help.gif" border="0" />
@@ -720,13 +720,7 @@
                   <span class="help_content" id="EnableTestTiming_help">
                     <b>Enable test timing</b>
                     <br />
-                    Enable/Disable test timing for this project
-                    <p>
-                      For more information about test timing see the
-                      <a href="http://www.cdash.org/Wiki/CDash:Administration#Test_Timing" title="CDash:Administration" target="blank">
-                        Test Timing</a>
-                      section.
-                    </p>
+                    Enable/Disable test timing for this project.
                   </span>
                 </td>
               </tr>
@@ -743,7 +737,7 @@
                          ng-change="cdash.changesmade = true"
                          ng-focus="showHelp('TimeDeviation_help')" />
                   <a
-                    href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                    href="https://public.kitware.com/Wiki/CDash:Design#Test_Timing"
                     target="blank">
                     <img ng-mouseover="showHelp('TimeDeviation_help')"
                       src="img/help.gif" border="0" />
@@ -757,12 +751,6 @@
                     marked as failed. Default is 4 if not specified. Note that
                     changing this value doesn’t affect previous builds but
                     only builds submitted after the modification.
-                    <p>
-                      For more information about test timing see the
-                      <a href="http://www.cdash.org/Wiki/CDash:Administration#Test_Timing" title="CDash:Administration" target="blank">
-                        Test Timing</a>
-                      section.
-                    </p>
                   </span>
                 </td>
               </tr>
@@ -780,7 +768,7 @@
                          ng-change="cdash.changesmade = true"
                          ng-focus="showHelp('TimeDeviationThreshold_help')" />
                   <a
-                    href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                    href="https://public.kitware.com/Wiki/CDash:Design#Test_Timing"
                     target="blank">
                     <img ng-mouseover="showHelp('TimeDeviationThreshold_help')"
                       src="img/help.gif" border="0" />
@@ -796,12 +784,6 @@
                     threshold is set to 2 if not specified. Note that changing
                     this value doesn’t affect previous builds but only builds
                     submitted after the modification.
-                    <p>
-                      For more information about test timing see the
-                      <a href="/Wiki/CDash:Administration#Test_Timing" title="CDash:Administration" target="blank">
-                        Test Timing</a>
-                      section.
-                    </p>
                   </span>
                 </td>
               </tr>
@@ -817,7 +799,21 @@
                   <input name="testTimeMaxStatus" type="text" id="testTimeMaxStatus" size="4"
                          ng-model="cdash.project.TestTimeMaxStatus"
                          ng-change="cdash.changesmade = true"
-                         ng-focus="clearHelp()" />
+                         ng-focus="showHelp('TimeMaxStatus_help')" />
+                  <a
+                    href="https://public.kitware.com/Wiki/CDash:Design#Test_Timing"
+                    target="blank">
+                    <img ng-mouseover="showHelp('TimeMaxStatus_help')"
+                      src="img/help.gif" border="0" />
+                  </a>
+                  <span class="help_content" id="TimeMaxStatus_help">
+                    <b>Test time max status</b>
+                    <br />
+                    Set the number of times a test must violate the time status check
+                    before it is flagged. For example, if this is set to 2, then a test
+                    will need to run more slowly than expected twice in a row before it
+                    is marked as having failed the time status check.
+                  </span>
                 </td>
               </tr>
               <tr>
@@ -1488,6 +1484,6 @@
       </form>
     </div>
 
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1522424981554.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1523706539263.html'"></ng-include>
   </body>
 </html>

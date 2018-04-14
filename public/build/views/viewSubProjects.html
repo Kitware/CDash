@@ -8,13 +8,13 @@
     <link rel="stylesheet" type="text/css" ng-href="{{cssfile}}" />
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.4.css" />
-    <script src="js/CDash_1522424981554.min.js"></script>
+    <script src="js/CDash_1523706539263.min.js"></script>
     <title ng-bind="title">CDash</title>
   </head>
 
   <body ng-controller="ViewSubProjectsController">
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1522424981554.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1523706539263.html'"></ng-include>
 
     <div id="content" ng-if="!loading && cdash.requirelogin != 1">
       <table ng-show="cdash.banners.length > 0" border="0" width="100%">
@@ -131,7 +131,7 @@
 
 
       <!-- SubProjects table -->
-      <ng-include ng-init="cdash.tableName = 'SubProjects'" src="'build/views/partials/subProjectTable_1522424981554.html'"></ng-include>
+      <ng-include ng-init="cdash.tableName = 'SubProjects'" src="'build/views/partials/subProjectTable_1523706539263.html'"></ng-include>
 
       <table width="100%" cellspacing="0" cellpadding="0">
         <tr>
@@ -153,6 +153,6 @@
     <br/>
     <!-- FOOTER -->
     <br/>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1522424981554.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1523706539263.html'"></ng-include>
   </body>
 </html>

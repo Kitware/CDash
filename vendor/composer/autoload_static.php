@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitf4ecc77126561b9d317fecd2614b0f83
+class ComposerStaticInite63311067bae5041ff64611db38a3ed7
 {
     public static $files = array (
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
@@ -14,9 +14,9 @@ class ComposerStaticInitf4ecc77126561b9d317fecd2614b0f83
         'a4ecaeafb8cfb009ad0e052c90355e98' => __DIR__ . '/..' . '/beberlei/assert/lib/Assert/functions.php',
         'decc78cc4436b1292c6c0d151b19445c' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/bootstrap.php',
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
+        'bbf73f3db644d3dced353b837903e74c' => __DIR__ . '/..' . '/php-di/php-di/src/DI/functions.php',
         '3f8bdd3b35094c73a26f0106e3c0f8b2' => __DIR__ . '/..' . '/sendgrid/sendgrid/lib/SendGrid.php',
         '9dda55337a76a24e949fbcc5d905a2c7' => __DIR__ . '/..' . '/sendgrid/sendgrid/lib/helpers/mail/Mail.php',
-        'bbf73f3db644d3dced353b837903e74c' => __DIR__ . '/..' . '/php-di/php-di/src/DI/functions.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -285,6 +285,7 @@ class ComposerStaticInitf4ecc77126561b9d317fecd2614b0f83
         'CDash\\Log' => __DIR__ . '/../..' . '/include/CDash/Log.php',
         'CDash\\ServiceContainer' => __DIR__ . '/../..' . '/include/CDash/ServiceContainer.php',
         'CDash\\Singleton' => __DIR__ . '/../..' . '/include/CDash/Singleton.php',
+        'CDash\\System' => __DIR__ . '/../..' . '/include/CDash/System.php',
         'CDash\\Test\\Log' => __DIR__ . '/../..' . '/include/CDash/Test/Log.php',
         'Console_Getopt' => __DIR__ . '/..' . '/pear/console_getopt/Console/Getopt.php',
         'DI\\Annotation\\Inject' => __DIR__ . '/..' . '/php-di/php-di/src/DI/Annotation/Inject.php',
@@ -5417,11 +5418,11 @@ class ComposerStaticInitf4ecc77126561b9d317fecd2614b0f83
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitf4ecc77126561b9d317fecd2614b0f83::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitf4ecc77126561b9d317fecd2614b0f83::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitf4ecc77126561b9d317fecd2614b0f83::$prefixesPsr0;
-            $loader->fallbackDirsPsr0 = ComposerStaticInitf4ecc77126561b9d317fecd2614b0f83::$fallbackDirsPsr0;
-            $loader->classMap = ComposerStaticInitf4ecc77126561b9d317fecd2614b0f83::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInite63311067bae5041ff64611db38a3ed7::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInite63311067bae5041ff64611db38a3ed7::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInite63311067bae5041ff64611db38a3ed7::$prefixesPsr0;
+            $loader->fallbackDirsPsr0 = ComposerStaticInite63311067bae5041ff64611db38a3ed7::$fallbackDirsPsr0;
+            $loader->classMap = ComposerStaticInite63311067bae5041ff64611db38a3ed7::$classMap;
 
         }, null, ClassLoader::class);
     }

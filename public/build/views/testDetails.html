@@ -7,54 +7,55 @@
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="stylesheet" type="text/css" ng-href="{{cssfile}}" />
     <link rel="stylesheet" href="css/je_compare_style-1.0.0.css" />
-    <script src="js/CDash_1522424981554.min.js"></script>
+    <script src="js/CDash_1523706539263.min.js"></script>
     <title ng-bind="title">CDash</title>
   </head>
 
   <body bgcolor="#ffffff" ng-controller="TestDetailsController">
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1522424981554.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1523706539263.html'"></ng-include>
 
     <div ng-if="cdash.requirelogin != 1 && !loading && !cdash.error">
 
       <div id="executiontime">
-        <img src="img/clock.png" alt="Execution Time" title="Execution Time" />
-        <span class="builddateelapsed" alt="Mean time: {{cdash.test.timemean}}s<br/>STD time: {{cdash.test.timestd}}s">
-          {{cdash.test.time}}
+        <img src="img/clock.png"
+             title="Average: {{::cdash.test.timemean}}, SD: {{::cdash.test.timestd}}"></img>
+        <span class="builddateelapsed">
+          {{::cdash.test.time}}
         </span>
       </div>
       <br/>
 
       <b>Test: </b>
-      <a ng-href="{{cdash.test.summaryLink}}">
-        {{cdash.test.test}}
+      <a ng-href="{{::cdash.test.summaryLink}}">
+        {{::cdash.test.test}}
       </a>
       <b ng-class="::cdash.test.statusColor">
-        ({{cdash.test.status}})
+        ({{::cdash.test.status}})
       </b>
       <br/>
 
       <b>Build: </b>
-      <a ng-href="buildSummary.php?buildid={{cdash.test.buildid}}">
-        {{cdash.test.build}}
+      <a ng-href="buildSummary.php?buildid={{::cdash.test.buildid}}">
+        {{::cdash.test.build}}
       </a>
-      <a ng-href="viewSite.php?siteid={{cdash.test.siteid}}">
-        ({{cdash.test.site}})
+      <a ng-href="viewSite.php?siteid={{::cdash.test.siteid}}">
+        ({{::cdash.test.site}})
       </a>
-      on {{cdash.test.buildstarttime}}
+      on {{::cdash.test.buildstarttime}}
       <br/>
 
       <div ng-if="cdash.test.update.revision">
         <b>Repository revision: </b>
-        <a ng-href="{{cdash.test.update.revisionurl}}">
-          {{cdash.test.update.revision}}
+        <a ng-href="{{::cdash.test.update.revisionurl}}">
+          {{::cdash.test.update.revision}}
         </a>
         <br/>
       </div>
 
       <div ng-if="cdash.test.details != ''">
         <b>Test Details: </b>
-        {{cdash.test.details}}
+        {{::cdash.test.details}}
         <br/>
       </div>
 
@@ -62,7 +63,7 @@
         <br/>
         <b>Test Timing: </b>
         <b ng-class="::cdash.test.timeStatusColor">
-          {{cdash.test.timestatus}}
+          {{::cdash.test.timestatus}}
         </b>
         <div ng-if="::cdash.test.timestatus != 'Passed'">
           This test took longer to complete ({{::cdash.test.time}}) than the threshold allows ({{::cdash.test.threshold}}).
@@ -76,7 +77,7 @@
           <th class="measurement">Interactive Image</th>
           <td>
             <div class="je_compare">
-              <img ng-repeat="image in cdash.test.compareimages"
+              <img ng-repeat="image in ::cdash.test.compareimages"
                    src="displayImage.php?imgid={{image.imgid}}"
                    alt="{{image.role}}"
                    on-finish-render="setup_compare()">
@@ -85,7 +86,7 @@
           </td>
         </tr>
 
-        <tr ng-repeat="image in cdash.test.images">
+        <tr ng-repeat="image in ::cdash.test.images">
           <th class="measurement">{{image.role}}</th>
           <td>
             <img src="displayImage.php?imgid={{image.imgid}}" alt="{{image.role}}">
@@ -93,7 +94,7 @@
           </td>
         </tr>
 
-        <tr ng-repeat="measurement in cdash.test.measurements | filter:{ type: '!text/link'}">
+        <tr ng-repeat="measurement in ::cdash.test.measurements | filter:{ type: '!text/link'}">
           <th class="measurement">{{measurement.name}}</th>
 
           <td ng-if="measurement.type != 'file'">
@@ -101,12 +102,12 @@
           </td>
 
           <td ng-if="measurement.type == 'file'">
-            <a href="testDetails.php?test={{cdash.test.id}}&build={{cdash.test.buildid}}&fileid={{measurement.fileid}}">
+            <a href="testDetails.php?test={{::cdash.test.id}}&build={{::cdash.test.buildid}}&fileid={{measurement.fileid}}">
               <image src="img/package.png"/>
             </a>
           </td>
         </tr>
-        <tr ng-repeat="measurement in cdash.test.measurements | filter:{ type: 'text/link'}">
+        <tr ng-repeat="measurement in ::cdash.test.measurements | filter:{ type: 'text/link'}">
           <td>
             <a ng-href="{{measurement.value}}">{{measurement.name}}</a>
           </td>
@@ -122,7 +123,7 @@
         <span ng-show="cdash.showcommandline">Hide Command Line</span>
       </a>
       <div id="commandline" ng-show="cdash.showcommandline">
-        {{cdash.test.command}}
+        {{::cdash.test.command}}
       </div>
       <br/>
 
@@ -133,20 +134,19 @@
               ng-change="display_graph()"
               ng-model="cdash.graphSelection">
         <option value="">Select...</option>
-        <option value="TestTimeGraph">Test Time</option>
-        <option value="TestPassingGraph">Failing/Passing</option>
-        <option ng-repeat="measurement in cdash.test.measurements | filter:{ type: 'numeric/double'}">
-          {{measurement.name}}
-        </option>
+        <option value="time">Test Time</option>
+        <option value="status">Failing/Passing</option>
+        <option ng-repeat="measurement in ::cdash.test.measurements | filter:{ type: 'numeric/double'}">{{measurement.name}}</option>
       </select>
       <br/>
 
-      <a ng-show="cdash.csvlink != ''" ng-href="{{cdash.csvlink}}">
-        Export as CSV File
+      <a ng-show="cdash.rawdatalink != ''" ng-href="{{::cdash.rawdatalink}}" target="_blank">
+        View Graph Data as JSON
       </a>
 
       <!-- Graph -->
       <div id="graph_holder" ng-show="cdash.showgraph"></div>
+      <div id='tooltip'></div>
 
       <br/>
       <b>Test output</b>
@@ -155,6 +155,6 @@
 
     <!-- FOOTER -->
     <br/>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1522424981554.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1523706539263.html'"></ng-include>
   </body>
 </html>
