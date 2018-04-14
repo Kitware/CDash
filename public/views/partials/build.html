@@ -333,7 +333,7 @@
 </td>
 
 <td align="center"
-    ng-if="::buildgroup.hastestdata && cdash.advancedview != 0 && cdash.showstarttime"
+    ng-if="::buildgroup.hastestdata && cdash.showtesttime"
     ng-class="::{'error': build.test.timestatus > 0, 'normal': build.test.timestatus == 0}">
   <div ng-if="::build.hastest"
        ng-class="::{'valuewithsub': build.build.test.ntimediffp > 0 || build.test.ntimediffn > 0}">

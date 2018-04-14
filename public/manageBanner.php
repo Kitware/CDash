@@ -19,9 +19,10 @@ require_once 'include/pdo.php';
 include_once 'include/common.php';
 include 'public/login.php';
 include 'include/version.php';
-include_once 'models/project.php';
-include_once 'models/banner.php';
-include_once 'models/user.php';
+
+use CDash\Model\Banner;
+use CDash\Model\Project;
+use CDash\Model\User;
 
 if ($session_OK) {
     @$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");

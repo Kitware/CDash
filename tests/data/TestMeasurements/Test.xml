@@ -27,9 +27,30 @@
 		<StartDateTime>Aug 29 10:56 EDT</StartDateTime>
 		<StartTestTime>1504018591</StartTestTime>
 		<TestList>
+			<Test>./TestNoProcs</Test>
 			<Test>./Test3Procs</Test>
 			<Test>./Test5Procs</Test>
 		</TestList>
+		<Test Status="passed">
+			<Name>TestNoProcs</Name>
+			<Path>.</Path>
+			<FullName>./TestNoProcs</FullName>
+			<FullCommandLine>/tmp/bin/sleep</FullCommandLine>
+			<Results>
+				<NamedMeasurement type="numeric/double" name="Execution Time">
+					<Value>1.40359</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Completion Status">
+					<Value>Completed</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Command Line">
+					<Value>/tmp/bin/sleep</Value>
+				</NamedMeasurement>
+				<Measurement>
+					<Value></Value>
+				</Measurement>
+			</Results>
+		</Test>
 		<Test Status="passed">
 			<Name>Test3Procs</Name>
 			<Path>.</Path>

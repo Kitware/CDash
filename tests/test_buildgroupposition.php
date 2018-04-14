@@ -6,7 +6,8 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 require_once 'include/pdo.php';
-require_once 'models/buildgroupposition.php';
+
+use CDash\Model\BuildGroupPosition;
 
 class BuildGroupPositionTestCase extends KWWebTestCase
 {

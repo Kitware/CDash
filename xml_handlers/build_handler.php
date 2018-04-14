@@ -16,11 +16,15 @@
 
 require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
-require_once 'models/build.php';
-require_once 'models/label.php';
-require_once 'models/site.php';
-require_once 'models/buildfailure.php';
-require_once 'models/feed.php';
+
+use CDash\Model\Build;
+use CDash\Model\BuildError;
+use CDash\Model\BuildFailure;
+use CDash\Model\BuildInformation;
+use CDash\Model\Feed;
+use CDash\Model\Label;
+use CDash\Model\Site;
+use CDash\Model\SiteInformation;
 
 class BuildHandler extends AbstractHandler implements ActionableBuildInterface
 {

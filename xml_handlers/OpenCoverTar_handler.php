@@ -15,9 +15,13 @@
 =========================================================================*/
 
 require_once 'xml_handlers/abstract_handler.php';
-require_once 'models/coverage.php';
 require_once 'config/config.php';
-require_once 'models/build.php';
+
+use CDash\Model\Build;
+use CDash\Model\Coverage;
+use CDash\Model\CoverageFile;
+use CDash\Model\CoverageFileLog;
+use CDash\Model\CoverageSummary;
 
 class OpenCoverTarHandler extends AbstractHandler
 {
@@ -39,6 +43,8 @@ class OpenCoverTarHandler extends AbstractHandler
         $this->Coverages = array();
         $this->CoverageFiles = array();
         $this->CoverageFileLogs = array();
+
+        $this->ParseCSFiles = true;
     }
 
     public function startElement($parser, $name, $attributes)
@@ -144,11 +150,23 @@ class OpenCoverTarHandler extends AbstractHandler
             return false;
         }
 
-        // Now that coverageFile objects exist, add source to each .cs file
+        // Search for data.json
         $iterator = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator($dirName),
             RecursiveIteratorIterator::CHILD_FIRST);
+        foreach ($iterator as $fileinfo) {
+            if ($fileinfo->getFilename() == 'data.json') {
+                $jsonContents = file_get_contents($fileinfo->getPath() . DIRECTORY_SEPARATOR . $fileinfo->getFilename());
+                $jsonDecoded = json_decode($jsonContents, true);
+                if (array_key_exists('parseCSFiles', $jsonDecoded)) {
+                    $this->ParseCSFiles = $jsonDecoded['parseCSFiles'];
+                }
+            }
+        }
+
+        // Now that coverageFile objects exist, add source to each .cs file
         $coverageSummary = $this->CoverageSummaries['default'];
+        $iterator->rewind();
         foreach ($iterator as $fileinfo) {
             $ext = substr(strstr($fileinfo->getFilename(), '.'), 1);
             if ($ext === 'cs') {
@@ -245,7 +263,7 @@ class OpenCoverTarHandler extends AbstractHandler
                    (preg_match("/[{}]/", $trimmedLine)) or
                    ("" == $trimmedLine) or
                    ($inlongComment)
-                )) {
+                ) && $this->ParseCSFiles) {
                     $this->coverageFileLog->AddLine($key, 0);
                 }
                 // Captures the end of a comment block

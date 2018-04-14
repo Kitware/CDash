@@ -20,8 +20,9 @@ require_once 'include/pdo.php';
 include 'public/login.php';
 include_once 'include/common.php';
 include 'include/version.php';
-require_once 'models/project.php';
-require_once 'models/subproject.php';
+
+use CDash\Model\Project;
+use CDash\Model\SubProject;
 
 $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
 pdo_select_db("$CDASH_DB_NAME", $db);

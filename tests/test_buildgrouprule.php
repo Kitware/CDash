@@ -6,8 +6,10 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 require_once 'include/pdo.php';
-require_once 'models/buildgroup.php';
-require_once 'models/buildgrouprule.php';
+
+use CDash\Model\Build;
+use CDash\Model\BuildGroup;
+use CDash\Model\BuildGroupRule;
 
 class BuildGroupRuleTestCase extends KWWebTestCase
 {

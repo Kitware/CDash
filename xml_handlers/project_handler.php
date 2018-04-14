@@ -15,11 +15,13 @@
 =========================================================================*/
 
 require_once 'xml_handlers/abstract_handler.php';
-require_once 'models/project.php';
-require_once 'models/subproject.php';
-require_once 'models/user.php';
-require_once 'models/labelemail.php';
-require_once 'models/label.php';
+
+use CDash\Model\Label;
+use CDash\Model\LabelEmail;
+use CDash\Model\Project;
+use CDash\Model\SubProject;
+use CDash\Model\User;
+use CDash\Model\UserProject;
 
 class ProjectHandler extends AbstractHandler
 {

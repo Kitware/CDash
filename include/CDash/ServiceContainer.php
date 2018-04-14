@@ -1,4 +1,18 @@
 <?php
+/*=========================================================================
+  Program:   CDash - Cross-Platform Dashboard System
+  Module:    $Id$
+  Language:  PHP
+  Date:      $Date$
+  Version:   $Revision$
+
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
+
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE. See the above copyright notices for more information.
+=========================================================================*/
 namespace CDash;
 
 use DI\ContainerBuilder;
@@ -17,14 +31,35 @@ class ServiceContainer extends Singleton
         $this->container = $builder->build();
     }
 
+    /**
+     * The create method will return a new instance of a class.
+     *
+     * @param $class_name
+     * @return mixed
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     */
+    public function create($class_name)
+    {
+        return $this->container->make($class_name);
+    }
+
+    /**
+     * The get method will return a singelton instance of a class.
+     *
+     * @param $class_name
+     * @return mixed
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     */
+    public function get($class_name)
+    {
+        return $this->container->get($class_name);
+    }
+
     public function getContainer()
     {
         return $this->container;
-    }
-
-    public function create($class_name)
-    {
-        return $this->container->get($class_name);
     }
 
     public function setContainer(Container $container)

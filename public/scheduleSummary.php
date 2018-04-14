@@ -19,8 +19,8 @@ require_once 'include/pdo.php';
 include_once 'include/common.php';
 include 'include/version.php';
 
-include_once 'models/project.php';
-include_once 'models/clientjobschedule.php';
+use CDash\Model\ClientJobSchedule;
+use CDash\Model\Job;
 
 if (!$CDASH_MANAGE_CLIENTS) {
     echo 'CDash has not been setup to allow client management';
@@ -61,19 +61,19 @@ foreach ($builds as $buildid) {
 
 $status = $ClientJobSchedule->GetStatus();
 switch ($status) {
-    case CDASH_JOB_SCHEDULED:
+    case Job::SCHEDULED:
         $statusText = 'Scheduled';
         break;
-    case CDASH_JOB_RUNNING:
+    case Job::RUNNING:
         $statusText = 'Running';
         break;
-    case CDASH_JOB_FINISHED:
+    case Job::FINISHED:
         $statusText = 'Finished';
         break;
-    case CDASH_JOB_FAILED:
+    case Job::FAILED:
         $statusText = 'Failed';
         break;
-    case CDASH_JOB_ABORTED:
+    case Job::ABORTED:
         $statusText = 'Aborted';
         break;
     default:

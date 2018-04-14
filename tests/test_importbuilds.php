@@ -6,8 +6,6 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 require_once 'include/pdo.php';
-require_once 'models/image.php';
-require_once 'models/testimage.php';
 require_once 'tests/kwtest/kw_unlink.php';
 
 class ImportBuildsTestCase extends KWWebTestCase

@@ -16,7 +16,8 @@
 
 include dirname(__DIR__) . '/config/config.php';
 require_once 'public/login.php';
-require_once 'models/user.php';
+
+use CDash\Model\User;
 
 function echo_git_output($cmd)
 {

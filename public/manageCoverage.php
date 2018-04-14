@@ -19,12 +19,17 @@ require_once 'include/pdo.php';
 include_once 'include/common.php';
 include 'public/login.php';
 include 'include/version.php';
-include_once 'models/project.php';
-include_once 'models/coverage.php';
-include_once 'models/build.php';
-include_once 'models/user.php';
-include_once 'models/site.php';
 require_once 'include/cdashmail.php';
+
+use CDash\Model\Build;
+use CDash\Model\Coverage;
+use CDash\Model\CoverageFile;
+use CDash\Model\CoverageFile2User;
+use CDash\Model\CoverageSummary;
+use CDash\Model\Project;
+use CDash\Model\Site;
+use CDash\Model\User;
+use CDash\Model\UserProject;
 
 if ($session_OK) {
     @$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");

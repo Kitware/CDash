@@ -27,7 +27,8 @@ require_once 'include/pdo.php';
 require_once 'include/common.php';
 require_once 'include/login_functions.php';
 require_once 'include/version.php';
-require_once 'models/user.php';
+
+use CDash\Model\User;
 
 if ($CDASH_PRODUCTION_MODE) {
     echo 'CDash is in production mode. Install cannot be accessed. Change the variable in your config.php if you want to access the installation.';

@@ -18,10 +18,12 @@ include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 include 'include/version.php';
-require_once 'models/build.php';
-require_once 'models/buildusernote.php';
-require_once 'models/project.php';
-require_once 'models/user.php';
+
+use CDash\Model\Build;
+use CDash\Model\BuildInformation;
+use CDash\Model\BuildUserNote;
+use CDash\Model\Project;
+use CDash\Model\User;
 
 $start = microtime_float();
 $response = array();

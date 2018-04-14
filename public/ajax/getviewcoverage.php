@@ -18,9 +18,11 @@ require_once dirname(dirname(__DIR__)) . '/config/config.php';
 require_once 'include/pdo.php';
 include_once 'include/common.php';
 include 'include/version.php';
-include 'models/coveragefile2user.php';
-include 'models/user.php';
+
 require_once 'include/filterdataFunctions.php';
+
+use CDash\Model\CoverageFile2User;
+use CDash\Model\User;
 
 @set_time_limit(0);
 

@@ -23,7 +23,7 @@
 // This file is 'config.php', in the directory 'config', in the root.
 // Therefore, the root of the CDash source tree on the web server is:
 require dirname(__DIR__) . '/vendor/autoload.php';
-require_once dirname(__FILE__) . '/cdash_autoload.php';
+require_once dirname(__FILE__) . '/../bootstrap/cdash_autoload.php';
 
 $CDASH_ROOT_DIR = str_replace('\\', '/', dirname(dirname(__FILE__)));
 set_include_path(get_include_path() . PATH_SEPARATOR . $CDASH_ROOT_DIR);

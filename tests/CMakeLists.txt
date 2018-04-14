@@ -6,8 +6,8 @@ set(PHPUNIT "${CDash_SOURCE_DIR}/vendor/bin/phpunit")
 #
 function(add_php_test TestName)
   add_test(
-    ${TestName}
-    ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_${TestName}.php
+    NAME ${TestName}
+    COMMAND ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_${TestName}.php
   )
   set_tests_properties(
     ${TestName} PROPERTIES
@@ -16,8 +16,8 @@ function(add_php_test TestName)
 endfunction(add_php_test)
 function(add_configured_php_test TestName)
   add_test(
-    ${TestName}
-    ${PHP_EXE} ${testing_dir}/singletest.php ${binary_testing_dir}/test_${TestName}.php
+    NAME ${TestName}
+    COMMAND ${PHP_EXE} ${testing_dir}/singletest.php ${binary_testing_dir}/test_${TestName}.php
   )
   set_tests_properties(
     ${TestName} PROPERTIES
@@ -26,18 +26,23 @@ function(add_configured_php_test TestName)
 endfunction(add_configured_php_test)
 function(add_unit_test TestName)
   add_test(
-    ${TestName}
-    ${PHP_EXE} ${PHPUNIT}  -c ${testing_dir}/phpunit.xml ${testing_dir}/case/${TestName}Test.php
+    NAME ${TestName}
+    COMMAND ${PHP_EXE} ${phpunit_extra_arg} ${PHPUNIT} -c ${testing_dir}/phpunit.xml ${testing_dir}/case/${TestName}Test.php
   )
 endfunction(add_unit_test TestName)
 
 # phpunit tests
+set(phpunit_extra_arg "")
+if (CDASH_CONFIGURE_HTACCESS_FILE)
+    set(phpunit_extra_arg "-d auto_prepend_file=${CMAKE_BINARY_DIR}/prepend_coverage.php")
+endif()
 add_unit_test(/PHPUnitTest)
 add_unit_test(/CDash/Config)
 add_unit_test(/CDash/Log)
 add_unit_test(/CDash/Database)
 add_unit_test(/CDash/ServiceContainer)
 add_unit_test(/CDash/TestUseCase)
+add_unit_test(/CDash/Controller/Auth/Session)
 
 add_php_test(install)
 add_php_test(compressedtest)

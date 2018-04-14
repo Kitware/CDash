@@ -19,7 +19,8 @@ require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 require_once 'include/filterdataFunctions.php';
 require_once 'include/version.php';
-require_once 'models/project.php';
+
+use CDash\Model\Project;
 
 $start = microtime_float();
 $response = array();

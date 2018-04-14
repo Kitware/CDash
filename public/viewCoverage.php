@@ -22,10 +22,11 @@ include 'public/login.php';
 
 require_once 'include/common.php';
 require_once 'include/version.php';
-require_once 'models/build.php';
-require_once 'models/coveragefile2user.php';
-require_once 'models/user.php';
 require_once 'include/filterdataFunctions.php';
+
+use CDash\Model\Build;
+
+use CDash\Model\User;
 
 @set_time_limit(0);
 

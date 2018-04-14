@@ -18,7 +18,8 @@
 require_once dirname(dirname(__DIR__)) . '/config/config.php';
 require_once 'include/pdo.php';
 require_once 'include/common.php';
-require_once 'models/user.php';
+
+use CDash\Model\User;
 
 $buildid = pdo_real_escape_numeric($_GET['buildid']);
 if (!isset($buildid) || !is_numeric($buildid)) {
