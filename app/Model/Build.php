@@ -840,7 +840,8 @@ class Build
                  :log, :nbuilderrors, :nbuildwarnings, :parentid, :uuid,
                  :pullrequest)");
             if (!$insert_stmt->execute($query_params)) {
-                $error = pdo_error(null, false);
+                $error_info = $insert_stmt->errorInfo();
+                $error = $error_info[2];
                 // This error might be due to a unique constraint violation
                 // for this UUID.  Query for such a previously existing build.
                 $existing_id_stmt = $this->PDO->prepare(

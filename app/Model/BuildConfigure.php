@@ -225,15 +225,15 @@ class BuildConfigure
             $stmt->bindParam(':status', $this->Status);
             $stmt->bindParam(':crc32', $this->Crc32);
             if (!$stmt->execute()) {
-                $error = pdo_error(null, false);
+                $error_info = $insert_stmt->errorInfo();
+                $error = $error_info[2];
                 // This error might be due to a unique constraint violation.
                 // Query again to see if this configure was created since
                 // the last time we checked.
-                pdo_execute($exists_stmt, [$this->Crc32]);
-                $exists_row = $exists_stmt->fetch(PDO::FETCH_ASSOC);
-                if (is_array($exists_row)) {
-                    $this->Id = $exists_row['id'];
+                if ($this->ExistsByCrc32()) {
+                    return true;
                 } else {
+                    add_log("SQL error: $error", 'Configure Insert', LOG_ERR);
                     $this->PDO->rollBack();
                     return false;
                 }
