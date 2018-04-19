@@ -493,7 +493,10 @@ function get_redmine_diff_url($projecturl, $directory, $file, $revision)
 /** Return the Phabricator diff URL */
 function get_phab_git_diff_url($projecturl, $directory, $file, $revision)
 {
-    $diff_url = $projecturl . '/browse/';
+    // "master" is misleading as the revision is the only relevant part.
+    // Could be any string but even Phabricator uses "master" when
+    // creating file URLs of revisions in other branches.
+    $diff_url = $projecturl . '/browse/master/';
 
     if ($directory) {
         $diff_url .= $directory . '/';
