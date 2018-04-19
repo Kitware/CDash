@@ -490,6 +490,24 @@ function get_redmine_diff_url($projecturl, $directory, $file, $revision)
     return make_cdash_url($diff_url);
 }
 
+/** Return the Phabricator diff URL */
+function get_phabricator_git_diff_url($projceturl, $directory, $file, $revision)
+{
+    $diff_url = $projecturl . '/browse/';
+
+    if ($directory) {
+        $diff_url .= $directory . '/';
+    }
+
+    $diff_url .= $file;
+
+    if ($revision) {
+        $diff_url .= ';' . $revision;
+    }
+
+    return make_cdash_url($diff_url);
+}
+
 /** Get the diff url based on the type of viewer */
 function get_diff_url($projectid, $projecturl, $directory, $file, $revision = '')
 {
@@ -648,6 +666,13 @@ function get_cgit_revision_url($projecturl, $revision, $priorrevision)
 function get_redmine_revision_url($projecturl, $revision, $priorrevision)
 {
     $revision_url = $projecturl . '/revisions/' . $revision;
+    return make_cdash_url($revision_url);
+}
+
+/** Return the Phabricator revision URL */
+function get_phabricator_git_revision_url($projecturl, $revision, $priorrevision)
+{
+    $revision_url = $projecturl . '/commit/' . $revision;
     return make_cdash_url($revision_url);
 }
 
