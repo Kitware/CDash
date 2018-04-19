@@ -491,7 +491,7 @@ function get_redmine_diff_url($projecturl, $directory, $file, $revision)
 }
 
 /** Return the Phabricator diff URL */
-function get_phabricator_git_diff_url($projecturl, $directory, $file, $revision)
+function get_phab_git_diff_url($projecturl, $directory, $file, $revision)
 {
     $diff_url = $projecturl . '/browse/';
 
@@ -670,7 +670,7 @@ function get_redmine_revision_url($projecturl, $revision, $priorrevision)
 }
 
 /** Return the Phabricator revision URL */
-function get_phabricator_git_revision_url($projecturl, $revision, $priorrevision)
+function get_phab_git_revision_url($projecturl, $revision, $priorrevision)
 {
     $revision_url = $projecturl . '/commit/' . $revision;
     return make_cdash_url($revision_url);
