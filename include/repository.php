@@ -491,7 +491,7 @@ function get_redmine_diff_url($projecturl, $directory, $file, $revision)
 }
 
 /** Return the Phabricator diff URL */
-function get_phabricator_git_diff_url($projceturl, $directory, $file, $revision)
+function get_phabricator_git_diff_url($projecturl, $directory, $file, $revision)
 {
     $diff_url = $projecturl . '/browse/';
 
