@@ -420,11 +420,32 @@ function LoginForm($loginerror)
         $xml .= '<allowlogincookie>1</allowlogincookie>';
     }
 
-    if ($GOOGLE_CLIENT_ID != '' && $GOOGLE_CLIENT_SECRET != '') {
+    if ($GOOGLE_CLIENT_ID != '' && $GOOGLE_CLIENT_SECRET != '' &&
+        !array_key_exists('Google', $OAUTH_PROVIDERS)) {
+        // Backwards compatibility for previous Google-login implementation.
+        $OAUTH_PROVIDERS['Google'] = [
+            'clientId'          => $GOOGLE_CLIENT_ID,
+            'clientSecret'      => $GOOGLE_CLIENT_SECRET,
+            'redirectUri'       => get_server_URI() . '/auth/Google.php'
+        ];
+    }
+
+    // OAuth 2.0 support.
+    $valid_oauth2_providers = ['GitHub', 'Google'];
+    $enabled_oauth2_providers = [];
+    foreach (array_keys($OAUTH2_PROVIDERS) as $provider) {
+        if (in_array($provider, $valid_oauth2_providers)) {
+            $enabled_oauth2_providers[] = $provider;
+        }
+    }
+    if (!empty($enabled_oauth2_providers)) {
         $xml .= '<oauth2>';
-        $xml .= add_XML_value('client', $GOOGLE_CLIENT_ID);
-        // Google OAuth needs to know the base url to redirect back to
-        $xml .= add_XML_value('CDASH_BASE_URL', get_server_URI());
+        foreach ($enabled_oauth2_providers as $provider) {
+            $xml .= '<provider>';
+            $xml .= add_XML_value('name', $provider);
+            $xml .= add_XML_value('img', "img/${provider}_signin.png");
+            $xml .= '</provider>';
+        }
         $xml .= '</oauth2>';
     }
 

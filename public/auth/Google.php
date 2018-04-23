@@ -14,12 +14,20 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-session_name('CDash');
-session_start();
+require_once dirname(dirname(__DIR__)) . '/config/config.php';
 
-if (empty($_SESSION['cdash']) || empty($_SESSION['cdash']['csrfToken'])) {
-    echo '';
-    return;
-}
+use CDash\Config;
+use CDash\Controller\Auth\Session;
+use CDash\Middleware\OAuth2\Google;
+use CDash\Model\User;
+use CDash\ServiceContainer;
+use CDash\System;
 
-echo $_SESSION['cdash']['csrfToken'];
+$config = Config::getInstance();
+$service = ServiceContainer::getInstance();
+$session = $service->get(Session::class);
+$system = $service->get(System::class);
+
+$user = $service->create(User::class);
+$provider = new Google($system, $session, $config);
+$provider->auth($user);
