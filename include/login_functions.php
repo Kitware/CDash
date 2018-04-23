@@ -431,7 +431,7 @@ function LoginForm($loginerror)
     }
 
     // OAuth 2.0 support.
-    $valid_oauth2_providers = ['GitHub', 'Google'];
+    $valid_oauth2_providers = ['GitHub', 'GitLab', 'Google'];
     $enabled_oauth2_providers = [];
     foreach (array_keys($OAUTH2_PROVIDERS) as $provider) {
         if (in_array($provider, $valid_oauth2_providers)) {

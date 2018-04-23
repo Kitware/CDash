@@ -233,13 +233,16 @@ $GOOGLE_CLIENT_ID = '';
 $GOOGLE_CLIENT_SECRET = '';
 
 // Settings to enable external authentication using OAuth 2.0.
-// Currently recognized providers are GitHub, Google.
+// Currently recognized providers are GitHub, GitLab, and Google.
 // Example:
 // $OAUTH_PROVIDERS['GitHub'] = [
 //    'clientId'          => {client-id},
 //    'clientSecret'      => {client-secret},
 //    'redirectUri'       => 'http://mydomain.com/CDash/auth/GitHub.php'
 //];
+// The GitLab provider takes an additional optional argument:
+// the base URL for a self-hosted instance.
+//    'domain'            => 'https://my.gitlab.example'
 $OAUTH2_PROVIDERS = [];
 
 // Should we use CDash's feed feature?  Disabling this feature can improve
