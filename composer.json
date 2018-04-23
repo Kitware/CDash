@@ -29,7 +29,8 @@
     "suin/php-rss-writer": "~1.4",
     "swiftmailer/swiftmailer": "~5.4",
     "sendgrid/sendgrid": "5.0.4",
-    "php-di/php-di": "^5.4"
+    "php-di/php-di": "^5.4",
+    "league/oauth2-github": "^2.0"
   },
   "require-dev": {
     "ext-gd": "*",
