@@ -711,15 +711,13 @@ function post_pull_request_comment($projectid, $pull_request, $comment, $cdash_u
         return;
     }
 
-    $project = pdo_query("SELECT cvsviewertype,cvsurl FROM project WHERE id='$projectid'");
-    $project_array = pdo_fetch_array($project);
-    $projecturl = $project_array['cvsurl'];
-
-    $cvsviewertype = strtolower($project_array['cvsviewertype']);
-    $PR_func = 'post_' . $cvsviewertype . '_pull_request_comment';
+    $project = new Project();
+    $project->Id = $projectid;
+    $project->Fill();
+    $PR_func = 'post_' . $project->CvsViewerType . '_pull_request_comment';
 
     if (function_exists($PR_func)) {
-        $PR_func($projectid, $pull_request, $comment, $cdash_url);
+        $PR_func($project, $pull_request, $comment, $cdash_url);
         return;
     } else {
         add_log("PR commenting not implemented for '$cvsviewertype'",
@@ -745,17 +743,20 @@ function get_github_api_url($github_url)
     return $api_url;
 }
 
-function post_github_pull_request_comment($projectid, $pull_request, $comment, $cdash_url)
+function post_github_pull_request_comment(Project $project, $pull_request, $comment, $cdash_url)
 {
-    $row = pdo_single_row_query(
-        "SELECT url, username, password FROM repositories
-    LEFT JOIN project2repositories AS p2r ON (p2r.repositoryid=repositories.id)
-    WHERE p2r.projectid='$projectid'");
+    $repo = null;
+    $repositories = $project->GetRepositories();
+    foreach ($repositories as $repository) {
+        if (strpos($repository['url'], 'github.com') !== false) {
+            $repo = $repository;
+            break;
+        }
+    }
 
-    if (empty($row) || !isset($row['url']) || !isset($row['username']) ||
-        !isset($row['password'])
-    ) {
-        add_log("Missing repository info for project #$projectid",
+    if (is_null($repo) || !isset($repo['username'])
+                       || !isset($repo['password'])) {
+        add_log("Missing repository info for project #$project->Id",
             'post_github_pull_request_comment()', LOG_WARNING);
         return;
     }
@@ -763,7 +764,7 @@ function post_github_pull_request_comment($projectid, $pull_request, $comment, $
     /* Massage our github url into the API endpoint that we need to POST to:
      * .../repos/:owner/:repo/issues/:number/comments
      */
-    $post_url = get_github_api_url($row['url']);
+    $post_url = get_github_api_url($repo['url']);
     $post_url .= "/issues/$pull_request/comments";
 
     // Format our comment using Github's comment syntax.
@@ -778,7 +779,7 @@ function post_github_pull_request_comment($projectid, $pull_request, $comment, $
             'Content-Length: ' . strlen($data_string))
     );
     curl_setopt($ch, CURLOPT_HEADER, 1);
-    $userpwd = $row['username'] . ':' . $row['password'];
+    $userpwd = $repo['username'] . ':' . $repo['password'];
     curl_setopt($ch, CURLOPT_USERPWD, $userpwd);
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
@@ -791,14 +792,14 @@ function post_github_pull_request_comment($projectid, $pull_request, $comment, $
         add_log(
             'cURL error: ' . curl_error($ch),
             'post_github_pull_request_comment',
-            LOG_ERR, $projectid);
+            LOG_ERR, $project->Id);
     } elseif ($CDASH_TESTING_MODE) {
         $matches = array();
         preg_match("#/comments/(\d+)#", $retval, $matches);
         add_log(
             'Just posted comment #' . $matches[1],
             'post_github_pull_request_comment',
-            LOG_DEBUG, $projectid);
+            LOG_DEBUG, $project->Id);
     }
 
     curl_close($ch);
