@@ -298,6 +298,12 @@ $CDASH_BUILDS_PER_PROJECT = 0;
 // Whitelist of projects that are allowed to have unlimited builds.
 $CDASH_UNLIMITED_PROJECTS = [];
 
+// Should CDash should post build/test results to a build's pull request?
+// This is enabled by default but requires CTEST_CHANGE_ID to be set by the
+// client.  Set this variable to FALSE to prevent CDash from commenting on
+// pull requests.
+$CDASH_NOTIFY_PULL_REQUEST = true;
+
 
 /* DO NOT EDIT AFTER THIS LINE */
 $localConfig = dirname(__FILE__) . '/config.local.php';

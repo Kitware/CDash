@@ -17,6 +17,7 @@
 require_once 'config/config.php';
 require_once 'include/log.php';
 
+use CDash\Config;
 use CDash\Model\Build;
 use CDash\Model\BuildUpdateFile;
 use CDash\Model\Project;
@@ -699,6 +700,14 @@ function linkify_compiler_output($projecturl, $source_dir, $revision, $compiler_
 function post_pull_request_comment($projectid, $pull_request, $comment, $cdash_url)
 {
     if (!is_numeric($projectid)) {
+        return;
+    }
+
+    $config = Config::getInstance();
+    if (!$config->get('CDASH_NOTIFY_PULL_REQUEST')) {
+        if ($config->get('CDASH_TESTING_MODE')) {
+            throw new Exception('pull request commenting is disabled');
+        }
         return;
     }
 
