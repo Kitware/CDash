@@ -227,9 +227,23 @@ $CDASH_MAX_UPLOAD_QUOTA = '10';
 // Maximum size of large text fields, in php-strlen units, 0 for unlimited
 $CDASH_LARGE_TEXT_LIMIT = '0';
 
-// for Google oauth2 support
+// Deprecated settings for Google oauth2 support.
+// Use OAUTH2_PROVIDERS instead.
 $GOOGLE_CLIENT_ID = '';
 $GOOGLE_CLIENT_SECRET = '';
+
+// Settings to enable external authentication using OAuth 2.0.
+// Currently recognized providers are GitHub, GitLab, and Google.
+// Example:
+// $OAUTH_PROVIDERS['GitHub'] = [
+//    'clientId'          => {client-id},
+//    'clientSecret'      => {client-secret},
+//    'redirectUri'       => 'http://mydomain.com/CDash/auth/GitHub.php'
+//];
+// The GitLab provider takes an additional optional argument:
+// the base URL for a self-hosted instance.
+//    'domain'            => 'https://my.gitlab.example'
+$OAUTH2_PROVIDERS = [];
 
 // Should we use CDash's feed feature?  Disabling this feature can improve
 // submission processing time.
