@@ -212,6 +212,7 @@ $viewers[] = AddVCSViewer('gitorious', 'Gitorious', $Project->CvsViewerType, $re
 $viewers[] = AddVCSViewer('gitweb', 'GitWeb', $Project->CvsViewerType, $response);
 $viewers[] = AddVCSViewer('gitweb2', 'GitWeb2', $Project->CvsViewerType, $response);
 $viewers[] = AddVCSViewer('hgweb', 'Hgweb', $Project->CvsViewerType, $response);
+$viewers[] = AddVCSViewer('phab_git', 'Phabricator (Git)', $Project->CvsViewerType, $response);
 $viewers[] = AddVCSViewer('stash', 'Atlassian Stash', $Project->CvsViewerType, $response);
 $viewers[] = AddVCSViewer('loggerhead', 'Loggerhead', $Project->CvsViewerType, $response);
 $viewers[] = AddVCSViewer('p4web', 'P4Web', $Project->CvsViewerType, $response);
