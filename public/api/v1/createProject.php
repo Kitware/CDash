@@ -112,21 +112,6 @@ if (!is_null($projectid)) {
     $response['noproject'] = 1;
 }
 
-/** Strip the HTTP */
-function stripHTTP($url)
-{
-    $pos = strpos($url, 'http://');
-    if ($pos !== false) {
-        return substr($url, 7);
-    } else {
-        $pos = strpos($url, 'https://');
-        if ($pos !== false) {
-            return substr($url, 8);
-        }
-    }
-    return $url;
-}
-
 // List the available projects
 $sql = 'SELECT id,name FROM project';
 if (!$User->IsAdmin()) {
