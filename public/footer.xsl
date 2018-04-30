@@ -7,7 +7,7 @@
 
 <div id="footer">
   <div id="kitwarelogo">
-      <a href="http://www.kitware.com"><img src="img/blogo.gif" border="0" height="30" alt="logo" /></a>
+      <a href="http://www.kitware.com"><img src="img/kitware_logo.png" border="0" alt="logo" /></a>
   </div>
   <div id="footerlogo">
     <a href="http://www.cdash.org"><img src="img/cdash.png" border="0" height="30" alt="CDash logo"/></a>

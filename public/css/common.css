@@ -839,6 +839,11 @@ div#topmenu a:hover {
   text-decoration: none;
 }
 
+#kitwarelogo img {
+  width: 117px;
+  height: 30px;
+}
+
 #footerlogo {
   top: 3px;
   float: left;
