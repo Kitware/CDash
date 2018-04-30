@@ -828,6 +828,20 @@ div#topmenu a:hover {
   text-decoration: underline;
 }
 
+#newfooter {
+  background-color: #FFFFFF;
+  border-top: solid 1px #BBBBBB;
+  width: 575px;
+  height: 50px;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#newfooter a:hover{
+  text-decoration: underline;
+}
+
 #kitwarelogo {
   margin-top: 3px;
   margin-left: 5px;
@@ -857,6 +871,22 @@ div#topmenu a:hover {
 }
 
 #footerlogo img {
+  margin-top: 5px;
+}
+
+#newfooterlogo {
+  top: 3px;
+  float: left;
+  width: 430px;
+  height: 10px;
+  margin-right: 5px;
+}
+
+#newfooterlogo a {
+  text-decoration: none;
+}
+
+#newfooterlogo img {
   margin-top: 5px;
 }
 

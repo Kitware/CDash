@@ -1,15 +1,16 @@
-<div id="footer">
+<div id="newfooter">
   <div id="kitwarelogo">
     <a href="http://www.kitware.com">
       <img src="img/kitware_logo.png" border="0" alt="logo" />
     </a>
   </div>
-  <div id="footerlogo">
+  <div id="newfooterlogo">
     <a href="http://www.cdash.org"><img src="img/cdash.png" border="0" height="30" alt="CDash logo"/></a>
     <span id="footertext">
       CDash {{::cdash.version}}
       © <a href="http://www.kitware.com">Kitware</a> |
-      <a href="https://github.com/Kitware/CDash/issues" target="blank">Report problems</a>
+      <a href="https://github.com/Kitware/CDash/issues" target="blank">Report problems</a> |
+      <a ng-href="{{cdash.endpoint}}">View as JSON</a>
       <span ng-if="::cdash.generationtime">
         | {{cdash.generationtime}}s
       </span>
