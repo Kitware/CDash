@@ -38,6 +38,6 @@ describe("viewBuildError", function() {
     element(by.linkText('Linux-unknown')).click();
     element(by.linkText('View Errors Summary')).click();
     expect(element.all(by.xpath(outputXpath + '/span')).count()).toBe(2);
-    expect(browser.getPageSource()).toContain('<a href="https://www.kitware.com/">Kitware</a>');
+    expect(browser.getPageSource()).toContain('&lt;a href="https://www.kitware.com/"&gt;Kitware&lt;\/a&gt;');
   });
 });

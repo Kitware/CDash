@@ -704,6 +704,10 @@ function get_revision_url($projectid, $revision, $priorrevision)
 
 function linkify_compiler_output($projecturl, $source_dir, $revision, $compiler_output)
 {
+    // Escape HTMl characters in compiler output first.  This allows us to properly
+    // display characters such as angle brackets in compiler output.
+    $compiler_output = htmlspecialchars($compiler_output);
+
     // set a reasonable default revision if none was specified
     if (empty($revision)) {
         $revision = 'master';
