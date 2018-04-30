@@ -748,7 +748,7 @@ function post_pull_request_comment($projectid, $pull_request, $comment, $cdash_u
         $PR_func($project, $pull_request, $comment, $cdash_url);
         return;
     } else {
-        add_log("PR commenting not implemented for '$cvsviewertype'",
+        add_log("PR commenting not implemented for '$project->CvsViewerType'",
             'post_pull_request_comment()', LOG_WARNING);
     }
 }
