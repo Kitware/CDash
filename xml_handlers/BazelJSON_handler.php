@@ -37,8 +37,10 @@ class BazelJSONHandler
     private $NumTestsNotRun;
     private $ParentBuild;
     private $Project;
+    private $RecordingTestOutput;
     private $Tests;
     private $TestsOutput;
+    private $TestName;
     private $WorkingDirectory;
 
     private $PDO;
@@ -73,8 +75,10 @@ class BazelJSONHandler
         if (!$this->HasSubProjects) {
             $this->InitializeConfigure($build, '');
         }
+        $this->RecordingTestOutput = false;
         $this->Tests = [];
         $this->TestsOutput = [];
+        $this->TestName = '';
 
         $this->PDO = get_link_identifier()->getPdo();
     }
@@ -214,31 +218,37 @@ class BazelJSONHandler
                     // wrote to sdterr instead.
                     $test_pattern =
                         '/==================== Test output for (.*?):$/';
-                    $test_name = '';
-                    $recording_test_output = false;
 
                     $stdout = $json_array['progress']['stdout'];
                     $lines = explode("\n", $stdout);
+                    // Output lines can extend over multiple 'progress' events
+                    $continue_line = true;
 
                     foreach ($lines as $line) {
-                        if ($recording_test_output) {
-                            if (!preg_match('/[^=]/', $line)) {
-                                // A line of all '='s means the end of output
+                        if ($this->RecordingTestOutput) {
+                            if (preg_match('/={80}/', $line)) {
+                                // A line of exacty 80 '='s means the end of output
                                 // for this test.
-                                $recording_test_output = false;
+                                $this->RecordingTestOutput = false;
+                                $this->TestName = "";
                             } else {
                                 if (!array_key_exists(
-                                            $test_name, $this->TestsOutput)) {
-                                    $this->TestsOutput[$test_name] = $line;
+                                      $this->TestName, $this->TestsOutput)) {
+                                    $this->TestsOutput[$this->TestName] = $line;
+                                    $continue_line = false;
+                                } elseif (!empty($line) && $continue_line) {
+                                    // Continue line from previous 'progress' event
+                                    $this->TestsOutput[$this->TestName] .= "$line";
+                                    $continue_line = false;
                                 } else {
-                                    $this->TestsOutput[$test_name] .= "\n$line";
+                                    $this->TestsOutput[$this->TestName] .= "\n$line";
                                 }
                             }
                         } else {
                             if (preg_match($test_pattern, $line, $matches) === 1
                                     && count($matches) === 2) {
-                                $test_name = $matches[1];
-                                $recording_test_output = true;
+                                $this->TestName = $matches[1];
+                                $this->RecordingTestOutput = true;
                             }
                         }
                     }
@@ -353,6 +363,10 @@ class BazelJSONHandler
                                     $source_line_number =
                                         substr($line, $colon_pos + 1);
                                 }
+                            }
+                            // Make sure we found a valid line number
+                            if (!is_numeric($source_line_number)) {
+                                $source_line_number = 0;
                             }
 
                             $build_error->Text = $line;
