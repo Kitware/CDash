@@ -423,59 +423,60 @@ class BazelJSONHandler
                 break;
 
             case 'testResult':
-                // By default, associate any tests with this->BuildId.
-                $buildid = $this->BuildId;
-                $subproject_name = '';
-                if ($this->HasSubProjects) {
-                    // But if this project is broken up into subprojects,
-                    // we may want to assign this test to one of the children
-                    // builds instead.
-                    $target_name = $json_array['id']['testResult']['label'];
-                    $subproject_name = SubProject::GetSubProjectForPath(
-                            $target_name, $this->Project->Id);
-                    // Skip this defect if we cannot deduce what SubProject
-                    // it belongs to.
-                    if (empty($subproject_name)) {
-                        continue;
+                // Skip test results with children, the output is duplicated
+                if (!array_key_exists('children', $json_array)) {
+                    // By default, associate any tests with this->BuildId.
+                    $buildid = $this->BuildId;
+                    $subproject_name = '';
+                    if ($this->HasSubProjects) {
+                        // But if this project is broken up into subprojects,
+                        // we may want to assign this test to one of the children
+                        // builds instead.
+                        $target_name = $json_array['id']['testResult']['label'];
+                        $subproject_name = SubProject::GetSubProjectForPath(
+                                $target_name, $this->Project->Id);
+                        // Skip this defect if we cannot deduce what SubProject
+                        // it belongs to.
+                        if (empty($subproject_name)) {
+                            continue;
+                        }
+                        $child_build = $this->InitializeSubProjectBuild($subproject_name);
+                        if (!is_null($child_build)) {
+                            $child_build->InsertErrors = false;
+                            add_build($child_build);
+                            $buildid = $child_build->Id;
+                        }
                     }
-                    $child_build = $this->InitializeSubProjectBuild($subproject_name);
-                    if (!is_null($child_build)) {
-                        $child_build->InsertErrors = false;
-                        add_build($child_build);
-                        $buildid = $child_build->Id;
+
+                    $buildtest = new BuildTest();
+                    $buildtest->BuildId = $buildid;
+                    $buildtest->Status =
+                        strtolower($json_array['testResult']['status']);
+                    $buildtest->Time =
+                        $json_array['testResult']['testAttemptDurationMillis'] / 1000.0;
+
+                    $test = new Test();
+                    $test->ProjectId = $this->Project->Id;
+                    $test->Command = '';
+                    $test->Path = '';
+                    $test->Name = $json_array['id']['testResult']['label'];
+                    if ($buildtest->Status === 'failed') {
+                        $this->NumTestsFailed[$subproject_name]++;
+                        $test->Details = 'Completed (Failed)';
+                    } elseif ($buildtest->Status === 'timeout') {
+                        $buildtest->Status = 'failed';
+                        $this->NumTestsFailed[$subproject_name]++;
+                        $test->Details = 'Completed (Timeout)';
+                        // "TIMEOUT" message is only in stderr, not stdout
+                        // Make sure that it is displayed.
+                        $this->TestsOutput[$test->Name] = "TIMEOUT\n";
+                    } else {
+                        $this->NumTestsPassed[$subproject_name]++;
+                        $test->Details = 'Completed';
                     }
+                    // We will set this test's output (if any) before inserting it into the database.
+                    $this->Tests[] = [$test, $buildtest];
                 }
-
-                $buildtest = new BuildTest();
-                $buildtest->BuildId = $buildid;
-                $buildtest->Status =
-                    strtolower($json_array['testResult']['status']);
-                $buildtest->Time =
-                    $json_array['testResult']['testAttemptDurationMillis'] / 1000.0;
-
-                $test = new Test();
-                $test->ProjectId = $this->Project->Id;
-                $test->Command = '';
-                $test->Path = '';
-                $test->Name = $json_array['id']['testResult']['label'];
-                if ($buildtest->Status === 'failed') {
-                    $this->NumTestsFailed[$subproject_name]++;
-                    $test->Details = 'Completed (Failed)';
-                } elseif ($buildtest->Status === 'timeout') {
-                    $buildtest->Status = 'failed';
-                    $this->NumTestsFailed[$subproject_name]++;
-                    $test->Details = 'Completed (Timeout)';
-                    // "TIMEOUT" message is only in stderr, not stdout
-                    // Make sure that it is displayed.
-                    $this->TestsOutput[$test->Name] = "TIMEOUT\n";
-                } else {
-                    $this->NumTestsPassed[$subproject_name]++;
-                    $test->Details = 'Completed';
-                }
-                // We will set this test's output (if any) before inserting it into the database.
-
-                $this->Tests[] = [$test, $buildtest];
-
                 break;
 
             default:
