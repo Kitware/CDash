@@ -7,7 +7,6 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 
-use CDash\Config;
 use CDash\Database;
 use CDash\Model\Build;
 
@@ -17,8 +16,6 @@ class TimelineTestCase extends KWWebTestCase
     {
         parent::__construct();
         $this->PDO = Database::getInstance()->getPdo();
-        $this->Config = Config::getInstance();
-        $this->base_url = $this->Config->get('CDASH_BASE_URL');
     }
 
     private function toggle_expected($client, $build, $expected)
@@ -31,7 +28,7 @@ class TimelineTestCase extends KWWebTestCase
         ];
         try {
             $response = $client->request('POST',
-                    $this->base_url .  '/api/v1/build.php',
+                    $this->url .  '/api/v1/build.php',
                     ['json' => $payload]);
         } catch (GuzzleHttp\Exception\ClientException $e) {
             $this->fail($e->getMessage());
@@ -72,18 +69,7 @@ class TimelineTestCase extends KWWebTestCase
         }
 
         // Login as admin.
-        $client = new GuzzleHttp\Client(['cookies' => true]);
-        try {
-            $response = $client->request('POST',
-                    $this->base_url . '/user.php',
-                    ['form_params' => [
-                        'login' => 'simpletest@localhost',
-                        'passwd' => 'simpletest',
-                        'sent' => 'Login >>']]);
-        } catch (GuzzleHttp\Exception\ClientException $e) {
-            $this->fail($e->getMessage());
-            return false;
-        }
+        $client = $this->getGuzzleClient();
 
         // Mark this build as expected.
         $this->toggle_expected($client, $build, 1);

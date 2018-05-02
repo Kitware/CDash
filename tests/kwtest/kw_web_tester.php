@@ -392,24 +392,12 @@ class KWWebTestCase extends WebTestCase
         }
 
         // Login as admin.
-        $client = new GuzzleHttp\Client(['cookies' => true]);
-        global $CDASH_BASE_URL;
-        try {
-            $response = $client->request('POST',
-                    $CDASH_BASE_URL . '/user.php',
-                    ['form_params' => [
-                        'login' => $username,
-                        'passwd' => $password,
-                        'sent' => 'Login >>']]);
-        } catch (GuzzleHttp\Exception\ClientException $e) {
-            $this->fail($e->getMessage());
-            return false;
-        }
+        $client = $this->getGuzzleClient($username, $password);
 
         // Create project.
         try {
             $response = $client->request('POST',
-                    $CDASH_BASE_URL . '/api/v1/project.php',
+                    $this->url . '/api/v1/project.php',
                     ['json' => [$submit_button => true, 'project' => $settings]]);
         } catch (GuzzleHttp\Exception\ClientException $e) {
             $this->fail($e->getMessage());
@@ -461,25 +449,13 @@ class KWWebTestCase extends WebTestCase
     public function deleteProject($projectid)
     {
         // Login as admin.
-        $client = new GuzzleHttp\Client(['cookies' => true]);
-        global $CDASH_BASE_URL;
-        try {
-            $response = $client->request('POST',
-                    $CDASH_BASE_URL . '/user.php',
-                    ['form_params' => [
-                        'login' => 'simpletest@localhost',
-                        'passwd' => 'simpletest',
-                        'sent' => 'Login >>']]);
-        } catch (GuzzleHttp\Exception\ClientException $e) {
-            $this->fail($e->getMessage());
-            return false;
-        }
+        $client = $this->getGuzzleClient();
 
         // Delete project.
         $project_array = array('Id' => $projectid);
         try {
             $response = $client->delete(
-                    $CDASH_BASE_URL . '/api/v1/project.php',
+                    $this->url . '/api/v1/project.php',
                     ['json' => ['project' => $project_array]]);
         } catch (GuzzleHttp\Exception\ClientException $e) {
             $this->fail($e->getMessage());
@@ -492,6 +468,24 @@ class KWWebTestCase extends WebTestCase
         if ($project->Exists()) {
             $this->fail("Project $projectid still exists after it should have been deleted");
         }
+    }
+
+    public function getGuzzleClient($username = 'simpletest@localhost',
+                                    $password = 'simpletest')
+    {
+        $client = new GuzzleHttp\Client(['cookies' => true]);
+        try {
+            $response = $client->request('POST',
+                    $this->url . '/user.php',
+                    ['form_params' => [
+                    'login' => $username,
+                    'passwd' => $password,
+                    'sent' => 'Login >>']]);
+        } catch (GuzzleHttp\Exception\ClientException $e) {
+            $this->fail($e->getMessage());
+            return false;
+        }
+        return $client;
     }
 
     public function addLineToConfig($line_to_add)

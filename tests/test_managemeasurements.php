@@ -104,19 +104,7 @@ class ManageMeasurementsTestCase extends KWWebTestCase
         }
 
         // Login as admin.
-        $client = new GuzzleHttp\Client(['cookies' => true]);
-        global $CDASH_BASE_URL;
-        try {
-            $response = $client->request('POST',
-                    $CDASH_BASE_URL . '/user.php',
-                    ['form_params' => [
-                        'login' => 'simpletest@localhost',
-                        'passwd' => 'simpletest',
-                        'sent' => 'Login >>']]);
-        } catch (GuzzleHttp\Exception\ClientException $e) {
-            $this->fail($e->getMessage());
-            return false;
-        }
+        $client = $this->getGuzzleClient();
 
         // POST to manageMeasurements.php to add 'Processors' as a
         // test measurement for these projects.
@@ -133,7 +121,7 @@ class ManageMeasurementsTestCase extends KWWebTestCase
             ];
             try {
                 $response = $client->request('POST',
-                        $CDASH_BASE_URL . '/api/v1/manageMeasurements.php',
+                        $this->url . '/api/v1/manageMeasurements.php',
                         ['json' => ['projectid' => $projectid, 'measurements' => $measurements]]);
             } catch (GuzzleHttp\Exception\ClientException $e) {
                 $this->fail($e->getMessage());
