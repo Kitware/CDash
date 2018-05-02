@@ -32,25 +32,8 @@ $build = get_request_build();
 
 $method = $_SERVER['REQUEST_METHOD'];
 // Make sure the user is an admin before proceeding with non-read-only methods.
-if ($method != 'GET') {
-    $userid = $_SESSION['cdash']['loginid'];
-    if (!isset($userid) || !is_numeric($userid)) {
-        $response['error'] = 'Not a valid userid!';
-        echo json_encode($response);
-        return;
-    }
-
-    $Project = new Project;
-    $User = new User;
-    $User->Id = $userid;
-    $Project->Id = $build->ProjectId;
-
-    $role = $Project->GetUserRole($userid);
-    if ($User->IsAdmin() === false && $role <= 1) {
-        $response['error'] = 'You do not have permission to access this page';
-        echo json_encode($response);
-        return;
-    }
+if ($method != 'GET' && !can_administrate_project($build->ProjectId)) {
+    return;
 }
 
 // Route based on what type of request this is.
