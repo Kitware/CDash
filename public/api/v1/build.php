@@ -34,34 +34,30 @@ if ($method != 'GET' && !can_administrate_project($build->ProjectId)) {
 // Route based on what type of request this is.
 switch ($method) {
     case 'DELETE':
-        rest_delete();
+        rest_delete($build);
         break;
     case 'POST':
-        rest_post();
+        rest_post($build);
         break;
     case 'PUT':
-        rest_put();
+        rest_put($build);
         break;
     case 'GET':
     default:
-        rest_get();
+        rest_get($build);
         break;
 }
 
 /* Handle DELETE requests */
-function rest_delete()
+function rest_delete($build)
 {
-    global $build;
     add_log('Build #' . $build->Id . ' removed manually', 'buildAPI');
     remove_build($build->Id);
 }
 
 /* Handle POST requests */
-function rest_post()
+function rest_post($build)
 {
-    /** @var Build $build */
-    global $build;
-
     $buildtype = $build->Type;
     $buildname = $build->Name;
     $siteid = $build->SiteId;
@@ -137,15 +133,13 @@ function rest_post()
 }
 
 /* Handle PUT requests */
-function rest_put()
+function rest_put($build)
 {
-    global $buildid;
 }
 
 /* Handle GET requests */
-function rest_get()
+function rest_get($build)
 {
-    global $build;
     $response = [];
 
     // Are we looking for what went wrong with this build?
