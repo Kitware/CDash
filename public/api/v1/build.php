@@ -22,12 +22,7 @@ use CDash\Model\Project;
 use CDash\Model\User;
 
 init_api_request();
-$response = array();
-
-// Connect to database.
-@$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
-
+$response = [];
 $build = get_request_build();
 
 $method = $_SERVER['REQUEST_METHOD'];
@@ -151,7 +146,7 @@ function rest_put()
 function rest_get()
 {
     global $build;
-    $response = array();
+    $response = [];
 
     // Are we looking for what went wrong with this build?
     if (isset($_GET['getproblems'])) {
