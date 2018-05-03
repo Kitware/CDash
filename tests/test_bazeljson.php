@@ -38,7 +38,7 @@ class BazelJSONTestCase extends KWWebTestCase
         $row = $stmt->fetch();
 
         $answer_key = [
-            'builderrors' => 1,
+            'builderrors' => 2,
             'buildwarnings' => 2,
             'testfailed' => 1,
             'testpassed' => 1,
@@ -182,7 +182,7 @@ class BazelJSONTestCase extends KWWebTestCase
     {
         // Submit testing data.
         $buildid = $this->submit_data('InsightExample', 'BazelJSON',
-            '83f69abfe3982e79c17a0d669bddadf7',
+            'abc62be615c3f2a469fe6b6ada556b75',
             dirname(__FILE__) . '/data/Bazel/bazel_testFailed.json');
         if (!$buildid) {
             return false;
@@ -197,7 +197,7 @@ class BazelJSONTestCase extends KWWebTestCase
         $answer_key = [
             'builderrors' => 0,
             'buildwarnings' => 0,
-            'testfailed' => 3,
+            'testfailed' => 1,
             'testpassed' => 1
         ];
         foreach ($answer_key as $key => $expected) {
@@ -235,7 +235,7 @@ class BazelJSONTestCase extends KWWebTestCase
     {
         // Submit testing data.
         $buildid = $this->submit_data('InsightExample', 'BazelJSON',
-            'c0bd82ecbd65043f2a7f2cc0d638871f',
+            '73817c7f786ff65ce14af7c34a6850ba',
             dirname(__FILE__) . '/data/Bazel/bazel_timeout.json');
         if (!$buildid) {
             return false;
@@ -288,7 +288,7 @@ class BazelJSONTestCase extends KWWebTestCase
     {
         // Submit testing data.
         $buildid = $this->submit_data('InsightExample', 'BazelJSON',
-            '7fccba5b31e7d681fa9f82632cb19a06',
+            'e2b864cc0c5308148aea0d143df6d2ba',
             dirname(__FILE__) . '/data/Bazel/bazel_configure.json');
         if (!$buildid) {
             return false;
@@ -302,7 +302,7 @@ class BazelJSONTestCase extends KWWebTestCase
         $row = $stmt->fetch();
 
         $answer_key = [
-            'builderrors' => 0,
+            'builderrors' => 8,
             'buildwarnings' => 0,
             'testfailed' => 0,
             'testpassed' => 0,
@@ -352,6 +352,55 @@ class BazelJSONTestCase extends KWWebTestCase
         // Cleanup.
         remove_build($buildid);
     }
+
+    public function testMultipleLineError()
+    {
+        // Submit testing data.
+        $buildid = $this->submit_data('InsightExample', 'BazelJSON',
+            '131eabf91e183359d4b3e1ef24482741',
+            dirname(__FILE__) . '/data/Bazel/bazel_multiple_line_error.json');
+        if (!$buildid) {
+            return false;
+        }
+
+        // Validate the build.
+        $stmt = $this->PDO->query(
+                "SELECT builderrors, buildwarnings, testfailed, testpassed
+                FROM build WHERE id = $buildid");
+        $row = $stmt->fetch();
+
+        $answer_key = [
+            'builderrors' => 3,
+            'buildwarnings' => 0,
+            'testfailed' => 0,
+            'testpassed' => 0
+        ];
+        foreach ($answer_key as $key => $expected) {
+            $found = $row[$key];
+            if ($found != $expected) {
+                $this->fail("Expected $expected for $key but found $found");
+            }
+        }
+
+        // Use the API to verify that the line numbers were parsed correctly
+        $this->get($this->url . "/api/v1/viewBuildError.php?buildid=$buildid");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $errors = $jsonobj['errors'];
+        if ($errors[0]["logline"] != 1) {
+            $this->fail("Expected error at line 1, found at line ".$errors[0]["logline"]);
+        }
+        if ($errors[1]["logline"] != 3) {
+            $this->fail("Expected error at line 3, found at line ".$errors[1]["logline"]);
+        }
+        if ($errors[2]["logline"] != 6) {
+            $this->fail("Expected error at line 6, found at line ".$errors[2]["logline"]);
+        }
+
+        // Cleanup.
+        remove_build($buildid);
+    }
+
 
     private function submit_data($project_name, $upload_type, $md5, $file_path)
     {

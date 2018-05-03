@@ -260,8 +260,8 @@ class BazelJSONHandler
                     // Parse through stderr line-by-line,
                     // searching for configure and build warnings and errors.
                     $stderr = $json_array[$message_id]['stderr'];
-                    $warning_pattern = '/(.*?) warning: (.*?)$/';
-                    $error_pattern = '/(.*?) error: (.*?)$/';
+                    $warning_pattern = '/(.*?) warning: (.*?)$/i';
+                    $error_pattern = '/(.*?)error: (.*?)$/i';
 
                     // The first two phases of a Bazel build, Loading and
                     // Analysis, will be treated as the 'Configure' step by
@@ -327,85 +327,82 @@ class BazelJSONHandler
                                 // Capture line as this configure's log.
                                 $this->Configures[$subproject_name]->Log .= "$line\n";
                             }
-                            // Check next line
-                            $log_line_number++;
-                            continue;
-                        }
-
-                        // Done with configure, parsing build errors and warnings
-                        $record_error = false;
-                        if (preg_match($warning_pattern, $line, $matches) === 1
-                                && count($matches) === 3) {
-                            // This line contains a warning.
-                            $record_error = true;
-                            $type = 1;
-                        } elseif (preg_match($error_pattern, $line, $matches) === 1
-                                && count($matches) === 3) {
-                            // This line contains an error.
-                            $record_error = true;
-                            $type = 0;
-                        }
-
-                        if ($record_error) {
-                            // Record any existing build error before creating
-                            // a new one.
-                            if (!is_null($build_error)) {
-                                $this->BuildErrors[$subproject_name][] = $build_error;
-                                $subproject_name = '';
-                                $build_error = null;
+                        } else {
+                            // Done with configure, parsing build errors and warnings
+                            $record_error = false;
+                            if (preg_match($warning_pattern, $line, $matches) === 1
+                                  && count($matches) === 3) {
+                                // This line contains a warning.
+                                $record_error = true;
+                                $type = 1;
+                            } elseif (preg_match($error_pattern, $line, $matches) === 1
+                                  && count($matches) === 3) {
+                                // This line contains an error.
+                                $record_error = true;
+                                $type = 0;
                             }
-                            $build_error = new BuildError();
-                            $build_error->Type = $type;
-                            $build_error->LogLine = $log_line_number;
-                            $build_error->PreContext = '';
-                            $build_error->PostContext = '';
-                            $build_error->RepeatCount = 0;
 
-                            // Parse source file and line number from compiler
-                            // output.
-                            $context = $matches[1];
-                            $source_file = '';
-                            $source_line_number = '';
-                            $colon_pos = strpos($context, ':');
-                            if ($colon_pos !== false) {
-                                $source_file = substr($line, 0, $colon_pos);
-                                $colon_pos2 =
-                                    strpos($context, ':', $colon_pos + 1);
-                                if ($colon_pos2 !== false) {
-                                    $len = $colon_pos2 - $colon_pos - 1;
-                                    $source_line_number =
-                                        substr($line, $colon_pos + 1, $len);
-                                } else {
-                                    $source_line_number =
-                                        substr($line, $colon_pos + 1);
+                            if ($record_error) {
+                                // Record any existing build error before creating
+                                // a new one.
+                                if (!is_null($build_error)) {
+                                    $this->BuildErrors[$subproject_name][] = $build_error;
+                                    $subproject_name = '';
+                                    $build_error = null;
                                 }
-                            }
-                            // Make sure we found a valid line number
-                            if (!is_numeric($source_line_number)) {
-                                $source_line_number = 0;
-                            }
+                                $build_error = new BuildError();
+                                $build_error->Type = $type;
+                                $build_error->LogLine = $log_line_number;
+                                $build_error->PreContext = '';
+                                $build_error->PostContext = '';
+                                $build_error->RepeatCount = 0;
 
-                            $build_error->Text = $line;
-                            $build_error->SourceFile = $source_file;
-                            $build_error->SourceLine = $source_line_number;
+                                // Parse source file and line number from compiler
+                                // output.
+                                $context = $matches[1];
+                                $source_file = '';
+                                $source_line_number = '';
+                                $colon_pos = strpos($context, ':');
+                                if ($colon_pos !== false) {
+                                    $source_file = substr($line, 0, $colon_pos);
+                                    $colon_pos2 =
+                                      strpos($context, ':', $colon_pos + 1);
+                                    if ($colon_pos2 !== false) {
+                                        $len = $colon_pos2 - $colon_pos - 1;
+                                        $source_line_number =
+                                          substr($line, $colon_pos + 1, $len);
+                                    } else {
+                                        $source_line_number =
+                                          substr($line, $colon_pos + 1);
+                                    }
+                                }
+                                // Make sure we found a valid line number
+                                if (!is_numeric($source_line_number)) {
+                                    $source_line_number = 0;
+                                }
 
-                            // Look up the subproject (if any) that contains
-                            // this source file.
-                            $subproject_name = SubProject::GetSubProjectForPath(
-                                $source_file, $this->Project->Id);
-                            // Skip this defect if we cannot deduce what SubProject
-                            // it belongs to.
-                            if (empty($subproject_name)) {
-                                continue;
+                                $build_error->Text = $line;
+                                $build_error->SourceFile = $source_file;
+                                $build_error->SourceLine = $source_line_number;
+
+                                // Look up the subproject (if any) that contains
+                                // this source file.
+                                $subproject_name = SubProject::GetSubProjectForPath(
+                                  $source_file, $this->Project->Id);
+                                // Skip this defect if we cannot deduce what SubProject
+                                // it belongs to.
+                                if (!empty($subproject_name)) {
+                                    $this->InitializeSubProjectBuild($subproject_name);
+                                }
+                            } elseif (!is_null($build_error)) {
+                                // Record lines following the error/warning
+                                // as post context.
+                                $build_error->PostContext .= "$line\n";
                             }
-                            $this->InitializeSubProjectBuild($subproject_name);
-                        } elseif (!is_null($build_error)) {
-                            // Record lines following the error/warning
-                            // as post context.
-                            $build_error->PostContext .= "$line\n";
                         }
                         $log_line_number++;
                     }
+
                     if (!is_null($build_error)) {
                         $this->BuildErrors[$subproject_name][] = $build_error;
                         $build_error = null;
