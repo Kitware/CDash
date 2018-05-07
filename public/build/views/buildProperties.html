@@ -9,13 +9,13 @@
     <link rel="stylesheet" type="text/css" href="css/nv.d3.css"/>
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.4.css" />
-    <script src="js/CDash_1523706539263.min.js"></script>
+    <script src="js/CDash_1525722731434.min.js"></script>
     <title ng-bind="title">CDash : Build Properties</title>
   </head>
 
   <body bgcolor="#ffffff" ng-controller="BuildPropertiesController">
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1523706539263.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1525722731434.html'"></ng-include>
     <br/>
 
     <div ng-if="cdash.requirelogin != 1 && !loading && !cdash.error" class="container">
@@ -206,6 +206,6 @@
 
     <!-- FOOTER -->
     <br/>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1523706539263.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1525722731434.html'"></ng-include>
   </body>
 </html>
