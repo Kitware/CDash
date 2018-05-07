@@ -33,6 +33,7 @@ use CDash\Model\ClientSite;
 use CDash\Model\ClientJob;
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
+use CDash\Model\BuildUpdate;
 use CDash\Model\Site;
 use CDash\Model\User;
 use CDash\Model\UserProject;

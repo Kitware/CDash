@@ -212,21 +212,6 @@ function valid_user(&$response, $Project=null)
     return true;
 }
 
-/** Strip the HTTP */
-function stripHTTP($url)
-{
-    $pos = strpos($url, 'http://');
-    if ($pos !== false) {
-        return substr($url, 7);
-    } else {
-        $pos = strpos($url, 'https://');
-        if ($pos !== false) {
-            return substr($url, 8);
-        }
-    }
-    return $url;
-}
-
 function create_project(&$response)
 {
     $Name = $_REQUEST['project']['Name'];
@@ -277,12 +262,6 @@ function populate_project($Project)
     $project_settings = $_REQUEST['project'];
     foreach ($project_settings as $k => $v) {
         $Project->{$k} = $v;
-    }
-
-    // Strip "http[s]://" from the beginning of URLs.
-    $url_vars = array('HomeUrl', 'CvsUrl', 'DocumentationUrl', 'TestingDataUrl');
-    foreach ($url_vars as $var) {
-        $Project->{$var} = stripHTTP($Project->{$var});
     }
 
     // Convert UploadQuota from GB to bytes.

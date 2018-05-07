@@ -137,4 +137,21 @@ class ConfigTest extends PHPUnit_Framework_TestCase
         $config->set('CDASH_BASE_URL', $CDASH_BASE_URL);
         $config->set('CDASH_USE_HTTPS', $CDASH_USE_HTTPS);
     }
+
+
+    /**
+     * @expectedException        Exception
+     * @expectedExceptionMessage pull request commenting is disabled
+     */
+    public function testDisablePullRequestComments()
+    {
+        include 'config/config.php';
+        require_once 'include/repository.php';
+
+        $config = Config::getInstance();
+        $config->set('CDASH_NOTIFY_PULL_REQUEST', false);
+        $config->set('CDASH_TESTING_MODE', true);
+
+        post_pull_request_comment(1, 1, "this is a comment", $config->get('CDASH_BASE_URL'));
+    }
 }
