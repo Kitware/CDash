@@ -1,4 +1,3 @@
-<html>
 <?php
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
@@ -71,4 +70,3 @@ echo pdo_error();
 
 </table>
 
-</html>

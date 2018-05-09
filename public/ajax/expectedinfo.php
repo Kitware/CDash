@@ -1,4 +1,3 @@
-<html>
 <?php
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
@@ -70,4 +69,3 @@ if (pdo_num_rows($lastbuild) > 0) {
             </font></td>
     </tr>
 </table>
-</html>

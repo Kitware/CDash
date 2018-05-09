@@ -1,4 +1,3 @@
-<html>
 <?php
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
@@ -139,4 +138,3 @@ if ($testfailing) {
 
 
 </table>
-</html>
