@@ -1,4 +1,3 @@
-<html>
 <?php
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
@@ -222,4 +221,3 @@ $group = pdo_query("SELECT name,id FROM buildgroup WHERE id!='$buildgroupid' AND
         ?>
     </table>
 </form>
-</html>

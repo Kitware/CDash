@@ -1,4 +1,3 @@
-<html>
 <?php
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
@@ -52,6 +51,3 @@ while ($note_array = pdo_fetch_array($note)) {
     echo 'by <b>' . $user->FirstName . ' ' . $user->LastName . '</b>' . ' (' . date('H:i:s T', $timestamp) . ')';
     echo '<pre>' . substr($note_array['note'], 0, 100) . '</pre>'; // limit 100 chars
 }
-?>
-
-</html>
