@@ -235,7 +235,7 @@ $GOOGLE_CLIENT_SECRET = '';
 // Settings to enable external authentication using OAuth 2.0.
 // Currently recognized providers are GitHub, GitLab, and Google.
 // Example:
-// $OAUTH_PROVIDERS['GitHub'] = [
+// $OAUTH2_PROVIDERS['GitHub'] = [
 //    'clientId'          => {client-id},
 //    'clientSecret'      => {client-secret},
 //    'redirectUri'       => 'http://mydomain.com/CDash/auth/GitHub.php'
