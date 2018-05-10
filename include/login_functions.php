@@ -421,9 +421,9 @@ function LoginForm($loginerror)
     }
 
     if ($GOOGLE_CLIENT_ID != '' && $GOOGLE_CLIENT_SECRET != '' &&
-        !array_key_exists('Google', $OAUTH_PROVIDERS)) {
+        !array_key_exists('Google', $OAUTH2_PROVIDERS)) {
         // Backwards compatibility for previous Google-login implementation.
-        $OAUTH_PROVIDERS['Google'] = [
+        $OAUTH2_PROVIDERS['Google'] = [
             'clientId'          => $GOOGLE_CLIENT_ID,
             'clientSecret'      => $GOOGLE_CLIENT_SECRET,
             'redirectUri'       => get_server_URI() . '/auth/Google.php'
