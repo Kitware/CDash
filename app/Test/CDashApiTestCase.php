@@ -95,19 +95,19 @@ class CDashApiTestCase extends CDashTestCase
     // back to their original states.
     protected function initSessionGlobalVar()
     {
-      // temporarily store values
-      $use_cookies = ini_get('session.use_cookies');
-      $limiter = session_cache_limiter();
+        // temporarily store values
+        $use_cookies = ini_get('session.use_cookies');
+        $limiter = session_cache_limiter();
 
-      // initialize $_SESSION
-      ini_set('session.use_cookies', false);
-      session_cache_limiter( FALSE );
-      session_start();
-      session_write_close();
+        // initialize $_SESSION
+        ini_set('session.use_cookies', false);
+        session_cache_limiter(false);
+        session_start();
+        session_write_close();
 
-      // restore values
-      ini_set('session.use_cookies', $use_cookies);
-      session_cache_limiter($limiter);
+        // restore values
+        ini_set('session.use_cookies', $use_cookies);
+        session_cache_limiter($limiter);
     }
 
     protected function getEndpointResponse()
