@@ -36,6 +36,8 @@ class CDashApiTestCase extends CDashTestCase
     {
         parent::setUp();
 
+        $this->initSessionGlobalVar();
+
         // TODO: implement Request class to make annoyances like this go away
         $_SERVER['SERVER_NAME'] = 'bleh.yuck.meh';
 
@@ -85,6 +87,27 @@ class CDashApiTestCase extends CDashTestCase
         if (!$this->endpoint) {
             throw new \Exception('Endpoint does not exist');
         }
+    }
+
+    // This method is used to ensure that the $_SESSION variable exists by turning off any
+    // output usually created by session_start(), calling session_start(), then closing
+    // the session and returning the values session.use_cookies and session_cache_limiter
+    // back to their original states.
+    protected function initSessionGlobalVar()
+    {
+      // temporarily store values
+      $use_cookies = ini_get('session.use_cookies');
+      $limiter = session_cache_limiter();
+
+      // initialize $_SESSION
+      ini_set('session.use_cookies', false);
+      session_cache_limiter( FALSE );
+      session_start();
+      session_write_close();
+
+      // restore values
+      ini_set('session.use_cookies', $use_cookies);
+      session_cache_limiter($limiter);
     }
 
     protected function getEndpointResponse()
