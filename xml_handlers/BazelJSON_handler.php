@@ -124,6 +124,7 @@ class BazelJSONHandler
             $num_notrun = $build->GetNumberOfNotRunTests() +
                 $this->NumTestsNotRun[$subproject_name];
             $build->UpdateTestNumbers($num_passed, $num_failed, $num_notrun);
+            $build->ComputeTestTiming();
         }
 
         // Save configure information.
