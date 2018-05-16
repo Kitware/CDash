@@ -386,13 +386,17 @@ class BazelJSONHandler
                                 $build_error->SourceFile = $source_file;
                                 $build_error->SourceLine = $source_line_number;
 
-                                // Look up the subproject (if any) that contains
-                                // this source file.
-                                $subproject_name = SubProject::GetSubProjectForPath(
-                                  $source_file, $this->Project->Id);
-                                // Skip this defect if we cannot deduce what SubProject
-                                // it belongs to.
-                                if (!empty($subproject_name)) {
+                                $subproject_name = '';
+                                if ($this->HasSubProjects) {
+                                    // Look up the subproject (if any) that contains
+                                    // this source file.
+                                    $subproject_name = SubProject::GetSubProjectForPath(
+                                    $source_file, $this->Project->Id);
+                                    // Skip this defect if we cannot deduce what SubProject
+                                    // it belongs to.
+                                    if (empty($subproject_name)) {
+                                        continue;
+                                    }
                                     $this->InitializeSubProjectBuild($subproject_name);
                                 }
                             } elseif (!is_null($build_error)) {
