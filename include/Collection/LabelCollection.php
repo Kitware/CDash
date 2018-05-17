@@ -1,7 +1,7 @@
 <?php
 namespace CDash\Collection;
 
-use Label;
+use CDash\Model\Label;
 
 class LabelCollection extends Collection
 {

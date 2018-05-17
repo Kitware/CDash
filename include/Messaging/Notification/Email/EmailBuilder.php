@@ -16,9 +16,9 @@ use CDash\Messaging\Subscription\SubscriptionNotificationBuilder;
 use CDash\Messaging\Subscription\Subscription;
 use CDash\Messaging\Subscription\SubscriptionCollection;
 use CDash\Messaging\Topic\Topic;
-use Project;
+use CDash\Model\Project;
 use SendGrid\Email;
-use Site;
+use CDash\Model\Site;
 
 class EmailBuilder extends SubscriptionNotificationBuilder
 {
@@ -183,7 +183,7 @@ class EmailBuilder extends SubscriptionNotificationBuilder
         return $this->notifications;
     }
 
-    public function setProject(\Project $project)
+    public function setProject(Project $project)
     {
         $this->project = $project;
     }

@@ -9,8 +9,7 @@ use CDash\Messaging\Notification\NotificationDirector;
 use CDash\Messaging\Notification\NotificationInterface;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Subscription\SubscriptionBuilder;
-use CDash\Test\UseCase\TestUseCase;
-use CDash\Test\UseCase\UpdateUseCase;
+use CDash\Model\Project;
 use CDash\Test\UseCase\UseCase;
 
 class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
@@ -510,7 +509,7 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
 
     public function testBuildUseCase()
     {
-        $this->useCase = UseCase::createBuilder($this, UseCase::BUILD);
+        // $this->useCase = UseCase::createBuilder($this, UseCase::BUILD);
 
     }
 }

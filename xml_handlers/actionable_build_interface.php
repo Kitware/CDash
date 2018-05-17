@@ -1,5 +1,8 @@
 <?php
 
+use CDash\Model\Build;
+use CDash\Model\Project;
+
 /**
  * ActionableHandler
  */

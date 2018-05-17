@@ -1,34 +1,20 @@
 <?php
-/*=========================================================================
-  Program:   CDash - Cross-Platform Dashboard System
-  Module:    $Id$
-  Language:  PHP
-  Date:      $Date$
-  Version:   $Revision$
-
-  Copyright (c) Kitware, Inc. All rights reserved.
-  See LICENSE or http://www.cdash.org/licensing/ for details.
-
-  This software is distributed WITHOUT ANY WARRANTY; without even
-  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-  PURPOSE. See the above copyright notices for more information.
-=========================================================================*/
-
 use CDash\Collection\BuildCollection;
 
 require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
 
-use CDash\Model\Build;
-use CDash\Model\BuildInformation;
-use CDash\Model\BuildTest;
-use CDash\Model\Feed;
-use CDash\Model\Image;
-use CDash\Model\Label;
-use CDash\Model\Site;
-use CDash\Model\SiteInformation;
-use CDash\Model\Test;
-use CDash\Model\TestMeasurement;
+use \CDash\Model\Build;
+use \CDash\Model\BuildInformation;
+use \CDash\Model\BuildTest;
+use \CDash\Model\Feed;
+use \CDash\Model\Image;
+use \CDash\Model\Label;
+use \CDash\Model\Site;
+use \CDash\Model\SiteInformation;
+use \CDash\Model\Test;
+use \CDash\Model\TestMeasurement;
+use \CDash\Model\Project;
 
 class TestingHandler extends AbstractHandler implements ActionableBuildInterface
 {

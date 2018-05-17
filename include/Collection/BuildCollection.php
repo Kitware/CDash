@@ -1,7 +1,7 @@
 <?php
 namespace CDash\Collection;
 
-use Build;
+use CDash\Model\Build;
 
 class BuildCollection extends Collection
 {

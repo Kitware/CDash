@@ -18,8 +18,6 @@ namespace CDash\Model;
 use PDO;
 use CDash\Database;
 
-use CDash\Database;
-
 /** BuildConfigure class */
 class BuildConfigure
 {
@@ -380,7 +378,7 @@ class BuildConfigure
         return $response;
     }
 
-    public function getURL(int $default_id = null)
+    public function getURL($default_id = null)
     {
         $config = \CDash\Config::getInstance();
         $id = is_null($default_id) ? $this->BuildId : $default_id;

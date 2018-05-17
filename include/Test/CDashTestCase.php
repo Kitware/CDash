@@ -38,7 +38,6 @@ class CDashTestCase extends \PHPUnit_Framework_TestCase
 
     public static function tearDownAfterClass()
     {
-        Database::setInstance(Database::class, self::$originalDatabase);
         ServiceContainer::setInstance(ServiceContainer::class, self::$originalServiceContainer);
         parent::tearDownAfterClass();
     }

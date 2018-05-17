@@ -1,7 +1,7 @@
 <?php
 namespace CDash\Messaging\Topic;
 
-use Build;
+use CDash\Model\Build;
 
 class UpdateErrorTopic extends Topic implements DecoratableInterface
 {

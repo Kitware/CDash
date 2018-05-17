@@ -3,6 +3,8 @@ namespace CDash\Messaging\Notification\Email\Decorator;
 
 use CDash\Collection\Collection;
 use CDash\Messaging\Topic\Topic;
+use CDash\Model\Build;
+use CDash\Model\BuildConfigure;
 
 class ConfigureDecorator extends Decorator
 {
@@ -11,7 +13,7 @@ class ConfigureDecorator extends Decorator
     public function setTopic(Topic $topic)
     {
         $collection = $topic->getTopicCollection();
-        /** @var \BuildConfigure $configure */
+        /** @var BuildConfigure $configure */
         $configure = $collection->current();
         $log = $this->processLog($configure->Log);
         $builds = $topic->getBuildCollection();
@@ -21,7 +23,7 @@ class ConfigureDecorator extends Decorator
         // which will display all of the subproject configurations (which themselves are
         // identical to one another).
         if ($builds->count() > 1) {
-            /** @var \Build $build */
+            /** @var Build $build */
             $builds->rewind();
             $build = $builds->current();
             $id = $build->GetParentId();
@@ -38,7 +40,7 @@ class ConfigureDecorator extends Decorator
         return $this->text;
     }
 
-    private function processLog(string $log)
+    private function processLog($log)
     {
         $processed = trim(substr($log, 0, $this->maxChars));
         $lines = explode("\n", $processed);

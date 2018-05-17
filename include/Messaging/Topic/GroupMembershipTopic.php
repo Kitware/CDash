@@ -1,7 +1,7 @@
 <?php
 namespace CDash\Messaging\Topic;
 
-use Build;
+use CDash\Model\Build;
 
 class GroupMembershipTopic extends Topic
 {
@@ -24,7 +24,7 @@ class GroupMembershipTopic extends Topic
     /**
      * @param string $group
      */
-    public function setGroup(string $group)
+    public function setGroup($group)
     {
         $this->group = $group;
     }

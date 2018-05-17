@@ -4,9 +4,9 @@ namespace CDash\Messaging\Subscription;
 use CDash\Config;
 use CDash\Messaging\Notification\NotificationInterface;
 use CDash\Messaging\Topic\TopicCollection;
-use Build;
-use Project;
-use Site;
+use CDash\Model\Build;
+use CDash\Model\Project;
+use CDash\Model\Site;
 use SubscriberInterface;
 
 class Subscription implements SubscriptionInterface

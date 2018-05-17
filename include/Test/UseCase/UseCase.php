@@ -58,6 +58,11 @@ abstract class UseCase
             case self::UPDATE:
                 $useCase = new UpdateUseCase();
                 break;
+            case self::BUILD:
+              $useCase = new BuildUseCase();
+            default:
+                $useCase = null;
+
         }
         $testCase->setUseCaseModelFactory($useCase);
         return $useCase;
@@ -97,7 +102,7 @@ abstract class UseCase
         return [];
     }
 
-    public function createAuthor(string $author, array $builds = [])
+    public function createAuthor($author, array $builds = [])
     {
         $builds = empty($builds) ? ['all'] : $builds;
         foreach ($builds as $build) {
@@ -344,7 +349,7 @@ abstract class UseCase
      * @param string $command
      * @return $this
      */
-    public function setConfigureCommand(string $command)
+    public function setConfigureCommand($command)
     {
         $this->properties['Config']['command'] = $command;
         return $this;
@@ -354,7 +359,7 @@ abstract class UseCase
      * @param int $status
      * @return $this
      */
-    public function setConfigureStatus(int $status)
+    public function setConfigureStatus($status)
     {
         $this->properties['Config']['status'] = $status;
         return $this;
@@ -364,7 +369,7 @@ abstract class UseCase
      * @param string $log
      * @return $this
      */
-    public function setConfigureLog(string $log)
+    public function setConfigureLog($log)
     {
         $this->properties['Config']['log'] = $log;
         return $this;
@@ -374,7 +379,7 @@ abstract class UseCase
      * @param int $minutes
      * @return $this
      */
-    public function setConfigureElapsedMinutes(int $minutes)
+    public function setConfigureElapsedMinutes($minutes)
     {
         $this->properties['Config']['elapsed'] = $minutes;
         return $this;

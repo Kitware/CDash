@@ -1,7 +1,7 @@
 <?php
 namespace CDash\Messaging\Topic;
 
-use Build;
+use CDash\Model\Build;
 use CDash\Collection\Collection;
 use CDash\Collection\CollectionCollection;
 use CDash\Collection\ConfigureCollection;

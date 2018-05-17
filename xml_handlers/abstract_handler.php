@@ -22,6 +22,7 @@ require_once 'xml_handlers/stack.php';
 use CDash\Config;
 use CDash\Model\Build;
 use CDash\Model\Site;
+use CDash\Model\Project;
 
 abstract class AbstractHandler implements SaxHandler, CDashSubmissionHandlerInterface
 {

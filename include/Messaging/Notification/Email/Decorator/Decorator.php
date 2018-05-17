@@ -31,7 +31,7 @@ abstract class Decorator implements DecoratorInterface
      * @param int $maxTopicItems
      * @return $this
      */
-    public function setMaxTopicItems(int $maxTopicItems)
+    public function setMaxTopicItems($maxTopicItems)
     {
         $this->maxTopicItems = $maxTopicItems;
         return $this;
@@ -41,7 +41,7 @@ abstract class Decorator implements DecoratorInterface
      * @param int $maxChars
      * @return $this
      */
-    public function setMaxChars(int $maxChars)
+    public function setMaxChars($maxChars)
     {
         $this->maxChars = $maxChars;
         return $this;
@@ -52,7 +52,7 @@ abstract class Decorator implements DecoratorInterface
      * @param array $data
      * @return string
      */
-    public function decorateWith(string $template, array $data)
+    public function decorateWith($template, array $data)
     {
         // This prevents users from having to create multi-dimensional arrays where none
         // are needed.

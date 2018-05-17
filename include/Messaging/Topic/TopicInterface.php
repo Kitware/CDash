@@ -1,9 +1,8 @@
 <?php
 namespace CDash\Messaging\Topic;
 
-use Build;
+use CDash\Model\Build;
 use CDash\Collection\CallableCollection;
-use CDash\Messaging\Email\Decorator\DecoratorInterface;
 use SubscriberInterface;
 
 interface TopicInterface

@@ -1,7 +1,7 @@
 <?php
 namespace CDash\Messaging\Topic;
 
-use Build;
+use CDash\Model\Build;
 
 class DynamicAnalysisTopic extends Topic implements DecoratableInterface
 {

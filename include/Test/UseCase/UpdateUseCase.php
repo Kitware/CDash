@@ -150,7 +150,7 @@ class UpdateUseCase extends UseCase
     }
 
 
-    protected function set(string $property, $value)
+    protected function set($property, $value)
     {
         $this->properties[self::UPDATE][$property] = $value;
         return $this;
@@ -162,46 +162,46 @@ class UpdateUseCase extends UseCase
      * @param string $name
      * @return $this
      */
-    public function setSite(string $name)
+    public function setSite($name)
     {
         return $this->set('Site', $name);
     }
 
-    public function setBuildName(string $name)
+    public function setBuildName($name)
     {
         return $this->set('BuildName', $name);
     }
 
-    public function setBuildType(string $type)
+    public function setBuildType($type)
     {
         $today = date('Ymd');
         $stamp = "{$today}-0000-{$type}";
         return $this->set('BuildStamp', $stamp);
     }
 
-    public function setUpdateCommand(string $command)
+    public function setUpdateCommand($command)
     {
         return $this->set('UpdateCommand', $command);
     }
 
-    public function setUpdateType(string $type)
+    public function setUpdateType($type)
     {
         return $this->set('UpdateType', $type);
     }
 
-    public function setRevision(string $revision)
+    public function setRevision($revision)
     {
         // this can be done automatically if not called
         return $this->set('Revision', $revision);
     }
 
-    public function setPriorRevision(string $revision)
+    public function setPriorRevision($revision)
     {
         // this can be done automatically if not called
         return $this->set('PriorRevision', $revision);
     }
 
-    public function setUpdateReturnStatus(string $status)
+    public function setUpdateReturnStatus($status)
     {
         return $this->set('UpdateReturnStatus', $status);
     }
@@ -297,7 +297,7 @@ class UpdateUseCase extends UseCase
         return date('Y-m-d H:i:s -0500', $time);
     }
 
-    public function createEmail(string $author)
+    public function createEmail($author)
     {
         $names = explode(" ", $author);
         $first = preg_replace('/\W/', '', $names[0]);

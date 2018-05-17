@@ -1,7 +1,7 @@
 <?php
 namespace CDash\Messaging\Topic;
 
-use BuildGroup;
+use CDash\Model\BuildGroup;
 use CDash\Collection\BuildCollection;
 use CDash\Collection\TestCollection;
 use CDash\Messaging\Notification\Email\Decorator\TestFailureDecorator;
