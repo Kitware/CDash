@@ -562,7 +562,7 @@ function curl_request_async($url, $params, $type = 'POST')
 function trigger_process_submissions($projectid)
 {
     global $CDASH_USE_HTTPS, $CDASH_ASYNC_WORKERS;
-    $currentURI = get_server_URI(true);
+    $currentURI = get_server_URI(false);
 
     if ($CDASH_ASYNC_WORKERS > 1) {
         // Parallel processing.
