@@ -1,6 +1,7 @@
 <?php
 
 use CDash\Collection\BuildCollection;
+use CDash\Model\BuildConfigure;
 use CDash\Test\CDashUseCaseTestCase;
 use CDash\Test\UseCase\ConfigUseCase;
 use CDash\Test\UseCase\UseCase;
@@ -49,6 +50,7 @@ class ConfigUseCaseTest extends CDashUseCaseTestCase
             ->setConfigureCommand($this->cmd)
             ->setConfigureStatus($this->errors)
             ->setConfigureLog($this->log);
+
         $handler = $sut->build();
         $this->assertInstanceOf(ConfigureHandler::class, $handler);
 
