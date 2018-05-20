@@ -7,6 +7,7 @@ use CDash\Collection\ConfigureCollection;
 class ConfigureTopic extends Topic implements DecoratableInterface
 {
     private $collection;
+
     /**
      * @param Build $build
      * @return bool
@@ -15,7 +16,7 @@ class ConfigureTopic extends Topic implements DecoratableInterface
     {
         $parentTopic = is_null($this->topic) ? true : $this->topic->subscribesToBuild($build);
         $conf = $build->GetBuildConfigure();
-        $subscribe = $parentTopic && ($conf->NumberOfErrors || $conf->NumberOfWarnings);
+        $subscribe = $parentTopic && ($conf->NumberOfErrors > 0 || $conf->NumberOfWarnings > 0);
         return $subscribe;
     }
 
@@ -36,6 +37,11 @@ class ConfigureTopic extends Topic implements DecoratableInterface
     {
         $collection = $this->getTopicCollection();
         $configure = $collection->get(Topic::CONFIGURE);
+        // TODO: why is this referencing status?
+        // return $configure->Status;
+        // I think this should be:
+        // return $configure->Status == 0 ? 0 : 1;
+        // Apparently $configure->Status is correct, for the time being anyhow.
         return $configure->Status;
     }
 
@@ -53,11 +59,11 @@ class ConfigureTopic extends Topic implements DecoratableInterface
     }
 
     /**
-     * @param Build $build
      * @param $item
-     * @return bool|void
+     * @return boolean
      */
     public function itemHasTopicSubject(Build $build, $item)
     {
+      // TODO: Implement itemHasTopicSubject() method.
     }
 }
