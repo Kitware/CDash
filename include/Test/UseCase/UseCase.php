@@ -44,7 +44,7 @@ abstract class UseCase
     /**
      * @param CDashUseCaseTestCase $testCase
      * @param $type
-     * @return static
+     * @return TestUseCase|ConfigUseCase|UpdateUseCase|BuildUseCase
      */
     public static function createBuilder(CDashUseCaseTestCase $testCase, $type)
     {

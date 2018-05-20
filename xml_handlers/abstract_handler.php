@@ -116,6 +116,9 @@ abstract class AbstractHandler implements SaxHandler, CDashSubmissionHandlerInte
         return [$this->Build];
     }
 
+    /**
+     * @return \CDash\ServiceContainer
+     */
     protected function getModelFactory()
     {
         if (!$this->ModelFactory) {

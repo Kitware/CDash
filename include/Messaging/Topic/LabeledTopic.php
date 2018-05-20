@@ -33,6 +33,10 @@ class LabeledTopic extends Topic implements DecoratableInterface
         return false;
     }
 
+    /**
+     * @param Build $build
+     * @return Topic|void
+     */
     public function setTopicData(Build $build)
     {
         switch ($build->GetActionableType()) {
@@ -45,6 +49,9 @@ class LabeledTopic extends Topic implements DecoratableInterface
         }
     }
 
+    /**
+     * @param Build $build
+     */
     protected function setTestItems(Build $build)
     {
         $tests = $build->GetTestCollection();
@@ -65,6 +72,9 @@ class LabeledTopic extends Topic implements DecoratableInterface
         }
     }
 
+    /**
+     * @param Build $build
+     */
     protected function setConfigureItems(Build $build)
     {
         $labels = $this->subscriber->getLabels();
@@ -82,6 +92,10 @@ class LabeledTopic extends Topic implements DecoratableInterface
         }
     }
 
+    /**
+     * @param Collection $collection
+     * @return mixed
+     */
     protected function getItemCollection(Collection $collection)
     {
         $collectionClass = get_class($collection);
@@ -134,6 +148,9 @@ class LabeledTopic extends Topic implements DecoratableInterface
         }
     }
 
+    /**
+     * @return CollectionCollection|\CDash\Collection\CollectionInterface
+     */
     public function getTopicCollection()
     {
         if (!$this->topicCollection) {
