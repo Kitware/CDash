@@ -20,7 +20,9 @@ class CallableCollectionTest extends CDashTestCase
         $sut->add($callable);
         $this->assertCount(1, $sut);
 
-        $callable = $sut->get('methodForTestingCallable');
+        $key = __CLASS__ . '::methodForTestingCallable';
+        $callable = $sut->get($key);
+        $this->assertTrue(is_callable($callable));
         $expected = 'azybci';
         $actual = $callable();
         $this->assertEquals($expected, $actual);

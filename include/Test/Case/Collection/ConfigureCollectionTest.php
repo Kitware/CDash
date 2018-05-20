@@ -1,6 +1,7 @@
 <?php
 namespace CDash\Collection;
 
+use CDash\Model\BuildConfigure;
 use CDash\Test\CDashTestCase;
 
 class ConfigureCollectionTest extends CDashTestCase
@@ -11,9 +12,9 @@ class ConfigureCollectionTest extends CDashTestCase
      */
     public function testAdd()
     {
-        $configure1 = new \BuildConfigure();
-        $configure2 = new \BuildConfigure();
-        $configure3 = new \BuildConfigure();
+        $configure1 = new BuildConfigure();
+        $configure2 = new BuildConfigure();
+        $configure3 = new BuildConfigure();
 
         $sut = new ConfigureCollection();
         $sut->add($configure1)

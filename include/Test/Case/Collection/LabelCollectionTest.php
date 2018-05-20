@@ -1,8 +1,8 @@
 <?php
 namespace CDash\Collection;
 
+use CDash\Model\Label;
 use CDash\Test\CDashTestCase;
-use Label;
 
 class LabelCollectionTest extends CDashTestCase
 {
