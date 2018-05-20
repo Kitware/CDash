@@ -19,6 +19,7 @@ include_once 'include/common.php';
 include_once 'include/ctestparserutils.php';
 include_once 'include/repository.php';
 
+use CDash\Collection\DynamicAnalysisCollection;
 use CDash\Collection\LabelCollection;
 use CDash\Config;
 use CDash\Log;
@@ -96,6 +97,7 @@ class Build
     private $ActionableType;
     private $BuildConfigure;
     private $LabelCollection;
+    private $DynamicAnalysisCollection;
 
     public function __construct()
     {
@@ -2954,5 +2956,37 @@ class Build
         }, $this->Labels);
 
         return in_array($label, $labels);
+    }
+
+    public function GetBuildErrorCount($filter = null)
+    {
+        $count = 0;
+        if (is_null($filter)) {
+            $count = count($this->Errors);
+        } else {
+            $count = 0;
+            /** @var BuildError $error */
+            foreach ($this->Errors as $error) {
+                if ($error->Type == $filter) {
+                    $count++;
+                }
+            }
+        }
+        return $count;
+    }
+
+    public function AddDynamicAnalysis(DynamicAnalysis $analysis)
+    {
+        $analyses = $this->GetDynamicAnalysisCollection();
+        $analyses->add($analysis);
+        return $this;
+    }
+
+    public function GetDynamicAnalysisCollection()
+    {
+        if (!$this->DynamicAnalysisCollection) {
+            $this->DynamicAnalysisCollection = new DynamicAnalysisCollection();
+        }
+        return $this->DynamicAnalysisCollection;
     }
 }

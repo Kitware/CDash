@@ -139,6 +139,7 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
                 }
             }
         } elseif ($name == 'TEST' && $parent == 'DYNAMICANALYSIS') {
+            /** @var Build $build */
             $build = $this->Builds[$this->SubProjectName];
             $GLOBALS['PHP_ERROR_BUILD_ID'] = $build->Id;
             $this->DynamicAnalysisSummaries[$this->SubProjectName]->Empty = false;
@@ -148,6 +149,8 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
             }
             $this->DynamicAnalysis->BuildId = $build->Id;
             $this->DynamicAnalysis->Insert();
+            $analysis = clone $this->DynamicAnalysis;
+            $build->AddDynamicAnalysis($analysis);
         } elseif ($name == 'DEFECT') {
             $this->DynamicAnalysis->AddDefect($this->DynamicAnalysisDefect);
             unset($this->DynamicAnalysisDefect);
