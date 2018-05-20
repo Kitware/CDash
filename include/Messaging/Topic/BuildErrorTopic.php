@@ -1,17 +1,37 @@
 <?php
 namespace CDash\Messaging\Topic;
 
+use CDash\Collection\BuildErrorCollection;
 use CDash\Model\Build;
 
 class BuildErrorTopic extends Topic implements DecoratableInterface
 {
+    private $collection;
+    private $type;
+
     /**
      * @param Build $build
      * @return bool
      */
     public function subscribesToBuild(Build $build)
     {
-        // TODO: Implement subscribesToBuild() method.
+        $ancestorSubscribe = is_null($this->topic) ? true : $this->topic->subscribesToBuild($build);
+        $subscribe = $ancestorSubscribe && $build->GetBuildErrorCount($this->type) > 0;
+        return $subscribe;
+    }
+
+    /**
+     * @param Build $build
+     * @return Topic|void
+     */
+    public function setTopicData(Build $build)
+    {
+        $collection = $this->getTopicCollection();
+        foreach ($build->Errors as $error) {
+            if ($this->itemHasTopicSubject($build, $error)) {
+                $collection->add($error);
+            }
+        }
     }
 
     /**
@@ -19,7 +39,8 @@ class BuildErrorTopic extends Topic implements DecoratableInterface
      */
     public function getTopicCount()
     {
-        // TODO: Implement getTopicCount() method.
+        $collection = $this->getTopicCollection();
+        return $collection->count();
     }
 
     /**
@@ -29,6 +50,33 @@ class BuildErrorTopic extends Topic implements DecoratableInterface
      */
     public function itemHasTopicSubject(Build $build, $item)
     {
-        // TODO: Implement itemHasTopicSubject() method.
+        $criteria = $this->getTopicCallables();
+        $hasTopicSubject = $item->Type === $this->type;
+        foreach ($criteria as $criterion) {
+            $hasTopicSubject = $hasTopicSubject && $criterion($build, $item);
+            if (!$hasTopicSubject) {
+                break;
+            }
+        }
+        return $hasTopicSubject;
+    }
+
+    /**
+     * @return BuildErrorCollection|\CDash\Collection\CollectionInterface
+     */
+    public function getTopicCollection()
+    {
+        if (!$this->collection) {
+            $this->collection = new BuildErrorCollection();
+        }
+        return $this->collection;
+    }
+
+    /**
+     * @param int $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
     }
 }

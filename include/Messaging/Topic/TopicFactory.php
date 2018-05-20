@@ -1,6 +1,7 @@
 <?php
 namespace CDash\Messaging\Topic;
 
+use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Collection\BuildCollection;
 use CDash\Collection\TestCollection;
@@ -64,9 +65,13 @@ class TopicFactory
     {
         switch ($topicName) {
             case 'BuildError':
-                return new BuildErrorTopic();
+                $topic = new BuildErrorTopic();
+                $topic->setType(Build::TYPE_ERROR);
+                return $topic;
             case 'BuildWarning':
-                return new BuildWarningTopic();
+                $topic = new BuildErrorTopic();
+                $topic->setType(Build::TYPE_WARN);
+                return $topic;
             case 'Configure':
                 return new ConfigureTopic();
             case 'DynamicAnalysis':
