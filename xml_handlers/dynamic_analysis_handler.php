@@ -17,6 +17,7 @@
 require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
 
+use CDash\Collection\BuildCollection;
 use CDash\Model\Build;
 use CDash\Model\Label;
 use CDash\Model\Site;
@@ -305,6 +306,23 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
     public function getActionableBuilds()
     {
         return $this->Builds;
+    }
+
+    /**
+     * @return BuildCollection
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * TODO: consider refactoring into abstract_handler asap
+     */
+    public function GetBuildCollection()
+    {
+        $factory = $this->getModelFactory();
+        /** @var BuildCollection $collection */
+        $collection = $factory->create(BuildCollection::class);
+        foreach ($this->Builds as $build) {
+            $collection->add($build);
+        }
+        return $collection;
     }
 
     public function getProjectId()

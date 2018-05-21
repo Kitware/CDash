@@ -17,6 +17,7 @@
 require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
 
+use CDash\Model\ActionableTypes;
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
 use CDash\Model\BuildInformation;
@@ -305,11 +306,19 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
 
     /**
      * @return BuildCollection
-     * TODO: Looks like this method can be moved into AbstractHandler
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * TODO: consider refactoring into abstract_handler asap
      */
     public function GetBuildCollection()
     {
-        return new BuildCollection($this->Builds);
+        $factory = $this->getModelFactory();
+        /** @var BuildCollection $collection */
+        $collection = $factory->create(BuildCollection::class);
+        foreach ($this->Builds as $build) {
+            $collection->add($build);
+        }
+        return $collection;
     }
 
     public function getProjectId()

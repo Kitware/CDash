@@ -1,5 +1,6 @@
 <?php
 
+use CDash\Collection\BuildCollection;
 use CDash\Model\Build;
 use CDash\Model\Project;
 
@@ -13,6 +14,13 @@ interface ActionableBuildInterface
      * @deprecated Use GetBuildCollection() 02/04/18
      */
     public function getActionableBuilds();
+
+    /**
+     * @return BuildCollection
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     */
+    public function GetBuildCollection();
 
     /**
      * @return Project

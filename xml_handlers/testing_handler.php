@@ -4,6 +4,7 @@ use CDash\Collection\BuildCollection;
 require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
 
+use CDash\Model\ActionableTypes;
 use \CDash\Model\Build;
 use \CDash\Model\BuildInformation;
 use \CDash\Model\BuildTest;
@@ -408,11 +409,19 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
         return $this->Builds;
     }
 
+    /**
+     * @return BuildCollection
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * TODO: consider refactoring into abstract_handler asap
+     */
     public function GetBuildCollection()
     {
-        $collection = new BuildCollection();
-        foreach ($this->Builds as $key => $build) {
-            $collection->addItem($build, $key);
+        $factory = $this->getModelFactory();
+        /** @var BuildCollection $collection */
+        $collection = $factory->create(BuildCollection::class);
+        foreach ($this->Builds as $build) {
+            $collection->add($build);
         }
         return $collection;
     }
