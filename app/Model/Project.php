@@ -137,6 +137,12 @@ class Project
         if (empty($this->WebApiKey)) {
             $this->WebApiKey = '';
         }
+        if (empty($this->EmailMaxItems)) {
+            $this->EmailMaxItems = 5;
+        }
+        if (empty($this->EmailMaxChars)) {
+            $this->EmailMaxChars = 255;
+        }
         if (empty($this->WarningsFilter)) {
             $this->WarningsFilter = '';
         }
@@ -1695,7 +1701,7 @@ class Project
     public function GetSubscriberCollection()
     {
         if (!$this->SubscriberCollection) {
-            $this->SubscriberCollection = new SubscriberCollection();
+            $this->SubscriberCollection = $this->GetProjectSubscribers();
         }
 
         return $this->SubscriberCollection;
@@ -1709,7 +1715,7 @@ class Project
     public function GetProjectSubscribers()
     {
         $service = ServiceContainer::getInstance()->getContainer();
-        $collection = $this->GetSubscriberCollection();
+        $collection = $service->make(SubscriberCollection::class);
         $sql = 'SELECT
               u2p.*,
               user.email email
