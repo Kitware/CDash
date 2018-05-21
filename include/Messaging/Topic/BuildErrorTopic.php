@@ -79,4 +79,24 @@ class BuildErrorTopic extends Topic implements DecoratableInterface
     {
         $this->type = $type;
     }
+
+    public function getTopicName()
+    {
+        // For now the use of == here is intentional
+        // TODO: initialize type?
+        if ($this->type == Build::TYPE_ERROR) {
+            return 'BuildError';
+        } else if ($this->type === Build::TYPE_WARN) {
+            return 'BuildWarning';
+        }
+    }
+
+    public function getTopicDescription()
+    {
+        if ($this->type == Build::TYPE_ERROR) {
+            return 'Errors';
+        } else if ($this->type === Build::TYPE_WARN) {
+            return 'Warnings';
+        }
+    }
 }

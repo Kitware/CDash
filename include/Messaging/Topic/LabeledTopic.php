@@ -1,6 +1,7 @@
 <?php
 namespace CDash\Messaging\Topic;
 
+use CDash\Model\ActionableTypes;
 use CDash\Model\Build;
 use CDash\Collection\Collection;
 use CDash\Collection\CollectionCollection;
@@ -40,10 +41,10 @@ class LabeledTopic extends Topic implements DecoratableInterface
     public function setTopicData(Build $build)
     {
         switch ($build->GetActionableType()) {
-            case \ActionableTypes::TEST:
+            case ActionableTypes::TEST:
                 $this->setTestItems($build);
                 break;
-            case \ActionableTypes::CONFIGURE:
+            case ActionableTypes::CONFIGURE:
                 $this->setConfigureItems($build);
                 break;
         }

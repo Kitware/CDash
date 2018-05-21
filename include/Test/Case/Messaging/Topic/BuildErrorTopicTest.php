@@ -122,4 +122,24 @@ class BuildErrorTopicTest extends \CDash\Test\CDashTestCase
         $sut->setTopicData($build);
         $this->assertEquals(2, $sut->getTopicCount());
     }
+
+    public function testGetTopicName()
+    {
+        $sut = new BuildErrorTopic();
+        $sut->setType(Build::TYPE_ERROR);
+        $this->assertEquals('BuildError', $sut->getTopicName());
+
+        $sut->setType(Build::TYPE_WARN);
+        $this->assertEquals('BuildWarning', $sut->getTopicName());
+    }
+
+    public function testGetTopicDescription()
+    {
+        $sut = new BuildErrorTopic();
+        $sut->setType(Build::TYPE_ERROR);
+        $this->assertEquals('Errors', $sut->getTopicDescription());
+
+        $sut->setType(Build::TYPE_WARN);
+        $this->assertEquals('Warnings', $sut->getTopicDescription());
+    }
 }

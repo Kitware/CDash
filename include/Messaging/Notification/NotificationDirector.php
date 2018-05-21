@@ -4,6 +4,10 @@ namespace CDash\Messaging\Notification;
 
 class NotificationDirector
 {
+    /**
+     * @param NotificationBuilderInterface $builder
+     * @return NotificationCollection
+     */
     public function build(NotificationBuilderInterface $builder)
     {
         $subscriptions = $builder->getSubscriptions();

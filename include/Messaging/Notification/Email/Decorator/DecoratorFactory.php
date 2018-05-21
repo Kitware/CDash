@@ -15,6 +15,9 @@ class DecoratorFactory
                 return new ConfigureDecorator($decorator);
             case 'Labeled':
                 return new LabeledDecorator($decorator);
+            case 'BuildWarning':
+            case 'BuildError':
+                return new BuildErrorDecorator($decorator);
         }
     }
 

@@ -7,7 +7,7 @@ use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Build;
 use CDash\Model\Project;
 use CDash\Model\Site;
-use SubscriberInterface;
+use CDash\Model\SubscriberInterface;
 
 class Subscription implements SubscriptionInterface
 {
@@ -171,12 +171,12 @@ class Subscription implements SubscriptionInterface
     {
         if (!$this->summary) {
             $project = $this->project;
-
+            $config = Config::getInstance();
             $summary = [];
             $topics = $this->subscriber->getTopics();
             $summary['topics'] = [];
             $summary['project_name'] = $project->GetName();
-            $summary['project_url'] = "/CDash/viewProject?projectid={$project->Id}";
+            $summary['project_url'] = "{$config->getBaseUrl()}/viewProject?projectid={$project->Id}";
             $summary['site_name'] = $this->site->Name;
             $summary['build_name'] = '';
             $summary['build_subproject_names'] = [];

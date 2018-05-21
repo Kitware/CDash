@@ -5,7 +5,7 @@ use CDash\Model\Build;
 use CDash\Collection\BuildCollection;
 use CDash\Collection\CallableCollection;
 use CDash\Collection\CollectionInterface;
-use SubscriberInterface;
+use CDash\Model\SubscriberInterface;
 
 abstract class Topic implements TopicInterface
 {

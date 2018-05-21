@@ -117,6 +117,9 @@ class EmailBuilder extends SubscriptionNotificationBuilder
                 case 'Configure Errors':
                     $totals[] = "c={$topic['count']}";
                     break;
+                case 'Warnings':
+                    $totals[] = "w=${topic['count']}";
+                    break;
             }
         }
 

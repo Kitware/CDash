@@ -3,7 +3,7 @@ namespace CDash\Messaging\Topic;
 
 use CDash\Model\Build;
 use CDash\Collection\CallableCollection;
-use SubscriberInterface;
+use CDash\Model\SubscriberInterface;
 
 interface TopicInterface
 {
