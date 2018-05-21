@@ -17,6 +17,7 @@
 namespace CDash\Model;
 
 use CDash\Messaging\Preferences\NotificationPreferences;
+use CDash\Messaging\Topic\Topic;
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Messaging\Topic\TopicFactory;
 use ActionableBuildInterface;
@@ -51,18 +52,24 @@ class Subscriber implements SubscriberInterface
     /**
      * @param ActionableBuildInterface $submission
      * @return bool
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function hasBuildTopics(ActionableBuildInterface $submission)
     {
+        // Initialize the topic collection
         $topics = $this->getTopics();
         $builds = $submission->GetBuildCollection();
         $user_topics = TopicFactory::createFrom($this->preferences);
 
+        /** @var Topic $topic */
         foreach ($user_topics as $topic) {
             $topic->setSubscriber($this);
             foreach ($builds as $build) {
                 if ($topic->subscribesToBuild($build)) {
                     $topic->addBuild($build);
+                    // Check to ensure that the topic does not already exist
+                    // TODO: refactor to check this first to avoid having to run subscribesToBuild
                     if (!$topics->has($topic->getTopicName())) {
                         $topics->add($topic);
                     }
