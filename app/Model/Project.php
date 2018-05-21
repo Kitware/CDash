@@ -22,7 +22,10 @@ use CDash\Collection\SubscriberCollection;
 
 use CDash\Config;
 use CDash\Database;
+use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
+use CDash\Messaging\Preferences\NotificationPreferencesInterface;
 use CDash\ServiceContainer;
+use CDash\Model\Subscriber;
 
 /** Main project class */
 class Project
@@ -1701,6 +1704,37 @@ class Project
     public function SetSubscriberCollection(SubscriberCollection $subscribers)
     {
         $this->SubscriberCollection = $subscribers;
+    }
+
+    public function GetProjectSubscribers()
+    {
+        $service = ServiceContainer::getInstance()->getContainer();
+        $collection = $this->GetSubscriberCollection();
+        $sql = 'SELECT
+              u2p.*,
+              user.email email
+            FROM user2project u2p
+            JOIN user ON user.id = u2p.userid
+            WHERE projectid = :id
+        ';
+
+        $user = $this->PDO->prepare($sql);
+        $user->bindParam(':id', $this->Id, \PDO::PARAM_INT);
+        $user->execute();
+
+        foreach ($user->fetchAll(\PDO::FETCH_OBJ) as $row) {
+            /** @var NotificationPreferencesInterface $preferences */
+            $preferences = $service->make(
+                BitmaskNotificationPreferences::class,
+                ['mask' => $row->emailcategory]
+            );
+            /** @var Subscriber $subscriber */
+            $subscriber = $service->make(Subscriber::class, ['preferences' => $preferences]);
+            $subscriber->setAddress($row->email);
+            $collection->add($subscriber);
+        }
+
+        return $collection;
     }
 
     // Modify the build error/warning filters for this project if necessary.

@@ -1,4 +1,5 @@
 <?php
+namespace CDash\Model;
 
 class ActionableTypes
 {
