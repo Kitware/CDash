@@ -357,7 +357,7 @@ class Test
         return $this->GetStatus() === self::PASSED;
     }
 
-    public function GetUrl()
+    public function GetUrlForSelf()
     {
         $config = \CDash\Config::getInstance();
         $host_base = $config->getBaseUrl();

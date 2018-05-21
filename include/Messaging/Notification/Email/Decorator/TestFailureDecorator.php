@@ -2,6 +2,7 @@
 namespace CDash\Messaging\Notification\Email\Decorator;
 
 use CDash\Messaging\Topic\Topic;
+use CDash\Model\Test;
 
 class TestFailureDecorator extends Decorator
 {
@@ -20,11 +21,12 @@ class TestFailureDecorator extends Decorator
         $counter = 0;
         $data = [];
 
+        /** @var Test $test */
         foreach ($tests as $test) {
             $data[] = [
                 'name' => $test->Name,
                 'details' => $test->Details,
-                'url' => $test->GetUrl(),
+                'url' => $test->GetUrlForSelf(),
             ];
             if (++$counter === $this->maxTopicItems) {
                 break;
