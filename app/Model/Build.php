@@ -121,7 +121,6 @@ class Build
         $this->Type = '';
         $this->Uuid = '';
         $this->TestCollection = new TestCollection();
-        $this->CommitAuthors = [];
 
         $this->PDO = Database::getInstance()->getPdo();
     }
@@ -2895,13 +2894,51 @@ class Build
         return $this->Type;
     }
 
+    /**
+     * @return array
+     */
     public function GetCommitAuthors()
     {
         // TODO: implement GetCommitAuthors
         // note: Per Zack: Depending on the type of submission (i.e. test, build error, etc)
         // this information may not yet be available as it is contained in the update xml
         // file submission. It should have already been handled by which
+
+        if (!$this->CommitAuthors) {
+            $db = Database::getInstance();
+            $sql = '
+                SELECT
+                    author,
+                    email,
+                    committeremail
+                FROM
+                    updatefile AS uf,
+                    build2update AS b2u,
+                WHERE b2u.updateid=uf.updateid
+                AND b2u.buildid=:buildId
+            ';
+            $stmt = $this->PDO->prepare($sql);
+            $stmt->bindParam(':buildId', $this->Id);
+            if ($db->execute($stmt)) {
+                $authors = [];
+                foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $row) {
+                    if ($row->email) {
+                        $authors[] = $row->email;
+                    }
+
+                    if ($row->committeremail) {
+                        $authors[] = $row->committeremail;
+                    }
+                }
+                $this->CommitAuthors = array_unique($authors);
+            }
+        }
         return $this->CommitAuthors;
+    }
+
+    public function HasAuthor($email) {
+        $authors = $this->GetCommitAuthors();
+        return in_array($email, $authors);
     }
 
     public function GetAggregatedLabels()
