@@ -231,7 +231,7 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
         $body = [
             'A submission to CDash for the project CDashUseCaseProject has failing tests. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.',
             '',
-            'Details on the submission can be found at /CDash/viewProject?projectid=321',
+            'Details on the submission can be found at http://open.cdash.org/viewProject?projectid=321',
             '',
             'Project: CDashUseCaseProject',
             'Site: mirror.site',
@@ -265,7 +265,7 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
         $body = [
             'A submission to CDash for the project CDashUseCaseProject has failing tests. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.',
             '',
-            'Details on the submission can be found at /CDash/viewProject?projectid=321',
+            'Details on the submission can be found at http://open.cdash.org/viewProject?projectid=321',
             '',
             'Project: CDashUseCaseProject',
             'Site: mirror.site',
@@ -296,7 +296,7 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
         $body = [
             'A submission to CDash for the project CDashUseCaseProject has failing tests. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.',
             '',
-            'Details on the submission can be found at /CDash/viewProject?projectid=321',
+            'Details on the submission can be found at http://open.cdash.org/viewProject?projectid=321',
             '',
             'Project: CDashUseCaseProject',
             'SubProject Name: BuildThree',
@@ -413,7 +413,7 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
         $body = [
             'A submission to CDash for the project CDashUseCaseProject has configure errors. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.',
             '',
-            'Details on the submission can be found at /CDash/viewProject?projectid=321',
+            'Details on the submission can be found at http://open.cdash.org/viewProject?projectid=321',
             '',
             'Project: CDashUseCaseProject',
             'Site: mirror.site',
@@ -459,7 +459,7 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
         $body = [
             'A submission to CDash for the project CDashUseCaseProject has configure errors. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.',
             '',
-            'Details on the submission can be found at /CDash/viewProject?projectid=321',
+            'Details on the submission can be found at http://open.cdash.org/viewProject?projectid=321',
             '',
             'Project: CDashUseCaseProject',
             'SubProject Name: BuildThree',
