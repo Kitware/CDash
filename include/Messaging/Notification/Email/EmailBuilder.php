@@ -1,6 +1,7 @@
 <?php
 namespace CDash\Messaging\Notification\Email;
 
+use CDash\Collection\BuildEmailCollection;
 use CDash\Config;
 use CDash\Messaging\Notification\Email\Decorator\Decorator;
 use CDash\Messaging\Notification\Email\Decorator\DecoratorFactory;
@@ -16,6 +17,8 @@ use CDash\Messaging\Subscription\SubscriptionNotificationBuilder;
 use CDash\Messaging\Subscription\Subscription;
 use CDash\Messaging\Subscription\SubscriptionCollection;
 use CDash\Messaging\Topic\Topic;
+use CDash\Model\ActionableTypes;
+use CDash\Model\BuildEmail;
 use CDash\Model\Project;
 use SendGrid\Email;
 use CDash\Model\Site;
@@ -38,6 +41,7 @@ class EmailBuilder extends SubscriptionNotificationBuilder
         $this->setFooter($message);
         $this->setSubject($message, $subscription);
         $this->setRecipient($message, $subscription);
+        $this->setBuildEmailCollection($message, $subscription);
         $this->setSender();
         return $message;
     }
@@ -189,5 +193,32 @@ class EmailBuilder extends SubscriptionNotificationBuilder
     public function setProject(Project $project)
     {
         $this->project = $project;
+    }
+
+    public function setBuildEmailCollection(EmailMessage $message, SubscriptionInterface $subscription)
+    {
+        $topics = $subscription->getTopicCollection();
+        $subscriber = $subscription->getSubscriber();
+        $collection = new BuildEmailCollection();
+
+        /** @var Topic $topic */
+        foreach ($topics as $topic) {
+            $builds = $topic->getBuildCollection();
+            $category = ActionableTypes::$categories[$topic->getTopicName()];
+            $userId = $subscriber->getUserId();
+            $email = $subscription->getRecipient();
+            foreach ($builds as $build) {
+                $buildId = $build->Id;
+                $buildEmail = new BuildEmail();
+                $buildEmail
+                    ->SetUserId($userId)
+                    ->SetBuildId($buildId)
+                    ->SetEmail($email)
+                    ->SetCategory($category);
+                $collection->add($buildEmail);
+            }
+        }
+
+        $message->setBuildEmailCollection($collection);
     }
 }

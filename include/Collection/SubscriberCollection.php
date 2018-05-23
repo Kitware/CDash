@@ -1,7 +1,7 @@
 <?php
 namespace CDash\Collection;
 
-use SubscriberInterface;
+use CDash\Model\SubscriberInterface;
 
 class SubscriberCollection extends Collection
 {

@@ -10,6 +10,7 @@ use CDash\Messaging\Notification\NotificationInterface;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Subscription\SubscriptionBuilder;
 use CDash\Model\Project;
+use CDash\Model\Subscriber;
 use CDash\Test\UseCase\UseCase;
 
 class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
@@ -28,6 +29,7 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
     /** @var  Project|PHPUnit_Framework_MockObject_MockObject $project */
     private $project;
 
+    /** @var UseCase $useCase */
     private $useCase;
 
     public static function setUpBeforeClass()
@@ -86,7 +88,7 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
     }
 
     /**
-     * @param UseCase $useCase
+     * @param array $subscribers
      * @return NotificationCollection
      */
     private function getNotifications(array $subscribers)
@@ -510,6 +512,5 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
     public function testBuildUseCase()
     {
         // $this->useCase = UseCase::createBuilder($this, UseCase::BUILD);
-
     }
 }

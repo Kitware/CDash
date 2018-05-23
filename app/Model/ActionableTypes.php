@@ -9,4 +9,24 @@ class ActionableTypes
     const DYNAMIC_ANALYSIS = 'DynaimcAnalysis';
     const TEST = 'TestFailure';
     const UPDATE = 'UpdateError';
+
+    const UPDATE_FIX = 'UpdateFix';
+    const BUILD_WARNING_FIX = 'BuildWarningFix';
+    const BUILD_ERROR_FIX = 'BuildErrorFix';
+    const CONFIGURE_FIX = 'ConfigureFix';
+    const TEST_FIX = 'TestFix';
+
+    public static $categories = [
+        self::UPDATE => 1,
+        self::CONFIGURE => 2,
+        self::BUILD_WARNING => 3,
+        self::BUILD_ERROR => 4,
+        self::TEST => 5,
+        self::UPDATE_FIX => 6,
+        self::CONFIGURE_FIX => 7,
+        self::BUILD_WARNING_FIX => 8,
+        self::BUILD_ERROR_FIX => 9,
+        self::TEST_FIX => 10,
+        self::DYNAMIC_ANALYSIS => 11
+    ];
 }

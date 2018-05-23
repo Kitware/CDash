@@ -17,4 +17,5 @@ class NotifyOn
     const GROUP_NIGHTLY = 'GroupMembership';
     const ANY = 'Any';
     const NEVER = 'Never';
+    const ONCE = 'Once';
 }

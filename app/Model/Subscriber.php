@@ -36,6 +36,8 @@ class Subscriber implements SubscriberInterface
     /** @var  string[] */
     private $labels;
 
+    private $userId;
+
     /**
      * SubscriberInterface constructor.
      * @param NotificationPreferences $preferences
@@ -141,5 +143,16 @@ class Subscriber implements SubscriberInterface
     public function getNotificationPreferences()
     {
         return $this->preferences;
+    }
+
+    public function setUserId($userId)
+    {
+        $this->userId = $userId;
+        return $this;
+    }
+
+    public function getUserId()
+    {
+        return $this->userId;
     }
 }

@@ -1,6 +1,21 @@
 <?php
+/**
+ * =========================================================================
+ *   Program:   CDash - Cross-Platform Dashboard System
+ *   Module:    $Id$
+ *   Language:  PHP
+ *   Date:      $Date$
+ *   Version:   $Revision$
+ *   Copyright (c) Kitware, Inc. All rights reserved.
+ *   See LICENSE or http://www.cdash.org/licensing/ for details.
+ *   This software is distributed WITHOUT ANY WARRANTY; without even
+ *   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ *   PURPOSE. See the above copyright notices for more information.
+ * =========================================================================
+ */
 namespace CDash\Messaging\Notification\Email;
 
+use CDash\Collection\BuildEmailCollection;
 use CDash\Messaging\Notification\Email\Decorator\DecoratorInterface;
 use CDash\Messaging\Notification\NotificationInterface;
 
@@ -17,6 +32,27 @@ class EmailMessage implements NotificationInterface
 
     /** @var  DecoratorInterface $body */
     private $body;
+
+    /** @var BuildEmailCollection $buildEmailCollection */
+    private $buildEmailCollection;
+
+    /**
+     * @param BuildEmailCollection $collection
+     * @return $this
+     */
+    public function setBuildEmailCollection(BuildEmailCollection $collection)
+    {
+        $this->buildEmailCollection = $collection;
+        return $this;
+    }
+
+    /**
+     * @return BuildEmailCollection
+     */
+    public function getBuildEmailCollection()
+    {
+        return $this->buildEmailCollection;
+    }
 
     /**
      * @param $sender

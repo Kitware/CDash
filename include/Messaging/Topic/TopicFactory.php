@@ -27,6 +27,14 @@ class TopicFactory
             }
         }
 
+        if ($preferences->get(NotifyOn::ONCE)) {
+            $decorated = [];
+            foreach ($topics as $topic) {
+                $decorated[] = new EmailSentTopic($topic);
+            }
+            $topics = $decorated;
+        }
+
         if ($preferences->get(NotifyOn::GROUP_NIGHTLY)) {
             $decorated = [];
             foreach ($topics as $topic) {
