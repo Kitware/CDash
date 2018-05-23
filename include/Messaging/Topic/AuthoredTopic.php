@@ -12,8 +12,7 @@ class AuthoredTopic extends Topic
     public function subscribesToBuild(Build $build)
     {
         $parentTopic = is_null($this->topic) ? true : $this->topic->subscribesToBuild($build);
-        return $parentTopic &&
-            in_array($this->subscriber->getAddress(), $build->GetCommitAuthors());
+        return $parentTopic && $build->HasAuthor($this->subscriber->getAddress());
     }
 
     /**
@@ -28,6 +27,6 @@ class AuthoredTopic extends Topic
         // a: Only if subscribesToBuild has not yet been called, but if it has been called
         //    how do we determine that the build passed in here is the same build that was
         //    verified in subscribesToBuild?
-        return in_array($this->subscriber->getAddress(), $build->GetCommitAuthors());
+        return $build->HasAuthor($this->subscriber->getAddress());
     }
 }
