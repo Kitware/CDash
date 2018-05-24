@@ -17,7 +17,14 @@
 require_once 'include/cdashmail.php';
 
 use CDash\Config;
+use CDash\Log;
+use CDash\Messaging\Notification\Email\EmailBuilder;
+use CDash\Messaging\Notification\Email\EmailNotificationFactory;
+use CDash\Messaging\Notification\NotificationCollection;
+use CDash\Messaging\Notification\NotificationDirector;
+use CDash\Messaging\Subscription\SubscriptionBuilder;
 use CDash\Model\Build;
+use CDash\Model\BuildEmail;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildTest;
 use CDash\Model\BuildConfigure;
@@ -1403,6 +1410,8 @@ function sendemail(ActionableBuildInterface $handler, $projectid)
     include_once 'include/common.php';
     require_once 'include/pdo.php';
 
+    $config = Config::getInstance();
+    $log = Log::getInstance();
     $Project = new Project();
     $Project->Id = $projectid;
     $Project->Fill();
@@ -1410,7 +1419,7 @@ function sendemail(ActionableBuildInterface $handler, $projectid)
     $sendEmail = null;
     $use_local_dir = Config::getInstance()->get('CDASH_USE_LOCAL_DIRECTORY');
 
-    if ($use_local_dir && file_exists('local/sendemail.php')) {
+    if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/sendemail.php')) {
         include_once 'local/sendemail.php';
         $sendEmail = new SendEmail();
         $sendEmail->SetProjectId($projectid);
@@ -1422,9 +1431,30 @@ function sendemail(ActionableBuildInterface $handler, $projectid)
     }
 
     $config_subscribers = [];
+/*
+    $builder = new SubscriptionBuilder($handler);
+    $subscriptions = $builder->build();
 
+    $builder = new EmailBuilder(new EmailNotificationFactory(), new NotificationCollection());
+    $builder
+        ->setSubscriptions($subscriptions)
+        ->setProject($Project);
+
+    $director = new NotificationDirector();
+    $notifications = $director->build($builder);
+
+    if ($config->get('CDASH_TESTING_MODE')) {
+        // @var \CDash\Messaging\Notification\NotificationInterface $notification
+        foreach ($notifications as $notification) {
+            $log->add_log($notification->getRecipient(), 'TESTING: EMAIL', LOG_DEBUG);
+            $log->add_log($notification->getSubject(), 'TESTING: EMAILTITLE', LOG_DEBUG);
+            $log->add_log($notification->getBody(), 'TESTING: EMAILBODY', LOG_DEBUG);
+            BuildEmail::SaveNotification($notification);
+        }
+    }
+*/
     /** @var  Build $Build */
-    foreach ($handler->getActionableBuilds() as $label => $Build) {
+    foreach ($handler->GetBuildCollection() as $label => $Build) {
         $Build->FillFromId($Build->Id);
         $groupid = $Build->GetGroup();
         $BuildGroup = new BuildGroup();
@@ -1441,6 +1471,7 @@ function sendemail(ActionableBuildInterface $handler, $projectid)
             continue;
         }
 
+        // TODO: this is not yet implemented in new system
         $emailCommitters = $BuildGroup->GetEmailCommitters();
 
         $errors = check_email_errors($Build->Id, $Project->EmailTestTimingChanged,
@@ -1493,7 +1524,7 @@ function sendemail(ActionableBuildInterface $handler, $projectid)
             continue;
         }
 
-        if ($use_local_dir && file_exists('local/sendemail.php')) {
+        if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/sendemail.php')) {
             $sendEmail->BuildId = $Build->Id;
             $sendEmail->Errors = $errors;
         }
@@ -1503,14 +1534,14 @@ function sendemail(ActionableBuildInterface $handler, $projectid)
             // Send the summary email
             sendsummaryemail($projectid, $groupid, $errors, $Build->Id);
 
-            if ($use_local_dir && file_exists('local/sendemail.php')) {
+            if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/sendemail.php')) {
                 $sendEmail->SendSummary();
             }
             return;
         }
 
         // Send build error
-        if ($use_local_dir && file_exists('local/sendemail.php')) {
+        if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/sendemail.php')) {
             $sendEmail->SendBuildError();
         }
 
