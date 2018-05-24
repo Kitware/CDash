@@ -1,4 +1,6 @@
 <?php
+
+use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 
 class BitmaskNotificationPreferencesTest extends \CDash\Test\CDashTestCase
@@ -22,7 +24,7 @@ class BitmaskNotificationPreferencesTest extends \CDash\Test\CDashTestCase
 
         $this->assertFalse($sut->getOnFiltered());
         $this->assertTrue($sut->getOnUpdateError());
-        $this->assertTrue($sut->getOnConfigureError());
+        $this->assertTrue($sut->getOnConfigure());
         $this->assertTrue($sut->getOnBuildWarning());
         $this->assertTrue($sut->getOnBuildError());
         $this->assertTrue($sut->getOnTestFailure());
@@ -34,30 +36,6 @@ class BitmaskNotificationPreferencesTest extends \CDash\Test\CDashTestCase
         $this->assertFalse($sut->getOnMyCheckinIssue());
         $this->assertFalse($sut->getOnAnyCheckinIssue());
         $this->assertFalse($sut->getOnCheckinIssueNightlyOnly());
-    }
-
-    public function testConstructWithCancelableInterfacePermissions()
-    {
-        $mask = $this->defaultMask |
-            BitmaskNotificationPreferences::EMAIL_ANY_USER_CHECKIN_ISSUE_ANY_SECTION;
-
-        $sut = new BitmaskNotificationPreferences($mask);
-
-        $this->assertTrue($sut->getOnAnyCheckinIssue());
-
-        $mask = $this->defaultMask |
-            BitmaskNotificationPreferences::EMAIL_ANY_USER_CHECKIN_ISSUE_NIGHTLY_SECTION;
-
-        $sut = new BitmaskNotificationPreferences($mask);
-
-        $this->assertTrue($sut->getOnCheckinIssueNightlyOnly());
-
-        $mask = $this->defaultMask |
-            BitmaskNotificationPreferences::EMAIL_USER_CHECKIN_ISSUE_ANY_SECTION;
-
-        $sut = new BitmaskNotificationPreferences($mask);
-
-        $this->assertTrue($sut->getOnMyCheckinIssue());
     }
 
     public function testMagicCallMethodReturnsNull()
@@ -82,5 +60,59 @@ class BitmaskNotificationPreferencesTest extends \CDash\Test\CDashTestCase
         $this->assertTrue($sut->notifyOn('TestFailure'));
         $this->assertTrue($sut->notifyOn('Fixed'));
         $this->assertFalse($sut->notifyOn('UpdateError'));
+    }
+
+    public function testSetPreferencesFromEmailTypeProperty()
+    {
+        $sut = new BitmaskNotificationPreferences();
+
+        $this->assertFalse($sut->get(NotifyOn::AUTHORED));
+        $this->assertFalse($sut->get(NotifyOn::GROUP_NIGHTLY));
+        $this->assertFalse($sut->get(NotifyOn::ANY));
+
+        $sut->setPreferencesFromEmailTypeProperty(1);
+        $this->assertTrue($sut->get(NotifyOn::AUTHORED));
+        $this->assertFalse($sut->get(NotifyOn::GROUP_NIGHTLY));
+        $this->assertFalse($sut->get(NotifyOn::ANY));
+
+        $sut->setPreferencesFromEmailTypeProperty(3);
+        $this->assertFalse($sut->get(NotifyOn::AUTHORED));
+        $this->assertFalse($sut->get(NotifyOn::GROUP_NIGHTLY));
+        $this->assertTrue($sut->get(NotifyOn::ANY));
+
+        $sut->setPreferencesFromEmailTypeProperty(2);
+        $this->assertFalse($sut->get(NotifyOn::AUTHORED));
+        $this->assertTrue($sut->get(NotifyOn::GROUP_NIGHTLY));
+        $this->assertFalse($sut->get(NotifyOn::ANY));
+    }
+
+    public function testSetPreferencesFromEmailSuccessProperty()
+    {
+        $sut = new BitmaskNotificationPreferences();
+
+        $this->assertFalse($sut->get(NotifyOn::FIXED));
+
+        $sut->setPreferencesFromEmailSuccessProperty('1');
+
+        $this->assertTrue($sut->get(NotifyOn::FIXED));
+
+        $sut->setPreferencesFromEmailSuccessProperty(0);
+
+        $this->assertFalse($sut->get(NotifyOn::FIXED));
+    }
+
+    public function testSetPreferenceFromMissingSiteProperty()
+    {
+        $sut = new BitmaskNotificationPreferences();
+
+        $this->assertFalse($sut->get(NotifyOn::SITE_MISSING));
+
+        $sut->setPreferenceFromMissingSiteProperty('1');
+
+        $this->assertTrue($sut->get(NotifyOn::SITE_MISSING));
+
+        $sut->setPreferenceFromMissingSiteProperty(0);
+
+        $this->assertFalse($sut->get(NotifyOn::SITE_MISSING));
     }
 }

@@ -23,6 +23,7 @@ use CDash\Collection\SubscriberCollection;
 use CDash\Config;
 use CDash\Database;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
+use CDash\Messaging\Preferences\NotificationPreferences;
 use CDash\Messaging\Preferences\NotificationPreferencesInterface;
 use CDash\ServiceContainer;
 use CDash\Model\Subscriber;
@@ -1730,11 +1731,15 @@ class Project
         $user->execute();
 
         foreach ($user->fetchAll(\PDO::FETCH_OBJ) as $row) {
-            /** @var NotificationPreferencesInterface $preferences */
+            /** @var NotificationPreferences $preferences */
             $preferences = $service->make(
                 BitmaskNotificationPreferences::class,
                 ['mask' => $row->emailcategory]
             );
+            $preferences->setPreferencesFromEmailTypeProperty($row->emailtype);
+            $preferences->setPreferencesFromEmailSuccessProperty($row->emailsuccess);
+            $preferences->setPreferenceFromMissingSiteProperty($row->emailmissingsites);
+
             /** @var Subscriber $subscriber */
             $subscriber = $service->make(Subscriber::class, ['preferences' => $preferences]);
             $subscriber
