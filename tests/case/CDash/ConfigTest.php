@@ -118,9 +118,6 @@ class ConfigTest extends PHPUnit_Framework_TestCase
         include 'config/config.php';
 
         $config = Config::getInstance();
-        $actual = $config->getBaseUrl();
-
-        $this->assertEquals($CDASH_BASE_URL, $actual);
 
         $config->set('CDASH_BASE_URL', null);
         $config->set('CDASH_USE_HTTPS', true);
@@ -133,6 +130,10 @@ class ConfigTest extends PHPUnit_Framework_TestCase
         $actual = $config->getBaseUrl();
 
         $this->assertEquals($expected, $actual);
+
+        $config->set('CDASH_BASE_URL', 'http://open.cdash.org/');
+        $expected = 'http://open.cdash.org';
+        $this->assertEquals($expected, $config->getBaseUrl());
 
         $config->set('CDASH_BASE_URL', $CDASH_BASE_URL);
         $config->set('CDASH_USE_HTTPS', $CDASH_USE_HTTPS);
