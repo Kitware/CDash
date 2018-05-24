@@ -112,10 +112,6 @@ class Config extends Singleton
 
             $uri = "{$protocol}://{$host}{$port}{$path}";
         }
-        // strip trailing slash
-        if (strrpos($uri, '/') === 0) {
-            $uri = substr($uri, 0, (strlen($uri) - 1));
-        }
 
         return $uri;
     }
