@@ -2916,9 +2916,9 @@ class Build
                     committeremail
                 FROM
                     updatefile AS uf,
-                    build2update AS b2u,
-                WHERE b2u.updateid=uf.updateid
-                AND b2u.buildid=:buildId
+                    build2update AS b2u
+                WHERE b2u.updateid = uf.updateid
+                AND b2u.buildid = :buildId
             ';
             $stmt = $this->PDO->prepare($sql);
             $stmt->bindParam(':buildId', $this->Id);
