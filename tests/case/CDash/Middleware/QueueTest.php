@@ -78,8 +78,11 @@ class QueueTest extends \PHPUnit_Framework_TestCase
             $it = new \RecursiveDirectoryIterator($path, \FilesystemIterator::SKIP_DOTS);
             $it = new \RecursiveIteratorIterator($it, \RecursiveIteratorIterator::CHILD_FIRST);
             foreach ($it as $file) {
-                if ($file->isDir()) $deleteTempDir($file->getPathname());
-                else unlink($file->getPathname());
+                if ($file->isDir()) {
+                    $deleteTempDir($file->getPathname());
+                } else {
+                    unlink($file->getPathname());
+                }
             }
             return rmdir($path);
         };

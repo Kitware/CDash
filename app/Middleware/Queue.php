@@ -93,7 +93,8 @@ class Queue
     /**
      * @return Serializer|SimpleSerializer
      */
-    protected function getSerializer() {
+    protected function getSerializer()
+    {
         if (!$this->serializer) {
             $this->serializer = new SimpleSerializer();
         }
