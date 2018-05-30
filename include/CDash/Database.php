@@ -174,6 +174,16 @@ class Database extends Singleton
     }
 
     /**
+     * @param $sql
+     * @param array $options
+     * @return bool|\PDOStatement
+     */
+    public function prepare($sql, array $options = [])
+    {
+        return $this->pdo->prepare($sql, $options);
+    }
+
+    /**
      * @param string|null $database_name
      * @return string
      */
