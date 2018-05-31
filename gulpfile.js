@@ -3,6 +3,7 @@
   var gulp = require('gulp'),
       del = require('del'),
       concat = require('gulp-concat'),
+      concatCss = require('gulp-concat-css'),
       eslint = require('gulp-eslint'),
       fsPath = require('fs-path'),
       newer = require('gulp-newer'),
@@ -117,6 +118,17 @@
  });
 
 
+ gulp.task('css', function() {
+    gulp.src(['public/css/cdash.css', 'public/css/common.css'])
+        .pipe(concatCss('cdash_' + version + '.css'))
+        .pipe(gulp.dest('public/build/css/'));
+
+    gulp.src(['public/css/colorblind.css', 'public/css/common.css'])
+        .pipe(concatCss('colorblind_' + version + '.css'))
+        .pipe(gulp.dest('public/build/css/'));
+ });
+
+
   gulp.task('replace', function(){
     gulp.src(['public/views/*.html'])
         .pipe(replace('@@version', version))
@@ -142,5 +154,5 @@
   });
 
 
-  gulp.task('default', ['clean', 'quality', 'uglify', 'replace']);
+  gulp.task('default', ['clean', 'quality', 'uglify', 'css', 'replace']);
 }());
