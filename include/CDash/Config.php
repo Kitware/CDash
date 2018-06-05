@@ -86,7 +86,6 @@ class Config extends Singleton
 
     public function load($config)
     {
-        $config = include "config/{$config}.php";
-        return $config;
+        return include "config/{$config}.php";
     }
 }
