@@ -14,7 +14,7 @@
  * =========================================================================
  */
 
-namespace CDash\Middleware\OAuth2;
+namespace CDash\Middleware\Queue;
 
 use Bernard\Driver;
 use Bernard\Message\DefaultMessage;
