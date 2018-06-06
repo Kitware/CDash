@@ -29,7 +29,6 @@ use Bernard\Serializer;
 use Bernard\Serializer\SimpleSerializer;
 use CDash\Middleware\Queue\Consumer;
 use CDash\Middleware\Queue\DriverFactory;
-use CDash\Middleware\Queue\SubmissionService;
 
 /**
  * Class Queue
@@ -170,16 +169,10 @@ class Queue
 
     /**
      * @return Router|SimpleRouter
-     * TODO: fix this so that we're not hard coding the receivers
      */
     protected function getRouter()
     {
         if (!$this->router) {
-            /*
-            $receivers = [
-                'DoSubmit' => new SubmissionService(),
-            ];
-            */
             $this->router = new SimpleRouter($this->services);
         }
         return $this->router;

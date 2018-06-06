@@ -47,7 +47,7 @@ class DriverFactory
     // End NOT Available in Bernard ~0.12
 
     /**
-     * @param null $configuration
+     * @param array $configuration
      * @return AppEngineDriver|DoctrineDriver|FlatFileDriver|PhpRedisDriver|PredisDriver|SqsDriver|null
      * @throws \Doctrine\DBAL\DBALException
      */
