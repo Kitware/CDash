@@ -2288,7 +2288,7 @@ function deepEncodeHTMLEntities(&$structure)
             }
             $structure->{$key} = $encode($prop);
         }
-    } else if (is_array($structure)) {
+    } elseif (is_array($structure)) {
         foreach ($structure as $key => &$value) {
             if (is_object($value) || is_array($value)) {
                 deepEncodeHTMLEntities($value);
@@ -2296,7 +2296,7 @@ function deepEncodeHTMLEntities(&$structure)
             }
             $value = $encode($value);
         }
-    } else if (is_string($structure)) {
+    } elseif (is_string($structure)) {
         $structure = $encode($structure);
     }
 }
