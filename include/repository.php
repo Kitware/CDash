@@ -706,7 +706,7 @@ function linkify_compiler_output($projecturl, $source_dir, $revision, $compiler_
 {
     // Escape HTMl characters in compiler output first.  This allows us to properly
     // display characters such as angle brackets in compiler output.
-    $compiler_output = htmlspecialchars($compiler_output);
+    $compiler_output = htmlspecialchars($compiler_output, ENT_QUOTES, 'UTF-8', false);
 
     // set a reasonable default revision if none was specified
     if (empty($revision)) {
@@ -714,7 +714,7 @@ function linkify_compiler_output($projecturl, $source_dir, $revision, $compiler_
     }
 
     $repo_link = "<a href='$projecturl/blob/$revision";
-    $pattern = "&$source_dir/([a-zA-Z0-9_\.\-\\/]+):(\d+)&";
+    $pattern = "&$source_dir\/*([a-zA-Z0-9_\.\-\\/]+):(\d+)&";
     $replacement = "$repo_link/$1#L$2'>$1:$2</a>";
 
     // create links for source files

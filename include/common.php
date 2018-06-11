@@ -2265,3 +2265,38 @@ function stripHTTP($url)
     }
     return $url;
 }
+
+/**
+ * Encode structures for safe HTML output
+ *
+ * @param $structure
+ * @return void
+ */
+function deepEncodeHTMLEntities(&$structure)
+{
+    $encode = function ($string) {
+        return htmlspecialchars($string, ENT_QUOTES, 'UTF-8', false);
+    };
+
+    if (is_object($structure)) {
+        $properties = get_object_vars($structure);
+        foreach ($properties as $key => &$prop) {
+            if (is_object($prop) || is_array($prop)) {
+                deepEncodeHTMLEntities($prop);
+                $structure->{$key} = $prop;
+                continue;
+            }
+            $structure->{$key} = $encode($prop);
+        }
+    } else if (is_array($structure)) {
+        foreach ($structure as $key => &$value) {
+            if (is_object($value) || is_array($value)) {
+                deepEncodeHTMLEntities($value);
+                continue;
+            }
+            $value = $encode($value);
+        }
+    } else if (is_string($structure)) {
+        $structure = $encode($structure);
+    }
+}

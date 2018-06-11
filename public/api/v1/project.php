@@ -272,6 +272,13 @@ function update_project(&$response, $Project)
 function populate_project($Project)
 {
     $project_settings = $_REQUEST['project'];
+
+    if (isset($project_settings['CvsUrl'])) {
+        $cvsurl = filter_var($project_settings['CvsUrl'], FILTER_SANITIZE_URL);
+        $cvsurl = htmlspecialchars($cvsurl, ENT_QUOTES, 'UTF-8', false);
+        $project_settings['CvsUrl'] = str_replace('&amp;', '&', $cvsurl);
+    }
+
     foreach ($project_settings as $k => $v) {
         $Project->{$k} = $v;
     }
