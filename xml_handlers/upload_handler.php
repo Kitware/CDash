@@ -19,6 +19,7 @@ require_once 'xml_handlers/abstract_handler.php';
 
 use CDash\Model\Build;
 use CDash\Model\BuildInformation;
+use CDash\Model\Label;
 use CDash\Model\Site;
 use CDash\Model\SiteInformation;
 use CDash\Model\Project;
@@ -45,6 +46,7 @@ class UploadHandler extends AbstractHandler
     private $TmpFilename;
     private $Base64TmpFileWriteHandle;
     private $Base64TmpFilename;
+    private $Label;
 
     /** If True, means an error happened while processing the file */
     private $UploadError;
@@ -155,6 +157,10 @@ class UploadHandler extends AbstractHandler
             $this->Build->GetIdFromName($this->SubProjectName);
             $this->Build->RemoveIfDone();
 
+            if ($this->Label) {
+                $this->Build->AddLabel($this->Label);
+            }
+
             // If the build doesn't exist we add it
             if ($this->Build->Id == 0) {
                 $this->Build->Append = false;
@@ -163,6 +169,10 @@ class UploadHandler extends AbstractHandler
 
                 $this->UpdateEndTime = true;
             } else {
+                if ($this->Label) {
+                    $this->Build->InsertLabelAssociations();
+                }
+
                 // Otherwise make sure that the build is up-to-date.
                 $this->Build->UpdateBuild($this->Build->Id, -1, -1);
             }
@@ -196,6 +206,8 @@ class UploadHandler extends AbstractHandler
                 $this->UploadError = true;
                 return;
             }
+        } elseif ($name == 'LABEL') {
+            $this->Label = new Label();
         }
     }
 
@@ -377,6 +389,8 @@ class UploadHandler extends AbstractHandler
                     fwrite($this->Base64TmpFileWriteHandle, str_replace($charsToReplace, '', $data));
                     break;
             }
+        } elseif ($element == 'LABEL') {
+            $this->Label->SetText($data);
         }
     }
 }
