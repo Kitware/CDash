@@ -42,6 +42,11 @@ class Test
 
     public function __construct()
     {
+        $this->Command = '';
+        $this->Details = '';
+        $this->Name = '';
+        $this->Path = '';
+
         $this->Images = [];
         $this->Labels = [];
         $this->Measurements = [];
@@ -135,11 +140,6 @@ class Test
         }
 
         include 'config/config.php';
-        $command = pdo_real_escape_string($this->Command);
-
-        $name = pdo_real_escape_string($this->Name);
-        $path = pdo_real_escape_string($this->Path);
-        $details = pdo_real_escape_string($this->Details);
 
         $id = '';
         $idvalue = '';
@@ -190,10 +190,10 @@ class Test
             $stmt->bindParam(':id', $this->Id);
             $stmt->bindParam(':projectid', $this->ProjectId);
             $stmt->bindParam(':crc32', $this->Crc32);
-            $stmt->bindParam(':name', $name);
-            $stmt->bindParam(':path', $path);
-            $stmt->bindParam(':command', $command);
-            $stmt->bindParam(':details', $details);
+            $stmt->bindParam(':name', $this->Name);
+            $stmt->bindParam(':path', $this->Path);
+            $stmt->bindParam(':command', $this->Command);
+            $stmt->bindParam(':details', $this->Details);
             $stmt->bindParam(':output', $output, PDO::PARAM_LOB);
             $success = pdo_execute($stmt);
         } else {
@@ -202,10 +202,10 @@ class Test
                 VALUES (:projectid, :crc32, :name, :path, :command, :details, :output)');
             $stmt->bindParam(':projectid', $this->ProjectId);
             $stmt->bindParam(':crc32', $this->Crc32);
-            $stmt->bindParam(':name', $name);
-            $stmt->bindParam(':path', $path);
-            $stmt->bindParam(':command', $command);
-            $stmt->bindParam(':details', $details);
+            $stmt->bindParam(':name', $this->Name);
+            $stmt->bindParam(':path', $this->Path);
+            $stmt->bindParam(':command', $this->Command);
+            $stmt->bindParam(':details', $this->Details);
             $stmt->bindParam(':output', $output, \PDO::PARAM_LOB);
             $success = pdo_execute($stmt);
             $this->Id = pdo_insert_id('test');
