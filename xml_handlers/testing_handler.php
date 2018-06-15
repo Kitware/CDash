@@ -307,7 +307,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
                     //$this->Test->Command = $data;
                     break;
                 case 'FULLCOMMANDLINE':
-                    $this->Test->Command = $data;
+                    $this->Test->Command .= $data;
                     break;
             }
         } elseif ($parent == 'NAMEDMEASUREMENT' && $element == 'VALUE') {
