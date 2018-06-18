@@ -20,6 +20,11 @@ describe("queryTests", function() {
     filter_test("details", "61", "Completed", 5);
   });
 
+  it("filter on group", function() {
+    filter_test("groupname", "61", "Experimental", 5);
+    filter_test("groupname", "62", "Experimental", 0);
+  });
+
   it("filter on site", function() {
     filter_test("site", "61", "CDashTestingSite", 5);
   });
