@@ -370,6 +370,7 @@ class QueryTestsPhpFilters extends DefaultFilters
         $xml .= getFilterDefinitionXML('buildstarttime', 'Build Start Time', 'date', '', '');
         $xml .= getFilterDefinitionXML('buildtype', 'Build Type', 'string', '', 'Nightly');
         $xml .= getFilterDefinitionXML('details', 'Details', 'string', '', '');
+        $xml .= getFilterDefinitionXML('groupname', 'Group', 'string', '', 'Nightly');
         $xml .= getFilterDefinitionXML('label', 'Label', 'string', '', '');
         $xml .= getFilterDefinitionXML('site', 'Site', 'string', '', '');
         $xml .= getFilterDefinitionXML('status', 'Status', 'string', '', '');
@@ -399,6 +400,11 @@ class QueryTestsPhpFilters extends DefaultFilters
 
             case 'details': {
                 $sql_field = 'test.details';
+            }
+                break;
+
+            case 'groupname': {
+                $sql_field = 'bg.name';
             }
                 break;
 
