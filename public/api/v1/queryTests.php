@@ -166,6 +166,18 @@ if (isset($_GET['parentid'])) {
     $query_params[':endtime'] = $end_UTCDate;
 }
 
+// Check for the presence of a filter on Build Group.
+// If this is present we need to join additional tables into our query.
+$filter_joins = '';
+foreach ($filterdata['filters'] as $filter) {
+    if ($filter['field'] == 'groupname') {
+        $filter_joins = '
+            JOIN build2group b2g ON b2g.buildid = b.id
+            JOIN buildgroup bg ON bg.id = b2g.groupid';
+        break;
+    }
+}
+
 $sql = "SELECT b.id, b.name, b.starttime, b.siteid,b.parentid,
                build2test.testid AS testid, build2test.status,
                build2test.time, build2test.timestatus, site.name AS sitename,
@@ -175,6 +187,7 @@ $sql = "SELECT b.id, b.name, b.starttime, b.siteid,b.parentid,
         JOIN site ON (b.siteid = site.id)
         JOIN test ON (test.id = build2test.testid)
         $proc_join
+        $filter_joins
         WHERE b.projectid = :projectid
               $parent_clause $date_clause $filter_sql
         ORDER BY build2test.status, test.name
