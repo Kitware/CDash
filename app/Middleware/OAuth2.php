@@ -156,7 +156,7 @@ abstract class OAuth2 implements OAuth2Interface
 
         // Use the access token to get the user's email.
         try {
-            $email = $this->getEmail();
+            $email = $this->getEmail($user);
             if (!$email) {
                 throw new Exception('Could not determine email address for user.');
             } else {

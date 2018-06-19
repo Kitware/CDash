@@ -13,6 +13,7 @@
 =========================================================================*/
 namespace CDash\Middleware\OAuth2;
 
+use CDash\Model\User;
 use League\OAuth2\Client\Provider\AbstractProvider;
 
 interface OAuth2Interface
@@ -31,7 +32,7 @@ interface OAuth2Interface
     /**
      * @return string
      */
-    public function getEmail();
+    public function getEmail(User $user);
 
     /**
      * @return string

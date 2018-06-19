@@ -18,6 +18,7 @@ namespace CDash\Middleware\OAuth2;
 use CDash\Config;
 use CDash\Controller\Auth\Session;
 use CDash\Middleware\OAuth2;
+use CDash\Model\User;
 use CDash\System;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use Omines\OAuth2\Client\Provider\Gitlab as GitLabProvider;
@@ -33,7 +34,7 @@ class GitLab extends OAuth2
         $this->Email = '';
     }
 
-    public function getEmail()
+    public function getEmail(User $user)
     {
         if (empty($this->Email)) {
             $this->loadEmail();
