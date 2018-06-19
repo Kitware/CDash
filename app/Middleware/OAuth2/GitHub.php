@@ -52,7 +52,7 @@ class GitHub extends OAuth2
     {
         $request = $this->Provider->getAuthenticatedRequest(
                 'GET',
-                'https://api.github.com/user/public_emails',
+                'https://api.github.com/user/emails',
                 $this->Token
                 );
         $this->setEmails(
