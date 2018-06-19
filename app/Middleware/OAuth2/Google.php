@@ -32,7 +32,7 @@ class Google extends OAuth2
             [ 'scope' => ['https://www.googleapis.com/auth/userinfo.email'] ];
     }
 
-    public function getEmail()
+    public function getEmail(User $user)
     {
         $this->loadOwnerDetails();
         $email = strtolower($this->OwnerDetails->getEmail());

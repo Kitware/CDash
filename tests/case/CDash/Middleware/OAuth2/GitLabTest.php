@@ -69,6 +69,7 @@ class GitLabTest extends \PHPUnit_Framework_TestCase
     public function testGetEmail()
     {
         $this->gitlab->setEmail('a@b.com');
-        $this->assertEquals('a@b.com', $this->gitlab->getEmail());
+        $user = $this->getMockBuilder(User::class)->getMock();
+        $this->assertEquals('a@b.com', $this->gitlab->getEmail($user));
     }
 }

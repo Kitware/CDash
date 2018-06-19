@@ -18,6 +18,7 @@ namespace CDash\Middleware\OAuth2;
 use CDash\Config;
 use CDash\Controller\Auth\Session;
 use CDash\Middleware\OAuth2;
+use CDash\Model\User;
 use CDash\System;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\Github as GitHubProvider;
@@ -33,19 +34,39 @@ class GitHub extends OAuth2
         $this->AuthorizationOptions = ['scope' => ['read:user', 'user:email']];
     }
 
-    public function getEmail()
+    public function getEmail(User $user)
     {
         if (empty($this->Emails)) {
             $this->loadEmails();
         }
+
         $email = '';
+        $first_email = '';
+        $primary_email = '';
+
         foreach ($this->Emails as $e) {
+            $email = strtolower($e->email);
+            if (!$first_email) {
+                $first_email = $email;
+            }
             if ($e->primary) {
-                $email = $e->email;
-                break;
+                $primary_email = $email;
+            }
+            // Return any email address that corresponds to an existing
+            // CDash user.
+            if ($user->GetIdFromEmail($email)) {
+                return $email;
             }
         }
-        return strtolower($email);
+
+        // Otherwise use the primary email address for this GitHub account
+        // if it has one set.
+        if ($primary_email) {
+            return $primary_email;
+        }
+
+        // If all else fails, return the first email in the list.
+        return $first_email;
     }
 
     private function loadEmails()

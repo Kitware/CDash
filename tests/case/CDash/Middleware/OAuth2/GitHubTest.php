@@ -81,6 +81,7 @@ class GitHubTest extends \PHPUnit_Framework_TestCase
         $emails[] = $email2;
 
         $this->github->setEmails($emails);
-        $this->assertEquals('b@c.com', $this->github->getEmail());
+        $user = $this->getMockBuilder(User::class)->getMock();
+        $this->assertEquals('b@c.com', $this->github->getEmail($user));
     }
 }

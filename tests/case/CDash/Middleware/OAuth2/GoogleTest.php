@@ -69,6 +69,7 @@ class GoogleTest extends \PHPUnit_Framework_TestCase
         $response = ['emails' => [0 => ['value' => 'a@b.com']]];
         $owner_details = new GoogleUser($response);
         $this->google->setOwnerDetails($owner_details);
-        $this->assertEquals('a@b.com', $this->google->getEmail());
+        $user = $this->getMockBuilder(User::class)->getMock();
+        $this->assertEquals('a@b.com', $this->google->getEmail($user));
     }
 }
