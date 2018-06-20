@@ -2104,7 +2104,7 @@ function angular_login()
 {
     if (array_key_exists('sent', $_POST) && $_POST['sent'] === 'Login >>') {
         require_once 'include/login_functions.php';
-        auth();
+        cdash_auth();
     }
 }
 
