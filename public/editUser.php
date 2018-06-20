@@ -65,11 +65,11 @@ if ($session_OK) {
         $passwd = $_POST['passwd'];
         $passwd2 = $_POST['passwd2'];
 
-        global $CDASH_MINIMUM_PASSWORD_LENGTH,
-               $CDASH_MINIMUM_PASSWORD_COMPLEXITY,
-               $CDASH_PASSWORD_COMPLEXITY_COUNT,
-               $CDASH_PASSWORD_EXPIRATION,
-               $CDASH_UNIQUE_PASSWORD_COUNT;
+//        global $CDASH_MINIMUM_PASSWORD_LENGTH,
+//               $CDASH_MINIMUM_PASSWORD_COMPLEXITY,
+//               $CDASH_PASSWORD_COMPLEXITY_COUNT,
+//               $CDASH_PASSWORD_EXPIRATION,
+//               $CDASH_UNIQUE_PASSWORD_COUNT;
 
         $password_is_good = true;
         $error_msg = '';
