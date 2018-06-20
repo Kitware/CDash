@@ -83,6 +83,8 @@ if (isset($_GET['iDisplayStart']) && $_GET['iDisplayLength'] != '-1') {
 }
 
 /* Sorting */
+global $sortby, $sortdir;
+
 $sortby = '';
 if (isset($_GET['iSortCol_0'])) {
     switch ($_GET['iSortCol_0']) {
