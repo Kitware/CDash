@@ -173,7 +173,7 @@ class IndexPhpFilters extends DefaultFilters
             return '';
         }
 
-        global $CDASH_DB_TYPE;
+        $config = \CDash\Config::getInstance();
         $sql_field = '';
         switch (strtolower($field)) {
             case 'buildduration': {
@@ -312,7 +312,7 @@ class IndexPhpFilters extends DefaultFilters
                 break;
 
             case 'updateduration': {
-                if ($CDASH_DB_TYPE === 'pgsql') {
+                if ($config->get("CDASH_DB_TYPE") === 'pgsql') {
                     $sql_field = 'ROUND(EXTRACT(EPOCH FROM (bu.endtime - bu.starttime))::numeric / 60, 1)';
                 } else {
                     $sql_field = 'ROUND(TIMESTAMPDIFF(SECOND,bu.starttime,bu.endtime)/60.0,1)';
@@ -958,9 +958,12 @@ function get_filterdata_from_request($page_id = '')
     $filterdata['hasdateclause'] = 0;
 
     if (empty($page_id)) {
-        $pos = strrpos($_SERVER['SCRIPT_NAME'], '/');
-        $page_id = substr($_SERVER['SCRIPT_NAME'], $pos + 1);
+        $request_path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $pos = strrpos($request_path, '/');
+
+        $page_id = substr($request_path, $pos + 1);
     }
+
     $filterdata['pageId'] = $page_id;
 
     $pageSpecificFilters = createPageSpecificFilters($page_id);
