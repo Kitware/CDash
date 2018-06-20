@@ -53,6 +53,8 @@ $xml .= '<dashboard>';
 $xml .= '<title>CDash</title>';
 $xml .= '<date>' . $date . '</date>';
 
+$apikey = null;
+
 // Find the correct google map key
 foreach ($CDASH_GOOGLE_MAP_API_KEY as $key => $value) {
     if (strstr($_SERVER['HTTP_HOST'], $key) !== false) {
