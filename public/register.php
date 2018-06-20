@@ -23,8 +23,10 @@ redirect_to_https();
 require_once 'include/cdashmail.php';
 require_once 'include/pdo.php';
 
+use CDash\Config;
 use CDash\Model\User;
 
+global $reg;
 $reg = '';
 
 /** Authentication function */
@@ -56,21 +58,20 @@ function register()
             return false;
         }
 
-        global $CDASH_MINIMUM_PASSWORD_LENGTH,
-               $CDASH_MINIMUM_PASSWORD_COMPLEXITY,
-               $CDASH_PASSWORD_COMPLEXITY_COUNT;
+        $config = Config::getInstance();
+
         $complexity = getPasswordComplexity($passwd);
-        if ($complexity < $CDASH_MINIMUM_PASSWORD_COMPLEXITY) {
-            if ($CDASH_PASSWORD_COMPLEXITY_COUNT > 1) {
-                $reg = "Your password must contain at least $CDASH_PASSWORD_COMPLEXITY_COUNT characters from $CDASH_MINIMUM_PASSWORD_COMPLEXITY of the following types: uppercase, lowercase, numbers, and symbols.";
+        if ($complexity < $config->get('CDASH_MINIMUM_PASSWORD_COMPLEXITY')) {
+            if ($config->get('CDASH_PASSWORD_COMPLEXITY_COUNT') > 1) {
+                $reg = "Your password must contain at least {$config->get('CDASH_PASSWORD_COMPLEXITY_COUNT')} characters from {$config->get('CDASH_MINIMUM_PASSWORD_COMPLEXITY')} of the following types: uppercase, lowercase, numbers, and symbols.";
             } else {
-                $reg = "Your password must contain at least $CDASH_MINIMUM_PASSWORD_COMPLEXITY of the following: uppercase, lowercase, numbers, and symbols.";
+                $reg = "Your password must contain at least {$config->get('CDASH_MINIMUM_PASSWORD_COMPLEXITY')} of the following: uppercase, lowercase, numbers, and symbols.";
             }
             return false;
         }
 
-        if (strlen($passwd) < $CDASH_MINIMUM_PASSWORD_LENGTH) {
-            $reg = "Your password must be at least $CDASH_MINIMUM_PASSWORD_LENGTH characters.";
+        if (strlen($passwd) < $config->get('CDASH_MINIMUM_PASSWORD_LENGTH')) {
+            $reg = "Your password must be at least {$config->get('CDASH_MINIMUM_PASSWORD_LENGTH')} characters.";
             return false;
         }
 
@@ -100,8 +101,8 @@ function register()
             $user->LastName = $lname;
             $user->Institution = $institution;
 
-            global $CDASH_REGISTRATION_EMAIL_VERIFY, $CDASH_SERVER_NAME;
-            if ($CDASH_REGISTRATION_EMAIL_VERIFY) {
+
+            if ($config->get('CDASH_REGISTRATION_EMAIL_VERIFY')) {
                 $key = generate_password(40);
                 $date = date(FMT_DATETIME);
                 if ($user->SaveTemp($key, $date)) {
@@ -113,7 +114,7 @@ function register()
                     $emailbody .= "Welcome to CDash! In order to validate your registration please follow this link: \n";
                     $emailbody .= $currentURI . '/register.php?key=' . $key . "\n";
 
-                    $serverName = $CDASH_SERVER_NAME;
+                    $serverName = $config->get('CDASH_SERVER_NAME');
                     if (strlen($serverName) == 0) {
                         $serverName = $_SERVER['SERVER_NAME'];
                     }
@@ -146,9 +147,9 @@ function register()
 /** Login Form function */
 function RegisterForm($regerror)
 {
-    global $CDASH_NO_REGISTRATION;
+    $config = Config::getInstance();
 
-    if (isset($CDASH_NO_REGISTRATION) && $CDASH_NO_REGISTRATION == 1) {
+    if ($config->get('CDASH_NO_REGISTRATION') == 1) {
         die("You cannot access this page. Contact your administrator if you think that's an error.");
     }
 
