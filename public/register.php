@@ -183,5 +183,6 @@ if (!register()) {                 // registration failed
     RegisterForm($reg);
 }    // display register form
 else {
-    header('location: user.php?note=register');
+    // header('location: user.php?note=register');
+    return ['Location' => 'user.php?note=register'];
 }
