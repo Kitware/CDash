@@ -14,6 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use CDash\Config;
+
 // Returns true if this call to processsubmissions.php should execute the
 // processing loop. Returns false if another instance of processsubmissions.php
 // is already executing the loop for this projectid.
@@ -222,6 +224,8 @@ function ResetApparentlyStalledSubmissions($projectid)
 //
 function ProcessSubmissions($projectid, $mypid, $multi = false)
 {
+    /** @var Config $config */
+    $config = Config::getInstance();
     $iterations = 0;
     @$sleep_in_loop = $_GET['sleep_in_loop'];
     @$intentional_nonreturning_submit = $_GET['intentional_nonreturning_submit'];
@@ -258,8 +262,7 @@ function ProcessSubmissions($projectid, $mypid, $multi = false)
         // so that we do not become known as an "apparently stalled" processor.
         SetLockLastUpdatedTime($projectid);
 
-        global $CDASH_SUBMISSION_PROCESSING_MAX_ATTEMPTS;
-        if ($new_attempts > $CDASH_SUBMISSION_PROCESSING_MAX_ATTEMPTS) {
+        if ($new_attempts > $config->get('CDASH_SUBMISSION_PROCESSING_MAX_ATTEMPTS')) {
             add_log("Too many attempts to process '$filename'",
                 'ProcessSubmissions',
                 LOG_ERR, $projectid);
@@ -267,8 +270,7 @@ function ProcessSubmissions($projectid, $mypid, $multi = false)
         } else {
             // Record id in global so that we can mark it as "error status"
             // if we get thrown to the error handler.
-            global $PHP_ERROR_SUBMISSION_ID;
-            $PHP_ERROR_SUBMISSION_ID = $submission_id;
+            $config->set('PHP_ERROR_SUBMISSION_ID', $submission_id);
 
             if ($intentional_nonreturning_submit) {
                 // simulate "error occurred" during do_submit:
@@ -281,10 +283,9 @@ function ProcessSubmissions($projectid, $mypid, $multi = false)
             $new_status = ProcessFile($projectid, $filename, $md5);
         }
 
-        $PHP_ERROR_SUBMISSION_ID = 0;
+        $config->set('PHP_ERROR_SUBMISSION_ID', 0);
 
-        global $CDASH_ASYNC_EXPIRATION_TIME;
-        if ($CDASH_ASYNC_EXPIRATION_TIME === 0 &&
+        if ($config->get('CDASH_ASYNC_EXPIRATION_TIME') === 0 &&
             ($new_status > 1 && $new_status < 6)
         ) {
             // If our expiration time is set to 0 we delete finished

@@ -284,10 +284,10 @@ function populate_project($Project)
     }
 
     // Convert UploadQuota from GB to bytes.
-    global $CDASH_MAX_UPLOAD_QUOTA;
+    $config = \CDash\Config::getInstance();
     if (is_numeric($Project->UploadQuota) && $Project->UploadQuota > 0) {
         $Project->UploadQuota =
-            floor(min($Project->UploadQuota, $CDASH_MAX_UPLOAD_QUOTA) * 1024 * 1024 * 1024);
+            floor(min($Project->UploadQuota, $config->get('CDASH_MAX_UPLOAD_QUOTA')) * 1024 * 1024 * 1024);
     }
 
     $Project->Save();

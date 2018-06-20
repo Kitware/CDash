@@ -15,9 +15,6 @@ class BranchCoverageTestCase extends KWWebTestCase
 
     public function testBranchCoverage()
     {
-        global $CDASH_TESTING_RENAME_LOGS;
-        $CDASH_TESTING_RENAME_LOGS = true;
-
         // Do the POST submission to get a pending buildid.
         // We submit to the TrilinosDriver project just because it
         // already has labels enabled.
@@ -54,6 +51,7 @@ class BranchCoverageTestCase extends KWWebTestCase
         $put_result = $this->uploadfile($puturl, $filename);
         $put_json = json_decode($put_result, true);
 
+        // TODO: This delivers false positive upon server error
         if ($put_json['status'] != 0) {
             $this->fail(
                 'PUT returned ' . $put_json['status'] . ":\n" .

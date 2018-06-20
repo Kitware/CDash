@@ -102,7 +102,7 @@ class ProjectHandler extends AbstractHandler
     public function endElement($parser, $name)
     {
         parent::endElement($parser, $name);
-        global $CDASH_DELETE_OLD_SUBPROJECTS;
+        $config = \CDash\Config::getInstance();
 
         if (!$this->ProjectNameMatches) {
             return;
@@ -110,7 +110,7 @@ class ProjectHandler extends AbstractHandler
 
         if ($name == 'PROJECT') {
             foreach ($this->SubProjects as $subproject) {
-                if ($CDASH_DELETE_OLD_SUBPROJECTS) {
+                if ($config->get('CDASH_DELETE_OLD_SUBPROJECTS')) {
                     // Remove dependencies that do not exist anymore,
                     // but only for those relationships where both sides
                     // are present in $this->SubProjects.
@@ -145,7 +145,7 @@ class ProjectHandler extends AbstractHandler
                 }
             }
 
-            if ($CDASH_DELETE_OLD_SUBPROJECTS) {
+            if ($config->get('CDASH_DELETE_OLD_SUBPROJECTS')) {
                 // Delete old subprojects that weren't included in this file.
                 $previousSubProjectIds = $this->Project->GetSubProjects();
                 foreach ($previousSubProjectIds as $previousId) {

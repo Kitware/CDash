@@ -19,6 +19,7 @@ use Bernard\Message\DefaultMessage;
 use Bernard\Producer;
 use Bernard\QueueFactory\PersistentFactory;
 use Bernard\Serializer;
+use CDash\Config;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 include 'include/ctestparser.php';
@@ -117,7 +118,6 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $expected_md5 = '', $d
 {
     global $CDASH_DAILY_UPDATES, $CDASH_USE_LOCAL_DIRECTORY;
 
-    include 'config/config.php';
     $filehandle = getSubmissionFileHandle($fileHandleOrSubmissionId);
 
     if ($filehandle === false) {
@@ -180,11 +180,11 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $expected_md5 = '', $d
 /** Asynchronous submission */
 function do_submit_asynchronous($filehandle, $projectid, $expected_md5 = '')
 {
-    include 'config/config.php';
     include 'include/version.php';
+    $config = Config::getInstance();
 
     do {
-        $filename = $CDASH_BACKUP_DIRECTORY . '/' . mt_rand() . '.xml';
+        $filename = $config->get('CDASH_BACKUP_DIRECTORY') . '/' . mt_rand() . '.xml';
         $fp = @fopen($filename, 'x');
     } while (!$fp);
     fclose($fp);
@@ -208,7 +208,7 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5 = '')
     unset($outfile);
 
     // Sends the file size to the local parser
-    if ($CDASH_USE_LOCAL_DIRECTORY && file_exists('local/ctestparser.php')) {
+    if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/ctestparser.php')) {
         require_once 'local/ctestparser.php';
         $localParser = new LocalParser();
         $filesize = filesize($filename);
@@ -248,10 +248,10 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5 = '')
     $submissionid = pdo_insert_id('submission');
 
     // We find the daily updates
-    $currentURI = get_server_URI(true);
+    $currentURI = $config->getBaseUrl();
     $request = $currentURI . '/ajax/dailyupdatescurl.php?projectid=' . $projectid;
 
-    if ($CDASH_DAILY_UPDATES && curl_request($request) === false) {
+    if ($config->get('CDASH_DAILY_UPDATES') && curl_request($request) === false) {
         return;
     }
 
@@ -393,6 +393,7 @@ function post_submit()
 /** Function to deal with the external tool mechanism */
 function put_submit_file()
 {
+    $config = Config::getInstance();
     // We expect GET to contain the following values:
     $vars = array('buildid', 'type');
     foreach ($vars as $var) {
@@ -440,8 +441,7 @@ function put_submit_file()
     }
 
     // Begin writing this file to the backup directory.
-    global $CDASH_BACKUP_DIRECTORY;
-    $uploadDir = $CDASH_BACKUP_DIRECTORY;
+    $uploadDir = $config->get('CDASH_BACKUP_DIRECTORY');
     $ext = pathinfo($buildfile->Filename, PATHINFO_EXTENSION);
     $filename = $uploadDir . '/' . $buildid . '_' . $buildfile->md5
         . ".$ext";
@@ -474,10 +474,8 @@ function put_submit_file()
         return;
     }
 
-    global $CDASH_ASYNCHRONOUS_SUBMISSION, $CDASH_BERNARD_DRIVER, $CDASH_BERNARD_COVERAGE_SUBMISSION;
-
-    if ($CDASH_BERNARD_COVERAGE_SUBMISSION) {
-        $factory = new PersistentFactory($CDASH_BERNARD_DRIVER, new Serializer());
+    if ($config->get('CDASH_BERNARD_COVERAGE_SUBMISSION')) {
+        $factory = new PersistentFactory($config->get('CDASH_BERNARD_DRIVER'), new Serializer());
         $producer = new Producer($factory, new EventDispatcher());
 
         $producer->produce(new DefaultMessage('DoSubmit', array(
@@ -486,7 +484,7 @@ function put_submit_file()
             'expected_md5' => $md5sum,
             'projectid' => $projectid,
             'submission_ip' => $_SERVER['REMOTE_ADDR'])));
-    } elseif ($CDASH_ASYNCHRONOUS_SUBMISSION) {
+    } elseif ($config->get('CDASH_ASYNCHRONOUS_SUBMISSION')) {
         // Create a new entry in the submission table for this file.
         $bytes = filesize($filename);
         $now_utc = gmdate(FMT_DATETIMESTD);
@@ -563,10 +561,11 @@ function curl_request_async($url, $params, $type = 'POST')
 // Trigger processsubmissions.php using cURL.
 function trigger_process_submissions($projectid)
 {
-    global $CDASH_USE_HTTPS, $CDASH_ASYNC_WORKERS;
-    $currentURI = get_server_URI(false);
+    $config = Config::getInstance();
+    $currentURI = $config->getBaseUrl();
+    $async_workers = $config->get('CDASH_ASYNC_WORKERS');
 
-    if ($CDASH_ASYNC_WORKERS > 1) {
+    if ($async_workers > 1) {
         // Parallel processing.
         // Obtain the processing lock before firing off parallel workers.
         $mypid = getmypid();
@@ -574,7 +573,7 @@ function trigger_process_submissions($projectid)
         if (AcquireProcessingLock($projectid, false, $mypid)) {
             $url = $currentURI . '/ajax/processsubmissions.php';
             $params = array('projectid' => $projectid, 'pid' => $mypid);
-            for ($i = 0; $i < $CDASH_ASYNC_WORKERS; $i++) {
+            for ($i = 0; $i < $async_workers; $i++) {
                 curl_request_async($url, $params, 'GET');
             }
         }
