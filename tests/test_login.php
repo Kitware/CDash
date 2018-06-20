@@ -34,9 +34,8 @@ class LoginTestCase extends KWWebTestCase
         }
         $this->analyse($this->clickLink('Register'));
         $this->fillOutRegisterForm('test@kw', 'kitware');
-        $this->setField('url', 'catchbot');
         $this->clickSubmitByName('sent');
-        $this->assertText('Bots are not allowed to obtain CDash accounts!', 'Bots detected in test_login.php.42');
+        $this->assertText('Bots are not allowed to obtain CDash accounts!', 'Bot not detected in test_login.php.' . __LINE__);
     }
 
     public function testRegister()
