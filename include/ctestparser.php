@@ -50,12 +50,10 @@ function displayReturnStatus($statusarray)
 function writeBackupFile($filehandler, $content, $projectname, $buildname,
                          $sitename, $stamp, $fileNameWithExt)
 {
-    global $CDASH_BACKUP_DIRECTORY;
-
     // Append a timestamp for the file
     $currenttimestamp = microtime(true) * 100;
-
-    $backupDir = $CDASH_BACKUP_DIRECTORY;
+    $config = \CDash\Config::getInstance();
+    $backupDir = $config->get('CDASH_BACKUP_DIRECTORY');
     if (!file_exists($backupDir)) {
         // try parent dir as well (for asynch submission)
         $backupDir = "../$backupDir";
@@ -63,7 +61,7 @@ function writeBackupFile($filehandler, $content, $projectname, $buildname,
         if (!file_exists($backupDir)) {
             trigger_error(
                 'function writeBackupFile cannot process files when backup directory ' .
-                "does not exist: CDASH_BACKUP_DIRECTORY='$CDASH_BACKUP_DIRECTORY'",
+                "does not exist: CDASH_BACKUP_DIRECTORY='{$config->get('CDASH_BACKUP_DIRECTORY')}'",
                 E_USER_ERROR);
             return false;
         }
@@ -97,8 +95,7 @@ function writeBackupFile($filehandler, $content, $projectname, $buildname,
         } else {
             $got_lock = true;
             // realpath() always returns false for Google Cloud Storage.
-            global $CDASH_DATA_ROOT_DIRECTORY;
-            if (realpath($CDASH_DATA_ROOT_DIRECTORY) !== false) {
+            if (realpath($config->get('CDASH_DATA_ROOT_DIRECTORY')) !== false) {
                 // Make sure the file is in the right directory.
                 $pos = strpos(realpath(dirname($filename)), realpath($backupDir));
                 if ($pos === false || $pos != 0) {
