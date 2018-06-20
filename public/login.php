@@ -30,12 +30,13 @@ $loginerror = '';
 // --------------------------------------------------------------------------------------
 $mysession = ['login' => false, 'passwd' => false, 'ID' => false, 'valid' => false, 'langage' => false];
 $uri = basename($_SERVER['PHP_SELF']);
+global $session_OK;
 $session_OK = 0;
 $service = ServiceContainer::getInstance();
 /** @var Session $session */
 $session = $service->get(Session::class);
 
-if (!auth(@$SessionCachePolicy) && !@$noforcelogin) {
+if (!cdash_auth(@$SessionCachePolicy) && !@$noforcelogin) {
     // authentication failed
 
     $csrfToken = null;

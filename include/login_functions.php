@@ -292,7 +292,7 @@ function authenticate($email, $password, $SessionCachePolicy, $rememberme)
  * This is called on every page load where common.php is selected, as well as when
  * submitting the login form.
  **/
-function auth($SessionCachePolicy = 'private_no_expire')
+function cdash_auth($SessionCachePolicy = 'private_no_expire')
 {
     $config = Config::getInstance();
 
