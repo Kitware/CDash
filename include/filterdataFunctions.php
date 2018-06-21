@@ -14,6 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use CDash\Config;
+
 function getFilterDefinitionXML($key, $uitext, $type, $valuelist, $defaultvalue)
 {
     $xml = '<def>';
@@ -939,7 +941,7 @@ function get_sql_compare_and_value($compare, $value)
 //
 function get_filterdata_from_request($page_id = '')
 {
-    global $CDASH_CSS_FILE;
+    $config = Config::getInstance();
     $sql = '';
     $xml = '';
     $clauses = 0;
@@ -1106,7 +1108,7 @@ function get_filterdata_from_request($page_id = '')
     if (array_key_exists('colorblind', $_COOKIE)) {
         $filterdata['colorblind'] = intval($_COOKIE['colorblind']);
     } else {
-        if ($CDASH_CSS_FILE === 'css/colorblind.css') {
+        if ($config->get('CDASH_CSS_FILE') === 'css/colorblind.css') {
             $filterdata['colorblind'] = 1;
         } else {
             $filterdata['colorblind'] = 0;

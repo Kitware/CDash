@@ -19,6 +19,7 @@ use Bernard\Message\DefaultMessage;
 use Bernard\Producer;
 use Bernard\QueueFactory\PersistentFactory;
 use Bernard\Serializer;
+use CDash\Config;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 include 'include/ctestparser.php';
@@ -393,6 +394,7 @@ function post_submit()
 /** Function to deal with the external tool mechanism */
 function put_submit_file()
 {
+    $config = Config::getInstance();
     // We expect GET to contain the following values:
     $vars = array('buildid', 'type');
     foreach ($vars as $var) {
@@ -440,8 +442,7 @@ function put_submit_file()
     }
 
     // Begin writing this file to the backup directory.
-    global $CDASH_BACKUP_DIRECTORY;
-    $uploadDir = $CDASH_BACKUP_DIRECTORY;
+    $uploadDir = $config->get('CDASH_BACKUP_DIRECTORY');
     $ext = pathinfo($buildfile->Filename, PATHINFO_EXTENSION);
     $filename = $uploadDir . '/' . $buildid . '_' . $buildfile->md5
         . ".$ext";
@@ -474,10 +475,8 @@ function put_submit_file()
         return;
     }
 
-    global $CDASH_ASYNCHRONOUS_SUBMISSION, $CDASH_BERNARD_DRIVER, $CDASH_BERNARD_COVERAGE_SUBMISSION;
-
-    if ($CDASH_BERNARD_COVERAGE_SUBMISSION) {
-        $factory = new PersistentFactory($CDASH_BERNARD_DRIVER, new Serializer());
+    if ($config->get('CDASH_BERNARD_COVERAGE_SUBMISSION')) {
+        $factory = new PersistentFactory($config->get('CDASH_BERNARD_DRIVER'), new Serializer());
         $producer = new Producer($factory, new EventDispatcher());
 
         $producer->produce(new DefaultMessage('DoSubmit', array(
@@ -486,7 +485,7 @@ function put_submit_file()
             'expected_md5' => $md5sum,
             'projectid' => $projectid,
             'submission_ip' => $_SERVER['REMOTE_ADDR'])));
-    } elseif ($CDASH_ASYNCHRONOUS_SUBMISSION) {
+    } elseif ($config->get('CDASH_ASYNCHRONOUS_SUBMISSION')) {
         // Create a new entry in the submission table for this file.
         $bytes = filesize($filename);
         $now_utc = gmdate(FMT_DATETIMESTD);
