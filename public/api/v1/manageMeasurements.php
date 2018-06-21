@@ -27,6 +27,7 @@ use CDash\Model\Project;
 
 // Require administrative access to view this page.
 init_api_request();
+global $projectid;
 $projectid = pdo_real_escape_numeric($_REQUEST['projectid']);
 if (!can_administrate_project($projectid)) {
     return;
