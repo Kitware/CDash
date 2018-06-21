@@ -1887,20 +1887,20 @@ function web_api_authenticate($projectid, $token)
 
 function begin_XML_for_XSLT()
 {
-    global $CDASH_CSS_FILE, $CDASH_VERSION;
+    $config = CDash\Config::getInstance();
+    $css_file = 'css/cdash.css';
 
     // check if user has specified a preference for color scheme
     if (array_key_exists('colorblind', $_COOKIE)) {
         if ($_COOKIE['colorblind'] == 1) {
-            $CDASH_CSS_FILE = 'css/colorblind.css';
-        } else {
-            $CDASH_CSS_FILE = 'css/cdash.css';
+            $css_file = 'css/colorblind.css';
         }
     }
+    $config->set('CDASH_CSS_FILE', $css_file);
 
     $xml = '<?xml version="1.0" encoding="UTF-8"?><cdash>';
-    $xml .= add_XML_value('cssfile', $CDASH_CSS_FILE);
-    $xml .= add_XML_value('version', $CDASH_VERSION);
+    $xml .= add_XML_value('cssfile', $css_file);
+    $xml .= add_XML_value('version', $config->get('CDASH_VERSION'));
     return $xml;
 }
 
