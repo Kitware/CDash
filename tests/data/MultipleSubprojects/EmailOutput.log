@@ -3,7 +3,7 @@
 [<NA> <NA>] cdash.DEBUG: A submission to CDash for the project SubProjectExample has configure errors.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
-Details on the submission can be found at http://<NA>/<NA>/buildSummary.php?buildid=<NA>
+Details on the submission can be found at http://<NA>/buildSummary.php?buildid=<NA>
 
 Project: SubProjectExample
 Site: livonia-linux
@@ -14,7 +14,7 @@ Configure errors: 1
 
 
 *Configure*
-Status: 1 (http://<NA>/<NA>/viewConfigure.php?buildid=<NA>)
+Status: 1 (http://<NA>/viewConfigure.php?buildid=<NA>)
 Output: -- The C compiler identification is GNU 4.8.4
 -- The CXX compiler identification is GNU 4.8.4
 -- Check for working C compiler: /usr/bin/cc
@@ -44,7 +44,7 @@ Error: example error #1
 [<NA> <NA>] cdash.DEBUG: A submission to CDash for the project SubProjectExample has configure errors.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
-Details on the submission can be found at http://<NA>/<NA>/buildSummary.php?buildid=<NA>
+Details on the submission can be found at http://<NA>/buildSummary.php?buildid=<NA>
 
 Project: SubProjectExample
 Site: livonia-linux
@@ -55,7 +55,7 @@ Configure errors: 1
 
 
 *Configure*
-Status: 1 (http://<NA>/<NA>/viewConfigure.php?buildid=<NA>)
+Status: 1 (http://<NA>/viewConfigure.php?buildid=<NA>)
 Output: -- The C compiler identification is GNU 4.8.4
 -- The CXX compiler identification is GNU 4.8.4
 -- Check for working C compiler: /usr/bin/cc
@@ -85,7 +85,7 @@ Error: example error #1
 [<NA> <NA>] cdash.DEBUG: A submission to CDash for the project SubProjectExample has configure errors.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
-Details on the submission can be found at http://<NA>/<NA>/buildSummary.php?buildid=<NA>
+Details on the submission can be found at http://<NA>/buildSummary.php?buildid=<NA>
 
 Project: SubProjectExample
 Site: livonia-linux
@@ -96,7 +96,7 @@ Configure errors: 1
 
 
 *Configure*
-Status: 1 (http://<NA>/<NA>/viewConfigure.php?buildid=<NA>)
+Status: 1 (http://<NA>/viewConfigure.php?buildid=<NA>)
 Output: -- The C compiler identification is GNU 4.8.4
 -- The CXX compiler identification is GNU 4.8.4
 -- Check for working C compiler: /usr/bin/cc
@@ -126,7 +126,7 @@ Error: example error #1
 [<NA> <NA>] cdash.DEBUG: A submission to CDash for the project SubProjectExample has build warnings.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
-Details on the submission can be found at http://<NA>/<NA>/buildSummary.php?buildid=<NA>
+Details on the submission can be found at http://<NA>/buildSummary.php?buildid=<NA>
 
 Project: SubProjectExample
 SubProject: MyExperimentalFeature
@@ -138,7 +138,7 @@ Warnings: 1
 
 
 *Warnings*
-MyExperimentalFeature/experimental.cxx (http://<NA>/<NA>/viewBuildError.php?type=<NA>&buildid=<NA>)
+MyExperimentalFeature/experimental.cxx (http://<NA>/viewBuildError.php?type=<NA>&buildid=<NA>)
 /home/betsy/cmake/Tests/CTestTestSubprojects/MyExperimentalFeature/experimental.cxx:2:5: warning: unused parameter ‘argc’ [-Wunused-parameter]
  int main(int argc, char *argv[])
      ^
@@ -153,7 +153,7 @@ MyExperimentalFeature/experimental.cxx (http://<NA>/<NA>/viewBuildError.php?type
 [<NA> <NA>] cdash.DEBUG: A submission to CDash for the project SubProjectExample has build warnings.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
-Details on the submission can be found at http://<NA>/<NA>/buildSummary.php?buildid=<NA>
+Details on the submission can be found at http://<NA>/buildSummary.php?buildid=<NA>
 
 Project: SubProjectExample
 SubProject: MyProductionCode
@@ -165,7 +165,7 @@ Warnings: 1
 
 
 *Warnings*
-MyProductionCode/production.cxx (http://<NA>/<NA>/viewBuildError.php?type=<NA>&buildid=<NA>)
+MyProductionCode/production.cxx (http://<NA>/viewBuildError.php?type=<NA>&buildid=<NA>)
 /home/betsy/cmake/Tests/CTestTestSubprojects/MyProductionCode/production.cxx:2:5: warning: unused parameter ‘argc’ [-Wunused-parameter]
  int main(int argc, char *argv[])
      ^
@@ -180,7 +180,7 @@ MyProductionCode/production.cxx (http://<NA>/<NA>/viewBuildError.php?type=<NA>&b
 [<NA> <NA>] cdash.DEBUG: A submission to CDash for the project SubProjectExample has build errors.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
-Details on the submission can be found at http://<NA>/<NA>/buildSummary.php?buildid=<NA>
+Details on the submission can be found at http://<NA>/buildSummary.php?buildid=<NA>
 
 Project: SubProjectExample
 SubProject: MyThirdPartyDependency
@@ -192,7 +192,7 @@ Errors: 2
 
 
 *Error*
-MyThirdPartyDependency/thirdparty.cxx (http://<NA>/<NA>/viewBuildError.php?type=<NA>&build=<NA>)
+MyThirdPartyDependency/thirdparty.cxx (http://<NA>/viewBuildError.php?type=<NA>&build=<NA>)
 /home/betsy/cmake/Tests/CTestTestSubprojects/MyThirdPartyDependency/thirdparty.cxx: In function ‘int main(int, char**)’:
 /home/betsy/cmake/Tests/CTestTestSubprojects/MyThirdPartyDependency/thirdparty.cxx:6:3: error: ‘n’ was not declared in this scope
    n = 5;
@@ -214,7 +214,7 @@ compilation terminated.
 [<NA> <NA>] cdash.DEBUG: A submission to CDash for the project SubProjectExample has build errors.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
-Details on the submission can be found at http://<NA>/<NA>/buildSummary.php?buildid=<NA>
+Details on the submission can be found at http://<NA>/buildSummary.php?buildid=<NA>
 
 Project: SubProjectExample
 SubProject: MyThirdPartyDependency
@@ -226,7 +226,7 @@ Errors: 2
 
 
 *Error*
-MyThirdPartyDependency/thirdparty.cxx (http://<NA>/<NA>/viewBuildError.php?type=<NA>&build=<NA>)
+MyThirdPartyDependency/thirdparty.cxx (http://<NA>/viewBuildError.php?type=<NA>&build=<NA>)
 /home/betsy/cmake/Tests/CTestTestSubprojects/MyThirdPartyDependency/thirdparty.cxx: In function ‘int main(int, char**)’:
 /home/betsy/cmake/Tests/CTestTestSubprojects/MyThirdPartyDependency/thirdparty.cxx:6:3: error: ‘n’ was not declared in this scope
    n = 5;
@@ -248,7 +248,7 @@ compilation terminated.
 [<NA> <NA>] cdash.DEBUG: A submission to CDash for the project SubProjectExample has failing dynamic analysis tests.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
-Details on the submission can be found at http://<NA>/<NA>/buildSummary.php?buildid=<NA>
+Details on the submission can be found at http://<NA>/buildSummary.php?buildid=<NA>
 
 Project: SubProjectExample
 SubProject: MyExperimentalFeature
@@ -260,7 +260,7 @@ Dynamic analysis tests failing: 1
 
 
 *Dynamic analysis tests failing or not run*
-experimentalFail1 (http://<NA>/<NA>/viewDynamicAnalysisFile.php?id=<NA>)
+experimentalFail1 (http://<NA>/viewDynamicAnalysisFile.php?id=<NA>)
 
 
 -CDash on 
@@ -270,7 +270,7 @@ experimentalFail1 (http://<NA>/<NA>/viewDynamicAnalysisFile.php?id=<NA>)
 [<NA> <NA>] cdash.DEBUG: A submission to CDash for the project SubProjectExample has failing tests.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
-Details on the submission can be found at http://<NA>/<NA>/buildSummary.php?buildid=<NA>
+Details on the submission can be found at http://<NA>/buildSummary.php?buildid=<NA>
 
 Project: SubProjectExample
 SubProject: MyExperimentalFeature
@@ -282,11 +282,11 @@ Tests not passing: 5
 
 
 *Tests failing* (first 5)
-experimentalFail1 | Completed (Failed) | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
-experimentalFail2 | Completed (Failed) | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
-experimentalFail3 | Completed (Failed) | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
-experimentalFail4 | Completed (Failed) | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
-experimentalFail5 | Completed (Failed) | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
+experimentalFail1 | Completed (Failed) | (http://<NA>/testDetails.php?test=<NA>&build=<NA>)
+experimentalFail2 | Completed (Failed) | (http://<NA>/testDetails.php?test=<NA>&build=<NA>)
+experimentalFail3 | Completed (Failed) | (http://<NA>/testDetails.php?test=<NA>&build=<NA>)
+experimentalFail4 | Completed (Failed) | (http://<NA>/testDetails.php?test=<NA>&build=<NA>)
+experimentalFail5 | Completed (Failed) | (http://<NA>/testDetails.php?test=<NA>&build=<NA>)
 
 
 -CDash on 
@@ -296,7 +296,7 @@ experimentalFail5 | Completed (Failed) | (http://<NA>/<NA>/testDetails.php?test=
 [<NA> <NA>] cdash.DEBUG: A submission to CDash for the project SubProjectExample has failing tests.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
-Details on the submission can be found at http://<NA>/<NA>/buildSummary.php?buildid=<NA>
+Details on the submission can be found at http://<NA>/buildSummary.php?buildid=<NA>
 
 Project: SubProjectExample
 SubProject: MyExperimentalFeature
@@ -308,11 +308,11 @@ Tests not passing: 5
 
 
 *Tests failing* (first 5)
-experimentalFail1 | Completed (Failed) | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
-experimentalFail2 | Completed (Failed) | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
-experimentalFail3 | Completed (Failed) | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
-experimentalFail4 | Completed (Failed) | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
-experimentalFail5 | Completed (Failed) | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
+experimentalFail1 | Completed (Failed) | (http://<NA>/testDetails.php?test=<NA>&build=<NA>)
+experimentalFail2 | Completed (Failed) | (http://<NA>/testDetails.php?test=<NA>&build=<NA>)
+experimentalFail3 | Completed (Failed) | (http://<NA>/testDetails.php?test=<NA>&build=<NA>)
+experimentalFail4 | Completed (Failed) | (http://<NA>/testDetails.php?test=<NA>&build=<NA>)
+experimentalFail5 | Completed (Failed) | (http://<NA>/testDetails.php?test=<NA>&build=<NA>)
 
 
 -CDash on 
@@ -322,7 +322,7 @@ experimentalFail5 | Completed (Failed) | (http://<NA>/<NA>/testDetails.php?test=
 [<NA> <NA>] cdash.DEBUG: A submission to CDash for the project SubProjectExample has failing tests.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
-Details on the submission can be found at http://<NA>/<NA>/buildSummary.php?buildid=<NA>
+Details on the submission can be found at http://<NA>/buildSummary.php?buildid=<NA>
 
 Project: SubProjectExample
 SubProject: MyThirdPartyDependency
@@ -334,7 +334,7 @@ Tests not passing: 1
 
 
 *Tests not run*
-thirdparty |  | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
+thirdparty |  | (http://<NA>/testDetails.php?test=<NA>&build=<NA>)
 
 
 -CDash on 
@@ -344,7 +344,7 @@ thirdparty |  | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
 [<NA> <NA>] cdash.DEBUG: A submission to CDash for the project SubProjectExample has failing tests.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
-Details on the submission can be found at http://<NA>/<NA>/buildSummary.php?buildid=<NA>
+Details on the submission can be found at http://<NA>/buildSummary.php?buildid=<NA>
 
 Project: SubProjectExample
 SubProject: MyThirdPartyDependency
@@ -356,7 +356,7 @@ Tests not passing: 1
 
 
 *Tests not run*
-thirdparty |  | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
+thirdparty |  | (http://<NA>/testDetails.php?test=<NA>&build=<NA>)
 
 
 -CDash on 
