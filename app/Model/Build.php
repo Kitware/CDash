@@ -784,9 +784,6 @@ class Build
         }
 
         if (!$this->Exists()) {
-            $id = '';
-            $idvalue = '';
-
             $this->Uuid = Build::GenerateUuid($this->Stamp, $this->Name,
                 $this->SiteId, $this->ProjectId, $this->SubProjectName);
 
@@ -823,19 +820,14 @@ class Build
                 ':uuid' => $this->Uuid,
                 ':pullrequest' => $this->PullRequest
             ];
-            if ($this->Id) {
-                $id = 'id, ';
-                $idvalue = ':id, ';
-                $query_params[':id'] = $this->Id;
-            }
 
             $insert_stmt = $this->PDO->prepare(
                 "INSERT INTO build
-                ($id siteid, projectid, stamp, name, type, generator,
+                (siteid, projectid, stamp, name, type, generator,
                  starttime, endtime, submittime, command, log, builderrors,
                  buildwarnings, parentid, uuid, changeid)
                 VALUES
-                ($idvalue :siteid, :projectid, :stamp, :name, :type,
+                (:siteid, :projectid, :stamp, :name, :type,
                  :generator, :starttime, :endtime, :submittime, :command,
                  :log, :nbuilderrors, :nbuildwarnings, :parentid, :uuid,
                  :pullrequest)");

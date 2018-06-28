@@ -181,7 +181,7 @@ class BuildModelTestCase extends KWWebTestCase
             return 1;
         }
 
-        $build->Id = '98765';
+        $build->Id = null;
         $build->SetStamp('20100610-1901-Experimental');
         $build->Type = ''; //force this empty for coverage purposes
 
