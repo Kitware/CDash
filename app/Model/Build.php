@@ -2684,4 +2684,83 @@ class Build
         pdo_execute($stmt, [$uuid]);
         return $stmt->fetchColumn();
     }
+
+    /**
+     * Insert this build if it doesn't already exist.
+     * If a build was created or an existing build was found,
+     * this->Id gets set to a valid value.
+     * Returns TRUE if a build was created, FALSE otherwise.
+     * $this is expected to have Stamp, Name, SiteId, and ProjectId set.
+     */
+    public function AddBuild($nbuilderrors = -1, $nbuildwarnings = -1)
+    {
+        // Compute a uuid for this build if necessary.
+        if (!$this->Uuid) {
+            $this->Uuid = Build::GenerateUuid($this->Stamp, $this->Name,
+                $this->SiteId, $this->ProjectId, $this->SubProjectName);
+        }
+
+        // Check if a build with this uuid already exists.
+        $id = Build::GetIdFromUuid($this->Uuid);
+        if ($id) {
+            $this->Id = $id;
+            return false;
+        }
+
+        // Build doesn't exist yet, create it here.
+        $query_params = [
+            ':siteid'         => $this->SiteId,
+            ':projectid'      => $this->ProjectId,
+            ':stamp'          => $this->Stamp,
+            ':name'           => $this->Name,
+            ':type'           => $this->Type,
+            ':generator'      => $this->Generator,
+            ':starttime'      => $this->StartTime,
+            ':endtime'        => $this->EndTime,
+            ':submittime'     => $this->SubmitTime,
+            ':command'        => $this->Command,
+            ':log'            => $this->Log,
+            ':nbuilderrors'   => $nbuilderrors,
+            ':nbuildwarnings' => $nbuildwarnings,
+            ':parentid'       => $this->ParentId,
+            ':uuid'           => $this->Uuid,
+            ':pullrequest'    => $this->PullRequest
+        ];
+        $this->PDO->beginTransaction();
+        $stmt = $this->PDO->prepare(
+                "INSERT INTO build
+                (siteid, projectid, stamp, name, type, generator,
+                 starttime, endtime, submittime, command, log,
+                 builderrors, buildwarnings, parentid, uuid,
+                 changeid)
+                VALUES
+                (:siteid, :projectid, :stamp, :name, :type, :generator,
+                 :starttime, :endtime, :submittime, :command, :log,
+                 :nbuilderrors, :nbuildwarnings, :parentid, :uuid,
+                 :pullrequest)");
+        if ($stmt->execute($query_params)) {
+            $this->Id = pdo_insert_id('build');
+            $this->PDO->commit();
+            return true;
+        }
+
+        // The INSERT statement didn't execute cleanly.
+        $error_info = $stmt->errorInfo();
+        $error = $error_info[2];
+        $this->PDO->rollBack();
+
+        // This error might be due to a unique key violation on the UUID.
+        // Check again for a previously existing build.
+        $id = Build::GetIdFromUuid($this->Uuid);
+        if ($id) {
+            $this->Id = $id;
+            return false;
+        }
+
+        // Otherwise log the error and return false.
+        $e = new Exception();
+        add_log($error . PHP_EOL . $e->getTraceAsString(), 'AddBuild', LOG_ERR,
+                $this->ProjectId);
+        return false;
+    }
 }
