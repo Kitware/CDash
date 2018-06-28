@@ -2671,4 +2671,17 @@ class Build
     {
         return $this->TestCollection;
     }
+
+    /**
+     * Return the Id of the Build matching the given $uuid,
+     * or FALSE if no such build exists.
+     */
+    public static function GetIdFromUuid($uuid)
+    {
+        $pdo = Database::getInstance()->getPdo();
+        $stmt = $pdo->prepare(
+                'SELECT id FROM build WHERE uuid = ?');
+        pdo_execute($stmt, [$uuid]);
+        return $stmt->fetchColumn();
+    }
 }
