@@ -1966,6 +1966,7 @@ class Build
         }
         $existing_buildid = $stmt->fetchColumn();
         if ($existing_buildid !== false) {
+            // Use the previously existing parent if one exists.
             $result_array = pdo_fetch_array($result);
             $this->SetParentId($existing_buildid);
 
@@ -1975,39 +1976,14 @@ class Build
                 WHERE id = ?');
             pdo_execute($stmt, [$this->ParentId]);
         } else {
-            // Generate a UUID for the parent build.  It is distinguished
-            // from its children by the lack of SubProject (final parameter).
-            $uuid = Build::GenerateUuid($this->Stamp, $this->Name,
-                $this->SiteId, $this->ProjectId, '');
-
-            // Create the parent build here.
-            $stmt = $this->PDO->prepare(
-                'INSERT INTO build
-                (parentid, siteid, projectid, stamp, name, type, generator,
-                 starttime, endtime, submittime, builderrors, buildwarnings,
-                 uuid, changeid)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-            if (! $stmt->execute(
-                    [Build::PARENT_BUILD, $this->SiteId, $this->ProjectId,
-                     $this->Stamp, $this->Name, $this->Type, $this->Generator,
-                     $this->StartTime, $this->EndTime, $this->SubmitTime, 0, 0,
-                     $uuid, $this->PullRequest])) {
-                // Check if somebody else beat us to creating this parent build.
-                $existing_id_stmt = $this->PDO->prepare(
-                    'SELECT id FROM build WHERE uuid = ?');
-                pdo_execute($existing_id_stmt, [$uuid]);
-                $existing_parentid = $existing_id_stmt->fetchColumn();
-                if ($existing_parentid !== false) {
-                    $this->SetParentId($existing_id_result['id']);
-                    return false;
-                } else {
-                    add_last_sql_error('Build Insert Parent', $this->ProjectId, $this->Id);
-                    return false;
-                }
-            }
-            if (!$this->ParentId) {
-                $this->SetParentId(pdo_insert_id('build'));
-            }
+            // Otherwise create a new build to be the parent.
+            $parent = clone $this;
+            $parent->Id = null;
+            $parent->ParentId = Build::PARENT_BUILD;
+            $parent->SubProjectName = '';
+            $parent->Uuid = '';
+            $parent->AddBuild(0, 0);
+            $this->SetParentId($parent->Id);
         }
 
         // Update the parent's tally of build errors & warnings.
