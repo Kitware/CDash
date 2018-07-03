@@ -141,6 +141,8 @@ class BuildError
      **/
     public static function marshal($data, $project, $revision)
     {
+        deepEncodeHTMLEntities($data);
+
         // Sets up access to $file and $directory
         extract(self::GetSourceFile($data));
         $marshaled = array(
