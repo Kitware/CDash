@@ -298,4 +298,16 @@ class BuildModelTestCase extends KWWebTestCase
 
         // Test configures work across child builds
     }
+
+    public function testBuildModelAddBuild()
+    {
+        $build = new Build();
+        $this->assertTrue($build->AddBuild());
+        $this->assertTrue($build->Id > 0);
+
+        $build2 = new Build();
+        $this->assertFalse($build2->AddBuild());
+
+        remove_build($build->Id);
+    }
 }
