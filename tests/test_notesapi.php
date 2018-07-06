@@ -115,7 +115,7 @@ class NotesAPICase extends KWWebTestCase
 
         $response = $this->get($endpoint);
         $actual = json_decode($response);
-        $expected = 'Valid build ID required';
+        $expected = 'Valid buildid required';
         $this->assertTrue(isset($actual->error));
         $this->assertEqual($actual->error, $expected);
     }

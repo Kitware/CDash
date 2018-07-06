@@ -61,7 +61,7 @@ function can_access_project($projectid)
     $userid = get_userid_from_session(false);
     $logged_in = is_null($userid) ? false : true;
 
-    if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
+    if (!checkUserPolicy($userid, $projectid, 1)) {
         if ($logged_in) {
             $response = ['error' => 'You do not have permission to access this page.'];
             json_error_response($response, 403);
@@ -130,6 +130,30 @@ function get_userid_from_session($required = true)
 }
 
 /**
+ * Get the named parameter from the request.
+ *
+ * @param bool $required
+ * @return string
+ */
+function get_param($name, $required = true)
+{
+    $value = isset($_REQUEST[$name]) ? $_REQUEST[$name] : null;
+    if ($required && !$value) {
+        json_error_response(['error' => "Valid $name required"]);
+    }
+    return pdo_real_escape_string($value);
+}
+
+function get_int_param($name, $required = true)
+{
+    $value = get_param($name, $required);
+    if ($required && !is_numeric($value)) {
+        json_error_response(['error' => "Valid $name required"]);
+    }
+    return (int)$value;
+}
+
+/**
  * Pulls the buildid from the request
  *
  * @param bool $required
@@ -137,11 +161,8 @@ function get_userid_from_session($required = true)
  */
 function get_request_build_id($required = true)
 {
-    $buildid = isset($_REQUEST['buildid']) ? $_REQUEST['buildid'] : null;
-    if ($required && (!$buildid || !is_numeric($buildid))) {
-        json_error_response(['error' => 'Valid build ID required']);
-    }
-    return (int)pdo_real_escape_string($buildid);
+    $buildid = get_int_param('buildid', $required);
+    return $buildid;
 }
 
 /**
