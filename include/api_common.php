@@ -16,6 +16,7 @@
 
 require_once 'include/common.php';
 
+use CDash\Model\AuthToken;
 use CDash\Model\Build;
 use CDash\Model\Project;
 use CDash\Model\User;
@@ -111,7 +112,7 @@ function can_administrate_project($projectid)
 }
 
 /**
- * Checks for the user id in the session, if none, and required, exits programe with 401
+ * Checks for the user id in the session, if none, and required, exits program with 401
  *
  * @return int|null
  */
@@ -120,6 +121,13 @@ function get_userid_from_session($required = true)
     $userid = null;
     if (isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid'])) {
         $userid = $_SESSION['cdash']['loginid'];
+    }
+
+    // Check for the presence of a bearer token if no userid was found
+    // in the session.
+    if (is_null($userid)) {
+        $authtoken = new AuthToken();
+        $userid = $authtoken->getUserIdFromRequest();
     }
 
     if ($required && is_null($userid)) {
