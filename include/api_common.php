@@ -183,7 +183,7 @@ function get_project_from_request()
     if (!isset($_REQUEST['project'])) {
         json_error_response(['error' => 'Valid project required']);
     }
-    $projectname = $_GET['project'];
+    $projectname = $_REQUEST['project'];
     $projectid = get_project_id($projectname);
     $Project = new Project();
     $Project->Id = $projectid;
