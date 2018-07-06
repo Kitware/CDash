@@ -216,4 +216,63 @@ class AuthToken
 
         return $marshaledAuthToken;
     }
+
+    /**
+     * Get Authorization header.
+     * Adapted from http://stackoverflow.com/a/40582472
+     **/
+    private static function getAuthorizationHeader()
+    {
+        $headers = null;
+        if (isset($_SERVER['Authorization'])) {
+            $headers = trim($_SERVER['Authorization']);
+        } elseif (isset($_SERVER['HTTP_AUTHORIZATION'])) { //Nginx or fast CGI
+            $headers = trim($_SERVER['HTTP_AUTHORIZATION']);
+        } else {
+            $requestHeaders = getallheaders();
+            if (isset($requestHeaders['Authorization'])) {
+                $headers = trim($requestHeaders['Authorization']);
+            }
+        }
+        return $headers;
+    }
+
+    /**
+     * Get access token from header.
+     **/
+    private static function getBearerToken()
+    {
+        $headers = AuthToken::getAuthorizationHeader();
+        if (!empty($headers)) {
+            $matches = [];
+            if (preg_match('/Bearer\s(\S+)/', $headers, $matches)) {
+                return $matches[1];
+            }
+        }
+        return null;
+    }
+
+    // Check for the presence of a bearer token in the request.
+    // If one is found, return the corresponding userid.
+    // Otherwise return null.
+    // If the specified token has expired it will be deleted.
+    public function getUserIdFromRequest()
+    {
+        $token = AuthToken::getBearerToken();
+        if (!$token) {
+            return null;
+        }
+
+        $this->Hash = $this->HashToken($token);
+
+        if (!$this->Exists()) {
+            return null;
+        }
+        if ($this->Expired()) {
+            $this->Delete();
+            return null;
+        }
+
+        return $this->UserId;
+    }
 }
