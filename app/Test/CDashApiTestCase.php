@@ -116,7 +116,11 @@ class CDashApiTestCase extends CDashTestCase
 
         ob_start();
         if ($this->endpoint) {
-            require $this->endpoint;
+            try {
+                require $this->endpoint;
+            } catch (\Exception $exception) {
+                //
+            }
             $response = ob_get_contents();
             ob_end_clean();
         } else {

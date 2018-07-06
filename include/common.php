@@ -412,7 +412,8 @@ function checkUserPolicy($userid, $projectid, $onlyreturn = 0)
         return;
     }
 
-    $user = new User();
+    $service = ServiceContainer::getInstance();
+    $user = $service->get(User::class);
     $user->Id = $userid;
 
     // If the projectid=0 only admin can access the page
@@ -429,7 +430,7 @@ function checkUserPolicy($userid, $projectid, $onlyreturn = 0)
             return true;
         }
 
-        $project = new Project();
+        $project = $service->get(Project::class);
         $project->Id = $projectid;
         $project->Fill();
 
@@ -582,11 +583,11 @@ function get_build_id($buildname, $stamp, $projectid, $sitename)
 /** Get the project id from the project name */
 function get_project_id($projectname)
 {
-    $projectname = pdo_real_escape_string($projectname);
-    $project = pdo_query("SELECT id FROM project WHERE name='$projectname'");
-    if (pdo_num_rows($project) > 0) {
-        $project_array = pdo_fetch_array($project);
-        return $project_array['id'];
+    $service = ServiceContainer::getInstance();
+    $project = $service->get(Project::class);
+    $project->Name = $projectname;
+    if ($project->GetIdByName()) {
+        return $project->Id;
     }
     return -1;
 }

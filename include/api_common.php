@@ -21,6 +21,8 @@ use CDash\Model\Build;
 use CDash\Model\Project;
 use CDash\Model\User;
 use CDash\Model\UserProject;
+use CDash\ServiceContainer;
+use CDash\System;
 
 /**
  *
@@ -185,7 +187,8 @@ function get_project_from_request()
     }
     $projectname = $_REQUEST['project'];
     $projectid = get_project_id($projectname);
-    $Project = new Project();
+    $service = ServiceContainer::getInstance();
+    $Project = $service->get(Project::class);
     $Project->Id = $projectid;
     if (!$Project->Exists()) {
         json_error_response(['error' => 'Project does not exist']);
@@ -226,7 +229,9 @@ function get_request_build($required = true)
  */
 function json_error_response($response, $code = 400)
 {
-    echo json_encode($response);
     http_response_code($code);
-    exit(0);
+    echo json_encode($response);
+    $service = ServiceContainer::getInstance();
+    $system = $service->get(System::class);
+    $system->system_exit();
 }
