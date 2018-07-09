@@ -13,4 +13,4 @@ $queue = $service_container->create(Queue::class);
 $submission_service = $service_container->create(SubmissionService::class);
 
 $submission_service->register($queue);
-$queue->consume($submission_service->getConsumerName(), ['max-runtime' => 0.1]);
+$queue->consume($submission_service->getConsumerName());
