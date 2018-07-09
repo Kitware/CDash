@@ -392,23 +392,33 @@ class Project
         return $role;
     }
 
-    public function FindByName($name)
+    public function GetIdByName()
     {
-        $sql = "SELECT id FROM project WHERE name=:name";
-        /** @var \PDOStatement $stmt $stmt */
-        $stmt = $this->PDO->prepare($sql);
-        $stmt->bindParam(':name', $name);
-        $stmt->execute();
+        $pdo = Database::getInstance()->getPdo();
+        $stmt = $pdo->prepare('SELECT id FROM project WHERE name = :name');
+        $stmt->bindParam(':name', $this->Name);
+        pdo_execute($stmt);
         $stmt->bindColumn('id', $this->Id);
         $stmt->fetch(\PDO::FETCH_BOUND);
-        $this->Fill();
+        return $this->Id;
+    }
+
+    public function FindByName($name)
+    {
+        $this->Name = $name;
+        $this->GetIdByName();
+        if ($this->Id) {
+            $this->Fill();
+            return true;
+        }
+        return false;
     }
 
     /** Return true if the project exists */
     public function ExistsByName($name)
     {
-        $project = pdo_query("SELECT id FROM project WHERE name='$name'");
-        if (pdo_num_rows($project) > 0) {
+        $this->Name = $name;
+        if ($this->GetIdByName()) {
             return true;
         }
         return false;

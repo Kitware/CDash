@@ -16,10 +16,13 @@
 
 require_once 'include/common.php';
 
+use CDash\Model\AuthToken;
 use CDash\Model\Build;
 use CDash\Model\Project;
 use CDash\Model\User;
 use CDash\Model\UserProject;
+use CDash\ServiceContainer;
+use CDash\System;
 
 /**
  *
@@ -61,7 +64,7 @@ function can_access_project($projectid)
     $userid = get_userid_from_session(false);
     $logged_in = is_null($userid) ? false : true;
 
-    if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
+    if (!checkUserPolicy($userid, $projectid, 1)) {
         if ($logged_in) {
             $response = ['error' => 'You do not have permission to access this page.'];
             json_error_response($response, 403);
@@ -111,7 +114,7 @@ function can_administrate_project($projectid)
 }
 
 /**
- * Checks for the user id in the session, if none, and required, exits programe with 401
+ * Checks for the user id in the session, if none, and required, exits program with 401
  *
  * @return int|null
  */
@@ -122,11 +125,42 @@ function get_userid_from_session($required = true)
         $userid = $_SESSION['cdash']['loginid'];
     }
 
+    // Check for the presence of a bearer token if no userid was found
+    // in the session.
+    if (is_null($userid)) {
+        $authtoken = new AuthToken();
+        $userid = $authtoken->getUserIdFromRequest();
+    }
+
     if ($required && is_null($userid)) {
         $response = ['error' => 'Permission denied'];
         json_error_response($response, 403);
     }
     return $userid;
+}
+
+/**
+ * Get the named parameter from the request.
+ *
+ * @param bool $required
+ * @return string
+ */
+function get_param($name, $required = true)
+{
+    $value = isset($_REQUEST[$name]) ? $_REQUEST[$name] : null;
+    if ($required && !$value) {
+        json_error_response(['error' => "Valid $name required"]);
+    }
+    return pdo_real_escape_string($value);
+}
+
+function get_int_param($name, $required = true)
+{
+    $value = get_param($name, $required);
+    if ($required && !is_numeric($value)) {
+        json_error_response(['error' => "Valid $name required"]);
+    }
+    return (int)$value;
 }
 
 /**
@@ -137,11 +171,8 @@ function get_userid_from_session($required = true)
  */
 function get_request_build_id($required = true)
 {
-    $buildid = isset($_REQUEST['buildid']) ? $_REQUEST['buildid'] : null;
-    if ($required && (!$buildid || !is_numeric($buildid))) {
-        json_error_response(['error' => 'Valid build ID required']);
-    }
-    return (int)pdo_real_escape_string($buildid);
+    $buildid = get_int_param('buildid', $required);
+    return $buildid;
 }
 
 /**
@@ -154,9 +185,10 @@ function get_project_from_request()
     if (!isset($_REQUEST['project'])) {
         json_error_response(['error' => 'Valid project required']);
     }
-    $projectname = $_GET['project'];
+    $projectname = $_REQUEST['project'];
     $projectid = get_project_id($projectname);
-    $Project = new Project();
+    $service = ServiceContainer::getInstance();
+    $Project = $service->get(Project::class);
     $Project->Id = $projectid;
     if (!$Project->Exists()) {
         json_error_response(['error' => 'Project does not exist']);
@@ -197,7 +229,9 @@ function get_request_build($required = true)
  */
 function json_error_response($response, $code = 400)
 {
-    echo json_encode($response);
     http_response_code($code);
-    exit(0);
+    echo json_encode($response);
+    $service = ServiceContainer::getInstance();
+    $system = $service->get(System::class);
+    $system->system_exit();
 }
