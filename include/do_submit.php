@@ -584,68 +584,22 @@ function trigger_process_submissions($projectid)
 }
 
 /**
- * Get Authorization header.
- * Adapted from http://stackoverflow.com/a/40582472
- **/
-function getAuthorizationHeader()
-{
-    $headers = null;
-    if (isset($_SERVER['Authorization'])) {
-        $headers = trim($_SERVER['Authorization']);
-    } elseif (isset($_SERVER['HTTP_AUTHORIZATION'])) { //Nginx or fast CGI
-        $headers = trim($_SERVER['HTTP_AUTHORIZATION']);
-    } else {
-        $requestHeaders = getallheaders();
-        if (isset($requestHeaders['Authorization'])) {
-            $headers = trim($requestHeaders['Authorization']);
-        }
-    }
-    return $headers;
-}
-
-/**
- * Get access token from header.
- **/
-function getBearerToken()
-{
-    $headers = getAuthorizationHeader();
-    if (!empty($headers)) {
-        $matches = [];
-        if (preg_match('/Bearer\s(\S+)/', $headers, $matches)) {
-            return $matches[1];
-        }
-    }
-    return null;
-}
-
-/**
  * Return true if the header contains a valid authentication token
  * for this project.  Otherwise return false and set the appropriate
  * response code.
  **/
 function valid_token_for_submission($projectid)
 {
-    $token = getBearerToken();
-    if (!$token) {
-        http_response_code(401);
-        return false;
-    }
-
     $authtoken = new AuthToken();
-    $authtoken->Hash = $authtoken->HashToken($token);
-    if (!$authtoken->Exists()) {
-        http_response_code(403);
-        return false;
-    }
-    if ($authtoken->Expired()) {
-        $authtoken->Delete();
-        http_response_code(403);
+    $userid = $authtoken->getUserIdFromRequest();
+    if (is_null($userid)) {
+        http_response_code(401);
         return false;
     }
 
     // Make sure that the user associated with this token is allowed to access
     // the project in question.
-    if (!checkUserPolicy($authtoken->UserId, $projectid, 1)) {
+    if (!checkUserPolicy($userid, $projectid, 1)) {
         http_response_code(403);
         return false;
     }

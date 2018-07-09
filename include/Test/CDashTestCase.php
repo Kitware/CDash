@@ -74,7 +74,7 @@ class CDashTestCase extends \PHPUnit_Framework_TestCase
 
         $mock_pdo = $this->getMockBuilder(Database::class)
             ->setMethods(
-                ['getPdo', 'prepare', 'execute', 'query', 'beginTransaction', 'commit', 'rollBack']
+                ['getPdo', 'prepare', 'execute', 'query', 'beginTransaction', 'commit', 'rollBack', 'quote']
             )
             ->getMock();
 

@@ -784,16 +784,12 @@ class Build
         }
 
         if (!$this->Exists()) {
-            $id = '';
-            $idvalue = '';
-
-            $this->Uuid = Build::GenerateUuid($this->Stamp, $this->Name,
-                $this->SiteId, $this->ProjectId, $this->SubProjectName);
-
+            // Make sure this build has a type.
             if (strlen($this->Type) == 0) {
                 $this->Type = extract_type_from_buildstamp($this->Stamp);
             }
 
+            // Check if this build should be a child build.
             $this->SetParentId(0);
             $justCreatedParent = false;
             if ($this->SubProjectName) {
@@ -805,82 +801,37 @@ class Build
                 }
             }
 
-            $query_params = [
-                ':siteid' => $this->SiteId,
-                ':projectid' => $this->ProjectId,
-                ':stamp' => $this->Stamp,
-                ':name' => $this->Name,
-                ':type' => $this->Type,
-                ':generator' => $this->Generator,
-                ':starttime' => $this->StartTime,
-                ':endtime' => $this->EndTime,
-                ':submittime' => $this->SubmitTime,
-                ':command' => $this->Command,
-                ':log' => $this->Log,
-                ':nbuilderrors' => $nbuilderrors,
-                ':nbuildwarnings' => $nbuildwarnings,
-                ':parentid' => $this->ParentId,
-                ':uuid' => $this->Uuid,
-                ':pullrequest' => $this->PullRequest
-            ];
-            if ($this->Id) {
-                $id = 'id, ';
-                $idvalue = ':id, ';
-                $query_params[':id'] = $this->Id;
-            }
-
-            $insert_stmt = $this->PDO->prepare(
-                "INSERT INTO build
-                ($id siteid, projectid, stamp, name, type, generator,
-                 starttime, endtime, submittime, command, log, builderrors,
-                 buildwarnings, parentid, uuid, changeid)
-                VALUES
-                ($idvalue :siteid, :projectid, :stamp, :name, :type,
-                 :generator, :starttime, :endtime, :submittime, :command,
-                 :log, :nbuilderrors, :nbuildwarnings, :parentid, :uuid,
-                 :pullrequest)");
-            if (!$insert_stmt->execute($query_params)) {
-                $error_info = $insert_stmt->errorInfo();
-                $error = $error_info[2];
-                // This error might be due to a unique constraint violation
-                // for this UUID.  Query for such a previously existing build.
-                $existing_id_stmt = $this->PDO->prepare(
-                    'SELECT id FROM build WHERE uuid = ?');
-                pdo_execute($existing_id_stmt, [$this->Uuid]);
-                $existing_id = $existing_id_stmt->fetchColumn();
-                if ($existing_id) {
-                    $this->Id = $existing_id;
-                    // If a previously existing build with this UUID was found
-                    // call UpdateBuild() on it.  This also sets ParentId
-                    // if an existing parent was found.
-                    $this->UpdateBuild($this->Id,
-                        $nbuilderrors, $nbuildwarnings);
-                    // Does the parent still need to be created?
-                    if ($this->SubProjectName && $this->ParentId < 1) {
-                        if (!$this->CreateParentBuild(
-                            $nbuilderrors, $nbuildwarnings)
-                        ) {
-                            // Someone else created the parent after we called
-                            // UpdateBuild(this->Id,...).
-                            // In this case we also need to manually update
-                            // the parent as well.
-                            $this->UpdateBuild($this->ParentId,
-                                $nbuilderrors, $nbuildwarnings);
-                        }
-                    }
-                    // Now that the existing build and its parent (if any) have
-                    // been updated we can return early.
-                    return true;
-                }
-                add_log("SQL error: $error", 'Build Insert', LOG_ERR, $this->ProjectId, $this->Id);
+            // Insert the build.
+            $build_created = $this->AddBuild($nbuilderrors, $nbuildwarnings);
+            if (!$this->Id) {
+                // Error creating build.
                 return false;
             }
 
-            if (!$this->Id) {
-                $this->Id = pdo_insert_id('build');
+            if (!$build_created) {
+                // Another process created this build before us.
+                // Call UpdateBuild().
+                // This also sets ParentId if an existing parent was found.
+                $this->UpdateBuild($this->Id, $nbuilderrors, $nbuildwarnings);
+
+                // Does the parent still need to be created?
+                if ($this->SubProjectName && $this->ParentId < 1) {
+                    if (!$this->CreateParentBuild(
+                                $nbuilderrors, $nbuildwarnings)) {
+                        // Someone else created the parent after we called
+                        // UpdateBuild(this->Id,...).
+                        // In this case we also need to manually update
+                        // the parent as well.
+                        $this->UpdateBuild($this->ParentId,
+                                $nbuilderrors, $nbuildwarnings);
+                    }
+                }
+                // Now that the existing build and its parent (if any) have
+                // been updated we can return early.
+                return true;
             }
 
-            // Add the groupid
+            // Add the groupid.
             if ($this->GroupId) {
                 $stmt = $this->PDO->prepare(
                     'INSERT INTO build2group (groupid, buildid)
@@ -1974,6 +1925,7 @@ class Build
         }
         $existing_buildid = $stmt->fetchColumn();
         if ($existing_buildid !== false) {
+            // Use the previously existing parent if one exists.
             $result_array = pdo_fetch_array($result);
             $this->SetParentId($existing_buildid);
 
@@ -1983,39 +1935,14 @@ class Build
                 WHERE id = ?');
             pdo_execute($stmt, [$this->ParentId]);
         } else {
-            // Generate a UUID for the parent build.  It is distinguished
-            // from its children by the lack of SubProject (final parameter).
-            $uuid = Build::GenerateUuid($this->Stamp, $this->Name,
-                $this->SiteId, $this->ProjectId, '');
-
-            // Create the parent build here.
-            $stmt = $this->PDO->prepare(
-                'INSERT INTO build
-                (parentid, siteid, projectid, stamp, name, type, generator,
-                 starttime, endtime, submittime, builderrors, buildwarnings,
-                 uuid, changeid)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-            if (! $stmt->execute(
-                    [Build::PARENT_BUILD, $this->SiteId, $this->ProjectId,
-                     $this->Stamp, $this->Name, $this->Type, $this->Generator,
-                     $this->StartTime, $this->EndTime, $this->SubmitTime, 0, 0,
-                     $uuid, $this->PullRequest])) {
-                // Check if somebody else beat us to creating this parent build.
-                $existing_id_stmt = $this->PDO->prepare(
-                    'SELECT id FROM build WHERE uuid = ?');
-                pdo_execute($existing_id_stmt, [$uuid]);
-                $existing_parentid = $existing_id_stmt->fetchColumn();
-                if ($existing_parentid !== false) {
-                    $this->SetParentId($existing_id_result['id']);
-                    return false;
-                } else {
-                    add_last_sql_error('Build Insert Parent', $this->ProjectId, $this->Id);
-                    return false;
-                }
-            }
-            if (!$this->ParentId) {
-                $this->SetParentId(pdo_insert_id('build'));
-            }
+            // Otherwise create a new build to be the parent.
+            $parent = clone $this;
+            $parent->Id = null;
+            $parent->ParentId = Build::PARENT_BUILD;
+            $parent->SubProjectName = '';
+            $parent->Uuid = '';
+            $parent->AddBuild(0, 0);
+            $this->SetParentId($parent->Id);
         }
 
         // Update the parent's tally of build errors & warnings.
@@ -2678,5 +2605,97 @@ class Build
     public function GetTestCollection()
     {
         return $this->TestCollection;
+    }
+
+    /**
+     * Return the Id of the Build matching the given $uuid,
+     * or FALSE if no such build exists.
+     */
+    public static function GetIdFromUuid($uuid)
+    {
+        $pdo = Database::getInstance()->getPdo();
+        $stmt = $pdo->prepare(
+                'SELECT id FROM build WHERE uuid = ?');
+        pdo_execute($stmt, [$uuid]);
+        return $stmt->fetchColumn();
+    }
+
+    /**
+     * Insert this build if it doesn't already exist.
+     * If a build was created or an existing build was found,
+     * this->Id gets set to a valid value.
+     * Returns TRUE if a build was created, FALSE otherwise.
+     * $this is expected to have Stamp, Name, SiteId, and ProjectId set.
+     */
+    public function AddBuild($nbuilderrors = -1, $nbuildwarnings = -1)
+    {
+        // Compute a uuid for this build if necessary.
+        if (!$this->Uuid) {
+            $this->Uuid = Build::GenerateUuid($this->Stamp, $this->Name,
+                $this->SiteId, $this->ProjectId, $this->SubProjectName);
+        }
+
+        // Check if a build with this uuid already exists.
+        $id = Build::GetIdFromUuid($this->Uuid);
+        if ($id) {
+            $this->Id = $id;
+            return false;
+        }
+
+        // Build doesn't exist yet, create it here.
+        $query_params = [
+            ':siteid'         => $this->SiteId,
+            ':projectid'      => $this->ProjectId,
+            ':stamp'          => $this->Stamp,
+            ':name'           => $this->Name,
+            ':type'           => $this->Type,
+            ':generator'      => $this->Generator,
+            ':starttime'      => $this->StartTime,
+            ':endtime'        => $this->EndTime,
+            ':submittime'     => $this->SubmitTime,
+            ':command'        => $this->Command,
+            ':log'            => $this->Log,
+            ':nbuilderrors'   => $nbuilderrors,
+            ':nbuildwarnings' => $nbuildwarnings,
+            ':parentid'       => $this->ParentId,
+            ':uuid'           => $this->Uuid,
+            ':pullrequest'    => $this->PullRequest
+        ];
+        $this->PDO->beginTransaction();
+        $stmt = $this->PDO->prepare(
+                "INSERT INTO build
+                (siteid, projectid, stamp, name, type, generator,
+                 starttime, endtime, submittime, command, log,
+                 builderrors, buildwarnings, parentid, uuid,
+                 changeid)
+                VALUES
+                (:siteid, :projectid, :stamp, :name, :type, :generator,
+                 :starttime, :endtime, :submittime, :command, :log,
+                 :nbuilderrors, :nbuildwarnings, :parentid, :uuid,
+                 :pullrequest)");
+        if ($stmt->execute($query_params)) {
+            $this->Id = pdo_insert_id('build');
+            $this->PDO->commit();
+            return true;
+        }
+
+        // The INSERT statement didn't execute cleanly.
+        $error_info = $stmt->errorInfo();
+        $error = $error_info[2];
+        $this->PDO->rollBack();
+
+        // This error might be due to a unique key violation on the UUID.
+        // Check again for a previously existing build.
+        $id = Build::GetIdFromUuid($this->Uuid);
+        if ($id) {
+            $this->Id = $id;
+            return false;
+        }
+
+        // Otherwise log the error and return false.
+        $e = new Exception();
+        add_log($error . PHP_EOL . $e->getTraceAsString(), 'AddBuild', LOG_ERR,
+                $this->ProjectId);
+        return false;
     }
 }

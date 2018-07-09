@@ -181,7 +181,7 @@ class BuildModelTestCase extends KWWebTestCase
             return 1;
         }
 
-        $build->Id = '98765';
+        $build->Id = null;
         $build->SetStamp('20100610-1901-Experimental');
         $build->Type = ''; //force this empty for coverage purposes
 
@@ -297,5 +297,17 @@ class BuildModelTestCase extends KWWebTestCase
         $this->assertTrue(count($build->GetConfigures()->fetchAll()) === 1);
 
         // Test configures work across child builds
+    }
+
+    public function testBuildModelAddBuild()
+    {
+        $build = new Build();
+        $this->assertTrue($build->AddBuild());
+        $this->assertTrue($build->Id > 0);
+
+        $build2 = new Build();
+        $this->assertFalse($build2->AddBuild());
+
+        remove_build($build->Id);
     }
 }
