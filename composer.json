@@ -16,7 +16,6 @@
     "ext-curl": "*",
     "ext-json": "*",
     "ext-mbstring": "*",
-    "ext-pcntl": "*",
     "ext-pdo": "*",
     "ext-xsl": "*",
     "bernard/bernard": "~0.12",
