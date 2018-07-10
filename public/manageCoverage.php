@@ -209,7 +209,7 @@ if ($session_OK) {
             $CoverageFile2User->UserId = $userid;
             $fileids = $CoverageFile2User->GetFiles();
 
-            $files = array();
+            $files = [];
 
             // For each file check the coverage metric
             foreach ($fileids as $fileid) {
@@ -218,9 +218,11 @@ if ($session_OK) {
                 $coveragefile->Id = $CoverageFile2User->GetCoverageFileId($buildid);
                 $metric = $coveragefile->GetMetric();
                 if ($metric < ($coverageThreshold / 100.0)) {
-                    $file['percent'] = $coveragefile->GetLastPercentCoverage();
-                    $file['path'] = $coveragefile->GetPath();
-                    $file['id'] = $fileid;
+                    $file = [
+                        'percent' => $coveragefile->GetLastPercentCoverage(),
+                        'path' => $coveragefile->GetPath(),
+                        'id' => $fileid,
+                    ];
                     $files[] = $file;
                 }
             }
