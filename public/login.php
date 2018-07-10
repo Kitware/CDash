@@ -23,6 +23,8 @@ require_once 'include/pdo.php';
 include_once 'include/version.php';
 include_once 'include/login_functions.php';
 
+global $loginerror;
+
 $loginerror = '';
 
 // --------------------------------------------------------------------------------------
