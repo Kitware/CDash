@@ -243,7 +243,7 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
       compare: parent_filter.compare,
       value: parent_filter.value,
     };
-    $scope.filterdata.filters.push(filter);
+    $scope.filterdata.filters.splice(index, 0, filter);
   };
 
   // Remove a filter from our list.
