@@ -1,1 +1,1 @@
-angular.module('CDash').constant('VERSION', '1525722731434');
+angular.module('CDash').constant('VERSION', '1531235108962');
