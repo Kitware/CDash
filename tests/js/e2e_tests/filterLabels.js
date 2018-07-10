@@ -85,4 +85,29 @@ describe("filterLabels", function() {
     expect(element(by.id('numtests')).getText()).toBe('Query Tests: 409 matches');
   });
 
+  it("new filter is added in the right place", function() {
+    // Show filters on index.php.
+    browser.get('index.php?project=Trilinos&date=2011-07-22');
+    element(by.id('settings')).click();
+    var link = element(by.id('label_showfilters'));
+    link.click();
+
+    // Add two filters to the form.
+    element(by.id('id_field1')).$('[value="label"]').click();
+    element(by.id('id_compare1')).$('[value="63"]').click();
+    element(by.id('id_value1')).sendKeys('a');
+
+    element(by.name('add1')).click();
+    element(by.id('id_value2')).clear();
+    element(by.id('id_value2')).sendKeys('b');
+
+    // Add a third one in between the two.
+    element(by.name('add1')).click();
+
+    // Verify that the second filter in the list is now 'a', not 'b'.
+    expect(element(by.id('id_value2')).getAttribute('value')).toBe('a');
+    expect(element(by.id('id_value3')).getAttribute('value')).toBe('b');
+  });
+
+
 });
