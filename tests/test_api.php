@@ -17,37 +17,37 @@ class APITestCase extends KWWebTestCase
 
     public function testAPI()
     {
-        $projectList = $this->get($this->url . '/api/v1/?method=project&task=list');
+        $projectList = $this->get($this->url . '/api/v1/index.php?method=project&task=list');
         if (strpos($projectList, 'InsightExample') === false) {
             $this->fail("'InsightExample' not found in list of projects");
             return 1;
         }
 
-        $defects = $this->get($this->url . '/api/v1/?method=build&task=defects&project=EmailProjectExample');
+        $defects = $this->get($this->url . '/api/v1/index.php?method=build&task=defects&project=EmailProjectExample');
         if (strpos($defects, 'testfailed') === false) {
             $this->fail('Expected output not found when querying API for defects');
             return 1;
         }
 
-        $checkinsdefects = $this->get($this->url . '/api/v1/?method=build&task=checkinsdefects&project=EmailProjectExample');
+        $checkinsdefects = $this->get($this->url . '/api/v1/index.php?method=build&task=checkinsdefects&project=EmailProjectExample');
         if (strpos($checkinsdefects, '"testfailed":"3"') === false && strpos($checkinsdefects, '"testfailed":3') === false) {
             $this->fail('Expected output not found when querying API for checkinsdefects.');
             return 1;
         }
 
-        $sitetestfailures = $this->get($this->url . '/api/v1/?method=build&task=sitetestfailures&project=EmailProjectExample&group=Nightly');
+        $sitetestfailures = $this->get($this->url . '/api/v1/index.php?method=build&task=sitetestfailures&project=EmailProjectExample&group=Nightly');
         if (strpos($sitetestfailures, '[]') === false) {
             $this->fail('Expected output not found when querying API for sitetestfailures');
             return 1;
         }
 
-        $coveragedirectory = $this->get($this->url . '/api/v1/?method=coverage&task=directory&project=InsightExample');
+        $coveragedirectory = $this->get($this->url . '/api/v1/index.php?method=coverage&task=directory&project=InsightExample');
         if (strpos($coveragedirectory, '[]') === false) {
             $this->fail('Expected output not found when querying API for coveragedirectory');
             return 1;
         }
 
-        $userdefects = $this->get($this->url . '/api/v1/?method=user&task=defects&project=EmailProjectExample');
+        $userdefects = $this->get($this->url . '/api/v1/index.php?method=user&task=defects&project=EmailProjectExample');
         if ($userdefects != '{"user1kw":{"buildfixes":6,"buildfixesfiles":1,"testfixes":2,"testfixesfiles":1},"Test Author":{"testerrors":1,"testerrorsfiles":1}}') {
             $this->fail("Expected output not found when querying API for userdefects: $userdefects");
             return 1;
