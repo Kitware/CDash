@@ -1117,7 +1117,7 @@ function perform_github_version_only_diff($project, $update, $previous_revision)
         $updateFile->Log = $commit['commit']['message'];
         $updateFile->Revision = $commit['sha'];
         $updateFile->PriorRevision = $previous_revision;
-        $updateFile->Status = 'MODIFIED';
+        $updateFile->Status = 'UPDATED';
         $update->AddFile($updateFile);
     }
 
