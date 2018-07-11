@@ -412,9 +412,11 @@ function get_source_dir($projectid, $projecturl, $file_path)
         return;
     }
 
-    $project = pdo_query("SELECT cvsviewertype FROM project WHERE id='$projectid'");
-    $project_array = pdo_fetch_array($project);
-    $cvsviewertype = strtolower($project_array['cvsviewertype']);
+    $service = ServiceContainer::getInstance();
+    $project = $service->get(Project::class);
+    $project->Id = $projectid;
+    $project->Fill();
+    $cvsviewertype = strtolower($project->CvsViewerType);
 
     $target_fn = $cvsviewertype . '_get_source_dir';
 
@@ -449,13 +451,7 @@ function get_github_diff_url($projecturl, $directory, $file, $revision)
     if (empty($revision)) {
         $revision = 'master';
     }
-    // get the source dir
-    $source_dir = github_get_source_dir($projecturl, $directory);
 
-    // remove it from the beginning of our path if it is found
-    if (substr($directory, 0, strlen($source_dir)) == $source_dir) {
-        $directory = substr($directory, strlen($source_dir));
-    }
     $directory = trim($directory, '/');
 
     $diff_url = "$projecturl/blob/$revision/";
@@ -707,7 +703,7 @@ function get_revision_url($projectid, $revision, $priorrevision)
 
 function linkify_compiler_output($projecturl, $source_dir, $revision, $compiler_output)
 {
-    // Escape HTMl characters in compiler output first.  This allows us to properly
+    // Escape HTML characters in compiler output first.  This allows us to properly
     // display characters such as angle brackets in compiler output.
     $compiler_output = htmlspecialchars($compiler_output, ENT_QUOTES, 'UTF-8', false);
 

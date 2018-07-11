@@ -282,13 +282,17 @@ class BuildFailure
         if (isset($data['sourcefile'])) {
             $file = basename($data['sourcefile']);
             $directory = dirname($data['sourcefile']);
+
+            $source_dir = \get_source_dir($project['id'], $project['cvsurl'], $directory);
+            if (substr($directory, 0, strlen($source_dir)) == $source_dir) {
+                $directory = substr($directory, strlen($source_dir));
+            }
+
             $marshaled['cvsurl'] = \get_diff_url($project['id'],
                                                 $project['cvsurl'],
                                                 $directory,
                                                 $file,
                                                 $revision);
-
-            $source_dir = \get_source_dir($project['id'], $project['cvsurl'], $directory);
 
             if ($source_dir !== null && $linkifyOutput) {
                 $marshaled['stderror'] = linkify_compiler_output($project['cvsurl'], $source_dir,
