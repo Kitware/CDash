@@ -160,7 +160,7 @@ if (isset($_GET['onlydeltan'])) {
     $resolvedBuildErrors = $build->GetResolvedBuildErrors($type);
     if ($resolvedBuildErrors !== false) {
         while ($resolvedBuildError = $resolvedBuildErrors->fetch()) {
-            addErrorResponse(builderror::marshal($resolvedBuildError, $project_array, $revision));
+            addErrorResponse(BuildError::marshal($resolvedBuildError, $project_array, $revision, $builderror));
         }
     }
 
@@ -197,7 +197,7 @@ if (isset($_GET['onlydeltan'])) {
     $buildErrors = $build->GetErrors($filter_error_properties);
 
     foreach ($buildErrors as $error) {
-        addErrorResponse(BuildError::marshal($error, $project_array, $revision));
+        addErrorResponse(BuildError::marshal($error, $project_array, $revision, $builderror));
     }
 
     // Build failure table
