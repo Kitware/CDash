@@ -40,9 +40,11 @@ use CDash\Model\BuildFailure;
 use CDash\Model\Label;
 use CDash\Model\BuildUpdate;
 use CDash\Model\Site;
+use CDash\ServiceContainer;
 
 $build = get_request_build();
-$update = new BuildUpdate();
+$service = ServiceContainer::getInstance();
+$update = $service->get(BuildUpdate::class);
 $update->BuildId = $build->Id;
 $build_update = $update->GetUpdateForBuild();
 
@@ -110,13 +112,16 @@ if ($next_buildid > 0) {
 $response['menu'] = $menu;
 
 // Build
-$site = new Site();
+$site = $service->get(Site::class);
 $site->Id = $siteid;
 $extra_build_fields = [
     'revision' => $build_update['revision'],
     'site' => $site->GetName()
 ];
 $response['build'] = Build::MarshalResponseArray($build, $extra_build_fields);
+
+$builderror = $service->get(BuildError::class);
+$buildfailure = $service->get(BuildFailure::class);
 
 // Set the error
 if ($type == 0) {
@@ -162,7 +167,7 @@ if (isset($_GET['onlydeltan'])) {
     // Build failure table
     $resolvedBuildFailures = $build->GetResolvedBuildFailures($type);
     while ($resolvedBuildFailure = $resolvedBuildFailures->fetch()) {
-        $marshaledResolvedBuildFailure = buildfailure::marshal($resolvedBuildFailure, $project_array, $revision);
+        $marshaledResolvedBuildFailure = BuildFailure::marshal($resolvedBuildFailure, $project_array, $revision, false, $buildfailure);
 
         if ($project_array['displaylabels']) {
             get_labels_JSON_from_query_results(
@@ -199,10 +204,10 @@ if (isset($_GET['onlydeltan'])) {
     $buildFailures = $build->GetFailures(['type' => $type]);
 
     foreach ($buildFailures as $fail) {
-        $failure = BuildFailure::marshal($fail, $project_array, $revision, true);
+        $failure = BuildFailure::marshal($fail, $project_array, $revision, true, $buildfailure);
 
         if ($project_array['displaylabels']) {
-            $label = new Label();
+            $label = $service->get(Label::class);
             $label->BuildFailureId = $fail['id'];
             $rows = $label->GetTextFromBuildFailure(PDO::FETCH_OBJ);
             if ($rows && count($rows)) {
