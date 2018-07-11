@@ -41,6 +41,7 @@ if (!isset($userid) || !is_numeric($userid)) {
 pdo_select_db("$CDASH_DB_NAME", $db);
 
 // Check required parameter.
+global $projectid;
 @$projectid = $_GET['projectid'];
 if (!isset($projectid)) {
     $rest_json = file_get_contents('php://input');
