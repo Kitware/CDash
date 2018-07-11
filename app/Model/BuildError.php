@@ -156,9 +156,9 @@ class BuildError
         $marshaled = array_merge($marshaled, array(
             // when building without launchers, CTest truncates the source dir to /.../
             // use this pattern to linkify compiler output.
-            'precontext' => linkify_compiler_output($marshaled['cvsurl'], "/\.\.\.", $revision, $data['precontext']),
-            'text' => linkify_compiler_output($marshaled['cvsurl'], "/\.\.\.", $revision, $data['text']),
-            'postcontext' => linkify_compiler_output($marshaled['cvsurl'], "/\.\.\.", $revision, $data['postcontext']),
+            'precontext' => linkify_compiler_output($project['cvsurl'], "/\.\.\.", $revision, $data['precontext']),
+            'text' => linkify_compiler_output($project['cvsurl'], "/\.\.\.", $revision, $data['text']),
+            'postcontext' => linkify_compiler_output($project['cvsurl'], "/\.\.\.", $revision, $data['postcontext']),
             'sourcefile' => $data['sourcefile'],
             'sourceline' => $data['sourceline']));
 
