@@ -21,6 +21,7 @@ use CDash\Config;
 use CDash\Model\Build;
 use CDash\Model\BuildUpdateFile;
 use CDash\Model\Project;
+use CDash\ServiceContainer;
 
 function get_previous_revision($revision)
 {
@@ -519,10 +520,12 @@ function get_diff_url($projectid, $projecturl, $directory, $file, $revision = ''
         return;
     }
 
-    $project = pdo_query("SELECT cvsviewertype FROM project WHERE id='$projectid'");
-    $project_array = pdo_fetch_array($project);
+    $service = ServiceContainer::getInstance();
+    $project = $service->get(Project::class);
+    $project->Id = $projectid;
+    $project->Fill();
 
-    $cvsviewertype = strtolower($project_array['cvsviewertype']);
+    $cvsviewertype = strtolower($project->CvsViewerType);
     $difffonction = 'get_' . $cvsviewertype . '_diff_url';
 
     if (function_exists($difffonction)) {

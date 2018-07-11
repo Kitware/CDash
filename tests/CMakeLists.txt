@@ -50,6 +50,7 @@ add_unit_test(/CDash/Middleware/OAuth2)
 add_unit_test(/CDash/Middleware/OAuth2/GitHub)
 add_unit_test(/CDash/Middleware/OAuth2/GitLab)
 add_unit_test(/CDash/Middleware/OAuth2/Google)
+add_unit_test(/CDash/Model/BuildFailure)
 
 add_php_test(install)
 add_php_test(compressedtest)
