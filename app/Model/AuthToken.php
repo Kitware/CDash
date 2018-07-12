@@ -228,7 +228,7 @@ class AuthToken
             $headers = trim($_SERVER['Authorization']);
         } elseif (isset($_SERVER['HTTP_AUTHORIZATION'])) { //Nginx or fast CGI
             $headers = trim($_SERVER['HTTP_AUTHORIZATION']);
-        } else {
+        } elseif (function_exists('getallheaders')) {
             $requestHeaders = getallheaders();
             if (isset($requestHeaders['Authorization'])) {
                 $headers = trim($requestHeaders['Authorization']);
