@@ -181,17 +181,16 @@ function rest_post()
         $BuildGroup->SetProjectId($projectid);
 
         $name = htmlspecialchars(pdo_real_escape_string($_POST['newbuildgroup']));
+        $BuildGroup->SetName($name);
 
-        // Avoid creating a group that uses one of the default names.
-        if ($name == 'Nightly' || $name == 'Experimental' || $name == 'Continuous') {
+        // Avoid creating a duplicate group.
+        if ($BuildGroup->Exists()) {
             $error_msg =
-                "You cannot create a group named 'Nightly','Experimental' or 'Continuous'";
+                "A group named '$name' already exists for this project.";
             json_error_response(['error' => $error_msg], 400);
         }
 
         $type = htmlspecialchars(pdo_real_escape_string($_POST['type']));
-
-        $BuildGroup->SetName($name);
         $BuildGroup->SetType($type);
         $BuildGroup->Save();
 
