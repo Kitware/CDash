@@ -115,9 +115,10 @@ class APITestCase extends KWWebTestCase
             return 1;
         }
 
-        include 'include/version.php';
         $version = $this->get($this->url . '/api/v1/getversion.php');
-        if ($version !== $CDASH_VERSION) {
+        $config = \CDash\Config::getInstance();
+
+        if ($version !== $config->get('CDASH_VERSION')) {
             $this->fail("Expected output not found when querying API for version: $version");
             return 1;
         }
