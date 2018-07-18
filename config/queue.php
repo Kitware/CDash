@@ -24,7 +24,9 @@
 use CDash\Middleware\Queue\DriverFactory as Driver;
 
 return [
-    'ctest_submission_queue' => 'DoSubmit',
+    /** @see \CDash\Middleware\Queue\SubmissionService documentation for discussion on queue names
+     */
+    'ctest_submission_queue' => \CDash\Middleware\Queue\SubmissionService::NAME,
     'drivers' => [
         Driver::APP_ENGINE => [
             'enabled' => false,
