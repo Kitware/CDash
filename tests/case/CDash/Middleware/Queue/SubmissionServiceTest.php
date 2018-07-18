@@ -155,4 +155,30 @@ class SubmissionServiceTest extends \PHPUnit_Framework_TestCase
 
         $sut->register($mock_queue);
     }
+
+    public function testServiceAcceptsAlternateQueueName()
+    {
+        $queue_name = 'DrakeCdash';
+        $this->parameters['queue_name'] = $queue_name;
+        self::$expected_arguments = [
+            'do_submit' => [
+                'fh' => $this->parameters['file'],
+                'project_id' => $this->parameters['project'],
+                'expected_md5' => $this->parameters['md5'],
+                'do_checksum' => true,
+                'submission_id' => 0,
+            ],
+            'fopen' => [
+                'filename' => $this->parameters['file'],
+                'mode' => 'r',
+                'use_include_path' => '',
+                'context' => ''
+            ],
+        ];
+        $sut = new SubmissionService($queue_name);
+        $message = SubmissionService::createMessage($this->parameters);
+
+        $this->assertEquals($queue_name, $message->getName());
+        $sut->drakeCdash($message);
+    }
 }
