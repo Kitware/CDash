@@ -301,7 +301,7 @@ function ctest_parse($filehandler, $projectid, $expected_md5 = '', $do_checksum 
 
     // Try to get the IP of the build
     global $CDASH_REMOTE_ADDR;
-    $ip = ($CDASH_REMOTE_ADDR) ? $CDASH_REMOTE_ADDR : $_SERVER['REMOTE_ADDR'];
+    $ip = $CDASH_REMOTE_ADDR ?: isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
 
     if ($handler == null) {
         echo 'no handler found';

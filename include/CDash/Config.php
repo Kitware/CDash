@@ -10,6 +10,7 @@ class Config extends Singleton
     protected function __construct()
     {
         include 'config/config.php';
+        include 'include/version.php';
         $this->_config = get_defined_vars();
     }
 
@@ -32,7 +33,11 @@ class Config extends Singleton
     {
         $server = $this->get('CDASH_SERVER_NAME');
         if (empty($server)) {
-            $server = $_SERVER['SERVER_NAME'];
+            if (isset($_SERVER['SERVER_NAME'])) {
+                $server = $_SERVER['SERVER_NAME'];
+            } else {
+                $server = 'localhost';
+            }
         }
         return $server;
     }
