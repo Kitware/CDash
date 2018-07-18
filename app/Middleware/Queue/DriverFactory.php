@@ -114,7 +114,7 @@ class DriverFactory
         };
 
         $driver_config = array_filter(
-            $queue_config,
+            $queue_config['drivers'],
             $filter,
             ARRAY_FILTER_USE_BOTH
         );

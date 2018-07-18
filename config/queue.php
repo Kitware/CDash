@@ -24,50 +24,53 @@
 use CDash\Middleware\Queue\DriverFactory as Driver;
 
 return [
-    Driver::APP_ENGINE => [
-        'enabled' => false,
-        'queueMap' => [
-            'queue-name' => '/url_endpoint',
+    'ctest_submission_queue' => 'DoSubmit',
+    'drivers' => [
+        Driver::APP_ENGINE => [
+            'enabled' => false,
+            'queueMap' => [
+                'queue-name' => '/url_endpoint',
+            ],
         ],
-    ],
-    Driver::DOCTRINE => [
-        'enabled' => false,
-        'dbname' => '',
-        'user' => '',
-        'password' => null,
-        'host' => 'localhost',
-        'driver' => 'pdo_mysql',
-    ],
-    Driver::FLAT_FILE => [
-        'enabled' => false,
-        'baseDirectory' => '/path/to/your/queue/dir',
-    ],
-    // While it is absolutely possible to run IronMQ, it will take a bit of
-    // massaging paying particular attention to the fact that Bernard ~0.12
-    // IronMQ driver expects version <= 1.5.3 of IronMQ and not the composer
-    // installable iron-io/iron_mq beginning at version 2.
-    /*
-    Driver::IRON_MQ => [
-        'enabled' => false,
-        'name_properties' => [
-            'token' => '',
-            'project_id' => '',
-        ]
-    ],
-    */
-    Driver::PHP_REDIS => [
-        'enabled' => false,
-        'host' => 'localhost',
-        'prefix' => 'bernard:',
-    ],
-    Driver::PREDIS => [
-        'enabled' => false,
-        'prefix' => 'bernard:',
-    ],
-    Driver::SQS => [
-        'enabled' => false,
-        'profile' => 'CDASH',
-        'region' => 'us-east-1',
-        'version' => 'latest',
+        Driver::DOCTRINE => [
+            'enabled' => false,
+            'dbname' => '',
+            'user' => '',
+            'password' => null,
+            'host' => 'localhost',
+            'driver' => 'pdo_mysql',
+        ],
+        Driver::FLAT_FILE => [
+            'enabled' => false,
+            'baseDirectory' => '/path/to/your/queue/dir',
+        ],
+        // While it is absolutely possible to run IronMQ, it will take a bit of
+        // massaging paying particular attention to the fact that Bernard ~0.12
+        // IronMQ driver expects version <= 1.5.3 of IronMQ and not the composer
+        // installable iron-io/iron_mq beginning at version 2.
+        /*
+        Driver::IRON_MQ => [
+            'enabled' => false,
+            'name_properties' => [
+                'token' => '',
+                'project_id' => '',
+            ]
+        ],
+        */
+        Driver::PHP_REDIS => [
+            'enabled' => false,
+            'host' => 'localhost',
+            'prefix' => 'bernard:',
+        ],
+        Driver::PREDIS => [
+            'enabled' => false,
+            'prefix' => 'bernard:',
+        ],
+        Driver::SQS => [
+            'enabled' => true,
+            'profile' => 'CDASH',
+            'region' => 'us-east-1',
+            'version' => 'latest',
+        ],
     ],
 ];

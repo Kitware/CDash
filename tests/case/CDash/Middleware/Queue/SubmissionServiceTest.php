@@ -156,6 +156,24 @@ class SubmissionServiceTest extends \PHPUnit_Framework_TestCase
         $sut->register($mock_queue);
     }
 
+    public function testRegisterWithAlternateQueueName()
+    {
+        $queue_name = 'DrakeCdash';
+        /** @var Queue|\PHPUnit_Framework_MockObject_MockObject $mock_queue */
+        $mock_queue = $this->getMockBuilder(Queue::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['addService'])
+            ->getMock();
+        $sut = new SubmissionService($queue_name);
+
+        $mock_queue
+            ->expects($this->once())
+            ->method('addService')
+            ->with($queue_name, $sut);
+
+        $sut->register($mock_queue);
+    }
+
     public function testServiceAcceptsAlternateQueueName()
     {
         $queue_name = 'DrakeCdash';

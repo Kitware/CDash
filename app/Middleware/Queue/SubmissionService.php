@@ -123,7 +123,7 @@ class SubmissionService
      */
     public function __construct($queueName = null)
     {
-        $this->queueName = lcfirst($queueName);
+        $this->queueName = $queueName;
     }
 
     /**
@@ -133,7 +133,7 @@ class SubmissionService
      */
     public function __call($name, $arguments)
     {
-        if ($name === $this->queueName) {
+        if ($name === lcfirst($this->queueName)) {
             $this->doSubmit($arguments[0]);
         }
     }
@@ -183,6 +183,7 @@ class SubmissionService
      */
     public function register(Queue $queue)
     {
-        $queue->addService(self::NAME, $this);
+        $name = $this->queueName ?: self::NAME;
+        $queue->addService($name, $this);
     }
 }
