@@ -1,6 +1,6 @@
 FROM php:7.0-apache
 
-MAINTAINER Omar Padron "omar.padron@kitware.com"
+LABEL maintainer="Kitware, Inc. <software.kitware.com>"
 
 RUN apt-get update                                                             \
  && apt-get install -y gnupg                                                   \
