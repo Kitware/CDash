@@ -1,0 +1,44 @@
+version: '3.3'
+services:
+  cdash:
+    image: "kitware/cdash"
+    build: .
+    depends_on:
+      - mysql
+    links:
+      - mysql
+    ports:
+     - "8080:80"
+    environment:
+      CDASH_ROOT_ADMIN_PASS: secret
+
+      CDASH_CONFIG: |
+        $$CDASH_DB_HOST = 'mysql';
+        $$CDASH_DB_NAME = 'cdash';
+        $$CDASH_DB_TYPE = 'mysql';
+        $$CDASH_DB_LOGIN = 'root';
+        $$CDASH_DB_PORT = '';
+        $$CDASH_DB_PASS = '';
+        $$CDASH_DB_CONNECTION_TYPE = 'host';
+
+      CDASH_STATIC_USERS: |
+        USER jdoe@acme.com jdoe_secret
+          John Doe "ACME Inc."
+
+        ADMIN admin@example.org admin_secret
+          Admin User "Example Foundation"
+
+        donotreply@example.org oldsecret newsecret
+
+        strange.name@gmail.com strange_secret
+        INFO Str@nge N@me "Str@nge Rese@rch Gr0up LLC."
+
+        DELETE remove.this.user@example.org delete_secret
+
+  mysql:
+    image: "mysql/mysql-server:5.5"
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_ROOT_PASSWORD: ''
+      MYSQL_DATABASE: 'cdash'
+      MYSQL_ROOT_HOST: '%'
