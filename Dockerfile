@@ -12,7 +12,6 @@ RUN apt-get update                                                             \
  && docker-php-ext-configure gd --with-freetype-dir=/usr/include/              \
                                 --with-jpeg-dir=/usr/include/                  \
  && docker-php-ext-install -j$(nproc) bcmath bz2 gd pdo_mysql pdo_pgsql xsl    \
- && docker-php-ext-enable xdebug                                               \
  && (                                                                          \
       echo '544e09ee 996cdf60 ece3804a bc52599c'                               \
     ; echo '22b1f40f 4323403c 44d44fdf dd586475'                               \
