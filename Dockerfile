@@ -1,6 +1,6 @@
 FROM php:7.0-apache
 
-LABEL maintainer="Kitware, Inc. <software.kitware.com>"
+LABEL maintainer="Kitware, Inc. <cdash@public.kitware.com>"
 
 RUN apt-get update                                                             \
  && apt-get install -y gnupg                                                   \
