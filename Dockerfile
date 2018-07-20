@@ -26,16 +26,32 @@ RUN apt-get update                                                             \
  && php -r "unlink('composer-setup.php');"                                     \
  && composer self-update --no-interaction
 
-RUN mkdir -p /var/www                                             \
- && git clone git://github.com/kitware/cdash /var/www/cdash       \
- && rm -rf /var/www/cdash/.git                                    \
- && cd /var/www/cdash                                             \
- && composer install --no-interaction --no-progress --prefer-dist \
- && npm install                                                   \
- && node_modules/.bin/gulp                                        \
- && chmod 777 backup log public/rss public/upload                 \
- && rm -rf /var/www/html                                          \
- && ln -s /var/www/cdash/public /var/www/html
+RUN mkdir -p /var/www/cdash
+COPY php.ini /var/www/cdash/php.ini
+COPY xml_handlers /var/www/cdash/xml_handlers
+COPY app /var/www/cdash/app
+COPY composer.lock /var/www/cdash/composer.lock
+COPY public /var/www/cdash/public
+COPY scripts /var/www/cdash/scripts
+COPY sql /var/www/cdash/sql
+COPY package.json /var/www/cdash/package.json
+COPY .php_cs /var/www/cdash/.php_cs
+COPY config /var/www/cdash/config
+COPY log /var/www/cdash/log
+COPY gulpfile.js /var/www/cdash/gulpfile.js
+COPY backup /var/www/cdash/backup
+COPY include /var/www/cdash/include
+COPY bootstrap /var/www/cdash/bootstrap
+COPY composer.json /var/www/cdash/composer.json
+
+RUN cd /var/www/cdash                                                      \
+ && composer install --no-interaction --no-progress --prefer-dist --no-dev \
+ && npm install                                                            \
+ && node_modules/.bin/gulp                                                 \
+ && chmod 777 backup log public/rss public/upload                          \
+ && rm -rf /var/www/html                                                   \
+ && ln -s /var/www/cdash/public /var/www/html                              \
+ && rm -rf composer.lock package.json gulpfile.js composer.json
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
