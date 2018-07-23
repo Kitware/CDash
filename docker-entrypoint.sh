@@ -168,32 +168,36 @@ fi'
 
 sleep 10
 
+if [ -z "$CDASH_ROOT_ADMIN_EMAIL" ] ; then
+    CDASH_ROOT_ADMIN_EMAIL="root@docker.container"
+fi
+
 # ENSURE ROOT ADMIN USER
 final_root_pass="$CDASH_ROOT_ADMIN_PASS"
 if [ -n "$CDASH_ROOT_ADMIN_NEW_PASS" ] ; then
     final_root_pass="$CDASH_ROOT_ADMIN_NEW_PASS"
 fi
 
-post - install.php admin_email='rootadmin@docker.container' \
-                   admin_password="$final_root_pass"        \
+post - install.php admin_email="$CDASH_ROOT_ADMIN_EMAIL" \
+                   admin_password="$final_root_pass"     \
                    Submit=Install &> /dev/null
 
 if [ -n "$CDASH_ROOT_ADMIN_NEW_PASS" ] ; then
     root_session="$( mksession )"
-    post "$root_session" user.php login='rootadmin@docker.container' \
-                                  passwd="$final_root_pass"          \
-                                  sent='Login >>'                    \
-        | grep 'Wrong email or password'                             \
+    post "$root_session" user.php login="$CDASH_ROOT_ADMIN_EMAIL" \
+                                  passwd="$final_root_pass"       \
+                                  sent='Login >>'                 \
+        | grep 'Wrong email or password'                          \
         | ( read X ; DEBUG "|$X|" ; [ -z "$X" ] )
 
     if [ "$?" '!=' '0' -a \
          "$CDASH_ROOT_ADMIN_PASS" '!=' "$final_root_pass" ] ; then
 
         # login failure
-        post "$root_session" user.php login='rootadmin@docker.container' \
-                                      passwd="$CDASH_ROOT_ADMIN_PASS"    \
-                                      sent='Login >>'                    \
-            | grep 'Wrong email or password'                             \
+        post "$root_session" user.php login="$CDASH_ROOT_ADMIN_EMAIL" \
+                                      passwd="$CDASH_ROOT_ADMIN_PASS" \
+                                      sent='Login >>'                 \
+            | grep 'Wrong email or password'                          \
             | ( read X ; DEBUG "|$X|" ; [ -z "$X" ] )
 
         if [ "$?" '=' '0' ] ; then
@@ -364,7 +368,7 @@ if [ "$root_login_failed" '!=' '1' ] ; then
 
     for (( i=0; i < ${#users_list[@]} ; ++i )) ; do
         email="${users_list[$i]}"
-        if [ "$email" '=' 'rootadmin@docker.conatiner' ] ; then
+        if [ "$email" '=' 'root' ] ; then
             echo 'Warning: refusing to modify the root admin account!' \
                  "Use the CDASH_ROOT_ADMIN_NEW_PASS environment variable" \
                  "to update the root account password." >&2
@@ -375,11 +379,11 @@ if [ "$root_login_failed" '!=' '1' ] ; then
             root_session="$( mksession )"
 
             # LOGIN AS ROOT ADMIN USER
-            post "$root_session" user.php              \
-                    login='rootadmin@docker.container' \
-                    passwd="$final_root_pass"          \
-                    sent='Login >>'                    \
-                | grep 'Wrong email or password'       \
+            post "$root_session" user.php           \
+                    login="$CDASH_ROOT_ADMIN_EMAIL" \
+                    passwd="$final_root_pass"       \
+                    sent='Login >>'                 \
+                | grep 'Wrong email or password'    \
                 | ( read X ; DEBUG "|$X|" ; [ -z "$X" ] )
 
             if [ "$?" '!=' '0' ] ; then
