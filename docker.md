@@ -49,8 +49,8 @@ Example:
 
 The email and password, respectively, for the "root" administrator user, or the
 initial administrator user that is created during the CDash `install.php`
-procedure.  The `CDASH_ROOT_ADMIN_PASS` variable the only one that is strictly
-required.  The default root admin email is `root@docker.container`.
+procedure.  The `CDASH_ROOT_ADMIN_PASS` variable is the only one that is
+strictly required.  The default root admin email is `root@docker.container`.
 
 The initial "root" administrator user is managed by the container.  The
 container uses this user account to log in and provision the service as well as
