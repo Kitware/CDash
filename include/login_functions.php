@@ -294,6 +294,7 @@ function authenticate($email, $password, $SessionCachePolicy, $rememberme)
  **/
 function cdash_auth($SessionCachePolicy = 'private_no_expire')
 {
+    /** @var Config $config */
     $config = Config::getInstance();
 
     if ($config->get('CDASH_EXTERNAL_AUTH') && isset($_SERVER['REMOTE_USER'])
@@ -312,8 +313,9 @@ function cdash_auth($SessionCachePolicy = 'private_no_expire')
         @$login = $_POST['login'];
         @$passwd = $_POST['passwd'];
         return authenticate($login, $passwd, $SessionCachePolicy, isset($_POST['rememberme']));
-    } else {                                         // arrive from session var
-        $cookiename = str_replace('.', '_', 'CDash-' . $_SERVER['SERVER_NAME']); // php doesn't like dot in cookie names
+    } else { // arrive from session var
+        $server = $config->getServer();
+        $cookiename = str_replace('.', '_', "CDash-{$server}"); // php doesn't like dot in cookie names
         $service = ServiceContainer::getInstance();
         /** @var Session $session */
         $session = $service->get(Session::class);
