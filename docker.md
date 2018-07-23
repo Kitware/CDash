@@ -13,7 +13,7 @@ $EDITOR local-configuration.php
 docker run \
     -e CDASH_CONFIG="$( cat local-configuration.php )" \
     ... \
-    kitware/cdash-docker
+    kitware/cdash
 ```
 
 Note: When setting this variable in a docker-compose file, take care to ensure
