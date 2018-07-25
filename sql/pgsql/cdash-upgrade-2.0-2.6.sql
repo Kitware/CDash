@@ -23,3 +23,12 @@ CREATE TABLE "buildproperties" (
   "properties" text DEFAULT '' NOT NULL,
   PRIMARY KEY ("buildid")
 );
+
+CREATE TABLE "related_builds" (
+  "buildid" integer DEFAULT '0' NOT NULL,
+  "relatedid" integer DEFAULT '0' NOT NULL,
+  "relationship" character varying(255),
+  PRIMARY KEY ("buildid", "relatedid")
+);
+CREATE INDEX "related_buildid" on "related_builds" ("buildid");
+CREATE INDEX "relatedid" on "related_builds" ("relatedid");
