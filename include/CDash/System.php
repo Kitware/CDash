@@ -182,4 +182,12 @@ class System
     {
         exit($exit_message);
     }
+
+    /**
+     * @param $code
+     */
+    public function http_response_code($code)
+    {
+        http_response_code($code);
+    }
 }
