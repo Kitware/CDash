@@ -53,6 +53,7 @@ add_unit_test(/CDash/Middleware/Queue/DriverFactory)
 add_unit_test(/CDash/Middleware/Queue/SubmissionService)
 add_unit_test(/CDash/Model/BuildError)
 add_unit_test(/CDash/Model/BuildFailure)
+add_unit_test(/CDash/Model/BuildRelationship)
 add_unit_test(/CDash/ServiceContainer)
 add_unit_test(/CDash/TestUseCase)
 
