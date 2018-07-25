@@ -136,8 +136,6 @@ function generate_XSLT($xml, $pageName, $only_in_local = false)
 
     $html = xslt_process($xh, 'arg:/_xml', $xslpage, null, $arguments);
 
-    // Enfore the charset to be UTF-8
-    header('Content-type: text/html; charset=utf-8');
     echo $html;
 
     xslt_free($xh);
