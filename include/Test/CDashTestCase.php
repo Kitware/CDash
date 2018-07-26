@@ -93,6 +93,14 @@ class CDashTestCase extends \PHPUnit_Framework_TestCase
             ->method('query')
             ->willReturn($mock_stmt);
 
+        $mock_pdo
+            ->expects($this->any())
+            ->method('quote')
+            ->will($this->returnCallback(function ($arg) {
+                return "'" . $arg . "'";
+            })
+        );
+
         Database::setInstance(Database::class, $mock_pdo);
     }
 
