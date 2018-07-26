@@ -82,8 +82,8 @@ function AcquireProcessingLock($projectid, $force, $mypid)
         $lastupdated_utc_ts = strtotime($lastupdated);
         $now_utc_ts = strtotime($now_utc);
 
-        global $CDASH_SUBMISSION_PROCESSING_TIME_LIMIT;
-        if ($lastupdated_utc_ts < ($now_utc_ts - $CDASH_SUBMISSION_PROCESSING_TIME_LIMIT)) {
+        $time_limit = Config::getInstance()->get('CDASH_SUBMISSION_PROCESSING_TIME_LIMIT');
+        if ($lastupdated_utc_ts < ($now_utc_ts - $time_limit)) {
             //if ($pid is not presently running) // assumed, php-way to measure?
             //  {
             add_log(
@@ -198,9 +198,9 @@ function SetLockLastUpdatedTime($projectid)
 //
 function ResetApparentlyStalledSubmissions($projectid)
 {
-    global $CDASH_SUBMISSION_PROCESSING_TIME_LIMIT;
+    $time_limit = Config::getInstance()->get('CDASH_SUBMISSION_PROCESSING_TIME_LIMIT');
 
-    $stall_time = gmdate(FMT_DATETIMESTD, time() - $CDASH_SUBMISSION_PROCESSING_TIME_LIMIT);
+    $stall_time = gmdate(FMT_DATETIMESTD, time() - $time_limit);
 
     $result = pdo_query('UPDATE submission SET status=0 ' .
         "WHERE status=1 AND projectid='$projectid' AND " .
@@ -356,10 +356,10 @@ function GetNextSubmission($projectid)
 //
 function DeleteOldSubmissionRecords($projectid)
 {
-    global $CDASH_ASYNC_EXPIRATION_TIME;
+    $expires = Config::getInstance()->get('CDASH_ASYNC_EXPIRATION_TIME');
 
     $delete_time =
-        gmdate(FMT_DATETIMESTD, time() - $CDASH_ASYNC_EXPIRATION_TIME);
+        gmdate(FMT_DATETIMESTD, time() - $expires);
 
     $ids = pdo_all_rows_query('SELECT id FROM submission WHERE ' .
         '(status=2 OR status=3 OR status=4 OR status=5) AND ' .

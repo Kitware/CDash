@@ -22,6 +22,8 @@ use CDash\ServiceContainer;
 use CDash\Database;
 use CDash\Model\User;
 
+/** @var PDO $pdo */
+global $pdo;
 $pdo = Database::getInstance()->getPdo();
 
 function setRememberMeCookie($userId)
@@ -44,7 +46,7 @@ function setRememberMeCookie($userId)
 /** Database authentication */
 function databaseAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
 {
-    global $loginerror;
+    global $loginerror, $pdo;
     $loginerror = '';
 
     $config = Config::getInstance();
@@ -87,11 +89,9 @@ function databaseAuthenticate($email, $password, $SessionCachePolicy, $rememberm
             // Re-hash this password using an algorithm that's more secure than md5.
             // Do not attempt this before the database has been upgraded
             // to accommodate the increased length of this field.
-
-            // TODO: clean up globals
-            global $CDASH_DB_TYPE, $pdo;
+            $config = Config::getInstance();
             $db_check = true;
-            if ($CDASH_DB_TYPE != 'pgsql') {
+            if ($config->get('CDASH_DB_TYPE') != 'pgsql') {
                 $table_name = qid('user');
                 $select = $pdo->query("SELECT password FROM $table_name LIMIT 1");
                 $meta = $select->getColumnMeta(0);
@@ -400,14 +400,12 @@ function logout()
 /** Login Form function */
 function LoginForm($loginerror)
 {
-    include dirname(__DIR__) . '/config/config.php';
-    require_once 'include/pdo.php';
     include_once 'include/common.php';
-    include 'include/version.php';
 
+    $config = Config::getInstance();
     $xml = begin_XML_for_XSLT();
     $xml .= '<title>Login</title>';
-    if (isset($CDASH_NO_REGISTRATION) && $CDASH_NO_REGISTRATION == 1) {
+    if ($config->get('CDASH_NO_REGISTRATION') == 1) {
         $xml .= add_XML_value('noregister', '1');
     }
     if (@$_GET['note'] == 'register') {
@@ -418,16 +416,16 @@ function LoginForm($loginerror)
         $xml .= '<message>' . $loginerror . '</message>';
     }
 
-    if ($CDASH_ALLOW_LOGIN_COOKIE) {
+    if ($config->get('CDASH_ALLOW_LOGIN_COOKIE')) {
         $xml .= '<allowlogincookie>1</allowlogincookie>';
     }
 
-    if ($GOOGLE_CLIENT_ID != '' && $GOOGLE_CLIENT_SECRET != '' &&
-        !array_key_exists('Google', $OAUTH2_PROVIDERS)) {
+    if ($config->get('GOOGLE_CLIENT_ID') != '' && $config->get('GOOGLE_CLIENT_SECRET') != '' &&
+        !array_key_exists('Google', $config->get('OAUTH2_PROVIDERS'))) {
         // Backwards compatibility for previous Google-login implementation.
         $OAUTH2_PROVIDERS['Google'] = [
-            'clientId'          => $GOOGLE_CLIENT_ID,
-            'clientSecret'      => $GOOGLE_CLIENT_SECRET,
+            'clientId'          => $config->get('GOOGLE_CLIENT_ID'),
+            'clientSecret'      => $config->get('GOOGLE_CLIENT_SECRET'),
             'redirectUri'       => get_server_URI() . '/auth/Google.php'
         ];
     }
@@ -435,7 +433,7 @@ function LoginForm($loginerror)
     // OAuth 2.0 support.
     $valid_oauth2_providers = ['GitHub', 'GitLab', 'Google'];
     $enabled_oauth2_providers = [];
-    foreach (array_keys($OAUTH2_PROVIDERS) as $provider) {
+    foreach (array_keys($config->get('OAUTH2_PROVIDERS')) as $provider) {
         if (in_array($provider, $valid_oauth2_providers)) {
             $enabled_oauth2_providers[] = $provider;
         }
@@ -461,25 +459,25 @@ function LoginForm($loginerror)
 /** Compute a complexity score for a potential password */
 function getPasswordComplexity($password)
 {
-    global $CDASH_PASSWORD_COMPLEXITY_COUNT;
+    $complexity_count = Config::getInstance()->get('CDASH_PASSWORD_COMPLEXITY_COUNT');
     $complexity = 0;
     $matches = array();
 
     // Uppercase letters
     $num_uppercase = preg_match_all('/[A-Z]/', $password, $matches);
-    if ($num_uppercase >= $CDASH_PASSWORD_COMPLEXITY_COUNT) {
+    if ($num_uppercase >= $complexity_count) {
         $complexity++;
     }
 
     // Lowercase letters
     $num_lowercase = preg_match_all('/[a-z]/', $password, $matches);
-    if ($num_lowercase >= $CDASH_PASSWORD_COMPLEXITY_COUNT) {
+    if ($num_lowercase >= $complexity_count) {
         $complexity++;
     }
 
     // Numbers
     $num_numbers = preg_match_all('/[0-9]/', $password, $matches);
-    if ($num_numbers >= $CDASH_PASSWORD_COMPLEXITY_COUNT) {
+    if ($num_numbers >= $complexity_count) {
         $complexity++;
     }
 
@@ -487,7 +485,7 @@ function getPasswordComplexity($password)
     $num_symbols = preg_match_all("/\W/", $password, $matches);
     // Underscore is not matched by \W but we consider it a symbol.
     $num_symbols += substr_count($password, '_');
-    if ($num_symbols >= $CDASH_PASSWORD_COMPLEXITY_COUNT) {
+    if ($num_symbols >= $complexity_count) {
         $complexity++;
     }
     return $complexity;
@@ -498,8 +496,10 @@ function getPasswordComplexity($password)
  */
 function checkForExpiredPassword()
 {
-    global $CDASH_PASSWORD_EXPIRATION, $pdo;
-    if ($CDASH_PASSWORD_EXPIRATION < 1) {
+    global $pdo;
+    $expires = Config::getInstance()->get('CDASH_PASSWORD_EXPIRATION');
+
+    if ($expires < 1) {
         return false;
     }
 
@@ -527,7 +527,7 @@ function checkForExpiredPassword()
 
     $password_created_time = strtotime($row['date']);
     $password_expiration_time =
-        strtotime("+$CDASH_PASSWORD_EXPIRATION days", $password_created_time);
+        strtotime("+{$expires} days", $password_created_time);
     if (time() > $password_expiration_time) {
         $_SESSION['cdash']['redirect'] = $uri;
         return true;
@@ -540,8 +540,8 @@ function checkForExpiredPassword()
   */
 function clearUnsuccessfulAttempts($userid)
 {
-    global $CDASH_LOCKOUT_ATTEMPTS, $pdo;
-    if ($CDASH_LOCKOUT_ATTEMPTS == 0) {
+    global $pdo;
+    if (Config::getInstance()->get('CDASH_LOCKOUT_ATTEMPTS') == 0) {
         return;
     }
     createLockoutRow($userid, $pdo);
@@ -556,8 +556,9 @@ function clearUnsuccessfulAttempts($userid)
   */
 function incrementUnsuccessfulAttempts($userid)
 {
-    global $CDASH_LOCKOUT_ATTEMPTS, $CDASH_LOCKOUT_LENGTH, $pdo;
-    if ($CDASH_LOCKOUT_ATTEMPTS == 0) {
+    global $pdo;
+    $config = Config::getInstance();
+    if ($config->get('CDASH_LOCKOUT_ATTEMPTS') == 0) {
         return;
     }
     createLockoutRow($userid, $pdo);
@@ -573,9 +574,10 @@ function incrementUnsuccessfulAttempts($userid)
     $row = $stmt->fetch();
     $failedattempts = $row['failedattempts'] + 1;
 
-    if ($failedattempts >= $CDASH_LOCKOUT_ATTEMPTS) {
+    if ($failedattempts >= $config->get('CDASH_LOCKOUT_ATTEMPTS')) {
         // Lock the account if it exceeds our number of failed attempts.
-        $unlocktime = gmdate(FMT_DATETIME, time() + $CDASH_LOCKOUT_LENGTH * 60);
+        $length = $config->get('CDASH_LOCKOUT_LENGTH');
+        $unlocktime = gmdate(FMT_DATETIME, time() + $length * 60);
         $stmt = $pdo->prepare(
                 'UPDATE lockout SET failedattempts = :failedattempts,
                 islocked = 1, unlocktime=:unlocktime
@@ -623,8 +625,8 @@ function createLockoutRow($userid, $pdo)
   */
 function accountIsLocked($userid)
 {
-    global $CDASH_LOCKOUT_ATTEMPTS, $pdo;
-    if ($CDASH_LOCKOUT_ATTEMPTS == 0) {
+    global $pdo;
+    if (Config::getInstance()->get('CDASH_LOCKOUT_ATTEMPTS') == 0) {
         return false;
     }
 

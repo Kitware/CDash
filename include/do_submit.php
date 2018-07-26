@@ -20,18 +20,17 @@ use Bernard\Producer;
 use Bernard\QueueFactory\PersistentFactory;
 use Bernard\Serializer;
 use CDash\Config;
+use CDash\Model\AuthToken;
+use CDash\Model\Build;
+use CDash\Model\BuildFile;
+use CDash\Model\Project;
+use CDash\Model\Site;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 include 'include/ctestparser.php';
 include_once 'include/common.php';
 include_once 'include/createRSS.php';
 include 'include/sendemail.php';
-
-use CDash\Model\AuthToken;
-use CDash\Model\Build;
-use CDash\Model\BuildFile;
-use CDash\Model\Project;
-use CDash\Model\Site;
 
 /**
  * Given a filename, query the CDash API for its contents and return
@@ -40,13 +39,13 @@ use CDash\Model\Site;
  **/
 function fileHandleFromSubmissionId($submissionId, $coverageFile=false)
 {
-    global $CDASH_BACKUP_DIRECTORY, $CDASH_BASE_URL;
+    $config = Config::getInstance();
 
-    $tmpFilename = tempnam($CDASH_BACKUP_DIRECTORY, 'cdash-submission-');
+    $tmpFilename = tempnam($config->get('CDASH_BACKUP_DIRECTORY'), 'cdash-submission-');
     $filename = ($coverageFile) ? $submissionId : $submissionId . '.xml';
     $client = new GuzzleHttp\Client();
     $response = $client->request('GET',
-                                 $CDASH_BASE_URL . '/api/v1/getSubmissionFile.php',
+                                 $config->get('CDASH_BASE_URL') . '/api/v1/getSubmissionFile.php',
                                  array('query' => array('filename' => $filename),
                                        'save_to' => $tmpFilename));
 
@@ -78,14 +77,14 @@ function getSubmissionFileHandle($fileHandleOrSubmissionId)
 
 function curl_request($request)
 {
-    global $CDASH_USE_HTTPS;
+    $use_https = Config::getInstance()->get('CDASH_USE_HTTPS');
     if (function_exists('curl_init')) {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $request);
         curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 1);
-        if ($CDASH_USE_HTTPS) {
+        if ($use_https) {
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         }
@@ -93,7 +92,7 @@ function curl_request($request)
         curl_close($ch);
     } elseif (ini_get('allow_url_fopen')) {
         $options = array('http' => array('timeout' => 1.0));
-        if ($CDASH_USE_HTTPS) {
+        if ($use_https) {
             $options['ssl'] = array('verify_peer' => false);
         }
         $context = stream_context_create($options);
@@ -116,8 +115,7 @@ function curl_request($request)
 function do_submit($fileHandleOrSubmissionId, $projectid, $expected_md5 = '', $do_checksum = true,
                    $submission_id = 0)
 {
-    global $CDASH_DAILY_UPDATES, $CDASH_USE_LOCAL_DIRECTORY;
-
+    $config = Config::getInstance();
     $filehandle = getSubmissionFileHandle($fileHandleOrSubmissionId);
 
     if ($filehandle === false) {
@@ -130,11 +128,11 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $expected_md5 = '', $d
     $baseUrl = get_server_URI(false);
     $request = $baseUrl . '/ajax/dailyupdatescurl.php?projectid=' . $projectid;
 
-    if ($CDASH_DAILY_UPDATES && curl_request($request) === false) {
+    if ($config->get('CDASH_DAILY_UPDATES') && curl_request($request) === false) {
         return false;
     }
 
-    if ($CDASH_USE_LOCAL_DIRECTORY && file_exists('local/submit.php')) {
+    if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/submit.php')) {
         include 'local/submit.php';
     }
 
@@ -170,8 +168,7 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $expected_md5 = '', $d
         sendemail($handler, $projectid);
     }
 
-    global $CDASH_ENABLE_FEED;
-    if ($CDASH_ENABLE_FEED) {
+    if ($config->get('CDASH_ENABLE_FEED')) {
         // Create the RSS feed
         CreateRSSFeed($projectid);
     }
@@ -218,7 +215,7 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5 = '')
     $md5sum = md5_file($filename);
     $md5error = false;
 
-    echo '<cdash version="' . $CDASH_VERSION . "\">\n";
+    echo "<cdash version=\"{$config->get('CDASH_VERSION')}\">\n";
     if ($expected_md5 == '' || $expected_md5 == $md5sum) {
         echo "  <status>OK</status>\n";
         echo "  <message></message>\n";

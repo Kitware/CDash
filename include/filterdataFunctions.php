@@ -47,8 +47,8 @@ class DefaultFilters implements PageSpecificFilters
     {
         // The way we concatenate text into a single value
         // depends on our database backend.
-        global $CDASH_DB_TYPE;
-        if ($CDASH_DB_TYPE === 'pgsql') {
+
+        if (Config::getInstance()->get('CDASH_DB_TYPE') === 'pgsql') {
             $this->TextConcat = "array_to_string(array_agg(text), ', ')";
         } else {
             $this->TextConcat = "GROUP_CONCAT(text SEPARATOR ', ')";

@@ -348,7 +348,6 @@ function pdo_real_escape_string($unescaped_string, $link_identifier = null)
  */
 function pdo_real_escape_numeric($unescaped_string, $link_identifier = null)
 {
-
     $config = Config::getInstance();
     if ($config->get('CDASH_DB_TYPE') == 'pgsql' && $unescaped_string == '') {
         // MySQL interprets an empty string as zero when assigned to a numeric field,
