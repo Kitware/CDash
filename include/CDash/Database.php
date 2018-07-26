@@ -157,17 +157,8 @@ class Database extends Singleton
      */
     public function execute(\PDOStatement $stmt, $input_parameters = null)
     {
-        $critical_pdo_errors = Config::getInstance()->get('CDASH_CRITICAL_PDO_ERRORS');
         if (!$stmt->execute($input_parameters)) {
-            $error_info = $stmt->errorInfo();
-            if (isset($error_info[2]) && $error_info[0] !== '00000') {
-                $e = new \RuntimeException($error_info[2]);
-                Log::getInstance()->error($e);
-                if (in_array($error_info[1], $critical_pdo_errors)) {
-                    http_response_code(500);
-                    exit();
-                }
-            }
+            $this->logPdoError($stmt->errorInfo());
             return false;
         }
 
@@ -201,6 +192,32 @@ class Database extends Singleton
     public function prepare($sql, array $options = [])
     {
         return $this->pdo->prepare($sql, $options);
+    }
+
+    /**
+     * @param $sql
+     * @return bool|\PDOStatement
+     */
+    public function query($sql)
+    {
+        if (($stmt = $this->pdo->query($sql)) === false) {
+            $this->logPdoError($this->pdo->errorInfo());
+        }
+        return $stmt;
+    }
+
+
+    public function logPdoError($error_info)
+    {
+        if (isset($error_info[2]) && $error_info[0] !== '00000') {
+            $critical_pdo_errors = Config::getInstance()->get('CDASH_CRITICAL_PDO_ERRORS');
+            $e = new \RuntimeException($error_info[2]);
+            Log::getInstance()->error($e);
+            if (in_array($error_info[1], $critical_pdo_errors)) {
+                http_response_code(500);
+                exit();
+            }
+        }
     }
 
     /**
@@ -252,7 +269,7 @@ class Database extends Singleton
      * @param string $sql
      * @return false|\PDOStatement
      */
-    public function query($sql)
+    public function queryWithBackoff($sql)
     {
         $this->_exponential_backoff(function () use ($sql) {
             if ($this->getPdo() === false) {
