@@ -15,6 +15,8 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use CDash\Config;
+
 class ClientJobSchedule
 {
     public $Id;
@@ -796,15 +798,14 @@ class ClientJobSchedule
             $ctest_script .= 'SET(CLIENT_EXECUTABLE_' . $program_name . '_' . $program_version . ' "' . $program['path'] . '")' . "\n";
         }
 
-        if ($CDASH_USE_HTTPS === true) {
+        $config = Config::getInstance();
+        if ($config->get('CDASH_USE_HTTPS') === true) {
             $ctest_script .= 'set(CTEST_DROP_METHOD "https")' . "\n";
         } else {
             $ctest_script .= 'set(CTEST_DROP_METHOD "http")' . "\n";
         }
-        $serverName = $CDASH_SERVER_NAME;
-        if (strlen($serverName) == 0) {
-            $serverName = $_SERVER['SERVER_NAME'];
-        }
+
+        $serverName = $config->getServer();
 
         $ctest_script .= 'set(CTEST_DROP_SITE "' . $serverName . '")' . "\n";
         $dropLocation = dirname($_SERVER['PHP_SELF']) . '/submit.php?project=' . urlencode($Project->Name);

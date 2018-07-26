@@ -771,8 +771,8 @@ class Project
     /** Get the last submission of the subproject*/
     public function GetLastSubmission()
     {
-        global $CDASH_SHOW_LAST_SUBMISSION;
-        if (!$CDASH_SHOW_LAST_SUBMISSION) {
+        $config = Config::getInstance();
+        if (!$config->get('CDASH_SHOW_LAST_SUBMISSION')) {
             return false;
         }
 
@@ -1178,9 +1178,9 @@ class Project
         $todaytime -= 3600 * 24 * $days;
         $today = date(FMT_DATETIMESTD, $todaytime);
 
-        include 'config/config.php';
         $straighthjoin = '';
-        if ($CDASH_DB_TYPE != 'pgsql') {
+        $config = Config::getInstance();
+        if ($config->get('CDASH_DB_TYPE') != 'pgsql') {
             $straighthjoin = 'STRAIGHT_JOIN';
         }
 
@@ -1218,9 +1218,7 @@ class Project
             echo 'Project SendEmailToAdmin(): Id not set';
             return false;
         }
-
-        include 'config/config.php';
-
+        $config = Config::getInstance();
         // Check if we should send emails
         $project = pdo_query('SELECT emailadministrator,name FROM project WHERE id =' . qnum($this->Id));
         if (!$project) {
@@ -1253,10 +1251,8 @@ class Project
             $emailtitle = 'CDash [' . $projectname . '] - Administration ';
             $emailbody = 'Object: ' . $subject . "\n";
             $emailbody .= $body . "\n";
-            $serverName = $CDASH_SERVER_NAME;
-            if (strlen($serverName) == 0) {
-                $serverName = $_SERVER['SERVER_NAME'];
-            }
+            $serverName = $config->getServer();
+
             $emailbody .= "\n-CDash on " . $serverName . "\n";
 
             if (cdashmail("$email", $emailtitle, $emailbody)) {
@@ -1636,20 +1632,17 @@ class Project
         if (!$this->Id) {
             return false;
         }
-
-        global $CDASH_BUILDS_PER_PROJECT, $CDASH_EMAILADMIN,
-               $CDASH_UNLIMITED_PROJECTS;
-
-        if ($CDASH_BUILDS_PER_PROJECT == 0 ||
-                in_array($this->GetName(), $CDASH_UNLIMITED_PROJECTS)) {
+        $config = Config::getInstance();
+        if ($config->get('CDASH_BUILDS_PER_PROJECT') == 0 ||
+                in_array($this->GetName(), $config->get('CDASH_UNLIMITED_PROJECTS'))) {
             return false;
         }
 
-        if ($this->GetNumberOfBuilds() < $CDASH_BUILDS_PER_PROJECT) {
+        if ($this->GetNumberOfBuilds() < $config->get('CDASH_BUILDS_PER_PROJECT')) {
             return false;
         }
 
-        $message = "Maximum number of builds reached for $this->Name.  Contact $CDASH_EMAILADMIN for support.";
+        $message = "Maximum number of builds reached for $this->Name.  Contact {$config->get('CDASH_EMAILADMIN')} for support.";
         add_log("Too many builds for $this->Name", 'project_has_too_many_builds',
                 LOG_INFO, $this->Id);
         return true;

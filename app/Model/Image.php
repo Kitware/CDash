@@ -15,6 +15,7 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use CDash\Config;
 use CDash\Database;
 use PDO;
 
@@ -128,8 +129,8 @@ class Image
         $this->Extension = $row['extension'];
         $this->Checksum = $row['checksum'];
 
-        global $CDASH_DB_TYPE;
-        if ($CDASH_DB_TYPE == 'pgsql') {
+        $config = Config::getInstance();
+        if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
             $this->Data = stream_get_contents($row['img']);
         } else {
             $this->Data = $row['img'];
