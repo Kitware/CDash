@@ -94,7 +94,8 @@ function can_administrate_project($projectid)
     }
 
     // Check if this user is a global admin.
-    $user = new User();
+    $service = ServiceContainer::getInstance();
+    $user = $service->get(User::class);
     $user->Id = $userid;
     if ($user->IsAdmin()) {
         return true;
