@@ -27,10 +27,15 @@ class Config extends Singleton
     }
 
     /**
+     * @param bool $use_localhost
      * @return string
      */
-    public function getServer()
+    public function getServer($use_localhost = false)
     {
+        if ($use_localhost) {
+            return 'localhost';
+        }
+
         $server = $this->get('CDASH_SERVER_NAME');
         if (empty($server)) {
             if (isset($_SERVER['SERVER_NAME'])) {
@@ -67,24 +72,31 @@ class Config extends Singleton
         }
     }
 
+    public function getPath()
+    {
+        $path = $this->get('CDASH_CURL_LOCALHOST_PREFIX') ?: $_SERVER['REQUEST_URI'];
+        if (strpos($path, '/') !== 0) {
+            $path = "/{$path}";
+        }
+        return $path;
+    }
+
+
     /**
+     * @param bool $use_localhost
      * @return string
      */
-    public function getBaseUrl()
+    public function getBaseUrl($use_localhost = false)
     {
         $uri = $this->get('CDASH_BASE_URL');
 
         if (!$uri) {
             $protocol = $this->getProtocol();
-            $server = $this->getServer();
-            $port = $this->getServerPort();
-            $uri = "{$protocol}://{$server}";
+            $host = $this->getServer($use_localhost);
+            $port = $this->getServerPort() ? ":{$this->getServerPort()}" : '';
+            $path = $this->getPath();
 
-            if ($port) {
-                $uri = "{$uri}:{$port}";
-            }
-
-            $uri = "{$uri}{$_SERVER['REQUEST_URI']}";
+            $uri = "{$protocol}://{$host}{$port}{$path}";
         }
         return $uri;
     }
