@@ -175,8 +175,7 @@ function ModifyTableField($table, $field, $mySQLType, $pgSqlType, $default, $not
 // Helper function to add an index to a table
 function AddTablePrimaryKey($table, $field)
 {
-    include dirname(__DIR__) . '/config/config.php';
-    global $CDASH_DB_TYPE;
+    $config = \CDash\Config::getInstance();
 
     add_log("Adding primarykey $field to $table", 'AddTablePrimaryKey');
     $query = 'ALTER TABLE "' . $table . '" ADD PRIMARY KEY ("' . $field . '")';
@@ -185,7 +184,7 @@ function AddTablePrimaryKey($table, $field)
 
     // As of MySQL 5.7.4, the IGNORE clause for ALTER TABLE is removed and its use produces an error.
     // Retaining original query for backwards compatibility
-    if ($CDASH_DB_TYPE == 'mysql') {
+    if ($config->get('CDASH_DB_TYPE') == 'mysql') {
         if ($major >= 5 && $minor >= 7) {
             $query = "ALTER TABLE {$table} ADD PRIMARY KEY (`{$field}`)";
         } else {

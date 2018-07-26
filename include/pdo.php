@@ -226,9 +226,9 @@ function pdo_free_result($result)
  */
 function pdo_insert_id($table_name)
 {
-    global $CDASH_DB_TYPE;
+    $config = Config::getInstance();
     $seq = '';
-    if ($CDASH_DB_TYPE === 'pgsql') {
+    if ($config->get('CDASH_DB_TYPE') === 'pgsql') {
         $seq = $table_name . '_id_seq';
     }
     return get_link_identifier(null)->getPdo()->lastInsertId($seq);

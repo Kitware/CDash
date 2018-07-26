@@ -170,7 +170,27 @@ class Database extends Singleton
             }
             return false;
         }
+
         return true;
+    }
+
+    /**
+     * @param \PDOStatement $stmt
+     * @param null $input_parameters
+     * @return string
+     */
+    public function insert(\PDOStatement $stmt, $input_parameters = null)
+    {
+        $this->execute($stmt, $input_parameters);
+        return $this->pdo->lastInsertId();
+    }
+
+    public function insertByTrasaction(\PDOStatement $stmt, $input_parameters = null)
+    {
+        $this->pdo->beginTransaction();
+        $this->execute($stmt, $input_parameters);
+        $this->pdo->commit();
+        return $this->pdo->lastInsertId();
     }
 
     /**

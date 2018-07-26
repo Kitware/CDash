@@ -27,13 +27,14 @@ class Image
 
     public $Data; // Loaded from database or the file referred by Filename.
     public $Name; // Use to track the role for test.
+    /** @var Database $PDO */
     private $PDO;
 
     public function __construct()
     {
         $this->Filename = '';
         $this->Name = '';
-        $this->PDO = Database::getInstance()->getPdo();
+        $this->PDO = Database::getInstance();
     }
 
     private function GetData()
@@ -86,7 +87,7 @@ class Image
                 $stmt->bindParam(':img', $this->Data, PDO::PARAM_LOB);
                 $stmt->bindParam(':extension', $this->Extension);
                 $stmt->bindParam(':checksum', $this->Checksum);
-                $success = pdo_execute($stmt);
+                $success = $this->PDO->execute($stmt);
             } else {
                 $stmt = $this->PDO->prepare('
                         INSERT INTO image (img, extension, checksum)
@@ -94,8 +95,7 @@ class Image
                 $stmt->bindParam(':img', $this->Data, PDO::PARAM_LOB);
                 $stmt->bindParam(':extension', $this->Extension);
                 $stmt->bindParam(':checksum', $this->Checksum);
-                $success = pdo_execute($stmt);
-                $this->Id = pdo_insert_id('image');
+                $success = (bool) $this->Id = $this->PDO->insert($stmt);
             }
             if (!$success) {
                 return false;
@@ -107,7 +107,7 @@ class Image
             $stmt->bindParam(':extension', $this->Extension);
             $stmt->bindParam(':checksum', $this->Checksum);
             $stmt->bindParam(':id', $this->Id);
-            if (!pdo_execute($stmt)) {
+            if (!$this->PDO->execute($stmt)) {
                 return false;
             }
         }

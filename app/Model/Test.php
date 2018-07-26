@@ -16,6 +16,7 @@
 namespace CDash\Model;
 
 use CDash\Collection\TestMeasurementCollection;
+use CDash\Config;
 use CDash\Database;
 use PDO;
 
@@ -135,11 +136,10 @@ class Test
     // Save in the database
     public function Insert()
     {
+        $config = Config::getInstance();
         if ($this->Exists()) {
             return true;
         }
-
-        include 'config/config.php';
 
         $id = '';
         $idvalue = '';
@@ -149,17 +149,17 @@ class Test
         }
 
         if ($this->CompressedOutput) {
-            if ($CDASH_DB_TYPE == 'pgsql') {
+            if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
                 $output = $this->Output;
             } else {
                 $output = base64_decode($this->Output);
             }
-        } elseif ($CDASH_USE_COMPRESSION) {
+        } elseif ($config->get('CDASH_USE_COMPRESSION')) {
             $output = gzcompress($this->Output);
             if ($output === false) {
                 $output = $this->Output;
             } else {
-                if ($CDASH_DB_TYPE == 'pgsql') {
+                if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
                     if (strlen($this->Output) < 2000) {
                         // compression doesn't help for small chunk
 
@@ -173,7 +173,7 @@ class Test
         }
 
         // We check for mysql that the
-        if ($CDASH_DB_TYPE == '' || $CDASH_DB_TYPE == 'mysql') {
+        if ($config->get('CDASH_DB_TYPE') == '' || $config->get('CDASH_DB_TYPE') == 'mysql') {
             $query = pdo_query("SHOW VARIABLES LIKE 'max_allowed_packet'");
             $query_array = pdo_fetch_array($query);
             $max = $query_array[1];
