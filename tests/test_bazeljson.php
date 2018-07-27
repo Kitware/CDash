@@ -653,11 +653,10 @@ class BazelJSONTestCase extends KWWebTestCase
             'type' => $upload_type,
             'datafilesmd5[0]=' => $md5];
         $client = new GuzzleHttp\Client();
-        global $CDASH_BASE_URL;
         try {
             $response = $client->request(
                 'POST',
-                $CDASH_BASE_URL . '/submit.php',
+                $this->config('CDASH_BASE_URL') . '/submit.php',
                 [
                     'form_params' => $fields
                 ]

@@ -61,9 +61,8 @@ class UploadFileTestCase extends KWWebTestCase
         }
         $this->FileId = $query[0]['id'];
         $this->Sha1Sum = $query[0]['sha1sum'];
+        $dirName = "{$this->config('CDASH_UPLOAD_DIRECTORY')}/{$this->Sha1Sum}";
 
-        global $CDASH_UPLOAD_DIRECTORY, $CDASH_DOWNLOAD_RELATIVE_URL;
-        $dirName = $CDASH_UPLOAD_DIRECTORY . '/' . $this->Sha1Sum;
         if (!is_dir($dirName)) {
             $this->fail("Directory $dirName was not created");
             return;
@@ -78,7 +77,8 @@ class UploadFileTestCase extends KWWebTestCase
         }
 
         // Make sure the file is downloadable.
-        $content = $this->connect("$this->url/$CDASH_DOWNLOAD_RELATIVE_URL/$this->Sha1Sum/CMakeCache.txt");
+        $url = "{$this->url}/{$this->config('CDASH_DOWNLOAD_RELATIVE_URL')}/{$this->Sha1Sum}/CMakeCache.txt";
+        $content = $this->connect($url);
         if (!$content) {
             $this->fail('No content returned when trying to download CMakeCache.txt');
             return;
