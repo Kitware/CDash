@@ -24,20 +24,7 @@ if (!isset($projectname)) {
 }
 
 $start = microtime_float();
-
-// Connect to the database.
 $response = array();
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-if (!$db) {
-    $response['error'] = 'Error connecting to CDash database server';
-    echo json_encode($response);
-    return;
-}
-if (!pdo_select_db("$CDASH_DB_NAME", $db)) {
-    $response['error'] = 'Error selecting CDash database';
-    echo json_encode($response);
-    return;
-}
 
 // Connect to memcache
 if ($CDASH_MEMCACHE_ENABLED) {

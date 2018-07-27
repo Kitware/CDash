@@ -35,9 +35,6 @@ if ($date != null) {
     $date = htmlspecialchars(pdo_real_escape_string($date));
 }
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
-
 $xml = begin_XML_for_XSLT();
 $xml .= '<title>' . $projectname . ' : Build Overview</title>';
 $xml .= get_cdash_dashboard_xml_by_name($projectname, $date);

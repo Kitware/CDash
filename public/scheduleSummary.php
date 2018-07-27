@@ -42,8 +42,6 @@ $projectid = $ClientJobSchedule->GetProjectId();
 $xml = begin_XML_for_XSLT();
 $xml .= add_XML_value('manageclient', $CDASH_MANAGE_CLIENTS);
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
 $xml .= add_XML_value('title', 'CDash - Scheduled Build Submissions');
 $xml .= add_XML_value('menutitle', 'CDash');
 $xml .= add_XML_value('menusubtitle', 'Submitted Builds');

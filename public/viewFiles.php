@@ -53,9 +53,6 @@ if ($date != null) {
 
 $xml = begin_XML_for_XSLT();
 $xml .= get_cdash_dashboard_xml(get_project_name($projectid), $date);
-
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
 $xml .= add_XML_value('title', 'CDash - Uploaded files');
 $xml .= add_XML_value('menutitle', 'CDash');
 $xml .= add_XML_value('menusubtitle', 'Uploaded files');

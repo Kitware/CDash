@@ -18,7 +18,6 @@ require_once dirname(dirname(__DIR__)) . '/config/config.php';
 require_once 'include/pdo.php';
 require_once 'include/common.php';
 
-
 $projectid = pdo_real_escape_numeric($_GET['projectid']);
 if (!isset($projectid) || !is_numeric($projectid)) {
     echo 'Not a valid projectid!';

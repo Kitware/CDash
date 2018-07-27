@@ -48,9 +48,6 @@ if (!isset($userid)) {
     $userid = 0;
 }
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
-
 $build_array = pdo_fetch_array(pdo_query("SELECT starttime,projectid FROM build WHERE id='$buildid'"));
 $projectid = $build_array['projectid'];
 if (!isset($projectid) || $projectid == 0) {

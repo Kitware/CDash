@@ -29,9 +29,6 @@ if ($argc != 2) {
 $directory = $argv[1];
 @set_time_limit(0);
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
-
 echo "checking new build files $directory \n";
 
 // Write the current time in the file

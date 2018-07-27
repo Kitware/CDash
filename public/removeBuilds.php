@@ -22,15 +22,6 @@ require_once 'include/common.php';
 
 @set_time_limit(0);
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-if (!$db) {
-    echo pdo_error();
-}
-if (pdo_select_db("$CDASH_DB_NAME", $db) === false) {
-    echo pdo_error();
-    return;
-}
-
 checkUserPolicy(@$_SESSION['cdash']['loginid'], 0); // only admin
 
 @$projectid = $_GET['projectid'];

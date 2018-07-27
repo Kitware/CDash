@@ -21,10 +21,6 @@ require_once 'include/api_common.php';
 use CDash\Model\Project;
 use CDash\Model\User;
 
-// Connect to the database.
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
-
 // Check that required params were specified.
 $rest_json = json_decode(file_get_contents('php://input'), true);
 if (!is_null($rest_json)) {

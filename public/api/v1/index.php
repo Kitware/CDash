@@ -37,11 +37,7 @@ use CDash\Model\SubProject;
 @set_time_limit(0);
 
 // Check if we can connect to the database.
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-if (!$db ||
-    pdo_select_db("$CDASH_DB_NAME", $db) === false ||
-    pdo_query('SELECT id FROM ' . qid('user') . ' LIMIT 1', $db) === false
-) {
+if (pdo_query('SELECT id FROM ' . qid('user') . ' LIMIT 1', $db) === false) {
     if ($CDASH_PRODUCTION_MODE) {
         $response = array();
         $response['error'] = 'CDash cannot connect to the database.';
@@ -81,18 +77,6 @@ if (!function_exists('echo_main_dashboard_JSON')) {
 
         $PDO = get_link_identifier()->getPdo();
         $response = array();
-
-        $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-        if (!$db) {
-            $response['error'] = 'Error connecting to CDash database server';
-            echo json_encode($response);
-            return;
-        }
-        if (!pdo_select_db("$CDASH_DB_NAME", $db)) {
-            $response['error'] = 'Error selecting CDash database';
-            echo json_encode($response);
-            return;
-        }
 
         $projectid = $project_instance->Id;
 

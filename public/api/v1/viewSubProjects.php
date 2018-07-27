@@ -51,18 +51,6 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
     $start = microtime_float();
     $response = array();
 
-    $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-    if (!$db) {
-        $response['error'] = 'Error connecting to CDash database server';
-        echo json_encode($response);
-        return;
-    }
-    if (!pdo_select_db("$CDASH_DB_NAME", $db)) {
-        $response['error'] = 'Error selecting CDash database';
-        echo json_encode($response);
-        return;
-    }
-
     $Project = $project_instance;
     $projectid = $project_instance->Id;
 

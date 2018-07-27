@@ -23,9 +23,6 @@ if ($session_OK) {
     include_once 'include/common.php';
     include_once 'include/ctestparser.php';
 
-    $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-    pdo_select_db("$CDASH_DB_NAME", $db);
-
     checkUserPolicy(@$_SESSION['cdash']['loginid'], 0); // only admin
 
     $xml = begin_XML_for_XSLT();

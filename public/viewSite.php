@@ -36,9 +36,6 @@ if (!isset($siteid) || !is_numeric($siteid)) {
     return;
 }
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
-
 $site_array = pdo_fetch_array(pdo_query("SELECT * FROM site WHERE id='$siteid'"));
 $sitename = $site_array['name'];
 

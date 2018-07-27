@@ -33,8 +33,8 @@ include 'include/version.php';
 
 use CDash\Model\Project;
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-if (!$db || !pdo_select_db("$CDASH_DB_NAME", $db)) {
+$pdo = get_link_identifier()->getPdo();
+if (!$pdo) {
     echo '<cdash version="' . $CDASH_VERSION . "\">\n";
     echo " <status>ERROR</status>\n";
     echo " <message>Cannot connect to the database.</message>\n";
@@ -58,7 +58,6 @@ if (isset($_GET['buildid'])) {
     return;
 }
 
-$pdo = get_link_identifier()->getPdo();
 $stmt = $pdo->prepare(
     'SELECT id, authenticatesubmissions FROM project WHERE name = ?');
 

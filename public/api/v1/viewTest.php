@@ -68,8 +68,6 @@ if (isset($_GET['tests'])) {
 $response = [];
 
 $start = microtime_float();
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
 
 $project = pdo_query("SELECT name,showtesttime,testtimemaxstatus,nightlytime,displaylabels FROM project WHERE id='{$build->ProjectId}'");
 if (pdo_num_rows($project) > 0) {

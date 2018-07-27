@@ -36,10 +36,6 @@ if (!isset($userid) || !is_numeric($userid)) {
     return;
 }
 
-// Connect to database.
-@$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
-
 // Check required parameter.
 global $projectid;
 @$projectid = $_GET['projectid'];
