@@ -38,8 +38,6 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface
     public function __construct($projectID, $scheduleID)
     {
         parent::__construct($projectID, $scheduleID);
-        $this->Build = new Build();
-        $this->Site = new Site();
         $this->Append = false;
         $this->Feed = new Feed();
     }
@@ -48,7 +46,11 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface
     public function startElement($parser, $name, $attributes)
     {
         parent::startElement($parser, $name, $attributes);
+        $factory = $this->getModelFactory();
         if ($name == 'UPDATE') {
+            $this->Build = $factory->create(Build::class);
+            $this->Update = $factory->create(BuildUpdate::class);
+
             if (isset($attributes['GENERATOR'])) {
                 $this->Build->Generator = $attributes['GENERATOR'];
             }
@@ -61,13 +63,14 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface
                 $this->Append = false;
             }
 
-            $this->Update = new BuildUpdate();
             $this->Update->Append = $this->Append;
         } elseif ($name == 'UPDATED' || $name == 'CONFLICTING' || $name == 'MODIFIED') {
-            $this->UpdateFile = new BuildUpdateFile();
+            $this->UpdateFile = $factory->create(BuildUpdateFile::class);
             $this->UpdateFile->Status = $name;
         } elseif ($name == 'UPDATERETURNSTATUS') {
             $this->Update->Status = '';
+        } elseif ($name == 'SITE') {
+            $this->Site = $factory->create(Site::class);
         }
     }
 
@@ -119,8 +122,7 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface
             // Insert the update
             $this->Update->Insert();
 
-            global $CDASH_ENABLE_FEED;
-            if ($CDASH_ENABLE_FEED) {
+            if ($this->config->get('CDASH_ENABLE_FEED')) {
                 // We need to work the magic here to have a good description
                 $this->Feed->InsertUpdate($this->projectid, $this->Build->Id);
             }
