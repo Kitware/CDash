@@ -230,13 +230,36 @@ class AuthToken
             $headers = trim($_SERVER['Authorization']);
         } elseif (isset($_SERVER['HTTP_AUTHORIZATION'])) { //Nginx or fast CGI
             $headers = trim($_SERVER['HTTP_AUTHORIZATION']);
-        } elseif (function_exists('getallheaders')) {
-            $requestHeaders = getallheaders();
+        } else {
+            $requestHeaders = self::getAllHeaders();
             if (isset($requestHeaders['Authorization'])) {
                 $headers = trim($requestHeaders['Authorization']);
             }
         }
         return $headers;
+    }
+
+    /**
+     * If getallheaders does not exist this method will provide a simulacrum
+     * @return array|false
+     */
+    private static function getAllHeaders()
+    {
+        if (function_exists('getallheaders')) {
+            return getallheaders();
+        } else {
+            $headers = [];
+            foreach ($_SERVER as $key => $value) {
+                $words = explode('_', $key);
+                if (array_shift($words) === 'HTTP') {
+                    array_walk($words, function (&$word) {
+                        $word = ucfirst(strtolower($word));
+                    });
+                    $headers[implode('-', $words)] = $value;
+                }
+            }
+            return $headers;
+        }
     }
 
     /**
