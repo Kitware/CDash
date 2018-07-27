@@ -1,8 +1,12 @@
 <?php
+
+use CDash\Model\BuildGroup;
+use CDash\Model\BuildUpdate;
+use CDash\Model\ClientJobSchedule;
+
 /** Add a new build */
 function add_build($build, $clientscheduleid = 0)
 {
-    require_once 'models/buildgroup.php';
     if (!is_numeric($build->ProjectId) || !is_numeric($build->SiteId)) {
         return;
     }
@@ -30,14 +34,12 @@ function add_build($build, $clientscheduleid = 0)
 
     // If the build is part of a subproject we link the update file
     if (isset($build->SubProjectName) && $build->SubProjectName != '') {
-        require_once 'models/buildupdate.php';
         $BuildUpdate = new BuildUpdate();
         $BuildUpdate->BuildId = $build->Id;
         $BuildUpdate->AssociateBuild($build->SiteId, $build->Name, $build->GetStamp());
     }
 
     if ($clientscheduleid != 0) {
-        require_once 'models/clientjobschedule.php';
         $ClientJobSchedule = new ClientJobSchedule();
         $ClientJobSchedule->Id = $clientscheduleid;
         $ClientJobSchedule->AssociateBuild($build->Id);
@@ -50,7 +52,9 @@ function extract_type_from_buildstamp($buildstamp)
 {
     // We assume that the time stamp is always of the form
     // 20080912-1810-this-is-a-type
-    return substr($buildstamp, strpos($buildstamp, '-', strpos($buildstamp, '-') + 1) + 1);
+    if (!empty($buildstamp)) {
+        return substr($buildstamp, strpos($buildstamp, '-', strpos($buildstamp, '-') + 1) + 1);
+    }
 }
 
 /** Extract the date from the build stamp */

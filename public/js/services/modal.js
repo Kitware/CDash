@@ -1,10 +1,10 @@
 CDash.factory('modalSvc', function modalSvc ($uibModal) {
-  const showModal = function(modelId, okFn, template, success, error) {
+  const showModal = function(modelId, okFn, template, parent_scope, size, success, error) {
+    parent_scope = typeof parent_scope !== 'undefined' ? parent_scope : null;
+    size = typeof size !== 'undefined' ? size : 'sm';
     $modal = $uibModal.open({
       animation: true,
-      size: 'sm',
       backdrop: true,
-      templateUrl: template,
       controller: function () {
         var $ctrl = this;
         $ctrl.ok = function() {
@@ -16,6 +16,9 @@ CDash.factory('modalSvc', function modalSvc ($uibModal) {
         }
       },
       controllerAs: '$ctrl',
+      size: size,
+      scope: parent_scope,
+      templateUrl: template,
     });
 
     // some clarification...

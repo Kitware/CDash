@@ -18,7 +18,8 @@ include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 include 'include/version.php';
-require_once 'models/build.php';
+
+use CDash\Model\Build;
 
 $start = microtime_float();
 $build = get_request_build();

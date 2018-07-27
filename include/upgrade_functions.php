@@ -1,4 +1,8 @@
 <?php
+
+use CDash\Model\Build;
+use CDash\Model\DynamicAnalysisSummary;
+
 // Helper function to alter a table
 function AddTableField($table, $field, $mySQLType, $pgSqlType, $default)
 {
@@ -430,8 +434,6 @@ function ComputeTestTiming($days = 4)
 /** Compute the statistics for the updated file. Number of produced errors, warning, test failings. */
 function ComputeUpdateStatistics($days = 4)
 {
-    include_once 'models/build.php';
-
     // Loop through the projects
     $project = pdo_query('SELECT id FROM project');
 
@@ -824,7 +826,6 @@ function AddUniqueConstraintToSiteTable($site_table)
  **/
 function PopulateDynamicAnalysisSummaryTable()
 {
-    require_once 'models/dynamicanalysissummary.php';
     $pdo = get_link_identifier()->getPdo();
 
     // Find all the builds that need to have a row created in the

@@ -15,9 +15,13 @@
 =========================================================================*/
 
 require_once 'xml_handlers/abstract_handler.php';
-require_once 'models/build.php';
-require_once 'models/site.php';
-require_once 'models/buildnote.php';
+
+use CDash\Model\Build;
+use CDash\Model\BuildConfigure;
+use CDash\Model\BuildInformation;
+use CDash\Model\BuildNote;
+use CDash\Model\Site;
+use CDash\Model\SiteInformation;
 
 class NoteHandler extends AbstractHandler
 {

@@ -187,8 +187,8 @@ function getFiltersForPage($page_id)
 
         case 'queryTests.php':
             return array(
-                'buildname', 'buildstarttime', 'details', 'label', 'site',
-                'status', 'testname', 'time');
+                'buildname', 'buildstarttime', 'details', 'groupname', 'label',
+                'site', 'status', 'testname', 'time');
             break;
 
         case 'viewCoverage.php':

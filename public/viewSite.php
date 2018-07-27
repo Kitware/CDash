@@ -22,8 +22,8 @@ include 'public/login.php';
 
 require_once 'include/common.php';
 require_once 'include/version.php';
-require_once 'models/project.php';
-require_once 'models/user.php';
+
+use CDash\Model\User;
 
 @$siteid = $_GET['siteid'];
 if ($siteid != null) {

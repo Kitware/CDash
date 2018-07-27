@@ -6,14 +6,18 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 require_once 'include/pdo.php';
-require_once 'models/buildgroup.php';
-require_once 'models/buildgrouprule.php';
+
+use CDash\Database;
+use CDash\Model\Build;
+use CDash\Model\BuildGroup;
+use CDash\Model\BuildGroupRule;
 
 class BuildGroupRuleTestCase extends KWWebTestCase
 {
     public function __construct()
     {
         parent::__construct();
+        $this->PDO = Database::getInstance()->getPdo();
     }
 
     public function testBuildGroupRule()
@@ -98,5 +102,94 @@ class BuildGroupRuleTestCase extends KWWebTestCase
         // This also deletes the rules.
         $group1->Delete();
         $group2->Delete();
+    }
+
+    public function testOnlyExpireRulesFromSameProject()
+    {
+        // Clean up any previous runs of this test case.
+        $stmt = $this->PDO->prepare(
+            "SELECT id FROM build WHERE name = 'no-project-leakage'");
+        pdo_execute($stmt);
+        while ($row = $stmt->fetch()) {
+            remove_build($row['id']);
+        }
+        $this->PDO->exec(
+            "DELETE FROM build2grouprule WHERE buildname = 'no-project-leakage'");
+
+        // Create two similar builds that belong to different projects.
+        $build1 = new Build();
+        $build1->Name = 'no-project-leakage';
+        $build1->SiteId = 1;
+        $build1->StartTime = gmdate(FMT_DATETIME, time() - 100);
+        $build1->Type = 'Experimental';
+        $build2 = clone $build1;
+
+        $build1->ProjectId = 1;
+        $build1->Id = add_build($build1);
+
+        $build2->ProjectId = 2;
+        $build2->Id = add_build($build2);
+
+        // Login as admin.
+        $client = $this->getGuzzleClient();
+
+        // Mark both builds as expected.  This will define buildgroup rules
+        // for each.
+        foreach ([$build1, $build2] as $build) {
+            // Mark this build as expected.
+            $payload = [
+                'buildid'  => $build->Id,
+                'groupid'  => $build->GroupId,
+                'expected' => 1
+            ];
+            try {
+                $response = $client->request('POST',
+                        $this->url .  '/api/v1/build.php',
+                        ['json' => $payload]);
+            } catch (GuzzleHttp\Exception\ClientException $e) {
+                $this->fail($e->getMessage());
+            }
+        }
+
+        // Change the group of one of the builds.
+        $group = new BuildGroup();
+        $group->SetProjectId($build1->ProjectId);
+        $group->SetName('Continuous');
+        $payload = [
+            'buildid'    => $build1->Id,
+            'expected'   => 1,
+            'newgroupid' => $group->GetId()
+        ];
+        try {
+            $response = $client->request('POST',
+                    $this->url .  '/api/v1/build.php',
+                    ['json' => $payload]);
+        } catch (GuzzleHttp\Exception\ClientException $e) {
+            $this->fail($e->getMessage());
+        }
+
+        // Check the database.
+        // We expect to find one finished rule and two active ones.
+        $num_active = 0;
+        $num_finished = 0;
+        $stmt = $this->PDO->prepare(
+                "SELECT * FROM build2grouprule
+                WHERE buildname = 'no-project-leakage' AND
+                      siteid = 1 AND
+                      buildtype = 'Experimental'");
+        pdo_execute($stmt);
+        while ($row = $stmt->fetch()) {
+            if ($row['endtime'] == '1980-01-01 00:00:00') {
+                $num_active++;
+            } else {
+                $num_finished++;
+            }
+        }
+        if ($num_active !== 2) {
+            $this->fail("Expected two active rules, found $num_active");
+        }
+        if ($num_finished !== 1) {
+            $this->fail("Expected one finished rule, found $num_finished");
+        }
     }
 }

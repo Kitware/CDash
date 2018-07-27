@@ -1,4 +1,3 @@
-<html>
 <?php
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
@@ -18,7 +17,8 @@
 require_once dirname(dirname(__DIR__)) . '/config/config.php';
 require_once 'include/pdo.php';
 require_once 'include/common.php';
-require_once 'models/user.php';
+
+use CDash\Model\User;
 
 $buildid = pdo_real_escape_numeric($_GET['buildid']);
 if (!isset($buildid) || !is_numeric($buildid)) {
@@ -51,6 +51,3 @@ while ($note_array = pdo_fetch_array($note)) {
     echo 'by <b>' . $user->FirstName . ' ' . $user->LastName . '</b>' . ' (' . date('H:i:s T', $timestamp) . ')';
     echo '<pre>' . substr($note_array['note'], 0, 100) . '</pre>'; // limit 100 chars
 }
-?>
-
-</html>

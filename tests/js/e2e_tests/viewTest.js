@@ -41,7 +41,7 @@ describe("viewTest", function() {
           browser.get(newPath);
 
           h3 = element(by.id('test-totals-indicator'));
-          expect(h3.getText()).toEqual('2 passed, 3 failed, 0 timed out, 0 not run, 3 missing.');
+          expect(h3.getText()).toEqual('2 passed, 3 failed, 0 not run, 3 missing.');
           done();
         });
     });

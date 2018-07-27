@@ -21,11 +21,16 @@ use Bernard\QueueFactory\PersistentFactory;
 use Bernard\Serializer;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-require dirname(__DIR__) . '/vendor/autoload.php';
 include 'include/ctestparser.php';
 include_once 'include/common.php';
 include_once 'include/createRSS.php';
 include 'include/sendemail.php';
+
+use CDash\Model\AuthToken;
+use CDash\Model\Build;
+use CDash\Model\BuildFile;
+use CDash\Model\Project;
+use CDash\Model\Site;
 
 /**
  * Given a filename, query the CDash API for its contents and return
@@ -316,7 +321,7 @@ function post_submit()
     }
 
     // Do not process this submission if the project has too many builds.
-    require_once 'models/project.php';
+
     $project = new Project();
     $project->Name = $projectname;
     $project->Id = $projectid;
@@ -388,8 +393,6 @@ function post_submit()
 /** Function to deal with the external tool mechanism */
 function put_submit_file()
 {
-    include 'models/buildfile.php';
-
     // We expect GET to contain the following values:
     $vars = array('buildid', 'type');
     foreach ($vars as $var) {
@@ -559,7 +562,7 @@ function curl_request_async($url, $params, $type = 'POST')
 function trigger_process_submissions($projectid)
 {
     global $CDASH_USE_HTTPS, $CDASH_ASYNC_WORKERS;
-    $currentURI = get_server_URI(true);
+    $currentURI = get_server_URI(false);
 
     if ($CDASH_ASYNC_WORKERS > 1) {
         // Parallel processing.
@@ -581,68 +584,22 @@ function trigger_process_submissions($projectid)
 }
 
 /**
- * Get Authorization header.
- * Adapted from http://stackoverflow.com/a/40582472
- **/
-function getAuthorizationHeader()
-{
-    $headers = null;
-    if (isset($_SERVER['Authorization'])) {
-        $headers = trim($_SERVER['Authorization']);
-    } elseif (isset($_SERVER['HTTP_AUTHORIZATION'])) { //Nginx or fast CGI
-        $headers = trim($_SERVER['HTTP_AUTHORIZATION']);
-    } else {
-        $requestHeaders = getallheaders();
-        if (isset($requestHeaders['Authorization'])) {
-            $headers = trim($requestHeaders['Authorization']);
-        }
-    }
-    return $headers;
-}
-
-/**
- * Get access token from header.
- **/
-function getBearerToken()
-{
-    $headers = getAuthorizationHeader();
-    if (!empty($headers)) {
-        $matches = [];
-        if (preg_match('/Bearer\s(\S+)/', $headers, $matches)) {
-            return $matches[1];
-        }
-    }
-    return null;
-}
-
-/**
  * Return true if the header contains a valid authentication token
  * for this project.  Otherwise return false and set the appropriate
  * response code.
  **/
 function valid_token_for_submission($projectid)
 {
-    $token = getBearerToken();
-    if (!$token) {
-        http_response_code(401);
-        return false;
-    }
-    require_once 'models/authtoken.php';
     $authtoken = new AuthToken();
-    $authtoken->Hash = $authtoken->HashToken($token);
-    if (!$authtoken->Exists()) {
-        http_response_code(403);
-        return false;
-    }
-    if ($authtoken->Expired()) {
-        $authtoken->Delete();
-        http_response_code(403);
+    $userid = $authtoken->getUserIdFromRequest();
+    if (is_null($userid)) {
+        http_response_code(401);
         return false;
     }
 
     // Make sure that the user associated with this token is allowed to access
     // the project in question.
-    if (!checkUserPolicy($authtoken->UserId, $projectid, 1)) {
+    if (!checkUserPolicy($userid, $projectid, 1)) {
         http_response_code(403);
         return false;
     }

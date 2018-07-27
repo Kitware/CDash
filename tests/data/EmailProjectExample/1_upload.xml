@@ -20,6 +20,9 @@
   LogicalProcessorsPerPhysical="4"
   ProcessorClockFrequency="2400"
 >
+<Labels>
+  <Label>UploadBuild</Label>
+</Labels>
 <Upload>
 <File filename="C:/zach dev/CMake/Tests/CTestTestUpload/sleep.c">
 <Content encoding="base64">

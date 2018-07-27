@@ -4,7 +4,8 @@
 // relative to the top of the CDash source tree
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
-require_once 'models/project.php';
+
+use CDash\Model\Project;
 
 class ManageClientTestCase extends KWWebTestCase
 {

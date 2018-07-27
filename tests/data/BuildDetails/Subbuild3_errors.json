@@ -19,8 +19,8 @@
             "\/opt\/cmake\/share\/cmake-3.4\/Modules\/ExternalData.cmake"
         ],
         "cvsurl": "",
-        "stderror": "CMake Error at \/opt\/cmake\/share\/cmake-3.4\/Modules\/ExternalData.cmake:1012 (message):\n  Object SHA1=e5d8cd51418a10b800a24f31a663e4c2fd245565 not found at:\n\n    ExternalDataCustomScript:\/\/gcp\/SHA1\/e5d8cd51418a10b800a24f31a663e4c2fd245565 (You are attempting to access protected data with no configured\n\n  credentials.  Please visit https:\/\/cloud.google.com\/console#\/project\n\n  and sign up for an account, and then run the \"gcloud auth login\"\n\n  command to configure gsutil to use these credentials.\n\n  )\nCall Stack (most recent call first):\n  \/opt\/cmake\/share\/cmake-3.4\/Modules\/ExternalData.cmake:1034 (_ExternalData_download_object)\n  \n\n",
-        "stdoutput": "-- Fetching \"ExternalDataCustomScript:\/\/gcp\/SHA1\/e5d8cd51418a10b800a24f31a663e4c2fd245565\"",
+        "stderror": "CMake Error at \/opt\/cmake\/share\/cmake-3.4\/Modules\/ExternalData.cmake:1012 (message):\n  Object SHA1=e5d8cd51418a10b800a24f31a663e4c2fd245565 not found at:\n\n    ExternalDataCustomScript:\/\/gcp\/SHA1\/e5d8cd51418a10b800a24f31a663e4c2fd245565 (You are attempting to access protected data with no configured\n\n  credentials.  Please visit https:\/\/cloud.google.com\/console#\/project\n\n  and sign up for an account, and then run the &quot;gcloud auth login&quot;\n\n  command to configure gsutil to use these credentials.\n\n  )\nCall Stack (most recent call first):\n  \/opt\/cmake\/share\/cmake-3.4\/Modules\/ExternalData.cmake:1034 (_ExternalData_download_object)\n  \n\n",
+        "stdoutput": "-- Fetching &quot;ExternalDataCustomScript:\/\/gcp\/SHA1\/e5d8cd51418a10b800a24f31a663e4c2fd245565&quot;",
         "exitcondition": 1
     },
     {
@@ -43,8 +43,8 @@
             "\/opt\/cmake\/share\/cmake-3.4\/Modules\/ExternalData.cmake"
         ],
         "cvsurl": "",
-        "stderror": "CMake Error at \/opt\/cmake\/share\/cmake-3.4\/Modules\/ExternalData.cmake:1012 (message):\n  Object SHA1=5722f2755c89fa22a6354cb0d33293b780d7f88c not found at:\n\n    ExternalDataCustomScript:\/\/gcp\/SHA1\/5722f2755c89fa22a6354cb0d33293b780d7f88c (You are attempting to access protected data with no configured\n\n  credentials.  Please visit https:\/\/cloud.google.com\/console#\/project\n\n  and sign up for an account, and then run the \"gcloud auth login\"\n\n  command to configure gsutil to use these credentials.\n\n  )\nCall Stack (most recent call first):\n  \/opt\/cmake\/share\/cmake-3.4\/Modules\/ExternalData.cmake:1034 (_ExternalData_download_object)\n  \n\n",
-        "stdoutput": "-- Fetching \"ExternalDataCustomScript:\/\/gcp\/SHA1\/5722f2755c89fa22a6354cb0d33293b780d7f88c\"",
+        "stderror": "CMake Error at \/opt\/cmake\/share\/cmake-3.4\/Modules\/ExternalData.cmake:1012 (message):\n  Object SHA1=5722f2755c89fa22a6354cb0d33293b780d7f88c not found at:\n\n    ExternalDataCustomScript:\/\/gcp\/SHA1\/5722f2755c89fa22a6354cb0d33293b780d7f88c (You are attempting to access protected data with no configured\n\n  credentials.  Please visit https:\/\/cloud.google.com\/console#\/project\n\n  and sign up for an account, and then run the &quot;gcloud auth login&quot;\n\n  command to configure gsutil to use these credentials.\n\n  )\nCall Stack (most recent call first):\n  \/opt\/cmake\/share\/cmake-3.4\/Modules\/ExternalData.cmake:1034 (_ExternalData_download_object)\n  \n\n",
+        "stdoutput": "-- Fetching &quot;ExternalDataCustomScript:\/\/gcp\/SHA1\/5722f2755c89fa22a6354cb0d33293b780d7f88c&quot;",
         "exitcondition": 1
     },
     {
@@ -67,8 +67,8 @@
             "\/opt\/cmake\/share\/cmake-3.4\/Modules\/ExternalData.cmake"
         ],
         "cvsurl": "",
-        "stderror": "CMake Error at \/opt\/cmake\/share\/cmake-3.4\/Modules\/ExternalData.cmake:1012 (message):\n  Object SHA1=4897bfecd36ba786d132c65fcb9c4e8f58e3df8f not found at:\n\n    ExternalDataCustomScript:\/\/gcp\/SHA1\/4897bfecd36ba786d132c65fcb9c4e8f58e3df8f (You are attempting to access protected data with no configured\n\n  credentials.  Please visit https:\/\/cloud.google.com\/console#\/project\n\n  and sign up for an account, and then run the \"gcloud auth login\"\n\n  command to configure gsutil to use these credentials.\n\n  )\nCall Stack (most recent call first):\n  \/opt\/cmake\/share\/cmake-3.4\/Modules\/ExternalData.cmake:1034 (_ExternalData_download_object)\n  \n\n",
-        "stdoutput": "-- Fetching \"ExternalDataCustomScript:\/\/gcp\/SHA1\/4897bfecd36ba786d132c65fcb9c4e8f58e3df8f\"",
+        "stderror": "CMake Error at \/opt\/cmake\/share\/cmake-3.4\/Modules\/ExternalData.cmake:1012 (message):\n  Object SHA1=4897bfecd36ba786d132c65fcb9c4e8f58e3df8f not found at:\n\n    ExternalDataCustomScript:\/\/gcp\/SHA1\/4897bfecd36ba786d132c65fcb9c4e8f58e3df8f (You are attempting to access protected data with no configured\n\n  credentials.  Please visit https:\/\/cloud.google.com\/console#\/project\n\n  and sign up for an account, and then run the &quot;gcloud auth login&quot;\n\n  command to configure gsutil to use these credentials.\n\n  )\nCall Stack (most recent call first):\n  \/opt\/cmake\/share\/cmake-3.4\/Modules\/ExternalData.cmake:1034 (_ExternalData_download_object)\n  \n\n",
+        "stdoutput": "-- Fetching &quot;ExternalDataCustomScript:\/\/gcp\/SHA1\/4897bfecd36ba786d132c65fcb9c4e8f58e3df8f&quot;",
         "exitcondition": 1
     }
 ]

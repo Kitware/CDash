@@ -17,3 +17,9 @@ CREATE TABLE "authtoken" (
 CREATE INDEX "authtokenhash" on "authtoken" ("hash");
 CREATE INDEX "authtokenuserid" on "authtoken" ("userid");
 CREATE INDEX "authtokenexpires" on "authtoken" ("expires");
+
+CREATE TABLE "buildproperties" (
+  "buildid" integer DEFAULT '0' NOT NULL,
+  "properties" text DEFAULT '' NOT NULL,
+  PRIMARY KEY ("buildid")
+);

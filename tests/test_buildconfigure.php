@@ -7,10 +7,11 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 require_once 'include/common.php';
 require_once 'include/pdo.php';
-require_once 'models/buildconfigure.php';
-require_once 'models/buildconfigureerror.php';
-require_once 'models/buildconfigureerrordiff.php';
-require_once 'models/label.php';
+
+use CDash\Model\BuildConfigure;
+use CDash\Model\BuildConfigureError;
+use CDash\Model\BuildConfigureErrorDiff;
+use CDash\Model\Label;
 
 class BuildConfigureTestCase extends KWWebTestCase
 {

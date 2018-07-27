@@ -20,7 +20,10 @@ include 'public/login.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 require_once 'include/version.php';
-require_once 'models/project.php';
+
+use CDash\Model\Project;
+use CDash\Model\User;
+use CDash\Model\UserProject;
 
 $userid = null;
 
@@ -116,13 +119,17 @@ function rest_post()
 /* Handle GET requests */
 function rest_get()
 {
-    $response = array();
+    global $userid;
+    $User = new User();
+    $User->Id = $userid;
+
+    $response = [];
     $Project = get_project($response);
     if (!$Project) {
         echo json_encode($response);
         return;
     }
-    $response['project'] = $Project->ConvertToJSON();
+    $response['project'] = $Project->ConvertToJSON($User);
     echo json_encode($response);
     http_response_code(200);
 }
@@ -210,21 +217,6 @@ function valid_user(&$response, $Project=null)
     return true;
 }
 
-/** Strip the HTTP */
-function stripHTTP($url)
-{
-    $pos = strpos($url, 'http://');
-    if ($pos !== false) {
-        return substr($url, 7);
-    } else {
-        $pos = strpos($url, 'https://');
-        if ($pos !== false) {
-            return substr($url, 8);
-        }
-    }
-    return $url;
-}
-
 function create_project(&$response)
 {
     $Name = $_REQUEST['project']['Name'];
@@ -246,6 +238,9 @@ function create_project(&$response)
 
     // Add the current user to this project.
     global $userid;
+    $User = new User();
+    $User->Id = $userid;
+
     if ($userid != 1) {
         // Global admin is already added, so no need to do it again.
         $UserProject = new UserProject();
@@ -257,30 +252,35 @@ function create_project(&$response)
     }
 
     $response['projectcreated'] = 1;
-    $response['project'] = $Project->ConvertToJSON();
+    $response['project'] = $Project->ConvertToJSON($User);
     http_response_code(200);
 }
 
 function update_project(&$response, $Project)
 {
+    global $userid;
+    $User = new User();
+    $User->Id = $userid;
+
     $Project->Fill();
     populate_project($Project);
     $response['projectupdated'] = 1;
-    $response['project'] = $Project->ConvertToJSON();
+    $response['project'] = $Project->ConvertToJSON($User);
     http_response_code(200);
 }
 
 function populate_project($Project)
 {
     $project_settings = $_REQUEST['project'];
-    foreach ($project_settings as $k => $v) {
-        $Project->{$k} = $v;
+
+    if (isset($project_settings['CvsUrl'])) {
+        $cvsurl = filter_var($project_settings['CvsUrl'], FILTER_SANITIZE_URL);
+        $cvsurl = htmlspecialchars($cvsurl, ENT_QUOTES, 'UTF-8', false);
+        $project_settings['CvsUrl'] = str_replace('&amp;', '&', $cvsurl);
     }
 
-    // Strip "http[s]://" from the beginning of URLs.
-    $url_vars = array('HomeUrl', 'CvsUrl', 'DocumentationUrl', 'TestingDataUrl');
-    foreach ($url_vars as $var) {
-        $Project->{$var} = stripHTTP($Project->{$var});
+    foreach ($project_settings as $k => $v) {
+        $Project->{$k} = $v;
     }
 
     // Convert UploadQuota from GB to bytes.

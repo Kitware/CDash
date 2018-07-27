@@ -18,7 +18,10 @@ include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 require_once 'include/common.php';
-require_once 'models/project.php';
+
+use CDash\Model\Banner;
+use CDash\Model\Project;
+use CDash\Model\SubProject;
 
 @set_time_limit(0);
 
@@ -41,8 +44,6 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
 {
     require_once dirname(dirname(dirname(__DIR__))) . '/config/config.php';
     require_once 'include/pdo.php';
-    require_once 'models/banner.php';
-    require_once 'models/subproject.php';
 
     global $CDASH_DB_HOST, $CDASH_DB_LOGIN, $CDASH_DB_NAME, $CDASH_DB_PASS,
            $CDASH_SHOW_LAST_SUBMISSION;

@@ -17,17 +17,22 @@
 require_once 'include/ctestparserutils.php';
 require_once 'xml_handlers/sax_handler.php';
 require_once 'xml_handlers/stack.php';
-require_once 'models/build.php';
-require_once 'models/site.php';
+
+use CDash\Model\Build;
+use CDash\Model\Site;
 
 abstract class AbstractHandler implements SaxHandler
 {
     protected $stack;
     protected $projectid;
     protected $scheduleid;
+    /** @var  Build $Build */
     protected $Build;
+    /** @var  Site $Site */
     protected $Site;
     protected $SubProjectName;
+
+    protected $ModelFactory;
 
     public function __construct($projectid, $scheduleid)
     {
@@ -98,5 +103,13 @@ abstract class AbstractHandler implements SaxHandler
     public function getBuildName()
     {
         return $this->Build->Name;
+    }
+
+    protected function getModelFactory()
+    {
+        if (!$this->ModelFactory) {
+            $this->ModelFactory = \CDash\ServiceContainer::getInstance();
+        }
+        return $this->ModelFactory;
     }
 }

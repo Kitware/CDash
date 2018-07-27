@@ -14,6 +14,16 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use CDash\Config;
+use CDash\Controller\Auth\Session;
+use CDash\Database;
+use CDash\ServiceContainer;
+use CDash\Model\Build;
+use CDash\Model\Project;
+use CDash\Model\User;
+use CDash\Model\UserProject;
+use CDash\Model\Site;
+
 require_once 'config/config.php';
 require_once 'include/log.php';
 
@@ -402,11 +412,8 @@ function checkUserPolicy($userid, $projectid, $onlyreturn = 0)
         return;
     }
 
-    require_once 'models/project.php';
-    require_once 'models/userproject.php';
-    require_once 'models/user.php';
-
-    $user = new User();
+    $service = ServiceContainer::getInstance();
+    $user = $service->get(User::class);
     $user->Id = $userid;
 
     // If the projectid=0 only admin can access the page
@@ -423,7 +430,7 @@ function checkUserPolicy($userid, $projectid, $onlyreturn = 0)
             return true;
         }
 
-        $project = new Project();
+        $project = $service->get(Project::class);
         $project->Id = $projectid;
         $project->Fill();
 
@@ -497,7 +504,6 @@ function get_projects($onlyactive = true)
 
     include 'config/config.php';
     require_once 'include/pdo.php';
-    require_once 'models/project.php';
 
     $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
     pdo_select_db("$CDASH_DB_NAME", $db);
@@ -577,11 +583,11 @@ function get_build_id($buildname, $stamp, $projectid, $sitename)
 /** Get the project id from the project name */
 function get_project_id($projectname)
 {
-    $projectname = pdo_real_escape_string($projectname);
-    $project = pdo_query("SELECT id FROM project WHERE name='$projectname'");
-    if (pdo_num_rows($project) > 0) {
-        $project_array = pdo_fetch_array($project);
-        return $project_array['id'];
+    $service = ServiceContainer::getInstance();
+    $project = $service->get(Project::class);
+    $project->Name = $projectname;
+    if ($project->GetIdByName()) {
+        return $project->Id;
     }
     return -1;
 }
@@ -962,6 +968,7 @@ function remove_build($buildid)
 
     pdo_query('DELETE FROM buildinformation WHERE buildid IN ' . $buildids);
     pdo_query('DELETE FROM builderrordiff WHERE buildid IN ' . $buildids);
+    pdo_query('DELETE FROM buildproperties WHERE buildid IN ' . $buildids);
 
     pdo_query('DELETE FROM configureerrordiff WHERE buildid IN ' . $buildids);
     pdo_query('DELETE FROM coveragesummarydiff WHERE buildid IN ' . $buildids);
@@ -1335,7 +1342,7 @@ function time2second($time)
  */
 function get_dates($date, $nightlytime)
 {
-    $nightlytime = strtotime($nightlytime);
+    $nightlytime = strtotime($nightlytime, strtotime($date));
 
     $nightlyhour = date('H', $nightlytime);
     $nightlyminute = date('i', $nightlytime);
@@ -1646,14 +1653,14 @@ function get_cdash_dashboard_xml($projectname, $date)
         $xml .= add_XML_value('id', $userid);
 
         // Is the user super administrator
-        require_once 'models/user.php';
+
         $user = new User();
         $user->Id = $userid;
         $user->Fill();
         $xml .= add_XML_value('admin', $user->Admin);
 
         // Is the user administrator of the project
-        require_once 'models/userproject.php';
+
         $userproject = new UserProject();
         $userproject->UserId = $userid;
         $userproject->ProjectId = $projectid;
@@ -1918,19 +1925,18 @@ function redirect_to_https()
 
 function begin_JSON_response()
 {
-    global $CDASH_VERSION, $CDASH_USE_LOCAL_DIRECTORY, $CDASH_ROOT_DIR,
-           $CDASH_ENABLE_FEED;
+    $config = Config::getInstance();
+    $service = ServiceContainer::getInstance();
+    $session = $service->get(Session::class);
 
     $response = array();
-    $response['version'] = $CDASH_VERSION;
-    $response['feed_enabled'] = $CDASH_ENABLE_FEED === 1;
+    $response['version'] = $config->get('CDASH_VERSION');
+    $response['feed_enabled'] = $config->get('CDASH_ENABLE_FEED') === 1;
 
     $user_response = array();
-    $userid = 0;
-    if (isset($_SESSION['cdash']) and isset($_SESSION['cdash']['loginid'])) {
-        $userid = $_SESSION['cdash']['loginid'];
-        require_once 'models/user.php';
-        $user = new User();
+    $userid = $session->getSessionVar('cdash.loginid');
+    if ($userid) {
+        $user = $service->create(User::class);
         $user->Id = $userid;
         $user->Fill();
         $user_response['admin'] = $user->Admin;
@@ -1941,52 +1947,40 @@ function begin_JSON_response()
     // Check for local overrides of common view partials.
     $files_to_check = array('header', 'footer');
     foreach ($files_to_check as $file_to_check) {
-        $local_file = "local/views/$file_to_check.html";
-        if ($CDASH_USE_LOCAL_DIRECTORY == '1' &&
-            file_exists("$CDASH_ROOT_DIR/public/$local_file")
+        $local_file = "local/views/{$file_to_check}.html";
+        $use_local = $config->get('CDASH_USE_LOCAL_DIRECTORY');
+        $root_dir = $config->get('CDASH_ROOT_DIR');
+
+        if ($use_local == '1' &&
+            file_exists("{$root_dir}/public/{$local_file}")
         ) {
             $response[$file_to_check] = $local_file;
         } else {
-            $response[$file_to_check] = "views/partials/$file_to_check.html";
+            $response[$file_to_check] = "views/partials/{$file_to_check}.html";
         }
     }
     return $response;
 }
 
+// TODO: pass in project object, not just name, prevents yet another unecessary query to db.
 function get_dashboard_JSON($projectname, $date, &$response)
 {
-    include 'config/config.php';
-    require_once 'include/pdo.php';
+    $config = Config::getInstance();
+    $service = ServiceContainer::getInstance();
+    $session = $service->get(Session::class);
 
-    $projectid = get_project_id($projectname);
-    if ($projectid == -1) {
-        return;
-    }
+    /** @var Project $project */
+    $project = $service->create(Project::class);
+    $project->FindByName($projectname);
 
-    $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-    if (!$db) {
-        echo "Error connecting to CDash database server<br>\n";
-        exit(0);
-    }
-
-    if (!pdo_select_db("$CDASH_DB_NAME", $db)) {
-        echo "Error selecting CDash database<br>\n";
-        exit(0);
-    }
-
-    $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
-    if (pdo_num_rows($project) > 0) {
-        $project_array = pdo_fetch_array($project);
-    } else {
-        $project_array = array();
-        $project_array['cvsurl'] = 'unknown';
-        $project_array['bugtrackerurl'] = 'unknown';
-        $project_array['documentationurl'] = 'unknown';
-        $project_array['homeurl'] = 'unknown';
-        $project_array['googletracker'] = 'unknown';
-        $project_array['name'] = $projectname;
-        $project_array['nightlytime'] = '00:00:00';
-    }
+    $project_array = [];
+    $project_array['cvsurl'] = $project->Id ? $project->CvsUrl : 'unknown';
+    $project_array['bugtrackerurl'] = $project->Id ? $project->BugTrackerUrl : 'unknown';
+    $project_array['documentationurl'] = $project->Id ? $project->DocumentationUrl : 'unknown';
+    $project_array['homeurl'] = $project->Id ? $project->HomeUrl : 'unknown';
+    $project_array['googletracker'] = $project->Id ? $project->GoogleTracker : 'unknown';
+    $project_array['name'] = $projectname;
+    $project_array['nightlytime'] =  $project->Id ? $project->NightlyTime : '00:00:00';
 
     if (is_null($date)) {
         $date = date(FMT_DATE);
@@ -2001,13 +1995,13 @@ function get_dashboard_JSON($projectname, $date, &$response)
     $response['bugtracker'] = make_cdash_url(htmlentities($project_array['bugtrackerurl']));
     $response['googletracker'] = htmlentities($project_array['googletracker']);
     $response['documentation'] = make_cdash_url(htmlentities($project_array['documentationurl']));
-    $response['projectid'] = $projectid;
+    $response['projectid'] = $project->Id;
     $response['projectname'] = $project_array['name'];
     $response['projectname_encoded'] = urlencode($project_array['name']);
-    $response['public'] = $project_array['public'];
+    $response['public'] = $project->Public;
     $response['previousdate'] = $previousdate;
     $response['nextdate'] = $nextdate;
-    $response['logoid'] = getLogoID($projectid);
+    $response['logoid'] = getLogoID($project->Id);
 
     if (empty($project_array['homeurl'])) {
         $response['home'] = 'index.php?project=' . urlencode($project_array['name']);
@@ -2015,23 +2009,23 @@ function get_dashboard_JSON($projectname, $date, &$response)
         $response['home'] = make_cdash_url(htmlentities($project_array['homeurl']));
     }
 
-    if ($CDASH_USE_LOCAL_DIRECTORY && file_exists('local/models/proProject.php')) {
+    if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/models/proProject.php')) {
         include_once 'local/models/proProject.php';
         $pro = new proProject;
-        $pro->ProjectId = $projectid;
+        $pro->ProjectId = $project->Id;
         $response['proedition'] = $pro->GetEdition(1);
     }
 
-    $userid = 0;
-    if (isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid'])) {
-        $userid = $_SESSION['cdash']['loginid'];
-        // Is the user an administrator of this project?
-        $row = pdo_single_row_query(
-            'SELECT role FROM user2project
-            WHERE userid=' . qnum($userid) . ' AND
-            projectid=' . qnum($projectid));
-        $response['projectrole'] = $row[0];
-        if ($response['projectrole'] > 1) {
+    $userid = $session->getSessionVar('cdash.loginid');
+    if ($userid) {
+        /** @var UserProject $user_project */
+        $user_project = $service->create(UserProject::class);
+        $user_project->UserId = $userid;
+        $user_project->ProjectId = $project->Id;
+        $user_project->FillFromUserId();
+
+        $response['projectrole'] = $user_project->Role;
+        if ($response['projectrole'] > Project::SITE_MAINTAINER) {
             $response['user']['admin'] = 1;
         }
     }
@@ -2125,7 +2119,7 @@ function cast_data_for_JSON($value)
     }
     // Do not support E notation for numbers (ie 6.02e23).
     // This can cause checksums (such as git commits) to be converted to 0.
-    if (is_numeric($value) && strpos($value, 'e') === false) {
+    if (is_numeric($value) && stripos($value, 'e') === false) {
         if (is_nan($value) || is_infinite($value)) {
             // Special handling for values that are not supported by JSON.
             return 0;
@@ -2149,7 +2143,6 @@ function cast_data_for_JSON($value)
  */
 function get_server_siteid()
 {
-    require_once 'models/site.php';
     $server = new Site();
     $server->Name = 'CDash Server';
     if (!$server->Exists()) {
@@ -2169,8 +2162,6 @@ function get_server_siteid()
  */
 function get_aggregate_build($build)
 {
-    require_once 'models/build.php';
-
     $siteid = get_server_siteid();
     $build->ComputeTestingDayBounds();
 
@@ -2258,5 +2249,55 @@ function extract_tar($filename, $dirName)
         return true;
     } else {
         return extract_tar_archive_tar($filename, $dirName);
+    }
+}
+
+/** Strip the HTTP */
+function stripHTTP($url)
+{
+    $pos = strpos($url, 'http://');
+    if ($pos !== false) {
+        return substr($url, 7);
+    } else {
+        $pos = strpos($url, 'https://');
+        if ($pos !== false) {
+            return substr($url, 8);
+        }
+    }
+    return $url;
+}
+
+/**
+ * Encode structures for safe HTML output
+ *
+ * @param $structure
+ * @return void
+ */
+function deepEncodeHTMLEntities(&$structure)
+{
+    $encode = function ($string) {
+        return htmlspecialchars($string, ENT_QUOTES, 'UTF-8', false);
+    };
+
+    if (is_object($structure)) {
+        $properties = get_object_vars($structure);
+        foreach ($properties as $key => &$prop) {
+            if (is_object($prop) || is_array($prop)) {
+                deepEncodeHTMLEntities($prop);
+                $structure->{$key} = $prop;
+                continue;
+            }
+            $structure->{$key} = $encode($prop);
+        }
+    } elseif (is_array($structure)) {
+        foreach ($structure as $key => &$value) {
+            if (is_object($value) || is_array($value)) {
+                deepEncodeHTMLEntities($value);
+                continue;
+            }
+            $value = $encode($value);
+        }
+    } elseif (is_string($structure)) {
+        $structure = $encode($structure);
     }
 }

@@ -15,7 +15,6 @@
 =========================================================================*/
 namespace CDash;
 
-use CDash\Log;
 use PDO;
 use PDOException;
 
@@ -149,6 +148,39 @@ class Database extends Singleton
             }
         }
         return $this->pdo;
+    }
+
+    /**
+     * @param \PDOStatement $stmt
+     * @param null $input_parameters
+     * @return bool
+     */
+    public function execute(\PDOStatement $stmt, $input_parameters = null)
+    {
+        $critical_pdo_errors = Config::getInstance()->get('CDASH_CRITICAL_PDO_ERRORS');
+        if (!$stmt->execute($input_parameters)) {
+            $error_info = $stmt->errorInfo();
+            if (isset($error_info[2]) && $error_info[0] !== '00000') {
+                $e = new \RuntimeException($error_info[2]);
+                Log::getInstance()->error($e);
+                if (in_array($error_info[1], $critical_pdo_errors)) {
+                    http_response_code(500);
+                    exit();
+                }
+            }
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @param $sql
+     * @param array $options
+     * @return bool|\PDOStatement
+     */
+    public function prepare($sql, array $options = [])
+    {
+        return $this->pdo->prepare($sql, $options);
     }
 
     /**

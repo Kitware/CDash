@@ -15,11 +15,13 @@
 =========================================================================*/
 
 require_once 'xml_handlers/abstract_handler.php';
-require_once 'models/build.php';
-require_once 'models/label.php';
-require_once 'models/site.php';
-require_once 'models/test.php';
-require_once 'models/image.php';
+
+use CDash\Model\Build;
+use CDash\Model\BuildInformation;
+use CDash\Model\BuildTest;
+use CDash\Model\Site;
+use CDash\Model\SiteInformation;
+use CDash\Model\Test;
 
 class TestingNUnitHandler extends AbstractHandler
 {

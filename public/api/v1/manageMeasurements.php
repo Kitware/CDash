@@ -21,9 +21,9 @@ include 'public/login.php';
 
 require_once 'include/common.php';
 require_once 'include/api_common.php';
-require_once 'models/measurement.php';
-require_once 'models/project.php';
-require_once 'models/user.php';
+
+use CDash\Model\Measurement;
+use CDash\Model\Project;
 
 // Require administrative access to view this page.
 init_api_request();

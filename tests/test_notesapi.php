@@ -6,7 +6,8 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
-require_once 'models/project.php';
+
+use CDash\Model\Project;
 
 class NotesAPICase extends KWWebTestCase
 {
@@ -114,7 +115,7 @@ class NotesAPICase extends KWWebTestCase
 
         $response = $this->get($endpoint);
         $actual = json_decode($response);
-        $expected = 'Valid build ID required';
+        $expected = 'Valid buildid required';
         $this->assertTrue(isset($actual->error));
         $this->assertEqual($actual->error, $expected);
     }

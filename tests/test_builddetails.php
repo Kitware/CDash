@@ -52,7 +52,7 @@ class BuildDetailsTestCase extends KWWebTestCase
         $response = $this->get($this->url . '/api/v1/viewBuildError.php?buildid=im-non-numeric');
         $response = json_decode($response);
 
-        $this->assertTrue(strpos($response->error, 'Valid build ID required') === 0);
+        $this->assertTrue(strpos($response->error, 'Valid buildid required') === 0);
     }
 
     public function testViewBuildErrorReturnsArrayOfErrorsOnChildBuilds()
@@ -106,8 +106,8 @@ class BuildDetailsTestCase extends KWWebTestCase
         }
 
         $buildId = pdo_single_row_query("SELECT id FROM build WHERE name = 'BuildDetails-Linux-g++-4.1-LesionSizingSandbox_Debug'");
-
-        $actualResponse = json_decode($this->get($this->url . '/api/v1/viewTest.php?buildid=' . $buildId['id']));
+        $json = $this->get("{$this->url}/api/v1/viewTest.php?buildid={$buildId['id']}");
+        $actualResponse = json_decode($json);
         $expectedResponse = json_decode(
             file_get_contents($this->testDataDir . '/' . 'InsightExperimentalExample_Expected.json'));
 

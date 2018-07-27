@@ -7,10 +7,8 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 require_once 'include/common.php';
 require_once 'include/pdo.php';
-require_once 'models/project.php';
-require_once 'models/subproject.php';
-require_once 'models/user.php';
-require_once 'models/labelemail.php';
+
+use CDash\Model\Project;
 
 class OutputColorTestCase extends KWWebTestCase
 {
@@ -75,5 +73,12 @@ class OutputColorTestCase extends KWWebTestCase
         }
 
         $this->assertTrue(true, 'All escape sequences found');
+
+        // Submit build data for later check in viewBuildErrors.
+        $file = dirname(__FILE__) . '/data/OutputColor/Build.xml';
+        if (!$this->submission('OutputColor', $file)) {
+            $this->fail("Failed to submit $file");
+            return;
+        }
     }
 }

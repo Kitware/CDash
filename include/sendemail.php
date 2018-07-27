@@ -16,6 +16,18 @@
 
 require_once 'include/cdashmail.php';
 
+use CDash\Model\Build;
+use CDash\Model\BuildGroup;
+use CDash\Model\BuildTest;
+use CDash\Model\BuildConfigure;
+use CDash\Model\BuildUpdate;
+use CDash\Model\DynamicAnalysis;
+use CDash\Model\LabelEmail;
+use CDash\Model\Project;
+use CDash\Model\Site;
+use CDash\Model\User;
+use CDash\Model\UserProject;
+
 /** Check the email preferences for errors */
 function checkEmailPreferences($emailcategory, $errors, $fixes = false)
 {
@@ -55,8 +67,6 @@ function checkEmailPreferences($emailcategory, $errors, $fixes = false)
 /** Given a user check if we should send an email based on labels */
 function checkEmailLabel($projectid, $userid, $buildid, $emailcategory = 62)
 {
-    include_once 'models/labelemail.php';
-    include_once 'models/build.php';
     $LabelEmail = new LabelEmail();
     $LabelEmail->UserId = $userid;
     $LabelEmail->ProjectId = $projectid;
@@ -99,10 +109,7 @@ function checkEmailLabel($projectid, $userid, $buildid, $emailcategory = 62)
 function check_email_errors($buildid, $checktesttimeingchanged, $testtimemaxstatus, $checkpreviouserrors)
 {
     // Includes
-    require_once 'models/buildconfigure.php';
-    require_once 'models/build.php';
-    require_once 'models/buildtest.php';
-    require_once 'models/dynamicanalysis.php';
+
 
     $errors = array();
     $errors['errors'] = true;
@@ -178,10 +185,6 @@ function check_email_errors($buildid, $checktesttimeingchanged, $testtimemaxstat
 /** Check for update errors for a given build. */
 function check_email_update_errors($buildid)
 {
-    // Includes
-    require_once 'models/buildupdate.php';
-    require_once 'models/build.php';
-
     $errors = array();
     $errors['errors'] = true;
     $errors['hasfixes'] = false;
@@ -201,9 +204,6 @@ function check_email_update_errors($buildid)
 /** Return the list of user id and committer emails who should get emails */
 function lookup_emails_to_send($errors, $buildid, $projectid, $buildtype, $fixes = false, $collectUnregisteredCommitters = false)
 {
-    require_once 'models/user.php';
-    require_once 'models/userproject.php';
-
     $userids = array();
     $committeremails = array();
 
@@ -332,9 +332,7 @@ function lookup_emails_to_send($errors, $buildid, $projectid, $buildtype, $fixes
 function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $testtimemaxstatus, $emailtesttimingchanged)
 {
     include 'config/config.php';
-    include_once 'models/build.php';
-    include_once 'models/buildconfigure.php';
-    include_once 'models/buildupdate.php';
+
 
     global $CDASH_BASE_URL, $CDASH_ASYNCHRONOUS_SUBMISSION;
 
@@ -482,7 +480,7 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
 
         // Local function to add a set of tests to our email message body.
         // This reduces copied & pasted code below.
-        $AddTestsToEmail = function ($tests, $section_title) use ($maxitems, $buildid, $maxchars, $maxitems, $serverURI) {
+        $AddTestsToEmail = function ($tests, $section_title) use ($buildid, $maxchars, $maxitems, $serverURI) {
             $num_tests = count($tests);
             if ($num_tests < 1) {
                 return '';
@@ -553,11 +551,6 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
 function sendsummaryemail($projectid, $groupid, $errors, $buildid)
 {
     include 'config/config.php';
-    require_once 'models/userproject.php';
-    require_once 'models/user.php';
-    require_once 'models/project.php';
-    require_once 'models/build.php';
-    require_once 'models/site.php';
 
     $Project = new Project();
     $Project->Id = $projectid;
@@ -875,8 +868,6 @@ function send_email_fix_to_user($userid, $emailtext, $Build, $Project)
 {
     include 'config/config.php';
     include_once 'include/common.php';
-    require_once 'models/site.php';
-    require_once 'models/user.php';
 
     $serverURI = get_server_URI();
     // In the case of asynchronous submission, the serverURI contains /cdash
@@ -1009,7 +1000,6 @@ function generate_broken_build_message($emailtext, $Build, $Project)
 {
     include 'config/config.php';
     include_once 'include/common.php';
-    require_once 'models/site.php';
 
     $serverURI = get_server_URI();
     // In the case of asynchronous submission, the serverURI contains /cdash
@@ -1205,8 +1195,6 @@ function send_email_to_address($emailaddress, $emailtext, $Build, $Project)
 
 function send_email_to_user($userid, $emailtext, $Build, $Project)
 {
-    require_once 'models/user.php';
-
     $User = new User();
     $User->Id = $userid;
     $email = $User->GetEmail();
@@ -1353,9 +1341,6 @@ function send_update_email($handler, $projectid)
     include 'config/config.php';
     include_once 'include/common.php';
     require_once 'include/pdo.php';
-    require_once 'models/build.php';
-    require_once 'models/project.php';
-    require_once 'models/buildgroup.php';
 
     $Project = new Project();
     $Project->Id = $projectid;
@@ -1453,9 +1438,6 @@ function sendemail(ActionableBuildInterface $handler, $projectid)
     include 'config/config.php';
     include_once 'include/common.php';
     require_once 'include/pdo.php';
-    require_once 'models/build.php';
-    require_once 'models/project.php';
-    require_once 'models/buildgroup.php';
 
     $Project = new Project();
     $Project->Id = $projectid;

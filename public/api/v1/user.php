@@ -25,16 +25,19 @@ include_once 'include/common.php';
 redirect_to_https();
 
 include 'include/version.php';
-include_once 'models/project.php';
-include_once 'models/authtoken.php';
-include_once 'models/clientjobschedule.php';
-include_once 'models/clientsite.php';
-include_once 'models/clientjob.php';
-include_once 'models/build.php';
-include_once 'models/buildconfigure.php';
-include_once 'models/buildupdate.php';
-include_once 'models/site.php';
-include_once 'models/user.php';
+
+use CDash\Model\Project;
+use CDash\Model\AuthToken;
+use CDash\Model\ClientJobSchedule;
+use CDash\Model\ClientSite;
+use CDash\Model\ClientJob;
+use CDash\Model\Build;
+use CDash\Model\BuildConfigure;
+use CDash\Model\BuildUpdate;
+use CDash\Model\Site;
+use CDash\Model\User;
+use CDash\Model\UserProject;
+use CDash\Model\Job;
 
 $response = [];
 if (!$session_OK || !isset($_SESSION['cdash']) || !isset($_SESSION['cdash']['loginid'])) {
@@ -130,28 +133,28 @@ if ($CDASH_MANAGE_CLIENTS) {
             $ClientJob = new ClientJob();
             $ClientJob->Id = $lastjobid;
             switch ($ClientJob->GetStatus()) {
-                case CDASH_JOB_RUNNING:
+                case Job::RUNNING:
                     $status = 'Running';
                     $ClientSite = new ClientSite();
                     $ClientSite->Id = $ClientJob->GetSite();
                     $status .= ' (' . $ClientSite->GetName() . ')';
                     $lastrun = $ClientJob->GetStartDate();
                     break;
-                case CDASH_JOB_FINISHED:
+                case Job::FINISHED:
                     $status = 'Finished';
                     $ClientSite = new ClientSite();
                     $ClientSite->Id = $ClientJob->GetSite();
                     $status .= ' (' . $ClientSite->GetName() . ')';
                     $lastrun = $ClientJob->GetEndDate();
                     break;
-                case CDASH_JOB_FAILED:
+                case Job::FAILED:
                     $status = 'Failed';
                     $ClientSite = new ClientSite();
                     $ClientSite->Id = $ClientJob->GetSite();
                     $status .= ' (' . $ClientSite->GetName() . ')';
                     $lastrun = $ClientJob->GetEndDate();
                     break;
-                case CDASH_JOB_ABORTED:
+                case Job::ABORTED:
                     $status = 'Aborted';
                     $lastrun = $ClientJob->GetEndDate();
                     break;

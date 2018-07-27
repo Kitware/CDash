@@ -169,14 +169,14 @@ CDash.controller('BuildSummaryController',
           label = "Build Time";
           break;
         case 'errors':
-          options['colors'] = ["#FDD017"];
+          options['colors'] = ["#FF0000"];
           options['yaxis'] = {minTickSize: 1};
           data = $scope.cdash.builderrors;
           element = "#builderrorsgrapholder";
           label = "# errors";
           break;
         case 'warnings':
-          options['colors'] = ["#FF0000"];
+          options['colors'] = ["#FDD017"];
           options['yaxis'] = {minTickSize: 1};
           data = $scope.cdash.buildwarnings;
           element = "#buildwarningsgrapholder";

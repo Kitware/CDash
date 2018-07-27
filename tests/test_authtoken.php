@@ -2,10 +2,10 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
-require_once 'models/authtoken.php';
-require_once 'models/project.php';
-require_once 'models/user.php';
-require_once 'models/userproject.php';
+
+use CDash\Model\AuthToken;
+use CDash\Model\Project;
+use CDash\Model\UserProject;
 
 class AuthTokenTestCase extends KWWebTestCase
 {
@@ -117,6 +117,95 @@ class AuthTokenTestCase extends KWWebTestCase
         if (!$this->putSubmit($headers)) {
             $this->fail('PUT submit failed using token');
         }
+    }
+
+    private function addBuildApiTestCase()
+    {
+        $add_build_params = [
+            'project' => 'AuthTokenProject',
+            'site'    => 'localhost',
+            'name'    => 'auth-token-build',
+            'stamp'   => '20180705-0100-Experimental'
+        ];
+        $client = new GuzzleHttp\Client(['cookies' => true]);
+
+        // Make sure the AddBuild API call fails if we do not supply
+        // a valid bearer token.
+        $exception_thrown = false;
+        try {
+            $response = $client->request('POST',
+                $this->url . '/api/v1/addBuild.php',
+                ['form_params' => $add_build_params]);
+        } catch (GuzzleHttp\Exception\ClientException $e) {
+            $exception_thrown = true;
+            $status_code = $e->getResponse()->getStatusCode();
+            if ($status_code != 401) {
+                $this->fail("Expected 401 but got $status_code");
+            }
+        }
+        if (!$exception_thrown) {
+            $this->fail('No Exception thrown for unauthenticated addBuild');
+        }
+
+        // Let's try that request again, but this time we specify a valid
+        // bearer token.
+        try {
+            $response = $client->request('POST',
+                $this->url . '/api/v1/addBuild.php',
+                [
+                    'headers' => ['Authorization' => "Bearer $this->Token"],
+                    'form_params' => $add_build_params
+                ]);
+        } catch (GuzzleHttp\Exception\ClientException $e) {
+            $this->fail($e->getMessage());
+        }
+
+        $status_code = $response->getStatusCode();
+        if ($status_code != 201) {
+            $this->fail("Expected 201 but got $status_code");
+        }
+
+        $response_array = json_decode($response->getBody(), true);
+        $buildid = $response_array['buildid'];
+
+        // Repeat the request again.
+        // It should give us a 200 response instead of 201 this time.
+        try {
+            $response = $client->request('POST',
+                $this->url . '/api/v1/addBuild.php',
+                [
+                    'headers' => ['Authorization' => "Bearer $this->Token"],
+                    'form_params' => $add_build_params
+                ]);
+        } catch (GuzzleHttp\Exception\ClientException $e) {
+            $this->fail($e->getMessage());
+        }
+
+        $status_code = $response->getStatusCode();
+        if ($status_code != 200) {
+            $this->fail("Expected 200 but got $status_code");
+        }
+        $response_array = json_decode($response->getBody(), true);
+        $buildid2 = $response_array['buildid'];
+
+        if ($buildid != $buildid2) {
+            $this->fail("Expected buildids $buildid and $buildid2 to be the same");
+        }
+
+        remove_build($buildid);
+    }
+
+    public function testAddBuild()
+    {
+        $this->addBuildApiTestCase();
+
+        // Run this test again as a public project.
+        $this->Project->Fill();
+        $this->Project->Public = 1;
+        $this->Project->Save();
+        $this->addBuildApiTestCase();
+        $this->Project->Public = 0;
+        $this->Project->Save();
     }
 
     public function testSubmissionFailsWithInvalidToken()

@@ -21,10 +21,10 @@ require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 include 'include/version.php';
 require_once 'include/filterdataFunctions.php';
-include_once 'models/build.php';
-include_once 'models/project.php';
 
 use CDash\Database;
+use CDash\Model\Build;
+use CDash\Model\Project;
 
 $start = microtime_float();
 
@@ -142,7 +142,6 @@ $query_params = [];
 $response['hasprocessors'] = false;
 $proc_select = '';
 $proc_join = '';
-$proc_clause = '';
 $stmt = $pdo->prepare(
     "SELECT * FROM measurement WHERE projectid = ? AND name = 'Processors'");
 pdo_execute($stmt, [$project->Id]);
@@ -151,8 +150,7 @@ if ($row['summarypage'] == 1) {
     $response['hasprocessors'] = true;
     $proc_select = ', tm.value';
     $proc_join =
-        'JOIN testmeasurement tm ON (test.id = tm.testid)';
-    $proc_clause = "AND tm.name = 'Processors'";
+        "LEFT JOIN testmeasurement tm ON (test.id = tm.testid AND tm.name = 'Processors')";
 }
 
 $date_clause = '';
@@ -168,6 +166,18 @@ if (isset($_GET['parentid'])) {
     $query_params[':endtime'] = $end_UTCDate;
 }
 
+// Check for the presence of a filter on Build Group.
+// If this is present we need to join additional tables into our query.
+$filter_joins = '';
+foreach ($filterdata['filters'] as $filter) {
+    if ($filter['field'] == 'groupname') {
+        $filter_joins = '
+            JOIN build2group b2g ON b2g.buildid = b.id
+            JOIN buildgroup bg ON bg.id = b2g.groupid';
+        break;
+    }
+}
+
 $sql = "SELECT b.id, b.name, b.starttime, b.siteid,b.parentid,
                build2test.testid AS testid, build2test.status,
                build2test.time, build2test.timestatus, site.name AS sitename,
@@ -177,8 +187,9 @@ $sql = "SELECT b.id, b.name, b.starttime, b.siteid,b.parentid,
         JOIN site ON (b.siteid = site.id)
         JOIN test ON (test.id = build2test.testid)
         $proc_join
+        $filter_joins
         WHERE b.projectid = :projectid
-              $parent_clause $date_clause $proc_clause $filter_sql
+              $parent_clause $date_clause $filter_sql
         ORDER BY build2test.status, test.name
         $limit_sql";
 $query_params[':projectid'] = $project->Id;
@@ -244,10 +255,11 @@ while ($row = $stmt->fetch()) {
 
     if ($response['hasprocessors']) {
         $num_procs = $row['value'];
+        $build['nprocs'] = $num_procs;
         if (!$num_procs) {
             $num_procs = 1;
+            $build['nprocs'] = 'N/A';
         }
-        $build['nprocs'] = $num_procs;
         $build['procTime'] = $row['time'] * $num_procs;
         $build['prettyProcTime'] = time_difference($build['procTime'], true, '', true);
     }

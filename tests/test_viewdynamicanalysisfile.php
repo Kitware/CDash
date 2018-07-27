@@ -5,6 +5,9 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
+use CDash\Model\Build;
+use CDash\Model\DynamicAnalysis;
+
 class ViewDynamicAnalysisFileTestCase extends KWWebTestCase
 {
     public function __construct()
@@ -23,8 +26,6 @@ class ViewDynamicAnalysisFileTestCase extends KWWebTestCase
     {
         require_once('include/common.php');
         require_once('include/pdo.php');
-        require_once('models/build.php');
-        require_once('models/dynamicanalysis.php');
 
         // Get id of existing build.
         $pdo = get_link_identifier()->getPdo();

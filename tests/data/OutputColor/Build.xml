@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Linux-unknown"
+	BuildStamp="20180126-1720-Experimental"
+	Name="nagas"
+	Generator="ctest-3.9.6"
+	CompilerName=""
+	CompilerVersion=""
+	OSName="Linux"
+	Hostname="nagas"
+	OSRelease="4.13.0-26-generic"
+	OSVersion="#29~16.04.2-Ubuntu SMP Tue Jan 9 22:00:44 UTC 2018"
+	OSPlatform="x86_64"
+	Is64Bits="1"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="158"
+	ProcessorCacheSize="8192"
+	NumberOfLogicalCPU="8"
+	NumberOfPhysicalCPU="4"
+	TotalVirtualMemory="32618"
+	TotalPhysicalMemory="32020"
+	LogicalProcessorsPerPhysical="2"
+	ProcessorClockFrequency="2900"
+	>
+	<Build>
+		<StartDateTime>Jan 26 12:20 EST</StartDateTime>
+		<StartBuildTime>1516987239</StartBuildTime>
+		<BuildCommand>/home/kyle/tools/bin/cmake --build . --config "Release"</BuildCommand>
+		<Error>
+			<BuildLogLine>5</BuildLogLine>
+			<Text>CMakeFiles/colortest.dir/build.make:57: recipe for target 'CMakeFiles/colortest' failed</Text>
+			<SourceFile>build/CMakeFiles/colortest.dir/build.make</SourceFile>
+			<SourceLineNumber>57</SourceLineNumber>
+			<PreContext>Scanning dependencies of target colortest
+[NON-XML-CHAR-0x1B][32mHello world!
+[NON-XML-CHAR-0x1B][91mVisit our website: &lt;a href="https://www.kitware.com/"&gt;Kitware&lt;/a&gt;
+[NON-XML-CHAR-0x1B][0mGood bye!
+</PreContext>
+			<PostContext></PostContext>
+			<RepeatCount>0</RepeatCount>
+		</Error>
+		<Error>
+			<BuildLogLine>6</BuildLogLine>
+			<Text>CMakeFiles/Makefile2:803: recipe for target 'CMakeFiles/colortest.dir/all' failed</Text>
+			<SourceFile>build/CMakeFiles/Makefile2</SourceFile>
+			<SourceLineNumber>803</SourceLineNumber>
+			<PreContext></PreContext>
+			<PostContext>Makefile:94: recipe for target 'all' failed
+</PostContext>
+			<RepeatCount>0</RepeatCount>
+		</Error>
+		<Error>
+			<BuildLogLine>8</BuildLogLine>
+			<Text>make[2]: *** [CMakeFiles/colortest] Error 1</Text>
+			<PreContext></PreContext>
+			<PostContext></PostContext>
+			<RepeatCount>0</RepeatCount>
+		</Error>
+		<Error>
+			<BuildLogLine>9</BuildLogLine>
+			<Text>make[1]: *** [CMakeFiles/colortest.dir/all] Error 2</Text>
+			<PreContext></PreContext>
+			<PostContext></PostContext>
+			<RepeatCount>0</RepeatCount>
+		</Error>
+		<Error>
+			<BuildLogLine>10</BuildLogLine>
+			<Text>make: *** [all] Error 2</Text>
+			<PreContext></PreContext>
+			<PostContext></PostContext>
+			<RepeatCount>0</RepeatCount>
+		</Error>
+		<Warning>
+			<BuildLogLine>1</BuildLogLine>
+			<Text>*** WARNING non-zero return value in ctest from: /home/kyle/tools/bin/cmake</Text>
+			<PreContext></PreContext>
+			<PostContext></PostContext>
+			<RepeatCount>0</RepeatCount>
+		</Warning>
+		<Log Encoding="base64" Compression="bin/gzip"/>
+		<EndDateTime>Jan 26 12:20 EST</EndDateTime>
+		<EndBuildTime>1516987239</EndBuildTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Build>
+</Site>

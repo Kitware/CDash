@@ -7,8 +7,8 @@ describe("testDetails", function() {
   it("display test graphs", function() {
     browser.get('testDetails.php?test=21&build=3');
     var select = element(by.id('GraphSelection'));
-    select.$('[value="TestTimeGraph"]').click();
-    select.$('[value="TestPassingGraph"]').click();
+    select.$('[value="time"]').click();
+    select.$('[value="status"]').click();
   });
 
   it("colorizes test output", function() {

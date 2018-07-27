@@ -45,12 +45,12 @@
     <th class="measurement">
       <span class="nobr"> {{cdash.errortypename}} </span>
     </th>
-    <td>
-      <pre ng-if="error.precontext" class="compiler-output" ng-bind-html="error.precontext"></pre>
+    <td ng-if="error.text">
+      <pre ng-if="error.precontext" class="compiler-output" ng-bind-html="error.precontext | ctestNonXmlCharEscape | terminalColors:false | trustAsHtml"></pre>
       <b>
-        <pre class="compiler-output" ng-bind-html="error.text"></pre>
+        <pre class="compiler-output" ng-bind-html="error.text | ctestNonXmlCharEscape | terminalColors:false | trustAsHtml"></pre>
       </b>
-      <pre ng-if="error.postcontext" class="compiler-output" ng-bind-html="error.postcontext"></pre>
+      <pre ng-if="error.postcontext" class="compiler-output" ng-bind-html="error.postcontext | ctestNonXmlCharEscape | terminalColors:false | trustAsHtml"></pre>
     </td>
   </tr>
 
@@ -120,7 +120,7 @@
       <span class="nobr"> Standard Output </span>
     </th>
     <td>
-      <pre class="compiler-output" name="stdout">{{error.stdoutput}}</pre>
+      <pre class="compiler-output" name="stdout" ng-bind-html="error.stdoutput | ctestNonXmlCharEscape | terminalColors:false | trustAsHtml"></pre>
     </td>
   </tr>
 
@@ -129,7 +129,7 @@
       <span class="nobr"> Standard Error </span>
     </th>
     <td>
-      <pre class="compiler-output" name="stderr">{{error.stderror}}</pre>
+      <pre class="compiler-output" name="stderr" ng-bind-html="error.stderror | ctestNonXmlCharEscape | terminalColors:false | trustAsHtml"></pre>
     </td>
   </tr>
 </table>

@@ -23,7 +23,7 @@
 // This file is 'config.php', in the directory 'config', in the root.
 // Therefore, the root of the CDash source tree on the web server is:
 require dirname(__DIR__) . '/vendor/autoload.php';
-require_once dirname(__FILE__) . '/cdash_autoload.php';
+require_once dirname(__FILE__) . '/../bootstrap/cdash_autoload.php';
 
 $CDASH_ROOT_DIR = str_replace('\\', '/', dirname(dirname(__FILE__)));
 set_include_path(get_include_path() . PATH_SEPARATOR . $CDASH_ROOT_DIR);
@@ -227,9 +227,23 @@ $CDASH_MAX_UPLOAD_QUOTA = '10';
 // Maximum size of large text fields, in php-strlen units, 0 for unlimited
 $CDASH_LARGE_TEXT_LIMIT = '0';
 
-// for Google oauth2 support
+// Deprecated settings for Google oauth2 support.
+// Use OAUTH2_PROVIDERS instead.
 $GOOGLE_CLIENT_ID = '';
 $GOOGLE_CLIENT_SECRET = '';
+
+// Settings to enable external authentication using OAuth 2.0.
+// Currently recognized providers are GitHub, GitLab, and Google.
+// Example:
+// $OAUTH2_PROVIDERS['GitHub'] = [
+//    'clientId'          => {client-id},
+//    'clientSecret'      => {client-secret},
+//    'redirectUri'       => 'http://mydomain.com/CDash/auth/GitHub.php'
+//];
+// The GitLab provider takes an additional optional argument:
+// the base URL for a self-hosted instance.
+//    'domain'            => 'https://my.gitlab.example'
+$OAUTH2_PROVIDERS = [];
 
 // Should we use CDash's feed feature?  Disabling this feature can improve
 // submission processing time.
@@ -297,6 +311,12 @@ $CDASH_BUILDS_PER_PROJECT = 0;
 
 // Whitelist of projects that are allowed to have unlimited builds.
 $CDASH_UNLIMITED_PROJECTS = [];
+
+// Should CDash should post build/test results to a build's pull request?
+// This is enabled by default but requires CTEST_CHANGE_ID to be set by the
+// client.  Set this variable to FALSE to prevent CDash from commenting on
+// pull requests.
+$CDASH_NOTIFY_PULL_REQUEST = true;
 
 
 /* DO NOT EDIT AFTER THIS LINE */

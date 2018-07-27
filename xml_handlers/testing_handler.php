@@ -14,26 +14,35 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use CDash\Collection\BuildCollection;
+
 require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
-require_once 'models/build.php';
-require_once 'models/label.php';
-require_once 'models/site.php';
-require_once 'models/test.php';
-require_once 'models/image.php';
-require_once 'models/feed.php';
+
+use CDash\Model\Build;
+use CDash\Model\BuildInformation;
+use CDash\Model\BuildTest;
+use CDash\Model\Feed;
+use CDash\Model\Image;
+use CDash\Model\Label;
+use CDash\Model\Site;
+use CDash\Model\SiteInformation;
+use CDash\Model\Test;
+use CDash\Model\TestMeasurement;
 
 class TestingHandler extends AbstractHandler implements ActionableBuildInterface
 {
     private $StartTimeStamp;
     private $EndTimeStamp;
 
+    /** @var Test Test */
     private $Test;
     private $BuildTest;
     private $TestMeasurement;
     private $Label;
     private $Append;
 
+    /** @var Build[] Builds */
     private $Builds;
     private $BuildInformation;
 
@@ -57,15 +66,13 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
     public function __construct($projectID, $scheduleID)
     {
         parent::__construct($projectID, $scheduleID);
-        $this->Builds = array();
-        $this->SubProjects = array();
-        $this->Site = new Site();
-        $this->NumberTestsFailed = array();
-        $this->NumberTestsNotRun = array();
-        $this->NumberTestsPassed = array();
+        $this->Builds = [];
+        $this->SubProjects = [];
+        $this->NumberTestsFailed = [];
+        $this->NumberTestsNotRun = [];
+        $this->NumberTestsPassed = [];
         $this->StartTimeStamp = 0;
         $this->EndTimeStamp = 0;
-        $this->Feed = new Feed();
     }
 
     /** Destructor */
@@ -78,16 +85,18 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
     {
         parent::startElement($parser, $name, $attributes);
         $parent = $this->getParent(); // should be before endElement
+        $factory = $this->getModelFactory();
 
         if ($name == 'SITE') {
+            $this->Site = $factory->create(Site::class);
             $this->Site->Name = $attributes['NAME'];
             if (empty($this->Site->Name)) {
                 $this->Site->Name = '(empty)';
             }
             $this->Site->Insert();
 
-            $siteInformation = new SiteInformation();
-            $this->BuildInformation = new BuildInformation();
+            $siteInformation = $factory->create(SiteInformation::class);
+            $this->BuildInformation = $factory->create(BuildInformation::class);
             $this->BuildName = "";
             $this->BuildStamp = "";
             $this->Generator = "";
@@ -122,16 +131,17 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
         } elseif ($name == 'SUBPROJECT') {
             $this->SubProjectName = $attributes['NAME'];
             if (!array_key_exists($this->SubProjectName, $this->SubProjects)) {
-                $this->SubProjects[$this->SubProjectName] = array();
+                $this->SubProjects[$this->SubProjectName] = [];
+                $this->createBuild();
             }
         } elseif ($name == 'TEST' && count($attributes) > 0) {
-            $this->Test = new Test();
+            $this->Test = $factory->create(Test::class);
             $this->Test->ProjectId = $this->projectid;
-            $this->BuildTest = new BuildTest();
+            $this->BuildTest = $factory->create(BuildTest::class);
             $this->BuildTest->Status = $attributes['STATUS'];
             $this->TestSubProjectName = "";
         } elseif ($name == 'NAMEDMEASUREMENT') {
-            $this->TestMeasurement = new TestMeasurement();
+            $this->TestMeasurement = $factory->create(TestMeasurement::class);
 
             if ($attributes['TYPE'] == 'file') {
                 $this->TestMeasurement->Name = $attributes['FILENAME'];
@@ -144,7 +154,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
                 $this->Test->CompressedOutput = true;
             }
         } elseif ($name == 'LABEL' && $parent == 'LABELS') {
-            $this->Label = new Label();
+            $this->Label = $factory->create(Label::class);
         }
     }
 
@@ -153,6 +163,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
     {
         $parent = $this->getParent(); // should be before endElement
         parent::endElement($parser, $name);
+        $factory = $this->getModelFactory();
 
         if ($name == 'TEST' && $parent == 'TESTING') {
             // By now, will either have one subproject for the entire file
@@ -175,6 +186,8 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
             }
 
             $this->Test->Insert();
+            $build->AddTest($this->Test);
+            $this->Test->SetBuildTest($this->BuildTest);
             if ($this->Test->Id > 0) {
                 $this->BuildTest->TestId = $this->Test->Id;
                 $this->BuildTest->BuildId = $build->Id;
@@ -195,9 +208,9 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
             if ($this->TestMeasurement->Name == 'Execution Time') {
                 $this->BuildTest->Time = $this->TestMeasurement->Value;
             } elseif ($this->TestMeasurement->Name == 'Exit Code') {
-                if (strlen($this->Test->Details) > 0) {
+                if (strlen($this->Test->Details) > 0 && $this->TestMeasurement->Value) {
                     $this->Test->Details .= ' (' . $this->TestMeasurement->Value . ')';
-                } else {
+                } elseif ($this->TestMeasurement->Value) {
                     $this->Test->Details = $this->TestMeasurement->Value;
                 }
             } elseif ($this->TestMeasurement->Name == 'Completion Status') {
@@ -213,7 +226,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
 
                 // If it's an image we add it as an image
                 if (strpos($this->TestMeasurement->Type, 'image') !== false) {
-                    $image = new Image();
+                    $image = $factory->create(Image::class);
                     $image->Extension = $this->TestMeasurement->Type;
                     $image->Data = $this->TestMeasurement->Value;
                     $image->Name = $this->TestMeasurement->Name;
@@ -235,6 +248,10 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
             $all_at_once = count($this->Builds) > 1;
             $parent_duration_set = false;
             foreach ($this->Builds as $subproject => $build) {
+                $build->StartTime = gmdate(FMT_DATETIME, $this->StartTimeStamp);
+                $build->EndTime = gmdate(FMT_DATETIME, $this->EndTimeStamp);
+                $build->UpdateBuild($build->Id, -1, -1);
+
                 // Update the number of tests in the Build table
                 $build->UpdateTestNumbers($this->NumberTestsPassed[$subproject],
                     $this->NumberTestsFailed[$subproject],
@@ -246,21 +263,17 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
                     $duration = $this->EndTimeStamp - $this->StartTimeStamp;
                     $build->SaveTotalTestsTime($duration, !$all_at_once);
                     if ($all_at_once && !$parent_duration_set) {
-                        $parent_build = new Build();
+                        $parent_build = $factory->create(Build::class);
                         $parent_build->Id = $build->GetParentId();
                         $parent_build->SaveTotalTestsTime($duration, false);
                         $parent_duration_set = true;
                     }
                 }
 
-                // Update the build's end time to extend through testing.
-                $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp);
-                $build->EndTime = $end_time;
-                $build->UpdateBuild($build->Id, -1, -1);
-
-                global $CDASH_ENABLE_FEED;
-                if ($CDASH_ENABLE_FEED) {
+                $config = \CDash\Config::getInstance();
+                if ($config->get('CDASH_ENABLE_FEED')) {
                     // Insert the build into the feed
+                    $this->Feed = $factory->create(Feed::class);
                     $this->Feed->InsertTest($this->projectid, $build->Id);
                 }
             }
@@ -285,10 +298,10 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
         } elseif ($parent == 'TEST') {
             switch ($element) {
                 case 'NAME':
-                    $this->Test->Name .= $data;
+                    $this->Test->Name = $data;
                     break;
                 case 'PATH':
-                    $this->Test->Path .= $data;
+                    $this->Test->Path = $data;
                     break;
                 case 'FULLNAME':
                     //$this->Test->Command = $data;
@@ -298,7 +311,11 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
                     break;
             }
         } elseif ($parent == 'NAMEDMEASUREMENT' && $element == 'VALUE') {
-            $this->TestMeasurement->Value .= $data;
+            if (!isset($this->TestMeasurement->Value)) {
+                $this->TestMeasurement->Value = $data;
+            } else {
+                $this->TestMeasurement->Value .= $data;
+            }
         } elseif ($parent == 'MEASUREMENT' && $element == 'VALUE') {
             $this->Test->Output .= $data;
         } elseif ($parent == 'SUBPROJECT' && $element == 'LABEL') {
@@ -338,8 +355,9 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
         if (!array_key_exists($this->SubProjectName, $this->NumberTestsPassed)) {
             $this->NumberTestsPassed[$this->SubProjectName] = 0;
         }
-
-        $build = new Build();
+        $factory = $this->getModelFactory();
+        $build = $factory->create(Build::class);
+        $build->SetSite($this->Site);
 
         if (!empty($this->PullRequest)) {
             $build->SetPullRequest($this->PullRequest);
@@ -347,18 +365,15 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
 
         $build->SiteId = $this->Site->Id;
         $build->Name = $this->BuildName;
-
         $build->SetStamp($this->BuildStamp);
         $build->Generator = $this->Generator;
         $build->Information = $this->BuildInformation;
-
-        $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
-
         $build->ProjectId = $this->projectid;
-        $build->StartTime = $start_time;
-        // EndTimeStamp hasn't been parsed yet.
-        $build->EndTime = $start_time;
         $build->SubmitTime = gmdate(FMT_DATETIME);
+
+        // TODO: dark days lie in waiting for this...
+        $build->StartTime = gmdate(FMT_DATETIME);
+
         $build->SetSubProject($this->SubProjectName);
 
         $build->GetIdFromName($this->SubProjectName);
@@ -385,9 +400,15 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
 
     /**
      * @return Build[]
+     * @deprecated Use GetBuildCollection() 02/04/18
      */
     public function getActionableBuilds()
     {
         return $this->Builds;
+    }
+
+    public function GetBuildCollection()
+    {
+        return new BuildCollection($this->Builds);
     }
 }
