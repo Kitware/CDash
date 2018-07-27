@@ -24,9 +24,6 @@ if (!isset($buildid) || !is_numeric($buildid)) {
     return;
 }
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
-
 // Find the project variables
 $build = pdo_query("SELECT name,type,siteid,projectid,starttime FROM build WHERE id='$buildid'");
 $build_array = pdo_fetch_array($build);

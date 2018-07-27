@@ -26,9 +26,6 @@ if (!isset($buildid) || !is_numeric($buildid)) {
     return;
 }
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
-
 // Find the notes
 $note = pdo_query("SELECT * FROM buildnote WHERE buildid='$buildid' ORDER BY timestamp ASC");
 while ($note_array = pdo_fetch_array($note)) {
