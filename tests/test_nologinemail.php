@@ -14,6 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use CDash\Model\User;
+
 class NoLoginEmailTestCase extends KWWebTestCase
 {
     public function __construct()
