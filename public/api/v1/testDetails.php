@@ -24,12 +24,14 @@ require_once 'include/api_common.php';
 include_once 'include/repository.php';
 include 'include/version.php';
 
+use CDash\Config;
+use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
 use CDash\Model\Site;
-use CDash\Database;
 
 $start = microtime_float();
+$config = Config::getInstance();
 
 $_REQUEST['buildid'] = $_GET['build'];
 $build = get_request_build();
@@ -66,7 +68,7 @@ if (isset($_GET['fileid']) && is_numeric($_GET['fileid'])) {
     header('Content-type: tar/gzip');
     header('Content-Disposition: attachment; filename="' . $result_array['name'] . '.tgz"');
 
-    if ($CDASH_DB_TYPE == 'pgsql') {
+    if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
         $buf = '';
         while (!feof($result_array['value'])) {
             $buf .= fread($result_array['value'], 2048);
@@ -183,8 +185,8 @@ function utf8_for_xml($string)
     return preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{001b}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', ' ', $string);
 }
 
-if ($CDASH_USE_COMPRESSION) {
-    if ($CDASH_DB_TYPE == 'pgsql') {
+if ($config->get('CDASH_USE_COMPRESSION')) {
+    if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
         if (is_resource($testRow['output'])) {
             $testRow['output'] = base64_decode(stream_get_contents($testRow['output']));
         } else {

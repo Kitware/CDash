@@ -20,11 +20,13 @@ include_once 'include/common.php';
 include_once 'include/version.php';
 require_once 'include/cdashmail.php';
 
+use CDash\Config;
 use CDash\Model\User;
 
+$config = Config::getInstance();
 $xml = begin_XML_for_XSLT();
 $xml .= '<title>Recover password</title>';
-if (isset($CDASH_NO_REGISTRATION) && $CDASH_NO_REGISTRATION == 1) {
+if ($config->get('CDASH_NO_REGISTRATION') == 1) {
     $xml .= add_XML_value('noregister', '1');
 }
 

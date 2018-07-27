@@ -14,12 +14,13 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once dirname(__DIR__) . '/config/config.php';
+include dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
 include 'public/login.php';
 include_once 'include/common.php';
 include 'include/version.php';
 
+use CDash\Config;
 use CDash\Model\ClientJobSchedule;
 use CDash\Model\ClientSite;
 use CDash\Model\ClientOS;
@@ -30,8 +31,10 @@ use CDash\Model\Project;
 use CDash\Model\User;
 use CDash\Model\UserProject;
 
+$config = Config::getInstance();
+
 if ($session_OK) {
-    if (!$CDASH_MANAGE_CLIENTS) {
+    if (!$config->get('CDASH_MANAGE_CLIENTS')) {
         echo 'CDash has not been setup to allow client management';
         return;
     }
@@ -79,7 +82,7 @@ if ($session_OK) {
     }
 
     $xml = begin_XML_for_XSLT();
-    $xml .= add_XML_value('manageclient', $CDASH_MANAGE_CLIENTS);
+    $xml .= add_XML_value('manageclient', $config->get('CDASH_MANAGE_CLIENTS'));
     $xml .= add_XML_value('title', 'CDash - Schedule Build');
     $xml .= add_XML_value('menutitle', 'CDash');
     $xml .= add_XML_value('menusubtitle', 'Schedule Build');

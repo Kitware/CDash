@@ -19,6 +19,9 @@ require_once 'include/pdo.php';
 include 'public/login.php';
 require_once 'include/common.php';
 
+use CDash\Config;
+$config = Config::getInstance();
+
 if (!$session_OK) {
     echo 'Not a valid session';
     return;
@@ -39,7 +42,6 @@ if ($user_array['admin'] != 1) {
 }
 
 $search = pdo_real_escape_string($_GET['search']);
-$config = \CDash\Config::getInstance();
 if ($config->get('CDASH_FULL_EMAIL_WHEN_ADDING_USER') == 1) {
     $sql = "email='$search'";
 } else {

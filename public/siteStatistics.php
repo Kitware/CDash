@@ -19,6 +19,9 @@ require_once 'include/pdo.php';
 include 'public/login.php';
 include 'include/version.php';
 
+use CDash\Config;
+$config = Config::getInstance();
+
 if ($session_OK) {
     include_once 'include/common.php';
     include_once 'include/ctestparser.php';
@@ -31,7 +34,7 @@ if ($session_OK) {
     $xml .= '<menutitle>CDash</menutitle>';
     $xml .= '<menusubtitle>Site Statistics</menusubtitle>';
 
-    if ($CDASH_DB_TYPE == 'pgsql') {
+    if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
         $query = pdo_query("SELECT siteid,sitename, SUM(elapsed) AS busytime FROM
   (
   SELECT site.id AS siteid,site.name AS sitename, project.name AS projectname, build.name AS buildname, build.type,

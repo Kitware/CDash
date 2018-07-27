@@ -16,6 +16,7 @@
 
 include_once 'api.php';
 
+use CDash\Config;
 use CDash\Model\ClientJobSchedule;
 use CDash\Model\ClientOS;
 use CDash\Model\ClientCMake;
@@ -24,11 +25,16 @@ use CDash\Model\ClientLibrary;
 
 class BuildAPI extends CDashAPI
 {
+    private $config;
+    public function __construct()
+    {
+        $this->config = Config::getInstance();
+    }
+
     /** Return the defects: builderrors, buildwarnings, testnotrun, testfailed. */
     private function ListDefects()
     {
         include_once 'include/common.php';
-        global $CDASH_DB_TYPE;
 
         if (!isset($this->Parameters['project'])) {
             echo 'Project not set';
@@ -43,7 +49,7 @@ class BuildAPI extends CDashAPI
 
         $builds = array();
 
-        if ($CDASH_DB_TYPE == 'pgsql') {
+        if ($this->config->get('CDASH_DB_TYPE') == 'pgsql') {
             $query = pdo_query('SELECT EXTRACT(YEAR FROM starttime) AS y ,
                               EXTRACT(MONTH FROM starttime) AS m,
                               EXTRACT(DAY FROM starttime) AS d,
@@ -96,7 +102,6 @@ class BuildAPI extends CDashAPI
     private function RevisionStatus()
     {
         include_once 'include/common.php';
-        include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 
         if (!isset($this->Parameters['project'])) {
             echo 'Project not set';
@@ -240,7 +245,6 @@ class BuildAPI extends CDashAPI
      *  array2: array1_id, test_fullname */
     private function ListSiteTestFailure()
     {
-        include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
         include_once 'include/common.php';
 
         if (!isset($this->Parameters['project'])) {
@@ -268,7 +272,7 @@ class BuildAPI extends CDashAPI
         $currentUTCTime = date(FMT_DATETIME, $currentstarttime);
 
         // Get all the unique builds for the section of the dashboard
-        if ($CDASH_DB_TYPE == 'pgsql') {
+        if ($this->config->get('CDASH_DB_TYPE') == 'pgsql') {
             $query = pdo_query("SELECT max(b.id) AS buildid,s.name || '-' || b.name AS fullname,s.name AS sitename,b.name,
                si.totalphysicalmemory,si.processorclockfrequency
                FROM build AS b, site AS s, siteinformation AS si, buildgroup AS bg, build2group AS b2g
@@ -322,7 +326,6 @@ class BuildAPI extends CDashAPI
     /** Schedule a build */
     private function ScheduleBuild()
     {
-        include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
         include_once 'include/common.php';
 
         if (!isset($this->Parameters['token'])) {
@@ -486,7 +489,6 @@ class BuildAPI extends CDashAPI
     /** Return the status of a scheduled build */
     private function ScheduleStatus()
     {
-        include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
         include_once 'include/common.php';
 
         $status = array();

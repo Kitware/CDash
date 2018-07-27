@@ -23,7 +23,9 @@ include 'public/login.php';
 require_once 'include/common.php';
 require_once 'include/version.php';
 
+use CDash\Config;
 use CDash\Model\User;
+$config = Config::getInstance();
 
 @$siteid = $_GET['siteid'];
 if ($siteid != null) {
@@ -117,7 +119,7 @@ $xml .= '<title>CDash</title>';
 
 $apikey = '';
 // Find the correct google map key
-foreach ($CDASH_GOOGLE_MAP_API_KEY as $key => $value) {
+foreach ($config->get('CDASH_GOOGLE_MAP_API_KEY') as $key => $value) {
     if (strstr($_SERVER['HTTP_HOST'], $key) !== false) {
         $apikey = $value;
         break;
@@ -192,7 +194,7 @@ if (!$displayPage) {
 }
 
 // Compute the time for all the projects (faster than individually) average of the week
-if ($CDASH_DB_TYPE == 'pgsql') {
+if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
     $timediff = 'EXTRACT(EPOCH FROM (build.submittime - buildupdate.starttime))';
     $timestampadd = "NOW()-INTERVAL'167 hours'";
 } else {

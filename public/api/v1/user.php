@@ -26,6 +26,7 @@ redirect_to_https();
 
 include 'include/version.php';
 
+use CDash\Config;
 use CDash\Model\Project;
 use CDash\Model\AuthToken;
 use CDash\Model\ClientJobSchedule;
@@ -39,6 +40,7 @@ use CDash\Model\User;
 use CDash\Model\UserProject;
 use CDash\Model\Job;
 
+$config = Config::getInstance();
 $response = [];
 if (!$session_OK || !isset($_SESSION['cdash']) || !isset($_SESSION['cdash']['loginid'])) {
     $response['requirelogin'] = 1;
@@ -59,11 +61,11 @@ $PDO = get_link_identifier()->getPdo();
 
 $userid = $_SESSION['cdash']['loginid'];
 $xml = begin_XML_for_XSLT();
-$xml .= add_XML_value('manageclient', $CDASH_MANAGE_CLIENTS);
+$xml .= add_XML_value('manageclient', $config->get('CDASH_MANAGE_CLIENTS'));
 
 $userid = $_SESSION['cdash']['loginid'];
 $response = begin_JSON_response();
-$response['manageclient'] = $CDASH_MANAGE_CLIENTS;
+$response['manageclient'] = $config->get('CDASH_MANAGE_CLIENTS');
 $response['title'] = 'CDash - My Profile';
 
 $user = new User();
@@ -72,7 +74,7 @@ $user->Fill();
 $response['user_name'] = $user->FirstName;
 $response['user_is_admin'] = $user->Admin;
 
-if ($CDASH_USER_CREATE_PROJECTS) {
+if ($config->get('CDASH_USER_CREATE_PROJECTS')) {
     $response['user_can_create_projects'] = 1;
 } else {
     $response['user_can_create_projects'] = 0;
@@ -114,7 +116,7 @@ $response['authtokens'] = $authTokens;
 $response['showauthtokens'] = $showAuthTokenSection;
 
 // Go through the jobs
-if ($CDASH_MANAGE_CLIENTS) {
+if ($config->get('CDASH_MANAGE_CLIENTS')) {
     $ClientJobSchedule = new ClientJobSchedule();
     $userJobSchedules = $ClientJobSchedule->getAll($userid, 1000);
     $schedule_response = [];
@@ -183,7 +185,7 @@ $stmt = $PDO->prepare(
     ORDER BY name');
 pdo_execute($stmt, [$userid]);
 
-if ($CDASH_USE_LOCAL_DIRECTORY == '1') {
+if ($config->get('CDASH_USE_LOCAL_DIRECTORY') == '1') {
     if (file_exists('local/user.php')) {
         include_once 'local/user.php';
     }

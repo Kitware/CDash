@@ -19,6 +19,7 @@ require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 require_once 'include/common.php';
 
+use CDash\Config;
 use CDash\Model\Banner;
 use CDash\Model\Project;
 use CDash\Model\SubProject;
@@ -42,13 +43,10 @@ echo_subprojects_dashboard_JSON($Project, $date);
 // Gather up the data for a SubProjects dashboard.
 function echo_subprojects_dashboard_JSON($project_instance, $date)
 {
-    require_once dirname(dirname(dirname(__DIR__))) . '/config/config.php';
     require_once 'include/pdo.php';
 
-    global $CDASH_DB_HOST, $CDASH_DB_LOGIN, $CDASH_DB_NAME, $CDASH_DB_PASS,
-           $CDASH_SHOW_LAST_SUBMISSION;
-
     $start = microtime_float();
+    $config = Config::getInstance();
     $response = array();
 
     $Project = $project_instance;
@@ -78,7 +76,7 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
     }
     $response['banners'] = $banners;
 
-    if ($CDASH_SHOW_LAST_SUBMISSION) {
+    if ($config->get('CDASH_SHOW_LAST_SUBMISSION')) {
         $response['showlastsubmission'] = 1;
     }
 

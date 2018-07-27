@@ -21,6 +21,7 @@ include 'public/login.php';
 include 'include/version.php';
 require_once 'include/cdashmail.php';
 
+use CDash\Config;
 use CDash\Model\Build;
 use CDash\Model\Coverage;
 use CDash\Model\CoverageFile;
@@ -30,6 +31,8 @@ use CDash\Model\Project;
 use CDash\Model\Site;
 use CDash\Model\User;
 use CDash\Model\UserProject;
+
+$config = Config::getInstance();
 
 if ($session_OK) {
     $userid = $_SESSION['cdash']['loginid'];
@@ -239,7 +242,7 @@ if ($session_OK) {
 
                 $messagePlainText .= get_server_URI();
                 $messagePlainText .= "\n\n";
-                $serverName = $CDASH_SERVER_NAME;
+                $serverName = $config->get('CDASH_SERVER_NAME');
                 if (strlen($serverName) == 0) {
                     $serverName = $_SERVER['SERVER_NAME'];
                 }

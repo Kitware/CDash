@@ -17,6 +17,7 @@
 include dirname(__DIR__) . '/config/config.php';
 require_once 'public/login.php';
 
+use CDash\Config;
 use CDash\Model\User;
 
 function echo_git_output($cmd)
@@ -60,9 +61,9 @@ if ($session_OK) {
         echo_git_output('status');
         echo_git_output('diff');
 
-        global $CDASH_ROOT_DIR;
-        echo_file_contents($CDASH_ROOT_DIR . '/config/config.local.php');
-        echo_file_contents($CDASH_ROOT_DIR . '/tests/config.test.local.php');
+        $config = Config::getInstance();
+        echo_file_contents($config->get('CDASH_ROOT_DIR') . '/config/config.local.php');
+        echo_file_contents($config->get('CDASH_ROOT_DIR') . '/tests/config.test.local.php');
         echo '<br/>';
     } else {
         echo 'Admin login required to display git info.';

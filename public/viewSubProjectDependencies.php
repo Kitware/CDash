@@ -21,8 +21,10 @@ include 'public/login.php';
 include_once 'include/common.php';
 include 'include/version.php';
 
+use CDash\Config;
 use CDash\Model\Project;
 use CDash\Model\SubProject;
+$config = Config::getInstance();
 
 @$projectname = $_GET['project'];
 if ($projectname != null) {
@@ -86,7 +88,7 @@ if (empty($project_array['homeurl'])) {
 } else {
     $xml .= '<home>' . $homeurl . '</home>';
 }
-if ($CDASH_USE_LOCAL_DIRECTORY && file_exists('local/models/proProject.php')) {
+if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/models/proProject.php')) {
     include_once 'local/models/proProject.php';
     $pro = new proProject;
     $pro->ProjectId = $projectid;

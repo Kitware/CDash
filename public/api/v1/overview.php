@@ -14,7 +14,9 @@ require_once 'include/api_common.php';
 include 'include/version.php';
 require_once 'include/memcache_functions.php';
 
+use CDash\Config;
 use CDash\Model\Project;
+$config = Config::getInstance();
 
 // handle required project argument
 @$projectname = $_GET['project'];
@@ -27,13 +29,13 @@ $start = microtime_float();
 $response = array();
 
 // Connect to memcache
-if ($CDASH_MEMCACHE_ENABLED) {
-    list($server, $port) = $CDASH_MEMCACHE_SERVER;
+if ($config->get('CDASH_MEMCACHE_ENABLED')) {
+    list($server, $port) = $config->get('CDASH_MEMCACHE_SERVER');
     $memcache = cdash_memcache_connect($server, $port);
 
     // Disable memcache for this request if it fails to connect
     if ($memcache === false) {
-        $CDASH_MEMCACHE_ENABLED = false;
+        $config->set('CDASH_MEMCACHE_ENABLED', false);
     }
 }
 
@@ -68,7 +70,7 @@ $date_range = 14;
 // Use cache if it's enabled, use_cache isn't set to 0, and an entry exists in Memcache
 // Using cache is implied, but the user can set use_cache to 0 to explicitly disable it
 // (This is a good method of ensuring the cache for this page stays up)
-if ($CDASH_MEMCACHE_ENABLED &&
+if ($config->get('CDASH_MEMCACHE_ENABLED') &&
     !(isset($_GET['use_cache']) && $_GET['use_cache'] == 0) &&
     ($cachedResponse = cdash_memcache_get($memcache, cdash_memcache_key('overview'))) !== false) {
     echo $cachedResponse;
@@ -620,7 +622,7 @@ $response['generationtime'] = round($end - $start, 3);
 $response = json_encode(cast_data_for_JSON($response));
 
 // Cache the overview page for 6 hours
-if ($CDASH_MEMCACHE_ENABLED) {
+if ($config->get('CDASH_MEMCACHE_ENABLED')) {
     cdash_memcache_set($memcache, cdash_memcache_key('overview'), $response, 60 * 60 * 6);
 }
 

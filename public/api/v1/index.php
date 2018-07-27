@@ -28,6 +28,7 @@ include 'include/version.php';
 require_once 'include/filterdataFunctions.php';
 require_once 'include/index_functions.php';
 
+use CDash\Config;
 use CDash\Model\Banner;
 use CDash\Model\Build;
 use CDash\Model\BuildInformation;
@@ -35,10 +36,11 @@ use CDash\Model\Project;
 use CDash\Model\SubProject;
 
 @set_time_limit(0);
+$config = Config::getInstance();
 
 // Check if we can connect to the database.
-if (pdo_query('SELECT id FROM ' . qid('user') . ' LIMIT 1', $db) === false) {
-    if ($CDASH_PRODUCTION_MODE) {
+if (pdo_query('SELECT id FROM ' . qid('user') . ' LIMIT 1') === false) {
+    if ($config->get('CDASH_PRODUCTION_MODE')) {
         $response = array();
         $response['error'] = 'CDash cannot connect to the database.';
         echo json_encode($response);
@@ -69,11 +71,9 @@ if (!function_exists('echo_main_dashboard_JSON')) {
     // Generate the main dashboard JSON response.
     function echo_main_dashboard_JSON($project_instance, $date)
     {
-        global $CDASH_DB_HOST, $CDASH_DB_LOGIN, $CDASH_DB_NAME, $CDASH_DB_PASS,
-               $CDASH_DB_TYPE, $CDASH_USE_LOCAL_DIRECTORY;
-
         $start = microtime_float();
         require_once 'include/pdo.php';
+        $config = Config::getInstance();
 
         $PDO = get_link_identifier()->getPdo();
         $response = array();
@@ -216,7 +216,7 @@ if (!function_exists('echo_main_dashboard_JSON')) {
         $page_id = 'index.php';
         $response['childview'] = 0;
 
-        if ($CDASH_USE_LOCAL_DIRECTORY && file_exists('local/models/proProject.php')) {
+        if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/models/proProject.php')) {
             include_once 'local/models/proProject.php';
             $pro = new proProject;
             $pro->ProjectId = $projectid;
@@ -1667,7 +1667,7 @@ if (!function_exists('add_expected_builds')) {
     // Find expected builds that haven't submitted yet.
     function add_expected_builds($groupid, $currentstarttime, $received_builds)
     {
-        include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
+        $config = Config::getInstance();
 
         if (isset($_GET['parentid'])) {
             // Don't add expected builds when viewing a single subproject result.
@@ -1708,7 +1708,7 @@ if (!function_exists('add_expected_builds')) {
 
                 // Compute historical average to get approximate expected time.
                 // PostgreSQL doesn't have the necessary functions for this.
-                if ($CDASH_DB_TYPE == 'pgsql') {
+                if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
                     $query = pdo_query(
                         "SELECT submittime FROM build,build2group
                         WHERE build2group.buildid=build.id AND siteid='$siteid' AND

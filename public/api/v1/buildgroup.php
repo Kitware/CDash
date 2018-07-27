@@ -13,7 +13,6 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
-
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 
@@ -23,6 +22,7 @@ include 'public/login.php';
 require_once 'include/api_common.php';
 require_once 'include/version.php';
 
+use CDash\Config;
 use CDash\Model\BuildGroup;
 
 // Require administrative access to view this page.
@@ -211,8 +211,8 @@ function rest_post()
         if (count($inputRows) > 0) {
             // Remove old build group layout for this project.
 
-            global $CDASH_DB_TYPE;
-            if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE == 'pgsql') {
+            $config = Config::getInstance();
+            if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
                 // We use a subquery here because postgres doesn't support
                 // JOINs in a DELETE statement.
                 $sql = "

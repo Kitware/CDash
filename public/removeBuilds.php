@@ -20,6 +20,9 @@ include 'public/login.php';
 include 'include/version.php';
 require_once 'include/common.php';
 
+use CDash\Config;
+$config = Config::getInstance();
+
 @set_time_limit(0);
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'], 0); // only admin
@@ -61,8 +64,8 @@ if (empty($dayTo)) {
 }
 
 $xml = '<cdash>';
-$xml .= '<cssfile>' . $CDASH_CSS_FILE . '</cssfile>';
-$xml .= '<version>' . $CDASH_VERSION . '</version>';
+$xml .= '<cssfile>' . $config->get('CDASH_CSS_FILE') . '</cssfile>';
+$xml .= '<version>' . $config->get('CDASH_VERSION') . '</version>';
 $xml .= '<title>CDash - Remove Builds</title>';
 $xml .= '<menutitle>CDash</menutitle>';
 $xml .= '<menusubtitle>Remove Builds</menusubtitle>';

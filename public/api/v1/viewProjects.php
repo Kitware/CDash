@@ -19,9 +19,11 @@ include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 include 'public/login.php';
 
+use CDash\Config;
 use CDash\Model\Banner;
 
 $start = microtime_float();
+$config = Config::getInstance();
 $response = begin_JSON_response();
 
 $Banner = new Banner;
@@ -40,10 +42,10 @@ if ($pdo->query('SELECT authenticatesubmissions FROM project LIMIT 1') === false
     $response['upgradewarning'] = 1;
 }
 
-$response['title'] = $CDASH_MAININDEX_TITLE;
-$response['subtitle'] = $CDASH_MAININDEX_SUBTITLE;
-$response['googletracker'] = $CDASH_DEFAULT_GOOGLE_ANALYTICS;
-if (isset($CDASH_NO_REGISTRATION) && $CDASH_NO_REGISTRATION == 1) {
+$response['title'] = $config->get('CDASH_MAININDEX_TITLE');
+$response['subtitle'] = $config->get('CDASH_MAININDEX_SUBTITLE');
+$response['googletracker'] = $config->get('CDASH_DEFAULT_GOOGLE_ANALYTICS');
+if ($config->get('CDASH_NO_REGISTRATION') == 1) {
     $response['noregister'] = 1;
 }
 

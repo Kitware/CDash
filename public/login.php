@@ -14,6 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use CDash\Config;
 use CDash\Controller\Auth\Session;
 use CDash\ServiceContainer;
 
@@ -22,6 +23,9 @@ include_once 'include/common.php';
 require_once 'include/pdo.php';
 include_once 'include/version.php';
 include_once 'include/login_functions.php';
+
+$config = Config::getInstance();
+$config->get('CDASH_AUTOREMOVE_BUILDS');
 
 global $loginerror;
 
@@ -110,7 +114,7 @@ if (!cdash_auth(@$SessionCachePolicy) && !@$noforcelogin) {
     }
 }
 
-if ($CDASH_USER_CREATE_PROJECTS && isset($_SESSION['cdash'])) {
+if ($config->get('CDASH_USER_CREATE_PROJECTS') && isset($_SESSION['cdash'])) {
     $_SESSION['cdash']['user_can_create_project'] = 1;
 }
 

@@ -19,6 +19,9 @@ require_once 'include/pdo.php';
 include 'public/login.php';
 include 'include/version.php';
 
+use CDash\Config;
+$config = Config::getInstance();
+
 if ($session_OK) {
     include_once 'include/common.php';
     include_once 'include/ctestparser.php';
@@ -41,8 +44,7 @@ if ($session_OK) {
     }
 
     if ($Submit && $filemask) {
-        $filelist = glob("$CDASH_BACKUP_DIRECTORY/$filemask");
-
+        $filelist = glob($config->get('CDASH_BACKUP_DIRECTORY') . "/$filemask");
         $i = 0;
         $n = count($filelist);
 
