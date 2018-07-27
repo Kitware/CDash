@@ -26,20 +26,16 @@ require_once 'include/pdo.php';
 use CDash\Config;
 use CDash\Model\User;
 
-global $reg;
-$reg = '';
-
 /** Authentication function */
-function register()
+function register(&$registration_error)
 {
-    global $reg;
     $user = new User();
 
     if (isset($_GET['key'])) {
         if ($user->Register($_GET['key'])) {
             return true;
         } else {
-            $reg = 'The key is invalid.';
+            $registration_error = 'The key is invalid.';
             return false;
         }
     } elseif (isset($_POST['sent'])) {
@@ -47,14 +43,14 @@ function register()
 
         $url = $_POST['url'];
         if ($url != 'catchbot') {
-            $reg = 'Bots are not allowed to obtain CDash accounts!';
+            $registration_error = 'Bots are not allowed to obtain CDash accounts!';
             return false;
         }
         $email = $_POST['email'];
         $passwd = $_POST['passwd'];
         $passwd2 = $_POST['passwd2'];
         if (!($passwd == $passwd2)) {
-            $reg = 'Passwords do not match!';
+            $registration_error = 'Passwords do not match!';
             return false;
         }
 
@@ -63,15 +59,15 @@ function register()
         $complexity = getPasswordComplexity($passwd);
         if ($complexity < $config->get('CDASH_MINIMUM_PASSWORD_COMPLEXITY')) {
             if ($config->get('CDASH_PASSWORD_COMPLEXITY_COUNT') > 1) {
-                $reg = "Your password must contain at least {$config->get('CDASH_PASSWORD_COMPLEXITY_COUNT')} characters from {$config->get('CDASH_MINIMUM_PASSWORD_COMPLEXITY')} of the following types: uppercase, lowercase, numbers, and symbols.";
+                $registration_error = "Your password must contain at least {$config->get('CDASH_PASSWORD_COMPLEXITY_COUNT')} characters from {$config->get('CDASH_MINIMUM_PASSWORD_COMPLEXITY')} of the following types: uppercase, lowercase, numbers, and symbols.";
             } else {
-                $reg = "Your password must contain at least {$config->get('CDASH_MINIMUM_PASSWORD_COMPLEXITY')} of the following: uppercase, lowercase, numbers, and symbols.";
+                $registration_error = "Your password must contain at least {$config->get('CDASH_MINIMUM_PASSWORD_COMPLEXITY')} of the following: uppercase, lowercase, numbers, and symbols.";
             }
             return false;
         }
 
         if (strlen($passwd) < $config->get('CDASH_MINIMUM_PASSWORD_LENGTH')) {
-            $reg = "Your password must be at least {$config->get('CDASH_MINIMUM_PASSWORD_LENGTH')} characters.";
+            $registration_error = "Your password must be at least {$config->get('CDASH_MINIMUM_PASSWORD_LENGTH')} characters.";
             return false;
         }
 
@@ -81,18 +77,18 @@ function register()
         if ($email && $passwd && $passwd2 && $fname && $lname && $institution) {
             $user->Email = $email;
             if ($user->Exists()) {
-                $reg = "$email is already registered.";
+                $registration_error = "$email is already registered.";
                 return false;
             }
 
             if ($user->TempExists()) {
-                $reg = "$email is already registered. Check your email if you haven't received the link to activate yet.";
+                $registration_error = "$email is already registered. Check your email if you haven't received the link to activate yet.";
                 return false;
             }
 
             $passwordHash = User::PasswordHash($passwd);
             if ($passwordHash === false) {
-                $reg = 'Failed to hash password.';
+                $registration_error = 'Failed to hash password.';
                 return false;
             }
             $user->Email = $email;
@@ -126,18 +122,18 @@ function register()
                         add_log('cannot send email to: ' . $email, 'Registration', LOG_ERR);
                     }
 
-                    $reg = "A confirmation email has been sent. Check your email (including your spam folder) to confirm your registration!\n";
-                    $reg .= 'You need to activate your account within 24 hours.';
+                    $registration_error = "A confirmation email has been sent. Check your email (including your spam folder) to confirm your registration!\n";
+                    $registration_error .= 'You need to activate your account within 24 hours.';
                     return false;
                 } else {
-                    $reg = 'Error registering user';
+                    $registration_error = 'Error registering user';
                     return false;
                 }
             } else {
                 return $user->Save();
             }
         } else {
-            $reg = 'Please fill in all of the required fields';
+            $registration_error = 'Please fill in all of the required fields';
             return false;
         }
     }
@@ -179,9 +175,11 @@ function RegisterForm($regerror)
 // --------------------------------------------------------------------------------------
 // main
 // --------------------------------------------------------------------------------------
-if (!register()) {                 // registration failed
-    RegisterForm($reg);
-}    // display register form
-else {
+$registration_error = '';
+if (!register($registration_error)) {
+    // Registration failed.
+    // Re-display register form with error message.
+    RegisterForm($registration_error);
+} else {
     header('location: user.php?note=register');
 }

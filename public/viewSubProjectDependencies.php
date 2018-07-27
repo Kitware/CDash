@@ -24,6 +24,7 @@ include 'include/version.php';
 use CDash\Config;
 use CDash\Model\Project;
 use CDash\Model\SubProject;
+
 $config = Config::getInstance();
 
 @$projectname = $_GET['project'];

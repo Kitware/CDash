@@ -27,6 +27,7 @@ redirect_to_https();
 include 'include/version.php';
 
 use CDash\Config;
+use CDash\Database;
 use CDash\Model\Project;
 use CDash\Model\AuthToken;
 use CDash\Model\ClientJobSchedule;
@@ -57,7 +58,7 @@ if (!$session_OK || !isset($_SESSION['cdash']) || !isset($_SESSION['cdash']['log
 }
 
 $script_start_time = microtime_float();
-$PDO = get_link_identifier()->getPdo();
+$PDO = Database::getInstance()->getPdo();
 
 $userid = $_SESSION['cdash']['loginid'];
 $xml = begin_XML_for_XSLT();
@@ -245,13 +246,12 @@ if (count($claimedsites) > 0) {
 }
 
 /** Report statistics about the last build */
-function ReportLastBuild($type, $projectid, $siteid, $projectname, $nightlytime)
+function ReportLastBuild($type, $projectid, $siteid, $projectname, $nightlytime, $PDO)
 {
     $response = [];
     $nightlytime = strtotime($nightlytime);
 
     // Find the last build
-    global $PDO;
     $stmt = $PDO->prepare(
         'SELECT starttime, id FROM build
         WHERE siteid = :siteid AND projectid = :projectid AND type = :type
@@ -382,11 +382,11 @@ foreach ($claimedsites as $site) {
         $nightlytime = $project['nightlytime'];
 
         $siteproject_response['nightly'] =
-            ReportLastBuild('Nightly', $projectid, $siteid, $projectname, $nightlytime);
+            ReportLastBuild('Nightly', $projectid, $siteid, $projectname, $nightlytime, $PDO);
         $siteproject_response['continuous'] =
-            ReportLastBuild('Continuous', $projectid, $siteid, $projectname, $nightlytime);
+            ReportLastBuild('Continuous', $projectid, $siteid, $projectname, $nightlytime, $PDO);
         $siteproject_response['experimental'] =
-            ReportLastBuild('Experimental', $projectid, $siteid, $projectname, $nightlytime);
+            ReportLastBuild('Experimental', $projectid, $siteid, $projectname, $nightlytime, $PDO);
         $siteprojects_response[] = $siteproject_response;
     }
     $claimedsite_response['projects'] = $siteprojects_response;

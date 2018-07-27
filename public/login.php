@@ -25,10 +25,7 @@ include_once 'include/version.php';
 include_once 'include/login_functions.php';
 
 $config = Config::getInstance();
-$config->get('CDASH_AUTOREMOVE_BUILDS');
-
 global $loginerror;
-
 $loginerror = '';
 
 // --------------------------------------------------------------------------------------
@@ -36,7 +33,6 @@ $loginerror = '';
 // --------------------------------------------------------------------------------------
 $mysession = ['login' => false, 'passwd' => false, 'ID' => false, 'valid' => false, 'langage' => false];
 $uri = basename($_SERVER['PHP_SELF']);
-global $session_OK;
 $session_OK = 0;
 $service = ServiceContainer::getInstance();
 /** @var Session $session */
@@ -122,3 +118,7 @@ if ($config->get('CDASH_USER_CREATE_PROJECTS') && isset($_SESSION['cdash'])) {
 if (file_exists('local/prelogin.php')) {
     include 'local/prelogin.php';
 }
+
+// Abusing the Config singleton to get rid of globals.
+$config->set('loginerror', $loginerror);
+$config->set('session_OK', $session_OK);

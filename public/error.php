@@ -23,6 +23,7 @@ include 'include/version.php';
 
 use CDash\Config;
 use CDash\Model\User;
+
 $config = Config::getInstance();
 
 $xml = begin_XML_for_XSLT();

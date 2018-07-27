@@ -20,6 +20,7 @@ include 'public/login.php';
 include 'include/version.php';
 
 use CDash\Config;
+
 $config = Config::getInstance();
 
 if ($session_OK) {

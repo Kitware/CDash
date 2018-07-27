@@ -1383,7 +1383,8 @@ if (!function_exists('echo_main_dashboard_JSON')) {
 
         if (!function_exists('is_buildgroup_nonempty')) {
             // At this point it is safe to remove any empty buildgroups from our response.
-            function is_buildgroup_nonempty($group) {
+            function is_buildgroup_nonempty($group)
+            {
                 return !empty($group['builds']);
             }
         }

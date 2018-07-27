@@ -22,6 +22,7 @@ include_once 'include/common.php';
 include 'include/version.php';
 
 use CDash\Config;
+
 $config = Config::getInstance();
 
 @$projectname = $_GET['project'];

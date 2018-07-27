@@ -20,6 +20,7 @@ include 'public/login.php';
 require_once 'include/common.php';
 
 use CDash\Config;
+
 $config = Config::getInstance();
 
 if (!$session_OK) {

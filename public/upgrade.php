@@ -22,6 +22,7 @@ include 'include/version.php';
 include_once 'include/upgrade_functions.php';
 
 use CDash\Config;
+
 $config = Config::getInstance();
 
 @set_time_limit(0);

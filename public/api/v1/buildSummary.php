@@ -38,17 +38,6 @@ $project->Fill();
 
 $date = get_dashboard_date_from_build_starttime($build->StartTime, $project->NightlyTime);
 
-// Format the text to fit the iPhone
-function format_for_iphone($text)
-{
-    global $FormatTextForIphone;
-    if (!isset($FormatTextForIphone)) {
-        return $text;
-    }
-    $text = str_replace("\n", '<br/>', $text);
-    return $text;
-}
-
 $response = begin_JSON_response();
 $response['title'] = "CDash : $project->Name";
 

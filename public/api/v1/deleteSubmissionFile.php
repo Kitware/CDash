@@ -18,6 +18,7 @@ require_once 'include/pdo.php';
 include_once 'include/common.php';
 
 use CDash\Config;
+
 $config = Config::getInstance();
 
 /**

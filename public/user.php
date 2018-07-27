@@ -26,7 +26,11 @@ if (isset($_GET['logout'])) {
 }
 
 angular_login();
-global $loginerror;
+
+use CDash\Config;
+
+$config = Config::getInstance();
+$loginerror = $config->get('loginerror');
 if ($loginerror != '') {
     // Display error on login page.
     require_once('include/login_functions.php');

@@ -22,6 +22,7 @@ include 'include/version.php';
 use CDash\Model\ClientJobSchedule;
 use CDash\Model\Job;
 use CDash\Config;
+
 $config = Config::getInstance();
 
 if (!$config->get('CDASH_MANAGE_CLIENTS')) {
