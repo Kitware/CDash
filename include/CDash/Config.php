@@ -83,4 +83,9 @@ class Config extends Singleton
         }
         return $uri;
     }
+
+    public function load($config)
+    {
+        return include "config/{$config}.php";
+    }
 }

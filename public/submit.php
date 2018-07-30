@@ -18,6 +18,9 @@ use Bernard\Message\DefaultMessage;
 use Bernard\Producer;
 use Bernard\QueueFactory\PersistentFactory;
 use Bernard\Serializer;
+use CDash\Middleware\Queue;
+use CDash\Middleware\Queue\DriverFactory as QueueDriverFactory;
+use CDash\Middleware\Queue\SubmissionService;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Ramsey\Uuid\Uuid;
 
@@ -105,22 +108,22 @@ $file_path = 'php://input';
 $fp = fopen($file_path, 'r');
 
 if ($CDASH_BERNARD_SUBMISSION) {
-    // @todo what serializer should be used?
-    $factory = new PersistentFactory($CDASH_BERNARD_DRIVER, new Serializer());
-    $producer = new Producer($factory, new EventDispatcher());
-
     $buildSubmissionId = Uuid::uuid4()->toString();
     $destinationFilename = $CDASH_BACKUP_DIRECTORY . '/' . $buildSubmissionId . '.xml';
 
     if (copy('php://input', $destinationFilename)) {
-        $producer->produce(new DefaultMessage('DoSubmit', array(
-            'buildsubmissionid' => $buildSubmissionId,
-            'filename' => $destinationFilename,
-            'projectid' => $projectid,
-            'expected_md5' => $expected_md5,
-            'do_checksum' => true,
-            'submission_id' => 0, // The submit endpoint does not allow a submission_id
-            'submission_ip' => $_SERVER['REMOTE_ADDR'])));
+        $driver = QueueDriverFactory::create();
+        $queue = new Queue($driver);
+
+        $message = SubmissionService::createMessage([
+            'file' => $destinationFilename,
+            'project' => $projectid,
+            'md5' => $expected_md5,
+            'checksum' => true,
+        ]);
+
+        $queue->produce($message);
+
         echo '<cdash version="' . $CDASH_VERSION . "\">\n";
         echo " <status>OK</status>\n";
         echo " <message>Build submitted successfully.</message>\n";
