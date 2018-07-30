@@ -15,6 +15,8 @@
 =========================================================================*/
 namespace CDash\Model;
 
+require_once 'include/repository.php';
+
 use PDO;
 use CDash\Database;
 
@@ -112,7 +114,7 @@ class BuildError
         return $query->fetchAll($fetchStyle);
     }
 
-    public static function GetSourceFile($data)
+    public function GetSourceFile($data)
     {
         // Detect if the source directory has already been replaced by CTest with /.../
         $sourceFile = array();
@@ -139,12 +141,12 @@ class BuildError
      *
      * Requires the $data of a build error, the $project, and the buildupdate.revision.
      **/
-    public static function marshal($data, $project, $revision)
+    public static function marshal($data, $project, $revision, $builderror)
     {
         deepEncodeHTMLEntities($data);
 
         // Sets up access to $file and $directory
-        extract(self::GetSourceFile($data));
+        extract($builderror->GetSourceFile($data));
         $marshaled = array(
             'new' => (isset($data['newstatus'])) ? $data['newstatus'] : -1,
             'logline' => $data['logline'],
@@ -154,9 +156,9 @@ class BuildError
         $marshaled = array_merge($marshaled, array(
             // when building without launchers, CTest truncates the source dir to /.../
             // use this pattern to linkify compiler output.
-            'precontext' => linkify_compiler_output($marshaled['cvsurl'], "/\.\.\.", $revision, $data['precontext']),
-            'text' => linkify_compiler_output($marshaled['cvsurl'], "/\.\.\.", $revision, $data['text']),
-            'postcontext' => linkify_compiler_output($marshaled['cvsurl'], "/\.\.\.", $revision, $data['postcontext']),
+            'precontext' => linkify_compiler_output($project['cvsurl'], "/\.\.\.", $revision, $data['precontext']),
+            'text' => linkify_compiler_output($project['cvsurl'], "/\.\.\.", $revision, $data['text']),
+            'postcontext' => linkify_compiler_output($project['cvsurl'], "/\.\.\.", $revision, $data['postcontext']),
             'sourcefile' => $data['sourcefile'],
             'sourceline' => $data['sourceline']));
 
