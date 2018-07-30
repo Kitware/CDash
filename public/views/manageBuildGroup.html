@@ -212,6 +212,10 @@
               <div class="form-group">
                 <button class="btn btn-default" ng-click="createBuildGroup(newBuildGroupName, buildType.value)">Create BuildGroup</button>
                 <img id="buildgroup_created" src="img/check.gif" style="display: none; height:16px; width=16px; margin-top:9px;" />
+                <div id="create_group_error" class="text-danger"
+                     ng-show="cdash.buildgroup_error">
+                  <b>{{cdash.buildgroup_error}}</b>
+                </div>
               </div>
             </div>
           </div> <!-- create new BuildGroup -->
