@@ -38,6 +38,7 @@ class BazelJSONHandler
     private $ParentBuild;
     private $Project;
     private $RecordingTestOutput;
+    private $RecordingTestSummary;
     private $Tests;
     private $TestsOutput;
     private $TestName;
@@ -77,6 +78,7 @@ class BazelJSONHandler
             $this->InitializeConfigure($build, '');
         }
         $this->RecordingTestOutput = false;
+        $this->RecordingTestSummary = false;
         $this->Tests = [];
         $this->TestsOutput = [];
         $this->TestName = '';
@@ -247,11 +249,37 @@ class BazelJSONHandler
                                     $this->TestsOutput[$this->TestName] .= "\n$line";
                                 }
                             }
-                        } else {
-                            if (preg_match($test_pattern, $line, $matches) === 1
+                        } elseif ($this->RecordingTestSummary) {
+                            $begin_line = explode(" ", $line)[0];
+                            // Check if this line starts with a test name
+                            // (might be a different test than the one we're
+                            // currently processing).
+                            if (array_key_exists($begin_line, $this->TestsOutput)) {
+                                $this->TestName = $test_name;
+                                $this->TestsOutput[$this->TestName] .= "\n\n$line";
+                            } elseif ($begin_line === "Executed") {
+                                // The summary of all tests begins with
+                                // "Executed"
+                                $this->RecordingTestSummary = false;
+                                $this->TestName = "";
+                            } else {
+                                // Add output to current test
+                                $this->TestsOutput[$this->TestName] .= "\n\n$line";
+                            }
+                        } elseif (preg_match($test_pattern, $line, $matches) === 1
                                     && count($matches) === 2) {
-                                $this->TestName = $matches[1];
-                                $this->RecordingTestOutput = true;
+                            // For sharded tests, this string will be:
+                            // '<test name> (shard <n> of <total>)'. Split
+                            // off just the <test name> part.
+                            $this->TestName = explode(" ", $matches[1])[0];
+                            $this->RecordingTestOutput = true;
+                        } else {
+                            // Check if this line starts with a test name
+                            $test_name = explode(" ", $line)[0];
+                            if (array_key_exists($test_name, $this->TestsOutput)) {
+                                $this->RecordingTestSummary = true;
+                                $this->TestName = $test_name;
+                                $this->TestsOutput[$this->TestName] .= "\n\n$line";
                             }
                         }
                     }
@@ -450,37 +478,76 @@ class BazelJSONHandler
                         }
                     }
 
-                    $buildtest = new BuildTest();
-                    $buildtest->BuildId = $buildid;
-                    $buildtest->Status =
-                        strtolower($json_array['testResult']['status']);
-                    $buildtest->Time =
-                        $json_array['testResult']['testAttemptDurationMillis'] / 1000.0;
+                    $test_name = $json_array['id']['testResult']['label'];
+                    $test_time = $json_array['testResult']['testAttemptDurationMillis'] / 1000.0;
 
-                    $test = new Test();
-                    $test->ProjectId = $this->Project->Id;
-                    $test->Command = '';
-                    $test->Path = '';
-                    $test->Name = $json_array['id']['testResult']['label'];
-                    if ($buildtest->Status === 'failed') {
-                        $this->NumTestsFailed[$subproject_name]++;
-                        $test->Details = 'Completed (Failed)';
-                    } elseif ($buildtest->Status === 'timeout') {
-                        $buildtest->Status = 'failed';
-                        $this->NumTestsFailed[$subproject_name]++;
-                        $test->Details = 'Completed (Timeout)';
-                        // "TIMEOUT" message is only in stderr, not stdout
-                        // Make sure that it is displayed.
-                        $this->TestsOutput[$test->Name] = "TIMEOUT\n";
+                    if (array_key_exists('shard', $json_array['id']['testResult'])) {
+                        // This test uses shards, so a Test with this name
+                        // might already exist
+                        $new_test = true;
+                        foreach ($this->Tests as $testdata) {
+                            $test = $testdata[0];
+                            $buildtest = $testdata[1];
+                            if ($test->Name === $test_name) {
+                                // Increment test time
+                                $buildtest->Time += $test_time;
+                                $new_test = false;
+                                break;
+                            }
+                        }
+                        if ($new_test) {
+                            // We'll set the overall test status from 'testSummary'
+                            $test_status = "";
+                            $this->CreateNewTest($buildid, $test_status,
+                                $test_time, $test_name);
+                        }
                     } else {
-                        $this->NumTestsPassed[$subproject_name]++;
-                        $test->Details = 'Completed';
+                        $test_status = strtolower($json_array['testResult']['status']);
+                        $this->CreateNewTest($buildid, $test_status,
+                            $test_time, $test_name);
                     }
-                    // We will set this test's output (if any) before inserting it into the database.
-                    $this->Tests[] = [$test, $buildtest];
                 }
                 break;
-
+            case 'testSummary':
+                // By default, associate any tests with this->BuildId.
+                $subproject_name = '';
+                if ($this->HasSubProjects) {
+                    // But if this project is broken up into subprojects,
+                    // we may want to assign this test to one of the children
+                    // builds instead.
+                    $target_name = $json_array['id']['testSummary']['label'];
+                    $subproject_name = SubProject::GetSubProjectForPath(
+                            $target_name, $this->Project->Id);
+                    // Skip this defect if we cannot deduce what SubProject
+                    // it belongs to.
+                    if (empty($subproject_name)) {
+                        continue;
+                    }
+                }
+                $test_name = $json_array['id']['testSummary']['label'];
+                foreach ($this->Tests as $testdata) {
+                    $test = $testdata[0];
+                    $buildtest = $testdata[1];
+                    if ($test->Name === $test_name) {
+                        $buildtest->Status =
+                            strtolower($json_array['testSummary']['overallStatus']);
+                        if ($buildtest->Status === 'failed') {
+                            $this->NumTestsFailed[$subproject_name]++;
+                            $test->Details = 'Completed (Failed)';
+                        } elseif ($buildtest->Status === 'timeout') {
+                            $buildtest->Status = 'failed';
+                            $this->NumTestsFailed[$subproject_name]++;
+                            $test->Details = 'Completed (Timeout)';
+                            // "TIMEOUT" message is only in stderr, not stdout
+                            // Make sure that it is displayed.
+                            $this->TestsOutput[$test->Name] = "TIMEOUT\n\n";
+                        } elseif (!empty($buildtest->Status)) {
+                            $this->NumTestsPassed[$subproject_name]++;
+                            $test->Details = 'Completed';
+                        }
+                        break;
+                    }
+                }
             default:
                 break;
         }
@@ -555,5 +622,37 @@ class BazelJSONHandler
         $configure->Log = '';
         $configure->Status = 0;
         $this->Configures[$subproject_name] = $configure;
+    }
+
+    private function CreateNewTest($buildid, $test_status, $test_time, $test_name)
+    {
+        $buildtest = new BuildTest();
+        $buildtest->BuildId = $buildid;
+        $buildtest->Status = $test_status;
+        $buildtest->Time = $test_time;
+
+        $test = new Test();
+        $test->ProjectId = $this->Project->Id;
+        $test->Command = '';
+        $test->Path = '';
+        $test->Name = $test_name;
+        if ($buildtest->Status === 'failed') {
+            $this->NumTestsFailed[$subproject_name]++;
+            $test->Details = 'Completed (Failed)';
+        } elseif ($buildtest->Status === 'timeout') {
+            $buildtest->Status = 'failed';
+            $this->NumTestsFailed[$subproject_name]++;
+            $test->Details = 'Completed (Timeout)';
+            // "TIMEOUT" message is only in stderr, not stdout
+            // Make sure that it is displayed.
+            $this->TestsOutput[$test->Name] = "TIMEOUT\n\n";
+        } elseif (!empty($buildtest->Status)) {
+            $this->NumTestsPassed[$subproject_name]++;
+            $test->Details = 'Completed';
+        }
+
+        // We will set this test's output (if any) before
+        // inserting it into the database.
+        $this->Tests[] = [$test, $buildtest];
     }
 }

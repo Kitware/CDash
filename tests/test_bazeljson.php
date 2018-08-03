@@ -401,6 +401,204 @@ class BazelJSONTestCase extends KWWebTestCase
         remove_build($buildid);
     }
 
+    public function testShardTest()
+    {
+        // Submit testing data.
+        $buildid = $this->submit_data('InsightExample', 'BazelJSON',
+            'cb99fa74feaf55a6777f3087becbce04',
+            dirname(__FILE__) . '/data/Bazel/bazel_shard_test.json');
+        if (!$buildid) {
+            return false;
+        }
+
+        // Validate the build.
+        $stmt = $this->PDO->query(
+                "SELECT builderrors, buildwarnings, testfailed, testpassed,
+                configureerrors, configurewarnings
+                FROM build WHERE id = $buildid");
+        $row = $stmt->fetch();
+
+
+        $answer_key = [
+            'builderrors' => 0,
+            'buildwarnings' => 0,
+            'testfailed' => 0,
+            'testpassed' => 1,
+            'configureerrors' => 0,
+            'configurewarnings' => 0
+        ];
+        foreach ($answer_key as $key => $expected) {
+            $found = $row[$key];
+            if ($found != $expected) {
+                $this->fail("Expected $expected for $key but found $found");
+            }
+        }
+
+        // Lookup specific test ID
+        $test_stmt = $this->PDO->prepare(
+            'SELECT t.id FROM test t
+            JOIN build2test b2t on b2t.testid = t.id
+            JOIN build b on b.id = b2t.buildid
+            WHERE b.id = ? AND t.name = ?');
+        pdo_execute($test_stmt, [$buildid, '//automotive/maliput/multilane:multilane_lanes_test']);
+        $testid = $test_stmt->fetchColumn();
+
+        $this->get($this->url . "/api/v1/testDetails.php?test=$testid&build=$buildid");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+
+        // Check Details
+        $expected = "Completed";
+        if (strpos($jsonobj['test']['details'], $expected) === false) {
+            $this->fail("Expected output to include '$expected'");
+        }
+
+        // Cleanup.
+        remove_build($buildid);
+    }
+
+    public function testShardTestFailures()
+    {
+        // Submit testing data.
+        $buildid = $this->submit_data('InsightExample', 'BazelJSON',
+            'f6d98ed855089e9f97105fc89372edb1',
+            dirname(__FILE__) . '/data/Bazel/bazel_shard_test_failures.json');
+        if (!$buildid) {
+            return false;
+        }
+
+        // Validate the build.
+        $stmt = $this->PDO->query(
+                "SELECT builderrors, buildwarnings, testfailed, testpassed,
+                configureerrors, configurewarnings
+                FROM build WHERE id = $buildid");
+        $row = $stmt->fetch();
+
+
+        $answer_key = [
+            'builderrors' => 0,
+            'buildwarnings' => 0,
+            'testfailed' => 1,
+            'testpassed' => 0,
+            'configureerrors' => 0,
+            'configurewarnings' => 0
+        ];
+        foreach ($answer_key as $key => $expected) {
+            $found = $row[$key];
+            if ($found != $expected) {
+                $this->fail("Expected $expected for $key but found $found");
+            }
+        }
+
+        // Lookup specific test ID
+        $test_stmt = $this->PDO->prepare(
+            'SELECT t.id FROM test t
+            JOIN build2test b2t on b2t.testid = t.id
+            JOIN build b on b.id = b2t.buildid
+            WHERE b.id = ? AND t.name = ?');
+        pdo_execute($test_stmt, [$buildid, '//automotive/maliput/multilane:multilane_lanes_test']);
+        $testid = $test_stmt->fetchColumn();
+
+        $this->get($this->url . "/api/v1/testDetails.php?test=$testid&build=$buildid");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+
+        // Check Details
+        $expected = "Completed (Failed)";
+        if (strpos($jsonobj['test']['details'], $expected) === false) {
+            $this->fail("Expected output to include '$expected'");
+        }
+
+        // Cleanup.
+        remove_build($buildid);
+    }
+
+    public function testShardTestTimeout()
+    {
+        // Submit testing data.
+        $buildid = $this->submit_data('InsightExample', 'BazelJSON',
+            'aa689b38ea361e5ccdc6b59755fbec64',
+            dirname(__FILE__) . '/data/Bazel/bazel_shard_test_timeout.json');
+        if (!$buildid) {
+            return false;
+        }
+
+        // Validate the build.
+        $stmt = $this->PDO->query(
+                "SELECT builderrors, buildwarnings, testfailed, testpassed,
+                configureerrors, configurewarnings
+                FROM build WHERE id = $buildid");
+        $row = $stmt->fetch();
+
+
+        $answer_key = [
+            'builderrors' => 0,
+            'buildwarnings' => 0,
+            'testfailed' => 1,
+            'testpassed' => 0,
+            'configureerrors' => 0,
+            'configurewarnings' => 0
+        ];
+        foreach ($answer_key as $key => $expected) {
+            $found = $row[$key];
+            if ($found != $expected) {
+                $this->fail("Expected $expected for $key but found $found");
+            }
+        }
+
+        // Lookup specific test ID
+        $test_stmt = $this->PDO->prepare(
+            'SELECT t.id FROM test t
+            JOIN build2test b2t on b2t.testid = t.id
+            JOIN build b on b.id = b2t.buildid
+            WHERE b.id = ? AND t.name = ?');
+        pdo_execute($test_stmt, [$buildid, '//automotive/maliput/multilane:multilane_lanes_test']);
+        $testid = $test_stmt->fetchColumn();
+
+        $this->get($this->url . "/api/v1/testDetails.php?test=$testid&build=$buildid");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+
+        // Use the API to verify that the expected output is displayed
+        $output = $jsonobj['test']['output'];
+
+        $expected = "Note: This is test shard 8 of 10.";
+        if (strpos($output, $expected) === false) {
+            $this->fail("Expected output to include '$expected'");
+        }
+        $expected = "Note: This is test shard 9 of 10.";
+        if (strpos($output, $expected) === false) {
+            $this->fail("Expected output to include '$expected'");
+        }
+        $expected = "Note: This is test shard 10 of 10.";
+        if (strpos($output, $expected) === false) {
+            $this->fail("Expected output to include '$expected'");
+        }
+        // 'TIMEOUT' has markup, skip looking for that to make test simpler
+        $expected = "in 3 out of 10 in 60.1s";
+        if (strpos($output, $expected) === false) {
+            $this->fail("Expected output to include '$expected'");
+        }
+        $expected = "Stats over 10 runs";
+        if (strpos($output, $expected) === false) {
+            $this->fail("Expected output to include '$expected'");
+        }
+
+        // Check Details
+        $expected = "Completed (Timeout)";
+        if (strpos($jsonobj['test']['details'], $expected) === false) {
+            $this->fail("Expected output to include '$expected'");
+        }
+
+        // Check time - should be sum of all shards
+        $expected = "3m 5s 750ms";
+        if (strpos($jsonobj['test']['time'], $expected) === false) {
+            $this->fail("Expected output to include '$expected'".var_dump($jsonobj['time']));
+        }
+
+        // Cleanup.
+        remove_build($buildid);
+    }
 
     private function submit_data($project_name, $upload_type, $md5, $file_path)
     {
