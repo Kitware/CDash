@@ -18,6 +18,9 @@ jobs:
     working_directory: /home/kitware/cdash
     steps:
       - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+          version: 18.03.1-ce
       - run: sudo /etc/init.d/apache2 restart
       - run:
           name: Upgrade Chrome
@@ -26,6 +29,14 @@ jobs:
             sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
             sudo apt-get update
             sudo apt-get -y install google-chrome-stable
+      - run:
+          name: Install Docker client
+          command: |
+            set -x
+            VER="18.03.1-ce"
+            curl -L -o /tmp/docker-$VER.tgz https://download.docker.com/linux/static/stable/x86_64/docker-$VER.tgz
+            tar -xz -C /tmp -f /tmp/docker-$VER.tgz
+            sudo mv /tmp/docker/* /usr/bin
       - run: sudo /etc/init.d/apache2 restart
       - run: sudo ln -s /home/kitware/cdash/public /var/www/html/cdash
       - run: chmod a+rwx backup log public/rss public/upload
@@ -43,3 +54,10 @@ jobs:
       - run: rm -rf _build && mkdir _build
       - run: cd _build && cmake -DCDASH_TESTING_RENAME_LOGS=true -DCDASH_DIR_NAME=cdash -DCDASH_DB_TYPE=pgsql -DCDASH_DB_LOGIN=postgres -DBUILDNAME="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}_PostgreSQL" -DSITE="CircleCI-2.0" ..
       - run: cd _build && ctest --extra-verbose --no-compress-output --track Continuous --test-action Test --test-action Submit .
+      # Build and push Docker image.
+      - run: |
+          if [ "${CIRCLE_BRANCH}" == "master" ]; then
+            docker build -t kitware/cdash:latest .
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker push kitware/cdash:latest
+          fi
