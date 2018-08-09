@@ -440,6 +440,19 @@
       </center>
       <br/>
 
+      <!-- Relationships -->
+      <div ng-if="::cdash.hasrelationships">
+        <div class="title-divider">
+          Relationships
+        </div>
+        <div ng-repeat="from in ::cdash.relationships_from">
+          This build {{::from.relationship}} <a ng-href="buildSummary.php?buildid={{::from.relatedid}}">{{::from.name}}</a>.
+        </div>
+        <div ng-repeat="to in ::cdash.relationships_to">
+          <a ng-href="buildSummary.php?buildid={{::to.buildid}}">{{::to.name}}</a> {{::to.relationship}} this build.
+        </div>
+      </div>
+
       <!-- Update -->
       <div ng-if="::cdash.hasupdate">
         <div class="title-divider" id="Update">

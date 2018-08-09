@@ -168,6 +168,7 @@ add_php_test(outputcolor)
 add_php_test(buildproperties)
 add_php_test(timestatus)
 add_php_test(bazeljson)
+add_php_test(buildrelationship)
 
 if(CDASH_GITHUB_USERNAME AND CDASH_GITHUB_PASSWORD)
   add_php_test(github_PR_comment)

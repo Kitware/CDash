@@ -21,6 +21,7 @@ include 'include/version.php';
 
 use CDash\Model\Build;
 use CDash\Model\BuildInformation;
+use CDash\Model\BuildRelationship;
 use CDash\Model\BuildUserNote;
 use CDash\Model\Project;
 use CDash\Model\User;
@@ -377,6 +378,14 @@ if ($generate_issue_link) {
     $response['bugtracker'] = $project->BugTrackerType;
 }
 $response['newissueurl'] = $new_issue_url;
+
+// Check if this build is related to any others.
+$build_relationship = $service->create(BuildRelationship::class);
+$relationships = $build_relationship->GetRelationships($build);
+$response['relationships_to'] = $relationships['to'];
+$response['relationships_from'] = $relationships['from'];
+$response['hasrelationships'] = !empty($response['relationships_to']) ||
+    !empty($response['relationships_from']);
 
 $end = microtime_float();
 $response['generationtime'] = round($end - $start, 3);

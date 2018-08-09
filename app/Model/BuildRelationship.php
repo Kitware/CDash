@@ -180,4 +180,30 @@ class BuildRelationship
             'relationship' => $this->Relationship
         ];
     }
+
+    /** Return marshaled arrays for all the builds related to this one. */
+    public function GetRelationships($build)
+    {
+        $response = [];
+        $stmt = $this->PDO->prepare(
+            'SELECT relatedid, relationship, b.name
+            FROM related_builds
+            JOIN build b ON b.id = relatedid
+            WHERE buildid = ?');
+        if (!pdo_execute($stmt, [$build->Id])) {
+            return false;
+        }
+        $response['from'] = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        $stmt = $this->PDO->prepare(
+            'SELECT buildid, relationship, b.name
+            FROM related_builds
+            JOIN build b ON b.id = buildid
+            WHERE relatedid = ?');
+        if (!pdo_execute($stmt, [$build->Id])) {
+            return false;
+        }
+        $response['to'] = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return $response;
+    }
 }
