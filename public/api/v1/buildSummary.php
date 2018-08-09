@@ -24,6 +24,7 @@ use CDash\Model\BuildInformation;
 use CDash\Model\BuildUserNote;
 use CDash\Model\Project;
 use CDash\Model\User;
+use CDash\ServiceContainer;
 
 $start = microtime_float();
 $response = [];
@@ -32,7 +33,8 @@ $build = get_request_build();
 $buildid = $build->Id;
 $siteid = $build->SiteId;
 
-$project = new Project();
+$service = ServiceContainer::getInstance();
+$project = $service->create(Project::class);
 $project->Id = $build->ProjectId;
 $project->Fill();
 
@@ -56,7 +58,7 @@ if ($previous_buildid > 0) {
     $menu['previous'] = "buildSummary.php?buildid=$previous_buildid";
 
     // Find the last submit date.
-    $previous_build = new Build();
+    $previous_build = $service->create(Build::class);
     $previous_build->Id = $previous_buildid;
     $previous_build->FillFromId($previous_build->Id);
     $lastsubmitdate = date(FMT_DATETIMETZ, strtotime($previous_build->StartTime . ' UTC'));
@@ -79,7 +81,7 @@ get_dashboard_JSON($project->Name, $date, $response);
 
 $userid = get_userid_from_session(false);
 if ($userid) {
-    $user = new User();
+    $user = $service->create(User::class);
     $user->Id = $userid;
     $user->Fill();
     $user_response['id'] = $userid;
@@ -116,7 +118,7 @@ $note_array = pdo_fetch_array($note);
 $build_response['note'] = $note_array['c'];
 
 // Find the OS and compiler information
-$buildinfo = new BuildInformation();
+$buildinfo = $service->create(BuildInformation::class);
 if ($build->GetParentId() > 0) {
     $buildinfo->BuildId = $build->GetParentId();
 } else {
