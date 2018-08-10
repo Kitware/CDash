@@ -1579,20 +1579,36 @@ function echo_main_dashboard_JSON($project_instance, $date)
 
             // Compute proc time for each parent build.
             if (!empty($parentids)) {
+                // Honor any SubProject include/exclude filters.
+                $extra_joins = '';
+                $extra_wheres = '';
+                if ($num_selected_subprojects > 0) {
+                    $extra_joins =
+                        'JOIN subproject2build AS sb2b ON (b.id = sb2b.buildid)
+                         JOIN subproject AS sb ON (sb2b.subprojectid = sb.id)';
+                    if ($include_subprojects) {
+                        $extra_wheres = "AND sb.name IN ($selected_subprojects)";
+                    } elseif ($exclude_subprojects) {
+                        $extra_wheres = "AND sb.name NOT IN ($selected_subprojects)";
+                    }
+                }
                 $in  = str_repeat('?,', count($parentids) - 1) . '?';
                 $test_time_stmt = $PDO->prepare(
                         "SELECT b.parentid AS id, b2t.testid, b2t.time
                         FROM build2test b2t
                         JOIN build b on (b.id = b2t.buildid)
-                        WHERE b.parentid IN ($in)");
+                        $extra_joins
+                        WHERE b.parentid IN ($in) $extra_wheres");
                 pdo_execute($test_time_stmt, $parentids);
                 $num_procs_stmt = $PDO->prepare(
                         "SELECT b.parentid AS id, b2t.testid, tm.value
                         FROM build2test b2t
                         JOIN testmeasurement tm ON (b2t.testid = tm.testid)
                         JOIN build b ON (b.id = b2t.buildid)
-                        WHERE b.parentid IN ($in)
-                        AND tm.name = 'Processors'");
+                        $extra_joins
+                        WHERE b.parentid IN ($in) AND
+                              tm.name = 'Processors'
+                              $extra_wheres");
                 pdo_execute($num_procs_stmt, $parentids);
                 compute_proc_time($test_timing, $test_time_stmt, $num_procs_stmt, $proc_time_verified);
             }
