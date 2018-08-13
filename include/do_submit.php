@@ -502,7 +502,9 @@ function put_submit_file()
 
         // The file is given a more appropriate name during do_submit, so we can
         // delete the old file now.
-        unlink($filename);
+        if (is_file($filename)) {
+            unlink($filename);
+        }
     }
 
     // Returns the OK submission
