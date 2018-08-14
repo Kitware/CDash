@@ -237,11 +237,16 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
 
   // Add a new row to our list of filters.
   $scope.addFilter = function(index) {
-    var parent_filter = $scope.filterdata.filters[index-1];
+    var previous_filter = $scope.filterdata.filters[index-1];
+    if (previous_filter.hasOwnProperty('type')) {
+      var filter_to_copy = previous_filter.filters[previous_filter.filters.length - 1];
+    } else {
+      var filter_to_copy = previous_filter;
+    }
     var filter = {
-      key: parent_filter.key,
-      compare: parent_filter.compare,
-      value: parent_filter.value,
+      key: filter_to_copy.key,
+      compare: filter_to_copy.compare,
+      value: filter_to_copy.value,
     };
     $scope.filterdata.filters.splice(index, 0, filter);
   };
@@ -324,13 +329,60 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
     }
 
     for (var i = 1; i <= n; i++) {
-      s = s + "&field" + i + "=" + escape($scope.filterdata.filters[i-1].key);
-      s = s + "&compare" + i + "=" + escape($scope.filterdata.filters[i-1].compare);
-      s = s + "&value" + i + "=" + escape($scope.filterdata.filters[i-1].value);
+      if ($scope.filterdata.filters[i-1].hasOwnProperty('type')) {
+        var num_subfilters = $scope.filterdata.filters[i-1].filters.length;
+        if (num_subfilters < 1) {
+          continue;
+        }
+        var prefix = "field" + i;
+        s = s + "&" + prefix + "=block";
+        s = s + "&" + prefix + "count=" + num_subfilters;
+        for (var j = 1; j <= num_subfilters ; j++) {
+          s = s + "&" + prefix + "field" + j + "=" + escape($scope.filterdata.filters[i-1].filters[j-1].key);
+          s = s + "&" + prefix + "compare" + j + "=" + escape($scope.filterdata.filters[i-1].filters[j-1].compare);
+          s = s + "&" + prefix + "value" + j + "=" + escape($scope.filterdata.filters[i-1].filters[j-1].value);
+        }
+      } else {
+        s = s + "&field" + i + "=" + escape($scope.filterdata.filters[i-1].key);
+        s = s + "&compare" + i + "=" + escape($scope.filterdata.filters[i-1].compare);
+        s = s + "&value" + i + "=" + escape($scope.filterdata.filters[i-1].value);
+      }
     }
 
     return s;
   }
+
+  // Add a sub-block of filters to our list.
+  $scope.addFilterBlock = function(index) {
+    var parent_filter = $scope.filterdata.filters[index-1];
+    var or_block = {
+      type: 'or',
+      filters: []
+    };
+    var filter = {
+      key: parent_filter.key,
+      compare: parent_filter.compare,
+      value: parent_filter.value,
+    };
+    or_block.filters.push(filter);
+    $scope.filterdata.filters.splice(index, 0, or_block);
+  };
+
+  // Add a new row to our list of filters.
+  $scope.addFilterToBlock = function(block, index) {
+    var parent_filter = block.filters[index-1];
+    var filter = {
+      key: parent_filter.key,
+      compare: parent_filter.compare,
+      value: parent_filter.value,
+    };
+    block.filters.splice(index, 0, filter);
+  };
+
+  // Remove a filter from our list.
+  $scope.removeFilterFromBlock = function(block, index) {
+    block.filters.splice(index-1, 1);
+  };
 
   var url = window.location.pathname;
   var filename = url.substring(url.lastIndexOf('/')+1);
@@ -348,7 +400,13 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
   }).then(function success(s) {
     var filterdata = s.data;
     filterdata.filters.forEach(function(filter) {
-      filter.compare = filter.compare.toString();
+      if (filter.hasOwnProperty('type')) {
+        filter.filters.forEach(function(subfilter) {
+          subfilter.compare = subfilter.compare.toString();
+        });
+      } else if (filter.hasOwnProperty('compare')) {
+        filter.compare = filter.compare.toString();
+      }
     });
 
     $scope.filterdata = filterdata;

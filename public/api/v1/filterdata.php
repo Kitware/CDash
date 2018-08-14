@@ -76,9 +76,27 @@ function get_filterdata_array_from_request($page_id = '')
             continue;
         }
         $field = htmlspecialchars(pdo_real_escape_string($_REQUEST['field' . $i]));
+        if ($field == 'block') {
+            // Handle filter blocks here.
+            $filter = [
+                'filters' => []
+            ];
+            $subfiltercount = pdo_real_escape_numeric($_REQUEST["field{$i}count"]);
+            for ($j = 1; $j <= $subfiltercount; ++$j) {
+                $field = htmlspecialchars(pdo_real_escape_string($_REQUEST["field{$i}field{$j}"]));
+                $compare = htmlspecialchars(pdo_real_escape_string($_REQUEST["field{$i}compare{$j}"]));
+                $value = htmlspecialchars(pdo_real_escape_string($_REQUEST["field{$i}value{$j}"]));
+                $filter['filters'][] = [
+                    'key' => $field,
+                    'value' => $value,
+                    'compare' => $compare
+                ];
+            }
+            $filters[] = $filter;
+            continue;
+        }
         $compare = htmlspecialchars(pdo_real_escape_string($_REQUEST['compare' . $i]));
         $value = htmlspecialchars(pdo_real_escape_string($_REQUEST['value' . $i]));
-
         $filters[] = [
             'key' => $field,
             'value' => $value,

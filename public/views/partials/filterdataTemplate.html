@@ -34,34 +34,82 @@
         </td>
       </tr>
 
-      <tr ng-repeat="filter in filterdata.filters" class="filterFields" number="{{$index + 1}}" id="filter{{$index+1}}" ng-class-even="'treven'" ng-class-odd="'trodd'">
-        <td>
-          <select id="id_field{{$index+1}}" name="field{{$index+1}}" ng-model="filter.key" ng-change="changeFilter($index+1)">
-            <option ng-repeat="availablefilter in filterdata.availablefilters" value="{{availablefilter}}" ng-selected="filterdata.availablefilters[$index] == filter.key">
+      <tr ng-repeat="filter in filterdata.filters" class="filterFields" id="filter{{$index+1}}" ng-class-even="'treven'" ng-class-odd="'trodd'">
+        <td ng-if="::filter.filters">
+          <table cellpadding="0" cellspacing="0" style="margin-left: 5%">
+            <tr class="filterFields" id="subfilter{{$index+1}}"
+                ng-repeat="subfilter in filter.filters" >
+              <td>
+                ...
+                <select id="id_field{{$index+1}}" name="field{{$index+1}}"
+                        ng-model="subfilter.key" ng-change="changeFilter($index+1)">
+                  <option ng-repeat="availablefilter in filterdata.availablefilters"
+                          value="{{availablefilter}}"
+                          ng-selected="filterdata.availablefilters[$index] == subfilter.key">
+                    {{filterdefinitions[availablefilter].text}}
+                  </option>
+                </select>
+
+                &nbsp;
+
+                <select id="id_compare{{$index+1}}" name="compare{{$index+1}}"
+                        ng-model="subfilter.compare">
+                  <option value="0">-- choose comparison --</option>
+                  <option ng-repeat="comparison in comparisons[filterdefinitions[subfilter.key].type]"
+                          value="{{comparison.value}}"
+                          ng-selected="subfilter.compare == comparison.value">
+                    {{comparison.text}}
+                  </option>
+                </select>
+
+                &nbsp;
+
+                <input type="text" size="60" id="id_value{{$index+1}}" name="value{{$index+1}}" value="{{subfilter.value}}" ng-model="subfilter.value"></input>
+
+                &nbsp;
+
+                <input type="button" value="-" name="remove{{$index+1}}" ng-click="removeFilterFromBlock(filter, $index+1)" ng-disabled="$last && $first"></input>
+                <input type="button" value="+" name="add{{$index+1}}" ng-click="addFilterToBlock(filter, $index+1)"></input>
+              </td>
+            </tr>
+          </table>
+          <input type="button" value="-" ng-click="removeFilter($index+1)" style="margin-left: 90%"></input>
+          <input type="button" value="+" name="add{{$index+1}}" ng-click="addFilter($index+1)"></input>
+          <input type="button" value="..." name="block{{$index+1}}" ng-click="addFilterBlock($index+1)"></input>
+        </td>
+
+        <td ng-if="::filter.key">
+          <select id="id_field{{$index+1}}" name="field{{$index+1}}"
+                  ng-model="filter.key"
+                  ng-change="changeFilter($index+1)">
+            <option ng-repeat="availablefilter in filterdata.availablefilters"
+                    value="{{availablefilter}}"
+                    ng-selected="filterdata.availablefilters[$index] == filter.key">
               {{filterdefinitions[availablefilter].text}}
             </option>
           </select>
 
           &nbsp;
 
-          <select id="id_compare{{$index+1}}" name="compare{{$index+1}}" ng-model="filter.compare">
+          <select id="id_compare{{$index+1}}" name="compare{{$index+1}}"
+                  ng-model="filter.compare">
             <option value="0">-- choose comparison --</option>
-            <option ng-repeat="comparison in comparisons[filterdefinitions[filter.key].type]" value="{{comparison.value}}" ng-selected="filter.compare == comparison.value">
+            <option ng-repeat="comparison in comparisons[filterdefinitions[filter.key].type]"
+                    value="{{comparison.value}}"
+                    ng-selected="filter.compare == comparison.value">
               {{comparison.text}}
             </option>
           </select>
 
           &nbsp;
 
-          <input type="text" size="60" id="id_value{{$index+1}}" name="value{{$index+1}}" value="{{filter.value}}" ng-model="filter.value">
-          </input>
+          <input type="text" size="60" id="id_value{{$index+1}}" name="value{{$index+1}}" value="{{filter.value}}" ng-model="filter.value"></input>
 
           &nbsp;
 
-          <input type="button" value="-" name="remove{{$index+1}}" ng-click="removeFilter($index+1)" ng-disabled="$last && $first">
-          </input>
-          <input type="button" value="+" name="add{{$index+1}}" ng-click="addFilter($index+1)">
-          </input>
+          <input type="button" value="-" name="remove{{$index+1}}" ng-click="removeFilter($index+1)" ng-disabled="$last && $first"></input>
+          <input type="button" value="+" name="add{{$index+1}}" ng-click="addFilter($index+1)"></input>
+          <input type="button" value="..." name="block{{$index+1}}" ng-click="addFilterBlock($index+1)"></input>
         </td>
       </tr>
 

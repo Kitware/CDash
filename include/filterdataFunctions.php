@@ -745,9 +745,8 @@ function filterdata_XML($filterdata)
     $xml .= '<filters>';
 
     foreach ($filters as $filter) {
-        if (array_key_exists('type', $filter)) {
+        if (array_key_exists('filters', $filter)) {
             $xml .= '<filter>';
-            $xml .= add_XML_value('type', $filter['type']);
             foreach ($filter['filters'] as $subfilter) {
                 $xml .= '<subfilter>';
                 $xml .= add_XML_value('field', $subfilter['field']);
@@ -1052,23 +1051,18 @@ function get_filterdata_from_request($page_id = '')
     @$filtercombine = htmlspecialchars(pdo_real_escape_string($_REQUEST['filtercombine']));
     if (strtolower($filtercombine) == 'or') {
         $sql_combine = 'OR';
+        $sql_other_combine = 'AND';
     } else {
         $sql_combine = 'AND';
+        $sql_other_combine = 'OR';
     }
 
     for ($i = 1; $i <= $filtercount; ++$i) {
-        if (empty($_REQUEST['field' . $i])) {
-            continue;
-        }
-        $fieldinfo = htmlspecialchars(pdo_real_escape_string($_REQUEST['field' . $i]));
-        $fieldinfo = explode('/', $fieldinfo, 2);
-        $field = $fieldinfo[0];
-        if ($field == 'or') {
-            // Handle 'OR' blocks here.
+        if (array_key_exists("field{$i}count", $_REQUEST)) {
+            // Handle block of filters.
             $subfiltercount = pdo_real_escape_numeric(@$_REQUEST["field{$i}count"]);
             $subclauses = [];
             $filter = [
-                'type' => 'or',
                 'filters' => []
             ];
             for ($j = 1; $j <= $subfiltercount; ++$j) {
@@ -1086,7 +1080,7 @@ function get_filterdata_from_request($page_id = '')
             $filters[] = $filter;
             if (count($subclauses) > 0) {
                 $clauses[] =
-                    'OR (' . join($subclauses, " $sql_combine ") . ')';
+                    '(' . join($subclauses, " $sql_other_combine ") . ')';
             }
             continue;
         }
@@ -1106,7 +1100,6 @@ function get_filterdata_from_request($page_id = '')
         $sql = '';
     } else {
         $sql = 'AND (' . join($clauses, " $sql_combine ") . ')';
-        $sql = str_replace(" $sql_combine OR ", ' OR ', $sql);
     }
 
     // If no filters were passed in as parameters,
