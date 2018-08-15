@@ -745,11 +745,24 @@ function filterdata_XML($filterdata)
     $xml .= '<filters>';
 
     foreach ($filters as $filter) {
-        $xml .= '<filter>';
-        $xml .= add_XML_value('field', $filter['field']);
-        $xml .= add_XML_value('compare', $filter['compare']);
-        $xml .= add_XML_value('value', $filter['value']);
-        $xml .= '</filter>';
+        if (array_key_exists('type', $filter)) {
+            $xml .= '<filter>';
+            $xml .= add_XML_value('type', $filter['type']);
+            foreach ($filter['filters'] as $subfilter) {
+                $xml .= '<subfilter>';
+                $xml .= add_XML_value('field', $subfilter['field']);
+                $xml .= add_XML_value('compare', $subfilter['compare']);
+                $xml .= add_XML_value('value', $subfilter['value']);
+                $xml .= '</subfilter>';
+            }
+            $xml .= '</filter>';
+        } else {
+            $xml .= '<filter>';
+            $xml .= add_XML_value('field', $filter['field']);
+            $xml .= add_XML_value('compare', $filter['compare']);
+            $xml .= add_XML_value('value', $filter['value']);
+            $xml .= '</filter>';
+        }
     }
 
     $xml .= '</filters>';
@@ -1047,6 +1060,37 @@ function get_filterdata_from_request($page_id = '')
         if (empty($_REQUEST['field' . $i])) {
             continue;
         }
+        $fieldinfo = htmlspecialchars(pdo_real_escape_string($_REQUEST['field' . $i]));
+        $fieldinfo = explode('/', $fieldinfo, 2);
+        $field = $fieldinfo[0];
+        if ($field == 'or') {
+            // Handle 'OR' blocks here.
+            $subfiltercount = pdo_real_escape_numeric(@$_REQUEST["field{$i}count"]);
+            $subclauses = [];
+            $filter = [
+                'type' => 'or',
+                'filters' => []
+            ];
+            for ($j = 1; $j <= $subfiltercount; ++$j) {
+                $subfilter_obj = [];
+                $subfilter_sql_clause =
+                    parse_filter_params_from_request(
+                        "field{$i}field{$j}", "field{$i}compare${j}",
+                        "field{$i}value{$j}", $pageSpecificFilters,
+                        $filterdata, $subfilter_obj);
+                if ($subfilter_sql_clause) {
+                    $subclauses[] = $subfilter_sql_clause;
+                    $filter['filters'][] = $subfilter_obj;
+                }
+            }
+            $filters[] = $filter;
+            if (count($subclauses) > 0) {
+                $clauses[] =
+                    'OR (' . join($subclauses, " $sql_combine ") . ')';
+            }
+            continue;
+        }
+
         $filter_obj = [];
         $filter_sql_clause =
             parse_filter_params_from_request("field{$i}", "compare${i}",
@@ -1062,6 +1106,7 @@ function get_filterdata_from_request($page_id = '')
         $sql = '';
     } else {
         $sql = 'AND (' . join($clauses, " $sql_combine ") . ')';
+        $sql = str_replace(" $sql_combine OR ", ' OR ', $sql);
     }
 
     // If no filters were passed in as parameters,
