@@ -951,8 +951,6 @@ function get_filterdata_from_request($page_id = '')
     $clauses = 0;
     $filterdata = array();
     $filters = array();
-    $add_filter = 0;
-    $remove_filter = 0;
     $filterdata['hasdateclause'] = 0;
 
     if (empty($page_id)) {
@@ -993,17 +991,9 @@ function get_filterdata_from_request($page_id = '')
         $fieldinfo = htmlspecialchars(pdo_real_escape_string($_REQUEST['field' . $i]));
         $compare = htmlspecialchars(pdo_real_escape_string($_REQUEST['compare' . $i]));
         $value = htmlspecialchars(pdo_real_escape_string($_REQUEST['value' . $i]));
-        @$add = $_REQUEST['add' . $i];
-        @$remove = $_REQUEST['remove' . $i];
 
         $fieldinfo = explode('/', $fieldinfo, 2);
         $field = $fieldinfo[0];
-
-        if ($add == '+') {
-            $add_filter = $i;
-        } elseif ($remove == '-') {
-            $remove_filter = $i;
-        }
 
         $cv = get_sql_compare_and_value($compare, $value);
         $sql_compare = $cv[0];
@@ -1061,30 +1051,6 @@ function get_filterdata_from_request($page_id = '')
     //
     if (0 == count($filters)) {
         $filters[] = $pageSpecificFilters->getDefaultFilter();
-    }
-
-    // If adding or removing a filter, do it before saving the
-    // $filters array in the $filterdata...
-    //
-    if ($add_filter != 0) {
-        $idx = $add_filter - 1;
-
-        // Add a copy of the existing filter we are adding after:
-        //
-        $filter = $filters[$idx];
-
-        array_splice($filters, $idx, 0, array($filter));
-        //
-        // with $length=0, array_splice is an "insert array element" call...
-    }
-
-    if ($remove_filter != 0) {
-        $idx = $remove_filter - 1;
-
-        array_splice($filters, $idx, 1);
-        //
-        // with $length=1, and no $replacement, array_splice is a "delete array
-        // element" call...
     }
 
     // Fill up filterdata and return it:
