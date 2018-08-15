@@ -929,6 +929,67 @@ function get_sql_compare_and_value($compare, $value)
     return array($sql_compare, $sql_value);
 }
 
+// Parse a filter's field, compare, and value from the request and return the
+// corresponding SQL clause.  Also updates $filterdata and returns an
+// associative array representation of this filter in $filter_obj.
+function parse_filter_params_from_request($field_var, $compare_var, $value_var,
+                                          $pageSpecificFilters, &$filterdata,
+                                          &$filter_obj)
+{
+    $sql = '';
+    $required_params = [$field_var, $compare_var, $value_var];
+    foreach ($required_params as $param) {
+        if (!array_key_exists($param, $_REQUEST)) {
+            return $sql;
+        }
+    }
+
+    $fieldinfo = htmlspecialchars(pdo_real_escape_string($_REQUEST[$field_var]));
+    $fieldinfo = explode('/', $fieldinfo, 2);
+    $field = $fieldinfo[0];
+    $compare = htmlspecialchars(pdo_real_escape_string($_REQUEST[$compare_var]));
+    $value = htmlspecialchars(pdo_real_escape_string($_REQUEST[$value_var]));
+
+    $cv = get_sql_compare_and_value($compare, $value);
+    $sql_compare = $cv[0];
+    $sql_value = $cv[1];
+
+    $sql_field = $pageSpecificFilters->getSqlField($field);
+
+    // The following filter types are considered 'date clauses' so that the
+    // default date clause of "builds from today only" is not used...
+    //
+    if ($field == 'buildstarttime' || $field == 'buildstamp' ||
+            $field == 'revision') {
+        $filterdata['hasdateclause'] = 1;
+    }
+
+    // Time durations can either be specified as a number of seconds,
+    // or as a string representing a time interval.
+    if (strpos($field, 'duration') !== false) {
+        $input_value = trim($sql_value, "'");
+        $sql_value = get_seconds_from_interval($input_value);
+        if ($input_value !== $sql_value && $field === 'updateduration') {
+            // Update duration is stored as number of minutes (not seconds)
+            // so if we just converted this value from string to seconds
+            // we should also convert it from seconds to minutes here as well.
+            $sql_value /= 60.0;
+        }
+    }
+
+    if ($sql_field != '' && $sql_compare != '') {
+        $sql = $sql_field . ' ' . $sql_compare . ' ' . $sql_value;
+    }
+
+    $filter_obj = [
+        'field'   => $field,
+        'compare' => $compare,
+        'value'   => $value
+    ];
+
+    return $sql;
+}
+
 // Analyze parameter values given in the URL _REQUEST and fill up a php
 // $filterdata structure with them.
 //
@@ -948,9 +1009,9 @@ function get_filterdata_from_request($page_id = '')
     global $CDASH_CSS_FILE;
     $sql = '';
     $xml = '';
-    $clauses = 0;
-    $filterdata = array();
-    $filters = array();
+    $clauses = [];
+    $filterdata = [];
+    $filters = [];
     $filterdata['hasdateclause'] = 0;
 
     if (empty($page_id)) {
@@ -982,74 +1043,32 @@ function get_filterdata_from_request($page_id = '')
         $sql_combine = 'AND';
     }
 
-    $sql = 'AND (';
-
     for ($i = 1; $i <= $filtercount; ++$i) {
         if (empty($_REQUEST['field' . $i])) {
             continue;
         }
-        $fieldinfo = htmlspecialchars(pdo_real_escape_string($_REQUEST['field' . $i]));
-        $compare = htmlspecialchars(pdo_real_escape_string($_REQUEST['compare' . $i]));
-        $value = htmlspecialchars(pdo_real_escape_string($_REQUEST['value' . $i]));
-
-        $fieldinfo = explode('/', $fieldinfo, 2);
-        $field = $fieldinfo[0];
-
-        $cv = get_sql_compare_and_value($compare, $value);
-        $sql_compare = $cv[0];
-        $sql_value = $cv[1];
-
-        $sql_field = $pageSpecificFilters->getSqlField($field);
-
-        // The following filter types are considered 'date clauses' so that the
-        // default date clause of "builds from today only" is not used...
-        //
-        if ($field == 'buildstarttime' || $field == 'buildstamp' ||
-            $field == 'revision') {
-            $filterdata['hasdateclause'] = 1;
+        $filter_obj = [];
+        $filter_sql_clause =
+            parse_filter_params_from_request("field{$i}", "compare${i}",
+                    "value{$i}", $pageSpecificFilters, $filterdata,
+                    $filter_obj);
+        $filters[] = $filter_obj;
+        if ($filter_sql_clause) {
+            $clauses[] = $filter_sql_clause;
         }
-
-        // Time durations can either be specified as a number of seconds,
-        // or as a string representing a time interval.
-        if (strpos($field, 'duration') !== false) {
-            $input_value = trim($sql_value, "'");
-            $sql_value = get_seconds_from_interval($input_value);
-            if ($input_value !== $sql_value && $field === 'updateduration') {
-                // Update duration is stored as number of minutes (not seconds)
-                // so if we just converted this value from string to seconds
-                // we should also convert it from seconds to minutes here as well.
-                $sql_value /= 60.0;
-            }
-        }
-
-        if ($sql_field != '' && $sql_compare != '') {
-            if ($clauses > 0) {
-                $sql .= ' ' . $sql_combine . ' ';
-            }
-
-            $sql .= $sql_field . ' ' . $sql_compare . ' ' . $sql_value;
-
-            ++$clauses;
-        }
-
-        $filters[] = array(
-            'field' => $field,
-            'compare' => $compare,
-            'value' => $value,
-        );
     }
 
-    if ($clauses == 0) {
+    if (count($clauses) == 0) {
         $sql = '';
     } else {
-        $sql .= ')';
+        $sql = 'AND (' . join($clauses, " $sql_combine ") . ')';
     }
 
     // If no filters were passed in as parameters,
     // then add one default filter so that the user sees
     // somewhere to enter filter queries in the GUI:
     //
-    if (0 == count($filters)) {
+    if (count($filters) == 0) {
         $filters[] = $pageSpecificFilters->getDefaultFilter();
     }
 
