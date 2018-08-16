@@ -251,17 +251,22 @@ class BazelJSONHandler
                             }
                         } elseif ($this->RecordingTestSummary) {
                             $begin_line = explode(" ", $line)[0];
-                            // Check if this line starts with a test name
-                            // (might be a different test than the one we're
-                            // currently processing).
-                            if (array_key_exists($begin_line, $this->TestsOutput)) {
-                                $this->TestName = $test_name;
-                                $this->TestsOutput[$this->TestName] .= "\n\n$line";
-                            } elseif ($begin_line === "Executed") {
+                            if ($begin_line === "Executed") {
                                 // The summary of all tests begins with
                                 // "Executed"
                                 $this->RecordingTestSummary = false;
                                 $this->TestName = "";
+                            } elseif ($this->IsTestName($begin_line)) {
+                                // Check if this line starts with a test name
+                                // (might be a different test than the one we're
+                                // currently processing).
+                                $this->TestName = $begin_line;
+                                if (!array_key_exists(
+                                      $this->TestName, $this->TestsOutput)) {
+                                    $this->TestsOutput[$this->TestName] = $line;
+                                } else {
+                                    $this->TestsOutput[$this->TestName] .= "\n\n$line";
+                                }
                             } else {
                                 // Add output to current test
                                 $this->TestsOutput[$this->TestName] .= "\n\n$line";
@@ -279,7 +284,12 @@ class BazelJSONHandler
                             if (array_key_exists($test_name, $this->TestsOutput)) {
                                 $this->RecordingTestSummary = true;
                                 $this->TestName = $test_name;
-                                $this->TestsOutput[$this->TestName] .= "\n\n$line";
+                                if (!array_key_exists(
+                                      $this->TestName, $this->TestsOutput)) {
+                                    $this->TestsOutput[$this->TestName] = $line;
+                                } else {
+                                    $this->TestsOutput[$this->TestName] .= "\n\n$line";
+                                }
                             }
                         }
                     }
@@ -654,5 +664,16 @@ class BazelJSONHandler
         // We will set this test's output (if any) before
         // inserting it into the database.
         $this->Tests[] = [$test, $buildtest];
+    }
+
+    private function IsTestName($name)
+    {
+        foreach ($this->Tests as $testdata) {
+            $test = $testdata[0];
+            if ($test->Name === $name) {
+                return true;
+            }
+        }
+        return false;
     }
 }

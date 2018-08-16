@@ -461,7 +461,7 @@ class BazelJSONTestCase extends KWWebTestCase
     {
         // Submit testing data.
         $buildid = $this->submit_data('InsightExample', 'BazelJSON',
-            'f6d98ed855089e9f97105fc89372edb1',
+            '6e1c0270ff3dd79cdcf7856c65de1be6',
             dirname(__FILE__) . '/data/Bazel/bazel_shard_test_failures.json');
         if (!$buildid) {
             return false;
@@ -478,8 +478,8 @@ class BazelJSONTestCase extends KWWebTestCase
         $answer_key = [
             'builderrors' => 0,
             'buildwarnings' => 0,
-            'testfailed' => 1,
-            'testpassed' => 0,
+            'testfailed' => 2,
+            'testpassed' => 4,
             'configureerrors' => 0,
             'configurewarnings' => 0
         ];
@@ -496,12 +496,52 @@ class BazelJSONTestCase extends KWWebTestCase
             JOIN build2test b2t on b2t.testid = t.id
             JOIN build b on b.id = b2t.buildid
             WHERE b.id = ? AND t.name = ?');
+        pdo_execute($test_stmt, [$buildid, '//automotive/maliput/multilane:multilane_builder_test']);
+        $testid = $test_stmt->fetchColumn();
+
+        $this->get($this->url . "/api/v1/testDetails.php?test=$testid&build=$buildid");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+
+        // Use the API to verify that the expected output is displayed
+        $output = $jsonobj['test']['output'];
+
+        $expected = "//automotive/maliput/multilane:multilane_builder_test";
+        if (strpos($output, $expected) === false) {
+            $this->fail("Expected output to include '$expected'");
+        }
+
+        $expected = "multilane/multilane_builder_test/test.log";
+        if (strpos($output, $expected) === false) {
+            $this->fail("Expected output to include '$expected'");
+        }
+
+        $not_expected = "automotive/maliput/multilane:multilane_lanes_test";
+        $result = strpos($output, $not_expected);
+        if ($result != false) {
+            $this->fail("Expected output to NOT include '$not_expected'");
+        }
+
+        // Lookup another specific test ID
+        $test_stmt = $this->PDO->prepare(
+            'SELECT t.id FROM test t
+            JOIN build2test b2t on b2t.testid = t.id
+            JOIN build b on b.id = b2t.buildid
+            WHERE b.id = ? AND t.name = ?');
         pdo_execute($test_stmt, [$buildid, '//automotive/maliput/multilane:multilane_lanes_test']);
         $testid = $test_stmt->fetchColumn();
 
         $this->get($this->url . "/api/v1/testDetails.php?test=$testid&build=$buildid");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
+
+        // Use the API to verify that the expected output is displayed
+        $output = $jsonobj['test']['output'];
+
+        $expected = "automotive/maliput/multilane:multilane_lanes_test";
+        if (strpos($output, $expected) === false) {
+            $this->fail("Expected output to include '$expected'");
+        }
 
         // Check Details
         $expected = "Completed (Failed)";
