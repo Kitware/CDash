@@ -37,7 +37,7 @@ Fltk resources not found, GUI application will not respond to mouse events
 Error: example error #1
 
 
--CDash on 
+-CDash on <NA>
  {"function":"TESTING: EMAILBODY","build_id":"<NA>","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: nox-noemail@noemail {"function":"TESTING: EMAIL","build_id":"<NA>","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: FAILED (c=1): SubProjectExample - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","build_id":"<NA>","pid":<NA>} 
@@ -78,7 +78,7 @@ Fltk resources not found, GUI application will not respond to mouse events
 Error: example error #1
 
 
--CDash on 
+-CDash on <NA>
  {"function":"TESTING: EMAILBODY","build_id":"<NA>","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: optika-noemail@noemail {"function":"TESTING: EMAIL","build_id":"<NA>","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: FAILED (c=1): SubProjectExample - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","build_id":"<NA>","pid":<NA>} 
@@ -119,7 +119,7 @@ Fltk resources not found, GUI application will not respond to mouse events
 Error: example error #1
 
 
--CDash on 
+-CDash on <NA>
  {"function":"TESTING: EMAILBODY","build_id":"<NA>","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: simpletest@<NA> {"function":"TESTING: EMAIL","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: FAILED (w=1): SubProjectExample/MyExperimentalFeature - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","pid":<NA>} 
@@ -146,7 +146,7 @@ MyExperimentalFeature/experimental.cxx (http://<NA>/<NA>/viewBuildError.php?type
 
 
 
--CDash on 
+-CDash on <NA>
  {"function":"TESTING: EMAILBODY","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: simpletest@<NA> {"function":"TESTING: EMAIL","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: FAILED (w=1): SubProjectExample/MyProductionCode - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","pid":<NA>} 
@@ -173,7 +173,7 @@ MyProductionCode/production.cxx (http://<NA>/<NA>/viewBuildError.php?type=<NA>&b
 
 
 
--CDash on 
+-CDash on <NA>
  {"function":"TESTING: EMAILBODY","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: simpletest@<NA> {"function":"TESTING: EMAIL","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: FAILED (b=2): SubProjectExample/MyThirdPartyDependency - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","pid":<NA>} 
@@ -207,7 +207,7 @@ c++: fatal error: no input files
 compilation terminated.
 
 
--CDash on 
+-CDash on <NA>
  {"function":"TESTING: EMAILBODY","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: optika-noemail@noemail {"function":"TESTING: EMAIL","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: FAILED (b=2): SubProjectExample/MyThirdPartyDependency - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","pid":<NA>} 
@@ -241,7 +241,7 @@ c++: fatal error: no input files
 compilation terminated.
 
 
--CDash on 
+-CDash on <NA>
  {"function":"TESTING: EMAILBODY","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: simpletest@<NA> {"function":"TESTING: EMAIL","build_id":"<NA>","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: FAILED (d=1): SubProjectExample/MyExperimentalFeature - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","build_id":"<NA>","pid":<NA>} 
@@ -263,7 +263,7 @@ Dynamic analysis tests failing: 1
 experimentalFail1 (http://<NA>/<NA>/viewDynamicAnalysisFile.php?id=<NA>)
 
 
--CDash on 
+-CDash on <NA>
  {"function":"TESTING: EMAILBODY","build_id":"<NA>","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: simpletest@<NA> {"function":"TESTING: EMAIL","build_id":"<NA>","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: FAILED (t=5): SubProjectExample/MyExperimentalFeature - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","build_id":"<NA>","pid":<NA>} 
@@ -289,7 +289,7 @@ experimentalFail4 | Completed (Failed) | (http://<NA>/<NA>/testDetails.php?test=
 experimentalFail5 | Completed (Failed) | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
 
 
--CDash on 
+-CDash on <NA>
  {"function":"TESTING: EMAILBODY","build_id":"<NA>","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: nox-noemail@noemail {"function":"TESTING: EMAIL","build_id":"<NA>","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: FAILED (t=5): SubProjectExample/MyExperimentalFeature - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","build_id":"<NA>","pid":<NA>} 
@@ -315,7 +315,7 @@ experimentalFail4 | Completed (Failed) | (http://<NA>/<NA>/testDetails.php?test=
 experimentalFail5 | Completed (Failed) | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
 
 
--CDash on 
+-CDash on <NA>
  {"function":"TESTING: EMAILBODY","build_id":"<NA>","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: simpletest@<NA> {"function":"TESTING: EMAIL","build_id":"<NA>","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: FAILED (t=1): SubProjectExample/MyThirdPartyDependency - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","build_id":"<NA>","pid":<NA>} 
@@ -337,7 +337,7 @@ Tests not passing: 1
 thirdparty |  | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
 
 
--CDash on 
+-CDash on <NA>
  {"function":"TESTING: EMAILBODY","build_id":"<NA>","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: optika-noemail@noemail {"function":"TESTING: EMAIL","build_id":"<NA>","pid":<NA>} 
 [<NA> <NA>] cdash.DEBUG: FAILED (t=1): SubProjectExample/MyThirdPartyDependency - CTestTest-Linux-c++-Subprojects - Experimental {"function":"TESTING: EMAILTITLE","build_id":"<NA>","pid":<NA>} 
@@ -359,7 +359,7 @@ Tests not passing: 1
 thirdparty |  | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
 
 
--CDash on 
+-CDash on <NA>
  {"function":"TESTING: EMAILBODY","build_id":"<NA>","pid":<NA>} 
 
 
