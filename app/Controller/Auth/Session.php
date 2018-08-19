@@ -173,11 +173,11 @@ class Session
 
         // This hack will prevent the xsrf possible with this cookie
         // @reference https://stackoverflow.com/a/46971326/1373710
-        $path = "{$url['path']}; samesite=strict";
-        // $name, $value, $expire, $path, $domain, $secure, $httponly
+        $path = isset($url['path']) ? $url['path'] : '/';
+        $cookie_path = "{$path}; samesite=strict";
 
         if ($user->SetCookieKey($key)) {
-            $this->system->setcookie($cookie_name, $cookie_value, $time, $path, $url['host'], $https, true);
+            $this->system->setcookie($cookie_name, $cookie_value, $time, $cookie_path, $url['host'], $https, true);
         }
     }
 }
