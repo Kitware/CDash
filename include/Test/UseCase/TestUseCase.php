@@ -47,7 +47,7 @@ class TestUseCase extends UseCase
         $startDateTime->appendChild(new DOMText($startDateTimeText));
         $startTestTime->appendChild(new DOMText($this->startTime));
 
-        $tests = isset($this->properties['Test']) ? $this->properties['Test'] : [];
+        $tests = $this->getModel('Test');
 
         foreach ($tests as $test) {
             $this->createTestElement($testing, $test);
