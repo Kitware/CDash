@@ -45,7 +45,8 @@
     "friendsofphp/php-cs-fixer": "~1.11",
     "phpunit/phpunit-selenium": "~1.4",
     "phpunit/phpunit": "~4.8",
-    "sensiolabs/security-checker": "~3.0"
+    "sensiolabs/security-checker": "~3.0",
+    "fzaninotto/faker": "^1.8"
   },
   "suggest": {
     "ext-memcached": "",
