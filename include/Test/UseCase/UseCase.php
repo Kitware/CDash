@@ -20,6 +20,7 @@ abstract class UseCase
     const CONTINUOUS = 'Continuous';
     const EXPERIMENTAL = 'Experimental';
 
+    private $faker;
     private $ids;
     protected $subprojects = [];
     protected $properties = [];
@@ -60,6 +61,7 @@ abstract class UseCase
                 break;
             case self::BUILD:
               $useCase = new BuildUseCase();
+              break;
             default:
                 $useCase = null;
 
@@ -154,19 +156,28 @@ abstract class UseCase
     }
 
     /**
-     * @param $class_name
+     * @param $tag_name
      * @param array $properties
      * @return $this
      */
-    public function setModel($class_name, array $properties)
+    public function setModel($tag_name, array $properties)
     {
-        if (!isset($this->properties[$class_name])) {
-            $this->properties[$class_name] = [];
+        if (!isset($this->properties[$tag_name])) {
+            $this->properties[$tag_name] = [];
         }
 
-        $this->properties[$class_name][] = $properties;
+        $this->properties[$tag_name][] = $properties;
 
         return $this;
+    }
+
+    public function getModel($tag_name)
+    {
+        $model = [];
+        if (isset($this->properties[$tag_name])) {
+            $model = $this->properties[$tag_name];
+        }
+        return $model;
     }
 
     /**
@@ -396,5 +407,34 @@ abstract class UseCase
     public function isSequential(array $array)
     {
         return $array === array_values($array);
+    }
+
+    public function getFaker()
+    {
+        if (!$this->faker) {
+            $this->faker = \Faker\Factory::create();
+        }
+        return $this->faker;
+    }
+
+    public function createChildElementsFromKeys(DOMElement $parent, array $attributes, $keys = [])
+    {
+        $subset = array_filter(
+            $attributes,
+            function ($key) use($keys) {
+                return empty($keys) || in_array($key, $keys);
+            },
+            ARRAY_FILTER_USE_KEY
+        );
+
+        foreach ($subset as $key => $values) {
+            $values = is_array($values) ? $values : [$values];
+            foreach ($values as $value) {
+                $node = $parent->appendChild(new DOMElement($key));
+                if ($value) {
+                    $node->appendChild(new DOMText($value));
+                }
+            }
+        }
     }
 }
