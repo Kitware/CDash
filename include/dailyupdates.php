@@ -24,6 +24,7 @@ require_once 'include/pdo.php';
 include_once 'include/common.php';
 require_once 'include/cdashmail.php';
 
+use CDash\Config;
 use CDash\Model\UserProject;
 
 @set_time_limit(0);
@@ -263,14 +264,14 @@ function get_cvs_repository_commits($cvsroot, $dates)
 /** Get the Perforce repository commits */
 function get_p4_repository_commits($root, $branch, $dates)
 {
-    include 'config/config.php';
+    $config = Config::getInstance();
     $commits = array();
     $users = array();
 
     // Add the command line specified by the user in the "Repository" field
     // of the project settings "Repository" tab and set the message language
     // to be English
-    $p4command = '"' . $CDASH_P4_COMMAND . '" ' . $root . ' -L en';
+    $p4command = '"' . $config->get('CDASH_P4_COMMAND') . '" ' . $root . ' -L en';
 
     // Perforce needs the dates separated with / and not with -
     $fromtime = str_replace('-', '/', gmdate(FMT_DATETIMESTD, $dates['nightly-1'] + 1));
@@ -342,11 +343,11 @@ function get_p4_repository_commits($root, $branch, $dates)
 /** Get the GIT repository commits */
 function get_git_repository_commits($gitroot, $dates, $branch, $previousrevision)
 {
-    include 'config/config.php';
+    $config = Config::getInstance();
     $commits = array();
 
-    $gitcommand = $CDASH_GIT_COMMAND;
-    $gitlocaldirectory = $CDASH_DEFAULT_GIT_DIRECTORY;
+    $gitcommand = $config->get('CDASH_GIT_COMMAND');
+    $gitlocaldirectory = $config->get('CDASH_DEFAULT_GIT_DIRECTORY');
 
     // Check that the default git directory exists and is writable
     if (empty($gitlocaldirectory) || !is_writable($gitlocaldirectory)) {
@@ -717,15 +718,8 @@ function get_repository_commits($projectid, $dates)
 /** Send email if expected build from last day have not been submitting */
 function sendEmailExpectedBuilds($projectid, $currentstarttime)
 {
-    include 'config/config.php';
-    include_once 'include/common.php';
-    $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-    pdo_select_db("$CDASH_DB_NAME", $db);
-
+    $config = Config::getInstance();
     $currentURI = get_server_URI();
-    if ($CDASH_BASE_URL == '' && $CDASH_ASYNCHRONOUS_SUBMISSION) {
-        $currentURI = substr($currentURI, 0, strrpos($currentURI, '/'));
-    }
 
     $currentEndUTCTime = gmdate(FMT_DATETIME, $currentstarttime);
     $currentBeginUTCTime = gmdate(FMT_DATETIME, $currentstarttime - 3600 * 24);
@@ -743,10 +737,7 @@ function sendEmailExpectedBuilds($projectid, $currentstarttime)
     $summary = 'The following expected build(s) for the project *' . $projectname . "* didn't submit yesterday:\n";
     $missingbuilds = 0;
 
-    $serverName = $CDASH_SERVER_NAME;
-    if (strlen($serverName) == 0) {
-        $serverName = $_SERVER['SERVER_NAME'];
-    }
+    $serverName = $config->getServer();
 
     while ($build2grouprule_array = pdo_fetch_array($build2grouprule)) {
         $builtype = $build2grouprule_array['buildtype'];
@@ -834,10 +825,8 @@ function cleanUserTemp()
 /** Send an email to administrator of the project for users who are not registered */
 function sendEmailUnregisteredUsers($projectid, $cvsauthors)
 {
-    include 'config/config.php';
-
     include_once 'include/common.php';
-
+    $config = Config::getInstance();
     $unregisteredusers = array();
     foreach ($cvsauthors as $author) {
         if ($author == 'Local User') {
@@ -869,10 +858,7 @@ function sendEmailUnregisteredUsers($projectid, $cvsauthors)
         // Send the email
         if ($email != '') {
             $projectname = get_project_name($projectid);
-            $serverName = $CDASH_SERVER_NAME;
-            if (strlen($serverName) == 0) {
-                $serverName = $_SERVER['SERVER_NAME'];
-            }
+            $serverName = $config->getServer();
 
             $title = 'CDash [' . $projectname . '] - Unregistered users';
             $body = 'The following users are checking in code but are not registered for the project ' . $projectname . ":\n";
@@ -898,12 +884,8 @@ function sendEmailUnregisteredUsers($projectid, $cvsauthors)
 /** Add daily changes if necessary */
 function addDailyChanges($projectid)
 {
-    include 'config/config.php';
     include_once 'include/common.php';
     include_once 'include/sendemail.php';
-
-    $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-    pdo_select_db("$CDASH_DB_NAME", $db);
 
     $project_array = pdo_fetch_array(pdo_query("SELECT nightlytime,name,autoremovetimeframe,autoremovemaxbuilds,emailadministrator
                                               FROM project WHERE id='$projectid'"));
@@ -991,8 +973,8 @@ function addDailyChanges($projectid)
                 $nbuildwarnings = $buildwarning_array[0];
 
                 // Find if the build has any test failings
-                if ($project_emailtesttimingchanged) {
-                    $sql = "SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND (status='failed' OR timestatus>" . qnum($project_testtimemaxstatus) . ')';
+                if ($project_array['emailtesttimingchanged']) {
+                    $sql = "SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND (status='failed' OR timestatus>" . qnum($project_array['testtimemaxstatus']) . ')';
                 } else {
                     $sql = "SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='failed'";
                 }

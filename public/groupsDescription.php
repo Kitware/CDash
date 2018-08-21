@@ -14,13 +14,9 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include dirname(__DIR__) . '/config/config.php';
+require_once dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
 include_once 'include/common.php';
-
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
-
 ?>
 <html>
 <head>

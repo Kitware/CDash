@@ -20,6 +20,7 @@ include_once 'include/ctestparserutils.php';
 include_once 'include/repository.php';
 
 use CDash\Collection\TestCollection;
+use CDash\Config;
 use CDash\Database;
 use PDO;
 
@@ -845,9 +846,9 @@ class Build
                     pdo_execute($stmt, [$this->ParentId]);
                     $groupid = $stmt->fetchColumn();
                     if ($groupid === false) {
-                        global $CDASH_DB_TYPE;
+                        $config = Config::getInstance();
                         $duplicate_sql = '';
-                        if ($CDASH_DB_TYPE !== 'pgsql') {
+                        if ($config->get('CDASH_DB_TYPE') !== 'pgsql') {
                             $duplicate_sql =
                                 'ON DUPLICATE KEY UPDATE groupid = groupid';
                         }
@@ -1288,8 +1289,8 @@ class Build
                     WHERE buildid = :buildid AND type = 1');
         } else {
             $duplicate_sql = '';
-            global $CDASH_DB_TYPE;
-            if ($CDASH_DB_TYPE !== 'pgsql') {
+            $config = Config::getInstance();
+            if ($config->get('CDASH_DB_TYPE') !== 'pgsql') {
                 $duplicate_sql = 'ON DUPLICATE KEY UPDATE difference = :difference';
             }
             $stmt = $this->PDO->prepare(

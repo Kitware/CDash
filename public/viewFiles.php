@@ -22,6 +22,7 @@ include_once 'include/common.php';
 include 'include/version.php';
 include 'public/login.php';
 
+use CDash\Config;
 use CDash\Model\Build;
 use CDash\Model\Site;
 
@@ -30,6 +31,7 @@ if (!isset($_GET['buildid'])) {
     return;
 }
 
+$config = Config::getInstance();
 $buildid = pdo_real_escape_numeric($_GET['buildid']);
 $Build = new Build();
 $Build->Id = $buildid;
@@ -53,9 +55,6 @@ if ($date != null) {
 
 $xml = begin_XML_for_XSLT();
 $xml .= get_cdash_dashboard_xml(get_project_name($projectid), $date);
-
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
 $xml .= add_XML_value('title', 'CDash - Uploaded files');
 $xml .= add_XML_value('menutitle', 'CDash');
 $xml .= add_XML_value('menusubtitle', 'Uploaded files');
@@ -76,7 +75,7 @@ foreach ($uploadFilesOrURLs as $uploadFileOrURL) {
     if (!$uploadFileOrURL->IsUrl) {
         $xml .= '<uploadfile>';
         $xml .= '<id>' . $uploadFileOrURL->Id . '</id>';
-        $xml .= '<href>' . $CDASH_DOWNLOAD_RELATIVE_URL . '/' . $uploadFileOrURL->Sha1Sum . '/' . $uploadFileOrURL->Filename . '</href>';
+        $xml .= '<href>' . $config->get('CDASH_DOWNLOAD_RELATIVE_URL') . '/' . $uploadFileOrURL->Sha1Sum . '/' . $uploadFileOrURL->Filename . '</href>';
         $xml .= '<sha1sum>' . $uploadFileOrURL->Sha1Sum . '</sha1sum>';
         $xml .= '<filename>' . $uploadFileOrURL->Filename . '</filename>';
         $xml .= '<filesize>' . $uploadFileOrURL->Filesize . '</filesize>';

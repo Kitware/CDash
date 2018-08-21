@@ -21,11 +21,11 @@ include 'public/login.php';
 include_once 'include/common.php';
 include 'include/version.php';
 
+use CDash\Config;
 use CDash\Model\Project;
 use CDash\Model\SubProject;
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
+$config = Config::getInstance();
 
 @$projectname = $_GET['project'];
 if ($projectname != null) {
@@ -89,7 +89,7 @@ if (empty($project_array['homeurl'])) {
 } else {
     $xml .= '<home>' . $homeurl . '</home>';
 }
-if ($CDASH_USE_LOCAL_DIRECTORY && file_exists('local/models/proProject.php')) {
+if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/models/proProject.php')) {
     include_once 'local/models/proProject.php';
     $pro = new proProject;
     $pro->ProjectId = $projectid;

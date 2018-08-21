@@ -24,18 +24,21 @@ use CDash\Middleware\Queue\SubmissionService;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Ramsey\Uuid\Uuid;
 
-// Open the database connection
 include dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
 include 'include/do_submit.php';
 include 'include/clientsubmit.php';
 include 'include/version.php';
 
+use CDash\Config;
 use CDash\Model\Project;
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-if (!$db || !pdo_select_db("$CDASH_DB_NAME", $db)) {
-    echo '<cdash version="' . $CDASH_VERSION . "\">\n";
+$config = Config::getInstance();
+
+// Check if we can connect to the database.
+$pdo = get_link_identifier()->getPdo();
+if (!$pdo) {
+    echo '<cdash version="' . $config->get('CDASH_VERSION') . "\">\n";
     echo " <status>ERROR</status>\n";
     echo " <message>Cannot connect to the database.</message>\n";
     echo "</cdash>\n";
@@ -58,7 +61,6 @@ if (isset($_GET['buildid'])) {
     return;
 }
 
-$pdo = get_link_identifier()->getPdo();
 $stmt = $pdo->prepare(
     'SELECT id, authenticatesubmissions FROM project WHERE name = ?');
 
@@ -74,7 +76,7 @@ if (pdo_execute($stmt, [$projectname])) {
 
 // If not a valid project we return
 if (!$projectid) {
-    echo '<cdash version="' . $CDASH_VERSION . "\">\n";
+    echo '<cdash version="' . $config->get('CDASH_VERSION') . "\">\n";
     echo " <status>ERROR</status>\n";
     echo " <message>Not a valid project.</message>\n";
     echo "</cdash>\n";
@@ -88,7 +90,7 @@ $project->Name = $projectname;
 $project->Id = $projectid;
 $message = '';
 if ($project->HasTooManyBuilds($message)) {
-    echo '<cdash version="' . $CDASH_VERSION . "\">\n";
+    echo '<cdash version="' . $config->get('CDASH_VERSION') . "\">\n";
     echo " <status>ERROR</status>\n";
     echo " <message>$message</message>\n";
     echo "</cdash>\n";
@@ -107,9 +109,9 @@ $expected_md5 = isset($_GET['MD5']) ? htmlspecialchars(pdo_real_escape_string($_
 $file_path = 'php://input';
 $fp = fopen($file_path, 'r');
 
-if ($CDASH_BERNARD_SUBMISSION) {
+if ($config->get('CDASH_BERNARD_SUBMISSION')) {
     $buildSubmissionId = Uuid::uuid4()->toString();
-    $destinationFilename = $CDASH_BACKUP_DIRECTORY . '/' . $buildSubmissionId . '.xml';
+    $destinationFilename = $config->get('CDASH_BACKUP_DIRECTORY') . '/' . $buildSubmissionId . '.xml';
 
     if (copy('php://input', $destinationFilename)) {
         $driver = QueueDriverFactory::create();
@@ -124,7 +126,7 @@ if ($CDASH_BERNARD_SUBMISSION) {
 
         $queue->produce($message);
 
-        echo '<cdash version="' . $CDASH_VERSION . "\">\n";
+        echo '<cdash version="' . $config->get('CDASH_VERSION') . "\">\n";
         echo " <status>OK</status>\n";
         echo " <message>Build submitted successfully.</message>\n";
         echo " <submissionId>$buildSubmissionId</submissionId>\n";
@@ -132,12 +134,12 @@ if ($CDASH_BERNARD_SUBMISSION) {
     } else {
         add_log('Failed to copy build submission XML', 'global:submit.php', LOG_ERR);
         header('HTTP/1.1 500 Internal Server Error');
-        echo '<cdash version="' . $CDASH_VERSION . "\">\n";
+        echo '<cdash version="' . $config->get('CDASH_VERSION') . "\">\n";
         echo " <status>ERROR</status>\n";
         echo " <message>Failed to copy build submission XML.</message>\n";
         echo "</cdash>\n";
     }
-} elseif ($CDASH_ASYNCHRONOUS_SUBMISSION) {
+} elseif ($config->get('CDASH_ASYNCHRONOUS_SUBMISSION')) {
     // If the submission is asynchronous we store in the database
     do_submit_asynchronous($fp, $projectid, $expected_md5);
 } else {

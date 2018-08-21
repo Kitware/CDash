@@ -14,6 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use CDash\Config;
+
 // Returns true if this call to processsubmissions.php should execute the
 // processing loop. Returns false if another instance of processsubmissions.php
 // is already executing the loop for this projectid.
@@ -80,8 +82,8 @@ function AcquireProcessingLock($projectid, $force, $mypid)
         $lastupdated_utc_ts = strtotime($lastupdated);
         $now_utc_ts = strtotime($now_utc);
 
-        global $CDASH_SUBMISSION_PROCESSING_TIME_LIMIT;
-        if ($lastupdated_utc_ts < ($now_utc_ts - $CDASH_SUBMISSION_PROCESSING_TIME_LIMIT)) {
+        $time_limit = Config::getInstance()->get('CDASH_SUBMISSION_PROCESSING_TIME_LIMIT');
+        if ($lastupdated_utc_ts < ($now_utc_ts - $time_limit)) {
             //if ($pid is not presently running) // assumed, php-way to measure?
             //  {
             add_log(
@@ -196,9 +198,9 @@ function SetLockLastUpdatedTime($projectid)
 //
 function ResetApparentlyStalledSubmissions($projectid)
 {
-    global $CDASH_SUBMISSION_PROCESSING_TIME_LIMIT;
+    $time_limit = Config::getInstance()->get('CDASH_SUBMISSION_PROCESSING_TIME_LIMIT');
 
-    $stall_time = gmdate(FMT_DATETIMESTD, time() - $CDASH_SUBMISSION_PROCESSING_TIME_LIMIT);
+    $stall_time = gmdate(FMT_DATETIMESTD, time() - $time_limit);
 
     $result = pdo_query('UPDATE submission SET status=0 ' .
         "WHERE status=1 AND projectid='$projectid' AND " .
@@ -222,6 +224,8 @@ function ResetApparentlyStalledSubmissions($projectid)
 //
 function ProcessSubmissions($projectid, $mypid, $multi = false)
 {
+    /** @var Config $config */
+    $config = Config::getInstance();
     $iterations = 0;
     @$sleep_in_loop = $_GET['sleep_in_loop'];
     @$intentional_nonreturning_submit = $_GET['intentional_nonreturning_submit'];
@@ -258,8 +262,7 @@ function ProcessSubmissions($projectid, $mypid, $multi = false)
         // so that we do not become known as an "apparently stalled" processor.
         SetLockLastUpdatedTime($projectid);
 
-        global $CDASH_SUBMISSION_PROCESSING_MAX_ATTEMPTS;
-        if ($new_attempts > $CDASH_SUBMISSION_PROCESSING_MAX_ATTEMPTS) {
+        if ($new_attempts > $config->get('CDASH_SUBMISSION_PROCESSING_MAX_ATTEMPTS')) {
             add_log("Too many attempts to process '$filename'",
                 'ProcessSubmissions',
                 LOG_ERR, $projectid);
@@ -267,8 +270,7 @@ function ProcessSubmissions($projectid, $mypid, $multi = false)
         } else {
             // Record id in global so that we can mark it as "error status"
             // if we get thrown to the error handler.
-            global $PHP_ERROR_SUBMISSION_ID;
-            $PHP_ERROR_SUBMISSION_ID = $submission_id;
+            $config->set('PHP_ERROR_SUBMISSION_ID', $submission_id);
 
             if ($intentional_nonreturning_submit) {
                 // simulate "error occurred" during do_submit:
@@ -281,10 +283,9 @@ function ProcessSubmissions($projectid, $mypid, $multi = false)
             $new_status = ProcessFile($projectid, $filename, $md5);
         }
 
-        $PHP_ERROR_SUBMISSION_ID = 0;
+        $config->set('PHP_ERROR_SUBMISSION_ID', 0);
 
-        global $CDASH_ASYNC_EXPIRATION_TIME;
-        if ($CDASH_ASYNC_EXPIRATION_TIME === 0 &&
+        if ($config->get('CDASH_ASYNC_EXPIRATION_TIME') === 0 &&
             ($new_status > 1 && $new_status < 6)
         ) {
             // If our expiration time is set to 0 we delete finished
@@ -355,10 +356,10 @@ function GetNextSubmission($projectid)
 //
 function DeleteOldSubmissionRecords($projectid)
 {
-    global $CDASH_ASYNC_EXPIRATION_TIME;
+    $expires = Config::getInstance()->get('CDASH_ASYNC_EXPIRATION_TIME');
 
     $delete_time =
-        gmdate(FMT_DATETIMESTD, time() - $CDASH_ASYNC_EXPIRATION_TIME);
+        gmdate(FMT_DATETIMESTD, time() - $expires);
 
     $ids = pdo_all_rows_query('SELECT id FROM submission WHERE ' .
         '(status=2 OR status=3 OR status=4 OR status=5) AND ' .

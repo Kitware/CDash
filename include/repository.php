@@ -817,14 +817,13 @@ function post_github_pull_request_comment(Project $project, $pull_request, $comm
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_USERAGENT, 'Googlebot/2.1 (+http://www.google.com/bot.html)');
 
-    global $CDASH_TESTING_MODE;
     $retval = curl_exec($ch);
     if ($retval === false) {
         add_log(
             'cURL error: ' . curl_error($ch),
             'post_github_pull_request_comment',
             LOG_ERR, $project->Id);
-    } elseif ($CDASH_TESTING_MODE) {
+    } elseif (Config::getInstance()->get('CDASH_TESTING_MODE')) {
         $matches = array();
         preg_match("#/comments/(\d+)#", $retval, $matches);
         add_log(
@@ -897,9 +896,10 @@ function perform_version_only_diff($update, $projectid)
 function perform_github_version_only_diff($project, $update, $previous_revision)
 {
     require_once 'include/memcache_functions.php';
-    global $CDASH_MEMCACHE_ENABLED, $CDASH_MEMCACHE_PREFIX, $CDASH_MEMCACHE_SERVER;
-
+    $config = Config::getInstance();
     $current_revision = $update->Revision;
+    $memcache_enabled = $config->get('CDASH_MEMECACHE_ENABLED');
+    $memcache_prefix = $config->get('CDASH_MEMCACHE_PREFIX');
 
     // Check if we have a Github account associated with this project.
     // If so, we are much less likely to get rate-limited by the API.
@@ -913,19 +913,19 @@ function perform_github_version_only_diff($project, $update, $previous_revision)
     }
 
     // Connect to memcache.
-    if ($CDASH_MEMCACHE_ENABLED) {
-        list($server, $port) = $CDASH_MEMCACHE_SERVER;
+    if ($memcache_enabled) {
+        list($server, $port) = $config->get('CDASH_MEMCACHE_SERVER');
         $memcache = cdash_memcache_connect($server, $port);
         // Disable memcache for this request if it fails to connect.
         if ($memcache === false) {
-            $CDASH_MEMCACHE_ENABLED = false;
+            $config->set('CDASH_MEMCACHE_ENABLED', false);
         }
     }
 
     // Check if we've memcached the difference between these two revisions.
     $diff_response = null;
-    $diff_key = "$CDASH_MEMCACHE_PREFIX:$project->Name:$current_revision:$previous_revision";
-    if ($CDASH_MEMCACHE_ENABLED) {
+    $diff_key = "$memcache_prefix:$project->Name:$current_revision:$previous_revision";
+    if ($memcache_enabled) {
         $cached_response = cdash_memcache_get($memcache, $diff_key);
         if ($cached_response !== false) {
             $diff_response = $cached_response;
@@ -952,7 +952,7 @@ function perform_github_version_only_diff($project, $update, $previous_revision)
         $diff_response = strval($response->getBody());
 
         // Cache the response from the GitHub API for 24 hours.
-        if ($CDASH_MEMCACHE_ENABLED) {
+        if ($memcache_enabled) {
             cdash_memcache_set($memcache, $diff_key, $diff_response, 60 * 60 * 24);
         }
     }
@@ -1042,8 +1042,8 @@ function perform_github_version_only_diff($project, $update, $previous_revision)
                     }
 
                     $commit_response = null;
-                    $commit_key = "$CDASH_MEMCACHE_PREFIX:$project->Name:$sha";
-                    if ($CDASH_MEMCACHE_ENABLED) {
+                    $commit_key = "$memcache_prefix:$project->Name:$sha";
+                    if ($memcache_enabled) {
                         // Check memcache if it is enabled before hitting
                         // the GitHub API.
                         $cached_response = cdash_memcache_get($memcache, $commit_key);
@@ -1064,7 +1064,7 @@ function perform_github_version_only_diff($project, $update, $previous_revision)
                         }
                         $commit_response = strval($r->getBody());
 
-                        if ($CDASH_MEMCACHE_ENABLED) {
+                        if ($memcache_enabled) {
                             // Cache this response for 24 hours.
                             cdash_memcache_set($memcache, $commit_key, $commit_response, 60 * 60 * 24);
                         }

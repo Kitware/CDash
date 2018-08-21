@@ -14,15 +14,18 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use CDash\Config;
+
 function _cdashsendgrid($to, $subject, $body)
 {
-    global $CDASH_EMAIL_FROM, $CDASH_EMAIL_REPLY, $CDASH_SENDGRID_API_KEY;
-    $sg = new \SendGrid($CDASH_SENDGRID_API_KEY);
+    $config = Config::getInstance();
+
+    $sg = new \SendGrid($config->get('CDASH_SENDGRID_API_KEY'));
 
     $mail = new SendGrid\Mail();
-    $mail->setFrom(new SendGrid\Email(null, $CDASH_EMAIL_FROM));
+    $mail->setFrom(new SendGrid\Email(null, $config->get('CDASH_EMAIL_FROM')));
     $mail->setSubject($subject);
-    $mail->setReplyTo(new SendGrid\Email(null, $CDASH_EMAIL_REPLY));
+    $mail->setReplyTo(new SendGrid\Email(null, $config->get('CDASH_EMAIL_REPLY')));
     $mail->addContent(new SendGrid\Content('text/plain', $body));
 
     foreach (explode(', ', $to) as $recipient) {
@@ -43,47 +46,40 @@ function _cdashsendgrid($to, $subject, $body)
 
 function cdashmail($to, $subject, $body, $headers = false)
 {
+    $config = Config::getInstance();
     if (empty($to)) {
         add_log('Cannot send email. Recipient is not set.', 'cdashmail', LOG_ERR);
         return false;
     }
 
-    global $CDASH_USE_SENDGRID;
-    if ($CDASH_USE_SENDGRID) {
+    if ($config->get('CDASH_USE_SENDGRID')) {
         return _cdashsendgrid($to, $subject, $body);
     }
 
     $to = explode(', ', $to);
-
-    global $CDASH_EMAIL_FROM, $CDASH_EMAIL_REPLY;
-
     $message = Swift_Message::newInstance()
         ->setTo($to)
         ->setSubject($subject)
         ->setBody($body)
-        ->setFrom(array($CDASH_EMAIL_FROM => 'CDash'))
-        ->setReplyTo($CDASH_EMAIL_REPLY)
+        ->setFrom([$config->get('CDASH_EMAIL_FROM')=> 'CDash'])
+        ->setReplyTo($config->get('CDASH_EMAIL_REPLY'))
         ->setContentType('text/plain')
         ->setCharset('UTF-8');
 
-    global $CDASH_EMAIL_SMTP_HOST, $CDASH_EMAIL_SMTP_PORT,
-           $CDASH_EMAIL_SMTP_ENCRYPTION, $CDASH_EMAIL_SMTP_LOGIN,
-           $CDASH_EMAIL_SMTP_PASS;
-
-    if (is_null($CDASH_EMAIL_SMTP_HOST)) {
+    if (is_null($config->get('CDASH_EMAIL_SMTP_HOST'))) {
         // Use the PHP mail() function.
         $transport = Swift_MailTransport::newInstance();
     } else {
         // Use an SMTP server to send mail.
         $transport = Swift_SmtpTransport::newInstance(
-            $CDASH_EMAIL_SMTP_HOST, $CDASH_EMAIL_SMTP_PORT,
-            $CDASH_EMAIL_SMTP_ENCRYPTION);
+            $config->get('CDASH_EMAIL_SMTP_HOST'), $config->get('CDASH_EMAIL_SMTP_PORT'),
+            $config->get('CDASH_EMAIL_SMTP_ENCRYPTION'));
 
-        if (!is_null($CDASH_EMAIL_SMTP_LOGIN)
-            && !is_null($CDASH_EMAIL_SMTP_PASS)
+        if (!is_null($config->get('CDASH_EMAIL_SMTP_LOGIN'))
+            && !is_null($config->get('CDASH_EMAIL_SMTP_PASS'))
         ) {
-            $transport->setUsername($CDASH_EMAIL_SMTP_LOGIN)
-                ->setPassword($CDASH_EMAIL_SMTP_PASS);
+            $transport->setUsername($config->get('CDASH_EMAIL_SMTP_LOGIN'))
+                ->setPassword($config->get('CDASH_EMAIL_SMTP_PASS'));
         }
     }
 

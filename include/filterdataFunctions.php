@@ -14,6 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use CDash\Config;
+
 function getFilterDefinitionXML($key, $uitext, $type, $valuelist, $defaultvalue)
 {
     $xml = '<def>';
@@ -45,8 +47,8 @@ class DefaultFilters implements PageSpecificFilters
     {
         // The way we concatenate text into a single value
         // depends on our database backend.
-        global $CDASH_DB_TYPE;
-        if ($CDASH_DB_TYPE === 'pgsql') {
+
+        if (Config::getInstance()->get('CDASH_DB_TYPE') === 'pgsql') {
             $this->TextConcat = "array_to_string(array_agg(text), ', ')";
         } else {
             $this->TextConcat = "GROUP_CONCAT(text SEPARATOR ', ')";
@@ -171,7 +173,7 @@ class IndexPhpFilters extends DefaultFilters
             return '';
         }
 
-        global $CDASH_DB_TYPE;
+        $config = \CDash\Config::getInstance();
         $sql_field = '';
         switch (strtolower($field)) {
             case 'buildduration': {
@@ -310,7 +312,7 @@ class IndexPhpFilters extends DefaultFilters
                 break;
 
             case 'updateduration': {
-                if ($CDASH_DB_TYPE === 'pgsql') {
+                if ($config->get("CDASH_DB_TYPE") === 'pgsql') {
                     $sql_field = 'ROUND(EXTRACT(EPOCH FROM (bu.endtime - bu.starttime))::numeric / 60, 1)';
                 } else {
                     $sql_field = 'ROUND(TIMESTAMPDIFF(SECOND,bu.starttime,bu.endtime)/60.0,1)';
@@ -945,7 +947,7 @@ function get_sql_compare_and_value($compare, $value)
 //
 function get_filterdata_from_request($page_id = '')
 {
-    global $CDASH_CSS_FILE;
+    $config = Config::getInstance();
     $sql = '';
     $xml = '';
     $clauses = 0;
@@ -956,9 +958,12 @@ function get_filterdata_from_request($page_id = '')
     $filterdata['hasdateclause'] = 0;
 
     if (empty($page_id)) {
-        $pos = strrpos($_SERVER['SCRIPT_NAME'], '/');
-        $page_id = substr($_SERVER['SCRIPT_NAME'], $pos + 1);
+        $request_path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $pos = strrpos($request_path, '/');
+
+        $page_id = substr($request_path, $pos + 1);
     }
+
     $filterdata['pageId'] = $page_id;
 
     $pageSpecificFilters = createPageSpecificFilters($page_id);
@@ -1109,7 +1114,7 @@ function get_filterdata_from_request($page_id = '')
     if (array_key_exists('colorblind', $_COOKIE)) {
         $filterdata['colorblind'] = intval($_COOKIE['colorblind']);
     } else {
-        if ($CDASH_CSS_FILE === 'css/colorblind.css') {
+        if ($config->get('CDASH_CSS_FILE') === 'css/colorblind.css') {
             $filterdata['colorblind'] = 1;
         } else {
             $filterdata['colorblind'] = 0;

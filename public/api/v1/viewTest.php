@@ -20,6 +20,7 @@ require_once 'include/api_common.php';
 include 'include/version.php';
 require_once 'include/filterdataFunctions.php';
 
+use CDash\Config;
 use CDash\Model\Build;
 use CDash\Model\BuildTest;
 
@@ -51,7 +52,7 @@ use CDash\Model\BuildTest;
  * export=[presence]
  **/
 
-// $buildid = get_request_build_id(false);
+$config = Config::getInstance();
 $build = get_request_build(false);
 
 @$date = $_GET['date'];
@@ -68,8 +69,6 @@ if (isset($_GET['tests'])) {
 $response = [];
 
 $start = microtime_float();
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
 
 $project = pdo_query("SELECT name,showtesttime,testtimemaxstatus,nightlytime,displaylabels FROM project WHERE id='{$build->ProjectId}'");
 if (pdo_num_rows($project) > 0) {
@@ -268,7 +267,7 @@ if ($onlydelta) {
 $labeljoin_sql = '';
 $label_sql = '';
 $groupby_sql = '';
-if ($project_array['displaylabels'] && $CDASH_DB_TYPE != 'pgsql') {
+if ($project_array['displaylabels'] && $config->get('CDASH_DB_TYPE') != 'pgsql') {
     $labeljoin_sql = '
         LEFT JOIN label2test AS l2t ON (l2t.testid=t.id)
         LEFT JOIN label AS l ON (l.id=l2t.labelid)';
@@ -435,7 +434,7 @@ while ($row = pdo_fetch_array($result)) {
         $numTimeFailed++;
     }
 
-    $labels_found = ($CDASH_DB_TYPE != 'pgsql' && !empty($marshaledTest['labels']));
+    $labels_found = ($config->get('CDASH_DB_TYPE') != 'pgsql' && !empty($marshaledTest['labels']));
     $marshaledTest['measurements'] = $test_measurements[$marshaledTest['id']];
     if ($response['hasprocessors']) {
         // Show an additional column "proc time" if these tests have
@@ -485,8 +484,8 @@ function get_test_history($testname, $previous_buildids)
 
     // STRAIGHT_JOIN is a MySQL specific enhancement.
     $join_type = 'INNER JOIN';
-    global $CDASH_DB_TYPE;
-    if ($CDASH_DB_TYPE === 'mysql') {
+    $config = Config::getInstance();
+    if ($config->get('CDASH_DB_TYPE') === 'mysql') {
         $join_type = 'STRAIGHT_JOIN';
     }
 
@@ -531,8 +530,8 @@ function get_test_summary($testname, $projectid, $groupid, $begin, $end)
 
     // STRAIGHT_JOIN is a MySQL specific enhancement.
     $join_type = 'INNER JOIN';
-    global $CDASH_DB_TYPE;
-    if ($CDASH_DB_TYPE === 'mysql') {
+    $config = Config::getInstance();
+    if ($config->get('CDASH_DB_TYPE') === 'mysql') {
         $join_type = 'STRAIGHT_JOIN';
     }
 

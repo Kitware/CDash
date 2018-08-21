@@ -16,6 +16,7 @@
 
 require_once 'include/common.php';
 
+use CDash\Config;
 use \Suin\RSSWriter\Channel;
 use \Suin\RSSWriter\Feed;
 use \Suin\RSSWriter\Item;
@@ -38,8 +39,8 @@ function CreateRSSFeed($projectid)
         return;
     }
 
-    global $CDASH_ROOT_DIR;
-    $filename = $CDASH_ROOT_DIR . '/public/rss/SubmissionRSS' . $projectname . '.xml';
+    $config = Config::getInstance();
+    $filename = $config->get('CDASH_ROOT_DIR') . '/public/rss/SubmissionRSS' . $projectname . '.xml';
 
     $currentURI = get_server_URI();
     $currenttime = time();

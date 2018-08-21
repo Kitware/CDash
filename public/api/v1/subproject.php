@@ -36,10 +36,6 @@ if (!isset($userid) || !is_numeric($userid)) {
     return;
 }
 
-// Connect to database.
-@$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
-
 // Check required parameter.
 @$projectid = $_GET['projectid'];
 if (!isset($projectid)) {
@@ -72,25 +68,23 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 switch ($method) {
     case 'DELETE':
-        rest_delete();
+        rest_delete($projectid);
         break;
     case 'POST':
-        rest_post();
+        rest_post($projectid);
         break;
     case 'PUT':
-        rest_put();
+        rest_put($projectid);
         break;
     case 'GET':
     default:
-        rest_get();
+        rest_get($projectid);
         break;
 }
 
 /* Handle GET requests */
-function rest_get()
+function rest_get($projectid)
 {
-    global $projectid;
-
     $subprojectid = get_subprojectid();
     if ($subprojectid === false) {
         return;
@@ -145,7 +139,7 @@ function rest_get()
 }
 
 /* Handle DELETE requests */
-function rest_delete()
+function rest_delete($projectid)
 {
     if (isset($_GET['groupid'])) {
         // Delete subproject group.
@@ -176,10 +170,8 @@ function rest_delete()
 }
 
 /* Handle POST requests */
-function rest_post()
+function rest_post($projectid)
 {
-    global $projectid;
-
     if (isset($_POST['newsubproject'])) {
         // Create a new subproject
         $SubProject = new SubProject();
@@ -243,10 +235,8 @@ function rest_post()
 }
 
 /* Handle PUT requests */
-function rest_put()
+function rest_put($projectid)
 {
-    global $projectid;
-
     if (isset($_GET['threshold'])) {
         // Modify an existing subproject group.
         $groupid = pdo_real_escape_numeric($_GET['groupid']);

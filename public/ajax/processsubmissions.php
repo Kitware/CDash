@@ -15,10 +15,12 @@
 =========================================================================*/
 
 require_once dirname(dirname(__DIR__)) . '/config/config.php';
+use CDash\Config;
+
+$config = Config::getInstance();
 
 // Only used to setup the parallel submissions test case.
-global $CDASH_DO_NOT_PROCESS_SUBMISSIONS;
-if ($CDASH_DO_NOT_PROCESS_SUBMISSIONS) {
+if ($config->get('CDASH_DO_NOT_PROCESS_SUBMISSIONS')) {
     exit(0);
 }
 

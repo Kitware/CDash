@@ -19,8 +19,9 @@ require_once 'include/pdo.php';
 include 'public/login.php';
 require_once 'include/common.php';
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
+use CDash\Config;
+
+$config = Config::getInstance();
 
 if (!$session_OK) {
     echo 'Not a valid session';
@@ -42,8 +43,7 @@ if ($user_array['admin'] != 1) {
 }
 
 $search = pdo_real_escape_string($_GET['search']);
-
-if (isset($CDASH_FULL_EMAIL_WHEN_ADDING_USER) && $CDASH_FULL_EMAIL_WHEN_ADDING_USER == 1) {
+if ($config->get('CDASH_FULL_EMAIL_WHEN_ADDING_USER') == 1) {
     $sql = "email='$search'";
 } else {
     $sql = "(email LIKE '%$search%' OR firstname LIKE '%$search%' OR lastname LIKE '%$search%')";

@@ -13,7 +13,6 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
-
 include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 
@@ -23,10 +22,12 @@ include 'public/login.php';
 require_once 'include/api_common.php';
 require_once 'include/version.php';
 
+use CDash\Config;
 use CDash\Model\BuildGroup;
 
 // Require administrative access to view this page.
 init_api_request();
+
 $projectid = pdo_real_escape_numeric($_REQUEST['projectid']);
 if (!can_administrate_project($projectid)) {
     return;
@@ -39,25 +40,23 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 switch ($method) {
     case 'DELETE':
-        rest_delete();
+        rest_delete($pdo);
         break;
     case 'POST':
-        rest_post();
+        rest_post($pdo, $projectid);
         break;
     case 'PUT':
-        rest_put();
+        rest_put($projectid);
         break;
     case 'GET':
     default:
-        rest_get();
+        rest_get($pdo, $projectid);
         break;
 }
 
 /* Handle GET requests */
-function rest_get()
+function rest_get($pdo, $projectid)
 {
-    global $pdo, $projectid;
-
     if (!isset($_GET['buildgroupid'])) {
         json_error_response(['error' => 'buildgroupid not specified'], 400);
     }
@@ -108,9 +107,8 @@ function rest_get()
 }
 
 /* Handle DELETE requests */
-function rest_delete()
+function rest_delete($pdo)
 {
-    global $pdo;
     if (isset($_GET['buildgroupid'])) {
         // Delete the specified BuildGroup.
         $buildgroupid = pdo_real_escape_numeric($_GET['buildgroupid']);
@@ -171,10 +169,8 @@ function rest_delete()
 }
 
 /* Handle POST requests */
-function rest_post()
+function rest_post($pdo, $projectid)
 {
-    global $pdo, $projectid;
-
     if (isset($_POST['newbuildgroup'])) {
         // Create a new buildgroup
         $BuildGroup = new BuildGroup();
@@ -209,8 +205,8 @@ function rest_post()
         if (count($inputRows) > 0) {
             // Remove old build group layout for this project.
 
-            global $CDASH_DB_TYPE;
-            if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE == 'pgsql') {
+            $config = Config::getInstance();
+            if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
                 // We use a subquery here because postgres doesn't support
                 // JOINs in a DELETE statement.
                 $sql = "
@@ -364,10 +360,8 @@ function rest_post()
 }
 
 /* Handle PUT requests */
-function rest_put()
+function rest_put($projectid)
 {
-    global $projectid;
-
     if (isset($_GET['buildgroup'])) {
         // Modify an existing buildgroup.
         $buildgroup = json_decode($_GET['buildgroup'], true);

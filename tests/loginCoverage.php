@@ -22,7 +22,5 @@ class LoginTestCase extends KWWebTestCase
 
         $content = $this->logout();
         $this->assertText('Login');
-
-        $this->pass('Test passed');
     }
 }

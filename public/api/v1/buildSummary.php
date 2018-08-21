@@ -38,17 +38,6 @@ $project->Fill();
 
 $date = get_dashboard_date_from_build_starttime($build->StartTime, $project->NightlyTime);
 
-// Format the text to fit the iPhone
-function format_for_iphone($text)
-{
-    global $FormatTextForIphone;
-    if (!isset($FormatTextForIphone)) {
-        return $text;
-    }
-    $text = str_replace("\n", '<br/>', $text);
-    return $text;
-}
-
 $response = begin_JSON_response();
 $response['title'] = "CDash : $project->Name";
 
@@ -170,11 +159,11 @@ $errors_response = array();
 foreach ($e_errors as $error_array) {
     $error_response = array();
     $error_response['logline'] = $error_array['logline'];
-    $error_response['text'] = format_for_iphone($error_array['text']);
+    $error_response['text'] = $error_array['text'];
     $error_response['sourcefile'] = $error_array['sourcefile'];
     $error_response['sourceline'] = $error_array['sourceline'];
-    $error_response['precontext'] = format_for_iphone($error_array['precontext']);
-    $error_response['postcontext'] = format_for_iphone($error_array['postcontext']);
+    $error_response['precontext'] = $error_array['precontext'];
+    $error_response['postcontext'] = $error_array['postcontext'];
     $errors_response[] = $error_response;
 }
 
@@ -183,7 +172,7 @@ foreach ($e_errors as $error_array) {
 foreach ($f_errors as $error_array) {
     $error_response = array();
     $error_response['sourcefile'] = $error_array['sourcefile'];
-    $error_response['stdoutput'] = format_for_iphone($error_array['stdoutput']);
+    $error_response['stdoutput'] = $error_array['stdoutput'];
     $error_response['stderror'] = $error_array['stderror'];
     $errors_response[] = $error_response;
 }
@@ -196,11 +185,11 @@ $warnings_response = array();
 foreach ($e_warnings as $error_array) {
     $warning_response = array();
     $warning_response['logline'] = $error_array['logline'];
-    $warning_response['text'] = format_for_iphone($error_array['text']);
+    $warning_response['text'] = $error_array['text'];
     $warning_response['sourcefile'] = $error_array['sourcefile'];
     $warning_response['sourceline'] = $error_array['sourceline'];
-    $warning_response['precontext'] = format_for_iphone($error_array['precontext']);
-    $warning_response['postcontext'] = format_for_iphone($error_array['postcontext']);
+    $warning_response['precontext'] = $error_array['precontext'];
+    $warning_response['postcontext'] = $error_array['postcontext'];
     $warnings_response[] = $warning_response;
 }
 
@@ -209,7 +198,7 @@ foreach ($e_warnings as $error_array) {
 foreach ($f_warnings as $error_array) {
     $warning_response = array();
     $warning_response['sourcefile'] = $error_array['sourcefile'];
-    $warning_response['stdoutput'] = format_for_iphone($error_array['stdoutput']);
+    $warning_response['stdoutput'] = $error_array['stdoutput'];
     $warning_response['stderror'] = $error_array['stderror'];
     $warnings_response[] = $warning_response;
 }
@@ -272,7 +261,7 @@ $configure_response['nwarnings'] = $configure_array['warnings'];
 
 $configure_response['status'] = $configure_array['status'];
 $configure_response['command'] = $configure_array['command'];
-$configure_response['output'] = format_for_iphone($configure_array['log']);
+$configure_response['output'] = $configure_array['log'];
 $configure_response['starttime'] = date(FMT_DATETIMETZ, strtotime($configure_array['starttime'] . ' UTC'));
 $configure_response['endtime'] = date(FMT_DATETIMETZ, strtotime($configure_array['endtime'] . ' UTC'));
 $response['configure'] = $configure_response;

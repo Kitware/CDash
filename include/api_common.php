@@ -212,6 +212,7 @@ function get_request_build($required = true)
     if ($required && !$build->Exists()) {
         $response = ['error' => 'This build does not exist. Maybe it has been deleted.'];
         json_error_response($response, 400);
+        return false;
     }
 
     if ($id) {
@@ -229,9 +230,9 @@ function get_request_build($required = true)
  */
 function json_error_response($response, $code = 400)
 {
-    http_response_code($code);
-    echo json_encode($response);
     $service = ServiceContainer::getInstance();
     $system = $service->get(System::class);
+    $system->http_response_code($code);
+    echo json_encode($response);
     $system->system_exit();
 }

@@ -16,6 +16,7 @@
 
 require_once 'config/config.php';
 
+use CDash\Config;
 use CDash\Model\Build;
 use CDash\Model\Coverage;
 use CDash\Model\CoverageFile;
@@ -44,10 +45,9 @@ class JavaJSONTarHandler
      **/
     public function Parse($filename)
     {
-        global $CDASH_BACKUP_DIRECTORY;
-
+        $config = Config::getInstance();
         // Create a new directory where we can extract our tarball.
-        $dirName = $CDASH_BACKUP_DIRECTORY . DIRECTORY_SEPARATOR . pathinfo($filename, PATHINFO_FILENAME);
+        $dirName = $config->get('CDASH_BACKUP_DIRECTORY') . DIRECTORY_SEPARATOR . pathinfo($filename, PATHINFO_FILENAME);
         mkdir($dirName);
 
         // Extract the tarball.

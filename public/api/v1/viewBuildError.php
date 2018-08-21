@@ -55,9 +55,6 @@ if ($date != null) {
 
 $response = [];
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
-
 $start = microtime_float();
 $project_array = [];
 $project = pdo_query("SELECT * FROM project WHERE id='{$build->ProjectId}'");
@@ -145,10 +142,8 @@ $response['numErrors'] = 0;
  * @todo id should probably just be a unique id for the builderror?
  * builderror table currently has no integer that serves as a unique identifier.
  **/
-function addErrorResponse($data)
+function addErrorResponse($data, &$response)
 {
-    global $build, $response;
-
     $data['id'] = $response['numErrors'];
     $response['numErrors']++;
 
@@ -160,7 +155,7 @@ if (isset($_GET['onlydeltan'])) {
     $resolvedBuildErrors = $build->GetResolvedBuildErrors($type);
     if ($resolvedBuildErrors !== false) {
         while ($resolvedBuildError = $resolvedBuildErrors->fetch()) {
-            addErrorResponse(BuildError::marshal($resolvedBuildError, $project_array, $revision, $builderror));
+            addErrorResponse(BuildError::marshal($resolvedBuildError, $project_array, $revision, $builderror), $response);
         }
     }
 
@@ -184,7 +179,7 @@ if (isset($_GET['onlydeltan'])) {
             'stdoutputrows' => min(10, substr_count($resolvedBuildFailure['stdoutputrows'], "\n") + 1),
         ));
 
-        addErrorResponse($marshaledResolvedBuildFailure);
+        addErrorResponse($marshaledResolvedBuildFailure, $response);
     }
 } else {
     $filter_error_properties = ['type' => $type];
@@ -197,7 +192,7 @@ if (isset($_GET['onlydeltan'])) {
     $buildErrors = $build->GetErrors($filter_error_properties);
 
     foreach ($buildErrors as $error) {
-        addErrorResponse(BuildError::marshal($error, $project_array, $revision, $builderror));
+        addErrorResponse(BuildError::marshal($error, $project_array, $revision, $builderror), $response);
     }
 
     // Build failure table
@@ -217,7 +212,7 @@ if (isset($_GET['onlydeltan'])) {
                 }
             }
         }
-        addErrorResponse($failure);
+        addErrorResponse($failure, $response);
     }
 }
 

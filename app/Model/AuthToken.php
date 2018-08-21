@@ -15,6 +15,7 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use CDash\Config;
 use CDash\Database;
 
 /** AuthToken class */
@@ -39,16 +40,17 @@ class AuthToken
     // $this->Hash.
     public function Generate()
     {
-        global $CDASH_TOKEN_DURATION;
+        $config = Config::getInstance();
+        $duration = $config->get('CDASH_TOKEN_DURATION');
         $now = time();
         $token = bin2hex(random_bytes(16));
         $this->Hash = $this->HashToken($token);
         $this->Created = gmdate(FMT_DATETIME, $now);
-        if ($CDASH_TOKEN_DURATION === 0) {
+        if ($duration === 0) {
             // Special value meaning "this token never expires".
             $this->Expires = '9999-12-31 23:59:59';
         } else {
-            $this->Expires = gmdate(FMT_DATETIME, $now + $CDASH_TOKEN_DURATION);
+            $this->Expires = gmdate(FMT_DATETIME, $now + $duration);
         }
         return $token;
     }
@@ -228,13 +230,36 @@ class AuthToken
             $headers = trim($_SERVER['Authorization']);
         } elseif (isset($_SERVER['HTTP_AUTHORIZATION'])) { //Nginx or fast CGI
             $headers = trim($_SERVER['HTTP_AUTHORIZATION']);
-        } elseif (function_exists('getallheaders')) {
-            $requestHeaders = getallheaders();
+        } else {
+            $requestHeaders = self::getAllHeaders();
             if (isset($requestHeaders['Authorization'])) {
                 $headers = trim($requestHeaders['Authorization']);
             }
         }
         return $headers;
+    }
+
+    /**
+     * If getallheaders does not exist this method will provide a simulacrum
+     * @return array|false
+     */
+    private static function getAllHeaders()
+    {
+        if (function_exists('getallheaders')) {
+            return getallheaders();
+        } else {
+            $headers = [];
+            foreach ($_SERVER as $key => $value) {
+                $words = explode('_', $key);
+                if (array_shift($words) === 'HTTP') {
+                    array_walk($words, function (&$word) {
+                        $word = ucfirst(strtolower($word));
+                    });
+                    $headers[implode('-', $words)] = $value;
+                }
+            }
+            return $headers;
+        }
     }
 
     /**

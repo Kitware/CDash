@@ -31,8 +31,6 @@ if ($date != null) {
 }
 
 $response = [];
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
 
 $project_array = pdo_fetch_array(pdo_query("SELECT * FROM project WHERE id='{$build->ProjectId}'"));
 $projectname = $project_array['name'];

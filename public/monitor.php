@@ -14,16 +14,17 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once dirname(__DIR__) . '/config/config.php';
+include dirname(__DIR__) . '/config/config.php';
 require_once 'public/login.php';
 
+use CDash\Config;
 use CDash\Model\User;
 
 function echo_currently_processing_submissions()
 {
-    include dirname(__DIR__) . '/config/config.php';
+    $config = Config::getInstance();
 
-    if ($CDASH_DB_TYPE == 'pgsql') {
+    if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
         $sql_query = "SELECT now() AT TIME ZONE 'UTC'";
     } else {
         $sql_query = 'SELECT UTC_TIMESTAMP()';
@@ -31,7 +32,7 @@ function echo_currently_processing_submissions()
     $current_time = pdo_single_row_query($sql_query);
 
     $sql_query = 'SELECT project.name, submission.*, ';
-    if ($CDASH_DB_TYPE == 'pgsql') {
+    if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
         $sql_query .= 'round((extract(EPOCH FROM now() - created)/3600)::numeric, 2) AS hours_ago ';
     } else {
         $sql_query .= 'ROUND(TIMESTAMPDIFF(SECOND, created, UTC_TIMESTAMP)/3600, 2) AS hours_ago ';
@@ -104,9 +105,8 @@ function echo_pending_submissions()
 
 function echo_average_wait_time($projectid)
 {
-    include dirname(__DIR__) . '/config/config.php';
-
-    if ($CDASH_DB_TYPE == 'pgsql') {
+    $config = Config::getInstance();
+    if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
         $sql_query = 'SELECT extract(EPOCH FROM now() - created)/3600 as hours_ago, ' .
             'current_time AS time_local, ' .
             'count(created) AS num_files, ' .

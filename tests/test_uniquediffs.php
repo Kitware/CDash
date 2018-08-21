@@ -83,13 +83,13 @@ class UniqueDiffsTestCase extends KWWebTestCase
     public function testUniqueDiffsUpgrade()
     {
         require_once 'include/upgrade_functions.php';
-        global $CDASH_DB_TYPE;
+
         $pdo = get_link_identifier()->getPdo();
         $tables = ['test_builderrordiff', 'test_configureerrordiff', 'test_testdiff'];
 
         foreach ($tables as $table) {
             // Create testing tables.
-            if ($CDASH_DB_TYPE == 'pgsql') {
+            if ($this->config('CDASH_DB_TYPE') == 'pgsql') {
                 $create_query = '
                     CREATE TABLE "' . $table . '" (
                             "buildid" integer NOT NULL,
