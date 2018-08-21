@@ -21,18 +21,21 @@ include 'include/version.php';
 
 use CDash\Model\Build;
 use CDash\Model\BuildInformation;
+use CDash\Model\BuildRelationship;
 use CDash\Model\BuildUserNote;
 use CDash\Model\Project;
 use CDash\Model\User;
+use CDash\ServiceContainer;
 
 $start = microtime_float();
-$response = array();
+$response = [];
 
 $build = get_request_build();
 $buildid = $build->Id;
 $siteid = $build->SiteId;
 
-$project = new Project();
+$service = ServiceContainer::getInstance();
+$project = $service->create(Project::class);
 $project->Id = $build->ProjectId;
 $project->Fill();
 
@@ -45,7 +48,7 @@ $previous_buildid = $build->GetPreviousBuildId();
 $current_buildid = $build->GetCurrentBuildId();
 $next_buildid = $build->GetNextBuildId();
 
-$menu = array();
+$menu = [];
 if ($build->GetParentId() > 0) {
     $menu['back'] = 'index.php?project=' . urlencode($project->Name) . "&parentid={$build->GetParentId()}";
 } else {
@@ -56,7 +59,7 @@ if ($previous_buildid > 0) {
     $menu['previous'] = "buildSummary.php?buildid=$previous_buildid";
 
     // Find the last submit date.
-    $previous_build = new Build();
+    $previous_build = $service->create(Build::class);
     $previous_build->Id = $previous_buildid;
     $previous_build->FillFromId($previous_build->Id);
     $lastsubmitdate = date(FMT_DATETIMETZ, strtotime($previous_build->StartTime . ' UTC'));
@@ -79,7 +82,7 @@ get_dashboard_JSON($project->Name, $date, $response);
 
 $userid = get_userid_from_session(false);
 if ($userid) {
-    $user = new User();
+    $user = $service->create(User::class);
     $user->Id = $userid;
     $user->Fill();
     $user_response['id'] = $userid;
@@ -89,7 +92,7 @@ if ($userid) {
 
 
 // Notes added by users.
-$notes_response = array();
+$notes_response = [];
 $notes = BuildUserNote::getNotesForBuild($buildid);
 foreach ($notes as $note) {
     $note_response = $note->marshal();
@@ -98,7 +101,7 @@ foreach ($notes as $note) {
 $response['notes'] = $notes_response;
 
 // Build
-$build_response = array();
+$build_response = [];
 
 $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
 $build_response['site'] = $site_array['name'];
@@ -116,7 +119,7 @@ $note_array = pdo_fetch_array($note);
 $build_response['note'] = $note_array['c'];
 
 // Find the OS and compiler information
-$buildinfo = new BuildInformation();
+$buildinfo = $service->create(BuildInformation::class);
 if ($build->GetParentId() > 0) {
     $buildinfo->BuildId = $build->GetParentId();
 } else {
@@ -154,10 +157,10 @@ $build_response['nwarnings'] = $nwarnings;
 
 // Display the build errors
 
-$errors_response = array();
+$errors_response = [];
 
 foreach ($e_errors as $error_array) {
-    $error_response = array();
+    $error_response = [];
     $error_response['logline'] = $error_array['logline'];
     $error_response['text'] = $error_array['text'];
     $error_response['sourcefile'] = $error_array['sourcefile'];
@@ -170,7 +173,7 @@ foreach ($e_errors as $error_array) {
 // Display the build failure error
 
 foreach ($f_errors as $error_array) {
-    $error_response = array();
+    $error_response = [];
     $error_response['sourcefile'] = $error_array['sourcefile'];
     $error_response['stdoutput'] = $error_array['stdoutput'];
     $error_response['stderror'] = $error_array['stderror'];
@@ -180,10 +183,10 @@ foreach ($f_errors as $error_array) {
 $build_response['errors'] = $errors_response;
 
 // Display the warnings
-$warnings_response = array();
+$warnings_response = [];
 
 foreach ($e_warnings as $error_array) {
-    $warning_response = array();
+    $warning_response = [];
     $warning_response['logline'] = $error_array['logline'];
     $warning_response['text'] = $error_array['text'];
     $warning_response['sourcefile'] = $error_array['sourcefile'];
@@ -196,7 +199,7 @@ foreach ($e_warnings as $error_array) {
 // Display the build failure warnings
 
 foreach ($f_warnings as $error_array) {
-    $warning_response = array();
+    $warning_response = [];
     $warning_response['sourcefile'] = $error_array['sourcefile'];
     $warning_response['stdoutput'] = $error_array['stdoutput'];
     $warning_response['stderror'] = $error_array['stderror'];
@@ -207,7 +210,7 @@ $build_response['warnings'] = $warnings_response;
 $response['build'] = $build_response;
 
 // Update
-$update_response = array();
+$update_response = [];
 $buildupdate = pdo_query('SELECT * FROM buildupdate AS u ,build2update AS b2u WHERE b2u.updateid=u.id AND b2u.buildid=' . qnum($buildid));
 
 if (pdo_num_rows($buildupdate) > 0) {
@@ -244,7 +247,7 @@ if (pdo_num_rows($buildupdate) > 0) {
 $response['update'] = $update_response;
 
 // Configure
-$configure_response = array();
+$configure_response = [];
 $configure = pdo_query(
         "SELECT * FROM configure c
         JOIN build2configure b2c ON b2c.configureid=c.id
@@ -267,7 +270,7 @@ $configure_response['endtime'] = date(FMT_DATETIMETZ, strtotime($configure_array
 $response['configure'] = $configure_response;
 
 // Test
-$test_response = array();
+$test_response = [];
 $nerrors = 0;
 $nwarnings = 0;
 $test_response['nerrors'] = $nerrors;
@@ -299,7 +302,7 @@ if ($coverage_array) {
 // Previous build
 // Find the previous build
 if ($previous_buildid > 0) {
-    $previous_response = array();
+    $previous_response = [];
     $previous_response['buildid'] = $previous_buildid;
 
     // Find if the build has any errors
@@ -375,6 +378,14 @@ if ($generate_issue_link) {
     $response['bugtracker'] = $project->BugTrackerType;
 }
 $response['newissueurl'] = $new_issue_url;
+
+// Check if this build is related to any others.
+$build_relationship = $service->create(BuildRelationship::class);
+$relationships = $build_relationship->GetRelationships($build);
+$response['relationships_to'] = $relationships['to'];
+$response['relationships_from'] = $relationships['from'];
+$response['hasrelationships'] = !empty($response['relationships_to']) ||
+    !empty($response['relationships_from']);
 
 $end = microtime_float();
 $response['generationtime'] = round($end - $start, 3);

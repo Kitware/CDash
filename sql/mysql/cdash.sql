@@ -1484,6 +1484,18 @@ CREATE TABLE IF NOT EXISTS `buildproperties` (
 );
 
 --
+-- Table structure for table `related_builds`
+--
+CREATE TABLE `related_builds` (
+  `buildid` bigint(20) NOT NULL,
+  `relatedid` bigint(20) NOT NULL,
+  `relationship` varchar(255),
+  PRIMARY KEY (`buildid`,`relatedid`),
+  KEY `buildid` (`buildid`),
+  KEY `relatedid` (`relatedid`)
+);
+
+--
 -- Change the table maximum size to be more than 4GB
 --
 alter table test max_rows = 200000000000 avg_row_length = 3458;
