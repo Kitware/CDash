@@ -69,7 +69,7 @@ return [
             'prefix' => 'bernard:',
         ],
         Driver::SQS => [
-            'enabled' => true,
+            'enabled' => false,
             'profile' => 'CDASH',
             'region' => 'us-east-1',
             'version' => 'latest',
