@@ -1,84 +1,80 @@
 <div id="div_showfilters" ng-controller="FiltersController">
 
   <div ng-hide="showfilters==0">
-    <table id="tablefilters" cellpadding="0" cellspacing="0">
-      <tr class="table-heading0" >
-        <td colspan="10" class="nob">
-          <h3>Filters</h3>
-        </td>
-        <td>
-          <a ng-href="http://public.kitware.com/Wiki/CDash:Documentation#Filters_on_{{cdash.page}}" target="_blank">Help</a>
-        </td>
-      </tr>
-      <tr class="trodd">
-        <td>
-          <span id="Match_filter">
-            <div ng-if="filterdata.filters.length == 1">
-              Match the following rule:
-              <input type="hidden" name="filtercombine"  id="id_filtercombine" value="{{filterdata.filtercombine}}">
-              </input>
-            </div>
-            <div ng-if="filterdata.filters.length > 1">
-              Match
-              <select name="filtercombine" id="id_filtercombine">
-                <option value="and" ng-selected="filterdata.filtercombine != 'or'">
-                  all
-                </option>
-                <option value="or" ng-selected="filterdata.filtercombine == 'or'">
-                  any
+    <div class="table-heading0">
+      <a ng-href="http://public.kitware.com/Wiki/CDash:Documentation#Filters_on_{{cdash.page}}"
+         target="_blank"
+         style="float: right;">Help</a>
+      <h3>Filters</h3>
+    </div>
+    <div class="trodd">
+      <span id="Match_filter">
+        <div ng-if="filterdata.filters.length == 1">
+          Match the following rule:
+          <input type="hidden" name="filtercombine"  id="id_filtercombine" value="{{filterdata.filtercombine}}">
+          </input>
+        </div>
+        <div ng-if="filterdata.filters.length > 1">
+          Match
+          <select name="filtercombine" id="id_filtercombine">
+            <option value="and" ng-selected="filterdata.filtercombine != 'or'">
+              all
+            </option>
+            <option value="or" ng-selected="filterdata.filtercombine == 'or'">
+              any
+            </option>
+          </select>
+          of the following rules:
+        </div>
+      </span>
+    </div>
+
+    <ul>
+      <li ng-repeat="filter in filterdata.filters"
+          ng-class-even="'treven'" ng-class-odd="'trodd'"
+          class="filterFields" id="filter{{$index+1}}">
+        <div ng-if="::filter.filters">
+          <ul>
+            <li class="filterFields" id="subfilter{{$index+1}}"
+                ng-repeat="subfilter in filter.filters" >
+              <select id="id_field{{$index+1}}" name="field{{$index+1}}"
+                      ng-model="subfilter.key" ng-change="changeFilter($index+1)">
+                <option ng-repeat="availablefilter in filterdata.availablefilters"
+                        value="{{availablefilter}}"
+                        ng-selected="filterdata.availablefilters[$index] == subfilter.key">
+                  {{filterdefinitions[availablefilter].text}}
                 </option>
               </select>
-              of the following rules:
-            </div>
-          </span>
-        </td>
-      </tr>
 
-      <tr ng-repeat="filter in filterdata.filters" class="filterFields" id="filter{{$index+1}}" ng-class-even="'treven'" ng-class-odd="'trodd'">
-        <td ng-if="::filter.filters">
-          <table cellpadding="0" cellspacing="0" style="margin-left: 5%">
-            <tr class="filterFields" id="subfilter{{$index+1}}"
-                ng-repeat="subfilter in filter.filters" >
-              <td>
-                ...
-                <select id="id_field{{$index+1}}" name="field{{$index+1}}"
-                        ng-model="subfilter.key" ng-change="changeFilter($index+1)">
-                  <option ng-repeat="availablefilter in filterdata.availablefilters"
-                          value="{{availablefilter}}"
-                          ng-selected="filterdata.availablefilters[$index] == subfilter.key">
-                    {{filterdefinitions[availablefilter].text}}
-                  </option>
-                </select>
+              &nbsp;
 
-                &nbsp;
+              <select id="id_compare{{$index+1}}" name="compare{{$index+1}}"
+                      ng-model="subfilter.compare">
+                <option value="0">-- choose comparison --</option>
+                <option ng-repeat="comparison in comparisons[filterdefinitions[subfilter.key].type]"
+                        value="{{comparison.value}}"
+                        ng-selected="subfilter.compare == comparison.value">
+                  {{comparison.text}}
+                </option>
+              </select>
 
-                <select id="id_compare{{$index+1}}" name="compare{{$index+1}}"
-                        ng-model="subfilter.compare">
-                  <option value="0">-- choose comparison --</option>
-                  <option ng-repeat="comparison in comparisons[filterdefinitions[subfilter.key].type]"
-                          value="{{comparison.value}}"
-                          ng-selected="subfilter.compare == comparison.value">
-                    {{comparison.text}}
-                  </option>
-                </select>
+              &nbsp;
 
-                &nbsp;
+              <input type="text" size="60" id="id_value{{$index+1}}" name="value{{$index+1}}" value="{{subfilter.value}}" ng-model="subfilter.value"></input>
 
-                <input type="text" size="60" id="id_value{{$index+1}}" name="value{{$index+1}}" value="{{subfilter.value}}" ng-model="subfilter.value"></input>
+              &nbsp;
 
-                &nbsp;
-
-                <input type="button" value="-" name="remove{{$index+1}}" ng-click="removeFilterFromBlock(filter, $index+1)" ng-disabled="$last && $first"></input>
-                <input type="button" value="+" name="add{{$index+1}}" ng-click="addFilterToBlock(filter, $index+1)"></input>
-              </td>
-            </tr>
-          </table>
-          <input type="button" value="-" ng-click="removeFilter($index+1)" style="margin-left: 90%"></input>
+              <input type="button" value="-" name="remove{{$index+1}}" ng-click="removeFilterFromBlock(filter, $index+1)" ng-disabled="$last && $first"></input>
+              <input type="button" value="+" name="add{{$index+1}}" ng-click="addFilterToBlock(filter, $index+1)"></input>
+            </li>
+          </ul>
+          <input type="button" value="-" ng-click="removeFilter($index+1)"></input>
           <input type="button" value="+" name="add{{$index+1}}" ng-click="addFilter($index+1)"></input>
           <input type="button" value="..." name="block{{$index+1}}" ng-click="addFilterBlock($index+1)"></input>
-        </td>
+          <input type="button" value="..." name="or{{$index+1}}" ng-click="addOrBlock($index+1)"></input>
+        </div>
 
-        <td ng-if="::filter.key">
+        <div ng-if="::filter.key">
           <select id="id_field{{$index+1}}" name="field{{$index+1}}"
                   ng-model="filter.key"
                   ng-change="changeFilter($index+1)">
@@ -109,6 +105,7 @@
 
           <input type="button" value="-" name="remove{{$index+1}}" ng-click="removeFilter($index+1)" ng-disabled="$last && $first"></input>
           <input type="button" value="+" name="add{{$index+1}}" ng-click="addFilter($index+1)"></input>
+<<<<<<< HEAD
           <input type="button" value="..." name="block{{$index+1}}" ng-click="addFilterBlock($index+1)"></input>
         </td>
       </tr>
@@ -145,5 +142,43 @@
         </td>
       </tr>
     </table>
+=======
+          <input type="button" value="..." name="or{{$index+1}}" ng-click="addOrBlock($index+1)"></input>
+        </div>
+      </li>
+    </ul>
+
+    <div>
+      <div ng-if="filterdata.showlimit == 0">
+        <input type="hidden" id="id_limit" name="limit" value="{{filterdata.limit}}">
+        </input>
+      </div>
+      <div ng-if="filterdata.showlimit == 1">
+        Limit results to
+        <input type="text" size="3" id="id_limit" name="limit" align="center" value="{{filterdata.limit}}">
+        </input>
+        rows (0 for unlimited)
+      </div>
+    </div>
+
+    <div>
+      <div>
+        <input type="hidden" name="filtercount" id="id_filtercount" value="{{filterdata.filters.length}}">
+        </input>
+        <input type="hidden" name="showfilters" id="id_showfilters" value="1" />
+        <input type="button" ng-click="applyFilters()" name="apply" value="Apply" />
+        &nbsp;
+        <input type="button" ng-click="clearFilters()" name="clear" value="Clear" />
+        &nbsp;
+        <input type="button" ng-click="displayHyperlink()" name="create_hyperlink" value="Create Hyperlink"/>
+      </div>
+    </div>
+
+    <div>
+      <div>
+        <div id="div_filtersAsUrl"/>
+      </div>
+    </div>
+>>>>>>> ffc633e... Convert filter display from table to list
   </div>
 </div>
