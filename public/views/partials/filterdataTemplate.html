@@ -1,34 +1,12 @@
 <div id="div_showfilters" ng-controller="FiltersController">
 
-  <div ng-hide="showfilters==0">
+  <div ng-hide="showfilters == 0">
     <div class="table-heading0">
       <a ng-href="http://public.kitware.com/Wiki/CDash:Documentation#Filters_on_{{cdash.page}}"
          target="_blank"
          style="float: right;">Help</a>
       <h3>Filters</h3>
     </div>
-    <div class="trodd">
-      <span id="Match_filter">
-        <div ng-if="filterdata.filters.length == 1">
-          Match the following rule:
-          <input type="hidden" name="filtercombine"  id="id_filtercombine" value="{{filterdata.filtercombine}}">
-          </input>
-        </div>
-        <div ng-if="filterdata.filters.length > 1">
-          Match
-          <select name="filtercombine" id="id_filtercombine">
-            <option value="and" ng-selected="filterdata.filtercombine != 'or'">
-              all
-            </option>
-            <option value="or" ng-selected="filterdata.filtercombine == 'or'">
-              any
-            </option>
-          </select>
-          of the following rules:
-        </div>
-      </span>
-    </div>
-
     <ul>
       <li ng-repeat="filter in filterdata.filters"
           ng-class-even="'treven'" ng-class-odd="'trodd'"
@@ -64,14 +42,34 @@
 
               &nbsp;
 
-              <input type="button" value="-" name="remove{{$index+1}}" ng-click="removeFilterFromBlock(filter, $index+1)" ng-disabled="$last && $first"></input>
-              <input type="button" value="+" name="add{{$index+1}}" ng-click="addFilterToBlock(filter, $index+1)"></input>
+              <button class="btn btn-default btn-xs"
+                      ng-click="removeFilter(filter, $index+1)"
+                      ng-disabled="$last && $first">
+                <span class="smallicon glyphicon glyphicon-minus"></span>
+              </button>
+              <button class="btn btn-default btn-xs"
+                      ng-click="addFilter(filter, $index+1)">
+                <span class="smallicon glyphicon glyphicon-plus"></span>
+              </button>
+              <span ng-if="!$last">
+                {{filterdata.othercombine}}
+              </span>
             </li>
           </ul>
-          <input type="button" value="-" ng-click="removeFilter($index+1)"></input>
-          <input type="button" value="+" name="add{{$index+1}}" ng-click="addFilter($index+1)"></input>
-          <input type="button" value="..." name="block{{$index+1}}" ng-click="addFilterBlock($index+1)"></input>
-          <input type="button" value="..." name="or{{$index+1}}" ng-click="addOrBlock($index+1)"></input>
+          <button class="btn btn-default btn-xs"
+                  ng-click="removeFilter(filterdata, $index+1)"
+                  ng-disabled="$last && $first">
+            <span class="smallicon glyphicon glyphicon-minus"></span>
+          </button>
+          <button class="btn btn-default btn-xs" ng-click="addFilter(filterdata, $index+1)">
+            <span class="smallicon glyphicon glyphicon-plus"></span>
+          </button>
+          <button class="btn btn-default btn-xs" ng-click="addFilterBlock($index+1)">
+            <img class="smallicon" src="img/nested_list.svg"></img>
+          </button>
+          <span ng-if="$middle">
+            {{filterdata.filtercombine}}
+          </span>
         </div>
 
         <div ng-if="::filter.key">
@@ -103,48 +101,28 @@
 
           &nbsp;
 
-          <input type="button" value="-" name="remove{{$index+1}}" ng-click="removeFilter($index+1)" ng-disabled="$last && $first"></input>
-          <input type="button" value="+" name="add{{$index+1}}" ng-click="addFilter($index+1)"></input>
-<<<<<<< HEAD
-          <input type="button" value="..." name="block{{$index+1}}" ng-click="addFilterBlock($index+1)"></input>
-        </td>
-      </tr>
-
-      <tr>
-        <td ng-if="filterdata.showlimit == 0">
-          <input type="hidden" id="id_limit" name="limit" value="{{filterdata.limit}}">
-          </input>
-        </td>
-        <td ng-if="filterdata.showlimit == 1">
-          Limit results to
-          <input type="text" size="3" id="id_limit" name="limit" align="center" value="{{filterdata.limit}}">
-          </input>
-          rows (0 for unlimited)
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <input type="hidden" name="filtercount" id="id_filtercount" value="{{filterdata.filters.length}}">
-          </input>
-          <input type="hidden" name="showfilters" id="id_showfilters" value="1" />
-          <input type="button" ng-click="applyFilters()" name="apply" value="Apply" />
-          &nbsp;
-          <input type="button" ng-click="clearFilters()" name="clear" value="Clear" />
-          &nbsp;
-          <input type="button" ng-click="displayHyperlink()" name="create_hyperlink" value="Create Hyperlink"/>
-        </td>
-      </tr>
-
-      <tr>
-        <td>
-          <div id="div_filtersAsUrl"/>
-        </td>
-      </tr>
-    </table>
-=======
-          <input type="button" value="..." name="or{{$index+1}}" ng-click="addOrBlock($index+1)"></input>
+          <button class="btn btn-default btn-xs"
+                  ng-click="removeFilter(filterdata, $index+1)"
+                  ng-disabled="$last && $first">
+            <span class="smallicon glyphicon glyphicon-minus"></span>
+          </button>
+          <button class="btn btn-default btn-xs" ng-click="addFilter(filterdata, $index+1)">
+            <span class="smallicon glyphicon glyphicon-plus"></span>
+          </button>
+          <button class="btn btn-default btn-xs" ng-click="addFilterBlock($index+1)">
+            <img class="smallicon" src="img/nested_list.svg"></img>
+          </button>
+          <select ng-if="filterdata.filters.length > 1 && $first"
+                  ng-model="filterdata.filtercombine"
+                  ng-change="updateCombine(filterdata)">
+            <option value="and">and</option>
+            <option value="or">or</option>
+          </select>
+          <span ng-if="$middle">
+            {{filterdata.filtercombine}}
+          </span>
         </div>
+
       </li>
     </ul>
 
@@ -179,6 +157,5 @@
         <div id="div_filtersAsUrl"/>
       </div>
     </div>
->>>>>>> ffc633e... Convert filter display from table to list
   </div>
 </div>

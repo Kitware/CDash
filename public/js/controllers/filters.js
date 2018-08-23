@@ -236,9 +236,9 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
   };
 
   // Add a new row to our list of filters.
-  $scope.addFilter = function(index) {
-    var previous_filter = $scope.filterdata.filters[index-1];
-    if (previous_filter.hasOwnProperty('type')) {
+  $scope.addFilter = function(block, index) {
+    var previous_filter = block.filters[index-1];
+    if (previous_filter.hasOwnProperty('filters')) {
       var filter_to_copy = previous_filter.filters[previous_filter.filters.length - 1];
     } else {
       var filter_to_copy = previous_filter;
@@ -248,12 +248,12 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
       compare: filter_to_copy.compare,
       value: filter_to_copy.value,
     };
-    $scope.filterdata.filters.splice(index, 0, filter);
+    block.filters.splice(index, 0, filter);
   };
 
   // Remove a filter from our list.
-  $scope.removeFilter = function(index) {
-    $scope.filterdata.filters.splice(index-1, 1);
+  $scope.removeFilter = function(block, index) {
+    block.filters.splice(index-1, 1);
   };
 
   // Check to see if the type of a filter was changed by the user.
@@ -297,7 +297,7 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
     params = window.location.search.replace('?', '').split(/[&;]/g);
 
     // Search for and remove any existing filter params.
-    var filterParams = ['filtercount', 'showfilters', 'field', 'compare', 'value', 'limit'];
+    var filterParams = ['filtercount', 'filtercombine', 'showfilters', 'field', 'compare', 'value', 'limit'];
     // Reverse iteration because this is destructive.
     for (var i = params.length; i-- > 0;) {
       for (var j = 0; j < filterParams.length; j++) {
@@ -325,11 +325,11 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
     }
 
     if (n > 1) {
-      s = s + "&filtercombine=" + $("#id_filtercombine").val();
+      s = s + "&filtercombine=" + $scope.filterdata.filtercombine;
     }
 
     for (var i = 1; i <= n; i++) {
-      if ($scope.filterdata.filters[i-1].hasOwnProperty('type')) {
+      if ($scope.filterdata.filters[i-1].hasOwnProperty('filters')) {
         var num_subfilters = $scope.filterdata.filters[i-1].filters.length;
         if (num_subfilters < 1) {
           continue;
@@ -356,7 +356,6 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
   $scope.addFilterBlock = function(index) {
     var parent_filter = $scope.filterdata.filters[index-1];
     var or_block = {
-      type: 'or',
       filters: []
     };
     var filter = {
@@ -368,20 +367,13 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
     $scope.filterdata.filters.splice(index, 0, or_block);
   };
 
-  // Add a new row to our list of filters.
-  $scope.addFilterToBlock = function(block, index) {
-    var parent_filter = block.filters[index-1];
-    var filter = {
-      key: parent_filter.key,
-      compare: parent_filter.compare,
-      value: parent_filter.value,
-    };
-    block.filters.splice(index, 0, filter);
-  };
-
-  // Remove a filter from our list.
-  $scope.removeFilterFromBlock = function(block, index) {
-    block.filters.splice(index-1, 1);
+  // Change the value of filterdata.othercombine.
+  $scope.updateCombine = function(filterdata) {
+    if (filterdata.filtercombine == 'or') {
+      filterdata.othercombine = 'and';
+    } else {
+      filterdata.othercombine = 'or';
+    }
   };
 
   var url = window.location.pathname;
@@ -400,7 +392,7 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
   }).then(function success(s) {
     var filterdata = s.data;
     filterdata.filters.forEach(function(filter) {
-      if (filter.hasOwnProperty('type')) {
+      if (filter.hasOwnProperty('filters')) {
         filter.filters.forEach(function(subfilter) {
           subfilter.compare = subfilter.compare.toString();
         });

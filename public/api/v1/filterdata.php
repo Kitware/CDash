@@ -68,7 +68,13 @@ function get_filterdata_array_from_request($page_id = '')
     $filterdata['limit'] = $limit;
 
     @$filtercombine = htmlspecialchars(pdo_real_escape_string($_REQUEST['filtercombine']));
-    $filterdata['filtercombine'] = $filtercombine;
+    if (strcasecmp($filtercombine, 'or') == 0) {
+        $filterdata['filtercombine'] = 'or';
+        $filterdata['othercombine'] = 'and';
+    } else {
+        $filterdata['filtercombine'] = 'and';
+        $filterdata['othercombine'] = 'or';
+    }
 
     // Check for filters passed in via the query string
     for ($i = 1; $i <= $filtercount; ++$i) {
