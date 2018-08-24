@@ -59,11 +59,7 @@ class Google extends OAuth2
             if (array_key_exists('clientId', $google_settings) &&
                     array_key_exists('clientSecret', $google_settings) &&
                     array_key_exists('redirectUri', $google_settings)) {
-                // Get domain from redirect URI.
-                $url_parts = parse_url($google_settings['redirectUri']);
-                $hosted_domain = $url_parts['scheme'] . '://' . $url_parts['host'];
-                $google_settings['hostedDomain'] = $hosted_domain;
-
+                $google_settings['hostedDomain'] = '*';
                 $this->Provider = new GoogleProvider($google_settings);
                 $this->Valid = true;
             }
