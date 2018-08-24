@@ -39,11 +39,11 @@ class BuildErrorModelTest extends PHPUnit_Framework_TestCase
         $input_data = [
             'logline' => 16,
             'newstatus' => 1,
-            'precontext' => "Scanning dependencies of target main\n[ 83%] Building CXX object CMakeFiles/main.dir/main.cxx.o\n/.../src/main.cpp: In function `int main(int, char**)`:",
+            'precontext' => "Scanning dependencies of target main\n[ 83%] Building CXX object src/CMakeFiles/main.dir/main.cpp.o\n/.../foo/src/main.cpp: In function `int main(int, char**)`:",
             'postcontext' => "   asdf = 0;\n   ^\n[100%] Linking CXX executable main",
-            'sourcefile'  => 'main.cpp',
+            'sourcefile'  => 'src/main.cpp',
             'sourceline'  => '2',
-            'text' => '/.../src/main.cpp:2:3: error: `asdf` not declared in this scope'
+            'text' => '/.../foo/src/main.cpp:2:3: error: `asdf` not declared in this scope'
         ];
 
         $input_project = [
@@ -56,12 +56,12 @@ class BuildErrorModelTest extends PHPUnit_Framework_TestCase
             'new' => '1',
             'logline' => '16',
             'cvsurl' => 'https://github.com/FooCo/foo/blob/12/src/main.cpp',
-            'precontext' => "Scanning dependencies of target main\n[ 83%] Building CXX object CMakeFiles/main.dir/main.cxx.o\n/.../src/main.cpp: In function `int main(int, char**)`:",
+            'precontext' => "Scanning dependencies of target main\n[ 83%] Building CXX object src/CMakeFiles/main.dir/main.cpp.o\n/.../foo/src/main.cpp: In function `int main(int, char**)`:",
             'text' => "<a href='https://github.com/FooCo/foo/blob/12/src/main.cpp#L2'>src/main.cpp:2</a>:3: error: `asdf` not declared in this scope",
             'postcontext' => "   asdf = 0;\n   ^\n[100%] Linking CXX executable main",
-            'sourcefile' => 'main.cpp',
+            'sourcefile' => 'src/main.cpp',
             'sourceline' => '2'
         ];
-        $this->assertEquals($marshaled, $expected);
+        $this->assertEquals($expected, $marshaled);
     }
 }
