@@ -114,7 +114,8 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $baseUrl = $config->getBaseUrl();
         $url = parse_url($baseUrl);
         $name = Session::REMEMBER_ME_PREFIX . $url['host'];
-        $path = isset($url['path']) ? "{$url['path']}; samesite=strict" : "/; samesite=strict";
+        $path = isset($url['path']) ? $url['path'] : '/';
+        $cooke_path = "{$path}; samesite=strict";
 
         /** @var User|\PHPUnit_Framework_MockObject_MockObject $mock_user */
         $mock_user = $this->getMockBuilder(User::class)
@@ -135,7 +136,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
                 $this->equalTo($name),
                 $this->equalTo("{$mock_user->Id}{$key}"),
                 $this->greaterThanOrEqual($time),
-                $this->equalTo($path),
+                $this->equalTo($cooke_path),
                 $this->equalTo($url['host']),
                 $this->equalTo(false),
                 $this->equalTo(true)
@@ -158,7 +159,8 @@ class SessionTest extends \PHPUnit_Framework_TestCase
         $baseUrl = $config->getBaseUrl();
         $url = parse_url($baseUrl);
         $name = Session::REMEMBER_ME_PREFIX . $url['host'];
-        $path = isset($url['path']) ? "{$url['path']}; samesite=strict" : "/; samesite=strict";
+        $path = isset($url['path']) ? $url['path'] : '/';
+        $cookie_path = "{$path}; samesite=strict";
 
         /** @var User|\PHPUnit_Framework_MockObject_MockObject $mock_user */
         $mock_user = $this->getMockBuilder(User::class)
@@ -179,7 +181,7 @@ class SessionTest extends \PHPUnit_Framework_TestCase
                 $this->equalTo($name),
                 $this->equalTo("{$mock_user->Id}{$key}"),
                 $this->greaterThanOrEqual($time),
-                $this->equalTo($path),
+                $this->equalTo($cookie_path),
                 $this->equalTo($url['host']),
                 $this->equalTo(true),
                 $this->equalTo(true)
