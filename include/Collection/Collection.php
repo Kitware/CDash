@@ -68,7 +68,15 @@ abstract class Collection implements CollectionInterface
      */
     public function valid()
     {
-        return isset($this->collection[$this->key()]);
+        $key = $this->key();
+        // a call to key may result in null, e.g. !isset. To prevent endless loop in the event
+        // that collection was set with a key equal to an empty string, we must check for the null
+        // type here.
+        if (is_null($key)) {
+            return false;
+        }
+
+        return isset($this->collection[$key]);
     }
 
     /**
