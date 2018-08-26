@@ -14,6 +14,7 @@ abstract class UseCase
     const CONFIG = 'Config';
     const UPDATE = 'Update';
     const BUILD = 'Build';
+    const DYNAMIC_ANALYSIS = 'DynamicAnalysis';
 
     /* build types (modes) */
     const NIGHTLY = 'Nightly';
@@ -62,6 +63,9 @@ abstract class UseCase
             case self::BUILD:
               $useCase = new BuildUseCase();
               break;
+            case self::DYNAMIC_ANALYSIS:
+                $useCase = new DynamicAnalysisUseCase();
+                break;
             default:
                 $useCase = null;
 
