@@ -39,6 +39,7 @@ class SubscriptionBuilder
      */
     public function build()
     {
+        // Start with an (presumably) empty subscription collection
         $subscriptions = $this->getSubscriptions();
         $factory = $this->getSubscriptionFactory();
 

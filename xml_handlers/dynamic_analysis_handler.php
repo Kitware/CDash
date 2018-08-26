@@ -51,7 +51,6 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
         parent::__construct($projectID, $scheduleID);
         $this->Builds = [];
         $this->SubProjects = [];
-        $this->Site = new Site();
         $this->DynamicAnalysisSummaries = [];
     }
 
@@ -59,16 +58,18 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
     public function startElement($parser, $name, $attributes)
     {
         parent::startElement($parser, $name, $attributes);
+        $factory = $this->getModelFactory();
 
         if ($name == 'SITE') {
+            $this->Site = $factory->create(Site::class);
             $this->Site->Name = $attributes['NAME'];
             if (empty($this->Site->Name)) {
                 $this->Site->Name = '(empty)';
             }
             $this->Site->Insert();
 
-            $siteInformation = new SiteInformation();
-            $this->BuildInformation = new BuildInformation();
+            $siteInformation = $factory->create(SiteInformation::class);
+            $this->BuildInformation = $factory->create(BuildInformation::class);
 
             // Fill in the attribute
             foreach ($attributes as $key => $value) {
@@ -98,7 +99,7 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
         } elseif ($name == 'DYNAMICANALYSIS') {
             $this->Checker = $attributes['CHECKER'];
             if (empty($this->DynamicAnalysisSummaries)) {
-                $summary = new DynamicAnalysisSummary();
+                $summary = $factory->create(DynamicAnalysisSummary::class);
                 $summary->Empty = true;
                 $summary->Checker = $this->Checker;
                 $this->DynamicAnalysisSummaries[$this->SubProjectName] = $summary;
@@ -108,15 +109,15 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
                 }
             }
         } elseif ($name == 'TEST' && isset($attributes['STATUS'])) {
-            $this->DynamicAnalysis = new DynamicAnalysis();
+            $this->DynamicAnalysis = $factory->create(DynamicAnalysis::class);
             $this->DynamicAnalysis->Checker = $this->Checker;
             $this->DynamicAnalysis->Status = $attributes['STATUS'];
             $this->TestSubProjectName = "";
         } elseif ($name == 'DEFECT') {
-            $this->DynamicAnalysisDefect = new DynamicAnalysisDefect();
+            $this->DynamicAnalysisDefect = $factory->create(DynamicAnalysisDefect::class);
             $this->DynamicAnalysisDefect->Type = $attributes['TYPE'];
         } elseif ($name == 'LABEL') {
-            $this->Label = new Label();
+            $this->Label = $factory->create(Label::class);
         } elseif ($name == 'LOG') {
             $this->DynamicAnalysis->LogCompression = isset($attributes['COMPRESSION']) ? $attributes['COMPRESSION'] : '';
             $this->DynamicAnalysis->LogEncoding = isset($attributes['ENCODING']) ? $attributes['ENCODING'] : '';
@@ -128,7 +129,7 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
     {
         $parent = $this->getParent(); // should be before endElement
         parent::endElement($parser, $name);
-
+        $factory = $this->getModelFactory();
         if ($name == 'STARTTESTTIME' && $parent == 'DYNAMICANALYSIS') {
             if (empty($this->SubProjects)) {
                 // Not a SubProject build.
@@ -170,7 +171,7 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
                 // If everything is perfect CTest doesn't send any <test>
                 // But we still want a line showing the current dynamic analysis
                 if ($this->DynamicAnalysisSummaries[$subprojectName]->Empty) {
-                    $this->DynamicAnalysis = new DynamicAnalysis();
+                    $this->DynamicAnalysis = $factory->create(DynamicAnalysis::class);
                     $this->DynamicAnalysis->BuildId = $build->Id;
                     $this->DynamicAnalysis->Status = 'passed';
                     $this->DynamicAnalysis->Checker = $this->Checker;
@@ -251,7 +252,8 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
 
     private function createBuild($subprojectName)
     {
-        $build = new Build();
+        $factory = $this->getModelFactory();
+        $build = $factory->create(Build::class);
 
         $build->SiteId = $this->Site->Id;
         $build->Name = $this->BuildName;
@@ -281,7 +283,7 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
             $build->UpdateBuild($build->Id, -1, -1);
 
             // Remove any previous analysis.
-            $DA = new DynamicAnalysis();
+            $DA = $factory->create(DynamicAnalysis::class);
             $DA->BuildId = $build->Id;
             $DA->RemoveAll();
         }
@@ -289,7 +291,7 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
         $this->Builds[$subprojectName] = $build;
 
         // Initialize a dynamic analysis summary for this build.
-        $summary = new DynamicAnalysisSummary();
+        $summary = $factory->create(DynamicAnalysisSummary::class);
         $summary->Empty = true;
         $summary->BuildId = $build->Id;
         $summary->Checker = $this->Checker;
@@ -319,8 +321,12 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
         $factory = $this->getModelFactory();
         /** @var BuildCollection $collection */
         $collection = $factory->create(BuildCollection::class);
-        foreach ($this->Builds as $build) {
-            $collection->add($build);
+        foreach ($this->Builds as $key => $build) {
+            if (is_numeric($key)) {
+                $collection->add($build);
+            } else {
+                $collection->addItem($build, $key);
+            }
         }
         return $collection;
     }
