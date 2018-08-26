@@ -42,6 +42,7 @@
   "require-dev": {
     "ext-gd": "*",
     "ext-xdebug": "*",
+    "ext-dom": "*",
     "friendsofphp/php-cs-fixer": "~1.11",
     "phpunit/phpunit-selenium": "~1.4",
     "phpunit/phpunit": "~4.8",
