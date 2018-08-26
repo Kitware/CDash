@@ -206,81 +206,6 @@ abstract class UseCase
     }
 
     /**
-     * @param array $properties
-     * @return UseCase
-     */
-    public function createTest(array $properties)
-    {
-        if (isset($properties[0])) {
-            $hash = [
-                'Name' => $properties[0],
-                'Status' => $properties[1],
-            ];
-            unset($properties[0], $properties[1]);
-            $properties = array_merge($hash, $properties);
-        }
-
-        // create some realistic defaults if properties don't exist
-        if (!isset($properties['Path'])) {
-            $properties['Path'] = '/a/path/to/test';
-        }
-
-        if (!isset($properties['FullName'])) {
-            $properties['FullName'] = "{$properties['Path']}/{$properties['Name']}";
-        }
-
-        if (!isset($properties['FullCommandLine'])) {
-            $properties['FullCommandLine'] = "{$properties['FullName']} --run-test .";
-        }
-
-        $this->setModel('Test', $properties);
-        return $this;
-    }
-
-    /**
-     * @param $name
-     * @param array $labels
-     * @return $this
-     */
-    public function createTestPassed($name, array $labels = [])
-    {
-        $this->createTest([$name, TestUseCase::PASSED, 'Labels' => $labels]);
-        return $this;
-    }
-
-    /**
-     * @param $name
-     * @param array $labels
-     * @return $this
-     */
-    public function createTestFailed($name, array $labels = [])
-    {
-        $this->createTest([$name, TestUseCase::FAILED, 'Labels' => $labels]);
-        return $this;
-    }
-
-    /**
-     * @param $name
-     * @param array $labels
-     * @return $this
-     */
-    public function createTestNotRun($name, array $labels = [])
-    {
-        $this->createTest([$name, TestUseCase::NOTRUN, 'Labels' => $labels]);
-        return $this;
-    }
-
-    /**
-     * @param $name
-     * @return UseCase
-     */
-    public function createTestTimedout($name, array $labels = [])
-    {
-        $this->createTest([$name, TestUseCase::TIMEOUT, 'Labels' => $labels]);
-        return $this;
-    }
-
-    /**
      * @param AbstractHandler $handler
      * @param $xml
      * @return AbstractHandler
@@ -339,6 +264,17 @@ abstract class UseCase
             $label = $parent->appendChild(new DOMElement('Label'));
             $label->appendChild(new DOMText($name));
         }
+    }
+
+    protected function createElapsedMinutesElement(DOMElement $parent)
+    {
+        $elapsed = 0;
+        if ($this->startTime && $this->endTime) {
+            $total = $this->endTime - $this->startTime;
+            $elapsed = $total / 60;
+        }
+        $node = $parent->appendChild(new DOMElement('Elapsed'));
+        $node->appendChild(new DOMText($elapsed));
     }
 
     /**
@@ -434,6 +370,17 @@ abstract class UseCase
                 if ($value) {
                     $node->appendChild(new DOMText($value));
                 }
+            }
+        }
+    }
+
+    protected function setNameInLabels($name, array &$properties)
+    {
+        if ($name) {
+            if (isset($properties['Labels']) && is_array($properties['Labels'])) {
+                $properties['Labels'][] = $name;
+            } else {
+                $properties['Labels'] = [$name];
             }
         }
     }

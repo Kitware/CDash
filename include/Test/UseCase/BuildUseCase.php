@@ -49,7 +49,6 @@ class BuildUseCase extends UseCase
         $xml_str = $xml->saveXML($xml);
         $handler = new BuildHandler($this->projectId, $this->scheduleId);
         return $this->getXmlHandler($handler, $xml_str);
-
     }
 
     protected function createFailureElement(DOMElement $parent, array $attributes)
@@ -232,16 +231,5 @@ class BuildUseCase extends UseCase
         $this->setNameInLabels($name, $properties);
         $this->createFailure([self::WARNING, $properties]);
         return $this;
-    }
-
-    protected function setNameInLabels($name, array &$properties)
-    {
-        if ($name) {
-            if (isset($properties['Labels']) && is_array($properties['Labels'])) {
-                $properties['Labels'][] = $name;
-            } else {
-                $properties['Labels'] = [$name];
-            }
-        }
     }
 }
