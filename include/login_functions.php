@@ -420,16 +420,6 @@ function LoginForm($loginerror)
         $xml .= '<allowlogincookie>1</allowlogincookie>';
     }
 
-    if ($config->get('GOOGLE_CLIENT_ID') != '' && $config->get('GOOGLE_CLIENT_SECRET') != '' &&
-        !array_key_exists('Google', $config->get('OAUTH2_PROVIDERS'))) {
-        // Backwards compatibility for previous Google-login implementation.
-        $OAUTH2_PROVIDERS['Google'] = [
-            'clientId'          => $config->get('GOOGLE_CLIENT_ID'),
-            'clientSecret'      => $config->get('GOOGLE_CLIENT_SECRET'),
-            'redirectUri'       => get_server_URI() . '/auth/Google.php'
-        ];
-    }
-
     // OAuth 2.0 support.
     $valid_oauth2_providers = ['GitHub', 'GitLab', 'Google'];
     $enabled_oauth2_providers = [];
