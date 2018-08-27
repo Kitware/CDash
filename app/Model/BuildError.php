@@ -116,15 +116,15 @@ class BuildError
 
     public function GetSourceFile($data)
     {
-        // Detect if the source directory has already been replaced by CTest with /.../
-        $sourceFile = array();
-        $pattern = '&/.../(.*?)/&';
-        $matches = array();
-        preg_match($pattern, $data['text'], $matches);
+        $sourceFile = [];
 
-        if (sizeof($matches) > 1) {
-            $sourceFile['file'] = $data['sourcefile'];
-            $sourceFile['directory'] = $matches[1];
+        // Detect if the source directory has already been replaced by CTest
+        // with /.../.  If so, sourcefile is already a relative path from the
+        // root of the source tree.
+        if (strpos($data['text'], '/.../') !== false) {
+            $parts = explode('/', $data['sourcefile']);
+            $sourceFile['file'] = array_pop($parts);
+            $sourceFile['directory'] = implode('/', $parts);
         } else {
             $sourceFile['file'] = basename($data['sourcefile']);
             $sourceFile['directory'] = dirname($data['sourcefile']);
@@ -153,15 +153,14 @@ class BuildError
             'cvsurl' => get_diff_url($project['id'], $project['cvsurl'], $directory, $file, $revision)
         );
 
+        // When building without launchers, CTest truncates the source dir to
+        // /.../<project-name>/.  Use this pattern to linkify compiler output.
+        $source_dir = "/\.\.\./[^/]+";
         $marshaled = array_merge($marshaled, array(
-            // when building without launchers, CTest truncates the source dir to /.../
-            // use this pattern to linkify compiler output.
-            'precontext' => linkify_compiler_output($project['cvsurl'], "/\.\.\.", $revision, $data['precontext']),
-            'text' => linkify_compiler_output($project['cvsurl'], "/\.\.\.", $revision, $data['text']),
-            'postcontext' => linkify_compiler_output($project['cvsurl'], "/\.\.\.", $revision, $data['postcontext']),
+            'precontext' => linkify_compiler_output($project['cvsurl'], $source_dir, $revision, $data['precontext']),            'text' => linkify_compiler_output($project['cvsurl'], $source_dir, $revision, $data['text']),
+            'postcontext' => linkify_compiler_output($project['cvsurl'], $source_dir, $revision, $data['postcontext']),
             'sourcefile' => $data['sourcefile'],
             'sourceline' => $data['sourceline']));
-
 
         if (isset($data['subprojectid'])) {
             $marshaled['subprojectid'] = $data['subprojectid'];
