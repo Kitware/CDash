@@ -107,6 +107,9 @@ class CoverageLogHandler extends AbstractHandler
             // Record the coverage data that we parsed from this file.
             foreach ($this->CoverageFiles as $coverageInfo) {
                 $coverageFile = $coverageInfo[0];
+                if (empty($coverageFile->FullPath)) {
+                    continue;
+                }
                 $coverageFileLog = $coverageInfo[1];
                 $coverageFile->TrimLastNewline();
 
