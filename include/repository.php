@@ -712,6 +712,10 @@ function linkify_compiler_output($projecturl, $source_dir, $revision, $compiler_
         $revision = 'master';
     }
 
+    // Make sure we specify a protocol so this isn't interpreted as a relative path.
+    if (strpos($projecturl, '//') === false) {
+        $projecturl = '//' . $projecturl;
+    }
     $repo_link = "<a href='$projecturl/blob/$revision";
     $pattern = "&$source_dir\/*([a-zA-Z0-9_\.\-\\/]+):(\d+)&";
     $replacement = "$repo_link/$1#L$2'>$1:$2</a>";
