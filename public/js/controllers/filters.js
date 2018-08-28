@@ -405,3 +405,11 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
     $scope.cdash.page = filename_for_docs;
   });
 }
+
+angular
+    .module('CDash')
+    .directive('filterRow', function (VERSION) {
+      return {
+          templateUrl: 'build/views/partials/filterRow_' + VERSION + '.html'
+      };
+  });

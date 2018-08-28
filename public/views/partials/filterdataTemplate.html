@@ -9,48 +9,15 @@
     </div>
     <ul>
       <li ng-repeat="filter in filterdata.filters"
+          ng-init="currentFilter = filter; group = filterdata"
           ng-class-even="'treven'" ng-class-odd="'trodd'"
           class="filterFields" id="filter{{$index+1}}">
         <div ng-if="::filter.filters">
           <ul>
             <li class="filterFields" id="subfilter{{$index+1}}"
-                ng-repeat="subfilter in filter.filters" >
-              <select id="id_field{{$index+1}}" name="field{{$index+1}}"
-                      ng-model="subfilter.key" ng-change="changeFilter($index+1)">
-                <option ng-repeat="availablefilter in filterdata.availablefilters"
-                        value="{{availablefilter}}"
-                        ng-selected="filterdata.availablefilters[$index] == subfilter.key">
-                  {{filterdefinitions[availablefilter].text}}
-                </option>
-              </select>
-
-              &nbsp;
-
-              <select id="id_compare{{$index+1}}" name="compare{{$index+1}}"
-                      ng-model="subfilter.compare">
-                <option value="0">-- choose comparison --</option>
-                <option ng-repeat="comparison in comparisons[filterdefinitions[subfilter.key].type]"
-                        value="{{comparison.value}}"
-                        ng-selected="subfilter.compare == comparison.value">
-                  {{comparison.text}}
-                </option>
-              </select>
-
-              &nbsp;
-
-              <input type="text" size="60" id="id_value{{$index+1}}" name="value{{$index+1}}" value="{{subfilter.value}}" ng-model="subfilter.value"></input>
-
-              &nbsp;
-
-              <button class="btn btn-default btn-xs"
-                      ng-click="removeFilter(filter, $index+1)"
-                      ng-disabled="$last && $first">
-                <span class="smallicon glyphicon glyphicon-minus"></span>
-              </button>
-              <button class="btn btn-default btn-xs"
-                      ng-click="addFilter(filter, $index+1)">
-                <span class="smallicon glyphicon glyphicon-plus"></span>
-              </button>
+                ng-repeat="subfilter in filter.filters"
+                ng-init="currentFilter = subfilter; group = filter">
+              <filter-row></filter-row>
               <span ng-if="!$last">
                 {{filterdata.othercombine}}
               </span>
@@ -77,42 +44,7 @@
         </div>
 
         <div ng-if="::filter.key">
-          <select id="id_field{{$index+1}}" name="field{{$index+1}}"
-                  ng-model="filter.key"
-                  ng-change="changeFilter($index+1)">
-            <option ng-repeat="availablefilter in filterdata.availablefilters"
-                    value="{{availablefilter}}"
-                    ng-selected="filterdata.availablefilters[$index] == filter.key">
-              {{filterdefinitions[availablefilter].text}}
-            </option>
-          </select>
-
-          &nbsp;
-
-          <select id="id_compare{{$index+1}}" name="compare{{$index+1}}"
-                  ng-model="filter.compare">
-            <option value="0">-- choose comparison --</option>
-            <option ng-repeat="comparison in comparisons[filterdefinitions[filter.key].type]"
-                    value="{{comparison.value}}"
-                    ng-selected="filter.compare == comparison.value">
-              {{comparison.text}}
-            </option>
-          </select>
-
-          &nbsp;
-
-          <input type="text" size="60" id="id_value{{$index+1}}" name="value{{$index+1}}" value="{{filter.value}}" ng-model="filter.value"></input>
-
-          &nbsp;
-
-          <button class="btn btn-default btn-xs"
-                  ng-click="removeFilter(filterdata, $index+1)"
-                  ng-disabled="$last && $first">
-            <span class="smallicon glyphicon glyphicon-minus"></span>
-          </button>
-          <button class="btn btn-default btn-xs" ng-click="addFilter(filterdata, $index+1)">
-            <span class="smallicon glyphicon glyphicon-plus"></span>
-          </button>
+          <filter-row></filter-row>
           <button class="btn btn-default btn-xs"
                   ng-click="addFilterBlock($index+1)"
                   tooltip-popup-delay="1500"
@@ -130,7 +62,6 @@
             {{filterdata.filtercombine}}
           </span>
         </div>
-
       </li>
     </ul>
 
