@@ -64,7 +64,11 @@
           <button class="btn btn-default btn-xs" ng-click="addFilter(filterdata, $index+1)">
             <span class="smallicon glyphicon glyphicon-plus"></span>
           </button>
-          <button class="btn btn-default btn-xs" ng-click="addFilterBlock($index+1)">
+          <button class="btn btn-default btn-xs"
+                  ng-click="addFilterBlock($index+1)"
+                  tooltip-popup-delay="1500"
+                  tooltip-append-to-body="true"
+                  uib-tooltip="Add filter block. All items added to this sub-list will be combined into a single filter clause.">
             <img class="smallicon" src="img/nested_list.svg"></img>
           </button>
           <span ng-if="$middle">
@@ -109,7 +113,11 @@
           <button class="btn btn-default btn-xs" ng-click="addFilter(filterdata, $index+1)">
             <span class="smallicon glyphicon glyphicon-plus"></span>
           </button>
-          <button class="btn btn-default btn-xs" ng-click="addFilterBlock($index+1)">
+          <button class="btn btn-default btn-xs"
+                  ng-click="addFilterBlock($index+1)"
+                  tooltip-popup-delay="1500"
+                  tooltip-append-to-body="true"
+                  uib-tooltip="Add filter block. All items added to this sub-list will be combined into a single filter clause.">
             <img class="smallicon" src="img/nested_list.svg"></img>
           </button>
           <select ng-if="filterdata.filters.length > 1 && $first"
