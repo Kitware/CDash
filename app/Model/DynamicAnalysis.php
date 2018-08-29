@@ -128,7 +128,7 @@ class DynamicAnalysis
         } else {
             add_log('No DynamicAnalysis::Id - cannot call $label->Insert...',
                 'DynamicAnalysis::InsertLabelAssociations', LOG_ERR,
-                0, $this->BuildId, Object::DYNAMICANALYSIS, $this->Id);
+                0, $this->BuildId, ModelType::DYNAMICANALYSIS, $this->Id);
         }
     }
 
@@ -157,7 +157,7 @@ class DynamicAnalysis
         }
         if ($this->Log === false) {
             add_log('Unable to decompress dynamic analysis log',
-                'DynamicAnalysis::Insert', LOG_ERR, 0, $this->BuildId, Object::DYNAMICANALYSIS, $this->Id);
+                'DynamicAnalysis::Insert', LOG_ERR, 0, $this->BuildId, ModelType::DYNAMICANALYSIS, $this->Id);
             $this->Log = '';
         }
 

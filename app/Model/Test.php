@@ -113,7 +113,7 @@ class Test
             add_log('No Test::Id or buildid - cannot call $label->Insert...',
                 'Test::InsertLabelAssociations', LOG_ERR,
                 $this->ProjectId, $buildid,
-                Object::TEST, $this->Id);
+                ModelType::TEST, $this->Id);
         }
     }
 
