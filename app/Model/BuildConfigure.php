@@ -118,13 +118,13 @@ class BuildConfigure
         if (!$this->BuildId) {
             add_log('BuildId not set',
                     'BuildConfigure::Exists', LOG_ERR,
-                    0, 0, Object::CONFIGURE, 0);
+                    0, 0, ModelType::CONFIGURE, 0);
             return false;
         }
         if (!is_numeric($this->BuildId)) {
             add_log('BuildId is not numeric',
                     'BuildConfigure::Exists', LOG_ERR,
-                    0, 0, Object::CONFIGURE, 0);
+                    0, 0, ModelType::CONFIGURE, 0);
             return false;
         }
 
@@ -148,7 +148,7 @@ class BuildConfigure
         if (!$this->Exists()) {
             add_log('this configure does not exist',
                     'BuildConfigure::Delete', LOG_ERR,
-                    0, 0, Object::CONFIGURE, 0);
+                    0, 0, ModelType::CONFIGURE, 0);
             return false;
         }
 
@@ -191,7 +191,7 @@ class BuildConfigure
         } else {
             add_log('No BuildConfigure::BuildId - cannot call $label->Insert...',
                 'BuildConfigure::InsertLabelAssociations', LOG_ERR,
-                0, $this->BuildId, Object::CONFIGURE, $this->BuildId);
+                0, $this->BuildId, ModelType::CONFIGURE, $this->BuildId);
         }
     }
 
@@ -202,14 +202,14 @@ class BuildConfigure
         if (!$this->BuildId) {
             add_log('BuildId not set',
                     'BuildConfigure::Insert', LOG_ERR,
-                    0, 0, Object::CONFIGURE, $this->Id);
+                    0, 0, ModelType::CONFIGURE, $this->Id);
             return false;
         }
 
         if ($this->ExistsByBuildId()) {
             add_log('This build already has a configure',
                     'BuildConfigure::Insert', LOG_ERR,
-                    0, $this->BuildId, Object::CONFIGURE, $this->Id);
+                    0, $this->BuildId, ModelType::CONFIGURE, $this->Id);
             return false;
         }
 

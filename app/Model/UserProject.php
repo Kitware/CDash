@@ -168,7 +168,7 @@ class UserProject
     {
         if (!$this->UserId) {
             add_log('UserId not set', 'UserProject UpdateCredentials()', LOG_ERR,
-                $this->ProjectId, 0, Object::USER, $this->UserId);
+                $this->ProjectId, 0, ModelType::USER, $this->UserId);
             return false;
         }
 
@@ -200,7 +200,7 @@ class UserProject
 
         if (!$this->UserId) {
             add_log('UserId not set', 'UserProject AddCredential()', LOG_ERR,
-                $this->ProjectId, 0, Object::USER, $this->UserId);
+                $this->ProjectId, 0, ModelType::USER, $this->UserId);
             return false;
         }
 
@@ -226,13 +226,13 @@ class UserProject
     {
         if (!$this->ProjectId) {
             add_log('ProjectId not set', 'UserProject FillFromRepositoryCredential()', LOG_ERR,
-                $this->ProjectId, 0, Object::USER, $this->UserId);
+                $this->ProjectId, 0, ModelType::USER, $this->UserId);
             return false;
         }
 
         if (!$this->RepositoryCredential) {
             add_log('RepositoryCredential not set', 'UserProject FillFromRepositoryCredential()', LOG_ERR,
-                $this->ProjectId, 0, Object::USER, $this->UserId);
+                $this->ProjectId, 0, ModelType::USER, $this->UserId);
             return false;
         }
 
@@ -264,13 +264,13 @@ class UserProject
     {
         if (!$this->ProjectId) {
             add_log('ProjectId not set', 'UserProject FillFromUserId()', LOG_ERR,
-                $this->ProjectId, 0, Object::USER, $this->UserId);
+                $this->ProjectId, 0, ModelType::USER, $this->UserId);
             return false;
         }
 
         if (!$this->UserId) {
             add_log('UserId not set', 'UserProject FillFromUserId()', LOG_ERR,
-                $this->ProjectId, 0, Object::USER, $this->UserId);
+                $this->ProjectId, 0, ModelType::USER, $this->UserId);
             return false;
         }
 

@@ -158,7 +158,7 @@ class Build
         if (empty($this->ProjectId)) {
             add_log('ProjectId not set' . $subproject, 'Build::SetSubProject', LOG_ERR,
                 $this->ProjectId, $this->Id,
-                Object::BUILD, $this->Id);
+                ModelType::BUILD, $this->Id);
             return false;
         }
 
@@ -203,7 +203,7 @@ class Build
         $Label->Insert();
 
         add_log('New subproject detected: ' . $subproject, 'Build::SetSubProject',
-            LOG_INFO, $this->ProjectId, $this->Id, Object::BUILD, $this->Id);
+            LOG_INFO, $this->ProjectId, $this->Id, ModelType::BUILD, $this->Id);
         return true;
     }
 
@@ -747,7 +747,7 @@ class Build
         } else {
             add_log('No Build::Id - cannot call $label->Insert...', 'Build::InsertLabelAssociations', LOG_ERR,
                 $this->ProjectId, $this->Id,
-                Object::BUILD, $this->Id);
+                ModelType::BUILD, $this->Id);
             return false;
         }
     }
@@ -1012,7 +1012,7 @@ class Build
     {
         if (!$this->Id) {
             add_log('BuildId is not set', 'Build::GetMissingTests', LOG_ERR,
-                $this->ProjectId, $this->Id, Object::BUILD, $this->Id);
+                $this->ProjectId, $this->Id, ModelType::BUILD, $this->Id);
             return false;
         }
 
@@ -1067,7 +1067,7 @@ class Build
     {
         if (!$this->Id) {
             add_log('BuildId is not set', 'Build::GetTests', LOG_ERR,
-                $this->ProjectId, $this->Id, Object::BUILD, $this->Id);
+                $this->ProjectId, $this->Id, ModelType::BUILD, $this->Id);
             return false;
         }
 
@@ -1146,7 +1146,7 @@ class Build
     {
         if (!$this->Id) {
             add_log('BuildId is not set', 'Build::GetErrorDifferences', LOG_ERR,
-                $this->ProjectId, $this->Id, Object::BUILD, $this->Id);
+                $this->ProjectId, $this->Id, ModelType::BUILD, $this->Id);
             return false;
         }
 
@@ -1219,7 +1219,7 @@ class Build
         if (!$this->Id) {
             add_log('BuildId is not set', 'Build::ComputeDifferences', LOG_ERR,
                 $this->ProjectId, $this->Id,
-                Object::BUILD, $this->Id);
+                ModelType::BUILD, $this->Id);
             return false;
         }
 
@@ -1239,7 +1239,7 @@ class Build
     {
         if (!$this->Id) {
             add_log('BuildId is not set', 'Build::ComputeConfigureDifferences',
-                LOG_ERR, $this->ProjectId, $this->Id, Object::BUILD,
+                LOG_ERR, $this->ProjectId, $this->Id, ModelType::BUILD,
                 $this->Id);
             return false;
         }
@@ -1315,13 +1315,13 @@ class Build
     {
         if (!$this->Id) {
             add_log('BuildId is not set', 'Build::ComputeTestTiming', LOG_ERR,
-                $this->ProjectId, $this->Id, Object::BUILD, $this->Id);
+                $this->ProjectId, $this->Id, ModelType::BUILD, $this->Id);
             return false;
         }
 
         if (!$this->ProjectId) {
             add_log('ProjectId is not set', 'Build::ComputeTestTiming', LOG_ERR,
-                $this->ProjectId, $this->Id, Object::BUILD, $this->Id);
+                $this->ProjectId, $this->Id, ModelType::BUILD, $this->Id);
             return false;
         }
 
@@ -1483,7 +1483,7 @@ class Build
     {
         if (!$this->Id) {
             add_log('Id is not set', 'Build::ComputeUpdateStatistics', LOG_ERR,
-                $this->ProjectId, $this->Id, Object::BUILD, $this->Id);
+                $this->ProjectId, $this->Id, ModelType::BUILD, $this->Id);
             return false;
         }
 
@@ -2095,7 +2095,7 @@ class Build
                 add_log("$buildid is its own parent",
                         'Build::UpdateBuild', LOG_ERR,
                         $this->ProjectId, $this->Id,
-                        Object::BUILD, $this->Id);
+                        ModelType::BUILD, $this->Id);
                 return;
             }
             $this->UpdateBuild($parentid, $newErrors, $newWarnings);
@@ -2445,7 +2445,7 @@ class Build
             add_log("Attempt to mark build $this->Id as its own parent",
                     'Build::SetParentId', LOG_ERR,
                 $this->ProjectId, $this->Id,
-                Object::BUILD, $this->Id);
+                ModelType::BUILD, $this->Id);
             return;
         }
         $this->ParentId = $parentid;
