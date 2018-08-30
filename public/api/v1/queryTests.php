@@ -169,11 +169,24 @@ if (isset($_GET['parentid'])) {
 // Check for the presence of a filter on Build Group.
 // If this is present we need to join additional tables into our query.
 $filter_joins = '';
+$extra_joins = '
+    JOIN build2group b2g ON b2g.buildid = b.id
+    JOIN buildgroup bg ON bg.id = b2g.groupid';
 foreach ($filterdata['filters'] as $filter) {
-    if ($filter['field'] == 'groupname') {
-        $filter_joins = '
-            JOIN build2group b2g ON b2g.buildid = b.id
-            JOIN buildgroup bg ON bg.id = b2g.groupid';
+    if (array_key_exists('filters', $filter)) {
+        $break = false;
+        foreach ($filter['filters'] as $subfilter) {
+            if ($subfilter['field'] == 'groupname') {
+                $filter_joins = $extra_joins;
+                $break = true;
+                break;
+            }
+        }
+        if ($break) {
+            break;
+        }
+    } elseif ($filter['field'] == 'groupname') {
+        $filter_joins = $extra_joins;
         break;
     }
 }
