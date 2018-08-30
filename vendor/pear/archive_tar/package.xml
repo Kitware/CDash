@@ -31,10 +31,10 @@ loaded. Bz2 compression is also supported with the bz2 extension loaded.</descri
   <email>stig@php.net</email>
   <active>no</active>
  </helper>
- <date>2016-02-25</date>
- <time>09:00:00</time>
+ <date>2017-06-11</date>
+ <time>17:31:00</time>
  <version>
-  <release>1.4.2</release>
+  <release>1.4.3</release>
   <api>1.4.0</api>
  </version>
  <stability>
@@ -43,9 +43,8 @@ loaded. Bz2 compression is also supported with the bz2 extension loaded.</descri
  </stability>
  <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
  <notes>
-* Fix reading of archives with files > 8GB
-* Performance optimizations
-* Do not try to call require_once on PEAR.php if it has already been loaded by the autoloader
+* Fix Bug #21218: Cannot use result of built-in function in write context in PHP
+   7.2.0alpha1 [mrook]
  </notes>
  <contents>
   <dir name="/">
@@ -75,7 +74,24 @@ loaded. Bz2 compression is also supported with the bz2 extension loaded.</descri
  </dependencies>
  <phprelease />
  <changelog>
-   <release>
+  <release>
+   <version>
+    <release>1.4.2</release>
+    <api>1.4.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2016-02-25</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
+   <notes>
+* Fix reading of archives with files &gt; 8GB
+* Performance optimizations
+* Do not try to call require_once on PEAR.php if it has already been loaded by the autoloader
+   </notes>
+  </release>
+  <release>
    <version>
     <release>1.4.1</release>
     <api>1.4.0</api>

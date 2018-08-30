@@ -283,10 +283,8 @@ the same filename as the one you attached.
     // Attach it to the message
     $message->attach($attachment);
 
-
     // The two statements above could be written in one line instead
     $message->attach(Swift_Attachment::fromPath('/path/to/image.jpg'));
-
 
     // You can attach files from a URL if allow_url_fopen is on in php.ini
     $message->attach(Swift_Attachment::fromPath('http://site.tld/logo.png'));
@@ -310,7 +308,6 @@ the email will rename the file to something else.
     // Create the attachment and call its setFilename() method
     $attachment = Swift_Attachment::fromPath('/path/to/image.jpg')
       ->setFilename('cool.jpg');
-
 
     // Because there's a fluid interface, you can do this in one statement
     $message->attach(
@@ -1038,13 +1035,14 @@ priority will not change the way your email is sent -- it is purely an
 indicative setting for the recipient.
 
 The priority of a message is an indication to the recipient what significance
-it has. Swift Mailer allows you to set the priority by calling the ``setPriority`` method. This method takes an integer value between 1 and 5:
+it has. Swift Mailer allows you to set the priority by calling the
+``setPriority`` method. This method takes an integer value between 1 and 5:
 
-* Highest
-* High
-* Normal
-* Low
-* Lowest
+* `Swift_Mime_SimpleMessage::PRIORITY_HIGHEST`: 1
+* `Swift_Mime_SimpleMessage::PRIORITY_HIGH`: 2
+* `Swift_Mime_SimpleMessage::PRIORITY_NORMAL`: 3
+* `Swift_Mime_SimpleMessage::PRIORITY_LOW`: 4
+* `Swift_Mime_SimpleMessage::PRIORITY_LOWEST`: 5
 
 To set the message priority:
 
@@ -1055,3 +1053,6 @@ To set the message priority:
 
     // Indicate "High" priority
     $message->setPriority(2);
+
+    // Or use the constant to be more explicit
+    $message->setPriority(Swift_Mime_SimpleMessage::PRIORITY_HIGH);

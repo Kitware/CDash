@@ -1,0 +1,22 @@
+language: php
+
+matrix:
+  include:
+    - php: 5.6
+    - php: 7.0
+    - php: 7.1
+    - php: 5.6
+      env: COMPOSER_FLAGS="--prefer-lowest"
+#  - hhvm  # HHVM works fine but disabled as it conflicts with PHP-CS-Fixer
+
+before_script:
+  - travis_retry composer self-update --no-progress
+  - travis_retry composer update --no-interaction --no-progress $COMPOSER_FLAGS
+  - travis_retry phpenv rehash
+
+script:
+  - ./vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
+
+after_script:
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover

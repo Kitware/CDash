@@ -38,6 +38,11 @@ class Item implements ItemInterface
     /** @var string */
     protected $author;
 
+    /** @var string */
+    protected $creator;
+
+    protected $preferCdata = false;
+
     public function title($title)
     {
         $this->title = $title;
@@ -93,6 +98,18 @@ class Item implements ItemInterface
         return $this;
     }
 
+    public function creator($creator)
+    {
+        $this->creator = $creator;
+        return $this;
+    }
+
+    public function preferCdata($preferCdata)
+    {
+        $this->preferCdata = (bool)$preferCdata;
+        return $this;
+    }
+
     public function appendTo(ChannelInterface $channel)
     {
         $channel->addItem($this);
@@ -102,16 +119,23 @@ class Item implements ItemInterface
     public function asXML()
     {
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8" ?><item></item>', LIBXML_NOERROR | LIBXML_ERR_NONE | LIBXML_ERR_FATAL);
-        $xml->addChild('title', $this->title);
+
+        if ($this->preferCdata) {
+            $xml->addCdataChild('title', $this->title);
+        } else {
+            $xml->addChild('title', $this->title);
+        }
+
         $xml->addChild('link', $this->url);
-        $xml->addChild('description', $this->description);
+
+        if ($this->preferCdata) {
+            $xml->addCdataChild('description', $this->description);
+        } else {
+            $xml->addChild('description', $this->description);
+        }
 
         if ($this->contentEncoded) {
-            // SimpleXMLElement does not support CDATA transformation
-            $element = $xml->addChild('encoded', null, 'http://purl.org/rss/1.0/modules/content/');
-            $element = dom_import_simplexml($element);
-            $elementOwner = $element->ownerDocument;
-            $element->appendChild($elementOwner->createCDATASection($this->contentEncoded));
+            $xml->addCdataChild('xmlns:content:encoded', $this->contentEncoded);
         }
 
         foreach ($this->categories as $category) {
@@ -146,6 +170,10 @@ class Item implements ItemInterface
 
         if (!empty($this->author)) {
             $xml->addChild('author', $this->author);
+        }
+
+        if (!empty($this->creator)) {
+            $xml->addChild('dc:creator', $this->creator,"http://purl.org/dc/elements/1.1/");
         }
 
         return $xml;

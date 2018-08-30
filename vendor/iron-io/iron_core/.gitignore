@@ -1,0 +1,5 @@
+*.swp
+config.ini
+.DS_Store
+*.esproj/
+.idea/

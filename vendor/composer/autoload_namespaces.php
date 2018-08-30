@@ -8,13 +8,14 @@ $baseDir = dirname($vendorDir);
 return array(
     'Suin\\RSSWriter' => array($vendorDir . '/suin/php-rss-writer/src'),
     'SendGrid' => array($vendorDir . '/sendgrid/php-http-client/lib'),
-    'Psr\\Log\\' => array($vendorDir . '/psr/log'),
     'Predis' => array($vendorDir . '/predis/predis/lib'),
     'PEAR' => array($vendorDir . '/pear/pear_exception'),
-    'Google_Service_' => array($vendorDir . '/google/apiclient-services/src'),
-    'Google_' => array($vendorDir . '/google/apiclient/src'),
+    'Doctrine\\DBAL\\' => array($vendorDir . '/doctrine/dbal/lib'),
+    'Doctrine\\Common\\Lexer\\' => array($vendorDir . '/doctrine/lexer/lib'),
+    'Doctrine\\Common\\Inflector\\' => array($vendorDir . '/doctrine/inflector/lib'),
+    'Doctrine\\Common\\Collections\\' => array($vendorDir . '/doctrine/collections/lib'),
     'Console' => array($vendorDir . '/pear/console_getopt'),
-    'Assert' => array($vendorDir . '/beberlei/assert/lib'),
+    'Bernard' => array($vendorDir . '/bernard/bernard/src'),
     'Archive_Tar' => array($vendorDir . '/pear/archive_tar'),
     '' => array($vendorDir . '/pear/pear-core-minimal/src'),
 );

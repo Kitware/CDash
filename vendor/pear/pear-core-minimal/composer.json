@@ -23,7 +23,7 @@
     },
     "type": "library",
     "require": {
-        "pear/console_getopt": "~1.3",
+        "pear/console_getopt": "~1.4",
         "pear/pear_exception": "~1.0"
     },
     "replace": {

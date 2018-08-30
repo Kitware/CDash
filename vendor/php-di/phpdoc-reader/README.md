@@ -1,7 +1,6 @@
 # PhpDocReader
 
 [![Build Status](https://img.shields.io/travis/PHP-DI/PhpDocReader.svg)](https://travis-ci.org/mnapoli/PhpDocReader)
-[![Coverage Status](https://img.shields.io/coveralls/PHP-DI/PhpDocReader.svg)](https://coveralls.io/r/mnapoli/PhpDocReader)
 ![](https://img.shields.io/packagist/dt/PHP-DI/phpdoc-reader.svg)
 
 This project is used by:

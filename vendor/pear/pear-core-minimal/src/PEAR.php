@@ -450,7 +450,7 @@ class PEAR
     }
 
     /**
-     * This method deletes all occurences of the specified element from
+     * This method deletes all occurrences of the specified element from
      * the expected error codes stack.
      *
      * @param  mixed $error_code error code that should be deleted
@@ -914,7 +914,8 @@ class PEAR_Error
             } else {
                 $format = $options;
             }
-            die(sprintf($format, $msg));
+            printf($format, $msg);
+            exit($code);
         }
 
         if ($this->mode & PEAR_ERROR_CALLBACK && is_callable($this->callback)) {

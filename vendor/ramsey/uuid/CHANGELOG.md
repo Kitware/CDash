@@ -1,5 +1,72 @@
 # ramsey/uuid Changelog
 
+## 3.7.3
+
+_Released: 2018-01-19_
+
+  * In rare cases, when using `glob()` to find `/sys/class/net/*/address` files on Linux, `glob()` encountered errors, returning `false` instead of an empty array, causing `array_map()` to emit warnings since its second parameter was not an array; this release gracefully handles cases where `glob()` returns `false` [#203](https://github.com/ramsey/uuid/issues/203)
+  * Fixed an off-by-one error in `DefaultTimeGenerator` and switching to `random_int()` from `mt_rand()` for better random numbers [#206](https://github.com/ramsey/uuid/pull/206)
+
+## 3.7.2
+
+_Released: 2018-01-13_
+
+  * On Linux, first check sysfs to determine node identifier; this provides a reliable way to identify the node on Docker images, etc. [#185](https://github.com/ramsey/uuid/pull/185)
+
+## 3.7.1
+
+_Released: 2017-09-22_
+
+  * Use `random_bytes()` when generating random nodes
+  * Set the multicast bit for random nodes, according to RFC 4122, §4.5, [#170](https://github.com/ramsey/uuid/pull/170), [#171](https://github.com/ramsey/uuid/pull/171), [#182](https://github.com/ramsey/uuid/pull/182)
+
+## 3.7.0
+
+_Released: 2017-08-04_
+
+  * Add UUID version constants [#173](https://github.com/ramsey/uuid/issues/173), [#177](https://github.com/ramsey/uuid/pull/177)
+    * `Uuid::UUID_TYPE_TIME`
+    * `Uuid::UUID_TYPE_IDENTIFIER`
+    * `Uuid::UUID_TYPE_HASH_MD5`
+    * `Uuid::UUID_TYPE_RANDOM`
+    * `Uuid::UUID_TYPE_HASH_SHA1`
+
+## 3.6.1
+
+_Released: 2017-03-26_
+
+  * Optimize UUID string decoding [#164](https://github.com/ramsey/uuid/pull/164)
+
+## 3.6.0
+
+_Released: 2017-03-18_
+
+  * Add `InvalidUuidStringException`, thrown when attempting to decode an invalid string UUID; this does not introduce any BC issues, since the new exception inherits from the previously used `InvalidArgumentException` [#162](https://github.com/ramsey/uuid/pull/162)
+  * Improve memory usage when generating large quantities of UUIDs (use `str_pad()` and `dechex()` instead of `sprintf()`) [#160](https://github.com/ramsey/uuid/pull/160)
+  * Minor test and documentation updates
+
+## 3.5.2
+
+_Released: 2016-11-22_
+
+  * Improved test coverage.
+
+## 3.5.1
+
+_Released: 2016-10-02_
+
+  * Fixed issue where same UUIDs were not treated as equal with mixed case ([#131](https://github.com/ramsey/uuid/issues/131), [#137](https://github.com/ramsey/uuid/pull/137)).
+  * Test cleanup.
+
+## 3.5.0
+
+_Released: 2016-08-02_
+
+  * Add `OrderedTimeCodec` to store UUID in an optimized way for InnoDB ([#117](https://github.com/ramsey/uuid/issues/117), [#118](https://github.com/ramsey/uuid/pull/118)).
+  * Fixed `RandomNodeProvider` to prevent invalid node generation ([#129](https://github.com/ramsey/uuid/pull/129)).
+  * Cache failed attempt to retrieve system node to avoid multiple system calls ([#107](https://github.com/ramsey/uuid/issues/107), [#121](https://github.com/ramsey/uuid/pull/121)).
+  * Various test improvements.
+
 ## 3.4.1
 
 _Released: 2016-04-23_

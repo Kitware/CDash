@@ -13,12 +13,17 @@
   "license": "MIT",
   "authors": [
     {
-      "name": "Hidehito Nozawa aka Suin",
+      "name": "suin",
       "email": "suinyeze@gmail.com"
     }
   ],
   "require": {
     "php": ">=5.4.0"
+  },
+  "require-dev": {
+    "EHER/PHPUnit": ">=1.6",
+    "mockery/mockery": ">=0.7.2",
+    "suin/xoopsunit": ">=1.2"
   },
   "autoload": {
     "psr-0": {

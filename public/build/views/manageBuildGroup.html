@@ -5,16 +5,16 @@
     <meta charset="UTF-8">
     <meta name="robots" content="noindex,nofollow" />
     <link rel="shortcut icon" href="favicon.ico" />
-    <link rel="stylesheet" type="text/css" ng-href="{{cssfile}}" />
+    <link rel="stylesheet" type="text/css" ng-href="build/css/{{cssfile}}_1535655159373.css" />
     <link rel="stylesheet" type="text/css" href="css/jquery.qtip.min.css" />
     <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.4.css" />
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
-    <script src="js/CDash_1523706539263.min.js"></script>
+    <script src="js/CDash_1535655159373.min.js"></script>
     <title>CDash - BuildGroups</title>
   </head>
   <body bgcolor="#ffffff" ng-controller="ManageBuildGroupController">
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1523706539263.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1535655159373.html'"></ng-include>
     <br/>
 
     <div class="container" ng-if="cdash.requirelogin != 1 && !loading">
@@ -212,6 +212,10 @@
               <div class="form-group">
                 <button class="btn btn-default" ng-click="createBuildGroup(newBuildGroupName, buildType.value)">Create BuildGroup</button>
                 <img id="buildgroup_created" src="img/check.gif" style="display: none; height:16px; width=16px; margin-top:9px;" />
+                <div id="create_group_error" class="text-danger"
+                     ng-show="cdash.buildgroup_error">
+                  <b>{{cdash.buildgroup_error}}</b>
+                </div>
               </div>
             </div>
           </div> <!-- create new BuildGroup -->
@@ -352,6 +356,6 @@
 
     <!-- FOOTER -->
     <br/>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1523706539263.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1535655159373.html'"></ng-include>
   </body>
 </html>

@@ -44,16 +44,16 @@ class ItemTest extends TestCase
         $channel->appendTo($feed);
 
         $expected = '<?xml version="1.0" encoding="UTF-8"?>
-        <rss xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
+        <rss xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
           <channel>
             <title/>
             <link/>
             <description/>
-            <item xmlns:default="http://purl.org/rss/1.0/modules/content/">
+            <item>
               <title/>
               <link/>
               <description/>
-              <content:encoded xmlns="http://purl.org/rss/1.0/modules/content/"><![CDATA[<div>contents</div>]]></content:encoded>
+              <content:encoded><![CDATA[<div>contents</div>]]></content:encoded>
             </item>
           </channel>
         </rss>';
@@ -135,6 +135,34 @@ class ItemTest extends TestCase
         $this->assertAttributeSame($author, 'author', $item);
     }
 
+    public function testPreferCdata()
+    {
+        $item = new Item();
+        $item->title('<h1>title</h1>');
+        $item->description('<p>description</p>');
+
+        // By default, prefer no CDATA on title and description
+        $actualXml = $item->asXML()->asXML();
+        $this->assertContains('<title>&lt;h1&gt;title&lt;/h1&gt;</title>', $actualXml);
+        $this->assertContains('<description>&lt;p&gt;description&lt;/p&gt;</description>', $actualXml);
+
+        // Once prefer-cdata is enabled, title and description is wrapped by CDATA
+        $item->preferCdata(true);
+        $actualXml = $item->asXML()->asXML();
+        $this->assertContains('<title><![CDATA[<h1>title</h1>]]></title>', $actualXml);
+        $this->assertContains('<description><![CDATA[<p>description</p>]]></description>', $actualXml);
+
+        // Of course, prefer-cdata can be disabled again
+        $item->preferCdata(false);
+        $actualXml = $item->asXML()->asXML();
+        $this->assertContains('<title>&lt;h1&gt;title&lt;/h1&gt;</title>', $actualXml);
+        $this->assertContains('<description>&lt;p&gt;description&lt;/p&gt;</description>', $actualXml);
+
+        // And like other APIs `preferCdata` is also fluent interface
+        $obj = $item->preferCdata(true);
+        $this->assertSame($obj, $item);
+    }
+
     public function testAsXML()
     {
         $now = time();
@@ -156,7 +184,7 @@ class ItemTest extends TestCase
                 'length' => 4992,
                 'type'   => 'audio/mpeg'
             ],
-            'author'      => 'Hidehito Nozawa aka Suin'
+            'author'      => 'John Smith'
         ];
 
         $item = new Item();
@@ -202,7 +230,7 @@ class ItemTest extends TestCase
                 'length' => 4992,
                 'type'   => 'audio/mpeg'
             ],
-            'author'      => 'Hidehito Nozawa aka Suin'
+            'author'      => 'John Smith'
         ];
 
         $item = new Item();
