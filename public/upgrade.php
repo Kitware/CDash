@@ -21,6 +21,10 @@ include_once 'include/common.php';
 include 'include/version.php';
 include_once 'include/upgrade_functions.php';
 
+use CDash\Config;
+
+$config = Config::getInstance();
+
 @set_time_limit(0);
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'], 0); // only admin
@@ -47,15 +51,15 @@ $xml .= '<minversion>' . $version_array['major'] . '.' . $version_array['minor']
 @$Upgrade = $_POST['Upgrade'];
 @$Cleanup = $_POST['Cleanup'];
 
-if (!isset($CDASH_DB_TYPE)) {
+if (!$config->get('CDASH_DB_TYPE')) {
     $db_type = 'mysql';
 } else {
-    $db_type = $CDASH_DB_TYPE;
+    $db_type = $config->get('CDASH_DB_TYPE');
 }
 
 if (isset($_GET['upgrade-tables'])) {
     // Apply all the patches
-    foreach (glob("$CDASH_ROOT_DIR/sql/$db_type/cdash-upgrade-*.sql") as $filename) {
+    foreach (glob($config->get('CDASH_ROOT_DIR') . '/sql/$db_type/cdash-upgrade-*.sql') as $filename) {
         $file_content = file($filename);
         $query = '';
         foreach ($file_content as $sql_line) {
@@ -184,7 +188,7 @@ if (isset($_GET['upgrade-1-2'])) {
     // Add summary email
     $summaryemail = pdo_query('SELECT summaryemail FROM buildgroup LIMIT 1');
     if (!$summaryemail) {
-        if ($CDASH_DB_TYPE == 'pgsql') {
+        if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
             pdo_query("ALTER TABLE \"buildgroup\" ADD \"summaryemail\" smallint DEFAULT '0'");
         } else {
             pdo_query("ALTER TABLE buildgroup ADD summaryemail tinyint(4) default '0'");
@@ -194,7 +198,7 @@ if (isset($_GET['upgrade-1-2'])) {
     // Add emailcategory
     $emailcategory = pdo_query('SELECT emailcategory FROM user2project LIMIT 1');
     if (!$emailcategory) {
-        if ($CDASH_DB_TYPE == 'pgsql') {
+        if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
             pdo_query("ALTER TABLE \"user2project\" ADD \"emailcategory\" smallint DEFAULT '62'");
         } else {
             pdo_query("ALTER TABLE user2project ADD emailcategory tinyint(4) default '62'");
@@ -235,7 +239,7 @@ if (isset($_GET['upgrade-1-4'])) {
     AddTableField('project', 'emailredundantfailures', 'tinyint(4)', 'smallint', '0');
     AddTableField('buildfailure2argument', 'place', 'int(11)', 'bigint', '0');
 
-    if ($CDASH_DB_TYPE != 'pgsql') {
+    if ($config->get('CDASH_DB_TYPE') != 'pgsql') {
         pdo_query('ALTER TABLE `builderror` CHANGE `precontext` `precontext` TEXT NULL');
         pdo_query('ALTER TABLE `builderror` CHANGE `postcontext` `postcontext` TEXT NULL');
     }
@@ -321,7 +325,7 @@ if (isset($_GET['upgrade-1-4'])) {
 
 // 1.6 Upgrade
 if (isset($_GET['upgrade-1-6'])) {
-    if ($CDASH_DB_TYPE != 'pgsql') {
+    if ($config->get('CDASH_DB_TYPE') != 'pgsql') {
         pdo_query("ALTER TABLE configure CHANGE starttime starttime TIMESTAMP NOT NULL DEFAULT '1980-01-01 00:00:00' ");
         pdo_query("ALTER TABLE buildupdate CHANGE starttime starttime TIMESTAMP NOT NULL DEFAULT '1980-01-01 00:00:00' ");
         pdo_query('ALTER TABLE test CHANGE output output MEDIUMBLOB NOT NULL '); // change it to blob (cannot do that in PGSQL)
@@ -571,8 +575,7 @@ if (isset($_GET['upgrade-1-8'])) {
 if (isset($_GET['upgrade-2-0'])) {
     // Add column id to test2image and testmeasurement
     if (!pdo_query('SELECT id FROM test2image LIMIT 1')) {
-        include dirname(__DIR__) . '/config/config.php';
-        if ($CDASH_DB_TYPE != 'pgsql') {
+        if ($config->get('CDASH_DB_TYPE') != 'pgsql') {
             pdo_query('ALTER TABLE testmeasurement ADD id BIGINT NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (id)');
             pdo_query('ALTER TABLE test2image ADD id BIGINT NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (id)');
         } else {
@@ -754,7 +757,7 @@ if (isset($_GET['upgrade-2-6'])) {
     AddTableIndex('label2test', 'buildid');
 
     // Expand size of password field to 255 characters.
-    if ($CDASH_DB_TYPE != 'pgsql') {
+    if ($config->get('CDASH_DB_TYPE') != 'pgsql') {
         ModifyTableField('password', 'password', 'VARCHAR( 255 )', 'VARCHAR( 255 )', '', true, false);
         ModifyTableField('user', 'password', 'VARCHAR( 255 )', 'VARCHAR( 255 )', '', true, false);
         ModifyTableField('usertemp', 'password', 'VARCHAR( 255 )', 'VARCHAR( 255 )', '', true, false);
@@ -765,7 +768,7 @@ if (isset($_GET['upgrade-2-6'])) {
     // to share a configure.
     if (!pdo_query('SELECT id FROM configure LIMIT 1')) {
         // Add id and crc32 columns to configure table.
-        if ($CDASH_DB_TYPE != 'pgsql') {
+        if ($config->get('CDASH_DB_TYPE') != 'pgsql') {
             pdo_query(
                 'ALTER TABLE configure
                 ADD id int(11) NOT NULL AUTO_INCREMENT,
@@ -790,7 +793,7 @@ if (isset($_GET['upgrade-2-6'])) {
         }
 
         // Remove columns from configure that have been moved to build2configure.
-        if ($CDASH_DB_TYPE == 'pgsql') {
+        if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
             pdo_query('ALTER TABLE "configure"
                         DROP COLUMN "buildid",
                         DROP COLUMN "starttime",
@@ -828,29 +831,28 @@ if (isset($_GET['upgrade-2-6'])) {
 // and here as well
 if ($Upgrade) {
     // check if the backup directory is writable
-    if (!is_writable($CDASH_BACKUP_DIRECTORY)) {
+    if (!is_writable($config->get('CDASH_BACKUP_DIRECTORY'))) {
         $xml .= '<backupwritable>0</backupwritable>';
     } else {
         $xml .= '<backupwritable>1</backupwritable>';
     }
 
     // check if the log directory is writable
-    if ($CDASH_LOG_FILE !== false && !is_writable($CDASH_LOG_DIRECTORY)) {
+    if ($config->get('CDASH_LOG_FILE') !== false && !is_writable($config->get('CDASH_LOG_DIRECTORY'))) {
         $xml .= '<logwritable>0</logwritable>';
     } else {
         $xml .= '<logwritable>1</logwritable>';
     }
 
     // check if the upload directory is writable
-    if (!is_writable($CDASH_UPLOAD_DIRECTORY)) {
+    if (!is_writable($config->get('CDASH_UPLOAD_DIRECTORY'))) {
         $xml .= '<uploadwritable>0</uploadwritable>';
     } else {
         $xml .= '<uploadwritable>1</uploadwritable>';
     }
 
     // check if the rss directory is writable
-    global $CDASH_ENABLE_FEED;
-    if ($CDASH_ENABLE_FEED > 0 && !is_writable('rss')) {
+    if ($config->get('CDASH_ENABLE_FEED') > 0 && !is_writable('rss')) {
         $xml .= '<rsswritable>0</rsswritable>';
     } else {
         $xml .= '<rsswritable>1</rsswritable>';

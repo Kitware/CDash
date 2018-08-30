@@ -68,23 +68,21 @@ CDash.filter('filter_builds', function() {
       newbuildgroup: newBuildGroup,
       type: type
     };
+    $scope.cdash.buildgroup_error = '';
     $http.post('api/v1/buildgroup.php', parameters)
     .then(function success(s) {
       var buildgroup = s.data;
-      if (buildgroup.error) {
-        $scope.cdash.error = buildgroup.error;
-      }
-      else {
-        $("#buildgroup_created").show();
-        $("#buildgroup_created").delay(3000).fadeOut(400);
+      $("#buildgroup_created").show();
+      $("#buildgroup_created").delay(3000).fadeOut(400);
 
-        // Add this new buildgroup to our scope.
-        $scope.cdash.buildgroups.push(buildgroup);
+      // Add this new buildgroup to our scope.
+      $scope.cdash.buildgroups.push(buildgroup);
 
-        if (type != "Daily") {
-          $scope.cdash.dynamics.push(buildgroup);
-        }
+      if (type != "Daily") {
+        $scope.cdash.dynamics.push(buildgroup);
       }
+    }, function error(e) {
+      $scope.cdash.buildgroup_error = e.data.error;
     });
   };
 

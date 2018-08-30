@@ -15,6 +15,7 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use CDash\Config;
 use CDash\Database;
 
 /** AuthToken class */
@@ -39,16 +40,17 @@ class AuthToken
     // $this->Hash.
     public function Generate()
     {
-        global $CDASH_TOKEN_DURATION;
+        $config = Config::getInstance();
+        $duration = $config->get('CDASH_TOKEN_DURATION');
         $now = time();
         $token = bin2hex(random_bytes(16));
         $this->Hash = $this->HashToken($token);
         $this->Created = gmdate(FMT_DATETIME, $now);
-        if ($CDASH_TOKEN_DURATION === 0) {
+        if ($duration === 0) {
             // Special value meaning "this token never expires".
             $this->Expires = '9999-12-31 23:59:59';
         } else {
-            $this->Expires = gmdate(FMT_DATETIME, $now + $CDASH_TOKEN_DURATION);
+            $this->Expires = gmdate(FMT_DATETIME, $now + $duration);
         }
         return $token;
     }
@@ -215,5 +217,87 @@ class AuthToken
         $marshaledAuthToken['expires'] = date(FMT_DATETIMEDISPLAY, $expires);
 
         return $marshaledAuthToken;
+    }
+
+    /**
+     * Get Authorization header.
+     * Adapted from http://stackoverflow.com/a/40582472
+     **/
+    private static function getAuthorizationHeader()
+    {
+        $headers = null;
+        if (isset($_SERVER['Authorization'])) {
+            $headers = trim($_SERVER['Authorization']);
+        } elseif (isset($_SERVER['HTTP_AUTHORIZATION'])) { //Nginx or fast CGI
+            $headers = trim($_SERVER['HTTP_AUTHORIZATION']);
+        } else {
+            $requestHeaders = self::getAllHeaders();
+            if (isset($requestHeaders['Authorization'])) {
+                $headers = trim($requestHeaders['Authorization']);
+            }
+        }
+        return $headers;
+    }
+
+    /**
+     * If getallheaders does not exist this method will provide a simulacrum
+     * @return array|false
+     */
+    private static function getAllHeaders()
+    {
+        if (function_exists('getallheaders')) {
+            return getallheaders();
+        } else {
+            $headers = [];
+            foreach ($_SERVER as $key => $value) {
+                $words = explode('_', $key);
+                if (array_shift($words) === 'HTTP') {
+                    array_walk($words, function (&$word) {
+                        $word = ucfirst(strtolower($word));
+                    });
+                    $headers[implode('-', $words)] = $value;
+                }
+            }
+            return $headers;
+        }
+    }
+
+    /**
+     * Get access token from header.
+     **/
+    private static function getBearerToken()
+    {
+        $headers = AuthToken::getAuthorizationHeader();
+        if (!empty($headers)) {
+            $matches = [];
+            if (preg_match('/Bearer\s(\S+)/', $headers, $matches)) {
+                return $matches[1];
+            }
+        }
+        return null;
+    }
+
+    // Check for the presence of a bearer token in the request.
+    // If one is found, return the corresponding userid.
+    // Otherwise return null.
+    // If the specified token has expired it will be deleted.
+    public function getUserIdFromRequest()
+    {
+        $token = AuthToken::getBearerToken();
+        if (!$token) {
+            return null;
+        }
+
+        $this->Hash = $this->HashToken($token);
+
+        if (!$this->Exists()) {
+            return null;
+        }
+        if ($this->Expired()) {
+            $this->Delete();
+            return null;
+        }
+
+        return $this->UserId;
     }
 }

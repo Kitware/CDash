@@ -15,7 +15,9 @@
 =========================================================================*/
 namespace CDash\Model;
 
-use PDO;
+require_once 'include/common.php';
+require_once 'include/repository.php';
+
 use CDash\Database;
 
 /** BuildFailure */
@@ -194,13 +196,13 @@ class BuildFailure
         }
 
         $sql = "
-            SELECT 
+            SELECT
                 bf.id,
                 bf.buildid,
                 bf.workingdirectory,
                 bf.sourcefile,
                 bf.newstatus,
-                bfd.stdoutput, 
+                bfd.stdoutput,
                 bfd.stderror,
                 bfd.type,
                 bfd.exitcondition,
@@ -209,7 +211,7 @@ class BuildFailure
                 bfd.outputfile,
                 bfd.outputtype
             FROM buildfailuredetails AS bfd
-            LEFT JOIN buildfailure AS bf 
+            LEFT JOIN buildfailure AS bf
                 ON (bf.detailsid = bfd.id)
             WHERE bf.buildid=?
             ORDER BY bf.id
@@ -224,19 +226,28 @@ class BuildFailure
     /**
      * Retrieve the arguments from a build failure given its id.
      **/
-    public static function GetBuildFailureArguments($buildFailureId)
+    public function GetBuildFailureArguments($buildFailureId)
     {
-        $response = array('argumentfirst' => null,
-                          'arguments' => array());
-        $arguments = pdo_query(
-            "SELECT bfa.argument FROM buildfailureargument AS bfa,
-             buildfailure2argument AS bf2a
-             WHERE bf2a.buildfailureid='$buildFailureId'
-             AND bf2a.argumentid=bfa.id
-             ORDER BY bf2a.place ASC");
+        $response = [
+            'argumentfirst' => null,
+            'arguments' => []
+        ];
+
+        $sql = "
+            SELECT bfa.argument
+            FROM buildfailureargument AS bfa,
+            buildfailure2argument AS bf2a
+            WHERE bf2a.buildfailureid=:build_failure_id
+            AND bf2a.argumentid=bfa.id
+            ORDER BY bf2a.place ASC
+        ";
+
+        $stmt = $this->PDO->prepare($sql);
+        $stmt->bindParam(':build_failure_id', $buildFailureId);
+        pdo_execute($stmt);
 
         $i = 0;
-        while ($argument_array = pdo_fetch_array($arguments)) {
+        while ($argument_array = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             if ($i == 0) {
                 $response['argumentfirst'] = $argument_array['argument'];
             } else {
@@ -251,8 +262,10 @@ class BuildFailure
     /**
      * Marshal a build failure, this includes the build failure arguments.
      **/
-    public static function marshal($data, $project, $revision, $linkifyOutput=false)
+    public static function marshal($data, $project, $revision, $linkifyOutput, $buildfailure)
     {
+        deepEncodeHTMLEntities($data);
+
         $marshaled = array_merge(array(
             'language' => $data['language'],
             'sourcefile' => $data['sourcefile'],
@@ -261,7 +274,7 @@ class BuildFailure
             'outputtype' => $data['outputtype'],
             'workingdirectory' => $data['workingdirectory'],
             'exitcondition' => $data['exitcondition']
-        ), self::GetBuildFailureArguments($data['id']));
+        ), $buildfailure->GetBuildFailureArguments($data['id']));
 
         $marshaled['stderror'] = $data['stderror'];
         $marshaled['stdoutput'] = $data['stdoutput'];
@@ -269,13 +282,17 @@ class BuildFailure
         if (isset($data['sourcefile'])) {
             $file = basename($data['sourcefile']);
             $directory = dirname($data['sourcefile']);
-            $marshaled['cvsurl'] = get_diff_url($project['id'],
+
+            $source_dir = \get_source_dir($project['id'], $project['cvsurl'], $directory);
+            if (substr($directory, 0, strlen($source_dir)) == $source_dir) {
+                $directory = substr($directory, strlen($source_dir));
+            }
+
+            $marshaled['cvsurl'] = \get_diff_url($project['id'],
                                                 $project['cvsurl'],
                                                 $directory,
                                                 $file,
                                                 $revision);
-
-            $source_dir = get_source_dir($project['id'], $project['cvsurl'], $directory);
 
             if ($source_dir !== null && $linkifyOutput) {
                 $marshaled['stderror'] = linkify_compiler_output($project['cvsurl'], $source_dir,

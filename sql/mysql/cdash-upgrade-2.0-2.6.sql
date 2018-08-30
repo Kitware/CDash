@@ -23,3 +23,12 @@ CREATE TABLE IF NOT EXISTS `buildproperties` (
   `properties` mediumtext NOT NULL DEFAULT '',
   PRIMARY KEY  (`buildid`)
 );
+
+CREATE TABLE IF NOT EXISTS `related_builds` (
+  `buildid` bigint(20) NOT NULL,
+  `relatedid` bigint(20) NOT NULL,
+  `relationship` varchar(255),
+  PRIMARY KEY (`buildid`,`relatedid`),
+  KEY `buildid` (`buildid`),
+  KEY `relatedid` (`relatedid`)
+);

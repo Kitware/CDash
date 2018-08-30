@@ -65,7 +65,7 @@ class CreateProjectPermissionsTestCase extends KWWebTestCase
         $row = $stmt->fetch();
         $userid = $row['id'];
         $pdo->exec("DELETE FROM user2project WHERE userid=$userid");
-        $pdo->exec("INSERT INTO user2project (userid, projectid, role) VALUES ($userid, 5, 2)");
+        $pdo->exec("INSERT INTO user2project (userid, projectid, role, emailtype) VALUES ($userid, 5, 2, 2)");
 
         // Cannot create project.
         $response = $this->get($this->url . '/api/v1/createProject.php');

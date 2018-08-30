@@ -1,5 +1,6 @@
 <?php
 
+use CDash\Config;
 use CDash\Model\Build;
 use CDash\Model\DynamicAnalysisSummary;
 
@@ -16,7 +17,7 @@ function AddTableField($table, $field, $mySQLType, $pgSqlType, $default)
     $query = pdo_query('SELECT ' . $field . ' FROM ' . $table . ' LIMIT 1');
     if (!$query) {
         add_log("Adding $field to $table", 'AddTableField');
-        if ($CDASH_DB_TYPE == 'pgsql') {
+        if (Config::getInstance()->get('CDASH_DB_TYPE') == 'pgsql') {
             pdo_query('ALTER TABLE "' . $table . '" ADD "' . $field . '" ' . $pgSqlType . $sql);
         } else {
             pdo_query('ALTER TABLE ' . $table . ' ADD ' . $field . ' ' . $mySQLType . $sql);
@@ -34,7 +35,7 @@ function RemoveTableField($table, $field)
     $query = pdo_query('SELECT ' . $field . ' FROM ' . $table . ' LIMIT 1');
     if ($query) {
         add_log("Droping $field from $table", 'DropTableField');
-        if ($CDASH_DB_TYPE == 'pgsql') {
+        if (Config::getInstance()->get('CDASH_DB_TYPE') == 'pgsql') {
             pdo_query('ALTER TABLE "' . $table . '" DROP COLUMN "' . $field . '"');
         } else {
             pdo_query('ALTER TABLE ' . $table . ' DROP ' . $field);
@@ -51,7 +52,7 @@ function RenameTableField($table, $field, $newfield, $mySQLType, $pgSqlType, $de
     $query = pdo_query('SELECT ' . $field . ' FROM ' . $table . ' LIMIT 1');
     if ($query) {
         add_log("Changing $field to $newfield for $table", 'RenameTableField');
-        if ($CDASH_DB_TYPE == 'pgsql') {
+        if (Config::getInstance()->get('CDASH_DB_TYPE') == 'pgsql') {
             pdo_query('ALTER TABLE "' . $table . '" RENAME "' . $field . '" TO "' . $newfield . '"');
             pdo_query('ALTER TABLE "' . $table . '" ALTER COLUMN "' . $newfield . '" TYPE ' . $pgSqlType);
             pdo_query('ALTER TABLE "' . $table . '" ALTER COLUMN "' . $newfield . '" SET DEFAULT ' . $default);
@@ -66,9 +67,7 @@ function RenameTableField($table, $field, $newfield, $mySQLType, $pgSqlType, $de
 /** Return true if the given index exists for the column */
 function pdo_check_index_exists($tablename, $columnname)
 {
-    global $CDASH_DB_TYPE;
-
-    if (isset($CDASH_DB_TYPE) && $CDASH_DB_TYPE != 'mysql') {
+    if (Config::getInstance()->get('CDASH_DB_TYPE') && Config::getInstance()->get('CDASH_DB_TYPE') != 'mysql') {
         echo 'NOT IMPLEMENTED';
         return false;
     } else {
@@ -98,7 +97,7 @@ function AddTableIndex($table, $field)
 
     if (!pdo_check_index_exists($table, $field)) {
         add_log("Adding index $field to $table", 'AddTableIndex');
-        if ($CDASH_DB_TYPE == 'pgsql') {
+        if (Config::getInstance()->get('CDASH_DB_TYPE') == 'pgsql') {
             @pdo_query("CREATE INDEX $index_name ON $table ($field)");
         } else {
             pdo_query("ALTER TABLE $table ADD INDEX $index_name ($field)");
@@ -115,7 +114,7 @@ function RemoveTableIndex($table, $field)
     if (pdo_check_index_exists($table, $field)) {
         add_log("Removing index $field from $table", 'RemoveTableIndex');
 
-        if ($CDASH_DB_TYPE == 'pgsql') {
+        if (Config::getInstance()->get('CDASH_DB_TYPE') == 'pgsql') {
             pdo_query('DROP INDEX ' . $table . '_' . $field . '_idx');
         } else {
             pdo_query('ALTER TABLE ' . $table . ' DROP INDEX ' . $field);
@@ -135,7 +134,7 @@ function ModifyTableField($table, $field, $mySQLType, $pgSqlType, $default, $not
     //add_log($type,"ModifyTableField");
     if (1) {
         add_log("Modifying $field to $table", 'ModifyTableField');
-        if ($CDASH_DB_TYPE == 'pgsql') {
+        if (Config::getInstance()->get('CDASH_DB_TYPE') == 'pgsql') {
             // ALTER TABLE "buildfailureargument" ALTER COLUMN "argument" TYPE VARCHAR( 255 );
             // ALTER TABLE "buildfailureargument" ALTER COLUMN "argument" SET NOT NULL;
             // ALTER TABLE "dynamicanalysisdefect" ALTER COLUMN "value" SET DEFAULT 0;
@@ -175,8 +174,7 @@ function ModifyTableField($table, $field, $mySQLType, $pgSqlType, $default, $not
 // Helper function to add an index to a table
 function AddTablePrimaryKey($table, $field)
 {
-    include dirname(__DIR__) . '/config/config.php';
-    global $CDASH_DB_TYPE;
+    $config = \CDash\Config::getInstance();
 
     add_log("Adding primarykey $field to $table", 'AddTablePrimaryKey');
     $query = 'ALTER TABLE "' . $table . '" ADD PRIMARY KEY ("' . $field . '")';
@@ -185,7 +183,7 @@ function AddTablePrimaryKey($table, $field)
 
     // As of MySQL 5.7.4, the IGNORE clause for ALTER TABLE is removed and its use produces an error.
     // Retaining original query for backwards compatibility
-    if ($CDASH_DB_TYPE == 'mysql') {
+    if ($config->get('CDASH_DB_TYPE') == 'mysql') {
         if ($major >= 5 && $minor >= 7) {
             $query = "ALTER TABLE {$table} ADD PRIMARY KEY (`{$field}`)";
         } else {
@@ -203,7 +201,7 @@ function RemoveTablePrimaryKey($table)
 {
     include dirname(__DIR__) . '/config/config.php';
     add_log("Removing primarykey from $table", 'RemoveTablePrimaryKey');
-    if ($CDASH_DB_TYPE == 'pgsql') {
+    if (Config::getInstance()->get('CDASH_DB_TYPE') == 'pgsql') {
         pdo_query('ALTER TABLE "' . $table . '" DROP CONSTRAINT "value_pkey"');
         pdo_query('ALTER TABLE "' . $table . '" DROP CONSTRAINT "' . $table . '_pkey"');
     } else {
@@ -655,8 +653,8 @@ function UpgradeTestDuration()
  **/
 function UpgradeBuildDuration($buildid=null)
 {
-    global $CDASH_DB_TYPE;
-    if ($CDASH_DB_TYPE === 'pgsql') {
+    Config::getInstance()->get('CDASH_DB_TYPE');
+    if (Config::getInstance()->get('CDASH_DB_TYPE') === 'pgsql') {
         $end_minus_start = 'EXTRACT(EPOCH FROM (endtime - starttime))::numeric';
     } else {
         $end_minus_start = 'TIMESTAMPDIFF(SECOND, starttime, endtime)';
@@ -757,7 +755,7 @@ function CompressCoverage()
  **/
 function AddUniqueConstraintToSiteTable($site_table)
 {
-    global $CDASH_DB_TYPE;
+    Config::getInstance()->get('CDASH_DB_TYPE');
     // Tables with a siteid field that will need to be updated as we prune
     // out duplicate sites.
     $tables_to_update = array('build', 'build2grouprule', 'site2user',
@@ -812,7 +810,7 @@ function AddUniqueConstraintToSiteTable($site_table)
         }
     }
     // It should be safe to add the constraint now.
-    if ($CDASH_DB_TYPE == 'pgsql') {
+    if (Config::getInstance()->get('CDASH_DB_TYPE') == 'pgsql') {
         pdo_query("ALTER TABLE $site_table ADD UNIQUE (name,ip)");
         pdo_query('CREATE INDEX "name_ip" ON "' . $site_table . '" ("name","ip")');
     } else {
@@ -877,7 +875,7 @@ function PopulateDynamicAnalysisSummaryTable()
 // Add unique constraint (buildid and type) to the *diff tables.
 function AddUniqueConstraintToDiffTables($testing=false)
 {
-    global $CDASH_DB_TYPE;
+    Config::getInstance()->get('CDASH_DB_TYPE');
 
     $prefix = '';
     if ($testing) {
@@ -897,7 +895,7 @@ function AddUniqueConstraintToDiffTables($testing=false)
             $buildid = $row['buildid'];
             $type = $row['type'];
             $limit = $row['c'] - 1;
-            if ($CDASH_DB_TYPE == 'pgsql') {
+            if (Config::getInstance()->get('CDASH_DB_TYPE') == 'pgsql') {
                 // Postgres doesn't allow DELETE with LIMIT, so we use
                 // ctid to get around this limitation.
                 $delete_stmt = $pdo->prepare(
@@ -915,7 +913,7 @@ function AddUniqueConstraintToDiffTables($testing=false)
             pdo_execute($delete_stmt);
         }
         // It should be safe to add the constraints now.
-        if ($CDASH_DB_TYPE == 'pgsql') {
+        if (Config::getInstance()->get('CDASH_DB_TYPE') == 'pgsql') {
             $pdo->query("ALTER TABLE $table ADD UNIQUE (buildid,type)");
             $index_name = $table . '_buildid_type';
             $pdo->query("CREATE INDEX \"$index_name\" ON \"$table\" (\"buildid\",\"type\")");
@@ -930,12 +928,12 @@ function AddUniqueConstraintToDiffTables($testing=false)
  **/
 function PopulateBuild2Configure($configure_table, $b2c_table)
 {
-    global $CDASH_DB_TYPE;
+    Config::getInstance()->get('CDASH_DB_TYPE');
 
     add_log('Computing crc32', 'PopulateBuild2Configure');
 
     // Set crc32 for configure rows.
-    if ($CDASH_DB_TYPE != 'pgsql') {
+    if (Config::getInstance()->get('CDASH_DB_TYPE') != 'pgsql') {
         // For MySQL, we use the CRC32 function provided by the database.
         pdo_query(
             "UPDATE $configure_table
@@ -1056,8 +1054,8 @@ function UpgradeConfigureErrorTable($table = 'configureerror',
 
     // Remove duplicates.
     // Step 1: create an empty table with the same structure as configureerror.
-    global $CDASH_DB_TYPE;
-    if ($CDASH_DB_TYPE == 'pgsql') {
+    Config::getInstance()->get('CDASH_DB_TYPE');
+    if (Config::getInstance()->get('CDASH_DB_TYPE') == 'pgsql') {
         pdo_query(
             "CREATE TABLE temp$table
             (LIKE $table INCLUDING DEFAULTS INCLUDING CONSTRAINTS INCLUDING INDEXES)");

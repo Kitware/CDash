@@ -14,6 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use CDash\Config;
+
 require_once 'include/common.php';
 require_once 'include/do_submit.php';
 
@@ -21,6 +23,7 @@ require_once 'include/do_submit.php';
 //
 function ProcessFile($projectid, $filename, $md5)
 {
+    $config = Config::getInstance();
     unset($fp);
 
     if (!file_exists($filename)) {
@@ -33,15 +36,13 @@ function ProcessFile($projectid, $filename, $md5)
     }
 
     if (@$fp) {
-        global $PHP_ERROR_SUBMISSION_ID;
-        do_submit($fp, $projectid, $md5, false, $PHP_ERROR_SUBMISSION_ID);
-        $PHP_ERROR_SUBMISSION_ID = 0;
+        do_submit($fp, $projectid, $md5, false, $config->get('PHP_ERROR_SUBMISSION_ID'));
+        $config->set('PHP_ERROR_SUBMISSION_ID', 0);
 
         @fclose($fp);
         unset($fp);
 
-        global $CDASH_BACKUP_TIMEFRAME;
-        if ($CDASH_BACKUP_TIMEFRAME != '0') {
+        if ($config->get('CDASH_BACKUP_TIMEFRAME') != '0') {
             // Delete the temporary backup file since we now have a better-named one.
             cdash_unlink($filename);
         }

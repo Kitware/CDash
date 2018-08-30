@@ -61,7 +61,7 @@ class Coverage
             add_log('No buildid or coveragefile',
                 'Coverage::InsertLabelAssociations', LOG_ERR,
                 0, $buildid,
-                Object::COVERAGE, $this->CoverageFile->Id);
+                ModelType::COVERAGE, $this->CoverageFile->Id);
         }
     }
 

@@ -18,194 +18,219 @@ include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 
+use CDash\Database;
 use CDash\Model\Project;
 use CDash\Model\User;
 
 init_api_request();
-$response = array();
-
-// Connect to database.
-@$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
-
+$response = [];
 $build = get_request_build();
 
 $method = $_SERVER['REQUEST_METHOD'];
 // Make sure the user is an admin before proceeding with non-read-only methods.
-if ($method != 'GET') {
-    $userid = $_SESSION['cdash']['loginid'];
-    if (!isset($userid) || !is_numeric($userid)) {
-        $response['error'] = 'Not a valid userid!';
-        echo json_encode($response);
-        return;
-    }
-
-    $Project = new Project;
-    $User = new User;
-    $User->Id = $userid;
-    $Project->Id = $build->ProjectId;
-
-    $role = $Project->GetUserRole($userid);
-    if ($User->IsAdmin() === false && $role <= 1) {
-        $response['error'] = 'You do not have permission to access this page';
-        echo json_encode($response);
-        return;
-    }
+if ($method != 'GET' && !can_administrate_project($build->ProjectId)) {
+    return;
 }
 
 // Route based on what type of request this is.
 switch ($method) {
     case 'DELETE':
-        rest_delete();
+        rest_delete($build);
         break;
     case 'POST':
-        rest_post();
+        rest_post($build);
         break;
     case 'PUT':
-        rest_put();
+        rest_put($build);
         break;
     case 'GET':
     default:
-        rest_get();
+        rest_get($build);
         break;
 }
 
 /* Handle DELETE requests */
-function rest_delete()
+function rest_delete($build)
 {
-    global $build;
     add_log('Build #' . $build->Id . ' removed manually', 'buildAPI');
     remove_build($build->Id);
 }
 
 /* Handle POST requests */
-function rest_post()
+function rest_post($build)
 {
-    /** @var Build $build */
-    global $build;
-
+    $pdo = Database::getInstance()->getPdo();
     $buildtype = $build->Type;
     $buildname = $build->Name;
     $siteid = $build->SiteId;
 
     // Should we change whether or not this build is expected?
     if (isset($_POST['expected']) && isset($_POST['groupid'])) {
-        $expected = pdo_real_escape_numeric($_POST['expected']);
-        $groupid = pdo_real_escape_numeric($_POST['groupid']);
+        $expected = $_POST['expected'];
+        $groupid = $_POST['groupid'];
 
         // If a rule already exists we update it.
-        $build2groupexpected = pdo_query(
+        $exists_stmt = $pdo->prepare(
             "SELECT groupid FROM build2grouprule
-                WHERE groupid='$groupid' AND buildtype='$buildtype' AND
-                buildname='$buildname' AND siteid='$siteid' AND
-                endtime='1980-01-01 00:00:00'");
-        if (pdo_num_rows($build2groupexpected) > 0) {
-            pdo_query(
-                "UPDATE build2grouprule SET expected='$expected'
-                    WHERE groupid='$groupid' AND buildtype='$buildtype' AND
-                    buildname='$buildname' AND siteid='$siteid' AND
-                    endtime='1980-01-01 00:00:00'");
+            WHERE groupid = :groupid AND buildtype = :buildtype AND
+                  buildname = :buildname AND siteid = :siteid AND
+                  endtime = '1980-01-01 00:00:00' LIMIT 1");
+        pdo_execute($exists_stmt, [
+                ':groupid'   => $groupid,
+                ':buildtype' => $buildtype,
+                ':buildname' => $buildname,
+                ':siteid'    => $siteid]);
+        if ($exists_stmt->fetchColumn() !== false) {
+            $update_stmt = $pdo->prepare(
+                "UPDATE build2grouprule SET expected = :expected
+                WHERE groupid = :groupid AND buildtype = :buildtype AND
+                      buildname = :buildname AND siteid = :siteid AND
+                      endtime = '1980-01-01 00:00:00'");
+            pdo_execute($update_stmt, [
+                    ':expected'  => $expected,
+                    ':groupid'   => $groupid,
+                    ':buildtype' => $buildtype,
+                    ':buildname' => $buildname,
+                    ':siteid'    => $siteid]);
         } elseif ($expected) {
-            // we add the grouprule
-
+            // Otherwise we add a grouprule.
             $now = gmdate(FMT_DATETIME);
-            pdo_query(
+            $insert_stmt = $pdo->prepare(
                 "INSERT INTO build2grouprule
                     (groupid, buildtype, buildname, siteid, expected,
                      starttime, endtime)
-                    VALUES
-                    ('$groupid','$buildtype','$buildname','$siteid','$expected',
-                     '$now','1980-01-01 00:00:00')");
+                VALUES
+                    (:groupid, :buildtype, :buildname, :siteid, :expected,
+                     :starttime, '1980-01-01 00:00:00')");
+            pdo_execute($insert_stmt, [
+                    ':groupid'   => $groupid,
+                    ':buildtype' => $buildtype,
+                    ':buildname' => $buildname,
+                    ':siteid'    => $siteid,
+                    ':expected'  => $expected,
+                    ':starttime' => $now]);
         }
     }
 
     // Should we move this build to a different group?
     if (isset($_POST['expected']) && isset($_POST['newgroupid'])) {
-        $expected = pdo_real_escape_numeric($_POST['expected']);
-        $newgroupid = pdo_real_escape_numeric($_POST['newgroupid']);
+        $expected = $_POST['expected'];
+        $newgroupid = $_POST['newgroupid'];
 
         // Remove the build from its previous group.
-        pdo_query("DELETE FROM build2group WHERE buildid='$build->Id'");
+        $delete_stmt = $pdo->prepare(
+            'DELETE FROM build2group WHERE buildid = :buildid');
+        pdo_execute($delete_stmt, [':buildid' => $build->Id]);
 
         // Insert it into the new group.
-        pdo_query(
-            "INSERT INTO build2group(groupid,buildid)
-                VALUES ('$newgroupid','$build->Id')");
+        $insert_stmt = $pdo->prepare(
+            'INSERT INTO build2group(groupid, buildid)
+            VALUES (:groupid, :buildid)');
+        pdo_execute($insert_stmt,
+                [':groupid' => $newgroupid, ':buildid' => $build->Id]);
 
         // Mark any previous buildgroup rule as finished as of this time.
         $now = gmdate(FMT_DATETIME);
-        pdo_query(
-            "UPDATE build2grouprule SET endtime='$now'
-                WHERE buildtype='$buildtype' AND buildname='$buildname' AND
-                siteid='$siteid' AND endtime='1980-01-01 00:00:00'");
+        $finish_stmt = $pdo->prepare(
+            "UPDATE build2grouprule
+            SET endtime = :endtime
+            WHERE buildtype = :buildtype AND
+                  buildname = :buildname AND
+                  siteid = :siteid AND
+                  endtime = '1980-01-01 00:00:00' AND
+                  groupid IN
+                      (SELECT id FROM buildgroup WHERE projectid = :projectid)");
+        pdo_execute($finish_stmt, [
+                ':endtime'   => $now,
+                ':projectid' => $build->ProjectId,
+                ':buildtype' => $buildtype,
+                ':buildname' => $buildname,
+                ':siteid'    => $siteid]);
 
-        // Create the rule for the new buildgroup.
-        // (begin time is set by default by mysql)
-        pdo_query(
-            "INSERT INTO build2grouprule(groupid, buildtype, buildname, siteid,
-            expected, starttime, endtime)
-                VALUES ('$newgroupid','$buildtype','$buildname','$siteid','$expected',
-                    '$now','1980-01-01 00:00:00')");
+        // Create the rule for the newly assigned buildgroup.
+        $insert_stmt = $pdo->prepare(
+            "INSERT INTO build2grouprule
+                (groupid, buildtype, buildname, siteid, expected, starttime,
+                 endtime)
+            VALUES
+                (:groupid, :buildtype, :buildname, :siteid, :expected,
+                 :starttime, '1980-01-01 00:00:00')");
+        pdo_execute($insert_stmt, [
+                ':groupid'   => $newgroupid,
+                ':buildtype' => $buildtype,
+                ':buildname' => $buildname,
+                ':siteid'    => $siteid,
+                ':expected'  => $expected,
+                ':starttime' => $now]);
     }
 
     // Should we change the 'done' setting for this build?
     if (isset($_POST['done'])) {
-        $done = pdo_real_escape_numeric($_POST['done']);
-        pdo_query("UPDATE build SET done='$done' WHERE id='{$build->Id}'");
+        $done = $_POST['done'];
+        $done_stmt = $pdo->prepare(
+            'UPDATE build SET done = :done WHERE id = :buildid');
+        pdo_execute($done_stmt, [':done' => $done, ':buildid' => $build->Id]);
     }
 }
 
 /* Handle PUT requests */
-function rest_put()
+function rest_put($build)
 {
-    global $buildid;
 }
 
 /* Handle GET requests */
-function rest_get()
+function rest_get($build)
 {
-    global $build;
-    $response = array();
+    $pdo = Database::getInstance()->getPdo();
+    $response = [];
 
     // Are we looking for what went wrong with this build?
     if (isset($_GET['getproblems'])) {
         $response['hasErrors'] = false;
         $response['hasFailingTests'] = false;
 
-        // Lookup some details about this build.
-        $buildtype = $build->Type;
-        $buildname = $build->Name;
-        $siteid = $build->SiteId;
-        $starttime = $build->StartTime;
-        $projectid = $build->ProjectId;
+        // Details about this build that will be used in SQL queries below.
+        $query_params = [
+            ':siteid'    => $build->SiteId,
+            ':type'      => $build->Type,
+            ':name'      => $build->Name,
+            ':projectid' => $build->ProjectId,
+            ':starttime' => $build->StartTime
+        ];
+
+        // Prepared statement to find the oldest submission for this build.
+        // We do this here because it is potentially used multiple times below.
+        $oldest_build_stmt = $pdo->prepare(
+            'SELECT starttime FROM build
+            WHERE siteid = :siteid AND type = :type AND
+                  name = :name AND projectid = :projectid AND
+                  starttime <= :starttime
+            ORDER BY starttime ASC LIMIT 1');
+        $first_submit = null;
 
         // Check if this build has errors.
         $buildHasErrors = $build->BuildErrorCount > 0;
         if ($buildHasErrors) {
             $response['hasErrors'] = true;
             // Find the last occurrence of this build that had no errors.
-            $no_errors_result = pdo_query(
-                "SELECT starttime FROM build
-                WHERE siteid='$siteid' AND type='$buildtype' AND
-                name='$buildname' AND projectid='$projectid' AND
-                starttime<='$starttime' AND parentid<1 AND builderrors<1
-                ORDER BY starttime DESC LIMIT 1");
-
-            if (pdo_num_rows($no_errors_result) > 0) {
-                $no_errors_row = pdo_fetch_array($no_errors_result);
-                $gmtdate = strtotime($no_errors_row['starttime'] . ' UTC');
+            $no_errors_stmt = $pdo->prepare(
+                'SELECT starttime FROM build
+                WHERE siteid = :siteid AND type = :type AND name = :name AND
+                      projectid = :projectid AND starttime <= :starttime AND
+                      parentid < 1 AND builderrors < 1
+                ORDER BY starttime DESC LIMIT 1');
+            pdo_execute($no_errors_stmt, $query_params);
+            $last_good_submit = $no_errors_stmt->fetchColumn();
+            if ($last_good_submit !== false) {
+                $gmtdate = strtotime($last_good_submit . ' UTC');
             } else {
-                // Find the first build
-                $firstbuild = pdo_single_row_query(
-                        "SELECT starttime FROM build
-                        WHERE siteid='$siteid' AND type='$buildtype' AND
-                        name='$buildname' AND projectid='$projectid' AND
-                        starttime<='$starttime'
-                        ORDER BY starttime ASC LIMIT 1");
-                $gmtdate = strtotime($firstbuild['starttime'] . ' UTC');
+                // Find the oldest submission for this build.
+                pdo_execute($oldest_build_stmt, $query_params);
+                $first_submit = $oldest_build_stmt->fetchColumn();
+                $gmtdate = strtotime($first_submit . ' UTC');
             }
             $response['daysWithErrors'] =
-                round((strtotime($starttime) - $gmtdate) / (3600 * 24));
+                round((strtotime($build->StartTime) - $gmtdate) / (3600 * 24));
             $response['failingSince'] = date(FMT_DATETIMETZ, $gmtdate);
             $response['failingDate'] = substr($response['failingSince'], 0, 10);
         }
@@ -215,28 +240,27 @@ function rest_get()
         if ($buildHasFailingTests) {
             $response['hasFailingTests'] = true;
             // Find the last occurrence of this build that had no test failures.
-            $no_fails_result = pdo_query(
-                "SELECT starttime FROM build
-                WHERE siteid='$siteid' AND type='$buildtype' AND
-                name='$buildname' AND projectid='$projectid' AND
-                starttime<='$starttime' AND parentid<1 AND testfailed<1
-                ORDER BY starttime DESC LIMIT 1");
-
-            if (pdo_num_rows($no_fails_result) > 0) {
-                $no_fails_row = pdo_fetch_array($no_fails_result);
-                $gmtdate = strtotime($no_fails_row['starttime'] . ' UTC');
+            $no_fails_stmt = $pdo->prepare(
+                'SELECT starttime FROM build
+                WHERE siteid = :siteid AND type = :type AND
+                        name = :name AND projectid = :projectid AND
+                        starttime <= :starttime AND parentid < 1 AND
+                        testfailed < 1
+                ORDER BY starttime DESC LIMIT 1');
+            pdo_execute($no_fails_stmt, $query_params);
+            $last_good_submit = $no_fails_stmt->fetchColumn();
+            if ($last_good_submit !== false) {
+                $gmtdate = strtotime($last_good_submit . ' UTC');
             } else {
-                // Find the first build
-                $firstbuild = pdo_single_row_query(
-                        "SELECT starttime FROM build
-                        WHERE siteid='$siteid' AND type='$buildtype' AND
-                        name='$buildname' AND projectid='$projectid' AND
-                        starttime<='$starttime' AND parentid<1
-                        ORDER BY starttime ASC LIMIT 1");
-                $gmtdate = strtotime($firstbuild['starttime'] . ' UTC');
+                // Find the oldest submission for this build.
+                if (is_null($first_submit)) {
+                    pdo_execute($oldest_build_stmt, $query_params);
+                    $first_submit = $oldest_build_stmt->fetchColumn();
+                }
+                $gmtdate = strtotime($first_submit . ' UTC');
             }
             $response['daysWithFailingTests'] =
-                round((strtotime($starttime) - $gmtdate) / (3600 * 24));
+                round((strtotime($build->StartTime) - $gmtdate) / (3600 * 24));
             $response['testsFailingSince'] = date(FMT_DATETIMETZ, $gmtdate);
             $response['testsFailingDate'] =
                 substr($response['testsFailingSince'], 0, 10);

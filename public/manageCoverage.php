@@ -21,6 +21,7 @@ include 'public/login.php';
 include 'include/version.php';
 require_once 'include/cdashmail.php';
 
+use CDash\Config;
 use CDash\Model\Build;
 use CDash\Model\Coverage;
 use CDash\Model\CoverageFile;
@@ -31,10 +32,9 @@ use CDash\Model\Site;
 use CDash\Model\User;
 use CDash\Model\UserProject;
 
-if ($session_OK) {
-    @$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-    pdo_select_db("$CDASH_DB_NAME", $db);
+$config = Config::getInstance();
 
+if ($session_OK) {
     $userid = $_SESSION['cdash']['loginid'];
     // Checks
     if (!isset($userid) || !is_numeric($userid)) {
@@ -209,7 +209,7 @@ if ($session_OK) {
             $CoverageFile2User->UserId = $userid;
             $fileids = $CoverageFile2User->GetFiles();
 
-            $files = array();
+            $files = [];
 
             // For each file check the coverage metric
             foreach ($fileids as $fileid) {
@@ -218,9 +218,11 @@ if ($session_OK) {
                 $coveragefile->Id = $CoverageFile2User->GetCoverageFileId($buildid);
                 $metric = $coveragefile->GetMetric();
                 if ($metric < ($coverageThreshold / 100.0)) {
-                    $file['percent'] = $coveragefile->GetLastPercentCoverage();
-                    $file['path'] = $coveragefile->GetPath();
-                    $file['id'] = $fileid;
+                    $file = [
+                        'percent' => $coveragefile->GetLastPercentCoverage(),
+                        'path' => $coveragefile->GetPath(),
+                        'id' => $fileid,
+                    ];
                     $files[] = $file;
                 }
             }
@@ -240,7 +242,7 @@ if ($session_OK) {
 
                 $messagePlainText .= get_server_URI();
                 $messagePlainText .= "\n\n";
-                $serverName = $CDASH_SERVER_NAME;
+                $serverName = $config->get('CDASH_SERVER_NAME');
                 if (strlen($serverName) == 0) {
                     $serverName = $_SERVER['SERVER_NAME'];
                 }

@@ -36,9 +36,6 @@ if (!$session_OK) {
     return;
 }
 
-@$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
-
 // Make sure a project was specified.
 $projectid_ok = false;
 @$projectid = $_GET['projectid'];

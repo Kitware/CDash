@@ -21,12 +21,12 @@ describe("viewBuildError", function() {
   });
 
   it("displays build errors inline", function() {
-    browser.get('viewBuildError.php?buildid=69&type=0');
+    browser.get('viewBuildError.php?buildid=71&type=0');
     expect(browser.getPageSource()).toContain("error: 'foo' was not declared in this scope");
   });
 
   it("displays build errors inline on parent builds", function() {
-    browser.get('viewBuildError.php?buildid=68&type=0');
+    browser.get('viewBuildError.php?buildid=70&type=0');
     expect(browser.getPageSource()).toContain("some-test-subproject");
     expect(browser.getPageSource()).toContain("error: 'foo' was not declared in this scope");
   });
@@ -38,6 +38,6 @@ describe("viewBuildError", function() {
     element(by.linkText('Linux-unknown')).click();
     element(by.linkText('View Errors Summary')).click();
     expect(element.all(by.xpath(outputXpath + '/span')).count()).toBe(2);
-    expect(browser.getPageSource()).toContain('<a href="https://www.kitware.com/">Kitware</a>');
+    expect(browser.getPageSource()).toContain('&lt;a href="https://www.kitware.com/"&gt;Kitware&lt;\/a&gt;');
   });
 });

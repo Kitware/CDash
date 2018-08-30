@@ -17,6 +17,7 @@
 require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
 
+use CDash\Config;
 use CDash\Model\Build;
 use CDash\Model\BuildError;
 use CDash\Model\BuildFailure;
@@ -50,13 +51,13 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
     public function __construct($projectid, $scheduleid)
     {
         parent::__construct($projectid, $scheduleid);
-        $this->Builds = array();
+        $this->Builds = [];
         $this->Site = new Site();
         $this->Append = false;
         $this->Feed = new Feed();
         $this->BuildLog = '';
-        $this->Labels = array();
-        $this->SubProjects = array();
+        $this->Labels = [];
+        $this->SubProjects = [];
     }
 
     public function startElement($parser, $name, $attributes)
@@ -202,15 +203,13 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
 
                 $build->ComputeDifferences();
 
-                global $CDASH_ENABLE_FEED;
-                if ($CDASH_ENABLE_FEED) {
+                if ($this->config->get('CDASH_ENABLE_FEED')) {
                     // Insert the build into the feed
                     $this->Feed->InsertBuild($this->projectid, $build->Id);
                 }
             }
         } elseif ($name == 'WARNING' || $name == 'ERROR' || $name == 'FAILURE') {
-            global $CDASH_LARGE_TEXT_LIMIT;
-            $threshold = $CDASH_LARGE_TEXT_LIMIT;
+            $threshold = $this->config->get('CDASH_LARGE_TEXT_LIMIT');
 
             if ($threshold > 0 && isset($this->Error->StdOutput)) {
                 $chunk_size = $threshold / 2;
@@ -296,8 +295,7 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
                     break;
             }
         } elseif ($parent == 'RESULT') {
-            global $CDASH_LARGE_TEXT_LIMIT;
-            $threshold = $CDASH_LARGE_TEXT_LIMIT;
+            $threshold = $this->config->get('CDASH_LARGE_TEXT_LIMIT');
             $append = true;
 
             switch ($element) {

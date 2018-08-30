@@ -14,6 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use CDash\Config;
 use CDash\Model\ClientJob;
 use CDash\Model\ClientJobSchedule;
 use CDash\Model\Job;
@@ -21,11 +22,12 @@ use CDash\Model\Job;
 /** Remove builds by their group-specific auto-remove timeframe setting */
 function removeBuildsGroupwise($projectid, $maxbuilds, $force = false)
 {
-    require_once 'config/config.php';
     require_once 'include/pdo.php';
     require_once 'include/common.php';
 
-    if (!$force && !isset($CDASH_AUTOREMOVE_BUILDS)) {
+    $config = Config::getInstance();
+
+    if (!$force && !$config->get('CDASH_AUTOREMOVE_BUILDS')) {
         return;
     }
 
@@ -68,17 +70,17 @@ function removeBuildsGroupwise($projectid, $maxbuilds, $force = false)
 /** Remove the first builds that are at the beginning of the queue */
 function removeFirstBuilds($projectid, $days, $maxbuilds, $force = false)
 {
-    require 'config/config.php';
     require_once 'include/pdo.php';
     require_once 'include/common.php';
 
     @set_time_limit(0);
-
-    if (!$force && !isset($CDASH_AUTOREMOVE_BUILDS)) {
+    $config = Config::getInstance();
+    $remove_builds = $config->get('CDASH_AUTOREMOVE_BUILDS');
+    if (!$force && !$remove_builds) {
         return;
     }
 
-    if (!$force && $CDASH_AUTOREMOVE_BUILDS != '1') {
+    if (!$force && $remove_builds != '1') {
         return;
     }
 

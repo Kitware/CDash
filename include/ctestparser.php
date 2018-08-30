@@ -28,6 +28,7 @@ require_once 'xml_handlers/testing_nunit_handler.php';
 require_once 'xml_handlers/testing_junit_handler.php';
 require_once 'xml_handlers/coverage_junit_handler.php';
 
+use CDash\Config;
 use CDash\Model\BuildFile;
 use CDash\Model\Project;
 
@@ -36,9 +37,9 @@ function displayReturnStatus($statusarray)
 {
     include 'include/version.php';
 
-    global $CDASH_VERSION;
+    $config = Config::getInstance();
 
-    echo "<cdash version=\"$CDASH_VERSION\">\n";
+    echo "<cdash version=\"{$config->get('CDASH_VERSION')}\">\n";
     foreach ($statusarray as $key => $value) {
         echo '  <' . $key . '>' . $value . '</' . $key . ">\n";
     }
@@ -50,12 +51,10 @@ function displayReturnStatus($statusarray)
 function writeBackupFile($filehandler, $content, $projectname, $buildname,
                          $sitename, $stamp, $fileNameWithExt)
 {
-    global $CDASH_BACKUP_DIRECTORY;
-
     // Append a timestamp for the file
     $currenttimestamp = microtime(true) * 100;
-
-    $backupDir = $CDASH_BACKUP_DIRECTORY;
+    $config = Config::getInstance();
+    $backupDir = $config->get('CDASH_BACKUP_DIRECTORY');
     if (!file_exists($backupDir)) {
         // try parent dir as well (for asynch submission)
         $backupDir = "../$backupDir";
@@ -63,7 +62,7 @@ function writeBackupFile($filehandler, $content, $projectname, $buildname,
         if (!file_exists($backupDir)) {
             trigger_error(
                 'function writeBackupFile cannot process files when backup directory ' .
-                "does not exist: CDASH_BACKUP_DIRECTORY='$CDASH_BACKUP_DIRECTORY'",
+                "does not exist: CDASH_BACKUP_DIRECTORY='{$config->get('CDASH_BACKUP_DIRECTORY')}'",
                 E_USER_ERROR);
             return false;
         }
@@ -97,8 +96,7 @@ function writeBackupFile($filehandler, $content, $projectname, $buildname,
         } else {
             $got_lock = true;
             // realpath() always returns false for Google Cloud Storage.
-            global $CDASH_DATA_ROOT_DIRECTORY;
-            if (realpath($CDASH_DATA_ROOT_DIRECTORY) !== false) {
+            if (realpath($config->get('CDASH_DATA_ROOT_DIRECTORY')) !== false) {
                 // Make sure the file is in the right directory.
                 $pos = strpos(realpath(dirname($filename)), realpath($backupDir));
                 if ($pos === false || $pos != 0) {
@@ -176,8 +174,8 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
             (SELECT siteid FROM build WHERE id=$buildid)");
     $sitename = $row['name'];
 
-    global $CDASH_BACKUP_TIMEFRAME;
-    if ($CDASH_BACKUP_TIMEFRAME == '0') {
+    $config = Config::getInstance();
+    if ($config->get('CDASH_BACKUP_TIMEFRAME') == '0') {
         $meta_data = stream_get_meta_data($filehandler);
         $filename = $meta_data['uri'];
     } else {
@@ -229,13 +227,11 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
 function ctest_parse($filehandler, $projectid, $expected_md5 = '', $do_checksum = true,
                      $scheduleid = 0)
 {
-    include 'config/config.php';
     require_once 'include/common.php';
     include 'include/version.php';
 
-    global $CDASH_USE_LOCAL_DIRECTORY;
-
-    if ($CDASH_USE_LOCAL_DIRECTORY && file_exists('local/ctestparser.php')) {
+    $config = Config::getInstance();
+    if ($config->get("CDASH_USE_LOCAL_DIRECTORY") && file_exists('local/ctestparser.php')) {
         require_once 'local/ctestparser.php';
         $localParser = new LocalParser();
         $localParser->SetProjectId($projectid);
@@ -303,8 +299,8 @@ function ctest_parse($filehandler, $projectid, $expected_md5 = '', $do_checksum 
     }
 
     // Try to get the IP of the build
-    global $CDASH_REMOTE_ADDR;
-    $ip = ($CDASH_REMOTE_ADDR) ? $CDASH_REMOTE_ADDR : $_SERVER['REMOTE_ADDR'];
+    $config = Config::getInstance();
+    $ip = $config->get('CDASH_REMOTE_ADDR') ?: isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
 
     if ($handler == null) {
         echo 'no handler found';
@@ -348,8 +344,7 @@ function ctest_parse($filehandler, $projectid, $expected_md5 = '', $do_checksum 
 
     // If backups are disabled, switch the filename to that of the existing handle
     // Otherwise, create a backup file and process from that
-    global $CDASH_BACKUP_TIMEFRAME;
-    if ($CDASH_BACKUP_TIMEFRAME == '0') {
+    if ($config->get('CDASH_BACKUP_TIMEFRAME') == '0') {
         $meta_data = stream_get_meta_data($filehandler);
         $filename = $meta_data['uri'];
     } else {
@@ -383,7 +378,7 @@ function ctest_parse($filehandler, $projectid, $expected_md5 = '', $do_checksum 
     }
 
     $parsingerror = '';
-    if ($CDASH_USE_LOCAL_DIRECTORY && file_exists('local/ctestparser.php')) {
+    if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/ctestparser.php')) {
         $parsingerror = $localParser->StartParsing();
         if ($parsingerror != '') {
             $statusarray['status'] = 'ERROR';
@@ -404,8 +399,7 @@ function ctest_parse($filehandler, $projectid, $expected_md5 = '', $do_checksum 
     $content = fread($parseHandle, 8192);
     while (!feof($parseHandle)) {
         $content = fread($parseHandle, 8192);
-
-        if ($CDASH_USE_LOCAL_DIRECTORY && file_exists('local/ctestparser.php')) {
+        if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/ctestparser.php')) {
             $parsingerror = $localParser->ParseFile();
             if ($parsingerror != '') {
                 $statusarray['status'] = 'ERROR';
@@ -421,7 +415,7 @@ function ctest_parse($filehandler, $projectid, $expected_md5 = '', $do_checksum 
     fclose($parseHandle);
     unset($parseHandle);
 
-    if ($CDASH_USE_LOCAL_DIRECTORY && file_exists('local/ctestparser.php')) {
+    if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/ctestparser.php')) {
         $parsingerror = $localParser->EndParsingFile();
     }
 
@@ -434,8 +428,8 @@ function check_for_immediate_deletion($filename)
 {
     // Delete this file as soon as its been parsed (or an error occurs)
     // if CDASH_BACKUP_TIMEFRAME is set to '0'.
-    global $CDASH_BACKUP_TIMEFRAME;
-    if ($CDASH_BACKUP_TIMEFRAME === '0' && is_file($filename)) {
+    $config = Config::getInstance();
+    if ($config->get('CDASH_BACKUP_TIMEFRAME') === '0' && is_file($filename)) {
         unlink($filename);
     }
 }

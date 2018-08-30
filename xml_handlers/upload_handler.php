@@ -17,8 +17,10 @@
 require_once 'config/config.php';
 require_once 'xml_handlers/abstract_handler.php';
 
+use CDash\Config;
 use CDash\Model\Build;
 use CDash\Model\BuildInformation;
+use CDash\Model\Label;
 use CDash\Model\Site;
 use CDash\Model\SiteInformation;
 use CDash\Model\Project;
@@ -45,6 +47,7 @@ class UploadHandler extends AbstractHandler
     private $TmpFilename;
     private $Base64TmpFileWriteHandle;
     private $Base64TmpFilename;
+    private $Label;
 
     /** If True, means an error happened while processing the file */
     private $UploadError;
@@ -67,6 +70,7 @@ class UploadHandler extends AbstractHandler
     public function startElement($parser, $name, $attributes)
     {
         parent::startElement($parser, $name, $attributes);
+        $config = Config::getInstance();
 
         if ($this->UploadError) {
             return;
@@ -155,6 +159,10 @@ class UploadHandler extends AbstractHandler
             $this->Build->GetIdFromName($this->SubProjectName);
             $this->Build->RemoveIfDone();
 
+            if ($this->Label) {
+                $this->Build->AddLabel($this->Label);
+            }
+
             // If the build doesn't exist we add it
             if ($this->Build->Id == 0) {
                 $this->Build->Append = false;
@@ -163,6 +171,10 @@ class UploadHandler extends AbstractHandler
 
                 $this->UpdateEndTime = true;
             } else {
+                if ($this->Label) {
+                    $this->Build->InsertLabelAssociations();
+                }
+
                 // Otherwise make sure that the build is up-to-date.
                 $this->Build->UpdateBuild($this->Build->Id, -1, -1);
             }
@@ -181,7 +193,7 @@ class UploadHandler extends AbstractHandler
             }
 
             // Create tmp file
-            $this->TmpFilename = tempnam($GLOBALS['CDASH_UPLOAD_DIRECTORY'], 'tmp'); // TODO Handle error
+            $this->TmpFilename = tempnam($config->get('CDASH_UPLOAD_DIRECTORY'), 'tmp'); // TODO Handle error
             if (empty($this->TmpFilename)) {
                 add_log('Failed to create temporary filename', __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
                 $this->UploadError = true;
@@ -196,6 +208,8 @@ class UploadHandler extends AbstractHandler
                 $this->UploadError = true;
                 return;
             }
+        } elseif ($name == 'LABEL') {
+            $this->Label = new Label();
         }
     }
 
@@ -204,6 +218,7 @@ class UploadHandler extends AbstractHandler
     {
         $parent = $this->getParent(); // should be before endElement
         parent::endElement($parser, $name);
+        $config = Config::getInstance();
 
         if ($this->UploadError) {
             return;
@@ -273,10 +288,10 @@ class UploadHandler extends AbstractHandler
             } else {
                 $this->UploadFile->IsUrl = false;
 
-                $upload_dir = realpath($GLOBALS['CDASH_UPLOAD_DIRECTORY']);
+                $upload_dir = realpath($config->get('CDASH_UPLOAD_DIRECTORY'));
                 if (!$upload_dir) {
                     add_log("realpath cannot resolve CDASH_UPLOAD_DIRECTORY '" .
-                        $GLOBALS['CDASH_UPLOAD_DIRECTORY'] . "' with cwd '" . getcwd() . "'",
+                        $config->get('CDASH_UPLOAD_DIRECTORY') . "' with cwd '" . getcwd() . "'",
                         __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_WARNING);
                 }
                 $upload_dir .= '/' . $this->UploadFile->Sha1Sum;
@@ -328,7 +343,7 @@ class UploadHandler extends AbstractHandler
                         $level = LOG_ERR;
 
                         // But if testing, log as info only:
-                        if ($GLOBALS['CDASH_TESTING_MODE']) {
+                        if ($config->get('CDASH_TESTING_MODE')) {
                             $level = LOG_INFO;
                         }
 
@@ -377,6 +392,8 @@ class UploadHandler extends AbstractHandler
                     fwrite($this->Base64TmpFileWriteHandle, str_replace($charsToReplace, '', $data));
                     break;
             }
+        } elseif ($element == 'LABEL') {
+            $this->Label->SetText($data);
         }
     }
 }

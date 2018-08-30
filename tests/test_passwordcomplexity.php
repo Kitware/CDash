@@ -19,9 +19,11 @@ require_once 'include/login_functions.php';
 
 class ViewIssuesTestCase extends KWWebTestCase
 {
+    public $complexity;
     public function __construct()
     {
         parent::__construct();
+        $this->complexity = \CDash\Config::getInstance()->get('CDASH_PASSWORD_COMPLEXITY_COUNT');
     }
 
     public function testViewIssues()
@@ -46,12 +48,13 @@ class ViewIssuesTestCase extends KWWebTestCase
         if ($success) {
             $this->pass('Passed');
         }
+
+        \CDash\Config::getInstance()->set('CDASH_PASSWORD_COMPLEXITY_COUNT', $this->complexity);
     }
 
     public function complexityTest($password, $answer, $count)
     {
-        global $CDASH_PASSWORD_COMPLEXITY_COUNT;
-        $CDASH_PASSWORD_COMPLEXITY_COUNT = $count;
+        \CDash\Config::getInstance()->set('CDASH_PASSWORD_COMPLEXITY_COUNT', $count);
         $response = getPasswordComplexity($password);
         if ($response != $answer) {
             $this->fail("Expected $answer for '$password' when count is $count, instead got $response");

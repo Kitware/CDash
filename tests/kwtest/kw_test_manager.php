@@ -46,28 +46,25 @@ class TestManager
     /** Delete the log file */
     public function removeLogAndBackupFiles($logfilename)
     {
+        $config = \CDash\Config::getInstance();
         if (file_exists($logfilename)) {
-            global $CDASH_TESTING_RENAME_LOGS;
-            if ($CDASH_TESTING_RENAME_LOGS) {
+            if ($config->get('CDASH_TESTING_RENAME_LOGS')) {
                 // Rename to a random name to keep for later inspection:
                 //
-                global $CDASH_LOG_DIRECTORY;
-                rename($logfilename, $CDASH_LOG_DIRECTORY . '/cdash.' . microtime(true) . '.' . bin2hex(random_bytes(2)) . '.log');
+                rename($logfilename, $config->get('CDASH_LOG_DIRECTORY') . '/cdash.' . microtime(true) . '.' . bin2hex(random_bytes(2)) . '.log');
             } else {
                 // Delete file:
                 cdash_testsuite_unlink($logfilename);
             }
         }
 
-        global $CDASH_BACKUP_DIRECTORY;
-        $filenames = glob("$CDASH_BACKUP_DIRECTORY/*");
+        $filenames = glob("{$config->get('CDASH_BACKUP_DIRECTORY')}/*");
         foreach ($filenames as $filename) {
             if (is_file($filename)) {
                 cdash_testsuite_unlink($filename);
             }
         }
     }
-
     public function runFileTest(&$reporter, $file)
     {
         $test = new TestSuite('All Tests');

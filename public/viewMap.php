@@ -21,6 +21,10 @@ include 'public/login.php';
 include_once 'include/common.php';
 include 'include/version.php';
 
+use CDash\Config;
+
+$config = Config::getInstance();
+
 @$projectname = $_GET['project'];
 if ($projectname != null) {
     $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
@@ -30,9 +34,6 @@ if ($projectname != null) {
 if ($date != null) {
     $date = htmlspecialchars(pdo_real_escape_string($date));
 }
-
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
 
 $projectid = get_project_id($projectname);
 
@@ -53,8 +54,10 @@ $xml .= '<dashboard>';
 $xml .= '<title>CDash</title>';
 $xml .= '<date>' . $date . '</date>';
 
+$apikey = null;
+
 // Find the correct google map key
-foreach ($CDASH_GOOGLE_MAP_API_KEY as $key => $value) {
+foreach ($config->get('CDASH_GOOGLE_MAP_API_KEY') as $key => $value) {
     if (strstr($_SERVER['HTTP_HOST'], $key) !== false) {
         $apikey = $value;
         break;
@@ -86,7 +89,7 @@ if ($end_timestamp < $beginning_timestamp) {
 $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
 $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
 
-if ($CDASH_DB_TYPE == 'pgsql') {
+if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
     $site = pdo_query('SELECT s.id,s.name,si.processorclockfrequency,
                      si.description,
                      si.numberphysicalcpus,s.ip,s.latitude,s.longitude,

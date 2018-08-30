@@ -25,9 +25,6 @@ use CDash\Model\Project;
 use CDash\Model\User;
 
 if ($session_OK) {
-    @$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-    pdo_select_db("$CDASH_DB_NAME", $db);
-
     $userid = $_SESSION['cdash']['loginid'];
     // Checks
     if (!isset($userid) || !is_numeric($userid)) {

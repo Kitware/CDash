@@ -19,14 +19,15 @@ require_once 'include/pdo.php';
 include 'public/login.php';
 include 'include/version.php';
 
+use CDash\Config;
+
+$config = Config::getInstance();
+
 if ($session_OK) {
     include_once 'include/common.php';
     include_once 'include/ctestparser.php';
 
     @set_time_limit(0);
-
-    $db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-    pdo_select_db("$CDASH_DB_NAME", $db);
 
     checkUserPolicy(@$_SESSION['cdash']['loginid'], 0); // only admin
     $xml = begin_XML_for_XSLT();
@@ -44,8 +45,7 @@ if ($session_OK) {
     }
 
     if ($Submit && $filemask) {
-        $filelist = glob("$CDASH_BACKUP_DIRECTORY/$filemask");
-
+        $filelist = glob($config->get('CDASH_BACKUP_DIRECTORY') . "/$filemask");
         $i = 0;
         $n = count($filelist);
 

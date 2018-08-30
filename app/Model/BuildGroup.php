@@ -284,6 +284,7 @@ class BuildGroup
     /** Helper function for filling in a buildgroup instance */
     public function FillFromRow($row)
     {
+        $this->Id = $row['id'];
         $this->Name = $row['name'];
         $this->ProjectId = $row['projectid'];
         $this->StartTime = $row['starttime'];

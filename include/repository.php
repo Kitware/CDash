@@ -17,9 +17,11 @@
 require_once 'config/config.php';
 require_once 'include/log.php';
 
+use CDash\Config;
 use CDash\Model\Build;
 use CDash\Model\BuildUpdateFile;
 use CDash\Model\Project;
+use CDash\ServiceContainer;
 
 function get_previous_revision($revision)
 {
@@ -410,9 +412,11 @@ function get_source_dir($projectid, $projecturl, $file_path)
         return;
     }
 
-    $project = pdo_query("SELECT cvsviewertype FROM project WHERE id='$projectid'");
-    $project_array = pdo_fetch_array($project);
-    $cvsviewertype = strtolower($project_array['cvsviewertype']);
+    $service = ServiceContainer::getInstance();
+    $project = $service->get(Project::class);
+    $project->Id = $projectid;
+    $project->Fill();
+    $cvsviewertype = strtolower($project->CvsViewerType);
 
     $target_fn = $cvsviewertype . '_get_source_dir';
 
@@ -447,13 +451,7 @@ function get_github_diff_url($projecturl, $directory, $file, $revision)
     if (empty($revision)) {
         $revision = 'master';
     }
-    // get the source dir
-    $source_dir = github_get_source_dir($projecturl, $directory);
 
-    // remove it from the beginning of our path if it is found
-    if (substr($directory, 0, strlen($source_dir)) == $source_dir) {
-        $directory = substr($directory, strlen($source_dir));
-    }
     $directory = trim($directory, '/');
 
     $diff_url = "$projecturl/blob/$revision/";
@@ -490,6 +488,27 @@ function get_redmine_diff_url($projecturl, $directory, $file, $revision)
     return make_cdash_url($diff_url);
 }
 
+/** Return the Phabricator diff URL */
+function get_phab_git_diff_url($projecturl, $directory, $file, $revision)
+{
+    // "master" is misleading as the revision is the only relevant part.
+    // Could be any string but even Phabricator uses "master" when
+    // creating file URLs of revisions in other branches.
+    $diff_url = $projecturl . '/browse/master/';
+
+    if ($directory) {
+        $diff_url .= $directory . '/';
+    }
+
+    $diff_url .= $file;
+
+    if ($revision) {
+        $diff_url .= ';' . $revision;
+    }
+
+    return make_cdash_url($diff_url);
+}
+
 /** Get the diff url based on the type of viewer */
 function get_diff_url($projectid, $projecturl, $directory, $file, $revision = '')
 {
@@ -497,10 +516,12 @@ function get_diff_url($projectid, $projecturl, $directory, $file, $revision = ''
         return;
     }
 
-    $project = pdo_query("SELECT cvsviewertype FROM project WHERE id='$projectid'");
-    $project_array = pdo_fetch_array($project);
+    $service = ServiceContainer::getInstance();
+    $project = $service->get(Project::class);
+    $project->Id = $projectid;
+    $project->Fill();
 
-    $cvsviewertype = strtolower($project_array['cvsviewertype']);
+    $cvsviewertype = strtolower($project->CvsViewerType);
     $difffonction = 'get_' . $cvsviewertype . '_diff_url';
 
     if (function_exists($difffonction)) {
@@ -651,6 +672,13 @@ function get_redmine_revision_url($projecturl, $revision, $priorrevision)
     return make_cdash_url($revision_url);
 }
 
+/** Return the Phabricator revision URL */
+function get_phab_git_revision_url($projecturl, $revision, $priorrevision)
+{
+    $revision_url = $projecturl . '/commit/' . $revision;
+    return make_cdash_url($revision_url);
+}
+
 /** Return the global revision URL (not file based) for a repository */
 function get_revision_url($projectid, $revision, $priorrevision)
 {
@@ -675,13 +703,21 @@ function get_revision_url($projectid, $revision, $priorrevision)
 
 function linkify_compiler_output($projecturl, $source_dir, $revision, $compiler_output)
 {
+    // Escape HTML characters in compiler output first.  This allows us to properly
+    // display characters such as angle brackets in compiler output.
+    $compiler_output = htmlspecialchars($compiler_output, ENT_QUOTES, 'UTF-8', false);
+
     // set a reasonable default revision if none was specified
     if (empty($revision)) {
         $revision = 'master';
     }
 
+    // Make sure we specify a protocol so this isn't interpreted as a relative path.
+    if (strpos($projecturl, '//') === false) {
+        $projecturl = '//' . $projecturl;
+    }
     $repo_link = "<a href='$projecturl/blob/$revision";
-    $pattern = "&$source_dir/([a-zA-Z0-9_\.\-\\/]+):(\d+)&";
+    $pattern = "&$source_dir\/*([a-zA-Z0-9_\.\-\\/]+):(\d+)&";
     $replacement = "$repo_link/$1#L$2'>$1:$2</a>";
 
     // create links for source files
@@ -702,18 +738,24 @@ function post_pull_request_comment($projectid, $pull_request, $comment, $cdash_u
         return;
     }
 
-    $project = pdo_query("SELECT cvsviewertype,cvsurl FROM project WHERE id='$projectid'");
-    $project_array = pdo_fetch_array($project);
-    $projecturl = $project_array['cvsurl'];
+    $config = Config::getInstance();
+    if (!$config->get('CDASH_NOTIFY_PULL_REQUEST')) {
+        if ($config->get('CDASH_TESTING_MODE')) {
+            throw new Exception('pull request commenting is disabled');
+        }
+        return;
+    }
 
-    $cvsviewertype = strtolower($project_array['cvsviewertype']);
-    $PR_func = 'post_' . $cvsviewertype . '_pull_request_comment';
+    $project = new Project();
+    $project->Id = $projectid;
+    $project->Fill();
+    $PR_func = 'post_' . $project->CvsViewerType . '_pull_request_comment';
 
     if (function_exists($PR_func)) {
-        $PR_func($projectid, $pull_request, $comment, $cdash_url);
+        $PR_func($project, $pull_request, $comment, $cdash_url);
         return;
     } else {
-        add_log("PR commenting not implemented for '$cvsviewertype'",
+        add_log("PR commenting not implemented for '$project->CvsViewerType'",
             'post_pull_request_comment()', LOG_WARNING);
     }
 }
@@ -736,17 +778,20 @@ function get_github_api_url($github_url)
     return $api_url;
 }
 
-function post_github_pull_request_comment($projectid, $pull_request, $comment, $cdash_url)
+function post_github_pull_request_comment(Project $project, $pull_request, $comment, $cdash_url)
 {
-    $row = pdo_single_row_query(
-        "SELECT url, username, password FROM repositories
-    LEFT JOIN project2repositories AS p2r ON (p2r.repositoryid=repositories.id)
-    WHERE p2r.projectid='$projectid'");
+    $repo = null;
+    $repositories = $project->GetRepositories();
+    foreach ($repositories as $repository) {
+        if (strpos($repository['url'], 'github.com') !== false) {
+            $repo = $repository;
+            break;
+        }
+    }
 
-    if (empty($row) || !isset($row['url']) || !isset($row['username']) ||
-        !isset($row['password'])
-    ) {
-        add_log("Missing repository info for project #$projectid",
+    if (is_null($repo) || !isset($repo['username'])
+                       || !isset($repo['password'])) {
+        add_log("Missing repository info for project #$project->Id",
             'post_github_pull_request_comment()', LOG_WARNING);
         return;
     }
@@ -754,7 +799,7 @@ function post_github_pull_request_comment($projectid, $pull_request, $comment, $
     /* Massage our github url into the API endpoint that we need to POST to:
      * .../repos/:owner/:repo/issues/:number/comments
      */
-    $post_url = get_github_api_url($row['url']);
+    $post_url = get_github_api_url($repo['url']);
     $post_url .= "/issues/$pull_request/comments";
 
     // Format our comment using Github's comment syntax.
@@ -769,27 +814,26 @@ function post_github_pull_request_comment($projectid, $pull_request, $comment, $
             'Content-Length: ' . strlen($data_string))
     );
     curl_setopt($ch, CURLOPT_HEADER, 1);
-    $userpwd = $row['username'] . ':' . $row['password'];
+    $userpwd = $repo['username'] . ':' . $repo['password'];
     curl_setopt($ch, CURLOPT_USERPWD, $userpwd);
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_USERAGENT, 'Googlebot/2.1 (+http://www.google.com/bot.html)');
 
-    global $CDASH_TESTING_MODE;
     $retval = curl_exec($ch);
     if ($retval === false) {
         add_log(
             'cURL error: ' . curl_error($ch),
             'post_github_pull_request_comment',
-            LOG_ERR, $projectid);
-    } elseif ($CDASH_TESTING_MODE) {
+            LOG_ERR, $project->Id);
+    } elseif (Config::getInstance()->get('CDASH_TESTING_MODE')) {
         $matches = array();
         preg_match("#/comments/(\d+)#", $retval, $matches);
         add_log(
             'Just posted comment #' . $matches[1],
             'post_github_pull_request_comment',
-            LOG_DEBUG, $projectid);
+            LOG_DEBUG, $project->Id);
     }
 
     curl_close($ch);
@@ -856,9 +900,10 @@ function perform_version_only_diff($update, $projectid)
 function perform_github_version_only_diff($project, $update, $previous_revision)
 {
     require_once 'include/memcache_functions.php';
-    global $CDASH_MEMCACHE_ENABLED, $CDASH_MEMCACHE_PREFIX, $CDASH_MEMCACHE_SERVER;
-
+    $config = Config::getInstance();
     $current_revision = $update->Revision;
+    $memcache_enabled = $config->get('CDASH_MEMECACHE_ENABLED');
+    $memcache_prefix = $config->get('CDASH_MEMCACHE_PREFIX');
 
     // Check if we have a Github account associated with this project.
     // If so, we are much less likely to get rate-limited by the API.
@@ -872,19 +917,19 @@ function perform_github_version_only_diff($project, $update, $previous_revision)
     }
 
     // Connect to memcache.
-    if ($CDASH_MEMCACHE_ENABLED) {
-        list($server, $port) = $CDASH_MEMCACHE_SERVER;
+    if ($memcache_enabled) {
+        list($server, $port) = $config->get('CDASH_MEMCACHE_SERVER');
         $memcache = cdash_memcache_connect($server, $port);
         // Disable memcache for this request if it fails to connect.
         if ($memcache === false) {
-            $CDASH_MEMCACHE_ENABLED = false;
+            $config->set('CDASH_MEMCACHE_ENABLED', false);
         }
     }
 
     // Check if we've memcached the difference between these two revisions.
     $diff_response = null;
-    $diff_key = "$CDASH_MEMCACHE_PREFIX:$project->Name:$current_revision:$previous_revision";
-    if ($CDASH_MEMCACHE_ENABLED) {
+    $diff_key = "$memcache_prefix:$project->Name:$current_revision:$previous_revision";
+    if ($memcache_enabled) {
         $cached_response = cdash_memcache_get($memcache, $diff_key);
         if ($cached_response !== false) {
             $diff_response = $cached_response;
@@ -911,7 +956,7 @@ function perform_github_version_only_diff($project, $update, $previous_revision)
         $diff_response = strval($response->getBody());
 
         // Cache the response from the GitHub API for 24 hours.
-        if ($CDASH_MEMCACHE_ENABLED) {
+        if ($memcache_enabled) {
             cdash_memcache_set($memcache, $diff_key, $diff_response, 60 * 60 * 24);
         }
     }
@@ -1001,8 +1046,8 @@ function perform_github_version_only_diff($project, $update, $previous_revision)
                     }
 
                     $commit_response = null;
-                    $commit_key = "$CDASH_MEMCACHE_PREFIX:$project->Name:$sha";
-                    if ($CDASH_MEMCACHE_ENABLED) {
+                    $commit_key = "$memcache_prefix:$project->Name:$sha";
+                    if ($memcache_enabled) {
                         // Check memcache if it is enabled before hitting
                         // the GitHub API.
                         $cached_response = cdash_memcache_get($memcache, $commit_key);
@@ -1023,7 +1068,7 @@ function perform_github_version_only_diff($project, $update, $previous_revision)
                         }
                         $commit_response = strval($r->getBody());
 
-                        if ($CDASH_MEMCACHE_ENABLED) {
+                        if ($memcache_enabled) {
                             // Cache this response for 24 hours.
                             cdash_memcache_set($memcache, $commit_key, $commit_response, 60 * 60 * 24);
                         }
@@ -1075,7 +1120,7 @@ function perform_github_version_only_diff($project, $update, $previous_revision)
         $updateFile->Log = $commit['commit']['message'];
         $updateFile->Revision = $commit['sha'];
         $updateFile->PriorRevision = $previous_revision;
-        $updateFile->Status = 'MODIFIED';
+        $updateFile->Status = 'UPDATED';
         $update->AddFile($updateFile);
     }
 

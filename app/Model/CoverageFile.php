@@ -15,6 +15,7 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use CDash\Config;
 use CDash\Database;
 use PDO;
 
@@ -28,7 +29,6 @@ class CoverageFile
 
     private $LastPercentCoverage; // used when GetMetric
     private $PDO;
-
     public function __construct()
     {
         $this->PDO = Database::getInstance()->getPdo();
@@ -41,14 +41,12 @@ class CoverageFile
             return;
         }
 
-        global $CDASH_USE_COMPRESSION;
-
         $this->FullPath = trim($this->FullPath);
 
         // Compute the crc32 of the file (before compression for backward compatibility)
         $this->Crc32 = crc32($this->FullPath . $this->File);
-
-        if ($CDASH_USE_COMPRESSION) {
+        $config = Config::getInstance();
+        if ($config->get('CDASH_USE_COMPRESSION')) {
             $file = gzcompress($this->File);
             if ($file === false) {
                 $file = $this->File;
@@ -268,8 +266,6 @@ class CoverageFile
     // Populate $this from existing database results.
     public function Load()
     {
-        global $CDASH_USE_COMPRESSION;
-
         if (!$this->Id) {
             return false;
         }
@@ -284,8 +280,8 @@ class CoverageFile
 
         $this->FullPath = $row['fullpath'];
         $this->Crc32 = $row['crc32'];
-
-        if ($CDASH_USE_COMPRESSION) {
+        $config = Config::getInstance();
+        if ($config->get('CDASH_USE_COMPRESSION')) {
             if (is_resource($row['file'])) {
                 $this->File = base64_decode(stream_get_contents($row['file']));
             } else {

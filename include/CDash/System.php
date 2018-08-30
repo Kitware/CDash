@@ -146,4 +146,48 @@ class System
     {
         setcookie($name, $value, $expire, $path, $domain, $secure, $httponly);
     }
+
+    /**
+     * @return int
+     */
+    public function session_status()
+    {
+        return session_status();
+    }
+
+    /**
+     * @return void
+     */
+    public function session_write_close()
+    {
+        session_write_close();
+    }
+
+    /**
+     * @param $string
+     * @param bool $replace
+     * @param int|null $http_response_code
+     * @return void
+     */
+    public function header($string, $replace = true, $http_response_code = null)
+    {
+        header($string, $replace, $http_response_code);
+    }
+
+    /**
+     * @param $exit_message
+     * @return void
+     */
+    public function system_exit($exit_message = '')
+    {
+        exit($exit_message);
+    }
+
+    /**
+     * @param $code
+     */
+    public function http_response_code($code)
+    {
+        http_response_code($code);
+    }
 }

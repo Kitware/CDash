@@ -52,16 +52,16 @@ if (is_array($rest_input)) {
 $method = $_SERVER['REQUEST_METHOD'];
 switch ($method) {
     case 'DELETE':
-        rest_delete();
+        rest_delete($userid);
         break;
     case 'POST':
     default:
-        rest_post();
+        rest_post($userid);
         break;
 }
 
 /* Handle DELETE requests */
-function rest_delete()
+function rest_delete($userid)
 {
     $response = [];
     $hash = null;
@@ -77,7 +77,6 @@ function rest_delete()
         return;
     }
 
-    global $userid;
     $authToken = new AuthToken();
     $authToken->Hash = $hash;
     $authToken->UserId = $userid;
@@ -91,7 +90,7 @@ function rest_delete()
 }
 
 /* Handle POST requests */
-function rest_post()
+function rest_post($userid)
 {
     $response = [];
     if (!isset($_REQUEST['description'])) {
@@ -101,7 +100,6 @@ function rest_post()
         return;
     }
 
-    global $userid;
     $authToken = new AuthToken();
     $authToken->UserId = $userid;
     $authToken->Description = $_REQUEST['description'];

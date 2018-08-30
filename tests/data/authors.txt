@@ -1,1 +1,1 @@
-/simple.cxx:administrator
+./simple.cxx:administrator

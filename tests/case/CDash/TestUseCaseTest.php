@@ -245,7 +245,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $test = $tests->get('some.test.name');
 
         $this->assertEquals(TestUseCase::NOTRUN, $test->GetStatus());
-        $this->assertNull($test->Details);
+        $this->assertEquals('', $test->Details);
     }
 
     public function testTestUseCaseCreatesMultisubprojectTestXMLFile()

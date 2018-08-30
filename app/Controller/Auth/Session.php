@@ -31,6 +31,7 @@ class Session
 
     const REMEMBER_ME_PREFIX = 'CDash-';
     const REMEMBER_ME_EXPIRATION = 2592000; // 60 * 60 * 24 * 30, 1 MONTH
+
     private $config;
     private $system;
 
@@ -118,13 +119,42 @@ class Session
     }
 
     /**
-     * @param $name
+     * @param $path
      * @param $value
      * @return void
      */
-    public function setSessionVar($name, $value)
+    public function setSessionVar($path, $value)
     {
-        $_SESSION[$name] = $value;
+        if (isset($_SESSION)) {
+            if (strpos($path, '.') !== false) {
+                $legs = explode('.', $path);
+                $ref = &$_SESSION;
+                foreach ($legs as $leg) {
+                    if (!isset($ref[$leg])) {
+                        $ref[$leg] = [];
+                    }
+                    $ref = &$ref[$leg];
+                }
+                $ref = $value;
+            } else {
+                $_SESSION[$path] = $value;
+            }
+        }
+    }
+
+    public function getStatus()
+    {
+        return $this->system->session_status();
+    }
+
+    public function isActive()
+    {
+        return $this->getStatus() === PHP_SESSION_ACTIVE;
+    }
+
+    public function writeClose()
+    {
+        $this->system->session_write_close();
     }
 
     /**
@@ -143,7 +173,7 @@ class Session
 
         // This hack will prevent the xsrf possible with this cookie
         // @reference https://stackoverflow.com/a/46971326/1373710
-        $path = "{$url['path']}; samesite=strict";
+        $path = isset($url['path']) ? "{$url['path']}; samesite=strict" : "/; samesite=strict";
         // $name, $value, $expire, $path, $domain, $secure, $httponly
 
         if ($user->SetCookieKey($key)) {

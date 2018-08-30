@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="robots" content="noindex,nofollow" />
     <link rel="shortcut icon" href="favicon.ico" />
-    <link rel="stylesheet" type="text/css" ng-href="{{cssfile}}" />
+    <link rel="stylesheet" type="text/css" ng-href="build/css/{{cssfile}}_@@version.css" />
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
     <script src="js/CDash_@@version.min.js"></script>
     <title ng-bind="title">CDash</title>
@@ -439,6 +439,19 @@
              ng-show="showTestGraph"></div>
       </center>
       <br/>
+
+      <!-- Relationships -->
+      <div ng-if="::cdash.hasrelationships">
+        <div class="title-divider">
+          Relationships
+        </div>
+        <div ng-repeat="from in ::cdash.relationships_from">
+          This build {{::from.relationship}} <a ng-href="buildSummary.php?buildid={{::from.relatedid}}">{{::from.name}}</a>.
+        </div>
+        <div ng-repeat="to in ::cdash.relationships_to">
+          <a ng-href="buildSummary.php?buildid={{::to.buildid}}">{{::to.name}}</a> {{::to.relationship}} this build.
+        </div>
+      </div>
 
       <!-- Update -->
       <div ng-if="::cdash.hasupdate">

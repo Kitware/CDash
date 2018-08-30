@@ -1,4 +1,3 @@
-<html>
 <?php
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
@@ -27,9 +26,6 @@ if (!isset($buildid) || !is_numeric($buildid)) {
     return;
 }
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
-
 // Find the notes
 $note = pdo_query("SELECT * FROM buildnote WHERE buildid='$buildid' ORDER BY timestamp ASC");
 while ($note_array = pdo_fetch_array($note)) {
@@ -52,6 +48,3 @@ while ($note_array = pdo_fetch_array($note)) {
     echo 'by <b>' . $user->FirstName . ' ' . $user->LastName . '</b>' . ' (' . date('H:i:s T', $timestamp) . ')';
     echo '<pre>' . substr($note_array['note'], 0, 100) . '</pre>'; // limit 100 chars
 }
-?>
-
-</html>

@@ -16,6 +16,7 @@
 namespace CDash\Model;
 
 use CDash\Collection\TestMeasurementCollection;
+use CDash\Config;
 use CDash\Database;
 use PDO;
 
@@ -42,6 +43,11 @@ class Test
 
     public function __construct()
     {
+        $this->Command = '';
+        $this->Details = '';
+        $this->Name = '';
+        $this->Path = '';
+
         $this->Images = [];
         $this->Labels = [];
         $this->Measurements = [];
@@ -107,7 +113,7 @@ class Test
             add_log('No Test::Id or buildid - cannot call $label->Insert...',
                 'Test::InsertLabelAssociations', LOG_ERR,
                 $this->ProjectId, $buildid,
-                Object::TEST, $this->Id);
+                ModelType::TEST, $this->Id);
         }
     }
 
@@ -130,16 +136,10 @@ class Test
     // Save in the database
     public function Insert()
     {
+        $config = Config::getInstance();
         if ($this->Exists()) {
             return true;
         }
-
-        include 'config/config.php';
-        $command = pdo_real_escape_string($this->Command);
-
-        $name = pdo_real_escape_string($this->Name);
-        $path = pdo_real_escape_string($this->Path);
-        $details = pdo_real_escape_string($this->Details);
 
         $id = '';
         $idvalue = '';
@@ -149,17 +149,17 @@ class Test
         }
 
         if ($this->CompressedOutput) {
-            if ($CDASH_DB_TYPE == 'pgsql') {
+            if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
                 $output = $this->Output;
             } else {
                 $output = base64_decode($this->Output);
             }
-        } elseif ($CDASH_USE_COMPRESSION) {
+        } elseif ($config->get('CDASH_USE_COMPRESSION')) {
             $output = gzcompress($this->Output);
             if ($output === false) {
                 $output = $this->Output;
             } else {
-                if ($CDASH_DB_TYPE == 'pgsql') {
+                if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
                     if (strlen($this->Output) < 2000) {
                         // compression doesn't help for small chunk
 
@@ -173,7 +173,7 @@ class Test
         }
 
         // We check for mysql that the
-        if ($CDASH_DB_TYPE == '' || $CDASH_DB_TYPE == 'mysql') {
+        if ($config->get('CDASH_DB_TYPE') == '' || $config->get('CDASH_DB_TYPE') == 'mysql') {
             $query = pdo_query("SHOW VARIABLES LIKE 'max_allowed_packet'");
             $query_array = pdo_fetch_array($query);
             $max = $query_array[1];
@@ -190,10 +190,10 @@ class Test
             $stmt->bindParam(':id', $this->Id);
             $stmt->bindParam(':projectid', $this->ProjectId);
             $stmt->bindParam(':crc32', $this->Crc32);
-            $stmt->bindParam(':name', $name);
-            $stmt->bindParam(':path', $path);
-            $stmt->bindParam(':command', $command);
-            $stmt->bindParam(':details', $details);
+            $stmt->bindParam(':name', $this->Name);
+            $stmt->bindParam(':path', $this->Path);
+            $stmt->bindParam(':command', $this->Command);
+            $stmt->bindParam(':details', $this->Details);
             $stmt->bindParam(':output', $output, PDO::PARAM_LOB);
             $success = pdo_execute($stmt);
         } else {
@@ -202,10 +202,10 @@ class Test
                 VALUES (:projectid, :crc32, :name, :path, :command, :details, :output)');
             $stmt->bindParam(':projectid', $this->ProjectId);
             $stmt->bindParam(':crc32', $this->Crc32);
-            $stmt->bindParam(':name', $name);
-            $stmt->bindParam(':path', $path);
-            $stmt->bindParam(':command', $command);
-            $stmt->bindParam(':details', $details);
+            $stmt->bindParam(':name', $this->Name);
+            $stmt->bindParam(':path', $this->Path);
+            $stmt->bindParam(':command', $this->Command);
+            $stmt->bindParam(':details', $this->Details);
             $stmt->bindParam(':output', $output, \PDO::PARAM_LOB);
             $success = pdo_execute($stmt);
             $this->Id = pdo_insert_id('test');

@@ -83,7 +83,7 @@ if (isset($_GET['iDisplayStart']) && $_GET['iDisplayLength'] != '-1') {
 }
 
 /* Sorting */
-$sortby = '';
+$sortby = 'filename';
 if (isset($_GET['iSortCol_0'])) {
     switch ($_GET['iSortCol_0']) {
         case 0:
@@ -107,6 +107,126 @@ if (isset($_GET['iSortCol_0'])) {
 $sortdir = 'asc';
 if (isset($_GET['sSortDir_0'])) {
     $sortdir = $_GET['sSortDir_0'];
+}
+
+function sort_filename_asc($a, $b)
+{
+    if ($a['fullpath'] == $b['fullpath']) {
+        return 0;
+    }
+    return $a['fullpath'] > $b['fullpath'] ? 1 : -1;
+}
+function sort_filename_desc($a, $b)
+{
+    if ($a['fullpath'] == $b['fullpath']) {
+        return 0;
+    }
+    return $a['fullpath'] > $b['fullpath'] ? -1 : 1;
+}
+function sort_status_asc($a, $b)
+{
+    if ($a['coveragemetric'] == $b['coveragemetric']) {
+        return 0;
+    }
+    return $a['coveragemetric'] > $b['coveragemetric'] ? 1 : -1;
+}
+function sort_status_desc($a, $b)
+{
+    if ($a['coveragemetric'] == $b['coveragemetric']) {
+        return 0;
+    }
+    return $a['coveragemetric'] > $b['coveragemetric'] ? -1 : 1;
+}
+function sort_percentage_asc($a, $b)
+{
+    if ($a['percentcoverage'] == $b['percentcoverage']) {
+        return 0;
+    }
+    return $a['percentcoverage'] > $b['percentcoverage'] ? 1 : -1;
+}
+function sort_percentage_desc($a, $b)
+{
+    if ($a['percentcoverage'] == $b['percentcoverage']) {
+        return 0;
+    }
+    return $a['percentcoverage'] > $b['percentcoverage'] ? -1 : 1;
+}
+function sort_lines_asc($a, $b)
+{
+    if ($a['locuntested'] == $b['locuntested']) {
+        return 0;
+    }
+    return $a['locuntested'] > $b['locuntested'] ? 1 : -1;
+}
+function sort_lines_desc($a, $b)
+{
+    if ($a['locuntested'] == $b['locuntested']) {
+        return 0;
+    }
+    return $a['locuntested'] > $b['locuntested'] ? -1 : 1;
+}
+function sort_branches_asc($a, $b)
+{
+    if ($a['branchesuntested'] == $b['branchesuntested']) {
+        return 0;
+    }
+    return $a['branchesuntested'] > $b['branchesuntested'] ? 1 : -1;
+}
+function sort_branches_desc($a, $b)
+{
+    if ($a['branchesuntested'] == $b['branchesuntested']) {
+        return 0;
+    }
+    return $a['branchesuntested'] > $b['branchesuntested'] ? -1 : 1;
+}
+function sort_functions_asc($a, $b)
+{
+    if ($a['functionsuntested'] == $b['functionsuntested']) {
+        return 0;
+    }
+    return $a['functionsuntested'] > $b['functionsuntested'] ? 1 : -1;
+}
+function sort_functions_desc($a, $b)
+{
+    if ($a['functionsuntested'] == $b['functionsuntested']) {
+        return 0;
+    }
+    return $a['functionsuntested'] > $b['functionsuntested'] ? -1 : 1;
+}
+function sort_priority_asc($a, $b)
+{
+    if ($a['priority'] == $b['priority']) {
+        return 0;
+    }
+    return $a['priority'] > $b['priority'] ? 1 : -1;
+}
+function sort_priority_desc($a, $b)
+{
+    if ($a['priority'] == $b['priority']) {
+        return 0;
+    }
+    return $a['priority'] > $b['priority'] ? -1 : 1;
+}
+function sort_user($a, $b)
+{
+    if (isset($a['user'][0]) && !isset($b['user'][0])) {
+        return 0;
+    }
+    if (!isset($a['user'][0]) && isset($b['user'][0])) {
+        return 1;
+    }
+    if (!isset($a['user'][0]) && !isset($b['user'][0])) {
+        return 0;
+    }
+    return $a['user'][0] < $b['user'][0] ? 1 : 0;
+}
+function sort_user_asc($a, $b)
+{
+    sort_user($a, $b);
+}
+function sort_user_desc($a, $b)
+{
+    sort_user($a, $b);
 }
 
 $SQLsearchTerm = '';
@@ -224,80 +344,6 @@ while ($coveragefile_array = pdo_fetch_array($coveragefile)) {
     }
 }
 
-// Do the sorting
-function sort_array($a, $b)
-{
-    global $sortby;
-    global $sortdir;
-    if ($sortby == 'filename') {
-        if ($a['fullpath'] == $b['fullpath']) {
-            return 0;
-        }
-        if ($sortdir == 'desc') {
-            return $a['fullpath'] > $b['fullpath'] ? -1 : 1;
-        }
-        return $a['fullpath'] > $b['fullpath'] ? 1 : -1;
-    } elseif ($sortby == 'status') {
-        if ($a['fullpath'] == $b['fullpath']) {
-            return 0;
-        }
-        if ($sortdir == 'desc') {
-            return $a['coveragemetric'] > $b['coveragemetric'] ? -1 : 1;
-        }
-        return $a['coveragemetric'] > $b['coveragemetric'] ? 1 : -1;
-    } elseif ($sortby == 'percentage') {
-        if ($a['percentcoverage'] == $b['percentcoverage']) {
-            return 0;
-        }
-        if ($sortdir == 'desc') {
-            return $a['percentcoverage'] > $b['percentcoverage'] ? -1 : 1;
-        }
-        return $a['percentcoverage'] > $b['percentcoverage'] ? 1 : -1;
-    } elseif ($sortby == 'lines') {
-        if ($a['locuntested'] == $b['locuntested']) {
-            return 0;
-        }
-        if ($sortdir == 'desc') {
-            return $a['locuntested'] > $b['locuntested'] ? -1 : 1;
-        }
-        return $a['locuntested'] > $b['locuntested'] ? 1 : -1;
-    } elseif ($sortby == 'branches') {
-        if ($a['branchesuntested'] == $b['branchesuntested']) {
-            return 0;
-        }
-        if ($sortdir == 'desc') {
-            return $a['branchesuntested'] > $b['branchesuntested'] ? -1 : 1;
-        }
-        return $a['branchesuntested'] > $b['branchesuntested'] ? 1 : -1;
-    } elseif ($sortby == 'functions') {
-        if ($a['functionsuntested'] == $b['functionsuntested']) {
-            return 0;
-        }
-        if ($sortdir == 'desc') {
-            return $a['functionsuntested'] > $b['functionsuntested'] ? -1 : 1;
-        }
-        return $a['functionsuntested'] > $b['functionsuntested'] ? 1 : -1;
-    } elseif ($sortby == 'priority') {
-        if ($a['priority'] == $b['priority']) {
-            return 0;
-        }
-        if ($sortdir == 'desc') {
-            return $a['priority'] > $b['priority'] ? -1 : 1;
-        }
-        return $a['priority'] > $b['priority'] ? 1 : -1;
-    } elseif ($sortby == 'user') {
-        if (isset($a['user'][0]) && !isset($b['user'][0])) {
-            return 0;
-        }
-        if (!isset($a['user'][0]) && isset($b['user'][0])) {
-            return 1;
-        }
-        if (!isset($a['user'][0]) && !isset($b['user'][0])) {
-            return 0;
-        }
-        return $a['user'][0] < $b['user'][0] ? 1 : 0;
-    }
-}
 
 // Contruct the directory view
 if ($status == -1) {
@@ -386,7 +432,8 @@ $output = array(
     'aaData' => array()
 );
 
-usort($covfile_array, 'sort_array');
+$sorting_function_name = "sort_{$sortby}_{$sortdir}";
+usort($covfile_array, $sorting_function_name);
 
 $ncoveragefiles = 0;
 $filestatus = -1;
