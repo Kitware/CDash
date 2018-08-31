@@ -350,6 +350,23 @@ class IndexPhpFilters extends DefaultFilters
     }
 }
 
+class IndexChildrenPhpFilters extends IndexPhpFilters
+{
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    public function getDefaultFilter()
+    {
+        return [
+            'field' => 'subproject',
+            'compare' => 61,
+            'value' => ''
+        ];
+    }
+}
+
 class QueryTestsPhpFilters extends DefaultFilters
 {
     public function getDefaultFilter()
@@ -679,9 +696,11 @@ function createPageSpecificFilters($page_id)
 {
     switch ($page_id) {
         case 'index.php':
-        case 'project.php':
-        case 'indexchildren.php':
             return new IndexPhpFilters();
+            break;
+
+        case 'indexchildren.php':
+            return new IndexChildrenPhpFilters();
             break;
 
         case 'queryTests.php':
@@ -1050,9 +1069,12 @@ function get_filterdata_from_request($page_id = '')
 
     @$filtercombine = htmlspecialchars(pdo_real_escape_string($_REQUEST['filtercombine']));
     if (strtolower($filtercombine) == 'or') {
+        $othercombine = 'and';
         $sql_combine = 'OR';
         $sql_other_combine = 'AND';
     } else {
+        $filtercombine = 'and';
+        $othercombine = 'or';
         $sql_combine = 'AND';
         $sql_other_combine = 'OR';
     }
@@ -1120,6 +1142,7 @@ function get_filterdata_from_request($page_id = '')
     }
 
     $filterdata['filtercombine'] = $filtercombine;
+    $filterdata['othercombine'] = $othercombine;
     $filterdata['filters'] = $filters;
     $filterdata['limit'] = $limit;
 

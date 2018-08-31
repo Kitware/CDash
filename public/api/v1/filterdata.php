@@ -26,98 +26,21 @@ echo json_encode(cast_data_for_JSON($response));
 //
 function get_filterdata_array_from_request($page_id = '')
 {
-    $filterdata = [];
-    $filters = [];
-
-    if (empty($page_id)) {
-        $pos = strrpos($_SERVER['SCRIPT_NAME'], '/');
-        $page_id = substr($_SERVER['SCRIPT_NAME'], $pos + 1);
+    $filterdata = get_filterdata_from_request($page_id);
+    $fields_to_preserve = [
+        'filters',
+        'filtercombine',
+        'limit',
+        'othercombine',
+        'showfilters',
+        'showlimit'
+    ];
+    foreach ($filterdata as $key => $value) {
+        if (!in_array($key, $fields_to_preserve)) {
+            unset($filterdata[$key]);
+        }
     }
     $filterdata['availablefilters'] = getFiltersForPage($page_id);
-
-    $pageSpecificFilters = createPageSpecificFilters($page_id);
-
-    if (isset($_GET['value1']) && strlen($_GET['value1']) > 0) {
-        $filtercount = $_GET['filtercount'];
-    } else {
-        $filtercount = 0;
-    }
-
-    $showfilters = pdo_real_escape_numeric(@$_REQUEST['showfilters']);
-    if ($showfilters) {
-        $filterdata['showfilters'] = 1;
-    } else {
-        if ($filtercount > 0) {
-            $filterdata['showfilters'] = 1;
-        } else {
-            $filterdata['showfilters'] = 0;
-        }
-    }
-
-    $showlimit = pdo_real_escape_numeric(@$_REQUEST['showlimit']);
-    if ($showlimit) {
-        $filterdata['showlimit'] = 1;
-    } else {
-        $filterdata['showlimit'] = 0;
-    }
-
-    $limit = intval(pdo_real_escape_numeric(@$_REQUEST['limit']));
-    if (!is_int($limit)) {
-        $limit = 0;
-    }
-    $filterdata['limit'] = $limit;
-
-    @$filtercombine = htmlspecialchars(pdo_real_escape_string($_REQUEST['filtercombine']));
-    if (strcasecmp($filtercombine, 'or') == 0) {
-        $filterdata['filtercombine'] = 'or';
-        $filterdata['othercombine'] = 'and';
-    } else {
-        $filterdata['filtercombine'] = 'and';
-        $filterdata['othercombine'] = 'or';
-    }
-
-    // Check for filters passed in via the query string
-    for ($i = 1; $i <= $filtercount; ++$i) {
-        if (empty($_REQUEST['field' . $i])) {
-            continue;
-        }
-        $field = htmlspecialchars(pdo_real_escape_string($_REQUEST['field' . $i]));
-        if ($field == 'block') {
-            // Handle filter blocks here.
-            $filter = [
-                'filters' => []
-            ];
-            $subfiltercount = pdo_real_escape_numeric($_REQUEST["field{$i}count"]);
-            for ($j = 1; $j <= $subfiltercount; ++$j) {
-                $field = htmlspecialchars(pdo_real_escape_string($_REQUEST["field{$i}field{$j}"]));
-                $compare = htmlspecialchars(pdo_real_escape_string($_REQUEST["field{$i}compare{$j}"]));
-                $value = htmlspecialchars(pdo_real_escape_string($_REQUEST["field{$i}value{$j}"]));
-                $filter['filters'][] = [
-                    'key' => $field,
-                    'value' => $value,
-                    'compare' => $compare
-                ];
-            }
-            $filters[] = $filter;
-            continue;
-        }
-        $compare = htmlspecialchars(pdo_real_escape_string($_REQUEST['compare' . $i]));
-        $value = htmlspecialchars(pdo_real_escape_string($_REQUEST['value' . $i]));
-        $filters[] = [
-            'key' => $field,
-            'value' => $value,
-            'compare' => $compare
-        ];
-    }
-
-    // If no filters were passed in as parameters,
-    // then add one default filter so that the user sees
-    // somewhere to enter filter queries in the GUI:
-    //
-    if (count($filters) === 0) {
-        $filters[] = getDefaultFilter($page_id);
-    }
-    $filterdata['filters'] = $filters;
     return $filterdata;
 }
 
@@ -182,38 +105,5 @@ function getFiltersForPage($page_id)
         default:
             return [];
             break;
-    }
-}
-
-// Get the default filter for a given page.
-function getDefaultFilter($page_id)
-{
-    switch ($page_id) {
-        case 'index.php':
-        case 'project.php': {
-            return ['key' => 'site', 'value' => '', 'compare' => 63];
-        }
-
-        case 'indexchildren.php':
-        case 'compareCoverage.php': {
-            return ['key' => 'subproject', 'value' => '', 'compare' => 61];
-        }
-
-        case 'queryTests.php':
-        case 'viewTest.php': {
-            return ['key' => 'testname', 'value' => '', 'compare' => 63];
-        }
-
-        case 'testOverview.php':
-            return ['key' => 'buildname', 'value' => '', 'compare' => 63];
-
-        case 'viewCoverage.php':
-        case 'getviewcoverage.php': {
-            return ['key' => 'filename', 'value' => '', 'compare' => 63];
-        }
-
-        default: {
-            return [];
-        }
     }
 }

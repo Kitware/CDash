@@ -244,7 +244,7 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
       var filter_to_copy = previous_filter;
     }
     var filter = {
-      key: filter_to_copy.key,
+      field: filter_to_copy.field,
       compare: filter_to_copy.compare,
       value: filter_to_copy.value,
     };
@@ -259,7 +259,7 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
   // Check to see if the type of a filter was changed by the user.
   $scope.changeFilter = function(index) {
     var filter = $scope.filterdata.filters[index-1];
-    var type = $scope.filterdefinitions[filter.key].type;
+    var type = $scope.filterdefinitions[filter.field].type;
     var comparisons = $scope.comparisons[type];
 
     // Assign the default comparison value to this filter if its type has changed.
@@ -338,12 +338,12 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
         s = s + "&" + prefix + "=block";
         s = s + "&" + prefix + "count=" + num_subfilters;
         for (var j = 1; j <= num_subfilters ; j++) {
-          s = s + "&" + prefix + "field" + j + "=" + escape($scope.filterdata.filters[i-1].filters[j-1].key);
+          s = s + "&" + prefix + "field" + j + "=" + escape($scope.filterdata.filters[i-1].filters[j-1].field);
           s = s + "&" + prefix + "compare" + j + "=" + escape($scope.filterdata.filters[i-1].filters[j-1].compare);
           s = s + "&" + prefix + "value" + j + "=" + escape($scope.filterdata.filters[i-1].filters[j-1].value);
         }
       } else {
-        s = s + "&field" + i + "=" + escape($scope.filterdata.filters[i-1].key);
+        s = s + "&field" + i + "=" + escape($scope.filterdata.filters[i-1].field);
         s = s + "&compare" + i + "=" + escape($scope.filterdata.filters[i-1].compare);
         s = s + "&value" + i + "=" + escape($scope.filterdata.filters[i-1].value);
       }
@@ -359,7 +359,7 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
       filters: []
     };
     var filter = {
-      key: parent_filter.key,
+      field: parent_filter.field,
       compare: parent_filter.compare,
       value: parent_filter.value,
     };

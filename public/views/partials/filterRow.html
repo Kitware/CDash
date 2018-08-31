@@ -1,9 +1,9 @@
 <select id="id_field{{$index+1}}" name="field{{$index+1}}"
-        ng-model="currentFilter.key"
+        ng-model="currentFilter.field"
         ng-change="changeFilter($index+1)">
   <option ng-repeat="availablefilter in filterdata.availablefilters"
           value="{{availablefilter}}"
-          ng-selected="filterdata.availablefilters[$index] == currentFilter.key">
+          ng-selected="filterdata.availablefilters[$index] == currentFilter.field">
     {{filterdefinitions[availablefilter].text}}
   </option>
 </select>
@@ -13,7 +13,7 @@
 <select id="id_compare{{$index+1}}" name="compare{{$index+1}}"
         ng-model="currentFilter.compare">
   <option value="0">-- choose comparison --</option>
-  <option ng-repeat="comparison in comparisons[filterdefinitions[currentFilter.key].type]"
+  <option ng-repeat="comparison in comparisons[filterdefinitions[currentFilter.field].type]"
           value="{{comparison.value}}"
           ng-selected="currentFilter.compare == comparison.value">
     {{comparison.text}}
