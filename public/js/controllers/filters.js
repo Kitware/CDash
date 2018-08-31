@@ -257,8 +257,7 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
   };
 
   // Check to see if the type of a filter was changed by the user.
-  $scope.changeFilter = function(index) {
-    var filter = $scope.filterdata.filters[index-1];
+  $scope.changeFilter = function(filter) {
     var type = $scope.filterdefinitions[filter.field].type;
     var comparisons = $scope.comparisons[type];
 
