@@ -64,6 +64,7 @@ class Build
 
     public $Errors;
     public $ErrorDiffs;
+    public $Failures;
     public $MissingTests;
 
     public $SubProjectId;
@@ -89,7 +90,6 @@ class Build
     public $BeginningOfDay;
     public $EndOfDay;
     private $TestCollection;
-    private $Failures;
     private $PDO;
     private $Site;
     private $BuildUpdate;
@@ -109,6 +109,7 @@ class Build
         $this->EndTime = '1980-01-01 00:00:00';
         $this->Errors = [];
         $this->ErrorDiffs = [];
+        $this->Failures = [];
         $this->Filled = false;
         $this->Generator = '';
         $this->InsertErrors = true;
@@ -3006,10 +3007,24 @@ class Build
         if (is_null($filter)) {
             $count = count($this->Errors);
         } else {
-            $count = 0;
             /** @var BuildError $error */
             foreach ($this->Errors as $error) {
                 if ($error->Type == $filter) {
+                    $count++;
+                }
+            }
+        }
+        return $count;
+    }
+
+    public function getBuildFailureCount($filter = null)
+    {
+        $count = 0;
+        if (is_null($filter)) {
+            return count($this->Failures);
+        } else {
+            foreach ($this->Failures as $fail) {
+                if ($fail->Type == $filter) {
                     $count++;
                 }
             }
