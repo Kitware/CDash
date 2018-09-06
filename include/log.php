@@ -27,26 +27,13 @@ use \Psr\Log\LogLevel;
 
 function cdash_unlink($filename)
 {
-    $success = unlink($filename);
-
-    //  $try_count = 1;
-    //
-    //  while(file_exists($filename) && $try_count < 60)
-    //  {
-    //    usleep(1000000); // == 1000 ms, == 1.0 seconds
-    //
-    //    $success = unlink($filename);
-    //    $try_count++;
-    //  }
+    unlink($filename);
 
     if (file_exists($filename)) {
         throw new Exception("file still exists after unlink: $filename");
     }
 
-    if (!$success) {
-        throw new Exception("unlink returned non-success: $success for $filename");
-    }
-    return $success;
+    return true;
 }
 
 function to_psr3_level($type)
