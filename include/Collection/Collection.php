@@ -94,6 +94,7 @@ abstract class Collection implements CollectionInterface
      * Add an item to the collection.
      * @param $item
      * @return mixed
+     * TODO: Watch this in a debugger when integration testing
      */
     public function addItem($item, $name = null)
     {
@@ -134,7 +135,7 @@ abstract class Collection implements CollectionInterface
      */
     public function has($key)
     {
-        return in_array($key, $this->keys);
+        return in_array($key, array_keys($this->collection));
     }
 
     /**
