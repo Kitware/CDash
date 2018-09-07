@@ -6,7 +6,7 @@ use CDash\Messaging\Topic\Topic;
 
 class SummaryDecorator extends Decorator
 {
-    private $counts_template = 'Total {{ description }}: {{ count }}';
+    private $counts_template = "Total {{ description }}: {{ count }}\n";
     private $summary_template = [
         'Project: {{ project_name }}%s',
         'Site: {{ site_name }}',
@@ -14,7 +14,6 @@ class SummaryDecorator extends Decorator
         'Build Time: {{ build_time }}',
         'Type: {{ build_type }}',
         '{{ counts }}',
-        '',
     ];
 
     /**
