@@ -16,6 +16,7 @@ use CDash\Messaging\Subscription\SubscriptionInterface;
 use CDash\Messaging\Subscription\SubscriptionNotificationBuilder;
 use CDash\Messaging\Subscription\Subscription;
 use CDash\Messaging\Subscription\SubscriptionCollection;
+use CDash\Messaging\Topic\LabeledTopic;
 use CDash\Messaging\Topic\Topic;
 use CDash\Model\ActionableTypes;
 use CDash\Model\BuildEmail;
@@ -29,20 +30,23 @@ class EmailBuilder extends SubscriptionNotificationBuilder
     private $project;
 
     /**
-     * @return NotificationInterface
+     * @return null|NotificationInterface
      */
     public function createNotification(SubscriptionInterface $subscription)
     {
-        $message = new EmailMessage();
-        $this->uniquifyTopics($subscription);
-        $this->setPreamble($message, $subscription);
-        $this->setSummary($message, $subscription);
-        $this->setTopics($message, $subscription);
-        $this->setFooter($message);
-        $this->setSubject($message, $subscription);
-        $this->setRecipient($message, $subscription);
-        $this->setBuildEmailCollection($message, $subscription);
-        $this->setSender();
+        $message = null;
+        if ($this->uniquifyTopics($subscription)) {
+            $message = new EmailMessage();
+            $this->setPreamble($message, $subscription);
+            $this->setSummary($message, $subscription);
+            $this->setTopics($message, $subscription);
+            $this->setFooter($message);
+            $this->setSubject($message, $subscription);
+            $this->setRecipient($message, $subscription);
+            $this->setBuildEmailCollection($message, $subscription);
+            $this->setSender();
+        }
+
         return $message;
     }
 
@@ -54,16 +58,18 @@ class EmailBuilder extends SubscriptionNotificationBuilder
      * multiple times by the notification decorators.
      *
      * @param SubscriptionInterface $subscription
-     * @return void
+     * @return bool
      */
     protected function uniquifyTopics(SubscriptionInterface $subscription)
     {
         $topics = $subscription->getTopicCollection();
 
+        /** @var LabeledTopic $labeled */
         $labeled = $topics->remove('Labeled');
         if ($labeled) {
             $labeled->mergeTopics($topics);
         }
+        return !!$topics->count();
     }
 
     /**
@@ -124,6 +130,8 @@ class EmailBuilder extends SubscriptionNotificationBuilder
                 case 'Warnings':
                     $totals[] = "w=${topic['count']}";
                     break;
+                case 'Errors':
+                    $totals[] = "b={$topic['count']}";
             }
         }
 

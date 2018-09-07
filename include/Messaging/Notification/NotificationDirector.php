@@ -15,7 +15,9 @@ class NotificationDirector
 
         foreach ($subscriptions as $recipient => $subscription) {
             $notification = $builder->createNotification($subscription);
-            $notifications->add($notification);
+            if ($notification) {
+                $notifications->add($notification);
+            }
         }
         return $notifications;
     }
