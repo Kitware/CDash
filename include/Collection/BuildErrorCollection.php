@@ -18,9 +18,18 @@ use CDash\Model\BuildError;
 
 class BuildErrorCollection extends Collection
 {
-    public function add(BuildError $buildError)
+    /**
+     * TODO: Find way to type-hint argument
+     * Normally we would type-hint this argument but the strangeness of
+     * BuildError and BuildFailure both being equally valid in terms of
+     * the Build::Errors property prevents us from doing so.
+     *
+     * @param $error
+     * @return $this
+     */
+    public function add($error)
     {
-        parent::addItem($buildError);
+        parent::addItem($error);
         return $this;
     }
 }
