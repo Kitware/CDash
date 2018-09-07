@@ -118,13 +118,13 @@ class BuildConfigure
         if (!$this->BuildId) {
             add_log('BuildId not set',
                     'BuildConfigure::Exists', LOG_ERR,
-                    0, 0, Object::CONFIGURE, 0);
+                    0, 0, ModelType::CONFIGURE, 0);
             return false;
         }
         if (!is_numeric($this->BuildId)) {
             add_log('BuildId is not numeric',
                     'BuildConfigure::Exists', LOG_ERR,
-                    0, 0, Object::CONFIGURE, 0);
+                    0, 0, ModelType::CONFIGURE, 0);
             return false;
         }
 
@@ -148,7 +148,7 @@ class BuildConfigure
         if (!$this->Exists()) {
             add_log('this configure does not exist',
                     'BuildConfigure::Delete', LOG_ERR,
-                    0, 0, Object::CONFIGURE, 0);
+                    0, 0, ModelType::CONFIGURE, 0);
             return false;
         }
 
@@ -191,7 +191,7 @@ class BuildConfigure
         } else {
             add_log('No BuildConfigure::BuildId - cannot call $label->Insert...',
                 'BuildConfigure::InsertLabelAssociations', LOG_ERR,
-                0, $this->BuildId, Object::CONFIGURE, $this->BuildId);
+                0, $this->BuildId, ModelType::CONFIGURE, $this->BuildId);
         }
     }
 
@@ -202,14 +202,14 @@ class BuildConfigure
         if (!$this->BuildId) {
             add_log('BuildId not set',
                     'BuildConfigure::Insert', LOG_ERR,
-                    0, 0, Object::CONFIGURE, $this->Id);
+                    0, 0, ModelType::CONFIGURE, $this->Id);
             return false;
         }
 
         if ($this->ExistsByBuildId()) {
             add_log('This build already has a configure',
                     'BuildConfigure::Insert', LOG_ERR,
-                    0, $this->BuildId, Object::CONFIGURE, $this->Id);
+                    0, $this->BuildId, ModelType::CONFIGURE, $this->Id);
             return false;
         }
 
@@ -225,15 +225,15 @@ class BuildConfigure
             $stmt->bindParam(':status', $this->Status);
             $stmt->bindParam(':crc32', $this->Crc32);
             if (!$stmt->execute()) {
-                $error = pdo_error(null, false);
+                $error_info = $insert_stmt->errorInfo();
+                $error = $error_info[2];
                 // This error might be due to a unique constraint violation.
                 // Query again to see if this configure was created since
                 // the last time we checked.
-                pdo_execute($exists_stmt, [$this->Crc32]);
-                $exists_row = $exists_stmt->fetch(PDO::FETCH_ASSOC);
-                if (is_array($exists_row)) {
-                    $this->Id = $exists_row['id'];
+                if ($this->ExistsByCrc32()) {
+                    return true;
                 } else {
+                    add_log("SQL error: $error", 'Configure Insert', LOG_ERR);
                     $this->PDO->rollBack();
                     return false;
                 }

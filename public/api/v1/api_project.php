@@ -16,10 +16,17 @@
 
 include_once 'api.php';
 
+use CDash\Config;
 use CDash\Model\Project;
 
 class ProjectAPI extends CDashAPI
 {
+    private $config;
+    public function __construct()
+    {
+        $this->config = Config::getInstance();
+    }
+
     /** Return the list of all public projects */
     private function ListProjects()
     {
@@ -78,8 +85,6 @@ class ProjectAPI extends CDashAPI
     {
         include_once 'include/common.php';
 
-        global $CDASH_DOWNLOAD_RELATIVE_URL;
-
         if (!isset($this->Parameters['project'])) {
             return array('status' => false, 'message' => 'You must specify a project parameter.');
         }
@@ -103,7 +108,7 @@ class ProjectAPI extends CDashAPI
             if (isset($this->Parameters['match']) && !preg_match('/' . $this->Parameters['match'] . '/', $file['filename'])) {
                 continue; //skip if it doesn't match regex
             }
-            $filteredList[] = array_merge($file, array('url' => $CDASH_DOWNLOAD_RELATIVE_URL . '/' . $file['sha1sum'] . '/' . $file['filename']));
+            $filteredList[] = array_merge($file, array('url' => $this->config->get('CDASH_DOWNLOAD_RELATIVE_URL') . '/' . $file['sha1sum'] . '/' . $file['filename']));
 
             if (isset($this->Parameters['mostrecent'])) {
                 break; //user requested only the most recent file

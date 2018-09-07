@@ -1,4 +1,3 @@
-<html>
 <?php
 /*=========================================================================
   Program:   CDash - Cross-Platform Dashboard System
@@ -18,9 +17,6 @@
 require_once dirname(dirname(__DIR__)) . '/config/config.php';
 require_once 'include/pdo.php';
 require_once 'include/common.php';
-
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
 
 $siteid = pdo_real_escape_numeric($_GET['siteid']);
 $buildname = htmlspecialchars(pdo_real_escape_string($_GET['buildname']));
@@ -70,4 +66,3 @@ if (pdo_num_rows($lastbuild) > 0) {
             </font></td>
     </tr>
 </table>
-</html>

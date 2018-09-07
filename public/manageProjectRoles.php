@@ -21,9 +21,12 @@ require_once 'include/common.php';
 require_once 'include/version.php';
 require_once 'include/cdashmail.php';
 
+use CDash\Config;
 use CDash\Model\Project;
 use CDash\Model\User;
 use CDash\Model\UserProject;
+
+$config = Config::getInstance();
 
 if ($session_OK) {
     $usersessionid = $_SESSION['cdash']['loginid'];
@@ -456,7 +459,7 @@ if ($session_OK) {
         }
     }
 
-    if (isset($CDASH_FULL_EMAIL_WHEN_ADDING_USER) && $CDASH_FULL_EMAIL_WHEN_ADDING_USER == 1) {
+    if ($config->get('CDASH_FULL_EMAIL_WHEN_ADDING_USER') == 1) {
         $xml .= add_XML_value('fullemail', '1');
     }
     $xml .= '</cdash>';

@@ -21,10 +21,6 @@ require_once 'include/api_common.php';
 use CDash\Model\Project;
 use CDash\Model\User;
 
-// Connect to the database.
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
-
 // Check that required params were specified.
 $rest_json = json_decode(file_get_contents('php://input'), true);
 if (!is_null($rest_json)) {
@@ -84,13 +80,13 @@ if ($method != 'GET') {
 // Route based on what type of request this is.
 switch ($method) {
     case 'DELETE':
-        rest_delete();
+        rest_delete($siteid, $buildgroupid, $buildname, $buildtype);
         break;
     case 'GET':
-        rest_get();
+        rest_get($siteid, $buildgroupid, $buildname, $buildtype, $projectid);
         break;
     case 'POST':
-        rest_post();
+        rest_post($siteid, $buildgroupid, $buildname, $buildtype);
         break;
     default:
         add_log("Unhandled method: $method", 'expectedBuildAPI', LOG_WARNING);
@@ -98,13 +94,8 @@ switch ($method) {
 }
 
 /* Handle DELETE requests */
-function rest_delete()
+function rest_delete($siteid, $buildgroupid, $buildname, $buildtype)
 {
-    global $siteid;
-    global $buildgroupid;
-    global $buildname;
-    global $buildtype;
-
     pdo_query(
         "DELETE FROM build2grouprule
         WHERE groupid='$buildgroupid' AND
@@ -114,14 +105,8 @@ function rest_delete()
 }
 
 /* Handle GET requests */
-function rest_get()
+function rest_get($siteid, $buildgroupid, $buildname, $buildtype, $projectid)
 {
-    global $siteid;
-    global $buildgroupid;
-    global $buildname;
-    global $buildtype;
-    global $projectid;
-
     $response = array();
 
     if (!array_key_exists('currenttime', $_REQUEST)) {
@@ -155,13 +140,8 @@ function rest_get()
 }
 
 /* Handle POST requests */
-function rest_post()
+function rest_post($siteid, $buildgroupid, $buildname, $buildtype)
 {
-    global $siteid;
-    global $buildgroupid;
-    global $buildname;
-    global $buildtype;
-
     if (!array_key_exists('newgroupid', $_REQUEST)) {
         $response = array();
         $response['error'] = 'newgroupid not specified.';

@@ -31,6 +31,7 @@ class Session
 
     const REMEMBER_ME_PREFIX = 'CDash-';
     const REMEMBER_ME_EXPIRATION = 2592000; // 60 * 60 * 24 * 30, 1 MONTH
+
     private $config;
     private $system;
 
@@ -52,20 +53,10 @@ class Session
     {
         $lifetime = $this->config->get('CDASH_COOKIE_EXPIRATION_TIME');
         $maxlife = $lifetime + self::EXTEND_GC_LIFETIME;
-        $baseUrl = $this->config->getBaseUrl();
-        $url = parse_url($baseUrl);
-        $secure = false; // send only over a https connection
-        $httponly = true; // make cookie only accessible via http, e.g. not javascript
 
         $this->system->session_name('CDash');
         $this->system->session_cache_limiter($cache_policy);
-        $this->system->session_set_cookie_params(
-            $lifetime,
-            $url['path'],
-            $url['host'],
-            $secure,
-            $httponly
-        );
+        $this->system->session_set_cookie_params($lifetime);
         $this->system->ini_set('session.gc_maxlifetime', $maxlife);
         $this->system->session_start();
     }
@@ -128,13 +119,42 @@ class Session
     }
 
     /**
-     * @param $name
+     * @param $path
      * @param $value
      * @return void
      */
-    public function setSessionVar($name, $value)
+    public function setSessionVar($path, $value)
     {
-        $_SESSION[$name] = $value;
+        if (isset($_SESSION)) {
+            if (strpos($path, '.') !== false) {
+                $legs = explode('.', $path);
+                $ref = &$_SESSION;
+                foreach ($legs as $leg) {
+                    if (!isset($ref[$leg])) {
+                        $ref[$leg] = [];
+                    }
+                    $ref = &$ref[$leg];
+                }
+                $ref = $value;
+            } else {
+                $_SESSION[$path] = $value;
+            }
+        }
+    }
+
+    public function getStatus()
+    {
+        return $this->system->session_status();
+    }
+
+    public function isActive()
+    {
+        return $this->getStatus() === PHP_SESSION_ACTIVE;
+    }
+
+    public function writeClose()
+    {
+        $this->system->session_write_close();
     }
 
     /**
@@ -153,7 +173,7 @@ class Session
 
         // This hack will prevent the xsrf possible with this cookie
         // @reference https://stackoverflow.com/a/46971326/1373710
-        $path = "{$url['path']}; samesite=strict";
+        $path = isset($url['path']) ? "{$url['path']}; samesite=strict" : "/; samesite=strict";
         // $name, $value, $expire, $path, $domain, $secure, $httponly
 
         if ($user->SetCookieKey($key)) {

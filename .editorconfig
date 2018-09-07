@@ -17,6 +17,9 @@ indent_size = 2
 [*.html]
 indent_size = 2
 
+[*.log]
+trim_trailing_whitespace = false
+
 [*.markdown]
 trim_trailing_whitespace = false
 

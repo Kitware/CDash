@@ -20,8 +20,11 @@ require_once 'include/login_functions.php';
 include 'public/login.php';
 require_once 'include/version.php';
 
+use CDash\Config;
 use CDash\Model\User;
 use CDash\Model\UserProject;
+
+$config = Config::getInstance();
 
 if ($session_OK) {
     require_once 'include/common.php';
@@ -65,12 +68,6 @@ if ($session_OK) {
         $passwd = $_POST['passwd'];
         $passwd2 = $_POST['passwd2'];
 
-        global $CDASH_MINIMUM_PASSWORD_LENGTH,
-               $CDASH_MINIMUM_PASSWORD_COMPLEXITY,
-               $CDASH_PASSWORD_COMPLEXITY_COUNT,
-               $CDASH_PASSWORD_EXPIRATION,
-               $CDASH_UNIQUE_PASSWORD_COUNT;
-
         $password_is_good = true;
         $error_msg = '';
 
@@ -84,9 +81,10 @@ if ($session_OK) {
             $error_msg = 'Passwords do not match.';
         }
 
-        if ($password_is_good && strlen($passwd) < $CDASH_MINIMUM_PASSWORD_LENGTH) {
+        $minimum_length = $config->get('CDASH_MINIMUM_PASSWORD_LENGTH');
+        if ($password_is_good && strlen($passwd) < $minimum_length) {
             $password_is_good = false;
-            $error_msg = "Password must be at least $CDASH_MINIMUM_PASSWORD_LENGTH characters.";
+            $error_msg = "Password must be at least $minimum_length characters.";
         }
 
         $password_hash = User::PasswordHash($passwd);
@@ -95,10 +93,11 @@ if ($session_OK) {
             $error_msg = 'Failed to hash password.  Contact an admin.';
         }
 
-        if ($password_is_good && $CDASH_PASSWORD_EXPIRATION > 0) {
+        if ($password_is_good && $config->get('CDASH_PASSWORD_EXPIRATION') > 0) {
             $query = 'SELECT password FROM password WHERE userid=?';
-            if ($CDASH_UNIQUE_PASSWORD_COUNT) {
-                $query .= " ORDER BY date DESC LIMIT $CDASH_UNIQUE_PASSWORD_COUNT";
+            $unique_count = $config->get('CDASH_UNIQUE_PASSWORD_COUNT');
+            if ($unique_count) {
+                $query .= " ORDER BY date DESC LIMIT $unique_count";
             }
             $stmt = $pdo->prepare($query);
             pdo_execute($stmt, [$userid]);
@@ -113,12 +112,14 @@ if ($session_OK) {
 
         if ($password_is_good) {
             $complexity = getPasswordComplexity($passwd);
-            if ($complexity < $CDASH_MINIMUM_PASSWORD_COMPLEXITY) {
+            $minimum_complexity = $config->get('CDASH_MINIMUM_PASSWORD_COMPLEXITY');
+            $complexity_count = $config->get('CDASH_PASSWORD_COMPLEXITY_COUNT');
+            if ($complexity < $minimum_complexity) {
                 $password_is_good = false;
-                if ($CDASH_PASSWORD_COMPLEXITY_COUNT > 1) {
-                    $error_msg = "Your password must contain at least $CDASH_PASSWORD_COMPLEXITY_COUNT characters from $CDASH_MINIMUM_PASSWORD_COMPLEXITY of the following types: uppercase, lowercase, numbers, and symbols.";
+                if ($complexity_count > 1) {
+                    $error_msg = "Your password must contain at least $complexity_count characters from $minimum_complexity of the following types: uppercase, lowercase, numbers, and symbols.";
                 } else {
-                    $error_msg = "Your password must contain at least $CDASH_MINIMUM_PASSWORD_COMPLEXITY of the following: uppercase, lowercase, numbers, and symbols.";
+                    $error_msg = "Your password must contain at least $minimum_complexity of the following: uppercase, lowercase, numbers, and symbols.";
                 }
             }
         }

@@ -21,7 +21,10 @@ require_once 'include/pdo.php';
 include 'include/common.php';
 include 'include/version.php';
 
+use CDash\Config;
 use CDash\Model\User;
+
+$config = Config::getInstance();
 
 $xml = begin_XML_for_XSLT();
 $xml .= add_XML_value('title', 'CDash');
@@ -31,8 +34,8 @@ $xml .= '<date>' . date('r') . '</date>';
 $xml .= '<dashboard>
 <title>CDash - Error</title>
 <subtitle></subtitle>
-<googletracker>' . $CDASH_DEFAULT_GOOGLE_ANALYTICS . '</googletracker>';
-if (isset($CDASH_NO_REGISTRATION) && $CDASH_NO_REGISTRATION == 1) {
+<googletracker>' . $config->get('CDASH_DEFAULT_GOOGLE_ANALYTICS') . '</googletracker>';
+if ($config->get('CDASH_NO_REGISTRATION') == 1) {
     $xml .= add_XML_value('noregister', '1');
 }
 $xml .= '</dashboard> ';

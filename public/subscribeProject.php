@@ -32,9 +32,6 @@ use CDash\Model\UserProject;
 if ($session_OK) {
     $userid = $_SESSION['cdash']['loginid'];
 
-    @$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-    pdo_select_db("$CDASH_DB_NAME", $db);
-
     $xml = begin_XML_for_XSLT();
     $xml .= '<backurl>user.php</backurl>';
     $xml .= '<title>CDash - Subscribe to a project</title>';

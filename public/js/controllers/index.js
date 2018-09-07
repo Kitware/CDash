@@ -539,11 +539,11 @@ CDash.filter("showEmptyBuildsLast", function () {
 
   $scope.colorblind_toggle = function() {
     if ($scope.cdash.filterdata.colorblind) {
-      $rootScope.cssfile = "css/colorblind.css";
+      $rootScope.cssfile = "colorblind";
       $.cookie("colorblind", 1, { expires: 365 } );
 
     } else {
-      $rootScope.cssfile = "css/cdash.css";
+      $rootScope.cssfile = "cdash";
       $.cookie("colorblind", 0, { expires: 365 } );
     }
   };

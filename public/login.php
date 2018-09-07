@@ -14,6 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use CDash\Config;
 use CDash\Controller\Auth\Session;
 use CDash\ServiceContainer;
 
@@ -23,6 +24,8 @@ require_once 'include/pdo.php';
 include_once 'include/version.php';
 include_once 'include/login_functions.php';
 
+$config = Config::getInstance();
+global $loginerror;
 $loginerror = '';
 
 // --------------------------------------------------------------------------------------
@@ -35,7 +38,7 @@ $service = ServiceContainer::getInstance();
 /** @var Session $session */
 $session = $service->get(Session::class);
 
-if (!auth(@$SessionCachePolicy) && !@$noforcelogin) {
+if (!cdash_auth(@$SessionCachePolicy) && !@$noforcelogin) {
     // authentication failed
 
     $csrfToken = null;
@@ -107,7 +110,7 @@ if (!auth(@$SessionCachePolicy) && !@$noforcelogin) {
     }
 }
 
-if ($CDASH_USER_CREATE_PROJECTS && isset($_SESSION['cdash'])) {
+if ($config->get('CDASH_USER_CREATE_PROJECTS') && isset($_SESSION['cdash'])) {
     $_SESSION['cdash']['user_can_create_project'] = 1;
 }
 
@@ -115,3 +118,7 @@ if ($CDASH_USER_CREATE_PROJECTS && isset($_SESSION['cdash'])) {
 if (file_exists('local/prelogin.php')) {
     include 'local/prelogin.php';
 }
+
+// Abusing the Config singleton to get rid of globals.
+$config->set('loginerror', $loginerror);
+$config->set('session_OK', $session_OK);

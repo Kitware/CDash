@@ -15,6 +15,7 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use CDash\Config;
 use CDash\Database;
 
 /** Main subproject class */
@@ -360,8 +361,8 @@ class SubProject
     /** Get the last submission of the subproject*/
     public function GetLastSubmission()
     {
-        global $CDASH_SHOW_LAST_SUBMISSION;
-        if (!$CDASH_SHOW_LAST_SUBMISSION) {
+        $config = Config::getInstance();
+        if (!$config->get('CDASH_SHOW_LAST_SUBMISSION')) {
             return false;
         }
 
@@ -718,5 +719,29 @@ class SubProject
         $subproject = new SubProject();
         $subproject->SetId($id);
         return $subproject;
+    }
+
+    /** Return the name of the subproject whose path contains the specified
+      * source file. */
+    public static function GetSubProjectForPath($filepath, $projectid)
+    {
+        $pdo = get_link_identifier()->getPdo();
+        // Get all the subprojects for this project that have a path defined.
+        // Sort by longest paths first.
+        $stmt = $pdo->prepare(
+            "SELECT name, path FROM subproject
+            WHERE projectid = ? AND path != ''
+            ORDER BY CHAR_LENGTH(path) DESC");
+        pdo_execute($stmt, [$projectid]);
+        while ($row = $stmt->fetch()) {
+            // Return the name of the subproject with the longest path
+            // that matches our input path.
+            if (strpos($filepath, $row['path']) !== false) {
+                return $row['name'];
+            }
+        }
+
+        // Return empty string if no match was found.
+        return '';
     }
 }

@@ -14,7 +14,10 @@ require_once 'include/api_common.php';
 include 'include/version.php';
 require_once 'include/memcache_functions.php';
 
+use CDash\Config;
 use CDash\Model\Project;
+
+$config = Config::getInstance();
 
 // handle required project argument
 @$projectname = $_GET['project'];
@@ -24,29 +27,16 @@ if (!isset($projectname)) {
 }
 
 $start = microtime_float();
-
-// Connect to the database.
 $response = array();
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-if (!$db) {
-    $response['error'] = 'Error connecting to CDash database server';
-    echo json_encode($response);
-    return;
-}
-if (!pdo_select_db("$CDASH_DB_NAME", $db)) {
-    $response['error'] = 'Error selecting CDash database';
-    echo json_encode($response);
-    return;
-}
 
 // Connect to memcache
-if ($CDASH_MEMCACHE_ENABLED) {
-    list($server, $port) = $CDASH_MEMCACHE_SERVER;
+if ($config->get('CDASH_MEMCACHE_ENABLED')) {
+    list($server, $port) = $config->get('CDASH_MEMCACHE_SERVER');
     $memcache = cdash_memcache_connect($server, $port);
 
     // Disable memcache for this request if it fails to connect
     if ($memcache === false) {
-        $CDASH_MEMCACHE_ENABLED = false;
+        $config->set('CDASH_MEMCACHE_ENABLED', false);
     }
 }
 
@@ -80,7 +70,7 @@ $date_range = 14;
 // Use cache if it's enabled, use_cache isn't set to 0, and an entry exists in Memcache
 // Using cache is implied, but the user can set use_cache to 0 to explicitly disable it
 // (This is a good method of ensuring the cache for this page stays up)
-if ($CDASH_MEMCACHE_ENABLED &&
+if ($config->get('CDASH_MEMCACHE_ENABLED') &&
     !(isset($_GET['use_cache']) && $_GET['use_cache'] == 0) &&
     ($cachedResponse = cdash_memcache_get($memcache, cdash_memcache_key('overview'))) !== false) {
     echo $cachedResponse;
@@ -215,7 +205,6 @@ $coverage_build_group_names[] = 'Aggregate';
 // are defined:
 //   coverage_data[day][build group][coverage group] = percent_coverage
 //   dynamic_analysis_data[day][group][checker] = num_defects
-
 $overview_data = array();
 $coverage_data = array();
 $dynamic_analysis_data = array();
@@ -292,9 +281,9 @@ $dynamic_analysis_types = array();
 
 while ($build_row = pdo_fetch_array($builds_array)) {
     // get what day this build is for.
-    $day = get_day_index($build_row['starttime']);
+    $day = get_day_index($build_row['starttime'], $beginning_timestamp, $date_range);
 
-    $static_name = get_static_group_name($build_row['groupid']);
+    $static_name = get_static_group_name($build_row['groupid'], $static_groups);
     // Special handling for static builds, as we don't need to record as
     // much data about them.
     if ($static_name) {
@@ -317,7 +306,7 @@ while ($build_row = pdo_fetch_array($builds_array)) {
     if ($build_row['name'] == 'Aggregate Coverage') {
         $group_name = 'Aggregate';
     } else {
-        $group_name = get_build_group_name($build_row['groupid']);
+        $group_name = get_build_group_name($build_row['groupid'], $build_groups);
     }
 
     // Skip this build if it's not from a group that is represented by
@@ -474,10 +463,10 @@ foreach ($build_measurements as $measurement) {
         $group_response['name'] = $build_group['name'];
         $group_response['name_clean'] =
             sanitize_string($build_group['name']);
-        $value = get_current_value($build_group['name'], $measurement);
+        $value = get_current_value($build_group['name'], $measurement, $date_range, $overview_data);
         $group_response['value'] = $value;
 
-        $chart_data = get_chart_data($build_group['name'], $measurement);
+        $chart_data = get_chart_data($build_group['name'], $measurement, $date_range, $overview_data, $beginning_timestamp);
         $group_response['chart'] = $chart_data;
         $groups_response[] = $group_response;
     }
@@ -526,12 +515,13 @@ foreach ($coverage_categories as $coverage_category) {
         $coverage_response['satisfactory'] = $coverage_category['satisfactory'];
 
         list($current_value, $previous_value) =
-            get_recent_coverage_values($build_group_name, $category_name);
+            get_recent_coverage_values($build_group_name, $category_name, $date_range, $coverage_data);
         $coverage_response['current'] = $current_value;
         $coverage_response['previous'] = $previous_value;
 
         $chart_data =
-            get_coverage_chart_data($build_group_name, $category_name);
+            get_coverage_chart_data($build_group_name, $category_name, $date_range, $coverage_data,
+                                    $beginning_timestamp);
         $coverage_response['chart'] = $chart_data;
         $coverage_category_response['groups'][] = $coverage_response;
     }
@@ -571,10 +561,10 @@ foreach ($dynamic_analysis_types as $checker) {
         $group_response['name_clean'] =
             sanitize_string($build_group['name']);
 
-        $chart_data = get_DA_chart_data($build_group['name'], $checker);
+        $chart_data = get_DA_chart_data($build_group['name'], $checker, $date_range, $dynamic_analysis_data);
         $group_response['chart'] = $chart_data;
 
-        $value = get_current_DA_value($build_group['name'], $checker);
+        $value = get_current_DA_value($build_group['name'], $checker, $date_range, $dynamic_analysis_data);
         $group_response['value'] = $value;
         $groups_response[] = $group_response;
     }
@@ -613,10 +603,10 @@ foreach ($static_groups as $static_group) {
         $measurement_response['name'] = $measurement;
         $measurement_response['name_clean'] = sanitize_string($measurement);
         $measurement_response['sort'] = $sort["build $measurement"];
-        $value = get_current_value($static_group['name'], $measurement);
+        $value = get_current_value($static_group['name'], $measurement, $date_range, $overview_data);
         $measurement_response['value'] = $value;
 
-        $chart_data = get_chart_data($static_group['name'], $measurement);
+        $chart_data = get_chart_data($static_group['name'], $measurement, $date_range, $overview_data, $beginning_timestamp);
         $measurement_response['chart'] = $chart_data;
         $measurements_response[] = $measurement_response;
     }
@@ -630,7 +620,7 @@ $response['generationtime'] = round($end - $start, 3);
 $response = json_encode(cast_data_for_JSON($response));
 
 // Cache the overview page for 6 hours
-if ($CDASH_MEMCACHE_ENABLED) {
+if ($config->get('CDASH_MEMCACHE_ENABLED')) {
     cdash_memcache_set($memcache, cdash_memcache_key('overview'), $response, 60 * 60 * 6);
 }
 
@@ -643,9 +633,8 @@ function sanitize_string($input_string)
 }
 
 // Check if a given groupid belongs to one of our general overview groups.
-function get_build_group_name($id)
+function get_build_group_name($id, $build_groups)
 {
-    global $build_groups;
     foreach ($build_groups as $build_group) {
         if ($build_group['id'] == $id) {
             return $build_group['name'];
@@ -655,9 +644,8 @@ function get_build_group_name($id)
 }
 
 // Check if a given groupid belongs to one of our static analysis groups.
-function get_static_group_name($id)
+function get_static_group_name($id, $static_groups)
 {
-    global $static_groups;
     foreach ($static_groups as $static_group) {
         if ($static_group['id'] == $id) {
             return $static_group['name'];
@@ -668,9 +656,8 @@ function get_static_group_name($id)
 
 // Convert a MySQL datetime into the number of days since the beginning of our
 // time range.
-function get_day_index($datetime)
+function get_day_index($datetime, $beginning_timestamp, $date_range = 1)
 {
-    global $beginning_timestamp, $date_range;
     $timestamp = strtotime($datetime) - $beginning_timestamp;
     $day = (int) ($timestamp / (3600 * 24));
 
@@ -686,9 +673,8 @@ function get_day_index($datetime)
 }
 
 // Get most recent value for a given group & measurement.
-function get_current_value($group_name, $measurement)
+function get_current_value($group_name, $measurement, $date_range, $overview_data)
 {
-    global $date_range, $overview_data;
     for ($i = $date_range - 1; $i > -1; $i--) {
         if (array_key_exists($measurement, $overview_data[$i][$group_name])) {
             return $overview_data[$i][$group_name][$measurement];
@@ -698,9 +684,8 @@ function get_current_value($group_name, $measurement)
 }
 
 // Get most recent dynamic analysis value for a given group & checker.
-function get_current_DA_value($group_name, $checker)
+function get_current_DA_value($group_name, $checker, $date_range, $dynamic_analysis_data)
 {
-    global $date_range, $dynamic_analysis_data;
     for ($i = $date_range - 1; $i > -1; $i--) {
         if (array_key_exists($checker, $dynamic_analysis_data[$i][$group_name])) {
             return $dynamic_analysis_data[$i][$group_name][$checker];
@@ -711,9 +696,8 @@ function get_current_DA_value($group_name, $checker)
 
 // Get a Javascript-compatible date representing the $ith date of our
 // time range.
-function get_date_from_index($i)
+function get_date_from_index($i, $beginning_timestamp)
 {
-    global $beginning_timestamp;
     $chart_beginning_timestamp = $beginning_timestamp + ($i * 3600 * 24);
     $chart_end_timestamp = $beginning_timestamp + (($i + 1) * 3600 * 24);
     // to be passed on to javascript chart renderers
@@ -723,16 +707,15 @@ function get_date_from_index($i)
 }
 
 // Get line chart data for configure/build/test metrics.
-function get_chart_data($group_name, $measurement)
+function get_chart_data($group_name, $measurement, $date_range, $overview_data, $beginning_timestamp)
 {
-    global $date_range, $overview_data;
     $chart_data = array();
 
     for ($i = 0; $i < $date_range; $i++) {
         if (!array_key_exists($measurement, $overview_data[$i][$group_name])) {
             continue;
         }
-        $chart_date = get_date_from_index($i);
+        $chart_date = get_date_from_index($i, $beginning_timestamp);
         $chart_data[] =
             array($chart_date, $overview_data[$i][$group_name][$measurement]);
     }
@@ -742,9 +725,9 @@ function get_chart_data($group_name, $measurement)
 }
 
 // Get line chart data for coverage
-function get_coverage_chart_data($build_group_name, $coverage_category)
+function get_coverage_chart_data($build_group_name, $coverage_category, $date_range, $coverage_data,
+                                 $beginning_timestamp)
 {
-    global $date_range, $coverage_data;
     $chart_data = array();
 
     for ($i = 0; $i < $date_range; $i++) {
@@ -756,7 +739,7 @@ function get_coverage_chart_data($build_group_name, $coverage_category)
             continue;
         }
 
-        $chart_date = get_date_from_index($i);
+        $chart_date = get_date_from_index($i, $beginning_timestamp, $date_range);
         $chart_data[] = array($chart_date, $coverage_array['percent']);
     }
     return json_encode($chart_data);
@@ -764,9 +747,8 @@ function get_coverage_chart_data($build_group_name, $coverage_category)
 
 // Get the current & previous coverage percentage value.
 // These are used by the bullet chart.
-function get_recent_coverage_values($build_group_name, $coverage_category)
+function get_recent_coverage_values($build_group_name, $coverage_category, $date_range, $coverage_data)
 {
-    global $date_range, $coverage_data;
     $current_value_found = false;
     $current_value = 0;
 
@@ -795,9 +777,8 @@ function get_recent_coverage_values($build_group_name, $coverage_category)
 }
 
 // Get line chart data for dynamic analysis
-function get_DA_chart_data($group_name, $checker)
+function get_DA_chart_data($group_name, $checker, $date_range, $dynamic_analysis_data)
 {
-    global $date_range, $dynamic_analysis_data;
     $chart_data = array();
 
     for ($i = 0; $i < $date_range; $i++) {
@@ -806,7 +787,7 @@ function get_DA_chart_data($group_name, $checker)
             continue;
         }
 
-        $chart_date = get_date_from_index($i);
+        $chart_date = get_date_from_index($i, $beginning_timestamp);
         $chart_data[] =
             array($chart_date, $dynamic_analysis_data[$i][$group_name][$checker]);
     }

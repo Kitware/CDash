@@ -26,6 +26,8 @@ redirect_to_https();
 
 include 'include/version.php';
 
+use CDash\Config;
+use CDash\Database;
 use CDash\Model\Project;
 use CDash\Model\AuthToken;
 use CDash\Model\ClientJobSchedule;
@@ -33,11 +35,13 @@ use CDash\Model\ClientSite;
 use CDash\Model\ClientJob;
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
+use CDash\Model\BuildUpdate;
 use CDash\Model\Site;
 use CDash\Model\User;
 use CDash\Model\UserProject;
 use CDash\Model\Job;
 
+$config = Config::getInstance();
 $response = [];
 if (!$session_OK || !isset($_SESSION['cdash']) || !isset($_SESSION['cdash']['loginid'])) {
     $response['requirelogin'] = 1;
@@ -54,15 +58,15 @@ if (!$session_OK || !isset($_SESSION['cdash']) || !isset($_SESSION['cdash']['log
 }
 
 $script_start_time = microtime_float();
-$PDO = get_link_identifier()->getPdo();
+$PDO = Database::getInstance()->getPdo();
 
 $userid = $_SESSION['cdash']['loginid'];
 $xml = begin_XML_for_XSLT();
-$xml .= add_XML_value('manageclient', $CDASH_MANAGE_CLIENTS);
+$xml .= add_XML_value('manageclient', $config->get('CDASH_MANAGE_CLIENTS'));
 
 $userid = $_SESSION['cdash']['loginid'];
 $response = begin_JSON_response();
-$response['manageclient'] = $CDASH_MANAGE_CLIENTS;
+$response['manageclient'] = $config->get('CDASH_MANAGE_CLIENTS');
 $response['title'] = 'CDash - My Profile';
 
 $user = new User();
@@ -71,7 +75,7 @@ $user->Fill();
 $response['user_name'] = $user->FirstName;
 $response['user_is_admin'] = $user->Admin;
 
-if ($CDASH_USER_CREATE_PROJECTS) {
+if ($config->get('CDASH_USER_CREATE_PROJECTS')) {
     $response['user_can_create_projects'] = 1;
 } else {
     $response['user_can_create_projects'] = 0;
@@ -113,7 +117,7 @@ $response['authtokens'] = $authTokens;
 $response['showauthtokens'] = $showAuthTokenSection;
 
 // Go through the jobs
-if ($CDASH_MANAGE_CLIENTS) {
+if ($config->get('CDASH_MANAGE_CLIENTS')) {
     $ClientJobSchedule = new ClientJobSchedule();
     $userJobSchedules = $ClientJobSchedule->getAll($userid, 1000);
     $schedule_response = [];
@@ -182,7 +186,7 @@ $stmt = $PDO->prepare(
     ORDER BY name');
 pdo_execute($stmt, [$userid]);
 
-if ($CDASH_USE_LOCAL_DIRECTORY == '1') {
+if ($config->get('CDASH_USE_LOCAL_DIRECTORY') == '1') {
     if (file_exists('local/user.php')) {
         include_once 'local/user.php';
     }
@@ -242,13 +246,12 @@ if (count($claimedsites) > 0) {
 }
 
 /** Report statistics about the last build */
-function ReportLastBuild($type, $projectid, $siteid, $projectname, $nightlytime)
+function ReportLastBuild($type, $projectid, $siteid, $projectname, $nightlytime, $PDO)
 {
     $response = [];
     $nightlytime = strtotime($nightlytime);
 
     // Find the last build
-    global $PDO;
     $stmt = $PDO->prepare(
         'SELECT starttime, id FROM build
         WHERE siteid = :siteid AND projectid = :projectid AND type = :type
@@ -379,11 +382,11 @@ foreach ($claimedsites as $site) {
         $nightlytime = $project['nightlytime'];
 
         $siteproject_response['nightly'] =
-            ReportLastBuild('Nightly', $projectid, $siteid, $projectname, $nightlytime);
+            ReportLastBuild('Nightly', $projectid, $siteid, $projectname, $nightlytime, $PDO);
         $siteproject_response['continuous'] =
-            ReportLastBuild('Continuous', $projectid, $siteid, $projectname, $nightlytime);
+            ReportLastBuild('Continuous', $projectid, $siteid, $projectname, $nightlytime, $PDO);
         $siteproject_response['experimental'] =
-            ReportLastBuild('Experimental', $projectid, $siteid, $projectname, $nightlytime);
+            ReportLastBuild('Experimental', $projectid, $siteid, $projectname, $nightlytime, $PDO);
         $siteprojects_response[] = $siteproject_response;
     }
     $claimedsite_response['projects'] = $siteprojects_response;

@@ -168,8 +168,8 @@ class BuildModelTestCase extends KWWebTestCase
         $build->ProjectId = '2';
         $build->SiteId = '1';
         $build->SetSubProject('8567');
-        global $CDASH_LOG_FILE;
-        if ($CDASH_LOG_FILE !== false && strpos(file_get_contents($this->logfilename),
+
+        if ($this->config('CDASH_LOG_FILE ')!== false && strpos(file_get_contents($this->logfilename),
                 'New subproject detected') === false
         ) {
             $this->fail("'New subproject detected' not found in log after calling SetSubProject for invalid subproject id");
@@ -181,7 +181,7 @@ class BuildModelTestCase extends KWWebTestCase
             return 1;
         }
 
-        $build->Id = '98765';
+        $build->Id = null;
         $build->SetStamp('20100610-1901-Experimental');
         $build->Type = ''; //force this empty for coverage purposes
 
@@ -297,5 +297,17 @@ class BuildModelTestCase extends KWWebTestCase
         $this->assertTrue(count($build->GetConfigures()->fetchAll()) === 1);
 
         // Test configures work across child builds
+    }
+
+    public function testBuildModelAddBuild()
+    {
+        $build = new Build();
+        $this->assertTrue($build->AddBuild());
+        $this->assertTrue($build->Id > 0);
+
+        $build2 = new Build();
+        $this->assertFalse($build2->AddBuild());
+
+        remove_build($build->Id);
     }
 }

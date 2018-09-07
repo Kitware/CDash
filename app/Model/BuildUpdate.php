@@ -15,6 +15,7 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use CDash\Config;
 use CDash\Database;
 use PDO;
 
@@ -42,8 +43,8 @@ class BuildUpdate
         $this->Append = false;
         $this->DuplicateSQL = '';
         $this->PDO = Database::getInstance()->getPdo();
-        global $CDASH_DB_TYPE;
-        if ($CDASH_DB_TYPE !== 'pgsql') {
+        $config = Config::getInstance();
+        if ($config->get('CDASH_DB_TYPE') !== 'pgsql') {
             $this->DuplicateSQL = 'ON DUPLICATE KEY UPDATE buildid=buildid';
         }
     }
@@ -189,8 +190,8 @@ class BuildUpdate
             $nwarnings += $this->GetNumberOfWarnings();
             $nfiles += $this->GetNumberOfFiles();
 
-            include 'config/config.php';
-            if ($CDASH_DB_TYPE == 'pgsql') {
+            $config = Config::getInstance();
+            if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
                 // pgsql doesn't have concat...
 
                 $query = "UPDATE buildupdate SET

@@ -21,11 +21,7 @@
         <xsl:call-template name="headscripts"/>
 
         <xsl:if test="/cdash/oauth2">
-          <script>
-            var CLIENTID = '<xsl:value-of select="cdash/oauth2/client"/>';
-            var CDASH_BASE_URL = '<xsl:value-of select="cdash/oauth2/CDASH_BASE_URL"/>';
-          </script>
-          <script src="js/cdashOauth2.js"></script>
+          <script src="js/oauth2.js"></script>
         </xsl:if>
 
       </head>
@@ -107,13 +103,41 @@
                   <td width="10%" class="nob"></td>
                   <td width="70%" class="nob">
                     <hr />
-                    <a href="" id="oauth2LoginText" onClick='oauth2Login();'>
-                      Log in with your Google account
-                    </a>
-                    <br />
-                    <xsl:if test="/cdash/allowlogincookie=1">
-                      <input class="textbox" type="checkbox"  name="oauth-rememberme"/>Remember Me
-                    </xsl:if>
+                    <p>
+                      Sign in with:
+                      <xsl:for-each select="/cdash/oauth2/provider">
+                        <xsl:variable name="name" select="name" />
+
+                        <a href="" onClick="oauth2('{$name}');">
+                          <img class="paddr">
+                            <xsl:attribute name="src">
+                              <xsl:value-of select="img"/>
+                            </xsl:attribute>
+                            <xsl:attribute name="title">Log in with your <xsl:value-of select="name"/> account</xsl:attribute>
+                          </img>
+                        </a>
+                      </xsl:for-each>
+                    </p>
+                  </td>
+                  <td width="20%" class="nob"></td>
+                </tr>
+                <xsl:if test="/cdash/allowlogincookie=1">
+                  <tr class="table-heading">
+                    <td width="10%" class="nob"></td>
+                    <td width="70%" class="nob">
+                      <p>
+                        <input class="textbox" type="checkbox"  name="oauth-rememberme"/>Remember Me
+                      </p>
+                    </td>
+                    <td width="20%" class="nob"></td>
+                  </tr>
+                </xsl:if>
+              </xsl:if>
+              <xsl:if test="/cdash/github_login">
+                <tr class="table-heading">
+                  <td width="10%" class="nob"></td>
+                  <td width="70%" class="nob">
+                    <hr />
                   </td>
                   <td width="20%" class="nob"></td>
                 </tr>

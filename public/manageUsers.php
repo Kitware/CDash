@@ -20,7 +20,10 @@ include 'public/login.php';
 require_once 'include/common.php';
 require_once 'include/version.php';
 
+use CDash\Config;
 use CDash\Model\User;
+
+$config = Config::getInstance();
 
 if ($session_OK) {
     $userid = $_SESSION['cdash']['loginid'];
@@ -109,7 +112,7 @@ if ($session_OK) {
         $xml .= '<search>' . $_POST['search'] . '</search>';
     }
 
-    if (isset($CDASH_FULL_EMAIL_WHEN_ADDING_USER) && $CDASH_FULL_EMAIL_WHEN_ADDING_USER == 1) {
+    if ($config->get('CDASH_FULL_EMAIL_WHEN_ADDING_USER') == 1) {
         $xml .= add_XML_value('fullemail', '1');
     }
 

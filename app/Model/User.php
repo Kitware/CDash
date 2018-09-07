@@ -15,7 +15,10 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use CDash\Config;
 use CDash\Database;
+
+require_once 'include/common.php';
 
 class User
 {
@@ -349,8 +352,9 @@ class User
       */
     public function RecordPassword()
     {
-        global $CDASH_PASSWORD_EXPIRATION, $CDASH_UNIQUE_PASSWORD_COUNT;
-        if ($CDASH_PASSWORD_EXPIRATION < 1 || !$this->Id || !$this->Password) {
+        $config = Config::getInstance();
+
+        if ($config->get('CDASH_PASSWORD_EXPIRATION') < 1 || !$this->Id || !$this->Password) {
             return false;
         }
 
@@ -364,7 +368,7 @@ class User
         $stmt->bindParam(':date', $now);
         pdo_execute($stmt);
 
-        if ($CDASH_UNIQUE_PASSWORD_COUNT > 0) {
+        if ($config->get('CDASH_UNIQUE_PASSWORD_COUNT') > 0) {
             // Delete old records for this user if they have more than
             // our limit.
             // Check if there are too many old passwords for this user.
@@ -372,9 +376,9 @@ class User
                 'SELECT COUNT(*) AS numrows FROM password WHERE userid = ?');
             pdo_execute($stmt, [$this->Id]);
             $num_rows = $stmt->fetchColumn();
-            if ($num_rows > $CDASH_UNIQUE_PASSWORD_COUNT) {
+            if ($num_rows > $config->get('CDASH_UNIQUE_PASSWORD_COUNT')) {
                 // If so, get the cut-off date so we can delete the rest.
-                $offset = $CDASH_UNIQUE_PASSWORD_COUNT - 1;
+                $offset = $config->get('CDASH_UNIQUE_PASSWORD_COUNT') - 1;
                 $stmt = $this->PDO->prepare(
                     "SELECT date FROM password
                     WHERE userid = ?

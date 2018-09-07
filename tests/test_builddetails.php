@@ -52,7 +52,7 @@ class BuildDetailsTestCase extends KWWebTestCase
         $response = $this->get($this->url . '/api/v1/viewBuildError.php?buildid=im-non-numeric');
         $response = json_decode($response);
 
-        $this->assertTrue(strpos($response->error, 'Valid build ID required') === 0);
+        $this->assertTrue(strpos($response->error, 'Valid buildid required') === 0);
     }
 
     public function testViewBuildErrorReturnsArrayOfErrorsOnChildBuilds()

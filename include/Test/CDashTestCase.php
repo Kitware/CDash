@@ -1,7 +1,29 @@
 <?php
+/*=========================================================================
+  Program:   CDash - Cross-Platform Dashboard System
+  Module:    $Id$
+  Language:  PHP
+  Date:      $Date$
+  Version:   $Revision$
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE. See the above copyright notices for more information.
+=========================================================================*/
 namespace CDash\Test;
 
 use CDash\Database;
+use CDash\Model\Build;
+use CDash\Model\BuildGroup;
+use CDash\Model\Project;
+use CDash\Model\Site;
+use CDash\Model\Test;
+use CDash\Model\User;
+use CDash\Model\UserProject;
+use CDash\ServiceContainer;
+use DI\Container;
+use DI\ContainerBuilder;
 
 class CDashTestCase extends \PHPUnit_Framework_TestCase
 {
@@ -11,11 +33,33 @@ class CDashTestCase extends \PHPUnit_Framework_TestCase
     /** @var  Database $originalDatabase*/
     private static $originalDatabase;
 
+    /** @var Container $originalServiceContainer */
+    private static $originalServiceContainer;
+
+    public static function tearDownAfterClass()
+    {
+        Database::setInstance(Database::class, self::$originalDatabase);
+        ServiceContainer::setInstance(ServiceContainer::class, self::$originalServiceContainer);
+        parent::tearDownAfterClass();
+    }
+
     public function tearDown()
     {
         global $cdash_database_connection;
         $cdash_database_connection = null;
         parent::tearDown();
+    }
+
+    protected function createServiceContainerForTesting()
+    {
+        $service = ServiceContainer::getInstance();
+        self::$originalServiceContainer = $service->getContainer();
+
+        $builder = new ContainerBuilder();
+        $builder->useAutowiring(false);
+        $builder->useAnnotations(false);
+        $container = $builder->build();
+        $service->setContainer($container);
     }
 
     protected function setDatabaseMocked()
@@ -30,7 +74,7 @@ class CDashTestCase extends \PHPUnit_Framework_TestCase
 
         $mock_pdo = $this->getMockBuilder(Database::class)
             ->setMethods(
-                ['getPdo', 'prepare', 'execute', 'query', 'beginTransaction', 'commit', 'rollBack']
+                ['getPdo', 'prepare', 'execute', 'query', 'beginTransaction', 'commit', 'rollBack', 'quote']
             )
             ->getMock();
 
@@ -48,6 +92,14 @@ class CDashTestCase extends \PHPUnit_Framework_TestCase
             ->expects($this->any())
             ->method('query')
             ->willReturn($mock_stmt);
+
+        $mock_pdo
+            ->expects($this->any())
+            ->method('quote')
+            ->will($this->returnCallback(function ($arg) {
+                return "'" . $arg . "'";
+            })
+        );
 
         Database::setInstance(Database::class, $mock_pdo);
     }
@@ -114,46 +166,41 @@ class CDashTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|\Build
+     * @return \PHPUnit_Framework_MockObject_MockObject|Build
      */
     protected function getMockBuild()
     {
-        return $this->createMock('Build');
+        return $this->createMock(Build::class);
     }
 
     protected function getMockTest()
     {
-        return $this->createMock('Test');
+        return $this->createMock(Test::class);
     }
 
     protected function getMockProject()
     {
-        return $this->createMock('Project');
+        return $this->createMock(Project::class);
     }
 
     protected function getMockUser()
     {
-        return $this->createMock('User');
+        return $this->createMock(User::class);
     }
 
     protected function getMockUserProject()
     {
-        return $this->createMock('UserProject');
+        return $this->createMock(UserProject::class);
     }
 
     protected function getMockBuildGroup()
     {
-        return $this->createMock('BuildGroup');
-    }
-
-    protected function getMockUserTopic()
-    {
-        return $this->createMock('UserTopic');
+        return $this->createMock(BuildGroup::class);
     }
 
     protected function getMockSite()
     {
-        return $this->createMock('Site');
+        return $this->createMock(Site::class);
     }
 
     protected function getMockActionableBuild()

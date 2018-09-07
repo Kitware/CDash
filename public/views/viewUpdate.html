@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="robots" content="noindex,nofollow" />
     <link rel="shortcut icon" href="favicon.ico" />
-    <link rel="stylesheet" type="text/css" ng-href="{{cssfile}}" />
+    <link rel="stylesheet" type="text/css" ng-href="build/css/{{cssfile}}_@@version.css" />
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
     <script src="js/CDash_@@version.min.js"></script>
     <title ng-bind="title">CDash : Update</title>
@@ -22,22 +22,17 @@
         Files changed on <a ng-href="viewSite.php?siteid={{::cdash.build.siteid}}">{{::cdash.build.site}}</a>
         ({{::cdash.build.buildname}}) as of {{::cdash.build.buildtime}}
       </h4>
-      <h4 ng-if="::cdash.update.timestamp">
-        Nightly Changes as of {{::cdash.updates.timestamp}}
-      </h4>
 
-      <div ng-if="::cdash.updates.revision">
+      <div ng-if="::cdash.update.revision">
         <b>Revision: </b>
-        <a ng-href="::cdash.update.revisionurl">{{::cdash.update.revision}}</a>
-        <div ng-if="::cdash.update.priorrevision">
-          <br/>
-          <b>Prior Revision: </b>
-          <a ng-href="::cdash.update.revisiondiff">{{::cdash.update.priorrevision}}</a>
-          <br/>
-          <br/>
-        </div>
+        <a ng-href="{{::cdash.update.revisionurl}}">{{::cdash.update.revision}}</a>
+      </div>
+      <div ng-if="::cdash.update.priorrevision">
+        <b>Prior Revision: </b>
+        <a ng-href="{{::cdash.update.revisiondiff}}">{{::cdash.update.priorrevision}}</a>
       </div>
 
+      <br/>
       <!-- Graph -->
       <a ng-click="toggleGraph()">
         <span ng-show="!showGraph">Show Activity Graph</span>

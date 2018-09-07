@@ -15,9 +15,9 @@ CDash.controller('HeadController', function HeadController($rootScope, $document
   // Pick which CSS file to use based on user settings.
   var colorblind = $rootScope.readCookie('colorblind');
   if (colorblind == 1) {
-    $rootScope.cssfile = "css/colorblind.css";
+    $rootScope.cssfile = "colorblind";
   } else {
-    $rootScope.cssfile = "css/cdash.css";
+    $rootScope.cssfile = "cdash";
   }
 
   // Load query string parameters into javascript object.

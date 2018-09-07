@@ -72,8 +72,8 @@
       <img src="img/note.png" alt="note" class="icon"></img>
     </a>
 
-    <div style="float: left;" ng-if="::cdash.user.id > 0">
-      <!-- Display folder icon for logged in users -->
+    <div style="float: left;" ng-if="::cdash.user.admin == 1">
+      <!-- Display folder icon to edit this build for administrative users -->
       <a href="javascript:;" ng-click="toggleAdminOptions(build)">
         <img src="img/folder.png" class="icon"/>
       </a>

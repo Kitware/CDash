@@ -16,6 +16,7 @@
 
 require_once dirname(__FILE__) . '/kw_unlink.php';
 
+use CDash\Config;
 use CDash\Model\Project;
 
 /**#@+
@@ -36,6 +37,11 @@ class KWWebTestCase extends WebTestCase
     public $configfilename = null;
     public $cdashpro = null;
 
+    private $config;
+
+    /**
+     * KWWebTestCase constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -56,9 +62,16 @@ class KWWebTestCase extends WebTestCase
         $this->db->setPassword($db['pwd']);
         $this->db->setConnection($db['connection']);
 
-        global $CDASH_LOG_FILE, $cdashpath;
-        $this->logfilename = $CDASH_LOG_FILE;
-        $this->configfilename = $cdashpath . '/config/config.local.php';
+        $config = Config::getInstance();
+        $this->logfilename = $config->get('CDASH_LOG_FILE');
+        $this->configfilename = "{$config->get('CDASH_ROOT_DIR')}/config/config.local.php";
+
+        $this->config = $config;
+    }
+
+    public function config($var_name)
+    {
+        return $this->config->get($var_name);
     }
 
     public function setUp()
@@ -84,11 +97,12 @@ class KWWebTestCase extends WebTestCase
     {
         //echo "stopCodeCoverage called...\n";
         if (extension_loaded('xdebug')) {
+            $config = Config::getInstance();
             $data = xdebug_get_code_coverage();
             xdebug_stop_code_coverage();
             //echo "xdebug_stop_code_coverage called...\n";
-            global $CDASH_COVERAGE_DIR;
-            $file = $CDASH_COVERAGE_DIR . DIRECTORY_SEPARATOR .
+
+            $file = $config->get('CDASH_COVERAGE_DIR') . DIRECTORY_SEPARATOR .
                 md5($_SERVER['SCRIPT_FILENAME']);
             file_put_contents(
                 $file . '.' . md5(uniqid(rand(), true)) . '.' . get_class(),
@@ -127,12 +141,12 @@ class KWWebTestCase extends WebTestCase
     public function deleteLog($filename)
     {
         if (file_exists($filename)) {
-            global $CDASH_TESTING_RENAME_LOGS;
-            if ($CDASH_TESTING_RENAME_LOGS) {
+            $config = Config::getInstance();
+
+            if ($config->get('CDASH_TESTING_RENAME_LOGS')) {
                 // Rename to a random name to keep for later inspection:
                 //
-                global $CDASH_LOG_DIRECTORY;
-                rename($filename, $CDASH_LOG_DIRECTORY . '/cdash.' . microtime(true) . '.' . bin2hex(random_bytes(2)) . '.log');
+                rename($filename, $config->get('CDASH_LOG_DIRECTORY') . '/cdash.' . microtime(true) . '.' . bin2hex(random_bytes(2)) . '.log');
             } else {
                 // Delete file:
                 cdash_testsuite_unlink($filename);
@@ -297,15 +311,13 @@ class KWWebTestCase extends WebTestCase
 
     public function submission($projectname, $file, $header = null)
     {
-        global $CDASH_BERNARD_SUBMISSION;
-
         $url = $this->url . "/submit.php?project=$projectname";
         $result = $this->uploadfile($url, $file, $header);
         if ($result === false) {
             return false;
         }
 
-        if ($CDASH_BERNARD_SUBMISSION) {
+        if (Config::getInstance()->get('CDASH_BERNARD_SUBMISSION')) {
             sleep(1);
         }
 
@@ -392,24 +404,12 @@ class KWWebTestCase extends WebTestCase
         }
 
         // Login as admin.
-        $client = new GuzzleHttp\Client(['cookies' => true]);
-        global $CDASH_BASE_URL;
-        try {
-            $response = $client->request('POST',
-                    $CDASH_BASE_URL . '/user.php',
-                    ['form_params' => [
-                        'login' => $username,
-                        'passwd' => $password,
-                        'sent' => 'Login >>']]);
-        } catch (GuzzleHttp\Exception\ClientException $e) {
-            $this->fail($e->getMessage());
-            return false;
-        }
+        $client = $this->getGuzzleClient($username, $password);
 
         // Create project.
         try {
             $response = $client->request('POST',
-                    $CDASH_BASE_URL . '/api/v1/project.php',
+                    $this->url . '/api/v1/project.php',
                     ['json' => [$submit_button => true, 'project' => $settings]]);
         } catch (GuzzleHttp\Exception\ClientException $e) {
             $this->fail($e->getMessage());
@@ -461,25 +461,13 @@ class KWWebTestCase extends WebTestCase
     public function deleteProject($projectid)
     {
         // Login as admin.
-        $client = new GuzzleHttp\Client(['cookies' => true]);
-        global $CDASH_BASE_URL;
-        try {
-            $response = $client->request('POST',
-                    $CDASH_BASE_URL . '/user.php',
-                    ['form_params' => [
-                        'login' => 'simpletest@localhost',
-                        'passwd' => 'simpletest',
-                        'sent' => 'Login >>']]);
-        } catch (GuzzleHttp\Exception\ClientException $e) {
-            $this->fail($e->getMessage());
-            return false;
-        }
+        $client = $this->getGuzzleClient();
 
         // Delete project.
         $project_array = array('Id' => $projectid);
         try {
             $response = $client->delete(
-                    $CDASH_BASE_URL . '/api/v1/project.php',
+                    $this->url . '/api/v1/project.php',
                     ['json' => ['project' => $project_array]]);
         } catch (GuzzleHttp\Exception\ClientException $e) {
             $this->fail($e->getMessage());
@@ -492,6 +480,24 @@ class KWWebTestCase extends WebTestCase
         if ($project->Exists()) {
             $this->fail("Project $projectid still exists after it should have been deleted");
         }
+    }
+
+    public function getGuzzleClient($username = 'simpletest@localhost',
+                                    $password = 'simpletest')
+    {
+        $client = new GuzzleHttp\Client(['cookies' => true]);
+        try {
+            $response = $client->request('POST',
+                    $this->url . '/user.php',
+                    ['form_params' => [
+                    'login' => $username,
+                    'passwd' => $password,
+                    'sent' => 'Login >>']]);
+        } catch (GuzzleHttp\Exception\ClientException $e) {
+            $this->fail($e->getMessage());
+            return false;
+        }
+        return $client;
     }
 
     public function addLineToConfig($line_to_add)

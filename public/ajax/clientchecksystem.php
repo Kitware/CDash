@@ -40,9 +40,6 @@ if (!isset($siteids) || !isset($cmakeids) || !isset($compilerids) || !isset($osi
     return;
 }
 
-$db = pdo_connect("$CDASH_DB_HOST", "$CDASH_DB_LOGIN", "$CDASH_DB_PASS");
-pdo_select_db("$CDASH_DB_NAME", $db);
-
 $siteids = explode(',', $siteids);
 $cmakeids = explode(',', $cmakeids);
 $compilerids = explode(',', $compilerids);

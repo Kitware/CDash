@@ -24,6 +24,18 @@ describe("manageBuildGroup", function() {
   });
 
 
+  it("prevents duplicate buildgroups", function() {
+    // Attempt to create a duplicate buildgroup
+    browser.get('manageBuildGroup.php?projectid=5#/create');
+    element(by.name('newBuildGroupName')).sendKeys('Experimental');
+    element(by.buttonText('Create BuildGroup')).click();
+
+    // Validate error message.
+    expect(element(by.id('create_group_error')).getText()).toEqual(
+      "A group named 'Experimental' already exists for this project.");
+  });
+
+
   it("can modify a buildgroup", function() {
     browser.get('manageBuildGroup.php?projectid=5#/current');
     // Select the 4th buildgroup in the list & expand its details.

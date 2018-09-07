@@ -18,6 +18,7 @@ require_once 'include/ctestparserutils.php';
 require_once 'xml_handlers/sax_handler.php';
 require_once 'xml_handlers/stack.php';
 
+use CDash\Config;
 use CDash\Model\Build;
 use CDash\Model\Site;
 
@@ -33,12 +34,14 @@ abstract class AbstractHandler implements SaxHandler
     protected $SubProjectName;
 
     protected $ModelFactory;
+    protected $conifg;
 
     public function __construct($projectid, $scheduleid)
     {
         $this->projectid = $projectid;
         $this->scheduleid = $scheduleid;
         $this->stack = new Stack();
+        $this->config = Config::getInstance();
     }
 
     protected function getParent()

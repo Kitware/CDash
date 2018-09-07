@@ -146,8 +146,7 @@ class UpgradeTestCase extends KWWebTestCase
         $old_table = 'testbuildfailure';
         $new_table = 'testdetails';
 
-        global $CDASH_DB_TYPE;
-        if ($CDASH_DB_TYPE == 'pgsql') {
+        if ($this->config('CDASH_DB_TYPE') == 'pgsql') {
             $create_old_query = '
                 CREATE TABLE "' . $old_table . '" (
                         "id" bigserial NOT NULL,
@@ -367,8 +366,7 @@ class UpgradeTestCase extends KWWebTestCase
         $retval = 0;
         $table_name = 'testsite';
 
-        global $CDASH_DB_TYPE;
-        if ($CDASH_DB_TYPE == 'pgsql') {
+        if ($this->config('CDASH_DB_TYPE') == 'pgsql') {
             $create_query = '
                 CREATE TABLE "' . $table_name . '" (
                         "id" serial NOT NULL,
@@ -597,8 +595,7 @@ class UpgradeTestCase extends KWWebTestCase
         $b2c_table_name = 'testbuild2configure';
         $error_table_name = 'testconfigureerror';
 
-        global $CDASH_DB_TYPE;
-        if ($CDASH_DB_TYPE == 'pgsql') {
+        if ($this->config('CDASH_DB_TYPE') == 'pgsql') {
             $create_query_1 = '
                 CREATE TABLE "' . $configure_table_name . '" (
                 "id" serial NOT NULL,

@@ -16,6 +16,7 @@
 
 require_once 'include/cdashmail.php';
 
+use CDash\Config;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildTest;
@@ -206,6 +207,7 @@ function lookup_emails_to_send($errors, $buildid, $projectid, $buildtype, $fixes
 {
     $userids = array();
     $committeremails = array();
+    $config = Config::getInstance();
 
     // Check if we know to whom we should send the email
     $updatefiles = pdo_query('SELECT author,email,committeremail FROM updatefile AS uf,build2update AS b2u
@@ -243,9 +245,8 @@ function lookup_emails_to_send($errors, $buildid, $projectid, $buildtype, $fixes
             }
 
             if (!$filled && !$UserProject->FillFromRepositoryCredential()) {
-                global $CDASH_WARN_ABOUT_UNREGISTERED_COMMITTERS;
-                global $CDASH_TESTING_MODE;
-                if (!$CDASH_TESTING_MODE && $CDASH_WARN_ABOUT_UNREGISTERED_COMMITTERS) {
+                if (!$config->get('CDASH_TESTING_MODE') &&
+                    $config->get('CDASH_WARN_ABOUT_UNREGISTERED_COMMITTERS')) {
                     $name = $email == '' ? $author : $email;
                     // Daily updates send an email to tell adminsitrator that the user
                     // is not registered but we log anyway
@@ -331,18 +332,14 @@ function lookup_emails_to_send($errors, $buildid, $projectid, $buildtype, $fixes
 /** Return a summary for a category of error */
 function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $testtimemaxstatus, $emailtesttimingchanged)
 {
-    include 'config/config.php';
-
-
-    global $CDASH_BASE_URL, $CDASH_ASYNCHRONOUS_SUBMISSION;
-
+    $config = Config::getInstance();
     $build = new Build();
     $build->Id = $buildid;
 
     $serverURI = get_server_URI();
     // In the case of asynchronous submission, the serverURI contains /cdash
     // we need to remove it
-    if ($CDASH_BASE_URL == '' && $CDASH_ASYNCHRONOUS_SUBMISSION) {
+    if ($config->get('CDASH_BASE_URL') == '' && $config->get('CDASH_ASYNCHRONOUS_SUBMISSION')) {
         $serverURI = substr($serverURI, 0, strrpos($serverURI, '/'));
     }
 
@@ -676,7 +673,8 @@ function sendsummaryemail($projectid, $groupid, $errors, $buildid)
     // In the case of asynchronous submission, the serverURI contains /cdash
     // we need to remove it
     $currentURI = get_server_URI();
-    if ($CDASH_BASE_URL == '' && $CDASH_ASYNCHRONOUS_SUBMISSION) {
+    $config = Config::getInstance();
+    if ($config->get('CDASH_BASE_URL') == '' && $config->get('CDASH_ASYNCHRONOUS_SUBMISSION')) {
         $currentURI = substr($currentURI, 0, strrpos($currentURI, '/'));
     }
 
@@ -734,15 +732,12 @@ function sendsummaryemail($projectid, $groupid, $errors, $buildid)
         }
         $messagePlainText .= "\n\n";
 
-        $serverName = $CDASH_SERVER_NAME;
-        if (strlen($serverName) == 0) {
-            $serverName = $_SERVER['SERVER_NAME'];
-        }
+        $serverName = $config->getServer();
 
         $messagePlainText .= "\n-CDash on " . $serverName . "\n";
 
         // If this is the testing
-        if ($CDASH_TESTING_MODE) {
+        if ($config->get('CDASH_TESTING_MODE')) {
             add_log($summaryEmail, 'TESTING: EMAIL', LOG_DEBUG);
             add_log($title, 'TESTING: EMAILTITLE', LOG_DEBUG);
             add_log($messagePlainText, 'TESTING: EMAILBODY', LOG_DEBUG);
@@ -1004,7 +999,8 @@ function generate_broken_build_message($emailtext, $Build, $Project)
     $serverURI = get_server_URI();
     // In the case of asynchronous submission, the serverURI contains /cdash
     // we need to remove it
-    if ($CDASH_BASE_URL == '' && $CDASH_ASYNCHRONOUS_SUBMISSION) {
+    $config = Config::getInstance();
+    if ($config->get('CDASH_BASE_URL') == '' && $config->get('CDASH_ASYNCHRONOUS_SUBMISSION')) {
         $serverURI = substr($serverURI, 0, strrpos($serverURI, '/'));
     }
 
@@ -1148,10 +1144,7 @@ function generate_broken_build_message($emailtext, $Build, $Project)
         $body .= $summary;
     }
 
-    $serverName = $CDASH_SERVER_NAME;
-    if (!$CDASH_TESTING_MODE && strlen($serverName) == 0) {
-        $serverName = $_SERVER['SERVER_NAME'];
-    }
+    $serverName = $config->getServer();
 
     $footer = "\n-CDash on " . $serverName . "\n";
     return ['title' => $title, 'preamble' => $preamble, 'body' => $body,
@@ -1163,8 +1156,6 @@ function generate_broken_build_message($emailtext, $Build, $Project)
 //
 function send_email_to_address($emailaddress, $emailtext, $Build, $Project)
 {
-    include 'config/config.php';
-
     $message = generate_broken_build_message($emailtext, $Build, $Project);
     if (!$message) {
         return false;
@@ -1176,7 +1167,7 @@ function send_email_to_address($emailaddress, $emailtext, $Build, $Project)
     $sent = false;
 
     // If this is the testing
-    if ($CDASH_TESTING_MODE) {
+    if (Config::getInstance()->get('CDASH_TESTING_MODE')) {
         add_log($emailaddress, 'TESTING: EMAIL', LOG_DEBUG);
         add_log($title, 'TESTING: EMAILTITLE', LOG_DEBUG);
         add_log($body, 'TESTING: EMAILBODY', LOG_DEBUG);
@@ -1295,7 +1286,8 @@ function send_error_email($userid, $emailaddress, $sendEmail, $errors,
         if ($userid != 0) {
             send_email_to_user($userid, $emailtext, $Build, $Project);
 
-            if ($CDASH_USE_LOCAL_DIRECTORY && file_exists('local/sendemail.php')) {
+            if (Config::getInstance()->get('CDASH_USE_LOCAL_DIRECTORY') &&
+                file_exists('local/sendemail.php')) {
                 $sendEmail->UserId = $userid;
                 $sendEmail->Text = $emailtext;
                 $sendEmail->SendToUser();
@@ -1399,7 +1391,8 @@ function send_update_email($handler, $projectid)
             $serverURI = get_server_URI();
             // In the case of asynchronous submission, the serverURI contains /cdash
             // we need to remove it
-            if ($CDASH_BASE_URL == '' && $CDASH_ASYNCHRONOUS_SUBMISSION) {
+            $config = Config::getInstance();
+            if ($config->get('CDASH_BASE_URL') == '' && $config->get('CDASH_ASYNCHRONOUS_SUBMISSION')) {
                 $serverURI = substr($serverURI, 0, strrpos($serverURI, '/'));
             }
 
@@ -1414,7 +1407,7 @@ function send_update_email($handler, $projectid)
             $body .= "*Update Errors*\n";
             $body .= 'Status: ' . $update_array['status'] . ' (' . $serverURI . '/viewUpdate.php?buildid=' . $buildid . ")\n";
 
-            if ($CDASH_TESTING_MODE) {
+            if ($config->get('CDASH_TESTING_MODE')) {
                 add_log($to_address, 'TESTING: EMAIL', LOG_DEBUG);
                 add_log($subject, 'TESTING: EMAILTITLE', LOG_DEBUG);
                 add_log($body, 'TESTING: EMAILBODY', LOG_DEBUG);
@@ -1433,9 +1426,6 @@ function send_update_email($handler, $projectid)
 /** Main function to send email if necessary */
 function sendemail(ActionableBuildInterface $handler, $projectid)
 {
-    global $CDASH_USE_LOCAL_DIRECTORY;
-
-    include 'config/config.php';
     include_once 'include/common.php';
     require_once 'include/pdo.php';
 
@@ -1444,8 +1434,9 @@ function sendemail(ActionableBuildInterface $handler, $projectid)
     $Project->Fill();
 
     $sendEmail = null;
+    $use_local_dir = Config::getInstance()->get('CDASH_USE_LOCAL_DIRECTORY');
 
-    if ($CDASH_USE_LOCAL_DIRECTORY && file_exists('local/sendemail.php')) {
+    if ($use_local_dir && file_exists('local/sendemail.php')) {
         include_once 'local/sendemail.php';
         $sendEmail = new SendEmail();
         $sendEmail->SetProjectId($projectid);
@@ -1528,7 +1519,7 @@ function sendemail(ActionableBuildInterface $handler, $projectid)
             continue;
         }
 
-        if ($CDASH_USE_LOCAL_DIRECTORY && file_exists('local/sendemail.php')) {
+        if ($use_local_dir && file_exists('local/sendemail.php')) {
             $sendEmail->BuildId = $Build->Id;
             $sendEmail->Errors = $errors;
         }
@@ -1538,14 +1529,14 @@ function sendemail(ActionableBuildInterface $handler, $projectid)
             // Send the summary email
             sendsummaryemail($projectid, $groupid, $errors, $Build->Id);
 
-            if ($CDASH_USE_LOCAL_DIRECTORY && file_exists('local/sendemail.php')) {
+            if ($use_local_dir && file_exists('local/sendemail.php')) {
                 $sendEmail->SendSummary();
             }
             return;
         }
 
         // Send build error
-        if ($CDASH_USE_LOCAL_DIRECTORY && file_exists('local/sendemail.php')) {
+        if ($use_local_dir && file_exists('local/sendemail.php')) {
             $sendEmail->SendBuildError();
         }
 

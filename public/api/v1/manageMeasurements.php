@@ -39,11 +39,11 @@ switch ($method) {
         rest_delete();
         break;
     case 'POST':
-        rest_post();
+        rest_post($projectid);
         break;
     case 'GET':
     default:
-        rest_get();
+        rest_get($projectid);
         break;
 }
 
@@ -62,13 +62,12 @@ function rest_delete()
 }
 
 /* Handle POST requests */
-function rest_post()
+function rest_post($projectid)
 {
     if (!array_key_exists('measurements', $_REQUEST)) {
         return;
     }
 
-    global $projectid;
     $OK = true;
     $new_ID = null;
     foreach ($_REQUEST['measurements'] as $measurement_data) {
@@ -103,12 +102,11 @@ function rest_post()
 }
 
 /* Handle GET requests */
-function rest_get()
+function rest_get($projectid)
 {
     $start = microtime_float();
     $response = begin_JSON_response();
 
-    global $projectid;
     $project = new Project();
     $project->Id = $projectid;
     $project->Fill();

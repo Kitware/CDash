@@ -3,6 +3,8 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use CDash\Config;
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 class JSCoverCoverageTestCase extends KWWebTestCase
@@ -14,8 +16,8 @@ class JSCoverCoverageTestCase extends KWWebTestCase
 
     public function testJSCoverCoverage()
     {
-        global $CDASH_TESTING_RENAME_LOGS;
-        $CDASH_TESTING_RENAME_LOGS = true;
+        Config::getInstance()->set('CDASH_TESTING_RENAME_LOGS', true);
+
         // Do the POST submission to get a pending buildid.
         $post_result = $this->post($this->url . '/submit.php', array(
             'project' => 'SubProjectExample',
