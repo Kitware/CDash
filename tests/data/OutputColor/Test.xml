@@ -46,7 +46,9 @@
 					<Value>/home/kyle/development/terminal-test/build/colortest_short</Value>
 				</NamedMeasurement>
 				<Measurement>
-					<Value>[NON-XML-CHAR-0x1B][32mHello world!
+					<Value>
+not bold [NON-XML-CHAR-0x1B][1mbold[NON-XML-CHAR-0x1B][0m not bold
+[NON-XML-CHAR-0x1B][32mHello world!
 [NON-XML-CHAR-0x1B][31mThis is a test
 </Value>
 				</Measurement>
