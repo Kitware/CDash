@@ -181,6 +181,8 @@ class Build
             return false;
         }
 
+        $this->SubProjectName = $subproject;
+
         $stmt = $this->PDO->prepare(
             "SELECT id FROM subproject WHERE name = ? AND projectid = ? AND
             endtime='1980-01-01 00:00:00'");
@@ -188,7 +190,6 @@ class Build
             return false;
         }
 
-        $this->SubProjectName = $subproject;
         $label = new Label;
         $label->Text = $subproject;
         $this->AddLabel($label);
@@ -2956,6 +2957,12 @@ class Build
             foreach ($this->GetTestCollection() as $test) {
                 foreach ($test->GetLabelCollection() as $label) {
                     $labels[] = $label;
+                }
+            }
+
+            foreach ($this->Errors as $error) {
+                if (isset($error->Labels) && !empty($error->Labels)) {
+                    $labels = array_merge($labels, $error->Labels);
                 }
             }
 
