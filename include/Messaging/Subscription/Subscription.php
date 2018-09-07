@@ -166,6 +166,7 @@ class Subscription implements SubscriptionInterface
 
     /**
      * @return string[]
+     * TODO: A summary should be a BuildSummary class, create one asap
      */
     public function getBuildSummary()
     {
