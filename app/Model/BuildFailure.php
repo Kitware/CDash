@@ -18,6 +18,7 @@ namespace CDash\Model;
 require_once 'include/common.php';
 require_once 'include/repository.php';
 
+use CDash\Config;
 use CDash\Database;
 
 /** BuildFailure */
@@ -41,16 +42,13 @@ class BuildFailure
 
     public function __construct()
     {
-        $this->Arguments = array();
+        $this->Arguments = [];
+        $this->Labels = [];
         $this->PDO = Database::getInstance()->getPdo();
     }
 
     public function AddLabel($label)
     {
-        if (!isset($this->Labels)) {
-            $this->Labels = array();
-        }
-
         $this->Labels[] = $label;
     }
 
@@ -308,5 +306,12 @@ class BuildFailure
         }
 
         return $marshaled;
+    }
+
+    public function GetUrlForSelf()
+    {
+        $config = Config::getInstance();
+        $url = $config->getBaseUrl();
+        return "{$url}/viewBuildError.php?type={$this->Type}&buildid={$this->BuildId}";
     }
 }
