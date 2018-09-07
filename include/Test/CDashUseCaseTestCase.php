@@ -71,6 +71,11 @@ class CDashUseCaseTestCase extends CDashTestCase
                     ->method('Save')
                     ->willReturnCallback(function () use ($class_name, $model, $useCase) {
                         $model->Id = $useCase->getIdForClass($class_name);
+                        if (isset($model->Errors)) {
+                            foreach ($model->Errors as $error) {
+                                $error->BuildId = $model->Id;
+                            }
+                        }
                         $this->setCachedModelId($model);
                         return $model->Id;
                     });

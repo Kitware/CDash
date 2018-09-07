@@ -490,11 +490,253 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
         $this->assertEquals($expected, $actual);
     }
 
+    public function testBuildUseCase()
+    {
+        $start = strtotime('-10 minutes');
+        $end = time();
+        $datetime = date('Y-m-d\TH:i:s', $start);
+
+        $this->useCase = UseCase::createBuilder($this, UseCase::BUILD);
+        $this->useCase
+            ->createSite([
+                'BuildName' => 'SomeOS-SomeBuild',
+                'BuildStamp' => '20180122-0100-Experimental',
+                'Name' => 'mirror.site',
+            ])
+            ->createAuthor(
+                'user_4@company.tld',
+                ['MyThirdPartyDependency']
+            )
+            ->createSubproject('MyExperimentalFeature')
+            ->createSubproject('MyProductionCode')
+            ->createSubproject('MyThirdPartyDependency')
+            ->createSubproject('EmptySubproject')
+            ->setBuildCommand('cmake --build . --config "Debug" -- -i')
+            ->createBuildFailureError('MyThirdPartyDependency',[
+                'SourceFile' => 'MyThirdPartyDependency/thirdparty.cxx',
+                'StdErr' => '/home/betsy/cmake/Tests/CTestTestSubprojects/MyThirdPartyDependency/thirdparty.cxx: In function ‘int main(int, char**)’:'
+                    . "\n/home/betsy/cmake/Tests/CTestTestSubprojects/MyThirdPartyDependency/thirdparty.cxx:6:3: error: ‘n’ was not declared in this scope"
+                    . "\n   n = 5;"
+                    . "\n/home/betsy/cmake/Tests/CTestTestSubprojects/MyThirdPartyDependency/thirdparty.cxx: At global scope:"
+                    . "\n/home/betsy/cmake/Tests/CTestTestSubprojects/MyThirdPartyDependency/thirdparty.cxx:3:5: warning: unused parameter ‘argc’ [-Wunused-parameter]"
+                    . "\n int main(int argc, char *argv[])"
+                    . "\n     ^"
+                    . "\n/home/betsy/cmake/Tests/CTestTestSubprojects/MyThirdPartyDependency/thirdparty.cxx:3:5: warning: unused parameter ‘argv’ [-Wunused-parameter]"
+                ])
+            ->createBuildFailureError('MyThirdPartyDependency', [
+                'SourceFile' => 'MyThirdPartyDependency/',
+                'StdErr' => 'c++: error: CMakeFiles/thirdparty.dir/thirdparty.cxx.o: No such file or directory'
+                    . "\nc++: fatal error: no input files"
+                    . "\ncompilation terminated."
+            ])
+            ->createBuildFailureWarning('MyExperimentalFeature', [
+                'SourceFile' => 'MyExperimentalFeature/experimental.cxx',
+                'StdErr' => '/home/betsy/cmake/Tests/CTestTestSubprojects/MyExperimentalFeature/experimental.cxx:2:5: warning: unused parameter ‘argc’ [-Wunused-parameter]'
+                    . "\nint main(int argc, char *argv[])"
+                    . "\n     ^"
+                    . "\n/home/betsy/cmake/Tests/CTestTestSubprojects/MyExperimentalFeature/experimental.cxx:2:5: warning: unused parameter ‘argv’ [-Wunused-parameter]"
+            ])
+            ->createBuildFailureWarning('MyProductionCode', [
+                'SourceFile' => 'MyProductionCode/production.cxx',
+                'StdErr' => '/home/betsy/cmake/Tests/CTestTestSubprojects/MyProductionCode/production.cxx:2:5: warning: unused parameter ‘argc’ [-Wunused-parameter]'
+                    . "\nint main(int argc, char *argv[])"
+                    . "\n     ^"
+                    . "\n/home/betsy/cmake/Tests/CTestTestSubprojects/MyProductionCode/production.cxx:2:5: warning: unused parameter ‘argv’ [-Wunused-parameter]"
+            ])
+            ->setStartTime($start)
+            ->setEndTime($end);
+
+        $subscribers = [
+            [ // This user should receive email
+                'user_1@company.tld',
+                BitmaskNotificationPreferences::EMAIL_ERROR |
+                BitmaskNotificationPreferences::EMAIL_WARNING,
+                []
+            ],
+            [
+                // This user should not receive an email as they are not an author
+                'user_2@company.tld',
+                BitmaskNotificationPreferences::EMAIL_WARNING |
+                BitmaskNotificationPreferences::EMAIL_ERROR |
+                BitmaskNotificationPreferences::EMAIL_USER_CHECKIN_ISSUE_ANY_SECTION,
+                []
+            ],
+            [
+                // This user should receive an email, subscribed to two labels, one present
+                'user_3@company.tld',
+                BitmaskNotificationPreferences::EMAIL_SUBSCRIBED_LABELS,
+                ['MyThirdPartyDependency1', 'MyProductionCode']
+            ],
+            [
+                // This user should receive an email, with MyExperimentalFeature appended to subject
+                'user_4@company.tld',
+                BitmaskNotificationPreferences::EMAIL_ERROR |
+                BitmaskNotificationPreferences::EMAIL_USER_CHECKIN_ISSUE_ANY_SECTION,
+                [],
+            ],
+            [
+                'user_5@company.tld',
+                BitmaskNotificationPreferences::EMAIL_USER_CHECKIN_ISSUE_ANY_SECTION,
+                [],
+            ]
+        ];
+
+        $notifications = $this->getNotifications($subscribers);
+
+        $notification = $notifications->get('user_1@company.tld');
+        $this->assertNotNull($notification);
+
+        $expected = 'FAILED (w=2, b=2) CDashUseCaseProject - SomeOS-SomeBuild - Experimental';
+        $actual = $notification->getSubject();
+        $this->assertEquals($expected, $actual);
+
+        $experimental_id = $this->getCachedModelId('MyExperimentalFeature');
+        $production_id = $this->getCachedModelId('MyProductionCode');
+        $dependency_id = $this->getCachedModelId('MyThirdPartyDependency');
+
+        $expected = "A submission to CDash for the project CDashUseCaseProject has warnings and errors. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
+
+Details on the submission can be found at http://open.cdash.org/viewProject?projectid=321
+
+Project: CDashUseCaseProject
+Site: mirror.site
+Build Name: SomeOS-SomeBuild
+Build Time: {$datetime}
+Type: Experimental
+Total Warnings: 2
+Total Errors: 2
+
+
+*Warnings*
+MyExperimentalFeature/experimental.cxx line  (http://open.cdash.org/viewBuildError.php?type=1&buildid={$experimental_id})
+/home/betsy/cmake/Tests/CTestTestSubprojects/MyExperimentalFeature/experimental.cxx:2:5: warning: unused parameter ‘argc’ [-Wunused-parameter]
+int main(int argc, char *argv[])
+     ^
+/home/betsy/cmake/Tests/CTestTestSubprojects/MyExperimentalFeature/experimental.cxx:2:5: warning: unused parameter ‘argv’ [-Wunused-parameter]
+
+MyProductionCode/production.cxx line  (http://open.cdash.org/viewBuildError.php?type=1&buildid={$production_id})
+/home/betsy/cmake/Tests/CTestTestSubprojects/MyProductionCode/production.cxx:2:5: warning: unused parameter ‘argc’ [-Wunused-parameter]
+int main(int argc, char *argv[])
+     ^
+/home/betsy/cmake/Tests/CTestTestSubprojects/MyProductionCode/production.cxx:2:5: warning: unused parameter ‘argv’ [-Wunused-parameter]
+
+
+
+
+*Errors*
+MyThirdPartyDependency/thirdparty.cxx line  (http://open.cdash.org/viewBuildError.php?type=0&buildid={$dependency_id})
+/home/betsy/cmake/Tests/CTestTestSubprojects/MyThirdPartyDependency/thirdparty.cxx: In function ‘int main(int, char**)’:
+/home/betsy/cmake/Tests/CTestTestSubprojects/MyThirdPartyDependency/thirdparty.cxx:6:3: error: ‘n’ was not declared in this scope
+   n = 5;
+/home/betsy/cmake/Tests/CTestTestSubprojects/MyThirdPartyDependency/thirdparty.cxx: At global scope:
+/home/betsy/cmake/Tests/CTestTestSubprojects/MyThirdPartyDependency/thirdparty.cxx:3:5: warning: unused parameter ‘argc’ [-Wunused-parameter]
+ int main(int argc, char *argv[])
+     ^
+/home/betsy/cmake/Tests/CTestTestSubprojects/MyThirdPartyDependency/thirdparty.cxx:3:5: warning: unused parameter ‘argv’ [-Wunused-parameter]
+
+MyThirdPartyDependency/ line  (http://open.cdash.org/viewBuildError.php?type=0&buildid={$dependency_id})
+c++: error: CMakeFiles/thirdparty.dir/thirdparty.cxx.o: No such file or directory
+c++: fatal error: no input files
+compilation terminated.
+
+
+
+-CDash on open.cdash.org
+";
+
+        $actual = $notification->__toString();
+        $this->assertEquals($expected, $actual);
+
+        $notification = $notifications->get('user_2@company.tld');
+        $this->assertNull($notification);
+
+        $notification = $notifications->get('user_3@company.tld');
+        $this->assertNotNull($notification);
+
+        $expected = 'FAILED (w=1) CDashUseCaseProject - SomeOS-SomeBuild - Experimental';
+        $actual = $notification->getSubject();
+        $this->assertEquals($expected, $actual);
+
+        $expected = "A submission to CDash for the project CDashUseCaseProject has warnings. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
+
+Details on the submission can be found at http://open.cdash.org/viewProject?projectid=321
+
+Project: CDashUseCaseProject
+SubProject Name: MyProductionCode
+Site: mirror.site
+Build Name: SomeOS-SomeBuild
+Build Time: {$datetime}
+Type: Experimental
+Total Warnings: 1
+
+
+*Warnings*
+MyProductionCode/production.cxx line  (http://open.cdash.org/viewBuildError.php?type=1&buildid={$production_id})
+/home/betsy/cmake/Tests/CTestTestSubprojects/MyProductionCode/production.cxx:2:5: warning: unused parameter ‘argc’ [-Wunused-parameter]
+int main(int argc, char *argv[])
+     ^
+/home/betsy/cmake/Tests/CTestTestSubprojects/MyProductionCode/production.cxx:2:5: warning: unused parameter ‘argv’ [-Wunused-parameter]
+
+
+
+-CDash on open.cdash.org
+";
+        $actual = "{$notification}";
+        $this->assertEquals($expected, $actual);
+
+        $notification = $notifications->get('user_4@company.tld');
+        $this->assertNotNull($notification);
+
+        $expected = $expected = 'FAILED (b=2) CDashUseCaseProject - SomeOS-SomeBuild - Experimental';
+        $actual = $notification->getSubject();
+        $this->assertEquals($expected, $actual);
+
+        $expected = "A submission to CDash for the project CDashUseCaseProject has errors. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
+
+Details on the submission can be found at http://open.cdash.org/viewProject?projectid=321
+
+Project: CDashUseCaseProject
+SubProject Name: MyThirdPartyDependency
+Site: mirror.site
+Build Name: SomeOS-SomeBuild
+Build Time: {$datetime}
+Type: Experimental
+Total Errors: 2
+
+
+*Errors*
+MyThirdPartyDependency/thirdparty.cxx line  (http://open.cdash.org/viewBuildError.php?type=0&buildid={$dependency_id})
+/home/betsy/cmake/Tests/CTestTestSubprojects/MyThirdPartyDependency/thirdparty.cxx: In function ‘int main(int, char**)’:
+/home/betsy/cmake/Tests/CTestTestSubprojects/MyThirdPartyDependency/thirdparty.cxx:6:3: error: ‘n’ was not declared in this scope
+   n = 5;
+/home/betsy/cmake/Tests/CTestTestSubprojects/MyThirdPartyDependency/thirdparty.cxx: At global scope:
+/home/betsy/cmake/Tests/CTestTestSubprojects/MyThirdPartyDependency/thirdparty.cxx:3:5: warning: unused parameter ‘argc’ [-Wunused-parameter]
+ int main(int argc, char *argv[])
+     ^
+/home/betsy/cmake/Tests/CTestTestSubprojects/MyThirdPartyDependency/thirdparty.cxx:3:5: warning: unused parameter ‘argv’ [-Wunused-parameter]
+
+MyThirdPartyDependency/ line  (http://open.cdash.org/viewBuildError.php?type=0&buildid={$dependency_id})
+c++: error: CMakeFiles/thirdparty.dir/thirdparty.cxx.o: No such file or directory
+c++: fatal error: no input files
+compilation terminated.
+
+
+
+-CDash on open.cdash.org
+";
+        $actual = "{$notification}";
+        $this->assertEquals($expected, $actual);
+    }
+
     public function testUpdateUseCaseBuild()
     {
         $this->useCase = UseCase::createBuilder($this, UseCase::UPDATE);
         $this->useCase
-            ->setSite('site.mirror')
+            ->createSite([
+                'BuildName' => 'SomeOS-SomeBuild',
+                'BuildStamp' => '20180122-0100-Experimental',
+                'Name' => 'mirror.site',
+            ])
             ->setBuildName('Linux-g++-0.1-NewFeature_Dev')
             ->setBuildType(UseCase::EXPERIMENTAL)
             ->setUpdateCommand('git fetch')
@@ -507,10 +749,5 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
             ]);
         $handler = $this->useCase->build();
         $this->assertInstanceOf(UpdateHandler::class, $handler);
-    }
-
-    public function testBuildUseCase()
-    {
-        // $this->useCase = UseCase::createBuilder($this, UseCase::BUILD);
     }
 }

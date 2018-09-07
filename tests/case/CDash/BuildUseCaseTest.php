@@ -35,10 +35,10 @@ class BuildUseCaseTest extends CDashUseCaseTestCase
           ->setStartTime($hour_and_half_ago)
           ->setEndTime($hour_ago)
           ->setBuildCommand('cmake --build . --config "Debug" -- -i')
-          ->createBuildError('MyThirdPartyDependency1')
-          ->createBuildError('MyThirdPartyDependency2')
-          ->createBuildWarning('MyExperimentalFeature')
-          ->createBuildWarning('MyProductionCode');
+          ->createBuildFailureError('MyThirdPartyDependency1')
+          ->createBuildFailureError('MyThirdPartyDependency2')
+          ->createBuildFailureWarning('MyExperimentalFeature')
+          ->createBuildFailureWarning('MyProductionCode');
 
       /** @var ActionableBuildInterface $handler */
       $handler = $sut->build();

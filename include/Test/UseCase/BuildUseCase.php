@@ -214,7 +214,7 @@ class BuildUseCase extends UseCase
      * @param array $properties
      * @return $this
      */
-    public function createBuildError($name = null, array $properties = [])
+    public function createBuildFailureError($name = null, array $properties = [])
     {
         $this->setNameInLabels($name, $properties);
         $this->createFailure([self::ERROR, $properties]);
@@ -226,7 +226,7 @@ class BuildUseCase extends UseCase
      * @param array $properties
      * @return $this
      */
-    public function createBuildWarning($name = null, array $properties = [])
+    public function createBuildFailureWarning($name = null, array $properties = [])
     {
         $this->setNameInLabels($name, $properties);
         $this->createFailure([self::WARNING, $properties]);
