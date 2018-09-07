@@ -1,6 +1,8 @@
 <?php
 namespace CDash\Messaging\Topic;
 
+use CDash\Collection\BuildCollection;
+use CDash\Collection\BuildErrorCollection;
 use CDash\Model\ActionableTypes;
 use CDash\Model\Build;
 use CDash\Collection\Collection;
@@ -47,6 +49,33 @@ class LabeledTopic extends Topic implements DecoratableInterface
             case ActionableTypes::CONFIGURE:
                 $this->setConfigureItems($build);
                 break;
+            case ActionableTypes::BUILD_ERROR:
+                $this->setBuildItems($build);
+                break;
+        }
+    }
+
+    protected function setBuildItems(Build $build)
+    {
+        $labels = $this->subscriber->getLabels();
+        $topics = $this->getTopicCollection();
+        $collection = $topics->get(BuildCollection::class);
+
+        foreach ($labels as $label) {
+            foreach ($build->Errors as $error) {
+                if (isset($error->Labels)) {
+                    $error_labels = array_map(function ($lbl) {
+                        return $lbl->Text;
+                    }, $error->Labels);
+                    if (in_array($label, $error_labels)) {
+                        if (!$collection) {
+                            $collection = new BuildErrorCollection();
+                            $topics->addItem($collection, BuildErrorCollection::class);
+                        }
+                        $collection->addItem($error, $label);
+                    }
+                }
+            }
         }
     }
 
@@ -130,6 +159,8 @@ class LabeledTopic extends Topic implements DecoratableInterface
 
         if ($collection->hasItems()) {
             foreach ($this->getTopicCollection() as $collection) {
+                $topic = null;
+                // TODO: add default case to throw exception
                 switch (get_class($collection)) {
                     case TestCollection::class:
                         $topic = new TestFailureTopic();
@@ -137,12 +168,23 @@ class LabeledTopic extends Topic implements DecoratableInterface
                     case ConfigureCollection::class:
                         $topic = new ConfigureTopic();
                         break;
+                    case BuildErrorCollection::class:
+                        $topic = new BuildErrorTopic();
+                        // Here we must make sure that we set the type (error or warning)
+                        /** @var \CDash\Model\BuildFailure|\CDash\Model\BuildError $first_item*/
+                        $first_item = $collection->current();
+                        if (isset($first_item->Type)) {
+                            $topic->setType($first_item->Type);
+                        }
+                        break;
                 }
 
                 if ($topic) {
+                    $topic->setSubscriber($this->subscriber);
                     foreach ($this->getBuildCollection() as $build) {
                         $topic->addBuild($build);
                     }
+
                     $topics->add($topic);
                 }
             }
