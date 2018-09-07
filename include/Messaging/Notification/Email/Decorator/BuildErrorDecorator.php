@@ -16,14 +16,14 @@
 
 namespace CDash\Messaging\Notification\Email\Decorator;
 
-
 use CDash\Messaging\Topic\Topic;
 use CDash\Model\BuildError;
+use CDash\Model\BuildFailure;
 
 class BuildErrorDecorator extends Decorator
 {
-    private $srcTemplate = "{{ srcfile }} line {{ srcline }} ({{ uri }})\n{{ text }}\n{{ context }}";
-    private $txtTemplate = "{{ text }}\n{{ context }}";
+    private $srcTemplate = "{{ srcfile }} line {{ srcline }} ({{ uri }})\n{{ text }}\n{{ context }}\n";
+    private $txtTemplate = "{{ text }}\n{{ context }}\n";
 
     /**
      * @param Topic $topic
@@ -38,15 +38,15 @@ class BuildErrorDecorator extends Decorator
         /** @var BuildError $error */
         foreach ($errors as $error) {
             $line = [
-                'text' => $error->Text,
-                'context' => $error->PostContext,
+                'text' => $this->getErrorText($error),
+                'context' => $this->getErrorPostContext($error),
             ];
             $tmpl = $this->txtTemplate;
 
             if (strlen($error->SourceFile) > 0) {
                 $line = array_merge($line, [
                     'srcfile' => $error->SourceFile,
-                    'srcline' => $error->SourceLine,
+                    'srcline' => $this->getErrorSourceLine($error),
                     'uri' => $error->GetUrlForSelf(),
                 ]);
                 $tmpl = $this->srcTemplate;
@@ -56,10 +56,30 @@ class BuildErrorDecorator extends Decorator
                 break;
             }
         }
-
+        $description = $topic->getTopicDescription();
         $maxReachedText = $this->maxTopicItems < $errors->count() ?
             " (first {$this->maxTopicItems} included)" : '';
-        $this->text = "\n*Warnings*{$maxReachedText}\n{$this->decorateWith($tmpl, $data)}\n";
+        $this->text = "\n*{$description}*{$maxReachedText}\n{$this->decorateWith($tmpl, $data)}\n";
         return $this->text;
+    }
+
+    protected function getErrorText($error)
+    {
+        return $this->isAFailure($error) ? $error->StdError : $error->Text;
+    }
+
+    protected function getErrorPostContext($error)
+    {
+        return $this->isAFailure($error) ? '' : $error->PostContext;
+    }
+
+    protected function getErrorSourceLine($error)
+    {
+        return $this->isAFailure($error) ? null : $error->SourceLine;
+    }
+
+    protected function isAFailure($error)
+    {
+        return is_a($error, BuildFailure::class);
     }
 }
