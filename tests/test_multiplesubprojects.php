@@ -600,22 +600,25 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             $stmt->execute();
             $rows = array_unique($stmt->fetchAll(PDO::FETCH_COLUMN, 'text'));
 
+            $count = count($rows);
+
             switch ($build['label']) {
                 case 'MyExperimentalFeature':
-                    $success = count($rows) === 1 && in_array('MyExperimentalFeature', $rows);
+                    $success = $count === 1 && in_array('MyExperimentalFeature', $rows);
                     break;
                 case 'MyProductionCode':
-                    $success = count($rows) === 1 && in_array('MyProductionCode', $rows);
+                    $success = $count === 1 && in_array('MyProductionCode', $rows);
                     break;
                 case 'MyThirdPartyDependency':
-                    $success = count($rows) === 1 && in_array('MyThirdPartyDependency1', $rows);
+                    $success = $count === 1 && in_array('MyThirdPartyDependency1', $rows);
                     break;
                 case 'EmptySubproject':
-                    $success = count($rows) === 0;
+                    $success = $count === 0;
                     break;
             }
             if (!$success) {
                 $error_message = 'Unexpected label associations';
+                $error_message .= "\n{$build['label']}: count: {$count}: rows: " . implode(',', $rows);
                 break;
             }
         }
