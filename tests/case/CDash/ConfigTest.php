@@ -121,7 +121,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase
 
         $config->set('CDASH_BASE_URL', null);
         $config->set('CDASH_USE_HTTPS', true);
-        $_SERVER['SERVER_NAME'] = 'www2.tonyrobins.com/';
+        $_SERVER['SERVER_NAME'] = 'www2.tonyrobins.com';
         $_SERVER['SERVER_PORT'] = 8080;
         $_SERVER['REQUEST_URI'] = '/path/to/success';
 
@@ -131,7 +131,7 @@ class ConfigTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($expected, $actual);
 
-        $config->set('CDASH_BASE_URL', 'http://open.cdash.org/');
+        $config->set('CDASH_BASE_URL', 'http://open.cdash.org');
         $expected = 'http://open.cdash.org';
         $this->assertEquals($expected, $config->getBaseUrl());
 
