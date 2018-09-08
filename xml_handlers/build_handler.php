@@ -260,16 +260,35 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
                 }
             }
             if (array_key_exists($this->SubProjectName, $this->Builds)) {
+                // TODO: temporary fix for subtle, hard to track down issue
+                // BuildFailures' labels are not getting set in label2buildfailure when using new
+                // subproject xml schema, e.g. (<SubProject name="..."><Label>...</Label></SubProject>.
+                // If the error is being set because this is a SubProject then presumably we may
+                // ensure that the label exists here, and if not, create it.
+
+                if (isset($this->Error->Labels)) {
+                    $hasLabel = false;
+                    foreach ($this->Labels as $lbl) {
+                        if ($lbl->Text === $this->SubProjectName) {
+                            $hasLabel = true;
+                            break;
+                        }
+                    }
+                    if (!$hasLabel) {
+                        $label = $factory->create(Label::class);
+                        $label->SetText($this->SubProjectName);
+                        $this->Error->AddLabel($label);
+                    }
+                }
+
                 $this->Builds[$this->SubProjectName]->AddError($this->Error);
             }
             unset($this->Error);
         } elseif ($name == 'LABEL' && $parent == 'LABELS') {
             if (!empty($this->ErrorSubProjectName)) {
                 $this->SubProjectName = $this->ErrorSubProjectName;
-                if (isset($this->Error)) {
-                    $this->Label->SetText($this->SubProjectName);
-                    $this->Error->AddLabel($this->Label);
-                }
+            } elseif (isset($this->Error)) {
+                $this->Error->AddLabel($this->Label);
             } else {
                 $this->Labels[] = $this->Label;
             }
