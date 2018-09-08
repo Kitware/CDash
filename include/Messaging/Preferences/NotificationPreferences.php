@@ -70,10 +70,10 @@ abstract class NotificationPreferences implements
         if ($type === 1) {
             $this->set(NotifyOn::AUTHORED, true);
             $this->set(NotifyOn::ANY, false);
-        } else if ($type === 2) {
+        } elseif ($type === 2) {
             $this->set(NotifyOn::GROUP_NIGHTLY, true);
             $this->set(NotifyOn::ANY, false);
-        } else if ($type === 3) {
+        } elseif ($type === 3) {
             $this->set(NotifyOn::ANY, true);
             $this->set(NotifyOn::AUTHORED, false);
         }

@@ -16,7 +16,6 @@
 
 namespace CDash\Collection;
 
-
 use CDash\Model\BuildFailure;
 
 class BuildFailureCollection extends Collection

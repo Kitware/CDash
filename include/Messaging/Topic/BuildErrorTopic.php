@@ -86,7 +86,7 @@ class BuildErrorTopic extends Topic implements DecoratableInterface
         // TODO: initialize type?
         if ($this->type == Build::TYPE_ERROR) {
             return 'BuildError';
-        } else if ($this->type === Build::TYPE_WARN) {
+        } elseif ($this->type === Build::TYPE_WARN) {
             return 'BuildWarning';
         }
     }
@@ -95,7 +95,7 @@ class BuildErrorTopic extends Topic implements DecoratableInterface
     {
         if ($this->type == Build::TYPE_ERROR) {
             return 'Errors';
-        } else if ($this->type === Build::TYPE_WARN) {
+        } elseif ($this->type === Build::TYPE_WARN) {
             return 'Warnings';
         }
     }

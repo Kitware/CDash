@@ -93,8 +93,8 @@ class BuildEmail
             AND buildemail.category=:c';
         $db = Database::getInstance();
         $stmt = $db->prepare($sql);
-        $stmt->bindParam(':b' , $buildId);
-        $stmt->bindParam(':c' , $category);
+        $stmt->bindParam(':b', $buildId);
+        $stmt->bindParam(':c', $category);
 
         if ($db->execute($stmt)) {
             foreach ($stmt->fetchAll(\PDO::FETCH_OBJ) as $row) {

@@ -175,7 +175,7 @@ class BuildUseCase extends UseCase
             }
             $args[] = $properties['SourceFile'];
             $properties['Argument'] = $args;
-        } else if (is_string($properties['Argument'])){
+        } elseif (is_string($properties['Argument'])) {
             // let's allow for setting the argument as a string of text
             $args = explode(' ', $properties['Argument']);
             $properties['Argument'] = $args;

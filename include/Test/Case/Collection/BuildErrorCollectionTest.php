@@ -19,7 +19,6 @@ use CDash\Model\BuildError;
 
 class BuildErrorCollectionTest extends PHPUnit_Framework_TestCase
 {
-
     public function testAdd()
     {
         $sut = new BuildErrorCollection();

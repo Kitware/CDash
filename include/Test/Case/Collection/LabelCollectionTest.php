@@ -6,7 +6,6 @@ use CDash\Test\CDashTestCase;
 
 class LabelCollectionTest extends CDashTestCase
 {
-
     public function testAdd()
     {
         $labelA = new Label();

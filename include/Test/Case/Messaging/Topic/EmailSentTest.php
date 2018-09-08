@@ -25,7 +25,6 @@ use CDash\Model\Subscriber;
 
 class EmailSentTest extends PHPUnit_Framework_TestCase
 {
-
     public function testSubscribesToBuild()
     {
         $topic = new BuildErrorTopic();

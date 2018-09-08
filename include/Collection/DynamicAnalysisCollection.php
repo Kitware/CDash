@@ -16,7 +16,6 @@
 
 namespace CDash\Collection;
 
-
 use CDash\Model\DynamicAnalysis;
 
 class DynamicAnalysisCollection extends Collection

@@ -138,4 +138,3 @@ class BuildFailureTopicTest extends \CDash\Test\CDashTestCase
         $this->assertSame($warning, $collection->current());
     }
 }
-

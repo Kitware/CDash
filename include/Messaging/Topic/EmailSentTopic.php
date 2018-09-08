@@ -16,7 +16,6 @@
 
 namespace CDash\Messaging\Topic;
 
-
 use CDash\Model\ActionableTypes;
 use CDash\Model\Build;
 use CDash\Model\BuildEmail;

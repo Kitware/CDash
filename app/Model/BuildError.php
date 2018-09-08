@@ -16,6 +16,7 @@
 namespace CDash\Model;
 
 use CDash\Config;
+
 require_once 'include/repository.php';
 
 use PDO;

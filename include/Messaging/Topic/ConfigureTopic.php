@@ -64,6 +64,6 @@ class ConfigureTopic extends Topic implements DecoratableInterface
      */
     public function itemHasTopicSubject(Build $build, $item)
     {
-      // TODO: Implement itemHasTopicSubject() method.
+        // TODO: Implement itemHasTopicSubject() method.
     }
 }

@@ -1431,28 +1431,28 @@ function sendemail(ActionableBuildInterface $handler, $projectid)
     }
 
     $config_subscribers = [];
-/*
-    $builder = new SubscriptionBuilder($handler);
-    $subscriptions = $builder->build();
-
-    $builder = new EmailBuilder(new EmailNotificationFactory(), new NotificationCollection());
-    $builder
-        ->setSubscriptions($subscriptions)
-        ->setProject($Project);
-
-    $director = new NotificationDirector();
-    $notifications = $director->build($builder);
-
-    if ($config->get('CDASH_TESTING_MODE')) {
-        // @var \CDash\Messaging\Notification\NotificationInterface $notification
-        foreach ($notifications as $notification) {
-            $log->add_log($notification->getRecipient(), 'TESTING: EMAIL', LOG_DEBUG);
-            $log->add_log($notification->getSubject(), 'TESTING: EMAILTITLE', LOG_DEBUG);
-            $log->add_log($notification->getBody(), 'TESTING: EMAILBODY', LOG_DEBUG);
-            BuildEmail::SaveNotification($notification);
+    /*
+        $builder = new SubscriptionBuilder($handler);
+        $subscriptions = $builder->build();
+    
+        $builder = new EmailBuilder(new EmailNotificationFactory(), new NotificationCollection());
+        $builder
+            ->setSubscriptions($subscriptions)
+            ->setProject($Project);
+    
+        $director = new NotificationDirector();
+        $notifications = $director->build($builder);
+    
+        if ($config->get('CDASH_TESTING_MODE')) {
+            // @var \CDash\Messaging\Notification\NotificationInterface $notification
+            foreach ($notifications as $notification) {
+                $log->add_log($notification->getRecipient(), 'TESTING: EMAIL', LOG_DEBUG);
+                $log->add_log($notification->getSubject(), 'TESTING: EMAILTITLE', LOG_DEBUG);
+                $log->add_log($notification->getBody(), 'TESTING: EMAILBODY', LOG_DEBUG);
+                BuildEmail::SaveNotification($notification);
+            }
         }
-    }
-*/
+    */
     /** @var  Build $Build */
     foreach ($handler->GetBuildCollection() as $label => $Build) {
         $Build->FillFromId($Build->Id);

@@ -512,7 +512,7 @@ class IntegrationTest extends \CDash\Test\CDashUseCaseTestCase
             ->createSubproject('MyThirdPartyDependency')
             ->createSubproject('EmptySubproject')
             ->setBuildCommand('cmake --build . --config "Debug" -- -i')
-            ->createBuildFailureError('MyThirdPartyDependency',[
+            ->createBuildFailureError('MyThirdPartyDependency', [
                 'SourceFile' => 'MyThirdPartyDependency/thirdparty.cxx',
                 'StdErr' => '/home/betsy/cmake/Tests/CTestTestSubprojects/MyThirdPartyDependency/thirdparty.cxx: In function ‘int main(int, char**)’:'
                     . "\n/home/betsy/cmake/Tests/CTestTestSubprojects/MyThirdPartyDependency/thirdparty.cxx:6:3: error: ‘n’ was not declared in this scope"
