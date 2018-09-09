@@ -39,7 +39,7 @@ class DynamicAnalysisDecorator extends Decorator
                 'name' => $analysis->Name,
                 'url' => $analysis->GetUrlForSelf(),
             ];
-            if(++$counter === $this->maxTopicItems) {
+            if (++$counter === $this->maxTopicItems) {
                 break;
             }
         }
