@@ -728,6 +728,7 @@ compilation terminated.
         $this->assertEquals($expected, $actual);
     }
 
+    /** TODO: holding off on this since there are no other tests to base off */
     public function testUpdateUseCaseBuild()
     {
         $this->useCase = UseCase::createBuilder($this, UseCase::UPDATE);
@@ -749,5 +750,95 @@ compilation terminated.
             ]);
         $handler = $this->useCase->build();
         $this->assertInstanceOf(UpdateHandler::class, $handler);
+    }
+
+    public function testDyanamicAnalysisUseCaseBuild()
+    {
+        $start = strtotime('-10 minutes');
+        $end = time();
+        $datetime = date('Y-m-d\TH:i:s', $start);
+
+        $this->useCase = UseCase::createBuilder($this, UseCase::DYNAMIC_ANALYSIS);
+        $this->useCase
+            ->createSite([
+                'Name' => 'Site.name',
+                'BuildName' => 'CTestTest-Linux-c++-Subprojects',
+                'BuildStamp' => '20160728-1932-Experimental',
+                'Generator' => 'ctest-3.6.20160726-g3e55f-dirty',
+            ])
+            ->createSubproject('MyExperimentalFeature')
+            ->createSubproject('MyProductionCode')
+            ->createSubproject('MyThirdPartyDependency')
+            ->setChecker('/usr/bin/valgrind')
+            ->createFailedTest('experimentalFail', ['Labels' => ['MyExperimentalFeature']])
+            ->createPassedTest(
+                'thirdparty',
+                ['Labels' =>
+                    ['MyThirdPartyDependency', 'NotASubproject']
+                ]
+            )
+            ->setStartTime($start)
+            ->setEndTime($end);
+
+        $subscribers = [
+            [ // This user should receive email
+                'user_1@company.tld',
+                BitmaskNotificationPreferences::EMAIL_DYNAMIC_ANALYSIS,
+                []
+            ],
+            [
+                // This user should not receive an email as they are not an author
+                'user_2@company.tld',
+                BitmaskNotificationPreferences::EMAIL_WARNING |
+                BitmaskNotificationPreferences::EMAIL_ERROR |
+                BitmaskNotificationPreferences::EMAIL_USER_CHECKIN_ISSUE_ANY_SECTION,
+                []
+            ],
+            [
+                // This user should receive an email, subscribed to two labels, one present
+                'user_3@company.tld',
+                BitmaskNotificationPreferences::EMAIL_SUBSCRIBED_LABELS,
+                ['MyThirdPartyDependency1', 'MyProductionCode']
+            ],
+            [
+                // This user should receive an email, with MyExperimentalFeature appended to subject
+                'user_4@company.tld',
+                BitmaskNotificationPreferences::EMAIL_ERROR |
+                BitmaskNotificationPreferences::EMAIL_USER_CHECKIN_ISSUE_ANY_SECTION,
+                [],
+            ],
+            [
+                'user_5@company.tld',
+                BitmaskNotificationPreferences::EMAIL_USER_CHECKIN_ISSUE_ANY_SECTION,
+                [],
+            ]
+        ];
+
+        $notifications = $this->getNotifications($subscribers);
+        $notification = $notifications->get('user_1@company.tld');
+
+        $this->assertNotNull($notification);
+        $this->assertCount(1, $notifications);
+
+        $expected = "A submission to CDash for the project CDashUseCaseProject has dynamic analysis tests failing or not run. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
+
+Details on the submission can be found at http://open.cdash.org/viewProject?projectid=321
+
+Project: CDashUseCaseProject
+SubProject Name: MyExperimentalFeature
+Site: Site.name
+Build Name: CTestTest-Linux-c++-Subprojects
+Build Time: {$datetime}
+Type: Experimental
+Total Dynamic analysis tests failing or not run: 1
+
+
+*Dynamic analysis tests failing or not run*
+experimentalFail (http://open.cdash.org/viewDynamicAnalysisFile.php?id=1)
+
+-CDash on open.cdash.org
+";
+        $actual = "{$notification}";
+        $this->assertEquals($expected, $actual);
     }
 }

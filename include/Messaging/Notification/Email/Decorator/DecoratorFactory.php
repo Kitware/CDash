@@ -18,6 +18,8 @@ class DecoratorFactory
             case 'BuildWarning':
             case 'BuildError':
                 return new BuildErrorDecorator($decorator);
+            case 'DynamicAnalysis':
+                return new DynamicAnalysisDecorator($decorator);
         }
     }
 

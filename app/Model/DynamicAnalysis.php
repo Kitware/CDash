@@ -289,4 +289,12 @@ class DynamicAnalysis
     {
         return $this->GetRelatedId($build, 'DESC');
     }
+
+    public function GetUrlForSelf()
+    {
+        $config = Config::getInstance();
+        $base_url = $config->getBaseUrl();
+
+        return "{$base_url}/viewDynamicAnalysisFile.php?id={$this->Id}";
+    }
 }

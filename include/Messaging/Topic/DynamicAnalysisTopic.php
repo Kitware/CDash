@@ -85,4 +85,20 @@ class DynamicAnalysisTopic extends Topic implements DecoratableInterface
         }
         return $this->collection;
     }
+
+    /**
+     * @return string
+     */
+    public function getTopicName()
+    {
+        return 'DynamicAnalysis';
+    }
+
+    /**
+     * @return string
+     */
+    public function getTopicDescription()
+    {
+        return 'Dynamic analysis tests failing or not run';
+    }
 }
