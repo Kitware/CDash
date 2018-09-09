@@ -32,7 +32,7 @@ class UpdateUseCase extends UseCase
 
         // create Site element
         $site = $update->appendChild(new \DOMElement('Site'));
-        $site->appendChild(new \DOMText($prop['Site']));
+        $site->appendChild(new \DOMText($this->properties['Site'][0]['Name']));
 
         // create BuildName element
         $buildName = $update->appendChild(new \DOMElement('BuildName'));
@@ -303,7 +303,7 @@ class UpdateUseCase extends UseCase
         $first = preg_replace('/\W/', '', $names[0]);
         $last = count($names) > 1 ? array_pop($names) : null;
         $last = $last ? ('.' . preg_replace('/\W*/', '', $last)) : '';
-        $site = $this->properties[UseCase::UPDATE]['Site'];
+        $site = $this->properties['Site'][0]['Name'];
         $email = "{$first}{$last}@{$site}";
         return strtolower($email);
     }
