@@ -1434,15 +1434,12 @@ function sendemail(ActionableBuildInterface $handler, $projectid)
     /*
         $builder = new SubscriptionBuilder($handler);
         $subscriptions = $builder->build();
-    
         $builder = new EmailBuilder(new EmailNotificationFactory(), new NotificationCollection());
         $builder
             ->setSubscriptions($subscriptions)
             ->setProject($Project);
-    
         $director = new NotificationDirector();
         $notifications = $director->build($builder);
-    
         if ($config->get('CDASH_TESTING_MODE')) {
             // @var \CDash\Messaging\Notification\NotificationInterface $notification
             foreach ($notifications as $notification) {

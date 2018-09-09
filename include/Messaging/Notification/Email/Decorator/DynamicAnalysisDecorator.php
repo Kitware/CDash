@@ -16,12 +16,10 @@
 
 namespace CDash\Messaging\Notification\Email\Decorator;
 
-
 use CDash\Messaging\Topic\Topic;
 
 class DynamicAnalysisDecorator extends Decorator
 {
-
     private $template = "{{ name }} ({{ url }})\n";
 
     /**
