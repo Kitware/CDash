@@ -8,7 +8,7 @@ class UpdateUseCaseTest extends CDashUseCaseTestCase
     {
         /** @var \CDash\Test\UseCase\UpdateUseCase $sut */
         $sut = UseCase::createBuilder($this, UseCase::UPDATE);
-        $sut->setSite('sub.domain.tld')
+        $sut->createSite(['Name' => 'sub.domain.tld'])
             ->setBuildName('Linux-g++-0.1-NewFeature_Dev')
             ->setBuildType(UseCase::EXPERIMENTAL)
             ->setUpdateCommand('git fetch')
