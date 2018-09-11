@@ -31,36 +31,12 @@
           <button class="btn btn-default btn-xs" ng-click="addFilter(filterdata, $index+1)">
             <span class="smallicon glyphicon glyphicon-plus"></span>
           </button>
-          <button class="btn btn-default btn-xs"
-                  ng-click="addFilterBlock($index+1)"
-                  tooltip-popup-delay="1500"
-                  tooltip-append-to-body="true"
-                  uib-tooltip="Add filter block. All items added to this sub-list will be combined into a single filter clause.">
-            <img class="smallicon" src="img/nested_list.svg"></img>
-          </button>
-          <span ng-if="$middle">
-            {{filterdata.filtercombine}}
-          </span>
+          <filter-buttons></filter-buttons>
         </div>
 
         <div ng-if="::filter.field">
           <filter-row></filter-row>
-          <button class="btn btn-default btn-xs"
-                  ng-click="addFilterBlock($index+1)"
-                  tooltip-popup-delay="1500"
-                  tooltip-append-to-body="true"
-                  uib-tooltip="Add filter block. All items added to this sub-list will be combined into a single filter clause.">
-            <img class="smallicon" src="img/nested_list.svg"></img>
-          </button>
-          <select ng-if="filterdata.filters.length > 1 && $first"
-                  ng-model="filterdata.filtercombine"
-                  ng-change="updateCombine(filterdata)">
-            <option value="and">and</option>
-            <option value="or">or</option>
-          </select>
-          <span ng-if="$middle">
-            {{filterdata.filtercombine}}
-          </span>
+          <filter-buttons></filter-buttons>
         </div>
       </li>
     </ul>
