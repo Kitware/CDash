@@ -112,8 +112,8 @@ function curl_request($request)
  * This method could be running on a worker that is either remote or local, so it accepts
  * a file handle or a filename that it can query the CDash API for.
  **/
-function do_submit($fileHandleOrSubmissionId, $projectid, $expected_md5 = '', $do_checksum = true,
-                   $submission_id = 0)
+function do_submit($fileHandleOrSubmissionId, $projectid, $buildid = null,
+                   $expected_md5 = '', $do_checksum = true, $submission_id = 0)
 {
     $config = Config::getInstance();
     $filehandle = getSubmissionFileHandle($fileHandleOrSubmissionId);
@@ -148,7 +148,7 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $expected_md5 = '', $d
     }
 
     // Parse the XML file
-    $handler = ctest_parse($filehandle, $projectid, $expected_md5, $do_checksum, $scheduleid);
+    $handler = ctest_parse($filehandle, $projectid, $buildid, $expected_md5, $do_checksum, $scheduleid);
     //this is the md5 checksum fail case
     if ($handler == false) {
         //no need to log an error since ctest_parse already did
@@ -175,7 +175,8 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $expected_md5 = '', $d
 }
 
 /** Asynchronous submission */
-function do_submit_asynchronous($filehandle, $projectid, $expected_md5 = '')
+function do_submit_asynchronous($filehandle, $projectid, $buildid = null,
+                                $expected_md5 = '')
 {
     include 'include/version.php';
     $config = Config::getInstance();
@@ -223,6 +224,9 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5 = '')
         echo "  <status>ERROR</status>\n";
         echo "  <message>Checksum failed for file.  Expected $expected_md5 but got $md5sum.</message>\n";
         $md5error = true;
+    }
+    if (!is_null($buildid)) {
+        echo " <buildId>$buildid</buildId>\n";
     }
     echo "  <md5>$md5sum</md5>\n";
     echo "</cdash>\n";
@@ -493,7 +497,7 @@ function put_submit_file()
     } else {
         // synchronous processing.
         $handle = fopen($filename, 'r');
-        do_submit($handle, $projectid, $buildfile->md5, false);
+        do_submit($handle, $projectid, null, $buildfile->md5, false);
 
         // The file is given a more appropriate name during do_submit, so we can
         // delete the old file now.

@@ -309,10 +309,8 @@ class KWWebTestCase extends WebTestCase
         return true;
     }
 
-    public function submission($projectname, $file, $header = null)
+    private function check_submission_result($result)
     {
-        $url = $this->url . "/submit.php?project=$projectname";
-        $result = $this->uploadfile($url, $file, $header);
         if ($result === false) {
             return false;
         }
@@ -329,6 +327,32 @@ class KWWebTestCase extends WebTestCase
             return false;
         }
         return true;
+    }
+
+    public function submission($projectname, $file, $header = null)
+    {
+        $url = $this->url . "/submit.php?project=$projectname";
+        $result = $this->uploadfile($url, $file, $header);
+        return $this->check_submission_result($result);
+    }
+
+    public function submission_assign_buildid($file, $project, $build, $site,
+            $stamp, $subproject = null, $header = null)
+    {
+        $url = $this->url . "/submit.php?project=$project&build=$build&site=$site&stamp=$stamp";
+        if (!is_null($subproject)) {
+            $url .= "&subproject=$subproject";
+        }
+
+        $result = $this->uploadfile($url, $file, $header);
+        $pattern = '#<buildId>([0-9]+)</buildId>#';
+        if ($this->check_submission_result($result) &&
+                preg_match($pattern, $result, $matches) &&
+                isset($matches[1])) {
+            return $matches[1];
+        }
+
+        return false;
     }
 
     public function uploadfile($url, $filename, $header = null)

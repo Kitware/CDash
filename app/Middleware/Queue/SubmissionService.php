@@ -167,7 +167,7 @@ class SubmissionService
     {
         try {
             $fh = fopen($message->file, 'r');
-            do_submit($fh, $message->project, $message->md5, $message->checksum);
+            do_submit($fh, $message->project, null, $message->md5, $message->checksum);
         } catch (\Exception $e) {
             Log::getInstance()->error($e);
             throw $e;
