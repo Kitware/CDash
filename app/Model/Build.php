@@ -22,6 +22,7 @@ include_once 'include/repository.php';
 use CDash\Collection\TestCollection;
 use CDash\Config;
 use CDash\Database;
+use CDash\Model\BuildGroup;
 use PDO;
 
 class Build
@@ -832,32 +833,24 @@ class Build
                 return true;
             }
 
-            // Add the groupid.
-            if ($this->GroupId) {
+            // Associate the parent with this build's group if necessary.
+            if ($this->ParentId > 0) {
                 $stmt = $this->PDO->prepare(
-                    'INSERT INTO build2group (groupid, buildid)
-                    VALUES (?, ?)');
-                pdo_execute($stmt, [$this->GroupId, $this->Id]);
-
-                // Associate the parent with this group too.
-                if ($this->ParentId > 0) {
-                    $stmt = $this->PDO->prepare(
                         'SELECT groupid FROM build2group WHERE buildid = ?');
-                    pdo_execute($stmt, [$this->ParentId]);
-                    $groupid = $stmt->fetchColumn();
-                    if ($groupid === false) {
-                        $config = Config::getInstance();
-                        $duplicate_sql = '';
-                        if ($config->get('CDASH_DB_TYPE') !== 'pgsql') {
-                            $duplicate_sql =
-                                'ON DUPLICATE KEY UPDATE groupid = groupid';
-                        }
-                        $stmt = $this->PDO->prepare(
+                pdo_execute($stmt, [$this->ParentId]);
+                $groupid = $stmt->fetchColumn();
+                if ($groupid === false) {
+                    $config = Config::getInstance();
+                    $duplicate_sql = '';
+                    if ($config->get('CDASH_DB_TYPE') !== 'pgsql') {
+                        $duplicate_sql =
+                            'ON DUPLICATE KEY UPDATE groupid = groupid';
+                    }
+                    $stmt = $this->PDO->prepare(
                             "INSERT INTO build2group (groupid, buildid)
                             VALUES (?, ?)
                             $duplicate_sql");
-                        pdo_execute($stmt, [$this->GroupId, $this->ParentId]);
-                    }
+                    pdo_execute($stmt, [$this->GroupId, $this->ParentId]);
                 }
             }
 
@@ -2677,6 +2670,7 @@ class Build
         if ($stmt->execute($query_params)) {
             $this->Id = pdo_insert_id('build');
             $this->PDO->commit();
+            $this->AssignToGroup();
             return true;
         }
 
@@ -2690,6 +2684,7 @@ class Build
         $id = Build::GetIdFromUuid($this->Uuid);
         if ($id) {
             $this->Id = $id;
+            $this->AssignToGroup();
             return false;
         }
 
@@ -2698,5 +2693,16 @@ class Build
         add_log($error . PHP_EOL . $e->getTraceAsString(), 'AddBuild', LOG_ERR,
                 $this->ProjectId);
         return false;
+    }
+
+    public function AssignToGroup()
+    {
+        // Find and record the groupid for this build.
+        $buildGroup = new BuildGroup();
+        $this->GroupId = $buildGroup->GetGroupIdFromRule($this);
+        $stmt = $this->PDO->prepare(
+                'INSERT INTO build2group (groupid, buildid)
+                VALUES (?, ?)');
+        pdo_execute($stmt, [$this->GroupId, $this->Id]);
     }
 }
