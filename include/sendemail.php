@@ -20,6 +20,8 @@ use CDash\Config;
 use CDash\Log;
 use CDash\Messaging\Notification\Email\EmailBuilder;
 use CDash\Messaging\Notification\Email\EmailNotificationFactory;
+use CDash\Messaging\Notification\Email\Mail;
+use CDash\Messaging\Notification\Mailer;
 use CDash\Messaging\Notification\NotificationCollection;
 use CDash\Messaging\Notification\NotificationDirector;
 use CDash\Messaging\Subscription\SubscriptionBuilder;
@@ -1407,50 +1409,41 @@ function send_update_email($handler, $projectid)
 /** Main function to send email if necessary */
 function sendemail(ActionableBuildInterface $handler, $projectid)
 {
-    include_once 'include/common.php';
-    require_once 'include/pdo.php';
-
-    $config = Config::getInstance();
-    $log = Log::getInstance();
     $Project = new Project();
     $Project->Id = $projectid;
     $Project->Fill();
 
+    // TODO: refactor this, probably into some sort of notification builder interface
+    /*
     $sendEmail = null;
-    $use_local_dir = Config::getInstance()->get('CDASH_USE_LOCAL_DIRECTORY');
 
     if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/sendemail.php')) {
         include_once 'local/sendemail.php';
         $sendEmail = new SendEmail();
         $sendEmail->SetProjectId($projectid);
     }
+    */
 
-    // If we shouldn't sent any emails we stop
+    // If we shouldn't send any emails we stop
     if ($Project->EmailBrokenSubmission == 0) {
         return;
     }
 
-    $config_subscribers = [];
-    /*
-        $builder = new SubscriptionBuilder($handler);
-        $subscriptions = $builder->build();
-        $builder = new EmailBuilder(new EmailNotificationFactory(), new NotificationCollection());
-        $builder
-            ->setSubscriptions($subscriptions)
-            ->setProject($Project);
-        $director = new NotificationDirector();
-        $notifications = $director->build($builder);
-        if ($config->get('CDASH_TESTING_MODE')) {
-            // @var \CDash\Messaging\Notification\NotificationInterface $notification
-            foreach ($notifications as $notification) {
-                $log->add_log($notification->getRecipient(), 'TESTING: EMAIL', LOG_DEBUG);
-                $log->add_log($notification->getSubject(), 'TESTING: EMAILTITLE', LOG_DEBUG);
-                $log->add_log($notification->getBody(), 'TESTING: EMAILBODY', LOG_DEBUG);
-                BuildEmail::SaveNotification($notification);
-            }
-        }
-    */
+    $builder = new SubscriptionBuilder($handler);
+    $subscriptions = $builder->build();
+    $builder = new EmailBuilder(new EmailNotificationFactory(), new NotificationCollection());
+    $builder
+        ->setSubscriptions($subscriptions)
+        ->setProject($Project);
+    $director = new NotificationDirector();
+    $notifications = $director->build($builder);
+    Mailer::send($notifications);
+
+    $sent_messages = Mail::getInstance()->getEmails();
+
     /** @var  Build $Build */
+    //$config_subscribers = [];
+    /*
     foreach ($handler->GetBuildCollection() as $label => $Build) {
         $Build->FillFromId($Build->Id);
         $groupid = $Build->GetGroup();
@@ -1583,4 +1576,5 @@ function sendemail(ActionableBuildInterface $handler, $projectid)
             }
         }
     }
+    */
 }
