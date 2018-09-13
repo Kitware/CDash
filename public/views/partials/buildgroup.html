@@ -11,40 +11,40 @@
   <thead>
     <tr class="table-heading1" >
       <td colspan="2" class="nob"></td>
-      <td ng-if="::buildgroup.hasupdatedata" align="center" colspan="{{::1 + cdash.showtimecolumns}}" width="5%" class="timeheader botl">Update</td>
-      <td ng-if="::buildgroup.hasconfiguredata" align="center" colspan="{{::2 + cdash.showtimecolumns}}" width="10%" class="timeheader botl">Configure</td>
-      <td ng-if="::buildgroup.hascompilationdata" align="center" colspan="{{::2 + cdash.showtimecolumns}}" width="10%" class="timeheader botl">Build</td>
-      <td ng-if="::buildgroup.hastestdata" align="center" colspan="{{::3 + cdash.extratestcolumns}}" width="15%" class="timeheader botl">Test</td>
+      <td ng-if="::buildgroup.hasupdatedata" align="center" colspan="{{::1 + cdash.showtimecolumns}}" class="timeheader botl">Update</td>
+      <td ng-if="::buildgroup.hasconfiguredata" align="center" colspan="{{::2 + cdash.showtimecolumns}}" class="timeheader botl">Configure</td>
+      <td ng-if="::buildgroup.hascompilationdata" align="center" colspan="{{::2 + cdash.showtimecolumns}}" class="timeheader botl">Build</td>
+      <td ng-if="::buildgroup.hastestdata" align="center" colspan="{{::3 + cdash.extratestcolumns}}" class="timeheader botl">Test</td>
       <td align="right" class="nob" colspan="{{::cdash.numcolumns}}"></td>
     </tr>
 
     <tr class="table-heading">
 
-      <th ng-if="::cdash.childview == 1" align="center" colspan="2" rowspan="2" width="5%" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'label', $event)">
+      <th ng-if="::cdash.childview == 1" align="center" colspan="2" rowspan="2" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'label', $event)">
         SubProject
         <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-label') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('label') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
       </th>
 
-      <th ng-if="::cdash.childview != 1" align="center" rowspan="2" width="20%" style="cursor: pointer"
+      <th ng-if="::cdash.childview != 1" align="center" rowspan="2" style="cursor: pointer"
           ng-click="updateOrderByFields(buildgroup, 'site', $event)">
         Site
         <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-site') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('site') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
       </th>
 
-      <th ng-if="::cdash.childview != 1" align="center" rowspan="2" width="25%" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'buildname', $event)">
+      <th ng-if="::cdash.childview != 1" align="center" rowspan="2" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'buildname', $event)">
         Build Name
         <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-buildname') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('buildname') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
       </th>
-      <td ng-if="::cdash.showorder" align="center" width="5%" class="timeheader botl"></td>
+      <td ng-if="::cdash.showorder" align="center" class="timeheader botl"></td>
     </tr>
 
     <tr class="table-heading">
-      <th ng-if="::buildgroup.hasupdatedata" align="center" width="3%" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'update.files', $event)">
+      <th ng-if="::buildgroup.hasupdatedata" align="center" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'update.files', $event)">
         {{::cdash.updatetype}}
         <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-update.files') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('update.files') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
       </th>
 
-      <th align="center" width="5%" style="cursor: pointer"
+      <th align="center" style="cursor: pointer"
           ng-if="::buildgroup.hasupdatedata && cdash.advancedview != 0 && cdash.showstarttime"
           ng-click="updateOrderByFields(buildgroup, 'update.timefull', $event)">
         Time
@@ -61,7 +61,7 @@
         <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-configure.warning') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('configure.warning') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
       </th>
 
-      <th align="center" width="5%" style="cursor: pointer"
+      <th align="center" style="cursor: pointer"
           ng-if="::buildgroup.hasconfiguredata && cdash.advancedview != 0 && cdash.showstarttime"
           ng-click="updateOrderByFields(buildgroup, 'configure.timefull', $event)">
         Time
@@ -78,57 +78,57 @@
         <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-compilation.warning') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('compilation.warning') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
       </th>
 
-      <th align="center" width="5%" style="cursor: pointer"
+      <th align="center" style="cursor: pointer"
           ng-if="::buildgroup.hascompilationdata && cdash.advancedview != 0 && cdash.showstarttime"
           ng-click="updateOrderByFields(buildgroup, 'compilation.timefull', $event)">
         Time
         <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-compilation.timefull') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('compilation.timefull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
       </th>
 
-      <th ng-if="::buildgroup.hastestdata" align="center" width="5%" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'test.notrun', $event)">
+      <th ng-if="::buildgroup.hastestdata" align="center" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'test.notrun', $event)">
         Not Run
         <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-test.notrun') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('test.notrun') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
       </th>
 
-      <th ng-if="::buildgroup.hastestdata" align="center" width="5%" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'test.fail', $event)">
+      <th ng-if="::buildgroup.hastestdata" align="center" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'test.fail', $event)">
         Fail
         <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-test.fail') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('test.fail') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
       </th>
 
-      <th ng-if="::buildgroup.hastestdata" align="center" width="5%" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'test.pass', $event)">
+      <th ng-if="::buildgroup.hastestdata" align="center" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'test.pass', $event)">
         Pass
         <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-test.pass') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('test.pass') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
       </th>
 
-      <th align="center" width="5%" style="cursor: pointer"
+      <th align="center" style="cursor: pointer"
           ng-if="::buildgroup.hastestdata && cdash.showtesttime"
           ng-click="updateOrderByFields(buildgroup, 'test.timefull', $event)">
         Time
         <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-test.timefull') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('test.timefull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
       </th>
 
-      <th align="center" width="5%" style="cursor: pointer"
+      <th align="center" style="cursor: pointer"
           ng-if="::buildgroup.hastestdata && cdash.advancedview != 0 && cdash.showProcTime"
           ng-click="updateOrderByFields(buildgroup, 'test.procTimeFull', $event)">
         Proc Time
         <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-test.procTimeFull') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('test.procTimeFull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
       </th>
 
-      <th align="center" width="20%" style="cursor: pointer"
+      <th align="center" style="cursor: pointer"
           ng-if="::cdash.showstarttime"
           ng-click="updateOrderByFields(buildgroup, 'builddatefull', $event)">
         Start Time
         <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-builddatefull') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('builddatefull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
       </th>
 
-      <th align="center" width="5%" style="cursor: pointer"
+      <th align="center" style="cursor: pointer"
           ng-if="::cdash.showorder"
           ng-click="updateOrderByFields(buildgroup, 'position', $event)">
         Order
         <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-position') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('position') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
       </th>
 
-      <th ng-if="::cdash.childview != 1 && cdash.displaylabels == 1" align="center" rowspan="2" width="5%" class="nob" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'label', $event)">
+      <th ng-if="::cdash.childview != 1 && cdash.displaylabels == 1" align="center" rowspan="2" class="nob" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'label', $event)">
         Labels
         <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-label') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('label') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
       </th>
