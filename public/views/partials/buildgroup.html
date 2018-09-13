@@ -15,7 +15,7 @@
       <td ng-if="::buildgroup.hasconfiguredata" align="center" colspan="{{::2 + cdash.showtimecolumns}}" width="10%" class="timeheader botl">Configure</td>
       <td ng-if="::buildgroup.hascompilationdata" align="center" colspan="{{::2 + cdash.showtimecolumns}}" width="10%" class="timeheader botl">Build</td>
       <td ng-if="::buildgroup.hastestdata" align="center" colspan="{{::3 + cdash.extratestcolumns}}" width="15%" class="timeheader botl">Test</td>
-      <td align="right" class="nob" colspan="{{::cdash.displaylabels == 1 ? 15 : 14}}"></td>
+      <td align="right" class="nob" colspan="{{::cdash.numcolumns}}"></td>
     </tr>
 
     <tr class="table-heading">
