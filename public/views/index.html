@@ -641,15 +641,15 @@
         <tbody>
           <tr ng-repeat="da in cdash.dynamicanalyses |orderBy:sortDA.orderByFields"
               ng-class-odd="'odd'" ng-class-even="'even'">
-            <td ng-if="::cdash.childview == 1" align="left">
+            <td ng-if="::cdash.childview == 1" class="paddt" align="left">
               {{::da.label}}
             </td>
 
-            <td ng-if="::cdash.childview != 1" align="left">
+            <td ng-if="::cdash.childview != 1" class="paddt" align="left">
               {{::da.site}}
             </td>
 
-            <td ng-if="::cdash.childview != 1" align="left">
+            <td ng-if="::cdash.childview != 1" class="paddt" align="left">
               {{::da.buildname}}
             </td>
 
