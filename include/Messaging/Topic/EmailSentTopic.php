@@ -36,7 +36,7 @@ class EmailSentTopic extends Topic
             $collection = $build->GetBuildEmailCollection($category);
             $email = $this->subscriber->getAddress();
             $buildEmails = $collection->get($email);
-            return is_null($buildEmails);
+            $subscribe = is_null($buildEmails);
         }
         return $subscribe;
     }

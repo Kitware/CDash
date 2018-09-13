@@ -22,6 +22,7 @@ abstract class NotificationPreferences implements
         NotifyOn::ANY,
         NotifyOn::LABELED,
         NotifyOn::NEVER,
+        NotifyOn::ONCE,
     ];
 
     protected $settings = [];
@@ -95,5 +96,11 @@ abstract class NotificationPreferences implements
         } else {
             $this->set(NotifyOn::SITE_MISSING, false);
         }
+    }
+
+    public function setEmailRedundantMessages($property)
+    {
+        $once = (int) $property === 0;
+        $this->set(NotifyOn::ONCE, $once);
     }
 }
