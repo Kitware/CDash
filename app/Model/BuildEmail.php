@@ -20,6 +20,7 @@ use CDash\Collection\BuildEmailCollection;
 use CDash\Database;
 use CDash\Log;
 use CDash\Messaging\Notification\Email\EmailMessage;
+use CDash\Messaging\Notification\NotificationInterface;
 
 class BuildEmail
 {
@@ -43,6 +44,20 @@ class BuildEmail
                 $email->Save();
             }
         }
+    }
+
+    public static function Log(NotificationInterface $notification, $sent)
+    {
+        $status = $sent ? 'SENT' : 'NOT SENT';
+        $class_name = get_class($notification);
+        $slash_pos = strrpos($class_name, '\\');
+        $pos = $slash_pos ? $slash_pos + 1 : 0;
+        $notification_type = substr($class_name, $pos);
+        $title = $notification->getSubject();
+        $recipient = $notification->getRecipient();
+        $message = "[{$status}] {$notification_type} titled, '{$title}' to {$recipient}";
+        $log = Log::getInstance();
+        $log->add_log($message, 'BuildEmail::SaveNotification');
     }
 
     /**
@@ -86,7 +101,7 @@ class BuildEmail
         $sql = '
             SELECT
                 buildemail.*,
-                user.email,
+                user.email
             FROM buildemail 
             JOIN user ON user.id=buildemail.userid
             WHERE buildemail.buildid=:b 
@@ -140,12 +155,15 @@ class BuildEmail
             return false;
         }
 
-        $sql = 'INSERT INTO buildemail (`userid`, `buildid`, `category`) VALUE (:u, :b, :c)';
+        $this->SetTime();
+
+        $sql = 'INSERT INTO buildemail (`userid`, `buildid`, `category`, `time`) VALUE (:u, :b, :c, :t)';
         $db = Database::getInstance();
         $stmt = $db->prepare($sql);
         $stmt->bindParam(':u', $this->UserId);
         $stmt->bindParam(':b', $this->BuildId);
         $stmt->bindParam(':c', $this->Category);
+        $stmt->bindParam(':t', $this->Time);
         return $db->execute($stmt);
     }
 
@@ -251,8 +269,11 @@ class BuildEmail
      * @param $time
      * @return $this
      */
-    public function SetTime($time)
+    public function SetTime($time = null)
     {
+        if (is_null($time)) {
+            $time = date('Y-m-d H:i:s');
+        }
         $this->Time = $time;
         return $this;
     }
