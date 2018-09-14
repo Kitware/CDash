@@ -1,4 +1,18 @@
 <?php
+/**
+ * =========================================================================
+ *   Program:   CDash - Cross-Platform Dashboard System
+ *   Module:    $Id$
+ *   Language:  PHP
+ *   Date:      $Date$
+ *   Version:   $Revision$
+ *   Copyright (c) Kitware, Inc. All rights reserved.
+ *   See LICENSE or http://www.cdash.org/licensing/ for details.
+ *   This software is distributed WITHOUT ANY WARRANTY; without even
+ *   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ *   PURPOSE. See the above copyright notices for more information.
+ * =========================================================================
+ */
 namespace CDash\Collection;
 
 abstract class Collection implements CollectionInterface
@@ -33,6 +47,7 @@ abstract class Collection implements CollectionInterface
         if ($this->valid()) {
             return $this->collection[$this->key()];
         }
+        return null;
     }
 
     /**
@@ -57,6 +72,7 @@ abstract class Collection implements CollectionInterface
         if (isset($this->keys[$this->position])) {
             return $this->keys[$this->position];
         }
+        return null;
     }
 
     /**
@@ -91,9 +107,9 @@ abstract class Collection implements CollectionInterface
     }
 
     /**
-     * Add an item to the collection.
      * @param $item
-     * @return mixed
+     * @param null $name
+     * @return $this|mixed
      * TODO: Watch this in a debugger when integration testing
      */
     public function addItem($item, $name = null)

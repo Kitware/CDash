@@ -14,8 +14,6 @@
 
 namespace CDash\Collection;
 
-use CDash\Model\BuildError;
-
 class BuildErrorCollection extends Collection
 {
     /**
