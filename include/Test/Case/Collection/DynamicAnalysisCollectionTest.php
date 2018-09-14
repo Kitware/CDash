@@ -21,11 +21,15 @@ class DynamicAnalysisCollectionTest extends PHPUnit_Framework_TestCase
 {
     public function testAdd()
     {
+        $key = 'Barney';
         $analysis = new DynamicAnalysis();
-        $analysis->Name = 'Barney';
+        $analysis->Name = $key;
 
         $sut = new DynamicAnalysisCollection();
+
+        $this->assertNull($sut->get($key));
+
         $this->assertSame($sut, $sut->add($analysis));
-        $this->assertSame($analysis, $sut->get('Barney'));
+        $this->assertSame($analysis, $sut->get($key));
     }
 }

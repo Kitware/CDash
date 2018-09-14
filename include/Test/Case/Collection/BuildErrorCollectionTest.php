@@ -23,6 +23,9 @@ class BuildErrorCollectionTest extends PHPUnit_Framework_TestCase
     {
         $sut = new BuildErrorCollection();
         $buildError = new BuildError();
+
+        $this->assertNull($sut->current());
+
         $sut->add($buildError);
 
         $this->assertSame($buildError, $sut->current());

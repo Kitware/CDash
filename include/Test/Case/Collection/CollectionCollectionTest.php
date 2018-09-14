@@ -10,6 +10,10 @@ class CollectionCollectionTest extends \PHPUnit_Framework_TestCase
         $label = new LabelCollection();
 
         $sut = new CollectionCollection();
+        $this->assertNull($sut->get(BuildCollection::class));
+        $this->assertNull($sut->get(ConfigureCollection::class));
+        $this->assertNull($sut->get(LabelCollection::class));
+
         $sut->add($build)
             ->add($configure)
             ->add($label);

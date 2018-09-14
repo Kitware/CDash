@@ -16,14 +16,17 @@ class ConfigureCollectionTest extends CDashTestCase
         $configure2 = new BuildConfigure();
         $configure3 = new BuildConfigure();
 
+        $key = 'Configure';
         $sut = new ConfigureCollection();
+
+        $this->assertNull($sut->get($key));
+
         $sut->add($configure1)
             ->add($configure2)
             ->add($configure3);
 
         $this->assertCount(1, $sut);
 
-        $key = 'Configure';
         $this->assertNotSame($configure1, $sut->get($key));
         $this->assertNotSame($configure2, $sut->get($key));
         $this->assertSame($configure3, $sut->get($key));

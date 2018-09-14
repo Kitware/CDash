@@ -32,6 +32,10 @@ class BuildEmailCollectionTest extends CDashTestCase
         $user2_1->SetEmail('two@company.tld');
 
         $sut = new BuildEmailCollection();
+
+        $this->assertNull($sut->get('one@company.tld'));
+        $this->assertNull($sut->get('two@company.tld'));
+
         $sut->add($user1_1);
 
         $this->assertTrue($sut->has('one@company.tld'));

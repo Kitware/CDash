@@ -32,6 +32,11 @@ class BuildCollectionTest extends CDashTestCase
         $build3->Name = 'BuildA';
 
         $sut = new BuildCollection();
+
+        $this->assertNull($sut->get('BuildC'));
+        $this->assertNull($sut->get('BuildB'));
+        $this->assertNull($sut->get('BuildA'));
+        
         $sut->add($build1);
         $sut->add($build2);
         $sut->add($build3);

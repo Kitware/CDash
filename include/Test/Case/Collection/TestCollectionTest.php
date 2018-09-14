@@ -21,11 +21,12 @@ class TestCollectionTest extends PHPUnit_Framework_TestCase
 {
     public function testAdd()
     {
+        $key = 'Barney';
         $test = new Test();
-        $test->Name = 'Barney';
+        $test->Name = $key;
 
         $sut = new TestCollection();
         $this->assertSame($sut, $sut->add($test));
-        $this->assertSame($test, $sut->get('Barney'));
+        $this->assertSame($test, $sut->get($key));
     }
 }
