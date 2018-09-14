@@ -16,9 +16,8 @@
 
 namespace CDash\Messaging\Notification\Email;
 
-
 use Swift_Events_SendEvent;
-
+// TODO: refactor as specifically a EmailSendTestListener
 class EmailSendListener implements \Swift_Events_SendListener
 {
     protected $mail;
