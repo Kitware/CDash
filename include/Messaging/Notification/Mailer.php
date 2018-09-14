@@ -59,10 +59,12 @@ class Mailer extends Singleton
         }
 
         $config = Config::getInstance();
-        BuildEmail::Log($notification, $status);
 
-        // TODO: remove config check after integration test refactors
-        if ($status || $config->get('CDASH_TESTING_MODE')) {
+        // TODO: Yikes! Remove with extreme prejudice after integration test refactor
+        $status = $config->get('CDASH_TESTING_MODE') ? 1 : $status;
+
+        BuildEmail::Log($notification, $status);
+        if ($status) {
             BuildEmail::SaveNotification($notification);
         }
     }
