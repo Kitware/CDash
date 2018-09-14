@@ -12,5 +12,6 @@ class TestMeasurementCollection extends Collection
     {
         $key = str_replace(' ', '', $measurement->Name);
         parent::addItem($measurement, $key);
+        return $this;
     }
 }
