@@ -13,20 +13,19 @@
  *   PURPOSE. See the above copyright notices for more information.
  * =========================================================================
  */
-namespace CDash\Collection;
 
+use CDash\Collection\TestCollection;
 use CDash\Model\Test;
 
-class TestCollection extends Collection
+class TestCollectionTest extends PHPUnit_Framework_TestCase
 {
-
-    /**
-     * @param Test $test
-     * @return $this
-     */
-    public function add(Test $test)
+    public function testAdd()
     {
-        parent::addItem($test, $test->Name);
-        return $this;
+        $test = new Test();
+        $test->Name = 'Barney';
+
+        $sut = new TestCollection();
+        $this->assertSame($sut, $sut->add($test));
+        $this->assertSame($test, $sut->get('Barney'));
     }
 }
