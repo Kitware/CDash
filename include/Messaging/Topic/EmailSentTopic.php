@@ -47,6 +47,8 @@ class EmailSentTopic extends Topic
      */
     public function itemHasTopicSubject(Build $build, $item)
     {
-        // TODO: Implement itemHasTopicSubject() method.
+        // What is this? We've already determined that the build email was not sent
+        // so just return true here
+        return true;
     }
 }
