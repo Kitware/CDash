@@ -58,9 +58,11 @@ class Mailer extends Singleton
                 throw new \Exception($message);
         }
 
+        $config = Config::getInstance();
         BuildEmail::Log($notification, $status);
 
-        if ($status) {
+        // TODO: remove config check after integration test refactors
+        if ($status || $config->get('CDASH_TESTING_MODE')) {
             BuildEmail::SaveNotification($notification);
         }
     }
