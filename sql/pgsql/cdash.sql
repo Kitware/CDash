@@ -25,6 +25,7 @@ CREATE TABLE "build" (
   "testfailed" smallint DEFAULT '-1',
   "testpassed" smallint DEFAULT '-1',
   "testtimestatusfailed" smallint DEFAULT '-1',
+  "testduration" integer DEFAULT '0' NOT NULL,
   "notified" smallint DEFAULT '0' NOT NULL,
   "done" smallint DEFAULT '0' NOT NULL,
   "uuid" character varying(36) NOT NULL,

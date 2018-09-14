@@ -39,6 +39,7 @@ CREATE TABLE `build` (
   `testfailed` smallint(6) DEFAULT '-1',
   `testpassed` smallint(6) DEFAULT '-1',
   `testtimestatusfailed` smallint(6) DEFAULT '-1',
+  `testduration` int(11) NOT NULL default '0',
   `notified` tinyint(1) default '0',
   `done` tinyint(1) default '0',
   `uuid` varchar(36) NOT NULL,
