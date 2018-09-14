@@ -13,6 +13,7 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 namespace CDash\Model;
 
 include_once 'include/common.php';
@@ -89,6 +90,7 @@ class Build
     public $NightlyStartTime;
     public $BeginningOfDay;
     public $EndOfDay;
+
     private $TestCollection;
     private $PDO;
     private $Site;
@@ -101,6 +103,7 @@ class Build
     private $LabelCollection;
     private $DynamicAnalysisCollection;
     private $BuildEmailCollection;
+    private $Update;
 
     public function __construct()
     {
@@ -255,7 +258,7 @@ class Build
     }
 
     /** Update the total testing duration */
-    public function SaveTotalTestsTime($duration, $update_parent=true)
+    public function SaveTotalTestsTime($duration, $update_parent = true)
     {
         if (!$this->Id || !is_numeric($this->Id)) {
             return false;
@@ -301,7 +304,7 @@ class Build
         }
 
         $stmt = $this->PDO->preapre(
-          'UPDATE build SET endtime = ? WHERE id = ?');
+            'UPDATE build SET endtime = ? WHERE id = ?');
         if (!pdo_execute($stmt, [$end_time, $this->Id])) {
             return false;
         }
@@ -404,7 +407,7 @@ class Build
     }
 
     /** Get the previous build id. */
-    public function GetPreviousBuildId($previous_parentid=null)
+    public function GetPreviousBuildId($previous_parentid = null)
     {
         if (!$this->Id) {
             return 0;
@@ -415,11 +418,11 @@ class Build
             "AND starttime < :starttime ORDER BY starttime DESC";
         $values_to_bind = [':starttime' => $this->StartTime];
         return $this->GetRelatedBuildId($previous_clause, $values_to_bind,
-                                        $previous_parentid);
+            $previous_parentid);
     }
 
     /** Get the next build id. */
-    public function GetNextBuildId($next_parentid=null)
+    public function GetNextBuildId($next_parentid = null)
     {
         if (!$this->Id) {
             return 0;
@@ -429,11 +432,11 @@ class Build
         $next_clause = "AND starttime > :starttime ORDER BY starttime";
         $values_to_bind = [':starttime' => $this->StartTime];
         return $this->GetRelatedBuildId($next_clause, $values_to_bind,
-                                        $next_parentid);
+            $next_parentid);
     }
 
     /** Get the most recent build id. */
-    public function GetCurrentBuildId($current_parentid=null)
+    public function GetCurrentBuildId($current_parentid = null)
     {
         if (!$this->Id) {
             return 0;
@@ -840,13 +843,13 @@ class Build
                 // Does the parent still need to be created?
                 if ($this->SubProjectName && $this->ParentId < 1) {
                     if (!$this->CreateParentBuild(
-                                $nbuilderrors, $nbuildwarnings)) {
+                        $nbuilderrors, $nbuildwarnings)) {
                         // Someone else created the parent after we called
                         // UpdateBuild(this->Id,...).
                         // In this case we also need to manually update
                         // the parent as well.
                         $this->UpdateBuild($this->ParentId,
-                                $nbuilderrors, $nbuildwarnings);
+                            $nbuilderrors, $nbuildwarnings);
                     }
                 }
                 // Now that the existing build and its parent (if any) have
@@ -948,7 +951,7 @@ class Build
     private function GetNumberOfTestsByField($field)
     {
         if ($field != 'testpassed' && $field != 'testfailed' &&
-                $field != 'testnotrun') {
+            $field != 'testnotrun') {
             return false;
         }
         $stmt = $this->PDO->prepare(
@@ -1005,7 +1008,7 @@ class Build
             'UPDATE build SET testnotrun = ?, testfailed = ?, testpassed = ?
             WHERE id = ?');
         if (!pdo_execute($stmt,
-                [$numberTestsNotRun, $numberTestsFailed, $numberTestsPassed,
+            [$numberTestsNotRun, $numberTestsFailed, $numberTestsPassed,
                 $this->Id])) {
             return false;
         }
@@ -1088,7 +1091,7 @@ class Build
         }
 
         $limit_clause = '';
-        $limit = (int) trim($maxitems);
+        $limit = (int)trim($maxitems);
         if ($limit > 0) {
             $limit_clause = "LIMIT $limit";
         }
@@ -1129,7 +1132,7 @@ class Build
      */
     public function GetFailedTimeStatusTests($maxitems = 0, $max_time_status = 3)
     {
-        $max_time_status = (int) trim($max_time_status);
+        $max_time_status = (int)trim($max_time_status);
         $criteria = "b2t.timestatus > $max_time_status";
         return $this->GetTests($criteria, $maxitems);
     }
@@ -1281,7 +1284,7 @@ class Build
         // Check if a diff already exists for this build.
         $this->PDO->beginTransaction();
         $stmt = $this->PDO->prepare(
-                'SELECT * FROM configureerrordiff
+            'SELECT * FROM configureerrordiff
                 WHERE buildid = :buildid AND type = 1 FOR UPDATE');
         $stmt->bindParam(':buildid', $this->Id);
         pdo_execute($stmt);
@@ -1301,7 +1304,7 @@ class Build
         // UPDATE or INSERT a new record as necessary.
         if ($row) {
             $stmt = $this->PDO->prepare(
-                    'UPDATE configureerrordiff SET difference = :difference
+                'UPDATE configureerrordiff SET difference = :difference
                     WHERE buildid = :buildid AND type = 1');
         } else {
             $duplicate_sql = '';
@@ -1310,7 +1313,7 @@ class Build
                 $duplicate_sql = 'ON DUPLICATE KEY UPDATE difference = :difference';
             }
             $stmt = $this->PDO->prepare(
-                    "INSERT INTO configureerrordiff (buildid, type, difference)
+                "INSERT INTO configureerrordiff (buildid, type, difference)
                     VALUES(:buildid, 1, :difference)
                     $duplicate_sql");
         }
@@ -1422,7 +1425,7 @@ class Build
                     FROM build2test
                     WHERE buildid = ? AND testid = ?');
                 if (!pdo_execute($previous_test_stmt,
-                        [$previousbuildid, $previoustestid])) {
+                    [$previousbuildid, $previoustestid])) {
                     continue;
                 }
 
@@ -1477,8 +1480,8 @@ class Build
                 SET timemean = ?, timestd = ?, timestatus = ?
                 WHERE buildid = ? AND testid = ?');
             if (!pdo_execute($update_stmt,
-                    [$timemean, $timestd, $timestatus, $this->Id,
-                     $testid])) {
+                [$timemean, $timestd, $timestatus, $this->Id,
+                    $testid])) {
                 continue;
             }
             if ($timestatus >= $projecttestmaxstatus) {
@@ -1528,7 +1531,7 @@ class Build
 
         // Find the number of authors that contributed to this changeset.
         $nauthors_stmt = $this->PDO->prepare(
-                'SELECT count(author) FROM
+            'SELECT count(author) FROM
                     (SELECT uf.author FROM updatefile AS uf
                      JOIN build2update AS b2u ON (b2u.updateid=uf.updateid)
                      WHERE b2u.buildid=? GROUP BY author)
@@ -1653,7 +1656,7 @@ class Build
         // Insert or update appropriately.
         $this->PDO->beginTransaction();
         $stmt = $this->PDO->prepare(
-                'SELECT totalupdatedfiles FROM userstatistics
+            'SELECT totalupdatedfiles FROM userstatistics
                 WHERE userid=:userid AND projectid=:projectid AND
                 checkindate=:checkindate FOR UPDATE');
         $stmt->bindParam(':userid', $userid);
@@ -1665,7 +1668,7 @@ class Build
         if ($row) {
             // Update existing entry.
             $stmt = $this->PDO->prepare(
-                    'UPDATE userstatistics SET
+                'UPDATE userstatistics SET
                     totalupdatedfiles=totalupdatedfiles+1,
                     totalbuilds=totalbuilds+:totalbuilds,
                     nfixedwarnings=nfixedwarnings+:nfixedwarnings,
@@ -1690,7 +1693,7 @@ class Build
         } else {
             // Insert a new row into the database.
             $stmt = $this->PDO->prepare(
-                    'INSERT INTO userstatistics
+                'INSERT INTO userstatistics
                     (userid,projectid,checkindate,totalupdatedfiles,totalbuilds,
                      nfixedwarnings,nfailedwarnings,nfixederrors,nfailederrors,
                      nfixedtests,nfailedtests)
@@ -1935,7 +1938,7 @@ class Build
             WHERE parentid = ' . Build::STANDALONE_BUILD . ' AND name = ? AND
                   siteid = ? AND stamp = ? AND projectid = ?');
         if (!pdo_execute($stmt,
-                [$this->Name, $this->SiteId, $this->Stamp, $this->ProjectId])) {
+            [$this->Name, $this->SiteId, $this->Stamp, $this->ProjectId])) {
             return false;
         }
         $existing_buildid = $stmt->fetchColumn();
@@ -1980,8 +1983,8 @@ class Build
             WHERE parentid = ' . Build::STANDALONE_BUILD . ' AND
                   siteid = ? AND name = ? AND stamp = ? AND projectid = ?');
         if (!pdo_execute($stmt,
-                [$this->ParentId, $this->SiteId, $this->Name, $this->Stamp,
-                 $this->ProjectId])) {
+            [$this->ParentId, $this->SiteId, $this->Name, $this->Stamp,
+                $this->ProjectId])) {
             return false;
         }
         return true;
@@ -2118,9 +2121,9 @@ class Build
                 // Avoid infinite recursion.
                 // This should never happen, but we might as well be careful.
                 add_log("$buildid is its own parent",
-                        'Build::UpdateBuild', LOG_ERR,
-                        $this->ProjectId, $this->Id,
-                        ModelType::BUILD, $this->Id);
+                    'Build::UpdateBuild', LOG_ERR,
+                    $this->ProjectId, $this->Id,
+                    ModelType::BUILD, $this->Id);
                 return;
             }
             $this->UpdateBuild($parentid, $newErrors, $newWarnings);
@@ -2321,7 +2324,7 @@ class Build
         pdo_execute($stmt, [$idToNotify]);
     }
 
-    public function SetConfigureDuration($duration, $update_parent=true)
+    public function SetConfigureDuration($duration, $update_parent = true)
     {
         if (!$this->Id || !is_numeric($this->Id)) {
             return;
@@ -2347,7 +2350,7 @@ class Build
         }
     }
 
-    public function UpdateBuildDuration($duration, $update_parent=true)
+    public function UpdateBuildDuration($duration, $update_parent = true)
     {
         if ($duration === 0 || !$this->Id || !is_numeric($this->Id)) {
             return;
@@ -2367,7 +2370,7 @@ class Build
             'UPDATE build SET buildduration = buildduration + :duration
             WHERE id = :id');
         if (!pdo_execute($update_stmt,
-                    [':duration' => $duration, ':id' => $this->Id])) {
+            [':duration' => $duration, ':id' => $this->Id])) {
             $this->PDO->rollBack();
             return;
         }
@@ -2386,7 +2389,7 @@ class Build
                 return;
             }
             if (!pdo_execute($update_stmt,
-                        [':duration' => $duration, ':id' => $this->ParentId])) {
+                [':duration' => $duration, ':id' => $this->ParentId])) {
                 $this->PDO->rollBack();
                 return;
             }
@@ -2508,7 +2511,7 @@ class Build
     {
         if ($parentid > 0 && $parentid == $this->Id) {
             add_log("Attempt to mark build $this->Id as its own parent",
-                    'Build::SetParentId', LOG_ERR,
+                'Build::SetParentId', LOG_ERR,
                 $this->ProjectId, $this->Id,
                 ModelType::BUILD, $this->Id);
             return;
@@ -2686,7 +2689,7 @@ class Build
     {
         $pdo = Database::getInstance()->getPdo();
         $stmt = $pdo->prepare(
-                'SELECT id FROM build WHERE uuid = ?');
+            'SELECT id FROM build WHERE uuid = ?');
         pdo_execute($stmt, [$uuid]);
         return $stmt->fetchColumn();
     }
@@ -2724,26 +2727,26 @@ class Build
 
         // Build doesn't exist yet, create it here.
         $query_params = [
-            ':siteid'         => $this->SiteId,
-            ':projectid'      => $this->ProjectId,
-            ':stamp'          => $this->Stamp,
-            ':name'           => $this->Name,
-            ':type'           => $this->Type,
-            ':generator'      => $this->Generator,
-            ':starttime'      => $this->StartTime,
-            ':endtime'        => $this->EndTime,
-            ':submittime'     => $this->SubmitTime,
-            ':command'        => $this->Command,
-            ':log'            => $this->Log,
-            ':nbuilderrors'   => $nbuilderrors,
+            ':siteid' => $this->SiteId,
+            ':projectid' => $this->ProjectId,
+            ':stamp' => $this->Stamp,
+            ':name' => $this->Name,
+            ':type' => $this->Type,
+            ':generator' => $this->Generator,
+            ':starttime' => $this->StartTime,
+            ':endtime' => $this->EndTime,
+            ':submittime' => $this->SubmitTime,
+            ':command' => $this->Command,
+            ':log' => $this->Log,
+            ':nbuilderrors' => $nbuilderrors,
             ':nbuildwarnings' => $nbuildwarnings,
-            ':parentid'       => $this->ParentId,
-            ':uuid'           => $this->Uuid,
-            ':pullrequest'    => $this->PullRequest
+            ':parentid' => $this->ParentId,
+            ':uuid' => $this->Uuid,
+            ':pullrequest' => $this->PullRequest
         ];
         $this->PDO->beginTransaction();
         $stmt = $this->PDO->prepare(
-                "INSERT INTO build
+            "INSERT INTO build
                 (siteid, projectid, stamp, name, type, generator,
                  starttime, endtime, submittime, command, log,
                  builderrors, buildwarnings, parentid, uuid,
@@ -2968,11 +2971,11 @@ class Build
             }
 
             $labels = array_unique(array_map(
-            function ($label) {
-                return $label->Text;
-            },
-            $labels
-          ));
+                function ($label) {
+                    return $label->Text;
+                },
+                $labels
+            ));
 
             $this->AggregateLabels = $labels;
         }
@@ -3066,5 +3069,15 @@ class Build
     public function SetBuildEmailCollection(BuildEmailCollection $collection)
     {
         $this->BuildEmailCollection = $collection;
+    }
+
+    public function SetUpdate(BuildUpdate $update)
+    {
+        $this->Update = $update;
+    }
+
+    public function GetUpdate()
+    {
+        return $this->Update;
     }
 }
