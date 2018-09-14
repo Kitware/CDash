@@ -3,13 +3,9 @@ namespace CDash\Messaging\Topic;
 
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
-use CDash\Collection\BuildCollection;
-use CDash\Collection\TestCollection;
-use CDash\Messaging\Notification\Email\Decorator\TestFailureDecorator;
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Preferences\NotificationPreferences;
-use CDash\ServiceContainer;
-use CDash\Messaging\Topic\TestFailureTopic;
+use CDash\Model\BuildUpdate;
 
 class TopicFactory
 {
@@ -140,6 +136,8 @@ class TopicFactory
                 return new TestFailureTopic();
             case 'UpdateError':
                 return new UpdateErrorTopic();
+            case 'Update':
+                return new UpdateTopic();
             default:
                 return null;
         }

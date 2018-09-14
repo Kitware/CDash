@@ -9,7 +9,7 @@ abstract class NotificationPreferences implements
 {
     protected $properties = [
         NotifyOn::FILTERED,
-        NotifyOn::UPDATE_ERROR,
+        NotifyOn::UPDATE,
         NotifyOn::CONFIGURE,
         NotifyOn::BUILD_WARNING,
         NotifyOn::BUILD_ERROR,
