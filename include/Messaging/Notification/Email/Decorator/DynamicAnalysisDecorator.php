@@ -47,5 +47,6 @@ class DynamicAnalysisDecorator extends Decorator
         $description = $topic->getTopicDescription();
         $full_text = $this->decorateWith($this->template, $data);
         $this->text = "\n*{$description}{$maxReachedText}*\n{$full_text}";
+        return $this->text;
     }
 }
