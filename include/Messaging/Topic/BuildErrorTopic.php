@@ -73,30 +73,22 @@ class BuildErrorTopic extends Topic implements DecoratableInterface
     }
 
     /**
-     * @param int $type
+     * @param $type
+     * @return $this
      */
     public function setType($type)
     {
         $this->type = $type;
+        return $this;
     }
 
     public function getTopicName()
     {
-        // For now the use of == here is intentional
-        // TODO: initialize type?
-        if ($this->type == Build::TYPE_ERROR) {
-            return 'BuildError';
-        } elseif ($this->type === Build::TYPE_WARN) {
-            return 'BuildWarning';
-        }
+        return $this->type == Build::TYPE_ERROR ? 'BuildError' : 'BuildWarning';
     }
 
     public function getTopicDescription()
     {
-        if ($this->type == Build::TYPE_ERROR) {
-            return 'Errors';
-        } elseif ($this->type === Build::TYPE_WARN) {
-            return 'Warnings';
-        }
+        return $this->type === Build::TYPE_ERROR ? 'Errors' : 'Warnings';
     }
 }
