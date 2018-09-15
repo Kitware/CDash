@@ -113,6 +113,8 @@ class Config extends Singleton
             $uri = "{$protocol}://{$host}{$port}{$path}";
         }
 
+        trim($uri, '/');
+
         return $uri;
     }
 
