@@ -33,20 +33,4 @@ class DecoratorFactory
                 return new TestFailureDecorator($decorator);
         }
     }
-
-    public static function create($name)
-    {
-        switch ($name) {
-            case 'TestFailure':
-                return new TestFailureDecorator();
-            case 'SummaryDecorator':
-                return new SummaryDecorator();
-            case 'PreambleDecorator':
-                return new PreambleDecorator();
-            case 'FooterDecorator':
-                return new FooterDecorator();
-            case 'LabledDecorator':
-              return new LabeledDecorator();
-        }
-    }
 }
