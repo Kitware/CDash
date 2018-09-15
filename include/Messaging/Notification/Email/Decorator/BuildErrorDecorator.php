@@ -22,8 +22,7 @@ use CDash\Model\BuildFailure;
 
 class BuildErrorDecorator extends Decorator
 {
-    private $srcTemplate = "{{ srcfile }} line {{ srcline }} ({{ uri }})\n{{ text }}\n{{ context }}\n";
-    private $txtTemplate = "{{ text }}\n{{ context }}\n";
+    private $template = "{{ text }}\n{{ error }}{{ context }}";
 
     /**
      * @param Topic $topic
@@ -35,22 +34,15 @@ class BuildErrorDecorator extends Decorator
         $counter = 0;
         $data = [];
 
-        /** @var BuildError $error */
+        /** @var BuildError|BuildFailure $error */
         foreach ($errors as $error) {
             $line = [
-                'text' => $this->getErrorText($error),
-                'context' => $this->getErrorPostContext($error),
+                'context' => $this->decorateTemplateContext($error),
+                'error' => $this->decorateTemplateError($error),
+                'text' => $this->decorateTemplateText($error),
+                'uri' => $error->GetUrlForSelf(),
             ];
-            $tmpl = $this->txtTemplate;
 
-            if (strlen($error->SourceFile) > 0) {
-                $line = array_merge($line, [
-                    'srcfile' => $error->SourceFile,
-                    'srcline' => $this->getErrorSourceLine($error),
-                    'uri' => $error->GetUrlForSelf(),
-                ]);
-                $tmpl = $this->srcTemplate;
-            }
             $data[] = $line;
             if (++$counter === $this->maxTopicItems) {
                 break;
@@ -59,27 +51,64 @@ class BuildErrorDecorator extends Decorator
         $description = $topic->getTopicDescription();
         $maxReachedText = $this->maxTopicItems < $errors->count() ?
             " (first {$this->maxTopicItems} included)" : '';
-        $this->text = "\n*{$description}*{$maxReachedText}\n{$this->decorateWith($tmpl, $data)}\n";
+        $this->text = "\n*{$description}*{$maxReachedText}\n{$this->decorateWith($this->template, $data)}\n";
         return $this->text;
     }
 
-    protected function getErrorText($error)
+    /**
+     * @param BuildError|BuildFailure $error
+     * @return string
+     */
+    protected function decorateTemplateText($error)
     {
-        return $this->isAFailure($error) ? $error->StdError : $error->Text;
+        $text = '';
+        if (is_a($error, BuildError::class)) {
+            $text = strlen($error->SourceFile) > 0 ?
+                "{$error->SourceFile} line {$error->SourceLine} ({$error->GetUrlForSelf()})" :
+                $error->Text;
+        } elseif (is_a($error, BuildFailure::class)) {
+            $text = "{$error->SourceFile} ({$error->GetUrlForSelf()})";
+        }
+        return $text;
     }
 
-    protected function getErrorPostContext($error)
+
+    /**
+     * @param BuildError|BuildFailure $error
+     * @return string
+     */
+    protected function decorateTemplateError($error)
     {
-        return $this->isAFailure($error) ? '' : $error->PostContext;
+        $text = '';
+        if (is_a($error, BuildError::class)) {
+            // If the BuildError does not have a source file BuildError::Text
+            // has already been set as the template text so use
+            // BuildError::PostContext
+            $text = strlen($error->SourceFile) > 0 ?
+                trim($error->Text) :
+                trim($error->PostContext);
+        } elseif (is_a($error, BuildFailure::class)) {
+            $text = $error->StdOutput;
+        }
+
+        $text .= strlen($text) ? PHP_EOL : '';
+        return $text;
     }
 
-    protected function getErrorSourceLine($error)
+    /**
+     * @param BuildError|BuildFailure $error
+     * @return string
+     */
+    protected function decorateTemplateContext($error)
     {
-        return $this->isAFailure($error) ? null : $error->SourceLine;
-    }
+        $text = '';
+        if(is_a($error, BuildError::class) && strlen($error->SourceFile) > 0) {
+            $text = trim($error->PostContext);
+        } elseif (is_a($error, BuildFailure::class)) {
+            $text = trim($error->StdError);
+        }
 
-    protected function isAFailure($error)
-    {
-        return is_a($error, BuildFailure::class);
+        $text .= strlen($text) ? PHP_EOL : '';
+        return $text;
     }
 }
