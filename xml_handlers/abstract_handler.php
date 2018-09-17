@@ -15,6 +15,7 @@
 =========================================================================*/
 
 require_once 'include/ctestparserutils.php';
+require_once 'xml_handlers/CDashSubmissionHandlerInterface.php';
 require_once 'xml_handlers/sax_handler.php';
 require_once 'xml_handlers/stack.php';
 
@@ -22,7 +23,7 @@ use CDash\Config;
 use CDash\Model\Build;
 use CDash\Model\Site;
 
-abstract class AbstractHandler implements SaxHandler
+abstract class AbstractHandler implements SaxHandler, CDashSubmissionHandlerInterface
 {
     protected $stack;
     protected $projectid;
@@ -106,6 +107,11 @@ abstract class AbstractHandler implements SaxHandler
     public function getBuildName()
     {
         return $this->Build->Name;
+    }
+
+    public function getBuilds()
+    {
+        return [$this->Build];
     }
 
     protected function getModelFactory()

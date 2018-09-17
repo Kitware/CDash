@@ -16,11 +16,12 @@
 =========================================================================*/
 
 require_once 'config/config.php';
+require_once 'xml_handlers/NonSaxHandler.php';
 
 use CDash\Model\Build;
 use CDash\Model\SubProject;
 
-class SubProjectDirectoriesHandler
+class SubProjectDirectoriesHandler extends NonSaxHandler
 {
     private $ProjectId;
     private $SubProjectOrder;

@@ -15,6 +15,7 @@
 =========================================================================*/
 
 require_once 'config/config.php';
+require_once 'xml_handlers/NonSaxHandler.php';
 
 use CDash\Model\Build;
 use CDash\Model\Coverage;
@@ -24,9 +25,8 @@ use CDash\Model\CoverageSummary;
 use CDash\Model\Label;
 use CDash\Model\SubProject;
 
-class GCovTarHandler
+class GCovTarHandler extends NonSaxHandler
 {
-    private $Build;
     private $ProjectId;
     private $CoverageSummary;
     private $SourceDirectory;

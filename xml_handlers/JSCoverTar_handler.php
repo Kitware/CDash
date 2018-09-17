@@ -15,6 +15,7 @@
 =========================================================================*/
 
 require_once 'config/config.php';
+require_once 'xml_handlers/NonSaxHandler.php';
 
 use CDash\Config;
 use CDash\Model\Build;
@@ -23,9 +24,8 @@ use CDash\Model\CoverageFile;
 use CDash\Model\CoverageFileLog;
 use CDash\Model\CoverageSummary;
 
-class JSCoverTarHandler
+class JSCoverTarHandler extends NonSaxHandler
 {
-    private $Build;
     private $CoverageSummaries;
 
     public function __construct($buildid)
