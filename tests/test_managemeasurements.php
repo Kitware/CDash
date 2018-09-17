@@ -301,5 +301,23 @@ class ManageMeasurementsTestCase extends KWWebTestCase
                 $this->fail("Expected proc time to be $expected but found $found for subproject build $label");
             }
         }
+
+        // Verify that correct Proc Time values are shown on index.php for
+        // parent builds.
+        $this->get($this->url . '/api/v1/index.php?project=SubProjectExample&date=2017-08-29');
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $buildgroup = array_pop($jsonobj['buildgroups']);
+        $build = array_pop($buildgroup['builds']);
+        $this->assertEqual($build['test']['procTimeFull'], 22);
+
+        // Verify that the include SubProjects filter correctly updates the
+        // Proc Time for a parent build.
+        $this->get($this->url . '/api/v1/index.php?project=SubProjectExample&date=2017-08-29&filtercount=1&field1=subprojects&compare1=93&value1=MyProductionCode');
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $buildgroup = array_pop($jsonobj['buildgroups']);
+        $build = array_pop($buildgroup['builds']);
+        $this->assertEqual($build['test']['procTimeFull'], 13.2);
     }
 }
