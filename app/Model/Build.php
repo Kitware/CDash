@@ -21,6 +21,7 @@ include_once 'include/ctestparserutils.php';
 include_once 'include/repository.php';
 
 use CDash\Collection\BuildEmailCollection;
+use CDash\Collection\CollectionCollection;
 use CDash\Collection\DynamicAnalysisCollection;
 use CDash\Collection\LabelCollection;
 use CDash\Config;
@@ -104,6 +105,9 @@ class Build
     private $DynamicAnalysisCollection;
     private $BuildEmailCollection;
     private $Update;
+
+    // TODO: ErrorDiffs appears to be no longer used?
+    private $ErrorDifferences;
 
     public function __construct()
     {
@@ -3060,10 +3064,20 @@ class Build
 
     public function GetBuildEmailCollection($category)
     {
-        if (!$this->BuildEmailCollection) {
-            $this->BuildEmailCollection = BuildEmail::GetBuildEmailSent($this->Id, $category);
+        if (!$this->Id) {
+            return false;
         }
-        return $this->BuildEmailCollection;
+
+        if (!$this->BuildEmailCollection) {
+            $this->BuildEmailCollection = new CollectionCollection();
+        }
+
+        if (!$this->BuildEmailCollection->has($category)) {
+            $collection = BuildEmail::GetBuildEmailSent($this->Id, $category);
+            $this->BuildEmailCollection->addItem($collection, $category);
+        }
+
+        return $this->BuildEmailCollection->get($category);
     }
 
     public function SetBuildEmailCollection(BuildEmailCollection $collection)
@@ -3079,5 +3093,46 @@ class Build
     public function GetUpdate()
     {
         return $this->Update;
+    }
+
+    // TODO: Create a diff class
+    public function GetDiffWithPreviousBuild()
+    {
+        if (!$this->Id) {
+            return false;
+        }
+
+        if (!$this->ErrorDifferences) {
+            $diff = $this->GetErrorDifferences();
+            $this->ErrorDifferences = [
+                'BuildWarning' => [
+                    'new' => $diff['buildwarningspositive'],
+                    'fixed' => $diff['buildwarningsnegative'],
+                ],
+                'BuildError' => [
+                    'new' => $diff['builderrorspositive'],
+                    'fixed' => $diff['builderrorsnegative'],
+                ],
+                'Configure' => [
+                    'errors' => $diff['configureerrors'],
+                    'warnings' => $diff['configurewarnings'],
+                ] ,
+                'TestFailure' => [
+                    'passed' => [
+                        'new' => $diff['testpassedpositive'],
+                        'broken' => $diff['testpassednegative']
+                    ],
+                    'failed' => [
+                        'new' => $diff['testfailedpositive'],
+                        'fixed' => $diff['testfailednegative'],
+                    ],
+                    'notrun' => [
+                        'new' => $diff['testnotrunpositive'],
+                        'fixed' => $diff['testnotrunnegative']
+                    ],
+                ],
+            ];
+        }
+        return $this->ErrorDifferences;
     }
 }
