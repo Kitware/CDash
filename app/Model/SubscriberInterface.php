@@ -63,4 +63,9 @@ interface SubscriberInterface
      * @return \CDash\Messaging\Preferences\NotificationPreferencesInterface
      */
     public function getNotificationPreferences();
+
+    /**
+     * @return array
+     */
+    public function getUserCredentials();
 }
