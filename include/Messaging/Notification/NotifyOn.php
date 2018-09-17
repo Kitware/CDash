@@ -5,6 +5,7 @@ class NotifyOn
 {
     const AUTHORED = 'Authored';
     const UPDATE_ERROR = 'UpdateError';
+    const UPDATE = 'Update';
     const CONFIGURE = 'Configure';
     const BUILD_WARNING = 'BuildWarning';
     const BUILD_ERROR = 'BuildError';
