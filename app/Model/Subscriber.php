@@ -27,28 +27,29 @@ class Subscriber implements SubscriberInterface
     /** @var  NotificationPreferences $preferences */
     private $preferences;
 
-    /** @var  string $address */
-    private $address;
-
     /** @var TopicCollection $topics */
     private $topics;
 
     /** @var  string[] */
     private $labels;
 
-    private $userId;
+    /** @var User $user */
+    private $user;
 
     /**
-     * SubscriberInterface constructor.
+     * Subscriber constructor.
      * @param NotificationPreferences $preferences
      * @param TopicCollection|null $topics
+     * @param User|null $user
      */
     public function __construct(
         NotificationPreferences $preferences,
-        TopicCollection $topics = null
+        TopicCollection $topics = null,
+        User $user = null
     ) {
         $this->preferences = $preferences;
         $this->topics = $topics;
+        $this->user = $user ? $user : new User();
     }
 
     /**
@@ -106,7 +107,7 @@ class Subscriber implements SubscriberInterface
      */
     public function getAddress()
     {
-        return $this->address;
+        return $this->user->Email;
     }
 
     /**
@@ -115,7 +116,7 @@ class Subscriber implements SubscriberInterface
      */
     public function setAddress($address)
     {
-        $this->address = $address;
+        $this->user->Email = $address;
         return $this;
     }
 
@@ -138,7 +139,7 @@ class Subscriber implements SubscriberInterface
     }
 
     /**
-     * @return \CDash\Messaging\Preferences\NotificationPreferencesInterface
+     * @return NotificationPreferences
      */
     public function getNotificationPreferences()
     {
@@ -147,12 +148,17 @@ class Subscriber implements SubscriberInterface
 
     public function setUserId($userId)
     {
-        $this->userId = $userId;
+        $this->user->Id = $userId;
         return $this;
     }
 
     public function getUserId()
     {
-        return $this->userId;
+        return $this->user->Id;
+    }
+
+    public function getUserCredentials()
+    {
+        return $this->user->GetRepositoryCredentials();
     }
 }
