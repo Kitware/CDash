@@ -33,6 +33,7 @@ class User
     public $TableName;
     public $TempTableName;
     private $PDO;
+    private $Credentials;
 
     public function __construct()
     {
@@ -46,7 +47,8 @@ class User
         $this->Filled = false;
         $this->TableName = qid('user');
         $this->TempTableName = qid('usertemp');
-        $this->PDO = Database::getInstance()->getPdo();
+        $this->PDO = Database::getInstance();
+        $this->Credentials = null;
     }
 
     /** Return if the user is admin */
@@ -453,5 +455,22 @@ class User
             add_log('password_hash returned false', 'PasswordHash', LOG_ERR);
         }
         return $passwordHash;
+    }
+
+    public function GetRepositoryCredentials()
+    {
+        if (is_null($this->Credentials)) {
+            if (!$this->Id) {
+                return false;
+            }
+
+            $sql = 'SELECT credential FROM user2repository WHERE userid = :id';
+            $stmt = $this->PDO->prepare($sql);
+            $stmt->bindParam(':id', $this->Id);
+            if ($this->PDO->execute($stmt)) {
+                $this->Credentials = $stmt->fetchAll(\PDO::FETCH_COLUMN);
+            }
+        }
+        return $this->Credentials;
     }
 }
