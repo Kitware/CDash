@@ -10,13 +10,22 @@ class BuildErrorTopic extends Topic implements DecoratableInterface
     private $type;
 
     /**
+     * When a user subscribes to receive notices for build errors or build warnings (and
+     * similarly build failures) this method will return true if the user has not already
+     * been notified for those events or if the has been notified but there are new events
+     * not included in the previous notification.
+     *
      * @param Build $build
      * @return bool
      */
     public function subscribesToBuild(Build $build)
     {
-        $ancestorSubscribe = is_null($this->topic) ? true : $this->topic->subscribesToBuild($build);
-        $subscribe = $ancestorSubscribe && $build->GetBuildErrorCount($this->type) > 0;
+        $subscribe = false;
+        $diff = $build->GetDiffWithPreviousBuild();
+        if ($diff) {
+            $type = $this->getTopicName();
+            $subscribe = $diff[$type]['new'] > 0;
+        }
         return $subscribe;
     }
 

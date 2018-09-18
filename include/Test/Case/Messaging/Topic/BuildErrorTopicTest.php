@@ -8,42 +8,46 @@ use CDash\Model\BuildError;
 
 class BuildErrorTopicTest extends \CDash\Test\CDashTestCase
 {
-    public function testSubscribesToBuild()
+    public function testSubscribesToBuildWithErrorDiff()
     {
+        $build = new Build();
+
         $sut = new BuildErrorTopic();
-        $build = new Build();
+        $sut->setType(Build::TYPE_ERROR);
 
         $this->assertFalse($sut->subscribesToBuild($build));
+        $build = $this->getMockBuild();
 
-        $buildError = new BuildError();
-        $buildError->Type = Build::TYPE_ERROR;
-        $build->AddError($buildError);
+        $build->expects($this->any())
+            ->method('GetDiffWithPreviousBuild')
+            ->willReturnOnConsecutiveCalls(
+                ['BuildError' => ['new' => 1]],
+                ['BuildError' => ['new' => 0]]
+            );
 
         $this->assertTrue($sut->subscribesToBuild($build));
+        $this->assertFalse($sut->subscribesToBuild($build));
+    }
 
-        // Topics are decorators, so the creation of this mock topic is merely
-        // for testing all possible states of our SUT
-        $mock_topic = $this->getMockForAbstractClass(Topic::class);
-        $mock_topic
-            ->method('subscribesToBuild')
-            ->willReturnOnConsecutiveCalls(false, false, true, true);
-
-        $sut = new BuildErrorTopic($mock_topic);
+    public function testSubscribesToBuildWithWarningDiff()
+    {
         $build = new Build();
-        // Parent does not subscribe and no errors
-        $this->assertFalse($sut->subscribesToBuild($build));
 
-        $build->AddError($buildError);
-        // Parent does not subscribe and build has build error
-        $this->assertFalse($sut->subscribesToBuild($build));
+        $sut = new BuildErrorTopic();
+        $sut->setType(Build::TYPE_WARN);
 
-        $build = new Build();
-        // Parent subscribes but build has no error
         $this->assertFalse($sut->subscribesToBuild($build));
+        $build = $this->getMockBuild();
 
-        $build->AddError($buildError);
-        // Parent subscribes and build has error
+        $build->expects($this->any())
+            ->method('GetDiffWithPreviousBuild')
+            ->willReturnOnConsecutiveCalls(
+                ['BuildWarning' => ['new' => 1]],
+                ['BuildWarning' => ['new' => 0]]
+            );
+
         $this->assertTrue($sut->subscribesToBuild($build));
+        $this->assertFalse($sut->subscribesToBuild($build));
     }
 
     public function testGetTopicCollection()
