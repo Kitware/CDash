@@ -82,15 +82,6 @@ class Subscriber implements SubscriberInterface
         return $topics->count() > 0;
     }
 
-    protected function initializeTopics()
-    {
-        $topics = $this->getTopics();
-        foreach (TopicFactory::createFrom($this->preferences) as $topic) {
-            $topics->add($topic);
-        }
-        return (bool) count($topics);
-    }
-
     /**
      * @return TopicCollection
      */

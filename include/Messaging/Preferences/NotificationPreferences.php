@@ -9,7 +9,7 @@ abstract class NotificationPreferences implements
 {
     protected $properties = [
         NotifyOn::FILTERED,
-        NotifyOn::UPDATE,
+        NotifyOn::UPDATE_ERROR,
         NotifyOn::CONFIGURE,
         NotifyOn::BUILD_WARNING,
         NotifyOn::BUILD_ERROR,
@@ -22,7 +22,7 @@ abstract class NotificationPreferences implements
         NotifyOn::ANY,
         NotifyOn::LABELED,
         NotifyOn::NEVER,
-        NotifyOn::ONCE,
+        NotifyOn::REDUNDANT,
     ];
 
     protected $settings = [];
@@ -52,14 +52,6 @@ abstract class NotificationPreferences implements
         return $this->get($name);
     }
 
-    public function __call($name, $arguments)
-    {
-        if (strpos($name, 'get') === 0) {
-            $property = substr($name, 5);
-            return $this->get($property);
-        }
-    }
-
     public function getPropertyNames()
     {
         return $this->properties;
@@ -78,29 +70,5 @@ abstract class NotificationPreferences implements
             $this->set(NotifyOn::ANY, true);
             $this->set(NotifyOn::AUTHORED, false);
         }
-    }
-
-    public function setPreferencesFromEmailSuccessProperty($emailSuccess)
-    {
-        if ((int) $emailSuccess === 1) {
-            $this->set(NotifyOn::FIXED, true);
-        } else {
-            $this->set(NotifyOn::FIXED, false);
-        }
-    }
-
-    public function setPreferenceFromMissingSiteProperty($missingSite)
-    {
-        if ((int) $missingSite === 1) {
-            $this->set(NotifyOn::SITE_MISSING, true);
-        } else {
-            $this->set(NotifyOn::SITE_MISSING, false);
-        }
-    }
-
-    public function setEmailRedundantMessages($property)
-    {
-        $once = (int) $property === 0;
-        $this->set(NotifyOn::ONCE, $once);
     }
 }

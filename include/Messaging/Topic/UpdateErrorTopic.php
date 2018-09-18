@@ -32,4 +32,9 @@ class UpdateErrorTopic extends Topic implements DecoratableInterface
     {
         // TODO: Implement itemHasTopicSubject() method.
     }
+
+    public function getTopicName()
+    {
+        return 'UpdateError';
+    }
 }

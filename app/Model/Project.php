@@ -22,6 +22,7 @@ use CDash\Collection\SubscriberCollection;
 
 use CDash\Config;
 use CDash\Database;
+use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Preferences\NotificationPreferences;
 use CDash\Messaging\Preferences\NotificationPreferencesInterface;
@@ -1737,9 +1738,9 @@ class Project
                 ['mask' => $row->emailcategory]
             );
             $preferences->setPreferencesFromEmailTypeProperty($row->emailtype);
-            $preferences->setPreferencesFromEmailSuccessProperty($row->emailsuccess);
-            $preferences->setPreferenceFromMissingSiteProperty($row->emailmissingsites);
-            $preferences->setEmailRedundantMessages($this->EmailRedundantFailures);
+            $preferences->set(NotifyOn::FIXED, $row->emailsuccess);
+            $preferences->set(NotifyOn::SITE_MISSING, $row->emailmissingsites);
+            $preferences->set(NotifyOn::REDUNDANT, $this->EmailRedundantFailures);
 
             /** @var Subscriber $subscriber */
             $subscriber = $service->make(Subscriber::class, ['preferences' => $preferences]);

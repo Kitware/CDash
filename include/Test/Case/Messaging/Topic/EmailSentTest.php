@@ -17,6 +17,7 @@
 use CDash\Collection\BuildEmailCollection;
 use CDash\Collection\CollectionCollection;
 use CDash\Collection\CollectionCollectioæn;
+use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Topic\EmailSentTopic;
 use CDash\Messaging\Topic\Topic;
@@ -66,26 +67,6 @@ class EmailSentTest extends \CDash\Test\CDashTestCase
         $this->assertFalse($sut->subscribesToBuild($build));
     }
 
-    public function testSubscribesToBuildGivenRedundantPreferenceSettings()
-    {
-        $mock_topic = $this->getAbstractMockTopic(true);
-
-        $subscriber = $this->createSubscriber(1);
-
-        // We could use a non-mocked build here but we want to ensure that
-        // the path we think is being taken is actually taken so we mock
-        // the build here so that we can verify that the GetBuildEmailCollection
-        // method is never called
-        $build = $this->getMockBuild();
-        $build->expects($this->never())
-            ->method('GetBuildEmailCollection');
-
-        $sut = new EmailSentTopic($mock_topic);
-        $sut->setSubscriber($subscriber);
-
-        $this->assertTrue($sut->subscribesToBuild($build));
-    }
-
     /**
      * @param $subscribesToBuild
      * @return Topic|PHPUnit_Framework_MockObject_MockObject
@@ -115,7 +96,7 @@ class EmailSentTest extends \CDash\Test\CDashTestCase
     private function createSubscriber($redundant = 0)
     {
         $preferences = new BitmaskNotificationPreferences(128);
-        $preferences->setEmailRedundantMessages($redundant);
+        $preferences->set(NotifyOn::REDUNDANT, $redundant);
 
         $subscriber = new Subscriber($preferences);
         $subscriber->setAddress('cdash.user@company.tld');
