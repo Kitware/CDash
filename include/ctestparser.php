@@ -224,8 +224,8 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
 }
 
 /** Main function to parse the incoming xml from ctest */
-function ctest_parse($filehandler, $projectid, $expected_md5 = '', $do_checksum = true,
-                     $scheduleid = 0)
+function ctest_parse($filehandler, $projectid, $buildid = null,
+                     $expected_md5 = '', $do_checksum = true, $scheduleid = 0)
 {
     require_once 'include/common.php';
     include 'include/version.php';
@@ -355,9 +355,12 @@ function ctest_parse($filehandler, $projectid, $expected_md5 = '', $do_checksum 
         }
     }
 
-    $statusarray = array();
+    $statusarray = [];
     $statusarray['status'] = 'OK';
     $statusarray['message'] = '';
+    if (!is_null($buildid)) {
+        $statusarray['buildId'] = $buildid;
+    }
     if ($do_checksum == true) {
         $md5sum = md5_file($filename);
         $md5error = false;

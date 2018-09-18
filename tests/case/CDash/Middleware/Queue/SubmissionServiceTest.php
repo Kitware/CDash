@@ -19,7 +19,7 @@ namespace CDash\Middleware\Queue;
 use Bernard\Message\DefaultMessage;
 use CDash\Middleware\Queue;
 
-function do_submit($fh, $project_id, $expected_md5 = '', $do_checksum = true, $submission_id = 0)
+function do_submit($fh, $project_id, $buildid = null, $expected_md5 = '', $do_checksum = true, $submission_id = 0)
 {
     SubmissionServiceTest::checkExpectedArguments([
         'do_submit',

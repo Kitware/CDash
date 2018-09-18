@@ -36,7 +36,7 @@ function ProcessFile($projectid, $filename, $md5)
     }
 
     if (@$fp) {
-        do_submit($fp, $projectid, $md5, false, $config->get('PHP_ERROR_SUBMISSION_ID'));
+        do_submit($fp, $projectid, null, $md5, false, $config->get('PHP_ERROR_SUBMISSION_ID'));
         $config->set('PHP_ERROR_SUBMISSION_ID', 0);
 
         @fclose($fp);
