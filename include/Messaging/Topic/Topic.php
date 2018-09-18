@@ -187,23 +187,6 @@ abstract class Topic implements TopicInterface
 
     public function hasSubscriberAlreadyBeenNotified(Build $build)
     {
-        // TODO: remove this
-        // there is no need to check if the user has subscribed to redundant notifications
-        // as, presumably, this topic should not exist on the users topic chain if the
-        // preference is to NotifyOn::REDUNDANT
-
-        /*
-        $redundant = $this->subscriber
-            ->getNotificationPreferences()
-            ->get(NotifyOn::REDUNDANT);
-
-        // $once is false if the subscriber prefers redundant emails, in
-        // which case hasSubscriberAlreadyBeenNotified should always be false
-        if ($redundant) {
-            return false;
-        }
-        */
-
         $category = ActionableTypes::$categories[$this->getTopicName()];
         $emailCollection = $build->GetBuildEmailCollection($category);
         $address = $this->subscriber->getAddress();
