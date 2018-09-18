@@ -1,6 +1,8 @@
 <?php
 namespace CDash\Messaging\Topic;
 
+use CDash\Messaging\Notification\NotifyOn;
+use CDash\Model\ActionableTypes;
 use CDash\Model\Build;
 use CDash\Collection\BuildCollection;
 use CDash\Collection\CallableCollection;
@@ -181,5 +183,24 @@ abstract class Topic implements TopicInterface
             $this->topicCallables = new CallableCollection();
         }
         return $this->topicCallables;
+    }
+
+    public function hasSubscriberAlreadyBeenNotified(Build $build)
+    {
+        $once = $this->subscriber
+            ->getNotificationPreferences()
+            ->get(NotifyOn::ONCE);
+
+        // $once is false if the subscriber prefers redundant emails, in
+        // which case hasSubscriberAlreadyBeenNotified should always be false
+        if (!$once) {
+            return false;
+        }
+
+        $category = ActionableTypes::$categories[$this->getTopicName()];
+        $emailCollection = $build->GetBuildEmailCollection($category);
+        $address = $this->subscriber->getAddress();
+
+        return $emailCollection->has($address);
     }
 }

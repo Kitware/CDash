@@ -15,51 +15,110 @@
  */
 
 use CDash\Collection\BuildEmailCollection;
+use CDash\Collection\CollectionCollection;
+use CDash\Collection\CollectionCollectioæn;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
-use CDash\Messaging\Topic\BuildErrorTopic;
 use CDash\Messaging\Topic\EmailSentTopic;
+use CDash\Messaging\Topic\Topic;
+use CDash\Model\ActionableTypes;
 use CDash\Model\Build;
 use CDash\Model\BuildEmail;
-use CDash\Model\BuildError;
 use CDash\Model\Subscriber;
 
-class EmailSentTest extends PHPUnit_Framework_TestCase
+class EmailSentTest extends \CDash\Test\CDashTestCase
 {
-    public function testSubscribesToBuild()
+    public function testSubscribesToBuildGivenDecoratedTopicDoesNotSubscribe()
     {
-        $topic = new BuildErrorTopic();
-        $topic->setType(Build::TYPE_WARN);
+        $mock_topic = $this->getAbstractMockTopic(false);
 
-        $preferences = new BitmaskNotificationPreferences();
-        $subscriber = new Subscriber($preferences);
-        $subscriber->setAddress('ricky.bobby@taladega.tld');
+        $sut = new EmailSentTopic($mock_topic);
 
-        $sut = new EmailSentTopic($topic);
-        $sut->setSubscriber($subscriber);
+        $this->assertFalse($sut->subscribesToBuild(new Build()));
+    }
 
-        $build = new Build();
+    public function testSubscribesToBuildGivenNotificationSentStatus()
+    {
+        $mock_topic = $this->getAbstractMockTopic(true);
+        $category = ActionableTypes::$categories[$mock_topic->getTopicName()];
+
+        $subscriber = $this->createSubscriber();
+
         $buildEmailCollection = new BuildEmailCollection();
 
-        $build->SetBuildEmailCollection($buildEmailCollection);
+        // We could use a non-mocked build here but we want to ensure that
+        // the path we think is being taken is actually taken so we mock
+        // the build here so that we can verify that the GetBuildEmailCollection
+        // method is actually called
+        $build = $this->getMockBuild();
+        $build->expects($this->exactly(2))
+            ->method('GetBuildEmailCollection')
+            ->with($category)
+            ->willReturn($buildEmailCollection);
 
-        // this results in false because the $build has no BuildErrors yet
-        $this->assertFalse($sut->subscribesToBuild($build));
+        $sut = new EmailSentTopic($mock_topic);
+        $sut->setSubscriber($subscriber);
 
-        $buildError = new BuildError();
-        $buildError->Type = Build::TYPE_WARN;
-        $build->AddError($buildError);
-
-        // now that our build error is set, we should get a return value of true
         $this->assertTrue($sut->subscribesToBuild($build));
 
-        $e1 = new BuildEmail();
+        // Add the BuildEmail to the collection and we should no longer be subscribed
+        $buildEmailCollection->addItem(new BuildEmail(), $subscriber->getAddress());
 
-        $e1->SetEmail('ricky.bobby@taladega.tld');
-
-        $buildEmailCollection->add($e1);
-
-        // now we can test that if there is a build email with the key
-        // that is the email address, the email has already been sent
         $this->assertFalse($sut->subscribesToBuild($build));
+    }
+
+    public function testSubscribesToBuildGivenRedundantPreferenceSettings()
+    {
+        $mock_topic = $this->getAbstractMockTopic(true);
+
+        $subscriber = $this->createSubscriber(1);
+
+        // We could use a non-mocked build here but we want to ensure that
+        // the path we think is being taken is actually taken so we mock
+        // the build here so that we can verify that the GetBuildEmailCollection
+        // method is never called
+        $build = $this->getMockBuild();
+        $build->expects($this->never())
+            ->method('GetBuildEmailCollection');
+
+        $sut = new EmailSentTopic($mock_topic);
+        $sut->setSubscriber($subscriber);
+
+        $this->assertTrue($sut->subscribesToBuild($build));
+    }
+
+    /**
+     * @param $subscribesToBuild
+     * @return Topic|PHPUnit_Framework_MockObject_MockObject
+     */
+    private function getAbstractMockTopic($subscribesToBuild)
+    {
+        $mock_topic = $this->getMockForAbstractClass(
+            Topic::class,
+            [],
+            '',
+            false,
+            true,
+            true,
+            ['subscribesToBuild', 'getTopicName']);
+
+        $mock_topic->expects($this->any())
+            ->method('subscribesToBuild')
+            ->willReturn($subscribesToBuild);
+
+        $mock_topic->expects($this->any())
+            ->method('getTopicName')
+            ->willReturn(ActionableTypes::TEST);
+
+        return $mock_topic;
+    }
+
+    private function createSubscriber($redundant = 0)
+    {
+        $preferences = new BitmaskNotificationPreferences(128);
+        $preferences->setEmailRedundantMessages($redundant);
+
+        $subscriber = new Subscriber($preferences);
+        $subscriber->setAddress('cdash.user@company.tld');
+        return $subscriber;
     }
 }
