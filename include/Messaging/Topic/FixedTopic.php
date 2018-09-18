@@ -3,29 +3,24 @@ namespace CDash\Messaging\Topic;
 
 use CDash\Model\Build;
 
+/**
+ * Class FixedTopic
+ * @package CDash\Messaging\Topic
+ */
 class FixedTopic extends Topic
 {
-    private $diff;
     /**
      * @param Build $build
      * @return bool
      */
     public function subscribesToBuild(Build $build)
     {
-        $ancestorSubscribe = is_null($this->topic) ? true : $this->topic->subscribesToBuild($build);
-        $subscribe = false;
-        $diff = $build->GetErrorDifferences();
-        if ($diff['buildwarningsnegative']  > 0
-            || $diff['testfailednegative']  > 0
-            || $diff['testnotrunnegative']  > 0
-            || $diff['builderrorsnegative'] > 0
-            || $diff['configurewarnings']   < 0
-            || $diff['configureerrors']     < 0
-        ) {
-            $this->diff = $diff;
-            $subscribe = true;
-        }
-        return $ancestorSubscribe && $subscribe;
+        $diff = $build->GetDiffWithPreviousBuild();
+        $subscribe = (bool) $diff['BuildError']['fixed'] > 0
+                         || $diff['BuildWarning']['fixed'] > 0
+                         || $diff['TestFailure']['failed']['fixed'] > 0
+                         || $diff['TestFailure']['notrun']['fixed'] > 0;
+        return $subscribe;
     }
 
     /**
