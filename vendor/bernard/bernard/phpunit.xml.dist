@@ -8,19 +8,13 @@
          stopOnFailure="false"
          syntaxCheck="false"
          strict="true"
-         bootstrap="vendor/autoload.php">
+         bootstrap="tests/bootstrap.php">
 
     <testsuites>
         <testsuite name="Bernard TestSuite">
             <directory>./tests/</directory>
         </testsuite>
     </testsuites>
-
-    <groups>
-        <exclude>
-            <group>functional</group>
-        </exclude>
-    </groups>
 
     <filter>
         <whitelist>

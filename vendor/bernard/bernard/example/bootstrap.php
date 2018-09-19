@@ -1,13 +1,12 @@
 <?php
 
 use Bernard\Consumer;
-use Bernard\EventListener;
 use Bernard\Message;
+use Bernard\Middleware;
 use Bernard\Producer;
 use Bernard\QueueFactory\PersistentFactory;
 use Bernard\Router\SimpleRouter;
-use Bernard\Serializer;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Bernard\Serializer\SimpleSerializer;
 
 /**
  * This file contains helper methods for the examples. See example/$driver.php
@@ -25,15 +24,19 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 function get_serializer() {
-    return new Serializer;
+    return new SimpleSerializer;
 }
 
-function get_event_dispatcher() {
-    $dispatcher = new EventDispatcher;
-    $dispatcher->addSubscriber(new EventListener\ErrorLogSubscriber);
-    $dispatcher->addSubscriber(new EventListener\FailureSubscriber(get_queue_factory()));
+function get_producer_middleware() {
+    return new Middleware\MiddlewareBuilder;
+}
 
-    return $dispatcher;
+function get_consumer_middleware() {
+    $chain = new Middleware\MiddlewareBuilder;
+    $chain->push(new Middleware\ErrorLogFactory);
+    $chain->push(new Middleware\FailuresFactory(get_queue_factory()));
+
+    return $chain;
 }
 
 function get_queue_factory() {
@@ -41,7 +44,7 @@ function get_queue_factory() {
 }
 
 function get_producer() {
-    return new Producer(get_queue_factory(), get_event_dispatcher());
+    return new Producer(get_queue_factory(), get_producer_middleware());
 }
 
 function get_receivers() {
@@ -51,7 +54,7 @@ function get_receivers() {
 }
 
 function get_consumer() {
-    return new Consumer(get_receivers(), get_event_dispatcher());
+    return new Consumer(get_receivers(), get_consumer_middleware());
 }
 
 function produce() {
