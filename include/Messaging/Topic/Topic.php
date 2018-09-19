@@ -1,7 +1,6 @@
 <?php
 namespace CDash\Messaging\Topic;
 
-use CDash\Messaging\Notification\NotifyOn;
 use CDash\Model\ActionableTypes;
 use CDash\Model\Build;
 use CDash\Collection\BuildCollection;
@@ -11,9 +10,14 @@ use CDash\Model\SubscriberInterface;
 
 abstract class Topic implements TopicInterface
 {
-    const TEST_FAILURE = 'TestFailure';
+    const BUILD_ERROR = 'BuildError';
+    const BUILD_WARNING = 'BuildWarning';
     const CONFIGURE = 'Configure';
+    const DYNAMIC_ANALYSIS = 'DynamicAnalysis';
     const LABELED = 'Labeled';
+    const TEST_FAILURE = 'TestFailure';
+    const UPDATE = 'Update';
+    const UPDATE_ERROR = 'UpdateError';
 
     /** @var  SubscriberInterface $subscriber */
     protected $subscriber;

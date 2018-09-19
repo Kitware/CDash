@@ -35,6 +35,6 @@ class UpdateErrorTopic extends Topic implements DecoratableInterface
 
     public function getTopicName()
     {
-        return 'UpdateError';
+        return Topic::UPDATE_ERROR;
     }
 }
