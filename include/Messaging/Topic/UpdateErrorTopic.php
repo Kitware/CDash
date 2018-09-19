@@ -5,22 +5,25 @@ use CDash\Model\Build;
 
 class UpdateErrorTopic extends Topic implements DecoratableInterface
 {
-
     /**
      * @param Build $build
      * @return bool
      */
     public function subscribesToBuild(Build $build)
     {
-        // TODO: Implement subscribesToBuild() method.
+        $buildUpdate = $build->GetBuildUpdate();
+        return $buildUpdate->Status > 0;
     }
 
     /**
-     * @return int
+     * @param Build $build
+     * @return Topic|void
      */
-    public function getTopicCount()
+    public function addBuild(Build $build)
     {
-        // TODO: Implement getTopicCount() method.
+        $collection = $this->getBuildCollection();
+        $collection->add($build);
+        return $this;
     }
 
     /**
@@ -36,5 +39,10 @@ class UpdateErrorTopic extends Topic implements DecoratableInterface
     public function getTopicName()
     {
         return Topic::UPDATE_ERROR;
+    }
+
+    public function getTopicDescription()
+    {
+        return 'Update Errors';
     }
 }

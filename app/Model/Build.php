@@ -104,7 +104,6 @@ class Build
     private $LabelCollection;
     private $DynamicAnalysisCollection;
     private $BuildEmailCollection;
-    private $Update;
 
     // TODO: ErrorDiffs appears to be no longer used?
     private $ErrorDifferences;
@@ -2826,29 +2825,6 @@ class Build
         return "{$base}/viewTest.php?buildid={$this->Id}";
     }
 
-    /**
-     * @return BuildUpdate
-     */
-    public function GetBuildUpdate()
-    {
-        /** @var BuildUpdate $buildUpdate */
-        if (!$this->BuildUpdate) {
-            $buildUpdate = ServiceContainer::instance(BuildUpdate::class);
-            $buildUpdate->BuildId = $this->Id;
-            $buildUpdate->FillFromBuildId();
-
-            $this->BuildUpdate = $buildUpdate;
-        }
-
-        return $this->BuildUpdate;
-    }
-
-    public function SetBuildUpdate(BuildUpdate $buildUpdate)
-    {
-        $this->BuildUpdate = $buildUpdate;
-        return $this;
-    }
-
     public static function ConvertMissingToZero($value)
     {
         if ($value == -1) {
@@ -3089,14 +3065,20 @@ class Build
         $this->BuildEmailCollection->addItem($collection, $category);
     }
 
-    public function SetUpdate(BuildUpdate $update)
+    /**
+     * @param BuildUpdate $buildUpdate
+     */
+    public function SetBuildUpdate(BuildUpdate $buildUpdate)
     {
-        $this->Update = $update;
+        $this->BuildUpdate = $buildUpdate;
     }
 
-    public function GetUpdate()
+    /**
+     * @return BuildUpdate|null
+     */
+    public function GetBuildUpdate()
     {
-        return $this->Update;
+        return $this->BuildUpdate;
     }
 
     // TODO: Create a diff class

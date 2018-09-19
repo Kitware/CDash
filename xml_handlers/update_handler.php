@@ -126,6 +126,7 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface
 
             // Insert the update
             $this->Update->Insert();
+            $this->Build->SetBuildUpdate($this->Update);
 
             if ($this->config->get('CDASH_ENABLE_FEED')) {
                 // We need to work the magic here to have a good description
