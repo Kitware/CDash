@@ -91,7 +91,7 @@ class DynamicAnalysisTopic extends Topic implements DecoratableInterface
      */
     public function getTopicName()
     {
-        return 'DynamicAnalysis';
+        return Topic::DYNAMIC_ANALYSIS;
     }
 
     /**

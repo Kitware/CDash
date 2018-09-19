@@ -16,6 +16,7 @@
 
 use CDash\Collection\DynamicAnalysisCollection;
 use CDash\Messaging\Topic\DynamicAnalysisTopic;
+use CDash\Messaging\Topic\Topic;
 use CDash\Model\Build;
 use CDash\Model\DynamicAnalysis;
 
@@ -96,5 +97,13 @@ class DynamicAnalysisTopicTest extends PHPUnit_Framework_TestCase
         $this->assertSame($a1, $collection->get('A'));
         $this->assertSame($a3, $collection->get('C'));
         $this->assertNull($collection->get('B'));
+    }
+
+    public function testGetTopicName()
+    {
+        $sut = new DynamicAnalysisTopic();
+        $expected = Topic::DYNAMIC_ANALYSIS;
+        $actual = $sut->getTopicName();
+        $this->assertEquals($expected, $actual);
     }
 }
