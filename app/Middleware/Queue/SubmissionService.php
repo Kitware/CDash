@@ -19,7 +19,7 @@ namespace CDash\Middleware\Queue;
 require_once dirname(__DIR__) . '/../../include/do_submit.php';
 
 use Bernard\Message;
-use Bernard\Message\DefaultMessage;
+use Bernard\Message\PlainMessage;
 use CDash\Log;
 use CDash\Middleware\Queue;
 
@@ -91,7 +91,7 @@ class SubmissionService
      * Returns a submission message for Queue::produce
      *
      * @param array $parameters
-     * @return DefaultMessage
+     * @return PlainMessage
      * @throws \Exception
      */
     public static function createMessage(array $parameters)
@@ -114,7 +114,7 @@ class SubmissionService
             throw new \Exception($message);
         }
         $name = isset($parameters['queue_name']) ? $parameters['queue_name'] : self::NAME;
-        return new DefaultMessage($name, $parameters);
+        return new PlainMessage($name, $parameters);
     }
 
     /**

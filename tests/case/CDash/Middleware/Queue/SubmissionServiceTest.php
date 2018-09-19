@@ -16,7 +16,7 @@
 
 namespace CDash\Middleware\Queue;
 
-use Bernard\Message\DefaultMessage;
+use Bernard\Message\PlainMessage;
 use CDash\Middleware\Queue;
 
 function do_submit($fh, $project_id, $buildid = null, $expected_md5 = '', $do_checksum = true, $submission_id = 0)
@@ -94,7 +94,7 @@ class SubmissionServiceTest extends \PHPUnit_Framework_TestCase
     {
         $message = SubmissionService::createMessage($this->parameters);
 
-        $this->assertInstanceOf(DefaultMessage::class, $message);
+        $this->assertInstanceOf(PlainMessage::class, $message);
         $this->assertEquals(SubmissionService::NAME, $message->getName());
         $this->assertEquals($this->parameters['file'], $message->file);
         $this->assertEquals($this->parameters['project'], $message->project);

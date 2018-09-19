@@ -15,7 +15,7 @@
 =========================================================================*/
 
 //error_reporting(0); // disable error reporting
-use Bernard\Message\DefaultMessage;
+use Bernard\Message\PlainMessage;
 use Bernard\Producer;
 use Bernard\QueueFactory\PersistentFactory;
 use Bernard\Serializer;
@@ -479,7 +479,7 @@ function put_submit_file()
         $factory = new PersistentFactory($config->get('CDASH_BERNARD_DRIVER'), new Serializer());
         $producer = new Producer($factory, new EventDispatcher());
 
-        $producer->produce(new DefaultMessage('DoSubmit', array(
+        $producer->produce(new PlainMessage('DoSubmit', array(
             'coverage_submission' => true,
             'filename' => $filename,
             'expected_md5' => $md5sum,

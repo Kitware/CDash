@@ -35,16 +35,12 @@ class DriverFactory
     const DOCTRINE = 'Doctrine';
     const FLAT_FILE = 'FlatFile';
     const IRON_MQ = 'IronMQ';
-    const PHP_REDIS = 'PhpRedis';
-    const PREDIS = 'Predis';
-    const SQS = 'SQS';
-
-    // Begin NOT Available in Bernard ~0.12
-    const MEMORY = 'Memory';
     const INTEROP = 'Interop';
     const MONGO = 'MongoDB';
     const PHEANSTALK = 'Pheanstalk';
-    // End NOT Available in Bernard ~0.12
+    const PHP_REDIS = 'PhpRedis';
+    const PREDIS = 'Predis';
+    const SQS = 'SQS';
 
     /**
      * @param array $configuration
