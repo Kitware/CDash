@@ -460,4 +460,10 @@ class BuildUpdate
 
         return true;
     }
+
+    public function GetUrlForSelf()
+    {
+        $config = Config::getInstance();
+        return "{$config->getBaseUrl()}/viewUpdate.php?buildid={$this->BuildId}";
+    }
 }
