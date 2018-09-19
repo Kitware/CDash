@@ -117,7 +117,7 @@ class Queue
     /**
      * @return Consumer
      */
-    protected function getConsumer()
+    public function getConsumer()
     {
         if (!$this->consumer) {
             $this->consumer = new Consumer($this->getRouter(), $this->eventDispatcher);
