@@ -297,7 +297,7 @@ class IndexPhpFilters extends DefaultFilters
                 break;
 
             case 'testsduration': {
-                $sql_field = 'btt.time';
+                $sql_field = 'b.testduration';
             }
                 break;
 

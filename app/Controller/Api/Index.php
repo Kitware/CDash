@@ -252,7 +252,7 @@ class Index extends ResultsApi
     public function getIndexQuery($userupdatesql='')
     {
         return
-            "SELECT b.id,b.siteid,b.parentid,b.done,b.changeid,
+            "SELECT b.id,b.siteid,b.parentid,b.done,b.changeid,b.testduration,
             bu.status AS updatestatus,
             i.osname AS osname,
             bu.starttime AS updatestarttime,
@@ -266,7 +266,7 @@ class Index extends ResultsApi
             bw_diff.difference_positive AS countbuildwarningdiffp,
             bw_diff.difference_negative AS countbuildwarningdiffn,
             ce_diff.difference AS countconfigurewarningdiff,
-            btt.time AS testduration,
+            btt.time AS testtime,
             tnotrun_diff.difference_positive AS counttestsnotrundiffp,
             tnotrun_diff.difference_negative AS counttestsnotrundiffn,
             tfailed_diff.difference_positive AS counttestsfaileddiffp,
@@ -534,11 +534,10 @@ class Index extends ResultsApi
                     SELECT configureerrors, configurewarnings, configureduration,
                            builderrors, buildwarnings, buildduration,
                            b.starttime, b.endtime, testnotrun, testfailed, testpassed,
-                           btt.time AS testduration, sb.name
+                           testduration, sb.name
                                FROM build AS b
                                INNER JOIN subproject2build AS sb2b ON (b.id = sb2b.buildid)
                                INNER JOIN subproject AS sb ON (sb2b.subprojectid = sb.id)
-                               LEFT JOIN buildtesttime AS btt ON (b.id=btt.buildid)
                                WHERE b.parentid=$buildid
                                AND sb.name IN $this->selectedSubProjects";
                 $select_results = pdo_query($select_query);
