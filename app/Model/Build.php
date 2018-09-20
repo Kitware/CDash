@@ -2308,43 +2308,10 @@ class Build
         pdo_execute($stmt, [$idToNotify]);
     }
 
-    /**
-     * @param $duration
-     * @param bool $update_parent
-     */
-    public function SetConfigureDuration($duration, $update_parent = true)
+    protected function UpdateDuration($field, $duration, $update_parent = true)
     {
-        if (!$this->Id || !is_numeric($this->Id)) {
-            return;
-        }
-
-        // Set configure duration for this build.
-        $stmt = $this->PDO->prepare(
-            'UPDATE build SET configureduration = ? WHERE id = ?');
-        pdo_execute($stmt, [$duration, $this->Id]);
-
-        if (!$update_parent) {
-            return;
-        }
-        // If this is a child build, add this duration
-        // to the parent's configure duration sum.
-        $this->SetParentId($this->LookupParentBuildId());
-        if ($this->ParentId > 0) {
-            $stmt = $this->PDO->prepare(
-                'UPDATE build
-                SET configureduration = configureduration + ?
-                WHERE id = ?');
-            pdo_execute($stmt, [$duration, $this->ParentId]);
-        }
-    }
-
-    /**
-     * @param $duration
-     * @param bool $update_parent
-     */
-    public function UpdateBuildDuration($duration, $update_parent = true)
-    {
-        if ($duration === 0 || !$this->Id || !is_numeric($this->Id)) {
+        if ($duration === 0 || !$this->Id || !is_numeric($this->Id) ||
+                !$this->Exists()) {
             return;
         }
 
@@ -2357,10 +2324,10 @@ class Build
             return;
         }
 
-        // Update build step duration for this build.
+        // Update duration of specified step for this build.
         $update_stmt = $this->PDO->prepare(
-            'UPDATE build SET buildduration = buildduration + :duration
-            WHERE id = :id');
+            "UPDATE build SET {$field}duration = {$field}duration + :duration
+            WHERE id = :id");
         if (!pdo_execute($update_stmt,
             [':duration' => $duration, ':id' => $this->Id])) {
             $this->PDO->rollBack();
@@ -2387,6 +2354,24 @@ class Build
             }
             $this->PDO->commit();
         }
+    }
+
+    /**
+     * @param $duration
+     * @param bool $update_parent
+     */
+    public function SetConfigureDuration($duration, $update_parent = true)
+    {
+        return $this->UpdateDuration('configure', $duration, $update_parent);
+    }
+
+    /**
+     * @param $duration
+     * @param bool $update_parent
+     */
+    public function UpdateBuildDuration($duration, $update_parent = true)
+    {
+        return $this->UpdateDuration('build', $duration, $update_parent);
     }
 
     // Return the dashboard date (in Y-m-d format) for this build.
