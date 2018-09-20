@@ -2374,6 +2374,11 @@ class Build
         return $this->UpdateDuration('build', $duration, $update_parent);
     }
 
+    public function UpdateTestDuration($duration, $update_parent=true)
+    {
+        return $this->UpdateDuration('test', $duration, $update_parent);
+    }
+
     // Return the dashboard date (in Y-m-d format) for this build.
     public function GetDate()
     {

@@ -290,7 +290,7 @@ class TestingJUnitHandler extends AbstractHandler
                 $this->NumberTestsFailed,
                 $this->NumberTestsNotRun);
 
-            $this->Build->SaveTotalTestsTime($this->TotalTestDuration);
+            $this->Build->UpdateTestDuration($this->TotalTestDuration);
             $this->Build->ComputeTestTiming();
         }
     }

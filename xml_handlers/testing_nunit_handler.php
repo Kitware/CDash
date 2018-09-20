@@ -159,8 +159,6 @@ class TestingNUnitHandler extends AbstractHandler
             $this->Build->Information = $buildInformation;
             $this->Append = false;
         } elseif ($this->BuildAdded == false && $name == 'TEST-SUITE') {
-            $this->Build->SaveTotalTestsTime(0);
-
             $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
             $this->Build->ProjectId = $this->projectid;
             $this->Build->GetIdFromName($this->SubProjectName);
