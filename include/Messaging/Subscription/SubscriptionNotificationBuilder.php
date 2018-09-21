@@ -3,7 +3,7 @@ namespace CDash\Messaging\Subscription;
 
 use CDash\Messaging\FactoryInterface;
 use CDash\Collection\CollectionInterface;
-use CDash\Messaging\Subscription\SubscriptionCollection;
+use CDash\Messaging\Notification\NotificationCollection;
 
 /**
  * SubscriptionNotificationBuilder is an abstract class meant to be extended by specific types of

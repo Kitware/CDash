@@ -1,7 +1,20 @@
 <?php
+/**
+ * =========================================================================
+ *   Program:   CDash - Cross-Platform Dashboard System
+ *   Module:    $Id$
+ *   Language:  PHP
+ *   Date:      $Date$
+ *   Version:   $Revision$
+ *   Copyright (c) Kitware, Inc. All rights reserved.
+ *   See LICENSE or http://www.cdash.org/licensing/ for details.
+ *   This software is distributed WITHOUT ANY WARRANTY; without even
+ *   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ *   PURPOSE. See the above copyright notices for more information.
+ * =========================================================================
+ */
 namespace CDash\Messaging\Notification;
 
-use CDash\Collection\Collection;
 use CDash\Collection\CollectionInterface;
 use CDash\Collection\SubscriberCollection;
 use CDash\Messaging\FactoryInterface;
@@ -17,9 +30,11 @@ interface NotificationBuilderInterface
     public function __construct(FactoryInterface $factory, CollectionInterface $collection);
 
     /**
-     * @return NotificationInterface
+     * @param SubscriptionInterface $subscription
+     * @param string $templateName
+     * @return NotificationInterface|null
      */
-    public function createNotification(SubscriptionInterface $subscription);
+    public function createNotification(SubscriptionInterface $subscription, $templateName);
 
     /**
      * @return SubscriberCollection

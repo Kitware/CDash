@@ -20,6 +20,7 @@ class SubscriptionBuilder
      * SubscriptionBuilder constructor.
      * @param ActionableBuildInterface $submission
      * @param SubscriptionCollection|null $subscriptions
+     * @param SubscriberCollection|null $subscribers
      * @param SubscriptionFactory|null $subscriptionFactory
      */
     public function __construct(

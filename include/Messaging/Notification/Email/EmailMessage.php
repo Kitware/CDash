@@ -30,7 +30,7 @@ class EmailMessage implements NotificationInterface
     /** @var  string $subject */
     protected $subject;
 
-    /** @var  DecoratorInterface $body */
+    /** @var  string $body */
     private $body;
 
     /** @var BuildEmailCollection $buildEmailCollection */
@@ -51,6 +51,10 @@ class EmailMessage implements NotificationInterface
      */
     public function getBuildEmailCollection()
     {
+        if (!$this->buildEmailCollection) {
+            $this->buildEmailCollection = new BuildEmailCollection();
+        }
+
         return $this->buildEmailCollection;
     }
 
@@ -94,7 +98,7 @@ class EmailMessage implements NotificationInterface
      * @param DecoratorInterface $body
      * @return EmailMessage
      */
-    public function setBody(DecoratorInterface $body)
+    public function setBody($body)
     {
         $this->body = $body;
         return $this;
@@ -106,7 +110,7 @@ class EmailMessage implements NotificationInterface
      */
     public function setSubject($subject)
     {
-        $this->subject = $subject;
+        $this->subject = trim($subject);
         return $this;
     }
 
@@ -115,15 +119,15 @@ class EmailMessage implements NotificationInterface
      */
     public function getSubject()
     {
-        return $this->subject;
+        return trim($this->subject);
     }
 
     /**
-     * @return DecoratorInterface
+     * @return string
      */
     public function getBody()
     {
-        return $this->body;
+        return trim($this->body);
     }
 
     /**
@@ -132,6 +136,12 @@ class EmailMessage implements NotificationInterface
      */
     public function __toString()
     {
-        return $this->body->__toString();
+        $body = '';
+        if (is_string($this->body)) {
+            $body = $this->body;
+        } elseif (method_exists($this->body, '__toString')) {
+            $body = $this->body->__toString();
+        }
+        return $body;
     }
 }

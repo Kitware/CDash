@@ -164,6 +164,34 @@ class Subscription implements SubscriptionInterface
         }
     }
 
+    public function getProjectName()
+    {
+        return $this->project->GetName();
+    }
+
+    public function getProjectUrl()
+    {
+        return $this->project->GetUrlForSelf();
+    }
+
+    public function getSiteName()
+    {
+        return $this->site->GetName();
+    }
+
+    public function getTopicDescriptions($case = null)
+    {
+        $descriptions = [];
+        foreach($this->subscriber->getTopics() as $topic) {
+            $description = $topic->getTopicDescription();
+            if (!is_null($case)) {
+                $description = $case === CASE_UPPER ? strtoupper($description) : strtolower($description);
+            }
+            $descriptions[] = $description;
+        }
+        return $descriptions;
+    }
+
     /**
      * @return string[]
      * TODO: A summary should be a BuildSummary class, create one asap
@@ -223,5 +251,19 @@ class Subscription implements SubscriptionInterface
             $this->summary = $summary;
         }
         return $this->summary;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTopicTemplates()
+    {
+        $stop = true;
+        $templates = [];
+        foreach ($this->subscriber->getTopics() as $topic) {
+            $templates[] = $topic->getTemplate();
+        }
+
+        return array_unique($templates);
     }
 }

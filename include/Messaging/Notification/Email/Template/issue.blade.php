@@ -1,7 +1,6 @@
 <?php
 use CDash\Messaging\Subscription\Subscription;
 use CDash\Config;
-
 $descriptions = $subscription->getTopicDescriptions(CASE_LOWER);
 $summary = $subscription->getBuildSummary();
 $config = Config::getInstance();
@@ -30,10 +29,9 @@ $warning = $size < $collection->count() ? "(first {$size} included)" : '';
 *{{ $topic->getTopicDescription() }}* {{ $warning }}
 
 @foreach($descriptions as $description)
-    <?php $reference = str_replace(' ', '_', $description); ?>
-    @each("issue.{$reference}", $items, $reference)
+<?php $reference = str_replace(' ', '_', $description); ?>
+@each("issue.{$reference}", $items, $reference)
 @endforeach
 @endforeach
 
 -CDash on {{ $config->getServer() }}
-

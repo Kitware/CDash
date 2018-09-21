@@ -1,15 +1,15 @@
 <?php use CDash\Model\BuildError; use CDash\Model\BuildFailure;?>
-@if (is_a($warnings, BuildFailure::class))
-{{ $warnings->SourceFile }} ({{ $warnings->GetUrlForSelf() }}
-{!! $warnings->StdOutput !!}
-{!! $warnings->StdErr !!}
+@if (is_a($errors, BuildFailure::class))
+{{ $errors->SourceFile }} ({!! $errors->GetUrlForSelf() !!})
+{!! $errors->StdOutput !!}
+{!! $errors->StdErr !!}
 @else
-    @if(strlen($warnings->SourceFile) > 0)
-{{ $warnings->SourceFile }} line {{ $warnings->SourceLine }} ({{ $warnings->GetUrlForSelf() }}
-{!! $warnings->Text !!}
-{!! $warnings->PostContext !!}
+    @if(strlen($errors->SourceFile) > 0)
+{{ $errors->SourceFile }} line {{ $errors->SourceLine }} ({!! $errors->GetUrlForSelf() !!})
+{!! $errors->Text !!}
+{!! $errors->PostContext !!}
     @else
-{!! $warnings->Text !!}
-{!! $warnings->PostContext !!}
+{!! $errors->Text !!}
+{!! $errors->PostContext !!}
     @endif
 @endif

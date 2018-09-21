@@ -14,9 +14,11 @@ class NotificationDirector
         $notifications = $builder->getNotifications();
 
         foreach ($subscriptions as $recipient => $subscription) {
-            $notification = $builder->createNotification($subscription);
-            if ($notification) {
-                $notifications->add($notification);
+            foreach ($subscription->getTopicTemplates() as $template) {
+                $notification = $builder->createNotification($subscription, $template);
+                if ($notification) {
+                    $notifications->add($notification);
+                }
             }
         }
         return $notifications;

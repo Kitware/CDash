@@ -42,7 +42,7 @@ abstract class Topic implements TopicInterface
 
     /**
      * Topic constructor.
-     * @param TopicInterface|null $topic
+     * @param TopicInterface|Fixable|null $topic
      */
     public function __construct(TopicInterface $topic = null)
     {
@@ -196,5 +196,10 @@ abstract class Topic implements TopicInterface
         $address = $this->subscriber->getAddress();
 
         return $emailCollection->has($address);
+    }
+
+    public function getTemplate()
+    {
+        return 'issue';
     }
 }
