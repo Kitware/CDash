@@ -2665,10 +2665,12 @@ class Build
 
     /**
      * @param Test $test
+     * @return $this
      */
     public function AddTest(Test $test)
     {
         $this->TestCollection->add($test);
+        return $this;
     }
 
     /**
@@ -3082,6 +3084,7 @@ class Build
     }
 
     // TODO: Create a diff class
+    // TODO: This works fine, unless it is the first build
     public function GetDiffWithPreviousBuild()
     {
         if (!$this->Id) {
@@ -3089,35 +3092,87 @@ class Build
         }
 
         if (!$this->ErrorDifferences) {
-            $diff = $this->GetErrorDifferences();
-            $this->ErrorDifferences = [
-                'BuildWarning' => [
-                    'new' => $diff['buildwarningspositive'],
-                    'fixed' => $diff['buildwarningsnegative'],
-                ],
-                'BuildError' => [
-                    'new' => $diff['builderrorspositive'],
-                    'fixed' => $diff['builderrorsnegative'],
-                ],
-                'Configure' => [
-                    'errors' => $diff['configureerrors'],
-                    'warnings' => $diff['configurewarnings'],
-                ] ,
-                'TestFailure' => [
-                    'passed' => [
-                        'new' => $diff['testpassedpositive'],
-                        'broken' => $diff['testpassednegative']
+            if ($this->GetPreviousBuildId() === 0) {
+                $warnings = array_reduce($this->Errors, function ($count, $item) {
+                    $count += $item->Type === Build::TYPE_WARN ? 1 : 0;
+                    return $count;
+                }, 0);
+                $errors = array_reduce($this->Errors, function ($count, $item) {
+                    $count += $item->Type === Build::TYPE_ERROR ? 1 : 0;
+                    return $count;
+                }, 0);
+                $passed = array_reduce($this->TestCollection->toArray(), function ($count, $test) {
+                    $count += $test->Status === Test::PASSED ? 1 : 0;
+                    return $count;
+                }, 0);
+                $failed = array_reduce($this->TestCollection->toArray(), function ($count, $test) {
+                    $count += $test->Status === Test::FAILED ? 1 : 0;
+                    return $count;
+                }, 0);
+                $notrun = array_reduce($this->TestCollection->toArray(), function ($count, $test) {
+                    $count += $test->Status === Test::NOTRUN ? 1 : 0;
+                    return $count;
+                }, 0);
+
+                $this->ErrorDifferences = [
+                    'BuildWarning' => [
+                        'new' => $warnings,
+                        'fixed' => 0,
                     ],
-                    'failed' => [
-                        'new' => $diff['testfailedpositive'],
-                        'fixed' => $diff['testfailednegative'],
+                    'BuildError' => [
+                        'new' => $errors,
+                        'fixed' => 0,
                     ],
-                    'notrun' => [
-                        'new' => $diff['testnotrunpositive'],
-                        'fixed' => $diff['testnotrunnegative']
+                    'Configure' => [
+                        'errors' => ($this->BuildConfigure ? $this->BuildConfigure->NumberOfErrors : 0),
+                        'warnings' => ($this->BuildConfigure ? $this->BuildConfigure->NumberOfWarnings : 0),
+                    ] ,
+                    'TestFailure' => [
+                        'passed' => [
+                            'new' => $passed,
+                            'broken' => 0,
+                        ],
+                        'failed' => [
+                            'new' => $failed,
+                            'fixed' => 0,
+                        ],
+                        'notrun' => [
+                            'new' => $notrun,
+                            'fixed' => 0,
+                        ],
                     ],
-                ],
-            ];
+                ];
+            } else {
+                $diff = $this->GetErrorDifferences();
+                $this->ErrorDifferences = [
+                    'BuildWarning' => [
+                        'new' => $diff['buildwarningspositive'],
+                        'fixed' => $diff['buildwarningsnegative'],
+                    ],
+                    'BuildError' => [
+                        'new' => $diff['builderrorspositive'],
+                        'fixed' => $diff['builderrorsnegative'],
+                    ],
+                    'Configure' => [
+                        'errors' => $diff['configureerrors'],
+                        'warnings' => $diff['configurewarnings'],
+                    ] ,
+                    'TestFailure' => [
+                        'passed' => [
+                            'new' => $diff['testpassedpositive'],
+                            'broken' => $diff['testpassednegative']
+                        ],
+                        'failed' => [
+                            'new' => $diff['testfailedpositive'],
+                            'fixed' => $diff['testfailednegative'],
+                        ],
+                        'notrun' => [
+                            'new' => $diff['testnotrunpositive'],
+                            'fixed' => $diff['testnotrunnegative']
+                        ],
+                    ],
+                ];
+            }
         }
         return $this->ErrorDifferences;
     }
