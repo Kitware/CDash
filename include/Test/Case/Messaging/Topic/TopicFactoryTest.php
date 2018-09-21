@@ -18,6 +18,8 @@ use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Topic\AuthoredTopic;
 use CDash\Messaging\Topic\EmailSentTopic;
+use CDash\Messaging\Topic\Fixable;
+use CDash\Messaging\Topic\FixedTopic;
 use CDash\Messaging\Topic\GroupMembershipTopic;
 use CDash\Messaging\Topic\LabeledTopic;
 use CDash\Messaging\Topic\Topic;
@@ -115,5 +117,21 @@ class TopicFactoryTest extends PHPUnit_Framework_TestCase
         sort($actual);
 
         $this->assertEquals($expected, $actual);
+    }
+
+    public function testCreateFromReturnsFixableTopicsDecoratedGivenNotifyOnFixed()
+    {
+        $userProject = new UserProject();
+        $preferences = new BitmaskNotificationPreferences($userProject->EmailCategory);
+        $preferences->set(NotifyOn::FIXED, true);
+        $preferences->set(NotifyOn::REDUNDANT, true);
+
+        $topics = TopicFactory::createFrom($preferences);
+
+        $fixable = array_filter($topics, function ($topic) {
+            return is_a($topic, FixedTopic::class);
+        });
+
+        $this->assertCount(3, $fixable);
     }
 }

@@ -2,12 +2,15 @@
 
 use CDash\Collection\BuildErrorCollection;
 use CDash\Messaging\Topic\BuildErrorTopic;
-use CDash\Messaging\Topic\Topic;
 use CDash\Model\Build;
 use CDash\Model\BuildError;
+use CDash\Test\BuildDiffForTesting;
+use phpDocumentor\Reflection\Types\This;
 
 class BuildErrorTopicTest extends \CDash\Test\CDashTestCase
 {
+    use BuildDiffForTesting;
+
     public function testSubscribesToBuildWithErrorDiff()
     {
         $build = new Build();
@@ -145,5 +148,41 @@ class BuildErrorTopicTest extends \CDash\Test\CDashTestCase
 
         $sut->setType(Build::TYPE_WARN);
         $this->assertEquals('Warnings', $sut->getTopicDescription());
+    }
+
+    public function testHasFixes()
+    {
+        $sut = new BuildErrorTopic();
+        $sut->setType(Build::TYPE_ERROR);
+
+        /** @var Build|PHPUnit_Framework_MockObject_MockObject $build */
+        $build = $this->getMockBuilder(Build::class)
+            ->setMethods(['GetErrorDifferences'])
+            ->getMock();
+
+        $build->expects($this->never())
+            ->method('GetErrorDifferences')
+            ->willReturn($this->getDiff());
+        $build->Id = 201;
+
+        $sut->subscribesToBuild($build);
+        $this->assertFalse($sut->hasFixes());
+
+        $build = $this->getMockBuilder(Build::class)
+            ->setMethods(['GetErrorDifferences', 'GetPreviousBuildId'])
+            ->getMock();
+
+        $build->expects($this->once())
+            ->method('GetErrorDifferences')
+            ->willReturn($this->createFixed('builderrorsnegative'));
+
+        $build->expects($this->once())
+            ->method('GetPreviousBuildId')
+            ->willReturn(201);
+
+        $build->Id = 202;
+
+        $sut->subscribesToBuild($build);
+        $this->assertTrue($sut->hasFixes());
     }
 }

@@ -56,4 +56,9 @@ interface TopicInterface
      * @return boolean
      */
     public function itemHasTopicSubject(Build $build, $item);
+
+    /**
+     * @return string|array
+     */
+    public function getTemplate();
 }

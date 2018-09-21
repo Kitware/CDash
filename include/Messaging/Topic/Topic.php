@@ -198,6 +198,15 @@ abstract class Topic implements TopicInterface
         return $emailCollection->has($address);
     }
 
+    public function getFixed()
+    {
+        $fixes = [];
+        if ($this->topic) {
+            $fixes = $this->topic->getFixed();
+        }
+        return $fixes;
+    }
+
     public function getTemplate()
     {
         return 'issue';

@@ -2,18 +2,13 @@
 namespace CDash\Messaging\Topic;
 
 use CDash\Model\Build;
-use CDash\Collection\CollectionCollection;
 use CDash\Collection\TestCollection;
 use CDash\Model\Test;
 
-class TestFailureTopic extends Topic implements DecoratableInterface
+class TestFailureTopic extends Topic implements DecoratableInterface, Fixable
 {
     private $collection;
-
-    public function getTopicDescription()
-    {
-        return 'Failing Tests';
-    }
+    private $diff;
 
     /**
      * This method queries the build to check for failed tests
@@ -23,8 +18,12 @@ class TestFailureTopic extends Topic implements DecoratableInterface
      */
     public function subscribesToBuild(Build $build)
     {
-        $parentTopic = is_null($this->topic) ? true : $this->topic->subscribesToBuild($build);
-        $subscribe = $parentTopic && $build->GetTestFailedCount() > 0;
+        $subscribe = false;
+        $this->diff = $build->GetDiffWithPreviousBuild();
+        if ($this->diff) {
+            $subscribe = $this->diff['TestFailure']['failed']['new'] > 0
+                || $this->diff['TestFailure']['notrun']['new'] > 0;
+        }
 
         return $subscribe;
     }
@@ -144,5 +143,36 @@ class TestFailureTopic extends Topic implements DecoratableInterface
             }
         }
         return $hasTopicSubject;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTopicDescription()
+    {
+        return 'Failing Tests';
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasFixes()
+    {
+        return $this->diff
+            && $this->diff['TestFailure']['failed']['fixed'] > 0
+            || $this->diff['TestFailure']['notrun']['fixed'] > 0;
+
+    }
+
+    /**
+     * @return array
+     */
+    public function getFixes()
+    {
+        $fixed = [];
+        if ($this->diff) {
+            $fixed = $this->diff['TestFailure'];
+        }
+        return $fixed;
     }
 }

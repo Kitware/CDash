@@ -1,59 +1,143 @@
 <?php
+/**
+ * =========================================================================
+ *   Program:   CDash - Cross-Platform Dashboard System
+ *   Module:    $Id$
+ *   Language:  PHP
+ *   Date:      $Date$
+ *   Version:   $Revision$
+ *   Copyright (c) Kitware, Inc. All rights reserved.
+ *   See LICENSE or http://www.cdash.org/licensing/ for details.
+ *   This software is distributed WITHOUT ANY WARRANTY; without even
+ *   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ *   PURPOSE. See the above copyright notices for more information.
+ * =========================================================================
+ */
+
 use CDash\Messaging\Topic\TestFailureTopic;
 use CDash\Messaging\Topic\Topic;
 use CDash\Model\Build;
+use CDash\Model\BuildTest;
+use CDash\Test\BuildDiffForTesting;
+use CDash\Model\Test;
 
 class TestFailureTopicTest extends \CDash\Test\CDashTestCase
 {
+    use BuildDiffForTesting;
+
     public function testSubscribesToBuild()
     {
         $sut = new TestFailureTopic();
+        $build = $this->createMockBuildWithDiff($this->getDiff());
+        $this->assertFalse($sut->subscribesToBuild($build));
+
+        $diff = $this->createNew('testfailedpositive');
+        $this->assertEquals(1, $diff['testfailedpositive']);
+        $build = $this->createMockBuildWithDiff($diff);
+        $this->assertTrue($sut->subscribesToBuild($build));
+
+        $diff = $this->createNew('testnotrunpositive');
+        $this->assertEquals(1, $diff['testnotrunpositive']);
+        $build = $this->createMockBuildWithDiff($diff);
+        $this->assertTrue($sut->subscribesToBuild($build));
+    }
+
+    public function testItemHasTopicSubject()
+    {
+        $sut = new TestFailureTopic();
         $build = new Build();
-        $this->assertFalse($sut->subscribesToBuild($build));
+        $test = new Test();
+        $buildTest = new BuildTest();
 
-        $build->TestFailedCount = 0;
-        $this->assertFalse($sut->subscribesToBuild($build));
+        $test->SetBuildTest($buildTest);
+        $build->AddTest($test);
 
-        $build->TestFailedCount = 1;
-        $this->assertTrue($sut->subscribesToBuild($build));
+        $this->assertFalse($sut->itemHasTopicSubject($build, $test));
 
-        $build->TestFailedCount = '1';
-        $this->assertTrue($sut->subscribesToBuild($build));
+        $buildTest->Status = Test::PASSED;
 
-        // Topics are decorators, so the creation of this mock topic is merely
-        // for testing all possible states of our SUT
-        $mock_topic = $this->getMockForAbstractClass(Topic::class);
-        $mock_topic
-            ->method('subscribesToBuild')
-            ->willReturnOnConsecutiveCalls(false, false, false, true, true);
+        $this->assertFalse($sut->itemHasTopicSubject($build, $test));
 
-        $sut = new TestFailureTopic($mock_topic);
+        $buildTest->Status = Test::NOTRUN;
+
+        $this->assertFalse($sut->itemHasTopicSubject($build, $test));
+
+        $buildTest->Status = Test::FAILED;
+
+        $this->assertTrue($sut->itemHasTopicSubject($build, $test));
+    }
+
+    public function testSetTopicData()
+    {
+        $sut = new TestFailureTopic();
         $build = new Build();
-        // parent does not subscribe to build and TestFailedCount is default value
-        $this->assertFalse($sut->subscribesToBuild($build));
+        $test1 = new Test();
+        $test1->Name = 'Passed';
+        $test2 = new Test();
+        $test2->Name = 'Failed';
+        $test3 = new Test();
+        $test3->Name = 'NotRun';
 
-        // parent does not subscribe to build and TestFailedCount is 0
-        $build->TestFailedCount = 0;
-        $this->assertFalse($sut->subscribesToBuild($build));
+        $passed = new BuildTest();
+        $passed->Status = Test::PASSED;
 
-        // parent does not subscribe to build and TestFailedCount is 1
-        $build->TestFailedCount = 1;
-        $this->assertFalse($sut->subscribesToBuild($build));
+        $failed = new BuildTest();
+        $failed->Status = Test::FAILED;
 
-        // parent *subscribes* to build and TestFailedCount is 0
-        $build->TestFailedCount = 0;
-        $this->assertFalse($sut->subscribesToBuild($build));
+        $notrun = new BuildTest();
+        $notrun->Status = Test::NOTRUN;
 
-        // parent *subscribes* to build and TestFailedCount is 1
-        $build->TestFailedCount = 1;
-        $this->assertTrue($sut->subscribesToBuild($build));
+        $test1->SetBuildTest($passed);
+        $test2->SetBuildTest($failed);
+        $test3->SetBuildTest($notrun);
+
+        $build
+            ->AddTest($test1)
+            ->AddTest($test2)
+            ->AddTest($test3);
+
+        $sut->setTopicData($build);
+
+        $collection = $sut->getTopicCollection();
+        $this->assertCount(1, $collection);
+        $this->assertSame($test2, $collection->current());
     }
 
     public function testGetTopicName()
     {
         $sut = new TestFailureTopic();
-        $expected = 'TestFailure';
+        $expected = Topic::TEST_FAILURE;
         $actual = $sut->getTopicName();
         $this->assertEquals($expected, $actual);
+    }
+
+    public function testGetTopicDescription()
+    {
+        $sut = new TestFailureTopic();
+        $expected = 'Failing Tests';
+        $actual = $sut->getTopicDescription();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testHasFixed()
+    {
+        $sut = new TestFailureTopic();
+        $build = $this->createMockBuildWithDiff($this->getDiff());
+        $this->assertFalse($sut->subscribesToBuild($build));
+        $this->assertFalse($sut->hasFixes());
+
+        $key = 'testfailednegative';
+        $diff = $this->createFixed($key);
+        $this->assertEquals(1, $diff[$key]);
+        $build = $this->createMockBuildWithDiff($diff);
+        $this->assertFalse($sut->subscribesToBuild($build));
+        $this->assertTrue($sut->hasFixes());
+
+        $key = 'testnotrunnegative';
+        $diff = $this->createFixed($key);
+        $this->assertEquals(1, $diff[$key]);
+        $build = $this->createMockBuildWithDiff($diff);
+        $this->assertFalse($sut->subscribesToBuild($build));
+        $this->assertTrue($sut->hasFixes());
     }
 }

@@ -47,4 +47,9 @@ class EmailSentTopic extends Topic
         // so just return true here
         return true;
     }
+
+    public function getTemplate()
+    {
+        return $this->topic->getTemplate();
+    }
 }

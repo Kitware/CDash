@@ -14,115 +14,102 @@
  * =========================================================================
  */
 
+use CDash\Messaging\Topic\BuildErrorTopic;
 use CDash\Messaging\Topic\FixedTopic;
+use CDash\Messaging\Topic\TestFailureTopic;
 use CDash\Model\Build;
+use CDash\Test\BuildDiffForTesting;
 
 class FixedTopicTest extends \CDash\Test\CDashTestCase
 {
-    private $diff;
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this->diff = [
-            'builderrorspositive'   => 0,
-            'builderrorsnegative'   => 0,
-            'buildwarningspositive' => 0,
-            'buildwarningsnegative' => 0,
-            'configureerrors'       => 0,
-            'configurewarnings'     => 0,
-            'testpassedpositive'    => 0,
-            'testpassednegative'    => 0,
-            'testfailedpositive'    => 0,
-            'testfailednegative'    => 0,
-            'testnotrunpositive'    => 0,
-            'testnotrunnegative'    => 0,
-        ];
-    }
+    use BuildDiffForTesting;
 
     public function testSubscribesToBuildGivenNoFixes()
     {
-        $sut = new FixedTopic();
-        /** @var Build|PHPUnit_Framework_MockObject_MockObject $build */
-        $build = $this->getMockBuilder(Build::class)
-            ->setMethods(['GetErrorDifferences'])
-            ->getMock();
+        // BuildErrorTopic implements Fixable
+        $buildTopic = new BuildErrorTopic();
+        $sut = new FixedTopic($buildTopic);
 
-        $build->expects($this->exactly(1))
-            ->method('GetErrorDifferences')
-            ->willReturn($this->diff);
-        $build->Id = 1;
+        $build = $this->createMockBuildWithDiff($this->getDiff());
+        $buildTopic->subscribesToBuild($build);
+
+        $this->assertFalse($sut->subscribesToBuild($build));
+
+        // TestFailureTopic implements Fixable
+        $testTopic = new TestFailureTopic();
+        $sut = new FixedTopic($testTopic);
+
+        $testTopic->subscribesToBuild($build);
 
         $this->assertFalse($sut->subscribesToBuild($build));
     }
 
     public function testSubscribesToBuildGivenBuildErrorFix()
     {
-        $sut = new FixedTopic();
-        /** @var Build|PHPUnit_Framework_MockObject_MockObject $build */
-        $build = $this->getMockBuilder(Build::class)
-            ->setMethods(['GetErrorDifferences'])
-            ->getMock();
+        $buildTopic = new BuildErrorTopic();
+        $sut = new FixedTopic($buildTopic);
 
-        $build->expects($this->exactly(1))
-            ->method('GetErrorDifferences')
-            ->willReturn($this->createFixed('builderrorsnegative'));
-        $build->Id = 1;
+        $build = $this->createMockBuildWithDiff($this->createFixed('builderrorsnegative'));
+        $buildTopic->subscribesToBuild($build);
 
         $this->assertTrue($sut->subscribesToBuild($build));
     }
 
     public function testSubscribesToBuildGivenBuildWarningFix()
     {
-        $sut = new FixedTopic();
-        /** @var Build|PHPUnit_Framework_MockObject_MockObject $build */
-        $build = $this->getMockBuilder(Build::class)
-            ->setMethods(['GetErrorDifferences'])
-            ->getMock();
+        $buildTopic = new BuildErrorTopic();
+        $buildTopic->setType(Build::TYPE_WARN);
 
-        $build->expects($this->exactly(1))
-            ->method('GetErrorDifferences')
-            ->willReturn($this->createFixed('buildwarningsnegative'));
-        $build->Id = 1;
+        $sut = new FixedTopic($buildTopic);
+
+        $build = $this->createMockBuildWithDiff($this->createFixed('buildwarningsnegative'));
+        $buildTopic->subscribesToBuild($build);
 
         $this->assertTrue($sut->subscribesToBuild($build));
     }
 
     public function testSubscribesToBuildGivenTestFailureFix()
     {
-        $sut = new FixedTopic();
-        /** @var Build|PHPUnit_Framework_MockObject_MockObject $build */
-        $build = $this->getMockBuilder(Build::class)
-            ->setMethods(['GetErrorDifferences'])
-            ->getMock();
+        $testTopic = new TestFailureTopic();
+        $sut = new FixedTopic($testTopic);
 
-        $build->expects($this->exactly(1))
-            ->method('GetErrorDifferences')
-            ->willReturn($this->createFixed('testfailednegative'));
-        $build->Id = 1;
+        $build = $this->createMockBuildWithDiff($this->createFixed('testfailednegative'));
+        $testTopic->subscribesToBuild($build);
 
         $this->assertTrue($sut->subscribesToBuild($build));
     }
 
     public function testSubscribesToBuildGivenTestNotRunFix()
     {
-        $sut = new FixedTopic();
-        /** @var Build|PHPUnit_Framework_MockObject_MockObject $build */
-        $build = $this->getMockBuilder(Build::class)
-            ->setMethods(['GetErrorDifferences'])
-            ->getMock();
+        $testTopic = new TestFailureTopic();
+        $sut = new FixedTopic($testTopic);
 
-        $build->expects($this->exactly(1))
-            ->method('GetErrorDifferences')
-            ->willReturn($this->createFixed('testnotrunnegative'));
-        $build->Id = 1;
+        $build = $this->createMockBuildWithDiff($this->createFixed('testnotrunnegative'));
+        $testTopic->subscribesToBuild($build);
 
         $this->assertTrue($sut->subscribesToBuild($build));
     }
 
-    public function createFixed($key)
+    /**
+     * @param $diff
+     * @return Build|PHPUnit_Framework_MockObject_MockObject
+     */
+    private function createMockBuildWithDiff($diff)
     {
-        $fixed = array_merge($this->diff, ["{$key}" => 1]);
-        return $fixed;
+        /** @var Build|PHPUnit_Framework_MockObject_MockObject $build */
+        $build = $this->getMockBuilder(Build::class)
+            ->setMethods(['GetErrorDifferences', 'GetPreviousBuildId'])
+            ->getMock();
+
+        $build->expects($this->once())
+            ->method('GetErrorDifferences')
+            ->willReturn($diff);
+
+        $build->expects($this->once())
+            ->method('GetPreviousBuildId')
+            ->willReturn(1);
+        $build->Id = 2;
+
+        return $build;
     }
 }

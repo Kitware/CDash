@@ -4,10 +4,11 @@ namespace CDash\Messaging\Topic;
 use CDash\Collection\BuildErrorCollection;
 use CDash\Model\Build;
 
-class BuildErrorTopic extends Topic implements DecoratableInterface
+class BuildErrorTopic extends Topic implements DecoratableInterface, Fixable
 {
     private $collection;
     private $type;
+    private $diff;
 
     /**
      * When a user subscribes to receive notices for build errors or build warnings (and
@@ -21,10 +22,10 @@ class BuildErrorTopic extends Topic implements DecoratableInterface
     public function subscribesToBuild(Build $build)
     {
         $subscribe = false;
-        $diff = $build->GetDiffWithPreviousBuild();
-        if ($diff) {
+        $this->diff = $build->GetDiffWithPreviousBuild();
+        if ($this->diff) {
             $type = $this->getTopicName();
-            $subscribe = $diff[$type]['new'] > 0;
+            $subscribe = $this->diff[$type]['new'] > 0;
         }
         return $subscribe;
     }
@@ -99,5 +100,25 @@ class BuildErrorTopic extends Topic implements DecoratableInterface
     public function getTopicDescription()
     {
         return $this->type === Build::TYPE_ERROR ? 'Errors' : 'Warnings';
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasFixes()
+    {
+        $key = $this->getTopicName();
+        return $this->diff && $this->diff[$key]['fixed'] > 0;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFixes()
+    {
+        $key = $this->getTopicName();
+        if ($this->diff) {
+            return $this->diff[$key];
+        }
     }
 }

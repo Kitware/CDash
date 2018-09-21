@@ -201,11 +201,12 @@ class Subscription implements SubscriptionInterface
         if (!$this->summary) {
             $project = $this->project;
             $config = Config::getInstance();
+            $baseUrl = $config->getBaseUrl();
             $summary = [];
             $topics = $this->subscriber->getTopics();
             $summary['topics'] = [];
             $summary['project_name'] = $project->GetName();
-            $summary['project_url'] = "{$config->getBaseUrl()}/viewProject?projectid={$project->Id}";
+            $summary['project_url'] = "{$baseUrl}/viewProject?projectid={$project->Id}";
             $summary['site_name'] = $this->site->Name;
             $summary['build_name'] = '';
             $summary['build_subproject_names'] = [];
@@ -213,9 +214,19 @@ class Subscription implements SubscriptionInterface
             $summary['build_time'] = '';
             $summary['build_type'] = '';
             $summary['build_parent_id'] = null;
+            $summary['build_summary_url'] = null;
+            $summary['fixes'] = [];
+            $checkForFixed = $this->subscriber
+                ->getNotificationPreferences()
+                ->notifyOn('Fixed');
 
             foreach ($topics as $topic) {
                 $name = $topic->getTopicName();
+
+                if ($checkForFixed) {
+                    $summary['fixes'] = $topic->getFixed();
+                }
+
                 $summary['topics'][$name] = [
                     'description' => $topic->getTopicDescription(),
                     'count' => $topic->getTopicCount(),
@@ -246,6 +257,11 @@ class Subscription implements SubscriptionInterface
                     if (is_null($summary['build_parent_id'])) {
                         $summary['build_parent_id'] = $build->GetParentId();
                     }
+
+                    if (is_null($summary['build_summary_url'])) {
+                        $id = $summary['build_parent_id'] || $build->Id;
+                        $summary['build_summary_url'] = "{$baseUrl}/buildSummary?buildid={$id}";
+                    }
                 }
             }
             $this->summary = $summary;
@@ -258,10 +274,10 @@ class Subscription implements SubscriptionInterface
      */
     public function getTopicTemplates()
     {
-        $stop = true;
         $templates = [];
         foreach ($this->subscriber->getTopics() as $topic) {
-            $templates[] = $topic->getTemplate();
+            // This seems like a good idea now but just wait.
+            $templates = array_merge($templates, (array)$topic->getTemplate());
         }
 
         return array_unique($templates);
