@@ -89,27 +89,4 @@ class FixedTopicTest extends \CDash\Test\CDashTestCase
 
         $this->assertTrue($sut->subscribesToBuild($build));
     }
-
-    /**
-     * @param $diff
-     * @return Build|PHPUnit_Framework_MockObject_MockObject
-     */
-    private function createMockBuildWithDiff($diff)
-    {
-        /** @var Build|PHPUnit_Framework_MockObject_MockObject $build */
-        $build = $this->getMockBuilder(Build::class)
-            ->setMethods(['GetErrorDifferences', 'GetPreviousBuildId'])
-            ->getMock();
-
-        $build->expects($this->once())
-            ->method('GetErrorDifferences')
-            ->willReturn($diff);
-
-        $build->expects($this->once())
-            ->method('GetPreviousBuildId')
-            ->willReturn(1);
-        $build->Id = 2;
-
-        return $build;
-    }
 }
