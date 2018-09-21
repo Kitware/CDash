@@ -12,7 +12,7 @@ class UpdateErrorTopic extends Topic implements DecoratableInterface
     public function subscribesToBuild(Build $build)
     {
         $buildUpdate = $build->GetBuildUpdate();
-        return $buildUpdate->Status > 0;
+        return $buildUpdate && $buildUpdate->Status > 0;
     }
 
     /**
