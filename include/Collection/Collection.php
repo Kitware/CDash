@@ -187,4 +187,19 @@ abstract class Collection implements CollectionInterface
     {
         return array_values($this->collection);
     }
+
+    /**
+     * @param int $size
+     * @return Collection
+     */
+    public function first($size = 1)
+    {
+        $self = new static;
+        for ($i = 0; $i < $size; $i++) {
+            $key = $this->keys[$i];
+            $item = $this->collection[$key];
+            $self->addItem($item, $key);
+        }
+        return $self;
+    }
 }
