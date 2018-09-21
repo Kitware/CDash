@@ -1754,6 +1754,12 @@ class Project
         return $collection;
     }
 
+    public function GetUrlForSelf()
+    {
+        $config = Config::getInstance();
+        return "{$config->getBaseUrl()}/viewProject?projectid={$this->Id}";
+    }
+
     // Modify the build error/warning filters for this project if necessary.
     public function UpdateBuildFilters()
     {
