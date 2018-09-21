@@ -2928,10 +2928,21 @@ class Build
         return $this->CommitAuthors;
     }
 
-    public function HasAuthor($email)
+    public function AuthoredBy(SubscriberInterface $subscriber)
     {
+        $authoredBy = false;
         $authors = $this->GetCommitAuthors();
-        return in_array($email, $authors);
+        $credentials = $subscriber->getUserCredentials();
+        $credentials[] = $subscriber->getAddress();
+
+        foreach (array_unique($credentials) as $credential) {
+            if (in_array($credential, $authors)) {
+                $authoredBy = true;
+                break;
+            }
+        }
+
+        return $authoredBy;
     }
 
     public function GetAggregatedLabels()
@@ -3084,7 +3095,6 @@ class Build
     }
 
     // TODO: Create a diff class
-    // TODO: This works fine, unless it is the first build
     public function GetDiffWithPreviousBuild()
     {
         if (!$this->Id) {
@@ -3102,15 +3112,15 @@ class Build
                     return $count;
                 }, 0);
                 $passed = array_reduce($this->TestCollection->toArray(), function ($count, $test) {
-                    $count += $test->Status === Test::PASSED ? 1 : 0;
+                    $count += $test->GetStatus() === Test::PASSED ? 1 : 0;
                     return $count;
                 }, 0);
                 $failed = array_reduce($this->TestCollection->toArray(), function ($count, $test) {
-                    $count += $test->Status === Test::FAILED ? 1 : 0;
+                    $count += $test->GetStatus() === Test::FAILED ? 1 : 0;
                     return $count;
                 }, 0);
                 $notrun = array_reduce($this->TestCollection->toArray(), function ($count, $test) {
-                    $count += $test->Status === Test::NOTRUN ? 1 : 0;
+                    $count += $test->GetStatus() === Test::NOTRUN ? 1 : 0;
                     return $count;
                 }, 0);
 

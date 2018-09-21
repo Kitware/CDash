@@ -12,7 +12,7 @@ class AuthoredTopic extends Topic
     public function subscribesToBuild(Build $build)
     {
         $subscribe = $this->topic->subscribesToBuild($build)
-            && $build->HasAuthor($this->subscriber->getAddress());
+            && $build->AuthoredBy($this->subscriber);
         return $subscribe;
     }
 
@@ -24,5 +24,10 @@ class AuthoredTopic extends Topic
     public function itemHasTopicSubject(Build $build, $item)
     {
         return $this->topic->itemHasTopicSubject($build, $item);
+    }
+
+    public function getTemplate()
+    {
+        return $this->topic->getTemplate();
     }
 }
