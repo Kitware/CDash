@@ -37,7 +37,8 @@
     "iron-io/iron_mq": "~2.0",
     "knplabs/github-api": "^2.11",
     "php-http/guzzle6-adapter": "^1.1",
-    "lcobucci/jwt": "3.2.0"
+    "lcobucci/jwt": "3.2.0",
+    "jenssegers/blade": "^1.1"
   },
   "require-dev": {
     "ext-gd": "*",
