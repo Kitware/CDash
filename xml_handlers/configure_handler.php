@@ -265,6 +265,10 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
     /**
      * @return Build[]
      */
+    public function getBuilds()
+    {
+        return array_values($this->Builds);
+    }
     public function getActionableBuilds()
     {
         return $this->Builds;

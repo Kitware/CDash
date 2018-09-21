@@ -15,6 +15,7 @@
 =========================================================================*/
 
 require_once 'config/config.php';
+require_once 'xml_handlers/NonSaxHandler.php';
 
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
@@ -24,7 +25,7 @@ use CDash\Model\Project;
 use CDash\Model\SubProject;
 use CDash\Model\Test;
 
-class BazelJSONHandler
+class BazelJSONHandler extends NonSaxHandler
 {
     private $BuildId;
     private $Builds;
@@ -675,5 +676,10 @@ class BazelJSONHandler
             }
         }
         return false;
+    }
+
+    public function getBuilds()
+    {
+        return array_values($this->Builds);
     }
 }
