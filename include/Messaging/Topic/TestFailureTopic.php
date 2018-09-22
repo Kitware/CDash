@@ -129,19 +129,10 @@ class TestFailureTopic extends Topic implements DecoratableInterface, Fixable
      * @param Build $build
      * @param Test $item
      * @return boolean
-     *
-     * TODO: maybe access on this should be protected?
      */
     public function itemHasTopicSubject(Build $build, $item)
     {
-        $criteria = $this->getTopicCallables();
         $hasTopicSubject = $item->HasFailed();
-        foreach ($criteria as $criterion) {
-            $hasTopicSubject = $hasTopicSubject && $criterion($build, $item);
-            if (!$hasTopicSubject) {
-                break;
-            }
-        }
         return $hasTopicSubject;
     }
 
