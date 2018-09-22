@@ -55,7 +55,11 @@ class FixedTopic extends Topic
 
     public function getTemplate()
     {
-        $templates = (array)'fix';
+        $templates = [];
+        if ($this->topic->hasFixes()) {
+            $templates[] = 'fix';
+        }
+
         if ($this->decoratedSubscribes) {
             $templates[] = $this->topic->getTemplate();
         }
