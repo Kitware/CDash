@@ -2913,16 +2913,13 @@ class Build
             $stmt->bindParam(':buildId', $this->Id);
             if ($db->execute($stmt)) {
                 $authors = [];
-                foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $row) {
-                    if ($row->email) {
-                        $authors[] = $row->email;
-                    }
 
-                    if ($row->committeremail) {
-                        $authors[] = $row->committeremail;
-                    }
+                foreach ($stmt->fetchAll(PDO::FETCH_OBJ) as $row) {
+                    $authors = array_filter((array)$row, function ($col) {
+                       return !empty($col);
+                    });
                 }
-                $this->CommitAuthors = array_unique($authors);
+                $this->CommitAuthors = array_unique(array_values($authors));
             }
         }
         return $this->CommitAuthors;
