@@ -322,7 +322,7 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
         /** @var BuildCollection $collection */
         $collection = $factory->create(BuildCollection::class);
         foreach ($this->Builds as $key => $build) {
-            if (is_numeric($key)) {
+            if (is_numeric($key) || empty($key)) {
                 $collection->add($build);
             } else {
                 $collection->addItem($build, $key);
