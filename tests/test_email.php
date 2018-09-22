@@ -108,19 +108,17 @@ class EmailTestCase extends KWWebTestCase
         $expected = [
             'cdash.DEBUG: user1@kw',
             'cdash.DEBUG: PASSED (w=6): EmailProjectExample - Win32-MSVC2009 - Nightly',
-            'Congratulations, a submission to CDash for the project EmailProjectExample has fixed build warnings.',
-            'You have been identified as one of the authors who have checked in changes that are part of this ',
+            'Congratulations. A submission to CDash for the project EmailProjectExample has fixed warnings',
             "{$config->getBaseUrl()}/buildSummary.php?buildid=",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',
             'Build Name: Win32-MSVC2009',
-            'Build Time: 2009-02-23T05:02:04 EST',
+            'Build Time: 2009-02-23 10:02:04',
             'Type: Nightly',
-            'Warning fixed: 6',
-            '-CDash on',
-            'function', // *sigh*
+            'Warnings fixed: 6',
+            '-CDash on cdash.dev'
         ];
-        if ($this->assertLogContains($expected, 17)) {
+        if ($this->assertLogContains($expected, 15)) {
             $this->pass('Passed');
         }
     }
@@ -139,20 +137,18 @@ class EmailTestCase extends KWWebTestCase
         $expected = [
             'cdash.DEBUG: user1@kw',
             'cdash.DEBUG: PASSED (t=2): EmailProjectExample - Win32-MSVC2009 - Nightly',
-            'Congratulations, a submission to CDash for the project EmailProjectExample has fixed failing tests.',
-            'You have been identified as one of the authors who have checked in changes that are part of this',
+            'Congratulations. A submission to CDash for the project EmailProjectExample has fixed failing tests',
             "{$config->getBaseUrl()}/buildSummary.php?buildid=",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',
             'Build Name: Win32-MSVC2009',
-            'Build Time: 2009-02-23T05:02:04 EST',
+            'Build Time: 2009-02-23 10:02:04',
             'Type: Nightly',
-            'Tests fixed: 2',
-            '-CDash on',
-            'function'
+            'Test failures fixed: 2',
+            '-CDash on cdash.dev'
         ];
 
-        if ($this->assertLogContains($expected, 17)) {
+        if ($this->assertLogContains($expected, 15)) {
             $this->pass('Passed');
         }
     }
@@ -169,71 +165,43 @@ class EmailTestCase extends KWWebTestCase
         $config = Config::getInstance();
         $url = $config->getBaseUrl();
         $expected = [
-            'user1@kw',
-            'FAILED (w=3, t=3, d=10): EmailProjectExample - Win32-MSVC2009 - Nightly',
-            'A submission to CDash for the project EmailProjectExample has build warnings and failing tests and failing dynamic analysis tests.',
-            'You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.',
-            "Details on the submission can be found at {$url}/buildSummary.php?buildid=",
-            'Project: EmailProjectExample',
-            'Site: Dash20.kitware',
-            'Build Name: Win32-MSVC2009',
-            'Build Time: 2009-02-23T05:02:04 EST',
-            'Type: Nightly',
-            'Warnings: 3',
-            'Tests not passing: 3',
-            'Dynamic analysis tests failing: 10',
-            '*Warnings*',
-            '3>f:\program files\microsoft sdks\windows\v6.0a\include\servprov.h(79) : warning C4068: unknown pragma',
-            '3>F:\Program Files\Microsoft SDKs\Windows\v6.0A\\\include\urlmon.h(352) : warning C4068: unknown pragma',
-            '3>XcedeCatalog.cxx',
-            '2>bmScriptAddDashboardLabelAction.cxx',
-            '3>f:\program files\microsoft sdks\windows\v6.0a\include\servprov.h(79) : warning C4068: unknown pragma',
-            '*Tests failing*',
-            "DashboardSendTest | Completed (OTHER_FAULT) | ({$url}/testDetails.php?test=",
-            "StringActionsTest | Completed (OTHER_FAULT) | ({$url}/testDetails.php?test=",
-            "MathActionsTest | Completed (OTHER_FAULT) | ({$url}/testDetails.php?test=",
-            '*Dynamic analysis tests failing or not run* (first 5)',
-            "itkGeodesicActiveContourLevelSetSegmentationModuleTest1 ({$url}/viewDynamicAnalysisFile.php?id=",
-            "itkShapeDetectionLevelSetSegmentationModuleTest1 ({$url}/viewDynamicAnalysisFile.php?id=",
-            "itkShapeDetectionLevelSetSegmentationModuleTest2 ({$url}/viewDynamicAnalysisFile.php?id=",
-            "itkVectorFiniteDifferenceFunctionTest1 ({$url}/viewDynamicAnalysisFile.php?id=",
-            "itkVectorLevelSetFunctionTest2 ({$url}/viewDynamicAnalysisFile.php?id=",
-            '-CDash on',
-            'function',
             'simpletest@localhost',
-            'FAILED (w=3, t=3, d=10): EmailProjectExample - Win32-MSVC2009 - Nightly',
-            'A submission to CDash for the project EmailProjectExample has build warnings and failing tests and failing dynamic analysis tests.',
-            'You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.',
-            "Details on the submission can be found at {$url}/buildSummary.php?buildid=",
+            'FAILED (d=10): EmailProjectExample - Win32-MSVC2009 - Nightly',
+            'A submission to CDash for the project EmailProjectExample has dynamic analysis tests failing or not run',
+            "{$url}/viewProject?projectid=",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',
             'Build Name: Win32-MSVC2009',
-            'Build Time: 2009-02-23T05:02:04 EST',
+            'Build Time: 2009-02-23 10:02:04',
             'Type: Nightly',
-            'Warnings: 3',
-            'Tests not passing: 3',
-            'Dynamic analysis tests failing: 10',
-            '*Warnings*',
-            '3>f:\program files\microsoft sdks\windows\v6.0a\include\servprov.h(79) : warning C4068: unknown pragma',
-            '3>F:\Program Files\Microsoft SDKs\Windows\v6.0A\\\include\urlmon.h(352) : warning C4068: unknown pragma',
-            '3>XcedeCatalog.cxx',
-            '2>bmScriptAddDashboardLabelAction.cxx',
-            '3>f:\program files\microsoft sdks\windows\v6.0a\include\servprov.h(79) : warning C4068: unknown pragma',
-            '*Tests failing*',
-            "DashboardSendTest | Completed (OTHER_FAULT) | ({$url}/testDetails.php?test=",
-            "StringActionsTest | Completed (OTHER_FAULT) | ({$url}/testDetails.php?test=",
-            "MathActionsTest | Completed (OTHER_FAULT) | ({$url}/testDetails.php?test=",
-            '*Dynamic analysis tests failing or not run* (first 5)',
-            "itkGeodesicActiveContourLevelSetSegmentationModuleTest1 ({$url}/viewDynamicAnalysisFile.php?id=",
-            "itkShapeDetectionLevelSetSegmentationModuleTest1 ({$url}/viewDynamicAnalysisFile.php?id=",
-            "itkShapeDetectionLevelSetSegmentationModuleTest2 ({$url}/viewDynamicAnalysisFile.php?id=",
+            'Total Dynamic analysis tests failing or not run: 10',
+            '*Dynamic analysis tests failing or not run* (first 5 included)',
             "itkVectorFiniteDifferenceFunctionTest1 ({$url}/viewDynamicAnalysisFile.php?id=",
+            "itkVectorSegmentationLevelSetFunctionTest1 ({$url}/viewDynamicAnalysisFile.php?id=",
             "itkVectorLevelSetFunctionTest2 ({$url}/viewDynamicAnalysisFile.php?id=",
-            '-CDash on',
-            'function',
+            "itkVectorSparseFieldLevelSetImageFilterTest1 ({$url}/viewDynamicAnalysisFile.php?id=",
+            "itkVectorSparseFieldLevelSetImageFilterTest2 ({$url}/viewDynamicAnalysisFile.php?id=",
+            "-CDash on",
+            'user1@kw',
+            'FAILED (d=10): EmailProjectExample - Win32-MSVC2009 - Nightly',
+            'A submission to CDash for the project EmailProjectExample has dynamic analysis tests failing or not run',
+            "{$url}/viewProject?projectid=",
+            'Project: EmailProjectExample',
+            'Site: Dash20.kitware',
+            'Build Name: Win32-MSVC2009',
+            'Build Time: 2009-02-23 10:02:04',
+            'Type: Nightly',
+            'Total Dynamic analysis tests failing or not run: 10',
+            '*Dynamic analysis tests failing or not run* (first 5 included)',
+            "itkVectorFiniteDifferenceFunctionTest1 ({$url}/viewDynamicAnalysisFile.php?id=",
+            "itkVectorSegmentationLevelSetFunctionTest1 ({$url}/viewDynamicAnalysisFile.php?id=",
+            "itkVectorLevelSetFunctionTest2 ({$url}/viewDynamicAnalysisFile.php?id=",
+            "itkVectorSparseFieldLevelSetImageFilterTest1 ({$url}/viewDynamicAnalysisFile.php?id=",
+            "itkVectorSparseFieldLevelSetImageFilterTest2 ({$url}/viewDynamicAnalysisFile.php?id=",
+            "-CDash on",
         ];
 
-        if ($this->assertLogContains($expected, 99)) {
+        if ($this->assertLogContains($expected, 45)) {
             $this->pass('Passed');
         }
     }
@@ -258,43 +226,68 @@ class EmailTestCase extends KWWebTestCase
             'simpletest@localhost',
             'FAILED (t=4): EmailProjectExample - Win32-MSVC2009 - Nightly',
             'A submission to CDash for the project EmailProjectExample has failing tests.',
-            'You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.',
-            "Details on the submission can be found at {$url}/buildSummary.php?buildid=",
+            "Details on the submission can be found at {$url}/viewProject?projectid=",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',
             'Build Name: Win32-MSVC2009',
-            'Build Time: 2009-02-23T05:02:05 EST',
+            'Build Time: 2009-02-23 10:02:05',
             'Type: Nightly',
-            'Tests not passing: 4',
-            '*Tests failing*',
+            'Total Failing Tests: 4',
+            '*Failing Tests*',
             "curl | Completed | ({$url}/testDetails.php?test=",
             "DashboardSendTest | Completed (OTHER_FAULT) | ({$url}/testDetails.php?test=",
             "StringActionsTest | Completed (OTHER_FAULT) | ({$url}/testDetails.php?test=",
             "MathActionsTest | Completed (OTHER_FAULT) | ({$url}/testDetails.php?test=",
             '-CDash on',
-            'function',
             'user1@kw',
             'FAILED (t=4): EmailProjectExample - Win32-MSVC2009 - Nightly',
             'A submission to CDash for the project EmailProjectExample has failing tests.',
-            'You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.',
-            "Details on the submission can be found at {$url}/buildSummary.php?buildid=",
+            "Details on the submission can be found at {$url}/viewProject?projectid=",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',
             'Build Name: Win32-MSVC2009',
-            'Build Time: 2009-02-23T05:02:05 EST',
+            'Build Time: 2009-02-23 10:02:05',
             'Type: Nightly',
-            'Tests not passing: 4',
-            '*Tests failing*',
+            'Total Failing Tests: 4',
+            '*Failing Tests*',
             "curl | Completed | ({$url}/testDetails.php?test=",
             "DashboardSendTest | Completed (OTHER_FAULT) | ({$url}/testDetails.php?test=",
             "StringActionsTest | Completed (OTHER_FAULT) | ({$url}/testDetails.php?test=",
             "MathActionsTest | Completed (OTHER_FAULT) | ({$url}/testDetails.php?test=",
             '-CDash on',
-            'function',
         ];
 
-        if ($this->assertLogContains($expected, 49)) {
+        if ($this->assertLogContains($expected, 43)) {
             $this->pass('Passed');
         }
+    }
+
+    private function assertLogContains($expected, $lineCount)
+    {
+        $count = 0;
+        $log = file_get_contents($this->logfilename);
+        $lines = explode(PHP_EOL, $log);
+        $passed = true;
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if ($line && !str_contains($line, $expected[$count])) {
+                $message = "Unexpected output in logfile:\n"
+                    . "Expected: {$expected[$count]}\n"
+                    . "   Found: {$line}\n";
+                $this->fail($message);
+                $passed = false;
+                break;
+            }
+            $count += $line ? 1 : 0;
+        }
+
+        $count = count($lines);
+        if ($count !== $lineCount) {
+            $message = "\nExpected {$lineCount} lines of log output, received {$count}";
+            $this->fail($message);
+            $passed = false;
+        }
+
+        return $passed;
     }
 }

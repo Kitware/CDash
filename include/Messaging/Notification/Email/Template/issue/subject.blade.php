@@ -28,6 +28,9 @@ foreach($summary['topics'] as $topic) {
             break;
         case 'Errors':
             $totals[] = "b={$topic['count']}";
+            break;
+        case 'Dynamic analysis tests failing or not run':
+            $totals[] = "d={$topic['count']}";
     }
 }
 

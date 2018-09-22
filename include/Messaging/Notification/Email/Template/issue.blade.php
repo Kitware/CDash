@@ -5,10 +5,9 @@ $descriptions = $subscription->getTopicDescriptions(CASE_LOWER);
 $summary = $subscription->getBuildSummary();
 $config = Config::getInstance();
 ?>
-A Submission to CDash for the project {{ $subscription->getProjectName() }} has {{ implode(', ', $descriptions )}}.
-You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
+A submission to CDash for the project {{ $subscription->getProjectName() }} has {{ implode(', ', $descriptions ) }}. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
-Details on the submission can be cound at {{ $summary['project_url'] }}.
+Details on the submission can be found at {{ $summary['project_url'] }}.
 
 Project: {{ $summary['project_name'] }}
 Site: {{ $summary['site_name'] }}
@@ -35,3 +34,4 @@ $warning = $size < $collection->count() ? "(first {$size} included)" : '';
 @endforeach
 
 -CDash on {{ $config->getServer() }}
+

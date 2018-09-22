@@ -17,6 +17,7 @@
 namespace CDash\Model;
 
 use CDash\Collection\BuildEmailCollection;
+use CDash\Config;
 use CDash\Database;
 use CDash\Log;
 use CDash\Messaging\Notification\Email\EmailMessage;
@@ -48,16 +49,23 @@ class BuildEmail
 
     public static function Log(NotificationInterface $notification, $sent)
     {
-        $status = $sent ? 'SENT' : 'NOT SENT';
-        $class_name = get_class($notification);
-        $slash_pos = strrpos($class_name, '\\');
-        $pos = $slash_pos ? $slash_pos + 1 : 0;
-        $notification_type = substr($class_name, $pos);
-        $title = $notification->getSubject();
-        $recipient = $notification->getRecipient();
-        $message = "[{$status}] {$notification_type} titled, '{$title}' to {$recipient}";
+        $config = Config::getInstance();
         $log = Log::getInstance();
-        $log->add_log($message, 'BuildEmail::SaveNotification');
+        if ($config->get('CDASH_TESTING_MODE')) {
+            $log->add_log($notification->getRecipient(), 'TESTING: EMAIL', LOG_DEBUG);
+            $log->add_log($notification->getSubject(), 'TESTING: EMAILTITLE', LOG_DEBUG);
+            $log->add_log($notification->getBody(), 'TESTING: EMAILBODY', LOG_DEBUG);
+        } else {
+            $status = $sent ? 'SENT' : 'NOT SENT';
+            $class_name = get_class($notification);
+            $slash_pos = strrpos($class_name, '\\');
+            $pos = $slash_pos ? $slash_pos + 1 : 0;
+            $notification_type = substr($class_name, $pos);
+            $title = $notification->getSubject();
+            $recipient = $notification->getRecipient();
+            $message = "[{$status}] {$notification_type} titled, '{$title}' to {$recipient}";
+            $log->add_log($message, 'BuildEmail::SaveNotification');
+        }
     }
 
     /**

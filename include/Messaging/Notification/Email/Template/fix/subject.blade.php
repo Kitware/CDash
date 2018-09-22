@@ -8,6 +8,28 @@ $project .= count($labels) === 1 && count($subprojects) === 1 ?
 
 $build = $summary['build_name'];
 $group = $summary['build_type'];
-$total = "not yet implemented";
+$fixes = $summary['fixes'];
+$total = [];
+if (isset($fixes['BuildError']['fixed'])) {
+    $total[] = "e={$fixes['BuildError']['fixed']}";
+}
+
+if (isset($fixes['BuildWarning']['fixed'])) {
+    $total[] = "w={$fixes['BuildWarning']['fixed']}";
+}
+
+if (isset($fixes['TestFailure'])) {
+    $count = 0;
+    if (isset($fixes['TestFailure']['failed']['fixed'])) {
+        $count += $fixes['TestFailure']['failed']['fixed'];
+    }
+    if(isset($fixes['TestFailure']['notrun']['fixed'])) {
+        $count += $fixes['TestFailure']['notrun']['fixed'];
+    }
+    if ($count) {
+        $total[] = "t={$count}";
+    }
+}
+$total = implode(", ", $total);
 ?>
 PASSED ({{ $total }}): {{ $project }} - {{ $build }} - {{ $group }}
