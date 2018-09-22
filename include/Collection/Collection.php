@@ -195,6 +195,8 @@ abstract class Collection implements CollectionInterface
     public function first($size = 1)
     {
         $self = new static;
+        $collectionSize = $this->count();
+        $size = $size <= $collectionSize ? $size : $collectionSize;
         for ($i = 0; $i < $size; $i++) {
             $key = $this->keys[$i];
             $item = $this->collection[$key];
