@@ -1,7 +1,7 @@
 <?php
 namespace CDash\Messaging\Topic;
 
-interface DecoratableInterface
+interface Decoratable
 {
     /**
      * @return int

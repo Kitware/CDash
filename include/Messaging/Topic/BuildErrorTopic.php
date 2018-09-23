@@ -4,7 +4,7 @@ namespace CDash\Messaging\Topic;
 use CDash\Collection\BuildErrorCollection;
 use CDash\Model\Build;
 
-class BuildErrorTopic extends Topic implements DecoratableInterface, Fixable
+class BuildErrorTopic extends Topic implements Decoratable, Fixable
 {
     private $collection;
     private $type;

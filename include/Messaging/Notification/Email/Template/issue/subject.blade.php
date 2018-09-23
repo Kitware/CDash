@@ -10,8 +10,7 @@ $subprojects = $summary['build_subproject_names'];
 // is that the user may have other criteria, besides label subscriptions, that increase
 // the number of subprojects associated with this notification.
 // TODO: verify this is the correct logic?
-$project .= count($labels) === 1 && count($subprojects) === 1 ?
-    "/{$labels[0]}" : '';
+$project .= count($subprojects) === 1 ? "/{$subprojects[0]}" : '';
 
 $totals = [];
 foreach($summary['topics'] as $topic) {

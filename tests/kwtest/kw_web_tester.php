@@ -233,7 +233,7 @@ class KWWebTestCase extends WebTestCase
         $passed = true;
         foreach ($lines as $line) {
             $line = trim($line);
-            if ($line && strpos($line, $expected[$count]) === false) {
+            if ($line && !str_contains($line, $expected[$count])) {
                 $message = "Unexpected output in logfile:\n"
                     . "Expected: {$expected[$count]}\n"
                     . "   Found: {$line}\n";

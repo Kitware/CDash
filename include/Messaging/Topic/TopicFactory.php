@@ -62,16 +62,21 @@ class TopicFactory
         $topics = [];
         $settings = $preferences->getPropertyNames();
         $onFixed = $preferences->notifyOn('Fixed');
+        $onLabeled = $preferences->notifyOn('Labeled');
 
         foreach ($settings as $topic) {
             if ($preferences->notifyOn($topic)) {
                 $instance = self::create($topic);
-                if ($onFixed && is_a($instance, Fixable::class)) {
-                    $instance = new FixedTopic($instance);
-                }
                 if ($instance) {
+                    if ($onFixed && $instance->isA(Fixable::class)) {
+                        $instance = new FixedTopic($instance);
+                    }
+                    if ($onLabeled && $instance->isA(Labelable::class)) {
+                        $instance = new LabeledTopic($instance);
+                    }
                     $topics[] = $instance;
                 }
+
             }
         }
 
@@ -131,14 +136,10 @@ class TopicFactory
                 return new DynamicAnalysisTopic();
             case 'ExpectedSiteSubmitMissing':
                 return new ExpectedSiteSubmitMissing();
-            case 'Labeled':
-                return new LabeledTopic();
             case 'TestFailure':
                 return new TestFailureTopic();
             case 'UpdateError':
                 return new UpdateErrorTopic();
-            case 'Update':
-                return new UpdateTopic();
             default:
                 return null;
         }

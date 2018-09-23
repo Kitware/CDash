@@ -1,11 +1,13 @@
 <?php
 namespace CDash\Messaging\Topic;
 
+use CDash\Collection\LabelCollection;
 use CDash\Model\Build;
 use CDash\Collection\TestCollection;
+use CDash\Model\Label;
 use CDash\Model\Test;
 
-class TestFailureTopic extends Topic implements DecoratableInterface, Fixable
+class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
 {
     private $collection;
     private $diff;
@@ -165,5 +167,50 @@ class TestFailureTopic extends Topic implements DecoratableInterface, Fixable
             $fixed = $this->diff['TestFailure'];
         }
         return $fixed;
+    }
+
+    /**
+     * @param Build $build
+     * @param LabelCollection $labels
+     * @return void
+     */
+    public function setTopicDataWithLabels(Build $build, LabelCollection $labels)
+    {
+        $collection = $this->getTopicCollection();
+        $tests = $build->GetTestCollection();
+        /** @var Test $test */
+        foreach ($tests as $test) {
+            if ($this->itemHasTopicSubject($build, $test)) {
+                foreach ($labels as $label) {
+                    $testLabels = $test->GetLabelCollection();
+                    if ($testLabels->has($label->Text)) {
+                        $collection->add($test);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @param Build $build
+     * @return LabelCollection
+     */
+    public function getLabelsFromBuild(Build $build)
+    {
+        $tests = $build->GetTestCollection();
+        $collection = new LabelCollection();
+        /** @var Test $test */
+        foreach ($tests as $test) {
+            // No need to bother with passed tests
+            if ($test->GetStatus() === Test::PASSED) {
+                continue;
+            }
+
+            /** @var Label $label */
+            foreach($test->GetLabelCollection() as $label) {
+                $collection->add($label);
+            }
+        }
+        return $collection;
     }
 }

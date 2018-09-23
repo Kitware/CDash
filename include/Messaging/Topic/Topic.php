@@ -42,7 +42,7 @@ abstract class Topic implements TopicInterface
 
     /**
      * Topic constructor.
-     * @param TopicInterface|Fixable|null $topic
+     * @param TopicInterface|Fixable|Labelable|null $topic
      */
     public function __construct(TopicInterface $topic = null)
     {
@@ -154,17 +154,6 @@ abstract class Topic implements TopicInterface
         return $this->buildCollection;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasLabels(Build $build)
-    {
-        if ($this->topic) {
-            return $this->topic->hasLabels($build);
-        }
-        return (bool)(count($this->labels));
-    }
-
     public function getLabels()
     {
         if ($this->topic) {
@@ -210,5 +199,14 @@ abstract class Topic implements TopicInterface
     public function getTemplate()
     {
         return 'issue';
+    }
+
+    public function isA($class)
+    {
+        $it = is_a($this, $class);
+        if (!$it && $this->topic) {
+            return $this->topic->isA($class);
+        }
+        return $it;
     }
 }

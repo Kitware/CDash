@@ -4,7 +4,7 @@ namespace CDash\Messaging\Topic;
 use CDash\Model\Build;
 use CDash\Collection\ConfigureCollection;
 
-class ConfigureTopic extends Topic implements DecoratableInterface
+class ConfigureTopic extends Topic implements Decoratable
 {
     private $collection;
 

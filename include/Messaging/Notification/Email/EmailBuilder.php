@@ -53,18 +53,16 @@ class EmailBuilder extends SubscriptionNotificationBuilder
     public function createNotification(SubscriptionInterface $subscription, $templateName)
     {
         $message = null;
-        if ($this->uniquifyTopics($subscription)) {
-            $blade = new Blade((array)$this->templateDirectory, $this->cacheDirectory);
-            $data = ['subscription' => $subscription];
-            $subject = $blade->make("{$templateName}.subject", $data);
-            $body = $blade->make($templateName, $data);
-            $recipient = $subscription->getSubscriber()->getAddress();
-            /** @var EmailMessage $message */
-            $message = $this->factory->create();
-            $message->setSubject($subject)
-                    ->setBody($body)
-                    ->setRecipient($recipient);
-        }
+        $blade = new Blade((array)$this->templateDirectory, $this->cacheDirectory);
+        $data = ['subscription' => $subscription];
+        $subject = $blade->make("{$templateName}.subject", $data);
+        $body = $blade->make($templateName, $data);
+        $recipient = $subscription->getSubscriber()->getAddress();
+        /** @var EmailMessage $message */
+        $message = $this->factory->create();
+        $message->setSubject($subject)
+            ->setBody($body)
+            ->setRecipient($recipient);
         // todo: this doesn't really belong here, refactor asap
         $this->setBuildEmailCollection($message, $subscription);
         return $message;

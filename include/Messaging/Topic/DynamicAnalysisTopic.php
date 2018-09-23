@@ -5,7 +5,7 @@ use CDash\Collection\DynamicAnalysisCollection;
 use CDash\Model\Build;
 use CDash\Model\DynamicAnalysis;
 
-class DynamicAnalysisTopic extends Topic implements DecoratableInterface
+class DynamicAnalysisTopic extends Topic implements Decoratable
 {
     protected static $statuses = [DynamicAnalysis::NOTRUN, DynamicAnalysis::FAILED];
 

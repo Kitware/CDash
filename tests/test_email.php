@@ -261,33 +261,4 @@ class EmailTestCase extends KWWebTestCase
             $this->pass('Passed');
         }
     }
-
-    private function assertLogContains($expected, $lineCount)
-    {
-        $count = 0;
-        $log = file_get_contents($this->logfilename);
-        $lines = explode(PHP_EOL, $log);
-        $passed = true;
-        foreach ($lines as $line) {
-            $line = trim($line);
-            if ($line && !str_contains($line, $expected[$count])) {
-                $message = "Unexpected output in logfile:\n"
-                    . "Expected: {$expected[$count]}\n"
-                    . "   Found: {$line}\n";
-                $this->fail($message);
-                $passed = false;
-                break;
-            }
-            $count += $line ? 1 : 0;
-        }
-
-        $count = count($lines);
-        if ($count !== $lineCount) {
-            $message = "\nExpected {$lineCount} lines of log output, received {$count}";
-            $this->fail($message);
-            $passed = false;
-        }
-
-        return $passed;
-    }
 }

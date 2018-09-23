@@ -1718,13 +1718,17 @@ class Project
     {
         $service = ServiceContainer::getInstance()->getContainer();
         $collection = $service->make(SubscriberCollection::class);
+        // TODO: works, but maybe find a better query
         $sql = '
             SELECT
-              u2p.*,
-              user.email email
+               u2p.*,
+               user.email email,
+               labelid hasLabels
             FROM user2project u2p
-            JOIN user ON user.id = u2p.userid
-            WHERE projectid = :id
+              JOIN user ON user.id = u2p.userid
+              LEFT JOIN labelemail ON labelemail.userid = u2p.userid
+            WHERE u2p.projectid = :id
+            GROUP BY user.email
         ';
 
         $user = $this->PDO->prepare($sql);
@@ -1741,6 +1745,7 @@ class Project
             $preferences->set(NotifyOn::FIXED, $row->emailsuccess);
             $preferences->set(NotifyOn::SITE_MISSING, $row->emailmissingsites);
             $preferences->set(NotifyOn::REDUNDANT, $this->EmailRedundantFailures);
+            $preferences->set(NotifyOn::LABELED, (bool)$row->hasLabels);
 
             /** @var Subscriber $subscriber */
             $subscriber = $service->make(Subscriber::class, ['preferences' => $preferences]);

@@ -116,7 +116,8 @@ class Subscriber implements SubscriberInterface
      */
     public function getLabels()
     {
-        return $this->labels;
+
+        return $this->user->GetLabelCollection();
     }
 
     /**

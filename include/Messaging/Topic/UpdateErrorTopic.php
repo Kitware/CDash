@@ -3,7 +3,7 @@ namespace CDash\Messaging\Topic;
 
 use CDash\Model\Build;
 
-class UpdateErrorTopic extends Topic implements DecoratableInterface
+class UpdateErrorTopic extends Topic implements Decoratable
 {
     /**
      * @param Build $build

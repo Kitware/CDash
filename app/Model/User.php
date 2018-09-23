@@ -15,6 +15,7 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use CDash\Collection\LabelCollection;
 use CDash\Config;
 use CDash\Database;
 
@@ -34,6 +35,7 @@ class User
     public $TempTableName;
     private $PDO;
     private $Credentials;
+    private $LabelCollection;
 
     public function __construct()
     {
@@ -472,5 +474,29 @@ class User
             }
         }
         return $this->Credentials;
+    }
+
+    public function GetLabelCollection()
+    {
+        if (!$this->LabelCollection) {
+            $this->LabelCollection = new LabelCollection();
+            $sql = '
+              SELECT label.id, label.text 
+              FROM labelemail 
+              JOIN label ON label.id = labelemail.labelid
+              WHERE userid=:user';
+
+            $stmt = $this->PDO->prepare($sql);
+            $stmt->bindParam(':user', $this->Id);
+            if ($this->PDO->execute($stmt)) {
+                foreach ($stmt->fetchAll(\PDO::FETCH_OBJ) as $row) {
+                    $label = new Label();
+                    $label->Id = $row->id;
+                    $label->Text = $row->text;
+                    $this->LabelCollection->add($label);
+                }
+            }
+        }
+        return $this->LabelCollection;
     }
 }
