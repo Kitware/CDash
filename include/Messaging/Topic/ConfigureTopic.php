@@ -3,6 +3,7 @@ namespace CDash\Messaging\Topic;
 
 use CDash\Model\Build;
 use CDash\Collection\ConfigureCollection;
+use CDash\Model\BuildConfigure;
 
 class ConfigureTopic extends Topic implements Decoratable
 {
@@ -14,9 +15,8 @@ class ConfigureTopic extends Topic implements Decoratable
      */
     public function subscribesToBuild(Build $build)
     {
-        $parentTopic = is_null($this->topic) ? true : $this->topic->subscribesToBuild($build);
         $conf = $build->GetBuildConfigure();
-        $subscribe = $parentTopic && ($conf->NumberOfErrors > 0 || $conf->NumberOfWarnings > 0);
+        $subscribe = $conf->NumberOfErrors > 0;
         return $subscribe;
     }
 
@@ -36,13 +36,11 @@ class ConfigureTopic extends Topic implements Decoratable
     public function getTopicCount()
     {
         $collection = $this->getTopicCollection();
-        $configure = $collection->get(Topic::CONFIGURE);
-        // TODO: why is this referencing status?
-        // return $configure->Status;
-        // I think this should be:
-        // return $configure->Status == 0 ? 0 : 1;
-        // Apparently $configure->Status is correct, for the time being anyhow.
-        return $configure->Status;
+        $configure = $collection->current();
+        if (is_a($configure, BuildConfigure::class)) {
+            return (int) $configure->NumberOfErrors;
+        }
+        return 0;
     }
 
     public function getTopicDescription()
