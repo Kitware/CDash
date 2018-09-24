@@ -1409,7 +1409,6 @@ function send_update_email($handler, $projectid)
 /** Main function to send email if necessary */
 function sendemail(ActionableBuildInterface $handler, $projectid)
 {
-    $config = Config::getInstance();
     $Project = new Project();
     $Project->Id = $projectid;
     $Project->Fill();
@@ -1425,10 +1424,23 @@ function sendemail(ActionableBuildInterface $handler, $projectid)
         return;
     }
 
+    // TODO: refactor this logic into ActionableBuildInterface (e.g. $handler->GetBuildGroup())
+    // also check the group for delivery preference
+    $builds = $handler->getActionableBuilds();
+    // since there can only be one group type per submission
+    $build = array_pop($builds);
+    if ($build) {
+        $buildGroup = new BuildGroup();
+        $buildGroup->SetId($build->GetGroup());
+        if ($buildGroup->GetSummaryEmail() == 2) {
+            return;
+        }
+    }
+
     $builder = new SubscriptionBuilder($handler);
     $subscriptions = $builder->build();
 
-    // TODO: pass subscriptions to constructor
+    // TODO: remove NotificationCollection then pass subscriptions to constructor
     $builder = new EmailBuilder(new EmailNotificationFactory(), new NotificationCollection());
     $builder->setSubscriptions($subscriptions);
 
@@ -1436,5 +1448,5 @@ function sendemail(ActionableBuildInterface $handler, $projectid)
     $notifications = $director->build($builder);
     Mailer::send($notifications);
 
-    $sent_messages = Mail::getInstance()->getEmails();
+    // $sent_messages = Mail::getInstance()->getEmails();
 }

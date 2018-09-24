@@ -168,11 +168,11 @@ class EmailTestCase extends KWWebTestCase
             'simpletest@localhost',
             'FAILED (d=10): EmailProjectExample - Win32-MSVC2009 - Nightly',
             'A submission to CDash for the project EmailProjectExample has dynamic analysis tests failing or not run',
-            "{$url}/viewProject?projectid=",
+            "{$url}/buildSummary.php?buildid=",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',
             'Build Name: Win32-MSVC2009',
-            'Build Time: 2009-02-23 10:02:04',
+            'Build Time: 2009-02-23T10:04:13',
             'Type: Nightly',
             'Total Dynamic analysis tests failing or not run: 10',
             '*Dynamic analysis tests failing or not run* (first 5 included)',
@@ -185,11 +185,11 @@ class EmailTestCase extends KWWebTestCase
             'user1@kw',
             'FAILED (d=10): EmailProjectExample - Win32-MSVC2009 - Nightly',
             'A submission to CDash for the project EmailProjectExample has dynamic analysis tests failing or not run',
-            "{$url}/viewProject?projectid=",
+            "{$url}/buildSummary.php?buildid=",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',
             'Build Name: Win32-MSVC2009',
-            'Build Time: 2009-02-23 10:02:04',
+            'Build Time: 2009-02-23T10:04:13',
             'Type: Nightly',
             'Total Dynamic analysis tests failing or not run: 10',
             '*Dynamic analysis tests failing or not run* (first 5 included)',
@@ -201,7 +201,7 @@ class EmailTestCase extends KWWebTestCase
             "-CDash on",
         ];
 
-        if ($this->assertLogContains($expected, 45)) {
+        if ($this->assertLogContains($expected, 43)) {
             $this->pass('Passed');
         }
     }
@@ -226,7 +226,7 @@ class EmailTestCase extends KWWebTestCase
             'simpletest@localhost',
             'FAILED (t=4): EmailProjectExample - Win32-MSVC2009 - Nightly',
             'A submission to CDash for the project EmailProjectExample has failing tests.',
-            "Details on the submission can be found at {$url}/viewProject?projectid=",
+            "Details on the submission can be found at {$url}/buildSummary.php?buildid=",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',
             'Build Name: Win32-MSVC2009',
@@ -242,7 +242,7 @@ class EmailTestCase extends KWWebTestCase
             'user1@kw',
             'FAILED (t=4): EmailProjectExample - Win32-MSVC2009 - Nightly',
             'A submission to CDash for the project EmailProjectExample has failing tests.',
-            "Details on the submission can be found at {$url}/viewProject?projectid=",
+            "Details on the submission can be found at {$url}/buildSummary.php?buildid=",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',
             'Build Name: Win32-MSVC2009',
@@ -257,7 +257,7 @@ class EmailTestCase extends KWWebTestCase
             '-CDash on',
         ];
 
-        if ($this->assertLogContains($expected, 43)) {
+        if ($this->assertLogContains($expected, 41)) {
             $this->pass('Passed');
         }
     }

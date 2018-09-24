@@ -63,7 +63,7 @@ class Subscriber implements SubscriberInterface
         // Initialize the topic collection
         $topics = $this->getTopics();
         $builds = $submission->GetBuildCollection();
-        $user_topics = TopicFactory::createFrom($this->preferences);
+        $user_topics = TopicFactory::create($this->preferences, $submission);
 
         /** @var Topic $topic */
         foreach ($user_topics as $topic) {

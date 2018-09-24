@@ -43,27 +43,25 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
             'simpletest@localhost',
             'FAILED (t=3, m=3): EmailProjectExample - Win32-MSVC2009 - Nightly',
             'A submission to CDash for the project EmailProjectExample has failing tests and missing tests.',
-            'You have been identified as one of the authors who have checked in changes that are part of this',
             "Details on the submission can be found at {$url}/buildSummary.php?buildid=",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',
             'Build Name: Win32-MSVC2009',
-            'Build Time: 2009-02-26T05:04:00 EST',
+            'Build Time: 2009-02-26 10:04:00',
             'Type: Nightly',
-            'Tests not passing: 3',
-            'Missing tests: 3',
-            '*Tests failing*',
+            'Total Failing Tests: 3',
+            'Total Missing Tests: 3',
+            '*Failing Tests*',
             "curl | Completed | ({$url}/testDetails.php?test=",
             "StringActionsTest | Completed (OTHER_FAULT) | ({$url}/testDetails.php?test=",
             "MathActionsTest | Completed (OTHER_FAULT) | ({$url}/testDetails.php?test=",
-            '*Missing tests*',
+            '*Missing Tests*',
             "DashboardSendTest ({$url}/viewTest.php?buildid=",
             "Parser1Test1 ({$url}/viewTest.php?buildid=",
-            "SystemInfoTest({$url}/viewTest.php?buildid=",
+            "SystemInfoTest ({$url}/viewTest.php?buildid=",
             '-CDash on',
-            'function',
         ];
-        if ($this->assertLogContains($expected, 31)) {
+        if ($this->assertLogContains($expected, 26)) {
             $this->pass('Passed');
         }
     }
@@ -109,21 +107,19 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
             'simpletest@localhost',
             'FAILED (t=2): EmailProjectExample - OSX-SIERRA-10.12.1 - Nightly',
             'A submission to CDash for the project EmailProjectExample has failing tests',
-            'You have been identified as one of the authors who have checked in changes that are part of this',
             "Details on the submission can be found at {$url}/buildSummary.php?buildid=",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',
             'Build Name: OSX-SIERRA-10.12.1',
-            'Build Time: 2009-02-23T05:04:13 EST',
+            'Build Time: 2009-02-23 10:04:13',
             'Type: Nightly',
-            'Tests not passing: 2',
-            '*Tests failing*',
+            'Total Failing Tests: 2',
+            '*Failing Tests*',
             "SleepTimer1 | Completed (Timeout) | ({$url}/testDetails.php?test=",
             "SleepTimer2 | Completed (Timeout) | ({$url}/testDetails.php?test=",
             '-CDash on',
-            'function',
         ];
-        if ($this->assertLogContains($expected, 23)) {
+        if ($this->assertLogContains($expected, 19)) {
             $this->pass('Passed');
         }
     }

@@ -1,10 +1,14 @@
 <?php
 namespace CDash\Messaging\Topic;
 
+use ActionableBuildInterface;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Preferences\NotificationPreferences;
+use CDash\Singleton;
+use Exception;
+use UpdateHandler;
 
 /**
  * Class TopicFactory
@@ -51,8 +55,149 @@ use CDash\Messaging\Preferences\NotificationPreferences;
  * Included in the return from this method will be a TestFailureTopic decorated with an Authored-
  * Topic, an EmailSentTopic, FixedTopic.
  */
-class TopicFactory
+class TopicFactory extends Singleton
 {
+    public static function create(NotificationPreferences $preferences, ActionableBuildInterface $handler)
+    {
+        $self = self::getInstance();
+        $topics = new TopicCollection();
+
+        switch (get_class($handler)) {
+            case 'BuildHandler':
+                $self->setBuildHandlerTopics($preferences, $topics);
+                break;
+            case 'ConfigureHandler':
+                $self->setConfigureHandlerTopics($preferences, $topics);
+                break;
+            case 'DynamicAnalysisHandler':
+                $self->setDynamicAnalysisHandlerTopics($preferences, $topics);
+                break;
+            case 'TestingHandler':
+                $self->setTestingHandlerTopics($preferences, $topics);
+                break;
+            case 'UpdateHandler':
+                $self->setUpdateHandlerTopics($preferences, $topics);
+                break;
+        }
+
+        $self->setFixables($preferences, $topics);
+        $self->setLabelables($preferences, $topics);
+        $self->setDeliverables($preferences, $topics);
+        $self->setGroupFilterables($preferences, $topics);
+        $self->setAttributables($preferences, $topics);
+
+        return $topics;
+    }
+
+    /**
+     * @param NotificationPreferences $preferences
+     * @param TopicCollection $topics
+     * @return void
+     */
+    public function setBuildHandlerTopics(NotificationPreferences $preferences, TopicCollection $topics)
+    {
+        if ($preferences->get(NotifyOn::BUILD_ERROR)) {
+            $topics->add(new BuildErrorTopic());
+        }
+
+        if ($preferences->get(NotifyOn::BUILD_WARNING)) {
+            $topic = new BuildErrorTopic();
+            $topic->setType(Build::TYPE_WARN);
+            $topics->add($topic);
+        }
+    }
+
+    protected function setConfigureHandlerTopics(NotificationPreferences $preferences, TopicCollection $topics)
+    {
+        if ($preferences->get(NotifyOn::CONFIGURE)) {
+            $topics->add(new ConfigureTopic());
+        }
+    }
+
+    protected function setDynamicAnalysisHandlerTopics(NotificationPreferences $preferences, TopicCollection $topics)
+    {
+        if ($preferences->get(NotifyOn::DYNAMIC_ANALYSIS)) {
+            $topics->add(new DynamicAnalysisTopic());
+        }
+    }
+
+    protected function setTestingHandlerTopics(NotificationPreferences $preferences, TopicCollection $topics)
+    {
+        if ($preferences->get(NotifyOn::TEST_FAILURE)) {
+            $topics->add(new TestFailureTopic());
+            $topics->add(new MissingTestTopic());
+        }
+    }
+
+    protected function setUpdateHandlerTopics(NotificationPreferences $preferences, TopicCollection $topics)
+    {
+        if ($preferences->get(NotifyOn::UPDATE_ERROR)) {
+            $topics->add(new UpdateErrorTopic());
+        }
+
+        if ($preferences->get(NotifyOn::FIXED)) {
+            $this->setBuildHandlerTopics($preferences, $topics);
+            $this->setTestingHandlerTopics($preferences, $topics);
+        }
+    }
+
+    protected function setFixables(NotificationPreferences $preferences, TopicCollection $topics)
+    {
+        if ($preferences->get(NotifyOn::FIXED)) {
+            foreach ($topics as $topic) {
+                if (is_a($topic, Fixable::class)) {
+                    $fixable = new FixedTopic($topic);
+                    $topics->add($fixable);
+                }
+            }
+        }
+    }
+
+    protected function setLabelables(NotificationPreferences $preferences, TopicCollection $topics)
+    {
+        if ($preferences->get(NotifyOn::LABELED)) {
+            foreach ($topics as $topic) {
+                if (is_a($topic, Labelable::class)) {
+                    $labelable = new LabeledTopic($topic);
+                    $topics->add($labelable);
+                }
+            }
+        }
+    }
+
+    protected function setDeliverables(NotificationPreferences $preferences, TopicCollection $topics)
+    {
+        if (!$preferences->get(NotifyOn::REDUNDANT)) {
+            foreach ($topics as $topic) {
+                $deliverable = new EmailSentTopic($topic);
+                $topics->add($deliverable);
+            }
+        }
+    }
+
+    protected function setGroupFilterables(NotificationPreferences $preferences, TopicCollection $topics)
+    {
+        if ($preferences->get(NotifyOn::GROUP_NIGHTLY)) {
+            foreach ($topics as $topic) {
+                $group = new GroupMembershipTopic($topic);
+                $group->setGroup(BuildGroup::NIGHTLY);
+                $topics->add($group);
+            }
+        }
+    }
+
+    protected function setAttributables(NotificationPreferences $preferences, TopicCollection $topics)
+    {
+        if ($preferences->get(NotifyOn::AUTHORED)) {
+            foreach ($topics as $topic) {
+                if (!is_a($topic, LabeledTopic::class)) {
+                    $attributable = new AuthoredTopic($topic);
+                    $topics->add($attributable);
+                }
+            }
+        }
+    }
+
     /**
      * @param NotificationPreferences $preferences
      * @return array
@@ -76,8 +221,17 @@ class TopicFactory
                     }
                     $topics[] = $instance;
                 }
-
             }
+        }
+
+        // because you cannot subscribe to Missing Tests build here if
+        // subscribed to TestFailures
+        if ($preferences->notifyOn('TestFailure')) {
+            $topic = new MissingTestTopic();
+            if ($onLabeled) {
+                $topic = new LabeledTopic($topic);
+            }
+            $topics[] = $topic;
         }
 
         // Start decoration of Topics
@@ -119,6 +273,7 @@ class TopicFactory
      * @param $topicName
      * @return TopicInterface|null
      */
+    /*
     protected static function create($topicName)
     {
         switch ($topicName) {
@@ -144,4 +299,5 @@ class TopicFactory
                 return null;
         }
     }
+    */
 }

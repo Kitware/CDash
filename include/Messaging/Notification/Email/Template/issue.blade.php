@@ -4,10 +4,18 @@ use CDash\Config;
 $descriptions = $subscription->getTopicDescriptions(CASE_LOWER);
 $summary = $subscription->getBuildSummary();
 $config = Config::getInstance();
+$last = array_pop($descriptions);
+$description = implode(', ', $descriptions);
+if ($description) {
+    $description .= " and {$last}";
+} else {
+    $description = $last;
+}
+array_push($descriptions, $last);
 ?>
-A submission to CDash for the project {{ $subscription->getProjectName() }} has {{ implode(', ', $descriptions ) }}. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
+A submission to CDash for the project {{ $subscription->getProjectName() }} has {{ $description }}. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
-Details on the submission can be found at {{ $summary['project_url'] }}.
+Details on the submission can be found at {{ $summary['build_summary_url'] }}.
 
 Project: {{ $summary['project_name'] }}
 @if(count($summary['build_subproject_names']) === 1)
@@ -30,12 +38,9 @@ $warning = $size < $collection->count() ? "(first {$size} included)" : '';
 $project = $subscription->getProject();
 ?>
 *{{ $topic->getTopicDescription() }}* {{ $warning }}
-
-@foreach($descriptions as $description)
-<?php $reference = str_replace(' ', '_', $description); ?>
+<?php $reference = str_replace(' ', '_', $topic->getTopicDescription()); ?>
 @include("issue.{$reference}", ['items' => $items, 'maxChars' => $project->EmailMaxChars])
+<?php echo PHP_EOL; ?>
 @endforeach
-@endforeach
-
 -CDash on {{ $config->getServer() }}
 

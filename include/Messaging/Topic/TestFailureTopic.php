@@ -9,8 +9,8 @@ use CDash\Model\Test;
 
 class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
 {
-    private $collection;
-    private $diff;
+    protected $collection;
+    protected $diff;
 
     /**
      * This method queries the build to check for failed tests
@@ -24,7 +24,7 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
         $this->diff = $build->GetDiffWithPreviousBuild();
         if ($this->diff) {
             $subscribe = $this->diff['TestFailure']['failed']['new'] > 0
-                || $this->diff['TestFailure']['notrun']['new'] > 0;
+                || $this->diff['TestFailure']['passed']['broken'] > 0;
         }
 
         return $subscribe;
@@ -151,10 +151,7 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
      */
     public function hasFixes()
     {
-        return $this->diff
-            && $this->diff['TestFailure']['failed']['fixed'] > 0
-            || $this->diff['TestFailure']['notrun']['fixed'] > 0;
-
+        return $this->diff && $this->diff['TestFailure']['failed']['fixed'] > 0;
     }
 
     /**
@@ -202,13 +199,11 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
         /** @var Test $test */
         foreach ($tests as $test) {
             // No need to bother with passed tests
-            if ($test->GetStatus() === Test::PASSED) {
-                continue;
-            }
-
-            /** @var Label $label */
-            foreach($test->GetLabelCollection() as $label) {
-                $collection->add($label);
+            if ($test->GetStatus() === Test::FAILED) {
+                /** @var Label $label */
+                foreach($test->GetLabelCollection() as $label) {
+                    $collection->add($label);
+                }
             }
         }
         return $collection;

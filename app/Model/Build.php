@@ -1032,37 +1032,39 @@ class Build
      */
     public function GetMissingTests()
     {
-        if (!$this->Id) {
-            add_log('BuildId is not set', 'Build::GetMissingTests', LOG_ERR,
-                $this->ProjectId, $this->Id, ModelType::BUILD, $this->Id);
-            return false;
+        if (!$this->MissingTests) {
+            if (!$this->Id) {
+                add_log('BuildId is not set', 'Build::GetMissingTests', LOG_ERR,
+                    $this->ProjectId, $this->Id, ModelType::BUILD, $this->Id);
+                return false;
+            }
+
+            $previous_build_tests = [];
+            $current_build_tests = [];
+
+            $previous_build = $this->GetPreviousBuildId();
+
+            $sql = "SELECT DISTINCT B.id, B.name FROM build2test A
+                LEFT JOIN test B
+                  ON A.testid=B.id
+                WHERE A.buildid=?
+                ORDER BY B.name
+             ";
+
+            $query = $this->PDO->prepare($sql);
+
+            pdo_execute($query, [$previous_build]);
+            foreach ($query->fetchAll(PDO::FETCH_OBJ) as $test) {
+                $previous_build_tests[$test->id] = $test->name;
+            }
+
+            pdo_execute($query, [$this->Id]);
+            foreach ($query->fetchAll(PDO::FETCH_OBJ) as $test) {
+                $current_build_tests[$test->id] = $test->name;
+            }
+            $this->MissingTests = array_diff($previous_build_tests, $current_build_tests);
         }
 
-        $previous_build_tests = [];
-        $current_build_tests = [];
-
-        $previous_build = $this->GetPreviousBuildId();
-
-        $sql = "SELECT DISTINCT B.name FROM build2test A
-            LEFT JOIN test B
-              ON A.testid=B.id
-            WHERE A.buildid=?
-            ORDER BY B.name
-         ";
-
-        $query = $this->PDO->prepare($sql);
-
-        pdo_execute($query, [$previous_build]);
-        foreach ($query->fetchAll(PDO::FETCH_OBJ) as $test) {
-            $previous_build_tests[$test->name] = $test->name;
-        }
-
-        pdo_execute($query, [$this->Id]);
-        foreach ($query->fetchAll(PDO::FETCH_OBJ) as $test) {
-            $current_build_tests[$test->name] = $test->name;
-        }
-
-        $this->MissingTests = array_diff($previous_build_tests, $current_build_tests);
         return $this->MissingTests;
     }
 

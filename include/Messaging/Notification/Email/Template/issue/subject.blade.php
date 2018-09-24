@@ -19,6 +19,9 @@ foreach($summary['topics'] as $topic) {
         case 'Failing Tests':
             $totals[] = "t={$topic['count']}";
             break;
+        case 'Missing Tests':
+            $totals[] = "m={$topic['count']}";
+            break;
         case 'Configure Errors':
             $totals[] = "c={$topic['count']}";
             break;

@@ -117,7 +117,9 @@ abstract class Collection implements CollectionInterface
         $ptr = count($this->collection);
         $key = is_null($name) ? $ptr : $name;
 
-        $this->keys[$ptr] = $key;
+        if (!in_array($key, $this->keys) && !in_array($key, array_keys($this->collection))) {
+            $this->keys[$ptr] = $key;
+        }
         $this->collection[$key] = $item;
         return $this;
     }
