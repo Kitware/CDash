@@ -1718,18 +1718,18 @@ class Project
     {
         $service = ServiceContainer::getInstance()->getContainer();
         $collection = $service->make(SubscriberCollection::class);
+        $userTable = qid('user');
         // TODO: works, but maybe find a better query
-        $sql = '
+        $sql = "
             SELECT
                u2p.*,
-               user.email email,
+               u.email email,
                labelid hasLabels
             FROM user2project u2p
-              JOIN user ON user.id = u2p.userid
+              JOIN $userTable u ON u.id = u2p.userid
               LEFT JOIN labelemail ON labelemail.userid = u2p.userid
             WHERE u2p.projectid = :id
-            GROUP BY user.email
-        ';
+        ";
 
         $user = $this->PDO->prepare($sql);
         $user->bindParam(':id', $this->Id, \PDO::PARAM_INT);

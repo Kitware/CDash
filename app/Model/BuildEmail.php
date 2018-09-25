@@ -106,14 +106,15 @@ class BuildEmail
     public static function GetBuildEmailSent($buildId, $category)
     {
         $collection = new BuildEmailCollection();
-        $sql = '
+        $userTable = qid('user');
+        $sql = "
             SELECT
                 buildemail.*,
-                user.email
-            FROM buildemail 
-            JOIN user ON user.id=buildemail.userid
-            WHERE buildemail.buildid=:b 
-            AND buildemail.category=:c';
+                u.email
+            FROM buildemail
+            JOIN $userTable u ON u.id=buildemail.userid
+            WHERE buildemail.buildid=:b
+            AND buildemail.category=:c";
         $db = Database::getInstance();
         $stmt = $db->prepare($sql);
         $stmt->bindParam(':b', $buildId);
@@ -165,7 +166,7 @@ class BuildEmail
 
         $this->SetTime();
 
-        $sql = 'INSERT INTO buildemail (`userid`, `buildid`, `category`, `time`) VALUE (:u, :b, :c, :t)';
+        $sql = 'INSERT INTO buildemail (userid, buildid, category, time) VALUES (:u, :b, :c, :t)';
         $db = Database::getInstance();
         $stmt = $db->prepare($sql);
         $stmt->bindParam(':u', $this->UserId);
