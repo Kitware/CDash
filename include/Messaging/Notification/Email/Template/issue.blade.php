@@ -38,7 +38,7 @@ $warning = $size < $collection->count() ? "(first {$size} included)" : '';
 $project = $subscription->getProject();
 ?>
 *{{ $topic->getTopicDescription() }}* {{ $warning }}
-<?php $reference = str_replace(' ', '_', $topic->getTopicDescription()); ?>
+<?php $reference = strtolower(str_replace(' ', '_', $topic->getTopicDescription())); ?>
 @include("issue.{$reference}", ['items' => $items, 'maxChars' => $project->EmailMaxChars])
 <?php echo PHP_EOL; ?>
 @endforeach
