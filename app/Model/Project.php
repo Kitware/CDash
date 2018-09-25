@@ -1729,6 +1729,7 @@ class Project
               JOIN $userTable u ON u.id = u2p.userid
               LEFT JOIN labelemail ON labelemail.userid = u2p.userid
             WHERE u2p.projectid = :id
+            ORDER BY u.email;
         ";
 
         $user = $this->PDO->prepare($sql);
