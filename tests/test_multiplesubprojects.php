@@ -630,20 +630,4 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             return 1;
         }
     }
-
-    public function testMultipleSubprojectsWithNormalEmail()
-    {
-        $summary = $this->setEmailPreference(self::EMAIL_NORMAL, 2147483647);
-
-        if ($summary === false) {
-            throw new Exception('Error setting email preferences.');
-        }
-
-        $this->submitBuild();
-        $emailoutput  = "{$this->dataDir}/EmailOutput.log";
-        if (!$this->compareLog($this->logfilename, $emailoutput)) {
-            return 1;
-        }
-        return 0;
-    }
 }

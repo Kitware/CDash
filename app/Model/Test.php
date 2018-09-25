@@ -30,6 +30,7 @@ class Test
     const OTHER_FAULT = 'OTHER_FAULT';
     const TIMEOUT = 'Timeout';
     const NOTRUN = 'notrun';
+    const DISABLED = 'Disabled';
 
     public $Id;
     public $Crc32;

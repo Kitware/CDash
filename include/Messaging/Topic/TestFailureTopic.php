@@ -24,7 +24,8 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
         $this->diff = $build->GetDiffWithPreviousBuild();
         if ($this->diff) {
             $subscribe = $this->diff['TestFailure']['failed']['new'] > 0
-                || $this->diff['TestFailure']['passed']['broken'] > 0;
+                || $this->diff['TestFailure']['passed']['broken'] > 0
+                || $this->diff['TestFailure']['notrun']['new'] > 0;
         }
 
         return $subscribe;
@@ -134,8 +135,16 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
      */
     public function itemHasTopicSubject(Build $build, $item)
     {
-        $hasTopicSubject = $item->HasFailed();
-        return $hasTopicSubject;
+        if ($item->HasFailed()) {
+            return true;
+        }
+
+        if ($item->HasNotRun()) {
+            if ($item->Details !== Test::DISABLED) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -199,7 +208,10 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
         /** @var Test $test */
         foreach ($tests as $test) {
             // No need to bother with passed tests
-            if ($test->GetStatus() === Test::FAILED) {
+            if ($test->HasFailed() || $test->HasNotRun()) {
+                if ($test->HasNotRun() && isset($test->Details) && $test->Details === Test::DISABLED) {
+                    continue;
+                }
                 /** @var Label $label */
                 foreach($test->GetLabelCollection() as $label) {
                     $collection->add($label);

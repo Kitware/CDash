@@ -1,11 +1,12 @@
 <?php
 namespace CDash\Messaging\Topic;
 
+use CDash\Collection\LabelCollection;
 use CDash\Model\Build;
 use CDash\Collection\ConfigureCollection;
 use CDash\Model\BuildConfigure;
 
-class ConfigureTopic extends Topic implements Decoratable
+class ConfigureTopic extends Topic implements Decoratable, Labelable
 {
     private $collection;
 
@@ -63,5 +64,37 @@ class ConfigureTopic extends Topic implements Decoratable
     public function itemHasTopicSubject(Build $build, $item)
     {
         // TODO: Implement itemHasTopicSubject() method.
+    }
+
+    /**
+     * @param Build $build
+     * @return LabelCollection
+     */
+    public function getLabelsFromBuild(Build $build)
+    {
+        // TODO: refactor, allow multiple collections to be merged with one another
+        $configure = $build->GetBuildConfigure();
+        $collection = new LabelCollection();
+        $labels = $configure->GetLabelCollection();
+        foreach ($labels as $lbl) {
+            $collection->add($lbl);
+        }
+
+        $labels = $build->GetLabelCollection();
+        foreach ($labels as $lbl) {
+            $collection->add($lbl);
+        }
+        return $collection;
+    }
+
+    /**
+     * @param Build $build
+     * @param LabelCollection $labels
+     * @return void
+     */
+    public function setTopicDataWithLabels(Build $build, LabelCollection $labels)
+    {
+       $collection = $this->getTopicCollection();
+       $collection->add($build->GetBuildConfigure());
     }
 }

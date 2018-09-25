@@ -15,6 +15,7 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use CDash\Collection\LabelCollection;
 use PDO;
 use CDash\Database;
 
@@ -383,5 +384,15 @@ class BuildConfigure
         $config = \CDash\Config::getInstance();
         $id = is_null($default_id) ? $this->BuildId : $default_id;
         return "{$config->getBaseUrl()}/viewConfigure.php?buildid={$id}";
+    }
+
+    public function GetLabelCollection()
+    {
+        $collection = new LabelCollection();
+        $this->Labels = is_null($this->Labels) ? [] : $this->Labels;
+        foreach ($this->Labels as $label) {
+            $collection->add($label);
+        }
+        return $collection;
     }
 }

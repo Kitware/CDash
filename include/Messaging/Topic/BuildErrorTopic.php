@@ -2,9 +2,11 @@
 namespace CDash\Messaging\Topic;
 
 use CDash\Collection\BuildErrorCollection;
+use CDash\Collection\LabelCollection;
 use CDash\Model\Build;
+use CDash\Model\BuildError;
 
-class BuildErrorTopic extends Topic implements Decoratable, Fixable
+class BuildErrorTopic extends Topic implements Decoratable, Fixable, Labelable
 {
     private $collection;
     private $type;
@@ -57,18 +59,11 @@ class BuildErrorTopic extends Topic implements Decoratable, Fixable
      * @param Build $build
      * @param $item
      * @return boolean
+     * // TODO: refactor itemHasTopicSubject, remove callables from Topic and subclasses & remove Build from signature
      */
     public function itemHasTopicSubject(Build $build, $item)
     {
-        $criteria = $this->getTopicCallables();
-        $hasTopicSubject = $item->Type === $this->type;
-        foreach ($criteria as $criterion) {
-            $hasTopicSubject = $hasTopicSubject && $criterion($build, $item);
-            if (!$hasTopicSubject) {
-                break;
-            }
-        }
-        return $hasTopicSubject;
+        return $item->Type === $this->type;
     }
 
     /**
@@ -120,5 +115,26 @@ class BuildErrorTopic extends Topic implements Decoratable, Fixable
         if ($this->diff) {
             return $this->diff[$key];
         }
+    }
+
+    /**
+     * @param Build $build
+     * @return LabelCollection
+     */
+    public function getLabelsFromBuild(Build $build)
+    {
+        return $build->GetLabelCollection();
+    }
+
+    /**
+     * @param Build $build
+     * @param LabelCollection $labels
+     * @return void
+     */
+    public function setTopicDataWithLabels(Build $build, LabelCollection $labels)
+    {
+        // We've already determined that the build has the subscribed labels
+        // so here we can just use setTopicData
+        $this->setTopicData($build);
     }
 }

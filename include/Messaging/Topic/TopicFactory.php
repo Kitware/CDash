@@ -97,7 +97,10 @@ class TopicFactory extends Singleton
     public function setBuildHandlerTopics(NotificationPreferences $preferences, TopicCollection $topics)
     {
         if ($preferences->get(NotifyOn::BUILD_ERROR)) {
-            $topics->add(new BuildErrorTopic());
+            $topic = new BuildErrorTopic();
+            $topic->setType(Build::TYPE_ERROR);
+            $topics->add($topic);
+
         }
 
         if ($preferences->get(NotifyOn::BUILD_WARNING)) {
