@@ -82,7 +82,7 @@ class SubProjectTestCase extends KWWebTestCase
             "packages/galeri/src/Galeri_CrsMatrices.cpp ({$url}/viewBuildError.php?type=",
             'In function ‘Epetra_CrsMatrix* Galeri::Matrices::UniFlow2D',
             '/',
-            '-CDash on cdash.dev',
+            '-CDash on',
         ];
         if ($this->assertLogContains($expected, 31)) {
             $this->pass('Passed');
@@ -112,11 +112,11 @@ class SubProjectTestCase extends KWWebTestCase
             'Total Failing Tests: 1',
             '*Failing Tests*',
             "NOX_FiniteDifferenceIsorropiaColoring | Completed (Failed) | ({$url}/testDetails.php?test=",
-            '-CDash on cdash.dev',
+            '-CDash on',
             'simpletest@localhost',
             'FAILED (t=1): SubProjectExample/NOX - Linux-GCC-4.1.2-SERIAL_RELEASE - Nightly',
             'A submission to CDash for the project SubProjectExample has failing tests',
-            'Details on the submission can be found at http://cdash.dev/buildSummary.php?buildid=',
+            'Details on the submission can be found at {$url}/buildSummary.php?buildid=',
             'Project: SubProjectExample',
             'SubProject: NOX',
             'Site: godel.sandia.gov',
@@ -126,7 +126,7 @@ class SubProjectTestCase extends KWWebTestCase
             'Total Failing Tests: 1',
             '*Failing Tests*',
             "NOX_FiniteDifferenceIsorropiaColoring | Completed (Failed) | ({$url}/testDetails.php?test=",
-            '-CDash on cdash.dev',
+            '-CDash on',
         ];
         if ($this->assertLogContains($expected, 37)) {
             $this->pass('Passed');
