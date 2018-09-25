@@ -74,15 +74,13 @@ class Site
                 return true;
             }
         }
-        if ($this->Name) {
-            $stmt = $this->PDO->prepare(
-                'SELECT id FROM site WHERE name = ?');
-            pdo_execute($stmt, [$this->Name]);
-            $id = $stmt->fetchColumn();
-            if ($id !== false) {
-                $this->Id = $id;
-                return true;
-            }
+        $stmt = $this->PDO->prepare(
+                'SELECT id FROM site WHERE name = :name AND ip = :ip');
+        pdo_execute($stmt, [':name' => $this->Name, ':ip' => $this->Ip]);
+        $id = $stmt->fetchColumn();
+        if ($id !== false) {
+            $this->Id = $id;
+            return true;
         }
         return false;
     }
