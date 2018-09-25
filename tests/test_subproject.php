@@ -116,7 +116,7 @@ class SubProjectTestCase extends KWWebTestCase
             'simpletest@localhost',
             'FAILED (t=1): SubProjectExample/NOX - Linux-GCC-4.1.2-SERIAL_RELEASE - Nightly',
             'A submission to CDash for the project SubProjectExample has failing tests',
-            'Details on the submission can be found at {$url}/buildSummary.php?buildid=',
+            "Details on the submission can be found at {$url}/buildSummary.php?buildid=",
             'Project: SubProjectExample',
             'SubProject: NOX',
             'Site: godel.sandia.gov',
