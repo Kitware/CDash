@@ -117,6 +117,17 @@ class SiteModelTestCase extends KWWebTestCase
             $this->fail("Site 3 and Site 4 have the same Id");
         }
 
+        // Verify that we handle unique key constraint violations gracefully.
+        $site3->Ip = '127.0.0.1';
+        $site3->Update();
+        $log_contents = file_get_contents($this->logfilename);
+        if (strpos($log_contents, 'PdoError') !== false) {
+            $this->fail('PDO error logged for unique constraint violation');
+        }
+        if ($site3->Id != $site4->Id) {
+            $this->fail("Site 3 and Site 4 do not have the same Id");
+        }
+
         $stmt = $this->PDO->prepare('DELETE FROM site WHERE id = ?');
         pdo_execute($stmt, [$site_3_id]);
         pdo_execute($stmt, [$site_4_id]);
