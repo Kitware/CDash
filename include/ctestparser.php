@@ -303,8 +303,13 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
     }
 
     // Try to get the IP of the build
+    $ip = null;
     $config = Config::getInstance();
-    $ip = $config->get('CDASH_REMOTE_ADDR') ?: isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
+    if ($config->get('CDASH_REMOTE_ADDR')) {
+        $ip = $config->get('CDASH_REMOTE_ADDR');
+    } elseif (array_key_exists('REMOTE_ADDR', $_SERVER)) {
+        $ip = $_SERVER['REMOTE_ADDR'];
+    }
 
     if ($handler == null) {
         echo 'no handler found';

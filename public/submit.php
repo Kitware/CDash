@@ -149,6 +149,7 @@ if ($config->get('CDASH_BERNARD_SUBMISSION')) {
             'project' => $projectid,
             'md5' => $expected_md5,
             'checksum' => true,
+            'ip' => $_SERVER['REMOTE_ADDR']
         ]);
 
         $queue->produce($message);

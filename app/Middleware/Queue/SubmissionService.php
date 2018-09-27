@@ -20,6 +20,7 @@ require_once dirname(__DIR__) . '/../../include/do_submit.php';
 
 use Bernard\Message;
 use Bernard\Message\PlainMessage;
+use CDash\Config;
 use CDash\Log;
 use CDash\Middleware\Queue;
 
@@ -83,7 +84,7 @@ class SubmissionService
     const NAME = 'DoSubmit';
 
     /** @var string[] - Fields required for processing */
-    protected static $required = ['file', 'project', 'checksum', 'md5'];
+    protected static $required = ['file', 'project', 'checksum', 'md5', 'ip'];
 
     protected $queueName;
 
@@ -167,13 +168,14 @@ class SubmissionService
     {
         try {
             $fh = fopen($message->file, 'r');
+            $config = Config::getInstance();
+            $config->set('CDASH_REMOTE_ADDR', $message->ip);
             do_submit($fh, $message->project, null, $message->md5, $message->checksum);
         } catch (\Exception $e) {
             Log::getInstance()->error($e);
             throw $e;
         }
     }
-
 
     /**
      * Registers this service with a Queue
