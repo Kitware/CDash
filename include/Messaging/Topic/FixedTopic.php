@@ -28,17 +28,6 @@ class FixedTopic extends Topic
 
     /**
      * @param Build $build
-     * @param $item
-     * @return boolean
-     */
-    public function itemHasTopicSubject(Build $build, $item)
-    {
-        // not implemented
-        $stop = true;
-    }
-
-    /**
-     * @param Build $build
      * @return Topic|void
      */
     public function setTopicData(Build $build)

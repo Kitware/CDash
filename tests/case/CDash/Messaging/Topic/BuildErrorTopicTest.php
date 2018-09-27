@@ -1,11 +1,24 @@
 <?php
+/**
+ * =========================================================================
+ *   Program:   CDash - Cross-Platform Dashboard System
+ *   Module:    $Id$
+ *   Language:  PHP
+ *   Date:      $Date$
+ *   Version:   $Revision$
+ *   Copyright (c) Kitware, Inc. All rights reserved.
+ *   See LICENSE or http://www.cdash.org/licensing/ for details.
+ *   This software is distributed WITHOUT ANY WARRANTY; without even
+ *   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ *   PURPOSE. See the above copyright notices for more information.
+ * =========================================================================
+ */
 
 use CDash\Collection\BuildErrorCollection;
 use CDash\Messaging\Topic\BuildErrorTopic;
 use CDash\Model\Build;
 use CDash\Model\BuildError;
 use CDash\Test\BuildDiffForTesting;
-use phpDocumentor\Reflection\Types\This;
 
 class BuildErrorTopicTest extends \CDash\Test\CDashTestCase
 {
@@ -184,5 +197,13 @@ class BuildErrorTopicTest extends \CDash\Test\CDashTestCase
 
         $sut->subscribesToBuild($build);
         $this->assertTrue($sut->hasFixes());
+    }
+
+    public function testGetTemplate()
+    {
+        $sut = new BuildErrorTopic();
+        $exptected = 'issue';
+        $actual = $sut->getTemplate();
+        $this->assertEquals($exptected, $actual);
     }
 }

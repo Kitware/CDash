@@ -16,16 +16,6 @@ class AuthoredTopic extends Topic
         return $subscribe;
     }
 
-    /**
-     * @param Build $build
-     * @param $item
-     * @return boolean
-     */
-    public function itemHasTopicSubject(Build $build, $item)
-    {
-        return $this->topic->itemHasTopicSubject($build, $item);
-    }
-
     public function getTemplate()
     {
         return $this->topic->getTemplate();

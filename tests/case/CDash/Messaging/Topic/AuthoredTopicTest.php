@@ -23,31 +23,6 @@ use CDash\Model\Subscriber;
 
 class AuthoredTopicTest extends \CDash\Test\CDashTestCase
 {
-
-    public function testItemHasTopicSubject()
-    {
-        $build = new Build();
-        $error = new BuildError();
-
-        $mock_topic = $this->getMockForAbstractClass(
-            Topic::class,
-            [],
-            '',
-            false,
-            true,
-            true,
-            ['subscribesToBuild']);
-
-        $mock_topic->expects($this->exactly(2))
-            ->method('itemHasTopicSubject')
-            ->with($build, $error)
-            ->willReturnOnConsecutiveCalls(false, true);
-
-        $sut = new AuthoredTopic($mock_topic);
-        $this->assertFalse($sut->itemHasTopicSubject($build, $error));
-        $this->assertTrue($sut->itemHasTopicSubject($build, $error));
-    }
-
     public function testSubscribesToBuild()
     {
         $mock_topic = $this->getMockForAbstractClass(

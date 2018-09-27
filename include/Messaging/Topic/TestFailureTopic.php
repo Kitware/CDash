@@ -1,4 +1,19 @@
 <?php
+/**
+ * =========================================================================
+ *   Program:   CDash - Cross-Platform Dashboard System
+ *   Module:    $Id$
+ *   Language:  PHP
+ *   Date:      $Date$
+ *   Version:   $Revision$
+ *   Copyright (c) Kitware, Inc. All rights reserved.
+ *   See LICENSE or http://www.cdash.org/licensing/ for details.
+ *   This software is distributed WITHOUT ANY WARRANTY; without even
+ *   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ *   PURPOSE. See the above copyright notices for more information.
+ * =========================================================================
+ */
+
 namespace CDash\Messaging\Topic;
 
 use CDash\Collection\LabelCollection;
@@ -7,9 +22,18 @@ use CDash\Collection\TestCollection;
 use CDash\Model\Label;
 use CDash\Model\Test;
 
+/**
+ * Class TestFailureTopic
+ * @package CDash\Messaging\Topic
+ */
 class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
 {
+    use IssueTemplateTrait;
+
+    /** @var TopicCollection $collection */
     protected $collection;
+
+    /** @var array $diff */
     protected $diff;
 
     /**
@@ -75,46 +99,11 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
     }
 
     /**
-     * This method checks its subscriber collection for the presence of labels which the subscriber
-     * is subscribed to. It then attempts to match those labels to the build's tests, returning
-     * true upon a match and false otherwise.
-     *
-     * @param Build $build
-     * @return bool
+     * @return string
      */
-    public function hasLabels(Build $build)
+    public function getTopicDescription()
     {
-        $subscribed_labels = $this->subscriber->getLabels();
-        foreach ($build->GetTestCollection() as $test) {
-            foreach ($test->GetLabelCollection() as $label) {
-                if (in_array($label->Text, $subscribed_labels)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * This method will return the LabelCollection from a \CDash\Model\Test
-     *
-     * @param Test $subject
-     * @return \CDash\Collection\LabelCollection
-     */
-    public function getSubjectLabelCollection(Test $subject)
-    {
-        return $subject->GetLabelCollection();
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getLabels()
-    {
-        if (!$this->labels) {
-            $this->labels = [];
-        }
-        return $this->labels;
+        return 'Failing Tests';
     }
 
     /**
@@ -145,14 +134,6 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
             }
         }
         return false;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTopicDescription()
-    {
-        return 'Failing Tests';
     }
 
     /**
@@ -208,10 +189,7 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
         /** @var Test $test */
         foreach ($tests as $test) {
             // No need to bother with passed tests
-            if ($test->HasFailed() || $test->HasNotRun()) {
-                if ($test->HasNotRun() && isset($test->Details) && $test->Details === Test::DISABLED) {
-                    continue;
-                }
+            if ($this->itemHasTopicSubject($build, $test)) {
                 /** @var Label $label */
                 foreach($test->GetLabelCollection() as $label) {
                     $collection->add($label);

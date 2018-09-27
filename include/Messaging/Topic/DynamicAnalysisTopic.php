@@ -1,4 +1,18 @@
 <?php
+/**
+ * =========================================================================
+ *   Program:   CDash - Cross-Platform Dashboard System
+ *   Module:    $Id$
+ *   Language:  PHP
+ *   Date:      $Date$
+ *   Version:   $Revision$
+ *   Copyright (c) Kitware, Inc. All rights reserved.
+ *   See LICENSE or http://www.cdash.org/licensing/ for details.
+ *   This software is distributed WITHOUT ANY WARRANTY; without even
+ *   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ *   PURPOSE. See the above copyright notices for more information.
+ * =========================================================================
+ */
 namespace CDash\Messaging\Topic;
 
 use CDash\Collection\DynamicAnalysisCollection;
@@ -7,6 +21,8 @@ use CDash\Model\DynamicAnalysis;
 
 class DynamicAnalysisTopic extends Topic implements Decoratable
 {
+    use IssueTemplateTrait;
+
     protected static $statuses = [DynamicAnalysis::NOTRUN, DynamicAnalysis::FAILED];
 
     /** @var DynamicAnalysisCollection $collection */
@@ -52,9 +68,7 @@ class DynamicAnalysisTopic extends Topic implements Decoratable
      */
     public function getTopicCount()
     {
-        if ($this->collection) {
-            return $this->collection->count();
-        }
+        return $this->collection->count();
     }
 
     /**
@@ -64,15 +78,7 @@ class DynamicAnalysisTopic extends Topic implements Decoratable
      */
     public function itemHasTopicSubject(Build $build, $item)
     {
-        $criteria = $this->getTopicCallables();
-        $hasTopicSubject = in_array($item->Status, self::$statuses);
-        foreach ($criteria as $criterion) {
-            $hasTopicSubject = $hasTopicSubject && $criterion($build, $item);
-            if (!$hasTopicSubject) {
-                break;
-            }
-        }
-        return $hasTopicSubject;
+        return in_array($item->Status, self::$statuses);
     }
 
     /**

@@ -24,6 +24,8 @@ use CDash\Model\Test;
 
 class MissingTestTopic extends  TestFailureTopic
 {
+    use IssueTemplateTrait;
+
     /**
      * This method queries the build to check for missing tests
      *

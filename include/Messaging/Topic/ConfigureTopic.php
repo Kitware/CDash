@@ -1,4 +1,19 @@
 <?php
+/**
+ * =========================================================================
+ *   Program:   CDash - Cross-Platform Dashboard System
+ *   Module:    $Id$
+ *   Language:  PHP
+ *   Date:      $Date$
+ *   Version:   $Revision$
+ *   Copyright (c) Kitware, Inc. All rights reserved.
+ *   See LICENSE or http://www.cdash.org/licensing/ for details.
+ *   This software is distributed WITHOUT ANY WARRANTY; without even
+ *   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ *   PURPOSE. See the above copyright notices for more information.
+ * =========================================================================
+ */
+
 namespace CDash\Messaging\Topic;
 
 use CDash\Collection\LabelCollection;
@@ -8,6 +23,8 @@ use CDash\Model\BuildConfigure;
 
 class ConfigureTopic extends Topic implements Decoratable, Labelable
 {
+    use IssueTemplateTrait;
+
     private $collection;
 
     /**
@@ -38,10 +55,11 @@ class ConfigureTopic extends Topic implements Decoratable, Labelable
     {
         $collection = $this->getTopicCollection();
         $configure = $collection->current();
+        $count = 0;
         if (is_a($configure, BuildConfigure::class)) {
-            return (int) $configure->NumberOfErrors;
+            $count = (int) $configure->NumberOfErrors;
         }
-        return 0;
+        return $count;
     }
 
     public function getTopicDescription()
@@ -60,10 +78,12 @@ class ConfigureTopic extends Topic implements Decoratable, Labelable
     /**
      * @param $item
      * @return boolean
+     *
+     * TODO: this breaks interface segregation principle, refactor
      */
     public function itemHasTopicSubject(Build $build, $item)
     {
-        // TODO: Implement itemHasTopicSubject() method.
+        return true;
     }
 
     /**

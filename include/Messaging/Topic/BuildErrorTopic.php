@@ -8,6 +8,8 @@ use CDash\Model\BuildFailure;
 
 class BuildErrorTopic extends Topic implements Decoratable, Fixable, Labelable
 {
+    use IssueTemplateTrait;
+
     private $collection;
     private $type;
     private $diff;

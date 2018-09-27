@@ -106,4 +106,12 @@ class DynamicAnalysisTopicTest extends PHPUnit_Framework_TestCase
         $actual = $sut->getTopicName();
         $this->assertEquals($expected, $actual);
     }
+
+    public  function testGetTopicDescription()
+    {
+        $sut = new DynamicAnalysisTopic();
+        $expected = 'Dynamic analysis tests failing or not run';
+        $actual = $sut->getTopicDescription();
+        $this->assertEquals($expected, $actual);
+    }
 }

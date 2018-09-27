@@ -46,10 +46,6 @@ abstract class Topic implements TopicInterface
      */
     public function __construct(TopicInterface $topic = null)
     {
-        if ($topic) {
-            $callables = $topic->getTopicCallables();
-            $callables->add([$this, 'itemHasTopicSubject']);
-        }
         $this->topic = $topic;
     }
 
@@ -106,6 +102,20 @@ abstract class Topic implements TopicInterface
             $this->topic->setTopicData($build);
         }
         return $this;
+    }
+
+    /**
+     * @param Build $build
+     * @param $item
+     * @return bool
+     */
+    public function itemHasTopicSubject(Build $build, $item)
+    {
+        $hasTopic = false;
+        if ($this->topic) {
+            $hasTopic = $this->topic->itemHasTopicSubject($build, $item);
+        }
+        return $hasTopic;
     }
 
     /**
@@ -198,7 +208,11 @@ abstract class Topic implements TopicInterface
 
     public function getTemplate()
     {
-        return 'issue';
+        $templates = [];
+        if ($this->topic) {
+            $templates = $this->topic->getTemplate();
+        }
+        return $templates;
     }
 
     public function isA($class)

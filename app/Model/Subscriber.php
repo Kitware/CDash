@@ -16,6 +16,7 @@
 
 namespace CDash\Model;
 
+use CDash\Collection\LabelCollection;
 use CDash\Messaging\Preferences\NotificationPreferences;
 use CDash\Messaging\Topic\Topic;
 use CDash\Messaging\Topic\TopicCollection;
@@ -112,7 +113,7 @@ class Subscriber implements SubscriberInterface
     }
 
     /**
-     * @return string[]
+     * @return LabelCollection
      */
     public function getLabels()
     {

@@ -21,7 +21,6 @@ use CDash\Model\BuildUpdate;
 
 class UpdateErrorTopicTest extends PHPUnit_Framework_TestCase
 {
-
     public function testGetTopicName()
     {
         $sut = new UpdateErrorTopic();
@@ -62,5 +61,13 @@ class UpdateErrorTopicTest extends PHPUnit_Framework_TestCase
         $collection = $sut->getBuildCollection();
 
         $this->assertSame($build, $collection->current());
+    }
+
+    public function testGetTemplate()
+    {
+        $sut = new UpdateErrorTopic();
+        $expected = 'issue';
+        $actual = $sut->getTemplate();
+        $this->assertEquals($expected, $actual);
     }
 }

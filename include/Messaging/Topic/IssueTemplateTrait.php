@@ -16,18 +16,13 @@
 
 namespace CDash\Messaging\Topic;
 
-use CDash\Model\Build;
-
-class EmailSentTopic extends Topic
+trait IssueTemplateTrait
 {
     /**
-     * @param Build $build
-     * @return bool
+     * @return string
      */
-    public function subscribesToBuild(Build $build)
+    public function getTemplate()
     {
-        $subscribe = $this->topic->subscribesToBuild($build)
-            && !$this->hasSubscriberAlreadyBeenNotified($build);
-        return $subscribe;
+        return 'issue';
     }
 }

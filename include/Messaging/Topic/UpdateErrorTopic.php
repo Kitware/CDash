@@ -5,6 +5,8 @@ use CDash\Model\Build;
 
 class UpdateErrorTopic extends Topic implements Decoratable
 {
+    use IssueTemplateTrait;
+
     /**
      * @param Build $build
      * @return bool
@@ -17,7 +19,7 @@ class UpdateErrorTopic extends Topic implements Decoratable
 
     /**
      * @param Build $build
-     * @return Topic|void
+     * @return $this
      */
     public function addBuild(Build $build)
     {
@@ -33,7 +35,7 @@ class UpdateErrorTopic extends Topic implements Decoratable
      */
     public function itemHasTopicSubject(Build $build, $item)
     {
-        // TODO: Implement itemHasTopicSubject() method.
+        return true;
     }
 
     public function getTopicName()

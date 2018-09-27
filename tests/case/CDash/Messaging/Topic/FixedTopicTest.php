@@ -87,6 +87,6 @@ class FixedTopicTest extends \CDash\Test\CDashTestCase
         $build = $this->createMockBuildWithDiff($this->createFixed('testnotrunnegative'));
         $testTopic->subscribesToBuild($build);
 
-        $this->assertTrue($sut->subscribesToBuild($build));
+        $this->assertFalse($sut->subscribesToBuild($build));
     }
 }

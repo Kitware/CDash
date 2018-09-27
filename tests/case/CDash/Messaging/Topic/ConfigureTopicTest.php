@@ -1,11 +1,26 @@
 <?php
+/**
+ * =========================================================================
+ *   Program:   CDash - Cross-Platform Dashboard System
+ *   Module:    $Id$
+ *   Language:  PHP
+ *   Date:      $Date$
+ *   Version:   $Revision$
+ *   Copyright (c) Kitware, Inc. All rights reserved.
+ *   See LICENSE or http://www.cdash.org/licensing/ for details.
+ *   This software is distributed WITHOUT ANY WARRANTY; without even
+ *   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ *   PURPOSE. See the above copyright notices for more information.
+ * =========================================================================
+ */
 
 use CDash\Collection\ConfigureCollection;
+use CDash\Collection\LabelCollection;
 use CDash\Messaging\Topic\ConfigureTopic;
 use CDash\Messaging\Topic\Topic;
-use CDash\Messaging\Topic\TopicInterface;
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
+use CDash\Model\Label;
 
 class ConfigureTopicTest extends \CDash\Test\CDashTestCase
 {
@@ -29,8 +44,8 @@ class ConfigureTopicTest extends \CDash\Test\CDashTestCase
         $this->assertFalse($sut->subscribesToBuild($build));
 
         $this->parent
-      ->method('subscribesToBuild')
-      ->willReturnOnConsecutiveCalls(false, true, true, true);
+            ->method('subscribesToBuild')
+            ->willReturnOnConsecutiveCalls(false, true, true, true);
 
         // SUT has parent does not subscribe, BuildConfigure has no warnings or errors
         $sut = new ConfigureTopic($this->parent);
@@ -41,9 +56,10 @@ class ConfigureTopicTest extends \CDash\Test\CDashTestCase
         $this->assertFalse($sut->subscribesToBuild($build));
 
         // SUT has parent who subscribes, BuildConfigure has warnings, no errors
+        // warnings do not trigger subscriptions
         $buildConfigure->NumberOfWarnings = 1;
         $sut = new ConfigureTopic($this->parent);
-        $this->assertTrue($sut->subscribesToBuild($build));
+        $this->assertFalse($sut->subscribesToBuild($build));
 
         // SUT has parent who subscribes, BuildConfigure errors, no warnings
         $buildConfigure->NumberOfWarnings = 0;
@@ -84,10 +100,10 @@ class ConfigureTopicTest extends \CDash\Test\CDashTestCase
         $sut->setTopicData($build);
         $this->assertEquals(0, $sut->getTopicCount());
 
-        $buildConfigure->Status = '0';
+        $buildConfigure->NumberOfErrors = '0';
         $this->assertEquals(0, $sut->getTopicCount());
 
-        $buildConfigure->Status = '127';
+        $buildConfigure->NumberOfErrors = '127';
         $this->assertEquals(127, $sut->getTopicCount());
     }
 
@@ -108,5 +124,54 @@ class ConfigureTopicTest extends \CDash\Test\CDashTestCase
         $sut = new ConfigureTopic();
         $collection = $sut->getTopicCollection();
         $this->assertInstanceOf(ConfigureCollection::class, $collection);
+    }
+
+    public function testGetTemplate()
+    {
+        $sut = new ConfigureTopic();
+        $expected = 'issue';
+        $actual = $sut->getTemplate();
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testGetLabelsFromBuild()
+    {
+        $sut = new ConfigureTopic();
+        $build = new Build();
+        $configure = new BuildConfigure();
+        $build->SetBuildConfigure($configure);
+
+        $collection = $sut->getLabelsFromBuild($build);
+        $this->assertEmpty($collection->toArray());
+
+        $lbl1 = new Label();
+        $lbl2 = new Label();
+
+        $lbl1->Text = 'one';
+        $lbl2->Text = 'two';
+
+        $build->AddLabel($lbl2);
+        $configure->AddLabel($lbl1);
+
+        $collection = $sut->getLabelsFromBuild($build);
+
+        $this->assertTrue($collection->has('one'));
+        $this->assertTrue($collection->has('two'));
+    }
+
+    public function testSetTopicDataWithLabels()
+    {
+        $sut = new ConfigureTopic();
+        $build = new Build();
+        $configure = new BuildConfigure();
+
+        $build->SetBuildConfigure($configure);
+        $sut->setTopicDataWithLabels($build, new LabelCollection());
+
+        $collection = $sut->getTopicCollection();
+        $this->assertInstanceOf(ConfigureCollection::class, $collection);
+
+        $this->assertSame($configure, $collection->current());
+        $this->assertCount(1, $collection);
     }
 }
