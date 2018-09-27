@@ -126,7 +126,9 @@ class Subscriber implements SubscriberInterface
      */
     public function setLabels(array $labels)
     {
-        $this->labels = $labels;
+        foreach ($labels as $label) {
+            $this->user->AddLabel($label);
+        }
         return $this;
     }
 

@@ -499,4 +499,12 @@ class User
         }
         return $this->LabelCollection;
     }
+
+    public function AddLabel(Label $label)
+    {
+        if (!$this->LabelCollection) {
+            $this->LabelCollection = new LabelCollection();
+        }
+        $this->LabelCollection->add($label);
+    }
 }

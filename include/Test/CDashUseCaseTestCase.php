@@ -64,7 +64,7 @@ class CDashUseCaseTestCase extends CDashTestCase
             ->method('create')
             ->willReturnCallback(function ($class_name) use ($useCase) {
                 $model = $this->getMockBuilder($class_name)
-                    ->setMethods(['Insert', 'Update', 'Save', 'GetCommitAuthors'])
+                    ->setMethods(['Insert', 'Update', 'Save', 'GetCommitAuthors', 'GetMissingTests'])
                     ->getMock();
 
                 $model->expects($this->any())
@@ -101,6 +101,16 @@ class CDashUseCaseTestCase extends CDashTestCase
                         /** @var \Build $model */
                         return $useCase->getAuthors($model->SubProjectName);
                     });
+
+                $model->expects($this->any())
+                    ->method('GetMissingTests')
+                    ->willReturnCallback(function () use ($useCase) {
+                        $missing = [];
+                        if (isset($useCase->missingTests)) {
+                            $missing = $useCase->missingTests;
+                        }
+                        return $missing;
+                });
 
                 return $model;
             });

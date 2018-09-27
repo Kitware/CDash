@@ -4,7 +4,7 @@ namespace CDash\Messaging\Topic;
 use CDash\Collection\BuildErrorCollection;
 use CDash\Collection\LabelCollection;
 use CDash\Model\Build;
-use CDash\Model\BuildError;
+use CDash\Model\BuildFailure;
 
 class BuildErrorTopic extends Topic implements Decoratable, Fixable, Labelable
 {
@@ -123,7 +123,21 @@ class BuildErrorTopic extends Topic implements Decoratable, Fixable, Labelable
      */
     public function getLabelsFromBuild(Build $build)
     {
-        return $build->GetLabelCollection();
+        $collection = new LabelCollection();
+        if (isset($build->Errors)) {
+            /** @var BuildFailure $error */
+            foreach ($build->Errors as $error) {
+
+                if (is_a($error, BuildFailure::class)
+                && $this->itemHasTopicSubject($build, $error)) {
+                    foreach ($error->Labels as $label) {
+                        $collection->add($label);
+                    }
+                }
+            }
+        }
+
+        return $collection;
     }
 
     /**
