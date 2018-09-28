@@ -74,15 +74,13 @@ class Site
                 return true;
             }
         }
-        if ($this->Name) {
-            $stmt = $this->PDO->prepare(
-                'SELECT id FROM site WHERE name = ?');
-            pdo_execute($stmt, [$this->Name]);
-            $id = $stmt->fetchColumn();
-            if ($id !== false) {
-                $this->Id = $id;
-                return true;
-            }
+        $stmt = $this->PDO->prepare(
+                'SELECT id FROM site WHERE name = :name AND ip = :ip');
+        pdo_execute($stmt, [':name' => $this->Name, ':ip' => $this->Ip]);
+        $id = $stmt->fetchColumn();
+        if ($id !== false) {
+            $this->Id = $id;
+            return true;
         }
         return false;
     }
@@ -107,10 +105,30 @@ class Site
         $stmt->bindParam(':outoforder', $this->OutOfOrder);
         $stmt->bindParam(':id', $this->Id);
 
-        if (!pdo_execute($stmt)) {
+        try {
+            if ($stmt->execute()) {
+                return true;
+            }
+            // The UPDATE statement didn't execute cleanly.
+            $error_info = $stmt->errorInfo();
+            $error = $error_info[2];
+            throw new \Exception($error);
+        } catch (\Exception $e) {
+            // This error might be due to a unique key violation.
+            // Check for an existing site with this name and ip.
+            $site = new Site();
+            $site->Name = $this->Name;
+            $site->Ip = $this->Ip;
+            if ($site->Exists()) {
+                $this->Id = $site->Id;
+                return true;
+            }
+
+            // Otherwise log the error and return false.
+            add_log($e->getMessage() . PHP_EOL . $e->getTraceAsString(),
+                    'Site::Update', LOG_ERR);
             return false;
         }
-        return true;
     }
 
     public function LookupIP()
