@@ -167,9 +167,16 @@ class SubmissionService
     public function doSubmit(Message $message)
     {
         try {
-            $fh = fopen($message->file, 'r');
             $config = Config::getInstance();
             $config->set('CDASH_REMOTE_ADDR', $message->ip);
+            if (file_exists($message->file)) {
+                // Local execution, process an open file.
+                $fh = fopen($message->file, 'r');
+            } else {
+                // Remote execution, pass the filename and CDash will retrieve
+                // its contents.
+                $fh = basename($message->file);
+            }
             do_submit($fh, $message->project, null, $message->md5, $message->checksum);
         } catch (\Exception $e) {
             Log::getInstance()->error($e);

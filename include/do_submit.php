@@ -40,12 +40,11 @@ include 'include/sendemail.php';
  * a read-only file handle.
  * This is useful for workers running on other machines that need access to build xml.
  **/
-function fileHandleFromSubmissionId($submissionId, $coverageFile=false)
+function fileHandleFromSubmissionId($filename)
 {
     $config = Config::getInstance();
 
     $tmpFilename = tempnam($config->get('CDASH_BACKUP_DIRECTORY'), 'cdash-submission-');
-    $filename = ($coverageFile) ? $submissionId : $submissionId . '.xml';
     $client = new GuzzleHttp\Client();
     $response = $client->request('GET',
                                  $config->get('CDASH_BASE_URL') . '/api/v1/getSubmissionFile.php',
