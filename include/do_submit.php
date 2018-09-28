@@ -15,11 +15,14 @@
 =========================================================================*/
 
 //error_reporting(0); // disable error reporting
-use Bernard\Message\DefaultMessage;
+use Bernard\Message\PlainMessage;
 use Bernard\Producer;
 use Bernard\QueueFactory\PersistentFactory;
 use Bernard\Serializer;
 use CDash\Config;
+use CDash\Middleware\Queue;
+use CDash\Middleware\Queue\DriverFactory as QueueDriverFactory;
+use CDash\Middleware\Queue\SubmissionService;
 use CDash\Model\AuthToken;
 use CDash\Model\Build;
 use CDash\Model\BuildFile;
@@ -476,15 +479,16 @@ function put_submit_file()
     }
 
     if ($config->get('CDASH_BERNARD_COVERAGE_SUBMISSION')) {
-        $factory = new PersistentFactory($config->get('CDASH_BERNARD_DRIVER'), new Serializer());
-        $producer = new Producer($factory, new EventDispatcher());
-
-        $producer->produce(new DefaultMessage('DoSubmit', array(
-            'coverage_submission' => true,
-            'filename' => $filename,
-            'expected_md5' => $md5sum,
-            'projectid' => $projectid,
-            'submission_ip' => $_SERVER['REMOTE_ADDR'])));
+        $driver = QueueDriverFactory::create();
+        $queue = new Queue($driver);
+        $message = SubmissionService::createMessage([
+            'file' => $filename,
+            'project' => $projectid,
+            'md5' => $md5sum,
+            'checksum' => true,
+            'ip' => $_SERVER['REMOTE_ADDR']
+        ]);
+        $queue->produce($message);
     } elseif ($config->get('CDASH_ASYNCHRONOUS_SUBMISSION')) {
         // Create a new entry in the submission table for this file.
         $bytes = filesize($filename);

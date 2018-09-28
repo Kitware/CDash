@@ -17,7 +17,7 @@
 namespace CDash\Middleware\Queue;
 
 use Bernard\Driver;
-use Bernard\Message\DefaultMessage;
+use Bernard\Message\PlainMessage;
 use CDash\Middleware\Queue;
 
 class QueueTest extends \PHPUnit_Framework_TestCase
@@ -47,8 +47,8 @@ class QueueTest extends \PHPUnit_Framework_TestCase
 
         $sut->addService('IsA', $mock_service);
 
-        $m1 = new DefaultMessage('IsA', ['isA' => true]);
-        $m2 = new DefaultMessage('IsA', ['isA' => false]);
+        $m1 = new PlainMessage('IsA', ['isA' => true]);
+        $m2 = new PlainMessage('IsA', ['isA' => false]);
 
         $sut->produce($m1);
         $sut->produce($m2);

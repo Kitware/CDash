@@ -32,6 +32,10 @@ use CDash\Config;
 use CDash\Model\BuildFile;
 use CDash\Model\Project;
 
+class CDashParseException extends RuntimeException
+{
+}
+
 // Helper function to display the message
 function displayReturnStatus($statusarray)
 {
@@ -215,7 +219,7 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
 
     // Parse the file.
     if ($handler->Parse($filename) === false) {
-        throw new Exception('Failed to parse file ' . $filename);
+        throw new CDashParseException('Failed to parse file ' . $filename);
     }
 
     check_for_immediate_deletion($filename);
@@ -243,7 +247,7 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
         if (parse_put_submission($filehandler, $projectid, $expected_md5)) {
             return true;
         }
-    } catch (Exception $e) {
+    } catch (CDashParseException $e) {
         add_log($e->getMessage(), 'ctest_parse', LOG_ERR);
         return false;
     }
@@ -299,8 +303,13 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
     }
 
     // Try to get the IP of the build
+    $ip = null;
     $config = Config::getInstance();
-    $ip = $config->get('CDASH_REMOTE_ADDR') ?: isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
+    if ($config->get('CDASH_REMOTE_ADDR')) {
+        $ip = $config->get('CDASH_REMOTE_ADDR');
+    } elseif (array_key_exists('REMOTE_ADDR', $_SERVER)) {
+        $ip = $_SERVER['REMOTE_ADDR'];
+    }
 
     if ($handler == null) {
         echo 'no handler found';
