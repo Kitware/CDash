@@ -170,7 +170,7 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $buildid = null,
         sendemail($handler, $projectid);
     }
 
-    if ($config->get('CDASH_ENABLE_FEED')) {
+    if ($config->get('CDASH_ENABLE_FEED') && !$config->get('CDASH_BERNARD_SUBMISSION')) {
         // Create the RSS feed
         CreateRSSFeed($projectid);
     }
