@@ -13,11 +13,13 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
-
 require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
 
 use CDash\Collection\BuildCollection;
+use CDash\Messaging\Notification\NotifyOn;
+use CDash\Messaging\Topic\DynamicAnalysisTopic;
+use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Build;
 use CDash\Model\Label;
 use CDash\Model\Site;
@@ -26,6 +28,7 @@ use CDash\Model\DynamicAnalysisSummary;
 use CDash\Model\DynamicAnalysisDefect;
 use CDash\Model\SiteInformation;
 use CDash\Model\BuildInformation;
+use CDash\Model\SubscriberInterface;
 
 class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildInterface
 {
@@ -305,6 +308,10 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
     {
         return array_values($this->Builds);
     }
+
+    /**
+     * @return array|Build[]
+     */
     public function getActionableBuilds()
     {
         return $this->Builds;
@@ -331,8 +338,18 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
         return $collection;
     }
 
-    public function getProjectId()
+    /**
+     * @param SubscriberInterface $subscriber
+     * @return TopicCollection
+     */
+    public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber)
     {
-        // TODO: Implement getProjectId() method.
+        $collection = new TopicCollection();
+        $preferences = $subscriber->getNotificationPreferences();
+        if ($preferences->get(NotifyOn::DYNAMIC_ANALYSIS)) {
+            $topic = new DynamicAnalysisTopic();
+            $collection->add($topic);
+        }
+        return $collection;
     }
 }

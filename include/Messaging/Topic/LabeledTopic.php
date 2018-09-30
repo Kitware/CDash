@@ -1,17 +1,10 @@
 <?php
 namespace CDash\Messaging\Topic;
 
-use CDash\Collection\BuildCollection;
-use CDash\Collection\BuildErrorCollection;
-use CDash\Model\ActionableTypes;
 use CDash\Model\Build;
-use CDash\Collection\Collection;
 use CDash\Collection\CollectionCollection;
-use CDash\Collection\ConfigureCollection;
-use CDash\Collection\LabelCollection;
-use CDash\Collection\TestCollection;
 
-class LabeledTopic extends Topic implements Decoratable
+class LabeledTopic extends Topic
 {
     /** @var  CollectionCollection $labeledCollection */
     protected $topicCollection;
@@ -58,14 +51,5 @@ class LabeledTopic extends Topic implements Decoratable
     {
         $labels = $this->subscriber->getLabels();
         $this->topic->setTopicDataWithLabels($build, $labels);
-    }
-
-    /**
-     * @param $item
-     * @return boolean
-     */
-    public function itemHasTopicSubject(Build $build, $item)
-    {
-        // TODO: Implement itemHasTopicSubject() method.
     }
 }

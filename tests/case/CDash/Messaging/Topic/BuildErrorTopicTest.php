@@ -15,9 +15,11 @@
  */
 
 use CDash\Collection\BuildErrorCollection;
+use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Topic\BuildErrorTopic;
 use CDash\Model\Build;
 use CDash\Model\BuildError;
+use CDash\Model\Subscriber;
 use CDash\Test\BuildDiffForTesting;
 
 class BuildErrorTopicTest extends \CDash\Test\CDashTestCase
@@ -205,5 +207,27 @@ class BuildErrorTopicTest extends \CDash\Test\CDashTestCase
         $exptected = 'issue';
         $actual = $sut->getTemplate();
         $this->assertEquals($exptected, $actual);
+    }
+
+    public function testIsSubscribedToBy()
+    {
+        $sut = new BuildErrorTopic();
+
+        $preferences = new BitmaskNotificationPreferences();
+        $subscriber = new Subscriber($preferences);
+
+        $this->assertFalse($sut->isSubscribedToBy($subscriber));
+
+        $bitmask = BitmaskNotificationPreferences::EMAIL_ERROR;
+        $preferences = new BitmaskNotificationPreferences($bitmask);
+        $subscriber = new Subscriber($preferences);
+
+        $this->assertTrue($sut->isSubscribedToBy($subscriber));
+
+        $bitmask = BitmaskNotificationPreferences::EMAIL_FIXES;
+        $preferences = new BitmaskNotificationPreferences($bitmask);
+        $subscriber = new Subscriber($preferences);
+
+        $this->assertTrue($sut->isSubscribedToBy($subscriber));
     }
 }

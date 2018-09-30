@@ -15,10 +15,13 @@
  */
 
 use CDash\Collection\DynamicAnalysisCollection;
+use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Topic\DynamicAnalysisTopic;
 use CDash\Messaging\Topic\Topic;
 use CDash\Model\Build;
 use CDash\Model\DynamicAnalysis;
+use CDash\Model\Subscriber;
+use CDash\Model\SubscriberInterface;
 
 class DynamicAnalysisTopicTest extends PHPUnit_Framework_TestCase
 {
@@ -107,11 +110,27 @@ class DynamicAnalysisTopicTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public  function testGetTopicDescription()
+    public function testGetTopicDescription()
     {
         $sut = new DynamicAnalysisTopic();
         $expected = 'Dynamic analysis tests failing or not run';
         $actual = $sut->getTopicDescription();
         $this->assertEquals($expected, $actual);
+    }
+
+    public function testIsSubscribedToBy()
+    {
+        $sut = new DynamicAnalysisTopic();
+
+        $preferences = new BitmaskNotificationPreferences();
+        $subscriber = new Subscriber($preferences);
+
+        $this->assertFalse($sut->isSubscribedToBy($subscriber));
+
+        $bitmask = BitmaskNotificationPreferences::EMAIL_DYNAMIC_ANALYSIS;
+        $preferences = new BitmaskNotificationPreferences($bitmask);
+        $subscriber = new Subscriber($preferences);
+
+        $this->assertTrue($sut->isSubscribedToBy($subscriber));
     }
 }

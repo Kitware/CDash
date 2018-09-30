@@ -16,8 +16,10 @@
 namespace CDash\Messaging\Topic;
 
 use CDash\Collection\DynamicAnalysisCollection;
+use CDash\Messaging\Notification\NotifyOn;
 use CDash\Model\Build;
 use CDash\Model\DynamicAnalysis;
+use CDash\Model\SubscriberInterface;
 
 class DynamicAnalysisTopic extends Topic implements Decoratable
 {
@@ -106,5 +108,21 @@ class DynamicAnalysisTopic extends Topic implements Decoratable
     public function getTopicDescription()
     {
         return 'Dynamic analysis tests failing or not run';
+    }
+
+    /**
+     * @param SubscriberInterface $subscriber
+     * @return bool
+     */
+    public function isSubscribedToBy(SubscriberInterface $subscriber)
+    {
+        $subscribes = false;
+        $preferences = $subscriber->getNotificationPreferences();
+
+        if ($preferences->get(NotifyOn::DYNAMIC_ANALYSIS)) {
+            $subscribes = true;
+        }
+
+        return $subscribes;
     }
 }

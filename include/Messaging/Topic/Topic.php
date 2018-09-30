@@ -16,7 +16,7 @@ abstract class Topic implements TopicInterface
     const DYNAMIC_ANALYSIS = 'DynamicAnalysis';
     const LABELED = 'Labeled';
     const TEST_FAILURE = 'TestFailure';
-    const UPDATE = 'Update';
+    const TEST_MISSING = 'TestMissing';
     const UPDATE_ERROR = 'UpdateError';
 
     /** @var  SubscriberInterface $subscriber */

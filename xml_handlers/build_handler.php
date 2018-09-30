@@ -18,6 +18,10 @@ require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
 
 use CDash\Collection\BuildCollection;
+use CDash\Messaging\Notification\NotifyOn;
+use CDash\Messaging\Topic\BuildErrorTopic;
+use CDash\Messaging\Topic\Decoratable;
+use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\ActionableTypes;
 use CDash\Config;
 use CDash\Model\Build;
@@ -30,6 +34,7 @@ use CDash\Model\Label;
 use CDash\Model\Project;
 use CDash\Model\Site;
 use CDash\Model\SiteInformation;
+use CDash\Model\SubscriberInterface;
 
 class BuildHandler extends AbstractHandler implements ActionableBuildInterface
 {
@@ -445,8 +450,27 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
         return $collection;
     }
 
-    public function getProjectId()
+    /**
+     * @param SubscriberInterface $subscriber
+     * @return TopicCollection
+     */
+    public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber)
     {
-        // TODO: Implement getProjectId() method.
+        $collection = new TopicCollection();
+        $preferences = $subscriber->getNotificationPreferences();
+
+        if ($preferences->get(NotifyOn::BUILD_ERROR)) {
+            $topic = new BuildErrorTopic();
+            $topic->setType(Build::TYPE_ERROR);
+            $collection->add($topic);
+        }
+
+        if ($preferences->get(NotifyOn::BUILD_WARNING)) {
+            $topic = new BuildErrorTopic();
+            $topic->setType(Build::TYPE_WARN);
+            $collection->add($topic);
+        }
+
+        return $collection;
     }
 }

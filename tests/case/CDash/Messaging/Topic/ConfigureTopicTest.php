@@ -16,11 +16,13 @@
 
 use CDash\Collection\ConfigureCollection;
 use CDash\Collection\LabelCollection;
+use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Topic\ConfigureTopic;
 use CDash\Messaging\Topic\Topic;
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
 use CDash\Model\Label;
+use CDash\Model\Subscriber;
 
 class ConfigureTopicTest extends \CDash\Test\CDashTestCase
 {
@@ -173,5 +175,21 @@ class ConfigureTopicTest extends \CDash\Test\CDashTestCase
 
         $this->assertSame($configure, $collection->current());
         $this->assertCount(1, $collection);
+    }
+
+    public function testIsSubscribedToBy()
+    {
+        $sut = new ConfigureTopic();
+
+        $preferences = new BitmaskNotificationPreferences();
+        $subscriber = new Subscriber($preferences);
+
+        $this->assertFalse($sut->isSubscribedToBy($subscriber));
+
+        $bitmask = BitmaskNotificationPreferences::EMAIL_CONFIGURE;
+        $preferences = new BitmaskNotificationPreferences($bitmask);
+        $subscriber = new Subscriber($preferences);
+
+        $this->assertTrue($sut->isSubscribedToBy($subscriber));
     }
 }

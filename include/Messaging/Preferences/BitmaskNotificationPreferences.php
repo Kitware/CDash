@@ -21,6 +21,8 @@ class BitmaskNotificationPreferences extends NotificationPreferences
     const EMAIL_SUBSCRIBED_LABELS = 4096;                        // 2^12
     const EMAIL_NO_REDUNDANT = 8192;                             // 2^13
 
+    const DEFAULT_PREFERENCES = 8248;
+
     protected $preferences = [];
 
     public function __construct($mask = 0)

@@ -20,8 +20,9 @@ use CDash\Collection\LabelCollection;
 use CDash\Messaging\Preferences\NotificationPreferences;
 use CDash\Messaging\Topic\Topic;
 use CDash\Messaging\Topic\TopicCollection;
-use CDash\Messaging\Topic\TopicFactory;
+use CDash\Messaging\Topic\TopicDecorator;
 use ActionableBuildInterface;
+use CDash\Messaging\Topic\TopicInterface;
 
 class Subscriber implements SubscriberInterface
 {
@@ -64,22 +65,22 @@ class Subscriber implements SubscriberInterface
         // Initialize the topic collection
         $topics = $this->getTopics();
         $builds = $submission->GetBuildCollection();
-        $user_topics = TopicFactory::create($this->preferences, $submission);
-
-        /** @var Topic $topic */
-        foreach ($user_topics as $topic) {
-            $topic->setSubscriber($this);
-            foreach ($builds as $build) {
-                if ($topic->subscribesToBuild($build)) {
-                    $topic->addBuild($build);
-                    // Check to ensure that the topic does not already exist
-                    // TODO: refactor to check this first to avoid having to run subscribesToBuild
-                    if (!$topics->has($topic->getTopicName())) {
+        $collection = $submission->GetTopicCollectionForSubscriber($this);
+        if ($collection->hasItems()) {
+            // $user_topics = TopicFactory::create($this->preferences, $submission);
+            TopicDecorator::decorate($collection, $this->preferences);
+            /** @var Topic $topic */
+            foreach ($collection as $topic) {
+                $topic->setSubscriber($this);
+                foreach ($builds as $build) {
+                    if ($topic->subscribesToBuild($build)) {
+                        $topic->addBuild($build);
                         $topics->add($topic);
                     }
                 }
             }
         }
+
         return $topics->count() > 0;
     }
 

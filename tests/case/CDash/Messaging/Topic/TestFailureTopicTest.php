@@ -15,11 +15,13 @@
  */
 
 use CDash\Collection\LabelCollection;
+use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Topic\TestFailureTopic;
 use CDash\Messaging\Topic\Topic;
 use CDash\Model\Build;
 use CDash\Model\BuildTest;
 use CDash\Model\Label;
+use CDash\Model\Subscriber;
 use CDash\Test\BuildDiffForTesting;
 use CDash\Model\Test;
 
@@ -286,5 +288,27 @@ class TestFailureTopicTest extends \CDash\Test\CDashTestCase
 
         $this->assertTrue($collection->has($labelForTwo->Text));
         $this->assertTrue($collection->has($labelFor3->Text));
+    }
+
+    public function testIsSubscribedToBy()
+    {
+        $sut = new TestFailureTopic();
+
+        $preferences = new BitmaskNotificationPreferences();
+        $subscriber = new Subscriber($preferences);
+
+        $this->assertFalse($sut->isSubscribedToBy($subscriber));
+
+        $bitmask = BitmaskNotificationPreferences::EMAIL_TEST;
+        $preferences = new BitmaskNotificationPreferences($bitmask);
+        $subscriber = new Subscriber($preferences);
+
+        $this->assertTrue($sut->isSubscribedToBy($subscriber));
+
+        $bitmask = BitmaskNotificationPreferences::EMAIL_FIXES;
+        $preferences = new BitmaskNotificationPreferences($bitmask);
+        $subscriber = new Subscriber($preferences);
+
+        $this->assertTrue($sut->isSubscribedToBy($subscriber));
     }
 }

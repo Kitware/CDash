@@ -17,6 +17,10 @@
 require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
 
+use CDash\Messaging\Notification\NotifyOn;
+use CDash\Messaging\Topic\ConfigureTopic;
+use CDash\Messaging\Topic\TopicCollection;
+use CDash\Messaging\Topic\TopicInterface;
 use CDash\Model\ActionableTypes;
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
@@ -26,6 +30,7 @@ use CDash\Model\Site;
 use CDash\Model\SiteInformation;
 
 use CDash\Collection\BuildCollection;
+use CDash\Model\SubscriberInterface;
 
 class ConfigureHandler extends AbstractHandler implements ActionableBuildInterface
 {
@@ -299,6 +304,10 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
     {
         return array_values($this->Builds);
     }
+
+    /**
+     * @return array|Build[]
+     */
     public function getActionableBuilds()
     {
         return $this->Builds;
@@ -321,8 +330,18 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
         return $collection;
     }
 
-    public function getProjectId()
+    /**
+     * @param SubscriberInterface $subscriber
+     * @return TopicCollection
+     */
+    public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber)
     {
-        // TODO: Implement getProjectId() method.
+        $collection = new TopicCollection();
+        $preferences = $subscriber->getNotificationPreferences();
+        if($preferences->get(NotifyOn::CONFIGURE)) {
+            $topic = new ConfigureTopic();
+            $collection->add($topic);
+        }
+        return $collection;
     }
 }

@@ -16,24 +16,29 @@
 
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
-use CDash\Messaging\Topic\AuthoredTopic;
-use CDash\Messaging\Topic\EmailSentTopic;
-use CDash\Messaging\Topic\FixedTopic;
-use CDash\Messaging\Topic\GroupMembershipTopic;
-use CDash\Messaging\Topic\LabeledTopic;
 use CDash\Messaging\Topic\Topic;
-use CDash\Messaging\Topic\TopicDecorator;
-use CDash\Model\UserProject;
+use CDash\Messaging\Topic\TopicCollection;
+use CDash\Model\Subscriber;
 
-class TopicFactoryTest extends PHPUnit_Framework_TestCase
+class UpdateHandlerTest extends PHPUnit_Framework_TestCase
 {
-    public function testFactoryGivenNotifyOnBuildWarningAndBuildHandler()
+    public function testGetBuildTopic()
     {
-        $handler = $this->getMockBuilder(ActionableBuildInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $sut = new UpdateHandler(1, 0);
 
-        $settings = BitmaskNotificationPreferences::EMAIL_WARNING;
+        $preferences = new BitmaskNotificationPreferences();
+        $subscriber = new Subscriber($preferences);
 
+        $collection = $sut->GetTopicCollectionForSubscriber($subscriber);
+
+        $this->assertInstanceOf(TopicCollection::class, $collection);
+        $this->assertFalse($collection->hasItems());
+
+        $preferences->set(NotifyOn::UPDATE_ERROR, true);
+
+        $collection = $sut->GetTopicCollectionForSubscriber($subscriber);
+
+        $this->assertCount(1, $collection);
+        $this->assertTrue($collection->has(Topic::UPDATE_ERROR));
     }
 }

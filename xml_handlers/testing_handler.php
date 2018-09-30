@@ -4,6 +4,11 @@ use CDash\Collection\BuildCollection;
 require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
 
+use CDash\Messaging\Notification\NotifyOn;
+use CDash\Messaging\Topic\MissingTestTopic;
+use CDash\Messaging\Topic\TestFailureTopic;
+use CDash\Messaging\Topic\TopicCollection;
+use CDash\Messaging\Topic\TopicInterface;
 use CDash\Model\ActionableTypes;
 use \CDash\Model\Build;
 use \CDash\Model\BuildInformation;
@@ -13,6 +18,7 @@ use \CDash\Model\Image;
 use \CDash\Model\Label;
 use \CDash\Model\Site;
 use \CDash\Model\SiteInformation;
+use CDash\Model\SubscriberInterface;
 use \CDash\Model\Test;
 use \CDash\Model\TestMeasurement;
 use \CDash\Model\Project;
@@ -426,13 +432,18 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
         return $collection;
     }
 
-    public function getProjectId()
+    /**
+     * @param SubscriberInterface $subscriber
+     * @return TopicCollection
+     */
+    public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber)
     {
-        // TODO: remove
-    }
-
-    public function GetSite()
-    {
-        return $this->Site;
+        $collection = new TopicCollection();
+        $preferences = $subscriber->getNotificationPreferences();
+        if ($preferences->get(NotifyOn::TEST_FAILURE)) {
+            $collection->add(new TestFailureTopic());
+            $collection->add(new MissingTestTopic());
+        }
+        return $collection;
     }
 }

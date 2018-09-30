@@ -16,15 +16,17 @@
 
 namespace CDash\Messaging\Topic;
 
-use CDash\Collection\LabelCollection;
+use CDash\Collection\TestCollection;
 use CDash\Model\Build;
 use CDash\Model\BuildTest;
-use CDash\Model\Label;
 use CDash\Model\Test;
 
-class MissingTestTopic extends  TestFailureTopic
+class MissingTestTopic extends Topic
 {
     use IssueTemplateTrait;
+
+    /** @var TestCollection $collection */
+    private $collection;
 
     /**
      * This method queries the build to check for missing tests
@@ -34,8 +36,7 @@ class MissingTestTopic extends  TestFailureTopic
      */
     public function subscribesToBuild(Build $build)
     {
-        $tests = $build->GetTestCollection();
-        return $tests->count() && $build->GetNumberOfMissingTests() > 0;
+        return $build->GetNumberOfMissingTests() > 0;
     }
 
     /**
@@ -61,16 +62,23 @@ class MissingTestTopic extends  TestFailureTopic
     }
 
     /**
-     * This method will determine which of a Build's tests meet the criteria for adding to this
-     * topic's TestCollection.
-     *
-     * @param Build $build
-     * @param Test $item
-     * @return boolean
+     * @return TestCollection
      */
-    public function itemHasTopicSubject(Build $build, $item)
+    public function getTopicCollection()
     {
-        // not implemented
+        if (!$this->collection) {
+            $this->collection = new TestCollection();
+        }
+        return $this->collection;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTopicCount()
+    {
+        $collection = $this->getTopicCollection();
+        return $collection->count();
     }
 
     /**
@@ -83,45 +91,6 @@ class MissingTestTopic extends  TestFailureTopic
 
     public function getTopicName()
     {
-        return 'MissingTest';
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasFixes()
-    {
-        // not implemented
-        // return $this->diff && $this->diff['TestFailure']['notrun']['fixed'] > 0;
-        return false;
-    }
-
-    /**
-     * @return array
-     */
-    public function getFixes()
-    {
-        return [];
-    }
-
-    /**
-     * @param Build $build
-     * @return LabelCollection
-     */
-    public function getLabelsFromBuild(Build $build)
-    {
-        $tests = $build->GetTestCollection();
-        $collection = new LabelCollection();
-        /** @var Test $test */
-        foreach ($tests as $test) {
-            // No need to bother with passed tests
-            if ($test->GetStatus() === Test::NOTRUN) {
-                /** @var Label $label */
-                foreach($test->GetLabelCollection() as $label) {
-                    $collection->add($label);
-                }
-            }
-        }
-        return $collection;
+        return Topic::TEST_MISSING;
     }
 }

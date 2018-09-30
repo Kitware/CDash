@@ -3,8 +3,10 @@ namespace CDash\Messaging\Topic;
 
 use CDash\Collection\BuildErrorCollection;
 use CDash\Collection\LabelCollection;
+use CDash\Messaging\Notification\NotifyOn;
 use CDash\Model\Build;
 use CDash\Model\BuildFailure;
+use CDash\Model\SubscriberInterface;
 
 class BuildErrorTopic extends Topic implements Decoratable, Fixable, Labelable
 {
@@ -152,5 +154,23 @@ class BuildErrorTopic extends Topic implements Decoratable, Fixable, Labelable
         // We've already determined that the build has the subscribed labels
         // so here we can just use setTopicData
         $this->setTopicData($build);
+    }
+
+    /**
+     * @param SubscriberInterface $subscriber
+     * @return bool
+     */
+    public function isSubscribedToBy(SubscriberInterface $subscriber)
+    {
+        $subscribes = false;
+        $preferences = $subscriber->getNotificationPreferences();
+
+        if ($preferences->get(NotifyOn::BUILD_ERROR)
+         || $preferences->get(NotifyOn::BUILD_WARNING)
+         || $preferences->get(NotifyOn::FIXED)) {
+            $subscribes = true;
+        }
+
+        return $subscribes;
     }
 }

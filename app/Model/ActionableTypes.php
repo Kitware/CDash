@@ -15,7 +15,7 @@ class ActionableTypes
     const BUILD_ERROR_FIX = 'BuildErrorFix';
     const CONFIGURE_FIX = 'ConfigureFix';
     const TEST_FIX = 'TestFix';
-    const MISSING_TEST = 'MissingTest';
+    const MISSING_TEST = 'TestMissing';
 
     public static $categories = [
         self::UPDATE => 1,

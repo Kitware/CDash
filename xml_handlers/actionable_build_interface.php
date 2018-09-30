@@ -1,8 +1,10 @@
 <?php
 
 use CDash\Collection\BuildCollection;
+use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Build;
 use CDash\Model\Project;
+use CDash\Model\SubscriberInterface;
 
 /**
  * ActionableHandler
@@ -26,4 +28,10 @@ interface ActionableBuildInterface
      * @return Project
      */
     public function GetProject();
+
+    /**
+     * @param SubscriberInterface $subscriber
+     * @return TopicCollection
+     */
+    public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber);
 }

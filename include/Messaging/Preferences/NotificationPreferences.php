@@ -40,6 +40,7 @@ abstract class NotificationPreferences implements
         if ($this->has($name)) {
             $this->settings[$name] = (bool) $val;
         }
+        return $this;
     }
 
     public function has($name)

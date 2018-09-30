@@ -17,9 +17,11 @@
 namespace CDash\Messaging\Topic;
 
 use CDash\Collection\LabelCollection;
+use CDash\Messaging\Notification\NotifyOn;
 use CDash\Model\Build;
 use CDash\Collection\TestCollection;
 use CDash\Model\Label;
+use CDash\Model\SubscriberInterface;
 use CDash\Model\Test;
 
 /**
@@ -197,5 +199,22 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
             }
         }
         return $collection;
+    }
+
+    /**
+     * @param SubscriberInterface $subscriber
+     * @return bool
+     */
+    public function isSubscribedToBy(SubscriberInterface $subscriber)
+    {
+        $subscribes = false;
+        $preferences = $subscriber->getNotificationPreferences();
+
+        if ($preferences->get(NotifyOn::TEST_FAILURE)
+         || $preferences->get(NotifyOn::FIXED)) {
+            $subscribes = true;
+        }
+
+        return $subscribes;
     }
 }

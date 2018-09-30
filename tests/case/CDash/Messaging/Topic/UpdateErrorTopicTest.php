@@ -14,13 +14,18 @@
  * =========================================================================
  */
 
+use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Topic\Topic;
 use CDash\Messaging\Topic\UpdateErrorTopic;
 use CDash\Model\Build;
 use CDash\Model\BuildUpdate;
+use CDash\Model\Subscriber;
+use CDash\Test\BuildDiffForTesting;
 
 class UpdateErrorTopicTest extends PHPUnit_Framework_TestCase
 {
+    use BuildDiffForTesting;
+
     public function testGetTopicName()
     {
         $sut = new UpdateErrorTopic();
@@ -69,5 +74,82 @@ class UpdateErrorTopicTest extends PHPUnit_Framework_TestCase
         $expected = 'issue';
         $actual = $sut->getTemplate();
         $this->assertEquals($expected, $actual);
+    }
+
+    public function testIsSubscribedToBy()
+    {
+        $sut = new UpdateErrorTopic();
+
+        $preferences = new BitmaskNotificationPreferences();
+        $subscriber = new Subscriber($preferences);
+
+        $this->assertFalse($sut->isSubscribedToBy($subscriber));
+
+        $bitmask = BitmaskNotificationPreferences::EMAIL_UPDATE;
+        $preferences = new BitmaskNotificationPreferences($bitmask);
+        $subscriber = new Subscriber($preferences);
+
+        $this->assertTrue($sut->isSubscribedToBy($subscriber));
+
+        $bitmask = BitmaskNotificationPreferences::EMAIL_FIXES;
+        $preferences = new BitmaskNotificationPreferences($bitmask);
+        $subscriber = new Subscriber($preferences);
+
+        $this->assertTrue($sut->isSubscribedToBy($subscriber));
+    }
+
+    public function testHasFixes()
+    {
+        $sut = new UpdateErrorTopic();
+
+        $build = $this->createMockBuildWithDiff($this->getDiff());
+        $sut->subscribesToBuild($build);
+        $this->assertFalse($sut->hasFixes());
+
+        $diff = $this->createFixed('buildwarningsnegative');
+        $build = $this->createMockBuildWithDiff($diff);
+        $sut->subscribesToBuild($build);
+
+        $this->assertTrue($sut->hasFixes());
+
+        $diff = $this->createFixed('builderrorsnegative');
+        $build = $this->createMockBuildWithDiff($diff);
+        $sut->subscribesToBuild($build);
+
+        $this->assertTrue($sut->hasFixes());
+
+        $diff = $this->createFixed('testfailednegative');
+        $build = $this->createMockBuildWithDiff($diff);
+        $sut->subscribesToBuild($build);
+
+        $this->assertTrue($sut->hasFixes());
+    }
+
+    public function testGetFixes()
+    {
+        $sut = new UpdateErrorTopic();
+
+        $build = $this->createMockBuildWithDiff($this->getDiff());
+        $sut->subscribesToBuild($build);
+
+        $this->assertEquals($build->GetDiffWithPreviousBuild(), $sut->getFixes());
+
+        $diff = $this->createFixed('buildwarningsnegative');
+        $build = $this->createMockBuildWithDiff($diff);
+        $sut->subscribesToBuild($build);
+
+        $this->assertEquals($build->GetDiffWithPreviousBuild(), $sut->getFixes());
+
+        $diff = $this->createFixed('builderrorsnegative');
+        $build = $this->createMockBuildWithDiff($diff);
+        $sut->subscribesToBuild($build);
+
+        $this->assertEquals($build->GetDiffWithPreviousBuild(), $sut->getFixes());
+
+        $diff = $this->createFixed('testfailednegative');
+        $build = $this->createMockBuildWithDiff($diff);
+        $sut->subscribesToBuild($build);
+
+        $this->assertEquals($build->GetDiffWithPreviousBuild(), $sut->getFixes());
     }
 }

@@ -1034,6 +1034,8 @@ class Build
     public function GetMissingTests()
     {
         if (!$this->MissingTests) {
+            $this->MissingTests = [];
+
             if (!$this->Id) {
                 add_log('BuildId is not set', 'Build::GetMissingTests', LOG_ERR,
                     $this->ProjectId, $this->Id, ModelType::BUILD, $this->Id);
@@ -1077,7 +1079,8 @@ class Build
     public function GetNumberOfMissingTests()
     {
         if (!is_array($this->MissingTests)) {
-            $this->GetMissingTests();
+            // feels clumsy but necessary for testing :( (for the time being)
+            $this->MissingTests = $this->GetMissingTests();
         }
 
         return count($this->MissingTests);

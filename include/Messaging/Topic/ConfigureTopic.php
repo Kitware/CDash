@@ -17,9 +17,11 @@
 namespace CDash\Messaging\Topic;
 
 use CDash\Collection\LabelCollection;
+use CDash\Messaging\Notification\NotifyOn;
 use CDash\Model\Build;
 use CDash\Collection\ConfigureCollection;
 use CDash\Model\BuildConfigure;
+use CDash\Model\SubscriberInterface;
 
 class ConfigureTopic extends Topic implements Decoratable, Labelable
 {
@@ -116,5 +118,21 @@ class ConfigureTopic extends Topic implements Decoratable, Labelable
     {
        $collection = $this->getTopicCollection();
        $collection->add($build->GetBuildConfigure());
+    }
+
+    /**
+     * @param SubscriberInterface $subscriber
+     * @return bool
+     */
+    public function isSubscribedToBy(SubscriberInterface $subscriber)
+    {
+        $subscribes = false;
+        $preferences = $subscriber->getNotificationPreferences();
+
+        if ($preferences->get(NotifyOn::CONFIGURE)) {
+            $subscribes = true;
+        }
+
+        return $subscribes;
     }
 }
