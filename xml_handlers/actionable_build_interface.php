@@ -4,6 +4,7 @@ use CDash\Collection\BuildCollection;
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Build;
 use CDash\Model\Project;
+use CDash\Model\Site;
 use CDash\Model\SubscriberInterface;
 
 /**
@@ -28,6 +29,11 @@ interface ActionableBuildInterface
      * @return Project
      */
     public function GetProject();
+
+    /**
+     * @return Site
+     */
+    public function GetSite();
 
     /**
      * @param SubscriberInterface $subscriber
