@@ -457,20 +457,17 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
     public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber)
     {
         $collection = new TopicCollection();
-        $preferences = $subscriber->getNotificationPreferences();
-
-        if ($preferences->get(NotifyOn::BUILD_ERROR)) {
-            $topic = new BuildErrorTopic();
-            $topic->setType(Build::TYPE_ERROR);
-            $collection->add($topic);
+        $errors = new BuildErrorTopic();
+        $errors->setType(Build::TYPE_ERROR);
+        if ($errors->isSubscribedToBy($subscriber)) {
+            $collection->add($errors);
         }
 
-        if ($preferences->get(NotifyOn::BUILD_WARNING)) {
-            $topic = new BuildErrorTopic();
-            $topic->setType(Build::TYPE_WARN);
-            $collection->add($topic);
+        $warnings = new BuildErrorTopic();
+        $warnings->setType(Build::TYPE_WARN);
+        if ($warnings->isSubscribedToBy($subscriber)) {
+            $collection->add($warnings);
         }
-
         return $collection;
     }
 }

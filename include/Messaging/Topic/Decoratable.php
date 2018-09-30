@@ -19,6 +19,7 @@ use CDash\Model\SubscriberInterface;
 
 interface Decoratable
 {
+    // TODO: consider changing param to NotificationsPreferences
     /**
      * @param SubscriberInterface $subscriber
      * @return bool

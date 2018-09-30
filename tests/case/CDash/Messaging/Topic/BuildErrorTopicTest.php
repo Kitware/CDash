@@ -15,6 +15,7 @@
  */
 
 use CDash\Collection\BuildErrorCollection;
+use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Topic\BuildErrorTopic;
 use CDash\Model\Build;
@@ -221,6 +222,13 @@ class BuildErrorTopicTest extends \CDash\Test\CDashTestCase
         $bitmask = BitmaskNotificationPreferences::EMAIL_ERROR;
         $preferences = new BitmaskNotificationPreferences($bitmask);
         $subscriber = new Subscriber($preferences);
+        $sut->setType(Build::TYPE_ERROR);
+
+        $this->assertTrue($sut->isSubscribedToBy($subscriber));
+
+        $sut->setType(Build::TYPE_WARN);
+        $this->assertFalse($sut->isSubscribedToBy($subscriber));
+        $preferences->set(NotifyOn::BUILD_WARNING, true);
 
         $this->assertTrue($sut->isSubscribedToBy($subscriber));
 

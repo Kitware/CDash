@@ -165,9 +165,16 @@ class BuildErrorTopic extends Topic implements Decoratable, Fixable, Labelable
         $subscribes = false;
         $preferences = $subscriber->getNotificationPreferences();
 
-        if ($preferences->get(NotifyOn::BUILD_ERROR)
-         || $preferences->get(NotifyOn::BUILD_WARNING)
-         || $preferences->get(NotifyOn::FIXED)) {
+        if ($this->type === Build::TYPE_ERROR && $preferences->get(NotifyOn::BUILD_ERROR)) {
+            $subscribes = true;
+        }
+
+        if ($this->type === Build::TYPE_WARN && $preferences->get(NotifyOn::BUILD_WARNING)) {
+            $subscribes = true;
+        }
+
+        // TODO: investigate whether or not this is necessary
+        if ($preferences->get(NotifyOn::FIXED)) {
             $subscribes = true;
         }
 
