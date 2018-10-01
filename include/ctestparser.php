@@ -78,31 +78,14 @@ function generateBackupFileName($projectname, $buildname, $sitename, $stamp,
     return $filename;
 }
 
-/** Function used to write a submitted file to our backup directory with a
- * descriptive name. */
-function writeBackupFile($filehandler, $content, $projectname, $buildname,
-                         $sitename, $stamp, $fileNameWithExt)
+/** Safely write a backup file, taking care to avoid writing two files
+  * to the same destination. Called by writeBackupFile().
+  **/
+function safelyWriteBackupFile($filehandler, $content, $filename)
 {
-    // Make sure the backup directory exists.
+    // If the file exists we append a number until we get a nonexistent file.
     $config = Config::getInstance();
     $backupDir = $config->get('CDASH_BACKUP_DIRECTORY');
-    if (!file_exists($backupDir)) {
-        // try parent dir as well (for asynch submission)
-        $backupDir = "../$backupDir";
-
-        if (!file_exists($backupDir)) {
-            trigger_error(
-                'function writeBackupFile cannot process files when backup directory ' .
-                "does not exist: CDASH_BACKUP_DIRECTORY='{$config->get('CDASH_BACKUP_DIRECTORY')}'",
-                E_USER_ERROR);
-            return false;
-        }
-    }
-
-    $filename = $backupDir . '/';
-    $filename .= generateBackupFileName($projectname, $buildname, $sitename, $stamp, $fileNameWithExt);
-
-    // If the file exists we append a number until we get a nonexistent file.
     $got_lock = false;
     $i = 1;
     while (!$got_lock) {
@@ -164,6 +147,32 @@ function writeBackupFile($filehandler, $content, $projectname, $buildname,
     fclose($handle);
     unset($handle);
     return $filename;
+}
+
+/** Function used to write a submitted file to our backup directory with a
+ * descriptive name. */
+function writeBackupFile($filehandler, $content, $projectname, $buildname,
+                         $sitename, $stamp, $fileNameWithExt)
+{
+    // Make sure the backup directory exists.
+    $config = Config::getInstance();
+    $backupDir = $config->get('CDASH_BACKUP_DIRECTORY');
+    if (!file_exists($backupDir)) {
+        // try parent dir as well (for asynch submission)
+        $backupDir = "../$backupDir";
+
+        if (!file_exists($backupDir)) {
+            trigger_error(
+                'function writeBackupFile cannot process files when backup directory ' .
+                "does not exist: CDASH_BACKUP_DIRECTORY='{$config->get('CDASH_BACKUP_DIRECTORY')}'",
+                E_USER_ERROR);
+            return false;
+        }
+    }
+
+    $filename = $backupDir . '/';
+    $filename .= generateBackupFileName($projectname, $buildname, $sitename, $stamp, $fileNameWithExt);
+    return safelyWriteBackupFile($filehandler, $content, $filename);
 }
 
 /** Function to handle new style submissions via HTTP PUT */
