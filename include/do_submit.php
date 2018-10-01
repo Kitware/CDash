@@ -44,7 +44,11 @@ function fileHandleFromSubmissionId($filename)
 {
     $config = Config::getInstance();
 
-    $tmpFilename = tempnam($config->get('CDASH_BACKUP_DIRECTORY'), 'cdash-submission-');
+    $ext = pathinfo($filename, PATHINFO_EXTENSION);
+    $_t = tempnam($config->get('CDASH_BACKUP_DIRECTORY'), 'cdash-submission-');
+    $tmpFilename = "{$_t}.{$ext}";
+    rename($_t, $tmpFilename);
+
     $client = new GuzzleHttp\Client();
     $response = $client->request('GET',
                                  $config->get('CDASH_BASE_URL') . '/api/v1/getSubmissionFile.php',
