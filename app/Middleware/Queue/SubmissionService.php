@@ -86,6 +86,9 @@ class SubmissionService
     /** @var string[] - Fields required for processing */
     protected static $required = ['file', 'project', 'checksum', 'md5', 'ip'];
 
+    protected $backupFileName;
+    protected $httpClient;
+    protected $localProcessing;
     protected $queueName;
 
     /**
@@ -124,6 +127,9 @@ class SubmissionService
      */
     public function __construct($queueName = null)
     {
+        $this->backupFileName = null;
+        $this->httpClient = null;
+        $this->localProcessing = true;
         $this->queueName = $queueName;
     }
 
@@ -135,7 +141,11 @@ class SubmissionService
     public function __call($name, $arguments)
     {
         if ($name === lcfirst($this->queueName)) {
-            $this->doSubmit($arguments[0]);
+            $message = $arguments[0];
+            $this->localProcessing = file_exists($message->file);
+            if ($this->doSubmit($message)) {
+                $this->delete($message);
+            }
         }
     }
 
@@ -161,15 +171,15 @@ class SubmissionService
      * Handles the incoming message
      *
      * @param Message $message
-     * @return void
+     * @return bool
      * @throws \Exception
      */
-    public function doSubmit(Message $message)
+    private function doSubmit(Message $message)
     {
         try {
-            $config = Config::getInstance();
-            $config->set('CDASH_REMOTE_ADDR', $message->ip);
-            if (file_exists($message->file)) {
+            Config::getInstance()->set('CDASH_REMOTE_ADDR', $message->ip);
+
+            if ($this->localProcessing) {
                 // Local execution, process an open file.
                 $fh = fopen($message->file, 'r');
             } else {
@@ -177,11 +187,50 @@ class SubmissionService
                 // its contents.
                 $fh = basename($message->file);
             }
-            do_submit($fh, $message->project, null, $message->md5, $message->checksum);
+            $handler = do_submit($fh, $message->project, null, $message->md5, $message->checksum);
+            if (is_object($handler) && property_exists($handler, 'backupFileName')) {
+                $this->backupFileName = $handler->backupFileName;
+            }
         } catch (\Exception $e) {
             Log::getInstance()->error($e);
             throw $e;
         }
+        return true;
+    }
+
+    /**
+     * Request that the web server delete or achive a submission file.
+     *
+     * @param Message $message
+     * @return void
+     */
+    public function delete(Message $message)
+    {
+        if ($this->localProcessing) {
+            return;
+        }
+
+        // When remotely executing we tell the server to delete the file
+        // after it has been parsed.
+        $query_args = ['filename' => basename($message->file)];
+        if ($this->backupFileName) {
+            // If the handler provided us with a descriptive backup filename
+            // we pass this on to the server in case it is configured to rename
+            // (rather than delete) processed submission files.
+            $query_args['dest'] = basename($this->backupFileName);
+        }
+        $url = Config::getInstance()->get('CDASH_BASE_URL') .
+            '/api/v1/deleteSubmissionFile.php';
+        $this->getHttpClient()->request('DELETE', $url,
+                ['query' => $query_args]);
+    }
+
+    public function getHttpClient()
+    {
+        if (!$this->httpClient) {
+            $this->httpClient = new \GuzzleHttp\Client();
+        }
+        return $this->httpClient;
     }
 
     /**
