@@ -174,6 +174,8 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $buildid = null,
         // Create the RSS feed
         CreateRSSFeed($projectid);
     }
+
+    return $handler;
 }
 
 /** Asynchronous submission */

@@ -205,11 +205,16 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
 
     $config = Config::getInstance();
     if ($config->get('CDASH_BACKUP_TIMEFRAME') == '0') {
+        // We do not save submission files after they are parsed.
+        // Work directly off the open file handle.
         $meta_data = stream_get_meta_data($filehandler);
         $filename = $meta_data['uri'];
+        $backup_filename = generateBackupFileName($projectname, $buildname,
+                $sitename, $stamp, $buildfile_row['filename']);
     } else {
         $filename = writeBackupFile($filehandler, '', $projectname, $buildname,
             $sitename, $stamp, $buildfile_row['filename']);
+        $backup_filename = $filename;
     }
 
     // Instantiate a buildfile object so we can delete it from the database
@@ -249,7 +254,8 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
 
     check_for_immediate_deletion($filename);
     $buildfile->Delete();
-    return true;
+    $handler->backupFileName = $backup_filename;
+    return $handler;
 }
 
 /** Main function to parse the incoming xml from ctest */
@@ -269,8 +275,9 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
 
     // Check if this is a new style PUT submission.
     try {
-        if (parse_put_submission($filehandler, $projectid, $expected_md5)) {
-            return true;
+        $handler = parse_put_submission($filehandler, $projectid, $expected_md5);
+        if ($handler) {
+            return $handler;
         }
     } catch (CDashParseException $e) {
         add_log($e->getMessage(), 'ctest_parse', LOG_ERR);
@@ -381,9 +388,12 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
     if ($config->get('CDASH_BACKUP_TIMEFRAME') == '0') {
         $meta_data = stream_get_meta_data($filehandler);
         $filename = $meta_data['uri'];
+        $backup_filename = generateBackupFileName($projectname, $buildname,
+                $sitename, $stamp, $file . '.xml');
     } else {
         $filename = writeBackupFile($filehandler, $content, $projectname, $buildname,
                                     $sitename, $stamp, $file . '.xml');
+        $backup_filename = $filename;
         if ($filename === false) {
             return $handler;
         }
@@ -458,6 +468,7 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
 
     check_for_immediate_deletion($filename);
     displayReturnStatus($statusarray);
+    $handler->backupFileName = $backup_filename;
     return $handler;
 }
 
