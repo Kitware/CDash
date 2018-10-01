@@ -50,13 +50,40 @@ function displayReturnStatus($statusarray)
     echo "</cdash>\n";
 }
 
+/** Determine the descriptive filename for a submission file.
+  * Called by writeBackupFile().
+  **/
+function generateBackupFileName($projectname, $buildname, $sitename, $stamp,
+                                $fileNameWithExt)
+{
+    // Generate a timestamp to include in the filename.
+    $currenttimestamp = microtime(true) * 100;
+
+    // Escape the sitename, buildname, and projectname.
+    $sitename_escaped = preg_replace('/[^\w\-~_]+/u', '-', $sitename);
+    $buildname_escaped = preg_replace('/[^\w\-~_]+/u', '-', $buildname);
+    $projectname_escaped = preg_replace('/[^\w\-~_]+/u', '-', $projectname);
+
+    // Separate the extension from the filename.
+    $ext = '.' . pathinfo($fileNameWithExt, PATHINFO_EXTENSION);
+    $file = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+
+    $filename = $projectname_escaped . '_';
+    if ($file != 'Project') {
+        // Project.xml files aren't associated with a particular build, so we
+        // only record the site and buildname for other types of submissions.
+        $filename .= $sitename_escaped . '_' . $buildname_escaped . '_' . $stamp . '_';
+    }
+    $filename .=  $currenttimestamp . '_' . $file . $ext;
+    return $filename;
+}
+
 /** Function used to write a submitted file to our backup directory with a
  * descriptive name. */
 function writeBackupFile($filehandler, $content, $projectname, $buildname,
                          $sitename, $stamp, $fileNameWithExt)
 {
-    // Append a timestamp for the file
-    $currenttimestamp = microtime(true) * 100;
+    // Make sure the backup directory exists.
     $config = Config::getInstance();
     $backupDir = $config->get('CDASH_BACKUP_DIRECTORY');
     if (!file_exists($backupDir)) {
@@ -72,20 +99,8 @@ function writeBackupFile($filehandler, $content, $projectname, $buildname,
         }
     }
 
-    // We escape the sitename and buildname
-    $sitename_escaped = preg_replace('/[^\w\-~_]+/u', '-', $sitename);
-    $buildname_escaped = preg_replace('/[^\w\-~_]+/u', '-', $buildname);
-    $projectname_escaped = preg_replace('/[^\w\-~_]+/u', '-', $projectname);
-
-    // Separate the extension from the filename.
-    $ext = '.' . pathinfo($fileNameWithExt, PATHINFO_EXTENSION);
-    $file = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
-
-    if ($file == 'Project') {
-        $filename = $backupDir . '/' . $projectname_escaped . '_' . $currenttimestamp . '_' . $file . $ext;
-    } else {
-        $filename = $backupDir . '/' . $projectname_escaped . '_' . $sitename_escaped . '_' . $buildname_escaped . '_' . $stamp . '_' . $currenttimestamp . '_' . $file . $ext;
-    }
+    $filename = $backupDir . '/';
+    $filename .= generateBackupFileName($projectname, $buildname, $sitename, $stamp, $fileNameWithExt);
 
     // If the file exists we append a number until we get a nonexistent file.
     $got_lock = false;
@@ -95,7 +110,8 @@ function writeBackupFile($filehandler, $content, $projectname, $buildname,
         $lockfp = fopen($lockfilename, 'w');
         flock($lockfp, LOCK_EX | LOCK_NB, $wouldblock);
         if ($wouldblock) {
-            $filename = $backupDir . '/' . $projectname_escaped . '_' . $sitename_escaped . '_' . $buildname_escaped . '_' . $stamp . '_' . $currenttimestamp . '_' . $file . '_' . $i . $ext;
+            $path_parts = pathinfo($filename);
+            $filename = $path_parts['dirname'] . '/' . $path_parts['filename'] . "_$i." . $part_parts['extension'];
             $i++;
         } else {
             $got_lock = true;
