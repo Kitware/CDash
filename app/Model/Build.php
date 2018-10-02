@@ -2666,32 +2666,32 @@ class Build
                  :starttime, :endtime, :submittime, :command, :log,
                  :nbuilderrors, :nbuildwarnings, :parentid, :uuid,
                  :pullrequest)");
-        if ($stmt->execute($query_params)) {
-            $this->Id = pdo_insert_id('build');
-            $this->PDO->commit();
-            $this->AssignToGroup();
-            return true;
-        }
-
-        // The INSERT statement didn't execute cleanly.
-        $error_info = $stmt->errorInfo();
-        $error = $error_info[2];
-        $this->PDO->rollBack();
-
-        // This error might be due to a unique key violation on the UUID.
-        // Check again for a previously existing build.
-        $id = Build::GetIdFromUuid($this->Uuid);
-        if ($id) {
-            $this->Id = $id;
-            $this->AssignToGroup();
+        try {
+            if ($stmt->execute($query_params)) {
+                $this->Id = pdo_insert_id('build');
+                $this->PDO->commit();
+                $this->AssignToGroup();
+                return true;
+            }
+            // The INSERT statement didn't execute cleanly.
+            $error_info = $stmt->errorInfo();
+            $error = $error_info[2];
+            $this->PDO->rollBack();
+            throw new \Exception($error);
+        } catch (\Exception $e) {
+            // This error might be due to a unique key violation on the UUID.
+            // Check again for a previously existing build.
+            $id = Build::GetIdFromUuid($this->Uuid);
+            if ($id) {
+                $this->Id = $id;
+                $this->AssignToGroup();
+                return false;
+            }
+            // Otherwise log the error and return false.
+            add_log($e->getMessage() . PHP_EOL . $e->getTraceAsString(),
+                    'AddBuild', LOG_ERR, $this->ProjectId);
             return false;
         }
-
-        // Otherwise log the error and return false.
-        $e = new \Exception();
-        add_log($error . PHP_EOL . $e->getTraceAsString(), 'AddBuild', LOG_ERR,
-                $this->ProjectId);
-        return false;
     }
 
     public function AssignToGroup()
