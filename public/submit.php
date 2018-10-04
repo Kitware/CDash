@@ -22,7 +22,6 @@ use CDash\Middleware\Queue;
 use CDash\Middleware\Queue\DriverFactory as QueueDriverFactory;
 use CDash\Middleware\Queue\SubmissionService;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Ramsey\Uuid\Uuid;
 
 include dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
@@ -137,41 +136,10 @@ $file_path = 'php://input';
 $fp = fopen($file_path, 'r');
 
 if ($config->get('CDASH_BERNARD_SUBMISSION')) {
-    $buildSubmissionId = Uuid::uuid4()->toString();
-    $destinationFilename = $config->get('CDASH_BACKUP_DIRECTORY') . '/' . $buildSubmissionId . '.xml';
-
-    if (copy('php://input', $destinationFilename)) {
-        $driver = QueueDriverFactory::create();
-        $queue = new Queue($driver);
-
-        $message = SubmissionService::createMessage([
-            'file' => $destinationFilename,
-            'project' => $projectid,
-            'md5' => $expected_md5,
-            'checksum' => true,
-            'ip' => $_SERVER['REMOTE_ADDR']
-        ]);
-
-        $queue->produce($message);
-
-        echo '<cdash version="' . $config->get('CDASH_VERSION') . "\">\n";
-        echo " <status>OK</status>\n";
-        echo " <message>Build submitted successfully.</message>\n";
-        echo " <submissionId>$buildSubmissionId</submissionId>\n";
-        if (!is_null($buildid)) {
-            echo " <buildId>$buildid</buildId>\n";
-        }
-        echo "</cdash>\n";
-    } else {
-        add_log('Failed to copy build submission XML', 'global:submit.php', LOG_ERR);
-        header('HTTP/1.1 500 Internal Server Error');
-        echo '<cdash version="' . $config->get('CDASH_VERSION') . "\">\n";
-        echo " <status>ERROR</status>\n";
-        echo " <message>Failed to copy build submission XML.</message>\n";
-        echo "</cdash>\n";
-    }
+    // Use a message queue for asynchronous submission processing.
+    do_submit_queue($fp, $projectid, $buildid, $expected_md5);
 } elseif ($config->get('CDASH_ASYNCHRONOUS_SUBMISSION')) {
-    // If the submission is asynchronous we store in the database
+    // If the submission is asynchronous we store in the database.
     do_submit_asynchronous($fp, $projectid, $buildid, $expected_md5);
 } else {
     do_submit($fp, $projectid, $buildid, $expected_md5, true);
