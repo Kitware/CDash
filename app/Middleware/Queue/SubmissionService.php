@@ -233,6 +233,21 @@ class SubmissionService
         return $this->httpClient;
     }
 
+    public function setHttpClient(\GuzzleHttp\ClientInterface $client)
+    {
+        $this->httpClient = $client;
+    }
+
+    public function setBackupFileName($filename)
+    {
+        $this->backupFileName = $filename;
+    }
+
+    public function setLocalProcessing($bool)
+    {
+        $this->localProcessing = $bool;
+    }
+
     /**
      * Registers this service with a Queue
      *
