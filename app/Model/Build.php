@@ -2635,6 +2635,15 @@ class Build
             return false;
         }
 
+        // Set ParentId if this is a SubProject build.
+        if ($this->SubProjectName) {
+            $this->SetParentId($this->LookupParentBuildId());
+            if ($this->ParentId == 0) {
+                // Parent build doesn't exist yet, create it here.
+                $this->CreateParentBuild($nbuilderrors, $nbuildwarnings);
+            }
+        }
+
         // Build doesn't exist yet, create it here.
         $query_params = [
             ':siteid'         => $this->SiteId,
