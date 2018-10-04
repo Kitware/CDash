@@ -20,29 +20,40 @@ use Bernard\Doctrine\MessagesSchema;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Schema\Schema;
 
-use CDash\Config;
-
 class Initializer
 {
+    protected $dbalConnection;
+    protected $schema;
+    protected $schemaManager;
+
+    public function __construct()
+    {
+        $this->dbalConnection = null;
+        $this->schema = null;
+        $this->schemaManager = null;
+    }
+
     /**
      * @param string $key
      * @param array $properties
      * @return void
      * @throws \Doctrine\DBAL\DBALException
      */
-    public static function initialize($key, array $properties)
+    public function initialize($key, array $properties)
     {
-        if (Config::getInstance()->get('CDASH_TESTING_MODE')) {
+        if (\CDash\Config::getInstance()->get('CDASH_TESTING_MODE')) {
             return;
         }
 
         switch ($key) {
             case DriverFactory::DOCTRINE:
-                $connection = DriverManager::getConnection($properties);
                 // Create required tables if they do not already exist.
                 $tables = ['bernard_messages', 'bernard_queues'];
-                if (!$connection->getSchemaManager()->tablesExist($tables)) {
-                    MessagesSchema::create($schema = new Schema);
+                $connection = $this->getDbalConnection($properties);
+                $schemaManager = $this->getSchemaManager($connection);
+                $schema = $this->getSchema();
+                if (!$schemaManager->tablesExist($tables)) {
+                    MessagesSchema::create($schema);
                     $sql = $schema->toSql($connection->getDatabasePlatform());
                     foreach ($sql as $query) {
                         $connection->exec($query);
@@ -64,5 +75,44 @@ class Initializer
             default:
                 return;
         }
+    }
+
+    public function getDbalConnection(array $properties)
+    {
+        if (!$this->dbalConnection) {
+            $this->dbalConnection = DriverManager::getConnection($properties);
+        }
+        return $this->dbalConnection;
+    }
+
+    public function setDbalConnection(\Doctrine\DBAL\Connection $connection)
+    {
+        $this->dbalConnection = $connection;
+    }
+
+    public function getSchemaManager(\Doctrine\DBAL\Connection $connection)
+    {
+        if (!$this->schemaManager) {
+            $this->schemaManager = $connection->getSchemaManager();
+        }
+        return $this->schemaManager;
+    }
+
+    public function setSchemaManager(\Doctrine\DBAL\Schema\AbstractSchemaManager $manager)
+    {
+        $this->schemaManager = $manager;
+    }
+
+    public function getSchema()
+    {
+        if (!$this->schema) {
+            $this->schema = new Schema();
+        }
+        return $this->schema;
+    }
+
+    public function setSchema(Schema $schema)
+    {
+        $this->schema = $schema;
     }
 }
