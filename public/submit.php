@@ -121,7 +121,7 @@ if (isset($_GET['build']) && isset($_GET['site']) && isset($_GET['stamp'])) {
     $build->StartTime = gmdate(FMT_DATETIME);
 
     if (isset($_GET['subproject'])) {
-        $build->$SubProjectName = pdo_real_escape_string($_GET['subproject']);
+        $build->SubProjectName = pdo_real_escape_string($_GET['subproject']);
     }
 
     $site = $service->create(Site::class);
