@@ -94,6 +94,8 @@ class DriverFactory
             default:
                 throw new \Exception("{$key} Not Implemented.");
         }
+        $initializer = new Initializer();
+        $initializer->initialize($key, $properties);
         return $driver;
     }
 

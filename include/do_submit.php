@@ -40,12 +40,15 @@ include 'include/sendemail.php';
  * a read-only file handle.
  * This is useful for workers running on other machines that need access to build xml.
  **/
-function fileHandleFromSubmissionId($submissionId, $coverageFile=false)
+function fileHandleFromSubmissionId($filename)
 {
     $config = Config::getInstance();
 
-    $tmpFilename = tempnam($config->get('CDASH_BACKUP_DIRECTORY'), 'cdash-submission-');
-    $filename = ($coverageFile) ? $submissionId : $submissionId . '.xml';
+    $ext = pathinfo($filename, PATHINFO_EXTENSION);
+    $_t = tempnam($config->get('CDASH_BACKUP_DIRECTORY'), 'cdash-submission-');
+    $tmpFilename = "{$_t}.{$ext}";
+    rename($_t, $tmpFilename);
+
     $client = new GuzzleHttp\Client();
     $response = $client->request('GET',
                                  $config->get('CDASH_BASE_URL') . '/api/v1/getSubmissionFile.php',
@@ -171,10 +174,12 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $buildid = null,
         sendemail($handler, $projectid);
     }
 
-    if ($config->get('CDASH_ENABLE_FEED')) {
+    if ($config->get('CDASH_ENABLE_FEED') && !$config->get('CDASH_BERNARD_SUBMISSION')) {
         // Create the RSS feed
         CreateRSSFeed($projectid);
     }
+
+    return $handler;
 }
 
 /** Asynchronous submission */

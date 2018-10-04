@@ -50,29 +50,16 @@ function displayReturnStatus($statusarray)
     echo "</cdash>\n";
 }
 
-/** Function used to write a submitted file to our backup directory with a
- * descriptive name. */
-function writeBackupFile($filehandler, $content, $projectname, $buildname,
-                         $sitename, $stamp, $fileNameWithExt)
+/** Determine the descriptive filename for a submission file.
+  * Called by writeBackupFile().
+  **/
+function generateBackupFileName($projectname, $buildname, $sitename, $stamp,
+                                $fileNameWithExt)
 {
-    // Append a timestamp for the file
+    // Generate a timestamp to include in the filename.
     $currenttimestamp = microtime(true) * 100;
-    $config = Config::getInstance();
-    $backupDir = $config->get('CDASH_BACKUP_DIRECTORY');
-    if (!file_exists($backupDir)) {
-        // try parent dir as well (for asynch submission)
-        $backupDir = "../$backupDir";
 
-        if (!file_exists($backupDir)) {
-            trigger_error(
-                'function writeBackupFile cannot process files when backup directory ' .
-                "does not exist: CDASH_BACKUP_DIRECTORY='{$config->get('CDASH_BACKUP_DIRECTORY')}'",
-                E_USER_ERROR);
-            return false;
-        }
-    }
-
-    // We escape the sitename and buildname
+    // Escape the sitename, buildname, and projectname.
     $sitename_escaped = preg_replace('/[^\w\-~_]+/u', '-', $sitename);
     $buildname_escaped = preg_replace('/[^\w\-~_]+/u', '-', $buildname);
     $projectname_escaped = preg_replace('/[^\w\-~_]+/u', '-', $projectname);
@@ -81,13 +68,24 @@ function writeBackupFile($filehandler, $content, $projectname, $buildname,
     $ext = '.' . pathinfo($fileNameWithExt, PATHINFO_EXTENSION);
     $file = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
 
-    if ($file == 'Project') {
-        $filename = $backupDir . '/' . $projectname_escaped . '_' . $currenttimestamp . '_' . $file . $ext;
-    } else {
-        $filename = $backupDir . '/' . $projectname_escaped . '_' . $sitename_escaped . '_' . $buildname_escaped . '_' . $stamp . '_' . $currenttimestamp . '_' . $file . $ext;
+    $filename = $projectname_escaped . '_';
+    if ($file != 'Project') {
+        // Project.xml files aren't associated with a particular build, so we
+        // only record the site and buildname for other types of submissions.
+        $filename .= $sitename_escaped . '_' . $buildname_escaped . '_' . $stamp . '_';
     }
+    $filename .=  $currenttimestamp . '_' . $file . $ext;
+    return $filename;
+}
 
+/** Safely write a backup file, taking care to avoid writing two files
+  * to the same destination. Called by writeBackupFile().
+  **/
+function safelyWriteBackupFile($filehandler, $content, $filename)
+{
     // If the file exists we append a number until we get a nonexistent file.
+    $config = Config::getInstance();
+    $backupDir = $config->get('CDASH_BACKUP_DIRECTORY');
     $got_lock = false;
     $i = 1;
     while (!$got_lock) {
@@ -95,7 +93,8 @@ function writeBackupFile($filehandler, $content, $projectname, $buildname,
         $lockfp = fopen($lockfilename, 'w');
         flock($lockfp, LOCK_EX | LOCK_NB, $wouldblock);
         if ($wouldblock) {
-            $filename = $backupDir . '/' . $projectname_escaped . '_' . $sitename_escaped . '_' . $buildname_escaped . '_' . $stamp . '_' . $currenttimestamp . '_' . $file . '_' . $i . $ext;
+            $path_parts = pathinfo($filename);
+            $filename = $path_parts['dirname'] . '/' . $path_parts['filename'] . "_$i." . $part_parts['extension'];
             $i++;
         } else {
             $got_lock = true;
@@ -150,6 +149,32 @@ function writeBackupFile($filehandler, $content, $projectname, $buildname,
     return $filename;
 }
 
+/** Function used to write a submitted file to our backup directory with a
+ * descriptive name. */
+function writeBackupFile($filehandler, $content, $projectname, $buildname,
+                         $sitename, $stamp, $fileNameWithExt)
+{
+    // Make sure the backup directory exists.
+    $config = Config::getInstance();
+    $backupDir = $config->get('CDASH_BACKUP_DIRECTORY');
+    if (!file_exists($backupDir)) {
+        // try parent dir as well (for asynch submission)
+        $backupDir = "../$backupDir";
+
+        if (!file_exists($backupDir)) {
+            trigger_error(
+                'function writeBackupFile cannot process files when backup directory ' .
+                "does not exist: CDASH_BACKUP_DIRECTORY='{$config->get('CDASH_BACKUP_DIRECTORY')}'",
+                E_USER_ERROR);
+            return false;
+        }
+    }
+
+    $filename = $backupDir . '/';
+    $filename .= generateBackupFileName($projectname, $buildname, $sitename, $stamp, $fileNameWithExt);
+    return safelyWriteBackupFile($filehandler, $content, $filename);
+}
+
 /** Function to handle new style submissions via HTTP PUT */
 function parse_put_submission($filehandler, $projectid, $expected_md5)
 {
@@ -180,11 +205,16 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
 
     $config = Config::getInstance();
     if ($config->get('CDASH_BACKUP_TIMEFRAME') == '0') {
+        // We do not save submission files after they are parsed.
+        // Work directly off the open file handle.
         $meta_data = stream_get_meta_data($filehandler);
         $filename = $meta_data['uri'];
+        $backup_filename = generateBackupFileName($projectname, $buildname,
+                $sitename, $stamp, $buildfile_row['filename']);
     } else {
         $filename = writeBackupFile($filehandler, '', $projectname, $buildname,
             $sitename, $stamp, $buildfile_row['filename']);
+        $backup_filename = $filename;
     }
 
     // Instantiate a buildfile object so we can delete it from the database
@@ -224,7 +254,8 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
 
     check_for_immediate_deletion($filename);
     $buildfile->Delete();
-    return true;
+    $handler->backupFileName = $backup_filename;
+    return $handler;
 }
 
 /** Main function to parse the incoming xml from ctest */
@@ -244,8 +275,9 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
 
     // Check if this is a new style PUT submission.
     try {
-        if (parse_put_submission($filehandler, $projectid, $expected_md5)) {
-            return true;
+        $handler = parse_put_submission($filehandler, $projectid, $expected_md5);
+        if ($handler) {
+            return $handler;
         }
     } catch (CDashParseException $e) {
         add_log($e->getMessage(), 'ctest_parse', LOG_ERR);
@@ -356,9 +388,12 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
     if ($config->get('CDASH_BACKUP_TIMEFRAME') == '0') {
         $meta_data = stream_get_meta_data($filehandler);
         $filename = $meta_data['uri'];
+        $backup_filename = generateBackupFileName($projectname, $buildname,
+                $sitename, $stamp, $file . '.xml');
     } else {
         $filename = writeBackupFile($filehandler, $content, $projectname, $buildname,
                                     $sitename, $stamp, $file . '.xml');
+        $backup_filename = $filename;
         if ($filename === false) {
             return $handler;
         }
@@ -433,6 +468,7 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
 
     check_for_immediate_deletion($filename);
     displayReturnStatus($statusarray);
+    $handler->backupFileName = $backup_filename;
     return $handler;
 }
 

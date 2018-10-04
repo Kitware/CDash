@@ -139,6 +139,31 @@ class SubmissionServiceTest extends \PHPUnit_Framework_TestCase
         $sut->doSubmit($message);
     }
 
+    public function testDelete()
+    {
+        $message = SubmissionService::createMessage($this->parameters);
+
+        $mock_client = $this->getMockBuilder(\GuzzleHttp\ClientInterface::class)
+            ->getMockForAbstractClass();
+
+        $sut = new SubmissionService();
+        $sut->setBackupFileName('/path/to/backup/descriptive_filename.xml');
+        $sut->setHttpClient($mock_client);
+        $sut->setLocalProcessing(false);
+
+        $url = \CDash\Config::getInstance()->get('CDASH_BASE_URL') .
+            '/api/v1/deleteSubmissionFile.php';
+        $query_args = [
+            'filename' => basename($message->file),
+            'dest' => 'descriptive_filename.xml'
+        ];
+        $mock_client->expects($this->once())
+            ->method('request')
+            ->with('DELETE', $url, ['query' => $query_args]);
+
+        $sut->delete($message);
+    }
+
     public function testRegister()
     {
         /** @var Queue|\PHPUnit_Framework_MockObject_MockObject $mock_queue */
