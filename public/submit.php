@@ -31,6 +31,7 @@ include 'include/version.php';
 
 use CDash\Config;
 use CDash\Model\Build;
+use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
 use CDash\Model\Site;
 use CDash\ServiceContainer;
@@ -111,6 +112,7 @@ if ($authenticate_submissions && !valid_token_for_submission($projectid)) {
 $expected_md5 = isset($_GET['MD5']) ? htmlspecialchars(pdo_real_escape_string($_GET['MD5'])) : '';
 
 // Check if CTest provided us enough info to assign a buildid.
+$pendingSubmissions = $service->create(PendingSubmissions::class);
 $buildid = null;
 if (isset($_GET['build']) && isset($_GET['site']) && isset($_GET['stamp'])) {
     $build = $service->create(Build::class);
@@ -127,8 +129,15 @@ if (isset($_GET['build']) && isset($_GET['site']) && isset($_GET['stamp'])) {
     $site->Name = pdo_real_escape_string($_GET['site']);
     $site->Insert();
     $build->SiteId = $site->Id;
+    $pendingSubmissions->Build = $build;
 
-    $build->AddBuild();
+    if ($build->AddBuild()) {
+        // Insert row to keep track of how many submissions are waiting to be
+        // processed for this build. This value will be incremented
+        // (and decremented) later on.
+        $pendingSubmissions->NumFiles = 0;
+        $pendingSubmissions->Save();
+    }
     $buildid = $build->Id;
 }
 
@@ -142,6 +151,9 @@ if ($config->get('CDASH_BERNARD_SUBMISSION')) {
     // If the submission is asynchronous we store in the database.
     do_submit_asynchronous($fp, $projectid, $buildid, $expected_md5);
 } else {
+    if (!is_null($buildid)) {
+        $pendingSubmissions->Increment();
+    }
     do_submit($fp, $projectid, $buildid, $expected_md5, true);
 }
 fclose($fp);

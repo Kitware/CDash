@@ -26,6 +26,7 @@ use CDash\Middleware\Queue\SubmissionService;
 use CDash\Model\AuthToken;
 use CDash\Model\Build;
 use CDash\Model\BuildFile;
+use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
 use CDash\Model\Site;
 use Ramsey\Uuid\Uuid;
@@ -156,6 +157,16 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $buildid = null,
 
     // Parse the XML file
     $handler = ctest_parse($filehandle, $projectid, $buildid, $expected_md5, $do_checksum, $scheduleid);
+
+    $build = get_build_from_handler($handler);
+    if (!is_null($build)) {
+        $pendingSubmissions = new PendingSubmissions();
+        $pendingSubmissions->Build = $build;
+        if ($pendingSubmissions->Exists()) {
+            $pendingSubmissions->Decrement();
+        }
+    }
+
     //this is the md5 checksum fail case
     if ($handler == false) {
         //no need to log an error since ctest_parse already did
@@ -257,6 +268,10 @@ function do_submit_asynchronous($filehandle, $projectid, $buildid = null,
     // later if this is a CDash@home (client) submission.
     $submissionid = pdo_insert_id('submission');
 
+    if (!is_null($buildid)) {
+        PendingSubmissions::IncrementForBuildId($buildid);
+    }
+
     // We find the daily updates
     $currentURI = $config->getBaseUrl();
     $request = $currentURI . '/ajax/dailyupdatescurl.php?projectid=' . $projectid;
@@ -325,6 +340,7 @@ function do_submit_queue($filehandle, $projectid, $buildid = null, $expected_md5
     echo " <submissionId>$buildSubmissionId</submissionId>\n";
     if (!is_null($buildid)) {
         echo " <buildId>$buildid</buildId>\n";
+        PendingSubmissions::IncrementForBuildId($buildid);
     }
     echo "</cdash>\n";
 }
@@ -533,6 +549,17 @@ function put_submit_file()
         return;
     }
 
+    // Increment the count of pending submission files for this build.
+    $build = new Build();
+    $build->Id = $buildid;
+    $pendingSubmissions = new PendingSubmissions();
+    $pendingSubmissions->Build = $build;
+    if (!$pendingSubmissions->Exists()) {
+        $pendingSubmissions->NumFiles = 0;
+        $pendingSubmissions->Save();
+    }
+    $pendingSubmissions->Increment();
+
     if ($config->get('CDASH_BERNARD_COVERAGE_SUBMISSION')) {
         $driver = QueueDriverFactory::create();
         $queue = new Queue($driver);
@@ -666,4 +693,19 @@ function valid_token_for_submission($projectid)
     }
 
     return true;
+}
+
+function get_build_from_handler($handler)
+{
+    $build = null;
+    $builds = $handler->getBuilds();
+    if (count($builds) > 1) {
+        // More than one build referenced by the handler.
+        // Return the parent build.
+        $build = new Build();
+        $build->Id = $builds[0]->GetParentId();
+    } elseif (count($builds) === 1 && $builds[0] instanceof Build) {
+        $build = $builds[0];
+    }
+    return $build;
 }

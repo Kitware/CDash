@@ -29,6 +29,7 @@ require_once 'xml_handlers/testing_junit_handler.php';
 require_once 'xml_handlers/coverage_junit_handler.php';
 
 use CDash\Config;
+use CDash\Model\Build;
 use CDash\Model\BuildFile;
 use CDash\Model\Project;
 
