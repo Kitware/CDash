@@ -2400,6 +2400,14 @@ class Build
         return $this->Done;
     }
 
+    /** Set (or unset) the done bit in the database for this build. */
+    public function MarkAsDone($done)
+    {
+        $done_stmt = $this->PDO->prepare(
+            'UPDATE build SET done = :done WHERE id = :buildid');
+        pdo_execute($done_stmt, [':done' => $done, ':buildid' => $this->Id]);
+    }
+
     /** Remove this build if it exists and has been marked as done.
      * This is called by XML handlers when a new replacement
      * submission is received.
