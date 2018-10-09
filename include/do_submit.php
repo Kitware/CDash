@@ -257,6 +257,12 @@ function do_submit_asynchronous($filehandle, $projectid, $buildid = null,
         return;
     }
 
+    do_submit_asynchronous_file($filename, $projectid, $buildid, $md5sum);
+}
+
+function do_submit_asynchronous_file($filename, $projectid, $buildid = null,
+                                     $md5sum)
+{
     $bytes = filesize($filename);
 
     // Insert the filename in the database
@@ -273,6 +279,7 @@ function do_submit_asynchronous($filehandle, $projectid, $buildid = null,
     }
 
     // We find the daily updates
+    $config = Config::getInstance();
     $currentURI = $config->getBaseUrl();
     $request = $currentURI . '/ajax/dailyupdatescurl.php?projectid=' . $projectid;
 
