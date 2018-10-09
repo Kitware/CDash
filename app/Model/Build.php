@@ -1920,7 +1920,6 @@ class Build
         $existing_buildid = $stmt->fetchColumn();
         if ($existing_buildid !== false) {
             // Use the previously existing parent if one exists.
-            $result_array = pdo_fetch_array($result);
             $this->SetParentId($existing_buildid);
 
             // Mark it as a parent (parentid of -1).

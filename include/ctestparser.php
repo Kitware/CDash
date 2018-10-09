@@ -459,6 +459,7 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
     }
     xml_parse($parser, null, true);
     xml_parser_free($parser);
+    unset($parser);
     fclose($parseHandle);
     unset($parseHandle);
 
