@@ -2688,7 +2688,7 @@ class Build
         }
 
         // Otherwise log the error and return false.
-        $e = new Exception();
+        $e = new \Exception();
         add_log($error . PHP_EOL . $e->getTraceAsString(), 'AddBuild', LOG_ERR,
                 $this->ProjectId);
         return false;
