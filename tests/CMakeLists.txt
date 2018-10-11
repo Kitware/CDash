@@ -172,6 +172,7 @@ add_php_test(timestatus)
 add_php_test(bazeljson)
 add_php_test(buildrelationship)
 add_php_test(submission_assign_buildid)
+add_php_test(donehandler)
 
 if(CDASH_GITHUB_USERNAME AND CDASH_GITHUB_PASSWORD)
   add_php_test(github_PR_comment)
