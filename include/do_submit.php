@@ -30,7 +30,7 @@ use CDash\Model\Project;
 use CDash\Model\Site;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-include 'include/ctestparser.php';
+require_once 'include/ctestparser.php';
 include_once 'include/common.php';
 include_once 'include/createRSS.php';
 include 'include/sendemail.php';
