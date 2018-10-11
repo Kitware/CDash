@@ -303,7 +303,7 @@ function do_submit_asynchronous_file($filename, $projectid, $buildid = null,
 }
 
 /** Asynchronous submission using a message queue */
-function do_submit_queue($filehandle, $projectid, $buildid = null, $expected_md5 = '')
+function do_submit_queue($filehandle, $projectid, $buildid = null, $expected_md5 = '', $ip = null)
 {
     $config = Config::getInstance();
     $buildSubmissionId = Uuid::uuid4()->toString();
@@ -331,12 +331,15 @@ function do_submit_queue($filehandle, $projectid, $buildid = null, $expected_md5
     $driver = QueueDriverFactory::create();
     $queue = new Queue($driver);
 
+    if (is_null($ip)) {
+        $ip = $_SERVER['REMOTE_ADDR'];
+    }
     $message = SubmissionService::createMessage([
         'file' => $destinationFilename,
         'project' => $projectid,
         'md5' => $expected_md5,
         'checksum' => true,
-        'ip' => $_SERVER['REMOTE_ADDR']
+        'ip' => $ip
     ]);
 
     $queue->produce($message);
@@ -715,4 +718,28 @@ function get_build_from_handler($handler)
         $build = $builds[0];
     }
     return $build;
+}
+
+function requeue_submission_file($filename, $projectid, $buildid = null,
+                                 $expected_md5 = '', $ip = null)
+{
+    $queued = false;
+    $config = Config::getInstance();
+
+    if ($config->get('CDASH_BERNARD_SUBMISSION')) {
+        // Worker might not live on the web server.
+        // Resubmit the whole file since we changed its contents.
+        $fp = fopen($filename, 'r');
+        do_submit_queue($fp, $projectid, $buildid, $expected_md5, $ip);
+        fclose($fp);
+        unset($fp);
+        return true;
+    } elseif ($config->get('CDASH_ASYNCHRONOUS_SUBMISSION')) {
+        // Workers lives on the web server.
+        // Tell CDash to requeue the file that already exists on disk.
+        do_submit_asynchronous_file($filename, $projectid, $buildid,
+                $expected_md5);
+        return true;
+    } // else synchronous submission -> no-op.
+    return false;
 }

@@ -20,6 +20,7 @@ require_once 'xml_handlers/testing_handler.php';
 require_once 'xml_handlers/update_handler.php';
 require_once 'xml_handlers/coverage_handler.php';
 require_once 'xml_handlers/coverage_log_handler.php';
+require_once 'xml_handlers/done_handler.php';
 require_once 'xml_handlers/note_handler.php';
 require_once 'xml_handlers/dynamic_analysis_handler.php';
 require_once 'xml_handlers/project_handler.php';
@@ -333,6 +334,9 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
     } elseif (preg_match('/<testsuite/', $content)) {
         $handler = new TestingJUnitHandler($projectid, $scheduleid);
         $file = 'Test';
+    } elseif (preg_match('/<Done/', $content)) {
+        $handler = new DoneHandler($projectid, $scheduleid);
+        $file = 'Done';
     }
 
     // Try to get the IP of the build
@@ -468,7 +472,18 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
         $parsingerror = $localParser->EndParsingFile();
     }
 
-    check_for_immediate_deletion($filename);
+    $requeued = false;
+    if ($handler instanceof DoneHandler && $handler->shouldRequeue()) {
+        require_once 'include/do_submit.php';
+        $retry_handler = new RetryHandler($filename);
+        $retry_handler->Increment();
+        $build = get_build_from_handler($handler);
+        $requeued = requeue_submission_file($filename, $projectid, $build->Id,
+                                            md5_file($filename), $ip);
+    }
+    if (!$requeued) {
+        check_for_immediate_deletion($filename);
+    }
     displayReturnStatus($statusarray);
     $handler->backupFileName = $backup_filename;
     return $handler;
