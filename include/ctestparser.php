@@ -406,6 +406,13 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
         $statusarray['buildId'] = $buildid;
     }
     if ($do_checksum == true) {
+        if (!file_exists($filename)) {
+            // Parsing cannot continue if this file does not exist.
+            // Perhaps another process already parsed it.
+            add_log("File does not exist, checksum cannot continue: $filename",
+                    'ctest_parse', LOG_INFO, $projectid);
+            return false;
+        }
         $md5sum = md5_file($filename);
         $md5error = false;
         if ($expected_md5 == '' || $expected_md5 == $md5sum) {
