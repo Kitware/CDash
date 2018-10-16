@@ -464,7 +464,7 @@ CREATE TABLE `site` (
   `longitude` varchar(10) NOT NULL default '',
   `outoforder` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `name_ip` (`name`, `ip`)
+  UNIQUE KEY `name` (`name`)
 ) ;
 
 --
