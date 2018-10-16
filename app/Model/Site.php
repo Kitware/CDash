@@ -189,28 +189,33 @@ class Site
         $stmt->bindParam(':ip', $this->Ip);
         $stmt->bindParam(':latitude', $this->Latitude);
         $stmt->bindParam(':longitude', $this->Longitude);
-        if (!$stmt->execute()) {
-            $error = pdo_error();
-            // This error might be due to a unique constraint violation.
-            // Query for a previously existing site with this name & ip.
-            $exists_stmt = $this->PDO->prepare(
-                'SELECT id FROM site WHERE name = ? AND ip = ?');
-            pdo_execute($exists_stmt, [$this->Name, $this->Ip]);
-            $id = $exists_stmt->fetchColumn();
-            if ($id !== false) {
-                $this->Id = $id;
+        try {
+            if ($stmt->execute()) {
+                $this->Id = pdo_insert_id('site');
                 return true;
             }
-            add_log("SQL error: $error", 'Site Insert', LOG_ERR);
+            // The INSERT statement didn't execute cleanly.
+            $error_info = $stmt->errorInfo();
+            $error = $error_info[2];
+            throw new \Exception($error);
+        } catch (\Exception $e) {
+            // This error might be due to a unique constraint violation.
+            // Query for a previously existing site with this name & ip.
+            $site = new Site();
+            $site->Name = $this->Name;
+            $site->Ip = $this->Ip;
+            if ($site->Exists()) {
+                $this->Id = $site->Id;
+                return true;
+            }
+            // Otherwise log the error and return false.
+            add_log($e->getMessage() . PHP_EOL . $e->getTraceAsString(),
+                    'Site::Update', LOG_ERR);
             return false;
-        } else {
-            $this->Id = pdo_insert_id('site');
         }
-
-        return true;
     }
 
-    // Get the name of the size
+    // Get the name of this site.
     public function GetName()
     {
         if (!$this->Fill()) {
