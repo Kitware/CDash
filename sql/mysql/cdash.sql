@@ -403,9 +403,18 @@ CREATE TABLE IF NOT EXISTS `build2uploadfile` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `pending_submissions`
+--
+CREATE TABLE `pending_submissions` (
+  `buildid` int(11) NOT NULL,
+  `numfiles` tinyint UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (`buildid`)
+);
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `project`
 --
-
 CREATE TABLE `project` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL default '',

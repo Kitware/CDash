@@ -26,8 +26,10 @@ use CDash\Middleware\Queue\SubmissionService;
 use CDash\Model\AuthToken;
 use CDash\Model\Build;
 use CDash\Model\BuildFile;
+use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
 use CDash\Model\Site;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 require_once 'include/ctestparser.php';
@@ -155,6 +157,16 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $buildid = null,
 
     // Parse the XML file
     $handler = ctest_parse($filehandle, $projectid, $buildid, $expected_md5, $do_checksum, $scheduleid);
+
+    $build = get_build_from_handler($handler);
+    if (!is_null($build)) {
+        $pendingSubmissions = new PendingSubmissions();
+        $pendingSubmissions->Build = $build;
+        if ($pendingSubmissions->Exists()) {
+            $pendingSubmissions->Decrement();
+        }
+    }
+
     //this is the md5 checksum fail case
     if ($handler == false) {
         //no need to log an error since ctest_parse already did
@@ -245,6 +257,12 @@ function do_submit_asynchronous($filehandle, $projectid, $buildid = null,
         return;
     }
 
+    do_submit_asynchronous_file($filename, $projectid, $buildid, $md5sum);
+}
+
+function do_submit_asynchronous_file($filename, $projectid, $buildid = null,
+                                     $md5sum)
+{
     $bytes = filesize($filename);
 
     // Insert the filename in the database
@@ -256,7 +274,12 @@ function do_submit_asynchronous($filehandle, $projectid, $buildid = null,
     // later if this is a CDash@home (client) submission.
     $submissionid = pdo_insert_id('submission');
 
+    if (!is_null($buildid)) {
+        PendingSubmissions::IncrementForBuildId($buildid);
+    }
+
     // We find the daily updates
+    $config = Config::getInstance();
     $currentURI = $config->getBaseUrl();
     $request = $currentURI . '/ajax/dailyupdatescurl.php?projectid=' . $projectid;
 
@@ -277,6 +300,59 @@ function do_submit_asynchronous($filehandle, $projectid, $buildid = null,
 
     // Call process submissions via cURL.
     trigger_process_submissions($projectid);
+}
+
+/** Asynchronous submission using a message queue */
+function do_submit_queue($filehandle, $projectid, $buildid = null, $expected_md5 = '', $ip = null)
+{
+    $config = Config::getInstance();
+    $buildSubmissionId = Uuid::uuid4()->toString();
+    $destinationFilename = $config->get('CDASH_BACKUP_DIRECTORY') . '/' . $buildSubmissionId . '.xml';
+
+    // Save the file in the backup directory.
+    $outfile = fopen($destinationFilename, 'w');
+    while (!feof($filehandle)) {
+        $content = fread($filehandle, 8192);
+        if (fwrite($outfile, $content) === false) {
+            add_log('Failed to copy build submission XML', 'do_submit_queue', LOG_ERR);
+            header('HTTP/1.1 500 Internal Server Error');
+            echo '<cdash version="' . $config->get('CDASH_VERSION') . "\">\n";
+            echo " <status>ERROR</status>\n";
+            echo " <message>Failed to copy build submission XML.</message>\n";
+            echo "</cdash>\n";
+            fclose($outfile);
+            unset($outfile);
+            return;
+        }
+    }
+    fclose($outfile);
+    unset($outfile);
+
+    $driver = QueueDriverFactory::create();
+    $queue = new Queue($driver);
+
+    if (is_null($ip)) {
+        $ip = $_SERVER['REMOTE_ADDR'];
+    }
+    $message = SubmissionService::createMessage([
+        'file' => $destinationFilename,
+        'project' => $projectid,
+        'md5' => $expected_md5,
+        'checksum' => true,
+        'ip' => $ip
+    ]);
+
+    $queue->produce($message);
+
+    echo '<cdash version="' . $config->get('CDASH_VERSION') . "\">\n";
+    echo " <status>OK</status>\n";
+    echo " <message>Build submitted successfully.</message>\n";
+    echo " <submissionId>$buildSubmissionId</submissionId>\n";
+    if (!is_null($buildid)) {
+        echo " <buildId>$buildid</buildId>\n";
+        PendingSubmissions::IncrementForBuildId($buildid);
+    }
+    echo "</cdash>\n";
 }
 
 /** Function to deal with the external tool mechanism */
@@ -483,6 +559,17 @@ function put_submit_file()
         return;
     }
 
+    // Increment the count of pending submission files for this build.
+    $build = new Build();
+    $build->Id = $buildid;
+    $pendingSubmissions = new PendingSubmissions();
+    $pendingSubmissions->Build = $build;
+    if (!$pendingSubmissions->Exists()) {
+        $pendingSubmissions->NumFiles = 0;
+        $pendingSubmissions->Save();
+    }
+    $pendingSubmissions->Increment();
+
     if ($config->get('CDASH_BERNARD_COVERAGE_SUBMISSION')) {
         $driver = QueueDriverFactory::create();
         $queue = new Queue($driver);
@@ -616,4 +703,43 @@ function valid_token_for_submission($projectid)
     }
 
     return true;
+}
+
+function get_build_from_handler($handler)
+{
+    $build = null;
+    $builds = $handler->getBuilds();
+    if (count($builds) > 1) {
+        // More than one build referenced by the handler.
+        // Return the parent build.
+        $build = new Build();
+        $build->Id = $builds[0]->GetParentId();
+    } elseif (count($builds) === 1 && $builds[0] instanceof Build) {
+        $build = $builds[0];
+    }
+    return $build;
+}
+
+function requeue_submission_file($filename, $projectid, $buildid = null,
+                                 $expected_md5 = '', $ip = null)
+{
+    $queued = false;
+    $config = Config::getInstance();
+
+    if ($config->get('CDASH_BERNARD_SUBMISSION')) {
+        // Worker might not live on the web server.
+        // Resubmit the whole file since we changed its contents.
+        $fp = fopen($filename, 'r');
+        do_submit_queue($fp, $projectid, $buildid, $expected_md5, $ip);
+        fclose($fp);
+        unset($fp);
+        return true;
+    } elseif ($config->get('CDASH_ASYNCHRONOUS_SUBMISSION')) {
+        // Workers lives on the web server.
+        // Tell CDash to requeue the file that already exists on disk.
+        do_submit_asynchronous_file($filename, $projectid, $buildid,
+                $expected_md5);
+        return true;
+    } // else synchronous submission -> no-op.
+    return false;
 }

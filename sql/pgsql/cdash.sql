@@ -310,6 +310,15 @@ CREATE TABLE "note" (
 CREATE INDEX "crc322" on "note" ("crc32");
 
 --
+-- Table: pending_submissions
+--
+CREATE TABLE "pending_submissions" (
+  "buildid" integer NOT NULL,
+  "numfiles" smallint DEFAULT '0' NOT NULL,
+  PRIMARY KEY ("buildid")
+);
+
+--
 -- Table: project
 --
 CREATE TABLE "project" (
