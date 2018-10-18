@@ -204,6 +204,11 @@ class SubmissionService
     public function delete(Message $message)
     {
         if (!Config::getInstance()->get('CDASH_REMOTE_PROCESSOR')) {
+            // A more descriptively named copy of this file should now
+            // exist on the server if it is configured to save backups.
+            if (file_exists($message->file)) {
+                unlink($message->file);
+            }
             return;
         }
 
