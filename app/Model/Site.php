@@ -75,8 +75,8 @@ class Site
             }
         }
         $stmt = $this->PDO->prepare(
-                'SELECT id FROM site WHERE name = :name AND ip = :ip');
-        pdo_execute($stmt, [':name' => $this->Name, ':ip' => $this->Ip]);
+                'SELECT id FROM site WHERE name = :name');
+        pdo_execute($stmt, [':name' => $this->Name]);
         $id = $stmt->fetchColumn();
         if ($id !== false) {
             $this->Id = $id;
@@ -115,10 +115,9 @@ class Site
             throw new \Exception($error);
         } catch (\Exception $e) {
             // This error might be due to a unique key violation.
-            // Check for an existing site with this name and ip.
+            // Check for an existing site with this name.
             $site = new Site();
             $site->Name = $this->Name;
-            $site->Ip = $this->Ip;
             if ($site->Exists()) {
                 $this->Id = $site->Id;
                 return true;
@@ -200,10 +199,9 @@ class Site
             throw new \Exception($error);
         } catch (\Exception $e) {
             // This error might be due to a unique constraint violation.
-            // Query for a previously existing site with this name & ip.
+            // Query for a previously existing site with this name.
             $site = new Site();
             $site->Name = $this->Name;
-            $site->Ip = $this->Ip;
             if ($site->Exists()) {
                 $this->Id = $site->Id;
                 return true;

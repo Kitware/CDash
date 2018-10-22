@@ -710,9 +710,6 @@ if (isset($_GET['upgrade-2-4'])) {
             pdo_query('ALTER TABLE build ADD UNIQUE KEY (uuid)');
         }
 
-        // Also add a new unique constraint to the site table.
-        AddUniqueConstraintToSiteTable('site');
-
         // Also add a new unique constraint to the subproject table.
         if ($db_type === 'pgsql') {
             pdo_query('ALTER TABLE subproject ADD UNIQUE (name, projectid, endtime)');
@@ -818,6 +815,9 @@ if (isset($_GET['upgrade-2-6'])) {
     // Support for bugtracker issue creation.
     AddTableField('project', 'bugtrackernewissueurl', 'varchar(255)', 'character varying(255)', '');
     AddTableField('project', 'bugtrackertype', 'varchar(16)', 'character varying(16)', '');
+
+    // Add new unique constraint to the site table.
+    AddUniqueConstraintToSiteTable('site');
 
     // Set the database version
     setVersion();

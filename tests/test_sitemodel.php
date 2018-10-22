@@ -81,11 +81,9 @@ class SiteModelTestCase extends KWWebTestCase
             return 1;
         }
 
-        // Create two sites.
-        // They have the same name but different ip addresses.
+        // Create two sites with different names.
         $site3 = new Site();
         $site3->Name = 'testsite3';
-        $site3->Ip = '';
         if (!$site3->Insert()) {
             $this->fail('Insert failed for site 3');
         }
@@ -99,8 +97,7 @@ class SiteModelTestCase extends KWWebTestCase
         }
 
         $site4 = new Site();
-        $site4->Name = 'testsite3';
-        $site4->Ip = '127.0.0.1';
+        $site4->Name = 'testsite4';
         if (!$site4->Insert()) {
             $this->fail('Insert failed for site 4');
         }
@@ -118,14 +115,14 @@ class SiteModelTestCase extends KWWebTestCase
         }
 
         // Verify that we handle unique key constraint violations gracefully.
-        $site3->Ip = '127.0.0.1';
+        $site3->Id = $site_4_id;
         $site3->Update();
         $log_contents = file_get_contents($this->logfilename);
         if (strpos($log_contents, 'PdoError') !== false) {
             $this->fail('PDO error logged for unique constraint violation');
         }
-        if ($site3->Id != $site4->Id) {
-            $this->fail("Site 3 and Site 4 do not have the same Id");
+        if ($site3->Id != $site3->Id) {
+            $this->fail("Site 3 Id not returned from Update()");
         }
 
         $stmt = $this->PDO->prepare('DELETE FROM site WHERE id = ?');
