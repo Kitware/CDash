@@ -84,11 +84,11 @@ trait BuildDiffForTesting
             ->setMethods(['GetErrorDifferences', 'GetPreviousBuildId'])
             ->getMock();
 
-        $build->expects($this->once())
+        $build->expects($this->any())
             ->method('GetErrorDifferences')
             ->willReturn($diff);
 
-        $build->expects($this->once())
+        $build->expects($this->any())
             ->method('GetPreviousBuildId')
             ->willReturn(1);
         $build->Id = 2;
