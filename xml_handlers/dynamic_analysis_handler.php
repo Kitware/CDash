@@ -17,7 +17,10 @@ require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
 
 use CDash\Collection\BuildCollection;
+use CDash\Collection\Collection;
+use CDash\Collection\SubscriptionBuilderCollection;
 use CDash\Messaging\Notification\NotifyOn;
+use CDash\Messaging\Subscription\UserSubscriptionBuilder;
 use CDash\Messaging\Topic\DynamicAnalysisTopic;
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Build;
@@ -350,6 +353,16 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
             $topic = new DynamicAnalysisTopic();
             $collection->add($topic);
         }
+        return $collection;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function GetSubscriptionBuilderCollection()
+    {
+        $collection = (new SubscriptionBuilderCollection)
+            ->add(new UserSubscriptionBuilder($this));
         return $collection;
     }
 }

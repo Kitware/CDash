@@ -18,7 +18,11 @@ require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
 
 use CDash\Collection\BuildCollection;
+use CDash\Collection\Collection;
+use CDash\Collection\SubscriptionBuilderCollection;
 use CDash\Messaging\Notification\NotifyOn;
+use CDash\Messaging\Subscription\CommitAuthorSubscriptionBuilder;
+use CDash\Messaging\Subscription\UserSubscriptionBuilder;
 use CDash\Messaging\Topic\BuildErrorTopic;
 use CDash\Messaging\Topic\Decoratable;
 use CDash\Messaging\Topic\TopicCollection;
@@ -468,6 +472,34 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
         if ($warnings->isSubscribedToBy($subscriber)) {
             $collection->add($warnings);
         }
+        return $collection;
+    }
+
+    /**
+     * @return array
+     */
+    public function GetCommitAuthors()
+    {
+
+        $authors = [];
+
+        foreach ($this->Builds as $build) {
+            $authors = array_merge($authors, array_map(function ($email) {
+                return $email;
+            }, $build->GetCommitAuthors()));
+        }
+        return array_unique($authors);
+
+    }
+
+    /**
+     * @return Collection
+     */
+    public function GetSubscriptionBuilderCollection()
+    {
+        $collection = (new SubscriptionBuilderCollection)
+            ->add(new UserSubscriptionBuilder($this))
+            ->add(new CommitAuthorSubscriptionBuilder($this));
         return $collection;
     }
 }

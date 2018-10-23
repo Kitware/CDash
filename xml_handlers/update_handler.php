@@ -19,7 +19,11 @@ use CDash\Collection\BuildCollection;
 require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
 
+use CDash\Collection\Collection;
+use CDash\Collection\SubscriptionBuilderCollection;
 use CDash\Messaging\Notification\NotifyOn;
+use CDash\Messaging\Subscription\CommitAuthorSubscriptionBuilder;
+use CDash\Messaging\Subscription\UserSubscriptionBuilder;
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Messaging\Topic\UpdateErrorTopic;
 use CDash\Model\Build;
@@ -270,6 +274,17 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface
             $topic = new UpdateErrorTopic();
             $collection->add($topic);
         }
+        return $collection;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function GetSubscriptionBuilderCollection()
+    {
+        $collection = (new SubscriptionBuilderCollection)
+            ->add(new UserSubscriptionBuilder($this))
+            ->add(new CommitAuthorSubscriptionBuilder($this));
         return $collection;
     }
 }

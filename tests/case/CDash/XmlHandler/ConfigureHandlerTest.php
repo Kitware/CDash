@@ -16,6 +16,7 @@
 
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
+use CDash\Messaging\Subscription\UserSubscriptionBuilder;
 use CDash\Messaging\Topic\ConfigureTopic;
 use CDash\Messaging\Topic\Topic;
 use CDash\Messaging\Topic\TopicCollection;
@@ -41,5 +42,14 @@ class ConfigureHandlerTest extends PHPUnit_Framework_TestCase
 
         $this->assertCount(1, $collection);
         $this->assertTrue($collection->has(Topic::CONFIGURE));
+    }
+
+    public function testGetSubscriptionBuilderCollection()
+    {
+        $sut = new ConfigureHandler(0, 0);
+        $builders = $sut->GetSubscriptionBuilderCollection();
+
+        $this->assertCount(1, $builders);
+        $this->assertTrue($builders->has(UserSubscriptionBuilder::class));
     }
 }

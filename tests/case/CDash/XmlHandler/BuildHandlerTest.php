@@ -16,6 +16,8 @@
 
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
+use CDash\Messaging\Subscription\CommitAuthorSubscriptionBuilder;
+use CDash\Messaging\Subscription\UserSubscriptionBuilder;
 use CDash\Messaging\Topic\Topic;
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Subscriber;
@@ -57,5 +59,14 @@ class BuildHandlerTest extends PHPUnit_Framework_TestCase
         $this->assertCount(2, $collection);
         $this->assertTrue($collection->has(Topic::BUILD_ERROR));
         $this->assertTrue($collection->has(Topic::BUILD_WARNING));
+    }
+
+    public function testGetSubscriptionBuilderCollection()
+    {
+        $sut = new BuildHandler(0, 0);
+        $builders = $sut->GetSubscriptionBuilderCollection();
+        $this->assertCount(2, $builders);
+        $this->assertTrue($builders->has(UserSubscriptionBuilder::class));
+        $this->assertTrue($builders->has(CommitAuthorSubscriptionBuilder::class));
     }
 }

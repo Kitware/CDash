@@ -17,7 +17,10 @@
 require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
 
+use CDash\Collection\Collection;
+use CDash\Collection\SubscriptionBuilderCollection;
 use CDash\Messaging\Notification\NotifyOn;
+use CDash\Messaging\Subscription\UserSubscriptionBuilder;
 use CDash\Messaging\Topic\ConfigureTopic;
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Messaging\Topic\TopicInterface;
@@ -342,6 +345,16 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
             $topic = new ConfigureTopic();
             $collection->add($topic);
         }
+        return $collection;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function GetSubscriptionBuilderCollection()
+    {
+        $collection = (new SubscriptionBuilderCollection)
+            ->add(new UserSubscriptionBuilder($this));
         return $collection;
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use CDash\Collection\BuildCollection;
+use CDash\Collection\Collection;
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Build;
 use CDash\Model\Project;
@@ -40,4 +41,16 @@ interface ActionableBuildInterface
      * @return TopicCollection
      */
     public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber);
+
+    /**
+     * Returns an array of email addresses from those comitters that are not already users
+     *
+     * @return array
+     */
+    public function GetCommitAuthors();
+
+    /**
+     * @return Collection
+     */
+    public function GetSubscriptionBuilderCollection();
 }

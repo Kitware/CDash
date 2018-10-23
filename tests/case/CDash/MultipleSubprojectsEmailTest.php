@@ -23,7 +23,8 @@ use CDash\Messaging\Notification\NotificationCollection;
 use CDash\Messaging\Notification\NotificationDirector;
 use CDash\Messaging\Notification\NotificationInterface;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
-use CDash\Messaging\Subscription\SubscriptionBuilder;
+use CDash\Messaging\Subscription\SubscriptionCollection;
+use CDash\Messaging\Subscription\UserSubscriptionBuilder;
 use CDash\Model\Label;
 use CDash\Model\Project;
 use CDash\Model\Subscriber;
@@ -139,9 +140,9 @@ class MultipleSubprojectsEmailTest extends \CDash\Test\CDashUseCaseTestCase
 
         $project->SetSubscriberCollection($subscriberCollection);
 
-        $builder = new SubscriptionBuilder($this->submission);
-
-        $subscriptions = $builder->build();
+        $builder = new UserSubscriptionBuilder($this->submission);
+        $subscriptions = new SubscriptionCollection();
+        $builder->build($subscriptions);
         $director = new NotificationDirector();
 
         /** @var EmailBuilder $builder */

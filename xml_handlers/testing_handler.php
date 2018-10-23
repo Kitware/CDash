@@ -4,7 +4,11 @@ use CDash\Collection\BuildCollection;
 require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
 
+use CDash\Collection\Collection;
+use CDash\Collection\SubscriptionBuilderCollection;
 use CDash\Messaging\Notification\NotifyOn;
+use CDash\Messaging\Subscription\CommitAuthorSubscriptionBuilder;
+use CDash\Messaging\Subscription\UserSubscriptionBuilder;
 use CDash\Messaging\Topic\MissingTestTopic;
 use CDash\Messaging\Topic\TestFailureTopic;
 use CDash\Messaging\Topic\TopicCollection;
@@ -444,6 +448,17 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
             $collection->add(new TestFailureTopic());
             $collection->add(new MissingTestTopic());
         }
+        return $collection;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function GetSubscriptionBuilderCollection()
+    {
+        $collection = (new SubscriptionBuilderCollection)
+            ->add(new UserSubscriptionBuilder($this))
+            ->add(new CommitAuthorSubscriptionBuilder($this));
         return $collection;
     }
 }

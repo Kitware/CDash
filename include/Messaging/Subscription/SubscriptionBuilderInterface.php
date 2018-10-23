@@ -13,15 +13,22 @@
  *   PURPOSE. See the above copyright notices for more information.
  * =========================================================================
  */
-namespace CDash\Collection;
 
-use CDash\Model\SubscriberInterface;
+namespace CDash\Messaging\Subscription;
 
-class SubscriberCollection extends Collection
+use ActionableBuildInterface;
+
+interface SubscriptionBuilderInterface
 {
-    public function add(SubscriberInterface $subscriber)
-    {
-        parent::addItem($subscriber, $subscriber->getAddress());
-        return $this;
-    }
+    /**
+     * @param ActionableBuildInterface $submission
+     * @return void
+     */
+    public function __construct(ActionableBuildInterface $submission);
+
+    /**
+     * @param SubscriptionCollection $subscriptions
+     * @return void
+     */
+    public function build(SubscriptionCollection $subscriptions);
 }

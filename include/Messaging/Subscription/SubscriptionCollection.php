@@ -11,7 +11,12 @@ class SubscriptionCollection extends Collection
 {
     public function add(Subscription $item)
     {
-        parent::addItem($item);
+        if ($item->getRecipient()) {
+            parent::addItem($item, $item->getRecipient());
+        } else {
+            parent::addItem($item);
+        }
+
         return $this;
     }
 }

@@ -141,4 +141,9 @@ abstract class AbstractHandler implements SaxHandler, CDashSubmissionHandlerInte
     {
         return $this->Site;
     }
+
+    public function GetCommitAuthors()
+    {
+        return [];
+    }
 }

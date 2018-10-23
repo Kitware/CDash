@@ -5,7 +5,7 @@ use ActionableBuildInterface;
 use CDash\Collection\SubscriberCollection;
 use CDash\Model\SubscriberInterface;
 
-class SubscriptionBuilder
+class UserSubscriptionBuilder implements SubscriptionBuilderInterface
 {
     /** @var  \ActionableBuildInterface $submission */
     private $submission;
@@ -19,29 +19,18 @@ class SubscriptionBuilder
     /**
      * SubscriptionBuilder constructor.
      * @param ActionableBuildInterface $submission
-     * @param SubscriptionCollection|null $subscriptions
-     * @param SubscriberCollection|null $subscribers
-     * @param SubscriptionFactory|null $subscriptionFactory
      */
-    public function __construct(
-        ActionableBuildInterface $submission,
-        SubscriptionCollection $subscriptions = null,
-        SubscriberCollection $subscribers = null,
-        SubscriptionFactory $subscriptionFactory = null
-    ) {
+    public function __construct(ActionableBuildInterface $submission)
+    {
         $this->submission = $submission;
-        $this->subscriptions = $subscriptions;
-        $this->subscribers = $subscribers;
-        $this->subscriptionFactory = $subscriptionFactory;
     }
 
     /**
-     * @return SubscriptionCollection|null
+     * @param SubscriptionCollection $subscriptions
+     * @return void
      */
-    public function build()
+    public function build(SubscriptionCollection $subscriptions)
     {
-        // Start with an (presumably) empty subscription collection
-        $subscriptions = $this->getSubscriptions();
         $factory = $this->getSubscriptionFactory();
 
         $project = $this->submission->GetProject();
@@ -61,10 +50,12 @@ class SubscriptionBuilder
                 $subscriptions->add($subscription);
             }
         }
-        return $subscriptions;
     }
 
-    protected function getSubscriptions()
+    /**
+     * @return SubscriptionCollection
+     */
+    protected function getSubscriptionCollection()
     {
         if (is_null($this->subscriptions)) {
             $this->subscriptions = new SubscriptionCollection();
@@ -72,6 +63,10 @@ class SubscriptionBuilder
         return $this->subscriptions;
     }
 
+    /**
+     * TODO: PHPDI exists now, refactor accordingly
+     * @return SubscriptionFactory
+     */
     protected function getSubscriptionFactory()
     {
         if (is_null($this->subscriptionFactory)) {

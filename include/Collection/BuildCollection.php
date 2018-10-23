@@ -26,5 +26,6 @@ class BuildCollection extends Collection
     {
         $name = $build->SubProjectName ? $build->SubProjectName : $build->Name;
         parent::addItem($build, $name);
+        return $this;
     }
 }
