@@ -24,7 +24,9 @@ use CDash\Messaging\Notification\Email\Mail;
 use CDash\Messaging\Notification\Mailer;
 use CDash\Messaging\Notification\NotificationCollection;
 use CDash\Messaging\Notification\NotificationDirector;
-use CDash\Messaging\Subscription\SubscriptionBuilder;
+use CDash\Messaging\Subscription\CommitAuthorSubscriptionBuilder;
+use CDash\Messaging\Subscription\SubscriptionCollection;
+use CDash\Messaging\Subscription\UserSubscriptionBuilder;
 use CDash\Model\Build;
 use CDash\Model\BuildEmail;
 use CDash\Model\BuildGroup;
@@ -1437,8 +1439,11 @@ function sendemail(ActionableBuildInterface $handler, $projectid)
         }
     }
 
-    $builder = new SubscriptionBuilder($handler);
-    $subscriptions = $builder->build();
+    $subscriptions = new SubscriptionCollection();
+
+    foreach ($handler->GetSubscriptionBuilderCollection() as $builder) {
+        $builder->build($subscriptions);
+    }
 
     // TODO: remove NotificationCollection then pass subscriptions to constructor
     $builder = new EmailBuilder(new EmailNotificationFactory(), new NotificationCollection());
