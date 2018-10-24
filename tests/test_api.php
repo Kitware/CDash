@@ -58,6 +58,11 @@ class APITestCase extends KWWebTestCase
             $this->fail("Expected output not found when querying API for buildid: $buildid");
             return 1;
         }
+        $buildid = $this->get($this->url . '/api/v1/getbuildid.php?project=EmailProjectExample&site=Dash20.kitware&name=Win32-MSVC2009&stamp=20090223-0100-Nightly');
+        if ($buildid !== '<?xml version="1.0" encoding="UTF-8"?><buildid>3</buildid>') {
+            $this->fail("Expected output not found when querying by site name for buildid: $buildid");
+            return 1;
+        }
 
         $this->login();
         $userid = $this->get($this->url . '/api/v1/getuserid.php?author=simpleuser@localhost');
