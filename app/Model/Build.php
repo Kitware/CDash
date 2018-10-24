@@ -23,6 +23,7 @@ use CDash\Collection\TestCollection;
 use CDash\Config;
 use CDash\Database;
 use CDash\Model\BuildGroup;
+use CDash\ServiceContainer;
 use PDO;
 
 class Build
@@ -85,6 +86,7 @@ class Build
     private $Failures;
     private $PDO;
     private $Site;
+    private $BuildUpdate;
 
     public function __construct()
     {
@@ -2734,5 +2736,37 @@ class Build
                 'INSERT INTO build2group (groupid, buildid)
                 VALUES (?, ?)');
         pdo_execute($stmt, [$this->GroupId, $this->Id]);
+    }
+
+    /**
+     * @return string
+     */
+    public function GetBuildSummaryUrl()
+    {
+        $base = Config::getInstance()->getBaseUrl();
+        return "{$base}/buildSummary.php?buildid={$this->Id}";
+    }
+
+    /**
+     * @return BuildUpdate
+     */
+    public function GetBuildUpdate()
+    {
+        /** @var BuildUpdate $buildUpdate */
+        if (!$this->BuildUpdate) {
+            $buildUpdate = ServiceContainer::instance(BuildUpdate::class);
+            $buildUpdate->BuildId = $this->Id;
+            $buildUpdate->FillFromBuildId();
+
+            $this->BuildUpdate = $buildUpdate;
+        }
+
+        return $this->BuildUpdate;
+    }
+
+    public function SetBuildUpdate(BuildUpdate $buildUpdate)
+    {
+        $this->BuildUpdate = $buildUpdate;
+        return $this;
     }
 }
