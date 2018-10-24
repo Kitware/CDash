@@ -103,6 +103,14 @@ class EmailTestCase extends KWWebTestCase
         if (!$this->compareLog($this->logfilename, $rep . '/cdash_1.log')) {
             return;
         }
+
+        // Verify that the yellow dot shows up on index.php.
+        $this->login('user1@kw', 'user1');
+        $content = $this->connect($this->url . '/api/v1/index.php?project=EmailProjectExample&date=2009-02-23');
+        if (strpos($content, '"userupdates":1') === false) {
+            $this->fail('Yellow dot not found when expected');
+        }
+
         $this->pass('Passed');
     }
 
