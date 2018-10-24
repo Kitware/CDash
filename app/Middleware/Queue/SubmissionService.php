@@ -88,7 +88,6 @@ class SubmissionService
 
     protected $backupFileName;
     protected $httpClient;
-    protected $localProcessing;
     protected $queueName;
 
     /**
@@ -129,7 +128,6 @@ class SubmissionService
     {
         $this->backupFileName = null;
         $this->httpClient = null;
-        $this->localProcessing = true;
         $this->queueName = $queueName;
     }
 
@@ -142,7 +140,6 @@ class SubmissionService
     {
         if ($name === lcfirst($this->queueName)) {
             $message = $arguments[0];
-            $this->localProcessing = file_exists($message->file);
             if ($this->doSubmit($message)) {
                 $this->delete($message);
             }
@@ -179,13 +176,13 @@ class SubmissionService
         try {
             Config::getInstance()->set('CDASH_REMOTE_ADDR', $message->ip);
 
-            if ($this->localProcessing) {
-                // Local execution, process an open file.
-                $fh = fopen($message->file, 'r');
-            } else {
+            if (Config::getInstance()->get('CDASH_REMOTE_PROCESSOR')) {
                 // Remote execution, pass the filename and CDash will retrieve
                 // its contents.
                 $fh = basename($message->file);
+            } else {
+                // Local execution, process an open file.
+                $fh = fopen($message->file, 'r');
             }
             $handler = do_submit($fh, $message->project, null, $message->md5, $message->checksum);
             if (is_object($handler) && property_exists($handler, 'backupFileName')) {
@@ -206,7 +203,12 @@ class SubmissionService
      */
     public function delete(Message $message)
     {
-        if ($this->localProcessing) {
+        if (!Config::getInstance()->get('CDASH_REMOTE_PROCESSOR')) {
+            // A more descriptively named copy of this file should now
+            // exist on the server if it is configured to save backups.
+            if (file_exists($message->file)) {
+                unlink($message->file);
+            }
             return;
         }
 
@@ -241,11 +243,6 @@ class SubmissionService
     public function setBackupFileName($filename)
     {
         $this->backupFileName = $filename;
-    }
-
-    public function setLocalProcessing($bool)
-    {
-        $this->localProcessing = $bool;
     }
 
     /**

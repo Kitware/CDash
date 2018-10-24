@@ -149,7 +149,7 @@ class SubmissionServiceTest extends \PHPUnit_Framework_TestCase
         $sut = new SubmissionService();
         $sut->setBackupFileName('/path/to/backup/descriptive_filename.xml');
         $sut->setHttpClient($mock_client);
-        $sut->setLocalProcessing(false);
+        \CDash\Config::getInstance()->set('CDASH_REMOTE_PROCESSOR', true);
 
         $url = \CDash\Config::getInstance()->get('CDASH_BASE_URL') .
             '/api/v1/deleteSubmissionFile.php';
