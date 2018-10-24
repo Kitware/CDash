@@ -14,6 +14,10 @@
 
 namespace CDash\Model;
 
+use CDash\Config;
+use CDash\Lib\Repository\GitHub;
+use CDash\Log;
+
 class Repository
 {
     const CVS = 0;
@@ -50,5 +54,40 @@ class Repository
             }
         }
         return $viewers;
+    }
+
+    public static function factory(Project $project)
+    {
+        switch ($project->CvsViewerType)
+        {
+            case self::VIEWER_GITHUB:
+                list($owner, $repo) = array_values(
+                    Repository::getGitHubRepoInformationFromUrl($project->CvsUrl)
+                );
+                $token = Config::getInstance()->get('CDASH_GITHUB_API_TOKEN');
+                $service = new GitHub($token, $owner, $repo);
+                break;
+            default:
+                $vcs = $project->CvsViewerType ?: 'none';
+                $e = new \Exception("Unknown CvsViewerType [{$vcs}]");
+                Log::getInstance()->error($e);
+        }
+        return $service;
+    }
+
+    protected static function getGitHubRepoInformationFromUrl($url)
+    {
+        $url = str_replace('//', '', $url);
+        $parts = explode('/', $url);
+        $info = ['owner' => null, 'repo' => null];
+        if (isset($parts[1])) {
+            $info['owner'] = $parts[1];
+        }
+
+        if (isset($parts[2])) {
+            $info['repo'] = $parts[2];
+        }
+
+        return $info;
     }
 }

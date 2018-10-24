@@ -15,10 +15,6 @@
 =========================================================================*/
 
 //error_reporting(0); // disable error reporting
-use Bernard\Message\PlainMessage;
-use Bernard\Producer;
-use Bernard\QueueFactory\PersistentFactory;
-use Bernard\Serializer;
 use CDash\Config;
 use CDash\Middleware\Queue;
 use CDash\Middleware\Queue\DriverFactory as QueueDriverFactory;
@@ -28,9 +24,12 @@ use CDash\Model\Build;
 use CDash\Model\BuildFile;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
+use CDash\Model\Repository;
 use CDash\Model\Site;
+use CDash\Service\RepositoryService;
+use CDash\ServiceContainer;
+use GuzzleHttp\Client as HttpClient;
 use Ramsey\Uuid\Uuid;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
 require_once 'include/ctestparser.php';
 include_once 'include/common.php';
@@ -175,9 +174,25 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $buildid = null,
 
     // Send the emails if necessary
     if ($handler instanceof UpdateHandler) {
+        // TODO: set repository status pending here
+        $builds = $handler->getBuilds();
+
+        /** @var Build $build */
+        $build = array_pop($builds);
+        $project = new Project();
+        $project->Id = $build->ProjectId;
+        $project->Fill();
+
+        $service = Repository::factory($project);
+        $client = new HttpClient();
+
+        $repository = new RepositoryService($service, $client);
+        $repository->setStatusPending($build);
+
         send_update_email($handler, $projectid);
         sendemail($handler, $projectid);
     }
+
     if ($handler instanceof TestingHandler ||
         $handler instanceof BuildHandler ||
         $handler instanceof ConfigureHandler ||
