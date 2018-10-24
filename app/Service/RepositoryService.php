@@ -46,7 +46,7 @@ class RepositoryService
     /**
      * @param Build $build
      */
-    public function setStatusPending(Build $build)
+    public function setStatusOnStart(Build $build)
     {
         $options = [
             'context' => 'CDash by Kitware',
@@ -57,5 +57,10 @@ class RepositoryService
         ];
 
         $this->repository->setStatus($this->client, $options);
+    }
+
+    public function setStatusOnComplete(Build $build)
+    {
+
     }
 }

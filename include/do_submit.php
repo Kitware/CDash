@@ -187,7 +187,7 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $buildid = null,
         $client = new HttpClient();
 
         $repository = new RepositoryService($service, $client);
-        $repository->setStatusPending($build);
+        $repository->setStatusOnStart($build);
 
         send_update_email($handler, $projectid);
         sendemail($handler, $projectid);

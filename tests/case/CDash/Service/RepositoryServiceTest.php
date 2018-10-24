@@ -45,7 +45,7 @@ class RepositoryServiceTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf(RepositoryService::class, $sut);
     }
 
-    public function testSetStatusPending()
+    public function testSetStatusOnStart()
     {
         $sut = new RepositoryService($this->repository, $this->client);
 
@@ -58,7 +58,6 @@ class RepositoryServiceTest extends PHPUnit_Framework_TestCase
         $build->Name = 'FooBar';
         $build->Id = '1001001';
         $build->SetBuildUpdate($buildUpdate);
-
 
         $options = [
             'context' => 'CDash by Kitware',
@@ -73,6 +72,6 @@ class RepositoryServiceTest extends PHPUnit_Framework_TestCase
             ->method('setStatus')
             ->with($this->client, $options);
 
-        $sut->setStatusPending($build);
+        $sut->setStatusOnStart($build);
     }
 }
