@@ -58,8 +58,8 @@ class Repository
 
     public static function factory(Project $project)
     {
-        switch ($project->CvsViewerType)
-        {
+        $service = null;
+        switch ($project->CvsViewerType) {
             case self::VIEWER_GITHUB:
                 $token = Config::getInstance()->get('CDASH_GITHUB_API_TOKEN');
                 if (!$token) {
@@ -71,8 +71,6 @@ class Repository
 
                 $service = new GitHub($token, $owner, $repo);
                 break;
-            default:
-                $service = null;
         }
         return $service;
     }

@@ -61,6 +61,5 @@ class RepositoryService
 
     public function setStatusOnComplete(Build $build)
     {
-
     }
 }
