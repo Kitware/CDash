@@ -61,16 +61,18 @@ class Repository
         switch ($project->CvsViewerType)
         {
             case self::VIEWER_GITHUB:
+                $token = Config::getInstance()->get('CDASH_GITHUB_API_TOKEN');
+                if (!$token) {
+                    break;
+                }
                 list($owner, $repo) = array_values(
                     Repository::getGitHubRepoInformationFromUrl($project->CvsUrl)
                 );
-                $token = Config::getInstance()->get('CDASH_GITHUB_API_TOKEN');
+
                 $service = new GitHub($token, $owner, $repo);
                 break;
             default:
-                $vcs = $project->CvsViewerType ?: 'none';
-                $e = new \Exception("Unknown CvsViewerType [{$vcs}]");
-                Log::getInstance()->error($e);
+                $service = null;
         }
         return $service;
     }

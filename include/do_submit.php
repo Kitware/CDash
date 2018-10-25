@@ -174,20 +174,17 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $buildid = null,
 
     // Send the emails if necessary
     if ($handler instanceof UpdateHandler) {
-        // TODO: set repository status pending here
-        $builds = $handler->getBuilds();
-
-        /** @var Build $build */
-        $build = array_pop($builds);
         $project = new Project();
-        $project->Id = $build->ProjectId;
+        $project->Id = $projectid;
         $project->Fill();
 
+        // TODO: factory should always return object, consider alt way to check need for notification
         $service = Repository::factory($project);
-        $client = new HttpClient();
-
-        $repository = new RepositoryService($service, $client);
-        $repository->setStatusOnStart($build);
+        if ($service) {
+            $client = new HttpClient();
+            $repository = new RepositoryService($service, $client);
+            $repository->setStatusOnStart($build);
+        }
 
         send_update_email($handler, $projectid);
         sendemail($handler, $projectid);
