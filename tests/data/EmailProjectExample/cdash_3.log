@@ -3,7 +3,7 @@
 [<NA> <NA>] cdash.DEBUG: A submission to CDash for the project EmailProjectExample has build warnings and failing tests and failing dynamic analysis tests.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
-Details on the submission can be found at http://<NA>/<NA>/buildSummary.php?buildid=<NA>
+Details on the submission can be found at http://<NA>/buildSummary.php?buildid=<NA>
 
 Project: EmailProjectExample
 Site: Dash20.kitware
@@ -31,18 +31,18 @@ Dynamic analysis tests failing: 10
 
 
 *Tests failing*
-DashboardSendTest | Completed (OTHER_FAULT) | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
-StringActionsTest | Completed (OTHER_FAULT) | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
-MathActionsTest | Completed (OTHER_FAULT) | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
+DashboardSendTest | Completed (OTHER_FAULT) | (http://<NA>/testDetails.php?test=<NA>&build=<NA>)
+StringActionsTest | Completed (OTHER_FAULT) | (http://<NA>/testDetails.php?test=<NA>&build=<NA>)
+MathActionsTest | Completed (OTHER_FAULT) | (http://<NA>/testDetails.php?test=<NA>&build=<NA>)
 
 
 
 *Dynamic analysis tests failing or not run* (first 5)
-itkGeodesicActiveContourLevelSetSegmentationModuleTest1 (http://<NA>/<NA>/viewDynamicAnalysisFile.php?id=<NA>)
-itkShapeDetectionLevelSetSegmentationModuleTest1 (http://<NA>/<NA>/viewDynamicAnalysisFile.php?id=<NA>)
-itkShapeDetectionLevelSetSegmentationModuleTest2 (http://<NA>/<NA>/viewDynamicAnalysisFile.php?id=<NA>)
-itkVectorFiniteDifferenceFunctionTest1 (http://<NA>/<NA>/viewDynamicAnalysisFile.php?id=<NA>)
-itkVectorLevelSetFunctionTest2 (http://<NA>/<NA>/viewDynamicAnalysisFile.php?id=<NA>)
+itkGeodesicActiveContourLevelSetSegmentationModuleTest1 (http://<NA>/viewDynamicAnalysisFile.php?id=<NA>)
+itkShapeDetectionLevelSetSegmentationModuleTest1 (http://<NA>/viewDynamicAnalysisFile.php?id=<NA>)
+itkShapeDetectionLevelSetSegmentationModuleTest2 (http://<NA>/viewDynamicAnalysisFile.php?id=<NA>)
+itkVectorFiniteDifferenceFunctionTest1 (http://<NA>/viewDynamicAnalysisFile.php?id=<NA>)
+itkVectorLevelSetFunctionTest2 (http://<NA>/viewDynamicAnalysisFile.php?id=<NA>)
 
 
 -CDash on <NA>

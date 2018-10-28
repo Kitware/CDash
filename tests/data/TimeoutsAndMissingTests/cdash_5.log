@@ -3,7 +3,7 @@
 [<NA> <NA>] cdash.DEBUG: A submission to CDash for the project EmailProjectExample has failing tests and missing tests.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
-Details on the submission can be found at http://<NA>/<NA>/buildSummary.php?buildid=<NA>
+Details on the submission can be found at http://<NA>/buildSummary.php?buildid=<NA>
 
 Project: EmailProjectExample
 Site: Dash20.kitware
@@ -15,16 +15,16 @@ Missing tests: 3
 
 
 *Tests failing*
-curl | Completed | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
-StringActionsTest | Completed (OTHER_FAULT) | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
-MathActionsTest | Completed (OTHER_FAULT) | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
+curl | Completed | (http://<NA>/testDetails.php?test=<NA>&build=<NA>)
+StringActionsTest | Completed (OTHER_FAULT) | (http://<NA>/testDetails.php?test=<NA>&build=<NA>)
+MathActionsTest | Completed (OTHER_FAULT) | (http://<NA>/testDetails.php?test=<NA>&build=<NA>)
 
 
 
 *Missing tests*
-DashboardSendTest (http://<NA>/<NA>/viewTest.php?buildid=<NA>)
-Parser1Test1 (http://<NA>/<NA>/viewTest.php?buildid=<NA>)
-SystemInfoTest(http://<NA>/<NA>/viewTest.php?buildid=<NA>)
+DashboardSendTest (http://<NA>/viewTest.php?buildid=<NA>)
+Parser1Test1 (http://<NA>/viewTest.php?buildid=<NA>)
+SystemInfoTest(http://<NA>/viewTest.php?buildid=<NA>)
 
 -CDash on <NA>
  {"function":"TESTING: EMAILBODY","build_id":"<NA>","pid":<NA>} 

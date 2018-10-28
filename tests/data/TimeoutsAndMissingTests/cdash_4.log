@@ -3,7 +3,7 @@
 [<NA> <NA>] cdash.DEBUG: A submission to CDash for the project EmailProjectExample has failing tests.
 You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 
-Details on the submission can be found at http://<NA>/<NA>/buildSummary.php?buildid=<NA>
+Details on the submission can be found at http://<NA>/buildSummary.php?buildid=<NA>
 
 Project: EmailProjectExample
 Site: Dash20.kitware
@@ -14,8 +14,8 @@ Tests not passing: 2
 
 
 *Tests failing*
-SleepTimer1 | Completed (Timeout) | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
-SleepTimer2 | Completed (Timeout) | (http://<NA>/<NA>/testDetails.php?test=<NA>&build=<NA>)
+SleepTimer1 | Completed (Timeout) | (http://<NA>/testDetails.php?test=<NA>&build=<NA>)
+SleepTimer2 | Completed (Timeout) | (http://<NA>/testDetails.php?test=<NA>&build=<NA>)
 
 
 -CDash on <NA>

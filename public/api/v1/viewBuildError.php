@@ -53,6 +53,7 @@ if ($date != null) {
     $date = htmlspecialchars(pdo_real_escape_string($date));
 }
 
+global $response;
 $response = [];
 
 $start = microtime_float();

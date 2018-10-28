@@ -37,6 +37,7 @@ if (!isset($userid) || !is_numeric($userid)) {
 }
 
 // Check required parameter.
+global $projectid;
 @$projectid = $_GET['projectid'];
 if (!isset($projectid)) {
     $rest_json = file_get_contents('php://input');

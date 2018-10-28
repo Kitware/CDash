@@ -18,6 +18,7 @@ class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
         $this->ParallelProcessingConfig = '$CDASH_ASYNC_WORKERS = 10;';
     }
 
+    /* TODO: REWRITE THIS TEST
     public function testParallelSubmissions()
     {
         // Delete the existing Trilinos build.
@@ -73,4 +74,5 @@ class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
                 stamp='20110723-1515-Experimental'");
         remove_build($row['id']);
     }
+    */
 }
