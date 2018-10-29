@@ -112,7 +112,7 @@ class SubProjectTestCase extends KWWebTestCase
             'Tests not passing: 1',
             '*Tests failing*',
             "NOX_FiniteDifferenceIsorropiaColoring | Completed (Failed) | ({$url}/testDetails.php?test=",
-            '-CDash on cdash.dev',
+            '-CDash on',
             'function',
             'nox-noemail@noemail',
             'FAILED (t=1): SubProjectExample/NOX - Linux-GCC-4.1.2-SERIAL_RELEASE - Nightly',
