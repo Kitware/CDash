@@ -73,6 +73,17 @@ class IssueCreationTestCase extends KWWebTestCase
         $build->FillFromId($build->Id);
         $this->Builds['standalone'] = $build;
 
+        // Add a clean build to the standalone project.
+        $clean_build = new Build();
+        $clean_build->Name = 'clean build';
+        $clean_build->ProjectId = $this->Projects['IssueCreationProject']->Id;
+        $clean_build->SetStamp('20090223-0100-Nightly');
+        $clean_build->StartTime = gmdate(FMT_DATETIME);
+        $clean_build->SubmitTime = $clean_build->StartTime;
+        $clean_build->SiteId = 1;
+        $clean_build->AddBuild(0, 0);
+        $this->Builds['clean'] = $clean_build;
+
         // Add user1@kw as a project administrator.
 
         $user = new User();
@@ -203,5 +214,10 @@ class IssueCreationTestCase extends KWWebTestCase
                 $this->fail($error_msg);
             }
         }
+
+        // Verify that the issue creation link is not shown for clean builds.
+        $content = $this->get($this->url . "/api/v1/buildSummary.php?buildid={$this->Builds['clean']->Id}");
+        $response = json_decode($content, true);
+        $this->assertFalse($response['newissueurl']);
     }
 }
