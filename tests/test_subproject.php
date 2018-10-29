@@ -128,7 +128,7 @@ class SubProjectTestCase extends KWWebTestCase
             'Tests not passing: 1',
             '*Tests failing*',
             "NOX_FiniteDifferenceIsorropiaColoring | Completed (Failed) | ({$url}/testDetails.php?test=",
-            '-CDash on cdash.dev',
+            '-CDash on',
             'function',
         ];
         if ($this->assertLogContains($expected, 45)) {
