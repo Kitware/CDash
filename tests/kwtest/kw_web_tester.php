@@ -224,6 +224,36 @@ class KWWebTestCase extends WebTestCase
         return true;
     }
 
+    /** a slightly more sane method of testing the log */
+    protected function assertLogContains($expected, $lineCount)
+    {
+        $count = 0;
+        $log = file_get_contents($this->logfilename);
+        $lines = explode(PHP_EOL, $log);
+        $passed = true;
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if ($line && strpos($line, $expected[$count]) === false) {
+                $message = "Unexpected output in logfile:\n"
+                    . "Expected: {$expected[$count]}\n"
+                    . "   Found: {$line}\n";
+                $this->fail($message);
+                $passed = false;
+                break;
+            }
+            $count += $line ? 1 : 0;
+        }
+
+        $count = count($lines);
+        if ($count !== $lineCount) {
+            $message = "\nExpected {$lineCount} lines of log output, received {$count}";
+            $this->fail($message);
+            $passed = false;
+        }
+
+        return $passed;
+    }
+
     /** Check the current content for errors */
     public function checkErrors()
     {
