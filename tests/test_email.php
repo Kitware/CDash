@@ -198,7 +198,7 @@ class EmailTestCase extends KWWebTestCase
             "itkShapeDetectionLevelSetSegmentationModuleTest2 ({$url}/viewDynamicAnalysisFile.php?id=",
             "itkVectorFiniteDifferenceFunctionTest1 ({$url}/viewDynamicAnalysisFile.php?id=",
             "itkVectorLevelSetFunctionTest2 ({$url}/viewDynamicAnalysisFile.php?id=",
-            '-CDash on cdash.dev',
+            '-CDash on',
             'function',
             'simpletest@localhost',
             'FAILED (w=3, t=3, d=10): EmailProjectExample - Win32-MSVC2009 - Nightly',
@@ -229,7 +229,7 @@ class EmailTestCase extends KWWebTestCase
             "itkShapeDetectionLevelSetSegmentationModuleTest2 ({$url}/viewDynamicAnalysisFile.php?id=",
             "itkVectorFiniteDifferenceFunctionTest1 ({$url}/viewDynamicAnalysisFile.php?id=",
             "itkVectorLevelSetFunctionTest2 ({$url}/viewDynamicAnalysisFile.php?id=",
-            '-CDash on cdash.dev',
+            '-CDash on',
             'function',
         ];
 
