@@ -132,10 +132,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
 
     private function restoreState()
     {
-        // Delete the builds
-        foreach ($this->buildIds as $buildid) {
-            remove_build($buildid);
-        }
+        remove_build($this->buildIds);
 
         $this->restoreEmailPreference();
 
@@ -595,21 +592,5 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             $this->fail($error_message);
             return 1;
         }
-    }
-
-    public function testMultipleSubprojectsWithNormalEmail()
-    {
-        $summary = $this->setEmailPreference(self::EMAIL_NORMAL, 2147483647);
-
-        if ($summary === false) {
-            throw new Exception('Error setting email preferences.');
-        }
-
-        $this->submitBuild();
-        $emailoutput  = "{$this->dataDir}/EmailOutput.log";
-        if (!$this->compareLog($this->logfilename, $emailoutput)) {
-            return 1;
-        }
-        return 0;
     }
 }
