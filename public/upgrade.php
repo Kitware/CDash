@@ -819,6 +819,10 @@ if (isset($_GET['upgrade-2-6'])) {
     // Add new unique constraint to the site table.
     AddUniqueConstraintToSiteTable('site');
 
+    // Add support for filtering build warnings
+    AddTableField('project', 'filterbuildwarnings', 'varchar(255)', 'varchar(255)', '');
+
+
     // Set the database version
     setVersion();
 

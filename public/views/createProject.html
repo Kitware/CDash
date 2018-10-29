@@ -1444,6 +1444,32 @@
                 </td>
               </tr>
               <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Filter Build Warnings:</strong>
+                  </div>
+                </td>
+                <td>
+                  <input type="text" name="filterBuildWarnings" id="filterBuildWarnings" size="10"
+                         ng-model="cdash.project.FilterBuildWarnings"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('filterBuildWarnings_help')" />
+                  <a
+                    href="http://www.cdash.org/Wiki/CDash:Administration#Creating_a_project"
+                    target="blank">
+                    <img ng-mouseover="showHelp('filterBuildWarnings_help')"
+                      src="img/help.gif" border="0" />
+                  </a>
+                  <span class="help_content" id="filterBuildWarnings_help">
+                    <b>Filter build warnings</b>
+                    <br />
+                    Enter a regex that will be used to filter build warnings.
+                    Any warnings matching this regex will not be saved to the database.
+                  </span>
+                </td>
+              </tr>
+              <tr>
                 <td>
                 </td>
                 <td>

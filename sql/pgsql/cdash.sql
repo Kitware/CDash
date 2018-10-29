@@ -360,6 +360,7 @@ CREATE TABLE "project" (
   "showcoveragecode" smallint default '1',
   "sharelabelfilters" smallint default '0',
   "authenticatesubmissions" smallint default '0',
+  "filterbuildwarnings" character varying(255) DEFAULT '' NOT NULL,
   PRIMARY KEY ("id")
 );
 CREATE INDEX "name2" on "project" ("name");

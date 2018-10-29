@@ -454,6 +454,7 @@ CREATE TABLE `project` (
   `showcoveragecode` tinyint(4) default '1',
   `sharelabelfilters` tinyint(1) default '0',
   `authenticatesubmissions` tinyint(1) default '0',
+  `filterbuildwarnings` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`id`),
   KEY `name` (`name`),
   KEY `public` (`public`)

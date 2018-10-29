@@ -418,7 +418,8 @@ class KWWebTestCase extends WebTestCase
                     'TestTimeMaxStatus' => 3,
                     'TestTimeStd' => 4,
                     'TestTimeStdThreshold' => 1,
-                    'UploadQuota' => 1);
+                    'UploadQuota' => 1,
+                    'FilterBuildWarnings' => '');
             $submit_button = 'Submit';
         }
 

@@ -69,6 +69,7 @@ class Project
     public $RobotRegex;
     public $CTestTemplateScript;
     public $WebApiKey;
+    public $FilterBuildWarnings;
     /** @var \PDO $PDO */
     private $PDO;
 
@@ -124,6 +125,9 @@ class Project
         }
         if (empty($this->WebApiKey)) {
             $this->WebApiKey = '';
+        }
+        if (empty($this->FilterBuildWarnings)) {
+            $this->FilterBuildWarnings = '';
         }
         $this->PDO = Database::getInstance()->getPdo();
     }
@@ -226,6 +230,7 @@ class Project
         $RobotRegex = pdo_real_escape_string($this->RobotRegex);
         $Name = pdo_real_escape_string($this->Name);
         $CvsViewerType = pdo_real_escape_string($this->CvsViewerType);
+        $FilterBuildWarnings = pdo_real_escape_string($this->FilterBuildWarnings);
 
         // Check if the project is already
         if ($this->Exists()) {
@@ -267,6 +272,7 @@ class Project
             $query .= ',testtimemaxstatus=' . qnum($this->TestTimeMaxStatus);
             $query .= ',emailmaxitems=' . qnum($this->EmailMaxItems);
             $query .= ',emailmaxchars=' . qnum($this->EmailMaxChars);
+            $query .= ",filterbuildwarnings='" . $FilterBuildWarnings . "'";
             $query .= ' WHERE id=' . qnum($this->Id) . '';
 
             if (!pdo_query($query)) {
@@ -336,14 +342,14 @@ class Project
                                     nightlytime,googletracker,emailbrokensubmission,emailredundantfailures,
                                     emaillowcoverage,emailtesttimingchanged,cvsviewertype,
                                     testtimestd,testtimestdthreshold,testtimemaxstatus,emailmaxitems,emailmaxchars,showtesttime,emailadministrator,showipaddresses
-                                    ,displaylabels,sharelabelfilters,authenticatesubmissions,showcoveragecode,autoremovetimeframe,autoremovemaxbuilds,uploadquota,webapikey)
+                                    ,displaylabels,sharelabelfilters,authenticatesubmissions,showcoveragecode,autoremovetimeframe,autoremovemaxbuilds,uploadquota,webapikey,filterbuildwarnings)
                  VALUES (' . $idvalue . "'$Name','$Description','$HomeUrl','$CvsUrl','$BugTrackerUrl','$BugTrackerFileUrl','$BugTrackerNewIssueUrl','$BugTrackerType','$DocumentationUrl',
                  " . qnum($this->Public) . ',' . qnum($this->ImageId) . ',' . qnum($this->CoverageThreshold) . ",'$TestingDataUrl','$NightlyTime',
                  '$GoogleTracker'," . qnum($this->EmailBrokenSubmission) . ',' . qnum($this->EmailRedundantFailures) . ','
                 . qnum($this->EmailLowCoverage) . ',' . qnum($this->EmailTestTimingChanged) . ",'$CvsViewerType'," . qnum($this->TestTimeStd)
                 . ',' . qnum($this->TestTimeStdThreshold) . ',' . qnum($this->TestTimeMaxStatus) . ',' . qnum($this->EmailMaxItems) . ',' . qnum($this->EmailMaxChars) . ','
                 . qnum($this->ShowTestTime) . ',' . qnum($this->EmailAdministrator) . ',' . qnum($this->ShowIPAddresses) . ',' . qnum($this->DisplayLabels) . ',' . qnum($this->ShareLabelFilters) . ',' . qnum($this->AuthenticateSubmissions) . ',' . qnum($this->ShowCoverageCode)
-                . ',' . qnum($this->AutoremoveTimeframe) . ',' . qnum($this->AutoremoveMaxBuilds) . ',' . qnum($this->UploadQuota) . ",'" . $this->WebApiKey . "')";
+                . ',' . qnum($this->AutoremoveTimeframe) . ',' . qnum($this->AutoremoveMaxBuilds) . ',' . qnum($this->UploadQuota) . ",'" . $this->WebApiKey . "','" . $this->FilterBuildWarnings ."')";
 
             if (!pdo_query($query)) {
                 add_last_sql_error('Project Create');
@@ -497,6 +503,7 @@ class Project
                 pdo_query("UPDATE project SET webapikey='$newKey' WHERE id=" . $this->Id);
                 $this->WebApiKey = $newKey;
             }
+            $this->FilterBuildWarnings = $project_array['filterbuildwarnings'];
         }
 
         // Check if we have a robot

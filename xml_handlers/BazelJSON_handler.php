@@ -370,7 +370,9 @@ class BazelJSONHandler extends NonSaxHandler
                         } else {
                             // Done with configure, parsing build errors and warnings
                             $record_error = false;
-                            if (preg_match($warning_pattern, $line, $matches) === 1
+                            if ($this->Builds[$subproject_name]->FilterWarning($line)) {
+                                // Skip this line
+                            } elseif (preg_match($warning_pattern, $line, $matches) === 1
                                   && count($matches) === 3) {
                                 // This line contains a warning.
                                 $record_error = true;

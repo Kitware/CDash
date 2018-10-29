@@ -85,6 +85,7 @@ class Build
     private $Failures;
     private $PDO;
     private $Site;
+    private $FilterBuildWarnings;
 
     public function __construct()
     {
@@ -2720,5 +2721,18 @@ class Build
                 'INSERT INTO build2group (groupid, buildid)
                 VALUES (?, ?)');
         pdo_execute($stmt, [$this->GroupId, $this->Id]);
+    }
+
+    public function FilterWarning($warning)
+    {
+        if (!$this->FilterBuildWarnings) {
+            $stmt = $this->PDO->prepare(
+                'SELECT filterbuildwarnings FROM project WHERE id = ?');
+            pdo_execute($stmt, [$this->ProjectId]);
+            $this->FilterBuildWarnings = $stmt->fetchColumn();
+        }
+
+        return preg_match($this->FilterBuildWarnings, $warning);
+
     }
 }

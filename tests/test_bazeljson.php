@@ -22,8 +22,21 @@ class BazelJSONTestCase extends KWWebTestCase
 
     public function testBazelJSON()
     {
+        // Create a new project.
+        $settings = [
+            'Name' => 'Bazel',
+            'Public' => 1,
+            'FilterBuildWarnings' => '/(.*?)unused variable(.*?)$/i'
+        ];
+        $projectid = $this->createProject($settings);
+        if ($projectid < 1) {
+            $this->fail('Failed to create project');
+        }
+        $project = new Project();
+        $project->Id = $projectid;
+
         // Submit testing data.
-        $buildid = $this->submit_data('InsightExample', 'BazelJSON',
+        $buildid = $this->submit_data('Bazel', 'BazelJSON',
             '0a9b0aeeb73618cd10d6e1bee221fd71',
             dirname(__FILE__) . '/data/Bazel/bazel_BEP.json');
         if (!$buildid) {
@@ -39,7 +52,7 @@ class BazelJSONTestCase extends KWWebTestCase
 
         $answer_key = [
             'builderrors' => 2,
-            'buildwarnings' => 2,
+            'buildwarnings' => 0,  // Warnings are filtered out
             'testfailed' => 1,
             'testpassed' => 1,
             'configureerrors' => 0,
@@ -74,6 +87,7 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Cleanup.
         remove_build($buildid);
+        $project->Delete();
     }
 
     public function testBazelSubProjs()

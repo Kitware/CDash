@@ -160,6 +160,7 @@ if ($projectid > 0) {
     if (!$config->get('CDASH_USER_CREATE_PROJECTS') || $isAdmin) {
         $project_response['UploadQuota'] = 1;
     }
+    $project_response['FilterBuildWarnings'] = "";
 }
 
 // Make sure we have at least one repository.
