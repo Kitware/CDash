@@ -48,6 +48,8 @@ $build->Name = get_param('name');
 $build->SetStamp(get_param('stamp'));
 $build->ProjectId = $project->Id;
 $build->SiteId = $site->Id;
+$build->StartTime = gmdate(FMT_DATETIME);
+$build->SubmitTime = $build->StartTime;
 $subProjectName = get_param('subProjectName', false);
 if ($subProjectName) {
     $build->SubProjectName = $subProjectName;
