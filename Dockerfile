@@ -36,6 +36,7 @@ COPY backup /var/www/cdash/backup
 COPY include /var/www/cdash/include
 COPY bootstrap /var/www/cdash/bootstrap
 COPY composer.json /var/www/cdash/composer.json
+COPY scripts/bash /bash-lib
 
 RUN cd /var/www/cdash                                                      \
  && composer install --no-interaction --no-progress --prefer-dist --no-dev \
@@ -56,3 +57,4 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=5m \
   CMD ["curl", "-f", "http://localhost/viewProjects.php"]
 
 ENTRYPOINT ["/bin/bash", "/docker-entrypoint.sh"]
+CMD ["serve"]
