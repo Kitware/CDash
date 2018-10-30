@@ -20,8 +20,6 @@ class PasswordRotationTestCase extends KWWebTestCase
         $this->UserId = null;
     }
 
-    /* TODO: REWRITE TEST
-
     public function testRegisterUser()
     {
         // Enable password rotation.
@@ -166,5 +164,4 @@ class PasswordRotationTestCase extends KWWebTestCase
         $this->removeLineFromConfig($this->RotationConfig);
         $this->removeLineFromConfig($this->UniqueConfig);
     }
-    */
 }

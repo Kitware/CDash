@@ -13,8 +13,7 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
     {
         parent::__construct();
     }
-    
-    /* TODO: rewrite this test
+
     public function addFakeSubmissionRecords($projectid)
     {
         // Insert fake submission records for the given projectid.
@@ -256,5 +255,4 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
         $this->pass('Passed');
         return 0;
     }
-    */
 }

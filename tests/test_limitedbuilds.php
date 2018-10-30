@@ -28,7 +28,6 @@ class LimitedBuildsTestCase extends KWWebTestCase
         $this->Projects = [];
     }
 
-    /* TODO: REWRITE TEST
     public function testSetup()
     {
         // Enable config settings to test.
@@ -88,5 +87,4 @@ class LimitedBuildsTestCase extends KWWebTestCase
         $this->removeLineFromConfig($this->LimitBuildsLine);
         $this->removeLineFromConfig($this->UnlimitedProjectLine);
     }
-    */
 }

@@ -27,7 +27,7 @@ class AuthTokenTestCase extends KWWebTestCase
             $this->Project->Delete();
         }
     }
-    /* TODO: REWRITE THIS TEST
+
     public function testEnableAuthenticatedSubmissions()
     {
         // Login as admin.
@@ -329,5 +329,4 @@ class AuthTokenTestCase extends KWWebTestCase
             $this->fail("Expired token still exists after submission");
         }
     }
-    */
 }

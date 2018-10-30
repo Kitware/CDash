@@ -17,7 +17,6 @@ class OverrideHeaderTestCase extends KWWebTestCase
         $this->ConfigFile = dirname(__FILE__) . '/../config/config.local.php';
     }
 
-    /* TODO: REWRITE THIS TEST
     public function testEnableConfigSetting()
     {
         $contents = file_get_contents($this->ConfigFile);
@@ -35,15 +34,16 @@ class OverrideHeaderTestCase extends KWWebTestCase
 
     public function testOverrideHeader()
     {
-        global $CDASH_ROOT_DIR;
+        $config = Config::getInstance();
+        $root_dir = $config->get('CDASH_ROOT_DIR');
 
         // Create a local header & footer.
-        $dir_name = "$CDASH_ROOT_DIR/public/local/views";
+        $dir_name = "$root_dir/public/local/views";
         if (!file_exists($dir_name)) {
             mkdir($dir_name);
         }
-        touch("$CDASH_ROOT_DIR/public/local/views/header.html");
-        touch("$CDASH_ROOT_DIR/public/local/views/footer.html");
+        touch("$root_dir/public/local/views/header.html");
+        touch("$root_dir/public/local/views/footer.html");
 
         // Verify that these are used.
         $this->get($this->url . '/api/v1/index.php?project=InsightExample');
@@ -84,10 +84,11 @@ class OverrideHeaderTestCase extends KWWebTestCase
 
     private function cleanup()
     {
-        global $CDASH_ROOT_DIR;
+        $config = Config::getInstance();
+        $root_dir = $config->get('CDASH_ROOT_DIR');
+
         // Delete the local files that we created.
-        unlink("$CDASH_ROOT_DIR/public/local/views/header.html");
-        unlink("$CDASH_ROOT_DIR/public/local/views/footer.html");
+        unlink("$root_dir/public/local/views/header.html");
+        unlink("$root_dir/public/local/views/footer.html");
     }
-    */
 }

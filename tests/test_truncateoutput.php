@@ -16,7 +16,7 @@ class TruncateOutputTestCase extends KWWebTestCase
         $this->Expected = "The beginning survives\n...\nCDash truncated output because it exceeded 44 characters.\n...\nThis part is preserved\n";
         $this->BuildId = 0;
     }
-    /* TODO: REWRITE TEST
+
     public function testTruncateOutput()
     {
         // Set a limit so long output will be truncated.
@@ -56,7 +56,7 @@ class TruncateOutputTestCase extends KWWebTestCase
         $this->pass("Passed");
         return 0;
     }
-    */
+
     public function cleanup()
     {
         // Restore our configuration and delete the build that we created.

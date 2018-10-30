@@ -77,7 +77,6 @@ class LoginTestCase extends KWWebTestCase
         $this->setField('institution', $institution);
     }
 
-    /* TODO: rewrite this test
     public function testRegistrationWithEmailVerification()
     {
         $configLine = '$CDASH_REGISTRATION_EMAIL_VERIFY = true;';
@@ -115,5 +114,4 @@ class LoginTestCase extends KWWebTestCase
 
         $this->removeLineFromConfig($configLine);
     }
-    */
 }

@@ -3,6 +3,8 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use CDash\Config;
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 require_once 'include/common.php';
@@ -13,7 +15,6 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
     {
         parent::__construct();
     }
-
 
     public function enableAutoRemoveConfigSetting()
     {
@@ -48,7 +49,6 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
     public function testBuildsRemovedOnSubmission()
     {
         $this->enableAutoRemoveConfigSetting();
-        /** TODO: REWRITE THIS TEST
 
         $this->setAutoRemoveTimeFrame();
         $this->deleteLog($this->logfilename);
@@ -101,12 +101,11 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         }
 
         // Make sure we didn't inadvertently delete the whole upload directory.
-        global $CDASH_ROOT_DIR;
-        if (!file_exists("$CDASH_ROOT_DIR/public/upload")) {
+        $config = Config::getInstance();
+        if (!file_exists("{$config->get('CDASH_ROOT_DIR')}/public/upload")) {
             $this->fail('upload diretory does not exist');
         }
 
         $this->pass('Passed');
-         */
     }
 }
