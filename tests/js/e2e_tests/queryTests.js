@@ -30,7 +30,10 @@ describe("queryTests", function() {
   });
 
   it("filter on time", function() {
-    // this test counts on all of the tests having taken 0s, which may not be accurate
+    // This test should not count on all tests taking 0s
+    // It should open the page with the time filter set to == 0
+    // then make sure that all tests on the page have times
+    // of 0s.
     // filter_test("time", "41", "0", 5);
   });
 
