@@ -14,7 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-// require_once 'config/config.php';
 require_once 'xml_handlers/abstract_handler.php';
 
 use CDash\Config;
