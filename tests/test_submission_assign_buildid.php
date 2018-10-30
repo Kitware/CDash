@@ -8,6 +8,7 @@ class SubmissionAssignBuildIdTestCase extends KWWebTestCase
 {
     public function testSubmissionAssignBuildId()
     {
+        $begin_test_time = time();
         $file_to_submit = dirname(__FILE__) .  '/data/AssignBuildId/Configure.xml';
         $buildid = $this->submission_assign_buildid(
                 $file_to_submit, 'InsightExample', 'assign_buildid',
@@ -24,6 +25,9 @@ class SubmissionAssignBuildIdTestCase extends KWWebTestCase
 
         $build->FillFromId($buildid);
         $this->assertEqual('assign_buildid', $build->Name);
+        $this->assertTrue(strtotime($build->SubmitTime) >= $begin_test_time);
+        $this->assertEqual('2018-09-18 14:27:07', $build->StartTime);
+        $this->assertEqual('2018-09-18 14:27:08', $build->EndTime);
 
         remove_build($buildid);
     }

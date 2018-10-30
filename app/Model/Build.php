@@ -314,6 +314,7 @@ class Build
                 projectid,
                 starttime,
                 endtime,
+                submittime,
                 siteid,
                 name,
                 stamp,
@@ -337,6 +338,7 @@ class Build
         $this->Type = $build_array['type'];
         $this->StartTime = $build_array['starttime'];
         $this->EndTime = $build_array['endtime'];
+        $this->SubmitTime = $build_array['submittime'];
         $this->SiteId = $build_array['siteid'];
         $this->ProjectId = $build_array['projectid'];
         $this->SetParentId($build_array['parentid']);
