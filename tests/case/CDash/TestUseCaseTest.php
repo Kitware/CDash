@@ -1,7 +1,7 @@
 <?php
 
 use CDash\Model\Build;
-use CDash\Collection\BuildCollection;
+use CDash\Lib\Collection\BuildCollection;
 use CDash\Collection\TestCollection;
 use CDash\Test\CDashUseCaseTestCase;
 use CDash\Test\UseCase\TestUseCase;

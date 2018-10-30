@@ -1,5 +1,5 @@
 <?php
-namespace CDash\Collection;
+namespace CDash\Lib\Collection;
 
 use CDash\Model\Test;
 

@@ -19,7 +19,7 @@ include_once 'include/common.php';
 include_once 'include/ctestparserutils.php';
 include_once 'include/repository.php';
 
-use CDash\Collection\TestCollection;
+use CDash\Lib\Collection\TestCollection;
 use CDash\Config;
 use CDash\Database;
 use CDash\Model\BuildGroup;
