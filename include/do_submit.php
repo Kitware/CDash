@@ -158,6 +158,12 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $buildid = null,
     // Parse the XML file
     $handler = ctest_parse($filehandle, $projectid, $buildid, $expected_md5, $do_checksum, $scheduleid);
 
+    //this is the md5 checksum fail case
+    if ($handler == false) {
+        //no need to log an error since ctest_parse already did
+        return false;
+    }
+
     $build = get_build_from_handler($handler);
     if (!is_null($build)) {
         $pendingSubmissions = new PendingSubmissions();
@@ -165,12 +171,6 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $buildid = null,
         if ($pendingSubmissions->Exists()) {
             $pendingSubmissions->Decrement();
         }
-    }
-
-    //this is the md5 checksum fail case
-    if ($handler == false) {
-        //no need to log an error since ctest_parse already did
-        return false;
     }
 
     // Send the emails if necessary
