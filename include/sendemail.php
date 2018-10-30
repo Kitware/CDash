@@ -386,7 +386,7 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
         foreach ($errors as $error) {
             $info = '';
             if (strlen($error->sourcefile) > 0) {
-                $info .= "{$error->sourcefile} line {$error->sourceline} ({$serverURI}/viewBuildError.php?{$buildid})";
+                $info .= "{$error->sourcefile} line {$error->sourceline} ({$serverURI}/viewBuildError.php?buildid={$buildid})";
                 $info .= "{$error->text}\n";
             } else {
                 $info .= "{$error->text}\n{$error->postcontext}\n";
@@ -406,7 +406,7 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
         foreach ($failures as $fail) {
             $info = '';
             if (strlen($fail->sourcefile) > 0) {
-                $info .= "{$fail->sourcefile} ({$serverURI}/viewBuildError.php?type=0&build={$buildid})\n";
+                $info .= "{$fail->sourcefile} ({$serverURI}/viewBuildError.php?type=0&buildid={$buildid})\n";
             }
             if (strlen($fail->stdoutput) > 0) {
                 $info .= "{$fail->stdoutput}\n";
