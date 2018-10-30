@@ -63,7 +63,6 @@ if ($date != null) {
 }
 list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $Project->NightlyTime);
 
-global $date_range;
 // Date range is currently hardcoded to two weeks in the past.
 // This could become a configurable value instead.
 $date_range = 14;
@@ -122,7 +121,6 @@ $query =
 $group_rows = pdo_query($query);
 add_last_sql_error('overview', $projectid);
 
-global $build_groups, $static_groups;
 $build_groups = array();
 $static_groups = array();
 
