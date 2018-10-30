@@ -628,18 +628,7 @@ function get_server_URI($localhost = false)
         $localhost = true;
     }
 
-    $uri = $config->getBaseUrl($localhost);
-
-    // Trim off any subdirectories too.
-    $subdirs = array('/ajax/', '/api/');
-    foreach ($subdirs as $subdir) {
-        $pos = strpos($uri, $subdir);
-        if ($pos !== false) {
-            $uri = substr($uri, 0, $pos);
-        }
-    }
-
-    return $uri;
+    return $config->getBaseUrl($localhost);
 }
 
 /** add a user to a site */

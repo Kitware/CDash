@@ -96,6 +96,20 @@ class Config extends Singleton
             $port = $this->getServerPort() ? ":{$this->getServerPort()}" : '';
             $path = $this->getPath();
 
+            // Trim any known subdirectories off of the path.
+            $subdirs = ['/ajax/', '/api/', '/auth/'];
+            foreach ($subdirs as $subdir) {
+                $pos = strpos($path, $subdir);
+                if ($pos !== false) {
+                    $path = substr($path, 0, $pos);
+                }
+            }
+
+            // Also trim any .php files from the path.
+            if (strpos($path, '.php') !== false) {
+                $path = dirname($path);
+            }
+
             $uri = "{$protocol}://{$host}{$port}{$path}";
         }
         return $uri;
