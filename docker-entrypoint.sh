@@ -293,6 +293,69 @@ do_install() {
         "$root_pass"
 }
 
+usage() {
+    echo "Usage: $0 [OPTIONS]... [COMMANDS]..."
+    echo "Run various CDash operations."
+    echo ""
+
+    echo "OPTIONS"
+    echo ""
+    echo "  -v, --verbose enable more verbose logging"
+    echo "  -h, --help    display this help and exit"
+    echo ""
+
+    echo "COMMANDS"
+    echo ""
+
+    echo "  install"
+    echo "      run CDash's initial install process (install.php)."
+    echo ""
+
+    echo "  upgrade"
+    echo "      upgrade database schema"
+    echo ""
+
+    echo "  configure"
+    echo "      update local configuration and manage static users"
+    echo ""
+
+    echo "  fix-build-groups"
+    echo "      fix build groups based on build rules"
+    echo ""
+
+    echo "  check-builds-for-wrong-date"
+    echo "      check CDash for builds with wrong start dates"
+    echo ""
+
+    echo "  delete-builds-with-wrong-date"
+    echo "      delete CDash builds with wrong start dates"
+    echo ""
+
+    echo "  compute-timing[:N]"
+    echo "      compute test timing for the last N days (default: 4)"
+    echo ""
+
+    echo "  update-stats[:N]"
+    echo "      compute updated statistics for last N days (default: 4)"
+    echo ""
+
+    echo "  compress"
+    echo "      compress test output"
+    echo ""
+
+    echo "  cleanup"
+    echo "      run CDash's database cleanup process"
+    echo ""
+
+    echo "  serve"
+    echo "      serve web traffic (default operation)"
+    echo ""
+
+    echo "  help"
+    echo "      display this help and exit"
+    echo ""
+}
+
 do_install=0
 do_upgrade=0
 do_configure=0
@@ -380,6 +443,24 @@ while [ -n "$*" ] ; do
             ;;
         serve)
             do_serve=1
+            ;;
+        -v)
+            export DEBUG=1
+            ;;
+        --verbose)
+            export DEBUG=1
+            ;;
+        -h)
+            usage
+            exit
+            ;;
+        --help)
+            usage
+            exit
+            ;;
+        help)
+            usage
+            exit
             ;;
     esac
     shift
