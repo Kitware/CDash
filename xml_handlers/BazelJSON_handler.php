@@ -370,7 +370,11 @@ class BazelJSONHandler extends NonSaxHandler
                         } else {
                             // Done with configure, parsing build errors and warnings
                             $record_error = false;
-                            if (preg_match($warning_pattern, $line, $matches) === 1
+                            if (!is_null($build_error) && $type === 0 && empty($build_error->PostContext)) {
+                                // Assume all errors have at list one line of
+                                // context *AND* that the first line of context
+                                // may match the error pattern
+                            } elseif (preg_match($warning_pattern, $line, $matches) === 1
                                   && count($matches) === 3) {
                                 // This line contains a warning.
                                 $record_error = true;
