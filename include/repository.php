@@ -1157,6 +1157,9 @@ function generate_bugtracker_new_issue_link($build, $project)
             get_email_summary($build->Id, $errors, $errorkey, 1, 500, 0, false);
         $emailtext['category'][$errorkey] = $nerrors;
     }
+    if (empty($emailtext)) {
+        return false;
+    }
     $msg_parts = generate_broken_build_message($emailtext, $build, $project);
     $title = $msg_parts['title'];
     $body = $msg_parts['body'];
