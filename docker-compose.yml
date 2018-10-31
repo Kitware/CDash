@@ -20,6 +20,8 @@ services:
         $$CDASH_DB_PORT = '';
         $$CDASH_DB_PASS = '';
         $$CDASH_DB_CONNECTION_TYPE = 'host';
+        $$CDASH_LOG_FILE = 'php://stdout';
+        $$CDASH_ENABLE_FEED = 0;
 
       CDASH_STATIC_USERS: |
         USER jdoe@acme.com jdoe_secret
