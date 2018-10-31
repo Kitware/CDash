@@ -510,12 +510,12 @@ class BazelJSONHandler extends NonSaxHandler
                             // We'll set the overall test status from 'testSummary'
                             $test_status = "";
                             $this->CreateNewTest($buildid, $test_status,
-                                $test_time, $test_name);
+                                $test_time, $test_name, $subproject_name);
                         }
                     } else {
                         $test_status = strtolower($json_array['testResult']['status']);
                         $this->CreateNewTest($buildid, $test_status,
-                            $test_time, $test_name);
+                            $test_time, $test_name, $subproject_name);
                     }
                 }
                 break;
@@ -635,7 +635,7 @@ class BazelJSONHandler extends NonSaxHandler
         $this->Configures[$subproject_name] = $configure;
     }
 
-    private function CreateNewTest($buildid, $test_status, $test_time, $test_name)
+    private function CreateNewTest($buildid, $test_status, $test_time, $test_name, $subproject_name)
     {
         $buildtest = new BuildTest();
         $buildtest->BuildId = $buildid;
