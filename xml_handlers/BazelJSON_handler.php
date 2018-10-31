@@ -466,7 +466,6 @@ class BazelJSONHandler extends NonSaxHandler
             case 'testResult':
                 // Skip test results with children, the output is duplicated
                 if (!array_key_exists('children', $json_array)) {
-                    $subproject_name = '';
                     // By default, associate any tests with this->BuildId.
                     $buildid = $this->BuildId;
                     $subproject_name = '';
