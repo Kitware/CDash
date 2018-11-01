@@ -1,3 +1,56 @@
+Unfamiliar with Docker?  [Start here](https://docs.docker.com/get-started/).
+
+## How-to Guide ##
+
+### Install CDash
+
+In the root of your CDash clone, edit `docker-compose.yml`.
+
+The `CDASH_CONFIG` section is where you specify settings that will be stored in your `config.local.php`
+file.
+
+`CDASH_STATIC_USERS` is a list of CDash users that should be automatically created, updated, or deleted.
+
+Once you're happy with your changes to this file, run:
+
+```
+docker-compose up -d
+```
+
+This tells [Docker Compose](https://docs.docker.com/compose/) to build and run services for the CDash web server and its MySQL database. This command downloads [a prebuilt image from DockerHub](https://hub.docker.com/r/kitware/cdash/).  If you prefer to build your own Docker image for CDash, pass the `--build` option to `docker-compose`.
+
+This initial `docker-compose` command does not run the CDash's install script by default.  To achieve that, run:
+
+```
+docker-compose run --rm cdash install configure
+```
+
+This executes a one-shot container that runs the install procedure and sets up the predefined users from your `docker-compose.yml` file.
+
+Once this command complete, browse to localhost:8080.  You should see a freshly installed copy of CDash with the latest database schema.
+
+### Change the config and redeploy
+
+Edit `docker-compose.yml` and run
+
+```
+docker-compose run --rm cdash configure
+```
+
+### Pull in changes from upstream CDash (upgrade)
+
+If you're using prebuilt images from DockerHub, run the following commands:
+
+```
+docker-compose pull cdash
+docker-compose up -d
+```
+
+If you prefer to build your own images locally, run:
+```
+docker-compose up -d --no-deps --build cdash
+````
+
 ## Container Variables
 
 ### `CDASH_CONFIG`
