@@ -732,7 +732,6 @@ function get_build_from_handler($handler)
 function requeue_submission_file($filename, $projectid, $buildid = null,
                                  $expected_md5 = '', $ip = null)
 {
-    $queued = false;
     $config = Config::getInstance();
 
     if ($config->get('CDASH_BERNARD_SUBMISSION')) {

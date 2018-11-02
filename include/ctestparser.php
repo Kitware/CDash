@@ -34,6 +34,7 @@ use CDash\Lib\Parser\CTest\BuildParser;
 use CDash\Lib\Parser\CTest\ConfigureParser;
 use CDash\Lib\Parser\CTest\CoverageLogParser;
 use CDash\Lib\Parser\CTest\CoverageParser;
+use CDash\Lib\Parser\CTest\DoneParser;
 use CDash\Lib\Parser\CTest\DynamicAnalysisParser;
 use CDash\Lib\Parser\CTest\NoteParser;
 use CDash\Lib\Parser\CTest\ProjectParser;
@@ -347,7 +348,7 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
         $handler = new JUnitTestingParser($projectid);
         $file = 'Test';
     } elseif (preg_match('/<Done/', $content)) {
-        $handler = new DoneHandler($projectid, $scheduleid);
+        $handler = new DoneParser($projectid);
         $file = 'Done';
     }
 
@@ -492,7 +493,7 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
     }
 
     $requeued = false;
-    if ($handler instanceof DoneHandler && $handler->shouldRequeue()) {
+    if ($handler instanceof DoneParser && $handler->shouldRequeue()) {
         require_once 'include/do_submit.php';
         $retry_handler = new RetryHandler($filename);
         $retry_handler->Increment();
@@ -504,7 +505,24 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
         check_for_immediate_deletion($filename);
     }
     displayReturnStatus($statusarray);
+
+    // This should not work as is and I'm not exactly sure why it does here, but sure enough,
+    // given the refactoring of DoneHandler into DoneParser it ceases to work. Two
+    // things:
+    //   1. This variable is not defined on the DoneHandler class (probably just an over site)
+    //   2. More importantly it violates the Liskov Substitution Principle, meaning that even
+    //      if the variable were defined it has the affect of making DoneHandler >
+    //      AbstractXmlParser (or any classes based off of it) which is how the violation
+    //      occurs. If we define it on DoneHandler, it should also be defined on TestHandler
+    //      BuildHandler, etc. But because it doesn't make sense to define it there this
+    //      is a very good indicator that the logic belongs elsewhere.
+    // Intermittent fix:
+    //   Create a backupFileName property on the AbstractXmlHandler class
+    // Proposed long term fix:
+    //   Set $backupFilename as a property on the Submission class which will handle
+    //   much of the work taking place in this function
     $handler->backupFileName = $backup_filename;
+
     return $handler;
 }
 

@@ -4,6 +4,8 @@ require_once 'include/common.php';
 require_once 'include/ctestparser.php';
 require_once 'include/pdo.php';
 
+use CDash\Config;
+use CDash\Lib\Parser\CTest\DoneParser;
 use CDash\Model\Build;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Site;
@@ -34,8 +36,9 @@ class DoneHandlerTestCase extends KWWebTestCase
         $this->assertTrue($build->AddBuild());
         $this->assertTrue($build->Id > 0);
 
+        $config = Config::getInstance();
         // Generate a Done.xml file and submit it.
-        $tmpfname = tempnam(CDash\Config::getInstance()->get('CDASH_BACKUP_DIRECTORY'), 'Done');
+        $tmpfname = tempnam($config->get('CDASH_BACKUP_DIRECTORY'), 'Done');
         $handle = fopen($tmpfname, 'w');
         fwrite($handle, "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Done><buildId>$build->Id</buildId><time>$timestamp</time></Done>");
         fclose($handle);
@@ -56,9 +59,11 @@ class DoneHandlerTestCase extends KWWebTestCase
         $pending->NumFiles = 2;
         $pending->Save();
         $fp = fopen($tmpfname, 'r');
+
+        /** @var DoneParser $handler */
         $handler = ctest_parse($fp, $projectid, $build->Id);
         fclose($fp);
-        $this->assertTrue($handler instanceof DoneHandler);
+        $this->assertTrue($handler instanceof DoneParser);
         $this->assertTrue($handler->shouldRequeue());
         $contents = file_get_contents($handler->backupFileName);
         $this->assertTrue(strpos($contents, "Done retries=\"1\"") !== false);

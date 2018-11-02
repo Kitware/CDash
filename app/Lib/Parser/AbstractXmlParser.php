@@ -53,6 +53,11 @@ abstract class AbstractXmlParser implements SaxInterface, SubmissionParserInterf
     /** @var string $endTimeStamp */
     protected $endTimeStamp;
 
+    // TODO: refactor, remove
+    // @see ctestparser.php ctest_parse (bottom) for refactor proposal
+    /** @var string $backupFileName */
+    public $backupFileName;
+
     /**
      * AbstractXmlParser constructor.
      * @param $projectId
