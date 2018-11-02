@@ -26,9 +26,9 @@ require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 include 'include/version.php';
 require_once 'include/filterdataFunctions.php';
-require_once 'include/index_functions.php';
 
 use CDash\Config;
+use CDash\Controller\Api\Index as IndexController;
 use CDash\Model\Banner;
 use CDash\Model\Build;
 use CDash\Model\BuildInformation;
@@ -79,6 +79,8 @@ if (!function_exists('echo_main_dashboard_JSON')) {
         $response = array();
 
         $projectid = $project_instance->Id;
+
+        $controller = new indexController($project_instance);
 
         $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
         if (pdo_num_rows($project) > 0) {
@@ -227,6 +229,7 @@ if (!function_exists('echo_main_dashboard_JSON')) {
         $response['menu'] = array();
         $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
         $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
+        $controller->setEndDate($end_UTCDate);
         if ($project_instance->GetNumberOfSubProjects($end_UTCDate) > 0) {
             $response['menu']['subprojects'] = 1;
         }
@@ -457,7 +460,7 @@ if (!function_exists('echo_main_dashboard_JSON')) {
                 AND user2repository.credential=updatefile.author) AS userupdates,";
         }
 
-        $sql = get_index_query($userupdatesql);
+        $sql = $controller->getIndexQuery($userupdatesql);
         $sql .= "WHERE b.projectid='$projectid' AND g.type='Daily'
         $parent_clause $date_clause $subprojectsql $filter_sql $limit_sql";
 
@@ -477,7 +480,7 @@ if (!function_exists('echo_main_dashboard_JSON')) {
         }
         $dynamic_builds = array();
         if (empty($filter_sql)) {
-            $dynamic_builds = get_dynamic_builds($projectid, $end_UTCDate);
+            $dynamic_builds = $controller->getDynamicBuilds();
             $build_data = array_merge($build_data, $dynamic_builds);
         }
 
