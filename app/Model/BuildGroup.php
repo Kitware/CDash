@@ -543,4 +543,31 @@ class BuildGroup
         $buildgroup_array = pdo_fetch_array($buildgroup);
         return $buildgroup_array['id'];
     }
+
+    // Return an array of currently active BuildGroups
+    // given a projectid and a starting datetime string.
+    public static function GetBuildGroups($projectid, $begin)
+    {
+        $pdo = Database::getInstance();
+        $buildgroups = [];
+
+        $stmt = $pdo->prepare("
+            SELECT bg.id, bg.name, bgp.position
+            FROM buildgroup AS bg
+            LEFT JOIN buildgroupposition AS bgp ON (bgp.buildgroupid = bg.id)
+            WHERE bg.projectid = :projectid AND
+                  bg.starttime < :begin AND
+                  (bg.endtime > :begin OR bg.endtime='1980-01-01 00:00:00')");
+
+        $pdo->execute($stmt, [':projectid' => $projectid, ':begin' => $begin]);
+        while ($row = $stmt->fetch()) {
+            $buildgroup = new BuildGroup();
+            $buildgroup->Id = $row['id'];
+            $buildgroup->Name = $row['name'];
+            $buildgroup->Position = $row['position'];
+            $buildgroups[] = $buildgroup;
+        }
+
+        return $buildgroups;
+    }
 }

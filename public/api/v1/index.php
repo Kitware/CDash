@@ -33,6 +33,7 @@ use CDash\Database;
 use CDash\Model\Banner;
 use CDash\Model\Build;
 use CDash\Model\BuildInformation;
+use CDash\Model\BuildGroup;
 use CDash\Model\Project;
 use CDash\Model\SubProject;
 
@@ -325,21 +326,16 @@ if (!function_exists('echo_main_dashboard_JSON')) {
         $received_builds = array();
 
         // Get info about our buildgroups.
-        $buildgroups_response = array();
-        $buildgroup_result = pdo_query(
-            "SELECT bg.id, bg.name, bgp.position FROM buildgroup AS bg
-            LEFT JOIN buildgroupposition AS bgp ON (bgp.buildgroupid=bg.id)
-            WHERE bg.projectid=$projectid AND bg.starttime < '$beginning_UTCDate' AND
-            (bg.endtime > '$beginning_UTCDate' OR
-             bg.endtime='1980-01-01 00:00:00')");
-        while ($buildgroup_array = pdo_fetch_array($buildgroup_result)) {
-            $buildgroup_response = array();
-            $groupname = $buildgroup_array['name'];
+        $buildgroups_response = [];
+        $buildgroups = BuildGroup::GetBuildGroups($projectid, $beginning_UTCDate);
+        foreach ($buildgroups as $buildgroup) {
+            $buildgroup_response = [];
+            $groupname = $buildgroup->GetName();
 
-            $buildgroup_response['id'] = $buildgroup_array['id'];
+            $buildgroup_response['id'] = $buildgroup->GetId();
             $buildgroup_response['name'] = $groupname;
             $buildgroup_response['linkname'] = str_replace(' ', '_', $groupname);
-            $buildgroup_response['position'] = $buildgroup_array['position'];
+            $buildgroup_response['position'] = $buildgroup->GetPosition();
 
             $buildgroup_response['numupdatedfiles'] = 0;
             $buildgroup_response['numupdateerror'] = 0;
