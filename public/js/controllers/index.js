@@ -614,9 +614,4 @@ CDash.filter("showEmptyBuildsLast", function () {
     return cookie_name;
   };
 
-})
-.directive('build', function(VERSION) {
-  return {
-    templateUrl: 'build/views/partials/build_' + VERSION + '.html'
-  }
 });
