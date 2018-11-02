@@ -20,12 +20,18 @@ use Bernard\Producer;
 use Bernard\QueueFactory\PersistentFactory;
 use Bernard\Serializer;
 use CDash\Config;
+use CDash\Lib\Parsing\Xml\BuildParser;
+use CDash\Lib\Parsing\Xml\ConfigureParser;
+use CDash\Lib\Parsing\Xml\DynamicAnalysisParser;
+use CDash\Lib\Parsing\Xml\TestingParser;
+use CDash\Lib\Parsing\Xml\UpdateParser;
 use CDash\Middleware\Queue;
 use CDash\Middleware\Queue\DriverFactory as QueueDriverFactory;
 use CDash\Middleware\Queue\SubmissionService;
 use CDash\Model\AuthToken;
 use CDash\Model\Build;
 use CDash\Model\BuildFile;
+use CDash\Model\ClientJobSchedule;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
 use CDash\Model\Site;
@@ -145,6 +151,10 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $buildid = null,
     }
 
     $scheduleid = 0;
+
+    // Parse the XML file
+    $handler = ctest_parse($filehandle, $projectid, $buildid, $expected_md5, $do_checksum);
+
     if ($submission_id !== 0) {
         $row = pdo_single_row_query(
             "SELECT scheduleid from client_jobschedule2submission WHERE submissionid=$submission_id");
@@ -155,8 +165,13 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $buildid = null,
         $scheduleid = pdo_real_escape_numeric($_GET['clientscheduleid']);
     }
 
-    // Parse the XML file
-    $handler = ctest_parse($filehandle, $projectid, $buildid, $expected_md5, $do_checksum, $scheduleid);
+    if ($scheduleid) {
+        $schedule = new ClientJobSchedule();
+        $schedule->Id = $scheduleid;
+        foreach ($handler->getBuilds() as $build) {
+            $schedule->AssociateBuild($build->Id);
+        }
+    }
 
     $build = get_build_from_handler($handler);
     if (!is_null($build)) {
@@ -174,14 +189,14 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $buildid = null,
     }
 
     // Send the emails if necessary
-    if ($handler instanceof UpdateHandler) {
+    if ($handler instanceof UpdateParser) {
         send_update_email($handler, $projectid);
         sendemail($handler, $projectid);
     }
-    if ($handler instanceof TestingHandler ||
-        $handler instanceof BuildHandler ||
-        $handler instanceof ConfigureHandler ||
-        $handler instanceof DynamicAnalysisHandler
+    if ($handler instanceof TestingParser ||
+        $handler instanceof BuildParser ||
+        $handler instanceof ConfigureParser ||
+        $handler instanceof DynamicAnalysisParser
     ) {
         sendemail($handler, $projectid);
     }

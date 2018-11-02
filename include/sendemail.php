@@ -17,6 +17,8 @@
 require_once 'include/cdashmail.php';
 
 use CDash\Config;
+use CDash\Lib\Parsing\Xml\TestingParser;
+use CDash\Lib\Parsing\Xml\UpdateParser;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildTest;
@@ -1424,7 +1426,7 @@ function send_update_email($handler, $projectid)
 }
 
 /** Main function to send email if necessary */
-function sendemail(ActionableBuildInterface $handler, $projectid)
+function sendemail($handler, $projectid)
 {
     include_once 'include/common.php';
     require_once 'include/pdo.php';
@@ -1462,8 +1464,7 @@ function sendemail(ActionableBuildInterface $handler, $projectid)
         }
 
         // Don't send an additional email if this build is a SubProject parent.
-        if ($Build->GetParentId() == Build::PARENT_BUILD &&
-            $handler instanceof UpdateHandler) {
+        if ($Build->GetParentId() == Build::PARENT_BUILD && $handler instanceof UpdateParser) {
             continue;
         }
 
@@ -1502,7 +1503,7 @@ function sendemail(ActionableBuildInterface $handler, $projectid)
         }
 
         // Check for missing tests
-        if ($handler instanceof TestingHandler) {
+        if ($handler instanceof TestingParser) {
             $missing = $Build->GetNumberOfMissingTests();
 
             if ($missing > 0) {

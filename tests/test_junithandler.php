@@ -7,18 +7,20 @@ use CDash\Model\Project;
 
 class JUnitHandlerTestCase extends KWWebTestCase
 {
+    private $project;
+
     public function __construct()
     {
         parent::__construct();
         $this->PDO = get_link_identifier()->getPdo();
-        $this->Project = null;
+        $this->project = null;
     }
 
     public function __destruct()
     {
-        if ($this->Project) {
-            remove_project_builds($this->Project->Id);
-            $this->Project->Delete();
+        if ($this->project) {
+            remove_project_builds($this->project->Id);
+            $this->project->Delete();
         }
     }
 
@@ -36,8 +38,8 @@ class JUnitHandlerTestCase extends KWWebTestCase
         if ($projectid < 1) {
             $this->fail('Failed to create project');
         }
-        $this->Project = new Project();
-        $this->Project->Id = $projectid;
+        $this->project = new Project();
+        $this->project->Id = $projectid;
 
         // Submit our test data.
         $xml = dirname(__FILE__) . '/data/JUNit_example.xml';

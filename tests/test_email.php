@@ -243,7 +243,7 @@ class EmailTestCase extends KWWebTestCase
         $rep = dirname(__FILE__) . '/data/EmailProjectExample';
         $file = "$rep/3_update.xml";
         if (!$this->submission('EmailProjectExample', $file)) {
-            //return;
+            return;
         }
 
         $this->deleteLog($this->logfilename);

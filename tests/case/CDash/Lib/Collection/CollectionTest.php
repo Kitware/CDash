@@ -14,13 +14,6 @@
  * =========================================================================
  */
 
-/**
- * Created by PhpStorm.
- * User: bryonbean
- * Date: 8/26/18
- * Time: 2:08 PM
- */
-
 use CDash\Lib\Collection\Collection;
 
 class CollectionTest extends PHPUnit_Framework_TestCase
