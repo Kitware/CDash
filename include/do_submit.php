@@ -14,17 +14,12 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-//error_reporting(0); // disable error reporting
-use Bernard\Message\PlainMessage;
-use Bernard\Producer;
-use Bernard\QueueFactory\PersistentFactory;
-use Bernard\Serializer;
 use CDash\Config;
-use CDash\Lib\Parsing\Xml\BuildParser;
-use CDash\Lib\Parsing\Xml\ConfigureParser;
-use CDash\Lib\Parsing\Xml\DynamicAnalysisParser;
-use CDash\Lib\Parsing\Xml\TestingParser;
-use CDash\Lib\Parsing\Xml\UpdateParser;
+use CDash\Lib\Parser\CTest\BuildParser;
+use CDash\Lib\Parser\CTest\ConfigureParser;
+use CDash\Lib\Parser\CTest\DynamicAnalysisParser;
+use CDash\Lib\Parser\CTest\TestingParser;
+use CDash\Lib\Parser\CTest\UpdateParser;
 use CDash\Middleware\Queue;
 use CDash\Middleware\Queue\DriverFactory as QueueDriverFactory;
 use CDash\Middleware\Queue\SubmissionService;
@@ -36,7 +31,6 @@ use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
 use CDash\Model\Site;
 use Ramsey\Uuid\Uuid;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
 require_once 'include/ctestparser.php';
 include_once 'include/common.php';
@@ -69,8 +63,8 @@ function fileHandleFromSubmissionId($filename)
         return fopen($tmpFilename, 'r');
     } else {
         // Log the status code and build submission UUID (404 means it's already been processed)
-        add_log('Failed to retrieve a file handle from build UUID ' .
-                $submissionId . '(' . (string) $response->getStatusCode() . ')',
+        add_log('Failed to retrieve a file handle for ' .
+                $filename . '(' . (string) $response->getStatusCode() . ')',
                 'fileHandleFromSubmissionId', LOG_WARNING);
         return false;
     }

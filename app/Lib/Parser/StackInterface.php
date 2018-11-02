@@ -14,11 +14,11 @@
  * =========================================================================
  */
 
-namespace CDash\Lib\Parsing\Xml;
+namespace CDash\Lib\Parser;
 
 /**
  * Interface StackInterface
- * @package CDash\Lib\Parsing\Xml
+ * @package CDash\Lib\Parser\CTest
  */
 interface StackInterface
 {

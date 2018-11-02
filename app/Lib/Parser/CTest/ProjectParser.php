@@ -14,8 +14,9 @@
  * =========================================================================
  */
 
-namespace CDash\Lib\Parsing\Xml;
+namespace CDash\Lib\Parser\CTest;
 
+use CDash\Lib\Parser\AbstractXmlParser;
 use CDash\Model\Label;
 use CDash\Model\LabelEmail;
 use CDash\Model\Project;
@@ -25,7 +26,7 @@ use CDash\Model\UserProject;
 
 /**
  * Class ProjectParser
- * @package CDash\Lib\Parsing\Xml
+ * @package CDash\Lib\Parser\CTest
  */
 class ProjectParser extends AbstractXmlParser
 {

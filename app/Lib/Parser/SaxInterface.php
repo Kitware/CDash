@@ -14,11 +14,11 @@
  * =========================================================================
  */
 
-namespace CDash\Lib\Parsing\Xml;
+namespace CDash\Lib\Parser;
 
 /**
  * Interface SaxInterface
- * @package CDash\Lib\Parsing\Xml
+ * @package CDash\Lib\Parser
  */
 interface SaxInterface
 {

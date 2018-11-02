@@ -14,9 +14,10 @@
  * =========================================================================
  */
 
-namespace CDash\Lib\Parsing\Xml;
+namespace CDash\Lib\Parser\CTest;
 
 use CDash\Lib\Collection\BuildCollection;
+use CDash\Lib\Parser\AbstractXmlParser;
 use CDash\Model\Build;
 use CDash\Model\BuildInformation;
 use CDash\Model\BuildTest;
@@ -30,7 +31,7 @@ use CDash\Model\TestMeasurement;
 
 /**
  * Class TestingParser
- * @package CDash\Lib\Parsing\Xml
+ * @package CDash\Lib\Parser\CTest
  */
 class TestingParser extends AbstractXmlParser
 {

@@ -14,8 +14,9 @@
  * =========================================================================
  */
 
-namespace CDash\Lib\Parsing\Xml;
+namespace CDash\Lib\Parser\CTest;
 
+use CDash\Lib\Parser\AbstractXmlParser;
 use CDash\Model\Build;
 use CDash\Model\BuildError;
 use CDash\Model\BuildFailure;
@@ -27,7 +28,7 @@ use CDash\Model\SiteInformation;
 
 /**
  * Class BuildParser
- * @package CDash\Lib\Parsing\Xml
+ * @package CDash\Lib\Parser\CTest
  */
 class BuildParser extends AbstractXmlParser
 {

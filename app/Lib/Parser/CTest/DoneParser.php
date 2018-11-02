@@ -14,14 +14,15 @@
  * =========================================================================
  */
 
-namespace CDash\Lib\Parsing\Xml;
+namespace CDash\Lib\Parser\CTest;
 
+use CDash\Lib\Parser\AbstractXmlParser;
 use CDash\Model\Build;
 use CDash\Model\PendingSubmissions;
 
 /**
  * Class DoneParser
- * @package CDash\Lib\Parsing\Xml
+ * @package CDash\Lib\Parser\CTest
  */
 class DoneParser extends AbstractXmlParser
 {

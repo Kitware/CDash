@@ -14,7 +14,7 @@
  * =========================================================================
  */
 
-namespace CDash\Lib\Parsing;
+namespace CDash\Lib\Parser;
 
 use CDash\Lib\Collection\BuildCollection;
 

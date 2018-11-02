@@ -14,8 +14,9 @@
  * =========================================================================
  */
 
-namespace CDash\Lib\Parsing\Xml;
+namespace CDash\Lib\Parser\CTest;
 
+use CDash\Lib\Parser\AbstractXmlParser;
 use CDash\Model\Build;
 use CDash\Model\BuildUpdate;
 use CDash\Model\BuildUpdateFile;
@@ -24,7 +25,7 @@ use CDash\Model\Site;
 
 /**
  * Class UpdateParser
- * @package CDash\Lib\Parsing\Xml
+ * @package CDash\Lib\Parser\CTest
  */
 class UpdateParser extends AbstractXmlParser
 {
@@ -35,7 +36,6 @@ class UpdateParser extends AbstractXmlParser
 
     /**
      * UpdateParser constructor.
-     * @param Stack $stack
      * @param $projectId
      */
     public function __construct($projectId)

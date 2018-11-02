@@ -14,7 +14,7 @@
  * =========================================================================
  */
 
-namespace CDash\Lib\Parsing\Xml;
+namespace CDash\Lib\Parser\JUnit;
 
 
 use CDash\Model\Build;
@@ -26,7 +26,7 @@ use CDash\Model\Label;
 use CDash\Model\Site;
 use CDash\Model\SiteInformation;
 
-class CoverageJunitParser extends AbstractXmlParser
+class CoverageParser extends AbstractXmlParser
 {
     protected $coverage;
     protected $coverageFile;

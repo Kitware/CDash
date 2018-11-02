@@ -17,8 +17,8 @@
 require_once 'include/cdashmail.php';
 
 use CDash\Config;
-use CDash\Lib\Parsing\Xml\TestingParser;
-use CDash\Lib\Parsing\Xml\UpdateParser;
+use CDash\Lib\Parser\CTest\UpdateParser;
+use CDash\Lib\Parser\CTest\TestingParser;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildTest;

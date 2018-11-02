@@ -30,19 +30,20 @@ require_once 'xml_handlers/testing_junit_handler.php';
 require_once 'xml_handlers/coverage_junit_handler.php';
 
 use CDash\Config;
-use CDash\Lib\Parsing\Xml\BuildParser;
-use CDash\Lib\Parsing\Xml\ConfigureParser;
-use CDash\Lib\Parsing\Xml\CoverageJunitParser;
-use CDash\Lib\Parsing\Xml\CoverageLogParser;
-use CDash\Lib\Parsing\Xml\CoverageParser;
-use CDash\Lib\Parsing\Xml\DoneParser;
-use CDash\Lib\Parsing\Xml\DynamicAnalysisParser;
-use CDash\Lib\Parsing\Xml\NoteParser;
-use CDash\Lib\Parsing\Xml\ProjectParser;
-use CDash\Lib\Parsing\Xml\TestingNunitParser;
-use CDash\Lib\Parsing\Xml\TestingParser;
-use CDash\Lib\Parsing\Xml\UpdateParser;
-use CDash\Lib\Parsing\Xml\UploadParser;
+use CDash\Lib\Parser\CTest\BuildParser;
+use CDash\Lib\Parser\CTest\ConfigureParser;
+use CDash\Lib\Parser\CTest\CoverageLogParser;
+use CDash\Lib\Parser\CTest\CoverageParser;
+use CDash\Lib\Parser\CTest\DynamicAnalysisParser;
+use CDash\Lib\Parser\CTest\NoteParser;
+use CDash\Lib\Parser\CTest\ProjectParser;
+use CDash\Lib\Parser\CTest\TestingParser;
+use CDash\Lib\Parser\CTest\UpdateParser;
+use CDash\Lib\Parser\CTest\UploadParser;
+use CDash\Lib\Parser\JUnit\CoverageParser as JUnitCoverageParser;
+use CDash\Lib\Parser\JUnit\TestingParser as JUnitTestingParser;
+use CDash\Lib\Parser\NUnit\TestingParser as NUnitTestingParser;
+
 use CDash\Model\BuildFile;
 use CDash\Model\Project;
 use CDash\Lib\Parsing\JUnit\TestingParser as JUnitTestParser;
@@ -325,7 +326,7 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
         $handler = new CoverageParser($projectid);
         $file = 'Coverage';
     } elseif (preg_match('/<report/', $content)) {
-        $handler = new CoverageJunitParser($projectid);
+        $handler = new JUnitCoverageParser($projectid);
         $file = 'Coverage';
     } elseif (preg_match('/<Notes/', $content)) {
         $handler = new NoteParser($projectid);
@@ -340,10 +341,10 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
         $handler = new UploadParser($projectid);
         $file = 'Upload';
     } elseif (preg_match('/<test-results/', $content)) {
-        $handler = new TestingNunitParser($projectid);
+        $handler = new NUnitTestingParser($projectid);
         $file = 'Test';
     } elseif (preg_match('/<testsuite/', $content)) {
-        $handler = new JUnitTestParser($projectid);
+        $handler = new JUnitTestingParser($projectid);
         $file = 'Test';
     } elseif (preg_match('/<Done/', $content)) {
         $handler = new DoneHandler($projectid, $scheduleid);

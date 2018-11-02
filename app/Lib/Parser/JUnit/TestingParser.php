@@ -14,10 +14,10 @@
  * =========================================================================
  */
 
-namespace CDash\Lib\Parsing\JUnit;
+namespace CDash\Lib\Parser\JUnit;
 
 
-use CDash\Lib\Parsing\Xml\AbstractXmlParser;
+use CDash\Lib\Parser\AbstractXmlParser;
 use CDash\Model\Build;
 use CDash\Model\BuildInformation;
 use CDash\Model\BuildTest;

@@ -14,8 +14,9 @@
  * =========================================================================
  */
 
-namespace CDash\Lib\Parsing\Xml;
+namespace CDash\Lib\Parser\CTest;
 
+use CDash\Lib\Parser\AbstractXmlParser;
 use CDash\Model\Build;
 use CDash\Model\BuildInformation;
 use CDash\Model\Coverage;
@@ -29,7 +30,7 @@ use CDash\Model\SubProject;
 
 /**
  * Class CoverageParser
- * @package CDash\Lib\Parsing\Xml
+ * @package CDash\Lib\Parser\CTest
  */
 class CoverageParser extends AbstractXmlParser
 {

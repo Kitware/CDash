@@ -14,8 +14,9 @@
  * =========================================================================
  */
 
-namespace CDash\Lib\Parsing\Xml;
+namespace CDash\Lib\Parser\NUnit;
 
+use CDash\Lib\Parser\AbstractXmlParser;
 use CDash\Model\Build;
 use CDash\Model\BuildInformation;
 use CDash\Model\BuildTest;
@@ -23,22 +24,11 @@ use CDash\Model\Site;
 use CDash\Model\SiteInformation;
 use CDash\Model\Test;
 
-/*
- * app
- *   - Lib
- *     - Parser
- *        - Bazel
- *        - CTest
- *        - JUnit
- *        - NUnit
- *
- *
- */
 /**
- * Class TestingNunitParser
- * @package CDash\Lib\Parsing\Xml
+ * Class TestingParser
+ * @package CDash\Lib\Parser\NUnit
  */
-class TestingNunitParser extends AbstractXmlParser
+class TestingParser extends AbstractXmlParser
 {
     private $updateEndTime; // should we update the end time of the build
 

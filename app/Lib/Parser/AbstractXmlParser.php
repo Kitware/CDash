@@ -14,11 +14,12 @@
  * =========================================================================
  */
 
-namespace CDash\Lib\Parsing\Xml;
+namespace CDash\Lib\Parser;
 
 use CDash\Lib\Collection\BuildCollection;
 use CDash\Lib\Configuration;
-use CDash\Lib\Parsing\SubmissionParserInterface;
+
+use CDash\Lib\Parser\SubmissionParserInterface;
 use CDash\Lib\ServiceContainer;
 use CDash\Model\Build;
 use CDash\Model\Site;
