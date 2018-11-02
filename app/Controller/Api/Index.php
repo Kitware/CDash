@@ -172,4 +172,122 @@ class Index
                 LEFT JOIN subproject2build AS sp2b ON (sp2b.buildid = b.id)
                 LEFT JOIN subproject as sp ON (sp2b.subprojectid = sp.id)";
     }
+
+    public function populateBuildRow($build_row)
+    {
+        // Fields that come from the initial query:
+        //  id
+        //  sitename
+        //  stamp
+        //  name
+        //  siteid
+        //  type
+        //  generator
+        //  starttime
+        //  endtime
+        //  submittime
+        //  groupname
+        //  position
+        //  groupid
+        //  countupdatefiles
+        //  updatestatus
+        //  countupdatewarnings
+        //  revision
+        //  countbuildwarnings
+        //  countbuilderrors
+        //  countbuilderrordiff
+        //  countbuildwarningdiff
+        //  configureduration
+        //  countconfigureerrors
+        //  countconfigurewarnings
+        //  countconfigurewarningdiff
+        //  counttestsnotrun
+        //  counttestsnotrundiff
+        //  counttestsfailed
+        //  counttestsfaileddiff
+        //  counttestspassed
+        //  counttestspasseddiff
+        //  countteststimestatusfailed
+        //  countteststimestatusfaileddiff
+        //  testduration
+        //
+        // Fields that we add within this function:
+        //  maxstarttime
+        //  buildids (array of buildids for summary rows)
+        //  countbuildnotes (added by users)
+        //  labels
+        //  updateduration
+        //  countupdateerrors
+        //  test
+        //
+
+        $buildid = $build_row['id'];
+        $groupid = $build_row['groupid'];
+        $siteid = $build_row['siteid'];
+        $parentid = $build_row['parentid'];
+
+        $build_row['buildids'][] = $buildid;
+        $build_row['maxstarttime'] = $build_row['starttime'];
+
+        // Updates
+        if (!empty($build_row['updatestarttime'])) {
+            $build_row['updateduration'] = round((strtotime($build_row['updateendtime']) - strtotime($build_row['updatestarttime'])) / 60, 1);
+        } else {
+            $build_row['updateduration'] = 0;
+        }
+
+        if (strlen($build_row['updatestatus']) > 0 &&
+                $build_row['updatestatus'] != '0'
+           ) {
+            $build_row['countupdateerrors'] = 1;
+        } else {
+            $build_row['countupdateerrors'] = 0;
+        }
+
+        // Error/Warnings differences
+        if (empty($build_row['countbuilderrordiffp'])) {
+            $build_row['countbuilderrordiffp'] = 0;
+        }
+        if (empty($build_row['countbuilderrordiffn'])) {
+            $build_row['countbuilderrordiffn'] = 0;
+        }
+
+        if (empty($build_row['countbuildwarningdiffp'])) {
+            $build_row['countbuildwarningdiffp'] = 0;
+        }
+        if (empty($build_row['countbuildwarningdiffn'])) {
+            $build_row['countbuildwarningdiffn'] = 0;
+        }
+
+        $build_row['hasconfigure'] = 0;
+        if ($build_row['countconfigureerrors'] != -1 ||
+                $build_row['countconfigurewarnings'] != -1) {
+            $build_row['hasconfigure'] = 1;
+        }
+
+        if ($build_row['countconfigureerrors'] < 0) {
+            $build_row['countconfigureerrors'] = 0;
+        }
+        if ($build_row['countconfigurewarnings'] < 0) {
+            $build_row['countconfigurewarnings'] = 0;
+        }
+
+        if (empty($build_row['countconfigurewarningdiff'])) {
+            $build_row['countconfigurewarningdiff'] = 0;
+        }
+
+        $build_row['hastest'] = 0;
+        if ($build_row['counttestsfailed'] != -1) {
+            $build_row['hastest'] = 1;
+        }
+
+        if (empty($build_row['testduration'])) {
+            $time_array = pdo_fetch_array(pdo_query("SELECT SUM(time) FROM build2test WHERE buildid='$buildid'"));
+            $build_row['testduration'] = round($time_array[0], 1);
+        } else {
+            $build_row['testduration'] = round($build_row['testduration'], 1);
+        }
+
+        return $build_row;
+    }
 }
