@@ -683,6 +683,7 @@ function createPageSpecificFilters($page_id)
         case 'index.php':
         case 'project.php':
         case 'indexchildren.php':
+        case 'viewBuildGroup.php':
             return new IndexPhpFilters();
             break;
 

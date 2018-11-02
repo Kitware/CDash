@@ -22,6 +22,7 @@ use CDash\Model\Project;
 
 class Index extends ResultsApi
 {
+    protected $buildGroupName;
     protected $includeSubProjects;
     protected $includedSubProjects;
     protected $excludeSubProjects;
@@ -47,6 +48,7 @@ class Index extends ResultsApi
     {
         parent::__construct($db, $project);
 
+        $this->buildGroupName = '';
         $this->buildgroupsResponse = [];
         $this->buildStartTimes = [];
         $this->childView = 0;
@@ -100,6 +102,11 @@ class Index extends ResultsApi
         $this->subProjectId = $subprojectid;
     }
 
+    public function filterOnBuildGroup($buildgroup_name)
+    {
+        $this->buildGroupName = $buildgroup_name;
+    }
+
     public function getDailyBuilds()
     {
         // Should we query by subproject?
@@ -138,6 +145,10 @@ class Index extends ResultsApi
                     AND user2repository.userid=user2project.userid
                     AND (user2repository.projectid=0 OR user2repository.projectid=b.projectid)
                     AND user2repository.credential=updatefile.author) AS userupdates,";
+        }
+
+        if ($this->buildGroupName) {
+            $this->filterSQL .= " AND g.name = '{$this->buildGroupName}' ";
         }
 
         $sql = $this->getIndexQuery($userupdatesql);
@@ -183,6 +194,9 @@ class Index extends ResultsApi
 
         while ($rule = $stmt->fetch()) {
             $buildgroup_name = $rule['name'];
+            if ($this->buildGroupName && $this->buildGroupName != $buildgroup_name) {
+                continue;
+            }
             $buildgroup_id = $rule['id'];
             $buildgroup_position = $rule['position'];
             if ($rule['type'] == 'Latest') {
@@ -423,7 +437,7 @@ class Index extends ResultsApi
 
         $buildgroup_response['id'] = $buildgroup->GetId();
         $buildgroup_response['name'] = $groupname;
-        $buildgroup_response['linkname'] = str_replace(' ', '_', $groupname);
+        $buildgroup_response['linkname'] = urlencode($groupname);
         $buildgroup_response['position'] = $buildgroup->GetPosition();
 
         $buildgroup_response['numupdatedfiles'] = 0;

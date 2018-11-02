@@ -215,6 +215,7 @@ if (!function_exists('echo_main_dashboard_JSON')) {
             $response['menu']['subprojects'] = 1;
         }
 
+        $projectname_encoded = urlencode($projectname);
         if (isset($_GET['parentid'])) {
             $page_id = 'indexchildren.php';
             $controller->childView = 1;
@@ -225,7 +226,7 @@ if (!function_exists('echo_main_dashboard_JSON')) {
             $current_buildid = $parent_build->GetCurrentBuildId();
             $next_buildid = $parent_build->GetNextBuildId();
 
-            $base_url = 'index.php?project=' . urlencode($projectname);
+            $base_url = "index.php?project={$projectname_encoded}";
             if ($previous_buildid > 0) {
                 $response['menu']['previous'] = "$base_url&parentid=$previous_buildid";
             } else {
@@ -239,8 +240,20 @@ if (!function_exists('echo_main_dashboard_JSON')) {
             } else {
                 $response['menu']['nonext'] = '1';
             }
-        } elseif (!has_next_date($date, $currentstarttime)) {
-            $response['menu']['nonext'] = 1;
+        } else {
+            if (!has_next_date($date, $currentstarttime)) {
+                $response['menu']['nonext'] = 1;
+            }
+            if (isset($_GET['buildgroup'])) {
+                $page_id = 'viewBuildGroup.php';
+                $buildgroup = $_GET['buildgroup'];
+                $base_url = "viewBuildGroup.php?project={$projectname_encoded}&buildgroup=$buildgroup";
+                $response['menu']['previous'] = "$base_url&date=" . $response['previousdate'];
+                $response['menu']['current'] = "$base_url";
+                if (!array_key_exists('nonext', $response['menu'])) {
+                    $response['menu']['next'] = "$base_url&date=" . $response['nextdate'];
+                }
+            }
         }
         $response['childview'] = $controller->childView;
 
@@ -316,6 +329,11 @@ if (!function_exists('echo_main_dashboard_JSON')) {
         $filter_sql = $controller->getFilterSQL();
         $response['filterdata'] = $controller->getFilterData();
         $response['filterurl'] = get_filterurl();
+
+        if (isset($_GET['buildgroup'])) {
+            $buildgroup_name = pdo_real_escape_string($_GET['buildgroup']);
+            $controller->filterOnBuildGroup($buildgroup_name);
+        }
 
         $controller->checkForSubProjectFilters();
         $response['sharelabelfilters'] = $controller->shareLabelFilters;

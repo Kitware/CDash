@@ -13,6 +13,9 @@ var timelineController =
     } else {
       query_parameters.date = $scope.$parent.cdash.date;
     }
+    if ($scope.$parent.cdash.hasOwnProperty('buildgroup')) {
+      query_parameters.buildgroup = $scope.$parent.cdash.buildgroup;
+    }
     $http({
       url: 'api/v1/timeline.php',
       method: 'GET',
