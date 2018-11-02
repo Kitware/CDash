@@ -17,6 +17,7 @@ namespace CDash\Controller\Api;
 
 use CDash\Config;
 use CDash\Database;
+use CDash\Model\BuildGroup;
 use CDash\Model\Project;
 
 class Index
@@ -289,5 +290,39 @@ class Index
         }
 
         return $build_row;
+    }
+
+    public function beginResponseForBuildGroup(BuildGroup $buildgroup)
+    {
+        $buildgroup_response = [];
+        $groupname = $buildgroup->GetName();
+
+        $buildgroup_response['id'] = $buildgroup->GetId();
+        $buildgroup_response['name'] = $groupname;
+        $buildgroup_response['linkname'] = str_replace(' ', '_', $groupname);
+        $buildgroup_response['position'] = $buildgroup->GetPosition();
+
+        $buildgroup_response['numupdatedfiles'] = 0;
+        $buildgroup_response['numupdateerror'] = 0;
+        $buildgroup_response['numupdatewarning'] = 0;
+        $buildgroup_response['updateduration'] = 0;
+        $buildgroup_response['configureduration'] = 0;
+        $buildgroup_response['numconfigureerror'] = 0;
+        $buildgroup_response['numconfigurewarning'] = 0;
+        $buildgroup_response['numbuilderror'] = 0;
+        $buildgroup_response['numbuildwarning'] = 0;
+        $buildgroup_response['numtestnotrun'] = 0;
+        $buildgroup_response['numtestfail'] = 0;
+        $buildgroup_response['numtestpass'] = 0;
+        $buildgroup_response['testduration'] = 0;
+        $buildgroup_response['hasupdatedata'] = false;
+        $buildgroup_response['hasconfiguredata'] = false;
+        $buildgroup_response['hascompilationdata'] = false;
+        $buildgroup_response['hastestdata'] = false;
+        $buildgroup_response['hasnormalbuilds'] = false;
+        $buildgroup_response['hasparentbuilds'] = false;
+
+        $buildgroup_response['builds'] = [];
+        return $buildgroup_response;
     }
 }

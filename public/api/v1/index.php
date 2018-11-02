@@ -329,37 +329,8 @@ if (!function_exists('echo_main_dashboard_JSON')) {
         $buildgroups_response = [];
         $buildgroups = BuildGroup::GetBuildGroups($projectid, $beginning_UTCDate);
         foreach ($buildgroups as $buildgroup) {
-            $buildgroup_response = [];
-            $groupname = $buildgroup->GetName();
-
-            $buildgroup_response['id'] = $buildgroup->GetId();
-            $buildgroup_response['name'] = $groupname;
-            $buildgroup_response['linkname'] = str_replace(' ', '_', $groupname);
-            $buildgroup_response['position'] = $buildgroup->GetPosition();
-
-            $buildgroup_response['numupdatedfiles'] = 0;
-            $buildgroup_response['numupdateerror'] = 0;
-            $buildgroup_response['numupdatewarning'] = 0;
-            $buildgroup_response['updateduration'] = 0;
-            $buildgroup_response['configureduration'] = 0;
-            $buildgroup_response['numconfigureerror'] = 0;
-            $buildgroup_response['numconfigurewarning'] = 0;
-            $buildgroup_response['numbuilderror'] = 0;
-            $buildgroup_response['numbuildwarning'] = 0;
-            $buildgroup_response['numtestnotrun'] = 0;
-            $buildgroup_response['numtestfail'] = 0;
-            $buildgroup_response['numtestpass'] = 0;
-            $buildgroup_response['testduration'] = 0;
-            $buildgroup_response['hasupdatedata'] = false;
-            $buildgroup_response['hasconfiguredata'] = false;
-            $buildgroup_response['hascompilationdata'] = false;
-            $buildgroup_response['hastestdata'] = false;
-            $buildgroup_response['hasnormalbuilds'] = false;
-            $buildgroup_response['hasparentbuilds'] = false;
-
-            $buildgroup_response['builds'] = array();
-            $received_builds[$groupname] = array();
-
+            $received_builds[$buildgroup->GetName()] = [];
+            $buildgroup_response = $controller->beginResponseForBuildgroup($buildgroup);
             $buildgroups_response[] = $buildgroup_response;
         }
 
