@@ -29,6 +29,7 @@ require_once 'include/filterdataFunctions.php';
 
 use CDash\Config;
 use CDash\Controller\Api\Index as IndexController;
+use CDash\Database;
 use CDash\Model\Banner;
 use CDash\Model\Build;
 use CDash\Model\BuildInformation;
@@ -80,7 +81,8 @@ if (!function_exists('echo_main_dashboard_JSON')) {
 
         $projectid = $project_instance->Id;
 
-        $controller = new indexController($project_instance);
+        $db = Database::getInstance();
+        $controller = new indexController($db, $project_instance);
 
         $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
         if (pdo_num_rows($project) > 0) {

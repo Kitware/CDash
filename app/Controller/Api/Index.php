@@ -16,6 +16,7 @@
 namespace CDash\Controller\Api;
 
 use CDash\Config;
+use CDash\Database;
 use CDash\Model\Project;
 
 class Index
@@ -24,8 +25,9 @@ class Index
 
     private $project;
 
-    public function __construct(Project $project)
+    public function __construct(Database $db, Project $project)
     {
+        $this->db = $db;
         $this->project = $project;
         $this->endDate = self::BEGIN_EPOCH;
     }
@@ -40,21 +42,22 @@ class Index
         $builds = [];
 
         // Get the build rules for each dynamic group belonging to this project.
-        $rules = pdo_query("
-                SELECT b2gr.buildname, b2gr.siteid, b2gr.parentgroupid, bg.id, bg.name,
-                bg.type, gp.position
-                FROM build2grouprule AS b2gr
-                LEFT JOIN buildgroup AS bg ON (bg.id = b2gr.groupid)
-                LEFT JOIN buildgroupposition AS gp ON (gp.buildgroupid=bg.id)
-                WHERE bg.projectid='{$this->project->Id}' AND bg.endtime='1980-01-01 00:00:00' AND
-                bg.type != 'Daily'");
+        $stmt = $this->db->prepare("
+            SELECT b2gr.buildname, b2gr.siteid, b2gr.parentgroupid, bg.id,
+                   bg.name, bg.type, gp.position
+            FROM build2grouprule AS b2gr
+            LEFT JOIN buildgroup AS bg ON (bg.id = b2gr.groupid)
+            LEFT JOIN buildgroupposition AS gp ON (gp.buildgroupid = bg.id)
+            WHERE bg.projectid = :projectid AND
+                  bg.endtime = :begin_epoch AND
+                  bg.type != 'Daily'");
+        $query_params = [
+            ':projectid' => $this->project->Id,
+            ':begin_epoch' => self::BEGIN_EPOCH
+        ];
+        $this->db->execute($stmt, $query_params);
 
-        if (!$rules) {
-            echo pdo_error();
-            return;
-        }
-
-        while ($rule = pdo_fetch_array($rules)) {
+        while ($rule = $stmt->fetch()) {
             $buildgroup_name = $rule['name'];
             $buildgroup_id = $rule['id'];
             $buildgroup_position = $rule['position'];
