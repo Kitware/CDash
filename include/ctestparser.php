@@ -14,21 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
   =========================================================================*/
 
-require_once 'xml_handlers/build_handler.php';
-require_once 'xml_handlers/configure_handler.php';
-require_once 'xml_handlers/testing_handler.php';
-require_once 'xml_handlers/update_handler.php';
-require_once 'xml_handlers/coverage_handler.php';
-require_once 'xml_handlers/coverage_log_handler.php';
-require_once 'xml_handlers/done_handler.php';
-require_once 'xml_handlers/note_handler.php';
-require_once 'xml_handlers/dynamic_analysis_handler.php';
-require_once 'xml_handlers/project_handler.php';
-require_once 'xml_handlers/upload_handler.php';
-require_once 'xml_handlers/testing_nunit_handler.php';
-require_once 'xml_handlers/testing_junit_handler.php';
-require_once 'xml_handlers/coverage_junit_handler.php';
-
 use CDash\Config;
 use CDash\Lib\Parser\CTest\BuildParser;
 use CDash\Lib\Parser\CTest\ConfigureParser;
@@ -44,10 +29,9 @@ use CDash\Lib\Parser\CTest\UploadParser;
 use CDash\Lib\Parser\JUnit\CoverageParser as JUnitCoverageParser;
 use CDash\Lib\Parser\JUnit\TestingParser as JUnitTestingParser;
 use CDash\Lib\Parser\NUnit\TestingParser as NUnitTestingParser;
-
 use CDash\Model\BuildFile;
 use CDash\Model\Project;
-use CDash\Lib\Parsing\JUnit\TestingParser as JUnitTestParser;
+use CDash\ServiceContainer;
 
 class CDashParseException extends RuntimeException
 {
@@ -241,8 +225,11 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
     $buildfile->md5 = $expected_md5;
 
     // Include the handler file for this type of submission.
+
     $type = $buildfile_row['type'];
     $include_file = 'xml_handlers/' . $type . '_handler.php';
+
+    /*
     if (stream_resolve_include_path($include_file) === false) {
         add_log("No handler include file for $type (tried $include_file)",
             'parse_put_submission',
@@ -251,18 +238,29 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
         $buildfile->Delete();
         return true;
     }
-    require_once $include_file;
+    */
+
+    // TODO: temporary until service container Parser building complete--then remove with extreme prejudice
+    @include_once $include_file;
 
     // Instantiate the handler.
     $className = $type . 'Handler';
+
     if (!class_exists($className)) {
-        add_log("No handler class for $type", 'parse_put_submission',
-            LOG_ERR, $projectid);
-        check_for_immediate_deletion($filename);
-        $buildfile->Delete();
-        return true;
+        // If the Handler does not exist try the creating a Parser with the service container
+        $container = ServiceContainer::getInstance()->getContainer();
+        $handler = $container->make('CDash\Lib\SubmissionParserInterface');
+
+        if (!$handler) {
+            add_log("No handler class for $type", __FUNCTION__,
+                LOG_ERR, $projectid);
+            check_for_immediate_deletion($filename);
+            $buildfile->Delete();
+            return false;
+        }
+    } else {
+        $handler = new $className($buildid);
     }
-    $handler = new $className($buildid);
 
     // Parse the file.
     if ($handler->Parse($filename) === false) {
@@ -509,7 +507,7 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
     // This should not work as is and I'm not exactly sure why it does here, but sure enough,
     // given the refactoring of DoneHandler into DoneParser it ceases to work. Two
     // things:
-    //   1. This variable is not defined on the DoneHandler class (probably just an over site)
+    //   1. This variable was not defined on the DoneHandler class (probably just an oversight)
     //   2. More importantly it violates the Liskov Substitution Principle, meaning that even
     //      if the variable were defined it has the affect of making DoneHandler >
     //      AbstractXmlParser (or any classes based off of it) which is how the violation
@@ -520,7 +518,7 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
     //   Create a backupFileName property on the AbstractXmlHandler class
     // Proposed long term fix:
     //   Set $backupFilename as a property on the Submission class which will handle
-    //   much of the work taking place in this function
+    //   much, if not all, of the work taking place in this file
     $handler->backupFileName = $backup_filename;
 
     return $handler;
