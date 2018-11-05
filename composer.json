@@ -18,6 +18,7 @@
     "ext-mbstring": "*",
     "ext-pdo": "*",
     "ext-xsl": "*",
+    "ext-xml": "*",
     "bernard/bernard": "1.0.0-alpha9",
     "guzzlehttp/guzzle": "~6.2",
     "monolog/monolog": "~1.19",
@@ -51,6 +52,6 @@
     "ext-phar": ""
   },
   "autoload": {
-    "psr-4": {"CDash\\": "include/CDash/"}
+    "psr-4": {"CDash\\": ["include/CDash/", "app/"]}
   }
 }
