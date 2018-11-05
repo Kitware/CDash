@@ -20,23 +20,18 @@ use CDash\Database;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
 
-class Index
+class Index extends ResultsApi
 {
-    const BEGIN_EPOCH = '1980-01-01 00:00:00';
-
-    private $db;
-    private $project;
-
-    private $includeSubProjects;
-    private $includedSubProjects;
-    private $excludeSubProjects;
-    private $excludedSubProjects;
-    private $labelIds;
-    private $limitSQL;
-    private $numSelectedSubProjects;
+    protected $includeSubProjects;
+    protected $includedSubProjects;
+    protected $excludeSubProjects;
+    protected $excludedSubProjects;
+    protected $labelIds;
+    protected $limitSQL;
+    protected $numSelectedSubProjects;
     // This array is used to track if expected builds are found or not.
-    private $receivedBuilds;
-    private $subProjectPositions;
+    protected $receivedBuilds;
+    protected $subProjectPositions;
 
     public $buildgroupsResponse;
     public $buildStartTimes;
@@ -47,8 +42,7 @@ class Index
 
     public function __construct(Database $db, Project $project)
     {
-        $this->db = $db;
-        $this->project = $project;
+        parent::__construct($db, $project);
 
         $this->buildgroupsResponse = [];
         $this->buildStartTimes = [];
