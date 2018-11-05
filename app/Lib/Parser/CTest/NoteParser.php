@@ -109,7 +109,7 @@ class NoteParser extends AbstractXmlParser
                 $this->note->BuildId = $this->build->Id;
                 $this->note->Insert();
             } else {
-                add_log('Trying to add a note to a nonexistent build', 'note_handler.php', LOG_ERR);
+                add_log('Trying to add a note to a nonexistent build', __FUNCTION__, LOG_ERR);
             }
         }
     }
