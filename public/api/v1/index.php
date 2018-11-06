@@ -140,6 +140,7 @@ if (!function_exists('echo_main_dashboard_JSON')) {
             $parent_build->FillFromId($parent_build->Id);
             $date = $parent_build->GetDate();
             $response['parentid'] = $parentid;
+            $controller->setParentId($parentid);
 
             $response['stamp'] = $parent_build->GetStamp();
             $response['starttime'] = $parent_build->StartTime;
@@ -231,7 +232,7 @@ if (!function_exists('echo_main_dashboard_JSON')) {
         $response['menu'] = array();
         $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
         $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
-        $controller->setEndDate($end_UTCDate);
+        $controller->setDates($beginning_UTCDate, $end_UTCDate);
         if ($project_instance->GetNumberOfSubProjects($end_UTCDate) > 0) {
             $response['menu']['subprojects'] = 1;
         }
@@ -276,6 +277,7 @@ if (!function_exists('echo_main_dashboard_JSON')) {
             $subprojectid = $SubProject->GetId();
 
             if ($subprojectid) {
+                $controller->setSubProjectId($subprojectid);
                 // Add an extra URL argument for the menu
                 $response['extraurl'] = '&subproject=' . urlencode($subproject_name);
                 $response['subprojectname'] = $subproject_name;
@@ -333,78 +335,17 @@ if (!function_exists('echo_main_dashboard_JSON')) {
         $filterdata = get_filterdata_from_request($page_id);
         unset($filterdata['xml']);
         $controller->setFilterData($filterdata);
-        $filter_sql = $controller->getFilterData()['sql'];
-        $limit_sql = $controller->getLimitSQL();
+        $filter_sql = $controller->getFilterSQL();
         $response['filterdata'] = $controller->getFilterData();
         $response['filterurl'] = get_filterurl();
 
         $controller->checkForSubProjectFilters();
         $response['sharelabelfilters'] = $controller->shareLabelFilters;
 
-        // add a request for the subproject
-        $subprojectsql = '';
-        if ($subproject_name && is_numeric($subprojectid)) {
-            $subprojectsql = ' AND sp2b.subprojectid=' . $subprojectid;
-        }
+        $build_data = $controller->getDailyBuilds();
 
-        // Use this as the default date clause, but if filterdata has a date clause,
-        // then cancel this one out:
-        //
-        $date_clause = "AND b.starttime<'$end_UTCDate' AND b.starttime>='$beginning_UTCDate' ";
-
-        if ($controller->getFilterData()['hasdateclause']) {
-            $date_clause = '';
-        }
-
-        $parent_clause = '';
-        if (isset($_GET['parentid'])) {
-            // If we have a parentid, then we should only show children of that build.
-            // Date becomes irrelevant in this case.
-            $parent_clause = 'AND (b.parentid = ' . qnum($_GET['parentid']) . ') ';
-            $date_clause = '';
-        } elseif (empty($subprojectsql)) {
-            // Only show builds that are not children.
-            $parent_clause = 'AND (b.parentid = -1 OR b.parentid = 0) ';
-        }
-
-        $build_rows = array();
-
-        // If the user is logged in we display if the build has some changes for him
-        $userupdatesql = '';
-        if (isset($_SESSION['cdash']) && array_key_exists('loginid', $_SESSION['cdash'])) {
-            $userupdatesql = "(SELECT count(updatefile.updateid) FROM updatefile,build2update,user2project,
-            user2repository
-                WHERE build2update.buildid=b.id
-                AND build2update.updateid=updatefile.updateid
-                AND user2project.projectid=b.projectid
-                AND user2project.userid='" . $_SESSION['cdash']['loginid'] . "'
-                AND user2repository.userid=user2project.userid
-                AND (user2repository.projectid=0 OR user2repository.projectid=b.projectid)
-                AND user2repository.credential=updatefile.author) AS userupdates,";
-        }
-
-        $sql = $controller->getIndexQuery($userupdatesql);
-        $sql .= "WHERE b.projectid='$projectid' AND g.type='Daily'
-        $parent_clause $date_clause $subprojectsql $filter_sql $limit_sql";
-
-        // We shouldn't get any builds for group that have been deleted (otherwise something is wrong)
-        $builds = pdo_query($sql);
-
-        // Log any errors
-        $pdo_error = pdo_error();
-        if (strlen($pdo_error) > 0) {
-            add_log('SQL error: ' . $pdo_error, 'Index.php', LOG_ERR);
-        }
-
-        // Gather up results from this query.
-        $build_data = array();
-        while ($build_row = pdo_fetch_array($builds)) {
-            $build_data[] = $build_row;
-        }
-        $dynamic_builds = array();
         if (empty($filter_sql)) {
-            $dynamic_builds = $controller->getDynamicBuilds();
-            $build_data = array_merge($build_data, $dynamic_builds);
+            $build_data = array_merge($build_data, $controller->getDynamicBuilds());
         }
 
         // Check if we need to summarize coverage by subproject groups.
@@ -616,7 +557,7 @@ if (!function_exists('echo_main_dashboard_JSON')) {
         // Put some finishing touches on our buildgroups now that we're done
         // iterating over all the builds.
         $addExpected =
-            empty($filter_sql) && (pdo_num_rows($builds) + count($dynamic_builds) > 0);
+            empty($filter_sql) && (count($build_data) > 0);
         for ($i = 0; $i < count($controller->buildgroupsResponse); $i++) {
             $controller->buildgroupsResponse[$i]['testduration'] = time_difference(
                 $controller->buildgroupsResponse[$i]['testduration'], true);

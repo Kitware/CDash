@@ -22,15 +22,20 @@ use CDash\Model\Project;
 
 class Index extends ResultsApi
 {
+    protected $beginDate;
     protected $includeSubProjects;
     protected $includedSubProjects;
+    protected $endDate;
     protected $excludeSubProjects;
     protected $excludedSubProjects;
+    protected $filterSQL;
     protected $labelIds;
     protected $limitSQL;
     protected $numSelectedSubProjects;
+    protected $parentId;
     // This array is used to track if expected builds are found or not.
     protected $receivedBuilds;
+    protected $subProjectId;
     protected $subProjectPositions;
 
     public $buildgroupsResponse;
@@ -44,6 +49,7 @@ class Index extends ResultsApi
     {
         parent::__construct($db, $project);
 
+        $this->beginDate = self::BEGIN_EPOCH;
         $this->buildgroupsResponse = [];
         $this->buildStartTimes = [];
         $this->childView = 0;
@@ -60,14 +66,18 @@ class Index extends ResultsApi
         $this->numSelectedSubProjects = 0;
         $this->selectedSubProjects = '';
 
+        $this->filterSQL = '';
         $this->labelIds = '';
         $this->limitSQL = '';
+        $this->parentId = false;
         $this->receivedBuilds = [];
+        $this->subProjectId = false;
         $this->subProjectPositions = [];
     }
 
-    public function setEndDate($end_date)
+    public function setDates($begin_date, $end_date)
     {
+        $this->beginDate = $begin_date;
         $this->endDate = $end_date;
     }
 
@@ -79,14 +89,86 @@ class Index extends ResultsApi
     public function setFilterData(array $filterdata)
     {
         $this->filterdata = $filterdata;
+        $this->filterSQL = $this->filterdata['sql'];
         if ($this->filterdata['limit'] > 0) {
             $this->limitSQL = ' LIMIT ' . $this->filterdata['limit'];
         }
     }
 
-    public function getLimitSQL()
+    public function getFilterSQL()
     {
-        return $this->limitSQL;
+        return $this->filterSQL;
+    }
+
+    public function setParentId($parentid)
+    {
+        $this->parentId = $parentid;
+    }
+
+    public function setSubProjectId($subprojectid)
+    {
+        $this->subProjectId = $subprojectid;
+    }
+
+    public function getDailyBuilds()
+    {
+        // Should we query by subproject?
+        $subprojectsql = '';
+        if (is_numeric($this->subProjectId)) {
+            $subprojectsql = ' AND sp2b.subprojectid=' . $this->subProjectId;
+        }
+
+        // Default date clause.
+        $date_clause = "AND b.starttime < '{$this->endDate}' AND b.starttime >= '{$this->beginDate}' ";
+        if ($this->filterdata['hasdateclause']) {
+            // If filterdata has a date clause, then cancel this one out.
+            $date_clause = '';
+        }
+
+        $parent_clause = '';
+        if ($this->parentId) {
+            // If we have a parentid, then we should only show children of that build.
+            // Date becomes irrelevant in this case.
+            $parent_clause = 'AND (b.parentid = ' . qnum($this->parentId) . ') ';
+            $date_clause = '';
+        } elseif (empty($subprojectsql)) {
+            // Only show builds that are not children.
+            $parent_clause = 'AND (b.parentid = -1 OR b.parentid = 0) ';
+        }
+
+        // If the user is logged in we display if the build has some changes for them.
+        $userupdatesql = '';
+        if (isset($_SESSION['cdash']) && array_key_exists('loginid', $_SESSION['cdash'])) {
+            $userupdatesql = "(SELECT count(updatefile.updateid) FROM updatefile,build2update,user2project,
+                user2repository
+                    WHERE build2update.buildid=b.id
+                    AND build2update.updateid=updatefile.updateid
+                    AND user2project.projectid=b.projectid
+                    AND user2project.userid='" . $_SESSION['cdash']['loginid'] . "'
+                    AND user2repository.userid=user2project.userid
+                    AND (user2repository.projectid=0 OR user2repository.projectid=b.projectid)
+                    AND user2repository.credential=updatefile.author) AS userupdates,";
+        }
+
+        $sql = $this->getIndexQuery($userupdatesql);
+        $sql .= "WHERE b.projectid='{$this->project->Id}' AND g.type='Daily'
+            $parent_clause $date_clause $subprojectsql $this->filterSQL $this->limitSQL";
+
+        // We shouldn't get any builds for group that have been deleted (otherwise something is wrong)
+        $builds = pdo_query($sql);
+
+        // Log any errors.
+        $pdo_error = pdo_error();
+        if (strlen($pdo_error) > 0) {
+            add_log('SQL error: ' . $pdo_error, 'Index.php', LOG_ERR);
+        }
+
+        // Gather up results from this query.
+        $build_data = [];
+        while ($build_row = pdo_fetch_array($builds)) {
+            $build_data[] = $build_row;
+        }
+        return $build_data;
     }
 
     public function getDynamicBuilds()
