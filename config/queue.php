@@ -14,6 +14,12 @@
  * =========================================================================
  */
 
+/** WARNING: It's recommended to create a queue.local.php file and leave
+ * this file as is.
+ * Make any necessary changes in queue.local.php and delete any entries
+ * that you have not modified.
+ */
+
 /*
  * CDash uses Bernard to abstract different message queue systems. This configuration
  * is used by CDash's QueueFactory to create the appropriate driver for Bernard to
@@ -23,7 +29,7 @@
 
 use CDash\Middleware\Queue\DriverFactory as Driver;
 
-return [
+$queue_config = [
     /** @see \CDash\Middleware\Queue\SubmissionService documentation for discussion on queue names
      */
     'ctest_submission_queue' => \CDash\Middleware\Queue\SubmissionService::NAME,
@@ -76,3 +82,12 @@ return [
         ],
     ],
 ];
+
+/* DO NOT EDIT AFTER THIS LINE */
+$localConfig = dirname(__FILE__) . '/queue.local.php';
+if ((strpos(__FILE__, 'queue.local.php') === false) && file_exists($localConfig)) {
+    $queue_local_config = \CDash\Config::getInstance()->load('queue.local');
+    $queue_config = array_replace_recursive($queue_config, $queue_local_config);
+}
+
+return $queue_config;
