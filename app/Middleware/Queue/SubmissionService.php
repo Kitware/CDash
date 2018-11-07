@@ -35,53 +35,20 @@ use CDash\Middleware\Queue;
  * also statically creates a message for a queue regarding a CTest submission in the format that it
  * expects (via SubmissionService::createMessage).
  *
- * Bernard has a naming convention that must be followed for consumption of queues. Queue names
- * have no spaces, and the first letter of each word in the name of the queue is capitalized. For
- * instance, in the general case of the SubmissionClass, one needs to create a queue named do-submit
- * which will result in the Bernard based queue name being DoSubmit, which, not coincidentally,
- * has the affect that when consuming a message, the consumer that has been registered with Bernard
- * (in this case SubmissionService) will call a method on that service named doSubmit. In summary:
+ * By default we expect that the name of your queue will be 'do-submit'.
+ * If you wish to provide your own queue name you should do the following:
  *
- *   1. If the name of the queue is do-submit
- *   2. The name provided to the message must be DoSubmit
- *   3. This requires that the consumer associated with the message have a method named doSubmit
+ *   1. Edit <cdash root>/config/queue.php.  Make sure this file is properly configured to be
+ *      able to interact with your specific queue driver.
  *
- * If you wish to provide your own queue name, for instance, drake-cdash, you would use this
- *  class in the following way:
- *
- *   1. Ensure that your configuration of the queue is correct. The queue configuration file is
- *      located at <cdash root>/config/queue.php.
- *
- *   2. Create a queue
- *      $queue = new Queue();
- *
- *   3. Register a consumer, this, with the queue
- *      $queue_name = 'DrakeCdash'; // Bernard naming convention for queue named drake-cdash
- *      $service = new SubmissionService($queue_name); // Notice we provide the optional name arg
- *      $queue->addService($queue_name, $service);
- *
- *   4. Create a message
- *      // required arguments
- *      $arguments_to_create_message = [
- *        'file' => </path/to/file/being/submitted/by/ctest>,
- *        'project' => <The name of the project of whom the file belongs to>,
- *        'md5' => <A hash of the file created by md5_file('/path/to/file')>,
- *        'checksum' => <A boolean indicating whether or not to create a checksum for the file>,
- *      ];
- *
- *      // optionally, to change the name of the queue used by SubmissionService
- *      $arguments_to_create_message['queue_name'] = $queue_name;
- *
- *      $message = SubmissionService::createMessage($arguments_to_create_message);
- *
- *   5. Produce the message (send it to the queue)
- *      $queue->produce($message);
+ *   2. Towards the beginning of this file you will see an entry for 'ctest_submission_queue'.
+ *      Set this value to the name of your queue.
  *
  */
 class SubmissionService
 {
     /** @var string - The name of this service */
-    const NAME = 'DoSubmit';
+    const NAME = 'do-submit';
 
     /** @var string[] - Fields required for processing */
     protected static $required = ['file', 'project', 'checksum', 'md5', 'ip'];
@@ -128,7 +95,7 @@ class SubmissionService
     {
         $this->backupFileName = null;
         $this->httpClient = null;
-        $this->queueName = $queueName;
+        $this->queueName = $queueName ?: self::NAME;
     }
 
     /**
@@ -153,15 +120,7 @@ class SubmissionService
      */
     public function getConsumerName()
     {
-        preg_match_all('/[A-Z][a-z]+/', static::NAME, $words);
-        $concat = function ($prev, $word) {
-            if (is_null($prev)) {
-                return $word;
-            }
-            return strtolower("{$prev}-{$word}");
-        };
-
-        return array_reduce($words[0], $concat);
+        return $this->queueName;
     }
 
     /**
@@ -253,7 +212,6 @@ class SubmissionService
      */
     public function register(Queue $queue)
     {
-        $name = $this->queueName ?: self::NAME;
-        $queue->addService($name, $this);
+        $queue->addService($this->queueName, $this);
     }
 }
