@@ -20,6 +20,7 @@ require_once 'xml_handlers/NonSaxHandler.php';
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
 use CDash\Model\BuildError;
+use CDash\Model\BuildErrorFilter;
 use CDash\Model\BuildTest;
 use CDash\Model\Project;
 use CDash\Model\SubProject;
@@ -45,6 +46,7 @@ class BazelJSONHandler extends NonSaxHandler
     private $TestName;
     private $WorkingDirectory;
     private $ParseConfigure;
+    private $BuildErrorFilter;
 
     private $PDO;
 
@@ -84,6 +86,8 @@ class BazelJSONHandler extends NonSaxHandler
         $this->TestsOutput = [];
         $this->TestName = '';
         $this->ParseConfigure = true;
+
+        $this->BuildErrorFilter = new BuildErrorFilter($build->ProjectId);
 
         $this->PDO = get_link_identifier()->getPdo();
     }
@@ -390,7 +394,7 @@ class BazelJSONHandler extends NonSaxHandler
                                 // Record any existing build error before creating
                                 // a new one.
                                 if (!is_null($build_error)) {
-                                    $this->BuildErrors[$subproject_name][] = $build_error;
+                                    $this->RecordError($build_error, $type, $subproject_name);
                                     $subproject_name = '';
                                     $build_error = null;
                                 }
@@ -452,7 +456,7 @@ class BazelJSONHandler extends NonSaxHandler
                     }
 
                     if (!is_null($build_error)) {
-                        $this->BuildErrors[$subproject_name][] = $build_error;
+                        $this->RecordError($build_error, $type, $subproject_name);
                         $build_error = null;
                     }
                 }
@@ -685,5 +689,19 @@ class BazelJSONHandler extends NonSaxHandler
     public function getBuilds()
     {
         return array_values($this->Builds);
+    }
+
+    private function RecordError($build_error, $type, $subproject_name)
+    {
+        $text_with_context = $build_error->Text . $build_error->PostContext;
+        $skip_error = false;
+        if ($type === 0) {
+            $skip_error = $this->BuildErrorFilter->FilterError($text_with_context);
+        } else {
+            $skip_error = $this->BuildErrorFilter->FilterWarning($text_with_context);
+        }
+        if (!$skip_error) {
+            $this->BuildErrors[$subproject_name][] = $build_error;
+        }
     }
 }
