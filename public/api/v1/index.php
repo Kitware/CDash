@@ -188,10 +188,10 @@ if (!function_exists('echo_main_dashboard_JSON')) {
             $response['parentid'] = -1;
         }
 
-        if (is_null($date) && isset($_GET['from']) && isset($_GET['to'])) {
-            // Honor 'to' & 'from' parameters to specify a range of dates.
-            $beginning_date = $_GET['from'];
-            $end_date = $_GET['to'];
+        if (is_null($date) && isset($_GET['begin']) && isset($_GET['end'])) {
+            // Honor 'begin' & 'end' parameters to specify a range of dates.
+            $beginning_date = $_GET['begin'];
+            $end_date = $_GET['end'];
             list($unused, $beginning_timestamp, $unused) =
                 get_dates($beginning_date, $project_array['nightlytime']);
             list($previousdate, $end_timestamp, $nextdate) =

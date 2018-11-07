@@ -184,7 +184,7 @@ var timelineController =
       if ($scope.cdash.begin_date == $scope.cdash.end_date) {
         uri += '&date=' + $scope.cdash.begin_date;
       } else {
-        uri += '&from=' + $scope.cdash.begin_date + '&to=' + $scope.cdash.end_date;
+        uri += '&begin=' + $scope.cdash.begin_date + '&end=' + $scope.cdash.end_date;
       }
       window.location = uri;
     };

@@ -64,16 +64,16 @@ $response['hassubprojects'] = $has_subprojects;
 $date = null;
 $begin_date = null;
 $end_date = null;
-if (isset($_GET['from']) || isset($_GET['to'])) {
-    if (isset($_GET['from']) && isset($_GET['to'])) {
+if (isset($_GET['begin']) || isset($_GET['end'])) {
+    if (isset($_GET['begin']) && isset($_GET['end'])) {
         // If both arguments were specified, compute date range for SQL query.
-        $from = $_GET['from'];
+        $from = $_GET['begin'];
         list($unused, $beginning_timestamp, $unused, $unused) =
             get_dates($from, $Project->NightlyTime);
         $begin_date = gmdate(FMT_DATETIME, $beginning_timestamp);
         $response['begin'] = $from;
 
-        $date = $_GET['to'];
+        $date = $_GET['end'];
         list($previousdate, $end_timestamp, $nextdate, $unused) =
             get_dates($date, $Project->NightlyTime);
         $end_timestamp += (3600 * 24);
@@ -81,10 +81,10 @@ if (isset($_GET['from']) || isset($_GET['to'])) {
         $response['end'] = $date;
     } else {
         // If not, just use whichever one was set.
-        if (isset($_GET['from'])) {
-            $date = $_GET['from'];
+        if (isset($_GET['begin'])) {
+            $date = $_GET['begin'];
         } else {
-            $date = $_GET['to'];
+            $date = $_GET['end'];
         }
     }
 } elseif (isset($_GET['date'])) {

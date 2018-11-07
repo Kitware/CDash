@@ -87,7 +87,7 @@ CDash.controller('TestOverviewController',
       if ($scope.cdash.begin_date == $scope.cdash.end_date) {
         uri += '&date=' + $scope.cdash.begin_date;
       } else {
-        uri += '&from=' + $scope.cdash.begin_date + '&to=' + $scope.cdash.end_date;
+        uri += '&begin=' + $scope.cdash.begin_date + '&end=' + $scope.cdash.end_date;
       }
       if ($scope.cdash.selectedGroup.id > 0) {
         uri += '&group=' + $scope.cdash.selectedGroup.id;
