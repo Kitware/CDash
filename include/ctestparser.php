@@ -23,6 +23,7 @@ use CDash\Lib\Parser\CTest\DoneParser;
 use CDash\Lib\Parser\CTest\DynamicAnalysisParser;
 use CDash\Lib\Parser\CTest\NoteParser;
 use CDash\Lib\Parser\CTest\ProjectParser;
+use CDash\Lib\Parser\CTest\RetryHandler;
 use CDash\Lib\Parser\CTest\TestingParser;
 use CDash\Lib\Parser\CTest\UpdateParser;
 use CDash\Lib\Parser\CTest\UploadParser;
