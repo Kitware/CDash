@@ -18,6 +18,7 @@
     "ext-json": "*",
     "ext-mbstring": "*",
     "ext-pdo": "*",
+    "ext-simplexml": "*",
     "ext-xsl": "*",
     "ext-xml": "*",
     "bernard/bernard": "1.0.0-alpha9",
