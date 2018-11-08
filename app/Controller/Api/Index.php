@@ -22,10 +22,8 @@ use CDash\Model\Project;
 
 class Index extends ResultsApi
 {
-    protected $beginDate;
     protected $includeSubProjects;
     protected $includedSubProjects;
-    protected $endDate;
     protected $excludeSubProjects;
     protected $excludedSubProjects;
     protected $filterSQL;
@@ -49,12 +47,10 @@ class Index extends ResultsApi
     {
         parent::__construct($db, $project);
 
-        $this->beginDate = self::BEGIN_EPOCH;
         $this->buildgroupsResponse = [];
         $this->buildStartTimes = [];
         $this->childView = 0;
         $this->filterdata = [];
-        $this->endDate = self::BEGIN_EPOCH;
         $this->shareLabelFilters = false;
         $this->updateType = '';
 
@@ -73,12 +69,6 @@ class Index extends ResultsApi
         $this->receivedBuilds = [];
         $this->subProjectId = false;
         $this->subProjectPositions = [];
-    }
-
-    public function setDates($begin_date, $end_date)
-    {
-        $this->beginDate = $begin_date;
-        $this->endDate = $end_date;
     }
 
     public function getFilterData()

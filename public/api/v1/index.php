@@ -64,14 +64,9 @@ $Project = new Project();
 $Project->Id = $projectid;
 $Project->Fill();
 
-@$date = $_GET['date'];
-if ($date != null) {
-    $date = htmlspecialchars(pdo_real_escape_string($date));
-}
-
 if (!function_exists('echo_main_dashboard_JSON')) {
     // Generate the main dashboard JSON response.
-    function echo_main_dashboard_JSON($project_instance, $date)
+    function echo_main_dashboard_JSON($project_instance)
     {
         $start = microtime_float();
         require_once 'include/pdo.php';
@@ -138,7 +133,8 @@ if (!function_exists('echo_main_dashboard_JSON')) {
             $parent_build = new Build();
             $parent_build->Id = $parentid;
             $parent_build->FillFromId($parent_build->Id);
-            $date = $parent_build->GetDate();
+            $controller->SetDate($parent_build->GetDate());
+
             $response['parentid'] = $parentid;
             $controller->setParentId($parentid);
 
@@ -185,36 +181,19 @@ if (!function_exists('echo_main_dashboard_JSON')) {
                 $show_proc_time = true;
             }
         } else {
+            $controller->determineDateRange($response);
             $response['parentid'] = -1;
         }
 
-        if (is_null($date) && isset($_GET['begin']) && isset($_GET['end'])) {
-            // Honor 'begin' & 'end' parameters to specify a range of dates.
-            $beginning_date = $_GET['begin'];
-            $end_date = $_GET['end'];
-            list($unused, $beginning_timestamp, $unused) =
-                get_dates($beginning_date, $project_array['nightlytime']);
-            list($previousdate, $end_timestamp, $nextdate) =
-                get_dates($end_date, $project_array['nightlytime']);
-            $currentstarttime = $end_timestamp;
-            $date = $end_date;
-            $response['begin'] = $beginning_date;
-            $response['end'] = $end_date;
-        } else {
-            list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $project_array['nightlytime']);
-            if ($currentstarttime > time() && !isset($_GET['parentid'])) {
-                $response['error'] = 'CDash cannot predict the future (yet)';
-                echo json_encode($response);
-                return;
-            }
-            $beginning_timestamp = $currentstarttime;
+        if (isset($_GET['date']) && !isset($_GET['parentid']) && $controller->getCurrentStartTime() > time()) {
+            $response['error'] = 'CDash cannot predict the future (yet)';
+            echo json_encode($response);
+            return;
         }
-        $datetime = new DateTime();
-        $datetime->setTimeStamp($currentstarttime);
-        $datetime->add(new DateInterval('P1D'));
-        $end_timestamp = $datetime->getTimestamp();
 
         // Main dashboard section
+        $currentstarttime = $controller->getCurrentStartTime();
+        $date = $controller->getDate();
         get_dashboard_JSON($projectname, $date, $response);
         $response['displaylabels'] = $project_array['displaylabels'];
         $response['showtesttime'] = $project_instance->ShowTestTime;
@@ -230,9 +209,8 @@ if (!function_exists('echo_main_dashboard_JSON')) {
 
         // Menu definition
         $response['menu'] = array();
-        $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
-        $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
-        $controller->setDates($beginning_UTCDate, $end_UTCDate);
+        $beginning_UTCDate = $controller->getBeginDate();
+        $end_UTCDate = $controller->getEndDate();
         if ($project_instance->GetNumberOfSubProjects($end_UTCDate) > 0) {
             $response['menu']['subprojects'] = 1;
         }
@@ -783,4 +761,4 @@ if (!function_exists('echo_main_dashboard_JSON')) {
 }
 
 
-echo_main_dashboard_JSON($Project, $date);
+echo_main_dashboard_JSON($Project);
