@@ -1,5 +1,7 @@
 <?php
 
+use CDash\Lib\Parser\AbstractXmlParser;
+use CDash\Lib\Parser\CTest\TestingParser;
 use CDash\Model\Build;
 use CDash\Lib\Collection\BuildCollection;
 use CDash\Collection\TestCollection;
@@ -29,9 +31,9 @@ class TestUseCaseTest extends CDashUseCaseTestCase
     {
         $sut = UseCase::createBuilder($this, UseCase::TEST);
         $sut->createSite(['Name' => 'Site.Name']);
-        /** @var ActionableBuildInterface $handler */
+        /** @var AbstractXmlParser $handler */
         $handler = $sut->build();
-        $this->assertInstanceOf(\TestingHandler::class, $handler);
+        $this->assertInstanceOf(TestingParser::class, $handler);
     }
 
     public function testTestUseCaseCreatesBuildAndSiteInformation()

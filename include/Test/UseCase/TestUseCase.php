@@ -4,7 +4,7 @@ namespace CDash\Test\UseCase;
 use DOMDocument;
 use DOMElement;
 use DOMText;
-use TestingHandler;
+use CDash\Lib\Parser\CTest\TestingParser;
 
 class TestUseCase extends UseCase
 {
@@ -77,7 +77,7 @@ class TestUseCase extends UseCase
         $endTestTime->appendChild(new DOMText($this->endTime));
 
         $xml_str = $xml->saveXML($xml);
-        $handler = new TestingHandler($this->projectId, $this->scheduleId);
+        $handler = new TestingParser($this->projectId);
         return $this->getXmlHandler($handler, $xml_str);
     }
 

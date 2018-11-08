@@ -1,12 +1,16 @@
 <?php
 namespace CDash\Test\UseCase;
 
-use AbstractHandler;
+use CDash\Lib\Parser\AbstractXmlParser;
 use CDash\Test\CDashUseCaseTestCase;
 use DOMDocument;
 use DOMElement;
 use DOMText;
 
+/**
+ * Class UseCase
+ * @package CDash\Test\UseCase
+ */
 abstract class UseCase
 {
     const TEST = 1;
@@ -196,7 +200,7 @@ abstract class UseCase
      * @param $xml
      * @return AbstractHandler
      */
-    public function getXmlHandler(AbstractHandler $handler, $xml)
+    public function getXmlHandler(AbstractXmlParser $handler, $xml)
     {
         $parser = xml_parser_create();
         xml_set_element_handler(
