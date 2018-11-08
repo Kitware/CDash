@@ -20,6 +20,8 @@ require_once 'include/api_common.php';
 require_once 'include/filterdataFunctions.php';
 require_once 'include/version.php';
 
+use CDash\Database;
+use CDash\Model\BuildGroup;
 use CDash\Model\Project;
 
 $start = microtime_float();
@@ -116,28 +118,23 @@ $menu['current'] = 'testOverview.php?project=' . urlencode($Project->Name) . "&d
 $menu['back'] = 'index.php?project=' . urlencode($Project->Name) . "&date=$date";
 $response['menu'] = $menu;
 
+
 // List all active buildgroups for this project.
-$pdo = get_link_identifier()->getPdo();
-$stmt = $pdo->prepare(
-    "SELECT id, name, position FROM buildgroup bg
-    JOIN buildgroupposition bgp on (bgp.buildgroupid=bg.id)
-    WHERE projectid=?
-    AND bg.endtime='1980-01-01 00:00:00'");
-pdo_execute($stmt, [$projectid]);
-$groups_response = array();
+$buildgroups = BuildGroup::GetBuildGroups($project->Id, $begin_date);
+$groups_response = [];
 
 // Begin with an entry for the default "Non-Experimental Builds" selection.
-$default_group = array();
+$default_group = [];
 $default_group['id'] = 0;
 $default_group['name'] = 'Non-Experimental Builds';
 $default_group['position'] = 0;
 $groups_response[] = $default_group;
 
-while ($row = $stmt->fetch()) {
-    $group_response = array();
-    $group_response['id'] = $row['id'];
-    $group_response['name'] = $row['name'];
-    $group_response['position'] = $row['position'];
+foreach ($buildgroups as $buildgroup) {
+    $group_response = [];
+    $group_response['id'] = $buildgroup->GetId();
+    $group_response['name'] = $buildgroup->GetName();
+    $group_response['position'] = $buildgroup->GetPosition();
     $groups_response[] = $group_response;
 }
 $response['groups'] = $groups_response;
@@ -159,6 +156,7 @@ if ($has_subprojects) {
 }
 
 // Main query: find all the requested tests.
+$pdo = Database::getInstance();
 $stmt = $pdo->prepare(
     "SELECT t.name, t.details, b2t.status, b2t.time $sp_select FROM build b
     JOIN build2test b2t ON (b2t.buildid=b.id)
@@ -174,7 +172,7 @@ $stmt->bindParam(':end', $end_date);
 if ($groupid > 0) {
     $stmt->bindParam(':groupid', $groupid);
 }
-pdo_execute($stmt);
+$pdo->execute($stmt);
 
 $tests_response[] = array();
 $all_tests = array();
