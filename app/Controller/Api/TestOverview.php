@@ -44,46 +44,7 @@ class TestOverview extends ResultsApi
         $response['hassubprojects'] = $has_subprojects;
 
         // Handle the optional arguments that dictate our time range.
-        $date = null;
-        $begin_date = null;
-        $end_date = null;
-        if (isset($_GET['begin']) || isset($_GET['end'])) {
-            if (isset($_GET['begin']) && isset($_GET['end'])) {
-                // If both arguments were specified, compute date range for SQL query.
-                $from = $_GET['begin'];
-                list($unused, $beginning_timestamp, $unused, $unused) =
-                    get_dates($from, $this->project->NightlyTime);
-                $begin_date = gmdate(FMT_DATETIME, $beginning_timestamp);
-                $response['begin'] = $from;
-
-                $date = $_GET['end'];
-                list($previousdate, $end_timestamp, $nextdate, $unused) =
-                    get_dates($date, $this->project->NightlyTime);
-                $end_timestamp += (3600 * 24);
-                $end_date = gmdate(FMT_DATETIME, $end_timestamp);
-                $response['end'] = $date;
-            } else {
-                // If not, just use whichever one was set.
-                if (isset($_GET['begin'])) {
-                    $date = $_GET['begin'];
-                } else {
-                    $date = $_GET['end'];
-                }
-            }
-        } elseif (isset($_GET['date'])) {
-            $date = $_GET['date'];
-        }
-
-        if (is_null($begin_date)) {
-            list($previousdate, $beginning_timestamp, $nextdate, $d) =
-                get_dates($date, $this->project->NightlyTime);
-            if (is_null($date)) {
-                $date = $d;
-            }
-            $end_timestamp = $beginning_timestamp + 3600 * 24;
-            $begin_date = gmdate(FMT_DATETIME, $beginning_timestamp);
-            $end_date = gmdate(FMT_DATETIME, $end_timestamp);
-        }
+        $this->determineDateRange($response);
 
         // Check if the user specified a buildgroup.
         $groupid = 0;
@@ -109,24 +70,24 @@ class TestOverview extends ResultsApi
             $response['showpassed'] = 0;
         }
 
-        get_dashboard_JSON($this->project->Name, $date, $response);
+        get_dashboard_JSON($this->project->Name, $this->date, $response);
 
         // Setup the menu of relevant links.
-        $menu = array();
-        $menu['previous'] = 'testOverview.php?project=' . urlencode($this->project->Name) . "&date=$previousdate$group_link";
-        if ($date != '' && date(FMT_DATE, $beginning_timestamp) != date(FMT_DATE)) {
-            $menu['next'] = 'testOverview.php?project=' . urlencode($this->project->Name) . "&date=$nextdate$group_link";
+        $menu = [];
+        $menu['previous'] = 'testOverview.php?project=' . urlencode($this->project->Name) . "&date={$this->previousDate}$group_link";
+        if (date(FMT_DATE, $this->currentStartTime) != date(FMT_DATE)) {
+            $menu['next'] = 'testOverview.php?project=' . urlencode($this->project->Name) . "&date={$this->nextDate}$group_link";
         } else {
             $menu['nonext'] = '1';
         }
         $today = date(FMT_DATE);
         $menu['current'] = 'testOverview.php?project=' . urlencode($this->project->Name) . "&date=$today$group_link";
-        $menu['back'] = 'index.php?project=' . urlencode($this->project->Name) . "&date=$date";
+        $menu['back'] = 'index.php?project=' . urlencode($this->project->Name) . "&date=$this->date";
         $response['menu'] = $menu;
 
 
         // List all active buildgroups for this project.
-        $buildgroups = BuildGroup::GetBuildGroups($this->project->Id, $begin_date);
+        $buildgroups = BuildGroup::GetBuildGroups($this->project->Id, $this->beginDate);
         $groups_response = [];
 
         // Begin with an entry for the default "Non-Experimental Builds" selection.
@@ -172,15 +133,15 @@ class TestOverview extends ResultsApi
                 AND b.starttime < :end AND b.starttime >= :begin
                 $filter_sql");
         $stmt->bindParam(':projectid', $this->project->Id);
-        $stmt->bindParam(':begin', $begin_date);
-        $stmt->bindParam(':end', $end_date);
+        $stmt->bindParam(':begin', $this->beginDate);
+        $stmt->bindParam(':end', $this->endDate);
         if ($groupid > 0) {
             $stmt->bindParam(':groupid', $groupid);
         }
         $this->db->execute($stmt);
 
-        $tests_response[] = array();
-        $all_tests = array();
+        $tests_response[] = [];
+        $all_tests = [];
         while ($row = $stmt->fetch()) {
             // Only track tests that passed or failed.
             $status = $row['status'];
@@ -190,7 +151,7 @@ class TestOverview extends ResultsApi
 
             $test_name = $row['name'];
             if (!array_key_exists($test_name, $all_tests)) {
-                $test = array();
+                $test = [];
                 $test['name'] = $test_name;
                 if ($has_subprojects) {
                     $test['subproject'] = $row['subproject'];
@@ -215,7 +176,7 @@ class TestOverview extends ResultsApi
         }
 
         // Compute fail percentage for each test found.
-        $tests_response = array();
+        $tests_response = [];
         foreach ($all_tests as $name => $test) {
             $total_runs = $test['passed'] + $test['failed'] + $test['timeout'];
             // Avoid divide by zero.
@@ -228,7 +189,7 @@ class TestOverview extends ResultsApi
                 continue;
             }
 
-            $test_response = array();
+            $test_response = [];
             $test_response['name'] = $name;
             if ($has_subprojects) {
                 $test_response['subproject'] = $test['subproject'];
@@ -238,7 +199,7 @@ class TestOverview extends ResultsApi
             $test_response['timeoutpercent'] =
                 round(($test['timeout'] / $total_runs) * 100, 2);
             $test_response['link'] =
-                "testSummary.php?project={$this->project->Id}&name=$name&date=$date";
+                "testSummary.php?project={$this->project->Id}&name=$name&date=$this->date";
             $test_response['totalruns'] = $total_runs;
             $test_response['prettytime'] = time_difference($test['time'], true, '', true);
             $test_response['time'] = $test['time'];
