@@ -23,40 +23,15 @@ require_once 'include/version.php';
 use CDash\Model\Project;
 
 $start = microtime_float();
-$response = array();
+$response = [];
 
-// Make sure a project was requested.
-if (!isset($_GET['project'])) {
-    $response['error'] = 'Project not specified.';
-    echo json_encode($response);
-    http_response_code(400);
-    return;
-}
+$Project = get_project_from_request();
 
-// Make sure the project exists.
-$projectname = $_GET['project'];
-$projectid = get_project_id($projectname);
-$Project = new Project();
-$Project->Id = $projectid;
-if (!$Project->Exists()) {
-    $response['error'] = 'Project does not exist.';
-    echo json_encode($response);
-    http_response_code(400);
-    return;
-}
-
-// Make sure the user has access to this project.
-if (!can_access_project($projectid)) {
-    return;
-}
-
-// Load project data.
-$Project->Fill();
 $has_subprojects = $Project->GetNumberOfSubProjects() > 0;
 
 // Begin our JSON response.
 $response = begin_JSON_response();
-$response['title'] = "$projectname : Test Overview";
+$response['title'] = "$Project->Name : Test Overview";
 $response['showcalendar'] = 1;
 $response['hassubprojects'] = $has_subprojects;
 
@@ -126,19 +101,19 @@ if ($showpassed) {
     $response['showpassed'] = 0;
 }
 
-get_dashboard_JSON($projectname, $date, $response);
+get_dashboard_JSON($Project->Name, $date, $response);
 
 // Setup the menu of relevant links.
 $menu = array();
-$menu['previous'] = 'testOverview.php?project=' . urlencode($projectname) . "&date=$previousdate$group_link";
+$menu['previous'] = 'testOverview.php?project=' . urlencode($Project->Name) . "&date=$previousdate$group_link";
 if ($date != '' && date(FMT_DATE, $beginning_timestamp) != date(FMT_DATE)) {
-    $menu['next'] = 'testOverview.php?project=' . urlencode($projectname) . "&date=$nextdate$group_link";
+    $menu['next'] = 'testOverview.php?project=' . urlencode($Project->Name) . "&date=$nextdate$group_link";
 } else {
     $menu['nonext'] = '1';
 }
 $today = date(FMT_DATE);
-$menu['current'] = 'testOverview.php?project=' . urlencode($projectname) . "&date=$today$group_link";
-$menu['back'] = 'index.php?project=' . urlencode($projectname) . "&date=$date";
+$menu['current'] = 'testOverview.php?project=' . urlencode($Project->Name) . "&date=$today$group_link";
+$menu['back'] = 'index.php?project=' . urlencode($Project->Name) . "&date=$date";
 $response['menu'] = $menu;
 
 // List all active buildgroups for this project.
@@ -193,7 +168,7 @@ $stmt = $pdo->prepare(
     WHERE b.projectid = :projectid AND b.parentid != -1 AND $group_clause
     AND b.starttime < :end AND b.starttime >= :begin
     $filter_sql");
-$stmt->bindParam(':projectid', $projectid);
+$stmt->bindParam(':projectid', $Project->Id);
 $stmt->bindParam(':begin', $begin_date);
 $stmt->bindParam(':end', $end_date);
 if ($groupid > 0) {
@@ -260,7 +235,7 @@ foreach ($all_tests as $name => $test) {
     $test_response['timeoutpercent'] =
             round(($test['timeout'] / $total_runs) * 100, 2);
     $test_response['link'] =
-            "testSummary.php?project=$projectid&name=$name&date=$date";
+            "testSummary.php?project=$Project->Id&name=$name&date=$date";
     $test_response['totalruns'] = $total_runs;
     $test_response['prettytime'] = time_difference($test['time'], true, '', true);
     $test_response['time'] = $test['time'];
