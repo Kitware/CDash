@@ -21,7 +21,6 @@ use CDash\Model\BuildGroup;
 use CDash\Model\Project;
 
 require_once 'include/filterdataFunctions.php';
-require_once 'include/version.php';
 
 class TestOverview extends ResultsApi
 {
@@ -47,15 +46,15 @@ class TestOverview extends ResultsApi
         $this->determineDateRange($response);
 
         // Check if the user specified a buildgroup.
-        $groupid = 0;
-        $group_join = '';
-        $group_clause = "b.type != 'Experimental'";
-        $group_link = '';
-        if (isset($_GET['group']) && is_numeric($_GET['group']) && $_GET['group'] > 0) {
-            $groupid = $_GET['group'];
+        $groupid = get_param('group', false) ?: 0;
+        if ($groupid) {
             $group_join = 'JOIN build2group b2g ON (b2g.buildid=b.id)';
             $group_clause = "b2g.groupid=:groupid";
             $group_link = "&group=$groupid";
+        } else {
+            $group_join = '';
+            $group_clause = "b.type != 'Experimental'";
+            $group_link = '';
         }
         $response['groupid'] = $groupid;
 
