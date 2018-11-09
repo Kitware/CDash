@@ -25,11 +25,22 @@ require_once 'include/api_common.php';
 class Timeline extends ResultsApi
 {
     private $defectTypes;
+    private $includeCleanBuilds;
+    // timeData is used to record the data that will populate our
+    // chart.  Its format is timeData[date][defect_type] = num_builds.
+    private $timeData;
+    // timeToDate is a mapping of timestamp (int) to date (str).
+    // We record this info here we don't have to reimplement this logic
+    // in Javascript.
+    private $timeToDate;
 
     public function __construct(Database $db, Project $project)
     {
         parent::__construct($db, $project);
         $this->defectTypes = [];
+        $this->includeCleanBuilds = true;
+        $this->timeData = [];
+        $this->timeToDate = [];
     }
 
     public function getResponse()
@@ -78,7 +89,7 @@ class Timeline extends ResultsApi
             json_error_response('Failed to load results');
         }
 
-        return $this->getTimelineChartData($stmt, true);
+        return $this->getTimelineChartData($stmt);
     }
 
     private function chartForIndex()
@@ -113,7 +124,7 @@ class Timeline extends ResultsApi
             json_error_response('Failed to load results');
             return [];
         }
-        return $this->getTimelineChartData($stmt, true);
+        return $this->getTimelineChartData($stmt);
     }
 
     private function chartForTestOverview()
@@ -142,95 +153,16 @@ class Timeline extends ResultsApi
             json_error_response('Failed to load results');
             return [];
         }
-        return $this->getTimelineChartData($stmt, false);
+        $this->includeCleanBuilds = false;
+        return $this->getTimelineChartData($stmt);
     }
 
-    private function getTimelineChartData($builds, $include_clean_builds)
+    private function getTimelineChartData($builds)
     {
         $response = [];
-
-        // Find the dates of the oldest and newest builds for this project.
-        $query = '
-            SELECT id from build
-            WHERE projectid = :projectid AND
-            (starttime =
-             (SELECT MIN(starttime) FROM build WHERE projectid = :projectid))
-            LIMIT 1';
-        $stmt = $this->db->prepare($query);
-        pdo_execute($stmt, [':projectid' => $this->project->Id]);
-        $b = new Build();
-        $b->Id = $stmt->fetchColumn();
-        $oldest_date = $b->GetDate();
-
-        $query = "
-            SELECT id from build
-            WHERE projectid = :projectid AND
-            (starttime =
-             (SELECT MAX(starttime) FROM build WHERE projectid = :projectid))
-            LIMIT 1";
-        $stmt = $this->db->prepare($query);
-        pdo_execute($stmt, [':projectid' => $this->project->Id]);
-        $b = new Build();
-        $b->Id = $stmt->fetchColumn();
-        $newest_date = $b->GetDate();
-
-        // Extend the end of our date range by *two* days.
-        //
-        // The first day is added because PHP's DatePeriod does not include the
-        // ending day in its range.
-        //
-        // The second day is added so that the chart extends through the end
-        // of the final testing day.
-        // We do this to satisfy two competing desires:
-        // 1) A single day's selection should appear as a box (not a line).
-        // 2) It should be possible to select all builds (from start to end date).
-        $end_datetime = new \DateTime($newest_date);
-        $end_datetime->modify('+2 days');
-        $newest_date = $end_datetime->format('Y-m-d');
-
-        // Record min and max timestamps.
-        list($unused, $timestamp) = get_dates($oldest_date, $this->project->NightlyTime);
-        $min_timestamp = $timestamp * 1000;
-        list($unused, $timestamp) = get_dates($newest_date, $this->project->NightlyTime);
-        $max_timestamp = $timestamp * 1000;
-
-        // time_data is used to record the data that will populate our
-        // chart.  Its format is time_data[date][defect_type] = num_builds.
-        $time_data = [];
-        // time_to_date is a mapping of timestamp (int) to date (str).
-        // We record this info here we don't have to reimplement this logic
-        // in Javascript.
-        $time_to_date = [];
-
-        // Initialize time_data and time_to_date for each date in our range.
-        $period = new \DatePeriod(
-                new \DateTime($oldest_date),
-                new \DateInterval('P1D'),
-                new \DateTime($newest_date)
-                );
-        foreach ($period as $datetime) {
-            $date = $datetime->format('Y-m-d');
-            list($unused, $start_of_day) = get_dates($date, $this->project->NightlyTime);
-            // Convert to milliseconds.
-            // This is the format nvd3 (our charting library) expects.
-            $start_of_day *= 1000;
-
-            // Initialize trends for this date.
-            if ($include_clean_builds) {
-                $time_data[$start_of_day] = ['clean' => 0];
-            } else {
-                $time_data[$start_of_day] = [];
-            }
-            foreach ($this->defectTypes as $defect_type) {
-                $key = $defect_type['name'];
-                $time_data[$start_of_day][$key] = 0;
-            }
-
-            $time_to_date[$start_of_day] = $date;
-        }
-
+        $oldest_time_ms = null;
+        $newest_time_ms = null;
         $nightly_timestamp = strtotime($this->project->NightlyTime);
-
         foreach ($builds as $build) {
             // Use this build's starttime to get the beginning of the appropriate
             // testing day.
@@ -238,25 +170,78 @@ class Timeline extends ResultsApi
                 Build::GetTestingDate($build['starttime'], $nightly_timestamp);
             list($unused, $start_of_day) =
                 get_dates($test_date, $this->project->NightlyTime);
-            $start_of_day *= 1000;
+
+            // Convert timestamp to milliseconds for our JS charting library.
+            $start_of_day_ms = $start_of_day * 1000;
+            $this->initializeDate($start_of_day_ms, $test_date);
+
+            // Keep track of oldest and newest date.
+            if (is_null($oldest_time_ms) || $start_of_day_ms < $oldest_time_ms) {
+                $oldest_time_ms = $start_of_day_ms;
+            }
+            if (is_null($newest_time_ms) || $start_of_day_ms > $newest_time_ms) {
+                $newest_time_ms = $start_of_day_ms;
+            }
 
             // Update our chart data to reflect this build's defects (if any).
             $clean_build = true;
             foreach ($this->defectTypes as $defect_type) {
                 $key = $defect_type['name'];
                 if ($build[$key] > 0) {
-                    $time_data[$start_of_day][$key] += 1;
+                    $this->timeData[$start_of_day_ms][$key] += 1;
                     $clean_build = false;
                 }
             }
-            if ($include_clean_builds && $clean_build) {
-                $time_data[$start_of_day]['clean'] += 1;
+            if ($this->includeCleanBuilds && $clean_build) {
+                $this->timeData[$start_of_day_ms]['clean'] += 1;
             }
         }
 
-        $response['min'] = $min_timestamp;
-        $response['max'] = $max_timestamp;
-        $response['time_to_date'] = $time_to_date;
+        if (is_null($oldest_time_ms)) {
+            // No builds found.
+            return [];
+        }
+
+        // Determine the range of the chart that should be selected by default.
+        // This is referred to as the extent.
+        list($unused, $begin_extent) = get_dates($this->beginDate, $this->project->NightlyTime);
+        $begin_extent *= 1000;
+        list($unused, $end_extent) = get_dates($this->endDate, $this->project->NightlyTime);
+        $end_extent *= 1000;
+        if ($begin_extent > $end_extent) {
+            $begin_extent = $end_extent;
+        }
+        $response['extentstart'] = $begin_extent;
+        $response['extentend'] = $end_extent;
+        $this->initializeDate($begin_extent, gmdate(FMT_DATE, strtotime($this->beginDate)));
+        $this->initializeDate($end_extent, gmdate(FMT_DATE, strtotime($this->endDate)));
+
+        // Make sure the date range of our chart includes all the days specified
+        // in the request.
+        if ($oldest_time_ms > $begin_extent) {
+            $oldest_time_ms = $begin_extent;
+        }
+        if ($newest_time_ms < $end_extent) {
+            $newest_time_ms = $end_extent;
+        }
+
+        // Record min and max timestamps.
+        $response['min'] = $oldest_time_ms;
+        $response['max'] = $newest_time_ms;
+
+        // Create empty entries for any dates in our range that did not have
+        // any builds.
+        $period = new \DatePeriod(
+            new \DateTime($this->timeToDate[$oldest_time_ms]),
+            new \DateInterval('P1D'),
+            new \DateTime($this->timeToDate[$newest_time_ms]));
+        foreach ($period as $datetime) {
+            $date = $datetime->format('Y-m-d');
+            list($unused, $start_of_day) = get_dates($date, $this->project->NightlyTime);
+            $start_of_day_ms = $start_of_day * 1000;
+            $this->initializeDate($start_of_day_ms, $date);
+        }
+        $response['time_to_date'] = $this->timeToDate;
 
         // Now that we've collected all this data, massage into the format used
         // by nvd3.
@@ -271,16 +256,17 @@ class Timeline extends ResultsApi
                 'prettyname' => $defect_type['prettyname']
             ];
         }
-        if ($include_clean_builds) {
+        if ($this->includeCleanBuilds) {
             $chart_keys[] = ['name' => 'clean', 'prettyname' => 'Clean Builds'];
         }
 
+        ksort($this->timeData);
         $time_chart_data = [];
         foreach ($chart_keys as $key) {
             $trend = [];
             $trend['key'] = $key['prettyname'];
             $trend['values'] = [];
-            foreach ($time_data as $start_of_day => $day_values) {
+            foreach ($this->timeData as $start_of_day => $day_values) {
                 $data_point = [$start_of_day, $day_values[$key['name']]];
                 $trend['values'][] = $data_point;
             }
@@ -288,24 +274,23 @@ class Timeline extends ResultsApi
         }
 
         $response['data'] = $time_chart_data;
-
-        // Determine the range of the chart that should be selected by default.
-        // This is referred to as the extent.
-        list($unused, $begin_extent) = get_dates($this->beginDate, $this->project->NightlyTime);
-        $begin_extent *= 1000;
-        list($unused, $end_extent) = get_dates($this->endDate, $this->project->NightlyTime);
-        $end_extent *= 1000;
-        if ($begin_extent < $min_timestamp) {
-            $begin_extent = $min_timestamp;
-        }
-        if ($end_extent > $max_timestamp) {
-            $end_extent = $max_timestamp;
-        }
-        if ($begin_extent > $end_extent) {
-            $begin_extent = $end_extent;
-        }
-        $response['extentstart'] = $begin_extent;
-        $response['extentend'] = $end_extent;
         return $response;
+    }
+
+    private function initializeDate($timestamp_ms, $date)
+    {
+        // Initialize trends for this date if necessary.
+        if (!array_key_exists($timestamp_ms, $this->timeData)) {
+            if ($this->includeCleanBuilds) {
+                $this->timeData[$timestamp_ms] = ['clean' => 0];
+            } else {
+                $this->timeData[$timestamp_ms] = [];
+            }
+            foreach ($this->defectTypes as $defect_type) {
+                $key = $defect_type['name'];
+                $this->timeData[$timestamp_ms][$key] = 0;
+            }
+            $this->timeToDate[$timestamp_ms] = $date;
+        }
     }
 }
