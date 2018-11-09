@@ -145,7 +145,7 @@ class Timeline extends ResultsApi
         return $this->getTimelineChartData($stmt, false);
     }
 
-    private function getTimelineChartData($input_stmt, $include_clean_builds)
+    private function getTimelineChartData($builds, $include_clean_builds)
     {
         $response = [];
 
@@ -231,11 +231,11 @@ class Timeline extends ResultsApi
 
         $nightly_timestamp = strtotime($this->project->NightlyTime);
 
-        while ($row = $input_stmt->fetch()) {
+        foreach ($builds as $build) {
             // Use this build's starttime to get the beginning of the appropriate
             // testing day.
             $test_date =
-                Build::GetTestingDate($row['starttime'], $nightly_timestamp);
+                Build::GetTestingDate($build['starttime'], $nightly_timestamp);
             list($unused, $start_of_day) =
                 get_dates($test_date, $this->project->NightlyTime);
             $start_of_day *= 1000;
@@ -244,7 +244,7 @@ class Timeline extends ResultsApi
             $clean_build = true;
             foreach ($this->defectTypes as $defect_type) {
                 $key = $defect_type['name'];
-                if ($row[$key] > 0) {
+                if ($build[$key] > 0) {
                     $time_data[$start_of_day][$key] += 1;
                     $clean_build = false;
                 }
@@ -308,5 +308,4 @@ class Timeline extends ResultsApi
         $response['extentend'] = $end_extent;
         return $response;
     }
-
 }
