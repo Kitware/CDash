@@ -130,7 +130,7 @@ class Queue
      */
     public function produce(Message $message)
     {
-        $this->producer->produce($message);
+        $this->producer->produce($message, $message->queueName);
     }
 
     /**

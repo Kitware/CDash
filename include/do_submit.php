@@ -334,14 +334,17 @@ function do_submit_queue($filehandle, $projectid, $buildid = null, $expected_md5
     if (is_null($ip)) {
         $ip = $_SERVER['REMOTE_ADDR'];
     }
-    $message = SubmissionService::createMessage([
-        'file' => $destinationFilename,
-        'project' => $projectid,
-        'md5' => $expected_md5,
-        'checksum' => true,
-        'ip' => $ip
-    ]);
 
+    $queue_config = $config->load('queue');
+    $queue_name = $queue_config['ctest_submission_queue'];
+    $message = SubmissionService::createMessage([
+        'file'          => $destinationFilename,
+        'project'       => $projectid,
+        'md5'           => $expected_md5,
+        'checksum'      => true,
+        'ip'            => $ip,
+        'queue_name'    => $queue_name
+    ]);
     $queue->produce($message);
 
     echo '<cdash version="' . $config->get('CDASH_VERSION') . "\">\n";

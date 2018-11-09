@@ -15,9 +15,12 @@ $service_container = \CDash\ServiceContainer::getInstance();
 /** @var Queue $queue */
 $queue = $service_container->create(Queue::class);
 
-/** @var SubmissionService $submission_service */
-$submission_service = $service_container->create(SubmissionService::class);
-
+$queue_config = \CDash\Config::getInstance()->load('queue');
+$container = $service_container->getContainer();
+$submission_service = $container->make(
+    SubmissionService::class,
+    ['queueName' => $queue_config['ctest_submission_queue']]
+);
 $submission_service->register($queue);
 
 try {
