@@ -18,11 +18,13 @@ namespace CDash\Controller\Api;
 
 use CDash\Database;
 use CDash\Model\Build;
+use CDash\Model\BuildGroup;
 use CDash\Model\Project;
+use CDash\ServiceContainer;
 
 require_once 'include/api_common.php';
 
-class Timeline extends ResultsApi
+class Timeline extends Index
 {
     private $defectTypes;
     private $includeCleanBuilds;
@@ -60,6 +62,9 @@ class Timeline extends ResultsApi
                 break;
             case 'testOverview.php':
                 return $this->chartForTestOverview();
+                break;
+            case 'viewBuildGroup.php':
+                return $this->chartForBuildGroup();
                 break;
             default:
                 json_error_response('Unexpected value for page');
@@ -157,6 +162,99 @@ class Timeline extends ResultsApi
         return $this->getTimelineChartData($stmt);
     }
 
+    private function chartForBuildGroup()
+    {
+        $groupname = urldecode(get_param('buildgroup'));
+        $service = ServiceContainer::getInstance();
+        $buildgroup = $service->create(BuildGroup::class);
+        $buildgroup->SetProjectId($this->project->Id);
+        $buildgroup->SetName($groupname);
+        if (!$buildgroup->Exists()) {
+            $error_msg =
+                "BuildGroup '$groupname' does not exist for project '$project->Name'";
+            json_error_response(['error' => $error_msg], 404);
+            return[];
+        }
+
+        $this->defectTypes = [
+            [
+                'name' => 'builderrors',
+                'prettyname' => 'Errors',
+            ],
+            [
+                'name' => 'buildwarnings',
+                'prettyname' => 'Warnings',
+            ],
+            [
+                'name' => 'testfailed',
+                'prettyname' => 'Test Failures',
+            ]
+        ];
+        $build_data = [];
+
+        $group_type = $buildgroup->GetType();
+        if ($group_type == 'Daily') {
+            // Query for defects on builds from this group.
+            $stmt = $this->db->prepare('
+                    SELECT b.id, b.starttime, b.builderrors, b.buildwarnings,
+                    b.testfailed
+                    FROM build b
+                    JOIN build2group b2g ON b2g.buildid = b.id
+                    JOIN buildgroup bg ON bg.id = b2g.groupid
+                    WHERE b.projectid = :projectid AND b.parentid IN (0, -1) AND
+                    bg.name = :buildgroupname
+                    ORDER BY starttime');
+            $query_params = [
+                ':projectid'      => $this->project->Id,
+                ':buildgroupname' => $groupname
+            ];
+            if (!pdo_execute($stmt, $query_params)) {
+                json_error_response('Failed to load results');
+                return [];
+            }
+            return $this->getTimelineChartData($stmt);
+        } elseif ($group_type == 'Latest') {
+            $this->filterOnBuildGroup($groupname);
+
+            // Save endDate before changing it.
+            $end_date = $this->endDate;
+
+            // Iterate backwards in time from now until builds stop appearing
+            // in this group.
+            $this->endDate = gmdate(FMT_DATETIME);
+            $datetime = new \DateTime();
+            // We want our date range to extend all the way through the current
+            // testing day (to the beginning of tomorrow). So we add one extra
+            // day to our range.
+            $datetime->add(new \DateInterval('P1D'));
+            $builds = [];
+            while (true) {
+                $dynamic_builds = $this->getDynamicBuilds();
+                if (empty($dynamic_builds)) {
+                    break;
+                }
+                // We want to associate builds with the testing day they occurred
+                // during (not the next one) so we subtract a day here before
+                // determining "build time".
+                $datetime->sub(new \DateInterval('P1D'));
+                $build_time = gmdate(FMT_DATETIME, $datetime->getTimestamp());
+                foreach ($dynamic_builds as $dynamic_build) {
+                    // Isolate the build fields that we need to make the chart.
+                    $build = [];
+                    $build['builderrors'] = $dynamic_build['countbuilderrors'];
+                    $build['buildwarnings'] = $dynamic_build['countbuildwarnings'];
+                    $build['testfailed'] = $dynamic_build['counttestsfailed'];
+                    $build['starttime'] = $build_time;
+                    $builds[] = $build;
+                }
+                unset($dynamic_builds);
+                $this->endDate = gmdate(FMT_DATETIME, $datetime->getTimestamp());
+            }
+            $this->endDate = $end_date;
+            return $this->getTimelineChartData($builds);
+        }
+    }
+
     private function getTimelineChartData($builds)
     {
         $response = [];
@@ -241,6 +339,7 @@ class Timeline extends ResultsApi
             $start_of_day_ms = $start_of_day * 1000;
             $this->initializeDate($start_of_day_ms, $date);
         }
+        ksort($this->timeToDate);
         $response['time_to_date'] = $this->timeToDate;
 
         // Now that we've collected all this data, massage into the format used

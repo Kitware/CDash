@@ -223,14 +223,17 @@ class Index extends ResultsApi
 
                 $sql = $this->getIndexQuery();
                 $sql .= "$where $order";
-                $build = pdo_single_row_query($sql);
-                if (empty($build)) {
-                    continue;
+
+                $results = pdo_query($sql);
+                while ($build = pdo_fetch_array($results)) {
+                    if (empty($build)) {
+                        continue;
+                    }
+                    $build['groupname'] = $buildgroup_name;
+                    $build['groupid'] = $buildgroup_id;
+                    $build['position'] = $buildgroup_position;
+                    $builds[] = $build;
                 }
-                $build['groupname'] = $buildgroup_name;
-                $build['groupid'] = $buildgroup_id;
-                $build['position'] = $buildgroup_position;
-                $builds[] = $build;
             }
         }
         return $builds;
@@ -1110,6 +1113,11 @@ class Index extends ResultsApi
 
         $groupid = $this->buildgroupsResponse[$i]['id'];
         $groupname = $this->buildgroupsResponse[$i]['name'];
+        if ($this->buildGroupName && $this->buildGroupName != $groupname) {
+            // When viewing results from a single build group don't check for
+            // expected builds from other groups.
+            return;
+        }
 
         $currentUTCTime = gmdate(FMT_DATETIME, $currentstarttime + 3600 * 24);
         $response = array();
