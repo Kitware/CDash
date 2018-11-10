@@ -16,5 +16,5 @@
 
 return [
     'OpenCoverTar' => '\CDash\Lib\Parser\OpenCover\CoverageParser',
-
+    'BazelJSON' => '\CDash\Lib\Parser\Bazel\BuildParser',
 ];
