@@ -16,42 +16,15 @@
 
 namespace CDash\Lib\Parser;
 
-use CDash\Lib\Collection\BuildCollection;
-use CDash\Lib\Configuration;
-
-use CDash\Lib\Parser\SubmissionParserInterface;
-use CDash\Lib\ServiceContainer;
 use CDash\Model\Build;
 use CDash\Model\Site;
 
 abstract class AbstractXmlParser implements SaxInterface, SubmissionParserInterface
 {
-    use ServiceContainer;
-    use Configuration;
-
-    /** @var Build $build */
-    protected $build;
-
-    /** @var string|int $projectId */
-    protected $projectId;
-
-    /** @var string|int $scheduleId */
-    protected $scheduleId;
-
-    /** @var Site */
-    protected $site;
+    use SubmissionParser;
 
     /** @var Stack $stack */
     protected $stack;
-
-    /** @var string $subProjectName */
-    protected $subProjectName;
-
-    /** @var string $startTimeStamp */
-    protected $startTimeStamp;
-
-    /** @var string $endTimeStamp */
-    protected $endTimeStamp;
 
     // TODO: refactor, remove
     // @see ctestparser.php ctest_parse (bottom) for refactor proposal
@@ -68,6 +41,10 @@ abstract class AbstractXmlParser implements SaxInterface, SubmissionParserInterf
         $this->stack = new Stack();
     }
 
+    /**
+     * @param StackInterface $stack
+     * @return self
+     */
     public function setStack(StackInterface $stack)
     {
         $this->stack = $stack;
@@ -173,94 +150,5 @@ abstract class AbstractXmlParser implements SaxInterface, SubmissionParserInterf
     public function endPrefixMapping($parser, $user_data, $prefix)
     {
         // not implemented
-    }
-
-    /**
-     * @return string
-     */
-    public function getSiteName()
-    {
-        if ($this->site) {
-            return $this->site->Name;
-        }
-    }
-
-    /**
-     * @return string|int
-     */
-    public function getSiteId()
-    {
-        if ($this->site) {
-            return $this->site->Id;
-        }
-    }
-
-    /**
-     * @return string
-     */
-    public function getBuildStamp()
-    {
-        if ($this->build) {
-            return $this->build->GetStamp();
-        }
-    }
-
-    /**
-     * @return string
-     */
-    public function getBuildName()
-    {
-        if ($this->build) {
-            return $this->build->Name;
-        }
-    }
-
-    /**
-     * @return \CDash\Model\Build[]
-     */
-    public function getBuilds()
-    {
-        $builds = [];
-        if ($this->build) {
-            $builds[] = $this->build;
-        }
-        return $builds;
-    }
-
-    /**
-     * @return BuildCollection
-     */
-    public function getBuildCollection()
-    {
-        $collection = $this->getInstance(BuildCollection::class);
-        foreach ($this->getBuilds() as $build) {
-            $collection->add($build);
-        }
-        return $collection;
-    }
-
-    /**
-     * @param $projectId
-     * @return self
-     */
-    public function setProjectId($projectId)
-    {
-        $this->projectId = $projectId;
-        return $this;
-    }
-
-    /**
-     * @param $scheduleId
-     * @return self
-     */
-    public function setScheduleId($scheduleId)
-    {
-        $this->scheduleId = $scheduleId;
-        return $this;
-    }
-
-    public function getActionableBuilds()
-    {
-        return $this->getBuildCollection();
     }
 }

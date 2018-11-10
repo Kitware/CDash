@@ -17,6 +17,7 @@
 namespace CDash\Lib\Parser;
 
 use CDash\Lib\Collection\BuildCollection;
+use CDash\Model\Build;
 
 /**
  * Interface SubmissionParserInterface
@@ -35,6 +36,13 @@ interface SubmissionParserInterface
     public function getSiteId();
 
     /**
+     * Returns either the parent build given multiple builds in the submission or the sole submitted build
+     *
+     * @return Build
+     */
+    public function getBuild();
+
+    /**
      * @return string
      */
     public function getBuildStamp();
@@ -45,7 +53,7 @@ interface SubmissionParserInterface
     public function getBuildName();
 
     /**
-     * @return \CDash\Model\Build[]
+     * @return Build[]
      */
     public function getBuilds();
 
