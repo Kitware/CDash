@@ -83,7 +83,13 @@ class SubmissionService
             );
             throw new \Exception($message);
         }
-        $name = isset($parameters['queue_name']) ? $parameters['queue_name'] : self::NAME;
+
+        if (array_key_exists('queue_name', $parameters)) {
+            $name = $parameters['queue_name'];
+        } else {
+            $queue_config = Config::getInstance()->load('queue');
+            $name = $queue_config['ctest_submission_queue'];
+        }
         return new PlainMessage($name, $parameters);
     }
 
