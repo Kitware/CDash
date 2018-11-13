@@ -44,9 +44,21 @@ local_service_setup() {
 setup_local_config() {
     (
         echo '<?php'
+
+        echo '$'"CDASH_DB_HOST = 'mysql';"
+        echo '$'"CDASH_DB_NAME = 'cdash';"
+        echo '$'"CDASH_DB_TYPE = 'mysql';"
+        echo '$'"CDASH_DB_LOGIN = 'root';"
+        echo '$'"CDASH_DB_PORT = '';"
+        echo '$'"CDASH_DB_PASS = '';"
+        echo '$'"CDASH_DB_CONNECTION_TYPE = 'host';"
+        echo '$'"CDASH_LOG_FILE = 'php://stdout';"
+        echo '$'"CDASH_ENABLE_FEED = 0;"
+
         if [ '!' -z ${CDASH_CONFIG+x} ] ; then
             echo "$CDASH_CONFIG"
         fi
+
     ) > "$__local_config_file"
 }
 
