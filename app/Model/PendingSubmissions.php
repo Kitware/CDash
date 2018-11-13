@@ -141,8 +141,26 @@ class PendingSubmissions
             "UPDATE pending_submissions
             SET numfiles = numfiles $operator 1
             WHERE buildid = ?");
-        pdo_execute($stmt, [$this->Build->Id]);
-        $this->PDO->commit();
+        try {
+            if ($stmt->execute([$this->Build->Id])) {
+                $this->PDO->commit();
+            } else {
+                // The UPDATE statement didn't execute cleanly.
+                $error_info = $stmt->errorInfo();
+                $error = $error_info[2];
+                throw new \Exception($error);
+            }
+        } catch (\Exception $e) {
+            $this->PDO->rollBack();
+            // Ignore any 'Numeric value out of range' SQL errors.
+            if ($this->GetNumFiles() > 0) {
+                // Otherwise log the error and return false.
+                add_log($e->getMessage() . PHP_EOL . $e->getTraceAsString(),
+                        'IncrementOrDecrement', LOG_ERR);
+                return false;
+            }
+        }
+        return true;
     }
     public function Increment()
     {
