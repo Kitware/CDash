@@ -1455,3 +1455,13 @@ CREATE TABLE "related_builds" (
 );
 CREATE INDEX "related_buildid" on "related_builds" ("buildid");
 CREATE INDEX "relatedid" on "related_builds" ("relatedid");
+
+--
+-- Table: build_filters
+--
+CREATE TABLE "build_filters" (
+  "projectid" bigint NOT NULL,
+  "warnings" text,
+  "errors" text,
+  PRIMARY KEY ("projectid")
+);

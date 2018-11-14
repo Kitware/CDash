@@ -38,3 +38,10 @@ CREATE TABLE "pending_submissions" (
   "numfiles" smallint DEFAULT '0' NOT NULL,
   PRIMARY KEY ("buildid")
 );
+
+CREATE TABLE "build_filters" (
+  "projectid" bigint NOT NULL,
+  "warnings" text,
+  "erors" text,
+  PRIMARY KEY ("projectid")
+);

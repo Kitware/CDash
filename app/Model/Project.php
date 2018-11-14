@@ -69,6 +69,9 @@ class Project
     public $RobotRegex;
     public $CTestTemplateScript;
     public $WebApiKey;
+    public $BuildErrorFilter;
+    public $WarningsFilter;
+    public $ErrorsFilter;
     /** @var \PDO $PDO */
     private $PDO;
 
@@ -125,6 +128,13 @@ class Project
         if (empty($this->WebApiKey)) {
             $this->WebApiKey = '';
         }
+        if (empty($this->WarningsFilter)) {
+            $this->WarningsFilter = '';
+        }
+        if (empty($this->ErrorsFilter)) {
+            $this->ErrorsFilter = '';
+        }
+        $this->BuildErrorFilter = new BuildErrorFilter($this->Id);
         $this->PDO = Database::getInstance()->getPdo();
     }
 
@@ -166,6 +176,7 @@ class Project
         pdo_query("DELETE FROM dailyupdate WHERE projectid=$this->Id");
         pdo_query("DELETE FROM projectrobot WHERE projectid=$this->Id");
         pdo_query("DELETE FROM projectjobscript WHERE projectid=$this->Id");
+        pdo_query("DELETE FROM build_filters WHERE projectid=$this->Id");
 
         // Delete any repositories that aren't shared with other projects.
         $repositories_query = pdo_query(
@@ -226,6 +237,8 @@ class Project
         $RobotRegex = pdo_real_escape_string($this->RobotRegex);
         $Name = pdo_real_escape_string($this->Name);
         $CvsViewerType = pdo_real_escape_string($this->CvsViewerType);
+        $WarningsFilter = pdo_real_escape_string($this->WarningsFilter);
+        $ErrorsFilter = pdo_real_escape_string($this->ErrorsFilter);
 
         // Check if the project is already
         if ($this->Exists()) {
@@ -291,6 +304,12 @@ class Project
                         add_last_sql_error('Project Update', $this->Id);
                         return false;
                     }
+                }
+            }
+
+            if ($this->WarningsFilter != '' || $this->ErrorsFilter != '') {
+                if (!$this->BuildErrorFilter->AddOrUpdateFilters($this->WarningsFilter, $this->ErrorsFilter)) {
+                    return false;
                 }
             }
 
@@ -368,6 +387,13 @@ class Project
                 $query = 'INSERT INTO projectjobscript(projectid,script)
                  VALUES (' . qnum($this->Id) . ",'" . $$CTestTemplateScript . "')";
                 if (!pdo_query($query)) {
+                    return false;
+                }
+            }
+
+            if ($this->WarningsFilter != '' || $this->ErrorsFilter != '') {
+                $this->BuildErrorFilter->ProjectId = $this->Id;
+                if (!$this->BuildErrorFilter->AddFilters($this->WarningsFilter, $this->ErrorsFilter)) {
                     return false;
                 }
             }
@@ -509,6 +535,18 @@ class Project
         if ($robot_array = pdo_fetch_array($robot)) {
             $this->RobotName = $robot_array['robotname'];
             $this->RobotRegex = $robot_array['authorregex'];
+        }
+
+        // Check if we have filters
+        $build_filters = pdo_query('SELECT * FROM build_filters WHERE projectid=' . $this->Id);
+        if (!$build_filters) {
+            add_last_sql_error('Project Fill', $this->Id);
+            return;
+        }
+
+        if ($build_filters_array = pdo_fetch_array($build_filters)) {
+            $this->WarningsFilter = $build_filters_array['warnings'];
+            $this->ErrorsFilter = $build_filters_array['errors'];
         }
 
         // Check if we have a ctest script

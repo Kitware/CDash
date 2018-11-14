@@ -1505,6 +1505,16 @@ CREATE TABLE `related_builds` (
 );
 
 --
+-- Table structure for table `build_filters`
+--
+CREATE TABLE IF NOT EXISTS `build_filters` (
+  `projectid` int(11) NOT NULL,
+  `warnings` text,
+  `errors` text,
+  PRIMARY KEY (`projectid`)
+);
+
+--
 -- Change the table maximum size to be more than 4GB
 --
 alter table test max_rows = 200000000000 avg_row_length = 3458;
