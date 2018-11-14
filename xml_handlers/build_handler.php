@@ -20,6 +20,7 @@ require_once 'xml_handlers/actionable_build_interface.php';
 use CDash\Config;
 use CDash\Model\Build;
 use CDash\Model\BuildError;
+use CDash\Model\BuildErrorFilter;
 use CDash\Model\BuildFailure;
 use CDash\Model\BuildInformation;
 use CDash\Model\Feed;
@@ -47,6 +48,7 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
     private $BuildStamp;
     private $Generator;
     private $PullRequest;
+    private $BuildErrorFilter;
 
     public function __construct($projectid, $scheduleid)
     {
@@ -58,6 +60,7 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
         $this->BuildLog = '';
         $this->Labels = [];
         $this->SubProjects = [];
+        $this->BuildErrorFilter = new BuildErrorFilter($projectid);
     }
 
     public function startElement($parser, $name, $attributes)
@@ -209,8 +212,28 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
                 }
             }
         } elseif ($name == 'WARNING' || $name == 'ERROR' || $name == 'FAILURE') {
-            $threshold = $this->config->get('CDASH_LARGE_TEXT_LIMIT');
+            $skip_error = false;
+            if (isset($this->Error->StdOutput)) {
+                if ($this->Error->Type === 1) {
+                    $skip_error = $this->BuildErrorFilter->FilterWarning($this->Error->StdOutput);
+                } elseif ($this->Error->Type === 0) {
+                    $skip_error = $this->BuildErrorFilter->FilterError($this->Error->StdOutput);
+                }
+            }
+            if (isset($this->Error->StdError)) {
+                if ($this->Error->Type === 1) {
+                    $skip_error = $this->BuildErrorFilter->FilterWarning($this->Error->StdError);
+                } elseif ($this->Error->Type === 0) {
+                    $skip_error = $this->BuildErrorFilter->FilterError($this->Error->StdError);
+                }
+            }
 
+            if ($skip_error) {
+                unset($this->Error);
+                return;
+            }
+
+            $threshold = $this->config->get('CDASH_LARGE_TEXT_LIMIT');
             if ($threshold > 0 && isset($this->Error->StdOutput)) {
                 $chunk_size = $threshold / 2;
                 $outlen = strlen($this->Error->StdOutput);
