@@ -335,15 +335,12 @@ function do_submit_queue($filehandle, $projectid, $buildid = null, $expected_md5
         $ip = $_SERVER['REMOTE_ADDR'];
     }
 
-    $queue_config = $config->load('queue');
-    $queue_name = $queue_config['ctest_submission_queue'];
     $message = SubmissionService::createMessage([
         'file'          => $destinationFilename,
         'project'       => $projectid,
         'md5'           => $expected_md5,
         'checksum'      => true,
-        'ip'            => $ip,
-        'queue_name'    => $queue_name
+        'ip'            => $ip
     ]);
     $queue->produce($message);
 
