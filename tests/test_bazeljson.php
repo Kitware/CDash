@@ -11,13 +11,6 @@ class BazelJSONTestCase extends KWWebTestCase
     {
         parent::__construct();
         $this->PDO = get_link_identifier()->getPdo();
-        $this->BuildId = 0;
-    }
-
-    public function __destruct()
-    {
-        if ($this->BuildId > 0) {
-        }
     }
 
     public function testBazelJSON()
@@ -38,7 +31,7 @@ class BazelJSONTestCase extends KWWebTestCase
         $row = $stmt->fetch();
 
         $answer_key = [
-            'builderrors' => 2,
+            'builderrors' => 1,
             'buildwarnings' => 2,
             'testfailed' => 1,
             'testpassed' => 1,
@@ -74,6 +67,58 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Cleanup.
         remove_build($buildid);
+    }
+
+    public function testFilterBazelJSON()
+    {
+        // Create a new project.
+        $settings = [
+            'Name' => 'Bazel',
+            'Public' => 1,
+            'WarningsFilter' => '/(.*?)unused variable(.*?)$/is',
+            'ErrorsFilter' => '/(.*?)use of undeclared identifier(.*?)$/is'
+        ];
+        $projectid = $this->createProject($settings);
+        if ($projectid < 1) {
+            $this->fail('Failed to create project');
+        }
+        $project = new Project();
+        $project->Id = $projectid;
+
+        // Submit testing data.
+        $buildid = $this->submit_data('Bazel', 'BazelJSON',
+            '0a9b0aeeb73618cd10d6e1bee221fd71',
+            dirname(__FILE__) . '/data/Bazel/bazel_BEP.json');
+        if (!$buildid) {
+            return false;
+        }
+
+        // Validate the build.
+        $stmt = $this->PDO->query(
+                "SELECT builderrors, buildwarnings, testfailed, testpassed,
+                configureerrors, configurewarnings
+                FROM build WHERE id = $buildid");
+        $row = $stmt->fetch();
+
+        // Warnings and errors are filtered out
+        $answer_key = [
+            'builderrors' => 0,
+            'buildwarnings' => 0,
+            'testfailed' => 1,
+            'testpassed' => 1,
+            'configureerrors' => 0,
+            'configurewarnings' => 0
+        ];
+        foreach ($answer_key as $key => $expected) {
+            $found = $row[$key];
+            if ($found != $expected) {
+                $this->fail("Expected $expected for $key but found $found");
+            }
+        }
+
+        // Cleanup.
+        remove_build($buildid);
+        $project->Delete();
     }
 
     public function testBazelSubProjs()
@@ -302,7 +347,7 @@ class BazelJSONTestCase extends KWWebTestCase
         $row = $stmt->fetch();
 
         $answer_key = [
-            'builderrors' => 8,
+            'builderrors' => 4,
             'buildwarnings' => 0,
             'testfailed' => 0,
             'testpassed' => 0,

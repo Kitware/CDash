@@ -1444,6 +1444,48 @@
                 </td>
               </tr>
               <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Warnings Filters:</strong>
+                  </div>
+                </td>
+                <td>
+                  <textarea name="warningsFilter" id="warningsFilter" rows="5" cols="40"
+                         ng-model="cdash.project.WarningsFilter"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('warningsFilter_help')">
+                  </textarea>
+                  <span class="help_content" id="warningsFilter_help">
+                    <b>Warnings filter</b>
+                    <br />
+                    Enter one or more regexes that will be used to filter build warnings.
+                    Any warnings matching any regex will not be saved to the database.
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Errors Filters:</strong>
+                  </div>
+                </td>
+                <td>
+                  <textarea name="errorsFilter" id="errorsFilter" rows="5" cols="40"
+                         ng-model="cdash.project.ErrorsFilter"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('errorsFilter_help')" >
+                  </textarea>
+                  <span class="help_content" id="errorsFilter_help">
+                    <b>Errors filter</b>
+                    <br />
+                    Enter one or more regexes that will be used to filter build errors.
+                    Any errors matching any regex will not be saved to the database.
+                  </span>
+                </td>
+              </tr>
+              <tr>
                 <td>
                 </td>
                 <td>
