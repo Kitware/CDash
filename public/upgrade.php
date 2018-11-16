@@ -827,6 +827,16 @@ if (isset($_GET['upgrade-2-6'])) {
     return;
 }
 
+// 2.8 Upgrade
+if (isset($_GET['upgrade-2-8'])) {
+    // Set the database version
+    setVersion();
+
+    // Put that the upgrade is done in the log
+    add_log('Upgrade done.', 'upgrade-2-8');
+    return;
+}
+
 // When adding new tables they should be added to the SQL installation file
 // and here as well
 if ($Upgrade) {
