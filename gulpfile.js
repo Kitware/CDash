@@ -11,7 +11,7 @@
       rename = require("gulp-rename"),
       sourcemaps = require('gulp-sourcemaps'),
       uglify = require('gulp-uglify'),
-      release = true, // Change to true when cutting a release.
+      release = false, // Change to true when cutting a release.
       version;
 
   if (release) {
