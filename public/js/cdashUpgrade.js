@@ -83,6 +83,10 @@ function upgrade_tables()
    {
    nextstep = upgrade_2_6;
    }
+  else if(version < 2.8)
+   {
+   nextstep = upgrade_2_8;
+   }
 
   if(nextstep != '')
     {
@@ -164,6 +168,13 @@ function upgrade_2_6()
   var text = "Applying 2.6 patches";
   $("#Upgrade-2-6-Status").html("<img src=\"img/loading.gif\"/> "+text+"...");
   sendAjax("#Upgrade-2-6-Status","upgrade.php?upgrade-2-6=1",text,done);
+}
+
+function upgrade_2_8()
+{
+  var text = "Applying 2.8 patches";
+  $("#Upgrade-2-8-Status").html("<img src=\"img/loading.gif\"/> "+text+"...");
+  sendAjax("#Upgrade-2-8-Status","upgrade.php?upgrade-2-8=1",text,done);
 }
 
 
