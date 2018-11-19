@@ -54,9 +54,9 @@ class BuildErrorFilter
     public function UpdateFilters($warnings, $errors)
     {
         $query = "UPDATE build_filters SET warnings='" . $warnings . "',errors='" . $errors .
-            "' WHERE projectid=" . qnum($this->Id);
+            "' WHERE projectid=" . qnum($this->ProjectId);
         if (!pdo_query($query)) {
-            add_last_sql_error('Project Update', $this->Id);
+            add_last_sql_error('Project Update', $this->ProjectId);
             return false;
         } else {
             return true;
