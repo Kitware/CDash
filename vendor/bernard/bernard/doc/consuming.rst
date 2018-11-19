@@ -6,7 +6,7 @@ earlier, a message's name is used to determine which service object should
 receive that message.
 
 A service object can be any object that has a method corresponding to the name of the
-message with the first letter lower cased. So ``new DefaultMessage('SendNewsletter')`` will trigger a
+message with the first letter lower cased. So ``new PlainMessage('SendNewsletter')`` will trigger a
 call to ``$serviceObject->sendNewsletter($message)``. For the system to know which service
 object should handle which messages, you are required to register them first.
 
@@ -14,31 +14,33 @@ object should handle which messages, you are required to register them first.
 
     <?php
 
-    use Bernard\ServiceResolver\ObjectResolver;
+    use Bernard\Router\SimpleRouter;
     use Bernard\Consumer;
 
     // .. create driver and a queuefactory
     // NewsletterMessageHandler is a pseudo service object that responds to
     // sendNewsletter.
 
-    $serviceResolver = new ObjectResolver;
-    $serviceResolver->register('SendNewsletter', new NewsletterMessageHandler);
+    $router = new SimpleRouter();
+    $router->add('SendNewsletter', new NewsletterMessageHandler);
 
-    // Bernard also comes with a service resolver for Pimple (Silex) which allows you
+    // Bernard also comes with a router for Pimple (Silex) which allows you
     // to use service ids and have your service object lazy loader.
     //
-    // $serviceResolver = new \Bernard\Pimple\PimpleAwareResolver($pimple);
-    // $serviceResolver->register('SendNewsletter', 'my.service.id');
+    // $router = new \Bernard\Router\PimpleAwareRouter($pimple);
+    // $router->add('SendNewsletter', 'my.service.id');
     //
     // Symfony DependencyInjection component is also supported.
     //
-    // $serviceResolver = new \Bernard\Symfony\ContainerAwareServiceResolver($container);
-    // $serviceResolver->register('SendNewsletter', 'my.service.id');
+    // $router = new \Bernard\Router\ContainerAwareRouter($container);
+    // $router->add('SendNewsletter', 'my.service.id');
 
-    // Create a Consumer and start the loop. The second argument is optional and is an array
+    // Create a Consumer and start the loop.
+    $consumer = new Consumer($router, $eventDispatcher);
+    
+    // The second argument is optional and is an array
     // of options. Currently only ``max-runtime`` is supported which specifies the max runtime
     // in seconds.
-    $consumer = new Consumer($serviceResolver);
     $consumer->consume($queueFactory->create('send-newsletter'), array(
         'max-runtime' => 900,
     ));
@@ -46,14 +48,14 @@ object should handle which messages, you are required to register them first.
 Commandline Interface
 ---------------------
 
-Bernard comes with a ``ConsumeCommand`` which can be used with Symfony Console 
+Bernard comes with a ``ConsumeCommand`` which can be used with Symfony Console
 component.
 
 .. code-block:: php
 
     <?php
 
-    use Bernard\Symfony\Command\ConsumeCommand;
+    use Bernard\Command\ConsumeCommand;
 
     // create $console application
     $console->add(new ConsumeCommand($consumer, $queueFactory));
@@ -64,7 +66,7 @@ a newsletter, it would look like this.
 
 .. code-block:: bash
 
-    $ /path/to/console bernard:consume 'send-newsletter'
+    $ /path/to/console bernard:consume send-newsletter
 
 
 Internals

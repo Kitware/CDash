@@ -1,16 +1,30 @@
+sudo: false
+dist: trusty
+
 language: php
 
-cache: composer
-
 php:
-    - 5.3
-    - 5.4
-    - 5.5
+  - 5.6
+  - 7.0
+  - hhvm
+
+env:
+  - COMPOSER_OPTS=""
+  - COMPOSER_OPTS="--prefer-lowest"
+
+cache:
+  directories:
+    - $HOME/.composer/cache/files
+
+services:
+  - mongodb
+  - mysql
+  - postgresql
 
 before_script:
-    - "pyrus install pecl/redis && pyrus build pecl/redis"
-    - "echo \"extension=redis.so\" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini"
-    - "echo '{\"config\":{\"github-oauth\": {\"github.com\":\"fa354b2f030836334eac842f8fd69a03e353d247\"}}}' > ~/.composer/config.json"
-    - "composer install --dev --no-progress --no-custom-installers --no-scripts"
+  - tests/travis.sh
 
-script: phpunit
+script:
+  - php vendor/bin/phpunit -v
+  - php vendor/bin/phpunit --group functional -v
+  - php vendor/bin/phpspec run

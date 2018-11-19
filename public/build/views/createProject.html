@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="robots" content="noindex,nofollow" />
     <link rel="shortcut icon" href="favicon.ico" />
-    <link rel="stylesheet" type="text/css" ng-href="build/css/{{cssfile}}_1535655159373.css" />
+    <link rel="stylesheet" type="text/css" ng-href="build/css/{{cssfile}}_2.6.0.css" />
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <script src="js/CDash_1535655159373.min.js"></script>
+    <script src="js/CDash_2.6.0.min.js"></script>
 <!--
     <script type="text/javascript" src="js/cdashCreateProject.js"></script>
 -->
@@ -17,7 +17,7 @@
   <body bgcolor="#ffffff" ng-controller="CreateProjectController">
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
 
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1535655159373.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_2.6.0.html'"></ng-include>
     <br/>
 
     <div ng-if="cdash.projectcreated == 1">
@@ -1444,6 +1444,48 @@
                 </td>
               </tr>
               <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Warnings Filters:</strong>
+                  </div>
+                </td>
+                <td>
+                  <textarea name="warningsFilter" id="warningsFilter" rows="5" cols="40"
+                         ng-model="cdash.project.WarningsFilter"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('warningsFilter_help')">
+                  </textarea>
+                  <span class="help_content" id="warningsFilter_help">
+                    <b>Warnings filter</b>
+                    <br />
+                    Enter one or more regexes that will be used to filter build warnings.
+                    Any warnings matching any regex will not be saved to the database.
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td>
+                  <div align="right">
+                    <strong>Errors Filters:</strong>
+                  </div>
+                </td>
+                <td>
+                  <textarea name="errorsFilter" id="errorsFilter" rows="5" cols="40"
+                         ng-model="cdash.project.ErrorsFilter"
+                         ng-change="cdash.changesmade = true"
+                         ng-focus="showHelp('errorsFilter_help')" >
+                  </textarea>
+                  <span class="help_content" id="errorsFilter_help">
+                    <b>Errors filter</b>
+                    <br />
+                    Enter one or more regexes that will be used to filter build errors.
+                    Any errors matching any regex will not be saved to the database.
+                  </span>
+                </td>
+              </tr>
+              <tr>
                 <td>
                 </td>
                 <td>
@@ -1484,6 +1526,6 @@
       </form>
     </div>
 
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1535655159373.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_2.6.0.html'"></ng-include>
   </body>
 </html>

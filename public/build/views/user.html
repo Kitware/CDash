@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="robots" content="noindex,nofollow" />
     <link rel="shortcut icon" href="favicon.ico" />
-    <link rel="stylesheet" type="text/css" ng-href="build/css/{{cssfile}}_1535655159373.css" />
+    <link rel="stylesheet" type="text/css" ng-href="build/css/{{cssfile}}_2.6.0.css" />
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <script src="js/CDash_1535655159373.min.js"></script>
+    <script src="js/CDash_2.6.0.min.js"></script>
     <title ng-bind="title">CDash - My Profile</title>
   </head>
 
@@ -282,7 +282,7 @@
         <br/>
       </div>
 
-      <div ng-if="::cdash.showauthtokens">
+      <div>
         <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
           <tbody>
             <tr class="table-heading1">
@@ -439,6 +439,6 @@
 
     <!-- FOOTER -->
     <br/>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1535655159373.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_2.6.0.html'"></ng-include>
   </body>
 </html>

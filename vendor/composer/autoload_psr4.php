@@ -6,12 +6,16 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Symfony\\Polyfill\\Ctype\\' => array($vendorDir . '/symfony/polyfill-ctype'),
+    'Symfony\\Component\\Serializer\\' => array($vendorDir . '/symfony/serializer'),
+    'Symfony\\Component\\EventDispatcher\\' => array($vendorDir . '/symfony/event-dispatcher'),
     'Ramsey\\Uuid\\' => array($vendorDir . '/ramsey/uuid/src'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
     'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src'),
     'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
     'PhpDocReader\\' => array($vendorDir . '/php-di/phpdoc-reader/src/PhpDocReader'),
     'Omines\\OAuth2\\Client\\' => array($vendorDir . '/omines/oauth2-gitlab/src'),
+    'Normalt\\' => array($vendorDir . '/bernard/normalt/src'),
     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
     'League\\OAuth2\\Client\\' => array($vendorDir . '/league/oauth2-client/src', $vendorDir . '/league/oauth2-github/src', $vendorDir . '/league/oauth2-google/src'),
     'JmesPath\\' => array($vendorDir . '/mtdowling/jmespath.php/src'),
@@ -27,5 +31,7 @@ return array(
     'Doctrine\\Common\\' => array($vendorDir . '/doctrine/common/lib/Doctrine/Common'),
     'DI\\' => array($vendorDir . '/php-di/php-di/src/DI'),
     'CDash\\' => array($baseDir . '/include/CDash'),
+    'Bernard\\' => array($vendorDir . '/bernard/bernard/src'),
     'Aws\\' => array($vendorDir . '/aws/aws-sdk-php/src'),
+    'Assert\\' => array($vendorDir . '/beberlei/assert/lib/Assert'),
 );

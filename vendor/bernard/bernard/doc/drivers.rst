@@ -3,65 +3,84 @@ Drivers
 
 Several different types of drivers are supported. Currently these are available:
 
+* `Google AppEngine`_
+* `Doctrine DBAL`_
+* `Flatfile`_
+* `IronMQ`_
+* `MongoDB`_
+* `Pheanstalk`_
+* `PhpAmqp / RabbitMQ`_
 * `Redis Extension`_
 * `Predis`_
-* `Doctrine DBAL`_
-* `IronMQ`_
 * `Amazon SQS`_
-* `Google AppEngine`_
+* `Queue Interop`_
 
-Redis Extension
----------------
+Google AppEngine
+----------------
 
-Requires the installation of the pecl extension. You can add the following to
-your ``composer.json`` file, to make sure it is installed:
+The Google AppEngine has support for PHP and PushQueue just as IronMQ. The AppEngine driver for Bernard is a minimal driver
+that uses its TaskQueue to push messages.
+Visit the `official docs <https://developers.google.com/appengine/docs/php/taskqueue/overview-push>`_ to get more information on the
+usage of the AppEngine api.
 
-.. code-block:: json
+.. important::
 
-    {
-        "require" : {
-            "ext-redis" : "~2.2"
-        }
-    }
+    This driver only works on AppEngine or with its development server as it
+    needs access to its SDK. It must also be autoloadable. If it is in the
+    include path you can use ``"config" : { "use-include-path" : true } }`` in
+    Composer.
 
-.. code-block:: php
-
-    <?php
-
-    use Bernard\Driver\PhpRedisDriver;
-
-    $redis = new Redis();
-    $redis->connect('127.0.0.1', 6379);
-    $redis->setOption(Redis::OPT_PREFIX, 'bernard:');
-
-    $driver = new PhpRedisDriver($redis);
-
-Predis
-------
-
-Requires the installation of predis. Add the following to your
-``composer.json`` file for this:
-
-.. code-block:: json
-
-    {
-        "require" : {
-            "predis/predis" : "~0.8"
-        }
-    }
+The driver takes a list of queue names and mappings to an endpoint. This is
+because queues are created at runtime and their endpoints are not
+preconfigured.
 
 .. code-block:: php
 
     <?php
 
-    use Bernard\Driver\PredisDriver;
-    use Predis\Client;
+    use Bernard\Driver\AppEngineDriver;
 
-    $predis = new Client('tcp://localhost', array(
-        'prefix' => 'bernard:',
+    $driver = new AppEngineDriver(array(
+        'queue-name' => '/url_endpoint',
     ));
 
-    $driver = new PredisDriver($predis);
+To consume messages, you need to create an url endpoint matching the one given
+to the drivers constructor. For the actual dispatching of messages, you can do
+something like this:
+
+.. code-block:: php
+
+    <?php
+
+    namespace Acme\Controller;
+
+    use Bernard\Consumer
+    use Bernard\Serializer;
+    use Bernard\QueueFactory;
+    use Symfony\Component\HttpFoundation\Request;
+
+    class QueueController
+    {
+        protected $consumer;
+        protected $queues;
+        protected $serializer;
+
+        public function __construct(Consumer $consumer, QueueFactory $queues, Serializer $serializer)
+        {
+            $this->consumer = $consumer;
+            $this->queues = $queues;
+            $this->serializer = $serializer;
+        }
+
+        public function queueAction(Request $request)
+        {
+            $envelope = $this->serializer->deserialize($request->getContent());
+
+            // This will invoke the right service and middleware, and lastly it will acknowledge
+            // the message.
+            $this->consumer->invoke($envelope, $this->queues->create($envelope->getMessage()->getQueue()));
+        }
+    }
 
 Doctrine DBAL
 -------------
@@ -76,7 +95,53 @@ the message popped from the queue.
 
     To use Doctrine DBAL remember to setup the correct schema.
 
-Use the following method for creating the needed bernard tables.
+Creating the needed bernard tables can be automated by creating a console
+application with `custom commands <http://doctrine-orm.readthedocs.org/en/stable/reference/tools.html#adding-own-commands>`_.
+Just configure a `connection <http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/configuration.html#getting-a-connection>`_
+or `entity manager <http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/tutorials/getting-started.html#obtaining-the-entitymanager>`_
+as appropriate for your use case.
+
+.. code-block:: php
+
+    <?php
+    // doctrine.php
+
+    use Bernard\Command\Doctrine as BernardCommands;
+    use Doctrine\DBAL\Tools\Console\ConsoleRunner;
+    use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
+    use Symfony\Component\Console\Application;
+    use Symfony\Component\Console\Helper\HelperSet;
+
+    $connection = ...;
+    $commands = [
+        new BernardCommands\CreateCommand,
+        new BernardCommands\DropCommand,
+        new BernardCommands\UpdateCommand,
+    ];
+
+    // To create a new application from scratch ...
+    $helperSet = new HelperSet(['connection' => new ConnectionHelper($connection)]);
+    $cli = new Application('Bernard Doctrine Command Line Interface');
+    $cli->setCatchExceptions(true);
+    $cli->setHelperSet($helperSet);
+    $cli->addCommands($commands);
+
+    // ... or, if you're using Doctrine ORM 2.5+,
+    // just re-use the existing Doctrine application ...
+    $entityManager = ...;
+    $helperSet = ConsoleRunner::createHelperSet($entityManager);
+    $cli = ConsoleRunner::createApplication($helperSet, $commands);
+
+    // Finally, run the application
+    $cli->run();
+
+And run the console application like so:
+
+.. code-block:: shell
+
+    php doctrine.php bernard:doctrine:create
+
+Alternatively, use the following method for creating the tables manually.
 
 .. code-block:: php
 
@@ -86,7 +151,7 @@ Use the following method for creating the needed bernard tables.
     use Doctrine\DBAL\Schema\Schema;
 
     MessagesSchema::create($schema = new Schema);
-    
+
     // setup Doctrine DBAL
     $connection = ...;
 
@@ -122,6 +187,19 @@ And here is the setup of the driver for doctrine dbal:
 
 
     $driver = new DoctrineDriver($connection);
+
+Flatfile
+--------
+
+The flat file driver provides a simple job queue without any database
+
+.. code-block:: php
+
+    <?php
+
+    use Bernard\Driver\FlatFileDriver;
+
+    $driver = new FlatFileDriver('/dir/to/store/messages');
 
 IronMQ
 ------
@@ -203,6 +281,149 @@ correct service. An example of this:
         }
     }
 
+MongoDB
+-------
+
+The MongoDB driver requires the `mongo PECL extension <http://pecl.php.net/package/mongo>`_.
+On platforms where the PECL extension is unavailable, such as HHVM,
+`mongofill <https://github.com/mongofill/mongofill>`_ may be used instead.
+
+The driver should be constructed with two MongoCollection objects, which
+corresponding to the queue and message collections, respectively.
+
+.. code-block:: php
+
+    <?php
+
+    $mongoClient = new \MongoClient();
+    $driver = new \Bernard\Driver\MongoDBDriver(
+        $mongoClient->selectCollection('bernardDatabase', 'queues'),
+        $mongoClient->selectCollection('bernardDatabase', 'messages'),
+    );
+
+.. note::
+
+    If you are using Doctrine MongoDB or the ODM, you can access the
+    MongoCollection objects through the ``getMongoCollection()`` method on the
+    ``Doctrine\MongoDB\Collection`` wrapper class, which in turn may be
+    retrieved from a ``Doctrine\MongoDB\Database`` wrapper or DocumentManager
+    directly.
+
+To support message queries, the following index should also be created:
+
+.. code-block:: php
+
+    <?php
+
+    $mongoClient = new \MongoClient();
+    $collection = $mongoClient->selectCollection('bernardDatabase', 'messages');
+    $collection->createIndex([
+        'queue' => 1,
+        'visible' => 1,
+        'sentAt' => 1,
+    ]);
+
+Pheanstalk
+----------
+
+Requires the installation of pda/pheanstalk. Add the following to your
+``composer.json`` file for this:
+
+.. code-block:: json
+
+    {
+        "require" : {
+            "pda/pheanstalk" : "~3.0"
+        }
+    }
+
+.. code-block:: php
+
+    <?php
+
+    use Bernard\Driver\PheanstalkDriver;
+    use Pheanstalk\Pheanstalk;
+
+    $pheanstalk = new Pheanstalk('localhost');
+
+    $driver = new PheanstalkDriver($pheanstalk);
+
+PhpAmqp / RabbitMQ
+------------------
+
+The RabbitMQ driver uses the `php-amqp library by php-amqplib <https://github.com/php-amqplib/php-amqplib>`_.
+
+The driver should be constructed with a class that extends `AbstractConnection` (for example `AMQPStreamConnection` or `AMQPSocketConnection`),
+an exchange name and optionally the default message parameters.
+
+.. code-block:: php
+
+    <?php
+
+    $connection = new \PhpAmqpLib\Connection\AMQPStreamConnection('localhost', 5672, 'foo', 'bar');
+
+    $driver = new \Bernard\Driver\PhpAmqpDriver($connection, 'my-exchange');
+
+    // Or with default message params
+    $driver = new \Bernard\Driver\PhpAmqpDriver(
+        $connection,
+        'my-exchange',
+        ['content_type' => 'application/json', 'delivery_mode' => 2]
+    );
+
+Redis Extension
+---------------
+
+Requires the installation of the pecl extension. You can add the following to
+your ``composer.json`` file, to make sure it is installed:
+
+.. code-block:: json
+
+    {
+        "require" : {
+            "ext-redis" : "~2.2"
+        }
+    }
+
+.. code-block:: php
+
+    <?php
+
+    use Bernard\Driver\PhpRedisDriver;
+
+    $redis = new Redis();
+    $redis->connect('127.0.0.1', 6379);
+    $redis->setOption(Redis::OPT_PREFIX, 'bernard:');
+
+    $driver = new PhpRedisDriver($redis);
+
+Predis
+------
+
+Requires the installation of predis. Add the following to your
+``composer.json`` file for this:
+
+.. code-block:: json
+
+    {
+        "require" : {
+            "predis/predis" : "~0.8"
+        }
+    }
+
+.. code-block:: php
+
+    <?php
+
+    use Bernard\Driver\PredisDriver;
+    use Predis\Client;
+
+    $predis = new Client('tcp://localhost', array(
+        'prefix' => 'bernard:',
+    ));
+
+    $driver = new PredisDriver($predis);
+
 Amazon SQS
 ----------
 
@@ -256,70 +477,27 @@ require a HTTP request to amazon to be resolved.
         'queue-name' => 'queue-url',
     ));
 
-Google AppEngine
-----------------
+Queue Interop
+-------------
 
-The Google AppEngine has support for PHP and PushQueue just as IronMQ. The
-AppEngine driver for Bernard is a minimal driver that uses its TaskQueue to
-push messages. There is a lot about how this works in
-`their documentation <https://developers.google.com/appengine/docs/php/taskqueue/overview-push>`_.
+This driver adds ability to use any `queue interop <https://github.com/queue-interop/queue-interop#implementations>`_ compatible transport.
+For example we choose enqueue/fs one to demonstrate how it is working.
 
-.. important::
+.. code-block:: json
 
-    This driver only works on AppEngine or with its development server as it
-    needs access to its SDK. It must also be autoloadable. If it is in the
-    include path you can use ``"config" : { "use-include-path" : true } }`` in
-    Composer.
-
-The driver takes a list of queue names and mappings to an endpoint. This is
-because queues are created at runtime and their endpoints are not
-preconfigured.
-
-.. code-block:: php
-
-    <?php
-
-    use Bernard\Driver\AppEngineDriver;
-
-    $driver = new AppEngineDriver(array(
-        'queue-name' => '/url_endpoint',
-    ));
-
-To consume messages, you need to create an url endpoint matching the one given
-to the drivers constructor. For the actual dispatching of messages, you can do
-something like this:
-
-.. code-block:: php
-
-    <?php
-
-    namespace Acme\Controller;
-
-    use Bernard\Consumer
-    use Bernard\Serializer;
-    use Bernard\QueueFactory;
-    use Symfony\Component\HttpFoundation\Request;
-
-    class QueueController
     {
-        protected $consumer;
-        protected $queues;
-        protected $serializer;
-
-        public function __construct(Consumer $consumer, QueueFactory $queues, Serializer $serializer)
-        {
-            $this->consumer = $consumer;
-            $this->queues = $queues;
-            $this->serializer = $serializer;
-        }
-
-        public function queueAction(Request $request)
-        {
-            $envelope = $this->serializer->deserialize($request->getContent());
-
-            // This will invoke the right service and middleware, and lastly it will acknowledge
-            // the message.
-            $this->consumer->invoke($envelope, $this->queues->create($envelope->getMessage()->getQueue()));
+        "require" : {
+            "enqueue/fs" : "^0.7"
         }
     }
 
+.. code-block:: php
+
+    <?php
+
+    use Bernard\Driver\InteropDriver;
+    use Enqueue\Fs\FsConnectionFactory;
+
+    $context = (new FsConnectionFactory('file://'.__DIR__.'/queues'))->createContext();
+
+    $driver = new InteropDriver($context);

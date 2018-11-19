@@ -15,7 +15,6 @@ return array(
     'Doctrine\\Common\\Inflector\\' => array($vendorDir . '/doctrine/inflector/lib'),
     'Doctrine\\Common\\Collections\\' => array($vendorDir . '/doctrine/collections/lib'),
     'Console' => array($vendorDir . '/pear/console_getopt'),
-    'Bernard' => array($vendorDir . '/bernard/bernard/src'),
     'Archive_Tar' => array($vendorDir . '/pear/archive_tar'),
     '' => array($vendorDir . '/pear/pear-core-minimal/src'),
 );
