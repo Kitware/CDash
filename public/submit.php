@@ -22,7 +22,6 @@ use CDash\Middleware\Queue;
 use CDash\Middleware\Queue\DriverFactory as QueueDriverFactory;
 use CDash\Middleware\Queue\SubmissionService;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Ramsey\Uuid\Uuid;
 
 include dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
@@ -31,9 +30,14 @@ include 'include/clientsubmit.php';
 include 'include/version.php';
 
 use CDash\Config;
+use CDash\Model\Build;
+use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
+use CDash\Model\Site;
+use CDash\ServiceContainer;
 
 $config = Config::getInstance();
+$service = ServiceContainer::getInstance();
 
 // Check if we can connect to the database.
 $pdo = get_link_identifier()->getPdo();
@@ -106,44 +110,52 @@ if ($authenticate_submissions && !valid_token_for_submission($projectid)) {
 }
 
 $expected_md5 = isset($_GET['MD5']) ? htmlspecialchars(pdo_real_escape_string($_GET['MD5'])) : '';
+
+// Check if CTest provided us enough info to assign a buildid.
+$pendingSubmissions = $service->create(PendingSubmissions::class);
+$buildid = null;
+if (isset($_GET['build']) && isset($_GET['site']) && isset($_GET['stamp'])) {
+    $build = $service->create(Build::class);
+    $build->Name = pdo_real_escape_string($_GET['build']);
+    $build->ProjectId = $projectid;
+    $build->SetStamp(pdo_real_escape_string($_GET['stamp']));
+    $build->StartTime = gmdate(FMT_DATETIME);
+    $build->SubmitTime = $build->StartTime;
+
+    if (isset($_GET['subproject'])) {
+        $build->SubProjectName = pdo_real_escape_string($_GET['subproject']);
+    }
+
+    $site = $service->create(Site::class);
+    $site->Name = pdo_real_escape_string($_GET['site']);
+    $site->Insert();
+    $build->SiteId = $site->Id;
+    $pendingSubmissions->Build = $build;
+
+    if ($build->AddBuild()) {
+        // Insert row to keep track of how many submissions are waiting to be
+        // processed for this build. This value will be incremented
+        // (and decremented) later on.
+        $pendingSubmissions->NumFiles = 0;
+        $pendingSubmissions->Save();
+    }
+    $buildid = $build->Id;
+}
+
 $file_path = 'php://input';
 $fp = fopen($file_path, 'r');
 
 if ($config->get('CDASH_BERNARD_SUBMISSION')) {
-    $buildSubmissionId = Uuid::uuid4()->toString();
-    $destinationFilename = $config->get('CDASH_BACKUP_DIRECTORY') . '/' . $buildSubmissionId . '.xml';
-
-    if (copy('php://input', $destinationFilename)) {
-        $driver = QueueDriverFactory::create();
-        $queue = new Queue($driver);
-
-        $message = SubmissionService::createMessage([
-            'file' => $destinationFilename,
-            'project' => $projectid,
-            'md5' => $expected_md5,
-            'checksum' => true,
-        ]);
-
-        $queue->produce($message);
-
-        echo '<cdash version="' . $config->get('CDASH_VERSION') . "\">\n";
-        echo " <status>OK</status>\n";
-        echo " <message>Build submitted successfully.</message>\n";
-        echo " <submissionId>$buildSubmissionId</submissionId>\n";
-        echo "</cdash>\n";
-    } else {
-        add_log('Failed to copy build submission XML', 'global:submit.php', LOG_ERR);
-        header('HTTP/1.1 500 Internal Server Error');
-        echo '<cdash version="' . $config->get('CDASH_VERSION') . "\">\n";
-        echo " <status>ERROR</status>\n";
-        echo " <message>Failed to copy build submission XML.</message>\n";
-        echo "</cdash>\n";
-    }
+    // Use a message queue for asynchronous submission processing.
+    do_submit_queue($fp, $projectid, $buildid, $expected_md5);
 } elseif ($config->get('CDASH_ASYNCHRONOUS_SUBMISSION')) {
-    // If the submission is asynchronous we store in the database
-    do_submit_asynchronous($fp, $projectid, $expected_md5);
+    // If the submission is asynchronous we store in the database.
+    do_submit_asynchronous($fp, $projectid, $buildid, $expected_md5);
 } else {
-    do_submit($fp, $projectid, $expected_md5, true);
+    if (!is_null($buildid)) {
+        $pendingSubmissions->Increment();
+    }
+    do_submit($fp, $projectid, $buildid, $expected_md5, true);
 }
 fclose($fp);
 unset($fp);

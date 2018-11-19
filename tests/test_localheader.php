@@ -3,6 +3,8 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use CDash\Config;
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
@@ -32,15 +34,16 @@ class OverrideHeaderTestCase extends KWWebTestCase
 
     public function testOverrideHeader()
     {
-        global $CDASH_ROOT_DIR;
+        $config = Config::getInstance();
+        $root_dir = $config->get('CDASH_ROOT_DIR');
 
         // Create a local header & footer.
-        $dir_name = "$CDASH_ROOT_DIR/public/local/views";
+        $dir_name = "$root_dir/public/local/views";
         if (!file_exists($dir_name)) {
             mkdir($dir_name);
         }
-        touch("$CDASH_ROOT_DIR/public/local/views/header.html");
-        touch("$CDASH_ROOT_DIR/public/local/views/footer.html");
+        touch("$root_dir/public/local/views/header.html");
+        touch("$root_dir/public/local/views/footer.html");
 
         // Verify that these are used.
         $this->get($this->url . '/api/v1/index.php?project=InsightExample');
@@ -81,9 +84,11 @@ class OverrideHeaderTestCase extends KWWebTestCase
 
     private function cleanup()
     {
-        global $CDASH_ROOT_DIR;
+        $config = Config::getInstance();
+        $root_dir = $config->get('CDASH_ROOT_DIR');
+
         // Delete the local files that we created.
-        unlink("$CDASH_ROOT_DIR/public/local/views/header.html");
-        unlink("$CDASH_ROOT_DIR/public/local/views/footer.html");
+        unlink("$root_dir/public/local/views/header.html");
+        unlink("$root_dir/public/local/views/footer.html");
     }
 }

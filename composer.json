@@ -18,7 +18,7 @@
     "ext-mbstring": "*",
     "ext-pdo": "*",
     "ext-xsl": "*",
-    "bernard/bernard": "~0.12",
+    "bernard/bernard": "1.0.0-alpha9",
     "guzzlehttp/guzzle": "~6.2",
     "monolog/monolog": "~1.19",
     "paragonie/random_compat": "2.0.4",

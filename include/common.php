@@ -628,18 +628,7 @@ function get_server_URI($localhost = false)
         $localhost = true;
     }
 
-    $uri = $config->getBaseUrl($localhost);
-
-    // Trim off any subdirectories too.
-    $subdirs = array('/ajax/', '/api/');
-    foreach ($subdirs as $subdir) {
-        $pos = strpos($uri, $subdir);
-        if ($pos !== false) {
-            $uri = substr($uri, 0, $pos);
-        }
-    }
-
-    return $uri;
+    return $config->getBaseUrl($localhost);
 }
 
 /** add a user to a site */
@@ -938,6 +927,7 @@ function remove_build($buildid)
     pdo_query('DELETE FROM summaryemail WHERE buildid IN ' . $buildids);
     pdo_query('DELETE FROM related_builds WHERE buildid IN ' . $buildids);
     pdo_query('DELETE FROM related_builds WHERE relatedid IN ' . $buildids);
+    pdo_query('DELETE FROM pending_submissions WHERE buildid IN ' . $buildids);
 
     // Remove the buildfailureargument
     $buildfailureids = '(';
@@ -1417,7 +1407,7 @@ function get_author_email($projectname, $author)
     $stmt = $db->prepare("
         SELECT email FROM user WHERE id IN (
           SELECT up.userid FROM user2project AS up, user2repository AS ur
-           WHERE ur.userid=up.userid 
+           WHERE ur.userid=up.userid
            AND up.projectid=:projectid
            AND ur.credential=:author
            AND (ur.projectid=0 OR ur.projectid=:projectid)

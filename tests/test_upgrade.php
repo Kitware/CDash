@@ -405,7 +405,7 @@ class UpgradeTestCase extends KWWebTestCase
         $keepers = array();
 
         // Insert sites into our testing table that will violate
-        // the (name, ip) unique constraint.
+        // the unique constraint on the name column.
         //
         // Case 1: No lat/lon info, so the lowest number siteid will be kept.
         $nolatlon_keeper = ++$i;
@@ -414,7 +414,7 @@ class UpgradeTestCase extends KWWebTestCase
             INSERT INTO $table_name
             (id, name, ip)
             VALUES
-            ($nolatlon_keeper, 'case1_site', '128.4.4.1')";
+            ($nolatlon_keeper, 'case1_site', '')";
         if (!pdo_query($insert_query)) {
             $this->fail('pdo_query returned false');
             $retval = 1;
@@ -425,7 +425,7 @@ class UpgradeTestCase extends KWWebTestCase
             INSERT INTO $table_name
             (id, name, ip)
             VALUES
-            ($nolatlon_dupe, 'case1_site', '128.4.4.1')";
+            ($nolatlon_dupe, 'case1_site', '')";
         if (!pdo_query($insert_query)) {
             $this->fail('pdo_query returned false');
             $retval = 1;
@@ -439,7 +439,7 @@ class UpgradeTestCase extends KWWebTestCase
             INSERT INTO $table_name
             (id, name, ip, latitude, longitude)
             VALUES
-            ($latlon_dupe1, 'case2_site', '129.5.5.2', '40.70', '-74.00')";
+            ($latlon_dupe1, 'case2_site', '', '40.70', '-74.00')";
         if (!pdo_query($insert_query)) {
             $this->fail('pdo_query returned false');
             $retval = 1;
@@ -450,7 +450,7 @@ class UpgradeTestCase extends KWWebTestCase
             INSERT INTO $table_name
             (id, name, ip, latitude, longitude)
             VALUES
-            ($latlon_keeper, 'case2_site', '129.5.5.2', '40.71', '-73.97')";
+            ($latlon_keeper, 'case2_site', '', '40.71', '-73.97')";
         if (!pdo_query($insert_query)) {
             $this->fail('pdo_query returned false');
             $retval = 1;
@@ -461,7 +461,7 @@ class UpgradeTestCase extends KWWebTestCase
             INSERT INTO $table_name
             (id, name, ip)
             VALUES
-            ($latlon_dupe2, 'case2_site', '129.5.5.2')";
+            ($latlon_dupe2, 'case2_site', '')";
         if (!pdo_query($insert_query)) {
             $this->fail('pdo_query returned false');
             $retval = 1;

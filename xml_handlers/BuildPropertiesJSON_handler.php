@@ -15,16 +15,21 @@
 =========================================================================*/
 
 require_once('include/pdo.php');
+require_once 'xml_handlers/NonSaxHandler.php';
+use CDash\Database;
+use CDash\Model\Build;
+use CDash\ServiceContainer;
 
-class BuildPropertiesJSONHandler
+class BuildPropertiesJSONHandler extends NonSaxHandler
 {
-    private $BuildId;
     private $PDO;
 
     public function __construct($buildid)
     {
-        $this->BuildId = $buildid;
-        $this->PDO = get_link_identifier()->getPdo();
+        $service = ServiceContainer::getInstance();
+        $this->Build = $service->get(Build::class);
+        $this->Build->Id = $buildid;
+        $this->PDO = Database::getInstance()->getPdo();
     }
 
     /**
@@ -51,9 +56,9 @@ class BuildPropertiesJSONHandler
 
         // Store this in the database, deleting any previously existing results.
         $stmt = $this->PDO->prepare('DELETE FROM buildproperties WHERE buildid = ?');
-        pdo_execute($stmt, [$this->BuildId]);
+        pdo_execute($stmt, [$this->Build->Id]);
         $stmt = $this->PDO->prepare(
             'INSERT INTO buildproperties (buildid, properties) VALUES (?, ?)');
-        return pdo_execute($stmt, [$this->BuildId, $json_str]);
+        return pdo_execute($stmt, [$this->Build->Id, $json_str]);
     }
 }

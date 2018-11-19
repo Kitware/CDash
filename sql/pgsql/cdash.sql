@@ -310,6 +310,15 @@ CREATE TABLE "note" (
 CREATE INDEX "crc322" on "note" ("crc32");
 
 --
+-- Table: pending_submissions
+--
+CREATE TABLE "pending_submissions" (
+  "buildid" integer NOT NULL,
+  "numfiles" smallint DEFAULT '0' NOT NULL,
+  PRIMARY KEY ("buildid")
+);
+
+--
 -- Table: project
 --
 CREATE TABLE "project" (
@@ -366,10 +375,9 @@ CREATE TABLE "site" (
   "latitude" character varying(10) DEFAULT '' NOT NULL,
   "longitude" character varying(10) DEFAULT '' NOT NULL,
   "outoforder" smallint DEFAULT '0' NOT NULL,
-  PRIMARY KEY ("id"),
-  CONSTRAINT "name_ip1" UNIQUE ("name", "ip")
+  PRIMARY KEY ("id")
 );
-CREATE INDEX "name_ip2" on "site" ("name", "ip");
+CREATE UNIQUE INDEX "site_name" on "site" ("name");
 
 --
 -- Table: siteinformation
@@ -1447,3 +1455,13 @@ CREATE TABLE "related_builds" (
 );
 CREATE INDEX "related_buildid" on "related_builds" ("buildid");
 CREATE INDEX "relatedid" on "related_builds" ("relatedid");
+
+--
+-- Table: build_filters
+--
+CREATE TABLE "build_filters" (
+  "projectid" bigint NOT NULL,
+  "warnings" text,
+  "errors" text,
+  PRIMARY KEY ("projectid")
+);

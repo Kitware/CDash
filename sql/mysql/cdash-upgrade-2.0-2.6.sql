@@ -32,3 +32,16 @@ CREATE TABLE IF NOT EXISTS `related_builds` (
   KEY `buildid` (`buildid`),
   KEY `relatedid` (`relatedid`)
 );
+
+CREATE TABLE IF NOT EXISTS `pending_submissions` (
+  `buildid` int(11) NOT NULL,
+  `numfiles` tinyint UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (`buildid`)
+);
+
+CREATE TABLE IF NOT EXISTS `build_filters` (
+  `projectid` int(11) NOT NULL,
+  `warnings` text,
+  `errors` text,
+  PRIMARY KEY (`projectid`)
+);

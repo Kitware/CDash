@@ -15,19 +15,24 @@
 =========================================================================*/
 
 //error_reporting(0); // disable error reporting
-use Bernard\Message\DefaultMessage;
+use Bernard\Message\PlainMessage;
 use Bernard\Producer;
 use Bernard\QueueFactory\PersistentFactory;
 use Bernard\Serializer;
 use CDash\Config;
+use CDash\Middleware\Queue;
+use CDash\Middleware\Queue\DriverFactory as QueueDriverFactory;
+use CDash\Middleware\Queue\SubmissionService;
 use CDash\Model\AuthToken;
 use CDash\Model\Build;
 use CDash\Model\BuildFile;
+use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
 use CDash\Model\Site;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-include 'include/ctestparser.php';
+require_once 'include/ctestparser.php';
 include_once 'include/common.php';
 include_once 'include/createRSS.php';
 include 'include/sendemail.php';
@@ -37,12 +42,15 @@ include 'include/sendemail.php';
  * a read-only file handle.
  * This is useful for workers running on other machines that need access to build xml.
  **/
-function fileHandleFromSubmissionId($submissionId, $coverageFile=false)
+function fileHandleFromSubmissionId($filename)
 {
     $config = Config::getInstance();
 
-    $tmpFilename = tempnam($config->get('CDASH_BACKUP_DIRECTORY'), 'cdash-submission-');
-    $filename = ($coverageFile) ? $submissionId : $submissionId . '.xml';
+    $ext = pathinfo($filename, PATHINFO_EXTENSION);
+    $_t = tempnam($config->get('CDASH_BACKUP_DIRECTORY'), 'cdash-submission-');
+    $tmpFilename = "{$_t}.{$ext}";
+    rename($_t, $tmpFilename);
+
     $client = new GuzzleHttp\Client();
     $response = $client->request('GET',
                                  $config->get('CDASH_BASE_URL') . '/api/v1/getSubmissionFile.php',
@@ -112,8 +120,8 @@ function curl_request($request)
  * This method could be running on a worker that is either remote or local, so it accepts
  * a file handle or a filename that it can query the CDash API for.
  **/
-function do_submit($fileHandleOrSubmissionId, $projectid, $expected_md5 = '', $do_checksum = true,
-                   $submission_id = 0)
+function do_submit($fileHandleOrSubmissionId, $projectid, $buildid = null,
+                   $expected_md5 = '', $do_checksum = true, $submission_id = 0)
 {
     $config = Config::getInstance();
     $filehandle = getSubmissionFileHandle($fileHandleOrSubmissionId);
@@ -148,11 +156,21 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $expected_md5 = '', $d
     }
 
     // Parse the XML file
-    $handler = ctest_parse($filehandle, $projectid, $expected_md5, $do_checksum, $scheduleid);
+    $handler = ctest_parse($filehandle, $projectid, $buildid, $expected_md5, $do_checksum, $scheduleid);
+
     //this is the md5 checksum fail case
     if ($handler == false) {
         //no need to log an error since ctest_parse already did
         return false;
+    }
+
+    $build = get_build_from_handler($handler);
+    if (!is_null($build)) {
+        $pendingSubmissions = new PendingSubmissions();
+        $pendingSubmissions->Build = $build;
+        if ($pendingSubmissions->Exists()) {
+            $pendingSubmissions->Decrement();
+        }
     }
 
     // Send the emails if necessary
@@ -168,14 +186,17 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $expected_md5 = '', $d
         sendemail($handler, $projectid);
     }
 
-    if ($config->get('CDASH_ENABLE_FEED')) {
+    if ($config->get('CDASH_ENABLE_FEED') && !$config->get('CDASH_BERNARD_SUBMISSION')) {
         // Create the RSS feed
         CreateRSSFeed($projectid);
     }
+
+    return $handler;
 }
 
 /** Asynchronous submission */
-function do_submit_asynchronous($filehandle, $projectid, $expected_md5 = '')
+function do_submit_asynchronous($filehandle, $projectid, $buildid = null,
+                                $expected_md5 = '')
 {
     include 'include/version.php';
     $config = Config::getInstance();
@@ -224,6 +245,9 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5 = '')
         echo "  <message>Checksum failed for file.  Expected $expected_md5 but got $md5sum.</message>\n";
         $md5error = true;
     }
+    if (!is_null($buildid)) {
+        echo " <buildId>$buildid</buildId>\n";
+    }
     echo "  <md5>$md5sum</md5>\n";
     echo "</cdash>\n";
 
@@ -233,6 +257,12 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5 = '')
         return;
     }
 
+    do_submit_asynchronous_file($filename, $projectid, $buildid, $md5sum);
+}
+
+function do_submit_asynchronous_file($filename, $projectid, $buildid = null,
+                                     $md5sum)
+{
     $bytes = filesize($filename);
 
     // Insert the filename in the database
@@ -244,7 +274,12 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5 = '')
     // later if this is a CDash@home (client) submission.
     $submissionid = pdo_insert_id('submission');
 
+    if (!is_null($buildid)) {
+        PendingSubmissions::IncrementForBuildId($buildid);
+    }
+
     // We find the daily updates
+    $config = Config::getInstance();
     $currentURI = $config->getBaseUrl();
     $request = $currentURI . '/ajax/dailyupdatescurl.php?projectid=' . $projectid;
 
@@ -265,6 +300,59 @@ function do_submit_asynchronous($filehandle, $projectid, $expected_md5 = '')
 
     // Call process submissions via cURL.
     trigger_process_submissions($projectid);
+}
+
+/** Asynchronous submission using a message queue */
+function do_submit_queue($filehandle, $projectid, $buildid = null, $expected_md5 = '', $ip = null)
+{
+    $config = Config::getInstance();
+    $buildSubmissionId = Uuid::uuid4()->toString();
+    $destinationFilename = $config->get('CDASH_BACKUP_DIRECTORY') . '/' . $buildSubmissionId . '.xml';
+
+    // Save the file in the backup directory.
+    $outfile = fopen($destinationFilename, 'w');
+    while (!feof($filehandle)) {
+        $content = fread($filehandle, 8192);
+        if (fwrite($outfile, $content) === false) {
+            add_log('Failed to copy build submission XML', 'do_submit_queue', LOG_ERR);
+            header('HTTP/1.1 500 Internal Server Error');
+            echo '<cdash version="' . $config->get('CDASH_VERSION') . "\">\n";
+            echo " <status>ERROR</status>\n";
+            echo " <message>Failed to copy build submission XML.</message>\n";
+            echo "</cdash>\n";
+            fclose($outfile);
+            unset($outfile);
+            return;
+        }
+    }
+    fclose($outfile);
+    unset($outfile);
+
+    $driver = QueueDriverFactory::create();
+    $queue = new Queue($driver);
+
+    if (is_null($ip)) {
+        $ip = $_SERVER['REMOTE_ADDR'];
+    }
+
+    $message = SubmissionService::createMessage([
+        'file'          => $destinationFilename,
+        'project'       => $projectid,
+        'md5'           => $expected_md5,
+        'checksum'      => true,
+        'ip'            => $ip
+    ]);
+    $queue->produce($message);
+
+    echo '<cdash version="' . $config->get('CDASH_VERSION') . "\">\n";
+    echo " <status>OK</status>\n";
+    echo " <message>Build submitted successfully.</message>\n";
+    echo " <submissionId>$buildSubmissionId</submissionId>\n";
+    if (!is_null($buildid)) {
+        echo " <buildId>$buildid</buildId>\n";
+        PendingSubmissions::IncrementForBuildId($buildid);
+    }
+    echo "</cdash>\n";
 }
 
 /** Function to deal with the external tool mechanism */
@@ -471,16 +559,28 @@ function put_submit_file()
         return;
     }
 
-    if ($config->get('CDASH_BERNARD_COVERAGE_SUBMISSION')) {
-        $factory = new PersistentFactory($config->get('CDASH_BERNARD_DRIVER'), new Serializer());
-        $producer = new Producer($factory, new EventDispatcher());
+    // Increment the count of pending submission files for this build.
+    $build = new Build();
+    $build->Id = $buildid;
+    $pendingSubmissions = new PendingSubmissions();
+    $pendingSubmissions->Build = $build;
+    if (!$pendingSubmissions->Exists()) {
+        $pendingSubmissions->NumFiles = 0;
+        $pendingSubmissions->Save();
+    }
+    $pendingSubmissions->Increment();
 
-        $producer->produce(new DefaultMessage('DoSubmit', array(
-            'coverage_submission' => true,
-            'filename' => $filename,
-            'expected_md5' => $md5sum,
-            'projectid' => $projectid,
-            'submission_ip' => $_SERVER['REMOTE_ADDR'])));
+    if ($config->get('CDASH_BERNARD_COVERAGE_SUBMISSION')) {
+        $driver = QueueDriverFactory::create();
+        $queue = new Queue($driver);
+        $message = SubmissionService::createMessage([
+            'file' => $filename,
+            'project' => $projectid,
+            'md5' => $md5sum,
+            'checksum' => true,
+            'ip' => $_SERVER['REMOTE_ADDR']
+        ]);
+        $queue->produce($message);
     } elseif ($config->get('CDASH_ASYNCHRONOUS_SUBMISSION')) {
         // Create a new entry in the submission table for this file.
         $bytes = filesize($filename);
@@ -493,7 +593,7 @@ function put_submit_file()
     } else {
         // synchronous processing.
         $handle = fopen($filename, 'r');
-        do_submit($handle, $projectid, $buildfile->md5, false);
+        do_submit($handle, $projectid, null, $buildfile->md5, false);
 
         // The file is given a more appropriate name during do_submit, so we can
         // delete the old file now.
@@ -603,4 +703,43 @@ function valid_token_for_submission($projectid)
     }
 
     return true;
+}
+
+function get_build_from_handler($handler)
+{
+    $build = null;
+    $builds = $handler->getBuilds();
+    if (count($builds) > 1) {
+        // More than one build referenced by the handler.
+        // Return the parent build.
+        $build = new Build();
+        $build->Id = $builds[0]->GetParentId();
+    } elseif (count($builds) === 1 && $builds[0] instanceof Build) {
+        $build = $builds[0];
+    }
+    return $build;
+}
+
+function requeue_submission_file($filename, $projectid, $buildid = null,
+                                 $expected_md5 = '', $ip = null)
+{
+    $queued = false;
+    $config = Config::getInstance();
+
+    if ($config->get('CDASH_BERNARD_SUBMISSION')) {
+        // Worker might not live on the web server.
+        // Resubmit the whole file since we changed its contents.
+        $fp = fopen($filename, 'r');
+        do_submit_queue($fp, $projectid, $buildid, $expected_md5, $ip);
+        fclose($fp);
+        unset($fp);
+        return true;
+    } elseif ($config->get('CDASH_ASYNCHRONOUS_SUBMISSION')) {
+        // Workers lives on the web server.
+        // Tell CDash to requeue the file that already exists on disk.
+        do_submit_asynchronous_file($filename, $projectid, $buildid,
+                $expected_md5);
+        return true;
+    } // else synchronous submission -> no-op.
+    return false;
 }

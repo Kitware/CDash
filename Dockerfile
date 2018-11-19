@@ -12,16 +12,9 @@ RUN apt-get update                                                             \
  && docker-php-ext-configure gd --with-freetype-dir=/usr/include/              \
                                 --with-jpeg-dir=/usr/include/                  \
  && docker-php-ext-install -j$(nproc) bcmath bz2 gd pdo_mysql pdo_pgsql xsl    \
- && (                                                                          \
-      echo '544e09ee 996cdf60 ece3804a bc52599c'                               \
-    ; echo '22b1f40f 4323403c 44d44fdf dd586475'                               \
-    ; echo 'ca9813a8 58088ffb c1f233e9 b180f061'                               \
-    ) | tr -d "\\n " | sed 's/$/  -/g' > checksum                              \
- && curl -o - 'https://getcomposer.org/installer'                              \
- |  tee composer-setup.php                                                     \
- |  sha384sum -c checksum                                                      \
- && rm checksum                                                                \
- || ( rm -f checksum composer-setup.php && false )                             \
+ && wget -q -O checksum https://composer.github.io/installer.sha384sum         \
+ && wget -q -O composer-setup.php https://getcomposer.org/installer            \
+ && sha384sum -c checksum                                                      \
  && php composer-setup.php --install-dir=/usr/local/bin --filename=composer    \
  && php -r "unlink('composer-setup.php');"                                     \
  && composer self-update --no-interaction
@@ -43,6 +36,7 @@ COPY backup /var/www/cdash/backup
 COPY include /var/www/cdash/include
 COPY bootstrap /var/www/cdash/bootstrap
 COPY composer.json /var/www/cdash/composer.json
+COPY scripts/bash /bash-lib
 
 RUN cd /var/www/cdash                                                      \
  && composer install --no-interaction --no-progress --prefer-dist --no-dev \
@@ -63,3 +57,4 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=5m \
   CMD ["curl", "-f", "http://localhost/viewProjects.php"]
 
 ENTRYPOINT ["/bin/bash", "/docker-entrypoint.sh"]
+CMD ["serve"]

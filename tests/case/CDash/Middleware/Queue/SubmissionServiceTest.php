@@ -16,10 +16,10 @@
 
 namespace CDash\Middleware\Queue;
 
-use Bernard\Message\DefaultMessage;
+use Bernard\Message\PlainMessage;
 use CDash\Middleware\Queue;
 
-function do_submit($fh, $project_id, $expected_md5 = '', $do_checksum = true, $submission_id = 0)
+function do_submit($fh, $project_id, $buildid = null, $expected_md5 = '', $do_checksum = true, $submission_id = 0)
 {
     SubmissionServiceTest::checkExpectedArguments([
         'do_submit',
@@ -94,7 +94,7 @@ class SubmissionServiceTest extends \PHPUnit_Framework_TestCase
     {
         $message = SubmissionService::createMessage($this->parameters);
 
-        $this->assertInstanceOf(DefaultMessage::class, $message);
+        $this->assertInstanceOf(PlainMessage::class, $message);
         $this->assertEquals(SubmissionService::NAME, $message->getName());
         $this->assertEquals($this->parameters['file'], $message->file);
         $this->assertEquals($this->parameters['project'], $message->project);
@@ -137,6 +137,31 @@ class SubmissionServiceTest extends \PHPUnit_Framework_TestCase
         ];
         $sut = new SubmissionService();
         $sut->doSubmit($message);
+    }
+
+    public function testDelete()
+    {
+        $message = SubmissionService::createMessage($this->parameters);
+
+        $mock_client = $this->getMockBuilder(\GuzzleHttp\ClientInterface::class)
+            ->getMockForAbstractClass();
+
+        $sut = new SubmissionService();
+        $sut->setBackupFileName('/path/to/backup/descriptive_filename.xml');
+        $sut->setHttpClient($mock_client);
+        \CDash\Config::getInstance()->set('CDASH_REMOTE_PROCESSOR', true);
+
+        $url = \CDash\Config::getInstance()->get('CDASH_BASE_URL') .
+            '/api/v1/deleteSubmissionFile.php';
+        $query_args = [
+            'filename' => basename($message->file),
+            'dest' => 'descriptive_filename.xml'
+        ];
+        $mock_client->expects($this->once())
+            ->method('request')
+            ->with('DELETE', $url, ['query' => $query_args]);
+
+        $sut->delete($message);
     }
 
     public function testRegister()

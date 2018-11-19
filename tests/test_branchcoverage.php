@@ -4,7 +4,11 @@
 // relative to the top of the CDash source tree
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once 'include/common.php';
 require_once 'include/pdo.php';
+
+use CDash\Model\Build;
+use CDash\Model\PendingSubmissions;
 
 class BranchCoverageTestCase extends KWWebTestCase
 {
@@ -15,6 +19,15 @@ class BranchCoverageTestCase extends KWWebTestCase
 
     public function testBranchCoverage()
     {
+        // Remove the build created by this test if it ran previously.
+        $pdo = \CDash\Database::getInstance()->getPdo();
+        $stmt = $pdo->query("
+            SELECT id FROM build WHERE name = 'branch_coverage'");
+        $existing_buildid = $stmt->fetchColumn();
+        if ($existing_buildid !== false) {
+            remove_build($existing_buildid);
+        }
+
         // Do the POST submission to get a pending buildid.
         // We submit to the TrilinosDriver project just because it
         // already has labels enabled.
@@ -97,6 +110,13 @@ class BranchCoverageTestCase extends KWWebTestCase
             $this->fail("Uncovered results differ from expectation");
             return 1;
         }
+
+        // Verify that this pending submission was recorded for this build.
+        $pending = new PendingSubmissions();
+        $build = new Build();
+        $build->Id = $buildid;
+        $pending->Build = $build;
+        $this->assertEqual($pending->GetNumFiles(), 0);
 
         return 0;
     }

@@ -313,6 +313,10 @@ $CDASH_UNLIMITED_PROJECTS = [];
 // pull requests.
 $CDASH_NOTIFY_PULL_REQUEST = true;
 
+// Set to true if this copy of CDash is serving as a remote submission
+// processor hosted somewhere other than the web server.
+$CDASH_REMOTE_PROCESSOR = false;
+
 
 /* DO NOT EDIT AFTER THIS LINE */
 $localConfig = dirname(__FILE__) . '/config.local.php';

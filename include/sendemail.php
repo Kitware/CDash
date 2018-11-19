@@ -337,12 +337,6 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
     $build->Id = $buildid;
 
     $serverURI = get_server_URI();
-    // In the case of asynchronous submission, the serverURI contains /cdash
-    // we need to remove it
-    if ($config->get('CDASH_BASE_URL') == '' && $config->get('CDASH_ASYNCHRONOUS_SUBMISSION')) {
-        $serverURI = substr($serverURI, 0, strrpos($serverURI, '/'));
-    }
-
     $information = '';
 
     // Update information
@@ -392,7 +386,7 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
         foreach ($errors as $error) {
             $info = '';
             if (strlen($error->sourcefile) > 0) {
-                $info .= "{$error->sourcefile} line {$error->sourceline} ({$serverURI}/viewBuildError.php?{$buildid})";
+                $info .= "{$error->sourcefile} line {$error->sourceline} ({$serverURI}/viewBuildError.php?buildid={$buildid})";
                 $info .= "{$error->text}\n";
             } else {
                 $info .= "{$error->text}\n{$error->postcontext}\n";
@@ -412,7 +406,7 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
         foreach ($failures as $fail) {
             $info = '';
             if (strlen($fail->sourcefile) > 0) {
-                $info .= "{$fail->sourcefile} ({$serverURI}/viewBuildError.php?type=0&build={$buildid})\n";
+                $info .= "{$fail->sourcefile} ({$serverURI}/viewBuildError.php?type=0&buildid={$buildid})\n";
             }
             if (strlen($fail->stdoutput) > 0) {
                 $info .= "{$fail->stdoutput}\n";
@@ -670,13 +664,7 @@ function sendsummaryemail($projectid, $groupid, $errors, $buildid)
         $summaryEmail .= $useremail;
     }
 
-    // In the case of asynchronous submission, the serverURI contains /cdash
-    // we need to remove it
     $currentURI = get_server_URI();
-    $config = Config::getInstance();
-    if ($config->get('CDASH_BASE_URL') == '' && $config->get('CDASH_ASYNCHRONOUS_SUBMISSION')) {
-        $currentURI = substr($currentURI, 0, strrpos($currentURI, '/'));
-    }
 
     // Select the users who want to receive all emails
     $user = pdo_query('SELECT ' . qid('user') . '.email,user2project.emailtype,' . qid('user') . '.id  FROM ' . qid('user') . ',user2project
@@ -732,6 +720,7 @@ function sendsummaryemail($projectid, $groupid, $errors, $buildid)
         }
         $messagePlainText .= "\n\n";
 
+        $config = Config::getInstance();
         $serverName = $config->getServer();
 
         $messagePlainText .= "\n-CDash on " . $serverName . "\n";
@@ -865,11 +854,6 @@ function send_email_fix_to_user($userid, $emailtext, $Build, $Project)
     include_once 'include/common.php';
 
     $serverURI = get_server_URI();
-    // In the case of asynchronous submission, the serverURI contains /cdash
-    // we need to remove it
-    if ($CDASH_BASE_URL == '' && $CDASH_ASYNCHRONOUS_SUBMISSION) {
-        $serverURI = substr($serverURI, 0, strrpos($serverURI, '/'));
-    }
 
     $messagePlainText = 'Congratulations, a submission to CDash for the project ' . $Project->Name . ' has ';
     $titleerrors = '(';
@@ -997,12 +981,6 @@ function generate_broken_build_message($emailtext, $Build, $Project)
     include_once 'include/common.php';
 
     $serverURI = get_server_URI();
-    // In the case of asynchronous submission, the serverURI contains /cdash
-    // we need to remove it
-    $config = Config::getInstance();
-    if ($config->get('CDASH_BASE_URL') == '' && $config->get('CDASH_ASYNCHRONOUS_SUBMISSION')) {
-        $serverURI = substr($serverURI, 0, strrpos($serverURI, '/'));
-    }
 
     $preamble = 'A submission to CDash for the project ' . $Project->Name . ' has ';
     $titleerrors = '(';
@@ -1144,6 +1122,7 @@ function generate_broken_build_message($emailtext, $Build, $Project)
         $body .= $summary;
     }
 
+    $config = Config::getInstance();
     $serverName = $config->getServer();
 
     $footer = "\n-CDash on " . $serverName . "\n";
@@ -1389,12 +1368,6 @@ function send_update_email($handler, $projectid)
 
         if ($to_address != '') {
             $serverURI = get_server_URI();
-            // In the case of asynchronous submission, the serverURI contains /cdash
-            // we need to remove it
-            $config = Config::getInstance();
-            if ($config->get('CDASH_BASE_URL') == '' && $config->get('CDASH_ASYNCHRONOUS_SUBMISSION')) {
-                $serverURI = substr($serverURI, 0, strrpos($serverURI, '/'));
-            }
 
             // Generate the email to send
             $subject = 'CDash [' . $Project->Name . '] - Update Errors for ' . $sitename;
@@ -1407,6 +1380,7 @@ function send_update_email($handler, $projectid)
             $body .= "*Update Errors*\n";
             $body .= 'Status: ' . $update_array['status'] . ' (' . $serverURI . '/viewUpdate.php?buildid=' . $buildid . ")\n";
 
+            $config = Config::getInstance();
             if ($config->get('CDASH_TESTING_MODE')) {
                 add_log($to_address, 'TESTING: EMAIL', LOG_DEBUG);
                 add_log($subject, 'TESTING: EMAILTITLE', LOG_DEBUG);

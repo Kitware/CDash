@@ -17,23 +17,23 @@
 namespace CDash\Middleware;
 
 use Bernard\Driver;
+use Bernard\EventListener;
 use Bernard\Message;
-use Bernard\Middleware;
-use Bernard\Middleware\MiddlewareBuilder;
 use Bernard\Producer;
 use Bernard\QueueFactory;
 use Bernard\QueueFactory\PersistentFactory;
 use Bernard\Router;
 use Bernard\Router\SimpleRouter;
 use Bernard\Serializer;
-use Bernard\Serializer\SimpleSerializer;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+
 use CDash\Middleware\Queue\Consumer;
 use CDash\Middleware\Queue\DriverFactory;
 
 /**
  * Class Queue
  * @package CDash\Middleware
- * @see https://github.com/bernardphp/bernard/blob/c452caa6de208b0274449cde1c48eb32fb9f59f9/example/bootstrap.php
+ * @see https://github.com/bernardphp/bernard/blob/1.0.0-alpha9/example/bootstrap.php
  */
 class Queue
 {
@@ -43,14 +43,14 @@ class Queue
     /** @var Serializer $serializer */
     protected $serializer;
 
-    /** @var MiddlewareBuilder $middlewareBuilder */
-    protected $middlewareBuilder;
+    /** @var EventDispatcher $eventDispatcher */
+    protected $eventDispatcher;
 
-    /** @var Middleware\ErrorLogFactory $errorLogFactory */
-    protected $errorLogFactory;
+    /** @var EventListener\ErrorLogSubscriber $errorLogSubscriber */
+    protected $errorLogSubscriber;
 
-    /** @var Middleware\FailuresFactory $failuresFactory */
-    protected $failuresFactory;
+    /** @var EventListener\FailureSubscriber $failureSubscriber */
+    protected $failureSubscriber;
 
     /** @var  QueueFactory $queueFactory*/
     protected $queueFactory;
@@ -75,6 +75,20 @@ class Queue
     {
         $this->driver = $driver;
         $this->services = $services;
+
+        // Because of the way FailureSubscriber works, we need a producer even
+        // if we're only consuming messages. That means we need to initialize
+        // all these member objects in the constructor.
+        $this->serializer = new Serializer();
+        $this->queueFactory = new PersistentFactory($this->getDriver(), $this->serializer);
+        $this->eventDispatcher = new EventDispatcher();
+        $this->producer = new Producer($this->queueFactory, $this->eventDispatcher);
+
+        $this->errorLogSubscriber = new EventListener\ErrorLogSubscriber();
+        $this->eventDispatcher->addSubscriber($this->errorLogSubscriber);
+
+        $this->failureSubscriber = new EventListener\FailureSubscriber($this->producer);
+        $this->eventDispatcher->addSubscriber($this->failureSubscriber);
     }
 
     /**
@@ -87,84 +101,6 @@ class Queue
             $this->driver = DriverFactory::create();
         }
         return $this->driver;
-    }
-
-    /**
-     * @return Serializer|SimpleSerializer
-     */
-    protected function getSerializer()
-    {
-        if (!$this->serializer) {
-            $this->serializer = new SimpleSerializer();
-        }
-        return $this->serializer;
-    }
-
-    /**
-     * @return MiddlewareBuilder
-     */
-    protected function getMiddlewareBuilder()
-    {
-        if (!$this->middlewareBuilder) {
-            $this->middlewareBuilder = new MiddlewareBuilder();
-        }
-        return $this->middlewareBuilder;
-    }
-
-    /**
-     * @return Middleware\ErrorLogFactory
-     */
-    protected function getErrorLogFactory()
-    {
-        if (!$this->errorLogFactory) {
-            $this->errorLogFactory = new Middleware\ErrorLogFactory();
-        }
-        return $this->errorLogFactory;
-    }
-
-    /**
-     * @return Middleware\FailuresFactory
-     */
-    protected function getFailuresFactory()
-    {
-        if (!$this->failuresFactory) {
-            $this->failuresFactory = new Middleware\FailuresFactory($this->getQueueFactory());
-        }
-        return $this->failuresFactory;
-    }
-
-    /**
-     * @return MiddlewareBuilder
-     */
-    protected function getConsumerMiddleware()
-    {
-        $chain = $this->getMiddlewareBuilder();
-        $chain->push($this->getErrorLogFactory());
-        $chain->push($this->getFailuresFactory());
-
-        return $chain;
-    }
-
-    /**
-     * @return QueueFactory|PersistentFactory
-     */
-    protected function getQueueFactory()
-    {
-        if (!$this->queueFactory) {
-            $this->queueFactory = new PersistentFactory($this->getDriver(), $this->getSerializer());
-        }
-        return $this->queueFactory;
-    }
-
-    /**
-     * @return Producer
-     */
-    protected function getProducer()
-    {
-        if (!$this->producer) {
-            $this->producer = new Producer($this->getQueueFactory(), $this->getMiddlewareBuilder());
-        }
-        return $this->producer;
     }
 
     /**
@@ -181,10 +117,10 @@ class Queue
     /**
      * @return Consumer
      */
-    protected function getConsumer()
+    public function getConsumer()
     {
         if (!$this->consumer) {
-            $this->consumer = new Consumer($this->getRouter(), $this->getConsumerMiddleware());
+            $this->consumer = new Consumer($this->getRouter(), $this->eventDispatcher);
         }
         return $this->consumer;
     }
@@ -194,8 +130,7 @@ class Queue
      */
     public function produce(Message $message)
     {
-        $queue = $this->getProducer();
-        $queue->produce($message);
+        $this->producer->produce($message, $message->queueName);
     }
 
     /**
@@ -204,10 +139,8 @@ class Queue
      */
     public function consume($name, array $options = [])
     {
-        $queues = $this->getQueueFactory();
         $consumer = $this->getConsumer();
-
-        $consumer->consume($queues->create($name), $options);
+        $consumer->consume($this->queueFactory->create($name), $options);
     }
 
     /**

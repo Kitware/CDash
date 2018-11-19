@@ -750,12 +750,63 @@ function CompressCoverage()
     /* SECOND STEP */
 }
 
-/** Carefully add a unique constraint (name & IP address) to the site table.
+/** Carefully add a unique constraint on the name column of the site table.
  *  This function is parameterized to make it easier to test.
  **/
 function AddUniqueConstraintToSiteTable($site_table)
 {
-    Config::getInstance()->get('CDASH_DB_TYPE');
+    $pdo = CDash\Database::getInstance()->getPdo();
+    $is_pgsql = Config::getInstance()->get('CDASH_DB_TYPE') == 'pgsql';
+
+    // Return early if we already have a unique constraint on site.name.
+    if ($is_pgsql) {
+        $stmt = $pdo->query("
+            SELECT * FROM information_schema.table_constraints
+            WHERE table_name='$site_table' AND constraint_name = 'name'");
+        $row = $stmt->fetch();
+        if ($row !== false &&
+                array_key_exists('constraint_type', $row) &&
+                $row['constraint_type'] == 'UNIQUE') {
+            return;
+        }
+    } else {
+        $stmt = $pdo->query(
+            "SHOW INDEXES FROM $site_table
+            WHERE Column_name = 'name' AND Key_name = 'name'");
+        $row = $stmt->fetch();
+        if ($row !== false &&
+                array_key_exists('Non_unique', $row) &&
+                $row['Non_unique'] == 0) {
+            return;
+        }
+    }
+
+    // Remove the previously used (name, ip) compound constraint if it exists.
+    if ($is_pgsql) {
+        $stmt = $pdo->query("
+            SELECT constraint_name FROM information_schema.table_constraints
+            WHERE table_name = '$site_table' AND
+                  constraint_type = 'UNIQUE' AND
+                  constraint_name != 'name'");
+        $constraint_name = $stmt->fetchColumn();
+        if ($constraint_name) {
+            $pdo->query("ALTER TABLE $site_table
+                         DROP CONSTRAINT IF EXISTS $constraint_name");
+        }
+    } else {
+        $db_name = Config::getInstance()->get('CDASH_DB_NAME');
+        $stmt = $pdo->query("
+                SELECT INDEX_NAME FROM information_schema.STATISTICS
+                WHERE TABLE_NAME = '$site_table' AND
+                      TABLE_SCHEMA = '$db_name'  AND
+                      INDEX_NAME != 'PRIMARY'    AND
+                      INDEX_NAME != 'name'");
+        $index_name = $stmt->fetchColumn();
+        if ($index_name) {
+            $pdo->query("ALTER TABLE $site_table DROP INDEX `$index_name`");
+        }
+    }
+
     // Tables with a siteid field that will need to be updated as we prune
     // out duplicate sites.
     $tables_to_update = array('build', 'build2grouprule', 'site2user',
@@ -764,17 +815,16 @@ function AddUniqueConstraintToSiteTable($site_table)
         'client_site2project');
 
     // Find all the rows that will violate this new unique constraint.
-    $query = "SELECT name, ip, COUNT(*) FROM $site_table
-        GROUP BY name, ip HAVING COUNT(*) > 1";
+    $query = "SELECT name, COUNT(*) FROM $site_table
+        GROUP BY name HAVING COUNT(*) > 1";
     $result = pdo_query($query);
     while ($row = pdo_fetch_array($result)) {
         $name = $row['name'];
-        $ip = $row['ip'];
 
         // We keep the most recent, non-null value for lat & lon (if any)
         $lat_result = pdo_single_row_query(
             "SELECT id FROM $site_table
-                WHERE name = '$name' AND ip = '$ip' AND latitude != '' AND
+                WHERE name = '$name' AND latitude != '' AND
                 longitude != '' ORDER BY id DESC LIMIT 1");
         if ($lat_result && array_key_exists('id', $lat_result)) {
             $id_to_keep = $lat_result['id'];
@@ -782,7 +832,7 @@ function AddUniqueConstraintToSiteTable($site_table)
             // Otherwise just use the row with the lowest ID.
             $id_result = pdo_single_row_query(
                 "SELECT id FROM $site_table
-                    WHERE name = '$name' AND ip = '$ip' ORDER BY id LIMIT 1");
+                    WHERE name = '$name' ORDER BY id LIMIT 1");
             if (!$id_result || !array_key_exists('id', $id_result)) {
                 continue;
             }
@@ -794,7 +844,7 @@ function AddUniqueConstraintToSiteTable($site_table)
         $ids_to_remove = array();
         $dupe_query =
             "SELECT id FROM $site_table
-            WHERE id != $id_to_keep AND name = '$name' AND ip = '$ip'";
+            WHERE id != $id_to_keep AND name = '$name'";
         $dupe_result = pdo_query($dupe_query);
         while ($dupe_row = pdo_fetch_array($dupe_result)) {
             $id_to_remove = $dupe_row['id'];
@@ -809,12 +859,15 @@ function AddUniqueConstraintToSiteTable($site_table)
             pdo_query("DELETE FROM $site_table WHERE id=$id_to_remove");
         }
     }
+
+    // Remove any previously existing non-unique key on this column.
+    RemoveTableIndex($site_table, 'name');
+
     // It should be safe to add the constraint now.
-    if (Config::getInstance()->get('CDASH_DB_TYPE') == 'pgsql') {
-        pdo_query("ALTER TABLE $site_table ADD UNIQUE (name,ip)");
-        pdo_query('CREATE INDEX "name_ip" ON "' . $site_table . '" ("name","ip")');
+    if ($is_pgsql) {
+        $pdo->query("CREATE UNIQUE INDEX name ON $site_table (name)");
     } else {
-        pdo_query("ALTER TABLE $site_table ADD UNIQUE KEY (name,ip)");
+        $pdo->query("ALTER TABLE $site_table ADD UNIQUE INDEX name (name)");
     }
 }
 

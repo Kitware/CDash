@@ -166,10 +166,7 @@ function rest_post($build)
 
     // Should we change the 'done' setting for this build?
     if (isset($_POST['done'])) {
-        $done = $_POST['done'];
-        $done_stmt = $pdo->prepare(
-            'UPDATE build SET done = :done WHERE id = :buildid');
-        pdo_execute($done_stmt, [':done' => $done, ':buildid' => $build->Id]);
+        $build->MarkAsDone($_POST['done']);
     }
 }
 

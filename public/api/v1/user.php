@@ -82,7 +82,6 @@ if ($config->get('CDASH_USER_CREATE_PROJECTS')) {
 }
 
 // Go through the list of project the user is part of.
-$showAuthTokenSection = false;
 $UserProject = new UserProject();
 $UserProject->UserId = $userid;
 $project_rows = $UserProject->GetProjects();
@@ -90,9 +89,6 @@ $start = gmdate(FMT_DATETIME, strtotime(date('r')) - (3600 * 24));
 $Project = new Project();
 $projects_response = [];
 foreach ($project_rows as $project_row) {
-    if ($project_row['authenticatesubmissions']) {
-        $showAuthTokenSection = true;
-    }
     $Project->Id = $project_row['id'];
     $Project->Name = $project_row['name'];
     $project_response = [];
@@ -110,11 +106,7 @@ foreach ($project_rows as $project_row) {
 $response['projects'] = $projects_response;
 
 $authTokens = AuthToken::getTokensForUser($userid);
-if (!empty($authTokens)) {
-    $showAuthTokenSection = true;
-}
 $response['authtokens'] = $authTokens;
-$response['showauthtokens'] = $showAuthTokenSection;
 
 // Go through the jobs
 if ($config->get('CDASH_MANAGE_CLIENTS')) {

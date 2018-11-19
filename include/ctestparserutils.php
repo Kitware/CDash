@@ -1,7 +1,6 @@
 <?php
 
 use CDash\Config;
-use CDash\Model\BuildGroup;
 use CDash\Model\BuildUpdate;
 use CDash\Model\ClientJobSchedule;
 
@@ -26,10 +25,6 @@ function add_build($build, $clientscheduleid = 0)
     if (!$build->Exists() && $build->Append && empty($build->Id)) {
         $build->Id = $buildid;
     }
-
-    // Find the groupid
-    $buildGroup = new BuildGroup();
-    $build->GroupId = $buildGroup->GetGroupIdFromRule($build);
 
     $build->Save();
 

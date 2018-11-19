@@ -32,3 +32,16 @@ CREATE TABLE "related_builds" (
 );
 CREATE INDEX "related_buildid" on "related_builds" ("buildid");
 CREATE INDEX "relatedid" on "related_builds" ("relatedid");
+
+CREATE TABLE "pending_submissions" (
+  "buildid" integer NOT NULL,
+  "numfiles" smallint DEFAULT '0' NOT NULL,
+  PRIMARY KEY ("buildid")
+);
+
+CREATE TABLE "build_filters" (
+  "projectid" bigint NOT NULL,
+  "warnings" text,
+  "erors" text,
+  PRIMARY KEY ("projectid")
+);

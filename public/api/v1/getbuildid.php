@@ -40,7 +40,7 @@ if (!is_numeric($projectid)) {
     return;
 }
 
-if (!isset($siteid)) {
+if (!array_key_exists('siteid', $_GET)) {
     $sitequery = pdo_query("SELECT id FROM site WHERE name='$site'");
     if (pdo_num_rows($sitequery) > 0) {
         $site_array = pdo_fetch_array($sitequery);

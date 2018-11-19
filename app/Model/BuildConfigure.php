@@ -224,22 +224,28 @@ class BuildConfigure
             $stmt->bindParam(':log', $this->Log);
             $stmt->bindParam(':status', $this->Status);
             $stmt->bindParam(':crc32', $this->Crc32);
-            if (!$stmt->execute()) {
-                $error_info = $insert_stmt->errorInfo();
-                $error = $error_info[2];
+            try {
+                if ($stmt->execute()) {
+                    $new_configure_inserted = true;
+                    $this->Id = pdo_insert_id('configure');
+                } else {
+                    $error_info = $insert_stmt->errorInfo();
+                    $error = $error_info[2];
+                    throw new \Exception($error);
+                }
+            } catch (\Exception $e) {
                 // This error might be due to a unique constraint violation.
                 // Query again to see if this configure was created since
                 // the last time we checked.
+                $this->PDO->rollBack();
                 if ($this->ExistsByCrc32()) {
                     return true;
                 } else {
-                    add_log("SQL error: $error", 'Configure Insert', LOG_ERR);
-                    $this->PDO->rollBack();
+                    add_log($e->getMessage() . PHP_EOL . $e->getTraceAsString(),
+                            'Configure Insert', LOG_ERR);
                     return false;
                 }
             }
-            $new_configure_inserted = true;
-            $this->Id = pdo_insert_id('configure');
         }
 
         // Insert a new build2configure row for this build.

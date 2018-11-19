@@ -59,7 +59,7 @@ if (!$config->get('CDASH_DB_TYPE')) {
 
 if (isset($_GET['upgrade-tables'])) {
     // Apply all the patches
-    foreach (glob($config->get('CDASH_ROOT_DIR') . '/sql/$db_type/cdash-upgrade-*.sql') as $filename) {
+    foreach (glob($config->get('CDASH_ROOT_DIR') . "/sql/$db_type/cdash-upgrade-*.sql") as $filename) {
         $file_content = file($filename);
         $query = '';
         foreach ($file_content as $sql_line) {
@@ -710,9 +710,6 @@ if (isset($_GET['upgrade-2-4'])) {
             pdo_query('ALTER TABLE build ADD UNIQUE KEY (uuid)');
         }
 
-        // Also add a new unique constraint to the site table.
-        AddUniqueConstraintToSiteTable('site');
-
         // Also add a new unique constraint to the subproject table.
         if ($db_type === 'pgsql') {
             pdo_query('ALTER TABLE subproject ADD UNIQUE (name, projectid, endtime)');
@@ -819,11 +816,24 @@ if (isset($_GET['upgrade-2-6'])) {
     AddTableField('project', 'bugtrackernewissueurl', 'varchar(255)', 'character varying(255)', '');
     AddTableField('project', 'bugtrackertype', 'varchar(16)', 'character varying(16)', '');
 
+    // Add new unique constraint to the site table.
+    AddUniqueConstraintToSiteTable('site');
+
     // Set the database version
     setVersion();
 
     // Put that the upgrade is done in the log
     add_log('Upgrade done.', 'upgrade-2-6');
+    return;
+}
+
+// 2.8 Upgrade
+if (isset($_GET['upgrade-2-8'])) {
+    // Set the database version
+    setVersion();
+
+    // Put that the upgrade is done in the log
+    add_log('Upgrade done.', 'upgrade-2-8');
     return;
 }
 

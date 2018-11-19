@@ -18,6 +18,7 @@ class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
         $this->ParallelProcessingConfig = '$CDASH_ASYNC_WORKERS = 10;';
     }
 
+
     public function testParallelSubmissions()
     {
         // Delete the existing Trilinos build.

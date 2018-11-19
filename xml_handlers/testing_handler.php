@@ -400,6 +400,13 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
 
     /**
      * @return Build[]
+     */
+    public function getBuilds()
+    {
+        return array_values($this->Builds);
+    }
+    /**
+     * @return Build[]
      * @deprecated Use GetBuildCollection() 02/04/18
      */
     public function getActionableBuilds()

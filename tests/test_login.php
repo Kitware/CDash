@@ -102,7 +102,7 @@ class LoginTestCase extends KWWebTestCase
         $url = $this->url . '/register.php?key=' . $row['registrationkey'];
         $content = $this->connect($url);
         if ($content == false) {
-            return $this->fail('Failed to load verification page.');
+            $this->fail('Failed to load verification page.');
         }
 
         if (!$this->userExists('verifytest@kw')) {

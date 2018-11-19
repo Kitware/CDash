@@ -224,6 +224,36 @@ class KWWebTestCase extends WebTestCase
         return true;
     }
 
+    /** a slightly more sane method of testing the log */
+    protected function assertLogContains($expected, $lineCount)
+    {
+        $count = 0;
+        $log = file_get_contents($this->logfilename);
+        $lines = explode(PHP_EOL, $log);
+        $passed = true;
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if ($line && strpos($line, $expected[$count]) === false) {
+                $message = "Unexpected output in logfile:\n"
+                    . "Expected: {$expected[$count]}\n"
+                    . "   Found: {$line}\n";
+                $this->fail($message);
+                $passed = false;
+                break;
+            }
+            $count += $line ? 1 : 0;
+        }
+
+        $count = count($lines);
+        if ($count !== $lineCount) {
+            $message = "\nExpected {$lineCount} lines of log output, received {$count}";
+            $this->fail($message);
+            $passed = false;
+        }
+
+        return $passed;
+    }
+
     /** Check the current content for errors */
     public function checkErrors()
     {
@@ -309,10 +339,8 @@ class KWWebTestCase extends WebTestCase
         return true;
     }
 
-    public function submission($projectname, $file, $header = null)
+    private function check_submission_result($result)
     {
-        $url = $this->url . "/submit.php?project=$projectname";
-        $result = $this->uploadfile($url, $file, $header);
         if ($result === false) {
             return false;
         }
@@ -329,6 +357,32 @@ class KWWebTestCase extends WebTestCase
             return false;
         }
         return true;
+    }
+
+    public function submission($projectname, $file, $header = null)
+    {
+        $url = $this->url . "/submit.php?project=$projectname";
+        $result = $this->uploadfile($url, $file, $header);
+        return $this->check_submission_result($result);
+    }
+
+    public function submission_assign_buildid($file, $project, $build, $site,
+            $stamp, $subproject = null, $header = null)
+    {
+        $url = $this->url . "/submit.php?project=$project&build=$build&site=$site&stamp=$stamp";
+        if (!is_null($subproject)) {
+            $url .= "&subproject=$subproject";
+        }
+
+        $result = $this->uploadfile($url, $file, $header);
+        $pattern = '#<buildId>([0-9]+)</buildId>#';
+        if ($this->check_submission_result($result) &&
+                preg_match($pattern, $result, $matches) &&
+                isset($matches[1])) {
+            return $matches[1];
+        }
+
+        return false;
     }
 
     public function uploadfile($url, $filename, $header = null)
@@ -394,7 +448,9 @@ class KWWebTestCase extends WebTestCase
                     'TestTimeMaxStatus' => 3,
                     'TestTimeStd' => 4,
                     'TestTimeStdThreshold' => 1,
-                    'UploadQuota' => 1);
+                    'UploadQuota' => 1,
+                    'WarningsFilter' => '',
+                    'ErrorsFilter' => '');
             $submit_button = 'Submit';
         }
 

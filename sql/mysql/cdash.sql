@@ -403,9 +403,18 @@ CREATE TABLE IF NOT EXISTS `build2uploadfile` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `pending_submissions`
+--
+CREATE TABLE `pending_submissions` (
+  `buildid` int(11) NOT NULL,
+  `numfiles` tinyint UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (`buildid`)
+);
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `project`
 --
-
 CREATE TABLE `project` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(255) NOT NULL default '',
@@ -464,7 +473,7 @@ CREATE TABLE `site` (
   `longitude` varchar(10) NOT NULL default '',
   `outoforder` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`id`),
-  UNIQUE KEY `name_ip` (`name`, `ip`)
+  UNIQUE KEY `name` (`name`)
 ) ;
 
 --
@@ -1493,6 +1502,16 @@ CREATE TABLE `related_builds` (
   PRIMARY KEY (`buildid`,`relatedid`),
   KEY `buildid` (`buildid`),
   KEY `relatedid` (`relatedid`)
+);
+
+--
+-- Table structure for table `build_filters`
+--
+CREATE TABLE IF NOT EXISTS `build_filters` (
+  `projectid` int(11) NOT NULL,
+  `warnings` text,
+  `errors` text,
+  PRIMARY KEY (`projectid`)
 );
 
 --

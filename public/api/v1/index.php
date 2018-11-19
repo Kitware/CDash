@@ -457,7 +457,7 @@ if (!function_exists('echo_main_dashboard_JSON')) {
                 AND user2repository.credential=updatefile.author) AS userupdates,";
         }
 
-        $sql = get_index_query();
+        $sql = get_index_query($userupdatesql);
         $sql .= "WHERE b.projectid='$projectid' AND g.type='Daily'
         $parent_clause $date_clause $subprojectsql $filter_sql $limit_sql";
 

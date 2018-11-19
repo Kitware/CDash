@@ -223,6 +223,6 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface
      */
     public function getActionableBuilds()
     {
-        return [$this->Build];
+        return $this->getBuilds();
     }
 }
