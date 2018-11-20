@@ -29,6 +29,9 @@ var timelineController =
 
 
     $scope.finishSetup = function() {
+      if ($scope.timeline === undefined || $scope.timeline.length === 0) {
+        return;
+      }
       nv.addGraph(function() {
         $scope.timechart = nv.models.stackedAreaChart()
           .x(function(d) { return d[0] })
