@@ -1650,7 +1650,7 @@ class Build
                     nfixedtests=nfixedtests+:nfixedtests,
                     nfailedtests=nfailedtests+:nfailedtests
                     WHERE userid=:userid AND projectid=:projectid AND
-                    checkindate>=:checkindate');
+                    checkindate=:checkindate');
             $stmt->bindParam(':totalbuilds', $totalbuilds);
             $stmt->bindParam(':nfixedwarnings', $nfixedwarnings);
             $stmt->bindParam(':nfailedwarnings', $nfailedwarnings);
