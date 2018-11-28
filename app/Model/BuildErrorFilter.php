@@ -75,26 +75,12 @@ class BuildErrorFilter
 
     public function FilterWarning($warning)
     {
-        if ($this->WarningsFilter) {
-            foreach (preg_split("/((\r?\n)|(\r\n?))/", $this->WarningsFilter) as $filter) {
-                if (preg_match($filter, $warning) === 1) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return $this->FilterText($warning, $this->WarningsFilter);
     }
 
     public function FilterError($error)
     {
-        if ($this->ErrorsFilter) {
-            foreach (preg_split("/((\r?\n)|(\r\n?))/", $this->ErrorsFilter) as $filter) {
-                if (preg_match($filter, $error) === 1) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return $this->FilterText($error, $this->ErrorsFilter);
     }
 
     public function GetErrorsFilter()
@@ -125,5 +111,17 @@ class BuildErrorFilter
         $row = $stmt->fetch();
         $this->ErrorsFilter = $row['errors'];
         $this->WarningsFilter = $row['warnings'];
+    }
+
+    private function FilterText($subject, $filterString)
+    {
+        if ($filterString) {
+            foreach (preg_split("/\R/", $filterString) as $filter) {
+                if (strpos($subject, $filter) !== false) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
