@@ -25,6 +25,7 @@ use CDash\Model\BuildFailure;
 use CDash\Model\BuildInformation;
 use CDash\Model\Feed;
 use CDash\Model\Label;
+use CDash\Model\Project;
 use CDash\Model\Site;
 use CDash\Model\SiteInformation;
 
@@ -60,7 +61,9 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
         $this->BuildLog = '';
         $this->Labels = [];
         $this->SubProjects = [];
-        $this->BuildErrorFilter = new BuildErrorFilter($projectid);
+        $project = new Project();
+        $project->Id = $projectid;
+        $this->BuildErrorFilter = new BuildErrorFilter($project);
     }
 
     public function startElement($parser, $name, $attributes)

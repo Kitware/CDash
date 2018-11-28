@@ -16,61 +16,65 @@
 namespace CDash\Model;
 
 use CDash\Database;
-use PDO;
+use CDash\Model\Project;
 
 class BuildErrorFilter
 {
-    private $WarningsFilter;
     private $ErrorsFilter;
-    public $ProjectId;
+    private $WarningsFilter;
 
-    public function __construct($projectid)
+    public $Project;
+
+    public function __construct(Project $project)
     {
-        $this->WarningsFilter = null;
         $this->ErrorsFilter = null;
-        $this->ProjectId = $projectid;
+        $this->WarningsFilter = null;
 
-        $this->PDO = Database::getInstance()->getPdo();
+        $this->PDO = Database::getInstance();
+
+        $this->Project = $project;
+        $this->Fill();
+    }
+
+    public function Exists()
+    {
+        $stmt = $this->PDO->prepare(
+                'SELECT projectid FROM build_filters
+                 WHERE projectid = :projectid');
+        $this->PDO->execute($stmt, [':projectid' => $this->Project->Id]);
+        if ($stmt->fetchColumn()) {
+            return true;
+        }
+        return false;
     }
 
     public function AddOrUpdateFilters($warnings, $errors)
     {
-        // Check if it exists
-        $build_filters = pdo_query('SELECT projectid FROM build_filters WHERE projectid=' . qnum($this->ProjectId));
-        if (pdo_num_rows($build_filters) > 0) {
-            return $this->UpdateFilters($warnings, $errors);
+        if ($this->Exists()) {
+            $stmt = $this->PDO->prepare(
+                'UPDATE build_filters
+                SET warnings = :warnings, errors = :errors
+                WHERE projectid = :projectid');
         } else {
-            return $this->AddFilters($warnings, $errors);
+            $stmt = $this->PDO->prepare(
+                    'INSERT INTO build_filters(projectid, warnings, errors)
+                    VALUES (:projectid, :warnings, :errors)');
         }
-    }
 
-    public function AddFilters($warnings, $errors)
-    {
-        $query = 'INSERT INTO build_filters(projectid,warnings,errors)
-            VALUES (' . qnum($this->ProjectId) . ",'" . $warnings . "','" . $errors . "')";
-        return pdo_query($query);
-    }
-
-    public function UpdateFilters($warnings, $errors)
-    {
-        $query = "UPDATE build_filters SET warnings='" . $warnings . "',errors='" . $errors .
-            "' WHERE projectid=" . qnum($this->ProjectId);
-        if (!pdo_query($query)) {
-            add_last_sql_error('Project Update', $this->ProjectId);
-            return false;
-        } else {
+        $query_params = [
+            ':errors' => $errors,
+            ':projectid' => $this->Project->Id,
+            ':warnings' => $warnings
+        ];
+        if ($this->PDO->execute($stmt, $query_params)) {
+            $this->Fill();
             return true;
         }
+        return false;
     }
 
     public function FilterWarning($warning)
     {
-        if (is_null($this->WarningsFilter)) {
-            $stmt = $this->PDO->prepare(
-                'SELECT warnings FROM build_filters WHERE projectid = ?');
-            pdo_execute($stmt, [$this->ProjectId]);
-            $this->WarningsFilter = $stmt->fetchColumn();
-        }
         if ($this->WarningsFilter) {
             foreach (preg_split("/((\r?\n)|(\r\n?))/", $this->WarningsFilter) as $filter) {
                 if (preg_match($filter, $warning) === 1) {
@@ -83,12 +87,6 @@ class BuildErrorFilter
 
     public function FilterError($error)
     {
-        if (is_null($this->ErrorsFilter)) {
-            $stmt = $this->PDO->prepare(
-                'SELECT errors FROM build_filters WHERE projectid = ?');
-            pdo_execute($stmt, [$this->ProjectId]);
-            $this->ErrorsFilter = $stmt->fetchColumn();
-        }
         if ($this->ErrorsFilter) {
             foreach (preg_split("/((\r?\n)|(\r\n?))/", $this->ErrorsFilter) as $filter) {
                 if (preg_match($filter, $error) === 1) {
@@ -97,5 +95,35 @@ class BuildErrorFilter
             }
         }
         return false;
+    }
+
+    public function GetErrorsFilter()
+    {
+        return $this->ErrorsFilter;
+    }
+
+    public function SetErrorsFilter($filter)
+    {
+        $this->ErrorsFilter = $filter;
+    }
+
+    public function GetWarningsFilter()
+    {
+        return $this->WarningsFilter;
+    }
+
+    public function SetWarningsFilter($filter)
+    {
+        $this->WarningsFilter = $filter;
+    }
+
+    private function Fill()
+    {
+        $stmt = $this->PDO->prepare(
+            'SELECT * FROM build_filters WHERE projectid = :projectid');
+        $this->PDO->execute($stmt, [':projectid' => $this->Project->Id]);
+        $row = $stmt->fetch();
+        $this->ErrorsFilter = $row['errors'];
+        $this->WarningsFilter = $row['warnings'];
     }
 }
