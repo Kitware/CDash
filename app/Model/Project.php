@@ -69,7 +69,6 @@ class Project
     public $RobotRegex;
     public $CTestTemplateScript;
     public $WebApiKey;
-    public $BuildErrorFilter;
     public $WarningsFilter;
     public $ErrorsFilter;
     /** @var \PDO $PDO */
@@ -134,7 +133,6 @@ class Project
         if (empty($this->ErrorsFilter)) {
             $this->ErrorsFilter = '';
         }
-        $this->BuildErrorFilter = new BuildErrorFilter($this->Id);
         $this->PDO = Database::getInstance()->getPdo();
     }
 
@@ -307,10 +305,8 @@ class Project
                 }
             }
 
-            if ($this->WarningsFilter != '' || $this->ErrorsFilter != '') {
-                if (!$this->BuildErrorFilter->AddOrUpdateFilters($this->WarningsFilter, $this->ErrorsFilter)) {
-                    return false;
-                }
+            if (!$this->UpdateBuildFilters()) {
+                return false;
             }
 
             // Insert the ctest template
@@ -391,11 +387,8 @@ class Project
                 }
             }
 
-            if ($this->WarningsFilter != '' || $this->ErrorsFilter != '') {
-                $this->BuildErrorFilter->ProjectId = $this->Id;
-                if (!$this->BuildErrorFilter->AddFilters($this->WarningsFilter, $this->ErrorsFilter)) {
-                    return false;
-                }
+            if (!$this->UpdateBuildFilters()) {
+                return false;
             }
         }
         return true;
@@ -1683,6 +1676,18 @@ class Project
         $message = "Maximum number of builds reached for $this->Name.  Contact {$config->get('CDASH_EMAILADMIN')} for support.";
         add_log("Too many builds for $this->Name", 'project_has_too_many_builds',
                 LOG_INFO, $this->Id);
+        return true;
+    }
+
+    // Modify the build error/warning filters for this project if necessary.
+    public function UpdateBuildFilters()
+    {
+        $buildErrorFilter = new BuildErrorFilter($this);
+        if ($buildErrorFilter->GetErrorsFilter() != $this->ErrorsFilter ||
+                $buildErrorFilter->GetWarningsFilter() != $this->WarningsFilter) {
+            return $buildErrorFilter->AddOrUpdateFilters(
+                    $this->WarningsFilter, $this->ErrorsFilter);
+        }
         return true;
     }
 }

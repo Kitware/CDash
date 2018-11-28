@@ -87,7 +87,7 @@ class BazelJSONHandler extends NonSaxHandler
         $this->TestName = '';
         $this->ParseConfigure = true;
 
-        $this->BuildErrorFilter = new BuildErrorFilter($build->ProjectId);
+        $this->BuildErrorFilter = new BuildErrorFilter($this->Project);
 
         $this->PDO = get_link_identifier()->getPdo();
     }

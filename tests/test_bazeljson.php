@@ -75,8 +75,8 @@ class BazelJSONTestCase extends KWWebTestCase
         $settings = [
             'Name' => 'Bazel',
             'Public' => 1,
-            'WarningsFilter' => '/(.*?)unused variable(.*?)$/is',
-            'ErrorsFilter' => '/(.*?)use of undeclared identifier(.*?)$/is'
+            'WarningsFilter' => 'unused variable',
+            'ErrorsFilter' => 'use of undeclared identifier'
         ];
         $projectid = $this->createProject($settings);
         if ($projectid < 1) {

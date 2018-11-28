@@ -25,6 +25,7 @@ use CDash\Model\BuildFailure;
 use CDash\Model\BuildInformation;
 use CDash\Model\Feed;
 use CDash\Model\Label;
+use CDash\Model\Project;
 use CDash\Model\Site;
 use CDash\Model\SiteInformation;
 
@@ -60,7 +61,9 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
         $this->BuildLog = '';
         $this->Labels = [];
         $this->SubProjects = [];
-        $this->BuildErrorFilter = new BuildErrorFilter($projectid);
+        $project = new Project();
+        $project->Id = $projectid;
+        $this->BuildErrorFilter = new BuildErrorFilter($project);
     }
 
     public function startElement($parser, $name, $attributes)
@@ -213,21 +216,15 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
             }
         } elseif ($name == 'WARNING' || $name == 'ERROR' || $name == 'FAILURE') {
             $skip_error = false;
-            if (isset($this->Error->StdOutput)) {
-                if ($this->Error->Type === 1) {
-                    $skip_error = $this->BuildErrorFilter->FilterWarning($this->Error->StdOutput);
-                } elseif ($this->Error->Type === 0) {
-                    $skip_error = $this->BuildErrorFilter->FilterError($this->Error->StdOutput);
+            foreach (['StdOutput', 'StdError', 'Text'] as $field) {
+                if (isset($this->Error->$field)) {
+                    if ($this->Error->Type === 1) {
+                        $skip_error = $this->BuildErrorFilter->FilterWarning($this->Error->$field);
+                    } elseif ($this->Error->Type === 0) {
+                        $skip_error = $this->BuildErrorFilter->FilterError($this->Error->$field);
+                    }
                 }
             }
-            if (isset($this->Error->StdError)) {
-                if ($this->Error->Type === 1) {
-                    $skip_error = $this->BuildErrorFilter->FilterWarning($this->Error->StdError);
-                } elseif ($this->Error->Type === 0) {
-                    $skip_error = $this->BuildErrorFilter->FilterError($this->Error->StdError);
-                }
-            }
-
             if ($skip_error) {
                 unset($this->Error);
                 return;
