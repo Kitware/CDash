@@ -213,21 +213,15 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
             }
         } elseif ($name == 'WARNING' || $name == 'ERROR' || $name == 'FAILURE') {
             $skip_error = false;
-            if (isset($this->Error->StdOutput)) {
-                if ($this->Error->Type === 1) {
-                    $skip_error = $this->BuildErrorFilter->FilterWarning($this->Error->StdOutput);
-                } elseif ($this->Error->Type === 0) {
-                    $skip_error = $this->BuildErrorFilter->FilterError($this->Error->StdOutput);
+            foreach (['StdOutput', 'StdError', 'Text'] as $field) {
+                if (isset($this->Error->$field)) {
+                    if ($this->Error->Type === 1) {
+                        $skip_error = $this->BuildErrorFilter->FilterWarning($this->Error->$field);
+                    } elseif ($this->Error->Type === 0) {
+                        $skip_error = $this->BuildErrorFilter->FilterError($this->Error->$field);
+                    }
                 }
             }
-            if (isset($this->Error->StdError)) {
-                if ($this->Error->Type === 1) {
-                    $skip_error = $this->BuildErrorFilter->FilterWarning($this->Error->StdError);
-                } elseif ($this->Error->Type === 0) {
-                    $skip_error = $this->BuildErrorFilter->FilterError($this->Error->StdError);
-                }
-            }
-
             if ($skip_error) {
                 unset($this->Error);
                 return;
