@@ -40,7 +40,7 @@ class BuildErrorFilter
         if (pdo_num_rows($build_filters) > 0) {
             return $this->UpdateFilters($warnings, $errors);
         } else {
-            return $this->AddFilters($WarningsFilter, $ErrorsFilter);
+            return $this->AddFilters($warnings, $errors);
         }
     }
 
