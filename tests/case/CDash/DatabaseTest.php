@@ -4,7 +4,6 @@ use CDash\Database;
 use CDash\Config;
 use CDash\Log;
 use CDash\Test\Log as TestLog;
-use PDO;
 
 class DatabaseTest extends PHPUnit_Framework_TestCase
 {
