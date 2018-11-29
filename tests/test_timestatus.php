@@ -10,7 +10,6 @@ require_once 'include/pdo.php';
 use CDash\Database;
 use CDash\Test\UseCase\TestUseCase;
 use CDash\Model\Project;
-use PDO;
 
 class TimeStatusTestCase extends KWWebTestCase
 {
