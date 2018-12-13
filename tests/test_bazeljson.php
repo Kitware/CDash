@@ -65,8 +65,20 @@ class BazelJSONTestCase extends KWWebTestCase
             $this->fail("Unexpected output! Should not include test summary");
         }
 
+        // Submit the same data again to verify that no testdiff is recorded.
+        $buildid2 = $this->submit_data('InsightExample', 'BazelJSON',
+            '0a9b0aeeb73618cd10d6e1bee221fd71',
+            dirname(__FILE__) . '/data/Bazel/bazel_BEP.json',
+            '20170824-1835-Experimental', '1503599755');
+        $this->assertTrue($buildid2 > 1);
+        $testdiff_stmt = $this->PDO->prepare(
+            'SELECT buildid FROM testdiff WHERE buildid = :buildid');
+        pdo_execute($testdiff_stmt, [':buildid' => $buildid2]);
+        $this->assertTrue($testdiff_stmt->fetchColumn() === false);
+
         // Cleanup.
         remove_build($buildid);
+        remove_build($buildid2);
     }
 
     public function testFilterBazelJSON()
@@ -685,15 +697,17 @@ class BazelJSONTestCase extends KWWebTestCase
         remove_build($buildid);
     }
 
-    private function submit_data($project_name, $upload_type, $md5, $file_path)
+    private function submit_data($project_name, $upload_type, $md5, $file_path,
+                                 $buildstamp = '20170823-1835-Experimental',
+                                 $timestamp = '1503513355')
     {
         $fields = [
             'project' => $project_name,
             'build' => 'bazel_json',
             'site' => 'localhost',
-            'stamp' => '20170823-1835-Experimental',
-            'starttime' => '1503513355',
-            'endtime' => '1503513355',
+            'stamp' => $buildstamp,
+            'starttime' => $timestamp,
+            'endtime' => $timestamp,
             'track' => 'Experimental',
             'type' => $upload_type,
             'datafilesmd5[0]=' => $md5];
