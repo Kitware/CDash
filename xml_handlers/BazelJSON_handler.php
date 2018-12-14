@@ -131,7 +131,6 @@ class BazelJSONHandler extends NonSaxHandler
             $num_notrun = $build->GetNumberOfNotRunTests() +
                 $this->NumTestsNotRun[$subproject_name];
             $build->UpdateTestNumbers($num_passed, $num_failed, $num_notrun);
-            $build->ComputeTestTiming();
         }
 
         // Save configure information.
@@ -184,6 +183,11 @@ class BazelJSONHandler extends NonSaxHandler
 
             $buildtest->TestId = $test->Id;
             $buildtest->Insert();
+        }
+
+        // Save testdiff information.
+        foreach ($this->Builds as $subproject_name => $build) {
+            $build->ComputeTestTiming();
         }
     }
 
