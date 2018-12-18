@@ -41,6 +41,7 @@ var timelineController =
           .x(function(d) { return d[0] })
           .y(function(d) { return d[1] })
           .interactive(false)
+          .interpolate("step-after")
           .margin({top: 30, right: 10, bottom: 30, left: 60})
           .rightAlignYAxis(false)
           .showControls(false)
