@@ -6,7 +6,7 @@ describe("expected_build", function() {
     browser.get('index.php?project=InsightExample');
 
     // Locate the folder icon
-    var folderIcon = element(by.repeater('build in buildgroup.pagination.filteredBuilds').row(0)).all(by.tagName('img')).get(2);
+    var folderIcon = element(by.repeater('build in buildgroup.pagination.filteredBuilds').row(0)).element(by.name('adminoptions'));
 
     // Make sure that we located the right img.
     expect(folderIcon.getAttribute('src')).toContain('img/folder.png');
@@ -21,7 +21,7 @@ describe("expected_build", function() {
 
     // Refresh the page to make sure this build is now expected.
     browser.get('index.php?project=InsightExample');
-    element(by.repeater('build in buildgroup.pagination.filteredBuilds').row(0)).all(by.tagName('img')).get(2).click();
+    element(by.repeater('build in buildgroup.pagination.filteredBuilds').row(0)).element(by.name('adminoptions')).click();
     expect(element(by.partialLinkText('mark as non expected')).isPresent()).toBe(true);
 
     // Make it non expected again.
@@ -31,7 +31,7 @@ describe("expected_build", function() {
 
     // Refresh & verify.
     browser.get('index.php?project=InsightExample');
-    element(by.repeater('build in buildgroup.pagination.filteredBuilds').row(0)).all(by.tagName('img')).get(2).click();
+    element(by.repeater('build in buildgroup.pagination.filteredBuilds').row(0)).element(by.name('adminoptions')).click();
     expect(element(by.partialLinkText('mark as expected')).isPresent()).toBe(true);
   });
 });

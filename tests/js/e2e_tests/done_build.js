@@ -1,11 +1,11 @@
 var LoginPage = require('../pages/login.page.js');
 describe("done_build", function() {
 
-  function toggle_done(index_url, idx) {
+  function toggle_done(index_url) {
     browser.get(index_url);
 
     // Locate the folder icon
-    var folderIcon = element(by.repeater('build in buildgroup.pagination.filteredBuilds').row(0)).all(by.tagName('img')).get(idx);
+    var folderIcon = element(by.repeater('build in buildgroup.pagination.filteredBuilds').row(0)).element(by.name('adminoptions'));
 
     // Make sure that we located the right img.
     expect(folderIcon.getAttribute('src')).toContain('img/folder.png');
@@ -20,7 +20,7 @@ describe("done_build", function() {
 
     // Refresh the page to make sure this build is now done.
     browser.get(index_url);
-    element(by.repeater('build in buildgroup.pagination.filteredBuilds').row(0)).all(by.tagName('img')).get(idx).click();
+    element(by.repeater('build in buildgroup.pagination.filteredBuilds').row(0)).element(by.name('adminoptions')).click();
     expect(element(by.partialLinkText('mark as not done')).isPresent()).toBe(true);
 
     // Make it not done again.
@@ -30,18 +30,18 @@ describe("done_build", function() {
 
     // Refresh & verify.
     browser.get(index_url);
-    element(by.repeater('build in buildgroup.pagination.filteredBuilds').row(0)).all(by.tagName('img')).get(idx).click();
+    element(by.repeater('build in buildgroup.pagination.filteredBuilds').row(0)).element(by.name('adminoptions')).click();
     expect(element(by.partialLinkText('mark as done')).isPresent()).toBe(true);
   }
 
   it("toggle done for normal build", function() {
     var loginPage = new LoginPage();
     loginPage.login();
-    toggle_done('index.php?project=InsightExample', 2);
+    toggle_done('index.php?project=InsightExample');
   });
 
   it("toggle done for parent build", function() {
-    toggle_done('index.php?project=Trilinos&date=2011-07-22', 2);
+    toggle_done('index.php?project=Trilinos&date=2011-07-22');
   });
 
 });

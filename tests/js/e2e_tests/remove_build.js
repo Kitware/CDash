@@ -6,7 +6,7 @@ describe("remove_build", function() {
     browser.get('index.php?project=InsightExample');
 
     // Locate the folder icon for the 2nd build.
-    var folderIcon = element(by.repeater('build in buildgroup.pagination.filteredBuilds').row(1)).all(by.tagName('img')).get(2);
+    var folderIcon = element(by.repeater('build in buildgroup.pagination.filteredBuilds').row(1)).element(by.name('adminoptions'));
 
     // Make sure that we located the right img.
     expect(folderIcon.getAttribute('src')).toContain('img/folder.png');
