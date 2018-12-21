@@ -87,7 +87,7 @@ a:hover{
 
 .title-divider { background-color: #b0c4de; text-align: center; font-weight: bold; }
 .table-heading1 {
- background-color : #3867d1;
+ background-color : #5775b9;
  color: #FFFFFF;
 }
 
@@ -938,7 +938,7 @@ div#headertop {
 
 #headermenu #navigation li ul li:hover {
   background:#efefef;
-  border-left:4px solid #3867d1;
+  border-left:4px solid #5775b9;
 }
 
 #headermenu #navigation li ul li a,
@@ -1086,7 +1086,7 @@ div#index_top {
 
 #settings ul li:hover {
   background:#efefef;
-  border-left:4px solid #3867d1;
+  border-left:4px solid #5775b9;
 }
 
 #settings ul li:hover a {
@@ -1258,7 +1258,7 @@ background-color: #adcae6
 }
 
 .table-heading1 td:nth-child(even) {
-  background-color:#4171de;
+  background-color:#607dc1;
 }
 
 .botl {
