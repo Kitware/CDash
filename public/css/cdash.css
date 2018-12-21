@@ -1,7 +1,5 @@
 @import url("common.css");
-.normal { background-color : inherit; position:relative; }
-.normal:before { background:url(../../img/checked.svg) no-repeat 0 2px; background-size:100%; content:""; display:inline-block; height:12px; width:12px; }
-.normal > div { display:inline-block; }
+.normal { background-color : #bfefbf !important; }
 .warning { background-color : #fd9e40 !important; }
 .warning, .warning a { color:#ffffff !important; }
 .error { background-color : #de6868 !important; }
@@ -12,8 +10,7 @@
 .warning-text { color : #fdb66d; }
 .error-text { color : #de6868; }
 
-.tabb tbody tr.odd td.normal { background-color: inherit; position:relative; }
-.tabb tbody tr.odd td.normal:before {}
+.tabb tbody tr.odd td.normal { background-color: #b4dcb4 !important; }
 .tabb tbody tr.odd td.warning { background-color: #f39130 !important; }
 .tabb tbody tr.odd td.error { background-color: #d95454 !important; }
 .tabb tbody tr.odd td.disabled-test { background-color: #eeee00 !important; }
