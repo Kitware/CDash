@@ -147,13 +147,15 @@ class Index extends ResultsApi
                     AND user2repository.credential=updatefile.author) AS userupdates,";
         }
 
+        $buildgroup_clause = '';
         if ($this->buildGroupName) {
-            $this->filterSQL .= " AND g.name = '{$this->buildGroupName}' ";
+            $buildgroup_clause = " AND g.name = '{$this->buildGroupName}' ";
         }
 
         $sql = $this->getIndexQuery($userupdatesql);
         $sql .= "WHERE b.projectid='{$this->project->Id}' AND g.type='Daily'
-            $parent_clause $date_clause $subprojectsql $this->filterSQL $this->limitSQL";
+            $parent_clause $date_clause $subprojectsql $this->filterSQL
+            $buildgroup_clause $this->limitSQL";
 
         // We shouldn't get any builds for group that have been deleted (otherwise something is wrong)
         $builds = pdo_query($sql);
@@ -222,7 +224,7 @@ class Index extends ResultsApi
                 $order = 'ORDER BY b.submittime DESC LIMIT 1';
 
                 $sql = $this->getIndexQuery();
-                $sql .= "$where $order";
+                $sql .= "$where $this->filterSQL $order";
 
                 $results = pdo_query($sql);
                 while ($build = pdo_fetch_array($results)) {

@@ -339,10 +339,7 @@ if (!function_exists('echo_main_dashboard_JSON')) {
         $response['sharelabelfilters'] = $controller->shareLabelFilters;
 
         $build_data = $controller->getDailyBuilds();
-
-        if (empty($filter_sql)) {
-            $build_data = array_merge($build_data, $controller->getDynamicBuilds());
-        }
+        $build_data = array_merge($build_data, $controller->getDynamicBuilds());
 
         // Check if we need to summarize coverage by subproject groups.
         // This happens when we have subprojects and we're looking at the children
