@@ -40,15 +40,13 @@ var timelineController =
         $scope.timechart = nv.models.stackedAreaChart()
           .x(function(d) { return d[0] })
           .y(function(d) { return d[1] })
-          .interactive(false)
           .interpolate("step-after")
           .margin({top: 30, right: 10, bottom: 30, left: 60})
           .rightAlignYAxis(false)
           .showControls(false)
-          .showLegend(true);
-
-        // Disable legend's ability to turn on & off trends.
-        $scope.timechart.legend.updateState(false);
+          .showLegend(true)
+          .showTotalInTooltip(false)
+          .useInteractiveGuideline(true);
 
         //Format x-axis labels as dates.
         $scope.timechart.xAxis
@@ -72,7 +70,9 @@ var timelineController =
         $scope.timeline.brush = d3.svg.brush()
         .x($scope.timechart.xScale())
         .extent([$scope.timeline.extentstart, $scope.timeline.extentend])
-        .on("brushend", brushed);
+        .on("brushstart", brushstart)
+        .on("brushend", brushend);
+        $scope.start_brushing = true;
 
         var height = d3.select(".nv-stackedAreaChart g rect").node().getBBox().height;
         var brush_element = $scope.timechart_selection
@@ -85,10 +85,27 @@ var timelineController =
         .attr('fill-opacity', '.125')
         .attr('stroke', '#fff');
 
+        // Remove the brush background so mouseover events get passed through
+        // to the underlying chart. This makes it so our tooltips still work.
+        brush_element.select(".background").remove();
+
         $scope.computeSelectedDateRange();
 
+        function brushstart() {
+          // Work around a d3 bug where brushstart() gets called before
+          // AND after brushend().
+          if (!$scope.start_brushing) {
+            $scope.start_brushing = true;
+            return;
+          }
+
+          // Hide tooltips while moving the brush.
+          d3.select('.nvtooltip').style('display', 'none');
+          $scope.start_brushing = false;
+        }
+
         // Snap to day boundaries.
-        function brushed() {
+        function brushend() {
           if (!d3.event.sourceEvent) return; // only transition after input
 
           // Use binary search to round to the nearest day.
@@ -148,6 +165,7 @@ var timelineController =
           }
 
           $scope.computeSelectedDateRange();
+          d3.select('.nvtooltip').style('display', 'block');
         }
 
         return $scope.timechart;
