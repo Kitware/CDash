@@ -36,25 +36,27 @@ var timelineController =
       if ($scope.timeline === undefined || $scope.timeline.length === 0) {
         return;
       }
+
+      // Construct an array of timestamps corresponding to our nightly start times.
+      var nightly_start_times = Object.keys($scope.timeline.time_to_date);
+      // Convert from string to int.
+      $scope.nightly_start_times = nightly_start_times.map(function (x) {
+        return Number(x);
+      });
+
       nv.addGraph(function() {
         $scope.timechart = nv.models.stackedAreaChart()
           .x(function(d) { return d[0] })
           .y(function(d) { return d[1] })
           .interpolate("step-after")
-          .margin({top: 30, right: 10, bottom: 30, left: 60})
+          .margin({top: 30, right: 60, bottom: 30, left: 60})
           .rightAlignYAxis(false)
           .showControls(false)
           .showLegend(true)
           .showTotalInTooltip(false)
           .useInteractiveGuideline(true);
 
-        //Format x-axis labels as dates.
-        $scope.timechart.xAxis
-        .showMaxMin(false)
-        .tickFormat(function(d) {
-          return d3.time.format('%x')(new Date(d))
-        });
-
+        $scope.timechart.xAxis.showMaxMin(false);
         $scope.timechart_selection = d3.select('#timechart svg').datum($scope.timeline.data);
         $scope.timechart_selection.call($scope.timechart);
 
@@ -66,6 +68,41 @@ var timelineController =
         $scope.timechart.update();
         nv.utils.windowResize($scope.timechart.update);
 
+        // Calculate how many ticks can comfortably fit on our X-axis.
+        var bbox = d3.select(".nv-stackedAreaChart g rect").node().getBBox();
+        var text_element = $scope.timechart_selection
+        .append('text')
+        .attr("class", "nvd3")
+        .text('2999-12-31')
+        .style('visibility', 'hidden');
+        var label_width = text_element.node().getBBox().width;
+        text_element.remove();
+        var num_ticks = Math.floor(Math.round(bbox.width) / (Math.ceil(label_width) * 2));
+
+        // Extract that many evenly spaced dates for our X-axis tick values.
+        var nightly_start_times = $scope.nightly_start_times.slice(0);
+        // Don't show the final X-axis tick because it represents one day
+        // past our specified range.
+        nightly_start_times.pop();
+        if (nightly_start_times.length > num_ticks) {
+          var tick_values = [nightly_start_times[0]];
+          var interval = nightly_start_times.length / num_ticks;
+          for (var i = 1; i < num_ticks; i++) {
+            tick_values.push(nightly_start_times[Math.round(i * interval)]);
+          }
+        } else {
+          var tick_values = nightly_start_times;
+        }
+
+        // Format x-axis labels as dates.
+        $scope.timechart.xAxis
+        .showMaxMin(false)
+        .tickValues(tick_values)
+        .tickFormat(function(d) {
+          return $scope.timeline.time_to_date[d];
+        });
+        $scope.timechart.update();
+
         // Use d3.brush to allow the user to select a date range.
         $scope.timeline.brush = d3.svg.brush()
         .x($scope.timechart.xScale())
@@ -74,14 +111,13 @@ var timelineController =
         .on("brushend", brushend);
         $scope.start_brushing = true;
 
-        var height = d3.select(".nv-stackedAreaChart g rect").node().getBBox().height;
         var brush_element = $scope.timechart_selection
         .select(".nv-areaWrap")
         .append("g")
         .attr("class", "brush")
         .call($scope.timeline.brush)
         .selectAll('rect')
-        .attr('height', height)
+        .attr('height', bbox.height)
         .attr('fill-opacity', '.125')
         .attr('stroke', '#fff');
 
@@ -128,13 +164,8 @@ var timelineController =
           }
           var extent = $scope.timeline.brush.extent();
           var new_extent = [];
-          var nightly_start_times = Object.keys($scope.timeline.time_to_date);
-          // Convert from string to int.
-          nightly_start_times = nightly_start_times.map(function (x) {
-            return Number(x);
-          });
-          new_extent[0] = find_closest_time(extent[0], nightly_start_times);
-          new_extent[1] = find_closest_time(extent[1], nightly_start_times);
+          new_extent[0] = find_closest_time(extent[0], $scope.nightly_start_times);
+          new_extent[1] = find_closest_time(extent[1], $scope.nightly_start_times);
 
           // Don't go out of bounds.
           if (new_extent[0] < $scope.timeline.min) {
