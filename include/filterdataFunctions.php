@@ -952,8 +952,8 @@ function get_filterdata_from_request($page_id = '')
     $sql = '';
     $xml = '';
     $clauses = 0;
-    $filterdata = array();
-    $filters = array();
+    $filterdata = [];
+    $filters = [];
     $add_filter = 0;
     $remove_filter = 0;
     $filterdata['hasdateclause'] = 0;
@@ -970,20 +970,20 @@ function get_filterdata_from_request($page_id = '')
     $pageSpecificFilters = createPageSpecificFilters($page_id);
     $filterdata['pageSpecificFilters'] = $pageSpecificFilters;
 
-    $filtercount = pdo_real_escape_numeric(@$_REQUEST['filtercount']);
-    $showfilters = pdo_real_escape_numeric(@$_REQUEST['showfilters']);
-    $showlimit = pdo_real_escape_numeric(@$_REQUEST['showlimit']);
-    $limit = intval(pdo_real_escape_numeric(@$_REQUEST['limit']));
+    $filtercount = isset($_REQUEST['filtercount']) ? pdo_real_escape_numeric($_REQUEST['filtercount']) : 0;
+    $showfilters = isset($_REQUEST['showfilters']) ? pdo_real_escape_numeric($_REQUEST['showfilters']) : 0;
+    $showlimit = isset($_REQUEST['showlimit']) ? pdo_real_escape_numeric($_REQUEST['showlimit']) : 0;
+    $limit = isset($_REQUEST['limit']) ? intval(pdo_real_escape_numeric($_REQUEST['limit'])) : 0;
     if (!is_int($limit)) {
         $limit = 0;
     }
 
-    @$clear = $_REQUEST['clear'];
+    $clear = isset($_REQUEST['clear']) ? $_REQUEST['clear'] : '';
     if ($clear == 'Clear') {
         $filtercount = 0;
     }
 
-    @$filtercombine = htmlspecialchars(pdo_real_escape_string($_REQUEST['filtercombine']));
+    $filtercombine = isset($_REQUEST['filtercombine']) ? htmlspecialchars(pdo_real_escape_string($_REQUEST['filtercombine'])) : '';
     if (strtolower($filtercombine) == 'or') {
         $sql_combine = 'OR';
     } else {
