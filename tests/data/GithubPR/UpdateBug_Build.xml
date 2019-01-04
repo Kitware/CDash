@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="test_changeid"
+	BuildStamp="20190104-0100-Nightly"
+	Name="elysium"
+	OSName="Linux"
+	Hostname="elysium"
+	>
+	<Build>
+		<StartBuildTime>1546624312</StartBuildTime>
+		<BuildCommand>make</BuildCommand>
+		<Log Encoding="base64" Compression="bin/gzip"/>
+		<EndBuildTime>1546624312</EndBuildTime>
+	</Build>
+</Site>

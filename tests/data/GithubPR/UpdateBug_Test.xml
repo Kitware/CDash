@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="test_changeid"
+	BuildStamp="20190104-0100-Nightly"
+	Name="elysium"
+	OSName="Linux"
+	Hostname="elysium"
+	ChangeId="555"
+	>
+	<Testing>
+		<StartTestTime>1546624312</StartTestTime>
+		<EndTestTime>1546624312</EndTestTime>
+	</Testing>
+</Site>

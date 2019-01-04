@@ -175,6 +175,7 @@ add_php_test(filterbuilderrors)
 add_php_test(buildrelationship)
 add_php_test(submission_assign_buildid)
 add_php_test(donehandler)
+add_php_test(changeid)
 
 if(CDASH_GITHUB_USERNAME AND CDASH_GITHUB_PASSWORD)
   add_php_test(github_PR_comment)

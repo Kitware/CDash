@@ -1986,7 +1986,7 @@ class Build
 
         $stmt = $this->PDO->prepare('
             SELECT builderrors, buildwarnings, starttime, endtime,
-            submittime, log, command, parentid
+            submittime, log, command, parentid, changeid
             FROM build WHERE id = ? FOR UPDATE');
         pdo_execute($stmt, [$buildid]);
         $build = $stmt->fetch();
@@ -2059,6 +2059,12 @@ class Build
                 $clauses[] = 'command = ?';
                 $params[] = $command;
             }
+        }
+
+        // Check if the build's changeid has changed.
+        if ($this->PullRequest && $this->PullRequest != $build['changeid']) {
+            $clauses[] = 'changeid = ?';
+            $params[] = $this->PullRequest;
         }
 
         $num_clauses = count($clauses);
