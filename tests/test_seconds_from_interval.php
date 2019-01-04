@@ -38,7 +38,11 @@ class SecondsFromIntervalTestCase extends KWWebTestCase
 
         // if 2 years ago was a leap year and the month is greater than Feb (2)
         $extraDay = date('L', strtotime('2 years')) && date('n') > 2;
-        
+        if (!$extraDay) {
+            // if last year was a leap year.
+            $extraDay = date('L', strtotime('1 year'));
+        }
+
         $leapYearSeconds = $extraDay ? 86400 : 0;
         $this->intervalTest('2 years', 63072000 + $leapYearSeconds);
         $this->intervalTest('2 years 43s', 63072043 + $leapYearSeconds);
