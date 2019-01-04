@@ -949,9 +949,7 @@ function get_sql_compare_and_value($compare, $value)
 function get_filterdata_from_request($page_id = '')
 {
     $config = Config::getInstance();
-    $sql = '';
     $xml = '';
-    $clauses = 0;
     $filterdata = [];
     $filters = [];
     $add_filter = 0;
@@ -983,14 +981,7 @@ function get_filterdata_from_request($page_id = '')
         $filtercount = 0;
     }
 
-    $filtercombine = isset($_REQUEST['filtercombine']) ? htmlspecialchars(pdo_real_escape_string($_REQUEST['filtercombine'])) : '';
-    if (strtolower($filtercombine) == 'or') {
-        $sql_combine = 'OR';
-    } else {
-        $sql_combine = 'AND';
-    }
-
-    $sql = 'AND (';
+    $filtercombine = isset($_REQUEST['filtercombine']) ? htmlspecialchars(pdo_real_escape_string($_REQUEST['filtercombine'])) : 'and';
 
     for ($i = 1; $i <= $filtercount; ++$i) {
         if (empty($_REQUEST['field' . $i])) {
@@ -1011,12 +1002,6 @@ function get_filterdata_from_request($page_id = '')
             $remove_filter = $i;
         }
 
-        $cv = get_sql_compare_and_value($compare, $value);
-        $sql_compare = $cv[0];
-        $sql_value = $cv[1];
-
-        $sql_field = $pageSpecificFilters->getSqlField($field);
-
         // The following filter types are considered 'date clauses' so that the
         // default date clause of "builds from today only" is not used...
         //
@@ -1025,47 +1010,18 @@ function get_filterdata_from_request($page_id = '')
             $filterdata['hasdateclause'] = 1;
         }
 
-        // Time durations can either be specified as a number of seconds,
-        // or as a string representing a time interval.
-        if (strpos($field, 'duration') !== false) {
-            $input_value = trim($sql_value, "'");
-            $sql_value = get_seconds_from_interval($input_value);
-            if ($input_value !== $sql_value && $field === 'updateduration') {
-                // Update duration is stored as number of minutes (not seconds)
-                // so if we just converted this value from string to seconds
-                // we should also convert it from seconds to minutes here as well.
-                $sql_value /= 60.0;
-            }
-        }
-
-        if ($sql_field != '' && $sql_compare != '') {
-            if ($clauses > 0) {
-                $sql .= ' ' . $sql_combine . ' ';
-            }
-
-            $sql .= $sql_field . ' ' . $sql_compare . ' ' . $sql_value;
-
-            ++$clauses;
-        }
-
-        $filters[] = array(
+        $filters[] = [
             'field' => $field,
             'compare' => $compare,
             'value' => $value,
-        );
-    }
-
-    if ($clauses == 0) {
-        $sql = '';
-    } else {
-        $sql .= ')';
+        ];
     }
 
     // If no filters were passed in as parameters,
     // then add one default filter so that the user sees
     // somewhere to enter filter queries in the GUI:
     //
-    if (0 == count($filters)) {
+    if (count($filters) == 0) {
         $filters[] = $pageSpecificFilters->getDefaultFilter();
     }
 
@@ -1103,6 +1059,7 @@ function get_filterdata_from_request($page_id = '')
     }
 
     $filterdata['filtercombine'] = $filtercombine;
+    $filterdata['filtercount'] = $filtercount;
     $filterdata['filters'] = $filters;
     $filterdata['limit'] = $limit;
 
@@ -1132,12 +1089,73 @@ function get_filterdata_from_request($page_id = '')
         $filterdata['showlimit'] = 0;
     }
 
-    $filterdata['sql'] = $sql;
+    $filterdata['sql'] = generate_filterdata_sql($filterdata);
 
     $xml = filterdata_XML($filterdata);
-
     $filterdata['xml'] = $xml;
+
     return $filterdata;
+}
+
+// Returns filter SQL given a populated $filterdata array.
+function generate_filterdata_sql($filterdata)
+{
+    if (!array_key_exists('filtercount', $filterdata) || $filterdata['filtercount'] < 1) {
+        return '';
+    }
+
+    if (strtolower($filterdata['filtercombine']) == 'or') {
+        $sql_combine = 'OR';
+    } else {
+        $sql_combine = 'AND';
+    }
+
+    $clauses = 0;
+    $pageSpecificFilters = createPageSpecificFilters($filterdata['pageId']);
+    $sql = 'AND (';
+
+    foreach ($filterdata['filters'] as $filter) {
+        $field = $filter['field'];
+        $compare = $filter['compare'];
+        $value = $filter['value'];
+
+        $cv = get_sql_compare_and_value($compare, $value);
+        $sql_compare = $cv[0];
+        $sql_value = $cv[1];
+
+        $sql_field = $pageSpecificFilters->getSqlField($field);
+
+        // Time durations can either be specified as a number of seconds,
+        // or as a string representing a time interval.
+        if (strpos($field, 'duration') !== false) {
+            $input_value = trim($sql_value, "'");
+            $sql_value = get_seconds_from_interval($input_value);
+            if ($input_value !== $sql_value && $field === 'updateduration') {
+                // Update duration is stored as number of minutes (not seconds)
+                // so if we just converted this value from string to seconds
+                // we should also convert it from seconds to minutes here as well.
+                $sql_value /= 60.0;
+            }
+        }
+
+        if ($sql_field != '' && $sql_compare != '') {
+            if ($clauses > 0) {
+                $sql .= ' ' . $sql_combine . ' ';
+            }
+
+            $sql .= $sql_field . ' ' . $sql_compare . ' ' . $sql_value;
+
+            ++$clauses;
+        }
+    }
+
+    if ($clauses == 0) {
+        $sql = '';
+    } else {
+        $sql .= ')';
+    }
+
+    return $sql;
 }
 
 // Return a list of label IDs that match the specified filterdata.
