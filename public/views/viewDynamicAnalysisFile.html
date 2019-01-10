@@ -46,7 +46,7 @@
       {{::cdash.dynamicanalysis.status}}
     </span>
 
-    <pre>{{::cdash.dynamicanalysis.log}}</pre>
+    <pre ng-bind-html="cdash.dynamicanalysis.log | trustAsHtml"></pre>
 
     <!-- FOOTER -->
     <br/>
