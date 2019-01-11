@@ -604,21 +604,22 @@
         <tbody>
           <tr ng-repeat="da in cdash.dynamicanalyses |orderBy:sortDA.orderByFields"
               ng-class-odd="'odd'" ng-class-even="'even'">
-            <td ng-if="::cdash.childview == 1" align="left">
+            <td ng-if="::cdash.childview == 1" class="paddt" align="left">
               {{::da.label}}
             </td>
 
-            <td ng-if="::cdash.childview != 1" align="left">
+            <td ng-if="::cdash.childview != 1" class="paddt" align="left">
               {{::da.site}}
             </td>
 
-            <td ng-if="::cdash.childview != 1" align="left">
+            <td ng-if="::cdash.childview != 1" class="paddt" align="left">
               {{::da.buildname}}
             </td>
 
-            <td align="center">{{::da.checker}}</td>
+            <td class="paddt" align="center">{{::da.checker}}</td>
 
-            <td align="center" ng-class="::{'error': da.defectcount > 0, 'normal': da.defectcount < 1}">
+            <td class="paddt" align="center"
+                ng-class="::{'error': da.defectcount > 0, 'normal': da.defectcount < 1}">
               <a ng-if="::da.childlink" ng-href="{{::da.childlink}}">
                 {{::da.defectcount}}
               </a>
@@ -626,7 +627,8 @@
                 {{::da.defectcount}}
               </a>
             </td>
-            <td align="center" ng-class="::{'nob': cdash.displaylabels == 0}">
+            <td class="paddt" align="center"
+                ng-class="::{'nob': cdash.displaylabels == 0}">
               <span class="builddateelapsed" alt="{{::da.date}}">{{::da.dateelapsed}}</span>
             </td>
           </tr>
