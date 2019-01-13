@@ -42,9 +42,8 @@
       </a>
     </div>
     <div id="headername">
-     <xsl:value-of select="/cdash/menutitle"/>
       <span id="subheadername">
-        <xsl:value-of select="/cdash/menusubtitle"/>
+        <xsl:value-of select="/cdash/menutitle"/> <xsl:value-of select="/cdash/menusubtitle"/>
       </span>
     </div>
     <div id="headermenu">

@@ -430,20 +430,21 @@ div#header {
   width:100%;
 }
 
-div#headername2 {
-  font-size: 24px;
-  font-weight: bold;
-  text-transform: capitalize;
-  color: #FFD966;
-  position: absolute;
-  top: 40px;
-  left: 150px;
-  text-shadow: #555555 1px 1px, #555555 -1px 1px, #555555 -1px -1px, #555555 1px -1px;
+#headername2 {
+  display:table;
+  float:left;
+  font-size:20px;
+  font-weight:700;
+  height:100%;
 }
 
 span#subheadername  {
+/*
   padding-left: 5px;
   text-transform: lowercase;
+  */
+  display:table-cell;
+  vertical-align: middle;
 }
 
 div#feedicon {

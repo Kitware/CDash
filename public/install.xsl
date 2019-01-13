@@ -33,9 +33,8 @@
       </a>
     </div>
     <div id="headername2">
-      CDash
       <span id="subheadername">
-        Installation
+        CDash Installation
       </span>
     </div>
  </div>

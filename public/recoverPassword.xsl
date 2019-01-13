@@ -55,9 +55,8 @@
       </a>
     </div>
     <div id="headername2">
-        CDash
       <span id="subheadername">
-        Recover password
+        CDash - Recover password
       </span>
     </div>
  </div>
