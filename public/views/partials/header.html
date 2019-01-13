@@ -159,7 +159,7 @@
       <li class="btnprev" ng-if="::!cdash.hidenav">
         <a ng-if="::cdash.menu.previous"
            ng-href="{{::cdash.menu.previous}}{{::cdash.filterurl}}">Prev</a>
-        <a ng-if="::!cdash.menu.previous && !cdash.menu.noprevious"
+        <a ng-if="!cdash.menu.previous && !cdash.menu.noprevious"
            ng-href="index.php?project={{::cdash.projectname_encoded}}&date={{::cdash.previousdate}}{{::cdash.extraurl}}{{::cdash.filterurl}}">
           Prev
         </a>
@@ -179,7 +179,7 @@
            ng-href="{{::cdash.menu.next}}{{::cdash.filterurl}}">
           Next
         </a>
-        <a ng-if="::!cdash.menu.next"
+        <a ng-if="!cdash.menu.next"
            ng-href="index.php?project={{::cdash.projectname_encoded}}&date={{::cdash.nextdate}}{{::cdash.extraurl}}{{::cdash.filterurl}}">
           Next
         </a>
