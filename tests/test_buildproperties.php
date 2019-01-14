@@ -3,6 +3,7 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 
+use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildError;
 use CDash\Model\BuildFailure;
@@ -17,7 +18,7 @@ class BuildPropertiesTestCase extends KWWebTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->PDO = get_link_identifier()->getPdo();
+        $this->PDO = Database::getInstance();
         $this->Project = null;
     }
 
