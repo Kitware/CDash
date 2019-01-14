@@ -27,6 +27,7 @@ use CDash\Messaging\Subscription\UserSubscriptionBuilder;
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Messaging\Topic\UpdateErrorTopic;
 use CDash\Model\Build;
+use CDash\Model\BuildGroup;
 use CDash\Model\BuildUpdate;
 use CDash\Model\BuildUpdateFile;
 use CDash\Model\Feed;
@@ -286,5 +287,18 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface
             ->add(new UserSubscriptionBuilder($this))
             ->add(new CommitAuthorSubscriptionBuilder($this));
         return $collection;
+    }
+
+    public function GetCommitAuthors()
+    {
+        return parent::GetCommitAuthors();
+    }
+
+    public function GetBuildGroup()
+    {
+        $factory = $this->getModelFactory();
+        $buildGroup = $factory->create(BuildGroup::class);
+        $buildGroup->SetId($this->Build->GroupId);
+        return $buildGroup;
     }
 }

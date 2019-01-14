@@ -24,6 +24,7 @@ use CDash\Messaging\Subscription\UserSubscriptionBuilder;
 use CDash\Messaging\Topic\DynamicAnalysisTopic;
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Build;
+use CDash\Model\BuildGroup;
 use CDash\Model\Label;
 use CDash\Model\Site;
 use CDash\Model\DynamicAnalysis;
@@ -364,5 +365,16 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
         $collection = (new SubscriptionBuilderCollection)
             ->add(new UserSubscriptionBuilder($this));
         return $collection;
+    }
+
+    public function GetBuildGroup()
+    {
+        $factory = $this->getModelFactory();
+        $buildGroup = $factory->create(BuildGroup::class);
+        foreach ($this->Builds as $build) {
+            $buildGroup->SetId($build->GroupId);
+            break;
+        }
+        return $buildGroup;
     }
 }

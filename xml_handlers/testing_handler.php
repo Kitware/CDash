@@ -15,6 +15,7 @@ use CDash\Messaging\Topic\TopicCollection;
 use CDash\Messaging\Topic\TopicInterface;
 use CDash\Model\ActionableTypes;
 use \CDash\Model\Build;
+use CDash\Model\BuildGroup;
 use \CDash\Model\BuildInformation;
 use \CDash\Model\BuildTest;
 use \CDash\Model\Feed;
@@ -460,5 +461,19 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
             ->add(new UserSubscriptionBuilder($this))
             ->add(new CommitAuthorSubscriptionBuilder($this));
         return $collection;
+    }
+
+    /**
+     * @return BuildGroup
+     */
+    public function GetBuildGroup()
+    {
+        $factory = $this->getModelFactory();
+        $buildGroup = $factory->create(BuildGroup::class);
+        foreach ($this->Builds as $build) {
+            $buildGroup->SetId($build->GroupId);
+            break;
+        }
+        return $buildGroup;
     }
 }

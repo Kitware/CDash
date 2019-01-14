@@ -21,6 +21,7 @@ require_once 'xml_handlers/stack.php';
 
 use CDash\Config;
 use CDash\Model\Build;
+use CDash\Model\BuildGroup;
 use CDash\Model\Site;
 use CDash\Model\Project;
 
@@ -137,11 +138,17 @@ abstract class AbstractHandler implements SaxHandler, CDashSubmissionHandlerInte
         return $this->Project;
     }
 
+    /**
+     * @return Site
+     */
     public function GetSite()
     {
         return $this->Site;
     }
 
+    /**
+     * @return array
+     */
     public function GetCommitAuthors()
     {
         return [];

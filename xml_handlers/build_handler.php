@@ -32,6 +32,7 @@ use CDash\Model\Build;
 use CDash\Model\BuildError;
 use CDash\Model\BuildErrorFilter;
 use CDash\Model\BuildFailure;
+use CDash\Model\BuildGroup;
 use CDash\Model\BuildInformation;
 use CDash\Model\Feed;
 use CDash\Model\Label;
@@ -51,6 +52,7 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
     private $Builds;
     private $BuildInformation;
     private $BuildCommand;
+    private $BuildGroup;
     private $BuildLog;
     private $Labels;
     // Map SubProjects to Labels
@@ -428,6 +430,10 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
     {
         return array_values($this->Builds);
     }
+
+    /**
+     * @return array|Build[]
+     */
     public function getActionableBuilds()
     {
         return $this->Builds;
@@ -501,5 +507,16 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
             ->add(new UserSubscriptionBuilder($this))
             ->add(new CommitAuthorSubscriptionBuilder($this));
         return $collection;
+    }
+
+    public function GetBuildGroup()
+    {
+        $factory = $this->getModelFactory();
+        $buildGroup = $factory->create(BuildGroup::class);
+        foreach ($this->Builds as $build) {
+            $buildGroup->SetId($build->GroupId);
+            break;
+        }
+        return $buildGroup;
     }
 }

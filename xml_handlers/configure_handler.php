@@ -27,6 +27,7 @@ use CDash\Messaging\Topic\TopicInterface;
 use CDash\Model\ActionableTypes;
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
+use CDash\Model\BuildGroup;
 use CDash\Model\BuildInformation;
 use CDash\Model\Label;
 use CDash\Model\Site;
@@ -356,5 +357,16 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
         $collection = (new SubscriptionBuilderCollection)
             ->add(new UserSubscriptionBuilder($this));
         return $collection;
+    }
+
+    public function GetBuildGroup()
+    {
+        $factory = $this->getModelFactory();
+        $buildGroup = $factory->create(BuildGroup::class);
+        foreach ($this->Builds as $build) {
+            $buildGroup->SetId($build->GroupId);
+            break;
+        }
+        return $buildGroup;
     }
 }
