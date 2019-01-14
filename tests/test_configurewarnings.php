@@ -8,6 +8,7 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 
+use CDash\Database;
 use CDash\Model\BuildConfigure;
 
 class ConfigureWarningTestCase extends KWWebTestCase
@@ -42,5 +43,44 @@ class ConfigureWarningTestCase extends KWWebTestCase
                 $this->fail("This was considered a configure warning when it should not be: $line");
             }
         }
+    }
+
+    public function testConfigureWarningDiff()
+    {
+        // Create a project for this test.
+        $settings = [
+            'Name' => 'ConfigureWarningProject',
+            'Description' => 'ConfigureWarningProject'
+        ];
+        $this->ProjectId = $this->createProject($settings);
+        if ($this->ProjectId < 1) {
+            $this->fail('Failed to create project');
+            return;
+        }
+
+        // Submit our testing data.
+        $dir = dirname(__FILE__) . '/data/ConfigureWarnings';
+        $this->submission('ConfigureWarningProject', "$dir/1.xml");
+        $this->submission('ConfigureWarningProject', "$dir/2.xml");
+
+        // Make sure the +1 warning gets associated with the correct build.
+        $db = Database::getInstance();
+        $stmt = $db->prepare('SELECT id FROM build WHERE projectid = :projectid');
+        $db->execute($stmt, [':projectid' => $this->ProjectId]);
+        $buildid1 = $stmt->fetchColumn();
+        $buildid2 = $stmt->fetchColumn();
+
+        $stmt = $db->prepare('SELECT difference FROM configureerrordiff WHERE buildid = :buildid');
+        $db->execute($stmt, [':buildid' => $buildid1]);
+        $num_warnings = $stmt->fetchColumn();
+        if ($num_warnings !== false) {
+            $this->fail('Found an unexpected row for first build');
+        }
+        $db->execute($stmt, [':buildid' => $buildid2]);
+        $num_warnings = $stmt->fetchColumn();
+        if ($num_warnings != 1) {
+            $this->fail("Expected 1 but got $num_warnings for second build");
+        }
+        $this->deleteProject($this->ProjectId);
     }
 }
