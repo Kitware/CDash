@@ -18,6 +18,7 @@ use CDash\Collection\BuildCollection;
 use CDash\Messaging\Subscription\CommitAuthorSubscriptionBuilder;
 use CDash\Messaging\Subscription\SubscriptionCollection;
 use CDash\Model\Build;
+use CDash\Model\BuildGroup;
 use CDash\Model\Project;
 use CDash\Model\Site;
 use CDash\Test\BuildDiffForTesting;
@@ -71,7 +72,7 @@ class CommitAuthorSubscriptionBuilderTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return ActionableBuildInterface
+     * @return ActionableBuildInterface|PHPUnit_Framework_MockObject_MockObject
      */
     public function getMockSubmission($key)
     {
@@ -87,6 +88,16 @@ class CommitAuthorSubscriptionBuilderTest extends PHPUnit_Framework_TestCase
         $mock_build = $this->createMockBuildWithDiff(
             $this->createNew($key)
         );
+
+        /** @var BuildGroup|PHPUnit_Framework_MockObject_MockObject $mock_group */
+        $mock_group = $this->getMockBuilder(BuildGroup::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['isNotifyingCommitters'])
+            ->getMock();
+
+        $mock_group->expects($this->any())
+            ->method('isNotifyingCommitters')
+            ->willReturn(true);
 
         /** @var ActionableBuildInterface|PHPUnit_Framework_MockObject_MockObject $mock_handler */
         $mock_handler = $this->getMockBuilder(ActionableBuildInterface::class)
@@ -108,6 +119,10 @@ class CommitAuthorSubscriptionBuilderTest extends PHPUnit_Framework_TestCase
         $mock_handler->expects($this->any())
             ->method('GetCommitAuthors')
             ->willReturn($this->getCommitAuthors());
+
+        $mock_handler->expects($this->any())
+            ->method('GetBuildGroup')
+            ->willReturn($mock_group);
 
         return $mock_handler;
     }

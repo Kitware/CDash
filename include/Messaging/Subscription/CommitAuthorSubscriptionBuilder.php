@@ -46,6 +46,11 @@ class CommitAuthorSubscriptionBuilder implements SubscriptionBuilderInterface
      */
     public function build(SubscriptionCollection $subscriptions)
     {
+        $group = $this->submission->GetBuildGroup();
+        if (!$group->isNotifyingCommitters()) {
+            return;
+        }
+
         $project = $this->submission->GetProject();
         $site = $this->submission->GetSite();
         $authors = $this->submission->GetCommitAuthors();
