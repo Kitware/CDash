@@ -110,7 +110,7 @@ class CDashUseCaseTestCase extends CDashTestCase
                             $missing = $useCase->missingTests;
                         }
                         return $missing;
-                });
+                    });
 
                 return $model;
             });

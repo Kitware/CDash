@@ -486,7 +486,6 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
      */
     public function GetCommitAuthors()
     {
-
         $authors = [];
 
         foreach ($this->Builds as $build) {
@@ -495,7 +494,6 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
             }, $build->GetCommitAuthors()));
         }
         return array_unique($authors);
-
     }
 
     /**

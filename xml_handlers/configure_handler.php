@@ -342,7 +342,7 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
     {
         $collection = new TopicCollection();
         $preferences = $subscriber->getNotificationPreferences();
-        if($preferences->get(NotifyOn::CONFIGURE)) {
+        if ($preferences->get(NotifyOn::CONFIGURE)) {
             $topic = new ConfigureTopic();
             $collection->add($topic);
         }

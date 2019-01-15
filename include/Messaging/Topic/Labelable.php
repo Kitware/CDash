@@ -16,7 +16,6 @@
 
 namespace CDash\Messaging\Topic;
 
-
 use CDash\Collection\LabelCollection;
 use CDash\Model\Build;
 

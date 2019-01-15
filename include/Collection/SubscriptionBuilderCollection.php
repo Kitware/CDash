@@ -16,7 +16,6 @@
 
 namespace CDash\Collection;
 
-
 use CDash\Messaging\Subscription\SubscriptionBuilderInterface;
 
 class SubscriptionBuilderCollection extends Collection

@@ -34,6 +34,5 @@ class TopicFactoryTest extends PHPUnit_Framework_TestCase
             ->getMock();
 
         $settings = BitmaskNotificationPreferences::EMAIL_WARNING;
-
     }
 }

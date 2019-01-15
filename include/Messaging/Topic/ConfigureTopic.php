@@ -116,8 +116,8 @@ class ConfigureTopic extends Topic implements Decoratable, Labelable
      */
     public function setTopicDataWithLabels(Build $build, LabelCollection $labels)
     {
-       $collection = $this->getTopicCollection();
-       $collection->add($build->GetBuildConfigure());
+        $collection = $this->getTopicCollection();
+        $collection->add($build->GetBuildConfigure());
     }
 
     /**

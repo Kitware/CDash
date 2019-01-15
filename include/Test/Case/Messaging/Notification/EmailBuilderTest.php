@@ -21,10 +21,8 @@ use CDash\Messaging\Subscription\Subscription;
 
 class EmailBuilderTest extends PHPUnit_Framework_TestCase
 {
-
     public function testSetBuildEmailCollection()
     {
-
     }
 
     public function testCreateNotification()
@@ -40,11 +38,9 @@ class EmailBuilderTest extends PHPUnit_Framework_TestCase
 
     public function test__construct()
     {
-
     }
 
     public function testGetNotifications()
     {
-
     }
 }

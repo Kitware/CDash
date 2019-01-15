@@ -29,7 +29,6 @@ use CDash\Model\ActionableTypes;
 use CDash\Model\BuildEmail;
 use Jenssegers\Blade\Blade;
 
-
 class EmailBuilder extends SubscriptionNotificationBuilder
 {
     /** @var string $templateDirectory */

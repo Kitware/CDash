@@ -108,7 +108,6 @@ class Mail extends Singleton
             if ($config->get('CDASH_TESTING_MODE')) {
                 $listener = new EmailSendListener($this);
                 $this->swift->registerPlugin($listener);
-
             }
         }
         return $this->swift;

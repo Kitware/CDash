@@ -20,7 +20,6 @@ use CDash\Test\CDashTestCase;
 
 class BuildEmailCollectionTest extends CDashTestCase
 {
-
     public function testAdd()
     {
         $user1_1 = new BuildEmail();

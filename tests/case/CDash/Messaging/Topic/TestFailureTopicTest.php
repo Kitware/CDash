@@ -172,7 +172,7 @@ class TestFailureTopicTest extends \CDash\Test\CDashTestCase
 
         $this->assertArrayHasKey('failed', $diff);
         $this->assertArrayHasKey('new', $diff['failed']);
-        $this->assertArrayHasKey('fixed' , $diff['failed']);
+        $this->assertArrayHasKey('fixed', $diff['failed']);
 
         $this->assertArrayHasKey('notrun', $diff);
         $this->assertArrayHasKey('new', $diff['notrun']);

@@ -175,7 +175,7 @@ class MultipleSubprojectsEmailTest extends \CDash\Test\CDashUseCaseTestCase
             ->createTestFailed('experimentalFail5', ['MyExperimentalFeature'])
             ->createTestPassed('production', ['MyProductionCode']);
 
-            $subscribers = [
+        $subscribers = [
                 [
                     'simpletest@localhost',
                     BitmaskNotificationPreferences::EMAIL_TEST |
@@ -204,12 +204,12 @@ class MultipleSubprojectsEmailTest extends \CDash\Test\CDashUseCaseTestCase
                 ],
             ];
 
-            $notifications = $this->getNotifications($subscribers);
-            $this->assertCount(3, $notifications);
+        $notifications = $this->getNotifications($subscribers);
+        $this->assertCount(3, $notifications);
 
-            $this->assertTrue($notifications->has('simpletest@localhost'));
-            $this->assertTrue($notifications->has('nox-noemail@noemail'));
-            $this->assertTrue($notifications->has('optika-noemail@noemail'));
+        $this->assertTrue($notifications->has('simpletest@localhost'));
+        $this->assertTrue($notifications->has('nox-noemail@noemail'));
+        $this->assertTrue($notifications->has('optika-noemail@noemail'));
     }
 
     public function testMultipleSubprojectsConfigureSubmission()

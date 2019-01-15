@@ -193,7 +193,7 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
             // No need to bother with passed tests
             if ($this->itemHasTopicSubject($build, $test)) {
                 /** @var Label $label */
-                foreach($test->GetLabelCollection() as $label) {
+                foreach ($test->GetLabelCollection() as $label) {
                     $collection->add($label);
                 }
             }

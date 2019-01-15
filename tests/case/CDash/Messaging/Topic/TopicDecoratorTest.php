@@ -29,9 +29,15 @@ use CDash\Messaging\Topic\TopicCollection;
 use CDash\Messaging\Topic\TopicDecorator;
 use CDash\Messaging\Topic\TopicInterface;
 
-abstract class MockTopic extends Topic implements Decoratable {};
-abstract class MockTopicFixable extends MockTopic implements Fixable {};
-abstract class MockTopicLabelable extends MockTopic implements Labelable {};
+abstract class MockTopic extends Topic implements Decoratable
+{
+};
+abstract class MockTopicFixable extends MockTopic implements Fixable
+{
+};
+abstract class MockTopicLabelable extends MockTopic implements Labelable
+{
+};
 
 class TopicDecoratorTest extends PHPUnit_Framework_TestCase
 {
@@ -205,5 +211,4 @@ class TopicDecoratorTest extends PHPUnit_Framework_TestCase
 
         return $mock_topic;
     }
-
 }

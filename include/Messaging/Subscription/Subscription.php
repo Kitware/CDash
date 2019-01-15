@@ -182,7 +182,7 @@ class Subscription implements SubscriptionInterface
     public function getTopicDescriptions($case = null)
     {
         $descriptions = [];
-        foreach($this->subscriber->getTopics() as $topic) {
+        foreach ($this->subscriber->getTopics() as $topic) {
             $description = $topic->getTopicDescription();
             if (!is_null($case)) {
                 $description = $case === CASE_UPPER ? strtoupper($description) : strtolower($description);
