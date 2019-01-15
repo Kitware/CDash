@@ -1746,7 +1746,7 @@ class Project
             $preferences->set(NotifyOn::FIXED, $row->emailsuccess);
             $preferences->set(NotifyOn::SITE_MISSING, $row->emailmissingsites);
             $preferences->set(NotifyOn::REDUNDANT, $this->EmailRedundantFailures);
-            $preferences->set(NotifyOn::LABELED, (bool)$row->hasLabels);
+            $preferences->set(NotifyOn::LABELED, (bool)$row->haslabels);
 
             /** @var Subscriber $subscriber */
             $subscriber = $service->make(Subscriber::class, ['preferences' => $preferences]);
