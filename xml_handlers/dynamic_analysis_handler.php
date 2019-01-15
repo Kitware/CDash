@@ -372,7 +372,12 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
         $factory = $this->getModelFactory();
         $buildGroup = $factory->create(BuildGroup::class);
         foreach ($this->Builds as $build) {
-            $buildGroup->SetId($build->GroupId);
+            if ($build->GroupId) {
+                $buildGroup->SetId($build->GroupId);
+            } elseif ($build->Type) {
+                $buildGroup->SetProjectId($this->projectid);
+                $buildGroup->SetName($build->Type);
+            }
             break;
         }
         return $buildGroup;

@@ -1426,17 +1426,9 @@ function sendemail(ActionableBuildInterface $handler, $projectid)
         return;
     }
 
-    // TODO: refactor this logic into ActionableBuildInterface (e.g. $handler->GetBuildGroup())
-    // also check the group for delivery preference
-    $builds = $handler->getActionableBuilds();
-    // since there can only be one group type per submission
-    $build = array_pop($builds);
-    if ($build) {
-        $buildGroup = new BuildGroup();
-        $buildGroup->SetId($build->GetGroup());
-        if ($buildGroup->GetSummaryEmail() == 2) {
-            return;
-        }
+    $buildGroup = $handler->GetBuildGroup();
+    if ($buildGroup->GetSummaryEmail() == 2) {
+        return;
     }
 
     $subscriptions = new SubscriptionCollection();
