@@ -1724,7 +1724,7 @@ class Project
             SELECT
                u2p.*,
                u.email email,
-               labelid hasLabels
+               labelid haslabels
             FROM user2project u2p
               JOIN $userTable u ON u.id = u2p.userid
               LEFT JOIN labelemail ON labelemail.userid = u2p.userid
