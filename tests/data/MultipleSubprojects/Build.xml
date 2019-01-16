@@ -28,11 +28,9 @@
         </Subproject>
         <Subproject name="MyProductionCode">
                 <Label>MyProductionCode</Label>
-                <Label>AnotherLabel</Label>
         </Subproject>
         <Subproject name="MyThirdPartyDependency">
-                <Label>MyThirdPartyDependency1</Label>
-                <Label>MyThirdPartyDependency2</Label>
+                <Label>MyThirdPartyDependency</Label>
         </Subproject>
         <Subproject name="EmptySubproject">
                 <Label>EmptySubproject</Label>
@@ -83,7 +81,7 @@
                                 <ExitCondition>1</ExitCondition>
                         </Result>
                         <Labels>
-                                <Label>MyThirdPartyDependency1</Label>
+                                <Label>MyThirdPartyDependency</Label>
                         </Labels>
                 </Failure>
                 <Failure type="Error">
@@ -121,7 +119,7 @@ compilation terminated.</StdErr>
                                 <ExitCondition>4</ExitCondition>
                         </Result>
                         <Labels>
-                                <Label>MyThirdPartyDependency2</Label>
+                                <Label>MyThirdPartyDependency</Label>
                         </Labels>
                 </Failure>
                 <Failure type="Warning">
