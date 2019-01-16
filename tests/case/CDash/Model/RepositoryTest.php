@@ -35,7 +35,7 @@ class RepositoryTest extends PHPUnit_Framework_TestCase
         $this->project->CvsUrl = 'https://github.com/foo/bar';
         $this->project->expects($this->once())
             ->method('GetRepositories')
-            ->willReturnCallback(function ()  {
+            ->willReturnCallback(function () {
                 return $this->repo;
             });
     }
