@@ -16,7 +16,6 @@
 
 namespace CDash\Lib\Repository;
 
-use CDash\Model\Build;
 use GuzzleHttp\ClientInterface;
 
 /**

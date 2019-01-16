@@ -14,9 +14,7 @@
 
 namespace CDash\Model;
 
-use CDash\Config;
 use CDash\Lib\Repository\GitHub;
-use CDash\Log;
 use Exception;
 
 class Repository
@@ -44,6 +42,10 @@ class Repository
     const VIEWER_VIEWVC_1_1 = 'ViewVC1.1';
     const VIEWER_WEBSVN = 'WebSVN';
 
+    /**
+     * @return array
+     * @throws \ReflectionException
+     */
     public static function getViewers()
     {
         $self = new \ReflectionClass(__CLASS__);
@@ -57,6 +59,11 @@ class Repository
         return $viewers;
     }
 
+    /**
+     * @param Project $project
+     * @return GitHub|null
+     * @throws Exception
+     */
     public static function factory(Project $project)
     {
         $service = null;
@@ -86,6 +93,10 @@ class Repository
         return $service;
     }
 
+    /**
+     * @param string $url
+     * @return array
+     */
     protected static function getGitHubRepoInformationFromUrl($url)
     {
         $url = str_replace('//', '', $url);
