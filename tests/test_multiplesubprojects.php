@@ -572,8 +572,6 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
                 if ($found !== false && $found != 4) {
                     throw new Exception("Expected 4 but found $found for {$build['id']}'s test duration");
                 }
-
-
             }
 
             // Verify that 'Back' links to the parent build.
