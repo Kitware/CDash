@@ -17,6 +17,7 @@ namespace CDash\Model;
 use CDash\Config;
 use CDash\Lib\Repository\GitHub;
 use CDash\Log;
+use Exception;
 
 class Repository
 {
@@ -59,17 +60,27 @@ class Repository
     public static function factory(Project $project)
     {
         $service = null;
+
         switch ($project->CvsViewerType) {
             case self::VIEWER_GITHUB:
-                $token = Config::getInstance()->get('CDASH_GITHUB_API_TOKEN');
-                if (!$token) {
-                    break;
-                }
-                list($owner, $repo) = array_values(
+                list($owner, $repository) = array_values(
                     Repository::getGitHubRepoInformationFromUrl($project->CvsUrl)
                 );
 
-                $service = new GitHub($token, $owner, $repo);
+                $password = '';
+                $repositories = $project->GetRepositories();
+                foreach ($repositories as $repo) {
+                    if (strpos($repo['url'], 'github.com') !== false) {
+                        $password = $repo['password'];
+                        break;
+                    }
+                }
+
+                if (empty($password)) {
+                    throw new Exception("Unable to find credentials for repository");
+                }
+
+                $service = new GitHub($repo['password'], $owner, $repository);
                 break;
         }
         return $service;

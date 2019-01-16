@@ -88,4 +88,28 @@ class GitHub implements RepositoryInterface
 
         return $client->requestAsync('POST', $uri, $options);
     }
+
+    /**
+     * @return string
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOwner()
+    {
+        return $this->owner;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRepository()
+    {
+        return $this->repo;
+    }
 }

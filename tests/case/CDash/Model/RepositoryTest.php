@@ -14,7 +14,6 @@
  * =========================================================================
  */
 
-use CDash\Config;
 use CDash\Lib\Repository\GitHub;
 use CDash\Model\Project;
 use CDash\Model\Repository;
@@ -22,29 +21,53 @@ use Ramsey\Uuid\Uuid;
 
 class RepositoryTest extends PHPUnit_Framework_TestCase
 {
+    private $project;
+    private $repo = [];
+
+    public function setUp()
+    {
+        $this->project = $this->getMockBuilder(Project::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['GetRepositories'])
+            ->getMock();
+
+        $this->project->CvsViewerType = Repository::VIEWER_GITHUB;
+        $this->project->CvsUrl = 'https://github.com/foo/bar';
+        $this->project->expects($this->once())
+            ->method('GetRepositories')
+            ->willReturnCallback(function ()  {
+                return $this->repo;
+            });
+    }
+
     public function testFactoryReturnsGitHubService()
     {
         $apiToken = str_replace('-', '', Uuid::uuid4()->toString());
-        $config = Config::getInstance();
-        $config->set('CDASH_GITHUB_API_TOKEN', $apiToken);
+        $this->repo[] = [
+            'url' => 'http://github.com/foo/bar',
+            'password' => $apiToken,
+        ];
 
-        $project = new Project();
-        $project->CvsViewerType = Repository::VIEWER_GITHUB;
-        $project->CvsUrl = 'https://github.com/foo/bar';
-
-        $service = Repository::factory($project);
+        $service = Repository::factory($this->project);
         $this->assertInstanceOf(GitHub::class, $service);
 
-        $token = new ReflectionProperty(GitHub::class, 'token');
-        $token->setAccessible(true);
-        $this->assertEquals($apiToken, $token->getValue($service));
+        $this->assertEquals('foo', $service->getOwner());
+        $this->assertEquals('bar', $service->getRepository());
+        $this->assertEquals($apiToken, $service->getToken());
+    }
 
-        $owner = new ReflectionProperty(GitHub::class, 'owner');
-        $owner->setAccessible(true);
-        $this->assertEquals('foo', $owner->getValue($service));
+    /**
+     * @expectedException Exception
+     * @expectedExceptionMessage Unable to find credentials for repository
+     */
+    public function testFactoryReturnsGitHubServiceThrowsExceptionGivenNoGitHubRepository()
+    {
+        $apiToken = str_replace('-', '', Uuid::uuid4()->toString());
+        $this->repo[] = [
+            'url' => 'https://gitlab.com/foo/baz',
+            'password' => $apiToken,
+        ];
 
-        $repo = new ReflectionProperty(GitHub::class, 'repo');
-        $repo->setAccessible(true);
-        $this->assertEquals('bar', $repo->getValue($service));
+        Repository::factory($this->project);
     }
 }
