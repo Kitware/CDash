@@ -122,10 +122,7 @@ function rest_delete($pdo)
         // Delete a wildcard build group rule.
         $wildcard = json_decode($_GET['wildcard'], true);
         $buildgroupid = $wildcard['buildgroupid'];
-        $match = $wildcard['match'];
-        if (!empty($match)) {
-            $match = "%$match%";
-        }
+        $match = isset($wildcard['match']) ? convert_wildcards($wildcard['match']) : '';
         $buildtype = $wildcard['buildtype'];
 
         $stmt = $pdo->prepare(
@@ -142,10 +139,7 @@ function rest_delete($pdo)
         $buildgroupid = $dynamic['id'];
 
         $rule = json_decode($_GET['rule'], true);
-        $match = $rule['match'];
-        if (!empty($match)) {
-            $match = "%$match%";
-        }
+        $match = isset($rule['match']) ? convert_wildcards($rule['match']) : '';
         $parentgroupid = $rule['parentgroupid'];
         $siteid = $rule['siteid'];
 
@@ -299,7 +293,7 @@ function rest_post($pdo, $projectid)
             json_error_response(['error' => $error_msg], 400);
         }
 
-        $nameMatch = '%' . $_POST['nameMatch'] . '%';
+        $nameMatch = convert_wildcards($_POST['nameMatch']);
         $type = $_POST['type'];
         $stmt = $pdo->prepare(
             'INSERT INTO build2grouprule (groupid, buildtype, buildname, siteid)
@@ -325,23 +319,22 @@ function rest_post($pdo, $projectid)
             $siteid = $_POST['site']['id'];
         }
 
-        if (empty($_POST['match'])) {
-            $match = '';
-        } else {
-            $match = '%' . $_POST['match'] . '%';
+        $sql_match = $match = isset($_POST['match']) ? $_POST['match'] : '';
+        if (!empty($match)) {
+            $sql_match = convert_wildcards($_POST['match']);
         }
 
         $stmt = $pdo->prepare(
             'INSERT INTO build2grouprule
             (groupid, buildname, siteid, parentgroupid)
             VALUES (?, ?, ?, ?)');
-        if (!pdo_execute($stmt, [$groupid, $match, $siteid, $parentgroupid])) {
+        if (!pdo_execute($stmt, [$groupid, $sql_match, $siteid, $parentgroupid])) {
             json_error_response(['error' => pdo_error()], 500);
         }
 
         // Respond with a JSON representation of this new rule.
         $response = [];
-        $response['match'] = $_POST['match'];
+        $response['match'] = $match;
         $response['siteid'] = $siteid;
         if ($siteid > 0) {
             $response['sitename'] = $_POST['site']['name'];
@@ -393,4 +386,16 @@ function rest_put($projectid)
             json_error_response(['error' => 'Failed to save BuildGroup'], 500);
         }
     }
+}
+
+/* Convert wildcard characters to SQL format */
+function convert_wildcards($match)
+{
+    if (empty($match)) {
+        return $match;
+    }
+    if (strpos($match, '*') !== false) {
+        $match = str_replace('*', '%', $match);
+    }
+    return '%' . trim($match, '%') . '%';
 }
