@@ -1294,7 +1294,7 @@ class Build
                     $duplicate_sql");
         }
 
-        $stmt->bindValue(':buildid', $previousbuildid);
+        $stmt->bindValue(':buildid', $this->Id);
         $stmt->bindValue(':difference', $warningdiff);
         if (!pdo_execute($stmt)) {
             $this->PDO->rollBack();

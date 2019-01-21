@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="test_configure_diffs"
+	BuildStamp="20190117-1834-Experimental"
+	Name="elysium"
+	>
+	<Configure>
+		<StartDateTime>Jan 17 11:34 MST</StartDateTime>
+		<StartConfigureTime>1547750075</StartConfigureTime>
+		<ConfigureCommand>"/usr/bin/cmake"</ConfigureCommand>
+		<Log>-- WARNING: here
+-- Configuring done
+-- Generating done
+</Log>
+		<ConfigureStatus>0</ConfigureStatus>
+		<EndDateTime>Jan 17 11:34 MST</EndDateTime>
+		<EndConfigureTime>1547750076</EndConfigureTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Configure>
+</Site>
