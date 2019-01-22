@@ -21,6 +21,7 @@ class CompressedTestCase extends KWWebTestCase
                 'Name' => 'TestCompressionExample',
                 'Description' => 'Project compression example',
                 'CvsUrl' => 'public.kitware.com/cgi-bin/viewcvs.cgi/?cvsroot=TestCompressionExample',
+                'CvsViewerType' => 'github',
                 'BugTrackerFileUrl' =>  'http://public.kitware.com/Bug/view.php?id=',
                 'RobotName' => 'itkrobot',
                 'RobotRegex' => '^(?:(?:\w|\.)+)\s+((?:\w|\.|\@)+)^');
@@ -66,14 +67,14 @@ class CompressedTestCase extends KWWebTestCase
         $this->get($this->url . "/api/v1/viewUpdate.php?buildid=$buildid");
         $response = json_decode($this->getBrowser()->getContentAsText(), true);
 
-        $expected = 'http://public.kitware.com/cgi-bin/viewcvs.cgi/?cvsroot=TestCompressionExample&rev=23a41258921e1cba8581ee2fa5add00f817f39fe';
+        $expected = 'http://public.kitware.com/cgi-bin/viewcvs.cgi/?cvsroot=TestCompressionExample/compare/0758f1dbf75d1f0a1759b5f2d0aa00b3aba0d8c4...23a41258921e1cba8581ee2fa5add00f817f39fe';
         $found = $response['update']['revisionurl'];
         if (strpos($found, $expected) === false) {
             $this->fail("expected $expected but found $found for revisionurl");
             return;
         }
 
-        $expected = 'http://public.kitware.com/cgi-bin/viewcvs.cgi/?cvsroot=TestCompressionExample&rev=0758f1dbf75d1f0a1759b5f2d0aa00b3aba0d8c4';
+        $expected = 'http://public.kitware.com/cgi-bin/viewcvs.cgi/?cvsroot=TestCompressionExample/commit/0758f1dbf75d1f0a1759b5f2d0aa00b3aba0d8c4';
         $found = $response['update']['revisiondiff'];
         if (strpos($found, $expected) === false) {
             $this->fail("expected $expected but found $found for revisiondiff");
