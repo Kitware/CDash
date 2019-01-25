@@ -612,7 +612,10 @@ CREATE TABLE `user` (
   `lastname` varchar(40) NOT NULL default '',
   `institution` varchar(255) NOT NULL default '',
   `admin` tinyint(4) NOT NULL default '0',
-  `cookiekey` varchar(40) NOT NULL default '',
+  `email_verified_at` timestamp NULL,
+  `remember_token` varchar(100) NULL,
+  `created_at` timestamp NULL,
+  `updated_at` timestamp NULL,
   PRIMARY KEY  (`id`),
   KEY `email` (`email`)
 );
@@ -1515,6 +1518,19 @@ CREATE TABLE IF NOT EXISTS `build_filters` (
   `errors` text,
   PRIMARY KEY (`projectid`)
 );
+
+--
+-- Table structure for table `migrations`
+--
+create table if not exists migrations
+(
+	id int unsigned auto_increment
+		primary key,
+	migration varchar(255) not null,
+	batch int not null
+)
+collate=utf8mb4_unicode_ci;
+
 
 --
 -- Change the table maximum size to be more than 4GB
