@@ -65,7 +65,7 @@
           <xsl:attribute name="src">displayImage.php?imgid=<xsl:value-of select="cdash/dashboard/logoid"/></xsl:attribute>
          </xsl:when>
         <xsl:otherwise>
-         <xsl:attribute name="src">img/cdash.png?rev=2019-05-08</xsl:attribute>
+         <xsl:attribute name="src">img/cdash.png</xsl:attribute>
         </xsl:otherwise>
         </xsl:choose>
         </img>
@@ -88,9 +88,61 @@
     upgrade your database structure in the <a href="upgrade.php">Administration/CDash maintenance panel of CDash</a></b></p>
 </xsl:if>
 
-<xsl:value-of select="cdash/error"/><br/>
-<a href="index.php">Go to the list of dashboards</a>
-<br/>
+<table border="0" cellpadding="4" cellspacing="0" width="100%" id="indexTable" class="tabb">
+<thead>
+<tr class="table-heading1">
+  <td colspan="6" align="left" class="nob"><h3>Dashboards</h3></td>
+</tr>
+
+  <tr class="table-heading">
+     <th align="center" id="sort_0" width="10%"><b>Project</b></th>
+     <td align="center" width="65%"><b>Description</b></td>
+     <th align="center" class="nob"  id="sort_2" width="13%"><b>Last activity</b></th>
+  </tr>
+ </thead>
+ <tbody>
+   <xsl:for-each select="cdash/project">
+   <tr>
+   <td align="center" >
+     <a>
+     <xsl:attribute name="href">index.php?project=<xsl:value-of select="name_encoded"/></xsl:attribute>
+     <xsl:value-of select="name"/>
+     </a></td>
+    <td align="left"><xsl:value-of select="description"/></td>
+    <td align="center" class="nob">
+    <span class="sorttime" style="display:none"><xsl:value-of select="lastbuilddatefull"/></span>
+    <a class="builddateelapsed">
+      <xsl:attribute name="alt"><xsl:value-of select="lastbuild"/> <!-- (<xsl:value-of select="uploadsize"/> GB) --></xsl:attribute>
+      <xsl:attribute name="href">index.php?project=<xsl:value-of select="name_encoded"/>&amp;date=<xsl:value-of select="lastbuilddate"/></xsl:attribute>
+      <xsl:value-of select="lastbuild_elapsed"/>
+    </a>
+
+    <img src="img/cleardot.gif">
+       <xsl:attribute name="class">activity-level-<xsl:value-of select="activity"/></xsl:attribute>
+    </img>
+    </td>
+    </tr>
+   </xsl:for-each>
+</tbody>
+</table>
+
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr>
+<td height="1" colspan="14" align="left" bgcolor="#888888"></td>
+</tr>
+<tr>
+<td height="1" colspan="14" align="right">
+<div id="showold">
+<xsl:if test="cdash/allprojects=0">
+<a href="index.php?allprojects=1">Show all <xsl:value-of select="cdash/nprojects"/> projects</a>
+ </xsl:if>
+ <xsl:if test="cdash/allprojects=1">
+    <a href="index.php">Hide old projects</a>
+ </xsl:if>
+</div>
+</td>
+</tr>
+</table>
 
 <!-- FOOTER -->
 <xsl:choose>
