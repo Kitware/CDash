@@ -26,3 +26,4 @@ local/
 ansible/roles/*
 ansible/site.retry
 .DS_Store
+.htaccess
