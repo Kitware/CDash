@@ -23,6 +23,7 @@ use CDash\Model\Project;
 use CDash\ServiceContainer;
 
 require_once 'include/api_common.php';
+require_once 'include/filterdataFunctions.php';
 
 class Timeline extends Index
 {
@@ -47,13 +48,16 @@ class Timeline extends Index
 
     public function getResponse()
     {
-        $page = get_param('page');
+        $this->filterdata = json_decode($_REQUEST['filterdata'], true);
+        $page = $this->filterdata['pageId'];
+        $this->filterSQL = generate_filterdata_sql($this->filterdata);
+
         $this->project->Fill();
         $response = [];
         $this->determineDateRange($response);
 
         // Generate data based on the page that's requesting this chart.
-        switch ($_GET['page']) {
+        switch ($page) {
             case 'buildProperties.php':
                 return $this->chartForBuildProperties();
                 break;
@@ -67,7 +71,7 @@ class Timeline extends Index
                 return $this->chartForBuildGroup();
                 break;
             default:
-                json_error_response('Unexpected value for page');
+                json_error_response("Unexpected value for page: $page");
                 break;
         }
     }
@@ -115,7 +119,7 @@ class Timeline extends Index
         ];
 
         // Query for defects on expected builds only.
-        $stmt = $this->db->prepare('
+        $stmt = $this->db->prepare("
                 SELECT b.id, b.starttime, b.builderrors, b.buildwarnings, b.testfailed
                 FROM build b
                 JOIN build2group b2g ON b2g.buildid = b.id
@@ -124,7 +128,8 @@ class Timeline extends Index
                 b2gr.buildname = b.name AND b2gr.siteid = b.siteid
                 WHERE b.projectid = :projectid AND b.parentid IN (0, -1)
                 AND b2gr.expected = 1
-                ORDER BY starttime');
+                $this->filterSQL
+                ORDER BY starttime");
         if (!pdo_execute($stmt, [':projectid' => $this->project->Id])) {
             json_error_response('Failed to load results');
             return [];
@@ -149,11 +154,12 @@ class Timeline extends Index
             ]
         ];
 
-        $stmt = $this->db->prepare('
+        $stmt = $this->db->prepare("
                 SELECT b.id, b.starttime, b.testfailed, b.testnotrun, b.testpassed
                 FROM build b
                 WHERE b.projectid = :projectid AND b.parentid IN (0, -1)
-                ORDER BY starttime');
+                $this->filterSQL
+                ORDER BY starttime");
         if (!pdo_execute($stmt, [':projectid' => $this->project->Id])) {
             json_error_response('Failed to load results');
             return [];

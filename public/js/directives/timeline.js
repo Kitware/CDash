@@ -4,7 +4,7 @@ var timelineController =
 
     query_parameters = {
       project: $scope.$parent.cdash.projectname,
-      page: $scope.$parent.cdash.filterdata.pageId
+      filterdata: $scope.$parent.cdash.filterdata
     };
     if ($scope.$parent.cdash.hasOwnProperty('begin') &&
         $scope.$parent.cdash.hasOwnProperty('end')) {

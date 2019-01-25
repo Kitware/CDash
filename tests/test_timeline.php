@@ -93,7 +93,8 @@ class TimelineTestCase extends KWWebTestCase
             ]
         ];
         foreach ($pages_to_check as $page) {
-            $this->get($this->url . "/api/v1/timeline.php?date=2009-02-23&page=$page&project=InsightExample");
+            $filterdata = json_encode(['pageId' => $page]);
+            $this->get($this->url . "/api/v1/timeline.php?date=2009-02-23&filterdata=$filterdata&project=InsightExample");
             $content = $this->getBrowser()->getContent();
             $jsonobj = json_decode($content, true);
 
