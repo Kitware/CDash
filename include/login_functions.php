@@ -295,84 +295,9 @@ function authenticate($email, $password, $SessionCachePolicy, $rememberme)
  * This is called on every page load where common.php is selected, as well as when
  * submitting the login form.
  **/
-function cdash_auth($SessionCachePolicy = 'private_no_expire')
+function cdash_auth()
 {
-    /** @var Config $config */
-    $config = Config::getInstance();
-
-    if ($config->get('CDASH_EXTERNAL_AUTH') && isset($_SERVER['REMOTE_USER'])
-    ) {
-        $login = $_SERVER['REMOTE_USER'];
-        return authenticate($login, null, $SessionCachePolicy, 0); // we don't remember
-    }
-
-    if (@$_GET['logout']) {                             // user requested logout
-        logout();
-        return 0;
-    }
-
-    if (isset($_POST['sent'])) {
-        // arrive from login form
-        @$login = $_POST['login'];
-        @$passwd = $_POST['passwd'];
-        return authenticate($login, $passwd, $SessionCachePolicy, isset($_POST['rememberme']));
-    } else { // arrive from session var
-        $server = $config->getServer();
-        $cookiename = str_replace('.', '_', "CDash-{$server}"); // php doesn't like dot in cookie names
-        $service = ServiceContainer::getInstance();
-        /** @var Session $session */
-        $session = $service->get(Session::class);
-
-        if (isset($_COOKIE[$cookiename])) {
-            $cookievalue = $_COOKIE[$cookiename];
-            $cookiekey = substr($cookievalue, strlen($cookievalue) - 32);
-            if (strlen($cookiekey) < 1) {
-                return false;
-            }
-            $cookieuseridkey = substr($cookievalue, 0, strlen($cookievalue) - 32);
-            // $user = new User();
-            /** @var User $userid */
-            $user = $service->create(User::class);
-            if ($user->FillFromCookie($cookiekey, $cookieuseridkey)) {
-                $session->start($SessionCachePolicy);
-                $session->setSessionVar('cdash', [
-                    'login' => $user->Email,
-                    'passwd' => $user->Password,
-                    'ID' => $session->getSessionId(),
-                    'valid' => 1,
-                    'loginid' => $user->Id
-                ]);
-                return true;
-            }
-        }
-
-        // Return early if a session has already been started.
-        if (session_status() != PHP_SESSION_NONE) {
-            return;
-        }
-
-        $session->start($SessionCachePolicy);
-        $email = $session->getSessionVar('cdash.login');
-
-        if (!empty($email)) {
-            /** @var User $userid */
-            $user = $service->create(User::class);
-            $userid = $user->GetIdFromEmail($email);
-            if (!$userid) {
-                $loginerror = 'Wrong email or password.';
-                return false;
-            }
-
-            $user->Id = $userid;
-            $user->Fill();
-
-            if ($user->Password == $session->getSessionVar('cdash.passwd')) {
-                return true;
-            }
-            $loginerror = 'Wrong email or password.';
-            return false;
-        }
-    }
+    return Auth::check();
 }
 
 /** Log out the current user. */

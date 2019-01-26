@@ -3,6 +3,7 @@
 
     <xsl:output method="xml" doctype-public="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" encoding="UTF-8"/>
     <xsl:include href="headscripts.xsl"/>
+    <xsl:include href="logout.xsl"/>
     <xsl:include href="local/headscripts.xsl"/>
 
     <xsl:template name="headerback">
@@ -12,7 +13,7 @@
   <div id="topmenu">
       <a href="viewProjects.php">All Dashboards</a>
      <xsl:if test="cdash/user/id>0">
-       <a href="user.php?logout=1">Log Out</a>
+       <xsl:call-template name="logout"/>
      </xsl:if>
     <a><xsl:attribute name="href">user.php</xsl:attribute>
         <xsl:choose>
