@@ -2,7 +2,7 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
-    <xsl:include href="headscripts.xsl"/>
+    <xsl:include href="logout.xsl"/>
 <!-- Group footer -->
 <xsl:template name="groupfooter">
 </xsl:template>
@@ -19,7 +19,7 @@
           <xsl:otherwise>Login</xsl:otherwise>
         </xsl:choose></a><a href="viewProjects.php">All Dashboards</a>
      <xsl:if test="cdash/user/id>0">
-       <a href="user.php?logout=1">Log Out</a>
+       <xsl:call-template name="logout" />
      </xsl:if>
   </div>
 

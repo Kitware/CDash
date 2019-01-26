@@ -3,6 +3,7 @@
 <html lang="en" ng-app="CDash">
   <head ng-controller="HeadController">
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <meta name="robots" content="noindex,nofollow" />
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="stylesheet" type="text/css" ng-href="build/css/{{cssfile}}_@@version.css" />
@@ -21,7 +22,7 @@
           <div id="topmenu">
             <a href="viewProjects.php">All Dashboards</a>
             <a href="editUser.php">My Profile</a>
-            <a href="user.php?logout=1">Log Out</a>
+            <ng-include src="'build/views/partials/logout_@@version.html'"></ng-include>
           </div>
         </div>
         <div id="headerbottom">

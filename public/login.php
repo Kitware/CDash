@@ -15,8 +15,6 @@
 =========================================================================*/
 
 use CDash\Config;
-use CDash\Controller\Auth\Session;
-use CDash\ServiceContainer;
 
 include dirname(__DIR__) . '/config/config.php';
 include_once 'include/common.php';
@@ -25,20 +23,17 @@ include_once 'include/version.php';
 include_once 'include/login_functions.php';
 
 $config = Config::getInstance();
-global $loginerror;
-$loginerror = '';
+
 
 // --------------------------------------------------------------------------------------
 // main
 // --------------------------------------------------------------------------------------
-$mysession = ['login' => false, 'passwd' => false, 'ID' => false, 'valid' => false, 'langage' => false];
-$uri = basename($_SERVER['PHP_SELF']);
-$session_OK = 0;
-$service = ServiceContainer::getInstance();
-/** @var Session $session */
-$session = $service->get(Session::class);
+// $mysession = ['login' => false, 'passwd' => false, 'ID' => false, 'valid' => false, 'langage' => false];
 
-if (!cdash_auth(@$SessionCachePolicy) && !@$noforcelogin) {
+$session_OK = (int)cdash_auth();
+
+/*
+if (!cdash_auth() && !@$noforcelogin) {
     // authentication failed
 
     $csrfToken = null;
@@ -110,15 +105,12 @@ if (!cdash_auth(@$SessionCachePolicy) && !@$noforcelogin) {
     }
 }
 
+
 if ($config->get('CDASH_USER_CREATE_PROJECTS') && isset($_SESSION['cdash'])) {
+    // TODO: Use Laravel to set this value
     $_SESSION['cdash']['user_can_create_project'] = 1;
 }
-
-// If we should use the local/prelogin.php
-if (file_exists('local/prelogin.php')) {
-    include 'local/prelogin.php';
-}
+*/
 
 // Abusing the Config singleton to get rid of globals.
-$config->set('loginerror', $loginerror);
 $config->set('session_OK', $session_OK);

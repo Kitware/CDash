@@ -2,6 +2,7 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
    <xsl:include href="footer.xsl"/>
+   <xsl:include href="logout.xsl"/>
    <!-- Include local common files -->
    <xsl:include href="local/header.xsl"/>
    <xsl:include href="local/footer.xsl"/>
@@ -48,7 +49,7 @@
         <xsl:otherwise><a href="login">Login</a> <a href="register">Register</a></xsl:otherwise>
      </xsl:choose>
      <xsl:if test="cdash/user/id>0">
-       <a href="user.php?logout=1">Log Out</a>
+       <xsl:call-template name="logout"/>
      </xsl:if>
   </div>
  </div>

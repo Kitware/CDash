@@ -1,5 +1,6 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
 
+  <xsl:include href="logout.xsl"/>
   <xsl:include href="footer.xsl"/>
   <xsl:include href="local/footer.xsl"/>
   <xsl:include href="headscripts.xsl"/>
@@ -38,7 +39,7 @@
           <xsl:otherwise>Login</xsl:otherwise>
         </xsl:choose></a><a href="viewProjects.php">All Dashboards</a>
      <xsl:if test="cdash/user/id>0">
-       <a href="user.php?logout=1">Log Out</a>
+       <xsl:call-template name="logout"/>
      </xsl:if>
   </div>
  </div>

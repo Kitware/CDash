@@ -1491,10 +1491,9 @@ function get_cdash_dashboard_xml($projectname, $date)
     }
     $xml .= '</dashboard>';
 
-    $userid = 0;
-    if (isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid'])) {
+    $userid = Auth::id();
+    if ($userid) {
         $xml .= '<user>';
-        $userid = $_SESSION['cdash']['loginid'];
         $xml .= add_XML_value('id', $userid);
 
         // Is the user super administrator
@@ -1778,7 +1777,7 @@ function begin_JSON_response()
     $response['feed_enabled'] = $config->get('CDASH_ENABLE_FEED') === 1;
 
     $user_response = array();
-    $userid = $session->getSessionVar('cdash.loginid');
+    $userid = Auth::id();
     if ($userid) {
         $user = $service->create(User::class);
         $user->Id = $userid;

@@ -3,6 +3,7 @@
 <html lang="en" ng-app="CDash">
   <head ng-controller="HeadController">
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <meta name="robots" content="noindex,nofollow" />
     <link rel="shortcut icon" href="favicon.ico" />
     <link rel="stylesheet" type="text/css" ng-href="build/css/{{cssfile}}_@@version.css" />
@@ -16,11 +17,13 @@
   <body ng-controller="ViewProjectsController">
     <div id="header">
       <div id="headertop">
-        <div id="topmenu">
-          <a ng-show="cdash.user.id > 0" href="user.php">My CDash</a>
-          <a ng-show="cdash.user.id > 0" href="user.php?logout=1">Log Out</a>
-          <a ng-show="cdash.user.id < 1" href="user.php">Login</a>
-          <a ng-show="cdash.user.id < 1" href="register">Register</a>
+        <div ng-show="cdash.user.id > 0" id="topmenu">
+          <a href="user.php">My CDash</a>
+          <ng-include src="'build/views/partials/logout_@@version.html'"></ng-include>
+        </div>
+        <div ng-show="cdash.user.id < 1" id="topmenu">
+          <a href="login">Login</a>
+          <a href="register">Register</a>
         </div>
       </div>
       <div id="headerbottom">
