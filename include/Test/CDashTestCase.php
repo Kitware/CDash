@@ -25,7 +25,9 @@ use CDash\ServiceContainer;
 use DI\Container;
 use DI\ContainerBuilder;
 
-class CDashTestCase extends \PHPUnit_Framework_TestCase
+use Tests\TestCase;
+
+class CDashTestCase extends TestCase
 {
     protected $mockPDO;
     private $queries;
@@ -160,7 +162,7 @@ class CDashTestCase extends \PHPUnit_Framework_TestCase
         return md5($hash);
     }
 
-    protected function createMock($className)
+    protected function createMockFromBuilder($className)
     {
         return $this->getMockBuilder($className)
             ->disableOriginalConstructor()
@@ -172,37 +174,37 @@ class CDashTestCase extends \PHPUnit_Framework_TestCase
      */
     protected function getMockBuild()
     {
-        return $this->createMock(Build::class);
+        return $this->createMockFromBuilder(Build::class);
     }
 
     protected function getMockTest()
     {
-        return $this->createMock(Test::class);
+        return $this->createMockFromBuilder(Test::class);
     }
 
     protected function getMockProject()
     {
-        return $this->createMock(Project::class);
+        return $this->createMockFromBuilder(Project::class);
     }
 
     protected function getMockUser()
     {
-        return $this->createMock(User::class);
+        return $this->createMockFromBuilder(User::class);
     }
 
     protected function getMockUserProject()
     {
-        return $this->createMock(UserProject::class);
+        return $this->createMockFromBuilder(UserProject::class);
     }
 
     protected function getMockBuildGroup()
     {
-        return $this->createMock(BuildGroup::class);
+        return $this->createMockFromBuilder(BuildGroup::class);
     }
 
     protected function getMockSite()
     {
-        return $this->createMock(Site::class);
+        return $this->createMockFromBuilder(Site::class);
     }
 
     protected function getMockActionableBuild()

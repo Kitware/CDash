@@ -1,8 +1,9 @@
 <?php
 use CDash\Config;
 use CDash\Singleton;
+use CDash\Test\CDashTestCase;
 
-class ConfigTest extends PHPUnit_Framework_TestCase
+class ConfigTest extends CDashTestCase
 {
     public function testGetInstance()
     {

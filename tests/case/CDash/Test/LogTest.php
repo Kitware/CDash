@@ -1,7 +1,9 @@
 <?php
+
+use CDash\Test\CDashTestCase;
 use CDash\Test\Log;
 
-class LogTest extends PHPUnit_Framework_TestCase
+class LogTest extends CDashTestCase
 {
     public function testInstance()
     {

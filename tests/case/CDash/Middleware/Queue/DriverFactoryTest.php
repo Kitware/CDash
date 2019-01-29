@@ -21,8 +21,9 @@ use Bernard\Driver\PhpRedisDriver;
 use Bernard\Driver\PredisDriver;
 use Bernard\Driver\SqsDriver;
 use CDash\Middleware\Queue\DriverFactory;
+use CDash\Test\CDashTestCase;
 
-class DriverFactoryTest extends PHPUnit_Framework_TestCase
+class DriverFactoryTest extends CDashTestCase
 {
     public function testCreateAppEngineDriver()
     {

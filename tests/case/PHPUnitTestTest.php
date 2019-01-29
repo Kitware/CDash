@@ -1,8 +1,9 @@
 <?php
 
 use CDash\Model\Project;
+use CDash\Test\CDashTestCase;
 
-class PHPUnitTestTest extends PHPUnit_Framework_TestCase
+class PHPUnitTestTest extends CDashTestCase
 {
     public function testAutoloaderAutoloadsModel()
     {

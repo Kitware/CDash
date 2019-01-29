@@ -2,8 +2,9 @@
 
 use CDash\Config;
 use CDash\Log;
+use CDash\Test\CDashTestCase;
 
-class LogTest extends PHPUnit_Framework_TestCase
+class LogTest extends CDashTestCase
 {
     private static $log;
 
