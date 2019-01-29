@@ -174,6 +174,7 @@ foreach ($buildgroups as $buildgroup) {
             $match = $rule_array['buildname'];
             if (!empty($match)) {
                 $match = trim($match, '%');
+                $match = str_replace('%', '*', $match);
             }
             $rule['match'] = $match;
 
@@ -238,7 +239,8 @@ while ($wildcard_array = pdo_fetch_array($wildcards)) {
     $wildcard_response['buildtype'] = $wildcard_array['buildtype'];
 
     $match = $wildcard_array['buildname'];
-    $match = str_replace('%', '', $match);
+    $match = trim($match, '%');
+    $match = str_replace('%', '*', $match);
     $wildcard_response['match'] = $match;
 
     $wildcards_response[] = $wildcard_response;
