@@ -18,6 +18,7 @@ namespace CDash\Middleware\Queue;
 
 use Bernard\Message\PlainMessage;
 use CDash\Middleware\Queue;
+use CDash\Test\CDashTestCase;
 
 function do_submit($fh, $project_id, $buildid = null, $expected_md5 = '', $do_checksum = true, $submission_id = 0)
 {
@@ -47,7 +48,7 @@ function fopen($filename, $mode, $use_include_path = '', $context = '')
     return $filename;
 }
 
-class SubmissionServiceTest extends \PHPUnit_Framework_TestCase
+class SubmissionServiceTest extends CDashTestCase
 {
     private static $expected_arguments;
 
@@ -218,10 +219,26 @@ class SubmissionServiceTest extends \PHPUnit_Framework_TestCase
                 'context' => ''
             ],
         ];
+        $mock_client = $this->getMockBuilder(\GuzzleHttp\ClientInterface::class)
+            ->getMockForAbstractClass();
+
         $sut = new SubmissionService($queue_name);
+        $sut->setHttpClient($mock_client);
+
         $message = SubmissionService::createMessage($this->parameters);
 
+        $url = \CDash\Config::getInstance()->get('CDASH_BASE_URL') .
+            '/api/v1/deleteSubmissionFile.php';
+
+        $query_args = [
+            'filename' => basename($message->file),
+        ];
+
         $this->assertEquals($queue_name, $message->getName());
+        $mock_client->expects($this->once())
+            ->method('request')
+            ->with('DELETE', $url, ['query' => $query_args]);
+
         $sut->drakeCdash($message);
     }
 }
