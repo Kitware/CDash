@@ -4,8 +4,9 @@ namespace CDash\Controller\Auth;
 use CDash\Config;
 use CDash\System;
 use CDash\Model\User;
+use CDash\Test\CDashTestCase;
 
-class SessionTest extends \PHPUnit_Framework_TestCase
+class SessionTest extends CDashTestCase
 {
     /** @var System|\PHPUnit_Framework_MockObject_MockObject */
     private $system;

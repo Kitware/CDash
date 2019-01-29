@@ -15,8 +15,9 @@
 use CDash\Model\Build;
 use CDash\Model\PendingSubmissions;
 use CDash\ServiceContainer;
+use CDash\Test\CDashTestCase;
 
-class PendingSubmissionsModelTest extends PHPUnit_Framework_TestCase
+class PendingSubmissionsModelTest extends CDashTestCase
 {
     public function setUp()
     {

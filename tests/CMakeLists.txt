@@ -1,6 +1,6 @@
 set(testing_dir "${CDash_SOURCE_DIR}/tests")
 set(binary_testing_dir "${CDash_BINARY_DIR}/tests")
-set(PHPUNIT "${CDash_SOURCE_DIR}/vendor/bin/phpunit")
+set(PHPUNIT "${CDash_SOURCE_DIR}/../../vendor/bin/phpunit")
 
 # function to add a new PHP based coverage test to CDash
 #
@@ -27,7 +27,7 @@ endfunction(add_configured_php_test)
 function(add_unit_test TestName)
   add_test(
     NAME ${TestName}
-    COMMAND ${PHP_EXE} ${phpunit_extra_arg} ${PHPUNIT} -c ${testing_dir}/phpunit.xml ${testing_dir}/case/${TestName}Test.php
+    COMMAND ${PHP_EXE} ${phpunit_extra_arg} ${PHPUNIT} -c ${testing_dir}/phpunit.xml --bootstrap ${CDash_SOURCE_DIR}/tests/bootstrap.php ${testing_dir}/case/${TestName}Test.php
   )
 endfunction(add_unit_test TestName)
 

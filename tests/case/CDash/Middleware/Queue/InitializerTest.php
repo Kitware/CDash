@@ -17,8 +17,9 @@
 namespace CDash\Middleware\Queue;
 
 use CDash\Middleware\Queue\DriverFactory as Driver;
+use CDash\Test\CDashTestCase;
 
-class InitializerTest extends \PHPUnit_Framework_TestCase
+class InitializerTest extends CDashTestCase
 {
     public function setUp()
     {

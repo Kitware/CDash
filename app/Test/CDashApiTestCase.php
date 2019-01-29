@@ -72,6 +72,10 @@ class CDashApiTestCase extends CDashTestCase
             ->expects($this->any())
             ->method('GetIdFromEmail')
             ->willReturn($this->mock_session_user->Id);
+
+        \Auth::shouldReceive('check')->andReturn(true);
+        \Auth::shouldReceive('user')->andReturn($this->mock_session_user);
+        \Auth::shouldReceive('id')->andReturn($id);
     }
 
     protected function getSessionUser()

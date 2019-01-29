@@ -15,8 +15,9 @@
 use CDash\Model\BuildError;
 use CDash\Model\Project;
 use CDash\ServiceContainer;
+use CDash\Test\CDashTestCase;
 
-class BuildErrorModelTest extends PHPUnit_Framework_TestCase
+class BuildErrorModelTest extends CDashTestCase
 {
     public function setUp()
     {

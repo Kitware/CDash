@@ -21,9 +21,10 @@ use CDash\Middleware\OAuth2;
 use CDash\Middleware\OAuth2\Google;
 use CDash\Model\User;
 use CDash\System;
+use CDash\Test\CDashTestCase;
 use League\OAuth2\Client\Provider\GoogleUser;
 
-class GoogleTest extends \PHPUnit_Framework_TestCase
+class GoogleTest extends CDashTestCase
 {
     private $system;
     private $session;

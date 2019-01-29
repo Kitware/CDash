@@ -1,7 +1,8 @@
 <?php
 use CDash\ServiceContainer;
+use CDash\Test\CDashTestCase;
 
-class ServiceContainerTest extends PHPUnit_Framework_TestCase
+class ServiceContainerTest extends CDashTestCase
 {
     private static $di;
 

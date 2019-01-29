@@ -19,8 +19,9 @@ namespace CDash\Middleware\Queue;
 use Bernard\Driver;
 use Bernard\Message\PlainMessage;
 use CDash\Middleware\Queue;
+use CDash\Test\CDashTestCase;
 
-class QueueTest extends \PHPUnit_Framework_TestCase
+class QueueTest extends CDashTestCase
 {
     /**
      * TODO: FlatFileDriver poorly written, save yourself 5 sec every test run, use other driver

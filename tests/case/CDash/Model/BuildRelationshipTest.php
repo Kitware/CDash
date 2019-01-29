@@ -17,8 +17,9 @@ use CDash\Model\Build;
 use CDash\Model\BuildRelationship;
 use CDash\Model\Project;
 use CDash\ServiceContainer;
+use CDash\Test\CDashTestCase;
 
-class BuildRelationshipModelTest extends PHPUnit_Framework_TestCase
+class BuildRelationshipModelTest extends CDashTestCase
 {
     public function setUp()
     {

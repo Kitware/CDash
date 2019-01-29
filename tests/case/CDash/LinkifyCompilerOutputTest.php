@@ -1,8 +1,10 @@
 <?php
 
+use CDash\Test\CDashTestCase;
+
 require_once 'include/repository.php';
 
-class LogTest extends PHPUnit_Framework_TestCase
+class LogTest extends CDashTestCase
 {
     public function testLinkifyCompilerOutput()
     {

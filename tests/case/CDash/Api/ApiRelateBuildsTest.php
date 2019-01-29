@@ -48,17 +48,17 @@ class ApiAddBuildTest extends CDash\Test\CDashApiTestCase
         $this->mock_project->Public = 1;
         $container->set(Project::class, $this->mock_project);
 
-        $this->mock_build = $this->createMock(Build::class);
+        $this->mock_build = $this->createMockFromBuilder(Build::class);
         $this->mock_build->Name = 'MockBuild';
         $this->mock_build->Id = 1;
         $container->set(Build::class, $this->mock_build);
 
-        $this->another_mock_build = $this->createMock(Build::class);
+        $this->another_mock_build = $this->createMockFromBuilder(Build::class);
         $this->another_mock_build->Name = 'AnotherMockBuild';
         $this->another_mock_build->Id = 2;
         $container->set(Build::class, $this->another_mock_build);
 
-        $this->mock_relationship = $this->createMock(BuildRelationship::class);
+        $this->mock_relationship = $this->createMockFromBuilder(BuildRelationship::class);
         $container->set(BuildRelationship::class, $this->mock_relationship);
 
         $_SERVER['REQUEST_METHOD'] = 'POST';

@@ -20,9 +20,10 @@ use CDash\Controller\Auth\Session;
 use CDash\Middleware\OAuth2;
 use CDash\Model\User;
 use CDash\System;
+use CDash\Test\CDashTestCase;
 use League\OAuth2\Client\Provider\AbstractProvider;
 
-class OAuth2Test extends \PHPUnit_Framework_TestCase
+class OAuth2Test extends CDashTestCase
 {
     /** @var System|\PHPUnit_Framework_MockObject_MockObject $system */
     private $system;

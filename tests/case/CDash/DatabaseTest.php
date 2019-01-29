@@ -3,9 +3,10 @@
 use CDash\Database;
 use CDash\Config;
 use CDash\Log;
+use CDash\Test\CDashTestCase;
 use CDash\Test\Log as TestLog;
 
-class DatabaseTest extends PHPUnit_Framework_TestCase
+class DatabaseTest extends CDashTestCase
 {
     private static $_backup;
 
@@ -149,7 +150,8 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
     {
         $input_params = ['param1', 'param2'];
         /** @var PDOStatement|PHPUnit_Framework_MockObject_MockObject $stmt */
-        $stmt = $this->getMock('\PDOStatement');
+        $stmt = $this->getMockBuilder('\PDOStatement')
+            ->getMock();
         $stmt
             ->expects($this->once())
             ->method('execute')
@@ -164,7 +166,8 @@ class DatabaseTest extends PHPUnit_Framework_TestCase
         $input_params = ['param1', 'param2'];
 
         /** @var PDOStatement|PHPUnit_Framework_MockObject_MockObject $stmt */
-        $stmt = $this->getMock('\PDOStatement');
+        $stmt = $this->getMockBuilder('\PDOStatement')
+            ->getMock();
         $stmt
             ->expects($this->once())
             ->method('execute')
