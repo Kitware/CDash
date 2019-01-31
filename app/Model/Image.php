@@ -118,13 +118,12 @@ class Image
     /** Load the image from the database. */
     public function Load()
     {
-        if (!$this->Exists()) {
+        $stmt = $this->PDO->prepare('SELECT * FROM image WHERE id=?');
+        $this->PDO->execute($stmt, [$this->Id]);
+
+        if (!$row = $stmt->fetch()) {
             return false;
         }
-
-        $stmt = $this->PDO->prepare('SELECT * FROM image WHERE id=?');
-        pdo_execute($stmt, [$this->Id]);
-        $row = $stmt->fetch();
 
         $this->Extension = $row['extension'];
         $this->Checksum = $row['checksum'];
@@ -135,5 +134,6 @@ class Image
         } else {
             $this->Data = $row['img'];
         }
+        return true;
     }
 }
