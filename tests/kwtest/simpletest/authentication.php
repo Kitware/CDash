@@ -25,7 +25,7 @@ class SimpleRealm
      *                             is currently supported.
      * @param SimpleUrl $url Somewhere in realm.
      */
-    public function SimpleRealm($type, $url)
+    public function __construct($type, $url)
     {
         $this->type = $type;
         $this->root = $url->getBasePath();
@@ -130,7 +130,7 @@ class SimpleAuthenticator
     /**
      *    Clears the realms.
      */
-    public function SimpleAuthenticator()
+    public function __construct()
     {
         $this->restartSession();
     }
