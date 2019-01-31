@@ -17,13 +17,13 @@ class ImportTestCase extends KWWebTestCase
         //make sure we can't visit the import page while logged out
         $this->logout();
         $content = $this->get($this->url . '/import.php');
-        if (strpos($content, '<title>Login</title>') === false) {
-            $this->fail("'<title>Login</title>' not found when expected");
+        if (strpos($content, 'Login') === false) {
+            $this->fail("'Login' not found when expected");
             return 1;
         }
 
         //make sure we can visit the page while logged in
-        $this->login();
+        $this->login('simpletest@localhost', 'simpltest', true);
         $content = $this->get($this->url . '/import.php');
         if (strpos($content, 'dartboard') === false) {
             $this->fail("'dartboard' not found when expected");
@@ -67,15 +67,10 @@ class ImportTestCase extends KWWebTestCase
         $content = $this->clickSubmitByName('Submit');
 
         //check for expected output
-        if (strpos($content, '<status>OK</status>') === false) {
-            $this->fail("'<status>OK</status>' not found on import.php\n$content\n");
+        if (strpos($content, 'Done for the day 2005-07-19') === false) {
+            $this->fail("'Done for the day 2005-07-19' not found on import.php");
             return 1;
         }
-
-        echo "content:\n";
-        echo $content;
-        echo "\n";
-        echo "endcontent\n";
 
         $this->pass('Passed');
         return 0;
