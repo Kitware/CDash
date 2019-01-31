@@ -15,10 +15,7 @@ class ManageUsersTestCase extends KWWebTestCase
     public function testManageUsersTest()
     {
         //make sure we can't visit the manageUsers page while logged out
-        $this->logout();
-        $content = $this->get($this->url . '/manageUsers.php');
-        if (strpos($content, '<title>Login</title>') === false) {
-            $this->fail("'<title>Login</title>' not found when expected.");
+        if (!$this->expectsPageRequiresLogin('/manageUsers.php')) {
             return 1;
         }
 

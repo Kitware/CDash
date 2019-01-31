@@ -15,10 +15,7 @@ class ManageClientTestCase extends KWWebTestCase
     public function testManageClientTest()
     {
         //make sure we can't visit the manageClient page while logged out
-        $this->logout();
-        $content = $this->get($this->url . '/manageClient.php');
-        if (strpos($content, '<title>Login</title>') === false) {
-            $this->fail("'<title>Login</title>' not found when expected.");
+        if (!$this->expectsPageRequiresLogin('/manageClient.php')) {
             return 1;
         }
 
