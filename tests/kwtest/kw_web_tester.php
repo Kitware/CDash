@@ -338,8 +338,10 @@ class KWWebTestCase extends WebTestCase
 
     public function logout()
     {
-        $this->get($this->url);
-        return $this->clickLink('Log Out');
+        $user = new User();
+        \Auth::shouldReceive('check')->andReturn(false);
+        \Auth::shouldReceive('user')->andReturn($user);
+        \Auth::shouldReceive('id')->andReturn(null);
     }
 
     public function userExists($email)
@@ -633,6 +635,17 @@ class KWWebTestCase extends WebTestCase
             }
         }
         fclose($handle);
+    }
+
+    public function expectsPageRequiresLogin($page)
+    {
+        $this->logout();
+        $content = $this->get("{$this->url}{$page}");
+
+        if (strpos($content, '<form method="post" action="/login" name="loginform" id="loginform">') === false) {
+            $this->fail("Login not found when expected");
+            return false;
+        }
     }
 }
 

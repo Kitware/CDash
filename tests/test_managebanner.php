@@ -14,11 +14,7 @@ class ManageBannerTestCase extends KWWebTestCase
 
     public function testManageBannerTest()
     {
-        //make sure we can't visit the manageBanner page while logged out
-        $this->logout();
-        $content = $this->get($this->url . '/manageBanner.php');
-        if (strpos($content, '<title>Login</title>') === false) {
-            $this->fail("'<title>Login</title>' not found when expected");
+        if (!$this->expectsPageRequiresLogin('/manageBanner.php')) {
             return 1;
         }
 

@@ -15,10 +15,8 @@ class EditUserTestCase extends KWWebTestCase
     public function testEditUserTest()
     {
         //make sure we can't visit the editUser page while logged out
-        $this->logout();
-        $content = $this->get($this->url . '/editUser.php');
-        if (strpos($content, '<title>CDash - Login</title>') === false) {
-            $this->fail("'<title>CDash - Login</title>' not found when expected.");
+
+        if (!$this->expectsPageRequiresLogin('/editUser.php')) {
             return 1;
         }
 

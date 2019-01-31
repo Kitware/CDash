@@ -14,11 +14,7 @@ class ImportBackupTestCase extends KWWebTestCase
 
     public function testImportBackupTest()
     {
-        //make sure we can't visit the importBackup page while logged out
-        $this->logout();
-        $content = $this->get($this->url . '/importBackup.php');
-        if (strpos($content, '<title>Login</title>') === false) {
-            $this->fail("'<title>Login</title>' not found when expected");
+        if (!$this->expectsPageRequiresLogin('/importBackup.php')) {
             return 1;
         }
 
