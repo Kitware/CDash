@@ -46,7 +46,7 @@ if (!isset($build_array['projectid'])) {
 }
 $projectid = $build_array['projectid'];
 
-checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid);
+checkUserPolicy(Auth::id(), $projectid);
 
 @$date = $_GET['date'];
 if ($date != null) {

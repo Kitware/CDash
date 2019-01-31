@@ -23,12 +23,12 @@ use CDash\Config;
 
 $config = Config::getInstance();
 
-if (!$session_OK) {
+if (!Auth::check()) {
     echo 'Not a valid session';
     return;
 }
 
-$userid = $_SESSION['cdash']['loginid'];
+$userid = Auth::id();
 // Checks
 if (!isset($userid) || !is_numeric($userid)) {
     echo 'Not a valid user';

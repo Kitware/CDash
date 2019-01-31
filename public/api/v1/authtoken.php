@@ -24,10 +24,10 @@ use CDash\Model\AuthToken;
 use CDash\Model\User;
 
 // Make sure we have a valid login.
-if (!$session_OK) {
+if (!Auth::check()) {
     return;
 }
-$userid = $_SESSION['cdash']['loginid'];
+$userid = Auth::id();
 if (!isset($userid) || !is_numeric($userid)) {
     http_response_code(401);
     exit();

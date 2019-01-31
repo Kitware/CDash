@@ -181,5 +181,5 @@ if (!register($registration_error)) {
     // Re-display register form with error message.
     RegisterForm($registration_error);
 } else {
-    header('location: user.php?note=register');
+    return \redirect('user.php?note=register');
 }

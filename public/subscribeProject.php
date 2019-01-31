@@ -29,8 +29,9 @@ use CDash\Model\Label;
 use CDash\Model\LabelEmail;
 use CDash\Model\UserProject;
 
-if ($session_OK) {
-    $userid = $_SESSION['cdash']['loginid'];
+if (Auth::check()) {
+    $User = \Auth::user();
+    $userid = $User->Id;
 
     $xml = begin_XML_for_XSLT();
     $xml .= '<backurl>user.php</backurl>';
@@ -68,8 +69,6 @@ if ($session_OK) {
     $project_array = pdo_fetch_array($project);
 
     $Project = new Project;
-    $User = new User;
-    $User->Id = $userid;
     $Project->Id = $projectid;
     $role = $Project->GetUserRole($userid);
 
@@ -140,7 +139,7 @@ if ($session_OK) {
               (SELECT build.siteid FROM build,user2project as up WHERE
                up.projectid = build.projectid AND up.userid='$userid' AND up.role>0
                GROUP BY build.siteid)");
-        header('location: user.php?note=unsubscribedtoproject');
+        return redirect('user.php?note=unsubscribedtoproject');
     } elseif ($UpdateSubscription) {
         @$emailcategory_update = $_POST['emailcategory_update'];
         @$emailcategory_configure = $_POST['emailcategory_configure'];
@@ -184,7 +183,7 @@ if ($session_OK) {
             $LabelEmail->UpdateLabels(null);
         }
         // Redirect
-        header('location: user.php');
+        return \redirect('user.php');
     } elseif ($Subscribe) {
         @$emailcategory_update = $_POST['emailcategory_update'];
         @$emailcategory_configure = $_POST['emailcategory_configure'];
@@ -228,7 +227,8 @@ if ($session_OK) {
                 $UserProject->AddCredential($credential);
             }
         }
-        header('location: user.php?note=subscribedtoproject');
+        return \redirect('user.php?note=subscribedtoproject');
+
     }
 
     // XML

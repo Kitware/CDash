@@ -43,7 +43,7 @@ use CDash\Model\Job;
 
 $config = Config::getInstance();
 $response = [];
-if (!$session_OK || !isset($_SESSION['cdash']) || !isset($_SESSION['cdash']['loginid'])) {
+if (Auth::check()) {
     $response['requirelogin'] = 1;
     // Special handling for the fact that this is where new users are sent
     // when they first create their account.
@@ -60,11 +60,11 @@ if (!$session_OK || !isset($_SESSION['cdash']) || !isset($_SESSION['cdash']['log
 $script_start_time = microtime_float();
 $PDO = Database::getInstance()->getPdo();
 
-$userid = $_SESSION['cdash']['loginid'];
+$userid = Auth::id();
 $xml = begin_XML_for_XSLT();
 $xml .= add_XML_value('manageclient', $config->get('CDASH_MANAGE_CLIENTS'));
 
-$userid = $_SESSION['cdash']['loginid'];
+$userid = Auth::id();
 $response = begin_JSON_response();
 $response['manageclient'] = $config->get('CDASH_MANAGE_CLIENTS');
 $response['title'] = 'CDash - My Profile';

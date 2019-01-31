@@ -54,8 +54,25 @@ if (!can_access_project($projectid)) {
 $method = $_SERVER['REQUEST_METHOD'];
 
 // Make sure the user is an admin before proceeding with non-read-only methods.
-if ($method != 'GET' && !can_administrate_project($projectid)) {
-    return;
+if ($method != 'GET') {
+    $userid = Auth::id();
+    if (!$userid) {
+        $response['error'] = 'No session found.';
+        echo json_encode($response);
+        return;
+    }
+
+    $Project = new Project;
+    $User = new User;
+    $User->Id = $userid;
+    $Project->Id = $projectid;
+
+    $role = $Project->GetUserRole($userid);
+    if ($User->IsAdmin() === false && $role <= 1) {
+        $response['error'] = 'You do not have permission to access this page';
+        echo json_encode($response);
+        return;
+    }
 }
 
 // Route based on what type of request this is.

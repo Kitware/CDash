@@ -27,11 +27,11 @@ use CDash\Model\SubProjectGroup;
 use CDash\Model\User;
 
 // Make sure we have a valid login.
-if (!$session_OK) {
+if (!Auth::check()) {
     return;
 }
-$userid = $_SESSION['cdash']['loginid'];
-if (!isset($userid) || !is_numeric($userid)) {
+$userid = Auth::id();
+if ($userid || !is_numeric($userid)) {
     echo_error('Not a valid userid!');
     return;
 }

@@ -15,6 +15,7 @@
 =========================================================================*/
 
 use CDash\Config;
+use Illuminate\Support\Collection;
 
 include dirname(__DIR__) . '/config/config.php';
 include_once 'include/common.php';
@@ -24,14 +25,23 @@ include_once 'include/login_functions.php';
 
 $config = Config::getInstance();
 
-
 // --------------------------------------------------------------------------------------
 // main
 // --------------------------------------------------------------------------------------
 // $mysession = ['login' => false, 'passwd' => false, 'ID' => false, 'valid' => false, 'langage' => false];
 
 $session_OK = (int)cdash_auth();
-
+if (!$session_OK && !@$noforcelogin) {
+    $errors = Collection::make([]);
+    echo view(
+        'auth.login',
+        [
+            'title' => 'Login',
+            'errors' => $errors,
+        ]
+    )->render();
+    return;
+}
 /*
 if (!cdash_auth() && !@$noforcelogin) {
     // authentication failed
@@ -108,6 +118,7 @@ if (!cdash_auth() && !@$noforcelogin) {
 
 if ($config->get('CDASH_USER_CREATE_PROJECTS') && isset($_SESSION['cdash'])) {
     // TODO: Use Laravel to set this value
+    // TODO: But first understand why this is set in the session, why here? Why now?
     $_SESSION['cdash']['user_can_create_project'] = 1;
 }
 */

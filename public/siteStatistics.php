@@ -23,11 +23,11 @@ use CDash\Config;
 
 $config = Config::getInstance();
 
-if ($session_OK) {
+if (Auth::check()) {
     include_once 'include/common.php';
     include_once 'include/ctestparser.php';
 
-    checkUserPolicy(@$_SESSION['cdash']['loginid'], 0); // only admin
+    checkUserPolicy(Auth::id(), 0); // only admin
 
     $xml = begin_XML_for_XSLT();
     $xml .= '<backurl>user.php</backurl>';

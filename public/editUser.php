@@ -26,7 +26,7 @@ use CDash\Model\UserProject;
 
 $config = Config::getInstance();
 
-if ($session_OK) {
+if (Auth::check()) {
     require_once 'include/common.php';
 
     $xml = begin_XML_for_XSLT();
@@ -36,7 +36,7 @@ if ($session_OK) {
     $xml .= '<menutitle>CDash</menutitle>';
     $xml .= '<menusubtitle>My Profile</menusubtitle>';
 
-    $userid = $_SESSION['cdash']['loginid'];
+    $userid = Auth::id();
     $user = new User();
     $user->Id = $userid;
     $user->Fill();

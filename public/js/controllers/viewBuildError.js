@@ -1,4 +1,4 @@
-CDash.controller('BuildErrorController',
+CDash.controller('ViewBuildErrorController',
   function BuildErrorController($scope, $sce, apiLoader) {
     $scope.loading = true;
     $scope.pagination = [];

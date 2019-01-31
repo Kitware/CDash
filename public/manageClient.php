@@ -33,13 +33,13 @@ use CDash\Model\UserProject;
 
 $config = Config::getInstance();
 
-if ($session_OK) {
+if (Auth::check()) {
     if (!$config->get('CDASH_MANAGE_CLIENTS')) {
         echo 'CDash has not been setup to allow client management';
         return;
     }
 
-    $userid = $_SESSION['cdash']['loginid'];
+    $userid = Auth::id();
     $User = new User();
     $User->Id = $userid;
 
@@ -91,7 +91,7 @@ if ($session_OK) {
     $xml .= '<date>' . date('r') . '</date>';
     $xml .= '<backurl>user.php</backurl>';
 
-    $userid = $_SESSION['cdash']['loginid'];
+    $userid = Auth::id();
     $user = new User();
     $user->Id = $userid;
     $user->Fill();

@@ -55,7 +55,7 @@ if (pdo_num_rows($project) > 0) {
     $projectname = 'NA';
 }
 
-checkUserPolicy(@$_SESSION['cdash']['loginid'], $project_array['id']);
+checkUserPolicy(Auth::id(), $project_array['id']);
 
 $Project = new Project();
 $Project->Id = $projectid;

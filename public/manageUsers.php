@@ -25,8 +25,8 @@ use CDash\Model\User;
 
 $config = Config::getInstance();
 
-if ($session_OK) {
-    $userid = $_SESSION['cdash']['loginid'];
+if (Auth::check()) {
+    $userid = Auth::id();
     // Checks
     if (!isset($userid) || !is_numeric($userid) || $userid < 1) {
         echo 'Not a valid usersessionid!';

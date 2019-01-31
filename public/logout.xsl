@@ -8,5 +8,4 @@
             <input type="hdden" name="_token" value="{{ csrf_token() }}" />
         </form>
     </xsl:template>
-
 </xsl:stylesheet>

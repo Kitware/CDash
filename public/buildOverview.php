@@ -45,7 +45,7 @@ if (!$project_array = pdo_fetch_array($project)) {
     die("Error:  project $projectname not found<br>\n");
 }
 
-checkUserPolicy(@$_SESSION['cdash']['loginid'], $project_array['id']);
+checkUserPolicy(Auth::id(), $project_array['id'], true);
 
 $projectid = $project_array['id'];
 $nightlytime = $project_array['nightlytime'];

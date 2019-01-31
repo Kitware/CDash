@@ -43,7 +43,7 @@ if (!isset($buildid) || !is_numeric($buildid)) {
     return;
 }
 
-@$userid = $_SESSION['cdash']['loginid'];
+@$userid = Auth::id();
 if (!isset($userid)) {
     $userid = 0;
 }

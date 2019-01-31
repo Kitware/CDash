@@ -28,8 +28,8 @@ use CDash\Model\UserProject;
 
 $config = Config::getInstance();
 
-if ($session_OK) {
-    $usersessionid = $_SESSION['cdash']['loginid'];
+if (Auth::check()) {
+    $usersessionid = Auth::id();
     // Checks
     if (!isset($usersessionid) || !is_numeric($usersessionid)) {
         echo 'Not a valid usersessionid!';

@@ -179,7 +179,7 @@ while ($site2project_array = pdo_fetch_array($site2project)) {
     $projectid = $site2project_array['projectid'];
     $project_array = pdo_fetch_array(pdo_query("SELECT name,public FROM project WHERE id=$projectid"));
 
-    if (checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
+    if (checkUserPolicy(Auth::id(), $projectid, 1)) {
         $xml .= '<project>';
         $xml .= add_XML_value('id', $projectid);
         $xml .= add_XML_value('submittime', $site2project_array['maxtime']);
@@ -223,7 +223,7 @@ echo pdo_error();
 $totalload = 0;
 while ($testtime_array = pdo_fetch_array($testtime)) {
     $projectid = $testtime_array['projectid'];
-    if (checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
+    if (checkUserPolicy(Auth::id(), $projectid, 1)) {
         $timespent = round($testtime_array['elapsed'] / 7.0); // average over 7 days
         $xml .= '<build>';
         $xml .= add_XML_value('name', $testtime_array['buildname']);
@@ -245,7 +245,7 @@ $xml .= '</siteload>';
 
 if (isset($_SESSION['cdash'])) {
     $xml .= '<user>';
-    $userid = $_SESSION['cdash']['loginid'];
+    $userid = Auth::id();
 
     // Check if the current user as a role in this project
     foreach ($projects as $projectid) {

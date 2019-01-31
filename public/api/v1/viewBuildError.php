@@ -141,12 +141,14 @@ $response['numErrors'] = 0;
  * @todo id should probably just be a unique id for the builderror?
  * builderror table currently has no integer that serves as a unique identifier.
  **/
-function addErrorResponse($data, &$response)
-{
-    $data['id'] = $response['numErrors'];
-    $response['numErrors']++;
+if (!function_exists('addErrorResponse')) {
+    function addErrorResponse($data, &$response)
+    {
+        $data['id'] = $response['numErrors'];
+        $response['numErrors']++;
 
-    $response['errors'][] = $data;
+        $response['errors'][] = $data;
+    }
 }
 
 if (isset($_GET['onlydeltan'])) {

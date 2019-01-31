@@ -30,7 +30,7 @@ if (!$config->get('CDASH_MANAGE_CLIENTS')) {
     return;
 }
 
-$userid = $_SESSION['cdash']['loginid'];
+$userid = Auth::id();
 
 if (!isset($_GET['scheduleid'])) {
     echo 'Schedule id not set';

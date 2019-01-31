@@ -14,22 +14,15 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once dirname(__DIR__) . '/config/config.php';
-
 use CDash\Config;
 
 // No project name set.
 if (!isset($_GET['project'])) {
     $default_project = Config::getInstance()->get('CDASH_DEFAULT_PROJECT');
-    if ($default_project) {
-        // Go to the default project if one is set.
-        header("Location: index.php?project=$default_project");
-    } else {
-        // Otherwise display the table of projects.
-        header('Location: viewProjects.php');
-    }
-    exit;
+    $url = $default_project ? "index.php?project={$default_project}" : 'viewProjects.php';
+    return \redirect($url);
 }
 
+require_once dirname(__DIR__) . '/config/config.php';
 include_once 'include/common.php';
 load_view('index');

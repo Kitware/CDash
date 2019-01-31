@@ -30,7 +30,7 @@ $response['menutitle'] = 'CDash';
 $response['menusubtitle'] = 'Overview';
 $response['hidenav'] = 1;
 
-if (!$session_OK) {
+if (!Auth::check()) {
     $response['requirelogin'] = 1;
     echo json_encode($response);
     return;
@@ -59,7 +59,7 @@ if (!$projectid_ok) {
 
 
 // Make sure we have an authenticated user.
-$userid = $_SESSION['cdash']['loginid'];
+$userid = Auth::id();
 if (!isset($userid) || !is_numeric($userid)) {
     $response['requirelogin'] = 1;
     echo json_encode($response);

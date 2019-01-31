@@ -22,6 +22,7 @@ require_once 'include/version.php';
 
 use CDash\Database;
 use CDash\Model\Project;
+use Session;
 
 $start = microtime_float();
 $response = [];
@@ -193,7 +194,9 @@ $response['properties'] = $all_properties;
 
 // Timeline chart needs to know what defects we care about
 // and what page we're coming from.
-$_SESSION['defecttypes'] = $defect_types;
+Session::put('defecttypes', $defect_types);
+
+//$_SESSION['defecttypes'] = $defect_types;
 $response['filterdata']['pageId'] = 'buildProperties.php';
 
 $end = microtime_float();

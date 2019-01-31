@@ -231,8 +231,8 @@ function echo_submission_table()
     echo '<br/>';
 }
 
-if ($session_OK) {
-    $userid = $_SESSION['cdash']['loginid'];
+if (Auth::check()) {
+    $userid = Auth::id();
     $user = new User();
     $user->Id = $userid;
     if ($user->IsAdmin()) {

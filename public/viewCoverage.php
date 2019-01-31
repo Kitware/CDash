@@ -52,7 +52,7 @@ if (!isset($buildid) || !is_numeric($buildid)) {
     return;
 }
 
-@$userid = $_SESSION['cdash']['loginid'];
+@$userid = Auth::id();
 if (!isset($userid)) {
     $userid = 0;
 }
@@ -71,7 +71,7 @@ if (!isset($projectid) || $projectid == 0 || !is_numeric($projectid)) {
     exit();
 }
 
-checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid);
+checkUserPolicy(Auth::id(), $projectid);
 
 $project = new Project();
 $project->Id = $projectid;

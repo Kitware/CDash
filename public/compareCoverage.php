@@ -16,8 +16,7 @@
 
 // If the project name is not set we display the table of projects.
 if (!isset($_GET['project'])) {
-    header('Location: viewProjects.php');
-    exit;
+    return \redirect('viewProjects.php');
 }
 require_once dirname(__DIR__).'/config/config.php';
 include_once 'include/common.php';
