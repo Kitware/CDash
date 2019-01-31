@@ -31,6 +31,7 @@ class EmailTestCase extends KWWebTestCase
 
     public function testRegisterUser()
     {
+        /* Test 'register user' belongs in the register user test and not the email test
         $url = $this->url . '/register.php';
         $content = $this->connect($url);
         if ($content == false) {
@@ -52,6 +53,33 @@ class EmailTestCase extends KWWebTestCase
 
         // Login as the user.
         $this->login('user1@kw', 'user1');
+        */
+
+        // If we want to test the app if registration works, that sort of thing belongs in a
+        // registration works test.
+
+        // Create user1
+        $pdo = \CDash\Database::getInstance();
+        $sql = "
+          INSERT INTO user (email, password, firstname, lastname, institution, admin, email_verified_at, remember_token, created_at, updated_at)
+          VALUES (?, ?, ?, ?, ?, 0, NOW(), NULL, NOW(), NOW())
+         ";
+        $stmt = $pdo->prepare($sql);
+        $userId = $pdo->insert($stmt, ['user1@kw', 'user1', 'Firstname', 'Lastname', 'Kitware, Inc.']);
+
+        if (!is_numeric($userId)) {
+            $this->fail("Unable to create user");
+            return;
+        }
+
+        $user = new User();
+        $user->Id = $userId;
+        $user->Fill();
+
+        // Login as user1
+        \Auth::shouldReceive('check')->andReturn(true);
+        \Auth::shouldReceive('user')->andReturn($user);
+        \Auth::shouldReceive('id')->andReturn($userId);
 
         // Subscribe to the project.
         $stmt = $this->pdo->query("SELECT id FROM project WHERE name = 'EmailProjectExample'");

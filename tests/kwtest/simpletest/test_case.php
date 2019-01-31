@@ -479,7 +479,7 @@ class TestSuite
      * @param string $label Name sent at the start and end
      *                            of the test.
      */
-    public function TestSuite($label = false)
+    public function __construct($label = false)
     {
         $this->label = $label;
         $this->test_cases = array();
@@ -613,7 +613,7 @@ class BadTestSuite
      * @param string $label Name sent at the start and end
      *                            of the test.
      */
-    public function BadTestSuite($label, $error)
+    public function __construct($label, $error)
     {
         $this->label = $label;
         $this->error = $error;

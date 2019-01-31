@@ -14,10 +14,17 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+require_once dirname(__FILE__) . '/../../../../vendor/autoload.php';
 require_once dirname(__FILE__) . '/kw_unlink.php';
 
+use App\Http\Controllers\CDash;
 use CDash\Config;
 use CDash\Model\Project;
+use CDash\Model\User;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Routing\Router;
+use Tests\CreatesApplication;
 
 /**#@+
  *  include other SimpleTest class files
@@ -31,6 +38,8 @@ require_once 'tests/kwtest/simpletest/web_tester.php';
  */
 class KWWebTestCase extends WebTestCase
 {
+    use CreatesApplication;
+
     public $url = null;
     public $db = null;
     public $logfilename = null;
@@ -38,6 +47,7 @@ class KWWebTestCase extends WebTestCase
     public $cdashpro = null;
 
     private $config;
+    protected $app;
 
     /**
      * KWWebTestCase constructor.
@@ -67,6 +77,12 @@ class KWWebTestCase extends WebTestCase
         $this->configfilename = "{$config->get('CDASH_ROOT_DIR')}/config/config.local.php";
 
         $this->config = $config;
+        $this->app = $this->createApplication();
+    }
+
+    public function createBrowser()
+    {
+        return new CDashControllerBrowser();
     }
 
     public function config($var_name)
@@ -127,8 +143,6 @@ class KWWebTestCase extends WebTestCase
 
     /**
      * Try to connect to the website
-     * @return the content if the connection succeeded
-     *         or false if there were some errors
      * @param string $url
      */
     public function connect($url)
@@ -316,10 +330,10 @@ class KWWebTestCase extends WebTestCase
 
     public function login($user = 'simpletest@localhost', $passwd = 'simpletest')
     {
-        $this->get($this->url . '/login.php');
-        $this->setField('login', $user);
-        $this->setField('passwd', $passwd);
-        return $this->clickSubmitByName('sent');
+        $user = $this->getUser($user);
+        \Auth::shouldReceive('check')->andReturn(true);
+        \Auth::shouldReceive('user')->andReturn($user);
+        \Auth::shouldReceive('id')->andReturn($user->Id);
     }
 
     public function logout()
@@ -342,6 +356,13 @@ class KWWebTestCase extends WebTestCase
         return true;
     }
 
+    public function getUser($email)
+    {
+        $user = new User();
+        $user->Id = $user->GetIdFromName($email);
+        $user->Fill();
+        return $user;
+    }
     private function check_submission_result($result)
     {
         if ($result === false) {
@@ -551,11 +572,20 @@ class KWWebTestCase extends WebTestCase
     {
         $client = new GuzzleHttp\Client(['cookies' => true]);
         try {
+            // first get the csrf token
+            $response = $client->request('GET', "{$this->url}/login");
+            $html = "{$response->getBody()}";
+            $dom = new \DOMDocument();
+            $dom->loadHTML($html);
+            $token = $dom->getElementById('csrf-token')
+                ->getAttribute('value');
+
             $response = $client->request('POST',
-                    $this->url . '/user.php',
+                    $this->url . '/login',
                     ['form_params' => [
-                    'login' => $username,
-                    'passwd' => $password,
+                        '_token' => "{$token}",
+                    'email' => $username,
+                    'password' => $password,
                     'sent' => 'Login >>']]);
         } catch (GuzzleHttp\Exception\ClientException $e) {
             $this->fail($e->getMessage());
@@ -603,5 +633,194 @@ class KWWebTestCase extends WebTestCase
             }
         }
         fclose($handle);
+    }
+}
+
+/**
+ * Class CDashControllerBrowser
+ */
+class CDashControllerBrowser extends SimpleBrowser
+{
+    /**
+     * @return CDashControllerUserAgent
+     */
+    public function createUserAgent()
+    {
+        return new CDashControllerUserAgent();
+    }
+
+    /**
+     * @param SimpleUrl $url
+     * @param SimpleEncoding $encoding
+     * @param int $depth
+     * @return SimplePage
+     */
+    protected function fetch($url, $encoding, $depth = 0)
+    {
+        $this->setRequestParameters($encoding);
+        $this->setQueryParameters($url);
+        $this->setServerParameters($url);
+
+        $_REQUEST = array_merge($_REQUEST, $_GET, $_POST);
+
+        return parent::fetch($url, $encoding, $depth);
+    }
+
+    /**
+     * @param SimpleEncoding $encoding
+     * @return void
+     */
+    private function setRequestParameters($encoding)
+    {
+        // reset our magic request vars
+        $parameters = $_REQUEST = $_GET = $_POST = [];
+
+        /** @var SimpleEncodedPair $parameter */
+        foreach ($encoding->getAll() as $parameter) {
+            $key = $parameter->getKey();
+            $value = $parameter->getValue();
+            $this->setRequestKeyValuePair($parameters, $key, $value);
+        }
+
+        if ($encoding instanceof SimpleGetEncoding) {
+            $_GET = $parameters;
+        } else {
+            $_POST = $parameters;
+        }
+    }
+
+    /**
+     * @param SimpleUrl $url
+     */
+    private function setQueryParameters($url)
+    {
+        $query = $url->getEncodedRequest();
+        $query = str_replace('?', '', $query);
+        $parameters = [];
+
+        if (!empty($query)) {
+            foreach ( explode("&", $query) as $parameter) {
+
+                if (strpos($parameter, '=') !== false) {
+                    list($key, $value) = explode('=', $parameter);
+                    $this->setRequestKeyValuePair($parameters, $key, $value);
+                } else {
+                    $this->setRequestKeyValuePair($parameters, $parameter, '');
+                }
+            }
+        }
+
+        $_GET = array_merge($_GET, $parameters);
+    }
+
+    /**
+     * @param array &$parameters
+     * @param string $key
+     * @param mixed $value
+     */
+    private function setRequestKeyValuePair(&$parameters, $key, $value)
+    {
+        // Handle key names that represent arrays of values
+        if (preg_match('/^(\w+)\[(\w+)\]$/', $key, $parts)) {
+            list(, $key, $index) = $parts;
+            if (!isset($parameters[$key])) {
+                $parameters[$key] = [];
+            }
+            $parameters[$key][$index] = $value;
+        } else {
+            $parameters[$key] = $value;
+        }
+    }
+
+    /**
+     * @param SimpleUrl $url
+     */
+    private function setServerParameters($url)
+    {
+
+    }
+}
+
+
+class CDashControllerUserAgent extends SimpleUserAgent
+{
+    /** @var Response $response */
+    private $response;
+
+    /**
+     * @param SimpleUrl $url
+     * @param SimpleFormEncoding $encoding
+     * @return SimpleHttpResponse
+     */
+    protected function fetch($url, $encoding)
+    {
+        $request = $this->getIlluminateHttpRequest($url);
+        $route = (new CDash($request))();
+        $this->response = Router::toResponse($request, $route);
+        return $this->getSimpleHttpResponse($url, $encoding);
+    }
+
+    /**
+     * @param SimpleUrl $url
+     * @return Request
+     */
+    private function getIlluminateHttpRequest($url)
+    {
+        $request = Request::create($url->asString());
+        $parameters = [];
+
+        foreach ($request->server() as $key => $value) {
+            $parameters[$key] = $value;
+        }
+        $_SERVER = array_merge($_SERVER, $parameters);
+        return $request;
+    }
+
+    /**
+     * @param $url
+     * @param $encoding
+     * @return SimpleHttpResponse
+     */
+    private function getSimpleHttpResponse($url, $encoding)
+    {
+        $socket = $this->getSocketEmulator();
+        return new SimpleHttpResponse($socket, $url, $encoding);
+    }
+
+    /**
+     * @return object
+     */
+    private function getSocketEmulator()
+    {
+        $socket = new class ($this->response) {
+            private $read = false;
+            /** @var Response $body */
+            private $response;
+
+            public function __construct($response)
+            {
+                $this->response = $response;
+            }
+
+            public function read() {
+                $output = '';
+                if (!$this->read) {
+                    $output = "{$this->response->sendHeaders()}";
+                    $this->read = true;
+                }
+                return $output;
+            }
+
+            public function getSent() {
+                return true;
+            }
+
+            public function isError() {
+                $this->response->isServerError() ?:
+                    $this->response->isClientError() ?:
+                        false;
+            }
+        };
+        return $socket;
     }
 }
