@@ -90,10 +90,9 @@ if (Auth::check()) {
             ob_flush();
             return;
         }
-        echo('Import for Project: ');
-        echo(get_project_name($projectid));
-        echo('<br>');
-        ob_flush();
+
+        $output = 'Import for Project: ' . get_project_name($projectid) . '<br>';
+
         if (strlen($directory) > 0) {
             $directory = str_replace('\\\\', '/', $directory);
             if (!file_exists($directory) || strpos($directory, 'Sites') === false) {
@@ -106,44 +105,25 @@ if (Auth::check()) {
             $numDays = ($endDate - $startDate) / (24 * 3600) + 1;
             for ($i = 0; $i < $numDays; $i++) {
                 $currentDay = date(FMT_DATE, mktime(0, 0, 0, $monthFrom, $dayFrom + $i, $yearFrom));
-                echo("Gathering XML files for $currentDay...  $directory/*/*/$currentDay-*/XML/*.xml <br>\n");
-                flush();
-                ob_flush();
+                $output .= "Gathering XML files for $currentDay...  $directory/*/*/$currentDay-*/XML/*.xml <br>\n";
                 $files = glob($directory . "/*/*/$currentDay-*/XML/*.xml");
                 $numFiles = count($files);
-                echo("$numFiles found<br>\n");
-                flush();
-                ob_flush();
-                $numDots = 0;
+                $output .= "$numFiles found<br>\n";
+
                 foreach ($files as $file) {
                     if (strlen($file) == 0) {
                         continue;
                     }
                     $handle = fopen($file, 'r');
-                    //$contents = fread($handle,filesize($file));
-                    echo '.';
-                    flush();
-                    ob_flush();
-                    $numDots++;
-                    if ($numDots > 79) {
-                        echo "<br>\n";
-                        flush();
-                        ob_flush();
-                        $numDots = 0;
-                    }
-                    //$xml_array = parse_XML($contents);
-                    //ctest_parse($xml_array,$projectid);
                     ctest_parse($handle, $projectid, false);
                     fclose($handle);
                     unset($handle);
                 }
-                echo '<br>Done for the day' . $currentDay . "<br>\n";
-                flush();
-                ob_flush();
+                $output .= '<br>Done for the day ' . $currentDay . "<br>\n";
             }
         }
-        echo('<a href=index.php?project=' . urlencode($projName) . ">Back to $projName dashboard</a>\n");
-        return;
+        $output .= '<a href=index.php?project=' . urlencode($projName) . ">Back to $projName dashboard</a>\n";
+        return $output;
     }
 
     // Now doing the xslt transition
