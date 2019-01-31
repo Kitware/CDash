@@ -121,10 +121,7 @@ function can_administrate_project($projectid)
  */
 function get_userid_from_session($required = true)
 {
-    $userid = null;
-    if (isset($_SESSION['cdash']) && isset($_SESSION['cdash']['loginid'])) {
-        $userid = $_SESSION['cdash']['loginid'];
-    }
+    $userid = Auth::id();
 
     // Check for the presence of a bearer token if no userid was found
     // in the session.
@@ -137,6 +134,7 @@ function get_userid_from_session($required = true)
         $response = ['error' => 'Permission denied'];
         json_error_response($response, 403);
     }
+
     return $userid;
 }
 

@@ -33,15 +33,15 @@ $response['menutitle'] = 'CDash';
 $response['menusubtitle'] = 'SubProjects';
 $response['hidenav'] = 1;
 
-if (!$session_OK) {
+if (!Auth::check()) {
     $response['requirelogin'] = 1;
     echo json_encode($response);
     return;
 }
 
-@$userid = $_SESSION['cdash']['loginid'];
+$userid = Auth::id();
 // Checks
-if (!isset($userid) || !is_numeric($userid)) {
+if (!$userid || !is_numeric($userid)) {
     $response['requirelogin'] = 1;
     echo json_encode($response);
     return;

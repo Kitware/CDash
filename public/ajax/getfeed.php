@@ -29,7 +29,7 @@ if (!isset($projectid) || !is_numeric($projectid)) {
 }
 
 $feed = new Feed();
-checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid);
+checkUserPolicy(Auth::id(), $projectid);
 
 // Return when the feed was seen
 function get_elapsed_time($date)

@@ -23,7 +23,7 @@ include 'public/login.php';
 
 $projectid = pdo_real_escape_numeric($_GET['projectid']);
 
-if (!checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid, 1)) {
+if (!checkUserPolicy(Auth::id(), $projectid, 1)) {
     echo 'You are not authorized to view this page.';
     return;
 }

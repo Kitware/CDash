@@ -21,8 +21,7 @@ if (isset($_GET['logout'])) {
     // User requested logout.
     require_once 'include/login_functions.php';
     logout();
-    header('Location: viewProjects.php');
-    exit;
+    return \redirect('viewProjects.php');
 }
 
 angular_login();

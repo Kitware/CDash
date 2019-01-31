@@ -42,11 +42,8 @@ $xml .= '</dashboard> ';
 
 // User
 $userid = 0;
-if (isset($_SESSION['cdash'])) {
-    $userid = $_SESSION['cdash']['loginid'];
-    $user = new User();
-    $user->Id = $userid;
-    $user->Fill();
+if (Auth::check()) {
+    $user = Auth::user();
 
     $xml .= '<user>';
     $xml .= add_XML_value('id', $userid);

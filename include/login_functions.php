@@ -414,32 +414,33 @@ function getPasswordComplexity($password)
  */
 function checkForExpiredPassword()
 {
-    global $pdo;
+    $pdo = Database::getInstance();
     $expires = Config::getInstance()->get('CDASH_PASSWORD_EXPIRATION');
 
     if ($expires < 1) {
         return false;
     }
 
-    if (!isset($_SESSION['cdash']) || !array_key_exists('loginid', $_SESSION['cdash'])) {
+    $userid = Auth::id();
+
+    if (!$userid) {
         return false;
     }
 
-    unset($_SESSION['cdash']['redirect']);
+    session(['cdash.redirect' => null]);
     $uri = get_server_URI(false);
     $uri .= '/editUser.php?reason=expired';
 
-    $userid = $_SESSION['cdash']['loginid'];
     $stmt = $pdo->prepare(
         'SELECT date FROM password WHERE userid = ?
         ORDER BY date DESC LIMIT 1');
-    pdo_execute($stmt, [$userid]);
+    $pdo->execute($stmt, [$userid]);
     $row = $stmt->fetch();
 
     if (!$row) {
         // If no result, then password rotation must have been enabled
         // after this user set their password.  Force them to change it now.
-        $_SESSION['cdash']['redirect'] = $uri;
+        session(['cdash.redirect' => $uri]);
         return true;
     }
 
@@ -447,7 +448,7 @@ function checkForExpiredPassword()
     $password_expiration_time =
         strtotime("+{$expires} days", $password_created_time);
     if (time() > $password_expiration_time) {
-        $_SESSION['cdash']['redirect'] = $uri;
+        session(['cdash.redirect' => $uri]);
         return true;
     }
     return false;

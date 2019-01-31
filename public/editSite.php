@@ -20,8 +20,8 @@ include 'public/login.php';
 include_once 'include/common.php';
 include 'include/version.php';
 
-if ($session_OK) {
-    $userid = $_SESSION['cdash']['loginid'];
+if (Auth::check()) {
+    $userid = Auth::id();
 
     $xml = begin_XML_for_XSLT();
     $xml .= '<backurl>user.php</backurl>';

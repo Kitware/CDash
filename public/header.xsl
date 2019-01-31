@@ -2,14 +2,14 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version='1.0'>
   <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
-    <xsl:include href="logout.xsl"/>
+
+  <xsl:include href="logout.xsl"/>
 <!-- Group footer -->
 <xsl:template name="groupfooter">
 </xsl:template>
 
 <!-- Main Header -->
 <xsl:template name="header">
-
 <div id="header">
  <div id="headertop">
   <div id="topmenu">
@@ -19,7 +19,15 @@
           <xsl:otherwise>Login</xsl:otherwise>
         </xsl:choose></a><a href="viewProjects.php">All Dashboards</a>
      <xsl:if test="cdash/user/id>0">
-       <xsl:call-template name="logout" />
+         <a href="logout"
+            onclick="
+                event.preventDefault();
+                document.getElementById('logout-form').submit()">
+             Log Out
+         </a>
+         <form id="logout-form" action="logout" method="POST">
+             <input type="hidden" name="_token" value="{cdash/_token}" />
+         </form>
      </xsl:if>
   </div>
 

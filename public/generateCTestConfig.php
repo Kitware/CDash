@@ -42,7 +42,7 @@ if (pdo_num_rows($project) == 0) {
 }
 
 $project_array = pdo_fetch_array($project);
-checkUserPolicy(@$_SESSION['cdash']['loginid'], $project_array['id']);
+checkUserPolicy(Auth::id(), $project_array['id']);
 
 $ctestconfig = "## This file should be placed in the root directory of your project.\n";
 $ctestconfig .= "## Then modify the CMakeLists.txt file in the root directory of your\n";

@@ -23,13 +23,13 @@ use CDash\Config;
 
 $config = Config::getInstance();
 
-if ($session_OK) {
+if (Auth::check()) {
     include_once 'include/common.php';
     include_once 'include/ctestparser.php';
 
     @set_time_limit(0);
 
-    checkUserPolicy(@$_SESSION['cdash']['loginid'], 0); // only admin
+    checkUserPolicy(Auth::id(), 0); // only admin
     $xml = begin_XML_for_XSLT();
     $xml .= '<title>CDash - Import Backups</title>';
     $xml .= '<menutitle>CDash</menutitle>';

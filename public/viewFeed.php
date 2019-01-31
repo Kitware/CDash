@@ -31,12 +31,12 @@ if ($projectid != null) {
 
 // Checks if the project id is set
 if (!isset($projectid) || !is_numeric($projectid)) {
-    checkUserPolicy(@$_SESSION['cdash']['loginid'], 0);
+    checkUserPolicy(Auth::id(), 0);
 } else {
-    checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid);
+    checkUserPolicy(Auth::id(), $projectid);
 }
 
-$userid = $_SESSION['cdash']['loginid'];
+$userid = Auth::id();
 $User = new User;
 $User->Id = $userid;
 

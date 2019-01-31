@@ -58,7 +58,7 @@ if (pdo_num_rows($project) > 0) {
     $projectname = 'NA';
 }
 
-checkUserPolicy(@$_SESSION['cdash']['loginid'], $project_array['id']);
+checkUserPolicy(Auth::id(), $project_array['id']);
 
 $xml = begin_XML_for_XSLT();
 $xml .= '<title>CDash - SubProject dependencies - ' . $projectname . '</title>';

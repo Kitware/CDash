@@ -26,7 +26,7 @@ $config = Config::getInstance();
 
 @set_time_limit(0);
 
-checkUserPolicy(@$_SESSION['cdash']['loginid'], 0); // only admin
+checkUserPolicy(Auth::id(), 0); // only admin
 
 @$projectid = $_GET['projectid'];
 if ($projectid != null) {

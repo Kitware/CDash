@@ -164,8 +164,9 @@ function XMLStrFormat($str)
 /** Redirect to the error page */
 function redirect_error($text = '')
 {
-    setcookie('cdash_error', $text);
-    header('Location: ' . get_server_URI() . '/error.php');
+    $redirectUrl = get_server_URI() . '/error.php';
+    \session(['cdash_error' => $text]);
+    return redirect($redirectUrl);
 }
 
 function time_difference($duration, $compact = false, $suffix = '', $displayms = false)
@@ -1745,6 +1746,8 @@ function begin_XML_for_XSLT()
     $xml = '<?xml version="1.0" encoding="UTF-8"?><cdash>';
     $xml .= add_XML_value('cssfile', $css_file);
     $xml .= add_XML_value('version', $config->get('CDASH_VERSION'));
+    $xml .= add_XML_value('_token', csrf_token());
+
     return $xml;
 }
 
@@ -1760,8 +1763,7 @@ function redirect_to_https()
 
         $https_check = @fsockopen($_SERVER['HTTP_HOST']);
         if ($https_check) {
-            header('Location: ' . $url);
-            exit;
+            return redirect($url);
         }
     }
 }
@@ -1770,7 +1772,6 @@ function begin_JSON_response()
 {
     $config = Config::getInstance();
     $service = ServiceContainer::getInstance();
-    $session = $service->get(Session::class);
 
     $response = array();
     $response['version'] = $config->get('CDASH_VERSION');
@@ -1857,7 +1858,7 @@ function get_dashboard_JSON($projectname, $date, &$response)
         $response['proedition'] = $pro->GetEdition(1);
     }
 
-    $userid = $session->getSessionVar('cdash.loginid');
+    $userid = Auth::id();
     if ($userid) {
         /** @var UserProject $user_project */
         $user_project = $service->create(UserProject::class);

@@ -24,10 +24,9 @@ use CDash\Model\User;
 $noforcelogin = 1;
 include 'public/login.php';
 
+$userid = Auth::id();
 // Check for authenticated user.
-if (!isset($_SESSION['cdash']) || !isset($_SESSION['cdash']['loginid']) ||
-    !is_numeric($_SESSION['cdash']['loginid'])
-) {
+if (!$userid) {
     return;
 }
 

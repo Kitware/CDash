@@ -42,7 +42,7 @@ if ($projectid == -1) {
     return;
 }
 
-checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid);
+checkUserPolicy(Auth::id(), $projectid);
 
 $xml = begin_XML_for_XSLT();
 $xml .= '<title>CDash : Sites map for ' . $projectname . '</title>';

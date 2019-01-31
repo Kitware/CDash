@@ -50,7 +50,7 @@ if (!isset($projectid) || $projectid == 0 || !is_numeric($projectid)) {
     exit();
 }
 
-checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid);
+checkUserPolicy(Auth::id(), $projectid);
 
 $project = pdo_query("SELECT name,coveragethreshold,nightlytime,showcoveragecode FROM project WHERE id='$projectid'");
 if (pdo_num_rows($project) == 0) {

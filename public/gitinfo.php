@@ -50,8 +50,8 @@ function echo_file_contents($filename)
     }
 }
 
-if ($session_OK) {
-    $userid = $_SESSION['cdash']['loginid'];
+if (Auth::check()) {
+    $userid = Auth::id();
 
     $user = new User();
     $user->Id = $userid;

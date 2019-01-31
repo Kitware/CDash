@@ -31,7 +31,8 @@ use CDash\Model\UserProject;
 $start = microtime_float();
 $response = array();
 
-$userid = $_SESSION['cdash']['loginid'];
+$userid = Auth::id();
+
 // Checks
 if (!isset($userid) || !is_numeric($userid)) {
     $response['requirelogin'] = '1';

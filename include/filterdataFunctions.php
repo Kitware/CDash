@@ -1023,7 +1023,6 @@ function get_filterdata_from_request($page_id = '')
     if (empty($page_id)) {
         $request_path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         $pos = strrpos($request_path, '/');
-
         $page_id = substr($request_path, $pos + 1);
     }
 

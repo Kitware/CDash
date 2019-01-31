@@ -322,7 +322,9 @@ function do_submit_queue($filehandle, $projectid, $buildid = null, $expected_md5
         $content = fread($filehandle, 8192);
         if (fwrite($outfile, $content) === false) {
             add_log('Failed to copy build submission XML', 'do_submit_queue', LOG_ERR);
-            header('HTTP/1.1 500 Internal Server Error');
+
+            // TODO: Handle the HTTP status code in CDash controller...
+            // header('HTTP/1.1 500 Internal Server Error');
             echo '<cdash version="' . $config->get('CDASH_VERSION') . "\">\n";
             echo " <status>ERROR</status>\n";
             echo " <message>Failed to copy build submission XML.</message>\n";
