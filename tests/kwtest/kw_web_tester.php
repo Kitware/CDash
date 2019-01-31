@@ -359,7 +359,7 @@ class KWWebTestCase extends WebTestCase
     public function getUser($email)
     {
         $user = new User();
-        $user->Id = $user->GetIdFromName($email);
+        $user->Id = $user->GetIdFromEmail($email);
         $user->Fill();
         return $user;
     }
