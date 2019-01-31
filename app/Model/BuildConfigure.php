@@ -229,7 +229,7 @@ class BuildConfigure
                     $new_configure_inserted = true;
                     $this->Id = pdo_insert_id('configure');
                 } else {
-                    $error_info = $insert_stmt->errorInfo();
+                    $error_info = $stmt->errorInfo();
                     $error = $error_info[2];
                     throw new \Exception($error);
                 }
