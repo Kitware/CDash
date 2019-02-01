@@ -24,6 +24,7 @@ use CDash\Model\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Router;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Tests\CreatesApplication;
 
 /**#@+
@@ -672,7 +673,6 @@ class CDashControllerBrowser extends SimpleBrowser
     {
         $this->setRequestParameters($encoding);
         $this->setQueryParameters($url);
-        $this->setServerParameters($url);
 
         $_REQUEST = array_merge($_REQUEST, $_GET, $_POST);
 
@@ -744,14 +744,6 @@ class CDashControllerBrowser extends SimpleBrowser
             $parameters[$key] = $value;
         }
     }
-
-    /**
-     * @param SimpleUrl $url
-     */
-    private function setServerParameters($url)
-    {
-
-    }
 }
 
 
@@ -818,7 +810,17 @@ class CDashControllerUserAgent extends SimpleUserAgent
             public function read() {
                 $output = '';
                 if (!$this->read) {
-                    $output = "{$this->response->sendHeaders()}";
+
+                    if (is_a($this->response, StreamedResponse::class)) {
+                        ob_start();
+                        $this->response->send();
+                        $file = ob_get_contents();
+                        ob_end_clean();
+                        $output = "{$this->response}{$file}";
+                    } else {
+                        $output = "{$this->response->sendHeaders()}";
+                    }
+
                     $this->read = true;
                 }
                 return $output;

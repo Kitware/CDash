@@ -112,20 +112,4 @@ if (count($subprojectids) > 0) {
     $ctestconfig .= ")\n";
 }
 
-header('Vary: User-Agent');
-if (ob_get_contents()) {
-    echo 'Some data has already been output';
-}
-if (isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE')) {
-    header('Content-Type: application/force-download');
-} else {
-    header('Content-Type: application/octet-stream');
-}
-if (headers_sent()) {
-    echo 'Some data has already been output to browser';
-}
-
-header('Content-Disposition: attachment; filename="CTestConfig.cmake"');
-header('Content-Transfer-Encoding: binary');
-header('Content-Length: ' . strlen($ctestconfig));
-echo $ctestconfig;
+return ['type' => 'text/plain', 'file' => $ctestconfig];
