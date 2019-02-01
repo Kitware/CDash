@@ -128,5 +128,6 @@ if ($lockAcquired) {
 
 echo "end processSubmissions.php\n";
 echo '</pre>';
-
-ob_end_flush();
+$output = ob_get_contents();
+ob_end_clean();
+return $output;
