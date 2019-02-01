@@ -581,7 +581,7 @@ div#div_showfilters {
 div#calendar{
   position:absolute;
   z-index: 1000;
-  left: 150px;
+  right: 150px;
   display: none; /* hide by default */
 }
 
