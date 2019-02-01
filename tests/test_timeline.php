@@ -75,9 +75,6 @@ class TimelineTestCase extends KWWebTestCase
         $this->toggle_expected($client, $build, 1);
 
         // Now that we have an expected build, validate timeline data on relevant pages.
-
-
-        $timestamp_to_check = 1235350800000;
         $pages_to_check = ['index.php', 'testOverview.php', 'viewBuildGroup.php'];
 
         $answer_key = [
@@ -102,37 +99,127 @@ class TimelineTestCase extends KWWebTestCase
             $content = $this->getBrowser()->getContent();
             $jsonobj = json_decode($content, true);
 
-            if ($jsonobj['extentstart'] != 1235350800000) {
-                $this->fail("Expected 1235350800000 but found " . $jsonobj['extentstart'] . " for extentstart");
-            }
-            if ($jsonobj['extentend'] != 1235437200000) {
-                $this->fail("Expected 1235437200000 but found " . $jsonobj['extentend'] . " for extentend");
-            }
-
-            foreach ($answer_key[$page] as $measurement => $expected) {
-                $validated = false;
-                foreach ($jsonobj['data'] as $trend) {
-                    if ($trend['key'] === $measurement) {
-                        foreach ($trend['values'] as $value) {
-                            if ($value[0] == $timestamp_to_check) {
-                                if ($value[1] = $expected) {
-                                    $validated = true;
-                                } else {
-                                    $this->fail("Expected $expected but found " . $value[1] . " for $measurement on $page");
-                                }
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                }
-                if (!$validated) {
-                    $this->fail("Failed to validate $measurement on $page");
-                }
-            }
+            $this->validateExtent(1235350800000, 1235437200000, $jsonobj);
+            $this->validatePage($answer_key, $page, 1235350800000, $jsonobj);
         }
 
         // Revert back to unexpected.
         $this->toggle_expected($client, $build, 0);
+    }
+
+    public function testTimelineWithFilters()
+    {
+        // Find the three builds we will use for this test case.
+        $builds = [];
+        $this->get($this->url . '/api/v1/index.php?project=InsightExample&date=2010-07-07');
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        foreach ($jsonobj['buildgroups'] as $buildgroup_response) {
+            foreach ($buildgroup_response['builds'] as $build_response) {
+                $build = new Build();
+                $build->Id = $build_response['id'];
+                $build->FillFromId($build->Id);
+                $builds[] = $build;
+            }
+        }
+        $num_builds = count($builds);
+        if ($num_builds != 3) {
+            $this->fail("Expected 3 builds, found $num_builds");
+        }
+
+        // Login as admin.
+        $client = $this->getGuzzleClient();
+
+        // Mark these builds as expected.
+        foreach ($builds as $build) {
+            $this->toggle_expected($client, $build, 1);
+        }
+
+        // Validate timeline with filters.
+        $filterdata_arr = [
+            'hasdateclause' => 0,
+            'filtercombine' => 'and',
+            'filtercount'   => 1,
+            'limit'         => 0,
+            'filters'       => [
+                [
+                    'field'   => 'buildname',
+                    'compare' => 63,
+                    'value'   => 'vs'
+                ]
+            ],
+        ];
+
+        $pages_to_check = ['index.php', 'testOverview.php', 'viewBuildGroup.php'];
+
+        $answer_key = [
+            'index.php' => [
+                'Errors' => 1,
+                'Warnings' => 1,
+                'Test Failures' => 2
+            ],
+            'testOverview.php' => [
+                'Failing Tests' => 2,
+                'Not Run Tests' => 2,
+                'Passing Tests' => 2
+            ],
+            'viewBuildGroup.php' => [
+                'Errors' => 1,
+                'Warnings' => 1,
+                'Test Failures' => 2
+            ],
+        ];
+
+        foreach ($pages_to_check as $page) {
+            $filterdata_arr['pageId'] = $page;
+            $filterdata = json_encode($filterdata_arr);
+            $extra_param = $page == 'viewBuildGroup.php' ? '&buildgroup=Nightly' : '';
+            $this->get($this->url . "/api/v1/timeline.php?date=2010-07-07&filterdata=$filterdata&project=InsightExample$extra_param");
+            $content = $this->getBrowser()->getContent();
+            $jsonobj = json_decode($content, true);
+
+            $this->validateExtent(1278464400000, 1278550800000, $jsonobj);
+            $this->validatePage($answer_key, $page, 1278464400000, $jsonobj);
+        }
+
+        // Revert back to unexpected.
+        foreach ($builds as $build) {
+            $this->toggle_expected($client, $build, 0);
+        }
+    }
+
+    private function validateExtent($start, $end, $jsonobj)
+    {
+        if ($jsonobj['extentstart'] != $start) {
+            $this->fail("Expected $start but found " . $jsonobj['extentstart'] . " for extentstart");
+        }
+        if ($jsonobj['extentend'] != $end) {
+            $this->fail("Expected $end but found " . $jsonobj['extentend'] . " for extentend");
+        }
+    }
+
+    private function validatePage($answer_key, $page, $timestamp_to_check, $jsonobj)
+    {
+        foreach ($answer_key[$page] as $measurement => $expected) {
+            $validated = false;
+            foreach ($jsonobj['data'] as $trend) {
+                if ($trend['key'] === $measurement) {
+                    foreach ($trend['values'] as $value) {
+                        if ($value[0] == $timestamp_to_check) {
+                            if ($value[1] = $expected) {
+                                $validated = true;
+                            } else {
+                                $this->fail("Expected $expected but found " . $value[1] . " for $measurement on $page");
+                            }
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+            if (!$validated) {
+                $this->fail("Failed to validate $measurement on $page");
+            }
+        }
     }
 }
