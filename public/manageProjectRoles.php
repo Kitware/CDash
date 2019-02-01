@@ -102,96 +102,98 @@ if (Auth::check()) {
     @$registerUser = $_POST['registerUser'];
 
     // Register a user and send the email
-    function register_user($projectid, $email, $firstName, $lastName, $repositoryCredential)
-    {
-        $UserProject = new UserProject();
-        $UserProject->ProjectId = $projectid;
+    if (!function_exists('register_user')) {
+        function register_user($projectid, $email, $firstName, $lastName, $repositoryCredential)
+        {
+            $UserProject = new UserProject();
+            $UserProject->ProjectId = $projectid;
 
-        $user = new User();
-        $userid = $user->GetIdFromEmail($email);
-        // Check if the user is already registered
-        if ($userid) {
-            // Check if the user has been registered to the project
-            $UserProject->UserId = $userid;
-            if (!$UserProject->Exists()) {
-                // not registered
+            $user = new User();
+            $userid = $user->GetIdFromEmail($email);
+            // Check if the user is already registered
+            if ($userid) {
+                // Check if the user has been registered to the project
+                $UserProject->UserId = $userid;
+                if (!$UserProject->Exists()) {
+                    // not registered
 
-                // We register the user to the project
-                $UserProject->Role = 0;
-                $UserProject->EmailType = 1;
-                $UserProject->Save();
+                    // We register the user to the project
+                    $UserProject->Role = 0;
+                    $UserProject->EmailType = 1;
+                    $UserProject->Save();
 
-                // We add the credentials if not already added
-                $UserProject->AddCredential($repositoryCredential);
-                $UserProject->ProjectId = 0;
-                $UserProject->AddCredential($email); // Add the email by default
+                    // We add the credentials if not already added
+                    $UserProject->AddCredential($repositoryCredential);
+                    $UserProject->ProjectId = 0;
+                    $UserProject->AddCredential($email); // Add the email by default
 
-                echo pdo_error();
+                    echo pdo_error();
+                    return false;
+                }
+                return '<error>User ' . $email . ' already registered.</error>';
+            } // already registered
+
+            // Check if the repositoryCredential exists for this project
+            $UserProject->RepositoryCredential = $repositoryCredential;
+            if ($UserProject->FillFromRepositoryCredential() === true) {
+                return '<error>' . $repositoryCredential . ' was already registered for this project under a different email address</error>';
+            }
+
+            // Register the user
+            // Create a new password
+            $pass = generate_password(10);
+            $passwordHash = User::PasswordHash($pass);
+            if ($passwordHash === false) {
+                $xml .= '<error>Failed to hash password.</error>';
                 return false;
             }
-            return '<error>User ' . $email . ' already registered.</error>';
-        } // already registered
 
-        // Check if the repositoryCredential exists for this project
-        $UserProject->RepositoryCredential = $repositoryCredential;
-        if ($UserProject->FillFromRepositoryCredential() === true) {
-            return '<error>' . $repositoryCredential . ' was already registered for this project under a different email address</error>';
+            $user = new User();
+            $user->Password = $passwordHash;
+            $user->Email = $email;
+            $user->FirstName = $firstName;
+            $user->LastName = $lastName;
+            $user->Save();
+            $userid = $user->Id;
+
+            // Insert the user into the project
+            $UserProject->UserId = $userid;
+            $UserProject->ProjectId = $projectid;
+            $UserProject->Role = 0;
+            $UserProject->EmailType = 1;
+            $UserProject->Save();
+
+            // We add the credentials if not already added
+            $UserProject->AddCredential($repositoryCredential);
+            $UserProject->ProjectId = 0;
+            $UserProject->AddCredential($email); // Add the email by default
+
+            $currentURI = get_server_URI();
+
+            $prefix = '';
+            if (strlen($firstName) > 0) {
+                $prefix = ' ';
+            }
+
+            $project = new Project();
+            $project->Id = $projectid;
+            $projectname = $project->GetName();
+
+            // Send the email
+            $text = 'Hello' . $prefix . $firstName . ",\n\n";
+            $text .= 'You have been registered to CDash because you have CVS/SVN access to the repository for ' . $projectname . "\n";
+            $text .= 'To access your CDash account: ' . $currentURI . "/user.php\n";
+            $text .= 'Your login is: ' . $email . "\n";
+            $text .= 'Your password is: ' . $pass . "\n\n";
+            $text .= 'Generated by CDash.';
+
+            if (cdashmail("$email", 'CDash - ' . $projectname . ' : Subscription', "$text")) {
+                echo 'Email sent to: ' . $email . '<br>';
+            } else {
+                add_log("cannot send email to: $email", 'register_user', LOG_ERR);
+            }
+            return true;
         }
-
-        // Register the user
-        // Create a new password
-        $pass = generate_password(10);
-        $passwordHash = User::PasswordHash($pass);
-        if ($passwordHash === false) {
-            $xml .= '<error>Failed to hash password.</error>';
-            return false;
-        }
-
-        $user = new User();
-        $user->Password = $passwordHash;
-        $user->Email = $email;
-        $user->FirstName = $firstName;
-        $user->LastName = $lastName;
-        $user->Save();
-        $userid = $user->Id;
-
-        // Insert the user into the project
-        $UserProject->UserId = $userid;
-        $UserProject->ProjectId = $projectid;
-        $UserProject->Role = 0;
-        $UserProject->EmailType = 1;
-        $UserProject->Save();
-
-        // We add the credentials if not already added
-        $UserProject->AddCredential($repositoryCredential);
-        $UserProject->ProjectId = 0;
-        $UserProject->AddCredential($email); // Add the email by default
-
-        $currentURI = get_server_URI();
-
-        $prefix = '';
-        if (strlen($firstName) > 0) {
-            $prefix = ' ';
-        }
-
-        $project = new Project();
-        $project->Id = $projectid;
-        $projectname = $project->GetName();
-
-        // Send the email
-        $text = 'Hello' . $prefix . $firstName . ",\n\n";
-        $text .= 'You have been registered to CDash because you have CVS/SVN access to the repository for ' . $projectname . "\n";
-        $text .= 'To access your CDash account: ' . $currentURI . "/user.php\n";
-        $text .= 'Your login is: ' . $email . "\n";
-        $text .= 'Your password is: ' . $pass . "\n\n";
-        $text .= 'Generated by CDash.';
-
-        if (cdashmail("$email", 'CDash - ' . $projectname . ' : Subscription', "$text")) {
-            echo 'Email sent to: ' . $email . '<br>';
-        } else {
-            add_log("cannot send email to: $email", 'register_user', LOG_ERR);
-        }
-        return true;
     }
 
     if (isset($_POST['sendEmailToSiteMaintainers'])) {
