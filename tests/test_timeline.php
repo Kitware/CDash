@@ -74,12 +74,11 @@ class TimelineTestCase extends KWWebTestCase
         // Mark this build as expected.
         $this->toggle_expected($client, $build, 1);
 
-        // Now that we have an expected build,
-        // validate timeline data for index.php and testOverview.php.
+        // Now that we have an expected build, validate timeline data on relevant pages.
 
 
         $timestamp_to_check = 1235350800000;
-        $pages_to_check = ['index.php', 'testOverview.php'];
+        $pages_to_check = ['index.php', 'testOverview.php', 'viewBuildGroup.php'];
 
         $answer_key = [
             'index.php' => [
@@ -90,11 +89,16 @@ class TimelineTestCase extends KWWebTestCase
                 'Failing Tests' => 1,
                 'Not Run Tests' => 1,
                 'Passing Tests' => 1
-            ]
+            ],
+            'viewBuildGroup.php' => [
+                'Warnings' => 1,
+                'Test Failures' => 1
+            ],
         ];
         foreach ($pages_to_check as $page) {
             $filterdata = json_encode(['pageId' => $page]);
-            $this->get($this->url . "/api/v1/timeline.php?date=2009-02-23&filterdata=$filterdata&project=InsightExample");
+            $extra_param = $page == 'viewBuildGroup.php' ? '&buildgroup=Experimental' : '';
+            $this->get($this->url . "/api/v1/timeline.php?date=2009-02-23&filterdata=$filterdata&project=InsightExample$extra_param");
             $content = $this->getBrowser()->getContent();
             $jsonobj = json_decode($content, true);
 
