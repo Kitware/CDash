@@ -40,6 +40,9 @@ class BuildConfigure
      */
     public function __construct()
     {
+        $this->Command = '';
+        $this->Log = '';
+        $this->Status = '';
         $this->PDO = Database::getInstance()->getPdo();
     }
 
@@ -74,7 +77,7 @@ class BuildConfigure
         }
 
         // Next, try crc32.
-        if (isset($this->Command) && isset($this->Log) && isset($this->Status)) {
+        if ($this->Command !== '' && $this->Log !== '' && $this->Status !== '') {
             return $this->ExistsByCrc32();
         }
 
@@ -105,7 +108,7 @@ class BuildConfigure
     /** Check if a configure record exists for these contents. */
     public function ExistsByCrc32()
     {
-        if (!isset($this->Command) || !isset($this->Log) || !isset($this->Status)) {
+        if ($this->Command === '' || $this->Log === '' || $this->Status === '') {
             return false;
         }
         $this->Crc32 = crc32($this->Command . $this->Log . $this->Status);
