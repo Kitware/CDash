@@ -1,9 +1,15 @@
 @import url("common.css");
 .normal { background-color : #bfefbf !important; }
 .warning { background-color : #fd9e40 !important; }
-.warning, .warning a { color:#ffffff !important; }
+.warning, .warning a {
+  color: #ffffff !important;
+  font-weight: bold !important;
+}
 .error { background-color : #de6868 !important; }
-.error, .error a { color:#ffffff !important; }
+.error, .error a {
+  color: #ffffff !important;
+  font-weight: bold !important;
+}
 .disabled-test { background-color : #ffff99; }
 
 .normal-text { color : #8aba5a; }
