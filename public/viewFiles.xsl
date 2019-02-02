@@ -18,7 +18,6 @@
          <link rel="StyleSheet" type="text/css">
          <xsl:attribute name="href"><xsl:value-of select="cdash/cssfile"/></xsl:attribute>
          </link>
-       <xsl:call-template name="headscripts"/>
 
        <script src="js/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>
        <script language="javascript" type="text/javascript" src="js/cdashUploadFilesSorter.js"></script>
