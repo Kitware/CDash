@@ -95,20 +95,22 @@ $update_response['revisionurl'] =
 $update_response['revisiondiff'] =
     get_revision_url($project->Id, $update->PriorRevision, ''); // no prior prior revision...
 $response['update'] = $update_response;
-
-function sort_array_by_directory($a, $b)
-{
-    return $a > $b ? 1 : 0;
+if (!function_exists('sort_array_by_directory')) {
+    function sort_array_by_directory($a, $b)
+    {
+        return $a > $b ? 1 : 0;
+    }
 }
 
-function sort_array_by_filename($a, $b)
-{
-    // Extract directory
-    $filenamea = $a['filename'];
-    $filenameb = $b['filename'];
-    return $filenamea > $filenameb ? 1 : 0;
+if (!function_exists('sort_array_by_filename')) {
+    function sort_array_by_filename($a, $b)
+    {
+        // Extract directory
+        $filenamea = $a['filename'];
+        $filenameb = $b['filename'];
+        return $filenamea > $filenameb ? 1 : 0;
+    }
 }
-
 $directoryarray = [];
 $updatearray1 = [];
 // Create an array so we can sort it
@@ -162,16 +164,18 @@ $num_conflicting_files = 0;
 // Local function to reduce copy/pasted code in the loop below.
 // It adds a file to one of the above data structures, creating the
 // directory if it does not exist yet.
-function add_file($file, $directory, &$list_of_files)
-{
-    $idx = array_search($directory, array_column($list_of_files, 'name'));
-    if ($idx === false) {
-        $d = [];
-        $d['name'] = $directory;
-        $d['files'] = [$file];
-        $list_of_files[] = $d;
-    } else {
-        $list_of_files[$idx]['files'][] = $file;
+if (!function_exists('add_file')) {
+    function add_file($file, $directory, &$list_of_files)
+    {
+        $idx = array_search($directory, array_column($list_of_files, 'name'));
+        if ($idx === false) {
+            $d = [];
+            $d['name'] = $directory;
+            $d['files'] = [$file];
+            $list_of_files[] = $d;
+        } else {
+            $list_of_files[$idx]['files'][] = $file;
+        }
     }
 }
 
