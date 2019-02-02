@@ -193,6 +193,8 @@ class UploadHandler extends AbstractHandler
 
             // Create tmp file
             $this->TmpFilename = tempnam($config->get('CDASH_UPLOAD_DIRECTORY'), 'tmp'); // TODO Handle error
+            chmod($this->TmpFilename, 0644);
+
             if (empty($this->TmpFilename)) {
                 add_log('Failed to create temporary filename', __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__, LOG_ERR);
                 $this->UploadError = true;
