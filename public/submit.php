@@ -25,9 +25,9 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 include dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
-include 'include/do_submit.php';
-include 'include/clientsubmit.php';
-include 'include/version.php';
+require_once 'include/do_submit.php';
+require_once 'include/clientsubmit.php';
+require_once 'include/version.php';
 
 use CDash\Config;
 use CDash\Model\Build;
