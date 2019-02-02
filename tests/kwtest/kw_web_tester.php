@@ -734,7 +734,7 @@ class CDashControllerBrowser extends SimpleBrowser
     private function setRequestKeyValuePair(&$parameters, $key, $value)
     {
         // Handle key names that represent arrays of values
-        if (preg_match('/^(\w+)\[(\w+)\]$/', $key, $parts)) {
+        if (preg_match('/^(\w+)\[(\w+)\]=?$/', $key, $parts)) {
             list(, $key, $index) = $parts;
             if (!isset($parameters[$key])) {
                 $parameters[$key] = [];
