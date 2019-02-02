@@ -1790,14 +1790,13 @@ function begin_JSON_response()
 
     // Check for local overrides of common view partials.
     $files_to_check = array('header', 'footer');
+
     foreach ($files_to_check as $file_to_check) {
         $local_file = "local/views/{$file_to_check}.html";
-        $use_local = $config->get('CDASH_USE_LOCAL_DIRECTORY');
-        $root_dir = $config->get('CDASH_ROOT_DIR');
+        $use_local = config('cdash.allow.local_directory');
+        $root_dir = config('cdash.directory');
 
-        if ($use_local == '1' &&
-            file_exists("{$root_dir}/public/{$local_file}")
-        ) {
+        if ($use_local && file_exists("{$root_dir}/public/{$local_file}")) {
             $response[$file_to_check] = $local_file;
         }
     }

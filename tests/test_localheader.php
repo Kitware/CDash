@@ -14,36 +14,23 @@ class OverrideHeaderTestCase extends KWWebTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->ConfigFile = dirname(__FILE__) . '/../config/config.local.php';
-    }
-
-    public function testEnableConfigSetting()
-    {
-        $contents = file_get_contents($this->ConfigFile);
-        $handle = fopen($this->ConfigFile, 'w');
-        $lines = explode("\n", $contents);
-        foreach ($lines as $line) {
-            if (strpos($line, 'CDASH_USE_LOCAL_DIRECTORY') !== false) {
-                fwrite($handle, "\$CDASH_USE_LOCAL_DIRECTORY = '1';\n");
-            } elseif ($line != '') {
-                fwrite($handle, "$line\n");
-            }
-        }
-        fclose($handle);
     }
 
     public function testOverrideHeader()
     {
-        $config = Config::getInstance();
-        $root_dir = $config->get('CDASH_ROOT_DIR');
+        config(['cdash.allow.local_directory' => true]);
 
         // Create a local header & footer.
-        $dir_name = "$root_dir/public/local/views";
-        if (!file_exists($dir_name)) {
-            mkdir($dir_name);
+        $view_path = config('cdash.file.path.custom.views');
+
+        // TODO: this path should either exist or not
+        // TODO: consider moving files like this (e.g. footer.html) into <root>/storage/cdash/...
+        if (!file_exists($view_path)) {
+            mkdir($view_path);
         }
-        touch("$root_dir/public/local/views/header.html");
-        touch("$root_dir/public/local/views/footer.html");
+
+        touch("{$view_path}/header.html");
+        touch("{$view_path}/footer.html");
 
         // Verify that these are used.
         $this->get($this->url . '/api/v1/index.php?project=InsightExample');
@@ -65,21 +52,6 @@ class OverrideHeaderTestCase extends KWWebTestCase
         $this->cleanup();
         $this->pass('Passed');
         return 0;
-    }
-
-    public function testRestoreConfigSetting()
-    {
-        $contents = file_get_contents($this->ConfigFile);
-        $handle = fopen($this->ConfigFile, 'w');
-        $lines = explode("\n", $contents);
-        foreach ($lines as $line) {
-            if (strpos($line, 'CDASH_USE_LOCAL_DIRECTORY') !== false) {
-                fwrite($handle, "\$CDASH_USE_LOCAL_DIRECTORY = '0';\n");
-            } elseif ($line != '') {
-                fwrite($handle, "$line\n");
-            }
-        }
-        fclose($handle);
     }
 
     private function cleanup()
