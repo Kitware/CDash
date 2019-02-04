@@ -1,9 +1,9 @@
 <select id="id_field{{$index+1}}" name="field{{$index+1}}"
         ng-model="currentFilter.field"
         ng-change="changeFilter(currentFilter)">
-  <option ng-repeat="availablefilter in filterdata.availablefilters"
+  <option ng-repeat="availablefilter in availablefilters"
           value="{{availablefilter}}"
-          ng-selected="filterdata.availablefilters[$index] == currentFilter.field">
+          ng-selected="availablefilters[$index] == currentFilter.field">
     {{filterdefinitions[availablefilter].text}}
   </option>
 </select>

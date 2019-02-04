@@ -9,14 +9,14 @@
     </div>
     <ul>
       <li ng-repeat="filter in filterdata.filters"
-          ng-init="currentFilter = filter; group = filterdata"
+          ng-init="currentFilter = filter; group = filterdata; availablefilters = filterdata.availablefilters"
           ng-class-even="'treven'" ng-class-odd="'trodd'"
           class="filterFields" id="filter{{$index+1}}">
         <div ng-if="::filter.filters">
           <ul>
             <li class="filterFields" id="subfilter{{$index+1}}"
                 ng-repeat="subfilter in filter.filters"
-                ng-init="currentFilter = subfilter; group = filter">
+                ng-init="currentFilter = subfilter; group = filter; availablefilters = filterdata.availablenoncontentfilters">
               <filter-row></filter-row>
               <span ng-if="!$last">
                 {{filterdata.othercombine}}
