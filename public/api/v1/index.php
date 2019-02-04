@@ -1205,7 +1205,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
             // Check if this build should be filtered out now that its
             // numbers have been updated by the SubProject include/exclude
             // filter.
-            if (!build_survives_filter($build_response, $filterdata)) {
+            if (!build_survives_filters($build_response, $filterdata)) {
                 continue;
             }
         }

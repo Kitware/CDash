@@ -1229,9 +1229,10 @@ function get_filterurl()
 
 // Returns true if the build should be included based on the specified filters,
 // false otherwise.
-function build_survives_filter($build_response, $filterdata)
+function build_survives_filters($build_response, $filterdata)
 {
     $filters = $filterdata['filters'];
+    $matching_filters_found = false;
     foreach ($filters as $filter) {
         // Get the filter's value for comparison.
         $filter_value = $filter['value'];
@@ -1314,40 +1315,87 @@ function build_survives_filter($build_response, $filterdata)
                 break;
         }
 
-        // Compare the build & filter's values, returning false if
-        // they don't match the filter's expectation.
-        switch ($filter['compare']) {
-            case 41:
-                // The filter expects the numbers to be equal.
-                if ($build_value != $filter_value) {
-                    return false;
-                }
-                break;
+        if ($build_value !== false) {
+            $matching_filters_found = true;
+        }
 
-            case 42:
-                // The filter expects the numbers to not be equal.
-                if ($build_value == $filter_value) {
-                    return false;
-                }
-                break;
+        if ($filterdata['filtercombine'] == 'or') {
+            // Compare the build & filter's values, returning false if
+            // they don't match the filter's expectation.
+            switch ($filter['compare']) {
+                case 41:
+                    // The filter expects the numbers to be equal.
+                    if ($build_value == $filter_value) {
+                        return true;
+                    }
+                    break;
 
-            case 43:
-                // The filter expects the build value to be greater.
-                if ($build_value <= $filter_value) {
-                    return false;
-                }
-                break;
+                case 42:
+                    // The filter expects the numbers to not be equal.
+                    if ($build_value != $filter_value) {
+                        return true;
+                    }
+                    break;
 
-            case 44:
-                // The filter expects the build value to be lesser.
-                if ($build_value >= $filter_value) {
-                    return false;
-                }
-                break;
+                case 43:
+                    // The filter expects the build value to be greater.
+                    if ($build_value > $filter_value) {
+                        return true;
+                    }
+                    break;
 
-            default:
-                break;
+                case 44:
+                    // The filter expects the build value to be lesser.
+                    if ($build_value < $filter_value) {
+                        return true;
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+
+        } else {
+            // Compare the build & filter's values, returning false if
+            // they don't match the filter's expectation.
+            switch ($filter['compare']) {
+                case 41:
+                    // The filter expects the numbers to be equal.
+                    if ($build_value != $filter_value) {
+                        return false;
+                    }
+                    break;
+
+                case 42:
+                    // The filter expects the numbers to not be equal.
+                    if ($build_value == $filter_value) {
+                        return false;
+                    }
+                    break;
+
+                case 43:
+                    // The filter expects the build value to be greater.
+                    if ($build_value <= $filter_value) {
+                        return false;
+                    }
+                    break;
+
+                case 44:
+                    // The filter expects the build value to be lesser.
+                    if ($build_value >= $filter_value) {
+                        return false;
+                    }
+                    break;
+
+                default:
+                    break;
+            }
         }
     }
-    return true;
+
+    if ($matching_filters_found && $filterdata['filtercombine'] == 'or') {
+        return false;
+    } else {
+        return true;
+    }
 }
