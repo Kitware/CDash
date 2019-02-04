@@ -1068,13 +1068,12 @@ function get_filterdata_from_request($page_id = '')
     }
 
     @$filtercombine = htmlspecialchars(pdo_real_escape_string($_REQUEST['filtercombine']));
-    if (strtolower($filtercombine) == 'or') {
-        $othercombine = 'and';
+    $othercombine = get_othercombine($filtercombine);
+    if ($othercombine == 'and') {
         $sql_combine = 'OR';
         $sql_other_combine = 'AND';
     } else {
         $filtercombine = 'and';
-        $othercombine = 'or';
         $sql_combine = 'AND';
         $sql_other_combine = 'OR';
     }
@@ -1229,11 +1228,24 @@ function get_filterurl()
 
 // Returns true if the build should be included based on the specified filters,
 // false otherwise.
-function build_survives_filters($build_response, $filterdata)
+function build_survives_filters($build_response, $filters, $filtercombine)
 {
-    $filters = $filterdata['filters'];
+    $filtercombine = strtolower($filtercombine);
     $matching_filters_found = false;
     foreach ($filters as $filter) {
+        if (array_key_exists('filters', $filter)) {
+            // Check this sub-block of filters.
+            $othercombine = get_othercombine($filtercombine);
+            $retval = build_survives_filters($build_response, $filter['filters'], $othercombine);
+            if ($filtercombine == 'and' && !$retval) {
+                return false;
+            }
+            if ($filtercombine == 'or' && $retval) {
+                return true;
+            }
+            continue;
+        }
+
         // Get the filter's value for comparison.
         $filter_value = $filter['value'];
 
@@ -1319,7 +1331,7 @@ function build_survives_filters($build_response, $filterdata)
             $matching_filters_found = true;
         }
 
-        if ($filterdata['filtercombine'] == 'or') {
+        if ($filtercombine === 'or') {
             // Compare the build & filter's values, returning false if
             // they don't match the filter's expectation.
             switch ($filter['compare']) {
@@ -1393,9 +1405,18 @@ function build_survives_filters($build_response, $filterdata)
         }
     }
 
-    if ($matching_filters_found && $filterdata['filtercombine'] == 'or') {
+    if ($matching_filters_found && $filtercombine === 'or') {
         return false;
     } else {
         return true;
+    }
+}
+
+function get_othercombine($filtercombine)
+{
+    if (strtolower($filtercombine) == 'or') {
+        return 'and';
+    } else {
+        return 'or';
     }
 }
