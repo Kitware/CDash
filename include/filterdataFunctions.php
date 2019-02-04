@@ -1093,9 +1093,9 @@ function get_filterdata_from_request($page_id = '')
                         "field{$i}field{$j}", "field{$i}compare${j}",
                         "field{$i}value{$j}", $pageSpecificFilters,
                         $filterdata, $subfilter_obj);
+                    $filter['filters'][] = $subfilter_obj;
                 if ($subfilter_sql_clause) {
                     $subclauses[] = $subfilter_sql_clause;
-                    $filter['filters'][] = $subfilter_obj;
                 }
             }
             $filters[] = $filter;
