@@ -27,7 +27,11 @@
         </div>
 
         <div id="settings" ng-click="showsettings = ! showsettings">
-          <span class="glyphicon glyphicon-picture"></span>
+          <span class="glyphicon glyphicon-picture"
+                tooltip-popup-delay="1000"
+                tooltip-append-to-body="true"
+                tooltip-placement="left"
+                uib-tooltip="More display options"></span>
           <ul ng-show="showsettings">
             <li>
               <a id="label_advancedview" ng-click="toggleAdvancedView()">
