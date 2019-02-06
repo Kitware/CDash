@@ -65,7 +65,7 @@ class ConfigureWarningTestCase extends KWWebTestCase
 
         // Make sure the +1 warning gets associated with the correct build.
         $db = Database::getInstance();
-        $stmt = $db->prepare('SELECT id FROM build WHERE projectid = :projectid');
+        $stmt = $db->prepare('SELECT id FROM build WHERE projectid = :projectid ORDER BY starttime');
         $db->execute($stmt, [':projectid' => $this->ProjectId]);
         $buildid1 = $stmt->fetchColumn();
         $buildid2 = $stmt->fetchColumn();
