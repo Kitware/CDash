@@ -11,7 +11,7 @@ require_once 'include/pdo.php';
 
 class EmailTestCase extends KWWebTestCase
 {
-    private $projectid;
+    private $project;
 
     public function __construct()
     {
@@ -25,8 +25,7 @@ class EmailTestCase extends KWWebTestCase
                 'Description' => 'Project EmailProjectExample test for cdash testing',
                 'EmailBrokenSubmission' => 1,
                 'EmailRedundantFailures' => 0);
-        $this->projectid = $this->createProject($settings);
-        $this->pdo = get_link_identifier()->getPdo();
+        $this->project = $this->createProject($settings);
     }
 
     public function testRegisterUser()
@@ -58,37 +57,21 @@ class EmailTestCase extends KWWebTestCase
         // If we want to test the app if registration works, that sort of thing belongs in a
         // registration works test.
 
-        // Create user1
-        $pdo = \CDash\Database::getInstance();
-        $sql = "
-          INSERT INTO user (email, password, firstname, lastname, institution, admin, email_verified_at, remember_token, created_at, updated_at)
-          VALUES (?, ?, ?, ?, ?, 0, NOW(), NULL, NOW(), NOW())
-         ";
-        $stmt = $pdo->prepare($sql);
-        $userId = $pdo->insert($stmt, ['user1@kw', 'user1', 'Firstname', 'Lastname', 'Kitware, Inc.']);
+        $user = $this->createUser([
+            'firstname' => 'Firstname',
+            'lastname' => 'Lastname',
+            'email' => 'user1@kw',
+            'password' => 'user1',
+            'institution' => 'Kitware, Inc',
+        ]);
 
-        if (!is_numeric($userId)) {
+        if (!$user->id) {
             $this->fail("Unable to create user");
             return;
         }
 
-        $user = new User();
-        $user->Id = $userId;
-        $user->Fill();
-
-        // Login as user1
-        \Auth::shouldReceive('check')->andReturn(true);
-        \Auth::shouldReceive('user')->andReturn($user);
-        \Auth::shouldReceive('id')->andReturn($userId);
-
-        // Subscribe to the project.
-        $stmt = $this->pdo->query("SELECT id FROM project WHERE name = 'EmailProjectExample'");
-        $row = $stmt->fetch();
-        if (!$row) {
-            $this->fail('Could not lookup projectid');
-        }
-        $projectid = $row['id'];
-        $this->connect($this->url . "/subscribeProject.php?projectid=$projectid");
+        $this->actingAs(['email' => 'user1@kw', 'password' => 'user1'])
+            ->connect($this->url . "/subscribeProject.php?projectid={$this->project}");
         $this->setField('credentials[0]', 'user1kw');
         $this->setField('emailsuccess', '1');
         $this->clickSubmitByName('subscribe');
@@ -263,13 +246,13 @@ class EmailTestCase extends KWWebTestCase
         $rep = dirname(__FILE__) . '/data/EmailProjectExample';
         $file = "$rep/3_update.xml";
         if (!$this->submission('EmailProjectExample', $file)) {
-            //return;
+            return;
         }
 
         $this->deleteLog($this->logfilename);
         $file = "$rep/3_test.xml";
         if (!$this->submission('EmailProjectExample', $file)) {
-            //return;
+            return;
         }
 
         $config = Config::getInstance();
