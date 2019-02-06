@@ -23,6 +23,7 @@ class BuildRelationshipModelTest extends CDashTestCase
 {
     public function setUp()
     {
+        parent::setUp();
         $this->service = ServiceContainer::getInstance();
         $container = ServiceContainer::container();
         $this->relationship = $this->service->get(BuildRelationship::class);

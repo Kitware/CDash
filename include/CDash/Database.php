@@ -15,6 +15,7 @@
 =========================================================================*/
 namespace CDash;
 
+use Doctrine\DBAL\Driver\PDOConnection;
 use PDO;
 use PDOException;
 
@@ -117,37 +118,17 @@ class Database extends Singleton
     /**
      * Get the underlying PDO object or false if it cannot be created.
      * @param bool $log_error
-     * @return bool|\PDO
+     * @return PDOConnection
      */
     public function getPdo($log_error = true)
     {
-        if (is_null($this->pdo) || strpos($this->dsn, 'dbname') === false) {
-            $this->dsn = $this->buildDsn($this->database_name);
-            try {
-                // try to connect with database name
-                $this->pdo = new PDO(
-                    $this->dsn,
-                    $this->username,
-                    $this->password,
-                    $this->attributes);
-            } catch (PDOException $e) {
-                // try to connect without database name
-                $this->dsn = $this->buildDsn();
-                try {
-                    $this->pdo = new PDO(
-                        $this->dsn,
-                        $this->username,
-                        $this->password,
-                        $this->attributes);
-                } catch (PDOException $e) {
-                    if ($log_error) {
-                        Log::getInstance()->error($e);
-                    }
-                    return false;
-                }
-            }
-        }
-        return $this->pdo;
+        $db = app()->make('db');
+        return $db->getPdo();
+    }
+
+    public function setPdo(PDOConnection $pdo)
+    {
+        $this->pdo = $pdo;
     }
 
     /**
@@ -173,7 +154,9 @@ class Database extends Singleton
     public function insert(\PDOStatement $stmt, $input_parameters = null)
     {
         $this->execute($stmt, $input_parameters);
-        return $this->pdo->lastInsertId();
+        $dbal = app()->make('db');
+        $pdo = $dbal->getPdo();
+        return $pdo->lastInsertId();
     }
 
     public function insertByTrasaction(\PDOStatement $stmt, $input_parameters = null)
@@ -204,7 +187,8 @@ class Database extends Singleton
      */
     public function query($sql)
     {
-        if (($stmt = $this->pdo->query($sql)) === false) {
+        $pdo = $this->getPdo();
+        if (($stmt = $pdo->query($sql)) === false) {
             $this->logPdoError($this->pdo->errorInfo());
         }
         return $stmt;
