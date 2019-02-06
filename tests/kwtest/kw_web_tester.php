@@ -21,6 +21,7 @@ use App\Http\Controllers\CDash;
 use CDash\Config;
 use CDash\Model\Project;
 use CDash\Model\User;
+use App\Http\Kernel;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Router;
@@ -49,6 +50,7 @@ class KWWebTestCase extends WebTestCase
 
     private $config;
     protected $app;
+    protected $actingAs = [];
 
     /**
      * KWWebTestCase constructor.
@@ -83,7 +85,8 @@ class KWWebTestCase extends WebTestCase
 
     public function createBrowser()
     {
-        return new CDashControllerBrowser();
+        $this->actingAs = [];
+        return new CDashControllerBrowser($this);
     }
 
     public function config($var_name)
@@ -329,9 +332,25 @@ class KWWebTestCase extends WebTestCase
         return $content;
     }
 
+    public function actingAs(array $credentials)
+    {
+        $this->actingAs = $credentials;
+        return $this;
+    }
+
+    public function hasActingAs()
+    {
+        return !empty($this->actingAs);
+    }
+
     public function login($user = 'simpletest@localhost', $passwd = 'simpletest')
     {
-        $user = $this->getUser($user);
+        $this->actingAs(['email' => $user, 'password' => $passwd]);
+    }
+
+    public function loginActingAs()
+    {
+        $user = $this->getUser($this->actingAs['email']);
         \Auth::shouldReceive('check')->andReturn(true);
         \Auth::shouldReceive('user')->andReturn($user);
         \Auth::shouldReceive('id')->andReturn($user->Id);
@@ -366,6 +385,13 @@ class KWWebTestCase extends WebTestCase
         $user->Fill();
         return $user;
     }
+
+    public function createUser(array $fields = [])
+    {
+        $user = factory(\App\User::class)->create($fields);
+        return $user;
+    }
+
     private function check_submission_result($result)
     {
         if ($result === false) {
@@ -655,12 +681,21 @@ class KWWebTestCase extends WebTestCase
  */
 class CDashControllerBrowser extends SimpleBrowser
 {
+    /** @var KWWebTestCase $test */
+    private $test;
+
+    public function __construct($test)
+    {
+        $this->test = $test;
+        parent::__construct();
+    }
+
     /**
      * @return CDashControllerUserAgent
      */
     public function createUserAgent()
     {
-        return new CDashControllerUserAgent();
+        return new CDashControllerUserAgent($this->test);
     }
 
     /**
@@ -758,8 +793,19 @@ class CDashControllerBrowser extends SimpleBrowser
 
 class CDashControllerUserAgent extends SimpleUserAgent
 {
+    use CreatesApplication;
+
+    /** @var KWWebTestCase $test */
+    private $test;
+
     /** @var Response $response */
     private $response;
+
+    public function __construct(KWWebTestCase $test)
+    {
+        parent::__construct();
+        $this->test = $test;
+    }
 
     /**
      * @param SimpleUrl $url
@@ -769,8 +815,13 @@ class CDashControllerUserAgent extends SimpleUserAgent
     protected function fetch($url, $encoding)
     {
         $request = $this->getIlluminateHttpRequest($url);
-        $route = (new CDash($request))();
-        $this->response = Router::toResponse($request, $route);
+        $app = $this->createApplication();
+
+        $kernel = $app->make(Kernel::class);
+        if ($this->test->hasActingAs()) {
+            $this->test->loginActingAs();
+        }
+        $this->response = $kernel->handle($request);
         return $this->getSimpleHttpResponse($url, $encoding);
     }
 
