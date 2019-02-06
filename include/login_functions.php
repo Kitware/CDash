@@ -24,7 +24,7 @@ use CDash\Model\User;
 
 /** @var PDO $pdo */
 global $pdo;
-$pdo = Database::getInstance()->getPdo();
+$pdo = Database::getInstance();
 
 function setRememberMeCookie($userId)
 {
