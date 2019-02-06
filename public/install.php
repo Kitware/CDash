@@ -22,14 +22,11 @@ if (class_exists('XsltProcessor') === false) {
     return;
 }
 
-include dirname(__DIR__) . '/config/config.php';
-require_once 'include/pdo.php';
 require_once 'include/common.php';
 require_once 'include/login_functions.php';
 require_once 'include/version.php';
 
 use CDash\Config;
-use CDash\Database;
 use CDash\Model\User;
 
 $config = Config::getInstance();
@@ -70,16 +67,22 @@ if (!$config->get('CDASH_DB_TYPE')) {
 } else {
     $db_type = $config->get('CDASH_DB_TYPE');
 }
+
+$db_connection = $config->get('CDASH_DB_CONNECTION_TYPE');
+$db_host = $config->get('CDASH_DB_HOST');
+$db_user = $config->get('CDASH_DB_LOGIN');
+$db_pass = $config->get('CDASH_DB_PASS');
+
 $xml .= '<connectiondb_type>' . $db_type . '</connectiondb_type>';
-$xml .= '<connectiondb_host>' . $config->get('CDASH_DB_HOST') . '</connectiondb_host>';
-$xml .= '<connectiondb_login>' . $config->get('CDASH_DB_LOGIN') . '</connectiondb_login>';
+$xml .= '<connectiondb_host>' . $db_host . '</connectiondb_host>';
+$xml .= '<connectiondb_login>' . $db_user . '</connectiondb_login>';
 $xml .= '<connectiondb_name>' . $config->get('CDASH_DB_NAME') . '</connectiondb_name>';
 
 // Step 1: Check if we can connect to the database
-$pdo = Database::getInstance()->getPdo();
-if ($pdo) {
+try {
+    $pdo = new \PDO("{$db_type}:{$db_connection}={$db_host}", $db_user, $db_pass);
     $xml .= '<connectiondb>1</connectiondb>';
-} else {
+} catch (\PDOException $exception) {
     $xml .= '<connectiondb>0</connectiondb>';
 }
 
@@ -111,11 +114,16 @@ if (!is_writable('rss')) {
     $xml .= '<rsswritable>1</rsswritable>';
 }
 
-// If the database already exists and we have all the tables
-if (pdo_query('SELECT id FROM ' . qid('user') . ' LIMIT 1')) {
+try {
+    pdo_query('SELECT id FROM ' . qid('user') . ' LIMIT 1');
     $xml .= '<database>1</database>';
-} else {
+    $installed = true;
+} catch (\PDOException $exception) {
     $xml .= '<database>0</database>';
+    $installed = false;
+}
+// If the database already exists and we have all the tables
+if (!$installed) {
     $xml .= '<dashboard_timeframe>24</dashboard_timeframe>';
 
     // If we should create the tables
@@ -158,7 +166,9 @@ if (pdo_query('SELECT id FROM ' . qid('user') . ' LIMIT 1')) {
             // If this is MySQL we try to create the database
             if ($db_type == 'mysql') {
                 $db_name = $config->get('CDASH_DB_NAME');
-                if (!pdo_query("CREATE DATABASE IF NOT EXISTS `$db_name`")) {
+                try {
+                    $pdo->exec("CREATE DATABASE IF NOT EXISTS `$db_name`");
+                } catch (Exception $exception) {
                     $xml .= '<db_created>0</db_created>';
                     $xml .= '<alert>' . pdo_error() . '</alert>';
                     $db_created = false;

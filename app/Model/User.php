@@ -358,7 +358,7 @@ class User
     {
         $config = Config::getInstance();
 
-        if ($config->get('CDASH_PASSWORD_EXPIRATION') < 1 || !$this->Id || !$this->Password) {
+        if (config('cdash.password.expires') < 1 || !$this->Id || !$this->Password) {
             return false;
         }
 
@@ -445,6 +445,35 @@ class User
         $this->Admin = $row['admin'];
         $this->Filled = true;
         return true;
+    }
+
+    public function hasExpiredPassword()
+    {
+        $expires = config('cdash.password.expires');
+
+        if ($expires < 1) {
+            return false;
+        }
+
+        $stmt = $this->PDO->prepare(
+            'SELECT date FROM password WHERE userid = ?
+        ORDER BY date DESC LIMIT 1');
+        $this->PDO->execute($stmt, [$this->Id]);
+        $row = $stmt->fetch();
+
+        if (!$row) {
+            // If no result, then password rotation must have been enabled
+            // after this user set their password.  Force them to change it now.
+            return true;
+        }
+
+        $password_created_time = strtotime($row['date']);
+        $password_expiration_time =
+            strtotime("+{$expires} days", $password_created_time);
+        if (time() > $password_expiration_time) {
+            return true;
+        }
+        return false;
     }
 
     /** Wrapper around PHP's builtin password_hash function.

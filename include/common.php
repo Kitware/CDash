@@ -429,7 +429,6 @@ function checkUserPolicy($userid, $projectid, $onlyreturn = 0)
     if ($projectid == 0 && !$user->IsAdmin()) {
         if (!$onlyreturn) {
             echo 'You cannot access this page';
-            exit(0);
         } else {
             return false;
         }

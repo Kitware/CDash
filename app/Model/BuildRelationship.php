@@ -38,7 +38,7 @@ class BuildRelationship
         $this->Project = null;
         $this->Relationship = '';
         $this->Filled = false;
-        $this->PDO = Database::getInstance()->getPdo();
+        $this->PDO = Database::getInstance();
         $this->Service = ServiceContainer::getInstance();
     }
 

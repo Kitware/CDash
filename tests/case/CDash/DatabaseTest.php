@@ -55,7 +55,7 @@ class DatabaseTest extends CDashTestCase
         $this->assertInstanceOf(PDO::class, $pdo);
     }
 
-    public function testGetPdoReturnsFalseWhenUnableToConnect()
+    public function testGetPdoReturnsInstanceOfDBALSymphonyDriver()
     {
         $config = Config::getInstance();
         $config->set('CDASH_DB_NAME', 'my_abcd_database');
@@ -69,26 +69,7 @@ class DatabaseTest extends CDashTestCase
         $db = Database::getInstance();
         $pdo = $db->getPdo();
 
-        $this->assertFalse($pdo);
-
-        // Test that exception is being logged
-        $log = Log::getInstance();
-        $entries = $log->getLogEntries();
-
-        $expected = 'could not connect to server';
-        $actual = $entries[0]['message'];
-        $this->assertContains($expected, $actual);
-
-        $expected = LOG_ERR;
-        $actual = $entries[0]['level'];
-
-        $this->assertEquals($expected, $actual);
-
-        // Test that exception does not get logged
-        $log->clear();
-        $pdo = $db->getPdo(false);
-        $this->assertFalse($pdo);
-        $this->assertEmpty($log->getLogEntries());
+        $this->assertInstanceOf('Doctrine\DBAL\Driver\PDOConnection', $pdo);
     }
 
     public function testBuildDsn()
