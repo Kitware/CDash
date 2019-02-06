@@ -1,17 +1,17 @@
 @import url("common.css");
-.normal  { background-color : #91bfdb; }
-.warning { background-color : #ffffbf; }
-.disabled-test { background-color : #fee090; }
-.error   { background-color : #fc8d59; }
+.normal  { background-color : #91bfdb !important; }
+.warning { background-color : #ffffbf !important; }
+.disabled-test { background-color : #fee090 !important; }
+.error   { background-color : #fc8d59 !important; }
 
 .normal-text  { color : #91bfdb; }
 .warning-text { color : #ffffbf; }
 .error-text   { color : #fc8d59; }
 
-.tabb tbody tr.odd td.normal { background-color: #88b3ce; }
-.tabb tbody tr.odd td.warning { background-color: #eeeeb3; }
-.tabb tbody tr.odd td.disabled-test { background-color: #edcf7f; }
-.tabb tbody tr.odd td.error { background-color: #ef8553; }
+.tabb tbody tr.odd td.normal { background-color: #88b3ce !important; }
+.tabb tbody tr.odd td.warning { background-color: #eeeeb3 !important; }
+.tabb tbody tr.odd td.disabled-test { background-color: #edcf7f !important; }
+.tabb tbody tr.odd td.error { background-color: #ef8553 !important; }
 
 .Passed  { background-color : #91bfdb; }
 .Failed  { background-color : #ffffbf; }

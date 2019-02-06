@@ -62,9 +62,8 @@
       </a>
     </div>
     <div id="headername2">
-        CDash
       <span id="subheadername">
-        Register
+        CDash - Register
       </span>
     </div>
  </div>

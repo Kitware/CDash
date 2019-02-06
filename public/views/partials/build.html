@@ -75,7 +75,7 @@
     <div style="float: left;" ng-if="::cdash.user.admin == 1">
       <!-- Display folder icon to edit this build for administrative users -->
       <a href="javascript:;" ng-click="toggleAdminOptions(build)">
-        <img src="img/folder.png" class="icon"/>
+        <img name="adminoptions" src="img/folder.png" class="icon"/>
       </a>
       <img src="img/loading.gif" ng-show="build.loading == 1"/>
     </div>

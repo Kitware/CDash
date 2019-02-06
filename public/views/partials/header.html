@@ -1,5 +1,5 @@
 <div id="header">
-  <div id="headertop">
+  <div id="headertop" class="clearfix">
     <div id="topmenu">
       <a href="user.php">
         <span ng-if="cdash.user.id > 0">My CDash</span>
@@ -8,8 +8,6 @@
       <a href="index.php">All Dashboards</a>
       <a href="user.php?logout=1" ng-if="cdash.user.id > 0">Log Out</a>
     </div>
-
-    <div id="datetime"> {{::cdash.datetime}} </div>
     <div ng-if="::cdash.feed_enabled && cdash.public==1" id="feedicon" alt="RSS Feed" title="RSS Feed">
       <a ng-href="rss/SubmissionRSS{{::cdash.projectname}}.xml">
         <img src="img/feed-icon16x16.png" alt="RSS" width="14" height="14" border="0" />
@@ -25,7 +23,7 @@
       </a>
     </div>
     <div id="headername">
-      {{::cdash.projectname}}
+      <span class="projectname">{{::cdash.projectname}}</span>
       <span ng-if="::cdash.subheadername" id="subheadername">{{::cdash.subprojectname}}</span>
     </div>
     <div id="headermenu">
@@ -87,34 +85,6 @@
         <li ng-if="::cdash.showcalendar">
           <a id="cal" href="" ng-click="toggleCalendar()">Calendar</a>
           <span id="date_now" style="display:none;">{{::cdash.date}}</span>
-        </li>
-        <li ng-if="::!cdash.hidenav">
-          <a ng-if="::cdash.menu.previous"
-             ng-href="{{::cdash.menu.previous}}{{::cdash.filterurl}}">Previous</a>
-          <a ng-if="::!cdash.menu.previous && !cdash.menu.noprevious"
-             ng-href="index.php?project={{::cdash.projectname_encoded}}&date={{::cdash.previousdate}}{{::cdash.extraurl}}{{::cdash.filterurl}}">
-            Previous
-          </a>
-        </li>
-        <li ng-if="::!cdash.hidenav">
-          <a ng-if="::cdash.menu.current"
-             ng-href="{{::cdash.menu.current}}{{::cdash.filterurl}}">
-            Current
-          </a>
-          <a ng-if="!cdash.menu.current"
-             ng-href="index.php?project={{::cdash.projectname_encoded}}{{::cdash.extraurl}}{{::cdash.filterurl}}">
-            Current
-          </a>
-        </li>
-        <li ng-if="::!cdash.menu.nonext && !cdash.hidenav">
-          <a ng-if="::cdash.menu.next"
-             ng-href="{{::cdash.menu.next}}{{::cdash.filterurl}}">
-            Next
-          </a>
-          <a ng-if="::!cdash.menu.next"
-             ng-href="index.php?project={{::cdash.projectname_encoded}}&date={{::cdash.nextdate}}{{::cdash.extraurl}}{{::cdash.filterurl}}">
-            Next
-          </a>
         </li>
         <li ng-if="::!cdash.hidenav">
           <a href="#">Project</a>
@@ -184,9 +154,41 @@
       </ul>
     </div>
   </div>
+  <div id="calendar"/>
+  <div class="projectnav clearfix">
+    <ul class="projectnav_controls clearfix">
+      <li class="btnprev" ng-if="::!cdash.hidenav">
+        <a ng-if="::cdash.menu.previous"
+           ng-href="{{::cdash.menu.previous}}{{::cdash.filterurl}}">Prev</a>
+        <a ng-if="!cdash.menu.previous && !cdash.menu.noprevious"
+           ng-href="index.php?project={{::cdash.projectname_encoded}}&date={{::cdash.previousdate}}{{::cdash.extraurl}}{{::cdash.filterurl}}">
+          Prev
+        </a>
+      </li>
+      <li class="btncurr" ng-if="::!cdash.hidenav">
+        <a ng-if="::cdash.menu.current"
+           ng-href="{{::cdash.menu.current}}{{::cdash.filterurl}}">
+          Current
+        </a>
+        <a ng-if="!cdash.menu.current"
+           ng-href="index.php?project={{::cdash.projectname_encoded}}{{::cdash.extraurl}}{{::cdash.filterurl}}">
+          Current
+        </a>
+      </li>
+      <li class="btnnext" ng-if="::!cdash.menu.nonext && !cdash.hidenav">
+        <a ng-if="::cdash.menu.next"
+           ng-href="{{::cdash.menu.next}}{{::cdash.filterurl}}">
+          Next
+        </a>
+        <a ng-if="!cdash.menu.next"
+           ng-href="index.php?project={{::cdash.projectname_encoded}}&date={{::cdash.nextdate}}{{::cdash.extraurl}}{{::cdash.filterurl}}">
+          Next
+        </a>
+      </li>
+    </ul>
+  </div>
 </div>
 
-<div id="calendar"/>
 
 <img id="spinner" src="img/loading.gif" ng-show="loading" />
 

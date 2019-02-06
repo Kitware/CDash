@@ -26,13 +26,11 @@
       <div id="headerbottom">
         <div id="headerlogo">
           <a ng-href="{{cdash.home}}">
-            <img ng-show="cdash.logoid > 0" ng-src="displayImage.php?imgid={{cdash.logoid}}" border="0" height="50px"/>
-            <img ng-show="cdash.logoid < 1" src="img/cdash.png" border="0" height="50px"/>
+            <img id="projectlogo" border="0" height="50px" src="img/cdash.png" />
           </a>
         </div>
         <div id="headername2">
-          <span ng-bind="cdash.title"></span>
-          <span id="subheadername" ng-bind="cdash.subtitle"></span>
+          <span id="subheadername">{{::cdash.title}} {{::cdash.subtitle}}</span>
         </div>
       </div>
     </div>
