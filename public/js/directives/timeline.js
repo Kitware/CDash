@@ -56,6 +56,10 @@ var timelineController =
           .showTotalInTooltip(false)
           .useInteractiveGuideline(true);
 
+        if ($scope.timeline.hasOwnProperty('colors')) {
+          $scope.timechart.color($scope.timeline.colors);
+        }
+
         $scope.timechart.xAxis.showMaxMin(false);
         $scope.timechart_selection = d3.select('#timechart svg').datum($scope.timeline.data);
         $scope.timechart_selection.call($scope.timechart);

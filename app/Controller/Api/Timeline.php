@@ -37,6 +37,11 @@ class Timeline extends Index
     // in Javascript.
     private $timeToDate;
 
+    const ERROR = 0;
+    const WARNING = 1;
+    const FAILURE = 2;
+    const CLEAN = 3;
+
     public function __construct(Database $db, Project $project)
     {
         parent::__construct($db, $project);
@@ -44,6 +49,8 @@ class Timeline extends Index
         $this->includeCleanBuilds = true;
         $this->timeData = [];
         $this->timeToDate = [];
+
+        $this->colors = [];
     }
 
     public function getResponse()
@@ -51,6 +58,7 @@ class Timeline extends Index
         $this->filterdata = json_decode($_REQUEST['filterdata'], true);
         $page = $this->filterdata['pageId'];
         $this->filterSQL = generate_filterdata_sql($this->filterdata);
+        $this->generateColorMap();
 
         $this->project->Fill();
         $response = [];
@@ -73,6 +81,22 @@ class Timeline extends Index
             default:
                 json_error_response("Unexpected value for page: $page");
                 break;
+        }
+    }
+
+    private function generateColorMap()
+    {
+        if (array_key_exists('colorblind', $this->filterdata) &&
+                $this->filterdata['colorblind']) {
+            $this->colors[self::ERROR] = '#fc8d59';
+            $this->colors[self::WARNING] = '#ffffbf';
+            $this->colors[self::FAILURE] = '#fee090';
+            $this->colors[self::CLEAN] = '#91bfdb';
+        } else {
+            $this->colors[self::ERROR] = '#de6868';
+            $this->colors[self::WARNING] = '#fd9e40';
+            $this->colors[self::FAILURE] = '#ffff99';
+            $this->colors[self::CLEAN] = '#bfefbf';
         }
     }
 
@@ -134,7 +158,14 @@ class Timeline extends Index
             json_error_response('Failed to load results');
             return [];
         }
-        return $this->getTimelineChartData($stmt);
+        $response = $this->getTimelineChartData($stmt);
+        $response['colors'] = [
+            $this->colors[self::ERROR],
+            $this->colors[self::WARNING],
+            $this->colors[self::FAILURE],
+            $this->colors[self::CLEAN]
+        ];
+        return $response;
     }
 
     private function chartForTestOverview()
@@ -165,7 +196,13 @@ class Timeline extends Index
             return [];
         }
         $this->includeCleanBuilds = false;
-        return $this->getTimelineChartData($stmt);
+        $response = $this->getTimelineChartData($stmt);
+        $response['colors'] = [
+            $this->colors[self::ERROR],
+            $this->colors[self::WARNING],
+            $this->colors[self::CLEAN]
+        ];
+        return $response;
     }
 
     private function chartForBuildGroup()
@@ -196,6 +233,12 @@ class Timeline extends Index
                 'prettyname' => 'Test Failures',
             ]
         ];
+        $colors = [
+            $this->colors[self::ERROR],
+            $this->colors[self::WARNING],
+            $this->colors[self::FAILURE],
+            $this->colors[self::CLEAN]
+        ];
         $build_data = [];
 
         $group_type = $buildgroup->GetType();
@@ -218,7 +261,9 @@ class Timeline extends Index
                 json_error_response('Failed to load results');
                 return [];
             }
-            return $this->getTimelineChartData($stmt);
+            $response = $this->getTimelineChartData($stmt);
+            $response['colors'] = $colors;
+            return $response;
         } elseif ($group_type == 'Latest') {
             $this->filterOnBuildGroup($groupname);
 
@@ -257,7 +302,9 @@ class Timeline extends Index
                 $this->endDate = gmdate(FMT_DATETIME, $datetime->getTimestamp());
             }
             $this->endDate = $end_date;
-            return $this->getTimelineChartData($builds);
+            $response = $this->getTimelineChartData($builds);
+            $response['colors'] = $colors;
+            return $response;
         }
     }
 
