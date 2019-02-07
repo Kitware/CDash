@@ -804,8 +804,8 @@ CREATE TABLE `summaryemail` (
 
 CREATE TABLE `configureerror` (
   `configureid` int(11) NOT NULL,
-  `type` tinyint(4) NOT NULL,
-  `text` text NOT NULL,
+  `type` tinyint(4),
+  `text` text,
   KEY `configureid` (`configureid`),
   KEY `type` (`type`)
 );
@@ -813,8 +813,8 @@ CREATE TABLE `configureerror` (
 
 CREATE TABLE `configureerrordiff` (
   `buildid` bigint(20) NOT NULL,
-  `type` tinyint(4) NOT NULL,
-  `difference` int(11) NOT NULL,
+  `type` tinyint(4),
+  `difference` int(11),
   KEY `buildid` (`buildid`),
   KEY `type` (`type`),
   UNIQUE KEY `unique_configureerrordiff` (`buildid`, `type`)

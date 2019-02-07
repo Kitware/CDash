@@ -709,8 +709,8 @@ CREATE INDEX "groupid3" on "summaryemail" ("groupid");
 --
 CREATE TABLE "configureerror" (
   "configureid" integer NOT NULL,
-  "type" smallint NOT NULL,
-  "text" text NOT NULL
+  "type" smallint,
+  "text" text
 );
 CREATE INDEX "configureid2" on "configureerror" ("configureid");
 CREATE INDEX "type3" on "configureerror" ("type");
@@ -720,8 +720,8 @@ CREATE INDEX "type3" on "configureerror" ("type");
 --
 CREATE TABLE "configureerrordiff" (
   "buildid" bigint NOT NULL,
-  "type" smallint NOT NULL,
-  "difference" bigint NOT NULL,
+  "type" smallint,
+  "difference" bigint,
   CONSTRAINT "unique_configureerrordiff" UNIQUE ("buildid", "type")
 );
 CREATE INDEX "buildid16" on "configureerrordiff" ("buildid");

@@ -15,6 +15,8 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use CDash\Database;
+
 /** BuildConfigureErrorDiff class */
 class BuildConfigureErrorDiff
 {
@@ -53,10 +55,14 @@ class BuildConfigureErrorDiff
             }
         } else {
             // insert
+            $db = Database::getInstance();
+            $sql = 'INSERT INTO configureerrordiff (buildid, type, difference) VALUES (:id, :type, :diff)';
+            $stmt = $db->prepare($sql);
+            $stmt->bindValue(':id', $this->BuildId);
+            $stmt->bindValue(':type', $this->Type);
+            $stmt->bindValue(':diff', $this->Difference);
 
-            $query = 'INSERT INTO configureerrordiff (buildid,type,difference)
-                 VALUES (' . qnum($this->BuildId) . ',' . qnum($this->Type) . ',' . qnum($this->Difference) . ')';
-            if (!pdo_query($query)) {
+            if (!$db->execute($stmt)) {
                 add_last_sql_error('BuildConfigureErrorDiff:Create', 0, $this->BuildId);
                 return false;
             }
