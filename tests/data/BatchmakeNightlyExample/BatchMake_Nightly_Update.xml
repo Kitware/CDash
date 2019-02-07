@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Update mode="Client" Generator="ctest-2.6-patch 0">
+<Update mode="Client" Generator="ctest2.6-patch 0">
   <Site>Dash20.kitware</Site>
   <BuildName>Win32-MSVC2009</BuildName>
   <BuildStamp>20090223-0100-Nightly</BuildStamp>

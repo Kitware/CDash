@@ -2,6 +2,7 @@
 <Site BuildName="test_changeid"
 	BuildStamp="20190104-0100-Nightly"
 	Name="elysium"
+	Generator="ctest-3.14.0-rc1"
 	OSName="Linux"
 	Hostname="elysium"
 	ChangeId="555"

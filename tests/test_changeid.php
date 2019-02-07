@@ -35,11 +35,14 @@ class ChangeIdTestCase extends KWWebTestCase
 
         // Make sure the build has a changeid associated with it.
         $db = Database::getInstance();
-        $stmt = $db->prepare('SELECT changeid FROM build WHERE projectid = :projectid');
+        $stmt = $db->prepare('SELECT changeid, generator FROM build WHERE projectid = :projectid');
         $db->execute($stmt, [':projectid' => $this->ProjectId]);
-        $changeid = $stmt->fetchColumn();
-        if ($changeid != 555) {
+        $row = $stmt->fetch();
+        if ($row['changeid'] != 555) {
             $this->fail('Expected changeid not found');
+        }
+        if ($row['generator'] != 'ctest-3.14.0-rc1') {
+            $this->fail('Expected generator not found');
         }
         $this->deleteProject($this->ProjectId);
     }

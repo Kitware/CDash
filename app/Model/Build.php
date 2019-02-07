@@ -1986,7 +1986,7 @@ class Build
 
         $stmt = $this->PDO->prepare('
             SELECT builderrors, buildwarnings, starttime, endtime,
-            submittime, log, command, parentid, changeid
+            submittime, log, command, generator, parentid, changeid
             FROM build WHERE id = ? FOR UPDATE');
         pdo_execute($stmt, [$buildid]);
         $build = $stmt->fetch();
@@ -2065,6 +2065,12 @@ class Build
         if ($this->PullRequest && $this->PullRequest != $build['changeid']) {
             $clauses[] = 'changeid = ?';
             $params[] = $this->PullRequest;
+        }
+
+        // Check if the build's generator has changed.
+        if ($this->Generator && $this->Generator != $build['generator']) {
+            $clauses[] = 'generator = ?';
+            $params[] = $this->Generator;
         }
 
         $num_clauses = count($clauses);
