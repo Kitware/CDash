@@ -18,7 +18,7 @@
 
     <tr class="table-heading">
 
-      <th ng-if="::cdash.childview == 1" align="center" rowspan="2" width="5%" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'label', $event)">
+      <th ng-if="::cdash.childview == 1" align="center" colspan="2" rowspan="2" width="5%" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'label', $event)">
         SubProject
         <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-label') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('label') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
       </th>

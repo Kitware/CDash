@@ -1,5 +1,5 @@
 <!-- For child view, display the label(s) as a link to the build summary -->
-<td ng-if="::cdash.childview == 1" align="left" class="paddt">
+<td ng-if="::cdash.childview == 1" align="left" class="paddt" colspan="2">
   <a ng-href="buildSummary.php?buildid={{::build.id}}">
     {{::build.label}}
   </a>
