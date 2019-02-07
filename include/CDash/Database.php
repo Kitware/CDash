@@ -122,20 +122,24 @@ class Database extends Singleton
      */
     public function getPdo($log_error = true)
     {
-        $db = app()->make('db');
-        /** @var PDO $pdo */
-        $pdo = $db->getPdo();
+        if (!$this->pdo) {
+            $db = app()->make('db');
+            /** @var PDO $pdo */
+            $pdo = $db->getPdo();
 
-        // The best of a number of bad  solutions. Essentially if a SQL statement
-        // contains the same token more than once, e.g.:
-        //   SELECT * FROM a WHERE b=:token OR c=:token
-        // the $stmt->bindValue(':token', $token) does not take into account the
-        // second token with the same name.
-        // @see https://stackoverflow.com/a/35375592/1373710
-        // TODO: Find out if this can be set at application bootstrap
-        //       by extending the DatabaseServiceProvider class
-        $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, TRUE);
-        return $pdo;
+            // The best of a number of bad  solutions. Essentially if a SQL statement
+            // contains the same token more than once, e.g.:
+            //   SELECT * FROM a WHERE b=:token OR c=:token
+            // the $stmt->bindValue(':token', $token) does not take into account the
+            // second token with the same name.
+            // @see https://stackoverflow.com/a/35375592/1373710
+            // TODO: Find out if this can be set at application bootstrap
+            //       by extending the DatabaseServiceProvider class
+            $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, TRUE);
+            $this->pdo = $pdo;
+        }
+
+        return $this->pdo;
     }
 
     public function setPdo(PDOConnection $pdo)
@@ -150,11 +154,12 @@ class Database extends Singleton
      */
     public function execute(\PDOStatement $stmt, $input_parameters = null)
     {
-        if (!$stmt->execute($input_parameters)) {
+        try {
+            $stmt->execute($input_parameters);
+        } catch (PDOException $exception) {
             $this->logPdoError($stmt->errorInfo());
             return false;
         }
-
         return true;
     }
 
@@ -166,17 +171,17 @@ class Database extends Singleton
     public function insert(\PDOStatement $stmt, $input_parameters = null)
     {
         $this->execute($stmt, $input_parameters);
-        $dbal = app()->make('db');
-        $pdo = $dbal->getPdo();
+        $pdo = $this->getPdo();
         return $pdo->lastInsertId();
     }
 
     public function insertByTrasaction(\PDOStatement $stmt, $input_parameters = null)
     {
-        $this->pdo->beginTransaction();
-        $this->execute($stmt, $input_parameters);
-        $this->pdo->commit();
-        return $this->pdo->lastInsertId();
+        $pdo = $this->getPdo();
+        $pdo->beginTransaction();
+        $lastInsertId = $this->insert($stmt, $input_parameters);
+        $pdo->commit();
+        return $lastInsertId;
     }
 
     /**
@@ -200,8 +205,11 @@ class Database extends Singleton
     public function query($sql)
     {
         $pdo = $this->getPdo();
-        if (($stmt = $pdo->query($sql)) === false) {
-            $this->logPdoError($this->pdo->errorInfo());
+        try {
+            $stmt = $pdo->query($sql);
+        } catch (\PDOException $exception) {
+            $this->logPdoError($pdo->errorInfo());
+            $stmt = false;
         }
         return $stmt;
     }

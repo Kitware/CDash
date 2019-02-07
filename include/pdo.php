@@ -275,12 +275,8 @@ function pdo_affected_rows($result)
  */
 function pdo_query($query, $link_identifier = null, $log_error = true)
 {
-    $cur_pdo = get_link_identifier($link_identifier)->getPdo($log_error);
-    if ($cur_pdo === false) {
-        return false;
-    } else {
-        return $cur_pdo->query($query);
-    }
+    $db = Database::getInstance();
+    return $db->query($query);
 }
 
 /**
