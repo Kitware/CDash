@@ -145,6 +145,8 @@ class DatabaseTest extends CDashTestCase
     public function testExecuteStatementLogsRuntimeException()
     {
         $input_params = ['param1', 'param2'];
+        $message = 'This is an exceptional message';
+        $exception = new \Doctrine\DBAL\Driver\PDOException(new PDOException($message));
 
         /** @var PDOStatement|PHPUnit_Framework_MockObject_MockObject $stmt */
         $stmt = $this->getMockBuilder('\PDOStatement')
@@ -153,7 +155,7 @@ class DatabaseTest extends CDashTestCase
             ->expects($this->once())
             ->method('execute')
             ->with($this->equalTo($input_params))
-            ->willReturn(false);
+            ->willThrowException($exception);
 
         $stmt
             ->expects($this->once())

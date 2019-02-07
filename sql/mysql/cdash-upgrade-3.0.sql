@@ -1,10 +1,10 @@
 --
 -- Laravel column needs for user
 --
-ALTER TABLE `user` ADD COLUMN `email_verified_at` timestamp NULL;
-ALTER TABLE `user` ADD COLUMN `created_at` timestamp NULL;
-ALTER TABLE `user` ADD COLUMN `created_at` timestamp NULL;
-ALTER TABLE `user` ADD COLUMN `remember_token` varchar(100) NULL;
+-- ALTER TABLE `user` ADD COLUMN `email_verified_at` timestamp NULL;
+-- ALTER TABLE `user` ADD COLUMN `created_at` timestamp NULL;
+-- ALTER TABLE `user` ADD COLUMN `created_at` timestamp NULL;
+-- ALTER TABLE `user` ADD COLUMN `remember_token` varchar(100) NULL;
 
 --
 -- Table structure for table `migrations`
