@@ -171,6 +171,8 @@ function redirect_error($text = '')
 
 function time_difference($duration, $compact = false, $suffix = '', $displayms = false)
 {
+    $duration = is_numeric($duration) ? $duration : 0;
+
     // If it's "in the future" -- probably indicates server time syncing is not
     // working well...
     if (($duration < 0) || ($duration < 30 && $compact == false && $suffix == 'ago')) {
