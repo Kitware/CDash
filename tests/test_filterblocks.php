@@ -70,7 +70,7 @@ class FilterBlocksTestCase extends KWWebTestCase
 
         // Verify the link to the child build is what we expect (no filter block).
         $build = $buildgroup['builds'][0];
-        $expected = 'filtercount=2&showfilters=1&field1=subproject&compare1=62&value1=Teuchos&field2=subproject&compare2=62&value2=Mesquite&filtercombine=and';
+        $expected = 'filtercount=2&showfilters=1&field1=subprojects&compare1=92&value1=Teuchos&field2=subprojects&compare2=92&value2=Mesquite&filtercombine=and';
         $this->assertTrue(strpos($build['multiplebuildshyperlink'], $expected) !== false);
     }
 

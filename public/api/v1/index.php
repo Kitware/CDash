@@ -997,7 +997,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
             $compilation_response['time'] = time_difference($buildduration, true);
             $compilation_response['timefull'] = $buildduration;
 
-            if (!$include_subprojects && !$exclude_subprojects) {
+            if ($response['childview'] == 1 || (!$include_subprojects && !$exclude_subprojects)) {
                 // Don't show diff when filtering by SubProject.
                 $compilation_response['nerrordiffp'] =
                     $build_array['countbuilderrordiffp'];
@@ -1075,7 +1075,7 @@ function echo_main_dashboard_JSON($project_instance, $date)
                     $selected_test_duration;
             }
 
-            if (!$include_subprojects && !$exclude_subprojects) {
+            if ($response['childview'] == 1 || (!$include_subprojects && !$exclude_subprojects)) {
                 $test_response['nnotrundiffp'] =
                     $build_array['counttestsnotrundiffp'];
                 $test_response['nnotrundiffn'] =
@@ -1630,7 +1630,6 @@ function get_child_builds_hyperlink($parentid, $filterdata)
     // Preserve any filters the user had specified.
     $existing_filter_params = '';
     $num_filters = 0;
-    $num_includes = 0;
 
     foreach ($filterdata['filters'] as $filter) {
         if (array_key_exists('filters', $filter)) {
@@ -1657,37 +1656,16 @@ function get_child_builds_hyperlink($parentid, $filterdata)
         }
         if (preserve_filter_for_child_build($filter)) {
             $num_filters++;
-            if ($filter['field'] == 'subprojects') {
-                // If we're filtering subprojects at the parent-level
-                // convert that to the appropriate filter for the child-level.
-                $compare = 0;
-                if ($filter['compare'] == 92) {
-                    $compare = 62;
-                } elseif ($filter['compare'] == 93) {
-                    $num_includes++;
-                    $compare = 61;
-                }
-                $existing_filter_params .=
-                    '&field' . $num_filters . '=' . 'subproject' .
-                    '&compare' . $num_filters . '=' . $compare .
-                    '&value' . $num_filters . '=' . htmlspecialchars($filter['value']);
-            } else {
-                $existing_filter_params .=
-                    '&field' . $num_filters . '=' . $filter['field'] .
-                    '&compare' . $num_filters . '=' . $filter['compare'] .
-                    '&value' . $num_filters . '=' . htmlspecialchars($filter['value']);
-            }
+            $existing_filter_params .=
+                '&field' . $num_filters . '=' . $filter['field'] .
+                '&compare' . $num_filters . '=' . $filter['compare'] .
+                '&value' . $num_filters . '=' . htmlspecialchars($filter['value']);
         }
     }
     if ($num_filters > 0) {
         $existing_filter_params =
             "&filtercount=$num_filters&showfilters=1$existing_filter_params";
-
-        // Multiple subproject includes need to be combined with 'or' (not 'and')
-        // at the child level.
-        if ($num_includes > 1) {
-            $existing_filter_params .= '&filtercombine=or';
-        } elseif (!empty($filterdata['filtercombine'])) {
+        if (!empty($filterdata['filtercombine'])) {
             $existing_filter_params .=
                 '&filtercombine=' . $filterdata['filtercombine'];
         }

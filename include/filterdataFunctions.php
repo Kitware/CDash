@@ -360,8 +360,8 @@ class IndexChildrenPhpFilters extends IndexPhpFilters
     public function getDefaultFilter()
     {
         return [
-            'field' => 'subproject',
-            'compare' => 61,
+            'field' => 'subprojects',
+            'compare' => 92,
             'value' => ''
         ];
     }

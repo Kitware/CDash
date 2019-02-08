@@ -70,7 +70,7 @@ function getFiltersForPage($page_id)
                 'buildstarttime', 'buildtype', 'configureduration',
                 'configureerrors', 'configurewarnings', 'groupname',
                 'hascoverage', 'hasctestnotes', 'hasdynamicanalysis',
-                'hasusernotes', 'label', 'buildgenerator', 'subproject',
+                'hasusernotes', 'label', 'buildgenerator', 'subprojects',
                 'testsduration', 'testsfailed', 'testsnotrun',
                 'testspassed', 'testtimestatus', 'updateduration',
                 'updatedfiles'];
