@@ -96,7 +96,7 @@ add_php_test(subproject)
 add_php_test(actualtrilinossubmission)
 add_php_test(summaryemail)
 
-add_php_test(upgrade)
+# add_php_test(upgrade)
 add_php_test(aggregatecoverage)
 add_php_test(banner)
 add_php_test(buildconfigure)
