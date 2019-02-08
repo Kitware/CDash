@@ -80,6 +80,8 @@ class KWWebTestCase extends WebTestCase
         $this->configfilename = "{$config->get('CDASH_ROOT_DIR')}/config/config.local.php";
 
         $this->config = $config;
+
+        // Create the application on construct so that we have access to app() (container)
         $this->app = $this->createApplication();
     }
 
@@ -330,6 +332,11 @@ class KWWebTestCase extends WebTestCase
             return false;
         }
         return $content;
+    }
+
+    public function getApp()
+    {
+        return $this->app;
     }
 
     public function actingAs(array $credentials)
@@ -815,7 +822,16 @@ class CDashControllerUserAgent extends SimpleUserAgent
     protected function fetch($url, $encoding)
     {
         $request = $this->getIlluminateHttpRequest($url);
+        $config_cache = config('cdash');
+
+        // The application *MUST* be recreated for every request
         $app = $this->createApplication();
+
+        // Config settings are loaded from file upon app bootstrap which occurs in
+        // createApplication(). Because we recreate the application with each request
+        // we must ensure that our the config settings manipulated in individual tests
+        // persist.
+        config(['cdash' => $config_cache]);
 
         $kernel = $app->make(Kernel::class);
         if ($this->test->hasActingAs()) {
