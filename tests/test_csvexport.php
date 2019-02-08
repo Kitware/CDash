@@ -17,7 +17,7 @@ class ExportToCSVTestCase extends KWWebTestCase
     public function testExportToCSV()
     {
         // Get the ID of a build that has tests.
-        $pdo = get_link_identifier()->getPdo();
+        $pdo = \CDash\Database::getInstance();
         $stmt = $pdo->prepare("
             SELECT b.id FROM build b
             JOIN build2test b2t ON b2t.buildid=b.id
