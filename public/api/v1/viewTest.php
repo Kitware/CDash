@@ -380,7 +380,7 @@ if ($columncount > 0) {
 }
 
 if (@$_GET['export'] == 'csv') {
-    export_as_csv($etestquery, null, $result, $project->ShowTestTime, $project->TestTimeMaxStatus, $columns);
+    return export_as_csv($etestquery, null, $result, $projectshowtesttime, $testtimemaxstatus, $columns);
 }
 
 // Keep track of extra measurements for each test.
@@ -701,16 +701,28 @@ function export_as_csv($etestquery, $etest, $result, $projectshowtesttime, $test
         $csv_contents[] = $csv_row;
     }
 
+    $output = fopen('php://temp', 'w');
+    foreach ($csv_contents as $csv_row) {
+        fputcsv($output, $csv_row);
+    }
+    rewind($output);
+
+    $file = [
+        'type' => 'text/csv',
+        'file' => stream_get_contents($output),
+        'filename' => 'test-export.csv',
+    ];
+
+    fclose($output);
+    return $file;
+
+    /*
     // Write out our data as CSV.
     header('Content-type: text/csv');
     header('Content-Disposition: attachment; filename="testExport.csv";');
     header('Pragma: no-cache');
     header('Expires: 0');
 
-    $output = fopen('php://output', 'w');
-    foreach ($csv_contents as $csv_row) {
-        fputcsv($output, $csv_row);
-    }
-    fclose($output);
     die; // to suppress unwanted output
+    */
 }

@@ -170,12 +170,12 @@ $result = pdo_query($query);
 
 // If user wants to export as CSV file.
 if (isset($_GET['export']) && $_GET['export'] == 'csv') {
-    header('Cache-Control: public');
-    header('Content-Description: File Transfer');
-    // Prepare some headers to download.
-    header('Content-Disposition: attachment; filename=testExport.csv');
-    header('Content-Type: application/octet-stream;');
-    header('Content-Transfer-Encoding: binary');
+//    header('Cache-Control: public');
+//    header('Content-Description: File Transfer');
+//    // Prepare some headers to download.
+//    header('Content-Disposition: attachment; filename=testExport.csv');
+//    header('Content-Type: application/octet-stream;');
+//    header('Content-Transfer-Encoding: binary');
     // Standard columns.
     $filecontent = 'Site,Build Name,Build Stamp,Status,Time(s)';
 
@@ -220,8 +220,12 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
         }
         $filecontent .= "\n";
     }
-    echo($filecontent); // Start file download
-    die; // to suppress unwanted output
+
+    return [
+        'type' => 'text/csv',
+        'file' => $filecontent,
+        'filename' => 'test-export.csv',
+    ];
 }
 
 //now that we have the data we need, generate our response.
