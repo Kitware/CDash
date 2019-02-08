@@ -19,7 +19,7 @@ class UniqueDiffsTestCase extends KWWebTestCase
     {
         // Find the highest buildid created so far and add one to it.
         // This should give us a buildid that doesn't exist yet.
-        $pdo = get_link_identifier()->getPdo();
+        $pdo = \CDash\Database::getInstance();
         $stmt = $pdo->query('SELECT id FROM build ORDER BY id DESC LIMIT 1');
         $row = $stmt->fetch();
         $buildid = $row['id'];
@@ -48,8 +48,12 @@ class UniqueDiffsTestCase extends KWWebTestCase
             (buildid, type, difference_positive, difference_negative)
             VALUES (?, ?, ?, ?)');
         $stmt->execute([$this->BuildId, 0, 1, -1]);
-        $stmt->execute([$this->BuildId, 0, 2, -2]);
-        $this->checkIntegrityViolation($stmt);
+        try {
+            $stmt->execute([$this->BuildId, 0, 2, -2]);
+        } catch (PDOException $exception) {
+            $this->checkIntegrityViolation($stmt);
+        }
+
         $this->checkRowCount($pdo, 'builderrordiff', 1);
 
         // configureerrordiff
@@ -57,8 +61,12 @@ class UniqueDiffsTestCase extends KWWebTestCase
             'INSERT INTO configureerrordiff (buildid, type, difference)
             VALUES (?, ?, ?)');
         $stmt->execute([$this->BuildId, 0, -1]);
-        $stmt->execute([$this->BuildId, 0, -2]);
-        $this->checkIntegrityViolation($stmt);
+        try {
+            $stmt->execute([$this->BuildId, 0, -2]);
+        } catch (PDOException $exception) {
+            $this->checkIntegrityViolation($stmt);
+        }
+
         $this->checkRowCount($pdo, 'configureerrordiff', 1);
 
         // testdiff
@@ -67,8 +75,12 @@ class UniqueDiffsTestCase extends KWWebTestCase
             (buildid, type, difference_positive, difference_negative)
             VALUES (?, ?, ?, ?)');
         $stmt->execute([$this->BuildId, 0, 1, -1]);
-        $stmt->execute([$this->BuildId, 0, 2, -2]);
-        $this->checkIntegrityViolation($stmt);
+        try {
+            $stmt->execute([$this->BuildId, 0, 2, -2]);
+        } catch (PDOException $exception) {
+            $this->checkIntegrityViolation($stmt);
+        }
+
         $this->checkRowCount($pdo, 'testdiff', 1);
 
         // Cleanup
