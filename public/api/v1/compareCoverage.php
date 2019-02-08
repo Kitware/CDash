@@ -22,6 +22,209 @@ require_once 'include/version.php';
 
 use CDash\Model\Project;
 
+if (!function_exists('create_subproject')) {
+    function create_subproject($coverage, $builds)
+    {
+        $subproject = array();
+        $subproject['label'] = $coverage['label'];
+        // Create a placeholder for each build
+        foreach ($builds as $build) {
+            $subproject[$build['key']] = -1;
+        }
+        return $subproject;
+    }
+}
+
+if (!function_exists('populate_subproject')) {
+    function populate_subproject($subproject, $key, $coverage)
+    {
+        $subproject[$key] = $coverage['percentage'];
+        $subproject[$key.'id'] = $coverage['buildid'];
+        if (array_key_exists('percentagediff', $coverage)) {
+            $percentagediff = $coverage['percentagediff'];
+        } else {
+            $percentagediff = null;
+        }
+        $subproject[$key.'percentagediff'] = $percentagediff;
+        return $subproject;
+    }
+}
+
+
+if (!function_exists('get_build_label')) {
+    function get_build_label($buildid, $build_array)
+    {
+        // Figure out how many labels to report for this build.
+        if (!array_key_exists('numlabels', $build_array) ||
+            $build_array['numlabels'] == 0
+        ) {
+            $num_labels = 0;
+        } else {
+            $num_labels = $build_array['numlabels'];
+        }
+
+        // Assign a label to this build based on how many labels it has.
+        if ($num_labels == 0) {
+            $build_label = '(none)';
+        } elseif ($num_labels == 1) {
+            // If exactly one label for this build, look it up here.
+            $label_query =
+                'SELECT l.text FROM label AS l
+            INNER JOIN label2build AS l2b ON (l.id=l2b.labelid)
+            INNER JOIN build AS b ON (l2b.buildid=b.id)
+            WHERE b.id=' . qnum($buildid);
+            $label_result = pdo_single_row_query($label_query);
+            $build_label = $label_result['text'];
+        } else {
+            // More than one label, just report the number.
+            $build_label = "($num_labels labels)";
+        }
+
+        return $build_label;
+    }
+}
+
+
+if (!function_exists('get_coverage')) {
+    function get_coverage($build_data, $subproject_groups)
+    {
+        $response = array();
+        $response['coveragegroups'] = array();
+
+        // Summarize coverage by subproject groups.
+        // This happens when we have subprojects and we're looking at the children
+        // of a specific build.
+        $coverage_groups = array();
+        foreach ($subproject_groups as $group) {
+            // Keep track of coverage info on a per-group basis.
+            $groupId = $group->GetId();
+
+            $coverage_groups[$groupId] = array();
+            $coverage_groups[$groupId]['label'] = $group->GetName();
+            $coverage_groups[$groupId]['loctested'] = 0;
+            $coverage_groups[$groupId]['locuntested'] = 0;
+            $coverage_groups[$groupId]['coverages'] = array();
+        }
+        if (count($subproject_groups > 1)) {
+            $coverage_groups[0] = array();
+            $coverage_groups[0]['label'] = 'Total';
+            $coverage_groups[0]['loctested'] = 0;
+            $coverage_groups[0]['locuntested'] = 0;
+        }
+
+        // Generate the JSON response from the rows of builds.
+        foreach ($build_data as $build_array) {
+            $buildid = $build_array['id'];
+            $coverageIsGrouped = false;
+            $coverage_response = array();
+            $coverage_response['buildid'] = $build_array['id'];
+
+            $percent = round(
+                compute_percentcoverage($build_array['loctested'],
+                    $build_array['locuntested']), 2);
+
+            if ($build_array['subprojectgroup']) {
+                $groupId = $build_array['subprojectgroup'];
+                if (array_key_exists($groupId, $coverage_groups)) {
+                    $coverageIsGrouped = true;
+                    $coverage_groups[$groupId]['loctested'] +=
+                        $build_array['loctested'];
+                    $coverage_groups[$groupId]['locuntested'] +=
+                        $build_array['locuntested'];
+                    if (count($subproject_groups > 1)) {
+                        $coverage_groups[0]['loctested'] +=
+                            $build_array['loctested'];
+                        $coverage_groups[0]['locuntested'] +=
+                            $build_array['locuntested'];
+                    }
+                }
+            }
+
+            $coverage_response['percentage'] = $percent;
+            $coverage_response['locuntested'] = intval($build_array['locuntested']);
+            $coverage_response['loctested'] = intval($build_array['loctested']);
+
+            // Compute the diff
+            if (!is_null($build_array['loctesteddiff']) || !is_null($build_array['locuntesteddiff'])) {
+                $loctesteddiff = $build_array['loctesteddiff'];
+                $locuntesteddiff = $build_array['locuntesteddiff'];
+                $previouspercent =
+                    round(($coverage_response['loctested'] - $loctesteddiff) /
+                        ($coverage_response['loctested'] - $loctesteddiff +
+                            $coverage_response['locuntested'] - $locuntesteddiff)
+                        * 100, 2);
+                $percentdiff = round($percent - $previouspercent, 2);
+                $coverage_response['percentagediff'] = $percentdiff;
+            }
+
+            $coverage_response['label'] = get_build_label($buildid, $build_array);
+
+            if ($coverageIsGrouped) {
+                $coverage_groups[$groupId]['coverages'][] = $coverage_response;
+            } else {
+                $response['coverages'][] = $coverage_response;
+            }
+        } // end looping through builds
+
+        // Generate coverage by group here.
+        foreach ($coverage_groups as $groupid => $group) {
+            $loctested = $group['loctested'];
+            $locuntested = $group['locuntested'];
+            if ($loctested == 0 && $locuntested == 0) {
+                continue;
+            }
+            $percentage = round($loctested / ($loctested + $locuntested) * 100, 2);
+            $group['percentage'] = $percentage;
+            $group['id'] = $groupid;
+
+            $response['coveragegroups'][] = $group;
+        }
+
+        return $response;
+    }
+}
+
+if (!function_exists('get_build_data')) {
+    function get_build_data($parentid, $projectid, $beginning_UTCDate, $end_UTCDate, $filter_sql='')
+    {
+        $date_clause = "AND b.starttime<'$end_UTCDate' AND b.starttime>='$beginning_UTCDate' ";
+        $parent_clause = '';
+        if (isset($parentid)) {
+            // If we have a parentid, then we should only show children of that build.
+            // Date becomes irrelevant in this case.
+            $parent_clause = 'AND (b.parentid = ' . qnum($parentid) . ') ';
+            $date_clause = '';
+        } else {
+            // Only show builds that are not children.
+            $parent_clause = 'AND (b.parentid = -1 OR b.parentid = 0) ';
+        }
+
+        $sql = "SELECT b.id, b.parentid, b.name, sp.groupid AS subprojectgroup,
+        (SELECT count(buildid) FROM label2build WHERE buildid=b.id) AS numlabels,
+        cs.loctested, cs.locuntested,
+        csd.loctested AS loctesteddiff, csd.locuntested AS locuntesteddiff
+        FROM build AS b
+        INNER JOIN build2group AS b2g ON (b2g.buildid=b.id)
+        INNER JOIN buildgroup AS g ON (g.id=b2g.groupid)
+        INNER JOIN coveragesummary AS cs ON (cs.buildid = b.id)
+        LEFT JOIN coveragesummarydiff AS csd ON (csd.buildid = b.id)
+        LEFT JOIN subproject2build AS sp2b ON (sp2b.buildid = b.id)
+        LEFT JOIN subproject AS sp ON (sp2b.subprojectid = sp.id)
+        WHERE b.projectid='$projectid' AND g.type='Daily' AND
+        b.type='Nightly'
+        $parent_clause $date_clause $filter_sql";
+        $builds = pdo_query($sql);
+
+        // Gather up results from this query.
+        $build_data = array();
+        while ($build_row = pdo_fetch_array($builds)) {
+            $build_data[] = $build_row;
+        }
+        return $build_data;
+    }
+}
+
+
 $start = microtime_float();
 $response = [];
 
@@ -232,9 +435,11 @@ foreach ($response['builds'] as $build_response) {
 
 if (!empty($subproject_groups)) {
     // At this point it is safe to remove any empty $coveragegroups from our response.
-    function is_coveragegroup_nonempty($group)
-    {
-        return $group['label'] === 'Total' || !empty($group['coverages']);
+    if (!function_exists('is_coveragegroup_nonempty')) {
+        function is_coveragegroup_nonempty($group)
+        {
+            return $group['label'] === 'Total' || !empty($group['coverages']);
+        }
     }
 
     $coveragegroups_response =
@@ -257,198 +462,3 @@ $end = microtime_float();
 $response['generationtime'] = round($end - $start, 3);
 
 echo json_encode(cast_data_for_JSON($response));
-
-
-function create_subproject($coverage, $builds)
-{
-    $subproject = array();
-    $subproject['label'] = $coverage['label'];
-    // Create a placeholder for each build
-    foreach ($builds as $build) {
-        $subproject[$build['key']] = -1;
-    }
-    return $subproject;
-}
-
-
-function populate_subproject($subproject, $key, $coverage)
-{
-    $subproject[$key] = $coverage['percentage'];
-    $subproject[$key.'id'] = $coverage['buildid'];
-    if (array_key_exists('percentagediff', $coverage)) {
-        $percentagediff = $coverage['percentagediff'];
-    } else {
-        $percentagediff = null;
-    }
-    $subproject[$key.'percentagediff'] = $percentagediff;
-    return $subproject;
-}
-
-
-function get_build_label($buildid, $build_array)
-{
-    // Figure out how many labels to report for this build.
-    if (!array_key_exists('numlabels', $build_array) ||
-        $build_array['numlabels'] == 0
-    ) {
-        $num_labels = 0;
-    } else {
-        $num_labels = $build_array['numlabels'];
-    }
-
-    // Assign a label to this build based on how many labels it has.
-    if ($num_labels == 0) {
-        $build_label = '(none)';
-    } elseif ($num_labels == 1) {
-        // If exactly one label for this build, look it up here.
-        $label_query =
-            'SELECT l.text FROM label AS l
-            INNER JOIN label2build AS l2b ON (l.id=l2b.labelid)
-            INNER JOIN build AS b ON (l2b.buildid=b.id)
-            WHERE b.id=' . qnum($buildid);
-        $label_result = pdo_single_row_query($label_query);
-        $build_label = $label_result['text'];
-    } else {
-        // More than one label, just report the number.
-        $build_label = "($num_labels labels)";
-    }
-
-    return $build_label;
-}
-
-
-function get_coverage($build_data, $subproject_groups)
-{
-    $response = array();
-    $response['coveragegroups'] = array();
-
-    // Summarize coverage by subproject groups.
-    // This happens when we have subprojects and we're looking at the children
-    // of a specific build.
-    $coverage_groups = array();
-    foreach ($subproject_groups as $group) {
-        // Keep track of coverage info on a per-group basis.
-        $groupId = $group->GetId();
-
-        $coverage_groups[$groupId] = array();
-        $coverage_groups[$groupId]['label'] = $group->GetName();
-        $coverage_groups[$groupId]['loctested'] = 0;
-        $coverage_groups[$groupId]['locuntested'] = 0;
-        $coverage_groups[$groupId]['coverages'] = array();
-    }
-    if (count($subproject_groups > 1)) {
-        $coverage_groups[0] = array();
-        $coverage_groups[0]['label'] = 'Total';
-        $coverage_groups[0]['loctested'] = 0;
-        $coverage_groups[0]['locuntested'] = 0;
-    }
-
-    // Generate the JSON response from the rows of builds.
-    foreach ($build_data as $build_array) {
-        $buildid = $build_array['id'];
-        $coverageIsGrouped = false;
-        $coverage_response = array();
-        $coverage_response['buildid'] = $build_array['id'];
-
-        $percent = round(
-            compute_percentcoverage($build_array['loctested'],
-                $build_array['locuntested']), 2);
-
-        if ($build_array['subprojectgroup']) {
-            $groupId = $build_array['subprojectgroup'];
-            if (array_key_exists($groupId, $coverage_groups)) {
-                $coverageIsGrouped = true;
-                $coverage_groups[$groupId]['loctested'] +=
-                    $build_array['loctested'];
-                $coverage_groups[$groupId]['locuntested'] +=
-                    $build_array['locuntested'];
-                if (count($subproject_groups > 1)) {
-                    $coverage_groups[0]['loctested'] +=
-                        $build_array['loctested'];
-                    $coverage_groups[0]['locuntested'] +=
-                        $build_array['locuntested'];
-                }
-            }
-        }
-
-        $coverage_response['percentage'] = $percent;
-        $coverage_response['locuntested'] = intval($build_array['locuntested']);
-        $coverage_response['loctested'] = intval($build_array['loctested']);
-
-        // Compute the diff
-        if (!is_null($build_array['loctesteddiff']) || !is_null($build_array['locuntesteddiff'])) {
-            $loctesteddiff = $build_array['loctesteddiff'];
-            $locuntesteddiff = $build_array['locuntesteddiff'];
-            $previouspercent =
-                round(($coverage_response['loctested'] - $loctesteddiff) /
-                    ($coverage_response['loctested'] - $loctesteddiff +
-                        $coverage_response['locuntested'] - $locuntesteddiff)
-                    * 100, 2);
-            $percentdiff = round($percent - $previouspercent, 2);
-            $coverage_response['percentagediff'] = $percentdiff;
-        }
-
-        $coverage_response['label'] = get_build_label($buildid, $build_array);
-
-        if ($coverageIsGrouped) {
-            $coverage_groups[$groupId]['coverages'][] = $coverage_response;
-        } else {
-            $response['coverages'][] = $coverage_response;
-        }
-    } // end looping through builds
-
-    // Generate coverage by group here.
-    foreach ($coverage_groups as $groupid => $group) {
-        $loctested = $group['loctested'];
-        $locuntested = $group['locuntested'];
-        if ($loctested == 0 && $locuntested == 0) {
-            continue;
-        }
-        $percentage = round($loctested / ($loctested + $locuntested) * 100, 2);
-        $group['percentage'] = $percentage;
-        $group['id'] = $groupid;
-
-        $response['coveragegroups'][] = $group;
-    }
-
-    return $response;
-}
-
-
-function get_build_data($parentid, $projectid, $beginning_UTCDate, $end_UTCDate, $filter_sql='')
-{
-    $date_clause = "AND b.starttime<'$end_UTCDate' AND b.starttime>='$beginning_UTCDate' ";
-    $parent_clause = '';
-    if (isset($parentid)) {
-        // If we have a parentid, then we should only show children of that build.
-        // Date becomes irrelevant in this case.
-        $parent_clause = 'AND (b.parentid = ' . qnum($parentid) . ') ';
-        $date_clause = '';
-    } else {
-        // Only show builds that are not children.
-        $parent_clause = 'AND (b.parentid = -1 OR b.parentid = 0) ';
-    }
-
-    $sql = "SELECT b.id, b.parentid, b.name, sp.groupid AS subprojectgroup,
-        (SELECT count(buildid) FROM label2build WHERE buildid=b.id) AS numlabels,
-        cs.loctested, cs.locuntested,
-        csd.loctested AS loctesteddiff, csd.locuntested AS locuntesteddiff
-        FROM build AS b
-        INNER JOIN build2group AS b2g ON (b2g.buildid=b.id)
-        INNER JOIN buildgroup AS g ON (g.id=b2g.groupid)
-        INNER JOIN coveragesummary AS cs ON (cs.buildid = b.id)
-        LEFT JOIN coveragesummarydiff AS csd ON (csd.buildid = b.id)
-        LEFT JOIN subproject2build AS sp2b ON (sp2b.buildid = b.id)
-        LEFT JOIN subproject AS sp ON (sp2b.subprojectid = sp.id)
-        WHERE b.projectid='$projectid' AND g.type='Daily' AND
-        b.type='Nightly'
-        $parent_clause $date_clause $filter_sql";
-    $builds = pdo_query($sql);
-
-    // Gather up results from this query.
-    $build_data = array();
-    while ($build_row = pdo_fetch_array($builds)) {
-        $build_data[] = $build_row;
-    }
-    return $build_data;
-}
