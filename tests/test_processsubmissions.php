@@ -6,6 +6,7 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 require_once 'include/pdo.php';
+use CDash\Config;
 
 class ProcessSubmissionsTestCase extends KWWebTestCase
 {
@@ -23,9 +24,10 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
         // After processing, verify that all records for projectid 1 have
         // status>1... (that exactly zero have status 0 or 1...)
         //
-        global $CDASH_SUBMISSION_PROCESSING_TIME_LIMIT;
+        $config = Config::getInstance();
+        $limit = $config->get('CDASH_SUBMISSION_PROCESSING_TIME_LIMIT');
 
-        $old_time = gmdate(FMT_DATETIMESTD, time() - (2 * $CDASH_SUBMISSION_PROCESSING_TIME_LIMIT));
+        $old_time = gmdate(FMT_DATETIMESTD, time() - (2 * $limit));
         $now_utc = gmdate(FMT_DATETIMESTD);
         $n = 3;
 
@@ -64,9 +66,10 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
         // processsubmissions.php for the projectid have already been made.
         // If not, this function should check and INSERT instead...
         //
-        global $CDASH_SUBMISSION_PROCESSING_TIME_LIMIT;
+        $config = Config::getInstance();
+        $limit = $config->get('CDASH_SUBMISSION_PROCESSING_TIME_LIMIT');
 
-        $old_time = gmdate(FMT_DATETIMESTD, time() - (2 * $CDASH_SUBMISSION_PROCESSING_TIME_LIMIT));
+        $old_time = gmdate(FMT_DATETIMESTD, time() - (2 * $limit));
 
         pdo_query(
             'UPDATE submissionprocessor ' .
@@ -120,7 +123,7 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
         curl_exec($ch);
         curl_close($ch);
     }
-
+    /*
     public function launchViaCommandLine($projectid)
     {
         global $cdashpath;
@@ -133,6 +136,7 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
         echo "  result='$result'\n";
         echo "Done with command line\n";
     }
+    */
 
     public function testProcessSubmissionsTest()
     {
@@ -229,10 +233,13 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
 
         // Finally, execute the processsubmissions.php script by php command line
         // to get coverage of the chunk of code that processes command line args.
-        //
         $this->addFakeSubmissionRecords('1');
         $this->addFakeStaleProcessingLock('1');
-        $this->launchViaCommandLine(1);
+
+        // TODO: Write artisan command for this, but otherwise, bad idea here.
+        // $this->launchViaCommandLine(1);
+
+        $this->launchViaCurl(1);
 
         if (!$this->allRecordsProcessed('1')) {
             // projectid 1 is tested in this test...

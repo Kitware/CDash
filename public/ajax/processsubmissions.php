@@ -17,6 +17,7 @@
 require_once dirname(dirname(__DIR__)) . '/config/config.php';
 use CDash\Config;
 
+$pid = null;
 $config = Config::getInstance();
 
 // Only used to setup the parallel submissions test case.
