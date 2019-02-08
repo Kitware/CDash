@@ -105,17 +105,7 @@ class Session
      */
     public function getSessionVar($path)
     {
-        $legs = explode('.', $path);
-        $session = count($legs) ? $_SESSION : null;
-
-        foreach ($legs as $leg) {
-            if (isset($session[$leg])) {
-                $session = $session[$leg];
-            } else {
-                return null;
-            }
-        }
-        return $session;
+        return session($path);
     }
 
     /**
@@ -125,21 +115,7 @@ class Session
      */
     public function setSessionVar($path, $value)
     {
-        if (isset($_SESSION)) {
-            if (strpos($path, '.') !== false) {
-                $legs = explode('.', $path);
-                $ref = &$_SESSION;
-                foreach ($legs as $leg) {
-                    if (!isset($ref[$leg])) {
-                        $ref[$leg] = [];
-                    }
-                    $ref = &$ref[$leg];
-                }
-                $ref = $value;
-            } else {
-                $_SESSION[$path] = $value;
-            }
-        }
+        session([$path => $value]);
     }
 
     public function getStatus()

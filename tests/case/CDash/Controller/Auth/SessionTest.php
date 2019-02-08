@@ -13,6 +13,8 @@ class SessionTest extends CDashTestCase
 
     public function setUp()
     {
+        // haha, always.
+        parent::setUp();
         $this->system = $this->getMockBuilder(System::class)
             ->getMock();
     }
@@ -71,7 +73,7 @@ class SessionTest extends CDashTestCase
             'user' => $login,
             'pass' => $paswd,
         ];
-        $_SESSION['cdash'] = $cdash;
+        session(['cdash' => $cdash]);
 
         $sut = new Session(new System(), Config::getInstance());
 
