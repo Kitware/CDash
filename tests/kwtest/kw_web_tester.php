@@ -365,9 +365,8 @@ class KWWebTestCase extends WebTestCase
 
     public function logout()
     {
-        $user = new User();
         \Auth::shouldReceive('check')->andReturn(false);
-        \Auth::shouldReceive('user')->andReturn($user);
+        \Auth::shouldReceive('user')->andReturn(new User);
         \Auth::shouldReceive('id')->andReturn(null);
     }
 
@@ -395,6 +394,10 @@ class KWWebTestCase extends WebTestCase
 
     public function createUser(array $fields = [])
     {
+        if (isset($fields['password'])) {
+            $fields['password'] = User::PasswordHash($fields['password']);
+        }
+
         $user = factory(\App\User::class)->create($fields);
         return $user;
     }

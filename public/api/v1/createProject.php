@@ -35,7 +35,7 @@ $service = ServiceContainer::getInstance();
 $config = Config::getInstance();
 /** @var Session $session */
 $session = $service->get(Session::class);
-$userid = $session->getSessionVar('cdash.loginid');
+
 $response = [];
 if (!Auth::check()) {
     $response['requirelogin'] = 1;
@@ -43,6 +43,7 @@ if (!Auth::check()) {
     return;
 }
 
+$userid = Auth::id();
 if (!$userid) {
     $response['requirelogin'] = 1;
     echo json_encode($response);

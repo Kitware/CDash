@@ -58,14 +58,14 @@ class CreateProjectPermissionsTestCase extends KWWebTestCase
         $this->assertTrue(property_exists($response, 'error'));
 
         // Test for project administrator.
-        $pdo = get_link_identifier()->getPdo();
+        $pdo = \CDash\Database::getInstance();
         $user_table = qid('user');
         $stmt = $pdo->prepare("SELECT id FROM $user_table WHERE email=?");
         $stmt->execute(['user1@kw']);
         $row = $stmt->fetch();
         $userid = $row['id'];
-        $pdo->exec("DELETE FROM user2project WHERE userid=$userid");
-        $pdo->exec("INSERT INTO user2project (userid, projectid, role, emailtype) VALUES ($userid, 5, 2, 2)");
+        $pdo->query("DELETE FROM user2project WHERE userid=$userid");
+        $pdo->query("INSERT INTO user2project (userid, projectid, role, emailtype) VALUES ($userid, 5, 2, 2)");
 
         // Cannot create project.
         $response = $this->get($this->url . '/api/v1/createProject.php');
@@ -89,6 +89,6 @@ class CreateProjectPermissionsTestCase extends KWWebTestCase
         $response = json_decode($response);
         $this->assertTrue(property_exists($response, 'error'));
 
-        $pdo->exec("DELETE FROM user2project WHERE userid=$userid");
+        $pdo->query("DELETE FROM user2project WHERE userid=$userid");
     }
 }
