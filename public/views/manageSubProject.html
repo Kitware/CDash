@@ -16,7 +16,7 @@
     <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_@@version.html'"></ng-include>
     <br/>
 
-    <div class="container" ng-if="!loading && cdash.requirelogin != 1">
+    <div id="main_content" class="container" ng-if="!loading && cdash.requirelogin != 1">
       <div class="row">
         <!-- project selection form -->
         <div class="col-md-3">

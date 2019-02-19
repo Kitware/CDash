@@ -20,7 +20,7 @@
 
     <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_@@version.html'"></ng-include>
 
-    <div id="index_content" ng-if="!loading && cdash.requirelogin != 1 && !cdash.error">
+    <div id="main_content" ng-if="!loading && cdash.requirelogin != 1 && !cdash.error">
       <div id="index_top">
         <div name="banner" ng-repeat="banner in ::cdash.banners">
           {{::banner.text}}
