@@ -550,7 +550,6 @@ div#div_showfilters {
   clear: both;
   width: 100%;
   position: relative;
-  float: left;
 }
 
 .icon {
@@ -1036,11 +1035,15 @@ div#headertop {
 /* Banner area */
 
 div#index_top {
-  padding:0 30px !important;
   height:auto;
   position: relative;
   width: 100%;
   margin: 0px;
+}
+
+div#index_content {
+  padding-left: 30px;
+  padding-right: 30px;
 }
 
 #settings {
@@ -1102,7 +1105,7 @@ div#index_top {
 /* Table Styles */
 
 .buildgroup {
-  padding:0 30px 40px;
+  padding-bottom: 40px;
 }
 
 .buildgroupname,
