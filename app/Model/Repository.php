@@ -68,8 +68,8 @@ class Repository
     {
         $service = null;
 
-        switch ($project->CvsViewerType) {
-            case self::VIEWER_GITHUB:
+        switch (strtolower($project->CvsViewerType)) {
+            case strtolower(self::VIEWER_GITHUB):
                 list($owner, $repository) = array_values(
                     Repository::getGitHubRepoInformationFromUrl($project->CvsUrl)
                 );
