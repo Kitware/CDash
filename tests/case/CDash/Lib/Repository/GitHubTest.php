@@ -58,7 +58,7 @@ class GitHubTest extends PHPUnit_Framework_TestCase
         $uri = GitHub::BASE_URI . "/repos/{$owner}/{$repo}/statuses/{$hash}";
 
         $client->expects($this->once())
-            ->method('requestAsync')
+            ->method('request')
             ->with('POST', $uri, $client_options);
 
         $sut->setStatus($client, $options);

@@ -85,7 +85,7 @@ class GitHub implements RepositoryInterface
             'body' => json_encode($body),
         ];
 
-        return $client->requestAsync('POST', $uri, $options);
+        return $client->request('POST', $uri, $options);
     }
 
     /**
