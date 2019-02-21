@@ -61,5 +61,31 @@ class RepositoryService
 
     public function setStatusOnComplete(Build $build)
     {
+        $options = [
+            'context' => 'CDash by Kitware',
+            'commit_hash' => $build->GetBuildUpdate()->Revision,
+            'state' => 'error'
+        ];
+
+        $num_configure_errors = $build->GetNumberOfConfigureErrors();
+        $num_build_errors = $build->GetNumberOfErrors();
+        $num_failed_tests = $build->GetNumberOfFailedTests();
+
+        if ($num_configure_errors > 0) {
+            $options['description'] = "$num_configure_errors configure errors";
+            $options['target_url'] = $build->GetBuildSummaryUrl();
+        } elseif ($build->GetNumberOfErrors() > 0) {
+            $options['description'] = "$num_build_errors build errors";
+            $options['target_url'] = $build->GetBuildErrorUrl();
+        } elseif ($build->GetNumberOfFailedTests() > 0) {
+            $options['description'] = "$num_failed_tests failed tests";
+            $options['target_url'] = $build->GetTestUrl();
+        } else {
+            $options['description'] = "Build: {$build->Name}";
+            $options['state'] = 'success';
+            $options['target_url'] = $build->GetBuildSummaryUrl();
+        }
+
+        $this->repository->setStatus($this->client, $options);
     }
 }
