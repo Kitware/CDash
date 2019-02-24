@@ -50,9 +50,9 @@ $response['nightlytime'] = $Project->NightlyTime;
 $date = null;
 $beginning_timestamp = null;
 $end_timestamp = null;
-if (isset($_GET['from']) && isset($_GET['to'])) {
-    $beginning_date = $_GET['from'];
-    $end_date = $_GET['to'];
+if (isset($_GET['begin']) && isset($_GET['end'])) {
+    $beginning_date = $_GET['begin'];
+    $end_date = $_GET['end'];
     list($unused, $beginning_timestamp) =
         get_dates($beginning_date, $Project->NightlyTime);
     list($unused, $end_timestamp) =

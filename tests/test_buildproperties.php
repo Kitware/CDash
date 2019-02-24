@@ -146,7 +146,7 @@ class BuildPropertiesTestCase extends KWWebTestCase
 
     public function testComputeClassifiers()
     {
-        $response = $this->get($this->url . "/api/v1/buildProperties.php?project=BuildPropertiesProject&from=2017-05-26&to=2017-05-29");
+        $response = $this->get($this->url . "/api/v1/buildProperties.php?project=BuildPropertiesProject&begin=2017-05-26&end=2017-05-29");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $builds = [];

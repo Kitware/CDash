@@ -119,6 +119,12 @@ CDash.filter("showEmptyBuildsLast", function () {
     // Check if we have a cookie for number of rows to display.
     var num_per_page_cookie = $.cookie('num_builds_per_page');
 
+    // Modify some settings if we're viewing the results from a single group.
+    if ('buildgroup' in $rootScope.queryString) {
+      $scope.showTimelineChart = true;
+      $scope.cdash.buildgroup = $rootScope.queryString['buildgroup'];
+    }
+
     for (var i in $scope.cdash.buildgroups) {
       if (!$scope.cdash.buildgroups.hasOwnProperty(i)) {
         continue;
@@ -614,9 +620,4 @@ CDash.filter("showEmptyBuildsLast", function () {
     return cookie_name;
   };
 
-})
-.directive('build', function(VERSION) {
-  return {
-    templateUrl: 'build/views/partials/build_' + VERSION + '.html'
-  }
 });

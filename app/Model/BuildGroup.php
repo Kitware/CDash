@@ -15,6 +15,8 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use CDash\Database;
+
 class BuildGroup
 {
     private $Id;
@@ -25,6 +27,8 @@ class BuildGroup
     private $Description;
     private $SummaryEmail;
     private $Type;
+    private $Position;
+    private $PDO;
 
     public function __construct()
     {
@@ -39,6 +43,9 @@ class BuildGroup
         $this->IncludeSubProjectTotal = 1;
         $this->EmailCommitters = 0;
         $this->Type = 'Daily';
+        $this->Position = 0;
+
+        $this->PDO = Database::getInstance()->getPdo();
     }
 
     /** Get the id */
@@ -300,29 +307,35 @@ class BuildGroup
     /** Get/Set this BuildGroup's position (the order it should appear in) */
     public function GetPosition()
     {
+        if ($this->Position > 0) {
+            return $this->Position;
+        }
+
         if ($this->Id < 1) {
             add_log('BuildGroup GetPosition(): Id not set', 'GetPosition', LOG_ERR);
             return false;
         }
 
-        $query = '
-      SELECT position FROM buildgroupposition
-      WHERE buildgroupid=' . qnum($this->Id) . '
-      ORDER BY position DESC LIMIT 1';
-        $result = pdo_query($query);
+        $stmt = $this->PDO->prepare('
+            SELECT position FROM buildgroupposition
+            WHERE buildgroupid = :id
+            ORDER BY position DESC LIMIT 1');
+        pdo_execute($stmt, [':id' => $this->Id]);
+        $position = $stmt->fetchColumn();
 
-        if (pdo_num_rows($result) < 1) {
+        if (!$position) {
             add_log(
                 "BuildGroup GetPosition(): no position found for buildgroup # $this->Id !",
                 'GetPosition',
                 LOG_ERR);
             return false;
         }
-        $query_array = pdo_fetch_array($result);
-        return $query_array['position'];
+
+        $this->Position = $position;
+        return $this->Position;
     }
 
-    public function SetPosition($position)
+    public function SetPosition(BuildGroupPosition $position)
     {
         $position->GroupId = $this->Id;
         $position->Add();
@@ -529,5 +542,32 @@ class BuildGroup
         }
         $buildgroup_array = pdo_fetch_array($buildgroup);
         return $buildgroup_array['id'];
+    }
+
+    // Return an array of currently active BuildGroups
+    // given a projectid and a starting datetime string.
+    public static function GetBuildGroups($projectid, $begin)
+    {
+        $pdo = Database::getInstance();
+        $buildgroups = [];
+
+        $stmt = $pdo->prepare("
+            SELECT bg.id, bg.name, bgp.position
+            FROM buildgroup AS bg
+            LEFT JOIN buildgroupposition AS bgp ON (bgp.buildgroupid = bg.id)
+            WHERE bg.projectid = :projectid AND
+                  bg.starttime < :begin AND
+                  (bg.endtime > :begin OR bg.endtime='1980-01-01 00:00:00')");
+
+        $pdo->execute($stmt, [':projectid' => $projectid, ':begin' => $begin]);
+        while ($row = $stmt->fetch()) {
+            $buildgroup = new BuildGroup();
+            $buildgroup->Id = $row['id'];
+            $buildgroup->Name = $row['name'];
+            $buildgroup->Position = $row['position'];
+            $buildgroups[] = $buildgroup;
+        }
+
+        return $buildgroups;
     }
 }

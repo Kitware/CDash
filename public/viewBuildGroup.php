@@ -14,11 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
-require_once 'include/api_common.php';
-
-use CDash\Controller\Api\Timeline as Controller;
-use CDash\Database;
-
-$controller = new Controller(Database::getInstance(), get_project_from_request());
-echo json_encode(cast_data_for_JSON($controller->getResponse()));
+require_once dirname(__DIR__) . '/config/config.php';
+include_once 'include/common.php';
+load_view('index');

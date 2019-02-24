@@ -162,6 +162,7 @@ function getFiltersForPage($page_id)
     switch ($page_id) {
         case 'index.php':
         case 'project.php':
+        case 'viewBuildGroup.php':
             return array(
                 'buildduration', 'builderrors', 'buildwarnings',
                 'buildname', 'buildstamp', 'buildstarttime', 'buildtype',
@@ -222,7 +223,8 @@ function getDefaultFilter($page_id)
 {
     switch ($page_id) {
         case 'index.php':
-        case 'project.php': {
+        case 'project.php':
+        case 'viewBuildGroup.php': {
             return array('key' => 'site', 'value' => '', 'compare' => 63);
         }
 

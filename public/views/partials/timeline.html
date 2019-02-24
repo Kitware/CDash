@@ -3,7 +3,7 @@
   <div ng-show="::error">
     <b>Error loading timeline: {{::error}}</b>
   </div>
-  <div ng-show="!loading && !error">
+  <div ng-show="!loading && !error && timeline.data.length">
     <div id="timechart" class="row">
       <div class="col-md-12">
         <svg width="100%" style="height:125px"></svg>

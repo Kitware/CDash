@@ -13,12 +13,21 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+namespace CDash\Controller\Api;
 
-include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
-require_once 'include/api_common.php';
-
-use CDash\Controller\Api\Timeline as Controller;
 use CDash\Database;
+use CDash\Model\Project;
 
-$controller = new Controller(Database::getInstance(), get_project_from_request());
-echo json_encode(cast_data_for_JSON($controller->getResponse()));
+/**
+ * Parent class for all API controllers that deal with a particular project.
+ **/
+class ProjectApi extends \CDash\Controller\Api
+{
+    protected $project;
+
+    public function __construct(Database $db, Project $project)
+    {
+        parent::__construct($db);
+        $this->project = $project;
+    }
+}

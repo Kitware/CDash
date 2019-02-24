@@ -20,14 +20,14 @@ class TestOverviewTestCase extends KWWebTestCase
         $this->get($this->url . '/api/v1/testOverview.php');
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
-        if ($jsonobj['error'] !== 'Project not specified.') {
+        if ($jsonobj['error'] !== 'Valid project required') {
             $this->fail('Missing project error not encountered when expected');
         }
 
         $this->get($this->url . '/api/v1/testOverview.php?project=FakeProject');
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
-        if ($jsonobj['error'] !== 'Project does not exist.') {
+        if ($jsonobj['error'] !== 'Project does not exist') {
             $this->fail('Nonexistent project error not encountered when expected');
         }
 

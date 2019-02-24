@@ -144,6 +144,7 @@ set_tests_properties(
 
 add_php_test(submitsortingdata)
 add_php_test(indexfilters)
+add_php_test(timeline)
 
 add_test(
   NAME enable_async
