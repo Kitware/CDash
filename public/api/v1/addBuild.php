@@ -22,9 +22,10 @@ use CDash\Model\Build;
 use CDash\Model\Project;
 use CDash\Model\Site;
 use CDash\ServiceContainer;
+use Symfony\Component\HttpFoundation\Response;
 
 if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-    exit();
+    return response('Not Implemented', Response::HTTP_NOT_IMPLEMENTED);
 }
 init_api_request();
 $project = get_project_from_request();
@@ -32,7 +33,7 @@ $project = get_project_from_request();
 $project->Fill();
 if ($project->AuthenticateSubmissions &&
     !valid_token_for_submission($project->Id)) {
-    return;
+    return response()->json(['requirelogin' => 1], Response::HTTP_UNAUTHORIZED);
 }
 
 // Get the id of the specified site.

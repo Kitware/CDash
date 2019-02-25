@@ -146,7 +146,7 @@ if ($projectid > 0) {
     }
 } else {
     // Initialize some variables for project creation.
-    $project_response['AuthenticateSubmissions'] = $config->get('CDASH_DEFAULT_AUTHENTICATE_SUBMISSIONS');
+    $project_response['AuthenticateSubmissions'] = config('cdash.allow.authenticated_submissions');
     $project_response['AutoremoveMaxBuilds'] = 500;
     $project_response['AutoremoveTimeframe'] = 60;
     $project_response['CoverageThreshold'] = 70;
