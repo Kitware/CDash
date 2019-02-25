@@ -23,7 +23,6 @@ use CDash\Middleware\Queue\DriverFactory as QueueDriverFactory;
 use CDash\Middleware\Queue\SubmissionService;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-include dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
 require_once 'include/do_submit.php';
 require_once 'include/clientsubmit.php';
@@ -35,6 +34,8 @@ use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
 use CDash\Model\Site;
 use CDash\ServiceContainer;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Process\InputStream;
 
 $config = Config::getInstance();
 $service = ServiceContainer::getInstance();
@@ -57,12 +58,10 @@ if (client_submit()) {
 
 // If we have a POST we forward to the new submission process
 if (isset($_POST['project'])) {
-    post_submit();
-    return;
+    return post_submit();
 }
 if (isset($_GET['buildid'])) {
-    put_submit_file();
-    return;
+    return put_submit_file();
 }
 
 $stmt = $pdo->prepare(
@@ -106,7 +105,11 @@ register_shutdown_function('PHPErrorHandler', $projectid);
 
 // Check for valid authentication token if this project requires one.
 if ($authenticate_submissions && !valid_token_for_submission($projectid)) {
-    return;
+    $message = "<cdash version=\"{$config->get('CDASH_VERSION')}\">
+    <status>ERROR</status>
+    <message>Invalid Token</message>
+    </cdash>";
+    return response($message, Response::HTTP_FORBIDDEN);
 }
 
 $expected_md5 = isset($_GET['MD5']) ? htmlspecialchars(pdo_real_escape_string($_GET['MD5'])) : '';
@@ -142,9 +145,7 @@ if (isset($_GET['build']) && isset($_GET['site']) && isset($_GET['stamp'])) {
     $buildid = $build->Id;
 }
 
-$file_path = 'php://input';
-$fp = fopen($file_path, 'r');
-
+$fp = request()->getContent(true);
 if ($config->get('CDASH_BERNARD_SUBMISSION')) {
     // Use a message queue for asynchronous submission processing.
     do_submit_queue($fp, $projectid, $buildid, $expected_md5);

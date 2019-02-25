@@ -23,21 +23,76 @@ require_once 'include/pdo.php';
 use CDash\Model\AuthToken;
 use CDash\Model\User;
 
+
+/* Handle DELETE requests */
+if (!function_exists('rest_delete')) {
+    function rest_delete($userid)
+    {
+        $json = [];
+        $hash = null;
+        $response = response();
+        if (isset($_REQUEST['token'])) {
+            $hash = AuthToken::HashToken($_REQUEST['token']);
+        } elseif (isset($_REQUEST['hash'])) {
+            $hash = $_REQUEST['hash'];
+        }
+        if (is_null($hash)) {
+            $json['error'] = 'No token or hash specified';
+            return response()->json($json, 400);
+//        echo json_encode($response);
+//        http_response_code(400);
+//        return;
+        }
+
+        $authToken = new AuthToken();
+        $authToken->Hash = $hash;
+        $authToken->UserId = $userid;
+        if (!$authToken->Delete()) {
+            $json['error'] = 'Error deleting token';
+            return response()->json($json, 400);
+//        echo json_encode($response);
+//        http_response_code(400);
+//        return;
+        }
+        return $response->json([], 201);
+    }
+}
+
+/* Handle POST requests */
+if (!function_exists('rest_post')) {
+    function rest_post($userid)
+    {
+        $response = [];
+        if (!isset($_REQUEST['description'])) {
+            $response['error'] = 'No description specified';
+            return response()->json($response, 400);
+//        echo json_encode($response);
+//        http_response_code(400);
+//        return;
+        }
+
+        $authToken = new AuthToken();
+        $authToken->UserId = $userid;
+        $authToken->Description = $_REQUEST['description'];
+        $token = $authToken->Generate();
+        $authToken->Save();
+
+        $marshaledToken = $authToken->marshal();
+        // Include the actual token (not its hash) in the response.
+        $marshaledToken['token'] = $token;
+        $response['token'] = $marshaledToken;
+        return response()->json($response, 200);
+//    http_response_code(200);
+//    echo json_encode($response);
+    }
+}
+
 // Make sure we have a valid login.
 if (!Auth::check()) {
-    return;
+    return response('This service requires authentication');
 }
-$userid = Auth::id();
-if (!isset($userid) || !is_numeric($userid)) {
-    http_response_code(401);
-    exit();
-}
-$User = new User();
-$User->Id = $userid;
-if (!$User->Exists()) {
-    http_response_code(403);
-    exit();
-}
+
+$User = Auth::user();
 
 // Read input parameters (if any).
 $rest_input = file_get_contents('php://input');
@@ -52,64 +107,9 @@ if (is_array($rest_input)) {
 $method = $_SERVER['REQUEST_METHOD'];
 switch ($method) {
     case 'DELETE':
-        rest_delete($userid);
-        break;
+        return rest_delete($User->Id);
     case 'POST':
     default:
-        rest_post($userid);
-        break;
+        return rest_post($User->Id);
 }
 
-/* Handle DELETE requests */
-function rest_delete($userid)
-{
-    $response = [];
-    $hash = null;
-    if (isset($_REQUEST['token'])) {
-        $hash = AuthToken::HashToken($_REQUEST['token']);
-    } elseif (isset($_REQUEST['hash'])) {
-        $hash = $_REQUEST['hash'];
-    }
-    if (is_null($hash)) {
-        $response['error'] = 'No token or hash specified';
-        echo json_encode($response);
-        http_response_code(400);
-        return;
-    }
-
-    $authToken = new AuthToken();
-    $authToken->Hash = $hash;
-    $authToken->UserId = $userid;
-    if (!$authToken->Delete()) {
-        $response['error'] = 'Error deleting token';
-        echo json_encode($response);
-        http_response_code(400);
-        return;
-    }
-    http_response_code(200);
-}
-
-/* Handle POST requests */
-function rest_post($userid)
-{
-    $response = [];
-    if (!isset($_REQUEST['description'])) {
-        $response['error'] = 'No description specified';
-        echo json_encode($response);
-        http_response_code(400);
-        return;
-    }
-
-    $authToken = new AuthToken();
-    $authToken->UserId = $userid;
-    $authToken->Description = $_REQUEST['description'];
-    $token = $authToken->Generate();
-    $authToken->Save();
-
-    $marshaledToken = $authToken->marshal();
-    // Include the actual token (not its hash) in the response.
-    $marshaledToken['token'] = $token;
-    $response['token'] = $marshaledToken;
-    http_response_code(200);
-    echo json_encode($response);
-}

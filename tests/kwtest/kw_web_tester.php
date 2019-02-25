@@ -51,6 +51,7 @@ class KWWebTestCase extends WebTestCase
     private $config;
     protected $app;
     protected $actingAs = [];
+    protected $ctest_submission = null;
 
     /**
      * KWWebTestCase constructor.
@@ -104,6 +105,17 @@ class KWWebTestCase extends WebTestCase
     public function tearDown()
     {
         $this->stopCodeCoverage();
+        unset($_SERVER['Authorization']);
+        foreach (array_keys($_SERVER) as $key) {
+            if (strpos($key, 'HTTP_') === 0) {
+                unset($_SERVER[$key]);
+            }
+        }
+
+        $_POST = [];
+        $_REQUEST = [];
+        $_FILES = [];
+        $_GET = [];
     }
 
     public function startCodeCoverage()
@@ -370,6 +382,11 @@ class KWWebTestCase extends WebTestCase
         \Auth::shouldReceive('id')->andReturn(null);
     }
 
+    public function getCtestSubmission()
+    {
+        return $this->ctest_submission;
+    }
+
     public function userExists($email)
     {
         require_once('include/common.php');
@@ -445,12 +462,37 @@ class KWWebTestCase extends WebTestCase
         $result = $this->uploadfile($url, $file, $header);
         $pattern = '#<buildId>([0-9]+)</buildId>#';
         if ($this->check_submission_result($result) &&
-                preg_match($pattern, $result, $matches) &&
-                isset($matches[1])) {
+            preg_match($pattern, $result, $matches) &&
+            isset($matches[1])) {
             return $matches[1];
         }
 
         return false;
+    }
+
+    public function setRequestHeaders($headers)
+    {
+        /** @var CDashControllerBrowser $browser */
+        $browser = $this->getBrowser();
+        foreach ($headers as $header => $value) {
+            $browser->addRequestHeader($header, $value);
+        }
+    }
+
+    public function putCtestFile(
+        $filename,
+        array $query,
+        $parameters = [],
+        $contentType = 'text/xml'
+    ) {
+        $this->ctest_submission = $filename;
+        $qstr = '';
+        array_walk($query, function ($v, $k) use (&$qstr) {
+            $qstr .= "{$k}={$v}&";
+        });
+
+        $url = "{$this->url}/submit.php?{$qstr}";
+        return $this->put($url, $parameters, $contentType);
     }
 
     public function uploadfile($url, $filename, $header = null)
@@ -694,10 +736,19 @@ class CDashControllerBrowser extends SimpleBrowser
     /** @var KWWebTestCase $test */
     private $test;
 
+    /** @var array $headers */
+    private $headers;
+
     public function __construct($test)
     {
         $this->test = $test;
+        $this->headers = [];
         parent::__construct();
+    }
+
+    public function addRequestHeader($name, $value)
+    {
+        $this->headers[$name] = $value;
     }
 
     /**
@@ -718,10 +769,16 @@ class CDashControllerBrowser extends SimpleBrowser
     {
         $this->setRequestParameters($encoding);
         $this->setQueryParameters($url);
+        $this->setServerParameters();
 
         $_REQUEST = array_merge($_REQUEST, $_GET, $_POST);
 
         return parent::fetch($url, $encoding, $depth);
+    }
+
+    private function setServerParameters()
+    {
+        $_SERVER = array_merge($_SERVER, $this->headers);
     }
 
     /**
@@ -816,15 +873,14 @@ class CDashControllerUserAgent extends SimpleUserAgent
         parent::__construct();
         $this->test = $test;
     }
-
     /**
      * @param SimpleUrl $url
-     * @param SimpleFormEncoding $encoding
+     * @param SimpleEncoding $encoding
      * @return SimpleHttpResponse
      */
     protected function fetch($url, $encoding)
     {
-        $request = $this->getIlluminateHttpRequest($url);
+        $request = $this->getIlluminateHttpRequest($url, $encoding);
         $config_cache = config('cdash');
 
         // The application *MUST* be recreated for every request
@@ -846,17 +902,37 @@ class CDashControllerUserAgent extends SimpleUserAgent
 
     /**
      * @param SimpleUrl $url
+     * @param SimpleEncoding|SimpleGetEncoding|SimplePutEncoding|SimplePostEncoding $encoding
      * @return Request
      */
-    private function getIlluminateHttpRequest($url)
+    private function getIlluminateHttpRequest($url, $encoding)
     {
-        $request = Request::create($url->asString());
-        $parameters = [];
+        $contents = null;
+        if ($submission = $this->test->getCtestSubmission()) {
+            $contents = file_get_contents($submission);
+        }
 
+        $request = Request::create(
+            $url->asString(),
+            $encoding->getMethod(),
+            $_REQUEST,
+            $_COOKIE,
+            $_FILES,
+            $_SERVER,
+            $contents
+        );
+
+        // Symphony\Component\HttpFoundation\Request sets some default
+        // $_SERVER values for us but it only makes them accessible through
+        // the Request object, i.e. it will not set them in $_SERVER; here
+        // we will make sure that they get set in the $_SERVER superglobal
+        $parameters = [];
         foreach ($request->server() as $key => $value) {
             $parameters[$key] = $value;
         }
+
         $_SERVER = array_merge($_SERVER, $parameters);
+
         return $request;
     }
 
