@@ -1683,12 +1683,13 @@ class Project
             return false;
         }
         $config = Config::getInstance();
-        if ($config->get('CDASH_BUILDS_PER_PROJECT') == 0 ||
+        $max_builds = $config->get('CDASH_BUILDS_PER_PROJECT');
+        if ( $max_builds == 0 ||
                 in_array($this->GetName(), $config->get('CDASH_UNLIMITED_PROJECTS'))) {
             return false;
         }
 
-        if ($this->GetNumberOfBuilds() < $config->get('CDASH_BUILDS_PER_PROJECT')) {
+        if ($this->GetNumberOfBuilds() < $max_builds) {
             return false;
         }
 

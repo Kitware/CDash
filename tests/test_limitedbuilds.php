@@ -8,32 +8,26 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 
+use CDash\Config;
+use CDash\Database;
 use CDash\Model\Project;
 
 class LimitedBuildsTestCase extends KWWebTestCase
 {
-    private $testDataFiles;
     private $testDataDir;
-    private $builds;
-    private $parentBuilds;
+    private $Projects;
 
     public function __construct()
     {
         parent::__construct();
 
         $this->testDataDir = dirname(__FILE__) . '/data/BuildModel';
-        $this->LimitBuildsLine = '$CDASH_BUILDS_PER_PROJECT = 1;';
-        $this->UnlimitedProjectLine = '$CDASH_UNLIMITED_PROJECTS = [\'Unlimited\'];';
-        $this->PDO = get_link_identifier()->getPdo();
+        $this->PDO = Database::getInstance();
         $this->Projects = [];
     }
 
     public function testSetup()
     {
-        // Enable config settings to test.
-        $this->addLineToConfig($this->LimitBuildsLine);
-        $this->addLineToConfig($this->UnlimitedProjectLine);
-
         // Create testing projects.
         $insert_stmt = $this->PDO->prepare('INSERT INTO project (name) VALUES (?)');
 
@@ -50,10 +44,16 @@ class LimitedBuildsTestCase extends KWWebTestCase
 
     public function testLimitedBuilds()
     {
+        $config = Config::getInstance();
+        $config->set('CDASH_BUILDS_PER_PROJECT', 1);
+        $config->set('CDASH_UNLIMITED_PROJECTS', ['Unlimited']);
+
         // Submit two builds to the 'Limited' project.
         // The second submission is expected to fail.
-        $this->submission('Limited', $this->testDataDir . '/build1.xml');
-        $this->submission('Limited', $this->testDataDir . '/build2.xml');
+        $build1 = "{$this->testDataDir}/build1.xml";
+        $build2 = "{$this->testDataDir}/build2.xml";
+        $this->putCtestFile($build1, ['project' => 'Limited']);
+        $this->putCtestFile($build2, ['project' => 'Limited']);
         $this->assertTrue($this->Projects[0]->GetNumberOfBuilds() === 1);
 
         // Verify that index.php warns about the project being full.
@@ -64,10 +64,17 @@ class LimitedBuildsTestCase extends KWWebTestCase
 
     public function testUnlimitedBuilds()
     {
+        $config = Config::getInstance();
+        $config->set('CDASH_BUILDS_PER_PROJECT', 1);
+        $config->set('CDASH_UNLIMITED_PROJECTS', ['Unlimited']);
+
         // Submit two builds to the 'Unlimited' project.
         // Both submissions are expected to pass.
-        $this->submission('Unlimited', $this->testDataDir . '/build1.xml');
-        $this->submission('Unlimited', $this->testDataDir . '/build2.xml');
+        $build1 = "{$this->testDataDir}/build1.xml";
+        $build2 = "{$this->testDataDir}/build2.xml";
+        $this->putCtestFile($build1, ['project' => 'Unlimited']);
+        $this->putCtestFile($build2, ['project' => 'Unlimited']);
+
         $this->assertTrue($this->Projects[1]->GetNumberOfBuilds() === 2);
 
         // Verify that index.php shows no warning.
@@ -84,7 +91,5 @@ class LimitedBuildsTestCase extends KWWebTestCase
         $delete_stmt = $this->PDO->prepare('DELETE FROM project WHERE name = ?');
         $delete_stmt->execute(['Limited']);
         $delete_stmt->execute(['Unlimited']);
-        $this->removeLineFromConfig($this->LimitBuildsLine);
-        $this->removeLineFromConfig($this->UnlimitedProjectLine);
     }
 }

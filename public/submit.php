@@ -93,11 +93,11 @@ $project->Name = $projectname;
 $project->Id = $projectid;
 $message = '';
 if ($project->HasTooManyBuilds($message)) {
-    echo '<cdash version="' . $config->get('CDASH_VERSION') . "\">\n";
-    echo " <status>ERROR</status>\n";
-    echo " <message>$message</message>\n";
-    echo "</cdash>\n";
-    return;
+    $message = "<cdash version=\"{$config->get('CDASH_VERSION')}\">
+     <status>ERROR</status>
+     <message>$message</message>
+    </cdash>";
+    return response($message, Response::HTTP_INSUFFICIENT_STORAGE);
 }
 
 // Catch the fatal errors during submission
