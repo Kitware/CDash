@@ -725,6 +725,7 @@ class KWWebTestCase extends WebTestCase
             $this->fail("Login not found when expected");
             return false;
         }
+        return true;
     }
 }
 
@@ -739,11 +740,25 @@ class CDashControllerBrowser extends SimpleBrowser
     /** @var array $headers */
     private $headers;
 
+    private $files;
+
     public function __construct($test)
     {
         $this->test = $test;
         $this->headers = [];
+        $this->files = [];
         parent::__construct();
+    }
+
+    public function __destruct()
+    {
+        if (!empty($this->files)) {
+            foreach ($this->files as $file) {
+                if (file_exists($file)) {
+                    unlink($file);
+                }
+            }
+        }
     }
 
     public function addRequestHeader($name, $value)
@@ -770,10 +785,40 @@ class CDashControllerBrowser extends SimpleBrowser
         $this->setRequestParameters($encoding);
         $this->setQueryParameters($url);
         $this->setServerParameters();
+        $this->setFileParameters($encoding);
 
         $_REQUEST = array_merge($_REQUEST, $_GET, $_POST);
 
         return parent::fetch($url, $encoding, $depth);
+    }
+
+    private function setFileParameters($encoding)
+    {
+        if (is_a($encoding, SimpleMultipartEncoding::class)) {
+            /** @var SimpleAttachment $part */
+            foreach ($encoding->getAll() as $part) {
+                if (is_a($part, SimpleAttachment::class)) {
+                    // one hates to have to do this unless absolutely necessary
+                    $reflection = new \ReflectionClass(SimpleAttachment::class);
+                    $property = $reflection->getProperty('content');
+                    $property->setAccessible(true);
+                    $content = $property->getValue($part);
+                    if ($tmpname = tempnam(sys_get_temp_dir(), 'simpletest')) {
+                        $fh = fopen($tmpname, 'w');
+                        fwrite($fh, $content);
+                        fclose($fh);
+                        $_FILES[$part->getKey()] = [
+                            'name' => $part->getValue(),
+                            'tmp_name' => $tmpname,
+                            'size' => filesize($tmpname),
+                            'type' => mime_content_type($tmpname),
+                        ];
+                        // for deletion upon destructor call
+                        $this->files[] = $tmpname;
+                    }
+                }
+            }
+        }
     }
 
     private function setServerParameters()
@@ -917,7 +962,7 @@ class CDashControllerUserAgent extends SimpleUserAgent
             $encoding->getMethod(),
             $_REQUEST,
             $_COOKIE,
-            $_FILES,
+            [],
             $_SERVER,
             $contents
         );
