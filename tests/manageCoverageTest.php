@@ -3,10 +3,9 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
-require_once dirname(__FILE__) . '/cdash_test_case.php';
-require_once 'include/common.php';
+use CDash\Model\Project;
 
-use CDash\Database;
+require_once dirname(__FILE__) . '/cdash_test_case.php';
 
 class ManageCoverageTestCase extends KWWebTestCase
 {
@@ -17,17 +16,18 @@ class ManageCoverageTestCase extends KWWebTestCase
 
     public function testManageCoverageTest()
     {
-        $this->login();
+        $project = new Project();
+        $project->Name = 'InsightExample';
+        $projectid = $project->GetIdByName();
 
         // Get projectid for InsightExample.
-        $projectid = get_project_id('InsightExample');
-        if ($projectid === -1) {
+        if ($projectid <= 0) {
             $this->fail('Unable to find projectid for InsightExamples');
             return 1;
         }
 
         //make sure we can't visit the manageCoverage page while logged out
-
+        $this->logout();
         if (!$this->expectsPageRequiresLogin('/manageCoverage.php')) {
             return 1;
         }
@@ -51,7 +51,6 @@ class ManageCoverageTestCase extends KWWebTestCase
             $buildid = $stmt->fetchColumn();
         }
 
-        $this->login();
         $content = $this->connect($this->url . "/manageCoverage.php?buildid=$buildid&projectid=$projectid");
         if (strpos($content, 'simple.cxx') === false) {
             $this->fail("'simple.cxx' not found when expected for buildid=" . $buildid);
@@ -121,7 +120,7 @@ class ManageCoverageTestCase extends KWWebTestCase
             return 1;
         }
 
-        //test the "Send email to authors" buttons
+        $this->get("{$this->url}/manageCoverage.php?buildid={$buildid}&projectid={$projectid}");
         $this->clickSubmitByName('sendEmail');
         if (strpos($this->getBrowser()->getContentAsText(),
                 'email has been sent successfully') === false

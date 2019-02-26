@@ -31,6 +31,7 @@ use CDash\Model\Project;
 use CDash\Model\Site;
 use CDash\Model\User;
 use CDash\Model\UserProject;
+use Illuminate\Support\Facades\Mail;
 
 $config = Config::getInstance();
 
@@ -203,7 +204,7 @@ if (Auth::check()) {
     // Send an email
     if (isset($_POST['sendEmail'])) {
         $coverageThreshold = $Project->GetCoverageThreshold();
-
+        $sender = $config->get('CDASH_EMAIL_FROM');
         $userids = $CoverageFile2User->GetUsersFromProject();
         foreach ($userids as $userid) {
             $CoverageFile2User->UserId = $userid;
@@ -256,7 +257,14 @@ if (Auth::check()) {
                 $User->Id = $userid;
                 $email = $User->GetEmail();
 
-                cdashmail("$email", $title, $messagePlainText);
+                // cdashmail("$email", $title, $messagePlainText);
+
+                Mail::raw($messagePlainText, function ($message) use ($title, $email, $sender) {
+                    /** @var Illuminate\Mail\Message */
+                    $message->subject($title)
+                        ->to($email)
+                        ->from($sender);
+                });
 
                 $xml .= add_XML_value('warning', '*The email has been sent successfully.');
             } else {
