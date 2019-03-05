@@ -1109,7 +1109,8 @@ div#main_content {
 /* Table Styles */
 
 .buildgroup {
-  padding-bottom: 40px;
+  padding-bottom: 20px;
+  padding-top: 20px;
 }
 
 .buildgroupname,
@@ -1129,6 +1130,12 @@ div#main_content {
   display:inline-block;
   font-size:12px;
   font-style: italic;
+  font-weight: normal;
+}
+
+.buildgroupname .grouplink {
+  float: right;
+  font-size:14px;
   font-weight: normal;
 }
 
