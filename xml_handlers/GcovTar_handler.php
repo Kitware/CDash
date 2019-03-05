@@ -298,7 +298,7 @@ class GCovTarHandler extends NonSaxHandler
                 $sourceLine = rtrim($fields[2]);
                 
                 //check for duplicate line output
-                if($lineNumber <= $last_lineNumber){
+                if($lineNumber <= $last_lineNumber) {
                     $file->next();
                     continue;
                 }
