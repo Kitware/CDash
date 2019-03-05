@@ -201,9 +201,10 @@
       </div>  <!-- end BuildGroups -->
 
       <!-- Coverage -->
-      <div class="buildgroup">
+      <div class="buildgroup"
+           ng-if="::cdash.coverages.length > 0 || cdash.coveragegroups.length > 0">
         <a id="Coverage"></a>
-        <table ng-if="::cdash.coverages.length > 0 || cdash.coveragegroups.length > 0" border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="coveragetable">
+        <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="coveragetable">
           <thead>
             <tr class="table-heading2">
               <td colspan="1" class="nob">
@@ -374,9 +375,10 @@
       </div>
 
       <!-- Dynamic analysis -->
-      <div class="buildgroup">
+      <div class="buildgroup"
+           ng-if="::cdash.dynamicanalyses.length > 0">
         <a id="DynamicAnalysis"></a>
-        <table ng-if="::cdash.dynamicanalyses.length > 0" border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="dynamicanalysistable">
+        <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="dynamicanalysistable">
           <thead>
             <tr class="table-heading3">
               <td colspan="1" class="nob">
