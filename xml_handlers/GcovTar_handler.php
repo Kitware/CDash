@@ -280,7 +280,8 @@ class GCovTarHandler extends NonSaxHandler
 
         $coverageFile->FullPath = trim($path);
         $lineNumber = 0;
-
+        
+        $last_lineNumber = 0;
         // The lack of rewind is intentional.
         while (!$file->eof()) {
             $gcovLine = $file->current();
@@ -295,7 +296,13 @@ class GCovTarHandler extends NonSaxHandler
                 $timesHit = trim($fields[0]);
                 $lineNumber = trim($fields[1]);
                 $sourceLine = rtrim($fields[2]);
-
+                
+                //check for duplicate line output
+                if ($lineNumber <= $last_lineNumber) {
+                    $file->next();
+                    continue;
+                }
+                
                 if ($lineNumber > 0) {
                     $coverageFile->File .= $sourceLine;
                     // cannot be <br/> for backward compatibility.
@@ -313,6 +320,8 @@ class GCovTarHandler extends NonSaxHandler
                     $timesHit = 0;
                 }
 
+                //save last inserted line number
+                $last_lineNumber = $lineNumber;
                 $coverageFileLog->AddLine($lineNumber - 1, $timesHit);
                 $file->next();
             }
