@@ -431,8 +431,7 @@ class Index extends ResultsApi
         }
 
         if (empty($build_row['testduration'])) {
-            $time_array = pdo_fetch_array(pdo_query("SELECT SUM(time) FROM build2test WHERE buildid='$buildid'"));
-            $build_row['testduration'] = round($time_array[0], 1);
+            $build_row['testduration'] = 0;
         } else {
             $build_row['testduration'] = round($build_row['testduration'], 1);
         }
