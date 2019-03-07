@@ -134,7 +134,7 @@ function rest_delete($pdo)
     }
 
     if (isset($_GET['dynamic'])) {
-        // Delete a dynamic build group rule.
+        // Soft delete a dynamic build group rule.
         $dynamic = json_decode($_GET['dynamic'], true);
         $buildgroupid = $dynamic['id'];
 
@@ -143,16 +143,21 @@ function rest_delete($pdo)
         $parentgroupid = $rule['parentgroupid'];
         $siteid = $rule['siteid'];
 
-        $sql =
-            'DELETE FROM build2grouprule WHERE groupid = ? AND buildname = ?';
-        $params = [$buildgroupid, $match];
+        $now = gmdate(FMT_DATETIME);
+        $sql = 'UPDATE build2grouprule SET endtime = :endtime
+            WHERE groupid = :groupid AND buildname = :buildname';
+        $params = [
+            ':endtime'   => $now,
+            ':groupid'   => $buildgroupid,
+            ':buildname' => $match,
+        ];
         if ($siteid > 0) {
-            $sql .= ' AND siteid = ?';
-            $params[] = $siteid;
+            $sql .= ' AND siteid = :siteid';
+            $params[':siteid'] = $siteid;
         }
         if ($parentgroupid > 0) {
-            $sql .= ' AND parentgroupid = ?';
-            $params[] = $parentgroupid;
+            $sql .= ' AND parentgroupid = :parentgroupid';
+            $params[':parentgroupid'] = $parentgroupid;
         }
 
         $stmt = $pdo->prepare($sql);
