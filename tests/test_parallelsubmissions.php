@@ -3,6 +3,8 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use CDash\Config;
+
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'tests/trilinos_submission_test.php';
 require_once 'include/common.php';
@@ -30,8 +32,9 @@ class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
                 starttime BETWEEN '2011-07-22 00:00:00' AND '2011-07-22 23:59:59'");
         remove_build($row['id']);
 
-        // Disable submission processing so that the queue will accumulate.
-        $this->addLineToConfig($this->DisableProcessingConfig);
+        $config = Config::getInstance();
+        $config->set('CDASH_ASYNCHRONOUS_SUBMISSION', true);
+        $config->set('CDASH_DO_NOT_PROCESS_SUBMISSIONS', true);
 
         // Re-submit the Trilinos build.
         $begin = time();
@@ -39,12 +42,12 @@ class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
         echo 'Submission took ' . (time() - $begin) . " seconds.\n";
 
         // Re-enable submission processing and enable parallel processing
-        $this->removeLineFromConfig($this->DisableProcessingConfig);
-        $this->addLineToConfig($this->ParallelProcessingConfig);
+        $config->set('CDASH_DO_NOT_PROCESS_SUBMISSIONS', false);
+        $config->set('CDASH_ASYNC_WORKERS', 10);
 
         // Submit another file to Trilinos to start the processing loop.
         $file = dirname(__FILE__) . '/data/SubProjectNextPrevious/Build_1.xml';
-        $this->submission('Trilinos', $file);
+        $this->putCtestFile($file, ['project' => 'Trilinos']);
 
         // Wait for processing to complete.
         $todo = 999;
@@ -64,9 +67,6 @@ class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
         // Verify the results.
         $this->verifyResults();
 
-        // Clean up by reverting our config settings and deleting the
-        // extra build that we created to trigger the processing.
-        $this->removeLineFromConfig($this->ParallelProcessingConfig);
         $row = pdo_single_row_query(
             "SELECT build.id FROM build
                 WHERE build.parentid=-1 AND
