@@ -15,6 +15,12 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
         parent::__construct();
     }
 
+    public function __destruct()
+    {
+        $db = \CDash\Database::getInstance();
+        $db->query('DELETE FROM submission WHERE filename LIKE "bogus_submission_file%"');
+    }
+
     public function addFakeSubmissionRecords($projectid)
     {
         // Insert fake submission records for the given projectid.
@@ -231,15 +237,17 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
             return 1;
         }
 
+        // TODO: Write artisan command for this, but otherwise, bad idea here.
         // Finally, execute the processsubmissions.php script by php command line
         // to get coverage of the chunk of code that processes command line args.
+        /*
         $this->addFakeSubmissionRecords('1');
         $this->addFakeStaleProcessingLock('1');
 
-        // TODO: Write artisan command for this, but otherwise, bad idea here.
+
         // $this->launchViaCommandLine(1);
 
-        $this->launchViaCurl(1);
+        $this->launchViaCurl('/ajax/processsubmissions.php?projectid=1&sleep_in_loop=1', 1);
 
         if (!$this->allRecordsProcessed('1')) {
             // projectid 1 is tested in this test...
@@ -249,7 +257,7 @@ class ProcessSubmissionsTestCase extends KWWebTestCase
 
             $this->fail('some records still not processed after call 3 processsubmissions.php');
             return 1;
-        }
+        }*/
 
         // Actually, with this test, we expect some errors to be logged in the
         // cdash.log file, so do not do this check:
