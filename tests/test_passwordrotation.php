@@ -23,7 +23,7 @@ class PasswordRotationTestCase extends KWWebTestCase
     public function testRegisterUser()
     {
         // Enable password rotation.
-        $this->addLineToConfig($this->RotationConfig);
+        # $this->addLineToConfig($this->RotationConfig);
 
         // Create a new user for this test.
         $url = $this->url . '/register.php';
@@ -129,7 +129,7 @@ class PasswordRotationTestCase extends KWWebTestCase
         $md5pass = $row['password'];
 
         // Enable unique password count.
-        $this->addLineToConfig($this->UniqueConfig);
+        # $this->addLineToConfig($this->UniqueConfig);
 
         // Successfully change password twice.
         $content = $this->passwordChangeAttempt('12345', 'qwert');

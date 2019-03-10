@@ -22,8 +22,8 @@ class AccountLockoutTestCase extends KWWebTestCase
     public function testAccountLockout()
     {
         // Enable our config settings.
-        $this->addLineToConfig($this->AttemptsConfig);
-        $this->addLineToConfig($this->LengthConfig);
+        # $this->addLineToConfig($this->AttemptsConfig);
+        # $this->addLineToConfig($this->LengthConfig);
 
         // Get the id for the simpletest user.
         $user = new User();
