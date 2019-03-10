@@ -145,10 +145,10 @@ add_php_test(submitsortingdata)
 add_php_test(indexfilters)
 add_php_test(timeline)
 
-add_test(
-  NAME enable_async
-  COMMAND ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_enable_async.php
-)
+#add_test(
+#  NAME enable_async
+#  COMMAND ${PHP_EXE} ${testing_dir}/singletest.php ${testing_dir}/test_enable_async.php
+#)
 
 add_php_test(nobackup)
 
