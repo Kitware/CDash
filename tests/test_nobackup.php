@@ -18,7 +18,7 @@ class NoBackupTestCase extends KWWebTestCase
     public function testNoBackup()
     {
         // Enable config setting.
-        $this->addLineToConfig($this->ConfigLine);
+        # $this->addLineToConfig($this->ConfigLine);
 
         // Submit XML file.
         $xml = dirname(__FILE__) . '/data/nobackup/Build.xml';

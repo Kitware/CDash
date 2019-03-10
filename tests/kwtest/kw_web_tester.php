@@ -675,6 +675,10 @@ class KWWebTestCase extends WebTestCase
         return $client;
     }
 
+    /**
+     * @param $line_to_add
+     * @deprecated DO NOT USE
+     */
     public function addLineToConfig($line_to_add)
     {
         $contents = file_get_contents($this->configfilename);
@@ -694,6 +698,10 @@ class KWWebTestCase extends WebTestCase
         $this->pass('Passed');
     }
 
+    /**
+     * @param $line_to_remove
+     * @drepecated DO NOT USE
+     */
     public function removeLineFromConfig($line_to_remove)
     {
         if (empty($line_to_remove)) {
