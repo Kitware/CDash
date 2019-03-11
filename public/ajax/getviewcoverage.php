@@ -324,7 +324,7 @@ while ($coveragefile_array = pdo_fetch_array($coveragefile)) {
         // coverage metric for gcov
 
         $covfile['percentcoverage'] = sprintf('%3.2f', $covfile['loctested'] / ($covfile['loctested'] + $covfile['locuntested']) * 100);
-        $covfile['coveragemetric'] = ($covfile['loctested'] + 10) / ($covfile['loctested'] + $covfile['locuntested'] + 10);
+        $covfile['coveragemetric'] = ($covfile['loctested']) / ($covfile['loctested'] + $covfile['locuntested']);
         $coveragetype = 'gcov';
     }
 
