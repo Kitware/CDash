@@ -122,7 +122,6 @@ CDash.controller('BuildSummaryController',
           history_build['starttime'] = build['starttime'];
           $scope.cdash.buildhistory.push(history_build);
         }
-        $scope.cdash.buildhistory.reverse();
         $scope.graphLoaded = true;
         if (graphType) {
           // Render the graph that triggered this call.
