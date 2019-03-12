@@ -30,8 +30,14 @@ class BuildGroupRule
 
     public function __construct()
     {
+        $this->BuildType = '';
+        $this->BuildName = '';
+        $this->SiteId = 0;
+        $this->Expected = 0;
         $this->StartTime = '1980-01-01 00:00:00';
         $this->EndTime = '1980-01-01 00:00:00';
+        $this->GroupId = 0;
+
         $this->PDO = Database::getInstance();
     }
 
@@ -69,7 +75,7 @@ class BuildGroupRule
         return true;
     }
 
-    /** Save the goup position */
+    /** Save the rule */
     public function Add()
     {
         if (empty($this->GroupId) || empty($this->BuildType)
@@ -98,5 +104,29 @@ class BuildGroupRule
             return $this->PDO->execute($stmt, $query_params);
         }
         return false;
+    }
+
+    /** Delete a rule */
+    public function Delete()
+    {
+        $stmt = $this->PDO->prepare(
+                'DELETE FROM build2grouprule
+                WHERE groupid = :groupid AND
+                      buildtype = :buildtype AND
+                      buildname = :buildname AND
+                      siteid = :siteid AND
+                      expected = :expected AND
+                      starttime = :starttime AND
+                      endtime = :endtime');
+        $query_params = [
+            ':groupid'   => $this->GroupId,
+            ':buildtype' => $this->BuildType,
+            ':buildname' => $this->BuildName,
+            ':siteid'    => $this->SiteId,
+            ':expected'  => $this->Expected,
+            ':starttime' => $this->StartTime,
+            ':endtime'   => $this->EndTime
+        ];
+        return $this->PDO->execute($stmt, $query_params);
     }
 }

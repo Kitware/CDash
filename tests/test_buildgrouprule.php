@@ -5,6 +5,7 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
+require_once 'include/common.php';
 require_once 'include/pdo.php';
 
 use CDash\Database;
@@ -52,6 +53,7 @@ class BuildGroupRuleTestCase extends KWWebTestCase
             return 1;
         }
 
+        $buildgrouprule->Delete();
         $this->pass('Passed');
         return 0;
     }
@@ -61,6 +63,7 @@ class BuildGroupRuleTestCase extends KWWebTestCase
         // Make some buildgroups.
         $group1 = new BuildGroup();
         $group1->SetName('group1');
+        $group1->SetProjectId(1);
         $group2 = clone $group1;
         $group2->SetName('group2');
         $group1->Save();
