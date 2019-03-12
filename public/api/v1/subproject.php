@@ -31,7 +31,7 @@ if (!Auth::check()) {
     return;
 }
 $userid = Auth::id();
-if ($userid || !is_numeric($userid)) {
+if (!$userid || !is_numeric($userid)) {
     echo_error('Not a valid userid!');
     return;
 }

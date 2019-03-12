@@ -44,7 +44,7 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
     public function setAutoRemoveTimeFrame()
     {
         // set project autoremovetimeframe
-        $result = $this->db->query('UPDATE project ' .
+        $result = $this->pdo->query('UPDATE project ' .
             "SET autoremovetimeframe='7' WHERE name='EmailProjectExample'");
     }
 
@@ -102,7 +102,7 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         $db->execute($stmt, $query_params);
 
         // Looks like it's a new day
-        $this->db->query("DELETE FROM dailyupdate WHERE projectid='$projectid'");
+        $this->pdo->query("DELETE FROM dailyupdate WHERE projectid='$projectid'");
 
         $testxml2 = "$rep/2_test.xml";
         if (!$this->submission('EmailProjectExample', $testxml2)) {

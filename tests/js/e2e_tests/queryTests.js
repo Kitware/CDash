@@ -13,20 +13,20 @@ describe("queryTests", function() {
 
 
   it("filter on build time", function() {
-    filter_test("buildstarttime", "83", "yesterday", 5);
+    filter_test("buildstarttime", "83", "yesterday", 4);
   });
 
   it("filter on details", function() {
-    filter_test("details", "61", "Completed", 5);
+    filter_test("details", "61", "Completed", 4);
   });
 
   it("filter on group", function() {
-    filter_test("groupname", "61", "Experimental", 5);
+    filter_test("groupname", "61", "Experimental", 4);
     filter_test("groupname", "62", "Experimental", 0);
   });
 
   it("filter on site", function() {
-    filter_test("site", "61", "CDashTestingSite", 5);
+    filter_test("site", "61", "CDashTestingSite", 4);
   });
 
   it("filter on time", function() {

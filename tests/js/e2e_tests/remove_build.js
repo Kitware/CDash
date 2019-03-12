@@ -1,8 +1,23 @@
 var LoginPage = require('../pages/login.page.js');
 describe("remove_build", function() {
   it("remove build", function() {
-    var loginPage = new LoginPage();
-    loginPage.login();
+    // need to login and need...
+    // TODO: better than this
+    browser.get('/manageSubProject.php?projectid=8');
+
+    expect(element(by.name('email')));
+    expect(element(by.name('password')));
+
+    element(by.name('email')).sendKeys('simpletest@localhost');
+    element(by.name('password')).sendKeys('simpletest');
+
+    // Submit it and wait for the title to change.
+    element(by.name('sent')).click().then(function () {
+      browser.driver.wait(browser.driver.getTitle().then(function (title) {
+        expect(title).toEqual("");
+      }));
+    });
+
     browser.get('index.php?project=InsightExample');
 
     // Locate the folder icon for the 2nd build.

@@ -55,5 +55,4 @@ describe("done_build", function() {
   it("toggle done for parent build", function() {
     toggle_done('index.php?project=Trilinos&date=2011-07-22');
   });
-
 });
