@@ -190,12 +190,11 @@ class Index extends ResultsApi
             WHERE bg.projectid = :projectid AND
                   bg.endtime = :begin_epoch AND
                   bg.type != 'Daily' AND
-                  b2gr.starttime < :begin_date AND
+                  b2gr.starttime < :end_date AND
                   (b2gr.endtime = :begin_epoch OR b2gr.endtime > :end_date)");
         $query_params = [
             ':projectid' => $this->project->Id,
             ':begin_epoch' => self::BEGIN_EPOCH,
-            ':begin_date' => $this->beginDate,
             ':end_date' => $this->endDate
         ];
         $this->db->execute($stmt, $query_params);

@@ -74,7 +74,7 @@ function rest_get($pdo, $projectid)
 
     $stmt = $pdo->prepare(
         "SELECT id, name FROM buildgroup
-        WHERE projectid = ? AND endtime='1980-01-01 00:00:00'");
+        WHERE projectid = ? AND endtime = '1980-01-01 00:00:00'");
     pdo_execute($stmt, [$projectid]);
 
     $dependencies = $BuildGroup->GetDependencies();
@@ -109,6 +109,8 @@ function rest_get($pdo, $projectid)
 /* Handle DELETE requests */
 function rest_delete($pdo)
 {
+    $now = gmdate(FMT_DATETIME);
+
     if (isset($_GET['buildgroupid'])) {
         // Delete the specified BuildGroup.
         $buildgroupid = pdo_real_escape_numeric($_GET['buildgroupid']);
@@ -117,8 +119,6 @@ function rest_delete($pdo)
         $Group->Delete();
         return;
     }
-
-    $now = gmdate(FMT_DATETIME);
 
     if (isset($_GET['wildcard'])) {
         // Soft delete a wildcard build group rule.
@@ -180,6 +180,8 @@ function rest_delete($pdo)
 /* Handle POST requests */
 function rest_post($pdo, $projectid)
 {
+    $now = gmdate(FMT_DATETIME);
+
     if (isset($_POST['newbuildgroup'])) {
         // Create a new buildgroup
         $BuildGroup = new BuildGroup();
@@ -280,14 +282,13 @@ function rest_post($pdo, $projectid)
                 WHERE groupid = :prevgroupid AND
                       buildid = :buildid');
             $query_params = [
-                ':groupid'     => $groupid
+                ':groupid'     => $groupid,
                 ':prevgroupid' => $prevgroupid,
                 ':buildid'     => $buildid
             ];
             pdo_execute($stmt, [$groupid, $prevgroupid, $buildid]);
 
             // Soft delete any previous rules.
-            $now = gmdate(FMT_DATETIME);
             $stmt = $pdo->prepare(
                 'UPDATE build2grouprule
                 SET endtime = :endtime
@@ -308,14 +309,13 @@ function rest_post($pdo, $projectid)
             $stmt = $pdo->prepare(
                 'INSERT INTO build2grouprule
                     (groupid, buildtype, buildname, siteid, expected,
-                     starttime, endtime)
+                     starttime)
                 VALUES
                     (:groupid, :buildtype, :buildname, :siteid, :expected,
-                     :starttime, :endtime)');
+                     :starttime)');
             $query_params[':groupid'] = $groupid;
             $query_params[':expected'] = $expected;
             $query_params[':starttime'] = $now;
-            $query_params[':endtime'] = '1980-01-01 00:00:00';
             pdo_execute($stmt, $query_params);
         }
     }
@@ -331,10 +331,20 @@ function rest_post($pdo, $projectid)
 
         $nameMatch = convert_wildcards($_POST['nameMatch']);
         $type = $_POST['type'];
+
         $stmt = $pdo->prepare(
-            'INSERT INTO build2grouprule (groupid, buildtype, buildname, siteid)
-            VALUES (?, ?, ?, ?)');
-        if (!pdo_execute($stmt, [$groupid, $type, $nameMatch, -1])) {
+            'INSERT INTO build2grouprule
+                (groupid, buildtype, buildname, siteid, starttime)
+            VALUES
+                (:groupid, :buildtype, :buildname, :siteid, :starttime)');
+        $query_params = [
+            ':groupid'   => $groupid,
+            ':buildtype' => $type,
+            ':buildname' => $nameMatch,
+            ':siteid'    => -1,
+            ':starttime' => $now
+        ];
+        if (!pdo_execute($stmt, $query_params)) {
             json_error_response(['error' => pdo_error()], 500);
         }
     }
@@ -362,9 +372,17 @@ function rest_post($pdo, $projectid)
 
         $stmt = $pdo->prepare(
             'INSERT INTO build2grouprule
-            (groupid, buildname, siteid, parentgroupid)
-            VALUES (?, ?, ?, ?)');
-        if (!pdo_execute($stmt, [$groupid, $sql_match, $siteid, $parentgroupid])) {
+                (groupid, buildname, siteid, parentgroupid, starttime)
+            VALUES
+                (:groupid, :buildname, :siteid, :parentgroupid, :starttime)');
+        $query_params = [
+            ':groupid' => $groupid,
+            ':buildname' => $sql_match,
+            ':siteid' => $siteid,
+            ':parentgroupid' => $parentgroupid,
+            ':starttime' => $now,
+        ];
+        if (!pdo_execute($stmt, $query_params)) {
             json_error_response(['error' => pdo_error()], 500);
         }
 
