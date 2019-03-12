@@ -25,6 +25,8 @@ include_once 'include/common.php';
 require_once 'include/cdashmail.php';
 
 use CDash\Config;
+use CDash\Database;
+use CDash\Model\BuildGroup;
 use CDash\Model\UserProject;
 
 @set_time_limit(0);
@@ -993,6 +995,36 @@ function addDailyChanges($projectid)
 
         // Delete expired authentication tokens.
         pdo_query('DELETE FROM authtoken WHERE expires < NOW()');
+
+        // Delete expired buildgroups and rules.
+        $current_date = gmdate(FMT_DATETIME);
+        $datetime = new \DateTime();
+        $datetime->sub(new \DateInterval("P{$project_array['autoremovetimeframe']}D"));
+        $cutoff_date = gmdate(FMT_DATETIME, $datetime->getTimestamp());
+        $db = Database::getInstance();
+        $stmt = $db->prepare(
+            "DELETE FROM build2grouprule
+            WHERE groupid IN
+                (SELECT id FROM buildgroup WHERE projectid = :projectid)
+            AND endtime != '1980-01-01 00:00:00'
+            AND endtime < :endtime");
+        $query_params = [
+            ':projectid' => $projectid,
+            ':endtime' => $cutoff_date
+        ];
+        $db->execute($stmt, $query_params);
+
+        $stmt = $db->prepare(
+            "SELECT id FROM buildgroup
+            WHERE projectid = :projectid AND
+                  endtime != '1980-01-01 00:00:00' AND
+                  endtime < :endtime");
+        $db->execute($stmt, $query_params);
+        while ($row = $stmt->fetch()) {
+            $buildgroup = new BuildGroup();
+            $buildgroup->SetId($row['id']);
+            $buildgroup->Delete();
+        }
 
         // Remove the first builds of the project
         include_once 'include/autoremove.php';
