@@ -118,17 +118,28 @@ function rest_delete($pdo)
         return;
     }
 
+    $now = gmdate(FMT_DATETIME);
+
     if (isset($_GET['wildcard'])) {
-        // Delete a wildcard build group rule.
+        // Soft delete a wildcard build group rule.
         $wildcard = json_decode($_GET['wildcard'], true);
         $buildgroupid = $wildcard['buildgroupid'];
         $match = isset($wildcard['match']) ? convert_wildcards($wildcard['match']) : '';
         $buildtype = $wildcard['buildtype'];
 
         $stmt = $pdo->prepare(
-            'DELETE FROM build2grouprule
-            WHERE groupid = ? AND buildtype = ? AND buildname = ?');
-        if (!pdo_execute($stmt, [$buildgroupid, $buildtype, $match])) {
+            'UPDATE build2grouprule
+            SET endtime = :endtime
+            WHERE groupid = :groupid AND
+                  buildtype = :buildtype AND
+                  buildname = :buildname');
+        $query_params = [
+            ':endtime'   => $now,
+            ':groupid'   => $buildgroupid,
+            ':buildtype' => $buildtype,
+            ':buildname' => $match
+        ];
+        if (!pdo_execute($stmt, $query_params)) {
             json_error_response(['error' => pdo_error()], 500);
         }
     }
@@ -143,7 +154,6 @@ function rest_delete($pdo)
         $parentgroupid = $rule['parentgroupid'];
         $siteid = $rule['siteid'];
 
-        $now = gmdate(FMT_DATETIME);
         $sql = 'UPDATE build2grouprule SET endtime = :endtime
             WHERE groupid = :groupid AND buildname = :buildname';
         $params = [
@@ -265,27 +275,48 @@ function rest_post($pdo, $projectid)
 
             // Change the group for this build.
             $stmt = $pdo->prepare(
-                'UPDATE build2group SET groupid = ?
-                WHERE groupid = ? AND buildid = ?');
+                'UPDATE build2group
+                SET groupid = :groupid
+                WHERE groupid = :prevgroupid AND
+                      buildid = :buildid');
+            $query_params = [
+                ':groupid'     => $groupid
+                ':prevgroupid' => $prevgroupid,
+                ':buildid'     => $buildid
+            ];
             pdo_execute($stmt, [$groupid, $prevgroupid, $buildid]);
 
-            // Delete any previous rules
+            // Soft delete any previous rules.
+            $now = gmdate(FMT_DATETIME);
             $stmt = $pdo->prepare(
-                'DELETE FROM build2grouprule
-                WHERE groupid = ? AND buildtype = ? AND buildname = ? AND
-                siteid =  ?');
-            pdo_execute($stmt,
-                [$prevgroupid, $Build->Type, $Build->Name, $Build->SiteId]);
+                'UPDATE build2grouprule
+                SET endtime = :endtime
+                WHERE groupid   = :groupid AND
+                      buildtype = :buildtype AND
+                      buildname = :buildname AND
+                      siteid    = :siteid');
+            $query_params = [
+                ':endtime'   => $now,
+                ':groupid'   => $prevgroupid,
+                ':buildtype' => $Build->Type,
+                ':buildname' => $Build->Name,
+                ':siteid'    => $Build->SiteId
+            ];
+            pdo_execute($stmt, $query_params);
 
             // Add the new rule
             $stmt = $pdo->prepare(
                 'INSERT INTO build2grouprule
                     (groupid, buildtype, buildname, siteid, expected,
                      starttime, endtime)
-                VALUES (?, ?, ?, ?, ?, ?, ?)');
-            pdo_execute($stmt,
-                [$groupid, $Build->Type, $Build->Name, $Build->SiteId,
-                 $expected, '1980-01-01 00:00:00', '1980-01-01 00:00:00']);
+                VALUES
+                    (:groupid, :buildtype, :buildname, :siteid, :expected,
+                     :starttime, :endtime)');
+            $query_params[':groupid'] = $groupid;
+            $query_params[':expected'] = $expected;
+            $query_params[':starttime'] = $now;
+            $query_params[':endtime'] = '1980-01-01 00:00:00';
+            pdo_execute($stmt, $query_params);
         }
     }
 
