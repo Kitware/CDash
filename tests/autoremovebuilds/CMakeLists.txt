@@ -1,4 +1,3 @@
-add_php_test(autoremovebuilds)
 add_php_test(autoremovebuilds_on_submit)
 add_php_test(deletesubproject)
 
