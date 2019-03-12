@@ -15,6 +15,8 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use CDash\Database;
+
 class BuildGroupRule
 {
     public $BuildType;
@@ -24,32 +26,44 @@ class BuildGroupRule
     public $StartTime;
     public $EndTime;
     public $GroupId;
+    private $PDO;
 
     public function __construct()
     {
         $this->StartTime = '1980-01-01 00:00:00';
         $this->EndTime = '1980-01-01 00:00:00';
+        $this->PDO = Database::getInstance();
     }
 
     /** Check if the rule already exists */
     public function Exists()
     {
-        // If no id specify return false
+        // If no id specified return false.
         if (empty($this->GroupId) || empty($this->BuildType)
             || empty($this->BuildName) || empty($this->SiteId)
         ) {
             return false;
         }
 
-        $query = pdo_query("SELECT count(*) AS c FROM build2grouprule WHERE
-                        groupid='" . $this->GroupId . "' AND buildtype='" . $this->BuildType . "'
-                        AND buildname='" . $this->BuildName . "'
-                        AND siteid='" . $this->SiteId . "'
-                        AND starttime='" . $this->StartTime . "'
-                        AND endtime='" . $this->EndTime . "'"
-        );
-        $query_array = pdo_fetch_array($query);
-        if ($query_array['c'] == 0) {
+        $stmt = $this->PDO->prepare(
+            'SELECT count(*) AS c FROM build2grouprule
+            WHERE groupid = :groupid AND
+                  buildtype = :buildtype AND
+                  buildname = :buildname AND
+                  siteid = :siteid AND
+                  starttime = :starttime AND
+                  endtime = :endtime');
+        $query_params = [
+            ':groupid'   => $this->GroupId,
+            ':buildtype' =>  $this->BuildType,
+            ':buildname' => $this->BuildName,
+            ':siteid'    =>  $this->SiteId,
+            ':starttime' => $this->StartTime,
+            ':endtime'   => $this->EndTime
+        ];
+
+        $this->PDO->execute($stmt, $query_params);
+        if ($stmt->fetchColumn() == 0) {
             return false;
         }
         return true;
@@ -65,13 +79,23 @@ class BuildGroupRule
         }
 
         if (!$this->Exists()) {
-            if (!pdo_query("INSERT INTO build2grouprule (groupid,buildtype,buildname,siteid,expected,starttime,endtime)
-                     VALUES ('$this->GroupId','$this->BuildType','$this->BuildName','$this->SiteId','$this->Expected','$this->StartTime','$this->EndTime')")
-            ) {
-                add_last_sql_error('BuildGroupRule Insert()');
-                return false;
-            }
-            return true;
+            $stmt = $this->PDO->prepare(
+                'INSERT INTO build2grouprule
+                    (groupid, buildtype, buildname, siteid, expected,
+                     starttime, endtime)
+                 VALUES
+                    (:groupid, :buildtype, :buildname, :siteid, :expected,
+                     :starttime, :endtime)');
+            $query_params = [
+                ':groupid'   => $this->GroupId,
+                ':buildtype' => $this->BuildType,
+                ':buildname' => $this->BuildName,
+                ':siteid'    => $this->SiteId,
+                ':expected'  => $this->Expected,
+                ':starttime' => $this->StartTime,
+                ':endtime'   => $this->EndTime
+            ];
+            return $this->PDO->execute($stmt, $query_params);
         }
         return false;
     }
