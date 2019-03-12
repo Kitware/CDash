@@ -130,7 +130,10 @@ if (Auth::check()) {
             $user->Password = $password_hash;
             if ($user->Save()) {
                 $xml .= '<error>Your password has been updated.</error>';
-                unset($_SESSION['cdash']['redirect']);
+                if (isset($_SESSION['cdash']['redirect'])) {
+                    unset($_SESSION['cdash']['redirect']);
+                    request()->session()->remove('cdash.redirect');
+                }
             } else {
                 $xml .= '<error>Cannot update password.</error>';
             }
