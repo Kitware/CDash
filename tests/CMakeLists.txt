@@ -179,6 +179,7 @@ add_php_test(submission_assign_buildid)
 add_php_test(donehandler)
 add_php_test(changeid)
 add_php_test(updateonlyuserstats)
+add_php_test(expiredbuildrules)
 
 if(CDASH_GITHUB_USERNAME AND CDASH_GITHUB_PASSWORD)
   add_php_test(github_PR_comment)
