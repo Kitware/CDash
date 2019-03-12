@@ -1,10 +1,25 @@
-var LoginPage = require('../pages/login.page.js');
 
 describe("manageBuildGroup", function() {
 
+  it("is protected by login", function () {
+    browser.get('manageBuildGroup.php?projectid=5');
+
+    expect(element(by.name('email')));
+    expect(element(by.name('password')));
+
+    element(by.name('email')).sendKeys('simpletest@localhost');
+    element(by.name('password')).sendKeys('simpletest');
+
+    // Submit it and wait for the title to change.
+    element(by.name('sent')).click().then(function () {
+      browser.driver.wait(browser.driver.getTitle().then(function (title) {
+        expect(title).toEqual("");
+      }));
+    });
+  });
+
   it("can create buildgroup", function() {
-    var loginPage = new LoginPage();
-    loginPage.login();
+
     browser.get('manageBuildGroup.php?projectid=5#/create');
 
     // Create a daily group

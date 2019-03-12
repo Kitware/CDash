@@ -1,18 +1,23 @@
 var LoginPage = function () {};
 
 LoginPage.prototype = Object.create({}, {
-  login: { value: function () {
-    // Fill out the login form.
-    browser.get('user.php');
-    element(by.name('login')).sendKeys('simpletest@localhost');
-    element(by.name('passwd')).sendKeys('simpletest');
+  login: { value: function (url = 'manageBuildGroup.php') {
 
-    // Submit it and wait for the title to change.
-    element(by.name('sent')).click().then(function () {
-      browser.driver.wait(browser.driver.getTitle().then(function (title) {
-        return title == "CDash - My Profile";
-      }));
-    });
+    // Fill out the login form.
+      browser.get(url);
+
+      expect(element(by.name('email')));
+      expect(element(by.name('password')));
+
+      element(by.name('email')).sendKeys('simpletest@localhost');
+      element(by.name('password')).sendKeys('simpletest');
+
+      // Submit it and wait for the title to change.
+      element(by.name('sent')).click().then(function () {
+        browser.driver.wait(browser.driver.getTitle().then(function (title) {
+          expect(title).toEqual("");
+        }));
+      });
   }}
 });
 

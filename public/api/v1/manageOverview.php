@@ -32,8 +32,7 @@ $response['hidenav'] = 1;
 
 if (!Auth::check()) {
     $response['requirelogin'] = 1;
-    echo json_encode($response);
-    return;
+    return json_encode($response);
 }
 
 // Make sure a project was specified.
@@ -52,8 +51,7 @@ if (isset($projectid)) {
 }
 if (!$projectid_ok) {
     $response['error'] = "Please specify a project";
-    echo json_encode($response);
-    return;
+    return json_encode($response);
 }
 
 
@@ -62,8 +60,8 @@ if (!$projectid_ok) {
 $userid = Auth::id();
 if (!isset($userid) || !is_numeric($userid)) {
     $response['requirelogin'] = 1;
-    echo json_encode($response);
-    return;
+    return json_encode($response);
+
 }
 
 $Project = new Project();
@@ -76,8 +74,8 @@ $User->Id = $userid;
 get_dashboard_JSON($Project->GetName(), null, $response);
 if ($response['user']['admin'] != 1) {
     $response['error'] = "You don't have the permissions to access this page";
-    echo json_encode($response);
-    return;
+    return json_encode($response);
+
 }
 
 // Check if we are saving an overview layout.

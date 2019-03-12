@@ -24,15 +24,19 @@ use CDash\Database;
 
 $build = get_request_build();
 
+if (!$build) {
+    return;
+}
+
 $testid = pdo_real_escape_numeric($_GET['testid']);
 if (!isset($testid) || !is_numeric($testid)) {
-    json_error_response(['error' => 'A valid test was not specified.']);
+    return json_error_response(['error' => 'A valid test was not specified.']);
 }
 
 $valid_types = ['time', 'status', 'measurement'];
 $type = $_GET['type'];
 if (!in_array($type, $valid_types)) {
-    json_error_response(['error' => 'Invalid type of graph requested.']);
+    return json_error_response(['error' => 'Invalid type of graph requested.']);
 }
 
 $project = new Project();

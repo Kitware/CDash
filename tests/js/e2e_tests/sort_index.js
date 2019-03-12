@@ -38,7 +38,8 @@ describe("sort_index", function() {
     expect(visible_tds.get(column_index).getText()).toBe(last_value);
 
     // Delete the cookie.
-    browser.manage().deleteAllCookies();
+    // browser.manage().deleteAllCookies();
+    browser.manage().deleteCookie('cdash_InsightExample_indexNightly_sort');
   }
 
   it("sort by Site", function() {
