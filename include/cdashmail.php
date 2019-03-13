@@ -15,6 +15,7 @@
 =========================================================================*/
 
 use CDash\Config;
+use Illuminate\Support\Facades\Mail;
 
 function _cdashsendgrid($to, $subject, $body)
 {
@@ -56,38 +57,13 @@ function cdashmail($to, $subject, $body, $headers = false)
         return _cdashsendgrid($to, $subject, $body);
     }
 
-    $to = explode(', ', $to);
-    try {
-        $message = Swift_Message::newInstance()
-            ->setTo($to)
-            ->setSubject($subject)
-            ->setBody($body)
-            ->setFrom([$config->get('CDASH_EMAIL_FROM')=> 'CDash'])
-            ->setReplyTo($config->get('CDASH_EMAIL_REPLY'))
-            ->setContentType('text/plain')
-            ->setCharset('UTF-8');
-    } catch (\Swift_RfcComplianceException $e) {
-        add_log("Swift RFC compliance exception. to=" . print_r($to, true). ", from=[". $config->get('CDASH_EMAIL_FROM') . " => 'CDash'], 'reply-to=" . $config->get('CDASH_EMAIL_REPLY'), 'sendmail', LOG_INFO);
-        return false;
-    }
+    Mail::raw($body, function ($message) use ($config, $to, $subject, $headers) {
+        $to = is_array($to) ? $to : [$to];
 
-    if (is_null($config->get('CDASH_EMAIL_SMTP_HOST'))) {
-        // Use the PHP mail() function.
-        $transport = Swift_MailTransport::newInstance();
-    } else {
-        // Use an SMTP server to send mail.
-        $transport = Swift_SmtpTransport::newInstance(
-            $config->get('CDASH_EMAIL_SMTP_HOST'), $config->get('CDASH_EMAIL_SMTP_PORT'),
-            $config->get('CDASH_EMAIL_SMTP_ENCRYPTION'));
-
-        if (!is_null($config->get('CDASH_EMAIL_SMTP_LOGIN'))
-            && !is_null($config->get('CDASH_EMAIL_SMTP_PASS'))
-        ) {
-            $transport->setUsername($config->get('CDASH_EMAIL_SMTP_LOGIN'))
-                ->setPassword($config->get('CDASH_EMAIL_SMTP_PASS'));
-        }
-    }
-
-    $mailer = Swift_Mailer::newInstance($transport);
-    return $mailer->send($message) > 0;
+        /** @var Illuminate\Mail\Message $message */
+        $message->subject($subject)
+            ->to($to)
+            ->from($config->get('CDASH_EMAIL_FROM'))
+            ->replyTo($config->get('CDASH_EMAIL_REPLY'));
+    });
 }
