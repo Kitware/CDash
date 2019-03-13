@@ -257,15 +257,7 @@ if (Auth::check()) {
                 $User->Id = $userid;
                 $email = $User->GetEmail();
 
-                // cdashmail("$email", $title, $messagePlainText);
-
-                Mail::raw($messagePlainText, function ($message) use ($title, $email, $sender) {
-                    /** @var Illuminate\Mail\Message */
-                    $message->subject($title)
-                        ->to($email)
-                        ->from($sender);
-                });
-
+                cdashmail($email, $title, $messagePlainText);
                 $xml .= add_XML_value('warning', '*The email has been sent successfully.');
             } else {
                 $xml .= add_XML_value('warning', '*No email sent because the coverage is green.');
