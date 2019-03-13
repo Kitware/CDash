@@ -22,6 +22,7 @@ use CDash\Middleware\Queue\SubmissionService;
 use CDash\Model\AuthToken;
 use CDash\Model\Build;
 use CDash\Model\BuildFile;
+use CDash\Model\BuildProperties;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
 use CDash\Model\Repository;
@@ -172,28 +173,39 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $buildid = null,
         }
     }
 
-    // Send the emails if necessary
-    if ($handler instanceof UpdateHandler) {
+    // Set status on repository.
+    if ($handler instanceof UpdateHandler ||
+        $handler instanceof BuildPropertiesJSONHandler
+    ) {
         $project = new Project();
         $project->Id = $projectid;
         $project->Fill();
 
-        // TODO: factory should always return object, consider alt way to check need for notification
-        $service = Repository::factory($project);
-        if ($service) {
-            $client = new HttpClient();
-            $repository = new RepositoryService($service, $client);
-            $repository->setStatusOnStart($build);
+        $buildProperties = new BuildProperties($build);
+        $buildProperties->Fill();
+        if (array_key_exists('status context', $buildProperties->Properties)) {
+            $context = $buildProperties->Properties['status context'];
+            // TODO: factory should always return object, consider alt way to check need for notification
+            $service = Repository::factory($project);
+            if ($service) {
+                $client = new HttpClient();
+                $repository = new RepositoryService($service, $client);
+                $repository->setStatusOnStart($build, $context);
+            }
         }
-
-        send_update_email($handler, $projectid);
-        sendemail($handler, $projectid);
     }
 
+    // Send emails about update problems.
+    if ($handler instanceof UpdateHandler) {
+        send_update_email($handler, $projectid);
+    }
+
+    // Send more general build emails.
     if ($handler instanceof TestingHandler ||
         $handler instanceof BuildHandler ||
         $handler instanceof ConfigureHandler ||
-        $handler instanceof DynamicAnalysisHandler
+        $handler instanceof DynamicAnalysisHandler ||
+        $handler instanceof UpdateHandler
     ) {
         sendemail($handler, $projectid);
     }

@@ -60,7 +60,7 @@ class RepositoryServiceTest extends PHPUnit_Framework_TestCase
         $build->SetBuildUpdate($buildUpdate);
 
         $options = [
-            'context' => 'CDash by Kitware',
+            'context' => 'ci/CDash/Debug',
             'description' => "Build: {$build->Name}",
             'commit_hash' => $hash,
             'state' => 'pending',
@@ -72,6 +72,6 @@ class RepositoryServiceTest extends PHPUnit_Framework_TestCase
             ->method('setStatus')
             ->with($this->client, $options);
 
-        $sut->setStatusOnStart($build);
+        $sut->setStatusOnStart($build, 'Debug');
     }
 }
