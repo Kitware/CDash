@@ -19,6 +19,7 @@ require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 
 use CDash\Database;
+use CDash\Model\BuildGroupRule;
 use CDash\Model\Project;
 use CDash\Model\User;
 
@@ -59,57 +60,14 @@ function rest_delete($build)
 /* Handle POST requests */
 function rest_post($build)
 {
-    $pdo = Database::getInstance()->getPdo();
-    $buildtype = $build->Type;
-    $buildname = $build->Name;
-    $siteid = $build->SiteId;
+    $pdo = Database::getInstance();
+    $buildgrouprule = new BuildGroupRule($build);
 
     // Should we change whether or not this build is expected?
     if (isset($_POST['expected']) && isset($_POST['groupid'])) {
-        $expected = $_POST['expected'];
-        $groupid = $_POST['groupid'];
-
-        // If a rule already exists we update it.
-        $exists_stmt = $pdo->prepare(
-            "SELECT groupid FROM build2grouprule
-            WHERE groupid = :groupid AND buildtype = :buildtype AND
-                  buildname = :buildname AND siteid = :siteid AND
-                  endtime = '1980-01-01 00:00:00' LIMIT 1");
-        pdo_execute($exists_stmt, [
-                ':groupid'   => $groupid,
-                ':buildtype' => $buildtype,
-                ':buildname' => $buildname,
-                ':siteid'    => $siteid]);
-        if ($exists_stmt->fetchColumn() !== false) {
-            $update_stmt = $pdo->prepare(
-                "UPDATE build2grouprule SET expected = :expected
-                WHERE groupid = :groupid AND buildtype = :buildtype AND
-                      buildname = :buildname AND siteid = :siteid AND
-                      endtime = '1980-01-01 00:00:00'");
-            pdo_execute($update_stmt, [
-                    ':expected'  => $expected,
-                    ':groupid'   => $groupid,
-                    ':buildtype' => $buildtype,
-                    ':buildname' => $buildname,
-                    ':siteid'    => $siteid]);
-        } elseif ($expected) {
-            // Otherwise we add a grouprule.
-            $now = gmdate(FMT_DATETIME);
-            $insert_stmt = $pdo->prepare(
-                "INSERT INTO build2grouprule
-                    (groupid, buildtype, buildname, siteid, expected,
-                     starttime, endtime)
-                VALUES
-                    (:groupid, :buildtype, :buildname, :siteid, :expected,
-                     :starttime, '1980-01-01 00:00:00')");
-            pdo_execute($insert_stmt, [
-                    ':groupid'   => $groupid,
-                    ':buildtype' => $buildtype,
-                    ':buildname' => $buildname,
-                    ':siteid'    => $siteid,
-                    ':expected'  => $expected,
-                    ':starttime' => $now]);
-        }
+        $buildgrouprule->Expected = $_POST['expected'];
+        $buildgrouprule->GroupId = $_POST['groupid'];
+        $buildgrouprule->SetExpected();
     }
 
     // Should we move this build to a different group?
@@ -120,48 +78,24 @@ function rest_post($build)
         // Remove the build from its previous group.
         $delete_stmt = $pdo->prepare(
             'DELETE FROM build2group WHERE buildid = :buildid');
-        pdo_execute($delete_stmt, [':buildid' => $build->Id]);
+        $pdo->execute($delete_stmt, [':buildid' => $build->Id]);
 
         // Insert it into the new group.
         $insert_stmt = $pdo->prepare(
             'INSERT INTO build2group(groupid, buildid)
             VALUES (:groupid, :buildid)');
-        pdo_execute($insert_stmt,
+        $pdo->execute($insert_stmt,
                 [':groupid' => $newgroupid, ':buildid' => $build->Id]);
 
         // Mark any previous buildgroup rule as finished as of this time.
         $now = gmdate(FMT_DATETIME);
-        $finish_stmt = $pdo->prepare(
-            "UPDATE build2grouprule
-            SET endtime = :endtime
-            WHERE buildtype = :buildtype AND
-                  buildname = :buildname AND
-                  siteid = :siteid AND
-                  endtime = '1980-01-01 00:00:00' AND
-                  groupid IN
-                      (SELECT id FROM buildgroup WHERE projectid = :projectid)");
-        pdo_execute($finish_stmt, [
-                ':endtime'   => $now,
-                ':projectid' => $build->ProjectId,
-                ':buildtype' => $buildtype,
-                ':buildname' => $buildname,
-                ':siteid'    => $siteid]);
+        $buildgrouprule->SoftDeleteExpiredRules($now);
 
         // Create the rule for the newly assigned buildgroup.
-        $insert_stmt = $pdo->prepare(
-            "INSERT INTO build2grouprule
-                (groupid, buildtype, buildname, siteid, expected, starttime,
-                 endtime)
-            VALUES
-                (:groupid, :buildtype, :buildname, :siteid, :expected,
-                 :starttime, '1980-01-01 00:00:00')");
-        pdo_execute($insert_stmt, [
-                ':groupid'   => $newgroupid,
-                ':buildtype' => $buildtype,
-                ':buildname' => $buildname,
-                ':siteid'    => $siteid,
-                ':expected'  => $expected,
-                ':starttime' => $now]);
+        $buildgrouprule->GroupId = $newgroupid;
+        $buildgrouprule->Expected = $expected;
+        $buildgrouprule->StartTime = $now;
+        $buildgrouprule->Save();
     }
 
     // Should we change the 'done' setting for this build?
