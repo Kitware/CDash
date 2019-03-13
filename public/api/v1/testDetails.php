@@ -30,6 +30,32 @@ use CDash\Model\Build;
 use CDash\Model\Project;
 use CDash\Model\Site;
 
+if (!function_exists('findTest')) {
+    // Helper function
+    function findTest($buildid, $testName, $pdo)
+    {
+        $stmt = $pdo->prepare(
+            'SELECT build2test.testid FROM build2test
+        WHERE build2test.buildid = :buildid
+        AND build2test.testid IN
+            (SELECT id FROM test WHERE name = :testname)');
+        pdo_execute($stmt, [':buildid' => $buildid, ':testname' => $testName]);
+        $testid = $stmt->fetchColumn();
+        if ($testid === false) {
+            return 0;
+        }
+        return $testid;
+    }
+}
+
+if (!function_exists('utf8_for_xml')) {
+    // Helper function to remove bad characters for XML parser
+    function utf8_for_xml($string)
+    {
+        return preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{001b}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', ' ', $string);
+    }
+}
+
 $start = microtime_float();
 $config = Config::getInstance();
 
@@ -109,22 +135,6 @@ pdo_execute($stmt, [':testid' => $testid, ':buildid' => $build->Id]);
 $testRow = $stmt->fetch();
 $testName = $testRow['name'];
 
-// Helper function
-function findTest($buildid, $testName, $pdo)
-{
-    $stmt = $pdo->prepare(
-        'SELECT build2test.testid FROM build2test
-        WHERE build2test.buildid = :buildid
-        AND build2test.testid IN
-            (SELECT id FROM test WHERE name = :testname)');
-    pdo_execute($stmt, [':buildid' => $buildid, ':testname' => $testName]);
-    $testid = $stmt->fetchColumn();
-    if ($testid === false) {
-        return 0;
-    }
-    return $testid;
-}
-
 $menu = [];
 $menu['back'] = "viewTest.php?buildid=$build->Id";
 
@@ -178,12 +188,6 @@ $test_response['test'] = $testName;
 $test_response['time'] = time_difference($testRow['time'], true, '', true);
 $test_response['command'] = $testRow['command'];
 $test_response['details'] = $testRow['details'];
-
-// Helper function to remove bad characters for XML parser
-function utf8_for_xml($string)
-{
-    return preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{001b}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', ' ', $string);
-}
 
 if ($config->get('CDASH_USE_COMPRESSION')) {
     if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
