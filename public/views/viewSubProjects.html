@@ -16,7 +16,7 @@
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
     <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_@@version.html'"></ng-include>
 
-    <div id="content" ng-if="!loading && cdash.requirelogin != 1">
+    <div id="main_content" ng-if="!loading && cdash.requirelogin != 1">
       <table ng-show="cdash.banners.length > 0" border="0" width="100%">
         <tr ng-repeat="banner in cdash.banners" bgcolor="#DDDDDD">
           <td align="center" width="100%" colspan="2">

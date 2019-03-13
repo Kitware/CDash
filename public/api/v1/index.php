@@ -123,7 +123,6 @@ if (!function_exists('echo_main_dashboard_JSON')) {
             $banners[] = $text;
         }
         $response['banners'] = $banners;
-        $site_response = array();
         $show_proc_time = false;
 
         // If parentid is set we need to lookup the date for this build
@@ -767,8 +766,8 @@ if (!function_exists('echo_main_dashboard_JSON')) {
 
         $end = microtime_float();
         $response['generationtime'] = round($end - $start, 3);
-        if (!empty($site_response)) {
-            $response = array_merge($response, $site_response);
+        if (!empty($controller->siteResponse)) {
+            $response = array_merge($response, $controller->siteResponse);
         }
 
         echo json_encode(cast_data_for_JSON($response));

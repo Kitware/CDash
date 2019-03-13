@@ -22,10 +22,45 @@
         <img ng-if="!cdash.logoid || cdash.logoid==0" id="projectlogo" border="0" height="50px" src="img/cdash.png"/>
       </a>
     </div>
+
     <div id="headername">
       <span class="projectname">{{::cdash.projectname}}</span>
       <span ng-if="::cdash.subheadername" id="subheadername">{{::cdash.subprojectname}}</span>
     </div>
+
+    <div class="projectnav clearfix">
+      <ul class="projectnav_controls clearfix">
+        <li class="btnprev" ng-if="::!cdash.hidenav">
+          <a ng-if="::cdash.menu.previous"
+             ng-href="{{::cdash.menu.previous}}{{::cdash.filterurl}}">Prev</a>
+          <a ng-if="!cdash.menu.previous && !cdash.menu.noprevious"
+             ng-href="index.php?project={{::cdash.projectname_encoded}}&date={{::cdash.previousdate}}{{::cdash.extraurl}}{{::cdash.filterurl}}">
+            Prev
+          </a>
+        </li>
+        <li class="btncurr" ng-if="::!cdash.hidenav">
+          <a ng-if="::cdash.menu.current"
+             ng-href="{{::cdash.menu.current}}{{::cdash.filterurl}}">
+            Current
+          </a>
+          <a ng-if="!cdash.menu.current"
+             ng-href="index.php?project={{::cdash.projectname_encoded}}{{::cdash.extraurl}}{{::cdash.filterurl}}">
+            Current
+          </a>
+        </li>
+        <li class="btnnext" ng-if="::!cdash.menu.nonext && !cdash.hidenav">
+          <a ng-if="::cdash.menu.next"
+             ng-href="{{::cdash.menu.next}}{{::cdash.filterurl}}">
+            Next
+          </a>
+          <a ng-if="!cdash.menu.next"
+             ng-href="index.php?project={{::cdash.projectname_encoded}}&date={{::cdash.nextdate}}{{::cdash.extraurl}}{{::cdash.filterurl}}">
+            Next
+          </a>
+        </li>
+      </ul>
+    </div>
+
     <div id="headermenu">
       <ul id="navigation">
         <li ng-if="::!cdash.noproject">
@@ -155,38 +190,6 @@
     </div>
   </div>
   <div id="calendar"/>
-  <div class="projectnav clearfix">
-    <ul class="projectnav_controls clearfix">
-      <li class="btnprev" ng-if="::!cdash.hidenav">
-        <a ng-if="::cdash.menu.previous"
-           ng-href="{{::cdash.menu.previous}}{{::cdash.filterurl}}">Prev</a>
-        <a ng-if="!cdash.menu.previous && !cdash.menu.noprevious"
-           ng-href="index.php?project={{::cdash.projectname_encoded}}&date={{::cdash.previousdate}}{{::cdash.extraurl}}{{::cdash.filterurl}}">
-          Prev
-        </a>
-      </li>
-      <li class="btncurr" ng-if="::!cdash.hidenav">
-        <a ng-if="::cdash.menu.current"
-           ng-href="{{::cdash.menu.current}}{{::cdash.filterurl}}">
-          Current
-        </a>
-        <a ng-if="!cdash.menu.current"
-           ng-href="index.php?project={{::cdash.projectname_encoded}}{{::cdash.extraurl}}{{::cdash.filterurl}}">
-          Current
-        </a>
-      </li>
-      <li class="btnnext" ng-if="::!cdash.menu.nonext && !cdash.hidenav">
-        <a ng-if="::cdash.menu.next"
-           ng-href="{{::cdash.menu.next}}{{::cdash.filterurl}}">
-          Next
-        </a>
-        <a ng-if="!cdash.menu.next"
-           ng-href="index.php?project={{::cdash.projectname_encoded}}&date={{::cdash.nextdate}}{{::cdash.extraurl}}{{::cdash.filterurl}}">
-          Next
-        </a>
-      </li>
-    </ul>
-  </div>
 </div>
 
 

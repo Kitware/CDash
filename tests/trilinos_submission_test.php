@@ -116,6 +116,10 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
         $buildgroup = array_pop($jsonobj['buildgroups']);
         $builds = $buildgroup['builds'];
 
+        if ($jsonobj['site'] != 'hut11.kitware') {
+            $this->fail('Expected hut11.kitware, found ' . $jsonobj['site']);
+        }
+
         $subproject_answers = array(
             'Amesos' => array(
                 'builddateelapsed' => 'Jul 22, 2011 - 11:29 EDT',

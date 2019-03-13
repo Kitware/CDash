@@ -14,7 +14,7 @@
   <body bgcolor="#ffffff" ng-controller="UserController">
     <div ng-if="cdash.requirelogin == 1 && cdash.registered == 1" ng-include="'login.php?note=register'"></div>
     <div ng-if="cdash.requirelogin == 1 && cdash.registered == 0" ng-include="'login.php'"></div>
-    <div ng-if="cdash.requirelogin != 1 && !loading">
+    <div id="main_content" ng-if="cdash.requirelogin != 1 && !loading">
       <!-- Header -->
       <div id="header">
         <div id="headertop">
