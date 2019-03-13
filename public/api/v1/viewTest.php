@@ -14,7 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 include 'include/version.php';
@@ -52,6 +51,266 @@ use CDash\Model\Project;
  * filterstring
  * export=[presence]
  **/
+
+if (!function_exists('get_test_history')) {
+    function get_test_history($testname, $previous_buildids)
+    {
+        $retval = array();
+
+        // STRAIGHT_JOIN is a MySQL specific enhancement.
+        $join_type = 'INNER JOIN';
+        $config = Config::getInstance();
+        if ($config->get('CDASH_DB_TYPE') === 'mysql') {
+            $join_type = 'STRAIGHT_JOIN';
+        }
+
+        $history_query = "
+        SELECT DISTINCT status FROM build2test AS b2t
+        $join_type test AS t ON (t.id = b2t.testid)
+        WHERE b2t.buildid IN ($previous_buildids) AND t.name = '$testname'";
+        $history_results = pdo_query($history_query);
+
+        $num_statuses = pdo_num_rows($history_results);
+        if ($num_statuses > 0) {
+            if ($num_statuses > 1) {
+                $retval['history'] = 'Unstable';
+                $retval['historyclass'] = 'warning';
+            } else {
+                $row = pdo_fetch_array($history_results);
+
+                $retval['history'] = ucfirst($row['status']);
+
+                switch ($row['status']) {
+                    case 'passed':
+                        $retval['historyclass'] = 'normal';
+                        $retval['history'] = 'Stable';
+                        break;
+                    case 'failed':
+                        $retval['historyclass'] = 'error';
+                        $retval['history'] = 'Broken';
+                        break;
+                    case 'notrun':
+                        $retval['historyclass'] = 'warning';
+                        $retval['history'] = 'Inactive';
+                        break;
+                }
+            }
+        }
+        return $retval;
+    }
+}
+
+if (!function_exists('get_test_summary')) {
+    function get_test_summary($testname, $projectid, $groupid, $begin, $end)
+    {
+        $retval = array();
+
+        // STRAIGHT_JOIN is a MySQL specific enhancement.
+        $join_type = 'INNER JOIN';
+        $config = Config::getInstance();
+        if ($config->get('CDASH_DB_TYPE') === 'mysql') {
+            $join_type = 'STRAIGHT_JOIN';
+        }
+
+        $summary_query = "
+        SELECT DISTINCT b2t.status FROM build AS b
+        $join_type build2group AS b2g ON (b.id = b2g.buildid)
+        $join_type build2test AS b2t ON (b.id = b2t.buildid)
+        $join_type test AS t ON (b2t.testid = t.id)
+        WHERE b2g.groupid = $groupid
+        AND b.projectid = $projectid
+        AND b.starttime>='$begin'
+        AND b.starttime<'$end'
+        AND t.name = '$testname'";
+
+        $summary_results = pdo_query($summary_query);
+
+        $num_statuses = pdo_num_rows($summary_results);
+        if ($num_statuses > 0) {
+            if ($num_statuses > 1) {
+                $retval['summary'] = 'Unstable';
+                $retval['summaryclass'] = 'warning';
+            } else {
+                $row = pdo_fetch_array($summary_results);
+
+                $retval['summary'] = ucfirst($row['status']);
+
+                switch ($row['status']) {
+                    case 'passed':
+                        $retval['summaryclass'] = 'normal';
+                        $retval['summary'] = 'Stable';
+                        break;
+                    case 'failed':
+                        $retval['summaryclass'] = 'error';
+                        $retval['summary'] = 'Broken';
+                        break;
+                    case 'notrun':
+                        $retval['summaryclass'] = 'warning';
+                        $retval['summary'] = 'Inactive';
+                        break;
+                }
+            }
+        }
+        return $retval;
+    }
+}
+
+if (!function_exists('load_test_details')) {
+    function load_test_details()
+    {
+        // Parse input arguments.
+        $tests = array();
+        foreach ($_GET['tests'] as $test) {
+            $tests[] = pdo_real_escape_string($test);
+        }
+        if (empty($tests)) {
+            return;
+        }
+
+        $previous_builds = '';
+        if (array_key_exists('previous_builds', $_GET)) {
+            $previous_builds = pdo_real_escape_string($_GET['previous_builds']);
+        }
+        $time_begin = '';
+        if (array_key_exists('time_begin', $_GET)) {
+            $time_begin = pdo_real_escape_string($_GET['time_begin']);
+        }
+        $time_end = '';
+        if (array_key_exists('time_end', $_GET)) {
+            $time_end = pdo_real_escape_string($_GET['time_end']);
+        }
+        $projectid = pdo_real_escape_numeric($_GET['projectid']);
+        $groupid = pdo_real_escape_numeric($_GET['groupid']);
+
+        $response = array();
+        $tests_response = array();
+
+        foreach ($tests as $test) {
+            // Send the client a character to see if they're still connected.
+            // If they disconnected this will cause the script to terminate early.
+            echo " ";
+            flush();
+            ob_flush();
+
+            $test_response = array();
+            $test_response['name'] = $test;
+            $data_found = false;
+
+            if ($time_begin && $time_end) {
+                $summary_response = get_test_summary($test, $projectid, $groupid,
+                    $time_begin, $time_end);
+                if (!empty($summary_response)) {
+                    $test_response = array_merge($test_response, $summary_response);
+                    $data_found = true;
+                }
+            }
+
+            if ($previous_builds) {
+                $history_response = get_test_history($test, $previous_builds);
+                if (!empty($history_response)) {
+                    $test_response = array_merge($test_response, $history_response);
+                    $response['displayhistory'] = true;
+                    $data_found = true;
+                }
+            }
+
+            if ($data_found) {
+                $tests_response[] = $test_response;
+            }
+        }
+
+        if (!empty($tests_response)) {
+            $response['tests'] = $tests_response;
+        }
+
+        echo json_encode($response);
+    }
+}
+
+if (!function_exists('export_as_csv')) {
+    // Export test results as CSV file.
+    function export_as_csv($etestquery, $etest, $result, $projectshowtesttime, $testtimemaxstatus, $columns)
+    {
+        // Store named measurements in an array
+        if (!is_null($etestquery)) {
+            while ($row = pdo_fetch_array($etestquery)) {
+                $etest[$row['id']][$row['name']] = $row['value'];
+            }
+        }
+
+        $csv_contents = array();
+        // Standard columns.
+        $csv_headers = array('Name', 'Time' ,'Details' , 'Status');
+        if ($projectshowtesttime) {
+            $csv_headers[] = 'Time Status';
+        }
+
+        for ($c = 0; $c < count($columns); $c++) {
+            // Add extra coluns.
+            $csv_headers[] = $columns[$c];
+        }
+        $csv_contents[] = $csv_headers;
+
+        while ($row = pdo_fetch_array($result)) {
+            $csv_row = array();
+            $csv_row[] = $row['name'];
+            $csv_row[] = $row['time'];
+            $csv_row[] = $row['details'];
+
+            switch ($row['status']) {
+                case 'passed':
+                    $csv_row[] = 'Passed';
+                    break;
+                case 'failed':
+                    $csv_row[] = 'Failed';
+                    break;
+                case 'notrun':
+                default:
+                    $csv_row[] = 'Not Run';
+                    break;
+            }
+
+            if ($projectshowtesttime) {
+                if ($row['timestatus'] < $testtimemaxstatus) {
+                    $csv_row[] = 'Passed';
+                } else {
+                    $csv_row[] = 'Failed';
+                }
+            }
+
+            // Extra columns.
+            for ($t = 0; $t < count($columns); $t++) {
+                $csv_row[] = $etest[$row['id']][$columns[$t]];
+            }
+            $csv_contents[] = $csv_row;
+        }
+
+        $output = fopen('php://temp', 'w');
+        foreach ($csv_contents as $csv_row) {
+            fputcsv($output, $csv_row);
+        }
+        rewind($output);
+
+        $file = [
+            'type' => 'text/csv',
+            'file' => stream_get_contents($output),
+            'filename' => 'test-export.csv',
+        ];
+
+        fclose($output);
+        return $file;
+
+        /*
+        // Write out our data as CSV.
+        header('Content-type: text/csv');
+        header('Content-Disposition: attachment; filename="testExport.csv";');
+        header('Pragma: no-cache');
+        header('Expires: 0');
+
+        die; // to suppress unwanted output
+        */
+    }
+}
 
 $config = Config::getInstance();
 $build = get_request_build(false);
@@ -475,254 +734,3 @@ $response['columncount'] = $columncount;
 
 echo json_encode(cast_data_for_JSON($response));
 
-function get_test_history($testname, $previous_buildids)
-{
-    $retval = array();
-
-    // STRAIGHT_JOIN is a MySQL specific enhancement.
-    $join_type = 'INNER JOIN';
-    $config = Config::getInstance();
-    if ($config->get('CDASH_DB_TYPE') === 'mysql') {
-        $join_type = 'STRAIGHT_JOIN';
-    }
-
-    $history_query = "
-        SELECT DISTINCT status FROM build2test AS b2t
-        $join_type test AS t ON (t.id = b2t.testid)
-        WHERE b2t.buildid IN ($previous_buildids) AND t.name = '$testname'";
-    $history_results = pdo_query($history_query);
-
-    $num_statuses = pdo_num_rows($history_results);
-    if ($num_statuses > 0) {
-        if ($num_statuses > 1) {
-            $retval['history'] = 'Unstable';
-            $retval['historyclass'] = 'warning';
-        } else {
-            $row = pdo_fetch_array($history_results);
-
-            $retval['history'] = ucfirst($row['status']);
-
-            switch ($row['status']) {
-                case 'passed':
-                    $retval['historyclass'] = 'normal';
-                    $retval['history'] = 'Stable';
-                    break;
-                case 'failed':
-                    $retval['historyclass'] = 'error';
-                    $retval['history'] = 'Broken';
-                    break;
-                case 'notrun':
-                    $retval['historyclass'] = 'warning';
-                    $retval['history'] = 'Inactive';
-                    break;
-            }
-        }
-    }
-    return $retval;
-}
-
-function get_test_summary($testname, $projectid, $groupid, $begin, $end)
-{
-    $retval = array();
-
-    // STRAIGHT_JOIN is a MySQL specific enhancement.
-    $join_type = 'INNER JOIN';
-    $config = Config::getInstance();
-    if ($config->get('CDASH_DB_TYPE') === 'mysql') {
-        $join_type = 'STRAIGHT_JOIN';
-    }
-
-    $summary_query = "
-        SELECT DISTINCT b2t.status FROM build AS b
-        $join_type build2group AS b2g ON (b.id = b2g.buildid)
-        $join_type build2test AS b2t ON (b.id = b2t.buildid)
-        $join_type test AS t ON (b2t.testid = t.id)
-        WHERE b2g.groupid = $groupid
-        AND b.projectid = $projectid
-        AND b.starttime>='$begin'
-        AND b.starttime<'$end'
-        AND t.name = '$testname'";
-
-    $summary_results = pdo_query($summary_query);
-
-    $num_statuses = pdo_num_rows($summary_results);
-    if ($num_statuses > 0) {
-        if ($num_statuses > 1) {
-            $retval['summary'] = 'Unstable';
-            $retval['summaryclass'] = 'warning';
-        } else {
-            $row = pdo_fetch_array($summary_results);
-
-            $retval['summary'] = ucfirst($row['status']);
-
-            switch ($row['status']) {
-                case 'passed':
-                    $retval['summaryclass'] = 'normal';
-                    $retval['summary'] = 'Stable';
-                    break;
-                case 'failed':
-                    $retval['summaryclass'] = 'error';
-                    $retval['summary'] = 'Broken';
-                    break;
-                case 'notrun':
-                    $retval['summaryclass'] = 'warning';
-                    $retval['summary'] = 'Inactive';
-                    break;
-            }
-        }
-    }
-    return $retval;
-}
-
-function load_test_details()
-{
-    // Parse input arguments.
-    $tests = array();
-    foreach ($_GET['tests'] as $test) {
-        $tests[] = pdo_real_escape_string($test);
-    }
-    if (empty($tests)) {
-        return;
-    }
-
-    $previous_builds = '';
-    if (array_key_exists('previous_builds', $_GET)) {
-        $previous_builds = pdo_real_escape_string($_GET['previous_builds']);
-    }
-    $time_begin = '';
-    if (array_key_exists('time_begin', $_GET)) {
-        $time_begin = pdo_real_escape_string($_GET['time_begin']);
-    }
-    $time_end = '';
-    if (array_key_exists('time_end', $_GET)) {
-        $time_end = pdo_real_escape_string($_GET['time_end']);
-    }
-    $projectid = pdo_real_escape_numeric($_GET['projectid']);
-    $groupid = pdo_real_escape_numeric($_GET['groupid']);
-
-    $response = array();
-    $tests_response = array();
-
-    foreach ($tests as $test) {
-        // Send the client a character to see if they're still connected.
-        // If they disconnected this will cause the script to terminate early.
-        echo " ";
-        flush();
-        ob_flush();
-
-        $test_response = array();
-        $test_response['name'] = $test;
-        $data_found = false;
-
-        if ($time_begin && $time_end) {
-            $summary_response = get_test_summary($test, $projectid, $groupid,
-                $time_begin, $time_end);
-            if (!empty($summary_response)) {
-                $test_response = array_merge($test_response, $summary_response);
-                $data_found = true;
-            }
-        }
-
-        if ($previous_builds) {
-            $history_response = get_test_history($test, $previous_builds);
-            if (!empty($history_response)) {
-                $test_response = array_merge($test_response, $history_response);
-                $response['displayhistory'] = true;
-                $data_found = true;
-            }
-        }
-
-        if ($data_found) {
-            $tests_response[] = $test_response;
-        }
-    }
-
-    if (!empty($tests_response)) {
-        $response['tests'] = $tests_response;
-    }
-
-    echo json_encode($response);
-}
-
-// Export test results as CSV file.
-function export_as_csv($etestquery, $etest, $result, $projectshowtesttime, $testtimemaxstatus, $columns)
-{
-    // Store named measurements in an array
-    if (!is_null($etestquery)) {
-        while ($row = pdo_fetch_array($etestquery)) {
-            $etest[$row['id']][$row['name']] = $row['value'];
-        }
-    }
-
-    $csv_contents = array();
-    // Standard columns.
-    $csv_headers = array('Name', 'Time' ,'Details' , 'Status');
-    if ($projectshowtesttime) {
-        $csv_headers[] = 'Time Status';
-    }
-
-    for ($c = 0; $c < count($columns); $c++) {
-        // Add extra coluns.
-        $csv_headers[] = $columns[$c];
-    }
-    $csv_contents[] = $csv_headers;
-
-    while ($row = pdo_fetch_array($result)) {
-        $csv_row = array();
-        $csv_row[] = $row['name'];
-        $csv_row[] = $row['time'];
-        $csv_row[] = $row['details'];
-
-        switch ($row['status']) {
-            case 'passed':
-                $csv_row[] = 'Passed';
-                break;
-            case 'failed':
-                $csv_row[] = 'Failed';
-                break;
-            case 'notrun':
-            default:
-                $csv_row[] = 'Not Run';
-                break;
-        }
-
-        if ($projectshowtesttime) {
-            if ($row['timestatus'] < $testtimemaxstatus) {
-                $csv_row[] = 'Passed';
-            } else {
-                $csv_row[] = 'Failed';
-            }
-        }
-
-        // Extra columns.
-        for ($t = 0; $t < count($columns); $t++) {
-            $csv_row[] = $etest[$row['id']][$columns[$t]];
-        }
-        $csv_contents[] = $csv_row;
-    }
-
-    $output = fopen('php://temp', 'w');
-    foreach ($csv_contents as $csv_row) {
-        fputcsv($output, $csv_row);
-    }
-    rewind($output);
-
-    $file = [
-        'type' => 'text/csv',
-        'file' => stream_get_contents($output),
-        'filename' => 'test-export.csv',
-    ];
-
-    fclose($output);
-    return $file;
-
-    /*
-    // Write out our data as CSV.
-    header('Content-type: text/csv');
-    header('Content-Disposition: attachment; filename="testExport.csv";');
-    header('Pragma: no-cache');
-    header('Expires: 0');
-
-    die; // to suppress unwanted output
-    */
-}
