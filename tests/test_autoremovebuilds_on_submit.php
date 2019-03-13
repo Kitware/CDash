@@ -44,7 +44,7 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
     public function setAutoRemoveTimeFrame()
     {
         // set project autoremovetimeframe
-        $result = $this->pdo->query('UPDATE project ' .
+        $result = $this->db->query('UPDATE project ' .
             "SET autoremovetimeframe='7' WHERE name='EmailProjectExample'");
     }
 
