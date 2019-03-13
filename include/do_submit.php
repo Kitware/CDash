@@ -63,8 +63,8 @@ function fileHandleFromSubmissionId($filename)
         return fopen($tmpFilename, 'r');
     } else {
         // Log the status code and build submission UUID (404 means it's already been processed)
-        add_log('Failed to retrieve a file handle from build UUID ' .
-                $submissionId . '(' . (string) $response->getStatusCode() . ')',
+        add_log('Failed to retrieve a file handle from filename ' .
+                $filename . '(' . (string) $response->getStatusCode() . ')',
                 'fileHandleFromSubmissionId', LOG_WARNING);
         return false;
     }
