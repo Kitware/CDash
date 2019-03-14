@@ -29,6 +29,10 @@ use CDash\Model\Site;
 $start = microtime_float();
 
 $build = get_request_build();
+if (is_null($build)) {
+    return;
+}
+
 $project = new Project();
 $project->Id = $build->ProjectId;
 $project->Fill();

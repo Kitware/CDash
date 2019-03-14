@@ -21,7 +21,9 @@ use CDash\Middleware\OAuth2;
 use CDash\Model\User;
 use CDash\System;
 use CDash\Test\CDashTestCase;
+use Exception;
 use League\OAuth2\Client\Provider\AbstractProvider;
+use OAuthException;
 
 class OAuth2Test extends CDashTestCase
 {
@@ -171,13 +173,14 @@ class OAuth2Test extends CDashTestCase
                 ["Location: {$auth_url}"]
             );
 
-        $this->system
-            ->expects($this->once())
-            ->method('system_exit');
-
         $this->sut->getAuthorizationCode();
     }
 
+    /**
+     * @throws Exception
+     * @expectedException Exception
+     * @expectedExceptionMessage OAuth: Invalid state
+     */
     public function testCheckStateWithEmptyState()
     {
         $_GET = [];
@@ -187,16 +190,16 @@ class OAuth2Test extends CDashTestCase
             ],
         ];
 
-        $this->system
-            ->expects($this->once())
-            ->method('system_exit')
-            ->with('Invalid state');
-
         $this->sut->checkState();
 
         $this->assertFalse(isset($_SESSION['cdash']['oauth2state']));
     }
 
+    /**
+     * @throws Exception
+     * @expectedException Exception
+     * @expectedExceptionMessage OAuth: Invalid state
+     */
     public function testCheckStateWhenRequestDoesNotMatchSession()
     {
         $_GET['state'] = 'abcdefg';
@@ -205,11 +208,6 @@ class OAuth2Test extends CDashTestCase
                 'oauth2state' => '123456',
             ],
         ];
-
-        $this->system
-            ->expects($this->once())
-            ->method('system_exit')
-            ->with('Invalid state');
 
         $this->sut->checkState();
 
@@ -231,10 +229,6 @@ class OAuth2Test extends CDashTestCase
             ->with('cdash.oauth2state')
             ->willReturn($_SESSION['cdash']['oauth2state']);
 
-        $this->system
-            ->expects($this->never())
-            ->method('system_exit');
-
         $this->sut->checkState();
 
         $this->assertTrue(isset($_SESSION['cdash']['oauth2state']));
@@ -254,10 +248,6 @@ class OAuth2Test extends CDashTestCase
             ->expects($this->any())
             ->method('getProvider')
             ->willReturn($mock_provider);
-
-        $this->system
-            ->expects($this->once())
-            ->method('system_exit');
 
         /** @var User|\PHPUnit_Framework_MockObject_MockObject $mock_user */
         $mock_user = $this->getMockBuilder(User::class)

@@ -22,6 +22,10 @@ use CDash\Model\Build;
 
 // Get details about this build.
 $build = get_request_build();
+if (is_null($build)) {
+    return;
+}
+
 
 // Take subproject into account, such that if there is one, then the
 // previous builds must be associated with the same subproject.

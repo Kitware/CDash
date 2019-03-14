@@ -180,7 +180,7 @@ class System
      */
     public function system_exit($exit_message = '')
     {
-        exit($exit_message);
+        // exit($exit_message);
     }
 
     /**

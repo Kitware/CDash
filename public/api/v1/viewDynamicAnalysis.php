@@ -26,6 +26,10 @@ $start = microtime_float();
 $response = [];
 
 $build = get_request_build();
+if (is_null($build)) {
+    return;
+}
+
 
 $pdo = get_link_identifier()->getPdo();
 

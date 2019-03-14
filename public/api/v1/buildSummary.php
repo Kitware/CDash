@@ -31,6 +31,11 @@ $start = microtime_float();
 $response = [];
 
 $build = get_request_build();
+
+if (is_null($build)) {
+    return;
+}
+
 $buildid = $build->Id;
 $siteid = $build->SiteId;
 

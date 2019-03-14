@@ -24,6 +24,11 @@ include 'public/login.php';
 use CDash\Database;
 
 $build = get_request_build();
+
+if (is_null($build)) {
+    return;
+}
+
 $response = [];
 $pdo = Database::getInstance()->getPdo();
 

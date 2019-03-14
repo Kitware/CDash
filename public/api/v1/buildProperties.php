@@ -150,7 +150,7 @@ if (array_key_exists('buildid', $_GET)) {
 
 // Make sure the user has access to this project.
 $Project = get_project_from_request();
-if (!can_access_project($Project->Id)) {
+if (is_null($Project)) {
     return;
 }
 

@@ -21,5 +21,10 @@ use CDash\Controller\Api\TestOverview as Controller;
 use CDash\Database;
 
 $db = Database::getInstance();
-$controller = new Controller($db, get_project_from_request());
+$project = get_project_from_request();
+if (is_null($project)) {
+    return;
+}
+
+$controller = new Controller($db, $project);
 echo json_encode(cast_data_for_JSON($controller->getResponse()));

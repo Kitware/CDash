@@ -23,6 +23,7 @@ use CDash\Controller\Auth\Session;
 use CDash\Middleware\OAuth2\OAuth2Interface;
 use CDash\Model\User;
 use CDash\System;
+use Exception;
 use League\OAuth2\Client\Provider\AbstractProvider;
 
 abstract class OAuth2 implements OAuth2Interface
@@ -77,15 +78,13 @@ abstract class OAuth2 implements OAuth2Interface
         $this->System->header("Cache-Control: no-cache, must-revalidate");
         $this->System->header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
         $this->System->header('Location: '. $authUrl);
-        $this->System->system_exit();
     }
 
     public function checkState()
     {
         $session_state = $this->Session->getSessionVar('cdash.oauth2state');
         if (empty($_GET['state']) || ($_GET['state'] !== $session_state)) {
-            unset($_SESSION['cdash']['oauth2state']);
-            $this->System->system_exit('Invalid state');
+            throw new Exception("OAuth: Invalid state");
         }
     }
 

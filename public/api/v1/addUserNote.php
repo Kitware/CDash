@@ -27,12 +27,21 @@ init_api_request();
 $response = array();
 
 $userid = get_userid_from_session();
+if (is_null($userid)) {
+    return;
+}
+
 $build = get_request_build();
+
+if (is_null($build)) {
+    return;
+}
 
 if (!isset($_REQUEST['AddNote']) || !isset($_REQUEST['Status']) ||
         strlen($_REQUEST['AddNote']) < 1 ||  strlen($_REQUEST['Status']) < 1) {
     $response['error'] = 'No note specified';
     json_error_response($response, 400);
+    return;
 }
 
 // Add the note.

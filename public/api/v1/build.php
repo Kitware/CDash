@@ -27,6 +27,10 @@ init_api_request();
 $response = [];
 $build = get_request_build();
 
+if (is_null($build)) {
+    return;
+}
+
 $method = $_SERVER['REQUEST_METHOD'];
 // Make sure the user is an admin before proceeding with non-read-only methods.
 if ($method != 'GET' && !can_administrate_project($build->ProjectId)) {
