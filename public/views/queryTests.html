@@ -19,7 +19,7 @@
     <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_@@version.html'"></ng-include>
     <br/>
 
-    <div ng-if="cdash.requirelogin != 1 && !loading">
+    <div  id="main_content" ng-if="cdash.requirelogin != 1 && !loading">
       <h3 id="numtests">Query {{cdash.dashboard.projectname}} Tests: {{cdash.builds.length}} matches</h3>
 
 <!-- Filters -->

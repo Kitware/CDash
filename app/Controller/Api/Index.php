@@ -42,6 +42,7 @@ class Index extends ResultsApi
     public $childView;
     public $filterdata;
     public $shareLabelFilters;
+    public $siteResponse;
     public $updateType;
 
     public function __construct(Database $db, Project $project)
@@ -54,6 +55,7 @@ class Index extends ResultsApi
         $this->childView = 0;
         $this->filterdata = [];
         $this->shareLabelFilters = false;
+        $this->siteResponse = [];
         $this->updateType = '';
 
         // SubProject filtering.
@@ -594,16 +596,16 @@ class Index extends ResultsApi
         }
 
         if (isset($_GET['parentid'])) {
-            if (empty($site_response)) {
-                $site_response['site'] = $build_array['sitename'];
-                $site_response['siteoutoforder'] = $build_array['siteoutoforder'];
-                $site_response['siteid'] = $siteid;
-                $site_response['buildname'] = $build_array['name'];
-                $site_response['buildplatform'] = $buildplatform;
-                $site_response['generator'] = $build_array['generator'];
+            if (empty($this->siteResponse)) {
+                $this->siteResponse['site'] = $build_array['sitename'];
+                $this->siteResponse['siteoutoforder'] = $build_array['siteoutoforder'];
+                $this->siteResponse['siteid'] = $siteid;
+                $this->siteResponse['buildname'] = $build_array['name'];
+                $this->siteResponse['buildplatform'] = $buildplatform;
+                $this->siteResponse['generator'] = $build_array['generator'];
                 if (!is_null($changelink)) {
-                    $site_response['changelink'] = $changelink;
-                    $site_response['changeicon'] = $changeicon;
+                    $this->siteResponse['changelink'] = $changelink;
+                    $this->siteResponse['changeicon'] = $changeicon;
                 }
             }
         } else {

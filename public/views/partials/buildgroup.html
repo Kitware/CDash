@@ -1,9 +1,11 @@
 <h3 class="buildgroupname">
   <a href="#" class="grouptrigger"
-     ng-href="viewBuildGroup.php?project={{::cdash.projectname}}&buildgroup={{::buildgroup.linkname}}&date={{::cdash.date}}&{{::cdash.filterurl}}">
+     ng-click="jumpToAnchor(buildgroup.linkname)">
     {{::buildgroup.name}}
   </a>
   <span class="buildnums" align="right">{{::buildgroup.numbuildslabel}}</span>
+  <a class="grouplink"
+     ng-href="viewBuildGroup.php?project={{::cdash.projectname}}&buildgroup={{::buildgroup.linkname}}&date={{::cdash.date}}&{{::cdash.filterurl}}">[view timeline]</a>
 </h3>
 <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="project_{{::cdash.projectid}}_{{::buildgroup.id}}">
   <thead>
@@ -18,7 +20,7 @@
 
     <tr class="table-heading">
 
-      <th ng-if="::cdash.childview == 1" align="center" rowspan="2" width="5%" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'label', $event)">
+      <th ng-if="::cdash.childview == 1" align="center" colspan="2" rowspan="2" width="5%" style="cursor: pointer" ng-click="updateOrderByFields(buildgroup, 'label', $event)">
         SubProject
         <span class="glyphicon" ng-class="buildgroup.orderByFields.indexOf('-label') != -1 ? 'glyphicon-chevron-down' : (buildgroup.orderByFields.indexOf('label') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
       </th>

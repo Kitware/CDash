@@ -550,7 +550,6 @@ div#div_showfilters {
   clear: both;
   width: 100%;
   position: relative;
-  float: left;
 }
 
 .icon {
@@ -825,6 +824,7 @@ div#headertop {
   -webkit-box-shadow: #222222 0px 0px 3px;
   -moz-box-shadow: 0px 0px 2px #222222;
   box-shadow: #222222 0 0 3px;
+  display: flex;
 }
 
 #headerlogo,
@@ -836,6 +836,7 @@ div#headertop {
   float:left;
   height: 60px;
   padding-left:30px;
+  order: 1;
 }
 
 #headerlogo #projectlogo {
@@ -849,6 +850,7 @@ div#headertop {
   font-size:20px;
   font-weight:700;
   height:100%;
+  order: 2;
 }
 
 #headername .projectname {
@@ -860,6 +862,7 @@ div#headertop {
   float:right;
   height:100%;
   padding-right:30px;
+  order: 4;
 }
 
 #headermenu #navigation {
@@ -953,8 +956,8 @@ div#headertop {
 /* Next/Previous Project Nav */
 #header .projectnav {
   margin:0 auto;
-  padding:30px;
-  text-align:center;
+  padding: 19px;
+  order: 3;
 }
 
 #header .projectnav .projectnav_controls {
@@ -1036,11 +1039,15 @@ div#headertop {
 /* Banner area */
 
 div#index_top {
-  padding:0 30px !important;
   height:auto;
   position: relative;
   width: 100%;
   margin: 0px;
+}
+
+div#main_content {
+  padding-left: 30px;
+  padding-right: 30px;
 }
 
 #settings {
@@ -1048,7 +1055,7 @@ div#index_top {
   float: right;
   height: 20px;
   margin-right:0;
-  margin-top:-53px;
+  margin-top:20px;
   position:relative;
   width: 20px;
 }
@@ -1102,7 +1109,8 @@ div#index_top {
 /* Table Styles */
 
 .buildgroup {
-  padding:0 30px 40px;
+  padding-bottom: 20px;
+  padding-top: 20px;
 }
 
 .buildgroupname,
@@ -1122,6 +1130,12 @@ div#index_top {
   display:inline-block;
   font-size:12px;
   font-style: italic;
+  font-weight: normal;
+}
+
+.buildgroupname .grouplink {
+  float: right;
+  font-size:14px;
   font-weight: normal;
 }
 

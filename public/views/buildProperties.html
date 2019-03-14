@@ -18,7 +18,7 @@
     <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_@@version.html'"></ng-include>
     <br/>
 
-    <div ng-if="cdash.requirelogin != 1 && !loading && !cdash.error" class="container">
+    <div id="main_content" ng-if="cdash.requirelogin != 1 && !loading && !cdash.error" class="container">
 
       <h4 class="text-center">Consider builds unclean if they contain any</h4>
       <div class="row">

@@ -17,7 +17,7 @@
     <ng-include ng-if="cdash.requirelogin != 1" src="::cdash.header || 'build/views/partials/header_@@version.html'"></ng-include>
     <br/>
 
-    <div ng-if="cdash.requirelogin != 1 && !loading && !cdash.error">
+    <div id="main_content" ng-if="cdash.requirelogin != 1 && !loading && !cdash.error">
       <h3>Testing started on {{::cdash.build.testtime}}</h3>
 
       <table ng-if="::!cdash.parentBuild" border="0">
