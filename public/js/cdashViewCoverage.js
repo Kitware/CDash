@@ -45,11 +45,19 @@ $(document).ready(function() {
       "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
             $('td:eq(3)', nRow).addClass($('td:eq(3) span', nRow).attr("class"));
             $('td:eq(3)', nRow).attr('align','center');
+
             if($('td:eq(4) span', nRow).attr("class"))
               {
               $('td:eq(4)', nRow).addClass($('td:eq(4) span', nRow).attr("class"));
               $('td:eq(4)', nRow).attr('align','center');
               }
+
+            //PRIDANE
+            if($('td:eq(5) span', nRow).attr("class")) 
+             {      
+              $('td:eq(5)', nRow).addClass($('td:eq(5) span', nRow).attr("class"));
+              $('td:eq(5)', nRow).attr('align','center');
+             }
             return nRow;
             }
       } );
