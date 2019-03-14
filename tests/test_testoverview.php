@@ -31,20 +31,20 @@ class TestOverviewTestCase extends KWWebTestCase
             $this->fail('Nonexistent project error not encountered when expected');
         }
 
-        $content = $this->connect($this->url . '/api/v1/testOverview.php?project=InsightExample');
+        $content = $this->get($this->url . '/api/v1/testOverview.php?project=InsightExample');
         $jsonobj = json_decode($content, true);
         if ($jsonobj['tests'] !== array()) {
             $this->fail("Empty list of tests not found when expected");
         }
 
-        $content = $this->connect($this->url . '/api/v1/testOverview.php?project=EmailProjectExample&date=2009-02-23');
+        $content = $this->get($this->url . '/api/v1/testOverview.php?project=EmailProjectExample&date=2009-02-23');
         $jsonobj = json_decode($content, true);
         $num_tests = count($jsonobj['tests']);
         if ($num_tests !== 6) {
             $this->fail("Expected 6 failing tests, found $num_tests");
         }
 
-        $content = $this->connect($this->url . '/api/v1/testOverview.php?project=EmailProjectExample&date=2009-02-23&showpassed=1');
+        $content = $this->get($this->url . '/api/v1/testOverview.php?project=EmailProjectExample&date=2009-02-23&showpassed=1');
         $jsonobj = json_decode($content, true);
         $num_tests = count($jsonobj['tests']);
         if ($num_tests !== 8) {
@@ -60,7 +60,7 @@ class TestOverviewTestCase extends KWWebTestCase
             $this->fail('Failed to fetch groupid for Trilinos Experimental');
         }
 
-        $content = $this->connect($this->url . "/api/v1/testOverview.php?project=Trilinos&date=2011-07-22&group=$groupid");
+        $content = $this->get($this->url . "/api/v1/testOverview.php?project=Trilinos&date=2011-07-22&group=$groupid");
         $jsonobj = json_decode($content, true);
         $num_tests = count($jsonobj['tests']);
         if ($num_tests !== 11) {
@@ -68,21 +68,21 @@ class TestOverviewTestCase extends KWWebTestCase
         }
 
         // Verify filters.
-        $content = $this->connect($this->url . "/api/v1/testOverview.php?project=Trilinos&date=2011-07-22&group=$groupid&filtercount=1&showfilters=1&field1=buildname&compare1=63&value1=TEST_BUILD");
+        $content = $this->get($this->url . "/api/v1/testOverview.php?project=Trilinos&date=2011-07-22&group=$groupid&filtercount=1&showfilters=1&field1=buildname&compare1=63&value1=TEST_BUILD");
         $jsonobj = json_decode($content, true);
         $num_tests = count($jsonobj['tests']);
         if ($num_tests !== 10) {
             $this->fail("Expected 10 failing tests for TEST_BUILD, found $num_tests");
         }
 
-        $content = $this->connect($this->url . "/api/v1/testOverview.php?project=Trilinos&date=2011-07-22&group=$groupid&filtercount=1&showfilters=1&field1=subproject&compare1=63&value1=Sacado");
+        $content = $this->get($this->url . "/api/v1/testOverview.php?project=Trilinos&date=2011-07-22&group=$groupid&filtercount=1&showfilters=1&field1=subproject&compare1=63&value1=Sacado");
         $jsonobj = json_decode($content, true);
         $num_tests = count($jsonobj['tests']);
         if ($num_tests !== 1) {
             $this->fail("Expected 1 failing test for Sacado, found $num_tests");
         }
 
-        $content = $this->connect($this->url . "/api/v1/testOverview.php?project=Trilinos&date=2011-07-22&group=$groupid&filtercount=1&showfilters=1&field1=testname&compare1=63&value1=DepTests");
+        $content = $this->get($this->url . "/api/v1/testOverview.php?project=Trilinos&date=2011-07-22&group=$groupid&filtercount=1&showfilters=1&field1=testname&compare1=63&value1=DepTests");
         $jsonobj = json_decode($content, true);
         $num_tests = count($jsonobj['tests']);
         if ($num_tests !== 4) {

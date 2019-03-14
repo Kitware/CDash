@@ -23,6 +23,10 @@ use CDash\Model\Project;
 use CDash\Database;
 
 $build = get_request_build();
+if (is_null($build)) {
+    return;
+}
+
 
 if (!$build) {
     return;

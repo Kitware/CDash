@@ -29,6 +29,11 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 }
 init_api_request();
 $project = get_project_from_request();
+
+if (is_null($project)) {
+    return;
+}
+
 // Check for valid authentication token if this project requires one.
 $project->Fill();
 if ($project->AuthenticateSubmissions &&

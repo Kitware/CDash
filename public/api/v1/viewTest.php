@@ -314,6 +314,10 @@ if (!function_exists('export_as_csv')) {
 
 $config = Config::getInstance();
 $build = get_request_build(false);
+if (is_null($build)) {
+    return;
+}
+
 
 @$date = $_GET['date'];
 if ($date != null) {

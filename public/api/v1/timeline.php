@@ -20,5 +20,10 @@ require_once 'include/api_common.php';
 use CDash\Controller\Api\Timeline as Controller;
 use CDash\Database;
 
-$controller = new Controller(Database::getInstance(), get_project_from_request());
+$project = get_project_from_request();
+if (is_null($project)) {
+    return;
+}
+
+$controller = new Controller(Database::getInstance(), $project);
 echo json_encode(cast_data_for_JSON($controller->getResponse()));

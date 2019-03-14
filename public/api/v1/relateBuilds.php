@@ -25,6 +25,10 @@ use CDash\ServiceContainer;
 // Get required parameters.
 init_api_request();
 $project = get_project_from_request();
+if (is_null($project)) {
+    return;
+}
+
 $buildid = get_param('buildid');
 $relatedid = get_param('relatedid');
 

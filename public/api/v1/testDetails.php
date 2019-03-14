@@ -61,6 +61,10 @@ $config = Config::getInstance();
 
 $_REQUEST['buildid'] = $_GET['build'];
 $build = get_request_build();
+if (is_null($build)) {
+    return;
+}
+
 
 $testid = pdo_real_escape_numeric($_GET['test']);
 // Checks

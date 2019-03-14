@@ -84,6 +84,7 @@ function can_administrate_project($projectid)
     // Check that we were supplied a reasonable looking projectid.
     if (!isset($projectid) || !is_numeric($projectid) || $projectid < 1) {
         json_error_response(['error' => 'Valid project ID required'], 400);
+        return false;
     }
 
     // Make sure the user is logged in.
@@ -91,6 +92,7 @@ function can_administrate_project($projectid)
     if (is_null($userid)) {
         $response = ['requirelogin' => 1];
         json_error_response($response, 401);
+        return false;
     }
 
     // Check if this user is a global admin.
@@ -133,6 +135,7 @@ function get_userid_from_session($required = true)
     if ($required && is_null($userid)) {
         $response = ['error' => 'Permission denied'];
         json_error_response($response, 403);
+        return null;
     }
 
     return $userid;
@@ -149,6 +152,7 @@ function get_param($name, $required = true)
     $value = isset($_REQUEST[$name]) ? $_REQUEST[$name] : null;
     if ($required && !$value) {
         json_error_response(['error' => "Valid $name required"]);
+        return null;
     }
     return pdo_real_escape_string($value);
 }
@@ -156,8 +160,13 @@ function get_param($name, $required = true)
 function get_int_param($name, $required = true)
 {
     $value = get_param($name, $required);
+    if (is_null($value)) {
+        return null;
+    }
+
     if ($required && !is_numeric($value)) {
         json_error_response(['error' => "Valid $name required"]);
+        return null;
     }
     return (int)$value;
 }
@@ -183,6 +192,7 @@ function get_project_from_request()
 {
     if (!isset($_REQUEST['project'])) {
         json_error_response(['error' => 'Valid project required']);
+        return null;
     }
     $projectname = $_REQUEST['project'];
     $projectid = get_project_id($projectname);
@@ -191,6 +201,7 @@ function get_project_from_request()
     $Project->Id = $projectid;
     if (!$Project->Exists()) {
         json_error_response(['error' => 'Project does not exist']);
+        return null;
     }
     return can_access_project($Project->Id) ? $Project : null;
 }
@@ -205,13 +216,16 @@ function get_project_from_request()
 function get_request_build($required = true)
 {
     $id = get_request_build_id($required);
+    if (is_null($id)) {
+        return null;
+    }
     $build = new Build();
     $build->Id = $id;
 
     if ($required && !$build->Exists()) {
         $response = ['error' => 'This build does not exist. Maybe it has been deleted.'];
         json_error_response($response, 400);
-        return false;
+        return null;
     }
 
     if ($id) {
