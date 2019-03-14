@@ -22,12 +22,10 @@ use CDash\Middleware\Queue\SubmissionService;
 use CDash\Model\AuthToken;
 use CDash\Model\Build;
 use CDash\Model\BuildFile;
-use CDash\Model\BuildProperties;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
 use CDash\Model\Repository;
 use CDash\Model\Site;
-use CDash\Service\RepositoryService;
 use CDash\ServiceContainer;
 use GuzzleHttp\Client as HttpClient;
 use Ramsey\Uuid\Uuid;
@@ -177,22 +175,7 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $buildid = null,
     if ($handler instanceof UpdateHandler ||
         $handler instanceof BuildPropertiesJSONHandler
     ) {
-        $project = new Project();
-        $project->Id = $projectid;
-        $project->Fill();
-
-        $buildProperties = new BuildProperties($build);
-        $buildProperties->Fill();
-        if (array_key_exists('status context', $buildProperties->Properties)) {
-            $context = $buildProperties->Properties['status context'];
-            // TODO: factory should always return object, consider alt way to check need for notification
-            $service = Repository::factory($project);
-            if ($service) {
-                $client = new HttpClient();
-                $repository = new RepositoryService($service, $client);
-                $repository->setStatusOnStart($build, $context);
-            }
-        }
+        Repository::setStatus($build, false);
     }
 
     // Send emails about update problems.

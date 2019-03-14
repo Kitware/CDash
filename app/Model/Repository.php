@@ -15,6 +15,12 @@
 namespace CDash\Model;
 
 use CDash\Lib\Repository\GitHub;
+use CDash\Model\Build;
+use CDash\Model\BuildProperties;
+use CDash\Model\Project;
+use CDash\Service\RepositoryService;
+
+use GuzzleHttp\Client as HttpClient;
 use Exception;
 
 class Repository
@@ -59,15 +65,48 @@ class Repository
         return $viewers;
     }
 
+    public static function setStatus(Build $build, $complete = true)
+    {
+        $buildProperties = new BuildProperties($build);
+        $buildProperties->Fill();
+        if (!array_key_exists('status context', $buildProperties->Properties)) {
+            return;
+        }
+        $context = $buildProperties->Properties['status context'];
+
+        $repositoryService = self::getRepositoryService($build);
+        if ($repositoryService) {
+            if ($complete) {
+                $repositoryService->setStatusOnComplete($build, $context);
+            } else {
+                $repositoryService->setStatusOnStart($build, $context);
+            }
+        }
+    }
+
+    protected static function getRepositoryService(Build $build)
+    {
+        $project = new Project();
+        $project->Id = $build->ProjectId;
+        $project->Fill();
+
+        try {
+            $repositoryInterface = self::getRepositoryInterface($project);
+        } catch (\Exception $e) {
+            add_log($e->getMessage(), 'getRepositoryService', LOG_INFO);
+            return null;
+        }
+        $client = new HttpClient();
+        return new RepositoryService($repositoryInterface, $client);
+    }
+
     /**
      * @param Project $project
-     * @return GitHub|null
+     * @return RepositoryInterface
      * @throws Exception
      */
-    public static function factory(Project $project)
+    public static function getRepositoryInterface(Project $project)
     {
-        $service = null;
-
         switch (strtolower($project->CvsViewerType)) {
             case strtolower(self::VIEWER_GITHUB):
                 list($owner, $repository) = array_values(
@@ -89,6 +128,11 @@ class Repository
 
                 $service = new GitHub($repo['password'], $owner, $repository);
                 break;
+            default:
+                $msg =
+                    "No repository interface defined for $project->CvsViewerType";
+                throw new \Exception($msg);
+                return;
         }
         return $service;
     }

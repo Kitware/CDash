@@ -94,6 +94,6 @@ class RepositoryService
             $target_url = $build->GetBuildSummaryUrl();
         }
 
-        $this->setState($context, $description, $revision, $state, $target_url);
+        $this->setStatus($context, $description, $revision, $state, $target_url);
     }
 }

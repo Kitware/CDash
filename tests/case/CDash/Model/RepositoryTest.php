@@ -40,7 +40,7 @@ class RepositoryTest extends PHPUnit_Framework_TestCase
             });
     }
 
-    public function testFactoryReturnsGitHubService()
+    public function testGetRepositoryInterfaceReturnsGitHubService()
     {
         $apiToken = str_replace('-', '', Uuid::uuid4()->toString());
         $this->repo[] = [
@@ -48,7 +48,7 @@ class RepositoryTest extends PHPUnit_Framework_TestCase
             'password' => $apiToken,
         ];
 
-        $service = Repository::factory($this->project);
+        $service = Repository::getRepositoryInterface($this->project);
         $this->assertInstanceOf(GitHub::class, $service);
 
         $this->assertEquals('foo', $service->getOwner());
@@ -60,7 +60,7 @@ class RepositoryTest extends PHPUnit_Framework_TestCase
      * @expectedException Exception
      * @expectedExceptionMessage Unable to find credentials for repository
      */
-    public function testFactoryReturnsGitHubServiceThrowsExceptionGivenNoGitHubRepository()
+    public function testGetRepositoryInterfaceReturnsGitHubServiceThrowsExceptionGivenNoGitHubRepository()
     {
         $apiToken = str_replace('-', '', Uuid::uuid4()->toString());
         $this->repo[] = [
@@ -68,6 +68,6 @@ class RepositoryTest extends PHPUnit_Framework_TestCase
             'password' => $apiToken,
         ];
 
-        Repository::factory($this->project);
+        Repository::getRepositoryInterface($this->project);
     }
 }

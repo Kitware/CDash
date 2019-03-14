@@ -26,6 +26,7 @@ class BuildPropertiesJSONHandler extends NonSaxHandler
         $service = ServiceContainer::getInstance();
         $this->Build = $service->get(Build::class);
         $this->Build->Id = $buildid;
+        $this->Build->FillFromId($this->Build->Id);
     }
 
     /**

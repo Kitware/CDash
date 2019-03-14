@@ -17,12 +17,8 @@
 require_once 'xml_handlers/abstract_handler.php';
 
 use CDash\Model\Build;
-use CDash\Model\BuildProperties;
 use CDash\Model\PendingSubmissions;
-use CDash\Model\Project;
 use CDash\Model\Repository;
-use CDash\Service\RepositoryService;
-use GuzzleHttp\Client as HttpClient;
 
 class DoneHandler extends AbstractHandler
 {
@@ -72,20 +68,7 @@ class DoneHandler extends AbstractHandler
             }
 
             // Set the status of this build on our repository.
-            $buildProperties = new BuildProperties($build);
-            $buildProperties->Fill();
-            if (array_key_exists('status context', $buildProperties->Properties)) {
-                $context = $buildProperties->Properties['status context'];
-                $project = new Project();
-                $project->Id = $this->Build->ProjectId;
-                $project->Fill();
-                $service = Repository::factory($project);
-                if ($service) {
-                    $client = new HttpClient();
-                    $repository = new RepositoryService($service, $client);
-                    $repository->setStatusOnComplete($this->Build, $context);
-                }
-            }
+            Repository::setStatus($this->Build, true);
         }
     }
 
