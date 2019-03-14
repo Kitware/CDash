@@ -135,7 +135,7 @@ class Database extends Singleton
             // @see https://stackoverflow.com/a/35375592/1373710
             // TODO: Find out if this can be set at application bootstrap
             //       by extending the DatabaseServiceProvider class
-            $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, TRUE);
+            $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
             $this->pdo = $pdo;
         }
 

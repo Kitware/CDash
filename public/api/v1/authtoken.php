@@ -23,7 +23,6 @@ require_once 'include/pdo.php';
 use CDash\Model\AuthToken;
 use CDash\Model\User;
 
-
 /* Handle DELETE requests */
 if (!function_exists('rest_delete')) {
     function rest_delete($userid)
@@ -112,4 +111,3 @@ switch ($method) {
     default:
         return rest_post($User->Id);
 }
-
