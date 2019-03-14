@@ -228,7 +228,6 @@ if (Auth::check()) {
             }
         }
         return \redirect('user.php?note=subscribedtoproject');
-
     }
 
     // XML

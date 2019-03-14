@@ -61,7 +61,6 @@ $userid = Auth::id();
 if (!isset($userid) || !is_numeric($userid)) {
     $response['requirelogin'] = 1;
     return json_encode($response);
-
 }
 
 $Project = new Project();
@@ -75,7 +74,6 @@ get_dashboard_JSON($Project->GetName(), null, $response);
 if ($response['user']['admin'] != 1) {
     $response['error'] = "You don't have the permissions to access this page";
     return json_encode($response);
-
 }
 
 // Check if we are saving an overview layout.
