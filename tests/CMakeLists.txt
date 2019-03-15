@@ -109,7 +109,6 @@ add_php_test(user)
 add_php_test(viewconfigure)
 add_php_test(viewdynamicanalysis)
 add_php_test(viewdynamicanalysisfile)
-add_php_test(viewissues)
 add_php_test(viewmap)
 
 add_php_test(groupsdescription)
