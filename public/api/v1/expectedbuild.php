@@ -19,6 +19,7 @@ require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 
 use CDash\Model\BuildGroup;
+use CDash\Model\BuildGroupRule;
 
 // Check that required params were specified.
 $rest_json = json_decode(file_get_contents('php://input'), true);
@@ -75,12 +76,12 @@ switch ($method) {
 /* Handle DELETE requests */
 function rest_delete($siteid, $buildgroupid, $buildname, $buildtype)
 {
-    pdo_query(
-        "DELETE FROM build2grouprule
-        WHERE groupid='$buildgroupid' AND
-        buildtype='$buildtype' AND
-        buildname='$buildname' AND siteid='$siteid' AND
-        endtime='1980-01-01 00:00:00'");
+    $rule = new BuildGroupRule();
+    $rule->SiteId = $siteid;
+    $rule->GroupId = $buildgroupid;
+    $rule->BuildName = $buildname;
+    $rule->BuildType = $buildtype;
+    $rule->Delete();
 }
 
 /* Handle GET requests */
