@@ -18,6 +18,8 @@ include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 
+use CDash\Model\BuildGroup;
+
 // Check that required params were specified.
 $rest_json = json_decode(file_get_contents('php://input'), true);
 if (!is_null($rest_json)) {
@@ -37,15 +39,12 @@ $buildname = htmlspecialchars(pdo_real_escape_string($_REQUEST['name']));
 $buildtype = htmlspecialchars(pdo_real_escape_string($_REQUEST['type']));
 
 // Make sure the user has access to this project.
-$row = pdo_single_row_query(
-        "SELECT projectid FROM buildgroup WHERE id='$buildgroupid'");
-if (!$row || !array_key_exists('projectid', $row)) {
-    $response['error'] =
-        "Could not find project for buildgroup #$buildgroupid";
-    echo json_encode($response);
-    return;
+$buildgroup = new BuildGroup();
+if (!$buildgroup->SetId($buildgroupid)) {
+    json_error_response(
+        ['error' => "Could not find project for buildgroup #$buildgroupid"]);
 }
-$projectid = $row['projectid'];
+$projectid = $buildgroup->GetProjectId();
 if (!can_access_project($projectid)) {
     return;
 }
