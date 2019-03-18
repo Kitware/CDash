@@ -79,7 +79,33 @@ class ExpectedAndMissingTestCase extends KWWebTestCase
             $this->fail('lastSubmission is -1');
         }
         if (strlen($jsonobj['lastSubmission']) < 3) {
-            $this->fail('lastSubmission response shorter than expected' . $jsonobj['lastSubmission']);
+            $this->fail('lastSubmission response shorter than expected');
+        }
+
+        // Use the API to soft-delete this rule.
+        $this->login();
+        $this->delete($url);
+        $stmt = $this->PDO->prepare(
+            'SELECT endtime FROM build2grouprule
+            WHERE siteid    = :siteid    AND
+                  groupid   = :groupid   AND
+                  buildname = :buildname AND
+                  buildtype = :buildtype');
+        $query_params = [
+            ':siteid' => $build->SiteId,
+            ':groupid' => $build->GroupId,
+            ':buildname' => $build->Name,
+            ':buildtype' => $build->Type];
+        $this->PDO->execute($stmt, $query_params);
+        $endtime = $stmt->fetchColumn();
+        if ($endtime === false) {
+            $this->fail('No endtime found when expected');
+        }
+        if ($endtime === '1980-01-01 00:00:00') {
+            $this->fail('API failed to soft delete');
+        }
+        if (strlen($endtime) < 3) {
+            $this->fail('endtime shorter than expected');
         }
 
         // Make it unexpected again by hard-deleting this buildgroup rule.
