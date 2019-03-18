@@ -132,18 +132,10 @@ function rest_post($siteid, $buildgroupid, $buildname, $buildtype)
     $newgroupid =
         htmlspecialchars(pdo_real_escape_string($_REQUEST['newgroupid']));
 
-    // Change the group that this rule points to.
-    pdo_query(
-        "UPDATE build2grouprule SET groupid='$newgroupid'
-        WHERE groupid='$buildgroupid' AND
-        buildtype='$buildtype' AND
-        buildname='$buildname' AND siteid='$siteid' AND
-        endtime='1980-01-01 00:00:00'");
-
-    // Move any builds that follow this rule to the new group.
-    pdo_query(
-        "UPDATE build2group SET groupid='$newgroupid'
-        WHERE groupid='$buildgroupid' AND buildid IN
-        (SELECT id FROM build WHERE siteid='$siteid' AND
-         name='$buildname' AND type='$buildtype')");
+    $rule = new BuildGroupRule();
+    $rule->SiteId = $siteid;
+    $rule->GroupId = $buildgroupid;
+    $rule->BuildName = $buildname;
+    $rule->BuildType = $buildtype;
+    $rule->ChangeGroup($newgroupid);
 }

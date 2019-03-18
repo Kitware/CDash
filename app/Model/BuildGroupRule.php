@@ -223,6 +223,38 @@ class BuildGroupRule
                 ':siteid'    => $this->SiteId]);
     }
 
+
+    /** Change the group that this rule points to. */
+    public function ChangeGroup($newgroupid)
+    {
+        $stmt = $this->PDO->prepare(
+            "UPDATE build2grouprule SET groupid = :newgroupid
+            WHERE groupid   = :groupid   AND
+                  buildtype = :buildtype AND
+                  buildname = :buildname AND
+                  siteid    = :siteid    AND
+                  endtime   = '1980-01-01 00:00:00'");
+
+        $query_params = [
+            ':newgroupid' => $newgroupid,
+            ':groupid'    => $this->GroupId,
+            ':buildtype'  => $this->BuildType,
+            ':buildname'  => $this->BuildName,
+            ':siteid'     => $this->SiteId];
+
+        $this->PDO->execute($stmt, $query_params);
+
+        // Move any builds that follow this rule to the new group.
+        $stmt = $this->PDO->prepare(
+            'UPDATE build2group SET groupid = :newgroupid
+            WHERE groupid = :groupid AND
+                  buildid IN
+                  (SELECT id FROM build WHERE siteid = :siteid    AND
+                                              name   = :buildname AND
+                                              type   = :buildtype)');
+        $this->PDO->execute($stmt, $query_params);
+    }
+
     public static function DeleteExpiredRulesForProject($projectid, $cutoff_date)
     {
         $db = Database::getInstance();
