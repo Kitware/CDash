@@ -18,6 +18,7 @@ include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 
+use CDash\Database;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildGroupRule;
 
@@ -98,18 +99,30 @@ function rest_get($siteid, $buildgroupid, $buildname, $buildtype, $projectid)
     $currentUTCtime = gmdate(FMT_DATETIME, $currenttime);
 
     // Find the last time this expected build submitted.
-    $last_build_row = pdo_single_row_query(
-            "SELECT starttime FROM build
-            WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
-            AND projectid='$projectid' AND starttime<='$currentUTCtime'
-            ORDER BY starttime DESC LIMIT 1");
-    if (!$last_build_row || !array_key_exists('starttime', $last_build_row)) {
+    $db = Database::getInstance();
+    $stmt = $db->prepare(
+        'SELECT starttime FROM build
+        WHERE siteid    = :siteid AND
+              type      = :buildtype AND
+              name      = :buildname AND
+              projectid = :projectid AND
+              starttime <= :starttime
+        ORDER BY starttime DESC LIMIT 1');
+    $query_params = [
+        ':siteid'    => $siteid,
+        ':buildtype' => $buildtype,
+        ':buildname' => $buildname,
+        ':projectid' => $projectid,
+        ':starttime' => $currentUTCtime
+    ];
+    $db->execute($stmt, $query_params);
+    $lastBuildDate = $stmt->fetchColumn();
+    if ($lastBuildDate === false) {
         $response['lastSubmission'] = -1;
         echo json_encode($response);
         return;
     }
 
-    $lastBuildDate = $last_build_row['starttime'];
     $gmtime = strtotime($lastBuildDate . ' UTC');
     $response['lastSubmission'] = date('M j, Y ', $gmtime);
     $response['lastSubmissionDate'] = date('Y-m-d', $gmtime);
