@@ -142,6 +142,24 @@ class BuildGroupRule
                 ':siteid'    => $this->SiteId]);
     }
 
+    public function GetExpected()
+    {
+        $stmt = $this->PDO->prepare(
+            'SELECT expected FROM build2grouprule
+            WHERE groupid   = :groupid   AND
+                  buildtype = :buildtype AND
+                  buildname = :buildname AND
+                  siteid    = :siteid    AND
+                  endtime   = :endtime');
+        $this->PDO->execute($stmt, [
+            ':groupid'   => $this->GroupId,
+            ':buildtype' => $this->BuildType,
+            ':buildname' => $this->BuildName,
+            ':siteid'    => $this->SiteId,
+            ':endtime'   => $this->EndTime]);
+        return $stmt->fetchColumn() ? 1 : 0;
+    }
+
     /** Delete a rule */
     public function Delete($soft = true)
     {
@@ -222,7 +240,6 @@ class BuildGroupRule
                 ':buildname' => $this->BuildName,
                 ':siteid'    => $this->SiteId]);
     }
-
 
     /** Change the group that this rule points to. */
     public function ChangeGroup($newgroupid)
