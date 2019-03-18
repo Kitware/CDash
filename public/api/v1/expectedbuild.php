@@ -18,9 +18,6 @@ include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 
-use CDash\Model\Project;
-use CDash\Model\User;
-
 // Check that required params were specified.
 $rest_json = json_decode(file_get_contents('php://input'), true);
 if (!is_null($rest_json)) {
@@ -56,25 +53,8 @@ if (!can_access_project($projectid)) {
 $method = $_SERVER['REQUEST_METHOD'];
 
 // Make sure the user is an admin before proceeding with non-read-only methods.
-if ($method != 'GET') {
-    if (!isset($_SESSION['cdash']) || !isset($_SESSION['cdash']['loginid'])) {
-        $response['error'] = 'No session found.';
-        echo json_encode($response);
-        return;
-    }
-    $userid = pdo_real_escape_numeric($_SESSION['cdash']['loginid']);
-
-    $Project = new Project;
-    $User = new User;
-    $User->Id = $userid;
-    $Project->Id = $projectid;
-
-    $role = $Project->GetUserRole($userid);
-    if ($User->IsAdmin() === false && $role <= 1) {
-        $response['error'] = 'You do not have permission to access this page';
-        echo json_encode($response);
-        return;
-    }
+if ($method != 'GET' && !can_administrate_project($projectid)) {
+    return;
 }
 
 // Route based on what type of request this is.
