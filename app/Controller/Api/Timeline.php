@@ -284,10 +284,6 @@ class Timeline extends Index
                 if (empty($dynamic_builds)) {
                     break;
                 }
-                // We want to associate builds with the testing day they occurred
-                // during (not the next one) so we subtract a day here before
-                // determining "build time".
-                $datetime->sub(new \DateInterval('P1D'));
                 $build_time = gmdate(FMT_DATETIME, $datetime->getTimestamp());
                 foreach ($dynamic_builds as $dynamic_build) {
                     // Isolate the build fields that we need to make the chart.
@@ -299,6 +295,7 @@ class Timeline extends Index
                     $builds[] = $build;
                 }
                 unset($dynamic_builds);
+                $datetime->sub(new \DateInterval('P1D'));
                 $this->endDate = gmdate(FMT_DATETIME, $datetime->getTimestamp());
             }
             $this->endDate = $end_date;
