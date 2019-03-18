@@ -61,10 +61,25 @@ class ExpectedAndMissingTestCase extends KWWebTestCase
         $buildgroup = array_pop($jsonobj['buildgroups']);
 
         $found = false;
-        foreach ($buildgroup['builds'] as $build) {
-            if ($build['buildname'] == $buildname && $build['expectedandmissing'] == 1) {
+        foreach ($buildgroup['builds'] as $build_response) {
+            if ($build_response['buildname'] == $buildname && $build_response['expectedandmissing'] == 1) {
                 $found = true;
             }
+        }
+
+        // Verify that the API tells us how long this build has been missing.
+        $url = $this->url . "/api/v1/expectedbuild.php?siteid={$build->SiteId}&groupid={$build->GroupId}&name=" . urlencode($build->Name) . "&type={$build->Type}&currenttime=" . time();
+        $this->get($url);
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        if (!array_key_exists('lastSubmission', $jsonobj)) {
+            $this->fail('No lastSubmission found in response');
+        }
+        if ($jsonobj['lastSubmission'] == -1) {
+            $this->fail('lastSubmission is -1');
+        }
+        if (strlen($jsonobj['lastSubmission']) < 3) {
+            $this->fail('lastSubmission response shorter than expected' . $jsonobj['lastSubmission']);
         }
 
         // Make it unexpected again by hard-deleting this buildgroup rule.
