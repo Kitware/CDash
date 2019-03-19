@@ -67,7 +67,6 @@ class Subscriber implements SubscriberInterface
         $builds = $submission->GetBuildCollection();
         $collection = $submission->GetTopicCollectionForSubscriber($this);
         if ($collection->hasItems()) {
-            // $user_topics = TopicFactory::create($this->preferences, $submission);
             TopicDecorator::decorate($collection, $this->preferences);
             /** @var Topic $topic */
             foreach ($collection as $topic) {
