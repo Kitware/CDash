@@ -141,7 +141,6 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
                 $build->SetStamp($this->BuildStamp);
                 $build->Generator = $this->Generator;
                 $build->Information = $this->BuildInformation;
-                $build->SetActionableType(ActionableTypes::BUILD_ERROR);
                 $this->Builds[$this->SubProjectName] = $build;
             }
         } elseif ($name == 'BUILD') {
@@ -156,7 +155,6 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
                 $build->SetStamp($this->BuildStamp);
                 $build->Generator = $this->Generator;
                 $build->Information = $this->BuildInformation;
-                $build->SetActionableType(ActionableTypes::BUILD_ERROR);
                 $this->Builds[''] = $build;
             }
         } elseif ($name == 'WARNING') {

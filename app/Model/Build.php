@@ -1570,7 +1570,6 @@ class Build
 
             // cache the author, email results
             $this->CommitAuthors = array_unique(array_merge($this->CommitAuthors, [$author, $email]));
-            // array_push($this->CommitAuthors, array_unique([$author, $email]));
 
             if ($author != $previousauthor) {
                 $newbuild = 1;
@@ -2687,11 +2686,6 @@ class Build
         return $this->TestCollection;
     }
 
-    public function GetSummaryUrl()
-    {
-        // TODO: create method
-    }
-
     /**
      * Return the Id of the Build matching the given $uuid,
      * or FALSE if no such build exists.
@@ -2738,22 +2732,22 @@ class Build
 
         // Build doesn't exist yet, create it here.
         $query_params = [
-            ':siteid' => $this->SiteId,
-            ':projectid' => $this->ProjectId,
-            ':stamp' => $this->Stamp,
-            ':name' => $this->Name,
-            ':type' => $this->Type,
-            ':generator' => $this->Generator,
-            ':starttime' => $this->StartTime,
-            ':endtime' => $this->EndTime,
-            ':submittime' => $this->SubmitTime,
-            ':command' => $this->Command,
-            ':log' => $this->Log,
-            ':nbuilderrors' => $nbuilderrors,
+            ':siteid'         => $this->SiteId,
+            ':projectid'      => $this->ProjectId,
+            ':stamp'          => $this->Stamp,
+            ':name'           => $this->Name,
+            ':type'           => $this->Type,
+            ':generator'      => $this->Generator,
+            ':starttime'      => $this->StartTime,
+            ':endtime'        => $this->EndTime,
+            ':submittime'     => $this->SubmitTime,
+            ':command'        => $this->Command,
+            ':log'            => $this->Log,
+            ':nbuilderrors'   => $nbuilderrors,
             ':nbuildwarnings' => $nbuildwarnings,
-            ':parentid' => $this->ParentId,
-            ':uuid' => $this->Uuid,
-            ':pullrequest' => $this->PullRequest
+            ':parentid'       => $this->ParentId,
+            ':uuid'           => $this->Uuid,
+            ':pullrequest'    => $this->PullRequest
         ];
         $this->PDO->beginTransaction();
         $stmt = $this->PDO->prepare(
@@ -2968,46 +2962,6 @@ class Build
         }
 
         return $authoredBy;
-    }
-
-    public function GetAggregatedLabels()
-    {
-        // TODO: This method reveals that Labels are being set twice, probably in the handler, fix
-        if (!$this->AggregateLabels) {
-            $labels = $this->Labels ? $this->Labels : [];
-
-            foreach ($this->GetTestCollection() as $test) {
-                foreach ($test->GetLabelCollection() as $label) {
-                    $labels[] = $label;
-                }
-            }
-
-            foreach ($this->Errors as $error) {
-                if (isset($error->Labels) && !empty($error->Labels)) {
-                    $labels = array_merge($labels, $error->Labels);
-                }
-            }
-
-            $labels = array_unique(array_map(
-                function ($label) {
-                    return $label->Text;
-                },
-                $labels
-            ));
-
-            $this->AggregateLabels = $labels;
-        }
-        return $this->AggregateLabels;
-    }
-
-    public function SetActionableType($type)
-    {
-        $this->ActionableType = $type;
-    }
-
-    public function GetActionableType()
-    {
-        return $this->ActionableType;
     }
 
     public function GetLabelCollection()

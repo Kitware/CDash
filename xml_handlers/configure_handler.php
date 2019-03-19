@@ -118,7 +118,6 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
                 $build->Generator = $this->Generator;
                 $build->Information = $this->BuildInformation;
                 $this->Builds[$this->SubProjectName] = $build;
-                $build->SetActionableType(ActionableTypes::CONFIGURE);
             }
         } elseif ($name == 'CONFIGURE') {
             $this->Configure = $factory->create(BuildConfigure::class);
