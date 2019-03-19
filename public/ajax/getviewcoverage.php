@@ -367,9 +367,10 @@ while ($coveragefile_array = pdo_fetch_array($coveragefile)) {
     if (isset($coveragefile_array['userid'])) {
         $covfile['user'] = $coveragefile_array['userid'];
     }
-    //if ($covfile['coveragemetric'] != 1.0 || $status != -1) {
+    /*if ($covfile['coveragemetric'] != 1.0 || $status != -1) {
         $covfile_array[] = $covfile;
-    //}
+    }*/
+    $covfile_array[] = $covfile;
 }
 
 
