@@ -282,9 +282,11 @@ Show coverage over time
     <!-- gcov -->
     <xsl:if test="cdash/coverage/coveragetype='gcov'">
       <th width="10%" align="center">Lines not covered</th>
+      <th width="10%" align="center">Branch percentage</th>
+      <th width="10%" align="center">Branches not covered</th>
       <th width="10%" align="center">Priority</th>
       <xsl:if test="/cdash/coverage/userid!=0">
-         <th>Author</th>
+        <th>Author</th>
       </xsl:if>
       <xsl:if test="cdash/coverage/displaylabels=1">
           <th>Labels</th>

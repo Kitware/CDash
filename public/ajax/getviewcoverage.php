@@ -98,7 +98,6 @@ if (isset($_GET['iSortCol_0'])) {
         case 3:
             $sortby = 'lines';
             break;
-        //PRIDANE
         case 4:
             $sortby = 'branchpercentage';
             break;
@@ -158,7 +157,6 @@ function sort_percentage_desc($a, $b)
     }
     return $a['percentcoverage'] > $b['percentcoverage'] ? -1 : 1;
 }
-//PRIDANE
 function sort_branchpercentage_asc($a, $b)
 {
     if ($a['branchpercentcoverage'] == $b['branchpercentcoverage']) {
@@ -173,7 +171,6 @@ function sort_branchpercentage_desc($a, $b)
     }
     return $a['branchpercentcoverage'] > $b['branchpercentcoverage'] ? -1 : 1;
 }
-//
 function sort_lines_asc($a, $b)
 {
     if ($a['locuntested'] == $b['locuntested']) {
@@ -345,8 +342,6 @@ while ($coveragefile_array = pdo_fetch_array($coveragefile)) {
         $coveragetype = 'bullseye';
     } else {
         // coverage metric for gcov
-
-        //PRIDANE
         $metric = 0;
         $covfile['branchesuntested'] = $coveragefile_array['branchsuntested'];
         $covfile['branchestested'] = $coveragefile_array['branchstested'];
@@ -357,15 +352,8 @@ while ($coveragefile_array = pdo_fetch_array($coveragefile)) {
         $covfile['branchcoveragemetric'] = $metric;
 
         $covfile['percentcoverage'] = sprintf('%3.2f', $covfile['loctested'] / ($covfile['loctested'] + $covfile['locuntested']) * 100);
-        $covfile['coveragemetric'] = ($covfile['loctested']) / ($covfile['loctested'] + $covfile['locuntested']);
+        $covfile['coveragemetric'] = ($covfile['loctested'] + 10) / ($covfile['loctested'] + $covfile['locuntested'] + 10);
         $coveragetype = 'gcov';
-
-        /*if (is_nan($covfile['branchpercentcoverage'])) {
-            $covfile['branchpercentcoverage'] = 0;
-        }
-        if (is_nan($covfile['branchcoveragemetric'])) {
-            $covfile['branchcoveragemetric'] = 0;
-        }*/
     }
 
     // Add the priority
@@ -755,7 +743,6 @@ foreach ($covfile_array as $covfile) {
         $row[] = $fourthcolumn;
     }
 
-    //PRIDANE
     //Next column (Branch Percentage)
     $nextcolumn = '<div style="position:relative; width: 190px;">
        <div style="position:relative; float:left;
