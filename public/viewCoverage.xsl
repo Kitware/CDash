@@ -273,7 +273,7 @@ Show coverage over time
       <th width="50%">Directory</th>
     </xsl:when>
     <xsl:otherwise>
-       <th width="40%">Filename</th>
+       <th width="50%">Filename</th>
     </xsl:otherwise>
     </xsl:choose>
   <th width="10%" align="center">Status</th>
@@ -282,9 +282,9 @@ Show coverage over time
     <!-- gcov -->
     <xsl:if test="cdash/coverage/coveragetype='gcov'">
       <th width="10%" align="center">Lines not covered</th>
-      <th align="center">Branch percentage</th>
+      <th width="10%" align="center">Branch percentage</th>
       <th width="10%" align="center">Branches not covered</th>
-      <th width="5%" align="center">Priority</th>
+      <th width="10%" align="center">Priority</th>
       <xsl:if test="/cdash/coverage/userid!=0">
         <th>Author</th>
       </xsl:if>
