@@ -352,7 +352,7 @@ while ($coveragefile_array = pdo_fetch_array($coveragefile)) {
         $covfile['branchcoveragemetric'] = $metric;
 
         $covfile['percentcoverage'] = sprintf('%3.2f', $covfile['loctested'] / ($covfile['loctested'] + $covfile['locuntested']) * 100);
-        $covfile['coveragemetric'] = ($covfile['loctested'] + 10) / ($covfile['loctested'] + $covfile['locuntested'] + 10);
+        $covfile['coveragemetric'] = ($covfile['loctested']) / ($covfile['loctested'] + $covfile['locuntested']);
         $coveragetype = 'gcov';
     }
 
@@ -367,9 +367,9 @@ while ($coveragefile_array = pdo_fetch_array($coveragefile)) {
     if (isset($coveragefile_array['userid'])) {
         $covfile['user'] = $coveragefile_array['userid'];
     }
-    if ($covfile['coveragemetric'] != 1.0 || $status != -1) {
+    //if ($covfile['coveragemetric'] != 1.0 || $status != -1) {
         $covfile_array[] = $covfile;
-    }
+    //}
 }
 
 
@@ -394,6 +394,8 @@ if ($status == -1) {
             $directory_array[$fullpath]['percentcoverage'] = 0;
             $directory_array[$fullpath]['coveragemetric'] = 0;
             $directory_array[$fullpath]['nfiles'] = 0;
+            $directory_array[$fullpath]['branchpercentcoverage'] = 0;
+            $directory_array[$fullpath]['branchcoveragemetric'] = 0;
         }
 
         $directory_array[$fullpath]['fullpath'] = $fullpath;
@@ -402,6 +404,8 @@ if ($status == -1) {
         if (isset($covfile['branchesuntested'])) {
             $directory_array[$fullpath]['branchesuntested'] += $covfile['branchesuntested'];
             $directory_array[$fullpath]['branchestested'] += $covfile['branchestested'];
+
+            $directory_array[$fullpath]['branchcoveragemetric'] += $covfile['branchcoveragemetric'];
         }
         if (isset($covfile['functionsuntested'])) {
             $directory_array[$fullpath]['functionsuntested'] += $covfile['functionsuntested'];
@@ -416,6 +420,14 @@ if ($status == -1) {
         $directory_array[$fullpath]['percentcoverage'] = sprintf('%3.2f',
             100.0 * ($covdir['loctested'] / ($covdir['loctested'] + $covdir['locuntested'])));
         $directory_array[$fullpath]['coveragemetric'] = sprintf('%3.2f', $covdir['coveragemetric'] / $covdir['nfiles']);
+
+        // Compute the branch average
+        if($covfile['branchestested'] + $covfile['branchesuntested'] > 0 && $coveragetype == 'gcov') {
+            $directory_array[$fullpath]['branchpercentcoverage'] = sprintf('%3.2f',
+                100.0 * ($covdir['branchestested'] / ($covdir['branchestested'] + $covdir['branchesuntested'])));
+            $directory_array[$fullpath]['branchcoveragemetric'] = sprintf('%3.2f', $covdir['branchcoveragemetric']);
+        }
+
     }
 
     $covfile_array = array_merge($covfile_array, $directory_array);
