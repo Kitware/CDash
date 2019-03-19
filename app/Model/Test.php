@@ -312,6 +312,9 @@ class Test
     }
 
     /**
+     * Returns the LabelCollection object for the current Test. It lazily loads a LabelCollection,
+     * then adds the current Test's Label array to the Collection if none exists.
+     *
      * @return LabelCollection
      */
     public function GetLabelCollection()
@@ -326,6 +329,8 @@ class Test
     }
 
     /**
+     * Returns the ExecutionTime property of the current Test.
+     *
      * @return double
      */
     public function GetExecutionTime()
@@ -335,42 +340,34 @@ class Test
     }
 
     /**
+     * Returns true if the test has failed.
+     *
      * @return bool
      */
-    public function HasFailed()
+    public function IsFailed()
     {
         return $this->GetStatus() === self::FAILED;
     }
 
     /**
+     * Returns true if the test has not run.
+     *
      * @return bool
      */
-    public function HasNotRun()
+    public function IsNotRun()
     {
         return $this->GetStatus() === self::NOTRUN;
     }
 
     /**
-     * @return bool
+     * Returns a self referencing URI for the current Test.
+     *
+     * @return string
      */
-    public function HasPassed()
-    {
-        return $this->GetStatus() === self::PASSED;
-    }
-
     public function GetUrlForSelf()
     {
         $config = \CDash\Config::getInstance();
         $host_base = $config->getBaseUrl();
         return "{$host_base}/testDetails.php?test={$this->Id}&build={$this->BuildTest->BuildId}";
-    }
-
-    public function isLabeled($label)
-    {
-        $labels = array_unique(array_map(function ($label) {
-            return $label->Text;
-        }, $this->GetLabelCollection()->toArray()));
-
-        return in_array($label, $labels);
     }
 }

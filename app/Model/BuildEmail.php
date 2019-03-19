@@ -23,6 +23,10 @@ use CDash\Log;
 use CDash\Messaging\Notification\Email\EmailMessage;
 use CDash\Messaging\Notification\NotificationInterface;
 
+/**
+ * Class BuildEmail
+ * @package CDash\Model
+ */
 class BuildEmail
 {
     protected $BuildId;
@@ -34,6 +38,10 @@ class BuildEmail
     private $RequiredFields = ['BuildId', 'UserId', 'Category'];
 
     /**
+     * Saves a EmailMessage's BuildEmailCollection to the database. The BuildEmailCollection
+     * is the collection of all emails sent for a given CTest submission, e.g. Build, Test,
+     * etc.
+     *
      * @param EmailMessage $notification
      */
     public static function SaveNotification(EmailMessage $message)
@@ -47,6 +55,13 @@ class BuildEmail
         }
     }
 
+    /**
+     * Logs the status (sent, or not sent) of a notification. Given a testing configuration
+     * this method will log the email in a manner expected by some of the older CDash tests.
+     *
+     * @param NotificationInterface $notification
+     * @param $sent
+     */
     public static function Log(NotificationInterface $notification, $sent)
     {
         $config = Config::getInstance();
@@ -69,6 +84,8 @@ class BuildEmail
     }
 
     /**
+     * Returns the record of a previously sent email given a user, a build, and a category.
+     *
      * @param $userId
      * @param $buildId
      * @param $category
@@ -99,6 +116,8 @@ class BuildEmail
     }
 
     /**
+     * Returns a collection of emails sent given a build and category.
+     *
      * @param $buildId
      * @param $category
      * @return BuildEmailCollection
@@ -145,6 +164,8 @@ class BuildEmail
     }
 
     /**
+     * Saves a record of the current BuildEmail having been sent.
+     *
      * @return bool
      */
     public function Save()

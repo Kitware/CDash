@@ -24,6 +24,15 @@ use CDash\Messaging\Topic\TopicDecorator;
 use ActionableBuildInterface;
 use CDash\Messaging\Topic\TopicInterface;
 
+/**
+ * Class Subscriber
+ *
+ * A subscriber is a wrapper for a User and contains properties and methods that concern,
+ * specifically, a user's preference regarding notifications and the content of those
+ * notifications.
+ *
+ * @package CDash\Model
+ */
 class Subscriber implements SubscriberInterface
 {
     /** @var  NotificationPreferences $preferences */
@@ -31,9 +40,6 @@ class Subscriber implements SubscriberInterface
 
     /** @var TopicCollection $topics */
     private $topics;
-
-    /** @var  string[] */
-    private $labels;
 
     /** @var User $user */
     private $user;

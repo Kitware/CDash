@@ -233,6 +233,10 @@ class BuildGroup
     }
 
     /**
+     * Returns true if the current BuildGroup is configured to email actionable builds items
+     * to email addresses belonging to those persons who executed the commit (vs. the acutal
+     * author).
+     *
      * @return bool
      */
     public function isNotifyingCommitters()

@@ -126,11 +126,11 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
      */
     public function itemHasTopicSubject(Build $build, $item)
     {
-        if ($item->HasFailed()) {
+        if ($item->IsFailed()) {
             return true;
         }
 
-        if ($item->HasNotRun()) {
+        if ($item->IsNotRun()) {
             if ($item->Details !== Test::DISABLED) {
                 return true;
             }

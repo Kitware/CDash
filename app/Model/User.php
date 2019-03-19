@@ -459,6 +459,12 @@ class User
         return $passwordHash;
     }
 
+    /**
+     * Returns the current User's repository credentials. (There may be multiple credentials
+     * for multiple repositories).
+     *
+     * @return array|bool|null
+     */
     public function GetRepositoryCredentials()
     {
         if (is_null($this->Credentials)) {
@@ -476,6 +482,13 @@ class User
         return $this->Credentials;
     }
 
+    /**
+     * Return's the current User's LabelCollection. If a LabelCollection is not yet defined
+     * this method checks the database for the labels of which a users has subscribed and
+     * return's them wrapped in a LabelCollection.
+     *
+     * @return LabelCollection
+     */
     public function GetLabelCollection()
     {
         if (!$this->LabelCollection) {
@@ -500,6 +513,11 @@ class User
         return $this->LabelCollection;
     }
 
+    /**
+     * Given a $label, the $label is added to the LabelCollection.
+     *
+     * @param Label $label
+     */
     public function AddLabel(Label $label)
     {
         if (!$this->LabelCollection) {

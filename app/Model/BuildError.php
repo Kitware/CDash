@@ -172,6 +172,11 @@ class BuildError
         return $marshaled;
     }
 
+    /**
+     * Returns a self referencing URI for the current BuildError.
+     *
+     * @return string
+     */
     public function GetUrlForSelf()
     {
         $config = Config::getInstance();

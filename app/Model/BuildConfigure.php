@@ -379,6 +379,13 @@ class BuildConfigure
         return $response;
     }
 
+    /**
+     * This method returns the URI for the given BuildConfigure id, or the URI for the current
+     * BuildConfigure if no id is provided.
+     *
+     * @param null $default_id
+     * @return string
+     */
     public function getURL($default_id = null)
     {
         $config = \CDash\Config::getInstance();
@@ -386,6 +393,10 @@ class BuildConfigure
         return "{$config->getBaseUrl()}/viewConfigure.php?buildid={$id}";
     }
 
+    /**
+     * Returns the current BuildConfigure's Label property as a LabelCollection.
+     * @return LabelCollection
+     */
     public function GetLabelCollection()
     {
         $collection = new LabelCollection();

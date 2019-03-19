@@ -308,6 +308,11 @@ class BuildFailure
         return $marshaled;
     }
 
+    /**
+     * Returns a self referencing URI for a the current BuildFailure.
+     *
+     * @return string
+     */
     public function GetUrlForSelf()
     {
         $config = Config::getInstance();

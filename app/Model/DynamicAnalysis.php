@@ -290,6 +290,11 @@ class DynamicAnalysis
         return $this->GetRelatedId($build, 'DESC');
     }
 
+    /**
+     * Returns a self referencing URI for the current DynamicAnalysis.
+     *
+     * @return string
+     */
     public function GetUrlForSelf()
     {
         $config = Config::getInstance();

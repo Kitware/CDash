@@ -1,6 +1,14 @@
 <?php
 namespace CDash\Model;
 
+/**
+ * Class ActionableTypes
+ *
+ * ActionableTypes represent CTest submissions that require MAY processing after parsing by
+ * CDash xml handlers.
+ *
+ * @package CDash\Model
+ */
 class ActionableTypes
 {
     const BUILD_ERROR = 'BuildError';

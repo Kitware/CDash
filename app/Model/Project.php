@@ -1698,6 +1698,9 @@ class Project
     }
 
     /**
+     * Returns the Project's SubscriberCollection object. This method lazily loads the
+     * SubscriberCollection if the object does not exist.
+     *
      * @returns \CDash\Collection\SubscriberCollection
      */
     public function GetSubscriberCollection()
@@ -1709,11 +1712,23 @@ class Project
         return $this->SubscriberCollection;
     }
 
+    /**
+     * Sets the Project's SubscriberCollection property.
+     *
+     * @param SubscriberCollection $subscribers
+     */
     public function SetSubscriberCollection(SubscriberCollection $subscribers)
     {
         $this->SubscriberCollection = $subscribers;
     }
 
+    /**
+     * Returns a SubscriberCollection; a collection of all users and their subscription preferences.
+     *
+     * @return SubscriberCollection
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     */
     public function GetProjectSubscribers()
     {
         $service = ServiceContainer::getInstance()->getContainer();
@@ -1760,6 +1775,11 @@ class Project
         return $collection;
     }
 
+    /**
+     * Returns a self referencing URI of the current Project.
+     *
+     * @return string
+     */
     public function GetUrlForSelf()
     {
         $config = Config::getInstance();
