@@ -46,21 +46,45 @@ class GitHubTest extends PHPUnit_Framework_TestCase
             'target_url' => $options['target_url']
         ];
 
-        /** @var ClientInterface|PHPUnit_Framework_MockObject_MockObject $client */
-        $client = $this->getMockBuilder(ClientInterface::class)
-            ->getMockForAbstractClass();
+        $builder = $this->getMockBuilder(\Lcobucci\JWT\Builder::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['setIssuer', 'setIssuedAt', 'setExpiration', 'sign',
+                          'getToken'])
+            ->getMock();
+        $builder->expects($this->once())
+            ->method('setIssuer')
+            ->will($this->returnSelf());
+        $builder->expects($this->once())
+            ->method('setIssuedAt')
+            ->will($this->returnSelf());
+        $builder->expects($this->once())
+            ->method('setExpiration')
+            ->will($this->returnSelf());
+        $builder->expects($this->once())
+            ->method('sign')
+            ->will($this->returnSelf());
+        $builder->expects($this->once())
+            ->method('getToken');
+        $sut->setJwtBuilder($builder);
 
-        $client_options = [
-            'headers' => ['Authorization' => "token {$token}"],
-            'body' => json_encode($json),
-        ];
+        $client = $this->getMockBuilder(\Github\Client::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['api', 'authenticate', 'createInstallationToken'])
+            ->getMock();
+        $client->expects($this->any())
+            ->method('authenticate')
+            ->willReturn(true);
+        $client->expects($this->any())
+            ->method('api')
+            ->will($this->returnSelf());
+        $client->expects($this->any())
+            ->method('createInstallationToken');
+
+        $sut->setApiClient($client);
 
         $uri = GitHub::BASE_URI . "/repos/{$owner}/{$repo}/statuses/{$hash}";
+        Config::getInstance()->set('CDASH_GITHUB_PRIVATE_KEY', __FILE__);
 
-        $client->expects($this->once())
-            ->method('request')
-            ->with('POST', $uri, $client_options);
-
-        $sut->setStatus($client, $options);
+        $sut->setStatus($options);
     }
 }

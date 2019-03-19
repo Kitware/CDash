@@ -17,7 +17,6 @@
 use CDash\Lib\Repository\GitHub;
 use CDash\Model\Project;
 use CDash\Model\Repository;
-use Ramsey\Uuid\Uuid;
 
 class RepositoryTest extends PHPUnit_Framework_TestCase
 {
@@ -42,10 +41,10 @@ class RepositoryTest extends PHPUnit_Framework_TestCase
 
     public function testGetRepositoryInterfaceReturnsGitHubService()
     {
-        $apiToken = str_replace('-', '', Uuid::uuid4()->toString());
+        $installationId = 12345;
         $this->repo[] = [
             'url' => 'http://github.com/foo/bar',
-            'password' => $apiToken,
+            'username' => $installationId,
         ];
 
         $service = Repository::getRepositoryInterface($this->project);
@@ -53,19 +52,19 @@ class RepositoryTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals('foo', $service->getOwner());
         $this->assertEquals('bar', $service->getRepository());
-        $this->assertEquals($apiToken, $service->getToken());
+        $this->assertEquals($installationId, $service->getInstallationId());
     }
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage Unable to find credentials for repository
+     * @expectedExceptionMessage Unable to find installation ID for repository
      */
     public function testGetRepositoryInterfaceReturnsGitHubServiceThrowsExceptionGivenNoGitHubRepository()
     {
-        $apiToken = str_replace('-', '', Uuid::uuid4()->toString());
+        $installationId = 12345;
         $this->repo[] = [
             'url' => 'https://gitlab.com/foo/baz',
-            'password' => $apiToken,
+            'password' => $installationId,
         ];
 
         Repository::getRepositoryInterface($this->project);

@@ -16,7 +16,14 @@
 
 namespace CDash\Lib\Repository;
 
-use GuzzleHttp\ClientInterface;
+use Http\Adapter\Guzzle6\Client as GuzzleClient;
+use Lcobucci\JWT\Builder;
+use Lcobucci\JWT\Signer\Key;
+use Lcobucci\JWT\Signer\Rsa\Sha256;
+
+use CDash\Config;
+
+require_once 'include/log.php';
 
 /**
  * Class GitHub
@@ -26,8 +33,8 @@ class GitHub implements RepositoryInterface
 {
     const BASE_URI = 'https://api.github.com';
 
-    /** @var string $token */
-    private $token;
+    /** @var string $installationId */
+    private $installationId;
 
     /** @var string $owner */
     private $owner;
@@ -38,18 +45,66 @@ class GitHub implements RepositoryInterface
     /** @var string $hash */
     private $hash;
 
+    private $apiClient;
+    private $jwtBuilder;
+
     /**
      * GitHub constructor.
-     * @param $token
+     * @param $installationId
      * @param $owner
      * @param $repo
      * @param $hash
      */
-    public function __construct($token, $owner, $repo)
+    public function __construct($installationId, $owner, $repo)
     {
-        $this->token = $token;
+        $this->installationId = $installationId;
         $this->owner = $owner;
         $this->repo = $repo;
+    }
+
+    public function setApiClient(\Github\Client $client)
+    {
+        $this->apiClient = $client;
+    }
+
+    public function setJwtBuilder(\Lcobucci\JWT\Builder $builder)
+    {
+        $this->jwtBuilder = $builder;
+    }
+
+    protected function initializeApiClient()
+    {
+        if (!$this->jwtBuilder) {
+            $this->setJwtBuilder(new Builder());
+        }
+
+        $builder = new \Github\HttpClient\Builder(new GuzzleClient());
+        $apiClient = new \Github\Client($builder, 'machine-man-preview');
+        $this->setApiClient($apiClient);
+    }
+
+    public function authenticate()
+    {
+        $pem = Config::getInstance()->get('CDASH_GITHUB_PRIVATE_KEY');
+        if (!file_exists($pem)) {
+            add_log('No GitHub pem', 'GitHub::authenticate', LOG_INFO);
+            return false;
+        }
+
+        $integrationId = Config::getInstance()->get('CDASH_GITHUB_APP_ID');
+
+        $jwt = $this->jwtBuilder
+            ->setIssuer($integrationId)
+            ->setIssuedAt(time())
+            ->setExpiration(time() + 60)
+            ->sign(new Sha256(), new Key("file://{$pem}"))
+            ->getToken();
+
+        $this->apiClient->authenticate($jwt, null, \Github\Client::AUTH_JWT);
+
+        $token = $this->apiClient->api('apps')->createInstallationToken($this->installationId);
+        $this->apiClient->authenticate($token['token'], null, \Github\Client::AUTH_HTTP_TOKEN);
+        return true;
     }
 
     /**
@@ -65,35 +120,35 @@ class GitHub implements RepositoryInterface
      *
      * @see https://developer.github.com/v3/repos/statuses/ for property descriptions
      *
-     * @param ClientInterface $client
      * @param array $options
-     * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function setStatus(ClientInterface $client, array $options)
+    public function setStatus(array $options)
     {
-        $path = "/repos/{$this->owner}/{$this->repo}/statuses/{$options['commit_hash']}";
-        $uri  = self::BASE_URI . $path;
+        if (!$this->apiClient) {
+            $this->initializeApiClient();
+        }
 
-        $body = array_filter($options, function ($key) {
+        if (!$this->authenticate()) {
+            return;
+        }
+
+        $commitHash = $options['commit_hash'];
+        $params = array_filter($options, function ($key) {
             return in_array($key, ['state', 'context', 'description', 'target_url']);
         }, ARRAY_FILTER_USE_KEY);
 
-        $options = [
-            'headers' => [
-                'Authorization' => "token {$this->token}"
-            ],
-            'body' => json_encode($body),
-        ];
-
-        return $client->request('POST', $uri, $options);
+        $statuses = $this->apiClient
+            ->api('repo')
+            ->statuses()
+            ->create($this->owner, $this->repo, $commitHash, $params);
     }
 
     /**
      * @return string
      */
-    public function getToken()
+    public function getInstallationId()
     {
-        return $this->token;
+        return $this->installationId;
     }
 
     /**

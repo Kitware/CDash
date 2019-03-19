@@ -16,9 +16,7 @@
 
 namespace CDash\Lib\Repository;
 
-use GuzzleHttp\ClientInterface;
-
 interface RepositoryInterface
 {
-    public function setStatus(ClientInterface $client, array $options);
+    public function setStatus(array $options);
 }

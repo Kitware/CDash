@@ -18,7 +18,6 @@ use CDash\Lib\Repository\RepositoryInterface;
 use CDash\Model\Build;
 use CDash\Model\BuildUpdate;
 use CDash\Service\RepositoryService;
-use GuzzleHttp\ClientInterface;
 use Ramsey\Uuid\Uuid;
 
 class RepositoryServiceTest extends PHPUnit_Framework_TestCase
@@ -26,28 +25,22 @@ class RepositoryServiceTest extends PHPUnit_Framework_TestCase
     /** @var RepositoryInterface|PHPUnit_Framework_MockObject_MockObject */
     private $repository;
 
-    /** @var ClientInterface|PHPUnit_Framework_MockObject_MockObject */
-    private $client;
-
     public function setUp()
     {
         parent::setUp();
         $this->repository = $this->getMockBuilder(RepositoryInterface::class)
             ->getMockForAbstractClass();
-
-        $this->client = $this->getMockBuilder(ClientInterface::class)
-            ->getMockForAbstractClass();
     }
 
     public function test__construct()
     {
-        $sut = new RepositoryService($this->repository, $this->client);
+        $sut = new RepositoryService($this->repository);
         $this->assertInstanceOf(RepositoryService::class, $sut);
     }
 
     public function testSetStatusOnStart()
     {
-        $sut = new RepositoryService($this->repository, $this->client);
+        $sut = new RepositoryService($this->repository);
 
         $hash = str_replace('-', '', Uuid::uuid4()->toString());
 
@@ -70,7 +63,7 @@ class RepositoryServiceTest extends PHPUnit_Framework_TestCase
         $this->repository
             ->expects($this->once())
             ->method('setStatus')
-            ->with($this->client, $options);
+            ->with($options);
 
         $sut->setStatusOnStart($build, 'Debug');
     }

@@ -21,7 +21,6 @@ use CDash\Model\Project;
 use CDash\Service\RepositoryService;
 
 use GuzzleHttp\Client as HttpClient;
-use Exception;
 
 class Repository
 {
@@ -113,20 +112,20 @@ class Repository
                     Repository::getGitHubRepoInformationFromUrl($project->CvsUrl)
                 );
 
-                $password = '';
+                $installationId = '';
                 $repositories = $project->GetRepositories();
                 foreach ($repositories as $repo) {
                     if (strpos($repo['url'], 'github.com') !== false) {
-                        $password = $repo['password'];
+                        $installationId = $repo['username'];
                         break;
                     }
                 }
 
-                if (empty($password)) {
-                    throw new Exception("Unable to find credentials for repository");
+                if (empty($installationId)) {
+                    throw new \Exception('Unable to find installation ID for repository');
                 }
 
-                $service = new GitHub($repo['password'], $owner, $repository);
+                $service = new GitHub($installationId, $owner, $repository);
                 break;
             default:
                 $msg =

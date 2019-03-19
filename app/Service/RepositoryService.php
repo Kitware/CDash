@@ -18,7 +18,6 @@ namespace CDash\Service;
 
 use CDash\Lib\Repository\RepositoryInterface;
 use CDash\Model\Build;
-use GuzzleHttp\ClientInterface;
 
 /**
  * Class RepositoryService
@@ -29,18 +28,13 @@ class RepositoryService
     /** @var RepositoryInterface $repository */
     protected $repository;
 
-    /** @var ClientInterface $client */
-    protected $client;
-
     /**
      * RepositoryService constructor.
      * @param RepositoryInterface $repository
-     * @param ClientInterface $client
      */
-    public function __construct(RepositoryInterface $repository, ClientInterface $client)
+    public function __construct(RepositoryInterface $repository)
     {
         $this->repository = $repository;
-        $this->client = $client;
     }
 
     protected function setStatus($context, $description, $revision, $state,
@@ -57,7 +51,7 @@ class RepositoryService
             'state'       => $state,
             'target_url'  => $target_url
         ];
-        $this->repository->setStatus($this->client, $options);
+        $this->repository->setStatus($options);
     }
 
     /**
