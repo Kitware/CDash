@@ -68,11 +68,10 @@ class Subscriber implements SubscriberInterface
      */
     public function hasBuildTopics(ActionableBuildInterface $submission)
     {
-        // Initialize the topic collection
         $topics = $this->getTopics();
-        $builds = $submission->GetBuildCollection();
         $collection = $submission->GetTopicCollectionForSubscriber($this);
         if ($collection->hasItems()) {
+            $builds = $submission->GetBuildCollection();
             TopicDecorator::decorate($collection, $this->preferences);
             /** @var Topic $topic */
             foreach ($collection as $topic) {
