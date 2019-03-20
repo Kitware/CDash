@@ -3178,13 +3178,19 @@ class Build
     }
 
     /**
-     * Sets the current build's BuildEmailCollection object.
+     * Sets the current build's BuildEmailCollection object. This method lazily loads a
+     * CollectionCollection object as the current Build's BuildEmailCollection property if none
+     * exists.
      *
      * @param BuildEmailCollection $collection
      * @param $category
      */
     public function SetBuildEmailCollection(BuildEmailCollection $collection, $category)
     {
+        if (!$this->BuildEmailCollection) {
+            $this->BuildEmailCollection = new CollectionCollection();
+        }
+
         $this->BuildEmailCollection->addItem($collection, $category);
     }
 
