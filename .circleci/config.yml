@@ -36,6 +36,12 @@ jobs:
             curl -L -o /tmp/docker-$VER.tgz https://download.docker.com/linux/static/stable/x86_64/docker-$VER.tgz
             tar -xz -C /tmp -f /tmp/docker-$VER.tgz
             sudo mv /tmp/docker/* /usr/bin
+      - run:
+          name: Upgrade CMake
+          command: |
+            wget -q -O cmake-linux.sh https://github.com/Kitware/CMake/releases/download/v3.14.0/cmake-3.14.0-Linux-x86_64.sh
+            sudo sh cmake-linux.sh -- --skip-license --prefix=/usr/local
+            rm cmake-linux.sh
       - run: sudo /etc/init.d/apache2 restart
       - run: sudo ln -s /home/kitware/cdash/public /var/www/html/cdash
       - run: chmod a+rwx backup log public/rss public/upload
