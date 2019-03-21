@@ -423,8 +423,11 @@ if ($status == -1) {
 
         // Compute the branch average
         if ($coveragetype == 'gcov') {
-            $directory_array[$fullpath]['branchpercentcoverage'] = sprintf('%3.2f',
-                100.0 * ($covdir['branchestested'] / ($covdir['branchestested'] + $covdir['branchesuntested'])));
+            $directory_array[$fullpath]['branchpercentcoverage'] = sprintf('%3.2f',0);
+            if (($covdir['branchestested'] + $covdir['branchesuntested']) > 0) {
+                $directory_array[$fullpath]['branchpercentcoverage'] = sprintf('%3.2f',
+                    100.0 * ($covdir['branchestested'] / ($covdir['branchestested'] + $covdir['branchesuntested'])));
+            }
             $directory_array[$fullpath]['branchcoveragemetric'] = sprintf('%3.2f', $covdir['branchcoveragemetric']);
         }
     }
