@@ -54,11 +54,11 @@ jobs:
           background: true
           command: node_modules/.bin/webdriver-manager start
       - run: mkdir _build
-      - run: cd _build && cmake -DCDASH_TESTING_RENAME_LOGS=true -DCDASH_DB_HOST=127.0.0.1 -DCDASH_DIR_NAME=cdash -DCDASH_DB_LOGIN=root -DBUILDNAME="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}_MySQL" -DSITE="CircleCI-2.0" ..
-      - run: cd _build && ctest --extra-verbose --no-compress-output --track Continuous --test-action Test --test-action Submit .
+      # Run the test suite for MySQL
+      - run: /usr/local/bin/ctest -VV -DBUILDNAME="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}_MySQL" -Dpostgres=OFF -S .circleci/ctest_driver_script.cmake
+      # Run the test suite for Postgres
       - run: rm -rf _build && mkdir _build
-      - run: cd _build && cmake -DCDASH_TESTING_RENAME_LOGS=true -DCDASH_DIR_NAME=cdash -DCDASH_DB_TYPE=pgsql -DCDASH_DB_LOGIN=postgres -DBUILDNAME="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}_PostgreSQL" -DSITE="CircleCI-2.0" ..
-      - run: cd _build && ctest --extra-verbose --no-compress-output --track Continuous --test-action Test --test-action Submit .
+      - run: /usr/local/bin/ctest -VV -DBUILDNAME="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}_Postgres" -Dpostgres=ON -S .circleci/ctest_driver_script.cmake
       # Build and push Docker image.
       - run: |
           if [ "${CIRCLE_BRANCH}" == "master" ]; then
