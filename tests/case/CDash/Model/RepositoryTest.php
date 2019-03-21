@@ -54,19 +54,4 @@ class RepositoryTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('bar', $service->getRepository());
         $this->assertEquals($installationId, $service->getInstallationId());
     }
-
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage Unable to find installation ID for repository
-     */
-    public function testGetRepositoryInterfaceReturnsGitHubServiceThrowsExceptionGivenNoGitHubRepository()
-    {
-        $installationId = 12345;
-        $this->repo[] = [
-            'url' => 'https://gitlab.com/foo/baz',
-            'password' => $installationId,
-        ];
-
-        Repository::getRepositoryInterface($this->project);
-    }
 }

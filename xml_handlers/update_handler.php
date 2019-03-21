@@ -18,10 +18,12 @@ require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
 
 use CDash\Model\Build;
-use CDash\Model\BuildUpdateFile;
-use CDash\Model\Site;
 use CDash\Model\BuildUpdate;
+use CDash\Model\BuildUpdateFile;
 use CDash\Model\Feed;
+use CDash\Model\Project;
+use CDash\Model\Repository;
+use CDash\Model\Site;
 
 /** Write the updates in one block
  *  In case of a lot of updates this might take up some memory */
@@ -133,7 +135,10 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface
                 // what version of the code is being built, not what changed
                 // since last time.  In this case we need to query the remote
                 // repository to figure out what changed.
-                perform_version_only_diff($this->Update, $this->projectid);
+                $project = new Project();
+                $project->Id = $this->projectid;
+                $project->Fill();
+                Repository::compareCommits($this->Update, $project);
             }
 
             // Compute the update statistics

@@ -87,4 +87,14 @@ class GitHubTest extends PHPUnit_Framework_TestCase
 
         $sut->setStatus($options);
     }
+
+    /**
+     * @expectedException Exception
+     * @expectedExceptionMessage Unable to find installation ID for repository
+     */
+    public function testAuthenticateThrowsExceptionGivenNoInstallationId()
+    {
+        $sut = new GitHub('', 'foo', 'bar');
+        $sut->authenticate();
+    }
 }

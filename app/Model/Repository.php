@@ -20,8 +20,6 @@ use CDash\Model\BuildProperties;
 use CDash\Model\Project;
 use CDash\Service\RepositoryService;
 
-use GuzzleHttp\Client as HttpClient;
-
 class Repository
 {
     const CVS = 0;
@@ -73,7 +71,10 @@ class Repository
         }
         $context = $buildProperties->Properties['status context'];
 
-        $repositoryService = self::getRepositoryService($build);
+        $project = new Project();
+        $project->Id = $build->ProjectId;
+        $project->Fill();
+        $repositoryService = self::getRepositoryService($project);
         if ($repositoryService) {
             if ($complete) {
                 $repositoryService->setStatusOnComplete($build, $context);
@@ -83,20 +84,21 @@ class Repository
         }
     }
 
-    protected static function getRepositoryService(Build $build)
+    public static function compareCommits(BuildUpdate $update, Project $project)
     {
-        $project = new Project();
-        $project->Id = $build->ProjectId;
-        $project->Fill();
+        $repositoryInterface = self::getRepositoryInterface($project);
+        $repositoryInterface->compareCommits($update, $project);
+    }
 
+    protected static function getRepositoryService(Project $project)
+    {
         try {
             $repositoryInterface = self::getRepositoryInterface($project);
         } catch (\Exception $e) {
             add_log($e->getMessage(), 'getRepositoryService', LOG_INFO);
             return null;
         }
-        $client = new HttpClient();
-        return new RepositoryService($repositoryInterface, $client);
+        return new RepositoryService($repositoryInterface);
     }
 
     /**
@@ -120,11 +122,6 @@ class Repository
                         break;
                     }
                 }
-
-                if (empty($installationId)) {
-                    throw new \Exception('Unable to find installation ID for repository');
-                }
-
                 $service = new GitHub($installationId, $owner, $repository);
                 break;
             default:
