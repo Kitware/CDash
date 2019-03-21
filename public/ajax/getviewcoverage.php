@@ -345,9 +345,8 @@ while ($coveragefile_array = pdo_fetch_array($coveragefile)) {
         $metric = 0;
         $covfile['branchesuntested'] = $coveragefile_array['branchsuntested'];
         $covfile['branchestested'] = $coveragefile_array['branchstested'];
-        $metric += $coveragefile_array['branchstested'] / ($coveragefile_array['branchstested'] + $coveragefile_array['branchsuntested']);
-        if (is_nan($metric)) {
-            $metric = 0;
+        if (($coveragefile_array['branchstested'] + $coveragefile_array['branchsuntested']) > 0) {
+            $metric += $coveragefile_array['branchstested'] / ($coveragefile_array['branchstested'] + $coveragefile_array['branchsuntested']);
         }
         $covfile['branchpercentcoverage'] = sprintf('%3.2f', $metric * 100);
         $covfile['branchcoveragemetric'] = $metric;
