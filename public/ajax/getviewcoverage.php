@@ -428,7 +428,6 @@ if ($status == -1) {
                 100.0 * ($covdir['branchestested'] / ($covdir['branchestested'] + $covdir['branchesuntested'])));
             $directory_array[$fullpath]['branchcoveragemetric'] = sprintf('%3.2f', $covdir['branchcoveragemetric']);
         }
-
     }
 
     $covfile_array = array_merge($covfile_array, $directory_array);
