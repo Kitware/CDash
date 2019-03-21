@@ -15,10 +15,6 @@
 =========================================================================*/
 
 //error_reporting(0); // disable error reporting
-use Bernard\Message\PlainMessage;
-use Bernard\Producer;
-use Bernard\QueueFactory\PersistentFactory;
-use Bernard\Serializer;
 use CDash\Config;
 use CDash\Middleware\Queue;
 use CDash\Middleware\Queue\DriverFactory as QueueDriverFactory;
@@ -28,9 +24,11 @@ use CDash\Model\Build;
 use CDash\Model\BuildFile;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Project;
+use CDash\Model\Repository;
 use CDash\Model\Site;
+use CDash\ServiceContainer;
+use GuzzleHttp\Client as HttpClient;
 use Ramsey\Uuid\Uuid;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
 require_once 'include/ctestparser.php';
 include_once 'include/common.php';
@@ -173,15 +171,24 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $buildid = null,
         }
     }
 
-    // Send the emails if necessary
+    // Set status on repository.
+    if ($handler instanceof UpdateHandler ||
+        $handler instanceof BuildPropertiesJSONHandler
+    ) {
+        Repository::setStatus($build, false);
+    }
+
+    // Send emails about update problems.
     if ($handler instanceof UpdateHandler) {
         send_update_email($handler, $projectid);
-        sendemail($handler, $projectid);
     }
+
+    // Send more general build emails.
     if ($handler instanceof TestingHandler ||
         $handler instanceof BuildHandler ||
         $handler instanceof ConfigureHandler ||
-        $handler instanceof DynamicAnalysisHandler
+        $handler instanceof DynamicAnalysisHandler ||
+        $handler instanceof UpdateHandler
     ) {
         sendemail($handler, $projectid);
     }

@@ -14,6 +14,14 @@
 
 namespace CDash\Model;
 
+use CDash\Lib\Repository\GitHub;
+use CDash\Model\Build;
+use CDash\Model\BuildProperties;
+use CDash\Model\Project;
+use CDash\Service\RepositoryService;
+
+use GuzzleHttp\Client as HttpClient;
+
 class Repository
 {
     const CVS = 0;
@@ -39,6 +47,10 @@ class Repository
     const VIEWER_VIEWVC_1_1 = 'ViewVC1.1';
     const VIEWER_WEBSVN = 'WebSVN';
 
+    /**
+     * @return array
+     * @throws \ReflectionException
+     */
     public static function getViewers()
     {
         $self = new \ReflectionClass(__CLASS__);
@@ -50,5 +62,97 @@ class Repository
             }
         }
         return $viewers;
+    }
+
+    public static function setStatus(Build $build, $complete = true)
+    {
+        $buildProperties = new BuildProperties($build);
+        $buildProperties->Fill();
+        if (!array_key_exists('status context', $buildProperties->Properties)) {
+            return;
+        }
+        $context = $buildProperties->Properties['status context'];
+
+        $repositoryService = self::getRepositoryService($build);
+        if ($repositoryService) {
+            if ($complete) {
+                $repositoryService->setStatusOnComplete($build, $context);
+            } else {
+                $repositoryService->setStatusOnStart($build, $context);
+            }
+        }
+    }
+
+    protected static function getRepositoryService(Build $build)
+    {
+        $project = new Project();
+        $project->Id = $build->ProjectId;
+        $project->Fill();
+
+        try {
+            $repositoryInterface = self::getRepositoryInterface($project);
+        } catch (\Exception $e) {
+            add_log($e->getMessage(), 'getRepositoryService', LOG_INFO);
+            return null;
+        }
+        $client = new HttpClient();
+        return new RepositoryService($repositoryInterface, $client);
+    }
+
+    /**
+     * @param Project $project
+     * @return RepositoryInterface
+     * @throws Exception
+     */
+    public static function getRepositoryInterface(Project $project)
+    {
+        switch (strtolower($project->CvsViewerType)) {
+            case strtolower(self::VIEWER_GITHUB):
+                list($owner, $repository) = array_values(
+                    Repository::getGitHubRepoInformationFromUrl($project->CvsUrl)
+                );
+
+                $installationId = '';
+                $repositories = $project->GetRepositories();
+                foreach ($repositories as $repo) {
+                    if (strpos($repo['url'], 'github.com') !== false) {
+                        $installationId = $repo['username'];
+                        break;
+                    }
+                }
+
+                if (empty($installationId)) {
+                    throw new \Exception('Unable to find installation ID for repository');
+                }
+
+                $service = new GitHub($installationId, $owner, $repository);
+                break;
+            default:
+                $msg =
+                    "No repository interface defined for $project->CvsViewerType";
+                throw new \Exception($msg);
+                return;
+        }
+        return $service;
+    }
+
+    /**
+     * @param string $url
+     * @return array
+     */
+    protected static function getGitHubRepoInformationFromUrl($url)
+    {
+        $url = str_replace('//', '', $url);
+        $parts = explode('/', $url);
+        $info = ['owner' => null, 'repo' => null];
+        if (isset($parts[1])) {
+            $info['owner'] = $parts[1];
+        }
+
+        if (isset($parts[2])) {
+            $info['repo'] = $parts[2];
+        }
+
+        return $info;
     }
 }

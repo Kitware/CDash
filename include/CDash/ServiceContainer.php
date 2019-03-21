@@ -74,4 +74,17 @@ class ServiceContainer extends Singleton
     {
         $this->container = $container;
     }
+
+    public static function singleton($class_name)
+    {
+        /** @var ServiceContainer $self */
+        $self = self::getInstance();
+        return $self->get($class_name);
+    }
+
+    public static function instance($class_name)
+    {
+        $self = self::getInstance();
+        return $self->create($class_name);
+    }
 }

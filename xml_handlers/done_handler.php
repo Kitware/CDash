@@ -18,6 +18,7 @@ require_once 'xml_handlers/abstract_handler.php';
 
 use CDash\Model\Build;
 use CDash\Model\PendingSubmissions;
+use CDash\Model\Repository;
 
 class DoneHandler extends AbstractHandler
 {
@@ -65,7 +66,9 @@ class DoneHandler extends AbstractHandler
             if ($this->PendingSubmissions->Exists()) {
                 $this->PendingSubmissions->Delete();
             }
-            // TODO: notifications.
+
+            // Set the status of this build on our repository.
+            Repository::setStatus($this->Build, true);
         }
     }
 

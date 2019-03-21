@@ -563,7 +563,7 @@ function get_fisheye_revision_url($projecturl, $revision, $priorrevision)
 /** Return the P4Web URL */
 function get_p4web_revision_url($projecturl, $revision, $priorrevision)
 {
-    $revision_url = $project_url . '?ac=64&sr=' . $revision;
+    $revision_url = $projecturl . '?ac=64&sr=' . $revision;
     return make_cdash_url($revision_url);
 }
 
@@ -585,7 +585,7 @@ function get_stash_revision_url($projecturl, $revision, $priorrevision)
 function get_viewvc_revision_url($projecturl, $revision, $priorrevision)
 {
     $revision_url = $projecturl . '?view=rev&revision=' . $revision;
-    return make_cdash_url($diff_url);
+    return make_cdash_url($revision_url);
 }
 
 /** Return the viewVC 1-1 url */
