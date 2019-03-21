@@ -21,7 +21,6 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
           version: 18.03.1-ce
-      - run: sudo /etc/init.d/apache2 restart
       - run:
           name: Upgrade Chrome
           command: |
