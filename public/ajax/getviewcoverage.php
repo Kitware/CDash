@@ -342,17 +342,17 @@ while ($coveragefile_array = pdo_fetch_array($coveragefile)) {
         $coveragetype = 'bullseye';
     } else {
         // coverage metric for gcov
-        $metric = 0;
-        $covfile['branchesuntested'] = $coveragefile_array['branchsuntested'];
-        $covfile['branchestested'] = $coveragefile_array['branchstested'];
         if ($coveragefile_array['branchstested'] + $coveragefile_array['branchsuntested'] > 0) {
+            $metric = 0;
+            $covfile['branchesuntested'] = $coveragefile_array['branchsuntested'];
+            $covfile['branchestested'] = $coveragefile_array['branchstested'];
             $metric += $coveragefile_array['branchstested'] / ($coveragefile_array['branchstested'] + $coveragefile_array['branchsuntested']);
+            $covfile['branchpercentcoverage'] = sprintf('%3.2f', $metric * 100);
+            $covfile['branchcoveragemetric'] = $metric;
         }
-        $covfile['branchpercentcoverage'] = sprintf('%3.2f', $metric * 100);
-        $covfile['branchcoveragemetric'] = $metric;
 
         $covfile['percentcoverage'] = sprintf('%3.2f', $covfile['loctested'] / ($covfile['loctested'] + $covfile['locuntested']) * 100);
-        $covfile['coveragemetric'] = ($covfile['loctested']) / ($covfile['loctested'] + $covfile['locuntested']);
+        $covfile['coveragemetric'] = ($covfile['loctested'] + 10) / ($covfile['loctested'] + $covfile['locuntested'] + 10);
         $coveragetype = 'gcov';
     }
 
@@ -367,10 +367,9 @@ while ($coveragefile_array = pdo_fetch_array($coveragefile)) {
     if (isset($coveragefile_array['userid'])) {
         $covfile['user'] = $coveragefile_array['userid'];
     }
-    /*if ($covfile['coveragemetric'] != 1.0 || $status != -1) {
+    if ($covfile['coveragemetric'] != 1.0 || $status != -1) {
         $covfile_array[] = $covfile;
-    }*/
-    $covfile_array[] = $covfile;
+    }
 }
 
 
@@ -517,11 +516,12 @@ foreach ($covfile_array as $covfile) {
     };
 
     // For display branch purposes
-    $roundedpercentage2 = round($covfile['branchpercentcoverage']);
-    if ($roundedpercentage2 > 98) {
-        $roundedpercentage2 = 98;
-    };
-
+    if($covfile['branchestested'] + $covfile['branchesuntested'] > 0 && $coveragetype == 'gcov') {
+        $roundedpercentage2 = round($covfile['branchpercentcoverage']);
+        if ($roundedpercentage2 > 98) {
+            $roundedpercentage2 = 98;
+        };
+    }
 
     $row = array();
 
@@ -757,93 +757,95 @@ foreach ($covfile_array as $covfile) {
     }
 
     //Next column (Branch Percentage)
-    $nextcolumn = '<div style="position:relative; width: 190px;">
-       <div style="position:relative; float:left;
-       width: 123px; height: 12px; background: #bdbdbd url(\'img/progressbar.gif\') top left no-repeat;">
-       <div class=';
-    switch ($status) {
-        case 0:
-            $nextcolumn .= '"error" ';
-            break;
-        case 1:
-            $nextcolumn .= '"error" ';
-            break;
-        case 2:
-            $nextcolumn .= '"error" ';
-            break;
-        case 3:
-            $nextcolumn .= '"warning" ';
-            break;
-        case 4:
-            $nextcolumn .= '"normal" ';
-            break;
-        case 5:
-            $nextcolumn .= '"normal" ';
-            break;
-        case 6:
-        case -1:
-            if (($covfile['branchcoveragemetric'] < $_GET['metricerror'])) {
-                $nextcolumn .= '"error"'; //low
-            } elseif ($covfile['branchcoveragemetric'] == 1.0) {
-                $nextcolumn .= '"normal"'; //complete
-            } elseif ($covfile['branchcoveragemetric'] >= $_GET['metricpass']) {
-                $nextcolumn .= '"normal"'; // satisfactory
-            } else {
-                $nextcolumn .= '"warning"'; // medium
-            }
-            break;
-    }
-    $nextcolumn .= 'style="height: 10px;margin-left:1px; ';
-    $nextcolumn .= 'border-top:1px solid grey; border-top:1px solid grey; ';
-    $nextcolumn .= 'width:' . $roundedpercentage2 . '%;">';
-    $nextcolumn .= '</div></div><div class="percentvalue" style="position:relative; float:left; margin-left:10px">' . $covfile['branchpercentcoverage'] . '%</div></div>';
-    $row[] = $nextcolumn;
-
-    // Next column (branch not covered)
-    $nextcolumn2 = '';
-    if ($coveragetype == 'gcov') {
-        $nextcolumn2 = '<span';
-        if ($covfile['covered'] == 0) {
-            $nextcolumn2 .= ' class="error">' . $covfile['branchestested'] . '</span>';
-        } else {
-            // covered > 0
-
-            switch ($status) {
-                case 0:
-                    $nextcolumn2 .= ' class="error">';
-                    break;
-                case 1:
-                    $nextcolumn2 .= ' class="error">';
-                    break;
-                case 2:
-                    $nextcolumn2 .= ' class="error">';
-                    break;
-                case 3:
-                    $nextcolumn2 .= ' class="warning">';
-                    break;
-                case 4:
-                    $nextcolumn2 .= ' class="normal">';
-                    break;
-                case 5:
-                    $nextcolumn2 .= ' class="normal">';
-                    break;
-                case 6:
-                case -1:
-                    if (($covfile['branchcoveragemetric'] < $_GET['metricerror'])) {
-                        $nextcolumn2 .= ' class="error">'; //low
-                    } elseif ($covfile['branchcoveragemetric'] == 1.0) {
-                        $nextcolumn2 .= ' class="normal">'; //complete
-                    } elseif ($covfile['branchcoveragemetric'] >= $_GET['metricpass']) {
-                        $nextcolumn2 .= ' class="normal">'; // satisfactory
-                    } else {
-                        $nextcolumn2 .= ' class="warning">'; // medium
-                    }
-                    break;
-            }
-            $totalloc = @$covfile['branchestested'] + @$covfile['branchesuntested'];
-            $nextcolumn2 .= $covfile['branchesuntested'] . '/' . $totalloc . '</span>';
+    if($covfile['branchestested'] + $covfile['branchesuntested'] > 0 && $coveragetype == 'gcov') {
+        $nextcolumn = '<div style="position:relative; width: 190px;">
+           <div style="position:relative; float:left;
+           width: 123px; height: 12px; background: #bdbdbd url(\'img/progressbar.gif\') top left no-repeat;">
+           <div class=';
+        switch ($status) {
+            case 0:
+                $nextcolumn .= '"error" ';
+                break;
+            case 1:
+                $nextcolumn .= '"error" ';
+                break;
+            case 2:
+                $nextcolumn .= '"error" ';
+                break;
+            case 3:
+                $nextcolumn .= '"warning" ';
+                break;
+            case 4:
+                $nextcolumn .= '"normal" ';
+                break;
+            case 5:
+                $nextcolumn .= '"normal" ';
+                break;
+            case 6:
+            case -1:
+                if (($covfile['branchcoveragemetric'] < $_GET['metricerror'])) {
+                    $nextcolumn .= '"error"'; //low
+                } elseif ($covfile['branchcoveragemetric'] == 1.0) {
+                    $nextcolumn .= '"normal"'; //complete
+                } elseif ($covfile['branchcoveragemetric'] >= $_GET['metricpass']) {
+                    $nextcolumn .= '"normal"'; // satisfactory
+                } else {
+                    $nextcolumn .= '"warning"'; // medium
+                }
+                break;
         }
-        $row[] = $nextcolumn2;
+        $nextcolumn .= 'style="height: 10px;margin-left:1px; ';
+        $nextcolumn .= 'border-top:1px solid grey; border-top:1px solid grey; ';
+        $nextcolumn .= 'width:' . $roundedpercentage2 . '%;">';
+        $nextcolumn .= '</div></div><div class="percentvalue" style="position:relative; float:left; margin-left:10px">' . $covfile['branchpercentcoverage'] . '%</div></div>';
+        $row[] = $nextcolumn;
+
+        // Next column (branch not covered)
+        $nextcolumn2 = '';
+        if ($coveragetype == 'gcov') {
+            $nextcolumn2 = '<span';
+            if ($covfile['covered'] == 0) {
+                $nextcolumn2 .= ' class="error">' . $covfile['branchestested'] . '</span>';
+            } else {
+                // covered > 0
+
+                switch ($status) {
+                    case 0:
+                        $nextcolumn2 .= ' class="error">';
+                        break;
+                    case 1:
+                        $nextcolumn2 .= ' class="error">';
+                        break;
+                    case 2:
+                        $nextcolumn2 .= ' class="error">';
+                        break;
+                    case 3:
+                        $nextcolumn2 .= ' class="warning">';
+                        break;
+                    case 4:
+                        $nextcolumn2 .= ' class="normal">';
+                        break;
+                    case 5:
+                        $nextcolumn2 .= ' class="normal">';
+                        break;
+                    case 6:
+                    case -1:
+                        if (($covfile['branchcoveragemetric'] < $_GET['metricerror'])) {
+                            $nextcolumn2 .= ' class="error">'; //low
+                        } elseif ($covfile['branchcoveragemetric'] == 1.0) {
+                            $nextcolumn2 .= ' class="normal">'; //complete
+                        } elseif ($covfile['branchcoveragemetric'] >= $_GET['metricpass']) {
+                            $nextcolumn2 .= ' class="normal">'; // satisfactory
+                        } else {
+                            $nextcolumn2 .= ' class="warning">'; // medium
+                        }
+                        break;
+                }
+                $totalloc = @$covfile['branchestested'] + @$covfile['branchesuntested'];
+                $nextcolumn2 .= $covfile['branchesuntested'] . '/' . $totalloc . '</span>';
+            }
+            $row[] = $nextcolumn2;
+        }
     }
 
     // Fifth column (Priority)
