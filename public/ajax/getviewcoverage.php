@@ -423,7 +423,7 @@ if ($status == -1) {
         $directory_array[$fullpath]['coveragemetric'] = sprintf('%3.2f', $covdir['coveragemetric'] / $covdir['nfiles']);
 
         // Compute the branch average
-        if($coveragetype == 'gcov') {
+        if ($coveragetype == 'gcov') {
             $directory_array[$fullpath]['branchpercentcoverage'] = sprintf('%3.2f',
                 100.0 * ($covdir['branchestested'] / ($covdir['branchestested'] + $covdir['branchesuntested'])));
             $directory_array[$fullpath]['branchcoveragemetric'] = sprintf('%3.2f', $covdir['branchcoveragemetric']);
@@ -517,7 +517,7 @@ foreach ($covfile_array as $covfile) {
     };
 
     // For display branch purposes
-    if($coveragetype == 'gcov') {
+    if ($coveragetype == 'gcov') {
         $roundedpercentage2 = round($covfile['branchpercentcoverage']);
         if ($roundedpercentage2 > 98) {
             $roundedpercentage2 = 98;
@@ -758,7 +758,7 @@ foreach ($covfile_array as $covfile) {
     }
 
     //Next column (Branch Percentage)
-    if($coveragetype == 'gcov') {
+    if ($coveragetype == 'gcov') {
         $nextcolumn = '<div style="position:relative; width: 190px;">
            <div style="position:relative; float:left;
            width: 123px; height: 12px; background: #bdbdbd url(\'img/progressbar.gif\') top left no-repeat;">
