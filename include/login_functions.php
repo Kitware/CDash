@@ -368,28 +368,6 @@ function crowdUsernameFromEmail($email, $baseUri, $session) {
     return "";
 }
 
-function crowdInfoFromUsername($username, $baseUri, $session) {
-    $target = $baseUri . '/user?username=tommy';
-
-    $response = $session->get(
-        $target
-    );
-
-    if ($response->status_code === 200) {
-        $data = json_decode($response->body, true);
-        if ($data) {
-            return $data;
-        }
-    } else if ($response->status_code === 400) {
-        error_log('User '. $username . ' not found.');
-    } else {
-        error_log('Unknown error occurred looking up ' . $username . ' in Crowd.');
-    }
-
-    $loginerror = 'Unable to lookup user info';
-    return;
-}
-
 function crowdInfoFromToken($token, $baseUri, $session) {
     $target = $baseUri.'/session';
     $response = $session->get($target.'/'.$token.'?expand=attributes');
