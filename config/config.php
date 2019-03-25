@@ -186,11 +186,11 @@ $CDASH_CROWD_AUTHENTICATOR = 'crowdAuthenticate';
 
 // Crowd - uses pear/Services_Atlassian_Crowd php lib
 $CDASH_CROWD_TOKEN_NAME = 'crowd.token_key';
-$CDASH_CROWD_APP_USERNAME = 'foo';
-$CDASH_CROWD_APP_PASSWORD = 'secretbar';
-$CDASH_CROWD_URL = 'https://crowd.example.com';
+$CDASH_CROWD_APP_USERNAME = '';
+$CDASH_CROWD_APP_PASSWORD = '';
+$CDASH_CROWD_URL = '';
 $CDASH_CROWD_API_URI = '/crowd/rest/usermanagement/latest';
-$CDASH_CROWD_CA_CERT = 'path/to/ca.crt';
+$CDASH_CROWD_CA_CERT = '';
 
 // Extends the default set of authenticators
 $CDASH_AUTHENTICATORS = array();
