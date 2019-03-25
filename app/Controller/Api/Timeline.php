@@ -38,9 +38,8 @@ class Timeline extends Index
     private $timeToDate;
 
     const ERROR = 0;
-    const WARNING = 1;
-    const FAILURE = 2;
-    const CLEAN = 3;
+    const FAILURE = 1;
+    const CLEAN = 2;
 
     public function __construct(Database $db, Project $project)
     {
@@ -89,13 +88,11 @@ class Timeline extends Index
         if (array_key_exists('colorblind', $this->filterdata) &&
                 $this->filterdata['colorblind']) {
             $this->colors[self::ERROR] = '#fc8d59';
-            $this->colors[self::WARNING] = '#ffffbf';
-            $this->colors[self::FAILURE] = '#fee090';
+            $this->colors[self::FAILURE] = '#ffffbf';
             $this->colors[self::CLEAN] = '#91bfdb';
         } else {
             $this->colors[self::ERROR] = '#de6868';
-            $this->colors[self::WARNING] = '#fd9e40';
-            $this->colors[self::FAILURE] = '#ffff99';
+            $this->colors[self::FAILURE] = '#fd9e40';
             $this->colors[self::CLEAN] = '#bfefbf';
         }
     }
@@ -133,10 +130,6 @@ class Timeline extends Index
                 'prettyname' => 'Errors',
             ],
             [
-                'name' => 'buildwarnings',
-                'prettyname' => 'Warnings',
-            ],
-            [
                 'name' => 'testfailed',
                 'prettyname' => 'Test Failures',
             ]
@@ -161,7 +154,6 @@ class Timeline extends Index
         $response = $this->getTimelineChartData($stmt);
         $response['colors'] = [
             $this->colors[self::ERROR],
-            $this->colors[self::WARNING],
             $this->colors[self::FAILURE],
             $this->colors[self::CLEAN]
         ];
@@ -199,7 +191,6 @@ class Timeline extends Index
         $response = $this->getTimelineChartData($stmt);
         $response['colors'] = [
             $this->colors[self::ERROR],
-            $this->colors[self::WARNING],
             $this->colors[self::CLEAN]
         ];
         return $response;
@@ -225,17 +216,12 @@ class Timeline extends Index
                 'prettyname' => 'Errors',
             ],
             [
-                'name' => 'buildwarnings',
-                'prettyname' => 'Warnings',
-            ],
-            [
                 'name' => 'testfailed',
                 'prettyname' => 'Test Failures',
             ]
         ];
         $colors = [
             $this->colors[self::ERROR],
-            $this->colors[self::WARNING],
             $this->colors[self::FAILURE],
             $this->colors[self::CLEAN]
         ];
@@ -245,7 +231,7 @@ class Timeline extends Index
         if ($group_type == 'Daily') {
             // Query for defects on builds from this group.
             $stmt = $this->db->prepare('
-                    SELECT b.id, b.starttime, b.builderrors, b.buildwarnings,
+                    SELECT b.id, b.starttime, b.builderrors,
                     b.testfailed
                     FROM build b
                     JOIN build2group b2g ON b2g.buildid = b.id
@@ -289,7 +275,6 @@ class Timeline extends Index
                     // Isolate the build fields that we need to make the chart.
                     $build = [];
                     $build['builderrors'] = $dynamic_build['countbuilderrors'];
-                    $build['buildwarnings'] = $dynamic_build['countbuildwarnings'];
                     $build['testfailed'] = $dynamic_build['counttestsfailed'];
                     $build['starttime'] = $build_time;
                     $builds[] = $build;
