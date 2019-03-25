@@ -263,7 +263,8 @@ function ldapAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
     return false;
 }
 
-function crowdRequestSession($config) {
+function crowdRequestSession($config)
+{
     $request_session = new Requests_Session(
         $config->get('CDASH_CROWD_URL')
     );
@@ -288,7 +289,8 @@ function crowdRequestSession($config) {
     return $request_session;
 }
 
-function crowdValidationFactors() {
+function crowdValidationFactors()
+{
     return array(
         'validationFactors' => array(
             array(
@@ -299,9 +301,10 @@ function crowdValidationFactors() {
     );
 }
 
-function crowdUsernameAuthenticate($username, $password, $baseUri, $session) {
+function crowdUsernameAuthenticate($username, $password, $baseUri, $session)
+{
     $target = $baseUri . '/session';
-    $payload = array (
+    $payload = array(
         'username' => $username,
         'password' => $password,
         'validation-factors' => crowdValidationFactors(),
@@ -320,7 +323,7 @@ function crowdUsernameAuthenticate($username, $password, $baseUri, $session) {
         } else {
             $loginerror = 'Authentication successful, but unable to get token';
         }
-    } else if ($response->status_code === 400) {
+    } elseif ($response->status_code === 400) {
         // Authentication details incorrect
         error_log('Invalid username or password for user ' . $username);
         $loginerror = 'Invalid username or password.';
@@ -334,11 +337,12 @@ function crowdUsernameAuthenticate($username, $password, $baseUri, $session) {
     return "";
 }
 
-function crowdUsernameFromEmail($email, $baseUri, $session) {
+function crowdUsernameFromEmail($email, $baseUri, $session)
+{
     $target = $baseUri . '/search?entity-type=user&expand=attributes';
-    $payload = array (
+    $payload = array(
         'restriction-type' => 'property-search-restriction',
-        'property' => array (
+        'property' => array(
             'name' => 'email',
             'type' => 'string'
         ),
@@ -358,7 +362,7 @@ function crowdUsernameFromEmail($email, $baseUri, $session) {
             $user = $data['users'][0];
             return $user['name'];
         }
-    } else if ($response->status_code === 409) {
+    } elseif ($response->status_code === 409) {
         error_log('Entity type unknown to Crowd when searching for username.');
     } else {
         error_log('Unknown error occurred looking up username from Crowd.');
@@ -368,14 +372,15 @@ function crowdUsernameFromEmail($email, $baseUri, $session) {
     return "";
 }
 
-function crowdInfoFromToken($token, $baseUri, $session) {
+function crowdInfoFromToken($token, $baseUri, $session)
+{
     $target = $baseUri.'/session';
     $response = $session->get($target.'/'.$token.'?expand=attributes');
 
     if ($response->status_code === 200) {
         $data = json_decode($response->body, true);
         return $data['user'];
-    } else if ($response->status_code === 404) {
+    } elseif ($response->status_code === 404) {
         error_log('Unable to get user info from token.');
     } else {
         error_log('Unknown error info via token.');
@@ -384,7 +389,8 @@ function crowdInfoFromToken($token, $baseUri, $session) {
     return object();
 }
 
-function isValidCrowdToken($token, $baseUri, $session) {
+function isValidCrowdToken($token, $baseUri, $session)
+{
     $target = $baseUri.'/session'.'/'.$token.'?expand=attributes';
     $response = $session->post(
         $target,
@@ -394,9 +400,9 @@ function isValidCrowdToken($token, $baseUri, $session) {
 
     if ($response->status_code === 200) {
         return true;
-    } else if ($response->status_code === 400) {
+    } elseif ($response->status_code === 400) {
         error_log('Validation factors incorrect.');
-    } else if ($response->status_code === 404) {
+    } elseif ($response->status_code === 404) {
         error_log('Unable to validate token, token not found.');
     } else {
         error_log('Unknown error while validating Crowd token.');
@@ -406,7 +412,8 @@ function isValidCrowdToken($token, $baseUri, $session) {
     return false;
 }
 
-function startSessionFromCrowdInfo ($crowdInfo, $token, $SessionCachePolicy) {
+function startSessionFromCrowdInfo($crowdInfo, $token, $SessionCachePolicy)
+{
     $user = new User();
     $userid = $user->GetIdFromEmail($crowdInfo['email']);
     $passwordHash = User::PasswordHash($token);
@@ -440,7 +447,8 @@ function startSessionFromCrowdInfo ($crowdInfo, $token, $SessionCachePolicy) {
     ]);
 }
 
-function crowdAuthenticate($email, $password, $SessionCachePolicy, $rememberme) {
+function crowdAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
+{
     Requests::register_autoloader();
     /** @var Config $config */
     $config = Config::getInstance();
@@ -452,7 +460,7 @@ function crowdAuthenticate($email, $password, $SessionCachePolicy, $rememberme) 
     $crowdRequest = crowdRequestSession($config);
     $baseUri = $config->get('CDASH_CROWD_API_URI');
 
-    if($email && $password) {
+    if ($email && $password) {
         $username = crowdUsernameFromEmail($email, $baseUri, $crowdRequest);
 
         $token = crowdUsernameAuthenticate(
@@ -509,7 +517,7 @@ function authenticate($email, $password, $SessionCachePolicy, $rememberme)
         );
     } else {
         $authenticated = false;
-        foreach($authenticators as $authenticator) {
+        foreach ($authenticators as $authenticator) {
             $authenticated = call_user_func_array(
                 $authenticator,
                 array(
@@ -558,7 +566,7 @@ function cdash_auth($SessionCachePolicy = 'private_no_expire')
         @$login = $_POST['login'];
         @$passwd = $_POST['passwd'];
         return authenticate($login, $passwd, $SessionCachePolicy, isset($_POST['rememberme']));
-    } else if (isset($_COOKIE[$crowdtoken]) && !isset($_COOKIE[$cookiename])) {
+    } elseif (isset($_COOKIE[$crowdtoken]) && !isset($_COOKIE[$cookiename])) {
         // validate crowd token initially, then piggyback on cdash cookie
         $crowdRequest = crowdRequestSession($config);
         $baseUri = $config->get('CDASH_CROWD_API_URI');
