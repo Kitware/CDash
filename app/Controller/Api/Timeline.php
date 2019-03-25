@@ -338,6 +338,7 @@ class Timeline extends Index
                 if ($build[$key] > 0) {
                     $this->timeData[$start_of_day_ms][$key] += 1;
                     $clean_build = false;
+                    break;
                 }
             }
             if ($this->includeCleanBuilds && $clean_build) {
