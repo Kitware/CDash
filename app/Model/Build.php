@@ -1828,10 +1828,7 @@ class Build
             return false;
         }
         $num_errors = $stmt->fetchColumn();
-        if ($num_errors == -1) {
-            $num_errors = 0;
-        }
-        return $num_errors;
+        return self::ConvertMissingToZero($num_errors);
     }
 
     /** Get the number of warnings for a build */
@@ -1849,10 +1846,7 @@ class Build
         }
 
         $num_warnings = $stmt->fetchColumn();
-        if ($num_warnings == -1) {
-            $num_warnings = 0;
-        }
-        return $num_warnings;
+        return self::ConvertMissingToZero($num_warnings);
     }
 
     /* Return all uploaded files or URLs for this build */
@@ -2009,9 +2003,7 @@ class Build
 
         // Check if we still need to modify builderrors or buildwarnings.
         if (!$errorsHandled) {
-            if ($build['builderrors'] == -1) {
-                $build['builderrors'] = 0;
-            }
+            $build['builderrors'] = self::ConvertMissingToZero($build['builderrors']);
             if ($newErrors > 0) {
                 $numErrors = $build['builderrors'] + $newErrors;
                 $clauses[] = 'builderrors = ?';
@@ -2019,9 +2011,7 @@ class Build
             }
         }
         if (!$warningsHandled) {
-            if ($build['buildwarnings'] == -1) {
-                $build['buildwarnings'] = 0;
-            }
+            $build['buildwarnings'] = self::ConvertMissingToZero($build['buildwarnings']);
             if ($newWarnings > 0) {
                 $numWarnings = $build['buildwarnings'] + $newWarnings;
                 $clauses[] = 'buildwarnings = ?';
@@ -2134,15 +2124,9 @@ class Build
         $parent = $stmt->fetch();
 
         // Don't let the -1 default value screw up our math.
-        if ($parent['testfailed'] == -1) {
-            $parent['testfailed'] = 0;
-        }
-        if ($parent['testnotrun'] == -1) {
-            $parent['testnotrun'] = 0;
-        }
-        if ($parent['testpassed'] == -1) {
-            $parent['testpassed'] = 0;
-        }
+        $parent['testfailed'] = self::ConvertMissingToZero($parent['testfailed']);
+        $parent['testnotrun'] = self::ConvertMissingToZero($parent['testnotrun']);
+        $parent['testpassed'] = self::ConvertMissingToZero($parent['testpassed']);
 
         $numFailed = $newFailed + $parent['testfailed'];
         $numNotRun = $newNotRun + $parent['testnotrun'];
@@ -2248,12 +2232,8 @@ class Build
         $parent = $stmt->fetch();
 
         // Don't let the -1 default value screw up our math.
-        if ($parent['configureerrors'] == -1) {
-            $parent['configureerrors'] = 0;
-        }
-        if ($parent['configurewarnings'] == -1) {
-            $parent['configurewarnings'] = 0;
-        }
+        $parent['configureerrors'] = self::ConvertMissingToZero($parent['configureerrors']);
+        $parent['configurewarnings'] = self::ConvertMissingToZero($parent['configurewarnings']);
 
         $numErrors = $newErrors + $parent['configureerrors'];
         $numWarnings = $newWarnings + $parent['configurewarnings'];
@@ -2822,5 +2802,13 @@ class Build
     {
         $this->BuildUpdate = $buildUpdate;
         return $this;
+    }
+
+    public static function ConvertMissingToZero($value)
+    {
+        if ($value == -1) {
+            $value = 0;
+        }
+        return $value;
     }
 }
