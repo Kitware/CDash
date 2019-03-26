@@ -300,7 +300,7 @@ Show coverage over time
       </xsl:if>  
       <th width="10%" align="center">Priority</th>
       <xsl:if test="/cdash/coverage/userid!=0">
-        <th>Author</th>
+         <th>Author</th>
       </xsl:if>
       <xsl:if test="cdash/coverage/displaylabels=1">
           <th>Labels</th>
