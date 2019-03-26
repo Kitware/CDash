@@ -98,6 +98,7 @@ if (pdo_num_rows($coverage_branches) > 0) {
 /* Sorting */
 $sortby = 'filename';
 if (isset($_GET['iSortCol_0'])) {
+<<<<<<< HEAD
     if (($total_branchsuntested + $total_branchstested) > 0) {
         switch ($_GET['iSortCol_0']) {
             case 0:
@@ -140,6 +141,24 @@ if (isset($_GET['iSortCol_0'])) {
                 $sortby = 'priority';
                 break;
         }
+=======
+    switch ($_GET['iSortCol_0']) {
+        case 0:
+            $sortby = 'filename';
+            break;
+        case 1:
+            $sortby = 'status';
+            break;
+        case 2:
+            $sortby = 'percentage';
+            break;
+        case 3:
+            $sortby = 'lines';
+            break;
+        case 5:
+            $sortby = 'priority';
+            break;
+>>>>>>> origin/master
     }
 }
 
@@ -190,6 +209,7 @@ function sort_percentage_desc($a, $b)
     }
     return $a['percentcoverage'] > $b['percentcoverage'] ? -1 : 1;
 }
+<<<<<<< HEAD
 function sort_branchpercentage_asc($a, $b)
 {
     if ($a['branchpercentcoverage'] == $b['branchpercentcoverage']) {
@@ -204,6 +224,8 @@ function sort_branchpercentage_desc($a, $b)
     }
     return $a['branchpercentcoverage'] > $b['branchpercentcoverage'] ? -1 : 1;
 }
+=======
+>>>>>>> origin/master
 function sort_lines_asc($a, $b)
 {
     if ($a['locuntested'] == $b['locuntested']) {
@@ -375,6 +397,7 @@ while ($coveragefile_array = pdo_fetch_array($coveragefile)) {
         $coveragetype = 'bullseye';
     } else {
         // coverage metric for gcov
+<<<<<<< HEAD
         $metric = 0;
         $covfile['branchesuntested'] = $coveragefile_array['branchsuntested'];
         $covfile['branchestested'] = $coveragefile_array['branchstested'];
@@ -384,6 +407,9 @@ while ($coveragefile_array = pdo_fetch_array($coveragefile)) {
         $covfile['branchpercentcoverage'] = sprintf('%3.2f', $metric * 100);
         $covfile['branchcoveragemetric'] = $metric;
         
+=======
+
+>>>>>>> origin/master
         $covfile['percentcoverage'] = sprintf('%3.2f', $covfile['loctested'] / ($covfile['loctested'] + $covfile['locuntested']) * 100);
         $covfile['coveragemetric'] = ($covfile['loctested'] + 10) / ($covfile['loctested'] + $covfile['locuntested'] + 10);
         $coveragetype = 'gcov';
@@ -550,6 +576,7 @@ foreach ($covfile_array as $covfile) {
         $roundedpercentage = 98;
     };
 
+<<<<<<< HEAD
     // For display branch purposes
     if ($coveragetype == 'gcov') {
         $roundedpercentage2 = round($covfile['branchpercentcoverage']);
@@ -558,6 +585,8 @@ foreach ($covfile_array as $covfile) {
         };
     }
 
+=======
+>>>>>>> origin/master
     $row = array();
 
     // First column (Filename)
@@ -791,6 +820,7 @@ foreach ($covfile_array as $covfile) {
         $row[] = $fourthcolumn;
     }
 
+<<<<<<< HEAD
     //Next column (Branch Percentage)
     if ($coveragetype == 'gcov' && ($total_branchstested + $total_branchsuntested) > 0) {
         $nextcolumn = '<div style="position:relative; width: 190px;">
@@ -881,6 +911,8 @@ foreach ($covfile_array as $covfile) {
         $row[] = $nextcolumn2;
     }
 
+=======
+>>>>>>> origin/master
     // Fifth column (Priority)
     // Get the priority
     $priority = 'NA';
