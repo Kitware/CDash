@@ -8,7 +8,7 @@
       <a href="index.php">All Dashboards</a>
       <a href="user.php?logout=1" ng-if="cdash.user.id > 0">Log Out</a>
     </div>
-    <div ng-if="::cdash.feed_enabled && cdash.public==1" id="feedicon" alt="RSS Feed" title="RSS Feed">
+    <div ng-if="cdash.feed_enabled && cdash.public==1" id="feedicon" alt="RSS Feed" title="RSS Feed">
       <a ng-href="rss/SubmissionRSS{{::cdash.projectname}}.xml">
         <img src="img/feed-icon16x16.png" alt="RSS" width="14" height="14" border="0" />
       </a>
@@ -25,21 +25,21 @@
 
     <div id="headername">
       <span class="projectname">{{::cdash.projectname}}</span>
-      <span ng-if="::cdash.subheadername" id="subheadername">{{::cdash.subprojectname}}</span>
+      <span ng-if="cdash.subheadername" id="subheadername">{{::cdash.subprojectname}}</span>
     </div>
 
     <div class="projectnav clearfix">
       <ul class="projectnav_controls clearfix">
-        <li class="btnprev" ng-if="::!cdash.hidenav">
-          <a ng-if="::cdash.menu.previous"
+        <li class="btnprev" ng-if="!cdash.hidenav">
+          <a ng-if="cdash.menu.previous"
              ng-href="{{::cdash.menu.previous}}{{::cdash.filterurl}}">Prev</a>
           <a ng-if="!cdash.menu.previous && !cdash.menu.noprevious"
              ng-href="index.php?project={{::cdash.projectname_encoded}}&date={{::cdash.previousdate}}{{::cdash.extraurl}}{{::cdash.filterurl}}">
             Prev
           </a>
         </li>
-        <li class="btncurr" ng-if="::!cdash.hidenav">
-          <a ng-if="::cdash.menu.current"
+        <li class="btncurr" ng-if="!cdash.hidenav">
+          <a ng-if="cdash.menu.current"
              ng-href="{{::cdash.menu.current}}{{::cdash.filterurl}}">
             Current
           </a>
@@ -48,8 +48,8 @@
             Current
           </a>
         </li>
-        <li class="btnnext" ng-if="::!cdash.menu.nonext && !cdash.hidenav">
-          <a ng-if="::cdash.menu.next"
+        <li class="btnnext" ng-if="!cdash.menu.nonext && !cdash.hidenav">
+          <a ng-if="cdash.menu.next"
              ng-href="{{::cdash.menu.next}}{{::cdash.filterurl}}">
             Next
           </a>
@@ -63,12 +63,12 @@
 
     <div id="headermenu">
       <ul id="navigation">
-        <li ng-if="::!cdash.noproject">
+        <li ng-if="!cdash.noproject">
           <a ng-href="index.php?project={{::cdash.projectname_encoded}}&date={{::cdash.date}}">
             Dashboard
           </a>
           <ul>
-            <li ng-if="::cdash.menu.subprojects == 1">
+            <li ng-if="cdash.menu.subprojects == 1">
               <a ng-href="viewSubProjects.php?project={{::cdash.projectname_encoded}}&date={{::cdash.date}}">
                 SubProjects
               </a>
@@ -89,11 +89,11 @@
               </a>
             </li>
             <li>
-              <a ng-if="::cdash.parentid <= 0"
+              <a ng-if="cdash.parentid <= 0"
                  ng-href="queryTests.php?project={{::cdash.projectname_encoded}}&date={{::cdash.date}}{{::cdash.extraurl}}{{::cdash.extrafilterurl}}">
                 Tests Query
               </a>
-              <a ng-if="::cdash.parentid > 0"
+              <a ng-if="cdash.parentid > 0"
                  ng-href="queryTests.php?project={{::cdash.projectname_encoded}}&parentid={{::cdash.parentid}}{{::cdash.extraurl}}{{::cdash.extrafilterurl}}">
                 Tests Query
               </a>
@@ -110,18 +110,18 @@
             </li>
           </ul>
         </li>
-        <li id="Back" ng-if="::cdash.menu.back">
+        <li id="Back" ng-if="cdash.menu.back">
           <a ng-href="{{::cdash.menu.back}}{{::cdash.extrafilterurl}}"
              tooltip-popup-delay="1500"
              tooltip-append-to-body="true"
              tooltip-placement="bottom"
              uib-tooltip="Go back up one level in the hierarchy of results">Up</a>
         </li>
-        <li ng-if="::cdash.showcalendar">
+        <li ng-if="cdash.showcalendar">
           <a id="cal" href="" ng-click="toggleCalendar()">Calendar</a>
           <span id="date_now" style="display:none;">{{::cdash.date}}</span>
         </li>
-        <li ng-if="::!cdash.hidenav">
+        <li ng-if="!cdash.hidenav">
           <a href="#">Project</a>
           <ul>
             <li>
@@ -136,12 +136,12 @@
             <li ng-class="::{endsubmenu: cdash.projectrole}">
               <a ng-href="{{::cdash.bugtracker}}">Bug Tracker</a>
             </li>
-            <li ng-if="::!cdash.projectrole" class="endsubmenu">
+            <li ng-if="!cdash.projectrole" class="endsubmenu">
               <a ng-href="subscribeProject.php?projectid={{::cdash.projectid}}">Subscribe</a>
             </li>
           </ul>
         </li>
-        <li ng-if="::cdash.user.admin == 1 && !cdash.noproject" id="admin">
+        <li ng-if="cdash.user.admin == 1 && !cdash.noproject" id="admin">
           <a href="#">Settings</a>
           <ul>
             <li>
