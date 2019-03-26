@@ -212,7 +212,7 @@ class Timeline extends Index
 
         $this->defectTypes = [
             [
-                'name' => 'builderrors',
+                'name' => 'errors',
                 'prettyname' => 'Errors',
             ],
             [
@@ -231,11 +231,13 @@ class Timeline extends Index
         if ($group_type == 'Daily') {
             // Query for defects on builds from this group.
             $stmt = $this->db->prepare('
-                    SELECT b.id, b.starttime, b.builderrors,
-                    b.testfailed
+                    SELECT b.configureerrors, b.builderrors, b.testfailed,
+                           b.starttime, bu.status AS updatestatus
                     FROM build b
                     JOIN build2group b2g ON b2g.buildid = b.id
                     JOIN buildgroup bg ON bg.id = b2g.groupid
+                    LEFT JOIN build2update b2u ON b2u.buildid = b.id
+                    LEFT JOIN buildupdate bu ON bu.id = b2u.updateid
                     WHERE b.projectid = :projectid AND b.parentid IN (0, -1) AND
                     bg.name = :buildgroupname
                     ORDER BY starttime');
@@ -247,7 +249,22 @@ class Timeline extends Index
                 json_error_response('Failed to load results');
                 return [];
             }
-            $response = $this->getTimelineChartData($stmt);
+            $builds = [];
+            while ($row = $stmt->fetch()) {
+                $build = [];
+                $build['errors'] = Build::ConvertMissingToZero($row['builderrors']) +
+                    Build::ConvertMissingToZero($row['configureerrors']);
+                if (strlen($row['updatestatus']) > 0 &&
+                        $row['updatestatus'] != '0'
+                   ) {
+                    $build['errors'] += 1;
+                }
+                $build['testfailed'] = $row['testfailed'];
+                $build['starttime'] = $row['starttime'];
+                $builds[] = $build;
+            }
+
+            $response = $this->getTimelineChartData($builds);
             $response['colors'] = $colors;
             return $response;
         } elseif ($group_type == 'Latest') {
@@ -274,7 +291,9 @@ class Timeline extends Index
                 foreach ($dynamic_builds as $dynamic_build) {
                     // Isolate the build fields that we need to make the chart.
                     $build = [];
-                    $build['builderrors'] = $dynamic_build['countbuilderrors'];
+                    $build['errors'] = Build::ConvertMissingToZero($dynamic_build['countbuilderrors']) +
+                        Build::ConvertMissingToZero($dynamic_build['countconfigureerrors']) +
+                        Build::ConvertMissingToZero($dynamic_build['countupdateerrors']);
                     $build['testfailed'] = $dynamic_build['counttestsfailed'];
                     $build['starttime'] = $build_time;
                     $builds[] = $build;
