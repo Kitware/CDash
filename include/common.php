@@ -1877,8 +1877,6 @@ function begin_JSON_response()
             file_exists("{$root_dir}/public/{$local_file}")
         ) {
             $response[$file_to_check] = $local_file;
-        } else {
-            $response[$file_to_check] = "views/partials/{$file_to_check}.html";
         }
     }
     return $response;
