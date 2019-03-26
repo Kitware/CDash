@@ -49,7 +49,7 @@ $stmt = $pdo->prepare(
      WHERE siteid=:siteid AND b.type=:type AND name=:name AND
      projectid=:projectid AND b.starttime<=:starttime
      $subproj_criteria
-     ORDER BY starttime ASC LIMIT 50");
+     ORDER BY starttime DESC LIMIT 50");
 
 $stmt->bindParam(':siteid', $build->SiteId);
 $stmt->bindParam(':type', $build->Type);

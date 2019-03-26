@@ -23,6 +23,7 @@ use CDash\Collection\TestCollection;
 use CDash\Config;
 use CDash\Database;
 use CDash\Model\BuildGroup;
+use CDash\ServiceContainer;
 use PDO;
 
 class Build
@@ -85,6 +86,7 @@ class Build
     private $Failures;
     private $PDO;
     private $Site;
+    private $BuildUpdate;
 
     public function __construct()
     {
@@ -2155,7 +2157,25 @@ class Build
         // so for now it isn't being updated for parent builds.
     }
 
-    /** Set number of configure warnings for this build. */
+    /** Get/Set number of configure warnings for this build. */
+    public function GetNumberOfConfigureWarnings()
+    {
+        if (!$this->Id || !is_numeric($this->Id)) {
+            return false;
+        }
+
+        $stmt = $this->PDO->prepare(
+            'SELECT configurewarnings FROM build WHERE id = ?');
+        if (!pdo_execute($stmt, [$this->Id])) {
+            return false;
+        }
+        $num_warnings = $stmt->fetchColumn();
+        if ($num_warnings == -1) {
+            $num_warnings = 0;
+        }
+        return $num_warnings;
+    }
+
     public function SetNumberOfConfigureWarnings($numWarnings)
     {
         if (!$this->Id || !is_numeric($this->Id)) {
@@ -2167,7 +2187,25 @@ class Build
         pdo_execute($stmt, [$numWarnings, $this->Id]);
     }
 
-    /** Set number of configure errors for this build. */
+    /** Get/Set number of configure errors for this build. */
+    public function GetNumberOfConfigureErrors()
+    {
+        if (!$this->Id || !is_numeric($this->Id)) {
+            return false;
+        }
+
+        $stmt = $this->PDO->prepare(
+            'SELECT configureerrors FROM build WHERE id = ?');
+        if (!pdo_execute($stmt, [$this->Id])) {
+            return false;
+        }
+        $num_errors = $stmt->fetchColumn();
+        if ($num_errors == -1) {
+            $num_errors = 0;
+        }
+        return $num_errors;
+    }
+
     public function SetNumberOfConfigureErrors($numErrors)
     {
         if (!$this->Id || !is_numeric($this->Id)) {
@@ -2734,5 +2772,55 @@ class Build
                 'INSERT INTO build2group (groupid, buildid)
                 VALUES (?, ?)');
         pdo_execute($stmt, [$this->GroupId, $this->Id]);
+    }
+
+    /**
+     * @return string
+     */
+    public function GetBuildSummaryUrl()
+    {
+        $base = Config::getInstance()->getBaseUrl();
+        return "{$base}/buildSummary.php?buildid={$this->Id}";
+    }
+
+    /**
+     * @return string
+     */
+    public function GetBuildErrorUrl()
+    {
+        $base = Config::getInstance()->getBaseUrl();
+        return "{$base}/viewBuildError.php?buildid={$this->Id}";
+    }
+
+    /**
+     * @return string
+     */
+    public function GetTestUrl()
+    {
+        $base = Config::getInstance()->getBaseUrl();
+        return "{$base}/viewTest.php?buildid={$this->Id}";
+    }
+
+    /**
+     * @return BuildUpdate
+     */
+    public function GetBuildUpdate()
+    {
+        /** @var BuildUpdate $buildUpdate */
+        if (!$this->BuildUpdate) {
+            $buildUpdate = ServiceContainer::instance(BuildUpdate::class);
+            $buildUpdate->BuildId = $this->Id;
+            $buildUpdate->FillFromBuildId();
+
+            $this->BuildUpdate = $buildUpdate;
+        }
+
+        return $this->BuildUpdate;
+    }
+
+    public function SetBuildUpdate(BuildUpdate $buildUpdate)
+    {
+        $this->BuildUpdate = $buildUpdate;
+        return $this;
     }
 }

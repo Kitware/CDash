@@ -21,12 +21,12 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
           version: 18.03.1-ce
-      - run: sudo /etc/init.d/apache2 restart
       - run:
           name: Upgrade Chrome
           command: |
             wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
             sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+            sudo sed -i '/jessie-updates/d' /etc/apt/sources.list
             sudo apt-get update
             sudo apt-get -y install google-chrome-stable
       - run:
@@ -37,6 +37,12 @@ jobs:
             curl -L -o /tmp/docker-$VER.tgz https://download.docker.com/linux/static/stable/x86_64/docker-$VER.tgz
             tar -xz -C /tmp -f /tmp/docker-$VER.tgz
             sudo mv /tmp/docker/* /usr/bin
+      - run:
+          name: Upgrade CMake
+          command: |
+            wget -q -O cmake-linux.sh https://github.com/Kitware/CMake/releases/download/v3.14.0/cmake-3.14.0-Linux-x86_64.sh
+            sudo sh cmake-linux.sh -- --skip-license --prefix=/usr/local
+            rm cmake-linux.sh
       - run: sudo /etc/init.d/apache2 restart
       - run: sudo ln -s /home/kitware/cdash/public /var/www/html/cdash
       - run: chmod a+rwx backup log public/rss public/upload
@@ -49,11 +55,11 @@ jobs:
           background: true
           command: node_modules/.bin/webdriver-manager start
       - run: mkdir _build
-      - run: cd _build && cmake -DCDASH_TESTING_RENAME_LOGS=true -DCDASH_DB_HOST=127.0.0.1 -DCDASH_DIR_NAME=cdash -DCDASH_DB_LOGIN=root -DBUILDNAME="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}_MySQL" -DSITE="CircleCI-2.0" ..
-      - run: cd _build && ctest --extra-verbose --no-compress-output --track Continuous --test-action Test --test-action Submit .
+      # Run the test suite for MySQL
+      - run: /usr/local/bin/ctest -VV -DBUILDNAME="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}_MySQL" -Dpostgres=OFF -S .circleci/ctest_driver_script.cmake
+      # Run the test suite for Postgres
       - run: rm -rf _build && mkdir _build
-      - run: cd _build && cmake -DCDASH_TESTING_RENAME_LOGS=true -DCDASH_DIR_NAME=cdash -DCDASH_DB_TYPE=pgsql -DCDASH_DB_LOGIN=postgres -DBUILDNAME="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}_PostgreSQL" -DSITE="CircleCI-2.0" ..
-      - run: cd _build && ctest --extra-verbose --no-compress-output --track Continuous --test-action Test --test-action Submit .
+      - run: /usr/local/bin/ctest -VV -DBUILDNAME="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}_Postgres" -Dpostgres=ON -S .circleci/ctest_driver_script.cmake
       # Build and push Docker image.
       - run: |
           if [ "${CIRCLE_BRANCH}" == "master" ]; then

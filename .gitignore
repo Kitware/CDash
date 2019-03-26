@@ -8,6 +8,7 @@
 /composer.phar
 /config/config.local.php
 /config/queue.local.php
+/config/*.pem
 /log/
 /nbproject/private/
 /node_modules
