@@ -82,31 +82,64 @@ if (isset($_GET['iDisplayStart']) && $_GET['iDisplayLength'] != '-1') {
     $end = pdo_real_escape_numeric($_GET['iDisplayStart']) + pdo_real_escape_numeric($_GET['iDisplayLength']);
 }
 
+$total_branchsuntested = 0;
+$total_branchstested = 0;
+$sql_branches = "SELECT " .
+    "sum(branchstested) as total_branchstested, sum(branchsuntested) as total_branchsuntested " .
+    "FROM coverage where buildid = '$buildid' " .
+    "group by buildid";
+$coverage_branches = pdo_query($sql_branches);
+if (pdo_num_rows($coverage_branches) > 0) {
+    $coverage_branches_array = pdo_fetch_array($coverage_branches);
+    $total_branchsuntested = $coverage_branches_array['total_branchsuntested'];
+    $total_branchstested = $coverage_branches_array['total_branchstested'];
+}
+
 /* Sorting */
 $sortby = 'filename';
 if (isset($_GET['iSortCol_0'])) {
-    switch ($_GET['iSortCol_0']) {
-        case 0:
-            $sortby = 'filename';
-            break;
-        case 1:
-            $sortby = 'status';
-            break;
-        case 2:
-            $sortby = 'percentage';
-            break;
-        case 3:
-            $sortby = 'lines';
-            break;
-        case 4:
-            $sortby = 'branchpercentage';
-            break;
-        case 5:
-            $sortby = 'branches';
-            break;
-        case 6:
-            $sortby = 'priority';
-            break;
+    if (($total_branchsuntested + $total_branchstested) > 0) {
+        switch ($_GET['iSortCol_0']) {
+            case 0:
+                $sortby = 'filename';
+                break;
+            case 1:
+                $sortby = 'status';
+                break;
+            case 2:
+                $sortby = 'percentage';
+                break;
+            case 3:
+                $sortby = 'lines';
+                break;
+            case 4:
+                $sortby = 'branchpercentage';
+                break;
+            case 5:
+                $sortby = 'branches';
+                break;
+            case 6:
+                $sortby = 'priority';
+                break;
+        }
+    } else {
+        switch ($_GET['iSortCol_0']) {
+            case 0:
+                $sortby = 'filename';
+                break;
+            case 1:
+                $sortby = 'status';
+                break;
+            case 2:
+                $sortby = 'percentage';
+                break;
+            case 3:
+                $sortby = 'lines';
+                break;
+            case 5:
+                $sortby = 'priority';
+                break;
+        }
     }
 }
 
@@ -759,7 +792,7 @@ foreach ($covfile_array as $covfile) {
     }
 
     //Next column (Branch Percentage)
-    if ($coveragetype == 'gcov') {
+    if ($coveragetype == 'gcov' && ($total_branchstested + $total_branchsuntested) > 0) {
         $nextcolumn = '<div style="position:relative; width: 190px;">
            <div style="position:relative; float:left;
            width: 123px; height: 12px; background: #bdbdbd url(\'img/progressbar.gif\') top left no-repeat;">

@@ -69,6 +69,18 @@
                <td align="right"><xsl:value-of select="cdash/coverage/locuntested"/></td>
 
             </tr>
+            <xsl:if test="(cdash/coverage/branchstested + cdash/coverage/branchsuntested) > 0">
+              <tr class="trodd">
+
+                 <td align="left">Tested branches</td>
+                 <td align="right"><xsl:value-of select="cdash/coverage/branchstested"/></td>
+              </tr>
+              <tr class="treven">
+                 <td align="left">Untested branches</td>
+                 <td align="right"><xsl:value-of select="cdash/coverage/branchsuntested"/></td>
+
+              </tr>
+            </xsl:if>
             <tr class="trodd">
                <td align="left">Files Covered</td>
                <td align="center"><xsl:value-of select="cdash/coverage/totalcovered"/> of <xsl:value-of select="cdash/coverage/totalfiles"/></td>
@@ -282,8 +294,10 @@ Show coverage over time
     <!-- gcov -->
     <xsl:if test="cdash/coverage/coveragetype='gcov'">
       <th width="10%" align="center">Lines not covered</th>
-      <th width="10%" align="center">Branch percentage</th>
-      <th width="10%" align="center">Branches not covered</th>
+      <xsl:if test="(cdash/coverage/branchstested + cdash/coverage/branchsuntested) > 0">
+        <th width="10%" align="center">Branch percentage</th>
+        <th width="10%" align="center">Branches not covered</th>
+      </xsl:if>  
       <th width="10%" align="center">Priority</th>
       <xsl:if test="/cdash/coverage/userid!=0">
         <th>Author</th>

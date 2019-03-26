@@ -150,12 +150,15 @@ if ($filtercount > 0) {
 
 // coverage
 $xml .= '<coverage>';
-$coverage = pdo_query("SELECT * FROM coveragesummary WHERE buildid='$buildid'");
+//$coverage = pdo_query("SELECT * FROM coveragesummary WHERE buildid='$buildid'");
+$coverage = pdo_query("SELECT buildid,sum(loctested) as loctested,sum(locuntested) as locuntested,sum(branchstested) as branchstested,sum(branchsuntested) as branchsuntested from coverage WHERE buildid='$buildid' group by buildid");
 $coverage_array = pdo_fetch_array($coverage);
 $xml .= add_XML_value('starttime', date('l, F d Y', strtotime($build_array['starttime'])));
 $xml .= add_XML_value('loctested', $coverage_array['loctested']);
 $xml .= add_XML_value('locuntested', $coverage_array['locuntested']);
 
+$xml .= add_XML_value('branchstested', $coverage_array['branchstested']);
+$xml .= add_XML_value('branchsuntested', $coverage_array['branchsuntested']);
 $percentcoverage = compute_percentcoverage(
     $coverage_array['loctested'], $coverage_array['locuntested']);
 
