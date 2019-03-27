@@ -82,6 +82,7 @@ if (isset($_GET['iDisplayStart']) && $_GET['iDisplayLength'] != '-1') {
     $end = pdo_real_escape_numeric($_GET['iDisplayStart']) + pdo_real_escape_numeric($_GET['iDisplayLength']);
 }
 
+//add columns for branches only if(total_branchsuntested+total_branchstested)>0
 $total_branchsuntested = 0;
 $total_branchstested = 0;
 $sql_branches = "SELECT " .
