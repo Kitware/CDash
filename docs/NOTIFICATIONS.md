@@ -18,10 +18,6 @@ This is a term applied to CTest submissions that require post persistence proces
 
 In git, the person who pushes the change may not be the same person who authors the change. The person who pushes the change shall be known in this document as the commit author.
 
-### Message Decorator
-
-A decorator decorates the message with text as described by the topic.
-
 ### Notification
 
 The notification is the message containing the information intrinsic to the topic. This is usually an email, but we  abstract the concept to support other messaging systems, SMS and Slack for example.
@@ -40,7 +36,7 @@ A user subscribes to topics. Examples of topics are test failures, label subscri
 
 ## High Level Overview
 
-When a CTest document is submitted is submitted the XML handler responsible for creating the CTest submission is passed to a subscription builder. The subscription builder determines the build's project users and the topics that they are subscribed, then proceeds to check the build submission for criteria matching that of each of the subscribers topics. Once the subscriptions have been created and notification builder, in our first case, an email builder is created, it is passed the subscriptions and an email message for each subscriber is constructed. Those messages are then passed to a transport for delivery.
+When a CTest document is submitted the XML handler responsible for creating the CTest submission is passed to a subscription builder. The subscription builder determines the build's project users and the topics that they are subscribed, then proceeds to check the build submission for criteria matching that of each of the subscribers topics. Once the subscriptions have been created and notification builder, in our first case, an email builder is created, it is passed the subscriptions and an email message for each subscriber is constructed. Those messages are then passed to a transport for delivery.
 
 ## Code Examples
 
@@ -118,7 +114,7 @@ public function build()
 ```
 ### Subscriber
 
-A subscriber is some entity that is able to subscribe a submission via topics. Currently CDash has two implementations of a Subscriber; 1) a user; 2) a commit author. Users' topics are set by evaluating the preferences they've set through the CDash UI. Commit authors have a set of topics with which they are provided. Subscribers' topics are evaluated against an actionable submission to determine if the Subscriber is subscribed to any given submission. Example:
+A subscriber is some entity that is able to subscribe to a submission via topics. Currently CDash has two implementations of a Subscriber; 1) a user; 2) a commit author. Users' topics are set by evaluating the preferences they've set through the CDash UI. Commit authors have a set of topics with which they are provided. Subscribers' topics are evaluated against an actionable submission to determine if the Subscriber is subscribed to any given submission. Example:
 
 ```php
 /**
@@ -158,7 +154,7 @@ public function hasBuildTopics(ActionableBuildInterface $handler)
 ```
 ### TopicDecorator
 
-The TopicDecorator acts somewhat like a builder. Its `decorate` method accepts the collection of topics intrinsic to the current submission and a `NotificationsPreferences` object which it uses to how or if to further refine the submission topics. For instance, given a user who wishes to see tests that have been fixed for any given submission, and a submission that contains fixed tests the `TopicDecorator::decorate` method will decorate the appropriate Topic with another topic that further refines that topic to include tests that are fixed.
+The TopicDecorator acts somewhat like a builder. Its `decorate` method accepts the collection of topics intrinsic to the current submission and a `NotificationsPreferences` object which it uses to further refine the submission topics. For instance, given a user who wishes to see tests that have been fixed for any given submission, and a submission that contains fixed tests the `TopicDecorator::decorate` method will decorate the appropriate Topic with another topic that further refines that topic to include tests that are fixed.
 
 ### Topic (for instance, TestFailureTopic)
 ```php
