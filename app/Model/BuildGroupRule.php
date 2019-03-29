@@ -70,7 +70,6 @@ class BuildGroupRule
                   buildtype     = :buildtype AND
                   buildname     = :buildname AND
                   siteid        = :siteid AND
-                  starttime     = :starttime AND
                   endtime       = :endtime');
         $query_params = [
             ':groupid'       => $this->GroupId,
@@ -78,7 +77,6 @@ class BuildGroupRule
             ':buildtype'     => $this->BuildType,
             ':buildname'     => $this->BuildName,
             ':siteid'        => $this->SiteId,
-            ':starttime'     => $this->StartTime,
             ':endtime'       => $this->EndTime
         ];
 
