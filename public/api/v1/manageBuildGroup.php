@@ -161,58 +161,49 @@ foreach ($buildgroups as $buildgroup) {
     if ($buildgroup->GetType() != 'Daily') {
         // Get the rules associated with this dynamic group.
         $dynamic_response = $buildgroup_response;
-
-        $stmt = $pdo->prepare(
-            "SELECT * FROM build2grouprule
-            WHERE groupid = :groupid AND
-                  endtime = '1980-01-01 00:00:00'");
-        if (!$pdo->execute($stmt, [':groupid' => $dynamic_response['id']])) {
-            $error_info = $stmt->errorInfo();
-            $response['error'] = $error_info[2];
-        }
-
-        $rules = [];
-        while ($rule_array = $stmt->fetch()) {
-            $rule = [];
-            $match = $rule_array['buildname'];
+        $rules = $buildgroup->GetRules();
+        $rules_response = [];
+        foreach ($rules as $rule) {
+            $rule_response = [];
+            $match = $rule->BuildName;
             if (!empty($match)) {
                 $match = trim($match, '%');
                 $match = str_replace('%', '*', $match);
             }
-            $rule['match'] = $match;
+            $rule_response['match'] = $match;
 
-            $siteid = $rule_array['siteid'];
+            $siteid = $rule->SiteId;
             if (empty($siteid)) {
-                $rule['sitename'] = 'Any';
-                $rule['siteid'] = 0;
+                $rule_response['sitename'] = 'Any';
+                $rule_response['siteid'] = 0;
             } else {
                 foreach ($sites as $site) {
                     if ($site['id'] == $siteid) {
-                        $rule['sitename'] = $site['name'];
-                        $rule['siteid'] = $site['id'];
+                        $rule_response['sitename'] = $site['name'];
+                        $rule_response['siteid'] = $site['id'];
                         break;
                     }
                 }
             }
 
-            $parentgroupid = $rule_array['parentgroupid'];
+            $parentgroupid = $rule->ParentGroupId;
             if (empty($parentgroupid)) {
-                $rule['parentgroupname'] = 'Any';
-                $rule['parentgroupid'] = 0;
+                $rule_response['parentgroupname'] = 'Any';
+                $rule_response['parentgroupid'] = 0;
             } else {
                 foreach ($buildgroups as $buildgroup) {
                     if ($buildgroup->GetId() == $parentgroupid) {
-                        $rule['parentgroupname'] = $buildgroup->GetName();
-                        $rule['parentgroupid'] = $parentgroupid;
+                        $rule_response['parentgroupname'] = $buildgroup->GetName();
+                        $rule_response['parentgroupid'] = $parentgroupid;
                         break;
                     }
                 }
             }
 
-            $rules[] = $rule;
+            $rules_response[] = $rule_response;
         }
-        if (!empty($rules)) {
-            $dynamic_response['rules'] = $rules;
+        if (!empty($rules_response)) {
+            $dynamic_response['rules'] = $rules_response;
         }
         $dynamics_response[] = $dynamic_response;
     }
