@@ -25,13 +25,19 @@ require_once 'include/version.php';
 use CDash\Config;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildGroupRule;
+use CDash\Model\Site;
 
 // Require administrative access to view this page.
 init_api_request();
 
-$projectid = pdo_real_escape_numeric($_REQUEST['projectid']);
-if (!can_administrate_project($projectid)) {
-    return;
+if (array_key_exists('projectid', $_REQUEST)) {
+    $projectid = pdo_real_escape_numeric($_REQUEST['projectid']);
+    if (!can_administrate_project($projectid)) {
+        return;
+    }
+} else {
+    $project = get_project_from_request();
+    $projectid = $project->Id;
 }
 
 $pdo = get_link_identifier()->getPdo();
@@ -395,6 +401,67 @@ function rest_put($projectid)
 
         if (!$BuildGroup->Save()) {
             json_error_response(['error' => 'Failed to save BuildGroup'], 500);
+        }
+    }
+
+    if (isset($_REQUEST['dynamiclist']) && !empty($_REQUEST['dynamiclist'])) {
+        // Update a list of dynamic builds.
+        $buildgroupid = pdo_real_escape_numeric($_REQUEST['buildgroupid']);
+        $build_group = new BuildGroup();
+        $build_group->SetId($buildgroupid);
+        $old_rules = $build_group->GetRules();
+
+        $new_rules_request = $_REQUEST['dynamiclist'];
+        $now = gmdate(FMT_DATETIME);
+        foreach ($new_rules_request as $new_rule_request) {
+            // Populate a model of the requested rule.
+            $new_rule = new BuildGroupRule();
+            $new_rule->GroupId = $buildgroupid;
+            $new_rule->ProjectId = $projectid;
+            $new_rule->BuildName =
+                isset($new_rule_request['match']) ?
+                convert_wildcards($new_rule_request['match']) : '';
+            $parentgroupid = $new_rule_request['parentgroupid'];
+            if ($parentgroupid > 0) {
+                $new_rule->ParentGroupId = $parentgroupid;
+            }
+            $sitename = $new_rule_request['site'];
+            if ($sitename == 'Any') {
+                $siteid = 0;
+            } else {
+                $site = new Site();
+                $site->Name = $sitename;
+                $siteid = $site->Exists() ? $site->Id : 0;
+            }
+            if ($siteid > 0) {
+                $new_rule->SiteId = $siteid;
+            }
+
+            if ($new_rule->Exists()) {
+                // We already have this rule, no need to add it again.
+                // Remove it from our list of old rules to soft-delete.
+                $idx_to_unset = -1;
+                foreach ($old_rules as $idx => $old_rule) {
+                    if ($old_rule->BuildName == $new_rule->BuildName &&
+                            $old_rule->ParentGroupId == $new_rule->ParentGroupId &&
+                            $old_rule->SiteId == $new_rule->SiteId) {
+                        $idx_to_unset = $idx;
+                        break;
+                    }
+                }
+                if ($idx_to_unset > -1) {
+                    unset($old_rules[$idx_to_unset]);
+                }
+            } else {
+                // Save this new rule.
+                $new_rule->StartTime = $now;
+                $new_rule->Save();
+            }
+        }
+
+        foreach ($old_rules as $old_rule) {
+            // Soft-delete any old rules that weren't included in the new set.
+            $old_rule->Delete(true);
         }
     }
 }
