@@ -1986,6 +1986,10 @@ class Build
             FROM build WHERE id = ? FOR UPDATE');
         pdo_execute($stmt, [$buildid]);
         $build = $stmt->fetch();
+        if ($build === false) {
+            pdo_commit();
+            return;
+        }
 
         // Special case: check if we should move from -1 to 0 errors/warnings.
         $errorsHandled = false;
