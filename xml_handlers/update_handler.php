@@ -138,7 +138,11 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface
                 $project = new Project();
                 $project->Id = $this->projectid;
                 $project->Fill();
-                Repository::compareCommits($this->Update, $project);
+                try {
+                    Repository::compareCommits($this->Update, $project);
+                } catch (\Exception $e) {
+                    // Do nothing.
+                }
             }
 
             // Compute the update statistics
