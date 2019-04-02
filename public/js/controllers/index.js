@@ -249,6 +249,8 @@ CDash.filter("showEmptyBuildsLast", function () {
       $scope.cdash.extratestcolumns += 1;
     }
 
+    $scope.cdash.numcolumns = 14 + $scope.cdash.extratestcolumns + $scope.cdash.displaylabels;
+
     if (!$scope.cdash.feed_enabled) {
       $scope.showFeed = false;
     }

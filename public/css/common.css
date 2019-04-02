@@ -1155,7 +1155,6 @@ textarea {
     padding: 10px;
 }
 
-/* used in overview.php */
 .center-text {
   text-align: center;
 }
@@ -1276,3 +1275,8 @@ textarea {
 
 .missing {background-color: #dfdfdf; }
 .tabb tbody tr.odd td.missing { background-color: #cdcdcd; }
+
+.column-header {
+  text-align: center;
+  cursor: pointer;
+}
