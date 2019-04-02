@@ -139,7 +139,8 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
     "subprojects": {
       "text": "SubProjects",
       "type": "list",
-      "defaultvalue": ""
+      "defaultvalue": "",
+      "content": true
     },
     "testname": {
       "text": "Test Name",
@@ -397,6 +398,14 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
         });
       } else if (filter.hasOwnProperty('compare')) {
         filter.compare = filter.compare.toString();
+      }
+    });
+
+    filterdata.availablenoncontentfilters = filterdata.availablefilters.slice();
+    filterdata.availablenoncontentfilters.forEach(function(availablefilter, index, object) {
+      var filter_definition = $scope.filterdefinitions[availablefilter];
+      if (filter_definition.hasOwnProperty('content') && filter_definition.content) {
+        object.splice(index, 1);
       }
     });
 
