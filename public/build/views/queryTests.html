@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" ng-href="{{cssfile}}" />
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.4.css" />
-    <script src="js/CDash_1531235108962.min.js"></script>
+    <script src="js/CDash_1554221785309.min.js"></script>
     <title ng-bind="title">CDash</title>
   </head>
 
@@ -16,7 +16,7 @@
 
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
 
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1531235108962.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1554221785309.html'"></ng-include>
     <br/>
 
     <div ng-if="cdash.requirelogin != 1 && !loading">
@@ -29,7 +29,7 @@
     <span ng-show="showfilters != 0">Hide Filters</span>
   </a>
 </div>
-<ng-include src="'build/views/partials/filterdataTemplate_1531235108962.html'"></ng-include>
+<ng-include src="'build/views/partials/filterdataTemplate_1554221785309.html'"></ng-include>
 
 <!-- Hide a div for javascript to know if time status is on -->
 <div ng-if="cdash.project.showtesttime == 1" id="showtesttimediv" style="display:none"></div>
@@ -176,6 +176,6 @@
 
     <!-- FOOTER -->
     <br/>
-    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1531235108962.html'"></ng-include>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1554221785309.html'"></ng-include>
   </body>
 </html>
