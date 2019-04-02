@@ -798,7 +798,7 @@ class Index extends ResultsApi
             $compilation_response['time'] = time_difference($buildduration, true);
             $compilation_response['timefull'] = $buildduration;
 
-            if (!$this->includeSubProjects && !$this->excludeSubProjects) {
+            if ($this->childView == 1 || (!$this->includeSubProjects && !$this->excludeSubProjects)) {
                 // Don't show diff when filtering by SubProject.
                 $compilation_response['nerrordiffp'] =
                     $build_array['countbuilderrordiffp'];
@@ -876,7 +876,7 @@ class Index extends ResultsApi
                     $selected_test_duration;
             }
 
-            if (!$this->includeSubProjects && !$this->excludeSubProjects) {
+            if ($this->childView == 1 || (!$this->includeSubProjects && !$this->excludeSubProjects)) {
                 $test_response['nnotrundiffp'] =
                     $build_array['counttestsnotrundiffp'];
                 $test_response['nnotrundiffn'] =
@@ -1006,7 +1006,7 @@ class Index extends ResultsApi
             // Check if this build should be filtered out now that its
             // numbers have been updated by the SubProject include/exclude
             // filter.
-            if (!build_survives_filter($build_response, $this->filterdata)) {
+            if (!build_survives_filters($build_response, $this->filterdata['filters'], $this->filterdata['filtercombine'])) {
                 return false;
             }
         }
@@ -1050,53 +1050,43 @@ class Index extends ResultsApi
 
         // Preserve any filters the user had specified.
         $existing_filter_params = '';
-        $n = 0;
-        $count = count($this->filterdata['filters']);
-        $num_includes = 0;
-        for ($i = 0; $i < $count; $i++) {
-            $filter = $this->filterdata['filters'][$i];
-
-            if ($filter['field'] == 'subprojects') {
-                // If we're filtering subprojects at the parent-level
-                // convert that to the appropriate filter for the child-level.
-                $n++;
-                $compare = 0;
-                if ($filter['compare'] == 92) {
-                    $compare = 62;
-                } elseif ($filter['compare'] == 93) {
-                    $num_includes++;
-                    $compare = 61;
+        $num_filters = 0;
+        foreach ($this->filterdata['filters'] as $filter) {
+            if (array_key_exists('filters', $filter)) {
+                $num_filters++;
+                $num_subfilters = 0;
+                $existing_subfilter_params = '';
+                foreach ($filter['filters'] as $subfilter) {
+                    if ($this->preserveFilterForChildBuild($subfilter)) {
+                        $num_subfilters++;
+                        $existing_subfilter_params .=
+                            "&field{$num_filters}field{$num_subfilters}={$subfilter['field']}" .
+                            "&field{$num_filters}compare{$num_subfilters}={$subfilter['compare']}" .
+                            "&field{$num_filters}value{$num_subfilters}=" . htmlspecialchars($subfilter['value']);
+                    }
                 }
+                if ($num_subfilters > 0) {
+                    $existing_filter_params .= "&field{$num_filters}=block&field{$num_filters}count={$num_subfilters}";
+                    $existing_filter_params .= $existing_subfilter_params;
+                } else {
+                    // No subfilters remain. The whole block should be removed.
+                    $num_filters--;
+                }
+                continue;
+            }
+            if ($this->preserveFilterForChildBuild($filter)) {
+                $num_filters++;
                 $existing_filter_params .=
-                    '&field' . $n . '=' . 'subproject' .
-                    '&compare' . $n . '=' . $compare .
-                    '&value' . $n . '=' . htmlspecialchars($filter['value']);
-            } elseif ($filter['field'] != 'buildname' &&
-                $filter['field'] != 'site' &&
-                $filter['field'] != 'stamp' &&
-                $filter['compare'] != 0 &&
-                $filter['compare'] != 20 &&
-                $filter['compare'] != 40 &&
-                $filter['compare'] != 60 &&
-                $filter['compare'] != 80
-            ) {
-                $n++;
-
-                $existing_filter_params .=
-                    '&field' . $n . '=' . $filter['field'] .
-                    '&compare' . $n . '=' . $filter['compare'] .
-                    '&value' . $n . '=' . htmlspecialchars($filter['value']);
+                    '&field' . $num_filters . '=' . $filter['field'] .
+                    '&compare' . $num_filters . '=' . $filter['compare'] .
+                    '&value' . $num_filters . '=' . htmlspecialchars($filter['value']);
             }
         }
-        if ($n > 0) {
+        if ($num_filters > 0) {
             $existing_filter_params =
-                "&filtercount=$count&showfilters=1$existing_filter_params";
+                "&filtercount=$num_filters&showfilters=1$existing_filter_params";
 
-            // Multiple subproject includes need to be combined with 'or' (not 'and')
-            // at the child level.
-            if ($num_includes > 1) {
-                $existing_filter_params .= '&filtercombine=or';
-            } elseif (!empty($this->filterdata['filtercombine'])) {
+            if (!empty($this->filterdata['filtercombine'])) {
                 $existing_filter_params .=
                     '&filtercombine=' . $this->filterdata['filtercombine'];
             }
@@ -1106,6 +1096,23 @@ class Index extends ResultsApi
         $url = "$baseurl&parentid=$parentid";
         $url .= $existing_filter_params;
         return $url;
+    }
+
+    // Return true if a filter should be passed from parent to child view,
+    // false otherwise.
+    private function preserveFilterForChildBuild($filter)
+    {
+        if ($filter['field'] != 'buildname' &&
+                $filter['field'] != 'site' &&
+                $filter['field'] != 'stamp' &&
+                $filter['compare'] != 0 &&
+                $filter['compare'] != 20 &&
+                $filter['compare'] != 40 &&
+                $filter['compare'] != 60 &&
+                $filter['compare'] != 80) {
+            return true;
+        }
+        return false;
     }
 
     // Find expected builds that haven't submitted yet.
@@ -1214,7 +1221,17 @@ class Index extends ResultsApi
     public function checkForSubProjectFilters()
     {
         $filter_on_labels = false;
+        $filters = [];
         foreach ($this->filterdata['filters'] as $filter) {
+            if (array_key_exists('filters', $filter)) {
+                foreach ($filter['filters'] as $subfilter) {
+                    $filters[] = $subfilter;
+                }
+            } else {
+                $filters[] = $filter;
+            }
+        }
+        foreach ($filters as $filter) {
             if ($filter['field'] == 'subprojects') {
                 if ($filter['compare'] == 92) {
                     $this->excludedSubProjects[] = $filter['value'];
@@ -1225,6 +1242,7 @@ class Index extends ResultsApi
                 $filter_on_labels = true;
             }
         }
+        unset($filters);
         if ($filter_on_labels && $this->project->ShareLabelFilters) {
             $this->shareLabelFilters = true;
             $label_ids_array = get_label_ids_from_filterdata($this->filterdata);

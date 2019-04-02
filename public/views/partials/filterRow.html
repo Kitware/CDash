@@ -1,0 +1,39 @@
+<select id="id_field{{$index+1}}" name="field{{$index+1}}"
+        ng-model="currentFilter.field"
+        ng-change="changeFilter(currentFilter)">
+  <option ng-repeat="availablefilter in filterdata.availablefilters"
+          value="{{availablefilter}}"
+          ng-selected="filterdata.availablefilters[$index] == currentFilter.field">
+    {{filterdefinitions[availablefilter].text}}
+  </option>
+</select>
+
+&nbsp;
+
+<select id="id_compare{{$index+1}}" name="compare{{$index+1}}"
+        ng-model="currentFilter.compare">
+  <option value="0">-- choose comparison --</option>
+  <option ng-repeat="comparison in comparisons[filterdefinitions[currentFilter.field].type]"
+          value="{{comparison.value}}"
+          ng-selected="currentFilter.compare == comparison.value">
+    {{comparison.text}}
+  </option>
+</select>
+
+&nbsp;
+
+<input type="text" size="60" id="id_value{{$index+1}}" name="value{{$index+1}}" value="{{currentFilter.value}}" ng-model="currentFilter.value"></input>
+
+&nbsp;
+
+<button class="btn btn-default btn-xs"
+        name="remove{{$index+1}}"
+        ng-click="removeFilter(group, $index+1)"
+        ng-disabled="$last && $first">
+  <span class="smallicon glyphicon glyphicon-minus"></span>
+</button>
+<button class="btn btn-default btn-xs"
+        name="add{{$index+1}}"
+        ng-click="addFilter(group, $index+1)">
+  <span class="smallicon glyphicon glyphicon-plus"></span>
+</button>

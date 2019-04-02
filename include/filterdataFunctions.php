@@ -352,6 +352,23 @@ class IndexPhpFilters extends DefaultFilters
     }
 }
 
+class IndexChildrenPhpFilters extends IndexPhpFilters
+{
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    public function getDefaultFilter()
+    {
+        return [
+            'field' => 'subprojects',
+            'compare' => 92,
+            'value' => ''
+        ];
+    }
+}
+
 class QueryTestsPhpFilters extends DefaultFilters
 {
     public function getDefaultFilter()
@@ -681,10 +698,12 @@ function createPageSpecificFilters($page_id)
 {
     switch ($page_id) {
         case 'index.php':
-        case 'project.php':
-        case 'indexchildren.php':
         case 'viewBuildGroup.php':
             return new IndexPhpFilters();
+            break;
+
+        case 'indexchildren.php':
+            return new IndexChildrenPhpFilters();
             break;
 
         case 'queryTests.php':
@@ -748,11 +767,23 @@ function filterdata_XML($filterdata)
     $xml .= '<filters>';
 
     foreach ($filters as $filter) {
-        $xml .= '<filter>';
-        $xml .= add_XML_value('field', $filter['field']);
-        $xml .= add_XML_value('compare', $filter['compare']);
-        $xml .= add_XML_value('value', $filter['value']);
-        $xml .= '</filter>';
+        if (array_key_exists('filters', $filter)) {
+            $xml .= '<filter>';
+            foreach ($filter['filters'] as $subfilter) {
+                $xml .= '<subfilter>';
+                $xml .= add_XML_value('field', $subfilter['field']);
+                $xml .= add_XML_value('compare', $subfilter['compare']);
+                $xml .= add_XML_value('value', $subfilter['value']);
+                $xml .= '</subfilter>';
+            }
+            $xml .= '</filter>';
+        } else {
+            $xml .= '<filter>';
+            $xml .= add_XML_value('field', $filter['field']);
+            $xml .= add_XML_value('compare', $filter['compare']);
+            $xml .= add_XML_value('value', $filter['value']);
+            $xml .= '</filter>';
+        }
     }
 
     $xml .= '</filters>';
@@ -932,6 +963,41 @@ function get_sql_compare_and_value($compare, $value)
     return array($sql_compare, $sql_value);
 }
 
+// Parse a filter's field, compare, and value from the request and return an
+// associative array representation of this filter.
+// This function also sets the 'hasdateclause' field in $filterdata
+// if necessary.
+function parse_filter_from_request($field_var, $compare_var, $value_var,
+                                   &$filterdata)
+{
+    $required_params = [$field_var, $compare_var, $value_var];
+    foreach ($required_params as $param) {
+        if (!array_key_exists($param, $_REQUEST)) {
+            return [];
+        }
+    }
+
+    $fieldinfo = htmlspecialchars(pdo_real_escape_string($_REQUEST[$field_var]));
+    $fieldinfo = explode('/', $fieldinfo, 2);
+    $field = $fieldinfo[0];
+    $compare = htmlspecialchars(pdo_real_escape_string($_REQUEST[$compare_var]));
+    $value = htmlspecialchars(pdo_real_escape_string($_REQUEST[$value_var]));
+
+    // The following filter types are considered 'date clauses' so that the
+    // default date clause of "builds from today only" is not used...
+    //
+    if ($field == 'buildstarttime' || $field == 'buildstamp' ||
+            $field == 'revision') {
+        $filterdata['hasdateclause'] = 1;
+    }
+
+    return [
+        'field'   => $field,
+        'compare' => $compare,
+        'value'   => $value
+    ];
+}
+
 // Analyze parameter values given in the URL _REQUEST and fill up a php
 // $filterdata structure with them.
 //
@@ -980,31 +1046,25 @@ function get_filterdata_from_request($page_id = '')
     }
 
     $filtercombine = isset($_REQUEST['filtercombine']) ? htmlspecialchars(pdo_real_escape_string($_REQUEST['filtercombine'])) : 'and';
+    $othercombine = get_othercombine($filtercombine);
 
     for ($i = 1; $i <= $filtercount; ++$i) {
-        if (empty($_REQUEST['field' . $i])) {
-            continue;
+        if (array_key_exists("field{$i}count", $_REQUEST)) {
+            // Handle block of filters.
+            $subfiltercount = pdo_real_escape_numeric(@$_REQUEST["field{$i}count"]);
+            $filter = [
+                'filters' => []
+            ];
+            for ($j = 1; $j <= $subfiltercount; ++$j) {
+                $filter['filters'][] = parse_filter_from_request(
+                        "field{$i}field{$j}", "field{$i}compare${j}",
+                        "field{$i}value{$j}", $filterdata);
+            }
+            $filters[] = $filter;
+        } else {
+            $filters[] = parse_filter_from_request(
+                    "field{$i}", "compare${i}", "value{$i}", $filterdata);
         }
-        $fieldinfo = htmlspecialchars(pdo_real_escape_string($_REQUEST['field' . $i]));
-        $compare = htmlspecialchars(pdo_real_escape_string($_REQUEST['compare' . $i]));
-        $value = htmlspecialchars(pdo_real_escape_string($_REQUEST['value' . $i]));
-
-        $fieldinfo = explode('/', $fieldinfo, 2);
-        $field = $fieldinfo[0];
-
-        // The following filter types are considered 'date clauses' so that the
-        // default date clause of "builds from today only" is not used...
-        //
-        if ($field == 'buildstarttime' || $field == 'buildstamp' ||
-            $field == 'revision') {
-            $filterdata['hasdateclause'] = 1;
-        }
-
-        $filters[] = [
-            'field' => $field,
-            'compare' => $compare,
-            'value' => $value,
-        ];
     }
 
     // If no filters were passed in as parameters,
@@ -1025,6 +1085,7 @@ function get_filterdata_from_request($page_id = '')
     }
 
     $filterdata['filtercombine'] = $filtercombine;
+    $filterdata['othercombine'] = $othercombine;
     $filterdata['filtercount'] = $filtercount;
     $filterdata['filters'] = $filters;
     $filterdata['limit'] = $limit;
@@ -1063,6 +1124,38 @@ function get_filterdata_from_request($page_id = '')
     return $filterdata;
 }
 
+// Returns SQL for a given filter array.
+function generate_filter_sql($filter, $pageSpecificFilters)
+{
+    $field = $filter['field'];
+    $compare = $filter['compare'];
+    $value = $filter['value'];
+
+    $cv = get_sql_compare_and_value($compare, $value);
+    $sql_compare = $cv[0];
+    $sql_value = $cv[1];
+    $sql_field = $pageSpecificFilters->getSqlField($field);
+
+    // Time durations can either be specified as a number of seconds,
+    // or as a string representing a time interval.
+    if (strpos($field, 'duration') !== false) {
+        $input_value = trim($sql_value, "'");
+        $sql_value = get_seconds_from_interval($input_value);
+        if ($input_value !== $sql_value && $field === 'updateduration') {
+            // Update duration is stored as number of minutes (not seconds)
+            // so if we just converted this value from string to seconds
+            // we should also convert it from seconds to minutes here as well.
+            $sql_value /= 60.0;
+        }
+    }
+
+    $sql = '';
+    if ($sql_field != '' && $sql_compare != '') {
+        $sql = "$sql_field $sql_compare $sql_value";
+    }
+    return $sql;
+}
+
 // Returns filter SQL given a populated $filterdata array.
 function generate_filterdata_sql($filterdata)
 {
@@ -1072,55 +1165,43 @@ function generate_filterdata_sql($filterdata)
 
     if (strtolower($filterdata['filtercombine']) == 'or') {
         $sql_combine = 'OR';
+        $sql_other_combine = 'AND';
     } else {
         $sql_combine = 'AND';
+        $sql_other_combine = 'OR';
     }
 
-    $clauses = 0;
+    $clauses = [];
     $pageSpecificFilters = createPageSpecificFilters($filterdata['pageId']);
-    $sql = 'AND (';
 
     foreach ($filterdata['filters'] as $filter) {
-        $field = $filter['field'];
-        $compare = $filter['compare'];
-        $value = $filter['value'];
-
-        $cv = get_sql_compare_and_value($compare, $value);
-        $sql_compare = $cv[0];
-        $sql_value = $cv[1];
-
-        $sql_field = $pageSpecificFilters->getSqlField($field);
-
-        // Time durations can either be specified as a number of seconds,
-        // or as a string representing a time interval.
-        if (strpos($field, 'duration') !== false) {
-            $input_value = trim($sql_value, "'");
-            $sql_value = get_seconds_from_interval($input_value);
-            if ($input_value !== $sql_value && $field === 'updateduration') {
-                // Update duration is stored as number of minutes (not seconds)
-                // so if we just converted this value from string to seconds
-                // we should also convert it from seconds to minutes here as well.
-                $sql_value /= 60.0;
+        if (array_key_exists('filters', $filter)) {
+            // Blocks of filters.
+            $subclauses = [];
+            foreach ($filter['filters'] as $subfilter) {
+                $subclause = generate_filter_sql($subfilter, $pageSpecificFilters);
+                if ($subclause) {
+                    $subclauses[] = $subclause;
+                }
             }
-        }
-
-        if ($sql_field != '' && $sql_compare != '') {
-            if ($clauses > 0) {
-                $sql .= ' ' . $sql_combine . ' ';
+            if (count($subclauses) > 0) {
+                $clauses[] =
+                    '(' . join($subclauses, " $sql_other_combine ") . ')';
             }
-
-            $sql .= $sql_field . ' ' . $sql_compare . ' ' . $sql_value;
-
-            ++$clauses;
+        } else {
+            // Top-level filters.
+            $clause = generate_filter_sql($filter, $pageSpecificFilters);
+            if ($clause) {
+                $clauses[] = $clause;
+            }
         }
     }
 
-    if ($clauses == 0) {
+    if (count($clauses) == 0) {
         $sql = '';
     } else {
-        $sql .= ')';
+        $sql = 'AND (' . join($clauses, " $sql_combine ") . ')';
     }
-
     return $sql;
 }
 
@@ -1173,10 +1254,24 @@ function get_filterurl()
 
 // Returns true if the build should be included based on the specified filters,
 // false otherwise.
-function build_survives_filter($build_response, $filterdata)
+function build_survives_filters($build_response, $filters, $filtercombine)
 {
-    $filters = $filterdata['filters'];
+    $filtercombine = strtolower($filtercombine);
+    $matching_filters_found = false;
     foreach ($filters as $filter) {
+        if (array_key_exists('filters', $filter)) {
+            // Check this sub-block of filters.
+            $othercombine = get_othercombine($filtercombine);
+            $retval = build_survives_filters($build_response, $filter['filters'], $othercombine);
+            if ($filtercombine == 'and' && !$retval) {
+                return false;
+            }
+            if ($filtercombine == 'or' && $retval) {
+                return true;
+            }
+            continue;
+        }
+
         // Get the filter's value for comparison.
         $filter_value = $filter['value'];
 
@@ -1258,40 +1353,95 @@ function build_survives_filter($build_response, $filterdata)
                 break;
         }
 
-        // Compare the build & filter's values, returning false if
-        // they don't match the filter's expectation.
-        switch ($filter['compare']) {
-            case 41:
-                // The filter expects the numbers to be equal.
-                if ($build_value != $filter_value) {
-                    return false;
-                }
-                break;
+        if ($build_value !== false) {
+            $matching_filters_found = true;
+        }
 
-            case 42:
-                // The filter expects the numbers to not be equal.
-                if ($build_value == $filter_value) {
-                    return false;
-                }
-                break;
+        if ($filtercombine === 'or') {
+            // Compare the build & filter's values, returning false if
+            // they don't match the filter's expectation.
+            switch ($filter['compare']) {
+                case 41:
+                    // The filter expects the numbers to be equal.
+                    if ($build_value == $filter_value) {
+                        return true;
+                    }
+                    break;
 
-            case 43:
-                // The filter expects the build value to be greater.
-                if ($build_value <= $filter_value) {
-                    return false;
-                }
-                break;
+                case 42:
+                    // The filter expects the numbers to not be equal.
+                    if ($build_value != $filter_value) {
+                        return true;
+                    }
+                    break;
 
-            case 44:
-                // The filter expects the build value to be lesser.
-                if ($build_value >= $filter_value) {
-                    return false;
-                }
-                break;
+                case 43:
+                    // The filter expects the build value to be greater.
+                    if ($build_value > $filter_value) {
+                        return true;
+                    }
+                    break;
 
-            default:
-                break;
+                case 44:
+                    // The filter expects the build value to be lesser.
+                    if ($build_value < $filter_value) {
+                        return true;
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+        } else {
+            // Compare the build & filter's values, returning false if
+            // they don't match the filter's expectation.
+            switch ($filter['compare']) {
+                case 41:
+                    // The filter expects the numbers to be equal.
+                    if ($build_value != $filter_value) {
+                        return false;
+                    }
+                    break;
+
+                case 42:
+                    // The filter expects the numbers to not be equal.
+                    if ($build_value == $filter_value) {
+                        return false;
+                    }
+                    break;
+
+                case 43:
+                    // The filter expects the build value to be greater.
+                    if ($build_value <= $filter_value) {
+                        return false;
+                    }
+                    break;
+
+                case 44:
+                    // The filter expects the build value to be lesser.
+                    if ($build_value >= $filter_value) {
+                        return false;
+                    }
+                    break;
+
+                default:
+                    break;
+            }
         }
     }
-    return true;
+
+    if ($matching_filters_found && $filtercombine === 'or') {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function get_othercombine($filtercombine)
+{
+    if (strtolower($filtercombine) == 'or') {
+        return 'and';
+    } else {
+        return 'or';
+    }
 }
