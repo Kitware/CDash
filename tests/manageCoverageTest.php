@@ -4,6 +4,9 @@
 // relative to the top of the CDash source tree
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once 'include/common.php';
+
+use CDash\Database;
 
 class ManageCoverageTestCase extends KWWebTestCase
 {
@@ -17,16 +20,7 @@ class ManageCoverageTestCase extends KWWebTestCase
         $this->login();
 
         // Get projectid for InsightExample.
-        $projectid = -1;
-        $content = $this->connect($this->url . '/api/v1/user.php');
-        $jsonobj = json_decode($content, true);
-        foreach ($jsonobj['projects'] as $project) {
-            if ($project['name'] === 'InsightExample') {
-                $projectid = $project['id'];
-                break;
-            }
-        }
-
+        $projectid = get_project_id('InsightExample');
         if ($projectid === -1) {
             $this->fail('Unable to find projectid for InsightExamples');
             return 1;
@@ -40,36 +34,26 @@ class ManageCoverageTestCase extends KWWebTestCase
             return 1;
         }
 
-        $this->login();
-        $content = $this->connect($this->url . "/manageCoverage.php?projectid=$projectid");
-        if (strpos($content, 'Coverage files') === false) {
-            $this->fail("'Coverage files' not found when expected");
-            return 1;
-        }
-
         //get a valid coverage buildid
-        $lines = explode("\n", $content);
-        $rightSpot = false;
-        $buildid = -1;
-        foreach ($lines as $line) {
-            if ($rightSpot === false) {
-                if (strpos($line, 'Choose build') !== false) {
-                    $rightSpot = true;
-                }
-                continue;
-            } else {
-                if (strpos($line, 'option value') !== false) {
-                    preg_match('#option value="([0-9.]+)"#', $line, $matches);
-                    $buildid = $matches[1];
-                    break;
-                }
+        $db = Database::getInstance();
+        $db->getPdo();
+        $stmt = $db->prepare("SELECT id FROM build WHERE name LIKE '%simple' AND projectid = :projectid");
+        $buildid = false;
+        $db->execute($stmt, [':projectid' => $projectid]);
+        $buildid = $stmt->fetchColumn();
+        $retries = 0;
+        while ($buildid === false) {
+            $retries += 1;
+            if ($retries > 10) {
+                $this->fail('Too many attempts to find buildid');
+                return 1;
             }
-        }
-        if ($buildid === -1) {
-            $this->fail('Unable to find a coverage buildid');
-            return 1;
+            sleep(1);
+            $db->execute($stmt, [':projectid' => $projectid]);
+            $buildid = $stmt->fetchColumn();
         }
 
+        $this->login();
         $content = $this->connect($this->url . "/manageCoverage.php?buildid=$buildid&projectid=$projectid");
         if (strpos($content, 'simple.cxx') === false) {
             $this->fail("'simple.cxx' not found when expected for buildid=" . $buildid);
