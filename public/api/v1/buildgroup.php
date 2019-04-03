@@ -175,31 +175,28 @@ function rest_post($pdo, $projectid)
     $error_msg = '';
 
     if (isset($_POST['newbuildgroup'])) {
-        // Create a new buildgroup
+        // Create a new buildgroup or return an existing one.
         $BuildGroup = new BuildGroup();
         $BuildGroup->SetProjectId($projectid);
 
         $name = htmlspecialchars(pdo_real_escape_string($_POST['newbuildgroup']));
         $BuildGroup->SetName($name);
 
-        // Avoid creating a duplicate group.
         if ($BuildGroup->Exists()) {
-            $error_msg =
-                "A group named '$name' already exists for this project.";
-            json_error_response(['error' => $error_msg], 400);
+            $status_code = 200;
+        } else {
+            $status_code = 201;
+            $type = htmlspecialchars(pdo_real_escape_string($_POST['type']));
+            $BuildGroup->SetType($type);
+            $BuildGroup->Save();
         }
 
-        $type = htmlspecialchars(pdo_real_escape_string($_POST['type']));
-        $BuildGroup->SetType($type);
-        $BuildGroup->Save();
-
-        // Respond with a JSON representation of this new buildgroup
+        // Respond with a JSON representation of this buildgroup.
         $response = [];
         $response['id'] = $BuildGroup->GetId();
         $response['name'] = $BuildGroup->GetName();
         $response['autoremovetimeframe'] = $BuildGroup->GetAutoRemoveTimeFrame();
-        echo json_encode(cast_data_for_JSON($response));
-        return;
+        json_error_response($response, $status_code);
     }
 
     if (isset($_POST['newLayout'])) {
