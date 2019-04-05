@@ -162,6 +162,9 @@ function ldapAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
 
     // Bind as the LDAP user if authenticated ldap is enabled
     if ($config->get('CDASH_LDAP_AUTHENTICATED')) {
+        if ($config->get('CDASH_LDAP_STARTTLS')) {
+           ldap_start_tls($ldap);
+        }
         ldap_bind(
             $ldap,
             $config->get('CDASH_LDAP_BIND_DN'),
