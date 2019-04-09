@@ -790,23 +790,6 @@ class Build
         }
 
         if (!$this->Exists()) {
-            // Make sure this build has a type.
-            if (strlen($this->Type) == 0) {
-                $this->Type = extract_type_from_buildstamp($this->Stamp);
-            }
-
-            // Check if this build should be a child build.
-            $this->SetParentId(0);
-            $justCreatedParent = false;
-            if ($this->SubProjectName) {
-                $this->SetParentId($this->LookupParentBuildId());
-                if ($this->ParentId == 0) {
-                    // This is the first subproject to submit for a new build.
-                    // Create a new parent build for it.
-                    $justCreatedParent = $this->CreateParentBuild($nbuilderrors, $nbuildwarnings);
-                }
-            }
-
             // Insert the build.
             $build_created = $this->AddBuild($nbuilderrors, $nbuildwarnings);
             if (!$this->Id) {
@@ -835,55 +818,6 @@ class Build
                 // Now that the existing build and its parent (if any) have
                 // been updated we can return early.
                 return true;
-            }
-
-            // Associate the parent with this build's group if necessary.
-            if ($this->ParentId > 0) {
-                $stmt = $this->PDO->prepare(
-                        'SELECT groupid FROM build2group WHERE buildid = ?');
-                pdo_execute($stmt, [$this->ParentId]);
-                $groupid = $stmt->fetchColumn();
-                if ($groupid === false) {
-                    $config = Config::getInstance();
-                    $duplicate_sql = '';
-                    if ($config->get('CDASH_DB_TYPE') !== 'pgsql') {
-                        $duplicate_sql =
-                            'ON DUPLICATE KEY UPDATE groupid = groupid';
-                    }
-                    $stmt = $this->PDO->prepare(
-                            "INSERT INTO build2group (groupid, buildid)
-                            VALUES (?, ?)
-                            $duplicate_sql");
-                    pdo_execute($stmt, [$this->GroupId, $this->ParentId]);
-                }
-            }
-
-            // Add the subproject2build relationship:
-            if ($this->SubProjectId) {
-                $stmt = $this->PDO->prepare(
-                    'INSERT INTO subproject2build (subprojectid,buildid)
-                    VALUES (?, ?)');
-                pdo_execute($stmt, [$this->SubProjectId, $this->Id]);
-            }
-
-            // Save the information
-            if (!empty($this->Information)) {
-                if ($this->ParentId > 0) {
-                    $this->Information->BuildId = $this->ParentId;
-                } else {
-                    $this->Information->BuildId = $this->Id;
-                }
-                $this->Information->Save();
-            }
-
-            // Update parent's tally of total build errors & warnings.
-            if (!$justCreatedParent) {
-                $this->UpdateBuild($this->ParentId, $nbuilderrors, $nbuildwarnings);
-            } elseif ($this->ParentId > 0) {
-                // If we just created a child build, associate it with
-                // the parent's updates (if any).
-
-                BuildUpdate::AssignUpdateToChild($this->Id, $this->ParentId);
             }
         } else {
             // Build already exists.
@@ -1930,6 +1864,7 @@ class Build
             $parent = clone $this;
             $parent->Id = null;
             $parent->ParentId = Build::PARENT_BUILD;
+            $parent->SubProjectId = null;
             $parent->SubProjectName = '';
             $parent->Uuid = '';
             $parent->AddBuild(0, 0);
@@ -2085,6 +2020,8 @@ class Build
         }
 
         pdo_commit();
+
+        $this->SaveInformation();
 
         // Also update the parent if necessary.
         $stmt = $this->PDO->prepare('SELECT parentid FROM build WHERE id = ?');
@@ -2680,11 +2617,20 @@ class Build
         }
 
         // Set ParentId if this is a SubProject build.
+        $justCreatedParent = false;
         if ($this->SubProjectName) {
             $this->SetParentId($this->LookupParentBuildId());
             if ($this->ParentId == 0) {
                 // Parent build doesn't exist yet, create it here.
-                $this->CreateParentBuild($nbuilderrors, $nbuildwarnings);
+                $justCreatedParent = $this->CreateParentBuild($nbuilderrors, $nbuildwarnings);
+            }
+        }
+
+        // Make sure this build has a type.
+        if (strlen($this->Type) == 0) {
+            $this->Type = extract_type_from_buildstamp($this->Stamp);
+            if (!$this->Type) {
+                $this->Type = '';
             }
         }
 
@@ -2723,39 +2669,87 @@ class Build
             if ($stmt->execute($query_params)) {
                 $this->Id = pdo_insert_id('build');
                 $this->PDO->commit();
-                $this->AssignToGroup();
-                return true;
+                $retval = true;
+            } else {
+                // The INSERT statement didn't execute cleanly.
+                $error_info = $stmt->errorInfo();
+                $error = $error_info[2];
+                $this->PDO->rollBack();
+                throw new \Exception($error);
             }
-            // The INSERT statement didn't execute cleanly.
-            $error_info = $stmt->errorInfo();
-            $error = $error_info[2];
-            $this->PDO->rollBack();
-            throw new \Exception($error);
         } catch (\Exception $e) {
             // This error might be due to a unique key violation on the UUID.
             // Check again for a previously existing build.
             $id = Build::GetIdFromUuid($this->Uuid);
             if ($id) {
                 $this->Id = $id;
-                $this->AssignToGroup();
+                $retval = false;
+            } else {
+                // Otherwise log the error and return false.
+                add_log($e->getMessage() . PHP_EOL . $e->getTraceAsString(),
+                        'AddBuild', LOG_ERR, $this->ProjectId);
                 return false;
             }
-            // Otherwise log the error and return false.
-            add_log($e->getMessage() . PHP_EOL . $e->getTraceAsString(),
-                    'AddBuild', LOG_ERR, $this->ProjectId);
-            return false;
         }
+
+        $this->SaveInformation();
+        $this->AssignToGroup();
+
+        if ($this->ParentId > 0 && !$justCreatedParent) {
+            // Update parent's tally of total build errors & warnings.
+            $this->UpdateBuild($this->ParentId, $nbuilderrors, $nbuildwarnings);
+        } elseif ($retval && $this->ParentId > 0) {
+            // If we just created a child build, associate it with
+            // the parent's updates (if any).
+            BuildUpdate::AssignUpdateToChild($this->Id, $this->ParentId);
+        }
+
+        return $retval;
     }
 
     public function AssignToGroup()
     {
+        // Return early if this build already belongs to a group.
+        $exists_stmt = $this->PDO->prepare(
+            'SELECT groupid FROM build2group WHERE buildid = ?');
+        if (!pdo_execute($exists_stmt, [$this->Id])) {
+            return false;
+        }
+        if ($exists_stmt->fetchColumn() !== false) {
+            return false;
+        }
+
         // Find and record the groupid for this build.
         $buildGroup = new BuildGroup();
         $this->GroupId = $buildGroup->GetGroupIdFromRule($this);
+
+        $config = Config::getInstance();
+        $duplicate_sql = '';
+        if ($config->get('CDASH_DB_TYPE') !== 'pgsql') {
+            $duplicate_sql =
+                'ON DUPLICATE KEY UPDATE groupid = groupid';
+        }
         $stmt = $this->PDO->prepare(
-                'INSERT INTO build2group (groupid, buildid)
-                VALUES (?, ?)');
+                "INSERT INTO build2group (groupid, buildid)
+                VALUES (?, ?)
+                $duplicate_sql");
         pdo_execute($stmt, [$this->GroupId, $this->Id]);
+
+        // Associate the parent with this build's group if necessary.
+        if ($this->ParentId > 0) {
+            pdo_execute($exists_stmt, [$this->ParentId]);
+            if ($exists_stmt->fetchColumn() === false) {
+                pdo_execute($stmt, [$this->GroupId, $this->ParentId]);
+            }
+        }
+
+        // Add the subproject2build relationship if necessary.
+        if ($this->SubProjectId) {
+            $stmt = $this->PDO->prepare(
+                'INSERT INTO subproject2build (subprojectid, buildid)
+                VALUES (?, ?)');
+            pdo_execute($stmt, [$this->SubProjectId, $this->Id]);
+        }
     }
 
     /**
@@ -2814,5 +2808,18 @@ class Build
             $value = 0;
         }
         return $value;
+    }
+
+    protected function SaveInformation()
+    {
+        // Save the information
+        if (!empty($this->Information)) {
+            if ($this->ParentId > 0) {
+                $this->Information->BuildId = $this->ParentId;
+            } else {
+                $this->Information->BuildId = $this->Id;
+            }
+            $this->Information->Save();
+        }
     }
 }
