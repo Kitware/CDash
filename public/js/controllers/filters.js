@@ -139,7 +139,8 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
     "subprojects": {
       "text": "SubProjects",
       "type": "list",
-      "defaultvalue": ""
+      "defaultvalue": "",
+      "content": true
     },
     "testname": {
       "text": "Test Name",
@@ -236,25 +237,29 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
   };
 
   // Add a new row to our list of filters.
-  $scope.addFilter = function(index) {
-    var parent_filter = $scope.filterdata.filters[index-1];
+  $scope.addFilter = function(block, index) {
+    var previous_filter = block.filters[index-1];
+    if (previous_filter.hasOwnProperty('filters')) {
+      var filter_to_copy = previous_filter.filters[previous_filter.filters.length - 1];
+    } else {
+      var filter_to_copy = previous_filter;
+    }
     var filter = {
-      key: parent_filter.key,
-      compare: parent_filter.compare,
-      value: parent_filter.value,
+      field: filter_to_copy.field,
+      compare: filter_to_copy.compare,
+      value: filter_to_copy.value,
     };
-    $scope.filterdata.filters.splice(index, 0, filter);
+    block.filters.splice(index, 0, filter);
   };
 
   // Remove a filter from our list.
-  $scope.removeFilter = function(index) {
-    $scope.filterdata.filters.splice(index-1, 1);
+  $scope.removeFilter = function(block, index) {
+    block.filters.splice(index-1, 1);
   };
 
   // Check to see if the type of a filter was changed by the user.
-  $scope.changeFilter = function(index) {
-    var filter = $scope.filterdata.filters[index-1];
-    var type = $scope.filterdefinitions[filter.key].type;
+  $scope.changeFilter = function(filter) {
+    var type = $scope.filterdefinitions[filter.field].type;
     var comparisons = $scope.comparisons[type];
 
     // Assign the default comparison value to this filter if its type has changed.
@@ -292,7 +297,7 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
     params = window.location.search.replace('?', '').split(/[&;]/g);
 
     // Search for and remove any existing filter params.
-    var filterParams = ['filtercount', 'showfilters', 'field', 'compare', 'value', 'limit'];
+    var filterParams = ['filtercount', 'filtercombine', 'showfilters', 'field', 'compare', 'value', 'limit'];
     // Reverse iteration because this is destructive.
     for (var i = params.length; i-- > 0;) {
       for (var j = 0; j < filterParams.length; j++) {
@@ -320,17 +325,56 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
     }
 
     if (n > 1) {
-      s = s + "&filtercombine=" + $("#id_filtercombine").val();
+      s = s + "&filtercombine=" + $scope.filterdata.filtercombine;
     }
 
     for (var i = 1; i <= n; i++) {
-      s = s + "&field" + i + "=" + escape($scope.filterdata.filters[i-1].key);
-      s = s + "&compare" + i + "=" + escape($scope.filterdata.filters[i-1].compare);
-      s = s + "&value" + i + "=" + escape($scope.filterdata.filters[i-1].value);
+      if ($scope.filterdata.filters[i-1].hasOwnProperty('filters')) {
+        var num_subfilters = $scope.filterdata.filters[i-1].filters.length;
+        if (num_subfilters < 1) {
+          continue;
+        }
+        var prefix = "field" + i;
+        s = s + "&" + prefix + "=block";
+        s = s + "&" + prefix + "count=" + num_subfilters;
+        for (var j = 1; j <= num_subfilters ; j++) {
+          s = s + "&" + prefix + "field" + j + "=" + escape($scope.filterdata.filters[i-1].filters[j-1].field);
+          s = s + "&" + prefix + "compare" + j + "=" + escape($scope.filterdata.filters[i-1].filters[j-1].compare);
+          s = s + "&" + prefix + "value" + j + "=" + escape($scope.filterdata.filters[i-1].filters[j-1].value);
+        }
+      } else {
+        s = s + "&field" + i + "=" + escape($scope.filterdata.filters[i-1].field);
+        s = s + "&compare" + i + "=" + escape($scope.filterdata.filters[i-1].compare);
+        s = s + "&value" + i + "=" + escape($scope.filterdata.filters[i-1].value);
+      }
     }
 
     return s;
   }
+
+  // Add a sub-block of filters to our list.
+  $scope.addFilterBlock = function(index) {
+    var parent_filter = $scope.filterdata.filters[index-1];
+    var or_block = {
+      filters: []
+    };
+    var filter = {
+      field: parent_filter.field,
+      compare: parent_filter.compare,
+      value: parent_filter.value,
+    };
+    or_block.filters.push(filter);
+    $scope.filterdata.filters.splice(index, 0, or_block);
+  };
+
+  // Change the value of filterdata.othercombine.
+  $scope.updateCombine = function(filterdata) {
+    if (filterdata.filtercombine == 'or') {
+      filterdata.othercombine = 'and';
+    } else {
+      filterdata.othercombine = 'or';
+    }
+  };
 
   var url = window.location.pathname;
   var filename = url.substring(url.lastIndexOf('/')+1);
@@ -348,10 +392,38 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
   }).then(function success(s) {
     var filterdata = s.data;
     filterdata.filters.forEach(function(filter) {
-      filter.compare = filter.compare.toString();
+      if (filter.hasOwnProperty('filters')) {
+        filter.filters.forEach(function(subfilter) {
+          subfilter.compare = subfilter.compare.toString();
+        });
+      } else if (filter.hasOwnProperty('compare')) {
+        filter.compare = filter.compare.toString();
+      }
+    });
+
+    filterdata.availablenoncontentfilters = filterdata.availablefilters.slice();
+    filterdata.availablenoncontentfilters.forEach(function(availablefilter, index, object) {
+      var filter_definition = $scope.filterdefinitions[availablefilter];
+      if (filter_definition.hasOwnProperty('content') && filter_definition.content) {
+        object.splice(index, 1);
+      }
     });
 
     $scope.filterdata = filterdata;
     $scope.cdash.page = filename_for_docs;
   });
 }
+
+angular.module('CDash')
+       .directive('filterRow', function (VERSION) {
+  return {
+    templateUrl: 'build/views/partials/filterRow_' + VERSION + '.html'
+  };
+});
+
+angular.module('CDash')
+       .directive('filterButtons', function (VERSION) {
+  return {
+    templateUrl: 'build/views/partials/filterButtons_' + VERSION + '.html'
+  };
+});
