@@ -38,9 +38,8 @@ class Timeline extends Index
     private $timeToDate;
 
     const ERROR = 0;
-    const WARNING = 1;
-    const FAILURE = 2;
-    const CLEAN = 3;
+    const FAILURE = 1;
+    const CLEAN = 2;
 
     public function __construct(Database $db, Project $project)
     {
@@ -89,13 +88,11 @@ class Timeline extends Index
         if (array_key_exists('colorblind', $this->filterdata) &&
                 $this->filterdata['colorblind']) {
             $this->colors[self::ERROR] = '#fc8d59';
-            $this->colors[self::WARNING] = '#ffffbf';
-            $this->colors[self::FAILURE] = '#fee090';
+            $this->colors[self::FAILURE] = '#ffffbf';
             $this->colors[self::CLEAN] = '#91bfdb';
         } else {
             $this->colors[self::ERROR] = '#de6868';
-            $this->colors[self::WARNING] = '#fd9e40';
-            $this->colors[self::FAILURE] = '#ffff99';
+            $this->colors[self::FAILURE] = '#fd9e40';
             $this->colors[self::CLEAN] = '#bfefbf';
         }
     }
@@ -133,10 +130,6 @@ class Timeline extends Index
                 'prettyname' => 'Errors',
             ],
             [
-                'name' => 'buildwarnings',
-                'prettyname' => 'Warnings',
-            ],
-            [
                 'name' => 'testfailed',
                 'prettyname' => 'Test Failures',
             ]
@@ -161,7 +154,6 @@ class Timeline extends Index
         $response = $this->getTimelineChartData($stmt);
         $response['colors'] = [
             $this->colors[self::ERROR],
-            $this->colors[self::WARNING],
             $this->colors[self::FAILURE],
             $this->colors[self::CLEAN]
         ];
@@ -199,7 +191,6 @@ class Timeline extends Index
         $response = $this->getTimelineChartData($stmt);
         $response['colors'] = [
             $this->colors[self::ERROR],
-            $this->colors[self::WARNING],
             $this->colors[self::CLEAN]
         ];
         return $response;
@@ -221,12 +212,8 @@ class Timeline extends Index
 
         $this->defectTypes = [
             [
-                'name' => 'builderrors',
+                'name' => 'errors',
                 'prettyname' => 'Errors',
-            ],
-            [
-                'name' => 'buildwarnings',
-                'prettyname' => 'Warnings',
             ],
             [
                 'name' => 'testfailed',
@@ -235,7 +222,6 @@ class Timeline extends Index
         ];
         $colors = [
             $this->colors[self::ERROR],
-            $this->colors[self::WARNING],
             $this->colors[self::FAILURE],
             $this->colors[self::CLEAN]
         ];
@@ -245,11 +231,13 @@ class Timeline extends Index
         if ($group_type == 'Daily') {
             // Query for defects on builds from this group.
             $stmt = $this->db->prepare('
-                    SELECT b.id, b.starttime, b.builderrors, b.buildwarnings,
-                    b.testfailed
+                    SELECT b.configureerrors, b.builderrors, b.testfailed,
+                           b.starttime, bu.status AS updatestatus
                     FROM build b
                     JOIN build2group b2g ON b2g.buildid = b.id
                     JOIN buildgroup bg ON bg.id = b2g.groupid
+                    LEFT JOIN build2update b2u ON b2u.buildid = b.id
+                    LEFT JOIN buildupdate bu ON bu.id = b2u.updateid
                     WHERE b.projectid = :projectid AND b.parentid IN (0, -1) AND
                     bg.name = :buildgroupname
                     ORDER BY starttime');
@@ -261,7 +249,22 @@ class Timeline extends Index
                 json_error_response('Failed to load results');
                 return [];
             }
-            $response = $this->getTimelineChartData($stmt);
+            $builds = [];
+            while ($row = $stmt->fetch()) {
+                $build = [];
+                $build['errors'] = Build::ConvertMissingToZero($row['builderrors']) +
+                    Build::ConvertMissingToZero($row['configureerrors']);
+                if (strlen($row['updatestatus']) > 0 &&
+                        $row['updatestatus'] != '0'
+                   ) {
+                    $build['errors'] += 1;
+                }
+                $build['testfailed'] = $row['testfailed'];
+                $build['starttime'] = $row['starttime'];
+                $builds[] = $build;
+            }
+
+            $response = $this->getTimelineChartData($builds);
             $response['colors'] = $colors;
             return $response;
         } elseif ($group_type == 'Latest') {
@@ -284,21 +287,19 @@ class Timeline extends Index
                 if (empty($dynamic_builds)) {
                     break;
                 }
-                // We want to associate builds with the testing day they occurred
-                // during (not the next one) so we subtract a day here before
-                // determining "build time".
-                $datetime->sub(new \DateInterval('P1D'));
                 $build_time = gmdate(FMT_DATETIME, $datetime->getTimestamp());
                 foreach ($dynamic_builds as $dynamic_build) {
                     // Isolate the build fields that we need to make the chart.
                     $build = [];
-                    $build['builderrors'] = $dynamic_build['countbuilderrors'];
-                    $build['buildwarnings'] = $dynamic_build['countbuildwarnings'];
+                    $build['errors'] = Build::ConvertMissingToZero($dynamic_build['countbuilderrors']) +
+                        Build::ConvertMissingToZero($dynamic_build['countconfigureerrors']) +
+                        Build::ConvertMissingToZero($dynamic_build['countupdateerrors']);
                     $build['testfailed'] = $dynamic_build['counttestsfailed'];
                     $build['starttime'] = $build_time;
                     $builds[] = $build;
                 }
                 unset($dynamic_builds);
+                $datetime->sub(new \DateInterval('P1D'));
                 $this->endDate = gmdate(FMT_DATETIME, $datetime->getTimestamp());
             }
             $this->endDate = $end_date;
@@ -341,6 +342,7 @@ class Timeline extends Index
                 if ($build[$key] > 0) {
                     $this->timeData[$start_of_day_ms][$key] += 1;
                     $clean_build = false;
+                    break;
                 }
             }
             if ($this->includeCleanBuilds && $clean_build) {

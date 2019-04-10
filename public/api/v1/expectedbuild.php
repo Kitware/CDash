@@ -18,8 +18,9 @@ include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 
-use CDash\Model\Project;
-use CDash\Model\User;
+use CDash\Database;
+use CDash\Model\BuildGroup;
+use CDash\Model\BuildGroupRule;
 
 // Check that required params were specified.
 $rest_json = json_decode(file_get_contents('php://input'), true);
@@ -40,15 +41,12 @@ $buildname = htmlspecialchars(pdo_real_escape_string($_REQUEST['name']));
 $buildtype = htmlspecialchars(pdo_real_escape_string($_REQUEST['type']));
 
 // Make sure the user has access to this project.
-$row = pdo_single_row_query(
-        "SELECT projectid FROM buildgroup WHERE id='$buildgroupid'");
-if (!$row || !array_key_exists('projectid', $row)) {
-    $response['error'] =
-        "Could not find project for buildgroup #$buildgroupid";
-    echo json_encode($response);
-    return;
+$buildgroup = new BuildGroup();
+if (!$buildgroup->SetId($buildgroupid)) {
+    json_error_response(
+        ['error' => "Could not find project for buildgroup #$buildgroupid"]);
 }
-$projectid = $row['projectid'];
+$projectid = $buildgroup->GetProjectId();
 if (!can_access_project($projectid)) {
     return;
 }
@@ -56,25 +54,8 @@ if (!can_access_project($projectid)) {
 $method = $_SERVER['REQUEST_METHOD'];
 
 // Make sure the user is an admin before proceeding with non-read-only methods.
-if ($method != 'GET') {
-    if (!isset($_SESSION['cdash']) || !isset($_SESSION['cdash']['loginid'])) {
-        $response['error'] = 'No session found.';
-        echo json_encode($response);
-        return;
-    }
-    $userid = pdo_real_escape_numeric($_SESSION['cdash']['loginid']);
-
-    $Project = new Project;
-    $User = new User;
-    $User->Id = $userid;
-    $Project->Id = $projectid;
-
-    $role = $Project->GetUserRole($userid);
-    if ($User->IsAdmin() === false && $role <= 1) {
-        $response['error'] = 'You do not have permission to access this page';
-        echo json_encode($response);
-        return;
-    }
+if ($method != 'GET' && !can_administrate_project($projectid)) {
+    return;
 }
 
 // Route based on what type of request this is.
@@ -96,12 +77,12 @@ switch ($method) {
 /* Handle DELETE requests */
 function rest_delete($siteid, $buildgroupid, $buildname, $buildtype)
 {
-    pdo_query(
-        "DELETE FROM build2grouprule
-        WHERE groupid='$buildgroupid' AND
-        buildtype='$buildtype' AND
-        buildname='$buildname' AND siteid='$siteid' AND
-        endtime='1980-01-01 00:00:00'");
+    $rule = new BuildGroupRule();
+    $rule->SiteId = $siteid;
+    $rule->GroupId = $buildgroupid;
+    $rule->BuildName = $buildname;
+    $rule->BuildType = $buildtype;
+    $rule->Delete();
 }
 
 /* Handle GET requests */
@@ -118,18 +99,30 @@ function rest_get($siteid, $buildgroupid, $buildname, $buildtype, $projectid)
     $currentUTCtime = gmdate(FMT_DATETIME, $currenttime);
 
     // Find the last time this expected build submitted.
-    $last_build_row = pdo_single_row_query(
-            "SELECT starttime FROM build
-            WHERE siteid='$siteid' AND type='$buildtype' AND name='$buildname'
-            AND projectid='$projectid' AND starttime<='$currentUTCtime'
-            ORDER BY starttime DESC LIMIT 1");
-    if (!$last_build_row || !array_key_exists('starttime', $last_build_row)) {
+    $db = Database::getInstance();
+    $stmt = $db->prepare(
+        'SELECT starttime FROM build
+        WHERE siteid    = :siteid AND
+              type      = :buildtype AND
+              name      = :buildname AND
+              projectid = :projectid AND
+              starttime <= :starttime
+        ORDER BY starttime DESC LIMIT 1');
+    $query_params = [
+        ':siteid'    => $siteid,
+        ':buildtype' => $buildtype,
+        ':buildname' => $buildname,
+        ':projectid' => $projectid,
+        ':starttime' => $currentUTCtime
+    ];
+    $db->execute($stmt, $query_params);
+    $lastBuildDate = $stmt->fetchColumn();
+    if ($lastBuildDate === false) {
         $response['lastSubmission'] = -1;
         echo json_encode($response);
         return;
     }
 
-    $lastBuildDate = $last_build_row['starttime'];
     $gmtime = strtotime($lastBuildDate . ' UTC');
     $response['lastSubmission'] = date('M j, Y ', $gmtime);
     $response['lastSubmissionDate'] = date('Y-m-d', $gmtime);
@@ -152,18 +145,10 @@ function rest_post($siteid, $buildgroupid, $buildname, $buildtype)
     $newgroupid =
         htmlspecialchars(pdo_real_escape_string($_REQUEST['newgroupid']));
 
-    // Change the group that this rule points to.
-    pdo_query(
-        "UPDATE build2grouprule SET groupid='$newgroupid'
-        WHERE groupid='$buildgroupid' AND
-        buildtype='$buildtype' AND
-        buildname='$buildname' AND siteid='$siteid' AND
-        endtime='1980-01-01 00:00:00'");
-
-    // Move any builds that follow this rule to the new group.
-    pdo_query(
-        "UPDATE build2group SET groupid='$newgroupid'
-        WHERE groupid='$buildgroupid' AND buildid IN
-        (SELECT id FROM build WHERE siteid='$siteid' AND
-         name='$buildname' AND type='$buildtype')");
+    $rule = new BuildGroupRule();
+    $rule->SiteId = $siteid;
+    $rule->GroupId = $buildgroupid;
+    $rule->BuildName = $buildname;
+    $rule->BuildType = $buildtype;
+    $rule->ChangeGroup($newgroupid);
 }

@@ -189,10 +189,13 @@ class Index extends ResultsApi
             LEFT JOIN buildgroupposition AS gp ON (gp.buildgroupid = bg.id)
             WHERE bg.projectid = :projectid AND
                   bg.endtime = :begin_epoch AND
-                  bg.type != 'Daily'");
+                  bg.type != 'Daily' AND
+                  b2gr.starttime < :end_date AND
+                  (b2gr.endtime = :begin_epoch OR b2gr.endtime > :end_date)");
         $query_params = [
             ':projectid' => $this->project->Id,
-            ':begin_epoch' => self::BEGIN_EPOCH
+            ':begin_epoch' => self::BEGIN_EPOCH,
+            ':end_date' => $this->endDate
         ];
         $this->db->execute($stmt, $query_params);
 

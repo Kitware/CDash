@@ -23,6 +23,7 @@ include 'public/login.php';
 
 require_once 'include/version.php';
 
+use CDash\Database;
 use CDash\Model\Project;
 use CDash\Model\User;
 use CDash\Model\UserProject;
@@ -104,7 +105,7 @@ if ($projectid < 1) {
 $currentUTCTime = gmdate(FMT_DATETIME);
 $beginUTCTime = gmdate(FMT_DATETIME, time() - 3600 * 7 * 24); // 7 days
 
-$pdo = get_link_identifier()->getPdo();
+$pdo = Database::getInstance();
 $stmt = $pdo->prepare(
     'SELECT DISTINCT b.siteid, s.name
     FROM build b
@@ -115,7 +116,7 @@ $stmt = $pdo->prepare(
 $stmt->bindParam(':projectid', $projectid);
 $stmt->bindParam(':start', $beginUTCTime);
 $stmt->bindParam(':end', $currentUTCTime);
-if (!pdo_execute($stmt)) {
+if (!$pdo->execute($stmt)) {
     $response['error'] = 'Database error during site lookup';
 }
 
@@ -160,17 +161,19 @@ foreach ($buildgroups as $buildgroup) {
     if ($buildgroup->GetType() != 'Daily') {
         // Get the rules associated with this dynamic group.
         $dynamic_response = $buildgroup_response;
-        $rules_result = pdo_query("
-      SELECT * FROM build2grouprule
-      WHERE groupid='" . $dynamic_response['id'] . "'");
-        $err = pdo_error();
-        if (!empty($err)) {
-            $response['error'] = $err;
+
+        $stmt = $pdo->prepare(
+            "SELECT * FROM build2grouprule
+            WHERE groupid = :groupid AND
+                  endtime = '1980-01-01 00:00:00'");
+        if (!$pdo->execute($stmt, [':groupid' => $dynamic_response['id']])) {
+            $error_info = $stmt->errorInfo();
+            $response['error'] = $error_info[2];
         }
 
-        $rules = array();
-        while ($rule_array = pdo_fetch_array($rules_result)) {
-            $rule = array();
+        $rules = [];
+        while ($rule_array = $stmt->fetch()) {
+            $rule = [];
             $match = $rule_array['buildname'];
             if (!empty($match)) {
                 $match = trim($match, '%');
@@ -225,7 +228,8 @@ $wildcards = pdo_query("
   SELECT bg.name, bg.id, b2gr.buildtype, b2gr.buildname
   FROM build2grouprule AS b2gr, buildgroup AS bg
   WHERE b2gr.buildname LIKE '\%%\%' AND b2gr.groupid = bg.id AND
-        bg.type = 'Daily' AND bg.projectid='$projectid'");
+        bg.type = 'Daily' AND bg.projectid='$projectid' AND
+        b2gr.endtime = '1980-01-01 00:00:00'");
 $err = pdo_error();
 if (!empty($err)) {
     $response['error'] = $err;

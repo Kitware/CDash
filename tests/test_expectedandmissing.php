@@ -7,11 +7,17 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 
+use CDash\Database;
+use CDash\Model\Build;
+use CDash\Model\BuildGroupRule;
+
 class ExpectedAndMissingTestCase extends KWWebTestCase
 {
     public function __construct()
     {
         parent::__construct();
+        $this->PDO = Database::getInstance();
+        $this->PDO->getPdo();
     }
 
     public function testParentExpected()
@@ -28,26 +34,24 @@ class ExpectedAndMissingTestCase extends KWWebTestCase
 
     private function expectedTest($buildname, $projectname)
     {
-        // Mark an old build as expected.
-        $query = "
-            SELECT b.siteid, b.type, g.id AS groupid FROM build AS b
-            INNER JOIN build2group AS b2g ON (b.id=b2g.buildid)
-            INNER JOIN buildgroup AS g ON (b2g.groupid=g.id)
-            WHERE b.name='$buildname'";
+        // Find the id of an old build.
+        $query = 'SELECT id FROM build WHERE name = :buildname';
         if ($projectname === 'Trilinos') {
-            $query .= ' AND b.parentid=-1';
+            $query .= ' AND parentid = -1';
         }
-        $build_row = pdo_single_row_query($query);
+        $stmt = $this->PDO->prepare($query);
+        $this->PDO->execute($stmt, [':buildname' => $buildname]);
+        $buildid = $stmt->fetchColumn();
 
-        $groupid = $build_row['groupid'];
-        $buildtype = $build_row['type'];
-        $siteid = $build_row['siteid'];
-        if (!pdo_query("
-                    INSERT INTO build2grouprule(groupid,buildtype,buildname,siteid,expected,starttime,endtime)
-                    VALUES ('$groupid','$buildtype','$buildname','$siteid','1','2013-01-01 00:00:00','1980-01-01 00:00:00')")
-        ) {
+        $build = new Build();
+        $build->Id = $buildid;
+        $build->FillFromId($buildid);
+
+        // Mark this build as expected.
+        $rule = new BuildGroupRule($build);
+        $rule->Expected = 1;
+        if (!$rule->SetExpected()) {
             $this->fail("Error marking $buildname as expected");
-            return 1;
         }
 
         // Verify that our API lists this build even though it hasn't submitted today.
@@ -57,21 +61,59 @@ class ExpectedAndMissingTestCase extends KWWebTestCase
         $buildgroup = array_pop($jsonobj['buildgroups']);
 
         $found = false;
-        foreach ($buildgroup['builds'] as $build) {
-            if ($build['buildname'] == $buildname && $build['expectedandmissing'] == 1) {
+        foreach ($buildgroup['builds'] as $build_response) {
+            if ($build_response['buildname'] == $buildname && $build_response['expectedandmissing'] == 1) {
                 $found = true;
             }
         }
 
-        // Make it unexpected again.
+        // Verify that the API tells us how long this build has been missing.
+        $url = $this->url . "/api/v1/expectedbuild.php?siteid={$build->SiteId}&groupid={$build->GroupId}&name=" . urlencode($build->Name) . "&type={$build->Type}&currenttime=" . time();
+        $this->get($url);
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        if (!array_key_exists('lastSubmission', $jsonobj)) {
+            $this->fail('No lastSubmission found in response');
+        }
+        if ($jsonobj['lastSubmission'] == -1) {
+            $this->fail('lastSubmission is -1');
+        }
+        if (strlen($jsonobj['lastSubmission']) < 3) {
+            $this->fail('lastSubmission response shorter than expected');
+        }
+
+        // Use the API to soft-delete this rule.
+        $this->login();
+        $this->delete($url);
+        $stmt = $this->PDO->prepare(
+            'SELECT endtime FROM build2grouprule
+            WHERE siteid    = :siteid    AND
+                  groupid   = :groupid   AND
+                  buildname = :buildname AND
+                  buildtype = :buildtype');
+        $query_params = [
+            ':siteid' => $build->SiteId,
+            ':groupid' => $build->GroupId,
+            ':buildname' => $build->Name,
+            ':buildtype' => $build->Type];
+        $this->PDO->execute($stmt, $query_params);
+        $endtime = $stmt->fetchColumn();
+        if ($endtime === false) {
+            $this->fail('No endtime found when expected');
+        }
+        if ($endtime === '1980-01-01 00:00:00') {
+            $this->fail('API failed to soft delete');
+        }
+        if (strlen($endtime) < 3) {
+            $this->fail('endtime shorter than expected');
+        }
+
+        // Make it unexpected again by hard-deleting this buildgroup rule.
+        $rule->Delete(false);
         pdo_query("DELETE FROM build2grouprule WHERE buildname='$buildname'");
 
         if (!$found) {
             $this->fail("Expected missing build '$buildname' not included");
-            return 1;
         }
-
-        $this->pass('Passed');
-        return 0;
     }
 }

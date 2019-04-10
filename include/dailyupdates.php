@@ -25,6 +25,10 @@ include_once 'include/common.php';
 require_once 'include/cdashmail.php';
 
 use CDash\Config;
+use CDash\Database;
+use CDash\Model\BuildGroup;
+use CDash\Model\BuildGroupRule;
+use CDash\Model\Project;
 use CDash\Model\UserProject;
 
 @set_time_limit(0);
@@ -887,10 +891,11 @@ function addDailyChanges($projectid)
     include_once 'include/common.php';
     include_once 'include/sendemail.php';
 
-    $project_array = pdo_fetch_array(pdo_query("SELECT nightlytime,name,autoremovetimeframe,autoremovemaxbuilds,emailadministrator
-                                              FROM project WHERE id='$projectid'"));
+    $project = new Project();
+    $project->Id = $projectid;
+    $project->Fill();
     $date = ''; // now
-    list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $project_array['nightlytime']);
+    list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $project->NightlyTime);
     $date = gmdate(FMT_DATE, $currentstarttime);
 
     // Check if we already have it somwhere
@@ -901,7 +906,7 @@ function addDailyChanges($projectid)
         pdo_query("INSERT INTO dailyupdate (projectid,date,command,type,status)
                VALUES ($projectid,'$date','NA','NA','0')");
         $updateid = pdo_insert_id('dailyupdate');
-        $dates = get_related_dates($project_array['nightlytime'], $date);
+        $dates = get_related_dates($project->NightlyTime, $date);
         $commits = get_repository_commits($projectid, $dates);
 
         // Insert the commits
@@ -940,7 +945,7 @@ function addDailyChanges($projectid)
         }
 
         // If the project has the option to send an email to the author
-        if ($project_array['emailadministrator']) {
+        if ($project->EmailAdministrator) {
             sendEmailUnregisteredUsers($projectid, $cvsauthors);
         }
 
@@ -973,8 +978,8 @@ function addDailyChanges($projectid)
                 $nbuildwarnings = $buildwarning_array[0];
 
                 // Find if the build has any test failings
-                if ($project_array['emailtesttimingchanged']) {
-                    $sql = "SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND (status='failed' OR timestatus>" . qnum($project_array['testtimemaxstatus']) . ')';
+                if ($project->EmailTestTimingChanged) {
+                    $sql = "SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND (status='failed' OR timestatus>" . qnum($project->TestTimeMaxStatus) . ')';
                 } else {
                     $sql = "SELECT count(testid) FROM build2test WHERE buildid='$buildid' AND status='failed'";
                 }
@@ -994,9 +999,33 @@ function addDailyChanges($projectid)
         // Delete expired authentication tokens.
         pdo_query('DELETE FROM authtoken WHERE expires < NOW()');
 
+        // Delete expired buildgroups and rules.
+        $current_date = gmdate(FMT_DATETIME);
+        $datetime = new \DateTime();
+        $datetime->sub(new \DateInterval("P{$project->AutoremoveTimeframe}D"));
+        $cutoff_date = gmdate(FMT_DATETIME, $datetime->getTimestamp());
+        BuildGroupRule::DeleteExpiredRulesForProject($project->Id, $cutoff_date);
+
+        $db = Database::getInstance();
+        $stmt = $db->prepare(
+            "SELECT id FROM buildgroup
+            WHERE projectid = :projectid AND
+                  endtime != '1980-01-01 00:00:00' AND
+                  endtime < :endtime");
+        $query_params = [
+            ':projectid' => $project->Id,
+            ':endtime' => $cutoff_date
+        ];
+        $db->execute($stmt, $query_params);
+        while ($row = $stmt->fetch()) {
+            $buildgroup = new BuildGroup();
+            $buildgroup->SetId($row['id']);
+            $buildgroup->Delete();
+        }
+
         // Remove the first builds of the project
         include_once 'include/autoremove.php';
-        removeFirstBuilds($projectid, $project_array['autoremovetimeframe'], $project_array['autoremovemaxbuilds']);
-        removeBuildsGroupwise($projectid, $project_array['autoremovemaxbuilds']);
+        removeFirstBuilds($projectid, $project->AutoremoveTimeframe, $project->AutoremoveMaxBuilds);
+        removeBuildsGroupwise($projectid, $project->AutoremoveMaxBuilds);
     }
 }

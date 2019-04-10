@@ -341,12 +341,6 @@ class BuildGroup
         $position->Add();
     }
 
-    public function AddRule($rule)
-    {
-        $rule->GroupId = $this->Id;
-        $rule->Add();
-    }
-
     /** Get the next position available for that group */
     public function GetNextPosition()
     {

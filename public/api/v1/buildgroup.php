@@ -24,6 +24,7 @@ require_once 'include/version.php';
 
 use CDash\Config;
 use CDash\Model\BuildGroup;
+use CDash\Model\BuildGroupRule;
 
 // Require administrative access to view this page.
 init_api_request();
@@ -74,7 +75,7 @@ function rest_get($pdo, $projectid)
 
     $stmt = $pdo->prepare(
         "SELECT id, name FROM buildgroup
-        WHERE projectid = ? AND endtime='1980-01-01 00:00:00'");
+        WHERE projectid = ? AND endtime = '1980-01-01 00:00:00'");
     pdo_execute($stmt, [$projectid]);
 
     $dependencies = $BuildGroup->GetDependencies();
@@ -109,6 +110,8 @@ function rest_get($pdo, $projectid)
 /* Handle DELETE requests */
 function rest_delete($pdo)
 {
+    $now = gmdate(FMT_DATETIME);
+
     if (isset($_GET['buildgroupid'])) {
         // Delete the specified BuildGroup.
         $buildgroupid = pdo_real_escape_numeric($_GET['buildgroupid']);
@@ -119,44 +122,41 @@ function rest_delete($pdo)
     }
 
     if (isset($_GET['wildcard'])) {
-        // Delete a wildcard build group rule.
+        // Soft delete a wildcard build group rule.
         $wildcard = json_decode($_GET['wildcard'], true);
-        $buildgroupid = $wildcard['buildgroupid'];
-        $match = isset($wildcard['match']) ? convert_wildcards($wildcard['match']) : '';
-        $buildtype = $wildcard['buildtype'];
-
-        $stmt = $pdo->prepare(
-            'DELETE FROM build2grouprule
-            WHERE groupid = ? AND buildtype = ? AND buildname = ?');
-        if (!pdo_execute($stmt, [$buildgroupid, $buildtype, $match])) {
+        $buildgrouprule = new BuildGroupRule();
+        $buildgrouprule->SiteId = -1;
+        $buildgrouprule->BuildType = $wildcard['buildtype'];
+        $buildgrouprule->BuildName =
+            isset($wildcard['match']) ? convert_wildcards($wildcard['match']) : '';
+        $buildgrouprule->GroupId = $wildcard['buildgroupid'];
+        if (!$buildgrouprule->Delete(true)) {
             json_error_response(['error' => pdo_error()], 500);
         }
     }
 
     if (isset($_GET['dynamic'])) {
-        // Delete a dynamic build group rule.
+        // Soft delete a dynamic build group rule.
+        $buildgrouprule = new BuildGroupRule();
+
         $dynamic = json_decode($_GET['dynamic'], true);
-        $buildgroupid = $dynamic['id'];
+        $buildgrouprule->GroupId = $dynamic['id'];
 
         $rule = json_decode($_GET['rule'], true);
-        $match = isset($rule['match']) ? convert_wildcards($rule['match']) : '';
-        $parentgroupid = $rule['parentgroupid'];
+        $buildgrouprule->BuildName =
+            isset($rule['match']) ? convert_wildcards($rule['match']) : '';
+
         $siteid = $rule['siteid'];
-
-        $sql =
-            'DELETE FROM build2grouprule WHERE groupid = ? AND buildname = ?';
-        $params = [$buildgroupid, $match];
         if ($siteid > 0) {
-            $sql .= ' AND siteid = ?';
-            $params[] = $siteid;
-        }
-        if ($parentgroupid > 0) {
-            $sql .= ' AND parentgroupid = ?';
-            $params[] = $parentgroupid;
+            $buildgrouprule->SiteId = $siteid;
         }
 
-        $stmt = $pdo->prepare($sql);
-        if (!pdo_execute($stmt, $params)) {
+        $parentgroupid = $rule['parentgroupid'];
+        if ($parentgroupid > 0) {
+            $buildgrouprule->ParentGroupId = $parentgroupid;
+        }
+
+        if (!$buildgrouprule->Delete(true)) {
             json_error_response(['error' => pdo_error()], 500);
         }
     }
@@ -165,6 +165,9 @@ function rest_delete($pdo)
 /* Handle POST requests */
 function rest_post($pdo, $projectid)
 {
+    $now = gmdate(FMT_DATETIME);
+    $error_msg = '';
+
     if (isset($_POST['newbuildgroup'])) {
         // Create a new buildgroup
         $BuildGroup = new BuildGroup();
@@ -260,27 +263,29 @@ function rest_post($pdo, $projectid)
 
             // Change the group for this build.
             $stmt = $pdo->prepare(
-                'UPDATE build2group SET groupid = ?
-                WHERE groupid = ? AND buildid = ?');
+                'UPDATE build2group
+                SET groupid = :groupid
+                WHERE groupid = :prevgroupid AND
+                      buildid = :buildid');
+            $query_params = [
+                ':groupid'     => $groupid,
+                ':prevgroupid' => $prevgroupid,
+                ':buildid'     => $buildid
+            ];
             pdo_execute($stmt, [$groupid, $prevgroupid, $buildid]);
 
-            // Delete any previous rules
-            $stmt = $pdo->prepare(
-                'DELETE FROM build2grouprule
-                WHERE groupid = ? AND buildtype = ? AND buildname = ? AND
-                siteid =  ?');
-            pdo_execute($stmt,
-                [$prevgroupid, $Build->Type, $Build->Name, $Build->SiteId]);
+            // Soft delete any previous rules.
+            $buildgrouprule = new BuildGroupRule($Build);
+            $buildgrouprule->Delete(true);
 
-            // Add the new rule
-            $stmt = $pdo->prepare(
-                'INSERT INTO build2grouprule
-                    (groupid, buildtype, buildname, siteid, expected,
-                     starttime, endtime)
-                VALUES (?, ?, ?, ?, ?, ?, ?)');
-            pdo_execute($stmt,
-                [$groupid, $Build->Type, $Build->Name, $Build->SiteId,
-                 $expected, '1980-01-01 00:00:00', '1980-01-01 00:00:00']);
+            // Add the new rule.
+            $buildgrouprule->GroupId = $groupid;
+            $buildgrouprule->Expected = $expected;
+            $buildgrouprule->StartTime = $now;
+            $buildgrouprule->EndTime = '1980-01-01 00:00:00';
+            if (!$buildgrouprule->Save()) {
+                json_error_response(['error' => 'Error saving rule'], 500);
+            }
         }
     }
 
@@ -295,11 +300,15 @@ function rest_post($pdo, $projectid)
 
         $nameMatch = convert_wildcards($_POST['nameMatch']);
         $type = $_POST['type'];
-        $stmt = $pdo->prepare(
-            'INSERT INTO build2grouprule (groupid, buildtype, buildname, siteid)
-            VALUES (?, ?, ?, ?)');
-        if (!pdo_execute($stmt, [$groupid, $type, $nameMatch, -1])) {
-            json_error_response(['error' => pdo_error()], 500);
+
+        $buildgrouprule = new BuildGroupRule();
+        $buildgrouprule->GroupId = $groupid;
+        $buildgrouprule->BuildType = $type;
+        $buildgrouprule->BuildName = $nameMatch;
+        $buildgrouprule->SiteId = -1;
+        $buildgrouprule->StartTime = $now;
+        if (!$buildgrouprule->Save()) {
+            json_error_response(['error' => 'Error saving rule'], 500);
         }
     }
 
@@ -324,12 +333,14 @@ function rest_post($pdo, $projectid)
             $sql_match = convert_wildcards($_POST['match']);
         }
 
-        $stmt = $pdo->prepare(
-            'INSERT INTO build2grouprule
-            (groupid, buildname, siteid, parentgroupid)
-            VALUES (?, ?, ?, ?)');
-        if (!pdo_execute($stmt, [$groupid, $sql_match, $siteid, $parentgroupid])) {
-            json_error_response(['error' => pdo_error()], 500);
+        $buildgrouprule = new BuildGroupRule();
+        $buildgrouprule->GroupId = $groupid;
+        $buildgrouprule->BuildName = $sql_match;
+        $buildgrouprule->SiteId = $siteid;
+        $buildgrouprule->ParentGroupId = $parentgroupid;
+        $buildgrouprule->StartTime = $now;
+        if (!$buildgrouprule->Save()) {
+            json_error_response(['error' => 'Error saving rule'], 500);
         }
 
         // Respond with a JSON representation of this new rule.

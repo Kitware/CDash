@@ -79,7 +79,6 @@ class TimelineTestCase extends KWWebTestCase
 
         $answer_key = [
             'index.php' => [
-                'Warnings' => 1,
                 'Test Failures' => 1
             ],
             'testOverview.php' => [
@@ -88,7 +87,6 @@ class TimelineTestCase extends KWWebTestCase
                 'Passing Tests' => 1
             ],
             'viewBuildGroup.php' => [
-                'Warnings' => 1,
                 'Test Failures' => 1
             ],
         ];
@@ -155,7 +153,6 @@ class TimelineTestCase extends KWWebTestCase
         $answer_key = [
             'index.php' => [
                 'Errors' => 1,
-                'Warnings' => 1,
                 'Test Failures' => 2
             ],
             'testOverview.php' => [
@@ -165,7 +162,6 @@ class TimelineTestCase extends KWWebTestCase
             ],
             'viewBuildGroup.php' => [
                 'Errors' => 1,
-                'Warnings' => 1,
                 'Test Failures' => 2
             ],
         ];
