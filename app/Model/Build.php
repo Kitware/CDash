@@ -2051,7 +2051,7 @@ class Build
             FROM build WHERE id = ? FOR UPDATE');
         pdo_execute($stmt, [$buildid]);
         $build = $stmt->fetch();
-        if ($build === false) {
+        if (!$build) {
             pdo_commit();
             return;
         }
