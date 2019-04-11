@@ -2,7 +2,6 @@
 namespace CDash\Messaging\Topic;
 
 use CDash\Model\Build;
-use CDash\Collection\CallableCollection;
 use CDash\Model\SubscriberInterface;
 
 interface TopicInterface
@@ -45,11 +44,6 @@ interface TopicInterface
      * @return int
      */
     public function getTopicCount();
-
-    /**
-     * @return CallableCollection
-     */
-    public function getTopicCallables();
 
     /**
      * @param $item

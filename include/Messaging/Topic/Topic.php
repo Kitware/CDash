@@ -4,7 +4,6 @@ namespace CDash\Messaging\Topic;
 use CDash\Model\ActionableTypes;
 use CDash\Model\Build;
 use CDash\Collection\BuildCollection;
-use CDash\Collection\CallableCollection;
 use CDash\Collection\CollectionInterface;
 use CDash\Model\SubscriberInterface;
 
@@ -178,14 +177,6 @@ abstract class Topic implements TopicInterface
             return $this->topic->getTopicCount();
         }
         return 0;
-    }
-
-    public function getTopicCallables()
-    {
-        if (!$this->topicCallables) {
-            $this->topicCallables = new CallableCollection();
-        }
-        return $this->topicCallables;
     }
 
     public function hasSubscriberAlreadyBeenNotified(Build $build)

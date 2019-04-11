@@ -298,29 +298,6 @@ class UserProject
         return true;
     }
 
-    /** Get the email category from the user id */
-    public function GetEmailCategory()
-    {
-        if (!$this->UserId) {
-            echo 'UserProject GetEmailCategory(): UserId not set';
-            return false;
-        }
-
-        if (!$this->ProjectId) {
-            echo 'UserProject GetEmailCategory(): ProjectId not set';
-            return false;
-        }
-
-        $category = pdo_query('SELECT emailcategory FROM user2project WHERE
-                          userid=' . qnum($this->UserId) . ' AND projectid=' . qnum($this->ProjectId));
-        if (!$category) {
-            add_last_sql_error('UserProject GetEmailCategory');
-            return false;
-        }
-        $category_array = pdo_fetch_array($category);
-        return $category_array['emailcategory'];
-    }
-
     /** Get information about the projects associated with this user. */
     public function GetProjects()
     {

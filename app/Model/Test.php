@@ -17,7 +17,6 @@ namespace CDash\Model;
 
 // It is assumed that appropriate headers should be included before including this file
 use CDash\Collection\LabelCollection;
-use CDash\Collection\TestMeasurementCollection;
 use CDash\Config;
 use CDash\Database;
 use PDO;
@@ -46,7 +45,6 @@ class Test
     public $Labels;
     public $Measurements;
 
-    private $TestMeasurementCollection;
     private $LabelCollection;
     private $Status;
     private $BuildTest;
@@ -297,20 +295,6 @@ class Test
     }
 
     /**
-     * @return TestMeasurementCollection
-     */
-    public function GetTestMeasurementCollection()
-    {
-        if (!$this->TestMeasurementCollection) {
-            $collection = new TestMeasurementCollection();
-            foreach ($this->Measurements as $m) {
-                $collection->add($m);
-            }
-            $this->TestMeasurementCollection = $collection;
-        }
-        return $this->TestMeasurementCollection;
-    }
-
     /**
      * Returns the LabelCollection object for the current Test. It lazily loads a LabelCollection,
      * then adds the current Test's Label array to the Collection if none exists.
