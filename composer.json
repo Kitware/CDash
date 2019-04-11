@@ -18,6 +18,7 @@
     "ext-mbstring": "*",
     "ext-pdo": "*",
     "ext-xsl": "*",
+    "rmccue/requests": ">=1.0",
     "bernard/bernard": "1.0.0-alpha9",
     "guzzlehttp/guzzle": "~6.2",
     "monolog/monolog": "~1.19",

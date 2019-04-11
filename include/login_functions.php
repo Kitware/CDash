@@ -15,6 +15,7 @@
 =========================================================================*/
 
 require_once('include/common.php');
+require dirname(__DIR__) . '/vendor/autoload.php';
 
 use CDash\Config;
 use CDash\Controller\Auth\Session;
@@ -265,6 +266,231 @@ function ldapAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
     return false;
 }
 
+function crowdRequestSession($config)
+{
+    $request_session = new Requests_Session(
+        $config->get('CDASH_CROWD_URL')
+    );
+
+    $request_session->headers['Content-Type'] = 'application/json';
+    $request_session->headers['Accept'] = 'application/json';
+
+    // Crowd authentication
+    $request_session->options['auth'] = new Requests_Auth_Basic(
+        array(
+            $config->get('CDASH_CROWD_APP_USERNAME'),
+            $config->get('CDASH_CROWD_APP_PASSWORD')
+        )
+    );
+
+    // Custom Crowd CA
+    $crowd_ssl_ca = $config->get('CDASH_CROWD_CA_CERT');
+    if ($crowd_ssl_ca) {
+        $request_session->options['verify'] = $crowd_ssl_ca;
+    }
+
+    return $request_session;
+}
+
+function crowdValidationFactors()
+{
+    return array(
+        'validationFactors' => array(
+            array(
+                'name' => 'remote_address',
+                'value' => $_SERVER['REMOTE_ADDR']
+            )
+        )
+    );
+}
+
+function crowdUsernameAuthenticate($username, $password, $baseUri, $session)
+{
+    $target = $baseUri . '/session';
+    $payload = array(
+        'username' => $username,
+        'password' => $password,
+        'validation-factors' => crowdValidationFactors(),
+    );
+
+    $response = $session->post(
+        $target,
+        null,
+        json_encode($payload)
+    );
+
+    if ($response->status_code === 201) {
+        $data = json_decode($response->body, true);
+        if ($data['token']) {
+            return $data['token'];
+        } else {
+            $loginerror = 'Authentication successful, but unable to get token';
+        }
+    } elseif ($response->status_code === 400) {
+        // Authentication details incorrect
+        error_log('Invalid username or password for user ' . $username);
+        $loginerror = 'Invalid username or password.';
+    } else {
+        // Don't know...
+        error_log('Unknown error authenticating user '
+                  . $username . ' with Crowd.');
+        $loginerror = 'Unable to login with Crowd.';
+    }
+
+    return "";
+}
+
+function crowdUsernameFromEmail($email, $baseUri, $session)
+{
+    $target = $baseUri . '/search?entity-type=user&expand=attributes';
+    $payload = array(
+        'restriction-type' => 'property-search-restriction',
+        'property' => array(
+            'name' => 'email',
+            'type' => 'string'
+        ),
+        'value' => $email,
+        'match-mode' => 'EXACTLY_MATCHES'
+    );
+
+    $response = $session->post(
+        $target,
+        null,
+        json_encode($payload)
+    );
+
+    if ($response->status_code === 200) {
+        $data = json_decode($response->body, true);
+        if ($data['users'] && sizeof($data['users']) === 1) {
+            $user = $data['users'][0];
+            return $user['name'];
+        }
+    } elseif ($response->status_code === 409) {
+        error_log('Entity type unknown to Crowd when searching for username.');
+    } else {
+        error_log('Unknown error occurred looking up username from Crowd.');
+    }
+
+    $loginerror = 'Unable to lookup Crowd user using email ' . $email;
+    return "";
+}
+
+function crowdInfoFromToken($token, $baseUri, $session)
+{
+    $target = $baseUri.'/session';
+    $response = $session->get($target.'/'.$token.'?expand=attributes');
+
+    if ($response->status_code === 200) {
+        $data = json_decode($response->body, true);
+        return $data['user'];
+    } elseif ($response->status_code === 404) {
+        error_log('Unable to get user info from token.');
+    } else {
+        error_log('Unknown error info via token.');
+    }
+
+    return object();
+}
+
+function isValidCrowdToken($token, $baseUri, $session)
+{
+    $target = $baseUri.'/session'.'/'.$token.'?expand=attributes';
+    $response = $session->post(
+        $target,
+        null,
+        json_encode(crowdValidationFactors())
+    );
+
+    if ($response->status_code === 200) {
+        return true;
+    } elseif ($response->status_code === 400) {
+        error_log('Validation factors incorrect.');
+    } elseif ($response->status_code === 404) {
+        error_log('Unable to validate token, token not found.');
+    } else {
+        error_log('Unknown error while validating Crowd token.');
+    }
+
+    $loginerror = 'Unable to login with Crowd, contact an administrator.';
+    return false;
+}
+
+function startSessionFromCrowdInfo($crowdInfo, $token, $SessionCachePolicy)
+{
+    $user = new User();
+    $userid = $user->GetIdFromEmail($crowdInfo['email']);
+    $passwordHash = User::PasswordHash($token);
+
+    if (!$userid) {
+        // Create new CDash user from info from Crowd
+        if ($passwordHash === false) {
+            $loginerror = 'Failed to hash password.  Contact an admin.';
+        } elseif ($user->Password != $passwordHash) {
+            $user->Email = $crowdInfo['email'];
+            $user->Password = $passwordHash;
+            $user->FirstName = $crowdInfo['first-name'];
+            $user->LastName = $crowdInfo['last-name'];
+            $user->Save();
+            $userid = $user->Id;
+        }
+    }
+
+    // Setup our session
+    $service = ServiceContainer::getInstance();
+    /** @var  Session $session */
+    $session = $service->create(\CDash\Controller\Auth\Session::class);
+
+    $session->start($SessionCachePolicy);
+    $session->setSessionVar('cdash', [
+        'login' => $crowdInfo['email'],
+        'passwd' => $passwordHash,
+        'ID' => $session->getSessionId(),
+        'valid' => 1,
+        'loginid' => $userid
+    ]);
+}
+
+function crowdAuthenticate($email, $password, $SessionCachePolicy, $rememberme)
+{
+    Requests::register_autoloader();
+    /** @var Config $config */
+    $config = Config::getInstance();
+    /** @var Session $session */
+
+    $authenticated = false;
+
+    $crowdtoken = str_replace('.', '_', $config->get('CDASH_CROWD_TOKEN_NAME'));
+    $crowdRequest = crowdRequestSession($config);
+    $baseUri = $config->get('CDASH_CROWD_API_URI');
+
+    if ($email && $password) {
+        $username = crowdUsernameFromEmail($email, $baseUri, $crowdRequest);
+
+        $token = crowdUsernameAuthenticate(
+            $username,
+            $password,
+            $baseUri,
+            $crowdRequest
+        );
+
+        if ($token) {
+            $_COOKIE[$crowdtoken] = $token;
+            $authenticated = true;
+        }
+    }
+
+    if ($authenticated) {
+        // Lets make sure CDash knows about our user
+        $token = $_COOKIE[$crowdtoken];
+        $info = crowdInfoFromToken($token);
+        startSessionFromCrowdInfo($info, $token, $SessionCachePolicy);
+    } else {
+        $_COOKIE[$crowdtoken] = '';
+    }
+
+    return $authenticated;
+}
+
 /** authentication */
 function authenticate($email, $password, $SessionCachePolicy, $rememberme)
 {
@@ -274,19 +500,42 @@ function authenticate($email, $password, $SessionCachePolicy, $rememberme)
         return 0;
     }
     include dirname(__DIR__) . '/config/config.php';
+    $default_authenticators = array(
+        'databaseAuthenticate',
+    );
 
-    if ($config->get('CDASH_USE_LDAP')) {
-        // If the user is '1' we use it to login
-        // $user = new User();
-        /** @var User $user */
-        $user = $service->create(User::class);
-        $userid = $user->GetIdFromEmail($email);
-        if ($userid == 1) {
-            return databaseAuthenticate($email, $password, $SessionCachePolicy, $rememberme);
-        }
-        return ldapAuthenticate($email, $password, $SessionCachePolicy, $rememberme);
+    $authenticators = array_merge(
+        $default_authenticators,
+        $config->get('CDASH_AUTHENTICATORS')
+    );
+
+    $user = $service->create(User::class);
+    $userid = $user->GetIdFromEmail($email);
+    if ($userid == 1) {
+        return databaseAuthenticate(
+            $email,
+            $password,
+            $SessionCachePolicy,
+            $rememberme
+        );
     } else {
-        return databaseAuthenticate($email, $password, $SessionCachePolicy, $rememberme);
+        $authenticated = false;
+        foreach ($authenticators as $authenticator) {
+            $authenticated = call_user_func_array(
+                $authenticator,
+                array(
+                    $email,
+                    $password,
+                    $SessionCachePolicy,
+                    $rememberme
+                )
+            );
+            // TODO: Authoritative authenticators, etc...
+            if ($authenticated) {
+                return $authenticated;
+            }
+        }
+        return $authenticated;
     }
 }
 
@@ -311,14 +560,45 @@ function cdash_auth($SessionCachePolicy = 'private_no_expire')
         return 0;
     }
 
+    $server = $config->getServer();
+    $cookiename = str_replace('.', '_', "CDash-{$server}"); // php doesn't like dot in cookie names
+    $crowdtoken = str_replace('.', '_', $config->get('CDASH_CROWD_TOKEN_NAME'));
+
     if (isset($_POST['sent'])) {
         // arrive from login form
         @$login = $_POST['login'];
         @$passwd = $_POST['passwd'];
         return authenticate($login, $passwd, $SessionCachePolicy, isset($_POST['rememberme']));
+    } elseif (isset($_COOKIE[$crowdtoken]) && !isset($_COOKIE[$cookiename])) {
+        // validate crowd token initially, then piggyback on cdash cookie
+        $crowdRequest = crowdRequestSession($config);
+        $baseUri = $config->get('CDASH_CROWD_API_URI');
+
+        $valid = isValidCrowdToken(
+            $_COOKIE[$crowdtoken],
+            $baseUri,
+            $crowdRequest
+        );
+
+        if ($valid) {
+            $info = crowdInfoFromToken(
+                $_COOKIE[$crowdtoken],
+                $baseUri,
+                $crowdRequest
+            );
+
+            if ($info) {
+                startSessionFromCrowdInfo(
+                    $info,
+                    $_COOKIE[$crowdtoken],
+                    $SessionCachePolicy
+                );
+                return true;
+            }
+        }
+
+        return false;
     } else { // arrive from session var
-        $server = $config->getServer();
-        $cookiename = str_replace('.', '_', "CDash-{$server}"); // php doesn't like dot in cookie names
         $service = ServiceContainer::getInstance();
         /** @var Session $session */
         $session = $service->get(Session::class);
