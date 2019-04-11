@@ -2,7 +2,10 @@ SET(CTEST_EXTRA_COVERAGE_GLOB "*.php")
 
 SET(CTEST_CUSTOM_COVERAGE_EXCLUDE
   ${CTEST_CUSTOM_COVERAGE_EXCLUDE}
+  "[/\\\\]config[/\\\\]"
+  "[/\\\\]log[/\\\\]"
   "[/\\\\]node_modules[/\\\\]"
+  "[/\\\\]Template[/\\\\]"
   "[/\\\\]tests[/\\\\]"
   "[/\\\\]testing[/\\\\]"
   "[/\\\\]vendor[/\\\\]"
