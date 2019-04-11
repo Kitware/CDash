@@ -52,7 +52,6 @@ class ProjectModelTestCase extends KWWebTestCase
         $project->AddLogo($contents2, 'gif');
         $project->AddLogo($contents1, 'gif');
 
-        @$project->SendEmailToAdmin('foo', 'hello world');
         return 0;
     }
 
