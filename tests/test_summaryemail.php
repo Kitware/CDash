@@ -1,0 +1,73 @@
+<?php
+
+use CDash\Config;
+use CDash\Model\BuildGroup;
+use CDash\Model\Project;
+
+require_once dirname(__FILE__) . '/cdash_test_case.php';
+require_once 'include/common.php';
+require_once 'include/pdo.php';
+
+class SummaryEmailTestCase extends KWWebTestCase
+{
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    public function testSummaryEmail()
+    {
+        // Cleanup from previous runs.
+        $this->deleteLog($this->logfilename);
+        $project = new Project();
+        $project->Id = get_project_id('SummaryEmailProject');
+        if ($project->Id >= 0) {
+            remove_project_builds($project->Id);
+            $project->Delete();
+        }
+
+        // Make a separate project for this test.
+        $project->Id = $this->createProject(['Name' => 'SummaryEmailProject']);
+
+        // Configure the nightly group to send summary emails.
+        $buildgroup = new BuildGroup();
+        $buildgroup->SetProjectId($project->Id);
+        $buildgroup->SetName('Nightly');
+        $buildgroup->SetSummaryEmail(1);
+        $buildgroup->Save();
+
+        // Resubmit a previous build to this new project.
+        $parts = ['build', 'update', 'test', 'dynamicanalysis'];
+        foreach ($parts as $part) {
+            $file = dirname(__FILE__) . "/data/EmailProjectExample/2_$part.xml";
+            $this->submission('SummaryEmailProject', $file);
+        }
+
+        $config = Config::getInstance();
+        $url = $config->getBaseUrl();
+        $expected = [
+            'simpletest@localhost',
+            'CDash [SummaryEmailProject] - Nightly Failures',
+            'The "Nightly" group has either errors, warnings or test failures.',
+            'You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.',
+            'Site name: Dash20.kitware',
+            'Build name: Win32-MSVC2009 (Nightly)',
+            'To see this dashboard:',
+            "$url/index.php?project=SummaryEmailProject&date=",
+            'Summary of the first build failure:',
+            '*Configure*',
+            '*Error*',
+            '*Warnings*',
+            '3>f:\program files\microsoft sdks\windows\v6.0a\include\servprov.h(79) : warning C4068: unknown pragma',
+            '3>F:\Program Files\Microsoft SDKs\Windows\v6.0A\\\include\urlmon.h(352) : warning C4068: unknown pragma',
+            '3>XcedeCatalog.cxx',
+            '2>bmScriptAddDashboardLabelAction.cxx',
+            '3>f:\program files\microsoft sdks\windows\v6.0a\include\servprov.h(79) : warning C4068: unknown pragma',
+            '-CDash on',
+            'function'
+        ];
+        if (!$this->assertLogContains($expected, 39)) {
+            $this->fail('Log did not contain expected contents');
+        }
+    }
+}
