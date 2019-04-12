@@ -223,14 +223,14 @@
               <!-- Site & Build Name for non-grouped coverage -->
               <th ng-if="::cdash.childview != 1"
                   ng-click="updateOrderByFields(sortCoverage, 'site', $event, 'coverage')"
-                  class="column-header" width="20%">
+                  class="column-header">
                 Site
                 <span class="glyphicon" ng-class="sortCoverage.orderByFields.indexOf('-site') != -1 ? 'glyphicon-chevron-down' : (sortCoverage.orderByFields.indexOf('site') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
 
               <th ng-if="::cdash.childview != 1"
                   ng-click="updateOrderByFields(sortCoverage, 'buildname', $event, 'coverage')"
-                  class="column-header" width="25%">
+                  class="column-header">
                 Build Name
                 <span class="glyphicon" ng-class="sortCoverage.orderByFields.indexOf('-buildname') != -1 ? 'glyphicon-chevron-down' : (sortCoverage.orderByFields.indexOf('buildname') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
@@ -238,40 +238,40 @@
               <!-- SubProject name for grouped coverage -->
               <th ng-if="::cdash.childview == 1"
                   ng-click="updateOrderByFields(sortCoverage,'label', $event, 'coverage')"
-                  class="column-header" width="20%">
+                  class="column-header">
                 SubProject
                 <span class="glyphicon" ng-class="sortCoverage.orderByFields.indexOf('-label') != -1 ? 'glyphicon-chevron-down' : (sortCoverage.orderByFields.indexOf('label') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
 
               <!-- Fields common to both modes -->
               <th ng-click="updateOrderByFields(sortCoverage, 'percentage', $event, 'coverage')"
-                  class="column-header" width="10%">
+                  class="column-header">
                 Percentage
                 <span class="glyphicon" ng-class="sortCoverage.orderByFields.indexOf('-percentage') != -1 ? 'glyphicon-chevron-down' : (sortCoverage.orderByFields.indexOf('percentage') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
 
               <th ng-click="updateOrderByFields(sortCoverage, 'loctested', $event, 'coverage')"
-                  class="column-header" width="10%">
+                  class="column-header">
                 LOC Tested
                 <span class="glyphicon" ng-class="sortCoverage.orderByFields.indexOf('-loctested') != -1 ? 'glyphicon-chevron-down' : (sortCoverage.orderByFields.indexOf('loctested') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
 
               <th ng-click="updateOrderByFields(sortCoverage, 'locuntested', $event, 'coverage')"
-                  class="column-header" width="10%">
+                  class="column-header">
                 LOC Untested
                 <span class="glyphicon" ng-class="sortCoverage.orderByFields.indexOf('-locuntested') != -1 ? 'glyphicon-chevron-down' : (sortCoverage.orderByFields.indexOf('locuntested') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
 
               <th ng-click="updateOrderByFields(sortCoverage, 'datefull', $event, 'coverage')"
                   ng-class="::{'nob': cdash.displaylabels == 0 && cdash.coveragegroups.length == 0}"
-                  class="column-header" width="15%">
+                  class="column-header">
                 Date
                 <span class="glyphicon" ng-class="sortCoverage.orderByFields.indexOf('-datefull') != -1 ? 'glyphicon-chevron-down' : (sortCoverage.orderByFields.indexOf('datefull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
 
               <!-- Conditionally display the labels -->
               <th ng-if="::cdash.displaylabels == 1 && !cdash.coveragegroups"
-                  class="column-header nob" width="10%">Labels</th>
+                  class="column-header nob">Labels</th>
 
             </tr>
           </thead>
@@ -408,39 +408,39 @@
             <tr class="table-heading">
               <th ng-if="::cdash.childview == 1"
                   ng-click="updateOrderByFields(sortDA, 'label', $event, 'DA')"
-                  class="column-header" width="20%">
+                  class="column-header">
                 SubProject
                 <span class="glyphicon" ng-class="sortDA.orderByFields.indexOf('-label') != -1 ? 'glyphicon-chevron-down' : (sortDA.orderByFields.indexOf('label') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
 
               <th ng-if="::cdash.childview != 1"
                   ng-click="updateOrderByFields(sortDA, 'site', $event, 'DA')"
-                  class="column-header" width="20%">
+                  class="column-header">
                 Site
                 <span class="glyphicon" ng-class="sortDA.orderByFields.indexOf('-site') != -1 ? 'glyphicon-chevron-down' : (sortDA.orderByFields.indexOf('site') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
 
               <th ng-if="::cdash.childview != 1"
                   ng-click="updateOrderByFields(sortDA, 'buildname', $event, 'DA')"
-                  class="column-header" width="25%">
+                  class="column-header">
                 Build Name
                 <span class="glyphicon" ng-class="sortDA.orderByFields.indexOf('-buildname') != -1 ? 'glyphicon-chevron-down' : (sortDA.orderByFields.indexOf('buildname') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
 
               <th ng-click="updateOrderByFields(sortDA, 'checker', $event, 'DA')"
-                  class="column-header" width="20%">
+                  class="column-header">
                 Checker
                 <span class="glyphicon" ng-class="sortDA.orderByFields.indexOf('-checker') != -1 ? 'glyphicon-chevron-down' : (sortDA.orderByFields.indexOf('checker') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
 
               <th ng-click="updateOrderByFields(sortDA, 'defectcount', $event, 'DA')"
-                  class="column-header" width="10%">
+                  class="column-header">
                 Defect Count
                 <span class="glyphicon" ng-class="sortDA.orderByFields.indexOf('-defectcount') != -1 ? 'glyphicon-chevron-down' : (sortDA.orderByFields.indexOf('defectcount') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
 
               <th ng-click="updateOrderByFields(sortDA, 'datefull', $event, 'DA')"
-                  class="column-header nob" width="15%">
+                  class="column-header nob">
                 Date
                 <span class="glyphicon" ng-class="sortDA.orderByFields.indexOf('-datefull') != -1 ? 'glyphicon-chevron-down' : (sortDA.orderByFields.indexOf('datefull') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
