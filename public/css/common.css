@@ -673,9 +673,12 @@ textarea {
     padding: 10px;
 }
 
-/* used in overview.php */
 .center-text {
   text-align: center;
+}
+.column-header {
+  text-align: center;
+  cursor: pointer;
 }
 .border-right {
   border-right: 2px black solid !important;
