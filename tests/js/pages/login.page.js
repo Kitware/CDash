@@ -15,7 +15,7 @@ LoginPage.prototype = Object.create({}, {
       // Submit it and wait for the title to change.
       element(by.name('sent')).click().then(function () {
         browser.driver.wait(browser.driver.getTitle().then(function (title) {
-          expect(title).toEqual("");
+          expect(title).not.toBeNull();
         }));
       });
   }}

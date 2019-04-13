@@ -13,20 +13,30 @@ require_once 'include/common.php';
 
 class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
 {
+    private $original;
+    private $config_file;
+
     public function __construct()
     {
         parent::__construct();
+        $this->config_file = dirname(__FILE__) . '/../config/config.local.php';
+    }
+
+    public function __destruct()
+    {
+        if ($this->original) {
+            file_put_contents($this->config_file, $this->original);
+        }
     }
 
     public function enableAutoRemoveConfigSetting()
     {
-        $filename = dirname(__FILE__) . '/../config/config.local.php';
-        $handle = fopen($filename, 'r');
-        $contents = fread($handle, filesize($filename));
+        $handle = fopen($this->config_file, 'r');
+        $this->original = fread($handle, filesize($this->config_file));
         fclose($handle);
         unset($handle);
-        $handle = fopen($filename, 'w');
-        $lines = explode("\n", $contents);
+        $handle = fopen($this->config_file, 'w');
+        $lines = explode("\n", $this->original);
         foreach ($lines as $line) {
             if (strpos($line, '?>') !== false) {
                 fwrite($handle, '// test config settings injected by file [' . __FILE__ . "]\n");
@@ -44,34 +54,62 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
     public function setAutoRemoveTimeFrame()
     {
         // set project autoremovetimeframe
-        $result = $this->db->query('UPDATE project ' .
-            "SET autoremovetimeframe='7' WHERE name='EmailProjectExample'");
+        $db = Database::getInstance();
+        $sql = 'UPDATE project SET autoremovetimeframe=:time WHERE name=:project';
+        /** @var PDOStatement $stmt */
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':time', 7);
+        $stmt->bindValue(':project', 'EmailProjectExample');
+        $stmt->execute();
     }
 
     public function testBuildsRemovedOnSubmission()
     {
+        // due to the asynchronous nature of do_submit.php line 144, this
+        // is, unfortunately, still necessary
         $this->enableAutoRemoveConfigSetting();
+
+        $config = Config::getInstance();
+
+        // for the time being these don't really do much, but no harm in leaving
+        // them here as the represent the actual state of the app and will be
+        // needed once a different methodology is found for testing this behavior
+        $config->set('CDASH_AUTOREMOVE_BUILDS', 1);
+        $config->set('CDASH_AYNCHONOUS_SUBMISSION', false);
 
         $this->setAutoRemoveTimeFrame();
         $this->deleteLog($this->logfilename);
 
-        $result = $this->db->query("SELECT id FROM project WHERE name = 'EmailProjectExample'");
-        $projectid = $result[0]['id'];
+        /** @var \CDash\Database $db */
+        $db = Database::getInstance();
+
+        /** @var PDO $pdo */
+        $pdo = $db->getPdo();
+
+        $result = $db->query("SELECT id FROM project WHERE name = 'EmailProjectExample'");
+        $projectid = $result->fetchColumn();
 
         // Submit the first build
         $rep = dirname(__FILE__) . '/data/EmailProjectExample';
         $testxml1 = "$rep/1_test.xml";
-        if (!$this->submission('EmailProjectExample', $testxml1)) {
+        if (!$this->putCtestFile($testxml1, ['project' => 'EmailProjectExample'])) {
             $this->fail('submission 1 failed');
             return;
         }
 
         // Check that the test is actually there
-        if (!$query = pdo_query("SELECT name FROM build WHERE projectid='$projectid' AND stamp='20090223-0100-Nightly'")) {
+        $sql = "SELECT name FROM build WHERE projectid=:id AND stamp=:stamp";
+
+        /** @var PDOStatement $stmt */
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':id', $projectid);
+        $stmt->bindValue(':stamp', '20090223-0100-Nightly');
+
+        if (!$stmt->execute()) {
             $this->fail('pdo_query returned false');
             return 1;
         }
-        $query_array = pdo_fetch_array($query);
+        $query_array = pdo_fetch_array($stmt);
         if ($query_array[0] != 'Win32-MSVC2009') {
             echo $query_array[0];
             $this->fail('First build not inserted correctly');
@@ -102,10 +140,10 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         $db->execute($stmt, $query_params);
 
         // Looks like it's a new day
-        $this->pdo->query("DELETE FROM dailyupdate WHERE projectid='$projectid'");
+        $pdo->exec("DELETE FROM dailyupdate WHERE projectid='{$projectid}'");
 
         $testxml2 = "$rep/2_test.xml";
-        if (!$this->submission('EmailProjectExample', $testxml2)) {
+        if (!$this->putCtestFile($testxml2, ['project' => 'EmailProjectExample'])) {
             $this->fail('submission 2 failed');
             return 1;
         }
@@ -114,13 +152,19 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         // in order for the process to be done
         sleep(10); // seconds
 
+        $sql = "SELECT id FROM build WHERE projectid=:id AND stamp=:stamp";
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':id', $projectid);
+        $stmt->bindValue(':stamp', '20090223-0100-Nightly');
+
         // Check that the first test is gone
-        if (!$query = pdo_query("SELECT id FROM build WHERE projectid='$projectid' AND stamp='20090223-0100-Nightly'")) {
+        if (!$stmt->execute()) {
             $this->fail('pdo_query returned false');
             return 1;
         }
 
-        if (pdo_num_rows($query) > 0) {
+        if (pdo_num_rows($stmt) > 0) {
             $this->fail('Auto remove build on submit failed');
             return 1;
         }
@@ -138,7 +182,6 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         }
 
         // Make sure we didn't inadvertently delete the whole upload directory.
-        $config = Config::getInstance();
         if (!file_exists("{$config->get('CDASH_ROOT_DIR')}/public/upload")) {
             $this->fail('upload directory does not exist');
         }
