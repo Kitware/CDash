@@ -1,22 +1,10 @@
-
+var LoginPage = require('../pages/login.page.js');
 
 describe("manageSubProject", function() {
 
   it("is protected by login", function () {
-    browser.get('manageSubProject.php?projectid=8');
-
-    expect(element(by.name('email')));
-    expect(element(by.name('password')));
-
-    element(by.name('email')).sendKeys('simpletest@localhost');
-    element(by.name('password')).sendKeys('simpletest');
-
-    // Submit it and wait for the title to change.
-    element(by.name('sent')).click().then(function () {
-      browser.driver.wait(browser.driver.getTitle().then(function (title) {
-        expect(title).toEqual("");
-      }));
-    });
+    var loginPage = new LoginPage();
+    loginPage.login("manageSubProject.php?projectid=8#/add");
   });
 
   it("can add a subproject", function() {
