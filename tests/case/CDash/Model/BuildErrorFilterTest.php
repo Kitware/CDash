@@ -15,8 +15,9 @@
 use CDash\Model\BuildErrorFilter;
 use CDash\Model\Project;
 use CDash\ServiceContainer;
+use CDash\Test\CDashTestCase;
 
-class BuildErrorFilterModelTest extends \CDash\Test\CDashTestCase
+class BuildErrorFilterModelTest extends CDashTestCase
 {
     public function setUp()
     {

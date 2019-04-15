@@ -93,5 +93,5 @@ function CreateRSSFeed($projectid)
     if (file_put_contents($filename, $feed) === false) {
         add_log('Cannot write file ' . $filename, 'CreateRSSFeed', LOG_ERR, $projectid);
     }
-    chown($filename, get_current_user());
+    // chown($filename, get_current_user());
 }

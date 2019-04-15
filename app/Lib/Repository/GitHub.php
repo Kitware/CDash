@@ -16,8 +16,10 @@
 
 namespace CDash\Lib\Repository;
 
+use Github\Client as GitHubClient;
+use Github\HttpClient\Builder as GitHubBuilder;
 use Http\Adapter\Guzzle6\Client as GuzzleClient;
-use Lcobucci\JWT\Builder;
+use Lcobucci\JWT\Builder as JwtBuilder;
 use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 
@@ -92,12 +94,12 @@ class GitHub implements RepositoryInterface
         $this->check = null;
     }
 
-    public function setApiClient(\Github\Client $client)
+    public function setApiClient(GitHubClient $client)
     {
         $this->apiClient = $client;
     }
 
-    public function setJwtBuilder(\Lcobucci\JWT\Builder $builder)
+    public function setJwtBuilder(JwtBuilder $builder)
     {
         $this->jwtBuilder = $builder;
     }
@@ -105,12 +107,12 @@ class GitHub implements RepositoryInterface
     protected function initializeApiClient()
     {
         if (!$this->jwtBuilder) {
-            $this->setJwtBuilder(new Builder());
+            $this->setJwtBuilder(new JwtBuilder());
         }
 
-        $builder = new \Github\HttpClient\Builder(new GuzzleClient());
+        $builder = new GitHubBuilder(new GuzzleClient());
+        $apiClient = new GitHubClient($builder, 'machine-man-preview');
         $builder->addHeaderValue('Accept', 'application/vnd.github.antiope-preview+json');
-        $apiClient = new \Github\Client($builder, 'machine-man-preview');
         $this->setApiClient($apiClient);
     }
 
@@ -144,10 +146,10 @@ class GitHub implements RepositoryInterface
             ->sign(new Sha256(), new Key("file://{$pem}"))
             ->getToken();
 
-        $this->apiClient->authenticate($jwt, null, \Github\Client::AUTH_JWT);
+        $this->apiClient->authenticate($jwt, null, GitHubClient::AUTH_JWT);
 
         $token = $this->apiClient->api('apps')->createInstallationToken($this->installationId);
-        $this->apiClient->authenticate($token['token'], null, \Github\Client::AUTH_HTTP_TOKEN);
+        $this->apiClient->authenticate($token['token'], null, GitHubClient::AUTH_HTTP_TOKEN);
         return true;
     }
 
