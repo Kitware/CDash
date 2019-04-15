@@ -18,9 +18,10 @@ use CDash\Lib\Repository\RepositoryInterface;
 use CDash\Model\Build;
 use CDash\Model\BuildUpdate;
 use CDash\Service\RepositoryService;
+use CDash\Test\CDashTestCase;
 use Ramsey\Uuid\Uuid;
 
-class RepositoryServiceTest extends PHPUnit_Framework_TestCase
+class RepositoryServiceTest extends CDashTestCase
 {
     /** @var RepositoryInterface|PHPUnit_Framework_MockObject_MockObject */
     private $repository;
@@ -28,6 +29,7 @@ class RepositoryServiceTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setDatabaseMocked();
         $this->repository = $this->getMockBuilder(RepositoryInterface::class)
             ->getMockForAbstractClass();
     }

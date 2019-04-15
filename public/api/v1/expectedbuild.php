@@ -21,6 +21,94 @@ require_once 'include/api_common.php';
 use CDash\Database;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildGroupRule;
+use CDash\Model\Project;
+use CDash\Model\User;
+use Illuminate\Support\Facades\Auth;
+
+if (!function_exists('rest_delete')) {
+    /* Handle DELETE requests */
+    function rest_delete($siteid, $buildgroupid, $buildname, $buildtype)
+    {
+        $rule = new BuildGroupRule();
+        $rule->SiteId = $siteid;
+        $rule->GroupId = $buildgroupid;
+        $rule->BuildName = $buildname;
+        $rule->BuildType = $buildtype;
+        $rule->Delete();
+    }
+}
+
+if (!function_exists('rest_get')) {
+    /* Handle GET requests */
+    function rest_get($siteid, $buildgroupid, $buildname, $buildtype, $projectid)
+    {
+        $response = array();
+
+        if (!array_key_exists('currenttime', $_REQUEST)) {
+            $response['error'] = "currenttime not specified.";
+            echo json_encode($response);
+            return;
+        }
+        $currenttime = pdo_real_escape_numeric($_REQUEST['currenttime']);
+        $currentUTCtime = gmdate(FMT_DATETIME, $currenttime);
+
+        // Find the last time this expected build submitted.
+        $db = Database::getInstance();
+        $stmt = $db->prepare(
+            'SELECT starttime FROM build
+        WHERE siteid    = :siteid AND
+              type      = :buildtype AND
+              name      = :buildname AND
+              projectid = :projectid AND
+              starttime <= :starttime
+        ORDER BY starttime DESC LIMIT 1');
+        $query_params = [
+            ':siteid'    => $siteid,
+            ':buildtype' => $buildtype,
+            ':buildname' => $buildname,
+            ':projectid' => $projectid,
+            ':starttime' => $currentUTCtime
+        ];
+        $db->execute($stmt, $query_params);
+        $lastBuildDate = $stmt->fetchColumn();
+        if ($lastBuildDate === false) {
+            $response['lastSubmission'] = -1;
+            echo json_encode($response);
+            return;
+        }
+
+        $gmtime = strtotime($lastBuildDate . ' UTC');
+        $response['lastSubmission'] = date('M j, Y ', $gmtime);
+        $response['lastSubmissionDate'] = date('Y-m-d', $gmtime);
+        $response['daysSinceLastBuild'] =
+            round(($currenttime - strtotime($lastBuildDate)) / (3600 * 24));
+
+        echo json_encode(cast_data_for_JSON($response));
+    }
+}
+
+if (!function_exists('rest_post')) {
+    /* Handle POST requests */
+    function rest_post($siteid, $buildgroupid, $buildname, $buildtype)
+    {
+        if (!array_key_exists('newgroupid', $_REQUEST)) {
+            $response = array();
+            $response['error'] = 'newgroupid not specified.';
+            echo json_encode($response);
+            return;
+        }
+
+        $newgroupid =
+            htmlspecialchars(pdo_real_escape_string($_REQUEST['newgroupid']));
+
+        $rule = new BuildGroupRule();
+        $rule->SiteId = $siteid;
+        $rule->GroupId = $buildgroupid;
+        $rule->BuildName = $buildname;
+        $rule->BuildType = $buildtype;
+        $rule->ChangeGroup($newgroupid);
+    }
+}
 
 // Check that required params were specified.
 $rest_json = json_decode(file_get_contents('php://input'), true);
@@ -89,83 +177,4 @@ switch ($method) {
     default:
         add_log("Unhandled method: $method", 'expectedBuildAPI', LOG_WARNING);
         break;
-}
-
-/* Handle DELETE requests */
-function rest_delete($siteid, $buildgroupid, $buildname, $buildtype)
-{
-    $rule = new BuildGroupRule();
-    $rule->SiteId = $siteid;
-    $rule->GroupId = $buildgroupid;
-    $rule->BuildName = $buildname;
-    $rule->BuildType = $buildtype;
-    $rule->Delete();
-}
-
-/* Handle GET requests */
-function rest_get($siteid, $buildgroupid, $buildname, $buildtype, $projectid)
-{
-    $response = array();
-
-    if (!array_key_exists('currenttime', $_REQUEST)) {
-        $response['error'] = "currenttime not specified.";
-        echo json_encode($response);
-        return;
-    }
-    $currenttime = pdo_real_escape_numeric($_REQUEST['currenttime']);
-    $currentUTCtime = gmdate(FMT_DATETIME, $currenttime);
-
-    // Find the last time this expected build submitted.
-    $db = Database::getInstance();
-    $stmt = $db->prepare(
-        'SELECT starttime FROM build
-        WHERE siteid    = :siteid AND
-              type      = :buildtype AND
-              name      = :buildname AND
-              projectid = :projectid AND
-              starttime <= :starttime
-        ORDER BY starttime DESC LIMIT 1');
-    $query_params = [
-        ':siteid'    => $siteid,
-        ':buildtype' => $buildtype,
-        ':buildname' => $buildname,
-        ':projectid' => $projectid,
-        ':starttime' => $currentUTCtime
-    ];
-    $db->execute($stmt, $query_params);
-    $lastBuildDate = $stmt->fetchColumn();
-    if ($lastBuildDate === false) {
-        $response['lastSubmission'] = -1;
-        echo json_encode($response);
-        return;
-    }
-
-    $gmtime = strtotime($lastBuildDate . ' UTC');
-    $response['lastSubmission'] = date('M j, Y ', $gmtime);
-    $response['lastSubmissionDate'] = date('Y-m-d', $gmtime);
-    $response['daysSinceLastBuild'] =
-        round(($currenttime - strtotime($lastBuildDate)) / (3600 * 24));
-
-    echo json_encode(cast_data_for_JSON($response));
-}
-
-/* Handle POST requests */
-function rest_post($siteid, $buildgroupid, $buildname, $buildtype)
-{
-    if (!array_key_exists('newgroupid', $_REQUEST)) {
-        $response = array();
-        $response['error'] = 'newgroupid not specified.';
-        echo json_encode($response);
-        return;
-    }
-
-    $newgroupid =
-        htmlspecialchars(pdo_real_escape_string($_REQUEST['newgroupid']));
-
-    $rule = new BuildGroupRule();
-    $rule->SiteId = $siteid;
-    $rule->GroupId = $buildgroupid;
-    $rule->BuildName = $buildname;
-    $rule->BuildType = $buildtype;
-    $rule->ChangeGroup($newgroupid);
 }

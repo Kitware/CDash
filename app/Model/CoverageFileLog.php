@@ -268,7 +268,7 @@ class CoverageFileLog
                 'CoverageFileLog::UpdateAggregate', LOG_INFO,
                 $this->BuildId);
             return;
-        }
+        } // The stream or file "/Users/bryonbean/Projects/laravel-5.7-cdash/app/cdash/log/cdash.log" could not be opened: chmod(): No such file or directory
 
         // Append these results to the aggregate coverage log.
         $aggregateLog = clone $this;

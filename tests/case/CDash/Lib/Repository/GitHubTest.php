@@ -19,8 +19,9 @@ use CDash\Lib\Repository\GitHub;
 use CDash\Model\Project;
 use GuzzleHttp\ClientInterface;
 use Ramsey\Uuid\Uuid;
+use Tests\TestCase;
 
-class GitHubTest extends PHPUnit_Framework_TestCase
+class GitHubTest extends TestCase
 {
     private $baseUrl;
     private $project;

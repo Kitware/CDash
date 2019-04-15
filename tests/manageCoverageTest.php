@@ -4,6 +4,7 @@
 // relative to the top of the CDash source tree
 //
 use CDash\Model\Project;
+use CDash\Database;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
@@ -51,6 +52,7 @@ class ManageCoverageTestCase extends KWWebTestCase
             $buildid = $stmt->fetchColumn();
         }
 
+        $this->login();
         $content = $this->connect($this->url . "/manageCoverage.php?buildid=$buildid&projectid=$projectid");
         if (strpos($content, 'simple.cxx') === false) {
             $this->fail("'simple.cxx' not found when expected for buildid=" . $buildid);
