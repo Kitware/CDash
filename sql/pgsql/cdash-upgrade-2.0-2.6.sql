@@ -36,6 +36,7 @@ CREATE INDEX "relatedid" on "related_builds" ("relatedid");
 CREATE TABLE "pending_submissions" (
   "buildid" integer NOT NULL,
   "numfiles" smallint DEFAULT '0' NOT NULL,
+  "recheck" smallint DEFAULT '0' NOT NULL,
   PRIMARY KEY ("buildid")
 );
 

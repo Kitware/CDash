@@ -49,6 +49,12 @@ class PendingSubmissionsModelTest extends PHPUnit_Framework_TestCase
         $this->sut->Decrement();
         $this->assertEquals(1, $this->sut->GetNumFiles());
 
+        PendingSubmissions::IncrementForBuildId($this->mock_build->Id);
+        $this->assertEquals(2, $this->sut->GetNumFiles());
+
+        PendingSubmissions::RecheckForBuildId($this->mock_build->Id);
+        $this->assertEquals(1, $this->sut->GetRecheck());
+
         $this->sut->Delete();
         $this->assertEquals(false, $this->sut->Exists());
     }

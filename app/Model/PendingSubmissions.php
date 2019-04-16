@@ -23,12 +23,16 @@ class PendingSubmissions
 {
     public $Build;
     public $NumFiles;
+    public $Recheck;
+    private $Filled;
     private $PDO;
 
     public function __construct()
     {
         $this->Build = null;
         $this->NumFiles = 0;
+        $this->Recheck = 0;
+        $this->Filled = false;
         $this->PDO = Database::getInstance()->getPdo();
     }
 
@@ -61,17 +65,19 @@ class PendingSubmissions
         if ($this->Exists()) {
             $stmt = $this->PDO->prepare(
                 'UPDATE pending_submissions
-                SET numfiles = :numfiles
+                SET numfiles = :numfiles,
+                    recheck  = :recheck
                 WHERE buildid = :buildid');
         } else {
             $stmt = $this->PDO->prepare(
                 'INSERT INTO pending_submissions
-                (buildid, numfiles)
+                (buildid, numfiles, recheck)
                 VALUES
-                (:buildid, :numfiles)');
+                (:buildid, :numfiles, :recheck)');
         }
         $stmt->bindParam(':buildid', $this->Build->Id);
         $stmt->bindParam(':numfiles', $this->NumFiles);
+        $stmt->bindParam(':recheck', $this->Recheck);
         if (!pdo_execute($stmt)) {
             $this->PDO->rollBack();
             return false;
@@ -98,27 +104,46 @@ class PendingSubmissions
         return pdo_execute($stmt, [$this->Build->Id]);
     }
 
-    /** Get number of pending submissions for a given build. */
-    public function GetNumFiles()
+    public function Fill()
     {
+        if ($this->Filled) {
+            return true;
+        }
         if (!$this->Build) {
-            add_log('Build not set', 'PendingSubmission::GetNumFiles', LOG_ERR);
+            add_log('Build not set', 'PendingSubmission::Fill', LOG_ERR);
             return false;
         }
 
         $stmt = $this->PDO->prepare(
-            'SELECT numfiles FROM pending_submissions WHERE buildid = ?');
+            'SELECT * FROM pending_submissions WHERE buildid = ?');
         if (!pdo_execute($stmt, [$this->Build->Id])) {
             return false;
         }
 
         $row = $stmt->fetch();
         $this->NumFiles = $row['numfiles'];
+        $this->Recheck = $row['recheck'];
+        $this->Filled = true;
+    }
+
+    /** Get number of pending submissions for a given build. */
+    public function GetNumFiles()
+    {
+        $this->Filled = false;
+        $this->Fill();
         return $this->NumFiles;
     }
 
-    // Increase or decrease the number of pending submissions for a build.
-    private function IncrementOrDecrement($caller)
+    /** Get whether or not this build has been scheduled for rechek. */
+    public function GetRecheck()
+    {
+        $this->Filled = false;
+        $this->Fill();
+        return $this->Recheck;
+    }
+
+    // Atomically update an existing pending_submissions record in the database.
+    private function AtomicUpdate($caller, $clause)
     {
         if (!$this->Build) {
             add_log('Build not set', "PendingSubmission::$caller", LOG_ERR);
@@ -131,15 +156,9 @@ class PendingSubmissions
             return false;
         }
 
-        if ($caller === 'Increment') {
-            $operator = '+';
-        } else {
-            $operator = '-';
-        }
-
         $stmt = $this->PDO->prepare(
             "UPDATE pending_submissions
-            SET numfiles = numfiles $operator 1
+            SET $clause
             WHERE buildid = ?");
         try {
             if ($stmt->execute([$this->Build->Id])) {
@@ -162,20 +181,40 @@ class PendingSubmissions
         }
         return true;
     }
+
     public function Increment()
     {
-        $this->IncrementOrDecrement('Increment');
+        return $this->AtomicUpdate('Increment', 'numfiles = numfiles + 1');
     }
+
     public function Decrement()
     {
-        $this->IncrementOrDecrement('Decrement');
+        return $this->AtomicUpdate('Decrement', 'numfiles = numfiles - 1');
     }
-    public static function IncrementForBuildId($buildid)
+
+    public function MarkForRecheck()
+    {
+        return $this->AtomicUpdate('MarkForRecheck', 'recheck = 1');
+    }
+
+    public static function GetModelForBuildId($buildid)
     {
         $build = new Build();
         $build->Id = $buildid;
         $pendingSubmissions = new PendingSubmissions();
         $pendingSubmissions->Build = $build;
-        $pendingSubmissions->Increment();
+        return $pendingSubmissions;
+    }
+
+    public static function RecheckForBuildId($buildid)
+    {
+        $pendingSubmissions = self::GetModelForBuildId($buildid);
+        return $pendingSubmissions->MarkForRecheck();
+    }
+
+    public static function IncrementForBuildId($buildid)
+    {
+        $pendingSubmissions = self::GetModelForBuildId($buildid);
+        return $pendingSubmissions->Increment();
     }
 }
