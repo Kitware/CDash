@@ -52,7 +52,7 @@ $build->StartTime = gmdate(FMT_DATETIME);
 $build->SubmitTime = $build->StartTime;
 $subProjectName = get_param('subProjectName', false);
 if ($subProjectName) {
-    $build->SubProjectName = $subProjectName;
+    $build->SetSubProject($subProjectName);
 }
 
 // Call AddBuild() to create the build or get the ID of an existing build.

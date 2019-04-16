@@ -123,7 +123,7 @@ if (isset($_GET['build']) && isset($_GET['site']) && isset($_GET['stamp'])) {
     $build->SubmitTime = $build->StartTime;
 
     if (isset($_GET['subproject'])) {
-        $build->SubProjectName = pdo_real_escape_string($_GET['subproject']);
+        $build->SetSubProject(pdo_real_escape_string($_GET['subproject']));
     }
 
     $site = $service->create(Site::class);

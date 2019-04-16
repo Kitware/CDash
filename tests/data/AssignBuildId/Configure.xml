@@ -2,6 +2,13 @@
 <Site BuildName="assign_buildid"
 	BuildStamp="20180918-0100-Nightly"
 	Name="localhost"
+	Generator="ctest-3.13.0"
+	CompilerName="gcc"
+	CompilerVersion="5.5.0"
+	OSName="Linux"
+	OSRelease="4.4.0"
+	OSVersion="#166"
+	OSPlatform="x86_64"
 	>
 	<Configure>
 		<StartConfigureTime>1537280827</StartConfigureTime>
