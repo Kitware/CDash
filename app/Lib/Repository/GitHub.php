@@ -52,19 +52,24 @@ class GitHub implements RepositoryInterface
 
     private $apiClient;
     private $jwtBuilder;
+    private $project;
 
     /**
      * GitHub constructor.
-     * @param $installationId
-     * @param $owner
-     * @param $repo
-     * @param $hash
+     * @param Project $project
      */
-    public function __construct($installationId, $owner, $repo)
+    public function __construct(Project $project)
     {
-        $this->installationId = $installationId;
-        $this->owner = $owner;
-        $this->repo = $repo;
+        $this->project = $project;
+        $this->getRepositoryInformation();
+        $installationId = '';
+        $repositories = $this->project->GetRepositories();
+        foreach ($repositories as $repo) {
+            if (strpos($repo['url'], 'github.com') !== false) {
+                $this->installationId = $repo['username'];
+                break;
+            }
+        }
     }
 
     public function setApiClient(\Github\Client $client)
@@ -160,7 +165,7 @@ class GitHub implements RepositoryInterface
     /**
      * Record what changed between two commits.
      **/
-    public function compareCommits(BuildUpdate $update, Project $project)
+    public function compareCommits(BuildUpdate $update)
     {
         // Get current revision (head).
         if (empty($update->Revision)) {
@@ -212,7 +217,7 @@ class GitHub implements RepositoryInterface
 
         // Check if we've memcached the difference between these two revisions.
         $commits = null;
-        $diff_key = "$memcache_prefix:$project->Name:$base:$head";
+        $diff_key = "$memcache_prefix:{$this->project->Name}:$base:$head";
         if ($memcache_enabled) {
             $cached_response = cdash_memcache_get($memcache, $diff_key);
             if ($cached_response !== false) {
@@ -309,7 +314,7 @@ class GitHub implements RepositoryInterface
                         }
 
                         $commit_array = null;
-                        $commit_key = "$memcache_prefix:$project->Name:$sha";
+                        $commit_key = "$memcache_prefix:{$this->project->Name}:$sha";
                         if ($memcache_enabled) {
                             // Check memcache if it is enabled before hitting
                             // the GitHub API.
@@ -406,5 +411,17 @@ class GitHub implements RepositoryInterface
     public function getRepository()
     {
         return $this->repo;
+    }
+
+    protected function getRepositoryInformation()
+    {
+        $url = str_replace('//', '', $this->project->CvsUrl);
+        $parts = explode('/', $url);
+        if (isset($parts[1])) {
+            $this->owner = $parts[1];
+        }
+        if (isset($parts[2])) {
+            $this->repo = $parts[2];
+        }
     }
 }

@@ -16,6 +16,7 @@
 
 use CDash\Config;
 use CDash\Lib\Repository\GitHub;
+use CDash\Model\Project;
 use GuzzleHttp\ClientInterface;
 use Ramsey\Uuid\Uuid;
 
@@ -23,13 +24,24 @@ class GitHubTest extends PHPUnit_Framework_TestCase
 {
     public function testSetStatus()
     {
+        $github_url = 'https://github.com/Foo/Bar';
+        $project = $this->getMockBuilder(Project::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $repositories = [];
+        $repositories[] = [
+            'url'      => $github_url,
+            'username' => 12345
+        ];
+        $project->CvsUrl = $github_url;
+        $project->expects($this->once())
+            ->method('GetRepositories')
+            ->willReturn($repositories);
+
         $base_url = Config::getInstance()->getBaseUrl();
 
-        $token = Uuid::uuid4()->toString();
-        $owner = 'Foo';
-        $repo = 'Bar';
         $hash = str_replace('-', '', Uuid::uuid4()->toString());
-        $sut = new GitHub($token, $owner, $repo);
+        $sut = new GitHub($project);
 
         $options = [
             'commit_hash' => $hash,
@@ -82,7 +94,6 @@ class GitHubTest extends PHPUnit_Framework_TestCase
 
         $sut->setApiClient($client);
 
-        $uri = GitHub::BASE_URI . "/repos/{$owner}/{$repo}/statuses/{$hash}";
         Config::getInstance()->set('CDASH_GITHUB_PRIVATE_KEY', __FILE__);
 
         $sut->setStatus($options);
@@ -94,7 +105,13 @@ class GitHubTest extends PHPUnit_Framework_TestCase
      */
     public function testAuthenticateThrowsExceptionGivenNoInstallationId()
     {
-        $sut = new GitHub('', 'foo', 'bar');
+        $project = $this->getMockBuilder(Project::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $project->expects($this->once())
+            ->method('GetRepositories')
+            ->willReturn([]);
+        $sut = new GitHub($project);
         $sut->authenticate();
     }
 }
