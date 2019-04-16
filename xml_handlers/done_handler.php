@@ -17,6 +17,7 @@
 require_once 'xml_handlers/abstract_handler.php';
 
 use CDash\Model\Build;
+use CDash\Model\BuildUpdate;
 use CDash\Model\PendingSubmissions;
 use CDash\Model\Repository;
 
@@ -63,6 +64,14 @@ class DoneHandler extends AbstractHandler
 
             $this->Build->UpdateBuild($this->Build->Id, -1, -1);
             $this->Build->MarkAsDone(1);
+
+            // Should we re-run any checks that were previously marked
+            // as pending?
+            if ($this->PendingSubmissions->Recheck) {
+                $update = $this->Build->GetBuildUpdate();
+                Repository::createOrUpdateCheck($update->Revision);
+            }
+
             if ($this->PendingSubmissions->Exists()) {
                 $this->PendingSubmissions->Delete();
             }

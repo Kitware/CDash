@@ -54,6 +54,7 @@ class DoneHandlerTestCase extends KWWebTestCase
         $pending = new PendingSubmissions();
         $pending->Build = $build;
         $pending->NumFiles = 2;
+        $pending->Recheck = 1;
         $pending->Save();
         $fp = fopen($tmpfname, 'r');
         $handler = ctest_parse($fp, $projectid, $build->Id);
