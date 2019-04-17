@@ -25,7 +25,7 @@ The "{{ $summary['build_group'] }}" group has errors, warnings, or test failures
 <?php
 $summary['build_summary_url'] = $summary['project_url'] . "&date=" . date('Y-m-d', strtotime($summary['build_time']));
 ?>
-You have been identified as on of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
+You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 @else
 A submission to CDash for the project {{ $subscription->getProjectName() }} has {{ $description }}. You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.
 @endif

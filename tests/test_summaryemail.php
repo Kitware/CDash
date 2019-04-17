@@ -49,7 +49,7 @@ class SummaryEmailTestCase extends KWWebTestCase
             'simpletest@localhost',
             'FAILED (w=3): SummaryEmailProject - Win32-MSVC2009 - Nightly',
             'The "Nightly" group has errors, warnings, or test failures.',
-            'You have been identified as on of the authors who have checked in changes that are part of this submission or you are listed in the default contact list',
+            'You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list',
             'Details on the submission can be found at http://cdash.dev/index.php?project=SummaryEmailProject&date=',
             'Project: SummaryEmailProject',
             'Site: Dash20.kitware',
