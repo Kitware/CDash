@@ -2,7 +2,6 @@
 namespace CDash\Messaging\Subscription;
 
 use ActionableBuildInterface;
-use CDash\Collection\SubscriberCollection;
 use CDash\Model\SubscriberInterface;
 
 class UserSubscriptionBuilder implements SubscriptionBuilderInterface
@@ -36,6 +35,7 @@ class UserSubscriptionBuilder implements SubscriptionBuilderInterface
         $project = $this->submission->GetProject();
         $site = $this->submission->GetSite();
         $subscribers = $project->GetSubscriberCollection();
+        $buildGroup = $this->submission->GetBuildGroup();
 
         Subscription::setMaxDisplayItems($project->EmailMaxItems);
 
@@ -46,7 +46,9 @@ class UserSubscriptionBuilder implements SubscriptionBuilderInterface
                 $subscription
                     ->setSubscriber($subscriber)
                     ->setProject($project)
-                    ->setSite($site);
+                    ->setSite($site)
+                    ->setBuildGroup($buildGroup);
+
                 $subscriptions->add($subscription);
             }
         }

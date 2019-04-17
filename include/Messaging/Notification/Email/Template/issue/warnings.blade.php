@@ -6,11 +6,11 @@
 @else
     @if(strlen($warnings->SourceFile) > 0)
 {{ $warnings->SourceFile }} line {{ $warnings->SourceLine }} ({{ $warnings->GetUrlForSelf() }}
-{!! mb_substr($warnings->Text, 0, $maxChars) !!}
-{!! mb_substr($warnings->PostContext, 0, $maxChars) !!}
+{!! mb_substr(trim($warnings->Text), 0, $maxChars) !!}
+{!! mb_substr(trim($warnings->PostContext), 0, $maxChars) !!}
     @else
-{!! mb_substr($warnings->Text, 0, $maxChars) !!}
-{!! mb_substr($warnings->PostContext, 0, $maxChars) !!}
+{!! mb_substr(trim($warnings->Text), 0, $maxChars) !!}
+{!! mb_substr(trim($warnings->PostContext), 0, $maxChars) !!}
     @endif
 @endif
 @endforeach

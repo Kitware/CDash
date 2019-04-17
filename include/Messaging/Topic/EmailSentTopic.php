@@ -16,6 +16,7 @@
 
 namespace CDash\Messaging\Topic;
 
+use CDash\Model\ActionableTypes;
 use CDash\Model\Build;
 
 class EmailSentTopic extends Topic
@@ -26,8 +27,9 @@ class EmailSentTopic extends Topic
      */
     public function subscribesToBuild(Build $build)
     {
+        $category = ActionableTypes::$categories[$this->getTopicName()];
         $subscribe = $this->topic->subscribesToBuild($build)
-            && !$this->hasSubscriberAlreadyBeenNotified($build);
+            && !$this->hasSubscriberAlreadyBeenNotified($build, $category);
         return $subscribe;
     }
 }

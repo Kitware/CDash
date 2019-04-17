@@ -36,9 +36,6 @@ abstract class Topic implements TopicInterface
     /** @var  string[] $labels */
     protected $labels;
 
-    /** @var  CallableCollection $topicCallables */
-    protected $topicCallables;
-
     /**
      * Topic constructor.
      * @param TopicInterface|Fixable|Labelable|null $topic
@@ -179,13 +176,23 @@ abstract class Topic implements TopicInterface
         return 0;
     }
 
-    public function hasSubscriberAlreadyBeenNotified(Build $build)
+    /**
+     * @param Build $build
+     * @param null $category
+     * @return bool
+     */
+    public function hasSubscriberAlreadyBeenNotified(Build $build, $category = null)
     {
-        $category = ActionableTypes::$categories[$this->getTopicName()];
-        $emailCollection = $build->GetBuildEmailCollection($category);
+        $collection = $build->GetBuildEmailCollection();
         $address = $this->subscriber->getAddress();
 
-        return $emailCollection->has($address);
+        if (!is_null($category)) {
+            $collection = $collection
+                ->keyedByCategory()
+                ->get($category);
+        }
+
+        return $collection && $collection->has($address);
     }
 
     public function getFixed()
@@ -204,14 +211,5 @@ abstract class Topic implements TopicInterface
             $templates = $this->topic->getTemplate();
         }
         return $templates;
-    }
-
-    public function isA($class)
-    {
-        $it = is_a($this, $class);
-        if (!$it && $this->topic) {
-            return $this->topic->isA($class);
-        }
-        return $it;
     }
 }

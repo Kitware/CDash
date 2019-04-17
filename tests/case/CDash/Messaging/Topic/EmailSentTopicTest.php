@@ -50,15 +50,16 @@ class EmailSentTopicTest extends \CDash\Test\CDashTestCase
         $build->Id = 1;
         $this->assertFalse($sut->subscribesToBuild($build));
 
-        $category = ActionableTypes::$categories[ActionableTypes::TEST];
         $buildEmails = new BuildEmailCollection();
-        $build->SetBuildEmailCollection($buildEmails, $category);
+        $build->SetBuildEmailCollection($buildEmails);
 
         $email1 = new BuildEmail();
         $email1->SetEmail('ricky.bobby@company.tld');
+        $email1->SetCategory(ActionableTypes::$categories[ActionableTypes::TEST]);
 
         $email2 = new BuildEmail();
         $email2->SetEmail('cal.naughton@company.tld');
+        $email2->SetCategory(ActionableTypes::$categories[ActionableTypes::TEST]);
 
         $buildEmails
             ->add($email1)

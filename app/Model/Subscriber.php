@@ -17,6 +17,7 @@
 namespace CDash\Model;
 
 use CDash\Collection\LabelCollection;
+use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Preferences\NotificationPreferences;
 use CDash\Messaging\Topic\Topic;
 use CDash\Messaging\Topic\TopicCollection;
@@ -72,6 +73,12 @@ class Subscriber implements SubscriberInterface
         $collection = $submission->GetTopicCollectionForSubscriber($this);
         if ($collection->hasItems()) {
             $builds = $submission->GetBuildCollection();
+            $buildGroup = $submission->GetBuildGroup();
+
+            if ($buildGroup->GetSummaryEmail() == 1) {
+                $this->preferences->set(NotifyOn::SUMMARY, true);
+            }
+
             TopicDecorator::decorate($collection, $this->preferences);
             /** @var Topic $topic */
             foreach ($collection as $topic) {

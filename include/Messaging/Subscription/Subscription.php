@@ -5,6 +5,7 @@ use CDash\Config;
 use CDash\Messaging\Notification\NotificationInterface;
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Build;
+use CDash\Model\BuildGroup;
 use CDash\Model\Project;
 use CDash\Model\Site;
 use CDash\Model\SubscriberInterface;
@@ -30,6 +31,20 @@ class Subscription implements SubscriptionInterface
 
     /** @var  Site $site */
     private $site;
+
+    /** @var BuildGroup $buildGroup */
+    private $buildGroup;
+
+    public function getBuildGroup()
+    {
+        return $this->buildGroup;
+    }
+
+    public function setBuildGroup(BuildGroup $buildGroup)
+    {
+        $this->buildGroup = $buildGroup;
+        return $this;
+    }
 
     /**
      * @param SubscriberInterface $subscriber
@@ -205,8 +220,9 @@ class Subscription implements SubscriptionInterface
             $summary = [];
             $topics = $this->subscriber->getTopics();
             $summary['topics'] = [];
+            $summary['build_group'] = $this->buildGroup->GetName();
             $summary['project_name'] = $project->GetName();
-            $summary['project_url'] = "{$baseUrl}/viewProject?projectid={$project->Id}";
+            $summary['project_url'] = "{$baseUrl}/index.php?project={$project->Name}";
             $summary['site_name'] = $this->site->Name;
             $summary['build_name'] = '';
             $summary['build_subproject_names'] = [];
@@ -259,7 +275,7 @@ class Subscription implements SubscriptionInterface
                     }
 
                     if (is_null($summary['build_summary_url'])) {
-                        $id = $summary['build_parent_id'] || $build->Id;
+                        $id = (int) $summary['build_parent_id'] ?: $build->Id;
                         $summary['build_summary_url'] = "{$baseUrl}/buildSummary.php?buildid={$id}";
                     }
                 }

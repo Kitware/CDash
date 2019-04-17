@@ -3157,24 +3157,19 @@ class Build
      * object if none exists.
      *
      * @param $category
-     * @return bool|mixed
+     * @return BuildEmailCollection;
      */
-    public function GetBuildEmailCollection($category)
+    public function GetBuildEmailCollection()
     {
         if (!$this->Id) {
-            return false;
+            return new BuildEmailCollection();
         }
 
         if (!$this->BuildEmailCollection) {
-            $this->BuildEmailCollection = new CollectionCollection();
+            $this->BuildEmailCollection = BuildEmail::GetEmailSentForBuild($this->Id);
         }
 
-        if (!$this->BuildEmailCollection->has($category)) {
-            $collection = BuildEmail::GetBuildEmailSent($this->Id, $category);
-            $this->BuildEmailCollection->addItem($collection, $category);
-        }
-
-        return $this->BuildEmailCollection->get($category);
+        return $this->BuildEmailCollection;
     }
 
     /**
@@ -3183,15 +3178,10 @@ class Build
      * exists.
      *
      * @param BuildEmailCollection $collection
-     * @param $category
      */
-    public function SetBuildEmailCollection(BuildEmailCollection $collection, $category)
+    public function SetBuildEmailCollection(BuildEmailCollection $collection)
     {
-        if (!$this->BuildEmailCollection) {
-            $this->BuildEmailCollection = new CollectionCollection();
-        }
-
-        $this->BuildEmailCollection->addItem($collection, $category);
+        $this->BuildEmailCollection = $collection;
     }
 
     /**

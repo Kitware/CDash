@@ -122,7 +122,7 @@ class BuildEmail
      * @param $category
      * @return BuildEmailCollection
      */
-    public static function GetBuildEmailSent($buildId, $category)
+    public static function GetEmailSentForBuild($buildId)
     {
         $collection = new BuildEmailCollection();
         $userTable = qid('user');
@@ -132,19 +132,18 @@ class BuildEmail
                 u.email
             FROM buildemail
             JOIN $userTable u ON u.id=buildemail.userid
-            WHERE buildemail.buildid=:b
-            AND buildemail.category=:c";
+            WHERE buildemail.buildid=:b";
+
         $db = Database::getInstance();
         $stmt = $db->prepare($sql);
         $stmt->bindParam(':b', $buildId);
-        $stmt->bindParam(':c', $category);
 
         if ($db->execute($stmt)) {
             foreach ($stmt->fetchAll(\PDO::FETCH_OBJ) as $row) {
                 $email = new BuildEmail();
                 $email
                     ->SetBuildId($buildId)
-                    ->SetCategory($category)
+                    ->SetCategory($row->category)
                     ->SetEmail($row->email)
                     ->SetUserId($row->userid)
                     ->SetTime($row->time)

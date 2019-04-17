@@ -47,16 +47,16 @@ class SummaryEmailTestCase extends KWWebTestCase
         $url = $config->getBaseUrl();
         $expected = [
             'simpletest@localhost',
-            'CDash [SummaryEmailProject] - Nightly Failures',
-            'The "Nightly" group has either errors, warnings or test failures.',
-            'You have been identified as one of the authors who have checked in changes that are part of this submission or you are listed in the default contact list.',
-            'Site name: Dash20.kitware',
-            'Build name: Win32-MSVC2009 (Nightly)',
-            'To see this dashboard:',
-            "$url/index.php?project=SummaryEmailProject&date=",
-            'Summary of the first build failure:',
-            '*Configure*',
-            '*Error*',
+            'FAILED (w=3): SummaryEmailProject - Win32-MSVC2009 - Nightly',
+            'The "Nightly" group has errors, warnings, or test failures.',
+            'You have been identified as on of the authors who have checked in changes that are part of this submission or you are listed in the default contact list',
+            'Details on the submission can be found at http://cdash.dev/index.php?project=SummaryEmailProject&date=',
+            'Project: SummaryEmailProject',
+            'Site: Dash20.kitware',
+            'Build Name: Win32-MSVC2009',
+            'Build Time: 2009-02-23 10:02:04',
+            "Type: Nightly",
+            'Total Warnings: 3',
             '*Warnings*',
             '3>f:\program files\microsoft sdks\windows\v6.0a\include\servprov.h(79) : warning C4068: unknown pragma',
             '3>F:\Program Files\Microsoft SDKs\Windows\v6.0A\\\include\urlmon.h(352) : warning C4068: unknown pragma',
@@ -64,9 +64,8 @@ class SummaryEmailTestCase extends KWWebTestCase
             '2>bmScriptAddDashboardLabelAction.cxx',
             '3>f:\program files\microsoft sdks\windows\v6.0a\include\servprov.h(79) : warning C4068: unknown pragma',
             '-CDash on',
-            'function'
         ];
-        if (!$this->assertLogContains($expected, 39)) {
+        if (!$this->assertLogContains($expected, 25)) {
             $this->fail('Log did not contain expected contents');
         }
     }

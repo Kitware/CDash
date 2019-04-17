@@ -19,4 +19,5 @@ class NotifyOn
     const ANY = 'Any';
     const NEVER = 'Never';
     const REDUNDANT = 'Redundant';
+    const SUMMARY = 'Summary';
 }

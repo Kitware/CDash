@@ -55,10 +55,4 @@ interface TopicInterface
      * @return string|array
      */
     public function getTemplate();
-
-    /**
-     * @param $class
-     * @return bool
-     */
-    public function isA($class);
 }

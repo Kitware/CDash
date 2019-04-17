@@ -15,11 +15,10 @@
  */
 
 use CDash\Collection\BuildEmailCollection;
-use CDash\Database;
-use CDash\Model\ActionableTypes;
 use CDash\Model\Build;
+use CDash\Test\CDashTestCase;
 
-class BuildTest extends \CDash\Test\CDashTestCase
+class BuildTest extends CDashTestCase
 {
     public function setUp()
     {
@@ -30,13 +29,9 @@ class BuildTest extends \CDash\Test\CDashTestCase
     {
         $sut = new Build();
 
-        $category = ActionableTypes::BUILD_ERROR;
-        $collection = $sut->GetBuildEmailCollection($category);
+        $collection = $sut->GetBuildEmailCollection();
 
-        $this->assertFalse($collection);
-
-        $sut->Id = 1;
-        $collection = $sut->GetBuildEmailCollection($category);
+        $this->assertFalse($collection->hasItems());
         $this->assertInstanceOf(BuildEmailCollection::class, $collection);
     }
 
@@ -46,9 +41,13 @@ class BuildTest extends \CDash\Test\CDashTestCase
         // TODO: refactor asap
         /** @var Build|PHPUnit_Framework_MockObject_MockObject $sut */
         $sut = $this->getMockBuilder(Build::class)
-            ->setMethods(['GetErrorDifferences'])
+            ->setMethods(['GetErrorDifferences', 'GetPreviousBuildId'])
             ->getMock();
         $sut->Id = 1;
+        $sut->expects($this->once())
+            ->method('GetPreviousBuildId')
+            ->willReturn(12);
+
         $sut->expects($this->once())
             ->method('GetErrorDifferences')
             ->willReturn([

@@ -20,6 +20,8 @@ use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Subscription\SubscriptionCollection;
 use CDash\Messaging\Subscription\UserSubscriptionBuilder;
+use CDash\Model\Build;
+use CDash\Model\BuildGroup;
 use CDash\Model\Project;
 use CDash\Model\Site;
 use CDash\Model\Subscriber;
@@ -88,6 +90,17 @@ class UserSubscriptionBuilderTest extends PHPUnit_Framework_TestCase
         $mock_handler->expects($this->any())
             ->method('GetBuildCollection')
             ->willReturn($builds);
+
+        $mock_group = $this->getMockBuilder(BuildGroup::class)
+            ->getMock();
+
+        $mock_group->expects($this->any())
+            ->method('GetName')
+            ->willReturn(BuildGroup::EXPERIMENTAL);
+
+        $mock_handler->expects($this->any())
+            ->method('GetBuildGroup')
+            ->willReturn($mock_group);
 
         return $mock_handler;
     }

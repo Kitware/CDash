@@ -23,6 +23,7 @@ abstract class NotificationPreferences implements
         NotifyOn::LABELED,
         NotifyOn::NEVER,
         NotifyOn::REDUNDANT,
+        NotifyOn::SUMMARY,
     ];
 
     protected $settings = [];

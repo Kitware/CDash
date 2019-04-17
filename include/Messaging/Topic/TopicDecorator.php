@@ -22,20 +22,23 @@ use CDash\Messaging\Preferences\NotificationPreferences;
 use CDash\Singleton;
 
 /**
- * Class TopicFactory
+ * Class TopicDecorator
  * @package CDash\Messaging\Topic
  *
- * Given NotificationPreferences and an ActionableBuildInterface TopicFactory::createFrom will
- * return an array of decorated topics.
+ * Given a TopicCollection and a subscriber's NotificationPreferences the TopicDecorator
+ * "decorates" a submission's topics with more granular topics as indicated by user
+ * preference.
  *
  * Topics come in two flavors--regular topics and decorate-able topics. What follows is a
  * discussion of the distinction.
  *
  * Decorate-able topics can be thought of as fundamental topics, e.g. DynamicAnalysisTopic,
  * BuildErrorTopic, or TestFailureTopic and they represent the type of build (that is, a phase
- * in the build process such as the dynamic analysis, the actual build itself or testing)
- * represented by the xml submitted to CDash by CTest. If a user wants to receive a notification
- * about a test failure the return of this method will include a TestFailureTopic.
+ * in the build process such as the dynamic analysis, the actual build itself, or testing)
+ * represented by the xml submitted to CDash by CTest. Take the example where a user wishes to receive a notification
+ * about a test failure but ignore test warnings. The handler that processed the submitted xml file (in this case, the
+ * TestingHandler), will have already set a TestWarning topic and a TestFailure topic in the
+ * TopicCollection.
  *
  * Note that a TestFailureTopic is decorate-able. Consider the other preferences that may be
  * present in addition to the test failure:
@@ -84,6 +87,11 @@ class TopicDecorator extends Singleton
     }
 
     /**
+     * The Fixable Interface represents classes that have the possibility of having been "fixed".
+     * For instance, a failing test can be fixed and CDash is able to make the distinction of tests
+     * that were previously failing, but are now fixed. Users may wish to be notified of this event
+     * and may do so by setting their notification preferences to notify when things get fixed.
+     *
      * @param NotificationPreferences $preferences
      * @param TopicCollection $topics
      * @return void
@@ -101,6 +109,10 @@ class TopicDecorator extends Singleton
     }
 
     /**
+     * The Labelable Interface represents a topic that has the possibility of having a label
+     * attached to it. Users may wish to be notified about submissions with a particular label
+     * and receive notification of these labeled items by indicating such in their preferences.
+     *
      * @param NotificationPreferences $preferences
      * @param TopicCollection $topics
      * @return void
@@ -118,6 +130,10 @@ class TopicDecorator extends Singleton
     }
 
     /**
+     * The notion of deliverable in this case represents something that can be delivered, e.g.
+     * a notification of any kind. Specifically this notion exists so that CDash discern if a
+     * notification event has already taken place.
+     *
      * @param NotificationPreferences $preferences
      * @param TopicCollection $topics
      * @return void
@@ -144,6 +160,13 @@ class TopicDecorator extends Singleton
                 $group = new GroupMembershipTopic($topic);
                 $group->setGroup(BuildGroup::NIGHTLY);
                 $topics->add($group);
+            }
+        }
+
+        if ($preferences->get(NotifyOn::SUMMARY)) {
+            foreach ($topics as $topic) {
+                $summary = new BuildGroupSummaryTopic($topic);
+                $topics->add($summary);
             }
         }
     }
