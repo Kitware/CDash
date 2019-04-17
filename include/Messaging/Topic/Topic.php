@@ -188,7 +188,7 @@ abstract class Topic implements TopicInterface
 
         if (!is_null($category)) {
             $collection = $collection
-                ->keyedByCategory()
+                ->sortByCategory()
                 ->get($category);
         }
 

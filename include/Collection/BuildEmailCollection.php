@@ -38,7 +38,7 @@ class BuildEmailCollection extends Collection
     /**
      * @return CollectionCollection
      */
-    public function keyedByCategory()
+    public function sortByCategory()
     {
         $collection = new CollectionCollection();
 
