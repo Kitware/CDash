@@ -18,13 +18,13 @@ class SummaryEmailTestCase extends KWWebTestCase
     public function testSummaryEmail()
     {
         // Cleanup from previous runs.
-        $this->deleteLog($this->logfilename);
         $project = new Project();
         $project->Id = get_project_id('SummaryEmailProject');
         if ($project->Id >= 0) {
             remove_project_builds($project->Id);
             $project->Delete();
         }
+        $this->deleteLog($this->logfilename);
 
         // Make a separate project for this test.
         $project->Id = $this->createProject(['Name' => 'SummaryEmailProject']);

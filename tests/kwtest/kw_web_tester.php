@@ -232,19 +232,6 @@ class KWWebTestCase extends WebTestCase
         $lines = explode(PHP_EOL, $log);
         $passed = true;
         foreach ($lines as $line) {
-            // This unfortunate addition is a symptom of not starting tests from a
-            // pristine state 100% of the time. If test_summaryemail is run after having just
-            // run ctest -I 48,51 (install through email), then ctest -I 55,55 (summary)
-            // the lineCount will necessarily need to be 28 to pass, if just ctest
-            // is run the lineCount argument will need to be 25 to pass. So, in
-            // summary, the summary test during this method (brittle as it is already)
-            // yields different results based on what is run prior to it being run. The
-            // faster we rid ourselves of this entire class the better.
-            if (str_contains($line, 'cdash.INFO')) {
-                $lineCount++;
-                continue;
-            }
-
             $line = trim($line);
             if (!isset($expected[$count]) || ($line && !str_contains($line, $expected[$count]))) {
                 $message = "Unexpected output in logfile:\n"
