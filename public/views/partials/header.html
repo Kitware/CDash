@@ -28,9 +28,9 @@
       <span ng-if="cdash.subheadername" id="subheadername">{{::cdash.subprojectname}}</span>
     </div>
 
-    <div class="projectnav clearfix">
+    <div ng-if="!cdash.hidenav" class="projectnav clearfix">
       <ul class="projectnav_controls clearfix">
-        <li class="btnprev" ng-if="!cdash.hidenav">
+        <li class="btnprev">
           <a ng-if="cdash.menu.previous"
              ng-href="{{::cdash.menu.previous}}{{::cdash.filterurl}}">Prev</a>
           <a ng-if="!cdash.menu.previous && !cdash.menu.noprevious"
@@ -38,7 +38,7 @@
             Prev
           </a>
         </li>
-        <li class="btncurr" ng-if="!cdash.hidenav">
+        <li class="btncurr">
           <a ng-if="cdash.menu.current"
              ng-href="{{::cdash.menu.current}}{{::cdash.filterurl}}">
             Current
@@ -48,7 +48,7 @@
             Current
           </a>
         </li>
-        <li class="btnnext" ng-if="!cdash.menu.nonext && !cdash.hidenav">
+        <li class="btnnext" ng-if="!cdash.menu.nonext">
           <a ng-if="cdash.menu.next"
              ng-href="{{::cdash.menu.next}}{{::cdash.filterurl}}">
             Next
