@@ -55,7 +55,7 @@ $next_buildid = $build->GetNextBuildId();
 if ($previous_buildid > 0) {
     $menu['previous'] = "viewNotes.php?buildid=$previous_buildid";
 } else {
-    $menu['noprevious'] = '1';
+    $menu['previous'] = false;
 }
 
 $menu['current'] = "viewNotes.php?buildid=$current_buildid";
@@ -63,7 +63,7 @@ $menu['current'] = "viewNotes.php?buildid=$current_buildid";
 if ($next_buildid > 0) {
     $menu['next'] = "viewNotes.php?buildid=$next_buildid";
 } else {
-    $menu['nonext'] = '1';
+    $menu['next'] = false;
 }
 
 $response['menu'] = $menu;

@@ -103,7 +103,7 @@ function echo_subprojects_dashboard_JSON($project_instance, $date)
     $menu_response['previous'] = "viewSubProjects.php?project=$projectname_encoded&date=$previousdate";
     $menu_response['current'] = "viewSubProjects.php?project=$projectname_encoded";
     if (!has_next_date($date, $currentstarttime)) {
-        $menu_response['nonext'] = 1;
+        $menu_response['next'] = false;
     } else {
         $menu_response['next'] = "viewSubProjects.php?project=$projectname_encoded&date=$nextdate";
     }

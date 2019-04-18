@@ -85,7 +85,7 @@ $menu['current'] = "testSummary.php?project=$projectid&name=$testName&date=" . d
 if ($date != '' && date(FMT_DATE, $currentstarttime) != date(FMT_DATE)) {
     $menu['next'] = "testSummary.php?project=$projectid&name=$testName&date=$nextdate";
 } else {
-    $menu['nonext'] = 1;
+    $menu['next'] = false;
 }
 $response['menu'] = $menu;
 

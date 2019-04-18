@@ -64,7 +64,7 @@ if ($previous_buildid > 0) {
     $previous_build->FillFromId($previous_build->Id);
     $lastsubmitdate = date(FMT_DATETIMETZ, strtotime($previous_build->StartTime . ' UTC'));
 } else {
-    $menu['noprevious'] = '1';
+    $menu['previous'] = false;
     $lastsubmitdate = 0;
 }
 
@@ -73,7 +73,7 @@ $menu['current'] = "buildSummary.php?buildid=$current_buildid";
 if ($next_buildid > 0) {
     $menu['next'] = "buildSummary.php?buildid=$next_buildid";
 } else {
-    $menu['nonext'] = '1';
+    $menu['next'] = false;
 }
 
 $response['menu'] = $menu;

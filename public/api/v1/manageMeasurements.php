@@ -118,8 +118,7 @@ function rest_get($projectid)
     // Menu
     $menu_response = [];
     $menu_response['back'] = 'user.php';
-    $menu_response['noprevious'] =  1;
-    $menu_response['nonext'] = 1;
+    $menu_response['hidenav'] =  true;
     $response['menu'] = $menu_response;
 
     // Get any measurements associated with this project's tests.

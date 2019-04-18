@@ -58,7 +58,7 @@ $previousbuildid = get_previous_buildid_dynamicanalysis($build->ProjectId, $buil
 if ($previousbuildid > 0) {
     $menu['previous'] = "viewDynamicAnalysis.php?buildid=$previousbuildid";
 } else {
-    $menu['noprevious'] = '1';
+    $menu['previous'] = false;
 }
 
 $currentbuildid = get_last_buildid_dynamicanalysis($build->ProjectId, $build->SiteId, $build->Type, $build->Name, $build->StartTime);
@@ -68,7 +68,7 @@ $nextbuildid = get_next_buildid_dynamicanalysis($build->ProjectId, $build->SiteI
 if ($nextbuildid > 0) {
     $menu['next'] = "viewDynamicAnalysis.php?buildid=$nextbuildid";
 } else {
-    $menu['nonext'] = '1';
+    $menu['next'] = false;
 }
 $response['menu'] = $menu;
 

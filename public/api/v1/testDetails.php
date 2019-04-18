@@ -146,7 +146,7 @@ if ($previous_buildid > 0) {
         $menu['previous'] = "testDetails.php?test=$previous_testid&build=$previous_buildid$extra_url";
     }
 } else {
-    $menu['noprevious'] = '1';
+    $menu['previous'] = false;
 }
 
 // Current build
@@ -160,7 +160,7 @@ if ($next_buildid > 0) {
         $menu['next'] = "testDetails.php?test=$next_testid&build=$next_buildid$extra_url";
     }
 } else {
-    $menu['nonext'] = '1';
+    $menu['next'] = false;
 }
 
 $response['menu'] = $menu;

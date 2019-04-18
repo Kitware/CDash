@@ -29,9 +29,9 @@
     "previous_builds": "",
     "menu": {
         "back": "index.php?project=SubProjectExample&date=2009-02-23",
-        "noprevious": 1,
+        "previous": false,
         "current": "viewTest.php?buildid=221",
-        "nonext": 1
+        "next": false
     },
     "build": {
         "displaylabels": 0,

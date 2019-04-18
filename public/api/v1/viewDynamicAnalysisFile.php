@@ -82,7 +82,7 @@ $previous_id = $DA->GetPreviousId($build);
 if ($previous_id > 0) {
     $menu_response['previous'] = "viewDynamicAnalysisFile.php?id=$previous_id";
 } else {
-    $menu_response['noprevious'] = '1';
+    $menu_response['previous'] = false;
 }
 $current_id = $DA->GetLastId($build);
 $menu_response['current'] = "viewDynamicAnalysisFile.php?id=$current_id";
@@ -90,7 +90,7 @@ $next_id = $DA->GetNextId($build);
 if ($next_id > 0) {
     $menu_response['next'] = "viewDynamicAnalysisFile.php?id=$next_id";
 } else {
-    $menu_response['nonext'] = '1';
+    $menu_response['next'] = false;
 }
 $response['menu'] = $menu_response;
 

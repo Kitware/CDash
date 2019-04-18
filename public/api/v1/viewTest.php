@@ -170,7 +170,7 @@ if ($previous_buildid > 0) {
         $previous_buildids_str = implode(', ', $previous_buildids);
     }
 } else {
-    $menu['noprevious'] = '1';
+    $menu['previous'] = false;
 }
 $response['previous_builds'] = $previous_buildids_str;
 
@@ -179,7 +179,7 @@ $menu['current'] = "viewTest.php?buildid=$current_buildid";
 if ($next_buildid > 0) {
     $menu['next'] = 'viewTest.php?buildid=' . $next_buildid . $extraquery;
 } else {
-    $menu['nonext'] = '1';
+    $menu['next'] = false;
 }
 
 $response['menu'] = $menu;
