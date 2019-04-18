@@ -229,7 +229,7 @@ if (!function_exists('echo_main_dashboard_JSON')) {
             if ($previous_buildid > 0) {
                 $response['menu']['previous'] = "$base_url&parentid=$previous_buildid";
             } else {
-                $response['menu']['noprevious'] = '1';
+                $response['menu']['previous'] = false;
             }
 
             $response['menu']['current'] = "$base_url&parentid=$current_buildid";
@@ -237,21 +237,23 @@ if (!function_exists('echo_main_dashboard_JSON')) {
             if ($next_buildid > 0) {
                 $response['menu']['next'] = "$base_url&parentid=$next_buildid";
             } else {
-                $response['menu']['nonext'] = '1';
+                $response['menu']['next'] = false;
             }
         } else {
             if (!has_next_date($date, $currentstarttime)) {
-                $response['menu']['nonext'] = 1;
+                $response['menu']['next'] = false;
             }
             if (isset($_GET['buildgroup'])) {
                 $page_id = 'viewBuildGroup.php';
                 $buildgroup = $_GET['buildgroup'];
                 $base_url = "viewBuildGroup.php?project={$projectname_encoded}&buildgroup=$buildgroup";
-                $response['menu']['previous'] = "$base_url&date=" . $response['previousdate'];
-                $response['menu']['current'] = "$base_url";
-                if (!array_key_exists('nonext', $response['menu'])) {
-                    $response['menu']['next'] = "$base_url&date=" . $response['nextdate'];
-                }
+            } else {
+                $base_url = "index.php?project={$projectname_encoded}";
+            }
+            $response['menu']['previous'] = "$base_url&date=" . $response['previousdate'];
+            $response['menu']['current'] = "$base_url";
+            if (! (isset($response['menu']['next']) && $response['menu']['next'] === false)) {
+                $response['menu']['next'] = "$base_url&date=" . $response['nextdate'];
             }
         }
         $response['childview'] = $controller->childView;
@@ -268,8 +270,13 @@ if (!function_exists('echo_main_dashboard_JSON')) {
 
             if ($subprojectid) {
                 $controller->setSubProjectId($subprojectid);
-                // Add an extra URL argument for the menu
-                $response['extraurl'] = '&subproject=' . urlencode($subproject_name);
+                // Add an extra URL argument to menu navigation items.
+                $extraurl = '&subproject=' . urlencode($subproject_name);
+                foreach (['previous', 'next', 'current'] as $item) {
+                    if ($response['menu'][$item]) {
+                        $response['menu'][$item] .= $extraurl;
+                    }
+                }
                 $response['subprojectname'] = $subproject_name;
 
                 $subproject_response = array();
