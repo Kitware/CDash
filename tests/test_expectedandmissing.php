@@ -54,8 +54,8 @@ class ExpectedAndMissingTestCase extends KWWebTestCase
             $this->fail("Error marking $buildname as expected");
         }
 
-        // Verify that our API lists this build even though it hasn't submitted today.
-        $this->get($this->url . "/api/v1/index.php?project=$projectname");
+        // Verify that our API lists this build even though it hasn't submitted on this day.
+        $this->get($this->url . "/api/v1/index.php?project=$projectname&date=2019-04-18");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $buildgroup = array_pop($jsonobj['buildgroups']);
