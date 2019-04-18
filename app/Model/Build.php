@@ -2443,7 +2443,12 @@ class Build
             get_dates($build_date, $this->NightlyStartTime);
 
         $beginning_timestamp = $currentstarttime;
-        $end_timestamp = $currentstarttime + 3600 * 24;
+
+        $datetime = new \DateTime();
+        $datetime->setTimeStamp($beginning_timestamp);
+        $datetime->add(new \DateInterval('P1D'));
+        $end_timestamp = $datetime->getTimestamp();
+
         $this->BeginningOfDay = gmdate(FMT_DATETIME, $beginning_timestamp);
         $this->EndOfDay = gmdate(FMT_DATETIME, $end_timestamp);
 
