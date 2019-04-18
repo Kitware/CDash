@@ -180,6 +180,7 @@ add_php_test(changeid)
 add_php_test(updateonlyuserstats)
 add_php_test(expiredbuildrules)
 add_php_test(filterblocks)
+add_php_test(indexnextprevious)
 
 if(CDASH_GITHUB_USERNAME AND CDASH_GITHUB_PASSWORD)
   add_php_test(github_PR_comment)
