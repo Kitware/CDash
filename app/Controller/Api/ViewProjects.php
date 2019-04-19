@@ -126,14 +126,14 @@ class ViewProjects extends \CDash\Controller\Api
     {
         $projects = [];
 
-        $projectres = $this->db->query(
+        $stmt = $this->db->query(
                 "SELECT p.id, p.name, p.description,
                 (SELECT COUNT(1) FROM subproject WHERE projectid=p.id AND
                  endtime='1980-01-01 00:00:00') AS nsubproj
                 FROM project AS p
                 WHERE p.public='1' ORDER BY p.name");
-        while ($project_array = pdo_fetch_array($projectres)) {
-            $project = array();
+        while ($project_array = $stmt->fetch()) {
+            $project = [];
             $project['id'] = $project_array['id'];
             $project['name'] = $project_array['name'];
             $project['description'] = $project_array['description'];
@@ -141,10 +141,14 @@ class ViewProjects extends \CDash\Controller\Api
             $projectid = $project['id'];
 
             $project['last_build'] = 'NA';
-            $lastbuildquery = $this->db->query("SELECT submittime FROM build WHERE projectid='$projectid' ORDER BY submittime DESC LIMIT 1");
-            if (pdo_num_rows($lastbuildquery) > 0) {
-                $lastbuild_array = pdo_fetch_array($lastbuildquery);
-                $project['last_build'] = $lastbuild_array['submittime'];
+            $last_build_stmt = $this->db->prepare(
+                'SELECT submittime FROM build
+                WHERE projectid = :projectid
+                ORDER BY submittime DESC LIMIT 1');
+            $this->db->execute($last_build_stmt, [':projectid' => $projectid]);
+            $submittime = $last_build_stmt->fetchColumn();
+            if ($submittime !== false) {
+                $project['last_build'] = $submittime;
             }
 
             // Display if the project is considered active or not
@@ -157,10 +161,16 @@ class ViewProjects extends \CDash\Controller\Api
             if ($project['last_build'] != 'NA' && $project['dayssincelastsubmission'] <= $this->config->get('CDASH_ACTIVE_PROJECT_DAYS')) {
                 // Get the number of builds in the past 7 days
                 $submittime_UTCDate = gmdate(FMT_DATETIME, time() - 604800);
-                $buildquery = $this->db->query("SELECT count(id) FROM build WHERE projectid='$projectid' AND starttime>'" . $submittime_UTCDate . "'");
-                echo pdo_error();
-                $buildquery_array = pdo_fetch_array($buildquery);
-                $project['nbuilds'] = $buildquery_array[0];
+                $num_builds_stmt = $this->db->prepare(
+                    'SELECT COUNT(id) FROM build
+                    WHERE projectid = :projectid AND
+                          starttime > :time');
+                $params = [
+                    ':projectid' => $projectid,
+                    ':time'      => $submittime_UTCDate
+                ];
+                $this->db->execute($num_builds_stmt, $params);
+                $project['nbuilds'] = $num_builds_stmt->fetchColumn();
             }
 
             if (!$onlyactive || $project['dayssincelastsubmission'] <= $this->config->get('CDASH_ACTIVE_PROJECT_DAYS')) {
