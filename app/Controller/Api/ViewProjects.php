@@ -58,7 +58,11 @@ class ViewProjects extends \CDash\Controller\Api
             $response['noregister'] = 1;
         }
 
-        if (isset($_GET['allprojects']) && $_GET['allprojects'] == 1) {
+        $response['showoldtoggle'] = true;
+        if ($this->config->get('CDASH_ACTIVE_PROJECT_DAYS') == 0) {
+            $this->showAllProjects = true;
+            $response['showoldtoggle'] = false;
+        } elseif (isset($_GET['allprojects']) && $_GET['allprojects'] == 1) {
             $this->showAllProjects = true;
         }
         $response['allprojects'] = $this->showAllProjects;
