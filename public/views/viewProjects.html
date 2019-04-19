@@ -88,10 +88,10 @@
       <tr>
         <td height="1" colspan="14" align="right">
           <div id="showold">
-            <a ng-show="cdash.allprojects == 0" href="viewProjects.php?allprojects=1">
+            <a ng-show="!cdash.allprojects" href="viewProjects.php?allprojects=1">
               Show all {{cdash.nprojects}} projects
             </a>
-            <a ng-show="cdash.allprojects == 1" href="viewProjects.php">
+            <a ng-show="cdash.allprojects" href="viewProjects.php">
               Hide old projects
             </a>
           </div>

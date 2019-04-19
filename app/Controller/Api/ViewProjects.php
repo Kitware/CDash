@@ -28,6 +28,7 @@ class ViewProjects extends \CDash\Controller\Api
     {
         parent::__construct($db);
         $this->config = Config::getInstance();
+        $this->showAllProjects = false;
     }
 
     public function getResponse()
@@ -58,14 +59,12 @@ class ViewProjects extends \CDash\Controller\Api
         }
 
         if (isset($_GET['allprojects']) && $_GET['allprojects'] == 1) {
-            $response['allprojects'] = 1;
-        } else {
-            $response['allprojects'] = 0;
+            $this->showAllProjects = true;
         }
-        $showallprojects = $response['allprojects'];
+        $response['allprojects'] = $this->showAllProjects;
         $response['nprojects'] = $this->getNumberPublicProjects();
 
-        $projects = $this->getProjects(!$showallprojects);
+        $projects = $this->getProjects();
         $projects_response = array();
         foreach ($projects as $project) {
             $project_response = array();
@@ -122,7 +121,7 @@ class ViewProjects extends \CDash\Controller\Api
     }
 
     /** return an array of public projects */
-    public function getProjects($onlyactive = true)
+    public function getProjects()
     {
         $projects = [];
 
@@ -173,7 +172,7 @@ class ViewProjects extends \CDash\Controller\Api
                 $project['nbuilds'] = $num_builds_stmt->fetchColumn();
             }
 
-            if (!$onlyactive || $project['dayssincelastsubmission'] <= $this->config->get('CDASH_ACTIVE_PROJECT_DAYS')) {
+            if ($this->showAllProjects || $project['dayssincelastsubmission'] <= $this->config->get('CDASH_ACTIVE_PROJECT_DAYS')) {
                 $projects[] = $project;
             }
         }
