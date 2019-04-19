@@ -63,9 +63,9 @@ class ViewProjects extends \CDash\Controller\Api
             $response['allprojects'] = 0;
         }
         $showallprojects = $response['allprojects'];
-        $response['nprojects'] = get_number_public_projects();
+        $response['nprojects'] = $this->getNumberPublicProjects();
 
-        $projects = get_projects(!$showallprojects);
+        $projects = $this->getProjects(!$showallprojects);
         $projects_response = array();
         foreach ($projects as $project) {
             $project_response = array();
@@ -112,5 +112,61 @@ class ViewProjects extends \CDash\Controller\Api
         $generation_time = round($end - $start, 2);
         $response['generationtime'] = $generation_time;
         return $response;
+    }
+
+    /** return the total number of public projects */
+    public function getNumberPublicProjects()
+    {
+        $stmt = $this->db->query("SELECT count(id) FROM project WHERE public='1'");
+        return $stmt->fetchColumn();
+    }
+
+    /** return an array of public projects */
+    public function getProjects($onlyactive = true)
+    {
+        $projects = [];
+
+        $projectres = $this->db->query(
+                "SELECT p.id, p.name, p.description,
+                (SELECT COUNT(1) FROM subproject WHERE projectid=p.id AND
+                 endtime='1980-01-01 00:00:00') AS nsubproj
+                FROM project AS p
+                WHERE p.public='1' ORDER BY p.name");
+        while ($project_array = pdo_fetch_array($projectres)) {
+            $project = array();
+            $project['id'] = $project_array['id'];
+            $project['name'] = $project_array['name'];
+            $project['description'] = $project_array['description'];
+            $project['numsubprojects'] = $project_array['nsubproj'];
+            $projectid = $project['id'];
+
+            $project['last_build'] = 'NA';
+            $lastbuildquery = $this->db->query("SELECT submittime FROM build WHERE projectid='$projectid' ORDER BY submittime DESC LIMIT 1");
+            if (pdo_num_rows($lastbuildquery) > 0) {
+                $lastbuild_array = pdo_fetch_array($lastbuildquery);
+                $project['last_build'] = $lastbuild_array['submittime'];
+            }
+
+            // Display if the project is considered active or not
+            $dayssincelastsubmission = $this->config->get('CDASH_ACTIVE_PROJECT_DAYS') + 1;
+            if ($project['last_build'] != 'NA') {
+                $dayssincelastsubmission = (time() - strtotime($project['last_build'])) / 86400;
+            }
+            $project['dayssincelastsubmission'] = $dayssincelastsubmission;
+
+            if ($project['last_build'] != 'NA' && $project['dayssincelastsubmission'] <= $this->config->get('CDASH_ACTIVE_PROJECT_DAYS')) {
+                // Get the number of builds in the past 7 days
+                $submittime_UTCDate = gmdate(FMT_DATETIME, time() - 604800);
+                $buildquery = $this->db->query("SELECT count(id) FROM build WHERE projectid='$projectid' AND starttime>'" . $submittime_UTCDate . "'");
+                echo pdo_error();
+                $buildquery_array = pdo_fetch_array($buildquery);
+                $project['nbuilds'] = $buildquery_array[0];
+            }
+
+            if (!$onlyactive || $project['dayssincelastsubmission'] <= $this->config->get('CDASH_ACTIVE_PROJECT_DAYS')) {
+                $projects[] = $project;
+            }
+        }
+        return $projects;
     }
 }
