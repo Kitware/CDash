@@ -273,6 +273,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
                         $parent_duration_set = true;
                     }
                 }
+                $build->SaveTotalTestsTime();
 
                 $config = \CDash\Config::getInstance();
                 if ($config->get('CDASH_ENABLE_FEED')) {

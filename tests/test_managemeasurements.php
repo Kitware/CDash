@@ -21,7 +21,8 @@ class ManageMeasurementsTestCase extends KWWebTestCase
     {
         parent::__construct();
 
-        $this->PDO = get_link_identifier()->getPdo();
+        $this->PDO = CDash\Database::getInstance();
+        $this->PDO->getPdo();
         $this->BuildId = null;
         $this->SubProjectBuildId = null;
         $this->MeasurementIds = [];
@@ -36,7 +37,7 @@ class ManageMeasurementsTestCase extends KWWebTestCase
             remove_build($this->SubProjectBuildId);
         }
         foreach ($this->MeasurementIds as $measurement_id) {
-            $this->PDO->exec(
+            $this->PDO->query(
                 "DELETE FROM measurement WHERE id = $measurement_id");
         }
     }
@@ -102,6 +103,12 @@ class ManageMeasurementsTestCase extends KWWebTestCase
         if (!$this->SubProjectBuildId > 0) {
             $this->fail("Expected positive integer for build ID, found $this->BuildId");
         }
+
+        // Verify that the buildtesttime table correctly multiplies
+        // test execution time by the number of processors used.
+        $stmt = $this->PDO->prepare("SELECT time FROM buildtesttime WHERE buildid = :buildid");
+        $this->PDO->execute($stmt, [':buildid' => $this->BuildId]);
+        $this->assertEqual(12.13, $stmt->fetchColumn());
 
         // Login as admin.
         $client = $this->getGuzzleClient();
