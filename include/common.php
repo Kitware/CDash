@@ -192,9 +192,14 @@ function time_difference($duration, $compact = false, $suffix = '', $displayms =
     $duration -= $hours * 3600;
     $mins = floor($duration / 60);
     $duration -= $mins * 60;
-    $secs = floor($duration);
-    $duration -= $secs;
-    $msecs = round($duration * 1000);
+    if ($displayms) {
+        $secs = floor($duration);
+        $duration -= $secs;
+        $msecs = round($duration * 1000);
+    } else {
+        $secs = round($duration);
+        $msecs = 0;
+    }
 
     $diff = '';
     if ($compact) {
