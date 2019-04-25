@@ -82,9 +82,15 @@ class ExcludeSubProjectsTestCase extends KWWebTestCase
             return 1;
         }
 
-        // Verify test duration of 44 seconds (normally 48).
-        if ($build['test']['timefull'] !== 44) {
-            $this->fail('Expected test duration to be 44, found ' . $build['test']['timefull']);
+        // Verify test duration of 48 seconds (unchanged).
+        if ($build['test']['timefull'] !== 48) {
+            $this->fail('Expected proc time to be 48, found ' . $build['test']['timefull']);
+            return 1;
+        }
+
+        // Verify proc time of 84.81 (normally 102.98).
+        if ($build['test']['procTimeFull'] !== 84.81) {
+            $this->fail('Expected proc time to be 84.81, found ' . $build['test']['procTimeFull']);
             return 1;
         }
 
@@ -188,9 +194,15 @@ class ExcludeSubProjectsTestCase extends KWWebTestCase
             return 1;
         }
 
-        // Verify test duration of 4 seconds (normally 48).
-        if ($build['test']['timefull'] !== 4) {
-            $this->fail('Expected test duration to be 4, found ' . $build['test']['timefull']);
+        // Verify test duration of 48 seconds (unchanged).
+        if ($build['test']['timefull'] !== 48) {
+            $this->fail('Expected test duration to be 48, found ' . $build['test']['timefull']);
+            return 1;
+        }
+
+        // Verify proc time of 18.17 (normally 102.98).
+        if ($build['test']['procTimeFull'] !== 18.17) {
+            $this->fail('Expected test duration to be 18.17, found ' . $build['test']['procTimeFull']);
             return 1;
         }
 
@@ -271,12 +283,6 @@ class ExcludeSubProjectsTestCase extends KWWebTestCase
                 'compare' => 42,
                 'value' => 35,
                 'exclude' => 'Sacado'
-            ),
-            array(
-                'filter' => 'testsduration',
-                'compare' => 41,
-                'value' => 48,
-                'exclude' => 'TrilinosFramework'
             ),
             array(
                 'filter' => 'testsfailed',

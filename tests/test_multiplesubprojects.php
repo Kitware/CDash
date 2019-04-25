@@ -524,22 +524,26 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
                         $expected_num_defect_types = 1;
                         $expected_num_defects = 1;
                         $expected_defect_type = 'Invalid Pointer Write';
+                        $expected_proc_time = 0.01;
                         break;
                     case 'MyProductionCode':
                         $expected_num_analyses = 1;
                         $expected_num_defect_types = 0;
                         $expected_num_defects = 0;
+                        $expected_proc_time = 0.0;
                         break;
                     case 'MyThirdPartyDependency':
                         $expected_num_analyses = 1;
                         $expected_num_defect_types = 1;
                         $expected_num_defects = 2;
                         $expected_defect_type = 'Memory Leak';
+                        $expected_proc_time = 0.0;
                         break;
                     case 'EmptySubproject':
                         $expected_num_analyses = 0;
                         $expected_num_defect_types = 0;
                         $expected_num_defects = 0;
+                        $expected_proc_time = 0.0;
                         break;
                 }
                 $num_analyses = count($jsonobj['dynamicanalyses']);
@@ -569,8 +573,8 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
                 // Verify that test duration is calculated correctly.
                 $stmt = $pdo->query("SELECT time FROM buildtesttime WHERE buildid = {$build['id']}");
                 $found = $stmt->fetchColumn();
-                if ($found !== false && $found != 4) {
-                    throw new Exception("Expected 4 but found $found for {$build['id']}'s test duration");
+                if ($found !== false && $found != $expected_proc_time) {
+                    throw new Exception("Expected $expected_proc_time but found $found for {$build['id']}'s test duration");
                 }
             }
 
