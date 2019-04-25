@@ -153,9 +153,9 @@ class Timeline extends Index
         }
         $response = $this->getTimelineChartData($stmt);
         $response['colors'] = [
-            $this->colors[self::ERROR],
+            $this->colors[self::CLEAN],
             $this->colors[self::FAILURE],
-            $this->colors[self::CLEAN]
+            $this->colors[self::ERROR]
         ];
         return $response;
     }
@@ -190,8 +190,9 @@ class Timeline extends Index
         $this->includeCleanBuilds = false;
         $response = $this->getTimelineChartData($stmt);
         $response['colors'] = [
-            $this->colors[self::ERROR],
-            $this->colors[self::CLEAN]
+            $this->colors[self::CLEAN],
+            $this->colors[self::FAILURE],
+            $this->colors[self::ERROR]
         ];
         return $response;
     }
@@ -221,9 +222,9 @@ class Timeline extends Index
             ]
         ];
         $colors = [
-            $this->colors[self::ERROR],
+            $this->colors[self::CLEAN],
             $this->colors[self::FAILURE],
-            $this->colors[self::CLEAN]
+            $this->colors[self::ERROR]
         ];
         $build_data = [];
 
@@ -434,7 +435,7 @@ class Timeline extends Index
             $time_chart_data[] = $trend;
         }
 
-        $response['data'] = $time_chart_data;
+        $response['data'] = array_reverse($time_chart_data);
         return $response;
     }
 
