@@ -77,7 +77,7 @@ class TestOverview extends ResultsApi
         if (date(FMT_DATE, $this->currentStartTime) != date(FMT_DATE)) {
             $menu['next'] = 'testOverview.php?project=' . urlencode($this->project->Name) . "&date={$this->nextDate}$group_link";
         } else {
-            $menu['nonext'] = '1';
+            $menu['next'] = false;
         }
         $today = date(FMT_DATE);
         $menu['current'] = 'testOverview.php?project=' . urlencode($this->project->Name) . "&date=$today$group_link";

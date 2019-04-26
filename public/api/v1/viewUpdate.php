@@ -51,7 +51,7 @@ $next_buildid = $build->GetNextBuildId();
 if ($previous_buildid > 0) {
     $menu_response['previous'] = "viewUpdate.php?buildid=$previous_buildid";
 } else {
-    $menu_response['noprevious'] = '1';
+    $menu_response['previous'] = false;
 }
 
 $menu_response['current'] = "viewUpdate.php?buildid=$current_buildid";
@@ -59,7 +59,7 @@ $menu_response['current'] = "viewUpdate.php?buildid=$current_buildid";
 if ($next_buildid > 0) {
     $menu_response['next'] = "viewUpdate.php?buildid=$next_buildid";
 } else {
-    $menu_response['nonext'] = '1';
+    $menu_response['next'] = false;
 }
 $response['menu'] = $menu_response;
 

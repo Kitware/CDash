@@ -1797,4 +1797,23 @@ class Project
         }
         return true;
     }
+
+    /**
+     * Return the beginning and the end of the specified testing day
+     * in DATETIME format.
+     */
+    public function ComputeTestingDayBounds($date)
+    {
+        list($unused, $beginning_timestamp) =
+            get_dates($date, $this->NightlyTime);
+
+        $datetime = new \DateTime();
+        $datetime->setTimeStamp($beginning_timestamp);
+        $datetime->add(new \DateInterval('P1D'));
+        $end_timestamp = $datetime->getTimestamp();
+
+        $beginningOfDay = gmdate(FMT_DATETIME, $beginning_timestamp);
+        $endOfDay = gmdate(FMT_DATETIME, $end_timestamp);
+        return [$beginningOfDay, $endOfDay];
+    }
 }

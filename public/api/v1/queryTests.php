@@ -83,7 +83,7 @@ if (isset($_GET['parentid'])) {
     if ($previous_buildid > 0) {
         $menu['previous'] = "$base_url&parentid=$previous_buildid" . $limit_param;
     } else {
-        $menu['noprevious'] = '1';
+        $menu['previous'] = false;
     }
 
     $menu['current'] = "$base_url&parentid=$current_buildid" . $limit_param;
@@ -91,7 +91,7 @@ if (isset($_GET['parentid'])) {
     if ($next_buildid > 0) {
         $menu['next'] = "$base_url&parentid=$next_buildid" . $limit_param;
     } else {
-        $menu['nonext'] = '1';
+        $menu['next'] = false;
     }
 } else {
     if ($date == '') {
@@ -108,7 +108,7 @@ if (isset($_GET['parentid'])) {
     if (has_next_date($date, $currentstarttime)) {
         $menu['next'] = $base_url . '&date=' . $nextdate . $limit_param;
     } else {
-        $menu['nonext'] = '1';
+        $menu['next'] = false;
     }
 }
 

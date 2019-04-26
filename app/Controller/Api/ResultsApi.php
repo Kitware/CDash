@@ -16,6 +16,7 @@
 namespace CDash\Controller\Api;
 
 use CDash\Database;
+use CDash\Model\Build;
 use CDash\Model\Project;
 
 /**
@@ -119,6 +120,17 @@ class ResultsApi extends ProjectApi
             }
         } elseif (isset($_REQUEST['date'])) {
             $this->date = $_REQUEST['date'];
+        } else {
+            // No date specified. Look up the most recent date with results.
+            $stmt = $this->db->prepare('
+                SELECT starttime FROM build
+                WHERE projectid = :projectid
+                ORDER BY starttime DESC LIMIT 1');
+            $this->db->execute($stmt, [':projectid' => $this->project->Id]);
+            $starttime = $stmt->fetchColumn();
+            if ($starttime) {
+                $this->date = Build::GetTestingDate($starttime, strtotime($this->project->NightlyTime));
+            }
         }
 
         if ($this->beginDate == self::BEGIN_EPOCH) {

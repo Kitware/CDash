@@ -2534,15 +2534,13 @@ class Build
             return true;
         }
 
+        $project = new Project();
+        $project->Id = $this->ProjectId;
+        $project->Fill();
+
         $build_date = $this->GetDate();
-        list($previousdate, $currentstarttime, $nextdate) =
-            get_dates($build_date, $this->NightlyStartTime);
-
-        $beginning_timestamp = $currentstarttime;
-        $end_timestamp = $currentstarttime + 3600 * 24;
-        $this->BeginningOfDay = gmdate(FMT_DATETIME, $beginning_timestamp);
-        $this->EndOfDay = gmdate(FMT_DATETIME, $end_timestamp);
-
+        list($this->BeginningOfDay, $this->EndOfDay) =
+            $project->ComputeTestingDayBounds($build_date);
         return true;
     }
 

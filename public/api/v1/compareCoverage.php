@@ -82,7 +82,7 @@ $menu['current'] = "$page_id?project=$projectname_encoded&date=$today";
 if (has_next_date($date, $currentstarttime)) {
     $menu['next'] = "$page_id?project=$projectname_encoded&date=$nextdate";
 } else {
-    $menu['nonext'] = '1';
+    $menu['next'] = false;
 }
 $response['menu'] = $menu;
 

@@ -17,6 +17,7 @@ namespace CDash\Controller\Api;
 
 use CDash\Config;
 use CDash\Database;
+use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
 
@@ -1271,6 +1272,83 @@ class Index extends ResultsApi
             for ($j = 0; $j < count($this->buildgroupsResponse[$i]['builds']); $j++) {
                 $idx = array_search($this->buildgroupsResponse[$i]['builds'][$j]['position'], $this->subProjectPositions);
                 $this->buildgroupsResponse[$i]['builds'][$j]['position'] = $idx + 1;
+            }
+        }
+    }
+
+    // Record next & previous dates (if any).
+    public function determineNextPrevious(&$response, $base_url)
+    {
+        // Next & previous are handled separately when we're viewing the
+        // results of a single parent build.
+        if ($this->childView) {
+            return;
+        }
+
+        // Use the project model to get the bounds of the current testing day.
+        list($beginningOfDay, $endOfDay) =
+            $this->project->ComputeTestingDayBounds($this->date);
+
+        // Query the database to find the previous testing day
+        // that has build results.
+        $query_params = [
+            ':projectid' => $this->project->Id,
+            ':time'      => $beginningOfDay
+        ];
+
+        // Only search for builds from a certain group when buildGroupName is set.
+        $extra_join = '';
+        $extra_where = '';
+        if ($this->buildGroupName) {
+            $query_params[':groupname'] = $this->buildGroupName;
+            $extra_join = '
+                JOIN build2group b2g ON b2g.buildid = b.id
+                JOIN buildgroup bg ON bg.id = b2g.groupid';
+            $extra_where = 'AND bg.name = :groupname';
+        }
+
+        $sql = "SELECT b.starttime FROM build b
+                $extra_join
+                WHERE b.projectid = :projectid
+                AND b.starttime < :time
+                $extra_where
+                ORDER BY starttime DESC LIMIT 1";
+        $previous_stmt = $this->db->prepare($sql);
+        $this->db->execute($previous_stmt, $query_params);
+        $starttime = $previous_stmt->fetchColumn();
+        if ($starttime) {
+            $previous_date = Build::GetTestingDate($starttime, strtotime($this->project->NightlyTime));
+            $response['menu']['previous'] = "$base_url&date=$previous_date";
+        } else {
+            $response['menu']['previous'] = false;
+        }
+
+        // Find the next testing day that has build results.
+        $sql = "SELECT b.starttime FROM build b
+                $extra_join
+                WHERE b.projectid = :projectid
+                AND b.starttime >= :time
+                $extra_where
+                ORDER BY starttime LIMIT 1";
+        $next_stmt = $this->db->prepare($sql);
+        $query_params[':time'] = $endOfDay;
+        $this->db->execute($next_stmt, $query_params);
+        $starttime = $next_stmt->fetchColumn();
+        if ($starttime) {
+            $next_date = Build::GetTestingDate($starttime, strtotime($this->project->NightlyTime));
+            $response['menu']['next'] = "$base_url&date=$next_date";
+        } else {
+            $response['menu']['next'] = false;
+        }
+
+        // Add an extra URL argument to menu navigation items when subprojectid is set.
+        if ($this->subProjectId) {
+            $subproject_name = $response['subprojectname'];
+            $extraurl = '&subproject=' . urlencode($subproject_name);
+            foreach (['previous', 'next', 'current'] as $item) {
+                if ($response['menu'][$item]) {
+                    $response['menu'][$item] .= $extraurl;
+                }
             }
         }
     }

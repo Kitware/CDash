@@ -121,7 +121,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
         $this->login();
 
         // Find buildid for coverage.
-        $content = $this->connect($this->url . '/api/v1/index.php?project=InsightExample&date=20090223');
+        $content = $this->connect($this->url . '/api/v1/index.php?project=InsightExample');
         $jsonobj = json_decode($content, true);
         if (count($jsonobj['coverages']) < 1) {
             $this->fail('No coverage build found when expected');
@@ -203,7 +203,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
 
     public function testProjectExperimentalLinkMachineName()
     {
-        $content = $this->connect($this->url . '/api/v1/index.php?project=BatchmakeExample&date=20090223');
+        $content = $this->connect($this->url . '/api/v1/index.php?project=BatchmakeExample');
         $jsonobj = json_decode($content, true);
         if (count($jsonobj['buildgroups']) < 1) {
             $this->fail('No build found when expected');
@@ -224,7 +224,7 @@ class ProjectWebPageTestCase extends KWWebTestCase
 
     public function testProjectExperimentalLinkBuildSummary()
     {
-        $content = $this->connect($this->url . '/api/v1/index.php?project=BatchmakeExample&date=20090223');
+        $content = $this->connect($this->url . '/api/v1/index.php?project=BatchmakeExample');
         $jsonobj = json_decode($content, true);
         if (count($jsonobj['buildgroups']) < 1) {
             $this->fail('No build found when expected');
