@@ -15,6 +15,7 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use CDash\Collection\LabelCollection;
 use PDO;
 use CDash\Database;
 
@@ -376,5 +377,33 @@ class BuildConfigure
         }
 
         return $response;
+    }
+
+    /**
+     * This method returns the URI for the given BuildConfigure id, or the URI for the current
+     * BuildConfigure if no id is provided.
+     *
+     * @param null $default_id
+     * @return string
+     */
+    public function getURL($default_id = null)
+    {
+        $config = \CDash\Config::getInstance();
+        $id = is_null($default_id) ? $this->BuildId : $default_id;
+        return "{$config->getBaseUrl()}/viewConfigure.php?buildid={$id}";
+    }
+
+    /**
+     * Returns the current BuildConfigure's Label property as a LabelCollection.
+     * @return LabelCollection
+     */
+    public function GetLabelCollection()
+    {
+        $collection = new LabelCollection();
+        $this->Labels = is_null($this->Labels) ? [] : $this->Labels;
+        foreach ($this->Labels as $label) {
+            $collection->add($label);
+        }
+        return $collection;
     }
 }

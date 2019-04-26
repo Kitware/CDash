@@ -233,7 +233,7 @@ class KWWebTestCase extends WebTestCase
         $passed = true;
         foreach ($lines as $line) {
             $line = trim($line);
-            if ($line && strpos($line, $expected[$count]) === false) {
+            if (!isset($expected[$count]) || ($line && !str_contains($line, $expected[$count]))) {
                 $message = "Unexpected output in logfile:\n"
                     . "Expected: {$expected[$count]}\n"
                     . "   Found: {$line}\n";
@@ -242,6 +242,9 @@ class KWWebTestCase extends WebTestCase
                 break;
             }
             $count += $line ? 1 : 0;
+            if (count($expected) >= $count) {
+                break;
+            }
         }
 
         $count = count($lines);
@@ -359,9 +362,14 @@ class KWWebTestCase extends WebTestCase
         return true;
     }
 
-    public function submission($projectname, $file, $header = null)
+    public function submission($projectname, $file, $header = null, $debug = false)
     {
         $url = $this->url . "/submit.php?project=$projectname";
+
+        if ($debug) {
+            $url .= "&XDEBUG_SESSION_START";
+        }
+
         $result = $this->uploadfile($url, $file, $header);
         return $this->check_submission_result($result);
     }

@@ -31,14 +31,13 @@ class CDashTestCase extends \PHPUnit_Framework_TestCase
     private $queries;
 
     /** @var  Database $originalDatabase*/
-    private static $originalDatabase;
+    private $originalDatabase;
 
     /** @var Container $originalServiceContainer */
     private static $originalServiceContainer;
 
     public static function tearDownAfterClass()
     {
-        Database::setInstance(Database::class, self::$originalDatabase);
         ServiceContainer::setInstance(ServiceContainer::class, self::$originalServiceContainer);
         parent::tearDownAfterClass();
     }
@@ -47,6 +46,9 @@ class CDashTestCase extends \PHPUnit_Framework_TestCase
     {
         global $cdash_database_connection;
         $cdash_database_connection = null;
+        if ($this->originalDatabase) {
+            Database::setInstance(Database::class, $this->originalDatabase);
+        }
         parent::tearDown();
     }
 
@@ -64,7 +66,7 @@ class CDashTestCase extends \PHPUnit_Framework_TestCase
 
     protected function setDatabaseMocked()
     {
-        self::$originalDatabase = Database::getInstance();
+        $this->originalDatabase = Database::getInstance();
 
         $mock_stmt = $this->getMockBuilder(\PDOStatement::class)
             ->disableOriginalConstructor()

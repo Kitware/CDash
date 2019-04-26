@@ -1,4 +1,18 @@
 <?php
+/**
+ * =========================================================================
+ *   Program:   CDash - Cross-Platform Dashboard System
+ *   Module:    $Id$
+ *   Language:  PHP
+ *   Date:      $Date$
+ *   Version:   $Revision$
+ *   Copyright (c) Kitware, Inc. All rights reserved.
+ *   See LICENSE or http://www.cdash.org/licensing/ for details.
+ *   This software is distributed WITHOUT ANY WARRANTY; without even
+ *   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ *   PURPOSE. See the above copyright notices for more information.
+ * =========================================================================
+ */
 namespace CDash\Collection;
 
 abstract class Collection implements CollectionInterface
@@ -33,6 +47,7 @@ abstract class Collection implements CollectionInterface
         if ($this->valid()) {
             return $this->collection[$this->key()];
         }
+        return null;
     }
 
     /**
@@ -57,6 +72,7 @@ abstract class Collection implements CollectionInterface
         if (isset($this->keys[$this->position])) {
             return $this->keys[$this->position];
         }
+        return null;
     }
 
     /**
@@ -68,7 +84,15 @@ abstract class Collection implements CollectionInterface
      */
     public function valid()
     {
-        return isset($this->collection[$this->key()]);
+        $key = $this->key();
+        // a call to key may result in null, e.g. !isset. To prevent endless loop in the event
+        // that collection was set with a key equal to an empty string, we must check for the null
+        // type here.
+        if (is_null($key)) {
+            return false;
+        }
+
+        return isset($this->collection[$key]);
     }
 
     /**
@@ -83,14 +107,19 @@ abstract class Collection implements CollectionInterface
     }
 
     /**
-     * Add an item to the collection.
      * @param $item
-     * @return mixed
+     * @param null $name
+     * @return $this|mixed
+     * TODO: Watch this in a debugger when integration testing
      */
     public function addItem($item, $name = null)
     {
-        $key = is_null($name) ? count($this->collection) : $name;
-        $this->keys[] = $key;
+        $ptr = count($this->collection);
+        $key = is_null($name) ? $ptr : $name;
+
+        if (!in_array($key, $this->keys) && !in_array($key, array_keys($this->collection))) {
+            $this->keys[$ptr] = $key;
+        }
         $this->collection[$key] = $item;
         return $this;
     }
@@ -124,7 +153,7 @@ abstract class Collection implements CollectionInterface
      */
     public function has($key)
     {
-        return in_array($key, $this->keys);
+        return in_array($key, array_keys($this->collection));
     }
 
     /**
@@ -137,5 +166,44 @@ abstract class Collection implements CollectionInterface
             return $this->collection[$key];
         }
         return null;
+    }
+
+    /**
+     * @param $key
+     * @return mixed
+     */
+    public function remove($key)
+    {
+        $item = null;
+        if ($this->has($key)) {
+            $item = $this->collection[$key];
+            unset($this->collection[$key], $this->keys[array_search($key, $this->keys)]);
+        }
+        return $item;
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray()
+    {
+        return array_values($this->collection);
+    }
+
+    /**
+     * @param int $size
+     * @return Collection
+     */
+    public function first($size = 1)
+    {
+        $self = new static;
+        $collectionSize = $this->count();
+        $size = $size <= $collectionSize ? $size : $collectionSize;
+        for ($i = 0; $i < $size; $i++) {
+            $key = $this->keys[$i];
+            $item = $this->collection[$key];
+            $self->addItem($item, $key);
+        }
+        return $self;
     }
 }

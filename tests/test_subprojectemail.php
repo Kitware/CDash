@@ -14,16 +14,14 @@ use CDash\Model\Project;
 use CDash\Model\SubProject;
 use CDash\Model\User;
 use CDash\Model\UserProject;
+use CDash\Database;
 
 class SubProjectEmailTestCase extends KWWebTestCase
 {
-    private $builds;
-    private $parentBuilds;
-
     public function __construct()
     {
         parent::__construct();
-        $this->PDO = get_link_identifier()->getPdo();
+        $this->PDO = Database::getInstance();
     }
 
     public function testSubProjectEmail()

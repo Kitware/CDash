@@ -18,9 +18,16 @@ namespace CDash\Model;
 require_once  'include/common.php';
 require_once 'include/cdashmail.php';
 
+use CDash\Collection\SubscriberCollection;
+
 use CDash\Config;
 use CDash\Database;
+use CDash\Messaging\Notification\NotifyOn;
+use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
+use CDash\Messaging\Preferences\NotificationPreferences;
+use CDash\Messaging\Preferences\NotificationPreferencesInterface;
 use CDash\ServiceContainer;
+use CDash\Model\Subscriber;
 
 /** Main project class */
 class Project
@@ -74,6 +81,11 @@ class Project
     /** @var \PDO $PDO */
     private $PDO;
 
+    /**
+     * @var SubscriberCollection
+     */
+    private $SubscriberCollection;
+
     public function __construct()
     {
         $this->Initialize();
@@ -126,6 +138,12 @@ class Project
         }
         if (empty($this->WebApiKey)) {
             $this->WebApiKey = '';
+        }
+        if (empty($this->EmailMaxItems)) {
+            $this->EmailMaxItems = 5;
+        }
+        if (empty($this->EmailMaxChars)) {
+            $this->EmailMaxChars = 255;
         }
         if (empty($this->WarningsFilter)) {
             $this->WarningsFilter = '';
@@ -1677,6 +1695,95 @@ class Project
         add_log("Too many builds for $this->Name", 'project_has_too_many_builds',
                 LOG_INFO, $this->Id);
         return true;
+    }
+
+    /**
+     * Returns the Project's SubscriberCollection object. This method lazily loads the
+     * SubscriberCollection if the object does not exist.
+     *
+     * @returns \CDash\Collection\SubscriberCollection
+     */
+    public function GetSubscriberCollection()
+    {
+        if (!$this->SubscriberCollection) {
+            $this->SubscriberCollection = $this->GetProjectSubscribers();
+        }
+
+        return $this->SubscriberCollection;
+    }
+
+    /**
+     * Sets the Project's SubscriberCollection property.
+     *
+     * @param SubscriberCollection $subscribers
+     */
+    public function SetSubscriberCollection(SubscriberCollection $subscribers)
+    {
+        $this->SubscriberCollection = $subscribers;
+    }
+
+    /**
+     * Returns a SubscriberCollection; a collection of all users and their subscription preferences.
+     *
+     * @return SubscriberCollection
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     */
+    public function GetProjectSubscribers()
+    {
+        $service = ServiceContainer::getInstance()->getContainer();
+        $collection = $service->make(SubscriberCollection::class);
+        $userTable = qid('user');
+        // TODO: works, but maybe find a better query
+        $sql = "
+            SELECT
+               u2p.*,
+               u.email email,
+               labelid haslabels
+            FROM user2project u2p
+              JOIN $userTable u ON u.id = u2p.userid
+              LEFT JOIN labelemail ON labelemail.userid = u2p.userid
+            WHERE u2p.projectid = :id
+            ORDER BY u.email;
+        ";
+
+        $user = $this->PDO->prepare($sql);
+        $user->bindParam(':id', $this->Id, \PDO::PARAM_INT);
+        $user->execute();
+
+        foreach ($user->fetchAll(\PDO::FETCH_OBJ) as $row) {
+            /** @var NotificationPreferences $preferences */
+            $preferences = $service->make(
+                BitmaskNotificationPreferences::class,
+                ['mask' => $row->emailcategory]
+            );
+            $preferences->setPreferencesFromEmailTypeProperty($row->emailtype);
+            $preferences->set(NotifyOn::FIXED, $row->emailsuccess);
+            $preferences->set(NotifyOn::SITE_MISSING, $row->emailmissingsites);
+            $preferences->set(NotifyOn::REDUNDANT, $this->EmailRedundantFailures);
+            $preferences->set(NotifyOn::LABELED, (bool)$row->haslabels);
+
+            /** @var Subscriber $subscriber */
+            $subscriber = $service->make(Subscriber::class, ['preferences' => $preferences]);
+            $subscriber
+                ->setAddress($row->email)
+                ->setUserId($row->userid);
+
+            $collection->add($subscriber);
+        }
+
+        return $collection;
+    }
+
+    /**
+     * Returns a self referencing URI of the current Project.
+     *
+     * @return string
+     */
+    public function GetUrlForSelf()
+    {
+        $config = Config::getInstance();
+        return "{$config->getBaseUrl()}/viewProject?projectid={$this->Id}";
     }
 
     // Modify the build error/warning filters for this project if necessary.

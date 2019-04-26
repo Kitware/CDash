@@ -1,34 +1,32 @@
 <?php
-/*=========================================================================
-  Program:   CDash - Cross-Platform Dashboard System
-  Module:    $Id$
-  Language:  PHP
-  Date:      $Date$
-  Version:   $Revision$
-
-  Copyright (c) Kitware, Inc. All rights reserved.
-  See LICENSE or http://www.cdash.org/licensing/ for details.
-
-  This software is distributed WITHOUT ANY WARRANTY; without even
-  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
-  PURPOSE. See the above copyright notices for more information.
-=========================================================================*/
-
 use CDash\Collection\BuildCollection;
 
 require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
 
-use CDash\Model\Build;
-use CDash\Model\BuildInformation;
-use CDash\Model\BuildTest;
-use CDash\Model\Feed;
-use CDash\Model\Image;
-use CDash\Model\Label;
-use CDash\Model\Site;
-use CDash\Model\SiteInformation;
-use CDash\Model\Test;
-use CDash\Model\TestMeasurement;
+use CDash\Collection\Collection;
+use CDash\Collection\SubscriptionBuilderCollection;
+use CDash\Messaging\Notification\NotifyOn;
+use CDash\Messaging\Subscription\CommitAuthorSubscriptionBuilder;
+use CDash\Messaging\Subscription\UserSubscriptionBuilder;
+use CDash\Messaging\Topic\MissingTestTopic;
+use CDash\Messaging\Topic\TestFailureTopic;
+use CDash\Messaging\Topic\TopicCollection;
+use CDash\Messaging\Topic\TopicInterface;
+use CDash\Model\ActionableTypes;
+use \CDash\Model\Build;
+use CDash\Model\BuildGroup;
+use \CDash\Model\BuildInformation;
+use \CDash\Model\BuildTest;
+use \CDash\Model\Feed;
+use \CDash\Model\Image;
+use \CDash\Model\Label;
+use \CDash\Model\Site;
+use \CDash\Model\SiteInformation;
+use CDash\Model\SubscriberInterface;
+use \CDash\Model\Test;
+use \CDash\Model\TestMeasurement;
+use \CDash\Model\Project;
 
 class TestingHandler extends AbstractHandler implements ActionableBuildInterface
 {
@@ -89,6 +87,9 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
 
         if ($name == 'SITE') {
             $this->Site = $factory->create(Site::class);
+            $this->Project = $factory->create(Project::class);
+            $this->Project->Id = $this->projectid;
+
             $this->Site->Name = $attributes['NAME'];
             if (empty($this->Site->Name)) {
                 $this->Site->Name = '(empty)';
@@ -201,7 +202,8 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
         } elseif ($name == 'LABEL' && $parent == 'LABELS') {
             if (!empty($this->TestSubProjectName)) {
                 $this->SubProjectName = $this->TestSubProjectName;
-            } elseif (isset($this->Test)) {
+            }
+            if (isset($this->Test)) {
                 $this->Test->AddLabel($this->Label);
             }
         } elseif ($name == 'NAMEDMEASUREMENT') {
@@ -256,6 +258,8 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
                 $build->UpdateTestNumbers($this->NumberTestsPassed[$subproject],
                     $this->NumberTestsFailed[$subproject],
                     $this->NumberTestsNotRun[$subproject]);
+
+                // Is it really necessary to have to load the build from the db here?
                 $build->ComputeTestTiming();
 
                 if ($this->StartTimeStamp > 0 && $this->EndTimeStamp > 0) {
@@ -328,7 +332,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
                     break;
                 }
             }
-            if (empty($this->TestSubProjectName)) {
+            if (is_a($this->Label, Label::class)) {
                 $this->Label->SetText($data);
             }
         }
@@ -365,17 +369,18 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
 
         $build->SiteId = $this->Site->Id;
         $build->Name = $this->BuildName;
+        $build->SubProjectName = $this->SubProjectName;
         $build->SetStamp($this->BuildStamp);
         $build->Generator = $this->Generator;
         $build->Information = $this->BuildInformation;
         $build->ProjectId = $this->projectid;
+        $build->SetProject($this->Project);
         $build->SubmitTime = gmdate(FMT_DATETIME);
 
         // TODO: dark days lie in waiting for this...
         $build->StartTime = gmdate(FMT_DATETIME);
 
         $build->SetSubProject($this->SubProjectName);
-
         $build->GetIdFromName($this->SubProjectName);
         $build->RemoveIfDone();
 
@@ -414,8 +419,60 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
         return $this->Builds;
     }
 
+    /**
+     * @return BuildCollection
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * TODO: consider refactoring into abstract_handler asap
+     */
     public function GetBuildCollection()
     {
-        return new BuildCollection($this->Builds);
+        $factory = $this->getModelFactory();
+        /** @var BuildCollection $collection */
+        $collection = $factory->create(BuildCollection::class);
+        foreach ($this->Builds as $build) {
+            $collection->add($build);
+        }
+        return $collection;
+    }
+
+    /**
+     * @param SubscriberInterface $subscriber
+     * @return TopicCollection
+     */
+    public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber)
+    {
+        $collection = new TopicCollection();
+        $preferences = $subscriber->getNotificationPreferences();
+        if ($preferences->get(NotifyOn::TEST_FAILURE)) {
+            $collection->add(new TestFailureTopic());
+            $collection->add(new MissingTestTopic());
+        }
+        return $collection;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function GetSubscriptionBuilderCollection()
+    {
+        $collection = (new SubscriptionBuilderCollection)
+            ->add(new UserSubscriptionBuilder($this))
+            ->add(new CommitAuthorSubscriptionBuilder($this));
+        return $collection;
+    }
+
+    /**
+     * @return BuildGroup
+     */
+    public function GetBuildGroup()
+    {
+        $factory = $this->getModelFactory();
+        $buildGroup = $factory->create(BuildGroup::class);
+        foreach ($this->Builds as $build) {
+            $buildGroup->SetId($build->GroupId);
+            break;
+        }
+        return $buildGroup;
     }
 }

@@ -9,31 +9,115 @@ use DOMText;
 
 abstract class UseCase
 {
-    const TEST = 1;
+    /* actionable steps */
+    const TEST = 'Test';
+    const CONFIG = 'Config';
+    const UPDATE = 'Update';
+    const BUILD = 'Build';
+    const DYNAMIC_ANALYSIS = 'DynamicAnalysis';
 
+    /* build types (modes) */
+    const NIGHTLY = 'Nightly';
+    const CONTINUOUS = 'Continuous';
+    const EXPERIMENTAL = 'Experimental';
+
+    private $faker;
     private $ids;
     protected $subprojects = [];
     protected $properties = [];
     protected $projectId = 321;
     protected $scheduleId = 0;
+    protected $startTime;
+    protected $endTime;
 
+    protected $authors = [];
     protected $testCase;
 
     abstract public function build();
 
+    public function __construct($name, array $properties = [])
+    {
+        $this->properties[$name] = $properties;
+
+        $this->setStartTime(time());
+        $this->setEndTime(time()+1);
+    }
+
     /**
      * @param CDashUseCaseTestCase $testCase
      * @param $type
-     * @return UseCase
+     * @return TestUseCase|ConfigUseCase|UpdateUseCase|BuildUseCase
      */
     public static function createBuilder(CDashUseCaseTestCase $testCase, $type)
     {
         switch ($type) {
             case self::TEST:
                 $useCase = new TestUseCase();
-                $testCase->setUseCaseModelFactory($useCase);
-                return $useCase;
+                break;
+            case self::CONFIG:
+                $useCase = new ConfigUseCase();
+                break;
+            case self::UPDATE:
+                $useCase = new UpdateUseCase();
+                break;
+            case self::BUILD:
+              $useCase = new BuildUseCase();
+              break;
+            case self::DYNAMIC_ANALYSIS:
+                $useCase = new DynamicAnalysisUseCase();
+                break;
+            default:
+                $useCase = null;
+
         }
+        $testCase->setUseCaseModelFactory($useCase);
+        return $useCase;
+    }
+
+    /**
+     * @param $start_time
+     * @return self
+     */
+    public function setStartTime($start_time)
+    {
+        $this->startTime = $start_time;
+        return $this;
+    }
+
+    /**
+     * @param $end_time
+     * @return self
+     */
+    public function setEndTime($end_time)
+    {
+        $this->endTime = $end_time;
+        return $this;
+    }
+
+    public function setAuthors(array $authors)
+    {
+        $this->authors = $authors;
+        return $this;
+    }
+
+    public function getAuthors($build)
+    {
+        if (isset($this->authors[$build])) {
+            return $this->authors[$build];
+        }
+        return [];
+    }
+
+    public function createAuthor($author, array $builds = [])
+    {
+        $builds = empty($builds) ? ['all'] : $builds;
+        foreach ($builds as $build) {
+            if (!isset($this->authors[$build])) {
+                $this->authors[$build] = [];
+            }
+            $this->authors[$build][] = $author;
+        }
+        return $this;
     }
 
     /**
@@ -76,19 +160,28 @@ abstract class UseCase
     }
 
     /**
-     * @param $class_name
+     * @param $tag_name
      * @param array $properties
      * @return $this
      */
-    public function setModel($class_name, array $properties)
+    public function setModel($tag_name, array $properties)
     {
-        if (!isset($this->properties[$class_name])) {
-            $this->properties[$class_name] = [];
+        if (!isset($this->properties[$tag_name])) {
+            $this->properties[$tag_name] = [];
         }
 
-        $this->properties[$class_name][] = $properties;
+        $this->properties[$tag_name][] = $properties;
 
         return $this;
+    }
+
+    public function getModel($tag_name)
+    {
+        $model = [];
+        if (isset($this->properties[$tag_name])) {
+            $model = $this->properties[$tag_name];
+        }
+        return $model;
     }
 
     /**
@@ -113,81 +206,6 @@ abstract class UseCase
         }
 
         $this->subprojects[$name] = $labels;
-        return $this;
-    }
-
-    /**
-     * @param array $properties
-     * @return UseCase
-     */
-    public function createTest(array $properties)
-    {
-        if (isset($properties[0])) {
-            $hash = [
-                'Name' => $properties[0],
-                'Status' => $properties[1],
-            ];
-            unset($properties[0], $properties[1]);
-            $properties = array_merge($hash, $properties);
-        }
-
-        // create some realistic defaults if properties don't exist
-        if (!isset($properties['Path'])) {
-            $properties['Path'] = '/a/path/to/test';
-        }
-
-        if (!isset($properties['FullName'])) {
-            $properties['FullName'] = "{$properties['Path']}/{$properties['Name']}";
-        }
-
-        if (!isset($properties['FullCommandLine'])) {
-            $properties['FullCommandLine'] = "{$properties['FullName']} --run-test .";
-        }
-
-        $this->setModel('Test', $properties);
-        return $this;
-    }
-
-    /**
-     * @param $name
-     * @param array $labels
-     * @return $this
-     */
-    public function createTestPassed($name, array $labels = [])
-    {
-        $this->createTest([$name, TestUseCase::PASSED, 'Labels' => $labels]);
-        return $this;
-    }
-
-    /**
-     * @param $name
-     * @param array $labels
-     * @return $this
-     */
-    public function createTestFailed($name, array $labels = [])
-    {
-        $this->createTest([$name, TestUseCase::FAILED, 'Labels' => $labels]);
-        return $this;
-    }
-
-    /**
-     * @param $name
-     * @param array $labels
-     * @return $this
-     */
-    public function createTestNotRun($name, array $labels = [])
-    {
-        $this->createTest([$name, TestUseCase::NOTRUN, 'Labels' => $labels]);
-        return $this;
-    }
-
-    /**
-     * @param $name
-     * @return UseCase
-     */
-    public function createTestTimedout($name, array $labels = [])
-    {
-        $this->createTest([$name, TestUseCase::TIMEOUT, 'Labels' => $labels]);
         return $this;
     }
 
@@ -252,6 +270,17 @@ abstract class UseCase
         }
     }
 
+    protected function createElapsedMinutesElement(DOMElement $parent)
+    {
+        $elapsed = 0;
+        if ($this->startTime && $this->endTime) {
+            $total = $this->endTime - $this->startTime;
+            $elapsed = $total / 60;
+        }
+        $node = $parent->appendChild(new DOMElement('Elapsed'));
+        $node->appendChild(new DOMText($elapsed));
+    }
+
     /**
      * @param $test_name
      * @param array $properties
@@ -265,5 +294,98 @@ abstract class UseCase
             }
         }
         return $this;
+    }
+
+    /**
+     * @param string $command
+     * @return $this
+     */
+    public function setConfigureCommand($command)
+    {
+        $this->properties['Config']['command'] = $command;
+        return $this;
+    }
+
+    /**
+     * @param int $status
+     * @return $this
+     */
+    public function setConfigureStatus($status)
+    {
+        $this->properties['Config']['status'] = $status;
+        return $this;
+    }
+
+    /**
+     * @param string $log
+     * @return $this
+     */
+    public function setConfigureLog($log)
+    {
+        $this->properties['Config']['log'] = $log;
+        return $this;
+    }
+
+    /**
+     * @param int $minutes
+     * @return $this
+     */
+    public function setConfigureElapsedMinutes($minutes)
+    {
+        $this->properties['Config']['elapsed'] = $minutes;
+        return $this;
+    }
+
+    /**
+     * Checks if an array is associative, sequential or a mixture of both. Will return true
+     * only if all array keys are ints.
+     *
+     * @param array $array
+     * @return bool
+     * @ref https://gist.github.com/Thinkscape/1965669
+     */
+    public function isSequential(array $array)
+    {
+        return $array === array_values($array);
+    }
+
+    public function getFaker()
+    {
+        if (!$this->faker) {
+            $this->faker = \Faker\Factory::create();
+        }
+        return $this->faker;
+    }
+
+    public function createChildElementsFromKeys(DOMElement $parent, array $attributes, $keys = [])
+    {
+        $subset = array_filter(
+            $attributes,
+            function ($key) use ($keys) {
+                return empty($keys) || in_array($key, $keys);
+            },
+            ARRAY_FILTER_USE_KEY
+        );
+
+        foreach ($subset as $key => $values) {
+            $values = is_array($values) ? $values : [$values];
+            foreach ($values as $value) {
+                $node = $parent->appendChild(new DOMElement($key));
+                if ($value) {
+                    $node->appendChild(new DOMText($value));
+                }
+            }
+        }
+    }
+
+    protected function setNameInLabels($name, array &$properties)
+    {
+        if ($name) {
+            if (isset($properties['Labels']) && is_array($properties['Labels'])) {
+                $properties['Labels'][] = $name;
+            } else {
+                $properties['Labels'] = [$name];
+            }
+        }
     }
 }

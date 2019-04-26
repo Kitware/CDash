@@ -17,17 +17,29 @@
 require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
 
+use CDash\Collection\BuildCollection;
+use CDash\Collection\Collection;
+use CDash\Collection\SubscriptionBuilderCollection;
+use CDash\Messaging\Notification\NotifyOn;
+use CDash\Messaging\Subscription\CommitAuthorSubscriptionBuilder;
+use CDash\Messaging\Subscription\UserSubscriptionBuilder;
+use CDash\Messaging\Topic\BuildErrorTopic;
+use CDash\Messaging\Topic\Decoratable;
+use CDash\Messaging\Topic\TopicCollection;
+use CDash\Model\ActionableTypes;
 use CDash\Config;
 use CDash\Model\Build;
 use CDash\Model\BuildError;
 use CDash\Model\BuildErrorFilter;
 use CDash\Model\BuildFailure;
+use CDash\Model\BuildGroup;
 use CDash\Model\BuildInformation;
 use CDash\Model\Feed;
 use CDash\Model\Label;
 use CDash\Model\Project;
 use CDash\Model\Site;
 use CDash\Model\SiteInformation;
+use CDash\Model\SubscriberInterface;
 
 class BuildHandler extends AbstractHandler implements ActionableBuildInterface
 {
@@ -40,6 +52,7 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
     private $Builds;
     private $BuildInformation;
     private $BuildCommand;
+    private $BuildGroup;
     private $BuildLog;
     private $Labels;
     // Map SubProjects to Labels
@@ -55,9 +68,7 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
     {
         parent::__construct($projectid, $scheduleid);
         $this->Builds = [];
-        $this->Site = new Site();
         $this->Append = false;
-        $this->Feed = new Feed();
         $this->BuildLog = '';
         $this->Labels = [];
         $this->SubProjects = [];
@@ -69,16 +80,18 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
     public function startElement($parser, $name, $attributes)
     {
         parent::startElement($parser, $name, $attributes);
+        $factory = $this->getModelFactory();
 
         if ($name == 'SITE') {
+            $this->Site = $factory->create(Site::class);
             $this->Site->Name = $attributes['NAME'];
             if (empty($this->Site->Name)) {
                 $this->Site->Name = '(empty)';
             }
             $this->Site->Insert();
 
-            $siteInformation = new SiteInformation();
-            $this->BuildInformation = new BuildInformation();
+            $siteInformation = $factory->create(SiteInformation::class);
+            $this->BuildInformation = $factory->create(BuildInformation::class);
             $this->BuildName = "";
             $this->BuildStamp = "";
             $this->Generator = "";
@@ -119,7 +132,7 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
                 $this->SubProjects[$this->SubProjectName] = array();
             }
             if (!array_key_exists($this->SubProjectName, $this->Builds)) {
-                $build = new Build();
+                $build = $factory->create(Build::class);
                 if (!empty($this->PullRequest)) {
                     $build->SetPullRequest($this->PullRequest);
                 }
@@ -133,7 +146,7 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
         } elseif ($name == 'BUILD') {
             if (empty($this->Builds)) {
                 // No subprojects
-                $build = new Build();
+                $build = $factory->create(Build::class);
                 if (!empty($this->PullRequest)) {
                     $build->SetPullRequest($this->PullRequest);
                 }
@@ -145,15 +158,15 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
                 $this->Builds[''] = $build;
             }
         } elseif ($name == 'WARNING') {
-            $this->Error = new BuildError();
+            $this->Error = $factory->create(BuildError::class);
             $this->Error->Type = 1;
             $this->ErrorSubProjectName = "";
         } elseif ($name == 'ERROR') {
-            $this->Error = new BuildError();
+            $this->Error = $factory->create(BuildError::class);
             $this->Error->Type = 0;
             $this->ErrorSubProjectName = "";
         } elseif ($name == 'FAILURE') {
-            $this->Error = new BuildFailure();
+            $this->Error = $factory->create(BuildFailure::class);
             $this->Error->Type = 0;
             if ($attributes['TYPE'] == 'Error') {
                 $this->Error->Type = 0;
@@ -162,7 +175,7 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
             }
             $this->ErrorSubProjectName = "";
         } elseif ($name == 'LABEL') {
-            $this->Label = new Label();
+            $this->Label = $factory->create(Label::class);
         }
     }
 
@@ -170,6 +183,7 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
     {
         $parent = $this->getParent(); // should be before endElement
         parent::endElement($parser, $name);
+        $factory = $this->getModelFactory();
 
         if ($name == 'BUILD') {
             $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
@@ -201,7 +215,7 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
                 $duration = $this->EndTimeStamp - $this->StartTimeStamp;
                 $build->UpdateBuildDuration($duration, !$all_at_once);
                 if ($all_at_once && !$parent_duration_set) {
-                    $parent_build = new Build();
+                    $parent_build = $factory->create(Build::class);
                     $parent_build->Id = $build->GetParentId();
                     $parent_build->UpdateBuildDuration($duration, false);
                     $parent_duration_set = true;
@@ -210,6 +224,7 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
                 $build->ComputeDifferences();
 
                 if ($this->config->get('CDASH_ENABLE_FEED')) {
+                    $this->Feed = $factory->create(Feed::class);
                     // Insert the build into the feed
                     $this->Feed->InsertBuild($this->projectid, $build->Id);
                 }
@@ -254,6 +269,27 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
                 }
             }
             if (array_key_exists($this->SubProjectName, $this->Builds)) {
+                // TODO: temporary fix for subtle, hard to track down issue
+                // BuildFailures' labels are not getting set in label2buildfailure when using new
+                // subproject xml schema, e.g. (<SubProject name="..."><Label>...</Label></SubProject>.
+                // If the error is being set because this is a SubProject then presumably we may
+                // ensure that the label exists here, and if not, create it.
+
+                if (isset($this->Error->Labels)) {
+                    $hasLabel = false;
+                    foreach ($this->Labels as $lbl) {
+                        if ($lbl->Text === $this->SubProjectName) {
+                            $hasLabel = true;
+                            break;
+                        }
+                    }
+                    if (!$hasLabel) {
+                        $label = $factory->create(Label::class);
+                        $label->SetText($this->SubProjectName);
+                        $this->Error->AddLabel($label);
+                    }
+                }
+
                 $this->Builds[$this->SubProjectName]->AddError($this->Error);
             }
             unset($this->Error);
@@ -392,8 +428,91 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
     {
         return array_values($this->Builds);
     }
+
+    /**
+     * @return array|Build[]
+     */
     public function getActionableBuilds()
     {
         return $this->Builds;
+    }
+
+    /**
+     * @return BuildCollection
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * TODO: consider refactoring into abstract_handler asap
+     */
+    public function GetBuildCollection()
+    {
+        $factory = $this->getModelFactory();
+        /** @var BuildCollection $collection */
+        $collection = $factory->create(BuildCollection::class);
+        foreach ($this->Builds as $key => $build) {
+            if (is_numeric($key)) {
+                $collection->add($build);
+            } else {
+                $collection->addItem($build, $key);
+            }
+        }
+        return $collection;
+    }
+
+    /**
+     * @param SubscriberInterface $subscriber
+     * @return TopicCollection
+     */
+    public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber)
+    {
+        $collection = new TopicCollection();
+        $errors = new BuildErrorTopic();
+        $errors->setType(Build::TYPE_ERROR);
+        if ($errors->isSubscribedToBy($subscriber)) {
+            $collection->add($errors);
+        }
+
+        $warnings = new BuildErrorTopic();
+        $warnings->setType(Build::TYPE_WARN);
+        if ($warnings->isSubscribedToBy($subscriber)) {
+            $collection->add($warnings);
+        }
+        return $collection;
+    }
+
+    /**
+     * @return array
+     */
+    public function GetCommitAuthors()
+    {
+        $authors = [];
+
+        foreach ($this->Builds as $build) {
+            $authors = array_merge($authors, array_map(function ($email) {
+                return $email;
+            }, $build->GetCommitAuthors()));
+        }
+        return array_unique($authors);
+    }
+
+    /**
+     * @return Collection
+     */
+    public function GetSubscriptionBuilderCollection()
+    {
+        $collection = (new SubscriptionBuilderCollection)
+            ->add(new UserSubscriptionBuilder($this))
+            ->add(new CommitAuthorSubscriptionBuilder($this));
+        return $collection;
+    }
+
+    public function GetBuildGroup()
+    {
+        $factory = $this->getModelFactory();
+        $buildGroup = $factory->create(BuildGroup::class);
+        foreach ($this->Builds as $build) {
+            $buildGroup->SetId($build->GroupId);
+            break;
+        }
+        return $buildGroup;
     }
 }

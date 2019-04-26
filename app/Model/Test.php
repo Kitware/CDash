@@ -15,7 +15,8 @@
 =========================================================================*/
 namespace CDash\Model;
 
-use CDash\Collection\TestMeasurementCollection;
+// It is assumed that appropriate headers should be included before including this file
+use CDash\Collection\LabelCollection;
 use CDash\Config;
 use CDash\Database;
 use PDO;
@@ -23,6 +24,13 @@ use PDO;
 /** Test */
 class Test
 {
+    const FAILED = 'failed';
+    const PASSED = 'passed';
+    const OTHER_FAULT = 'OTHER_FAULT';
+    const TIMEOUT = 'Timeout';
+    const NOTRUN = 'notrun';
+    const DISABLED = 'Disabled';
+
     public $Id;
     public $Crc32;
     public $ProjectId;
@@ -37,7 +45,7 @@ class Test
     public $Labels;
     public $Measurements;
 
-    private $TestMeasurementCollection;
+    private $LabelCollection;
     private $Status;
     private $BuildTest;
 
@@ -287,26 +295,63 @@ class Test
     }
 
     /**
-     * @return TestMeasurementCollection
+    /**
+     * Returns the LabelCollection object for the current Test. It lazily loads a LabelCollection,
+     * then adds the current Test's Label array to the Collection if none exists.
+     *
+     * @return LabelCollection
      */
-    public function GetTestMeasurementCollection()
+    public function GetLabelCollection()
     {
-        if (!$this->TestMeasurementCollection) {
-            $collection = new TestMeasurementCollection();
-            foreach ($this->Measurements as $m) {
-                $collection->add($m);
+        if (!$this->LabelCollection) {
+            $this->LabelCollection = new LabelCollection();
+            foreach ($this->Labels as $label) {
+                $this->LabelCollection->add($label);
             }
-            $this->TestMeasurementCollection = $collection;
         }
-        return $this->TestMeasurementCollection;
+        return $this->LabelCollection;
     }
 
     /**
-     * @return
+     * Returns the ExecutionTime property of the current Test.
+     *
+     * @return double
      */
     public function GetExecutionTime()
     {
         $buildTest = $this->GetBuildTest();
         return (double)$buildTest->Time;
+    }
+
+    /**
+     * Returns true if the test has failed.
+     *
+     * @return bool
+     */
+    public function IsFailed()
+    {
+        return $this->GetStatus() === self::FAILED;
+    }
+
+    /**
+     * Returns true if the test has not run.
+     *
+     * @return bool
+     */
+    public function IsNotRun()
+    {
+        return $this->GetStatus() === self::NOTRUN;
+    }
+
+    /**
+     * Returns a self referencing URI for the current Test.
+     *
+     * @return string
+     */
+    public function GetUrlForSelf()
+    {
+        $config = \CDash\Config::getInstance();
+        $host_base = $config->getBaseUrl();
+        return "{$host_base}/testDetails.php?test={$this->Id}&build={$this->BuildTest->BuildId}";
     }
 }

@@ -6,7 +6,7 @@ abstract class Singleton
     private static $_instances = [];
 
     /**
-     * @return mixed
+     * @return static
      */
     public static function getInstance()
     {

@@ -381,6 +381,45 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
                 if ($build['position'] !== $index) {
                     throw new Exception("Expected {$index} but found ${build['position']} for {$label} position");
                 }
+
+                // Adding tests to ensure that labels associated with subprojects and tests were saved
+                $sql = "
+                    SELECT text
+                    FROM label2test
+                         JOIN label
+                    ON
+                      id=labelid
+                    WHERE buildid=:buildid;
+                ";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindParam(':buildid', $build['id'], PDO::PARAM_INT);
+                $stmt->execute();
+                $rows = array_unique($stmt->fetchAll(PDO::FETCH_COLUMN, 'text'));
+
+                $count = count($rows);
+
+                switch ($label) {
+                    case 'MyExperimentalFeature':
+                        $success = $count === 1 && in_array('MyExperimentalFeature', $rows);
+                        break;
+                    case 'MyProductionCode':
+                        $success = $count === 1 && in_array('MyProductionCode', $rows);
+                        break;
+                    case 'MyThirdPartyDependency':
+                        $success = $count === 1 && in_array('MyThirdPartyDependency', $rows);
+                        break;
+                    case 'EmptySubproject':
+                        $success = $count === 0;
+                        break;
+                    default:
+                        $success = false;
+                }
+
+                if (!$success) {
+                    $error_message = 'Unexpected label associations';
+                    $error_message .= "\n{$build['label']}: count: {$count}: rows: " . implode(',', $rows);
+                    throw new Exception($error_message);
+                }
             }
 
             // viewConfigure

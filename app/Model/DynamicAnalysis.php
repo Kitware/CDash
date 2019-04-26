@@ -20,6 +20,10 @@ use CDash\Database;
 
 class DynamicAnalysis
 {
+    const PASSED = 'passed';
+    const FAILED = 'failed';
+    const NOTRUN = 'notrun';
+
     public $Id;
     public $Status;
     public $Checker;
@@ -284,5 +288,18 @@ class DynamicAnalysis
     public function GetLastId($build)
     {
         return $this->GetRelatedId($build, 'DESC');
+    }
+
+    /**
+     * Returns a self referencing URI for the current DynamicAnalysis.
+     *
+     * @return string
+     */
+    public function GetUrlForSelf()
+    {
+        $config = Config::getInstance();
+        $base_url = $config->getBaseUrl();
+
+        return "{$base_url}/viewDynamicAnalysisFile.php?id={$this->Id}";
     }
 }

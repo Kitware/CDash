@@ -112,7 +112,8 @@ class Config extends Singleton
 
             $uri = "{$protocol}://{$host}{$port}{$path}";
         }
-        return $uri;
+
+        return rtrim($uri, '/');
     }
 
     public function load($config)

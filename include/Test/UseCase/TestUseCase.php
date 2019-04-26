@@ -23,31 +23,14 @@ class TestUseCase extends UseCase
     const TIMEOUT = 'Timeout';
     const NOTRUN = 'notrun';
 
-    private $startTime;
-    private $endTime;
-
-    /**
-     * @param $start_time
-     * @return TestUseCase
-     */
-    public function setStartTime($start_time)
+    public function __construct(array $properties = [])
     {
-        $this->startTime = $start_time;
-        return $this;
-    }
-
-    /**
-     * @param $end_time
-     * @return TestUseCase
-     */
-    public function setEndTime($end_time)
-    {
-        $this->endTime = $end_time;
-        return $this;
+        parent::__construct('Test', $properties);
     }
 
     /**
      * @return \AbstractHandler
+     * @throws \Exception
      */
     public function build()
     {
@@ -64,7 +47,7 @@ class TestUseCase extends UseCase
         $startDateTime->appendChild(new DOMText($startDateTimeText));
         $startTestTime->appendChild(new DOMText($this->startTime));
 
-        $tests = isset($this->properties['Test']) ? $this->properties['Test'] : [];
+        $tests = $this->getModel('Test');
 
         foreach ($tests as $test) {
             $this->createTestElement($testing, $test);
@@ -198,5 +181,80 @@ class TestUseCase extends UseCase
                 $exit_value->appendChild(new DOMText('127'));
                 $measurement_value->appendChild(new DOMText('Segmentation fault: exited with 127'));
         }
+    }
+
+    /**
+     * @param array $properties
+     * @return UseCase
+     */
+    public function createTest(array $properties)
+    {
+        if (isset($properties[0])) {
+            $hash = [
+                'Name' => $properties[0],
+                'Status' => $properties[1],
+            ];
+            unset($properties[0], $properties[1]);
+            $properties = array_merge($hash, $properties);
+        }
+
+        // create some realistic defaults if properties don't exist
+        if (!isset($properties['Path'])) {
+            $properties['Path'] = '/a/path/to/test';
+        }
+
+        if (!isset($properties['FullName'])) {
+            $properties['FullName'] = "{$properties['Path']}/{$properties['Name']}";
+        }
+
+        if (!isset($properties['FullCommandLine'])) {
+            $properties['FullCommandLine'] = "{$properties['FullName']} --run-test .";
+        }
+
+        $this->setModel('Test', $properties);
+        return $this;
+    }
+
+    /**
+     * @param $name
+     * @param array $labels
+     * @return $this
+     */
+    public function createTestPassed($name, array $labels = [])
+    {
+        $this->createTest([$name, TestUseCase::PASSED, 'Labels' => $labels]);
+        return $this;
+    }
+
+    /**
+     * @param $name
+     * @param array $labels
+     * @return $this
+     */
+    public function createTestFailed($name, array $labels = [])
+    {
+        $this->createTest([$name, TestUseCase::FAILED, 'Labels' => $labels]);
+        return $this;
+    }
+
+    /**
+     * @param $name
+     * @param array $labels
+     * @return $this
+     */
+    public function createTestNotRun($name, array $labels = [])
+    {
+        $this->createTest([$name, TestUseCase::NOTRUN, 'Labels' => $labels]);
+        return $this;
+    }
+
+    /**
+     * @param $name
+     * @return UseCase
+     */
+    public function createTestTimedout($name, array $labels = [])
+    {
+        $this->createTest([$name, TestUseCase::TIMEOUT, 'Labels' => $labels]);
+        return $this;
     }
 }

@@ -15,6 +15,7 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use CDash\Collection\LabelCollection;
 use CDash\Config;
 use CDash\Database;
 
@@ -33,6 +34,8 @@ class User
     public $TableName;
     public $TempTableName;
     private $PDO;
+    private $Credentials;
+    private $LabelCollection;
 
     public function __construct()
     {
@@ -46,7 +49,8 @@ class User
         $this->Filled = false;
         $this->TableName = qid('user');
         $this->TempTableName = qid('usertemp');
-        $this->PDO = Database::getInstance()->getPdo();
+        $this->PDO = Database::getInstance();
+        $this->Credentials = null;
     }
 
     /** Return if the user is admin */
@@ -453,5 +457,72 @@ class User
             add_log('password_hash returned false', 'PasswordHash', LOG_ERR);
         }
         return $passwordHash;
+    }
+
+    /**
+     * Returns the current User's repository credentials. (There may be multiple credentials
+     * for multiple repositories).
+     *
+     * @return array|bool|null
+     */
+    public function GetRepositoryCredentials()
+    {
+        if (is_null($this->Credentials)) {
+            if (!$this->Id) {
+                return false;
+            }
+
+            $sql = 'SELECT credential FROM user2repository WHERE userid = :id';
+            $stmt = $this->PDO->prepare($sql);
+            $stmt->bindParam(':id', $this->Id);
+            if ($this->PDO->execute($stmt)) {
+                $this->Credentials = $stmt->fetchAll(\PDO::FETCH_COLUMN);
+            }
+        }
+        return $this->Credentials;
+    }
+
+    /**
+     * Return's the current User's LabelCollection. If a LabelCollection is not yet defined
+     * this method checks the database for the labels of which a users has subscribed and
+     * return's them wrapped in a LabelCollection.
+     *
+     * @return LabelCollection
+     */
+    public function GetLabelCollection()
+    {
+        if (!$this->LabelCollection) {
+            $this->LabelCollection = new LabelCollection();
+            $sql = '
+              SELECT label.id, label.text 
+              FROM labelemail 
+              JOIN label ON label.id = labelemail.labelid
+              WHERE userid=:user';
+
+            $stmt = $this->PDO->prepare($sql);
+            $stmt->bindParam(':user', $this->Id);
+            if ($this->PDO->execute($stmt)) {
+                foreach ($stmt->fetchAll(\PDO::FETCH_OBJ) as $row) {
+                    $label = new Label();
+                    $label->Id = $row->id;
+                    $label->Text = $row->text;
+                    $this->LabelCollection->add($label);
+                }
+            }
+        }
+        return $this->LabelCollection;
+    }
+
+    /**
+     * Given a $label, the $label is added to the LabelCollection.
+     *
+     * @param Label $label
+     */
+    public function AddLabel(Label $label)
+    {
+        if (!$this->LabelCollection) {
+            $this->LabelCollection = new LabelCollection();
+        }
+        $this->LabelCollection->add($label);
     }
 }

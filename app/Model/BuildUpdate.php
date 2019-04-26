@@ -460,4 +460,15 @@ class BuildUpdate
 
         return true;
     }
+
+    /**
+     * Returns a self referencing URI for the current BuildUpdate.
+     *
+     * @return string
+     */
+    public function GetUrlForSelf()
+    {
+        $config = Config::getInstance();
+        return "{$config->getBaseUrl()}/viewUpdate.php?buildid={$this->BuildId}";
+    }
 }

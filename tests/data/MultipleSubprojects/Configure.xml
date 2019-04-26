@@ -28,11 +28,9 @@
         </Subproject>
         <Subproject name="MyProductionCode">
                 <Label>MyProductionCode</Label>
-                <Label>AnotherLabel</Label>
         </Subproject>
         <Subproject name="MyThirdPartyDependency">
-                <Label>MyThirdPartyDependency1</Label>
-                <Label>MyThirdPartyDependency2</Label>
+                <Label>MyThirdPartyDependency</Label>
         </Subproject>
         <Subproject name="EmptySubproject">
                 <Label>EmptySubproject</Label>

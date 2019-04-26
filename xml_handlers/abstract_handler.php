@@ -21,7 +21,9 @@ require_once 'xml_handlers/stack.php';
 
 use CDash\Config;
 use CDash\Model\Build;
+use CDash\Model\BuildGroup;
 use CDash\Model\Site;
+use CDash\Model\Project;
 
 abstract class AbstractHandler implements SaxHandler, CDashSubmissionHandlerInterface
 {
@@ -35,6 +37,7 @@ abstract class AbstractHandler implements SaxHandler, CDashSubmissionHandlerInte
     protected $SubProjectName;
 
     protected $ModelFactory;
+    protected $Project;
     protected $conifg;
 
     public function __construct($projectid, $scheduleid)
@@ -114,11 +117,40 @@ abstract class AbstractHandler implements SaxHandler, CDashSubmissionHandlerInte
         return [$this->Build];
     }
 
+    /**
+     * @return \CDash\ServiceContainer
+     */
     protected function getModelFactory()
     {
         if (!$this->ModelFactory) {
             $this->ModelFactory = \CDash\ServiceContainer::getInstance();
         }
         return $this->ModelFactory;
+    }
+
+    public function GetProject()
+    {
+        if (!$this->Project) {
+            $factory = $this->getModelFactory();
+            $this->Project = $factory->create(Project::class);
+            $this->Project->Id = $this->projectid;
+        }
+        return $this->Project;
+    }
+
+    /**
+     * @return Site
+     */
+    public function GetSite()
+    {
+        return $this->Site;
+    }
+
+    /**
+     * @return array
+     */
+    public function GetCommitAuthors()
+    {
+        return [];
     }
 }

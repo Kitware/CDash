@@ -14,16 +14,27 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use CDash\Collection\BuildCollection;
+
 require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
 
+use CDash\Collection\Collection;
+use CDash\Collection\SubscriptionBuilderCollection;
+use CDash\Messaging\Notification\NotifyOn;
+use CDash\Messaging\Subscription\CommitAuthorSubscriptionBuilder;
+use CDash\Messaging\Subscription\UserSubscriptionBuilder;
+use CDash\Messaging\Topic\TopicCollection;
+use CDash\Messaging\Topic\UpdateErrorTopic;
 use CDash\Model\Build;
+use CDash\Model\BuildGroup;
 use CDash\Model\BuildUpdate;
 use CDash\Model\BuildUpdateFile;
 use CDash\Model\Feed;
 use CDash\Model\Project;
 use CDash\Model\Repository;
 use CDash\Model\Site;
+use CDash\Model\SubscriberInterface;
 
 /** Write the updates in one block
  *  In case of a lot of updates this might take up some memory */
@@ -40,8 +51,11 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface
     public function __construct($projectID, $scheduleID)
     {
         parent::__construct($projectID, $scheduleID);
+        $factory = $this->getModelFactory();
+        $this->Build = $factory->create(Build::class);
+        $this->Site = $factory->create(Site::class);
         $this->Append = false;
-        $this->Feed = new Feed();
+        $this->Feed = $factory->create(Feed::class);
     }
 
     /** Start element */
@@ -71,8 +85,6 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface
             $this->UpdateFile->Status = $name;
         } elseif ($name == 'UPDATERETURNSTATUS') {
             $this->Update->Status = '';
-        } elseif ($name == 'SITE') {
-            $this->Site = $factory->create(Site::class);
         }
     }
 
@@ -123,6 +135,7 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface
 
             // Insert the update
             $this->Update->Insert();
+            $this->Build->SetBuildUpdate($this->Update);
 
             if ($this->config->get('CDASH_ENABLE_FEED')) {
                 // We need to work the magic here to have a good description
@@ -229,9 +242,63 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface
 
     /**
      * @return Build[]
+     * @deprecated
      */
     public function getActionableBuilds()
     {
         return $this->getBuilds();
+    }
+
+    /**
+     * @return BuildCollection
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     */
+    public function GetBuildCollection()
+    {
+        $factory = $this->getModelFactory();
+        /** @var BuildCollection $collection */
+        $collection = $factory->create(BuildCollection::class);
+        $collection->add($this->Build);
+        return $collection;
+    }
+
+    /**
+     * @param SubscriberInterface $subscriber
+     * @return TopicCollection
+     */
+    public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber)
+    {
+        $collection = new TopicCollection();
+        $preferences = $subscriber->getNotificationPreferences();
+        if ($preferences->get(NotifyOn::UPDATE_ERROR)) {
+            $topic = new UpdateErrorTopic();
+            $collection->add($topic);
+        }
+        return $collection;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function GetSubscriptionBuilderCollection()
+    {
+        $collection = (new SubscriptionBuilderCollection)
+            ->add(new UserSubscriptionBuilder($this))
+            ->add(new CommitAuthorSubscriptionBuilder($this));
+        return $collection;
+    }
+
+    public function GetCommitAuthors()
+    {
+        return parent::GetCommitAuthors();
+    }
+
+    public function GetBuildGroup()
+    {
+        $factory = $this->getModelFactory();
+        $buildGroup = $factory->create(BuildGroup::class);
+        $buildGroup->SetId($this->Build->GroupId);
+        return $buildGroup;
     }
 }

@@ -13,15 +13,23 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+
 namespace CDash\Model;
 
 include_once 'include/common.php';
 include_once 'include/ctestparserutils.php';
 include_once 'include/repository.php';
 
-use CDash\Collection\TestCollection;
+use CDash\Collection\BuildEmailCollection;
+use CDash\Collection\CollectionCollection;
+use CDash\Collection\DynamicAnalysisCollection;
+use CDash\Collection\LabelCollection;
 use CDash\Config;
+use CDash\Log;
+use CDash\Collection\TestCollection;
 use CDash\Database;
+use CDash\Messaging\Topic\Topic;
+use CDash\Model\ActionableTypes;
 use CDash\Model\BuildGroup;
 use CDash\ServiceContainer;
 use PDO;
@@ -58,6 +66,7 @@ class Build
 
     public $Errors;
     public $ErrorDiffs;
+    public $Failures;
     public $MissingTests;
 
     public $SubProjectId;
@@ -82,12 +91,26 @@ class Build
     public $NightlyStartTime;
     public $BeginningOfDay;
     public $EndOfDay;
+
     private $TestCollection;
-    private $Failures;
     private $PDO;
     private $Site;
     private $BuildUpdate;
+    private $Project;
+    private $CommitAuthors;
+    private $AggregateLabels;
+    private $ActionableType;
+    private $BuildConfigure;
+    private $LabelCollection;
+    private $DynamicAnalysisCollection;
+    private $BuildEmailCollection;
 
+    // TODO: ErrorDiffs appears to be no longer used?
+    private $ErrorDifferences;
+
+    /**
+     * Build constructor.
+     */
     public function __construct()
     {
         $this->Append = false;
@@ -95,6 +118,7 @@ class Build
         $this->EndTime = '1980-01-01 00:00:00';
         $this->Errors = [];
         $this->ErrorDiffs = [];
+        $this->Failures = [];
         $this->Filled = false;
         $this->Generator = '';
         $this->InsertErrors = true;
@@ -110,23 +134,34 @@ class Build
         $this->Type = '';
         $this->Uuid = '';
         $this->TestCollection = new TestCollection();
+        $this->CommitAuthors = [];
 
         $this->PDO = Database::getInstance()->getPdo();
     }
 
+    /**
+     * @return bool
+     */
     public function IsParentBuild()
     {
         return $this->ParentId == -1;
     }
 
+    /**
+     * @param $error
+     */
     public function AddError($error)
     {
         $error->BuildId = $this->Id;
         $this->Errors[] = $error;
     }
 
+    /**
+     * @param $label
+     */
     public function AddLabel($label)
     {
+        // TODO: turn into collection only
         if (!isset($this->Labels)) {
             $this->Labels = [];
         }
@@ -134,6 +169,9 @@ class Build
         $this->Labels[] = $label;
     }
 
+    /**
+     * @param $stamp
+     */
     public function SetStamp($stamp)
     {
         $this->Stamp = $stamp;
@@ -142,6 +180,9 @@ class Build
         }
     }
 
+    /**
+     * @return string
+     */
     public function GetStamp()
     {
         return $this->Stamp;
@@ -165,6 +206,8 @@ class Build
             return false;
         }
 
+        $this->SubProjectName = $subproject;
+
         $stmt = $this->PDO->prepare(
             "SELECT id FROM subproject WHERE name = ? AND projectid = ? AND
             endtime='1980-01-01 00:00:00'");
@@ -172,7 +215,6 @@ class Build
             return false;
         }
 
-        $this->SubProjectName = $subproject;
         $label = new Label;
         $label->Text = $subproject;
         $this->AddLabel($label);
@@ -238,7 +280,7 @@ class Build
     }
 
     /** Update the total testing duration */
-    public function SaveTotalTestsTime($duration, $update_parent=true)
+    public function SaveTotalTestsTime($duration, $update_parent = true)
     {
         if (!$this->Id || !is_numeric($this->Id)) {
             return false;
@@ -284,13 +326,17 @@ class Build
         }
 
         $stmt = $this->PDO->preapre(
-          'UPDATE build SET endtime = ? WHERE id = ?');
+            'UPDATE build SET endtime = ? WHERE id = ?');
         if (!pdo_execute($stmt, [$end_time, $this->Id])) {
             return false;
         }
         return true;
     }
 
+    /**
+     * @param $buildid
+     * @return bool|mixed
+     */
     public function QuerySubProjectId($buildid)
     {
         $stmt = $this->PDO->prepare(
@@ -387,7 +433,7 @@ class Build
     }
 
     /** Get the previous build id. */
-    public function GetPreviousBuildId($previous_parentid=null)
+    public function GetPreviousBuildId($previous_parentid = null)
     {
         if (!$this->Id) {
             return 0;
@@ -398,11 +444,11 @@ class Build
             "AND starttime < :starttime ORDER BY starttime DESC";
         $values_to_bind = [':starttime' => $this->StartTime];
         return $this->GetRelatedBuildId($previous_clause, $values_to_bind,
-                                        $previous_parentid);
+            $previous_parentid);
     }
 
     /** Get the next build id. */
-    public function GetNextBuildId($next_parentid=null)
+    public function GetNextBuildId($next_parentid = null)
     {
         if (!$this->Id) {
             return 0;
@@ -412,11 +458,11 @@ class Build
         $next_clause = "AND starttime > :starttime ORDER BY starttime";
         $values_to_bind = [':starttime' => $this->StartTime];
         return $this->GetRelatedBuildId($next_clause, $values_to_bind,
-                                        $next_parentid);
+            $next_parentid);
     }
 
     /** Get the most recent build id. */
-    public function GetCurrentBuildId($current_parentid=null)
+    public function GetCurrentBuildId($current_parentid = null)
     {
         if (!$this->Id) {
             return 0;
@@ -659,6 +705,9 @@ class Build
         return $stmt;
     }
 
+    /**
+     * @return bool|\PDOStatement
+     */
     public function GetConfigures()
     {
         if ($this->IsParentBuild()) {
@@ -738,6 +787,9 @@ class Build
         return 0;
     }
 
+    /**
+     * @return bool|void
+     */
     public function InsertLabelAssociations()
     {
         if ($this->Id) {
@@ -806,13 +858,13 @@ class Build
                 // Does the parent still need to be created?
                 if ($this->SubProjectName && $this->ParentId < 1) {
                     if (!$this->CreateParentBuild(
-                                $nbuilderrors, $nbuildwarnings)) {
+                        $nbuilderrors, $nbuildwarnings)) {
                         // Someone else created the parent after we called
                         // UpdateBuild(this->Id,...).
                         // In this case we also need to manually update
                         // the parent as well.
                         $this->UpdateBuild($this->ParentId,
-                                $nbuilderrors, $nbuildwarnings);
+                            $nbuilderrors, $nbuildwarnings);
                     }
                 }
                 // Now that the existing build and its parent (if any) have
@@ -865,7 +917,7 @@ class Build
     private function GetNumberOfTestsByField($field)
     {
         if ($field != 'testpassed' && $field != 'testfailed' &&
-                $field != 'testnotrun') {
+            $field != 'testnotrun') {
             return false;
         }
         $stmt = $this->PDO->prepare(
@@ -908,6 +960,8 @@ class Build
             return;
         }
 
+        $this->TestFailedCount = $numberTestsFailed;
+
         // If this is a subproject build, we also have to update its parents test numbers.
         $newFailed = $numberTestsFailed - $this->GetNumberOfFailedTests();
         $newNotRun = $numberTestsNotRun - $this->GetNumberOfNotRunTests();
@@ -920,7 +974,7 @@ class Build
             'UPDATE build SET testnotrun = ?, testfailed = ?, testpassed = ?
             WHERE id = ?');
         if (!pdo_execute($stmt,
-                [$numberTestsNotRun, $numberTestsFailed, $numberTestsPassed,
+            [$numberTestsNotRun, $numberTestsFailed, $numberTestsPassed,
                 $this->Id])) {
             return false;
         }
@@ -941,37 +995,41 @@ class Build
      */
     public function GetMissingTests()
     {
-        if (!$this->Id) {
-            add_log('BuildId is not set', 'Build::GetMissingTests', LOG_ERR,
-                $this->ProjectId, $this->Id, ModelType::BUILD, $this->Id);
-            return false;
+        if (!$this->MissingTests) {
+            $this->MissingTests = [];
+
+            if (!$this->Id) {
+                add_log('BuildId is not set', 'Build::GetMissingTests', LOG_ERR,
+                    $this->ProjectId, $this->Id, ModelType::BUILD, $this->Id);
+                return false;
+            }
+
+            $previous_build_tests = [];
+            $current_build_tests = [];
+
+            $previous_build = $this->GetPreviousBuildId();
+
+            $sql = "SELECT DISTINCT B.id, B.name FROM build2test A
+                LEFT JOIN test B
+                  ON A.testid=B.id
+                WHERE A.buildid=?
+                ORDER BY B.name
+             ";
+
+            $query = $this->PDO->prepare($sql);
+
+            pdo_execute($query, [$previous_build]);
+            foreach ($query->fetchAll(PDO::FETCH_OBJ) as $test) {
+                $previous_build_tests[$test->id] = $test->name;
+            }
+
+            pdo_execute($query, [$this->Id]);
+            foreach ($query->fetchAll(PDO::FETCH_OBJ) as $test) {
+                $current_build_tests[$test->id] = $test->name;
+            }
+            $this->MissingTests = array_diff($previous_build_tests, $current_build_tests);
         }
 
-        $previous_build_tests = [];
-        $current_build_tests = [];
-
-        $previous_build = $this->GetPreviousBuildId();
-
-        $sql = "SELECT DISTINCT B.name FROM build2test A
-            LEFT JOIN test B
-              ON A.testid=B.id
-            WHERE A.buildid=?
-            ORDER BY B.name
-         ";
-
-        $query = $this->PDO->prepare($sql);
-
-        pdo_execute($query, [$previous_build]);
-        foreach ($query->fetchAll(PDO::FETCH_OBJ) as $test) {
-            $previous_build_tests[$test->name] = $test->name;
-        }
-
-        pdo_execute($query, [$this->Id]);
-        foreach ($query->fetchAll(PDO::FETCH_OBJ) as $test) {
-            $current_build_tests[$test->name] = $test->name;
-        }
-
-        $this->MissingTests = array_diff($previous_build_tests, $current_build_tests);
         return $this->MissingTests;
     }
 
@@ -983,7 +1041,8 @@ class Build
     public function GetNumberOfMissingTests()
     {
         if (!is_array($this->MissingTests)) {
-            $this->GetMissingTests();
+            // feels clumsy but necessary for testing :( (for the time being)
+            $this->MissingTests = $this->GetMissingTests();
         }
 
         return count($this->MissingTests);
@@ -1003,7 +1062,7 @@ class Build
         }
 
         $limit_clause = '';
-        $limit = (int) trim($maxitems);
+        $limit = (int)trim($maxitems);
         if ($limit > 0) {
             $limit_clause = "LIMIT $limit";
         }
@@ -1044,7 +1103,7 @@ class Build
      */
     public function GetFailedTimeStatusTests($maxitems = 0, $max_time_status = 3)
     {
-        $max_time_status = (int) trim($max_time_status);
+        $max_time_status = (int)trim($max_time_status);
         $criteria = "b2t.timestatus > $max_time_status";
         return $this->GetTests($criteria, $maxitems);
     }
@@ -1196,7 +1255,7 @@ class Build
         // Check if a diff already exists for this build.
         $this->PDO->beginTransaction();
         $stmt = $this->PDO->prepare(
-                'SELECT * FROM configureerrordiff
+            'SELECT * FROM configureerrordiff
                 WHERE buildid = :buildid AND type = 1 FOR UPDATE');
         $stmt->bindParam(':buildid', $this->Id);
         pdo_execute($stmt);
@@ -1216,7 +1275,7 @@ class Build
         // UPDATE or INSERT a new record as necessary.
         if ($row) {
             $stmt = $this->PDO->prepare(
-                    'UPDATE configureerrordiff SET difference = :difference
+                'UPDATE configureerrordiff SET difference = :difference
                     WHERE buildid = :buildid AND type = 1');
         } else {
             $duplicate_sql = '';
@@ -1225,7 +1284,7 @@ class Build
                 $duplicate_sql = 'ON DUPLICATE KEY UPDATE difference = :difference';
             }
             $stmt = $this->PDO->prepare(
-                    "INSERT INTO configureerrordiff (buildid, type, difference)
+                "INSERT INTO configureerrordiff (buildid, type, difference)
                     VALUES(:buildid, 1, :difference)
                     $duplicate_sql");
         }
@@ -1337,7 +1396,7 @@ class Build
                     FROM build2test
                     WHERE buildid = ? AND testid = ?');
                 if (!pdo_execute($previous_test_stmt,
-                        [$previousbuildid, $previoustestid])) {
+                    [$previousbuildid, $previoustestid])) {
                     continue;
                 }
 
@@ -1392,8 +1451,8 @@ class Build
                 SET timemean = ?, timestd = ?, timestatus = ?
                 WHERE buildid = ? AND testid = ?');
             if (!pdo_execute($update_stmt,
-                    [$timemean, $timestd, $timestatus, $this->Id,
-                     $testid])) {
+                [$timemean, $timestd, $timestatus, $this->Id,
+                    $testid])) {
                 continue;
             }
             if ($timestatus >= $projecttestmaxstatus) {
@@ -1443,7 +1502,7 @@ class Build
 
         // Find the number of authors that contributed to this changeset.
         $nauthors_stmt = $this->PDO->prepare(
-                'SELECT count(author) FROM
+            'SELECT count(author) FROM
                     (SELECT uf.author FROM updatefile AS uf
                      JOIN build2update AS b2u ON (b2u.updateid=uf.updateid)
                      WHERE b2u.buildid=? GROUP BY author)
@@ -1470,6 +1529,9 @@ class Build
             $warnings = 0;
             $errors = 0;
             $tests = 0;
+
+            // cache the author, email results
+            $this->CommitAuthors = array_unique(array_merge($this->CommitAuthors, [$author, $email]));
 
             if ($author != $previousauthor) {
                 $newbuild = 1;
@@ -1564,7 +1626,7 @@ class Build
         // Insert or update appropriately.
         $this->PDO->beginTransaction();
         $stmt = $this->PDO->prepare(
-                'SELECT totalupdatedfiles FROM userstatistics
+            'SELECT totalupdatedfiles FROM userstatistics
                 WHERE userid=:userid AND projectid=:projectid AND
                 checkindate=:checkindate FOR UPDATE');
         $stmt->bindParam(':userid', $userid);
@@ -1576,7 +1638,7 @@ class Build
         if ($row) {
             // Update existing entry.
             $stmt = $this->PDO->prepare(
-                    'UPDATE userstatistics SET
+                'UPDATE userstatistics SET
                     totalupdatedfiles=totalupdatedfiles+1,
                     totalbuilds=totalbuilds+:totalbuilds,
                     nfixedwarnings=nfixedwarnings+:nfixedwarnings,
@@ -1601,7 +1663,7 @@ class Build
         } else {
             // Insert a new row into the database.
             $stmt = $this->PDO->prepare(
-                    'INSERT INTO userstatistics
+                'INSERT INTO userstatistics
                     (userid,projectid,checkindate,totalupdatedfiles,totalbuilds,
                      nfixedwarnings,nfailedwarnings,nfixederrors,nfailederrors,
                      nfixedtests,nfailedtests)
@@ -1733,7 +1795,10 @@ class Build
         return array_unique($labelids);
     }
 
-    // Get the group for a build
+    /**
+     * Get the group for a build
+     * @return bool|mixed
+     */
     public function GetGroup()
     {
         if (!$this->Id) {
@@ -1846,7 +1911,7 @@ class Build
             WHERE parentid = ' . Build::STANDALONE_BUILD . ' AND name = ? AND
                   siteid = ? AND stamp = ? AND projectid = ?');
         if (!pdo_execute($stmt,
-                [$this->Name, $this->SiteId, $this->Stamp, $this->ProjectId])) {
+            [$this->Name, $this->SiteId, $this->Stamp, $this->ProjectId])) {
             return false;
         }
         $existing_buildid = $stmt->fetchColumn();
@@ -1892,8 +1957,8 @@ class Build
             WHERE parentid = ' . Build::STANDALONE_BUILD . ' AND
                   siteid = ? AND name = ? AND stamp = ? AND projectid = ?');
         if (!pdo_execute($stmt,
-                [$this->ParentId, $this->SiteId, $this->Name, $this->Stamp,
-                 $this->ProjectId])) {
+            [$this->ParentId, $this->SiteId, $this->Name, $this->Stamp,
+                $this->ProjectId])) {
             return false;
         }
         return true;
@@ -1921,7 +1986,7 @@ class Build
             FROM build WHERE id = ? FOR UPDATE');
         pdo_execute($stmt, [$buildid]);
         $build = $stmt->fetch();
-        if ($build === false) {
+        if (!$build) {
             pdo_commit();
             return;
         }
@@ -2032,9 +2097,9 @@ class Build
                 // Avoid infinite recursion.
                 // This should never happen, but we might as well be careful.
                 add_log("$buildid is its own parent",
-                        'Build::UpdateBuild', LOG_ERR,
-                        $this->ProjectId, $this->Id,
-                        ModelType::BUILD, $this->Id);
+                    'Build::UpdateBuild', LOG_ERR,
+                    $this->ProjectId, $this->Id,
+                    ModelType::BUILD, $this->Id);
                 return;
             }
             $this->UpdateBuild($parentid, $newErrors, $newWarnings);
@@ -2083,16 +2148,19 @@ class Build
     }
 
     /** Get/Set number of configure warnings for this build. */
+    /**
+     * @return int|null
+     */
     public function GetNumberOfConfigureWarnings()
     {
-        if (!$this->Id || !is_numeric($this->Id)) {
-            return false;
+        if ($this->BuildConfigure) {
+            return $this->BuildConfigure->NumberOfWarnings;
         }
 
         $stmt = $this->PDO->prepare(
             'SELECT configurewarnings FROM build WHERE id = ?');
         if (!pdo_execute($stmt, [$this->Id])) {
-            return false;
+            return null;
         }
         $num_warnings = $stmt->fetchColumn();
         if ($num_warnings == -1) {
@@ -2100,6 +2168,7 @@ class Build
         }
         return $num_warnings;
     }
+
 
     public function SetNumberOfConfigureWarnings($numWarnings)
     {
@@ -2112,25 +2181,7 @@ class Build
         pdo_execute($stmt, [$numWarnings, $this->Id]);
     }
 
-    /** Get/Set number of configure errors for this build. */
-    public function GetNumberOfConfigureErrors()
-    {
-        if (!$this->Id || !is_numeric($this->Id)) {
-            return false;
-        }
-
-        $stmt = $this->PDO->prepare(
-            'SELECT configureerrors FROM build WHERE id = ?');
-        if (!pdo_execute($stmt, [$this->Id])) {
-            return false;
-        }
-        $num_errors = $stmt->fetchColumn();
-        if ($num_errors == -1) {
-            $num_errors = 0;
-        }
-        return $num_errors;
-    }
-
+    /** Set number of configure errors for this build. */
     public function SetNumberOfConfigureErrors($numErrors)
     {
         if (!$this->Id || !is_numeric($this->Id)) {
@@ -2148,6 +2199,26 @@ class Build
                 "/viewConfigure.php?buildid=$this->Id";
             $this->NotifyPullRequest($message, $url);
         }
+    }
+
+    /**
+     * @return int|null
+     */
+    public function GetNumberOfConfigureErrors()
+    {
+        if ($this->BuildConfigure) {
+            return $this->BuildConfigure->NumberOfErrors;
+        }
+        $stmt = $this->PDO->prepare(
+            'SELECT configureerrors FROM build WHERE id = ?');
+        if (!pdo_execute($stmt, [$this->Id])) {
+            return null;
+        }
+        $num_errors = $stmt->fetchColumn();
+        if ($num_errors == -1) {
+            $num_errors = 0;
+        }
+        return $num_errors;
     }
 
     /**
@@ -2192,11 +2263,19 @@ class Build
         return $this->PullRequest;
     }
 
+    /**
+     * @param $pr
+     */
     public function SetPullRequest($pr)
     {
         $this->PullRequest = $pr;
     }
 
+    /**
+     * @param $message
+     * @param $url
+     * @throws \Exception
+     */
     private function NotifyPullRequest($message, $url)
     {
         // Figure out if we should notify this build or its parent.
@@ -2229,7 +2308,11 @@ class Build
         pdo_execute($stmt, [$idToNotify]);
     }
 
-    public function SetConfigureDuration($duration, $update_parent=true)
+    /**
+     * @param $duration
+     * @param bool $update_parent
+     */
+    public function SetConfigureDuration($duration, $update_parent = true)
     {
         if (!$this->Id || !is_numeric($this->Id)) {
             return;
@@ -2255,7 +2338,11 @@ class Build
         }
     }
 
-    public function UpdateBuildDuration($duration, $update_parent=true)
+    /**
+     * @param $duration
+     * @param bool $update_parent
+     */
+    public function UpdateBuildDuration($duration, $update_parent = true)
     {
         if ($duration === 0 || !$this->Id || !is_numeric($this->Id)) {
             return;
@@ -2275,7 +2362,7 @@ class Build
             'UPDATE build SET buildduration = buildduration + :duration
             WHERE id = :id');
         if (!pdo_execute($update_stmt,
-                    [':duration' => $duration, ':id' => $this->Id])) {
+            [':duration' => $duration, ':id' => $this->Id])) {
             $this->PDO->rollBack();
             return;
         }
@@ -2294,7 +2381,7 @@ class Build
                 return;
             }
             if (!pdo_execute($update_stmt,
-                        [':duration' => $duration, ':id' => $this->ParentId])) {
+                [':duration' => $duration, ':id' => $this->ParentId])) {
                 $this->PDO->rollBack();
                 return;
             }
@@ -2320,6 +2407,12 @@ class Build
         return Build::GetTestingDate($this->StartTime, $this->NightlyStartTime);
     }
 
+    /**
+     * @param $build_start_time
+     * @param $nightly_start_timestamp
+     * @return false|string
+     * @throws \Exception
+     */
     public static function GetTestingDate($build_start_time,
                                           $nightly_start_timestamp)
     {
@@ -2412,11 +2505,14 @@ class Build
         return $this->ParentId;
     }
 
+    /**
+     * @param $parentid
+     */
     public function SetParentId($parentid)
     {
         if ($parentid > 0 && $parentid == $this->Id) {
             add_log("Attempt to mark build $this->Id as its own parent",
-                    'Build::SetParentId', LOG_ERR,
+                'Build::SetParentId', LOG_ERR,
                 $this->ProjectId, $this->Id,
                 ModelType::BUILD, $this->Id);
             return;
@@ -2549,6 +2645,9 @@ class Build
     }
 
     /**
+     * Returns the current Build's Site property. This method lazily loads the Site if no such
+     * object exists.
+     *
      * @return Site
      */
     public function GetSite()
@@ -2560,20 +2659,31 @@ class Build
         return $this->Site;
     }
 
+    /**
+     * Sets the current Build's Site property.
+     *
+     * @param Site $site
+     */
     public function SetSite(Site $site)
     {
         $this->Site = $site;
     }
 
     /**
+     * Given a $test, this method adds a Test to the current Build's TestCollection.
+     *
      * @param Test $test
+     * @return $this
      */
     public function AddTest(Test $test)
     {
         $this->TestCollection->add($test);
+        return $this;
     }
 
     /**
+     * Return the current Build's TestCollection.
+     *
      * @return TestCollection
      */
     public function GetTestCollection()
@@ -2589,7 +2699,7 @@ class Build
     {
         $pdo = Database::getInstance()->getPdo();
         $stmt = $pdo->prepare(
-                'SELECT id FROM build WHERE uuid = ?');
+            'SELECT id FROM build WHERE uuid = ?');
         pdo_execute($stmt, [$uuid]);
         return $stmt->fetchColumn();
     }
@@ -2655,7 +2765,7 @@ class Build
         ];
         $this->PDO->beginTransaction();
         $stmt = $this->PDO->prepare(
-                "INSERT INTO build
+            "INSERT INTO build
                 (siteid, projectid, stamp, name, type, generator,
                  starttime, endtime, submittime, command, log,
                  builderrors, buildwarnings, parentid, uuid,
@@ -2779,35 +2889,412 @@ class Build
         return "{$base}/viewTest.php?buildid={$this->Id}";
     }
 
-    /**
-     * @return BuildUpdate
-     */
-    public function GetBuildUpdate()
-    {
-        /** @var BuildUpdate $buildUpdate */
-        if (!$this->BuildUpdate) {
-            $buildUpdate = ServiceContainer::instance(BuildUpdate::class);
-            $buildUpdate->BuildId = $this->Id;
-            $buildUpdate->FillFromBuildId();
-
-            $this->BuildUpdate = $buildUpdate;
-        }
-
-        return $this->BuildUpdate;
-    }
-
-    public function SetBuildUpdate(BuildUpdate $buildUpdate)
-    {
-        $this->BuildUpdate = $buildUpdate;
-        return $this;
-    }
-
     public static function ConvertMissingToZero($value)
     {
         if ($value == -1) {
             $value = 0;
         }
         return $value;
+    }
+
+    /**
+     * Returns the current Build's BuildConfigure property. This method lazily loads the
+     * BuildConfigure object if none exists.
+     *
+     * @return BuildConfigure
+     */
+    public function GetBuildConfigure()
+    {
+        if (!$this->BuildConfigure) {
+            $this->BuildConfigure = new BuildConfigure();
+            $this->BuildConfigure->BuildId = $this->Id;
+        }
+        return $this->BuildConfigure;
+    }
+
+    /**
+     * Sets the current Build's BuildConfigure property and ensures that the BuildConfigure's
+     * BuildId property is set with the current Build's Id property.
+     *
+     * @param BuildConfigure $buildConfigure
+     */
+    public function SetBuildConfigure(BuildConfigure $buildConfigure)
+    {
+        $buildConfigure->BuildId = $this->Id;
+        $this->BuildConfigure = $buildConfigure;
+    }
+
+    /**
+     * Returns the current Build's Project object. This method lazily loads the Project if none
+     * exists.
+     *
+     * @return Project
+     */
+    public function GetProject()
+    {
+        if (!$this->Project) {
+            $this->Project = new Project();
+            $this->Project->Id = $this->ProjectId;
+        }
+        return $this->Project;
+    }
+
+    /**
+     * Sets the current Build's Project property.
+     *
+     * @param Project $project
+     */
+    public function SetProject(Project $project)
+    {
+        $this->Project = $project;
+    }
+
+    /**
+     * Returns the current Build's TestFailedCount property.
+     *
+     * @return mixed
+     */
+    public function GetTestFailedCount()
+    {
+        return $this->TestFailedCount;
+    }
+
+    /**
+     * Returns the current Build's Type property.
+     *
+     * @return string
+     */
+    public function GetBuildType()
+    {
+        return $this->Type;
+    }
+
+    /**
+     * This method returns an array of all of the authors who are responsible for changes made
+     * to the current Build.
+     *
+     * @return array
+     */
+    public function GetCommitAuthors()
+    {
+        // note: Per Zack: Depending on the type of submission (i.e. test, build error, etc)
+        // this information may not yet be available as it is contained in the update xml
+        // file submission.
+
+        if (!$this->CommitAuthors) {
+            $db = Database::getInstance();
+            $sql = '
+                SELECT
+                    author,
+                    email,
+                    committeremail
+                FROM
+                    updatefile AS uf,
+                    build2update AS b2u
+                WHERE b2u.updateid = uf.updateid
+                AND b2u.buildid = :buildId
+            ';
+            $stmt = $this->PDO->prepare($sql);
+            $stmt->bindParam(':buildId', $this->Id);
+            if ($db->execute($stmt)) {
+                $authors = [];
+                foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+                    $hasAuthor = !empty($row['email']);
+                    $hasCommitter = !empty($row['committeremail']);
+
+                    if ($hasAuthor) {
+                        $authors[] = $row['email'];
+                    }
+
+                    if ($hasCommitter) {
+                        $authors[] = $row['committeremail'];
+                    }
+
+                    if ($hasAuthor === false && $hasCommitter === false) {
+                        $authors[] = $row['author'];
+                        // IMPORTANT: PLEASE READ
+                        // This is dubious. In testing this value is often expected to be user1kw with no
+                        // associated domain name. Here are the implications of this:
+                        //   * Could be that $row['author'] is a user name with no guarantees that it is also
+                        //     an email address
+                        //   * Could be that $row['author'] is a first and a last name, which clearly does not
+                        //     work here
+                        //   * If it just so happens to be an email address, as it is used in testing, it is
+                        //     unaccompanied by a domain name, further complicating whether or not any messages
+                        //     addressed to it reach its intended destination in practice
+                        //   * Without this value present at least one test will fail and chances are pretty
+                        //     good that others will follow suit.
+                    }
+                }
+                $this->CommitAuthors = array_unique($authors);
+            }
+        }
+        return $this->CommitAuthors;
+    }
+
+    /**
+     * Given a $subscriber this method returns true if the current Build has contains changes
+     * authored by $subscriber and false if no such changes by the author exist.
+     *
+     * @param SubscriberInterface $subscriber
+     * @return bool
+     */
+    public function AuthoredBy(SubscriberInterface $subscriber)
+    {
+        $authoredBy = false;
+        $authors = $this->GetCommitAuthors();
+        $credentials = $subscriber->getUserCredentials();
+        $credentials[] = $subscriber->getAddress();
+
+        foreach (array_unique($credentials) as $credential) {
+            if (in_array($credential, $authors)) {
+                $authoredBy = true;
+                break;
+            }
+        }
+
+        return $authoredBy;
+    }
+
+    /**
+     * Returns the current Build's LabelCollection.
+     * @return LabelCollection
+     */
+    public function GetLabelCollection()
+    {
+        $this->LabelCollection = new LabelCollection();
+
+        if ($this->Labels) {
+            foreach ($this->Labels as $label) {
+                $this->LabelCollection->add($label);
+            }
+        }
+        return $this->LabelCollection;
+    }
+
+    /**
+     * Given a $filter of value ERROR or WARNING it will return the number of BuildErrors
+     * whose Type property matches that of the $filter. If no $filter is provided it returns
+     * the number of all the current Build's BuildErrors.
+     *
+     * @param null $filter
+     * @return int
+     */
+    public function GetBuildErrorCount($filter = null)
+    {
+        $count = 0;
+        if (is_null($filter)) {
+            $count = count($this->Errors);
+        } else {
+            /** @var BuildError $error */
+            foreach ($this->Errors as $error) {
+                if ($error->Type == $filter) {
+                    $count++;
+                }
+            }
+        }
+        return $count;
+    }
+
+    /**
+     * Given a $filter of value ERROR or WARNING it will return the number of BuildFailures
+     * whose Type property matches that of the $filter. If no $filter is provided it returns
+     * the number of all the current Build's BuildFailures.
+     *
+     * @param null $filter
+     * @return int
+     */
+    public function getBuildFailureCount($filter = null)
+    {
+        $count = 0;
+        if (is_null($filter)) {
+            return count($this->Failures);
+        } else {
+            foreach ($this->Failures as $fail) {
+                if ($fail->Type == $filter) {
+                    $count++;
+                }
+            }
+        }
+        return $count;
+    }
+
+    /**
+     * Adds a DynamicAnalysis object to the Build's DynamicAnalysisCollection.
+     *
+     * @param DynamicAnalysis $analysis
+     * @return $this
+     */
+    public function AddDynamicAnalysis(DynamicAnalysis $analysis)
+    {
+        $analyses = $this->GetDynamicAnalysisCollection();
+        $analyses->add($analysis);
+        return $this;
+    }
+
+    /**
+     * Returns the current Build's DynamicAnalysisCollection object. This method lazily loads the
+     * DynamicAnalysisCollection if none exists.
+     *
+     * @return DynamicAnalysisCollection
+     */
+    public function GetDynamicAnalysisCollection()
+    {
+        if (!$this->DynamicAnalysisCollection) {
+            $this->DynamicAnalysisCollection = new DynamicAnalysisCollection();
+        }
+        return $this->DynamicAnalysisCollection;
+    }
+
+    /**
+     * Returns the BuildEmailCollection object. This method lazily loads a CollectionCollection
+     * object if none exists.
+     *
+     * @param $category
+     * @return BuildEmailCollection;
+     */
+    public function GetBuildEmailCollection()
+    {
+        if (!$this->Id) {
+            return new BuildEmailCollection();
+        }
+
+        if (!$this->BuildEmailCollection) {
+            $this->BuildEmailCollection = BuildEmail::GetEmailSentForBuild($this->Id);
+        }
+
+        return $this->BuildEmailCollection;
+    }
+
+    /**
+     * Sets the current build's BuildEmailCollection object. This method lazily loads a
+     * CollectionCollection object as the current Build's BuildEmailCollection property if none
+     * exists.
+     *
+     * @param BuildEmailCollection $collection
+     */
+    public function SetBuildEmailCollection(BuildEmailCollection $collection)
+    {
+        $this->BuildEmailCollection = $collection;
+    }
+
+    /**
+     * Sets the build's BuildUpdate object.
+     *
+     * @param BuildUpdate $buildUpdate
+     */
+    public function SetBuildUpdate(BuildUpdate $buildUpdate)
+    {
+        $this->BuildUpdate = $buildUpdate;
+    }
+
+    /**
+     * Returns the BuildUpdate object.
+     *
+     * @return BuildUpdate|null
+     */
+    public function GetBuildUpdate()
+    {
+        return $this->BuildUpdate;
+    }
+
+    /**
+     * Returns a data structure representing the difference between the previous build and
+     * the current build.
+     *
+     * @return array|bool
+     * TODO: Create a diff class
+     */
+    public function GetDiffWithPreviousBuild()
+    {
+        if (!$this->Id) {
+            return false;
+        }
+
+        if (!$this->ErrorDifferences) {
+            if ($this->GetPreviousBuildId() === 0) {
+                $warnings = array_reduce($this->Errors, function ($count, $item) {
+                    $count += $item->Type === Build::TYPE_WARN ? 1 : 0;
+                    return $count;
+                }, 0);
+                $errors = array_reduce($this->Errors, function ($count, $item) {
+                    $count += $item->Type === Build::TYPE_ERROR ? 1 : 0;
+                    return $count;
+                }, 0);
+                $passed = array_reduce($this->TestCollection->toArray(), function ($count, $test) {
+                    $count += $test->GetStatus() === Test::PASSED ? 1 : 0;
+                    return $count;
+                }, 0);
+                $failed = array_reduce($this->TestCollection->toArray(), function ($count, $test) {
+                    $count += $test->GetStatus() === Test::FAILED ? 1 : 0;
+                    return $count;
+                }, 0);
+                $notrun = array_reduce($this->TestCollection->toArray(), function ($count, $test) {
+                    $count += $test->GetStatus() === Test::NOTRUN ? 1 : 0;
+                    return $count;
+                }, 0);
+
+                $this->ErrorDifferences = [
+                    'BuildWarning' => [
+                        'new' => $warnings,
+                        'fixed' => 0,
+                    ],
+                    'BuildError' => [
+                        'new' => $errors,
+                        'fixed' => 0,
+                    ],
+                    'Configure' => [
+                        'errors' => ($this->BuildConfigure ? $this->BuildConfigure->NumberOfErrors : 0),
+                        'warnings' => ($this->BuildConfigure ? $this->BuildConfigure->NumberOfWarnings : 0),
+                    ] ,
+                    'TestFailure' => [
+                        'passed' => [
+                            'new' => $passed,
+                            'broken' => 0,
+                        ],
+                        'failed' => [
+                            'new' => $failed,
+                            'fixed' => 0,
+                        ],
+                        'notrun' => [
+                            'new' => $notrun,
+                            'fixed' => 0,
+                        ],
+                    ],
+                ];
+            } else {
+                $diff = $this->GetErrorDifferences();
+                $this->ErrorDifferences = [
+                    'BuildWarning' => [
+                        'new' => $diff['buildwarningspositive'],
+                        'fixed' => $diff['buildwarningsnegative'],
+                    ],
+                    'BuildError' => [
+                        'new' => $diff['builderrorspositive'],
+                        'fixed' => $diff['builderrorsnegative'],
+                    ],
+                    'Configure' => [
+                        'errors' => $diff['configureerrors'],
+                        'warnings' => $diff['configurewarnings'],
+                    ] ,
+                    'TestFailure' => [
+                        'passed' => [
+                            'new' => $diff['testpassedpositive'],
+                            'broken' => $diff['testpassednegative']
+                        ],
+                        'failed' => [
+                            'new' => $diff['testfailedpositive'],
+                            'fixed' => $diff['testfailednegative'],
+                        ],
+                        'notrun' => [
+                            'new' => $diff['testnotrunpositive'],
+                            'fixed' => $diff['testnotrunnegative']
+                        ],
+                    ],
+                ];
+            }
+        }
+        return $this->ErrorDifferences;
     }
 
     protected function SaveInformation()
