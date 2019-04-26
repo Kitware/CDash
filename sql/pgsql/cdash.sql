@@ -315,6 +315,7 @@ CREATE INDEX "crc322" on "note" ("crc32");
 CREATE TABLE "pending_submissions" (
   "buildid" integer NOT NULL,
   "numfiles" smallint DEFAULT '0' NOT NULL,
+  "recheck" smallint DEFAULT '0' NOT NULL,
   PRIMARY KEY ("buildid")
 );
 

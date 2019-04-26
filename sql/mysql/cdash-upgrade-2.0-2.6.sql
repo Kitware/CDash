@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS `related_builds` (
 CREATE TABLE IF NOT EXISTS `pending_submissions` (
   `buildid` int(11) NOT NULL,
   `numfiles` tinyint UNSIGNED NOT NULL DEFAULT 0,
+  `recheck` tinyint UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`buildid`)
 );
 

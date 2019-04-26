@@ -408,6 +408,7 @@ CREATE TABLE IF NOT EXISTS `build2uploadfile` (
 CREATE TABLE `pending_submissions` (
   `buildid` int(11) NOT NULL,
   `numfiles` tinyint UNSIGNED NOT NULL DEFAULT 0,
+  `recheck` tinyint UNSIGNED NOT NULL DEFAULT 0,
   PRIMARY KEY (`buildid`)
 );
 -- --------------------------------------------------------

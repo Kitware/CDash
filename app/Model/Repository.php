@@ -14,6 +14,7 @@
 
 namespace CDash\Model;
 
+use CDash\Database;
 use CDash\Lib\Repository\GitHub;
 use CDash\Model\Build;
 use CDash\Model\BuildProperties;
@@ -84,10 +85,36 @@ class Repository
         }
     }
 
+    public static function createOrUpdateCheck($sha)
+    {
+        // Find projectid from sha.
+        // If this proves to be unreliable we could use the repositories table
+        // instead.
+        $db = Database::getInstance();
+        $db->getPdo();
+        $stmt = $db->prepare('
+			SELECT projectid FROM build b
+			JOIN build2update b2u ON b2u.buildid = b.id
+			JOIN buildupdate bu ON bu.id = b2u.updateid
+			WHERE bu.revision = :sha
+			LIMIT 1');
+        $db->execute($stmt, ['sha' => $sha]);
+        $projectid = $stmt->fetchColumn();
+        if ($projectid === false) {
+            return;
+        }
+
+        $project = new Project();
+        $project->Id = $projectid;
+        $project->Fill();
+        $repositoryInterface = self::getRepositoryInterface($project);
+        $repositoryInterface->createCheck($sha);
+    }
+
     public static function compareCommits(BuildUpdate $update, Project $project)
     {
         $repositoryInterface = self::getRepositoryInterface($project);
-        $repositoryInterface->compareCommits($update, $project);
+        $repositoryInterface->compareCommits($update);
     }
 
     protected static function getRepositoryService(Project $project)
@@ -110,19 +137,7 @@ class Repository
     {
         switch (strtolower($project->CvsViewerType)) {
             case strtolower(self::VIEWER_GITHUB):
-                list($owner, $repository) = array_values(
-                    Repository::getGitHubRepoInformationFromUrl($project->CvsUrl)
-                );
-
-                $installationId = '';
-                $repositories = $project->GetRepositories();
-                foreach ($repositories as $repo) {
-                    if (strpos($repo['url'], 'github.com') !== false) {
-                        $installationId = $repo['username'];
-                        break;
-                    }
-                }
-                $service = new GitHub($installationId, $owner, $repository);
+                $service = new GitHub($project);
                 break;
             default:
                 $msg =
@@ -131,25 +146,5 @@ class Repository
                 return;
         }
         return $service;
-    }
-
-    /**
-     * @param string $url
-     * @return array
-     */
-    protected static function getGitHubRepoInformationFromUrl($url)
-    {
-        $url = str_replace('//', '', $url);
-        $parts = explode('/', $url);
-        $info = ['owner' => null, 'repo' => null];
-        if (isset($parts[1])) {
-            $info['owner'] = $parts[1];
-        }
-
-        if (isset($parts[2])) {
-            $info['repo'] = $parts[2];
-        }
-
-        return $info;
     }
 }

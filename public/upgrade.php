@@ -829,6 +829,9 @@ if (isset($_GET['upgrade-2-6'])) {
 
 // 2.8 Upgrade
 if (isset($_GET['upgrade-2-8'])) {
+    // Add a 'recheck' field to the pendingsubmission table.
+    AddTableField('pending_submissions', 'recheck', 'tinyint(1)', 'smallint', '0');
+
     // Set the database version
     setVersion();
 
