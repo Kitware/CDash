@@ -19,6 +19,31 @@ require_once 'include/api_common.php';
 
 use CDash\Model\Repository;
 
+// Adapted from https://gist.github.com/milo/daed6e958ea534e4eba3
+if (!function_exists('handle_error')) {
+    function handle_error($msg)
+    {
+        add_log($msg, 'GitHub webhook', LOG_WARNING);
+        json_error_response(['error' => $msg], 500);
+    }
+}
+$hookSecret = \CDash\Config::getInstance()->get('CDASH_WEBHOOK_SECRET');
+if (!is_null($hookSecret)) {
+    if (!isset($_SERVER['HTTP_X_HUB_SIGNATURE'])) {
+        handle_error("HTTP header 'X-Hub-Signature' is missing.");
+    } elseif (!extension_loaded('hash')) {
+        handle_error("Missing 'hash' extension to check the secret code validity.");
+    }
+    list($algo, $hash) = explode('=', $_SERVER['HTTP_X_HUB_SIGNATURE'], 2) + array('', '');
+    if (!in_array($algo, hash_algos(), true)) {
+        handle_error("Hash algorithm '$algo' is not supported.");
+    }
+    $rawPost = file_get_contents('php://input');
+    if ($hash !== hash_hmac($algo, $rawPost, $hookSecret)) {
+        handle_error('Hook secret does not match.');
+    }
+}
+
 init_api_request();
 
 $event = array_key_exists('HTTP_X_GITHUB_EVENT', $_SERVER) ?  $_SERVER['HTTP_X_GITHUB_EVENT'] : '';
