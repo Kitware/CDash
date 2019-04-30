@@ -4,12 +4,15 @@
 // relative to the top of the CDash source tree
 //
 use CDash\Config;
+use CDash\Model\User;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/pdo.php';
 
 class EmailTestCase extends KWWebTestCase
 {
+    private $projectid;
+
     public function __construct()
     {
         parent::__construct();
@@ -22,7 +25,8 @@ class EmailTestCase extends KWWebTestCase
                 'Description' => 'Project EmailProjectExample test for cdash testing',
                 'EmailBrokenSubmission' => 1,
                 'EmailRedundantFailures' => 0);
-        $this->createProject($settings);
+        $this->projectid = $this->createProject($settings);
+        $this->pdo = get_link_identifier()->getPdo();
     }
 
     public function testRegisterUser()
@@ -50,8 +54,7 @@ class EmailTestCase extends KWWebTestCase
         $this->login('user1@kw', 'user1');
 
         // Subscribe to the project.
-        $pdo = get_link_identifier()->getPdo();
-        $stmt = $pdo->query("SELECT id FROM project WHERE name = 'EmailProjectExample'");
+        $stmt = $this->pdo->query("SELECT id FROM project WHERE name = 'EmailProjectExample'");
         $row = $stmt->fetch();
         if (!$row) {
             $this->fail('Could not lookup projectid');
@@ -64,6 +67,27 @@ class EmailTestCase extends KWWebTestCase
         if (!$this->checkLog($this->logfilename)) {
             return;
         }
+    }
+
+    public function testRegisterNoEmailUser()
+    {
+        $user = new User();
+        $user->Email = 'user2@kw';
+        $user->Password = User::PasswordHash('user2');
+        $user->FirstName = 'user2';
+        $user->LastName = 'kw';
+        $user->Institution = 'Kitware';
+        $user->Admin = 0;
+        $user->Save();
+        if (!$user->Id) {
+            $this->fail('Failed to create user2');
+        }
+
+        // No emails for me, please.
+        $this->pdo->exec(
+            "INSERT INTO user2project
+            (userid, projectid, role, emailtype)
+            VALUES ($user->Id, $this->projectid, 0, 0)");
     }
 
     public function testSubmissionFirstBuild()
