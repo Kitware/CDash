@@ -62,7 +62,9 @@ abstract class NotificationPreferences implements
     public function setPreferencesFromEmailTypeProperty($emailType)
     {
         $type = (int) $emailType;
-        if ($type === 1) {
+        if ($type === 0) {
+            $this->set(NotifyOn::NEVER, true);
+        } elseif ($type === 1) {
             $this->set(NotifyOn::AUTHORED, true);
             $this->set(NotifyOn::ANY, false);
         } elseif ($type === 2) {

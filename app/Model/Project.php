@@ -1758,6 +1758,9 @@ class Project
                 ['mask' => $row->emailcategory]
             );
             $preferences->setPreferencesFromEmailTypeProperty($row->emailtype);
+            if ($preferences->get(NotifyOn::NEVER)) {
+                continue;
+            }
             $preferences->set(NotifyOn::FIXED, $row->emailsuccess);
             $preferences->set(NotifyOn::SITE_MISSING, $row->emailmissingsites);
             $preferences->set(NotifyOn::REDUNDANT, $this->EmailRedundantFailures);
