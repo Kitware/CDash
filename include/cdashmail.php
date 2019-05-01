@@ -57,14 +57,19 @@ function cdashmail($to, $subject, $body, $headers = false)
     }
 
     $to = explode(', ', $to);
-    $message = Swift_Message::newInstance()
-        ->setTo($to)
-        ->setSubject($subject)
-        ->setBody($body)
-        ->setFrom([$config->get('CDASH_EMAIL_FROM')=> 'CDash'])
-        ->setReplyTo($config->get('CDASH_EMAIL_REPLY'))
-        ->setContentType('text/plain')
-        ->setCharset('UTF-8');
+    try {
+        $message = Swift_Message::newInstance()
+            ->setTo($to)
+            ->setSubject($subject)
+            ->setBody($body)
+            ->setFrom([$config->get('CDASH_EMAIL_FROM')=> 'CDash'])
+            ->setReplyTo($config->get('CDASH_EMAIL_REPLY'))
+            ->setContentType('text/plain')
+            ->setCharset('UTF-8');
+    } catch (\Swift_RfcComplianceException $e) {
+        add_log("Swift RFC compliance exception. to=" . print_r($to, true). ", from=[". $config->get('CDASH_EMAIL_FROM') . " => 'CDash'], 'reply-to=" . $config->get('CDASH_EMAIL_REPLY'), 'sendmail', LOG_INFO);
+        return false;
+    }
 
     if (is_null($config->get('CDASH_EMAIL_SMTP_HOST'))) {
         // Use the PHP mail() function.
