@@ -40,9 +40,8 @@ class UpdateUseCaseTest extends CDashUseCaseTestCase
         /** @var \CDash\Test\UseCase\UpdateUseCase $sut */
         $sut = UseCase::createBuilder($this, UseCase::UPDATE);
         list($date, $time, $tz) = explode(' ', $sut->randomizeCheckinDate());
-        $todayDate = date('d');
         list($y, $m, $d) = explode('-', $date);
-        // TODO: make this test better
-        $this->assertEquals(($todayDate - 1), $d);
+        $yesterday = date('d', strtotime('-1 days'));
+        $this->assertEquals($yesterday, $d);
     }
 }
