@@ -32,39 +32,6 @@ use CDash\Model\Project;
 require_once 'include/log.php';
 
 /**
- * Class Checks
- * TODO: upstream this to KnpLabs/php-github-api
- **/
-class Checks extends \Github\Api\AbstractApi
-{
-    use \Github\Api\AcceptHeaderTrait;
-
-    public function configure()
-    {
-        // TODO: this isn't working yet (manually added this header below).
-        // Maybe it will once we move it into php-github-api.
-        $this->acceptHeaderValue = 'application/vnd.github.antiope-preview+json';
-
-        return $this;
-    }
-
-    // https://developer.github.com/v3/checks/runs/#create-a-check-run
-    public function create($username, $repository, array $params = [])
-    {
-        if (!isset($params['name'], $params['head_sha'])) {
-            throw new \Github\Exception\MissingArgumentException(['name', 'head_sha']);
-        }
-        return $this->post('/repos/'.rawurlencode($username).'/'.rawurlencode($repository).'/check-runs', $params);
-    }
-
-    // https://developer.github.com/v3/checks/runs/#update-a-check-run
-    public function update($username, $repository, $checkRunId, array $params = [])
-    {
-        return $this->patch('/repos/'.rawurlencode($username).'/'.rawurlencode($repository).'/check-runs/'.rawurlencode($checkRunId), $params);
-    }
-}
-
-/**
  * Class GitHub
  * @package CDash\Lib\Repository
  */
@@ -231,7 +198,7 @@ class GitHub implements RepositoryInterface
         $payload = $this->generateCheckPayloadFromBuildRows($build_rows, $head_sha);
 
         if (!$this->check) {
-            $this->check = new Checks($this->apiClient);
+            $this->check = new \Github\Api\Repository\Checks($this->apiClient);
         }
         try {
             $this->check->create($this->owner, $this->repo, $payload);

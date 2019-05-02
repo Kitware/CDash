@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "a1bb1afe5083ac086555e24aead93c29",
+    "content-hash": "00c619441fd600c2fc84e7f857fb0591",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -1433,16 +1433,16 @@
         },
         {
             "name": "knplabs/github-api",
-            "version": "2.11.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/php-github-api.git",
-                "reference": "7e67b4ccf9ef62fbd6321a314c61d3202c07b855"
+                "reference": "8c26dc85"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/php-github-api/zipball/7e67b4ccf9ef62fbd6321a314c61d3202c07b855",
-                "reference": "7e67b4ccf9ef62fbd6321a314c61d3202c07b855",
+                "url": "https://api.github.com/repos/KnpLabs/php-github-api/zipball/8c26dc85",
+                "reference": "8c26dc85",
                 "shasum": ""
             },
             "require": {
@@ -1465,7 +1465,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.11.x-dev"
+                    "dev-master": "2.12.x-dev"
                 }
             },
             "autoload": {
@@ -1496,7 +1496,7 @@
                 "gist",
                 "github"
             ],
-            "time": "2019-01-28T19:31:35+00:00"
+            "time": "2019-04-23 20:21:16"
         },
         {
             "name": "lcobucci/jwt",
@@ -5336,7 +5336,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "bernard/bernard": 15
+        "bernard/bernard": 15,
+        "knplabs/github-api": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
