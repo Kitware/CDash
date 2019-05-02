@@ -367,7 +367,7 @@ class GitHub implements RepositoryInterface
                 } else {
                     $params['conclusion'] = 'success';
                     $output['title'] = 'Success';
-                    $summary = 'All builds completed successfully';
+                    $summary = 'All builds completed successfully :shipit:';
                 }
             }
         }

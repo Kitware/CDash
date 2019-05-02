@@ -191,7 +191,7 @@ class GitHubTest extends PHPUnit_Framework_TestCase
         $expected['status'] = 'completed';
         $expected['conclusion'] = 'success';
         $expected['output']['title'] = 'Success';
-        $expected['output']['summary'] = "[All builds completed successfully]($index_url)";
+        $expected['output']['summary'] = "[All builds completed successfully :shipit:]($index_url)";
         $expected['output']['text'] = "$table_header\n[a]($this->baseUrl/buildSummary.php?buildid=99995) | :white_check_mark: | [success]($this->baseUrl/buildSummary.php?buildid=99995)";
         $build_rows[0]['done'] = 1;
         $actual = $sut->generateCheckPayloadFromBuildRows($build_rows, 'zzz');
