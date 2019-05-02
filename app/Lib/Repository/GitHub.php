@@ -220,14 +220,75 @@ class GitHub implements RepositoryInterface
     {
         $stmt = $this->db->prepare('
             SELECT b.id, b.name, b.builderrors, b.configureerrors, b.testfailed,
-                   b.done, bp.properties
+                   b.done, b.starttime, bp.properties
             FROM build b
             JOIN build2update b2u ON b2u.buildid = b.id
             JOIN buildupdate bu ON bu.id = b2u.updateid
             LEFT JOIN buildproperties bp ON bp.buildid = b.id
             WHERE bu.revision = :sha');
         $this->db->execute($stmt, [':sha' => $head_sha]);
-        return $stmt;
+        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $rows = $this->dedupeAndSortBuildRows($rows);
+        return $rows;
+    }
+
+    /**
+     * Include only one row per build name: the one with the most recent start time.
+     * Also sort the rows by the build name (in alphabetical order).
+     */
+    public function dedupeAndSortBuildRows($rows)
+    {
+        // Gather up all the rows that have non-unique build names.
+        $build_names = [];
+        foreach ($rows as $row) {
+            $build_name = $row['name'];
+            if (!array_key_exists($build_name, $build_names)) {
+                $build_names[$build_name] = [];
+            }
+            $build_names[$build_name][] = $row;
+        }
+        $build_names = array_filter($build_names, function ($k, $v) {
+            return count($k) > 1;
+        }, ARRAY_FILTER_USE_BOTH);
+
+        // Find the ids of all the older builds that should not be included
+        // in our report.
+        $buildids_to_remove = [];
+        foreach ($build_names as $name => $builds) {
+            // Find the newest build with this name.
+            // This is the one we will include in the report.
+            $newest_starttime = -1;
+            $buildid_to_keep = -1;
+            foreach ($builds as $build) {
+                $starttime = strtotime($build['starttime']);
+                if ($starttime > $newest_starttime) {
+                    $newest_starttime = $starttime;
+                    $buildid_to_keep = $build['id'];
+                }
+            }
+            // Record all the old builds that should not be included.
+            foreach ($builds as $build) {
+                if ($build['id'] !== $buildid_to_keep) {
+                    $buildids_to_remove[] = $build['id'];
+                }
+            }
+        }
+
+        // Make a new array of rows that only contains the builds that will be
+        // included in our report.
+        $output_rows = [];
+        foreach ($rows as $row) {
+            if (!in_array($row['id'], $buildids_to_remove)) {
+                $output_rows[] = $row;
+            }
+        }
+
+        // Alphabetize this array by build name.
+        usort($output_rows, function ($a, $b) {
+            return strcmp($a['name'], $b['name']);
+        });
+
+        return $output_rows;
     }
 
     /**

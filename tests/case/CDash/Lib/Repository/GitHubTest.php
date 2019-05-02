@@ -241,6 +241,30 @@ class GitHubTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    public function testDedupeAndSortBuildRows()
+    {
+        $this->project->expects($this->once())
+            ->method('GetRepositories')
+            ->willReturn([]);
+        $sut = new GitHub($this->project);
+
+        $rows = [
+            ['id' => 1, 'name' => 'c', 'starttime' => '2019-05-01 18:08:35'],
+            ['id' => 2, 'name' => 'a', 'starttime' => '2019-05-01 18:08:36'],
+            ['id' => 3, 'name' => 'a', 'starttime' => '2019-05-01 18:08:37'],
+            ['id' => 4, 'name' => 'a', 'starttime' => '2019-05-01 18:08:38'],
+            ['id' => 5, 'name' => 'b', 'starttime' => '2019-05-01 18:08:39'],
+            ['id' => 6, 'name' => 'b', 'starttime' => '2019-05-01 18:08:40'],
+        ];
+        $actual = $sut->dedupeAndSortBuildRows($rows);
+        $expected = [
+            ['id' => 4, 'name' => 'a', 'starttime' => '2019-05-01 18:08:38'],
+            ['id' => 6, 'name' => 'b', 'starttime' => '2019-05-01 18:08:40'],
+            ['id' => 1, 'name' => 'c', 'starttime' => '2019-05-01 18:08:35']
+        ];
+        $this->assertEquals($expected, $actual);
+    }
+
     private function setupAuthentication()
     {
         $github_url = 'https://github.com/Foo/Bar';
