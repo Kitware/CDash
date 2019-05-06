@@ -38,6 +38,7 @@ class Repository
     const VIEWER_STASH = 'Atlassian Stash';
     const VIEWER_LOGGERHEAD = 'Loggerhead';
     const VIEWER_P4WEB = 'P4Web';
+    const VIEWER_PHAB_GIT = 'Phabricator';
     const VIEWER_REDMINE = 'Redmine';
     const VIEWER_ALLURA = 'SourceForge Allura';
     const VIEWER_TRAC = 'Trac';
