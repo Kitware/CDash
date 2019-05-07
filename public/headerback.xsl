@@ -10,7 +10,7 @@
 <div id="header">
  <div id="headertop">
   <div id="topmenu">
-      <a href="index.php">All Dashboards</a>
+      <a href="viewProjects.php">All Dashboards</a>
      <xsl:if test="cdash/user/id>0">
        <a href="user.php?logout=1">Log Out</a>
      </xsl:if>
