@@ -29,7 +29,7 @@
         <xsl:choose>
           <xsl:when test="cdash/user/id>0">My CDash</xsl:when>
           <xsl:otherwise>Login</xsl:otherwise>
-        </xsl:choose></a><a href="index.php">All Dashboards</a>
+        </xsl:choose></a><a href="viewProjects.php">All Dashboards</a>
      <xsl:if test="cdash/user/id>0">
        <a href="user.php?logout=1">Log Out</a>
      </xsl:if>

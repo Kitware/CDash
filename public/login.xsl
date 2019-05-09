@@ -30,7 +30,7 @@
         <div id="header">
           <div id="headertop">
             <div id="topmenu">
-              <a href="index.php">All Dashboards</a>
+              <a href="viewProjects.php">All Dashboards</a>
               <a href="register.php">Register</a>
             </div>
           </div>
