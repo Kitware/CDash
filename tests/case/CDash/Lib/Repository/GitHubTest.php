@@ -191,7 +191,7 @@ class GitHubTest extends PHPUnit_Framework_TestCase
         $expected['status'] = 'completed';
         $expected['conclusion'] = 'success';
         $expected['output']['title'] = 'Success';
-        $expected['output']['summary'] = "[All builds completed successfully]($index_url)";
+        $expected['output']['summary'] = "[All builds completed successfully :shipit:]($index_url)";
         $expected['output']['text'] = "$table_header\n[a]($this->baseUrl/buildSummary.php?buildid=99995) | :white_check_mark: | [success]($this->baseUrl/buildSummary.php?buildid=99995)";
         $build_rows[0]['done'] = 1;
         $actual = $sut->generateCheckPayloadFromBuildRows($build_rows, 'zzz');
@@ -238,6 +238,30 @@ class GitHubTest extends PHPUnit_Framework_TestCase
         $actual = $sut->generateCheckPayloadFromBuildRows($build_rows, 'zzz');
         unset($actual['started_at']);
         unset($actual['completed_at']);
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testDedupeAndSortBuildRows()
+    {
+        $this->project->expects($this->once())
+            ->method('GetRepositories')
+            ->willReturn([]);
+        $sut = new GitHub($this->project);
+
+        $rows = [
+            ['id' => 1, 'name' => 'c', 'starttime' => '2019-05-01 18:08:35'],
+            ['id' => 2, 'name' => 'a', 'starttime' => '2019-05-01 18:08:36'],
+            ['id' => 3, 'name' => 'a', 'starttime' => '2019-05-01 18:08:37'],
+            ['id' => 4, 'name' => 'a', 'starttime' => '2019-05-01 18:08:38'],
+            ['id' => 5, 'name' => 'b', 'starttime' => '2019-05-01 18:08:39'],
+            ['id' => 6, 'name' => 'b', 'starttime' => '2019-05-01 18:08:40'],
+        ];
+        $actual = $sut->dedupeAndSortBuildRows($rows);
+        $expected = [
+            ['id' => 4, 'name' => 'a', 'starttime' => '2019-05-01 18:08:38'],
+            ['id' => 6, 'name' => 'b', 'starttime' => '2019-05-01 18:08:40'],
+            ['id' => 1, 'name' => 'c', 'starttime' => '2019-05-01 18:08:35']
+        ];
         $this->assertEquals($expected, $actual);
     }
 

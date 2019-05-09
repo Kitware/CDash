@@ -35,7 +35,7 @@
     "aws/aws-sdk-php": "^3.57",
     "doctrine/dbal": "^2.5",
     "iron-io/iron_mq": "~2.0",
-    "knplabs/github-api": "^2.11",
+    "knplabs/github-api": "dev-master#8c26dc85",
     "php-http/guzzle6-adapter": "^1.1",
     "lcobucci/jwt": "3.2.0",
     "jenssegers/blade": "^1.1"

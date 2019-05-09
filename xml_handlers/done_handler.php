@@ -68,7 +68,9 @@ class DoneHandler extends AbstractHandler
             // Should we re-run any checks that were previously marked
             // as pending?
             if ($this->PendingSubmissions->Recheck) {
-                $update = $this->Build->GetBuildUpdate();
+                $update = new BuildUpdate();
+                $update->BuildId = $this->Build->Id;
+                $update->FillFromBuildId();
                 Repository::createOrUpdateCheck($update->Revision);
             }
 
