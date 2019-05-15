@@ -223,6 +223,21 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
         }
     }
 
+    private function verifyBuild($expected, $actual, $name)
+    {
+        foreach ($expected as $key => $value) {
+            if (!array_key_exists($key, $actual)) {
+                $this->fail("$name is missing $key");
+            } else {
+                if (is_array($expected[$key])) {
+                    $this->verifyBuild($expected[$key], $actual[$key], $name);
+                } elseif ($actual[$key] != $value) {
+                    $this->fail("Expected $value but found " . $actual[$key] . " for $name::$key");
+                }
+            }
+        }
+    }
+
     public function testMultipleSubprojects()
     {
         // Get the buildids that we just created so we can delete it later.
@@ -369,11 +384,92 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             $this->fail("Expected testduration to be 4s, found {$jsonobj['testduration']}");
         }
 
+        $expected_builds = [
+            'MyExperimentalFeature' => [
+                'timefull' => 6,
+                'compilation' => [
+                    'error' => 0,
+                    'warning' => 1,
+                    'timefull' => 5,
+                ],
+                'configure' => [
+                    'error' => 1,
+                    'warning' => 1,
+                    'timefull' => 1,
+                ],
+                'test' => [
+                    'notrun' => 0,
+                    'fail' => 5,
+                    'pass' => 0,
+                    'timefull' => 4,
+                ],
+            ],
+            'MyProductionCode' => [
+                'timefull' => 6,
+                'compilation' => [
+                    'error' => 0,
+                    'warning' => 1,
+                    'timefull' => 5,
+                ],
+                'configure' => [
+                    'error' => 1,
+                    'warning' => 1,
+                    'timefull' => 1,
+                ],
+                'test' => [
+                    'notrun' => 0,
+                    'fail' => 0,
+                    'pass' => 1,
+                    'timefull' => 4,
+                ],
+            ],
+            'MyThirdPartyDependency' => [
+                'timefull' => 6,
+                'compilation' => [
+                    'error' => 2,
+                    'warning' => 0,
+                    'timefull' => 5,
+                ],
+                'configure' => [
+                    'error' => 1,
+                    'warning' => 1,
+                    'timefull' => 1,
+                ],
+                'test' => [
+                    'notrun' => 1,
+                    'fail' => 0,
+                    'pass' => 0,
+                    'timefull' => 4,
+                ],
+            ],
+            'EmptySubproject' => [
+                'timefull' => 6,
+                'compilation' => [
+                    'error' => 0,
+                    'warning' => 0,
+                    'timefull' => 5,
+                ],
+                'configure' => [
+                    'error' => 1,
+                    'warning' => 1,
+                    'timefull' => 1,
+                ],
+                'test' => [
+                    'notrun' => 0,
+                    'fail' => 0,
+                    'pass' => 0,
+                    'timefull' => 4,
+                ],
+            ],
+        ];
+
         $buildgroup = array_pop($jsonobj['buildgroups']);
         $builds = $buildgroup['builds'];
-
         foreach ($builds as $build) {
             $label = $build['label'];
+            if (!array_key_exists($label, $expected_builds)) {
+                $this->fail("Unexpected label $label");
+            }
             $index = array_search($label, $subprojects);
             if ($index === false) {
                 $this->fail("Invalid label ($label)!");
@@ -382,6 +478,8 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             if ($build['position'] !== $index) {
                 $this->fail("Expected {$index} but found ${build['position']} for {$label} position");
             }
+
+            $this->verifyBuild($expected_builds[$label], $build, $label);
 
             // Adding tests to ensure that labels associated with subprojects and tests were saved
             $sql = "
