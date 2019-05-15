@@ -522,6 +522,35 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             }
         }
 
+        // Test include subprojects filter.
+        $this->get("{$this->url}/api/v1/index.php?project=SubProjectExample&parentid={$parentid}&filtercount=1&showfilters=1&field1=subprojects&compare1=93&value1=MyExperimentalFeature");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $num_children = $jsonobj['numchildren'];
+        if ($num_children != 1) {
+            $this->fail("Expected 1 subproject, found {$num_children}");
+        }
+        $buildgroup = array_pop($jsonobj['buildgroups']);
+        $builds = $buildgroup['builds'];
+        $build = $builds[0];
+        $this->verifyBuild($expected_builds['MyExperimentalFeature'], $build, 'MyExperimentalFeature');
+
+        // Test exclude subprojects filter.
+        $this->get("{$this->url}/api/v1/index.php?project=SubProjectExample&parentid={$parentid}&filtercount=3&showfilters=1&filtercombine=and&field1=subprojects&compare1=92&value1=MyExperimentalFeature&field2=subprojects&compare2=92&value2=MyProductionCode&field3=subprojects&compare3=92&value3=EmptySubproject");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $num_children = $jsonobj['numchildren'];
+        if ($num_children != 1) {
+            $this->fail("Expected 1 subproject, found {$num_children}");
+        }
+        $buildgroup = array_pop($jsonobj['buildgroups']);
+        $builds = $buildgroup['builds'];
+        $build = $builds[0];
+        $this->verifyBuild($expected_builds['MyThirdPartyDependency'], $build, 'MyThirdPartyDependency');
+
+
+
+
         // viewConfigure
         $this->get("{$this->url}/viewConfigure.php?buildid={$parentid}");
 
