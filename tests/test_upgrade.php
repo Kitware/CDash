@@ -4,7 +4,10 @@
 // relative to the top of the CDash source tree
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
-include_once 'include/upgrade_functions.php';
+require_once 'include/upgrade_functions.php';
+
+use CDash\Config;
+use CDash\Database;
 
 class UpgradeTestCase extends KWWebTestCase
 {
@@ -310,35 +313,35 @@ class UpgradeTestCase extends KWWebTestCase
             $retval = 1;
         }
 
-        // Similarly test our buildduration upgrade function.
-        $query = "SELECT buildduration FROM build WHERE id = $id";
+        // Similarly test our buildduration and testduration upgrade functions.
+        $query = "SELECT buildduration, testduration FROM build WHERE id = $id";
         $row = pdo_single_row_query($query);
         $saved_build_duration = $row['buildduration'];
-        pdo_query("UPDATE build SET buildduration = 0 WHERE id = $id");
-        UpgradeBuildDuration($id);
-        $row = pdo_single_row_query($query);
-        if ($row['buildduration'] != 1383) {
-            $this->fail(
-                'Expected build duration to be 1383, found ' . $row['buildduration']);
-            $retval = 1;
-        }
-        pdo_query("UPDATE build SET buildduration = $saved_build_duration
+        $saved_test_duration = $row['testduration'];
+        pdo_query(
+                "UPDATE build SET buildduration = 0, testduration = 0
                 WHERE id = $id");
 
-        // Remove the buildtesttime entry for our parent build.
-        pdo_query("DELETE FROM buildtesttime WHERE buildid = $id");
-
-        // Run the test duration upgrade function.
+        UpgradeBuildDuration($id);
         UpgradeTestDuration();
-
-        // Verify that it worked as expected.
-        $query = "SELECT time FROM buildtesttime WHERE buildid = $id";
         $row = pdo_single_row_query($query);
-        if ($row['time'] != 48.00) {
+        $buildduration = $row['buildduration'];
+        $testduration = $row['testduration'];
+        if ($buildduration != 1383) {
             $this->fail(
-                'Expected test duration to be 48.00, found ' . $row['time']);
+                "Expected build duration to be 1383, found $buildduration");
             $retval = 1;
         }
+        if ($testduration != 48) {
+            $this->fail("Expected test duration to be 48, found $testduration");
+            $retval = 1;
+        }
+
+        pdo_query(
+                "UPDATE build
+                SET buildduration = $saved_build_duration,
+                    testduration = $saved_test_duration
+                WHERE id = $id");
 
         if ($retval == 0) {
             $this->pass('Passed');
@@ -746,5 +749,119 @@ class UpgradeTestCase extends KWWebTestCase
             $this->pass('Passed');
         }
         return $retval;
+    }
+
+    public function testPopulateTestDuration()
+    {
+        require_once dirname(__FILE__) . '/cdash_test_case.php';
+        require_once 'include/common.php';
+        require_once 'include/pdo.php';
+
+        $config = Config::getInstance();
+        $pdo = Database::getInstance()->getPdo();
+
+        $build_table_name = 'testbuild';
+        $btt_table_name = 'testbuildtesttime';
+
+        if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
+            $create_query_1 = '
+                CREATE TABLE "' . $build_table_name . '" (
+                "id" serial NOT NULL,
+                "testduration" integer DEFAULT \'0\' NOT NULL,
+                PRIMARY KEY ("id"))';
+            $create_query_2 = '
+                CREATE TABLE "' . $btt_table_name . '" (
+                "buildid" integer DEFAULT \'0\' NOT NULL,
+                "time" numeric(7,2) DEFAULT \'0.00\' NOT NULL,
+                PRIMARY KEY ("buildid"))';
+        } else {
+            // MySQL
+            $create_query_1 = "
+                CREATE TABLE `$build_table_name` (
+                `id` int(11) NOT NULL auto_increment,
+                `testduration` int(11) NOT NULL default '0',
+                PRIMARY KEY  (`id`))";
+            $create_query_2 = "
+                CREATE TABLE `$btt_table_name` (
+                `buildid` int(11) NOT NULL default '0',
+                `time` float(7,2) NOT NULL default '0.00',
+                PRIMARY KEY  (`buildid`))";
+        }
+
+        // Create testing tables.
+        if ($pdo->exec($create_query_1) === false) {
+            $this->fail('create build table returned false');
+        }
+        if ($pdo->exec($create_query_2) === false) {
+            $this->fail('create btt table returned false');
+        }
+
+        // Insert some builds and test times.
+        $buildids = [1, 2];
+        foreach ($buildids as $buildid) {
+            $pdo->exec(
+                    "INSERT INTO $build_table_name
+                    (id, testduration)
+                    VALUES ($buildid, 0)");
+            $pdo->exec(
+                    "INSERT INTO $btt_table_name
+                    (buildid, time)
+                    VALUES ($buildid, $buildid)");
+        }
+
+        // Also insert one build with no test timing.
+        $pdo->exec(
+                "INSERT INTO $build_table_name
+                (id, testduration)
+                VALUES (3, 0)");
+
+        // Verify that the right number of testing rows made it into the database.
+        $expected_results = [$build_table_name => 3, $btt_table_name => 2];
+        foreach ($expected_results as $table_name => $expected) {
+            $stmt = $pdo->query("SELECT COUNT(*) AS numrows FROM $table_name");
+            $found = $stmt->fetchColumn();
+            if ($found != $expected) {
+                $this->fail(
+                        "Expected $expected rows in $table_name, found $found");
+            }
+        }
+
+        // Run the upgrade function.
+        PopulateTestDuration($btt_table_name, $build_table_name);
+
+        // Verify results in build table.
+        $expected = [
+            1 => 1,
+            2 => 2,
+            3 => 0
+        ];
+        $stmt = $pdo->query(
+            "SELECT id, testduration FROM $build_table_name");
+        $num_rows = 0;
+        while ($row = $stmt->fetch()) {
+            $num_rows++;
+            $buildid = $row['id'];
+            if (!array_key_exists($buildid, $expected)) {
+                $this->fail("No row found for build #$buildid");
+            }
+            if ($expected[$buildid] != $row['testduration']) {
+                $this->fail("Expected {$expected[$buildid]} but found {$row['testduration']} for build #$buildid");
+            }
+        }
+        if ($num_rows != 3) {
+            $this->fail("Expected 3 rows found but $num_rows in build table");
+        }
+
+        // Verify that the btt table was cleaned out.
+        $stmt = $pdo->query("SELECT COUNT(*) FROM $btt_table_name");
+        $num_rows = $stmt->fetchColumn();
+        if ($num_rows != 0) {
+            $this->fail("Expected zero rows in btt table but found $num_rows");
+        }
+
+        // Drop testing tables.
+        $pdo->exec(
+        "DROP TABLE $build_table_name");
+        pdo_query("DROP TABLE $btt_table_name");
     }
 }

@@ -1,6 +1,21 @@
 <?php
+/*=========================================================================
+  Program:   CDash - Cross-Platform Dashboard System
+  Module:    $Id$
+  Language:  PHP
+  Date:      $Date$
+  Version:   $Revision$
+
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
+
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE. See the above copyright notices for more information.
+=========================================================================*/
 
 use CDash\Config;
+use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\DynamicAnalysisSummary;
 
@@ -624,9 +639,8 @@ function UpgradeTestDuration()
 {
     // Find parent builds that don't have test duration set.
     $query =
-        'SELECT b.id FROM build AS b
-        WHERE b.parentid=-1 AND NOT EXISTS
-        (SELECT null FROM buildtesttime AS btt WHERE btt.buildid = b.id)';
+        'SELECT id FROM build
+        WHERE parentid = -1 AND testduration = 0';
     $result = pdo_query($query);
 
     while ($row = pdo_fetch_array($result)) {
@@ -634,14 +648,13 @@ function UpgradeTestDuration()
 
         // Set the parent's test duration to be the sum of its children.
         $query =
-            "SELECT sum(time) AS duration FROM buildtesttime AS btt
-            INNER JOIN build AS b on (btt.buildid = b.id)
-            WHERE b.parentid=$id";
+            "SELECT sum(testduration) AS duration FROM build
+            WHERE parentid = $id";
         $subrow = pdo_single_row_query($query);
         $duration = qnum($subrow['duration']);
 
         $update_query =
-            "INSERT INTO buildtesttime (buildid, time) VALUES ($id, $duration)";
+            "UPDATE build SET testduration = $duration WHERE id = $id";
         if (!pdo_query($update_query)) {
             add_last_sql_error('UpgradeTestDuration', 0, $id);
         }
@@ -665,7 +678,7 @@ function UpgradeBuildDuration($buildid=null)
         $query .= " AND id = $buildid";
     }
     if (!pdo_query($query)) {
-        add_last_sql_error('UpgradeTestDuration');
+        add_last_sql_error('UpgradeBuildDuration');
     }
 }
 
@@ -1126,4 +1139,26 @@ function UpgradeConfigureErrorTable($table = 'configureerror',
     // Step 3: drop the old table and rename the new one to take its place.
     pdo_query("DROP TABLE $table");
     pdo_query("ALTER TABLE temp$table RENAME TO $table");
+}
+
+/** Migrate values from buildtesttime.time to build.testduration
+ *  This function is parameterized to make it easier to test.
+ **/
+function PopulateTestDuration($src_table = 'buildtesttime',
+                              $dst_table = 'build')
+{
+    $pdo = Database::getInstance()->getPdo();
+    if (Config::getInstance()->get('CDASH_DB_TYPE') == 'pgsql') {
+        $pdo->exec("
+                UPDATE $dst_table AS b
+                SET testduration = btt.time
+                FROM $src_table AS btt
+                WHERE b.id = btt.buildid");
+    } else {
+        $pdo->exec("
+                UPDATE $dst_table b
+                INNER JOIN $src_table btt ON b.id = btt.buildid
+                SET b.testduration = btt.time");
+    }
+    $pdo->exec("DELETE FROM $src_table");
 }

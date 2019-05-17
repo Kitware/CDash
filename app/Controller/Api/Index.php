@@ -252,7 +252,7 @@ class Index extends ResultsApi
     public function getIndexQuery($userupdatesql='')
     {
         return
-            "SELECT b.id,b.siteid,b.parentid,b.done,b.changeid,
+            "SELECT b.id,b.siteid,b.parentid,b.done,b.changeid,b.testduration,
             bu.status AS updatestatus,
             i.osname AS osname,
             bu.starttime AS updatestarttime,
@@ -266,7 +266,7 @@ class Index extends ResultsApi
             bw_diff.difference_positive AS countbuildwarningdiffp,
             bw_diff.difference_negative AS countbuildwarningdiffn,
             ce_diff.difference AS countconfigurewarningdiff,
-            btt.time AS testduration,
+            btt.time AS testtime,
             tnotrun_diff.difference_positive AS counttestsnotrundiffp,
             tnotrun_diff.difference_negative AS counttestsnotrundiffn,
             tfailed_diff.difference_positive AS counttestsfaileddiffp,
@@ -431,8 +431,7 @@ class Index extends ResultsApi
         }
 
         if (empty($build_row['testduration'])) {
-            $time_array = pdo_fetch_array(pdo_query("SELECT SUM(time) FROM build2test WHERE buildid='$buildid'"));
-            $build_row['testduration'] = round($time_array[0], 1);
+            $build_row['testduration'] = 0;
         } else {
             $build_row['testduration'] = round($build_row['testduration'], 1);
         }
@@ -520,7 +519,7 @@ class Index extends ResultsApi
         $selected_tests_not_run = 0;
         $selected_tests_failed = 0;
         $selected_tests_passed = 0;
-        $selected_test_duration = 0;
+        $selected_proc_time = 0;
 
         if ($numchildren > 0) {
             $child_builds_hyperlink =
@@ -534,11 +533,11 @@ class Index extends ResultsApi
                     SELECT configureerrors, configurewarnings, configureduration,
                            builderrors, buildwarnings, buildduration,
                            b.starttime, b.endtime, testnotrun, testfailed, testpassed,
-                           btt.time AS testduration, sb.name
+                           testduration, sb.name, btt.time AS testtime
                                FROM build AS b
                                INNER JOIN subproject2build AS sb2b ON (b.id = sb2b.buildid)
                                INNER JOIN subproject AS sb ON (sb2b.subprojectid = sb.id)
-                               LEFT JOIN buildtesttime AS btt ON (b.id=btt.buildid)
+                               LEFT JOIN buildtesttime AS btt ON (btt.buildid = b.id)
                                WHERE b.parentid=$buildid
                                AND sb.name IN $this->selectedSubProjects";
                 $select_results = pdo_query($select_query);
@@ -561,8 +560,8 @@ class Index extends ResultsApi
                         max(0, $select_array['testfailed']);
                     $selected_tests_passed +=
                         max(0, $select_array['testpassed']);
-                    $selected_test_duration +=
-                        max(0, $select_array['testduration']);
+                    $selected_proc_time +=
+                        max(0, $select_array['testtime']);
                 }
             }
         } else {
@@ -865,7 +864,7 @@ class Index extends ResultsApi
                 $nnotrun = $selected_tests_not_run;
                 $nfail = $selected_tests_failed;
                 $npass = $selected_tests_passed;
-                $testduration = $selected_test_duration;
+                $proc_time = $selected_proc_time;
             } else {
                 $nnotrun = $build_array['counttestsnotrun'] -
                     $selected_tests_not_run;
@@ -873,8 +872,7 @@ class Index extends ResultsApi
                     $selected_tests_failed;
                 $npass = $build_array['counttestspassed'] -
                     $selected_tests_passed;
-                $testduration = $build_array['testduration'] -
-                    $selected_test_duration;
+                $proc_time = $build_array['testtime'] - $selected_proc_time;
             }
 
             if ($this->childView == 1 || (!$this->includeSubProjects && !$this->excludeSubProjects)) {
@@ -954,9 +952,13 @@ class Index extends ResultsApi
             $this->buildgroupsResponse[$i]['numtestfail'] += $nfail;
             $this->buildgroupsResponse[$i]['numtestpass'] += $npass;
 
+            $testduration = $build_array['testduration'];
             $test_response['time'] = time_difference($testduration, true);
             $test_response['timefull'] = $testduration;
             $this->buildgroupsResponse[$i]['testduration'] += $testduration;
+
+            $test_response['procTime'] = time_difference($proc_time, true);
+            $test_response['procTimeFull'] = $proc_time;
 
             $build_response['test'] = $test_response;
         }

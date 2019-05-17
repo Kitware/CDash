@@ -832,6 +832,18 @@ if (isset($_GET['upgrade-2-8'])) {
     // Add a 'recheck' field to the pendingsubmission table.
     AddTableField('pending_submissions', 'recheck', 'tinyint(1)', 'smallint', '0');
 
+    // Migrate from buildtesttime.time to build.testduration
+    if (!pdo_query('SELECT testduration FROM build LIMIT 1')) {
+        // Add testduration column to build table.
+        AddTableField('build', 'testduration', 'int(11)', 'integer', '0');
+
+        // Migrate values from buildtesttime.time to build.testduration.
+        PopulateTestDuration();
+
+        // Change build.configureduration from float to int
+        ModifyTableField('build', 'configureduration', 'int(11)', 'integer', '0', true, false);
+    }
+
     // Set the database version
     setVersion();
 

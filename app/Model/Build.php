@@ -279,43 +279,84 @@ class Build
         return false;
     }
 
-    /** Update the total testing duration */
-    public function SaveTotalTestsTime($duration, $update_parent = true)
+    /**
+     * Record the total execution time of all the tests performed by this build.
+     **/
+    public function SaveTotalTestsTime($update_parent = true)
     {
-        if (!$this->Id || !is_numeric($this->Id)) {
+        if (!$this->Exists()) {
             return false;
         }
 
-        // Check if an entry already exists for this build.
-        $exists_stmt = $this->PDO->prepare(
-            'SELECT buildid FROM buildtesttime WHERE buildid = ?');
-        if (!pdo_execute($exists_stmt, [$this->Id])) {
+        // Calculate how much processor time was spent running this build's
+        // tests.
+        $total_proc_time = 0.0;
+        foreach ($this->TestCollection as $test) {
+            $exec_time = $test->GetExecutionTime();
+            $num_procs = 1.0;
+            foreach ($test->Measurements as $measurement) {
+                if ($measurement->Name == 'Processors') {
+                    $num_procs *= $measurement->Value;
+                    break;
+                }
+            }
+            $total_proc_time += ($exec_time * $num_procs);
+        }
+
+        if (!$this->UpdateBuildTestTime($total_proc_time)) {
             return false;
         }
-        if ($exists_stmt->fetchColumn() !== false) {
-            $stmt = $this->PDO->prepare(
-                'UPDATE buildtesttime SET time = time + ? WHERE buildid = ?');
-            $params = [$duration, $this->Id];
-        } else {
-            $stmt = $this->PDO->prepare(
-                'INSERT INTO buildtesttime (buildid, time) VALUES (?, ?)');
-            $params = [$this->Id, $duration];
-        }
-        if (!pdo_execute($stmt, $params)) {
-            return false;
-        }
+
 
         if (!$update_parent) {
             return true;
         }
-        // If this is a child build, add this duration
-        // to the parent's test duration sum.
+
+        // If this is a child build, add this exec time
+        // to the parent's value.
         $this->SetParentId($this->LookupParentBuildId());
         if ($this->ParentId > 0) {
             $parent = new Build();
             $parent->Id = $this->ParentId;
-            $parent->SaveTotalTestsTime($duration);
+            $parent->UpdateBuildTestTime($total_proc_time);
         }
+    }
+
+    /**
+     * Insert or update a record in the buildtesttime table.
+     **/
+    protected function UpdateBuildTestTime($test_exec_time)
+    {
+        // Check if an entry already exists for this build.
+        $this->PDO->beginTransaction();
+        $exists_stmt = $this->PDO->prepare(
+                'SELECT time FROM buildtesttime WHERE buildid = ?');
+        if (!pdo_execute($exists_stmt, [$this->Id])) {
+            $this->PDO->rollBack();
+            return false;
+        }
+
+        $existing_time = $exists_stmt->fetchColumn();
+        $query_params = [':buildid' => $this->Id];
+        if ($existing_time !== false) {
+            $stmt = $this->PDO->prepare(
+                    'UPDATE buildtesttime
+                    SET time = :time
+                    WHERE buildid = :buildid');
+            $query_params[':time'] = $test_exec_time + $existing_time;
+        } else {
+            $stmt = $this->PDO->prepare(
+                    'INSERT INTO buildtesttime (buildid, time)
+                    VALUES (:buildid, :time)');
+            $query_params[':time'] = $test_exec_time;
+        }
+        if (!pdo_execute($stmt, $query_params)) {
+            $this->PDO->rollBack();
+            return false;
+        }
+
+        $this->PDO->commit();
+        return true;
     }
 
     /** Update the end time */
@@ -2308,43 +2349,10 @@ class Build
         pdo_execute($stmt, [$idToNotify]);
     }
 
-    /**
-     * @param $duration
-     * @param bool $update_parent
-     */
-    public function SetConfigureDuration($duration, $update_parent = true)
+    protected function UpdateDuration($field, $duration, $update_parent = true)
     {
-        if (!$this->Id || !is_numeric($this->Id)) {
-            return;
-        }
-
-        // Set configure duration for this build.
-        $stmt = $this->PDO->prepare(
-            'UPDATE build SET configureduration = ? WHERE id = ?');
-        pdo_execute($stmt, [$duration, $this->Id]);
-
-        if (!$update_parent) {
-            return;
-        }
-        // If this is a child build, add this duration
-        // to the parent's configure duration sum.
-        $this->SetParentId($this->LookupParentBuildId());
-        if ($this->ParentId > 0) {
-            $stmt = $this->PDO->prepare(
-                'UPDATE build
-                SET configureduration = configureduration + ?
-                WHERE id = ?');
-            pdo_execute($stmt, [$duration, $this->ParentId]);
-        }
-    }
-
-    /**
-     * @param $duration
-     * @param bool $update_parent
-     */
-    public function UpdateBuildDuration($duration, $update_parent = true)
-    {
-        if ($duration === 0 || !$this->Id || !is_numeric($this->Id)) {
+        if ($duration === 0 || !$this->Id || !is_numeric($this->Id) ||
+                !$this->Exists()) {
             return;
         }
 
@@ -2357,10 +2365,10 @@ class Build
             return;
         }
 
-        // Update build step duration for this build.
+        // Update duration of specified step for this build.
         $update_stmt = $this->PDO->prepare(
-            'UPDATE build SET buildduration = buildduration + :duration
-            WHERE id = :id');
+            "UPDATE build SET {$field}duration = {$field}duration + :duration
+            WHERE id = :id");
         if (!pdo_execute($update_stmt,
             [':duration' => $duration, ':id' => $this->Id])) {
             $this->PDO->rollBack();
@@ -2387,6 +2395,29 @@ class Build
             }
             $this->PDO->commit();
         }
+    }
+
+    /**
+     * @param $duration
+     * @param bool $update_parent
+     */
+    public function SetConfigureDuration($duration, $update_parent = true)
+    {
+        return $this->UpdateDuration('configure', $duration, $update_parent);
+    }
+
+    /**
+     * @param $duration
+     * @param bool $update_parent
+     */
+    public function UpdateBuildDuration($duration, $update_parent = true)
+    {
+        return $this->UpdateDuration('build', $duration, $update_parent);
+    }
+
+    public function UpdateTestDuration($duration, $update_parent=true)
+    {
+        return $this->UpdateDuration('test', $duration, $update_parent);
     }
 
     // Return the dashboard date (in Y-m-d format) for this build.
