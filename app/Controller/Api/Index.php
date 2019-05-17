@@ -648,7 +648,7 @@ class Index extends ResultsApi
             INNER JOIN build AS b ON (l2b.buildid=b.id)
             WHERE b.id=' . qnum($buildid);
 
-        $build_labels = array();
+        $build_labels = [];
         if ($this->numSelectedSubProjects > 0) {
             // Special handling for whitelisting/blacklisting SubProjects.
             if ($this->includeSubProjects) {
@@ -726,7 +726,7 @@ class Index extends ResultsApi
         $build_response['time'] = time_difference($duration, true);
         $build_response['timefull'] = $duration;
 
-        $update_response = array();
+        $update_response = [];
 
         $countupdatefiles = $build_array['countupdatefiles'];
         $this->buildgroupsResponse[$i]['numupdatedfiles'] += $countupdatefiles;
@@ -774,7 +774,7 @@ class Index extends ResultsApi
             $build_response['update'] = $update_response;
         }
 
-        $compilation_response = array();
+        $compilation_response = [];
 
         if ($build_array['countbuilderrors'] >= 0) {
             if ($this->includeSubProjects && $this->childView != 1) {
@@ -820,7 +820,7 @@ class Index extends ResultsApi
         $build_response['hasconfigure'] = false;
         if ($build_array['hasconfigure'] != 0) {
             $build_response['hasconfigure'] = true;
-            $configure_response = array();
+            $configure_response = [];
 
             if ($this->includeSubProjects && $this->childView != 1) {
                 $nconfigureerrors = $selected_configure_errors;
@@ -858,7 +858,7 @@ class Index extends ResultsApi
         if ($build_array['hastest'] != 0) {
             $build_response['hastest'] = true;
             $this->buildgroupsResponse[$i]['hastestdata'] = true;
-            $test_response = array();
+            $test_response = [];
 
             if ($this->includeSubProjects && $this->childView != 1) {
                 $nnotrun = $selected_tests_not_run;
@@ -1137,7 +1137,7 @@ class Index extends ResultsApi
         }
 
         $currentUTCTime = gmdate(FMT_DATETIME, $currentstarttime + 3600 * 24);
-        $response = array();
+        $response = [];
         $build2grouprule = pdo_query(
             "SELECT g.siteid, g.buildname, g.buildtype, s.name, s.outoforder
             FROM build2grouprule AS g, site AS s
@@ -1154,7 +1154,7 @@ class Index extends ResultsApi
                 $siteoutoforder = $build2grouprule_array['outoforder'];
                 $buildtype = $build2grouprule_array['buildtype'];
                 $buildname = $build2grouprule_array['buildname'];
-                $build_response = array();
+                $build_response = [];
                 $build_response['site'] = $site;
                 $build_response['siteoutoforder'] = $siteoutoforder;
                 $build_response['siteid'] = $siteid;
