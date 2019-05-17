@@ -1318,6 +1318,7 @@ class Project
         switch ($this->CvsViewerType) {
             case 'cgit':
             case 'github':
+            case 'gitlab':
             case 'gitorious':
             case 'gitweb':
             case 'redmine':
