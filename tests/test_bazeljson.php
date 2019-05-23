@@ -518,7 +518,7 @@ class BazelJSONTestCase extends KWWebTestCase
     {
         // Submit testing data.
         $buildid = $this->submit_data('InsightExample', 'BazelJSON',
-            '6e1c0270ff3dd79cdcf7856c65de1be6',
+            '74df5d4af1b22097caf2304b301fe4d0',
             dirname(__FILE__) . '/data/Bazel/bazel_shard_test_failures.json');
         if (!$buildid) {
             return false;
@@ -536,7 +536,7 @@ class BazelJSONTestCase extends KWWebTestCase
             'builderrors' => 0,
             'buildwarnings' => 0,
             'testfailed' => 2,
-            'testpassed' => 4,
+            'testpassed' => 36,
             'configureerrors' => 0,
             'configurewarnings' => 0
         ];
