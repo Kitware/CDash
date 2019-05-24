@@ -314,12 +314,10 @@ class Timeline extends Index
         $response = [];
         $oldest_time_ms = null;
         $newest_time_ms = null;
-        $nightly_timestamp = strtotime($this->project->NightlyTime);
         foreach ($builds as $build) {
             // Use this build's starttime to get the beginning of the appropriate
             // testing day.
-            $test_date =
-                Build::GetTestingDate($build['starttime'], $nightly_timestamp);
+            $test_date = $this->project->GetTestingDay($build['starttime']);
             list($unused, $start_of_day) =
                 get_dates($test_date, $this->project->NightlyTime);
 

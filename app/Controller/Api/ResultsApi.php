@@ -129,7 +129,7 @@ class ResultsApi extends ProjectApi
             $this->db->execute($stmt, [':projectid' => $this->project->Id]);
             $starttime = $stmt->fetchColumn();
             if ($starttime) {
-                $this->date = Build::GetTestingDate($starttime, strtotime($this->project->NightlyTime));
+                $this->date = $this->project->GetTestingDay($starttime);
             }
         }
 

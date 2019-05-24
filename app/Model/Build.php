@@ -88,7 +88,6 @@ class Build
 
     // Not set by FillFromId(), but cached the first time they are
     // computed.
-    public $NightlyStartTime;
     public $BeginningOfDay;
     public $EndOfDay;
 
@@ -2427,54 +2426,8 @@ class Build
             return date(FMT_DATE);
         }
         $this->FillFromId($this->Id);
-
-        if (!$this->NightlyStartTime) {
-            $stmt = $this->PDO->prepare(
-                'SELECT nightlytime FROM project WHERE id = ?');
-            pdo_execute($stmt, [$this->ProjectId]);
-            $this->NightlyStartTime = strtotime($stmt->fetchColumn());
-        }
-
-        return Build::GetTestingDate($this->StartTime, $this->NightlyStartTime);
-    }
-
-    /**
-     * @param $build_start_time
-     * @param $nightly_start_timestamp
-     * @return false|string
-     * @throws \Exception
-     */
-    public static function GetTestingDate($build_start_time,
-                                          $nightly_start_timestamp)
-    {
-        // If the build was started after the nightly start time
-        // then it should appear on the dashboard results for the
-        // subsequent day.
-        $build_datetime = new \DateTime($build_start_time);
-        $build_start_timestamp = $build_datetime->getTimestamp();
-
-        if (date(FMT_TIME, $nightly_start_timestamp) < '12:00:00') {
-            // If the "nightly" start time is in the morning then any build
-            // that occurs before it is part of the previous testing day.
-            if (date(FMT_TIME, $build_start_timestamp) <
-                date(FMT_TIME, $nightly_start_timestamp)
-            ) {
-                $build_datetime->sub(new \DateInterval('P1D'));
-                $build_start_timestamp = $build_datetime->getTimestamp();
-            }
-        } else {
-            // If the nightly start time is NOT in the morning then any build
-            // that occurs after it is part of the next testing day.
-            if (date(FMT_TIME, $build_start_timestamp) >=
-                date(FMT_TIME, $nightly_start_timestamp)
-            ) {
-                $build_datetime->add(new \DateInterval('P1D'));
-                $build_start_timestamp = $build_datetime->getTimestamp();
-            }
-        }
-
-        $build_date = date(FMT_DATE, $build_start_timestamp);
-        return $build_date;
+        $this->GetProject()->Fill();
+        return $this->Project->GetTestingDay($this->StartTime);
     }
 
     /** Return whether or not this build has been marked as done. */
@@ -2565,13 +2518,10 @@ class Build
             return true;
         }
 
-        $project = new Project();
-        $project->Id = $this->ProjectId;
-        $project->Fill();
-
         $build_date = $this->GetDate();
+        $this->GetProject()->Fill();
         list($this->BeginningOfDay, $this->EndOfDay) =
-            $project->ComputeTestingDayBounds($build_date);
+            $this->Project->ComputeTestingDayBounds($build_date);
         return true;
     }
 
