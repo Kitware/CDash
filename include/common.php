@@ -1410,21 +1410,37 @@ function get_last_buildid_dynamicanalysis($projectid, $siteid, $buildtype, $buil
 }
 
 /** Get the date from the buildid */
-function get_dashboard_date_from_build_starttime($starttime, $nightlytime)
+function get_dashboard_date_from_build_starttime($build_start_time, $nightlytime)
 {
-    $nightlytime = strtotime($nightlytime) - 1; // in case it's midnight
-    $starttime = strtotime($starttime . ' GMT');
+    // If the build was started after the nightly start time
+    // then it should appear on the dashboard results for the
+    // subsequent day.
+    $build_datetime = new \DateTime($build_start_time);
+    $build_start_timestamp = $build_datetime->getTimestamp();
+    $nightly_start_timestamp = strtotime($nightlytime);
 
-    $date = date(FMT_DATE, $starttime);
-    if (date(FMT_TIME, $starttime) > date(FMT_TIME, $nightlytime)) {
-        $date = date(FMT_DATE, $starttime + 3600 * 24); //next day
+    if (date(FMT_TIME, $nightly_start_timestamp) < '12:00:00') {
+        // If the "nightly" start time is in the morning then any build
+        // that occurs before it is part of the previous testing day.
+        if (date(FMT_TIME, $build_start_timestamp) <
+                date(FMT_TIME, $nightly_start_timestamp)
+           ) {
+            $build_datetime->sub(new \DateInterval('P1D'));
+            $build_start_timestamp = $build_datetime->getTimestamp();
+        }
+    } else {
+        // If the nightly start time is NOT in the morning then any build
+        // that occurs after it is part of the next testing day.
+        if (date(FMT_TIME, $build_start_timestamp) >=
+                date(FMT_TIME, $nightly_start_timestamp)
+           ) {
+            $build_datetime->add(new \DateInterval('P1D'));
+            $build_start_timestamp = $build_datetime->getTimestamp();
+        }
     }
 
-    // If the $nightlytime is in the morning it's actually the day after
-    if (date(FMT_TIME, $nightlytime) < '12:00:00') {
-        $date = date(FMT_DATE, strtotime($date) - 3600 * 24); // previous date
-    }
-    return $date;
+    $build_date = date(FMT_DATE, $build_start_timestamp);
+    return $build_date;
 }
 
 function get_dashboard_date_from_project($projectname, $date)
