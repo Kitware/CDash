@@ -90,7 +90,7 @@ $site = new Site();
 $site->Id = $build->SiteId;
 $site->Fill();
 
-$date = get_dashboard_date_from_build_starttime($build->StartTime, $project->NightlyTime);
+$date = $project->GetTestingDay($build->StartTime);
 list($previousdate, $currenttime, $nextdate) = get_dates($date, $project->NightlyTime);
 $logoid = getLogoID($projectid);
 

@@ -20,6 +20,7 @@ require_once 'include/api_common.php';
 include 'include/version.php';
 
 use CDash\Model\Build;
+use CDash\Model\Project;
 
 $start = microtime_float();
 $build = get_request_build();
@@ -32,20 +33,21 @@ if ($date != null) {
 
 $response = [];
 
-$project_array = pdo_fetch_array(pdo_query("SELECT * FROM project WHERE id='{$build->ProjectId}'"));
-$projectname = $project_array['name'];
+$project = new Project();
+$project->Id = $build->ProjectId;
+$project->Fill();
 $response = begin_JSON_response();
-$response['title'] = "CDash : $projectname";
+$response['title'] = "CDash : $project->Name";
 
-$date = get_dashboard_date_from_build_starttime($build->StartTime, $project_array['nightlytime']);
-get_dashboard_JSON_by_name($projectname, $date, $response);
+$date = $project->GetTestingDay($build->StartTime);
+get_dashboard_JSON_by_name($project->Name, $date, $response);
 
 // Menu
 $menu = array();
 if ($build->GetParentId() > 0) {
-    $menu['back'] = 'index.php?project=' . urlencode($projectname) . "&parentid={$build->GetParentId()}";
+    $menu['back'] = 'index.php?project=' . urlencode($project->Name) . "&parentid={$build->GetParentId()}";
 } else {
-    $menu['back'] = 'index.php?project=' . urlencode($projectname) . '&date=' . $date;
+    $menu['back'] = 'index.php?project=' . urlencode($project->Name) . '&date=' . $date;
 }
 
 $previous_buildid = $build->GetPreviousBuildId();

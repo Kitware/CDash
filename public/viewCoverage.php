@@ -25,7 +25,7 @@ require_once 'include/version.php';
 require_once 'include/filterdataFunctions.php';
 
 use CDash\Model\Build;
-
+use CDash\Model\Project;
 use CDash\Model\User;
 
 @set_time_limit(0);
@@ -73,11 +73,10 @@ if (!isset($projectid) || $projectid == 0 || !is_numeric($projectid)) {
 
 checkUserPolicy(@$_SESSION['cdash']['loginid'], $projectid);
 
-$query =
-    "SELECT name, coveragethreshold, nightlytime, showcoveragecode, displaylabels
-   FROM project WHERE id='$projectid'";
-$project = pdo_query($query);
-if (pdo_num_rows($project) == 0) {
+$project = new Project();
+$project->Id = $projectid;
+$project->Fill();
+if (!$project->Exists()) {
     echo "This project doesn't exist.";
     exit();
 }
@@ -89,26 +88,21 @@ if (pdo_num_rows($user2project) > 0) {
     $role = $user2project_array['role'];
 }
 
-$project_array = pdo_fetch_array($project);
-$projectname = $project_array['name'];
-
 $projectshowcoveragecode = 1;
-if (!$project_array['showcoveragecode'] && $role < 2) {
+if (!$project->ShowCoverageCode && $role < 2) {
     $projectshowcoveragecode = 0;
 }
 
-$projectdisplaylabels = $project_array['displaylabels'];
-
 $xml = begin_XML_for_XSLT();
-$xml .= '<title>CDash : ' . $projectname . '</title>';
-$xml .= get_cdash_dashboard_xml_by_name($projectname, $date);
+$xml .= '<title>CDash : ' . $project->Name . '</title>';
+$xml .= get_cdash_dashboard_xml_by_name($project->Name, $date);
 $xml .= '<buildid>' . $buildid . '</buildid>';
 
 $siteid = $build_array['siteid'];
 $buildtype = $build_array['type'];
 $buildname = $build_array['name'];
 $starttime = $build_array['starttime'];
-$threshold = $project_array['coveragethreshold'];
+$threshold = $project->CoverageThreshold;
 if ($build_array['groupid'] > 0) {
     $row = pdo_single_row_query(
         'SELECT coveragethreshold FROM subprojectgroup
@@ -119,8 +113,9 @@ if ($build_array['groupid'] > 0) {
     }
 }
 
+$date = $project->GetTestingDay($build_array['starttime']);
 $xml .= '<menu>';
-$xml .= add_XML_value('back', 'index.php?project=' . urlencode($projectname) . '&date=' . get_dashboard_date_from_build_starttime($build_array['starttime'], $project_array['nightlytime']));
+$xml .= add_XML_value('back', 'index.php?project=' . urlencode($project->Name) . "&date=$date");
 
 $build = new Build();
 $build->Id = $buildid;
@@ -174,7 +169,7 @@ $xml .= add_XML_value('metricerror', $metricerror);
 // Only execute the label-related queries if labels are being
 // displayed:
 //
-if ($projectdisplaylabels) {
+if ($project->DisplayLabels) {
     // Get the set of labels involved:
     //
     $labels = array();
@@ -230,7 +225,7 @@ $xml .= add_XML_value('buildid', $buildid);
 $xml .= add_XML_value('userid', $userid);
 
 $xml .= add_XML_value('showcoveragecode', $projectshowcoveragecode);
-$xml .= add_XML_value('displaylabels', $projectdisplaylabels);
+$xml .= add_XML_value('displaylabels', $project->DisplayLabels);
 
 $nsatisfactorycoveredfiles = 0;
 $coveragetype = 'gcov'; // default coverage to avoid warning

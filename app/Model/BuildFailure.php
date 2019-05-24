@@ -260,7 +260,7 @@ class BuildFailure
     /**
      * Marshal a build failure, this includes the build failure arguments.
      **/
-    public static function marshal($data, $project, $revision, $linkifyOutput, $buildfailure)
+    public static function marshal($data, Project $project, $revision, $linkifyOutput, $buildfailure)
     {
         deepEncodeHTMLEntities($data);
 
@@ -281,21 +281,21 @@ class BuildFailure
             $file = basename($data['sourcefile']);
             $directory = dirname($data['sourcefile']);
 
-            $source_dir = \get_source_dir($project['id'], $project['cvsurl'], $directory);
+            $source_dir = \get_source_dir($project->Id, $project->CvsUrl, $directory);
             if (substr($directory, 0, strlen($source_dir)) == $source_dir) {
                 $directory = substr($directory, strlen($source_dir));
             }
 
-            $marshaled['cvsurl'] = \get_diff_url($project['id'],
-                                                $project['cvsurl'],
+            $marshaled['cvsurl'] = \get_diff_url($project->Id,
+                                                $project->CvsUrl,
                                                 $directory,
                                                 $file,
                                                 $revision);
 
             if ($source_dir !== null && $linkifyOutput) {
-                $marshaled['stderror'] = linkify_compiler_output($project['cvsurl'], $source_dir,
+                $marshaled['stderror'] = linkify_compiler_output($project->CvsUrl, $source_dir,
                                                                  $revision, $data['stderror']);
-                $marshaled['stdoutput'] = linkify_compiler_output($project['cvsurl'], $source_dir,
+                $marshaled['stdoutput'] = linkify_compiler_output($project->CvsUrl, $source_dir,
                                                                   $revision, $data['stdoutput']);
             }
         }

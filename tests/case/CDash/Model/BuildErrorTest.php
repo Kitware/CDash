@@ -46,11 +46,8 @@ class BuildErrorModelTest extends PHPUnit_Framework_TestCase
             'text' => '/.../foo/src/main.cpp:2:3: error: `asdf` not declared in this scope'
         ];
 
-        $input_project = [
-            'id' => 1,
-            'cvsurl' => 'https://github.com/FooCo/foo'
-        ];
-        $marshaled = $this->mock_builderror->marshal($input_data, $input_project, '12', $this->mock_builderror);
+        $this->mock_project->CvsUrl = 'https://github.com/FooCo/foo';
+        $marshaled = $this->mock_builderror->marshal($input_data, $this->mock_project, '12', $this->mock_builderror);
 
         $expected = [
             'new' => '1',

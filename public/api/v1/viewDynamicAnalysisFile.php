@@ -58,7 +58,7 @@ $project = new Project();
 $project->Id = $build->ProjectId;
 $project->Fill();
 
-$date = get_dashboard_date_from_build_starttime($build->StartTime, $project->NightlyTime);
+$date = $project->GetTestingDay($build->StartTime);
 $response = begin_JSON_response();
 get_dashboard_JSON($project->Name, $date, $response);
 $response['title'] = "$project->Name : Dynamic Analysis";

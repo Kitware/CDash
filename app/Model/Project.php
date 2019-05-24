@@ -1820,4 +1820,42 @@ class Project
         $endOfDay = gmdate(FMT_DATETIME, $end_timestamp);
         return [$beginningOfDay, $endOfDay];
     }
+
+
+    /**
+     * Return the testing day (a string in DATETIME format)
+     * for a given date (a date/time string).
+     */
+    public function GetTestingDay($date)
+    {
+        // If the build was started after the nightly start time
+        // then it should appear on the dashboard results for the
+        // subsequent day.
+        $build_datetime = new \DateTime($date);
+        $build_start_timestamp = $build_datetime->getTimestamp();
+        $nightly_start_timestamp = strtotime($this->NightlyTime);
+
+        if (date(FMT_TIME, $nightly_start_timestamp) < '12:00:00') {
+            // If the "nightly" start time is in the morning then any build
+            // that occurs before it is part of the previous testing day.
+            if (date(FMT_TIME, $build_start_timestamp) <
+                    date(FMT_TIME, $nightly_start_timestamp)
+               ) {
+                $build_datetime->sub(new \DateInterval('P1D'));
+                $build_start_timestamp = $build_datetime->getTimestamp();
+            }
+        } else {
+            // If the nightly start time is NOT in the morning then any build
+            // that occurs after it is part of the next testing day.
+            if (date(FMT_TIME, $build_start_timestamp) >=
+                    date(FMT_TIME, $nightly_start_timestamp)
+               ) {
+                $build_datetime->add(new \DateInterval('P1D'));
+                $build_start_timestamp = $build_datetime->getTimestamp();
+            }
+        }
+
+        $build_date = date(FMT_DATE, $build_start_timestamp);
+        return $build_date;
+    }
 }

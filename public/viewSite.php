@@ -24,6 +24,7 @@ require_once 'include/common.php';
 require_once 'include/version.php';
 
 use CDash\Config;
+use CDash\Model\Project;
 use CDash\Model\User;
 
 $config = Config::getInstance();
@@ -104,9 +105,12 @@ $xml .= '<title>CDash : ' . $sitename . '</title>';
 
 @$projectid = pdo_real_escape_numeric($_GET['project']);
 if ($projectid) {
-    $project_array = pdo_fetch_array(pdo_query("SELECT name,nightlytime,showipaddresses FROM project WHERE id='$projectid'"));
-    $xml .= '<backurl>index.php?project=' . urlencode($project_array['name']);
-    $xml .= '&#38;date=' . get_dashboard_date_from_build_starttime(gmdate(FMT_DATETIME, $currenttime), $project_array['nightlytime']);
+    $project = new Project();
+    $project->Id = $projectid;
+    $project->Fill();
+    $xml .= '<backurl>index.php?project=' . urlencode($project->Name);
+    $date = $project->GetTestingDay(gmdate(FMT_DATETIME, $currenttime));
+    $xml .= '&#38;date=' . $date;
     $xml .= '</backurl>';
 } else {
     $xml .= '<backurl>index.php</backurl>';
@@ -146,7 +150,7 @@ $xml .= add_XML_value('totalphysicalmemory', getByteValueWithExtension($siteinfo
 $xml .= add_XML_value('logicalprocessorsperphysical', $siteinformation_array['logicalprocessorsperphysical']);
 $xml .= add_XML_value('processorclockfrequency', getByteValueWithExtension($siteinformation_array['processorclockfrequency'] * 1000000, 1000) . 'Hz');
 $xml .= add_XML_value('outoforder', $site_array['outoforder']);
-if ($projectid && $project_array['showipaddresses']) {
+if ($projectid && $project->ShowIPAddresses) {
     $xml .= add_XML_value('ip', $site_array['ip']);
     $xml .= add_XML_value('latitude', $site_array['latitude']);
     $xml .= add_XML_value('longitude', $site_array['longitude']);
