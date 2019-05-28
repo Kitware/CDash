@@ -43,7 +43,7 @@ class QueryTests extends ResultsApi
             $parentid = pdo_real_escape_numeric($_GET['parentid']);
             $parent_build = new Build();
             $parent_build->Id = $parentid;
-            $this->date = $parent_build->GetDate();
+            $this->setDate($parent_build->GetDate());
         } else {
             // Handle the optional arguments that dictate our time range.
             $this->determineDateRange($response);
@@ -117,20 +117,15 @@ class QueryTests extends ResultsApi
         $project_response['showtesttime'] = $this->project->ShowTestTime;
         $response['project'] = $project_response;
 
-        //get information about all the builds for the given date and project
+        // Get information about all the builds for the given project
+        // and date range.
         $builds = [];
-
-        $beginning_timestamp = $currentstarttime;
-        $end_timestamp = $currentstarttime + 3600 * 24;
-
-        $beginning_UTCDate = gmdate(FMT_DATETIME, $beginning_timestamp);
-        $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
 
         // Add the date/time
         $builds['projectid'] = $this->project->Id;
-        $builds['currentstarttime'] = $currentstarttime;
-        $builds['teststarttime'] = date(FMT_DATETIME, $beginning_timestamp);
-        $builds['testendtime'] = date(FMT_DATETIME, $end_timestamp);
+        $builds['currentstarttime'] = $this->currentStartTime;
+        $builds['teststarttime'] = $this->beginDate;
+        $builds['testendtime'] = $this->endDate;
 
         // Start constructing the main SQL query for this page.
         $pdo = Database::getInstance()->getPdo();
@@ -160,8 +155,8 @@ class QueryTests extends ResultsApi
             $query_params[':parentid'] = $_GET['parentid'];
         } elseif (!$filterdata['hasdateclause']) {
             $date_clause = 'AND b.starttime >= :starttime AND b.starttime < :endtime';
-            $query_params[':starttime'] = $beginning_UTCDate;
-            $query_params[':endtime'] = $end_UTCDate;
+            $query_params[':starttime'] = $this->beginDate;
+            $query_params[':endtime'] = $this->endDate;
         }
 
         // Check for the presence of a filter on Build Group.
