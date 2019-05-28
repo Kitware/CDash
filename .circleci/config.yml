@@ -56,10 +56,10 @@ jobs:
           command: node_modules/.bin/webdriver-manager start
       - run: mkdir _build
       # Run the test suite for MySQL
-      - run: /usr/local/bin/ctest -VV -DBUILDNAME="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}_MySQL" -Dpostgres=OFF -S .circleci/ctest_driver_script.cmake
+      - run: /usr/local/bin/ctest -VV -DBUILDNAME="${CIRCLE_BRANCH}_MySQL" -Dpostgres=OFF -S .circleci/ctest_driver_script.cmake
       # Run the test suite for Postgres
       - run: rm -rf _build && mkdir _build
-      - run: /usr/local/bin/ctest -VV -DBUILDNAME="${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}_Postgres" -Dpostgres=ON -S .circleci/ctest_driver_script.cmake
+      - run: /usr/local/bin/ctest -VV -DBUILDNAME="${CIRCLE_BRANCH}_Postgres" -Dpostgres=ON -S .circleci/ctest_driver_script.cmake
       # Build and push Docker image.
       - run: |
           if [ "${CIRCLE_BRANCH}" == "master" ]; then
