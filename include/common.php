@@ -1409,24 +1409,6 @@ function get_last_buildid_dynamicanalysis($projectid, $siteid, $buildtype, $buil
     return 0;
 }
 
-/** Get the date from the buildid */
-function get_dashboard_date_from_build_starttime($starttime, $nightlytime)
-{
-    $nightlytime = strtotime($nightlytime) - 1; // in case it's midnight
-    $starttime = strtotime($starttime . ' GMT');
-
-    $date = date(FMT_DATE, $starttime);
-    if (date(FMT_TIME, $starttime) > date(FMT_TIME, $nightlytime)) {
-        $date = date(FMT_DATE, $starttime + 3600 * 24); //next day
-    }
-
-    // If the $nightlytime is in the morning it's actually the day after
-    if (date(FMT_TIME, $nightlytime) < '12:00:00') {
-        $date = date(FMT_DATE, strtotime($date) - 3600 * 24); // previous date
-    }
-    return $date;
-}
-
 function get_dashboard_date_from_project($projectname, $date)
 {
     $project = pdo_query("SELECT nightlytime FROM project WHERE name='$projectname'");

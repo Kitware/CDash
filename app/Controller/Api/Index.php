@@ -1319,7 +1319,7 @@ class Index extends ResultsApi
         $this->db->execute($previous_stmt, $query_params);
         $starttime = $previous_stmt->fetchColumn();
         if ($starttime) {
-            $previous_date = Build::GetTestingDate($starttime, strtotime($this->project->NightlyTime));
+            $previous_date = $this->project->GetTestingDay($starttime);
             $response['menu']['previous'] = "$base_url&date=$previous_date";
         } else {
             $response['menu']['previous'] = false;
@@ -1337,7 +1337,7 @@ class Index extends ResultsApi
         $this->db->execute($next_stmt, $query_params);
         $starttime = $next_stmt->fetchColumn();
         if ($starttime) {
-            $next_date = Build::GetTestingDate($starttime, strtotime($this->project->NightlyTime));
+            $next_date = $this->project->GetTestingDay($starttime);
             $response['menu']['next'] = "$base_url&date=$next_date";
         } else {
             $response['menu']['next'] = false;

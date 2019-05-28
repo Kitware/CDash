@@ -39,7 +39,7 @@ $project = $service->create(Project::class);
 $project->Id = $build->ProjectId;
 $project->Fill();
 
-$date = get_dashboard_date_from_build_starttime($build->StartTime, $project->NightlyTime);
+$date = $project->GetTestingDay($build->StartTime);
 
 $response = begin_JSON_response();
 $response['title'] = "CDash : $project->Name";

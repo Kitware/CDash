@@ -37,8 +37,9 @@ include 'include/version.php';
 use CDash\Model\Build;
 use CDash\Model\BuildError;
 use CDash\Model\BuildFailure;
-use CDash\Model\Label;
 use CDash\Model\BuildUpdate;
+use CDash\Model\Label;
+use CDash\Model\Project;
 use CDash\Model\Site;
 use CDash\ServiceContainer;
 
@@ -56,15 +57,13 @@ if ($date != null) {
 $response = [];
 
 $start = microtime_float();
-$project_array = [];
-$project = pdo_query("SELECT * FROM project WHERE id='{$build->ProjectId}'");
-if (pdo_num_rows($project) > 0) {
-    $project_array = pdo_fetch_array($project);
-    $projectname = $project_array['name'];
-}
+
+$project = $service->get(Project::class);
+$project->Id = $build->ProjectId;
+$project->Fill();
 
 $response = begin_JSON_response();
-$response['title'] = "CDash : $projectname";
+$response['title'] = "CDash : $project->Name";
 
 $siteid = $build->SiteId;
 $buildtype = $build->Type;
@@ -78,14 +77,14 @@ if (isset($_GET['type'])) {
     $type = 0;
 }
 
-$date = get_dashboard_date_from_build_starttime($build->StartTime, $project_array['nightlytime']);
-get_dashboard_JSON_by_name($projectname, $date, $response);
+$date = $project->GetTestingDay($build->StartTime);
+get_dashboard_JSON_by_name($project->Name, $date, $response);
 
 $menu = array();
 if ($build->GetParentId() > 0) {
-    $menu['back'] = 'index.php?project=' . urlencode($projectname) . "&parentid={$build->GetParentId()}";
+    $menu['back'] = 'index.php?project=' . urlencode($project->Name) . "&parentid={$build->GetParentId()}";
 } else {
-    $menu['back'] = 'index.php?project=' . urlencode($projectname) . '&date=' . $date;
+    $menu['back'] = 'index.php?project=' . urlencode($project->Name) . '&date=' . $date;
 }
 
 $previous_buildid = $build->GetPreviousBuildId();
@@ -155,16 +154,16 @@ if (isset($_GET['onlydeltan'])) {
     $resolvedBuildErrors = $build->GetResolvedBuildErrors($type);
     if ($resolvedBuildErrors !== false) {
         while ($resolvedBuildError = $resolvedBuildErrors->fetch()) {
-            addErrorResponse(BuildError::marshal($resolvedBuildError, $project_array, $revision, $builderror), $response);
+            addErrorResponse(BuildError::marshal($resolvedBuildError, $project, $revision, $builderror), $response);
         }
     }
 
     // Build failure table
     $resolvedBuildFailures = $build->GetResolvedBuildFailures($type);
     while ($resolvedBuildFailure = $resolvedBuildFailures->fetch()) {
-        $marshaledResolvedBuildFailure = BuildFailure::marshal($resolvedBuildFailure, $project_array, $revision, false, $buildfailure);
+        $marshaledResolvedBuildFailure = BuildFailure::marshal($resolvedBuildFailure, $project, $revision, false, $buildfailure);
 
-        if ($project_array['displaylabels']) {
+        if ($project->DisplayLabels) {
             get_labels_JSON_from_query_results(
                     "SELECT text FROM label, label2buildfailure
                     WHERE label.id=label2buildfailure.labelid AND
@@ -192,16 +191,16 @@ if (isset($_GET['onlydeltan'])) {
     $buildErrors = $build->GetErrors($filter_error_properties);
 
     foreach ($buildErrors as $error) {
-        addErrorResponse(BuildError::marshal($error, $project_array, $revision, $builderror), $response);
+        addErrorResponse(BuildError::marshal($error, $project, $revision, $builderror), $response);
     }
 
     // Build failure table
     $buildFailures = $build->GetFailures(['type' => $type]);
 
     foreach ($buildFailures as $fail) {
-        $failure = BuildFailure::marshal($fail, $project_array, $revision, true, $buildfailure);
+        $failure = BuildFailure::marshal($fail, $project, $revision, true, $buildfailure);
 
-        if ($project_array['displaylabels']) {
+        if ($project->DisplayLabels) {
             $label = $service->get(Label::class);
             $label->BuildFailureId = $fail['id'];
             $rows = $label->GetTextFromBuildFailure(PDO::FETCH_OBJ);

@@ -23,6 +23,7 @@ require_once 'include/filterdataFunctions.php';
 use CDash\Config;
 use CDash\Model\Build;
 use CDash\Model\BuildTest;
+use CDash\Model\Project;
 
 /**
  * View tests of a particular build.
@@ -70,16 +71,12 @@ $response = [];
 
 $start = microtime_float();
 
-$project = pdo_query("SELECT name,showtesttime,testtimemaxstatus,nightlytime,displaylabels FROM project WHERE id='{$build->ProjectId}'");
-if (pdo_num_rows($project) > 0) {
-    $project_array = pdo_fetch_array($project);
-    $projectname = $project_array['name'];
-    $projectshowtesttime = $project_array['showtesttime'];
-    $testtimemaxstatus = $project_array['testtimemaxstatus'];
-}
+$project = new Project();
+$project->Id = $build->ProjectId;
+$project->Fill();
 
 $response = begin_JSON_response();
-$response['title'] = "CDash : $projectname";
+$response['title'] = "CDash : $project->Name";
 $siteid = $build->SiteId;
 $buildtype = $build->Type;
 $buildname = $build->Name;
@@ -88,8 +85,8 @@ $endtime = $build->EndTime;
 $groupid = $build->GroupId;
 $response['groupid'] = $groupid;
 
-$date = get_dashboard_date_from_build_starttime($starttime, $project_array['nightlytime']);
-get_dashboard_JSON_by_name($projectname, $date, $response);
+$date = $project->GetTestingDay($starttime);
+get_dashboard_JSON_by_name($project->Name, $date, $response);
 
 // Menu
 $menu = array();
@@ -127,11 +124,11 @@ if (isset($_GET['onlypassed'])) {
     $display = 'all';
 }
 
-$nightlytime = get_project_property($projectname, 'nightlytime');
+$nightlytime = get_project_property($project->Name, 'nightlytime');
 if ($build->GetParentId() > 0) {
-    $menu['back'] = 'index.php?project=' . urlencode($projectname) . "&parentid={$build->GetParentId()}";
+    $menu['back'] = 'index.php?project=' . urlencode($project->Name) . "&parentid={$build->GetParentId()}";
 } else {
-    $menu['back'] = 'index.php?project=' . urlencode($projectname) . '&date=' . get_dashboard_date_from_build_starttime($starttime, $nightlytime);
+    $menu['back'] = 'index.php?project=' . urlencode($project->Name) . "&date=$date";
 }
 
 // Get the IDs of the four previous builds.
@@ -187,7 +184,7 @@ $response['menu'] = $menu;
 $site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='$siteid'"));
 
 $build_response = Build::MarshalResponseArray($build, [
-    'displaylabels' => $project_array['displaylabels'],
+    'displaylabels' => $project->DisplayLabels,
     'site' => $site_array['name'],
     'testtime' => $endtime,
 ]);
@@ -218,9 +215,9 @@ if (pdo_num_rows($buildinformation) > 0) {
 $response['build'] = $build_response;
 $response['csvlink'] = "api/v1/viewTest.php?buildid=$buildid&export=csv";
 
-$project = array();
-$project['showtesttime'] = $projectshowtesttime;
-$response['project'] = $project;
+$project_response = [];
+$project_response['showtesttime'] = $project->ShowTestTime;
+$response['project'] = $project_response;
 $response['parentBuild'] = $build->GetParentId() == Build::PARENT_BUILD;
 
 $displaydetails = 1;
@@ -235,7 +232,7 @@ if ($onlypassed) {
 } elseif ($onlynotrun) {
     $status = "AND bt.status='notrun'";
 } elseif ($onlytimestatus) {
-    $status = "AND bt.timestatus>='$testtimemaxstatus'";
+    $status = "AND bt.timestatus>='$project->TestTimeMaxStatus'";
 } else {
     $order = 'bt.status,bt.timestatus DESC,t.name';
 }
@@ -267,7 +264,7 @@ if ($onlydelta) {
 $labeljoin_sql = '';
 $label_sql = '';
 $groupby_sql = '';
-if ($project_array['displaylabels'] && $config->get('CDASH_DB_TYPE') != 'pgsql') {
+if ($project->DisplayLabels && $config->get('CDASH_DB_TYPE') != 'pgsql') {
     $labeljoin_sql = '
         LEFT JOIN label2test AS l2t ON (l2t.testid=t.id)
         LEFT JOIN label AS l ON (l.id=l2t.labelid)';
@@ -383,7 +380,7 @@ if ($columncount > 0) {
 }
 
 if (@$_GET['export'] == 'csv') {
-    export_as_csv($etestquery, null, $result, $projectshowtesttime, $testtimemaxstatus, $columns);
+    export_as_csv($etestquery, null, $result, $project->ShowTestTime, $project->TestTimeMaxStatus, $columns);
 }
 
 // Keep track of extra measurements for each test.
@@ -407,7 +404,7 @@ $response['totaltime'] = time_difference($time, true, '', true);
 $num_tests = pdo_num_rows($result);
 
 // Gather date information.
-$testdate = get_dashboard_date_from_build_starttime($starttime, $nightlytime);
+$testdate = $date;
 list($previousdate, $currentstarttime, $nextdate, $today) =
     get_dates($date, $nightlytime);
 $beginning_timestamp = $currentstarttime;
@@ -420,7 +417,7 @@ $labels_found = false;
 
 // Generate a response for each test found.
 while ($row = pdo_fetch_array($result)) {
-    $marshaledTest = BuildTest::marshal($row, $row['buildid'], $build->ProjectId, $projectshowtesttime, $testtimemaxstatus, $testdate);
+    $marshaledTest = BuildTest::marshal($row, $row['buildid'], $build->ProjectId, $project->ShowTestTime, $project->TestTimeMaxStatus, $testdate);
 
     if ($marshaledTest['status'] == 'Passed') {
         $numPassed++;
@@ -430,7 +427,7 @@ while ($row = pdo_fetch_array($result)) {
         $numNotRun++;
     }
 
-    if ($row['timestatus'] >= $testtimemaxstatus) {
+    if ($row['timestatus'] >= $project->TestTimeMaxStatus) {
         $numTimeFailed++;
     }
 
@@ -456,7 +453,7 @@ $numMissing = $build->GetNumberOfMissingTests();
 
 if ($numMissing > 0) {
     foreach ($build->MissingTests as $name) {
-        $marshaledTest = buildtest::marshalMissing($name, $buildid, $build->ProjectId, $projectshowtesttime, $testtimemaxstatus, $testdate);
+        $marshaledTest = buildtest::marshalMissing($name, $buildid, $build->ProjectId, $project->ShowTestTime, $project->TestTimeMaxStatus, $testdate);
         array_unshift($tests, $marshaledTest);
     }
 }

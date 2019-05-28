@@ -41,7 +41,7 @@ $project->Id = $build->ProjectId;
 $project->Fill();
 $response['displaylabels'] = $project->DisplayLabels;
 
-$date = get_dashboard_date_from_build_starttime($build->StartTime, $project->NightlyTime);
+$date = $project->GetTestingDay($build->StartTime);
 
 $response = begin_JSON_response();
 get_dashboard_JSON($project->Name, $date, $response);
