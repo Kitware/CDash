@@ -153,9 +153,9 @@ class Timeline extends Index
         }
         $response = $this->getTimelineChartData($stmt);
         $response['colors'] = [
-            $this->colors[self::ERROR],
+            $this->colors[self::CLEAN],
             $this->colors[self::FAILURE],
-            $this->colors[self::CLEAN]
+            $this->colors[self::ERROR]
         ];
         return $response;
     }
@@ -190,8 +190,9 @@ class Timeline extends Index
         $this->includeCleanBuilds = false;
         $response = $this->getTimelineChartData($stmt);
         $response['colors'] = [
-            $this->colors[self::ERROR],
-            $this->colors[self::CLEAN]
+            $this->colors[self::CLEAN],
+            $this->colors[self::FAILURE],
+            $this->colors[self::ERROR]
         ];
         return $response;
     }
@@ -221,9 +222,9 @@ class Timeline extends Index
             ]
         ];
         $colors = [
-            $this->colors[self::ERROR],
+            $this->colors[self::CLEAN],
             $this->colors[self::FAILURE],
-            $this->colors[self::CLEAN]
+            $this->colors[self::ERROR]
         ];
         $build_data = [];
 
@@ -291,9 +292,18 @@ class Timeline extends Index
                 foreach ($dynamic_builds as $dynamic_build) {
                     // Isolate the build fields that we need to make the chart.
                     $build = [];
-                    $build['errors'] = Build::ConvertMissingToZero($dynamic_build['countbuilderrors']) +
-                        Build::ConvertMissingToZero($dynamic_build['countconfigureerrors']) +
-                        Build::ConvertMissingToZero($dynamic_build['countupdateerrors']);
+                    $error_types = [
+                        'countbuilderrors',
+                        'countconfigureerrors',
+                        'countupdateerrors'
+                    ];
+                    $build['errors'] = 0;
+                    foreach ($error_types as $error_type) {
+                        if (array_key_exists($error_type, $dynamic_build)) {
+                            $build['errors'] +=
+                                Build::ConvertMissingToZero($dynamic_build[$error_type]);
+                        }
+                    }
                     $build['testfailed'] = $dynamic_build['counttestsfailed'];
                     $build['starttime'] = $build_time;
                     $builds[] = $build;
@@ -425,7 +435,7 @@ class Timeline extends Index
             $time_chart_data[] = $trend;
         }
 
-        $response['data'] = $time_chart_data;
+        $response['data'] = array_reverse($time_chart_data);
         return $response;
     }
 
