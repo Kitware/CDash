@@ -248,7 +248,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
 
         $subprojects = array("MyThirdPartyDependency", "MyExperimentalFeature", "MyProductionCode", "EmptySubproject");
 
-        //
+        // Check index.php for this date.
         $this->get($this->url . "/api/v1/index.php?project=SubProjectExample&date=2016-07-28");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
@@ -341,6 +341,34 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
         if ($defectcount != 3) {
             $this->fail("Expected 3 DA defects, found {$defectcount}");
         }
+
+        // Verify filtered parent build.
+        $this->get("{$this->url}/api/v1/index.php?project=SubProjectExample&&date=2016-07-28&filtercount=1&showfilters=1&field1=subprojects&compare1=92&value1=MyThirdPartyDependency");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $buildgroup = array_pop($jsonobj['buildgroups']);
+        $build = $buildgroup['builds'][0];
+        $expected_parent_build = [
+            'label' => '(3 labels)',
+            'timefull' => 6,
+            'compilation' => [
+                'error' => 0,
+                'warning' => 2,
+                'timefull' => 5,
+            ],
+            'configure' => [
+                'error' => 1,
+                'warning' => 1,
+                'timefull' => 1,
+            ],
+            'test' => [
+                'notrun' => 0,
+                'fail' => 5,
+                'pass' => 1,
+                'timefull' => 4,
+            ],
+        ];
+        $this->verifyBuild($expected_parent_build, $build, 'filtered parent');
 
         // View parent build
         $this->get("{$this->url}/api/v1/index.php?project=SubProjectExample&parentid={$parentid}");
@@ -547,9 +575,6 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
         $builds = $buildgroup['builds'];
         $build = $builds[0];
         $this->verifyBuild($expected_builds['MyThirdPartyDependency'], $build, 'MyThirdPartyDependency');
-
-
-
 
         // viewConfigure
         $this->get("{$this->url}/viewConfigure.php?buildid={$parentid}");
