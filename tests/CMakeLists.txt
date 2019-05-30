@@ -205,6 +205,7 @@ add_php_test(updateonlyuserstats)
 add_php_test(expiredbuildrules)
 add_php_test(filterblocks)
 add_php_test(indexnextprevious)
+add_php_test(putdynamicbuilds)
 
 add_subdirectory(ctest)
 

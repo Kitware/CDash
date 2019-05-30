@@ -16,6 +16,7 @@
 namespace CDash\Model;
 
 use CDash\Database;
+use CDash\Model\BuildGroupRule;
 
 class BuildGroup
 {
@@ -48,7 +49,7 @@ class BuildGroup
         $this->Type = 'Daily';
         $this->Position = 0;
 
-        $this->PDO = Database::getInstance()->getPdo();
+        $this->PDO = Database::getInstance();
     }
 
     /** Get the id */
@@ -578,5 +579,24 @@ class BuildGroup
         }
 
         return $buildgroups;
+    }
+
+    // Get the active rules for this build group.
+    public function GetRules()
+    {
+        $stmt = $this->PDO->prepare("
+                SELECT * FROM build2grouprule
+                WHERE groupid = :groupid AND
+                      endtime = '1980-01-01 00:00:00'");
+        if (!$this->PDO->execute($stmt, [':groupid' => $this->Id])) {
+            return false;
+        }
+        $rules = [];
+        while ($row = $stmt->fetch()) {
+            $rule = new BuildGroupRule();
+            $rule->FillFromRow($row, $this->ProjectId);
+            $rules[] = $rule;
+        }
+        return $rules;
     }
 }

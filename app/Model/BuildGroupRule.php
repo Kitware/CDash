@@ -20,15 +20,16 @@ use CDash\Model\Project;
 
 class BuildGroupRule
 {
-    public $BuildType;
     public $BuildName;
-    public $SiteId;
-    public $Expected;
-    public $StartTime;
+    public $BuildType;
     public $EndTime;
+    public $Expected;
     public $GroupId;
     public $ParentGroupId;
     public $ProjectId;
+    public $SiteId;
+    public $StartTime;
+
     private $PDO;
 
     public function __construct(Build $build = null)
@@ -69,7 +70,6 @@ class BuildGroupRule
                   buildtype     = :buildtype AND
                   buildname     = :buildname AND
                   siteid        = :siteid AND
-                  starttime     = :starttime AND
                   endtime       = :endtime');
         $query_params = [
             ':groupid'       => $this->GroupId,
@@ -77,7 +77,6 @@ class BuildGroupRule
             ':buildtype'     => $this->BuildType,
             ':buildname'     => $this->BuildName,
             ':siteid'        => $this->SiteId,
-            ':starttime'     => $this->StartTime,
             ':endtime'       => $this->EndTime
         ];
 
@@ -286,5 +285,19 @@ class BuildGroupRule
             ':endtime'   => $cutoff_date
         ];
         $db->execute($stmt, $query_params);
+    }
+
+    // Populate this object with a row from the database and a projectid.
+    public function FillFromRow($row, $projectid)
+    {
+        $this->BuildName = $row['buildname'];
+        $this->BuildType = $row['buildtype'];
+        $this->EndTime = $row['endtime'];
+        $this->Expected = $row['expected'];
+        $this->GroupId = $row['groupid'];
+        $this->ParentGroupId = $row['parentgroupid'];
+        $this->ProjectId = $projectid;
+        $this->SiteId = $row['siteid'];
+        $this->StartTime = $row['starttime'];
     }
 }
