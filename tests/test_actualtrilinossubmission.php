@@ -22,7 +22,7 @@ class ActualTrilinosSubmissionTestCase extends TrilinosSubmissionTestCase
                 'ShowIPAddresses' => '1',
                 'DisplayLabels' => '1',
                 'ShareLabelFilters' => '1');
-        $this->createProject($settings);
+        return $this->createProject($settings);
     }
 
     public function setEmailCommitters($projectname, $email)
@@ -43,19 +43,20 @@ class ActualTrilinosSubmissionTestCase extends TrilinosSubmissionTestCase
 
     public function createProjects()
     {
-        $this->createProjectWithName('TrilinosDriver');
-        $this->createProjectWithName('Trilinos');
+        return $this->createProjectWithName('TrilinosDriver') &&
+            $this->createProjectWithName('Trilinos');
     }
 
     public function testActualTrilinosSubmission()
     {
-        $this->createProjects();
-        $this->setEmailCommitters('Trilinos', 1);
-        $this->submitFiles('ActualTrilinosSubmission');
-        $this->submitFiles('ActualTrilinosSubmissionTestData');
-        $this->verifyResults();
-        $this->setEmailCommitters('Trilinos', 0);
-        $this->deleteLog($this->logfilename);
+        if ($this->createProjects()) {
+            $this->setEmailCommitters('Trilinos', 1);
+            $this->submitFiles('ActualTrilinosSubmission');
+            $this->submitFiles('ActualTrilinosSubmissionTestData');
+            $this->verifyResults();
+            $this->setEmailCommitters('Trilinos', 0);
+            $this->deleteLog($this->logfilename);
+        }
     }
 
     public function testSubProjectBuildErrors()
@@ -65,13 +66,24 @@ class ActualTrilinosSubmissionTestCase extends TrilinosSubmissionTestCase
             "SELECT id FROM build
             WHERE name = 'Windows_NT-MSVC10-SERIAL_DEBUG_DEV'
             AND parentid = -1");
+
+        if (!isset($query[0])) {
+            $this->fail("Unable to find build, 'Windows_NT-MSVC10-SERIAL_DEBUG_DEV'");
+            return;
+        }
+
         $buildid = $query[0]['id'];
 
         // Verify 8 build errors.
         $this->get($this->url . "/api/v1/viewBuildError.php?buildid=$buildid");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
-        $num_errors = count($jsonobj['errors']);
+        $num_errors = 0;
+
+        if (isset($jsonobj['errors'])) {
+            $num_errors = count($jsonobj['errors']);
+        }
+
         if ($num_errors !== 8) {
             $this->fail("Expected 8 build errors, found $num_errors");
         }
@@ -80,7 +92,12 @@ class ActualTrilinosSubmissionTestCase extends TrilinosSubmissionTestCase
         $this->get($this->url . "/api/v1/viewBuildError.php?buildid=$buildid&type=1");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
-        $num_warnings = count($jsonobj['errors']);
+        $num_warnings = 0;
+
+        if (isset($jsonobj['errors'])) {
+            $num_warnings = count($jsonobj['errors']);
+        }
+
         if ($num_warnings !== 296) {
             $this->fail("Expected 296 build warnings, found $num_warnings");
         }

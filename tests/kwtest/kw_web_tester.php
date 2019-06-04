@@ -572,6 +572,10 @@ class KWWebTestCase extends WebTestCase
         // Login as admin.
         $client = $this->getGuzzleClient($username, $password);
 
+        if (!$client) {
+            return false;
+        }
+
         // Create project.
         try {
             $response = $client->request('POST',
