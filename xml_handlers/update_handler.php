@@ -182,6 +182,9 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface
                 case 'BUILDSTAMP':
                     $this->Build->SetStamp($data);
                     break;
+                case 'CHANGEID':
+                    $this->Build->SetPullRequest($data);
+                    break;
                 case 'ENDTIME':
                     $this->EndTimeStamp = $data;
                     break;

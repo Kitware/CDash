@@ -32,17 +32,17 @@ class ChangeIdTestCase extends KWWebTestCase
         $dir = dirname(__FILE__) . '/data/GithubPR';
         $this->submission('ChangeIdProject', "$dir/UpdateBug_Build.xml");
         $this->submission('ChangeIdProject', "$dir/UpdateBug_Test.xml");
+        $this->submission('ChangeIdProject', "$dir/Update.xml");
 
-        // Make sure the build has a changeid associated with it.
+        // Make sure the builds have a changeid associated with them.
         $db = Database::getInstance();
         $stmt = $db->prepare('SELECT changeid, generator FROM build WHERE projectid = :projectid');
         $db->execute($stmt, [':projectid' => $this->ProjectId]);
-        $row = $stmt->fetch();
-        if ($row['changeid'] != 555) {
-            $this->fail('Expected changeid not found');
-        }
-        if ($row['generator'] != 'ctest-3.14.0-rc1') {
-            $this->fail('Expected generator not found');
+        $rows = $stmt->fetchAll();
+        $this->assertEqual(count($rows), 2);
+        foreach ($rows as $row) {
+            $this->assertEqual($row['changeid'], 555);
+            $this->assertEqual($row['generator'], 'ctest-3.14.0-rc1');
         }
         $this->deleteProject($this->ProjectId);
     }
