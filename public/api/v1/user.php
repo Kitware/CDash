@@ -43,7 +43,7 @@ use CDash\Model\Job;
 
 $config = Config::getInstance();
 $response = [];
-if (Auth::check()) {
+if (!Auth::check()) {
     $response['requirelogin'] = 1;
     // Special handling for the fact that this is where new users are sent
     // when they first create their account.
