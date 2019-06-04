@@ -182,6 +182,18 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface
                 case 'BUILDSTAMP':
                     $this->Build->SetStamp($data);
                     break;
+                case 'ENDTIME':
+                    $this->EndTimeStamp = $data;
+                    break;
+                case 'PATH':
+                    $this->Update->Path = $data;
+                    break;
+                case 'PRIORREVISION':
+                    $this->Update->PriorRevision = $data;
+                    break;
+                case 'REVISION':
+                    $this->Update->Revision = $data;
+                    break;
                 case 'SITE':
                     $this->Site->Name = $data;
                     if (empty($this->Site->Name)) {
@@ -191,26 +203,14 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface
                 case 'STARTTIME':
                     $this->StartTimeStamp = $data;
                     break;
-                case 'ENDTIME':
-                    $this->EndTimeStamp = $data;
-                    break;
                 case 'UPDATECOMMAND':
                     $this->Update->Command .= $data;
                     break;
-                case 'UPDATETYPE':
-                    $this->Update->Type = $data;
-                    break;
-                case 'REVISION':
-                    $this->Update->Revision = $data;
-                    break;
-                case 'PRIORREVISION':
-                    $this->Update->PriorRevision = $data;
-                    break;
-                case 'PATH':
-                    $this->Update->Path = $data;
-                    break;
                 case 'UPDATERETURNSTATUS':
                     $this->Update->Status .= $data;
+                    break;
+                case 'UPDATETYPE':
+                    $this->Update->Type = $data;
                     break;
             }
         } elseif ($parent != 'REVISIONS' && $element == 'FULLNAME') {
