@@ -278,6 +278,17 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
             $success = false;
         }
 
+        // Make sure the tests from all three days are listed on queryTests.php when we
+        // specify a date range.
+        $this->get($this->url . "/api/v1/queryTests.php?project=Trilinos&begin=2011-07-22&end=2011-07-24");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $num_tests = count($jsonobj['builds']);
+        if ($num_tests != 549) {
+            $error_msg = "Expected 549 tests, found $num_tests";
+            $success = false;
+        }
+
         // Delete the builds that we created during this test.
         remove_build($second_parentid);
         remove_build($third_parentid);
