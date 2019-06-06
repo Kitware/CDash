@@ -13,15 +13,8 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
-
-include dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
-
-$noforcelogin = 1;
-include 'public/login.php';
-
 require_once 'include/common.php';
-require_once 'include/version.php';
 require_once 'include/filterdataFunctions.php';
 
 use CDash\Model\Build;
@@ -71,7 +64,10 @@ if (!isset($projectid) || $projectid == 0 || !is_numeric($projectid)) {
     exit();
 }
 
-checkUserPolicy(Auth::id(), $projectid);
+$policy = checkUserPolicy(Auth::id(), $projectid);
+if ($policy !== true) {
+    return $policy;
+}
 
 $project = new Project();
 $project->Id = $projectid;

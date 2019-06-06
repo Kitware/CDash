@@ -13,13 +13,8 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
-
-$noforcelogin = 1;
-include dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
-include 'public/login.php';
 include_once 'include/common.php';
-include 'include/version.php';
 
 use CDash\Config;
 use CDash\Model\Project;
@@ -58,7 +53,10 @@ if (pdo_num_rows($project) > 0) {
     $projectname = 'NA';
 }
 
-checkUserPolicy(Auth::id(), $project_array['id']);
+$policy = checkUserPolicy(Auth::id(), $project_array['id']);
+if ($policy !== true) {
+    return $policy;
+}
 
 $xml = begin_XML_for_XSLT();
 $xml .= '<title>CDash - SubProject dependencies - ' . $projectname . '</title>';

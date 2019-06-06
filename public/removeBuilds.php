@@ -13,11 +13,7 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
-
-include dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
-include 'public/login.php';
-include 'include/version.php';
 require_once 'include/common.php';
 
 use CDash\Config;
@@ -26,7 +22,10 @@ $config = Config::getInstance();
 
 @set_time_limit(0);
 
-checkUserPolicy(Auth::id(), 0); // only admin
+$policy = checkUserPolicy(Auth::id(), 0); // only admin
+if ($policy !== true) {
+    return $policy;
+}
 
 @$projectid = $_GET['projectid'];
 if ($projectid != null) {

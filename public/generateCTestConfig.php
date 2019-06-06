@@ -13,11 +13,7 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
-
-$noforcelogin = 1;
-include dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
-include 'public/login.php';
 include_once 'include/common.php';
 
 use CDash\Model\Project;
@@ -42,7 +38,11 @@ if (pdo_num_rows($project) == 0) {
 }
 
 $project_array = pdo_fetch_array($project);
-checkUserPolicy(Auth::id(), $project_array['id']);
+$policy = checkUserPolicy(Auth::id(), $project_array['id']);
+
+if ($policy !== true) {
+    return $policy;
+}
 
 $ctestconfig = "## This file should be placed in the root directory of your project.\n";
 $ctestconfig .= "## Then modify the CMakeLists.txt file in the root directory of your\n";

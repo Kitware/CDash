@@ -14,12 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once dirname(dirname(__DIR__)) . '/config/config.php';
 require_once 'include/pdo.php';
 include_once 'include/common.php';
-include 'include/version.php';
-$noforcelogin = 1;
-include 'public/login.php';
 
 use CDash\Model\Feed;
 
@@ -29,7 +25,11 @@ if (!isset($projectid) || !is_numeric($projectid)) {
 }
 
 $feed = new Feed();
-checkUserPolicy(Auth::id(), $projectid);
+
+$policy = checkUserPolicy(Auth::id(), $projectid);
+if ($policy !== true) {
+    return $policy;
+}
 
 // Return when the feed was seen
 function get_elapsed_time($date)

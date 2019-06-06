@@ -14,12 +14,10 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
 include_once 'include/common.php';
-include 'public/login.php';
-include 'include/version.php';
 
+use App\Http\Controllers\Auth\LoginController;
 use CDash\Model\Banner;
 use CDash\Model\Project;
 use CDash\Model\User;
@@ -122,4 +120,6 @@ if (Auth::check()) {
 
     // Now doing the xslt transition
     generate_XSLT($xml, 'manageBanner');
+} else {
+    return LoginController::staticShowLoginForm();
 }

@@ -14,9 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include dirname(__DIR__) . '/config/config.php';
-require_once 'public/login.php';
-
+use App\Http\Controllers\Auth\LoginController;
 use CDash\Config;
 use CDash\Model\User;
 
@@ -244,4 +242,6 @@ if (Auth::check()) {
     } else {
         echo 'Admin login required to display monitoring info.';
     }
+} else {
+    return LoginController::staticShowLoginForm();
 }

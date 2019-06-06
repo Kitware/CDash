@@ -14,24 +14,20 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
-include 'public/login.php';
-
 include_once 'include/common.php';
-redirect_to_https();
 
-require_once 'include/version.php';
-
+use App\Http\Controllers\Auth\LoginController;
 use CDash\Model\Project;
 use CDash\Model\User;
 use CDash\Model\Label;
 use CDash\Model\LabelEmail;
 use CDash\Model\UserProject;
 
+redirect_to_https();
 if (Auth::check()) {
-    $User = \Auth::user();
-    $userid = $User->Id;
+    $User = new User();
+    $userid = Auth::id();
 
     $xml = begin_XML_for_XSLT();
     $xml .= '<backurl>user.php</backurl>';
@@ -290,4 +286,6 @@ if (Auth::check()) {
 
     // Now doing the xslt transition
     generate_XSLT($xml, 'subscribeProject');
+} else {
+    return LoginController::staticShowLoginForm();
 }

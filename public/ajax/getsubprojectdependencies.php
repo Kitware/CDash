@@ -14,12 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-$noforcelogin = 1;
-
-require_once dirname(dirname(__DIR__)) . '/config/config.php';
 require_once 'include/pdo.php';
 require_once 'include/common.php';
-include 'public/login.php';
 
 use CDash\Model\Project;
 use CDash\Model\SubProject;
@@ -55,7 +51,10 @@ if (pdo_num_rows($project) > 0) {
     $projectname = 'NA';
 }
 
-checkUserPolicy(Auth::id(), $project_array['id']);
+$policy = checkUserPolicy(Auth::id(), $projectid);
+if ($policy !== true) {
+    return $policy;
+}
 
 $Project = new Project();
 $Project->Id = $projectid;

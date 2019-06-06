@@ -14,20 +14,14 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once dirname(dirname(__DIR__)) . '/config/config.php';
 require_once 'include/pdo.php';
 include_once 'include/common.php';
-include 'include/version.php';
-
 require_once 'include/filterdataFunctions.php';
 
 use CDash\Model\CoverageFile2User;
 use CDash\Model\User;
 
 @set_time_limit(0);
-
-$noforcelogin = 1;
-require 'public/login.php';
 
 $buildid = pdo_real_escape_numeric($_GET['buildid']);
 if (!isset($buildid) || !is_numeric($buildid)) {
@@ -50,7 +44,10 @@ if (!isset($projectid) || $projectid == 0 || !is_numeric($projectid)) {
     exit();
 }
 
-checkUserPolicy(Auth::id(), $projectid);
+$policy = checkUserPolicy(Auth::id(), $projectid);
+if ($policy !== true) {
+    return $policy;
+}
 
 $project = pdo_query("SELECT name,coveragethreshold,nightlytime,showcoveragecode FROM project WHERE id='$projectid'");
 if (pdo_num_rows($project) == 0) {

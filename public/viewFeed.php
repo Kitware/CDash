@@ -14,26 +14,24 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-$noforcelogin = 1;
-include dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
-include 'public/login.php';
 include_once 'include/common.php';
-include 'include/version.php';
 
+use App\Http\Controllers\Auth\LoginController;
 use CDash\Model\Project;
 use CDash\Model\User;
 
+@$date = $_GET['projectid'];
 @$projectid = $_GET['projectid'];
 if ($projectid != null) {
     $projectid = pdo_real_escape_numeric($projectid);
 }
 
-// Checks if the project id is set
-if (!isset($projectid) || !is_numeric($projectid)) {
-    checkUserPolicy(Auth::id(), 0);
-} else {
-    checkUserPolicy(Auth::id(), $projectid);
+$policy_project_id = is_numeric($projectid) ? $projectid : 0;
+$policy = checkUserPolicy(Auth::id(), $policy_project_id);
+
+if ($policy !== true) {
+    return $policy;
 }
 
 $userid = Auth::id();

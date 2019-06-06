@@ -14,13 +14,11 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
 include_once 'include/common.php';
-include 'public/login.php';
-include 'include/version.php';
 require_once 'include/cdashmail.php';
 
+use App\Http\Controllers\Auth\LoginController;
 use CDash\Config;
 use CDash\Model\Build;
 use CDash\Model\Coverage;
@@ -31,7 +29,6 @@ use CDash\Model\Project;
 use CDash\Model\Site;
 use CDash\Model\User;
 use CDash\Model\UserProject;
-use Illuminate\Support\Facades\Mail;
 
 $config = Config::getInstance();
 
@@ -367,4 +364,6 @@ if (Auth::check()) {
 
     // Now doing the xslt transition
     generate_XSLT($xml, 'manageCoverage');
+} else {
+    return LoginController::staticShowLoginForm();
 }

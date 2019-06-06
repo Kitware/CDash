@@ -14,14 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 require_once 'include/common.php';
-
-$noforcelogin = 1;
-include 'public/login.php';
-
-require_once 'include/version.php';
 
 use CDash\Database;
 use CDash\Model\Project;
@@ -34,7 +28,7 @@ $response = array();
 $userid = Auth::id();
 
 // Checks
-if (!isset($userid) || !is_numeric($userid)) {
+if (!$userid || !is_numeric($userid)) {
     $response['requirelogin'] = '1';
     echo json_encode($response);
     return;

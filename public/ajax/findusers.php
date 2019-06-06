@@ -14,9 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once dirname(dirname(__DIR__)) . '/config/config.php';
 require_once 'include/pdo.php';
-include 'public/login.php';
 require_once 'include/common.php';
 
 use CDash\Config;

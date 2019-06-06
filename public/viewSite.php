@@ -14,14 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
-
-$noforcelogin = 1;
-include 'public/login.php';
-
 require_once 'include/common.php';
-require_once 'include/version.php';
 
 use CDash\Config;
 use CDash\Model\Project;
@@ -131,6 +125,23 @@ foreach ($config->get('CDASH_GOOGLE_MAP_API_KEY') as $key => $value) {
     }
 }
 
+const MB = 1048576;
+
+$total_virtual_memory = 0;
+if (is_numeric($siteinformation_array['totalvirtualmemory'])) {
+    $total_virtual_memory = $siteinformation_array['totalvirtualmemory'] * MB;
+}
+
+$total_physical_memory = 0;
+if (is_numeric($siteinformation_array['totalphysicalmemory'])) {
+    $total_physical_memory = $siteinformation_array['totalphysicalmemory'] * MB;
+}
+
+$processor_clock_frequency = 0;
+if (is_numeric($siteinformation_array['processorclockfrequency'])) {
+    $processor_clock_frequency = $siteinformation_array['processorclockfrequency'] * 10**6;
+}
+
 $xml .= add_XML_value('googlemapkey', $apikey);
 $xml .= '</dashboard>';
 $xml .= '<site>';
@@ -145,10 +156,10 @@ $xml .= add_XML_value('processormodelid', $siteinformation_array['processormodel
 $xml .= add_XML_value('processorcachesize', $siteinformation_array['processorcachesize']);
 $xml .= add_XML_value('numberlogicalcpus', $siteinformation_array['numberlogicalcpus']);
 $xml .= add_XML_value('numberphysicalcpus', $siteinformation_array['numberphysicalcpus']);
-$xml .= add_XML_value('totalvirtualmemory', getByteValueWithExtension($siteinformation_array['totalvirtualmemory'] * 1048576) . 'iB');
-$xml .= add_XML_value('totalphysicalmemory', getByteValueWithExtension($siteinformation_array['totalphysicalmemory'] * 1048576) . 'iB');
+$xml .= add_XML_value('totalvirtualmemory', getByteValueWithExtension($total_virtual_memory) . 'iB');
+$xml .= add_XML_value('totalphysicalmemory', getByteValueWithExtension($total_physical_memory) . 'iB');
 $xml .= add_XML_value('logicalprocessorsperphysical', $siteinformation_array['logicalprocessorsperphysical']);
-$xml .= add_XML_value('processorclockfrequency', getByteValueWithExtension($siteinformation_array['processorclockfrequency'] * 1000000, 1000) . 'Hz');
+$xml .= add_XML_value('processorclockfrequency', getByteValueWithExtension($processor_clock_frequency, 1000) . 'Hz');
 $xml .= add_XML_value('outoforder', $site_array['outoforder']);
 if ($projectid && $project->ShowIPAddresses) {
     $xml .= add_XML_value('ip', $site_array['ip']);

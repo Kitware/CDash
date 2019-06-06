@@ -55,14 +55,8 @@ function can_access_project($projectid)
         return true;
     }
 
-    $response = [];
-    $logged_in = false;
-    $userid = '';
-
-    $noforcelogin = 1;
-    include 'public/login.php';
-    $userid = get_userid_from_session(false);
-    $logged_in = is_null($userid) ? false : true;
+    $userid = Auth::id();
+    $logged_in = Auth::check();
 
     if (!checkUserPolicy($userid, $projectid, 1)) {
         if ($logged_in) {

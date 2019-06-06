@@ -14,14 +14,10 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 
 use CDash\Model\BuildUserNote;
-
-$noforcelogin = 1;
-require 'public/login.php';
 
 init_api_request();
 $response = array();

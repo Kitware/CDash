@@ -14,10 +14,9 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include dirname(__DIR__) . '/config/config.php';
+use App\Http\Controllers\Auth\LoginController;
+
 require_once 'include/pdo.php';
-include 'public/login.php';
-include 'include/version.php';
 
 if (Auth::check()) {
     include_once 'include/common.php';
@@ -128,4 +127,6 @@ if (Auth::check()) {
 
     // Now doing the xslt transition
     generate_XSLT($xml, 'import');
+} else {
+    return LoginController::staticShowLoginForm();
 }

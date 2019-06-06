@@ -14,12 +14,10 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
-include 'public/login.php';
 require_once 'include/common.php';
-require_once 'include/version.php';
 
+use App\Http\Controllers\Auth\LoginController;
 use CDash\Config;
 use CDash\Model\User;
 
@@ -120,4 +118,6 @@ if (Auth::check()) {
 
     // Now doing the xslt transition
     generate_XSLT($xml, 'manageUsers');
+} else {
+    return LoginController::staticShowLoginForm();
 }

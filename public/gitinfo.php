@@ -14,9 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include dirname(__DIR__) . '/config/config.php';
-require_once 'public/login.php';
-
 use CDash\Config;
 use CDash\Model\User;
 
