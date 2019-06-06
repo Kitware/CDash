@@ -14,14 +14,11 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
-include 'public/login.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 
 use CDash\Model\AuthToken;
-use CDash\Model\User;
 
 /* Handle DELETE requests */
 if (!function_exists('rest_delete')) {
@@ -91,8 +88,6 @@ if (!Auth::check()) {
     return response('This service requires authentication');
 }
 
-$User = Auth::user();
-
 // Read input parameters (if any).
 $rest_input = file_get_contents('php://input');
 if (!is_array($rest_input)) {
@@ -106,8 +101,8 @@ if (is_array($rest_input)) {
 $method = $_SERVER['REQUEST_METHOD'];
 switch ($method) {
     case 'DELETE':
-        return rest_delete($User->Id);
+        return rest_delete(Auth::id());
     case 'POST':
     default:
-        return rest_post($User->Id);
+        return rest_post(Auth::id());
 }

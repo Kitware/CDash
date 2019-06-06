@@ -48,6 +48,9 @@ class ManageClientTestCase extends KWWebTestCase
         $siteid = $this->get($this->url . '/submit.php?sitename=camelot.kitware&systemname=Ubuntu32&getsiteid=1');
 
         // wait a few seconds so that we know we are ahead of the schedule time
+        // TODO: seem to be having problems with tests that sleep
+        //  could this be due to the fact that the tests and the application now run in the same
+        //  process?
         sleep(5);
 
         // verify that we receive the correct script when we query for a job

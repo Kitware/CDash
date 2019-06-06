@@ -20,7 +20,6 @@
 
         <link href='//fonts.googleapis.com/css?family=Open+Sans:400,700|Roboto:400,700' rel='stylesheet' type='text/css'/>
         <link href='css/d3.dependencyedgebundling.css' rel='stylesheet' type='text/css'/>
-       <xsl:call-template name="headscripts"/>
 
         <script type="text/javascript" src="js/d3.min.js"></script>
         <script type="text/javascript" src="js/d3.dependencyedgebundling.js"></script>

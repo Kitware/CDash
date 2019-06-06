@@ -14,6 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
+use App\Http\Controllers\Auth\LoginController;
 use CDash\Config;
 use CDash\Controller\Auth\Session;
 use CDash\Database;
@@ -420,7 +421,7 @@ function setVersion()
 function checkUserPolicy($userid, $projectid, $onlyreturn = 0)
 {
     if (($userid != '' && !is_numeric($userid)) || !is_numeric($projectid)) {
-        return;
+        return response('Insufficient data to determine access');
     }
 
     $service = ServiceContainer::getInstance();
@@ -430,7 +431,7 @@ function checkUserPolicy($userid, $projectid, $onlyreturn = 0)
     // If the projectid=0 only admin can access the page
     if ($projectid == 0 && !$user->IsAdmin()) {
         if (!$onlyreturn) {
-            echo 'You cannot access this page';
+            return response('You cannot access this project');
         } else {
             return false;
         }
@@ -452,8 +453,7 @@ function checkUserPolicy($userid, $projectid, $onlyreturn = 0)
         // If the project is private and the user is not logged in we quit
         if (!$userid && !$project->Public) {
             if (!$onlyreturn) {
-                LoginForm(0);
-                exit(0);
+                return LoginController::staticShowLoginForm();
             } else {
                 return false;
             }
@@ -463,8 +463,7 @@ function checkUserPolicy($userid, $projectid, $onlyreturn = 0)
             $userproject->ProjectId = $projectid;
             if (!$userproject->Exists()) {
                 if (!$onlyreturn) {
-                    echo 'You cannot access this project';
-                    exit(0);
+                    return response('You cannot access this project');
                 } else {
                     return false;
                 }

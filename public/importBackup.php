@@ -14,22 +14,19 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
-include 'public/login.php';
-include 'include/version.php';
+include_once 'include/common.php';
 
+use App\Http\Controllers\Auth\LoginController;
 use CDash\Config;
 
 $config = Config::getInstance();
 
-if (Auth::check()) {
-    include_once 'include/common.php';
+if (checkUserPolicy(Auth::id(), 0, true)) {
     include_once 'include/ctestparser.php';
 
     @set_time_limit(0);
 
-    checkUserPolicy(Auth::id(), 0); // only admin
     $xml = begin_XML_for_XSLT();
     $xml .= '<title>CDash - Import Backups</title>';
     $xml .= '<menutitle>CDash</menutitle>';
@@ -105,4 +102,6 @@ if (Auth::check()) {
     // Now doing the xslt transition
     $xml .= '</cdash>';
     generate_XSLT($xml, 'importBackup');
+} else {
+    return LoginController::staticShowLoginForm();
 }

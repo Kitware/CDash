@@ -14,12 +14,8 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
 include_once 'include/common.php';
-include 'include/version.php';
-$noforcelogin = 1;
-include 'public/login.php';
 
 @$projectname = $_GET['project'];
 if ($projectname != null) {
@@ -45,7 +41,10 @@ if (!$project_array = pdo_fetch_array($project)) {
     die("Error:  project $projectname not found<br>\n");
 }
 
-checkUserPolicy(Auth::id(), $project_array['id'], true);
+$policy = checkUserPolicy(Auth::id(), $project_array['id']);
+if ($policy !== true) {
+    return $policy;
+}
 
 $projectid = $project_array['id'];
 $nightlytime = $project_array['nightlytime'];

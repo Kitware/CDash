@@ -13,18 +13,11 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
-
-include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
-
-$noforcelogin = 1;
-$SessionCachePolicy = 'nocache';
-include 'public/login.php';
-
 include_once 'include/common.php';
-redirect_to_https();
 
-include 'include/version.php';
+// TODO: dunno what this is or why it seems to exist here and there willy nilly, RWEP.
+redirect_to_https();
 
 use CDash\Config;
 use CDash\Database;

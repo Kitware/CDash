@@ -14,12 +14,10 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
-include 'public/login.php';
 include_once 'include/common.php';
-include 'include/version.php';
 
+use App\Http\Controllers\Auth\LoginController;
 use CDash\Config;
 use CDash\Model\ClientJobSchedule;
 use CDash\Model\ClientSite;
@@ -39,16 +37,16 @@ if (Auth::check()) {
         return;
     }
 
-    $userid = Auth::id();
     $User = new User();
-    $User->Id = $userid;
+    $User->Id = Auth::id();
+    $User->Fill();
 
     /* If we should remove a job */
     if (isset($_GET['removeschedule'])) {
         $ClientJobSchedule = new ClientJobSchedule();
         $ClientJobSchedule->Id = pdo_real_escape_numeric($_GET['removeschedule']);
 
-        if (!$User->IsAdmin() && $ClientJobSchedule->GetOwner() != $userid) {
+        if (!$User->IsAdmin() && $ClientJobSchedule->GetOwner() != $User->Id) {
             echo 'You cannot access this job';
             return;
         }
@@ -75,7 +73,7 @@ if (Auth::check()) {
         $UserProject = new UserProject();
         $UserProject->ProjectId = $projectid;
         $projectAdmins = $UserProject->GetUsers(2); //get project admin users
-        if (!in_array($userid, $projectAdmins)) {
+        if (!in_array($User->Id, $projectAdmins)) {
             echo 'You are not a project administrator!';
             return;
         }
@@ -91,13 +89,10 @@ if (Auth::check()) {
     $xml .= '<date>' . date('r') . '</date>';
     $xml .= '<backurl>user.php</backurl>';
 
-    $userid = Auth::id();
-    $user = new User();
-    $user->Id = $userid;
-    $user->Fill();
+
     $xml .= '<user>';
-    $xml .= add_XML_value('id', $userid);
-    $xml .= add_XML_value('admin', $user->Admin);
+    $xml .= add_XML_value('id', $User->Id);
+    $xml .= add_XML_value('admin', $User->Admin);
     $xml .= '</user>';
 
     if (isset($scheduleid)) {
@@ -289,7 +284,7 @@ if (Auth::check()) {
     // Schedule the build
     if (!empty($_POST['submit']) || !empty($_POST['update'])) {
         $clientJobSchedule = new ClientJobSchedule();
-        $clientJobSchedule->UserId = $userid;
+        $clientJobSchedule->UserId = $User->Id;
         $clientJobSchedule->ProjectId = $Project->Id;
         $clientJobSchedule->BuildNameSuffix = htmlspecialchars(pdo_real_escape_string($_POST['buildnamesuffix']));
         $clientJobSchedule->BuildConfiguration = htmlspecialchars(pdo_real_escape_string($_POST['buildconfiguration']));
@@ -373,4 +368,6 @@ if (Auth::check()) {
         echo "<script language=\"javascript\">window.location='user.php'</script>";
     }
     generate_XSLT($xml, 'manageClient', true);
+} else {
+    return LoginController::staticShowLoginForm();
 }

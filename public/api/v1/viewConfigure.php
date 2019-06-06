@@ -13,14 +13,9 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
-
-include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
-$noforcelogin = 1;
-require_once 'public/login.php';
 require_once 'include/common.php';
 require_once 'include/api_common.php';
-require_once 'include/version.php';
 
 use CDash\Model\BuildConfigure;
 use CDash\Model\Project;

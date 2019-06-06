@@ -14,12 +14,10 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include dirname(__DIR__) . '/config/config.php';
 require_once 'include/pdo.php';
 require_once 'include/login_functions.php';
-include 'public/login.php';
-require_once 'include/version.php';
 
+use App\Http\Controllers\Auth\LoginController;
 use CDash\Config;
 use CDash\Model\User;
 use CDash\Model\UserProject;
@@ -193,4 +191,6 @@ if (Auth::check()) {
     $xml .= '</cdash>';
 
     generate_XSLT($xml, 'editUser');
+} else {
+    return LoginController::staticShowLoginForm();
 }

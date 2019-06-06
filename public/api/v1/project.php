@@ -13,14 +13,9 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
-
-include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
-include 'public/login.php';
 require_once 'include/api_common.php';
 require_once 'include/common.php';
-require_once 'include/pdo.php';
-require_once 'include/version.php';
 
 use CDash\Model\Project;
 use CDash\Model\User;
@@ -34,6 +29,10 @@ if (!is_array($rest_input)) {
 }
 if (is_array($rest_input)) {
     $_REQUEST = array_merge($_REQUEST, $rest_input);
+}
+
+if (!Auth::check()) {
+    return;
 }
 
 // Get the authenticated user.

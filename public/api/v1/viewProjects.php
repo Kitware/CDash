@@ -13,11 +13,6 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
-
-include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
-$noforcelogin = 1;
-include 'public/login.php';
-
 use CDash\Controller\Api\ViewProjects as Controller;
 use CDash\Database;
 

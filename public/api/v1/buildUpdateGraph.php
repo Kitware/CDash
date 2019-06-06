@@ -14,12 +14,9 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 require_once 'include/common.php';
 require_once 'include/api_common.php';
-$noforcelogin = 1;
-include 'public/login.php';
 
 use CDash\Database;
 
