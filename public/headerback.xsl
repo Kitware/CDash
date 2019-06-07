@@ -10,18 +10,6 @@
 
 <div id="header">
  <div id="headertop">
-  <div id="topmenu">
-      <a href="viewProjects.php">All Dashboards</a>
-     <xsl:if test="cdash/user/id>0">
-       <xsl:call-template name="logout"/>
-     </xsl:if>
-    <a><xsl:attribute name="href">user.php</xsl:attribute>
-        <xsl:choose>
-          <xsl:when test="cdash/user/id>0">My CDash</xsl:when>
-          <xsl:otherwise></xsl:otherwise>
-        </xsl:choose></a>
-  </div>
-
   <div id="datetime">
    <xsl:value-of select="cdash/dashboard/datetime"/>
   </div>
