@@ -25,7 +25,6 @@ use CDash\Model\User;
 use CDash\Model\UserProject;
 use CDash\Model\Site;
 
-require_once 'config/config.php';
 require_once 'include/log.php';
 
 
@@ -611,7 +610,6 @@ function update_site($siteid, $name,
                      $description, $ip, $latitude, $longitude, $nonewrevision = false,
                      $outoforder = 0)
 {
-    include 'config/config.php';
     require_once 'include/pdo.php';
 
     // Security checks
@@ -750,7 +748,6 @@ function update_site($siteid, $name,
 /** Get the geolocation from IP address */
 function get_geolocation($ip)
 {
-    include 'config/config.php';
     $location = array();
 
     $lat = '';

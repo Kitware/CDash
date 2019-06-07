@@ -19,11 +19,9 @@
  * on a specific day.  It also displays information (success, execution time)
  * about each copy of the test that was run.
  */
-include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 include_once 'include/repository.php';
-include 'include/version.php';
 
 $response = [];
 

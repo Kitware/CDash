@@ -28,8 +28,6 @@ include_once dirname(__FILE__) . '/../bootstrap/cdash_autoload.php';
 $CDASH_ROOT_DIR = str_replace('\\', '/', dirname(dirname(__FILE__)));
 set_include_path(get_include_path() . PATH_SEPARATOR . $CDASH_ROOT_DIR);
 
-// Default timezone for PHP.
-date_default_timezone_set('UTC');
 
 // Hostname of the database server or name of unix socket
 $CDASH_DB_HOST = 'localhost';

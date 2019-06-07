@@ -273,7 +273,6 @@ function authenticate($email, $password, $SessionCachePolicy, $rememberme)
     if (empty($email)) {
         return 0;
     }
-    include dirname(__DIR__) . '/config/config.php';
 
     if ($config->get('CDASH_USE_LDAP')) {
         // If the user is '1' we use it to login

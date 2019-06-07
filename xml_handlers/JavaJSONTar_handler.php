@@ -13,8 +13,6 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
-
-require_once 'config/config.php';
 require_once 'xml_handlers/NonSaxHandler.php';
 
 use CDash\Config;

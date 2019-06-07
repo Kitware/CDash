@@ -22,8 +22,6 @@ use CDash\Model\DynamicAnalysisSummary;
 // Helper function to alter a table
 function AddTableField($table, $field, $mySQLType, $pgSqlType, $default)
 {
-    include dirname(__DIR__) . '/config/config.php';
-
     $sql = '';
     if ($default !== false) {
         $sql = " DEFAULT '" . $default . "'";
@@ -46,7 +44,6 @@ function AddTableField($table, $field, $mySQLType, $pgSqlType, $default)
 /** Remove a table field */
 function RemoveTableField($table, $field)
 {
-    include dirname(__DIR__) . '/config/config.php';
     $query = pdo_query('SELECT ' . $field . ' FROM ' . $table . ' LIMIT 1');
     if ($query) {
         add_log("Droping $field from $table", 'DropTableField');
@@ -63,7 +60,6 @@ function RemoveTableField($table, $field)
 // Rename a table vield
 function RenameTableField($table, $field, $newfield, $mySQLType, $pgSqlType, $default)
 {
-    include dirname(__DIR__) . '/config/config.php';
     $query = pdo_query('SELECT ' . $field . ' FROM ' . $table . ' LIMIT 1');
     if ($query) {
         add_log("Changing $field to $newfield for $table", 'RenameTableField');
@@ -101,8 +97,6 @@ function pdo_check_index_exists($tablename, $columnname)
 // Helper function to add an index to a table
 function AddTableIndex($table, $field)
 {
-    include dirname(__DIR__) . '/config/config.php';
-
     $index_name = $field;
     // Support for multiple column indices
     if (is_array($field)) {
@@ -125,7 +119,6 @@ function AddTableIndex($table, $field)
 // Helper function to remove an index to a table
 function RemoveTableIndex($table, $field)
 {
-    include dirname(__DIR__) . '/config/config.php';
     if (pdo_check_index_exists($table, $field)) {
         add_log("Removing index $field from $table", 'RemoveTableIndex');
 
@@ -142,8 +135,6 @@ function RemoveTableIndex($table, $field)
 // Helper function to modify a table
 function ModifyTableField($table, $field, $mySQLType, $pgSqlType, $default, $notnull, $autoincrement)
 {
-    include dirname(__DIR__) . '/config/config.php';
-
     //$check = pdo_query("SELECT ".$field." FROM ".$table." LIMIT 1");
     //$type  = pdo_field_type($check,0);
     //add_log($type,"ModifyTableField");
@@ -214,7 +205,6 @@ function AddTablePrimaryKey($table, $field)
 // Helper function to add an index to a table
 function RemoveTablePrimaryKey($table)
 {
-    include dirname(__DIR__) . '/config/config.php';
     add_log("Removing primarykey from $table", 'RemoveTablePrimaryKey');
     if (Config::getInstance()->get('CDASH_DB_TYPE') == 'pgsql') {
         pdo_query('ALTER TABLE "' . $table . '" DROP CONSTRAINT "value_pkey"');

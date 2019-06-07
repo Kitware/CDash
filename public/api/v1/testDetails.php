@@ -18,11 +18,9 @@
 * testDetails.php shows more detailed information for a particular test that
 * was run.  This includes test output and image comparison information
 */
-include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 include_once 'include/repository.php';
-include 'include/version.php';
 
 use CDash\Config;
 use CDash\Database;

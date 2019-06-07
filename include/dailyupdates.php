@@ -19,7 +19,6 @@
 // the input, the project's nightly start time, now
 //
 
-include 'config/config.php';
 require_once 'include/pdo.php';
 include_once 'include/common.php';
 require_once 'include/cdashmail.php';
@@ -811,7 +810,6 @@ function sendEmailExpectedBuilds($projectid, $currentstarttime)
 /** Remove the buildemail that have been there from more than 48h */
 function cleanBuildEmail()
 {
-    include 'config/config.php';
     include_once 'include/common.php';
     $now = date(FMT_DATETIME, time() - 3600 * 48);
     pdo_query("DELETE FROM buildemail WHERE time<'$now'");
@@ -820,7 +818,6 @@ function cleanBuildEmail()
 /** Clean the usertemp table if more than 24hrs */
 function cleanUserTemp()
 {
-    include 'config/config.php';
     include_once 'include/common.php';
     $now = date(FMT_DATETIME, time() - 3600 * 24);
     pdo_query("DELETE FROM usertemp WHERE registrationdate<'$now'");
