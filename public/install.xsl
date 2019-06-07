@@ -18,11 +18,7 @@
        <body bgcolor="#ffffff">
 
 <div id="header">
- <div id="headertop">
-  <div id="topmenu">
-
-  </div>
- </div>
+ <div id="headertop"></div>
 
  <div id="headerbottom">
     <div id="headerlogo">

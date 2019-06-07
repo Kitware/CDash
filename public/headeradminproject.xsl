@@ -6,11 +6,6 @@
 
 <div id="header">
  <div id="headertop">
-  <div id="topmenu">
-    <a><xsl:attribute name="href"><xsl:value-of select="/cdash/backurl"/></xsl:attribute>My CDash</a>
-    <a href="viewProjects.php">All Dashboards</a>
-  </div>
-
   <div id="datetime">
    <xsl:value-of select="cdash/dashboard/datetime"/>
   </div>

@@ -24,18 +24,7 @@
 
 
    <div id="header">
- <div id="headertop">
- <div id="topmenu">
-    <a><xsl:attribute name="href">user.php</xsl:attribute>
-        <xsl:choose>
-          <xsl:when test="cdash/user/id>0">My CDash</xsl:when>
-          <xsl:otherwise>Login</xsl:otherwise>
-        </xsl:choose></a><a href="viewProjects.php">All Dashboards</a>
-     <xsl:if test="cdash/user/id>0">
-       <xsl:call-template name="logout"/>
-     </xsl:if>
-  </div>
- </div>
+ <div id="headertop"></div>
 
  <div id="headerbottom">
     <div id="headerlogo">
