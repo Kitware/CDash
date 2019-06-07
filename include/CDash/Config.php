@@ -1,8 +1,6 @@
 <?php
 namespace CDash;
 
-use CDash\Singleton;
-
 class Config extends Singleton
 {
     private $_config;
@@ -24,6 +22,14 @@ class Config extends Singleton
     public function set($name, $value)
     {
         $this->_config[$name] = $value;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getVersion()
+    {
+        return self::getInstance()->get('CDASH_VERSION');
     }
 
     /**
