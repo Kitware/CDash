@@ -29,8 +29,6 @@ function client_submit()
     if (!$config->get('CDASH_MANAGE_CLIENTS')) {
         return 0;
     }
-
-    include 'config/config.php';
     require_once 'include/common.php';
 
     // Client asks for the site id

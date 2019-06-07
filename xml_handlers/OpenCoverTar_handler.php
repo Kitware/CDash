@@ -15,7 +15,6 @@
 =========================================================================*/
 
 require_once 'xml_handlers/abstract_handler.php';
-require_once 'config/config.php';
 
 use CDash\Config;
 use CDash\Model\Build;

@@ -16,9 +16,6 @@ namespace CDash\Model;
 
 use CDash\Database;
 use CDash\Lib\Repository\GitHub;
-use CDash\Model\Build;
-use CDash\Model\BuildProperties;
-use CDash\Model\Project;
 use CDash\Service\RepositoryService;
 
 class Repository

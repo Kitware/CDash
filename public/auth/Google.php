@@ -14,8 +14,6 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-require_once dirname(dirname(__DIR__)) . '/config/config.php';
-
 use CDash\Config;
 use CDash\Controller\Auth\Session;
 use CDash\Middleware\OAuth2\Google;

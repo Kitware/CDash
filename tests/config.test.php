@@ -5,7 +5,7 @@
 // That file adds the root of the CDash source tree to the include path.
 //
 require_once 'config/config.php';
-
+// TODO: determine if this file is still needed and if so update it to use Cdash/Config
 global $configure;
 $configure = array(
     // url of the cdash to test

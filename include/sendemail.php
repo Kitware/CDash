@@ -349,7 +349,6 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
 //
 function generate_broken_build_message($emailtext, $Build, $Project)
 {
-    include 'config/config.php';
     include_once 'include/common.php';
 
     $serverURI = get_server_URI();
@@ -506,7 +505,6 @@ function generate_broken_build_message($emailtext, $Build, $Project)
  * step fails */
 function send_update_email($handler, $projectid)
 {
-    include 'config/config.php';
     include_once 'include/common.php';
     require_once 'include/pdo.php';
 

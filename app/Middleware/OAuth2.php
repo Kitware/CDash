@@ -15,7 +15,6 @@
 =========================================================================*/
 namespace CDash\Middleware;
 
-require_once dirname(__DIR__) . '/../config/config.php';
 require_once 'include/common.php';
 
 use CDash\Config;

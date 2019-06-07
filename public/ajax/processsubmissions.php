@@ -13,8 +13,6 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
-
-require_once dirname(dirname(__DIR__)) . '/config/config.php';
 use CDash\Config;
 
 $pid = null;

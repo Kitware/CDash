@@ -27,12 +27,9 @@
  * onlydeltan=[anything] Only show errors that were resolved by this build (not supported for parent builds)
  * onlydeltap=[anything] Only show new errors that arose from this build
  **/
-
-include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 include_once 'include/repository.php';
-include 'include/version.php';
 
 use CDash\Model\Build;
 use CDash\Model\BuildError;

@@ -13,9 +13,6 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
-
-include dirname(dirname(dirname(__DIR__))) . '/config/config.php';
-
 class CDashAPI
 {
     public $Parameters;
