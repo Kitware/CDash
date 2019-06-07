@@ -99,10 +99,13 @@ class Timeline extends Index
 
     private function chartForBuildProperties()
     {
-        if (!isset($_SESSION['defecttypes'])) {
+        $request = request();
+        $defect_types = $request->session()->get('defecttypes');
+
+        if (!$defect_types) {
             json_error_response('No defecttypes defined in your session');
         }
-        $this->defectTypes = $_SESSION['defecttypes'];
+        $this->defectTypes = $defect_types;
 
         // Construct an SQL SELECT clause for the requested types of defects.
         $defect_keys = [];
