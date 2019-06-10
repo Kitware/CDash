@@ -796,7 +796,11 @@ class Index extends ResultsApi
                 if ($this->includeSubProjects) {
                     $nerrors = $selected_build_errors;
                     $nwarnings = $selected_build_warnings;
-                    $buildduration = $selected_build_duration;
+                    // We only sum up selected build duration for "one at a time"
+                    // builds (not "all at once" builds).
+                    if ($one_at_a_time) {
+                        $buildduration = $selected_build_duration;
+                    }
                 } else {
                     $nerrors -= $selected_build_errors;
                     $nwarnings -= $selected_build_warnings;
