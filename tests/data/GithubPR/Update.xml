@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Update mode="Client" Generator="ctest-3.14.0-rc1">
+	<Site>elysium</Site>
+	<BuildName>test_changeid2</BuildName>
+	<BuildStamp>20190104-0100-Nightly</BuildStamp>
+    <StartTime>1546624312</StartTime>
+	<UpdateCommand></UpdateCommand>
+	<UpdateType>GIT</UpdateType>
+    <ChangeId>555</ChangeId>
+	<Revision>3cc3b357d7a6447c4cb785e2dd9a1c30416bc9af</Revision>
+    <EndTime>1546624312</EndTime>
+	<ElapsedMinutes>0</ElapsedMinutes>
+	<UpdateReturnStatus></UpdateReturnStatus>
+</Update>
