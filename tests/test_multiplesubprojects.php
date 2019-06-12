@@ -343,6 +343,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
         }
 
         // Verify filtered parent build.
+        // ...exclude
         $this->get("{$this->url}/api/v1/index.php?project=SubProjectExample&&date=2016-07-28&filtercount=1&showfilters=1&field1=subprojects&compare1=92&value1=MyThirdPartyDependency");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
@@ -368,7 +369,35 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
                 'timefull' => 4,
             ],
         ];
-        $this->verifyBuild($expected_parent_build, $build, 'filtered parent');
+        $this->verifyBuild($expected_parent_build, $build, 'parent exclude');
+
+        // ...include
+        $this->get("{$this->url}/api/v1/index.php?project=SubProjectExample&date=2016-07-28&filtercount=2&showfilters=1&filtercombine=and&field1=subprojects&compare1=93&value1=MyProductionCode&field2=subprojects&compare2=93&value2=MyThirdPartyDependency");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $buildgroup = array_pop($jsonobj['buildgroups']);
+        $build = $buildgroup['builds'][0];
+        $expected_parent_build = [
+            'label' => '(2 labels)',
+            'timefull' => 6,
+            'compilation' => [
+                'error' => 2,
+                'warning' => 1,
+                'timefull' => 5,
+            ],
+            'configure' => [
+                'error' => 1,
+                'warning' => 1,
+                'timefull' => 1,
+            ],
+            'test' => [
+                'notrun' => 1,
+                'fail' => 0,
+                'pass' => 1,
+                'timefull' => 4,
+            ],
+        ];
+        $this->verifyBuild($expected_parent_build, $build, 'parent include');
 
         // View parent build
         $this->get("{$this->url}/api/v1/index.php?project=SubProjectExample&parentid={$parentid}");
