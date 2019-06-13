@@ -170,7 +170,12 @@ class AuthTokenTestCase extends KWWebTestCase
             $this->fail($e->getMessage());
         }
 
-        $status_code = $response->getStatusCode();
+        if (!$response) {
+            $this->fail('No response from request');
+            return 1;
+        }
+
+        $status_code = $response ? $response->getStatusCode() : null;
         if ($status_code != 201) {
             $this->fail("Expected 201 but got $status_code");
         }

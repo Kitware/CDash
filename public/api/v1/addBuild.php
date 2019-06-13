@@ -32,13 +32,6 @@ if (is_null($project)) {
     return;
 }
 
-// Check for valid authentication token if this project requires one.
-$project->Fill();
-if ($project->AuthenticateSubmissions &&
-    !valid_token_for_submission($project->Id)) {
-    return response()->json(['requirelogin' => 1], Response::HTTP_UNAUTHORIZED);
-}
-
 // Get the id of the specified site.
 $service = ServiceContainer::getInstance();
 $site = $service->create(Site::class);

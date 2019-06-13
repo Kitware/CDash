@@ -18,6 +18,7 @@ use App\Http\Controllers\Auth\LoginController;
 use CDash\Config;
 use CDash\Controller\Auth\Session;
 use CDash\Database;
+use CDash\Model\AuthToken;
 use CDash\ServiceContainer;
 use CDash\Model\Build;
 use CDash\Model\Project;
@@ -447,6 +448,12 @@ function checkUserPolicy($userid, $projectid, $onlyreturn = 0)
         // If the project is public we quit
         if ($project->Public) {
             return true;
+        }
+
+        // does the request contain a token
+        if (!$userid && $project->AuthenticateSubmissions) {
+            $authtoken = new AuthToken();
+            $userid = $authtoken->getUserIdFromRequest();
         }
 
         // If the project is private and the user is not logged in we quit
