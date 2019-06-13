@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html lang="en" ng-app="CDash">
   <head ng-controller="HeadController">
@@ -13,12 +13,18 @@
   </head>
 
   <body bgcolor="#ffffff" ng-controller="UserController">
+  -->
     <div ng-if="cdash.requirelogin == 1 && cdash.registered == 1" ng-include="'login.php?note=register'"></div>
     <div ng-if="cdash.requirelogin == 1 && cdash.registered == 0" ng-include="'login.php'"></div>
     <div id="main_content" ng-if="cdash.requirelogin != 1 && !loading">
       <!-- Header -->
       <div id="header">
         <div id="headertop">
+          <div id="topmenu">
+            <a href="index.php">All Dashboards</a>
+            <a href="editUser.php">My Profile</a>
+            <ng-include src="'build/views/partials/logout_@@version.html'"></ng-include>
+          </div>
         </div>
         <div id="headerbottom">
           <div id="headerlogo">
@@ -435,5 +441,5 @@
     <!-- FOOTER -->
     <br/>
     <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_@@version.html'"></ng-include>
-  </body>
-</html>
+<!--  </body>
+</html> -->
