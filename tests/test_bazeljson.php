@@ -733,7 +733,7 @@ class BazelJSONTestCase extends KWWebTestCase
         $file_name = basename($file_path);
         $puturl = $this->url . "/submit.php?type=$upload_type&md5=$md5&filename=$file_name&buildid=$buildid";
         if ($this->uploadfile($puturl, $file_path) === false) {
-            $this->fail("Upload failed for $file_name");
+            $this->fail("Upload failed for url {$puturl}");
             return false;
         }
         return $buildid;
