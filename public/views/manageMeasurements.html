@@ -1,3 +1,4 @@
+<!--
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html lang="en" ng-app="CDash">
@@ -12,6 +13,7 @@
   </head>
 
   <body bgcolor="#ffffff" ng-controller="ManageMeasurementsController">
+  -->
     <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
     <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_@@version.html'"></ng-include>
 
@@ -87,5 +89,6 @@
 
     <!-- FOOTER -->
     <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_@@version.html'"></ng-include>
+<!--
   </body>
-</html>
+</html> -->
