@@ -75,11 +75,16 @@ class TimelineTestCase extends KWWebTestCase
         $this->toggle_expected($client, $build, 1);
 
         // Now that we have an expected build, validate timeline data on relevant pages.
-        $pages_to_check = ['index.php', 'testOverview.php', 'viewBuildGroup.php'];
+        $pages_to_check = ['index.php', 'testOverview.php', 'queryTests.php', 'viewBuildGroup.php'];
 
         $answer_key = [
             'index.php' => [
                 'Test Failures' => 1
+            ],
+            'queryTests.php' => [
+                'Failing Tests' => 1,
+                'Not Run Tests' => 1,
+                'Passing Tests' => 1
             ],
             'testOverview.php' => [
                 'Failing Tests' => 1,

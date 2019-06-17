@@ -71,8 +71,11 @@ class Timeline extends Index
             case 'index.php':
                 return $this->chartForIndex();
                 break;
+            case 'queryTests.php':
+                return $this->chartForTests(false);
+                break;
             case 'testOverview.php':
-                return $this->chartForTestOverview();
+                return $this->chartForTests(true);
                 break;
             case 'viewBuildGroup.php':
                 return $this->chartForBuildGroup();
@@ -160,7 +163,7 @@ class Timeline extends Index
         return $response;
     }
 
-    private function chartForTestOverview()
+    private function chartForTests($tally)
     {
         $this->defectTypes = [
             [
@@ -188,7 +191,7 @@ class Timeline extends Index
             return [];
         }
         $this->includeCleanBuilds = false;
-        $response = $this->getTimelineChartData($stmt);
+        $response = $this->getTimelineChartData($stmt, $tally);
         $response['colors'] = [
             $this->colors[self::CLEAN],
             $this->colors[self::FAILURE],
@@ -319,7 +322,7 @@ class Timeline extends Index
         }
     }
 
-    private function getTimelineChartData($builds)
+    private function getTimelineChartData($builds, $tally = true)
     {
         $response = [];
         $oldest_time_ms = null;
@@ -348,9 +351,13 @@ class Timeline extends Index
             foreach ($this->defectTypes as $defect_type) {
                 $key = $defect_type['name'];
                 if ($build[$key] > 0) {
-                    $this->timeData[$start_of_day_ms][$key] += 1;
                     $clean_build = false;
-                    break;
+                    if ($tally) {
+                        $this->timeData[$start_of_day_ms][$key] += 1;
+                        break;
+                    } else {
+                        $this->timeData[$start_of_day_ms][$key] += $build[$key];
+                    }
                 }
             }
             if ($this->includeCleanBuilds && $clean_build) {
