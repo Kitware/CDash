@@ -140,7 +140,7 @@ class Mail extends Singleton
         return $mail;
     }
 
-    public function addEmail(\Swift_Mime_Message $message)
+    public function addEmail(\Swift_Message $message)
     {
         $this->emails[] = $message;
     }

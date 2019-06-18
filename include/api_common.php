@@ -184,6 +184,19 @@ function get_request_build_id($required = true)
  */
 function get_project_from_request()
 {
+    $Project = just_get_project_from_request();
+    return ($Project && can_access_project($Project->Id)) ? $Project : null;
+}
+
+/**
+ * Get project given request parameter, 'project'
+ *
+ * @return mixed|null
+ * @throws \DI\DependencyException
+ * @throws \DI\NotFoundException
+ */
+function just_get_project_from_request()
+{
     if (!isset($_REQUEST['project'])) {
         json_error_response(['error' => 'Valid project required']);
         return null;
@@ -197,9 +210,8 @@ function get_project_from_request()
         json_error_response(['error' => 'Project does not exist']);
         return null;
     }
-    return can_access_project($Project->Id) ? $Project : null;
+    return $Project;
 }
-
 /**
  * Returns a build based on the id extracted from the request and returns it if the user has
  * necessary access to the project

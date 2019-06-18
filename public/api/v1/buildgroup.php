@@ -179,15 +179,13 @@ function rest_post($pdo, $projectid)
         $BuildGroup->SetName($name);
 
         if ($BuildGroup->Exists()) {
-            $error_msg =
-                "A group named '$name' already exists for this project.";
-            json_error_response(['error' => $error_msg], 400);
-            return null;
+            $status_code = 200;
+        } else {
+            $status_code = 201;
+            $type = htmlspecialchars(pdo_real_escape_string($_POST['type']));
+            $BuildGroup->SetType($type);
+            $BuildGroup->Save();
         }
-
-        $type = htmlspecialchars(pdo_real_escape_string($_POST['type']));
-        $BuildGroup->SetType($type);
-        $BuildGroup->Save();
 
         // Respond with a JSON representation of this buildgroup.
         $response = [];

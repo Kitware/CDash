@@ -138,13 +138,14 @@ class AuthTokenTestCase extends KWWebTestCase
             'stamp'   => '20180705-0100-Experimental'
         ];
         $client = new GuzzleHttp\Client(['cookies' => true]);
+        $client->getConfig('cookies')->clear();
 
         // Make sure the AddBuild API call fails if we do not supply
         // a valid bearer token.
         $exception_thrown = false;
         try {
             $response = $client->request('POST',
-                $this->url . '/api/v1/addBuild.php',
+                $this->url . '/api/v1/addBuild.php?XDEBUG_SESSION_START',
                 ['form_params' => $add_build_params]);
         } catch (GuzzleHttp\Exception\ClientException $e) {
             $exception_thrown = true;
@@ -219,6 +220,7 @@ class AuthTokenTestCase extends KWWebTestCase
         $this->Project->Fill();
         $this->Project->Public = 1;
         $this->Project->Save();
+
         $this->addBuildApiTestCase();
         $this->Project->Public = 0;
         $this->Project->Save();

@@ -15,11 +15,13 @@
  */
 
 use CDash\Model\Project;
+use Tests\TestCase;
 
-class NightlyTimeTest extends PHPUnit_Framework_TestCase
+class NightlyTimeTest extends TestCase
 {
     public function __construct()
     {
+        parent::__construct();
         $this->Project = new Project();
     }
 

@@ -21,8 +21,9 @@ use CDash\Messaging\Subscription\UserSubscriptionBuilder;
 use CDash\Messaging\Topic\Topic;
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Subscriber;
+use Tests\TestCase;
 
-class TestingHandlerTest extends PHPUnit_Framework_TestCase
+class TestingHandlerTest extends TestCase
 {
     public function testGetBuildTopic()
     {

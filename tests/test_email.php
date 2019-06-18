@@ -93,12 +93,10 @@ class EmailTestCase extends KWWebTestCase
         if (!$user->Id) {
             $this->fail('Failed to create user2');
         }
+        $db = \CDash\Database::getInstance();
 
-        // No emails for me, please.
-        $this->pdo->exec(
-            "INSERT INTO user2project
-            (userid, projectid, role, emailtype)
-            VALUES ($user->Id, $this->projectid, 0, 0)");
+        $stmt = $db->prepare('INSERT INTO user2project (userid, projectid, role, emailtype) VALUES (?, ?, ?, ?)');
+        $db->insert($stmt, [$user->Id, $this->project, 0, 0]);
     }
 
     public function testSubmissionFirstBuild()

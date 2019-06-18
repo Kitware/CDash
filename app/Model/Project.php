@@ -88,7 +88,7 @@ class Project
 
     public function __construct()
     {
-        $this->Initialize();
+        $this->Initialize(); // why?
     }
 
     /** Initialize non defined variables */
@@ -151,7 +151,7 @@ class Project
         if (empty($this->ErrorsFilter)) {
             $this->ErrorsFilter = '';
         }
-        $this->PDO = Database::getInstance()->getPdo();
+        $this->PDO = Database::getInstance();
     }
 
     /** Add a build group */

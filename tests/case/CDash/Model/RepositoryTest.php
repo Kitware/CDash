@@ -17,9 +17,9 @@
 use CDash\Lib\Repository\GitHub;
 use CDash\Model\Project;
 use CDash\Model\Repository;
-use CDash\Test\CDashTestCase;
+use Tests\TestCase;
 
-class RepositoryTest extends CDashTestCase
+class RepositoryTest extends TestCase
 {
     private $project;
     private $repo = [];

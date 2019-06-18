@@ -17,7 +17,6 @@ require_once 'include/api_common.php';
 require_once 'include/do_submit.php';
 
 use CDash\Model\Build;
-use CDash\Model\Project;
 use CDash\Model\Site;
 use CDash\ServiceContainer;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,10 +24,14 @@ use Symfony\Component\HttpFoundation\Response;
 if ($_SERVER['REQUEST_METHOD'] != 'POST') {
     return response('Not Implemented', Response::HTTP_NOT_IMPLEMENTED);
 }
-init_api_request();
-$project = get_project_from_request();
 
-if (is_null($project)) {
+init_api_request();
+$project = just_get_project_from_request();
+$project->Fill();
+
+if ($project->AuthenticateSubmissions && !valid_token_for_submission($project->Id)) {
+    return;
+} elseif (!$project->AuthenticateSubmissions && !can_access_project($project->Id)) {
     return;
 }
 

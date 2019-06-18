@@ -450,12 +450,6 @@ function checkUserPolicy($userid, $projectid, $onlyreturn = 0)
             return true;
         }
 
-        // does the request contain a token
-        if (!$userid && $project->AuthenticateSubmissions) {
-            $authtoken = new AuthToken();
-            $userid = $authtoken->getUserIdFromRequest();
-        }
-
         // If the project is private and the user is not logged in we quit
         if (!$userid && !$project->Public) {
             if (!$onlyreturn) {

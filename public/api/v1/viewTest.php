@@ -643,7 +643,7 @@ if ($columncount > 0) {
 }
 
 if (@$_GET['export'] == 'csv') {
-    return export_as_csv($etestquery, null, $result, $projectshowtesttime, $testtimemaxstatus, $columns);
+    return export_as_csv($etestquery, null, $result, $project->ShowTestTime, $project->TestTimeMaxStatus, $columns);
 }
 
 // Keep track of extra measurements for each test.

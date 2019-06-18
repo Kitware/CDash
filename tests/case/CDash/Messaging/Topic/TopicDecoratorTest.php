@@ -28,6 +28,7 @@ use CDash\Messaging\Topic\Topic;
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Messaging\Topic\TopicDecorator;
 use CDash\Messaging\Topic\TopicInterface;
+use Tests\TestCase;
 
 abstract class MockTopic extends Topic implements Decoratable
 {
@@ -39,7 +40,7 @@ abstract class MockTopicLabelable extends MockTopic implements Labelable
 {
 };
 
-class TopicDecoratorTest extends PHPUnit_Framework_TestCase
+class TopicDecoratorTest extends TestCase
 {
     public function testDecorateGivenFixesEmailPreference()
     {

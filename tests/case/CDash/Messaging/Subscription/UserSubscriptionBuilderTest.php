@@ -26,8 +26,9 @@ use CDash\Model\Project;
 use CDash\Model\Site;
 use CDash\Model\Subscriber;
 use CDash\Test\BuildDiffForTesting;
+use Tests\TestCase;
 
-class UserSubscriptionBuilderTest extends PHPUnit_Framework_TestCase
+class UserSubscriptionBuilderTest extends TestCase
 {
     use BuildDiffForTesting;
 
