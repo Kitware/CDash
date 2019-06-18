@@ -22,8 +22,9 @@ use CDash\Model\Build;
 use CDash\Model\DynamicAnalysis;
 use CDash\Model\Subscriber;
 use CDash\Model\SubscriberInterface;
+use Tests\TestCase;
 
-class DynamicAnalysisTopicTest extends PHPUnit_Framework_TestCase
+class DynamicAnalysisTopicTest extends TestCase
 {
     public function testSubscribesToBuild()
     {

@@ -13,6 +13,8 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+require_once 'include/common.php';
+
 use CDash\Controller\Api\ViewProjects as Controller;
 use CDash\Database;
 

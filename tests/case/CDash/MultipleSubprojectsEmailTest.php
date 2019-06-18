@@ -28,9 +28,10 @@ use CDash\Messaging\Subscription\UserSubscriptionBuilder;
 use CDash\Model\Label;
 use CDash\Model\Project;
 use CDash\Model\Subscriber;
+use CDash\Test\CDashUseCaseTestCase;
 use CDash\Test\UseCase\UseCase;
 
-class MultipleSubprojectsEmailTest extends \CDash\Test\CDashUseCaseTestCase
+class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
 {
     private static $tz;
     private static $database;
@@ -59,8 +60,8 @@ class MultipleSubprojectsEmailTest extends \CDash\Test\CDashUseCaseTestCase
         $config->set('CDASH_BASE_URL', 'http://open.cdash.org');
 
         // deal with timezone stuff
+
         self::$tz = date_default_timezone_get();
-        date_default_timezone_set('UTC');
 
         // so that we can mock the database layer
         self::$database = Database::getInstance();
@@ -349,6 +350,8 @@ class MultipleSubprojectsEmailTest extends \CDash\Test\CDashUseCaseTestCase
 
     public function testDyanamicAnalysisUseCaseBuild()
     {
+        // TODO: figure out why the time in use case is being set with UTC
+        date_default_timezone_set('UTC');
         $start = strtotime('-10 minutes');
         $end = time();
         $datetime = date('Y-m-d\TH:i:s', $start);

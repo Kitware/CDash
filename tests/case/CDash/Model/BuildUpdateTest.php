@@ -15,8 +15,9 @@
  */
 
 use CDash\Model\BuildUpdate;
+use Tests\TestCase;
 
-class BuildUpdateTest extends PHPUnit_Framework_TestCase
+class BuildUpdateTest extends TestCase
 {
     public function testGetUrlForSelf()
     {

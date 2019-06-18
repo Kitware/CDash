@@ -22,8 +22,9 @@ use CDash\Model\BuildGroup;
 use CDash\Model\Project;
 use CDash\Model\Site;
 use CDash\Test\BuildDiffForTesting;
+use Tests\TestCase;
 
-class CommitAuthorSubscriptionBuilderTest extends PHPUnit_Framework_TestCase
+class CommitAuthorSubscriptionBuilderTest extends TestCase
 {
     use BuildDiffForTesting;
 

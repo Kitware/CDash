@@ -7,6 +7,7 @@ use CDash\Messaging\Topic\DynamicAnalysisTopic;
 use CDash\Messaging\Topic\Topic;
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Subscriber;
+use Tests\TestCase;
 
 /**
  * =========================================================================
@@ -23,7 +24,7 @@ use CDash\Model\Subscriber;
  * =========================================================================
  */
 
-class DynamicAnalysisHandlerTest extends PHPUnit_Framework_TestCase
+class DynamicAnalysisHandlerTest extends TestCase
 {
     public function testGetBuildTopic()
     {

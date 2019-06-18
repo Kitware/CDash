@@ -52,10 +52,14 @@ class EmailBuilder extends SubscriptionNotificationBuilder
     public function createNotification(SubscriptionInterface $subscription, $templateName)
     {
         $message = null;
-        $blade = new Blade((array)$this->templateDirectory, $this->cacheDirectory);
+        $subject_template = "email.{$templateName}.subject";
+        $template = "email.{$templateName}";
+
+
+        // $blade = new Blade((array)$this->templateDirectory, $this->cacheDirectory);
         $data = ['subscription' => $subscription];
-        $subject = $blade->make("{$templateName}.subject", $data);
-        $body = $blade->make($templateName, $data);
+        $subject = view($subject_template)->with($data);
+        $body = view($template)->with($data);
         $recipient = $subscription->getSubscriber()->getAddress();
         /** @var EmailMessage $message */
         $message = $this->factory->create();

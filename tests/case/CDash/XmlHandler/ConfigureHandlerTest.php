@@ -21,8 +21,9 @@ use CDash\Messaging\Topic\ConfigureTopic;
 use CDash\Messaging\Topic\Topic;
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Subscriber;
+use Tests\TestCase;
 
-class ConfigureHandlerTest extends PHPUnit_Framework_TestCase
+class ConfigureHandlerTest extends TestCase
 {
     public function testGetBuildTopic()
     {

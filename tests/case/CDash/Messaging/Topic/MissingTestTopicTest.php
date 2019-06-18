@@ -18,8 +18,9 @@ use CDash\Collection\TestCollection;
 use CDash\Messaging\Topic\MissingTestTopic;
 use CDash\Messaging\Topic\Topic;
 use CDash\Model\Build;
+use Tests\TestCase;
 
-class MissingTestTopicTest extends PHPUnit_Framework_TestCase
+class MissingTestTopicTest extends TestCase
 {
     public function testSubscribesToBuild()
     {

@@ -78,7 +78,6 @@ class GitHub implements RepositoryInterface
         $this->config = Config::getInstance();
         $this->baseUrl = $this->config->getBaseUrl();
         $this->db = Database::getInstance();
-        $this->db->getPdo();
 
         $this->getRepositoryInformation();
 

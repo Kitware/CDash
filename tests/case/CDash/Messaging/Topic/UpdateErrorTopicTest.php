@@ -21,8 +21,9 @@ use CDash\Model\Build;
 use CDash\Model\BuildUpdate;
 use CDash\Model\Subscriber;
 use CDash\Test\BuildDiffForTesting;
+use Tests\TestCase;
 
-class UpdateErrorTopicTest extends PHPUnit_Framework_TestCase
+class UpdateErrorTopicTest extends TestCase
 {
     use BuildDiffForTesting;
 
