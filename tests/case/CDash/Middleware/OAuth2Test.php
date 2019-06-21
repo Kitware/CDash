@@ -173,7 +173,7 @@ class OAuth2Test extends CDashTestCase
                 ["Location: {$auth_url}"]
             );
 
-        $this->sut->getAuthorizationCode();
+        $this->sut->authorization();
     }
 
     /**
