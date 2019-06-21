@@ -13,7 +13,8 @@
 =========================================================================*/
 namespace CDash\Middleware\OAuth2;
 
-use CDash\Model\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use League\OAuth2\Client\Provider\AbstractProvider;
 
 interface OAuth2Interface
@@ -30,17 +31,33 @@ interface OAuth2Interface
     public function setProvider(AbstractProvider $provider);
 
     /**
-     * @return string
+     * @return Collection
      */
-    public function getEmail(User $user);
+    public function getEmail();
+
+    /**
+     * @param Request $request
+     * @return OAuth2Interface
+     */
+    public function setRequest(Request $request);
+
+    /**
+     * @return bool
+     */
+    public function checkState();
 
     /**
      * @return string
      */
-    public function getFirstName();
+    public function getAuthorizationUrl();
 
     /**
      * @return string
      */
-    public function getLastName();
+    public function getState();
+
+    /**
+     * @return string
+     */
+    public function getOwnerName();
 }

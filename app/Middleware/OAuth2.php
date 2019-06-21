@@ -15,184 +15,113 @@
 =========================================================================*/
 namespace CDash\Middleware;
 
-require_once 'include/common.php';
-
-use CDash\Config;
-use CDash\Controller\Auth\Session;
 use CDash\Middleware\OAuth2\OAuth2Interface;
-use CDash\Model\User;
-use CDash\System;
-use Exception;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use League\OAuth2\Client\Provider\AbstractProvider;
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
+use League\OAuth2\Client\Provider\ResourceOwnerInterface;
+use League\OAuth2\Client\Token\AccessToken;
+use League\OAuth2\Client\Token\AccessTokenInterface;
 
+/**
+ * Class OAuth2
+ * @package CDash\Middleware
+ */
 abstract class OAuth2 implements OAuth2Interface
 {
-    public $Valid;
-
-    protected $AuthorizationOptions;
-    protected $NameParts;
+    protected $AuthorizationOptions = [];
     protected $OwnerDetails;
     protected $Provider;
     protected $Token;
 
-    protected $Config;
-    private $Session;
-    private $System;
+    /** @var Request $request */
+    private $request;
 
-    public function __construct(System $system, Session $session, Config $config)
-    {
-        $this->AuthorizationOptions = [];
-        $this->NameParts = null;
-        $this->OwnerDetails = null;
-        $this->Provider = null;
-        $this->Token = null;
-        $this->Valid = false;
-
-        $this->System = $system;
-        $this->Session = $session;
-        $this->Config = $config;
-    }
-
-    public function initializeSession()
-    {
-        if (!$this->Session->isActive()) {
-            $this->Session->start(Session::CACHE_PRIVATE_NO_EXPIRE);
-            if (!$this->Session->getSessionVar('cdash')) {
-                $this->Session->setSessionVar('cdash', []);
-            }
-            if (array_key_exists('dest', $_GET)) {
-                $this->Session->setSessionVar('cdash.dest', $_GET['dest']);
-            }
-        }
-    }
-
-    public function getAuthorizationCode()
-    {
-        $provider = $this->getProvider();
-        // If we don't have an authorization code then get one
-        $authUrl = $provider->getAuthorizationUrl($this->AuthorizationOptions);
-        $this->Session->setSessionVar('cdash.oauth2state', $provider->getState());
-
-        // Prevent the browser from caching this redirect.
-        $this->System->header("Cache-Control: no-cache, must-revalidate");
-        $this->System->header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
-        $this->System->header('Location: '. $authUrl);
-    }
-
+    /**
+     * Check given state against previously stored one to mitigate CSRF attack.
+     *
+     * @return bool
+     */
     public function checkState()
     {
-        $session_state = $this->Session->getSessionVar('cdash.oauth2state');
-        if (empty($_GET['state']) || ($_GET['state'] !== $session_state)) {
-            throw new Exception("OAuth: Invalid state");
-        }
+        $request = $this->getRequest();
+        $request_state = $request->query('state');
+        $session_state = $request->session()->get('auth.oauth.state');
+        return Str::is($request_state, $session_state);
     }
 
-    public function loadOwnerDetails()
+    /**
+     * @return ResourceOwnerInterface
+     * @throws IdentityProviderException
+     */
+    public function getOwnerDetails()
     {
-        if (!is_null($this->OwnerDetails)) {
-            return true;
+        if (!$this->OwnerDetails) {
+            $provider = $this->getProvider();
+            $token = $this->getAccessToken();
+            $this->OwnerDetails = $provider->getResourceOwner($token);
         }
+        return $this->OwnerDetails;
+    }
 
+    /**
+     * @return AccessTokenInterface|AccessToken
+     * @throws IdentityProviderException
+     */
+    protected function getAccessToken()
+    {
         if (!$this->Token) {
-            return false;
+            $provider = $this->getProvider();
+            $options = ['code' => $this->getRequest()->query('code')];
+            $this->Token = $provider->getAccessToken('authorization_code', $options);
         }
+        return $this->Token;
+    }
 
+    /**
+     * @return RedirectResponse
+     */
+    public function authorization()
+    {
         $provider = $this->getProvider();
-        $this->setOwnerDetails($provider->getResourceOwner($this->Token));
-        return true;
+        $to = $provider->getAuthorizationUrl($this->AuthorizationOptions);
+        $this->request
+            ->session()
+            ->put('auth.oauth.state', $provider->getState());
+
+        return redirect($to)
+            ->header('Cache-Control', 'no-cache, must-revalidate')
+            ->header('Expires', 'Sat, 26 Jul 1997 05:00:00GMT');
     }
 
-    public function setOwnerDetails($details)
+    /**
+     * @return string
+     */
+    public function getAuthorizationUrl()
     {
-        $this->OwnerDetails = $details;
-    }
-
-    protected function loadNameParts()
-    {
-        if (!is_null($this->NameParts)) {
-            return;
-        }
-        $this->loadOwnerDetails();
-        $name = $this->OwnerDetails->getName();
-        $this->setNameParts(explode(' ', $name));
-    }
-
-    public function setNameParts($parts)
-    {
-        $this->NameParts = $parts;
-    }
-
-    public function getFirstName()
-    {
-        $this->loadNameParts();
-        return $this->NameParts[0];
-    }
-
-    public function getLastName()
-    {
-        $this->loadNameParts();
-        return $this->NameParts[1];
-    }
-
-
-    public function auth(User $user)
-    {
-        $this->initializeSession();
         $provider = $this->getProvider();
-        // Get an authorization code if we do not already have one.
-        if (!isset($_GET['code'])) {
-            return $this->getAuthorizationCode();
-        }
+        return $provider->getAuthorizationUrl($this->AuthorizationOptions);
+    }
 
-        // Check given state against previously stored one to mitigate
-        // CSRF attack.
-        $this->checkState();
+    /**
+     * @return string
+     */
+    public function getState()
+    {
+        $provider = $this->getProvider();
+        return $provider->getState();
+    }
 
-        // Try to get an access token using the authorization code grant.
-        $this->Token = $provider->getAccessToken('authorization_code',
-                [ 'code' => $_GET['code'] ]);
-
-        // Use the access token to get the user's email.
-        try {
-            $email = $this->getEmail($user);
-            if (!$email) {
-                throw new Exception('Could not determine email address for user.');
-            } else {
-                // Check if this email address appears in our user database.
-                $userid = $user->GetIdFromEmail($email);
-                if (!$userid) {
-                    // if no match is found, redirect to pre-filled out
-                    // registration page.
-                    $firstname = $this->getFirstName();
-                    $lastname = $this->getLastName();
-                    $baseUrl = $this->Config->get('CDASH_BASE_URL');
-                    $this->System->header("Location: $baseUrl/register.php?firstname=$firstname&lastname=$lastname&email=$email");
-                    return false;
-                }
-
-                $user->Id = $userid;
-                $user->Fill();
-
-                // Set "remember me" cookie.
-                $key = generate_password(32);
-                $this->Session->setRememberMeCookie($user, $key);
-
-                $dest = $this->Session->getSessionVar('cdash.dest');
-                $sessionArray = array(
-                        'login' => $email,
-                        'passwd' => $user->Password,
-                        'ID' => $this->Session->getSessionId(),
-                        'valid' => 1,
-                        'loginid' => $user->Id);
-                $this->Session->setSessionVar('cdash', $sessionArray);
-                $this->Session->writeClose();
-                $this->System->header("Location: {$dest}");
-                // Authentication succeeded.
-                return true;
-            }
-        } catch (Exception $e) {
-            json_error_response(['error' => $e->getMessage()]);
-        }
+    /**
+     * @return string
+     * @throws IdentityProviderException
+     */
+    public function getOwnerName()
+    {
+        $details = $this->getOwnerDetails();
+        return $details->getName();
     }
 
     /**
@@ -202,5 +131,26 @@ abstract class OAuth2 implements OAuth2Interface
     public function setProvider(AbstractProvider $provider)
     {
         $this->Provider = $provider;
+    }
+
+    /**
+     * @return array|Request|string
+     */
+    public function getRequest()
+    {
+        if (!$this->request) {
+            $this->request = request();
+        }
+        return $this->request;
+    }
+
+    /**
+     * @param Request $request
+     * @return OAuth2Interface
+     */
+    public function setRequest(Request $request)
+    {
+        $this->request = $request;
+        return $this;
     }
 }
