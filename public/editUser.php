@@ -138,6 +138,10 @@ if (Auth::check()) {
         }
     }
 
+    if (request('password_expired')) {
+        $xml .= '<error>Password has expired</error>';
+    }
+
     $xml .= '<user>';
     $xml .= add_XML_value('id', $userid);
     $xml .= add_XML_value('firstname', $user->FirstName);
