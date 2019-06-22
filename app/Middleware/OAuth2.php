@@ -153,4 +153,17 @@ abstract class OAuth2 implements OAuth2Interface
         $this->request = $request;
         return $this;
     }
+
+    /**
+     * If an associated primary attribute is available for an email address that email will
+     * be returned, otherwise we return the first email
+     *
+     * @return string
+     */
+    public function getPrimaryEmail()
+    {
+        $email = $this->getEmail();
+        $primary = $email->firstWhere('primary', true) ?: $email->first();
+        return $primary->email;
+    }
 }

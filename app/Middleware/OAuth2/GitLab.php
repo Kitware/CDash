@@ -15,55 +15,57 @@
 =========================================================================*/
 namespace CDash\Middleware\OAuth2;
 
-use CDash\Config;
-use CDash\Controller\Auth\Session;
 use CDash\Middleware\OAuth2;
-use CDash\Model\User;
-use CDash\System;
-use League\OAuth2\Client\Provider\AbstractProvider;
+use Illuminate\Support\Collection;
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use Omines\OAuth2\Client\Provider\Gitlab as GitLabProvider;
 
+/**
+ * Class GitLab
+ * @package CDash\Middleware\OAuth2
+ */
 class GitLab extends OAuth2
 {
+    /** @var Collection $Email */
     private $Email;
 
-    public function __construct(System $system, Session $session, Config $config)
+    public function __construct()
     {
-        parent::__construct($system, $session, $config);
         $this->AuthorizationOptions = ['scope' => ['read_user']];
-        $this->Email = '';
     }
 
-    public function getEmail(User $user)
+    /**
+     * @return Collection
+     * @throws IdentityProviderException
+     */
+    public function getEmail()
     {
-        if (empty($this->Email)) {
-            $this->loadEmail();
+        if (!$this->Email) {
+           $details = $this->getOwnerDetails();
+           $email = (object)[
+               'email' => strtolower($details->getEmail())
+           ];
+           $this->Email = collect([$email]);
         }
         return $this->Email;
     }
 
-    public function setEmail($email)
+    /**
+     * @param Collection $email
+     */
+    public function setEmail(Collection $email)
     {
         $this->Email = $email;
     }
 
-    private function loadEmail()
-    {
-        $this->loadOwnerDetails();
-        $this->setEmail(strtolower($this->OwnerDetails->getEmail()));
-    }
-
+    /**
+     * @return \League\OAuth2\Client\Provider\AbstractProvider|GitLabProvider
+     */
     public function getProvider()
     {
-        if (is_null($this->Provider) && array_key_exists('GitLab',
-                    $this->Config->get('OAUTH2_PROVIDERS'))) {
-            $gitlab_settings = $this->Config->get('OAUTH2_PROVIDERS')['GitLab'];
-            if (array_key_exists('clientId', $gitlab_settings) &&
-                    array_key_exists('clientSecret', $gitlab_settings) &&
-                    array_key_exists('redirectUri', $gitlab_settings)) {
-                $this->Provider = new GitLabProvider($gitlab_settings);
-                $this->Valid = true;
-            }
+        if (!$this->Provider) {
+            $settings = config('oauth2.gitlab');
+            $this->Provider = new GitLabProvider($settings);
         }
         return $this->Provider;
     }
