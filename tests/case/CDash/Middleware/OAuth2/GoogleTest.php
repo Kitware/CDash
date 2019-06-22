@@ -13,64 +13,19 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
-namespace CDash\Middleware\OAuth2;
 
-use CDash\Config;
-use CDash\Controller\Auth\Session;
-use CDash\Middleware\OAuth2;
 use CDash\Middleware\OAuth2\Google;
-use CDash\Model\User;
-use CDash\System;
-use CDash\Test\CDashTestCase;
-use League\OAuth2\Client\Provider\GoogleUser;
+use Tests\TestCase;
 
-class GoogleTest extends CDashTestCase
+class GoogleTest extends TestCase
 {
-    private $system;
-    private $session;
-    private $config;
-    private $google;
-
-    public function setUp()
+    public function testGetProvider()
     {
-        parent::setUp();
-        $this->config = Config::getInstance();
+        $sut = new Google();
 
-        $this->session = $this->getMockBuilder(Session::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $expected = \League\OAuth2\Client\Provider\Google::class;
+        $actual = $sut->getProvider();
 
-        $this->system = $this->getMockBuilder(System::class)
-            ->getMock();
-
-        $this->google = $this->getMockBuilder(Google::class)
-            ->setConstructorArgs([$this->system, $this->session, $this->config])
-            ->setMethods(['loadOwnerDetails'])
-            ->getMock();
-    }
-
-    public function testGetFirstName()
-    {
-        $response = ['name' => ['givenName' => 'John']];
-        $owner_details = new GoogleUser($response);
-        $this->google->setOwnerDetails($owner_details);
-        $this->assertEquals('John', $this->google->getFirstName());
-    }
-
-    public function testGetLastName()
-    {
-        $response = ['name' => ['familyName' => 'Doe']];
-        $owner_details = new GoogleUser($response);
-        $this->google->setOwnerDetails($owner_details);
-        $this->assertEquals('Doe', $this->google->getLastName());
-    }
-
-    public function testGetEmail()
-    {
-        $response = ['emails' => [0 => ['value' => 'a@b.com']]];
-        $owner_details = new GoogleUser($response);
-        $this->google->setOwnerDetails($owner_details);
-        $user = $this->getMockBuilder(User::class)->getMock();
-        $this->assertEquals('a@b.com', $this->google->getEmail($user));
+        $this->assertInstanceOf($expected, $actual);
     }
 }

@@ -26,7 +26,7 @@ interface OAuth2Interface
 
     /**
      * @param AbstractProvider $provider
-     * @return void
+     * @return self
      */
     public function setProvider(AbstractProvider $provider);
 

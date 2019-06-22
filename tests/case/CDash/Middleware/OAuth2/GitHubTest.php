@@ -15,74 +15,67 @@
 =========================================================================*/
 namespace CDash\Middleware\OAuth2;
 
-use CDash\Config;
-use CDash\Controller\Auth\Session;
-use CDash\Middleware\OAuth2;
-use CDash\Middleware\OAuth2\GitHub;
-use CDash\Model\User;
-use CDash\System;
-use CDash\Test\CDashTestCase;
-use League\OAuth2\Client\Provider\AbstractProvider;
+use CDash\Test\OAuthTestHelper;
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
+use Psr\Http\Message\RequestInterface;
+use Tests\TestCase;
 
-class GitHubTest extends CDashTestCase
+class GitHubTest extends TestCase
 {
-    private $system;
-    private $session;
-    private $config;
-    private $github;
+    use OAuthTestHelper;
 
-    public function setUp()
+    public function testGetProvider()
     {
-        parent::setUp();
-        $this->config = Config::getInstance();
-
-        $this->session = $this->getMockBuilder(Session::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->system = $this->getMockBuilder(System::class)
-            ->getMock();
-
-        $this->github = $this->getMockBuilder(GitHub::class)
-            ->setConstructorArgs([$this->system, $this->session, $this->config])
-            ->setMethods(['loadNameParts'])
-            ->getMock();
+        $sut = new GitHub();
+        $expected = \League\OAuth2\Client\Provider\Github::class;
+        $actual = $sut->getProvider();
+        $this->assertInstanceOf($expected, $actual);
     }
 
-    public function testGetFirstName()
-    {
-        $this->github->setNameParts(['John', 'Doe']);
-        $this->github
-            ->expects($this->once())
-            ->method('loadNameParts');
-        $this->assertEquals('John', $this->github->getFirstName());
-    }
-
-    public function testGetLastName()
-    {
-        $this->github->setNameParts(['John', 'Doe']);
-        $this->github
-            ->expects($this->once())
-            ->method('loadNameParts');
-        $this->assertEquals('Doe', $this->github->getLastName());
-    }
-
+    /**
+     * @throws \ReflectionException
+     * @throws IdentityProviderException
+     */
     public function testGetEmail()
     {
-        $emails = [];
+        $provider = $this->getProvider(['getAuthenticatedRequest', 'getResponse', 'getBody']);
 
-        $email1 = new \stdClass();
-        $email1->primary = false;
-        $email1->email = 'a@b.com';
-        $emails[] = $email1;
+        $request = $this->getMockForAbstractClass(RequestInterface::class);
 
-        $email2 = new \stdClass();
-        $email2->primary = true;
-        $email2->email = 'b@c.com';
-        $emails[] = $email2;
+        $provider->expects($this->once())
+            ->method('getAuthenticatedRequest')
+            ->with(
+                GitHub::AUTH_REQUEST_METHOD,
+                GitHub::AUTH_REQUEST_URI,
+                $this->accessToken)
+            ->willReturn($request);
 
-        $this->github->setEmails($emails);
-        $user = $this->getMockBuilder(User::class)->getMock();
-        $this->assertEquals('b@c.com', $this->github->getEmail($user));
+        $provider->expects($this->once())
+            ->method('getResponse')
+            ->with($request)
+            ->willReturnSelf();
+
+        $provider->expects($this->once())
+            ->method('getBody')
+            ->willReturn(json_encode([
+                (object)['email' => 'ricky.bobby@taladega.tld', 'primary' => false],
+                (object)['email' => 'cal.naughton@taladega.tld', 'primary' => true],
+            ]));
+
+        $sut = new GitHub();
+        $sut->setProvider($provider);
+
+        $email_collection = $sut->getEmail();
+        $email = $email_collection->get(0);
+        $expected = 'ricky.bobby@taladega.tld';
+        $actual = $email->email;
+        $this->assertEquals($expected, $actual);
+        $this->assertFalse($email->primary);
+
+        $email = $email_collection->get(1);
+        $expected = 'cal.naughton@taladega.tld';
+        $actual = $email->email;
+        $this->assertEquals($expected, $actual);
+        $this->assertTrue($email->primary);
     }
 }
