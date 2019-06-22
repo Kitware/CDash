@@ -16,8 +16,6 @@
 namespace CDash\Middleware\OAuth2;
 
 use CDash\Middleware\OAuth2;
-use Illuminate\Support\Collection;
-use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use Omines\OAuth2\Client\Provider\Gitlab as GitLabProvider;
 
 /**
@@ -26,36 +24,12 @@ use Omines\OAuth2\Client\Provider\Gitlab as GitLabProvider;
  */
 class GitLab extends OAuth2
 {
-    /** @var Collection $Email */
-    private $Email;
-
+    /**
+     * GitLab constructor.
+     */
     public function __construct()
     {
         $this->AuthorizationOptions = ['scope' => ['read_user']];
-    }
-
-    /**
-     * @return Collection
-     * @throws IdentityProviderException
-     */
-    public function getEmail()
-    {
-        if (!$this->Email) {
-           $details = $this->getOwnerDetails();
-           $email = (object)[
-               'email' => strtolower($details->getEmail())
-           ];
-           $this->Email = collect([$email]);
-        }
-        return $this->Email;
-    }
-
-    /**
-     * @param Collection $email
-     */
-    public function setEmail(Collection $email)
-    {
-        $this->Email = $email;
     }
 
     /**
@@ -64,7 +38,11 @@ class GitLab extends OAuth2
     public function getProvider()
     {
         if (!$this->Provider) {
-            $settings = config('oauth2.gitlab');
+            $uri = $this->getRedirectUri();
+            $settings = array_merge(
+                ['redirectUri' => $uri],
+                config('oauth2.gitlab')
+            );
             $this->Provider = new GitLabProvider($settings);
         }
         return $this->Provider;
