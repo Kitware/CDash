@@ -18,6 +18,8 @@ namespace CDash\Middleware;
 use CDash\Middleware\OAuth2\OAuth2Interface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
@@ -35,6 +37,7 @@ abstract class OAuth2 implements OAuth2Interface
     protected $OwnerDetails;
     protected $Provider;
     protected $Token;
+    protected $Email;
 
     /** @var Request $request */
     private $request;
@@ -155,15 +158,49 @@ abstract class OAuth2 implements OAuth2Interface
     }
 
     /**
+     * @param Collection $email
+     */
+    public function setEmail(Collection $email)
+    {
+        $this->Email = $email;
+    }
+
+    /**
+     * @return Collection
+     * @throws IdentityProviderException
+     */
+    public function getEmail()
+    {
+        if (!$this->Email) {
+            $details = $this->getOwnerDetails();
+            $email = (object)[
+                'email' => strtolower($details->getEmail())
+            ];
+            $this->Email = collect([$email]);
+        }
+        return $this->Email;
+    }
+
+    /**
      * If an associated primary attribute is available for an email address that email will
      * be returned, otherwise we return the first email
      *
      * @return string
+     * @throws IdentityProviderException
      */
     public function getPrimaryEmail()
     {
         $email = $this->getEmail();
         $primary = $email->firstWhere('primary', true) ?: $email->first();
         return $primary->email;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getRedirectUri()
+    {
+        $service = strtolower(class_basename(static::class));
+        return route('oauth.callback', ['service' => $service]);
     }
 }

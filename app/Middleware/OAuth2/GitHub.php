@@ -30,8 +30,6 @@ class GitHub extends OAuth2
     const AUTH_REQUEST_METHOD = 'GET';
     const AUTH_REQUEST_URI = 'https://api.github.com/user/emails';
 
-    private $Email = [];
-
     /**
      * GitHub constructor
      */
@@ -65,20 +63,16 @@ class GitHub extends OAuth2
     }
 
     /**
-     * @param $email
-     */
-    public function setEmail($email)
-    {
-        $this->Email = $email;
-    }
-
-    /**
      * @return AbstractProvider
      */
     public function getProvider()
     {
         if (!$this->Provider) {
-            $settings = config('oauth2.github');
+            $uri = $this->getRedirectUri();
+            $settings = array_merge(
+                ['redirectUri' => $uri],
+                config('oauth2.github')
+            );
             $this->Provider = new GitHubProvider($settings);
         }
         return $this->Provider;

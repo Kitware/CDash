@@ -15,64 +15,48 @@
 =========================================================================*/
 namespace CDash\Middleware\OAuth2;
 
-use CDash\Config;
-use CDash\Controller\Auth\Session;
 use CDash\Middleware\OAuth2;
-use CDash\Model\User;
-use CDash\System;
-use League\OAuth2\Client\Provider\AbstractProvider;
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Provider\Google as GoogleProvider;
 
+/**
+ * Class Google
+ * @package CDash\Middleware\OAuth2
+ */
 class Google extends OAuth2
 {
-    public function __construct(System $system, Session $session, Config $config)
+    /**
+     * Google constructor.
+     */
+    public function __construct()
     {
-        parent::__construct($system, $session, $config);
         $this->AuthorizationOptions =
             [ 'scope' => ['https://www.googleapis.com/auth/userinfo.email'] ];
     }
 
-    public function getEmail(User $user)
+    /**
+     * @return string
+     * @throws IdentityProviderException
+     */
+    public function getOwnerName()
     {
-        $this->loadOwnerDetails();
-        $email = strtolower($this->OwnerDetails->getEmail());
-        return $email;
+        $details = $this->getOwnerDetails();
+        return "{$details->getFirstName()} {$details->getLastName()}";
     }
 
-    public function getFirstName()
-    {
-        $this->loadOwnerDetails();
-        return $this->OwnerDetails->getFirstName();
-    }
-
-    public function getLastName()
-    {
-        $this->loadOwnerDetails();
-        return $this->OwnerDetails->getLastName();
-    }
-
+    /**
+     * @return GoogleProvider
+     */
     public function getProvider()
     {
-        if (is_null($this->Provider) && array_key_exists('Google',
-                    $this->Config->get('OAUTH2_PROVIDERS'))) {
-            $google_settings = $this->Config->get('OAUTH2_PROVIDERS')['Google'];
-            if (array_key_exists('clientId', $google_settings) &&
-                    array_key_exists('clientSecret', $google_settings) &&
-                    array_key_exists('redirectUri', $google_settings)) {
-                $google_settings['hostedDomain'] = '*';
-                $this->Provider = new GoogleProvider($google_settings);
-                $this->Valid = true;
-            }
+        if (!$this->Provider) {
+            $uri = $this->getRedirectUri();
+            $settings = array_merge(
+                ['hostedDomain' => '*', 'redirectUri' => $uri],
+                config('oauth2.google')
+            );
+            $this->Provider = new GoogleProvider($settings);
         }
         return $this->Provider;
-    }
-
-    public function auth(User $user)
-    {
-        if (!empty($_GET['error'])) {
-            // Got an error, probably user denied access.
-            throw new Exception($_GET['error']);
-        }
-        parent::auth($user);
     }
 }
