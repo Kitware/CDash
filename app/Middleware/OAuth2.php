@@ -19,7 +19,6 @@ use CDash\Middleware\OAuth2\OAuth2Interface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
@@ -88,10 +87,10 @@ abstract class OAuth2 implements OAuth2Interface
      */
     public function authorization()
     {
+        $request = $this->getRequest();
         $provider = $this->getProvider();
         $to = $provider->getAuthorizationUrl($this->AuthorizationOptions);
-        $this->request
-            ->session()
+        $request->session()
             ->put('auth.oauth.state', $provider->getState());
 
         return redirect($to)
@@ -129,11 +128,12 @@ abstract class OAuth2 implements OAuth2Interface
 
     /**
      * @param AbstractProvider $provider
-     * @return void
+     * @return self
      */
     public function setProvider(AbstractProvider $provider)
     {
         $this->Provider = $provider;
+        return $this;
     }
 
     /**
@@ -149,7 +149,7 @@ abstract class OAuth2 implements OAuth2Interface
 
     /**
      * @param Request $request
-     * @return OAuth2Interface
+     * @return self
      */
     public function setRequest(Request $request)
     {
@@ -159,10 +159,12 @@ abstract class OAuth2 implements OAuth2Interface
 
     /**
      * @param Collection $email
+     * @return OAuth2
      */
     public function setEmail(Collection $email)
     {
         $this->Email = $email;
+        return $this;
     }
 
     /**
@@ -192,7 +194,7 @@ abstract class OAuth2 implements OAuth2Interface
     {
         $email = $this->getEmail();
         $primary = $email->firstWhere('primary', true) ?: $email->first();
-        return $primary->email;
+        return $primary ? $primary->email : '';
     }
 
     /**
