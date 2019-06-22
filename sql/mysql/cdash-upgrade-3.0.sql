@@ -9,11 +9,16 @@
 --
 -- Table structure for table `migrations`
 --
-create table if not exists migrations
+CREATE TABLE IF NOT EXISTS migrations
 (
 	id int unsigned auto_increment
 		primary key,
 	migration varchar(255) not null,
 	batch int not null
-)
-collate=utf8mb4_unicode_ci;
+) collate=utf8mb4_unicode_ci;
+
+ALTER TABLE `user` ADD COLUMN `updated_at` TIMESTAMP NULL;
+ALTER TABLE `user` ADD COLUMN `created_at` TIMESTAMP NULL;
+
+ALTER TABLE `password` ADD COLUMN `updated_at` TIMESTAMP NULL;
+ALTER TABLE `password` ADD COLUMN `created_at` TIMESTAMP NULL;

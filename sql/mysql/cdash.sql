@@ -1469,6 +1469,8 @@ CREATE TABLE IF NOT EXISTS `password` (
   `userid` int(11) NOT NULL,
   `password` varchar(255) NOT NULL default '',
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL,
+  `created_at` timestamp NULL,
   KEY `userid` (`userid`)
 );
 
