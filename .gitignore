@@ -21,7 +21,7 @@
 /tests/config.test.local.php
 /vendor/
 build/
-local/
+
 .vagrant
 ansible/roles/*
 ansible/site.retry
