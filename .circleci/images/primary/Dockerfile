@@ -15,12 +15,12 @@ ADD --chown=www-data:www-data . ./
 
 # Create links in the public folder to avoid Laravel handling requests
 # for assets
-RUN ln -s /var/www/cdash/app/cdash/public/build public/build \
- && ln -s /var/www/cdash/app/cdash/public/css public/css \
- && ln -s /var/www/cdash/app/cdash/public/fonts public/fonts \
- && ln -s /var/www/cdash/app/cdash/public/img public/img \
- && ln -s /var/www/cdash/app/cdash/public/js public/js \
- && ln -s /var/www/cdash/app/cdash/public/views public/views
+#RUN ln -s /var/www/cdash/app/cdash/public/build public/build \
+# && ln -s /var/www/cdash/app/cdash/public/css public/css \
+# && ln -s /var/www/cdash/app/cdash/public/fonts public/fonts \
+# && ln -s /var/www/cdash/app/cdash/public/img public/img \
+# && ln -s /var/www/cdash/app/cdash/public/js public/js \
+# && ln -s /var/www/cdash/app/cdash/public/views public/views
 
 WORKDIR /var/www/cdash/app/cdash
 
