@@ -17,4 +17,4 @@ jobs:
             bash -c "docker/bash/circleci-wait.bash http://localhost/ping 12"
       - run:
           name: Test
-          command: docker exec cdash bash -c "/usr/bin/ctest -VV"
+          command: docker exec --user www-data cdash bash -c "/usr/bin/ctest -VV"
