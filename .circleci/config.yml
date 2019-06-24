@@ -12,11 +12,30 @@ jobs:
             cp ./.circleci/docker-compose-mysql-build.yml ./docker-compose.yml
             docker-compose build --build-arg DEVELOPMENT_BUILD=1 cdash
       - run:
-          name: Verify Build
+          name: Spin Up MySQL Build
           command: |
             set -x
             docker-compose up -d
             bash -c "docker/bash/circleci-wait.bash http://localhost/ping 12"
       - run:
-          name: Test
+          name: Test MySQL Build
+          command: docker exec --user www-data cdash bash -c "/usr/bin/ctest -VV"
+      - run:
+          name: Tear Down MySQL Build
+          command: docker-compose down
+      - run:
+          name: Spin Up Postgres Build
+          command: |
+            set -x
+            rm ./docker-compose.yml
+            cp ./.circleci/docker-compose-postgres-build.yml ./docker-compose.yml
+            docker-compose up -d
+      - run:
+          name: Configure Postgress Build
+          command: |
+            set -x
+            docker exec -it cdash bash -c "/usr/bin/cmake -DCDASH_DB_HOST=postgres -DCDASH_DB_TYPE=postgres .."
+            bash -c "docker/bash/circleci-wait.bash http://localhost/ping 12"
+      - run:
+          name: Test Postgres Build
           command: docker exec --user www-data cdash bash -c "/usr/bin/ctest -VV"
