@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use Storage;
 use Tests\TestCase;
 
-
 /**
  * A general place to test the CDash installation on-top of Laravel
  *

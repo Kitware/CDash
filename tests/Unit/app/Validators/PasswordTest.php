@@ -423,5 +423,4 @@ class PasswordTest extends TestCase
         */
         return $validator;
     }
-
 }

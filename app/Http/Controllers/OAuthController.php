@@ -57,7 +57,9 @@ class OAuthController extends Controller
         }
 
         $email_collection = $service->getEmail();
-        $emails = $email_collection->map(function ($item) { return $item->email; });
+        $emails = $email_collection->map(function ($item) {
+            return $item->email;
+        });
 
         // TODO: What if, for whatever reason, there is more than one user found?
         $user = $user_table->whereIn('email', $emails)->first();

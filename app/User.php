@@ -52,6 +52,4 @@ class User extends Authenticatable implements MustVerifyEmail
 
         return parent::__call($method, $parameters);
     }
-
-
 }

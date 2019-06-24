@@ -6,7 +6,7 @@
 /app.yaml
 /backup/
 /composer.phar
-/config/config.local.php
+*.local.php
 /config/queue.local.php
 /config/*.pem
 /log/
@@ -18,7 +18,6 @@
 /public/js/3rdparty.min.js.map
 /public/js/CDash_*.min.js*
 /public/upload/
-/tests/config.test.local.php
 /vendor/
 build/
 

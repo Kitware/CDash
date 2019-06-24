@@ -85,7 +85,8 @@ class LoginController extends Controller
     /**
      * @return string
      */
-    public function redirectTo () {
+    public function redirectTo ()
+    {
         $previous = App::make('url')->previous();
         // prevent multiple redirects if $previous was /login
         if ($previous === route('login')) {

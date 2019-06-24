@@ -22,7 +22,6 @@ class RegisterUserTest extends TestCase
 
     public function testRegisterGivenUserAlreadyExists()
     {
-
         $form = $this->getForm([], true);
         $this->post($this->url, $form)
             ->assertSeeText('The email has already been taken');

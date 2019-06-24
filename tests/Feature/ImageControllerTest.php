@@ -36,7 +36,6 @@ class ImageControllerTest extends TestCase
 
     public function testImageReturnsImageGivenExistentImageId()
     {
-
         $response = $this->get('/image/1');
         $response->assertStatus(200)
             ->assertHeader('Content-Type', 'image/gif');

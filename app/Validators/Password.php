@@ -131,7 +131,6 @@ class Password
 
         if ($config['count'] > 1) {
             $var = "{$config['count']} characters from {$complexity}";
-
         } else {
             $var = $complexity;
         }
