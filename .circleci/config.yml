@@ -41,7 +41,7 @@ jobs:
           command: |
             set -x
             docker exec -it cdash bash -c "/usr/bin/cmake -DCDASH_DB_HOST=postgres -DCDASH_DB_TYPE=pgsql -DCDASH_DB_LOGIN=postgres -DCDASH_DB_PASS=cdash4simpletest .."
-            docker cp ./.circleci/postgres/.env cdash:/home/kitware/cdash/.env
+            docker exec -it cdash bash -c "cp /home/kitware/cdash/.circleci/postgres/.env /home/kitware/cdash/.env"
             docker exec -it postgres_cdash bash -c "/usr/bin/createdb -U postgres --no-password cdash4simpletest"
       - run:
           name: Test Postgres Build
