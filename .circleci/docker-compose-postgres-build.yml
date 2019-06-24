@@ -29,10 +29,11 @@ services:
         DELETE remove.this.user@example.org delete_secret
 
   postgres:
-    image: postgress
+    image: postgres
     environment:
-      POSTGRESS_PASSWORD: ''
-      POSTGRESS_USER: root
+      POSTGRES_PASSWORD: ''
+      POSTGRES_USER: root
+      POSTGRES_DB: cdash4simpletest
   selenium-hub:
     image: selenium/hub:3.141.59-mercury
     container_name: selenium-hub
