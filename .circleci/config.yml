@@ -21,6 +21,12 @@ jobs:
           name: Test MySQL Build
           command: docker exec --user www-data cdash bash -c "/usr/bin/ctest -VV"
       - run:
+          name: Save Test Artifacts
+          command: docker cp cdash:/home/kitware/cdash/storage/logs/laravel-$(date +%F).log /tmp/cdash-mysql-build.log
+      - store_artifacts:
+          path: /tmp/cdash-mysql-build.log
+          destination: cdash-mysql-build.log
+      - run:
           name: Tear Down MySQL Build
           command: docker-compose down
       - run:
