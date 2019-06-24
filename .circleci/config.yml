@@ -9,7 +9,7 @@ jobs:
           command: |
             set -x
             rm ./docker-compose.yml
-            cp ./.circleci/docker-compose-mysql-build.yml ./docker-compose.yml
+            cp ./.circleci/mysql/docker-compose.yml ./docker-compose.yml
             docker-compose build --build-arg DEVELOPMENT_BUILD=1 cdash
       - run:
           name: Spin Up MySQL Build
@@ -22,10 +22,10 @@ jobs:
           command: docker exec --user www-data cdash bash -c "/usr/bin/ctest -VV"
       - run:
           name: Save Test Artifacts
-          command: docker cp cdash:/home/kitware/cdash/storage/logs/laravel-$(date +%F).log /tmp/cdash-mysql-build.log
+          command: docker cp cdash:/home/kitware/cdash/storage/logs/laravel-$(date +%F).log /tmp/cdash-mysql-test.log
       - store_artifacts:
-          path: /tmp/cdash-mysql-build.log
-          destination: cdash-mysql-build.log
+          path: /tmp/cdash-mysql-test.log
+          destination: cdash-mysql-test.log
       - run:
           name: Tear Down MySQL Build
           command: docker-compose down
@@ -34,14 +34,21 @@ jobs:
           command: |
             set -x
             rm ./docker-compose.yml
-            cp ./.circleci/docker-compose-postgres-build.yml ./docker-compose.yml
+            cp ./.circleci/postgres/docker-compose.yml ./docker-compose.yml
             docker-compose up -d
       - run:
           name: Configure Postgress Build
           command: |
             set -x
             docker exec -it cdash bash -c "/usr/bin/cmake -DCDASH_DB_HOST=postgres -DCDASH_DB_TYPE=pgsql -DCDASH_DB_LOGIN=postgres -DCDASH_DB_PASS=cdash4simpletest .."
+            docker cp ./.circleci/postgres/.env cdash:/home/kitware/cdash/.env
             docker exec -it postgres_cdash bash -c "/usr/bin/createdb -U postgres --no-password cdash4simpletest"
       - run:
           name: Test Postgres Build
           command: docker exec --user www-data cdash bash -c "/usr/bin/ctest -VV"
+      - run:
+          name: Save Postgres Test Artifacts
+          command: cp cdash:/home/kitware/cdash/storage/logs/laravel-$(date +%F).log /tmp/cdash-postgres-test.log
+      - store_artifacts:
+          path: /tmp/cdash-postgres-test.log
+          destination: cdash-postgres-test.log
