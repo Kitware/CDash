@@ -26,20 +26,31 @@ class OAuthServiceProvider extends ServiceProvider
         if ($this->isOAuthRequest()) {
             $provider = $this->getProviderName();
             $settings = $this->getProviderSettings($provider);
+            $exception = null;
+            $message = '';
 
             if (!$settings) {
                 $message = "OAuth2 provider, {$provider}, is not configured";
-                Log::alert($message);
-                throw new NotFoundHttpException($message);
+                $exception = new NotFoundHttpException($message);
+            }
+
+            if ($settings['enable'] === false) {
+                $message = "OAuth2 provider, {$provider}, is not enabled";
+                $exception = new Exception($message);
             }
 
             // all settings are required, if any are empty throw error
             foreach ($settings as $key => $setting) {
                 if (empty($setting)) {
                     $message = "OAuth2 {$provider} configuration setting, {$key}, must have a value";
-                    Log::alert($message);
-                    throw new Exception($message);
+                    $exception = new Exception($message);
+                    break;
                 }
+            }
+
+            if ($exception) {
+                Log::alert($message);
+                throw $exception;
             }
         }
     }

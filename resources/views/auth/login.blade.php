@@ -1,5 +1,6 @@
 @php
-$oauth_providers = config('cdash.deprecated.OAUTH2_PROVIDERS');
+$collection = collect(config('oauth2'));
+$hasEnabled = $collection->firstWhere('enable', true);
 @endphp
 
 @extends('layouts.cdash')
@@ -56,15 +57,15 @@ $oauth_providers = config('cdash.deprecated.OAUTH2_PROVIDERS');
                         @endif
                     </td>
                 </tr>
-                @if (!empty($oauth_providers))
+                @if ($hasEnabled)
                 <tr class="table-heading">
                     <td width="10%" class="nob"></td>
                     <td width="70%" class="nob">
                         <hr>
                         <p>
                             Sign in with:
-                            @foreach($oauth_providers as $key => $config)
-                                <a href=""><img class="paddr" src="img/{{ $key }}_signin.png" title="Log in with your {{ $key }} account"/></a>
+                            @foreach($collection as $key => $config)
+                                <a href="/oauth/{{ $key  }}"><img class="paddr" src="img/{{ $key }}_signin.png" title="Log in with your {{ $key }} account"/></a>
                             @endforeach
                         </p>
                     </td>
