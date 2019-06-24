@@ -5,9 +5,11 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Build
+          name: MySQL Build
           command: |
             set -x
+            rm ./docker-compose.yml
+            cp ./.circleci/docker-compose-mysql-build.yml ./docker-compose.yml
             docker-compose build --build-arg DEVELOPMENT_BUILD=1 cdash
       - run:
           name: Verify Build
