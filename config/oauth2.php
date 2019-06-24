@@ -9,20 +9,20 @@ return [
         'clientId' => env('GITHUB_CLIENT_ID'),
         'clientSecret' => env('GITHUB_CLIENT_SECRET'),
         'className' => GitHub::class,
-        'enable' => true,
+        'enable' => false,
     ],
     'gitlab' => [
         'clientId' => env('GITLAB_CLIENT_ID'),
         'clientSecret' => env('GITLAB_CLIENT_SECRET'),
         'domain' => 'https://kwgitlab.kitware.com',
         'className' => GitLab::class,
-        'enable' => true,
+        'enable' => false,
     ],
     'google' => [
         'clientId' => env('GOOGLE_OAUTH_CLIENT_ID'),
         'clientSecret' => env('GOOGLE_OAUTH_CLIENT_SECRET'),
         'hostedDomain' => '*',
         'className' => Google::class,
-        'enable' => true,
+        'enable' => false,
     ]
 ];
