@@ -40,8 +40,8 @@ jobs:
           name: Configure Postgress Build
           command: |
             set -x
-            docker exec -it cdash bash -c "/usr/bin/cmake -DCDASH_DB_HOST=postgres -DCDASH_DB_TYPE=postgres .."
-            bash -c "docker/bash/circleci-wait.bash http://localhost/ping 12"
+            docker exec -it cdash bash -c "/usr/bin/cmake -DCDASH_DB_HOST=postgres -DCDASH_DB_TYPE=pgsql -DCDASH_DB_LOGIN=postgres -DCDASH_DB_PASS=cdash4simpletest .."
+            docker exec -it postgres_cdash bash -c "/usr/bin/createdb -U postgres --no-password cdash4simpletest"
       - run:
           name: Test Postgres Build
           command: docker exec --user www-data cdash bash -c "/usr/bin/ctest -VV"
