@@ -18,6 +18,9 @@ use CDash\Model\User;
 use CDash\Model\UserProject;
 use CDash\ServiceContainer;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class ApiCreateProjectTest extends CDash\Test\CDashApiTestCase
 {
     public function setUp()

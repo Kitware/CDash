@@ -16,6 +16,9 @@ use CDash\Config;
 use CDash\ServiceContainer;
 use CDash\System;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class GitHubWebhookTest extends CDash\Test\CDashApiTestCase
 {
     public function setUp()
