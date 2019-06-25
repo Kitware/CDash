@@ -83,6 +83,8 @@ class RemoveBuildsTestCase extends KWWebTestCase
         // BuildError
         $error = new BuildError();
         $error->Text = 'error: asdf';
+        $error->Type = 1;
+        $error->LogLine = 1;
         $build->AddError($error);
 
         // BuildFailure
@@ -90,6 +92,7 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $failure->StdError = 'failure: asdf';
         $failure->AddArgument('arg1');
         $failure->AddLabel($label);
+        $failure->Type = 1;
         $build->AddError($failure);
 
         $build->Save();
