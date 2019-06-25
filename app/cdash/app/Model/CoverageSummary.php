@@ -107,7 +107,7 @@ class CoverageSummary
                 // GcovTarHandler creates its own coveragefiles, no need to do
                 // it again here.
                 $fileid = -1;
-                if (!empty($coverage->CoverageFile->Crc32)) {
+                if ($coverage->CoverageFile->Crc32 > 0) {
                     $fileid = $coverage->CoverageFile->Id;
                 }
 
@@ -120,7 +120,7 @@ class CoverageSummary
                     WHERE cf.fullpath='$fullpath' AND cfl.buildid='$this->BuildId'");
                     if (pdo_num_rows($coveragefile) == 0) {
                         // Create an empty file if doesn't exist.
-                        pdo_query("INSERT INTO coveragefile (fullpath) VALUES ('$fullpath')");
+                        pdo_query("INSERT INTO coveragefile (fullpath, crc32) VALUES ('$fullpath', 0)");
                         $fileid = pdo_insert_id('coveragefile');
                     } else {
                         $coveragefile_array = pdo_fetch_array($coveragefile);
