@@ -16,7 +16,7 @@ class BuildDetailsTestCase extends KWWebTestCase
         $this->testDataDir = dirname(__FILE__) . '/data/BuildDetails';
         $this->testDataFiles = array('Subbuild1.xml', 'Subbuild2.xml', 'Subbuild3.xml');
 
-        pdo_query("INSERT INTO project (name) VALUES ('BuildDetails')");
+        $this->createProject(['Name' => 'BuildDetails']);
 
         foreach ($this->testDataFiles as $testDataFile) {
             if (!$this->submission('BuildDetails', $this->testDataDir . '/' . $testDataFile)) {
