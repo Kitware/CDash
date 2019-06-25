@@ -3,6 +3,11 @@ services:
   cdash:
     image: "kitware/cdash"
     container_name: cdash
+    build:
+      context: .
+      dockerfile: ./docker/cdash.docker
+      args:
+        - CDASH_DATABASE_HOST=postgres
     depends_on:
       - postgres
       - selenium-hub
