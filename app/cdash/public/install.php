@@ -114,14 +114,9 @@ if (!is_writable('rss')) {
     $xml .= '<rsswritable>1</rsswritable>';
 }
 
-try {
-    pdo_query('SELECT id FROM ' . qid('user') . ' LIMIT 1');
-    $xml .= '<database>1</database>';
-    $installed = true;
-} catch (\PDOException $exception) {
-    $xml .= '<database>0</database>';
-    $installed = false;
-}
+$installed = pdo_query('SELECT id FROM ' . qid('user') . ' LIMIT 1');
+$xml .= '<database>' . (int)$installed . '</database>';
+
 // If the database already exists and we have all the tables
 if (!$installed) {
     $xml .= '<dashboard_timeframe>24</dashboard_timeframe>';
@@ -163,16 +158,15 @@ if (!$installed) {
 
         if ($valid_email) {
             $db_created = true;
-            // If this is MySQL we try to create the database
-            if ($db_type == 'mysql') {
-                $db_name = $config->get('CDASH_DB_NAME');
-                try {
-                    $pdo->exec("CREATE DATABASE IF NOT EXISTS `$db_name`");
-                } catch (Exception $exception) {
-                    $xml .= '<db_created>0</db_created>';
-                    $xml .= '<alert>' . pdo_error() . '</alert>';
-                    $db_created = false;
-                }
+            $db_name = $config->get('CDASH_DB_NAME');
+            $sql = $db_type === 'mysql' ? "CREATE DATABASE IF NOT EXISTS `{$db_name}`" : "CREATE DATABASE {$db_name}";
+
+            try {
+                $pdo->exec($sql);
+            } catch (Exception $exception) {
+                $xml .= '<db_created>0</db_created>';
+                $xml .= '<alert>' . pdo_error() . '</alert>';
+                $db_created = false;
             }
 
             /** process an SQL file */
