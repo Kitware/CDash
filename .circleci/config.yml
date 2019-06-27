@@ -33,8 +33,6 @@ jobs:
           name: Spin Up Postgres Build
           command: |
             set -x
-            rm ./docker-compose.yml
-            cp ./.circleci/postgres/docker-compose.yml ./docker-compose.yml
             docker-compose up -d
       - run:
           name: Configure Postgress Build
