@@ -503,7 +503,10 @@ CREATE TABLE "user" (
   "lastname" character varying(255) DEFAULT '' NOT NULL,
   "institution" character varying(255) DEFAULT '' NOT NULL,
   "admin" smallint DEFAULT '0' NOT NULL,
-  "cookiekey" character varying(40)  DEFAULT '' NOT NULL,
+  "email_verified_at" timestamp NULL,
+  "remember_token" varchar(100) NULL,
+  "created_at" timestamp NULL,
+  "updated_at" timestamp NULL,
   PRIMARY KEY ("id")
 );
 CREATE INDEX "email" on "user" ("email");
@@ -1266,7 +1269,7 @@ CREATE INDEX "projectrobot_projectid" on "projectrobot" ("projectid");
 CREATE INDEX "projectrobot_robotname" on "projectrobot" ("robotname");
 
 --
--- Table structure for table `filesum`
+-- Table structure for table "filesum"
 --
 
 CREATE TABLE "filesum" (
@@ -1405,7 +1408,9 @@ CREATE INDEX "buildfile_md5" on "buildfile" ("md5");
 CREATE TABLE "password" (
   "userid" integer NOT NULL,
   "password" character varying(255) DEFAULT '' NOT NULL,
-  "date" timestamp(0) DEFAULT CURRENT_TIMESTAMP NOT NULL
+  "date" timestamp(0) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  "updated_at" timestamp NULL,
+  "created_at" timestamp NULL
 );
 CREATE INDEX "password_userid" on "password" ("userid");
 
@@ -1467,3 +1472,14 @@ CREATE TABLE "build_filters" (
   "errors" text,
   PRIMARY KEY ("projectid")
 );
+
+
+--
+-- Table structure for table `migrations`
+--
+create table "migrations"
+(
+    "id" integer NOT NULL ,
+    "migration" character varying(255) NOT NULL,
+    "batch" integer NOT NULL
+)
