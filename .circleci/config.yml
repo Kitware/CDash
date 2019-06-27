@@ -4,34 +4,6 @@ jobs:
     machine: true
     steps:
       - checkout
-#      - run:
-#          name: PostgreSQL Build
-#          command: |
-#            set -x
-#            rm ./docker-compose.yml
-#            cp ./.circleci/postgres/docker-compose.yml ./docker-compose.yml
-#            docker-compose build --build-arg DEVELOPMENT_BUILD=1 cdash
-#      - run:
-#          name: Spin Up PostgreSQL Build
-#          command: docker-compose up -d
-#      - run:
-#          name: Configure PostgreSQL Build
-#          command: |
-#            set -x
-#            docker exec -it cdash bash -c "/usr/bin/cmake -DCDASH_DB_HOST=postgres -DCDASH_DB_TYPE=pgsql -DCDASH_DB_LOGIN=postgres -DCDASH_DB_PASS=cdash4simpletest .."
-#            docker exec -it cdash bash -c "cp /home/kitware/cdash/.circleci/postgres/env /home/kitware/cdash/.env"
-#      - run:
-#          name: Test PostgreSQL Build
-#          command: docker exec --user www-data cdash bash -c "/usr/bin/ctest -VV"
-#      - run:
-#          name: Save Postgres Test Artifacts
-#          command: docker cp cdash:/home/kitware/cdash/storage/logs/laravel-$(date +%F).log /tmp/cdash-postgres-test.log
-#      - store_artifacts:
-#          path: /tmp/cdash-postgres-test.log
-#          destination: cdash-postgres-test.log
-      - run:
-          name: Test MySQL Build
-          command: docker exec --user www-data cdash bash -c "/usr/bin/ctest -VV"
       - run:
           name: MySQL Build
           command: |
