@@ -30,16 +30,6 @@ class InstallTestCase extends KWWebTestCase
             return 1;
         }
 
-        // Create the database
-        if ($this->db->type == 'pgsql') {
-            if (!$this->db->create($this->databaseName)) {
-                $dbcreated = false;
-                $msg = 'error query(CREATE DATABASE)';
-                die('Error' . ' File: ' . __FILE__ . ' on line: ' . __LINE__ . ": $msg");
-                return false;
-            }
-        }
-
         $this->setConnectionTimeout(99999);
         $this->get($this->url . '/install.php');
         if (!$this->setFieldByName('admin_email', 'simpletest@localhost')) {

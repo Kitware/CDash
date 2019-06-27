@@ -114,8 +114,13 @@ if (!is_writable('rss')) {
     $xml .= '<rsswritable>1</rsswritable>';
 }
 
-$installed = pdo_query('SELECT id FROM ' . qid('user') . ' LIMIT 1');
-$xml .= '<database>' . (int)$installed . '</database>';
+try {
+    $installed = pdo_query('SELECT id FROM ' . qid('user') . ' LIMIT 1');
+    $xml .= '<database>' . (int)$installed . '</database>';
+} catch (PDOException $e) {
+    $installed = false;
+    $xml .= '<database>0</database>';
+}
 
 // If the database already exists and we have all the tables
 if (!$installed) {
