@@ -39,8 +39,9 @@ jobs:
           name: Configure Postgress Build
           command: |
             set -x
-            docker exec -it cdash bash -c "/usr/bin/cmake -DCDASH_DB_HOST=postgres -DCDASH_DB_TYPE=pgsql -DCDASH_DB_LOGIN=postgres -DCDASH_DB_PASS=cdash4simpletest .."
-            docker exec -it cdash bash -c "cp /home/kitware/cdash/.circleci/postgres/env /home/kitware/cdash/.env"
+            docker exec cdash bash -c "/usr/bin/cmake -DCDASH_DB_HOST=postgres -DCDASH_DB_TYPE=pgsql -DCDASH_DB_LOGIN=postgres -DCDASH_DB_PASS=cdash4simpletest .."
+            docker exec cdash bash -c "cp /home/kitware/cdash/docker/conf.js tests/js/e2e_tests/conf.js"
+            docker exec cdash bash -c "cp /home/kitware/cdash/.circleci/postgres/env /home/kitware/cdash/.env"
       - run:
           name: Test Postgres Build
           command: docker exec --user www-data cdash bash -c "/usr/bin/ctest -VV"
