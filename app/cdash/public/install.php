@@ -116,7 +116,8 @@ if (!is_writable('rss')) {
 
 try {
     $installed = pdo_query('SELECT id FROM ' . qid('user') . ' LIMIT 1');
-    $xml .= '<database>' . (int)$installed . '</database>';
+    $installed = is_object($installed) ? 1 : (int) $installed;
+    $xml .= '<database>' . $installed . '</database>';
 } catch (PDOException $e) {
     $installed = false;
     $xml .= '<database>0</database>';
