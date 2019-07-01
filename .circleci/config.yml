@@ -19,7 +19,7 @@ jobs:
             bash -c "docker/bash/circleci-wait.bash http://localhost/ping 12"
       - run:
           name: Test MySQL Build
-          command: docker exec --user www-data cdash bash -c "/usr/bin/ctest -VV -DBUILDNAME=\"${CIRCLE_BRANCH}\_MySQL" -Dpostgres=OFF -S /home/kitware/cdash/.circleci/ctest_driver_script.cmake"
+          command: docker exec --user www-data cdash bash -c "/usr/bin/ctest -VV -DBUILDNAME=\"${CIRCLE_BRANCH}_MySQL\" -Dpostgres=OFF -S /home/kitware/cdash/.circleci/ctest_driver_script.cmake"
       - run:
           name: Save Test Artifacts
           command: docker cp cdash:/home/kitware/cdash/storage/logs/laravel-$(date +%F).log /tmp/cdash-mysql-test.log
