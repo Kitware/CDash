@@ -20,26 +20,26 @@ RUN apt-get update                                                              
  && php -r "unlink('composer-setup.php');"                                       \
  && composer self-update --no-interaction
 
-RUN mkdir -p /var/www/cdash
+RUN mkdir -p /var/www/cdash/app/cdash
 COPY php.ini /var/www/cdash/php.ini
-COPY xml_handlers /var/www/cdash/xml_handlers
-COPY app /var/www/cdash/app
-COPY composer.lock /var/www/cdash/composer.lock
-COPY public /var/www/cdash/public
-COPY scripts /var/www/cdash/scripts
-COPY sql /var/www/cdash/sql
-COPY package.json /var/www/cdash/package.json
-COPY .php_cs /var/www/cdash/.php_cs
-COPY config /var/www/cdash/config
-COPY log /var/www/cdash/log
-COPY gulpfile.js /var/www/cdash/gulpfile.js
-COPY backup /var/www/cdash/backup
-COPY include /var/www/cdash/include
-COPY bootstrap /var/www/cdash/bootstrap
-COPY composer.json /var/www/cdash/composer.json
-COPY scripts/bash /bash-lib
+COPY xml_handlers /var/www/cdash/app/cdash/xml_handlers
+COPY app /var/www/cdash/app/cdash/app
+COPY composer.lock /var/www/cdash/app/cdash/composer.lock
+COPY public /var/www/cdash/app/cdash/public
+COPY scripts /var/www/cdash/app/cdash/scripts
+COPY sql /var/www/cdash/app/cdash/sql
+COPY package.json /var/www/cdash/app/cdash/package.json
+COPY .php_cs /var/www/cdash/app/cdash/.php_cs
+COPY config /var/www/cdash/app/cdash/config
+COPY log /var/www/cdash/app/cdash/log
+COPY gulpfile.js /var/www/cdash/app/cdash/gulpfile.js
+COPY backup /var/www/cdash/app/cdash/backup
+COPY include /var/www/cdash/app/cdash/include
+COPY bootstrap /var/www/cdash/app/cdash/bootstrap
+COPY composer.json /var/www/cdash/app/cdash/composer.json
+COPY docker/bash /bash-lib
 
-RUN cd /var/www/cdash                                                      \
+RUN cd /var/www/cdash/app/cdash                                            \
  && composer install --no-interaction --no-progress --prefer-dist --no-dev \
  && npm install                                                            \
  && node_modules/.bin/gulp                                                 \
@@ -47,6 +47,11 @@ RUN cd /var/www/cdash                                                      \
  && rm -rf /var/www/html                                                   \
  && ln -s /var/www/cdash/public /var/www/html                              \
  && rm -rf composer.lock package.json gulpfile.js composer.json
+
+RUN cd /var/www/cdash                                                      \
+ && composer install --no-interaction --no-progress --prefer-dist --no-dev \
+ && cp ./docker/.env.laravel ./.env                                        \
+ && php artisan key:generate
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
