@@ -1,11 +1,7 @@
 FROM php:7.1-apache
 LABEL maintainer="Kitware, Inc. <cdash@public.kitware.com>"
 
-ARG CDASH_DATABASE_HOST=localhost
-
-ARG DOCKER_HOST_IP=$DOCKER_HOST_IP
-
-ARG CDASH_REMOTE_DEBUGGING=0
+ARG CDASH_DB_HOST=localhost
 
 # Designates as dev build, adds testing infrastructure, et al.
 ARG DEVELOPMENT_BUILD
@@ -28,10 +24,6 @@ ENV PHP_ENV=${DEVELOPMENT_BUILD:+' '}
 # i.e. composer will not try to load require-dev packages, e.g. those
 # requiring xdebug
 ENV PHP_ENV=${PHP_ENV:-'--no-dev'}
-
-# Heads-up that this is a development build
-RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                \
-    echo " ** DEVELOPMENT BUILD **"; fi;
 
 RUN apt-get update                                                         \
  && apt-get install -y gnupg                                               \
@@ -59,10 +51,10 @@ WORKDIR /home/kitware/cdash
 # to www-data
 ADD . ./
 
-RUN touch "storage/logs/laravel-$(date +%F).log" && chmod -R 777 .
+RUN touch "storage/logs/laravel-$(date +%F).log"
 
-# Create links in the public folder to avoid Laravel handling requests
-# for assets
+# For whatever reason, these links are checked in the repo but are missing
+# from the docker build
 RUN ln -s /home/kitware/cdash/app/cdash/public/build public/build          \
  && ln -s /home/kitware/cdash/app/cdash/public/css public/css              \
  && ln -s /home/kitware/cdash/app/cdash/public/fonts public/fonts          \
@@ -79,46 +71,26 @@ RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                \
  && docker-php-ext-enable xdebug                                           \
  && mkdir _build && cd _build                                              \
  && cmake                                                                  \
-  -DCDASH_DB_HOST=$CDASH_DATABASE_HOST                                     \
+  -DCDASH_DB_HOST=$CDASH_DB_HOST                                           \
   -DCDASH_DIR_NAME=                                                        \
-  -DCDASH_TESTING_URL='http://localhost/'                                  \
-  -DCDASH_SERVER='localhost' ..                                            \
+  -DCDASH_TESTING_URL='http://cdash/'                                      \
+  -DCDASH_SERVER='cdash' ..                                                \
  && cp /home/kitware/cdash/docker/conf.js                                  \
-       /home/kitware/cdash/app/cdash/_build/tests/js/e2e_tests/conf.js;    \
+       /home/kitware/cdash/app/cdash/_build/tests/js/e2e_tests/conf.js     \
+ && cp /home/kitware/cdash/docker/.env.laravel /home/kitware/cdash/.env;   \
 else                                                                       \
  composer install --no-interaction --no-progress --prefer-dist $PHP_ENV    \
  && npm install                                                            \
- && node_modules/.bin/gulp;                                                \
+ && node_modules/.bin/gulp                                                 \
+ && mv /home/kitware/cdash/.env.example /home/kitware/cdash/.env;          \
 fi
 
-RUN if [ "$CDASH_REMOTE_DEBUGGING" = '1' ]; then                           \
- echo "xdebug.remote_enable=1" >>                                          \
-      "/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini"                \
- && echo "xdebug.remote_port=9001" >>                                      \
-          "/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini"            \
- && echo "xdebug.remote_host=$DOCKER_HOST_IP" >>                           \
-          "/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini"            \
- && echo "xdebug.remote_handler=dbgp" >>                                   \
-          "/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini"            \
- && echo "xdebug.remote_autostart=1" >>                                    \
-          "/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini"            \
- && echo "xdebug.remote_connnect_back=0" >>                                \
-          "/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini"            \
- && echo "xdebug.idekey=docker" >>                                         \
-          "/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini";           \
-fi
-
-RUN mkdir -p backup log public/upload
-# TODO: revisit, 777 not ideal Docker container or no
-RUN chmod 777 backup log public/rss public/upload
 RUN cp php.ini /usr/local/etc/php/conf.d/cdash.ini
 
 # Install Laravel dependencies with composer and npm, configure Laravel
 WORKDIR /home/kitware/cdash
 RUN composer install --no-interaction --no-progress --prefer-dist $PHP_ENV \
  && npm install                                                            \
- # copy the docker specific environment file from the docker directory
- && cp docker/.env.laravel .env                                            \
  && php artisan key:generate                                               \
  && chown -R www-data:www-data .
 
@@ -138,7 +110,6 @@ COPY docker/bash /bash-lib
 RUN chmod +x /docker-entrypoint.sh
 
 EXPOSE 80
-EXPOSE 9001
 
 WORKDIR /home/kitware/cdash/app/cdash/_build
 

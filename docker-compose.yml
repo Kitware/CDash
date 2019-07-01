@@ -2,7 +2,12 @@ version: '3.3'
 services:
   cdash:
     image: "kitware/cdash"
-    build: .
+    container_name: cdash
+    build:
+      context: .
+      dockerfile: ./docker/cdash.docker
+      args:
+        - CDASH_DB_HOST=mysql
     depends_on:
       - mysql
     links:

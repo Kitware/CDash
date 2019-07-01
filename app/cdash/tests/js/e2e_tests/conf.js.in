@@ -1,5 +1,5 @@
 exports.config = {
-  seleniumAddress: 'http://localhost:4444/wd/hub',
+  seleniumAddress: 'http://@CDASH_SELENIUM_HUB@:4444/wd/hub',
   baseUrl: '@CDASH_TESTING_URL@/',
   capabilities: {
     browserName: 'chrome',

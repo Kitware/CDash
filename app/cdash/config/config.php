@@ -47,6 +47,9 @@ $CDASH_DB_CONNECTION_TYPE = 'host';
 // PDO error codes which should result in an internal server error
 $CDASH_CRITICAL_PDO_ERRORS = array();
 
+// host for Selenium testing
+$CDASH_SELENIUM_HUB='localhost';
+
 // Support for SSL database connections.
 $CDASH_SSL_KEY = null;
 $CDASH_SSL_CERT = null;

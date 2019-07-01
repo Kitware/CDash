@@ -13,6 +13,7 @@
     "ansi_up": "^3.0.0",
     "as-jqplot": "^1.0.8",
     "d3": "^3.5.17",
+    "del": "^2.2.0",
     "fs-path": "0.0.23",
     "ng-file-upload": "^12.0.4",
     "nvd3": "^1.8.5",
@@ -27,7 +28,6 @@
     "gulp-uglify": "^1.5.1"
   },
   "devDependencies": {
-    "del": "^2.2.0",
     "eslint": "^1.5.1",
     "eslint-config-angular": "^0.4.0",
     "eslint-plugin-angular": "^0.12.0",
