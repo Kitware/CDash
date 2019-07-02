@@ -44,3 +44,11 @@ jobs:
       - store_artifacts:
           path: /tmp/cdash-postgres-test.log
           destination: cdash-postgres-test.log
+      - run:
+          name: Update Docker Image
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker build -t kitware/cdash:latest .
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push kitware/cdash:latest
+            fi
