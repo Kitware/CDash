@@ -10,7 +10,7 @@ jobs:
             set -x
             rm ./docker-compose.yml
             cp ./.circleci/mysql/docker-compose.yml ./docker-compose.yml
-            docker-compose build --build-arg DEVELOPMENT_BUILD=1 cdash
+            docker-compose build --force-rm --no-cache --build-arg DEVELOPMENT_BUILD=1 cdash
       - run:
           name: Spin Up MySQL Build
           command: |
