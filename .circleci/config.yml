@@ -20,7 +20,10 @@ jobs:
             bash -c "docker/bash/circleci-wait.bash http://localhost/ping 12"
       - run:
           name: Test MySQL Build
-          command: docker exec --user www-data cdash bash -c "/usr/bin/ctest -VV -DBUILDNAME=\"${CIRCLE_BRANCH}_MySQL\" -Dpostgres=OFF -S /home/kitware/cdash/.circleci/ctest_driver_script.cmake"
+          command:  |
+            set -x
+            docker exec cdash bash -c "cd /home/kitware/cdash && /usr/bin/git checkout ."
+            docker exec --user www-data cdash bash -c "/usr/bin/ctest -VV -DBUILDNAME=\"${CIRCLE_BRANCH}_MySQL\" -Dpostgres=OFF -S /home/kitware/cdash/.circleci/ctest_driver_script.cmake"
       - run:
           name: Save Test Artifacts
           command: docker cp cdash:/home/kitware/cdash/storage/logs/laravel-$(date +%F).log /tmp/cdash-mysql-test.log
@@ -38,7 +41,11 @@ jobs:
             docker-compose -f docker-compose.local.yml up -d
       - run:
           name: Test Postgres Build
-          command: docker exec --user www-data cdash bash -c "/usr/bin/ctest -VV -DBUILDNAME=\"${CIRCLE_BRANCH}_PgSQL\" -Dpostgres=ON -S /home/kitware/cdash/.circleci/ctest_driver_script.cmake"
+          command: |
+            set -x
+            docker exec cdash bash -c "cp /home/kitware/cdash/.circleci/postgres/env /home/kitware/cdash/.env"
+            docker exec cdash bash -c "cd /home/kitware/cdash && /usr/bin/git checkout ."
+            docker exec --user www-data cdash bash -c "/usr/bin/ctest -VV -DBUILDNAME=\"${CIRCLE_BRANCH}_PgSQL\" -Dpostgres=ON -S /home/kitware/cdash/.circleci/ctest_driver_script.cmake"
       - run:
           name: Save Postgres Test Artifacts
           command: docker cp cdash:/home/kitware/cdash/storage/logs/laravel-$(date +%F).log /tmp/cdash-postgres-test.log
