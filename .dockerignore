@@ -1,17 +1,8 @@
 app/cdash/vendor
 app/cdash/_build
 app/cdash/node_modules
-app/cdash/log/*
-app/cdash/backup/*
-app/cdash/public/upload/*
 .env
 node_modules
-public/build
-public/css
-public/fonts
-public/img
-public/js
-public/views
 server.php
 vendor
 storage/logs/*

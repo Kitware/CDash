@@ -1,5 +1,5 @@
 FROM php:7.1-apache
-LABEL maintainer="Kitware, Inc. <cdash@public.kitware.com>"
+LABEL MAINTAINER="Kitware, Inc. <cdash@public.kitware.com>"
 
 ARG CDASH_DB_HOST=localhost
 
@@ -49,18 +49,47 @@ WORKDIR /home/kitware/cdash
 
 # Copy CDash (current folder) into /home/kitware/cdash to set its owner
 # to www-data
-ADD . ./
+COPY ./.git ./.git
+COPY ./.circleci ./.circleci
+COPY ./app ./app
+COPY ./bootstrap ./bootstrap
+COPY ./config ./config
+COPY ./database ./database
+COPY ./docker ./docker
+COPY ./public ./public
+COPY ./resources ./resources
+COPY ./routes ./routes
+COPY ./storage ./storage
+COPY ./tests ./tests
+COPY ./.env.example ./.env.example
+COPY ./.env.example ./.env
+COPY ./.editorconfig  ./.editorconfig
+COPY ./.eslintrc ./.eslintrc
+COPY ./.php_cs ./.php_cs
+COPY ./.styleci.yml ./.styleci.yml
+COPY ./artisan ./artisan
+COPY ./composer.json ./composer.json
+COPY ./.dockerignore ./.dockerignore
+COPY ./.gitattributes ./.gitattributes
+COPY ./.gitattributes ./.gitattributes
+COPY ./docker-compose.yml ./docker-compose.yml
+COPY ./package.json ./package.json
+COPY ./package-lock.json ./package-lock.json
+COPY ./phpunit.xml ./phpunit.xml
+COPY ./README.md ./README.md
+COPY ./webpack.mix.js ./webpack.mix.js
+COPY ./yarn.lock ./yarn.lock
+
+RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                        \
+  apt-get install -y                                                               \
+  apt-transport-https ca-certificates software-properties-common wget              \
+  && wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null \
+     | apt-key add -                                                               \
+  && apt-add-repository 'deb https://apt.kitware.com/ubuntu/ xenial main'          \
+  && apt-get update;                                                               \
+fi
 
 RUN touch "storage/logs/laravel-$(date +%F).log"
-
-# For whatever reason, these links are checked in the repo but are missing
-# from the docker build
-RUN ln -s /home/kitware/cdash/app/cdash/public/build public/build          \
- && ln -s /home/kitware/cdash/app/cdash/public/css public/css              \
- && ln -s /home/kitware/cdash/app/cdash/public/fonts public/fonts          \
- && ln -s /home/kitware/cdash/app/cdash/public/img public/img              \
- && ln -s /home/kitware/cdash/app/cdash/public/js public/js                \
- && ln -s /home/kitware/cdash/app/cdash/public/views public/views
 
 # Install CDash dependencies with composer and npm, run gulp to build assets
 WORKDIR /home/kitware/cdash/app/cdash
@@ -81,8 +110,7 @@ RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                \
 else                                                                       \
  composer install --no-interaction --no-progress --prefer-dist $PHP_ENV    \
  && npm install                                                            \
- && node_modules/.bin/gulp                                                 \
- && mv /home/kitware/cdash/.env.example /home/kitware/cdash/.env;          \
+ && node_modules/.bin/gulp;                                                \
 fi
 
 RUN cp php.ini /usr/local/etc/php/conf.d/cdash.ini
