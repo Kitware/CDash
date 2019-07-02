@@ -18,4 +18,3 @@ composer.phar
 composer.lock
 /app/cdash/public/.htaccess
 !/public/.htaccess
-./server.php

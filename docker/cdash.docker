@@ -77,6 +77,7 @@ COPY ./package.json ./package.json
 COPY ./package-lock.json ./package-lock.json
 COPY ./phpunit.xml ./phpunit.xml
 COPY ./README.md ./README.md
+COPY ./server.php ./server.php
 COPY ./webpack.mix.js ./webpack.mix.js
 COPY ./yarn.lock ./yarn.lock
 
@@ -101,8 +102,9 @@ RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                \
  && cmake                                                                  \
   -DCDASH_DB_HOST=$CDASH_DB_HOST                                           \
   -DCDASH_DIR_NAME=                                                        \
-  -DCDASH_TESTING_URL='http://cdash/'                                      \
-  -DCDASH_SERVER='cdash' ..                                                \
+  -DCDASH_TESTING_URL=http://cdash/                                        \
+  -DCDASH_SERVER=cdash                                                     \
+  -DCTEST_UPDATE_VERSION_ONLY=1 ..                                         \
  && cp /home/kitware/cdash/docker/conf.js                                  \
        /home/kitware/cdash/app/cdash/_build/tests/js/e2e_tests/conf.js     \
  && cp /home/kitware/cdash/docker/.env.laravel /home/kitware/cdash/.env;   \

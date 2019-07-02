@@ -8,9 +8,10 @@ jobs:
           name: MySQL Build
           command: |
             set -x
-            rm ./docker-compose.yml
+            mv ./docker-compose.yml ./docker-compose.backup
             cp ./.circleci/mysql/docker-compose.yml ./docker-compose.yml
             docker-compose build --force-rm --no-cache --build-arg DEVELOPMENT_BUILD=1 cdash
+            mv ./docker-compose.backup ./docker-compose.yml
       - run:
           name: Spin Up MySQL Build
           command: |
@@ -33,8 +34,8 @@ jobs:
           name: Spin Up Postgres Build
           command: |
             set -x
-            cp ./.circleci/postgres/docker-compose.yml ./docker-compose.yml
-            docker-compose up -d
+            cp ./.circleci/postgres/docker-compose.yml ./docker-compose.local.yml
+            docker-compose -f docker-compose.local.yml up -d
       - run:
           name: Test Postgres Build
           command: docker exec --user www-data cdash bash -c "/usr/bin/ctest -VV -DBUILDNAME=\"${CIRCLE_BRANCH}_PgSQL\" -Dpostgres=ON -S /home/kitware/cdash/.circleci/ctest_driver_script.cmake"
