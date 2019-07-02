@@ -96,6 +96,7 @@ RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                \
  apt-get install -y cmake                                                  \
  && pecl install xdebug                                                    \
  && docker-php-ext-enable xdebug                                           \
+ && mkdir -p /var/www/.npm && chown www-data:www-data /var/www/.npm        \
  && mkdir _build && cd _build                                              \
  && cmake                                                                  \
   -DCDASH_DB_HOST=$CDASH_DB_HOST                                           \

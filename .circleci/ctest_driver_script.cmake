@@ -8,9 +8,7 @@ set(CTEST_UPDATE_VERSION_ONLY 1)
 
 set(cfg_options
   "-DCDASH_DIR_NAME="
-  "-DCDASH_DB_NAME=cdash4simpletest"
   "-DCDASH_SELENIUM_HUB=selenium-hub"
-  "-DCDASH_LOG_FILE=php://stdout"
 )
 if (postgres)
   list(APPEND cfg_options
@@ -31,4 +29,4 @@ ctest_test(RETURN_VALUE test_status CAPTURE_CMAKE_ERROR cmake_errors)
 if (NOT "${test_status}" EQUAL 0)
   message(SEND_ERROR "some tests did not pass cleanly")
 endif()
-ctest_submit(PARTS Test)
+ctest_submit(PARTS Test Done)
