@@ -11,12 +11,12 @@ jobs:
             mv ./docker-compose.yml ./docker-compose.backup
             cp ./.circleci/mysql/docker-compose.yml ./docker-compose.yml
             docker-compose build --force-rm --no-cache --build-arg DEVELOPMENT_BUILD=1 cdash
-            mv ./docker-compose.backup ./docker-compose.yml
       - run:
           name: Spin Up MySQL Build
           command: |
             set -x
             docker-compose up -d
+            docker exec cdash bash -c "mv /home/kitware/cdash/docker-compose.backup /home/kitware/cdash/docker-compose.yml"
             bash -c "docker/bash/circleci-wait.bash http://localhost/ping 12"
       - run:
           name: Test MySQL Build
