@@ -71,7 +71,7 @@ COPY ./artisan ./artisan
 COPY ./composer.json ./composer.json
 COPY ./.dockerignore ./.dockerignore
 COPY ./.gitattributes ./.gitattributes
-COPY ./.gitattributes ./.gitattributes
+COPY ./.gitignore ./.gitignore
 COPY ./docker-compose.yml ./docker-compose.yml
 COPY ./package.json ./package.json
 COPY ./package-lock.json ./package-lock.json
@@ -88,8 +88,6 @@ RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                     
   && apt-add-repository 'deb https://apt.kitware.com/ubuntu/ xenial main'          \
   && apt-get update;                                                               \
 fi
-
-RUN touch "storage/logs/laravel-$(date +%F).log"
 
 # Install CDash dependencies with composer and npm, run gulp to build assets
 WORKDIR /home/kitware/cdash/app/cdash

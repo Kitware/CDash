@@ -41,6 +41,7 @@
   gulp.task('clean', function () {
     return del.sync([
       'public/build/*',
+      '!public/build/empty',
       'public/js/CDash_*.min.js*'
     ]);
   });

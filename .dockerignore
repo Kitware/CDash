@@ -3,6 +3,5 @@ app/cdash/_build
 app/cdash/node_modules
 .env
 node_modules
-server.php
 vendor
-storage/logs/*
+*.local.*
