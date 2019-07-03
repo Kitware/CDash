@@ -8,6 +8,7 @@ jobs:
           name: MySQL Build
           command: |
             set -x
+            mv ./docker-compose.yml ./docker-compose.backup
             cp ./.circleci/mysql/docker-compose.yml ./docker-compose.yml
             docker-compose build --force-rm --no-cache --build-arg DEVELOPMENT_BUILD=1 cdash
       - run:
@@ -54,6 +55,7 @@ jobs:
           name: Update Docker Image
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              mv ./docker-compose.backup ./docker-compose.yml
               docker build -t kitware/cdash:latest .
               docker login -u $DOCKER_USER -p $DOCKER_PASS
               docker push kitware/cdash:latest
