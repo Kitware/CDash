@@ -201,7 +201,6 @@ if (Auth::check()) {
     // Send an email
     if (isset($_POST['sendEmail'])) {
         $coverageThreshold = $Project->GetCoverageThreshold();
-        $sender = $config->get('CDASH_EMAIL_FROM');
         $userids = $CoverageFile2User->GetUsersFromProject();
         foreach ($userids as $userid) {
             $CoverageFile2User->UserId = $userid;

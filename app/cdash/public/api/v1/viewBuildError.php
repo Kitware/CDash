@@ -45,11 +45,6 @@ if (is_null($build)) {
     return;
 }
 
-
-if (is_null($build)) {
-    return null;
-}
-
 $service = ServiceContainer::getInstance();
 $update = $service->get(BuildUpdate::class);
 $update->BuildId = $build->Id;

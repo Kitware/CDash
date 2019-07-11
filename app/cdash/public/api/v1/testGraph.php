@@ -25,11 +25,6 @@ if (is_null($build)) {
     return;
 }
 
-
-if (!$build) {
-    return;
-}
-
 $testid = pdo_real_escape_numeric($_GET['testid']);
 if (!isset($testid) || !is_numeric($testid)) {
     return json_error_response(['error' => 'A valid test was not specified.']);

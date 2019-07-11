@@ -21,7 +21,6 @@ use App\Http\Controllers\Auth\LoginController;
 use CDash\Model\Project;
 use CDash\Model\User;
 
-@$date = $_GET['projectid'];
 @$projectid = $_GET['projectid'];
 if ($projectid != null) {
     $projectid = pdo_real_escape_numeric($projectid);
