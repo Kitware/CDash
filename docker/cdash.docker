@@ -79,7 +79,6 @@ COPY ./phpunit.xml ./phpunit.xml
 COPY ./README.md ./README.md
 COPY ./server.php ./server.php
 COPY ./webpack.mix.js ./webpack.mix.js
-COPY ./yarn.lock ./yarn.lock
 
 RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                        \
   apt-get install -y                                                               \
