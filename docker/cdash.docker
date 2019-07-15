@@ -1,4 +1,4 @@
-FROM php:7.1-apache
+FROM php:7.1-apache-stretch
 LABEL MAINTAINER="Kitware, Inc. <cdash@public.kitware.com>"
 
 ARG CDASH_DB_HOST=localhost
