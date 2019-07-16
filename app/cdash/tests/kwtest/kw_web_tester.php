@@ -936,7 +936,14 @@ class CDashControllerUserAgent extends SimpleUserAgent
      */
     protected function fetch($url, $encoding)
     {
-        $request = $this->getIlluminateHttpRequest($url, $encoding);
+        $url_string = $url->asString();
+        // Strip $CDASH_DIR_NAME (if set) from the URL string.
+        global $configure;
+        if (strlen($configure['webpath']) > 1) {
+            $url_string = str_replace($configure['webpath'], '', $url_string);
+        }
+
+        $request = $this->getIlluminateHttpRequest($url_string, $encoding);
         $config_cache = config('cdash');
 
         // The application *MUST* be recreated for every request
@@ -957,11 +964,11 @@ class CDashControllerUserAgent extends SimpleUserAgent
     }
 
     /**
-     * @param SimpleUrl $url
+     * @param String $url_string
      * @param SimpleEncoding|SimpleGetEncoding|SimplePutEncoding|SimplePostEncoding $encoding
      * @return Request
      */
-    private function getIlluminateHttpRequest($url, $encoding)
+    private function getIlluminateHttpRequest($url_string, $encoding)
     {
         $contents = null;
         if ($submission = $this->test->getCtestSubmission()) {
@@ -969,7 +976,7 @@ class CDashControllerUserAgent extends SimpleUserAgent
         }
 
         $request = Request::create(
-            $url->asString(),
+            $url_string,
             $encoding->getMethod(),
             $_REQUEST,
             $_COOKIE,
