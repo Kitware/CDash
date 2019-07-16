@@ -20,7 +20,7 @@ use CDash\Config;
 if (!isset($_GET['project'])) {
     $default_project = Config::getInstance()->get('CDASH_DEFAULT_PROJECT');
     $url = $default_project ? "index.php?project={$default_project}" : 'viewProjects.php';
-    return \redirect($url);
+    return \redirect()->away($url);
 }
 
 require_once dirname(__DIR__) . '/config/config.php';
