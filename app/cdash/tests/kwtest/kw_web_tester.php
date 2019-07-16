@@ -733,7 +733,7 @@ class KWWebTestCase extends WebTestCase
         $this->logout();
         $content = $this->get("{$this->url}{$page}");
 
-        if (strpos($content, '<form method="post" action="/login" name="loginform" id="loginform">') === false) {
+        if (strpos($content, '<form method="post" action="login" name="loginform" id="loginform">') === false) {
             $this->fail("Login not found when expected");
             return false;
         }

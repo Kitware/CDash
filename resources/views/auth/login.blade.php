@@ -9,7 +9,7 @@ $hasEnabled = $collection->firstWhere('enable', true);
 @include('cdash.header')
     <div id="message" style="color: green;"></div>
     <div style="margin-top:20px">
-        <form method="post" action="/login" name="loginform" id="loginform">
+        <form method="post" action="login" name="loginform" id="loginform">
             <input type="hidden" name="_token" id="csrf-token" value="{{ csrf_token() }}" />
             <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
                 <tbody>
