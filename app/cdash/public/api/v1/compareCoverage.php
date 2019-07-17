@@ -102,7 +102,7 @@ if (!function_exists('get_coverage')) {
             $coverage_groups[$groupId]['locuntested'] = 0;
             $coverage_groups[$groupId]['coverages'] = array();
         }
-        if (count($subproject_groups > 1)) {
+        if (count($subproject_groups) > 1) {
             $coverage_groups[0] = array();
             $coverage_groups[0]['label'] = 'Total';
             $coverage_groups[0]['loctested'] = 0;
@@ -128,7 +128,7 @@ if (!function_exists('get_coverage')) {
                         $build_array['loctested'];
                     $coverage_groups[$groupId]['locuntested'] +=
                         $build_array['locuntested'];
-                    if (count($subproject_groups > 1)) {
+                    if (count($subproject_groups) > 1) {
                         $coverage_groups[0]['loctested'] +=
                             $build_array['loctested'];
                         $coverage_groups[0]['locuntested'] +=
