@@ -11,7 +11,7 @@
     "wiki": "http://public.kitware.com/Wiki/CDash"
   },
   "require": {
-    "php": ">=5.5.9",
+    "php": ">=7.1",
     "ext-bcmath": "*",
     "ext-curl": "*",
     "ext-json": "*",
