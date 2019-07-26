@@ -14,9 +14,8 @@ trait CommitAuthorHandlerTrait
         $authors = [];
         /** @var Build $build */
         foreach ($this->Builds as $build) {
-            $authors = array_merge($authors, array_map(function ($email) {
-                return $email;
-            }, $build->GetCommitAuthors()));
+            $build_authors = $build->GetCommitAuthors();
+            $authors = array_merge($authors, $build_authors);
         }
         return array_unique($authors);
     }
