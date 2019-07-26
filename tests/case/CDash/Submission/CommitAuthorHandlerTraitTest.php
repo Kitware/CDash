@@ -28,7 +28,6 @@ class CommitAuthorHandlerTraitTest extends PHPUnit_Framework_TestCase
         $builds = [$has_errors, $has_warnings];
 
         $sut = new class($builds) {
-
             use CommitAuthorHandlerTrait;
 
             private $Builds;
