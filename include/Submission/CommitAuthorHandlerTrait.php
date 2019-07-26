@@ -1,8 +1,6 @@
 <?php
 
-
 namespace CDash\Submission;
-
 
 use CDash\Model\Build;
 

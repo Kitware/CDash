@@ -70,7 +70,6 @@ class CommitAuthorSubscriptionBuilderTest extends TestCase
         $this->assertEmpty($subscriptions);
         $this->assertFalse($subscriptions->has('com.mitter@company.tld'));
         $this->assertFalse($subscriptions->has('auth.or@compnay.tld'));
-
     }
 
     public function testBuildGivenSubmissionWithTestFailures()
