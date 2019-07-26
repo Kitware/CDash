@@ -50,6 +50,29 @@ class CommitAuthorSubscriptionBuilderTest extends TestCase
         $this->assertTrue($subscriptions->has('auth.or@company.tld'));
     }
 
+    public function testBuildGivenSubmissionWithBuildWarnings()
+    {
+        $subscriptions = new SubscriptionCollection();
+        $this->assertCount(0, $subscriptions);
+
+        $key = 'buildwarningspositive';
+        $mock_submission = $this->getMockSubmission($key);
+        $mock_submission->expects($this->any())
+            ->method('GetTopicCollectionForSubscriber')
+            ->willReturnCallback(function ($subscriber) {
+                $handler = new BuildHandler(0, 0);
+                return $handler->GetTopicCollectionForSubscriber($subscriber);
+            });
+
+        $sut = new CommitAuthorSubscriptionBuilder($mock_submission);
+        $sut->build($subscriptions);
+
+        $this->assertEmpty($subscriptions);
+        $this->assertFalse($subscriptions->has('com.mitter@company.tld'));
+        $this->assertFalse($subscriptions->has('auth.or@compnay.tld'));
+
+    }
+
     public function testBuildGivenSubmissionWithTestFailures()
     {
         $subscriptions = new SubscriptionCollection();
