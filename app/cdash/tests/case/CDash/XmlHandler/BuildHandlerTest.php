@@ -22,9 +22,16 @@ use CDash\Messaging\Topic\Topic;
 use CDash\Messaging\Topic\TopicCollection;
 use CDash\Model\Subscriber;
 use Tests\TestCase;
+use CDash\Submission\CommitAuthorHandlerInterface;
 
 class BuildHandlerTest extends TestCase
 {
+    public function testBuildHandlerIsACommitAuthorHandler()
+    {
+        $sut = new BuildHandler(0, 0);
+        $this->assertInstanceOf(CommitAuthorHandlerInterface::class, $sut);
+    }
+
     public function testGetTopicCollectionForSubscriber()
     {
         $sut = new BuildHandler(1, 0);

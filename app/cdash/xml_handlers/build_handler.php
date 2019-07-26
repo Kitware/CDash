@@ -20,14 +20,10 @@ require_once 'xml_handlers/actionable_build_interface.php';
 use CDash\Collection\BuildCollection;
 use CDash\Collection\Collection;
 use CDash\Collection\SubscriptionBuilderCollection;
-use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Subscription\CommitAuthorSubscriptionBuilder;
 use CDash\Messaging\Subscription\UserSubscriptionBuilder;
 use CDash\Messaging\Topic\BuildErrorTopic;
-use CDash\Messaging\Topic\Decoratable;
 use CDash\Messaging\Topic\TopicCollection;
-use CDash\Model\ActionableTypes;
-use CDash\Config;
 use CDash\Model\Build;
 use CDash\Model\BuildError;
 use CDash\Model\BuildErrorFilter;
@@ -40,9 +36,13 @@ use CDash\Model\Project;
 use CDash\Model\Site;
 use CDash\Model\SiteInformation;
 use CDash\Model\SubscriberInterface;
+use CDash\Submission\CommitAuthorHandlerInterface;
+use CDash\Submission\CommitAuthorHandlerTrait;
 
-class BuildHandler extends AbstractHandler implements ActionableBuildInterface
+class BuildHandler extends AbstractHandler implements ActionableBuildInterface, CommitAuthorHandlerInterface
 {
+    use CommitAuthorHandlerTrait;
+
     private $StartTimeStamp;
     private $EndTimeStamp;
     private $Error;
@@ -477,21 +477,6 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface
             $collection->add($warnings);
         }
         return $collection;
-    }
-
-    /**
-     * @return array
-     */
-    public function GetCommitAuthors()
-    {
-        $authors = [];
-
-        foreach ($this->Builds as $build) {
-            $authors = array_merge($authors, array_map(function ($email) {
-                return $email;
-            }, $build->GetCommitAuthors()));
-        }
-        return array_unique($authors);
     }
 
     /**
