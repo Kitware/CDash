@@ -15,6 +15,7 @@
       <FullName>bar.txt</FullName>
       <CheckinDate>2009-12-18T15:53:47Z</CheckinDate>
       <Author>user1kw</Author>
+      <Email>user1@kw</Email>
       <Log>Changed content</Log>
       <Revision>3</Revision>
       <PriorRevision>2</PriorRevision>
