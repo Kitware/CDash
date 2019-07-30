@@ -851,6 +851,24 @@ if (isset($_GET['upgrade-2-8'])) {
     return;
 }
 
+// 3.0 Upgrade
+if (isset($_GET['upgrade-3-0'])) {
+
+    // Add Laravel required columns to user and password tables.
+    AddTableField('user', 'updated_at', 'TIMESTAMP', 'TIMESTAMP', '1980-01-01 00:00:00');
+    AddTableField('user', 'created_at', 'TIMESTAMP', 'TIMESTAMP', '1980-01-01 00:00:00');
+    AddTableField('user', 'remember_token', 'varchar(100)', 'character varying(16)', 'NULL');
+    AddTableField('password', 'updated_at', 'TIMESTAMP', 'TIMESTAMP', '1980-01-01 00:00:00');
+    AddTableField('password', 'created_at', 'TIMESTAMP', 'TIMESTAMP', '1980-01-01 00:00:00');
+
+    // Set the database version
+    setVersion();
+
+    // Put that the upgrade is done in the log
+    add_log('Upgrade done.', 'upgrade-3-0');
+    return;
+}
+
 // When adding new tables they should be added to the SQL installation file
 // and here as well
 if ($Upgrade) {
