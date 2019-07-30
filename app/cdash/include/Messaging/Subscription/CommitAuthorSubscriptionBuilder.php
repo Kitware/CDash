@@ -20,6 +20,7 @@ use ActionableBuildInterface;
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Model\Subscriber;
+use CDash\Model\User;
 
 class CommitAuthorSubscriptionBuilder implements SubscriptionBuilderInterface
 {
@@ -55,6 +56,7 @@ class CommitAuthorSubscriptionBuilder implements SubscriptionBuilderInterface
         $site = $this->submission->GetSite();
         $authors = $this->submission->GetCommitAuthors();
         $factory = $this->getSubscriptionFactory();
+        $buildGroup = $this->submission->GetBuildGroup();
 
         foreach ($authors as $author) {
             $preferences = (new BitmaskNotificationPreferences())
@@ -69,7 +71,8 @@ class CommitAuthorSubscriptionBuilder implements SubscriptionBuilderInterface
                 $subscription
                     ->setSubscriber($subscriber)
                     ->setProject($project)
-                    ->setSite($site);
+                    ->setSite($site)
+                    ->setBuildGroup($buildGroup);
 
                 $subscriptions->add($subscription);
             }
