@@ -177,10 +177,9 @@ class BuildEmail
         }
 
         if (!empty($missing)) {
-            $msg = "Cannot save " . __CLASS__ .
-                ": Missing required fields [" . implode(', ', $missing) . "]";
-            $e = new \Exception($msg);
-            Log::getInstance()->error($e);
+            $missing_str = implode(', ', $missing);
+            $msg = "Missing: {$missing_str}; cannot save BuildEmail for {$this->Email}.";
+            Log::getInstance()->add_log($msg, __FUNCTION__);
             return false;
         }
 
