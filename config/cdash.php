@@ -21,10 +21,10 @@ return [
     'directory' => $cdash,
     'deprecated' => $deprecated,
     'password' => [
-        'complexity' => 1,
-        'count' => 1,
+        'complexity' => 0,
+        'count' => 0,
         'min' => 5,
-        'expires' => 30,
+        'expires' => 0,
     ],
     'version' => '3.0.1',
     'registration' => [
