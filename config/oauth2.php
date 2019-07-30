@@ -14,7 +14,7 @@ return [
     'gitlab' => [
         'clientId' => env('GITLAB_CLIENT_ID'),
         'clientSecret' => env('GITLAB_CLIENT_SECRET'),
-        'domain' => 'https://kwgitlab.kitware.com',
+        'domain' => env('GITLAB_DOMAIN', 'https://gitlab.com'),
         'className' => GitLab::class,
         'enable' => false,
     ],
