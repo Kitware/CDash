@@ -65,7 +65,9 @@ $hasEnabled = $collection->firstWhere('enable', true);
                         <p>
                             Sign in with:
                             @foreach($collection as $key => $config)
-                                <a href="/oauth/{{ $key  }}"><img class="paddr" src="img/{{ $key }}_signin.png" title="Log in with your {{ $key }} account"/></a>
+                                @if ($config['enable'])
+                                    <a href="/oauth/{{ $key  }}"><img class="paddr" src="img/{{ $key }}_signin.png" title="Log in with your {{ $key }} account"/></a>
+                                @endif
                             @endforeach
                         </p>
                     </td>
