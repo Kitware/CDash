@@ -1,10 +1,5 @@
 <?php
 
-// Include config.php from the cdash directory.
-$cdash_directory_name = env('CDASH_DIRECTORY', 'cdash');
-$cdash = realpath(app_path($cdash_directory_name));
-include $cdash . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.php';
-
 return [
 
     /*
@@ -18,7 +13,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', $CDASH_DB_TYPE),
+    'default' => env('DB_CONNECTION', config('cdash.deprecated.DB_TYPE')),
 
     /*
     |--------------------------------------------------------------------------
@@ -47,11 +42,11 @@ return [
 
         'mysql' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', $CDASH_DB_HOST),
-            'port' => env('DB_PORT', $CDASH_DB_PORT),
-            'database' => env('DB_DATABASE', $CDASH_DB_NAME),
-            'username' => env('DB_USERNAME', $CDASH_DB_LOGIN),
-            'password' => env('DB_PASSWORD', $CDASH_DB_PASS),
+            'host' => env('DB_HOST', config('cdash.deprecated.DB_HOST')),
+            'port' => env('DB_PORT', config('cdash.deprecated.DB_PORT')),
+            'database' => env('DB_DATABASE', config('cdash.deprecated.DB_NAME')),
+            'username' => env('DB_USERNAME', config('cdash.deprecated.DB_LOGIN')),
+            'password' => env('DB_PASSWORD', config('cdash.deprecated.DB_PASS')),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
@@ -63,11 +58,11 @@ return [
 
         'pgsql' => [
             'driver' => 'pgsql',
-            'host' => env('DB_HOST', $CDASH_DB_HOST),
-            'port' => env('DB_PORT', $CDASH_DB_PORT),
-            'database' => env('DB_DATABASE', $CDASH_DB_NAME),
-            'username' => env('DB_USERNAME', $CDASH_DB_LOGIN),
-            'password' => env('DB_PASSWORD', $CDASH_DB_PASS),
+            'host' => env('DB_HOST', config('cdash.deprecated.DB_HOST')),
+            'port' => env('DB_PORT', config('cdash.deprecated.DB_PORT')),
+            'database' => env('DB_DATABASE', config('cdash.deprecated.DB_NAME')),
+            'username' => env('DB_USERNAME', config('cdash.deprecated.DB_LOGIN')),
+            'password' => env('DB_PASSWORD', config('cdash.deprecated.DB_PASS')),
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
