@@ -20,8 +20,11 @@ use ActionableBuildInterface;
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Model\Subscriber;
-use CDash\Model\User;
 
+/**
+ * Class CommitAuthorSubscriptionBuilder
+ * @package CDash\Messaging\Subscription
+ */
 class CommitAuthorSubscriptionBuilder implements SubscriptionBuilderInterface
 {
     /** @var SubscriptionFactory $factory */
@@ -33,6 +36,9 @@ class CommitAuthorSubscriptionBuilder implements SubscriptionBuilderInterface
     /**
      * SubscriptionBuilder constructor.
      * @param ActionableBuildInterface $submission
+     * TODO: PHP 7.4 (finally) has covariant and contravariant parameters: this parameter should be
+     *   the contravariant CommitAuthorHandlerInterface
+     *   @see https://wiki.php.net/rfc/covariant-returns-and-contravariant-parameters
      */
     public function __construct(ActionableBuildInterface $submission)
     {
@@ -61,7 +67,8 @@ class CommitAuthorSubscriptionBuilder implements SubscriptionBuilderInterface
         foreach ($authors as $author) {
             $preferences = (new BitmaskNotificationPreferences())
                 ->set(NotifyOn::TEST_FAILURE, true)
-                ->set(NotifyOn::BUILD_ERROR, true);
+                ->set(NotifyOn::BUILD_ERROR, true)
+                ->set(NotifyOn::AUTHORED, true);
 
             $subscriber = (new Subscriber($preferences))
                 ->setAddress($author);

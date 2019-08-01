@@ -223,5 +223,7 @@ if(CDASH_USE_SELENIUM)
   add_subdirectory(selenium)
 endif()
 
+add_php_test(commitauthornotification)
+
 # These should go last so the removal of builds doesn't clobber other tests
 add_subdirectory(autoremovebuilds)

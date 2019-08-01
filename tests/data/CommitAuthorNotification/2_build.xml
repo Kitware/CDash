@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Win32-MSVC2009"
+  BuildStamp="20090224-0100-Continuous"
+  Name="Dash20.kitware"
+  Generator="ctest2.6-patch 0"  OSName="Windows"
+  Hostname="dash20"
+  OSRelease="XP Professional"
+  OSVersion="Service Pack 2(Build 2600)"
+  OSPlatform=""
+  Is64Bits="0"
+  VendorString="GenuineIntel"
+  VendorID="Intel Corporation"
+  FamilyID="6"
+  ModelID="15"
+  ProcessorCacheSize="-1"
+  NumberOfLogicalCPU="1"
+  NumberOfPhysicalCPU="4"
+  TotalVirtualMemory="2047"
+  TotalPhysicalMemory="15"
+  LogicalProcessorsPerPhysical="4"
+  ProcessorClockFrequency="2400"
+>
+<Build>
+  <StartDateTime>Feb 24 05:02 Eastern Standard Time</StartDateTime>
+  <StartBuildTime>1551002520</StartBuildTime>
+<BuildCommand>F:\PROGRA~1\MICROS~1.0\Common7\IDE\VCExpress.exe BatchMake.sln /build Release /project ALL_BUILD</BuildCommand>
+    <Error>
+        <BuildLogLine>34</BuildLogLine>
+        <Text>3&gt;f:\program files\microsoft sdks\windows\v6.0a\include\servprov.h(79) : variable undefined</Text>
+        <SourceFile>f:\program files\microsoft sdks\windows\v6.0a\include\servprov.h</SourceFile>
+        <SourceLineNumber>79</SourceLineNumber>
+        <PreContext>Scanning dependencies of target foo
+            [ 50%] Building CXX object CMakeFilesf:\program files\microsoft sdks\windows\v6.0a\include\foo.cxx.o
+            f:\program files\microsoft sdks\windows\v6.0a\include\servprov.h(79): In function ‘int main(int, char**)’:
+        </PreContext>
+        <PostContext>   foo = asdf;
+            ^
+        </PostContext>
+        <RepeatCount>0</RepeatCount>
+    </Error>
+  <Log Encoding="base64" Compression="/bin/gzip"></Log>
+  <EndDateTime>Feb 24 05:04 Eastern Standard Time</EndDateTime>
+  <EndBuildTime>1551002640</EndBuildTime>
+<ElapsedMinutes>2.1</ElapsedMinutes></Build>
+</Site>

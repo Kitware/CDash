@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Update mode="Client" Generator="ctest-2.6-patch 0">
+  <Site>Dash20.kitware</Site>
+  <BuildName>Win32-MSVC2009</BuildName>
+  <BuildStamp>20090224-0100-Continuous</BuildStamp>
+  <StartDateTime>Feb 24 05:02 Eastern Standard Time</StartDateTime>
+  <StartTime>1551002520</StartTime>
+  <UpdateCommand>&quot;/usr/bin/git&quot; &quot;pull&quot;</UpdateCommand>
+  <UpdateType>GIT</UpdateType>
+  <Revision>23a41258921e1cba8581ee2fa5add00f817f39fe</Revision>
+  <PriorRevision>0758f1dbf75d1f0a1759b5f2d0aa00b3aba0d8c4</PriorRevision>
+  <Directory>
+    <Name>f:\program files\microsoft sdks\windows\v6.0a\include</Name>
+    <Updated>
+      <File>servprov.h</File>
+      <Directory>f:\program files\microsoft sdks\windows\v6.0a\include</Directory>
+      <FullName>f:\program files\microsoft sdks\windows\v6.0a\include\servprov.h</FullName>
+      <CheckinDate>2009-02-24T15:53:47Z</CheckinDate>
+      <Author>Bot</Author>
+      <Email>bot@domain.tld</Email>
+      <Committer>Jane Doe</Committer>
+      <CommitterEmail>jane.doe@domain.tld</CommitterEmail>
+      <Log>Changed content</Log>
+      <Revision>c8dc139cd3b79f27ba60e4cb2177fda420c465af</Revision>
+      <PriorRevision>0758f1dbf75d1f0a1759b5f2d0aa00b3aba0d8c4</PriorRevision>
+    </Updated>
+  </Directory>
+    <Directory>
+        <Name>f:\program files\microsoft sdks\windows\v6.0a\include</Name>
+        <Updated>
+            <File>XcedeLib.lib</File>
+            <Directory>f:\program files\microsoft sdks\windows\v6.0a\include</Directory>
+            <FullName>f:\program files\microsoft sdks\windows\v6.0a\include\XcedeLib.lib</FullName>
+            <CheckinDate>2009-02-24T15:53:47Z</CheckinDate>
+            <Author>Bot</Author>
+            <Email>bot@domain.tld</Email>
+            <Committer>John Doe</Committer>
+            <CommitterEmail>john.doe@domain.tld</CommitterEmail>
+            <Log>Changed content</Log>
+            <Revision>c8dc139cd3b79f27ba60e4cb2177fda420c465af</Revision>
+            <PriorRevision>0758f1dbf75d1f0a1759b5f2d0aa00b3aba0d8c4</PriorRevision>
+        </Updated>
+    </Directory>
+  <EndDateTime>Feb 24 05:04 Eastern Standard Time</EndDateTime>
+  <EndTime>1551002640</EndTime>
+  <ElapsedMinutes>2.1</ElapsedMinutes>
+  <UpdateReturnStatus></UpdateReturnStatus>
+</Update>
