@@ -71,7 +71,6 @@ class CommitAuthorNotificationTestCase extends KWWebTestCase
     {
         $this->deleteLog($this->logfilename);
 
-        $this->submitFile('2_update.xml');
         $this->submitFile('2_test.xml');
 
         $log = file_get_contents($this->logfilename);
