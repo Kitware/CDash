@@ -67,8 +67,7 @@ class CommitAuthorSubscriptionBuilder implements SubscriptionBuilderInterface
         foreach ($authors as $author) {
             $preferences = (new BitmaskNotificationPreferences())
                 ->set(NotifyOn::TEST_FAILURE, true)
-                ->set(NotifyOn::BUILD_ERROR, true)
-                ->set(NotifyOn::AUTHORED, true);
+                ->set(NotifyOn::BUILD_ERROR, true);
 
             $subscriber = (new Subscriber($preferences))
                 ->setAddress($author);
