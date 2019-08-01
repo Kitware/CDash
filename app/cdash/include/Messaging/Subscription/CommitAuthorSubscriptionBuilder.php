@@ -37,7 +37,7 @@ class CommitAuthorSubscriptionBuilder implements SubscriptionBuilderInterface
      * SubscriptionBuilder constructor.
      * @param ActionableBuildInterface $submission
      * TODO: PHP 7.4 (finally) has covariant and contravariant parameters: this parameter should be
-     *   the contravariant CommitAuthorHandlerInterface
+     *   the covariant CommitAuthorHandlerInterface
      *   @see https://wiki.php.net/rfc/covariant-returns-and-contravariant-parameters
      */
     public function __construct(ActionableBuildInterface $submission)
