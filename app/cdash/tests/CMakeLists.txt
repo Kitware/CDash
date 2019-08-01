@@ -88,6 +88,7 @@ add_unit_test(/CDash/MultipleSubprojectsEmail)
 add_unit_test(/CDash/NightlyTime)
 add_unit_test(/CDash/Service/RepositoryService)
 add_unit_test(/CDash/ServiceContainer)
+add_unit_test(/CDash/Submission/CommitAuthorHandlerTrait)
 add_unit_test(/CDash/TestUseCase)
 add_unit_test(/CDash/UpdateUseCase)
 add_unit_test(/CDash/XmlHandler/BuildHandler)
@@ -213,6 +214,7 @@ add_php_test(expiredbuildrules)
 add_php_test(filterblocks)
 add_php_test(indexnextprevious)
 add_php_test(putdynamicbuilds)
+add_php_test(commitauthornotification)
 
 add_subdirectory(ctest)
 
@@ -222,8 +224,6 @@ if(CDASH_USE_SELENIUM)
   file(MAKE_DIRECTORY ${CDash_BINARY_DIR}/cmake.git)
   add_subdirectory(selenium)
 endif()
-
-add_php_test(commitauthornotification)
 
 # These should go last so the removal of builds doesn't clobber other tests
 add_subdirectory(autoremovebuilds)
