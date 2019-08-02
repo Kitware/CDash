@@ -1,4 +1,5 @@
 set(testing_dir "${CDash_SOURCE_DIR}/tests")
+set(laravel_testing_dir "${CDash_SOURCE_DIR}/../../tests")
 set(binary_testing_dir "${CDash_BINARY_DIR}/tests")
 set(PHPUNIT "${CDash_SOURCE_DIR}/../../vendor/bin/phpunit")
 
@@ -31,6 +32,13 @@ function(add_unit_test TestName)
   )
 endfunction(add_unit_test TestName)
 
+function(add_laravel_unit_test TestName)
+  add_test(
+    NAME ${TestName}
+    COMMAND ${PHP_EXE} ${phpunit_extra_arg} ${PHPUNIT} -c ${testing_dir}/phpunit.xml --bootstrap ${CDash_SOURCE_DIR}/tests/bootstrap.php ${laravel_testing_dir}/Unit/${TestName}Test.php
+  )
+endfunction(add_laravel_unit_test TestName)
+
 # phpunit tests
 set(phpunit_extra_arg "")
 if (CDASH_CONFIGURE_HTACCESS_FILE)
@@ -38,6 +46,7 @@ if (CDASH_CONFIGURE_HTACCESS_FILE)
 endif()
 
 add_php_test(install)
+add_laravel_unit_test(/app/Validators/Password)
 add_unit_test(/PHPUnitTest)
 add_unit_test(/CDash/Api/ApiAddBuild)
 add_unit_test(/CDash/Api/ApiCreateProject)
