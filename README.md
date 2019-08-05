@@ -17,7 +17,53 @@ maintain large-scale software systems. Good examples of a CDash are the
 
 ## Installation
 
-[See here for installation instructions](http://public.kitware.com/Wiki/CDash:Installation).
+The easiest way to install CDash is with [Docker](https://www.docker.com)'s [docker-compose](https://docs.docker.com/compose/).
+
+```bash
+git clone https://github.com/Kitware/CDash
+cd CDash
+docker-compose up -d
+```
+More details instructions for Docker builds can be in the [CDash Docker README](docker/docker.md)
+### Requirements
+
+- MySQL (5.x+) or PostgreSQL(8.3+)
+- PHP 7.1
+- Composer
+- NPM
+
+#### PHP Required Modules
+
+- bcmath
+- php_curl
+- gd
+- mbstring
+- pdo_mysql or pdo_pgsql
+- bz2
+- xsl
+
+```bash
+git clone https://github.com/Kitware/CDash
+
+# install CDash dependencies
+cd CDash/app/cdash
+composer install --no-dev --prefer-dist
+npm install
+node_modules/.bin/gulp
+
+# now install Laravel dependencies
+cd ../../
+composer install --no-dev
+npm install
+cp .env.example .env
+php artisan key:generate
+```
+#### Further reading
+[CDash Docker README](docker/docker.md)
+
+[Laravel Documentation](https://laravel.com/)
+
+[Old install instructions, prebuilt download links, et al.](http://public.kitware.com/Wiki/CDash:Installation)
 
 
 ## Development

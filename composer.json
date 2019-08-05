@@ -1,62 +1,66 @@
 {
-  "name": "kitware/cdash",
-  "description": "An open source, web-based software testing server",
+  "name": "laravel/laravel",
   "type": "project",
-  "homepage": "http://www.cdash.org",
-  "license": "BSD-3-Clause",
-  "support": {
-    "email": "kitware@kitware.com",
-    "issues": "https://github.com/Kitware/CDash/issues",
-    "source": "https://github.com/Kitware/CDash",
-    "wiki": "http://public.kitware.com/Wiki/CDash"
-  },
+  "description": "The Laravel Framework.",
+  "keywords": [
+    "framework",
+    "laravel"
+  ],
+  "license": "MIT",
   "require": {
-    "php": ">=5.5.9",
-    "ext-bcmath": "*",
-    "ext-curl": "*",
+    "php": "^7.1.3",
+    "fideloper/proxy": "^4.0",
+    "laravel/framework": "5.7.*",
+    "laravel/tinker": "^1.0",
     "ext-json": "*",
-    "ext-mbstring": "*",
     "ext-pdo": "*",
-    "ext-xsl": "*",
-    "bernard/bernard": "1.0.0-alpha9",
-    "guzzlehttp/guzzle": "~6.2",
-    "monolog/monolog": "~1.19",
-    "paragonie/random_compat": "2.0.4",
-    "pear/archive_tar": "~1.4",
-    "predis/predis": "~0.8",
-    "ramsey/uuid": "~3.4",
-    "suin/php-rss-writer": "~1.4",
-    "swiftmailer/swiftmailer": "~5.4",
-    "sendgrid/sendgrid": "5.0.4",
-    "php-di/php-di": "^5.4",
-    "league/oauth2-github": "^2.0",
-    "league/oauth2-google": "^2.0",
-    "omines/oauth2-gitlab": "^3.1",
-    "aws/aws-sdk-php": "^3.57",
-    "doctrine/dbal": "^2.5",
-    "iron-io/iron_mq": "~2.0",
-    "knplabs/github-api": "dev-master#8c26dc85",
-    "php-http/guzzle6-adapter": "^1.1",
-    "lcobucci/jwt": "3.2.0",
-    "jenssegers/blade": "^1.1"
+    "ext-posix": "*"
   },
   "require-dev": {
-    "ext-gd": "*",
-    "ext-xdebug": "*",
-    "ext-dom": "*",
-    "friendsofphp/php-cs-fixer": "~1.11",
-    "phpunit/phpunit-selenium": "~1.4",
-    "phpunit/phpunit": "~4.8",
-    "sensiolabs/security-checker": "~3.0",
-    "fzaninotto/faker": "^1.8"
+    "beyondcode/laravel-dump-server": "^1.0",
+    "filp/whoops": "^2.0",
+    "fzaninotto/faker": "^1.4",
+    "mockery/mockery": "^1.0",
+    "nunomaduro/collision": "^2.0",
+    "phpunit/phpunit": "^7.0"
   },
-  "suggest": {
-    "ext-memcached": "",
-    "ext-pdo_mysql": "",
-    "ext-pdo_pgsql": "",
-    "ext-phar": ""
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true
+  },
+  "extra": {
+    "laravel": {
+      "dont-discover": []
+    }
   },
   "autoload": {
-    "psr-4": {"CDash\\": "include/CDash/"}
+    "psr-4": {
+      "App\\": "app/",
+      "CDash\\": "app/"
+    },
+    "classmap": [
+      "database/seeds",
+      "database/factories"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "scripts": {
+    "post-autoload-dump": [
+      "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+      "@php artisan package:discover --ansi"
+    ],
+    "post-root-package-install": [
+      "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+    ],
+    "post-create-project-cmd": [
+      "@php artisan key:generate --ansi"
+    ]
   }
 }

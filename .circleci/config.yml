@@ -1,69 +1,62 @@
-version: 2
-
+version: 2.1
 jobs:
   build:
-    docker:
-      - image: bbeanatkitware/cdash-host:latest
-      - image: mysql/mysql-server:5.5
-        environment:
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
-          MYSQL_ROOT_PASSWORD: ''
-          MYSQL_DATABASE: 'cdash4simpletest'
-          MYSQL_ROOT_HOST: '%'
-      - image: postgres:9.6.2
-        environment:
-          POSTGRES_USER: postgres
-          POSTGRES_DB: 'cdash4simpletest'
-          POSTGRES_PASSWORD: ""
-    working_directory: /home/kitware/cdash
+    machine: true
     steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
-          version: 18.03.1-ce
       - run:
-          name: Upgrade Chrome
-          command: |
-            wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-            sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
-            sudo sed -i '/jessie-updates/d' /etc/apt/sources.list
-            sudo apt-get update
-            sudo apt-get -y install google-chrome-stable
-      - run:
-          name: Install Docker client
+          name: MySQL Build
           command: |
             set -x
-            VER="18.03.1-ce"
-            curl -L -o /tmp/docker-$VER.tgz https://download.docker.com/linux/static/stable/x86_64/docker-$VER.tgz
-            tar -xz -C /tmp -f /tmp/docker-$VER.tgz
-            sudo mv /tmp/docker/* /usr/bin
+            mv ./docker-compose.yml ./docker-compose.backup
+            cp ./.circleci/mysql/docker-compose.yml ./docker-compose.yml
+            docker-compose build --force-rm --no-cache --build-arg DEVELOPMENT_BUILD=1 cdash
       - run:
-          name: Upgrade CMake
+          name: Spin Up MySQL Build
           command: |
-            wget -q -O cmake-linux.sh https://github.com/Kitware/CMake/releases/download/v3.14.0/cmake-3.14.0-Linux-x86_64.sh
-            sudo sh cmake-linux.sh -- --skip-license --prefix=/usr/local
-            rm cmake-linux.sh
-      - run: sudo /etc/init.d/apache2 restart
-      - run: sudo ln -s /home/kitware/cdash/public /var/www/html/cdash
-      - run: chmod a+rwx backup log public/rss public/upload
-      - run: sudo composer self-update --no-interaction
-      - run: composer install --no-interaction --no-progress --prefer-dist
-      - run: npm install
-      - run: cp tests/circle/protractor.config.json node_modules/protractor/config.json
-      - run: node_modules/.bin/webdriver-manager update
+            set -x
+            docker-compose up -d
+            bash -c "docker/bash/circleci-wait.bash http://localhost/ping 12"
       - run:
-          background: true
-          command: node_modules/.bin/webdriver-manager start
-      - run: mkdir _build
-      # Run the test suite for MySQL
-      - run: /usr/local/bin/ctest -VV -DBUILDNAME="${CIRCLE_BRANCH}_MySQL" -Dpostgres=OFF -S .circleci/ctest_driver_script.cmake
-      # Run the test suite for Postgres
-      - run: rm -rf _build && mkdir _build
-      - run: /usr/local/bin/ctest -VV -DBUILDNAME="${CIRCLE_BRANCH}_Postgres" -Dpostgres=ON -S .circleci/ctest_driver_script.cmake
-      # Build and push Docker image.
-      - run: |
-          if [ "${CIRCLE_BRANCH}" == "master" ]; then
-            docker build -t kitware/cdash:latest .
-            docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker push kitware/cdash:latest
-          fi
+          name: Test MySQL Build
+          command:  |
+            set -x
+            docker exec cdash bash -c "cd /home/kitware/cdash && /usr/bin/git checkout ."
+            docker exec --user www-data cdash bash -c "/usr/bin/ctest -VV -DBUILDNAME=\"${CIRCLE_BRANCH}_MySQL\" -Dpostgres=OFF -S /home/kitware/cdash/.circleci/ctest_driver_script.cmake"
+      - run:
+          name: Save Test Artifacts
+          command: docker cp cdash:/home/kitware/cdash/storage/logs/laravel-$(date +%F).log /tmp/cdash-mysql-test.log
+      - store_artifacts:
+          path: /tmp/cdash-mysql-test.log
+          destination: cdash-mysql-test.log
+      - run:
+          name: Tear Down MySQL Build
+          command: docker-compose down
+      - run:
+          name: Spin Up Postgres Build
+          command: |
+            set -x
+            cp ./.circleci/postgres/docker-compose.yml ./docker-compose.local.yml
+            docker-compose -f docker-compose.local.yml up -d
+      - run:
+          name: Test Postgres Build
+          command: |
+            set -x
+            docker exec cdash bash -c "cp /home/kitware/cdash/.circleci/postgres/env /home/kitware/cdash/.env"
+            docker exec cdash bash -c "cd /home/kitware/cdash && /usr/bin/git checkout ."
+            docker exec --user www-data cdash bash -c "/usr/bin/ctest -VV -DBUILDNAME=\"${CIRCLE_BRANCH}_PgSQL\" -Dpostgres=ON -S /home/kitware/cdash/.circleci/ctest_driver_script.cmake"
+      - run:
+          name: Save Postgres Test Artifacts
+          command: docker cp cdash:/home/kitware/cdash/storage/logs/laravel-$(date +%F).log /tmp/cdash-postgres-test.log
+      - store_artifacts:
+          path: /tmp/cdash-postgres-test.log
+          destination: cdash-postgres-test.log
+      - run:
+          name: Update Docker Image
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              mv ./docker-compose.backup ./docker-compose.yml
+              docker build -t kitware/cdash:latest .
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push kitware/cdash:latest
+            fi

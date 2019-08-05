@@ -1,93 +1,86 @@
 <?php
-/**
- * =========================================================================
- *   Program:   CDash - Cross-Platform Dashboard System
- *   Module:    $Id$
- *   Language:  PHP
- *   Date:      $Date$
- *   Version:   $Revision$
- *   Copyright (c) Kitware, Inc. All rights reserved.
- *   See LICENSE or http://www.cdash.org/licensing/ for details.
- *   This software is distributed WITHOUT ANY WARRANTY; without even
- *   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
- *   PURPOSE. See the above copyright notices for more information.
- * =========================================================================
- */
 
-/** WARNING: It's recommended to create a queue.local.php file and leave
- * this file as is.
- * Make any necessary changes in queue.local.php and delete any entries
- * that you have not modified.
- */
+return [
 
-/*
- * CDash uses Bernard to abstract different message queue systems. This configuration
- * is used by CDash's QueueFactory to create the appropriate driver for Bernard to
- * use. Currently only one configuration can be enabled and you must ensure that you
- * have installed the appropriate composer libraries for your particular message queue.
- */
+    /*
+    |--------------------------------------------------------------------------
+    | Default Queue Connection Name
+    |--------------------------------------------------------------------------
+    |
+    | Laravel's queue API supports an assortment of back-ends via a single
+    | API, giving you convenient access to each back-end using the same
+    | syntax for every one. Here you may define a default connection.
+    |
+    */
 
-use CDash\Middleware\Queue\DriverFactory as Driver;
+    'default' => env('QUEUE_CONNECTION', 'sync'),
 
-$queue_config = [
-    /** @see \CDash\Middleware\Queue\SubmissionService documentation for discussion on queue names
-     */
-    'ctest_submission_queue' => \CDash\Middleware\Queue\SubmissionService::NAME,
-    'drivers' => [
-        Driver::APP_ENGINE => [
-            'enabled' => false,
-            'queueMap' => [
-                'queue-name' => '/url_endpoint',
-            ],
+    /*
+    |--------------------------------------------------------------------------
+    | Queue Connections
+    |--------------------------------------------------------------------------
+    |
+    | Here you may configure the connection information for each server that
+    | is used by your application. A default configuration has been added
+    | for each back-end shipped with Laravel. You are free to add more.
+    |
+    | Drivers: "sync", "database", "beanstalkd", "sqs", "redis", "null"
+    |
+    */
+
+    'connections' => [
+
+        'sync' => [
+            'driver' => 'sync',
         ],
-        Driver::DOCTRINE => [
-            'enabled' => false,
-            'dbname' => '',
-            'user' => '',
-            'password' => null,
+
+        'database' => [
+            'driver' => 'database',
+            'table' => 'jobs',
+            'queue' => 'default',
+            'retry_after' => 90,
+        ],
+
+        'beanstalkd' => [
+            'driver' => 'beanstalkd',
             'host' => 'localhost',
-            'driver' => 'pdo_mysql',
+            'queue' => 'default',
+            'retry_after' => 90,
         ],
-        Driver::FLAT_FILE => [
-            'enabled' => false,
-            'baseDirectory' => '/path/to/your/queue/dir',
+
+        'sqs' => [
+            'driver' => 'sqs',
+            'key' => env('SQS_KEY', 'your-public-key'),
+            'secret' => env('SQS_SECRET', 'your-secret-key'),
+            'prefix' => env('SQS_PREFIX', 'https://sqs.us-east-1.amazonaws.com/your-account-id'),
+            'queue' => env('SQS_QUEUE', 'your-queue-name'),
+            'region' => env('SQS_REGION', 'us-east-1'),
         ],
-        // While it is absolutely possible to run IronMQ, it will take a bit of
-        // massaging paying particular attention to the fact that Bernard ~0.12
-        // IronMQ driver expects version <= 1.5.3 of IronMQ and not the composer
-        // installable iron-io/iron_mq beginning at version 2.
-        /*
-        Driver::IRON_MQ => [
-            'enabled' => false,
-            'name_properties' => [
-                'token' => '',
-                'project_id' => '',
-            ]
+
+        'redis' => [
+            'driver' => 'redis',
+            'connection' => 'default',
+            'queue' => env('REDIS_QUEUE', 'default'),
+            'retry_after' => 90,
+            'block_for' => null,
         ],
-        */
-        Driver::PHP_REDIS => [
-            'enabled' => false,
-            'host' => 'localhost',
-            'prefix' => 'bernard:',
-        ],
-        Driver::PREDIS => [
-            'enabled' => false,
-            'prefix' => 'bernard:',
-        ],
-        Driver::SQS => [
-            'enabled' => false,
-            'profile' => 'CDASH',
-            'region' => 'us-east-1',
-            'version' => 'latest',
-        ],
+
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Failed Queue Jobs
+    |--------------------------------------------------------------------------
+    |
+    | These options configure the behavior of failed queue job logging so you
+    | can control which database and table are used to store the jobs that
+    | have failed. You may change them to any database / table you wish.
+    |
+    */
+
+    'failed' => [
+        'database' => env('DB_CONNECTION', 'mysql'),
+        'table' => 'failed_jobs',
+    ],
+
 ];
-
-/* DO NOT EDIT AFTER THIS LINE */
-$localConfig = dirname(__FILE__) . '/queue.local.php';
-if ((strpos(__FILE__, 'queue.local.php') === false) && file_exists($localConfig)) {
-    $queue_local_config = \CDash\Config::getInstance()->load('queue.local');
-    $queue_config = array_replace_recursive($queue_config, $queue_local_config);
-}
-
-return $queue_config;

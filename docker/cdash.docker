@@ -1,0 +1,142 @@
+FROM php:7.2-apache-stretch
+LABEL MAINTAINER="Kitware, Inc. <cdash@public.kitware.com>"
+
+ARG CDASH_DB_HOST=localhost
+
+# Designates as dev build, adds testing infrastructure, et al.
+ARG DEVELOPMENT_BUILD
+
+# make sure it's set in the ENV for reference in docker-entrypoint.sh
+# TODO: rename CDASH_DEVELOPMENT_BUILD ?
+ENV DEVELOPMENT_BUILD=$DEVELOPMENT_BUILD
+
+# NODE_ENV expands to nothing if DEVELOPMENT_BUILD is unset or empty
+ENV NODE_ENV=${DEVELOPMENT_BUILD:+'development'}
+
+# NODE_ENV expands to production if NODE_ENV is unset or empty,
+# i.e. if DEVELOMPMENT_BUILD is empty the node environment is production
+ENV NODE_ENV=${NODE_ENV:-'production'}
+
+# PHP_ENV expands to empty if DEVELOPMENT_BUILD is unset or empty
+ENV PHP_ENV=${DEVELOPMENT_BUILD:+' '}
+
+# PHP_ENV expands to --no-dev (composer flag) if PHP_ENV is empty,
+# i.e. composer will not try to load require-dev packages, e.g. those
+# requiring xdebug
+ENV PHP_ENV=${PHP_ENV:-'--no-dev'}
+
+RUN apt-get update                                                         \
+ && apt-get install -y gnupg                                               \
+ && curl -sL https://deb.nodesource.com/setup_6.x | bash                   \
+ && apt-get install -y git libbz2-dev libfreetype6-dev libjpeg62-turbo-dev \
+    libmcrypt-dev libpng-dev libpq-dev libxslt-dev libxss1 nodejs unzip    \
+    wget zip                                                               \
+ && docker-php-ext-configure pgsql --with-pgsql=/usr/local/pgsql           \
+ && docker-php-ext-configure gd --with-freetype-dir=/usr/include/          \
+                                --with-jpeg-dir=/usr/include/              \
+ && docker-php-ext-install -j$(nproc) bcmath bz2 gd                        \
+    pdo_mysql pdo_pgsql xsl                                                \
+ && wget -q -O checksum https://composer.github.io/installer.sha384sum     \
+ && wget -q -O composer-setup.php https://getcomposer.org/installer        \
+ && sha384sum -c checksum                                                  \
+ && php composer-setup.php                                                 \
+    --install-dir=/usr/local/bin --filename=composer                       \
+ && php -r "unlink('composer-setup.php');"                                 \
+ && composer self-update --no-interaction
+
+# Creates the kitware home directory with directory for cdash
+WORKDIR /home/kitware/cdash
+
+# Copy CDash (current folder) into /home/kitware/cdash to set its owner
+# to www-data
+COPY ./.git ./.git
+COPY ./.circleci ./.circleci
+COPY ./app ./app
+COPY ./bootstrap ./bootstrap
+COPY ./config ./config
+COPY ./database ./database
+COPY ./docker ./docker
+COPY ./public ./public
+COPY ./resources ./resources
+COPY ./routes ./routes
+COPY ./storage ./storage
+COPY ./tests ./tests
+COPY ./.env.example ./.env.example
+COPY ./.env.example ./.env
+COPY ./.editorconfig  ./.editorconfig
+COPY ./.eslintrc ./.eslintrc
+COPY ./.php_cs ./.php_cs
+COPY ./.styleci.yml ./.styleci.yml
+COPY ./artisan ./artisan
+COPY ./composer.json ./composer.json
+COPY ./.dockerignore ./.dockerignore
+COPY ./.gitattributes ./.gitattributes
+COPY ./.gitignore ./.gitignore
+COPY ./docker-compose.yml ./docker-compose.yml
+COPY ./package.json ./package.json
+COPY ./package-lock.json ./package-lock.json
+COPY ./phpunit.xml ./phpunit.xml
+COPY ./README.md ./README.md
+COPY ./server.php ./server.php
+COPY ./webpack.mix.js ./webpack.mix.js
+
+# Install newer version of CMake
+RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                \
+  wget -q -O cmake-linux.sh https://github.com/Kitware/CMake/releases/download/v3.14.6/cmake-3.14.6-Linux-x86_64.sh                                                                       \
+  && sh cmake-linux.sh -- --skip-license --prefix=/usr                     \
+  && rm cmake-linux.sh;                                                    \
+fi
+
+# Install CDash dependencies with composer and npm, run gulp to build assets
+WORKDIR /home/kitware/cdash/app/cdash
+
+RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                \
+ pecl install xdebug                                                       \
+ && docker-php-ext-enable xdebug                                           \
+ && mkdir -p /var/www/.npm && chown www-data:www-data /var/www/.npm        \
+ && mkdir _build && cd _build                                              \
+ && cmake                                                                  \
+  -DCDASH_DB_HOST=$CDASH_DB_HOST                                           \
+  -DCDASH_DIR_NAME=                                                        \
+  -DCDASH_TESTING_URL=http://cdash/                                        \
+  -DCDASH_SERVER=cdash                                                     \
+  -DCTEST_UPDATE_VERSION_ONLY=1 ..                                         \
+ && cp /home/kitware/cdash/docker/conf.js                                  \
+       /home/kitware/cdash/app/cdash/_build/tests/js/e2e_tests/conf.js     \
+ && cp /home/kitware/cdash/docker/.env.laravel /home/kitware/cdash/.env;   \
+else                                                                       \
+ composer install --no-interaction --no-progress --prefer-dist $PHP_ENV    \
+ && npm install                                                            \
+ && node_modules/.bin/gulp;                                                \
+fi
+
+RUN cp php.ini /usr/local/etc/php/conf.d/cdash.ini
+
+# Install Laravel dependencies with composer and npm, configure Laravel
+WORKDIR /home/kitware/cdash
+RUN composer install --no-interaction --no-progress --prefer-dist $PHP_ENV \
+ && npm install                                                            \
+ && php artisan key:generate                                               \
+ && chown -R www-data:www-data .
+
+# Configure Apache
+RUN cp /home/kitware/cdash/docker/cdash-site.conf                          \
+       /etc/apache2/sites-available/cdash-site.conf
+
+# Remove default site, add cdash-site, enable mod_rewrite, enable php7
+RUN a2dissite 000-default                                                  \
+ && a2ensite cdash-site                                                    \
+ && a2enmod rewrite                                                        \
+ && a2enmod php7
+
+COPY docker/docker-entrypoint.sh /docker-entrypoint.sh
+COPY docker/bash /bash-lib
+
+RUN chmod +x /docker-entrypoint.sh
+
+EXPOSE 80
+
+WORKDIR /home/kitware/cdash/app/cdash/_build
+
+ENTRYPOINT ["/bin/bash", "/docker-entrypoint.sh"]
+CMD ["serve"]

@@ -1,0 +1,109 @@
+<!-- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" ng-app="CDash">
+  <head ng-controller="HeadController">
+    <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" type="text/css" ng-href="build/css/{{cssfile}}_@@version.css" />
+    <link rel="stylesheet" type="text/css" href="css/jquery.qtip.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/jqModal.css" />
+    <script src="js/CDash_@@version.min.js"></script>
+    <title>CDash - Continuous Integration Made Easy</title>
+
+  </head>
+
+  <body ng-controller="ViewProjectsController">
+  -->
+    <div id="header">
+      <div id="headertop">
+        <div ng-show="cdash.user.id > 0" id="topmenu">
+          <a href="user.php">My CDash</a>
+          <ng-include src="'build/views/partials/logout_@@version.html'"></ng-include>
+        </div>
+        <div ng-show="cdash.user.id < 1" id="topmenu">
+          <a href="login">Login</a>
+          <a href="register">Register</a>
+        </div>
+      </div>
+      <div id="headerbottom">
+        <div id="headerlogo">
+          <a ng-href="{{cdash.home}}">
+            <img id="projectlogo" border="0" height="50px" src="img/cdash.png?rev=2019-05-08" />
+          </a>
+        </div>
+        <div id="headername2">
+          <span id="subheadername">{{::cdash.title}} {{::cdash.subtitle}}</span>
+        </div>
+      </div>
+    </div>
+
+    <br/>
+    <p ng-show="cdash.upgradewarning" style="color:red">
+      <b>
+        The current database schema doesn't match the version of CDash
+        you are running, upgrade your database structure in the
+        <a href="upgrade.php">
+          Administration/CDash maintenance panel of CDash
+        </a>
+      </b>
+    </p>
+
+    <!-- Main table -->
+    <table border="0" cellpadding="4" cellspacing="0" width="100%" id="indexTable" class="tabb">
+      <thead>
+        <tr class="table-heading1">
+          <td colspan="6" align="left" class="nob"><h3>Dashboards</h3></td>
+        </tr>
+
+        <tr class="table-heading">
+          <th align="center" id="sort_0" width="10%"><b>Project</b></th>
+          <td align="center" width="65%"><b>Description</b></td>
+          <th align="center" class="nob"  id="sort_2" width="13%"><b>Last activity</b></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr ng-repeat="project in cdash.projects" ng-class-odd="'odd'" ng-class-even="'even'">
+          <td align="center" >
+            <a ng-href="{{project.link}}">
+              {{project.name}}
+            </a>
+          </td>
+          <td align="left">{{project.description}}</td>
+          <td align="center" class="nob">
+            <span class="sorttime" style="display:none">
+              {{project.lastbuilddatefull}}
+            </span>
+            <a class="builddateelapsed" ng-alt="{{project.lastbuild}}" ng-href="{{project.link}}&date={{project.lastbuilddate}}">
+              {{project.lastbuild_elapsed}}
+            </a>
+            <img src="img/cleardot.gif" ng-class="'activity-level-{{project.activity}}'"/>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table width="100%" cellspacing="0" cellpadding="0">
+      <tr>
+        <td height="1" colspan="14" align="left" bgcolor="#888888"></td>
+      </tr>
+      <tr>
+        <td height="1" colspan="14" align="right">
+          <div ng-if="cdash.showoldtoggle" id="showold">
+            <a ng-show="!cdash.allprojects" href="viewProjects.php?allprojects=1">
+              Show all {{cdash.nprojects}} projects
+            </a>
+            <a ng-show="cdash.allprojects" href="viewProjects.php">
+              Hide old projects
+            </a>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <!-- FOOTER -->
+    <ng-include src="'build/views/partials/footer_@@version.html'"></ng-include>
+<!--  </body>
+</html> -->

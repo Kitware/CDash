@@ -1,0 +1,7 @@
+app/cdash/vendor
+app/cdash/_build
+app/cdash/node_modules
+.env
+node_modules
+vendor
+*.local.*

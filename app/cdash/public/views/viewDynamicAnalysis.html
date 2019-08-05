@@ -1,0 +1,76 @@
+<!-- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" ng-app="CDash">
+  <head ng-controller="HeadController">
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" type="text/css" ng-href="build/css/{{cssfile}}_@@version.css" />
+    <script src="js/CDash_@@version.min.js"></script>
+    <title ng-bind="title">CDash : Dynamic Analysis</title>
+  </head>
+
+  <body bgcolor="#ffffff" ng-controller="ViewDynamicAnalysisController">
+  -->
+    <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_@@version.html'"></ng-include>
+    <br/>
+
+    <div id="main_content" ng-if="cdash.requirelogin != 1 && !loading && !cdash.error">
+      <h3>Dynamic analysis started on {{::cdash.build.buildtime}}</h3>
+
+      <table border="0">
+        <tr>
+          <td align="right"><b>Site Name:</b></td>
+          <td>{{::cdash.build.site}}</td>
+        </tr>
+        <tr>
+          <td align="right"><b>Build Name:</b></td>
+          <td>{{::cdash.build.buildname}}</td>
+        </tr>
+      </table>
+
+      <table cellspacing="0">
+        <tr>
+          <th>Name</th>
+          <th>Status</th>
+          <th ng-repeat="defecttype in ::cdash.defecttypes">
+            {{::defecttype.type}}
+          </th>
+          <th ng-if="::cdash.displaylabels">Labels</th>
+        </tr>
+
+        <tr align="center"
+            ng-repeat="DA in ::cdash.dynamicanalyses"
+            ng-class-odd="'measurement'">
+          <td align="left">
+            <a ng-href="viewDynamicAnalysisFile.php?id={{::DA.id}}">
+              {{::DA.name}}
+            </a>
+          </td>
+
+          <td ng-class="::DA.status == 'Passed' ? 'normal' : 'error'">
+            {{::DA.status}}
+          </td>
+
+          <!-- Show how many defects of each type were found for this test -->
+          <td ng-repeat="numdefects in ::DA.defects track by $index"
+              ng-class="::{warning: numdefects > 0}">
+            <span ng-if="::numdefects > 0">
+              {{::numdefects}}
+            </span>
+          </td>
+
+          <!-- Labels -->
+          <td ng-if="::cdash.displaylabels">
+            {{::DA.labels}}
+          </td>
+        </tr>
+      </table>
+    </br>
+    </div>
+
+  <!-- FOOTER -->
+  <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_@@version.html'"></ng-include>
+<!--  </body>
+</html> -->

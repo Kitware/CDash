@@ -1,0 +1,155 @@
+<!-- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" ng-app="CDash">
+  <head ng-controller="HeadController">
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" type="text/css" ng-href="build/css/{{cssfile}}_@@version.css" />
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.4.css" />
+    <script src="js/CDash_@@version.min.js"></script>
+    <title ng-bind="::title">CDash</title>
+  </head>
+
+  <body bgcolor="#ffffff" ng-controller="UserStatisticsController">
+  -->
+    <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
+
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_@@version.html'"></ng-include>
+    <br/>
+
+    <div id="main_content" ng-if="cdash.requirelogin != 1 && !loading && !cdash.error">
+
+      <form class="form-inline" method="GET">
+        <input type="hidden" name="project" ng-value="cdash.projectname_encoded">
+        <input type="hidden" name="date" ng-value="cdash.date">
+        Show stats for the preceding:
+        <select name="range" onChange="form.submit()">
+          <option value="day" ng-selected="::cdash.range=='day'">
+            Day
+          </option>
+          <option value="week" ng-selected="::cdash.range=='week'">
+            Week
+          </option>
+          <option value="month" ng-selected="::cdash.range=='month'">
+            Month
+          </option>
+          <option value="year" ng-selected="::cdash.range=='year'">
+            Year
+          </option>
+        </select>
+        <button class="btn btn-default pull-right"
+                ng-click="defaultSorting()">
+          Restore default sorting
+        </button>
+      </form>
+
+      <br/>
+
+      <table id="userStatistics" cellspacing="0" width="100%" class="tabb">
+        <thead>
+          <tr class="table-heading1">
+            <th width="20%" class="header center-text"
+                ng-click="updateOrderByFields('name', $event)">
+              Developer
+              <span class="glyphicon"
+                    ng-class="orderByFields.indexOf('-name') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('name') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')">
+              </span>
+            </th>
+
+            <th width="10%" class="header center-text"
+                ng-click="updateOrderByFields('totalupdatedfiles', $event)">
+              Updated Files
+              <span class="glyphicon"
+                    ng-class="orderByFields.indexOf('-totalupdatedfiles') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('totalupdatedfiles') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')">
+              </span>
+            </th>
+
+            <th width="10%" class="header center-text"
+                ng-click="updateOrderByFields('fixed_errors', $event)">
+              Fixed Errors
+              <span class="glyphicon"
+                    ng-class="orderByFields.indexOf('-fixed_errors') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('fixed_errors') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')">
+              </span>
+            </th>
+
+            <th width="10%" class="header center-text"
+                ng-click="updateOrderByFields('fixed_warnings', $event)">
+              Fixed Warnings
+              <span class="glyphicon"
+                    ng-class="orderByFields.indexOf('-fixed_warnings') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('fixed_warnings') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')">
+              </span>
+            </th>
+
+            <th width="10%" class="header center-text"
+                ng-click="updateOrderByFields('fixed_tests', $event)">
+              Fixed Tests
+              <span class="glyphicon"
+                    ng-class="orderByFields.indexOf('-fixed_tests') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('fixed_tests') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')">
+              </span>
+            </th>
+
+            <th width="10%" class="header center-text"
+                ng-click="updateOrderByFields('failed_errors', $event)">
+              Errors
+              <span class="glyphicon"
+                    ng-class="orderByFields.indexOf('-failed_errors') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('failed_errors') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')">
+              </span>
+            </th>
+
+            <th width="10%" class="header center-text"
+                ng-click="updateOrderByFields('failed_warnings', $event)">
+              Warnings
+              <span class="glyphicon"
+                    ng-class="orderByFields.indexOf('-failed_warnings') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('failed_warnings') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')">
+              </span>
+            </th>
+
+            <th width="10%" class="header center-text"
+                ng-click="updateOrderByFields('failed_tests', $event)">
+              Failed Tests
+              <span class="glyphicon"
+                    ng-class="orderByFields.indexOf('-failed_tests') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('failed_tests') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')">
+              </span>
+            </th>
+          </tr>
+        </thead>
+
+        <tr ng-repeat="user in cdash.users"
+            ng-class-odd="'odd'" ng-class-even="'even'">
+          <td align="center">{{::user.name}}</td>
+
+          <td align="center">{{::user.totalupdatedfiles}}</td>
+
+          <td align="center" ng-class="::{'normal': user.fixed_errors > 0}">
+            {{::user.fixed_errors}}
+          </td>
+
+          <td align="center" ng-class="::{'normal': user.fixed_warnings > 0}">
+            {{::user.fixed_warnings}}
+          </td>
+
+          <td align="center" ng-class="::{'normal': user.fixed_tests > 0}">
+            {{::user.fixed_tests}}
+          </td>
+
+          <td align="center" ng-class="::{'error': user.failed_errors > 0}">
+            {{::user.failed_errors}}
+          </td>
+
+          <td align="center" ng-class="::{'error': user.failed_warnings > 0}">
+            {{::user.failed_warnings}}
+          </td>
+
+          <td align="center" ng-class="::{'error': user.failed_tests > 0}">
+            {{::user.failed_tests}}
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_@@version.html'"></ng-include>
+<!--
+  </body>
+</html> -->

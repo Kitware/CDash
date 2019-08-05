@@ -1,0 +1,240 @@
+<!-- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" ng-app="CDash">
+  <head ng-controller="HeadController">
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" type="text/css" ng-href="build/css/{{cssfile}}_@@version.css" />
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <script src="js/CDash_@@version.min.js"></script>
+    <title>CDash - Manage SubProjects</title>
+  </head>
+
+  <body bgcolor="#ffffff" ng-controller="ManageSubProjectController">
+  -->
+    <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_@@version.html'"></ng-include>
+    <br/>
+
+    <div id="main_content" class="container" ng-if="!loading && cdash.requirelogin != 1">
+      <div class="row">
+        <!-- project selection form -->
+        <div class="col-md-3">
+          <form class="form-inline" name="form1" method="post" action="{{'manageSubProject.php?projectid=' + cdash.projectid}}">
+            <div class="form-group">
+              <label for="projectSelection">Project: </label>
+              <select name="projectSelection" onchange="location = 'manageSubProject.php?projectid='+this.options[this.selectedIndex].value;" class="form-control">
+                <option value=-1>Choose...</option>
+                <option ng-repeat="proj in cdash.availableprojects" value="{{proj.id}}" ng-selected="proj.id==cdash.projectid">
+                  {{proj.name}}
+                </option>
+              </select>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- If a project has been selected -->
+      <div role="tabpanel" ng-if="cdash.projectid > -1">
+        <ul class="nav nav-tabs" role="tablist" id="tabs">
+          <li role="presentation" class="active">
+            <a href="#current" aria-controls="current" role="tab" data-toggle="tab">Current SubProjects</a>
+          </li>
+          <li role="presentation">
+            <a href="#add" aria-controls="add" role="tab" data-toggle="tab">Add a SubProject</a>
+          </li>
+          <li role="presentation">
+            <a href="#groups" aria-controls="groups" role="tab" data-toggle="tab">SubProject Groups</a>
+          </li>
+        </ul>
+
+        <div class="tab-content">
+
+          <div role="tabpanel" class="tab-pane active container" id="current">
+            <div class="row">
+              <div class="col-md-3">
+                <strong> Current SubProjects</strong>
+              </div>
+
+              <!-- group selection form -->
+              <div class="col-md-3 pull-right" ng-if="cdash.groups.length > 0">
+                <div class="form-inline">
+                  <label for="groupSelection">Display: </label>
+                  <select name="groupSelection" ng-model="cdash.filteredGroup" ng-options="group as group.name for group in cdash.groups | orderBy:'name'" class="form-control">
+                    <option value="">All</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- List the subprojects -->
+            <div ng-controller="SubProjectController" ng-repeat="subproject in cdash.subprojects | orderBy:'name' | filter_subproject_groups:cdash.filteredGroup" class="repeat-item">
+              <div class="row">
+                <div class="col-md-4">
+                  <!-- The subproject's name & an icon to fetch more info -->
+                  <span ng-click="loadData(subproject.id); showDetails = !showDetails" ng-class="showDetails ? 'glyphicon glyphicon-chevron-down' : 'glyphicon glyphicon-chevron-right'"></span> {{subproject.name}}
+
+                  <!-- Link to delete this subproject -->
+                  <span ng-show="showDetails" ng-click="deleteSubProject(subproject.id)" class="glyphicon glyphicon-trash"</span>
+                </div>
+              </div>
+
+              <div ng-show="showDetails">
+                <div class="row">
+
+                  <!-- Form to change this subproject's group -->
+                  <div class="col-md-3" ng-if="cdash.groups.length > 0">
+                    <div class="form-inline">
+                      <label for="groupid">Change group: </label>
+                      <select class="subproject_group form-control" name="groupid" ng-model="details.group" ng-options="group as group.name for group in cdash.groups | orderBy:'name'" ng-change="changeGroup()">
+                      </select>
+                      <img id="group_changed_{{details.subprojectid}}" src="img/check.gif" style="display: none; height:16px; width=16px; margin-top:9px;" />
+                    </div>
+                  </div>
+
+                  <!-- Form to add new dependencies to this subproject -->
+                  <div class="col-md-3 col-md-offset-5 form-group">
+                    <label for="dependency_selection_{{details.subprojectid}}">Add dependency: </label>
+                    <select class="dependency_selector form-control" name="dependency_selection_{{details.subprojectid}}" ng-model="dependencySelection" ng-options="avail as avail.name for avail in details.available_dependencies | orderBy:'name'">
+                      <option value="">Choose...</option>
+                    </select>
+                    <button class="btn btn-default" ng-click="addDependency(dependencySelection, details.subprojectid)" ng-disabled="! dependencySelection">Add</button>
+                  </div>
+
+                </div>
+
+                <!-- List the dependencies for this subproject -->
+                <div class="row" ng-if="details.dependencies.length > 0">
+                  <div class="col-md-5">
+                    <strong>Current dependencies:</strong>
+                  </div>
+                </div>
+
+                <div class="row repeat-item" ng-repeat="dep in details.dependencies | orderBy:'name'">
+                  <div class="col-md-5">
+                    <!-- Remove a dependency from a subproject -->
+                    - {{dep.name}}
+                    <span ng-click="removeDependency(dep.id, details.subprojectid)" class="glyphicon glyphicon-trash"</span>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <hr/>
+                </div>
+
+              </div>
+            </div>
+          </div> <!-- "current" pane -->
+
+          <div role="tabpanel" class="tab-pane container" id="add">
+            <div class="col-md-9 text-center">
+              <strong>Add a SubProject</strong>
+            </div>
+            <div class="col-md-9 form-horizontal">
+              <label for="newsubproject">New SubProject</label>
+              <input name="newsubproject" type="text" class="form-control" ng-model="newsubproject"></input>
+              <div ng-if="cdash.groups.length > 0">
+                <label for="newGroupSelection">Group</label>
+                <select name="newGroupSelection" ng-model="dd" ng-options="group as group.name for group in cdash.groups | orderBy:'name'" class="form-control">
+                </select>
+              </div>
+
+              <button class="btn btn-default" ng-click="createSubProject(newsubproject, dd.name)">Add SubProject</button>
+              <img id="subproject_created" src="img/check.gif" style="display: none; height:16px; width=16px; margin-top:9px;" />
+            </div>
+          </div> <!-- "add" pane -->
+
+          <div role="tabpanel" class="tab-pane container" id="groups">
+
+            <!-- form to create a new group -->
+            <div class="row">
+              <div class="col-md-9 text-center">
+              <strong>Create a new SubProject Group</strong>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-9 form-horizontal">
+                <label for="newgroup">Group Name</label>
+                <input name="newgroup" type="text" class="form-control" ng-model="newgroup"></input>
+                <label for="threshold">Coverage Threshold</label>
+                <input name="threshold" type="text" class="form-control" ng-model="cdash.threshold"></input>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" name="isdefault" ng-model="isdefault" ng-checked="cdash.groups.length == 0" ng-disabled="cdash.groups.length == 0" > Default
+                  </label>
+                </div>
+
+                <button class="btn btn-default" ng-click="createGroup(newgroup, cdash.threshold, isdefault)">Add group</button>
+              </div>
+
+            <div class="row">
+              <div class="col-md-9">
+                <hr/>
+              </div>
+            </div>
+
+            <div class="row" ng-if="cdash.groups.length > 0">
+              <div class="col-md-9">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>
+                        Group Name
+                      </th>
+                      <th>
+                        Is Default?
+                      </th>
+                      <th>
+                        Coverage Threshold
+                      </th>
+                    </tr>
+                  </thead>
+
+                  <tbody id="sortable"
+                         ui-sortable="sortable"
+                         ng-model="cdash.groups">
+                    <tr class="form-group repeat-item" style="cursor: move;"
+                        ng-repeat="group in cdash.groups | orderBy:'position'"
+                        id={{group.id}}>
+                      <td class="col-md-3">
+                        <input name="group_name" type="text" class="form-control" ng-model="group.name"></input>
+                      </td>
+
+                      <td class="col-md-1">
+                        <input name="groupRadio" type="radio" value="{{group.id}}"
+                          ng-model="cdash.default_group_id"
+                          ng-checked="cdash.default_group_id == group.id">
+                      </td>
+
+                      <td class="col-md-2">
+                        <input name="coverage_threshold" type="text" class="form-control" ng-model="group.coverage_threshold"></input>
+                      </td>
+
+                      <td class="col-md-1">
+                        <button class="btn btn-sm btn-default" ng-click="updateGroup(group, cdash.default_group_id == group.id)">Update</button>
+                      </td>
+                      <td class="col-md-1" name="img_cell">
+                        <img id="group_updated_{{group.id}}" src="img/check.gif" style="display: none; height:16px; width=16px; margin-top:9px;" />
+                      </td>
+                      <td class="col-md-1">
+                        <span ng-if="group.id != cdash.default_group_id || cdash.groups.length < 2" ng-click="deleteGroup(group.id)" class="glyphicon glyphicon-trash"</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <button class="btn btn-default" ng-click="updateGroupOrder()">Save Order</button>
+                <img id="order_updated" src="img/check.gif" style="display: none; height:16px; width=16px; margin-top:9px;" />
+              </div>
+            </div>
+          </div> <!-- "groups" pane -->
+        </div> <!-- tab-content -->
+      </div> <!-- tab panel -->
+    </div> <!-- container -->
+
+    <!-- FOOTER -->
+    <br/>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_@@version.html'"></ng-include>
+      <!--
+  </body>
+</html> -->

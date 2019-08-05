@@ -1,0 +1,297 @@
+<?php
+/*=========================================================================
+  Program:   CDash - Cross-Platform Dashboard System
+  Module:    $Id$
+  Language:  PHP
+  Date:      $Date$
+  Version:   $Revision$
+
+  Copyright (c) Kitware, Inc. All rights reserved.
+  See LICENSE or http://www.cdash.org/licensing/ for details.
+
+  This software is distributed WITHOUT ANY WARRANTY; without even
+  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+  PURPOSE. See the above copyright notices for more information.
+=========================================================================*/
+require_once 'include/pdo.php';
+require_once 'include/api_common.php';
+require_once 'include/common.php';
+
+use CDash\Model\Project;
+use CDash\Model\User;
+use CDash\Model\UserProject;
+use CDash\ServiceContainer;
+
+// Read input parameters (if any).
+$rest_input = file_get_contents('php://input');
+if (!is_array($rest_input)) {
+    $rest_input = json_decode($rest_input, true);
+}
+if (is_array($rest_input)) {
+    $_REQUEST = array_merge($_REQUEST, $rest_input);
+}
+
+if (!Auth::check()) {
+    return;
+}
+
+// Get the authenticated user.
+$service = ServiceContainer::getInstance();
+$user = $service->create(User::class);
+$user->Id = get_userid_from_session();
+
+// Route based on what type of request this is.
+$method = $_SERVER['REQUEST_METHOD'];
+switch ($method) {
+    case 'DELETE':
+        rest_delete($user);
+        break;
+    case 'POST':
+        rest_post($user);
+        break;
+    case 'GET':
+    default:
+        rest_get($user);
+        break;
+}
+
+/* Handle DELETE requests */
+function rest_delete($user)
+{
+    $response = [];
+    $project = get_project($response);
+    if (!$project) {
+        echo json_encode($response);
+        return;
+    }
+    if (!can_administrate_project($project->Id)) {
+        return;
+    }
+    remove_project_builds($project->Id);
+    $project->Delete();
+    http_response_code(200);
+}
+
+/* Handle POST requests */
+function rest_post($user)
+{
+    $response = [];
+
+    // If we should create a new project.
+    if (isset($_REQUEST['Submit'])) {
+        if (!$user) {
+            return;
+        }
+
+        $config = \CDash\Config::getInstance();
+        if (!$user->IsAdmin() && $config->get('CDASH_USER_CREATE_PROJECTS') != 1) {
+            // User does not have permission to create a new project.
+            $response['error'] = 'You do not have permission to access this page.';
+            http_response_code(403);
+            return false;
+        }
+        create_project($response, $user);
+        echo json_encode($response);
+        return;
+    }
+
+    $project = get_project($response);
+    if (!$project) {
+        echo json_encode($response);
+        return;
+    }
+    if (!can_administrate_project($project->Id)) {
+        return;
+    }
+
+    // If we should update an existing project.
+    if (isset($_REQUEST['Update']) || isset($_REQUEST['AddRepository'])) {
+        update_project($response, $project, $user);
+        echo json_encode($response);
+        return;
+    }
+
+    // If we should block a spammer's build.
+    if (isset($_REQUEST['AddBlockedBuild']) && !empty($_REQUEST['AddBlockedBuild'])) {
+        $response['blockedid'] =
+            add_blocked_build($project, $_REQUEST['AddBlockedBuild']);
+        echo json_encode($response);
+        return;
+    }
+
+    // If we should remove a build from the blocked list.
+    if (isset($_REQUEST['RemoveBlockedBuild']) && !empty($_REQUEST['RemoveBlockedBuild'])) {
+        return remove_blocked_build($project, $_REQUEST['RemoveBlockedBuild']);
+    }
+
+    // If we should set the logo.
+    if (isset($_FILES['logo']) && strlen($_FILES['logo']['tmp_name']) > 0) {
+        return set_logo($project);
+    }
+}
+
+/* Handle GET requests */
+function rest_get($user)
+{
+    $response = [];
+    $project = get_project($response);
+    if (!$project) {
+        echo json_encode($response);
+        return;
+    }
+    if (!can_administrate_project($project->Id)) {
+        return;
+    }
+    $response['project'] = $project->ConvertToJSON($user);
+    echo json_encode($response);
+    http_response_code(200);
+}
+
+function get_project(&$response)
+{
+    // Make sure we have a projectid.
+    if (!isset($_REQUEST['project'])) {
+        $response['error'] = 'No projectid specified';
+        http_response_code(400);
+        return false;
+    }
+    if (!is_array($_REQUEST['project'])) {
+        $_REQUEST['project'] = json_decode($_REQUEST['project'], true);
+    }
+    if (!isset($_REQUEST['project']['Id'])) {
+        $response['error'] = 'No projectid specified';
+        http_response_code(400);
+        return false;
+    }
+    $projectid = $_REQUEST['project']['Id'];
+    if (!is_numeric($projectid) || $projectid < 1) {
+        $response['error'] = 'No projectid specified';
+        http_response_code(400);
+        return false;
+    }
+    // Make sure the project exists.
+    $Project = new Project;
+    $Project->Id = $projectid;
+    if (!$Project->Exists()) {
+        $response['error'] = 'This project does not exist.';
+        http_response_code(400);
+        return false;
+    }
+
+    return $Project;
+}
+
+function create_project(&$response, $user)
+{
+    $Name = $_REQUEST['project']['Name'];
+    // Remove any potentially problematic characters.
+    $Name = preg_replace("/[^a-zA-Z0-9\s+-._]/", '', $Name);
+
+    // Make sure that a project with this name does not already exist.
+    $Project = new Project();
+    if ($Project->ExistsByName($Name)) {
+        $response['error'] = "Project '$Name' already exists.";
+        http_response_code(400);
+        return;
+    }
+
+    // Create the project.
+    $Project->Name = $Name;
+    populate_project($Project);
+    $Project->InitialSetup();
+
+    // Add the current user to this project.
+    if ($user->Id != 1) {
+        // Global admin is already added, so no need to do it again.
+        $UserProject = new UserProject();
+        $UserProject->UserId = $user->Id;
+        $UserProject->ProjectId = $Project->Id;
+        $UserProject->Role = 2;
+        $UserProject->EmailType = 3;// receive all emails
+        $UserProject->Save();
+    }
+
+    $response['projectcreated'] = 1;
+    $response['project'] = $Project->ConvertToJSON($user);
+    http_response_code(200);
+}
+
+function update_project(&$response, $Project, $User)
+{
+    $Project->Fill();
+    populate_project($Project);
+    $response['projectupdated'] = 1;
+    $response['project'] = $Project->ConvertToJSON($User);
+    http_response_code(200);
+}
+
+function populate_project($Project)
+{
+    $project_settings = $_REQUEST['project'];
+
+    if (isset($project_settings['CvsUrl'])) {
+        $cvsurl = filter_var($project_settings['CvsUrl'], FILTER_SANITIZE_URL);
+        $cvsurl = htmlspecialchars($cvsurl, ENT_QUOTES, 'UTF-8', false);
+        $project_settings['CvsUrl'] = str_replace('&amp;', '&', $cvsurl);
+    }
+
+    foreach ($project_settings as $k => $v) {
+        $Project->{$k} = $v;
+    }
+
+    // Convert UploadQuota from GB to bytes.
+    $config = \CDash\Config::getInstance();
+    if (is_numeric($Project->UploadQuota) && $Project->UploadQuota > 0) {
+        $Project->UploadQuota =
+            floor(min($Project->UploadQuota, $config->get('CDASH_MAX_UPLOAD_QUOTA')) * 1024 * 1024 * 1024);
+    }
+
+    $Project->Save();
+
+    if (isset($project_settings['repositories'])) {
+        // Add the repositories.
+        $repo_urls = array();
+        $repo_branches = array();
+        $repo_usernames = array();
+        $repo_passwords = array();
+        foreach ($project_settings['repositories'] as $repo) {
+            $repo_urls[] = $repo['url'];
+            $repo_branches[] = $repo['branch'];
+            $repo_usernames[] = $repo['username'];
+            $repo_passwords[] = $repo['password'];
+        }
+        if (!empty($repo_urls)) {
+            $Project->AddRepositories($repo_urls, $repo_usernames,
+                    $repo_passwords, $repo_branches);
+        }
+    }
+}
+
+function add_blocked_build($Project, $blocked_build)
+{
+    return $Project->AddBlockedBuild($blocked_build['buildname'],
+            $blocked_build['sitename'], $blocked_build['ipaddress']);
+}
+
+function remove_blocked_build($Project, $blocked_build)
+{
+    $Project->RemoveBlockedBuild($blocked_build['id']);
+}
+
+function set_logo($Project)
+{
+    $handle = fopen($_FILES['logo']['tmp_name'], 'r');
+    $contents = 0;
+    if ($handle) {
+        $contents = fread($handle, $_FILES['logo']['size']);
+        $filetype = $_FILES['logo']['type'];
+        fclose($handle);
+        unset($handle);
+    }
+    if ($contents) {
+        $imageId = $Project->AddLogo($contents, $filetype);
+        $response['imageid'] = $imageId;
+        http_response_code(200);
+        echo json_encode($response);
+    }
+}
