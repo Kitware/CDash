@@ -14,7 +14,7 @@ describe("manageSubProject", function() {
     element(by.buttonText('Add SubProject')).click();
 
     browser.get('manageSubProject.php?projectid=8#/current');
-    expect(element(by.id('current')).getInnerHtml()).toContain("aaaNewSubProject");
+    expect(element(by.id('current')).getText()).toContain("aaaNewSubProject");
   });
 
   it("can add a dependency", function() {
@@ -150,11 +150,11 @@ describe("manageSubProject", function() {
     element(by.className('table-striped')).element(by.className('glyphicon-trash')).click();
 
     // Make sure our groups don't exist anymore.
-    expect(element(by.id('groups')).getInnerHtml()).not.toContain("group1");
-    expect(element(by.id('groups')).getInnerHtml()).not.toContain("group2");
+    expect(element(by.id('groups')).getText()).not.toContain("group1");
+    expect(element(by.id('groups')).getText()).not.toContain("group2");
     browser.get('manageSubProject.php?projectid=8#/groups');
-    expect(element(by.id('groups')).getInnerHtml()).not.toContain("group1");
-    expect(element(by.id('groups')).getInnerHtml()).not.toContain("group2");
+    expect(element(by.id('groups')).getText()).not.toContain("group1");
+    expect(element(by.id('groups')).getText()).not.toContain("group2");
   });
 
 
@@ -173,11 +173,11 @@ describe("manageSubProject", function() {
       // on the page anymore.
       deleteIcon.click();
       browser.waitForAngular();
-      expect(element(by.id('current')).getInnerHtml()).not.toContain("aaaNewSubProject");
+      expect(element(by.id('current')).getText()).not.toContain("aaaNewSubProject");
 
       // Reload the page to make sure it's really gone from the database too.
       browser.get('manageSubProject.php?projectid=8');
-      expect(element(by.id('current')).getInnerHtml()).not.toContain("aaaNewSubProject");
+      expect(element(by.id('current')).getText()).not.toContain("aaaNewSubProject");
     });
   });
 

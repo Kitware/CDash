@@ -23,8 +23,8 @@ describe("manageBuildGroup", function() {
 
     // Make sure they're both on our list of current BuildGroups.
     browser.get('manageBuildGroup.php?projectid=5#/current');
-    expect(element(by.id('current')).getInnerHtml()).toContain("aaNewBuildGroup");
-    expect(element(by.id('current')).getInnerHtml()).toContain("latestBuildGroup");
+    expect(element(by.id('current')).getText()).toContain("aaNewBuildGroup");
+    expect(element(by.id('current')).getText()).toContain("latestBuildGroup");
   });
 
 
@@ -180,7 +180,7 @@ describe("manageBuildGroup", function() {
 
     // Make sure it's on the top after we reload.
     browser.get('manageBuildGroup.php?projectid=5#/current');
-    expect(element(by.repeater('buildgroup in cdash.buildgroups').row(0)).getInnerHtml()).toContain("aaaNewBuildGroup");
+    expect(element(by.repeater('buildgroup in cdash.buildgroups').row(0)).getText()).toContain("aaaNewBuildGroup");
   });
 
 
@@ -207,11 +207,11 @@ describe("manageBuildGroup", function() {
 
         // Make sure that this BuildGroup doesn't appear on the page anymore.
         browser.waitForAngular();
-        expect(element(by.id('current')).getInnerHtml()).not.toContain(buildGroupName);
+        expect(element(by.id('current')).getText()).not.toContain(buildGroupName);
 
         // Reload the page to make sure it's really gone from the database too.
         browser.get('manageBuildGroup.php?projectid=5#/current');
-        expect(element(by.id('current')).getInnerHtml()).not.toContain(buildGroupName);
+        expect(element(by.id('current')).getText()).not.toContain(buildGroupName);
       });
     }
 
