@@ -31,6 +31,6 @@
     "eslint": "^1.5.1",
     "eslint-config-angular": "^0.4.0",
     "eslint-plugin-angular": "^0.12.0",
-    "protractor": "^2.0.0"
+    "protractor": "^5.4.2"
   }
 }
