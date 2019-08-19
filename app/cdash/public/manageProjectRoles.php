@@ -179,7 +179,7 @@ if (Auth::check()) {
 
             // Send the email
             $text = 'Hello' . $prefix . $firstName . ",\n\n";
-            $text .= 'You have been registered to CDash because you have CVS/SVN access to the repository for ' . $projectname . "\n";
+            $text .= 'You have been registered to CDash because you have access to the source repository for ' . $projectname . "\n";
             $text .= 'To access your CDash account: ' . $currentURI . "/user.php\n";
             $text .= 'Your login is: ' . $email . "\n";
             $text .= 'Your password is: ' . $pass . "\n\n";
