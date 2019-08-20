@@ -58,11 +58,19 @@ CDash.controller('HeadController', function HeadController($rootScope, $document
   $rootScope.calendarSelected = function(dateStr) {
     var dateValue = dateStr.substr(6, 4) + "-" + dateStr.substr(0, 2) + "-" + dateStr.substr(3, 2);
     var uri = window.location.href;
-    // Insert/replace date value in current URI.
-    if (uri.indexOf('date=') == -1) {
-      uri += '&date=' + dateValue;
-    } else {
+    var dateStr = '&date=' + dateValue;
+    if (uri.indexOf('date=') > -1) {
       uri = uri.replace(/(date=)[^\&]+/, '$1' + dateValue);
+    } else {
+      // No date currently specified.
+      var filterIdx = uri.indexOf('&filter');
+      if (filterIdx > -1) {
+        // Insert the date clause before any filter stuff.
+        uri = uri.slice(0, filterIdx) + dateStr + uri.slice(filterIdx);
+      } else {
+        // No filters either, stick the date on the end.
+        uri += dateStr;
+      }
     }
     window.location = uri;
     $('#calendar').hide();
