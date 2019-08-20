@@ -211,8 +211,11 @@
                 <span class="glyphicon" ng-class="orderByFields.indexOf('-summary') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('summary') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
 
-              <th ng-repeat = "columnname in ::cdash.columnnames">
+              <th ng-repeat="columnname in ::cdash.columnnames"
+                  class="header"
+                  ng-click="sortByExtraMeasurement($index, $event)">
                 {{::columnname}}
+                <span class="glyphicon" ng-class="orderByFields.indexOf('-measurements[' + $index + ']') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('measurements[' + $index + ']') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
               </th>
             </tr>
           </thead>

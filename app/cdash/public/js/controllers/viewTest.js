@@ -134,6 +134,11 @@ CDash.controller('ViewTestController',
       $.cookie('cdash_view_test_sort', $scope.orderByFields);
     };
 
+    $scope.sortByExtraMeasurement = function(idx, $event) {
+      var field = 'measurements[' + idx + ']';
+      $scope.updateOrderByFields(field, $event);
+    }
+
     $scope.numTestsPerPageChanged = function() {
       $.cookie("viewTest_num_per_page", $scope.pagination.numPerPage, { expires: 365 });
       $scope.pageChanged();
