@@ -19,8 +19,22 @@
     <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_@@version.html'"></ng-include>
     <br/>
 
-    <div  id="main_content" ng-if="cdash.requirelogin != 1 && !loading">
-      <h3 id="numtests">Query {{cdash.dashboard.projectname}} Tests: {{cdash.builds.length}} matches</h3>
+    <div id="main_content" ng-if="cdash.requirelogin != 1 && !loading">
+
+<div class="row">
+  <div class="h3 col-xs-5" id="numtests">
+    Query {{cdash.dashboard.projectname}} Tests: {{cdash.builds.length}} matches
+  </div>
+  <!-- date range selector -->
+  <div class="form-inline pull-right">
+    <div class="form-group" daterange></div>
+    <button type="submit" class="btn btn-default"
+            ng-disabled="!cdash.begin || !cdash.end"
+            ng-click="formSubmit()">
+      Go
+    </button>
+  </div>
+</div>
 
 <!-- Filters -->
 <div id="labelshowfilters">
