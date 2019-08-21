@@ -147,6 +147,12 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
       "type": "string",
       "defaultvalue": ""
     },
+    "testoutput": {
+      "text": "Test Output",
+      "type": "list",
+      "defaultvalue": "",
+      "content": true
+    },
     "testsduration": {
       "text": "Tests Duration",
       "type": "number",

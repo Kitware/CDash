@@ -447,6 +447,12 @@ class QueryTestsPhpFilters extends DefaultFilters
             }
                 break;
 
+            case 'testoutput': {
+                // Handle via custom logic rather than a modified SQL query.
+                $sql_field = '';
+            }
+                break;
+
             case 'time': {
                 $sql_field = 'build2test.time';
             }

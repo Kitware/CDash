@@ -16,6 +16,7 @@
 
 namespace CDash\Controller\Api;
 
+use CDash\Config;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
@@ -27,6 +28,28 @@ class QueryTests extends ResultsApi
     public function __construct(Database $db, Project $project)
     {
         parent::__construct($db, $project);
+        $this->filterOnBuildGroup = false;
+        $this->filterOnTestOutput = false;
+
+        $this->testOutputMustInclude = [];
+        $this->testOutputMustExclude = [];
+    }
+
+    private function checkForSpecialFilters($filterdata)
+    {
+        $filters = $this->flattenFilters();
+        foreach ($filters as $filter) {
+            if ($filter['field'] == 'groupname') {
+                $this->filterOnBuildGroup = true;
+            } elseif ($filter['field'] == 'testoutput') {
+                $this->filterOnTestOutput = true;
+                if ($filter['compare'] == 92) {
+                    $this->testOutputMustExclude[] = $filter['value'];
+                } elseif ($filter['compare'] == 93) {
+                    $this->testOutputMustInclude[] = $filter['value'];
+                }
+            }
+        }
     }
 
     public function getResponse()
@@ -58,11 +81,7 @@ class QueryTests extends ResultsApi
         $filterdata = get_filterdata_from_request();
         unset($filterdata['xml']);
         $response['filterdata'] = $filterdata;
-        $filter_sql = $filterdata['sql'];
-        $limit_sql = '';
-        if ($filterdata['limit'] > 0) {
-            $limit_sql = ' LIMIT ' . $filterdata['limit'];
-        }
+        $this->setFilterData($filterdata);
         $response['filterurl'] = get_filterurl();
 
         // Menu
@@ -159,35 +178,27 @@ class QueryTests extends ResultsApi
             $query_params[':endtime'] = $this->endDate;
         }
 
-        // Check for the presence of a filter on Build Group.
-        // If this is present we need to join additional tables into our query.
+        // Check for the presence of a filters that modify our querying behavior.
+        $this->checkForSpecialFilters($filterdata);
+
+        // If we are filtering on Build Groups we need to join additional tables into our query.
         $filter_joins = '';
-        $extra_joins = '
-            JOIN build2group b2g ON b2g.buildid = b.id
-            JOIN buildgroup bg ON bg.id = b2g.groupid';
-        foreach ($filterdata['filters'] as $filter) {
-            if (array_key_exists('filters', $filter)) {
-                $break = false;
-                foreach ($filter['filters'] as $subfilter) {
-                    if ($subfilter['field'] == 'groupname') {
-                        $filter_joins = $extra_joins;
-                        $break = true;
-                        break;
-                    }
-                }
-                if ($break) {
-                    break;
-                }
-            } elseif ($filter['field'] == 'groupname') {
-                $filter_joins = $extra_joins;
-                break;
-            }
+        if ($this->filterOnBuildGroup) {
+            $filter_joins = '
+                JOIN build2group b2g ON b2g.buildid = b.id
+                JOIN buildgroup bg ON bg.id = b2g.groupid';
+        }
+
+        // Select extra data if we are filtering on test output.
+        $output_select = '';
+        if ($this->filterOnTestOutput) {
+            $output_select = ', test.output';
         }
 
         $sql = "SELECT b.id, b.name, b.starttime, b.siteid,b.parentid,
             build2test.testid AS testid, build2test.status,
             build2test.time, build2test.timestatus, site.name AS sitename,
-            test.name AS testname, test.details $proc_select
+            test.name AS testname, test.details $proc_select $output_select
                 FROM build AS b
                 JOIN build2test ON (b.id = build2test.buildid)
                 JOIN site ON (b.siteid = site.id)
@@ -195,16 +206,58 @@ class QueryTests extends ResultsApi
                 $proc_join
                 $filter_joins
                 WHERE b.projectid = :projectid
-                $parent_clause $date_clause $filter_sql
+                $parent_clause $date_clause $this->filterSQL
                 ORDER BY build2test.status, test.name
-                $limit_sql";
+                $this->limitSQL";
         $query_params[':projectid'] = $this->project->Id;
         $stmt = $pdo->prepare($sql);
         pdo_execute($stmt, $query_params);
 
         // Builds
+        $config = Config::getInstance();
         $builds = [];
         while ($row = $stmt->fetch()) {
+
+            if ($this->filterOnTestOutput) {
+                // TODO: encapsulate this decode somewhere else
+                if ($config->get('CDASH_USE_COMPRESSION')) {
+                    if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
+                        if (is_resource($row['output'])) {
+                            $row['output'] = base64_decode(stream_get_contents($row['output']));
+                        } else {
+                            $row['output'] = base64_decode($row['output']);
+                        }
+                    }
+                    @$uncompressedrow = gzuncompress($row['output']);
+                    if ($uncompressedrow !== false) {
+                        $test_output = $uncompressedrow;
+                    } else {
+                        $test_output = $row['output'];
+                    }
+                } else {
+                    $test_output = $row['output'];
+                }
+
+                // Make sure test output matches (or does not match) the
+                // specified filter values.
+                $skip = false;
+                foreach ($this->testOutputMustExclude as $exclude) {
+                    if (strpos($test_output, $exclude) !== false) {
+                        $skip = true;
+                        break;
+                    }
+                }
+                foreach ($this->testOutputMustInclude as $include) {
+                    if (strpos($test_output, $include) === false) {
+                        $skip = true;
+                        break;
+                    }
+                }
+                if ($skip) {
+                    continue;
+                }
+            }
+
             $buildid = $row['id'];
             $testid = $row['testid'];
 

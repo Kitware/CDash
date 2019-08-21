@@ -31,15 +31,17 @@ class QueryTestsTestCase extends KWWebTestCase
         $expected_previous_url = 'queryTests.php?project=Trilinos&date=2011-07-21&limit=0';
         if ($previous_url != $expected_previous_url) {
             $this->fail("Expected previous url to be $expected_previous_url, found $previous_url");
-            return 1;
         }
         $next_url = $menu['next'];
         $expected_next_url = 'queryTests.php?project=Trilinos&date=2011-07-23&limit=0';
         if ($next_url != $expected_next_url) {
             $this->fail("Expected next url to be $expected_next_url, found $next_url");
-            return 1;
         }
 
-        $this->pass('Passed');
+        // Make sure the test output filters work as expected.
+        $this->get($this->url . '/api/v1/queryTests.php?project=Trilinos&date=2011-07-22&filtercount=2&showfilters=1&filtercombine=and&field1=testoutput&compare1=93&value1=analytic&field2=testoutput&compare2=92&value2=%5E2');
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $this->assertEqual(count($jsonobj['builds']), 6);
     }
 }
