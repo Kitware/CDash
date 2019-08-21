@@ -20,6 +20,7 @@ use CDash\Config;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
+use CDash\Model\Test;
 
 require_once 'include/filterdataFunctions.php';
 
@@ -219,25 +220,7 @@ class QueryTests extends ResultsApi
         while ($row = $stmt->fetch()) {
 
             if ($this->filterOnTestOutput) {
-                // TODO: encapsulate this decode somewhere else
-                if ($config->get('CDASH_USE_COMPRESSION')) {
-                    if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
-                        if (is_resource($row['output'])) {
-                            $row['output'] = base64_decode(stream_get_contents($row['output']));
-                        } else {
-                            $row['output'] = base64_decode($row['output']);
-                        }
-                    }
-                    @$uncompressedrow = gzuncompress($row['output']);
-                    if ($uncompressedrow !== false) {
-                        $test_output = $uncompressedrow;
-                    } else {
-                        $test_output = $row['output'];
-                    }
-                } else {
-                    $test_output = $row['output'];
-                }
-
+                $test_output = Test::DecompressOutput($row['output']);
                 // Make sure test output matches (or does not match) the
                 // specified filter values.
                 $skip = false;

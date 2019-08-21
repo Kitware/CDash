@@ -354,4 +354,29 @@ class Test
         $host_base = $config->getBaseUrl();
         return "{$host_base}/testDetails.php?test={$this->Id}&build={$this->BuildTest->BuildId}";
     }
+
+    /**
+     * Returns uncompressed test output.
+     *
+     * @return string
+     */
+    public static function DecompressOutput($output)
+    {
+        $config = \CDash\Config::getInstance();
+        if (!$config->get('CDASH_USE_COMPRESSION')) {
+            return $output;
+        }
+        if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
+            if (is_resource($output)) {
+                $output = base64_decode(stream_get_contents($output));
+            } else {
+                $output = base64_decode($output);
+            }
+        }
+        @$uncompressedrow = gzuncompress($output);
+        if ($uncompressedrow !== false) {
+            $output = $uncompressedrow;
+        }
+        return $output;
+    }
 }

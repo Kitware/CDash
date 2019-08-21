@@ -27,6 +27,7 @@ use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
 use CDash\Model\Site;
+use CDash\Model\Test;
 
 if (!function_exists('findTest')) {
     // Helper function
@@ -190,24 +191,7 @@ $test_response['test'] = $testName;
 $test_response['time'] = time_difference($testRow['time'], true, '', true);
 $test_response['command'] = $testRow['command'];
 $test_response['details'] = $testRow['details'];
-
-if ($config->get('CDASH_USE_COMPRESSION')) {
-    if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
-        if (is_resource($testRow['output'])) {
-            $testRow['output'] = base64_decode(stream_get_contents($testRow['output']));
-        } else {
-            $testRow['output'] = base64_decode($testRow['output']);
-        }
-    }
-    @$uncompressedrow = gzuncompress($testRow['output']);
-    if ($uncompressedrow !== false) {
-        $test_response['output'] = utf8_for_xml($uncompressedrow);
-    } else {
-        $test_response['output'] = utf8_for_xml($testRow['output']);
-    }
-} else {
-    $test_response['output'] = utf8_for_xml($testRow['output']);
-}
+$test_response['output'] = utf8_for_xml(Test::DecompressOutput($testRow['output']));
 
 $test_response['summaryLink'] = $summaryLink;
 switch ($testRow['status']) {
