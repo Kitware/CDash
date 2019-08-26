@@ -218,7 +218,7 @@ class QueryTests extends ResultsApi
         $config = Config::getInstance();
         $builds = [];
         while ($row = $stmt->fetch()) {
-
+            $build = [];
             if ($this->filterOnTestOutput) {
                 $test_output = Test::DecompressOutput($row['output']);
                 // Make sure test output matches (or does not match) the
@@ -239,12 +239,35 @@ class QueryTests extends ResultsApi
                 if ($skip) {
                     continue;
                 }
+
+                $context_size = 200;
+                if ($this->testOutputMustInclude) {
+                    // Showing tests whose output includes some string(s).
+                    // Show context surrounding the first filter specified.
+                    $match_length = strlen($this->testOutputMustInclude[0]);
+                    $pre_post_context_size = ($context_size - $match_length) / 2;
+                    $idx = strpos($test_output, $this->testOutputMustInclude[0]);
+                    if ($idx < $pre_post_context_size) {
+                        // Match shows up near the beginning, start context from there.
+                        $build['matchingoutput'] = substr($test_output, 0, $context_size);
+                    } elseif ($idx > (strlen($test_output) - ($context_size / 2))) {
+                        // Match shows up near the end, show the end of test output.
+                        $build['matchingoutput'] = substr($test_output, -$context_size);
+                    } else {
+                        // Show context surrounding the match.
+                        $build['matchingoutput'] =
+                            substr($test_output, $idx - $pre_post_context_size,
+                                   $context_size);
+                    }
+                } else {
+                    // Showing tests whose output does NOT include some string(s).
+                    // Show the end of test output.
+                    $build['matchingoutput'] = substr($test_output, -$context_size);
+                }
             }
 
             $buildid = $row['id'];
             $testid = $row['testid'];
-
-            $build = [];
 
             $build['testname'] = $row['testname'];
             $build['site'] = $row['sitename'];
@@ -309,6 +332,7 @@ class QueryTests extends ResultsApi
             $builds[] = $build;
         }
         $response['builds'] = $builds;
+        $response['filterontestoutput'] = $this->filterOnTestOutput;
 
         $end = microtime_float();
         $response['generationtime'] = round($end - $start, 3);

@@ -43,5 +43,8 @@ class QueryTestsTestCase extends KWWebTestCase
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $this->assertEqual(count($jsonobj['builds']), 6);
+        $this->assertTrue($jsonobj['filterontestoutput']);
+        $idx = strpos($jsonobj['builds'][0]['matchingoutput'], 'analytic');
+        $this->assertEqual($idx, 96);
     }
 }

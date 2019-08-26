@@ -91,7 +91,7 @@
       <span class="glyphicon" ng-class="orderByFields.indexOf('-details') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('details') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
     </th>
 
-    <th class="header nob"
+    <th class="header"
         ng-click="updateOrderByFields('buildstarttime', $event)">
       Build Time
       <span class="glyphicon" ng-class="orderByFields.indexOf('-buildstarttime') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('buildstarttime') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
@@ -102,6 +102,10 @@
         ng-click="updateOrderByFields('nprocs', $event)">
       Processors
       <span class="glyphicon" ng-class="orderByFields.indexOf('-nprocs') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('nprocs') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+    </th>
+
+    <th ng-if="::cdash.filterontestoutput">
+      Matching Output
     </th>
   </tr>
 </thead>
@@ -147,6 +151,10 @@
 
     <td ng-if="::cdash.hasprocessors">
       {{build.nprocs}}
+    </td>
+
+    <td ng-if="::cdash.filterontestoutput">
+      <pre ng-bind-html="build.matchingoutput | ctestNonXmlCharEscape | terminalColors | trustAsHtml"></pre>
     </td>
   </tr>
 
