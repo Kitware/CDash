@@ -1,7 +1,5 @@
-set(testing_dir "${CDash_SOURCE_DIR}/tests")
-set(laravel_testing_dir "${CDash_SOURCE_DIR}/../../tests")
 set(binary_testing_dir "${CDash_BINARY_DIR}/tests")
-set(PHPUNIT "${CDash_SOURCE_DIR}/../../vendor/bin/phpunit")
+set(PHPUNIT "${CDash_SOURCE_DIR}/vendor/bin/phpunit")
 
 # function to add a new PHP based coverage test to CDash
 #
@@ -28,14 +26,14 @@ endfunction(add_configured_php_test)
 function(add_unit_test TestName)
   add_test(
     NAME ${TestName}
-    COMMAND ${PHP_EXE} ${phpunit_extra_arg} ${PHPUNIT} -c ${testing_dir}/phpunit.xml --bootstrap ${CDash_SOURCE_DIR}/tests/bootstrap.php ${testing_dir}/case/${TestName}Test.php
+    COMMAND ${PHP_EXE} ${phpunit_extra_arg} ${PHPUNIT} -c ${testing_dir}/phpunit.xml --bootstrap ${testing_dir}/bootstrap.php ${testing_dir}/case/${TestName}Test.php
   )
 endfunction(add_unit_test TestName)
 
 function(add_laravel_test TestName)
   add_test(
     NAME ${TestName}
-    COMMAND ${PHP_EXE} ${phpunit_extra_arg} ${PHPUNIT} -c ${testing_dir}/phpunit.xml --bootstrap ${CDash_SOURCE_DIR}/tests/bootstrap.php ${laravel_testing_dir}/${TestName}Test.php
+    COMMAND ${PHP_EXE} ${phpunit_extra_arg} ${PHPUNIT} -c ${testing_dir}/phpunit.xml --bootstrap ${testing_dir}/bootstrap.php ${laravel_testing_dir}/${TestName}Test.php
   )
 endfunction(add_laravel_test TestName)
 

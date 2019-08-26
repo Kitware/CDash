@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 2.8)
 set(CTEST_SITE                          "CDashTestingSite")
 set(CTEST_BUILD_NAME           "CDash-CTest-@TestName@")
 
-set(CTEST_SOURCE_DIRECTORY     "@CDash_SOURCE_DIR@/tests/ctest/@Directory@")
+set(CTEST_SOURCE_DIRECTORY     "@testing_dir@/ctest/@Directory@")
 set(CTEST_BINARY_DIRECTORY     "@CDash_BINARY_DIR@/tests/ctest/@Directory@")
 set(CTEST_CMAKE_GENERATOR      "@CMAKE_GENERATOR@")
 set(CTEST_NOTES_FILES          "${CTEST_SCRIPT_DIRECTORY}/${CTEST_SCRIPT_NAME}")
@@ -23,7 +23,7 @@ ctest_build(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)
 ctest_test(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)
 ctest_submit()
 execute_process(COMMAND "@PHP_EXE@" singletest.php "@CDashVerifyScript@"
-  WORKING_DIRECTORY  "@CDash_SOURCE_DIR@/tests"
+  WORKING_DIRECTORY  "@testing_dir@"
   OUTPUT_VARIABLE OUTDATA
   RESULT_VARIABLE res
   )

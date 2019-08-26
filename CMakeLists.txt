@@ -42,7 +42,9 @@ if(NOT DEFINED CDASH_BUILD_NAME)
 endif()
 
 # turn the CDash into one that can be tested
-file(WRITE "${CDash_SOURCE_DIR}/tests/config.test.local.php"
+set(testing_dir "${CDash_SOURCE_DIR}/app/cdash/tests")
+set(laravel_testing_dir "${CDash_SOURCE_DIR}/tests")
+file(WRITE "${testing_dir}/config.test.local.php"
 "<?php
 $configure = array(
   'urlwebsite'       => '${CDASH_TESTING_URL}',
@@ -65,7 +67,7 @@ endif(NOT CDASH_DB_TYPE)
 
 set(CDASH_COVERAGE_DIR "${CDash_BINARY_DIR}/xdebugCoverage")
 make_directory("${CDASH_COVERAGE_DIR}")
-configure_file(${CDash_SOURCE_DIR}/tests/prepend_coverage.php.in
+configure_file(${testing_dir}/prepend_coverage.php.in
                ${CDash_BINARY_DIR}/prepend_coverage.php)
 
 # For coverage builds on apache web servers, provide a default
@@ -73,8 +75,8 @@ configure_file(${CDash_SOURCE_DIR}/tests/prepend_coverage.php.in
 option(CDASH_CONFIGURE_HTACCESS_FILE "Create .htaccess file for coverage testing?" OFF)
 if(CDASH_CONFIGURE_HTACCESS_FILE)
   configure_file(
-    ${CDash_SOURCE_DIR}/tests/htaccess.in
-    ${CDash_SOURCE_DIR}/public/.htaccess)
+    ${testing_dir}/htaccess.in
+    ${CDash_SOURCE_DIR}/app/cdash/public/.htaccess)
     # Yes, the output of this configure_file is intentionally in the
     # source directory
 endif()
@@ -92,7 +94,7 @@ if(NOT COMPOSER)
 endif()
 execute_process(
   COMMAND ${PHP_EXE} ${COMPOSER} install --prefer-dist
-  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../..
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 # Also run "npm install" during configure time.
@@ -140,7 +142,7 @@ else()
   set(CDASH_BERNARD_CONSUMERS_WHITELIST "false")
 endif()
 
-file(WRITE "${CDash_SOURCE_DIR}/config/config.local.php"
+file(WRITE "${CDash_SOURCE_DIR}/app/cdash/config/config.local.php"
 "<?php
 // WARNING: This file is unconditionally overwritten by the CMake configure
 // step: [${CMAKE_CURRENT_LIST_FILE}]
@@ -173,4 +175,4 @@ $CDASH_BERNARD_CONSUMERS_WHITELIST = ${CDASH_BERNARD_CONSUMERS_WHITELIST};
 ")
 
 # add the tests directory
-add_subdirectory(tests)
+add_subdirectory(app/cdash/tests)
