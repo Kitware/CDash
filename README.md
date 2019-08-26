@@ -45,18 +45,16 @@ More details instructions for Docker builds can be in the [CDash Docker README](
 ```bash
 git clone https://github.com/Kitware/CDash
 
-# install CDash dependencies
-cd CDash/app/cdash
+# install CDash and Laravel dependencies
 composer install --no-dev --prefer-dist
 npm install
-node_modules/.bin/gulp
 
-# now install Laravel dependencies
-cd ../../
-composer install --no-dev
-npm install
-cp .env.example .env
+# Generate build files.
+node_modules/.bin/gulp
 php artisan key:generate
+
+# Setup default configuration.
+cp .env.example .env
 ```
 #### Further reading
 [CDash Docker README](docker/docker.md)
