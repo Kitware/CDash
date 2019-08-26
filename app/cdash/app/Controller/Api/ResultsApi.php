@@ -137,4 +137,20 @@ class ResultsApi extends ProjectApi
             $this->setDate($this->date);
         }
     }
+
+    // Return a flattened array of all filters and sub-filters.
+    public function flattenFilters()
+    {
+        $filters = [];
+        foreach ($this->filterdata['filters'] as $filter) {
+            if (array_key_exists('filters', $filter)) {
+                foreach ($filter['filters'] as $subfilter) {
+                    $filters[] = $subfilter;
+                }
+            } else {
+                $filters[] = $filter;
+            }
+        }
+        return $filters;
+    }
 }

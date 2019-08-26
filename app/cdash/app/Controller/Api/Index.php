@@ -1260,16 +1260,7 @@ class Index extends ResultsApi
     public function checkForSubProjectFilters()
     {
         $filter_on_labels = false;
-        $filters = [];
-        foreach ($this->filterdata['filters'] as $filter) {
-            if (array_key_exists('filters', $filter)) {
-                foreach ($filter['filters'] as $subfilter) {
-                    $filters[] = $subfilter;
-                }
-            } else {
-                $filters[] = $filter;
-            }
-        }
+        $filters = $this->flattenFilters();
         foreach ($filters as $filter) {
             if ($filter['field'] == 'subprojects') {
                 if ($filter['compare'] == 92) {
