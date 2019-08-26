@@ -12,7 +12,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-namespace CDash\Listeners;
+namespace App\Listeners;
 
 use App\User;
 use Illuminate\Auth\Events\Registered;

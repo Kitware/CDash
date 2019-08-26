@@ -91,8 +91,8 @@ if(NOT COMPOSER)
   set(COMPOSER "${CMAKE_CURRENT_SOURCE_DIR}/composer.phar")
 endif()
 execute_process(
-  COMMAND ${PHP_EXE} ${COMPOSER} install
-  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+  COMMAND ${PHP_EXE} ${COMPOSER} install --prefer-dist
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../..
 )
 
 # Also run "npm install" during configure time.

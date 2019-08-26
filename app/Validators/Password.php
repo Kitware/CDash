@@ -12,13 +12,13 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-namespace CDash\Validators;
+namespace App\Validators;
 
 use Illuminate\Validation\Validator;
 
 /**
  * Class Password
- * @package CDash\Validators
+ * @package App\Validators
  */
 class Password
 {
