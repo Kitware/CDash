@@ -16,7 +16,7 @@
 
 namespace CDash\Validators;
 
-use CDash\Validators\Password as PasswordValidator;
+use App\Validators\Password as PasswordValidator;
 use Config;
 use Illuminate\Contracts\Translation\Translator;
 use PHPUnit\Framework\MockObject\MockObject;

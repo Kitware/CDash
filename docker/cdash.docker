@@ -49,35 +49,39 @@ WORKDIR /home/kitware/cdash
 
 # Copy CDash (current folder) into /home/kitware/cdash to set its owner
 # to www-data
-COPY ./.git ./.git
-COPY ./.circleci ./.circleci
 COPY ./app ./app
-COPY ./bootstrap ./bootstrap
-COPY ./config ./config
-COPY ./database ./database
-COPY ./docker ./docker
-COPY ./public ./public
-COPY ./resources ./resources
-COPY ./routes ./routes
-COPY ./storage ./storage
-COPY ./tests ./tests
-COPY ./.env.example ./.env.example
-COPY ./.env.example ./.env
-COPY ./.editorconfig  ./.editorconfig
-COPY ./.eslintrc ./.eslintrc
-COPY ./.php_cs ./.php_cs
-COPY ./.styleci.yml ./.styleci.yml
 COPY ./artisan ./artisan
+COPY ./bootstrap ./bootstrap
+COPY ./.circleci ./.circleci
+COPY ./CMakeLists.txt ./CMakeLists.txt
 COPY ./composer.json ./composer.json
-COPY ./.dockerignore ./.dockerignore
-COPY ./.gitattributes ./.gitattributes
-COPY ./.gitignore ./.gitignore
+COPY ./config ./config
+COPY ./CTestConfig.cmake ./CTestConfig.cmake
+COPY ./CTestCustom.cmake.in ./CTestCustom.cmake.in
+COPY ./database ./database
 COPY ./docker-compose.yml ./docker-compose.yml
+COPY ./docker ./docker
+COPY ./.dockerignore ./.dockerignore
+COPY ./.editorconfig  ./.editorconfig
+COPY ./.env.example ./.env
+COPY ./.env.example ./.env.example
+COPY ./.eslintrc ./.eslintrc
+COPY ./.gitattributes ./.gitattributes
+COPY ./.git ./.git
+COPY ./.gitignore ./.gitignore
+COPY ./gulpfile.js ./gulpfile.js
 COPY ./package.json ./package.json
 COPY ./package-lock.json ./package-lock.json
+COPY ./.php_cs ./.php_cs
 COPY ./phpunit.xml ./phpunit.xml
+COPY ./public ./public
 COPY ./README.md ./README.md
+COPY ./resources ./resources
+COPY ./routes ./routes
 COPY ./server.php ./server.php
+COPY ./storage ./storage
+COPY ./.styleci.yml ./.styleci.yml
+COPY ./tests ./tests
 COPY ./webpack.mix.js ./webpack.mix.js
 
 # Install newer version of CMake
@@ -88,7 +92,7 @@ RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                \
 fi
 
 # Install CDash dependencies with composer and npm, run gulp to build assets
-WORKDIR /home/kitware/cdash/app/cdash
+WORKDIR /home/kitware/cdash
 
 RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                \
  pecl install xdebug                                                       \
@@ -102,7 +106,7 @@ RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                \
   -DCDASH_SERVER=cdash                                                     \
   -DCTEST_UPDATE_VERSION_ONLY=1 ..                                         \
  && cp /home/kitware/cdash/docker/conf.js                                  \
-       /home/kitware/cdash/app/cdash/_build/tests/js/e2e_tests/conf.js     \
+       /home/kitware/cdash/_build/app/cdash/tests/js/e2e_tests/conf.js     \
  && cp /home/kitware/cdash/docker/.env.laravel /home/kitware/cdash/.env;   \
 else                                                                       \
  composer install --no-interaction --no-progress --prefer-dist $PHP_ENV    \
@@ -110,13 +114,10 @@ else                                                                       \
  && node_modules/.bin/gulp;                                                \
 fi
 
-RUN cp php.ini /usr/local/etc/php/conf.d/cdash.ini
+RUN cp app/cdash/php.ini /usr/local/etc/php/conf.d/cdash.ini
 
-# Install Laravel dependencies with composer and npm, configure Laravel
-WORKDIR /home/kitware/cdash
-RUN composer install --no-interaction --no-progress --prefer-dist $PHP_ENV \
- && npm install                                                            \
- && php artisan key:generate                                               \
+# Configure Laravel
+RUN php artisan key:generate                                               \
  && chown -R www-data:www-data .
 
 # Configure Apache
@@ -136,7 +137,7 @@ RUN chmod +x /docker-entrypoint.sh
 
 EXPOSE 80
 
-WORKDIR /home/kitware/cdash/app/cdash/_build
+WORKDIR /home/kitware/cdash/_build
 
 ENTRYPOINT ["/bin/bash", "/docker-entrypoint.sh"]
 CMD ["serve"]

@@ -1,6 +1,4 @@
-app/cdash/vendor
-app/cdash/_build
-app/cdash/node_modules
+_build
 .env
 node_modules
 vendor

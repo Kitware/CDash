@@ -5,7 +5,7 @@ set(CTEST_DASHBOARD_ROOT                "@CMake_BINARY_DIR@/Tests/CTestTest")
 set(CTEST_SITE                          "CDashTestingSite")
 set(CTEST_BUILD_NAME                    "CTestTest-Build-Crash")
 
-set(CTEST_SOURCE_DIRECTORY     "@CDash_SOURCE_DIR@/tests/ctest/simple")
+set(CTEST_SOURCE_DIRECTORY     "@testing_dir@/ctest/simple")
 set(CTEST_BINARY_DIRECTORY     "@CDash_BINARY_DIR@/tests/ctest/simple")
 set(CTEST_CMAKE_GENERATOR               "@CMAKE_GENERATOR@")
 set(CTEST_NOTES_FILES                   "${CTEST_SCRIPT_DIRECTORY}/${CTEST_SCRIPT_NAME}")
