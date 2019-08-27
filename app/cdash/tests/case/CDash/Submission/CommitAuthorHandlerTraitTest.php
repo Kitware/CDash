@@ -2,8 +2,9 @@
 
 use CDash\Model\Build;
 use CDash\Submission\CommitAuthorHandlerTrait;
+use Tests\TestCase;
 
-class CommitAuthorHandlerTraitTest extends PHPUnit_Framework_TestCase
+class CommitAuthorHandlerTraitTest extends TestCase
 {
     public function testGetCommitAuthors()
     {
