@@ -17,14 +17,6 @@ ENV NODE_ENV=${DEVELOPMENT_BUILD:+'development'}
 # i.e. if DEVELOMPMENT_BUILD is empty the node environment is production
 ENV NODE_ENV=${NODE_ENV:-'production'}
 
-# PHP_ENV expands to empty if DEVELOPMENT_BUILD is unset or empty
-ENV PHP_ENV=${DEVELOPMENT_BUILD:+' '}
-
-# PHP_ENV expands to --no-dev (composer flag) if PHP_ENV is empty,
-# i.e. composer will not try to load require-dev packages, e.g. those
-# requiring xdebug
-ENV PHP_ENV=${PHP_ENV:-'--no-dev'}
-
 RUN apt-get update                                                         \
  && apt-get install -y gnupg                                               \
  && curl -sL https://deb.nodesource.com/setup_6.x | bash                   \
@@ -55,6 +47,7 @@ COPY ./bootstrap ./bootstrap
 COPY ./.circleci ./.circleci
 COPY ./CMakeLists.txt ./CMakeLists.txt
 COPY ./composer.json ./composer.json
+COPY ./composer.lock ./composer.lock
 COPY ./config ./config
 COPY ./CTestConfig.cmake ./CTestConfig.cmake
 COPY ./CTestCustom.cmake.in ./CTestCustom.cmake.in
@@ -109,7 +102,8 @@ RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                \
        /home/kitware/cdash/_build/app/cdash/tests/js/e2e_tests/conf.js     \
  && cp /home/kitware/cdash/docker/.env.laravel /home/kitware/cdash/.env;   \
 else                                                                       \
- composer install --no-interaction --no-progress --prefer-dist $PHP_ENV    \
+ composer install --no-interaction --no-progress --prefer-dist --no-dev    \
+                  --optimize-autoloader                                    \
  && npm install                                                            \
  && node_modules/.bin/gulp;                                                \
 fi
