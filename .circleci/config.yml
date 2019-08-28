@@ -5,24 +5,25 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Composer Install
+          command: sh docker/composer-install.sh
+      - run:
           name: MySQL Build
           command: |
             set -x
-            mv ./docker-compose.yml ./docker-compose.backup
-            cp ./.circleci/mysql/docker-compose.yml ./docker-compose.yml
-            docker-compose build --force-rm --no-cache --build-arg DEVELOPMENT_BUILD=1 cdash
+            php vendor/bin/composer run-script enable-dev-mysql
+            php vendor/bin/composer run-script --timeout=0 build-cdash-image
       - run:
           name: Spin Up MySQL Build
           command: |
             set -x
-            docker-compose up -d
+            php vendor/bin/composer run-script start-docker-services
             bash -c "docker/bash/circleci-wait.bash http://localhost/ping 12"
       - run:
           name: Test MySQL Build
           command:  |
             set -x
-            docker exec cdash bash -c "cd /home/kitware/cdash && /usr/bin/git checkout ."
-            docker exec --user www-data cdash bash -c "/usr/bin/ctest -VV -DBUILDNAME=\"${CIRCLE_BRANCH}_MySQL\" -Dpostgres=OFF -S /home/kitware/cdash/.circleci/ctest_driver_script.cmake"
+            php vendor/bin/composer run-script --timeout=0 run-container-tests
       - run:
           name: Save Test Artifacts
           command: docker cp cdash:/home/kitware/cdash/storage/logs/laravel-$(date +%F).log /tmp/cdash-mysql-test.log
@@ -32,32 +33,32 @@ jobs:
       - run:
           name: Tear Down MySQL Build
           command: docker-compose down
-      - run:
-          name: Spin Up Postgres Build
-          command: |
-            set -x
-            cp ./.circleci/postgres/docker-compose.yml ./docker-compose.local.yml
-            docker-compose -f docker-compose.local.yml up -d
-      - run:
-          name: Test Postgres Build
-          command: |
-            set -x
-            docker exec cdash bash -c "cp /home/kitware/cdash/.circleci/postgres/env /home/kitware/cdash/.env"
-            docker exec cdash bash -c "cd /home/kitware/cdash && /usr/bin/git checkout ."
-            docker exec --user www-data cdash bash -c "/usr/bin/ctest -VV -DBUILDNAME=\"${CIRCLE_BRANCH}_PgSQL\" -Dpostgres=ON -S /home/kitware/cdash/.circleci/ctest_driver_script.cmake"
-      - run:
-          name: Save Postgres Test Artifacts
-          command: docker cp cdash:/home/kitware/cdash/storage/logs/laravel-$(date +%F).log /tmp/cdash-postgres-test.log
-      - store_artifacts:
-          path: /tmp/cdash-postgres-test.log
-          destination: cdash-postgres-test.log
-      - run:
-          name: Update Docker Image
-          command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              mv ./docker-compose.backup ./docker-compose.yml
-              cp docker/cdash.docker Dockerfile
-              docker build -t kitware/cdash:latest .
-              docker login -u $DOCKER_USER -p $DOCKER_PASS
-              docker push kitware/cdash:latest
-            fi
+#      - run:
+#          name: Spin Up Postgres Build
+#          command: |
+#            set -x
+#            cp ./.circleci/postgres/docker-compose.yml ./docker-compose.local.yml
+#            docker-compose -f docker-compose.local.yml up -d
+#      - run:
+#          name: Test Postgres Build
+#          command: |
+#            set -x
+#            docker exec cdash bash -c "cp /home/kitware/cdash/.circleci/postgres/env /home/kitware/cdash/.env"
+#            docker exec cdash bash -c "cd /home/kitware/cdash && /usr/bin/git checkout ."
+#            docker exec --user www-data cdash bash -c "/usr/bin/ctest -VV -DBUILDNAME=\"${CIRCLE_BRANCH}_PgSQL\" -Dpostgres=ON -S /home/kitware/cdash/.circleci/ctest_driver_script.cmake"
+#      - run:
+#          name: Save Postgres Test Artifacts
+#          command: docker cp cdash:/home/kitware/cdash/storage/logs/laravel-$(date +%F).log /tmp/cdash-postgres-test.log
+#      - store_artifacts:
+#          path: /tmp/cdash-postgres-test.log
+#          destination: cdash-postgres-test.log
+#      - run:
+#          name: Update Docker Image
+#          command: |
+#            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+#              mv ./docker-compose.backup ./docker-compose.yml
+#              cp docker/cdash.docker Dockerfile
+#              docker build -t kitware/cdash:latest .
+#              docker login -u $DOCKER_USER -p $DOCKER_PASS
+#              docker push kitware/cdash:latest
+#            fi
