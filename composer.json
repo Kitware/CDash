@@ -95,34 +95,6 @@
     ],
     "post-create-project-cmd": [
       "@php artisan key:generate --ansi"
-    ],
-
-    "enable-production": "ln -fs docker/docker-compose.production.yml docker-compose.yml",
-    "enable-dev-mysql": "ln -fs docker/docker-compose.mysql.yml docker-compose.yml",
-    "enable-dev-postgres": "ln -fs docker/docker-compose.postgres.yml docker-compose.yml",
-
-    "build-cdash-image": [
-      "docker-compose build --force-rm --no-cache cdash"
-    ],
-
-    "start-docker-services": "docker-compose up -d",
-
-    "start-dev-mysql": [
-      "@enable-dev-mysql",
-      "@start-docker-services"
-    ],
-    "start-dev-postgres": [
-      "@enable-dev-postgres",
-      "@start-docker-services"
-    ],
-    "start-cdash-container": [
-      "@enable-production",
-      "@start-docker-services"
-    ],
-
-    "ctest-run-and-submit": [
-      "docker exec cdash bash -c \"cd /home/kitware/cdash && /usr/bin/git checkout .\"",
-      "docker exec --user www-data cdash bash -c \"/usr/bin/ctest -VV -DBUILDNAME=\"${CIRCLE_BRANCH}_MySQL\" -Dpostgres=OFF -S /home/kitware/cdash/.circleci/ctest_driver_script.cmake\""
     ]
   }
 }
