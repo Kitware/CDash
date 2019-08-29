@@ -33,7 +33,7 @@ cdash_start_docker_services() {
 cdash_wait_for_ready() {
   local url
   local allowed
-  local attemts
+  local attempts
   local wait_seconds
   local ok
 
