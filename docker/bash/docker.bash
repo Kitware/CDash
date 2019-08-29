@@ -60,7 +60,6 @@ cdash_run_and_submit_ctest() {
 
   ctest_driver="/home/kitware/cdash/.circleci/ctest_driver_script.cmake"
 
-  database="$1" ; shift
   if [ "$CDASH_DATABASE" '=' 'POSTGRES' ] ; then
     postgres='ON'
   else
