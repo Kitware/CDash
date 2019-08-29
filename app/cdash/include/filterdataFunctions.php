@@ -953,9 +953,12 @@ function get_sql_compare_and_value($compare, $value)
             break;
 
         case 92:
-        case 93: {
-            // Include or exclude a SubProject from the parent summary.
-            // This has to be handled via custom logic,
+        case 93:
+        case 94:
+        case 95:
+        case 96:
+        case 97: {
+            // These comparisons are handled via custom logic,
             // not just by tweaking the SQL query.
             $sql_compare = '';
             $sql_value = '';

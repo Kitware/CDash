@@ -149,7 +149,7 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
     },
     "testoutput": {
       "text": "Test Output",
-      "type": "list",
+      "type": "search",
       "defaultvalue": "",
       "content": true
     },
@@ -227,6 +227,12 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
       {"value": 42, text: "is not"},
       {"value": 43, text: "is greater than"},
       {"value": 44, text: "is less than"}
+    ],
+    "search": [
+      {"value": 94, text: "exclude"},
+      {"value": 95, text: "include"},
+      {"value": 96, text: "exclude regex"},
+      {"value": 97, text: "include regex"},
     ],
     "string": [
       {"value": 63, text: "contains"},
@@ -344,14 +350,14 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
         s = s + "&" + prefix + "=block";
         s = s + "&" + prefix + "count=" + num_subfilters;
         for (var j = 1; j <= num_subfilters ; j++) {
-          s = s + "&" + prefix + "field" + j + "=" + escape($scope.filterdata.filters[i-1].filters[j-1].field);
-          s = s + "&" + prefix + "compare" + j + "=" + escape($scope.filterdata.filters[i-1].filters[j-1].compare);
-          s = s + "&" + prefix + "value" + j + "=" + escape($scope.filterdata.filters[i-1].filters[j-1].value);
+          s = s + "&" + prefix + "field" + j + "=" + encodeURIComponent($scope.filterdata.filters[i-1].filters[j-1].field);
+          s = s + "&" + prefix + "compare" + j + "=" + encodeURIComponent($scope.filterdata.filters[i-1].filters[j-1].compare);
+          s = s + "&" + prefix + "value" + j + "=" + encodeURIComponent($scope.filterdata.filters[i-1].filters[j-1].value);
         }
       } else {
-        s = s + "&field" + i + "=" + escape($scope.filterdata.filters[i-1].field);
-        s = s + "&compare" + i + "=" + escape($scope.filterdata.filters[i-1].compare);
-        s = s + "&value" + i + "=" + escape($scope.filterdata.filters[i-1].value);
+        s = s + "&field" + i + "=" + encodeURIComponent($scope.filterdata.filters[i-1].field);
+        s = s + "&compare" + i + "=" + encodeURIComponent($scope.filterdata.filters[i-1].compare);
+        s = s + "&value" + i + "=" + encodeURIComponent($scope.filterdata.filters[i-1].value);
       }
     }
 

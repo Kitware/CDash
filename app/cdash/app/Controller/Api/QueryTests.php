@@ -32,8 +32,13 @@ class QueryTests extends ResultsApi
         $this->filterOnBuildGroup = false;
         $this->filterOnTestOutput = false;
 
-        $this->testOutputMustInclude = [];
-        $this->testOutputMustExclude = [];
+        $this->testOutputInclude = [];
+        $this->testOutputIncludeRegex = [];
+        $this->testOutputExclude = [];
+        $this->testOutputExcludeRegex = [];
+
+        $this->delimiters = ['/', '#', '%', '~', '+', '!', '@', '_', ';', '`',
+                             '-', '=', ','];
     }
 
     private function checkForSpecialFilters($filterdata)
@@ -44,13 +49,29 @@ class QueryTests extends ResultsApi
                 $this->filterOnBuildGroup = true;
             } elseif ($filter['field'] == 'testoutput') {
                 $this->filterOnTestOutput = true;
-                if ($filter['compare'] == 92) {
-                    $this->testOutputMustExclude[] = $filter['value'];
-                } elseif ($filter['compare'] == 93) {
-                    $this->testOutputMustInclude[] = $filter['value'];
+                if ($filter['compare'] == 94) {
+                    $this->testOutputExclude[] = $filter['value'];
+                } elseif ($filter['compare'] == 95) {
+                    $this->testOutputInclude[] = $filter['value'];
+                } elseif ($filter['compare'] == 96) {
+                    $this->testOutputExcludeRegex[] = $filter['value'];
+                } elseif ($filter['compare'] == 97) {
+                    $this->testOutputIncludeRegex[] = $filter['value'];
                 }
             }
         }
+    }
+
+    // Find and apply a safe delimiter for converting a substring into a
+    // regular expression.
+    private function applySafeDelimiter($pattern)
+    {
+        foreach ($this->delimiters as $delimiter) {
+            if (strpos($pattern, $delimiter) === false) {
+                return $delimiter . $pattern . $delimiter;
+            }
+        }
+        return $pattern;
     }
 
     public function getResponse()
@@ -224,14 +245,45 @@ class QueryTests extends ResultsApi
                 // Make sure test output matches (or does not match) the
                 // specified filter values.
                 $skip = false;
-                foreach ($this->testOutputMustExclude as $exclude) {
+                $first_match_idx = false;
+                $match_length = 0;
+
+                foreach ($this->testOutputExclude as $exclude) {
                     if (strpos($test_output, $exclude) !== false) {
                         $skip = true;
                         break;
                     }
                 }
-                foreach ($this->testOutputMustInclude as $include) {
-                    if (strpos($test_output, $include) === false) {
+
+                foreach ($this->testOutputExcludeRegex as $exclude_regex) {
+                    $exclude_regex = $this->applySafeDelimiter($exclude_regex);
+                    if (preg_match($exclude_regex, $test_output)) {
+                        $skip = true;
+                        break;
+                    }
+                }
+
+                foreach ($this->testOutputInclude as $include) {
+                    $idx = strpos($test_output, $include);
+                    if ($idx === false) {
+                        $skip = true;
+                        break;
+                    }
+                    if (!$first_match_idx) {
+                        $first_match_idx = $idx;
+                        $match_length = strlen($include);
+                    }
+                }
+
+                foreach ($this->testOutputIncludeRegex as $include_regex) {
+                    $include_regex = $this->applySafeDelimiter($include_regex);
+                    if (preg_match($include_regex, $test_output, $matches,
+                                   PREG_OFFSET_CAPTURE)) {
+                        if (!$first_match_idx) {
+                            $first_match_idx = $matches[0][1];
+                            $match_length = strlen($include_regex);
+                        }
+                    } else {
                         $skip = true;
                         break;
                     }
@@ -241,22 +293,21 @@ class QueryTests extends ResultsApi
                 }
 
                 $context_size = 200;
-                if ($this->testOutputMustInclude) {
+                if ($this->testOutputInclude || $this->testOutputIncludeRegex) {
                     // Showing tests whose output includes some string(s).
                     // Show context surrounding the first filter specified.
-                    $match_length = strlen($this->testOutputMustInclude[0]);
                     $pre_post_context_size = ($context_size - $match_length) / 2;
-                    $idx = strpos($test_output, $this->testOutputMustInclude[0]);
-                    if ($idx < $pre_post_context_size) {
+                    if ($first_match_idx < $pre_post_context_size) {
                         // Match shows up near the beginning, start context from there.
                         $build['matchingoutput'] = substr($test_output, 0, $context_size);
-                    } elseif ($idx > (strlen($test_output) - ($context_size / 2))) {
+                    } elseif ($first_match_idx > (strlen($test_output) - ($context_size / 2))) {
                         // Match shows up near the end, show the end of test output.
                         $build['matchingoutput'] = substr($test_output, -$context_size);
                     } else {
                         // Show context surrounding the match.
                         $build['matchingoutput'] =
-                            substr($test_output, $idx - $pre_post_context_size,
+                            substr($test_output,
+                                   $first_match_idx - $pre_post_context_size,
                                    $context_size);
                     }
                 } else {
