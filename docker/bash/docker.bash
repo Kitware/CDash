@@ -15,7 +15,7 @@ cdash_environment() {
   fi
 
   echo "Setting enviroment variables..."
-  export $CDASH_DATABASE
+  export CDASH_DATABASE
   echo "CDASH_DATABASE=${CDASH_DATABASE}"
 
   echo "Linking compose file docker/docker-compose.${environment}.yml ..."
