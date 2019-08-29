@@ -32,7 +32,7 @@ jobs:
           destination: cdash-mysql-test.log
       - run:
           name: Tear Down MySQL Build
-          command: docker-compose down
+          command: docker-compose down --remove-orphans
       - run:
           name: Spin Up Postgres Build
           command: |
