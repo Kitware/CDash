@@ -33,32 +33,33 @@ jobs:
       - run:
           name: Tear Down MySQL Build
           command: docker-compose down
-#      - run:
-#          name: Spin Up Postgres Build
-#          command: |
-#            set -x
-#            cp ./.circleci/postgres/docker-compose.yml ./docker-compose.local.yml
-#            docker-compose -f docker-compose.local.yml up -d
-#      - run:
-#          name: Test Postgres Build
-#          command: |
-#            set -x
-#            docker exec cdash bash -c "cp /home/kitware/cdash/.circleci/postgres/env /home/kitware/cdash/.env"
-#            docker exec cdash bash -c "cd /home/kitware/cdash && /usr/bin/git checkout ."
-#            docker exec --user www-data cdash bash -c "/usr/bin/ctest -VV -DBUILDNAME=\"${CIRCLE_BRANCH}_PgSQL\" -Dpostgres=ON -S /home/kitware/cdash/.circleci/ctest_driver_script.cmake"
-#      - run:
-#          name: Save Postgres Test Artifacts
-#          command: docker cp cdash:/home/kitware/cdash/storage/logs/laravel-$(date +%F).log /tmp/cdash-postgres-test.log
-#      - store_artifacts:
-#          path: /tmp/cdash-postgres-test.log
-#          destination: cdash-postgres-test.log
-#      - run:
-#          name: Update Docker Image
-#          command: |
-#            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-#              mv ./docker-compose.backup ./docker-compose.yml
-#              cp docker/cdash.docker Dockerfile
-#              docker build -t kitware/cdash:latest .
-#              docker login -u $DOCKER_USER -p $DOCKER_PASS
-#              docker push kitware/cdash:latest
-#            fi
+      - run:
+          name: Spin Up Postgres Build
+          command: |
+            set -x
+            source ~/project/docker/bash/docker.bash
+            cdash_environment postgres
+            cdash_start_docker_services
+      - run:
+          name: Test Postgres Build
+          command: |
+            set -x
+            source ~/project/docker/bash/docker.bash
+            docker exec cdash bash -c "cp /home/kitware/cdash/.circleci/postgres/env /home/kitware/cdash/.env"
+            cdash_run_and_submit_ctest
+      - run:
+          name: Save Postgres Test Artifacts
+          command: docker cp cdash:/home/kitware/cdash/storage/logs/laravel-$(date +%F).log /tmp/cdash-postgres-test.log
+      - store_artifacts:
+          path: /tmp/cdash-postgres-test.log
+          destination: cdash-postgres-test.log
+      - run:
+          name: Update Docker Image
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              mv ./docker-compose.backup ./docker-compose.yml
+              cp docker/cdash.docker Dockerfile
+              docker build -t kitware/cdash:latest .
+              docker login -u $DOCKER_USER -p $DOCKER_PASS
+              docker push kitware/cdash:latest
+            fi
