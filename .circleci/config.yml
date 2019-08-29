@@ -5,23 +5,25 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Source Commands
-          command: source ~/project/docker/bash/docker.bash
-      - run:
           name: MySQL Build
           command: |
             set -x
+            source ~/project/docker/bash/docker.bash
             cdash_environment mysql
             cdash_build_image
       - run:
           name: Spin Up MySQL Build
           command: |
             set -x
+            source ~/project/docker/bash/docker.bash
             cdash_start_docker_services
             cdash_wait_for_ready http://localhost/ping 12
       - run:
           name: Test MySQL Build
-          command: cdash_run_and_submit_ctest
+          command: |
+            set -x
+            source ~/project/docker/bash/docker.bash
+            cdash_run_and_submit_ctest
       - run:
           name: Save Test Artifacts
           command: docker cp cdash:/home/kitware/cdash/storage/logs/laravel-$(date +%F).log /tmp/cdash-mysql-test.log
