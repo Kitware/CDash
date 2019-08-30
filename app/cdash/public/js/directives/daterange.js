@@ -6,6 +6,7 @@ CDash.directive('daterange', function (VERSION) {
       var format = "yy-mm-dd",
 
       begin = element.find("#begin").datepicker({
+        constrainInput: false,
         changeMonth: true,
         dateFormat: format,
         defaultDate: scope.cdash.date
@@ -15,6 +16,7 @@ CDash.directive('daterange', function (VERSION) {
       }),
 
       end = element.find("#end").datepicker({
+        constrainInput: false,
         changeMonth: true,
         dateFormat: format,
         defaultDate: scope.cdash.date
