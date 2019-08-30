@@ -34,7 +34,7 @@ class CommitAuthorSubscriptionBuilderTest extends TestCase
         $this->assertCount(0, $subscriptions);
 
         $key = 'builderrorspositive';
-        $mock_submission = $this->getMockSubmission($key);
+        $mock_submission = $this->getMockSubmission($key, BuildHandler::class);
         $mock_submission->expects($this->any())
             ->method('GetTopicCollectionForSubscriber')
             ->willReturnCallback(function ($subscriber) {
@@ -50,13 +50,35 @@ class CommitAuthorSubscriptionBuilderTest extends TestCase
         $this->assertTrue($subscriptions->has('auth.or@company.tld'));
     }
 
+    public function testBuildGivenSubmissionWithBuildWarnings()
+    {
+        $subscriptions = new SubscriptionCollection();
+        $this->assertCount(0, $subscriptions);
+
+        $key = 'buildwarningspositive';
+        $mock_submission = $this->getMockSubmission($key, BuildHandler::class);
+        $mock_submission->expects($this->any())
+            ->method('GetTopicCollectionForSubscriber')
+            ->willReturnCallback(function ($subscriber) {
+                $handler = new BuildHandler(0, 0);
+                return $handler->GetTopicCollectionForSubscriber($subscriber);
+            });
+
+        $sut = new CommitAuthorSubscriptionBuilder($mock_submission);
+        $sut->build($subscriptions);
+
+        $this->assertEmpty($subscriptions);
+        $this->assertFalse($subscriptions->has('com.mitter@company.tld'));
+        $this->assertFalse($subscriptions->has('auth.or@compnay.tld'));
+    }
+
     public function testBuildGivenSubmissionWithTestFailures()
     {
         $subscriptions = new SubscriptionCollection();
         $this->assertCount(0, $subscriptions);
 
         $key = 'testfailedpositive';
-        $mock_submission = $this->getMockSubmission($key);
+        $mock_submission = $this->getMockSubmission($key, TestingHandler::class);
         $mock_submission->expects($this->any())
             ->method('GetTopicCollectionForSubscriber')
             ->willReturnCallback(function ($subscriber) {
@@ -75,7 +97,7 @@ class CommitAuthorSubscriptionBuilderTest extends TestCase
     /**
      * @return ActionableBuildInterface|PHPUnit_Framework_MockObject_MockObject
      */
-    public function getMockSubmission($key)
+    public function getMockSubmission($key, $handler_class)
     {
         /** @var Project $mock_project */
         $mock_project = $this->getMockBuilder(Project::class)
@@ -101,8 +123,10 @@ class CommitAuthorSubscriptionBuilderTest extends TestCase
             ->willReturn(true);
 
         /** @var ActionableBuildInterface|PHPUnit_Framework_MockObject_MockObject $mock_handler */
-        $mock_handler = $this->getMockBuilder(ActionableBuildInterface::class)
-            ->getMockForAbstractClass();
+        $mock_handler = $this->getMockBuilder($handler_class)
+            ->disableOriginalConstructor()
+            ->setMethods(['GetProject', 'GetSite', 'GetBuildCollection', 'GetCommitAuthors', 'GetBuildGroup'])
+            ->getMock();
 
         $mock_handler->expects($this->any())
             ->method('GetProject')

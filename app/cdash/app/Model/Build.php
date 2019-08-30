@@ -2989,20 +2989,11 @@ class Build
                         $authors[] = $row['committeremail'];
                     }
 
-                    if ($hasAuthor === false && $hasCommitter === false) {
+                    if ($hasAuthor === false
+                        && $hasCommitter === false
+                        && filter_var($row['author'], FILTER_VALIDATE_EMAIL)
+                    ) {
                         $authors[] = $row['author'];
-                        // IMPORTANT: PLEASE READ
-                        // This is dubious. In testing this value is often expected to be user1kw with no
-                        // associated domain name. Here are the implications of this:
-                        //   * Could be that $row['author'] is a user name with no guarantees that it is also
-                        //     an email address
-                        //   * Could be that $row['author'] is a first and a last name, which clearly does not
-                        //     work here
-                        //   * If it just so happens to be an email address, as it is used in testing, it is
-                        //     unaccompanied by a domain name, further complicating whether or not any messages
-                        //     addressed to it reach its intended destination in practice
-                        //   * Without this value present at least one test will fail and chances are pretty
-                        //     good that others will follow suit.
                     }
                 }
                 $this->CommitAuthors = array_unique($authors);

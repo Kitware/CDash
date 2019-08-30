@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="nolaunchers"
+	BuildStamp="20190730-1640-Experimental"
+	Name="localhost"
+	Generator="ctest-3.14.5"
+	CompilerName=""
+	CompilerVersion=""
+	OSName="Linux"
+	Hostname="elysium"
+	OSRelease="4.15.0-52-generic"
+	OSVersion="#56-Ubuntu SMP Tue Jun 4 22:49:08 UTC 2019"
+	OSPlatform="x86_64"
+	Is64Bits="1"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="45"
+	ProcessorCacheSize="12288"
+	NumberOfLogicalCPU="12"
+	NumberOfPhysicalCPU="6"
+	TotalVirtualMemory="2047"
+	TotalPhysicalMemory="32090"
+	LogicalProcessorsPerPhysical="2"
+	ProcessorClockFrequency="1606.62"
+	>
+	<Build>
+		<StartDateTime>Jul 30 12:40 EDT</StartDateTime>
+		<StartBuildTime>1564504828</StartBuildTime>
+		<BuildCommand>/usr/bin/cmake --build . --config "Release" -- -i</BuildCommand>
+		<Error>
+			<BuildLogLine>4</BuildLogLine>
+			<Text>/.../src/error.cxx:2:3: error: ‘asdf’ was not declared in this scope</Text>
+			<SourceFile>error.cxx</SourceFile>
+			<SourceLineNumber>2</SourceLineNumber>
+			<PreContext>Scanning dependencies of target error
+[ 10%] Building CXX object CMakeFiles/error.dir/error.cxx.o
+/.../src/error.cxx: In function ‘int main(int, char**)’:
+</PreContext>
+			<PostContext>   asdf = 0;
+   ^~~~
+[ 20%] Linking CXX executable error
+</PostContext>
+			<RepeatCount>0</RepeatCount>
+		</Error>
+		<Error>
+			<BuildLogLine>8</BuildLogLine>
+			<Text>c++: error: CMakeFiles/error.dir/error.cxx.o: No such file or directory</Text>
+			<PreContext></PreContext>
+			<PostContext>c++: fatal error: no input files
+compilation terminated.
+[ 20%] Built target error
+Scanning dependencies of target error2
+[ 30%] Building CXX object CMakeFiles/error2.dir/error2.cxx.o
+/.../src/error2.cxx: In function ‘int main(int, char**)’:
+</PostContext>
+			<RepeatCount>0</RepeatCount>
+		</Error>
+		<Error>
+			<BuildLogLine>15</BuildLogLine>
+			<Text>/.../src/error2.cxx:2:3: error: ‘asdf’ was not declared in this scope</Text>
+			<SourceFile>error2.cxx</SourceFile>
+			<SourceLineNumber>2</SourceLineNumber>
+			<PreContext></PreContext>
+			<PostContext>   asdf = 0;
+   ^~~~
+[ 40%] Linking CXX executable error2
+</PostContext>
+			<RepeatCount>0</RepeatCount>
+		</Error>
+		<Error>
+			<BuildLogLine>19</BuildLogLine>
+			<Text>c++: error: CMakeFiles/error2.dir/error2.cxx.o: No such file or directory</Text>
+			<PreContext></PreContext>
+			<PostContext>c++: fatal error: no input files
+compilation terminated.
+[ 40%] Built target error2
+Scanning dependencies of target color
+[ 50%] Building CXX object CMakeFiles/color.dir/color.cxx.o
+[ 60%] Linking CXX executable color
+[ 60%] Built target color
+Scanning dependencies of target sleep
+[ 70%] Building CXX object CMakeFiles/sleep.dir/sleep.cxx.o
+[ 80%] Linking CXX executable sleep</PostContext>
+			<RepeatCount>0</RepeatCount>
+		</Error>
+		<Warning>
+			<BuildLogLine>34</BuildLogLine>
+			<Text>/.../src/warning.cxx:4:9: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]</Text>
+			<SourceFile>warning.cxx</SourceFile>
+			<SourceLineNumber>4</SourceLineNumber>
+			<PreContext>[ 80%] Built target sleep
+Scanning dependencies of target warning
+[ 90%] Building CXX object CMakeFiles/warning.dir/warning.cxx.o
+/.../src/warning.cxx: In function ‘int main(int, char**)’:
+</PreContext>
+			<PostContext>   if (i &lt; j) {
+       ~~^~~
+</PostContext>
+			<RepeatCount>0</RepeatCount>
+		</Warning>
+		<Warning>
+			<BuildLogLine>37</BuildLogLine>
+			<Text>/.../src/warning.cxx:4:9: warning: ‘j’ is used uninitialized in this function [-Wuninitialized]</Text>
+			<SourceFile>warning.cxx</SourceFile>
+			<SourceLineNumber>4</SourceLineNumber>
+			<PreContext></PreContext>
+			<PostContext>   if (i &lt; j) {
+       ~~^~~
+[100%] Linking CXX executable warning
+[100%] Built target warning
+</PostContext>
+			<RepeatCount>0</RepeatCount>
+		</Warning>
+		<Log Encoding="base64" Compression="bin/gzip"/>
+		<EndDateTime>Jul 30 12:40 EDT</EndDateTime>
+		<EndBuildTime>1564504829</EndBuildTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Build>
+</Site>

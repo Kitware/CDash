@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="launchers"
+	BuildStamp="20190730-1637-Experimental"
+	Name="localhost"
+	Generator="ctest-3.14.5"
+	CompilerName=""
+	CompilerVersion=""
+	OSName="Linux"
+	Hostname="elysium"
+	OSRelease="4.15.0-52-generic"
+	OSVersion="#56-Ubuntu SMP Tue Jun 4 22:49:08 UTC 2019"
+	OSPlatform="x86_64"
+	Is64Bits="1"
+	VendorString="GenuineIntel"
+	VendorID="Intel Corporation"
+	FamilyID="6"
+	ModelID="45"
+	ProcessorCacheSize="12288"
+	NumberOfLogicalCPU="12"
+	NumberOfPhysicalCPU="6"
+	TotalVirtualMemory="2047"
+	TotalPhysicalMemory="32090"
+	LogicalProcessorsPerPhysical="2"
+	ProcessorClockFrequency="1406.57"
+	>
+	<Build>
+		<StartDateTime>Jul 30 12:37 EDT</StartDateTime>
+		<StartBuildTime>1564504660</StartBuildTime>
+		<BuildCommand>/usr/bin/cmake --build . --config "Release" -- -i</BuildCommand>
+		<Failure type="Error">
+			<!-- Meta-information about the build action -->
+			<Action>
+				<TargetName>error</TargetName>
+				<Language>C++</Language>
+				<SourceFile>error.cxx</SourceFile>
+				<OutputFile>CMakeFiles/error.dir/error.cxx.o</OutputFile>
+				<OutputType>object file</OutputType>
+			</Action>
+			<!-- Details of command -->
+			<Command>
+				<WorkingDirectory>/home/zack/projects/tmp_for_cdash/bin</WorkingDirectory>
+				<Argument>/usr/bin/c++</Argument>
+				<Argument>-Wall</Argument>
+				<Argument>-o</Argument>
+				<Argument>CMakeFiles/error.dir/error.cxx.o</Argument>
+				<Argument>-c</Argument>
+				<Argument>/projects/tmp_for_cdash/src/error.cxx</Argument>
+			</Command>
+			<!-- Result of command -->
+			<Result>
+				<StdOut/>
+				<StdErr>/projects/tmp_for_cdash/src/error.cxx: In function ‘int main(int, char**)’:
+/projects/tmp_for_cdash/src/error.cxx:2:3: error: ‘asdf’ was not declared in this scope
+   asdf = 0;
+   ^~~~</StdErr>
+				<ExitCondition>1</ExitCondition>
+			</Result>
+		</Failure>
+		<Failure type="Error">
+			<!-- Meta-information about the build action -->
+			<Action>
+				<TargetName>error</TargetName>
+				<Language>C++</Language>
+				<OutputFile>error</OutputFile>
+				<OutputType>executable</OutputType>
+			</Action>
+			<!-- Details of command -->
+			<Command>
+				<WorkingDirectory>/home/zack/projects/tmp_for_cdash/bin</WorkingDirectory>
+				<Argument>/usr/bin/c++</Argument>
+				<Argument>-Wall</Argument>
+				<Argument>-rdynamic</Argument>
+				<Argument>CMakeFiles/error.dir/error.cxx.o</Argument>
+				<Argument>-o</Argument>
+				<Argument>error</Argument>
+			</Command>
+			<!-- Result of command -->
+			<Result>
+				<StdOut/>
+				<StdErr>c++: error: CMakeFiles/error.dir/error.cxx.o: No such file or directory
+c++: fatal error: no input files
+compilation terminated.</StdErr>
+				<ExitCondition>1</ExitCondition>
+			</Result>
+		</Failure>
+		<Failure type="Error">
+			<!-- Meta-information about the build action -->
+			<Action>
+				<TargetName>error2</TargetName>
+				<Language>C++</Language>
+				<SourceFile>error2.cxx</SourceFile>
+				<OutputFile>CMakeFiles/error2.dir/error2.cxx.o</OutputFile>
+				<OutputType>object file</OutputType>
+			</Action>
+			<!-- Details of command -->
+			<Command>
+				<WorkingDirectory>/home/zack/projects/tmp_for_cdash/bin</WorkingDirectory>
+				<Argument>/usr/bin/c++</Argument>
+				<Argument>-Wall</Argument>
+				<Argument>-o</Argument>
+				<Argument>CMakeFiles/error2.dir/error2.cxx.o</Argument>
+				<Argument>-c</Argument>
+				<Argument>/projects/tmp_for_cdash/src/error2.cxx</Argument>
+			</Command>
+			<!-- Result of command -->
+			<Result>
+				<StdOut/>
+				<StdErr>/projects/tmp_for_cdash/src/error2.cxx: In function ‘int main(int, char**)’:
+/projects/tmp_for_cdash/src/error2.cxx:2:3: error: ‘asdf’ was not declared in this scope
+   asdf = 0;
+   ^~~~</StdErr>
+				<ExitCondition>1</ExitCondition>
+			</Result>
+		</Failure>
+		<Failure type="Error">
+			<!-- Meta-information about the build action -->
+			<Action>
+				<TargetName>error2</TargetName>
+				<Language>C++</Language>
+				<OutputFile>error2</OutputFile>
+				<OutputType>executable</OutputType>
+			</Action>
+			<!-- Details of command -->
+			<Command>
+				<WorkingDirectory>/home/zack/projects/tmp_for_cdash/bin</WorkingDirectory>
+				<Argument>/usr/bin/c++</Argument>
+				<Argument>-Wall</Argument>
+				<Argument>-rdynamic</Argument>
+				<Argument>CMakeFiles/error2.dir/error2.cxx.o</Argument>
+				<Argument>-o</Argument>
+				<Argument>error2</Argument>
+			</Command>
+			<!-- Result of command -->
+			<Result>
+				<StdOut/>
+				<StdErr>c++: error: CMakeFiles/error2.dir/error2.cxx.o: No such file or directory
+c++: fatal error: no input files
+compilation terminated.</StdErr>
+				<ExitCondition>1</ExitCondition>
+			</Result>
+		</Failure>
+		<Failure type="Warning">
+			<!-- Meta-information about the build action -->
+			<Action>
+				<TargetName>warning</TargetName>
+				<Language>C++</Language>
+				<SourceFile>warning.cxx</SourceFile>
+				<OutputFile>CMakeFiles/warning.dir/warning.cxx.o</OutputFile>
+				<OutputType>object file</OutputType>
+			</Action>
+			<!-- Details of command -->
+			<Command>
+				<WorkingDirectory>/home/zack/projects/tmp_for_cdash/bin</WorkingDirectory>
+				<Argument>/usr/bin/c++</Argument>
+				<Argument>-Wall</Argument>
+				<Argument>-o</Argument>
+				<Argument>CMakeFiles/warning.dir/warning.cxx.o</Argument>
+				<Argument>-c</Argument>
+				<Argument>/projects/tmp_for_cdash/src/warning.cxx</Argument>
+			</Command>
+			<!-- Result of command -->
+			<Result>
+				<StdOut/>
+				<StdErr>/projects/tmp_for_cdash/src/warning.cxx: In function ‘int main(int, char**)’:
+[CTest: warning matched] /projects/tmp_for_cdash/src/warning.cxx:4:9: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+   if (i &lt; j) {
+       ~~^~~
+[CTest: warning matched] /projects/tmp_for_cdash/src/warning.cxx:4:9: warning: ‘j’ is used uninitialized in this function [-Wuninitialized]
+   if (i &lt; j) {
+       ~~^~~</StdErr>
+				<ExitCondition>0</ExitCondition>
+			</Result>
+		</Failure>
+		<Log Encoding="base64" Compression="bin/gzip"/>
+		<EndDateTime>Jul 30 12:37 EDT</EndDateTime>
+		<EndBuildTime>1564504661</EndBuildTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Build>
+</Site>

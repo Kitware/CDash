@@ -44,13 +44,6 @@ interface ActionableBuildInterface
     public function GetTopicCollectionForSubscriber(SubscriberInterface $subscriber);
 
     /**
-     * Returns an array of email addresses from those comitters that are not already users
-     *
-     * @return array
-     */
-    public function GetCommitAuthors();
-
-    /**
      * @return Collection
      */
     public function GetSubscriptionBuilderCollection();

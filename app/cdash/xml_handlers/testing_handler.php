@@ -1,9 +1,9 @@
 <?php
-use CDash\Collection\BuildCollection;
 
 require_once 'xml_handlers/abstract_handler.php';
 require_once 'xml_handlers/actionable_build_interface.php';
 
+use CDash\Collection\BuildCollection;
 use CDash\Collection\Collection;
 use CDash\Collection\SubscriptionBuilderCollection;
 use CDash\Messaging\Notification\NotifyOn;
@@ -12,24 +12,26 @@ use CDash\Messaging\Subscription\UserSubscriptionBuilder;
 use CDash\Messaging\Topic\MissingTestTopic;
 use CDash\Messaging\Topic\TestFailureTopic;
 use CDash\Messaging\Topic\TopicCollection;
-use CDash\Messaging\Topic\TopicInterface;
-use CDash\Model\ActionableTypes;
-use \CDash\Model\Build;
+use CDash\Model\Build;
 use CDash\Model\BuildGroup;
-use \CDash\Model\BuildInformation;
-use \CDash\Model\BuildTest;
-use \CDash\Model\Feed;
-use \CDash\Model\Image;
-use \CDash\Model\Label;
-use \CDash\Model\Site;
-use \CDash\Model\SiteInformation;
+use CDash\Model\BuildInformation;
+use CDash\Model\BuildTest;
+use CDash\Model\Feed;
+use CDash\Model\Image;
+use CDash\Model\Label;
+use CDash\Model\Project;
+use CDash\Model\Site;
+use CDash\Model\SiteInformation;
 use CDash\Model\SubscriberInterface;
-use \CDash\Model\Test;
-use \CDash\Model\TestMeasurement;
-use \CDash\Model\Project;
+use CDash\Model\Test;
+use CDash\Model\TestMeasurement;
+use CDash\Submission\CommitAuthorHandlerInterface;
+use CDash\Submission\CommitAuthorHandlerTrait;
 
-class TestingHandler extends AbstractHandler implements ActionableBuildInterface
+class TestingHandler extends AbstractHandler implements ActionableBuildInterface, CommitAuthorHandlerInterface
 {
+    use CommitAuthorHandlerTrait;
+
     private $StartTimeStamp;
     private $EndTimeStamp;
 

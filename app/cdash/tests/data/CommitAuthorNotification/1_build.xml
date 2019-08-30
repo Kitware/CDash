@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Win32-MSVC2009"
+  BuildStamp="20090223-0100-Continuous"
+  Name="Dash20.kitware"
+  Generator="ctest2.6-patch 0"  OSName="Windows"
+  Hostname="dash20"
+  OSRelease="XP Professional"
+  OSVersion="Service Pack 2(Build 2600)"
+  OSPlatform=""
+  Is64Bits="0"
+  VendorString="GenuineIntel"
+  VendorID="Intel Corporation"
+  FamilyID="6"
+  ModelID="15"
+  ProcessorCacheSize="-1"
+  NumberOfLogicalCPU="1"
+  NumberOfPhysicalCPU="4"
+  TotalVirtualMemory="2047"
+  TotalPhysicalMemory="15"
+  LogicalProcessorsPerPhysical="4"
+  ProcessorClockFrequency="2400"
+>
+<Build>
+  <StartDateTime>Feb 23 05:02 Eastern Standard Time</StartDateTime>
+  <StartBuildTime>1235383323</StartBuildTime>
+<BuildCommand>F:\PROGRA~1\MICROS~1.0\Common7\IDE\VCExpress.exe BatchMake.sln /build Release /project ALL_BUILD</BuildCommand>
+  <Warning>
+    <BuildLogLine>34</BuildLogLine>
+    <Text>3&gt;f:\program files\microsoft sdks\windows\v6.0a\include\servprov.h(79) : warning C4068: unknown pragma
+</Text>
+    <PreContext>1&gt;uncompr.c
+2&gt;bmDashboardSend.cxx
+1&gt;inftrees.c
+1&gt;gzio.c
+1&gt;Generating Code...
+4&gt;SliceExtractor.cxx
+</PreContext>
+    <PostContext></PostContext>
+    <RepeatCount>0</RepeatCount>
+</Warning>
+  <Warning>
+    <BuildLogLine>417</BuildLogLine>
+    <Text>25&gt;XcedeLib.lib(XnatCatalog.obj) : warning LNK4049: locally defined symbol _itk_libxml2_xmlFree imported
+</Text>
+    <PreContext></PreContext>
+    <PostContext>25&gt;Embedding manifest...
+25&gt;Build log was saved at "file://f:\Dashboards\BatchMake-Nightly\Testing\Code\BatchMakeTests.dir\Release\BuildLog.htm"
+25&gt;BatchMakeTests - 0 error(s), 2 warning(s)
+========== Build: 27 succeeded, 0 failed, 2 up-to-date, 0 skipped ==========
+</PostContext>
+    <RepeatCount>0</RepeatCount>
+</Warning>
+
+
+  <Log Encoding="base64" Compression="/bin/gzip">
+  </Log>
+  <EndDateTime>Feb 23 05:04 Eastern Standard Time</EndDateTime>
+  <EndBuildTime>1235383451</EndBuildTime>
+<ElapsedMinutes>2.1</ElapsedMinutes></Build>
+</Site>
