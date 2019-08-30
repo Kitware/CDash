@@ -30,6 +30,10 @@ cdash_start_docker_services() {
   docker-compose -f ./docker-compose.local.yml up -d
 }
 
+cdash_stop_docker_services() {
+  docker-compose down --remove-orphans
+}
+
 cdash_wait_for_ready() {
   local url
   local allowed
@@ -56,15 +60,38 @@ cdash_wait_for_ready() {
 
 cdash_run_and_submit_ctest() {
   local postgres
+  local database
   local ctest_driver
 
   ctest_driver="/home/kitware/cdash/.circleci/ctest_driver_script.cmake"
 
-  if [ "$CDASH_DATABASE" '=' 'POSTGRES' ] ; then
-    postgres='ON'
-  else
-    postgres='OFF'
-  fi
+  database="$1" ; shift
+  postgres="$1" ; shift
+
   docker exec cdash bash -c "cd /home/kitware/cdash && /usr/bin/git checkout ."
-  docker exec --user www-data cdash bash -c "/usr/bin/ctest -VV -DBUILDNAME=\"${CIRCLE_BRANCH}_${CDASH_DATABASE}\" -Dpostgres=${postgres} -S ${ctest_driver}"
+
+  echo "CIRCLE_BRANCH=$CIRCLE_BRANCH"
+  echo "database=$database"
+  echo "postgres=$postgres"
+  echo "ctest_driver=$ctest_driver"
+
+  docker exec --user www-data cdash bash -c "/usr/bin/ctest -VV -DBUILDNAME=\"${CIRCLE_BRANCH}_${database}\" -Dpostgres=${postgres} -S ${ctest_driver}"
+}
+
+cdash_run_and_submit_mysql_ctest() {
+  cdash_run_and_submit_ctest MySQL OFF
+}
+
+cdash_run_and_submit_pgsql_ctest() {
+  cdash_run_and_submit_ctest PGSQL ON
+}
+
+cdash_copy() {
+  local from
+  local to
+
+  from="$1" ; shift
+  to="$2" ; shift
+
+  docker cp $from cdash:/home/kitware/cdash/$2
 }
