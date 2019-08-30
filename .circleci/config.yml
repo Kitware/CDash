@@ -23,7 +23,7 @@ jobs:
           command: |
             set -x
             source ~/project/docker/bash/docker.bash
-            cdash_run_and_submit_ctest
+            cdash_run_and_submit_mysql_ctest
       - run:
           name: Save Test Artifacts
           command: docker cp cdash:/home/kitware/cdash/storage/logs/laravel-$(date +%F).log /tmp/cdash-mysql-test.log
@@ -32,7 +32,10 @@ jobs:
           destination: cdash-mysql-test.log
       - run:
           name: Tear Down MySQL Build
-          command: docker-compose down --remove-orphans
+          command: |
+            set -x
+            source ~/project/docker/bash/docker.bash
+            cdash_stop_docker_services
       - run:
           name: Spin Up Postgres Build
           command: |
@@ -46,7 +49,7 @@ jobs:
             set -x
             source ~/project/docker/bash/docker.bash
             docker exec cdash bash -c "cp /home/kitware/cdash/.circleci/postgres/env /home/kitware/cdash/.env"
-            cdash_run_and_submit_ctest
+            cdash_run_and_submit_pgsql_ctest
       - run:
           name: Save Postgres Test Artifacts
           command: docker cp cdash:/home/kitware/cdash/storage/logs/laravel-$(date +%F).log /tmp/cdash-postgres-test.log
