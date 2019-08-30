@@ -1,6 +1,8 @@
 version: 2.1
 jobs:
   build:
+    environment:
+      SITENAME: "CircleCI 2.1"
     machine: true
     steps:
       - checkout
@@ -8,21 +10,21 @@ jobs:
           name: MySQL Build
           command: |
             set -x
-            source ~/project/docker/bash/docker.bash
+            source ~/project/docker/commands.bash
             cdash_environment mysql
             cdash_build_image
       - run:
           name: Spin Up MySQL Build
           command: |
             set -x
-            source ~/project/docker/bash/docker.bash
+            source ~/project/docker/commands.bash
             cdash_start_docker_services
             cdash_wait_for_ready http://localhost/ping 12
       - run:
           name: Test MySQL Build
           command: |
             set -x
-            source ~/project/docker/bash/docker.bash
+            source ~/project/docker/commands.bash
             cdash_run_and_submit_mysql_ctest
       - run:
           name: Save Test Artifacts
@@ -34,20 +36,20 @@ jobs:
           name: Tear Down MySQL Build
           command: |
             set -x
-            source ~/project/docker/bash/docker.bash
+            source ~/project/docker/commands.bash
             cdash_stop_docker_services
       - run:
           name: Spin Up Postgres Build
           command: |
             set -x
-            source ~/project/docker/bash/docker.bash
+            source ~/project/docker/commands.bash
             cdash_environment postgres
             cdash_start_docker_services
       - run:
           name: Test Postgres Build
           command: |
             set -x
-            source ~/project/docker/bash/docker.bash
+            source ~/project/docker/commands.bash
             docker exec cdash bash -c "cp /home/kitware/cdash/.circleci/postgres/env /home/kitware/cdash/.env"
             cdash_run_and_submit_pgsql_ctest
       - run:

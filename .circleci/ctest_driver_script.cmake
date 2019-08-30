@@ -1,4 +1,4 @@
-set(CTEST_SITE "CircleCI 2.0")
+set(CTEST_SITE "${SITENAME}")
 set(CTEST_BUILD_NAME "${BUILDNAME}")
 set(CTEST_CMAKE_GENERATOR "Unix Makefiles")
 set(CTEST_SOURCE_DIRECTORY "/home/kitware/cdash")
