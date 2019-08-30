@@ -1234,8 +1234,10 @@ function time2second($time)
  */
 function get_dates($date, $nightlytime)
 {
-    $nightlytime = strtotime($nightlytime, strtotime($date));
+    // Convert $date parameter to expected format.
+    $date = date(FMT_DATE, strtotime($date));
 
+    $nightlytime = strtotime($nightlytime, strtotime($date));
     $nightlyhour = date('H', $nightlytime);
     $nightlyminute = date('i', $nightlytime);
     $nightlysecond = date('s', $nightlytime);
