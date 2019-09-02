@@ -370,7 +370,7 @@ function do_submit_queue($filehandle, $projectid, $buildid = null, $expected_md5
 function post_submit()
 {
     // We expect POST to contain the following values.
-    $vars = array('project', 'build', 'stamp', 'site', 'track', 'type', 'starttime', 'endtime', 'datafilesmd5');
+    $vars = ['project', 'build', 'stamp', 'site', 'starttime', 'endtime', 'datafilesmd5'];
     foreach ($vars as $var) {
         if (!isset($_POST[$var]) || empty($_POST[$var])) {
             $response_array['status'] = 1;
@@ -402,8 +402,6 @@ function post_submit()
     $buildname = htmlspecialchars(pdo_real_escape_string($_POST['build']));
     $buildstamp = htmlspecialchars(pdo_real_escape_string($_POST['stamp']));
     $sitename = htmlspecialchars(pdo_real_escape_string($_POST['site']));
-    $track = htmlspecialchars(pdo_real_escape_string($_POST['track']));
-    $type = htmlspecialchars(pdo_real_escape_string($_POST['type']));
     $starttime = htmlspecialchars(pdo_real_escape_string($_POST['starttime']));
     $endtime = htmlspecialchars(pdo_real_escape_string($_POST['endtime']));
 

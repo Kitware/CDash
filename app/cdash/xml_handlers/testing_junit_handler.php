@@ -30,7 +30,7 @@ class TestingJUnitHandler extends AbstractHandler
     // Should we update the end time of the build?
     private $UpdateEndTime;
     // The buildgroup to submit to (defaults to Nightly).
-    private $Track;
+    private $Group;
 
     private $Tests;
     private $CurrentTest;
@@ -58,7 +58,7 @@ class TestingJUnitHandler extends AbstractHandler
         $this->Tests = [];
 
         $this->UpdateEndTime = false;
-        $this->Track = 'Nightly';
+        $this->Group = 'Nightly';
         $this->NumberTestsFailed = 0;
         $this->NumberTestsNotRun = 0;
         $this->NumberTestsPassed = 0;
@@ -139,7 +139,8 @@ class TestingJUnitHandler extends AbstractHandler
                         }
                         break;
                     case 'track':
-                        $this->Track = $attributes['VALUE'];
+                    case 'group':
+                        $this->Group = $attributes['VALUE'];
                         break;
                 }
             }
@@ -255,7 +256,7 @@ class TestingJUnitHandler extends AbstractHandler
                     $this->Build->InsertErrors = false;
                     if ($this->HasSiteTag == false) {
                         // Construct the build stamp.
-                        $stamp = date('Ymd-Hi', $this->StartTimeStamp) . "-$this->Track";
+                        $stamp = date('Ymd-Hi', $this->StartTimeStamp) . "-$this->Group";
                         $this->Build->SetStamp($stamp);
                     }
                     add_build($this->Build, $this->scheduleid);
