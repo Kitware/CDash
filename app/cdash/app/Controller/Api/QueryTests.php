@@ -62,6 +62,84 @@ class QueryTests extends ResultsApi
         }
     }
 
+    private function rowSurvivesTestOutputFilter($row, &$build)
+    {
+        if (!$this->filterOnTestOutput) {
+            return true;
+        }
+
+        $test_output = Test::DecompressOutput($row['output']);
+
+        // Make sure test output matches (or does not match) the
+        // specified filter values.
+        $first_match_idx = false;
+        $match_length = 0;
+
+        foreach ($this->testOutputExclude as $exclude) {
+            if (strpos($test_output, $exclude) !== false) {
+                return false;
+            }
+        }
+
+        foreach ($this->testOutputExcludeRegex as $exclude_regex) {
+            $exclude_regex = $this->applySafeDelimiter($exclude_regex);
+            if (preg_match($exclude_regex, $test_output)) {
+                return false;
+            }
+        }
+
+        foreach ($this->testOutputInclude as $include) {
+            $idx = strpos($test_output, $include);
+            if ($idx === false) {
+                return false;
+            }
+            if (!$first_match_idx) {
+                $first_match_idx = $idx;
+                $match_length = strlen($include);
+            }
+        }
+
+        foreach ($this->testOutputIncludeRegex as $include_regex) {
+            $include_regex = $this->applySafeDelimiter($include_regex);
+            if (preg_match($include_regex, $test_output, $matches,
+                        PREG_OFFSET_CAPTURE)) {
+                if (!$first_match_idx) {
+                    $first_match_idx = $matches[0][1];
+                    $match_length = strlen($include_regex);
+                }
+            } else {
+                return false;
+            }
+        }
+
+        // Isolate a relevant subset of the test output to display.
+        $context_size = 200;
+        if ($this->testOutputInclude || $this->testOutputIncludeRegex) {
+            // Showing tests whose output includes some string(s).
+            // Show context surrounding the first filter specified.
+            $pre_post_context_size = ($context_size - $match_length) / 2;
+            if ($first_match_idx < $pre_post_context_size) {
+                // Match shows up near the beginning, start context from there.
+                $build['matchingoutput'] = substr($test_output, 0, $context_size);
+            } elseif ($first_match_idx > (strlen($test_output) - ($context_size / 2))) {
+                // Match shows up near the end, show the end of test output.
+                $build['matchingoutput'] = substr($test_output, -$context_size);
+            } else {
+                // Show context surrounding the match.
+                $build['matchingoutput'] =
+                    substr($test_output,
+                            $first_match_idx - $pre_post_context_size,
+                            $context_size);
+            }
+        } else {
+            // Showing tests whose output does NOT include some string(s).
+            // Show the end of test output.
+            $build['matchingoutput'] = substr($test_output, -$context_size);
+        }
+
+        return true;
+    }
+
     // Find and apply a safe delimiter for converting a substring into a
     // regular expression.
     private function applySafeDelimiter($pattern)
@@ -240,81 +318,9 @@ class QueryTests extends ResultsApi
         $builds = [];
         while ($row = $stmt->fetch()) {
             $build = [];
-            if ($this->filterOnTestOutput) {
-                $test_output = Test::DecompressOutput($row['output']);
-                // Make sure test output matches (or does not match) the
-                // specified filter values.
-                $skip = false;
-                $first_match_idx = false;
-                $match_length = 0;
 
-                foreach ($this->testOutputExclude as $exclude) {
-                    if (strpos($test_output, $exclude) !== false) {
-                        $skip = true;
-                        break;
-                    }
-                }
-
-                foreach ($this->testOutputExcludeRegex as $exclude_regex) {
-                    $exclude_regex = $this->applySafeDelimiter($exclude_regex);
-                    if (preg_match($exclude_regex, $test_output)) {
-                        $skip = true;
-                        break;
-                    }
-                }
-
-                foreach ($this->testOutputInclude as $include) {
-                    $idx = strpos($test_output, $include);
-                    if ($idx === false) {
-                        $skip = true;
-                        break;
-                    }
-                    if (!$first_match_idx) {
-                        $first_match_idx = $idx;
-                        $match_length = strlen($include);
-                    }
-                }
-
-                foreach ($this->testOutputIncludeRegex as $include_regex) {
-                    $include_regex = $this->applySafeDelimiter($include_regex);
-                    if (preg_match($include_regex, $test_output, $matches,
-                                   PREG_OFFSET_CAPTURE)) {
-                        if (!$first_match_idx) {
-                            $first_match_idx = $matches[0][1];
-                            $match_length = strlen($include_regex);
-                        }
-                    } else {
-                        $skip = true;
-                        break;
-                    }
-                }
-                if ($skip) {
-                    continue;
-                }
-
-                $context_size = 200;
-                if ($this->testOutputInclude || $this->testOutputIncludeRegex) {
-                    // Showing tests whose output includes some string(s).
-                    // Show context surrounding the first filter specified.
-                    $pre_post_context_size = ($context_size - $match_length) / 2;
-                    if ($first_match_idx < $pre_post_context_size) {
-                        // Match shows up near the beginning, start context from there.
-                        $build['matchingoutput'] = substr($test_output, 0, $context_size);
-                    } elseif ($first_match_idx > (strlen($test_output) - ($context_size / 2))) {
-                        // Match shows up near the end, show the end of test output.
-                        $build['matchingoutput'] = substr($test_output, -$context_size);
-                    } else {
-                        // Show context surrounding the match.
-                        $build['matchingoutput'] =
-                            substr($test_output,
-                                   $first_match_idx - $pre_post_context_size,
-                                   $context_size);
-                    }
-                } else {
-                    // Showing tests whose output does NOT include some string(s).
-                    // Show the end of test output.
-                    $build['matchingoutput'] = substr($test_output, -$context_size);
-                }
+            if (!$this->rowSurvivesTestOutputFilter($row, $build)) {
+                continue;
             }
 
             $buildid = $row['id'];
