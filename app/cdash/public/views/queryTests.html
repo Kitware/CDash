@@ -28,6 +28,11 @@
     <span ng-show="showfilters == 0">Show Filters</span>
     <span ng-show="showfilters != 0">Hide Filters</span>
   </a>
+  <a ng-if="::cdash.filterontestoutput"
+     ng-click="toggleShowMatchingOutput()">
+    <span ng-show="!cdash.showmatchingoutput">Show Matching Output</span>
+    <span ng-show="cdash.showmatchingoutput">Hide Matching Output</span>
+  </a>
 </div>
 <ng-include src="'build/views/partials/filterdataTemplate_@@version.html'"></ng-include>
 
@@ -104,7 +109,8 @@
       <span class="glyphicon" ng-class="orderByFields.indexOf('-nprocs') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('nprocs') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
     </th>
 
-    <th ng-if="::cdash.filterontestoutput">
+    <th ng-if="::cdash.filterontestoutput"
+        ng-show="cdash.showmatchingoutput">
       Matching Output
     </th>
   </tr>
@@ -153,7 +159,9 @@
       {{build.nprocs}}
     </td>
 
-    <td ng-if="::cdash.filterontestoutput">
+    <td ng-if="::cdash.filterontestoutput"
+        ng-show="cdash.showmatchingoutput"
+        class="animate-show">
       <pre ng-bind-html="build.matchingoutput | ctestNonXmlCharEscape | terminalColors | trustAsHtml"></pre>
     </td>
   </tr>
