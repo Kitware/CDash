@@ -43,6 +43,8 @@ cdash_wait_for_ready() {
     >&2 echo "Aborting: maximum attempts to connect reached"
     return 1
   fi
+
+  >&2 echo "CDash is ready!"
 }
 
 cdash_site() {
