@@ -135,6 +135,10 @@ class RegisterController extends Controller
                     [
                         'errors' => $e->validator->getMessageBag(),
                         'title' => 'Register',
+                        'fname' => $request->get('fname'),
+                        'lname' => $request->get('lname'),
+                        'email' => $request->get('email'),
+                        'institution' => $request->get('institution')
                     ],
                     422
                 );
