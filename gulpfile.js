@@ -5,7 +5,7 @@
       concat = require('gulp-concat'),
       concatCss = require('gulp-concat-css'),
       eslint = require('gulp-eslint'),
-      fsPath = require('fs-path'),
+      fs = require('fs'),
       newer = require('gulp-newer'),
       replace = require('gulp-replace'),
       rename = require("gulp-rename"),
@@ -25,7 +25,11 @@
 
   // Record timestamp for use by Angular.
   gulp.task('record-version', function() {
-    fsPath.writeFileSync('public/build/js/version.js', "angular.module('CDash').constant('VERSION', '" + version + "');");
+    var dir = 'public/build/js';
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir);
+    }
+    fs.writeFileSync(dir + '/version.js', "angular.module('CDash').constant('VERSION', '" + version + "');");
   });
 
 
