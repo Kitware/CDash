@@ -29,15 +29,6 @@
   });
 
 
-  gulp.task('quality', function() {
-    gulp.src(['javascript/**/*_angular.js',
-              'javascript/controllers/**.js'])
-        .pipe(eslint({}))
-        .pipe(eslint.format())
-        .pipe(eslint.failAfterError());
-  });
-
-
   gulp.task('clean', function () {
     return del.sync([
       'public/build/*',
@@ -155,5 +146,5 @@
   });
 
 
-  gulp.task('default', ['clean', 'quality', 'uglify', 'css', 'replace']);
+  gulp.task('default', ['clean', 'uglify', 'css', 'replace']);
 }());
