@@ -14,7 +14,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Validator::extendImplicit('complexity', 'CDash\Validators\Password@complexity');
+        Validator::extendImplicit('complexity', 'App\Validators\Password@complexity');
     }
 
     /**

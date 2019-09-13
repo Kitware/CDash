@@ -14,7 +14,7 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-namespace CDash\Validators;
+namespace App\Validators;
 
 use App\Validators\Password as PasswordValidator;
 use Config;
