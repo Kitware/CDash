@@ -10,7 +10,7 @@ cdash_environment() {
 }
 
 cdash_build_image() {
-  docker-compose -f ./docker-compose.local.yml build --force-rm --parallel cdash
+  docker-compose -f ./docker-compose.local.yml build --force-rm cdash
 }
 
 cdash_start_docker_services() {
