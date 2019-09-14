@@ -10,7 +10,7 @@ cdash_environment() {
 }
 
 cdash_build_image() {
-  docker-compose -f ./docker-compose.local.yml build --force-rm --no-cache cdash
+  docker-compose -f ./docker-compose.local.yml build --force-rm --parallel cdash
 }
 
 cdash_start_docker_services() {
@@ -68,10 +68,15 @@ cdash_run_and_submit_ctest() {
   ctest_driver="/home/kitware/cdash/.circleci/ctest_driver_script.cmake"
 
   database="$1" ; shift
-  postgres="$1" ; shift
 
   site=$(cdash_site)
   branch=$(cdash_branch)
+  postgres="OFF"
+
+  if ("$database" '=' 'PgSQL') ; then
+    postgres = 'ON'
+  fi
+
 
   docker exec cdash bash -c "cd /home/kitware/cdash && /usr/bin/git checkout ."
 
@@ -85,9 +90,17 @@ cdash_run_and_submit_ctest() {
 }
 
 cdash_run_and_submit_mysql_ctest() {
-  cdash_run_and_submit_ctest MySQL OFF
+  cdash_run_and_submit_ctest MySQL
 }
 
 cdash_run_and_submit_pgsql_ctest() {
-  cdash_run_and_submit_ctest PgSQL ON
+  cdash_run_and_submit_ctest PgSQL
+}
+
+cdash_test() {
+  docker exec cdash rm -rf /home/kitware/_build
+  docker exec cdash mkdir /home/kitware/_build
+  docker exec cdash bash -c "cd /home/kitware/_build && cmake -DCDASH_DB_TYPE=mysql -DCDASH_DB_HOST=mysql -DCDASH_DB_LOGIN=root -DCDASH_DIR_NAME= -DCDASH_SERVER=cdash -DCDASH_SELENIUM_HUB=selenium-hub ../cdash"
+  docker exec cdash chown -R www-data:www-data /home/kitware/_build
+  docker exec --user www-data cdash bash -c "cd /home/kitware/_build && /usr/bin/ctest $*"
 }
