@@ -17,6 +17,14 @@ cdash_start_docker_services() {
   docker-compose -f ./docker-compose.local.yml up -d
 }
 
+cdash_start_docker_dev_services() {
+  docker-compose -f ./docker-compose.local.yml up -d
+  # we need to stop the CDash container and restart it, bind
+  # mounted to the source directory
+  docker-compose stop cdash
+  docker-compose -f ./docker/docker-compose.bind-mount.yml -f ./docker-compose.local.yml up -d
+}
+
 cdash_stop_docker_services() {
   docker-compose down --remove-orphans
 }

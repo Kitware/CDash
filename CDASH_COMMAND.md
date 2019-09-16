@@ -120,6 +120,19 @@ DESCRIPTION
     cdash_chrome_1, and selenium-hub.
 ```
 
+### cdash_start_docker_dev_services
+
+```text
+NAME
+    cdash_start_docker_dev_services
+SYNOPSIS
+    cdash_start_docker_dev_services
+DESCRIPTION
+    This has the same behavior as cdash_start_docker_services with the
+    that this command will bind mount the src directory so that any changes
+    made there will be reflected in application functionality
+```
+
 ### cdash_stop_docker_services
 
 ```text
@@ -130,7 +143,6 @@ SYNOPSIS
 DESCRIPTION
     Stops all of the docker services started by cdash_start_docker_services.
 ```
-
 
 ### cdash_wait_for_ready
 
