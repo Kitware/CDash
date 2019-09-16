@@ -81,8 +81,8 @@ cdash_run_and_submit_ctest() {
   branch=$(cdash_branch)
   postgres="OFF"
 
-  if ("$database" '=' 'PgSQL') ; then
-    postgres = 'ON'
+  if [ "$database" '=' 'PgSQL' ] ; then
+    postgres='ON'
   fi
 
 
