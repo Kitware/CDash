@@ -19,8 +19,8 @@ services:
      - "8080:80"
   mysql:
     image: "mysql/mysql-server:5.5"
-    env_file:
-      - ./docker/.env.mysql
+    volumes:
+      - ./docker/mysql:/docker-entrypoint-initdb.d
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
       MYSQL_ROOT_PASSWORD: ''
