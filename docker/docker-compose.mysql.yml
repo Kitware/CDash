@@ -17,8 +17,6 @@ services:
       - mysql
     ports:
      - "8080:80"
-    volumes:
-      - ./:/home/kitware/cdash
   mysql:
     image: "mysql/mysql-server:5.5"
     env_file:

@@ -17,8 +17,6 @@ services:
       - postgres
     ports:
      - "8080:80"
-    volumes:
-      - ./:/home/kitware/cdash
   postgres:
     image: postgres
     container_name: postgres_cdash
