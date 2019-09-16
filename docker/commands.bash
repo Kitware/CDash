@@ -98,10 +98,12 @@ cdash_run_and_submit_ctest() {
 }
 
 cdash_run_and_submit_mysql_ctest() {
+  docker cp docker/.env.mysql cdash:/home/kitware/cdash/.env
   cdash_run_and_submit_ctest MySQL
 }
 
 cdash_run_and_submit_pgsql_ctest() {
+  docker cp docker/.env.pgsql cdash:/home/kitware/cdash/.env
   cdash_run_and_submit_ctest PgSQL
 }
 
