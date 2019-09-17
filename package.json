@@ -23,9 +23,7 @@
     "as-jqplot": "^1.0.8",
     "d3": "^3.5.17",
     "del": "^2.2.0",
-    "fs-path": "0.0.23",
-    "ng-file-upload": "^12.0.4",
-    "nvd3": "^1.8.5",
+    "fs": "0.0.1-security",
     "gulp": "^3.9.0",
     "gulp-concat": "^2.6.0",
     "gulp-concat-css": "^3.1.0",
@@ -34,13 +32,14 @@
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.4",
     "gulp-sourcemaps": "^1.6.0",
-    "gulp-uglify": "^1.5.1"
+    "gulp-uglify": "^1.5.1",
+    "ng-file-upload": "^12.0.4",
+    "nvd3": "^1.8.5"
   },
   "devDependencies": {
     "axios": "^0.18",
     "bootstrap": "^4.0.0",
     "cross-env": "^5.1",
-    "eslint": "^1.5.1",
     "eslint-config-angular": "^0.4.0",
     "eslint-plugin-angular": "^0.12.0",
     "jquery": "^3.2",
