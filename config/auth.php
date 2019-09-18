@@ -66,7 +66,7 @@ return [
 
     'providers' => [
         'users' => [
-            'driver' => 'eloquent',
+            'driver' => env('CDASH_AUTHENTICATION_PROVIDER_DRIVER', 'eloquent'),
             'model' => App\User::class,
         ],
 
