@@ -24,7 +24,7 @@ return [
     |
     */
 
-    'logging' => env('LDAP_LOGGING', true),
+    'logging' => env('LDAP_LOGGING', false),
 
     /*
     |--------------------------------------------------------------------------
