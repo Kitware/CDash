@@ -23,8 +23,10 @@
 
     <div id="main_content" ng-if="!loading && cdash.requirelogin != 1 && !cdash.error">
       <div id="index_top">
-        <div name="banner" ng-repeat="banner in ::cdash.banners">
-          {{::banner.text}}
+        <div name="banner"
+             class="h3 text-center bg-info"
+             ng-repeat="banner in ::cdash.banners">
+          {{::banner}}
         </div>
 
         <div id="settings" ng-click="showsettings = ! showsettings">
