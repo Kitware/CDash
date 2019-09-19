@@ -69,6 +69,7 @@ if (!$config->get('CDASH_DB_TYPE')) {
 }
 
 $db_connection = $config->get('CDASH_DB_CONNECTION_TYPE');
+$db_port = $config->get('CDASH_DB_PORT');
 $db_host = $config->get('CDASH_DB_HOST');
 $db_user = $config->get('CDASH_DB_LOGIN');
 $db_pass = $config->get('CDASH_DB_PASS');
@@ -80,7 +81,7 @@ $xml .= '<connectiondb_name>' . $config->get('CDASH_DB_NAME') . '</connectiondb_
 
 // Step 1: Check if we can connect to the database
 try {
-    $pdo = new \PDO("{$db_type}:{$db_connection}={$db_host}", $db_user, $db_pass);
+    $pdo = new \PDO("{$db_type}:{$db_connection}={$db_host};port={$db_port}", $db_user, $db_pass);
     $xml .= '<connectiondb>1</connectiondb>';
 } catch (\PDOException $exception) {
     $xml .= '<connectiondb>0</connectiondb>';

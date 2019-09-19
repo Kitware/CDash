@@ -188,7 +188,7 @@ class dbo_mysql extends dbo
 
     public function getDSN()
     {
-        return "mysql:{$this->connection}={$this->host}";
+        return "mysql:{$this->connection}={$this->host};port={$this->port}";
     }
 
     public function disconnect()
