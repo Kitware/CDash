@@ -25,6 +25,10 @@ use CDash\Model\Project;
  **/
 class ResultsApi extends ProjectApi
 {
+    public $filterdata;
+
+    protected $filterSQL;
+    protected $limitSQL;
     protected $beginDate;
     protected $currentStartTime;
     protected $date;
@@ -37,10 +41,15 @@ class ResultsApi extends ProjectApi
     public function __construct(Database $db, Project $project)
     {
         parent::__construct($db, $project);
+
+        $this->filterdata = [];
+
         $this->beginDate = self::BEGIN_EPOCH;
         $this->currentStartTime = 0;
         $this->date = null;
         $this->endDate = self::BEGIN_EPOCH;
+        $this->filterSQL = '';
+        $this->limitSQL = '';
         $this->nextDate = '';
         $this->previousDate = '';
 
@@ -136,5 +145,40 @@ class ResultsApi extends ProjectApi
         if ($this->beginDate == self::BEGIN_EPOCH) {
             $this->setDate($this->date);
         }
+    }
+
+    public function getFilterData()
+    {
+        return $this->filterdata;
+    }
+
+    public function setFilterData(array $filterdata)
+    {
+        $this->filterdata = $filterdata;
+        $this->filterSQL = $this->filterdata['sql'];
+        if ($this->filterdata['limit'] > 0) {
+            $this->limitSQL = ' LIMIT ' . $this->filterdata['limit'];
+        }
+    }
+
+    public function getFilterSQL()
+    {
+        return $this->filterSQL;
+    }
+
+    // Return a flattened array of all filters and sub-filters.
+    public function flattenFilters()
+    {
+        $filters = [];
+        foreach ($this->filterdata['filters'] as $filter) {
+            if (array_key_exists('filters', $filter)) {
+                foreach ($filter['filters'] as $subfilter) {
+                    $filters[] = $subfilter;
+                }
+            } else {
+                $filters[] = $filter;
+            }
+        }
+        return $filters;
     }
 }

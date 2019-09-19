@@ -16,9 +16,11 @@
 
 namespace CDash\Controller\Api;
 
+use CDash\Config;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
+use CDash\Model\Test;
 
 require_once 'include/filterdataFunctions.php';
 
@@ -27,6 +29,127 @@ class QueryTests extends ResultsApi
     public function __construct(Database $db, Project $project)
     {
         parent::__construct($db, $project);
+        $this->filterOnBuildGroup = false;
+        $this->filterOnTestOutput = false;
+
+        $this->testOutputInclude = [];
+        $this->testOutputIncludeRegex = [];
+        $this->testOutputExclude = [];
+        $this->testOutputExcludeRegex = [];
+
+        $this->delimiters = ['/', '#', '%', '~', '+', '!', '@', '_', ';', '`',
+                             '-', '=', ','];
+    }
+
+    private function checkForSpecialFilters($filterdata)
+    {
+        $filters = $this->flattenFilters();
+        foreach ($filters as $filter) {
+            if ($filter['field'] == 'groupname') {
+                $this->filterOnBuildGroup = true;
+            } elseif ($filter['field'] == 'testoutput') {
+                $this->filterOnTestOutput = true;
+                if ($filter['compare'] == 94) {
+                    $this->testOutputExclude[] = $filter['value'];
+                } elseif ($filter['compare'] == 95) {
+                    $this->testOutputInclude[] = $filter['value'];
+                } elseif ($filter['compare'] == 96) {
+                    $this->testOutputExcludeRegex[] = $filter['value'];
+                } elseif ($filter['compare'] == 97) {
+                    $this->testOutputIncludeRegex[] = $filter['value'];
+                }
+            }
+        }
+    }
+
+    private function rowSurvivesTestOutputFilter($row, &$build)
+    {
+        if (!$this->filterOnTestOutput) {
+            return true;
+        }
+
+        $test_output = Test::DecompressOutput($row['output']);
+
+        // Make sure test output matches (or does not match) the
+        // specified filter values.
+        $first_match_idx = false;
+        $match_length = 0;
+
+        foreach ($this->testOutputExclude as $exclude) {
+            if (strpos($test_output, $exclude) !== false) {
+                return false;
+            }
+        }
+
+        foreach ($this->testOutputExcludeRegex as $exclude_regex) {
+            $exclude_regex = $this->applySafeDelimiter($exclude_regex);
+            if (preg_match($exclude_regex, $test_output)) {
+                return false;
+            }
+        }
+
+        foreach ($this->testOutputInclude as $include) {
+            $idx = strpos($test_output, $include);
+            if ($idx === false) {
+                return false;
+            }
+            if (!$first_match_idx) {
+                $first_match_idx = $idx;
+                $match_length = strlen($include);
+            }
+        }
+
+        foreach ($this->testOutputIncludeRegex as $include_regex) {
+            $include_regex = $this->applySafeDelimiter($include_regex);
+            if (preg_match($include_regex, $test_output, $matches,
+                        PREG_OFFSET_CAPTURE)) {
+                if (!$first_match_idx) {
+                    $first_match_idx = $matches[0][1];
+                    $match_length = strlen($include_regex);
+                }
+            } else {
+                return false;
+            }
+        }
+
+        // Isolate a relevant subset of the test output to display.
+        $context_size = 200;
+        if ($this->testOutputInclude || $this->testOutputIncludeRegex) {
+            // Showing tests whose output includes some string(s).
+            // Show context surrounding the first filter specified.
+            $pre_post_context_size = ($context_size - $match_length) / 2;
+            if ($first_match_idx < $pre_post_context_size) {
+                // Match shows up near the beginning, start context from there.
+                $build['matchingoutput'] = substr($test_output, 0, $context_size);
+            } elseif ($first_match_idx > (strlen($test_output) - ($context_size / 2))) {
+                // Match shows up near the end, show the end of test output.
+                $build['matchingoutput'] = substr($test_output, -$context_size);
+            } else {
+                // Show context surrounding the match.
+                $build['matchingoutput'] =
+                    substr($test_output,
+                            $first_match_idx - $pre_post_context_size,
+                            $context_size);
+            }
+        } else {
+            // Showing tests whose output does NOT include some string(s).
+            // Show the end of test output.
+            $build['matchingoutput'] = substr($test_output, -$context_size);
+        }
+
+        return true;
+    }
+
+    // Find and apply a safe delimiter for converting a substring into a
+    // regular expression.
+    private function applySafeDelimiter($pattern)
+    {
+        foreach ($this->delimiters as $delimiter) {
+            if (strpos($pattern, $delimiter) === false) {
+                return $delimiter . $pattern . $delimiter;
+            }
+        }
+        return $pattern;
     }
 
     public function getResponse()
@@ -58,11 +181,7 @@ class QueryTests extends ResultsApi
         $filterdata = get_filterdata_from_request();
         unset($filterdata['xml']);
         $response['filterdata'] = $filterdata;
-        $filter_sql = $filterdata['sql'];
-        $limit_sql = '';
-        if ($filterdata['limit'] > 0) {
-            $limit_sql = ' LIMIT ' . $filterdata['limit'];
-        }
+        $this->setFilterData($filterdata);
         $response['filterurl'] = get_filterurl();
 
         // Menu
@@ -159,35 +278,27 @@ class QueryTests extends ResultsApi
             $query_params[':endtime'] = $this->endDate;
         }
 
-        // Check for the presence of a filter on Build Group.
-        // If this is present we need to join additional tables into our query.
+        // Check for the presence of a filters that modify our querying behavior.
+        $this->checkForSpecialFilters($filterdata);
+
+        // If we are filtering on Build Groups we need to join additional tables into our query.
         $filter_joins = '';
-        $extra_joins = '
-            JOIN build2group b2g ON b2g.buildid = b.id
-            JOIN buildgroup bg ON bg.id = b2g.groupid';
-        foreach ($filterdata['filters'] as $filter) {
-            if (array_key_exists('filters', $filter)) {
-                $break = false;
-                foreach ($filter['filters'] as $subfilter) {
-                    if ($subfilter['field'] == 'groupname') {
-                        $filter_joins = $extra_joins;
-                        $break = true;
-                        break;
-                    }
-                }
-                if ($break) {
-                    break;
-                }
-            } elseif ($filter['field'] == 'groupname') {
-                $filter_joins = $extra_joins;
-                break;
-            }
+        if ($this->filterOnBuildGroup) {
+            $filter_joins = '
+                JOIN build2group b2g ON b2g.buildid = b.id
+                JOIN buildgroup bg ON bg.id = b2g.groupid';
+        }
+
+        // Select extra data if we are filtering on test output.
+        $output_select = '';
+        if ($this->filterOnTestOutput) {
+            $output_select = ', test.output';
         }
 
         $sql = "SELECT b.id, b.name, b.starttime, b.siteid,b.parentid,
             build2test.testid AS testid, build2test.status,
             build2test.time, build2test.timestatus, site.name AS sitename,
-            test.name AS testname, test.details $proc_select
+            test.name AS testname, test.details $proc_select $output_select
                 FROM build AS b
                 JOIN build2test ON (b.id = build2test.buildid)
                 JOIN site ON (b.siteid = site.id)
@@ -195,20 +306,25 @@ class QueryTests extends ResultsApi
                 $proc_join
                 $filter_joins
                 WHERE b.projectid = :projectid
-                $parent_clause $date_clause $filter_sql
+                $parent_clause $date_clause $this->filterSQL
                 ORDER BY build2test.status, test.name
-                $limit_sql";
+                $this->limitSQL";
         $query_params[':projectid'] = $this->project->Id;
         $stmt = $pdo->prepare($sql);
         pdo_execute($stmt, $query_params);
 
         // Builds
+        $config = Config::getInstance();
         $builds = [];
         while ($row = $stmt->fetch()) {
+            $build = [];
+
+            if (!$this->rowSurvivesTestOutputFilter($row, $build)) {
+                continue;
+            }
+
             $buildid = $row['id'];
             $testid = $row['testid'];
-
-            $build = [];
 
             $build['testname'] = $row['testname'];
             $build['site'] = $row['sitename'];
@@ -273,6 +389,7 @@ class QueryTests extends ResultsApi
             $builds[] = $build;
         }
         $response['builds'] = $builds;
+        $response['filterontestoutput'] = $this->filterOnTestOutput;
 
         $end = microtime_float();
         $response['generationtime'] = round($end - $start, 3);

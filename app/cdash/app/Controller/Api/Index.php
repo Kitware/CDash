@@ -28,9 +28,7 @@ class Index extends ResultsApi
     protected $includedSubProjects;
     protected $excludeSubProjects;
     protected $excludedSubProjects;
-    protected $filterSQL;
     protected $labelIds;
-    protected $limitSQL;
     protected $numSelectedSubProjects;
     protected $parentId;
     // This array is used to track if expected builds are found or not.
@@ -41,7 +39,6 @@ class Index extends ResultsApi
     public $buildgroupsResponse;
     public $buildStartTimes;
     public $childView;
-    public $filterdata;
     public $shareLabelFilters;
     public $siteResponse;
     public $updateType;
@@ -54,7 +51,6 @@ class Index extends ResultsApi
         $this->buildgroupsResponse = [];
         $this->buildStartTimes = [];
         $this->childView = 0;
-        $this->filterdata = [];
         $this->shareLabelFilters = false;
         $this->siteResponse = [];
         $this->updateType = '';
@@ -67,32 +63,11 @@ class Index extends ResultsApi
         $this->numSelectedSubProjects = 0;
         $this->selectedSubProjects = '';
 
-        $this->filterSQL = '';
         $this->labelIds = '';
-        $this->limitSQL = '';
         $this->parentId = false;
         $this->receivedBuilds = [];
         $this->subProjectId = false;
         $this->subProjectPositions = [];
-    }
-
-    public function getFilterData()
-    {
-        return $this->filterdata;
-    }
-
-    public function setFilterData(array $filterdata)
-    {
-        $this->filterdata = $filterdata;
-        $this->filterSQL = $this->filterdata['sql'];
-        if ($this->filterdata['limit'] > 0) {
-            $this->limitSQL = ' LIMIT ' . $this->filterdata['limit'];
-        }
-    }
-
-    public function getFilterSQL()
-    {
-        return $this->filterSQL;
     }
 
     public function setParentId($parentid)
@@ -1260,16 +1235,7 @@ class Index extends ResultsApi
     public function checkForSubProjectFilters()
     {
         $filter_on_labels = false;
-        $filters = [];
-        foreach ($this->filterdata['filters'] as $filter) {
-            if (array_key_exists('filters', $filter)) {
-                foreach ($filter['filters'] as $subfilter) {
-                    $filters[] = $subfilter;
-                }
-            } else {
-                $filters[] = $filter;
-            }
-        }
+        $filters = $this->flattenFilters();
         foreach ($filters as $filter) {
             if ($filter['field'] == 'subprojects') {
                 if ($filter['compare'] == 92) {
