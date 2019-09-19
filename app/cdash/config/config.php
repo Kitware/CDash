@@ -183,21 +183,7 @@ $CDASH_GEOLOCATE_IP_ADDRESSES = true;
 $CDASH_DEFAULT_IP_LOCATIONS = array();
 // Use compression (default on)
 $CDASH_USE_COMPRESSION = '1';
-// Use LDAP
-$CDASH_USE_LDAP = '0';
-$CDASH_LDAP_HOSTNAME = 'localhost';
-$CDASH_LDAP_BASEDN = 'ou=people,dc=organization,dc=com';
-$CDASH_LDAP_PROTOCOL_VERSION = '3';
-// Additional LDAP query filters to restrict authorized user list
-// Example: To restrict users to a specific Active Directory group:
-// '(memberOf=cn=superCoolRescrictedGroup,cn=Users,dc=example,dc=com)'
-$CDASH_LDAP_FILTER = '';
-// For authentication against Active Directory, set CDASH_LDAP_AUTHENTICATED to '1'
-// CDASH_LDAP_OPT_REFERRALS to '0', and specify a bind DN and password
-$CDASH_LDAP_OPT_REFERRALS = '1';
-$CDASH_LDAP_AUTHENTICATED = '0';
-$CDASH_LDAP_BIND_DN = 'cn=user,ou=people,dc=orgranization,dc=com';
-$CDASH_LDAP_BIND_PASSWORD = 'password';
+
 // Allow rememberme
 $CDASH_ALLOW_LOGIN_COOKIE = '1';
 // Set to start the autoremoval on the first build of the day
