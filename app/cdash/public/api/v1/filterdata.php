@@ -39,6 +39,7 @@ function get_filterdata_array_from_request($page_id = '')
         }
     }
     $filterdata['availablefilters'] = getFiltersForPage($page_id);
+    $filterdata['showdaterange'] = isDatePage($page_id);
     return $filterdata;
 }
 
@@ -103,6 +104,28 @@ function getFiltersForPage($page_id)
 
         default:
             return [];
+            break;
+    }
+}
+
+function isDatePage($page_id)
+{
+    switch ($page_id) {
+        case 'compareCoverage.php':
+        case 'index.php':
+        case 'indexchildren.php':
+        case 'project.php':
+        case 'queryTests.php':
+        case 'testOverview.php':
+        case 'viewBuildGroup.php':
+            return true;
+            break;
+
+        case 'getviewcoverage.php':
+        case 'viewCoverage.php':
+        case 'viewTest.php':
+        default:
+            return false;
             break;
     }
 }
