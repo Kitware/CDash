@@ -1,5 +1,6 @@
 <?php
 
+$driver = env('CDASH_AUTHENTICATION_PROVIDER_DRIVER', 'eloquent') ?: 'eloquent';
 return [
 
     /*
@@ -66,7 +67,7 @@ return [
 
     'providers' => [
         'users' => [
-            'driver' => env('CDASH_AUTHENTICATION_PROVIDER_DRIVER', 'eloquent'),
+            'driver' => $driver,
             'model' => App\User::class,
         ],
 
