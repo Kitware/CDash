@@ -13,6 +13,10 @@ use Illuminate\Http\Request;
 |
 */
 
+Route::apiResources([
+    'builds' => 'Api\BuildController',
+]);
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
