@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'connection' => 'default',
     'identifiers' => [
         'ldap' => [
             'locate_users_by' => 'mail',
@@ -14,5 +15,8 @@ return [
         'email' => 'mail',
         'firstname' => 'givenName',
         'lastname' => 'sn'
+    ],
+    'rules' => [
+        App\Rules\LdapFilterRules::class
     ]
 ];
