@@ -21,7 +21,7 @@ class LdapFilterRules extends Rule
             $isValid = false;
             $user = $this->user;
             $connection = $user->getQuery()->getConnection();
-            $result = $connection->search($user->getDn(), $filter, ['dn', 'cn', 'memberOf']);
+            $result = $connection->search($user->getDn(), $filter, ['dn', 'cn']);
             if (is_resource($result)) {
                 $isValid = $connection->countEntries($result) > 0;
                 $connection->freeResult($result);
