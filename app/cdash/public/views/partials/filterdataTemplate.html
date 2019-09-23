@@ -54,6 +54,9 @@
       </div>
     </div>
 
+    <!-- date range selector -->
+    <div ng-if="filterdata.showdaterange" class="form-group" daterange></div>
+
     <div>
       <div>
         <input type="hidden" name="filtercount" id="id_filtercount" value="{{filterdata.filters.length}}">

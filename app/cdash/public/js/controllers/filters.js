@@ -308,8 +308,8 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
     // Read the current query string parameters.
     params = window.location.search.replace('?', '').split(/[&;]/g);
 
-    // Search for and remove any existing filter params.
-    var filterParams = ['filtercount', 'filtercombine', 'showfilters', 'field', 'compare', 'value', 'limit'];
+    // Search for and remove any existing filter/date params.
+    var filterParams = ['filtercount', 'filtercombine', 'showfilters', 'field', 'compare', 'value', 'limit', 'date', 'begin', 'end'];
     // Reverse iteration because this is destructive.
     for (var i = params.length; i-- > 0;) {
       for (var j = 0; j < filterParams.length; j++) {
@@ -325,6 +325,25 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
     var s = window.location.origin + window.location.pathname + '?';
     for (var i = 0; i < params.length; i++) {
       s += params[i] + '&';
+    }
+
+    // Now add date params.
+    if ($scope.cdash.begin && $scope.cdash.end) {
+      // Both begin and end were set.
+      if ($scope.cdash.begin == $scope.cdash.end) {
+        // If they are the same, then convert it to a 'date' param.
+        s += 'date=' + $scope.cdash.begin + '&';
+      } else {
+        // Otherwise construct a URL for a range of date.
+        s += 'begin=' + $scope.cdash.begin + '&end=' + $scope.cdash.end + '&';
+      }
+    } else if ($scope.cdash.begin || $scope.cdash.end) {
+      // If only one of begin/end was set, use its value as a 'date' param.
+      var date = $scope.cdash.begin ? $scope.cdash.begin : $scope.cdash.end;
+      s += 'date=' + date + '&';
+    } else if ($scope.cdash.date_set && $scope.cdash.date) {
+      // Otherwise include the 'date' param if it was explicitly set (not left blank).
+      s += 'date=' + $scope.cdash.date + '&';
     }
 
     // Now add filter params.
@@ -423,6 +442,15 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
 
     $scope.filterdata = filterdata;
     $scope.cdash.page = filename_for_docs;
+    // Set default values for date picker.
+    if ($scope.cdash.date_set && $scope.cdash.date) {
+      if (!$scope.cdash.begin) {
+        $scope.cdash.begin = $scope.cdash.date;
+      }
+      if (!$scope.cdash.end) {
+        $scope.cdash.end = $scope.cdash.date;
+      }
+    }
   });
 }
 

@@ -127,10 +127,13 @@ class ResultsApi extends ProjectApi
                     $this->date = $_REQUEST['end'];
                 }
             }
+            $response['date_set'] = true;
         } elseif (isset($_REQUEST['date'])) {
             $this->date = $_REQUEST['date'];
+            $response['date_set'] = true;
         } else {
             // No date specified. Look up the most recent date with results.
+            $response['date_set'] = false;
             $stmt = $this->db->prepare('
                 SELECT starttime FROM build
                 WHERE projectid = :projectid

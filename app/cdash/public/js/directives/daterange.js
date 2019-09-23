@@ -5,22 +5,24 @@ CDash.directive('daterange', function (VERSION) {
     link: function (scope, element, attrs, ngModelCtrl) {
       var format = "yy-mm-dd",
 
-      from = element.find("#from").datepicker({
+      begin = element.find("#begin").datepicker({
+        constrainInput: false,
         changeMonth: true,
         dateFormat: format,
         defaultDate: scope.cdash.date
       }).on( "change", function() {
         var date = getDate(this);
-        to.datepicker("option", "minDate", date);
+        end.datepicker("option", "minDate", date);
       }),
 
-      to = element.find("#to").datepicker({
+      end = element.find("#end").datepicker({
+        constrainInput: false,
         changeMonth: true,
         dateFormat: format,
         defaultDate: scope.cdash.date
       }).on( "change", function() {
         var date = getDate(this);
-        from.datepicker("option", "maxDate", date);
+        begin.datepicker("option", "maxDate", date);
       });
 
       function getDate(element) {

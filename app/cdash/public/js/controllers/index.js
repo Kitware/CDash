@@ -75,12 +75,9 @@ CDash.filter("showEmptyBuildsLast", function () {
     $scope.autoRefresh = false;
   }
 
-  // Hide timeline chart by default, but show it if we have a cookie for it.
+  // Hide timeline chart by default. It is conditionally enabled below if
+  // we are reviewing results for a single buildgroup.
   $scope.showTimelineChart = false;
-  var timelinechart_cookie = $.cookie('cdash_timelinechart');
-  if(timelinechart_cookie) {
-    $scope.showTimelineChart = true;
-  }
 
   // Check for filters
   $rootScope.queryString['filterstring'] = filters.getString();
@@ -304,17 +301,6 @@ CDash.filter("showEmptyBuildsLast", function () {
     }
     $.cookie('cdash_'+$scope.cdash.projectname+'_advancedview', $scope.cdash.advancedview);
     window.location.reload(true);
-  };
-
-
-  $scope.toggleTimelineChart = function() {
-    if ($scope.showTimelineChart) {
-      $scope.showTimelineChart = false;
-      $.cookie('cdash_timelinechart', null);
-    } else {
-      $scope.showTimelineChart = true;
-      $.cookie('cdash_timelinechart', 1);
-    }
   };
 
 
@@ -621,5 +607,4 @@ CDash.filter("showEmptyBuildsLast", function () {
     cookie_name += '_sort';
     return cookie_name;
   };
-
 });
