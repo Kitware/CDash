@@ -4,7 +4,8 @@ return [
     'connection' => 'default',
     'identifiers' => [
         'ldap' => [
-            'locate_users_by' => 'mail',
+            'locate_users_by' => env('LDAP_EMAIL_ATTRIBUTE', 'mail'),
+            'bind_users_by'   => env('LDAP_BIND_USERS_BY', 'distinguishedname'),
         ],
         'database' => [
             'guid_column' => 'email',
@@ -12,7 +13,7 @@ return [
         ]
     ],
     'sync_attributes' => [
-        'email' => 'mail',
+        'email' => env('LDAP_EMAIL_ATTRIBUTE', 'mail'),
         'firstname' => 'givenName',
         'lastname' => 'sn'
     ],
