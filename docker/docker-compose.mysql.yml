@@ -15,9 +15,12 @@ services:
       - chrome
     links:
       - mysql
+    volumes:
+      - ./:/home/kitware/cdash
     ports:
      - "8080:80"
     environment:
+      XDEBUG_CONFG: remote_host=172.18.0.1
       CDASH_ROOT_ADMIN_PASS: secret
 
       CDASH_STATIC_USERS: |
