@@ -2,6 +2,14 @@
 
 return [
 
+    // Mapping of provider type to schema class.
+    'schemas' => [
+        'activedirectory' => Adldap\Schemas\ActiveDirectory::class,
+        'openldap'        => \App\Schemas\OpenLDAP::class,
+        'freeipa'         => Adldap\Schemas\FreeIPA::class,
+        ''                => null
+    ];
+
     /*
     |--------------------------------------------------------------------------
     | Logging
@@ -101,7 +109,7 @@ return [
                 |
                 */
 
-                'schema' => Adldap\Schemas\ActiveDirectory::class,
+                'schema' => env('LDAP_PROVIDER', ''),
 
                 /*
                 |--------------------------------------------------------------------------
