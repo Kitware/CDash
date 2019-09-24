@@ -15,8 +15,6 @@ services:
       - chrome
     links:
       - mysql
-    volumes:
-      - ./:/home/kitware/cdash
     ports:
      - "8080:80"
     environment:
