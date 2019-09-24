@@ -1,0 +1,58 @@
+version: '3.3'
+services:
+  cdash:
+    image: "kitware/cdash:testing"
+    container_name: cdash
+    build:
+      context: .
+      dockerfile: ./docker/cdash.docker
+      args:
+        - CDASH_DB_HOST=mysql
+        - DEVELOPMENT_BUILD=1
+    depends_on:
+      - mysql
+      - selenium-hub
+      - chrome
+    links:
+      - mysql
+    ports:
+     - "8080:80"
+    environment:
+      CDASH_ROOT_ADMIN_PASS: secret
+
+      CDASH_STATIC_USERS: |
+        USER jdoe@acme.com jdoe_secret
+          John Doe "ACME Inc."
+
+        ADMIN admin@example.org admin_secret
+          Admin User "Example Foundation"
+
+        donotreply@example.org oldsecret newsecret
+
+        strange.name@gmail.com strange_secret
+        INFO Str@nge N@me "Str@nge Rese@rch Gr0up LLC."
+
+        DELETE remove.this.user@example.org delete_secret
+
+  mysql:
+    image: "mysql/mysql-server:5.5"
+    env_file:
+      - ./docker/.env.mysql
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_ROOT_PASSWORD: ''
+      MYSQL_ROOT_HOST: '%'
+  selenium-hub:
+    image: selenium/hub:3.141.59-mercury
+    container_name: selenium-hub
+    ports:
+      - "4444:4444"
+  chrome:
+    image: selenium/node-chrome:3.141.59-mercury
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - selenium-hub
+    environment:
+      - HUB_HOST=selenium-hub
+      - HUB_PORT=4444
