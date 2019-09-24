@@ -33,16 +33,16 @@ cdash_wait_for_ready() {
   attempts=0
   wait_seconds=5
 
+  if [[ ${attempts} -ge ${allowed} ]]; then
+    >&2 echo "Aborting: maximum attempts to connect reached"
+    return 1
+  fi
+
   until ok=$(docker exec cdash curl -f --silent --show-error  "$url") || [[ ${attempts} -ge ${allowed} ]]; do
     >&2 echo "CDash not ready, waiting ${wait_seconds}s..."
     attempts=$((attempts+1))
     sleep ${wait_seconds}
   done
-
-  if [[ ${attempts} -ge ${allowed} ]]; then
-    >&2 echo "Aborting: maximum attempts to connect reached"
-    return 1
-  fi
 
   >&2 echo "CDash is ready!"
 }

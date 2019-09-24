@@ -38,7 +38,7 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => env('CDASH_AUTHENTICATION_PROVIDER', 'users'),
         ],
 
         'api' => [
@@ -67,6 +67,11 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
+            'model' => App\User::class,
+        ],
+
+        'ldap' => [
+            'driver' => 'ldap',
             'model' => App\User::class,
         ],
 
