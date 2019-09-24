@@ -62,7 +62,6 @@ jobs:
           name: Update Docker Image
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              mv ./docker-compose.backup ./docker-compose.yml
               cp docker/cdash.docker Dockerfile
               docker build -t kitware/cdash:latest .
               docker login -u $DOCKER_USER -p $DOCKER_PASS
