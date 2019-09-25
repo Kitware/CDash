@@ -341,6 +341,9 @@ function FiltersController($scope, $rootScope, $http, $timeout) {
       // If only one of begin/end was set, use its value as a 'date' param.
       var date = $scope.cdash.begin ? $scope.cdash.begin : $scope.cdash.end;
       s += 'date=' + date + '&';
+    } else if (!$scope.cdash.begin && !$scope.cdash.end) {
+      // If both begin and end are explicitly empty then we do not add any
+      // date fields to the URL.
     } else if ($scope.cdash.date_set && $scope.cdash.date) {
       // Otherwise include the 'date' param if it was explicitly set (not left blank).
       s += 'date=' + $scope.cdash.date + '&';
