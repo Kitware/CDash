@@ -12,7 +12,9 @@ CDash.directive('daterange', function (VERSION) {
         defaultDate: scope.cdash.date
       }).on( "change", function() {
         var date = getDate(this);
-        end.datepicker("option", "minDate", date);
+        if (date) {
+          end.datepicker("option", "minDate", date);
+        }
       }),
 
       end = element.find("#end").datepicker({
@@ -22,7 +24,9 @@ CDash.directive('daterange', function (VERSION) {
         defaultDate: scope.cdash.date
       }).on( "change", function() {
         var date = getDate(this);
-        begin.datepicker("option", "maxDate", date);
+        if (date) {
+          begin.datepicker("option", "maxDate", date);
+        }
       });
 
       function getDate(element) {
