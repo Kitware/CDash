@@ -118,10 +118,15 @@ class Mail extends Singleton
         $sender = $message->getSender() ?: $this->getDefaultSender();
         $swift_mailer = $this->getSwiftMailer();
         $swift_message = new \Swift_Message();
-        $swift_message->setTo($this->recipient)
-            ->setFrom($sender)
-            ->setSubject($message->getSubject())
-            ->setBody($message->getBody());
+        try {
+            $swift_message->setTo($this->recipient)
+                ->setFrom($sender)
+                ->setSubject($message->getSubject())
+                ->setBody($message->getBody());
+        } catch (\Exception $e) {
+            $log = Log::getInstance();
+            $log->add_log($e->getMessage(), __METHOD__);
+        }
         $failed_recipients = [];
 
         $status = $swift_mailer->send($swift_message, $failed_recipients);
