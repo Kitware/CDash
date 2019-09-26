@@ -1832,7 +1832,7 @@ class Project
         // If the build was started after the nightly start time
         // then it should appear on the dashboard results for the
         // subsequent day.
-        $build_datetime = new \DateTime($date);
+        $build_datetime = new \DateTime($date . ' UTC');
         $build_start_timestamp = $build_datetime->getTimestamp();
         $nightly_start_timestamp = strtotime($this->NightlyTime);
 

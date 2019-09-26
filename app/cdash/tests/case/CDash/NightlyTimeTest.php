@@ -84,14 +84,32 @@ class NightlyTimeTest extends TestCase
     {
         date_default_timezone_set('America/New_York');
         $this->Project->NightlyTime = '01:00:00 America/New_York';
+        $utc_time = new \DateTimeZone('UTC');
 
         // DST 2019 in New York began at 2:00 AM on Sunday, March 10
-        $this->validateTestingDay('2019-03-10 00:59:59', '2019-03-09');
-        $this->validateTestingDay('2019-03-10 01:00:01', '2019-03-10');
+        $datetime = new \DateTime('2019-03-10 00:59:59');
+        $datetime->setTimezone($utc_time);
+        $this->validateTestingDay($datetime->format('Y-m-d H:i:s'), '2019-03-09');
+
+        $datetime = new \DateTime('2019-03-10 01:00:01');
+        $datetime->setTimezone($utc_time);
+        $this->validateTestingDay($datetime->format('Y-m-d H:i:s'), '2019-03-10');
 
         // DST 2018 in New York ended at 2:00 AM on Sunday, November 4
-        $this->validateTestingDay('2018-11-04 00:59:59', '2018-11-03');
-        $this->validateTestingDay('2019-11-04 01:00:01', '2019-11-04');
+        $datetime = new \DateTime('2018-11-04 00:59:59');
+        $datetime->setTimezone($utc_time);
+        $this->validateTestingDay($datetime->format('Y-m-d H:i:s'), '2018-11-03');
+
+        $datetime = new \DateTime('2018-11-04 01:00:01');
+        $datetime->setTimezone($utc_time);
+        $this->validateTestingDay($datetime->format('Y-m-d H:i:s'), '2018-11-04');
+    }
+
+    public function testUTCInput()
+    {
+        date_default_timezone_set('America/Denver');
+        $this->Project->NightlyTime = '04:01:00 UTC';
+        $this->validateTestingDay('2019-09-26 04:00:59 UTC', '2019-09-25');
     }
 
     private function validateTestingDay($starttime, $expected)
