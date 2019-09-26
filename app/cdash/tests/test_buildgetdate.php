@@ -28,7 +28,7 @@ class BuildGetDateTestCase extends KWWebTestCase
         $original_nightlytime = $row['nightlytime'];
         // Test the case where the project's start time is in the evening.
         pdo_query("UPDATE project SET nightlytime = '20:00:00' WHERE id=1");
-        $build->StartTime = date('Y-m-d H:i:s', strtotime('2009-02-23 19:59:59'));
+        $build->StartTime = gmdate('Y-m-d H:i:s', strtotime('2009-02-23 19:59:59'));
 
         $expected_date = '2009-02-23';
         $date = $build->GetDate();
@@ -37,7 +37,7 @@ class BuildGetDateTestCase extends KWWebTestCase
             $retval = 1;
         }
 
-        $build->StartTime = date('Y-m-d H:i:s', strtotime('2009-02-23 20:00:00'));
+        $build->StartTime = gmdate('Y-m-d H:i:s', strtotime('2009-02-23 20:00:00'));
 
         $expected_date = '2009-02-24';
         $build->NightlyStartTime = false;
@@ -49,7 +49,7 @@ class BuildGetDateTestCase extends KWWebTestCase
 
         // Test the case where the project's start time is in the morning.
         pdo_query("UPDATE project SET nightlytime = '09:00:00' WHERE id=1");
-        $build->StartTime = date('Y-m-d H:i:s', strtotime('2009-02-23 08:59:59'));
+        $build->StartTime = gmdate('Y-m-d H:i:s', strtotime('2009-02-23 08:59:59'));
         $expected_date = '2009-02-22';
         $build->NightlyStartTime = false;
         $date = $build->GetDate();
@@ -58,7 +58,7 @@ class BuildGetDateTestCase extends KWWebTestCase
             $retval = 1;
         }
 
-        $build->StartTime = date('Y-m-d H:i:s', strtotime('2009-02-23 09:00:00'));
+        $build->StartTime = gmdate('Y-m-d H:i:s', strtotime('2009-02-23 09:00:00'));
         $expected_date = '2009-02-23';
         $build->NightlyStartTime= false;
         $date = $build->GetDate();
