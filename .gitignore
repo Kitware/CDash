@@ -27,6 +27,7 @@ npm-debug.log
 !/public/.htaccess
 /public/storage
 /storage/*.key
+.tmp
 .vagrant
 /vendor/
 yarn-error.log
