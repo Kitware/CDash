@@ -10,7 +10,7 @@ describe('HeaderNav', () => {
     const el = component.find(selector);
     expect(el.classes()).toContain('btn-disabled');
 
-    component.setData({[button]: '/some/endpoint'});
+    component.setProps({[button]: '/some/endpoint'});
     expect(el.classes()).not.toContain('btn-disabled');
     expect(el.classes()).toContain('btn');
   };
