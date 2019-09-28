@@ -19,7 +19,7 @@ ENV NODE_ENV=${NODE_ENV:-'production'}
 
 RUN apt-get update                                                         \
  && apt-get install -y gnupg                                               \
- && curl -sL https://deb.nodesource.com/setup_6.x | bash                   \
+ && curl -sL https://deb.nodesource.com/setup_8.x | bash                   \
  && apt-get install -y git libbz2-dev libfreetype6-dev libjpeg62-turbo-dev \
     libmcrypt-dev libpng-dev libpq-dev libxslt-dev libxss1 nodejs unzip    \
     wget zip libldap2-dev                                                  \
