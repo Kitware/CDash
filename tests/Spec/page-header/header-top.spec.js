@@ -1,5 +1,5 @@
 import { mount } from 'vue-test-utils';
-import HeaderTop from "../../resources/js/components/page-header/HeaderTop.vue";
+import HeaderTop from "../../../resources/js/components/page-header/HeaderTop.vue";
 import expect from 'expect';
 
 describe('HeaderTop', () => {

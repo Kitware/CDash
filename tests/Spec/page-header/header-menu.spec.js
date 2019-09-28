@@ -1,5 +1,5 @@
 import { mount } from 'vue-test-utils';
-import HeaderMenu from "../../resources/js/components/page-header/HeaderMenu.vue";
+import HeaderMenu from "../../../resources/js/components/page-header/HeaderMenu.vue";
 import expect from 'expect';
 import moment from "moment";
 
