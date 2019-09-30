@@ -112,6 +112,51 @@ class AuthTokenTestCase extends KWWebTestCase
         }
     }
 
+    public function testApiAccess()
+    {
+        $client = new GuzzleHttp\Client(['cookies' => true]);
+        $client->getConfig('cookies')->clear();
+
+        // Make sure we can't visit the private project page
+        // without being logged in.
+        $exception_thrown = false;
+        try {
+            $response = $client->request('GET',
+                $this->url . '/api/v1/index.php?project=AuthTokenProject');
+        } catch (GuzzleHttp\Exception\ClientException $e) {
+            $exception_thrown = true;
+            $status_code = $e->getResponse()->getStatusCode();
+            if ($status_code != 401) {
+                $this->fail("Expected 401 but got $status_code");
+            }
+        }
+        if (!$exception_thrown) {
+            $this->fail('No Exception thrown for unauthenticated index.php');
+        }
+
+        // Let's try that request again, but this time we specify a valid
+        // bearer token.
+        try {
+            $response = $client->request('GET',
+                $this->url . '/api/v1/index.php?project=AuthTokenProject',
+                [ 'headers' => ['Authorization' => "Bearer $this->Token"] ]);
+        } catch (GuzzleHttp\Exception\ClientException $e) {
+            $this->fail($e->getMessage());
+            return 1;
+        }
+
+        if (!$response) {
+            $this->fail('No response from request');
+            return 1;
+        }
+
+        $status_code = $response ? $response->getStatusCode() : null;
+        $this->assertEqual(200, $status_code);
+
+        $response_array = json_decode($response->getBody(), true);
+        $this->assertEqual('CDash - AuthTokenProject', $response_array['title']);
+    }
+
     public function testSubmissionWorksWithToken()
     {
         config(['cdash.allow.authenticated_submissions' => true]);

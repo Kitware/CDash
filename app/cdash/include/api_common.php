@@ -55,7 +55,7 @@ function can_access_project($projectid)
         return true;
     }
 
-    $userid = Auth::id();
+    $userid = get_userid_from_session(false);
     $logged_in = Auth::check();
 
     if (!checkUserPolicy($userid, $projectid, 1)) {
