@@ -19,7 +19,7 @@ services:
      - "8080:80"
     environment:
       CDASH_ROOT_ADMIN_PASS: secret
-
+      CDASH_SELENIUM_URL: http://selenium-hub:4444/wd/hub
       CDASH_STATIC_USERS: |
         USER jdoe@acme.com jdoe_secret
           John Doe "ACME Inc."
