@@ -1,6 +1,6 @@
 <template>
     <div>
-        <HeaderTop></HeaderTop>
+        <HeaderTop :user="user" :menu="menu"></HeaderTop>
         <HeaderBottom></HeaderBottom>
     </div>
 </template>
@@ -10,7 +10,8 @@
     import HeaderBottom from "./page-header/HeaderBottom";
     export default {
         name: "Header",
-        components: {HeaderBottom, HeaderTop}
+        components: {HeaderBottom, HeaderTop},
+        props: ['menu', 'user']
     }
 </script>
 

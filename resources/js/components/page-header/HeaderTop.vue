@@ -1,10 +1,10 @@
 <template>
     <div id="headertop">
-        <div id="topmenu">
-            <a :class="{ 'hidden': loggedIn}"  href="/login">Login</a>
-            <a :class="{ 'hidden': loggedIn}"  href="register.php">Register</a>
-            <a :class="{ 'hidden': !loggedIn}" href="user.php">My CDash</a>
-            <a :class="{ 'hidden': !loggedIn}" href="/logout">Log out</a>
+        <div id="topmenu" class="fill">
+            <a :class="{ 'hidden': loggedIn }"  href="/login">Login</a>
+            <a :class="{ 'hidden': loggedIn }"  href="register.php">Register</a>
+            <a :class="{ 'hidden': !loggedIn }" href="user.php">My CDash</a>
+            <a :class="{ 'hidden': !loggedIn, 'float-right' : true }" href="/logout">Log out</a>
             <a :class="{ 'hidden': isHome}"   :href="home">All Dashboards</a>
         </div>
     </div>
@@ -13,10 +13,10 @@
 <script>
     export default {
         name: "HeaderTop",
-        props: ['user', 'location'],
+        props: ['user', 'menu'],
         data () {
             return {
-                home: 'viewProjects.php'
+                home: this.menu.home
             }
         },
 
@@ -36,4 +36,10 @@
  .hidden {
      display: none;
  }
+ .float-right {
+     position: absolute;
+     right: 5px;
+     top: -3px;
+ }
+
 </style>

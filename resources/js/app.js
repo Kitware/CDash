@@ -1,3 +1,4 @@
+import PageHeader from "./components/PageHeader";
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -5,7 +6,7 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require('./bootstrap');
+// require('./bootstrap');
 
 window.Vue = require('vue');
 
@@ -29,5 +30,6 @@ window.Vue = require('vue');
  */
 
 const app = new Vue({
-    el: '#app'
+    el: '#app',
+  components: {PageHeader}
 });
