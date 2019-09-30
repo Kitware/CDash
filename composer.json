@@ -21,6 +21,7 @@
     "ext-pdo": "*",
     "ext-posix": "*",
     "ext-xsl": "*",
+    "ext-zip": "*",
     "bernard/bernard": "1.0.0-alpha9",
     "guzzlehttp/guzzle": "~6.2",
     "monolog/monolog": "~1.19",
@@ -42,12 +43,13 @@
     "lcobucci/jwt": "3.2.0"
   },
   "require-dev": {
-    "beyondcode/laravel-dump-server": "^1.0",
+    "ext-dom": "*",
     "ext-gd": "*",
     "ext-xdebug": "*",
-    "ext-dom": "*",
+    "beyondcode/laravel-dump-server": "^1.0",
     "filp/whoops": "^2.0",
     "fzaninotto/faker": "^1.4",
+    "laravel/dusk": "^5.5",
     "mockery/mockery": "^1.0",
     "nunomaduro/collision": "^2.0",
     "phpunit/phpunit": "^7.0"
