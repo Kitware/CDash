@@ -18,7 +18,7 @@ cdash_start_docker_services() {
 }
 
 cdash_stop_docker_services() {
-  docker-compose down --remove-orphans
+  docker-compose -f ./docker-compose.local.yml down
 }
 
 cdash_wait_for_ready() {
