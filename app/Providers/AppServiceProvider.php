@@ -2,8 +2,9 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
-use Validator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,6 +16,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Validator::extendImplicit('complexity', 'App\Validators\Password@complexity');
+
+        /** For migrations on MySQL older than 5.7.7 **/
+        Schema::defaultStringLength(191);
     }
 
     /**
