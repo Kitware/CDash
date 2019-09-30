@@ -112,7 +112,7 @@ __webpack_require__.r(__webpack_exports__);
     HeaderBottom: _page_header_HeaderBottom__WEBPACK_IMPORTED_MODULE_1__["default"],
     HeaderTop: _page_header_HeaderTop__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  props: ['menu', 'user']
+  props: ['menu', 'pathname', 'user']
 });
 
 /***/ }),
@@ -384,18 +384,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "HeaderTop",
-  props: ['user', 'menu'],
-  data: function data() {
-    return {
-      home: this.menu.home
-    };
-  },
+  props: ['user', 'pathname', 'menu'],
   computed: {
     loggedIn: function loggedIn() {
       return this.user && this.user.id;
     },
     isHome: function isHome() {
-      return this.location === this.home;
+      return this.menu.home === this.location;
     }
   }
 });
@@ -19285,7 +19280,9 @@ var render = function() {
   return _c(
     "div",
     [
-      _c("HeaderTop", { attrs: { user: _vm.user, menu: _vm.menu } }),
+      _c("HeaderTop", {
+        attrs: { user: _vm.user, menu: _vm.menu, pathname: _vm.pathname }
+      }),
       _vm._v(" "),
       _c("HeaderBottom")
     ],
@@ -19546,9 +19543,11 @@ var render = function() {
         [_vm._v("Log out")]
       ),
       _vm._v(" "),
-      _c("a", { class: { hidden: _vm.isHome }, attrs: { href: _vm.home } }, [
-        _vm._v("All Dashboards")
-      ])
+      _c(
+        "a",
+        { class: { hidden: _vm.isHome }, attrs: { href: _vm.menu.home } },
+        [_vm._v("All Dashboards")]
+      )
     ])
   ])
 }

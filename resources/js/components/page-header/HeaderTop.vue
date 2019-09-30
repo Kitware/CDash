@@ -5,7 +5,7 @@
             <a :class="{ 'hidden': loggedIn }"  href="register.php">Register</a>
             <a :class="{ 'hidden': !loggedIn }" href="user.php">My CDash</a>
             <a :class="{ 'hidden': !loggedIn, 'float-right' : true }" href="/logout">Log out</a>
-            <a :class="{ 'hidden': isHome}"   :href="home">All Dashboards</a>
+            <a :class="{ 'hidden': isHome}"   :href="menu.home">All Dashboards</a>
         </div>
     </div>
 </template>
@@ -13,12 +13,7 @@
 <script>
     export default {
         name: "HeaderTop",
-        props: ['user', 'menu'],
-        data () {
-            return {
-                home: this.menu.home
-            }
-        },
+        props: ['user', 'pathname', 'menu'],
 
         computed: {
             loggedIn () {
@@ -26,7 +21,7 @@
             },
 
             isHome () {
-                return this.location === this.home;
+                return this.menu.home === this.pathname;
             },
         },
     }

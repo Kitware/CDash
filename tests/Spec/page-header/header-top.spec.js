@@ -6,7 +6,15 @@ describe('HeaderTop', () => {
   let component;
 
   beforeEach(() => {
-    component = mount(HeaderTop);
+    component = mount(HeaderTop, {
+      propsData: {
+        user: {},
+        pathname: '/api/v1/build/1234',
+        menu: {
+          home: 'viewProjects.php'
+        }
+      }
+    });
   });
 
   it ('has an id of #headertop', () => {
@@ -33,7 +41,12 @@ describe('HeaderTop', () => {
     const link = component.find('a[href="viewProjects.php"]');
     expect(link.classes()).not.toContain('hidden');
 
-    component.setData({location: 'viewProjects.php'});
+    component.setData({
+      pathname: 'viewProjects.php',
+      menu: {
+        home: 'viewProjects.php'
+      }
+    });
 
     expect(link.classes()).toContain('hidden');
   });
