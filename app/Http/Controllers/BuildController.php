@@ -1,13 +1,22 @@
 <?php
-
+declare(strict_types=1);
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use CDash\Model\Build;
 
 class BuildController extends Controller
 {
-    public function summary()
+    public function summary($build_id)
     {
-        return view('build.summary')->with('title', 'Build Summary');
+        $build = new Build();
+        $build->FillFromId($build_id);
+
+        $store = [
+            'build' => $build,
+        ];
+
+        return view('build.summary')
+            ->with('title', 'Build Summary')
+            ->with('store', $store);
     }
 }
