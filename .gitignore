@@ -25,6 +25,7 @@ npm-debug.log
 .phpunit.result.cache
 /public/hot
 !/public/.htaccess
+/public/mix-manifest.json
 /public/storage
 /storage/*.key
 .tmp
