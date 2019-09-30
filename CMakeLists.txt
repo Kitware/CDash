@@ -175,8 +175,10 @@ $CDASH_BERNARD_CONSUMERS_WHITELIST = ${CDASH_BERNARD_CONSUMERS_WHITELIST};
 ?>
 ")
 
+# add the new tests directory
+add_subdirectory(tests)
+
 # add the old tests directory
 add_subdirectory(app/cdash/tests)
 
-# add the new tests directory
-add_subdirectory(tests)
+
