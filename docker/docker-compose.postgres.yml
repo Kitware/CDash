@@ -39,6 +39,7 @@ services:
     container_name: postgres_cdash
     environment:
       POSTGRES_PASSWORD: cdash4simpletest
+      POSTGRES_DB: cdash4simpletest
   selenium-hub:
     image: selenium/hub:3.141.59-mercury
     container_name: selenium-hub
