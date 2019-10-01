@@ -82,6 +82,27 @@ return [
             'prefix_indexes' => true,
         ],
 
+        // The following connection is to be used by Laravel tests. Specifically it is to allow
+        // you to have a separate database only for testing, relieving you from having to run
+        // php artisan migrate:fresh after any test using the trait DatabaseMigration. Consider
+        // trying to run Laravel Dusk tests: the test environment can be set in phpunit.xml, e.g
+        // <env name="APP_ENV" value="testing"/>, which will prompt Laravel to choose the
+        // environment file .env.testing vs. .env. A problem arises though when because Dusk uses
+        // Curl to make requests the application, now, in a new process the new process does not
+        // realize that the request is being made from the .env.testing environment so the app
+        // prefers the regular .env file, which may have a different database name, which will more
+        // than likely cause your tests to fail. See the link below for the solution to this problem
+        // https://laracasts.com/discuss/channels/testing/test-database-for-laravel-dusk-54?page=1#reply=331508
+        'test' => [
+            'driver' => env('DB_DRIVER', 'mysql'),
+            'database' => 'cdash4simpletest',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'username' => env('DB_USERNAME', 'root'),
+            'password' => env('DB_PASSWORD', ''),
+            'prefix' => '',
+        ]
+
     ],
 
     /*

@@ -18,6 +18,12 @@ services:
     ports:
      - "8080:80"
     environment:
+      DB_DRIVER: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USERNAME: root
+      DB_PASSWORD:
+      DB_DATABASE: cdash4simpletest
       CDASH_ROOT_ADMIN_PASS: secret
       CDASH_SELENIUM_URL: http://selenium-hub:4444/wd/hub
       CDASH_STATIC_USERS: |

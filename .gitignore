@@ -16,6 +16,7 @@ composer.phar
 .DS_Store
 .env*
 !.env.example
+!docker/.env.laravel
 Homestead.json
 Homestead.yaml
 .idea

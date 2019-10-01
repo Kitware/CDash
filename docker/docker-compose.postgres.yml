@@ -18,6 +18,12 @@ services:
     ports:
      - "8080:80"
     environment:
+      DB_DRIVER: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: cdash4simpletest
+      DB_DATABASE: cdash4simpletest
       CDASH_ROOT_ADMIN_PASS: secret
       CDASH_SELENIUM_URL: http://selenium-hub:4444/wd/hub
       CDASH_STATIC_USERS: |
