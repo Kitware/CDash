@@ -74,6 +74,7 @@ cdash_run_and_submit_ctest() {
   branch=$(cdash_branch)
 
   docker exec cdash bash -c "cd /home/kitware/cdash && /usr/bin/git checkout ."
+  docker exec cdash bash -c "chown -R www-data:www-data /home/kitware/cdash"
 
   echo "site=$site"
   echo "branch=$branch"
