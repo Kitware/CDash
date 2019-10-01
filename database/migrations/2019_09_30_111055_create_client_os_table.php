@@ -15,9 +15,9 @@ class CreateClientOsTable extends Migration {
 		Schema::create('client_os', function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			$table->string('name')->index('name');
-			$table->string('version')->index('version');
-			$table->boolean('bits')->default(32)->index('bits');
+			$table->string('name')->index();
+			$table->string('version')->index();
+			$table->tinyInteger('bits')->default(32)->index();
 		});
 	}
 

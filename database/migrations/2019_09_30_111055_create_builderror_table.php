@@ -14,8 +14,8 @@ class CreateBuilderrorTable extends Migration {
 	{
 		Schema::create('builderror', function(Blueprint $table)
 		{
-			$table->integer('buildid')->default(0)->index('buildid');
-			$table->boolean('type')->default(0)->index('type');
+			$table->integer('buildid')->default(0)->index();
+			$table->tinyInteger('type')->default(0)->index();
 			$table->integer('logline')->default(0);
 			$table->text('text', 65535);
 			$table->string('sourcefile')->default('');
@@ -23,8 +23,8 @@ class CreateBuilderrorTable extends Migration {
 			$table->text('precontext', 65535)->nullable();
 			$table->text('postcontext', 65535)->nullable();
 			$table->integer('repeatcount')->default(0);
-			$table->bigInteger('crc32')->default(0)->index('crc32');
-			$table->boolean('newstatus')->default(0)->index('newstatus');
+			$table->bigInteger('crc32')->default(0)->index();
+			$table->tinyInteger('newstatus')->default(0)->index();
 		});
 	}
 

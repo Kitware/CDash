@@ -14,9 +14,9 @@ class CreateVersionTable extends Migration {
 	{
 		Schema::create('version', function(Blueprint $table)
 		{
-			$table->boolean('major');
-			$table->boolean('minor');
-			$table->boolean('patch');
+			$table->tinyInteger('major');
+			$table->tinyInteger('minor');
+			$table->tinyInteger('patch');
 		});
 	}
 

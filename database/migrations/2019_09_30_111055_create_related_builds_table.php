@@ -14,8 +14,8 @@ class CreateRelatedBuildsTable extends Migration {
 	{
 		Schema::create('related_builds', function(Blueprint $table)
 		{
-			$table->bigInteger('buildid')->index('buildid');
-			$table->bigInteger('relatedid')->index('relatedid');
+			$table->bigInteger('buildid')->index();
+			$table->bigInteger('relatedid')->index();
 			$table->string('relationship')->nullable();
 			$table->primary(['buildid','relatedid']);
 		});

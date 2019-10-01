@@ -15,7 +15,7 @@ class CreateFilesumTable extends Migration {
 		Schema::create('filesum', function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			$table->string('md5sum', 32)->index('md5sum');
+			$table->string('md5sum', 32)->index();
 			$table->binary('contents')->nullable();
 		});
 	}

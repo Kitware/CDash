@@ -16,7 +16,7 @@ class CreateClientJobschedule2osTable extends Migration {
 		{
 			$table->bigInteger('scheduleid');
 			$table->integer('osid');
-			$table->unique(['scheduleid','osid'], 'scheduleid');
+			$table->unique(['scheduleid','osid'], 'client_jobschedule2os_scheduleid');
 		});
 	}
 

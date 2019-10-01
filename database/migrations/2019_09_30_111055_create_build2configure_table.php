@@ -14,7 +14,7 @@ class CreateBuild2configureTable extends Migration {
 	{
 		Schema::create('build2configure', function(Blueprint $table)
 		{
-			$table->integer('configureid')->default(0)->index('configureid');
+			$table->integer('configureid')->default(0)->index();
 			$table->integer('buildid')->default(0)->primary();
 			$table->dateTime('starttime')->default('1980-01-01 00:00:00');
 			$table->dateTime('endtime')->default('1980-01-01 00:00:00');

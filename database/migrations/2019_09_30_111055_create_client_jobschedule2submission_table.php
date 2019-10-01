@@ -14,7 +14,7 @@ class CreateClientJobschedule2submissionTable extends Migration {
 	{
 		Schema::create('client_jobschedule2submission', function(Blueprint $table)
 		{
-			$table->bigInteger('scheduleid')->unique('scheduleid');
+			$table->bigInteger('scheduleid')->unique();
 			$table->bigInteger('submissionid')->primary();
 		});
 	}

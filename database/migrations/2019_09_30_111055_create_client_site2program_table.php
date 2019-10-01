@@ -14,7 +14,7 @@ class CreateClientSite2programTable extends Migration {
 	{
 		Schema::create('client_site2program', function(Blueprint $table)
 		{
-			$table->integer('siteid')->index('siteid');
+			$table->integer('siteid')->index();
 			$table->string('name', 30);
 			$table->string('version', 30);
 			$table->string('path', 512);

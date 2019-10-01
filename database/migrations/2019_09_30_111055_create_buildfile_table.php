@@ -14,10 +14,10 @@ class CreateBuildfileTable extends Migration {
 	{
 		Schema::create('buildfile', function(Blueprint $table)
 		{
-			$table->integer('buildid')->index('buildid');
-			$table->string('filename')->index('filename');
-			$table->string('md5', 40)->index('md5');
-			$table->string('type', 32)->default('')->index('type');
+			$table->integer('buildid')->index();
+			$table->string('filename')->index();
+			$table->string('md5', 40)->index();
+			$table->string('type', 32)->default('')->index();
 		});
 	}
 

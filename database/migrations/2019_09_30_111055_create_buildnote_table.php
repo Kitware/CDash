@@ -14,11 +14,11 @@ class CreateBuildnoteTable extends Migration {
 	{
 		Schema::create('buildnote', function(Blueprint $table)
 		{
-			$table->integer('buildid')->index('buildid');
+			$table->integer('buildid')->index();
 			$table->integer('userid');
 			$table->text('note', 16777215);
 			$table->dateTime('timestamp');
-			$table->boolean('status')->default(0);
+			$table->tinyInteger('status')->default(0);
 		});
 	}
 

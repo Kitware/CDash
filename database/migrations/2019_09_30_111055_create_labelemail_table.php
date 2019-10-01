@@ -14,8 +14,8 @@ class CreateLabelemailTable extends Migration {
 	{
 		Schema::create('labelemail', function(Blueprint $table)
 		{
-			$table->integer('projectid')->index('projectid');
-			$table->integer('userid')->index('userid');
+			$table->integer('projectid')->index();
+			$table->integer('userid')->index();
 			$table->bigInteger('labelid');
 		});
 	}

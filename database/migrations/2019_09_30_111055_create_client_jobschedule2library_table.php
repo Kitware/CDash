@@ -16,7 +16,7 @@ class CreateClientJobschedule2libraryTable extends Migration {
 		{
 			$table->bigInteger('scheduleid');
 			$table->integer('libraryid');
-			$table->unique(['scheduleid','libraryid'], 'scheduleid');
+			$table->unique(['scheduleid','libraryid'], 'client_jobschedule2library_scheduleid');
 		});
 	}
 

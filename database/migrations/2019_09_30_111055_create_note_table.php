@@ -17,7 +17,7 @@ class CreateNoteTable extends Migration {
 			$table->bigInteger('id', true);
 			$table->text('text', 16777215);
 			$table->string('name');
-			$table->bigInteger('crc32')->index('crc32');
+			$table->bigInteger('crc32')->index();
 		});
 	}
 

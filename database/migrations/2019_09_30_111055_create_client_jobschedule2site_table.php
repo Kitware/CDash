@@ -16,7 +16,7 @@ class CreateClientJobschedule2siteTable extends Migration {
 		{
 			$table->bigInteger('scheduleid');
 			$table->integer('siteid');
-			$table->unique(['scheduleid','siteid'], 'scheduleid');
+			$table->unique(['scheduleid','siteid'], 'client_jobschedule2site_scheduleid');
 		});
 	}
 

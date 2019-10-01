@@ -16,15 +16,15 @@ class CreateSubmissionTable extends Migration {
 		{
 			$table->bigInteger('id', true);
 			$table->string('filename', 500);
-			$table->integer('projectid')->index('projectid');
-			$table->boolean('status')->index('status');
+			$table->integer('projectid')->index();
+			$table->tinyInteger('status')->index();
 			$table->integer('attempts')->default(0);
 			$table->integer('filesize')->default(0);
 			$table->string('filemd5sum', 32)->default('');
 			$table->dateTime('lastupdated')->default('1980-01-01 00:00:00');
 			$table->dateTime('created')->default('1980-01-01 00:00:00');
 			$table->dateTime('started')->default('1980-01-01 00:00:00');
-			$table->dateTime('finished')->default('1980-01-01 00:00:00')->index('finished');
+			$table->dateTime('finished')->default('1980-01-01 00:00:00')->index();
 		});
 	}
 

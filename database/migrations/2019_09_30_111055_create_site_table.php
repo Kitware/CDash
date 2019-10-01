@@ -15,11 +15,11 @@ class CreateSiteTable extends Migration {
 		Schema::create('site', function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			$table->string('name')->default('')->unique('name');
+			$table->string('name')->default('')->unique();
 			$table->string('ip')->default('');
 			$table->string('latitude', 10)->default('');
 			$table->string('longitude', 10)->default('');
-			$table->boolean('outoforder')->default(0);
+			$table->tinyInteger('outoforder')->default(0);
 		});
 	}
 

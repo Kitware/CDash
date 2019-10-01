@@ -14,8 +14,11 @@ class CreateBuild2uploadfileTable extends Migration {
 	{
 		Schema::create('build2uploadfile', function(Blueprint $table)
 		{
-			$table->bigInteger('fileid')->index('fileid');
-			$table->bigInteger('buildid')->index('buildid');
+			$table->bigInteger('fileid');
+			$table->bigInteger('buildid');
+
+			$table->index('fileid');
+			$table->index('buildid');
 		});
 	}
 

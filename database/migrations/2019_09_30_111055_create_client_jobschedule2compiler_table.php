@@ -16,7 +16,7 @@ class CreateClientJobschedule2compilerTable extends Migration {
 		{
 			$table->bigInteger('scheduleid');
 			$table->integer('compilerid');
-			$table->unique(['scheduleid','compilerid'], 'scheduleid');
+			$table->unique(['scheduleid','compilerid'], 'client_jobschedule2compiler_scheduleid');
 		});
 	}
 

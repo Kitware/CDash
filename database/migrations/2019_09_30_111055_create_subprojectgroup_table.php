@@ -15,13 +15,13 @@ class CreateSubprojectgroupTable extends Migration {
 		Schema::create('subprojectgroup', function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			$table->string('name')->index('name');
-			$table->integer('projectid')->index('projectid');
+			$table->string('name')->index();
+			$table->integer('projectid')->index();
 			$table->smallInteger('coveragethreshold')->default(70);
-			$table->boolean('is_default');
+			$table->tinyInteger('is_default');
 			$table->dateTime('starttime')->default('1980-01-01 00:00:00');
 			$table->dateTime('endtime')->default('1980-01-01 00:00:00');
-			$table->integer('position')->default(0)->index('position');
+			$table->integer('position')->default(0)->index();
 		});
 	}
 

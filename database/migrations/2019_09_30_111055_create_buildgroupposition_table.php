@@ -14,10 +14,10 @@ class CreateBuildgrouppositionTable extends Migration {
 	{
 		Schema::create('buildgroupposition', function(Blueprint $table)
 		{
-			$table->integer('buildgroupid')->default(0)->index('buildgroupid');
-			$table->integer('position')->default(0)->index('position');
-			$table->dateTime('starttime')->default('1980-01-01 00:00:00')->index('starttime');
-			$table->dateTime('endtime')->default('1980-01-01 00:00:00')->index('endtime');
+			$table->integer('buildgroupid')->default(0)->index();
+			$table->integer('position')->default(0)->index();
+			$table->dateTime('starttime')->default('1980-01-01 00:00:00')->index();
+			$table->dateTime('endtime')->default('1980-01-01 00:00:00')->index();
 		});
 	}
 

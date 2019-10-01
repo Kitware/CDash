@@ -15,7 +15,7 @@ class CreateLabelTable extends Migration {
 		Schema::create('label', function(Blueprint $table)
 		{
 			$table->bigInteger('id', true);
-			$table->string('text')->unique('text');
+			$table->string('text')->unique();
 		});
 	}
 

@@ -15,8 +15,8 @@ class CreateFeedTable extends Migration {
 		Schema::create('feed', function(Blueprint $table)
 		{
 			$table->bigInteger('id', true);
-			$table->integer('projectid')->index('projectid');
-			$table->timestamp('date')->default(DB::raw('CURRENT_TIMESTAMP'))->index('date');
+			$table->integer('projectid')->index();
+			$table->timestamp('date')->default(DB::raw('CURRENT_TIMESTAMP'))->index();
 			$table->bigInteger('buildid');
 			$table->integer('type');
 			$table->string('description');

@@ -14,8 +14,8 @@ class CreateSite2userTable extends Migration {
 	{
 		Schema::create('site2user', function(Blueprint $table)
 		{
-			$table->integer('siteid')->default(0)->index('siteid');
-			$table->integer('userid')->default(0)->index('userid');
+			$table->integer('siteid')->default(0)->index();
+			$table->integer('userid')->default(0)->index();
 		});
 	}
 

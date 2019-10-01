@@ -15,9 +15,9 @@ class CreateCoveragefilepriorityTable extends Migration {
 		Schema::create('coveragefilepriority', function(Blueprint $table)
 		{
 			$table->bigInteger('id', true);
-			$table->boolean('priority')->index('priority');
-			$table->string('fullpath')->index('fullpath');
-			$table->integer('projectid')->index('projectid');
+			$table->tinyInteger('priority')->index();
+			$table->string('fullpath')->index();
+			$table->integer('projectid')->index();
 		});
 	}
 

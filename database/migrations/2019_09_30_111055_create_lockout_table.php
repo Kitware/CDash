@@ -15,8 +15,8 @@ class CreateLockoutTable extends Migration {
 		Schema::create('lockout', function(Blueprint $table)
 		{
 			$table->integer('userid')->primary();
-			$table->boolean('failedattempts')->nullable()->default(0);
-			$table->boolean('islocked')->default(0);
+			$table->tinyInteger('failedattempts')->nullable()->default(0);
+			$table->tinyInteger('islocked')->default(0);
 			$table->dateTime('unlocktime')->default('1980-01-01 00:00:00');
 		});
 	}

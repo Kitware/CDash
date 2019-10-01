@@ -15,7 +15,7 @@ class CreateClientSite2projectTable extends Migration {
 		Schema::create('client_site2project', function(Blueprint $table)
 		{
 			$table->integer('projectid')->nullable();
-			$table->integer('siteid')->nullable()->index('siteid');
+			$table->integer('siteid')->nullable()->index();
 		});
 	}
 

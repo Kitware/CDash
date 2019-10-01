@@ -17,7 +17,7 @@ class CreateImageTable extends Migration {
 			$table->integer('id', true);
 			$table->binary('img');
 			$table->text('extension');
-			$table->bigInteger('checksum')->index('checksum');
+			$table->bigInteger('checksum')->index();
 		});
 	}
 
