@@ -14,7 +14,7 @@ class CreateSubproject2buildTable extends Migration {
 	{
 		Schema::create('subproject2build', function(Blueprint $table)
 		{
-			$table->integer('subprojectid')->index('subprojectid');
+			$table->integer('subprojectid')->index();
 			$table->bigInteger('buildid')->primary();
 		});
 	}

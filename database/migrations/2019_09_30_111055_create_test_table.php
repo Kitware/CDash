@@ -15,9 +15,9 @@ class CreateTestTable extends Migration {
 		Schema::create('test', function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			$table->integer('projectid')->index('projectid');
-			$table->bigInteger('crc32')->index('crc32');
-			$table->string('name')->default('')->index('name');
+			$table->integer('projectid')->index();
+			$table->bigInteger('crc32')->index();
+			$table->string('name')->default('')->index();
 			$table->string('path')->default('');
 			$table->text('command', 65535);
 			$table->text('details', 65535);

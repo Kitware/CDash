@@ -16,14 +16,14 @@ class CreateSiteinformationTable extends Migration {
 		{
 			$table->integer('siteid');
 			$table->dateTime('timestamp')->default('1980-01-01 00:00:00');
-			$table->boolean('processoris64bits')->default(-1);
+			$table->tinyInteger('processoris64bits')->default(-1);
 			$table->string('processorvendor')->default('NA');
 			$table->string('processorvendorid')->default('NA');
 			$table->integer('processorfamilyid')->default(-1);
 			$table->integer('processormodelid')->default(-1);
 			$table->integer('processorcachesize')->default(-1);
-			$table->boolean('numberlogicalcpus')->default(-1);
-			$table->boolean('numberphysicalcpus')->default(-1);
+			$table->tinyInteger('numberlogicalcpus')->default(-1);
+			$table->tinyInteger('numberphysicalcpus')->default(-1);
 			$table->integer('totalvirtualmemory')->default(-1);
 			$table->integer('totalphysicalmemory')->default(-1);
 			$table->integer('logicalprocessorsperphysical')->default(-1);

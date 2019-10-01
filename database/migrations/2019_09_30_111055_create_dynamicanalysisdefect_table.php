@@ -14,7 +14,7 @@ class CreateDynamicanalysisdefectTable extends Migration {
 	{
 		Schema::create('dynamicanalysisdefect', function(Blueprint $table)
 		{
-			$table->integer('dynamicanalysisid')->default(0)->index('buildid');
+			$table->integer('dynamicanalysisid')->default(0)->index();
 			$table->string('type', 50)->default('');
 			$table->integer('value')->default(0);
 		});

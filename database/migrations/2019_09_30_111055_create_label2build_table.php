@@ -14,8 +14,8 @@ class CreateLabel2buildTable extends Migration {
 	{
 		Schema::create('label2build', function(Blueprint $table)
 		{
-			$table->bigInteger('labelid')->index('labelid');
-			$table->bigInteger('buildid')->index('buildid');
+			$table->bigInteger('labelid')->index();
+			$table->bigInteger('buildid')->index();
 			$table->primary(['labelid','buildid']);
 		});
 	}

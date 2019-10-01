@@ -14,7 +14,7 @@ class CreateBuild2groupTable extends Migration {
 	{
 		Schema::create('build2group', function(Blueprint $table)
 		{
-			$table->integer('groupid')->default(0)->index('groupid');
+			$table->integer('groupid')->default(0)->index();
 			$table->integer('buildid')->default(0)->primary();
 		});
 	}

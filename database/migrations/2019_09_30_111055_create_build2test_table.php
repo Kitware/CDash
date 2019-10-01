@@ -14,14 +14,20 @@ class CreateBuild2testTable extends Migration {
 	{
 		Schema::create('build2test', function(Blueprint $table)
 		{
-			$table->integer('buildid')->default(0)->index('buildid');
-			$table->integer('testid')->default(0)->index('testid');
-			$table->string('status', 10)->default('')->index('status');
+			$table->integer('buildid')->default(0);
+			$table->integer('testid')->default(0);
+			$table->string('status', 10)->default('');
 			$table->float('time', 7)->default(0.00);
 			$table->float('timemean', 7)->default(0.00);
 			$table->float('timestd', 7)->default(0.00);
-			$table->boolean('timestatus')->default(0)->index('timestatus');
-			$table->boolean('newstatus')->default(0)->index('newstatus');
+			$table->tinyInteger('timestatus')->default(0);
+			$table->tinyInteger('newstatus')->default(0);
+
+            $table->index('buildid');
+            $table->index('testid');
+            $table->index('status');
+            $table->index('timestatus');
+            $table->index('newstatus');
 		});
 	}
 

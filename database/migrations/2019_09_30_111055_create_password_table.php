@@ -14,7 +14,7 @@ class CreatePasswordTable extends Migration {
 	{
 		Schema::create('password', function(Blueprint $table)
 		{
-			$table->integer('userid')->index('userid');
+			$table->integer('userid')->index();
 			$table->string('password')->default('');
 			$table->timestamp('date')->default(DB::raw('CURRENT_TIMESTAMP'));
 			$table->timestamps();

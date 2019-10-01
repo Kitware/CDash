@@ -16,7 +16,7 @@ class CreateClientJobschedule2cmakeTable extends Migration {
 		{
 			$table->bigInteger('scheduleid');
 			$table->integer('cmakeid');
-			$table->unique(['scheduleid','cmakeid'], 'scheduleid');
+			$table->unique(['scheduleid','cmakeid'], 'client_jobschedule2cmake_scheduleid');
 		});
 	}
 

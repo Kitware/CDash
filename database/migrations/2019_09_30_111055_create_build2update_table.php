@@ -15,7 +15,7 @@ class CreateBuild2updateTable extends Migration {
 		Schema::create('build2update', function(Blueprint $table)
 		{
 			$table->bigInteger('buildid')->primary();
-			$table->bigInteger('updateid')->index('updateid');
+			$table->bigInteger('updateid')->index();
 		});
 	}
 

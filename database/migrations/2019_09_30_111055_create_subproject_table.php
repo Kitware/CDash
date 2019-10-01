@@ -16,13 +16,13 @@ class CreateSubprojectTable extends Migration {
 		{
 			$table->bigInteger('id', true);
 			$table->string('name');
-			$table->integer('projectid')->index('projectid');
-			$table->integer('groupid')->index('groupid');
-			$table->string('path', 512)->default('')->index('path');
+			$table->integer('projectid')->index();
+			$table->integer('groupid')->index();
+			$table->string('path', 512)->default('')->index();
 			$table->smallInteger('position')->unsigned()->default(0);
 			$table->dateTime('starttime')->default('1980-01-01 00:00:00');
 			$table->dateTime('endtime')->default('1980-01-01 00:00:00');
-			$table->unique(['name','projectid','endtime'], 'unique_key');
+			$table->unique(['name','projectid','endtime'], 'subproject_unique_key');
 		});
 	}
 

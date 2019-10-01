@@ -14,9 +14,9 @@ class CreateUserstatisticsTable extends Migration {
 	{
 		Schema::create('userstatistics', function(Blueprint $table)
 		{
-			$table->integer('userid')->index('userid');
-			$table->smallInteger('projectid')->index('projectid');
-			$table->timestamp('checkindate')->default(DB::raw('CURRENT_TIMESTAMP'))->index('checkindate');
+			$table->integer('userid')->index();
+			$table->smallInteger('projectid')->index();
+			$table->timestamp('checkindate')->default(DB::raw('CURRENT_TIMESTAMP'))->index();
 			$table->bigInteger('totalupdatedfiles');
 			$table->bigInteger('totalbuilds');
 			$table->bigInteger('nfixedwarnings');

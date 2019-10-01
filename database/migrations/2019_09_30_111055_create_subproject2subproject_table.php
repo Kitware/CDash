@@ -14,8 +14,8 @@ class CreateSubproject2subprojectTable extends Migration {
 	{
 		Schema::create('subproject2subproject', function(Blueprint $table)
 		{
-			$table->integer('subprojectid')->index('subprojectid');
-			$table->integer('dependsonid')->index('dependsonid');
+			$table->integer('subprojectid')->index();
+			$table->integer('dependsonid')->index();
 			$table->dateTime('starttime')->default('1980-01-01 00:00:00');
 			$table->dateTime('endtime')->default('1980-01-01 00:00:00');
 		});

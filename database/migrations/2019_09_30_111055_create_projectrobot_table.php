@@ -14,8 +14,8 @@ class CreateProjectrobotTable extends Migration {
 	{
 		Schema::create('projectrobot', function(Blueprint $table)
 		{
-			$table->integer('projectid')->index('projectid');
-			$table->string('robotname')->index('robotname');
+			$table->integer('projectid')->index();
+			$table->string('robotname')->index();
 			$table->string('authorregex', 512);
 		});
 	}

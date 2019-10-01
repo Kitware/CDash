@@ -17,8 +17,8 @@ class CreateUploadfileTable extends Migration {
 			$table->integer('id', true);
 			$table->string('filename');
 			$table->integer('filesize')->default(0);
-			$table->string('sha1sum', 40)->index('sha1sum');
-			$table->boolean('isurl')->default(0);
+			$table->string('sha1sum', 40)->index();
+			$table->tinyInteger('isurl')->default(0);
 		});
 	}
 

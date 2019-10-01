@@ -14,9 +14,9 @@ class CreateCoverageTable extends Migration {
 	{
 		Schema::create('coverage', function(Blueprint $table)
 		{
-			$table->integer('buildid')->default(0)->index('buildid');
-			$table->integer('fileid')->default(0)->index('fileid');
-			$table->boolean('covered')->default(0)->index('covered');
+			$table->integer('buildid')->default(0)->index();
+			$table->integer('fileid')->default(0)->index();
+			$table->tinyInteger('covered')->default(0)->index();
 			$table->integer('loctested')->default(0);
 			$table->integer('locuntested')->default(0);
 			$table->integer('branchstested')->default(0);

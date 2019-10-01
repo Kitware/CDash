@@ -15,10 +15,10 @@ class CreateMeasurementTable extends Migration {
 		Schema::create('measurement', function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			$table->integer('projectid')->index('projectid');
-			$table->string('name')->index('name');
-			$table->boolean('testpage');
-			$table->boolean('summarypage');
+			$table->integer('projectid')->index();
+			$table->string('name')->index();
+			$table->tinyInteger('testpage');
+			$table->tinyInteger('summarypage');
 		});
 	}
 

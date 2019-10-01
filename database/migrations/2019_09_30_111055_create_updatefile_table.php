@@ -14,10 +14,10 @@ class CreateUpdatefileTable extends Migration {
 	{
 		Schema::create('updatefile', function(Blueprint $table)
 		{
-			$table->integer('updateid')->default(0)->index('updateid');
+			$table->integer('updateid')->default(0)->index();
 			$table->string('filename')->default('');
 			$table->dateTime('checkindate')->default('1980-01-01 00:00:00');
-			$table->string('author')->default('')->index('author');
+			$table->string('author')->default('')->index();
 			$table->string('email')->default('');
 			$table->string('committer')->default('');
 			$table->string('committeremail')->default('');

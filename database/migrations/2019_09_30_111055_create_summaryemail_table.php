@@ -15,8 +15,8 @@ class CreateSummaryemailTable extends Migration {
 		Schema::create('summaryemail', function(Blueprint $table)
 		{
 			$table->bigInteger('buildid');
-			$table->date('date')->index('date');
-			$table->smallInteger('groupid')->index('groupid');
+			$table->date('date')->index();
+			$table->smallInteger('groupid')->index();
 		});
 	}
 

@@ -19,7 +19,7 @@ class CreateUsertempTable extends Migration {
 			$table->string('firstname', 40)->default('');
 			$table->string('lastname', 40)->default('');
 			$table->string('institution')->default('');
-			$table->dateTime('registrationdate')->index('registrationdate');
+			$table->dateTime('registrationdate')->index();
 			$table->string('registrationkey', 40)->default('');
 		});
 	}

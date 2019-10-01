@@ -14,10 +14,10 @@ class CreateAuthtokenTable extends Migration {
 	{
 		Schema::create('authtoken', function(Blueprint $table)
 		{
-			$table->string('hash', 128)->index('hash');
-			$table->integer('userid')->default(0)->index('userid');
+			$table->string('hash', 128)->index();
+			$table->integer('userid')->default(0)->index();
 			$table->timestamp('created')->default(DB::raw('CURRENT_TIMESTAMP'));
-			$table->dateTime('expires')->default('1980-01-01 00:00:00')->index('expires');
+			$table->dateTime('expires')->default('1980-01-01 00:00:00')->index();
 			$table->string('description')->nullable();
 		});
 	}

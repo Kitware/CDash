@@ -15,7 +15,7 @@ class CreateBuildfailureargumentTable extends Migration {
 		Schema::create('buildfailureargument', function(Blueprint $table)
 		{
 			$table->bigInteger('id', true);
-			$table->string('argument')->index('argument');
+			$table->string('argument')->index();
 		});
 	}
 

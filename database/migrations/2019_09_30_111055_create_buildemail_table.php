@@ -14,13 +14,16 @@ class CreateBuildemailTable extends Migration {
 	{
 		Schema::create('buildemail', function(Blueprint $table)
 		{
-			$table->integer('userid')->index('userid');
-			$table->bigInteger('buildid')->index('buildid');
-			$table->boolean('category')->index('category');
+			$table->integer('userid');
+			$table->bigInteger('buildid');
+			$table->tinyInteger('category');
 			$table->dateTime('time')->default('1980-01-01 00:00:00');
+
+			$table->index('userid');
+			$table->index('buildid');
+			$table->index('category');
 		});
 	}
-
 
 	/**
 	 * Reverse the migrations.
@@ -31,5 +34,4 @@ class CreateBuildemailTable extends Migration {
 	{
 		Schema::drop('buildemail');
 	}
-
 }

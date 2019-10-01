@@ -15,8 +15,8 @@ class CreatePendingSubmissionsTable extends Migration {
 		Schema::create('pending_submissions', function(Blueprint $table)
 		{
 			$table->integer('buildid')->primary();
-			$table->boolean('numfiles')->default(0);
-			$table->boolean('recheck')->default(0);
+			$table->tinyInteger('numfiles')->default(0);
+			$table->tinyInteger('recheck')->default(0);
 		});
 	}
 

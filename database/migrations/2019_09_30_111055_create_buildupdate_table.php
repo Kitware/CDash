@@ -22,7 +22,7 @@ class CreateBuildupdateTable extends Migration {
 			$table->text('status', 65535);
 			$table->smallInteger('nfiles')->nullable()->default(-1);
 			$table->smallInteger('warnings')->nullable()->default(-1);
-			$table->string('revision', 60)->default('0')->index('revision');
+			$table->string('revision', 60)->default('0')->index();
 			$table->string('priorrevision', 60)->default('0');
 			$table->string('path')->default('');
 		});

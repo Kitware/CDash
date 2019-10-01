@@ -15,10 +15,10 @@ class CreateBlockbuildTable extends Migration {
 		Schema::create('blockbuild', function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			$table->integer('projectid')->index('projectid');
-			$table->string('buildname')->index('buildname');
-			$table->string('sitename')->index('sitename');
-			$table->string('ipaddress', 50)->index('ipaddress');
+			$table->integer('projectid')->index();
+			$table->string('buildname')->index();
+			$table->string('sitename')->index();
+			$table->string('ipaddress', 50)->index();
 		});
 	}
 

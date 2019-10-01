@@ -14,8 +14,8 @@ class CreateOverviewComponentsTable extends Migration {
 	{
 		Schema::create('overview_components', function(Blueprint $table)
 		{
-			$table->integer('projectid')->default(1)->index('projectid');
-			$table->integer('buildgroupid')->default(0)->index('buildgroupid');
+			$table->integer('projectid')->default(1)->index();
+			$table->integer('buildgroupid')->default(0)->index();
 			$table->integer('position')->default(0);
 			$table->string('type', 32)->default('build');
 		});

@@ -14,8 +14,8 @@ class CreateClientSite2cmakeTable extends Migration {
 	{
 		Schema::create('client_site2cmake', function(Blueprint $table)
 		{
-			$table->integer('siteid')->nullable()->index('siteid');
-			$table->integer('cmakeid')->nullable()->index('version');
+			$table->integer('siteid')->nullable()->index();
+			$table->integer('cmakeid')->nullable()->index();
 			$table->string('path', 512)->nullable();
 		});
 	}

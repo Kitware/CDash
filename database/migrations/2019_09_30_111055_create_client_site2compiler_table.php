@@ -14,7 +14,7 @@ class CreateClientSite2compilerTable extends Migration {
 	{
 		Schema::create('client_site2compiler', function(Blueprint $table)
 		{
-			$table->integer('siteid')->nullable()->index('siteid');
+			$table->integer('siteid')->nullable()->index();
 			$table->integer('compilerid')->nullable();
 			$table->string('command', 512)->nullable();
 			$table->string('generator');

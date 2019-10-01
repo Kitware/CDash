@@ -14,14 +14,23 @@ class CreateBuild2groupruleTable extends Migration {
 	{
 		Schema::create('build2grouprule', function(Blueprint $table)
 		{
-			$table->integer('groupid')->default(0)->index('groupid');
-			$table->integer('parentgroupid')->default(0)->index('parentgroupid');
-			$table->string('buildtype', 20)->default('')->index('buildtype');
-			$table->string('buildname')->default('')->index('buildname');
-			$table->integer('siteid')->default(0)->index('siteid');
-			$table->boolean('expected')->default(0)->index('expected');
-			$table->dateTime('starttime')->default('1980-01-01 00:00:00')->index('starttime');
-			$table->dateTime('endtime')->default('1980-01-01 00:00:00')->index('endtime');
+			$table->integer('groupid')->default(0);
+			$table->integer('parentgroupid')->default(0);
+			$table->string('buildtype', 20)->default('');
+			$table->string('buildname')->default('');
+			$table->integer('siteid')->default(0);
+			$table->tinyInteger('expected')->default(0);
+			$table->dateTime('starttime')->default('1980-01-01 00:00:00');
+			$table->dateTime('endtime')->default('1980-01-01 00:00:00');
+
+			$table->index('groupid');
+			$table->index('parentgroupid');
+			$table->index('buildtype');
+			$table->index('buildname');
+			$table->index('siteid');
+			$table->index('expected');
+			$table->index('starttime');
+			$table->index('endtime');
 		});
 	}
 

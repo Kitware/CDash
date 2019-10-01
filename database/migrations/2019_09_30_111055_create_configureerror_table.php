@@ -14,8 +14,8 @@ class CreateConfigureerrorTable extends Migration {
 	{
 		Schema::create('configureerror', function(Blueprint $table)
 		{
-			$table->integer('configureid')->index('configureid');
-			$table->boolean('type')->nullable()->index('type');
+			$table->integer('configureid')->index();
+			$table->tinyInteger('type')->nullable()->index();
 			$table->text('text', 65535)->nullable();
 		});
 	}

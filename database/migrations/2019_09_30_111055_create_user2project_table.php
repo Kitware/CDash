@@ -17,11 +17,11 @@ class CreateUser2projectTable extends Migration {
 			$table->integer('userid')->default(0);
 			$table->integer('projectid')->default(0);
 			$table->integer('role')->default(0);
-			$table->string('cvslogin', 50)->default('')->index('cvslogin');
-			$table->boolean('emailtype')->default(0)->index('emailtype');
-			$table->boolean('emailcategory')->default(62);
-			$table->boolean('emailsuccess')->default(0)->index('emailsucess');
-			$table->boolean('emailmissingsites')->default(0)->index('emailmissingsites');
+			$table->string('cvslogin', 50)->default('')->index();
+			$table->tinyInteger('emailtype')->default(0)->index();
+			$table->tinyInteger('emailcategory')->default(62);
+			$table->tinyInteger('emailsuccess')->default(0)->index();
+			$table->tinyInteger('emailmissingsites')->default(0)->index();
 			$table->primary(['userid','projectid']);
 		});
 	}

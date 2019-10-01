@@ -15,9 +15,9 @@ class CreateCoveragefileTable extends Migration {
 		Schema::create('coveragefile', function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			$table->string('fullpath')->default('')->index('fullpath');
+			$table->string('fullpath')->default('')->index();
 			$table->binary('file')->nullable();
-			$table->bigInteger('crc32')->nullable()->index('crc32');
+			$table->bigInteger('crc32')->nullable()->index();
 		});
 	}
 

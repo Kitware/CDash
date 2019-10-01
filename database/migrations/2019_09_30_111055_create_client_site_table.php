@@ -15,12 +15,12 @@ class CreateClientSiteTable extends Migration {
 		Schema::create('client_site', function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			$table->string('name')->nullable()->index('name');
-			$table->integer('osid')->nullable()->index('system');
+			$table->string('name')->nullable()->index();
+			$table->integer('osid')->nullable()->index();
 			$table->string('systemname')->nullable();
 			$table->string('host')->nullable();
 			$table->string('basedirectory', 512);
-			$table->dateTime('lastping')->default('1980-01-01 00:00:00')->index('lastping');
+			$table->dateTime('lastping')->default('1980-01-01 00:00:00')->index();
 		});
 	}
 

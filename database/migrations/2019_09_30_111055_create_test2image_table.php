@@ -15,8 +15,8 @@ class CreateTest2imageTable extends Migration {
 		Schema::create('test2image', function(Blueprint $table)
 		{
 			$table->bigInteger('id', true);
-			$table->integer('imgid')->index('imgid');
-			$table->integer('testid')->index('testid');
+			$table->integer('imgid')->index();
+			$table->integer('testid')->index();
 			$table->text('role');
 		});
 	}

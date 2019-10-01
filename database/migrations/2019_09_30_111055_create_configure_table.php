@@ -17,9 +17,9 @@ class CreateConfigureTable extends Migration {
 			$table->integer('id', true);
 			$table->text('command', 65535);
 			$table->text('log', 16777215);
-			$table->boolean('status')->default(0);
+			$table->tinyInteger('status')->default(0);
 			$table->smallInteger('warnings')->nullable()->default(-1);
-			$table->bigInteger('crc32')->unique('crc32');
+			$table->bigInteger('crc32')->unique();
 		});
 	}
 

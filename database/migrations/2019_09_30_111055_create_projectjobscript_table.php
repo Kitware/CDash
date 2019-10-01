@@ -15,7 +15,7 @@ class CreateProjectjobscriptTable extends Migration {
 		Schema::create('projectjobscript', function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			$table->integer('projectid')->index('projectid');
+			$table->integer('projectid')->index();
 			$table->text('script');
 		});
 	}

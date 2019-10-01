@@ -14,8 +14,8 @@ class CreateBuild2noteTable extends Migration {
 	{
 		Schema::create('build2note', function(Blueprint $table)
 		{
-			$table->bigInteger('buildid')->index('buildid');
-			$table->bigInteger('noteid')->index('noteid');
+			$table->bigInteger('buildid')->index();
+			$table->bigInteger('noteid')->index();
 			$table->dateTime('time')->default('1980-01-01 00:00:00');
 		});
 	}

@@ -14,9 +14,9 @@ class CreateCoveragefile2userTable extends Migration {
 	{
 		Schema::create('coveragefile2user', function(Blueprint $table)
 		{
-			$table->bigInteger('fileid')->index('coveragefileid');
-			$table->bigInteger('userid')->index('userid');
-			$table->boolean('position');
+			$table->bigInteger('fileid')->index();
+			$table->bigInteger('userid')->index();
+			$table->tinyInteger('position');
 		});
 	}
 

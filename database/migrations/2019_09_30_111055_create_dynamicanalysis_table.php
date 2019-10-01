@@ -15,7 +15,7 @@ class CreateDynamicanalysisTable extends Migration {
 		Schema::create('dynamicanalysis', function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			$table->integer('buildid')->default(0)->index('buildid');
+			$table->integer('buildid')->default(0)->index();
 			$table->string('status', 10)->default('');
 			$table->string('checker', 60)->default('');
 			$table->string('name')->default('');
