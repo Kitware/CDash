@@ -1,0 +1,364 @@
+<!-- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" ng-app="CDash">
+  <head ng-controller="HeadController">
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" type="text/css" ng-href="build/css/{{cssfile}}_1570022558247.css" />
+    <link rel="stylesheet" type="text/css" href="css/jquery.qtip.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.4.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+    <script src="js/CDash_1570022558247.min.js"></script>
+    <title>CDash - BuildGroups</title>
+  </head>
+  <body bgcolor="#ffffff" ng-controller="ManageBuildGroupController">
+  -->
+    <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1570022558247.html'"></ng-include>
+    <br/>
+
+    <div id="main_content" class="container" ng-if="cdash.requirelogin != 1 && !loading">
+
+      <!-- project selection form -->
+      <div class="row">
+        <div class="col-md-3">
+          <form class="form-inline" name="form1" method="post" action="{{'manageBuildGroup.php?projectid=' + cdash.projectid}}">
+            <div class="form-group">
+              <label for="projectSelection">Project: </label>
+              <select name="projectSelection" onchange="location = 'manageBuildGroup.php?projectid='+this.options[this.selectedIndex].value;" class="form-control">
+                <option value=-1>Choose...</option>
+                <option ng-repeat="proj in cdash.availableprojects" value="{{proj.id}}" ng-selected="proj.id==cdash.projectid">
+                  {{proj.name}}
+                </option>
+              </select>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- If a project has been selected -->
+      <div role="tabpanel" ng-if="cdash.projectid > -1">
+        <ul class="nav nav-tabs" role="tablist" id="tabs">
+          <li role="presentation" class="active">
+            <a href="#current" aria-controls="current" role="tab" data-toggle="tab">
+              <strong>Current BuildGroups</strong>
+            </a>
+          </li>
+          <li role="presentation">
+            <a href="#create" aria-controls="create" role="tab" data-toggle="tab">
+              <strong>Create new BuildGroup</strong>
+            </a>
+          </li>
+          <li role="presentation">
+            <a href="#wildcard" aria-controls="wildcard" role="tab" data-toggle="tab">
+              <strong>Wildcard BuildGroups</strong>
+            </a>
+          </li>
+          <li role="presentation">
+            <a href="#dynamic" aria-controls="dynamic" role="tab" data-toggle="tab">
+              <strong>Dynamic BuildGroups</strong>
+            </a>
+          </li>
+        </ul>
+
+        <div class="tab-content container">
+
+          <div role="tabpanel" class="tab-pane active" id="current">
+            <!-- List the current BuildGroups -->
+            <div class="row">
+              <div class="col-md-12">
+                <div id="sortable" ui-sortable="sortable" ng-model="cdash.buildgroups">
+                  <div class="row" ng-repeat="buildgroup in cdash.buildgroups" id="{{buildgroup.id}}" style="cursor: move;" ng-class-even="'even'" ng-class-odd="'odd'">
+                    <div class="col-md-4">
+                      <!-- the BuildGroup name & an icon for more options -->
+                      <span ng-click="showOptions = !showOptions" ng-class="showOptions ? 'glyphicon glyphicon-chevron-down' : 'glyphicon glyphicon-chevron-right'" style="cursor: pointer;"></span> {{buildgroup.name}}
+
+                      <!-- Display delete icon if this isn't a default build group -->
+                      <span ng-if="buildgroup.name != 'Nightly' && buildgroup.name != 'Continuous' && buildgroup.name != 'Experimental'" ng-show="showOptions" ng-click="showModal(buildgroup.id)" class="glyphicon glyphicon-trash animate-show" style="cursor: pointer;"></span>
+
+                    </div>
+
+                    <div class="col-md-8 animate-show" ng-show="showOptions">
+                      <!-- Form to modify BuildGroup settings -->
+                      <form ng-show="showOptions">
+                        <input type="hidden" name="buildgroupid" value="{{buildgroup.id}}"/>
+                        <!-- Only allow this BuildGroup to be renamed if it isn't one of the default BuildGroups (Nightly/Continuous/Experimental) -->
+                        <div class="form-group" ng-if="buildgroup.name != 'Nightly' && buildgroup.name != 'Continuous' && buildgroup.name != 'Experimental'">
+                          <label for="name">Name</label>
+                          <input name="name" type="text" class="form-control" ng-model="buildgroup.name"/>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="description">Description</label>
+                          <input name="description" type="text" class="form-control" ng-model="buildgroup.description"/>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="autoremovetimeframe">Number of days before builds should be removed</label>
+                          <input type="text" name="autoremovetimeframe" class="form-control" ng-model="buildgroup.autoremovetimeframe"/>
+                          <p class="help-block">
+                            "0" indicates that this BuildGroup should defer to its Project's settings for build expiration.
+                          </p>
+                        </div>
+
+                        <div class="radio">
+                          <label>
+                            <input name="summaryEmail" type="radio" value="0"
+                             convert-to-number
+                             ng-model="buildgroup.summaryemail"
+                             ng-checked="buildgroup.summaryemail == 0"/> Normal email
+                          </label>
+                          <p class="help-block">
+                            Defer to the Project's email settings.
+                          </p>
+                        </div>
+
+                        <div class="radio">
+                          <label>
+                            <input name="summaryEmail" type="radio" value="1"
+                             convert-to-number
+                             ng-model="buildgroup.summaryemail"
+                             ng-checked="buildgroup.summaryemail == 1"/> Summary email
+                          </label>
+                          <p class="help-block">
+                            Send only one email per day when the first build fails.
+                          </p>
+                        </div>
+
+                        <div class="radio">
+                          <label>
+                            <input name="summaryEmail" type="radio" value="2"
+                             convert-to-number
+                             ng-model="buildgroup.summaryemail"
+                             ng-checked="buildgroup.summaryemail == 2"/> No email
+                          </label>
+                          <p class="help-block">
+                            Don't send any email, regardless of users' preferences.
+                          </p>
+                        </div>
+
+                        <div class="checkbox">
+                          <label>
+                            <input type="checkbox"
+                              ng-model="buildgroup.emailcommitters"
+                              name="emailCommitters"
+                              ng-true-value="1"
+                              ng-false-value="0"/>
+                            Email committers
+                          </label>
+                          <p class="help-block">
+                            Send email to authors &amp; committers when build problems occur.
+                          </p>
+                        </div>
+
+                        <div class="checkbox">
+                          <label>
+                            <input type="checkbox"
+                              ng-model="buildgroup.includesubprojecttotal"
+                              name="includeInSummary"
+                              ng-true-value="1"
+                              ng-false-value="0"/>
+                            Included in SubProject summary
+                          </label>
+                          <p class="help-block">
+                            This group's builds should contribute to totals on SubProject summary pages.
+                          </p>
+                        </div>
+
+                        <button type="submit" class="btn btn-default" ng-click="saveBuildGroup(buildgroup)">Save</button>
+                        <img id="buildgroup_updated_{{buildgroup.id}}" src="img/check.gif" style="display: none; height:16px; width=16px; margin-top:9px;" />
+
+                      </form>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <button class="btn btn-default" ng-click="updateBuildGroupOrder()">Update Order</button>
+                <img id="order_updated" src="img/check.gif" style="display: none; height:16px; width=16px; margin-top:9px;" />
+              </div>
+            </div>
+          </div> <!-- current BuildGroups -->
+
+          <div role="tabpanel" class="tab-pane" id="create">
+            <div class="row">
+              <div class="col-md-12 text-center">
+                <strong>Create a new BuildGroup</strong>
+              </div>
+            </div>
+            <div class="form-horizontal">
+              <div class="form-group">
+                <label for="newBuildGroupName">Name:</label>
+                <input name="newBuildGroupName" class="form-control" type="text" size="40" ng-model="newBuildGroupName" />
+              </div>
+              <div class="form-group">
+                <label for="newBuildGroupType">Build Type:</label>
+                <select name="newBuildGroupType" ng-model="buildType" ng-options="type.name for type in cdash.buildgrouptypes" class="form-control">
+                </select>
+                <p class="help-block">
+                  <dl class="dl-horizontal">
+                    <dt>Daily</dt>
+                    <dd>Builds are shown on a day-by-day basis (default).</dd>
+                    <dt>Latest</dt>
+                    <dd>The most recent content is displayed for this BuildGroup, no matter when it was submitted.  Contents are defined under the <em>Dynamic</em> tab.</dd>
+                  </dl>
+                </p>
+
+              </div>
+              <div class="form-group">
+                <button class="btn btn-default" ng-click="createBuildGroup(newBuildGroupName, buildType.value)">Create BuildGroup</button>
+                <img id="buildgroup_created" src="img/check.gif" style="display: none; height:16px; width=16px; margin-top:9px;" />
+                <div id="create_group_error" class="text-danger"
+                     ng-show="cdash.buildgroup_error">
+                  <b>{{cdash.buildgroup_error}}</b>
+                </div>
+              </div>
+            </div>
+          </div> <!-- create new BuildGroup -->
+
+          <div role="tabpanel" class="tab-pane" id="wildcard">
+            <div class="form-horizontal">
+              <div class="form-group">
+                <label for="wildcardBuildGroupSelection">Define Wildcard rule for:</label>
+                <select name="wildcardBuildGroupSelection" ng-model="wildcardBuildGroupSelection" ng-options="buildgroup as buildgroup.name for buildgroup in cdash.buildgroups | orderBy:'name'" class="form-control">
+                  <option value="">Choose...</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="wildcardBuildNameMatch">Build Names should contain:</label>
+                <input name="wildcardBuildNameMatch" type="text" ng-model="wildcardBuildNameMatch" size="12" class="form-control"/>
+              </div>
+              <div class="form-group">
+                <label for="buildType">Build Type:</label>
+                <select name="buildType" ng-model="buildType" class="form-control">
+                  <option>Nightly</option>
+                  <option>Continuous</option>
+                  <option>Experimental</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <button type="submit" class="btn btn-default" ng-click="addWildcardRule(wildcardBuildGroupSelection, buildType, wildcardBuildNameMatch)">Define BuildGroup</button>
+                <img id="wildcard_defined" src="img/check.gif" style="display: none; height:16px; width=16px; margin-top:9px;" />
+              </div>
+            </div>
+
+            <hr/>
+
+            <div name="existingwildcardrules" ng-if="cdash.wildcards.length > 0">
+              <table class="table-striped" style="width:100%;">
+                <caption class="h4">Existing Wildcard Rules</caption>
+                <thead>
+                  <th>BuildGroup</th>
+                  <th>Matches</th>
+                  <th>Type</th>
+                  <th>Delete?</th>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="wildcard in cdash.wildcards" class="repeat-item">
+                    <td>{{wildcard.buildgroupname}}</td>
+                    <td>{{wildcard.match}}</td>
+                    <td>{{wildcard.buildtype}}</td>
+                    <td>
+                      <span ng-click="deleteWildcardRule(wildcard)" class="glyphicon glyphicon-trash animate-show" style="cursor: pointer;"></span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div> <!-- wildcard -->
+
+          <div role="tabpanel" class="tab-pane" id="dynamic">
+            <div class="form-horizontal">
+              <div class="form-group">
+                <label for="dynamicSelection">Add a build row to the following dynamic group:</label>
+                <select name="dynamicSelection" ng-model="dynamicSelection" ng-options="dynamic as dynamic.name for dynamic in cdash.dynamics | orderBy:'name'" class="form-control">
+                  <option value="">Choose...</option>
+                </select>
+              </div>
+            </div>
+
+            <hr/>
+
+            <div class="form-horizontal">
+              <div class="form-group">
+                <label for="parentBuildGroupSelection">Show the most recent build from the following group:</label>
+                <select name="parentBuildGroupSelection" ng-model="parentBuildGroupSelection" ng-options="buildgroup as buildgroup.name for buildgroup in cdash.buildgroups | orderBy:'name' | filter_buildgroups:'Daily'" class="form-control">
+                  <option value="">Any</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="siteSelection">and the following site:</label>
+                <select name="siteSelection" ng-model="siteSelection" ng-options="site as site.name for site in cdash.sites | orderBy:'name'" class="form-control">
+                  <option value="">Any</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="dynamicBuildNameMatch">whose build name contains:</label>
+                <input name="dynamicBuildNameMatch" type="text" ng-model="dynamicBuildNameMatch" size="12" class="form-control"/>
+                <p class="help-block">
+                  Leave blank to ignore this criterion. Use * to match one or more characters.
+                </p>
+              </div>
+
+              <div class="form-group">
+                <button type="submit" class="btn btn-default" ng-click="addDynamicRow(dynamicSelection, parentBuildGroupSelection, siteSelection, dynamicBuildNameMatch)">Add content to BuildGroup</button>
+                <img id="dynamic_defined" src="img/check.gif" style="display: none; height:16px; width=16px; margin-top:9px;" />
+              </div>
+            </div>
+
+            <div ng-if="dynamicSelection.rules.length > 0" name="existingdynamicrows">
+              <table class="table-striped" style="width:100%;">
+                <caption class="h4">Existing Build Rows</caption>
+                <thead>
+                  <th>Group to draw builds from</th>
+                  <th>Site</th>
+                  <th>Build name contains</th>
+                  <th>Delete?</th>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="rule in dynamicSelection.rules" class="repeat-item">
+                    <td>{{rule.parentgroupname}}</td>
+                    <td>{{rule.sitename}}</td>
+                    <td>{{rule.match}}</td>
+                    <td>
+                      <span ng-click="deleteDynamicRule(dynamicSelection, rule)" class="glyphicon glyphicon-trash animate-show" style="cursor: pointer;"></span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </form>
+          </div> <!-- dynamic -->
+        </div> <!-- tab-content -->
+      </div> <!-- tabpanel -->
+    </div> <!-- container -->
+
+    <!-- confirm delete build modal template -->
+    <script type="text/ng-template" id="modal-template">
+      <div class="modal-header">
+        <h4 class="modal-title">Delete BuildGroup</h4>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete this BuildGroup? (If the BuildGroup is not empty its builds
+          will be moved to their original BuildGroup.)</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" ng-click="$ctrl.cancel()">cancel</button>
+        <button class="btn btn-danger" id="modal-delete-group-button" ng-click="$ctrl.ok()">Delete</button>
+      </div>
+    </script>
+
+    <!-- FOOTER -->
+    <br/>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1570022558247.html'"></ng-include>
+      <!--
+  </body>
+</html>
+-->

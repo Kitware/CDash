@@ -1,0 +1,7 @@
+<a onclick="event.preventDefault();
+    document.getElementById('_csrf-token').value = document.querySelector('[name=csrf-token][content]').content;
+    document.getElementById('logout-form').submit();"
+   href="logout">Log Out</a>
+<form id="logout-form" action="logout" method="POST" style="display: none">
+    <input type="hidden" name="_token" id="_csrf-token" value="" />
+</form>

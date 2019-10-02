@@ -1,0 +1,115 @@
+<!-- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en" ng-app="CDash">
+  <head ng-controller="HeadController">
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" type="text/css" ng-href="build/css/{{cssfile}}_1570022558247.css" />
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/jquery-ui-1.10.4.css"/>
+    <script src="js/CDash_1570022558247.min.js"></script>
+    <title>CDash - Manage Overview</title>
+  </head>
+
+  <body bgcolor="#ffffff" ng-controller="ManageOverviewController">
+  -->
+    <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1570022558247.html'"></ng-include>
+    <br/>
+    <div class="container" style="height:400px;">
+      <div class="row">
+        <div class="col-md-11">
+          <ul class="row" id="buildSortable"
+              ui-sortable="buildSortable" ng-model="cdash.buildcolumns">
+            <li class="col-md-2 measurement text-center"
+                ng-repeat="build in cdash.buildcolumns"
+                id="{{build.id}}">
+              <div class="row">
+                <div class="col-xs-1 col-xs-offset-9 glyphicon glyphicon-remove"
+                     ng-click="removeBuildColumn(build)">
+                </div>
+              </div>
+              <p id="label" class="text-center">{{build.name}}</p>
+            </li>
+          </ul>
+          <div class="row">
+            <table style="width:100%;">
+              <tbody id="staticSortable"
+                     ui-sortable="staticSortable" ng-model="cdash.staticrows">
+                <tr class='row measurement text-center'
+                    ng-repeat="static in cdash.staticrows"
+                    id="{{static.id}}">
+                  <td id='label' class='text-center col-md-11'>
+                    {{static.name}}
+                  </td>
+                  <td class='col-md-1 glyphicon glyphicon-remove'
+                      ng-click="removeStaticRow(static)">
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="row spacer">
+            <select id="newBuildColumn" class="col-md-2"
+              ng-model="cdash.newBuildColumn"
+              ng-options="group as group.name for group in cdash.availablegroups | orderBy: 'name'">
+              <option value="">Choose...</option>
+            </select>
+            <div class="col-md-1">
+              <button id="addBuildColumn" class="btn btn-default"
+                      ng-click="addBuildColumn(cdash.newBuildColumn)"
+                      ng-disabled="!cdash.newBuildColumn">
+                Add Build Column
+              </button>
+            </div>
+            <select id="newStaticRow" class="col-md-2 col-md-offset-4"
+              ng-model="cdash.newStaticRow"
+              ng-options="group as group.name for group in cdash.availablegroups | orderBy: 'name'">
+              <option value="">Choose...</option>
+            </select>
+            <div class="col-md-1">
+              <button id="addStaticRow" class="btn btn-default"
+                      ng-click="addStaticRow(cdash.newStaticRow)"
+                      ng-disabled="!cdash.newStaticRow">
+                Add Static Analysis Row
+              </button>
+            </div>
+          </div>
+          <div class="row spacer"></div>
+          <div class="row">
+            <button type="submit" id="saveLayout"
+                    class="btn btn-default col-md-3 col-md-offset-4"
+                    ng-click="saveLayout()">
+              Save Layout
+            </button>
+            <div class="col-md-1">
+              <img id="loading" style="height:16px; width=16px; margin-top:9px;"/>
+            </div>
+          </div>
+          <div class="row spacer" id="instructions">
+            <p>
+              Add and remove groups above.
+              General build groups will appear as columns,
+              while static analysis groups will appear as rows.
+              Drag the groups into the proper order (if necessary).
+              Once you are satisfied, click the "Save Layout" button.
+            </p>
+            <a ng-href="overview.php?project={{cdash.projectname_encoded}}">
+              Go to overview
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1570022558247.html'"></ng-include>
+<!--
+  </body>
+</html>
+-->

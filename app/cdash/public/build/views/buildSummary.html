@@ -1,0 +1,621 @@
+<!-- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en" ng-app="CDash">
+  <head ng-controller="HeadController">
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" type="text/css" ng-href="build/css/{{cssfile}}_1570022558247.css" />
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <script src="js/CDash_1570022558247.min.js"></script>
+    <title ng-bind="title">CDash</title>
+  </head>
+  <body bgcolor="#ffffff" ng-controller="BuildSummaryController">
+-->
+    <div ng-if="cdash.requirelogin == 1" ng-include="'login.php'"></div>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.header || 'build/views/partials/header_1570022558247.html'"></ng-include>
+
+    <div id="main_content" ng-if="cdash.requirelogin != 1 && !loading && !cdash.error">
+
+      <!-- Display link to create bug tracker issue if supported. -->
+      <div ng-if="::cdash.newissueurl">
+        <a href="{{::cdash.newissueurl}}">
+          <b>Create {{::cdash.bugtracker}} issue for this build</b>
+        </a>
+        <br/>
+      </div>
+
+      <!-- Build log for a single submission -->
+      <br/><br/>
+      <b>Site Name: </b>
+      <a ng-href="viewSite.php?siteid={{::cdash.build.siteid}}">
+        {{::cdash.build.site}}
+      </a>
+      <br/>
+
+      <b>Build Name: </b>{{::cdash.build.name}}
+      <div ng-if="::cdash.build.note">
+        (<a ng-href="viewNotes.php?buildid={{::cdash.build.id}}"/>view notes</a>)
+      </div>
+      <br/>
+
+      <b>Stamp: </b>{{::cdash.build.stamp}}
+      <br/>
+
+      <b>Time: </b>{{::cdash.build.time}}
+      <br/>
+
+      <b>Type: </b>{{::cdash.build.type}}
+      <br/>
+
+      <!-- Display Operating System information  -->
+      <div ng-if="::cdash.build.osname">
+        <br/><b>OS Name: </b>{{::cdash.build.osname}}
+      </div>
+      <div ng-if="::cdash.build.osplatform">
+        <br/><b>OS Platform: </b>{{::cdash.build.osplatform}}
+      </div>
+      <div ng-if="::cdash.build.osrelease">
+        <br/><b>OS Release: </b>{{::cdash.build.osrelease}}
+      </div>
+      <div ng-if="::cdash.build.osversion">
+        <br/><b>OS Version: </b>{{::cdash.build.osversion}}
+      </div>
+
+      <!-- Display Compiler information  -->
+      <div ng-if="::cdash.build.compilername">
+        <br/><b>Compiler Name: </b>{{::cdash.build.compilername}}
+      </div>
+      <div ng-if="::cdash.build.compilerversion">
+        <br/><b>Compiler Version: </b>{{::cdash.build.compilerversion}}
+      </div>
+
+      <div ng-if="::cdash.build.generator">
+        <br/><b>CTest version: </b>{{::cdash.build.generator}}
+      </div>
+
+      <div ng-if="::cdash.build.lastsubmitbuild > 0">
+        <p/><b>Last submission: </b>
+        <a ng-href="buildSummary.php?buildid={{::cdash.build.lastsubmitbuild}}"/>
+          {{::cdash.build.lastsubmitdate}}
+        </a>
+      </div>
+      <br/><br/>
+
+      <table>
+        <tr>
+          <td>
+            <table class="dart">
+              <tr class="table-heading">
+                <th colspan="3">Current Build</th>
+              </tr>
+              <tr class="table-heading">
+                <th>Stage</th>
+                <th>Errors</th>
+                <th>Warnings</th>
+              </tr>
+              <tr class="tr-odd">
+                <td>
+                  <a ng-if="::cdash.hasupdate"
+                     ng-click="jumpToAnchor('Update')">
+                    <b>Update</b>
+                  </a>
+                  <span ng-if="::!cdash.hasupdate">
+                    <b>Update</b>
+                  </span>
+                </td>
+                <td align="right"
+                    ng-class="::cdash.update.nerrors > 0 ? 'error' : 'normal'">
+                  <b>
+                    <a ng-href="viewUpdate.php?buildid={{::cdash.build.id}}">
+                      {{::cdash.update.nerrors}}
+                    </a>
+                  </b>
+                </td>
+                <td align="right"
+                    ng-class="::cdash.update.nwarnings > 0 ? 'warning' : 'normal'">
+                  <b>
+                    <a ng-href="viewUpdate.php?buildid={{::cdash.build.id}}"/>
+                      {{::cdash.update.nwarnings}}
+                    </a>
+                  </b>
+                </td>
+              </tr>
+              <tr class="tr-even">
+                <td>
+                  <a ng-click="jumpToAnchor('Configure')">
+                    <b>Configure</b>
+                  </a>
+                </td>
+                <td align="right"
+                    ng-class="::cdash.configure.nerrors > 0 ? 'error' : 'normal'">
+                  <b>
+                    <a ng-href="viewConfigure.php?buildid={{::cdash.build.id}}"/>
+                      {{::cdash.configure.nerrors}}
+                    </a>
+                  </b>
+                </td>
+                <td align="right"
+                    ng-class="::cdash.configure.nwarnings > 0 ? 'warning' : 'normal'">
+                  <b>
+                    <a ng-href="viewConfigure.php?buildid={{::cdash.build.id}}">
+                      {{::cdash.configure.nwarnings}}
+                    </a>
+                  </b>
+                </td>
+              </tr>
+              <tr class="tr-odd">
+                <td>
+                  <a ng-click="jumpToAnchor('Build')">
+                    <b>Build</b>
+                  </a>
+                </td>
+                <td align="right"
+                    ng-class="::cdash.build.nerrors > 0 ? 'error' : 'normal'">
+                  <b>
+                    <a ng-href="viewBuildError.php?buildid={{::cdash.build.id}}">
+                      {{::cdash.build.nerrors}}
+                    </a>
+                  </b>
+                </td>
+                <td align="right"
+                    ng-class="::cdash.build.nwarnings > 0 ? 'warning' : 'normal'">
+                  <b>
+                    <a ng-href="viewBuildError.php?type=&buildid={{::cdash.build.id}}">
+                      {{::cdash.build.nwarnings}}
+                    </a>
+                  </b>
+                </td>
+              </tr>
+              <tr class="tr-even">
+                <td><a ng-click="jumpToAnchor('Test')"><b>Test</b></a></td>
+                <td align="right"
+                    ng-class="::cdash.test.nfailed > 0 ? 'error' : 'normal'">
+                  <b>
+                    <a ng-href="viewTest.php?onlyfailed&buildid={{::cdash.build.id}}">
+                      {{::cdash.test.nfailed}}
+                    </a>
+                  </b>
+                </td>
+                <td align="right"
+                    ng-class="::cdash.test.nnotrun > 0 ? 'warning' : 'normal'">
+                  <b>
+                    <a ng-href="viewTest.php?onlynotrun&buildid={{::cdash.build.id}}">
+                      {{::cdash.test.nnotrun}}
+                    </a>
+                  </b>
+                </td>
+              </tr>
+            </table>
+          </td>
+          <td>
+
+            <!-- Previous build -->
+            <table ng-if="::cdash.previousbuild" class="dart">
+              <tr class="table-heading">
+                <th colspan="3">
+                  <a ng-href="buildSummary.php?buildid={{::cdash.previousbuild.buildid}}">
+                    Previous Build
+                  </a>
+                </th>
+              </tr>
+              <tr class="table-heading">
+                <th>Stage</th>
+                <th>Errors</th>
+                <th>Warnings</th>
+              </tr>
+              <tr class="tr-odd">
+                <td><b>Update</b></td>
+                <td align="right"
+                    ng-class="::cdash.previousbuild.nupdateerrors > 0 ? 'error' : 'normal'">
+                  <b>
+                    <a ng-href="viewUpdate.php?buildid={{::cdash.previousbuild.buildid}}">
+                      {{cdash.previousbuild.nupdateerrors}}
+                    </a>
+                  </b>
+                </td>
+                <td align="right"
+                    ng-class="::cdash.previousbuild.nupdatewarnings > 0 ? 'warning' : 'normal'">
+                  <b>
+                    <a ng-href="viewUpdate.php?buildid={{::cdash.previousbuild.buildid}}">
+                      {{::cdash.previousbuild.nupdatewarnings}}
+                    </a>
+                  </b>
+                </td>
+              </tr>
+
+              <tr class="tr-even">
+                <td><b>Configure</b></td>
+                <td align="right"
+                    ng-class="::cdash.previousbuild.nconfigureerrors > 0 ? 'error' : 'normal'">
+                  <b>
+                    <a ng-href="::viewConfigure.php?buildid={{::cdash.previousbuild.buildid}}">
+                      {{::cdash.previousbuild.nconfigureerrors}}
+                    </a>
+                  </b>
+                </td>
+                <td align="right"
+                    ng-class="::cdash.previousbuild.nconfigurewarnings > 0 ? 'warning' : 'normal'">
+                  <b>
+                    <a ng-href="viewConfigure.php?buildid={{::cdash.previousbuild.buildid}}">
+                      {{::cdash.previousbuild.nconfigurewarnings}}
+                    </a>
+                  </b>
+                </td>
+              </tr>
+
+              <tr class="tr-odd">
+                <td><b>Build</b></td>
+                <td align="right"
+                    ng-class="::cdash.previousbuild.nerrors > 0 ? 'error' : 'normal'">
+                  <b>
+                    <a ng-href="viewBuildError.php?buildid={{::cdash.previousbuild.buildid}}">
+                      {{::cdash.previousbuild.nerrors}}
+                    </a>
+                  </b>
+                </td>
+                <td align="right"
+                    ng-class="::cdash.previousbuild.nwarnings > 0 ? 'warning' : 'normal'">
+                  <b>
+                    <a ng-href="viewBuildError.php?type=1&buildid={{::cdash.previousbuild.buildid}}">
+                      {{::cdash.previousbuild.nwarnings}}
+                    </a>
+                  </b>
+                </td>
+              </tr>
+
+              <tr class="tr-even">
+                <td><b>Test</b></td>
+                <td align="right"
+                    ng-class="::cdash.previousbuild.ntestfailed > 0 ? 'error' : 'normal'">
+                  <b>
+                    <a ng-href="viewTest.php?onlyfailed&buildid={{::cdash.previousbuild.buildid}}">
+                      {{::cdash.previousbuild.ntestfailed}}
+                    </a>
+                  </b>
+                </td>
+                <td align="right"
+                    ng-class="::cdash.previousbuild.ntestnotrun > 0 ? 'warning' : 'normal'">
+                  <b>
+                    <a ng-href="viewTest.php?onlynotrun&buildid={{::cdash.previousbuild.buildid}}">
+                      {{::cdash.previousbuild.ntestnotrun}}
+                    </a>
+                  </b>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+      <br/>
+
+      <!-- Display the history table -->
+      <div class="title-divider">History</div>
+      <a ng-click="toggleHistoryGraph()">
+        Show Build History
+      </a>
+      </br>
+
+      <a ng-href="index.php?project={{::cdash.projectname_encoded}}&filtercount=4&showfilters=1&filtercombine=and&field1=site&compare1=61&value1={{::cdash.build.sitename_encoded}}&field2=buildname&compare2=61&value2={{::cdash.build.name}}&field3=buildtype&compare3=61&value3={{::cdash.build.type}}&field4=buildstarttime&compare4=84&value4={{::cdash.build.starttime}}">
+        Build History Filter
+      </a>
+      <br/>
+
+      <div>
+        <img src="img/loading.gif" ng-show="showHistoryGraph && graphLoading"/>
+        <table id="historyGraph" width="100%" border="0"
+               ng-show="showHistoryGraph && !graphLoading">
+          <tr>
+            <th>Start Time</th>
+            <th>Updated Files</th>
+            <th>Configure Errors</th>
+            <th>Configure Warnings</th>
+            <th>Build Errors</th>
+            <th>Build Warnings</th>
+            <th>Failed Tests</th>
+          </tr>
+          <tr ng-repeat="build in cdash.buildhistory"
+              ng-class-odd="'odd'" ng-class-even="'even'">
+            <td>
+              <a ng-href="buildSummary.php?buildid={{::build.id}}">
+                {{::build.starttime}}
+              </a>
+            </td>
+            <td>
+              {{::build.nfiles}}
+            </td>
+            <td ng-class="::build.configureerrors > 0 ? 'error' : 'normal'">
+              {{::build.configureerrors}}
+            </td>
+            <td ng-class="::build.configurewarnings > 0 ? 'warning' : 'normal'">
+              {{::build.configurewarnings}}
+            </td>
+            <td ng-class="::build.builderrors > 0 ? 'error' : 'normal'">
+              {{::build.builderrors}}
+            </td>
+            <td ng-class="::build.buildwarnings > 0 ? 'warning' : 'normal'">
+              {{::build.buildwarnings}}
+            </td>
+            <td ng-class="::build.testfailed > 0 ? 'error' : 'normal'">
+              {{::build.testfailed}}
+            </td>
+          </tr>
+        </table>
+      </div>
+      <br/>
+
+      <!-- Display notes for that build -->
+      <div class="title-divider"
+           ng-if="cdash.notes.length > 0 || cdash.user.id > 0">Notes</div>
+
+      <div ng-if="cdash.notes.length > 0">
+        <div class="title-divider">
+          Users notes ({{cdash.notes.length}})
+        </div>
+        <div ng-repeat="note in cdash.notes">
+          <b>{{::note.status}}</b> by <b>{{::note.user}}</b> at {{::note.date}}
+          <pre>{{::note.text}}</pre>
+          <hr/>
+        </div>
+      </div>
+
+
+      <div ng-if="::cdash.user.id > 0">
+        <!-- Add Notes -->
+        <a ng-click="toggleNote()">
+          Add a Note to this Build
+        </a>
+        <div id="addnote" ng-show="showNote">
+          <table>
+            <tr>
+              <td><b>Note:</b></td>
+              <td>
+                <textarea name="TextNote" cols="50" rows="5" ng-model="cdash.noteText"></textarea>
+              </td>
+            </tr>
+            <tr>
+              <td><b>Status:</b></td>
+              <td>
+                <select name="Status" ng-model="cdash.noteStatus">
+                  <option value="0">Simple Note</option>
+                  <option value="1">Fix in progress</option>
+                  <option value="2">Fixed</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>
+                <input name="AddNote" type="submit" value="Add Note"
+                       ng-click="addNote()" ng-disabled="!cdash.noteText">
+              </td>
+            </tr>
+          </table>
+        </div>
+        <br/>
+      </div>
+
+      <!-- Graphs -->
+      <div class="title-divider">Graphs</div>
+
+      <img src="img/graph.png" title="graph"/>
+      <a ng-click="toggleTimeGraph()">
+        Show Build Time Graph
+      </a>
+      <center>
+        <img src="img/loading.gif" ng-show="showTimeGraph && graphLoading"/>
+        <div id="buildtimegrapholder" class="graph_holder"
+             ng-show="showTimeGraph">
+      </center>
+
+      <img src="img/graph.png" title="graph"/>
+      <a ng-click="toggleErrorGraph()">
+        Show Build Errors Graph
+      </a>
+      <center>
+        <img src="img/loading.gif" ng-show="showErrorGraph && graphLoading"/>
+        <div id="builderrorsgrapholder" class="graph_holder"
+             ng-show="showErrorGraph"></div>
+      </center>
+
+      <img src="img/graph.png" title="graph"/>
+      <a ng-click="toggleWarningGraph()">
+        Show Build Warnings Graph
+      </a>
+      <center>
+        <img src="img/loading.gif" ng-show="showWarningGraph && graphLoading"/>
+        <div id="buildwarningsgrapholder" class="graph_holder"
+             ng-show="showWarningGraph"></div>
+      </center>
+
+      <img src="img/graph.png" title="graph"/>
+      <a ng-click="toggleTestGraph()">
+        Show Build Tests Failed Graph
+      </a>
+      <center>
+        <img src="img/loading.gif" ng-show="showTestGraph && graphLoading"/>
+        <div id="buildtestsfailedgrapholder" class="graph_holder"
+             ng-show="showTestGraph"></div>
+      </center>
+      <br/>
+
+      <!-- Relationships -->
+      <div ng-if="::cdash.hasrelationships">
+        <div class="title-divider">
+          Relationships
+        </div>
+        <div ng-repeat="from in ::cdash.relationships_from">
+          This build {{::from.relationship}} <a ng-href="buildSummary.php?buildid={{::from.relatedid}}">{{::from.name}}</a>.
+        </div>
+        <div ng-repeat="to in ::cdash.relationships_to">
+          <a ng-href="buildSummary.php?buildid={{::to.buildid}}">{{::to.name}}</a> {{::to.relationship}} this build.
+        </div>
+      </div>
+
+      <!-- Update -->
+      <div ng-if="::cdash.hasupdate">
+        <div class="title-divider" id="Update">
+          Stage: Update ({{::cdash.update.nerrors}} errors, {{::cdash.update.nwarnings}} warnings)
+        </div>
+        <br/>
+
+        <b>Start Time: </b>{{::cdash.update.starttime}}
+        <br/>
+
+        <b>End Time: </b>{{::cdash.update.endtime}}
+        <br/>
+
+        <b>Update Command: </b> {{::cdash.update.command}}
+        <br/>
+
+        <b>Update Type: </b> {{::cdash.update.type}}
+        <br/>
+
+        <b>Number of Updates: </b>
+        <a ng-href="viewUpdate.php?buildid={{::cdash.build.id}}">
+          {{::cdash.update.nupdates}}
+        </a>
+        <div ng-if="::cdash.update.status">
+          <br/>
+          <b>Update Status: </b>{{::cdash.update.status}}
+        </div>
+        <br/>
+        <br/>
+      </div>
+
+      <!-- Configure -->
+      <div class="title-divider" id="Configure">
+        Configure ({{::cdash.configure.nerrors}} errors, {{::cdash.configure.nwarnings}} warnings)
+      </div>
+      <br/>
+
+      <b>Start Time: </b>{{::cdash.configure.starttime}}
+      <br/>
+
+      <b>End Time: </b>{{::cdash.configure.endtime}}
+      <br/>
+
+      <b>Configure Command: </b> {{::cdash.configure.command}}
+      <br/>
+
+      <b>Configure Return Value: </b> {{::cdash.configure.status}}
+      <br/>
+
+      <b>Configure Output: </b>
+      <br/>
+
+      <pre>{{::cdash.configure.output}}</pre>
+      <br/>
+
+      <a ng-href="viewConfigure.php?buildid={{::cdash.build.id}}">
+        View Configure Summary
+      </a>
+      <br/>
+      <br/>
+
+      <!-- Build -->
+      <div class="title-divider" id="Build">
+        Build ({{::cdash.build.nerrors}} errors, {{::cdash.build.nwarnings}} warnings)
+      </div>
+      <br/>
+
+      <b>Build command: </b><tt>{{::cdash.build.command}}</tt>
+      <br/>
+
+      <b>Start Time: </b>{{::cdash.build.starttime}}
+      <br/>
+
+      <b>End Time: </b>{{::cdash.build.endtime}}
+      <br/>
+      <br/>
+
+      <!-- Show the errors -->
+      <div ng-repeat="error in ::cdash.build.errors">
+        <div ng-if="::error.sourceline > 0">
+          <hr/>
+          <h3>
+            <a>Build Log line {{::error.logline}}</a></h3>
+            <br/>
+            File: <b>{{::error.sourcefile}}</b>
+            Line: <b>{{::error.sourceline}}</b>
+        </div>
+        <pre>{{::error.precontext}}</pre>
+        <pre>{{::error.text}}</pre>
+        <pre>{{::error.postcontext}}</pre>
+
+        <div ng-if="::error.stdoutput || error.stderror">
+          <br/>
+          <b>{{::error.sourcefile}}</b>
+          <pre ng-if="::error.stdoutput">{{::error.stdoutput}}</pre>
+          <pre ng-if="::error.stderror">{{::error.stderror}}</pre>
+        </div>
+      </div>
+
+      <a ng-href="viewBuildError.php?buildid={{::cdash.build.id}}">
+        View Errors Summary
+      </a>
+      <br/>
+      <br/>
+
+      <!--  Warnings -->
+      <div class="title-divider" id="Warnings">
+        Build Warnings ({{::cdash.build.nwarnings}})
+      </div>
+
+      <div ng-repeat="warning in ::cdash.build.warnings">
+        <div ng-if="::warning.sourceline > 0">
+          <hr/>
+          <h3><a>Build Log line {{::warning.logline}}</a></h3>
+          <br/>
+          File: <b>{{::warning.sourcefile}}</b>
+          Line: <b>{{::warning.sourceline}}</b>
+        </div>
+        <pre>{{::warning.precontext}}</pre>
+        <pre>{{::warning.text}}</pre>
+        <pre>{{::warning.postcontext}}</pre>
+
+        <div ng-if="::warning.stdoutput || warning.stderror">
+          <br/>
+          <b>{{::warning.sourcefile}}</b>
+          <pre ng-if="::warning.stdoutput">{{::warning.stdoutput}}</pre>
+          <pre ng-if="::warning.stderror">{{::warning.stderror}}</pre>
+        </div>
+      </div>
+      <br/>
+
+      <a ng-href="viewBuildError.php?type=1&buildid={{::cdash.build.id}}">
+        View Warnings Summary
+      </a>
+      <br/>
+      <br/>
+
+      <!-- Test -->
+      <div class="title-divider" id="Test">
+        Test ({{::cdash.test.npassed}}  passed, {{::cdash.test.nfailed}} failed, {{::cdash.test.nnotrun}} not run)
+      </div>
+      <a ng-href="viewTest.php?buildid={{::cdash.build.id}}">
+        View Tests Summary
+      </a>
+      <br/>
+      <br/>
+
+      <!-- Coverage -->
+      <div ng-if="::cdash.hascoverage">
+      <div class="title-divider" id="Coverage">
+        Coverage ({{::cdash.coverage}}%)
+      </div>
+      <a ng-href="viewCoverage.php?buildid={{::cdash.build.id}}">
+        View Coverage Summary
+      </a>
+      <br/>
+      <br/>
+    </div>
+    </div>
+
+    <!-- FOOTER -->
+    <br/>
+    <ng-include ng-if="cdash.requirelogin != 1" src="cdash.footer || 'build/views/partials/footer_1570022558247.html'"></ng-include>
+<!--
+  </body>
+</html>
+-->
