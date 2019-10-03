@@ -5,6 +5,7 @@
   "repository": "https://github.com/Kitware/CDash",
   "license": "BSD-3-Clause",
   "scripts": {
+    "test": "mocha-webpack --webpack-config node_modules/laravel-mix/setup/webpack.config.js --require tests/setup.js tests/Spec/*.spec.js tests/Spec/**/*.spec.js",
     "dev": "npm run development",
     "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
     "watch": "npm run development -- --watch",
@@ -33,23 +34,31 @@
     "gulp-sourcemaps": "^1.6.0",
     "gulp-uglify-es": "^2.0.0",
     "ng-file-upload": "^12.0.4",
-    "nvd3": "^1.8.5"
+    "nvd3": "^1.8.5",
+    "vue": "^2.5.17"
   },
   "devDependencies": {
+    "@vue/test-utils": "^1.0.0-beta.29",
     "axios": "^0.18",
+    "axios-mock-adapter": "^1.17.0",
     "bootstrap": "^4.0.0",
     "cross-env": "^5.1",
     "eslint-config-angular": "^0.4.0",
     "eslint-plugin-angular": "^0.12.0",
+    "expect": "^24.9.0",
     "jquery": "^3.2",
+    "jsdom": "^15.1.1",
+    "jsdom-global": "^3.0.2",
     "laravel-mix": "^4.0.7",
     "lodash": "^4.17.5",
-    "popper.js": "^1.12",
+    "mocha": "^5.0.0",
+    "mocha-webpack": "^2.0.0-beta.0",
+    "moment": "^2.24.0",
     "protractor": "^5.4.2",
     "resolve-url-loader": "^2.3.1",
     "sass": "^1.15.2",
     "sass-loader": "^7.1.0",
-    "vue": "^2.5.17",
-    "vue-template-compiler": "^2.5.22"
+    "vue-template-compiler": "^2.6.10",
+    "webpack": "^4.1.0"
   }
 }
