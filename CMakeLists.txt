@@ -180,5 +180,8 @@ execute_process(
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-# add the tests directory
+# add the new tests directory
+add_subdirectory(tests)
+
+# add the old tests directory
 add_subdirectory(app/cdash/tests)
