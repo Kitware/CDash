@@ -1,5 +1,5 @@
 {
-  "name": "CDash",
+  "name": "cdash",
   "version": "3.0.0",
   "description": "Continuous integration dashboard.",
   "repository": "https://github.com/Kitware/CDash",
