@@ -3,33 +3,32 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateCoveragefileTable extends Migration {
+class CreateCoveragefileTable extends Migration
+{
 
-	/**
-	 * Run the migrations.
-	 *
-	 * @return void
-	 */
-	public function up()
-	{
-		Schema::create('coveragefile', function(Blueprint $table)
-		{
-			$table->integer('id', true);
-			$table->string('fullpath')->default('')->index();
-			$table->binary('file')->nullable();
-			$table->bigInteger('crc32')->nullable()->index();
-		});
-	}
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('coveragefile', function (Blueprint $table) {
+            $table->integer('id', true);
+            $table->string('fullpath')->default('')->index();
+            $table->binary('file')->nullable();
+            $table->bigInteger('crc32')->nullable()->index();
+        });
+    }
 
 
-	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
-	public function down()
-	{
-		Schema::drop('coveragefile');
-	}
-
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('coveragefile');
+    }
 }
