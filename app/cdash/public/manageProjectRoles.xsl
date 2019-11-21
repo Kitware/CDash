@@ -218,7 +218,7 @@
                 <select name="emailtype">
                  <option value="0"><xsl:if test="emailtype=0"><xsl:attribute name="selected"></xsl:attribute></xsl:if>No email</option>
                  <option value="1"><xsl:if test="emailtype=1"><xsl:attribute name="selected"></xsl:attribute></xsl:if>Email checkins</option>
-                 <option value="2"><xsl:if test="emailtype=2"><xsl:attribute name="selected"></xsl:attribute></xsl:if>Email nighlty</option>
+                 <option value="2"><xsl:if test="emailtype=2"><xsl:attribute name="selected"></xsl:attribute></xsl:if>Email nightly</option>
                  <option value="3"><xsl:if test="emailtype=3"><xsl:attribute name="selected"></xsl:attribute></xsl:if>All emails</option>
                </select>
                 </td>
