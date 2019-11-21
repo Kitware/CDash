@@ -36,6 +36,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 return false;
             }
 
+            echo "Submit $fullname\n";
             if (preg_match('/TrilinosDriver/', $filename)) {
                 $project = 'TrilinosDriver';
             } elseif (preg_match('/Trilinos/', $filename)) {
