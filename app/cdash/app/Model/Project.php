@@ -1834,7 +1834,7 @@ class Project
         // subsequent day.
         $build_datetime = new \DateTime($date . ' UTC');
         $build_start_timestamp = $build_datetime->getTimestamp();
-        $nightly_start_timestamp = strtotime($this->NightlyTime);
+        $nightly_start_timestamp = strtotime($this->NightlyTime, $build_start_timestamp);
 
         if (date(FMT_TIME, $nightly_start_timestamp) < '12:00:00') {
             // If the "nightly" start time is in the morning then any build
