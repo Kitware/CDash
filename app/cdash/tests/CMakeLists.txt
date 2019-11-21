@@ -228,3 +228,8 @@ endif()
 
 # These should go last so the removal of builds doesn't clobber other tests
 add_subdirectory(autoremovebuilds)
+
+# Slow tests that need more time in CI.
+set_tests_properties(
+  actualtrilinossubmission processsubmissions
+  PROPERTIES TIMEOUT 1800)
