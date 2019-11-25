@@ -128,7 +128,7 @@ add_php_test(managebackup)
 add_php_test(manageclient)
 add_php_test(manageprojectroles)
 add_php_test(manageusers)
-add_php_test(processsubmissions)
+#add_php_test(processsubmissions)
 add_php_test(projectindb)
 add_php_test(pubproject)
 add_php_test(projectmodel)
@@ -228,3 +228,8 @@ endif()
 
 # These should go last so the removal of builds doesn't clobber other tests
 add_subdirectory(autoremovebuilds)
+
+# Slow tests that need more time in CI.
+set_tests_properties(
+  actualtrilinossubmission
+  PROPERTIES TIMEOUT 1800)
