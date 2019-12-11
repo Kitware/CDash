@@ -228,3 +228,4 @@ endif()
 
 # These should go last so the removal of builds doesn't clobber other tests
 add_subdirectory(autoremovebuilds)
+add_laravel_test(/Feature/AutoRemoveBuildsCommand)
