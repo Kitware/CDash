@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use CDash\Database;
 use Illuminate\Console\Command;
 
 require_once 'include/pdo.php';
@@ -44,20 +45,30 @@ class AutoRemoveBuilds extends Command
         set_time_limit(0);
         $projectname = $this->argument('project');
         echo "removing builds for $projectname \n";
-        $sql = " WHERE name='" . $projectname . "'";
-        if ($projectname == 'all') {
-            $sql = '';
+
+        $db = new Database();
+        $sql = 'SELECT id, autoremovetimeframe, autoremovemaxbuilds
+                FROM project';
+        $args = [];
+        if ($projectname != 'all') {
+            $sql .= ' WHERE name = ?';
+            $args = [$projectname];
         }
 
-        $project = pdo_query('SELECT id,autoremovetimeframe,autoremovemaxbuilds FROM project' . $sql);
-        if (!$project) {
-            add_last_sql_error('autoRemoveBuilds');
-            return false;
+        $stmt = $db->prepare($sql);
+        $db->execute($stmt, $args);
+        while ($project_array = $stmt->fetch()) {
+            removeFirstBuilds(
+                    $project_array['id'],
+                    $project_array['autoremovetimeframe'],
+                    $project_array['autoremovemaxbuilds'],
+                    true // force the autoremove
+            );
+            removeBuildsGroupwise(
+                    $project_array['id'],
+                    $project_array['autoremovemaxbuilds'],
+                    true // force the autoremove
+            );
         }
-        while ($project_array = pdo_fetch_array($project)) {
-            removeFirstBuilds($project_array['id'], $project_array['autoremovetimeframe'], $project_array['autoremovemaxbuilds'], true); // force the autoremove
-            removeBuildsGroupwise($project_array['id'], $project_array['autoremovemaxbuilds'], true); // force the autoremove
-        }
-        return 0;
     }
 }
