@@ -6,6 +6,7 @@
 use CDash\Config;
 use CDash\Database;
 use CDash\Model\BuildGroup;
+use CDash\Model\Project;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
@@ -185,6 +186,16 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         if (!file_exists("{$config->get('CDASH_ROOT_DIR')}/public/upload")) {
             $this->fail('upload directory does not exist');
         }
+
+        // Make sure the dailyupdate was recorded for the correct day.
+        $stmt = $db->prepare('SELECT date FROM dailyupdate WHERE projectid = ?');
+        $db->execute($stmt, [$projectid]);
+        $found = $stmt->fetchColumn();
+        $project = new Project();
+        $project->Id = $projectid;
+        $project->Fill();
+        $expected = $project->GetTestingDay(date(FMT_DATETIME));
+        $this->assertEqual($expected, $found);
 
         $this->pass('Passed');
     }
