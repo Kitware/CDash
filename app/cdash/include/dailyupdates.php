@@ -891,8 +891,7 @@ function addDailyChanges($projectid)
     $project = new Project();
     $project->Id = $projectid;
     $project->Fill();
-    $date = ''; // now
-    list($previousdate, $currentstarttime, $nextdate) = get_dates($date, $project->NightlyTime);
+    list($previousdate, $currentstarttime, $nextdate) = get_dates('now', $project->NightlyTime);
     $date = gmdate(FMT_DATE, $currentstarttime);
 
     // Check if we already have it somwhere

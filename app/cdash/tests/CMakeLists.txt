@@ -228,6 +228,7 @@ endif()
 
 # These should go last so the removal of builds doesn't clobber other tests
 add_subdirectory(autoremovebuilds)
+add_laravel_test(/Feature/AutoRemoveBuildsCommand)
 
 # Slow tests that need more time in CI.
 set_tests_properties(
