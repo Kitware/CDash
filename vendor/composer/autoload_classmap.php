@@ -147,6 +147,7 @@ return array(
     'Adldap\\Schemas\\Schema' => $vendorDir . '/adldap2/adldap2/src/Schemas/Schema.php',
     'Adldap\\Schemas\\SchemaInterface' => $vendorDir . '/adldap2/adldap2/src/Schemas/SchemaInterface.php',
     'Adldap\\Utilities' => $vendorDir . '/adldap2/adldap2/src/Utilities.php',
+    'App\\Console\\Commands\\AutoRemoveBuilds' => $baseDir . '/app/Console/Commands/AutoRemoveBuilds.php',
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
     'App\\Http\\Controllers\\Auth\\ForgotPasswordController' => $baseDir . '/app/Http/Controllers/Auth/ForgotPasswordController.php',
