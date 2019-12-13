@@ -4,7 +4,6 @@
       del = require('del'),
       concat = require('gulp-concat'),
       concatCss = require('gulp-concat-css'),
-      eslint = require('gulp-eslint'),
       fs = require('fs'),
       newer = require('gulp-newer'),
       replace = require('gulp-replace'),
