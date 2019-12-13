@@ -868,7 +868,7 @@ function AddUniqueConstraintToSiteTable($site_table)
 
     // It should be safe to add the constraint now.
     if ($is_pgsql) {
-        $pdo->query("CREATE UNIQUE INDEX name ON $site_table (name)");
+        $pdo->query("CREATE UNIQUE INDEX {$site_table}_name ON $site_table (name)");
     } else {
         $pdo->query("ALTER TABLE $site_table ADD UNIQUE INDEX name (name)");
     }
@@ -1151,4 +1151,25 @@ function PopulateTestDuration($src_table = 'buildtesttime',
                 SET b.testduration = btt.time");
     }
     $pdo->exec("DELETE FROM $src_table");
+}
+
+/** Migrate values from buildtesttime.time to build.testduration
+ **/
+function UpdateDynamicRules()
+{
+    $pdo = Database::getInstance()->getPdo();
+    // Make sure dynamic build rules are surrounded by wildcards.
+    $pdo->exec("
+            UPDATE build2grouprule
+            SET buildname = CONCAT('%', buildname, '%')
+            WHERE buildname NOT LIKE '\%%\%'
+            AND endtime = '1980-01-01 00:00:00'
+            AND groupid IN (SELECT id FROM buildgroup WHERE type = 'Latest')");
+
+    // Make sure dynamic build rules do not have a buildtype set.
+    $pdo->exec("
+            UPDATE build2grouprule
+            SET buildtype = ''
+            WHERE endtime = '1980-01-01 00:00:00'
+            AND groupid IN (SELECT id FROM buildgroup WHERE type = 'Latest');");
 }
