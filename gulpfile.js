@@ -9,7 +9,7 @@
       replace = require('gulp-replace'),
       rename = require("gulp-rename"),
       sourcemaps = require('gulp-sourcemaps'),
-      uglify = require('gulp-uglify'),
+      uglify = require('gulp-uglify-es').default,
       release = false, // Change to true when cutting a release.
       version;
 
