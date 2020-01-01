@@ -1,25 +1,15 @@
 <?php
-$deprecated = [];
 $cdash_directory_name = env('CDASH_DIRECTORY', 'cdash');
 $cdash = realpath(app_path($cdash_directory_name));
 
 // read in all of our cdash config files
 if ($cdash) {
-    $local_configs = [];
     include_once $cdash . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.php';
     include_once $cdash . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'version.php';
-
-    foreach (get_defined_vars() as $key => $value) {
-        if (strpos($key, 'CDASH_') === 0) {
-            $key = substr($key, strlen('CDASH_'));
-            $deprecated[$key] = $value;
-        }
-    }
 }
 
 return [
     'directory' => $cdash,
-    'deprecated' => $deprecated,
     'password' => [
         'complexity' => 0,
         'count' => 0,
