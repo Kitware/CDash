@@ -56,6 +56,7 @@ class EmailTestCase extends KWWebTestCase
 
         // If we want to test the app if registration works, that sort of thing belongs in a
         // registration works test.
+        $this->deleteLog($this->logfilename);
 
         $user = $this->createUser([
             'firstname' => 'Firstname',
@@ -76,7 +77,7 @@ class EmailTestCase extends KWWebTestCase
         $this->setField('emailsuccess', '1');
         $this->clickSubmitByName('subscribe');
         if (!$this->checkLog($this->logfilename)) {
-            return;
+            $this->fail("Errors logged");
         }
     }
 
@@ -139,8 +140,8 @@ class EmailTestCase extends KWWebTestCase
 
         // illuminate/support/helpers/str_contains
         $expected = [
-            'cdash.DEBUG: user1@kw',
-            'cdash.DEBUG: PASSED (w=6): EmailProjectExample - Win32-MSVC2009 - Nightly',
+            'DEBUG: user1@kw',
+            'DEBUG: PASSED (w=6): EmailProjectExample - Win32-MSVC2009 - Nightly',
             'Congratulations. A submission to CDash for the project EmailProjectExample has fixed warnings',
             "{$config->getBaseUrl()}/buildSummary.php?buildid=",
             'Project: EmailProjectExample',
@@ -168,8 +169,8 @@ class EmailTestCase extends KWWebTestCase
         $config = Config::getInstance();
         // illuminate/support/helpers/str_contains
         $expected = [
-            'cdash.DEBUG: user1@kw',
-            'cdash.DEBUG: PASSED (t=2): EmailProjectExample - Win32-MSVC2009 - Nightly',
+            'DEBUG: user1@kw',
+            'DEBUG: PASSED (t=2): EmailProjectExample - Win32-MSVC2009 - Nightly',
             'Congratulations. A submission to CDash for the project EmailProjectExample has fixed failing tests',
             "{$config->getBaseUrl()}/buildSummary.php?buildid=",
             'Project: EmailProjectExample',
