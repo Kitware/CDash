@@ -36,14 +36,19 @@ class SecondsFromIntervalTestCase extends KWWebTestCase
         $this->intervalTest('8 days 17h 24m 43s', 753883);
         // Not testing months since they have a variable number of seconds.
 
-        // if 2 years ago was a leap year and the month is greater than Feb (2)
-        $extraDay = date('L', strtotime('2 years')) && date('n') > 2;
-        if (!$extraDay) {
-            // if last year was a leap year.
-            $extraDay = date('L', strtotime('1 year'));
+        // Check if there will be a leap day within the next two years.
+        $leapYearSeconds = 0;
+        $begin = new DateTime('now');
+        $end = new DateTime('2 years');
+        $interval = DateInterval::createFromDateString('1 day');
+        $period = new DatePeriod($begin, $interval, $end);
+        foreach ($period as $dt) {
+            if (($dt->format('m') === '02') && ($dt->format('d') === '29')) {
+                $leapYearSeconds = 86400;
+                break;
+            }
         }
 
-        $leapYearSeconds = $extraDay ? 86400 : 0;
         $this->intervalTest('2 years', 63072000 + $leapYearSeconds);
         $this->intervalTest('2 years 43s', 63072043 + $leapYearSeconds);
         $this->intervalTest('2 years 24m', 63073440 + $leapYearSeconds);
