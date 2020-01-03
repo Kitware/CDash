@@ -76,6 +76,7 @@ COPY ./storage ./storage
 COPY ./.styleci.yml ./.styleci.yml
 COPY ./tests ./tests
 COPY ./webpack.mix.js ./webpack.mix.js
+RUN chown -R www-data:www-data .
 
 # Install newer version of CMake
 RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                \
