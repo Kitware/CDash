@@ -55,6 +55,10 @@ php artisan key:generate
 
 # Setup default configuration.
 cp .env.example .env
+
+# Migrate your config settings if you're upgrading an existing CDash instance.
+php artisan config:migrate
+
 ```
 #### Further reading
 [CDash Docker README](docker/docker.md)

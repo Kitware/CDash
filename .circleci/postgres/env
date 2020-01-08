@@ -1,4 +1,3 @@
-APP_NAME=CDash
 APP_ENV=testing
 APP_KEY=base64:/4agNXrZCKuMNyJm9lUSLXNFjASyr9xJi+mJE1ece3k=
 APP_DEBUG=true
