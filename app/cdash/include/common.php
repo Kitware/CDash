@@ -1775,7 +1775,6 @@ function begin_JSON_response()
 
     $response = array();
     $response['version'] = $config->get('CDASH_VERSION');
-    $response['feed_enabled'] = $config->get('CDASH_ENABLE_FEED') === 1;
 
     $user_response = array();
     $userid = Auth::id();

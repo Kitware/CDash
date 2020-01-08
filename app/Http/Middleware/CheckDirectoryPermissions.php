@@ -14,7 +14,6 @@ class CheckDirectoryPermissions
     private $dirsToCheck = [
         'backup',
         'log',
-        'public/rss',
         'public/upload',
     ];
 

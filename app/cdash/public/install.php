@@ -107,13 +107,6 @@ if (!is_writable($config->get('CDASH_UPLOAD_DIRECTORY'))) {
     $xml .= '<uploadwritable>1</uploadwritable>';
 }
 
-// check if the rss directory is writable
-if (!is_writable('rss')) {
-    $xml .= '<rsswritable>0</rsswritable>';
-} else {
-    $xml .= '<rsswritable>1</rsswritable>';
-}
-
 try {
     $installed = pdo_query('SELECT id FROM ' . qid('user') . ' LIMIT 1');
     $installed = is_object($installed) ? 1 : (int) $installed;

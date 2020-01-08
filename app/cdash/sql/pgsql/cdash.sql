@@ -1365,18 +1365,6 @@ CREATE INDEX "measurement_projectid" on "measurement" ("projectid");
 CREATE INDEX "measurement_name" on "measurement" ("name");
 
 
-CREATE TABLE "feed" (
-  "id" serial NOT NULL,
-  "projectid" bigint NOT NULL,
-  "date" timestamp(0) DEFAULT '1980-01-01 00:00:00' NOT NULL,
-  "buildid" bigint NOT NULL DEFAULT '0',
-  "type" bigint NOT NULL DEFAULT '0',
-  "description" character varying(255) NOT NULL,
-  PRIMARY KEY ("id")
-);
-CREATE INDEX "feed_projectid" on "feed" ("projectid");
-CREATE INDEX "feed_date" on "feed" ("date");
-
 --
 -- Table: overview_components
 --

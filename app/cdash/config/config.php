@@ -230,10 +230,6 @@ $CDASH_LARGE_TEXT_LIMIT = '0';
 //    'domain'            => 'https://my.gitlab.example'
 $OAUTH2_PROVIDERS = [];
 
-// Should we use CDash's feed feature?  Disabling this feature can improve
-// submission processing time.
-$CDASH_ENABLE_FEED = 1;
-
 // Should we show the last submission for a project or subproject?
 // Disabling this feature can improve rendering performance of index.php
 // for projects with lots of subproject builds.

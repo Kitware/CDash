@@ -34,7 +34,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 require_once 'include/ctestparser.php';
 include_once 'include/common.php';
-include_once 'include/createRSS.php';
 include 'include/sendemail.php';
 
 /**
@@ -193,11 +192,6 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $buildid = null,
         $handler instanceof UpdateHandler
     ) {
         sendemail($handler, $projectid);
-    }
-
-    if ($config->get('CDASH_ENABLE_FEED') && !$config->get('CDASH_BERNARD_SUBMISSION')) {
-        // Create the RSS feed
-        CreateRSSFeed($projectid);
     }
 
     return $handler;

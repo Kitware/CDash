@@ -30,7 +30,6 @@ use CDash\Model\BuildErrorFilter;
 use CDash\Model\BuildFailure;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildInformation;
-use CDash\Model\Feed;
 use CDash\Model\Label;
 use CDash\Model\Project;
 use CDash\Model\Site;
@@ -48,7 +47,6 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
     private $Error;
     private $Label;
     private $Append;
-    private $Feed;
     private $Builds;
     private $BuildInformation;
     private $BuildCommand;
@@ -222,12 +220,6 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
                 }
 
                 $build->ComputeDifferences();
-
-                if ($this->config->get('CDASH_ENABLE_FEED')) {
-                    $this->Feed = $factory->create(Feed::class);
-                    // Insert the build into the feed
-                    $this->Feed->InsertBuild($this->projectid, $build->Id);
-                }
             }
         } elseif ($name == 'WARNING' || $name == 'ERROR' || $name == 'FAILURE') {
             $skip_error = false;
