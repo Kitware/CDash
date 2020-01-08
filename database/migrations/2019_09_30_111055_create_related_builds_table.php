@@ -13,12 +13,14 @@ class CreateRelatedBuildsTable extends Migration
      */
     public function up()
     {
-        Schema::create('related_builds', function (Blueprint $table) {
-            $table->bigInteger('buildid')->index();
-            $table->bigInteger('relatedid')->index();
-            $table->string('relationship')->nullable();
-            $table->primary(['buildid','relatedid']);
-        });
+        if (!Schema::hasTable('related_builds')) {
+            Schema::create('related_builds', function (Blueprint $table) {
+                $table->bigInteger('buildid')->index();
+                $table->bigInteger('relatedid')->index();
+                $table->string('relationship')->nullable();
+                $table->primary(['buildid','relatedid']);
+            });
+        }
     }
 
 

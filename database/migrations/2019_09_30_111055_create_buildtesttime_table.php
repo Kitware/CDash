@@ -13,10 +13,12 @@ class CreateBuildtesttimeTable extends Migration
      */
     public function up()
     {
-        Schema::create('buildtesttime', function (Blueprint $table) {
-            $table->integer('buildid')->default(0)->primary();
-            $table->float('time', 7)->default(0.00);
-        });
+        if (!Schema::hasTable('buildtesttime')) {
+            Schema::create('buildtesttime', function (Blueprint $table) {
+                $table->integer('buildid')->default(0)->primary();
+                $table->float('time', 7)->default(0.00);
+            });
+        }
     }
 
 

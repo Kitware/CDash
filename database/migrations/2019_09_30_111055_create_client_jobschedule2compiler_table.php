@@ -13,11 +13,13 @@ class CreateClientJobschedule2compilerTable extends Migration
      */
     public function up()
     {
-        Schema::create('client_jobschedule2compiler', function (Blueprint $table) {
-            $table->bigInteger('scheduleid');
-            $table->integer('compilerid');
-            $table->unique(['scheduleid','compilerid'], 'client_jobschedule2compiler_scheduleid');
-        });
+        if (!Schema::hasTable('client_jobschedule2compiler')) {
+            Schema::create('client_jobschedule2compiler', function (Blueprint $table) {
+                $table->bigInteger('scheduleid');
+                $table->integer('compilerid');
+                $table->unique(['scheduleid','compilerid'], 'client_jobschedule2compiler_scheduleid');
+            });
+        }
     }
 
 

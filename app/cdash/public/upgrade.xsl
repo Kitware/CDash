@@ -25,17 +25,12 @@
           <xsl:if test="cdash/uploadwritable=0">
             <font color="#FF0000">Your upload directory is not writable, make sure that the web process can write into the directory.</font><br/>
           </xsl:if>
-          <xsl:if test="cdash/rsswritable=0">
-            <font color="#FF0000">Your rss directory is not writable, make sure that the web process can write into the directory.</font><br/>
-          </xsl:if>
           <xsl:if test="cdash/backupwritable=1">
-            <xsl:if test="cdash/rsswritable=1">
-              <script type="text/javascript">
+            <script type="text/javascript">
               var version='<xsl:value-of select="cdash/minversion"/>';
-              </script>
-              <script src="js/jquery-1.6.2.js" type="text/javascript" charset="utf-8"></script>
-              <script src="js/cdashUpgrade.js" type="text/javascript" charset="utf-8"></script>
-            </xsl:if>
+            </script>
+            <script src="js/jquery-1.6.2.js" type="text/javascript" charset="utf-8"></script>
+            <script src="js/cdashUpgrade.js" type="text/javascript" charset="utf-8"></script>
           </xsl:if>
         </xsl:if>
 

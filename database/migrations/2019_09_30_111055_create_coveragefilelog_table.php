@@ -13,11 +13,13 @@ class CreateCoveragefilelogTable extends Migration
      */
     public function up()
     {
-        Schema::create('coveragefilelog', function (Blueprint $table) {
-            $table->integer('buildid')->default(0)->index();
-            $table->integer('fileid')->default(0)->index();
-            $table->binary('log');
-        });
+        if (!Schema::hasTable('coveragefilelog')) {
+            Schema::create('coveragefilelog', function (Blueprint $table) {
+                $table->integer('buildid')->default(0)->index();
+                $table->integer('fileid')->default(0)->index();
+                $table->binary('log');
+            });
+        }
     }
 
 

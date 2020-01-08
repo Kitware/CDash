@@ -39,8 +39,7 @@
     "php-http/guzzle6-adapter": "^1.1",
     "predis/predis": "~0.8",
     "ramsey/uuid": "~3.4",
-    "sendgrid/sendgrid": "5.0.4",
-    "suin/php-rss-writer": "~1.4"
+    "sendgrid/sendgrid": "5.0.4"
   },
   "require-dev": {
     "beyondcode/laravel-dump-server": "^1.0",

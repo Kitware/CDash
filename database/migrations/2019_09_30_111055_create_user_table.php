@@ -13,18 +13,20 @@ class CreateUserTable extends Migration
      */
     public function up()
     {
-        Schema::create('user', function (Blueprint $table) {
-            $table->integer('id', true);
-            $table->string('email')->default('')->index();
-            $table->string('password')->default('');
-            $table->string('firstname', 40)->default('');
-            $table->string('lastname', 40)->default('');
-            $table->string('institution')->default('');
-            $table->tinyInteger('admin')->default(0);
-            $table->dateTime('email_verified_at')->nullable();
-            $table->string('remember_token', 100)->nullable();
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('user')) {
+            Schema::create('user', function (Blueprint $table) {
+                $table->integer('id', true);
+                $table->string('email')->default('')->index();
+                $table->string('password')->default('');
+                $table->string('firstname', 40)->default('');
+                $table->string('lastname', 40)->default('');
+                $table->string('institution')->default('');
+                $table->tinyInteger('admin')->default(0);
+                $table->dateTime('email_verified_at')->nullable();
+                $table->string('remember_token', 100)->nullable();
+                $table->timestamps();
+            });
+        }
     }
 
 

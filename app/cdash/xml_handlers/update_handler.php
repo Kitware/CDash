@@ -29,7 +29,6 @@ use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildUpdate;
 use CDash\Model\BuildUpdateFile;
-use CDash\Model\Feed;
 use CDash\Model\Project;
 use CDash\Model\Repository;
 use CDash\Model\Site;
@@ -45,7 +44,6 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface,
     private $Append;
     private $Update;
     private $UpdateFile;
-    private $Feed;
 
     /** Constructor */
     public function __construct($projectID, $scheduleID)
@@ -55,7 +53,6 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface,
         $this->Build = $factory->create(Build::class);
         $this->Site = $factory->create(Site::class);
         $this->Append = false;
-        $this->Feed = $factory->create(Feed::class);
     }
 
     /** Start element */
@@ -136,11 +133,6 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface,
             // Insert the update
             $this->Update->Insert();
             $this->Build->SetBuildUpdate($this->Update);
-
-            if ($this->config->get('CDASH_ENABLE_FEED')) {
-                // We need to work the magic here to have a good description
-                $this->Feed->InsertUpdate($this->projectid, $this->Build->Id);
-            }
 
             if ($this->Update->Command === '') {
                 // If the UpdateCommand was not set, then this was a

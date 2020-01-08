@@ -13,10 +13,12 @@ class CreateLabelTable extends Migration
      */
     public function up()
     {
-        Schema::create('label', function (Blueprint $table) {
-            $table->bigInteger('id', true);
-            $table->string('text')->unique();
-        });
+        if (!Schema::hasTable('label')) {
+            Schema::create('label', function (Blueprint $table) {
+                $table->bigInteger('id', true);
+                $table->string('text')->unique();
+            });
+        }
     }
 
 

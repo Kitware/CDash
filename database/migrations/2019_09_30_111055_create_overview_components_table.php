@@ -13,12 +13,14 @@ class CreateOverviewComponentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('overview_components', function (Blueprint $table) {
-            $table->integer('projectid')->default(1)->index();
-            $table->integer('buildgroupid')->default(0)->index();
-            $table->integer('position')->default(0);
-            $table->string('type', 32)->default('build');
-        });
+        if (!Schema::hasTable('overview_components')) {
+            Schema::create('overview_components', function (Blueprint $table) {
+                $table->integer('projectid')->default(1)->index();
+                $table->integer('buildgroupid')->default(0)->index();
+                $table->integer('position')->default(0);
+                $table->string('type', 32)->default('build');
+            });
+        }
     }
 
 

@@ -13,13 +13,15 @@ class CreateTestmeasurementTable extends Migration
      */
     public function up()
     {
-        Schema::create('testmeasurement', function (Blueprint $table) {
-            $table->bigInteger('id', true);
-            $table->bigInteger('testid')->index();
-            $table->string('name', 70);
-            $table->string('type', 70);
-            $table->text('value', 65535);
-        });
+        if (!Schema::hasTable('testmeasurement')) {
+            Schema::create('testmeasurement', function (Blueprint $table) {
+                $table->bigInteger('id', true);
+                $table->bigInteger('testid')->index();
+                $table->string('name', 70);
+                $table->string('type', 70);
+                $table->text('value', 65535);
+            });
+        }
     }
 
 

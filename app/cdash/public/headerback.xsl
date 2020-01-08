@@ -13,13 +13,6 @@
   <div id="datetime">
    <xsl:value-of select="cdash/dashboard/datetime"/>
   </div>
- <div id="feedicon" alt="RSS Feed" title="RSS Feed">
-   <xsl:if test="cdash/dashboard/projectpublic=1">
-      <a>
-      <xsl:attribute name="href">rss/SubmissionRSS<xsl:value-of select="cdash/dashboard/projectname"/>.xml</xsl:attribute><img src="img/feed-icon16x16.png" alt="RSS" width="14" height="14" border="0" />
-      </a>
-   </xsl:if>
-   </div>
  </div>
 
  <div id="headerbottom">

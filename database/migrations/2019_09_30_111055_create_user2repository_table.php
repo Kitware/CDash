@@ -13,11 +13,13 @@ class CreateUser2repositoryTable extends Migration
      */
     public function up()
     {
-        Schema::create('user2repository', function (Blueprint $table) {
-            $table->integer('userid')->index();
-            $table->string('credential')->index();
-            $table->integer('projectid')->default(0)->index();
-        });
+        if (!Schema::hasTable('user2repository')) {
+            Schema::create('user2repository', function (Blueprint $table) {
+                $table->integer('userid')->index();
+                $table->string('credential')->index();
+                $table->integer('projectid')->default(0)->index();
+            });
+        }
     }
 
 

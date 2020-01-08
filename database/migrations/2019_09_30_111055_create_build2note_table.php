@@ -13,11 +13,13 @@ class CreateBuild2noteTable extends Migration
      */
     public function up()
     {
-        Schema::create('build2note', function (Blueprint $table) {
-            $table->bigInteger('buildid')->index();
-            $table->bigInteger('noteid')->index();
-            $table->dateTime('time')->default('1980-01-01 00:00:00');
-        });
+        if (!Schema::hasTable('build2note')) {
+            Schema::create('build2note', function (Blueprint $table) {
+                $table->bigInteger('buildid')->index();
+                $table->bigInteger('noteid')->index();
+                $table->dateTime('time')->default('1980-01-01 00:00:00');
+            });
+        }
     }
 
 

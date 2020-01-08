@@ -13,11 +13,13 @@ class CreateFilesumTable extends Migration
      */
     public function up()
     {
-        Schema::create('filesum', function (Blueprint $table) {
-            $table->integer('id', true);
-            $table->string('md5sum', 32)->index();
-            $table->binary('contents')->nullable();
-        });
+        if (!Schema::hasTable('filesum')) {
+            Schema::create('filesum', function (Blueprint $table) {
+                $table->integer('id', true);
+                $table->string('md5sum', 32)->index();
+                $table->binary('contents')->nullable();
+            });
+        }
     }
 
 

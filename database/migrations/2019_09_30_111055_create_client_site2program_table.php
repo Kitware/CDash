@@ -13,12 +13,14 @@ class CreateClientSite2programTable extends Migration
      */
     public function up()
     {
-        Schema::create('client_site2program', function (Blueprint $table) {
-            $table->integer('siteid')->index();
-            $table->string('name', 30);
-            $table->string('version', 30);
-            $table->string('path', 512);
-        });
+        if (!Schema::hasTable('client_site2program')) {
+            Schema::create('client_site2program', function (Blueprint $table) {
+                $table->integer('siteid')->index();
+                $table->string('name', 30);
+                $table->string('version', 30);
+                $table->string('path', 512);
+            });
+        }
     }
 
 

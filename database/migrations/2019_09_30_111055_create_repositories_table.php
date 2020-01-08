@@ -13,13 +13,15 @@ class CreateRepositoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('repositories', function (Blueprint $table) {
-            $table->integer('id', true);
-            $table->string('url');
-            $table->string('username', 50)->default('');
-            $table->string('password', 50)->default('');
-            $table->string('branch', 60)->default('');
-        });
+        if (!Schema::hasTable('repositories')) {
+            Schema::create('repositories', function (Blueprint $table) {
+                $table->integer('id', true);
+                $table->string('url');
+                $table->string('username', 50)->default('');
+                $table->string('password', 50)->default('');
+                $table->string('branch', 60)->default('');
+            });
+        }
     }
 
 

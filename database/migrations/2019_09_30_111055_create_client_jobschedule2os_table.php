@@ -13,11 +13,13 @@ class CreateClientJobschedule2osTable extends Migration
      */
     public function up()
     {
-        Schema::create('client_jobschedule2os', function (Blueprint $table) {
-            $table->bigInteger('scheduleid');
-            $table->integer('osid');
-            $table->unique(['scheduleid','osid'], 'client_jobschedule2os_scheduleid');
-        });
+        if (!Schema::hasTable('client_jobschedule2os')) {
+            Schema::create('client_jobschedule2os', function (Blueprint $table) {
+                $table->bigInteger('scheduleid');
+                $table->integer('osid');
+                $table->unique(['scheduleid','osid'], 'client_jobschedule2os_scheduleid');
+            });
+        }
     }
 
 

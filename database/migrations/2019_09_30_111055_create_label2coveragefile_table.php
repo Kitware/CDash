@@ -13,12 +13,14 @@ class CreateLabel2coveragefileTable extends Migration
      */
     public function up()
     {
-        Schema::create('label2coveragefile', function (Blueprint $table) {
-            $table->bigInteger('labelid');
-            $table->bigInteger('buildid');
-            $table->bigInteger('coveragefileid');
-            $table->primary(['labelid','buildid','coveragefileid']);
-        });
+        if (!Schema::hasTable('label2coveragefile')) {
+            Schema::create('label2coveragefile', function (Blueprint $table) {
+                $table->bigInteger('labelid');
+                $table->bigInteger('buildid');
+                $table->bigInteger('coveragefileid');
+                $table->primary(['labelid','buildid','coveragefileid']);
+            });
+        }
     }
 
 

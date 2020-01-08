@@ -13,12 +13,14 @@ class CreateSubproject2subprojectTable extends Migration
      */
     public function up()
     {
-        Schema::create('subproject2subproject', function (Blueprint $table) {
-            $table->integer('subprojectid')->index();
-            $table->integer('dependsonid')->index();
-            $table->dateTime('starttime')->default('1980-01-01 00:00:00');
-            $table->dateTime('endtime')->default('1980-01-01 00:00:00');
-        });
+        if (!Schema::hasTable('subproject2subproject')) {
+            Schema::create('subproject2subproject', function (Blueprint $table) {
+                $table->integer('subprojectid')->index();
+                $table->integer('dependsonid')->index();
+                $table->dateTime('starttime')->default('1980-01-01 00:00:00');
+                $table->dateTime('endtime')->default('1980-01-01 00:00:00');
+            });
+        }
     }
 
 

@@ -13,12 +13,14 @@ class CreateConfigureerrordiffTable extends Migration
      */
     public function up()
     {
-        Schema::create('configureerrordiff', function (Blueprint $table) {
-            $table->bigInteger('buildid')->index();
-            $table->tinyInteger('type')->nullable()->index();
-            $table->integer('difference')->nullable();
-            $table->unique(['buildid','type'], 'unique_configureerrordiff');
-        });
+        if (!Schema::hasTable('configureerrordiff')) {
+            Schema::create('configureerrordiff', function (Blueprint $table) {
+                $table->bigInteger('buildid')->index();
+                $table->tinyInteger('type')->nullable()->index();
+                $table->integer('difference')->nullable();
+                $table->unique(['buildid','type'], 'unique_configureerrordiff');
+            });
+        }
     }
 
 

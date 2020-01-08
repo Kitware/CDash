@@ -1,17 +1,27 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
-class CreateFeedTable extends Migration
+class DropFeedTable extends Migration
 {
-
     /**
      * Run the migrations.
      *
      * @return void
      */
     public function up()
+    {
+        Schema::dropIfExists('feed');
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
     {
         if (!Schema::hasTable('feed')) {
             Schema::create('feed', function (Blueprint $table) {
@@ -23,16 +33,5 @@ class CreateFeedTable extends Migration
                 $table->string('description');
             });
         }
-    }
-
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::drop('feed');
     }
 }
