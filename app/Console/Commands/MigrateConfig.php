@@ -146,6 +146,10 @@ class MigrateConfig extends Command
                 $key = 'SESSION_LIFETIME';
                 // Convert from seconds to minutes.
                 $value /= 60;
+            } elseif ($key === 'LOG_LEVEL') {
+                require_once 'include/log.php';
+                $key = 'APP_LOG_LEVEL';
+                $value = to_psr3_level($value);
             }
 
             /* still TODO for special handling:

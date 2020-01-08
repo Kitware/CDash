@@ -36,6 +36,7 @@ class SubProjectTestCase extends KWWebTestCase
 
     public function testSubmissionProjectDependencies()
     {
+        $this->deleteLog($this->logfilename);
         $rep = dirname(__FILE__) . '/data/SubProjectExample';
         $file = "$rep/Project_1.xml";
         if (!$this->submission('SubProjectExample', $file)) {
