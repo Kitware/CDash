@@ -13,13 +13,15 @@ class CreateTestdiffTable extends Migration
      */
     public function up()
     {
-        Schema::create('testdiff', function (Blueprint $table) {
-            $table->bigInteger('buildid')->index();
-            $table->tinyInteger('type')->index();
-            $table->integer('difference_positive')->index();
-            $table->integer('difference_negative')->index();
-            $table->unique(['buildid','type'], 'unique_testdiff');
-        });
+        if (!Schema::hasTable('testdiff')) {
+            Schema::create('testdiff', function (Blueprint $table) {
+                $table->bigInteger('buildid')->index();
+                $table->tinyInteger('type')->index();
+                $table->integer('difference_positive')->index();
+                $table->integer('difference_negative')->index();
+                $table->unique(['buildid','type'], 'unique_testdiff');
+            });
+        }
     }
 
 

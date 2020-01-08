@@ -13,12 +13,14 @@ class CreateClientOsTable extends Migration
      */
     public function up()
     {
-        Schema::create('client_os', function (Blueprint $table) {
-            $table->integer('id', true);
-            $table->string('name')->index();
-            $table->string('version')->index();
-            $table->tinyInteger('bits')->default(32)->index();
-        });
+        if (!Schema::hasTable('client_os')) {
+            Schema::create('client_os', function (Blueprint $table) {
+                $table->integer('id', true);
+                $table->string('name')->index();
+                $table->string('version')->index();
+                $table->tinyInteger('bits')->default(32)->index();
+            });
+        }
     }
 
 

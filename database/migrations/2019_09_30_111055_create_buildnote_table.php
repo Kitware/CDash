@@ -13,13 +13,15 @@ class CreateBuildnoteTable extends Migration
      */
     public function up()
     {
-        Schema::create('buildnote', function (Blueprint $table) {
-            $table->integer('buildid')->index();
-            $table->integer('userid');
-            $table->text('note', 16777215);
-            $table->dateTime('timestamp');
-            $table->tinyInteger('status')->default(0);
-        });
+        if (!Schema::hasTable('buildnote')) {
+            Schema::create('buildnote', function (Blueprint $table) {
+                $table->integer('buildid')->index();
+                $table->integer('userid');
+                $table->text('note', 16777215);
+                $table->dateTime('timestamp');
+                $table->tinyInteger('status')->default(0);
+            });
+        }
     }
 
 

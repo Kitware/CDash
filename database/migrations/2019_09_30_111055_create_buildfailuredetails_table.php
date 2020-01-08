@@ -13,18 +13,20 @@ class CreateBuildfailuredetailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('buildfailuredetails', function (Blueprint $table) {
-            $table->bigInteger('id', true);
-            $table->tinyInteger('type')->index();
-            $table->text('stdoutput', 16777215);
-            $table->text('stderror', 16777215);
-            $table->string('exitcondition');
-            $table->string('language', 64);
-            $table->string('targetname');
-            $table->string('outputfile', 512);
-            $table->string('outputtype');
-            $table->bigInteger('crc32')->default(0)->index();
-        });
+        if (!Schema::hasTable('buildfailuredetails')) {
+            Schema::create('buildfailuredetails', function (Blueprint $table) {
+                $table->bigInteger('id', true);
+                $table->tinyInteger('type')->index();
+                $table->text('stdoutput', 16777215);
+                $table->text('stderror', 16777215);
+                $table->string('exitcondition');
+                $table->string('language', 64);
+                $table->string('targetname');
+                $table->string('outputfile', 512);
+                $table->string('outputtype');
+                $table->bigInteger('crc32')->default(0)->index();
+            });
+        }
     }
 
 

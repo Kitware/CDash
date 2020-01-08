@@ -13,10 +13,12 @@ class CreateBannerTable extends Migration
      */
     public function up()
     {
-        Schema::create('banner', function (Blueprint $table) {
-            $table->integer('projectid')->primary();
-            $table->string('text', 500);
-        });
+        if (!Schema::hasTable('banner')) {
+            Schema::create('banner', function (Blueprint $table) {
+                $table->integer('projectid')->primary();
+                $table->string('text', 500);
+            });
+        }
     }
 
 

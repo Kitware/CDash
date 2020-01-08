@@ -13,11 +13,13 @@ class CreateProjectjobscriptTable extends Migration
      */
     public function up()
     {
-        Schema::create('projectjobscript', function (Blueprint $table) {
-            $table->integer('id', true);
-            $table->integer('projectid')->index();
-            $table->text('script');
-        });
+        if (!Schema::hasTable('projectjobscript')) {
+            Schema::create('projectjobscript', function (Blueprint $table) {
+                $table->integer('id', true);
+                $table->integer('projectid')->index();
+                $table->text('script');
+            });
+        }
     }
 
 

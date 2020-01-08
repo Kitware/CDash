@@ -13,10 +13,12 @@ class CreateClientJobschedule2submissionTable extends Migration
      */
     public function up()
     {
-        Schema::create('client_jobschedule2submission', function (Blueprint $table) {
-            $table->bigInteger('scheduleid')->unique();
-            $table->bigInteger('submissionid')->primary();
-        });
+        if (!Schema::hasTable('client_jobschedule2submission')) {
+            Schema::create('client_jobschedule2submission', function (Blueprint $table) {
+                $table->bigInteger('scheduleid')->unique();
+                $table->bigInteger('submissionid')->primary();
+            });
+        }
     }
 
 

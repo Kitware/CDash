@@ -13,16 +13,18 @@ class CreateTestTable extends Migration
      */
     public function up()
     {
-        Schema::create('test', function (Blueprint $table) {
-            $table->integer('id', true);
-            $table->integer('projectid')->index();
-            $table->bigInteger('crc32')->index();
-            $table->string('name')->default('')->index();
-            $table->string('path')->default('');
-            $table->text('command', 65535);
-            $table->text('details', 65535);
-            $table->binary('output', 16777215);
-        });
+        if (!Schema::hasTable('test')) {
+            Schema::create('test', function (Blueprint $table) {
+                $table->integer('id', true);
+                $table->integer('projectid')->index();
+                $table->bigInteger('crc32')->index();
+                $table->string('name')->default('')->index();
+                $table->string('path')->default('');
+                $table->text('command', 65535);
+                $table->text('details', 65535);
+                $table->binary('output', 16777215);
+            });
+        }
     }
 
 

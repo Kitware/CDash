@@ -13,11 +13,13 @@ class CreateBuildFiltersTable extends Migration
      */
     public function up()
     {
-        Schema::create('build_filters', function (Blueprint $table) {
-            $table->integer('projectid')->primary();
-            $table->text('warnings', 65535)->nullable();
-            $table->text('errors', 65535)->nullable();
-        });
+        if (!Schema::hasTable('build_filters')) {
+            Schema::create('build_filters', function (Blueprint $table) {
+                $table->integer('projectid')->primary();
+                $table->text('warnings', 65535)->nullable();
+                $table->text('errors', 65535)->nullable();
+            });
+        }
     }
 
 

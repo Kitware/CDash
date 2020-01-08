@@ -13,11 +13,13 @@ class CreateLabelemailTable extends Migration
      */
     public function up()
     {
-        Schema::create('labelemail', function (Blueprint $table) {
-            $table->integer('projectid')->index();
-            $table->integer('userid')->index();
-            $table->bigInteger('labelid');
-        });
+        if (!Schema::hasTable('labelemail')) {
+            Schema::create('labelemail', function (Blueprint $table) {
+                $table->integer('projectid')->index();
+                $table->integer('userid')->index();
+                $table->bigInteger('labelid');
+            });
+        }
     }
 
 

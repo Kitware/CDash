@@ -13,13 +13,15 @@ class CreateBuilderrordiffTable extends Migration
      */
     public function up()
     {
-        Schema::create('builderrordiff', function (Blueprint $table) {
-            $table->bigInteger('buildid')->index();
-            $table->tinyInteger('type')->index();
-            $table->integer('difference_positive')->index();
-            $table->integer('difference_negative')->index();
-            $table->unique(['buildid','type'], 'unique_builderrordiff');
-        });
+        if (!Schema::hasTable('builderrordiff')) {
+            Schema::create('builderrordiff', function (Blueprint $table) {
+                $table->bigInteger('buildid')->index();
+                $table->tinyInteger('type')->index();
+                $table->integer('difference_positive')->index();
+                $table->integer('difference_negative')->index();
+                $table->unique(['buildid','type'], 'unique_builderrordiff');
+            });
+        }
     }
 
 

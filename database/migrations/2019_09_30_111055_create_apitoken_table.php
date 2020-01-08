@@ -13,11 +13,13 @@ class CreateApitokenTable extends Migration
      */
     public function up()
     {
-        Schema::create('apitoken', function (Blueprint $table) {
-            $table->integer('projectid');
-            $table->string('token', 40)->nullable()->index();
-            $table->dateTime('expiration_date')->default('1980-01-01 00:00:00');
-        });
+        if (!Schema::hasTable('apitoken')) {
+            Schema::create('apitoken', function (Blueprint $table) {
+                $table->integer('projectid');
+                $table->string('token', 40)->nullable()->index();
+                $table->dateTime('expiration_date')->default('1980-01-01 00:00:00');
+            });
+        }
     }
 
 

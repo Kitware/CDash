@@ -13,12 +13,14 @@ class CreateTest2imageTable extends Migration
      */
     public function up()
     {
-        Schema::create('test2image', function (Blueprint $table) {
-            $table->bigInteger('id', true);
-            $table->integer('imgid')->index();
-            $table->integer('testid')->index();
-            $table->text('role');
-        });
+        if (!Schema::hasTable('test2image')) {
+            Schema::create('test2image', function (Blueprint $table) {
+                $table->bigInteger('id', true);
+                $table->integer('imgid')->index();
+                $table->integer('testid')->index();
+                $table->text('role');
+            });
+        }
     }
 
 

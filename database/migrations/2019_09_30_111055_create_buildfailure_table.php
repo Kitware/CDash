@@ -13,14 +13,16 @@ class CreateBuildfailureTable extends Migration
      */
     public function up()
     {
-        Schema::create('buildfailure', function (Blueprint $table) {
-            $table->bigInteger('id', true);
-            $table->bigInteger('buildid')->index();
-            $table->bigInteger('detailsid')->index();
-            $table->string('workingdirectory', 512);
-            $table->string('sourcefile', 512);
-            $table->tinyInteger('newstatus')->default(0)->index();
-        });
+        if (!Schema::hasTable('buildfailure')) {
+            Schema::create('buildfailure', function (Blueprint $table) {
+                $table->bigInteger('id', true);
+                $table->bigInteger('buildid')->index();
+                $table->bigInteger('detailsid')->index();
+                $table->string('workingdirectory', 512);
+                $table->string('sourcefile', 512);
+                $table->tinyInteger('newstatus')->default(0)->index();
+            });
+        }
     }
 
 

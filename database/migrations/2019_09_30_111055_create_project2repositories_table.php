@@ -13,11 +13,13 @@ class CreateProject2repositoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('project2repositories', function (Blueprint $table) {
-            $table->integer('projectid');
-            $table->integer('repositoryid');
-            $table->primary(['projectid','repositoryid']);
-        });
+        if (!Schema::hasTable('project2repositories')) {
+            Schema::create('project2repositories', function (Blueprint $table) {
+                $table->integer('projectid');
+                $table->integer('repositoryid');
+                $table->primary(['projectid','repositoryid']);
+            });
+        }
     }
 
 

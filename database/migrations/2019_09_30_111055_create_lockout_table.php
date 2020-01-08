@@ -13,12 +13,14 @@ class CreateLockoutTable extends Migration
      */
     public function up()
     {
-        Schema::create('lockout', function (Blueprint $table) {
-            $table->integer('userid')->primary();
-            $table->tinyInteger('failedattempts')->nullable()->default(0);
-            $table->tinyInteger('islocked')->default(0);
-            $table->dateTime('unlocktime')->default('1980-01-01 00:00:00');
-        });
+        if (!Schema::hasTable('lockout')) {
+            Schema::create('lockout', function (Blueprint $table) {
+                $table->integer('userid')->primary();
+                $table->tinyInteger('failedattempts')->nullable()->default(0);
+                $table->tinyInteger('islocked')->default(0);
+                $table->dateTime('unlocktime')->default('1980-01-01 00:00:00');
+            });
+        }
     }
 
 
