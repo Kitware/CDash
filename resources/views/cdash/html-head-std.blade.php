@@ -17,7 +17,6 @@
 <script src="js/tooltip.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/jquery.qtip.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/jquery-ui-1.10.4.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="js/cdashmenu.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/jquery.dataTables.min.js" type="text/javascript" charset="utf-8"></script>
