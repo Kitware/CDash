@@ -30,12 +30,12 @@ $name = htmlspecialchars(pdo_real_escape_string($name));
 
 $projectid = get_project_id($project);
 
-echo '<?xml version="1.0" encoding="UTF-8"?>';
-echo '<buildid>';
+$xml = '<?xml version="1.0" encoding="UTF-8"?>';
+$xml .= '<buildid>';
 
 if (!is_numeric($projectid)) {
-    echo 'not found</buildid>';
-    return;
+    $xml .= 'not found</buildid>';
+    return response($xml, 404)->header('Content-Type', 'application/xml');
 }
 
 if (!array_key_exists('siteid', $_GET)) {
@@ -47,8 +47,8 @@ if (!array_key_exists('siteid', $_GET)) {
 }
 
 if (!is_numeric($siteid)) {
-    echo 'wrong site</buildid>';
-    return;
+    $xml .= 'wrong site</buildid>';
+    return response($xml, 404)->header('Content-Type', 'application/xml');
 }
 
 $buildquery = pdo_query("SELECT id FROM build WHERE siteid='$siteid' AND projectid='$projectid'
@@ -57,8 +57,9 @@ $buildquery = pdo_query("SELECT id FROM build WHERE siteid='$siteid' AND project
 if (pdo_num_rows($buildquery) > 0) {
     $buildarray = pdo_fetch_array($buildquery);
     $buildid = $buildarray['id'];
-    echo $buildid . '</buildid>';
-    return;
+    $xml .= $buildid . '</buildid>';
+    return response($xml, 400)->header('Content-Type', 'application/xml');
 }
 
-echo 'not found</buildid>';
+$xml .= 'not found</buildid>';
+return response($xml, 404)->header('Content-Type', 'application/xml');
