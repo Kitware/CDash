@@ -18,7 +18,6 @@ require_once 'include/pdo.php';
 require_once 'include/common.php';
 require_once 'include/api_common.php';
 require_once 'include/repository.php';
-require_once 'include/bugurl.php';
 
 use CDash\Model\BuildUpdate;
 use CDash\Model\Project;
@@ -209,18 +208,10 @@ foreach ($updatearray as $file) {
 
     $file['log'] = $log;
     $file['filename'] = $filename;
-    $file['bugurl'] = '';
     $file['bugid'] = '0';
     $file['bugpos'] = '0';
     // This field is redundant because of the way our data is organized.
     unset($file['status']);
-
-    $bug = get_bug_from_log($log, $baseurl);
-    if ($bug !== false) {
-        $file['bugurl'] = $bug[0];
-        $file['bugid'] = $bug[1];
-        $file['bugpos'] = $bug[2];
-    }
 
     if ($status == 'UPDATED') {
         $diff_url = get_diff_url($project->Id, $project->CvsUrl, $directory, $filename, $revision);

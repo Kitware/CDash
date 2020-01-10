@@ -44,8 +44,7 @@
 
 
   gulp.task('uglify-1stparty', gulp.series('record-version', function() {
-    return gulp.src(['public/js/cdashIndexTable.js',
-             'public/js/cdashSortable.js',
+    return gulp.src(['public/js/cdashSortable.js',
              'public/js/tabNavigation.js',
              'public/js/linechart.js',
              'public/js/bulletchart.js',

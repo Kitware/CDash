@@ -145,7 +145,6 @@ add_php_test(viewdynamicanalysis)
 add_php_test(viewdynamicanalysisfile)
 add_php_test(viewmap)
 
-add_php_test(groupsdescription)
 add_php_test(viewsubprojectdependencies)
 add_php_test(testmodel)
 add_php_test(buildmodel)

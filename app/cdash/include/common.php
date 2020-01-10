@@ -162,14 +162,6 @@ function XMLStrFormat($str)
     return $str;
 }
 
-/** Redirect to the error page */
-function redirect_error($text = '')
-{
-    $redirectUrl = get_server_URI() . '/error.php';
-    \session(['cdash_error' => $text]);
-    return redirect($redirectUrl);
-}
-
 function time_difference($duration, $compact = false, $suffix = '', $displayms = false)
 {
     $duration = is_numeric($duration) ? $duration : 0;
