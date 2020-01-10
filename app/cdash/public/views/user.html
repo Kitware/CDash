@@ -77,11 +77,6 @@
                    ng-href="editSite.php?projectid={{::project.id}}">
                   <img src="img/systemtray.png" border="0" alt="claimsite" />
                 </a>
-                <a title="Schedule Build"
-                   ng-if="::project.role > 1 && cdash.manageclient == 1"
-                   ng-href="manageClient.php?projectid={{::project.id}}">
-                  <img src="img/manageclient.png" border="0" alt="manageclient" />
-                </a>
                 <a title="Edit project"
                    ng-if="::project.role > 1"
                    ng-href="createProject.php?projectid={{::project.id}}">
@@ -125,43 +120,6 @@
               <td align="center"  bgcolor="#DDDDDD"
                   ng-class="::{'warning': project.warning > 0}">
                 {{::project.warning}}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <br/>
-      </div>
-
-      <!-- Job Submission -->
-      <div ng-if="::cdash.manageclient == 1 && cdash.jobschedule.length > 0">
-        <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb">
-          <tbody>
-            <tr class="table-heading1">
-              <td colspan="7" id="nob"><h3>My Build Schedules</h3></td>
-            </tr>
-            <tr class="table-heading">
-              <td align="center" class="botl">Project</td>
-              <td align="center" class="botl">Status</td>
-              <td align="center" class="botl">Last run</td>
-              <td align="center" class="botl">Description</td>
-              <td align="center" class="botl">Actions</td>
-            </tr>
-            <tr class="table-heading" ng-repeat="job in ::cdash.jobschedule">
-              <td align="center">
-                <a ng-href="index.php?project={{::job.projectname}}">
-                  {{::job.projectname}}
-                </a>
-              </td>
-              <td align="center">{{::job.status}}</td>
-              <td align="center">{{::job.lastrun}}</td>
-              <td align="center">{{::job.description}}</td>
-              <td align="center">
-                <a ng-href="manageClient.php?scheduleid={{::job.id}}">
-                  <img src="img/advanced.png" border="0" alt="edit schedule" />
-                </a>
-                <a ng-click="deleteSchedule(job)">
-                  <img src="img/delete.png" border="0" alt="remove schedule" />
-                </a>
               </td>
             </tr>
           </tbody>

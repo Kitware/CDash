@@ -46,9 +46,9 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface,
     private $UpdateFile;
 
     /** Constructor */
-    public function __construct($projectID, $scheduleID)
+    public function __construct($projectID)
     {
-        parent::__construct($projectID, $scheduleID);
+        parent::__construct($projectID);
         $factory = $this->getModelFactory();
         $this->Build = $factory->create(Build::class);
         $this->Site = $factory->create(Site::class);
@@ -119,7 +119,7 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface,
                 $this->Build->SetSubProject($this->SubProjectName);
                 $this->Build->Append = $this->Append;
                 $this->Build->InsertErrors = false;
-                add_build($this->Build, $this->scheduleid);
+                add_build($this->Build);
             } else {
                 // Otherwise make sure that it's up-to-date.
                 $this->Build->UpdateBuild($this->Build->Id, -1, -1);

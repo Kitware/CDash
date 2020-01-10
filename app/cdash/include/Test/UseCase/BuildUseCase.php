@@ -47,7 +47,7 @@ class BuildUseCase extends UseCase
         $endTestTime->appendChild(new DOMText($this->endTime));
 
         $xml_str = $xml->saveXML($xml);
-        $handler = new BuildHandler($this->projectId, $this->scheduleId);
+        $handler = new BuildHandler($this->projectId);
         return $this->getXmlHandler($handler, $xml_str);
     }
 

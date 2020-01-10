@@ -382,7 +382,6 @@ function DeleteOldSubmissionRecords($projectid)
     $idset .= "'" . $ids[0]['id'] . "')";
 
     pdo_delete_query('DELETE FROM submission WHERE id IN ' . $idset);
-    pdo_delete_query('DELETE FROM client_jobschedule2submission WHERE submissionid IN ' . $idset);
     pdo_delete_query('DELETE FROM submission2ip WHERE submissionid IN ' . $idset);
 }
 

@@ -7,5 +7,3 @@ add_test(
 set_tests_properties(
   removebuilds PROPERTIES
   FAIL_REGULAR_EXPRESSION ".*Failures: [1-9]+.*;.*Exceptions: [1-9]+.*")
-
-add_php_test(customclientscript)

@@ -49,9 +49,9 @@ class TestingJUnitHandler extends AbstractHandler
     private $TotalTestDuration;
 
     /** Constructor */
-    public function __construct($projectID, $scheduleID)
+    public function __construct($projectID)
     {
-        parent::__construct($projectID, $scheduleID);
+        parent::__construct($projectID);
         $this->Build = new Build();
         $this->Site = new Site();
         $this->BuildTests = [];
@@ -259,7 +259,7 @@ class TestingJUnitHandler extends AbstractHandler
                         $stamp = date('Ymd-Hi', $this->StartTimeStamp) . "-$this->Group";
                         $this->Build->SetStamp($stamp);
                     }
-                    add_build($this->Build, $this->scheduleid);
+                    add_build($this->Build);
                     $this->UpdateEndTime = true;
                 } else {
                     // Otherwise make sure that the build is up-to-date.

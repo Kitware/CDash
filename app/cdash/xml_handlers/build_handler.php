@@ -62,9 +62,9 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
     private $PullRequest;
     private $BuildErrorFilter;
 
-    public function __construct($projectid, $scheduleid)
+    public function __construct($projectid)
     {
-        parent::__construct($projectid, $scheduleid);
+        parent::__construct($projectid);
         $this->Builds = [];
         $this->Append = false;
         $this->BuildLog = '';
@@ -208,7 +208,7 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
                 foreach ($this->Labels as $label) {
                     $build->AddLabel($label);
                 }
-                add_build($build, $this->scheduleid);
+                add_build($build);
 
                 $duration = $this->EndTimeStamp - $this->StartTimeStamp;
                 $build->UpdateBuildDuration($duration, !$all_at_once);

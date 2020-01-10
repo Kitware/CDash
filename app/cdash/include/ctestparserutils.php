@@ -2,10 +2,9 @@
 
 use CDash\Config;
 use CDash\Model\BuildUpdate;
-use CDash\Model\ClientJobSchedule;
 
 /** Add a new build */
-function add_build($build, $clientscheduleid = 0)
+function add_build($build)
 {
     if (!is_numeric($build->ProjectId) || !is_numeric($build->SiteId)) {
         return;
@@ -35,11 +34,6 @@ function add_build($build, $clientscheduleid = 0)
         $BuildUpdate->AssociateBuild($build->SiteId, $build->Name, $build->GetStamp());
     }
 
-    if ($clientscheduleid != 0) {
-        $ClientJobSchedule = new ClientJobSchedule();
-        $ClientJobSchedule->Id = $clientscheduleid;
-        $ClientJobSchedule->AssociateBuild($build->Id);
-    }
     return $build->Id;
 }
 

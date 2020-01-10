@@ -23,16 +23,12 @@ use CDash\Config;
 use CDash\Database;
 use CDash\Model\Project;
 use CDash\Model\AuthToken;
-use CDash\Model\ClientJobSchedule;
-use CDash\Model\ClientSite;
-use CDash\Model\ClientJob;
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
 use CDash\Model\BuildUpdate;
 use CDash\Model\Site;
 use CDash\Model\User;
 use CDash\Model\UserProject;
-use CDash\Model\Job;
 
 $config = Config::getInstance();
 $response = [];
@@ -55,11 +51,9 @@ $PDO = Database::getInstance()->getPdo();
 
 $userid = Auth::id();
 $xml = begin_XML_for_XSLT();
-$xml .= add_XML_value('manageclient', $config->get('CDASH_MANAGE_CLIENTS'));
 
 $userid = Auth::id();
 $response = begin_JSON_response();
-$response['manageclient'] = $config->get('CDASH_MANAGE_CLIENTS');
 $response['title'] = 'CDash - My Profile';
 
 $user = new User();
@@ -100,68 +94,6 @@ $response['projects'] = $projects_response;
 
 $authTokens = AuthToken::getTokensForUser($userid);
 $response['authtokens'] = $authTokens;
-
-// Go through the jobs
-if ($config->get('CDASH_MANAGE_CLIENTS')) {
-    $ClientJobSchedule = new ClientJobSchedule();
-    $userJobSchedules = $ClientJobSchedule->getAll($userid, 1000);
-    $schedule_response = [];
-    foreach ($userJobSchedules as $scheduleid) {
-        $ClientJobSchedule = new ClientJobSchedule();
-        $ClientJobSchedule->Id = $scheduleid;
-        $projectid = $ClientJobSchedule->GetProjectId();
-        $Project = new Project();
-        $Project->Id = $projectid;
-
-        $status = 'Scheduled';
-        $lastrun = 'NA';
-
-        $lastjobid = $ClientJobSchedule->GetLastJobId();
-        if ($lastjobid) {
-            $ClientJob = new ClientJob();
-            $ClientJob->Id = $lastjobid;
-            switch ($ClientJob->GetStatus()) {
-                case Job::RUNNING:
-                    $status = 'Running';
-                    $ClientSite = new ClientSite();
-                    $ClientSite->Id = $ClientJob->GetSite();
-                    $status .= ' (' . $ClientSite->GetName() . ')';
-                    $lastrun = $ClientJob->GetStartDate();
-                    break;
-                case Job::FINISHED:
-                    $status = 'Finished';
-                    $ClientSite = new ClientSite();
-                    $ClientSite->Id = $ClientJob->GetSite();
-                    $status .= ' (' . $ClientSite->GetName() . ')';
-                    $lastrun = $ClientJob->GetEndDate();
-                    break;
-                case Job::FAILED:
-                    $status = 'Failed';
-                    $ClientSite = new ClientSite();
-                    $ClientSite->Id = $ClientJob->GetSite();
-                    $status .= ' (' . $ClientSite->GetName() . ')';
-                    $lastrun = $ClientJob->GetEndDate();
-                    break;
-                case Job::ABORTED:
-                    $status = 'Aborted';
-                    $lastrun = $ClientJob->GetEndDate();
-                    break;
-            }
-        }
-        $job_response = [];
-        $job_response['id'] = $scheduleid;
-        $job_response['projectid'] = $Project->Id;
-        $job_response['projectname'] = $Project->GetName();
-        $job_response['status'] = $status;
-        $job_response['lastrun'] = $lastrun;
-        $job_response['description'] = $ClientJobSchedule->GetDescription();
-        if (strlen($job_response['description']) === 0) {
-            $job_response['description'] = 'NA';
-        }
-        $schedule_response[] = $job_response;
-    }
-    $response['jobschedule'] = $schedule_response;
-}
 
 // Find all the public projects that this user is not subscribed to.
 $stmt = $PDO->prepare(
