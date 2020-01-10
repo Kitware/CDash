@@ -238,28 +238,22 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
             }
 
             $threshold = $this->config->get('CDASH_LARGE_TEXT_LIMIT');
-            if ($threshold > 0 && isset($this->Error->StdOutput)) {
+            if ($threshold > 0) {
                 $chunk_size = $threshold / 2;
-                $outlen = strlen($this->Error->StdOutput);
-                if ($outlen > $threshold) {
-                    $beginning = substr($this->Error->StdOutput, 0, $chunk_size);
-                    $end = substr($this->Error->StdOutput, -$chunk_size);
-                    unset($this->Error->StdOutput);
-                    $this->Error->StdOutput =
-                        "$beginning\n...\nCDash truncated output because it exceeded $threshold characters.\n...\n$end\n";
-                    $outlen = strlen($this->Error->StdOutput);
-                }
-
-                $errlen = strlen($this->Error->StdError);
-                if ($errlen > $threshold) {
-                    $beginning = substr($this->Error->StdError, 0, $chunk_size);
-                    $end = substr($this->Error->StdError, -$chunk_size);
-                    unset($this->Error->StdError);
-                    $this->Error->StdError =
-                        "$beginning\n...\nCDash truncated output because it exceeded $threshold characters.\n...\n$end\n";
-                    $errlen = strlen($this->Error->StdError);
+                foreach (['StdOutput', 'StdError'] as $field) {
+                    if (isset($this->Error->$field)) {
+                        $outlen = strlen($this->Error->$field);
+                        if ($outlen > $threshold) {
+                            $beginning = substr($this->Error->$field, 0, $chunk_size);
+                            $end = substr($this->Error->$field, -$chunk_size);
+                            unset($this->Error->$field);
+                            $this->Error->$field =
+                                "$beginning\n...\nCDash truncated output because it exceeded $threshold characters.\n...\n$end\n";
+                        }
+                    }
                 }
             }
+
             if (array_key_exists($this->SubProjectName, $this->Builds)) {
                 // TODO: temporary fix for subtle, hard to track down issue
                 // BuildFailures' labels are not getting set in label2buildfailure when using new
