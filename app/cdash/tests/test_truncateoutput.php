@@ -60,8 +60,22 @@ class TruncateOutputTestCase extends KWWebTestCase
             // Delete the build.
             $this->removeBuild();
         }
+
+        // Test removing suppressed warnings.
+        $expected = "[CTest: warning matched] This part survives\n";
+        $this->submission('InsightExample', "$rep/Build_suppressed.xml");
+        $buildid_results = pdo_single_row_query(
+                "SELECT id FROM build WHERE name='TruncateOutput'");
+        $this->BuildId = $buildid_results['id'];
+        $this->get($this->url . "/api/v1/viewBuildError.php?type=1&buildid=" . $this->BuildId);
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $actual = $jsonobj['errors'][0]['stderror'];
+        $this->assertEqual($expected, $actual);
+
         $this->cleanup();
     }
+
 
     private function removeBuild()
     {

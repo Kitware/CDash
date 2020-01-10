@@ -244,6 +244,14 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
                     if (isset($this->Error->$field)) {
                         $outlen = strlen($this->Error->$field);
                         if ($outlen > $threshold) {
+                            // First try removing suppressed warnings to see
+                            // if that gets us under the threshold.
+                            $this->Error->$field = $this->removeSuppressedWarnings($this->Error->$field);
+                        }
+                        $outlen = strlen($this->Error->$field);
+                        if ($outlen > $threshold) {
+                            // Truncate the middle of the output if it is
+                            // still too long.
                             $beginning = substr($this->Error->$field, 0, $chunk_size);
                             $end = substr($this->Error->$field, -$chunk_size);
                             unset($this->Error->$field);
@@ -337,32 +345,13 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
                     break;
             }
         } elseif ($parent == 'RESULT') {
-            $threshold = $this->config->get('CDASH_LARGE_TEXT_LIMIT');
-            $append = true;
-
             switch ($element) {
                 case 'STDOUT':
-                    if ($threshold > 0) {
-                        if (strlen($this->Error->StdOutput) > $threshold) {
-                            $append = false;
-                        }
-                    }
-
-                    if ($append) {
                         $this->Error->StdOutput .= $data;
-                    }
                     break;
 
                 case 'STDERR':
-                    if ($threshold > 0) {
-                        if (strlen($this->Error->StdError) > $threshold) {
-                            $append = false;
-                        }
-                    }
-
-                    if ($append) {
                         $this->Error->StdError .= $data;
-                    }
                     break;
 
                 case 'EXITCONDITION':
@@ -485,5 +474,32 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
             break;
         }
         return $buildGroup;
+    }
+
+    private function removeSuppressedWarnings($input)
+    {
+        if (strpos($input, '[CTest: warning suppressed]') === false) {
+            return $input;
+        }
+        // Iterate over the input string line-by-line,
+        // keeping any content following "warning matched" but removing
+        // any content following "warning suppressed".
+        $output = '';
+        $separator = "\r\n";
+        $line = strtok($input, $separator);
+        $preserve = true;
+        while ($line !== false) {
+            if (strpos($line, '[CTest: warning suppressed') !== false) {
+                $preserve = false;
+            }
+            if (strpos($line, '[CTest: warning matched') !== false) {
+                $preserve = true;
+            }
+            if ($preserve) {
+                $output .= "{$line}\n";
+            }
+            $line = strtok($separator);
+        }
+        return $output;
     }
 }
