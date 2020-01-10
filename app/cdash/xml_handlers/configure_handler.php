@@ -52,9 +52,9 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
     private $Generator;
     private $PullRequest;
 
-    public function __construct($projectid, $scheduleid)
+    public function __construct($projectid)
     {
-        parent::__construct($projectid, $scheduleid);
+        parent::__construct($projectid);
         $this->Builds = [];
         $this->SubProjects = [];
         $this->StartTimeStamp = 0;
@@ -180,7 +180,7 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
                 $build->RemoveIfDone();
                 if ($build->Id == 0) {
                     // If the build doesn't exist we add it
-                    add_build($build, $this->scheduleid);
+                    add_build($build);
                 } else {
                     // Otherwise we make sure that it's up-to-date.
                     $build->UpdateBuild($build->Id, -1, -1);

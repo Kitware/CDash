@@ -143,19 +143,8 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $buildid = null,
         include 'local/submit.php';
     }
 
-    $scheduleid = 0;
-    if ($submission_id !== 0) {
-        $row = pdo_single_row_query(
-            "SELECT scheduleid from client_jobschedule2submission WHERE submissionid=$submission_id");
-        if (!empty($row)) {
-            $scheduleid = $row[0];
-        }
-    } elseif (isset($_GET['clientscheduleid'])) {
-        $scheduleid = pdo_real_escape_numeric($_GET['clientscheduleid']);
-    }
-
     // Parse the XML file
-    $handler = ctest_parse($filehandle, $projectid, $buildid, $expected_md5, $do_checksum, $scheduleid);
+    $handler = ctest_parse($filehandle, $projectid, $buildid, $expected_md5, $do_checksum);
 
     //this is the md5 checksum fail case
     if ($handler == false) {
@@ -290,12 +279,6 @@ function do_submit_asynchronous_file($filename, $projectid, $buildid = null,
         return;
     }
 
-    $clientscheduleid = isset($_GET['clientscheduleid']) ? pdo_real_escape_numeric($_GET['clientscheduleid']) : 0;
-    if ($clientscheduleid !== 0) {
-        pdo_query('INSERT INTO client_jobschedule2submission (scheduleid,submissionid) ' .
-            "VALUES ('$clientscheduleid','$submissionid')");
-    }
-
     // Save submitter IP in the database in the async case, so we have a valid
     // IP at Site::Insert time when processing rather than 'localhost's IP:
     pdo_insert_query('INSERT INTO submission2ip (submissionid, ip) ' .
@@ -421,12 +404,6 @@ function post_submit()
         return;
     }
 
-    // Check if we have the CDash@Home scheduleid
-    $scheduleid = 0;
-    if (isset($_POST['clientscheduleid'])) {
-        $scheduleid = pdo_real_escape_numeric($_POST['clientscheduleid']);
-    }
-
     // Add the build
     $build = new Build();
 
@@ -464,7 +441,7 @@ function post_submit()
 
     // If not, add a new one.
     if ($buildid === 0) {
-        $buildid = add_build($build, $scheduleid);
+        $buildid = add_build($build);
     }
 
     // Returns the OK submission

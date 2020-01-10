@@ -60,9 +60,9 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
     private $NumberTestsPassed;
 
     /** Constructor */
-    public function __construct($projectID, $scheduleID)
+    public function __construct($projectID)
     {
-        parent::__construct($projectID, $scheduleID);
+        parent::__construct($projectID);
         $this->Builds = [];
         $this->SubProjects = [];
         $this->NumberTestsFailed = [];
@@ -383,7 +383,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
         if ($build->Id == 0) {
             $build->Append = $this->Append;
             $build->InsertErrors = false;
-            add_build($build, $this->scheduleid);
+            add_build($build);
         } else {
             // Otherwise make sure that the build is up-to-date.
             $build->UpdateBuild($build->Id, -1, -1);

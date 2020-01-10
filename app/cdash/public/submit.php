@@ -25,7 +25,6 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 require_once 'include/pdo.php';
 require_once 'include/do_submit.php';
-require_once 'include/clientsubmit.php';
 require_once 'include/version.php';
 
 use CDash\Config;
@@ -50,11 +49,6 @@ if (!$pdo) {
     return;
 }
 @set_time_limit(0);
-
-// Send to the client submit
-if (client_submit()) {
-    return;
-}
 
 // If we have a POST we forward to the new submission process
 if (isset($_POST['project'])) {

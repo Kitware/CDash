@@ -27,9 +27,9 @@ class DoneHandler extends AbstractHandler
     private $PendingSubmissions;
     private $Requeue;
 
-    public function __construct($projectID, $scheduleID)
+    public function __construct($projectID)
     {
-        parent::__construct($projectID, $scheduleID);
+        parent::__construct($projectID);
         $this->Build = new Build();
         $this->FinalAttempt = false;
         $this->PendingSubmissions = new PendingSubmissions();

@@ -28,7 +28,6 @@ abstract class AbstractHandler implements SaxHandler, CDashSubmissionHandlerInte
 {
     protected $stack;
     protected $projectid;
-    protected $scheduleid;
     /** @var  Build $Build */
     protected $Build;
     /** @var  Site $Site */
@@ -39,10 +38,9 @@ abstract class AbstractHandler implements SaxHandler, CDashSubmissionHandlerInte
     protected $Project;
     protected $conifg;
 
-    public function __construct($projectid, $scheduleid)
+    public function __construct($projectid)
     {
         $this->projectid = $projectid;
-        $this->scheduleid = $scheduleid;
         $this->stack = new Stack();
         $this->config = Config::getInstance();
     }

@@ -26,7 +26,6 @@ abstract class UseCase
     protected $subprojects = [];
     protected $properties = [];
     protected $projectId = 321;
-    protected $scheduleId = 0;
     protected $startTime;
     protected $endTime;
 

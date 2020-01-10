@@ -30,9 +30,9 @@ class NoteHandler extends AbstractHandler
     private $Configure;
 
     /** Constructor */
-    public function __construct($projectID, $scheduleID)
+    public function __construct($projectID)
     {
-        parent::__construct($projectID, $scheduleID);
+        parent::__construct($projectID);
         $this->Build = new Build();
         $this->Site = new Site();
         $this->Configure = new BuildConfigure();
@@ -97,7 +97,7 @@ class NoteHandler extends AbstractHandler
                 $this->Build->EndTime = $this->Note->Time;
                 $this->Build->SubmitTime = gmdate(FMT_DATETIME);
                 $this->Build->InsertErrors = false;
-                add_build($this->Build, $this->scheduleid);
+                add_build($this->Build);
             }
 
             if ($this->Build->Id > 0) {

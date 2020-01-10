@@ -36,9 +36,9 @@ class CoverageLogHandler extends AbstractHandler
     private $CurrentLine;
 
     /** Constructor */
-    public function __construct($projectID, $scheduleID)
+    public function __construct($projectID)
     {
-        parent::__construct($projectID, $scheduleID);
+        parent::__construct($projectID);
         $this->Build = new Build();
         $this->Site = new Site();
         $this->UpdateEndTime = false;
@@ -93,7 +93,7 @@ class CoverageLogHandler extends AbstractHandler
             if ($this->Build->Id == 0) {
                 // If the build doesn't exist we add it.
                 $this->Build->InsertErrors = false;
-                add_build($this->Build, $this->scheduleid);
+                add_build($this->Build);
             } else {
                 // Otherwise make sure that it's up-to-date.
                 $this->Build->UpdateBuild($this->Build->Id, -1, -1);
