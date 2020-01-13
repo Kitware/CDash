@@ -238,28 +238,30 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
             }
 
             $threshold = $this->config->get('CDASH_LARGE_TEXT_LIMIT');
-            if ($threshold > 0 && isset($this->Error->StdOutput)) {
+            if ($threshold > 0) {
                 $chunk_size = $threshold / 2;
-                $outlen = strlen($this->Error->StdOutput);
-                if ($outlen > $threshold) {
-                    $beginning = substr($this->Error->StdOutput, 0, $chunk_size);
-                    $end = substr($this->Error->StdOutput, -$chunk_size);
-                    unset($this->Error->StdOutput);
-                    $this->Error->StdOutput =
-                        "$beginning\n...\nCDash truncated output because it exceeded $threshold characters.\n...\n$end\n";
-                    $outlen = strlen($this->Error->StdOutput);
-                }
-
-                $errlen = strlen($this->Error->StdError);
-                if ($errlen > $threshold) {
-                    $beginning = substr($this->Error->StdError, 0, $chunk_size);
-                    $end = substr($this->Error->StdError, -$chunk_size);
-                    unset($this->Error->StdError);
-                    $this->Error->StdError =
-                        "$beginning\n...\nCDash truncated output because it exceeded $threshold characters.\n...\n$end\n";
-                    $errlen = strlen($this->Error->StdError);
+                foreach (['StdOutput', 'StdError'] as $field) {
+                    if (isset($this->Error->$field)) {
+                        $outlen = strlen($this->Error->$field);
+                        if ($outlen > $threshold) {
+                            // First try removing suppressed warnings to see
+                            // if that gets us under the threshold.
+                            $this->Error->$field = $this->removeSuppressedWarnings($this->Error->$field);
+                        }
+                        $outlen = strlen($this->Error->$field);
+                        if ($outlen > $threshold) {
+                            // Truncate the middle of the output if it is
+                            // still too long.
+                            $beginning = substr($this->Error->$field, 0, $chunk_size);
+                            $end = substr($this->Error->$field, -$chunk_size);
+                            unset($this->Error->$field);
+                            $this->Error->$field =
+                                "$beginning\n...\nCDash truncated output because it exceeded $threshold characters.\n...\n$end\n";
+                        }
+                    }
                 }
             }
+
             if (array_key_exists($this->SubProjectName, $this->Builds)) {
                 // TODO: temporary fix for subtle, hard to track down issue
                 // BuildFailures' labels are not getting set in label2buildfailure when using new
@@ -343,32 +345,13 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
                     break;
             }
         } elseif ($parent == 'RESULT') {
-            $threshold = $this->config->get('CDASH_LARGE_TEXT_LIMIT');
-            $append = true;
-
             switch ($element) {
                 case 'STDOUT':
-                    if ($threshold > 0) {
-                        if (strlen($this->Error->StdOutput) > $threshold) {
-                            $append = false;
-                        }
-                    }
-
-                    if ($append) {
                         $this->Error->StdOutput .= $data;
-                    }
                     break;
 
                 case 'STDERR':
-                    if ($threshold > 0) {
-                        if (strlen($this->Error->StdError) > $threshold) {
-                            $append = false;
-                        }
-                    }
-
-                    if ($append) {
                         $this->Error->StdError .= $data;
-                    }
                     break;
 
                 case 'EXITCONDITION':
@@ -491,5 +474,32 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
             break;
         }
         return $buildGroup;
+    }
+
+    private function removeSuppressedWarnings($input)
+    {
+        if (strpos($input, '[CTest: warning suppressed]') === false) {
+            return $input;
+        }
+        // Iterate over the input string line-by-line,
+        // keeping any content following "warning matched" but removing
+        // any content following "warning suppressed".
+        $output = '';
+        $separator = "\r\n";
+        $line = strtok($input, $separator);
+        $preserve = true;
+        while ($line !== false) {
+            if (strpos($line, '[CTest: warning suppressed') !== false) {
+                $preserve = false;
+            }
+            if (strpos($line, '[CTest: warning matched') !== false) {
+                $preserve = true;
+            }
+            if ($preserve) {
+                $output .= "{$line}\n";
+            }
+            $line = strtok($separator);
+        }
+        return $output;
     }
 }
