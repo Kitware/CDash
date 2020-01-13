@@ -155,6 +155,24 @@ class EmailTestCase extends KWWebTestCase
         if ($this->assertLogContains($expected, 15)) {
             $this->pass('Passed');
         }
+
+        // Also check that viewUpdate shows email address for logged in users.
+        $db = \CDash\Database::getInstance();
+        $stmt = $db->prepare("
+                SELECT build.id FROM build
+                JOIN project ON (build.projectid = project.id)
+                JOIN build2update ON (build.id = build2update.buildid)
+                WHERE build.name = 'Win32-MSVC2009' AND
+                      project.name = 'EmailProjectExample'");
+        $db->execute($stmt);
+        $buildid = $stmt->fetchColumn();
+        $this->login();
+        $this->get($this->url . "/api/v1/viewUpdate.php?buildid=$buildid");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $expected = 'user1@kw';
+        $actual = $jsonobj['updategroups'][0]['directories'][0]['files'][0]['email'];
+        $this->assertEqual($expected, $actual);
     }
 
     public function testSubmissionEmailTest()
