@@ -120,7 +120,7 @@ foreach ($update->GetFiles() as $update_file) {
     $file['status'] = $update_file->Status;
 
     // Only display email if the user is logged in
-    if (isset($_SESSION['cdash'])) {
+    if (Auth::check()) {
         if ($update_file->Email == '') {
             $file['email'] = get_author_email($project->Name, $file['author']);
         } else {
