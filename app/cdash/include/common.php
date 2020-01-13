@@ -1327,33 +1327,6 @@ function make_cdash_url($url)
     return $cdash_url;
 }
 
-// Return the email of a given author within a given project.
-function get_author_email($projectname, $author)
-{
-    /** @var Database $db */
-    $db = Database::getInstance();
-    $projectid = get_project_id($projectname);
-    if ($projectid == -1) {
-        return 'unknownProject';
-    }
-
-    $stmt = $db->prepare("
-        SELECT email FROM user WHERE id IN (
-          SELECT up.userid FROM user2project AS up, user2repository AS ur
-           WHERE ur.userid=up.userid
-           AND up.projectid=:projectid
-           AND ur.credential=:author
-           AND (ur.projectid=0 OR ur.projectid=:projectid) )
-           LIMIT 1
-    ");
-
-    $stmt->bindParam(':projectid', $projectid);
-    $stmt->bindParam(':author', $author);
-    $db->execute($stmt);
-
-    return $stmt ? $stmt->fetchColumn() : '';
-}
-
 /** Get the previous build id dynamicanalysis*/
 function get_previous_buildid_dynamicanalysis($projectid, $siteid, $buildtype, $buildname, $starttime)
 {
