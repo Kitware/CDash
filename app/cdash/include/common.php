@@ -1343,7 +1343,7 @@ function get_author_email($projectname, $author)
            WHERE ur.userid=up.userid
            AND up.projectid=:projectid
            AND ur.credential=:author
-           AND (ur.projectid=0 OR ur.projectid=:projectid)
+           AND (ur.projectid=0 OR ur.projectid=:projectid) )
            LIMIT 1
     ");
 
