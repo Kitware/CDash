@@ -52,8 +52,6 @@ setup_local_config() {
         echo '$'"CDASH_DB_PORT = '';"
         echo '$'"CDASH_DB_PASS = '';"
         echo '$'"CDASH_DB_CONNECTION_TYPE = 'host';"
-        echo '$'"CDASH_LOG_FILE = 'php://stdout';"
-        echo '$'"CDASH_ENABLE_FEED = 0;"
 
         if [ '!' -z ${CDASH_CONFIG+x} ] ; then
             echo "$CDASH_CONFIG"
