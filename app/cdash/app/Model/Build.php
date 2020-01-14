@@ -1290,7 +1290,7 @@ class Build
 
         pdo_execute($stmt, [$previousbuildid]);
         $row = $stmt->fetch();
-        $npreviouswarnings = $row['configurewarnings'];
+        $npreviouswarnings = self::ConvertMissingToZero($row['configurewarnings']);
 
         // Check if a diff already exists for this build.
         $this->PDO->beginTransaction();
