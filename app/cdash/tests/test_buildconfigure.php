@@ -9,8 +9,6 @@ require_once 'include/common.php';
 require_once 'include/pdo.php';
 
 use CDash\Model\BuildConfigure;
-use CDash\Model\BuildConfigureError;
-use CDash\Model\BuildConfigureErrorDiff;
 use CDash\Model\Label;
 
 class BuildConfigureTestCase extends KWWebTestCase
@@ -51,18 +49,8 @@ class BuildConfigureTestCase extends KWWebTestCase
             $this->fail("configure->Insert returned false");
         }
 
-        $error = new BuildConfigureError();
-        $error->ConfigureId = 1;
-        $error->Type = 1;
-        $configure->AddError($error);
-
-        $diff = new BuildConfigureErrorDiff();
-        $diff->BuildId = 1;
-        $configure->AddErrorDifference($diff);
-
         $label = new Label();
         $configure->AddLabel($label);
-
 
         $configure->BuildId = 2;
         // This is expected to return false because the configure row already exists.
