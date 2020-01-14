@@ -139,10 +139,6 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $buildid = null,
         return false;
     }
 
-    if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/submit.php')) {
-        include 'local/submit.php';
-    }
-
     // Parse the XML file
     $handler = ctest_parse($filehandle, $projectid, $buildid, $expected_md5, $do_checksum);
 
@@ -216,14 +212,6 @@ function do_submit_asynchronous($filehandle, $projectid, $buildid = null,
     }
     fclose($outfile);
     unset($outfile);
-
-    // Sends the file size to the local parser
-    if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/ctestparser.php')) {
-        require_once 'local/ctestparser.php';
-        $localParser = new LocalParser();
-        $filesize = filesize($filename);
-        $localParser->SetFileSize($projectid, $filesize);
-    }
 
     $md5sum = md5_file($filename);
     $md5error = false;

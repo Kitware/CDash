@@ -103,11 +103,6 @@ $stmt = $PDO->prepare(
     ORDER BY name');
 pdo_execute($stmt, [$userid]);
 
-if ($config->get('CDASH_USE_LOCAL_DIRECTORY') == '1') {
-    if (file_exists('local/user.php')) {
-        include_once 'local/user.php';
-    }
-}
 $publicprojects_response = [];
 while ($row = $stmt->fetch()) {
     $publicproject_response = [];

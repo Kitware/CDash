@@ -185,13 +185,6 @@ if (!function_exists('echo_main_dashboard_JSON')) {
 
         $page_id = 'index.php';
 
-        if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/models/proProject.php')) {
-            include_once 'local/models/proProject.php';
-            $pro = new proProject;
-            $pro->ProjectId = $projectid;
-            $response['proedition'] = $pro->GetEdition(1);
-        }
-
         // Begin menu definition
         $response['menu'] = array();
         $beginning_UTCDate = $controller->getBeginDate();

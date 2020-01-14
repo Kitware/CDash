@@ -40,7 +40,6 @@ return [
         ]
     ],
     'allow' => [
-        'local_directory' => false,
         'authenticated_submissions' => false,
     ],
     'login' => [

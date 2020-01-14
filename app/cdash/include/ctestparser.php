@@ -268,12 +268,6 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
     include 'include/version.php';
 
     $config = Config::getInstance();
-    if ($config->get("CDASH_USE_LOCAL_DIRECTORY") && file_exists('local/ctestparser.php')) {
-        require_once 'local/ctestparser.php';
-        $localParser = new LocalParser();
-        $localParser->SetProjectId($projectid);
-        $localParser->BufferSizeMB = 8192 / (1024 * 1024);
-    }
 
     // Check if this is a new style PUT submission.
     try {
@@ -437,15 +431,6 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
     }
 
     $parsingerror = '';
-    if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/ctestparser.php')) {
-        $parsingerror = $localParser->StartParsing();
-        if ($parsingerror != '') {
-            $statusarray['status'] = 'ERROR';
-            $statusarray['message'] = $parsingerror;
-            displayReturnStatus($statusarray);
-            exit();
-        }
-    }
     if (!$parseHandle = fopen($filename, 'r')) {
         $statusarray['status'] = 'ERROR';
         $statusarray['message'] = "ERROR: Cannot open file ($filename)";
@@ -458,15 +443,6 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
     $content = fread($parseHandle, 8192);
     while (!feof($parseHandle)) {
         $content = fread($parseHandle, 8192);
-        if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/ctestparser.php')) {
-            $parsingerror = $localParser->ParseFile();
-            if ($parsingerror != '') {
-                $statusarray['status'] = 'ERROR';
-                $statusarray['message'] = $parsingerror;
-                displayReturnStatus($statusarray);
-                exit();
-            }
-        }
         xml_parse($parser, $content, false);
     }
     xml_parse($parser, null, true);
@@ -474,10 +450,6 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
     unset($parser);
     fclose($parseHandle);
     unset($parseHandle);
-
-    if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/ctestparser.php')) {
-        $parsingerror = $localParser->EndParsingFile();
-    }
 
     $requeued = false;
     if ($handler instanceof DoneHandler && $handler->shouldRequeue()) {
