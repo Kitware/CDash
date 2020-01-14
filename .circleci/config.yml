@@ -6,26 +6,13 @@ jobs:
     machine: true
     steps:
       - checkout
-      - restore_cache:
-         keys:
-           - img-v1-{{checksum "docker/cdash.docker"}}
       - run:
           name: MySQL Build
           command: |
             set -x
             source ~/project/docker/commands.bash
             cdash_environment mysql
-            if [ -f "/home/circleci/circle-cache/cdash-image.tar.gz" ]; then
-              docker load -i /home/circleci/circle-cache/cdash-image.tar.gz
-            else
-              cdash_build_image
-              mkdir -p /home/circleci/circle-cache
-              docker save kitware/cdash:testing | gzip > /home/circleci/circle-cache/cdash-image.tar.gz
-            fi
-      - save_cache:
-          key: img-v1-{{checksum "docker/cdash.docker"}}
-          paths:
-            - /home/circleci/circle-cache/cdash-image.tar.gz
+            cdash_build_image
       - run:
           name: Spin Up MySQL Build
           command: |
