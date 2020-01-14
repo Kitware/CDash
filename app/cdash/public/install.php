@@ -199,14 +199,6 @@ if (!$installed) {
                 $sqlfile = $config->get('CDASH_ROOT_DIR') . "/sql/$db_type/cdash.sql";
                 _processSQLfile($sqlfile);
 
-                // If we have a local directory we process the sql in that directory
-                if ($config->get('CDASH_USE_LOCAL_DIRECTORY')) {
-                    $sqlfile = $config->get('CDASH_ROOT_DIR') . "/local/sql/$db_type/cdash.sql";
-                    if (file_exists($sqlfile)) {
-                        _processSQLfile($sqlfile);
-                    }
-                }
-
                 // If we are with PostGreSQL we need to add some extra functions
                 if ($db_type == 'pgsql') {
                     $sqlfile = $config->get('CDASH_ROOT_DIR') . '/sql/pgsql/cdash.ext.sql';

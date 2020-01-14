@@ -599,12 +599,6 @@ function sendemail(ActionableBuildInterface $handler, $projectid)
     $Project->Id = $projectid;
     $Project->Fill();
 
-    /*
-    if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/sendemail.php')) {
-        // TODO: refactor this, probably into some sort of notification builder interface
-    }
-    */
-
     // If we shouldn't send any emails we stop
     if ($Project->EmailBrokenSubmission == 0) {
         return;

@@ -141,8 +141,6 @@ $CDASH_SERVER_PORT = '';
 $CDASH_CURL_REQUEST_LOCALHOST = '1';
 $CDASH_CURL_LOCALHOST_PREFIX = '';
 $CDASH_BASE_URL = '';
-// Define the location of the local directory
-$CDASH_USE_LOCAL_DIRECTORY = '0';
 // CSS file
 $CDASH_CSS_FILE = 'css/cdash.css';
 // Must be writable by the web server

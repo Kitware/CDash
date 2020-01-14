@@ -2,9 +2,7 @@
 
   <xsl:include href="logout.xsl"/>
   <xsl:include href="footer.xsl"/>
-  <xsl:include href="local/footer.xsl"/>
   <xsl:include href="headscripts.xsl"/>
-  <xsl:include href="local/headscripts.xsl"/>
 
    <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
