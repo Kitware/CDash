@@ -1,5 +1,7 @@
 import Vue from 'vue';
+import VTooltip from 'v-tooltip'
 import axios from 'axios';
+Vue.use(VTooltip)
 
 window.Vue = Vue;
 

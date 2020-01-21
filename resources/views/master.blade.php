@@ -18,6 +18,7 @@
     <link type="text/css" rel="stylesheet" href="{{ asset('css/jquery.qtip.min.css') }}" />
     <link type="text/css" rel="stylesheet" media="all" href="{{ asset('css/jquery.dataTables.css') }}" />
     <link rel="StyleSheet" type="text/css" href="{{ asset('css/cdash.css') }}" />
+    <link rel="StyleSheet" type="text/css" href="{{ asset('css/vue_common.css') }}" />
     @yield('header_script')
 </head>
 <body>
