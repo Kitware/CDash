@@ -58,7 +58,7 @@ COPY ./.dockerignore ./.dockerignore
 COPY ./.editorconfig  ./.editorconfig
 COPY ./.env.example ./.env
 COPY ./.env.example ./.env.example
-COPY ./.eslintrc ./.eslintrc
+COPY ./.eslintrc.js ./.eslintrc.js
 COPY ./.gitattributes ./.gitattributes
 COPY ./.git ./.git
 COPY ./.gitignore ./.gitignore

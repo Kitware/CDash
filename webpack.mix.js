@@ -42,3 +42,19 @@ mix.scripts([
 
 mix.js('resources/js/app.js', 'public/laravel/js')
    .sass('resources/sass/app.scss', 'public/laravel/css');
+
+mix.webpackConfig({
+  module: {
+    rules: [
+      {
+        enforce: 'pre',
+        test: /\.vue$/,
+        loader: 'eslint-loader',
+        options: {
+          fix: true,
+        },
+        exclude: /(vendor|node_modules)/
+      }
+    ]
+  }
+})
