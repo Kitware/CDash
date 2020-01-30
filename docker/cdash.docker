@@ -108,7 +108,8 @@ else                                                                       \
                   --optimize-autoloader                                    \
  && echo "LOG_CHANNEL=stderr" >> .env                                      \
  && npm install                                                            \
- && node_modules/.bin/gulp;                                                \
+ && node_modules/.bin/gulp                                                 \
+ && npm run prod;                                                          \
 fi
 
 RUN cp app/cdash/php.ini /usr/local/etc/php/conf.d/cdash.ini
