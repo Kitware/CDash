@@ -1661,17 +1661,21 @@ function web_api_authenticate($projectid, $token)
     return pdo_num_rows($result) != 0;
 }
 
+// Check if user has specified a preference for color scheme.
+function get_css_file()
+{
+    if (array_key_exists('colorblind', $_COOKIE) && $_COOKIE['colorblind'] == 1) {
+        return 'css/colorblind.css';
+    }
+    return 'css/cdash.css';
+}
+
 function begin_XML_for_XSLT()
 {
     $config = CDash\Config::getInstance();
     $css_file = 'css/cdash.css';
 
-    // check if user has specified a preference for color scheme
-    if (array_key_exists('colorblind', $_COOKIE)) {
-        if ($_COOKIE['colorblind'] == 1) {
-            $css_file = 'css/colorblind.css';
-        }
-    }
+    $css_file = get_css_file();
     $config->set('CDASH_CSS_FILE', $css_file);
 
     $xml = '<?xml version="1.0" encoding="UTF-8"?><cdash>';
