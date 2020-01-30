@@ -5,9 +5,11 @@
  */
 
 import './bootstrap';
+import BuildSummary from "./components/BuildSummary";
 import PageHeader from "./components/PageHeader";
 
 const cdash_components = {
+  BuildSummary,
   PageHeader
 };
 

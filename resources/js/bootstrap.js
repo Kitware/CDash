@@ -3,6 +3,9 @@ import VTooltip from 'v-tooltip'
 import axios from 'axios';
 Vue.use(VTooltip)
 
+Vue.prototype.$baseURL = process.env.MIX_APP_URL;
+axios.defaults.baseURL = Vue.prototype.$baseURL;
+
 window.Vue = Vue;
 
 /**
@@ -24,9 +27,9 @@ window.Vue = Vue;
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = axios;
+Vue.prototype.$axios = axios;
 
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+Vue.prototype.$axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /**
  * Next we will register the CSRF Token as a common header with Axios so that
@@ -37,7 +40,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 let token = document.head.querySelector('meta[name="csrf-token"]');
 
 if (token) {
-    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+    Vue.prototype.$axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
 } else {
     console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
