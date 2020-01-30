@@ -276,7 +276,7 @@ class Subscription implements SubscriptionInterface
 
                     if (is_null($summary['build_summary_url'])) {
                         $id = (int) $summary['build_parent_id'] ?: $build->Id;
-                        $summary['build_summary_url'] = "{$baseUrl}/buildSummary.php?buildid={$id}";
+                        $summary['build_summary_url'] = "{$baseUrl}/build/{$id}";
                     }
                 }
             }

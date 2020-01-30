@@ -18,8 +18,8 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
     private function getLastBuildId()
     {
         $sql = "
-          SELECT id 
-          FROM build 
+          SELECT id
+          FROM build
           WHERE name='{$this->buildName}'
           ORDER BY starttime DESC
           LIMIT 1
@@ -43,7 +43,7 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
             'simpletest@localhost',
             'FAILED (t=3, m=3): EmailProjectExample - Win32-MSVC2009 - Nightly',
             'A submission to CDash for the project EmailProjectExample has failing tests and missing tests.',
-            "Details on the submission can be found at {$url}/buildSummary.php?buildid=",
+            "Details on the submission can be found at {$url}/build/",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',
             'Build Name: Win32-MSVC2009',
@@ -107,7 +107,7 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
             'simpletest@localhost',
             'FAILED (t=2): EmailProjectExample - OSX-SIERRA-10.12.1 - Nightly',
             'A submission to CDash for the project EmailProjectExample has failing tests',
-            "Details on the submission can be found at {$url}/buildSummary.php?buildid=",
+            "Details on the submission can be found at {$url}/build/",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',
             'Build Name: OSX-SIERRA-10.12.1',

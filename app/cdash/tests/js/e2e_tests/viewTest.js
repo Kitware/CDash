@@ -7,11 +7,12 @@ describe("viewTest", function() {
 
   describe("Missing Tests", function() {
 
-    beforeEach(function(){
-
+    beforeEach(async function() {
       browser.get('index.php?project=EmailProjectExample&date=2009-02-26');
-      element(by.cssContainingText('a','Win32-MSVC2009')).click();
-      element(by.cssContainingText('a','View Tests Summary')).click();
+      var href = await element(by.cssContainingText('a','Win32-MSVC2009')).getAttribute('href');
+      var matches = href.match(/\/build\/([0-9]+)/);
+      var buildid = matches[1];
+      browser.get('viewTest.php?buildid=' + buildid);
     });
 
       it("should display missing tests", function() {

@@ -2847,7 +2847,7 @@ class Build
     public function GetBuildSummaryUrl()
     {
         $base = Config::getInstance()->getBaseUrl();
-        return "{$base}/buildSummary.php?buildid={$this->Id}";
+        return "{$base}/build/{$this->Id}";
     }
 
     /**

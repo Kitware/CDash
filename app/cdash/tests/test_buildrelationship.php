@@ -81,7 +81,7 @@ class BuildRelationshipTestCase extends KWWebTestCase
             }
         }
 
-        // Verify that these results are displayed on buildSummary.php.
+        // Verify that these results are displayed on the build summary page.
         $content = $this->connect($this->url . '/api/v1/buildSummary.php?buildid=' . $build2->Id);
         $json_content = json_decode($content, true);
 
