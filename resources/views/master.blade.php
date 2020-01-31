@@ -16,11 +16,16 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/jquery-ui-1.10.4.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('css/jqModal.css') }}" />
     <link type="text/css" rel="stylesheet" href="{{ asset('css/jquery.qtip.min.css') }}" />
-    <link type="text/css" rel="stylesheet" media="all" href="{{ asset('css/jquery.dataTables.css') }}" />
-    <link rel="StyleSheet" type="text/css" href="{{ $cdashCss }}" />
-    <link rel="StyleSheet" type="text/css" href="{{ asset('css/vue_common.css') }}" />
+    <link type="text/css" rel="stylesheet" href="{{ asset('css/jquery.dataTables.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ $cdashCss }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/vue_common.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/nv.d3.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.min.css') }}"/>
     @yield('header_script')
 </head>
+
+
+
 <body>
 
 <div id="app">
