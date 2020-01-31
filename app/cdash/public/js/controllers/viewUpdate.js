@@ -54,7 +54,7 @@ CDash.controller('ViewUpdateController',
         if (item) {
           plot.highlight(item.series, item.datapoint);
           buildid = input.buildids[item.datapoint[0]];
-          window.location = "buildSummary.php?buildid=" + buildid;
+          window.location = "build/" + buildid;
         }
       });
 

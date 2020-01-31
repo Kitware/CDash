@@ -342,7 +342,7 @@ class QueryTests extends ResultsApi
             $siteLink = 'viewSite.php?siteid=' . $row['siteid'];
             $build['siteLink'] = $siteLink;
 
-            $buildSummaryLink = "buildSummary.php?buildid=$buildid";
+            $buildSummaryLink = "build/$buildid";
             $build['buildSummaryLink'] = $buildSummaryLink;
 
             $testDetailsLink = "testDetails.php?test=$testid&build=$buildid";

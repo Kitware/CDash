@@ -51,10 +51,12 @@ npm install
 
 # Generate build files.
 node_modules/.bin/gulp
-php artisan key:generate
 
 # Setup default configuration.
 cp .env.example .env
+
+# Generate application key.
+php artisan key:generate
 
 # Migrate your config settings if you're upgrading an existing CDash instance.
 php artisan config:migrate

@@ -8,9 +8,9 @@ ansible/site.retry
 /app/cdash/backup/
 /app/cdash/log/
 /app/cdash/public/.htaccess
+/app/cdash/public/build/
 /app/cdash/public/upload/
 _build/
-build/
 CDash_*.min.js*
 composer.phar
 .DS_Store
@@ -23,6 +23,7 @@ Homestead.yaml
 npm-debug.log
 *.pem
 .phpunit.result.cache
+/public/build/
 /public/hot
 !/public/.htaccess
 /public/storage
@@ -30,3 +31,8 @@ npm-debug.log
 .vagrant
 /vendor/
 yarn-error.log
+
+# Files generated for Vue
+app/cdash/public/js/3rdparty.js
+public/laravel/
+public/mix-manifest.json

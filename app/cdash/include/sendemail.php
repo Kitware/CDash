@@ -442,7 +442,7 @@ function generate_broken_build_message($emailtext, $Build, $Project)
     $body = 'Details on the submission can be found at ';
 
     $body .= $serverURI;
-    $body .= '/buildSummary.php?buildid=' . $Build->Id;
+    $body .= "/build/{$Build->Id}";
     $body .= "\n\n";
 
     $body .= 'Project: ' . $Project->Name . "\n";

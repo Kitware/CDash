@@ -88,7 +88,7 @@ $previousbuilds = pdo_query("SELECT id,starttime,endtime,loctested,locuntested F
             if (item) {
                 plot.highlight(item.series, item.datapoint);
                 buildid = buildids[item.datapoint[0]];
-                window.location = "buildSummary.php?buildid=" + buildid;
+                window.location = "build/" + buildid;
             }
         });
 

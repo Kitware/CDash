@@ -1,6 +1,6 @@
 <!-- For child view, display the label(s) as a link to the build summary -->
 <td ng-if="::cdash.childview == 1" align="left" class="paddt" colspan="2">
-  <a ng-href="buildSummary.php?buildid={{::build.id}}">
+  <a ng-href="build/{{::build.id}}">
     {{::build.label}}
   </a>
   <!-- Icon for build errors / test failing -->
@@ -25,7 +25,7 @@
   <div ng-if="::build.id" style="float: left; margin: 0px 4px;">
     <a class="buildinfo" alt="generator"
        ng-if="::build.numchildren == 0"
-       ng-href="buildSummary.php?buildid={{::build.id}}">
+       ng-href="build/{{::build.id}}">
       {{::build.buildname}}
     </a>
     <a class="buildinfo" alt="generator"
@@ -68,7 +68,7 @@
     <!-- Display the note icon -->
     <a name="Build Notes" class="jTip" id="buildnote_{{::build.id}}"
        ng-if="::build.buildnotes > 0"
-       ng-href="ajax/buildnote.php?buildid={{::build.id}}&width=350&link=buildSummary.php%3Fbuildid%3D{{::build.id}}">
+       ng-href="ajax/buildnote.php?buildid={{::build.id}}&width=350&link=build%2F{{::build.id}}">
       <img src="img/note.png" alt="note" class="icon"></img>
     </a>
 

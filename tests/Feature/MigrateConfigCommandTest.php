@@ -52,10 +52,14 @@ EOT;
         // Verify expected contents in .env.
         $actual = file_get_contents($this->test_file);
         $this->assertContains('APP_DEBUG=1', $actual);
+        $this->assertContains('APP_URL=http://localhost/CDash', $actual);
+        $expected = <<<'EOT'
+MIX_APP_URL="${APP_URL}"
+EOT;
+        $this->assertContains($expected, $actual);
         $this->assertContains('MAIL_HOST=cdash_smtp_host', $actual);
         $this->assertContains('MAIL_PASSWORD=cdash_smtp_password', $actual);
         $this->assertContains('MAIL_USERNAME=cdash_smtp_user', $actual);
-        $this->assertContains('BASE_URL=http://localhost/CDash', $actual);
         $this->assertContains('APP_TIMEZONE=America/New_York', $actual);
         $this->assertContains('APP_LOG_LEVEL=debug', $actual);
 

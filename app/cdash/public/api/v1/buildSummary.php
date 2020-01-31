@@ -52,13 +52,13 @@ $next_buildid = $build->GetNextBuildId();
 
 $menu = [];
 if ($build->GetParentId() > 0) {
-    $menu['back'] = 'index.php?project=' . urlencode($project->Name) . "&parentid={$build->GetParentId()}";
+    $menu['back'] = '/index.php?project=' . urlencode($project->Name) . "&parentid={$build->GetParentId()}";
 } else {
-    $menu['back'] = 'index.php?project=' . urlencode($project->Name) . "&date=$date";
+    $menu['back'] = '/index.php?project=' . urlencode($project->Name) . "&date=$date";
 }
 
 if ($previous_buildid > 0) {
-    $menu['previous'] = "buildSummary.php?buildid=$previous_buildid";
+    $menu['previous'] = "/build/$previous_buildid";
 
     // Find the last submit date.
     $previous_build = $service->create(Build::class);
@@ -70,10 +70,10 @@ if ($previous_buildid > 0) {
     $lastsubmitdate = 0;
 }
 
-$menu['current'] = "buildSummary.php?buildid=$current_buildid";
+$menu['current'] = "/build/$current_buildid";
 
 if ($next_buildid > 0) {
-    $menu['next'] = "buildSummary.php?buildid=$next_buildid";
+    $menu['next'] = "/build/$next_buildid";
 } else {
     $menu['next'] = false;
 }

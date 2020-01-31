@@ -464,7 +464,7 @@ div#datetime {
 div#topmenu {
   position: relative;
   float: left;
-  width: 500px;
+  width: 100%;
   top: 4px;
   left: 6px;
 }

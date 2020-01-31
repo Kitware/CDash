@@ -93,6 +93,7 @@ class MigrateConfig extends Command
         $legacy_to_laravel_names = [
             'MAININDEX_TITLE' => 'APP_NAME',
             'TESTING_MODE' => 'APP_DEBUG',
+            'BASE_URL' => 'APP_URL',
             'DB_TYPE' => 'DB_CONNECTION',
             'DB_NAME' => 'DB_DATABASE',
             'DB_PASS' => 'DB_PASSWORD',
