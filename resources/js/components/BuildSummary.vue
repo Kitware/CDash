@@ -136,7 +136,7 @@
                   :class="cdash.configure.nerrors > 0 ? 'error' : 'normal'"
                 >
                   <b>
-                    <a :href="$baseURL + '/viewConfigure.php?buildid=' + cdash.build.id">
+                    <a :href="$baseURL + '/build/' + cdash.build.id + '/configure'">
                       {{ cdash.configure.nerrors }}
                     </a>
                   </b>
@@ -146,7 +146,7 @@
                   :class="cdash.configure.nwarnings > 0 ? 'warning' : 'normal'"
                 >
                   <b>
-                    <a :href="$baseURL + '/viewConfigure.php?buildid=' + cdash.build.id">
+                    <a :href="$baseURL + '/build/' + cdash.build.id + '/configure'">
                       {{ cdash.configure.nwarnings }}
                     </a>
                   </b>
@@ -253,7 +253,7 @@
                   :class="cdash.previousbuild.nconfigureerrors > 0 ? 'error' : 'normal'"
                 >
                   <b>
-                    <a :href="$baseURL + '/viewConfigure.php?buildid=' + cdash.previousbuild.buildid">
+                    <a :href="$baseURL + '/build/' + cdash.previousbuild.buildid + '/configure'">
                       {{ cdash.previousbuild.nconfigureerrors }}
                     </a>
                   </b>
@@ -263,7 +263,7 @@
                   :class="cdash.previousbuild.nconfigurewarnings > 0 ? 'warning' : 'normal'"
                 >
                   <b>
-                    <a :href="$baseURL + '/viewConfigure.php?buildid=' + cdash.previousbuild.buildid">
+                    <a :href="$baseURL + '/build/' + cdash.previousbuild.buildid + '/configure'">
                       {{ cdash.previousbuild.nconfigurewarnings }}
                     </a>
                   </b>
@@ -655,7 +655,7 @@
 
       <a
         id="configure_link"
-        :href="$baseURL + '/viewConfigure.php?buildid=' + cdash.build.id"
+        :href="$baseURL + '/build/' + cdash.build.id + '/configure'"
       >
         View Configure Summary
       </a>

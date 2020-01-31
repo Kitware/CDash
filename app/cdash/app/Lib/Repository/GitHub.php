@@ -399,7 +399,7 @@ class GitHub implements RepositoryInterface
                 // Pluralize.
                 $msg .= 's';
             }
-            $details_url = "$this->baseUrl/viewConfigure.php?buildid={$row['id']}";
+            $details_url = "$this->baseUrl/build/{$row['id']}/configure";
             $icon = ':x:';
             $this->numFailed++;
             $this->foundConfigureErrors = true;

@@ -66,8 +66,9 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
 
         $pages = ['buildSummary', 'viewBuildError', 'viewConfigure',
                   'viewNotes', 'viewUpdate'];
+        $vue_pages = ['buildSummary', 'viewConfigure'];
         foreach ($pages as $page) {
-            if ($page == 'buildSummary') {
+            if (in_array($page, $vue_pages)) {
                 $path_to_first = "build/{$first_buildid}";
                 $path_to_second = "build/{$second_buildid}";
                 $path_to_third = "build/{$third_buildid}";

@@ -2236,7 +2236,7 @@ class Build
         if (!empty($this->PullRequest) && $numErrors > 0) {
             $message = "$this->Name failed to configure";
             $url = get_server_URI(false) .
-                "/viewConfigure.php?buildid=$this->Id";
+                "/build/{$this->Id}/configure";
             $this->NotifyPullRequest($message, $url);
         }
     }

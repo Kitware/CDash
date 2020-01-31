@@ -104,7 +104,7 @@ describe('BuildSummary', function() {
     expect(site_link.text()).toBe('mysite');
 
     const configure_link = component.find('#configure_link');
-    expect(configure_link.attributes('href')).toBe('/viewConfigure.php?buildid=1');
+    expect(configure_link.attributes('href')).toBe('/build/1/configure');
     expect(configure_link.text()).toBe('View Configure Summary');
   });
 

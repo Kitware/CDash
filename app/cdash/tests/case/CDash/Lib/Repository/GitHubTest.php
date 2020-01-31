@@ -89,7 +89,7 @@ class GitHubTest extends TestCase
 
         // Single configure error.
         $actual = $sut->getCheckSummaryForBuildRow($build_row);
-        $link = "$this->baseUrl/viewConfigure.php?buildid=99999";
+        $link = "$this->baseUrl/build/99999/configure";
         $expected = $common . ":x: | [1 configure error]($link)";
         $this->assertEquals($expected, $actual);
 
@@ -206,7 +206,7 @@ class GitHubTest extends TestCase
         $expected['output']['summary'] = "[CDash detected configure errors, build errors and failed tests.]($index_url)";
         $expected['output']['text'] = "$table_header\n";
         $expected['output']['text'] .= "[a]($this->baseUrl/build/99995) | :white_check_mark: | [success]($this->baseUrl/build/99995)\n";
-        $expected['output']['text'] .= "[b]($this->baseUrl/build/99996) | :x: | [5 configure errors]($this->baseUrl/viewConfigure.php?buildid=99996)\n";
+        $expected['output']['text'] .= "[b]($this->baseUrl/build/99996) | :x: | [5 configure errors]($this->baseUrl/build/99996/configure)\n";
         $expected['output']['text'] .= "[c]($this->baseUrl/build/99997) | :x: | [1 build error]($this->baseUrl/viewBuildError.php?buildid=99997)\n";
         $expected['output']['text'] .= "[d]($this->baseUrl/build/99998) | :x: | [7 failed tests]($this->baseUrl/viewTest.php?buildid=99998)";
         $build_rows[] = [

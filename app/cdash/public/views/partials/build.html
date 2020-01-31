@@ -226,7 +226,7 @@
 
 <td ng-if="::buildgroup.hasconfiguredata" align="center" ng-class="::{'error': build.configure.error > 0, 'normal': build.configure.error == 0}">
   <div ng-if="::build.hasconfigure">
-    <a ng-href="viewConfigure.php?buildid={{::build.id}}">
+    <a ng-href="build/{{::build.id}}/configure">
       {{::build.configure.error}}
     </a>
   </div>
@@ -234,7 +234,7 @@
 
 <td ng-if="::buildgroup.hasconfiguredata" align="center" ng-class="::{'warning': build.configure.warning > 0, 'normal': build.configure.warning == 0}">
   <div ng-if="::build.hasconfigure">
-    <a ng-href="viewConfigure.php?buildid={{::build.id}}">
+    <a ng-href="build/{{::build.id}}/configure">
       {{::build.configure.warning}}
     </a>
     <sub ng-if="::build.configure.warningdiff > 0">+{{::build.configure.warningdiff}}</sub>
