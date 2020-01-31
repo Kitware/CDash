@@ -5,11 +5,13 @@
  */
 
 import './bootstrap';
+import BuildConfigure from "./components/BuildConfigure";
 import BuildSummary from "./components/BuildSummary";
 import PageHeader from "./components/PageHeader";
 import PageFooter from "./components/PageFooter";
 
 const cdash_components = {
+  BuildConfigure,
   BuildSummary,
   PageHeader,
   PageFooter

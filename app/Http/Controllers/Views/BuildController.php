@@ -32,6 +32,19 @@ class BuildController extends ProjectController
         $this->date = $this->project->GetTestingDay($this->build->StartTime);
     }
 
+    // Render the build configure page.
+    public function configure($build_id = null)
+    {
+        $this->setup($build_id);
+        return view('build.configure')
+            ->with('build', json_encode($this->build))
+            ->with('cdashCss', $this->cdashCss)
+            ->with('date', json_encode($this->date))
+            ->with('logo', json_encode($this->logo))
+            ->with('projectname', json_encode($this->project->Name))
+            ->with('title', "{$this->project->Name} : Configure");
+    }
+
     // Render the build summary page.
     public function summary($build_id = null)
     {
@@ -42,6 +55,6 @@ class BuildController extends ProjectController
             ->with('date', json_encode($this->date))
             ->with('logo', json_encode($this->logo))
             ->with('projectname', json_encode($this->project->Name))
-            ->with('title', "{$this->project->Name} - Build Summary");
+            ->with('title', "{$this->project->Name} : Build Summary");
     }
 }
