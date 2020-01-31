@@ -823,10 +823,12 @@ export default {
 
   mounted () {
     this.buildid = window.location.pathname.split("/").pop();
+    var endpoint_path = '/api/v1/buildSummary.php?buildid=' + this.buildid;
     this.$axios
-      .get('/api/v1/buildSummary.php?buildid=' + this.buildid)
+      .get(endpoint_path)
       .then(response => {
         this.cdash = response.data;
+        this.cdash.endpoint = this.$baseURL + endpoint_path;
         this.$root.$emit('api-loaded', this.cdash);
         this.cdash.noteStatus = "0";
       })

@@ -7,10 +7,12 @@
 import './bootstrap';
 import BuildSummary from "./components/BuildSummary";
 import PageHeader from "./components/PageHeader";
+import PageFooter from "./components/PageFooter";
 
 const cdash_components = {
   BuildSummary,
-  PageHeader
+  PageHeader,
+  PageFooter
 };
 
 /**

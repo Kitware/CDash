@@ -1,4 +1,3 @@
-
 @extends('master')
 
 @section('page-header')
@@ -7,7 +6,7 @@
 
 @section('content')
 <build-summary></build-summary>
-@include('cdash.footer')
+@include('build.page-footer')
 @endsection
 
 @section('post_content_script')
