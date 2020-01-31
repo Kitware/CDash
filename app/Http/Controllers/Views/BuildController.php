@@ -42,6 +42,6 @@ class BuildController extends ProjectController
             ->with('date', json_encode($this->date))
             ->with('logo', json_encode($this->logo))
             ->with('projectname', json_encode($this->project->Name))
-            ->with('title', 'Build Summary');
+            ->with('title', "{$this->project->Name} - Build Summary");
     }
 }

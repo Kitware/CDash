@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <title>CDash - {{ $title }}</title>
+    <title>{{ $title }}</title>
 
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
