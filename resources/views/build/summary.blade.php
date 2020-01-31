@@ -1,7 +1,7 @@
 @extends('master')
 
 @section('page-header')
-@include('cdash.build-page-header')
+@include('build.page-header')
 @endsection
 
 @section('content')
