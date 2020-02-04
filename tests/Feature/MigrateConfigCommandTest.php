@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 
-class AutoRemoveBuildsCommand extends TestCase
+class MigrateConfigCommandTestCase extends TestCase
 {
     public function setUp()
     {
