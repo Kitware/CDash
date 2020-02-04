@@ -23,6 +23,7 @@ class LdapAuthWithRulesTest extends TestCase
         // ensure that we're using LDAP, overriding whatever may be set in .env
         putenv('CDASH_AUTHENTICATION_PROVIDER=ldap');
         putenv('LDAP_PROVIDER=activedirectory');
+        putenv('APP_URL=http://localhost');
         parent::setUp();
     }
 

@@ -1,3 +1,9 @@
+@php
+use CDash\Config;
+
+$version = Config::getVersion();
+@endphp
+
 @extends('master')
 
 @section('page-header')
@@ -5,7 +11,7 @@
 @endsection
 
 @section('content')
-<build-summary></build-summary>
+<build-configure></build-configure>
 @include('build.page-footer')
 @endsection
 

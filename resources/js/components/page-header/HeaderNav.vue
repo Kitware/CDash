@@ -69,15 +69,15 @@ export default {
 
   computed: {
     previousClass () {
-      return this.previous === null ? 'btn-disabled' : 'btn';
+      return this.previous === null ? 'btn-disabled' : 'btn-enabled';
     },
 
     currentClass () {
-      return this.current === null ? 'btn-disabled' : 'btn';
+      return this.current === null ? 'btn-disabled' : 'btn-enabled';
     },
 
     nextClass () {
-      return this.next === null ? 'btn-disabled' : 'btn';
+      return this.next === null ? 'btn-disabled' : 'btn-enabled';
     }
   },
 
@@ -116,7 +116,7 @@ export default {
     }
 
 
-    .btn {
+    .btn-enabled {
         background: #555;
         border: 1px solid #212121;
         font-size: 11px;

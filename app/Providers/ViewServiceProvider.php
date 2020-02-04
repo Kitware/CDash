@@ -10,7 +10,7 @@ class ViewServiceProvider extends ServiceProvider
     public function boot()
     {
         View::composer(
-            'cdash.build-page-header', 'App\Http\View\Composers\BuildPageHeaderComposer'
+            'build.page-header', 'App\Http\View\Composers\BuildPageHeaderComposer'
         );
     }
 }

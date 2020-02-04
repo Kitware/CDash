@@ -14,7 +14,7 @@ describe('HeaderNav', () => {
 
     const el = component.find(selector);
     expect(el.classes()).not.toContain('btn-disabled');
-    expect(el.classes()).toContain('btn');
+    expect(el.classes()).toContain('btn-enabled');
   };
 
   beforeEach(() => {

@@ -390,7 +390,7 @@ class BuildConfigure
     {
         $config = \CDash\Config::getInstance();
         $id = is_null($default_id) ? $this->BuildId : $default_id;
-        return "{$config->getBaseUrl()}/viewConfigure.php?buildid={$id}";
+        return "{$config->getBaseUrl()}/build/{$id}/configure";
     }
 
     /**
