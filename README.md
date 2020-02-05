@@ -50,7 +50,7 @@ composer install --no-dev --prefer-dist
 npm install
 
 # Generate build files.
-node_modules/.bin/gulp
+npm run production
 
 # Setup default configuration.
 cp .env.example .env

@@ -105,17 +105,7 @@ execute_process(
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-# Run gulp too.
-find_program(GULP
-  NAMES gulp
-  PATHS ${CMAKE_CURRENT_SOURCE_DIR}/node_modules/.bin
-)
-execute_process(
-  COMMAND ${GULP}
-  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-)
-
-# And npm (webpack) again.
+# Run npm build step.
 execute_process(
   COMMAND ${NPM} run dev
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
