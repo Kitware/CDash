@@ -33,6 +33,7 @@
     "laravel-mix": "^4.0.7",
     "ng-file-upload": "^12.0.4",
     "nvd3": "^1.8.5",
+    "replace-in-file-webpack-plugin": "^1.0.6",
     "resolve-url-loader": "^2.3.1",
     "sass": "^1.15.2",
     "sass-loader": "^7.1.0",
@@ -51,7 +52,6 @@
     "mocha": "^5.0.0",
     "mocha-webpack": "^2.0.0-beta.0",
     "moment": "^2.24.0",
-    "protractor": "^5.4.2",
-    "replace-in-file-webpack-plugin": "^1.0.6"
+    "protractor": "^5.4.2"
   }
 }
