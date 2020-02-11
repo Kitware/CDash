@@ -43,7 +43,7 @@ class TestFailureTopicTest extends \CDash\Test\CDashTestCase
         $diff = $this->createNew('testnotrunpositive');
         $this->assertEquals(1, $diff['testnotrunpositive']);
         $build = $this->createMockBuildWithDiff($diff);
-        $this->assertTrue($sut->subscribesToBuild($build));
+        $this->assertFalse($sut->subscribesToBuild($build));
     }
 
     public function testItemHasTopicSubject()
@@ -64,7 +64,7 @@ class TestFailureTopicTest extends \CDash\Test\CDashTestCase
 
         $buildTest->Status = Test::NOTRUN;
 
-        $this->assertTrue($sut->itemHasTopicSubject($build, $test));
+        $this->assertFalse($sut->itemHasTopicSubject($build, $test));
 
         $test->Details = Test::DISABLED;
 
@@ -116,10 +116,11 @@ class TestFailureTopicTest extends \CDash\Test\CDashTestCase
         $sut->setTopicData($build);
 
         $collection = $sut->getTopicCollection();
-        $this->assertEquals(2, $sut->getTopicCount());
+        $this->assertEquals(1, $sut->getTopicCount());
 
         $this->assertTrue($collection->has('Failed'));
-        $this->assertTrue($collection->has('NotRun'));
+        $this->assertFalse($collection->has('NotRun'));
+        $this->assertFalse($collection->has('Passed'));
     }
 
     public function testGetTopicName()
@@ -207,13 +208,13 @@ class TestFailureTopicTest extends \CDash\Test\CDashTestCase
         $test2->AddLabel($labelForTwo);
         $test2->SetBuildTest($buildTestTwo);
 
-        // Create a test that is not run and has a label that we're searching for
+        // Create a test that has failed and has a label that we're searching for
         $labelFor3 = new Label();
         $labelFor3->Text = 'Three';
         $test3 = new Test();
         $test3->Name = 'TestThree';
         $buildTestThree = new BuildTest();
-        $buildTestThree->Status = Test::NOTRUN;
+        $buildTestThree->Status = Test::FAILED;
         $test3->AddLabel($labelFor3);
         $test3->SetBuildTest($buildTestThree);
 
@@ -287,7 +288,7 @@ class TestFailureTopicTest extends \CDash\Test\CDashTestCase
         $collection = $sut->getLabelsFromBuild($build);
 
         $this->assertTrue($collection->has($labelForTwo->Text));
-        $this->assertTrue($collection->has($labelFor3->Text));
+        $this->assertFalse($collection->has($labelFor3->Text));
     }
 
     public function testIsSubscribedToBy()
