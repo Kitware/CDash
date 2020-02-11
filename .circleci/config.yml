@@ -47,11 +47,14 @@ jobs:
             docker exec cdash bash -c "cp /home/kitware/cdash/.circleci/postgres/env /home/kitware/cdash/.env"
             cdash_run_and_submit_pgsql_ctest
       - run:
-          name: Update Docker Image
+          name: Build Docker Image
           command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
               cp docker/cdash.docker Dockerfile
               docker build -t kitware/cdash:latest .
+      - run:
+          name: Publish Docker Image
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
               docker login -u $DOCKER_USER -p $DOCKER_PASS
               docker push kitware/cdash:latest
             fi
