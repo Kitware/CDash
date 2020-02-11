@@ -27,13 +27,13 @@
 		<StartDateTime>Feb 13 10:17 EST</StartDateTime>
 		<StartTestTime>1486999078</StartTestTime>
 		<TestList>
-			<Test>./ThisTestWillNotRun</Test>
+			<Test>./ThisTestFails</Test>
 			<Test>./ThisTestIsDisabled</Test>
 		</TestList>
-		<Test Status="notrun">
-			<Name>ThisTestWillNotRun</Name>
+		<Test Status="failed">
+			<Name>ThisTestFails</Name>
 			<Path>.</Path>
-			<FullName>./ThisTestWillNotRun</FullName>
+			<FullName>./ThisTestFails</FullName>
 			<FullCommandLine></FullCommandLine>
 			<Results>
 				<NamedMeasurement type="text/string" name="Completion Status">
