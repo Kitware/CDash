@@ -168,7 +168,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
             ->createSubproject('MyProductionCode')
             ->createSubproject('MyThirdPartyDependency')
             ->createSubproject('EmptySubproject')
-            ->createTestNotRun('thirdparty', ['MyThirdPartyDependency'])
+            ->createTestFailed('thirdparty', ['MyThirdPartyDependency'])
             ->createTestFailed('experimentalFail1', ['MyExperimentalFeature'])
             ->createTestFailed('experimentalFail2', ['MyExperimentalFeature'])
             ->createTestFailed('experimentalFail3', ['MyExperimentalFeature'])

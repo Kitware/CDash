@@ -49,9 +49,7 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
         $subscribe = false;
         $this->diff = $build->GetDiffWithPreviousBuild();
         if ($this->diff) {
-            $subscribe = $this->diff['TestFailure']['failed']['new'] > 0
-                || $this->diff['TestFailure']['passed']['broken'] > 0
-                || $this->diff['TestFailure']['notrun']['new'] > 0;
+            $subscribe = $this->diff['TestFailure']['failed']['new'] > 0;
         }
 
         return $subscribe;
@@ -126,16 +124,7 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
      */
     public function itemHasTopicSubject(Build $build, $item)
     {
-        if ($item->IsFailed()) {
-            return true;
-        }
-
-        if ($item->IsNotRun()) {
-            if ($item->Details !== Test::DISABLED) {
-                return true;
-            }
-        }
-        return false;
+        return $item->IsFailed();
     }
 
     /**
