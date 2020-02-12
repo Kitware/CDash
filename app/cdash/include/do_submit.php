@@ -34,7 +34,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 require_once 'include/ctestparser.php';
 include_once 'include/common.php';
-include_once 'include/createRSS.php';
 include 'include/sendemail.php';
 
 /**
@@ -140,23 +139,8 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $buildid = null,
         return false;
     }
 
-    if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/submit.php')) {
-        include 'local/submit.php';
-    }
-
-    $scheduleid = 0;
-    if ($submission_id !== 0) {
-        $row = pdo_single_row_query(
-            "SELECT scheduleid from client_jobschedule2submission WHERE submissionid=$submission_id");
-        if (!empty($row)) {
-            $scheduleid = $row[0];
-        }
-    } elseif (isset($_GET['clientscheduleid'])) {
-        $scheduleid = pdo_real_escape_numeric($_GET['clientscheduleid']);
-    }
-
     // Parse the XML file
-    $handler = ctest_parse($filehandle, $projectid, $buildid, $expected_md5, $do_checksum, $scheduleid);
+    $handler = ctest_parse($filehandle, $projectid, $buildid, $expected_md5, $do_checksum);
 
     //this is the md5 checksum fail case
     if ($handler == false) {
@@ -195,11 +179,6 @@ function do_submit($fileHandleOrSubmissionId, $projectid, $buildid = null,
         sendemail($handler, $projectid);
     }
 
-    if ($config->get('CDASH_ENABLE_FEED') && !$config->get('CDASH_BERNARD_SUBMISSION')) {
-        // Create the RSS feed
-        CreateRSSFeed($projectid);
-    }
-
     return $handler;
 }
 
@@ -233,14 +212,6 @@ function do_submit_asynchronous($filehandle, $projectid, $buildid = null,
     }
     fclose($outfile);
     unset($outfile);
-
-    // Sends the file size to the local parser
-    if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/ctestparser.php')) {
-        require_once 'local/ctestparser.php';
-        $localParser = new LocalParser();
-        $filesize = filesize($filename);
-        $localParser->SetFileSize($projectid, $filesize);
-    }
 
     $md5sum = md5_file($filename);
     $md5error = false;
@@ -294,12 +265,6 @@ function do_submit_asynchronous_file($filename, $projectid, $buildid = null,
 
     if ($config->get('CDASH_DAILY_UPDATES') && curl_request($request) === false) {
         return;
-    }
-
-    $clientscheduleid = isset($_GET['clientscheduleid']) ? pdo_real_escape_numeric($_GET['clientscheduleid']) : 0;
-    if ($clientscheduleid !== 0) {
-        pdo_query('INSERT INTO client_jobschedule2submission (scheduleid,submissionid) ' .
-            "VALUES ('$clientscheduleid','$submissionid')");
     }
 
     // Save submitter IP in the database in the async case, so we have a valid
@@ -427,12 +392,6 @@ function post_submit()
         return;
     }
 
-    // Check if we have the CDash@Home scheduleid
-    $scheduleid = 0;
-    if (isset($_POST['clientscheduleid'])) {
-        $scheduleid = pdo_real_escape_numeric($_POST['clientscheduleid']);
-    }
-
     // Add the build
     $build = new Build();
 
@@ -470,7 +429,7 @@ function post_submit()
 
     // If not, add a new one.
     if ($buildid === 0) {
-        $buildid = add_build($build, $scheduleid);
+        $buildid = add_build($build);
     }
 
     // Returns the OK submission

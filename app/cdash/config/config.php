@@ -22,8 +22,11 @@
 
 // This file is 'config.php', in the directory 'config', in the root.
 // Therefore, the root of the CDash source tree on the web server is:
-@include_once dirname(__DIR__) . '/vendor/autoload.php';
-include_once dirname(__FILE__) . '/../bootstrap/cdash_autoload.php';
+
+if (!isset($ONLY_LOAD_DEFAULTS)) {
+    @include_once dirname(__DIR__) . '/vendor/autoload.php';
+    include_once dirname(__FILE__) . '/../bootstrap/cdash_autoload.php';
+}
 
 $CDASH_ROOT_DIR = str_replace('\\', '/', dirname(dirname(__FILE__)));
 set_include_path(get_include_path() . PATH_SEPARATOR . $CDASH_ROOT_DIR);
@@ -138,8 +141,6 @@ $CDASH_SERVER_PORT = '';
 $CDASH_CURL_REQUEST_LOCALHOST = '1';
 $CDASH_CURL_LOCALHOST_PREFIX = '';
 $CDASH_BASE_URL = '';
-// Define the location of the local directory
-$CDASH_USE_LOCAL_DIRECTORY = '0';
 // CSS file
 $CDASH_CSS_FILE = 'css/cdash.css';
 // Must be writable by the web server
@@ -196,9 +197,6 @@ $CDASH_DEFAULT_GOOGLE_ANALYTICS = '';
 // How long since the last submission before considering a project inactive.
 // Set to 0 to always show all projects on viewProjects.php.
 $CDASH_ACTIVE_PROJECT_DAYS = '7'; // a week
-// Use CDash to manage build submissions
-// This feature is currently experimental
-$CDASH_MANAGE_CLIENTS = '0';
 // Define the git command
 $CDASH_GIT_COMMAND = 'git';
 // The default git directory where the bare repositories should be created
@@ -226,10 +224,6 @@ $CDASH_LARGE_TEXT_LIMIT = '0';
 // the base URL for a self-hosted instance.
 //    'domain'            => 'https://my.gitlab.example'
 $OAUTH2_PROVIDERS = [];
-
-// Should we use CDash's feed feature?  Disabling this feature can improve
-// submission processing time.
-$CDASH_ENABLE_FEED = 1;
 
 // Should we show the last submission for a project or subproject?
 // Disabling this feature can improve rendering performance of index.php
@@ -319,7 +313,9 @@ $CDASH_WEBHOOK_SECRET = null;
 $CDASH_DEFAULT_PROJECT = '';
 
 /* DO NOT EDIT AFTER THIS LINE */
-$localConfig = dirname(__FILE__) . '/config.local.php';
-if ((strpos(__FILE__, 'config.local.php') === false) && file_exists($localConfig)) {
-    include $localConfig;
+if (!isset($ONLY_LOAD_DEFAULTS)) {
+    $localConfig = dirname(__FILE__) . '/config.local.php';
+    if ((strpos(__FILE__, 'config.local.php') === false) && file_exists($localConfig)) {
+        include $localConfig;
+    }
 }

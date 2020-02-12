@@ -5,11 +5,6 @@
    <xsl:include href="headscripts.xsl"/>
    <xsl:include href="headeradminproject.xsl"/>
 
-   <!-- Include local common files -->
-   <xsl:include href="local/footer.xsl"/>
-   <xsl:include href="local/headscripts.xsl"/>
-   <xsl:include href="local/headeradminproject.xsl"/>
-
    <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
 
@@ -218,7 +213,7 @@
                 <select name="emailtype">
                  <option value="0"><xsl:if test="emailtype=0"><xsl:attribute name="selected"></xsl:attribute></xsl:if>No email</option>
                  <option value="1"><xsl:if test="emailtype=1"><xsl:attribute name="selected"></xsl:attribute></xsl:if>Email checkins</option>
-                 <option value="2"><xsl:if test="emailtype=2"><xsl:attribute name="selected"></xsl:attribute></xsl:if>Email nighlty</option>
+                 <option value="2"><xsl:if test="emailtype=2"><xsl:attribute name="selected"></xsl:attribute></xsl:if>Email nightly</option>
                  <option value="3"><xsl:if test="emailtype=3"><xsl:attribute name="selected"></xsl:attribute></xsl:if>All emails</option>
                </select>
                 </td>

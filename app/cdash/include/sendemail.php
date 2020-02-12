@@ -170,7 +170,7 @@ function get_email_summary($buildid, $errors, $errorkey, $maxitems, $maxchars, $
         // If this is false pdo_execute called in BuildConfigure will
         // have already logged the error.
         if (is_object($configure)) {
-            $information .= "Status: {$configure->status} ({$serverURI}/viewConfigure.php?buildid={$buildid})\n";
+            $information .= "Status: {$configure->status} ({$serverURI}/build/{$buildid})\n/configure";
             $information .= 'Output: ';
             $information .= substr($configure->log, 0, $maxchars);
             $information .= "\n";
@@ -442,7 +442,7 @@ function generate_broken_build_message($emailtext, $Build, $Project)
     $body = 'Details on the submission can be found at ';
 
     $body .= $serverURI;
-    $body .= '/buildSummary.php?buildid=' . $Build->Id;
+    $body .= "/build/{$Build->Id}";
     $body .= "\n\n";
 
     $body .= 'Project: ' . $Project->Name . "\n";
@@ -598,12 +598,6 @@ function sendemail(ActionableBuildInterface $handler, $projectid)
     $Project = new Project();
     $Project->Id = $projectid;
     $Project->Fill();
-
-    /*
-    if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/sendemail.php')) {
-        // TODO: refactor this, probably into some sort of notification builder interface
-    }
-    */
 
     // If we shouldn't send any emails we stop
     if ($Project->EmailBrokenSubmission == 0) {

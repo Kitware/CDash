@@ -11,6 +11,7 @@
 |
 */
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -33,6 +34,18 @@ Route::get('ping', function (Response $response) {
 });
 
 Route::get('/image/{image}', 'ImageController@image');
+
+Route::get('/build/{id}', 'Views\BuildController@summary');
+Route::get('/buildSummary.php', function (Request $request) {
+    $buildid = $request->query('buildid');
+    return redirect("/build/{$buildid}");
+});
+
+Route::get('/build/{id}/configure', 'Views\BuildController@configure');
+Route::get('/viewConfigure.php', function (Request $request) {
+    $buildid = $request->query('buildid');
+    return redirect("/build/{$buildid}/configure");
+});
 
 // this *MUST* be the last route in the file
 Route::any('{url}', 'CDash')->where('url', '.*');

@@ -87,32 +87,10 @@ function xslt_free($xsltproc)
 }
 
 
-/** Do the XSLT translation and look in the local directory if the file
- *  doesn't exist */
-function generate_XSLT($xml, $pageName, $only_in_local = false)
+/** Do the XSLT translation **/
+function generate_XSLT($xml, $pageName)
 {
-    // For common xsl pages not referenced directly
-    // i.e. header, headerback, etc...
-    // look if they are in the local directory, and set
-    // an XML value accordingly
     $config = Config::getInstance();
-    if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && !$only_in_local) {
-        $pos = strpos($xml, '</cdash>'); // this should be the last
-        if ($pos !== false) {
-            $xml = substr($xml, 0, $pos);
-            $xml .= '<uselocaldirectory>1</uselocaldirectory>';
-
-            // look at the local directory if we have the same php file
-            // and add the xml if needed
-            $localphpfile = 'local/' . $pageName . '.php';
-            if (file_exists($localphpfile)) {
-                include_once $localphpfile;
-                $xml .= getLocalXML();
-            }
-
-            $xml .= '</cdash>'; // finish the xml
-        }
-    }
 
     $xh = xslt_create();
 
@@ -129,11 +107,6 @@ function generate_XSLT($xml, $pageName, $only_in_local = false)
         unset($inF);
     }
     $xslpage = $pageName . '.xsl';
-
-    // Check if the page exists in the local directory
-    if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/' . $xslpage)) {
-        $xslpage = 'local/' . $xslpage;
-    }
 
     $html = xslt_process($xh, 'arg:/_xml', $xslpage, null, $arguments);
 
@@ -160,14 +133,6 @@ function XMLStrFormat($str)
     $str = preg_replace('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', '', $str);
 
     return $str;
-}
-
-/** Redirect to the error page */
-function redirect_error($text = '')
-{
-    $redirectUrl = get_server_URI() . '/error.php';
-    \session(['cdash_error' => $text]);
-    return redirect($redirectUrl);
 }
 
 function time_difference($duration, $compact = false, $suffix = '', $displayms = false)
@@ -1335,33 +1300,6 @@ function make_cdash_url($url)
     return $cdash_url;
 }
 
-// Return the email of a given author within a given project.
-function get_author_email($projectname, $author)
-{
-    /** @var Database $db */
-    $db = Database::getInstance();
-    $projectid = get_project_id($projectname);
-    if ($projectid == -1) {
-        return 'unknownProject';
-    }
-
-    $stmt = $db->prepare("
-        SELECT email FROM user WHERE id IN (
-          SELECT up.userid FROM user2project AS up, user2repository AS ur
-           WHERE ur.userid=up.userid
-           AND up.projectid=:projectid
-           AND ur.credential=:author
-           AND (ur.projectid=0 OR ur.projectid=:projectid)
-           LIMIT 1
-    ");
-
-    $stmt->bindParam(':projectid', $projectid);
-    $stmt->bindParam(':author', $author);
-    $db->execute($stmt);
-
-    return $stmt ? $stmt->fetchColumn() : '';
-}
-
 /** Get the previous build id dynamicanalysis*/
 function get_previous_buildid_dynamicanalysis($projectid, $siteid, $buildtype, $buildname, $starttime)
 {
@@ -1483,13 +1421,6 @@ function get_cdash_dashboard_xml($projectname, $date)
         $xml .= '<home>' . make_cdash_url(htmlentities($project_array['homeurl'])) . '</home>';
     }
 
-    if ($config->get('CDASH_USE_LOCAL_DIRECTORY') &&
-        file_exists('local/models/proProject.php')) {
-        include_once 'local/models/proProject.php';
-        $pro = new proProject;
-        $pro->ProjectId = $projectid;
-        $xml .= '<proedition>' . $pro->GetEdition(1) . '</proedition>';
-    }
     $xml .= '</dashboard>';
 
     $userid = Auth::id();
@@ -1730,17 +1661,21 @@ function web_api_authenticate($projectid, $token)
     return pdo_num_rows($result) != 0;
 }
 
+// Check if user has specified a preference for color scheme.
+function get_css_file()
+{
+    if (array_key_exists('colorblind', $_COOKIE) && $_COOKIE['colorblind'] == 1) {
+        return 'css/colorblind.css';
+    }
+    return 'css/cdash.css';
+}
+
 function begin_XML_for_XSLT()
 {
     $config = CDash\Config::getInstance();
     $css_file = 'css/cdash.css';
 
-    // check if user has specified a preference for color scheme
-    if (array_key_exists('colorblind', $_COOKIE)) {
-        if ($_COOKIE['colorblind'] == 1) {
-            $css_file = 'css/colorblind.css';
-        }
-    }
+    $css_file = get_css_file();
     $config->set('CDASH_CSS_FILE', $css_file);
 
     $xml = '<?xml version="1.0" encoding="UTF-8"?><cdash>';
@@ -1775,7 +1710,6 @@ function begin_JSON_response()
 
     $response = array();
     $response['version'] = $config->get('CDASH_VERSION');
-    $response['feed_enabled'] = $config->get('CDASH_ENABLE_FEED') === 1;
 
     $user_response = array();
     $userid = Auth::id();
@@ -1787,20 +1721,6 @@ function begin_JSON_response()
     }
     $user_response['id'] = $userid;
     $response['user'] = $user_response;
-
-    // Check for local overrides of common view partials.
-    $files_to_check = array('header', 'footer');
-
-    $use_local = config('cdash.allow.local_directory');
-    $root_dir = config('cdash.directory');
-
-    foreach ($files_to_check as $file_to_check) {
-        $local_file = "local/views/{$file_to_check}.html";
-
-        if ($use_local && file_exists("{$root_dir}/public/{$local_file}")) {
-            $response[$file_to_check] = $local_file;
-        }
-    }
     return $response;
 }
 
@@ -1849,13 +1769,6 @@ function get_dashboard_JSON($projectname, $date, &$response)
         $response['home'] = 'index.php?project=' . urlencode($project_array['name']);
     } else {
         $response['home'] = make_cdash_url(htmlentities($project_array['homeurl']));
-    }
-
-    if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/models/proProject.php')) {
-        include_once 'local/models/proProject.php';
-        $pro = new proProject;
-        $pro->ProjectId = $project->Id;
-        $response['proedition'] = $pro->GetEdition(1);
     }
 
     $userid = Auth::id();
@@ -1928,19 +1841,10 @@ function DeleteDirectory($dirName)
 
 function load_view($viewName, $login=true)
 {
-    $config = Config::getInstance();
-
     if ($login) {
         angular_login();
     }
-
-    if ($config->get('CDASH_USE_LOCAL_DIRECTORY') &&
-        file_exists("build/local/views/$viewName.html")
-    ) {
-        readfile("build/local/views/$viewName.html");
-    } else {
-        readfile("build/views/$viewName.html");
-    }
+    readfile("build/views/$viewName.html");
 }
 
 function angular_login()

@@ -39,7 +39,7 @@ if ($build->SubProjectId > 0) {
 
 // Get details about previous builds.
 // Currently just grabbing the info used for the graphs and charts
-// on buildSummary.php.
+// on /build/.
 $pdo = get_link_identifier()->getPdo();
 $stmt = $pdo->prepare(
     "SELECT b.id, nfiles, configureerrors, configurewarnings,

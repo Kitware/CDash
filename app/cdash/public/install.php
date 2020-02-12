@@ -107,13 +107,6 @@ if (!is_writable($config->get('CDASH_UPLOAD_DIRECTORY'))) {
     $xml .= '<uploadwritable>1</uploadwritable>';
 }
 
-// check if the rss directory is writable
-if (!is_writable('rss')) {
-    $xml .= '<rsswritable>0</rsswritable>';
-} else {
-    $xml .= '<rsswritable>1</rsswritable>';
-}
-
 try {
     $installed = pdo_query('SELECT id FROM ' . qid('user') . ' LIMIT 1');
     $installed = is_object($installed) ? 1 : (int) $installed;
@@ -205,14 +198,6 @@ if (!$installed) {
             if ($db_created) {
                 $sqlfile = $config->get('CDASH_ROOT_DIR') . "/sql/$db_type/cdash.sql";
                 _processSQLfile($sqlfile);
-
-                // If we have a local directory we process the sql in that directory
-                if ($config->get('CDASH_USE_LOCAL_DIRECTORY')) {
-                    $sqlfile = $config->get('CDASH_ROOT_DIR') . "/local/sql/$db_type/cdash.sql";
-                    if (file_exists($sqlfile)) {
-                        _processSQLfile($sqlfile);
-                    }
-                }
 
                 // If we are with PostGreSQL we need to add some extra functions
                 if ($db_type == 'pgsql') {

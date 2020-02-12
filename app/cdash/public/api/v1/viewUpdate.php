@@ -18,9 +18,9 @@ require_once 'include/pdo.php';
 require_once 'include/common.php';
 require_once 'include/api_common.php';
 require_once 'include/repository.php';
-require_once 'include/bugurl.php';
 
 use CDash\Model\BuildUpdate;
+use CDash\Database;
 use CDash\Model\Project;
 use CDash\Model\Site;
 
@@ -30,6 +30,7 @@ if (is_null($build)) {
     return;
 }
 
+$db = Database::getInstance();
 
 $project = new Project();
 $project->Id = $build->ProjectId;
@@ -120,10 +121,22 @@ foreach ($update->GetFiles() as $update_file) {
     $file['author'] = $update_file->Author;
     $file['status'] = $update_file->Status;
 
-    // Only display email if the user is logged in
-    if (isset($_SESSION['cdash'])) {
+    // Only display email if the user is logged in.
+    if (Auth::check()) {
         if ($update_file->Email == '') {
-            $file['email'] = get_author_email($project->Name, $file['author']);
+            // Try to find author email from repository credentials.
+            $stmt = $db->prepare("
+                SELECT email FROM user WHERE id IN (
+                  SELECT up.userid FROM user2project AS up, user2repository AS ur
+                   WHERE ur.userid=up.userid
+                   AND up.projectid=:projectid
+                   AND ur.credential=:author
+                   AND (ur.projectid=0 OR ur.projectid=:projectid) )
+                   LIMIT 1");
+            $stmt->bindParam(':projectid', $project->Id);
+            $stmt->bindParam(':author', $file['author']);
+            $db->execute($stmt);
+            $file['email'] = $stmt ? $stmt->fetchColumn() : '';
         } else {
             $file['email'] = $update_file->Email;
         }
@@ -209,18 +222,10 @@ foreach ($updatearray as $file) {
 
     $file['log'] = $log;
     $file['filename'] = $filename;
-    $file['bugurl'] = '';
     $file['bugid'] = '0';
     $file['bugpos'] = '0';
     // This field is redundant because of the way our data is organized.
     unset($file['status']);
-
-    $bug = get_bug_from_log($log, $baseurl);
-    if ($bug !== false) {
-        $file['bugurl'] = $bug[0];
-        $file['bugid'] = $bug[1];
-        $file['bugpos'] = $bug[2];
-    }
 
     if ($status == 'UPDATED') {
         $diff_url = get_diff_url($project->Id, $project->CvsUrl, $directory, $filename, $revision);

@@ -4,10 +4,6 @@
    <xsl:include href="header.xsl"/>
    <xsl:include href="footer.xsl"/>
 
-   <!-- Local includes -->
-   <xsl:include href="local/footer.xsl"/>
-   <xsl:include href="local/header.xsl"/>
-
    <xsl:output method="xml" indent="yes"  doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
     <xsl:template match="/">
@@ -36,7 +32,7 @@
 
 <br/>
 <b>Site: </b><xsl:value-of select="/cdash/sitename" /><br/>
-<b>Build name: </b><a><xsl:attribute name="href">buildSummary.php?buildid=<xsl:value-of select="/cdash/buildid" /></xsl:attribute><xsl:value-of select="/cdash/buildname" /></a><br/>
+<b>Build name: </b><a><xsl:attribute name="href">build/<xsl:value-of select="/cdash/buildid" /></xsl:attribute><xsl:value-of select="/cdash/buildname" /></a><br/>
 <b>Build start time: </b><xsl:value-of select="/cdash/buildstarttime" /><br/>
 
 <h3>URLs or Files submitted with this build</h3>

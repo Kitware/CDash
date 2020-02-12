@@ -50,15 +50,15 @@ $next_buildid = $build->GetNextBuildId();
 $current_buildid = $build->GetCurrentBuildId();
 
 if ($previous_buildid > 0) {
-    $menu_response['previous'] = "viewConfigure.php?buildid=$previous_buildid";
+    $menu_response['previous'] = "/build/$previous_buildid/configure";
 } else {
     $menu_response['previous'] = false;
 }
 
-$menu_response['current'] = "viewConfigure.php?buildid=$current_buildid";
+$menu_response['current'] = "/build/$current_buildid/configure";
 
 if ($next_buildid > 0) {
-    $menu_response['next'] = "viewConfigure.php?buildid=$next_buildid";
+    $menu_response['next'] = "/build/$next_buildid/configure";
 } else {
     $menu_response['next'] = false;
 }

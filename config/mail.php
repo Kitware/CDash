@@ -56,8 +56,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', config('cdash.deprecated.EMAIL_FROM')),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
+        'address' => env('MAIL_FROM_ADDRESS', 'admin@cdash.org'),
+        'name' => env('MAIL_FROM_NAME', 'CDash'),
     ],
 
     /*

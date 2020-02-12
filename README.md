@@ -50,11 +50,17 @@ composer install --no-dev --prefer-dist
 npm install
 
 # Generate build files.
-node_modules/.bin/gulp
-php artisan key:generate
+npm run production
 
 # Setup default configuration.
 cp .env.example .env
+
+# Generate application key.
+php artisan key:generate
+
+# Migrate your config settings if you're upgrading an existing CDash instance.
+php artisan config:migrate
+
 ```
 #### Further reading
 [CDash Docker README](docker/docker.md)

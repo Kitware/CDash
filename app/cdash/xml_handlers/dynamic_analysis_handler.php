@@ -53,9 +53,9 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
     private $TestSubProjectName;
 
     /** Constructor */
-    public function __construct($projectID, $scheduleID)
+    public function __construct($projectID)
     {
-        parent::__construct($projectID, $scheduleID);
+        parent::__construct($projectID);
         $this->Builds = [];
         $this->SubProjects = [];
         $this->DynamicAnalysisSummaries = [];
@@ -284,7 +284,7 @@ class DynamicAnalysisHandler extends AbstractHandler implements ActionableBuildI
         // If the build doesn't exist we add it
         if ($build->Id == 0) {
             $build->InsertErrors = false;
-            add_build($build, $this->scheduleid);
+            add_build($build);
         } else {
             // Otherwise make sure that the build is up-to-date.
             $build->UpdateBuild($build->Id, -1, -1);

@@ -16,7 +16,6 @@ use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildInformation;
 use CDash\Model\BuildTest;
-use CDash\Model\Feed;
 use CDash\Model\Image;
 use CDash\Model\Label;
 use CDash\Model\Project;
@@ -60,12 +59,10 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
     private $NumberTestsNotRun;
     private $NumberTestsPassed;
 
-    private $Feed;
-
     /** Constructor */
-    public function __construct($projectID, $scheduleID)
+    public function __construct($projectID)
     {
-        parent::__construct($projectID, $scheduleID);
+        parent::__construct($projectID);
         $this->Builds = [];
         $this->SubProjects = [];
         $this->NumberTestsFailed = [];
@@ -278,11 +275,6 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
                 $build->SaveTotalTestsTime();
 
                 $config = \CDash\Config::getInstance();
-                if ($config->get('CDASH_ENABLE_FEED')) {
-                    // Insert the build into the feed
-                    $this->Feed = $factory->create(Feed::class);
-                    $this->Feed->InsertTest($this->projectid, $build->Id);
-                }
             }
         }
     }
@@ -391,7 +383,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
         if ($build->Id == 0) {
             $build->Append = $this->Append;
             $build->InsertErrors = false;
-            add_build($build, $this->scheduleid);
+            add_build($build);
         } else {
             // Otherwise make sure that the build is up-to-date.
             $build->UpdateBuild($build->Id, -1, -1);

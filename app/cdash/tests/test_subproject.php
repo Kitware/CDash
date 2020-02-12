@@ -36,6 +36,7 @@ class SubProjectTestCase extends KWWebTestCase
 
     public function testSubmissionProjectDependencies()
     {
+        $this->deleteLog($this->logfilename);
         $rep = dirname(__FILE__) . '/data/SubProjectExample';
         $file = "$rep/Project_1.xml";
         if (!$this->submission('SubProjectExample', $file)) {
@@ -60,7 +61,7 @@ class SubProjectTestCase extends KWWebTestCase
             'simpletest@localhost',
             'FAILED (w=21): SubProjectExample/NOX - Linux-GCC-4.1.2-SERIAL_RELEASE - Nightly' ,
             'A submission to CDash for the project SubProjectExample has warnings.',
-            "Details on the submission can be found at {$url}/buildSummary.php?buildid=",
+            "Details on the submission can be found at {$url}/build/",
             'Project: SubProjectExample',
             'SubProject: NOX',
             'Site: godel.sandia.gov',
@@ -102,7 +103,7 @@ class SubProjectTestCase extends KWWebTestCase
             'nox-noemail@noemail',
             'FAILED (t=1): SubProjectExample/NOX - Linux-GCC-4.1.2-SERIAL_RELEASE - Nightly',
             'A submission to CDash for the project SubProjectExample has failing tests',
-            "Details on the submission can be found at {$url}/buildSummary.php?buildid=",
+            "Details on the submission can be found at {$url}/build/",
             'Project: SubProjectExample',
             'SubProject: NOX',
             'Site: godel.sandia.gov',
@@ -116,7 +117,7 @@ class SubProjectTestCase extends KWWebTestCase
             'simpletest@localhost',
             'FAILED (t=1): SubProjectExample/NOX - Linux-GCC-4.1.2-SERIAL_RELEASE - Nightly',
             'A submission to CDash for the project SubProjectExample has failing tests',
-            "Details on the submission can be found at {$url}/buildSummary.php?buildid=",
+            "Details on the submission can be found at {$url}/build/",
             'Project: SubProjectExample',
             'SubProject: NOX',
             'Site: godel.sandia.gov',

@@ -262,18 +262,12 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
 
 /** Main function to parse the incoming xml from ctest */
 function ctest_parse($filehandler, $projectid, $buildid = null,
-                     $expected_md5 = '', $do_checksum = true, $scheduleid = 0)
+                     $expected_md5 = '', $do_checksum = true)
 {
     require_once 'include/common.php';
     include 'include/version.php';
 
     $config = Config::getInstance();
-    if ($config->get("CDASH_USE_LOCAL_DIRECTORY") && file_exists('local/ctestparser.php')) {
-        require_once 'local/ctestparser.php';
-        $localParser = new LocalParser();
-        $localParser->SetProjectId($projectid);
-        $localParser->BufferSizeMB = 8192 / (1024 * 1024);
-    }
 
     // Check if this is a new style PUT submission.
     try {
@@ -294,48 +288,48 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
     if (preg_match('/<Update/', $content)) {
         // Should be first otherwise confused with Build
 
-        $handler = new UpdateHandler($projectid, $scheduleid);
+        $handler = new UpdateHandler($projectid);
         $file = 'Update';
     } elseif (preg_match('/<Build/', $content)) {
-        $handler = new BuildHandler($projectid, $scheduleid);
+        $handler = new BuildHandler($projectid);
         $file = 'Build';
     } elseif (preg_match('/<Configure/', $content)) {
-        $handler = new ConfigureHandler($projectid, $scheduleid);
+        $handler = new ConfigureHandler($projectid);
         $file = 'Configure';
     } elseif (preg_match('/<Testing/', $content)) {
-        $handler = new TestingHandler($projectid, $scheduleid);
+        $handler = new TestingHandler($projectid);
         $file = 'Test';
     } elseif (preg_match('/<CoverageLog/', $content)) {
         // Should be before coverage
 
-        $handler = new CoverageLogHandler($projectid, $scheduleid);
+        $handler = new CoverageLogHandler($projectid);
         $file = 'CoverageLog';
     } elseif (preg_match('/<Coverage/', $content)) {
-        $handler = new CoverageHandler($projectid, $scheduleid);
+        $handler = new CoverageHandler($projectid);
         $file = 'Coverage';
     } elseif (preg_match('/<report/', $content)) {
-        $handler = new CoverageJUnitHandler($projectid, $scheduleid);
+        $handler = new CoverageJUnitHandler($projectid);
         $file = 'Coverage';
     } elseif (preg_match('/<Notes/', $content)) {
-        $handler = new NoteHandler($projectid, $scheduleid);
+        $handler = new NoteHandler($projectid);
         $file = 'Notes';
     } elseif (preg_match('/<DynamicAnalysis/', $content)) {
-        $handler = new DynamicAnalysisHandler($projectid, $scheduleid);
+        $handler = new DynamicAnalysisHandler($projectid);
         $file = 'DynamicAnalysis';
     } elseif (preg_match('/<Project/', $content)) {
-        $handler = new ProjectHandler($projectid, $scheduleid);
+        $handler = new ProjectHandler($projectid);
         $file = 'Project';
     } elseif (preg_match('/<Upload/', $content)) {
-        $handler = new UploadHandler($projectid, $scheduleid);
+        $handler = new UploadHandler($projectid);
         $file = 'Upload';
     } elseif (preg_match('/<test-results/', $content)) {
-        $handler = new TestingNUnitHandler($projectid, $scheduleid);
+        $handler = new TestingNUnitHandler($projectid);
         $file = 'Test';
     } elseif (preg_match('/<testsuite/', $content)) {
-        $handler = new TestingJUnitHandler($projectid, $scheduleid);
+        $handler = new TestingJUnitHandler($projectid);
         $file = 'Test';
     } elseif (preg_match('/<Done/', $content)) {
-        $handler = new DoneHandler($projectid, $scheduleid);
+        $handler = new DoneHandler($projectid);
         $file = 'Done';
     }
 
@@ -437,15 +431,6 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
     }
 
     $parsingerror = '';
-    if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/ctestparser.php')) {
-        $parsingerror = $localParser->StartParsing();
-        if ($parsingerror != '') {
-            $statusarray['status'] = 'ERROR';
-            $statusarray['message'] = $parsingerror;
-            displayReturnStatus($statusarray);
-            exit();
-        }
-    }
     if (!$parseHandle = fopen($filename, 'r')) {
         $statusarray['status'] = 'ERROR';
         $statusarray['message'] = "ERROR: Cannot open file ($filename)";
@@ -458,15 +443,6 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
     $content = fread($parseHandle, 8192);
     while (!feof($parseHandle)) {
         $content = fread($parseHandle, 8192);
-        if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/ctestparser.php')) {
-            $parsingerror = $localParser->ParseFile();
-            if ($parsingerror != '') {
-                $statusarray['status'] = 'ERROR';
-                $statusarray['message'] = $parsingerror;
-                displayReturnStatus($statusarray);
-                exit();
-            }
-        }
         xml_parse($parser, $content, false);
     }
     xml_parse($parser, null, true);
@@ -474,10 +450,6 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
     unset($parser);
     fclose($parseHandle);
     unset($parseHandle);
-
-    if ($config->get('CDASH_USE_LOCAL_DIRECTORY') && file_exists('local/ctestparser.php')) {
-        $parsingerror = $localParser->EndParsingFile();
-    }
 
     $requeued = false;
     if ($handler instanceof DoneHandler && $handler->shouldRequeue()) {

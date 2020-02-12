@@ -8,7 +8,7 @@
     <div id="headerbottom">
         <div id="headerlogo">
             <a href="">
-                <img id="projectlogo" border="0" height="50px" alt="" src="img/cdash.png" />
+                <img id="projectlogo" border="0" height="50px" alt="" src="{{ asset('img/cdash.png') }}" />
             </a>
         </div>
         <div id="headername2">

@@ -81,7 +81,7 @@ class UpdateUseCase extends UseCase
         $status->appendChild(new \DOMText($text));
 
         $xml_str = $xml->saveXML($xml);
-        $handler = new \UpdateHandler($this->projectId, $this->scheduleId);
+        $handler = new \UpdateHandler($this->projectId);
         return $this->getXmlHandler($handler, $xml_str);
     }
 

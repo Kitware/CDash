@@ -60,14 +60,6 @@
                 <span ng-show="showfilters != 0">Hide Filters</span>
               </a>
             </li>
-            <li ng-if="::cdash.feed_enabled">
-              <a href="" ng-click="toggleFeed()" ng-show="!showFeed">
-                Show Feed
-              </a>
-              <a href="" ng-click="toggleFeed()" ng-show="showFeed">
-                Hide Feed
-              </a>
-            </li>
             <li>
               <a href="http://public.kitware.com/Wiki/CDash:Documentation" class="helptrigger" target="_blank">
                 Help
@@ -84,8 +76,6 @@
         <!-- Filters -->
         <ng-include src="'build/views/partials/filterdataTemplate_@@version.html'"></ng-include>
       </div> <!-- End index-top -->
-
-      <div ng-show="showFeed" id="feed" ng-include="::'ajax/getfeed.php?projectid='+ cdash.projectid"></div>
 
       <!-- Timeline chart -->
       <div class="container"

@@ -58,7 +58,7 @@ class ConfigUseCase extends UseCase
         $endTestTime->appendChild(new DOMText($this->endTime));
 
         $xml_str = $xml->saveXML($xml);
-        $handler = new ConfigureHandler($this->projectId, $this->scheduleId);
+        $handler = new ConfigureHandler($this->projectId);
         return $this->getXmlHandler($handler, $xml_str);
     }
 }

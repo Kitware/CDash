@@ -5,7 +5,7 @@
   </a>
   <span class="buildnums" align="right">{{::buildgroup.numbuildslabel}}</span>
   <a class="grouplink"
-     ng-href="viewBuildGroup.php?project={{::cdash.projectname}}&buildgroup={{::buildgroup.linkname}}&date={{::cdash.date}}&{{::cdash.filterurl}}">[view timeline]</a>
+     ng-href="viewBuildGroup.php?project={{::cdash.projectname_encoded}}&buildgroup={{::buildgroup.linkname}}&date={{::cdash.date}}&{{::cdash.filterurl}}">[view timeline]</a>
 </h3>
 <table border="0" cellpadding="4" cellspacing="0" width="100%" class="tabb" id="project_{{::cdash.projectid}}_{{::buildgroup.id}}">
   <thead>

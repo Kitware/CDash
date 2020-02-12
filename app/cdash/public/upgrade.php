@@ -893,12 +893,6 @@ if ($Upgrade) {
         $xml .= '<uploadwritable>1</uploadwritable>';
     }
 
-    // check if the rss directory is writable
-    if ($config->get('CDASH_ENABLE_FEED') > 0 && !is_writable('rss')) {
-        $xml .= '<rsswritable>0</rsswritable>';
-    } else {
-        $xml .= '<rsswritable>1</rsswritable>';
-    }
     $xml .= '<upgrade>1</upgrade>';
 }
 

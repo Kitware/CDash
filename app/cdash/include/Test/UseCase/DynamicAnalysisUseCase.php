@@ -77,7 +77,7 @@ class DynamicAnalysisUseCase extends UseCase
         $this->createElapsedMinutesElement($analysis);
 
         $xml_str = $xml->saveXML($xml);
-        $handler = new DynamicAnalysisHandler($this->projectId, $this->scheduleId);
+        $handler = new DynamicAnalysisHandler($this->projectId);
         return $this->getXmlHandler($handler, $xml_str);
     }
 

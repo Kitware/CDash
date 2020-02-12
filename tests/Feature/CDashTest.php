@@ -58,14 +58,27 @@ class CDashTest extends TestCase
 
     public function testCDashBasicRequest()
     {
+        config(['app.url' => 'http://localhost']);
         $this->get('/viewProjects.php')
             ->assertStatus(200);
     }
 
     public function testCDashReturnsNotFoundGivenPathDoesNotExist()
     {
+        config(['app.url' => 'http://localhost']);
         $this->get('/nope-not-a-uri')
             ->assertStatus(404);
+    }
+
+    public function testRedirects()
+    {
+        config(['app.url' => 'http://localhost']);
+
+        $response = $this->call('GET', '/buildSummary.php', ['buildid' => '2']);
+        $response->assertRedirect('/build/2');
+
+        $response = $this->call('GET', '/viewConfigure.php', ['buildid' => '5']);
+        $response->assertRedirect('/build/5/configure');
     }
 
     public function testGetController()

@@ -66,20 +66,30 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
 
         $pages = ['buildSummary', 'viewBuildError', 'viewConfigure',
                   'viewNotes', 'viewUpdate'];
+        $vue_pages = ['buildSummary', 'viewConfigure'];
         foreach ($pages as $page) {
+            if (in_array($page, $vue_pages)) {
+                $path_to_first = "build/{$first_buildid}";
+                $path_to_second = "build/{$second_buildid}";
+                $path_to_third = "build/{$third_buildid}";
+            } else {
+                $path_to_first = "buildid={$first_buildid}";
+                $path_to_second = "buildid={$second_buildid}";
+                $path_to_third = "buildid={$third_buildid}";
+            }
             $this->get($this->url . "/api/v1/$page.php?buildid=" . $first_buildid);
             $content = $this->getBrowser()->getContent();
             $jsonobj = json_decode($content, true);
 
             // Verify 'Next' from build #1 points to build #2
-            if (strpos($jsonobj['menu']['next'], "buildid=$second_buildid") === false) {
+            if (strpos($jsonobj['menu']['next'], $path_to_second) === false) {
                 $error_msg = "Expected 'Next' link not found on $page for $first_buildid";
                 $success = false;
                 break;
             }
 
             // Verify 'Current' from build #1 points to build #3
-            if (strpos($jsonobj['menu']['current'], "buildid=$third_buildid") === false) {
+            if (strpos($jsonobj['menu']['current'], $path_to_third) === false) {
                 $error_msg = "Expected 'Current' link not found on $page for $first_buildid";
                 $success = false;
                 break;
@@ -90,21 +100,21 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
             $jsonobj = json_decode($content, true);
 
             // Verify 'Previous' from build #2 points to build #1
-            if (strpos($jsonobj['menu']['previous'], "buildid=$first_buildid") === false) {
+            if (strpos($jsonobj['menu']['previous'], $path_to_first) === false) {
                 $error_msg = "Expected 'Previous' link not found on $page for $second_buildid";
                 $success = false;
                 break;
             }
 
             // Verify 'Next' from build #2 points to build #3
-            if (strpos($jsonobj['menu']['next'], "buildid=$third_buildid") === false) {
+            if (strpos($jsonobj['menu']['next'], $path_to_third) === false) {
                 $error_msg = "Expected 'Next' link not found on $page for $second_buildid";
                 $success = false;
                 break;
             }
 
             // Verify 'Current' from build #2 points to build #3
-            if (strpos($jsonobj['menu']['current'], "buildid=$third_buildid") === false) {
+            if (strpos($jsonobj['menu']['current'], $path_to_third) === false) {
                 $error_msg = "Expected 'Current' link not found on $page for $second_buildid";
                 $success = false;
                 break;
@@ -115,7 +125,7 @@ class SubProjectNextPreviousTestCase extends KWWebTestCase
             $jsonobj = json_decode($content, true);
 
             // Verify 'Previous' from build #3 points to build #2
-            if (strpos($jsonobj['menu']['previous'], "buildid=$second_buildid") === false) {
+            if (strpos($jsonobj['menu']['previous'], $path_to_second) === false) {
                 $error_msg = "Expected 'Previous' link not found on $page for $third_buildid";
                 $success = false;
                 break;

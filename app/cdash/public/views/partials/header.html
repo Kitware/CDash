@@ -8,11 +8,6 @@
       <a href="index.php">All Dashboards</a>
       <ng-include ng-if="cdash.user.id > 0" src="'build/views/partials/logout_@@version.html'"></ng-include>
     </div>
-    <div ng-if="cdash.feed_enabled && cdash.public==1" id="feedicon" alt="RSS Feed" title="RSS Feed">
-      <a ng-href="rss/SubmissionRSS{{::cdash.projectname}}.xml">
-        <img src="img/feed-icon16x16.png" alt="RSS" width="14" height="14" border="0" />
-      </a>
-    </div>
   </div>
 
   <div id="headerbottom">

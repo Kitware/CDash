@@ -26,6 +26,7 @@ class SiteModelTestCase extends KWWebTestCase
 
     public function testSiteModel()
     {
+        $this->deleteLog($this->logfilename);
         $this->site = new Site();
 
         if ($this->site->Exists() !== false) {

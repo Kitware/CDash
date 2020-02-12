@@ -105,13 +105,9 @@ execute_process(
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-# Run gulp too.
-find_program(GULP
-  NAMES gulp
-  PATHS ${CMAKE_CURRENT_SOURCE_DIR}/node_modules/.bin
-)
+# Run npm build step.
 execute_process(
-  COMMAND ${GULP}
+  COMMAND ${NPM} run dev
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
@@ -155,11 +151,11 @@ $CDASH_DB_NAME = 'cdash4simpletest';
 $CDASH_TESTING_MODE = true;
 $CDASH_REGISTRATION_EMAIL_VERIFY = false;
 $CDASH_TESTING_RENAME_LOGS = ${rename_logs};
-$CDASH_DB_HOST = env('DB_HOST', '${CDASH_DB_HOST}');
-$CDASH_DB_LOGIN = env('DB_USERNAME', '${CDASH_DB_LOGIN}');
-$CDASH_DB_PORT = env('DB_PORT', '${CDASH_DB_PORT}');
-$CDASH_DB_PASS = env('DB_PASSWORD', '${CDASH_DB_PASS}');
-$CDASH_DB_TYPE = env('DB_CONNECTION', '${CDASH_DB_TYPE}');
+$CDASH_DB_HOST = '${CDASH_DB_HOST}';
+$CDASH_DB_LOGIN = '${CDASH_DB_LOGIN}';
+$CDASH_DB_PORT = '${CDASH_DB_PORT}';
+$CDASH_DB_PASS = '${CDASH_DB_PASS}';
+$CDASH_DB_TYPE = '${CDASH_DB_TYPE}';
 $CDASH_DB_CONNECTION_TYPE = '${CDASH_DB_CONNECTION_TYPE}';
 $CDASH_COVERAGE_DIR = '${CDASH_COVERAGE_DIR}';
 $CDASH_LOG_LEVEL = LOG_DEBUG;
@@ -175,5 +171,13 @@ $CDASH_BERNARD_CONSUMERS_WHITELIST = ${CDASH_BERNARD_CONSUMERS_WHITELIST};
 ?>
 ")
 
-# add the tests directory
+execute_process(
+  COMMAND ${PHP_EXE} artisan config:migrate
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+# add the new tests directory
+add_subdirectory(tests)
+
+# add the old tests directory
 add_subdirectory(app/cdash/tests)

@@ -25,6 +25,7 @@ use App\Http\Kernel;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Tests\CreatesApplication;
 
@@ -77,13 +78,12 @@ class KWWebTestCase extends WebTestCase
         $this->db->setConnection($db['connection']);
 
         $config = Config::getInstance();
-        $this->logfilename = $config->get('CDASH_LOG_FILE');
         $this->configfilename = "{$config->get('CDASH_ROOT_DIR')}/config/config.local.php";
-
         $this->config = $config;
 
         // Create the application on construct so that we have access to app() (container)
         $this->app = $this->createApplication();
+        $this->logfilename = Log::getLogger()->getHandlers()[0]->getUrl();
     }
 
     public function createBrowser()

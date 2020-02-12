@@ -4,26 +4,26 @@ use CDash\Config;
 use CDash\Log;
 use CDash\Test\CDashTestCase;
 
+use Illuminate\Support\Facades\Log as LogFacade;
+
 class LogTest extends CDashTestCase
 {
-    private static $log;
-
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
-        self::$log = Config::getInstance()->get('CDASH_LOG_FILE');
     }
 
     public function setUp()
     {
         parent::setUp();
-        file_put_contents(self::$log, '');
+        $this->log = LogFacade::getLogger()->getHandlers()[0]->getUrl();
+        file_put_contents($this->log, '');
     }
 
     public function tearDown()
     {
         parent::tearDown();
-        file_put_contents(self::$log, '');
+        file_put_contents($this->log, '');
     }
 
     public function testInstance()
@@ -44,8 +44,8 @@ class LogTest extends CDashTestCase
         $log = Log::getInstance();
         $e = new Exception("TESTING Log::info");
         $log->info($e);
-        $output = file_get_contents(self::$log);
-        $this->assertContains("cdash.INFO: TESTING Log::info", $output);
+        $output = file_get_contents($this->log);
+        $this->assertContains('INFO: TESTING Log::info', $output);
         $this->assertContains('"function":"testInfo"', $output);
     }
 
@@ -54,8 +54,8 @@ class LogTest extends CDashTestCase
         $log = Log::getInstance();
         $e = new Exception("TESTING Log::error");
         $log->error($e);
-        $output = file_get_contents(self::$log);
-        $this->assertContains('cdash.ERROR: TESTING Log::error', $output);
+        $output = file_get_contents($this->log);
+        $this->assertContains('ERROR: TESTING Log::error', $output);
         $this->assertContains('"function":"testError"', $output);
     }
 
@@ -64,8 +64,8 @@ class LogTest extends CDashTestCase
         $log = Log::getInstance();
         $e = new Exception("TESTING Log::debug");
         $log->debug($e);
-        $output = file_get_contents(self::$log);
-        $this->assertContains('cdash.DEBUG: TESTING Log::debug', $output);
+        $output = file_get_contents($this->log);
+        $this->assertContains('DEBUG: TESTING Log::debug', $output);
         $this->assertContains('"function":"testDebug"', $output);
     }
 }

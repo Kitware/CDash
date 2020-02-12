@@ -56,6 +56,7 @@ class EmailTestCase extends KWWebTestCase
 
         // If we want to test the app if registration works, that sort of thing belongs in a
         // registration works test.
+        $this->deleteLog($this->logfilename);
 
         $user = $this->createUser([
             'firstname' => 'Firstname',
@@ -76,7 +77,7 @@ class EmailTestCase extends KWWebTestCase
         $this->setField('emailsuccess', '1');
         $this->clickSubmitByName('subscribe');
         if (!$this->checkLog($this->logfilename)) {
-            return;
+            $this->fail("Errors logged");
         }
     }
 
@@ -139,10 +140,10 @@ class EmailTestCase extends KWWebTestCase
 
         // illuminate/support/helpers/str_contains
         $expected = [
-            'cdash.DEBUG: user1@kw',
-            'cdash.DEBUG: PASSED (w=6): EmailProjectExample - Win32-MSVC2009 - Nightly',
+            'DEBUG: user1@kw',
+            'DEBUG: PASSED (w=6): EmailProjectExample - Win32-MSVC2009 - Nightly',
             'Congratulations. A submission to CDash for the project EmailProjectExample has fixed warnings',
-            "{$config->getBaseUrl()}/buildSummary.php?buildid=",
+            "{$config->getBaseUrl()}/build/",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',
             'Build Name: Win32-MSVC2009',
@@ -154,6 +155,24 @@ class EmailTestCase extends KWWebTestCase
         if ($this->assertLogContains($expected, 15)) {
             $this->pass('Passed');
         }
+
+        // Also check that viewUpdate shows email address for logged in users.
+        $db = \CDash\Database::getInstance();
+        $stmt = $db->prepare("
+                SELECT build.id FROM build
+                JOIN project ON (build.projectid = project.id)
+                JOIN build2update ON (build.id = build2update.buildid)
+                WHERE build.name = 'Win32-MSVC2009' AND
+                      project.name = 'EmailProjectExample'");
+        $db->execute($stmt);
+        $buildid = $stmt->fetchColumn();
+        $this->login();
+        $this->get($this->url . "/api/v1/viewUpdate.php?buildid=$buildid");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $expected = 'user1@kw';
+        $actual = $jsonobj['updategroups'][0]['directories'][0]['files'][0]['email'];
+        $this->assertEqual($expected, $actual);
     }
 
     public function testSubmissionEmailTest()
@@ -168,10 +187,10 @@ class EmailTestCase extends KWWebTestCase
         $config = Config::getInstance();
         // illuminate/support/helpers/str_contains
         $expected = [
-            'cdash.DEBUG: user1@kw',
-            'cdash.DEBUG: PASSED (t=2): EmailProjectExample - Win32-MSVC2009 - Nightly',
+            'DEBUG: user1@kw',
+            'DEBUG: PASSED (t=2): EmailProjectExample - Win32-MSVC2009 - Nightly',
             'Congratulations. A submission to CDash for the project EmailProjectExample has fixed failing tests',
-            "{$config->getBaseUrl()}/buildSummary.php?buildid=",
+            "{$config->getBaseUrl()}/build/",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',
             'Build Name: Win32-MSVC2009',
@@ -201,7 +220,7 @@ class EmailTestCase extends KWWebTestCase
             'simpletest@localhost',
             'FAILED (d=10): EmailProjectExample - Win32-MSVC2009 - Nightly',
             'A submission to CDash for the project EmailProjectExample has dynamic analysis tests failing or not run',
-            "{$url}/buildSummary.php?buildid=",
+            "{$url}/build/",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',
             'Build Name: Win32-MSVC2009',
@@ -218,7 +237,7 @@ class EmailTestCase extends KWWebTestCase
             'user1@kw',
             'FAILED (d=10): EmailProjectExample - Win32-MSVC2009 - Nightly',
             'A submission to CDash for the project EmailProjectExample has dynamic analysis tests failing or not run',
-            "{$url}/buildSummary.php?buildid=",
+            "{$url}/build/",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',
             'Build Name: Win32-MSVC2009',
@@ -259,7 +278,7 @@ class EmailTestCase extends KWWebTestCase
             'simpletest@localhost',
             'FAILED (t=4): EmailProjectExample - Win32-MSVC2009 - Nightly',
             'A submission to CDash for the project EmailProjectExample has failing tests.',
-            "Details on the submission can be found at {$url}/buildSummary.php?buildid=",
+            "Details on the submission can be found at {$url}/build/",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',
             'Build Name: Win32-MSVC2009',
@@ -275,7 +294,7 @@ class EmailTestCase extends KWWebTestCase
             'user1@kw',
             'FAILED (t=4): EmailProjectExample - Win32-MSVC2009 - Nightly',
             'A submission to CDash for the project EmailProjectExample has failing tests.',
-            "Details on the submission can be found at {$url}/buildSummary.php?buildid=",
+            "Details on the submission can be found at {$url}/build/",
             'Project: EmailProjectExample',
             'Site: Dash20.kitware',
             'Build Name: Win32-MSVC2009',

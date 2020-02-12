@@ -1290,7 +1290,7 @@ class Build
 
         pdo_execute($stmt, [$previousbuildid]);
         $row = $stmt->fetch();
-        $npreviouswarnings = $row['configurewarnings'];
+        $npreviouswarnings = self::ConvertMissingToZero($row['configurewarnings']);
 
         // Check if a diff already exists for this build.
         $this->PDO->beginTransaction();
@@ -2236,7 +2236,7 @@ class Build
         if (!empty($this->PullRequest) && $numErrors > 0) {
             $message = "$this->Name failed to configure";
             $url = get_server_URI(false) .
-                "/viewConfigure.php?buildid=$this->Id";
+                "/build/{$this->Id}/configure";
             $this->NotifyPullRequest($message, $url);
         }
     }
@@ -2847,7 +2847,7 @@ class Build
     public function GetBuildSummaryUrl()
     {
         $base = Config::getInstance()->getBaseUrl();
-        return "{$base}/buildSummary.php?buildid={$this->Id}";
+        return "{$base}/build/{$this->Id}";
     }
 
     /**
