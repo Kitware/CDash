@@ -38,16 +38,16 @@ class DisabledTestsTestCase extends KWWebTestCase
         $this->get("$this->url/api/v1/viewTest.php?buildid=$buildid");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
-        if ($jsonobj['numNotRun'] !== 2) {
-            $this->fail("Did not find 2 'Not Run' tests when expected");
+        if ($jsonobj['numFailed'] !== 1) {
+            $this->fail("Did not find 1 'Failed' tests when expected");
+        }
+        if ($jsonobj['numNotRun'] !== 1) {
+            $this->fail("Did not find 1 'NotRun' tests when expected");
         }
 
         $verified_disabled = false;
         $verified_missingexe = false;
         foreach ($jsonobj['tests'] as $test) {
-            if ($test['status'] !== 'Not Run') {
-                $this->fail("Test has a status other than 'Not Run'");
-            }
             if ($test['details'] === 'Disabled') {
                 $verified_disabled = true;
             }
@@ -64,8 +64,8 @@ class DisabledTestsTestCase extends KWWebTestCase
 
         // Verify email was sent for the missing exe but not for the disabled test.
         $log_contents = file_get_contents($this->logfilename);
-        if (strpos($log_contents, 'ThisTestWillNotRun') === false) {
-            $this->fail("No email sent for test 'ThisTestWillNotRun'");
+        if (strpos($log_contents, 'ThisTestFails') === false) {
+            $this->fail("No email sent for test 'ThisTestFails'");
         }
         if (strpos($log_contents, 'ThisTestIsDisabled') !== false) {
             $this->fail("Erroneous email sent for test 'ThisTestIsDisabled'");
