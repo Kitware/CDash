@@ -6,7 +6,7 @@ use Adldap\Connections\ConnectionInterface;
 use Adldap\Connections\Ldap;
 use Adldap\Laravel\Facades\Adldap;
 use Adldap\Laravel\Facades\Resolver;
-use App\User;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Auth;

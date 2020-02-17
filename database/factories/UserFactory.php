@@ -14,7 +14,7 @@ use Faker\Generator as Faker;
 */
 
 
-$factory->define(App\User::class, function (Faker $faker) {
+$factory->define(App\Models\User::class, function (Faker $faker) {
     return [
         'firstname' => $faker->firstName,
         'lastname' => $faker->lastName,
@@ -26,9 +26,9 @@ $factory->define(App\User::class, function (Faker $faker) {
     ];
 });
 
-$factory->state(App\User::class, 'admin', ['admin' => 1,]);
+$factory->state(App\Models\User::class, 'admin', ['admin' => 1,]);
 
-$factory->afterCreating(App\User::class, function ($user, $faker) {
+$factory->afterCreating(App\Models\User::class, function ($user, $faker) {
     $user->passwords()->insert([
         'userid' => $user->id,
         'date' => now(),
