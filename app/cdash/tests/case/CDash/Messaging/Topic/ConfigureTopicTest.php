@@ -14,8 +14,9 @@
  * =========================================================================
  */
 
+use Illuminate\Support\Collection;
+
 use CDash\Collection\ConfigureCollection;
-use CDash\Collection\LabelCollection;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Topic\ConfigureTopic;
 use CDash\Messaging\Topic\Topic;
@@ -157,8 +158,8 @@ class ConfigureTopicTest extends \CDash\Test\CDashTestCase
 
         $collection = $sut->getLabelsFromBuild($build);
 
-        $this->assertTrue($collection->has('one'));
-        $this->assertTrue($collection->has('two'));
+        $this->assertTrue($collection->contains($lbl1));
+        $this->assertTrue($collection->contains($lbl2));
     }
 
     public function testSetTopicDataWithLabels()
@@ -168,7 +169,7 @@ class ConfigureTopicTest extends \CDash\Test\CDashTestCase
         $configure = new BuildConfigure();
 
         $build->SetBuildConfigure($configure);
-        $sut->setTopicDataWithLabels($build, new LabelCollection());
+        $sut->setTopicDataWithLabels($build, collect());
 
         $collection = $sut->getTopicCollection();
         $this->assertInstanceOf(ConfigureCollection::class, $collection);

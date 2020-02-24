@@ -14,7 +14,6 @@
  * =========================================================================
  */
 
-use CDash\Collection\LabelCollection;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Topic\TestFailureTopic;
 use CDash\Messaging\Topic\Topic;
@@ -230,11 +229,11 @@ class TestFailureTopicTest extends \CDash\Test\CDashTestCase
         $lbl3 = new Label();
         $lbl3->Text = 'Three';
 
-        $lblCollection = new LabelCollection();
+        $lblCollection = collect();
         $lblCollection
-            ->add($lbl1)
-            ->add($lbl2)
-            ->add($lbl3);
+            ->push($lbl1)
+            ->push($lbl2)
+            ->push($lbl3);
 
         $sut->setTopicDataWithLabels($build, $lblCollection);
 
@@ -287,8 +286,8 @@ class TestFailureTopicTest extends \CDash\Test\CDashTestCase
 
         $collection = $sut->getLabelsFromBuild($build);
 
-        $this->assertTrue($collection->has($labelForTwo->Text));
-        $this->assertFalse($collection->has($labelFor3->Text));
+        $this->assertTrue($collection->contains($labelForTwo));
+        $this->assertFalse($collection->contains($labelFor3));
     }
 
     public function testIsSubscribedToBy()

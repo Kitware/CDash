@@ -16,7 +16,8 @@
 
 namespace CDash\Messaging\Topic;
 
-use CDash\Collection\LabelCollection;
+use Illuminate\Support\Collection;
+
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Model\Build;
 use CDash\Collection\TestCollection;
@@ -149,20 +150,22 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
 
     /**
      * @param Build $build
-     * @param LabelCollection $labels
+     * @param Collection $labels
      * @return void
      */
-    public function setTopicDataWithLabels(Build $build, LabelCollection $labels)
+    public function setTopicDataWithLabels(Build $build, Collection $labels)
     {
         $collection = $this->getTopicCollection();
         $tests = $build->GetTestCollection();
         /** @var Test $test */
         foreach ($tests as $test) {
             if ($this->itemHasTopicSubject($build, $test)) {
+                $testLabels = $test->GetLabelCollection();
                 foreach ($labels as $label) {
-                    $testLabels = $test->GetLabelCollection();
-                    if ($testLabels->has($label->Text)) {
-                        $collection->add($test);
+                    foreach ($testLabels as $test_label) {
+                        if ($label->Text === $test_label->Text) {
+                            $collection->add($test);
+                        }
                     }
                 }
             }
@@ -171,19 +174,19 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
 
     /**
      * @param Build $build
-     * @return LabelCollection
+     * @return Collection
      */
     public function getLabelsFromBuild(Build $build)
     {
         $tests = $build->GetTestCollection();
-        $collection = new LabelCollection();
+        $collection = collect();
         /** @var Test $test */
         foreach ($tests as $test) {
             // No need to bother with passed tests
             if ($this->itemHasTopicSubject($build, $test)) {
                 /** @var Label $label */
                 foreach ($test->GetLabelCollection() as $label) {
-                    $collection->add($label);
+                    $collection->push($label);
                 }
             }
         }

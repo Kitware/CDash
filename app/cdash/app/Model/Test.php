@@ -15,8 +15,6 @@
 =========================================================================*/
 namespace CDash\Model;
 
-// It is assumed that appropriate headers should be included before including this file
-use CDash\Collection\LabelCollection;
 use CDash\Config;
 use CDash\Database;
 use PDO;
@@ -42,7 +40,6 @@ class Test
     public $CompressedOutput;
 
     public $Images;
-    public $Labels;
     public $Measurements;
 
     private $LabelCollection;
@@ -56,10 +53,11 @@ class Test
         $this->Name = '';
         $this->Path = '';
 
+
         $this->Images = [];
-        $this->Labels = [];
         $this->Measurements = [];
         $this->CompressedOutput = false;
+        $this->LabelCollection = collect();
         $this->PDO = Database::getInstance()->getPdo();
     }
 
@@ -83,7 +81,7 @@ class Test
     public function AddLabel($label)
     {
         $label->TestId = $this->Id;
-        $this->Labels[] = $label;
+        $this->LabelCollection->push($label);
     }
 
     /** Get the CRC32 */
@@ -112,7 +110,7 @@ class Test
     public function InsertLabelAssociations($buildid)
     {
         if ($this->Id && $buildid) {
-            foreach ($this->Labels as $label) {
+            foreach ($this->LabelCollection as $label) {
                 $label->TestId = $this->Id;
                 $label->TestBuildId = $buildid;
                 $label->Insert();
@@ -296,19 +294,12 @@ class Test
 
     /**
     /**
-     * Returns the LabelCollection object for the current Test. It lazily loads a LabelCollection,
-     * then adds the current Test's Label array to the Collection if none exists.
+     * Returns the LabelCollection object for the current Test.
      *
-     * @return LabelCollection
+     * @return Collection
      */
     public function GetLabelCollection()
     {
-        if (!$this->LabelCollection) {
-            $this->LabelCollection = new LabelCollection();
-            foreach ($this->Labels as $label) {
-                $this->LabelCollection->add($label);
-            }
-        }
         return $this->LabelCollection;
     }
 
