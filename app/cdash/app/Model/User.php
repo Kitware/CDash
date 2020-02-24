@@ -15,7 +15,6 @@
 =========================================================================*/
 namespace CDash\Model;
 
-use CDash\Collection\LabelCollection;
 use CDash\Config;
 use CDash\Database;
 
@@ -51,6 +50,7 @@ class User
         $this->TempTableName = qid('usertemp');
         $this->PDO = Database::getInstance();
         $this->Credentials = null;
+        $this->LabelCollection = collect();
     }
 
     /** Return if the user is admin */
@@ -516,15 +516,14 @@ class User
      * this method checks the database for the labels of which a users has subscribed and
      * return's them wrapped in a LabelCollection.
      *
-     * @return LabelCollection
+     * @return Collection
      */
     public function GetLabelCollection()
     {
-        if (!$this->LabelCollection) {
-            $this->LabelCollection = new LabelCollection();
+        if ($this->LabelCollection->isEmpty()) {
             $sql = '
-              SELECT label.id, label.text 
-              FROM labelemail 
+              SELECT label.id, label.text
+              FROM labelemail
               JOIN label ON label.id = labelemail.labelid
               WHERE userid=:user';
 
@@ -535,7 +534,7 @@ class User
                     $label = new Label();
                     $label->Id = $row->id;
                     $label->Text = $row->text;
-                    $this->LabelCollection->add($label);
+                    $this->LabelCollection->push($label);
                 }
             }
         }
@@ -549,9 +548,6 @@ class User
      */
     public function AddLabel(Label $label)
     {
-        if (!$this->LabelCollection) {
-            $this->LabelCollection = new LabelCollection();
-        }
-        $this->LabelCollection->add($label);
+        $this->LabelCollection->push($label);
     }
 }

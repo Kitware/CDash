@@ -15,7 +15,6 @@
 =========================================================================*/
 namespace CDash\Model;
 
-use CDash\Collection\LabelCollection;
 use PDO;
 use CDash\Database;
 
@@ -29,7 +28,6 @@ class BuildConfigure
     public $Log;
     public $Status;
     public $BuildId;
-    public $Labels;
     public $NumberOfWarnings;
     public $NumberOfErrors;
     private $Crc32;
@@ -44,6 +42,7 @@ class BuildConfigure
         $this->Command = '';
         $this->Log = '';
         $this->Status = '';
+        $this->LabelCollection = collect();
         $this->PDO = Database::getInstance()->getPdo();
     }
 
@@ -61,12 +60,8 @@ class BuildConfigure
 
     public function AddLabel($label)
     {
-        if (!isset($this->Labels)) {
-            $this->Labels = array();
-        }
-
         $label->BuildId = $this->BuildId;
-        $this->Labels[] = $label;
+        $this->LabelCollection->push($label);
     }
 
     /** Check if the configure exists */
@@ -184,11 +179,11 @@ class BuildConfigure
     public function InsertLabelAssociations()
     {
         if ($this->BuildId) {
-            if (!isset($this->Labels)) {
+            if ($this->LabelCollection->isEmpty()) {
                 return;
             }
 
-            foreach ($this->Labels as $label) {
+            foreach ($this->LabelCollection as $label) {
                 $label->BuildId = $this->BuildId;
                 $label->Insert();
             }
@@ -395,15 +390,10 @@ class BuildConfigure
 
     /**
      * Returns the current BuildConfigure's Label property as a LabelCollection.
-     * @return LabelCollection
+     * @return Collection
      */
     public function GetLabelCollection()
     {
-        $collection = new LabelCollection();
-        $this->Labels = is_null($this->Labels) ? [] : $this->Labels;
-        foreach ($this->Labels as $label) {
-            $collection->add($label);
-        }
-        return $collection;
+        return $this->LabelCollection;
     }
 }

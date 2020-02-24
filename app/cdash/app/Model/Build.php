@@ -23,7 +23,6 @@ include_once 'include/repository.php';
 use CDash\Collection\BuildEmailCollection;
 use CDash\Collection\CollectionCollection;
 use CDash\Collection\DynamicAnalysisCollection;
-use CDash\Collection\LabelCollection;
 use CDash\Config;
 use CDash\Log;
 use CDash\Collection\TestCollection;
@@ -73,7 +72,6 @@ class Build
     public $SubProjectName;
     public $Append;
     public $Done;
-    public $Labels;
 
     // Only the build.xml has information about errors and warnings
     // when the InsertErrors is false the build is created but not the errors and warnings
@@ -97,7 +95,6 @@ class Build
     private $BuildUpdate;
     private $Project;
     private $CommitAuthors;
-    private $AggregateLabels;
     private $ActionableType;
     private $BuildConfigure;
     private $LabelCollection;
@@ -135,6 +132,8 @@ class Build
         $this->TestCollection = new TestCollection();
         $this->CommitAuthors = [];
 
+        $this->LabelCollection = collect();
+
         $this->PDO = Database::getInstance()->getPdo();
     }
 
@@ -160,12 +159,8 @@ class Build
      */
     public function AddLabel($label)
     {
-        // TODO: turn into collection only
-        if (!isset($this->Labels)) {
-            $this->Labels = [];
-        }
         $label->BuildId = $this->Id;
-        $this->Labels[] = $label;
+        $this->LabelCollection->push($label);
     }
 
     /**
@@ -828,25 +823,26 @@ class Build
     }
 
     /**
-     * @return bool|void
+     * @return bool
      */
     public function InsertLabelAssociations()
     {
-        if ($this->Id) {
-            if (!isset($this->Labels)) {
-                return;
-            }
-
-            foreach ($this->Labels as $label) {
-                $label->BuildId = $this->Id;
-                $label->Insert();
-            }
-        } else {
+        if (!$this->Id) {
             add_log('No Build::Id - cannot call $label->Insert...', 'Build::InsertLabelAssociations', LOG_ERR,
                 $this->ProjectId, $this->Id,
                 ModelType::BUILD, $this->Id);
             return false;
         }
+
+        if ($this->LabelCollection->isEmpty()) {
+            return true;
+        }
+
+        foreach ($this->LabelCollection as $label) {
+            $label->BuildId = $this->Id;
+            $label->Insert();
+        }
+        return true;
     }
 
     /** Return if exists */
@@ -3028,17 +3024,10 @@ class Build
 
     /**
      * Returns the current Build's LabelCollection.
-     * @return LabelCollection
+     * @return Collection
      */
     public function GetLabelCollection()
     {
-        $this->LabelCollection = new LabelCollection();
-
-        if ($this->Labels) {
-            foreach ($this->Labels as $label) {
-                $this->LabelCollection->add($label);
-            }
-        }
         return $this->LabelCollection;
     }
 
