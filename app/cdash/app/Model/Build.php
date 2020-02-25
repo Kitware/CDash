@@ -160,7 +160,7 @@ class Build
     public function AddLabel($label)
     {
         $label->BuildId = $this->Id;
-        $this->LabelCollection->push($label);
+        $this->LabelCollection->put($label->Text, $label);
     }
 
     /**

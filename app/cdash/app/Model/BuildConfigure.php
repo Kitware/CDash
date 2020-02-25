@@ -61,7 +61,7 @@ class BuildConfigure
     public function AddLabel($label)
     {
         $label->BuildId = $this->BuildId;
-        $this->LabelCollection->push($label);
+        $this->LabelCollection->put($label->Text, $label);
     }
 
     /** Check if the configure exists */

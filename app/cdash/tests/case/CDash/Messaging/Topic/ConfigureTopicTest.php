@@ -158,8 +158,8 @@ class ConfigureTopicTest extends \CDash\Test\CDashTestCase
 
         $collection = $sut->getLabelsFromBuild($build);
 
-        $this->assertTrue($collection->contains($lbl1));
-        $this->assertTrue($collection->contains($lbl2));
+        $this->assertTrue($collection->has('one'));
+        $this->assertTrue($collection->has('two'));
     }
 
     public function testSetTopicDataWithLabels()

@@ -135,7 +135,7 @@ class BuildErrorTopic extends Topic implements Decoratable, Fixable, Labelable
                 if (is_a($error, BuildFailure::class)
                 && $this->itemHasTopicSubject($build, $error)) {
                     foreach ($error->Labels as $label) {
-                        $collection->push($label);
+                        $collection->put($label->Text, $label);
                     }
                 }
             }

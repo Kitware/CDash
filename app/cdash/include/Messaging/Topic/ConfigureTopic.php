@@ -100,12 +100,12 @@ class ConfigureTopic extends Topic implements Decoratable, Labelable
         $collection = collect();
         $labels = $configure->GetLabelCollection();
         foreach ($labels as $lbl) {
-            $collection->push($lbl);
+            $collection->put($lbl->Text, $lbl);
         }
 
         $labels = $build->GetLabelCollection();
         foreach ($labels as $lbl) {
-            $collection->push($lbl);
+            $collection->put($lbl->Text, $lbl);
         }
         return $collection;
     }

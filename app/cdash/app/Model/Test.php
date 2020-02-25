@@ -53,7 +53,6 @@ class Test
         $this->Name = '';
         $this->Path = '';
 
-
         $this->Images = [];
         $this->Measurements = [];
         $this->CompressedOutput = false;
@@ -81,7 +80,7 @@ class Test
     public function AddLabel($label)
     {
         $label->TestId = $this->Id;
-        $this->LabelCollection->push($label);
+        $this->LabelCollection->put($label->Text, $label);
     }
 
     /** Get the CRC32 */
