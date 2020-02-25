@@ -162,10 +162,8 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
             if ($this->itemHasTopicSubject($build, $test)) {
                 $testLabels = $test->GetLabelCollection();
                 foreach ($labels as $label) {
-                    foreach ($testLabels as $test_label) {
-                        if ($label->Text === $test_label->Text) {
-                            $collection->add($test);
-                        }
+                    if ($testLabels->has($label->Text)) {
+                        $collection->add($test);
                     }
                 }
             }
@@ -186,7 +184,7 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
             if ($this->itemHasTopicSubject($build, $test)) {
                 /** @var Label $label */
                 foreach ($test->GetLabelCollection() as $label) {
-                    $collection->push($label);
+                    $collection->put($label->Text, $label);
                 }
             }
         }

@@ -231,9 +231,9 @@ class TestFailureTopicTest extends \CDash\Test\CDashTestCase
 
         $lblCollection = collect();
         $lblCollection
-            ->push($lbl1)
-            ->push($lbl2)
-            ->push($lbl3);
+            ->put($lbl1->Text, $lbl1)
+            ->put($lbl2->Text, $lbl2)
+            ->put($lbl3->Text, $lbl3);
 
         $sut->setTopicDataWithLabels($build, $lblCollection);
 
@@ -286,8 +286,8 @@ class TestFailureTopicTest extends \CDash\Test\CDashTestCase
 
         $collection = $sut->getLabelsFromBuild($build);
 
-        $this->assertTrue($collection->contains($labelForTwo));
-        $this->assertFalse($collection->contains($labelFor3));
+        $this->assertTrue($collection->has($labelForTwo->Text));
+        $this->assertFalse($collection->has($labelFor3->Text));
     }
 
     public function testIsSubscribedToBy()

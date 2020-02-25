@@ -32,13 +32,8 @@ class LabeledTopic extends Topic
             $subscriberLabels = $this->subscriber->getLabels();
             $topicLabels = $this->topic->getLabelsFromBuild($build);
             foreach ($subscriberLabels as $subscriberLabel) {
-                foreach ($topicLabels as $topicLabel) {
-                    if ($subscriberLabel->Text === $topicLabel->Text) {
-                        $subscribe = true;
-                        break;
-                    }
-                }
-                if ($subscribe) {
+                if ($topicLabels->has($subscriberLabel->Text)) {
+                    $subscribe = true;
                     break;
                 }
             }

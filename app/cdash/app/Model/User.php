@@ -534,7 +534,7 @@ class User
                     $label = new Label();
                     $label->Id = $row->id;
                     $label->Text = $row->text;
-                    $this->LabelCollection->push($label);
+                    $this->AddLabel($label);
                 }
             }
         }
@@ -548,6 +548,6 @@ class User
      */
     public function AddLabel(Label $label)
     {
-        $this->LabelCollection->push($label);
+        $this->LabelCollection->put($label->Text, $label);
     }
 }
