@@ -20,6 +20,8 @@ include_once 'include/common.php';
 include_once 'include/ctestparserutils.php';
 include_once 'include/repository.php';
 
+use App\Models\Test;
+
 use CDash\Collection\BuildEmailCollection;
 use CDash\Collection\CollectionCollection;
 use CDash\Collection\DynamicAnalysisCollection;

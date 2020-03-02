@@ -23,7 +23,6 @@ use CDash\Messaging\Topic\Topic;
 use CDash\Model\Build;
 use CDash\Model\Label;
 use CDash\Model\Subscriber;
-use CDash\Model\Test as TestConstants;
 use CDash\Test\BuildDiffForTesting;
 
 class TestFailureTopicTest extends \CDash\Test\CDashTestCase
@@ -59,19 +58,19 @@ class TestFailureTopicTest extends \CDash\Test\CDashTestCase
 
         $this->assertFalse($sut->itemHasTopicSubject($build, $buildTest));
 
-        $buildTest->status = TestConstants::PASSED;
+        $buildTest->status = Test::PASSED;
 
         $this->assertFalse($sut->itemHasTopicSubject($build, $buildTest));
 
-        $buildTest->status = TestConstants::NOTRUN;
+        $buildTest->status = Test::NOTRUN;
 
         $this->assertFalse($sut->itemHasTopicSubject($build, $buildTest));
 
-        $buildTest->details = TestConstants::DISABLED;
+        $buildTest->details = Test::DISABLED;
 
         $this->assertFalse($sut->itemHasTopicSubject($build, $buildTest));
 
-        $buildTest->status = TestConstants::FAILED;
+        $buildTest->status = Test::FAILED;
 
         $this->assertTrue($sut->itemHasTopicSubject($build, $buildTest));
     }
@@ -82,26 +81,26 @@ class TestFailureTopicTest extends \CDash\Test\CDashTestCase
         $build = new Build();
 
         $passed = new BuildTest();
-        $passed->status = TestConstants::PASSED;
+        $passed->status = Test::PASSED;
         $test1 = new Test();
         $test1->name = 'Passed';
         $passed->test = $test1;
 
         $failed = new BuildTest();
-        $failed->status = TestConstants::FAILED;
+        $failed->status = Test::FAILED;
         $test2 = new Test();
         $test2->name = 'Failed';
         $failed->test = $test2;
 
         $notrun = new BuildTest();
-        $notrun->status = TestConstants::NOTRUN;
+        $notrun->status = Test::NOTRUN;
         $test3 = new Test();
         $test3->name = 'NotRun';
         $notrun->test = $test3;
 
         $disabled = new BuildTest();
-        $disabled->status = TestConstants::NOTRUN;
-        $disabled->details = TestConstants::DISABLED;
+        $disabled->status = Test::NOTRUN;
+        $disabled->details = Test::DISABLED;
         $test4 = new Test();
         $test4->name = 'Disabled';
         $disabled->test = $test4;
@@ -195,7 +194,7 @@ class TestFailureTopicTest extends \CDash\Test\CDashTestCase
         $test1 = new Test();
         $test1->name = 'TestOne';
         $buildTestOne = new BuildTest();
-        $buildTestOne->status = TestConstants::PASSED;
+        $buildTestOne->status = Test::PASSED;
         $buildTestOne->addLabel($labelForOne);
         $buildTestOne->test = $test1;
 
@@ -205,7 +204,7 @@ class TestFailureTopicTest extends \CDash\Test\CDashTestCase
         $test2 = new Test();
         $test2->name = 'TestTwo';
         $buildTestTwo = new BuildTest();
-        $buildTestTwo->status = TestConstants::FAILED;
+        $buildTestTwo->status = Test::FAILED;
         $buildTestTwo->addLabel($labelForTwo);
         $buildTestTwo->test = $test2;
 
@@ -215,7 +214,7 @@ class TestFailureTopicTest extends \CDash\Test\CDashTestCase
         $test3 = new Test();
         $test3->name = 'TestThree';
         $buildTestThree = new BuildTest();
-        $buildTestThree->status = TestConstants::FAILED;
+        $buildTestThree->status = Test::FAILED;
         $buildTestThree->addLabel($labelForThree);
         $buildTestThree->test = $test3;
 
@@ -254,7 +253,7 @@ class TestFailureTopicTest extends \CDash\Test\CDashTestCase
         $test1 = new Test();
         $test1->name = 'TestOne';
         $buildTestOne = new BuildTest();
-        $buildTestOne->status = TestConstants::PASSED;
+        $buildTestOne->status = Test::PASSED;
         $buildTestOne->addLabel($labelForOne);
         $buildTestOne->test = $test1;
 
@@ -264,7 +263,7 @@ class TestFailureTopicTest extends \CDash\Test\CDashTestCase
         $test2 = new Test();
         $test2->name = 'TestTwo';
         $buildTestTwo = new BuildTest();
-        $buildTestTwo->status = TestConstants::FAILED;
+        $buildTestTwo->status = Test::FAILED;
         $buildTestTwo->addLabel($labelForTwo);
         $buildTestTwo->test = $test2;
 
@@ -274,7 +273,7 @@ class TestFailureTopicTest extends \CDash\Test\CDashTestCase
         $test3 = new Test();
         $test3->name = 'TestThree';
         $buildTestThree = new BuildTest();
-        $buildTestThree->status = TestConstants::NOTRUN;
+        $buildTestThree->status = Test::NOTRUN;
         $buildTestThree->addLabel($labelForThree);
         $buildTestThree->test = $test3;
 

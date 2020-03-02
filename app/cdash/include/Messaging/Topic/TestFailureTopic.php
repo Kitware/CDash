@@ -18,12 +18,13 @@ namespace CDash\Messaging\Topic;
 
 use Illuminate\Support\Collection;
 
+use App\Models\Test;
+
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Model\Build;
 use CDash\Collection\TestCollection;
 use CDash\Model\Label;
 use CDash\Model\SubscriberInterface;
-use CDash\Model\Test;
 
 /**
  * Class TestFailureTopic

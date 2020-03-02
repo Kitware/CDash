@@ -147,7 +147,6 @@ add_php_test(viewdynamicanalysisfile)
 add_php_test(viewmap)
 
 add_php_test(viewsubprojectdependencies)
-add_php_test(testmodel)
 add_php_test(buildmodel)
 add_php_test(sitemodel)
 add_unit_test(/CDash/Model/PendingSubmissions)
