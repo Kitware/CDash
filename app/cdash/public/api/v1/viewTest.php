@@ -529,7 +529,7 @@ $label_sql = '';
 $groupby_sql = '';
 if ($project->DisplayLabels && $config->get('CDASH_DB_TYPE') != 'pgsql') {
     $labeljoin_sql = '
-        LEFT JOIN label2test AS l2t ON (l2t.testid=t.id)
+        LEFT JOIN label2test AS l2t ON (l2t.outputid=bt.outputid)
         LEFT JOIN label AS l ON (l.id=l2t.labelid)';
     $label_sql = ", GROUP_CONCAT(DISTINCT l.text SEPARATOR ', ') AS labels";
     $groupby_sql = ' GROUP BY t.id';
@@ -548,7 +548,7 @@ if ($build->GetParentId() == Build::PARENT_BUILD) {
 }
 
 $sql = "
-    SELECT bt.status, bt.newstatus, bt.timestatus, t.id, bt.time, bt.buildid, t.details,
+    SELECT bt.status, bt.newstatus, bt.timestatus, t.id, bt.time, bt.buildid, bt.details,
            t.name $label_sql $parentBuildFieldSql
     FROM build2test AS bt
     LEFT JOIN test AS t ON (t.id=bt.testid)
@@ -574,8 +574,8 @@ if ($build->GetParentId() == Build::PARENT_BUILD) {
 
 $columns = array();
 $getcolumnnumber = pdo_query("SELECT testmeasurement.name, COUNT(DISTINCT test.name) as xxx FROM test
-JOIN testmeasurement ON (test.id = testmeasurement.testid)
 JOIN build2test ON (build2test.testid = test.id)
+JOIN testmeasurement ON (testmeasurement.outputid = build2test.outputid)
 JOIN build ON (build.id = build2test.buildid)
 JOIN measurement ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
 WHERE build.$buildid_field = '$buildid'
@@ -631,9 +631,9 @@ if ($columncount > 0) {
   build2test.status, build2test.timestatus, test.name, testmeasurement.name,
   testmeasurement.value, build.starttime,
   build2test.time, measurement.testpage FROM test
-  JOIN testmeasurement ON (test.id = testmeasurement.testid)
   JOIN build2test ON (build2test.testid = test.id)
   JOIN build ON (build.id = build2test.buildid)
+  JOIN testmeasurement ON (build2test.outputid = testmeasurement.outputid)
   JOIN measurement ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
   WHERE build.$buildid_field = '$buildid'
   AND measurement.testpage=1 $onlydelta_extra

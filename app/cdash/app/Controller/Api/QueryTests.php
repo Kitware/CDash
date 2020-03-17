@@ -16,6 +16,8 @@
 
 namespace CDash\Controller\Api;
 
+use App\Models\TestOutput;
+
 use CDash\Config;
 use CDash\Database;
 use CDash\Model\Build;
@@ -68,7 +70,7 @@ class QueryTests extends ResultsApi
             return true;
         }
 
-        $test_output = Test::DecompressOutput($row['output']);
+        $test_output = TestOutput::DecompressOutput($row['output']);
 
         // Make sure test output matches (or does not match) the
         // specified filter values.
@@ -262,7 +264,7 @@ class QueryTests extends ResultsApi
             $response['hasprocessors'] = true;
             $proc_select = ', tm.value';
             $proc_join =
-                "LEFT JOIN testmeasurement tm ON (test.id = tm.testid AND tm.name = 'Processors')";
+                "LEFT JOIN testmeasurement tm ON (build2test.outputid = tm.outputid AND tm.name = 'Processors')";
         }
 
         $date_clause = '';
@@ -291,20 +293,24 @@ class QueryTests extends ResultsApi
 
         // Select extra data if we are filtering on test output.
         $output_select = '';
+        $output_joins = '';
         if ($this->filterOnTestOutput) {
-            $output_select = ', test.output';
+            $output_joins = '
+                JOIN testoutput ON (testoutput.id = build2test.outputid)';
+            $output_select = ', testoutput.output';
         }
 
-        $sql = "SELECT b.id, b.name, b.starttime, b.siteid,b.parentid,
-            build2test.testid AS testid, build2test.status,
+        $sql = "SELECT b.id, b.name, b.starttime, b.siteid, b.parentid,
+            build2test.testid AS testid, build2test.details, build2test.status,
             build2test.time, build2test.timestatus, site.name AS sitename,
-            test.name AS testname, test.details $proc_select $output_select
+            test.name AS testname $proc_select $output_select
                 FROM build AS b
                 JOIN build2test ON (b.id = build2test.buildid)
                 JOIN site ON (b.siteid = site.id)
                 JOIN test ON (test.id = build2test.testid)
                 $proc_join
                 $filter_joins
+                $output_joins
                 WHERE b.projectid = :projectid
                 $parent_clause $date_clause $this->filterSQL
                 ORDER BY build2test.status, test.name

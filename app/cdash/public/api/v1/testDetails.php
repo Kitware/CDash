@@ -22,12 +22,14 @@ require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 include_once 'include/repository.php';
 
+use App\Models\Test;
+use App\Models\TestOutput;
+
 use CDash\Config;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
 use CDash\Model\Site;
-use CDash\Model\Test;
 
 if (!function_exists('findTest')) {
     // Helper function
@@ -133,10 +135,12 @@ $response['project'] = $project_response;
 $stmt = $pdo->prepare(
     'SELECT * FROM build2test b2t
     JOIN test t ON t.id = b2t.testid
+    JOIN testoutput ON testoutput.id = b2t.outputid
     WHERE b2t.testid = :testid AND b2t.buildid = :buildid');
 pdo_execute($stmt, [':testid' => $testid, ':buildid' => $build->Id]);
 $testRow = $stmt->fetch();
 $testName = $testRow['name'];
+$outputid = $testRow['outputid'];
 
 $menu = [];
 $menu['back'] = "viewTest.php?buildid=$build->Id";
@@ -191,7 +195,7 @@ $test_response['test'] = $testName;
 $test_response['time'] = time_difference($testRow['time'], true, '', true);
 $test_response['command'] = $testRow['command'];
 $test_response['details'] = $testRow['details'];
-$test_response['output'] = utf8_for_xml(Test::DecompressOutput($testRow['output']));
+$test_response['output'] = utf8_for_xml(TestOutput::DecompressOutput($testRow['output']));
 
 $test_response['summaryLink'] = $summaryLink;
 switch ($testRow['status']) {
@@ -256,11 +260,11 @@ if ($testRow['timestatus'] == 0) {
 $compareimages_response = [];
 $stmt = $pdo->prepare(
     "SELECT imgid, role FROM test2image
-    WHERE testid = :testid AND
+    WHERE outputid = :outputid AND
         (role = 'TestImage' OR role = 'ValidImage' OR role = 'BaselineImage' OR
          role ='DifferenceImage2')
     ORDER BY id");
-pdo_execute($stmt, [':testid' => $testid]);
+pdo_execute($stmt, [':outputid' => $outputid]);
 while ($row = $stmt->fetch()) {
     $image_response = [];
     $image_response['imgid'] = $row['imgid'];
@@ -274,11 +278,11 @@ if (!empty($compareimages_response)) {
 $images_response = [];
 $stmt = $pdo->prepare(
     "SELECT imgid, role FROM test2image
-    WHERE testid = :testid AND
+    WHERE outputid = :outputid AND
           role != 'ValidImage' AND role != 'BaselineImage' AND
           role != 'DifferenceImage2'
     ORDER BY id");
-pdo_execute($stmt, [':testid' => $testid]);
+pdo_execute($stmt, [':outputid' => $outputid]);
 while ($row = $stmt->fetch()) {
     $image_response = [];
     $image_response['imgid'] = $row['imgid'];
@@ -293,9 +297,9 @@ if (!empty($images_response)) {
 $measurements_response = [];
 $stmt = $pdo->prepare(
     'SELECT name, type, value FROM testmeasurement
-    WHERE testid = :testid
+    WHERE outputid = :outputid
     ORDER BY id');
-pdo_execute($stmt, [':testid' => $testid]);
+pdo_execute($stmt, [':outputid' => $outputid]);
 $fileid = 1;
 while ($row = $stmt->fetch()) {
     $measurement_response = [];
