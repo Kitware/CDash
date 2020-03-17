@@ -21,12 +21,12 @@ class TestImage
 {
     public $Id;
     public $Role;
-    public $TestId;
+    public $OutputId;
 
     /** Return if exists */
     public function Exists()
     {
-        $query = pdo_query("SELECT count(*) AS c FROM test2image WHERE imgid='" . $this->Id . "' AND testid='" . $this->TestId . "' AND role='" . $this->Role . "'");
+        $query = pdo_query("SELECT count(*) AS c FROM test2image WHERE imgid='" . $this->Id . "' AND outputid='" . $this->OutputId . "' AND role='" . $this->Role . "'");
         $query_array = pdo_fetch_array($query);
         if ($query_array['c'] > 0) {
             return true;
@@ -39,8 +39,8 @@ class TestImage
     {
         $role = pdo_real_escape_string($this->Role);
 
-        $query = "INSERT INTO test2image (imgid,testid,role)
-              VALUES ('$this->Id','$this->TestId','$role')";
+        $query = "INSERT INTO test2image (imgid,outputid,role)
+              VALUES ('$this->Id','$this->OutputId','$role')";
         if (!pdo_query($query)) {
             add_last_sql_error('TestImage Insert');
             return false;

@@ -15,18 +15,18 @@
  */
 namespace CDash\Collection;
 
-use CDash\Model\Test;
+use App\Models\BuildTest;
 
 class TestCollection extends Collection
 {
 
     /**
-     * @param Test $test
+     * @param BuildTest $buildtest
      * @return $this
      */
-    public function add(Test $test)
+    public function add(BuildTest $buildtest)
     {
-        parent::addItem($test, $test->Name);
+        parent::addItem($buildtest, $buildtest->test->name);
         return $this;
     }
 }

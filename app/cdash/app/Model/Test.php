@@ -40,7 +40,6 @@ class Test
     public $CompressedOutput;
 
     public $Images;
-    public $Measurements;
 
     private $LabelCollection;
     private $Status;
@@ -54,22 +53,9 @@ class Test
         $this->Path = '';
 
         $this->Images = [];
-        $this->Measurements = [];
         $this->CompressedOutput = false;
         $this->LabelCollection = collect();
         $this->PDO = Database::getInstance()->getPdo();
-    }
-
-    public function AddMeasurement($measurement)
-    {
-        $measurement->TestId = $this->Id;
-        $this->Measurements[] = $measurement;
-
-        if ($measurement->Name == 'Label') {
-            $label = new Label();
-            $label->SetText($measurement->Value);
-            $this->AddLabel($label);
-        }
     }
 
     public function AddImage($image)
@@ -218,12 +204,6 @@ class Test
 
         if (!$success) {
             return false;
-        }
-
-        // Add the measurements
-        foreach ($this->Measurements as $measurement) {
-            $measurement->TestId = $this->Id;
-            $measurement->Insert();
         }
 
         // Add the images

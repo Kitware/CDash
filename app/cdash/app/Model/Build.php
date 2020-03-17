@@ -286,7 +286,7 @@ class Build
         // tests.
         $total_proc_time = 0.0;
         foreach ($this->TestCollection as $test) {
-            $exec_time = $test->GetExecutionTime();
+            $exec_time = (double)$test->time;
             $num_procs = 1.0;
             foreach ($test->Measurements as $measurement) {
                 if ($measurement->Name == 'Processors') {
@@ -2645,14 +2645,14 @@ class Build
     }
 
     /**
-     * Given a $test, this method adds a Test to the current Build's TestCollection.
+     * Given a $buildtest, this method adds a BuildTest to the current Build's TestCollection.
      *
-     * @param Test $test
+     * @param BuildTest $test
      * @return $this
      */
-    public function AddTest(Test $test)
+    public function AddTest(\App\Models\BuildTest $buildtest)
     {
-        $this->TestCollection->add($test);
+        $this->TestCollection->add($buildtest);
         return $this;
     }
 
@@ -3181,15 +3181,15 @@ class Build
                     return $count;
                 }, 0);
                 $passed = array_reduce($this->TestCollection->toArray(), function ($count, $test) {
-                    $count += $test->GetStatus() === Test::PASSED ? 1 : 0;
+                    $count += $test->status === Test::PASSED ? 1 : 0;
                     return $count;
                 }, 0);
                 $failed = array_reduce($this->TestCollection->toArray(), function ($count, $test) {
-                    $count += $test->GetStatus() === Test::FAILED ? 1 : 0;
+                    $count += $test->status === Test::FAILED ? 1 : 0;
                     return $count;
                 }, 0);
                 $notrun = array_reduce($this->TestCollection->toArray(), function ($count, $test) {
-                    $count += $test->GetStatus() === Test::NOTRUN ? 1 : 0;
+                    $count += $test->status === Test::NOTRUN ? 1 : 0;
                     return $count;
                 }, 0);
 

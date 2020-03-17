@@ -166,7 +166,7 @@ class Label
 
         $this->InsertAssociation('label2test',
             'buildid', $this->TestBuildId,
-            'testid', $this->TestId);
+            'outputid', $this->TestId);
 
         // TODO: Implement this:
         //

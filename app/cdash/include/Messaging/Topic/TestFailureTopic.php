@@ -125,7 +125,7 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
      */
     public function itemHasTopicSubject(Build $build, $item)
     {
-        return $item->IsFailed();
+        return $item->status === Test::FAILED;
     }
 
     /**
@@ -156,14 +156,14 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
     public function setTopicDataWithLabels(Build $build, Collection $labels)
     {
         $collection = $this->getTopicCollection();
-        $tests = $build->GetTestCollection();
-        /** @var Test $test */
-        foreach ($tests as $test) {
-            if ($this->itemHasTopicSubject($build, $test)) {
-                $testLabels = $test->GetLabelCollection();
+        $buildtests = $build->GetTestCollection();
+        /** @var Test $buildtest */
+        foreach ($buildtests as $buildtest) {
+            if ($this->itemHasTopicSubject($build, $buildtest)) {
+                $testLabels = $buildtest->getLabels();
                 foreach ($labels as $label) {
                     if ($testLabels->has($label->Text)) {
-                        $collection->add($test);
+                        $collection->add($buildtest);
                     }
                 }
             }
@@ -176,14 +176,14 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
      */
     public function getLabelsFromBuild(Build $build)
     {
-        $tests = $build->GetTestCollection();
+        $buildtests = $build->GetTestCollection();
         $collection = collect();
-        /** @var Test $test */
-        foreach ($tests as $test) {
-            // No need to bother with passed tests
-            if ($this->itemHasTopicSubject($build, $test)) {
+        /** @var BuildTest $buildtest */
+        foreach ($buildtests as $buildtest) {
+            // No need to bother with passed buildtests
+            if ($this->itemHasTopicSubject($build, $buildtest)) {
                 /** @var Label $label */
-                foreach ($test->GetLabelCollection() as $label) {
+                foreach ($buildtest->getLabels() as $label) {
                     $collection->put($label->Text, $label);
                 }
             }
