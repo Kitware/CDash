@@ -108,13 +108,13 @@ class MissingTestTopicTest extends TestCase
         $a = $collection->get('TestA');
         $c = $collection->get('TestC');
 
-        $this->assertEquals('101', $a->Id);
-        $this->assertEquals('TestA', $a->Name);
-        $this->assertEquals('2', $a->GetBuildTest()->BuildId);
+        $this->assertEquals('101', $a->test->id);
+        $this->assertEquals('TestA', $a->test->name);
+        $this->assertEquals('2', $a->buildid);
 
-        $this->assertEquals('303', $c->Id);
-        $this->assertEquals('TestC', $c->Name);
-        $this->assertEquals('2', $c->GetBuildTest()->BuildId);
+        $this->assertEquals('303', $c->test->id);
+        $this->assertEquals('TestC', $c->test->name);
+        $this->assertEquals('2', $c->buildid);
 
         $this->assertEquals(2, $sut->getTopicCount());
     }

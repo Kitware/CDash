@@ -9,7 +9,6 @@ require_once 'include/common.php';
 require_once 'include/pdo.php';
 
 use CDash\Model\Image;
-use CDash\Model\TestImage;
 
 class ImageTestCase extends KWWebTestCase
 {
@@ -48,27 +47,6 @@ class ImageTestCase extends KWWebTestCase
         }
         if (!$image->Save()) {
             $this->fail("Save() call #2 returned false when it should be true.\n");
-            return 1;
-        }
-
-        //exercise the TestImage class as well
-        $testimage = new TestImage();
-
-        $testimage->Id = 1;
-        $testimage->TestId = 1;
-
-        if ($testimage->Exists()) {
-            $this->fail("testimage shouldn't exist yet.\n");
-            return 1;
-        }
-
-        if (!$testimage->Insert()) {
-            $this->fail("testimage::Insert() shouldn't have returned false.\n");
-            return 1;
-        }
-
-        if (!$testimage->Exists()) {
-            $this->fail("testimage should exist at this point.\n");
             return 1;
         }
 
