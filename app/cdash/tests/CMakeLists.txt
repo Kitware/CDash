@@ -99,6 +99,7 @@ add_unit_test(/CDash/XmlHandler/DynamicAnalysisHandler)
 add_unit_test(/CDash/XmlHandler/TestingHandler)
 add_unit_test(/CDash/XmlHandler/UpdateHandler)
 
+add_laravel_test(/Feature/TestSchemaMigration)
 add_php_test(reinstall)
 add_php_test(compressedtest)
 add_php_test(createpublicdashboard)
