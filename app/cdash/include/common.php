@@ -977,14 +977,18 @@ function remove_build($buildid)
     }
     pdo_query('DELETE FROM build2update WHERE buildid IN ' . $buildids);
 
-    // Delete any tests that are not shared.
-    // First find all the tests from builds that are about to be deleted.
+    // Delete tests and testoutputs that are not shared.
+    // First find all the tests and testoutputs from builds that are about to be deleted.
     $b2t_result = pdo_query(
-        "SELECT DISTINCT testid from build2test WHERE buildid IN $buildids");
-    $all_testids = array();
+        "SELECT testid, outputid from build2test WHERE buildid IN $buildids");
+    $all_testids = [];
+    $all_outputids = [];
     while ($b2t_row = pdo_fetch_array($b2t_result)) {
         $all_testids[] = $b2t_row['testid'];
+        $all_outputids[] = $b2t_row['outputid'];
     }
+    $all_testids = array_unique($all_testids);
+    $all_outputids = array_unique($all_outputids);
 
     if (!empty($all_testids)) {
         // Next identify tests from this list that should be preserved
@@ -1002,14 +1006,35 @@ function remove_build($buildid)
         $tests_to_delete = array_diff($all_testids, $tests_to_save);
         if (!empty($tests_to_delete)) {
             $testids = '(' . implode(',', $tests_to_delete) . ')';
-            pdo_query("DELETE FROM testmeasurement WHERE testid IN $testids");
             pdo_query("DELETE FROM test WHERE id IN $testids");
+        }
+    }
+
+    // Delete un-shared testoutput rows.
+    if (!empty($all_outputids)) {
+        // Next identify tests from this list that should be preserved
+        // because they are shared with builds that are not about to be deleted.
+        $outputids = '(' . implode(',', $all_outputids) . ')';
+        $save_test_result = pdo_query(
+                "SELECT DISTINCT outputid FROM build2test
+                WHERE outputid IN $outputids AND buildid NOT IN $buildids");
+        $testoutputs_to_save = [];
+        while ($save_test_row = pdo_fetch_array($save_test_result)) {
+            $testoutputs_to_save[] = $save_test_row['outputid'];
+        }
+
+        // Use array_diff to get the list of tests that should be deleted.
+        $testoutputs_to_delete = array_diff($all_outputids, $testoutputs_to_save);
+        if (!empty($testoutputs_to_delete)) {
+            $outputids = '(' . implode(',', $testoutputs_to_delete) . ')';
+            pdo_query("DELETE FROM testmeasurement WHERE outputid IN $outputids");
+            pdo_query("DELETE FROM testoutput WHERE id IN $outputids");
 
             $imgids = '(';
             // Check if the images for the test are not shared
             $test2image = pdo_query('SELECT a.imgid,count(b.imgid) AS c
                     FROM test2image AS a LEFT JOIN test2image AS b
-                    ON (a.imgid=b.imgid AND b.testid NOT IN ' . $testids . ') WHERE a.testid IN ' . $testids . '
+                    ON (a.imgid=b.imgid AND b.outputid NOT IN ' . $outputids . ') WHERE a.outputid IN ' . $outputids . '
                     GROUP BY a.imgid HAVING count(b.imgid)=0');
             while ($test2image_array = pdo_fetch_array($test2image)) {
                 $imgid = $test2image_array['imgid'];
@@ -1022,7 +1047,7 @@ function remove_build($buildid)
             if (strlen($imgids) > 2) {
                 pdo_query('DELETE FROM image WHERE id IN ' . $imgids);
             }
-            pdo_query('DELETE FROM test2image WHERE testid IN ' . $testids);
+            pdo_query('DELETE FROM test2image WHERE outputid IN ' . $outputids);
         }
     }
 
