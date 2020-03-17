@@ -16,12 +16,12 @@
 
 require_once 'xml_handlers/abstract_handler.php';
 
+use App\Services\TestCreator;
+
 use CDash\Model\Build;
 use CDash\Model\BuildInformation;
-use CDash\Model\BuildTest;
 use CDash\Model\Site;
 use CDash\Model\SiteInformation;
-use CDash\Model\Test;
 
 class TestingJUnitHandler extends AbstractHandler
 {
@@ -32,10 +32,6 @@ class TestingJUnitHandler extends AbstractHandler
     // The buildgroup to submit to (defaults to Nightly).
     private $Group;
 
-    private $Tests;
-    private $CurrentTest;
-    private $BuildTests;
-    private $CurrentBuildTest;
     private $Append;
 
     // Keep a record of the number of tests passed, failed and notrun.
@@ -54,8 +50,6 @@ class TestingJUnitHandler extends AbstractHandler
         parent::__construct($projectID);
         $this->Build = new Build();
         $this->Site = new Site();
-        $this->BuildTests = [];
-        $this->Tests = [];
 
         $this->UpdateEndTime = false;
         $this->Group = 'Nightly';
@@ -114,7 +108,7 @@ class TestingJUnitHandler extends AbstractHandler
                 $this->Append = false;
             }
         } elseif ($name == 'FAILURE' || $name == 'ERROR') {
-            $this->CurrentTest->Details = $attributes['TYPE'];
+            $this->TestCreator->testDetails = $attributes['TYPE'];
         } elseif ($name == 'PROPERTY' && $parent == 'PROPERTIES') {
             $this->TestProperties .= $attributes['NAME'] . '=' . $attributes['VALUE'] . "\n";
             if ($this->HasSiteTag == false) {
@@ -145,29 +139,28 @@ class TestingJUnitHandler extends AbstractHandler
                 }
             }
         } elseif ($name == 'TESTCASE' && count($attributes) > 0) {
-            $this->CurrentTest = new Test();
-            $this->CurrentTest->Command = $this->TestProperties;
-            $this->CurrentTest->ProjectId = $this->projectid;
-            $this->CurrentBuildTest = new BuildTest();
+            $this->TestCreator = new TestCreator;
+            $this->TestCreator->testCommand = $this->TestProperties;
+            $this->TestCreator->projectid = $this->projectid;
 
             if (isset($attributes['TIME'])) {
-                $this->CurrentBuildTest->Time = $attributes['TIME'];
+                $this->TestCreator->buildTestTime = $attributes['TIME'];
             }
 
             // Default is that the test passes.
-            $this->CurrentBuildTest->Status = 'passed';
+            $this->TestCreator->testStatus = 'passed';
             if (array_key_exists('STATUS', $attributes)) {
                 $status = $attributes['STATUS'];
                 if (stripos($status, 'fail') !== false) {
-                    $this->CurrentBuildTest->Status = 'failed';
+                    $this->TestCreator->testStatus = 'failed';
                 }
                 if (strcasecmp($status, 'notrun') === 0) {
-                    $this->CurrentBuildTest->Status = 'notrun';
+                    $this->TestCreator->testStatus = 'notrun';
                 }
             }
 
-            $this->CurrentTest->Name = $attributes['NAME'];
-            $this->CurrentTest->Path = $attributes['CLASSNAME'];
+            $this->TestCreator->testName = $attributes['NAME'];
+            $this->TestCreator->testPath = $attributes['CLASSNAME'];
         } elseif ($name == 'TESTSUITE') {
             // If the XML file doesn't have a <Site> tag then we use the information
             // provided by the testsuite.
@@ -212,78 +205,27 @@ class TestingJUnitHandler extends AbstractHandler
         parent::endElement($parser, $name);
         if ($name == 'FAILURE' || $name == 'ERROR') {
             // Mark this test as failed if it has a <failure> or <error> tag.
-            $this->CurrentBuildTest->Status = 'failed';
+            $this->TestCreator->testStatus = 'failed';
         } elseif ($name == 'TESTCASE') {
+            // At this point we should have enough information
+            // to create a build if we haven't done so already.
+            $this->createBuild();
+
             // Update our tally of passing/failing/notrun tests.
-            if ($this->CurrentBuildTest->Status == 'passed') {
+            if ($this->TestCreator->testStatus == 'passed') {
                 $this->NumberTestsPassed++;
-            } elseif ($this->CurrentBuildTest->Status == 'failed') {
+            } elseif ($this->TestCreator->testStatus == 'failed') {
                 $this->NumberTestsFailed++;
-            } elseif ($this->CurrentBuildTest->Status == 'notrun') {
+            } elseif ($this->TestCreator->testStatus == 'notrun') {
                 $this->NumberTestsNotRun++;
             }
+
             // Record this test in the database.
-            $this->CurrentTest->Insert();
-            if ($this->CurrentTest->Id > 0) {
-                $this->CurrentBuildTest->TestId = $this->CurrentTest->Id;
-                $this->Tests[] = $this->CurrentTest;
-                $this->BuildTests[] = $this->CurrentBuildTest;
-            } else {
-                add_log('Cannot insert test', 'Test XML parser', LOG_ERR,
-                    $this->projectid, $this->Build->Id);
-            }
+            $this->TestCreator->create($this->Build);
         } elseif ($name == 'SITE' || ($this->HasSiteTag == false && $name == 'TESTSUITE')) {
             if (strlen($this->EndTimeStamp) > 0 && $this->UpdateEndTime) {
                 $end_time = gmdate(FMT_DATETIME, $this->EndTimeStamp); // The EndTimeStamp
                 $this->Build->UpdateEndTime($end_time);
-            }
-
-            // Add the build if necessary.
-            if ($this->BuildAdded == false) {
-                $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
-                $this->Build->ProjectId = $this->projectid;
-                $this->Build->GetIdFromName($this->SubProjectName);
-                $this->Build->RemoveIfDone();
-
-                // If the build doesn't exist we add it
-                if ($this->Build->Id == 0) {
-                    $this->Build->ProjectId = $this->projectid;
-                    $this->Build->StartTime = $start_time;
-                    $this->Build->EndTime = $start_time;
-                    $this->Build->SubmitTime = gmdate(FMT_DATETIME);
-                    $this->Build->SetSubProject($this->SubProjectName);
-                    $this->Build->Append = $this->Append;
-                    $this->Build->InsertErrors = false;
-                    if ($this->HasSiteTag == false) {
-                        // Construct the build stamp.
-                        $stamp = date('Ymd-Hi', $this->StartTimeStamp) . "-$this->Group";
-                        $this->Build->SetStamp($stamp);
-                    }
-                    add_build($this->Build);
-                    $this->UpdateEndTime = true;
-                } else {
-                    // Otherwise make sure that the build is up-to-date.
-                    $this->Build->UpdateBuild($this->Build->Id, -1, -1);
-
-                    //if the build already exists factor the number of tests that have
-                    //already been run into our running total
-                    $this->NumberTestsFailed += $this->Build->GetNumberOfFailedTests();
-                    $this->NumberTestsNotRun += $this->Build->GetNumberOfNotRunTests();
-                    $this->NumberTestsPassed += $this->Build->GetNumberOfPassedTests();
-                }
-                $GLOBALS['PHP_ERROR_BUILD_ID'] = $this->Build->Id;
-                $this->BuildAdded = true;
-            }
-
-            // Add the tests for this build.
-            foreach ($this->BuildTests as $buildtest) {
-                $buildtest->BuildId = $this->Build->Id;
-                $buildtest->Insert();
-            }
-
-            // Set any label associations for tests.
-            foreach ($this->Tests as $test) {
-                $test->InsertLabelAssociations($this->Build->Id);
             }
 
             // Update the number of tests in the Build table
@@ -301,7 +243,48 @@ class TestingJUnitHandler extends AbstractHandler
     {
         $element = $this->getElement();
         if ($element == 'FAILURE') {
-            $this->CurrentTest->Output .= $data;
+            $this->TestCreator->testOutput .= $data;
         }
+    }
+
+    private function createBuild()
+    {
+        // Add the build if necessary.
+        if ($this->BuildAdded) {
+            return;
+        }
+        $start_time = gmdate(FMT_DATETIME, $this->StartTimeStamp);
+        $this->Build->ProjectId = $this->projectid;
+        $this->Build->GetIdFromName($this->SubProjectName);
+        $this->Build->RemoveIfDone();
+
+        // If the build doesn't exist we add it
+        if ($this->Build->Id == 0) {
+            $this->Build->ProjectId = $this->projectid;
+            $this->Build->StartTime = $start_time;
+            $this->Build->EndTime = $start_time;
+            $this->Build->SubmitTime = gmdate(FMT_DATETIME);
+            $this->Build->SetSubProject($this->SubProjectName);
+            $this->Build->Append = $this->Append;
+            $this->Build->InsertErrors = false;
+            if ($this->HasSiteTag == false) {
+                // Construct the build stamp.
+                $stamp = date('Ymd-Hi', $this->StartTimeStamp) . "-$this->Group";
+                $this->Build->SetStamp($stamp);
+            }
+            add_build($this->Build);
+            $this->UpdateEndTime = true;
+        } else {
+            // Otherwise make sure that the build is up-to-date.
+            $this->Build->UpdateBuild($this->Build->Id, -1, -1);
+
+            //if the build already exists factor the number of tests that have
+            //already been run into our running total
+            $this->NumberTestsFailed += $this->Build->GetNumberOfFailedTests();
+            $this->NumberTestsNotRun += $this->Build->GetNumberOfNotRunTests();
+            $this->NumberTestsPassed += $this->Build->GetNumberOfPassedTests();
+        }
+        $GLOBALS['PHP_ERROR_BUILD_ID'] = $this->Build->Id;
+        $this->BuildAdded = true;
     }
 }
