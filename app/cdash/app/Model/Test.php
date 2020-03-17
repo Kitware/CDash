@@ -334,18 +334,6 @@ class Test
     }
 
     /**
-     * Returns a self referencing URI for the current Test.
-     *
-     * @return string
-     */
-    public function GetUrlForSelf()
-    {
-        $config = \CDash\Config::getInstance();
-        $host_base = $config->getBaseUrl();
-        return "{$host_base}/testDetails.php?test={$this->Id}&build={$this->BuildTest->BuildId}";
-    }
-
-    /**
      * Returns uncompressed test output.
      *
      * @return string
