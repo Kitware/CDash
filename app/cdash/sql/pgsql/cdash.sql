@@ -291,12 +291,12 @@ CREATE INDEX "checksum" on "image" ("checksum");
 CREATE TABLE "test2image" (
   "id" serial NOT NULL,
   "imgid" bigint NOT NULL,
-  "testid" bigint NOT NULL,
+  "outputid" bigint NOT NULL,
   "role" text NOT NULL,
    PRIMARY KEY ("id")
 );
 CREATE INDEX "imgid" on "test2image" ("imgid");
-CREATE INDEX "testid" on "test2image" ("testid");
+CREATE INDEX "outputid" on "test2image" ("outputid");
 
 --
 -- Table: note
@@ -433,33 +433,47 @@ CREATE INDEX "userid" on "site2user" ("userid");
 CREATE TABLE "test" (
   "id" serial NOT NULL,
   "projectid" bigint NOT NULL,
-  "crc32" bigint NOT NULL,
   "name" character varying(255) DEFAULT '' NOT NULL,
+  PRIMARY KEY ("id")
+);
+CREATE UNIQUE INDEX "test_name_projectid_unique" ON "test" ("name", "projectid");
+
+--
+-- Table: testoutput
+--
+CREATE TABLE "testoutput" (
+  "id" serial NOT NULL,
+  "testid" bigint NOT NULL,
+  "crc32" bigint NOT NULL,
   "path" character varying(255) DEFAULT '' NOT NULL,
   "command" text NOT NULL,
-  "details" text NOT NULL,
   "output" bytea NOT NULL,
   PRIMARY KEY ("id")
 );
-CREATE INDEX "crc323" on "test" ("crc32");
-CREATE INDEX "testprojectid" on "test" ("projectid");
-CREATE INDEX "name4" on "test" ("name");
+CREATE INDEX "crc323" on "testoutput" ("crc32");
+CREATE INDEX "testoutput_testid_index" on "testoutput" ("testid");
+
 
 --
 -- Table: build2test
 --
 CREATE TABLE "build2test" (
+  "id" serial NOT NULL,
   "buildid" bigint DEFAULT '0' NOT NULL,
+  "outputid" bigint DEFAULT '0' NOT NULL,
   "testid" bigint DEFAULT '0' NOT NULL,
   "status" character varying(10) DEFAULT '' NOT NULL,
+  "details" character varying(255) DEFAULT '' NOT NULL,
   "time" numeric(7,2) DEFAULT '0.00' NOT NULL,
   "timemean" numeric(7,2) DEFAULT '0.00' NOT NULL,
   "timestd" numeric(7,2) DEFAULT '0.00' NOT NULL,
   "timestatus" smallint DEFAULT '0' NOT NULL,
-  "newstatus" smallint DEFAULT '0' NOT NULL
+  "newstatus" smallint DEFAULT '0' NOT NULL,
+  PRIMARY KEY ("id")
 );
-CREATE INDEX "buildid8" on "build2test" ("buildid");
-CREATE INDEX "testid2" on "build2test" ("testid");
+CREATE INDEX "build2test_buildid" on "build2test" ("buildid");
+CREATE INDEX "build2test_outputid" on "build2test" ("outputid");
+CREATE INDEX "build2test_testid" on "build2test" ("testid");
 CREATE INDEX "status" on "build2test" ("status");
 CREATE INDEX "timestatus" on "build2test" ("timestatus");
 CREATE INDEX "newstatus" on "build2test" ("newstatus");
@@ -584,13 +598,13 @@ CREATE TABLE "project2repositories" (
 --
 CREATE TABLE "testmeasurement" (
   "id" serial NOT NULL,
-  "testid" bigint NOT NULL,
+  "outputid" bigint NOT NULL,
   "name" character varying(70) NOT NULL,
   "type" character varying(70) NOT NULL,
   "value" text NOT NULL,
    PRIMARY KEY ("id")
 );
-CREATE INDEX "testid3" on "testmeasurement" ("testid");
+CREATE INDEX "testmeasurement_outputid" on "testmeasurement" ("outputid");
 
 --
 -- Table: dailyupdate
@@ -816,11 +830,11 @@ CREATE TABLE "label2dynamicanalysis" (
 CREATE TABLE "label2test" (
   "labelid" bigint NOT NULL,
   "buildid" bigint NOT NULL,
-  "testid" bigint NOT NULL,
-  PRIMARY KEY ("labelid", "buildid", "testid")
+  "outputid" bigint NOT NULL,
+  PRIMARY KEY ("labelid", "buildid", "outputid")
 );
 CREATE INDEX "label2test_buildid" on "label2test" ("buildid");
-CREATE INDEX "label2test_testid" on "label2test" ("testid");
+CREATE INDEX "label2test_outputid" on "label2test" ("outputid");
 
 --
 -- Table: label2update
