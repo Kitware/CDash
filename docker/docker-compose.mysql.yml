@@ -36,7 +36,7 @@ services:
         DELETE remove.this.user@example.org delete_secret
 
   mysql:
-    image: "mysql/mysql-server:5.5"
+    image: "mysql/mysql-server:5.7"
     env_file:
       - ./docker/.env.mysql
     environment:
