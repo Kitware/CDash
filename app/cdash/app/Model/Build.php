@@ -288,9 +288,9 @@ class Build
         foreach ($this->TestCollection as $test) {
             $exec_time = (double)$test->time;
             $num_procs = 1.0;
-            foreach ($test->Measurements as $measurement) {
-                if ($measurement->Name == 'Processors') {
-                    $num_procs *= $measurement->Value;
+            foreach ($test->measurements as $measurement) {
+                if ($measurement->name == 'Processors') {
+                    $num_procs *= $measurement->value;
                     break;
                 }
             }
@@ -360,7 +360,7 @@ class Build
             return false;
         }
 
-        $stmt = $this->PDO->preapre(
+        $stmt = $this->PDO->prepare(
             'UPDATE build SET endtime = ? WHERE id = ?');
         if (!pdo_execute($stmt, [$end_time, $this->Id])) {
             return false;
@@ -1104,7 +1104,7 @@ class Build
         }
 
         $sql = "
-            SELECT t.name, t.id, t.details
+            SELECT t.name, t.id, b2t.details
             FROM test t
             JOIN build2test b2t ON t.id = b2t.testid
             WHERE b2t.buildid = :buildid
@@ -1151,7 +1151,7 @@ class Build
      */
     public function GetTimedoutTests($maxitems = 0)
     {
-        $criteria = "b2t.status = 'failed' AND t.details LIKE '%%Timeout%%'";
+        $criteria = "b2t.status = 'failed' AND b2t.details LIKE '%%Timeout%%'";
         return $this->GetTests($criteria, $maxitems);
     }
 
@@ -1163,7 +1163,7 @@ class Build
      */
     public function GetNotRunTests($maxitems = 0)
     {
-        $criteria = "b2t.status = 'notrun' AND t.details != 'Disabled'";
+        $criteria = "b2t.status = 'notrun' AND b2t.details != 'Disabled'";
         return $this->GetTests($criteria, $maxitems);
     }
 
@@ -1385,7 +1385,7 @@ class Build
 
         // Get the tests performed by the previous build.
         $previous_tests_stmt = $this->PDO->prepare(
-            'SELECT b2t.testid, t.name
+            'SELECT b2t.id AS buildtestid, b2t.testid, t.name
             FROM build2test b2t
             JOIN test t ON t.id = b2t.testid
             WHERE b2t.buildid = ?');
@@ -1396,6 +1396,7 @@ class Build
         $testarray = [];
         while ($row = $previous_tests_stmt->fetch()) {
             $test = [];
+            $test['buildtestid'] = $row['buildtestid'];
             $test['id'] = $row['testid'];
             $test['name'] = $row['name'];
             $testarray[] = $test;
@@ -1403,8 +1404,8 @@ class Build
 
         // Loop through the tests performed by this build.
         $tests_stmt = $this->PDO->prepare(
-            'SELECT b2t.time, b2t.testid, t.name, b2t.status,
-                    b2t.timestatus
+            'SELECT b2t.id AS buildtestid, b2t.time, b2t.testid, t.name,
+                    b2t.status, b2t.timestatus
             FROM build2test b2t
             JOIN test t ON b2t.testid = t.id
             WHERE b2t.buildid = ?');
@@ -1413,26 +1414,25 @@ class Build
         }
         while ($row = $tests_stmt->fetch()) {
             $testtime = $row['time'];
+            $buildtestid = $row['buildtestid'];
             $testid = $row['testid'];
             $teststatus = $row['status'];
             $testname = $row['name'];
-            $previoustestid = 0;
+            $previousbuildtestid = 0;
             $timestatus = $row['timestatus'];
 
             foreach ($testarray as $test) {
                 if ($test['name'] == $testname) {
-                    $previoustestid = $test['id'];
+                    $previousbuildtestid = $test['buildtestid'];
                     break;
                 }
             }
 
-            if ($previoustestid > 0) {
+            if ($previousbuildtestid > 0) {
                 $previous_test_stmt = $this->PDO->prepare(
-                    'SELECT timemean, timestd, timestatus
-                    FROM build2test
-                    WHERE buildid = ? AND testid = ?');
-                if (!pdo_execute($previous_test_stmt,
-                    [$previousbuildid, $previoustestid])) {
+                    'SELECT timemean, timestd, timestatus FROM build2test
+                    WHERE id = ?');
+                if (!pdo_execute($previous_test_stmt, [$previousbuildtestid])) {
                     continue;
                 }
 
@@ -1482,15 +1482,16 @@ class Build
                 $timemean = $testtime;
             }
 
-            $update_stmt = $this->PDO->prepare(
-                'UPDATE build2test
-                SET timemean = ?, timestd = ?, timestatus = ?
-                WHERE buildid = ? AND testid = ?');
-            if (!pdo_execute($update_stmt,
-                [$timemean, $timestd, $timestatus, $this->Id,
-                    $testid])) {
-                continue;
-            }
+            $buildtest = \App\Models\BuildTest::find($buildtestid);
+            $buildtest->timestatus = $timestatus;
+
+            // TODO: remove these cast-to-strings after upgrading to Laravel 6.x.
+            // https://github.com/laravel/framework/issues/23850
+            $buildtest->timemean = "$timemean";
+            $buildtest->timestd = "$timestd";
+
+            $buildtest->save();
+
             if ($timestatus >= $projecttestmaxstatus) {
                 $testtimestatusfailed++;
             }
