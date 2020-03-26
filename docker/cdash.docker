@@ -107,7 +107,7 @@ else                                                                       \
                   --optimize-autoloader                                    \
  && echo "LOG_CHANNEL=stderr" >> .env                                      \
  && npm install                                                            \
- && npm run prod;                                                          \
+ && npm run dev;                                                           \
 fi
 
 RUN cp app/cdash/php.ini /usr/local/etc/php/conf.d/cdash.ini
