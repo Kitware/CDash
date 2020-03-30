@@ -58,4 +58,101 @@ class BuildTest extends Model
         $host_base = \Config::get('app.url');
         return "{$host_base}/testDetails.php?test={$this->outputid}&build={$this->buildid}";
     }
+
+
+    // Marshal functions moved here from the old BuildTest model class.
+    public static function marshalMissing($name, $buildid, $projectid, $projectshowtesttime, $testtimemaxstatus, $testdate)
+    {
+        $data = array();
+        $data['name'] = $name;
+        $data['status'] = 'missing';
+        $data['id'] = '';
+        $data['time'] = '';
+        $data['details'] = '';
+        $data["newstatus"] = false;
+
+        $test = self::marshal($data, $buildid, $projectid, $projectshowtesttime, $testtimemaxstatus, $testdate);
+
+        // Since these tests are missing they should
+        // not behave like other tests
+        $test['execTime'] = '';
+        $test['summary'] = '';
+        $test['detailsLink'] = '';
+        $test['summaryLink'] = '';
+
+        return $test;
+    }
+
+    public static function marshalStatus($status)
+    {
+        $statuses = array('passed' => array('Passed', 'normal'),
+                          'failed' => array('Failed', 'error'),
+                          'notrun' => array('Not Run', 'warning'),
+                          'missing' => array('Missing', 'missing'));
+
+        return $statuses[$status];
+    }
+
+    public static function marshal($data, $buildid, $projectid, $projectshowtesttime, $testtimemaxstatus, $testdate)
+    {
+        require_once 'include/common.php';
+        $marshaledStatus = self::marshalStatus($data['status']);
+        if ($data['details'] === 'Disabled') {
+            $marshaledStatus = array('Not Run', 'disabled-test');
+        }
+        $marshaledData = array(
+            'id' => $data['id'],
+            'buildid' => $buildid,
+            'status' => $marshaledStatus[0],
+            'statusclass' => $marshaledStatus[1],
+            'name' => $data['name'],
+            'execTime' => time_difference($data['time'], true, '', true),
+            'execTimeFull' => floatval($data['time']),
+            'details' => $data['details'],
+            'summaryLink' => "testSummary.php?project=$projectid&name=" . urlencode($data['name']) . "&date=$testdate",
+            'summary' => 'Summary', /* Default value later replaced by AJAX */
+            'detailsLink' => "testDetails.php?test=" . $data['id'] . "&build=$buildid");
+
+        if ($data['newstatus']) {
+            $marshaledData['new'] = '1';
+        }
+
+        if ($projectshowtesttime) {
+            if ($data['timestatus'] == 0) {
+                $marshaledData['timestatus'] = 'Passed';
+                $marshaledData['timestatusclass'] = 'normal';
+            } elseif ($data['timestatus'] < $testtimemaxstatus) {
+                $marshaledData['timestatus'] = 'Warning';
+                $marshaledData['timestatusclass'] = 'warning';
+            } else {
+                $marshaledData['timestatus'] = 'Failed';
+                $marshaledData['timestatusclass'] = 'error';
+            }
+        }
+
+        if (config('database.default') == 'pgsql' && $marshaledData['id']) {
+            get_labels_JSON_from_query_results(
+                'SELECT text FROM label, label2test WHERE ' .
+                'label.id=label2test.labelid AND ' .
+                "label2test.testid=" . $marshaledData['id'] . " AND " .
+                "label2test.buildid='$buildid' " .
+                'ORDER BY text ASC',
+                $marshaledData);
+        } else {
+            if (!empty($data['labels'])) {
+                $labels = explode(',', $data['labels']);
+                $marshaledData['labels'] = $labels;
+            }
+        }
+
+        if (isset($data['subprojectid'])) {
+            $marshaledData['subprojectid'] = $data['subprojectid'];
+        }
+
+        if (isset($data['subprojectname'])) {
+            $marshaledData['subprojectname'] = $data['subprojectname'];
+        }
+
+        return $marshaledData;
+    }
 }

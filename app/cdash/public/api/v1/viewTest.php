@@ -19,9 +19,10 @@ require_once 'include/api_common.php';
 include 'include/version.php';
 require_once 'include/filterdataFunctions.php';
 
+use App\Models\BuildTest;
+
 use CDash\Config;
 use CDash\Model\Build;
-use CDash\Model\BuildTest;
 use CDash\Model\Project;
 
 /**

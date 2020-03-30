@@ -22,7 +22,6 @@ use CDash\Config;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
-use CDash\Model\Test;
 
 require_once 'include/filterdataFunctions.php';
 

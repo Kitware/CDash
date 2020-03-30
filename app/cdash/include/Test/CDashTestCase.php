@@ -13,12 +13,13 @@
 =========================================================================*/
 namespace CDash\Test;
 
+use App\Models\Test;
+
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
 use CDash\Model\Site;
-use CDash\Model\Test;
 use CDash\Model\User;
 use CDash\Model\UserProject;
 use CDash\ServiceContainer;

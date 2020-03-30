@@ -104,7 +104,6 @@ class MissingTestTopicTest extends TestCase
         $this->assertTrue($collection->has('TestA'));
         $this->assertTrue($collection->has('TestC'));
 
-        /** @var \CDash\Model\Test $a */
         $a = $collection->get('TestA');
         $c = $collection->get('TestC');
 
