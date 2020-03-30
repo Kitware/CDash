@@ -3,13 +3,13 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 
+use App\Services\TestCreator;
+
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildError;
 use CDash\Model\BuildFailure;
-use CDash\Model\BuildTest;
 use CDash\Model\Project;
-use CDash\Model\Test;
 
 class BuildPropertiesTestCase extends KWWebTestCase
 {
@@ -57,28 +57,24 @@ class BuildPropertiesTestCase extends KWWebTestCase
         $this->create_build('fixed', 'fixed.json', '20170529-0500', '0d7a8415c91ea126550bdff6f5b18b2f');
 
         // Add a test for these builds.
-        $test = new Test();
-        $test->ProjectId = $this->Project->Id;
-        $test->Details = '';
-        $test->Name = 'BuildPropUnitTest';
-        $test->Path = '/tmp';
-        $test->Command = 'echo foo';
-        $test->Output = 'foo';
-        $test->Insert();
+        $testcreator = new TestCreator;
+        $testcreator->projectid = $this->Project->Id;
+        $testcreator->testDetails = '';
+        $testcreator->testName = 'BuildPropUnitTest';
+        $testcreator->testPath = '/tmp';
+        $testcreator->testCommand = 'echo foo';
+        $testcreator->testOutput = 'foo';
         foreach ($this->Builds as $name => $build) {
-            $buildtest = new BuildTest();
-            $buildtest->BuildId = $build->Id;
-            $buildtest->TestId = $test->Id;
             $numpass = 0;
             $numfail = 0;
             if (strpos($name, 'failedtest') !== false) {
-                $buildtest->Status = 'failed';
+                $testcreator->testStatus = 'failed';
                 $numfail = 1;
             } else {
-                $buildtest->Status = 'passed';
+                $testcreator->testStatus = 'passed';
                 $numpass = 1;
             }
-            $buildtest->Insert();
+            $testcreator->create($build);
             $build->UpdateTestNumbers($numpass, $numfail, 0);
         }
 

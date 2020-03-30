@@ -356,11 +356,11 @@ CREATE TABLE `image` (
 CREATE TABLE `test2image` (
   `id` bigint(20) NOT NULL auto_increment,
   `imgid` int(11) NOT NULL,
-  `testid` int(11) NOT NULL,
+  `outputid` int(11) NOT NULL,
   `role` tinytext NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `imgid` (`imgid`),
-  KEY `testid` (`testid`)
+  KEY `outputid` (`outputid`)
 );
 
 -- --------------------------------------------------------
@@ -535,32 +535,45 @@ CREATE TABLE `site2user` (
 CREATE TABLE `test` (
   `id` int(11) NOT NULL auto_increment,
   `projectid` int(11) NOT NULL,
-  `crc32` bigint(20) NOT NULL,
   `name` varchar(255) NOT NULL default '',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `test_name_projectid_unique` (`name`,`projectid`)
+);
+
+--
+-- Table structure for table `testoutput`
+--
+CREATE TABLE `testoutput` (
+  `id` int(11) NOT NULL auto_increment,
+  `testid` int(11) NOT NULL,
+  `crc32` bigint(20) NOT NULL,
   `path` varchar(255) NOT NULL default '',
   `command` text NOT NULL,
-  `details` text NOT NULL,
   `output` MEDIUMBLOB NOT NULL,
   PRIMARY KEY  (`id`),
-  KEY `projectid` (`projectid`),
   KEY `crc32` (`crc32`),
-  KEY `name` (`name`)
+  KEY `testoutput_testid_index` (`testid`)
 );
 
 --
 -- Table structure for table `build2test`
 --
 CREATE TABLE `build2test` (
+  `id` int(11) NOT NULL auto_increment,
   `buildid` int(11) NOT NULL default '0',
-  `testid` int(11) NOT NULL default '0',
+  `outputid` int(11) NOT NULL default '0',
+  `testid` int(11) NOT NULL,
   `status` varchar(10) NOT NULL default '',
+  `details` varchar(255) NOT NULL default '',
   `time` float(7,2) NOT NULL default '0.00',
   `timemean` float(7,2) NOT NULL default '0.00',
   `timestd` float(7,2) NOT NULL default '0.00',
   `timestatus` tinyint(4) NOT NULL default '0',
   `newstatus` tinyint(4) NOT NULL default '0',
+  PRIMARY KEY (`id`),
   KEY `buildid` (`buildid`),
-  KEY `testid` (`testid`),
+  KEY `outputid` (`outputid`),
+  KEY `build2test_testid_index` (`testid`),
   KEY `status` (`status`),
   KEY `timestatus` (`timestatus`),
   KEY `newstatus` (`newstatus`)
@@ -699,12 +712,12 @@ CREATE TABLE `project2repositories` (
 -- --------------------------------------------------------
 CREATE TABLE `testmeasurement` (
   `id` bigint(20) NOT NULL auto_increment,
-  `testid` bigint(20) NOT NULL,
+  `outputid` bigint(20) NOT NULL,
   `name` varchar(70) NOT NULL,
   `type` varchar(70) NOT NULL,
   `value` text NOT NULL,
   PRIMARY KEY  (`id`),
-  KEY `testid` (`testid`)
+  KEY `outputid` (`outputid`)
 );
 
 
@@ -898,10 +911,10 @@ CREATE TABLE `label2dynamicanalysis` (
 CREATE TABLE `label2test` (
   `labelid` bigint(20) NOT NULL,
   `buildid` bigint(20) NOT NULL,
-  `testid` bigint(20) NOT NULL,
-  PRIMARY KEY (`labelid`,`buildid`,`testid`),
+  `outputid` bigint(20) NOT NULL,
+  PRIMARY KEY (`labelid`,`buildid`,`outputid`),
   KEY `buildid` (`buildid`),
-  KEY `testid` (`testid`)
+  KEY `outputid` (`outputid`)
 );
 
 --

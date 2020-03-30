@@ -98,9 +98,9 @@ $end_UTCDate = gmdate(FMT_DATETIME, $end_timestamp);
 // Count how many extra test measurements we have.
 $getcolumnnumber = pdo_query(
     "SELECT testmeasurement.name, COUNT(DISTINCT test.name) as xxx FROM test
-        JOIN testmeasurement ON (test.id = testmeasurement.testid)
         JOIN build2test ON (build2test.testid = test.id)
         JOIN build ON (build.id = build2test.buildid)
+        JOIN testmeasurement ON (build2test.outputid = testmeasurement.outputid)
         JOIN measurement ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
         WHERE test.name='$testName'
         AND build.starttime>='$beginning_UTCDate'
@@ -141,10 +141,10 @@ if ($columncount > 0) {
             build2test.status, build2test.timestatus, test.name,
             testmeasurement.name, testmeasurement.value, build.starttime,
             build2test.time, measurement.testpage FROM test
-            JOIN testmeasurement ON (test.id = testmeasurement.testid)
             JOIN build2test ON (build2test.testid = test.id)
             JOIN build ON (build.id = build2test.buildid)
-            JOIN measurements ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
+            JOIN testmeasurement ON (build2test.outputid = testmeasurement.outputid)
+            JOIN measurement ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
             WHERE test.name='$testName'
             AND build.starttime>='$beginning_UTCDate'
             AND build.starttime<'$end_UTCDate'
@@ -302,9 +302,9 @@ if ($columncount > 0) {
             build2test.status, build2test.timestatus, test.name,
             testmeasurement.name, testmeasurement.value, build.starttime,
             build2test.time, measurement.testpage FROM test
-            JOIN testmeasurement ON (test.id = testmeasurement.testid)
             JOIN build2test ON (build2test.testid = test.id)
             JOIN build ON (build.id = build2test.buildid)
+            JOIN testmeasurement ON (build2test.outputid = testmeasurement.outputid)
             JOIN measurement ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
             WHERE test.name='$testName'
             AND build.starttime>='$beginning_UTCDate'

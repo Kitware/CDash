@@ -21,7 +21,7 @@ class TestMeasurement
     public $Name;
     public $Type;
     public $Value;
-    public $TestId;
+    public $OutputId;
 
     // Save in the database
     public function Insert()
@@ -30,8 +30,8 @@ class TestMeasurement
         $type = pdo_real_escape_string($this->Type);
         $value = pdo_real_escape_string($this->Value);
 
-        $query = "INSERT INTO testmeasurement (testid,name,type,value)
-              VALUES ('$this->TestId','$name','$type','$value')";
+        $query = "INSERT INTO testmeasurement (outputid,name,type,value)
+              VALUES ('$this->OutputId','$name','$type','$value')";
         if (!pdo_query($query)) {
             add_last_sql_error('TestMeasurement Insert');
             return false;

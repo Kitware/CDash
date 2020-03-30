@@ -40,7 +40,6 @@ class Test
     public $CompressedOutput;
 
     public $Images;
-    public $Measurements;
 
     private $LabelCollection;
     private $Status;
@@ -54,22 +53,9 @@ class Test
         $this->Path = '';
 
         $this->Images = [];
-        $this->Measurements = [];
         $this->CompressedOutput = false;
         $this->LabelCollection = collect();
         $this->PDO = Database::getInstance()->getPdo();
-    }
-
-    public function AddMeasurement($measurement)
-    {
-        $measurement->TestId = $this->Id;
-        $this->Measurements[] = $measurement;
-
-        if ($measurement->Name == 'Label') {
-            $label = new Label();
-            $label->SetText($measurement->Value);
-            $this->AddLabel($label);
-        }
     }
 
     public function AddImage($image)
@@ -220,12 +206,6 @@ class Test
             return false;
         }
 
-        // Add the measurements
-        foreach ($this->Measurements as $measurement) {
-            $measurement->TestId = $this->Id;
-            $measurement->Insert();
-        }
-
         // Add the images
         foreach ($this->Images as $image) {
             // Decode the data
@@ -331,42 +311,5 @@ class Test
     public function IsNotRun()
     {
         return $this->GetStatus() === self::NOTRUN;
-    }
-
-    /**
-     * Returns a self referencing URI for the current Test.
-     *
-     * @return string
-     */
-    public function GetUrlForSelf()
-    {
-        $config = \CDash\Config::getInstance();
-        $host_base = $config->getBaseUrl();
-        return "{$host_base}/testDetails.php?test={$this->Id}&build={$this->BuildTest->BuildId}";
-    }
-
-    /**
-     * Returns uncompressed test output.
-     *
-     * @return string
-     */
-    public static function DecompressOutput($output)
-    {
-        $config = \CDash\Config::getInstance();
-        if (!$config->get('CDASH_USE_COMPRESSION')) {
-            return $output;
-        }
-        if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
-            if (is_resource($output)) {
-                $output = base64_decode(stream_get_contents($output));
-            } else {
-                $output = base64_decode($output);
-            }
-        }
-        @$uncompressedrow = gzuncompress($output);
-        if ($uncompressedrow !== false) {
-            $output = $uncompressedrow;
-        }
-        return $output;
     }
 }

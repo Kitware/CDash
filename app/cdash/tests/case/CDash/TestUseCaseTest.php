@@ -174,8 +174,8 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         /** @var Test $test */
         $test = $tests->get('some.test.name');
 
-        $this->assertEquals(TestUseCase::PASSED, $test->GetStatus());
-        $this->assertEquals('Completed', $test->Details);
+        $this->assertEquals(TestUseCase::PASSED, $test->status);
+        $this->assertEquals('Completed', $test->details);
     }
 
     public function testTestUseCaseCreatesTestFailed()
@@ -198,8 +198,8 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         /** @var Test $test */
         $test = $tests->get('some.test.name');
 
-        $this->assertEquals(TestUseCase::FAILED, $test->GetStatus());
-        $this->assertEquals('Completed (Failed)', $test->Details);
+        $this->assertEquals(TestUseCase::FAILED, $test->status);
+        $this->assertEquals('Completed (Failed)', $test->details);
     }
 
     public function testTestUseCaseCreatesTestTimeout()
@@ -222,8 +222,8 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         /** @var Test $test */
         $test = $tests->get('some.test.name');
 
-        $this->assertEquals(TestUseCase::FAILED, $test->GetStatus());
-        $this->assertEquals('Completed (Timeout)', $test->Details);
+        $this->assertEquals(TestUseCase::FAILED, $test->status);
+        $this->assertEquals('Completed (Timeout)', $test->details);
     }
 
     public function testTestUseCaseCreatesTestNotRun()
@@ -246,8 +246,8 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         /** @var Test $test */
         $test = $tests->get('some.test.name');
 
-        $this->assertEquals(TestUseCase::NOTRUN, $test->GetStatus());
-        $this->assertEquals('', $test->Details);
+        $this->assertEquals(TestUseCase::NOTRUN, $test->status);
+        $this->assertEquals('', $test->details);
     }
 
     public function testTestUseCaseCreatesMultisubprojectTestXMLFile()
@@ -291,20 +291,20 @@ class TestUseCaseTest extends CDashUseCaseTestCase
 
         /** @var Test $test */
         $test = $tests->get('experimentalFail1');
-        $this->assertEquals(TestUseCase::FAILED, $test->GetStatus());
+        $this->assertEquals(TestUseCase::FAILED, $test->status);
 
         $test = $tests->get('test4');
-        $this->assertEquals(TestUseCase::FAILED, $test->GetStatus());
+        $this->assertEquals(TestUseCase::FAILED, $test->status);
 
         $build = $builds->get('MyProductionCode');
         $tests = $build->GetTestCollection();
         $test = $tests->get('production');
-        $this->assertEquals(TestUseCase::PASSED, $test->GetStatus());
+        $this->assertEquals(TestUseCase::PASSED, $test->status);
 
         $build = $builds->get('MyThirdPartyDependency');
         $tests = $build->GetTestCollection();
         $test = $tests->get('thirdparty');
-        $this->assertEquals(TestUseCase::NOTRUN, $test->GetStatus());
+        $this->assertEquals(TestUseCase::NOTRUN, $test->status);
     }
 
     public function testUseCaseSetsPropertiesByTestName()
@@ -330,7 +330,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $tests = $build->GetTestCollection();
         $test = $tests->get('nap');
 
-        $this->assertEquals(2.00447, $test->GetExecutionTime());
+        $this->assertEquals(2.00447, $test->time);
 
         // Test again to ensure that the previous value is replaced with the new value
         $sut->setTestProperties('nap', ['Execution Time' => '9.123456']);
@@ -342,6 +342,6 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $tests = $build->GetTestCollection();
         $test = $tests->get('nap');
 
-        $this->assertEquals(9.123456, $test->GetExecutionTime());
+        $this->assertEquals(9.123456, $test->time);
     }
 }

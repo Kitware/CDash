@@ -15,14 +15,14 @@
 =========================================================================*/
 require_once 'xml_handlers/NonSaxHandler.php';
 
+use App\Services\TestCreator;
+
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
 use CDash\Model\BuildError;
 use CDash\Model\BuildErrorFilter;
-use CDash\Model\BuildTest;
 use CDash\Model\Project;
 use CDash\Model\SubProject;
-use CDash\Model\Test;
 
 class BazelJSONHandler extends NonSaxHandler
 {
@@ -168,19 +168,25 @@ class BazelJSONHandler extends NonSaxHandler
 
         // Save testing information.
         foreach ($this->Tests as $testdata) {
-            $test = $testdata[0];
-            $buildtest = $testdata[1];
+            $testCreator = new TestCreator;
 
-            if (array_key_exists($test->Name, $this->TestsOutput)) {
-                $test->Output = $this->TestsOutput[$test->Name];
+            $testCreator->buildTestTime = $testdata->time;
+            $testCreator->projectid = $this->Project->Id;
+            $testCreator->testCommand = $this->CommandLine;
+            $testCreator->testDetails = $testdata->details;
+            $testCreator->testName = $testdata->name;
+            $testCreator->testStatus = $testdata->status;
+
+            if (array_key_exists($testdata->name, $this->TestsOutput)) {
+                $testCreator->testOutput = $this->TestsOutput[$testdata->name];
             }
 
-            $test->Command = $this->CommandLine;
-            $test->Insert();
-            $test->InsertLabelAssociations($buildtest->BuildId);
-
-            $buildtest->TestId = $test->Id;
-            $buildtest->Insert();
+            foreach ($this->Builds as $subproject_name => $build) {
+                if ($build->Id = $testdata->buildid) {
+                    $testCreator->create($build);
+                    break;
+                }
+            }
         }
 
         // Save testdiff information.
@@ -507,19 +513,16 @@ class BazelJSONHandler extends NonSaxHandler
                         // might already exist
                         $new_test = true;
                         foreach ($this->Tests as $testdata) {
-                            $test = $testdata[0];
-                            $buildtest = $testdata[1];
-                            if ($test->Name === $test_name) {
+                            if ($testdata->name === $test_name) {
                                 // Increment test time
-                                $buildtest->Time += $test_time;
+                                $testdata->time += $test_time;
                                 $new_test = false;
                                 break;
                             }
                         }
                         if ($new_test) {
                             // We'll set the overall test status from 'testSummary'
-                            $test_status = "";
-                            $this->CreateNewTest($buildid, $test_status,
+                            $this->CreateNewTest($buildid, '',
                                 $test_time, $test_name, $subproject_name);
                         }
                     } else {
@@ -547,24 +550,22 @@ class BazelJSONHandler extends NonSaxHandler
                 }
                 $test_name = $json_array['id']['testSummary']['label'];
                 foreach ($this->Tests as $testdata) {
-                    $test = $testdata[0];
-                    $buildtest = $testdata[1];
-                    if ($test->Name === $test_name) {
-                        $buildtest->Status =
+                    if ($testdata->name === $test_name) {
+                        $testdata->status =
                             strtolower($json_array['testSummary']['overallStatus']);
-                        if ($buildtest->Status === 'failed') {
+                        if ($testdata->status === 'failed') {
                             $this->NumTestsFailed[$subproject_name]++;
-                            $test->Details = 'Completed (Failed)';
-                        } elseif ($buildtest->Status === 'timeout') {
-                            $buildtest->Status = 'failed';
+                            $testdata->details = 'Completed (Failed)';
+                        } elseif ($testdata->status === 'timeout') {
+                            $testdata->status = 'failed';
                             $this->NumTestsFailed[$subproject_name]++;
-                            $test->Details = 'Completed (Timeout)';
+                            $testdata->details = 'Completed (Timeout)';
                             // "TIMEOUT" message is only in stderr, not stdout
                             // Make sure that it is displayed.
-                            $this->TestsOutput[$test->Name] = "TIMEOUT\n\n";
-                        } elseif (!empty($buildtest->Status)) {
+                            $this->TestsOutput[$testdata->name] = "TIMEOUT\n\n";
+                        } elseif (!empty($testdata->status)) {
                             $this->NumTestsPassed[$subproject_name]++;
-                            $test->Details = 'Completed';
+                            $testdata->details = 'Completed';
                         }
                         break;
                     }
@@ -647,41 +648,35 @@ class BazelJSONHandler extends NonSaxHandler
 
     private function CreateNewTest($buildid, $test_status, $test_time, $test_name, $subproject_name)
     {
-        $buildtest = new BuildTest();
-        $buildtest->BuildId = $buildid;
-        $buildtest->Status = $test_status;
-        $buildtest->Time = $test_time;
+        $testdata = new stdClass();
+        $testdata->buildid = $buildid;
+        $testdata->name = $test_name;
+        $testdata->status = $test_status;
+        $testdata->time = $test_time;
+        $testdata->details = '';
 
-        $test = new Test();
-        $test->ProjectId = $this->Project->Id;
-        $test->Command = '';
-        $test->Path = '';
-        $test->Name = $test_name;
-        if ($buildtest->Status === 'failed') {
+        if ($testdata->status === 'failed') {
             $this->NumTestsFailed[$subproject_name]++;
-            $test->Details = 'Completed (Failed)';
-        } elseif ($buildtest->Status === 'timeout') {
-            $buildtest->Status = 'failed';
+            $testdata->details = 'Completed (Failed)';
+        } elseif ($testdata->status === 'timeout') {
+            $testdata->status = 'failed';
             $this->NumTestsFailed[$subproject_name]++;
-            $test->Details = 'Completed (Timeout)';
+            $testdata->details = 'Completed (Timeout)';
             // "TIMEOUT" message is only in stderr, not stdout
             // Make sure that it is displayed.
-            $this->TestsOutput[$test->Name] = "TIMEOUT\n\n";
-        } elseif (!empty($buildtest->Status)) {
+            $this->TestsOutput[$testdata->name] = "TIMEOUT\n\n";
+        } elseif (!empty($testdata->status)) {
             $this->NumTestsPassed[$subproject_name]++;
-            $test->Details = 'Completed';
+            $testdata->details = 'Completed';
         }
 
-        // We will set this test's output (if any) before
-        // inserting it into the database.
-        $this->Tests[] = [$test, $buildtest];
+        $this->Tests[] = $testdata;
     }
 
     private function IsTestName($name)
     {
         foreach ($this->Tests as $testdata) {
-            $test = $testdata[0];
-            if ($test->Name === $name) {
+            if ($testdata->name === $name) {
                 return true;
             }
         }

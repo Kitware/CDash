@@ -5,6 +5,8 @@
 //
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 
+use App\Models\TestMeasurement;
+
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
 use CDash\Model\BuildError;
@@ -25,7 +27,6 @@ use CDash\Model\DynamicAnalysisSummary;
 use CDash\Model\Image;
 use CDash\Model\Label;
 use CDash\Model\Test;
-use CDash\Model\TestMeasurement;
 use CDash\Model\UploadFile;
 
 class RemoveBuildsTestCase extends KWWebTestCase
@@ -274,9 +275,9 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $test->Output = 'build removed successfully';
 
         $measurement = new TestMeasurement();
-        $measurement->Name = 'Exit Value';
-        $measurement->Type = 'text/string';
-        $measurement->Value = 5;
+        $measurement->name = 'Exit Value';
+        $measurement->type = 'text/string';
+        $measurement->value = 5;
         $test->AddMeasurement($measurement);
 
         $image = new Image();
@@ -309,9 +310,9 @@ class RemoveBuildsTestCase extends KWWebTestCase
         $test2->Output = 'test shared successfully';
 
         $measurement2 = new TestMeasurement();
-        $measurement2->Name = 'Exit Value';
-        $measurement2->Type = 'text/string';
-        $measurement2->Value = 0;
+        $measurement2->name = 'Exit Value';
+        $measurement2->type = 'text/string';
+        $measurement2->value = 0;
         $test2->AddMeasurement($measurement2);
 
         $image2 = new Image();

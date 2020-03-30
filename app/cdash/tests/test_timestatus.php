@@ -89,7 +89,7 @@ class TimeStatusTestCase extends KWWebTestCase
 
         // Verify results.
         $stmt = $this->PDO->prepare(
-            'SELECT id, time, timemean, timestd, timestatus
+            'SELECT b.id, time, timemean, timestd, timestatus
             FROM build b
             JOIN build2test b2t ON (b.id = b2t.buildid)
             WHERE projectid = ?

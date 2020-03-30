@@ -916,7 +916,7 @@ class Index extends ResultsApi
                     "SELECT b2t.status, b2t.newstatus
                     FROM build2test AS b2t
                     INNER JOIN label2test AS l2t ON
-                    (l2t.testid=b2t.testid AND l2t.buildid=b2t.buildid)
+                    (l2t.outputid=b2t.outputid AND l2t.buildid=b2t.buildid)
                     WHERE b2t.buildid = '$buildid' AND
                     l2t.labelid IN $this->labelIds";
                 $label_filter_query = $label_query_base . $this->limitSQL;

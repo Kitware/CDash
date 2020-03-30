@@ -16,10 +16,11 @@
 
 namespace CDash\Messaging\Topic;
 
+use App\Models\BuildTest;
+use App\Models\Test;
+
 use CDash\Collection\TestCollection;
 use CDash\Model\Build;
-use CDash\Model\BuildTest;
-use CDash\Model\Test;
 
 class MissingTestTopic extends Topic
 {
@@ -52,12 +53,12 @@ class MissingTestTopic extends Topic
         $rows = $build->GetMissingTests();
         foreach ($rows as $id => $name) {
             $test = new Test();
-            $test->Id = $id;
-            $test->Name = $name;
+            $test->id = $id;
+            $test->name = $name;
             $buildTest = new BuildTest();
-            $buildTest->BuildId = $build->Id;
-            $test->SetBuildTest($buildTest);
-            $collection->add($test);
+            $buildTest->buildid = $build->Id;
+            $buildTest->test = $test;
+            $collection->add($buildTest);
         }
     }
 

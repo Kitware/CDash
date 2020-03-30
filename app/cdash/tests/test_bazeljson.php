@@ -690,7 +690,7 @@ class BazelJSONTestCase extends KWWebTestCase
         // Check time - should be sum of all shards
         $expected = "3m 5s 750ms";
         if (strpos($jsonobj['test']['time'], $expected) === false) {
-            $this->fail("Expected output to include '$expected'".var_dump($jsonobj['time']));
+            $this->fail("Expected time to be $expected, found {$jsonobj['test']['time']}");
         }
 
         // Cleanup.
