@@ -25,7 +25,6 @@ require_once 'xml_handlers/note_handler.php';
 require_once 'xml_handlers/dynamic_analysis_handler.php';
 require_once 'xml_handlers/project_handler.php';
 require_once 'xml_handlers/upload_handler.php';
-require_once 'xml_handlers/testing_nunit_handler.php';
 require_once 'xml_handlers/testing_junit_handler.php';
 require_once 'xml_handlers/coverage_junit_handler.php';
 
@@ -322,9 +321,6 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
     } elseif (preg_match('/<Upload/', $content)) {
         $handler = new UploadHandler($projectid);
         $file = 'Upload';
-    } elseif (preg_match('/<test-results/', $content)) {
-        $handler = new TestingNUnitHandler($projectid);
-        $file = 'Test';
     } elseif (preg_match('/<testsuite/', $content)) {
         $handler = new TestingJUnitHandler($projectid);
         $file = 'Test';
