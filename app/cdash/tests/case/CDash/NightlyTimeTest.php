@@ -110,6 +110,8 @@ class NightlyTimeTest extends TestCase
         date_default_timezone_set('America/Denver');
         $this->Project->NightlyTime = '04:01:00 UTC';
         $this->validateTestingDay('2019-09-26 04:00:59 UTC', '2019-09-25');
+
+        $this->validateTestingDay('2020-03-09 04:00:59 UTC', '2020-03-08');
     }
 
     private function validateTestingDay($starttime, $expected)

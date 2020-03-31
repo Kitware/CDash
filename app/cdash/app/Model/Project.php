@@ -1677,15 +1677,44 @@ class Project
     /**
      * Return the testing day (a string in DATETIME format)
      * for a given date (a date/time string).
+     *
+     * As a side effect, this also changes the timezone to match that specified
+     * in the project's settings.
      */
     public function GetTestingDay($date)
     {
         // If the build was started after the nightly start time
         // then it should appear on the dashboard results for the
         // subsequent day.
+
+        // Get hour, date, and timezone from our nightly start time.
+        $current_nightly_datetime = new \DateTime($this->NightlyTime);
+        $nightly_timezone = $current_nightly_datetime->getTimezone();
+        if (!$nightly_timezone) {
+            // Default to UTC.
+            $nightly_timezone = new \DateTimeZone('UTC');
+        }
+        date_default_timezone_set($nightly_timezone->getName());
+        $current_nightly_timestamp = $current_nightly_datetime->getTimestamp();
+        $hour = intval(date('H', $current_nightly_timestamp));
+        $minute = intval(date('i', $current_nightly_timestamp));
+        $second = intval(date('s', $current_nightly_timestamp));
+
+        // Get UNIX timestamp for input date (interpreted as UTC time).
         $build_datetime = new \DateTime($date . ' UTC');
         $build_start_timestamp = $build_datetime->getTimestamp();
-        $nightly_start_timestamp = strtotime($this->NightlyTime, $build_start_timestamp);
+
+        // Generate a DateTime object for our nightly starttime on the date
+        // of the build and use it to get a corresponding UNIX timestamp.
+        $year = intval(date('Y', $build_start_timestamp));
+        $month = intval(date('n', $build_start_timestamp));
+        $day = intval(date('j', $build_start_timestamp));
+
+        $nightly_datetime = new \DateTime();
+        $nightly_datetime->setTimezone($nightly_timezone);
+        $nightly_datetime->setDate($year, $month, $day);
+        $nightly_datetime->setTime($hour, $minute, $second);
+        $nightly_start_timestamp = $nightly_datetime->getTimestamp();
 
         if (date(FMT_TIME, $nightly_start_timestamp) < '12:00:00') {
             // If the "nightly" start time is in the morning then any build
@@ -1707,7 +1736,6 @@ class Project
             }
         }
 
-        $build_date = date(FMT_DATE, $build_start_timestamp);
-        return $build_date;
+        return date(FMT_DATE, $build_start_timestamp);
     }
 }

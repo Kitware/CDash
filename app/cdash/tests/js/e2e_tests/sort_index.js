@@ -83,7 +83,7 @@ describe("sort_index", function() {
   });
 
   it("sort by Start Time", function() {
-    sort_test('Start Time', 10, 'Jul 07, 2010 - 08:26 EDT', 'Jul 07, 2010 - 08:22 EDT');
+    sort_test('Start Time', 10, 'Jul 07, 2010 - 12:26 UTC', 'Jul 07, 2010 - 12:22 UTC');
   });
 
   it("sort by multiple columns", function() {
