@@ -21,7 +21,7 @@ use CDash\System;
  */
 class GitHubWebhookTest extends CDash\Test\CDashApiTestCase
 {
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->setEndpoint('GitHub/webhook');

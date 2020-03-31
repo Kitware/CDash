@@ -76,7 +76,7 @@ class MultipleSubprojectsEmailTest extends CDashUseCaseTestCase
         parent::tearDownAfterClass();
     }
 
-    public function setUp()
+    public function setUp() : void
     {
         $mock_stmt = $this->createMock(PDOStatement::class);
         $mock_stmt

@@ -26,7 +26,7 @@ use CDash\System;
  */
 class ApiAddBuildTest extends CDash\Test\CDashApiTestCase
 {
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->setEndpoint('relateBuilds');

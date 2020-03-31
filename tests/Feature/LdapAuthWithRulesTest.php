@@ -18,7 +18,7 @@ class LdapAuthWithRulesTest extends TestCase
 {
     use WithFaker, DatabaseTransactions;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         // ensure that we're using LDAP, overriding whatever may be set in .env
         putenv('CDASH_AUTHENTICATION_PROVIDER=ldap');

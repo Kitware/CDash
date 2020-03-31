@@ -30,7 +30,7 @@ class ConfigureTopicTest extends \CDash\Test\CDashTestCase
     /** @var Topic|PHPUnit_Framework_MockObject_MockObject */
     private $parent;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->parent = $this->getMockForAbstractClass(Topic::class);

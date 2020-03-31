@@ -13,7 +13,7 @@ trait OAuthTestHelper
 {
     protected $accessToken;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 

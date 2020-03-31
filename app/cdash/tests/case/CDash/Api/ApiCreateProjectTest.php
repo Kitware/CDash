@@ -23,7 +23,7 @@ use CDash\ServiceContainer;
  */
 class ApiCreateProjectTest extends CDash\Test\CDashApiTestCase
 {
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->setEndpoint('createProject');

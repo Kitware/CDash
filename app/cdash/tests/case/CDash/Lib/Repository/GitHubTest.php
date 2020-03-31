@@ -25,7 +25,7 @@ class GitHubTest extends TestCase
 {
     private $baseUrl;
     private $project;
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->project = $this->getMockBuilder(Project::class)

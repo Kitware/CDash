@@ -6,7 +6,7 @@ use Tests\TestCase;
 
 class MigrateConfigCommandTestCase extends TestCase
 {
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->config_file = base_path('app/cdash/config/config.local.php');
@@ -71,7 +71,7 @@ EOT;
         $this->assertNotContains('DB_PASSWORD=my_fake_testing_db_password', $actual);
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         // Remove testing files.
         if (file_exists($this->test_file)) {

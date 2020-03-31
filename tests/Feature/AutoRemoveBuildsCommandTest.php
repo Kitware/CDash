@@ -51,7 +51,7 @@ class AutoRemoveBuildsCommand extends TestCase
         $this->assertEquals(0, $stmt->fetchColumn());
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         if ($this->project) {
             $this->project->Delete();

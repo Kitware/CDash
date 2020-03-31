@@ -13,14 +13,14 @@ class LogTest extends CDashTestCase
         parent::setUpBeforeClass();
     }
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->log = LogFacade::getLogger()->getHandlers()[0]->getUrl();
         file_put_contents($this->log, '');
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         parent::tearDown();
         file_put_contents($this->log, '');

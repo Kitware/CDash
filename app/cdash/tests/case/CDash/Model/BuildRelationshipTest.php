@@ -21,7 +21,7 @@ use CDash\Test\CDashTestCase;
 
 class BuildRelationshipModelTest extends CDashTestCase
 {
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->service = ServiceContainer::getInstance();

@@ -19,7 +19,7 @@ use CDash\Test\CDashTestCase;
 
 class BuildErrorModelTest extends CDashTestCase
 {
-    public function setUp()
+    public function setUp() : void
     {
         $container = ServiceContainer::container();
         $this->mock_builderror = $this->getMockBuilder(BuildError::class)
