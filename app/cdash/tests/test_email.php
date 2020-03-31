@@ -138,7 +138,6 @@ class EmailTestCase extends KWWebTestCase
 
         $config = Config::getInstance();
 
-        // illuminate/support/helpers/str_contains
         $expected = [
             'DEBUG: user1@kw',
             'DEBUG: PASSED (w=6): EmailProjectExample - Win32-MSVC2009 - Nightly',
@@ -185,7 +184,6 @@ class EmailTestCase extends KWWebTestCase
             return;
         }
         $config = Config::getInstance();
-        // illuminate/support/helpers/str_contains
         $expected = [
             'DEBUG: user1@kw',
             'DEBUG: PASSED (t=2): EmailProjectExample - Win32-MSVC2009 - Nightly',

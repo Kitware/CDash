@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Str;
+
 use CDash\Model\BuildGroup;
 
 class CommitAuthorNotificationTestCase extends KWWebTestCase
@@ -48,9 +50,9 @@ class CommitAuthorNotificationTestCase extends KWWebTestCase
 
         $log = file_get_contents($this->logfilename);
 
-        $this->assertFalse(str_contains($log, 'bot@domain.tld'));
-        $this->assertFalse(str_contains($log, 'jane.doe@domain.tld'));
-        $this->assertFalse(str_contains($log, 'john.doe@domain.tld'));
+        $this->assertFalse(Str::contains($log, 'bot@domain.tld'));
+        $this->assertFalse(Str::contains($log, 'jane.doe@domain.tld'));
+        $this->assertFalse(Str::contains($log, 'john.doe@domain.tld'));
     }
 
     public function testCommitAuthorsReceiveBuildFailureNotifications()
@@ -62,9 +64,9 @@ class CommitAuthorNotificationTestCase extends KWWebTestCase
 
         $log = file_get_contents($this->logfilename);
 
-        $this->assertTrue(str_contains($log, 'bot@domain.tld'));
-        $this->assertTrue(str_contains($log, 'jane.doe@domain.tld'));
-        $this->assertTrue(str_contains($log, 'john.doe@domain.tld'));
+        $this->assertTrue(Str::contains($log, 'bot@domain.tld'));
+        $this->assertTrue(Str::contains($log, 'jane.doe@domain.tld'));
+        $this->assertTrue(Str::contains($log, 'john.doe@domain.tld'));
     }
 
     public function testCommitAuthorsReceiveTestFailureNotifications()
@@ -75,9 +77,9 @@ class CommitAuthorNotificationTestCase extends KWWebTestCase
 
         $log = file_get_contents($this->logfilename);
 
-        $this->assertTrue(str_contains($log, 'bot@domain.tld'));
-        $this->assertTrue(str_contains($log, 'jane.doe@domain.tld'));
-        $this->assertTrue(str_contains($log, 'john.doe@domain.tld'));
+        $this->assertTrue(Str::contains($log, 'bot@domain.tld'));
+        $this->assertTrue(Str::contains($log, 'jane.doe@domain.tld'));
+        $this->assertTrue(Str::contains($log, 'john.doe@domain.tld'));
     }
 }
 

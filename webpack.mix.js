@@ -96,11 +96,11 @@ mix.scripts([
 ], 'public/js/CDash_' + version + '.min.js');
 
 // Boilerplate.
-mix.js('resources/js/app.js', 'public/laravel/js');
+mix.js('resources/js/app.js', 'public/laravel/js').version();
+mix.sass('resources/sass/app.scss', 'public/laravel/css').version();
+
 // Added this line to get mocha testing working with versioning.
 mix.copy('resources/js/app.js', 'public/main.js');
-mix.sass('resources/sass/app.scss', 'public/laravel/css');
-mix.version();
 
 mix.webpackConfig({
   module: {
