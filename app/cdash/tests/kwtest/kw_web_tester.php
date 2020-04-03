@@ -26,6 +26,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Tests\CreatesApplication;
 
@@ -265,7 +266,7 @@ class KWWebTestCase extends WebTestCase
         $passed = true;
         foreach ($lines as $line) {
             $line = trim($line);
-            if (!isset($expected[$count]) || ($line && !str_contains($line, $expected[$count]))) {
+            if (!isset($expected[$count]) || ($line && !Str::contains($line, $expected[$count]))) {
                 $message = "Unexpected output in logfile:\n"
                     . "Expected: {$expected[$count]}\n"
                     . "   Found: {$line}\n";

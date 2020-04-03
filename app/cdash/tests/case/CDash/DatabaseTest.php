@@ -25,7 +25,7 @@ class DatabaseTest extends CDashTestCase
         parent::tearDownAfterClass();
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         Database::setInstance(Database::class, null);
         parent::tearDown();

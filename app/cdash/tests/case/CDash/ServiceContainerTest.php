@@ -18,7 +18,7 @@ class ServiceContainerTest extends CDashTestCase
         parent::tearDownAfterClass();
     }
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         ServiceContainer::setInstance(ServiceContainer::class, self::$di);

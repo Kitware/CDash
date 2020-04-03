@@ -15,6 +15,7 @@ CDash_*.min.js*
 composer.phar
 .DS_Store
 .env
+.env.bak
 Homestead.json
 Homestead.yaml
 .idea
@@ -25,6 +26,7 @@ npm-debug.log
 .phpunit.result.cache
 /public/build/
 /public/hot
+public/main.js
 !/public/.htaccess
 /public/storage
 /storage/*.key

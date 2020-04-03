@@ -32,7 +32,7 @@ class CDashApiTestCase extends CDashTestCase
     /** @var String $endpoint */
     private $endpoint;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 

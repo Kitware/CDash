@@ -21,7 +21,7 @@ use CDash\Test\CDashTestCase;
 
 class InitializerTest extends CDashTestCase
 {
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         \CDash\Config::getInstance()->set('CDASH_TESTING_MODE', false);

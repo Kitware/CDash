@@ -35,6 +35,6 @@
 
 @yield('post_content_script')
 </body>
-<script src="{{ asset('js/3rdparty.js') }}" type="text/javascript"></script>
+<script src="{{ asset('js/3rdparty.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset(mix('laravel/js/app.js')) }}" type="text/javascript"></script>
 </html>

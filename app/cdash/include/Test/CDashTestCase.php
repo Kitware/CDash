@@ -45,7 +45,7 @@ class CDashTestCase extends TestCase
         parent::tearDownAfterClass();
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         global $cdash_database_connection;
         $cdash_database_connection = null;

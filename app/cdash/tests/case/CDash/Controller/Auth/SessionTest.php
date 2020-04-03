@@ -11,7 +11,7 @@ class SessionTest extends CDashTestCase
     /** @var System|\PHPUnit_Framework_MockObject_MockObject */
     private $system;
 
-    public function setUp()
+    public function setUp() : void
     {
         // haha, always.
         parent::setUp();

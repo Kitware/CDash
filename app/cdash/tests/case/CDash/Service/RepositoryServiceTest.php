@@ -26,7 +26,7 @@ class RepositoryServiceTest extends CDashTestCase
     /** @var RepositoryInterface|PHPUnit_Framework_MockObject_MockObject */
     private $repository;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         $this->setDatabaseMocked();

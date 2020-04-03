@@ -19,7 +19,7 @@ use CDash\Test\CDashTestCase;
 
 class BuildErrorFilterModelTest extends CDashTestCase
 {
-    public function setUp()
+    public function setUp() : void
     {
         $this->setDatabaseMocked();
         $this->service = ServiceContainer::getInstance();
