@@ -79,7 +79,7 @@
           <td>
             <div class="je_compare">
               <img ng-repeat="image in ::cdash.test.compareimages"
-                   src="displayImage.php?imgid={{image.imgid}}"
+                   ng-src="displayImage.php?imgid={{image.imgid}}"
                    alt="{{image.role}}"
                    on-finish-render="setup_compare()">
               </img>
@@ -90,7 +90,7 @@
         <tr ng-repeat="image in ::cdash.test.images">
           <th class="measurement">{{image.role}}</th>
           <td>
-            <img src="displayImage.php?imgid={{image.imgid}}" alt="{{image.role}}">
+            <img ng-src="displayImage.php?imgid={{image.imgid}}" alt="{{image.role}}">
             </img>
           </td>
         </tr>
