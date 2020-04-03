@@ -13,8 +13,19 @@ abstract class ViewController extends Controller
     public function __construct()
     {
         $this->cdashCss = asset(get_css_file());
+        $this->user = [];
+    }
+
+    protected function setup()
+    {
         $this->user = [
             'id' => \Auth::id()
         ];
+    }
+
+    protected function redirectToLogin()
+    {
+        session(['url.intended' => url()->current()]);
+        return redirect()->route('login');
     }
 }
