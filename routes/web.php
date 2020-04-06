@@ -23,6 +23,8 @@ Route::get('/oauth/{service}', 'OAuthController@authenticate');
 Route::get('/oauth/callback/{service}', 'OAuthController@login')
     ->name('oauth.callback');
 
+Route::get('/logout', 'Auth\LoginController@logout');
+
 Route::get('ping', function (Response $response) {
     try {
         DB::connection()->getPdo();

@@ -20,7 +20,6 @@
 <script src="js/jquery.cookie.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/jquery.tablesorter.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/jquery.dataTables.min.js" type="text/javascript" charset="utf-8"></script>
-<script src="js/cdashTableSorter.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/jquery.metadata.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/jtip.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/jqModal.js" type="text/javascript" charset="utf-8"></script>

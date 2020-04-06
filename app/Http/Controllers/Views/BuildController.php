@@ -22,20 +22,29 @@ class BuildController extends ProjectController
     protected function setup($build_id = null)
     {
         if (!$build_id) {
-            return;
+            abort(404);
         }
 
         $this->build = new Build();
+        $this->build->Id = $build_id;
         $this->build->FillFromId($build_id);
+        if (!$this->build->Exists()) {
+            abort(404);
+        }
 
         parent::setup($this->build->GetProject());
-        $this->date = $this->project->GetTestingDay($this->build->StartTime);
+        if (!is_null($this->project)) {
+            $this->date = $this->project->GetTestingDay($this->build->StartTime);
+        }
     }
 
     // Render the build configure page.
     public function configure($build_id = null)
     {
         $this->setup($build_id);
+        if (!$this->authOk) {
+            return $this->redirectToLogin();
+        }
         return view('build.configure')
             ->with('build', json_encode($this->build))
             ->with('cdashCss', $this->cdashCss)
@@ -49,6 +58,9 @@ class BuildController extends ProjectController
     public function summary($build_id = null)
     {
         $this->setup($build_id);
+        if (!$this->authOk) {
+            return $this->redirectToLogin();
+        }
         return view('build.summary')
             ->with('build', json_encode($this->build))
             ->with('cdashCss', $this->cdashCss)
