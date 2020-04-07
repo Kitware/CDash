@@ -18,9 +18,10 @@ require_once dirname(__FILE__) . '/../../../../vendor/autoload.php';
 require_once dirname(__FILE__) . '/kw_unlink.php';
 
 use App\Http\Controllers\CDash;
+use App\Models\User;
 use CDash\Config;
 use CDash\Model\Project;
-use CDash\Model\User;
+//use CDash\Model\User;
 use App\Http\Kernel;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -373,7 +374,7 @@ class KWWebTestCase extends WebTestCase
         $user = $this->getUser($this->actingAs['email']);
         \Auth::shouldReceive('check')->andReturn(true);
         \Auth::shouldReceive('user')->andReturn($user);
-        \Auth::shouldReceive('id')->andReturn($user->Id);
+        \Auth::shouldReceive('id')->andReturn($user->id);
     }
 
     public function logout()
@@ -404,10 +405,7 @@ class KWWebTestCase extends WebTestCase
 
     public function getUser($email)
     {
-        $user = new User();
-        $user->Id = $user->GetIdFromEmail($email);
-        $user->Fill();
-        return $user;
+        return User::where('email', $email)->first();
     }
 
     public function createUser(array $fields = [])
