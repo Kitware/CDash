@@ -18,9 +18,11 @@ require_once 'include/pdo.php';
 include_once 'include/common.php';
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Models\User;
+use App\Services\ProjectPermissions;
+
 use CDash\Model\Banner;
 use CDash\Model\Project;
-use CDash\Model\User;
 
 if (Auth::check()) {
     $userid = Auth::id();
@@ -29,6 +31,8 @@ if (Auth::check()) {
         echo 'Not a valid userid!';
         return;
     }
+
+    $user = Auth::user();
 
     $xml = begin_XML_for_XSLT();
     $xml .= '<backurl>user.php</backurl>';
@@ -45,29 +49,25 @@ if (Auth::check()) {
         $projectid = 0;
     }
 
-    $Project = new Project;
+    $project = new Project;
 
     // If the projectid is not set and there is only one project we go directly to the page
     if (isset($edit) && !isset($projectid)) {
-        $projectids = $Project->GetIds();
+        $projectids = $project->GetIds();
         if (count($projectids) == 1) {
             $projectid = $projectids[0];
         }
     }
 
-    $User = new User;
-    $User->Id = $userid;
-    $Project->Id = $projectid;
+    $project->Id = $projectid;
 
-    $role = $Project->GetUserRole($userid);
-
-    if ($User->IsAdmin() === false && $role <= 1) {
+    if (!ProjectPermissions::userCanEditProject($user, $project)) {
         echo "You don't have the permissions to access this page";
         return;
     }
 
     // If user is admin then we can add a banner for all projects
-    if ($User->IsAdmin() == true) {
+    if ($user->IsAdmin() == true) {
         $xml .= '<availableproject>';
         $xml .= add_XML_value('id', '0');
         $xml .= add_XML_value('name', 'All');
@@ -78,7 +78,7 @@ if (Auth::check()) {
     }
 
     $sql = 'SELECT id,name FROM project';
-    if ($User->IsAdmin() == false) {
+    if ($user->IsAdmin() == false) {
         $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$userid' AND role>0)";
     }
     $projects = pdo_query($sql);
@@ -105,14 +105,14 @@ if (Auth::check()) {
     // List the available project
     if ($projectid >= 0) {
         $xml .= '<project>';
-        $xml .= add_XML_value('id', $Project->Id);
+        $xml .= add_XML_value('id', $project->Id);
         $xml .= add_XML_value('text', $Banner->GetText());
 
         if ($projectid > 0) {
-            $xml .= add_XML_value('name', $Project->GetName());
-            $xml .= add_XML_value('name_encoded', urlencode($Project->GetName()));
+            $xml .= add_XML_value('name', $project->GetName());
+            $xml .= add_XML_value('name_encoded', urlencode($project->GetName()));
         }
-        $xml .= add_XML_value('id', $Project->Id);
+        $xml .= add_XML_value('id', $project->Id);
         $xml .= '</project>';
     }
 

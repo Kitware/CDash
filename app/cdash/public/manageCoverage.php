@@ -19,6 +19,8 @@ include_once 'include/common.php';
 require_once 'include/cdashmail.php';
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Services\ProjectPermissions;
+
 use CDash\Config;
 use CDash\Model\Build;
 use CDash\Model\Coverage;
@@ -69,10 +71,7 @@ if (Auth::check()) {
     $User = new User;
     $User->Id = $userid;
     $Project->Id = $projectid;
-
-    $role = $Project->GetUserRole($userid);
-
-    if ($User->IsAdmin() === false && $role <= 1) {
+    if (!ProjectPermissions::userCanEditProject($User, $Project)) {
         echo "You don't have the permissions to access this page";
         return;
     }

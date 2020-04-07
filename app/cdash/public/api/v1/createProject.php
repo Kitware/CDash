@@ -16,6 +16,8 @@
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 
+use App\Services\ProjectPermissions;
+
 use CDash\Config;
 use CDash\Model\Project;
 use CDash\Model\Repository;
@@ -57,25 +59,16 @@ if (isset($_GET['projectid'])) {
     }
 }
 
-/** @var User $User */
-$User = $service->create(User::class);
-
-$User->Id = $userid;
-$role = $Project->GetUserRole($userid);
-$isAdmin = $User->IsAdmin();
+$User = \Auth::user();
 
 // Check if the user has the necessary permissions.
 $userHasAccess = false;
 if (!is_null($projectid)) {
     // Can they edit this project?
-    if ($isAdmin || $role > 1) {
-        $userHasAccess = true;
-    }
+    $userHasAccess = ProjectPermissions::UserCanEditProject($User, $Project);
 } else {
     // Can they create a new project?
-    if ($isAdmin || $session->getSessionVar('cdash.user_can_create_project')) {
-        $userHasAccess = true;
-    }
+    $userHasAccess = ProjectPermissions::userCanCreateProject($User);
 }
 if (!$userHasAccess) {
     $response['error'] = 'You do not have permission to access this page.';
@@ -152,7 +145,7 @@ if ($projectid > 0) {
     $project_response['TestTimeMaxStatus'] = 3;
     $project_response['TestTimeStd'] = 4.0;
     $project_response['TestTimeStdThreshold'] = 1.0;
-    if (!$config->get('CDASH_USER_CREATE_PROJECTS') || $isAdmin) {
+    if (!$config->get('CDASH_USER_CREATE_PROJECTS') || $User->IsAdmin()) {
         $project_response['UploadQuota'] = 1;
     }
     $project_response['WarningsFilter'] = "";

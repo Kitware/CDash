@@ -17,6 +17,8 @@
 require_once 'include/pdo.php';
 include_once 'include/common.php';
 
+use App\Services\ProjectPermissions;
+
 use CDash\Model\Project;
 use CDash\Model\SubProject;
 use CDash\Model\SubProjectGroup;
@@ -26,11 +28,8 @@ use CDash\Model\User;
 if (!Auth::check()) {
     return;
 }
-$userid = Auth::id();
-if (!$userid || !is_numeric($userid)) {
-    echo_error('Not a valid userid!');
-    return;
-}
+
+$user = Auth::user();
 
 // Check required parameter.
 @$projectid = $_GET['projectid'];
@@ -46,16 +45,10 @@ if (!isset($projectid)) {
 $projectid = pdo_real_escape_numeric($projectid);
 
 // Make sure the user has access to this page.
-$Project = new Project;
-
-$User = new User;
-$User->Id = $userid;
-$Project->Id = $projectid;
-
-$role = $Project->GetUserRole($userid);
-
-if ($User->IsAdmin() === false && $role <= 1) {
-    echo_error("You ($userid) don't have the permissions to access this page ($projectid)");
+$project = new Project;
+$project->Id = $projectid;
+if (!ProjectPermissions::userCanEditProject($user, $project)) {
+    echo_error("You ($userid) don't have the permissions to access this page ($projectid)", 403);
     return;
 }
 
@@ -285,9 +278,9 @@ function get_subprojectid()
     return $subprojectid;
 }
 
-function echo_error($msg)
+function echo_error($msg, $status = 400)
 {
-    $response = array();
+    $response = [];
     $response['error'] = $msg;
-    echo json_encode($response);
+    json_error_response($response, $status);
 }

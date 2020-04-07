@@ -17,10 +17,11 @@ require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 require_once 'include/common.php';
 
+use App\Models\User;
+use App\Services\ProjectPermissions;
+
 use CDash\Model\Project;
-use CDash\Model\User;
 use CDash\Model\UserProject;
-use CDash\ServiceContainer;
 
 // Read input parameters (if any).
 $rest_input = file_get_contents('php://input');
@@ -36,9 +37,7 @@ if (!Auth::check()) {
 }
 
 // Get the authenticated user.
-$service = ServiceContainer::getInstance();
-$user = $service->create(User::class);
-$user->Id = get_userid_from_session();
+$user = \Auth::user();
 
 // Route based on what type of request this is.
 $method = $_SERVER['REQUEST_METHOD'];
@@ -83,8 +82,7 @@ function rest_post($user)
             return;
         }
 
-        $config = \CDash\Config::getInstance();
-        if (!$user->IsAdmin() && $config->get('CDASH_USER_CREATE_PROJECTS') != 1) {
+        if (!ProjectPermissions::userCanCreateProject($user)) {
             // User does not have permission to create a new project.
             $response['error'] = 'You do not have permission to access this page.';
             http_response_code(403);
@@ -201,10 +199,10 @@ function create_project(&$response, $user)
     $Project->InitialSetup();
 
     // Add the current user to this project.
-    if ($user->Id != 1) {
+    if ($user->id != 1) {
         // Global admin is already added, so no need to do it again.
         $UserProject = new UserProject();
-        $UserProject->UserId = $user->Id;
+        $UserProject->UserId = $user->id;
         $UserProject->ProjectId = $Project->Id;
         $UserProject->Role = 2;
         $UserProject->EmailType = 3;// receive all emails

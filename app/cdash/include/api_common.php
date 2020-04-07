@@ -16,6 +16,8 @@
 
 require_once 'include/common.php';
 
+use App\Services\ProjectPermissions;
+
 use CDash\Model\AuthToken;
 use CDash\Model\Build;
 use CDash\Model\Project;
@@ -75,34 +77,23 @@ function can_access_project($projectid)
 // Respond with the correct HTTP status (401 or 403) and exit if not.
 function can_administrate_project($projectid)
 {
-    // Check that we were supplied a reasonable looking projectid.
-    if (!isset($projectid) || !is_numeric($projectid) || $projectid < 1) {
-        json_error_response(['error' => 'Valid project ID required'], 400);
+    // Check that we were supplied a valid projectid.
+    $project = new Project();
+    $project->Id = $projectid;
+    if (!$project->Exists()) {
+        json_error_response(['error' => 'Valid project ID required'], 404);
         return false;
     }
 
     // Make sure the user is logged in.
-    $userid = get_userid_from_session(false);
-    if (is_null($userid)) {
+    if (!\Auth::check()) {
         $response = ['requirelogin' => 1];
         json_error_response($response, 401);
         return false;
     }
 
-    // Check if this user is a global admin.
-    $service = ServiceContainer::getInstance();
-    $user = $service->get(User::class);
-    $user->Id = $userid;
-    if ($user->IsAdmin()) {
-        return true;
-    }
-
-    // Check if this user is a project admin.
-    $user2project = new UserProject();
-    $user2project->UserId = $userid;
-    $user2project->ProjectId = $projectid;
-    $user2project->FillFromUserId();
-    if ($user2project->Role == UserProject::PROJECT_ADMIN) {
+    // Check if the user has the necessary permissions.
+    if (ProjectPermissions::userCanEditProject(\Auth::user(), $project)) {
         return true;
     }
 
