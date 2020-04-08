@@ -63,15 +63,19 @@ if (Auth::check()) {
 
     $project = pdo_query("SELECT id,name,public,emailbrokensubmission FROM project WHERE id='$projectid'");
     $project_array = pdo_fetch_array($project);
-
     $Project = new Project;
     $Project->Id = $projectid;
-    $role = $Project->GetUserRole($userid);
 
     // Check if the project is public
-    if (!$project_array['public'] && ($User->IsAdmin() === false && $role < 0)) {
-        echo "You don't have the permissions to access this page";
-        return;
+    if (!$project_array['public'] && !$User->IsAdmin()) {
+        $user2project = new UserProject();
+        $user2project->UserId = $User->id;
+        $user2project->ProjectId = $Project->Id;
+        $user2project->FillFromUserId();
+        if ($user2project->Role == UserProject::NORMAL_USER) {
+            echo 'Not a valid projectid!';
+            return;
+        }
     }
 
     // Check if the user is not already in the database

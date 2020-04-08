@@ -16,6 +16,8 @@
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 
+use App\Services\ProjectPermissions;
+
 use CDash\Database;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildGroupRule;
@@ -44,7 +46,7 @@ if (!function_exists('rest_get')) {
 
         if (!array_key_exists('currenttime', $_REQUEST)) {
             $response['error'] = "currenttime not specified.";
-            echo json_encode($response);
+            json_error_response($response);
             return;
         }
         $currenttime = pdo_real_escape_numeric($_REQUEST['currenttime']);
@@ -92,7 +94,7 @@ if (!function_exists('rest_post')) {
         if (!array_key_exists('newgroupid', $_REQUEST)) {
             $response = array();
             $response['error'] = 'newgroupid not specified.';
-            echo json_encode($response);
+            json_error_response($response);
             return;
         }
 
@@ -117,7 +119,7 @@ $required_params = array('siteid', 'groupid', 'name', 'type');
 foreach ($required_params as $param) {
     if (!array_key_exists($param, $_REQUEST)) {
         $response['error'] = "$param not specified.";
-        echo json_encode($response);
+        json_error_response($response);
         return;
     }
 }
@@ -141,22 +143,17 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 // Make sure the user is an admin before proceeding with non-read-only methods.
 if ($method != 'GET') {
-    $userid = Auth::id();
-    if (!$userid) {
+    if (!Auth::check()) {
         $response['error'] = 'No session found.';
-        echo json_encode($response);
+        json_error_response($response, 401);
         return;
     }
 
-    $Project = new Project;
-    $User = new User;
-    $User->Id = $userid;
-    $Project->Id = $projectid;
-
-    $role = $Project->GetUserRole($userid);
-    if ($User->IsAdmin() === false && $role <= 1) {
+    $project = new Project();
+    $project->Id = $projectid;
+    if (!ProjectPermissions::userCanEditProject(Auth::user(), $project)) {
         $response['error'] = 'You do not have permission to access this page';
-        echo json_encode($response);
+        json_error_response($response, 403);
         return;
     }
 }

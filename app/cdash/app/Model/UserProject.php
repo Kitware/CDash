@@ -50,7 +50,7 @@ class UserProject
      * @return array
      * TODO: this is a non-static method on UserProject, pls mv asap
      */
-    public static function GetProjectsForUser(User $user)
+    public static function GetProjectsForUser(\App\Models\User $user)
     {
         /** @var \PDO $pdo */
         $pdo = Database::getInstance()->getPdo();
