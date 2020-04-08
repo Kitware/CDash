@@ -8,6 +8,7 @@ use CDash\Model\Project;
 
 abstract class ProjectController extends ViewController
 {
+    protected $authOk;
     protected $date;
     protected $logo;
     protected $project;
@@ -21,10 +22,14 @@ abstract class ProjectController extends ViewController
         $this->logo = env('APP_URL') . '/img/cdash.png';
     }
 
-    // Retrieve common data used by all build-specific pages in CDash.
+    // Retrieve common data used by all project-specific pages in CDash.
     protected function setup(Project $project = null)
     {
         parent::setup();
+
+        if (is_null($project)) {
+            return;
+        }
 
         // Check if user is authorized to view this project.
         if (checkUserPolicy($this->user['id'], $project->Id, 1)) {

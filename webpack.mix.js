@@ -44,6 +44,10 @@ glob.sync('public/views/partials/*.html').forEach(function(src) {
 mix.copy('public/css/cdash.css', 'public/build/css/cdash_' + version + '.css');
 mix.copy('public/css/colorblind.css', 'public/build/css/colorblind_' + version + '.css');
 mix.copy('public/css/common.css', 'public/build/css/common.css');
+mix.styles([
+  'node_modules/bootstrap/dist/css/bootstrap.css',
+  'node_modules/bootstrap-vue/dist/bootstrap-vue.css'
+], 'public/build/css/3rdparty.css').version();
 
 // Concatenate and minify 3rd party javascript.
 mix.scripts([
