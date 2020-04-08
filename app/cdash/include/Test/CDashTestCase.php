@@ -14,13 +14,14 @@
 namespace CDash\Test;
 
 use App\Models\Test;
+use App\Models\User;
 
+use CDash\Config;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
 use CDash\Model\Project;
 use CDash\Model\Site;
-use CDash\Model\User;
 use CDash\Model\UserProject;
 use CDash\ServiceContainer;
 use DI\Container;
@@ -38,6 +39,9 @@ class CDashTestCase extends TestCase
 
     /** @var Container $originalServiceContainer */
     private static $originalServiceContainer;
+
+    /** @var String $endpoint */
+    private $endpoint;
 
     public static function tearDownAfterClass()
     {
@@ -214,5 +218,34 @@ class CDashTestCase extends TestCase
             ->disableOriginalConstructor()
             ->setMethods(['getActionableBuilds', 'getType', 'getProjectId', 'getBuildGroupId'])
             ->getMock();
+    }
+
+    protected function setEndpoint($endpoint)
+    {
+        $config = Config::getInstance();
+        $root = $config->get('CDASH_ROOT_DIR');
+        $this->endpoint = realpath("{$root}/public/api/v1/{$endpoint}.php");
+        if (!$this->endpoint) {
+            throw new \Exception('Endpoint does not exist');
+        }
+    }
+    protected function getEndpointResponse()
+    {
+        $response = null;
+
+        ob_start();
+        if ($this->endpoint) {
+            try {
+                require $this->endpoint;
+            } catch (\Exception $exception) {
+                //
+            }
+            $response = ob_get_contents();
+            ob_end_clean();
+        } else {
+            throw new \Exception('Endpoint not set');
+        }
+
+        return json_decode($response);
     }
 }

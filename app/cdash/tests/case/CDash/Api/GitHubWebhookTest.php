@@ -19,7 +19,7 @@ use CDash\System;
 /**
  * @runTestsInSeparateProcesses
  */
-class GitHubWebhookTest extends CDash\Test\CDashApiTestCase
+class GitHubWebhookTest extends CDash\Test\CDashTestCase
 {
     public function setUp() : void
     {

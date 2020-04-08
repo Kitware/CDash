@@ -68,8 +68,7 @@ if (Auth::check()) {
         }
     }
 
-    $User = new User;
-    $User->Id = $userid;
+    $User = Auth::user();
     $Project->Id = $projectid;
     if (!ProjectPermissions::userCanEditProject($User, $Project)) {
         echo "You don't have the permissions to access this page";
