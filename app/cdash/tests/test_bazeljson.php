@@ -359,7 +359,7 @@ class BazelJSONTestCase extends KWWebTestCase
         $row = $stmt->fetch();
 
         $answer_key = [
-            'builderrors' => 4,
+            'builderrors' => 8,
             'buildwarnings' => 0,
             'testfailed' => 0,
             'testpassed' => 0,
@@ -427,7 +427,7 @@ class BazelJSONTestCase extends KWWebTestCase
         $row = $stmt->fetch();
 
         $answer_key = [
-            'builderrors' => 3,
+            'builderrors' => 1,
             'buildwarnings' => 0,
             'testfailed' => 0,
             'testpassed' => 0
@@ -446,12 +446,6 @@ class BazelJSONTestCase extends KWWebTestCase
         $errors = $jsonobj['errors'];
         if ($errors[0]["logline"] != 1) {
             $this->fail("Expected error at line 1, found at line ".$errors[0]["logline"]);
-        }
-        if ($errors[1]["logline"] != 3) {
-            $this->fail("Expected error at line 3, found at line ".$errors[1]["logline"]);
-        }
-        if ($errors[2]["logline"] != 6) {
-            $this->fail("Expected error at line 6, found at line ".$errors[2]["logline"]);
         }
 
         // Cleanup.

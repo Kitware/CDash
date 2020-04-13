@@ -313,7 +313,7 @@ class BazelJSONHandler extends NonSaxHandler
                     // searching for configure and build warnings and errors.
                     $stderr = $json_array[$message_id]['stderr'];
                     $warning_pattern = '/(.*?) warning: (.*?)$/i';
-                    $error_pattern = '/(.*?)error: (.*?)$/i';
+                    $error_pattern = '/(.*?)ERROR: (.*?)$/';
 
                     // The first two phases of a Bazel build, Loading and
                     // Analysis, will be treated as the 'Configure' step by
@@ -382,11 +382,7 @@ class BazelJSONHandler extends NonSaxHandler
                         } else {
                             // Done with configure, parsing build errors and warnings
                             $record_error = false;
-                            if (!is_null($build_error) && $type === 0 && empty($build_error->PostContext)) {
-                                // Assume all errors have at list one line of
-                                // context *AND* that the first line of context
-                                // may match the error pattern
-                            } elseif (preg_match($warning_pattern, $line, $matches) === 1
+                            if (preg_match($warning_pattern, $line, $matches) === 1
                                   && count($matches) === 3) {
                                 // This line contains a warning.
                                 $record_error = true;
