@@ -198,7 +198,11 @@ export default {
       this.statisticsUrl = `${this.$baseURL}/userStatistics.php?project=${cdash.projectname_encoded}&date=${cdash.date}`;
       this.sitesUrl = `${this.$baseURL}/viewMap.php?project=${cdash.projectname_encoded}&date=${cdash.date}${extraurl}`;
 
-      this.homeUrl = cdash.home;
+      if (cdash.home.startsWith('index.php?project=')) {
+        this.homeUrl = `${this.$baseURL}/${cdash.home}`;
+      } else {
+        this.homeUrl = cdash.home;
+      }
       this.docUrl = cdash.documentation;
       this.vcsUrl = cdash.vcs;
       this.bugUrl = cdash.bugtracker;
