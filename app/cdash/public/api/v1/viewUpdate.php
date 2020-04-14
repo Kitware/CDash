@@ -19,6 +19,8 @@ require_once 'include/common.php';
 require_once 'include/api_common.php';
 require_once 'include/repository.php';
 
+use App\Services\TestingDay;
+
 use CDash\Model\BuildUpdate;
 use CDash\Database;
 use CDash\Model\Project;
@@ -36,7 +38,7 @@ $project = new Project();
 $project->Id = $build->ProjectId;
 $project->Fill();
 
-$date = $project->GetTestingDay($build->StartTime);
+$date = TestingDay::get($project, $build->StartTime);
 $response = begin_JSON_response();
 get_dashboard_JSON($project->Name, $date, $response);
 $response['title'] = "$project->Name : Update";

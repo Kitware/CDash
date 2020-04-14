@@ -16,6 +16,8 @@
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 
+use App\Services\TestingDay;
+
 use CDash\Model\Build;
 use CDash\Model\BuildInformation;
 use CDash\Model\BuildRelationship;
@@ -41,7 +43,7 @@ $project = $service->create(Project::class);
 $project->Id = $build->ProjectId;
 $project->Fill();
 
-$date = $project->GetTestingDay($build->StartTime);
+$date = TestingDay::get($project, $build->StartTime);
 
 $response = begin_JSON_response();
 $response['title'] = "CDash : $project->Name";

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Views;
 require_once 'include/common.php';
 require_once 'include/defines.php';
 
+use App\Services\TestingDay;
 use CDash\Model\Project;
 
 abstract class ProjectController extends ViewController
@@ -46,8 +47,8 @@ abstract class ProjectController extends ViewController
         $this->project = $project;
         $this->project->Fill();
         if ($project->ImageId) {
-            $this->logo = env('APP_URL') . "/displayImage.php?imgid={$project->ImageId}";
+            $this->logo = env('APP_URL') . "/displayImage.php?imgid={$this->project->ImageId}";
         }
-        $this->date = $project->GetTestingDay(date(FMT_DATETIME));
+        $this->date = TestingDay::get($this->project, date(FMT_DATETIME));
     }
 }

@@ -14,6 +14,8 @@
  * =========================================================================
  */
 
+use App\Services\TestingDay;
+
 use CDash\Model\Project;
 use Tests\TestCase;
 
@@ -109,7 +111,7 @@ class NightlyTimeTest extends TestCase
 
     private function validateTestingDay($starttime, $expected)
     {
-        $actual = $this->Project->GetTestingDay($starttime);
+        $actual = TestingDay::get($this->Project, $starttime);
         $this->assertEquals($expected, $actual);
     }
 }

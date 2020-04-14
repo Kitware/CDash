@@ -17,6 +17,8 @@ require_once 'include/pdo.php';
 require_once 'include/common.php';
 require_once 'include/filterdataFunctions.php';
 
+use App\Services\TestingDay;
+
 use CDash\Model\Build;
 use CDash\Model\Project;
 use CDash\Model\User;
@@ -109,7 +111,7 @@ if ($build_array['groupid'] > 0) {
     }
 }
 
-$date = $project->GetTestingDay($build_array['starttime']);
+$date = TestingDay::get($project, $build_array['starttime']);
 $xml .= '<menu>';
 $xml .= add_XML_value('back', 'index.php?project=' . urlencode($project->Name) . "&date=$date");
 

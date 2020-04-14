@@ -16,6 +16,7 @@
 
 namespace CDash\Controller\Api;
 
+use App\Services\TestingDay;
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\BuildGroup;
@@ -330,7 +331,7 @@ class Timeline extends Index
         foreach ($builds as $build) {
             // Use this build's starttime to get the beginning of the appropriate
             // testing day.
-            $test_date = $this->project->GetTestingDay($build['starttime']);
+            $test_date = TestingDay::get($this->project, $build['starttime']);
             list($unused, $start_of_day) =
                 get_dates($test_date, $this->project->NightlyTime);
 

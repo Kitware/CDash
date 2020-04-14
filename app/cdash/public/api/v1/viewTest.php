@@ -20,6 +20,7 @@ include 'include/version.php';
 require_once 'include/filterdataFunctions.php';
 
 use App\Models\BuildTest;
+use App\Services\TestingDay;
 
 use CDash\Config;
 use CDash\Model\Build;
@@ -349,7 +350,7 @@ $endtime = $build->EndTime;
 $groupid = $build->GroupId;
 $response['groupid'] = $groupid;
 
-$date = $project->GetTestingDay($starttime);
+$date = TestingDay::get($project, $starttime);
 get_dashboard_JSON_by_name($project->Name, $date, $response);
 
 // Menu

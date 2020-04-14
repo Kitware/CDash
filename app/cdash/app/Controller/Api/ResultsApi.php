@@ -15,6 +15,8 @@
 =========================================================================*/
 namespace CDash\Controller\Api;
 
+use App\Services\TestingDay;
+
 use CDash\Database;
 use CDash\Model\Build;
 use CDash\Model\Project;
@@ -141,7 +143,7 @@ class ResultsApi extends ProjectApi
             $this->db->execute($stmt, [':projectid' => $this->project->Id]);
             $starttime = $stmt->fetchColumn();
             if ($starttime) {
-                $this->date = $this->project->GetTestingDay($starttime);
+                $this->date = TestingDay::get($this->project, $starttime);
             }
         }
 

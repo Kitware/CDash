@@ -21,6 +21,7 @@ include_once 'include/ctestparserutils.php';
 include_once 'include/repository.php';
 
 use App\Models\Test;
+use App\Services\TestingDay;
 
 use CDash\Collection\BuildEmailCollection;
 use CDash\Collection\CollectionCollection;
@@ -2426,7 +2427,7 @@ class Build
         }
         $this->FillFromId($this->Id);
         $this->GetProject()->Fill();
-        return $this->Project->GetTestingDay($this->StartTime);
+        return TestingDay::get($this->Project, $this->StartTime);
     }
 
     /** Return whether or not this build has been marked as done. */
