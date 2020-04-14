@@ -975,10 +975,15 @@
                     >
                       <b>Nightly start time:</b>
                       <br>
-                      CDash displays the current dashboard using a 24hours
+                      CDash displays the current dashboard using a 24 hour
                       window. The nightly start time defines the beginning of
                       this window. Note that the start time is expressed in the
-                      form HH:MM:SS TZ, i.e. 21:00:00 EDT.
+                      form HH:MM:SS TZ, i.e. 21:00:00 America/New_York
+                      <br>
+                      <a
+                        href="https://www.php.net/manual/en/timezones.php"
+                        target="blank"
+                      >List of supported timezones</a>
                     </span>
                   </td>
                 </tr>
