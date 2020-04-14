@@ -1,7 +1,7 @@
 <template>
   <nav id="headermenu">
     <ul id="navigation">
-      <li>
+      <li v-if="hasProject">
         <a :href="indexUrl">Dashboard</a>
         <ul>
           <li v-if="showSubProjects">
@@ -49,7 +49,7 @@
           style="display:none;"
         >{{ date }}</span>
       </li>
-      <li v-if="showNav">
+      <li v-if="hasProject">
         <a
           id="project_nav"
           href="#"
@@ -123,10 +123,10 @@ export default {
 
   data () {
     return {
+      hasProject: false,
       showAdmin: false,
       showBack: false,
       showCalendar: false,
-      showNav: false,
       showSubscribe: false,
       showSubProjects: false,
 
@@ -166,6 +166,19 @@ export default {
         extrafilterurl = cdash.extrafilterurl;
       }
 
+      if (cdash.menu.back) {
+        this.showBack = true;
+        this.backUrl = `${this.$baseURL}${cdash.menu.back}${extrafilterurl}`;
+      }
+      if (cdash.showcalendar) {
+        this.showCalendar = true;
+      }
+
+      if (!cdash.projectname_encoded) {
+        return;
+      }
+      this.hasProject = true;
+
       this.indexUrl = `${this.$baseURL}/index.php?project=${cdash.projectname_encoded}&date=${cdash.date}`;
       if (cdash.menu.subprojects == 1) {
         this.showSubProjects = true;
@@ -185,24 +198,13 @@ export default {
       this.statisticsUrl = `${this.$baseURL}/userStatistics.php?project=${cdash.projectname_encoded}&date=${cdash.date}`;
       this.sitesUrl = `${this.$baseURL}/viewMap.php?project=${cdash.projectname_encoded}&date=${cdash.date}${extraurl}`;
 
-      if (cdash.menu.back) {
-        this.showBack = true;
-        this.backUrl = `${this.$baseURL}${cdash.menu.back}${extrafilterurl}`;
-      }
-      if (cdash.showcalendar) {
-        this.showCalendar = true;
-      }
-
-      if (!cdash.hidenav) {
-        this.showNav = true;
-        this.homeUrl = cdash.home;
-        this.docUrl = cdash.documentation;
-        this.vcsUrl = cdash.vcs;
-        this.bugUrl = cdash.bugtracker;
-        if (!cdash.projectrole) {
-          this.showSubscribe = true;
-          this.subscribeUrl = `${this.$baseURL}/subscribeProject.php?projectid=${cdash.projectid}`;
-        }
+      this.homeUrl = cdash.home;
+      this.docUrl = cdash.documentation;
+      this.vcsUrl = cdash.vcs;
+      this.bugUrl = cdash.bugtracker;
+      if (!cdash.projectrole) {
+        this.showSubscribe = true;
+        this.subscribeUrl = `${this.$baseURL}/subscribeProject.php?projectid=${cdash.projectid}`;
       }
 
       if (cdash.user.admin == 1) {
