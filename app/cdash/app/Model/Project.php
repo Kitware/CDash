@@ -74,7 +74,6 @@ class Project
     public $UploadQuota;
     public $RobotName;
     public $RobotRegex;
-    public $CTestTemplateScript;
     public $WebApiKey;
     public $WarningsFilter;
     public $ErrorsFilter;
@@ -191,7 +190,6 @@ class Project
 
         pdo_query("DELETE FROM dailyupdate WHERE projectid=$this->Id");
         pdo_query("DELETE FROM projectrobot WHERE projectid=$this->Id");
-        pdo_query("DELETE FROM projectjobscript WHERE projectid=$this->Id");
         pdo_query("DELETE FROM build_filters WHERE projectid=$this->Id");
 
         // Delete any repositories that aren't shared with other projects.
@@ -326,28 +324,6 @@ class Project
             if (!$this->UpdateBuildFilters()) {
                 return false;
             }
-
-            // Insert the ctest template
-            if ($this->CTestTemplateScript != '') {
-                $CTestTemplateScript = pdo_real_escape_string($this->CTestTemplateScript);
-
-                // Check if it exists
-                $script = pdo_query('SELECT projectid FROM projectjobscript WHERE projectid=' . qnum($this->Id));
-                if (pdo_num_rows($script) > 0) {
-                    $query = "UPDATE projectjobscript SET script='" . $CTestTemplateScript . "' WHERE projectid=" . qnum($this->Id);
-                    if (!pdo_query($query)) {
-                        return false;
-                    }
-                } else {
-                    $query = 'INSERT INTO projectjobscript(projectid,script)
-                   VALUES (' . qnum($this->Id) . ",'" . $CTestTemplateScript . "')";
-                    if (!pdo_query($query)) {
-                        return false;
-                    }
-                }
-            } else {
-                pdo_query("DELETE FROM projectjobscript WHERE projectid=$this->Id");
-            }
         } else {
             // insert the project
 
@@ -390,16 +366,6 @@ class Project
             if ($this->RobotName != '') {
                 $query = 'INSERT INTO projectrobot(projectid,robotname,authorregex)
                  VALUES (' . qnum($this->Id) . ",'" . $RobotName . "','" . $RobotRegex . "')";
-                if (!pdo_query($query)) {
-                    return false;
-                }
-            }
-
-            if ($this->CTestTemplateScript != '') {
-                $CTestTemplateScript = pdo_real_escape_string($this->CTestTemplateScript);
-
-                $query = 'INSERT INTO projectjobscript(projectid,script)
-                 VALUES (' . qnum($this->Id) . ",'" . $$CTestTemplateScript . "')";
                 if (!pdo_query($query)) {
                     return false;
                 }
@@ -541,16 +507,6 @@ class Project
         if ($build_filters_array = pdo_fetch_array($build_filters)) {
             $this->WarningsFilter = $build_filters_array['warnings'];
             $this->ErrorsFilter = $build_filters_array['errors'];
-        }
-
-        // Check if we have a ctest script
-        $script = pdo_query('SELECT script FROM projectjobscript WHERE projectid=' . $this->Id);
-        if (!$script) {
-            add_last_sql_error('Project Fill', $this->Id);
-            return;
-        }
-        if ($script_array = pdo_fetch_array($script)) {
-            $this->CTestTemplateScript = $script_array['script'];
         }
     }
 
@@ -1323,90 +1279,6 @@ class Project
         }
     }
 
-    public function getDefaultJobTemplateScript()
-    {
-        $ctest_script = '# From this line down, this script may be customized' . "\n";
-        $ctest_script .= '# on the Clients tab of the CDash createProject page.' . "\n";
-        $ctest_script .= '#' . "\n";
-        $ctest_script .= 'if(JOB_MODULE)' . "\n";
-        $ctest_script .= '  set(SOURCE_NAME ${JOB_MODULE})' . "\n";
-        $ctest_script .= '  if(JOB_TAG)' . "\n";
-        $ctest_script .= '    set(SOURCE_NAME ${SOURCE_NAME}-${JOB_TAG})' . "\n";
-        $ctest_script .= '  endif()' . "\n";
-        $ctest_script .= 'else()' . "\n";
-        $ctest_script .= '  set(SOURCE_NAME ${PROJECT_NAME})' . "\n";
-        $ctest_script .= '  if(JOB_BUILDNAME_SUFFIX)' . "\n";
-        $ctest_script .= '    set(SOURCE_NAME ${SOURCE_NAME}-${JOB_BUILDNAME_SUFFIX})' . "\n";
-        $ctest_script .= '  endif()' . "\n";
-        $ctest_script .= 'endif()' . "\n";
-        $ctest_script .= "\n";
-        $ctest_script .= 'set(CTEST_SOURCE_NAME ${SOURCE_NAME})' . "\n";
-        $ctest_script .= 'set(CTEST_BINARY_NAME ${SOURCE_NAME}-bin)' . "\n";
-        $ctest_script .= 'set(CTEST_DASHBOARD_ROOT "${CLIENT_BASE_DIRECTORY}")' . "\n";
-        $ctest_script .= 'set(CTEST_SOURCE_DIRECTORY "${CTEST_DASHBOARD_ROOT}/${CTEST_SOURCE_NAME}")' . "\n";
-        $ctest_script .= 'set(CTEST_BINARY_DIRECTORY "${CTEST_DASHBOARD_ROOT}/${CTEST_BINARY_NAME}")' . "\n";
-        $ctest_script .= 'set(CTEST_CMAKE_GENERATOR "${JOB_CMAKE_GENERATOR}")' . "\n";
-        $ctest_script .= 'set(CTEST_BUILD_CONFIGURATION "${JOB_BUILD_CONFIGURATION}")' . "\n";
-        $ctest_script .= "\n";
-
-        // Construct the buildname
-        $ctest_script .= 'set(CTEST_SITE "${CLIENT_SITE}")' . "\n";
-        $ctest_script .= 'set(CTEST_BUILD_NAME "${JOB_OS_NAME}-${JOB_OS_VERSION}-${JOB_OS_BITS}-${JOB_COMPILER_NAME}-${JOB_COMPILER_VERSION}")' . "\n";
-        $ctest_script .= 'if(JOB_BUILDNAME_SUFFIX)' . "\n";
-        $ctest_script .= '  set(CTEST_BUILD_NAME ${CTEST_BUILD_NAME}-${JOB_BUILDNAME_SUFFIX})' . "\n";
-        $ctest_script .= 'endif()' . "\n";
-        $ctest_script .= "\n";
-
-        // Set the checkout command
-        $repo_type = $this->getDefaultCTestUpdateType();
-
-        if ($repo_type == 'cvs') {
-            $ctest_script .= 'if(NOT EXISTS "${CTEST_SOURCE_DIRECTORY}")' . "\n";
-            $ctest_script .= '  set(CTEST_CHECKOUT_COMMAND "cvs -d ${JOB_REPOSITORY} checkout ")' . "\n";
-            $ctest_script .= '  if(JOB_TAG)' . "\n";
-            $ctest_script .= '    set(CTEST_CHECKOUT_COMMAND "${CTEST_CHECKOUT_COMMAND} -r ${JOB_TAG}")' . "\n";
-            $ctest_script .= '  endif()' . "\n";
-            $ctest_script .= '  set(CTEST_CHECKOUT_COMMAND "${CTEST_CHECKOUT_COMMAND} -d ${SOURCE_NAME}")' . "\n";
-            $ctest_script .= '  set(CTEST_CHECKOUT_COMMAND "${CTEST_CHECKOUT_COMMAND} ${JOB_MODULE}")' . "\n";
-            $ctest_script .= 'endif()' . "\n";
-            $ctest_script .= 'set(CTEST_UPDATE_COMMAND "cvs")' . "\n";
-        }
-
-        if ($repo_type == 'git') {
-            $ctest_script .= 'if(NOT EXISTS "${CTEST_SOURCE_DIRECTORY}")' . "\n";
-            $ctest_script .= '  set(CTEST_CHECKOUT_COMMAND "git clone ${JOB_REPOSITORY} ${SOURCE_NAME}")' . "\n";
-            $ctest_script .= 'endif()' . "\n";
-            $ctest_script .= 'set(CTEST_UPDATE_COMMAND "git")' . "\n";
-        }
-
-        if ($repo_type == 'svn') {
-            $ctest_script .= 'if(NOT EXISTS "${CTEST_SOURCE_DIRECTORY}")' . "\n";
-            $ctest_script .= '  set(CTEST_CHECKOUT_COMMAND "svn co ${JOB_REPOSITORY} ${SOURCE_NAME}")' . "\n";
-            $ctest_script .= 'endif()' . "\n";
-            $ctest_script .= 'set(CTEST_UPDATE_COMMAND "svn")' . "\n";
-        }
-
-        $ctest_script .= "\n";
-
-        // Write the initial CMakeCache.txt
-        //
-        $ctest_script .= 'file(WRITE "${CTEST_BINARY_DIRECTORY}/CMakeCache.txt" "${JOB_INITIAL_CACHE}")' . "\n";
-        $ctest_script .= "\n";
-
-        $ctest_script .= 'ctest_start(${JOB_BUILDTYPE})' . "\n";
-        $ctest_script .= 'ctest_update(SOURCE ${CTEST_SOURCE_DIRECTORY})' . "\n";
-        $ctest_script .= 'ctest_configure(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)' . "\n";
-        $ctest_script .= 'ctest_build(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)' . "\n";
-        $ctest_script .= 'ctest_test(BUILD "${CTEST_BINARY_DIRECTORY}" RETURN_VALUE res)' . "\n";
-        $ctest_script .= '# The following lines are used to associate a build id with this job.' . "\n";
-        $ctest_script .= 'set(CTEST_DROP_SITE ${JOB_DROP_SITE})' . "\n";
-        $ctest_script .= 'set(CTEST_DROP_LOCATION ${JOB_DROP_LOCATION})' . "\n";
-        $ctest_script .= 'ctest_submit(RETURN_VALUE res)' . "\n";
-        $ctest_script .= "\n";
-        $ctest_script .= 'message("DONE")' . "\n";
-        return $ctest_script;
-    }
-
     /** Returns the total size of all uploaded files for this project */
     public function GetUploadsTotalSize()
     {
@@ -1564,10 +1436,6 @@ class Project
             $response[$k] = $v;
         }
         $response['name_encoded'] = urlencode($this->Name);
-
-        if (strlen($this->CTestTemplateScript) === 0) {
-            $response['ctesttemplatescript'] = $this->getDefaultJobTemplateScript();
-        }
 
         $includeQuota = !$config->get('CDASH_USER_CREATE_PROJECTS') || $user->IsAdmin();
 

@@ -117,15 +117,6 @@
             </b-nav-item>
 
             <b-nav-item
-              v-if="cdash.edit == 1"
-              href="#Clients"
-              :active="activeTab == 'Clients'"
-              @click="setTabByName('Clients');"
-            >
-              Clients
-            </b-nav-item>
-
-            <b-nav-item
               href="#Misc"
               :active="activeTab == 'Misc'"
               :disabled="cdash.tabs.Misc.disabled"
@@ -1635,36 +1626,6 @@
                         @click="nextTab()"
                       >
                     </div>
-                  </td>
-                </tr>
-              </table>
-            </div>
-
-            <!-- Clients tab -->
-            <div
-              v-if="cdash.edit == 1"
-              :class="['tab-pane', { 'active': activeTab === 'Clients' }]"
-            >
-              <div class="tab_help" />
-              <table width="100%">
-                <tr>
-                  <td
-                    valign="top"
-                    align="right"
-                  >
-                    <strong>CTest Template Script:</strong>
-                  </td>
-                  <td>
-                    <textarea
-                      id="ctestScript"
-                      v-model="cdash.project.CTestTemplateScript"
-                      name="ctestTemplateScript"
-                      wrap="off"
-                      cols="80"
-                      rows="30"
-                      @change="cdash.changesmade = true"
-                      @focus="$('.ctesttemplatescript_help').html('')"
-                    />
                   </td>
                 </tr>
               </table>
