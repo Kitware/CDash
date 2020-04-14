@@ -49,5 +49,8 @@ Route::get('/viewConfigure.php', function (Request $request) {
     return redirect("/build/{$buildid}/configure");
 });
 
+Route::get('/project/{id}/edit', 'Views\EditProjectController@edit');
+Route::get('/project/new', 'Views\EditProjectController@create');
+
 // this *MUST* be the last route in the file
 Route::any('{url}', 'CDash')->where('url', '.*');

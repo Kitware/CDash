@@ -1061,17 +1061,6 @@ CREATE TABLE "filesum" (
 CREATE INDEX "filesum_md5sum" on "filesum" ("md5sum");
 
 --
--- Table: projectjobscript
---
-CREATE TABLE "projectjobscript" (
-  "id" serial NOT NULL,
-  "projectid" bigint NOT NULL,
-  "script" text NOT NULL,
-  PRIMARY KEY ("id")
-);
-CREATE INDEX "projectjobscript_projectid" on "projectjobscript" ("projectid");
-
---
 -- Table: submissionprocessor
 --
 CREATE TABLE "submissionprocessor" (

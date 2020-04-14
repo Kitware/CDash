@@ -176,7 +176,7 @@
         <xsl:if test="cdash/user/admin=1">
         <li id="admin">
         <a href="#">Settings</a><ul>
-        <li><a><xsl:attribute name="href">createProject.php?projectid=<xsl:value-of select="cdash/dashboard/projectid"/></xsl:attribute>Project</a></li>
+        <li><a><xsl:attribute name="href">project/<xsl:value-of select="cdash/dashboard/projectid"/>/edit</xsl:attribute>Project</a></li>
         <li><a><xsl:attribute name="href">manageProjectRoles.php?projectid=<xsl:value-of select="cdash/dashboard/projectid"/></xsl:attribute>Users</a></li>
         <li><a><xsl:attribute name="href">manageBuildGroup.php?projectid=<xsl:value-of select="cdash/dashboard/projectid"/></xsl:attribute>Groups</a></li>
         <li><a><xsl:attribute name="href">manageCoverage.php?projectid=<xsl:value-of select="cdash/dashboard/projectid"/></xsl:attribute>Coverage</a></li>

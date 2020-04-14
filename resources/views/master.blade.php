@@ -18,13 +18,12 @@
     <link type="text/css" rel="stylesheet" href="{{ asset('css/jquery.qtip.min.css') }}" />
     <link type="text/css" rel="stylesheet" href="{{ asset('css/jquery.dataTables.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ $cdashCss }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset(mix('build/css/3rdparty.css')) }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('css/vue_common.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('css/nv.d3.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.min.css') }}"/>
     @yield('header_script')
 </head>
-
-
 
 <body>
 

@@ -1,6 +1,8 @@
 import Vue from 'vue';
+import BootstrapVue from 'bootstrap-vue'
 import VTooltip from 'v-tooltip'
 import axios from 'axios';
+Vue.use(BootstrapVue)
 Vue.use(VTooltip)
 
 Vue.prototype.$baseURL = process.env.MIX_APP_URL;

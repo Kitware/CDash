@@ -128,9 +128,26 @@ function rest_post($user)
     }
 }
 
+function get_repo_url_example()
+{
+    require_once 'include/common.php';
+    require_once 'include/repository.php';
+    $url = get_param('url');
+    $type = get_param('type');
+    $functionname = "get_{$type}_diff_url";
+    $example = $functionname($url, 'DIRECTORYNAME', 'FILENAME', 'REVISION');
+    json_error_response(['example' => $example], 200);
+    return true;
+}
+
 /* Handle GET requests */
 function rest_get($user)
 {
+    // Repository URL examples?
+    if (isset($_REQUEST['vcsexample'])) {
+        return get_repo_url_example();
+    }
+
     $response = [];
     $project = get_project($response);
     if (!$project) {

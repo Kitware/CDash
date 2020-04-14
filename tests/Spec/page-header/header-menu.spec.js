@@ -44,6 +44,7 @@ describe('HeaderMenu', () => {
           statisticsUrl: statisticsUrl,
           sitesUrl: sitesUrl,
           subscribeUrl: subscribeUrl,
+          hasProject: true,
           showNav: true,
           showSubscribe: true,
         }

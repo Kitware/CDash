@@ -12,6 +12,7 @@
       <span class="pagename">{{ pagename }}</span>
     </div>
     <HeaderNav
+      v-if="showNav"
       :previous="previous"
       :current="current"
       :next="next"
@@ -59,6 +60,7 @@ export default {
   data () {
     return {
       logo: `${this.$baseURL}/img/cdash.png`,
+      showNav: false,
     }
   },
 
@@ -66,6 +68,9 @@ export default {
     this.$root.$on('api-loaded', cdash => {
       if (cdash.logoid > 0) {
         this.logo = `${this.$baseURL}/image/${cdash.logoid}`;
+        if (!cdash.hidenav) {
+          this.showNav = true;
+        }
       }
     });
   },
