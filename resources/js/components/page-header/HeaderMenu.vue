@@ -209,7 +209,7 @@ export default {
 
       if (cdash.user.admin == 1) {
         this.showAdmin = true;
-        this.projectSettingsUrl = `${this.$baseURL}/createProject.php?projectid=${cdash.projectid}`;
+        this.projectSettingsUrl = `${this.$baseURL}/project/${cdash.projectid}/edit`;
         this.userSettingsUrl = `${this.$baseURL}/manageProjectRoles.php?projectid=${cdash.projectid}`;
         this.groupSettingsUrl = `${this.$baseURL}/manageBuildGroup.php?projectid=${cdash.projectid}`;
         this.coverageSettingsUrl = `${this.$baseURL}/manageCoverage.php?projectid=${cdash.projectid}`;

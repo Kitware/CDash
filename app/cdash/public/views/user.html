@@ -79,7 +79,7 @@
                 </a>
                 <a title="Edit project"
                    ng-if="::project.role > 1"
-                   ng-href="createProject.php?projectid={{::project.id}}">
+                   ng-href="project/{{::project.id}}/edit">
                   <img src="img/edit2.png" border="0" alt="editproject" />
                 </a>
                 <a title="Manage subprojects"
@@ -315,7 +315,7 @@
             </tr>
             <tr class="trodd">
               <td id="nob">
-                <a href="createProject.php">Start a new project</a>
+                <a href="project/new">Start a new project</a>
               </td>
             </tr>
           </tbody>
@@ -334,7 +334,7 @@
           </tr>
           <tr class="treven">
             <td id="nob">
-              <a href="createProject.php">Create new project</a>
+              <a href="project/new">Create new project</a>
             </td>
           </tr>
           <tr class="trodd">
