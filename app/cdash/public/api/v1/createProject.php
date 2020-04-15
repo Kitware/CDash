@@ -24,13 +24,10 @@ use CDash\Model\Repository;
 use CDash\Model\User;
 use CDash\Model\UserProject;
 use CDash\ServiceContainer;
-use CDash\Controller\Auth\Session;
 
 $start = microtime_float();
 $service = ServiceContainer::getInstance();
 $config = Config::getInstance();
-/** @var Session $session */
-$session = $service->get(Session::class);
 
 $response = [];
 if (!Auth::check()) {

@@ -21,8 +21,6 @@ use App\Services\ProjectPermissions;
 use CDash\Model\AuthToken;
 use CDash\Model\Build;
 use CDash\Model\Project;
-use CDash\Model\User;
-use CDash\Model\UserProject;
 use CDash\ServiceContainer;
 use CDash\System;
 

@@ -16,7 +16,6 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use CDash\Config;
-use CDash\Controller\Auth\Session;
 use CDash\Database;
 use CDash\Model\AuthToken;
 use CDash\ServiceContainer;
@@ -1768,7 +1767,6 @@ function get_dashboard_JSON($projectname, $date, &$response)
 {
     $config = Config::getInstance();
     $service = ServiceContainer::getInstance();
-    $session = $service->get(Session::class);
 
     /** @var Project $project */
     $project = $service->create(Project::class);

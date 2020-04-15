@@ -17,7 +17,6 @@ namespace CDash\Controller\Auth;
 
 use CDash\Config;
 use CDash\System;
-use CDash\Model\User;
 
 /**
  * Class Session
@@ -28,9 +27,6 @@ class Session
     const EXTEND_GC_LIFETIME = 600;
     const CACHE_NOCACHE = 'nocache';
     const CACHE_PRIVATE_NO_EXPIRE = 'private_no_expire';
-
-    const REMEMBER_ME_PREFIX = 'CDash-';
-    const REMEMBER_ME_EXPIRATION = 2592000; // 60 * 60 * 24 * 30, 1 MONTH
 
     private $config;
     private $system;
@@ -131,30 +127,5 @@ class Session
     public function writeClose()
     {
         $this->system->session_write_close();
-    }
-
-    /**
-     * @param User $user
-     * @param $key
-     * @return void
-     */
-    public function setRememberMeCookie(User $user, $key)
-    {
-        $time = time() + self::REMEMBER_ME_EXPIRATION; // 30 days;
-        $cookie_value = $user->Id . $key;
-        $baseUrl = $this->config->getBaseUrl();
-        $url = parse_url($baseUrl);
-        $cookie_name = self::REMEMBER_ME_PREFIX . $url['host'];
-        $https = $this->config->get('CDASH_USE_HTTPS');
-
-        $path = isset($url['path']) ? $url['path'] : '/';
-        // This hack will prevent the xsrf possible with this cookie
-        // @reference https://stackoverflow.com/a/46971326/1373710
-        $cookie_path = "{$path}; samesite=strict";
-        // $name, $value, $expire, $path, $domain, $secure, $httponly
-
-        if ($user->SetCookieKey($key)) {
-            $this->system->setcookie($cookie_name, $cookie_value, $time, $cookie_path, $url['host'], $https, true);
-        }
     }
 }

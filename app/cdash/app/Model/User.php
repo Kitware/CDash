@@ -402,20 +402,6 @@ class User
         }
     }
 
-    /** Set the cookie key for the current user.
-      */
-    public function SetCookieKey($key)
-    {
-        if (!$this->Id) {
-            return false;
-        }
-        $stmt = $this->PDO->prepare(
-            "UPDATE $this->TableName SET cookiekey = :key WHERE id = :id");
-        $stmt->bindParam(':key', $key);
-        $stmt->bindParam(':id', $this->Id);
-        return pdo_execute($stmt);
-    }
-
     public function hasExpiredPassword()
     {
         $expires = config('cdash.password.expires');
