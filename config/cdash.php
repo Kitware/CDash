@@ -43,7 +43,7 @@ return [
         'authenticated_submissions' => false,
     ],
     'login' => [
-        'max_attempts' => 3,
+        'max_attempts' => 5,
         'lockout' => [
             'duration' => 1,
         ],

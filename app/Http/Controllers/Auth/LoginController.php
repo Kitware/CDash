@@ -32,8 +32,8 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
-        $this->maxAttempts = config('login.max_attempts', 5);
-        $this->decayMinutes = config('login.lockout.duration', 1);
+        $this->maxAttempts = config('cdash.login.max_attempts', 5);
+        $this->decayMinutes = config('cdash.login.lockout.duration', 1);
     }
 
     /**
