@@ -213,6 +213,7 @@ add_php_test(indexnextprevious)
 add_php_test(putdynamicbuilds)
 add_php_test(commitauthornotification)
 add_php_test(addbuildapi)
+add_php_test(subscribeprojectshowlabels)
 
 add_subdirectory(ctest)
 

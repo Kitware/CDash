@@ -1194,7 +1194,7 @@ class Project
         }
 
         while ($label_array = pdo_fetch_array($labels)) {
-            $labelids[] = $label_array['labelid'];
+            $labelids[] = $label_array['id'];
         }
         return array_unique($labelids);
     }
