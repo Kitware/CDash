@@ -31,6 +31,8 @@ require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 include_once 'include/repository.php';
 
+use App\Services\TestingDay;
+
 use CDash\Model\Build;
 use CDash\Model\BuildError;
 use CDash\Model\BuildFailure;
@@ -78,7 +80,7 @@ if (isset($_GET['type'])) {
     $type = 0;
 }
 
-$date = $project->GetTestingDay($build->StartTime);
+$date = TestingDay::get($project, $build->StartTime);
 get_dashboard_JSON_by_name($project->Name, $date, $response);
 
 $menu = array();

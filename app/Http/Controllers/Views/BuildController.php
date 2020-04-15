@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Views;
 require_once 'include/common.php';
 require_once 'include/defines.php';
 
+use App\Services\TestingDay;
 use CDash\Model\Build;
 use CDash\Model\Project;
 
@@ -34,7 +35,7 @@ class BuildController extends ProjectController
 
         parent::setup($this->build->GetProject());
         if (!is_null($this->project)) {
-            $this->date = $this->project->GetTestingDay($this->build->StartTime);
+            $this->date = TestingDay::get($this->project, $this->build->StartTime);
         }
     }
 

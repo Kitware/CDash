@@ -24,6 +24,7 @@ include_once 'include/repository.php';
 
 use App\Models\Test;
 use App\Models\TestOutput;
+use App\Services\TestingDay;
 
 use CDash\Config;
 use CDash\Database;
@@ -121,7 +122,7 @@ $site = new Site();
 $site->Id = $build->SiteId;
 $site->Fill();
 
-$date = $project->GetTestingDay($build->StartTime);
+$date = TestingDay::get($project, $build->StartTime);
 list($previousdate, $currenttime, $nextdate) = get_dates($date, $project->NightlyTime);
 $logoid = getLogoID($projectid);
 

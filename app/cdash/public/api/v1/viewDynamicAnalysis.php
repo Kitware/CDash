@@ -16,6 +16,8 @@
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 
+use App\Services\TestingDay;
+
 use CDash\Model\Project;
 use CDash\Model\Site;
 
@@ -42,7 +44,7 @@ $project->Id = $build->ProjectId;
 $project->Fill();
 $response['displaylabels'] = $project->DisplayLabels;
 
-$date = $project->GetTestingDay($build->StartTime);
+$date = TestingDay::get($project, $build->StartTime);
 
 $response = begin_JSON_response();
 get_dashboard_JSON($project->Name, $date, $response);

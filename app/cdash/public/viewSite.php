@@ -17,6 +17,8 @@
 require_once 'include/pdo.php';
 require_once 'include/common.php';
 
+use App\Services\TestingDay;
+
 use CDash\Config;
 use CDash\Model\Project;
 use CDash\Model\User;
@@ -103,7 +105,7 @@ if ($projectid) {
     $project->Id = $projectid;
     $project->Fill();
     $xml .= '<backurl>index.php?project=' . urlencode($project->Name);
-    $date = $project->GetTestingDay(gmdate(FMT_DATETIME, $currenttime));
+    $date = TestingDay::get($project, gmdate(FMT_DATETIME, $currenttime));
     $xml .= '&#38;date=' . $date;
     $xml .= '</backurl>';
 } else {

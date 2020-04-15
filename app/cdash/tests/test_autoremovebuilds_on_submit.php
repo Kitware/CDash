@@ -3,6 +3,8 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use App\Services\TestingDay;
+
 use CDash\Config;
 use CDash\Database;
 use CDash\Model\BuildGroup;
@@ -194,7 +196,7 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         $project = new Project();
         $project->Id = $projectid;
         $project->Fill();
-        $expected = $project->GetTestingDay(date(FMT_DATETIME));
+        $expected = TestingDay::get($project, date(FMT_DATETIME));
         $this->assertEqual($expected, $found);
 
         $this->pass('Passed');

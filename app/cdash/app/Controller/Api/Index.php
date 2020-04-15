@@ -15,6 +15,7 @@
 =========================================================================*/
 namespace CDash\Controller\Api;
 
+use App\Services\TestingDay;
 use CDash\Config;
 use CDash\Database;
 use CDash\Model\Build;
@@ -1321,7 +1322,7 @@ class Index extends ResultsApi
         $this->db->execute($previous_stmt, $query_params);
         $starttime = $previous_stmt->fetchColumn();
         if ($starttime) {
-            $previous_date = $this->project->GetTestingDay($starttime);
+            $previous_date = TestingDay::get($this->project, $starttime);
             $response['menu']['previous'] = "$base_url&date=$previous_date";
         } else {
             $response['menu']['previous'] = false;
@@ -1339,7 +1340,7 @@ class Index extends ResultsApi
         $this->db->execute($next_stmt, $query_params);
         $starttime = $next_stmt->fetchColumn();
         if ($starttime) {
-            $next_date = $this->project->GetTestingDay($starttime);
+            $next_date = TestingDay::get($this->project, $starttime);
             $response['menu']['next'] = "$base_url&date=$next_date";
         } else {
             $response['menu']['next'] = false;
