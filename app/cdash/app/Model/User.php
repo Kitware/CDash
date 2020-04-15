@@ -416,37 +416,6 @@ class User
         return pdo_execute($stmt);
     }
 
-    /** Populate $this from cookie values.
-      */
-    public function FillFromCookie($cookiekey, $cookieuserid)
-    {
-        $sql = "SELECT * FROM $this->TableName WHERE cookiekey = :cookiekey";
-        if (!empty($cookieuserid)) {
-            $sql .= ' AND id = :id';
-        }
-        $stmt = $this->PDO->prepare($sql);
-        $stmt->bindParam(':cookiekey', $cookiekey);
-        if (!empty($cookieuserid)) {
-            $stmt->bindParam(':id', $cookieuserid);
-        }
-        if (!pdo_execute($stmt)) {
-            return false;
-        }
-        $row = $stmt->fetch();
-        if (!$row) {
-            return false;
-        }
-        $this->Id = $row['id'];
-        $this->Email = $row['email'];
-        $this->Password = $row['password'];
-        $this->FirstName = $row['firstname'];
-        $this->LastName = $row['lastname'];
-        $this->Institution = $row['institution'];
-        $this->Admin = $row['admin'];
-        $this->Filled = true;
-        return true;
-    }
-
     public function hasExpiredPassword()
     {
         $expires = config('cdash.password.expires');
