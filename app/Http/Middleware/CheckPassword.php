@@ -17,14 +17,11 @@ class CheckPassword
      */
     public function handle($request, Closure $next)
     {
-        $password_expired_path = 'editUser.php';
+        $password_expired_path = '/editUser.php';
         if (Auth::check() && !Str::contains(url()->current(), $password_expired_path)) {
             $user = Auth::user();
             if ($user->hasExpiredPassword()) {
-                // TODO: figure out why we have to build the entire URI here, i.e. why
-                //  url($password_expired_path) does not work
-                $password_expired_uri  = $request->getSchemeAndHttpHost();
-                $password_expired_uri .= "/$password_expired_path?password_expired=1";
+                $password_expired_uri = "{$password_expired_path}?password_expired=1";
                 return redirect($password_expired_uri);
             }
         }
