@@ -1689,10 +1689,24 @@ function web_api_authenticate($projectid, $token)
 // Check if user has specified a preference for color scheme.
 function get_css_file()
 {
-    if (array_key_exists('colorblind', $_COOKIE) && $_COOKIE['colorblind'] == 1) {
-        return 'css/colorblind.css';
+    $classic = 'css/cdash.css';
+    $colorblind = 'css/colorblind.css';
+
+    // Return cache-busting filenames if available.
+    $css_files = glob(Config::getInstance()->get('CDASH_ROOT_DIR') . '/public/build/css/*.css');
+    foreach ($css_files as $css_file) {
+        $css_file = basename($css_file);
+        if (strpos($css_file, 'cdash_') !== false) {
+            $classic = "build/css/{$css_file}";
+        } elseif (strpos($css_file, 'colorblind_') !== false) {
+            $colorblind = "build/css/{$css_file}";
+        }
     }
-    return 'css/cdash.css';
+
+    if (array_key_exists('colorblind', $_COOKIE) && $_COOKIE['colorblind'] == 1) {
+        return $colorblind;
+    }
+    return $classic;
 }
 
 function begin_XML_for_XSLT()
