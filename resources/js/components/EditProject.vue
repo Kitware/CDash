@@ -152,7 +152,7 @@
                       id="name_help"
                       class="help_content"
                     >
-                      <strong>Name of the project.</strong>
+                      <strong>Name of the project</strong>
                       <br>
                       CDash allows spaces for the name of the project but it is
                       not recommended. If the project’s name contains space
@@ -935,7 +935,7 @@
                       id="TestingDataUrl_help"
                       class="help_content"
                     >
-                      <b>Testing Data URL:</b>
+                      <b>Testing Data URL</b>
                       <br>
                       CDash can display a link on the main dashboard page
                       to the URL of your testing data
@@ -973,17 +973,20 @@
                       id="NightlyStart_help"
                       class="help_content"
                     >
-                      <b>Nightly start time:</b>
-                      <br>
-                      CDash displays the current dashboard using a 24 hour
-                      window. The nightly start time defines the beginning of
-                      this window. Note that the start time is expressed in the
-                      form HH:MM:SS TZ, i.e. 21:00:00 America/New_York
-                      <br>
-                      <a
-                        href="https://www.php.net/manual/en/timezones.php"
-                        target="blank"
-                      >List of supported timezones</a>
+                      <b>Nightly Start Time</b>
+                      <p>
+                        CDash displays results using a 24 hour window.
+                        The nightly start time defines the beginning of this window.
+                      </p>
+                      <p>
+                        Format as <i>HH:MM:SS TZ</i>, i.e.
+                        21:00:00 America/New_York. Build times are shown in the
+                        chosen time zone. CDash adjusts for DST if necessary.
+                        <a
+                          href="https://www.php.net/manual/en/timezones.php"
+                          target="blank"
+                        >List of supported timezones</a>
+                      </p>
                     </span>
                   </td>
                 </tr>
