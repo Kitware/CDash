@@ -16,7 +16,6 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use CDash\Config;
-use CDash\Model\User;
 
 function echo_currently_processing_submissions()
 {
@@ -230,10 +229,8 @@ function echo_submission_table()
 }
 
 if (Auth::check()) {
-    $userid = Auth::id();
-    $user = new User();
-    $user->Id = $userid;
-    if ($user->IsAdmin()) {
+    $user = Auth::user();
+    if ($user->admin) {
         echo_currently_processing_submissions();
         echo_pending_submissions();
         echo_average_wait_times();

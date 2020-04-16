@@ -16,7 +16,7 @@
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 
-use CDash\Model\User;
+use App\Models\User;
 
 $start = microtime_float();
 $response = array();
@@ -127,9 +127,7 @@ while ($row = $stmt->fetch()) {
 $users_response = array();
 foreach ($users as $key => $user) {
     $user_response = array();
-    $user_obj = new User();
-    $user_obj->Id = $key;
-    $user_obj->Fill();
+    $user_obj = User::where('id', $key)->first();
     $user_response['name'] = $user_obj->GetName();
     $user_response['id'] = $key;
     $user_response['failed_errors'] = $user['nfailederrors'];

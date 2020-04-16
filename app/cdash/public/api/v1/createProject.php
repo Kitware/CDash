@@ -21,7 +21,6 @@ use App\Services\ProjectPermissions;
 use CDash\Config;
 use CDash\Model\Project;
 use CDash\Model\Repository;
-use CDash\Model\User;
 use CDash\Model\UserProject;
 use CDash\ServiceContainer;
 

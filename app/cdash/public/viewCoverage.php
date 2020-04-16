@@ -21,7 +21,6 @@ use App\Services\TestingDay;
 
 use CDash\Model\Build;
 use CDash\Model\Project;
-use CDash\Model\User;
 
 @set_time_limit(0);
 

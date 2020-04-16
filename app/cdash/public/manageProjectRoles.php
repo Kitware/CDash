@@ -19,9 +19,9 @@ require_once 'include/common.php';
 require_once 'include/cdashmail.php';
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Models\User;
 use CDash\Config;
 use CDash\Model\Project;
-use CDash\Model\User;
 use CDash\Model\UserProject;
 
 $config = Config::getInstance();
@@ -33,6 +33,8 @@ if (Auth::check()) {
         echo 'Not a valid usersessionid!';
         return;
     }
+
+    $current_user = Auth::user();
 
     @$projectid = $_GET['projectid'];
     if ($projectid != null) {
@@ -50,9 +52,6 @@ if (Auth::check()) {
     }
 
     $role = 0;
-    $current_user = new User();
-    $current_user->Id = $usersessionid;
-
     if ($projectid && is_numeric($projectid)) {
         $current_user_project = new UserProject();
         $current_user_project->ProjectId = $projectid;
@@ -61,7 +60,7 @@ if (Auth::check()) {
         $role = $current_user_project->Role;
     }
 
-    if (!$current_user->IsAdmin() && $role <= 1) {
+    if (!$current_user->admin && $role <= 1) {
         echo "You don't have the permissions to access this page";
         return;
     }
@@ -106,10 +105,10 @@ if (Auth::check()) {
             $UserProject = new UserProject();
             $UserProject->ProjectId = $projectid;
 
-            $user = new User();
-            $userid = $user->GetIdFromEmail($email);
+            $user = User::where('email', $email)->first();
             // Check if the user is already registered
-            if ($userid) {
+            if ($user) {
+                $userid = $user->id;
                 // Check if the user has been registered to the project
                 $UserProject->UserId = $userid;
                 if (!$UserProject->Exists()) {
@@ -140,19 +139,20 @@ if (Auth::check()) {
             // Register the user
             // Create a new password
             $pass = generate_password(10);
-            $passwordHash = User::PasswordHash($pass);
+            $passwordHash = password_hash($pass, PASSWORD_DEFAULT);
+
             if ($passwordHash === false) {
                 $xml .= '<error>Failed to hash password.</error>';
                 return false;
             }
 
             $user = new User();
-            $user->Password = $passwordHash;
-            $user->Email = $email;
-            $user->FirstName = $firstName;
-            $user->LastName = $lastName;
-            $user->Save();
-            $userid = $user->Id;
+            $user->password = $passwordHash;
+            $user->email = $email;
+            $user->firstname = $firstName;
+            $user->lastname = $lastName;
+            $user->save();
+            $userid = $user->id;
 
             // Insert the user into the project
             $UserProject->UserId = $userid;
@@ -370,7 +370,7 @@ if (Auth::check()) {
     }
 
     $sql = 'SELECT id,name FROM project';
-    if (!$current_user->IsAdmin()) {
+    if (!$current_user->admin) {
         $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$usersessionid' AND role>0)";
     }
     $sql .= ' ORDER BY name';

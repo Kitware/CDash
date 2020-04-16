@@ -21,7 +21,6 @@ use App\Http\Controllers\CDash;
 use App\Models\User;
 use CDash\Config;
 use CDash\Model\Project;
-//use CDash\Model\User;
 use App\Http\Kernel;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -411,7 +410,7 @@ class KWWebTestCase extends WebTestCase
     public function createUser(array $fields = [])
     {
         if (isset($fields['password'])) {
-            $fields['password'] = User::PasswordHash($fields['password']);
+            $fields['password'] = password_hash($fields['password'], PASSWORD_DEFAULT);
         }
 
         $user = factory(\App\Models\User::class)->create($fields);

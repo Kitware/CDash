@@ -18,8 +18,8 @@ require_once 'include/pdo.php';
 include_once 'include/common.php';
 require_once 'include/filterdataFunctions.php';
 
+use App\Models\User;
 use CDash\Model\CoverageFile2User;
-use CDash\Model\User;
 
 @set_time_limit(0);
 
@@ -958,9 +958,8 @@ foreach ($covfile_array as $covfile) {
     if ($userid > 0) {
         $author = '';
         if (isset($covfile['user'])) {
-            $User = new User();
-            $User->Id = $covfile['user'];
-            $author = $User->GetName();
+            $user = User::where('id', $covfile['user']);
+            $author = $user->GetName();
         }
         $row[] = $author;
     }

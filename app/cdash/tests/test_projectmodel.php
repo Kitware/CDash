@@ -8,8 +8,8 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 
+use App\Models\User;
 use CDash\Model\Project;
-use CDash\Model\User;
 
 class ProjectModelTestCase extends KWWebTestCase
 {
@@ -59,8 +59,8 @@ class ProjectModelTestCase extends KWWebTestCase
     {
         $project = new Project();
         $project->Id = 0;
-        $User = new User();
-        $User->Id = 1;
+        $User = new user();
+        $User->id = 1;
         $output = $project->ConvertToJSON($User);
 
         $this->assertFalse(in_array('PDO', array_keys($output)));

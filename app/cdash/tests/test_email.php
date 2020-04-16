@@ -3,8 +3,8 @@
 // After including cdash_test_case.php, subsequent require_once calls are
 // relative to the top of the CDash source tree
 //
+use App\Models\User;
 use CDash\Config;
-use CDash\Model\User;
 
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/pdo.php';
@@ -84,20 +84,20 @@ class EmailTestCase extends KWWebTestCase
     public function testRegisterNoEmailUser()
     {
         $user = new User();
-        $user->Email = 'user2@kw';
-        $user->Password = User::PasswordHash('user2');
-        $user->FirstName = 'user2';
-        $user->LastName = 'kw';
-        $user->Institution = 'Kitware';
-        $user->Admin = 0;
-        $user->Save();
-        if (!$user->Id) {
+        $user->email = 'user2@kw';
+        $user->password = password_hash('user2', PASSWORD_DEFAULT);
+        $user->firstname = 'user2';
+        $user->lastname = 'kw';
+        $user->institution = 'Kitware';
+        $user->admin = 0;
+        $user->save();
+        if (!$user->id) {
             $this->fail('Failed to create user2');
         }
         $db = \CDash\Database::getInstance();
 
         $stmt = $db->prepare('INSERT INTO user2project (userid, projectid, role, emailtype) VALUES (?, ?, ?, ?)');
-        $db->insert($stmt, [$user->Id, $this->project, 0, 0]);
+        $db->insert($stmt, [$user->id, $this->project, 0, 0]);
     }
 
     public function testSubmissionFirstBuild()

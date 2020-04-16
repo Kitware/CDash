@@ -17,7 +17,7 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 
-use CDash\Model\User;
+use App\Models\User;
 use CDash\Model\UserProject;
 
 class UpdateOnlyUserStatsTestCase extends KWWebTestCase
@@ -66,14 +66,14 @@ class UpdateOnlyUserStatsTestCase extends KWWebTestCase
         $userproject->ProjectId = $this->ProjectId;
         foreach ($users_details as $user_details) {
             $user = new User();
-            $user->Email = $user_details['email'];
-            $user->FirstName = $user_details['firstname'];
-            $user->LastName = $user_details['lastname'];
-            $user->Password = User::PasswordHash('12345');
-            $user->Institution = 'Kitware';
-            $user->Admin = 0;
+            $user->email = $user_details['email'];
+            $user->firstname = $user_details['firstname'];
+            $user->lastname = $user_details['lastname'];
+            $user->password = password_hash('12345', PASSWORD_DEFAULT);
+            $user->institution = 'Kitware';
+            $user->admin = 0;
             $user->Save();
-            $userproject->UserId = $user->Id;
+            $userproject->UserId = $user->id;
             $userproject->Save();
             $this->Users[] = $user;
         }

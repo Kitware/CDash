@@ -18,16 +18,16 @@ require_once 'include/pdo.php';
 include_once 'include/common.php';
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Models\User;
 use CDash\Model\Project;
-use CDash\Model\User;
 use CDash\Model\Label;
 use CDash\Model\LabelEmail;
 use CDash\Model\UserProject;
 
 redirect_to_https();
 if (Auth::check()) {
-    $User = new User();
-    $userid = Auth::id();
+    $user = Auth::user();
+    $userid = $user->id;
 
     $xml = begin_XML_for_XSLT();
     $xml .= '<backurl>user.php</backurl>';
@@ -67,9 +67,9 @@ if (Auth::check()) {
     $Project->Id = $projectid;
 
     // Check if the project is public
-    if (!$project_array['public'] && !$User->IsAdmin()) {
+    if (!$project_array['public'] && !$user->IsAdmin()) {
         $user2project = new UserProject();
-        $user2project->UserId = $User->id;
+        $user2project->UserId = $user->id;
         $user2project->ProjectId = $Project->Id;
         $user2project->FillFromUserId();
         if ($user2project->Role == UserProject::NORMAL_USER) {
@@ -272,7 +272,7 @@ if (Auth::check()) {
     $xml .= '</project>';
 
     $sql = 'SELECT id,name FROM project';
-    if ($User->IsAdmin() == false) {
+    if ($user->IsAdmin() == false) {
         $sql .= " WHERE public=1 OR id IN (SELECT projectid AS id FROM user2project WHERE userid='$userid' AND role>0)";
     }
     $projects = pdo_query($sql);

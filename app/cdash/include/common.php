@@ -15,13 +15,14 @@
 =========================================================================*/
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Models\User;
+
 use CDash\Config;
 use CDash\Database;
 use CDash\Model\AuthToken;
 use CDash\ServiceContainer;
 use CDash\Model\Build;
 use CDash\Model\Project;
-use CDash\Model\User;
 use CDash\Model\UserProject;
 use CDash\Model\Site;
 
@@ -389,8 +390,13 @@ function checkUserPolicy($userid, $projectid, $onlyreturn = 0)
     }
 
     $service = ServiceContainer::getInstance();
-    $user = $service->get(User::class);
-    $user->Id = $userid;
+
+    $user = User::where('id', '=', $userid)->first();
+    if ($user === null) {
+        // user doesn't exist. Populate an empty model anyway.
+        $user = new User();
+        $user->id = $userid;
+    }
 
     // If the projectid=0 only admin can access the page
     if ($projectid == 0 && !$user->IsAdmin()) {
@@ -1447,22 +1453,18 @@ function get_cdash_dashboard_xml($projectname, $date)
 
     $xml .= '</dashboard>';
 
-    $userid = Auth::id();
-    if ($userid) {
+    if (Auth::check()) {
+        $user = Auth::user();
         $xml .= '<user>';
-        $xml .= add_XML_value('id', $userid);
+        $xml .= add_XML_value('id', $user->id);
 
-        // Is the user super administrator
-
-        $user = new User();
-        $user->Id = $userid;
-        $user->Fill();
-        $xml .= add_XML_value('admin', $user->Admin);
+        // Is the user super administrator?
+        $xml .= add_XML_value('admin', $user->admin);
 
         // Is the user administrator of the project
 
         $userproject = new UserProject();
-        $userproject->UserId = $userid;
+        $userproject->UserId = $user->id;
         $userproject->ProjectId = $projectid;
         $userproject->FillFromUserId();
         $xml .= add_XML_value('projectrole', $userproject->Role);
@@ -1752,10 +1754,8 @@ function begin_JSON_response()
     $user_response = array();
     $userid = Auth::id();
     if ($userid) {
-        $user = $service->create(User::class);
-        $user->Id = $userid;
-        $user->Fill();
-        $user_response['admin'] = $user->Admin;
+        $user = Auth::user();
+        $user_response['admin'] = $user->admin;
     }
     $user_response['id'] = $userid;
     $response['user'] = $user_response;

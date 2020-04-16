@@ -3,7 +3,6 @@ namespace CDash\Controller\Auth;
 
 use CDash\Config;
 use CDash\System;
-use CDash\Model\User;
 use CDash\Test\CDashTestCase;
 
 class SessionTest extends CDashTestCase
