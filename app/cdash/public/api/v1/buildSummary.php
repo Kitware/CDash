@@ -23,7 +23,6 @@ use CDash\Model\BuildInformation;
 use CDash\Model\BuildRelationship;
 use CDash\Model\BuildUserNote;
 use CDash\Model\Project;
-use CDash\Model\User;
 use CDash\ServiceContainer;
 
 $start = microtime_float();
@@ -84,16 +83,13 @@ $response['menu'] = $menu;
 
 get_dashboard_JSON($project->Name, $date, $response);
 
-$userid = get_userid_from_session(false);
-if ($userid) {
-    $user = $service->create(User::class);
-    $user->Id = $userid;
-    $user->Fill();
+if (Auth::check()) {
+    $user = Auth::user();
+    $userid = $user->id;
     $user_response['id'] = $userid;
-    $user_response['admin'] = $user->Admin;
+    $user_response['admin'] = $user->admin;
     $response['user'] = $user_response;
 }
-
 
 // Notes added by users.
 $notes_response = [];

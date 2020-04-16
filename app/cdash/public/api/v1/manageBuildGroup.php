@@ -19,20 +19,19 @@ require_once 'include/common.php';
 
 use CDash\Database;
 use CDash\Model\Project;
-use CDash\Model\User;
 use CDash\Model\UserProject;
 
 $start = microtime_float();
 $response = array();
 
-$userid = Auth::id();
-
 // Checks
-if (!$userid || !is_numeric($userid)) {
+if (!Auth::check()) {
     $response['requirelogin'] = '1';
     echo json_encode($response);
     return;
 }
+$user = Auth::user();
+$userid = $user->id;
 
 $response = begin_JSON_response();
 $response['backurl'] = 'user.php';
@@ -56,8 +55,6 @@ if (!isset($projectid)) {
 
 @$show = $_GET['show'];
 
-$user = new User();
-$user->Id = $userid;
 if ($projectid && is_numeric($projectid)) {
     $user2project = new UserProject();
     $user2project->UserId = $userid;

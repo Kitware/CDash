@@ -17,11 +17,10 @@
 require_once 'include/pdo.php';
 require_once 'include/common.php';
 
+use App\Models\User;
 use App\Services\TestingDay;
-
 use CDash\Config;
 use CDash\Model\Project;
-use CDash\Model\User;
 
 $config = Config::getInstance();
 
@@ -276,11 +275,9 @@ if (isset($_SESSION['cdash'])) {
         }
     }
 
-    $user = new User();
-    $user->Id = $userid;
-    $user->Fill();
+    $user = User::where('id', '=', $userid)->first();
     $xml .= add_XML_value('id', $userid);
-    $xml .= add_XML_value('admin', $user->Admin);
+    $xml .= add_XML_value('admin', $user->admin);
     $xml .= '</user>';
 }
 

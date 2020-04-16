@@ -16,11 +16,12 @@
 
 require_once 'xml_handlers/abstract_handler.php';
 
+use App\Models\User;
+
 use CDash\Model\Label;
 use CDash\Model\LabelEmail;
 use CDash\Model\Project;
 use CDash\Model\SubProject;
-use CDash\Model\User;
 use CDash\Model\UserProject;
 
 class ProjectHandler extends AbstractHandler
@@ -199,23 +200,25 @@ class ProjectHandler extends AbstractHandler
 
             foreach ($this->Emails as $email) {
                 // Check if the user is in the database.
-                $User = new User();
+                $user = new User();
 
                 $posat = strpos($email, '@');
                 if ($posat !== false) {
-                    $User->FirstName = substr($email, 0, $posat);
-                    $User->LastName = substr($email, $posat + 1);
+                    $user->firstname = substr($email, 0, $posat);
+                    $user->lastname = substr($email, $posat + 1);
                 } else {
-                    $User->FirstName = $email;
-                    $User->LastName = $email;
+                    $user->firstname = $email;
+                    $user->lastname = $email;
                 }
-                $User->Email = $email;
-                $User->Password = User::PasswordHash($email);
-                $User->Admin = 0;
-                $userid = $User->GetIdFromEmail($email);
-                if (!$userid) {
-                    $User->Save();
-                    $userid = $User->Id;
+                $user->email = $email;
+                $user->password = password_hash($email, PASSWORD_DEFAULT);
+                $user->admin = 0;
+                $existing_user = User::where('email', $email)->first();
+                if ($existing_user) {
+                    $userid = $existing_user->id;
+                } else {
+                    $user->save();
+                    $userid = $user->id;
                 }
 
                 $UserProject = new UserProject();

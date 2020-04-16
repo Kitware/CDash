@@ -15,7 +15,6 @@
 =========================================================================*/
 
 use CDash\Config;
-use CDash\Model\User;
 
 function echo_git_output($cmd)
 {
@@ -48,11 +47,8 @@ function echo_file_contents($filename)
 }
 
 if (Auth::check()) {
-    $userid = Auth::id();
-
-    $user = new User();
-    $user->Id = $userid;
-    if ($user->IsAdmin()) {
+    $user = Auth::user();
+    if ($user->admin) {
         echo_git_output('--version');
         echo_git_output('remote -v');
         echo_git_output('status');

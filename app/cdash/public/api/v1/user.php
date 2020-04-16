@@ -27,7 +27,6 @@ use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
 use CDash\Model\BuildUpdate;
 use CDash\Model\Site;
-use CDash\Model\User;
 use CDash\Model\UserProject;
 
 $config = Config::getInstance();
@@ -47,20 +46,19 @@ if (!Auth::check()) {
 }
 
 $script_start_time = microtime_float();
+
+$user = Auth::user();
+$userid = $user->id;
+
 $PDO = Database::getInstance()->getPdo();
 
-$userid = Auth::id();
 $xml = begin_XML_for_XSLT();
 
-$userid = Auth::id();
 $response = begin_JSON_response();
 $response['title'] = 'CDash - My Profile';
 
-$user = new User();
-$user->Id = $userid;
-$user->Fill();
-$response['user_name'] = $user->FirstName;
-$response['user_is_admin'] = $user->Admin;
+$response['user_name'] = $user->firstname;
+$response['user_is_admin'] = $user->admin;
 
 if ($config->get('CDASH_USER_CREATE_PROJECTS')) {
     $response['user_can_create_projects'] = 1;

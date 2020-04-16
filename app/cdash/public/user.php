@@ -17,24 +17,5 @@
 require_once dirname(__DIR__) . '/config/config.php';
 include_once 'include/common.php';
 
-if (isset($_GET['logout'])) {
-    // User requested logout.
-    require_once 'include/login_functions.php';
-    logout();
-    return \redirect('viewProjects.php');
-}
-
 angular_login();
-
-use CDash\Config;
-
-$config = Config::getInstance();
-$loginerror = $config->get('loginerror');
-if ($loginerror != '') {
-    // Display error on login page.
-    require_once('include/login_functions.php');
-    LoginForm($loginerror);
-    exit;
-}
-
 load_view('user', false);

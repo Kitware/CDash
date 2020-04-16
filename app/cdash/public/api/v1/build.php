@@ -19,7 +19,6 @@ require_once 'include/api_common.php';
 use CDash\Database;
 use CDash\Model\BuildGroupRule;
 use CDash\Model\Project;
-use CDash\Model\User;
 
 init_api_request();
 $response = [];

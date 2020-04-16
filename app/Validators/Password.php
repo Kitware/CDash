@@ -69,7 +69,7 @@ class Password
      * @param $count
      * @return int
      */
-    protected function computeComplexity($password, $count)
+    public function computeComplexity($password, $count)
     {
         $complexity = 0;
 

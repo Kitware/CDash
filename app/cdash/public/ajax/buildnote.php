@@ -16,7 +16,7 @@
 require_once 'include/pdo.php';
 require_once 'include/common.php';
 
-use CDash\Model\User;
+use App\Models\User;
 
 $buildid = pdo_real_escape_numeric($_GET['buildid']);
 if (!isset($buildid) || !is_numeric($buildid)) {
@@ -27,10 +27,7 @@ if (!isset($buildid) || !is_numeric($buildid)) {
 // Find the notes
 $note = pdo_query("SELECT * FROM buildnote WHERE buildid='$buildid' ORDER BY timestamp ASC");
 while ($note_array = pdo_fetch_array($note)) {
-    $userid = $note_array['userid'];
-    $user = new User();
-    $user->Id = $userid;
-    $user->Fill();
+    $user = User::where('id', $note_array['userid']);
     $timestamp = strtotime($note_array['timestamp'] . ' UTC');
     switch ($note_array['status']) {
         case 0:
@@ -43,6 +40,6 @@ while ($note_array = pdo_fetch_array($note)) {
             echo '<b>[fixed] </b>';
             break;
     }
-    echo 'by <b>' . $user->FirstName . ' ' . $user->LastName . '</b>' . ' (' . date('H:i:s T', $timestamp) . ')';
+    echo 'by <b>' . $user->firstname . ' ' . $user->lastname . '</b>' . ' (' . date('H:i:s T', $timestamp) . ')';
     echo '<pre>' . substr($note_array['note'], 0, 100) . '</pre>'; // limit 100 chars
 }

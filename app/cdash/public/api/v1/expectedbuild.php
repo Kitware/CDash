@@ -22,7 +22,6 @@ use CDash\Database;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildGroupRule;
 use CDash\Model\Project;
-use CDash\Model\User;
 use Illuminate\Support\Facades\Auth;
 
 if (!function_exists('rest_delete')) {

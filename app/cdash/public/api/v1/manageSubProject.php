@@ -18,7 +18,6 @@ include_once 'include/common.php';
 
 use CDash\Model\Project;
 use CDash\Model\SubProject;
-use CDash\Model\User;
 
 $start = microtime_float();
 
@@ -28,28 +27,20 @@ $response['menutitle'] = 'CDash';
 $response['menusubtitle'] = 'SubProjects';
 $response['hidenav'] = 1;
 
+// Checks
 if (!Auth::check()) {
     $response['requirelogin'] = 1;
     echo json_encode($response);
     return;
 }
 
-$userid = Auth::id();
-// Checks
-if (!$userid || !is_numeric($userid)) {
-    $response['requirelogin'] = 1;
-    echo json_encode($response);
-    return;
-}
+$user = Auth::user();
+$userid = $user->id;
 
 // List the available projects that this user has admin rights to.
-
 @$projectid = $_GET['projectid'];
-$User = new User;
-$User->Id = $userid;
-
 $sql = 'SELECT id,name FROM project';
-if ($User->IsAdmin() == false) {
+if ($user->IsAdmin() == false) {
     $sql .= " WHERE id IN (SELECT projectid AS id FROM user2project WHERE userid='$userid' AND role>0)";
 }
 

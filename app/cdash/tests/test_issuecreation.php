@@ -3,9 +3,9 @@ require_once 'include/common.php';
 require_once 'include/pdo.php';
 require_once 'include/repository.php';
 
+use App\Models\User;
 use CDash\Model\Build;
 use CDash\Model\Project;
-use CDash\Model\User;
 use CDash\Model\UserProject;
 
 class IssueCreationTestCase extends KWWebTestCase
@@ -83,9 +83,8 @@ class IssueCreationTestCase extends KWWebTestCase
         $this->Builds['clean'] = $clean_build;
 
         // Add user1@kw as a project administrator.
-
-        $user = new User();
-        $userid = $user->GetIdFromEmail('user1@kw');
+        $user = User::where('email', '=', 'user1@kw')->first();
+        $userid = $user->id;
         $userproject = new UserProject();
         $userproject->UserId = $userid;
         $userproject->ProjectId = $this->Projects['CDash']->Id;

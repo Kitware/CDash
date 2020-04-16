@@ -37,7 +37,6 @@ use CDash\Model\DynamicAnalysis;
 use CDash\Model\LabelEmail;
 use CDash\Model\Project;
 use CDash\Model\Site;
-use CDash\Model\User;
 use CDash\Model\UserProject;
 
 /** Check for errors for a given build. Return false if no errors */

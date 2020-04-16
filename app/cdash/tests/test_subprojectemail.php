@@ -8,11 +8,11 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 
+use App\Models\User;
 use CDash\Model\Label;
 use CDash\Model\LabelEmail;
 use CDash\Model\Project;
 use CDash\Model\SubProject;
-use CDash\Model\User;
 use CDash\Model\UserProject;
 use CDash\Database;
 
@@ -72,19 +72,20 @@ class SubProjectEmailTestCase extends KWWebTestCase
 
             $subproj_lower = strtolower($subproject_name);
             $email = "$subproj_lower-regression@noemail";
-            $user = new User($email);
-            $userid = $user->GetIdFromEmail($email);
-            if (!$userid) {
+            $user = User::where('email', '=', $email)->first();
+
+            if (!$user) {
                 // These users are typically created by previous tests,
                 // but we can create them here if they don't exist yet.
-                $user->FirstName = $subproj_lower;
-                $user->LastName = 'regressions';
-                $user->Email = $email;
-                $user->Password = User::PasswordHash($email);
-                $user->Admin = 0;
-                $user->Save();
-                $userid = $user->Id;
+                $user->firstname = $subproj_lower;
+                $user->lastname = 'regressions';
+                $user->email = $email;
+                $user->password = password_hash($email, PASSWORD_DEFAULT);
+                $user->admin = 0;
+                $user->save();
+                $userid = $user->id;
             }
+            $userid = $user->id;
             $user_project = new UserProject();
             $user_project->UserId = $userid;
             $user_project->ProjectId = $this->Project->Id;

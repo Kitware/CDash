@@ -140,9 +140,10 @@ if (!$installed) {
             $valid_email = false;
         }
         if ($valid_email) {
-            $complexity = getPasswordComplexity($admin_password);
-            $minimum_complexity = $config->get('CDASH_MINIMUM_PASSWORD_COMPLEXITY');
+            $password_validator = new \App\Validators\Password;
             $complexity_count = $config->get('CDASH_PASSWORD_COMPLEXITY_COUNT');
+            $complexity = $password_validator->computeComplexity($admin_password, $complexity_count);
+            $minimum_complexity = $config->get('CDASH_MINIMUM_PASSWORD_COMPLEXITY');
             if ($complexity < $minimum_complexity) {
                 $xml .= "<alert>* Administrator's password is not complex enough. ";
                 if ($complexity_count > 1) {

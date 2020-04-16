@@ -19,7 +19,6 @@ require_once 'include/common.php';
 
 use App\Http\Controllers\Auth\LoginController;
 use CDash\Config;
-use CDash\Model\User;
 
 $config = Config::getInstance();
 
@@ -31,10 +30,8 @@ if (Auth::check()) {
         return;
     }
 
-    $current_user = new User();
-    $current_user->Id = $userid;
-
-    if (!$current_user->IsAdmin()) {
+    $current_user = Auth::user();
+    if (!$current_user->admin) {
         echo "You don't have the permissions to access this page!";
         return;
     }

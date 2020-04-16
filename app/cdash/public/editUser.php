@@ -109,9 +109,10 @@ if (Auth::check()) {
         }
 
         if ($password_is_good) {
-            $complexity = getPasswordComplexity($passwd);
-            $minimum_complexity = $config->get('CDASH_MINIMUM_PASSWORD_COMPLEXITY');
+            $password_validator = new \App\Validators\Password;
             $complexity_count = $config->get('CDASH_PASSWORD_COMPLEXITY_COUNT');
+            $complexity = $password_validator->computeComplexity($passwd, $complexity_count);
+            $minimum_complexity = $config->get('CDASH_MINIMUM_PASSWORD_COMPLEXITY');
             if ($complexity < $minimum_complexity) {
                 $password_is_good = false;
                 if ($complexity_count > 1) {

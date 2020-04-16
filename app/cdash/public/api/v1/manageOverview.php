@@ -18,7 +18,6 @@ require_once 'include/pdo.php';
 include_once 'include/common.php';
 
 use CDash\Model\Project;
-use CDash\Model\User;
 
 $start = microtime_float();
 $response = begin_JSON_response();
@@ -27,6 +26,7 @@ $response['menutitle'] = 'CDash';
 $response['menusubtitle'] = 'Overview';
 $response['hidenav'] = 1;
 
+// Make sure we have an authenticated user.
 if (!Auth::check()) {
     $response['requirelogin'] = 1;
     return json_encode($response);
@@ -51,20 +51,8 @@ if (!$projectid_ok) {
     return json_encode($response);
 }
 
-
-
-// Make sure we have an authenticated user.
-$userid = Auth::id();
-if (!isset($userid) || !is_numeric($userid)) {
-    $response['requirelogin'] = 1;
-    return json_encode($response);
-}
-
 $Project = new Project();
 $Project->Id = $projectid;
-
-$User = new User();
-$User->Id = $userid;
 
 // Make sure the user has admin rights to this project.
 get_dashboard_JSON($Project->GetName(), null, $response);

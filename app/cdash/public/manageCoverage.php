@@ -19,6 +19,7 @@ include_once 'include/common.php';
 require_once 'include/cdashmail.php';
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Models\User;
 use App\Services\ProjectPermissions;
 
 use CDash\Config;
@@ -29,7 +30,6 @@ use CDash\Model\CoverageFile2User;
 use CDash\Model\CoverageSummary;
 use CDash\Model\Project;
 use CDash\Model\Site;
-use CDash\Model\User;
 use CDash\Model\UserProject;
 
 $config = Config::getInstance();
@@ -247,11 +247,8 @@ if (Auth::check()) {
                 // Send the email
                 $title = 'CDash [' . $Project->GetName() . '] - Low Coverage';
 
-                $User = new User();
-                $User->Id = $userid;
-                $email = $User->GetEmail();
-
-                cdashmail($email, $title, $messagePlainText);
+                $user = User::where('id', '=', $userid)->first();
+                cdashmail($user->email, $title, $messagePlainText);
                 $xml .= add_XML_value('warning', '*The email has been sent successfully.');
             } else {
                 $xml .= add_XML_value('warning', '*No email sent because the coverage is green.');
@@ -326,9 +323,8 @@ if (Auth::check()) {
                 $authorids = $CoverageFile2User->GetAuthors();
                 foreach ($authorids as $authorid) {
                     $xml .= '<author>';
-                    $User = new User();
-                    $User->Id = $authorid;
-                    $xml .= add_XML_value('name', $User->GetName());
+                    $user = User::where('id', '=', $authorid)->first();
+                    $xml .= add_XML_value('name', $user->GetName());
                     $xml .= add_XML_value('id', $authorid);
                     $xml .= '</author>';
                 }

@@ -3,7 +3,6 @@ namespace CDash\Controller\Auth;
 
 use CDash\Config;
 use CDash\System;
-use CDash\Model\User;
 use CDash\Test\CDashTestCase;
 
 class SessionTest extends CDashTestCase
@@ -104,96 +103,6 @@ class SessionTest extends CDashTestCase
         $sut = new Session($this->system, Config::getInstance());
         $this->assertFalse($sut->exists());
         $this->assertTrue($sut->exists());
-    }
-
-    public function testSetRememberMeCookieWithHttpsOff()
-    {
-        $key = 'abcde12345fghij';
-        $config = Config::getInstance();
-        $orig_https = $config->get('CDASH_USE_HTTPS');
-        $config->set('CDASH_USE_HTTPS', false);
-
-        $time = time() + Session::REMEMBER_ME_EXPIRATION;
-        $baseUrl = $config->getBaseUrl();
-        $url = parse_url($baseUrl);
-        $name = Session::REMEMBER_ME_PREFIX . $url['host'];
-        $path = isset($url['path']) ? $url['path'] : '/';
-        $cooke_path = "{$path}; samesite=strict";
-
-        /** @var User|\PHPUnit_Framework_MockObject_MockObject $mock_user */
-        $mock_user = $this->getMockBuilder(User::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $mock_user->Id = 201;
-        $mock_user
-            ->expects($this->once())
-            ->method('SetCookieKey')
-            ->with($key)
-            ->willReturn(true);
-
-        $this->system
-            ->expects($this->once())
-            ->method('setcookie')
-            ->with(
-                $this->equalTo($name),
-                $this->equalTo("{$mock_user->Id}{$key}"),
-                $this->greaterThanOrEqual($time),
-                $this->equalTo($cooke_path),
-                $this->equalTo($url['host']),
-                $this->equalTo(false),
-                $this->equalTo(true)
-            );
-
-        $sut = new Session($this->system, $config);
-
-        $sut->setRememberMeCookie($mock_user, $key);
-        $config->set('CDASH_USE_HTTPS', $orig_https);
-    }
-
-    public function testSetRememberMeCookieWithHttpsOn()
-    {
-        $key = 'abcde12345fghij';
-        $config = Config::getInstance();
-        $orig_https = $config->get('CDASH_USE_HTTPS');
-        $config->set('CDASH_USE_HTTPS', true);
-
-        $time = time() + Session::REMEMBER_ME_EXPIRATION;
-        $baseUrl = $config->getBaseUrl();
-        $url = parse_url($baseUrl);
-        $name = Session::REMEMBER_ME_PREFIX . $url['host'];
-        $path = isset($url['path']) ? $url['path'] : '/';
-        $cookie_path = "{$path}; samesite=strict";
-
-        /** @var User|\PHPUnit_Framework_MockObject_MockObject $mock_user */
-        $mock_user = $this->getMockBuilder(User::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $mock_user->Id = 201;
-        $mock_user
-            ->expects($this->once())
-            ->method('SetCookieKey')
-            ->with($key)
-            ->willReturn(true);
-
-        $this->system
-            ->expects($this->once())
-            ->method('setcookie')
-            ->with(
-                $this->equalTo($name),
-                $this->equalTo("{$mock_user->Id}{$key}"),
-                $this->greaterThanOrEqual($time),
-                $this->equalTo($cookie_path),
-                $this->equalTo($url['host']),
-                $this->equalTo(true),
-                $this->equalTo(true)
-            );
-
-        $sut = new Session($this->system, $config);
-
-        $sut->setRememberMeCookie($mock_user, $key);
-        $config->set('CDASH_USE_HTTPS', $orig_https);
     }
 
     public function testIsActive()

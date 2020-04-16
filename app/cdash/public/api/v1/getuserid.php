@@ -16,8 +16,8 @@
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 
+use App\Models\User;
 use CDash\Model\Project;
-use CDash\Model\User;
 
 $userid = Auth::id();
 // Check for authenticated user.
@@ -43,10 +43,9 @@ $author = htmlspecialchars(pdo_real_escape_string($_GET['author']));
 // First, try the simplest query, where the author string is simply exactly
 // equal to the user's email:
 //
-$user = new User();
-$userid = $user->GetIdFromEmail($author);
-if ($userid) {
-    $xml .= $userid . '</userid>';
+$user = User::where('email', $author)->first();
+if ($user) {
+    $xml .= $user->id . '</userid>';
     return response($xml, 200)->header('Content-Type', 'application/xml');
 }
 
