@@ -30,7 +30,6 @@ use CDash\Messaging\Subscription\UserSubscriptionBuilder;
 use CDash\Model\Build;
 use CDash\Model\BuildEmail;
 use CDash\Model\BuildGroup;
-use CDash\Model\BuildTest;
 use CDash\Model\BuildConfigure;
 use CDash\Model\BuildUpdate;
 use CDash\Model\DynamicAnalysis;
@@ -42,10 +41,7 @@ use CDash\Model\UserProject;
 /** Check for errors for a given build. Return false if no errors */
 function check_email_errors($buildid, $checktesttimeingchanged, $testtimemaxstatus, $checkpreviouserrors)
 {
-    // Includes
-
-
-    $errors = array();
+    $errors = [];
     $errors['errors'] = true;
     $errors['hasfixes'] = false;
 
@@ -62,9 +58,11 @@ function check_email_errors($buildid, $checktesttimeingchanged, $testtimemaxstat
     $errors['build_warnings'] = $Build->GetNumberOfWarnings();
 
     // Test errors
-    $BuildTest = new BuildTest();
-    $BuildTest->BuildId = $buildid;
-    $errors['test_errors'] = $BuildTest->GetNumberOfFailures($checktesttimeingchanged, $testtimemaxstatus);
+    $errors['test_errors'] = $Build->GetNumberOfFailedTests();
+    $errors['test_errors'] += $Build->GetNumberOfNotRunTests();
+    if ($checktesttimeingchanged) {
+        $errors['test_errors'] += $Build->GetFailedTimeStatusTests(0, $testtimemaxstatus);
+    }
 
     // Dynamic analysis errors
     $DynamicAnalysis = new DynamicAnalysis();
