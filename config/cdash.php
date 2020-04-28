@@ -47,5 +47,6 @@ return [
         'lockout' => [
             'duration' => 1,
         ],
-    ]
+    ],
+    'slow_page_time' => env('SLOW_PAGE_TIME', 10),
 ];

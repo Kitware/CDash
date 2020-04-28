@@ -18,6 +18,7 @@ require_once 'include/pdo.php';
 require_once 'include/common.php';
 require_once 'include/api_common.php';
 
+use App\Services\PageTimer;
 use App\Services\TestingDay;
 
 use CDash\Model\Build;
@@ -25,7 +26,7 @@ use CDash\Model\DynamicAnalysis;
 use CDash\Model\Project;
 use CDash\Model\Site;
 
-$start = microtime_float();
+$pageTimer = new PageTimer();
 $response = [];
 
 // Make sure a valid id was specified.
@@ -102,6 +103,5 @@ $href = "testSummary.php?project=$project->Id&name=$DA->Name&date=$date";
 $DA_response['href'] = $href;
 $response['dynamicanalysis'] = $DA_response;
 
-$end = microtime_float();
-$response['generationtime'] = round($end - $start, 3);
+$pageTimer->end($response);
 echo json_encode(cast_data_for_JSON($response));

@@ -20,6 +20,7 @@ include 'include/version.php';
 require_once 'include/filterdataFunctions.php';
 
 use App\Models\BuildTest;
+use App\Services\PageTimer;
 use App\Services\TestingDay;
 
 use CDash\Config;
@@ -334,7 +335,7 @@ if (isset($_GET['tests'])) {
 
 $response = [];
 
-$start = microtime_float();
+$pageTimer = new PageTimer();
 
 $project = new Project();
 $project->Id = $build->ProjectId;
@@ -733,9 +734,7 @@ $response['numMissing'] = $numMissing;
 // Only show the labels column if some were found.
 $response['build']['displaylabels'] &= $labels_found;
 
-$end = microtime_float();
-$generation_time = round($end - $start, 3);
-$response['generationtime'] = $generation_time;
 $response['columncount'] = $columncount;
 
+$pageTimer->end($response);
 echo json_encode(cast_data_for_JSON($response));

@@ -17,6 +17,7 @@
 require_once 'include/pdo.php';
 include_once 'include/common.php';
 
+use App\Services\PageTimer;
 use App\Services\ProjectPermissions;
 
 use CDash\Model\Project;
@@ -78,7 +79,7 @@ function rest_get($projectid)
         return;
     }
 
-    $start = microtime_float();
+    $pageTimer = new PageTimer();
     $response = begin_JSON_response();
     $response['projectid'] = $projectid;
     $response['subprojectid'] = $subprojectid;
@@ -121,8 +122,7 @@ function rest_get($projectid)
     $response['dependencies'] = $dependencies_response;
     $response['available_dependencies'] = $available_dependencies_response;
 
-    $end = microtime_float();
-    $response['generationtime'] = round($end - $start, 3);
+    $pageTimer->end($response);
     echo json_encode(cast_data_for_JSON($response));
 }
 

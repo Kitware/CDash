@@ -24,6 +24,7 @@ include_once 'include/repository.php';
 
 use App\Models\Test;
 use App\Models\TestOutput;
+use App\Services\PageTimer;
 use App\Services\TestingDay;
 
 use CDash\Config;
@@ -58,7 +59,7 @@ if (!function_exists('utf8_for_xml')) {
     }
 }
 
-$start = microtime_float();
+$pageTimer = new PageTimer();
 $config = Config::getInstance();
 
 $_REQUEST['buildid'] = $_GET['build'];
@@ -333,6 +334,5 @@ if (!empty($measurements_response)) {
     $test_response['measurements'] = $measurements_response;
 }
 $response['test'] = $test_response;
-$end = microtime_float();
-$response['generationtime'] = round($end - $start, 3);
+$pageTimer->end($response);
 echo json_encode($response);

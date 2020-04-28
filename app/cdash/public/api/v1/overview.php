@@ -11,6 +11,7 @@ require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 require_once 'include/memcache_functions.php';
 
+use App\Services\PageTimer;
 use CDash\Config;
 use CDash\Model\Project;
 
@@ -23,8 +24,8 @@ if (!isset($projectname)) {
     return;
 }
 
-$start = microtime_float();
-$response = array();
+$pageTimer = new PageTimer();
+$response = [];
 
 // Connect to memcache
 if ($config->get('CDASH_MEMCACHE_ENABLED')) {
@@ -612,8 +613,7 @@ foreach ($static_groups as $static_group) {
 }
 $response['staticanalyses'] = $static_analyses_response;
 
-$end = microtime_float();
-$response['generationtime'] = round($end - $start, 3);
+$pageTimer->end($response);
 $response = json_encode(cast_data_for_JSON($response));
 
 // Cache the overview page for 6 hours

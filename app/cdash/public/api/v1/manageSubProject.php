@@ -16,10 +16,11 @@
 require_once 'include/pdo.php';
 include_once 'include/common.php';
 
+use App\Services\PageTimer;
 use CDash\Model\Project;
 use CDash\Model\SubProject;
 
-$start = microtime_float();
+$pageTimer = new PageTimer();
 
 $response = begin_JSON_response();
 $response['backurl'] = 'user.php';
@@ -120,6 +121,5 @@ foreach ($Project->GetSubProjectGroups() as $subProjectGroup) {
 }
 $response['groups'] = $groups;
 
-$end = microtime_float();
-$response['generationtime'] = round($end - $start, 3);
+$pageTimer->end($response);
 echo json_encode(cast_data_for_JSON($response));

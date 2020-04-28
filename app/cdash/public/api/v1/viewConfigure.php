@@ -17,13 +17,14 @@ require_once 'include/pdo.php';
 require_once 'include/common.php';
 require_once 'include/api_common.php';
 
+use App\Services\PageTimer;
 use App\Services\TestingDay;
 
 use CDash\Model\BuildConfigure;
 use CDash\Model\Project;
 use CDash\Model\Site;
 
-$start = microtime_float();
+$pageTimer = new PageTimer();
 
 $build = get_request_build();
 if (is_null($build)) {
@@ -89,6 +90,5 @@ $build_response['buildid'] = $build->Id;
 $build_response['hassubprojects'] = $has_subprojects;
 $response['build'] = $build_response;
 
-$end = microtime_float();
-$response['generationtime'] = round($end - $start, 3);
+$pageTimer->end($response);
 echo json_encode(cast_data_for_JSON($response));

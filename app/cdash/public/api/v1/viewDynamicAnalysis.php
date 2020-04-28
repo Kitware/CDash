@@ -16,12 +16,13 @@
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 
+use App\Services\PageTimer;
 use App\Services\TestingDay;
 
 use CDash\Model\Project;
 use CDash\Model\Site;
 
-$start = microtime_float();
+$pageTimer = new PageTimer();
 $response = [];
 
 $build = get_request_build();
@@ -167,6 +168,5 @@ foreach ($defect_types as $defect_type) {
 }
 $response['defecttypes'] = $types_response;
 
-$end = microtime_float();
-$response['generationtime'] = round($end - $start, 3);
+$pageTimer->end($response);
 echo json_encode(cast_data_for_JSON($response));

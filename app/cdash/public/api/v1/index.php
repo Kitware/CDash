@@ -66,7 +66,6 @@ if (!function_exists('echo_main_dashboard_JSON')) {
     // Generate the main dashboard JSON response.
     function echo_main_dashboard_JSON($project_instance)
     {
-        $start = microtime_float();
         require_once 'include/pdo.php';
         $config = Config::getInstance();
 
@@ -76,7 +75,7 @@ if (!function_exists('echo_main_dashboard_JSON')) {
         $projectid = $project_instance->Id;
 
         $db = Database::getInstance();
-        $controller = new indexController($db, $project_instance);
+        $controller = new IndexController($db, $project_instance);
 
         $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
         if (pdo_num_rows($project) > 0) {
@@ -696,12 +695,11 @@ if (!function_exists('echo_main_dashboard_JSON')) {
         $response['updatetype'] = $controller->updateType;
         $response['enableTestTiming'] = $project_array['showtesttime'];
 
-        $end = microtime_float();
-        $response['generationtime'] = round($end - $start, 3);
         if (!empty($controller->siteResponse)) {
             $response = array_merge($response, $controller->siteResponse);
         }
 
+        $controller->recordGenerationTime($response);
         echo json_encode(cast_data_for_JSON($response));
     }
 }

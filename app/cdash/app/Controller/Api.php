@@ -15,6 +15,7 @@
 =========================================================================*/
 namespace CDash\Controller;
 
+use App\Services\PageTimer;
 use CDash\Database;
 
 /**
@@ -29,5 +30,6 @@ class Api
     public function __construct(Database $db)
     {
         $this->db = $db;
+        $this->pageTimer = new PageTimer();
     }
 }

@@ -33,7 +33,6 @@ class ViewProjects extends \CDash\Controller\Api
 
     public function getResponse()
     {
-        $start = microtime_float();
         $response = begin_JSON_response();
 
         $Banner = new Banner;
@@ -111,9 +110,7 @@ class ViewProjects extends \CDash\Controller\Api
         }
         $response['projects'] = $projects_response;
 
-        $end = microtime_float();
-        $generation_time = round($end - $start, 2);
-        $response['generationtime'] = $generation_time;
+        $this->pageTimer->end($response);
         return $response;
     }
 

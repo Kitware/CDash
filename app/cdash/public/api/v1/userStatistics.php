@@ -17,9 +17,10 @@ require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 
 use App\Models\User;
+use App\Services\PageTimer;
 
-$start = microtime_float();
-$response = array();
+$pageTimer = new PageTimer();
+$response = [];
 
 // Handle required project argument.
 $project_ok = true;
@@ -140,7 +141,5 @@ foreach ($users as $key => $user) {
     $users_response[] = $user_response;
 }
 $response['users'] = $users_response;
-
-$end = microtime_float();
-$response['generationtime'] = round($end - $start, 3);
+$pageTimer->end($response);
 echo json_encode(cast_data_for_JSON($response));

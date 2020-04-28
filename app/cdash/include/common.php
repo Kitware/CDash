@@ -286,13 +286,6 @@ function get_seconds_from_interval($input)
     return null;
 }
 
-/** Microtime function */
-function microtime_float()
-{
-    list($usec, $sec) = explode(' ', microtime());
-    return ((float)$usec + (float)$sec);
-}
-
 function xml_replace_callback($matches)
 {
     $decimal_value = hexdec(bin2hex($matches[0]));

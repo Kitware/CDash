@@ -17,6 +17,7 @@ require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 require_once 'include/filterdataFunctions.php';
 
+use App\Services\PageTimer;
 use CDash\Database;
 use CDash\Model\Project;
 
@@ -137,7 +138,7 @@ if (!function_exists('defect_type_selected')) {
     }
 }
 
-$start = microtime_float();
+$pageTimer = new PageTimer();
 $response = [];
 
 if (array_key_exists('buildid', $_GET)) {
@@ -302,9 +303,7 @@ $response['properties'] = $all_properties;
 // and what page we're coming from.
 \Session::put('defecttypes', $defect_types);
 
-//$_SESSION['defecttypes'] = $defect_types;
 $response['filterdata']['pageId'] = 'buildProperties.php';
 
-$end = microtime_float();
-$response['generationtime'] = round($end - $start, 3);
+$pageTimer->end($response);
 echo json_encode(cast_data_for_JSON($response));
