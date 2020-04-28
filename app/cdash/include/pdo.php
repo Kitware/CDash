@@ -172,7 +172,7 @@ function pdo_error($link_identifier = null, $log_error = true)
             http_response_code(500);
             exit();
         }
-        if ($config->get('CDASH_PRODUCTION_MODE')) {
+        if (config('app.env') === 'production') {
             return 'SQL error encountered, query hidden.';
         }
         return $error_info[2];

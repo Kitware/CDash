@@ -40,17 +40,13 @@ class ConfigTest extends CDashTestCase
     {
         $config = Config::getInstance();
         $testing_mode = $config->get('CDASH_TESTING_MODE');
-        $production_mode = $config->get('CDASH_PRODUCTION_MODE');
         $config->set('CDASH_TESTING_MODE', '5544332211abc');
-        $config->set('CDASH_PRODUCTION_MODE', 'abcd22334455');
         $config->set('THIS_IS_NOT_A_THING', 'ABCDEFGH');
 
         $this->assertEquals('5544332211abc', $config->get('CDASH_TESTING_MODE'));
-        $this->assertEquals('abcd22334455', $config->get('CDASH_PRODUCTION_MODE'));
         $this->assertEquals('ABCDEFGH', $config->get('THIS_IS_NOT_A_THING'));
 
         $config->set('CDASH_TESTING_MODE', $testing_mode);
-        $config->set('CDASH_PRODUCTION_MODE', $production_mode);
         $config->set('THIS_IS_NOT_A_THING', null);
     }
 
