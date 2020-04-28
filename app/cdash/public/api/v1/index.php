@@ -38,23 +38,6 @@ use CDash\Model\SubProject;
 @set_time_limit(0);
 $config = Config::getInstance();
 
-// Check if we can connect to the database.
-if (pdo_query('SELECT id FROM ' . qid('user') . ' LIMIT 1') === false) {
-    if ($config->get('CDASH_PRODUCTION_MODE')) {
-        $response = array();
-        $response['error'] = 'CDash cannot connect to the database.';
-        echo json_encode($response);
-        return;
-    } else {
-        // redirect to the install.php script
-        $response = array();
-        $response['redirect'] = get_server_URI() . '/install.php';
-        echo json_encode($response);
-        return;
-    }
-    return;
-}
-
 @$projectname = $_GET['project'];
 $projectname = htmlspecialchars(pdo_real_escape_string($projectname));
 $projectid = get_project_id($projectname);
