@@ -31,7 +31,6 @@ class TestOverview extends ResultsApi
 
     public function getResponse()
     {
-        $start = microtime_float();
         $response = [];
 
         $has_subprojects = $this->project->GetNumberOfSubProjects() > 0;
@@ -207,8 +206,7 @@ class TestOverview extends ResultsApi
 
         $response['tests'] = $tests_response;
 
-        $end = microtime_float();
-        $response['generationtime'] = round($end - $start, 3);
+        $this->pageTimer->end($response);
         return $response;
     }
 }

@@ -17,6 +17,7 @@ require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 require_once 'include/filterdataFunctions.php';
 
+use App\Services\PageTimer;
 use CDash\Model\Project;
 
 if (!function_exists('create_subproject')) {
@@ -222,7 +223,7 @@ if (!function_exists('get_build_data')) {
 }
 
 
-$start = microtime_float();
+$pageTimer = new PageTimer();
 $response = [];
 
 // Check if a valid project was specified.
@@ -455,7 +456,5 @@ if (!empty($subproject_groups)) {
     $response['coverages'] = array_values($coverages);
 }
 
-$end = microtime_float();
-$response['generationtime'] = round($end - $start, 3);
-
+$pageTimer->end($response);
 echo json_encode(cast_data_for_JSON($response));

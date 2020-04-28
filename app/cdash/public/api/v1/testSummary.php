@@ -19,6 +19,9 @@
  * on a specific day.  It also displays information (success, execution time)
  * about each copy of the test that was run.
  */
+
+use App\Services\PageTimer;
+
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 include_once 'include/repository.php';
@@ -51,7 +54,7 @@ if (!isset($testName)) {
     return;
 }
 
-$start = microtime_float();
+$pageTimer = new PageTimer();
 
 $project = pdo_query("SELECT * FROM project WHERE id='$projectid'");
 if (pdo_num_rows($project) > 0) {
@@ -345,7 +348,5 @@ $response['numfailed'] = $numfailed;
 $response['numtotal'] = $numtotal;
 $response['percentagepassed'] = round($numpassed / $numtotal, 2) * 100;
 
-$end = microtime_float();
-$response['generationtime'] = round($end - $start, 3);
-
+$pageTimer->end($response);
 echo json_encode($response);

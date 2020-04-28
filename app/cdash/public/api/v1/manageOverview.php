@@ -17,9 +17,10 @@
 require_once 'include/pdo.php';
 include_once 'include/common.php';
 
+use App\Services\PageTimer;
 use CDash\Model\Project;
 
-$start = microtime_float();
+$pageTimer = new PageTimer();
 $response = begin_JSON_response();
 $response['backurl'] = 'user.php';
 $response['menutitle'] = 'CDash';
@@ -142,6 +143,5 @@ while ($buildgroup_row = pdo_fetch_array($buildgroup_rows)) {
 }
 $response['availablegroups'] = $availablegroups_response;
 
-$end = microtime_float();
-$response['generationtime'] = round($end - $start, 3);
+$pageTimer->end($response);
 echo json_encode(cast_data_for_JSON($response));

@@ -19,6 +19,7 @@ include_once 'include/common.php';
 // TODO: dunno what this is or why it seems to exist here and there willy nilly, RWEP.
 redirect_to_https();
 
+use App\Services\PageTimer;
 use CDash\Config;
 use CDash\Database;
 use CDash\Model\Project;
@@ -45,7 +46,7 @@ if (!Auth::check()) {
     return;
 }
 
-$script_start_time = microtime_float();
+$pageTimer = new PageTimer();
 
 $user = Auth::user();
 $userid = $user->id;
@@ -321,6 +322,5 @@ if (@$_GET['note'] == 'subscribedtoproject') {
     $response['message'] = 'You have been unsubscribed from a project.';
 }
 
-$script_end_time = microtime_float();
-$response['generationtime'] = round($script_end_time - $script_start_time, 3);
+$pageTimer->end($response);
 echo json_encode(cast_data_for_JSON($response));

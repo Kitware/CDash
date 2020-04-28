@@ -17,12 +17,13 @@
 require_once 'include/pdo.php';
 require_once 'include/common.php';
 
+use App\Services\PageTimer;
 use CDash\Database;
 use CDash\Model\Project;
 use CDash\Model\UserProject;
 
-$start = microtime_float();
-$response = array();
+$pageTimer = new PageTimer();
+$response = [];
 
 // Checks
 if (!Auth::check()) {
@@ -87,8 +88,7 @@ while ($project_array = pdo_fetch_array($projects)) {
 $response['availableprojects'] = $availableprojects;
 
 if ($projectid < 1) {
-    $end = microtime_float();
-    $response['generationtime'] = round($end - $start, 3);
+    $pageTimer->end($response);
     echo json_encode($response);
     return;
 }
@@ -235,6 +235,5 @@ while ($wildcard_array = pdo_fetch_array($wildcards)) {
 
 $response['wildcards'] = $wildcards_response;
 
-$end = microtime_float();
-$response['generationtime'] = round($end - $start, 3);
+$pageTimer->end($response);
 echo json_encode(cast_data_for_JSON($response));

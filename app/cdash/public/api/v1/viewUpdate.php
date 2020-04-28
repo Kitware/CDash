@@ -19,6 +19,7 @@ require_once 'include/common.php';
 require_once 'include/api_common.php';
 require_once 'include/repository.php';
 
+use App\Services\PageTimer;
 use App\Services\TestingDay;
 
 use CDash\Model\BuildUpdate;
@@ -26,7 +27,7 @@ use CDash\Database;
 use CDash\Model\Project;
 use CDash\Model\Site;
 
-$start = microtime_float();
+$pageTimer = new PageTimer();
 $build = get_request_build();
 if (is_null($build)) {
     return;
@@ -267,6 +268,5 @@ $update_groups = [
 ];
 $response['updategroups'] = $update_groups;
 
-$end = microtime_float();
-$response['generationtime'] = round($end - $start, 3);
+$pageTimer->end($response);
 echo json_encode(cast_data_for_JSON($response));

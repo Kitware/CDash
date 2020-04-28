@@ -16,6 +16,7 @@ require_once 'include/pdo.php';
 require_once 'include/common.php';
 require_once 'include/api_common.php';
 
+use App\Services\PageTimer;
 use CDash\Model\Measurement;
 use CDash\Model\Project;
 
@@ -99,7 +100,7 @@ function rest_post($projectid)
 /* Handle GET requests */
 function rest_get($projectid)
 {
-    $start = microtime_float();
+    $pageTimer = new PageTimer();
     $response = begin_JSON_response();
 
     $project = new Project();
@@ -128,8 +129,6 @@ function rest_get($projectid)
         $measurements_response[] = $measurement_response;
     }
     $response['measurements'] = $measurements_response;
-    $end = microtime_float();
-    $response['generationtime'] = round($end - $start, 3);
-
+    $pageTimer->end($response);
     echo json_encode(cast_data_for_JSON($response));
 }

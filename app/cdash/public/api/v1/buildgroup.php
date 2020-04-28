@@ -18,6 +18,7 @@ require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 require_once 'include/version.php';
 
+use App\Services\PageTimer;
 use CDash\Config;
 use CDash\Model\BuildGroup;
 use CDash\Model\BuildGroupRule;
@@ -65,7 +66,7 @@ function rest_get($pdo, $projectid)
     }
     $buildgroupid = pdo_real_escape_numeric($_GET['buildgroupid']);
 
-    $start = microtime_float();
+    $pageTimer = new PageTimer();
     $response = begin_JSON_response();
     $response['projectid'] = $projectid;
     $response['buildgroupid'] = $buildgroupid;
@@ -104,8 +105,7 @@ function rest_get($pdo, $projectid)
     $response['dependencies'] = $dependencies_response;
     $response['available_dependencies'] = $available_dependencies_response;
 
-    $end = microtime_float();
-    $response['generationtime'] = round($end - $start, 3);
+    $pageTimer->end($response);
     echo json_encode(cast_data_for_JSON($response));
 }
 

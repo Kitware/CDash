@@ -16,12 +16,13 @@
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 
+use App\Services\PageTimer;
 use App\Services\TestingDay;
 
 use CDash\Model\Build;
 use CDash\Model\Project;
 
-$start = microtime_float();
+$pageTimer = new PageTimer();
 $build = get_request_build();
 if (is_null($build)) {
     return;
@@ -92,9 +93,5 @@ while ($build2note_array = pdo_fetch_array($build2note)) {
     $notes[] = $note;
 }
 $response['notes'] = $notes;
-
-$end = microtime_float();
-$generation_time = round($end - $start, 2);
-$response['generationtime'] = $generation_time;
-
+$pageTimer->end($response);
 echo json_encode(cast_data_for_JSON($response));

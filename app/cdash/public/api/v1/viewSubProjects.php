@@ -17,6 +17,8 @@ require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 require_once 'include/common.php';
 
+use App\Services\PageTimer;
+
 use CDash\Config;
 use CDash\Model\Banner;
 use CDash\Model\Project;
@@ -42,7 +44,7 @@ if (!function_exists('echo_subprojects_dashboard_JSON')) {
     {
         require_once 'include/pdo.php';
 
-        $start = microtime_float();
+        $pageTimer = new PageTimer();
         $config = Config::getInstance();
         $response = array();
 
@@ -229,9 +231,7 @@ if (!function_exists('echo_subprojects_dashboard_JSON')) {
         }
         $response['subprojects'] = $subprojects_response;
 
-        $end = microtime_float();
-        $response['generationtime'] = round($end - $start, 3);
-
+        $pageTimer->end($response);
         echo json_encode(cast_data_for_JSON($response));
     }
 }

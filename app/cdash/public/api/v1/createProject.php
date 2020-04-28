@@ -16,6 +16,7 @@
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 
+use App\Services\PageTimer;
 use App\Services\ProjectPermissions;
 
 use CDash\Config;
@@ -24,7 +25,7 @@ use CDash\Model\Repository;
 use CDash\Model\UserProject;
 use CDash\ServiceContainer;
 
-$start = microtime_float();
+$pageTimer = new PageTimer();
 $service = ServiceContainer::getInstance();
 $config = Config::getInstance();
 
@@ -177,6 +178,5 @@ $callback = function ($key) use ($Project, $viewers, &$response) {
 
 $response['vcsviewers'] = array_map($callback, array_keys($viewers));
 
-$end = microtime_float();
-$response['generationtime'] = round($end - $start, 3);
+$pageTimer->end($response);
 echo json_encode(cast_data_for_JSON($response));

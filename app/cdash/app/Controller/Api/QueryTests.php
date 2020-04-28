@@ -155,8 +155,6 @@ class QueryTests extends ResultsApi
 
     public function getResponse()
     {
-        $start = microtime_float();
-
         $response = begin_JSON_response();
         $response['title'] = "CDash : {$this->project->Name}";
         $response['showcalendar'] = 1;
@@ -396,8 +394,7 @@ class QueryTests extends ResultsApi
         $response['builds'] = $builds;
         $response['filterontestoutput'] = $this->filterOnTestOutput;
 
-        $end = microtime_float();
-        $response['generationtime'] = round($end - $start, 3);
+        $this->pageTimer->end($response);
         return $response;
     }
 }

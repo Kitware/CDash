@@ -31,6 +31,7 @@ require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 include_once 'include/repository.php';
 
+use App\Services\PageTimer;
 use App\Services\TestingDay;
 
 use CDash\Model\Build;
@@ -58,8 +59,7 @@ if ($date != null) {
 }
 
 $response = [];
-
-$start = microtime_float();
+$pageTimer = new PageTimer();
 
 $project = $service->get(Project::class);
 $project->Id = $build->ProjectId;
@@ -226,7 +226,5 @@ if ($build->IsParentBuild()) {
     }, $response['errors'])));
 }
 
-$end = microtime_float();
-$response['generationtime'] = round($end - $start, 3);
-
+$pageTimer->end($response);
 echo json_encode(cast_data_for_JSON($response));

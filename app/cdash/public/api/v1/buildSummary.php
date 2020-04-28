@@ -16,6 +16,7 @@
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 
+use App\Services\PageTimer;
 use App\Services\TestingDay;
 
 use CDash\Model\Build;
@@ -25,7 +26,7 @@ use CDash\Model\BuildUserNote;
 use CDash\Model\Project;
 use CDash\ServiceContainer;
 
-$start = microtime_float();
+$pageTimer = new PageTimer();
 $response = [];
 
 $build = get_request_build();
@@ -387,6 +388,5 @@ $response['relationships_from'] = $relationships['from'];
 $response['hasrelationships'] = !empty($response['relationships_to']) ||
     !empty($response['relationships_from']);
 
-$end = microtime_float();
-$response['generationtime'] = round($end - $start, 3);
+$pageTimer->end($response);
 echo json_encode(cast_data_for_JSON($response));

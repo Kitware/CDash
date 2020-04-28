@@ -1357,4 +1357,9 @@ class Index extends ResultsApi
             }
         }
     }
+
+    public function recordGenerationTime(&$response)
+    {
+        $this->pageTimer->end($response);
+    }
 }
