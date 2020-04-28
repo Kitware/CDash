@@ -17,7 +17,6 @@ require_once 'include/log.php';
 require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 
-$start = microtime_float();
 $response = [];
 
 $builds = $_GET['builds'];
