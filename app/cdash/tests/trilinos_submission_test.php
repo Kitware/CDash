@@ -46,7 +46,7 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 return false;
             }
 
-            if (!$this->putCtestFile($fullname, ['project' => $project])) {
+            if (!$this->submission($project, $fullname)) {
                 $this->fail("Submission of file [$fullname] for project [$project] failed");
                 return false;
             }

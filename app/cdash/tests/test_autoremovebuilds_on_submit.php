@@ -95,7 +95,8 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         // Submit the first build
         $rep = dirname(__FILE__) . '/data/EmailProjectExample';
         $testxml1 = "$rep/1_test.xml";
-        if (!$this->putCtestFile($testxml1, ['project' => 'EmailProjectExample'])) {
+
+        if (!$this->submission('EmailProjectExample', $testxml1)) {
             $this->fail('submission 1 failed');
             return;
         }
@@ -146,7 +147,7 @@ class AutoRemoveBuildsOnSubmitTestCase extends KWWebTestCase
         $pdo->exec("DELETE FROM dailyupdate WHERE projectid='{$projectid}'");
 
         $testxml2 = "$rep/2_test.xml";
-        if (!$this->putCtestFile($testxml2, ['project' => 'EmailProjectExample'])) {
+        if (!$this->submission('EmailProjectExample', $testxml2)) {
             $this->fail('submission 2 failed');
             return 1;
         }
