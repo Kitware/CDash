@@ -58,9 +58,6 @@ $CDASH_SSL_KEY = null;
 $CDASH_SSL_CERT = null;
 $CDASH_SSL_CA = null;
 
-// Turn this variable ON when CDash has been installed
-// Prevents from running the install.php again
-$CDASH_PRODUCTION_MODE = false;
 $CDASH_TESTING_MODE = false;
 $CDASH_TESTING_RENAME_LOGS = false;
 

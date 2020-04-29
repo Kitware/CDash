@@ -31,8 +31,8 @@ use CDash\Model\User;
 
 $config = Config::getInstance();
 
-if ($config->get('CDASH_PRODUCTION_MODE')) {
-    echo 'CDash is in production mode. Install cannot be accessed. Change the variable in your config.php if you want to access the installation.';
+if (config('app.env') === 'production') {
+    echo 'CDash is in production mode. Install cannot be accessed. Set APP_ENV=development in your .env file if you want to access the installation.';
     return;
 }
 

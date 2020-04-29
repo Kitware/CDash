@@ -47,7 +47,7 @@ class ParallelSubmissionsTestCase extends TrilinosSubmissionTestCase
 
         // Submit another file to Trilinos to start the processing loop.
         $file = dirname(__FILE__) . '/data/SubProjectNextPrevious/Build_1.xml';
-        $this->putCtestFile($file, ['project' => 'Trilinos']);
+        $this->submission('Trilinos', $file);
 
         // Wait for processing to complete.
         $todo = 999;

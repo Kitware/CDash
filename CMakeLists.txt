@@ -148,6 +148,7 @@ file(WRITE "${CDash_SOURCE_DIR}/app/cdash/config/config.local.php"
 //
 date_default_timezone_set('America/New_York');
 $CDASH_DB_NAME = 'cdash4simpletest';
+$CDASH_PRODUCTION_MODE = false;
 $CDASH_TESTING_MODE = true;
 $CDASH_REGISTRATION_EMAIL_VERIFY = false;
 $CDASH_TESTING_RENAME_LOGS = ${rename_logs};
