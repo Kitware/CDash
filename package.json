@@ -47,7 +47,7 @@
     "@vue/test-utils": "^1.0.0-beta.29",
     "axios-mock-adapter": "^1.17.0",
     "expect": "^24.9.0",
-    "jquery": "^3.2",
+    "jquery": "^3.5",
     "jsdom": "^15.1.1",
     "jsdom-global": "^3.0.2",
     "mocha": "^5.0.0",
