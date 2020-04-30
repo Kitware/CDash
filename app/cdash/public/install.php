@@ -108,8 +108,7 @@ if (!is_writable($config->get('CDASH_UPLOAD_DIRECTORY'))) {
 }
 
 try {
-    $installed = pdo_query('SELECT id FROM ' . qid('user') . ' LIMIT 1');
-    $installed = is_object($installed) ? 1 : (int) $installed;
+    $installed = \Schema::hasTable(qid('user'));
     $xml .= '<database>' . $installed . '</database>';
 } catch (\Exception $e) {
     $installed = false;
