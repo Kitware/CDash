@@ -247,7 +247,7 @@ if (Auth::check()) {
                 // Send the email
                 $title = 'CDash [' . $Project->GetName() . '] - Low Coverage';
 
-                $user = User::where('id', '=', $userid)->first();
+                $user = User::find($userid);
                 cdashmail($user->email, $title, $messagePlainText);
                 $xml .= add_XML_value('warning', '*The email has been sent successfully.');
             } else {
@@ -323,8 +323,8 @@ if (Auth::check()) {
                 $authorids = $CoverageFile2User->GetAuthors();
                 foreach ($authorids as $authorid) {
                     $xml .= '<author>';
-                    $user = User::where('id', '=', $authorid)->first();
-                    $xml .= add_XML_value('name', $user->GetName());
+                    $user = User::find($authorid);
+                    $xml .= add_XML_value('name', $user->full_name);
                     $xml .= add_XML_value('id', $authorid);
                     $xml .= '</author>';
                 }
@@ -343,11 +343,10 @@ if (Auth::check()) {
         $UserProject->ProjectId = $Project->Id;
         $userIds = $UserProject->GetUsers();
         foreach ($userIds as $userid) {
-            $User = new User;
-            $User->Id = $userid;
+            $User = User::find($userid);
             $xml .= '<user>';
             $xml .= add_XML_value('id', $userid);
-            $xml .= add_XML_value('name', $User->GetName());
+            $xml .= add_XML_value('name', $User->full_name);
             $xml .= '</user>';
         }
 
