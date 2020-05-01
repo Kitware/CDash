@@ -959,7 +959,7 @@ foreach ($covfile_array as $covfile) {
         $author = '';
         if (isset($covfile['user'])) {
             $user = User::where('id', $covfile['user']);
-            $author = $user->GetName();
+            $author = $user->full_name;
         }
         $row[] = $author;
     }
