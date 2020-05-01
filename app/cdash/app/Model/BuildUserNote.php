@@ -15,6 +15,7 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use App\Models\User;
 use CDash\Database;
 
 class BuildUserNote
@@ -86,9 +87,8 @@ class BuildUserNote
         $pdo = get_link_identifier()->getPdo();
         $marshaledNote = array();
 
-        $user = new User();
-        $user->Id = $this->UserId;
-        $marshaledNote['user'] = $user->GetName();
+        $user = User::find($this->UserId);
+        $marshaledNote['user'] = $user->full_name;
 
         $timestamp = strtotime($this->TimeStamp . ' UTC');
         $marshaledNote['date'] = date('H:i:s T', $timestamp);
