@@ -40,6 +40,19 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany('App\Password', 'userid')->orderBy('date');
     }
 
+    /**
+     * Get the user's full name.
+     *
+     * @return string
+     */
+    public function getFullNameAttribute()
+    {
+        return trim("{$this->firstname} {$this->lastname}");
+    }
+
+    /**
+     * Passthrough to call legacy User model method.
+     **/
     public function __call($method, $parameters)
     {
         $class = \CDash\Model\User::class;

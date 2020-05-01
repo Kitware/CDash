@@ -30,11 +30,6 @@ class UserTestCase extends KWWebTestCase
         $user->Id = '';
         $user->Email = '';
 
-        if (!($user->GetName() === false)) {
-            $this->fail("User::GetName didn't return false when given no user id");
-            return 1;
-        }
-
         if (!($user->IsAdmin() === false)) {
             $this->fail("User::Exists didn't return false for no user id and no email");
             return 1;

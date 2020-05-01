@@ -176,21 +176,6 @@ class User
         pdo_execute($stmt, [$this->Id]);
     }
 
-    /** Get the name */
-    public function GetName()
-    {
-        // If no id specified return false.
-        if (!$this->Id) {
-            return false;
-        }
-
-        $stmt = $this->PDO->prepare(
-            "SELECT firstname, lastname FROM $this->TableName WHERE id = ?");
-        pdo_execute($stmt, [$this->Id]);
-        $row = $stmt->fetch();
-        return trim($row['firstname'] . ' ' . $row['lastname']);
-    }
-
     /** Get the email */
     public function GetEmail()
     {
