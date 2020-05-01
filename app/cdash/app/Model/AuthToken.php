@@ -15,6 +15,7 @@
 =========================================================================*/
 namespace CDash\Model;
 
+use App\Models\User;
 use CDash\Config;
 use CDash\Database;
 
@@ -82,9 +83,8 @@ class AuthToken
             add_log('Hash not set', 'AuthToken::Save', LOG_ERR);
             return false;
         }
-        $user = new User();
-        $user->Id = $this->UserId;
-        if (!$user->Exists()) {
+        $user = User::find($this->UserId);
+        if (is_null($user)) {
             add_log('Invalid UserId', 'AuthToken::Save', LOG_ERR);
             return false;
         }
@@ -207,9 +207,8 @@ class AuthToken
         $marshaledAuthToken['hash'] = $this->Hash;
         $marshaledAuthToken['description'] = $this->Description;
 
-        $user = new User();
-        $user->Id = $this->UserId;
-        $marshaledAuthToken['user'] = $user->GetName();
+        $user = User::find($this->UserId);
+        $marshaledAuthToken['user'] = $user->full_name;
 
         $created = strtotime($this->Created . ' UTC');
         $marshaledAuthToken['created'] = date(FMT_DATETIMEDISPLAY, $created);
