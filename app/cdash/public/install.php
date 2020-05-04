@@ -82,7 +82,7 @@ $xml .= '<connectiondb_name>' . $config->get('CDASH_DB_NAME') . '</connectiondb_
 try {
     $pdo = new \PDO("{$db_type}:{$db_connection}={$db_host}", $db_user, $db_pass);
     $xml .= '<connectiondb>1</connectiondb>';
-} catch (\PDOException $exception) {
+} catch (\Exception $exception) {
     $xml .= '<connectiondb>0</connectiondb>';
 }
 
@@ -108,10 +108,9 @@ if (!is_writable($config->get('CDASH_UPLOAD_DIRECTORY'))) {
 }
 
 try {
-    $installed = pdo_query('SELECT id FROM ' . qid('user') . ' LIMIT 1');
-    $installed = is_object($installed) ? 1 : (int) $installed;
+    $installed = \Schema::hasTable(qid('user'));
     $xml .= '<database>' . $installed . '</database>';
-} catch (PDOException $e) {
+} catch (\Exception $e) {
     $installed = false;
     $xml .= '<database>0</database>';
 }

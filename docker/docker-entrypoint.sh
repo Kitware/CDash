@@ -23,7 +23,7 @@ do_configure() {
 
         if cdash_password_index 1 ; then
             cdash_change_password            \
-                "$CDASH_ROOT_ADMIN_PASS"     \
+                "$CDASH_ROOT_ADMIN_EMAIL"     \
                 "$CDASH_ROOT_ADMIN_NEW_PASS"
         fi
 
@@ -205,18 +205,10 @@ do_configure() {
                 eval "${param}=\"$value\""
             done
 
-            user_id="$( cdash_find_user "$email" )"
-
             if [ "$disp" '=' 'DELETE' ] ; then
                 # REMOVE USER
                 debug "REMOVING USER: $email"
-                if [ -n "$user_id" ] ; then
-                    cdash_remove_user "$user_id"
-                else
-                    echo "Warning: could not remove user" \
-                         "$email: user not found" >&2
-                fi
-
+                cdash_remove_user "$email"
                 continue
             fi
 
@@ -226,6 +218,8 @@ do_configure() {
             fi
 
             login_pass="$pass"
+
+            user_id="$( cdash_find_user "$email" )"
 
             if [ -z "$user_id" ] ; then
                 login_pass="$final_pass"
@@ -246,12 +240,12 @@ do_configure() {
 
             if [ "$disp" '=' 'ADMIN' ] ; then
                 debug "PROMOTING USER: $email"
-                cdash_promote_user "$user_id"
+                cdash_promote_user "$email"
             fi
 
             if [ "$disp" '=' 'USER' ] ; then
                 debug "DEMOTING USER: $email"
-                cdash_demote_user "$user_id"
+                cdash_demote_user "$email"
             fi
 
             (
@@ -272,7 +266,7 @@ do_configure() {
                 if cdash_password_index 1 ; then
                     # update user's password
                     debug "UPDATING USER PASSWORD: $email"
-                    cdash_change_password "$login_pass" "$newpass"
+                    cdash_change_password "$email" "$newpass"
                 fi
             )
         done

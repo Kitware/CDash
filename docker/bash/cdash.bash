@@ -65,20 +65,13 @@ __cdash_logout() {
 }
 
 cdash_change_password() {
-    local old_pass
+    local email
     local new_pass
 
-    old_pass="$1" ; shift
+    email="$1" ; shift
     new_pass="$1"
 
-    web_post    "${__cdash_session}"                   \
-                "${__cdash_session_host}/editUser.php" \
-        oldpasswd="$old_pass"                          \
-        passwd="$new_pass"                             \
-        passwd2="$new_pass"                            \
-        updatepassword='Update Password' &> /dev/null
-
-    return $?
+    php artisan user:save --email="$email" --password="$new_pass"
 }
 
 cdash_update_profile() {
@@ -92,26 +85,13 @@ cdash_update_profile() {
     email="$1" ; shift
     institution="$1"
 
-    web_post    "${__cdash_session}"                   \
-                "${__cdash_session_host}/editUser.php" \
-        fname="$first_name"                            \
-        lname="$last_name"                             \
-        email="$email"                                 \
-        institution="$institution"                     \
-        updateprofile='Update Profile' &> /dev/null
-
-    return $?
+    php artisan user:save --email="$email" --firstname="$first_name" --lastname="$last_name" --institution="$institution"
 }
 
 cdash_remove_user() {
-    local user_id
-
-    user_id="$1" ; shift
-
-    web_post    "${__cdash_session}"                      \
-                "${__cdash_session_host}/manageUsers.php" \
-        userid="$user_id"                                 \
-        removeuser="remove user" &> /dev/null
+    local email
+    email="$1" ; shift
+    php artisan user:remove --email="$email"
 }
 
 cdash_find_user() {
@@ -139,6 +119,7 @@ cdash_add_user() {
     local email
     local pass
     local institution
+
     local ids
 
     first_name="$1" ; shift
@@ -147,44 +128,19 @@ cdash_add_user() {
     pass="$1" ; shift
     institution="$1"
 
-    web_post    "${__cdash_session}"                      \
-                "${__cdash_session_host}/manageUsers.php" \
-        fname="$first_name"                               \
-        lname="$last_name"                                \
-        email="$email"                                    \
-        passwd="$pass"                                    \
-        passwd2="$pass"                                   \
-        institution="$institution"                        \
-        adduser='Add user >>' &> /dev/null
-
-    cdash_find_user "$email"
-    return $?
+    php artisan user:save --email="$email" --firstname="$first_name" --lastname="$last_name" --institution="$institution" --password="$pass"
 }
 
 cdash_promote_user() {
-    local user_id
-
-    user_id="$1" ; shift
-
-    web_post    "${__cdash_session}"                      \
-                "${__cdash_session_host}/manageUsers.php" \
-        userid="$user_id"                                 \
-        makeadmin="make admin" &> /dev/null
-
-    return $?
+    local email
+    email="$1" ; shift
+    php artisan user:save --email="$email" --admin=1
 }
 
 cdash_demote_user() {
-    local user_id
-
-    user_id="$1" ; shift
-
-    web_post    "${__cdash_session}"                      \
-                "${__cdash_session_host}/manageUsers.php" \
-        userid="$user_id"                                 \
-        makenormaluser="make normal user" &> /dev/null
-
-    return $?
+    local email
+    email="$1" ; shift
+    php artisan user:save --email="$email" --admin=0
 }
 
 cdash_install() {
