@@ -1,4 +1,4 @@
-FROM php:7.2-apache-stretch
+FROM php:7.4-apache-buster
 LABEL MAINTAINER="Kitware, Inc. <cdash@public.kitware.com>"
 
 ARG CDASH_DB_HOST=localhost
@@ -24,8 +24,8 @@ RUN apt-get update                                                         \
     libmcrypt-dev libpng-dev libpq-dev libxslt-dev libxss1 nodejs unzip    \
     wget zip libldap2-dev                                                  \
  && docker-php-ext-configure pgsql --with-pgsql=/usr/local/pgsql           \
- && docker-php-ext-configure gd --with-freetype-dir=/usr/include/          \
-                                --with-jpeg-dir=/usr/include/              \
+ && docker-php-ext-configure gd --with-freetype=/usr/include/              \
+                                --with-jpeg=/usr/include/                  \
  && docker-php-ext-install -j$(nproc) bcmath bz2 gd ldap                   \
     pdo_mysql pdo_pgsql xsl                                                \
  && wget -q -O checksum https://composer.github.io/installer.sha384sum     \
