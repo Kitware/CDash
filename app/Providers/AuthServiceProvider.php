@@ -24,7 +24,8 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-
-        //
+        \Auth::provider('cdash', function ($app, array $config) {
+            return new CDashDatabaseUserProvider($app['hash'], $config['model']);
+        });
     }
 }
