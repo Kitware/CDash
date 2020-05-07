@@ -109,8 +109,10 @@ class BuildErrorFilter
             'SELECT * FROM build_filters WHERE projectid = :projectid');
         $this->PDO->execute($stmt, [':projectid' => $this->Project->Id]);
         $row = $stmt->fetch();
-        $this->ErrorsFilter = $row['errors'];
-        $this->WarningsFilter = $row['warnings'];
+        if ($row) {
+            $this->ErrorsFilter = $row['errors'];
+            $this->WarningsFilter = $row['warnings'];
+        }
     }
 
     private function FilterText($subject, $filterString)

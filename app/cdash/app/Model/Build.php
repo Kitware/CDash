@@ -419,6 +419,10 @@ class Build
         }
 
         $build_array = $stmt->fetch();
+        if (!is_array($build_array)) {
+            return false;
+        }
+
         $this->Name = $build_array['name'];
         $this->SetStamp($build_array['stamp']);
         $this->Type = $build_array['type'];

@@ -434,28 +434,30 @@ if (Auth::check()) {
             $xml .= '</user>';
         }
 
-        // Check if a user is committing without being registered to CDash or with email disabled
-        $date = date(FMT_DATETIME, strtotime(date(FMT_DATETIME) . ' -30 days'));
-        $sql = 'SELECT DISTINCT author,emailtype,' . qid('user') . '.email FROM dailyupdate,dailyupdatefile
-            LEFT JOIN user2repository ON (dailyupdatefile.author=user2repository.credential
-            AND (user2repository.projectid=0 OR user2repository.projectid=' . qnum($project_array['id']) . ')
-            )
-            LEFT JOIN user2project ON (user2repository.userid= user2project.userid AND
-            user2project.projectid=' . qnum($project_array['id']) . ')
-            LEFT JOIN ' . qid('user') . ' ON (user2project.userid=' . qid('user') . '.id)
-            WHERE
-             dailyupdatefile.dailyupdateid=dailyupdate.id
-             AND dailyupdate.projectid=' . qnum($project_array['id']) .
-            " AND dailyupdatefile.checkindate>'" . $date . "' AND (emailtype=0 OR emailtype IS NULL)";
+        if (is_array($project_array)) {
+            // Check if a user is committing without being registered to CDash or with email disabled
+            $date = date(FMT_DATETIME, strtotime(date(FMT_DATETIME) . ' -30 days'));
+            $sql = 'SELECT DISTINCT author,emailtype,' . qid('user') . '.email FROM dailyupdate,dailyupdatefile
+                LEFT JOIN user2repository ON (dailyupdatefile.author=user2repository.credential
+                        AND (user2repository.projectid=0 OR user2repository.projectid=' . qnum($project_array['id']) . ')
+                        )
+                LEFT JOIN user2project ON (user2repository.userid= user2project.userid AND
+                        user2project.projectid=' . qnum($project_array['id']) . ')
+                LEFT JOIN ' . qid('user') . ' ON (user2project.userid=' . qid('user') . '.id)
+                WHERE
+                dailyupdatefile.dailyupdateid=dailyupdate.id
+                AND dailyupdate.projectid=' . qnum($project_array['id']) .
+                " AND dailyupdatefile.checkindate>'" . $date . "' AND (emailtype=0 OR emailtype IS NULL)";
 
-        $query = pdo_query($sql);
-        add_last_sql_error('ManageProjectRole');
-        while ($query_array = pdo_fetch_array($query)) {
-            $xml .= '<baduser>';
-            $xml .= add_XML_value('author', $query_array['author']);
-            $xml .= add_XML_value('emailtype', $query_array['emailtype']);
-            $xml .= add_XML_value('email', $query_array['email']);
-            $xml .= '</baduser>';
+            $query = pdo_query($sql);
+            add_last_sql_error('ManageProjectRole');
+            while ($query_array = pdo_fetch_array($query)) {
+                $xml .= '<baduser>';
+                $xml .= add_XML_value('author', $query_array['author']);
+                $xml .= add_XML_value('emailtype', $query_array['emailtype']);
+                $xml .= add_XML_value('email', $query_array['email']);
+                $xml .= '</baduser>';
+            }
         }
     }
 

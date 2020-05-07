@@ -317,7 +317,7 @@ class ExcludeSubProjectsTestCase extends KWWebTestCase
             $content = $this->getBrowser()->getContent();
             $jsonobj = json_decode($content, true);
             $buildgroup = array_pop($jsonobj['buildgroups']);
-            if (!is_array($buildgroup['builds'])) {
+            if (!is_array($buildgroup) || !is_array($buildgroup['builds'])) {
                 $numbuilds = 0;
             } else {
                 $numbuilds = count($buildgroup['builds']);

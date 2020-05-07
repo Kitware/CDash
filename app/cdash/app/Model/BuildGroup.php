@@ -551,7 +551,9 @@ class BuildGroup
             $buildgroup = pdo_query("SELECT id FROM buildgroup WHERE name='Experimental' AND projectid='$projectid'");
         }
         $buildgroup_array = pdo_fetch_array($buildgroup);
-        return $buildgroup_array['id'];
+        if (is_array($buildgroup_array)) {
+            return $buildgroup_array['id'];
+        }
     }
 
     // Return an array of currently active BuildGroups

@@ -138,7 +138,7 @@ while ($row = $stmt->fetch()) {
             $status = strtolower($row['status']);
             // Only show passed & failed tests on the chart (skip 'notrun').
             if ($status != 'passed' && $status != 'failed') {
-                continue;
+                break;
             }
             if ($status == 'passed') {
                 $data_point['y'] = 1;

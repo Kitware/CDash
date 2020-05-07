@@ -117,6 +117,10 @@ class BuildProperties
         }
 
         $row = $stmt->fetch();
+        if (!is_array($row)) {
+            return true;
+        }
+
         $properties = json_decode($row['properties'], true);
         if (is_array($properties)) {
             $this->Properties = $properties;

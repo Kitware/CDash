@@ -216,7 +216,13 @@ switch ($testRow['status']) {
 }
 
 // Find the repository revision.
-$update_response = [];
+$update_response = [
+    'revision' => '',
+    'priorrevision' => '',
+    'path' => '',
+    'revisionurl' => '',
+    'revisiondiff' => ''
+];
 $stmt = $pdo->prepare(
     'SELECT status, revision, priorrevision, path
      FROM buildupdate bu
@@ -224,18 +230,18 @@ $stmt = $pdo->prepare(
      WHERE b2u.buildid = :buildid');
 pdo_execute($stmt, [':buildid' => $build->Id]);
 $status_array = $stmt->fetch();
-if (strlen($status_array['status']) > 0 && $status_array['status'] != '0') {
-    $update_response['status'] = $status_array['status'];
-} else {
-    $update_response['status'] = ''; // empty status
+if (is_array($status_array)) {
+    if (strlen($status_array['status']) > 0 && $status_array['status'] != '0') {
+        $update_response['status'] = $status_array['status'];
+    }
+    $update_response['revision'] = $status_array['revision'];
+    $update_response['priorrevision'] = $status_array['priorrevision'];
+    $update_response['path'] = $status_array['path'];
+    $update_response['revisionurl'] =
+        get_revision_url($projectid, $status_array['revision'], $status_array['priorrevision']);
+    $update_response['revisiondiff'] =
+        get_revision_url($projectid, $status_array['priorrevision'], ''); // no prior revision...
 }
-$update_response['revision'] = $status_array['revision'];
-$update_response['priorrevision'] = $status_array['priorrevision'];
-$update_response['path'] = $status_array['path'];
-$update_response['revisionurl'] =
-    get_revision_url($projectid, $status_array['revision'], $status_array['priorrevision']);
-$update_response['revisiondiff'] =
-    get_revision_url($projectid, $status_array['priorrevision'], ''); // no prior revision...
 $test_response['update'] = $update_response;
 
 $test_response['timemean'] = $testRow['timemean'];

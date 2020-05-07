@@ -121,8 +121,10 @@ class PendingSubmissions
         }
 
         $row = $stmt->fetch();
-        $this->NumFiles = $row['numfiles'];
-        $this->Recheck = $row['recheck'];
+        if (is_array($row)) {
+            $this->NumFiles = $row['numfiles'];
+            $this->Recheck = $row['recheck'];
+        }
         $this->Filled = true;
     }
 

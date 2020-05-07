@@ -50,12 +50,9 @@ class JavaJSONCoverageTestCase extends KWWebTestCase
         $filename = dirname(__FILE__) . '/data/JavaJSONTar_example.tar';
 
         $put_result = $this->uploadfile($puturl, $filename);
-        $put_json = json_decode($put_result, true);
-
-        if ($put_json['status'] != 0) {
+        if (strpos($put_result, '{"status":0}') === false) {
             $this->fail(
-                'PUT returned ' . $put_json['status'] . ":\n" .
-                $put_json['description'] . "\n");
+                "status:0 not found in PUT results:\n$put_result\n");
             return 1;
         }
 

@@ -49,9 +49,6 @@ if (is_null($build)) {
 }
 
 $service = ServiceContainer::getInstance();
-$update = $service->get(BuildUpdate::class);
-$update->BuildId = $build->Id;
-$build_update = $update->GetUpdateForBuild();
 
 @$date = $_GET['date'];
 if ($date != null) {
@@ -72,7 +69,6 @@ $siteid = $build->SiteId;
 $buildtype = $build->Type;
 $buildname = $build->Name;
 $starttime = $build->StartTime;
-$revision = $build_update['revision'];
 
 if (isset($_GET['type'])) {
     $type = pdo_real_escape_numeric($_GET['type']);
@@ -110,13 +106,25 @@ if ($next_buildid > 0) {
 
 $response['menu'] = $menu;
 
-// Build
+// Site
 $site = $service->get(Site::class);
 $site->Id = $siteid;
 $extra_build_fields = [
-    'revision' => $build_update['revision'],
     'site' => $site->GetName()
 ];
+
+// Update
+$update = $service->get(BuildUpdate::class);
+$update->BuildId = $build->Id;
+$build_update = $update->GetUpdateForBuild();
+if (is_array($build_update)) {
+    $revision = $build_update['revision'];
+    $extra_build_fields['revision'] = $revision;
+} else {
+    $revision = null;
+}
+
+// Build
 $response['build'] = Build::MarshalResponseArray($build, $extra_build_fields);
 
 $builderror = $service->get(BuildError::class);

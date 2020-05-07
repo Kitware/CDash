@@ -60,10 +60,11 @@ if (Auth::check()) {
             $lname = $_POST['lname'];
             $institution = $_POST['institution'];
             if ($email && $passwd && $passwd2 && $fname && $lname && $institution) {
-                $new_user = User::firstWhere('email', $email);
+                $new_user = User::where('email', $email)->first();
                 if (!is_null($new_user)) {
                     $xml .= add_XML_value('error', 'Email already registered!');
                 } else {
+                    $new_user = new User();
                     $passwordHash = password_hash($passwd, PASSWORD_DEFAULT);
                     if ($passwordHash === false) {
                         $xml .= add_XML_value('error', 'Failed to hash password');

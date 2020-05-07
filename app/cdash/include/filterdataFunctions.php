@@ -1357,7 +1357,6 @@ function build_survives_filters($build_response, $filters, $filtercombine)
                 break;
 
             default:
-                continue;
                 break;
         }
 

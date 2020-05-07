@@ -257,7 +257,7 @@ class QueryTests extends ResultsApi
                 "SELECT * FROM measurement WHERE projectid = ? AND name = 'Processors'");
         pdo_execute($stmt, [$this->project->Id]);
         $row = $stmt->fetch();
-        if ($row['summarypage'] == 1) {
+        if (is_array($row) && $row['summarypage'] == 1) {
             $response['hasprocessors'] = true;
             $proc_select = ', tm.value';
             $proc_join =
