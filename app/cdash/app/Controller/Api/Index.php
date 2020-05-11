@@ -198,7 +198,7 @@ class Index extends ResultsApi
                     $whereClauses[] = "b.name LIKE '" . $rule['buildname'] . "'";
                 }
                 if (!empty($whereClauses)) {
-                    $where = 'WHERE ' . implode($whereClauses, ' AND ');
+                    $where = 'WHERE ' . implode(' AND ', $whereClauses);
                     $where .= " AND b.starttime<'{$this->endDate}'";
                 }
 
