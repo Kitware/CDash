@@ -29,16 +29,12 @@ class LimitedBuildsTestCase extends KWWebTestCase
     public function testSetup()
     {
         // Create testing projects.
-        $insert_stmt = $this->PDO->prepare('INSERT INTO project (name) VALUES (?)');
-
-        $insert_stmt->execute(['Limited']);
         $limited = new Project();
-        $limited->Id = pdo_insert_id('project');
+        $limited->Id = $this->createProject(['Name' => 'Limited']);
         $this->Projects[] = $limited;
 
-        $insert_stmt->execute(['Unlimited']);
         $unlimited = new Project();
-        $unlimited->Id = pdo_insert_id('project');
+        $unlimited->Id = $this->createProject(['Name' => 'Unlimited']);
         $this->Projects[] = $unlimited;
     }
 
