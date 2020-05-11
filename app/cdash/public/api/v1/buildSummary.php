@@ -254,21 +254,25 @@ $configure = pdo_query(
         JOIN build2configure b2c ON b2c.configureid=c.id
         WHERE b2c.buildid='$buildid'");
 $configure_array = pdo_fetch_array($configure);
+if (is_array($configure_array)) {
+    $response['hasconfigure'] = true;
+    $nerrors = 0;
+    if ($configure_array['status'] != 0) {
+        $nerrors = 1;
+    }
 
-$nerrors = 0;
-if ($configure_array['status'] != 0) {
-    $nerrors = 1;
+    $configure_response['nerrors'] = $nerrors;
+    $configure_response['nwarnings'] = $configure_array['warnings'];
+
+    $configure_response['status'] = $configure_array['status'];
+    $configure_response['command'] = $configure_array['command'];
+    $configure_response['output'] = $configure_array['log'];
+    $configure_response['starttime'] = date(FMT_DATETIMETZ, strtotime($configure_array['starttime'] . ' UTC'));
+    $configure_response['endtime'] = date(FMT_DATETIMETZ, strtotime($configure_array['endtime'] . ' UTC'));
+    $response['configure'] = $configure_response;
+} else {
+    $response['hasconfigure'] = false;
 }
-
-$configure_response['nerrors'] = $nerrors;
-$configure_response['nwarnings'] = $configure_array['warnings'];
-
-$configure_response['status'] = $configure_array['status'];
-$configure_response['command'] = $configure_array['command'];
-$configure_response['output'] = $configure_array['log'];
-$configure_response['starttime'] = date(FMT_DATETIMETZ, strtotime($configure_array['starttime'] . ' UTC'));
-$configure_response['endtime'] = date(FMT_DATETIMETZ, strtotime($configure_array['endtime'] . ' UTC'));
-$response['configure'] = $configure_response;
 
 // Test
 $test_response = [];
