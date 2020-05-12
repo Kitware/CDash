@@ -1194,7 +1194,7 @@ function generate_filterdata_sql($filterdata)
             }
             if (count($subclauses) > 0) {
                 $clauses[] =
-                    '(' . join($subclauses, " $sql_other_combine ") . ')';
+                    '(' . implode(" $sql_other_combine ", $subclauses) . ')';
             }
         } else {
             // Top-level filters.
@@ -1208,7 +1208,7 @@ function generate_filterdata_sql($filterdata)
     if (count($clauses) == 0) {
         $sql = '';
     } else {
-        $sql = 'AND (' . join($clauses, " $sql_combine ") . ')';
+        $sql = 'AND (' . implode(" $sql_combine ", $clauses) . ')';
     }
     return $sql;
 }
@@ -1357,7 +1357,6 @@ function build_survives_filters($build_response, $filters, $filtercombine)
                 break;
 
             default:
-                continue;
                 break;
         }
 

@@ -53,14 +53,10 @@ class OpenCoverCoverageTestCase extends KWWebTestCase
         // Do the PUT submission to actually upload our data.
         $puturl = $this->url."/submit.php?type=OpenCoverTar&md5=c0eeaf6be9838eacc75e652d6c85f925&filename=OpenCoverTest.tar&buildid=$buildid";
         $filename  = dirname(__FILE__)."/data/OpenCoverTest.tar";
-
         $put_result = $this->uploadfile($puturl, $filename);
-        $put_json = json_decode($put_result, true);
-
-        if ($put_json["status"] != 0) {
+        if (strpos($put_result, '{"status":0}') === false) {
             $this->fail(
-                "PUT returned " . $put_json["status"] . ":\n" .
-                $put_json["description"]. "\n");
+                "status:0 not found in PUT results:\n$put_result\n");
             return 1;
         }
 
@@ -111,12 +107,9 @@ class OpenCoverCoverageTestCase extends KWWebTestCase
         $filename  = dirname(__FILE__)."/data/OpenCoverTestWithDataJson.tar";
 
         $put_result = $this->uploadfile($puturl, $filename);
-        $put_json = json_decode($put_result, true);
-
-        if ($put_json["status"] != 0) {
+        if (strpos($put_result, '{"status":0}') === false) {
             $this->fail(
-                "PUT returned " . $put_json["status"] . ":\n" .
-                $put_json["description"]. "\n");
+                "status:0 not found in PUT results:\n$put_result\n");
             return 1;
         }
 

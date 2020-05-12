@@ -495,7 +495,7 @@ class BazelJSONHandler extends NonSaxHandler
                         // Skip this defect if we cannot deduce what SubProject
                         // it belongs to.
                         if (empty($subproject_name)) {
-                            continue;
+                            break;
                         }
                         $child_build = $this->InitializeSubProjectBuild($subproject_name);
                         if (!is_null($child_build)) {
@@ -545,7 +545,7 @@ class BazelJSONHandler extends NonSaxHandler
                     // Skip this defect if we cannot deduce what SubProject
                     // it belongs to.
                     if (empty($subproject_name)) {
-                        continue;
+                        break;
                     }
                 }
                 $test_name = $json_array['id']['testSummary']['label'];

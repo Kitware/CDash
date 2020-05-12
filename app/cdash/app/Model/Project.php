@@ -857,6 +857,9 @@ class Project
             AND parentid IN (-1, 0)
             ORDER BY starttime ASC LIMIT 1");
         $first_build = pdo_fetch_array($project);
+        if (!is_array($first_build)) {
+            return 0;
+        }
         $first_build = $first_build['starttime'];
         $nb_days = strtotime($endUTCdate) - strtotime($first_build);
         $nb_days = intval($nb_days / 86400) + 1;

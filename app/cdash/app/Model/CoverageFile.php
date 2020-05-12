@@ -82,40 +82,42 @@ class CoverageFile
             $stmt->bindParam(':fullpath', $this->FullPath);
             pdo_execute($stmt);
             $old_fileid_row = $stmt->fetch();
-            $prevfileid = $old_fileid_row['fileid'];
+            if (is_array($old_fileid_row)) {
+                $prevfileid = $old_fileid_row['fileid'];
 
-            $stmt = $this->PDO->prepare(
-                    'UPDATE coverage SET fileid=:fileid
-                    WHERE buildid=:buildid AND fileid=:prevfileid');
-            $stmt->bindParam(':fileid', $this->Id);
-            $stmt->bindParam(':buildid', $buildid);
-            $stmt->bindParam(':prevfileid', $prevfileid);
-            pdo_execute($stmt);
-
-            // Similarly update any labels if necessary.
-            $stmt = $this->PDO->prepare(
-                    'SELECT COUNT(*) AS c FROM label2coveragefile
-                    WHERE buildid=:buildid AND coveragefileid=:prevfileid');
-            $stmt->bindParam(':buildid', $buildid);
-            $stmt->bindParam(':prevfileid', $prevfileid);
-            pdo_execute($stmt);
-            $count_labels_row = $stmt->fetch(PDO::FETCH_ASSOC);
-            if ($count_labels_row['c'] > 0) {
                 $stmt = $this->PDO->prepare(
-                        'UPDATE label2coveragefile SET coveragefileid=:fileid
-                        WHERE buildid=:buildid AND coveragefileid=:prevfileid');
+                        'UPDATE coverage SET fileid=:fileid
+                        WHERE buildid=:buildid AND fileid=:prevfileid');
                 $stmt->bindParam(':fileid', $this->Id);
                 $stmt->bindParam(':buildid', $buildid);
                 $stmt->bindParam(':prevfileid', $prevfileid);
                 pdo_execute($stmt);
-            }
 
-            // Remove the file if the crc32 is NULL
-            $stmt = $this->PDO->prepare(
-                    'DELETE FROM coveragefile
-                    WHERE id=:prevfileid AND file IS NULL AND crc32 IS NULL');
-            $stmt->bindParam(':prevfileid', $prevfileid);
-            pdo_execute($stmt);
+                // Similarly update any labels if necessary.
+                $stmt = $this->PDO->prepare(
+                        'SELECT COUNT(*) AS c FROM label2coveragefile
+                        WHERE buildid=:buildid AND coveragefileid=:prevfileid');
+                $stmt->bindParam(':buildid', $buildid);
+                $stmt->bindParam(':prevfileid', $prevfileid);
+                pdo_execute($stmt);
+                $count_labels_row = $stmt->fetch(PDO::FETCH_ASSOC);
+                if ($count_labels_row['c'] > 0) {
+                    $stmt = $this->PDO->prepare(
+                            'UPDATE label2coveragefile SET coveragefileid=:fileid
+                            WHERE buildid=:buildid AND coveragefileid=:prevfileid');
+                    $stmt->bindParam(':fileid', $this->Id);
+                    $stmt->bindParam(':buildid', $buildid);
+                    $stmt->bindParam(':prevfileid', $prevfileid);
+                    pdo_execute($stmt);
+                }
+
+                // Remove the file if the crc32 is NULL
+                $stmt = $this->PDO->prepare(
+                        'DELETE FROM coveragefile
+                        WHERE id=:prevfileid AND file IS NULL AND crc32 IS NULL');
+                $stmt->bindParam(':prevfileid', $prevfileid);
+                pdo_execute($stmt);
+            }
         } else {
             // The file doesn't exist in the database
 

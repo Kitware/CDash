@@ -240,24 +240,32 @@ while ($row = pdo_fetch_array($result)) {
     $build_response = array();
 
     // Find the repository revision
-    $update_response = array();
+    $update_response = [
+        'revision' => '',
+        'priorrevision' => '',
+        'path' => '',
+        'revisionurl' => '',
+        'revisiondiff' => ''
+    ];
     // Return the status
     $status_array = pdo_fetch_array(pdo_query("SELECT status,revision,priorrevision,path
                 FROM buildupdate,build2update AS b2u
                 WHERE b2u.updateid=buildupdate.id
                 AND b2u.buildid='$buildid'"));
-    if (strlen($status_array['status']) > 0 && $status_array['status'] != '0') {
-        $update_response['status'] = $status_array['status'];
-    } else {
-        $update_response['status'] = ''; // empty status
+    if (is_array($status_array)) {
+        if (strlen($status_array['status']) > 0 && $status_array['status'] != '0') {
+            $update_response['status'] = $status_array['status'];
+        } else {
+            $update_response['status'] = ''; // empty status
+        }
+        $update_response['revision'] = $status_array['revision'];
+        $update_response['priorrevision'] = $status_array['priorrevision'];
+        $update_response['path'] = $status_array['path'];
+        $update_response['revisionurl'] =
+            get_revision_url($projectid, $status_array['revision'], $status_array['priorrevision']);
+        $update_response['revisiondiff'] =
+            get_revision_url($projectid, $status_array['priorrevision'], ''); // no prior prior revision...
     }
-    $update_response['revision'] = $status_array['revision'];
-    $update_response['priorrevision'] = $status_array['priorrevision'];
-    $update_response['path'] = $status_array['path'];
-    $update_response['revisionurl'] =
-        get_revision_url($projectid, $status_array['revision'], $status_array['priorrevision']);
-    $update_response['revisiondiff'] =
-        get_revision_url($projectid, $status_array['priorrevision'], ''); // no prior prior revision...
     $build_response['update'] = $update_response;
 
     $build_response['site'] = $row['sitename'];

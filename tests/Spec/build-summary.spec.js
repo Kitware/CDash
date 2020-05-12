@@ -54,6 +54,7 @@ describe('BuildSummary', function() {
         status: 0,
       },
       coverage: 98,
+      hasconfigure: true,
       hascoverage: true,
       hasupdate: true,
       newissueurl: null,

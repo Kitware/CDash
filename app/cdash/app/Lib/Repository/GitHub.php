@@ -148,7 +148,9 @@ class GitHub implements RepositoryInterface
         $this->apiClient->authenticate($jwt, null, GitHubClient::AUTH_JWT);
 
         $token = $this->apiClient->api('apps')->createInstallationToken($this->installationId);
-        $this->apiClient->authenticate($token['token'], null, GitHubClient::AUTH_HTTP_TOKEN);
+        if ($token) {
+            $this->apiClient->authenticate($token['token'], null, GitHubClient::AUTH_HTTP_TOKEN);
+        }
         return true;
     }
 

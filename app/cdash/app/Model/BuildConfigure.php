@@ -104,7 +104,7 @@ class BuildConfigure
     /** Check if a configure record exists for these contents. */
     public function ExistsByCrc32()
     {
-        if ($this->Command === '' || $this->Log === '' || $this->Status === '') {
+        if ($this->Command === '' || $this->Status === '') {
             return false;
         }
         $this->Crc32 = crc32($this->Command . $this->Log . $this->Status);

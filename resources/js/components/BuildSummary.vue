@@ -125,7 +125,10 @@
                   </b>
                 </td>
               </tr>
-              <tr class="tr-even">
+              <tr
+                v-if="cdash.hasconfigure"
+                class="tr-even"
+              >
                 <td>
                   <a href="#Configure">
                     <b>Configure</b>
@@ -246,7 +249,10 @@
                 </td>
               </tr>
 
-              <tr class="tr-even">
+              <tr
+                v-if="cdash.hasconfigure"
+                class="tr-even"
+              >
                 <td><b>Configure</b></td>
                 <td
                   align="right"
@@ -627,40 +633,42 @@
       </div>
 
       <!-- Configure -->
-      <div
-        id="Configure"
-        class="title-divider"
-      >
-        Configure ({{ cdash.configure.nerrors }} errors, {{ cdash.configure.nwarnings }} warnings)
+      <div v-if="cdash.hasconfigure">
+        <div
+          id="Configure"
+          class="title-divider"
+        >
+          Configure ({{ cdash.configure.nerrors }} errors, {{ cdash.configure.nwarnings }} warnings)
+        </div>
+        <br>
+
+        <b>Start Time: </b>{{ cdash.configure.starttime }}
+        <br>
+
+        <b>End Time: </b>{{ cdash.configure.endtime }}
+        <br>
+
+        <b>Configure Command: </b> {{ cdash.configure.command }}
+        <br>
+
+        <b>Configure Return Value: </b> {{ cdash.configure.status }}
+        <br>
+
+        <b>Configure Output: </b>
+        <br>
+
+        <pre>{{ cdash.configure.output }}</pre>
+        <br>
+
+        <a
+          id="configure_link"
+          :href="$baseURL + '/build/' + cdash.build.id + '/configure'"
+        >
+          View Configure Summary
+        </a>
+        <br>
+        <br>
       </div>
-      <br>
-
-      <b>Start Time: </b>{{ cdash.configure.starttime }}
-      <br>
-
-      <b>End Time: </b>{{ cdash.configure.endtime }}
-      <br>
-
-      <b>Configure Command: </b> {{ cdash.configure.command }}
-      <br>
-
-      <b>Configure Return Value: </b> {{ cdash.configure.status }}
-      <br>
-
-      <b>Configure Output: </b>
-      <br>
-
-      <pre>{{ cdash.configure.output }}</pre>
-      <br>
-
-      <a
-        id="configure_link"
-        :href="$baseURL + '/build/' + cdash.build.id + '/configure'"
-      >
-        View Configure Summary
-      </a>
-      <br>
-      <br>
 
       <!-- Build -->
       <div

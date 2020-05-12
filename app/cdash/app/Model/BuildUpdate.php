@@ -281,8 +281,7 @@ class BuildUpdate
     public function GetNumberOfWarnings()
     {
         if (!$this->UpdateId) {
-            echo 'BuildUpdate::GetNumberOfWarnings(): Id not set';
-            return false;
+            return 0;
         }
 
         $warnings = pdo_query('SELECT warnings FROM buildupdate WHERE id=' . qnum($this->UpdateId));
@@ -309,9 +308,9 @@ class BuildUpdate
         $builderror = pdo_query('SELECT status FROM buildupdate AS u, build2update AS b2u WHERE u.id=b2u.updateid AND b2u.buildid=' . qnum($this->BuildId));
         $updatestatus_array = pdo_fetch_array($builderror);
 
-        if (strlen($updatestatus_array['status']) > 0 &&
-            $updatestatus_array['status'] != '0'
-        ) {
+        if (is_array($updatestatus_array) &&
+                strlen($updatestatus_array['status']) > 0 &&
+                $updatestatus_array['status'] != '0') {
             return 1;
         }
         return 0;
