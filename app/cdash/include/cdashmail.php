@@ -66,4 +66,6 @@ function cdashmail($to, $subject, $body, $headers = false)
             ->from($config->get('CDASH_EMAIL_FROM'))
             ->replyTo($config->get('CDASH_EMAIL_REPLY'));
     });
+
+    return true;
 }
