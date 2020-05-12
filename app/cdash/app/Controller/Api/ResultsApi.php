@@ -80,6 +80,7 @@ class ResultsApi extends ProjectApi
 
     public function setDate($date)
     {
+        $this->project->Fill();
         list($previousdate, $beginning_timestamp, $nextdate, $d) =
             get_dates($date, $this->project->NightlyTime);
         if (is_null($date)) {
