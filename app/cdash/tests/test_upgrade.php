@@ -128,12 +128,6 @@ class UpgradeTestCase extends KWWebTestCase
         }
         //fake the javascript calls...
         $this->get($this->url . '/upgrade.php?upgrade-tables=1');
-        $this->get($this->url . '/upgrade.php?upgrade-0-8=1');
-        $this->get($this->url . '/upgrade.php?upgrade-1-0=1');
-        $this->get($this->url . '/upgrade.php?upgrade-1-2=1');
-        $this->get($this->url . '/upgrade.php?upgrade-1-4=1');
-        $this->get($this->url . '/upgrade.php?upgrade-1-6=1');
-        $this->get($this->url . '/upgrade.php?upgrade-1-8=1');
         //some of these upgrades pollute the log file
         //clear it out so that it doesn't cause subsequent tests to fail
         $this->deleteLog($this->logfilename);
