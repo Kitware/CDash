@@ -5,14 +5,18 @@
     </a>
   </div>
   <div id="footerlinks" class="clearfix">
-    <a href="http://www.cdash.org" class="footerlogo"><img src="img/cdash.png?rev=2019-05-08" border="0" height="30" alt="CDash logo"/></a>
-    <span id="footertext">
+    <a href="http://www.cdash.org" class="footerlogo"><img src="img/cdash.png?rev=2019-05-08" border="0" height="30" alt="CDash logo" class="pull-left"/></a>
+    <span id="footertext" class="pull-right">
       CDash {{::cdash.version}}
       © <a href="http://www.kitware.com">Kitware</a> |
       <a href="https://github.com/Kitware/CDash/issues" target="blank">Report problems</a> |
       <a ng-href="{{cdash.endpoint}}">View as JSON</a>
       <span ng-if="::cdash.generationtime">
         | {{cdash.generationtime}}s
+      </span>
+      <span ng-if="::cdash.currentdate">
+        <br>
+        Current Testing Day {{ ::cdash.currentdate }} | Started at {{ ::cdash.nightlytime }}
       </span>
     </span>
   </div>
