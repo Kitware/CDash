@@ -16,6 +16,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Models\User;
+use App\Services\TestingDay;
 
 use CDash\Config;
 use CDash\Database;
@@ -1783,6 +1784,7 @@ function get_dashboard_JSON($projectname, $date, &$response)
     $response['date'] = $date;
     $response['unixtimestamp'] = $currentstarttime;
     $response['startdate'] = date('l, F d Y H:i:s', $currentstarttime);
+    $response['currentdate'] = TestingDay::get($project, gmdate(FMT_DATETIME));
     $response['vcs'] = make_cdash_url(htmlentities($project_array['cvsurl']));
     $response['bugtracker'] = make_cdash_url(htmlentities($project_array['bugtrackerurl']));
     $response['googletracker'] = htmlentities($project_array['googletracker']);
@@ -1794,7 +1796,7 @@ function get_dashboard_JSON($projectname, $date, &$response)
     $response['previousdate'] = $previousdate;
     $response['nextdate'] = $nextdate;
     $response['logoid'] = getLogoID($project->Id);
-
+    $response['nightlytime'] = date('H:i T', strtotime($project_array['nightlytime']));
     if (empty($project_array['homeurl'])) {
         $response['home'] = 'index.php?project=' . urlencode($project_array['name']);
     } else {
