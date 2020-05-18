@@ -17,6 +17,7 @@
 use App\Models\BuildTest;
 use App\Models\Test;
 
+use CDash\Messaging\Notification\NotifyOn;
 use CDash\Messaging\Preferences\BitmaskNotificationPreferences;
 use CDash\Messaging\Topic\TestFailureTopic;
 use CDash\Messaging\Topic\Topic;
@@ -311,5 +312,42 @@ class TestFailureTopicTest extends \CDash\Test\CDashTestCase
         $subscriber = new Subscriber($preferences);
 
         $this->assertTrue($sut->isSubscribedToBy($subscriber));
+    }
+
+    public function testSubscribesToRedundantBuild()
+    {
+        // Make a build with a redundant (not new) test failure.
+        $diff = $this->createNew('testfailedpositive');
+        $diff['testfailedpositive'] = 0;
+        $build = $this->getMockBuilder(Build::class)
+            ->setMethods(['GetErrorDifferences', 'GetPreviousBuildId', 'GetNumberOfFailedTests'])
+            ->getMock();
+        $build->expects($this->any())
+            ->method('GetErrorDifferences')
+            ->willReturn($diff);
+        $build->expects($this->any())
+            ->method('GetPreviousBuildId')
+            ->willReturn(1);
+        $build->expects($this->any())
+            ->method('GetNumberOfFailedTests')
+            ->willReturn(1);
+        $build->Id = 2;
+
+        // Verify that a user will not be notified when redundant
+        // notifications are disabled.
+        $bitmask = BitmaskNotificationPreferences::EMAIL_TEST;
+        $preferences = new BitmaskNotificationPreferences($bitmask);
+        $preferences->set(NotifyOn::REDUNDANT, 0);
+        $subscriber = new Subscriber($preferences);
+
+        $sut = new TestFailureTopic();
+        $sut->setSubscriber($subscriber);
+        $this->assertFalse($sut->subscribesToBuild($build));
+
+        // Verify that the notification will be sent when the redundant
+        // flag is enabled.
+        $preferences->set(NotifyOn::REDUNDANT, 1);
+        $subscriber = new Subscriber($preferences);
+        $this->assertTrue($sut->subscribesToBuild($build));
     }
 }

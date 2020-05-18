@@ -28,6 +28,16 @@ class BuildErrorTopic extends Topic implements Decoratable, Fixable, Labelable
      */
     public function subscribesToBuild(Build $build)
     {
+        if ($this->subscriber) {
+            $send_redundant = $this->subscriber->getNotificationPreferences()->get(NotifyOn::REDUNDANT);
+            if ($send_redundant) {
+                $function_name = 'GetNumberOf' . $this->getTopicDescription();
+                if ($build->$function_name() > 0) {
+                    return true;
+                }
+            }
+        }
+
         $subscribe = false;
         $this->diff = $build->GetDiffWithPreviousBuild();
         if ($this->diff) {

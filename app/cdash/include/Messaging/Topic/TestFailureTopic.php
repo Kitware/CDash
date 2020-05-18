@@ -48,6 +48,13 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
      */
     public function subscribesToBuild(Build $build)
     {
+        if ($this->subscriber) {
+            $preferences = $this->subscriber->getNotificationPreferences();
+            if ($preferences->get(NotifyOn::REDUNDANT) && $build->GetNumberOfFailedTests() > 0) {
+                return true;
+            }
+        }
+
         $subscribe = false;
         $this->diff = $build->GetDiffWithPreviousBuild();
         if ($this->diff) {

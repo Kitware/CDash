@@ -238,4 +238,34 @@ class BuildErrorTopicTest extends \CDash\Test\CDashTestCase
 
         $this->assertTrue($sut->isSubscribedToBy($subscriber));
     }
+
+    public function testSubscribesToRedundantBuild()
+    {
+        // Create a build with a redundant warning.
+        $build = $this->getMockBuild();
+        $build->expects($this->any())
+            ->method('GetDiffWithPreviousBuild')
+            ->willReturn(['BuildWarning' => ['new' => 0]]);
+        $build->expects($this->any())
+            ->method('GetNumberOfWarnings')
+            ->willReturn(1);
+
+        // Verify that a user will not be notified when redundant
+        // notifications are disabled.
+        $bitmask = BitmaskNotificationPreferences::EMAIL_WARNING;
+        $preferences = new BitmaskNotificationPreferences($bitmask);
+        $preferences->set(NotifyOn::REDUNDANT, 0);
+        $subscriber = new Subscriber($preferences);
+
+        $sut = new BuildErrorTopic();
+        $sut->setType(Build::TYPE_WARN);
+        $sut->setSubscriber($subscriber);
+        $this->assertFalse($sut->subscribesToBuild($build));
+
+        // Verify that the notification will be sent when the redundant
+        // flag is enabled.
+        $preferences->set(NotifyOn::REDUNDANT, 1);
+        $subscriber = new Subscriber($preferences);
+        $this->assertTrue($sut->subscribesToBuild($build));
+    }
 }
