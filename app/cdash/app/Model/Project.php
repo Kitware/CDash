@@ -1562,6 +1562,7 @@ class Project
     public function GetSubscriberCollection()
     {
         if (!$this->SubscriberCollection) {
+            $this->Fill();
             $this->SubscriberCollection = $this->GetProjectSubscribers();
         }
 
