@@ -25,9 +25,13 @@
           border="0"
           height="30"
           alt="CDash logo"
+          class="float-left"
         >
       </a>
-      <span id="footertext">
+      <span
+        id="footertext"
+        class="float-right"
+      >
         CDash
         {{ version }} © <a href="http://www.kitware.com">Kitware</a>
         | <a
@@ -37,6 +41,10 @@
         <a :href="endpoint">View as JSON</a>
         <span v-if="generationtime">
           | {{ generationtime }}s
+        </span>
+        <span v-if="currentdate">
+          <br>
+          Current Testing Day {{ currentdate }} | Started at {{ nightlytime }}
         </span>
       </span>
     </div>
@@ -64,8 +72,10 @@ export default {
 
   data() {
     return {
+      currentdate: null,
       endpoint: null,
       generationtime: null,
+      nightlytime: null,
     }
   },
 
@@ -76,6 +86,12 @@ export default {
       }
       if (cdash.endpoint) {
         this.endpoint = cdash.endpoint;
+      }
+      if (cdash.currentdate) {
+        this.currentdate = cdash.currentdate;
+      }
+      if (cdash.nightlytime) {
+        this.nightlytime = cdash.nightlytime;
       }
     });
   },
