@@ -11,6 +11,7 @@ import BuildSummary from "./components/BuildSummary";
 import EditProject from "./components/EditProject";
 import PageHeader from "./components/PageHeader";
 import PageFooter from "./components/PageFooter";
+import TestDetails from "./components/TestDetails";
 
 const cdash_components = {
   BuildConfigure,
@@ -18,7 +19,8 @@ const cdash_components = {
   BuildSummary,
   EditProject,
   PageHeader,
-  PageFooter
+  PageFooter,
+  TestDetails
 };
 
 /**

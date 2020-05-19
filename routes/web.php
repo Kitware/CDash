@@ -58,5 +58,16 @@ Route::get('/viewNotes.php', function (Request $request) {
 Route::get('/project/{id}/edit', 'Views\EditProjectController@edit');
 Route::get('/project/new', 'Views\EditProjectController@create');
 
+Route::get('/test/{id}', 'Views\TestController@details');
+Route::get('/testDetails.php', function (Request $request) {
+    $buildid = $request->query('build');
+    $testid = $request->query('test');
+    $buildtest = \App\Models\BuildTest::where('buildid', $buildid)->where('testid', $testid)->first();
+    if ($buildtest) {
+        return redirect("/test/{$buildtest->id}");
+    }
+    abort(404);
+});
+
 // this *MUST* be the last route in the file
 Route::any('{url}', 'CDash')->where('url', '.*');

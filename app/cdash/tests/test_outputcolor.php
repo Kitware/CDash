@@ -46,14 +46,14 @@ class OutputColorTestCase extends KWWebTestCase
             return;
         }
 
-        $buildid_results = pdo_single_row_query('SELECT id FROM build WHERE projectid = ' . $projectid);
-        $buildid = $buildid_results['id'];
-
-        $testid_results = pdo_single_row_query("SELECT id FROM test WHERE name = 'colortest_long'");
-        $testid = $testid_results['id'];
+        $buildtestid_results = pdo_single_row_query(
+            "SELECT build2test.id FROM build2test
+            JOIN test ON (build2test.testid = test.id)
+            WHERE test.name = 'colortest_long'");
+        $buildtestid = $buildtestid_results['id'];
 
         // Get the output.
-        $content = $this->connect($this->url . '/api/v1/testDetails.php?build=' . $buildid . '&test=' . $testid);
+        $content = $this->connect($this->url . "/api/v1/testDetails.php?buildtestid=$buildtestid");
         $json_content = json_decode($content, true);
         $output = $json_content['test']['output'];
 

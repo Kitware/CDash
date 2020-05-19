@@ -56,7 +56,7 @@ class BuildTest extends Model
     public function GetUrlForSelf()
     {
         $host_base = \Config::get('app.url');
-        return "{$host_base}/testDetails.php?test={$this->outputid}&build={$this->buildid}";
+        return "{$host_base}/test/{$this->id}";
     }
 
 
@@ -67,6 +67,7 @@ class BuildTest extends Model
         $data['name'] = $name;
         $data['status'] = 'missing';
         $data['id'] = '';
+        $data['buildtestid'] = '';
         $data['time'] = '';
         $data['details'] = '';
         $data["newstatus"] = false;
@@ -93,6 +94,7 @@ class BuildTest extends Model
         return $statuses[$status];
     }
 
+    // Only used in api/v1/viewTest.php
     public static function marshal($data, $buildid, $projectid, $projectshowtesttime, $testtimemaxstatus, $testdate)
     {
         require_once 'include/common.php';
@@ -100,7 +102,7 @@ class BuildTest extends Model
         if ($data['details'] === 'Disabled') {
             $marshaledStatus = array('Not Run', 'disabled-test');
         }
-        $marshaledData = array(
+        $marshaledData = [
             'id' => $data['id'],
             'buildid' => $buildid,
             'status' => $marshaledStatus[0],
@@ -111,7 +113,8 @@ class BuildTest extends Model
             'details' => $data['details'],
             'summaryLink' => "testSummary.php?project=$projectid&name=" . urlencode($data['name']) . "&date=$testdate",
             'summary' => 'Summary', /* Default value later replaced by AJAX */
-            'detailsLink' => "testDetails.php?test=" . $data['id'] . "&build=$buildid");
+            'detailsLink' => "test/{$data['buildtestid']}"
+        ];
 
         if ($data['newstatus']) {
             $marshaledData['new'] = '1';

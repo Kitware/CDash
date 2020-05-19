@@ -298,7 +298,7 @@ class QueryTests extends ResultsApi
         }
 
         $sql = "SELECT b.id, b.name, b.starttime, b.siteid, b.parentid,
-            build2test.testid AS testid, build2test.details, build2test.status,
+            build2test.id AS buildtestid, build2test.details, build2test.status,
             build2test.time, build2test.timestatus, site.name AS sitename,
             test.name AS testname $proc_select $output_select
                 FROM build AS b
@@ -327,7 +327,7 @@ class QueryTests extends ResultsApi
             }
 
             $buildid = $row['id'];
-            $testid = $row['testid'];
+            $buildtestid = $row['buildtestid'];
 
             $build['testname'] = $row['testname'];
             $build['site'] = $row['sitename'];
@@ -348,7 +348,7 @@ class QueryTests extends ResultsApi
             $buildSummaryLink = "build/$buildid";
             $build['buildSummaryLink'] = $buildSummaryLink;
 
-            $testDetailsLink = "testDetails.php?test=$testid&build=$buildid";
+            $testDetailsLink = "test/$buildtestid";
             $build['testDetailsLink'] = $testDetailsLink;
 
             switch ($row['status']) {

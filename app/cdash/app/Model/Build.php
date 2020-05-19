@@ -1111,7 +1111,7 @@ class Build
         }
 
         $sql = "
-            SELECT t.name, t.id, b2t.details
+            SELECT t.name, b2t.id AS buildtestid, b2t.details
             FROM test t
             JOIN build2test b2t ON t.id = b2t.testid
             WHERE b2t.buildid = :buildid

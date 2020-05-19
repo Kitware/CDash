@@ -1,10 +1,11 @@
 module.exports = {
   extends: [
     // add more generic rulesets here
-    'plugin:vue/recommended'
+    "plugin:vue/recommended"
   ],
   rules: {
     "indent": ["error", 2],
-    'vue/require-v-for-key': "off",
+    "vue/no-v-html": "off",
+    "vue/require-v-for-key": "off",
   }
 }

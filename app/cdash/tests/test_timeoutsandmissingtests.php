@@ -110,8 +110,8 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
             'Type: Nightly',
             'Total Failing Tests: 2',
             '*Failing Tests*',
-            "SleepTimer1 | Completed (Timeout) | ({$url}/testDetails.php?test=",
-            "SleepTimer2 | Completed (Timeout) | ({$url}/testDetails.php?test=",
+            "SleepTimer1 | Completed (Timeout) | ({$url}/test/",
+            "SleepTimer2 | Completed (Timeout) | ({$url}/test/",
             '-CDash on',
         ];
         if ($this->assertLogContains($expected, 19)) {

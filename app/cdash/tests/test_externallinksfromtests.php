@@ -30,11 +30,11 @@ class ExternalLinksFromTestsTestCase extends KWWebTestCase
         $buildid = $result['id'];
 
         $result = pdo_single_row_query(
-            "SELECT testid FROM build2test WHERE buildid=$buildid");
-        $testid = $result['testid'];
+            "SELECT id FROM build2test WHERE buildid=$buildid");
+        $buildtestid = $result['id'];
 
         // Use the API to verify that our external link was parsed properly.
-        $this->get($this->url . "/api/v1/testDetails.php?test=$testid&build=$buildid");
+        $this->get($this->url . "/api/v1/testDetails.php?buildtestid=$buildtestid");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $measurement = array_pop($jsonobj['test']['measurements']);
