@@ -39,14 +39,9 @@
 
       <br>
 
-      <li v-for="(item, index) in items">
-        {{ parentMessage }} - {{ index }} - {{ item.message }}
-      </li>
-
-
       <a
         v-for="(note, index) in cdash.notes"
-        :href="`#${index}`"
+        :href="`#note${index}`"
       >
         <img
           :src="$baseURL + '/img/document.png'"
@@ -65,12 +60,16 @@
       <div v-for="(note, index) in cdash.notes">
         <div
           :id="`note${index}`"
-          class="title-divider"
+          class="title-divider column-header"
+          @click="note.show = !note.show"
         >
           <b>{{ note.time }} -- {{ note.name }}</b>
+          <i :class="[note.show ? 'glyphicon-chevron-down' : 'glyphicon-chevron-right', 'glyphicon']" />
         </div>
         <br>
-        <pre>{{ note.text }}</pre>
+        <transition name="fade">
+          <pre v-show="note.show">{{ note.text }}</pre>
+        </transition>
         <br>
       </div>
       <br>
@@ -99,6 +98,17 @@ export default {
     this.$axios
       .get(endpoint_path)
       .then(response => {
+        // Collapse notes by default if there's more than one.
+        var showNotes = true;
+        this.cdash.multiple_notes = false;
+        if (response.data.notes.length > 1) {
+          this.cdash.multiple_notes = true;
+          showNotes = false;
+        }
+        for (var i = 0; i < response.data.notes.length; i++) {
+          response.data.notes[i].show = showNotes;
+        }
+
         this.cdash = response.data;
         this.cdash.endpoint = this.$baseURL + endpoint_path;
         this.$root.$emit('api-loaded', this.cdash);
