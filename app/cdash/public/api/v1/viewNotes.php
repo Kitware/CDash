@@ -49,9 +49,9 @@ get_dashboard_JSON_by_name($project->Name, $date, $response);
 // Menu
 $menu = array();
 if ($build->GetParentId() > 0) {
-    $menu['back'] = 'index.php?project=' . urlencode($project->Name) . "&parentid={$build->GetParentId()}";
+    $menu['back'] = '/index.php?project=' . urlencode($project->Name) . "&parentid={$build->GetParentId()}";
 } else {
-    $menu['back'] = 'index.php?project=' . urlencode($project->Name) . '&date=' . $date;
+    $menu['back'] = '/index.php?project=' . urlencode($project->Name) . '&date=' . $date;
 }
 
 $previous_buildid = $build->GetPreviousBuildId();
@@ -59,15 +59,15 @@ $current_buildid = $build->GetCurrentBuildId();
 $next_buildid = $build->GetNextBuildId();
 
 if ($previous_buildid > 0) {
-    $menu['previous'] = "viewNotes.php?buildid=$previous_buildid";
+    $menu['previous'] = "/build/$previous_buildid/notes";
 } else {
     $menu['previous'] = false;
 }
 
-$menu['current'] = "viewNotes.php?buildid=$current_buildid";
+$menu['current'] = "/build/$current_buildid/notes";
 
 if ($next_buildid > 0) {
-    $menu['next'] = "viewNotes.php?buildid=$next_buildid";
+    $menu['next'] = "/build/$next_buildid/notes";
 } else {
     $menu['next'] = false;
 }
