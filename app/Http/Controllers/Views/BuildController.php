@@ -42,32 +42,36 @@ class BuildController extends ProjectController
     // Render the build configure page.
     public function configure($build_id = null)
     {
-        $this->setup($build_id);
-        if (!$this->authOk) {
-            return $this->redirectToLogin();
-        }
-        return view('build.configure')
-            ->with('build', json_encode($this->build))
-            ->with('cdashCss', $this->cdashCss)
-            ->with('date', json_encode($this->date))
-            ->with('logo', json_encode($this->logo))
-            ->with('projectname', json_encode($this->project->Name))
-            ->with('title', "{$this->project->Name} : Configure");
+        return $this->renderBuildPage($build_id, 'configure');
+    }
+
+    // Render the build notes page.
+    public function notes($build_id = null)
+    {
+        return $this->renderBuildPage($build_id, 'notes');
     }
 
     // Render the build summary page.
     public function summary($build_id = null)
     {
+        return $this->renderBuildPage($build_id, 'summary', 'Build Summary');
+    }
+
+    protected function renderBuildPage($build_id = null, $page_name, $page_title = '')
+    {
         $this->setup($build_id);
         if (!$this->authOk) {
             return $this->redirectToLogin();
         }
-        return view('build.summary')
+        if (!$page_title) {
+            $page_title = ucfirst($page_name);
+        }
+        return view("build.{$page_name}")
             ->with('build', json_encode($this->build))
             ->with('cdashCss', $this->cdashCss)
             ->with('date', json_encode($this->date))
             ->with('logo', json_encode($this->logo))
             ->with('projectname', json_encode($this->project->Name))
-            ->with('title', "{$this->project->Name} : Build Summary");
+            ->with('title', "{$this->project->Name} : {$page_title}");
     }
 }
