@@ -10,6 +10,7 @@ function(add_vue_test TestName)
 endfunction(add_vue_test)
 
 add_vue_test(Spec/build-configure)
+add_vue_test(Spec/build-notes)
 add_vue_test(Spec/build-summary)
 add_vue_test(Spec/page-header)
 add_vue_test(Spec/page-header/header-top)

@@ -68,7 +68,10 @@
         </div>
         <br>
         <transition name="fade">
-          <pre v-show="note.show">{{ note.text }}</pre>
+          <pre
+            v-show="note.show"
+            :id="`notetext${index}`"
+          >{{ note.text }}</pre>
         </transition>
         <br>
       </div>
