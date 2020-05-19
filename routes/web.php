@@ -49,6 +49,12 @@ Route::get('/viewConfigure.php', function (Request $request) {
     return redirect("/build/{$buildid}/configure");
 });
 
+Route::get('/build/{id}/notes', 'Views\BuildController@notes');
+Route::get('/viewNotes.php', function (Request $request) {
+    $buildid = $request->query('buildid');
+    return redirect("/build/{$buildid}/notes");
+});
+
 Route::get('/project/{id}/edit', 'Views\EditProjectController@edit');
 Route::get('/project/new', 'Views\EditProjectController@create');
 
