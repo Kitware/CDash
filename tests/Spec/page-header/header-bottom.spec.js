@@ -45,8 +45,8 @@ describe('HeaderBottom', () => {
     expect(el.attributes().src).toBe('/path/to/some/other/src.png');
   });
 
-  it('does not contain a HeaderNav component', () => {
-    expect(component.contains(HeaderNav)).toBe(false);
+  it('does not display a HeaderNav component', () => {
+    expect(component.find(HeaderNav).isVisible()).toBe(false);
   });
 
   it ('contains a HeaderMenu component', () => {
