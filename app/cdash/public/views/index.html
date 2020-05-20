@@ -109,7 +109,7 @@
           <img ng-if="::cdash.buildplatform" class="icon" alt="platform" ng-src="img/platform_{{::cdash.buildplatform}}.png"/>
           <a title="View notes"
              ng-if="::cdash.parenthasnotes"
-             ng-href="viewNotes.php?buildid={{::cdash.parentid}}">
+             ng-href="build/{{::cdash.parentid}}/notes">
             <img src="img/document.png" alt="Notes" class="icon"/>
           </a>
 

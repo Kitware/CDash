@@ -31,7 +31,7 @@
 
       <b>Build Name: </b>{{ cdash.build.name }}
       <div v-if="cdash.build.note">
-        (<a :href="$baseURL + '/viewNotes.php?buildid=' + cdash.build.id">view notes</a>)
+        (<a :href="$baseURL + '/build/' + cdash.build.id + '/notes'">view notes</a>)
       </div>
       <br>
 
