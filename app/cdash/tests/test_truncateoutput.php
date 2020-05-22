@@ -19,6 +19,23 @@ class TruncateOutputTestCase extends KWWebTestCase
 
     public function testTruncateOutput()
     {
+        // Verify that some previously submitted data was truncated as expected.
+        $buildtests = \DB::select(
+            "SELECT build2test.id FROM build2test
+            JOIN build ON (build.id = build2test.buildid)
+            JOIN test ON (test.id = build2test.testid)
+            JOIN project ON (project.id = build.projectid)
+            WHERE build.name = 'Win32-MSVC2009' AND
+                  build.stamp = '20090223-0100-Nightly' AND
+                  project.name = 'EmailProjectExample' AND
+                  test.name = 'curl'");
+        $buildtestid = $buildtests[0]->id;
+        $this->get($this->url . "/api/v1/testDetails.php?buildtestid={$buildtestid}");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $expected = 'The rest of the test output was removed since it exceeds the threshold';
+        $this->assertTrue(strpos($jsonobj['test']['output'], $expected) !== false);
+
         // Set a limit so long output will be truncated.
         $this->addLineToConfig($this->ConfigLine);
         $rep  = dirname(__FILE__)."/data/TruncateOutput";
