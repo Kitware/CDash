@@ -153,6 +153,27 @@
       </transition>
       <br>
 
+      <!-- Show environment variables -->
+      <div v-if="hasenvironment">
+        <img :src="$baseURL + '/img/console.png'">
+        <a
+          id="environmentlink"
+          href="javascript:;"
+          @click="showenvironment = !showenvironment"
+        >
+          <span v-show="!showenvironment">Show Environment</span>
+          <span v-show="showenvironment">Hide Environment</span>
+        </a>
+        <transition name="fade">
+          <pre
+            v-show="showenvironment"
+            id="environment"
+            style="white-space: pre-wrap;"
+          >{{ cdash.test.environment }}</pre>
+        </transition>
+        <br>
+      </div>
+
       <!-- Pull down menu to see the graphs -->
       <img :src="$baseURL + '/img/graph.png'">
       Display graphs:
@@ -216,6 +237,8 @@ export default {
       errored: false,
 
       showcommandline: false,
+      showenvironment: false,
+      hasenvironment: false,
       showgraph: false,
       graphSelection: "",
       rawdatalink: "",
@@ -255,6 +278,10 @@ export default {
         if ('graph' in this.queryParams) {
           this.graphSelection = this.queryParams.graph;
           this.displayGraph();
+        }
+
+        if (this.cdash.test.environment != '') {
+          this.hasenvironment = true;
         }
 
         this.cdash.endpoint = this.$baseURL + endpoint_path;

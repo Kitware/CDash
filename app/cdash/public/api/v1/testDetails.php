@@ -311,6 +311,11 @@ $stmt = $pdo->prepare(
 pdo_execute($stmt, [':outputid' => $outputid]);
 $fileid = 1;
 while ($row = $stmt->fetch()) {
+    if ($row['name'] === 'Environment' && $row['type'] === 'text/string') {
+        $test_response['environment'] = $row['value'];
+        continue;
+    }
+
     $measurement_response = [];
     $measurement_response['name'] = $row['name'];
     $measurement_response['type'] = $row['type'];

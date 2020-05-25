@@ -38,6 +38,7 @@ describe('TestDetails', function() {
         time: '100ms',
         command: '/usr/bin/false',
         details: 'Completed (OTHER_FAULT)',
+        environment: 'foo=bar',
         output: "\u001b[32mHello world!\n\u001b[91m<script type=\"text\/javascript\">console.log(\"MALICIOUS JAVASCRIPT!!!\");<\/script>\n\u001b[0mGood bye world!\n",
         summaryLink: 'testSummary.php?project=1&name=my-test',
         status: 'Failed',
@@ -166,6 +167,29 @@ describe('TestDetails', function() {
 
     expect(component.vm.showgraph).toBe(true);
     expect(component.find('#graph_holder').isVisible()).toBe(true);
+  });
+
+  it('can toggle environment', async function() {
+    this.axios.onGet('/api/v1/testDetails.php?buildtestid=blank').reply(200, this.api_response);
+    component = mount(TestDetails);
+    await component.vm.$nextTick();
+    await component.vm.$nextTick();
+    await component.vm.$nextTick();
+    await component.vm.$nextTick();
+
+    // We have an environment but it's hidden by default.
+    expect(component.vm.hasenvironment).toBe(true);
+    expect(component.vm.showenvironment).toBe(false);
+    expect(component.find('#environment').isVisible()).toBe(false);
+
+    // Toggle it on.
+    var environmentlink = component.find('#environmentlink')
+    environmentlink.trigger('click');
+    await component.vm.$nextTick();
+    await component.vm.$nextTick();
+    await component.vm.$nextTick();
+    await component.vm.$nextTick();
+    expect(component.find('#environment').isVisible()).toBe(true);
   });
 
 });
