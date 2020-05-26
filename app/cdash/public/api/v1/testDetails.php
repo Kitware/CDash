@@ -22,6 +22,7 @@ require_once 'include/pdo.php';
 require_once 'include/api_common.php';
 include_once 'include/repository.php';
 
+use App\Models\BuildTest;
 use App\Models\Test;
 use App\Models\TestOutput;
 use App\Services\PageTimer;
@@ -35,19 +36,18 @@ use CDash\Model\Site;
 
 if (!function_exists('findTest')) {
     // Helper function
-    function findTest($buildid, $testName, $pdo)
+    function findTest($buildid, $testid, $pdo)
     {
-        $stmt = $pdo->prepare(
-            'SELECT build2test.testid FROM build2test
-        WHERE build2test.buildid = :buildid
-        AND build2test.testid IN
-            (SELECT id FROM test WHERE name = :testname)');
-        pdo_execute($stmt, [':buildid' => $buildid, ':testname' => $testName]);
-        $testid = $stmt->fetchColumn();
-        if ($testid === false) {
+        $stmt = $pdo->prepare('
+        SELECT id FROM build2test
+        WHERE buildid = :buildid AND
+              testid = :testid');
+        pdo_execute($stmt, [':buildid' => $buildid, ':testid' => $testid]);
+        $buildtestid = $stmt->fetchColumn();
+        if ($buildtestid === false) {
             return 0;
         }
-        return $testid;
+        return $buildtestid;
     }
 }
 
@@ -62,18 +62,20 @@ if (!function_exists('utf8_for_xml')) {
 $pageTimer = new PageTimer();
 $config = Config::getInstance();
 
-$_REQUEST['buildid'] = $_GET['build'];
-$build = get_request_build();
-if (is_null($build)) {
-    return;
-}
-
-
-$testid = pdo_real_escape_numeric($_GET['test']);
-// Checks
-if (!isset($testid) || !is_numeric($testid)) {
+$buildtestid = $_GET['buildtestid'];
+if (!isset($buildtestid) || !is_numeric($buildtestid)) {
     json_error_response(['error' => 'A valid test was not specified.']);
 }
+
+$buildtest = BuildTest::where('id', '=', $buildtestid)->first();
+if ($buildtest === null) {
+    json_error_response(['error' => 'test not found'], 404);
+    return;
+}
+$testid = $buildtest->test->id;
+$build = new Build();
+$build->Id = $buildtest->buildid;
+$build->FillFromId($build->Id);
 
 $projectid = $build->ProjectId;
 if (!$projectid) {
@@ -86,18 +88,16 @@ if (!can_access_project($projectid)) {
 
 $pdo = Database::getInstance()->getPdo();
 $response = begin_JSON_response();
-$response['title'] = 'CDash : Test Details';
 
 // If we have a fileid we download it.
 if (isset($_GET['fileid']) && is_numeric($_GET['fileid'])) {
     $stmt = $pdo->prepare(
         "SELECT id, value, name FROM testmeasurement
-        WHERE testid = :testid AND type = 'file'
+        WHERE outputid = :testid AND type = 'file'
         ORDER BY id");
     pdo_execute($stmt, [':testid' => $testid]);
-    for ($i = 0; $i < $_GET['fileid']; $i++) {
-        $result_array = $stmt->fetch();
-    }
+    $result_array = $stmt->fetch();
+
     header('Content-type: tar/gzip');
     header('Content-Disposition: attachment; filename="' . $result_array['name'] . '.tgz"');
 
@@ -112,6 +112,7 @@ if (isset($_GET['fileid']) && is_numeric($_GET['fileid'])) {
     }
     echo base64_decode($buf);
     flush();
+    ob_flush();
     return;
 }
 
@@ -145,7 +146,7 @@ $testName = $testRow['name'];
 $outputid = $testRow['outputid'];
 
 $menu = [];
-$menu['back'] = "viewTest.php?buildid=$build->Id";
+$menu['back'] = "/viewTest.php?buildid=$build->Id";
 
 $previous_buildid = $build->GetPreviousBuildId();
 $current_buildid = $build->GetCurrentBuildId();
@@ -160,23 +161,23 @@ if (array_key_exists('graph', $_GET)) {
 
 // Previous build
 if ($previous_buildid > 0) {
-    $previous_testid = findTest($previous_buildid, $testName, $pdo);
-    if ($previous_testid) {
-        $menu['previous'] = "testDetails.php?test=$previous_testid&build=$previous_buildid$extra_url";
+    $previous_buildtestid = findTest($previous_buildid, $testid, $pdo);
+    if ($previous_buildtestid) {
+        $menu['previous'] = "/test/{$previous_buildtestid}{$extra_url}";
     }
 } else {
     $menu['previous'] = false;
 }
 
 // Current build
-if ($current_testid = findTest($current_buildid, $testName, $pdo)) {
-    $menu['current'] = "testDetails.php?test=$current_testid&build=$current_buildid$extra_url";
+if ($current_buildtestid = findTest($current_buildid, $testid, $pdo)) {
+    $menu['current'] = "/test/{$current_buildtestid}{$extra_url}";
 }
 
 // Next build
 if ($next_buildid > 0) {
-    if ($next_testid = findTest($next_buildid, $testName, $pdo)) {
-        $menu['next'] = "testDetails.php?test=$next_testid&build=$next_buildid$extra_url";
+    if ($next_buildtestid = findTest($next_buildid, $testid, $pdo)) {
+        $menu['next'] = "/test/{$next_buildtestid}{$extra_url}";
     }
 } else {
     $menu['next'] = false;
@@ -310,6 +311,11 @@ $stmt = $pdo->prepare(
 pdo_execute($stmt, [':outputid' => $outputid]);
 $fileid = 1;
 while ($row = $stmt->fetch()) {
+    if ($row['name'] === 'Environment' && $row['type'] === 'text/string') {
+        $test_response['environment'] = $row['value'];
+        continue;
+    }
+
     $measurement_response = [];
     $measurement_response['name'] = $row['name'];
     $measurement_response['type'] = $row['type'];
@@ -336,9 +342,7 @@ while ($row = $stmt->fetch()) {
     $measurement_response['value'] = $value;
     $measurements_response[] = $measurement_response;
 }
-if (!empty($measurements_response)) {
-    $test_response['measurements'] = $measurements_response;
-}
+$test_response['measurements'] = $measurements_response;
 $response['test'] = $test_response;
 $pageTimer->end($response);
 echo json_encode($response);

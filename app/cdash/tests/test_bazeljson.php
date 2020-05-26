@@ -47,15 +47,15 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Lookup specific test ID
         $test_stmt = $this->PDO->prepare(
-            'SELECT t.id FROM test t
+            'SELECT b2t.id FROM test t
             JOIN build2test b2t on b2t.testid = t.id
             JOIN build b on b.id = b2t.buildid
             WHERE b.id = ? AND t.name = ?');
         pdo_execute($test_stmt, [$buildid, '//main:hello-good']);
-        $testid = $test_stmt->fetchColumn();
+        $buildtestid = $test_stmt->fetchColumn();
 
         // Use the API to verify that only output for the specified test is displayed
-        $this->get($this->url . "/api/v1/testDetails.php?test=$testid&build=$buildid");
+        $this->get($this->url . "/api/v1/testDetails.php?buildtestid=$buildtestid");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $output = $jsonobj['test']['output'];
@@ -266,15 +266,15 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Lookup specific test ID
         $test_stmt = $this->PDO->prepare(
-            'SELECT t.id FROM test t
+            'SELECT b2t.id FROM test t
             JOIN build2test b2t on b2t.testid = t.id
             JOIN build b on b.id = b2t.buildid
             WHERE b.id = ? AND t.name = ?');
         pdo_execute($test_stmt, [$buildid, '//drake/bindings:pydrake_common_install_test']);
-        $testid = $test_stmt->fetchColumn();
+        $buildtestid = $test_stmt->fetchColumn();
 
         // Use the API to verify that all of the build output is displayed.
-        $this->get($this->url . "/api/v1/testDetails.php?test=$testid&build=$buildid");
+        $this->get($this->url . "/api/v1/testDetails.php?buildtestid=$buildtestid");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $output = $jsonobj['test']['output'];
@@ -319,15 +319,15 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Lookup specific test ID
         $test_stmt = $this->PDO->prepare(
-            'SELECT t.id FROM test t
+            'SELECT b2t.id FROM test t
             JOIN build2test b2t on b2t.testid = t.id
             JOIN build b on b.id = b2t.buildid
             WHERE b.id = ? AND t.name = ?');
         pdo_execute($test_stmt, [$buildid, '//drake/bindings:pydrake_common_install_test']);
-        $testid = $test_stmt->fetchColumn();
+        $buildtestid = $test_stmt->fetchColumn();
 
         // Use the API to verify that the 'TIMEOUT' message is displayed
-        $this->get($this->url . "/api/v1/testDetails.php?test=$testid&build=$buildid");
+        $this->get($this->url . "/api/v1/testDetails.php?buildtestid=$buildtestid");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $output = $jsonobj['test']['output'];
@@ -493,14 +493,14 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Lookup specific test ID
         $test_stmt = $this->PDO->prepare(
-            'SELECT t.id FROM test t
+            'SELECT b2t.id FROM test t
             JOIN build2test b2t on b2t.testid = t.id
             JOIN build b on b.id = b2t.buildid
             WHERE b.id = ? AND t.name = ?');
         pdo_execute($test_stmt, [$buildid, '//automotive/maliput/multilane:multilane_lanes_test']);
-        $testid = $test_stmt->fetchColumn();
+        $buildtestid = $test_stmt->fetchColumn();
 
-        $this->get($this->url . "/api/v1/testDetails.php?test=$testid&build=$buildid");
+        $this->get($this->url . "/api/v1/testDetails.php?buildtestid=$buildtestid");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
 
@@ -549,14 +549,14 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Lookup specific test ID
         $test_stmt = $this->PDO->prepare(
-            'SELECT t.id FROM test t
+            'SELECT b2t.id FROM test t
             JOIN build2test b2t on b2t.testid = t.id
             JOIN build b on b.id = b2t.buildid
             WHERE b.id = ? AND t.name = ?');
         pdo_execute($test_stmt, [$buildid, '//automotive/maliput/multilane:multilane_builder_test']);
-        $testid = $test_stmt->fetchColumn();
+        $buildtestid = $test_stmt->fetchColumn();
 
-        $this->get($this->url . "/api/v1/testDetails.php?test=$testid&build=$buildid");
+        $this->get($this->url . "/api/v1/testDetails.php?buildtestid=$buildtestid");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
 
@@ -581,14 +581,14 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Lookup another specific test ID
         $test_stmt = $this->PDO->prepare(
-            'SELECT t.id FROM test t
+            'SELECT b2t.id FROM test t
             JOIN build2test b2t on b2t.testid = t.id
             JOIN build b on b.id = b2t.buildid
             WHERE b.id = ? AND t.name = ?');
         pdo_execute($test_stmt, [$buildid, '//automotive/maliput/multilane:multilane_lanes_test']);
-        $testid = $test_stmt->fetchColumn();
+        $buildtestid = $test_stmt->fetchColumn();
 
-        $this->get($this->url . "/api/v1/testDetails.php?test=$testid&build=$buildid");
+        $this->get($this->url . "/api/v1/testDetails.php?buildtestid=$buildtestid");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
 
@@ -645,14 +645,14 @@ class BazelJSONTestCase extends KWWebTestCase
 
         // Lookup specific test ID
         $test_stmt = $this->PDO->prepare(
-            'SELECT t.id FROM test t
+            'SELECT b2t.id FROM test t
             JOIN build2test b2t on b2t.testid = t.id
             JOIN build b on b.id = b2t.buildid
             WHERE b.id = ? AND t.name = ?');
         pdo_execute($test_stmt, [$buildid, '//automotive/maliput/multilane:multilane_lanes_test']);
-        $testid = $test_stmt->fetchColumn();
+        $buildtestid = $test_stmt->fetchColumn();
 
-        $this->get($this->url . "/api/v1/testDetails.php?test=$testid&build=$buildid");
+        $this->get($this->url . "/api/v1/testDetails.php?buildtestid=$buildtestid");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
 

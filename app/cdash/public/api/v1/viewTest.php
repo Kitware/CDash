@@ -552,7 +552,7 @@ if ($build->GetParentId() == Build::PARENT_BUILD) {
 
 $sql = "
     SELECT bt.status, bt.newstatus, bt.timestatus, t.id, bt.time, bt.buildid, bt.details,
-           t.name $label_sql $parentBuildFieldSql
+            bt.id AS buildtestid, t.name $label_sql $parentBuildFieldSql
     FROM build2test AS bt
     LEFT JOIN test AS t ON (t.id=bt.testid)
     $parentBuildJoinSql

@@ -99,7 +99,7 @@ switch ($type) {
 
 // Select relevant data about all runs of this test from this recurring build.
 $query =
-        "SELECT b.id, b.starttime, b2t.testid, $extra_fields
+        "SELECT b.starttime, b2t.id AS buildtestid, $extra_fields
         FROM build b
         JOIN build2test b2t ON (b.id = b2t.buildid)
         $extra_joins
@@ -115,8 +115,7 @@ pdo_execute($stmt, $query_params);
 
 while ($row = $stmt->fetch()) {
     $data_point = [];
-    $data_point['buildid'] = $row['id'];
-    $data_point['testid'] = $row['testid'];
+    $data_point['buildtestid'] = $row['buildtestid'];
     $build_start_time = strtotime($row['starttime']) * 1000;
     $data_point['x'] = $build_start_time;
 

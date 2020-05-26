@@ -158,8 +158,8 @@ if ($columncount > 0) {
 }
 
 $query = "
-    SELECT b.id AS buildid, b.name, b.stamp, b2t.status,
-           b2t.time, t.id AS testid, s.name AS sitename
+    SELECT b.id AS buildid, b.name, b.stamp, b2t.id AS buildtestid,
+           b2t.status, b2t.time, s.name AS sitename
     FROM test AS t
     LEFT JOIN build2test AS b2t ON (t.id = b2t.testid)
     LEFT JOIN build AS b ON (b.id = b2t.buildid)
@@ -276,8 +276,8 @@ while ($row = pdo_fetch_array($result)) {
     $buildLink = "viewTest.php?buildid=$buildid";
     $build_response['buildid'] = $buildid;
     $build_response['buildLink'] = $buildLink;
-    $testid = $row['testid'];
-    $testLink = "testDetails.php?test=$testid&build=$buildid";
+    $buildtestid = $row['buildtestid'];
+    $testLink = "test/$buildtestid";
     $build_response['testLink'] = $testLink;
     switch ($row['status']) {
         case 'passed':
