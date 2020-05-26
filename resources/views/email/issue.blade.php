@@ -49,7 +49,11 @@ Total {{ $topic->getTopicDescription() }}: {{ $topic->getTopicCount() }}
 <?php
 $collection = $topic->getTopicCollection();
 $size = Subscription::getMaxDisplayItems();
-$items = $collection->first($size);
+if ($collection instanceof \Illuminate\Support\Collection) {
+    $items = $collection->take($size);
+} else {
+    $items = $collection->first($size);
+}
 $warning = $size < $collection->count() ? "(first {$size} included)" : '';
 $project = $subscription->getProject();
 ?>

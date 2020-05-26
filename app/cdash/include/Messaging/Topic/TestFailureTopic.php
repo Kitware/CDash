@@ -22,7 +22,6 @@ use App\Models\Test;
 
 use CDash\Messaging\Notification\NotifyOn;
 use CDash\Model\Build;
-use CDash\Collection\TestCollection;
 use CDash\Model\Label;
 use CDash\Model\SubscriberInterface;
 
@@ -34,7 +33,7 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
 {
     use IssueTemplateTrait;
 
-    /** @var TopicCollection $collection */
+    /** @var Collection $collection */
     protected $collection;
 
     /** @var array $diff */
@@ -65,7 +64,7 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
     }
 
     /**
-     * This method sets a build's failed tests in a TestCollection
+     * This method sets a build's failed tests in a Collection
      *
      * @param Build $build
      * @return void
@@ -73,23 +72,23 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
     public function setTopicData(Build $build)
     {
         $collection = $this->getTopicCollection();
-        $tests = $build->GetTestCollection();
-        foreach ($tests as $test) {
-            if ($this->itemHasTopicSubject($build, $test)) {
-                $collection->add($test);
+        $buildtests = $build->GetTestCollection();
+        foreach ($buildtests as $test_name => $buildtest) {
+            if ($this->itemHasTopicSubject($build, $buildtest)) {
+                $collection->put($test_name, $buildtest);
             }
         }
     }
 
     /**
-     * This method returns the TestCollection containing a build's failed tests
+     * This method returns the Collection containing a build's failed tests
      *
-     * @return \CDash\Collection\CollectionInterface|TestCollection
+     * @return \Illuminate\Support\Collection
      */
     public function getTopicCollection()
     {
         if (!$this->collection) {
-            $this->collection = new TestCollection();
+            $this->collection = collect();
         }
         return $this->collection;
     }
@@ -166,12 +165,12 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
         $collection = $this->getTopicCollection();
         $buildtests = $build->GetTestCollection();
         /** @var Test $buildtest */
-        foreach ($buildtests as $buildtest) {
+        foreach ($buildtests as $test_name => $buildtest) {
             if ($this->itemHasTopicSubject($build, $buildtest)) {
                 $testLabels = $buildtest->getLabels();
                 foreach ($labels as $label) {
                     if ($testLabels->has($label->Text)) {
-                        $collection->add($buildtest);
+                        $collection->put($test_name, $buildtest);
                     }
                 }
             }
@@ -186,8 +185,7 @@ class TestFailureTopic extends Topic implements Decoratable, Fixable, Labelable
     {
         $buildtests = $build->GetTestCollection();
         $collection = collect();
-        /** @var BuildTest $buildtest */
-        foreach ($buildtests as $buildtest) {
+        foreach ($buildtests as $test_name => $buildtest) {
             // No need to bother with passed buildtests
             if ($this->itemHasTopicSubject($build, $buildtest)) {
                 /** @var Label $label */

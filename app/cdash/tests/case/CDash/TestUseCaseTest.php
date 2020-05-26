@@ -2,7 +2,6 @@
 
 use CDash\Model\Build;
 use CDash\Collection\BuildCollection;
-use CDash\Collection\TestCollection;
 use CDash\Test\CDashUseCaseTestCase;
 use CDash\Test\UseCase\TestUseCase;
 use CDash\Test\UseCase\UseCase;
@@ -169,7 +168,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $builds = $handler->GetBuildCollection();
         /** @var Build $build */
         $build = $builds->current();
-        /** @var TestCollection $tests */
+        /** @var Illuminate\Support\Collection $tests */
         $tests = $build->GetTestCollection();
         /** @var Test $test */
         $test = $tests->get('some.test.name');
@@ -193,7 +192,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $builds = $handler->GetBuildCollection();
         /** @var Build $build */
         $build = $builds->current();
-        /** @var TestCollection $tests */
+        /** @var Illuminate\Support\Collection $tests */
         $tests = $build->GetTestCollection();
         /** @var Test $test */
         $test = $tests->get('some.test.name');
@@ -217,7 +216,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $builds = $handler->GetBuildCollection();
         /** @var Build $build */
         $build = $builds->current();
-        /** @var TestCollection $tests */
+        /** @var Illuminate\Support\Collection $tests */
         $tests = $build->GetTestCollection();
         /** @var Test $test */
         $test = $tests->get('some.test.name');
@@ -241,7 +240,7 @@ class TestUseCaseTest extends CDashUseCaseTestCase
         $builds = $handler->GetBuildCollection();
         /** @var Build $build */
         $build = $builds->current();
-        /** @var TestCollection $tests */
+        /** @var Illuminate\Support\Collection $tests */
         $tests = $build->GetTestCollection();
         /** @var Test $test */
         $test = $tests->get('some.test.name');
