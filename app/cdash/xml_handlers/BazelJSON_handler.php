@@ -311,16 +311,21 @@ class BazelJSONHandler extends NonSaxHandler
                 if (array_key_exists('stderr', $json_array[$message_id])) {
                     // Parse through stderr line-by-line,
                     // searching for configure and build warnings and errors.
-                    $stderr = $json_array[$message_id]['stderr'];
-                    $warning_pattern = '/(.*?) warning: (.*?)$/i';
-                    $error_pattern = '/(.*?)error: (.*?)$/i';
 
                     // The first two phases of a Bazel build, Loading and
                     // Analysis, will be treated as the 'Configure' step by
                     // CDash. The final phase, Execution, will be treated as
                     // the 'Build' step by CDash.
+
+                    $stderr = $json_array[$message_id]['stderr'];
+
+                    $info_pattern = '/(.*?)INFO: (.*?)$/';
+                    $linking_pattern = '/(.*?)____From Linking (.*?)$/';
+                    $error_pattern = '/(.*?)ERROR: (.*?)$/';
+                    $warning_pattern = '/(.*?)warning: (.*?)$/';
+
                     $configure_error_pattern = '/\s*ERROR: (.*?)BUILD/';
-                    $analysis_warning_pattern = '/\s*WARNING: errors encountered while analyzing target \'(.*?)\': it will not be built.*?$/';
+                    $analysis_warning_pattern = '/\s*WARNING: (.*?)$/';
                     // Look for the report printed at the end of the analysis phase.
                     $analysis_report_pattern = '/(.*?)Found (.*?)target(.*?)/';
 
@@ -328,7 +333,8 @@ class BazelJSONHandler extends NonSaxHandler
                     $lines = explode("\n", $stderr);
                     $build_error = null;
                     $subproject_name = '';
-
+                    $warning_text = '';
+                    $check_for_warning = false;
 
                     foreach ($lines as $line) {
                         // Remove ANSI color codes.
@@ -382,15 +388,41 @@ class BazelJSONHandler extends NonSaxHandler
                         } else {
                             // Done with configure, parsing build errors and warnings
                             $record_error = false;
-                            if (!is_null($build_error) && $type === 0 && empty($build_error->PostContext)) {
-                                // Assume all errors have at list one line of
-                                // context *AND* that the first line of context
-                                // may match the error pattern
-                            } elseif (preg_match($warning_pattern, $line, $matches) === 1
+
+                            if ($check_for_warning) {
+                                if (preg_match($warning_pattern, $line, $matches) === 1
+                                      && count($matches) === 3) {
+                                    // This line is part of a warning message
+                                    $record_error = true;
+                                    $type = 1;
+                                } else {
+                                    $warning_text = '';
+                                }
+                                $check_for_warning = false;
+                            }
+
+                            if (!empty($warning_text)) {
+                                // This line is part of a warning message
+                            } elseif (preg_match($info_pattern, $line, $matches) === 1
                                   && count($matches) === 3) {
-                                // This line contains a warning.
-                                $record_error = true;
-                                $type = 1;
+                                // This line might be the start of a warning message
+                                // Some warnings are structured:
+                                // INFO: ....
+                                // ... warning: ...
+                                // ...
+                                // ... warning: ...
+                                // ...
+                                // <n> warnings generated.
+                                $check_for_warning = true;
+                                $warning_text = $line;
+                            } elseif (preg_match($linking_pattern, $line, $matches) === 1
+                                  && count($matches) === 3) {
+                                // This line might be the start of a warning message
+                                // Some warnings are structed:
+                                // ____From Linking <...>:
+                                // clang: warning: ...
+                                $check_for_warning = true;
+                                $warning_text = $line;
                             } elseif (preg_match($error_pattern, $line, $matches) === 1
                                   && count($matches) === 3) {
                                 // This line contains an error.
@@ -406,6 +438,7 @@ class BazelJSONHandler extends NonSaxHandler
                                     $subproject_name = '';
                                     $build_error = null;
                                 }
+
                                 $build_error = new BuildError();
                                 $build_error->Type = $type;
                                 $build_error->LogLine = $log_line_number;
@@ -437,7 +470,13 @@ class BazelJSONHandler extends NonSaxHandler
                                     $source_line_number = 0;
                                 }
 
-                                $build_error->Text = $line;
+                                if (empty($warning_text)) {
+                                    $build_error->Text = $line;
+                                } else {
+                                    $build_error->Text = $warning_text;
+                                    $warning_text = '';
+                                    $build_error->PostContext .= "$line\n";
+                                }
                                 $build_error->SourceFile = $source_file;
                                 $build_error->SourceLine = $source_line_number;
 
