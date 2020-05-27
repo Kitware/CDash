@@ -18,14 +18,16 @@
         <tr>
           <td align="left">
             <b>Site: </b>
-            <a :href="$baseURL + 'viewSite.php?siteid=' + cdash.build.siteid">
+            <a :href="$baseURL + '/viewSite.php?siteid=' + cdash.build.siteid">
               {{ cdash.build.site }}
             </a>
           </td>
         </tr>
         <tr>
           <td align="left">
-            <b>Build Name: </b>{{ cdash.build.buildname }}
+            <a :href="$baseURL + '/build/' + buildid">
+              {{ cdash.build.buildname }}
+            </a>
           </td>
         </tr>
         <tr>
@@ -107,7 +109,7 @@
                 <tr>
                   <td align="left">
                     <b>Site: </b>
-                    <a :href="$baseURL + 'viewSite.php?siteid=' + cdash.build.siteid">
+                    <a :href="$baseURL + '/viewSite.php?siteid=' + cdash.build.siteid">
                       {{ cdash.build.site }}
                     </a>
                   </td>
