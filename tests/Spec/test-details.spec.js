@@ -192,4 +192,15 @@ describe('TestDetails', function() {
     expect(component.find('#environment').isVisible()).toBe(true);
   });
 
+  it('"Show Environment" toggle is conditionally rendered', async function() {
+    this.api_response.test.environment = '';
+    this.axios.onGet('/api/v1/testDetails.php?buildtestid=blank').reply(200, this.api_response);
+    component = mount(TestDetails);
+    await component.vm.$nextTick();
+    await component.vm.$nextTick();
+    await component.vm.$nextTick();
+    await component.vm.$nextTick();
+    expect(component.contains('#environmentlink')).toBe(false);
+  });
+
 });
