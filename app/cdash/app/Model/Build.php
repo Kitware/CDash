@@ -28,7 +28,6 @@ use CDash\Collection\CollectionCollection;
 use CDash\Collection\DynamicAnalysisCollection;
 use CDash\Config;
 use CDash\Log;
-use CDash\Collection\TestCollection;
 use CDash\Database;
 use CDash\Messaging\Topic\Topic;
 use CDash\Model\ActionableTypes;
@@ -132,7 +131,7 @@ class Build
         $this->SubmitTime = '1980-01-01 00:00:00';
         $this->Type = '';
         $this->Uuid = '';
-        $this->TestCollection = new TestCollection();
+        $this->TestCollection = collect();
         $this->CommitAuthors = [];
 
         $this->LabelCollection = collect();
@@ -2660,7 +2659,7 @@ class Build
      */
     public function AddTest(\App\Models\BuildTest $buildtest)
     {
-        $this->TestCollection->add($buildtest);
+        $this->TestCollection->put($buildtest->test->name, $buildtest);
         return $this;
     }
 
@@ -3189,15 +3188,15 @@ class Build
                     return $count;
                 }, 0);
                 $passed = array_reduce($this->TestCollection->toArray(), function ($count, $test) {
-                    $count += $test->status === Test::PASSED ? 1 : 0;
+                    $count += $test['status'] === Test::PASSED ? 1 : 0;
                     return $count;
                 }, 0);
                 $failed = array_reduce($this->TestCollection->toArray(), function ($count, $test) {
-                    $count += $test->status === Test::FAILED ? 1 : 0;
+                    $count += $test['status'] === Test::FAILED ? 1 : 0;
                     return $count;
                 }, 0);
                 $notrun = array_reduce($this->TestCollection->toArray(), function ($count, $test) {
-                    $count += $test->status === Test::NOTRUN ? 1 : 0;
+                    $count += $test['status'] === Test::NOTRUN ? 1 : 0;
                     return $count;
                 }, 0);
 
