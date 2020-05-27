@@ -310,6 +310,7 @@ $stmt = $pdo->prepare(
     ORDER BY id');
 pdo_execute($stmt, [':outputid' => $outputid]);
 $fileid = 1;
+$test_response['environment'] = '';
 while ($row = $stmt->fetch()) {
     if ($row['name'] === 'Environment' && $row['type'] === 'text/string') {
         $test_response['environment'] = $row['value'];
