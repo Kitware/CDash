@@ -8,7 +8,6 @@ require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'include/common.php';
 require_once 'include/pdo.php';
 
-use CDash\Config;
 use CDash\Database;
 use CDash\Model\Project;
 
@@ -40,9 +39,10 @@ class LimitedBuildsTestCase extends KWWebTestCase
 
     public function testLimitedBuilds()
     {
-        $config = Config::getInstance();
-        $config->set('CDASH_BUILDS_PER_PROJECT', 1);
-        $config->set('CDASH_UNLIMITED_PROJECTS', ['Unlimited']);
+        config([
+            'cdash.builds_per_project' => 1,
+            'cdash.unlimited_projects' => ['Unlimited'],
+        ]);
 
         // Submit two builds to the 'Limited' project.
         // The second submission is expected to fail.
@@ -60,9 +60,10 @@ class LimitedBuildsTestCase extends KWWebTestCase
 
     public function testUnlimitedBuilds()
     {
-        $config = Config::getInstance();
-        $config->set('CDASH_BUILDS_PER_PROJECT', 1);
-        $config->set('CDASH_UNLIMITED_PROJECTS', ['Unlimited']);
+        config([
+            'cdash.builds_per_project' => 1,
+            'cdash.unlimited_projects' => ['Unlimited'],
+        ]);
 
         // Submit two builds to the 'Unlimited' project.
         // Both submissions are expected to pass.

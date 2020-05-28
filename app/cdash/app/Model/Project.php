@@ -1536,10 +1536,9 @@ class Project
         if (!$this->Id) {
             return false;
         }
-        $config = Config::getInstance();
-        $max_builds = $config->get('CDASH_BUILDS_PER_PROJECT');
+        $max_builds = config('cdash.builds_per_project');
         if ($max_builds == 0 ||
-                in_array($this->GetName(), $config->get('CDASH_UNLIMITED_PROJECTS'))) {
+                in_array($this->GetName(), config('cdash.unlimited_projects'))) {
             return false;
         }
 
@@ -1547,6 +1546,7 @@ class Project
             return false;
         }
 
+        $config = Config::getInstance();
         $message = "Maximum number of builds reached for $this->Name.  Contact {$config->get('CDASH_EMAILADMIN')} for support.";
         add_log("Too many builds for $this->Name", 'project_has_too_many_builds',
                 LOG_INFO, $this->Id);

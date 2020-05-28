@@ -278,13 +278,6 @@ $CDASH_TOKEN_DURATION = 15811200;
 // 1 means that newly created projects will require authentication by default.
 $CDASH_DEFAULT_AUTHENTICATE_SUBMISSIONS = 0;
 
-// Maximum number of builds allowed per project.
-// When set to 0 projects are not limited by number of builds.
-$CDASH_BUILDS_PER_PROJECT = 0;
-
-// Whitelist of projects that are allowed to have unlimited builds.
-$CDASH_UNLIMITED_PROJECTS = [];
-
 // Should CDash should post build/test results to a build's pull request?
 // This is enabled by default but requires CTEST_CHANGE_ID to be set by the
 // client.  Set this variable to FALSE to prevent CDash from commenting on
