@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Site BuildName="buildmodel-test-build"
-      BuildStamp="20160329-1825-some-type"
+      BuildStamp="20160330-1825-some-type"
       Generator="ctest-3.4.20160121-g750ae8"
       Name="buildmodel-test-sitename">
 
   <Configure>
     <StartDateTime>Feb 21 05:02 Eastern Standard Time</StartDateTime>
-    <StartConfigureTime>1235383223</StartConfigureTime>
+    <StartConfigureTime>1235383323</StartConfigureTime>
     <ConfigureCommand>./configure</ConfigureCommand>
     <Log>-- Configuring done
     -- Generating done
@@ -14,7 +14,7 @@
     </Log>
     <ConfigureStatus>0</ConfigureStatus>
     <EndDateTime>Feb 21 05:04 Eastern Standard Time</EndDateTime>
-    <EndConfigureTime>1235383351</EndConfigureTime>
+    <EndConfigureTime>1235383451</EndConfigureTime>
     <ElapsedMinutes>0</ElapsedMinutes>
   </Configure>
 </Site>

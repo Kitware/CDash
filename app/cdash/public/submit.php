@@ -81,21 +81,14 @@ if (!$projectid) {
     return;
 }
 
-// Do not process this submission if the project has too many builds.
+// Catch the fatal errors during submission
+register_shutdown_function('PHPErrorHandler', $projectid);
+
+// Remove some old builds if the project has too many.
 $project = new Project();
 $project->Name = $projectname;
 $project->Id = $projectid;
-$message = '';
-if ($project->HasTooManyBuilds($message)) {
-    $message = "<cdash version=\"{$config->get('CDASH_VERSION')}\">
-     <status>ERROR</status>
-     <message>$message</message>
-    </cdash>";
-    return response($message, Response::HTTP_INSUFFICIENT_STORAGE);
-}
-
-// Catch the fatal errors during submission
-register_shutdown_function('PHPErrorHandler', $projectid);
+$project->CheckForTooManyBuilds();
 
 // Check for valid authentication token if this project requires one.
 if ($authenticate_submissions && !valid_token_for_submission($projectid)) {
