@@ -83,12 +83,6 @@ if (!function_exists('echo_main_dashboard_JSON')) {
         $response['title'] = "CDash - $projectname";
         $response['showcalendar'] = 1;
 
-        // Let the user know if this project has maxed out its quota of builds.
-        $message = '';
-        if ($project_instance->HasTooManyBuilds($message)) {
-            $response['warning'] = $message;
-        }
-
         $Banner = new Banner;
         $Banner->SetProjectId(0);
         $text = $Banner->GetText();

@@ -8,6 +8,11 @@ if ($cdash) {
     include_once $cdash . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'version.php';
 }
 
+$unlimited_projects = json_decode(env('UNLIMITED_PROJECTS', ''), true);
+if (!is_array($unlimited_projects)) {
+    $unlimited_projects = [];
+}
+
 return [
     'directory' => $cdash,
     'password' => [
@@ -49,4 +54,6 @@ return [
         ],
     ],
     'slow_page_time' => env('SLOW_PAGE_TIME', 10),
+    'builds_per_project' => env('BUILDS_PER_PROJECT', 0),
+    'unlimited_projects' => $unlimited_projects,
 ];

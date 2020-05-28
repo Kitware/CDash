@@ -379,20 +379,13 @@ function post_submit()
         return;
     }
 
-    // Do not process this submission if the project has too many builds.
-
+    // Remove some old builds if the project has too many.
     $project = new Project();
     $project->Name = $projectname;
     $project->Id = $projectid;
-    $message = '';
-    if ($project->HasTooManyBuilds($message)) {
-        $response_array['status'] = 1;
-        $response_array['description'] = $message;
-        echo json_encode($response_array);
-        return;
-    }
+    $project->CheckForTooManyBuilds();
 
-    // Add the build
+    // Add the build.
     $build = new Build();
 
     $build->ProjectId = get_project_id($projectname);

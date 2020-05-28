@@ -65,7 +65,7 @@ function removeBuildsGroupwise($projectid, $maxbuilds, $force = false)
 }
 
 /** Remove the first builds that are at the beginning of the queue */
-function removeFirstBuilds($projectid, $days, $maxbuilds, $force = false)
+function removeFirstBuilds($projectid, $days, $maxbuilds, $force = false, $echo = true)
 {
     require_once 'include/pdo.php';
     require_once 'include/common.php';
@@ -81,7 +81,7 @@ function removeFirstBuilds($projectid, $days, $maxbuilds, $force = false)
         return;
     }
 
-    if ($days < 2) {
+    if (!$force && $days < 2) {
         return;
     }
 
@@ -105,6 +105,8 @@ function removeFirstBuilds($projectid, $days, $maxbuilds, $force = false)
 
     $s = 'removing old buildids for projectid: ' . $projectid;
     add_log($s, 'removeFirstBuilds');
-    echo '  -- ' . $s . "\n"; // for "interactive" command line feedback
+    if ($echo) {
+        echo '  -- ' . $s . "\n"; // for "interactive" command line feedback
+    }
     remove_build($buildids);
 }

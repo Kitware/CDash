@@ -1530,24 +1530,30 @@ class Project
         pdo_execute($stmt, [$id]);
     }
 
-    // Return true and set error message if this project has too many builds.
-    public function HasTooManyBuilds(&$message)
+    // Delete old builds if this project has too many.
+    public function CheckForTooManyBuilds()
     {
         if (!$this->Id) {
             return false;
         }
-        $config = Config::getInstance();
-        $max_builds = $config->get('CDASH_BUILDS_PER_PROJECT');
+        $max_builds = config('cdash.builds_per_project');
         if ($max_builds == 0 ||
-                in_array($this->GetName(), $config->get('CDASH_UNLIMITED_PROJECTS'))) {
+                in_array($this->GetName(), config('cdash.unlimited_projects'))) {
             return false;
         }
 
-        if ($this->GetNumberOfBuilds() < $max_builds) {
+        $num_builds = $this->GetNumberOfBuilds();
+
+        // The +1 here is to account for the build we're currently inserting.
+        if ($num_builds < ($max_builds + 1)) {
             return false;
         }
 
-        $message = "Maximum number of builds reached for $this->Name.  Contact {$config->get('CDASH_EMAILADMIN')} for support.";
+        // Remove old builds.
+        $num_to_remove = $num_builds - $max_builds;
+        require_once 'include/autoremove.php';
+        removeFirstBuilds($this->Id, -1, $num_to_remove, true, false);
+
         add_log("Too many builds for $this->Name", 'project_has_too_many_builds',
                 LOG_INFO, $this->Id);
         return true;
