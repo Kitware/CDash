@@ -123,7 +123,7 @@ class MigrateConfig extends Command
                 if (empty($value)) {
                     continue;
                 }
-                $value = implode(',', $value);
+                $value = '["' . implode('","', $value) . '"]';
             }
             if (array_key_exists($key, $legacy_defaults) &&
                     $value === $legacy_defaults[$key]) {

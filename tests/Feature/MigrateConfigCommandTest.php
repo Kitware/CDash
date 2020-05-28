@@ -37,6 +37,7 @@ $CDASH_EMAIL_SMTP_LOGIN = 'cdash_smtp_user';
 $CDASH_EMAIL_SMTP_PASS = 'cdash_smtp_password';
 $CDASH_BASE_URL = 'http://localhost/CDash';
 $CDASH_LOG_LEVEL = LOG_DEBUG;
+$CDASH_UNLIMITED_PROJECTS = ['Project1', 'Project2'];
 EOT;
         file_put_contents($this->config_file, $config_contents);
 
@@ -62,6 +63,7 @@ EOT;
         $this->assertContains('MAIL_USERNAME=cdash_smtp_user', $actual);
         $this->assertContains('APP_TIMEZONE=America/New_York', $actual);
         $this->assertContains('APP_LOG_LEVEL=debug', $actual);
+        $this->assertContains('UNLIMITED_PROJECTS=["Project1","Project2"]', $actual);
 
         // Default value (mysql) does not get written to .env.
         $this->assertNotContains('DB_CONNECTION=', $actual);
