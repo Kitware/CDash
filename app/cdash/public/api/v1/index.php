@@ -281,6 +281,9 @@ if (!function_exists('echo_main_dashboard_JSON')) {
         foreach ($buildgroups as $buildgroup) {
             $buildgroup_response = $controller->beginResponseForBuildgroup($buildgroup);
         }
+        if (empty($buildgroups)) {
+            $response['banners'][] = 'No builds found';
+        }
 
         // Filters:
         //

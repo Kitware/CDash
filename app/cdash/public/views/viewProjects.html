@@ -50,8 +50,14 @@
       </b>
     </p>
 
+    <h1 ng-if="cdash.projects.length == 0"
+       class="text-info text-center">
+        No Projects Found
+    </h1>
+
     <!-- Main table -->
-    <table border="0" cellpadding="4" cellspacing="0" width="100%" id="indexTable" class="tabb">
+    <table ng-if="cdash.projects.length > 0"
+           border="0" cellpadding="4" cellspacing="0" width="100%" id="indexTable" class="tabb">
       <thead>
         <tr class="table-heading1">
           <td colspan="6" align="left" class="nob"><h3>Dashboards</h3></td>
@@ -85,7 +91,8 @@
       </tbody>
     </table>
 
-    <table width="100%" cellspacing="0" cellpadding="0">
+    <table ng-if="cdash.projects.length > 0"
+           width="100%" cellspacing="0" cellpadding="0">
       <tr>
         <td height="1" colspan="14" align="left" bgcolor="#888888"></td>
       </tr>
