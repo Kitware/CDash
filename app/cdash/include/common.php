@@ -1887,12 +1887,31 @@ function angular_login()
     }
 }
 
-/* Change data-type from string to integar or float if required.
+/* Change data-type from string to integer or float if required.
  * If a string is detected make sure it is utf8 encoded. */
 function cast_data_for_JSON($value)
 {
     if (is_array($value)) {
+        // Brutal hack to preserve hashes that happen to be all numbers
+        // and start with a leading zero. These are expected to be indexed under
+        // 'revision', 'priorrevision', or 'files'.
+        $values_to_preserve = [];
+        $keys_to_check = ['revision', 'priorrevision'];
+        foreach ($keys_to_check as $key) {
+            if (array_key_exists($key, $value)) {
+                $values_to_preserve[$key] = $value[$key];
+            }
+        }
+        if (array_key_exists('files', $value) && is_string($value['files']) &&  strlen($value['files']) == 6) {
+            $values_to_preserve['files'] = $value['files'];
+        }
+
         $value = array_map('cast_data_for_JSON', $value);
+
+        foreach ($values_to_preserve as $k => $v) {
+            $value[$k] = $v;
+        }
+
         return $value;
     }
     // Do not support E notation for numbers (ie 6.02e23).
