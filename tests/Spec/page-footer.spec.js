@@ -9,7 +9,7 @@ describe('PageFooter', () => {
   let component;
   const currentdate = moment().format('YYYY-MM-DD');
   const endpoint = `http://localhost/api/v1/index.php?project=CDash&date=${currentdate}`;
-  const generationtime = 0.01;
+  const generationtime = '0.01s';
   const nightlytime = '23:00 EDT';
 
   beforeEach(() => {

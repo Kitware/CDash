@@ -797,6 +797,7 @@
 </template>
 
 <script>
+import ApiLoader from './shared/ApiLoader';
 export default {
   name: "BuildSummary",
 
@@ -832,22 +833,14 @@ export default {
   mounted () {
     this.buildid = window.location.pathname.split("/").pop();
     var endpoint_path = '/api/v1/buildSummary.php?buildid=' + this.buildid;
-    this.$axios
-      .get(endpoint_path)
-      .then(response => {
-        this.cdash = response.data;
-        this.cdash.endpoint = this.$baseURL + endpoint_path;
-        this.$root.$emit('api-loaded', this.cdash);
-        this.cdash.noteStatus = "0";
-      })
-      .catch(error => {
-        console.log(error)
-        this.errored = true
-      })
-      .finally(() => this.loading = false)
+    ApiLoader.loadPageData(this, endpoint_path);
   },
 
   methods: {
+    postSetup: function (response) {
+      this.cdash.noteStatus = "0";
+    },
+
     toggleHistoryGraph: function () {
       this.showHistoryGraph = !this.showHistoryGraph;
       this.loadGraphData();

@@ -150,6 +150,7 @@
 </template>
 
 <script>
+import ApiLoader from './shared/ApiLoader';
 export default {
   name: "BuildConfigure",
 
@@ -167,18 +168,7 @@ export default {
     var path_parts = window.location.pathname.split("/");
     this.buildid = path_parts[path_parts.length - 2];
     var endpoint_path = '/api/v1/viewConfigure.php?buildid=' + this.buildid;
-    this.$axios
-      .get(endpoint_path)
-      .then(response => {
-        this.cdash = response.data;
-        this.cdash.endpoint = this.$baseURL + endpoint_path;
-        this.$root.$emit('api-loaded', this.cdash);
-      })
-      .catch(error => {
-        console.log(error)
-        this.errored = true
-      })
-      .finally(() => this.loading = false)
+    ApiLoader.loadPageData(this, endpoint_path);
   },
 }
 </script>
