@@ -18,7 +18,9 @@ CDash.factory('renderTimer', function ($timeout) {
 
     $timeout(function() {
       var renderTime = +((new Date() - start) / 1000);
-      controllerScope.cdash.generationtime = (renderTime + cdash.generationtime).toFixed(2);
+      var generationTimeStr = (renderTime + cdash.generationtime).toFixed(2);
+      generationTimeStr += `s (${cdash.generationtime}s)`;
+      controllerScope.cdash.generationtime = generationTimeStr;
     }, 0, true, controllerScope, cdash);
   };
   return {
