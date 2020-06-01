@@ -60,7 +60,7 @@ class TestManager
 
         $filenames = glob("{$config->get('CDASH_BACKUP_DIRECTORY')}/*");
         foreach ($filenames as $filename) {
-            if (is_file($filename)) {
+            if (is_file($filename) && substr($filename, -5) !== 'empty') {
                 cdash_testsuite_unlink($filename);
             }
         }
