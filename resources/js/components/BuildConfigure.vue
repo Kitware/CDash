@@ -25,6 +25,7 @@
         </tr>
         <tr>
           <td align="left">
+            <b>Build: </b>
             <a :href="$baseURL + '/build/' + buildid">
               {{ cdash.build.buildname }}
             </a>
