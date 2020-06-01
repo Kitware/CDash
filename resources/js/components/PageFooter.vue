@@ -40,7 +40,7 @@
         >Report problems</a> |
         <a :href="endpoint">View as JSON</a>
         <span v-if="generationtime">
-          | {{ generationtime }}s
+          | {{ generationtime }}
         </span>
         <span v-if="currentdate">
           <br>

@@ -223,6 +223,7 @@
 </template>
 
 <script>
+import ApiLoader from './shared/ApiLoader';
 import QueryParams from './shared/QueryParams';
 import TextMutator from './shared/TextMutator';
 export default {
@@ -266,32 +267,7 @@ export default {
   mounted () {
     this.buildtestid = window.location.pathname.split("/").pop();
     var endpoint_path = '/api/v1/testDetails.php?buildtestid=' + this.buildtestid;
-    this.$axios
-      .get(endpoint_path)
-      .then(response => {
-        this.cdash = response.data;
-
-        this.cdash.test.output = TextMutator.ctestNonXmlCharEscape(this.cdash.test.output);
-        this.cdash.test.output = TextMutator.terminalColors(this.cdash.test.output, true);
-
-        this.queryParams = QueryParams.get();
-        if ('graph' in this.queryParams) {
-          this.graphSelection = this.queryParams.graph;
-          this.displayGraph();
-        }
-
-        if (this.cdash.test.environment != '') {
-          this.hasenvironment = true;
-        }
-
-        this.cdash.endpoint = this.$baseURL + endpoint_path;
-        this.$root.$emit('api-loaded', this.cdash);
-      })
-      .catch(error => {
-        console.log(error)
-        this.errored = true
-      })
-      .finally(() => this.loading = false)
+    ApiLoader.loadPageData(this, endpoint_path);
   },
 
   updated: function () {
@@ -301,6 +277,21 @@ export default {
   },
 
   methods: {
+    postSetup: function(response) {
+      this.cdash.test.output = TextMutator.ctestNonXmlCharEscape(this.cdash.test.output);
+      this.cdash.test.output = TextMutator.terminalColors(this.cdash.test.output, true);
+
+      this.queryParams = QueryParams.get();
+      if ('graph' in this.queryParams) {
+        this.graphSelection = this.queryParams.graph;
+        this.displayGraph();
+      }
+
+      if (this.cdash.test.environment != '') {
+        this.hasenvironment = true;
+      }
+    },
+
     displayGraph: function() {
       var testid = this.cdash.test.id;
       var buildid = this.cdash.test.buildid;

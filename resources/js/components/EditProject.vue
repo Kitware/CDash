@@ -2133,6 +2133,7 @@
 </template>
 
 <script>
+import ApiLoader from './shared/ApiLoader';
 export default {
   name: "EditProject",
   props: {
@@ -2191,81 +2192,71 @@ export default {
       endpoint_path += '?projectid=' + this.projectid;
       this.selectedProject = this.projectid;
     }
-    this.$axios
-      .get(endpoint_path)
-      .then(response => {
-        this.cdash = response.data;
-        this.cdash.endpoint = this.$baseURL + endpoint_path;
-        this.cdash.changesmade = false;
-
-        var disableTabs = false;
-
-        if (this.cdash.edit == 0) {
-          disableTabs = true;
-          this.cdash.submitdisabled = true;
-        }
-
-        this.cdash.tabs = {
-          'Info': {
-            'disabled': false,
-            'idx': 0,
-          },
-          'Logo': {
-            'disabled': disableTabs,
-            'idx': 1,
-          },
-          'Repos': {
-            'disabled': disableTabs,
-            'idx': 2,
-          },
-          'Testing': {
-            'disabled': disableTabs,
-            'idx': 3,
-          },
-          'Email': {
-            'disabled': disableTabs,
-            'idx': 4,
-          },
-        };
-        if (this.cdash.edit == 1) {
-          this.cdash.tabs.Spam = {
-            'disabled': false,
-            'idx': 5,
-          };
-          this.cdash.tabs.Clients = {
-            'disabled': false,
-            'idx': 6,
-          };
-          this.cdash.tabs.Misc = {
-            'disabled': false,
-            'idx': 7,
-          };
-        } else {
-          this.cdash.tabs.Misc = {
-            'disabled': true,
-            'idx': 5,
-          };
-        }
-
-        // Jump to tab specified by hash (if any).
-        this.setTabByName(window.location.hash.replace("#", ""));
-
-        if (this.cdash.project.BugTrackerType && this.cdash.project.BugTrackerNewIssueUrl) {
-          this.issuecreation = true;
-        } else {
-          this.issuecreation = false;
-        }
-
-        this.$root.$emit('api-loaded', this.cdash);
-      })
-      .catch(error => {
-        console.log(error);
-        this.errored = true;
-      })
-      .finally(() => this.loading = false)
+    ApiLoader.loadPageData(this, endpoint_path);
   },
 
   methods: {
+    postSetup: function (response) {
+      this.cdash.changesmade = false;
+
+      var disableTabs = false;
+
+      if (this.cdash.edit == 0) {
+        disableTabs = true;
+        this.cdash.submitdisabled = true;
+      }
+
+      this.cdash.tabs = {
+        'Info': {
+          'disabled': false,
+          'idx': 0,
+        },
+        'Logo': {
+          'disabled': disableTabs,
+          'idx': 1,
+        },
+        'Repos': {
+          'disabled': disableTabs,
+          'idx': 2,
+        },
+        'Testing': {
+          'disabled': disableTabs,
+          'idx': 3,
+        },
+        'Email': {
+          'disabled': disableTabs,
+          'idx': 4,
+        },
+      };
+      if (this.cdash.edit == 1) {
+        this.cdash.tabs.Spam = {
+          'disabled': false,
+          'idx': 5,
+        };
+        this.cdash.tabs.Clients = {
+          'disabled': false,
+          'idx': 6,
+        };
+        this.cdash.tabs.Misc = {
+          'disabled': false,
+          'idx': 7,
+        };
+      } else {
+        this.cdash.tabs.Misc = {
+          'disabled': true,
+          'idx': 5,
+        };
+      }
+
+      // Jump to tab specified by hash (if any).
+      this.setTabByName(window.location.hash.replace("#", ""));
+
+      if (this.cdash.project.BugTrackerType && this.cdash.project.BugTrackerNewIssueUrl) {
+        this.issuecreation = true;
+      } else {
+        this.issuecreation = false;
+      }
+    },
 
     // Show/hide help text.
     showHelp: function(id_div) {

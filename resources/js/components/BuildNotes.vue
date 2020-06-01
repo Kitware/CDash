@@ -81,6 +81,7 @@
 </template>
 
 <script>
+import ApiLoader from './shared/ApiLoader';
 export default {
   name: "BuildNotes",
 
@@ -98,29 +99,22 @@ export default {
     var path_parts = window.location.pathname.split("/");
     this.buildid = path_parts[path_parts.length - 2];
     var endpoint_path = '/api/v1/viewNotes.php?buildid=' + this.buildid;
-    this.$axios
-      .get(endpoint_path)
-      .then(response => {
-        // Collapse notes by default if there's more than one.
-        var showNotes = true;
-        this.cdash.multiple_notes = false;
-        if (response.data.notes.length > 1) {
-          this.cdash.multiple_notes = true;
-          showNotes = false;
-        }
-        for (var i = 0; i < response.data.notes.length; i++) {
-          response.data.notes[i].show = showNotes;
-        }
+    ApiLoader.loadPageData(this, endpoint_path);
+  },
 
-        this.cdash = response.data;
-        this.cdash.endpoint = this.$baseURL + endpoint_path;
-        this.$root.$emit('api-loaded', this.cdash);
-      })
-      .catch(error => {
-        console.log(error)
-        this.errored = true
-      })
-      .finally(() => this.loading = false)
+  methods: {
+    preSetup: function(response) {
+      // Collapse notes by default if there's more than one.
+      var showNotes = true;
+      this.cdash.multiple_notes = false;
+      if (response.data.notes.length > 1) {
+        this.cdash.multiple_notes = true;
+        showNotes = false;
+      }
+      for (var i = 0; i < response.data.notes.length; i++) {
+        response.data.notes[i].show = showNotes;
+      }
+    },
   },
 }
 </script>
