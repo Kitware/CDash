@@ -23,6 +23,16 @@
         <!-- Functions to confirm the email -->
         <xsl:text disable-output-escaping="yes">
               &lt;script language="JavaScript" type="text/javascript"&gt;
+
+              $(document).ready(function() {
+                $(window).keydown(function(event){
+                  if(event.keyCode == 13) {
+                  event.preventDefault();
+                  return false;
+                  }
+                });
+              });
+
               function confirmRemove() {
                  if (window.confirm("Are you sure you want to remove this user from the database?")){
                     return true;
