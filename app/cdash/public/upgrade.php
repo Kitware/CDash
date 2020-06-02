@@ -333,6 +333,9 @@ if (isset($_GET['upgrade-3-0'])) {
     AddTableField('password', 'updated_at', 'TIMESTAMP', 'TIMESTAMP', '1980-01-01 00:00:00');
     AddTableField('password', 'created_at', 'TIMESTAMP', 'TIMESTAMP', '1980-01-01 00:00:00');
 
+    // Call artisan to run Laravel database migrations.
+    Artisan::call('migrate --force');
+
     // Set the database version
     setVersion();
 
