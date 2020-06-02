@@ -15,65 +15,25 @@ maintain large-scale software systems. Good examples of a CDash are the
 [CMake quality dashboard](https://open.cdash.org/index.php?project=CMake) and the
 [VTK quality dashboard](https://open.cdash.org/index.php?project=VTK).
 
-## Installation
+## Using CDash
 
-The easiest way to install CDash is with [Docker](https://www.docker.com)'s [docker-compose](https://docs.docker.com/compose/).
+The easiest way to start using CDash is to register an account and create a new project at
+https://my.cdash.org.
 
-```bash
-git clone https://github.com/Kitware/CDash
-cd CDash
-docker-compose up -d
-```
-More details instructions for Docker builds can be in the [CDash Docker README](docker/docker.md)
-### Requirements
+## Installing CDash
 
-- MySQL (5.x+) or PostgreSQL(8.3+)
-- PHP 7.1
-- Composer
-- NPM
-
-#### PHP Required Modules
-
-- bcmath
-- php_curl
-- gd
-- mbstring
-- pdo_mysql or pdo_pgsql
-- bz2
-- xsl
-
-```bash
-git clone https://github.com/Kitware/CDash
-
-# install CDash and Laravel dependencies
-composer install --no-dev --prefer-dist
-npm install
-
-# Generate build files.
-npm run production
-
-# Setup default configuration.
-cp .env.example .env
-
-# Generate application key.
-php artisan key:generate
-
-# Migrate your config settings if you're upgrading an existing CDash instance.
-php artisan config:migrate
-
-```
-#### Further reading
-[CDash Docker README](docker/docker.md)
-
-[Laravel Documentation](https://laravel.com/)
-
-[Old install instructions, prebuilt download links, et al.](http://public.kitware.com/Wiki/CDash:Installation)
-
+If you'd prefer to install your own CDash server, please follow one of these guides:
+* [Installation guide](docs/install.md)
+* [Docker instructions](docs/docker.md)
 
 ## Development
 
-If you're interested in contributing to CDash, please begin by [introducing yourself on our mailing list](http://public.kitware.com/mailman/listinfo/cdash).
+Your efforts to improve CDash are welcome and appreciated!
 
+[Browse our open issues](https://github.com/Kitware/CDash/issues) if you'd like to help
+but you're not sure where to start.
+
+For bigger changes, please begin by [introducing yourself on our mailing list](http://public.kitware.com/mailman/listinfo/cdash).
 
 ## Testing
 
