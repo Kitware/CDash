@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Update mode="Client" Generator="ctest-3.15.0">
+	<Site>elysium</Site>
+	<BuildName>test_update</BuildName>
+	<BuildStamp>20200601-1929-Experimental</BuildStamp>
+	<StartDateTime>Jun 01 15:29 EDT</StartDateTime>
+	<StartTime>1591039770</StartTime>
+	<UpdateCommand></UpdateCommand>
+	<UpdateType>GIT</UpdateType>
+	<Revision>08416132611118b6817515907055112111663314</Revision>
+	<PriorRevision>07416132611118b6817515907055112111663314</PriorRevision>
+	<EndDateTime>Jun 01 15:29 EDT</EndDateTime>
+	<EndTime>1591039770</EndTime>
+	<ElapsedMinutes>0</ElapsedMinutes>
+	<UpdateReturnStatus>0</UpdateReturnStatus>
+</Update>

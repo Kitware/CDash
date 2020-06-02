@@ -216,6 +216,7 @@ add_php_test(addbuildapi)
 add_php_test(subscribeprojectshowlabels)
 add_php_test(rehashpassword)
 add_php_test(consistenttestingday)
+add_php_test(numericupdate)
 
 add_subdirectory(ctest)
 
