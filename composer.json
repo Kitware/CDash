@@ -35,7 +35,7 @@
     "omines/oauth2-gitlab": "^3.1",
     "paragonie/random_compat": "2.0.4",
     "pear/archive_tar": "~1.4",
-    "php-di/php-di": "^5.4",
+    "php-di/php-di": "^6.1",
     "php-http/guzzle6-adapter": "^1.1",
     "predis/predis": "~0.8",
     "ramsey/uuid": "~3.4",

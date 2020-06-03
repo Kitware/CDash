@@ -7,7 +7,7 @@ return [
         $config = \CDash\Config::getInstance()->load('queue');
         return isset($config['ctest_submission_queue']) ? $config['ctest_submission_queue'] : null;
     },
-    'CDash\Controller\Auth\Session' => \DI\object()
+    'CDash\Controller\Auth\Session' => \DI\create()
         ->constructor(\DI\get('CDash\System'), \CDash\Config::getInstance()),
     'Bernard\Driver' => \DI\factory(function () {
         return DriverFactory::create();
