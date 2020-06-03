@@ -33,7 +33,7 @@ endfunction(add_unit_test TestName)
 function(add_laravel_test TestName)
   add_test(
     NAME ${TestName}
-    COMMAND ${PHP_EXE} ${phpunit_extra_arg} ${PHPUNIT} -c ${CDash_SOURCE_DIR}/phpunit.xml ${laravel_testing_dir}/${TestName}Test.php
+    COMMAND ${PHP_EXE} ${phpunit_extra_arg} ${PHPUNIT} -c ${CDash_SOURCE_DIR}/phpunit.xml ${laravel_testing_dir}/${TestName}.php
   )
 endfunction(add_laravel_test TestName)
 
@@ -44,9 +44,9 @@ if (CDASH_CONFIGURE_HTACCESS_FILE)
 endif()
 
 add_php_test(install)
-add_laravel_test(/Unit/app/Validators/Password)
-add_laravel_test(/Feature/CDash)
-add_laravel_test(/Feature/LdapAuthWithRules)
+add_laravel_test(/Unit/app/Validators/PasswordTest)
+add_laravel_test(/Feature/CDashTest)
+add_laravel_test(/Feature/LdapAuthWithRulesTest)
 add_laravel_test(/Feature/MigrateConfigCommand)
 add_laravel_test(/Feature/UserCommand)
 add_unit_test(/PHPUnitTest)
