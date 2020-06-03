@@ -4,6 +4,13 @@ Unfamiliar with Docker?  [Start here](https://docs.docker.com/get-started/).
 
 ### Install CDash
 
+If you haven't done so already, begin by cloning the CDash repository.
+```bash
+git clone https://github.com/Kitware/CDash
+cd CDash
+docker-compose up -d
+```
+
 In the root of your CDash clone, edit `docker-compose.yml`.
 
 The `CDASH_CONFIG` section is where you specify settings that will be stored in your `config.local.php`
