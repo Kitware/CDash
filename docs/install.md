@@ -64,29 +64,32 @@ chgrp -R www-data /path/to/CDash
 chmod -R g+rw /path/to/CDash
 ```
 
-## Install dependencies
+## Install/upgrade steps
+
+Perform the follow steps when you initially install CDash and upon each subsequent upgrade.
 
 ```bash
+# Install PHP and JavaScript dependencies
 composer install --no-dev --prefer-dist
 npm install
-```
 
-## Generate build files
-```bash
+# Generate build files
 npm run dev
 ```
 
-## Setup default configuration
-```bash
-cp .env.example .env
-```
+## Install steps: initial installation only
 
-## Generate application key
+The following steps only need to be completed the first time you setup CDash.
+
 ```bash
+# Setup default configuration
+cp .env.example .env
+
+# Generate application key
 php artisan key:generate
 ```
 
-## Set CDash configuration variables
+## Configure CDash
 
 If you are upgrading an existing CDash instance, run the following command to migrate
 your config settings into the .env file:
