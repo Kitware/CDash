@@ -11,7 +11,7 @@ Before installing CDash, you will need:
 - A database: [MySQL v5.x+](https://www.mysql.com) or [PostgreSQL v9.2+](https://www.postgresql.org)
 - [PHP 7.2 - 7.4](https://www.php.net)
 - [Composer](https://getcomposer.org) (to install PHP dependencies)
-- [npm](https://www.npmjs.com/) (to install Javascript dependencies)
+- [npm v6](https://www.npmjs.com/) (to install Javascript dependencies)
 
 ## PHP modules
 
@@ -64,29 +64,32 @@ chgrp -R www-data /path/to/CDash
 chmod -R g+rw /path/to/CDash
 ```
 
-## Install dependencies
+## Install/upgrade steps
+
+Perform the follow steps when you initially install CDash and upon each subsequent upgrade.
 
 ```bash
+# Install PHP and JavaScript dependencies
 composer install --no-dev --prefer-dist
 npm install
-```
 
-## Generate build files
-```bash
+# Generate build files
 npm run dev
 ```
 
-## Setup default configuration
-```bash
-cp .env.example .env
-```
+## Install steps: initial installation only
 
-## Generate application key
+The following steps only need to be completed the first time you setup CDash.
+
 ```bash
+# Setup default configuration
+cp .env.example .env
+
+# Generate application key
 php artisan key:generate
 ```
 
-## Set CDash configuration variables
+## Configure CDash
 
 If you are upgrading an existing CDash instance, run the following command to migrate
 your config settings into the .env file:
