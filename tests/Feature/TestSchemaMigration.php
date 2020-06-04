@@ -6,7 +6,7 @@ use Artisan;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class TestSchemaMigrationTestCase extends TestCase
+class TestSchemaMigration extends TestCase
 {
     use RefreshDatabase;
 

@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 
-class MigrateConfigCommandTestCase extends TestCase
+class MigrateConfigCommand extends TestCase
 {
     public function setUp() : void
     {
