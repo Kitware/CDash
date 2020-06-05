@@ -19,6 +19,11 @@ class AppServiceProvider extends ServiceProvider
 
         /** For migrations on MySQL older than 5.7.7 **/
         Schema::defaultStringLength(191);
+
+        // Serve content over https in production mode.
+        if (config('app.env') === 'production') {
+            \URL::forceScheme('https');
+        }
     }
 
     /**
