@@ -93,24 +93,13 @@ $response = begin_JSON_response();
 if (isset($_GET['fileid']) && is_numeric($_GET['fileid'])) {
     $stmt = $pdo->prepare(
         "SELECT id, value, name FROM testmeasurement
-        WHERE outputid = :testid AND type = 'file'
+        WHERE outputid = :outputid AND type = 'file'
         ORDER BY id");
-    pdo_execute($stmt, [':testid' => $testid]);
+    pdo_execute($stmt, [':outputid' => $buildtest->outputid]);
     $result_array = $stmt->fetch();
-
     header('Content-type: tar/gzip');
     header('Content-Disposition: attachment; filename="' . $result_array['name'] . '.tgz"');
-
-    if ($config->get('CDASH_DB_TYPE') == 'pgsql') {
-        $buf = '';
-        while (!feof($result_array['value'])) {
-            $buf .= fread($result_array['value'], 2048);
-        }
-        $buf = stripslashes($buf);
-    } else {
-        $buf = $result_array['value'];
-    }
-    echo base64_decode($buf);
+    echo base64_decode($result_array['value']);
     flush();
     ob_flush();
     return;
