@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="test_attached_files"
+	BuildStamp="20200610-1332-Experimental"
+	Name="elysium"
+	Generator="ctest-3.15.0"
+	>
+	<Testing>
+		<StartDateTime>Jun 10 09:32 EDT</StartDateTime>
+		<StartTestTime>1591795946</StartTestTime>
+		<TestList>
+			<Test>./test_attached_files</Test>
+		</TestList>
+		<Test Status="passed">
+			<Name>test_attached_files</Name>
+			<Path>.</Path>
+			<FullName>./test_attached_files</FullName>
+			<FullCommandLine>/tmp/bin/test_attached_files</FullCommandLine>
+			<Results>
+				<NamedMeasurement type="text/string" name="Completion Status">
+					<Value>Completed</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Command Line">
+					<Value>/tmp/bin/test_attached_files</Value>
+				</NamedMeasurement>
+				<Measurement>
+					<Value></Value>
+				</Measurement>
+			</Results>
+			<NamedMeasurement name="Attached File" encoding="base64" compression="tar/gzip" filename="output.txt" type="file">
+				<Value>H4sIAOrg4F4AA8svLSkoLdErqShhoBkwMDAwMzFRANHmZqZg2sAIwocAI3MFQ2MzcwNDMwMjY0MFA0NjI1MDBgUD2jkJAUqLSxKLgE6pSkzOxqcOqCwtDY88xCcKcHqIgJCMzGIFIMqtVChJLS5RyAenB66BdtYoGAWjYBSMAhoDAGiSnUcACAAA====</Value>
+			</NamedMeasurement>
+		</Test>
+		<EndDateTime>Jun 10 09:32 EDT</EndDateTime>
+		<EndTestTime>1591795946</EndTestTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Testing>
+</Site>
