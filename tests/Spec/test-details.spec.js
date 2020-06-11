@@ -51,11 +51,18 @@ describe('TestDetails', function() {
         timestd: 0.00,
         timestatus: 'Passed',
         timeStatusColor: 'normal-text',
-        measurements: [{
-          name: 'Exit Value',
-          type: 'text/string',
-          value: 5,
-        }],
+        measurements: [
+          {
+            name: 'Exit Value',
+            type: 'text/string',
+            value: 5,
+          },
+          {
+            name: 'results.txt',
+            type: 'file',
+            value: '',
+          },
+        ],
       },
       user: {
         id: 1,
@@ -103,6 +110,10 @@ describe('TestDetails', function() {
     const site_link = component.find('#site_link');
     expect(site_link.text()).toBe('(my site)');
     expect(site_link.attributes('href')).toBe('/viewSite.php?siteid=1');
+
+    const file_link = component.find('a[href*="fileid="]');
+    expect(file_link.isVisible()).toBe(true);
+    expect(file_link.attributes('href')).toBe('/api/v1/testDetails.php?buildtestid=blank&fileid=undefined');
   });
 
   it('can toggle command line', async function() {

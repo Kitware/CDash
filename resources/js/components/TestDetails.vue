@@ -120,7 +120,7 @@
             {{ file.name }}
           </th>
           <td>
-            <a :href="$baseURL + '/api/v1/testDetails.php?test=' + cdash.test.id + '&build=' + cdash.test.buildid + '&fileid=' + file.fileid">
+            <a :href="$baseURL + '/api/v1/testDetails.php?buildtestid=' + buildtestid+ '&fileid=' + file.fileid">
               <img :src="$baseURL + '/img/package.png'">
             </a>
           </td>
