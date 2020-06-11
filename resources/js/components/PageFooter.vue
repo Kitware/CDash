@@ -39,7 +39,13 @@
           target="blank"
         >Report problems</a> |
         <a :href="endpoint">View as JSON</a>
-        <span v-if="generationtime">
+        <span
+          v-if="generationtime"
+          v-tooltip.top-start="{
+            content: 'Total (Backend API)',
+            delay: 1500,
+          }"
+        >
           | {{ generationtime }}
         </span>
         <span v-if="currentdate">

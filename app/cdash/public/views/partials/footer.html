@@ -11,7 +11,11 @@
       © <a href="http://www.kitware.com">Kitware</a> |
       <a href="https://github.com/Kitware/CDash/issues" target="blank">Report problems</a> |
       <a ng-href="{{cdash.endpoint}}">View as JSON</a>
-      <span ng-if="::cdash.generationtime">
+      <span ng-if="::cdash.generationtime"
+            tooltip-popup-delay="1500"
+            tooltip-append-to-body="true"
+            uib-tooltip="Total (Backend API)"
+      >
         | {{cdash.generationtime}}
       </span>
       <span ng-if="::cdash.currentdate">
