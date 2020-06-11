@@ -218,6 +218,7 @@ add_php_test(rehashpassword)
 add_php_test(consistenttestingday)
 add_php_test(numericupdate)
 add_php_test(attachedfiles)
+add_php_test(subprojectorder)
 
 add_subdirectory(ctest)
 
