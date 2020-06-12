@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="close_to_nightly"
+	BuildStamp="20200612-1344-Experimental"
+	Name="hesperides"
+	Generator="ctest-3.15.0"
+	>
+	<Build>
+		<StartDateTime>Jun 11 09:44 EDT</StartDateTime>
+		<StartBuildTime>1591883092</StartBuildTime>
+		<BuildCommand>cmake --build .</BuildCommand>
+		<Log Encoding="base64" Compression="bin/gzip"/>
+		<EndDateTime>Jun 11 09:44 EDT</EndDateTime>
+		<EndBuildTime>1591883092</EndBuildTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Build>
+</Site>

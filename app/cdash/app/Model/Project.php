@@ -85,6 +85,8 @@ class Project
      */
     private $SubscriberCollection;
 
+    public $Filled;
+
     public function __construct()
     {
         $this->Initialize(); // why?
@@ -151,6 +153,8 @@ class Project
             $this->ErrorsFilter = '';
         }
         $this->PDO = Database::getInstance();
+
+        $this->Filled = false;
     }
 
     /** Add a build group */
@@ -429,6 +433,10 @@ class Project
     /** Fill in all the information from the database */
     public function Fill()
     {
+        if ($this->Filled) {
+            return;
+        }
+
         if (!$this->Id) {
             echo 'Project Fill(): Id not set';
         }
@@ -453,7 +461,7 @@ class Project
             $this->Public = $project_array['public'];
             $this->CoverageThreshold = $project_array['coveragethreshold'];
             $this->TestingDataUrl = $project_array['testingdataurl'];
-            $this->NightlyTime = $project_array['nightlytime'];
+            $this->SetNightlyTime($project_array['nightlytime']);
             $this->GoogleTracker = $project_array['googletracker'];
             $this->EmailLowCoverage = $project_array['emaillowcoverage'];
             $this->EmailTestTimingChanged = $project_array['emailtesttimingchanged'];
@@ -508,6 +516,23 @@ class Project
             $this->WarningsFilter = $build_filters_array['warnings'];
             $this->ErrorsFilter = $build_filters_array['errors'];
         }
+
+        $this->Filled = true;
+    }
+
+    public function SetNightlyTime($nightly_time)
+    {
+        $this->NightlyTime = $nightly_time;
+
+        // Get the timezone for the project's nightly start time.
+        $this->NightlyDateTime = new \DateTime($this->NightlyTime);
+        $this->NightlyTimezone = $this->NightlyDateTime->getTimezone();
+        if (!$this->NightlyTimezone) {
+            // Default to UTC.
+            $this->NightlyTimezone = new \DateTimeZone('UTC');
+        }
+        // Use the project's timezone by default.
+        date_default_timezone_set($this->NightlyTimezone->getName());
     }
 
     /** Add a logo */
