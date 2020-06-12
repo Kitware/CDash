@@ -693,7 +693,7 @@ class Index extends ResultsApi
                 $this->subProjectPositions[] = $build_array['subprojectposition'];
             }
         } else {
-            $build_response['position'] = 0;
+            $build_response['position'] = -1;
         }
 
         // We maintain a list of distinct build start times when viewing
@@ -1269,13 +1269,20 @@ class Index extends ResultsApi
         }
     }
 
-    // Normalize subproject order so it's always 1 to N with no gaps.
+    // Normalize subproject order so it's always 1 to N with no gaps and no duplicates.
     public function normalizeSubProjectOrder()
     {
         sort($this->subProjectPositions);
         for ($i = 0; $i < count($this->buildgroupsResponse); $i++) {
             for ($j = 0; $j < count($this->buildgroupsResponse[$i]['builds']); $j++) {
-                $idx = array_search($this->buildgroupsResponse[$i]['builds'][$j]['position'], $this->subProjectPositions);
+                $position = $this->buildgroupsResponse[$i]['builds'][$j]['position'];
+                if ($position === -1) {
+                    // No SubProject position found for this build, stick it on the end of the list.
+                    $idx = count($this->subProjectPositions);
+                    $this->subProjectPositions[] = $idx;
+                } else {
+                    $idx = array_search($position, $this->subProjectPositions);
+                }
                 $this->buildgroupsResponse[$i]['builds'][$j]['position'] = $idx + 1;
             }
         }
