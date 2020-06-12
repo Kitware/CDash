@@ -34,18 +34,11 @@ class TestingDay
      */
     public static function get(Project $project, $date)
     {
-        // Get timezone from the project's nightly start time.
-        $current_nightly_datetime = new \DateTime($project->NightlyTime);
-        $nightly_timezone = $current_nightly_datetime->getTimezone();
-        if (!$nightly_timezone) {
-            // Default to UTC.
-            $nightly_timezone = new \DateTimeZone('UTC');
-        }
-        // Use the project's timezone by default.
-        date_default_timezone_set($nightly_timezone->getName());
+        // Make sure the project is populated from the database.
+        $project->Fill();
 
         // Extract hour, minute, and second from the project nightly start time.
-        $current_nightly_timestamp = $current_nightly_datetime->getTimestamp();
+        $current_nightly_timestamp = $project->NightlyDateTime->getTimestamp();
         $hour = intval(date('H', $current_nightly_timestamp));
         $minute = intval(date('i', $current_nightly_timestamp));
         $second = intval(date('s', $current_nightly_timestamp));
@@ -61,7 +54,7 @@ class TestingDay
         $day = intval(date('j', $build_start_timestamp));
 
         $nightly_datetime = new \DateTime();
-        $nightly_datetime->setTimezone($nightly_timezone);
+        $nightly_datetime->setTimezone($project->NightlyTimezone);
         $nightly_datetime->setDate($year, $month, $day);
         $nightly_datetime->setTime($hour, $minute, $second);
         $nightly_start_timestamp = $nightly_datetime->getTimestamp();

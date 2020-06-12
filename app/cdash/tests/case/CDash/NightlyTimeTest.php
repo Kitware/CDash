@@ -25,12 +25,14 @@ class NightlyTimeTest extends TestCase
     {
         parent::__construct();
         $this->Project = new Project();
+        // Avoid the database for this test.
+        $this->Project->Filled = true;
     }
 
     public function testBuildDateWithConsistentTimeZones()
     {
         // "Nightly" time in the morning.
-        $this->Project->NightlyTime = '11:59:59 UTC';
+        $this->Project->SetNightlyTime('11:59:59 UTC');
 
         // Build started before the nightly time.
         // It belongs to yesterday.
@@ -41,7 +43,7 @@ class NightlyTimeTest extends TestCase
         $this->validateTestingDay('2019-05-17 11:59:59', '2019-05-17');
 
         // "Nightly" time in the afternoon.
-        $this->Project->NightlyTime = '12:00:01 UTC';
+        $this->Project->SetNightlyTime('12:00:01 UTC');
 
         // Build started before the nightly time.
         // It belongs to today.
@@ -55,7 +57,7 @@ class NightlyTimeTest extends TestCase
     public function testBuildDateWithDifferentTimeZones()
     {
         // "Nightly" time in the morning according to the project's time zone.
-        $this->Project->NightlyTime = '11:59:59 America/New_York';
+        $this->Project->SetNightlyTime('11:59:59 America/New_York');
 
         // Build started before the nightly time.
         // It belongs to yesterday.
@@ -66,7 +68,7 @@ class NightlyTimeTest extends TestCase
         $this->validateTestingDay('2019-05-17 16:00:01', '2019-05-17');
 
         // "Nightly" time in the afternoon according to the project's time zone.
-        $this->Project->NightlyTime = '12:00:01 America/New_York';
+        $this->Project->SetNightlyTime('12:00:01 America/New_York');
 
         // Build started before the nightly time.
         // It belongs to today.
@@ -79,7 +81,7 @@ class NightlyTimeTest extends TestCase
 
     public function testBuildDateAcrossDST()
     {
-        $this->Project->NightlyTime = '01:00:00 America/New_York';
+        $this->Project->SetNightlyTime('01:00:00 America/New_York');
         $utc_time = new \DateTimeZone('UTC');
 
         // DST 2019 in New York began at 2:00 AM on Sunday, March 10
@@ -103,7 +105,7 @@ class NightlyTimeTest extends TestCase
 
     public function testUTCInput()
     {
-        $this->Project->NightlyTime = '04:01:00 UTC';
+        $this->Project->SetNightlyTime('04:01:00 UTC');
         $this->validateTestingDay('2019-09-26 04:00:59 UTC', '2019-09-25');
 
         $this->validateTestingDay('2020-03-09 04:00:59 UTC', '2020-03-08');

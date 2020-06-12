@@ -92,5 +92,23 @@ class ConsistentTestingDayTestCase extends KWWebTestCase
         $jsonobj = json_decode($content, true);
         $this->assertEqual(1, count($jsonobj['builds']));
         $this->assertEqual('after', $jsonobj['builds'][0]['buildName']);
+
+        // Different time zone case.
+        $this->project->SetNightlyTime('10:00:00 America/Denver');
+        $this->project->Save();
+        $this->submission('ConsistentTestingDay', "$dir/Build_1.xml");
+
+        // This build occurred slightly before the nightly start time,
+        // so verify it shows up on the correct day.
+        $this->get($this->url . '/api/v1/index.php?project=ConsistentTestingDay&date=2020-06-10');
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $buildgroup = array_pop($jsonobj['buildgroups']);
+        $this->assertEqual(1, count($buildgroup['builds']));
+
+        $this->get($this->url . '/api/v1/index.php?project=ConsistentTestingDay&date=2020-06-11');
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $this->assertEqual(0, count($jsonobj['buildgroups']));
     }
 }
