@@ -36,8 +36,14 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
         $file = "{$rep}/5_test.xml";
 
         if (!$this->submission('EmailProjectExample', $file)) {
+            $this->fail('submission of test data failed');
             return;
         }
+
+        if (!$this->checkLog($this->logfilename)) {
+            $this->fail('Errors in log after submit');
+        }
+
         $url = Config::getInstance()->getBaseUrl();
         $expected = [
             'simpletest@localhost',
@@ -95,6 +101,7 @@ class TimeoutsAndMissingTestsTestCase extends KWWebTestCase
         $file = "{$rep}/4_test.xml";
 
         if (!$this->submission('EmailProjectExample', $file)) {
+            $this->fail('failed to submit test data');
             return;
         }
         $url = Config::getInstance()->getBaseUrl();
