@@ -715,7 +715,7 @@ CREATE TABLE `testmeasurement` (
   `outputid` bigint(20) NOT NULL,
   `name` varchar(70) NOT NULL,
   `type` varchar(70) NOT NULL,
-  `value` text NOT NULL,
+  `value` mediumtext NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `outputid` (`outputid`)
 );
