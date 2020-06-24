@@ -53,10 +53,9 @@
         </tr>
       </table>
 
-      <form
+      <div
         v-if="cdash.project || cdash.edit == 0"
         name="projectForm"
-        action="javascript:;"
       >
         <div class="tabs">
           <!-- navigation panel -->
@@ -2127,7 +2126,7 @@
             >
           </div>
         </div>
-      </form>
+      </div>
     </div>
   </section>
 </template>

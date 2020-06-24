@@ -137,7 +137,7 @@
       <img :src="$baseURL + '/img/console.png'">
       <a
         id="commandlinelink"
-        href="javascript:;"
+        href="#"
         @click="showcommandline = !showcommandline"
       >
         <span v-show="!showcommandline">Show Command Line</span>
@@ -158,7 +158,7 @@
         <img :src="$baseURL + '/img/console.png'">
         <a
           id="environmentlink"
-          href="javascript:;"
+          href="#"
           @click="showenvironment = !showenvironment"
         >
           <span v-show="!showenvironment">Show Environment</span>
