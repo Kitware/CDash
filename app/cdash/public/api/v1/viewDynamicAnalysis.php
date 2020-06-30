@@ -89,62 +89,65 @@ $build_response['buildtime'] = $build->StartTime;
 $response['build'] = $build_response;
 
 // Dynamic Analysis
-$DA_stmt = $pdo->prepare(
-    'SELECT * FROM dynamicanalysis WHERE buildid = ? ORDER BY status DESC');
-pdo_execute($DA_stmt, [$build->Id]);
-
 $defect_types = [];
 $dynamic_analyses = [];
-while ($DA_row = $DA_stmt->fetch()) {
-    $dynamic_analysis = [];
-    $dynamic_analysis['status'] = ucfirst($DA_row['status']);
-    $dynamic_analysis['name'] = $DA_row['name'];
-    $dynamic_analysis['id'] = $DA_row['id'];
 
-    $dynid = $DA_row['id'];
-    $defects_stmt = $pdo->prepare(
-        'SELECT * FROM dynamicanalysisdefect WHERE dynamicanalysisid = ?');
-    pdo_execute($defects_stmt, [$dynid]);
-    // Initialize defects array as zero for each type.
-    $num_types = count($defect_types);
-    if ($num_types > 0) {
-        // Work around a bug in older versions of PHP where the 2nd argument to
-        // array_fill must be greater than zero.
-        $defects = array_fill(0, count($defect_types), 0);
-    } else {
-        $defects = [];
-    }
-    while ($defects_row = $defects_stmt->fetch()) {
-        // Figure out how many defects of each type were found for this test.
-        $defect_type = $defects_row['type'];
-        if (array_key_exists($defect_type, $defect_nice_names)) {
-            $defect_type = $defect_nice_names[$defect_type];
-        }
-        if (!in_array($defect_type, $defect_types)) {
-            $defect_types[] = $defect_type;
-            $defects[] = 0;
-        }
+// Process 50 rows at a time so we don't run out of memory.
+$rows = \DB::table('dynamicanalysis')
+        ->where('buildid', '=', $build->Id)
+        ->orderBy('status', 'desc')
+        ->chunk(50, function ($rows) use ($pdo, &$dynamic_analyses, &$defect_types, $defect_nice_names, $project) {
+            foreach ($rows as $DA_row) {
+                $dynamic_analysis = [];
+                $dynamic_analysis['status'] = ucfirst($DA_row->status);
+                $dynamic_analysis['name'] = $DA_row->name;
+                $dynamic_analysis['id'] = $DA_row->id;
 
-        $column = array_search($defect_type, $defect_types);
-        $defects[$column] = $defects_row['value'];
-    }
-    $dynamic_analysis['defects'] = $defects;
+                $dynid = $DA_row->id;
+                $defects_stmt = $pdo->prepare(
+                    'SELECT * FROM dynamicanalysisdefect WHERE dynamicanalysisid = ?');
+                pdo_execute($defects_stmt, [$dynid]);
+                // Initialize defects array as zero for each type.
+                $num_types = count($defect_types);
+                if ($num_types > 0) {
+                    // Work around a bug in older versions of PHP where the 2nd argument to
+                    // array_fill must be greater than zero.
+                    $defects = array_fill(0, count($defect_types), 0);
+                } else {
+                    $defects = [];
+                }
+                while ($defects_row = $defects_stmt->fetch()) {
+                    // Figure out how many defects of each type were found for this test.
+                    $defect_type = $defects_row['type'];
+                    if (array_key_exists($defect_type, $defect_nice_names)) {
+                        $defect_type = $defect_nice_names[$defect_type];
+                    }
+                    if (!in_array($defect_type, $defect_types)) {
+                        $defect_types[] = $defect_type;
+                        $defects[] = 0;
+                    }
 
-    if ($project->DisplayLabels) {
-        get_labels_JSON_from_query_results(
-                "SELECT text FROM label, label2dynamicanalysis
-                WHERE label.id = label2dynamicanalysis.labelid AND
-                label2dynamicanalysis.dynamicanalysisid = '$dynid'
-                ORDER BY text ASC", $dynamic_analysis);
-        if (array_key_exists('labels', $dynamic_analysis)) {
-            $dynamic_analysis['labels'] = implode(', ', $dynamic_analysis['labels']);
-        } else {
-            $dynamic_analysis['labels'] = '';
-        }
-    }
+                    $column = array_search($defect_type, $defect_types);
+                    $defects[$column] = $defects_row['value'];
+                }
+                $dynamic_analysis['defects'] = $defects;
 
-    $dynamic_analyses[] = $dynamic_analysis;
-}
+                if ($project->DisplayLabels) {
+                    get_labels_JSON_from_query_results(
+                    "SELECT text FROM label, label2dynamicanalysis
+                    WHERE label.id = label2dynamicanalysis.labelid AND
+                    label2dynamicanalysis.dynamicanalysisid = '$dynid'
+                    ORDER BY text ASC", $dynamic_analysis);
+                    if (array_key_exists('labels', $dynamic_analysis)) {
+                        $dynamic_analysis['labels'] = implode(', ', $dynamic_analysis['labels']);
+                    } else {
+                        $dynamic_analysis['labels'] = '';
+                    }
+                }
+
+                $dynamic_analyses[] = $dynamic_analysis;
+            }
+        });
 
 // Insert zero entries for types of defects that were not detected by a given test.
 $num_defect_types = count($defect_types);
