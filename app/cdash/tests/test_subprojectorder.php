@@ -50,7 +50,6 @@ class SubProjectOrderTestCase extends KWWebTestCase
         // Verify subproject order.
         $this->get("{$this->url}/api/v1/index.php?project=SubProjectOrder&parentid={$parent_buildid}");
         $content = $this->getBrowser()->getContent();
-        file_put_contents("/tmp/zackdebug.txt", $content);
         $jsonobj = json_decode($content, true);
         $buildgroup = array_pop($jsonobj['buildgroups']);
         $this->assertTrue(1 === $buildgroup['builds'][0]['position']);
