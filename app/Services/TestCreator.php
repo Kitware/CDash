@@ -64,8 +64,12 @@ class TestCreator
         $this->testStatus = '';
     }
 
-    public function saveImage(Image $image, $outputid)
+    public function loadImage(Image $image)
     {
+        if ($image->Checksum) {
+            return;
+        }
+
         // Decode the data
         $imgStr = base64_decode($image->Data);
         $img = imagecreatefromstring($imgStr);
@@ -92,8 +96,11 @@ class TestCreator
 
         $image->Data = $imageVariable;
         $image->Checksum = crc32($imageVariable);
-        $image->Save();
+    }
 
+    public function saveImage(Image $image, $outputid)
+    {
+        $image->Save();
         $testImage = new TestImage;
         $testImage->imgid = $image->Id;
         $testImage->outputid = $outputid;
@@ -111,6 +118,12 @@ class TestCreator
         foreach ($this->measurements as $measurement) {
             $crc32_input .= $measurement->Type . $measurement->Name . $measurement->Value;
         }
+
+        foreach ($this->images as $image) {
+            $this->loadImage($image);
+            $crc32_input .= "_{$image->Checksum}";
+        }
+
         return crc32($crc32_input);
     }
 
