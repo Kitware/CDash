@@ -29,7 +29,7 @@ class Config extends Singleton
      */
     public static function getVersion()
     {
-        return self::getInstance()->get('CDASH_VERSION');
+        return file_get_contents(public_path('VERSION'));
     }
 
     /**
