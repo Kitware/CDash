@@ -3,8 +3,9 @@ const mix = require('laravel-mix');
 mix.disableNotifications();
 
 const ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin');
+const GitRevisionPlugin = require('git-revision-webpack-plugin')
 
-// Generate version string.
+// Generate version string (timestamp) used internally for cache-busting.
 var release = false; // Change to true when cutting a release.
 if (release) {
   // Update the version in package.json before cutting a new release.
@@ -121,7 +122,9 @@ mix.webpackConfig({
       },
     ]
   },
+
   plugins: [
+    new GitRevisionPlugin(),
     // Replace version string in angular files.
     new ReplaceInFileWebpackPlugin([
       {

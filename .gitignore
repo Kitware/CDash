@@ -29,6 +29,8 @@ npm-debug.log
 public/main.js
 !/public/.htaccess
 /public/storage
+/public/COMMITHASH
+/public/VERSION
 /storage/*.key
 .vagrant
 /vendor/

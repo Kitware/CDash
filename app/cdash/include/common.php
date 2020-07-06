@@ -1714,7 +1714,7 @@ function begin_XML_for_XSLT()
 
     $xml = '<?xml version="1.0" encoding="UTF-8"?><cdash>';
     $xml .= add_XML_value('cssfile', $css_file);
-    $xml .= add_XML_value('version', $config->get('CDASH_VERSION'));
+    $xml .= add_XML_value('version', CDash\Config::getVersion());
     $xml .= add_XML_value('_token', csrf_token());
 
     return $xml;
@@ -1743,7 +1743,7 @@ function begin_JSON_response()
     $service = ServiceContainer::getInstance();
 
     $response = array();
-    $response['version'] = $config->get('CDASH_VERSION');
+    $response['version'] = CDash\Config::getVersion();
 
     $user_response = array();
     $userid = Auth::id();
