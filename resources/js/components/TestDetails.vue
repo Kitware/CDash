@@ -199,7 +199,7 @@
 
       <a
         v-show="rawdatalink != ''"
-        :href="$baseURL + '/' + cdash.rawdatalink"
+        :href="rawdatalink"
         target="_blank"
       >
         View Graph Data as JSON

@@ -182,6 +182,10 @@ describe('TestDetails', function() {
 
     expect(component.vm.showgraph).toBe(true);
     expect(component.find('#graph_holder').isVisible()).toBe(true);
+
+    const json_link = component.find('a[href*="testGraph.php"]');
+    expect(json_link.isVisible()).toBe(true);
+    expect(json_link.attributes('href')).toBe('/api/v1/testGraph.php?testid=1&buildid=1&type=time');
   });
 
   it('can toggle environment', async function() {
