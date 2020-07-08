@@ -45,7 +45,7 @@ describe('TestDetails', function() {
         statusColor: 'error-text',
         update: {
           revision: 'asdf',
-          revisionurl: 'github.com/asdf',
+          revisionurl: 'https://github.com/asdf',
         },
         timemean: 0.00,
         timestd: 0.00,
@@ -111,6 +111,10 @@ describe('TestDetails', function() {
     expect(site_link.text()).toBe('(my site)');
     expect(site_link.attributes('href')).toBe('/viewSite.php?siteid=1');
 
+    const revision_link = component.find('#revision_link');
+    expect(revision_link.text()).toBe('asdf');
+    expect(revision_link.attributes('href')).toBe('https://github.com/asdf');
+
     const file_link = component.find('a[href*="fileid="]');
     expect(file_link.isVisible()).toBe(true);
     expect(file_link.attributes('href')).toBe('/api/v1/testDetails.php?buildtestid=blank&fileid=undefined');
@@ -171,6 +175,14 @@ describe('TestDetails', function() {
     graph_selector.findAll('option').at(1).setSelected();
     graph_selector.trigger('change');
 
+    const options = graph_selector.findAll('option');
+    expect(options.length).toBe(3);
+    expect(options.at(0).text()).toBe('Select...');
+    expect(options.at(1).text()).toBe('Test Time');
+    expect(options.at(2).text()).toBe('Failing/Passing');
+
+    options.at(1).setSelected();
+
     await component.vm.$nextTick();
     await component.vm.$nextTick();
     await component.vm.$nextTick();
@@ -178,6 +190,10 @@ describe('TestDetails', function() {
 
     expect(component.vm.showgraph).toBe(true);
     expect(component.find('#graph_holder').isVisible()).toBe(true);
+
+    const json_link = component.find('a[href*="testGraph.php"]');
+    expect(json_link.isVisible()).toBe(true);
+    expect(json_link.attributes('href')).toBe('/api/v1/testGraph.php?testid=1&buildid=1&type=time');
   });
 
   it('can toggle environment', async function() {

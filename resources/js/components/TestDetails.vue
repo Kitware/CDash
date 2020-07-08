@@ -53,7 +53,7 @@
         <b>Repository revision: </b>
         <a
           id="revision_link"
-          :href="$baseURL + '/' + cdash.test.update.revisionurl"
+          :href="cdash.test.update.revisionurl"
         >
           {{ cdash.test.update.revision }}
         </a>
@@ -191,7 +191,7 @@
         <option value="status">
           Failing/Passing
         </option>
-        <option v-for="measurement in cdash.test.measurements">
+        <option v-for="measurement in numericMeasurements">
           {{ measurement.name }}
         </option>
       </select>
@@ -199,7 +199,7 @@
 
       <a
         v-show="rawdatalink != ''"
-        :href="$baseURL + '/' + cdash.rawdatalink"
+        :href="rawdatalink"
         target="_blank"
       >
         View Graph Data as JSON
@@ -260,6 +260,11 @@ export default {
     measurements: function () {
       return this.cdash.test.measurements.filter(function (measurement) {
         return measurement.type != 'file' && measurement.type != 'text/link';
+      })
+    },
+    numericMeasurements: function () {
+      return this.cdash.test.measurements.filter(function (measurement) {
+        return measurement.type == 'numeric/double';
       })
     },
   },

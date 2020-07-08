@@ -199,11 +199,17 @@ class ManageMeasurementsTestCase extends KWWebTestCase
         if ($found != 3) {
             $this->fail("Expected three tests, found $found");
         }
+        $first = true;
         foreach ($jsonobj['tests'] as $test) {
             $test_name = $test['name'];
             $num_procs = $test['measurements'][0];
             $proc_time = $test['procTimeFull'];
             $this->validate_test($test_name, $num_procs, $proc_time, 'viewTest.php');
+            if ($first && $num_procs) {
+                $selected_test_id = $test['id'];
+                $selected_nprocs =  $num_procs;
+                $first = false;
+            }
         }
 
         // Verify that 'Processors' is also displayed on testSummary.php.
@@ -230,6 +236,7 @@ class ManageMeasurementsTestCase extends KWWebTestCase
         if ($found != 6.5) {
             $this->fail("Expected proctime to be 6.5, found $found");
         }
+        $this->assertEqual("/api/v1/testSummary.php?project=$this->ProjectId&name=Test5Procs&date=2017-08-29&export=csv", $jsonobj['csvlink']);
 
         // Check queryTests.php for this extra data too.
         $this->get($this->url . '/api/v1/queryTests.php?project=InsightExample&date=2017-08-29');
@@ -299,5 +306,11 @@ class ManageMeasurementsTestCase extends KWWebTestCase
                 $this->fail("Expected proc time to be $expected but found $found for subproject build $label");
             }
         }
+
+        // Verify that our test graphs correctly report Processors.
+        $this->get($this->url .  "/api/v1/testGraph.php?testid={$selected_test_id}&buildid={$this->BuildId}&measurementname=Processors&type=measurement");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $this->assertTrue($jsonobj[0]['data'][0]['y']  == $selected_nprocs);
     }
 }
