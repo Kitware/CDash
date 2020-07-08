@@ -350,7 +350,7 @@ foreach ($builds_response as $i => $build_response) {
 }
 
 $response['builds'] = $builds_response;
-$response['csvlink'] = htmlspecialchars($_SERVER['REQUEST_URI']) . '&amp;export=csv';
+$response['csvlink'] = $_SERVER['REQUEST_URI'] . '&export=csv';
 $response['columncount'] = count($columns);
 $response['numfailed'] = $numfailed;
 $response['numtotal'] = $numtotal;

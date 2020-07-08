@@ -236,6 +236,7 @@ class ManageMeasurementsTestCase extends KWWebTestCase
         if ($found != 6.5) {
             $this->fail("Expected proctime to be 6.5, found $found");
         }
+        $this->assertEqual("/api/v1/testSummary.php?project=$this->ProjectId&name=Test5Procs&date=2017-08-29&export=csv", $jsonobj['csvlink']);
 
         // Check queryTests.php for this extra data too.
         $this->get($this->url . '/api/v1/queryTests.php?project=InsightExample&date=2017-08-29');
