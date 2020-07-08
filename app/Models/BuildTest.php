@@ -137,7 +137,7 @@ class BuildTest extends Model
             get_labels_JSON_from_query_results(
                 'SELECT text FROM label, label2test WHERE ' .
                 'label.id=label2test.labelid AND ' .
-                "label2test.testid=" . $marshaledData['id'] . " AND " .
+                "label2test.outputid=" . $marshaledData['id'] . " AND " .
                 "label2test.buildid='$buildid' " .
                 'ORDER BY text ASC',
                 $marshaledData);

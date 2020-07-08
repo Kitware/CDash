@@ -238,6 +238,10 @@ class ManageMeasurementsTestCase extends KWWebTestCase
         }
         $this->assertEqual("/api/v1/testSummary.php?project=$this->ProjectId&name=Test5Procs&date=2017-08-29&export=csv", $jsonobj['csvlink']);
 
+        // Make sure download as CSV works too.
+        $this->get($this->url . "/api/v1/testSummary.php?project=$this->ProjectId&name=Test5Procs&date=2017-08-29&export=csv");
+        $this->assertTrue($this->checkLog($this->logfilename) !== false);
+
         // Check queryTests.php for this extra data too.
         $this->get($this->url . '/api/v1/queryTests.php?project=InsightExample&date=2017-08-29');
         $content = $this->getBrowser()->getContent();

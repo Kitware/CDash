@@ -217,7 +217,7 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
         }
         // start writing test results
         for ($t = 0; $t < count($columns); $t++) {
-            $filecontent .= $etest[$row['id']][$columns[$t]] . ',';
+            $filecontent .= $etest[$row['buildid']][$columns[$t]] . ',';
         }
         $filecontent .= "\n";
     }
