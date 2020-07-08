@@ -191,7 +191,7 @@
         <option value="status">
           Failing/Passing
         </option>
-        <option v-for="measurement in cdash.test.measurements">
+        <option v-for="measurement in numericMeasurements">
           {{ measurement.name }}
         </option>
       </select>
@@ -260,6 +260,11 @@ export default {
     measurements: function () {
       return this.cdash.test.measurements.filter(function (measurement) {
         return measurement.type != 'file' && measurement.type != 'text/link';
+      })
+    },
+    numericMeasurements: function () {
+      return this.cdash.test.measurements.filter(function (measurement) {
+        return measurement.type == 'numeric/double';
       })
     },
   },

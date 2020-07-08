@@ -175,6 +175,14 @@ describe('TestDetails', function() {
     graph_selector.findAll('option').at(1).setSelected();
     graph_selector.trigger('change');
 
+    const options = graph_selector.findAll('option');
+    expect(options.length).toBe(3);
+    expect(options.at(0).text()).toBe('Select...');
+    expect(options.at(1).text()).toBe('Test Time');
+    expect(options.at(2).text()).toBe('Failing/Passing');
+
+    options.at(1).setSelected();
+
     await component.vm.$nextTick();
     await component.vm.$nextTick();
     await component.vm.$nextTick();
