@@ -45,7 +45,7 @@ describe('TestDetails', function() {
         statusColor: 'error-text',
         update: {
           revision: 'asdf',
-          revisionurl: 'github.com/asdf',
+          revisionurl: 'https://github.com/asdf',
         },
         timemean: 0.00,
         timestd: 0.00,
@@ -110,6 +110,10 @@ describe('TestDetails', function() {
     const site_link = component.find('#site_link');
     expect(site_link.text()).toBe('(my site)');
     expect(site_link.attributes('href')).toBe('/viewSite.php?siteid=1');
+
+    const revision_link = component.find('#revision_link');
+    expect(revision_link.text()).toBe('asdf');
+    expect(revision_link.attributes('href')).toBe('https://github.com/asdf');
 
     const file_link = component.find('a[href*="fileid="]');
     expect(file_link.isVisible()).toBe(true);

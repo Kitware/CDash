@@ -53,7 +53,7 @@
         <b>Repository revision: </b>
         <a
           id="revision_link"
-          :href="$baseURL + '/' + cdash.test.update.revisionurl"
+          :href="cdash.test.update.revisionurl"
         >
           {{ cdash.test.update.revision }}
         </a>
