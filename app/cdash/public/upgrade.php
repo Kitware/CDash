@@ -320,7 +320,7 @@ if (isset($_GET['upgrade-2-8'])) {
 
     // Put that the upgrade is done in the log
     add_log('Upgrade done.', 'upgrade-2-8');
-    return;
+    $_GET['upgrade-3-0'] = 1;
 }
 
 // 3.0 Upgrade
