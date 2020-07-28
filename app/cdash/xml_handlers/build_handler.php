@@ -67,6 +67,7 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
         parent::__construct($projectid);
         $this->Builds = [];
         $this->Append = false;
+        $this->BuildCommand = '';
         $this->BuildLog = '';
         $this->Labels = [];
         $this->SubProjects = [];
