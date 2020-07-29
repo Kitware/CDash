@@ -43,6 +43,11 @@ if (CDASH_CONFIGURE_HTACCESS_FILE)
     set(phpunit_extra_arg "-d auto_prepend_file=${CMAKE_BINARY_DIR}/prepend_coverage.php")
 endif()
 
+add_test(
+  NAME php_style_check
+  COMMAND ${CMAKE_SOURCE_DIR}/vendor/bin/php-cs-fixer fix --dry-run
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+
 add_php_test(install)
 add_laravel_test(/Unit/app/Validators/PasswordTest)
 add_laravel_test(/Feature/CDashTest)

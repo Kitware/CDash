@@ -23,6 +23,7 @@ Homestead.yaml
 /node_modules
 npm-debug.log
 *.pem
+.php_cs.cache
 .phpunit.result.cache
 /public/build/
 /public/hot
