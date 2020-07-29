@@ -609,6 +609,7 @@ class BazelJSONHandler extends NonSaxHandler
                         break;
                     }
                 }
+                // no break
             default:
                 break;
         }

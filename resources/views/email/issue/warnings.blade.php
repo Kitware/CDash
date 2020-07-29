@@ -1,4 +1,7 @@
-<?php use CDash\Model\BuildError; use CDash\Model\BuildFailure;?>
+<?php use CDash\Model\BuildError;
+use CDash\Model\BuildFailure;
+
+?>
 @foreach($items as $warnings)
 @if (is_a($warnings, BuildFailure::class))
 {{ $warnings->SourceFile }} ({!! $warnings->GetUrlForSelf() !!})

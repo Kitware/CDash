@@ -13,7 +13,7 @@ $subprojects = $summary['build_subproject_names'];
 $project .= count($subprojects) === 1 ? "/{$subprojects[0]}" : '';
 
 $totals = [];
-foreach($summary['topics'] as $topic) {
+foreach ($summary['topics'] as $topic) {
     $description = $topic['description'];
     switch ($description) {
         case 'Failing Tests':
