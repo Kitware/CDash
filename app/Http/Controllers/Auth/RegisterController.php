@@ -96,7 +96,7 @@ class RegisterController extends Controller
             'lastname' => $data['lname'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'institution' => $data['institution']
+            'institution' => $data['institution'] || ''
         ]);
 
         $user->passwords()->save(new Password(['password' => $user->password]));

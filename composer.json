@@ -23,6 +23,7 @@
     "bernard/bernard": "1.0.0-alpha9",
     "doctrine/dbal": "^2.5",
     "fideloper/proxy": "^4.0",
+    "friendsofphp/php-cs-fixer": "^2.16",
     "guzzlehttp/guzzle": "~6.2",
     "iron-io/iron_mq": "~2.0",
     "knplabs/github-api": "dev-master#8c26dc85",

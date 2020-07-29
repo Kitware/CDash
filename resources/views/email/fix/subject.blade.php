@@ -30,7 +30,7 @@ if (isset($fixes['TestFailure'])) {
     if (isset($fixes['TestFailure']['failed']['fixed']) && $fixes['TestFailure']['failed']['fixed'] > 0) {
         $total[] = "t={$fixes['TestFailure']['failed']['fixed']}";
     }
-    if(isset($fixes['TestFailure']['notrun']['fixed']) && $fixes['TestFailure']['notrun']['fixed'] > 0) {
+    if (isset($fixes['TestFailure']['notrun']['fixed']) && $fixes['TestFailure']['notrun']['fixed'] > 0) {
         $total[] = "m={$fixes['TestFailure']['notrun']['fixed']}";
     }
 }
