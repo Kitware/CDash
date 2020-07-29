@@ -1,5 +1,6 @@
 <?php
 use CDash\Messaging\Topic\Topic;
+
 $max = $subscription->getProject()->EmailMaxChars;
 $subscriber = $subscription->getSubscriber();
 $topics = $subscriber->getTopics();

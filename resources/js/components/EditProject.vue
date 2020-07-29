@@ -2387,7 +2387,7 @@ export default {
       if (window.confirm("Are you sure you want to delete this project?")) {
         var parameters = { project: this.cdash.project };
         this.$axios
-          .delete('/api/v1/project.php', parameters)
+          .delete('/api/v1/project.php', { data: parameters})
           .then(response => {
             // Redirect to user.php
             window.location = this.$baseURL + '/user.php';

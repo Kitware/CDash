@@ -705,6 +705,7 @@ function createPageSpecificFilters($page_id)
     switch ($page_id) {
         case 'index.php':
         case 'viewBuildGroup.php':
+        case 'filterdata.php':
             return new IndexPhpFilters();
             break;
 

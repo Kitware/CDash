@@ -531,8 +531,16 @@ class Project
             // Default to UTC.
             $this->NightlyTimezone = new \DateTimeZone('UTC');
         }
+
+        // Attempt to deal with the fact that tz->getName() doesn't necessarily return
+        // a "valid timezone ID".
+        $timezone_name = timezone_name_from_abbr($this->NightlyTimezone->getName());
+        if ($timezone_name === false) {
+            $timezone_name = $this->NightlyTimezone->getName();
+        }
+
         // Use the project's timezone by default.
-        date_default_timezone_set($this->NightlyTimezone->getName());
+        date_default_timezone_set($timezone_name);
     }
 
     /** Add a logo */

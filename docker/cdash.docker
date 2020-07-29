@@ -64,7 +64,7 @@ COPY ./.git ./.git
 COPY ./.gitignore ./.gitignore
 COPY ./package.json ./package.json
 COPY ./package-lock.json ./package-lock.json
-COPY ./.php_cs ./.php_cs
+COPY ./.php_cs.dist ./.php_cs.dist
 COPY ./phpunit.xml ./phpunit.xml
 COPY ./public ./public
 COPY ./README.md ./README.md
@@ -72,7 +72,6 @@ COPY ./resources ./resources
 COPY ./routes ./routes
 COPY ./server.php ./server.php
 COPY ./storage ./storage
-COPY ./.styleci.yml ./.styleci.yml
 COPY ./tests ./tests
 COPY ./webpack.mix.js ./webpack.mix.js
 RUN chown -R www-data:www-data .

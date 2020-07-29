@@ -1,5 +1,6 @@
 <?php
 use CDash\Config;
+
 $config = Config::getInstance();
 $buildid = $items->first()->buildid;
 $url = "{$config->getBaseUrl()}/viewTest.php?buildid={$buildid}";
