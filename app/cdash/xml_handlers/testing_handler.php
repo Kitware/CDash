@@ -133,7 +133,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
             $this->TestCreator->projectid = $this->projectid;
             $this->TestCreator->testStatus = $attributes['STATUS'];
             $this->TestSubProjectName = '';
-        } elseif ($name == 'NAMEDMEASUREMENT') {
+        } elseif ($name == 'NAMEDMEASUREMENT' && array_key_exists('TYPE', $attributes)) {
             $this->TestMeasurement = $factory->create(TestMeasurement::class);
 
             if ($attributes['TYPE'] == 'file') {
