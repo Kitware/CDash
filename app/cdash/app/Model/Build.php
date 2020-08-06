@@ -1496,7 +1496,14 @@ class Build
             $buildtest->timemean = "$timemean";
             $buildtest->timestd = "$timestd";
 
-            $buildtest->save();
+            \DB::beginTransaction();
+            try {
+                $buildtest->save();
+            } catch (\Exception $e) {
+                \DB::rollback();
+                add_log($e->getMessage(), __METHOD__);
+            }
+            \DB::commit();
 
             if ($timestatus >= $projecttestmaxstatus) {
                 $testtimestatusfailed++;
