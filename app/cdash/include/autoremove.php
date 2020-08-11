@@ -61,7 +61,7 @@ function removeBuildsGroupwise($projectid, $maxbuilds, $force = false)
     $s = 'removing old buildids for projectid: ' . $projectid;
     add_log($s, 'removeBuildsGroupwise');
     echo '  -- ' . $s . "\n";
-    remove_build($buildids);
+    remove_build_chunked($buildids);
 }
 
 /** Remove the first builds that are at the beginning of the queue */
@@ -108,5 +108,5 @@ function removeFirstBuilds($projectid, $days, $maxbuilds, $force = false, $echo 
     if ($echo) {
         echo '  -- ' . $s . "\n"; // for "interactive" command line feedback
     }
-    remove_build($buildids);
+    remove_build_chunked($buildids);
 }
