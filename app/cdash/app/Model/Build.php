@@ -2814,7 +2814,10 @@ class Build
         if (!pdo_execute($exists_stmt, [$this->Id])) {
             return false;
         }
-        if ($exists_stmt->fetchColumn() !== false) {
+
+        $existing_groupid = $exists_stmt->fetchColumn();
+        if ($existing_groupid !== false) {
+            $this->GroupId = $existing_groupid;
             return false;
         }
 
