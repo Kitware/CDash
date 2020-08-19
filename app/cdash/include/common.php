@@ -791,7 +791,7 @@ function remove_project_builds($projectid)
     while ($build_array = pdo_fetch_array($build)) {
         $buildids[] = $build_array['id'];
     }
-    remove_build($buildids);
+    remove_build_chunked($buildids);
 }
 
 /** Remove all related inserts for a given build */
@@ -1096,6 +1096,17 @@ function remove_build($buildid)
     pdo_query('DELETE FROM build WHERE id IN ' . $buildids);
 
     add_last_sql_error('remove_build');
+}
+
+/** Call remove_build() in batches of 100. */
+function remove_build_chunked($buildid)
+{
+    if (!is_array($buildid)) {
+        return remove_build($buildid);
+    }
+    foreach (array_chunk($buildid, 100) as $chunk) {
+        remove_build($chunk);
+    }
 }
 
 /** Remove any children of the given build. */

@@ -100,7 +100,7 @@ class NoteHandler extends AbstractHandler
                 add_build($this->Build);
             }
 
-            if ($this->Build->Id > 0) {
+            if ($this->Build->Id > 0 && $this->Note->Time && $this->Note->Name && $this->Note->Text) {
                 // Insert the note
                 $this->Note->BuildId = $this->Build->Id;
                 $this->Note->Insert();

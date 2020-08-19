@@ -108,7 +108,7 @@ if (isset($submit)) {
         $builds[] = $build_array['id'];
     }
 
-    remove_build($builds);
+    remove_build_chunked($builds);
     $xml .= add_XML_value('alert', 'Removed ' . count($builds) . ' builds.');
 }
 

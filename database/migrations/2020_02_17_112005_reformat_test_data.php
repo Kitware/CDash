@@ -90,19 +90,45 @@ class ReformatTestData extends Migration
 
         // Set testid and details in the build2test table.
         $this->print('Set testid and details in the build2test table');
-        if (config('database.default') == 'pgsql') {
-            DB::update('
-                UPDATE build2test
-                SET testid = testoutput.testid,
-                    details = testoutput.details
-                FROM testoutput
-                WHERE build2test.outputid = testoutput.id');
-        } else {
-            DB::update('
-                UPDATE build2test
-                INNER JOIN testoutput ON build2test.outputid = testoutput.id
-                SET build2test.testid = testoutput.testid,
-                    build2test.details = testoutput.details');
+
+        $start = DB::table('build2test')->min('id') || 1;
+        $max = DB::table('build2test')->max('id') || $start;
+        $total = $max - $start;
+        $num_done = 0;
+        $next_report = 10;
+        $done = false;
+
+        while (!$done) {
+            $end = $start + 4999;
+            if (config('database.default') == 'pgsql') {
+                DB::update("
+                    UPDATE build2test
+                    SET testid = testoutput.testid,
+                        details = testoutput.details
+                    FROM testoutput
+                    WHERE build2test.outputid = testoutput.id AND
+                          build2test.id BETWEEN $start AND $end");
+            } else {
+                DB::update("
+                    UPDATE build2test
+                    INNER JOIN testoutput ON build2test.outputid = testoutput.id
+                    SET build2test.testid = testoutput.testid,
+                        build2test.details = testoutput.details
+                        WHERE build2test.id BETWEEN $start AND $end");
+            }
+            $num_done += 5000;
+            if ($end >= $max) {
+                $done = true;
+            } else {
+                usleep(1);
+                $start += 5000;
+                // Calculate percentage inserted.
+                $percent = round(($num_done / $total) * 100, -1);
+                if ($percent > $next_report) {
+                    $this->print("{$percent}%");
+                    $next_report = $percent + 10;
+                }
+            }
         }
 
         // Remove migrated columns from testoutput table.
