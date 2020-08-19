@@ -521,8 +521,9 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
         ];
 
         $buildgroup = array_pop($jsonobj['buildgroups']);
-        $builds = $buildgroup['builds'];
-        foreach ($builds as $build) {
+        $child_builds = $buildgroup['builds'];
+        $this->assertEqual(count($child_builds), 4);
+        foreach ($child_builds as $build) {
             $label = $build['label'];
             if (!array_key_exists($label, $expected_builds)) {
                 $this->fail("Unexpected label $label");
@@ -693,7 +694,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             }
         }
 
-        foreach ($builds as $build) {
+        foreach ($child_builds as $build) {
             // Verify that dynamic analysis data was correctly split across SubProjects.
             $stmt = $pdo->query("SELECT numdefects FROM dynamicanalysissummary WHERE buildid = {$build['id']}");
             $summary_total = $stmt->fetchColumn();
@@ -701,6 +702,8 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
             $content = $this->getBrowser()->getContent();
             $jsonobj = json_decode($content, true);
             $expected_defect_type = null;
+            $expected_log = '';
+            $log_stmt = $pdo->prepare('SELECT log FROM dynamicanalysis WHERE buildid = :buildid');
             switch ($build['label']) {
                 case 'MyExperimentalFeature':
                     $expected_num_analyses = 1;
@@ -708,6 +711,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
                     $expected_num_defects = 1;
                     $expected_defect_type = 'Invalid Pointer Write';
                     $expected_proc_time = 0.01;
+                    $expected_log = 'heap block overrun time!';
                     break;
                 case 'MyProductionCode':
                     $expected_num_analyses = 1;
@@ -721,6 +725,7 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
                     $expected_num_defects = 2;
                     $expected_defect_type = 'Memory Leak';
                     $expected_proc_time = 0.0;
+                    $expected_log = 'This function is third party code.  It leaks memory.';
                     break;
                 case 'EmptySubproject':
                     $expected_num_analyses = 0;
@@ -750,6 +755,14 @@ class MultipleSubprojectsTestCase extends KWWebTestCase
                 $defect_type = $jsonobj['defecttypes'][0]['type'];
                 if ($expected_defect_type != $defect_type) {
                     $this->fail("Expected type {$expected_defect_type} for {$build['label']}, found {$defect_type}");
+                }
+            }
+            if ($expected_log) {
+                $log_stmt->bindParam(':buildid', $build['id'], PDO::PARAM_INT);
+                $log_stmt->execute();
+                $found_log = $log_stmt->fetchColumn();
+                if (strpos($found_log, $expected_log) === false) {
+                    $this->fail("Expected log {$expected_log} for {$build['label']}, found {$found_log}");
                 }
             }
 
