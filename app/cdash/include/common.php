@@ -1026,8 +1026,8 @@ function remove_build($buildid)
         $testoutputs_to_delete = array_diff($all_outputids, $testoutputs_to_save);
         if (!empty($testoutputs_to_delete)) {
             $outputids = '(' . implode(',', $testoutputs_to_delete) . ')';
-            pdo_query("DELETE FROM testmeasurement WHERE outputid IN $outputids");
-            pdo_query("DELETE FROM testoutput WHERE id IN $outputids");
+            delete_rows_chunked('DELETE FROM testmeasurement WHERE outputid IN ', $testoutputs_to_delete);
+            delete_rows_chunked('DELETE FROM testoutput WHERE id IN ', $testoutputs_to_delete);
 
             $imgids = '(';
             // Check if the images for the test are not shared
@@ -1046,7 +1046,7 @@ function remove_build($buildid)
             if (strlen($imgids) > 2) {
                 pdo_query('DELETE FROM image WHERE id IN ' . $imgids);
             }
-            pdo_query('DELETE FROM test2image WHERE outputid IN ' . $outputids);
+            delete_rows_chunked('DELETE FROM test2image WHERE outputid IN ', $testoutputs_to_delete);
         }
     }
 
@@ -1106,6 +1106,17 @@ function remove_build_chunked($buildid)
     }
     foreach (array_chunk($buildid, 100) as $chunk) {
         remove_build($chunk);
+    }
+}
+
+/** Chunk up DELETE queries into batches of 100. */
+function delete_rows_chunked($query, $ids)
+{
+    foreach (array_chunk($ids, 100) as $chunk) {
+        $chunk_ids = '(' . implode(',', $chunk) . ')';
+        pdo_query("$query $chunk_ids");
+        // Sleep for a microsecond to give other processes a chance.
+        usleep(1);
     }
 }
 
