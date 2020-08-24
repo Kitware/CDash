@@ -1,7 +1,7 @@
 # Installation
 
 If you'd like to install CDash in a [Docker](https://www.docker.com) container, please see our
-[Docker installation guide](docs/docker.md).
+[Docker installation guide](docker.md).
 
 ## Prerequisite software
 
