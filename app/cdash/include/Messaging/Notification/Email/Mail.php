@@ -129,7 +129,13 @@ class Mail extends Singleton
         }
         $failed_recipients = [];
 
-        $status = $swift_mailer->send($swift_message, $failed_recipients);
+        try {
+            $status = $swift_mailer->send($swift_message, $failed_recipients);
+        } catch (\Exception $e) {
+            $log = Log::getInstance();
+            $log->add_log($e->getMessage(), __METHOD__);
+        }
+
         if (!empty($failed_recipients)) {
             $log = Log::getInstance();
             $message = "Failed to send message titled {$message->getSubject()} to {$failed_recipients[0]}";

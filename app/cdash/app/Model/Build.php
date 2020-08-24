@@ -1496,7 +1496,14 @@ class Build
             $buildtest->timemean = "$timemean";
             $buildtest->timestd = "$timestd";
 
-            $buildtest->save();
+            \DB::beginTransaction();
+            try {
+                $buildtest->save();
+            } catch (\Exception $e) {
+                \DB::rollback();
+                add_log($e->getMessage(), __METHOD__);
+            }
+            \DB::commit();
 
             if ($timestatus >= $projecttestmaxstatus) {
                 $testtimestatusfailed++;
@@ -2807,7 +2814,10 @@ class Build
         if (!pdo_execute($exists_stmt, [$this->Id])) {
             return false;
         }
-        if ($exists_stmt->fetchColumn() !== false) {
+
+        $existing_groupid = $exists_stmt->fetchColumn();
+        if ($existing_groupid !== false) {
+            $this->GroupId = $existing_groupid;
             return false;
         }
 
