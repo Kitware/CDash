@@ -167,7 +167,7 @@ class DynamicAnalysis
                     break;
                 }
             }
-            $uncompressed_log .= inflate_add($inflate_context, NULL, ZLIB_FINISH);
+            $uncompressed_log .= inflate_add($inflate_context, null, ZLIB_FINISH);
             $this->Log = $uncompressed_log;
         }
 
