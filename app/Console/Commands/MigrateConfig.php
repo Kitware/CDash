@@ -115,6 +115,22 @@ class MigrateConfig extends Command
         include $cdash_app_dir . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.php';
         include $cdash_app_dir . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'version.php';
         foreach (get_defined_vars() as $key => $value) {
+
+            if ($key == 'OAUTH2_PROVIDERS') {
+                foreach ($value as $k => $v) {
+                    $provider = strtoupper($k);
+                    if (array_key_exists('clientId', $v)) {
+                        $config["{$provider}_CLIENT_ID"] = $v['clientId'];
+                    }
+                    if (array_key_exists('clientSecret', $v)) {
+                        $config["{$provider}_CLIENT_SECRET"] = $v['clientSecret'];
+                    }
+                    if (array_key_exists('domain', $v)) {
+                        $config["{$provider}_DOMAIN"] = $v['domain'];
+                    }
+                }
+            }
+
             if (strpos($key, 'CDASH_') !== 0) {
                 continue;
             }
@@ -154,7 +170,6 @@ class MigrateConfig extends Command
             }
 
             /* still TODO for special handling:
-             * oauth2 stuff
              * associative arrays that will need code-level changes:
                  MEMCACHE_SERVER, GOOGLE_MAP_API_KEY
              */

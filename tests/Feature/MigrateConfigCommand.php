@@ -38,6 +38,19 @@ $CDASH_EMAIL_SMTP_PASS = 'cdash_smtp_password';
 $CDASH_BASE_URL = 'http://localhost/CDash';
 $CDASH_LOG_LEVEL = LOG_DEBUG;
 $CDASH_UNLIMITED_PROJECTS = ['Project1', 'Project2'];
+$OAUTH2_PROVIDERS['GitHub'] = [
+    'clientId'          => 'github_client_id',
+    'clientSecret'      => 'github_client_secret'
+];
+$OAUTH2_PROVIDERS['GitLab'] = [
+    'clientId'          => 'gitlab_client_id',
+    'clientSecret'      => 'gitlab_client_secret',
+    'domain'            => 'https://gitlab.kitware.com'
+];
+$OAUTH2_PROVIDERS['Google'] = [
+    'clientId'          => 'google_client_id',
+    'clientSecret'      => 'google_client_secret'
+];
 EOT;
         file_put_contents($this->config_file, $config_contents);
 
@@ -64,6 +77,12 @@ EOT;
         $this->assertContains('APP_TIMEZONE=America/New_York', $actual);
         $this->assertContains('APP_LOG_LEVEL=debug', $actual);
         $this->assertContains('UNLIMITED_PROJECTS=["Project1","Project2"]', $actual);
+        $this->assertContains('GITHUB_CLIENT_SECRET=github_client_secret', $actual);
+        $this->assertContains('GITLAB_CLIENT_ID=gitlab_client_id', $actual);
+        $this->assertContains('GITLAB_CLIENT_SECRET=gitlab_client_secret', $actual);
+        $this->assertContains('GITLAB_DOMAIN=https://gitlab.kitware.com', $actual);
+        $this->assertContains('GOOGLE_CLIENT_ID=google_client_id', $actual);
+        $this->assertContains('GOOGLE_CLIENT_SECRET=google_client_secret', $actual);
 
         // Default value (mysql) does not get written to .env.
         $this->assertNotContains('DB_CONNECTION=', $actual);
