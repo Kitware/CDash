@@ -72,9 +72,6 @@ Perform the follow steps when you initially install CDash and upon each subseque
 # Install PHP and JavaScript dependencies
 composer install --no-dev --prefer-dist
 npm install
-
-# Generate build files
-npm run dev
 ```
 
 ## Install steps: initial installation only
@@ -89,7 +86,7 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-## Configure CDash
+## Configure CDash and generate build files
 
 If you are upgrading an existing CDash instance, run the following command to migrate
 your config settings into the .env file:
@@ -104,6 +101,13 @@ In particular, you will want to set the following values:
 * `APP_URL` should be set to the root URL of CDash (ie `https://localhost/CDash`)
 
 In most other cases, reasonable default values apply if the variables are not explicitly set.
+
+Once you're happy with your config settings, run `npm` to generate CDash's frontend.
+
+```bash
+# Generate build files
+npm run dev
+```
 
 ## Finish CDash installation
 
