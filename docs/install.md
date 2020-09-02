@@ -18,12 +18,13 @@ Before installing CDash, you will need:
 CDash needs the following PHP modules installed and enabled.
 
 - bcmath
+- bz2
 - php_curl
 - gd
 - json
+- ldap
 - mbstring
 - pdo_mysql or pdo_pgsql
-- bz2
 - xsl
 
 ## Web server configuration
