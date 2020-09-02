@@ -18,12 +18,13 @@ Before installing CDash, you will need:
 CDash needs the following PHP modules installed and enabled.
 
 - bcmath
+- bz2
 - php_curl
 - gd
 - json
+- ldap
 - mbstring
 - pdo_mysql or pdo_pgsql
-- bz2
 - xsl
 
 ## Web server configuration
@@ -74,33 +75,37 @@ composer install --no-dev --prefer-dist
 npm install
 ```
 
-## Install steps: initial installation only
+## Configure CDash and generate build files
 
-The following steps only need to be completed the first time you setup CDash.
+If you don't already have a `.env` file in the root of your CDash tree, start with
+one based on the default configuration, and set your application key.
 
 ```bash
-# Setup default configuration
 cp .env.example .env
-
-# Generate application key
 php artisan key:generate
 ```
 
-## Configure CDash and generate build files
+Next, if you haven't already done so, create the file `app/cdash/config/config.local.php`
+and populate it with any non-default settings you require. The most important values
+to set here are:
 
-If you are upgrading an existing CDash instance, run the following command to migrate
-your config settings into the .env file:
+* The `$CDASH_DB_*` variables. These indicate how to connect to the database.
+* `$CDASH_BASE_URL` should be set to the root URL of CDash (ie `https://localhost/CDash`)
+
+In most other cases, reasonable default values apply if the variables are not explicitly set.
+
+Once you're happy with the contents of `config.local.php`, run the following command to migrate
+your config settings into the `.env` file used by Laravel.
 
 ```bash
 php artisan config:migrate
 ```
 
-Otherwise, edit `.env` and set configuration variables as necessary.
-In particular, you will want to set the following values:
-* The `DB_*` variables indicate how to connect to the database
-* `APP_URL` should be set to the root URL of CDash (ie `https://localhost/CDash`)
-
-In most other cases, reasonable default values apply if the variables are not explicitly set.
+At this point, make sure your `.env` file has a `APP_URL` entry, and that the following line
+appears somewhere further down in the file:
+```
+MIX_APP_URL="${APP_URL}"
+```
 
 Once you're happy with your config settings, run `npm` to generate CDash's frontend.
 
@@ -111,6 +116,8 @@ npm run dev
 
 ## Finish CDash installation
 
-Open up your new CDash instance in a web browser and fill out the installation form.
+Open up your new CDash instance in a web browser. You should be automatically
+redirected to `install.php`. Fill out the installation form to create the
+database tables and the initial admin user.
 
 Once that is complete you can create a project and start submitting builds to it.
