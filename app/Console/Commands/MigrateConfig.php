@@ -115,7 +115,6 @@ class MigrateConfig extends Command
         include $cdash_app_dir . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.php';
         include $cdash_app_dir . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'version.php';
         foreach (get_defined_vars() as $key => $value) {
-
             if ($key == 'OAUTH2_PROVIDERS') {
                 foreach ($value as $k => $v) {
                     $provider = strtoupper($k);
