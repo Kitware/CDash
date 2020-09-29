@@ -63,6 +63,9 @@
 				<NamedMeasurement type="numeric/double" name="Processors">
 					<Value>3</Value>
 				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="I/O Wait Time">
+					<Value>4.2</Value>
+				</NamedMeasurement>
 				<NamedMeasurement type="text/string" name="Completion Status">
 					<Value>Completed</Value>
 				</NamedMeasurement>
