@@ -92,8 +92,8 @@ switch ($type) {
         ];
         $extra_fields = 'tm.value';
         $extra_joins = 'JOIN testmeasurement tm ON (b2t.outputid = tm.outputid)';
-        $extra_where = 'AND tm.name = :measurementname';
-        $params[':measurementname'] = $measurement_name;
+        $extra_wheres = 'AND tm.name = :measurementname';
+        $query_params[':measurementname'] = $measurement_name;
         break;
 }
 
