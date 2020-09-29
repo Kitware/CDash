@@ -50,6 +50,7 @@ add_test(
 
 add_php_test(install)
 add_laravel_test(/Unit/app/Validators/PasswordTest)
+add_laravel_test(/Feature/ConsumeSubmissionCommand)
 add_laravel_test(/Feature/CDashTest)
 add_laravel_test(/Feature/LdapAuthWithRulesTest)
 add_laravel_test(/Feature/MigrateConfigCommand)
