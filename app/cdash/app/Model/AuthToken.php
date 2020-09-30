@@ -49,7 +49,7 @@ class AuthToken
         $this->Created = gmdate(FMT_DATETIME, $now);
         if ($duration === 0) {
             // Special value meaning "this token never expires".
-            $this->Expires = '9999-12-31 23:59:59';
+            $this->Expires = '2038-01-18 03:14:07';
         } else {
             $this->Expires = gmdate(FMT_DATETIME, $now + $duration);
         }
