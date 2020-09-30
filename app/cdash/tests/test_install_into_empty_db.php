@@ -2,15 +2,15 @@
 require_once dirname(__FILE__) . '/cdash_test_case.php';
 require_once 'tests/install_test.php';
 
-class InstallTestCase extends BaseInstallTestCase
+class InstallIntoEmptyDBTestCase extends BaseInstallTestCase
 {
     public function __construct()
     {
         parent::__construct();
     }
 
-    public function testInstall()
+    public function testInstallIntoEmptyDB()
     {
-        $this->install();
+        $this->install(true);
     }
 }

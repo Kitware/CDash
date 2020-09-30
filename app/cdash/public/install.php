@@ -107,11 +107,15 @@ if (!is_writable($config->get('CDASH_UPLOAD_DIRECTORY'))) {
     $xml .= '<uploadwritable>1</uploadwritable>';
 }
 
+$installed = false;
 try {
-    $installed = \Schema::hasTable(qid('user'));
-    $xml .= '<database>' . $installed . '</database>';
+    if (\Schema::hasTable(qid('user'))) {
+        $xml .= '<database>1</database>';
+        $installed = true;
+    } else {
+        $xml .= '<database>0</database>';
+    }
 } catch (\Exception $e) {
-    $installed = false;
     $xml .= '<database>0</database>';
 }
 
