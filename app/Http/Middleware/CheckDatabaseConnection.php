@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\Schema;
 
 class CheckDatabaseConnection
 {
@@ -18,6 +19,9 @@ class CheckDatabaseConnection
         if (strpos($request->fullUrl(), 'install.php') === false) {
             try {
                 \DB::connection()->getPdo();
+                if (!Schema::hasTable('build')) {
+                    throw new \Exception("build table missing");
+                }
             } catch (\Exception $e) {
                 if (config('app.env') == 'production') {
                     \App::abort(503, 'CDash cannot connect to the database.');
