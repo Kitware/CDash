@@ -9,7 +9,8 @@ require_once 'include/common.php';
 require_once 'include/pdo.php';
 
 use CDash\Database;
-use CDash\Model\BuildConfigure;
+use CDash\Model\BuildGroup;
+use CDash\Model\Site;
 
 class PutDynamicBuildsTestCase extends KWWebTestCase
 {
@@ -31,10 +32,17 @@ class PutDynamicBuildsTestCase extends KWWebTestCase
 
         // Get one of the default buildgroups for this project.
         $stmt = $this->PDO->prepare(
-            'SELECT id FROM buildgroup WHERE projectid = :projectid LIMIT 2');
+            'SELECT id FROM buildgroup WHERE projectid = :projectid LIMIT 1');
         $this->PDO->execute($stmt, [':projectid' => $this->ProjectId]);
         $this->ParentGroupId = $stmt->fetchColumn();
-        $this->ChildGroupId = $stmt->fetchColumn();
+
+        // Create a 'Latest' buildgroup for this project.
+        $buildgroup = new BuildGroup();
+        $buildgroup->SetProjectId($this->ProjectId);
+        $buildgroup->SetName('latest results');
+        $buildgroup->SetType('Latest');
+        $buildgroup->Save();
+        $this->ChildGroupId = $buildgroup->GetId();
 
         // Use the API PUT a list of builds.
         $client = $this->getGuzzleClient();
@@ -73,6 +81,27 @@ class PutDynamicBuildsTestCase extends KWWebTestCase
             $endtime = $starttime_stmt->fetchColumn();
             $this->assertTrue(strtotime($endtime) > strtotime('-1 week'));
         }
+
+        // Verify that we can associate a dynamic build group with a rule that
+        // hasn't submitted any builds to this project yet.
+        $site = new Site();
+        $site->Id = 1;
+        $site_name = $site->GetName();
+        $build_rules = [
+            [ 'match' => 'foo', 'parentgroupid' => $this->ParentGroupId, 'site' => $site_name ],
+        ];
+        $starttime_stmt = $this->PDO->prepare("
+            SELECT starttime FROM build2grouprule
+            WHERE buildname     = :buildname AND
+                  parentgroupid = :parentgroupid AND
+                  siteid        = $site->Id");
+        $this->verifyListGetsCreated($client, $starttime_stmt, $build_rules);
+        $this->login();
+        $this->get($this->url . "/api/v1/manageBuildGroup.php?projectid={$this->ProjectId}");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $this->assertEqual($jsonobj['dynamics'][0]['rules'][0]['match'], 'foo');
+        $this->assertEqual($jsonobj['dynamics'][0]['rules'][0]['siteid'], 1);
 
         // Clean up.
         $this->deleteProject($this->ProjectId);
