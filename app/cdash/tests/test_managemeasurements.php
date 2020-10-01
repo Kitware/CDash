@@ -145,64 +145,69 @@ class ManageMeasurementsTestCase extends KWWebTestCase
         // Login as admin.
         $client = $this->getGuzzleClient();
 
-        // POST to manageMeasurements.php to add 'Processors' as a
-        // test measurement for these projects.
+        // POST to manageMeasurements.php to add 'Processors' and
+        // 'I/O Wait Time' as test measurements for these projects.
         $measurement_ids = [];
         $this->ProjectId =  get_project_id('InsightExample');
         $this->SubProjectId =  get_project_id('SubProjectExample');
-        foreach ([$this->ProjectId, $this->SubProjectId] as $projectid) {
-            $measurements = [];
-            $measurements[] = [
-                'id' => -1,
-                'name' => 'Processors',
-                'summarypage' => 1,
-                'testpage' => 1
-            ];
-            try {
-                $response = $client->request('POST',
-                        $this->url . '/api/v1/manageMeasurements.php',
-                        ['json' => ['projectid' => $projectid, 'measurements' => $measurements]]);
-            } catch (GuzzleHttp\Exception\ClientException $e) {
-                $this->fail($e->getMessage());
-                return false;
-            }
+        $new_measurements = ['Processors', 'I/O Wait Time'];
+        foreach ($new_measurements as $new_measurement) {
+            foreach ([$this->ProjectId, $this->SubProjectId] as $projectid) {
+                $measurements = [];
+                $measurements[] = [
+                    'id' => -1,
+                    'name' => $new_measurement,
+                    'summarypage' => 1,
+                    'testpage' => 1
+                ];
+                try {
+                    $response = $client->request('POST',
+                            $this->url . '/api/v1/manageMeasurements.php',
+                            ['json' => ['projectid' => $projectid, 'measurements' => $measurements]]);
+                } catch (GuzzleHttp\Exception\ClientException $e) {
+                    $this->fail($e->getMessage());
+                    return false;
+                }
 
-            // Response should have the ID of the newly created measurement.
-            $response_array = json_decode($response->getBody(), true);
-            $measurement_id = $response_array['id'];
-            if (!$measurement_id > 0) {
-                $this->fail("Expected positive integer for measurement ID, found $measurement_id");
-            }
-            $this->MeasurementIds[] = $measurement_id;
-            // Check that the measurement actually got added to the database.
-            $stmt = $this->PDO->query(
-                    "SELECT id FROM measurement WHERE id = $measurement_id");
-            $found = $stmt->fetchColumn();
-            if ($found != $measurement_id) {
-                $this->fail("Expected $measurement_id but found $found for DB measurement ID");
+                // Response should have the ID of the newly created measurement.
+                $response_array = json_decode($response->getBody(), true);
+                $measurement_id = $response_array['id'];
+                if (!$measurement_id > 0) {
+                    $this->fail("Expected positive integer for measurement ID, found $measurement_id");
+                }
+                $this->MeasurementIds[] = $measurement_id;
+                // Check that the measurement actually got added to the database.
+                $stmt = $this->PDO->query(
+                        "SELECT id FROM measurement WHERE id = $measurement_id");
+                $found = $stmt->fetchColumn();
+                if ($found != $measurement_id) {
+                    $this->fail("Expected $measurement_id but found $found for DB measurement ID");
+                }
             }
         }
 
-        // Verify that the 'Processors' measurement is displayed on viewTest.php.
+        // Verify that the new measurements are displayed on viewTest.php.
         $this->get($this->url . "/api/v1/viewTest.php?buildid=$this->BuildId");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $found = $jsonobj['columncount'];
-        if ($found != 1) {
-            $this->fail("Expected 1 extra column on viewTest.php, found $found");
+        if ($found != 2) {
+            $this->fail("Expected 2 extra columns on viewTest.php, found $found");
         }
-        $found = $jsonobj['columnnames'][0];
-        if ($found != 'Processors') {
-            $this->fail("Expected extra column to be called 'Processors', found $found");
+        foreach ($new_measurements as $new_measurement) {
+            if (!in_array($new_measurement, $jsonobj['columnnames'])) {
+                $this->fail("Did not find expected extra column '$new_measurement'");
+            }
         }
         $found = count($jsonobj['tests']);
         if ($found != 3) {
             $this->fail("Expected three tests, found $found");
         }
         $first = true;
+        $proc_idx = array_search('Processors', $jsonobj['columnnames']);
         foreach ($jsonobj['tests'] as $test) {
             $test_name = $test['name'];
-            $num_procs = $test['measurements'][0];
+            $num_procs = $test['measurements'][$proc_idx];
             $proc_time = $test['procTimeFull'];
             $this->validate_test($test_name, $num_procs, $proc_time, 'viewTest.php');
             if ($first && $num_procs) {
@@ -261,20 +266,22 @@ class ManageMeasurementsTestCase extends KWWebTestCase
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $found = $jsonobj['columncount'];
-        if ($found != 1) {
-            $this->fail("Expected 1 extra column on viewTest.php, found $found");
+        if ($found != 2) {
+            $this->fail("Expected 2 extra columns on viewTest.php, found $found");
         }
-        $found = $jsonobj['columnnames'][0];
-        if ($found != 'Processors') {
-            $this->fail("Expected extra column to be called 'Processors', found $found");
+        foreach ($new_measurements as $new_measurement) {
+            if (!in_array($new_measurement, $jsonobj['columnnames'])) {
+                $this->fail("Did not find expected extra column '$new_measurement'");
+            }
         }
         $found = count($jsonobj['tests']);
         if ($found != 3) {
             $this->fail("Expected three tests, found $found");
         }
+        $proc_idx = array_search('Processors', $jsonobj['columnnames']);
         foreach ($jsonobj['tests'] as $test) {
             $test_name = $test['name'];
-            $num_procs = $test['measurements'][0];
+            $num_procs = $test['measurements'][$proc_idx];
             $proc_time = $test['procTimeFull'];
             $this->validate_subproject_test($test_name, $num_procs, $proc_time, 'viewTest.php');
         }
@@ -316,5 +323,6 @@ class ManageMeasurementsTestCase extends KWWebTestCase
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $this->assertTrue($jsonobj[0]['data'][0]['y']  == $selected_nprocs);
+        $this->assertTrue(count($jsonobj[0]['data']) === 1);
     }
 }

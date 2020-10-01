@@ -55,6 +55,9 @@
                                 <NamedMeasurement type="numeric/double" name="Processors">
                                     <Value>2</Value>
                                 </NamedMeasurement>
+                                <NamedMeasurement type="numeric/double" name="I/O Wait Time">
+                                    <Value>4.2</Value>
+                                </NamedMeasurement>
                                 <NamedMeasurement type="text/string" name="Fail Reason">
                                         <Value>Required regular expression not found.Regex=[Test!
 ]</Value>
@@ -92,6 +95,9 @@
                                 <NamedMeasurement type="numeric/double" name="Processors">
                                     <Value>3</Value>
                                 </NamedMeasurement>
+                                <NamedMeasurement type="numeric/double" name="I/O Wait Time">
+                                    <Value>5.3</Value>
+                                </NamedMeasurement>
                                 <NamedMeasurement type="text/string" name="Fail Reason">
                                         <Value>Required regular expression not found.Regex=[Test!
 ]</Value>
@@ -122,6 +128,9 @@
                                 </NamedMeasurement>
                                 <NamedMeasurement type="numeric/double" name="Processors">
                                     <Value>4</Value>
+                                </NamedMeasurement>
+                                <NamedMeasurement type="numeric/double" name="I/O Wait Time">
+                                    <Value>6.4</Value>
                                 </NamedMeasurement>
                                 <NamedMeasurement type="text/string" name="Completion Status">
                                         <Value>Completed</Value>

@@ -50,6 +50,7 @@ add_test(
 
 add_php_test(install)
 add_laravel_test(/Unit/app/Validators/PasswordTest)
+add_laravel_test(/Feature/ConsumeSubmissionCommand)
 add_laravel_test(/Feature/CDashTest)
 add_laravel_test(/Feature/LdapAuthWithRulesTest)
 add_laravel_test(/Feature/MigrateConfigCommand)
@@ -103,6 +104,7 @@ add_unit_test(/CDash/XmlHandler/TestingHandler)
 add_unit_test(/CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/TestSchemaMigration)
+add_php_test(install_into_empty_db)
 add_php_test(reinstall)
 add_php_test(compressedtest)
 add_php_test(createpublicdashboard)

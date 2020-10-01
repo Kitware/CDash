@@ -90,14 +90,21 @@ class ReformatTestData extends Migration
 
         // Set testid and details in the build2test table.
         $this->print('Set testid and details in the build2test table');
-
-        $start = DB::table('build2test')->min('id') || 1;
-        $max = DB::table('build2test')->max('id') || $start;
-        $total = $max - $start;
+        $done = false;
         $num_done = 0;
         $next_report = 10;
-        $done = false;
-
+        $start = DB::table('build2test')->min('id');
+        $max = DB::table('build2test')->max('id');
+        $total = $max - $start;
+        if ($total < 1) {
+            if (DB::table('build2test')->count() > 0) {
+                $error_msg = "Could not determine min & max id for build2test table.\n";
+                $error_msg .= "Manually set \$start and \$max and rerun the migration\n";
+                throw new Exception($error_msg);
+            } else {
+                $done = true;
+            }
+        }
         while (!$done) {
             $end = $start + 4999;
             if (config('database.default') == 'pgsql') {
