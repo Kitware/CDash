@@ -20,6 +20,7 @@ require_once 'include/common.php';
 use App\Services\PageTimer;
 use CDash\Database;
 use CDash\Model\Project;
+use CDash\Model\Site;
 use CDash\Model\UserProject;
 
 $pageTimer = new PageTimer();
@@ -112,9 +113,9 @@ if (!$pdo->execute($stmt)) {
     $response['error'] = 'Database error during site lookup';
 }
 
-$sites = array();
+$sites = [];
 while ($row = $stmt->fetch()) {
-    $site = array();
+    $site = [];
     $site['id'] = $row['siteid'];
     $site['name'] = $row['name'];
     $sites[] = $site;
@@ -169,12 +170,19 @@ foreach ($buildgroups as $buildgroup) {
                 $rule_response['sitename'] = 'Any';
                 $rule_response['siteid'] = 0;
             } else {
+                $rule_response['siteid'] = $siteid;
+                $found = false;
                 foreach ($sites as $site) {
                     if ($site['id'] == $siteid) {
                         $rule_response['sitename'] = $site['name'];
-                        $rule_response['siteid'] = $site['id'];
+                        $found = true;
                         break;
                     }
+                }
+                if (!$found) {
+                    $site = new Site();
+                    $site->Id = $siteid;
+                    $rule_response['sitename'] = $site->GetName();
                 }
             }
 
