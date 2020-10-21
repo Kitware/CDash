@@ -120,7 +120,7 @@ class BuildTest extends Model
             $marshaledData['new'] = '1';
         }
 
-        if ($projectshowtesttime) {
+        if ($projectshowtesttime && array_key_exists('timestatus', $data)) {
             if ($data['timestatus'] == 0) {
                 $marshaledData['timestatus'] = 'Passed';
                 $marshaledData['timestatusclass'] = 'normal';
