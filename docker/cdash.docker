@@ -34,7 +34,7 @@ RUN apt-get update                                                         \
  && php composer-setup.php                                                 \
     --install-dir=/usr/local/bin --filename=composer                       \
  && php -r "unlink('composer-setup.php');"                                 \
- && composer self-update --no-interaction
+ && composer self-update --1 --no-interaction
 
 # Creates the kitware home directory with directory for cdash
 WORKDIR /home/kitware/cdash

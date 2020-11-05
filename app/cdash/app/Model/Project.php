@@ -525,11 +525,20 @@ class Project
         $this->NightlyTime = $nightly_time;
 
         // Get the timezone for the project's nightly start time.
-        $this->NightlyDateTime = new \DateTime($this->NightlyTime);
-        $this->NightlyTimezone = $this->NightlyDateTime->getTimezone();
-        if (!$this->NightlyTimezone) {
-            // Default to UTC.
+        try {
+            $this->NightlyDateTime = new \DateTime($this->NightlyTime);
+            $this->NightlyTimezone = $this->NightlyDateTime->getTimezone();
+        } catch (\Exception $e) {
+            // Bad timezone (probably) specified, try defaulting to UTC.
             $this->NightlyTimezone = new \DateTimeZone('UTC');
+            $parts = explode(' ', $nightly_time);
+            $this->NightlyTime = $parts[0];
+            try {
+                $this->NightlyDateTime = new \DateTime($this->NightlyTime, $this->NightlyTimezone);
+            } catch (\Exception $e) {
+                \Log::error("Could not parse $nightly_time");
+                return;
+            }
         }
 
         // Attempt to deal with the fact that tz->getName() doesn't necessarily return
