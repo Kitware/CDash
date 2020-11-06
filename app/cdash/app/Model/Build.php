@@ -779,7 +779,7 @@ class Build
                     FROM configure c
                     JOIN build2configure b2c ON b2c.configureid = c.id
                     JOIN build b ON b.id = b2c.buildid
-                    WHERE c.id = ?');
+                    WHERE c.id = ? LIMIT 1');
                 pdo_execute($stmt, [$configure_rows[0]['id']]);
                 return $stmt;
             }
