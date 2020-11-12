@@ -545,7 +545,12 @@ class BazelJSONHandler extends NonSaxHandler
                     }
 
                     $test_name = $json_array['id']['testResult']['label'];
-                    $test_time = $json_array['testResult']['testAttemptDurationMillis'] / 1000.0;
+                    $test_time = 0;
+                    if (array_key_exists('testAttemptDurationMillis', $json_array['testResult'])) {
+                        $test_time = $json_array['testResult']['testAttemptDurationMillis'] / 1000.0;
+                    } elseif (array_key_exists('testAttemptDurationMillis', $json_array['id']['testResult'])) {
+                        $test_time = $json_array['id']['testResult']['testAttemptDurationMillis'] / 1000.0;
+                    }
 
                     if (array_key_exists('shard', $json_array['id']['testResult'])) {
                         // This test uses shards, so a Test with this name
