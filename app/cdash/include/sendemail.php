@@ -548,17 +548,14 @@ function send_update_email($handler, $projectid)
         // Find the site maintainer(s)
         $sitename = $handler->getSiteName();
         $siteid = $handler->getSiteId();
-        $to_address = '';
+        $recipients = [];
         $email_addresses =
             pdo_query('SELECT email FROM ' . qid('user') . ',site2user WHERE ' . qid('user') . ".id=site2user.userid AND site2user.siteid='$siteid'");
         while ($email_addresses_array = pdo_fetch_array($email_addresses)) {
-            if ($to_address != '') {
-                $to_address .= ', ';
-            }
-            $to_address .= $email_addresses_array['email'];
+            $recipients[] = $email_addresses_array['email'];
         }
 
-        if ($to_address != '') {
+        if (!empty($recipients)) {
             $serverURI = get_server_URI();
 
             // Generate the email to send
@@ -571,19 +568,10 @@ function send_update_email($handler, $projectid)
             $body = "$sitename has encountered errors during the Update step and you have been identified as the maintainer of this site.\n\n";
             $body .= "*Update Errors*\n";
             $body .= 'Status: ' . $update_array['status'] . ' (' . $serverURI . '/viewUpdate.php?buildid=' . $buildid . ")\n";
-
-            $config = Config::getInstance();
-            if ($config->get('CDASH_TESTING_MODE')) {
-                add_log($to_address, 'TESTING: EMAIL', LOG_DEBUG);
-                add_log($subject, 'TESTING: EMAILTITLE', LOG_DEBUG);
-                add_log($body, 'TESTING: EMAILBODY', LOG_DEBUG);
+            if (cdashmail($recipients, $emailtitle, $emailbody)) {
+                add_log('email sent to: ' . implode(', ', $recipients), 'send_update_email');
             } else {
-                if (cdashmail("$to_address", $subject, $body)) {
-                    add_log('email sent to: ' . $to_address, 'sendEmailExpectedBuilds');
-                    return;
-                } else {
-                    add_log('cannot send email to: ' . $to_address, 'sendEmailExpectedBuilds');
-                }
+                add_log('cannot send email to: ' . implode(', ', $recipients), 'send_update_email');
             }
         }
     }
