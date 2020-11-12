@@ -66,12 +66,16 @@ function cdashmail($to, $subject, $body, $headers = false)
 
     Mail::raw($body, function ($message) use ($config, $to, $subject, $headers) {
         $to = is_array($to) ? $to : [$to];
-
-        /** @var Illuminate\Mail\Message $message */
-        $message->subject($subject)
-            ->to($to)
-            ->from($config->get('CDASH_EMAIL_FROM'))
-            ->replyTo($config->get('CDASH_EMAIL_REPLY'));
+        try {
+            /** @var Illuminate\Mail\Message $message */
+            $message->subject($subject)
+                ->to($to)
+                ->from($config->get('CDASH_EMAIL_FROM'))
+                ->replyTo($config->get('CDASH_EMAIL_REPLY'));
+        } catch (\Exception $e) {
+            \Log::error($e->getMessage());
+            return false;
+        }
     });
 
     return true;
