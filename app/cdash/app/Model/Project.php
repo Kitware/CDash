@@ -1269,17 +1269,14 @@ class Project
         $UserProject->ProjectId = $this->Id;
 
         $userids = $UserProject->GetUsers(2); // administrators
-        $email = '';
+        $recipients = [];
         foreach ($userids as $userid) {
             $User = new User;
             $User->Id = $userid;
-            if ($email != '') {
-                $email .= ', ';
-            }
-            $email .= $User->GetEmail();
+            $recipients[] = $User->GetEmail();
         }
 
-        if ($email != '') {
+        if (!empty($recipients)) {
             $projectname = $project_array['name'];
             $emailtitle = 'CDash [' . $projectname . '] - Administration ';
             $emailbody = 'Object: ' . $subject . "\n";
@@ -1288,11 +1285,10 @@ class Project
 
             $emailbody .= "\n-CDash on " . $serverName . "\n";
 
-            if (cdashmail("$email", $emailtitle, $emailbody)) {
-                add_log('email sent to: ' . $email, 'Project::SendEmailToAdmin');
-                return;
+            if (cdashmail($recipients, $emailtitle, $emailbody)) {
+                add_log('email sent to: ' . implode(', ', $recipients), 'SendEmailToAdmin');
             } else {
-                add_log('cannot send email to: ' . $email, 'Project::SendEmailToAdmin', LOG_ERR, $this->Id);
+                add_log('cannot send email to: ' . implode(', ', $recipients), 'SendEmailToAdmin', LOG_ERR, $this->Id);
             }
         }
     }
