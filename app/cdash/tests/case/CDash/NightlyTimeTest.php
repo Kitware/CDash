@@ -106,17 +106,17 @@ class NightlyTimeTest extends TestCase
     public function testUTCInput()
     {
         $this->Project->SetNightlyTime('04:01:00 UTC');
-        $this->validateTestingDay('2019-09-26 04:00:59 UTC', '2019-09-25');
+        $this->validateTestingDay('2019-09-26 04:00:59', '2019-09-25');
 
-        $this->validateTestingDay('2020-03-09 04:00:59 UTC', '2020-03-08');
+        $this->validateTestingDay('2020-03-09 04:00:59', '2020-03-08');
     }
 
     public function testInvalidTimezone()
     {
-        $this->Project->SetNightlyTime('04:01:00 BST');
-        $this->validateTestingDay('2019-09-26 04:00:59 BST', '2019-09-25');
+        $this->Project->SetNightlyTime('04:01:00 XYZ');
+        $this->validateTestingDay('2019-09-26 04:00:59', '2019-09-25');
 
-        $this->validateTestingDay('2020-03-09 04:00:59 BST', '2020-03-08');
+        $this->validateTestingDay('2020-03-09 04:00:59', '2020-03-08');
     }
 
     private function validateTestingDay($starttime, $expected)

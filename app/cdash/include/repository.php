@@ -871,6 +871,9 @@ function generate_bugtracker_new_issue_link($build, $project)
         return false;
     }
     $msg_parts = generate_broken_build_message($emailtext, $build, $project);
+    if (!is_array($msg_parts)) {
+        return false;
+    }
     $title = $msg_parts['title'];
     $body = $msg_parts['body'];
 

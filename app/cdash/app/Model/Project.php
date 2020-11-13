@@ -525,11 +525,20 @@ class Project
         $this->NightlyTime = $nightly_time;
 
         // Get the timezone for the project's nightly start time.
-        $this->NightlyDateTime = new \DateTime($this->NightlyTime);
-        $this->NightlyTimezone = $this->NightlyDateTime->getTimezone();
-        if (!$this->NightlyTimezone) {
-            // Default to UTC.
+        try {
+            $this->NightlyDateTime = new \DateTime($this->NightlyTime);
+            $this->NightlyTimezone = $this->NightlyDateTime->getTimezone();
+        } catch (\Exception $e) {
+            // Bad timezone (probably) specified, try defaulting to UTC.
             $this->NightlyTimezone = new \DateTimeZone('UTC');
+            $parts = explode(' ', $nightly_time);
+            $this->NightlyTime = $parts[0];
+            try {
+                $this->NightlyDateTime = new \DateTime($this->NightlyTime, $this->NightlyTimezone);
+            } catch (\Exception $e) {
+                \Log::error("Could not parse $nightly_time");
+                return;
+            }
         }
 
         // Attempt to deal with the fact that tz->getName() doesn't necessarily return
@@ -1260,17 +1269,14 @@ class Project
         $UserProject->ProjectId = $this->Id;
 
         $userids = $UserProject->GetUsers(2); // administrators
-        $email = '';
+        $recipients = [];
         foreach ($userids as $userid) {
             $User = new User;
             $User->Id = $userid;
-            if ($email != '') {
-                $email .= ', ';
-            }
-            $email .= $User->GetEmail();
+            $recipients[] = $User->GetEmail();
         }
 
-        if ($email != '') {
+        if (!empty($recipients)) {
             $projectname = $project_array['name'];
             $emailtitle = 'CDash [' . $projectname . '] - Administration ';
             $emailbody = 'Object: ' . $subject . "\n";
@@ -1279,11 +1285,10 @@ class Project
 
             $emailbody .= "\n-CDash on " . $serverName . "\n";
 
-            if (cdashmail("$email", $emailtitle, $emailbody)) {
-                add_log('email sent to: ' . $email, 'Project::SendEmailToAdmin');
-                return;
+            if (cdashmail($recipients, $emailtitle, $emailbody)) {
+                add_log('email sent to: ' . implode(', ', $recipients), 'SendEmailToAdmin');
             } else {
-                add_log('cannot send email to: ' . $email, 'Project::SendEmailToAdmin', LOG_ERR, $this->Id);
+                add_log('cannot send email to: ' . implode(', ', $recipients), 'SendEmailToAdmin', LOG_ERR, $this->Id);
             }
         }
     }
