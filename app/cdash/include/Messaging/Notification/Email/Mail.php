@@ -132,6 +132,7 @@ class Mail extends Singleton
         try {
             $status = $swift_mailer->send($swift_message, $failed_recipients);
         } catch (\Exception $e) {
+            $status = 0;
             $log = Log::getInstance();
             $log->add_log($e->getMessage(), __METHOD__);
         }
