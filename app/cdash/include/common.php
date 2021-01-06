@@ -20,7 +20,6 @@ use App\Services\TestingDay;
 
 use CDash\Config;
 use CDash\Database;
-use CDash\Model\AuthToken;
 use CDash\ServiceContainer;
 use CDash\Model\Build;
 use CDash\Model\Project;

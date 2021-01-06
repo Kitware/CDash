@@ -18,7 +18,6 @@ require_once 'include/common.php';
 
 use App\Services\ProjectPermissions;
 
-use CDash\Model\AuthToken;
 use CDash\Model\Build;
 use CDash\Model\Project;
 use CDash\ServiceContainer;
@@ -107,13 +106,6 @@ function can_administrate_project($projectid)
 function get_userid_from_session($required = true)
 {
     $userid = Auth::id();
-
-    // Check for the presence of a bearer token if no userid was found
-    // in the session.
-    if (is_null($userid)) {
-        $authtoken = new AuthToken();
-        $userid = $authtoken->getUserIdFromRequest();
-    }
 
     if ($required && is_null($userid)) {
         $response = ['error' => 'Permission denied'];
