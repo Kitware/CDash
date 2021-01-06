@@ -19,6 +19,8 @@ use App\Models\User;
 use CDash\Config;
 use CDash\Database;
 
+require_once 'include/pdo.php';
+
 /** AuthToken class */
 class AuthToken
 {
