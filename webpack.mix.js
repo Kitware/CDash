@@ -3,17 +3,6 @@ const mix = require('laravel-mix');
 mix.disableNotifications();
 
 const ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin');
-const GitRevisionPlugin = require('git-revision-webpack-plugin')
-
-// Generate version string (timestamp) used internally for cache-busting.
-var release = false; // Change to true when cutting a release.
-if (release) {
-  // Update the version in package.json before cutting a new release.
-  var config = require('./package.json');
-  version = config.version;
-} else {
-  version = new Date().getTime().toString();
-}
 
 // Clean up from previous webpack runs.
 del = require('del'),
@@ -22,13 +11,55 @@ del.sync('public/build/js');
 del.sync('public/build/views');
 del.sync('public/js/CDash_*.js');
 
-// Write out version file for angular.js
+// Determine if this is a git clone of CDash or not.
 fs = require('fs');
+var git_clone = false;
+if (fs.existsSync('.git')) {
+  var git_clone = true;
+  // If this is a git clone, we will use the `git describe` to generate a version
+  // to report in the footer.
+  // Use current UNIX timestamp for cache busting.
+  version = new Date().getTime().toString();
+} else {
+  // Otherwise if this is a release download, use the version from package.json.
+  var config = require('./package.json');
+  version = config.version;
+  fs.writeFileSync('./public/VERSION', 'v' + version);
+}
+
+// Write out version file for angular.js
 var dir = 'public/build/js';
 if (!fs.existsSync(dir)) {
   fs.mkdirSync(dir);
 }
 fs.writeFileSync(dir + '/version.js', "angular.module('CDash').constant('VERSION', '" + version + "');");
+
+// Webpack plugins.
+var webpack_plugins = [
+  // Replace version string in angular files.
+  new ReplaceInFileWebpackPlugin([
+    {
+      dir: 'public/build/views',
+      test: /\.html$/,
+      rules: [{
+        search: /@@version/g,
+        replace: version
+      }]
+    },
+    {
+      dir: 'public/js',
+      test: /\.js$/,
+      rules: [{
+        search: /@@cdash_version/g,
+        replace: version
+      }]
+    },
+  ])
+];
+if (git_clone) {
+  const GitRevisionPlugin = require('git-revision-webpack-plugin')
+  webpack_plugins.push(new GitRevisionPlugin());
+}
 
 // Copy angularjs files to build directory.
 mix.copy('public/views/*.html', 'public/build/views/');
@@ -122,27 +153,5 @@ mix.webpackConfig({
       },
     ]
   },
-
-  plugins: [
-    new GitRevisionPlugin(),
-    // Replace version string in angular files.
-    new ReplaceInFileWebpackPlugin([
-      {
-        dir: 'public/build/views',
-        test: /\.html$/,
-        rules: [{
-          search: /@@version/g,
-          replace: version
-        }]
-      },
-      {
-        dir: 'public/js',
-        test: /\.js$/,
-        rules: [{
-          search: /@@cdash_version/g,
-          replace: version
-        }]
-      },
-    ])
-  ]
+  plugins: webpack_plugins
 });
