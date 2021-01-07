@@ -328,7 +328,7 @@ class CDash extends Controller
         $version = '';
         if (is_readable($path)) {
             $file = file_get_contents($path);
-            if (preg_match("/'VERSION',\s+'(\d+)'/", $file, $match)) {
+            if (preg_match("/'VERSION',\s+'([0-9.]+)'/", $file, $match)) {
                 $version = $match[1];
             }
         }
