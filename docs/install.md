@@ -10,7 +10,7 @@ Before installing CDash, you will need:
 - A web server: [Apache](https://httpd.apache.org) or [NGINX](https://www.nginx.com)
 - A database: [MySQL v5.x+](https://www.mysql.com) or [PostgreSQL v9.2+](https://www.postgresql.org)
 - [PHP 7.2 - 7.4](https://www.php.net)
-- [Composer](https://getcomposer.org) (to install PHP dependencies)
+- [Composer v1.x](https://getcomposer.org) (to install PHP dependencies)
 - [npm v6](https://www.npmjs.com/) (to install Javascript dependencies)
 
 ## PHP modules
@@ -47,7 +47,7 @@ git clone https://github.com/Kitware/CDash
 
 ## Expose CDash to the web
 
-Only CDash's `public` subdirectory  should be served to the web.
+Only CDash's `public` subdirectory should be served to the web.
 
 The easiest way to achieve this is to create a symbolic link in your DocumentRoot
 (typically `/var/www`) that points to `/path/to/CDash/public`.
@@ -71,6 +71,7 @@ Perform the follow steps when you initially install CDash and upon each subseque
 
 ```bash
 # Install PHP and JavaScript dependencies
+cd /path/to/CDash
 composer install --no-dev --prefer-dist
 npm install
 ```
@@ -81,6 +82,7 @@ If you don't already have a `.env` file in the root of your CDash tree, start wi
 one based on the default configuration, and set your application key.
 
 ```bash
+cd /path/to/CDash
 cp .env.example .env
 php artisan key:generate
 ```
@@ -91,6 +93,7 @@ to set here are:
 
 * The `$CDASH_DB_*` variables. These indicate how to connect to the database.
 * `$CDASH_BASE_URL` should be set to the root URL of CDash (ie `https://localhost/CDash`)
+* `$CDASH_EMAIL*` variables. These indicate how email should be sent.
 
 In most other cases, reasonable default values apply if the variables are not explicitly set.
 
@@ -98,6 +101,7 @@ Once you're happy with the contents of `config.local.php`, run the following com
 your config settings into the `.env` file used by Laravel.
 
 ```bash
+cd /path/to/CDash
 php artisan config:migrate
 ```
 
