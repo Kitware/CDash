@@ -227,6 +227,7 @@ add_php_test(numericupdate)
 add_php_test(attachedfiles)
 add_php_test(subprojectorder)
 add_php_test(testimages)
+add_php_test(dynamicanalysislogs)
 
 add_subdirectory(ctest)
 
