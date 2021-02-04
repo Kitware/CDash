@@ -228,6 +228,7 @@ add_php_test(attachedfiles)
 add_php_test(subprojectorder)
 add_php_test(testimages)
 add_php_test(dynamicanalysislogs)
+add_php_test(namedmeasurements)
 
 add_subdirectory(ctest)
 
