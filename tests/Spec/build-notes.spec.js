@@ -4,7 +4,7 @@ import AxiosMockAdapter from 'axios-mock-adapter';
 import expect from 'expect';
 import BuildNotes from "../../resources/js/components/BuildNotes.vue";
 
-config.mocks['$baseURL'] = '';
+config.mocks['$baseURL'] = 'http://localhost';
 axios.defaults.baseURL = config.mocks['$baseURL'];
 
 import $ from 'jquery'
@@ -43,7 +43,7 @@ describe('BuildNotes', function() {
   });
 
   it('handles API response', async function() {
-    this.axios.onGet('/api/v1/viewNotes.php?buildid=undefined').reply(200, this.api_response);
+    this.axios.onGet('/api/v1/viewNotes.php?buildid=').reply(200, this.api_response);
     component = mount(BuildNotes);
     await component.vm.$nextTick();
     await component.vm.$nextTick();
@@ -68,7 +68,7 @@ describe('BuildNotes', function() {
       text: 'more note text',
       time: 'later on',
     });
-    this.axios.onGet('/api/v1/viewNotes.php?buildid=undefined').reply(200, this.api_response);
+    this.axios.onGet('/api/v1/viewNotes.php?buildid=').reply(200, this.api_response);
     component = mount(BuildNotes);
     await component.vm.$nextTick();
     await component.vm.$nextTick();

@@ -4,7 +4,7 @@ import AxiosMockAdapter from 'axios-mock-adapter';
 import expect from 'expect';
 import BuildSummary from "../../resources/js/components/BuildSummary.vue";
 
-config.mocks['$baseURL'] = '';
+config.mocks['$baseURL'] = 'http://localhost';
 axios.defaults.baseURL = config.mocks['$baseURL'];
 
 import $ from 'jquery'
@@ -88,7 +88,7 @@ describe('BuildSummary', function() {
   });
 
   it('handles API response', async function() {
-    this.axios.onGet('/api/v1/buildSummary.php?buildid=blank').reply(200, this.api_response);
+    this.axios.onGet('/api/v1/buildSummary.php?buildid=').reply(200, this.api_response);
     component = mount(BuildSummary);
     await component.vm.$nextTick();
     await component.vm.$nextTick();
@@ -101,16 +101,16 @@ describe('BuildSummary', function() {
     expect(html).toContain('mysite');
     expect(html).toContain('Linux');
     const site_link = component.find('#site_link');
-    expect(site_link.attributes('href')).toBe('/viewSite.php?siteid=1');
+    expect(site_link.attributes('href')).toMatch('/viewSite.php?siteid=1');
     expect(site_link.text()).toBe('mysite');
 
     const configure_link = component.find('#configure_link');
-    expect(configure_link.attributes('href')).toBe('/build/1/configure');
+    expect(configure_link.attributes('href')).toMatch('/build/1/configure');
     expect(configure_link.text()).toBe('View Configure Summary');
   });
 
   it('can toggle the graphs', async function() {
-    this.axios.onGet('/api/v1/buildSummary.php?buildid=blank').reply(200, this.api_response);
+    this.axios.onGet('/api/v1/buildSummary.php?buildid=').reply(200, this.api_response);
     component = mount(BuildSummary);
     await component.vm.$nextTick();
     await component.vm.$nextTick();
@@ -146,7 +146,7 @@ describe('BuildSummary', function() {
         time: 0,
       }]
     };
-    this.axios.onGet('/api/v1/getPreviousBuilds.php?buildid=blank').reply(200, graph_data);
+    this.axios.onGet('/api/v1/getPreviousBuilds.php?buildid=').reply(200, graph_data);
     const history_button = component.find('#toggle_history_graph')
     history_button.trigger('click');
     await component.vm.$nextTick();
@@ -203,7 +203,7 @@ describe('BuildSummary', function() {
   });
 
   it('can add a build note', async function() {
-    this.axios.onGet('/api/v1/buildSummary.php?buildid=blank').reply(200, this.api_response);
+    this.axios.onGet('/api/v1/buildSummary.php?buildid=').reply(200, this.api_response);
     component = mount(BuildSummary);
     await component.vm.$nextTick();
     await component.vm.$nextTick();
