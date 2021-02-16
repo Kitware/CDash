@@ -145,7 +145,7 @@ $next_buildid = $build->GetNextBuildId();
 // If so we should make that chart appear when they click next or previous.
 $extra_url = '';
 if (array_key_exists('graph', $_GET)) {
-    $extra_url = "&graph=" . $_GET['graph'];
+    $extra_url = "?graph=" . $_GET['graph'];
 }
 
 // Previous build

@@ -4,7 +4,7 @@ import AxiosMockAdapter from 'axios-mock-adapter';
 import expect from 'expect';
 import BuildConfigure from "../../resources/js/components/BuildConfigure.vue";
 
-config.mocks['$baseURL'] = '';
+config.mocks['$baseURL'] = 'http://localhost';
 axios.defaults.baseURL = config.mocks['$baseURL'];
 
 describe('BuildConfigure', function() {
@@ -36,7 +36,7 @@ describe('BuildConfigure', function() {
   });
 
   it('handles API response', async function() {
-    this.axios.onGet('/api/v1/viewConfigure.php?buildid=undefined').reply(200, this.api_response);
+    this.axios.onGet('/api/v1/viewConfigure.php?buildid=').reply(200, this.api_response);
     component = mount(BuildConfigure);
     await component.vm.$nextTick();
     await component.vm.$nextTick();
