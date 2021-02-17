@@ -229,6 +229,7 @@ add_php_test(subprojectorder)
 add_php_test(testimages)
 add_php_test(dynamicanalysislogs)
 add_php_test(namedmeasurements)
+add_php_test(longbuildname)
 
 add_subdirectory(ctest)
 
