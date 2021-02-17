@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="this build name is really really really really really really really really really really really really really really really really really really really really reall really really really really really really really really really really really really long"
+	BuildStamp="20210217-1356-Experimental"
+	Name="hesperides"
+	Generator="ctest-3.20.0-rc1"
+	>
+	<Configure>
+		<StartDateTime>Feb 17 08:56 EST</StartDateTime>
+		<StartConfigureTime>1613570202</StartConfigureTime>
+		<ConfigureCommand>"cmake" "-GUnix Makefiles" "/tmp/src"</ConfigureCommand>
+		<Log>This is my config output
+</Log>
+		<ConfigureStatus>0</ConfigureStatus>
+		<EndDateTime>Feb 17 08:56 EST</EndDateTime>
+		<EndConfigureTime>1613570203</EndConfigureTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Configure>
+</Site>

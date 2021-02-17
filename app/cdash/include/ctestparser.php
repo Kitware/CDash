@@ -76,6 +76,15 @@ function generateBackupFileName($projectname, $buildname, $sitename, $stamp,
         $filename .= $sitename_escaped . '_' . $buildname_escaped . '_' . $stamp . '_';
     }
     $filename .=  $currenttimestamp . '_' . $file . $ext;
+
+    // Make sure we don't generate a filename that's too long, otherwise
+    // fopen() will fail later.
+    $maxChars = 250;
+    $textLength = strlen($filename);
+    if ($textLength > $maxChars) {
+        $filename = substr_replace($filename, '', $maxChars/2, $textLength-$maxChars);
+    }
+
     return $filename;
 }
 
