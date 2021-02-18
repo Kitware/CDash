@@ -2,40 +2,19 @@
 
 namespace Tests\Feature;
 
-use Adldap\Connections\ConnectionInterface;
-use Adldap\Connections\Ldap;
-use Adldap\Laravel\Facades\Adldap;
 use Adldap\Laravel\Facades\Resolver;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Symfony\Component\HttpFoundation\Response;
-use Tests\TestCase;
+use Tests\LdapTest;
 
-class LdapAuthWithRulesTest extends TestCase
+class LdapAuthWithRulesTest extends LdapTest
 {
-    use WithFaker, DatabaseTransactions;
-
     protected function setUp() : void
     {
-        // ensure that we're using LDAP, overriding whatever may be set in .env
-        putenv('CDASH_AUTHENTICATION_PROVIDER=ldap');
         putenv('LDAP_PROVIDER=activedirectory');
-        putenv('APP_URL=http://localhost');
         parent::setUp();
-    }
-
-    protected function makeLdapUser(array $attributes = [])
-    {
-        $mock_ldap = $this->getMockBuilder(ConnectionInterface::class)
-            ->getMockForAbstractClass();
-
-        $provider = config('ldap_auth.connection');
-        $user = Adldap::getProvider($provider)->make()->user($attributes);
-        $user->getQuery()->setConnection($mock_ldap);
-        return $user;
     }
 
     public function testLdapAuthentication()
