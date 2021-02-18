@@ -97,4 +97,12 @@ class CDashTest extends TestCase
 
         $this->assertEmpty($sut->getController());
     }
+
+    public function testOverrideLoginField()
+    {
+        \URL::forceRootUrl('http://localhost');
+        Config::set('cdash.login_field', 'User');
+        $this->get('/login')
+            ->assertSeeText('User:');
+    }
 }
