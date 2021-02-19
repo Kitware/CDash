@@ -162,7 +162,7 @@ class DynamicAnalysis
             $uncompressed_log = '';
             $inflate_context = inflate_init(ZLIB_ENCODING_DEFLATE);
             foreach (str_split($this->Log, 1024) as $chunk) {
-                $uncompressed_log = inflate_add($inflate_context, $chunk, ZLIB_NO_FLUSH);
+                $uncompressed_log .= inflate_add($inflate_context, $chunk, ZLIB_NO_FLUSH);
                 if (strlen($uncompressed_log) >= $max_log_length) {
                     break;
                 }

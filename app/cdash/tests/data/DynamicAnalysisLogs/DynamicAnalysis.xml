@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="leak_lots"
+	BuildStamp="20210125-1520-Experimental"
+	Name="localhost"
+	Generator="ctest-3.19.0"
+	>
+	<DynamicAnalysis Checker="Valgrind">
+		<StartDateTime>Jan 25 10:20 EST</StartDateTime>
+		<StartTestTime>1611588059</StartTestTime>
+		<TestList>
+			<Test>./main</Test>
+		</TestList>
+		<Test Status="passed">
+			<Name>main</Name>
+			<Path>.</Path>
+			<FullName>./main</FullName>
+			<FullCommandLine>/usr/bin/valgrind "--log-file=/tmp/leak_lots_bin/Testing/Temporary/MemoryChecker.1.log" "--leak-check=full" "--show-reachable=yes" "--track-origins=yes" "/tmp/leak_lots_bin/main"</FullCommandLine>
+			<Results>
+				<Defect type="Memory Leak">60</Defect>
+			</Results>
+			<Log compression="gzip" encoding="base64">eJzN211vm0gUBuD7/oq520SyY+YT8DaVwB/pbpPdKFWqXVVVhM3YZoPBApzE/36HxHW9OdU6snSkk4uEADPwziCdx1hzfq5FeH7OruxyurDT+w5L2NIuy2rDbFWVFUttY6dNWb073545KFebKpsvGnYyOGXC80RXeNx3DYuUXfxxyy6uL39JO2yyYb+v8ywp2Gf7mFQpsw1L8rNdP7d1VszZlySfV1mRduUZl2fecyeX2eTL6K9fWWWrdcEes2bBugs2czcz3V07K2bl3i0tl65hn/VWVfmPu9261yxXd67F3TRN6kUvt8n9XV429d0kK3rLJCt2ba+TyhYNu/5t2GdK691+uPFxFF2zz7dXV9HN3/3d3vYnK9i6tixpmH3Kmj6THeN5bgAaW7fHjNvOy+l9vdeoKZskZwubrFzTZG77zCg3PO60usMUm1XWuo2Adzyptj09H00am/64tfeTD1eXn973Jh/Y931q78J8e13mMrqJnGVF1th8w/Kybkew/Vu7UZ6WbnY4K2fuTvdzuTzekxpILwjHfVaubJW4B4EV9vHrt5N1UWfzwqauk2J+yk5cd711XfXybNJ72E5q72G+qmxeJundcvt8dZNlalQ3z4r101ldnu5fzz0x3hP3Qn+s+6ydJHbS/j6bTvuKn6KkFnRSBzwGqQVOakkoteIgtcRJrQilNj5IrXBSa0KpgyFIrXFSG0KpYwlSG5zUPqHUwxCk9nFSB4RSj8cgdYCTOqSTOhSwXoc4qblHKLYCBVt7SLEJ6Sz0QcXWSDrjhHjmcoPYSDzjhHwWxqBmaySfcUJAC0egaGskoHFCQos8ULU1ktA4IaJFYgBiIxGNEzJapIBWNJLROCGkRb4AsZGQxgkpLQqB0jSS0gQhpUVx8Dq2QVKaIKS0aAhwarDeoRFSWjQegdhIShOElBYLYHKDpDRBSGmxUiA2ktIEIaXF8O2hQVKaIKS0OIhAbCSlCUJKiyPwCcwgKU0QUlo89EBsJKUJQkqLx+CDp0FSmiSktAE3r2P7B5QWHBubkNKkBCY/MNlHpyaENKmBTTnWZBNCmgwA0vgBkh8dmxDSZAS0wg+Q/OjYhJAmB6Bs8wMkPzo2IaRJWL/4AZIfHZsQ0hQHL075AZIfHZsQ0pQEbxD5AZIfHZsQ0pQBZZsfIPmxsRUhpKkA1u0DJD86NiGkqRjWbSSlKUJKU0NQtwWS0hQhpakxqNsCSWmKkNK0AHVbIClNEVKaVqBuCySlKUJK0wbUbYGkNEVIaRp+BSaQlKYIKU3HoG4LJKUpQkrTI1C3BZLSNCGlGQ/WbSSlaUJKMwLWbSSlaUJKMxrUbYmkNE1IacYHdVsiKU0TUpoJQd2WSErThJRmBqBuSySlaUJKMyNQtyWS0jQhpfkc1G2JpDRNSGm+BHVbIilNE1Kar0HdlkhKM4SU5gewbu8r7fvG5Sj69NNFp6+yvmnRqdufZm4wml2jvQY/O5+xlRu/bPLW8+smy3M33Ml0kUxy+4b+20brlRvBurbp/5+/2xg/rwReF03dzufLAmU3Se3S4R99vSxfrjt7q4j7rPuw62R0c/PnzW5k2+F6acBmVbls/52WRWOf3DVO/nuDz8cdsT7aPC/ZY1nl6TvpsbRcu8TuMaySzVfufWv3ZUWzt+OiLNPJxm6b/AscBejZ====</Log>
+		</Test>
+		<DefectList>
+			<Defect Type="Memory Leak"/>
+		</DefectList>
+		<EndDateTime>Jan 25 10:21 EST</EndDateTime>
+		<EndTestTime>1611588060</EndTestTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</DynamicAnalysis>
+</Site>

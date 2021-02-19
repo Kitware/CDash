@@ -272,6 +272,11 @@ export default {
   mounted () {
     this.buildtestid = window.location.pathname.split("/").pop();
     var endpoint_path = '/api/v1/testDetails.php?buildtestid=' + this.buildtestid;
+    this.queryParams = QueryParams.get();
+    if ('graph' in this.queryParams) {
+      this.graphSelection = this.queryParams.graph;
+      endpoint_path += "&graph=" + this.graphSelection;
+    }
     ApiLoader.loadPageData(this, endpoint_path);
   },
 
@@ -287,8 +292,7 @@ export default {
       this.cdash.test.output = TextMutator.terminalColors(this.cdash.test.output, true);
 
       this.queryParams = QueryParams.get();
-      if ('graph' in this.queryParams) {
-        this.graphSelection = this.queryParams.graph;
+      if (this.graphSelection) {
         this.displayGraph();
       }
 
@@ -298,6 +302,25 @@ export default {
     },
 
     displayGraph: function() {
+      if (history.pushState) {
+        var graph_query = "?graph=" + this.graphSelection;
+        if (this.cdash.menu.current.indexOf(graph_query) === -1) {
+          // Update query string.
+          var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + graph_query;
+          window.history.pushState({path:newurl},'',newurl);
+
+          // Update menu links.
+          this.cdash.menu.current = this.cdash.menu.current.split("?")[0] + graph_query;
+          if (this.cdash.menu.previous) {
+            this.cdash.menu.previous = this.cdash.menu.previous.split("?")[0] + graph_query;
+          }
+          if (this.cdash.menu.next) {
+            this.cdash.menu.next = this.cdash.menu.next.split("?")[0] + graph_query;
+          }
+          this.$root.$emit('api-loaded', this.cdash);
+        }
+      }
+
       var testid = this.cdash.test.id;
       var buildid = this.cdash.test.buildid;
       var measurementname = this.graphSelection;

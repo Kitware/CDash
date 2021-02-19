@@ -12,4 +12,9 @@ class OpenLDAP extends BaseSchema
     {
         return env('LDAP_GUID', parent::objectGuid());
     }
+
+    public function userModel()
+    {
+        return \App\Models\Ldap\User::class;
+    }
 }

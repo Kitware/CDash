@@ -116,7 +116,9 @@ class TestCreator
         $crc32_input .= pdo_real_escape_string($this->testOutput);
         $crc32_input .= pdo_real_escape_string($this->testDetails);
         foreach ($this->measurements as $measurement) {
-            $crc32_input .= $measurement->Type . $measurement->Name . $measurement->Value;
+            $crc32_input .= "_" . pdo_real_escape_string($measurement->type);
+            $crc32_input .= "_" . pdo_real_escape_string($measurement->name);
+            $crc32_input .= "_" . pdo_real_escape_string($measurement->value);
         }
 
         foreach ($this->images as $image) {
