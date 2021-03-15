@@ -600,6 +600,12 @@ class TrilinosSubmissionTestCase extends KWWebTestCase
                 $this->fail("Did not find $subproject_name in the list of child builds");
             }
         }
+
+        // Verify that the 'SubProject Dependencies' table is rendered correctly.
+        $this->get($this->url . '/api/v1/index.php?subproject=FEApp&project=Trilinos&date=2011-07-22');
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $this->assertEqual('project=Trilinos&date=2011-07-22', $jsonobj['linkparams']);
     }
 
     public function verifyBuild($build, $answer, $name)

@@ -216,6 +216,10 @@ if (!function_exists('echo_main_dashboard_JSON')) {
                     $subproject_response['dependencies'] = $dependencies_response;
                 }
                 $response['subproject'] = $subproject_response;
+                $response['linkparams'] = "project={$projectname_encoded}";
+                if ($response['date_set']) {
+                    $response['linkparams'] .= "&date={$date}";
+                }
             } else {
                 add_log("SubProject '$subproject_name' does not exist",
                     __FILE__ . ':' . __LINE__ . ' - ' . __FUNCTION__,
