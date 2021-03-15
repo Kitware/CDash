@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="append_configures"
+	BuildStamp="20210315-1730-Experimental"
+	Name="hesperides"
+	Generator="ctest-3.19.4"
+	>
+	<Configure>
+		<StartDateTime>Mar 15 13:30 EDT</StartDateTime>
+		<StartConfigureTime>1615829430</StartConfigureTime>
+		<ConfigureCommand>"cmake" "-GUnix Makefiles" "/tmp/src"</ConfigureCommand>
+		<Log>-- This is the first part of my configure
+-- CMake Warning (dev) at some/file/path:1234 (MESSAGE):
+-- WARNING: foo
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /tmp/bin
+</Log>
+		<ConfigureStatus>1</ConfigureStatus>
+		<EndDateTime>Mar 15 13:30 EDT</EndDateTime>
+		<EndConfigureTime>1615829430</EndConfigureTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Configure>
+</Site>

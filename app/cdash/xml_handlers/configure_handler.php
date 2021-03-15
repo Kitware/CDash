@@ -173,6 +173,30 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
                 } else {
                     // Otherwise we make sure that it's up-to-date.
                     $build->UpdateBuild($build->Id, -1, -1);
+
+                    // Honor the Append flag if this build already existed.
+                    if ($this->Append) {
+                        // Get existing log & status from the database.
+                        $existing_config = $this->ModelFactory->create(BuildConfigure::class);
+                        $existing_config->BuildId = $build->Id;
+                        if ($existing_config->Exists()) {
+                            $existing_config_results = $existing_config->GetConfigureForBuild();
+                            if ($existing_config_results) {
+                                // Combine these with the data we just parsed out of the XML.
+                                $this->Configure->Log = $existing_config_results['log'] . "\n" . $this->Configure->Log;
+                                $this->Configure->Status = intval($existing_config_results['status']) + intval($this->Configure->Status);
+
+                                // Also reuse the prior start time for this configure step.
+                                $existing_start_timestamp = strtotime($existing_config_results['starttime'] . ' UTC');
+                                if ($existing_start_timestamp) {
+                                    $this->StartTimeStamp = $existing_start_timestamp;
+                                }
+                            }
+                            // Delete the existing configure for this build.
+                            // A new one will be created below.
+                            $existing_config->Delete();
+                        }
+                    }
                 }
                 $GLOBALS['PHP_ERROR_BUILD_ID'] = $build->Id;
                 $this->Configure->BuildId = $build->Id;
