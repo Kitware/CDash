@@ -32,8 +32,6 @@ class TestingJUnitHandler extends AbstractHandler
     // The buildgroup to submit to (defaults to Nightly).
     private $Group;
 
-    private $Append;
-
     // Keep a record of the number of tests passed, failed and notrun.
     // This works only because we have one test file per submission.
     private $NumberTestsFailed;
@@ -101,12 +99,6 @@ class TestingJUnitHandler extends AbstractHandler
             $this->Build->SetStamp($attributes['BUILDSTAMP']);
             $this->Build->Generator = $attributes['GENERATOR'];
             $this->Build->Information = $buildInformation;
-
-            if (array_key_exists('APPEND', $attributes)) {
-                $this->Append = $attributes['APPEND'];
-            } else {
-                $this->Append = false;
-            }
         } elseif ($name == 'FAILURE' || $name == 'ERROR') {
             $this->TestCreator->testDetails = $attributes['TYPE'];
         } elseif ($name == 'PROPERTY' && $parent == 'PROPERTIES') {
