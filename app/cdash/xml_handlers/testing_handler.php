@@ -36,6 +36,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
 
     private $TestMeasurement;
     private $Label;
+    private $Labels;
     private $Append;
 
     private $TestCreator;
@@ -133,6 +134,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
             $this->TestCreator->projectid = $this->projectid;
             $this->TestCreator->testStatus = $attributes['STATUS'];
             $this->TestSubProjectName = '';
+            $this->Labels = [];
         } elseif ($name == 'NAMEDMEASUREMENT' && array_key_exists('TYPE', $attributes)) {
             $this->TestMeasurement = $factory->create(TestMeasurement::class);
 
@@ -177,11 +179,9 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
             } elseif ($this->TestCreator->testStatus == 'notrun') {
                 $this->NumberTestsNotRun[$this->SubProjectName]++;
             }
-
-            if ($this->Label) {
-                $this->TestCreator->labels->push($this->Label);
+            if ($this->Labels) {
+                $this->TestCreator->labels = $this->Labels;
             }
-
             $this->TestCreator->create($build);
         } elseif ($name == 'LABEL' && $parent == 'LABELS') {
             if (!empty($this->TestSubProjectName)) {
@@ -306,6 +306,7 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
             }
             if (is_a($this->Label, Label::class)) {
                 $this->Label->SetText($data);
+                $this->Labels[] = $this->Label;
             }
         }
     }
