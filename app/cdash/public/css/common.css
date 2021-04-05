@@ -71,6 +71,15 @@ a:hover{
 .na { background-color : #cccccc; }
 .measurement { background-color : #b0c4de; }
 
+#test_measurement_table th {
+  padding: 4px;
+  margin-right: 4px;
+}
+#test_measurement_table td {
+  padding: 4px;
+  margin-left: 4px;
+}
+
 .table-heading {
  background-color : #c7d7e7; /* #c1c1c1 */
  font-size: 13px;

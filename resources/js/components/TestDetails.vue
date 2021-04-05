@@ -79,7 +79,7 @@
       <br>
 
       <!-- Display the measurements -->
-      <table>
+      <table id="test_measurement_table">
         <tr v-if="cdash.test.compareimages">
           <th class="measurement">
             Interactive Image
