@@ -450,6 +450,7 @@ function clean_backup_directory()
 
     foreach (glob("{$directory}/*") as $filename) {
         if (file_exists($filename) && is_file($filename) &&
+            substr($filename, -5) !== 'empty' &&
             time() - filemtime($filename) > $timeframe * 3600
         ) {
             cdash_unlink($filename);
