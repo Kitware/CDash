@@ -76,6 +76,13 @@
           This test took longer to complete ({{ cdash.test.time }}) than the threshold allows ({{ cdash.test.threshold }}).
         </div>
       </div>
+
+      <div v-if="cdash.test.labels != ''">
+        <b>Labels: </b>
+        {{ cdash.test.labels }}
+        <br>
+      </div>
+
       <br>
 
       <!-- Display the measurements -->

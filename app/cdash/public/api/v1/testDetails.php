@@ -189,6 +189,12 @@ $test_response['command'] = $testRow['command'];
 $test_response['details'] = $testRow['details'];
 $test_response['output'] = utf8_for_xml(TestOutput::DecompressOutput($testRow['output']));
 
+if ($project->DisplayLabels) {
+    $test_response['labels'] = $buildtest->getLabels()->keys()->implode(', ');
+} else {
+    $test_response['labels'] = '';
+}
+
 $test_response['summaryLink'] = $summaryLink;
 switch ($testRow['status']) {
     case 'passed':
