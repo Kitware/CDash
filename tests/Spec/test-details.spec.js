@@ -69,6 +69,14 @@ describe('TestDetails', function() {
             value: '',
           },
         ],
+        preformatted_measurements: [
+          {
+            name: 'Custom Output',
+            type: 'test/preformatted',
+            value: `multiple
+lines`,
+          },
+        ],
       },
       user: {
         id: 1,
@@ -112,6 +120,9 @@ describe('TestDetails', function() {
     expect(html).toContain('my-test');
     expect(html).toContain('Completed (OTHER_FAULT)');
     expect(html).toContain('label1, label2, label3');
+    expect(html).toContain('Custom Output');
+    expect(html).toContain(`<pre>multiple
+lines</pre>`);
 
     // Verify colorized/escaped output.
     const test_output = component.find("#test_output");
