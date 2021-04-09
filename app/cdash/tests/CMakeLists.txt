@@ -231,6 +231,7 @@ add_php_test(testimages)
 add_php_test(dynamicanalysislogs)
 add_php_test(namedmeasurements)
 add_php_test(longbuildname)
+add_php_test(multiplelabelsfortests)
 
 add_subdirectory(ctest)
 

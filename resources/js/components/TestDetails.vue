@@ -76,10 +76,17 @@
           This test took longer to complete ({{ cdash.test.time }}) than the threshold allows ({{ cdash.test.threshold }}).
         </div>
       </div>
+
+      <div v-if="cdash.test.labels != ''">
+        <b>Labels: </b>
+        {{ cdash.test.labels }}
+        <br>
+      </div>
+
       <br>
 
       <!-- Display the measurements -->
-      <table>
+      <table id="test_measurement_table">
         <tr v-if="cdash.test.compareimages">
           <th class="measurement">
             Interactive Image
@@ -218,6 +225,12 @@
         id="test_output"
         v-html="cdash.test.output"
       />
+
+      <div v-for="preformatted_measurement in cdash.test.preformatted_measurements">
+        <b>{{ preformatted_measurement.name }}</b>
+        <pre v-html="preformatted_measurement.value" />
+        <br>
+      </div>
     </div>
   </section>
 </template>
@@ -290,6 +303,11 @@ export default {
     postSetup: function(response) {
       this.cdash.test.output = TextMutator.ctestNonXmlCharEscape(this.cdash.test.output);
       this.cdash.test.output = TextMutator.terminalColors(this.cdash.test.output, true);
+
+      for (var i = 0; i < this.cdash.test.preformatted_measurements.length; i++) {
+        this.cdash.test.preformatted_measurements[i].value = TextMutator.ctestNonXmlCharEscape(this.cdash.test.preformatted_measurements[i].value);
+        this.cdash.test.preformatted_measurements[i].value = TextMutator.terminalColors(this.cdash.test.preformatted_measurements[i].value, true);
+      }
 
       this.queryParams = QueryParams.get();
       if (this.graphSelection) {

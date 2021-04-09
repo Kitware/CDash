@@ -43,7 +43,17 @@ class BuildTest extends Model
     public function getLabels()
     {
         if (is_null($this->labels)) {
-            return [];
+            $this->labels = collect();
+            $testlabel_models = TestLabel::where([
+                ['buildid', '=', $this->buildid],
+                ['outputid', '=', $this->outputid],
+            ])->get();
+            foreach ($testlabel_models as $testlabel_model) {
+                $label = new Label();
+                $label->Id = $testlabel_model->labelid;
+                $text = $label->GetText();
+                $this->labels->put($text, $label);
+            }
         }
         return $this->labels;
     }
@@ -134,13 +144,10 @@ class BuildTest extends Model
         }
 
         if (config('database.default') == 'pgsql' && $marshaledData['id']) {
-            get_labels_JSON_from_query_results(
-                'SELECT text FROM label, label2test WHERE ' .
-                'label.id=label2test.labelid AND ' .
-                "label2test.outputid=" . $marshaledData['id'] . " AND " .
-                "label2test.buildid='$buildid' " .
-                'ORDER BY text ASC',
-                $marshaledData);
+            $buildtest = BuildTest::where('id', '=', $data['buildtestid'])->first();
+            if ($buildtest) {
+                $marshaledData['labels'] = $buildtest->getLabels()->keys()->all();
+            }
         } else {
             if (!empty($data['labels'])) {
                 $labels = explode(',', $data['labels']);

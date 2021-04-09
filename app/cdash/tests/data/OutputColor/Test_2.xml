@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="preformatted_test_measurement"
+	BuildStamp="20210409-1528-Experimental"
+	Name="hesperides"
+	Generator="ctest-3.20.1"
+	>
+	<Testing>
+		<StartDateTime>Apr 09 11:29 EDT</StartDateTime>
+		<StartTestTime>1617982140</StartTestTime>
+		<TestList>
+			<Test>./preformatted_color</Test>
+		</TestList>
+		<Test Status="passed">
+			<Name>preformatted_color</Name>
+			<Path>.</Path>
+			<FullName>./preformatted_color</FullName>
+			<FullCommandLine>/tmp/bin/preformatted_color</FullCommandLine>
+			<Results>
+				<NamedMeasurement type="numeric/double" name="Execution Time">
+					<Value>0.269173</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="numeric/double" name="Processors">
+					<Value>1</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Completion Status">
+					<Value>Completed</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="Command Line">
+					<Value>/tmp/bin/preformatted_color</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/preformatted" name="Color Output">
+					<Value>not bold[NON-XML-CHAR-0x1B][1m bold[NON-XML-CHAR-0x1B][0;0m not bold
+[NON-XML-CHAR-0x1B][32mHello world![NON-XML-CHAR-0x1B][0m
+[NON-XML-CHAR-0x1B][31mThis is test output[NON-XML-CHAR-0x1B][0m
+</Value>
+				</NamedMeasurement>
+				<Measurement>
+					<Value>regular output here
+</Value>
+				</Measurement>
+			</Results>
+		</Test>
+		<EndDateTime>Apr 09 11:29 EDT</EndDateTime>
+		<EndTestTime>1617982140</EndTestTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Testing>
+</Site>

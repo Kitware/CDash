@@ -44,6 +44,7 @@ describe('TestDetails', function() {
         command: '/usr/bin/false',
         details: 'Completed (OTHER_FAULT)',
         environment: 'foo=bar',
+        labels: 'label1, label2, label3',
         output: "\u001b[32mHello world!\n\u001b[91m<script type=\"text\/javascript\">console.log(\"MALICIOUS JAVASCRIPT!!!\");<\/script>\n\u001b[0mGood bye world!\n",
         summaryLink: 'testSummary.php?project=1&name=my-test',
         status: 'Failed',
@@ -66,6 +67,14 @@ describe('TestDetails', function() {
             name: 'results.txt',
             type: 'file',
             value: '',
+          },
+        ],
+        preformatted_measurements: [
+          {
+            name: 'Custom Output',
+            type: 'test/preformatted',
+            value: `multiple
+lines`,
           },
         ],
       },
@@ -110,6 +119,10 @@ describe('TestDetails', function() {
     expect(html).toContain('my build');
     expect(html).toContain('my-test');
     expect(html).toContain('Completed (OTHER_FAULT)');
+    expect(html).toContain('label1, label2, label3');
+    expect(html).toContain('Custom Output');
+    expect(html).toContain(`<pre>multiple
+lines</pre>`);
 
     // Verify colorized/escaped output.
     const test_output = component.find("#test_output");

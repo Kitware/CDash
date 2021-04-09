@@ -189,6 +189,12 @@ $test_response['command'] = $testRow['command'];
 $test_response['details'] = $testRow['details'];
 $test_response['output'] = utf8_for_xml(TestOutput::DecompressOutput($testRow['output']));
 
+if ($project->DisplayLabels) {
+    $test_response['labels'] = $buildtest->getLabels()->keys()->implode(', ');
+} else {
+    $test_response['labels'] = '';
+}
+
 $test_response['summaryLink'] = $summaryLink;
 switch ($testRow['status']) {
     case 'passed':
@@ -300,9 +306,15 @@ $stmt = $pdo->prepare(
 pdo_execute($stmt, [':outputid' => $outputid]);
 $fileid = 1;
 $test_response['environment'] = '';
+$preformatted_measurements = [];
+
 while ($row = $stmt->fetch()) {
     if ($row['name'] === 'Environment' && $row['type'] === 'text/string') {
         $test_response['environment'] = $row['value'];
+        continue;
+    } elseif ($row['type'] == 'text/preformatted') {
+        $preformatted_measurement = ['name' => $row['name'], 'value' => $row['value']];
+        $preformatted_measurements[] = $preformatted_measurement;
         continue;
     }
 
@@ -332,7 +344,12 @@ while ($row = $stmt->fetch()) {
     $measurement_response['value'] = $value;
     $measurements_response[] = $measurement_response;
 }
+
 $test_response['measurements'] = $measurements_response;
+usort($preformatted_measurements, function ($a, $b) {
+    return strcmp($a['name'], $b['name']);
+});
+$test_response['preformatted_measurements'] = $preformatted_measurements;
 $response['test'] = $test_response;
 $pageTimer->end($response);
 echo json_encode($response);
