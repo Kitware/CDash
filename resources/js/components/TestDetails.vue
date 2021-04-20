@@ -277,7 +277,7 @@ export default {
     },
     numericMeasurements: function () {
       return this.cdash.test.measurements.filter(function (measurement) {
-        return measurement.type == 'numeric/double';
+        return measurement.type.lastIndexOf('numeric/', 0) === 0;
       })
     },
   },
