@@ -2,6 +2,7 @@
 const mix = require('laravel-mix');
 mix.disableNotifications();
 
+const ESLintPlugin = require('eslint-webpack-plugin');
 const ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin');
 
 // Clean up from previous webpack runs.
@@ -54,8 +55,16 @@ var webpack_plugins = [
         replace: version
       }]
     },
-  ])
+  ]),
+
+  // Linter for Vuejs files.
+  new ESLintPlugin({
+    exclude: ['node_modules', 'vendor'],
+    extensions: 'vue',
+    fix: true,
+  }),
 ];
+
 if (git_clone) {
   const GitRevisionPlugin = require('git-revision-webpack-plugin')
   webpack_plugins.push(new GitRevisionPlugin());
@@ -132,26 +141,12 @@ mix.scripts([
 ], 'public/js/CDash_' + version + '.min.js');
 
 // Boilerplate.
-mix.js('resources/js/app.js', 'public/laravel/js').version();
+mix.js('resources/js/app.js', 'public/laravel/js').vue().version();
 mix.sass('resources/sass/app.scss', 'public/laravel/css').version();
 
 // Added this line to get mocha testing working with versioning.
 mix.copy('resources/js/app.js', 'public/main.js');
 
 mix.webpackConfig({
-  module: {
-    rules: [
-      {
-        // Vuejs linter
-        enforce: 'pre',
-        test: /\.vue$/,
-        loader: 'eslint-loader',
-        options: {
-          fix: true,
-        },
-        exclude: /(vendor|node_modules)/
-      },
-    ]
-  },
   plugins: webpack_plugins
 });
