@@ -19,13 +19,18 @@ CDash needs the following PHP modules installed and enabled.
 
 - bcmath
 - bz2
-- php_curl
+- curl
 - gd
 - json
 - ldap
 - mbstring
 - pdo_mysql or pdo_pgsql
 - xsl
+- posix
+- simplexml
+- tokenizer
+- fileinfo
+- session
 
 ## Web server configuration
 
@@ -94,6 +99,7 @@ to set here are:
 * The `$CDASH_DB_*` variables. These indicate how to connect to the database.
 * `$CDASH_BASE_URL` should be set to the root URL of CDash (ie `https://localhost/CDash`)
 * `$CDASH_EMAIL*` variables. These indicate how email should be sent.
+* `$CDASH_USE_HTTPS` should be set to `1` if you want to use https instead of http.
 
 In most other cases, reasonable default values apply if the variables are not explicitly set.
 
