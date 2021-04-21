@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.12)
 project(CDash)
 include(CTest)
 configure_file(${CDash_SOURCE_DIR}/CTestCustom.cmake.in
@@ -16,10 +16,7 @@ set(CDASH_SELENIUM_HUB "localhost" CACHE STRING "Location of selenium server")
 option(CDASH_USE_SELENIUM "Should CDash use Selenium to test ajax functionality?" OFF)
 option(CDASH_USE_PROTRACTOR "Should CDash use Protractor to test angular functionality?" ON)
 option(CDASH_USE_REDIS_QUEUE "Should CDash use a message queue (Redis) for submitting/processing builds?" OFF)
-option(CDASH_PRO "Are we testing CDashPro?" OFF)
 set(CMake_SOURCE_DIR CACHE FILEPATH "Path to CMake source dir.  Set this to import tests from CMake")
-set(CLIENT_TEST_SCRIPT1 CACHE FILEPATH "Path to client management test script")
-set(CLIENT_TEST_SCRIPT2 CACHE FILEPATH "Path to client management test script")
 
 get_filename_component(CDASH_DIR_NAME_DEFAULT ${CDash_SOURCE_DIR} NAME)
 set(CDASH_DIR_NAME "${CDASH_DIR_NAME_DEFAULT}" CACHE STRING "URL suffix. Ie 'http://<CDASH_SERVER>/<CDASH_DIR_NAME>'")
@@ -57,7 +54,6 @@ $configure = array(
   'buildname'        => '${CDASH_BUILD_NAME}',
   'cdash'            => 'http://www.cdash.org/CDash',
   'svnroot'          => '${CDash_SOURCE_DIR}',
-  'cdashpro'         => '${CDASH_PRO}',
   );
 ?>
 ")
@@ -131,9 +127,6 @@ else()
 endif()
 
 set(CDASH_USE_LOCAL_DIRECTORY 0)
-if(${CDASH_PRO})
-  set(CDASH_USE_LOCAL_DIRECTORY 1)
-endif(${CDASH_PRO})
 
 if (CDASH_USE_REDIS_QUEUE)
   set(CDASH_BERNARD_SUBMISSION "true")
