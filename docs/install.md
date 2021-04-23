@@ -31,6 +31,7 @@ CDash needs the following PHP modules installed and enabled.
 - tokenizer
 - fileinfo
 - session
+- zlib
 
 ## Web server configuration
 
