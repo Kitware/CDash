@@ -17,18 +17,11 @@ class ProjectInDbTestCase extends KWWebTestCase
         $this->createProjectTest4Db();
         $query = "SELECT name,description,public FROM project WHERE name = 'ProjectTest4Db'";
         $result = $this->db->query($query);
-        $nameexpected = 'ProjectTest4Db';
-        $descriptionexpected = 'This is a project test for cdash';
-        $publicexpected = 0;
-        $expected = array('name' => $nameexpected,
-            'description' => $descriptionexpected,
-            'public' => $publicexpected);
-
-        // For CDashPro projects should be public
-        if ($this->cdashpro) {
-            $expected['public'] = 1;
-        }
-
+        $expected = [
+            'name' => 'ProjectTest4Db',
+            'description' => 'This is a project test for cdash',
+            'public' => 0
+        ];
         $this->assertEqual($result[0], $expected);
     }
 

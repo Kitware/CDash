@@ -3,6 +3,7 @@
 $finder = PhpCsFixer\Finder::create()
     ->exclude('app/cdash/config')
     ->exclude('bootstrap/cache')
+    ->exclude('node_modules')
     ->exclude('storage')
     ->exclude('vendor')
     ->in(__DIR__)

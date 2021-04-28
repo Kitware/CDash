@@ -48,7 +48,6 @@ class KWWebTestCase extends WebTestCase
     public $db = null;
     public $logfilename = null;
     public $configfilename = null;
-    public $cdashpro = null;
 
     private $config;
     protected $app;
@@ -64,10 +63,6 @@ class KWWebTestCase extends WebTestCase
 
         global $configure;
         $this->url = $configure['urlwebsite'];
-        $this->cdashpro = false;
-        if (isset($configure['cdashpro']) && $configure['cdashpro'] == '1') {
-            $this->cdashpro = true;
-        }
 
         global $db;
         $this->db = new database($db['type']);

@@ -302,18 +302,34 @@ class GitHubTest extends TestCase
             ->method('getToken');
         $sut->setJwtBuilder($builder);
 
+        $statuses = $this->getMockBuilder(\Github\Api\Apps::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['create'])
+            ->getMock();
+        $statuses->expects($this->any())
+            ->method('create')
+            ->willReturn(true);
+
+        $api = $this->getMockBuilder(\Github\Api\Apps::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['createInstallationToken', 'statuses'])
+            ->getMock();
+        $api->expects($this->any())
+            ->method('createInstallationToken');
+        $api->expects($this->any())
+            ->method('statuses')
+            ->willReturn($statuses);
+
         $client = $this->getMockBuilder(\Github\Client::class)
             ->disableOriginalConstructor()
-            ->setMethods(['api', 'authenticate', 'createInstallationToken', 'getHttpClient'])
+            ->setMethods(['api', 'authenticate', 'getHttpClient'])
             ->getMock();
         $client->expects($this->any())
             ->method('authenticate')
             ->willReturn(true);
         $client->expects($this->any())
             ->method('api')
-            ->will($this->returnSelf());
-        $client->expects($this->any())
-            ->method('createInstallationToken');
+            ->willReturn($api);
 
         $sut->setApiClient($client);
         Config::getInstance()->set('CDASH_GITHUB_PRIVATE_KEY', __FILE__);

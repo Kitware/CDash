@@ -6,20 +6,18 @@ import HeaderTop from "../../resources/js/components/page-header/HeaderTop.vue";
 import HeaderBottom from "../../resources/js/components/page-header/HeaderBottom.vue";
 import expect from 'expect';
 
-describe('PageHeader', () => {
-  let component;
+let component;
 
-  beforeEach(() => {
-    component = mount(PageHeader);
-  });
+beforeEach(() => {
+  component = mount(PageHeader);
+});
 
-  it('has a HeaderTop component', () => {
-    let child = component.find(HeaderTop);
-    expect(child.is(HeaderTop)).toBe(true);
-  });
+test('PageHeader has a HeaderTop component', () => {
+  const child = component.findComponent(HeaderTop);
+  expect(child.is(HeaderTop)).toBe(true);
+});
 
-  it('has a HeaderBottom component', () => {
-    let child = component.find(HeaderBottom);
-    expect(child.is(HeaderBottom)).toBe(true);
-  });
+test('PageHeader has a HeaderBottom component', () => {
+  const child = component.findComponent(HeaderBottom);
+  expect(child.is(HeaderBottom)).toBe(true);
 });
