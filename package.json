@@ -20,7 +20,7 @@
     "angular-clipboard": "^1.5.0",
     "angular-ui-bootstrap": "^2.0.0",
     "angular-ui-sortable": "^0.14.3",
-    "ansi_up": "^3.0.0",
+    "ansi_up": "^5.0.0",
     "as-jqplot": "^1.0.8",
     "axios": "^0.21",
     "bootstrap": "^4.4.1",
