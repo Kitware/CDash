@@ -78,7 +78,7 @@ RUN chown -R www-data:www-data .
 
 # Install newer version of CMake
 RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                \
-  wget -q -O cmake-linux.sh https://github.com/Kitware/CMake/releases/download/v3.14.6/cmake-3.14.6-Linux-x86_64.sh                                                                       \
+  wget -q -O cmake-linux.sh https://github.com/Kitware/CMake/releases/download/v3.20.2/cmake-3.20.2-linux-x86_64.sh                                                                       \
   && sh cmake-linux.sh -- --skip-license --prefix=/usr                     \
   && rm cmake-linux.sh;                                                    \
 fi
