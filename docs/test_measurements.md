@@ -10,8 +10,9 @@ CDash recognizes following types of test measurements.
 ## Displayed in Browser
 
 ### Text
-* `numeric/double`: numeric results produced by this test. All measurements whose type begins with "numeric/" are treated identically by CDash. For example, you can provide your measurement as `numeric/integer` or `numeric/float` and CDash's behavior will not change.
-
+* `numeric/double`: numeric results produced by this test.
+  * All measurements whose type begins with `numeric/` are treated identically by CDash. For example, you can provide your measurement as `numeric/integer` or `numeric/float` and CDash's behavior will not change.
+  * CDash displays plots for numeric measurements on the test details page. This allows you to see how measurements change from one run of a test to the next.
 * `text/string`: short text rendered in browser.
 * `text/preformatted`: Useful for longer text fields. Newlines, whitespace, and ANSI color codes are preserved.
 * `text/link`: associate a hyperlink with this test.
