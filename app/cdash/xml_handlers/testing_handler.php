@@ -36,8 +36,6 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
 
     private $TestMeasurement;
     private $Label;
-    private $Labels;
-    private $Append;
 
     private $TestCreator;
 
@@ -117,12 +115,6 @@ class TestingHandler extends AbstractHandler implements ActionableBuildInterface
                 $this->BuildName = '(empty)';
             }
             $this->Site->SetInformation($siteInformation);
-
-            if (array_key_exists('APPEND', $attributes)) {
-                $this->Append = $attributes['APPEND'];
-            } else {
-                $this->Append = false;
-            }
         } elseif ($name == 'SUBPROJECT') {
             $this->SubProjectName = $attributes['NAME'];
             if (!array_key_exists($this->SubProjectName, $this->SubProjects)) {

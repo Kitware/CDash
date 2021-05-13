@@ -61,23 +61,24 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
         $this->EndTimeStamp = 0;
         // Only complain about errors & warnings once.
         $this->Notified = false;
+        // Instantiate model factory.
+        $this->getModelFactory();
     }
 
     public function startElement($parser, $name, $attributes)
     {
         parent::startElement($parser, $name, $attributes);
-        $factory = $this->getModelFactory();
 
         if ($name == 'SITE') {
-            $this->Site = $factory->create(Site::class);
+            $this->Site = $this->ModelFactory->create(Site::class);
             $this->Site->Name = $attributes['NAME'];
             if (empty($this->Site->Name)) {
                 $this->Site->Name = '(empty)';
             }
             $this->Site->Insert();
 
-            $siteInformation = $factory->create(SiteInformation::class);
-            $this->BuildInformation = $factory->create(BuildInformation::class);
+            $siteInformation = $this->ModelFactory->create(SiteInformation::class);
+            $this->BuildInformation = $this->ModelFactory->create(BuildInformation::class);
             $this->BuildName = "";
             $this->BuildStamp = "";
             $this->Generator = "";
@@ -110,36 +111,24 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
                 $this->SubProjects[$this->SubProjectName] = [];
             }
             if (!array_key_exists($this->SubProjectName, $this->Builds)) {
-                $build = $factory->create(Build::class); // new Build();
-                $build->SiteId = $this->Site->Id;
-                $build->Name = $this->BuildName;
+                $build = $this->CreateBuild();
                 $build->SubProjectName = $this->SubProjectName;
-                $build->SetStamp($this->BuildStamp);
-                $build->Generator = $this->Generator;
-                $build->Information = $this->BuildInformation;
                 $this->Builds[$this->SubProjectName] = $build;
             }
         } elseif ($name == 'CONFIGURE') {
-            $this->Configure = $factory->create(BuildConfigure::class);
+            $this->Configure = $this->ModelFactory->create(BuildConfigure::class);
             if (empty($this->Builds)) {
                 // No subprojects
-                $build = $factory->create(Build::class);
-                $build->SiteId = $this->Site->Id;
-                $build->Name = $this->BuildName;
-                $build->SetStamp($this->BuildStamp);
-                $build->Generator = $this->Generator;
-                $build->Information = $this->BuildInformation;
-                $this->Builds[] = $build;
+                $this->Builds[] = $this->CreateBuild();
             }
         } elseif ($name == 'LABEL') {
-            $this->Label = $factory->create(Label::class);
+            $this->Label = $this->ModelFactory->create(Label::class);
         }
     }
 
     public function endElement($parser, $name)
     {
         $parent = $this->getParent();
-        $factory = $this->getModelFactory();
 
         parent::endElement($parser, $name);
 
@@ -184,6 +173,30 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
                 } else {
                     // Otherwise we make sure that it's up-to-date.
                     $build->UpdateBuild($build->Id, -1, -1);
+
+                    // Honor the Append flag if this build already existed.
+                    if ($this->Append) {
+                        // Get existing log & status from the database.
+                        $existing_config = $this->ModelFactory->create(BuildConfigure::class);
+                        $existing_config->BuildId = $build->Id;
+                        if ($existing_config->Exists()) {
+                            $existing_config_results = $existing_config->GetConfigureForBuild();
+                            if ($existing_config_results) {
+                                // Combine these with the data we just parsed out of the XML.
+                                $this->Configure->Log = $existing_config_results['log'] . "\n" . $this->Configure->Log;
+                                $this->Configure->Status = intval($existing_config_results['status']) + intval($this->Configure->Status);
+
+                                // Also reuse the prior start time for this configure step.
+                                $existing_start_timestamp = strtotime($existing_config_results['starttime'] . ' UTC');
+                                if ($existing_start_timestamp) {
+                                    $this->StartTimeStamp = $existing_start_timestamp;
+                                }
+                            }
+                            // Delete the existing configure for this build.
+                            // A new one will be created below.
+                            $existing_config->Delete();
+                        }
+                    }
                 }
                 $GLOBALS['PHP_ERROR_BUILD_ID'] = $build->Id;
                 $this->Configure->BuildId = $build->Id;
@@ -209,7 +222,7 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
                 $duration = $this->EndTimeStamp - $this->StartTimeStamp;
                 $build->SetConfigureDuration($duration, !$all_at_once);
                 if ($all_at_once && !$parent_duration_set) {
-                    $parent_build = $factory->create(Build::class);
+                    $parent_build = $this->ModelFactory->create(Build::class);
                     $parent_build->Id = $build->GetParentId();
                     $parent_build->SetConfigureDuration($duration, false);
                     $parent_duration_set = true;
@@ -236,7 +249,6 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
     {
         $parent = $this->getParent();
         $element = $this->getElement();
-        $factory = $this->getModelFactory();
 
         if ($parent == 'CONFIGURE') {
             switch ($element) {
@@ -271,7 +283,7 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
         } elseif ($parent == 'SUBPROJECT' && $element == 'LABEL') {
             $this->SubProjects[$this->SubProjectName][] =  $data;
             $build = $this->Builds[$this->SubProjectName];
-            $label = $factory->create(Label::class);
+            $label = $this->ModelFactory->create(Label::class);
             $label->Text = $data;
             $build->AddLabel($label);
         } elseif ($parent == 'LABELS' && $element == 'LABEL') {
@@ -324,9 +336,8 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
      */
     public function GetBuildCollection()
     {
-        $factory = $this->getModelFactory();
         /** @var BuildCollection $collection */
-        $collection = $factory->create(BuildCollection::class);
+        $collection = $this->ModelFactory->create(BuildCollection::class);
         foreach ($this->Builds as $build) {
             $collection->add($build);
         }
@@ -360,12 +371,22 @@ class ConfigureHandler extends AbstractHandler implements ActionableBuildInterfa
 
     public function GetBuildGroup()
     {
-        $factory = $this->getModelFactory();
-        $buildGroup = $factory->create(BuildGroup::class);
+        $buildGroup = $this->ModelFactory->create(BuildGroup::class);
         foreach ($this->Builds as $build) {
             $buildGroup->SetId($build->GroupId);
             break;
         }
         return $buildGroup;
+    }
+
+    protected function CreateBuild()
+    {
+        $build = $this->ModelFactory->create(Build::class);
+        $build->SiteId = $this->Site->Id;
+        $build->Name = $this->BuildName;
+        $build->SetStamp($this->BuildStamp);
+        $build->Generator = $this->Generator;
+        $build->Information = $this->BuildInformation;
+        return $build;
     }
 }

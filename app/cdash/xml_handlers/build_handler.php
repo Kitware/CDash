@@ -46,7 +46,6 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
     private $EndTimeStamp;
     private $Error;
     private $Label;
-    private $Append;
     private $Builds;
     private $BuildInformation;
     private $BuildCommand;
@@ -66,7 +65,6 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
     {
         parent::__construct($projectid);
         $this->Builds = [];
-        $this->Append = false;
         $this->BuildCommand = '';
         $this->BuildLog = '';
         $this->Labels = [];
@@ -117,14 +115,6 @@ class BuildHandler extends AbstractHandler implements ActionableBuildInterface, 
             }
 
             $this->Site->SetInformation($siteInformation);
-
-            if (array_key_exists('APPEND', $attributes)) {
-                if (strtolower($attributes['APPEND']) == 'true') {
-                    $this->Append = true;
-                }
-            } else {
-                $this->Append = false;
-            }
         } elseif ($name == 'SUBPROJECT') {
             $this->SubProjectName = $attributes['NAME'];
             if (!array_key_exists($this->SubProjectName, $this->SubProjects)) {

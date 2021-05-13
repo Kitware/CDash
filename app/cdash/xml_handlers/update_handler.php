@@ -41,7 +41,6 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface,
 {
     private $StartTimeStamp;
     private $EndTimeStamp;
-    private $Append;
     private $Update;
     private $UpdateFile;
 
@@ -52,7 +51,6 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface,
         $factory = $this->getModelFactory();
         $this->Build = $factory->create(Build::class);
         $this->Site = $factory->create(Site::class);
-        $this->Append = false;
     }
 
     /** Start element */
@@ -67,15 +65,6 @@ class UpdateHandler extends AbstractHandler implements ActionableBuildInterface,
             if (isset($attributes['GENERATOR'])) {
                 $this->Build->Generator = $attributes['GENERATOR'];
             }
-
-            if (array_key_exists('APPEND', $attributes)) {
-                if (strtolower($attributes['APPEND']) == 'true') {
-                    $this->Append = true;
-                }
-            } else {
-                $this->Append = false;
-            }
-
             $this->Update->Append = $this->Append;
         } elseif ($name == 'UPDATED' || $name == 'CONFLICTING' || $name == 'MODIFIED') {
             $this->UpdateFile = $factory->create(BuildUpdateFile::class);
