@@ -10,13 +10,6 @@ ARG DEVELOPMENT_BUILD
 # TODO: rename CDASH_DEVELOPMENT_BUILD ?
 ENV DEVELOPMENT_BUILD=$DEVELOPMENT_BUILD
 
-# NODE_ENV expands to nothing if DEVELOPMENT_BUILD is unset or empty
-ENV NODE_ENV=${DEVELOPMENT_BUILD:+'development'}
-
-# NODE_ENV expands to production if NODE_ENV is unset or empty,
-# i.e. if DEVELOPMENT_BUILD is empty the node environment is production
-ENV NODE_ENV=${NODE_ENV:-'production'}
-
 RUN apt-get update                                                         \
  && apt-get install -y gnupg                                               \
  && curl -sL https://deb.nodesource.com/setup_12.x | bash                   \
