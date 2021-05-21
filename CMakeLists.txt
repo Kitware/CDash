@@ -80,33 +80,6 @@ endif()
 
 find_program(PHP_EXE NAMES php PATHS c:/xampp/php /xampp/php)
 
-# Update composer during configure time.
-find_program(COMPOSER
-  NAMES composer composer.phar
-  PATHS ${CMAKE_CURRENT_SOURCE_DIR}
-)
-if(NOT COMPOSER)
-  file(DOWNLOAD "http://getcomposer.org/composer.phar" "${CMAKE_CURRENT_SOURCE_DIR}/composer.phar")
-  set(COMPOSER "${CMAKE_CURRENT_SOURCE_DIR}/composer.phar")
-endif()
-execute_process(
-  COMMAND ${PHP_EXE} ${COMPOSER} install --prefer-dist
-  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-)
-
-# Also run "npm install" during configure time.
-find_program(NPM NAMES npm)
-execute_process(
-  COMMAND ${NPM} install
-  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-)
-
-# Run npm build step.
-execute_process(
-  COMMAND ${NPM} run dev
-  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-)
-
 # Run PHP style fixer.
 execute_process(
   COMMAND ${CMAKE_SOURCE_DIR}/vendor/bin/php-cs-fixer fix
@@ -161,7 +134,6 @@ $CDASH_COVERAGE_DIR = '${CDASH_COVERAGE_DIR}';
 $CDASH_LOG_LEVEL = LOG_DEBUG;
 $PHP_EXE = '${PHP_EXE}';
 $PHPUNIT_EXE = '${PHPUNIT_EXE}';
-$CDASH_MANAGE_CLIENTS = '1';
 $CDASH_DEFAULT_GIT_DIRECTORY = '${CDash_BINARY_DIR}';
 $CDASH_USE_LOCAL_DIRECTORY = '${CDASH_USE_LOCAL_DIRECTORY}';
 $CDASH_BASE_URL = '${CDASH_TESTING_URL}';
@@ -170,11 +142,6 @@ $CDASH_BERNARD_DRIVER = ${CDASH_BERNARD_DRIVER};
 $CDASH_BERNARD_CONSUMERS_WHITELIST = ${CDASH_BERNARD_CONSUMERS_WHITELIST};
 ?>
 ")
-
-execute_process(
-  COMMAND ${PHP_EXE} artisan config:migrate
-  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-)
 
 # add the new tests directory
 add_subdirectory(tests)

@@ -10,13 +10,6 @@ ARG DEVELOPMENT_BUILD
 # TODO: rename CDASH_DEVELOPMENT_BUILD ?
 ENV DEVELOPMENT_BUILD=$DEVELOPMENT_BUILD
 
-# NODE_ENV expands to nothing if DEVELOPMENT_BUILD is unset or empty
-ENV NODE_ENV=${DEVELOPMENT_BUILD:+'development'}
-
-# NODE_ENV expands to production if NODE_ENV is unset or empty,
-# i.e. if DEVELOPMENT_BUILD is empty the node environment is production
-ENV NODE_ENV=${NODE_ENV:-'production'}
-
 RUN apt-get update                                                         \
  && apt-get install -y gnupg                                               \
  && curl -sL https://deb.nodesource.com/setup_12.x | bash                   \
@@ -39,10 +32,10 @@ RUN apt-get update                                                         \
 # Creates the kitware home directory with directory for cdash
 WORKDIR /home/kitware/cdash
 
-# Copy CDash (current folder) into /home/kitware/cdash to set its owner
-# to www-data
+# Copy CDash (current folder) into /home/kitware/cdash
 COPY ./app ./app
 COPY ./artisan ./artisan
+COPY ./babel.config.js ./babel.config.js
 COPY ./bootstrap ./bootstrap
 COPY ./.circleci ./.circleci
 COPY ./CMakeLists.txt ./CMakeLists.txt
@@ -52,6 +45,7 @@ COPY ./config ./config
 COPY ./CTestConfig.cmake ./CTestConfig.cmake
 COPY ./CTestCustom.cmake.in ./CTestCustom.cmake.in
 COPY ./database ./database
+COPY ./docs ./docs
 COPY ./docker-compose.yml ./docker-compose.yml
 COPY ./docker ./docker
 COPY ./.dockerignore ./.dockerignore
@@ -62,6 +56,8 @@ COPY ./.eslintrc.js ./.eslintrc.js
 COPY ./.gitattributes ./.gitattributes
 COPY ./.git ./.git
 COPY ./.gitignore ./.gitignore
+COPY ./jest.config.js ./jest.config.js
+COPY ./LICENSE ./LICENSE
 COPY ./package.json ./package.json
 COPY ./package-lock.json ./package-lock.json
 COPY ./.php_cs.dist ./.php_cs.dist
@@ -74,7 +70,6 @@ COPY ./server.php ./server.php
 COPY ./storage ./storage
 COPY ./tests ./tests
 COPY ./webpack.mix.js ./webpack.mix.js
-RUN chown -R www-data:www-data .
 
 # Install newer version of CMake
 RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                \
@@ -83,13 +78,15 @@ RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                \
   && rm cmake-linux.sh;                                                    \
 fi
 
-# Install CDash dependencies with composer and npm, run webpack to build assets
 WORKDIR /home/kitware/cdash
 
+# Install PHP dependencies with composer
+# Set up testing environment if this is a development build
 RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                \
  pecl install xdebug                                                       \
  && docker-php-ext-enable xdebug                                           \
  && mkdir -p /var/www/.npm && chown www-data:www-data /var/www/.npm        \
+ && composer install --no-interaction --no-progress --prefer-dist          \
  && mkdir _build && cd _build                                              \
  && cmake                                                                  \
   -DCDASH_DB_HOST=$CDASH_DB_HOST                                           \
@@ -104,16 +101,25 @@ RUN if [ "$DEVELOPMENT_BUILD" = '1' ]; then                                \
 else                                                                       \
  composer install --no-interaction --no-progress --prefer-dist --no-dev    \
                   --optimize-autoloader                                    \
- && echo "LOG_CHANNEL=stderr" >> .env                                      \
- && npm install                                                            \
- && npm run dev;                                                           \
+ && echo "LOG_CHANNEL=stderr" >> .env;                                     \
 fi
 
 RUN cp app/cdash/php.ini /usr/local/etc/php/conf.d/cdash.ini
 
-# Configure Laravel
-RUN php artisan key:generate                                               \
- && chown -R www-data:www-data .
+# Install javascript dependencies
+RUN npm install
+
+# Generate Laravel application key
+RUN php artisan key:generate
+
+# Expose CDash config to Laravel
+RUN php artisan config:migrate
+
+# Run laravel-mix to builds assets
+RUN npm run dev
+
+# Set www-data user as the owner of the CDash directory
+RUN chown -R www-data:www-data .
 
 # Configure Apache
 RUN cp /home/kitware/cdash/docker/cdash-site.conf                          \
