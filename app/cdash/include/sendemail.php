@@ -568,7 +568,7 @@ function send_update_email($handler, $projectid)
             $body = "$sitename has encountered errors during the Update step and you have been identified as the maintainer of this site.\n\n";
             $body .= "*Update Errors*\n";
             $body .= 'Status: ' . $update_array['status'] . ' (' . $serverURI . '/viewUpdate.php?buildid=' . $buildid . ")\n";
-            if (cdashmail($recipients, $emailtitle, $emailbody)) {
+            if (cdashmail($recipients, $subject, $body)) {
                 add_log('email sent to: ' . implode(', ', $recipients), 'send_update_email');
             } else {
                 add_log('cannot send email to: ' . implode(', ', $recipients), 'send_update_email');
