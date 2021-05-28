@@ -35,7 +35,7 @@ $CDASH_DB_LOGIN = 'my_fake_cdash_db_user';
 $CDASH_EMAIL_SMTP_HOST = 'cdash_smtp_host';
 $CDASH_EMAIL_SMTP_LOGIN = 'cdash_smtp_user';
 $CDASH_EMAIL_SMTP_PASS = 'cdash_smtp_password';
-$CDASH_BASE_URL = 'http://localhost/CDash';
+$CDASH_BASE_URL = 'https://localhost/CDash';
 $CDASH_LOG_LEVEL = LOG_DEBUG;
 $CDASH_UNLIMITED_PROJECTS = ['Project1', 'Project2'];
 $OAUTH2_PROVIDERS['GitHub'] = [
@@ -66,7 +66,8 @@ EOT;
         // Verify expected contents in .env.
         $actual = file_get_contents($this->test_file);
         $this->assertContains('APP_DEBUG=1', $actual);
-        $this->assertContains('APP_URL=http://localhost/CDash', $actual);
+        $this->assertContains('APP_URL=https://localhost/CDash', $actual);
+        $this->assertContains('APP_ENV=production', $actual);
         $expected = <<<'EOT'
 MIX_APP_URL="${APP_URL}"
 EOT;
