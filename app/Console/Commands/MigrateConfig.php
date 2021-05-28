@@ -180,6 +180,11 @@ class MigrateConfig extends Command
                 continue;
             }
 
+            // Serving over https means 'production mode' to Laravel.
+            if ($key === 'APP_URL' && substr($value, 0, 5) === 'https') {
+                $config['APP_ENV'] = 'production';
+            }
+
             $config[$key] = rtrim($value);
         }
         // Also record timezone is a non-default value was set in config.local.php.
