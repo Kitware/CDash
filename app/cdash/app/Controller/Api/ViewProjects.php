@@ -64,13 +64,20 @@ class ViewProjects extends \CDash\Controller\Api
         } elseif (isset($_GET['allprojects']) && $_GET['allprojects'] == 1) {
             $this->showAllProjects = true;
         }
-        $response['allprojects'] = $this->showAllProjects;
         $response['nprojects'] = $this->getNumberPublicProjects();
 
         $projects = $this->getProjects();
-        $projects_response = array();
+        if (count($projects) === 0) {
+            // Show all projects if none were found with any recent activity.
+            $this->showAllProjects = true;
+            $projects = $this->getProjects();
+            $response['showoldtoggle'] = false;
+        }
+        $response['allprojects'] = $this->showAllProjects;
+
+        $projects_response = [];
         foreach ($projects as $project) {
-            $project_response = array();
+            $project_response = [];
             $project_response['name'] = $project['name'];
             $name_encoded = urlencode($project['name']);
             $project_response['name_encoded'] = $name_encoded;
