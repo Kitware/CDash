@@ -291,10 +291,10 @@
 <td ng-if="::buildgroup.hastestdata" align="center" ng-class="::{'warning': build.test.notrun > 0, 'normal': build.test.notrun == 0}">
   <div ng-if="::build.hastest"
        ng-class="::{'valuewithsub': build.test.nnotrundiffp > 0 || build.test.nnotrundiffn > 0}">
-    <a ng-href="viewTest.php?onlynotrun&buildid={{::build.id}}{{::cdash.extrafilterurl}}">
+    <a ng-href="viewTest.php?onlynotrun&buildid={{::build.id}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
       {{::build.test.notrun}}
     </a>
-    <a ng-if="::build.test.nnotrundiffp > 0" class="sup" ng-href="viewTest.php?onlydelta&buildid={{::build.id}}{{::cdash.extrafilterurl}}">
+    <a ng-if="::build.test.nnotrundiffp > 0" class="sup" ng-href="viewTest.php?onlydelta&buildid={{::build.id}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
       +{{::build.test.nnotrundiffp}}
     </a>
     <span ng-if="::build.test.nnotrundiffn > 0" class="sub">-{{::build.test.nnotrundiffn}}</span>
@@ -304,10 +304,10 @@
 <td ng-if="::buildgroup.hastestdata" align="center" ng-class="::{'error': build.test.fail > 0, 'normal': build.test.fail < 1}">
   <div ng-if="::build.hastest"
        ng-class="::{'valuewithsub': build.test.nfaildiffp > 0 || build.test.nfaildiffn > 0}">
-    <a ng-href="viewTest.php?onlyfailed&buildid={{::build.id}}{{::cdash.extrafilterurl}}">
+    <a ng-href="viewTest.php?onlyfailed&buildid={{::build.id}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
       {{::build.test.fail}}
     </a>
-    <a ng-if="::build.test.nfaildiffp > 0" class="sup" ng-href="viewTest.php?onlydelta&buildid={{::build.id}}{{::cdash.extrafilterurl}}">
+    <a ng-if="::build.test.nfaildiffp > 0" class="sup" ng-href="viewTest.php?onlydelta&buildid={{::build.id}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
       +{{::build.test.nfaildiffp}}
     </a>
     <span ng-if="::build.test.nfaildiffn > 0" class="sub">
@@ -319,10 +319,10 @@
 <td ng-if="::buildgroup.hastestdata" align="center" ng-class="::{'normal': build.test.pass > -1}">
   <div ng-if="::build.hastest"
        ng-class="::{'valuewithsub': build.test.npassdiffp > 0 || build.test.npassdiffn > 0}">
-    <a ng-href="viewTest.php?onlypassed&buildid={{::build.id}}{{::cdash.extrafilterurl}}">
+    <a ng-href="viewTest.php?onlypassed&buildid={{::build.id}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
       {{::build.test.pass}}
     </a>
-    <a ng-if="::build.test.npassdiffp > 0" class="sup" ng-href="viewTest.php?onlydelta&buildid={{::build.id}}{{::cdash.extrafilterurl}}">
+    <a ng-if="::build.test.npassdiffp > 0" class="sup" ng-href="viewTest.php?onlydelta&buildid={{::build.id}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
       +{{::build.test.npassdiffp}}
     </a>
 
@@ -338,10 +338,10 @@
   <div ng-if="::build.hastest"
        ng-class="::{'valuewithsub': build.build.test.ntimediffp > 0 || build.test.ntimediffn > 0}">
     <div ng-if="::build.test.timestatus > 0">
-      <a ng-href="viewTest.php?onlytimestatus&buildid={{::build.id}}{{::cdash.extrafilterurl}}">
+      <a ng-href="viewTest.php?onlytimestatus&buildid={{::build.id}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
         {{::build.test.timestatus}}
       </a>
-      <a ng-if="::build.test.ntimediffp > 0" class="sup" ng-href="viewTest.php?onlydelta&buildid={{::build.id}}{{::cdash.extrafilterurl}}">
+      <a ng-if="::build.test.ntimediffp > 0" class="sup" ng-href="viewTest.php?onlydelta&buildid={{::build.id}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
         +{{::build.test.ntimediffp}}
       </a>
       <span ng-if="::build.test.ntimediffn > 0" class="sub">
@@ -351,7 +351,7 @@
 
     <span ng-if="::build.test.timestatus">
       {{::build.test.time}}
-      <a ng-if="::build.test.ntimediffp > 0" class="sup" ng-href="viewTest.php?onlydelta&buildid={{::buildid}}{{::cdash.extrafilterurl}}">
+      <a ng-if="::build.test.ntimediffp > 0" class="sup" ng-href="viewTest.php?onlydelta&buildid={{::buildid}}{{::cdash.testfilters}}{{::cdash.extrafilterurl}}">
         +{{::build.test.ntimediffp}}
       </a>
       <span ng-if="::build.test.ntimediffn > 0" class="sub">

@@ -573,6 +573,7 @@ class ViewTestPhpFilters extends DefaultFilters
         $xml .= getFilterDefinitionXML('details', 'Details', 'string', '', '');
         $xml .= getFilterDefinitionXML('label', 'Label', 'string', '', '');
         $xml .= getFilterDefinitionXML('status', 'Status', 'string', '', '');
+        $xml .= getFilterDefinitionXML('subproject', 'SubProject', 'string', '', '');
         $xml .= getFilterDefinitionXML('testname', 'Test Name', 'string', '', '');
         $xml .= getFilterDefinitionXML('timestatus', 'Time Status', 'string', '', '');
         $xml .= getFilterDefinitionXML('time', 'Time', 'number', '', '');
@@ -595,6 +596,11 @@ class ViewTestPhpFilters extends DefaultFilters
 
             case 'status': {
                 $sql_field = 'bt.status';
+            }
+                break;
+
+            case 'subproject': {
+                $sql_field = 'sp.name';
             }
                 break;
 
