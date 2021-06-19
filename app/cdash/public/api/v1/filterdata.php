@@ -90,7 +90,7 @@ function getFiltersForPage($page_id)
             break;
 
         case 'viewTest.php':
-            return ['details', 'label', 'status', 'testname',
+            return ['details', 'label', 'status', 'subproject', 'testname',
                 'timestatus', 'time'];
             break;
 

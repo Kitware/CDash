@@ -296,6 +296,7 @@ if (!function_exists('echo_main_dashboard_JSON')) {
 
         $controller->checkForSubProjectFilters();
         $response['sharelabelfilters'] = $controller->shareLabelFilters;
+        $response['testfilters'] = $controller->subProjectTestFilters;
 
         $build_data = $controller->getDailyBuilds();
         $build_data = array_merge($build_data, $controller->getDynamicBuilds());

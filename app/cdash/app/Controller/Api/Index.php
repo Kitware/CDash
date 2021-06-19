@@ -42,6 +42,7 @@ class Index extends ResultsApi
     public $childView;
     public $shareLabelFilters;
     public $siteResponse;
+    public $subProjectTestFilters;
     public $updateType;
 
     public function __construct(Database $db, Project $project)
@@ -63,6 +64,7 @@ class Index extends ResultsApi
         $this->excludedSubProjects = [];
         $this->numSelectedSubProjects = 0;
         $this->selectedSubProjects = '';
+        $this->subProjectTestFilters = '';
 
         $this->labelIds = '';
         $this->parentId = false;
@@ -1268,6 +1270,32 @@ class Index extends ResultsApi
             $this->selectedSubProjects = implode("','", $this->excludedSubProjects);
             $this->selectedSubProjects = "('" . $this->selectedSubProjects . "')";
             $this->excludeSubProjects = true;
+        }
+
+        if (!$this->childView) {
+            // Determine subproject filters to pass to viewTest.php.
+            $subproject_test_filters = [];
+            $selected_subprojects = null;
+            $compare = '';
+            if ($this->includeSubProjects) {
+                $selected_subprojects = $this->includedSubProjects;
+                $compare = '61'; // string is equal
+            } elseif ($this->excludeSubProjects) {
+                $selected_subprojects = $this->excludedSubProjects;
+                $compare = '62'; // string is not equal
+            }
+            if ($selected_subprojects) {
+                foreach ($selected_subprojects as $i => $subproject) {
+                    $idx = $i + 1;
+                    $subproject_test_filters[] = "field{$idx}=subproject";
+                    $subproject_test_filters[] = "compare{$idx}=$compare";
+                    $subproject_test_filters[] = "value{$idx}=$subproject";
+                }
+                $this->subProjectTestFilters = '&';
+                $this->subProjectTestFilters .= implode('&', $subproject_test_filters);
+                $this->subProjectTestFilters .= "&filtercount={$this->numSelectedSubProjects}";
+                $this->subProjectTestFilters .= '&showfilters=1';
+            }
         }
     }
 
