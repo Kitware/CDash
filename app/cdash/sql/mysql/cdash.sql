@@ -312,7 +312,7 @@ CREATE TABLE `dynamicanalysis` (
 
 CREATE TABLE `dynamicanalysisdefect` (
   `dynamicanalysisid` int(11) NOT NULL default '0',
-  `type` varchar(50) NOT NULL default '',
+  `type` varchar(255) NOT NULL default '',
   `value` int(11) NOT NULL default '0',
   KEY `buildid` (`dynamicanalysisid`)
 );

@@ -258,7 +258,7 @@ CREATE INDEX "buildid6" on "dynamicanalysis" ("buildid");
 --
 CREATE TABLE "dynamicanalysisdefect" (
   "dynamicanalysisid" bigint DEFAULT '0' NOT NULL,
-  "type" character varying(50) DEFAULT '' NOT NULL,
+  "type" character varying(255) DEFAULT '' NOT NULL,
   "value" bigint DEFAULT '0' NOT NULL
 );
 CREATE INDEX "buildid7" on "dynamicanalysisdefect" ("dynamicanalysisid");

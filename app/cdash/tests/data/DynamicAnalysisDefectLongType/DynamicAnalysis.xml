@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="DA_long_type"
+	BuildStamp="20210706-1247-Experimental"
+	Name="localhost"
+	Generator="ctest-3.20.1"
+	>
+	<DynamicAnalysis Checker="UndefinedBehaviorSanitizer">
+		<StartDateTime>Jul 06 08:47 EDT</StartDateTime>
+		<StartTestTime>1625575641</StartTestTime>
+		<TestList>
+			<Test>./mytest</Test>
+		</TestList>
+		<Test Status="passed">
+			<Name>mytest</Name>
+			<Path>.</Path>
+			<FullName>./mytest</FullName>
+			<FullCommandLine>/tmp/bin/mytest</FullCommandLine>
+			<Results>
+				<Defect type="member call on address 0x7f9ce2a84da8 which does not point to an object of type &apos;error_category&apos;">1</Defect>
+			</Results>
+			<Log>test log goes here
+</Log>
+		</Test>
+		<DefectList>
+      <Defect type="member call on address 0x7f9ce2a84da8 which does not point to an object of type &apos;error_category&apos;"/>
+		</DefectList>
+		<EndDateTime>Jul 06 08:47 EDT</EndDateTime>
+		<EndTestTime>1625575641</EndTestTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</DynamicAnalysis>
+</Site>
