@@ -147,7 +147,12 @@ class SubmissionService
                 $fh = basename($message->file);
             } else {
                 // Local execution, process an open file.
-                $fh = fopen($message->file, 'r');
+                if (file_exists($message->file)) {
+                    $fh = fopen($message->file, 'r');
+                } else {
+                    \Log::warning("Could not process {$message->file} because it does not exist");
+                    return true;
+                }
             }
             $handler = do_submit($fh, $message->project, null, $message->md5, $message->checksum);
             if (is_object($handler) && property_exists($handler, 'backupFileName')) {
