@@ -205,6 +205,9 @@ function parse_put_submission($filehandler, $projectid, $expected_md5)
     $buildid = $buildfile_row['buildid'];
     $row = pdo_single_row_query(
         "SELECT name, stamp FROM build WHERE id=$buildid");
+    if (empty($row)) {
+        return false;
+    }
     $buildname = $row['name'];
     $stamp = $row['stamp'];
 
