@@ -40,6 +40,9 @@ class QueryTests extends ResultsApi
 
         $this->delimiters = ['/', '#', '%', '~', '+', '!', '@', '_', ';', '`',
                              '-', '=', ','];
+
+        $this->hasProcessors = false;
+        $this->numExtraMeasurements = 0;
     }
 
     private function checkForSpecialFilters($filterdata)
@@ -153,6 +156,37 @@ class QueryTests extends ResultsApi
         return $pattern;
     }
 
+    // Add extra test measurement fields (including proc time) for this build.
+    private function addExtraMeasurements(&$test, $outputid)
+    {
+        if ($this->hasProcessors) {
+            $test['nprocs'] = '';
+            // Set initial Proc Time assuming no Processors measurement for this test.
+            $test['procTime'] = $test['time'];
+            $test['prettyProcTime'] = time_difference($test['procTime'], true, '', true);
+        }
+        $test['measurements'] = array_fill(0, $this->numExtraMeasurements, '');
+        $stmt = $this->db->prepare(
+            'SELECT name, value FROM testmeasurement WHERE outputid = ?');
+        $this->db->execute($stmt, [$outputid]);
+        while ($row = $stmt->fetch()) {
+            if ($row['name'] == 'Processors') {
+                // For API backwards compatibility, we continue to report 'nprocs' separately
+                // rather than including it in the 'measurements' array.
+                $test['nprocs'] = $row['value'];
+                // Update Proc Time.
+                $test['procTime'] = $test['time'] * $row['value'];
+                $test['prettyProcTime'] = time_difference($test['procTime'], true, '', true);
+            } else {
+                $idx = array_search($row['name'], $this->extraMeasurements);
+                if ($idx === false) {
+                    continue;
+                }
+                $test['measurements'][$idx] = $row['value'];
+            }
+        }
+    }
+
     public function getResponse()
     {
         $response = begin_JSON_response();
@@ -245,24 +279,26 @@ class QueryTests extends ResultsApi
         $builds['teststarttime'] = $this->beginDate;
         $builds['testendtime'] = $this->endDate;
 
-        // Start constructing the main SQL query for this page.
-        $pdo = Database::getInstance()->getPdo();
-        $query_params = [];
-
-        // Check if we should display 'Proc Time'.
-        $response['hasprocessors'] = false;
-        $proc_select = '';
-        $proc_join = '';
-        $stmt = $pdo->prepare(
-                "SELECT * FROM measurement WHERE projectid = ? AND name = 'Processors'");
-        pdo_execute($stmt, [$this->project->Id]);
-        $row = $stmt->fetch();
-        if (is_array($row) && $row['summarypage'] == 1) {
-            $response['hasprocessors'] = true;
-            $proc_select = ', tm.value';
-            $proc_join =
-                "LEFT JOIN testmeasurement tm ON (build2test.outputid = tm.outputid AND tm.name = 'Processors')";
+        // Get the list of extra test measurements that should be displayed on this page.
+        $this->extraMeasurements = [];
+        $stmt = $this->db->prepare(
+            'SELECT name FROM measurement WHERE projectid = ? AND testpage = 1');
+        $this->db->execute($stmt, [$this->project->Id]);
+        while ($row = $stmt->fetch()) {
+            // If we have the Processors measurement, then we should also
+            // compute and display 'Proc Time'.
+            if ($row['name'] == 'Processors') {
+                $this->hasProcessors = true;
+            } else {
+                $this->extraMeasurements[] = $row['name'];
+            }
         }
+        $this->numExtraMeasurements = count($this->extraMeasurements);
+        $response['extrameasurements'] = $this->extraMeasurements;
+        $response['hasprocessors'] = $this->hasProcessors;
+
+        // Start constructing the main SQL query for this page.
+        $query_params = [];
 
         $date_clause = '';
         $parent_clause = '';
@@ -297,15 +333,14 @@ class QueryTests extends ResultsApi
             $output_select = ', testoutput.output';
         }
 
-        $sql = "SELECT b.id, b.name, b.starttime, b.siteid, b.parentid,
-            build2test.id AS buildtestid, build2test.details, build2test.status,
-            build2test.time, build2test.timestatus, site.name AS sitename,
-            test.name AS testname $proc_select $output_select
+        $sql = "SELECT b.id AS buildid, b.name AS buildname, b.starttime, b.siteid, b.parentid,
+            build2test.id AS buildtestid, build2test.details, build2test.outputid,
+            build2test.status, build2test.time, build2test.timestatus,
+            site.name AS sitename, test.name AS testname $output_select
                 FROM build AS b
                 JOIN build2test ON (b.id = build2test.buildid)
                 JOIN site ON (b.siteid = site.id)
                 JOIN test ON (test.id = build2test.testid)
-                $proc_join
                 $filter_joins
                 $output_joins
                 WHERE b.projectid = :projectid
@@ -313,85 +348,77 @@ class QueryTests extends ResultsApi
                 ORDER BY build2test.status, test.name
                 $this->limitSQL";
         $query_params[':projectid'] = $this->project->Id;
-        $stmt = $pdo->prepare($sql);
-        pdo_execute($stmt, $query_params);
+        $stmt = $this->db->prepare($sql);
+        $this->db->execute($stmt, $query_params);
 
-        // Builds
+        // Rows of test data to be displayed to the user.
         $config = Config::getInstance();
-        $builds = [];
+        $tests = [];
         while ($row = $stmt->fetch()) {
-            $build = [];
+            $test = [];
 
-            if (!$this->rowSurvivesTestOutputFilter($row, $build)) {
+            if (!$this->rowSurvivesTestOutputFilter($row, $test)) {
                 continue;
             }
 
-            $buildid = $row['id'];
+            $buildid = $row['buildid'];
             $buildtestid = $row['buildtestid'];
 
-            $build['testname'] = $row['testname'];
-            $build['site'] = $row['sitename'];
-            $build['buildName'] = $row['name'];
+            $test['testname'] = $row['testname'];
+            $test['site'] = $row['sitename'];
+            $test['buildName'] = $row['buildname'];
 
-            $build['buildstarttime'] =
+            $test['buildstarttime'] =
                 date(FMT_DATETIMETZ, strtotime($row['starttime'] . ' UTC'));
-            // use the default timezone, same as index.php
 
-            $build['time'] = $row['time'];
-            $build['prettyTime'] = time_difference($build['time'], true, '', true);
+            $test['time'] = $row['time'];
+            $test['prettyTime'] = time_difference($test['time'], true, '', true);
 
-            $build['details'] = $row['details'] . "\n";
+            $test['details'] = $row['details'] . "\n";
 
             $siteLink = 'viewSite.php?siteid=' . $row['siteid'];
-            $build['siteLink'] = $siteLink;
+            $test['siteLink'] = $siteLink;
 
             $buildSummaryLink = "build/$buildid";
-            $build['buildSummaryLink'] = $buildSummaryLink;
+            $test['buildSummaryLink'] = $buildSummaryLink;
 
             $testDetailsLink = "test/$buildtestid";
-            $build['testDetailsLink'] = $testDetailsLink;
+            $test['testDetailsLink'] = $testDetailsLink;
 
             switch ($row['status']) {
                 case 'passed':
-                    $build['status'] = 'Passed';
-                    $build['statusclass'] = 'normal';
+                    $test['status'] = 'Passed';
+                    $test['statusclass'] = 'normal';
                     break;
 
                 case 'failed':
-                    $build['status'] = 'Failed';
-                    $build['statusclass'] = 'error';
+                    $test['status'] = 'Failed';
+                    $test['statusclass'] = 'error';
                     break;
 
                 case 'notrun':
-                    $build['status'] = 'Not Run';
-                    $build['statusclass'] = 'warning';
+                    $test['status'] = 'Not Run';
+                    $test['statusclass'] = 'warning';
                     break;
             }
 
             if ($this->project->ShowTestTime) {
                 if ($row['timestatus'] < $this->project->TestTimeMaxStatus) {
-                    $build['timestatus'] = 'Passed';
-                    $build['timestatusclass'] = 'normal';
+                    $test['timestatus'] = 'Passed';
+                    $test['timestatusclass'] = 'normal';
                 } else {
-                    $build['timestatus'] = 'Failed';
-                    $build['timestatusclass'] = 'error';
+                    $test['timestatus'] = 'Failed';
+                    $test['timestatusclass'] = 'error';
                 }
             }
 
-            if ($response['hasprocessors']) {
-                $num_procs = $row['value'];
-                $build['nprocs'] = $num_procs;
-                if (!$num_procs) {
-                    $num_procs = 1;
-                    $build['nprocs'] = 'N/A';
-                }
-                $build['procTime'] = $row['time'] * $num_procs;
-                $build['prettyProcTime'] = time_difference($build['procTime'], true, '', true);
+            if ($this->hasProcessors || $this->numExtraMeasurements > 0) {
+                $this->addExtraMeasurements($test, $row['outputid']);
             }
 
-            $builds[] = $build;
+            $tests[] = $test;
         }
-        $response['builds'] = $builds;
+        $response['builds'] = $tests;
         $response['filterontestoutput'] = $this->filterOnTestOutput;
 
         $this->pageTimer->end($response);

@@ -73,4 +73,8 @@ CDash.controller('QueryTestsController',
       $scope.cdash.showmatchingoutput = !($scope.cdash.showmatchingoutput);
     };
 
+    $scope.sortByExtraMeasurement = function(idx, $event) {
+      var field = 'measurements[' + idx + ']';
+      $scope.updateOrderByFields(field, $event);
+    }
 });
