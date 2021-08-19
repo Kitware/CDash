@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,8 +21,11 @@ class AppServiceProvider extends ServiceProvider
         /** For migrations on MySQL older than 5.7.7 **/
         Schema::defaultStringLength(191);
 
-        // Serve content over https in production mode.
-        if (config('app.env') === 'production') {
+        // Force root URL to match app URL.
+        \URL::forceRootUrl(\Config::get('app.url'));
+
+        // Serve content over https if that's what our app URL specifies.
+        if (Str::contains(\Config::get('app.url'), 'https://')) {
             \URL::forceScheme('https');
         }
     }
