@@ -127,6 +127,9 @@ class MigrateConfig extends Command
                     if (array_key_exists('domain', $v)) {
                         $config["{$provider}_DOMAIN"] = $v['domain'];
                     }
+                    if (array_key_exists('clientId', $v) && array_key_exists('clientSecret', $v)) {
+                        $config["{$provider}_ENABLE"] = true;
+                    }
                 }
             }
 
