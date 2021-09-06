@@ -1280,9 +1280,11 @@ class Index extends ResultsApi
             if ($this->includeSubProjects) {
                 $selected_subprojects = $this->includedSubProjects;
                 $compare = '61'; // string is equal
+                $combine = 'or';
             } elseif ($this->excludeSubProjects) {
                 $selected_subprojects = $this->excludedSubProjects;
                 $compare = '62'; // string is not equal
+                $combine = 'and';
             }
             if ($selected_subprojects) {
                 foreach ($selected_subprojects as $i => $subproject) {
@@ -1294,6 +1296,7 @@ class Index extends ResultsApi
                 $this->subProjectTestFilters = '&';
                 $this->subProjectTestFilters .= implode('&', $subproject_test_filters);
                 $this->subProjectTestFilters .= "&filtercount={$this->numSelectedSubProjects}";
+                $this->subProjectTestFilters .= "&filtercombine=$combine";
                 $this->subProjectTestFilters .= '&showfilters=1';
             }
         }
