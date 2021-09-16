@@ -154,7 +154,7 @@ class GitHub implements RepositoryInterface
             return false;
         }
         if ($token) {
-            $this->apiClient->authenticate($token['token'], null, GitHubClient::AUTH_HTTP_TOKEN);
+            $this->apiClient->authenticate($token['token'], null, GitHubClient::AUTH_ACCESS_TOKEN);
         }
         return true;
     }
