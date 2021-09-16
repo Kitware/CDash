@@ -53,62 +53,6 @@ function extract_date_from_buildstamp($buildstamp)
     return substr($buildstamp, 0, strpos($buildstamp, '-', strpos($buildstamp, '-') + 1));
 }
 
-/** Return timestamp from string
- *  \WARNING this function needs improvement */
-function str_to_time($str, $stamp)
-{
-    $str = str_replace('Eastern Standard Time', 'EST', $str);
-    $str = str_replace('Eastern Daylight Time', 'EDT', $str);
-
-    // For some reasons the Australian time is not recognized by php
-    // Actually an open bug in PHP 5.
-    $offset = 0; // no offset by default
-    if (strpos($str, 'AEDT') !== false) {
-        $str = str_replace('AEDT', 'UTC', $str);
-        $offset = 3600 * 11;
-    } // We had more custom dates
-    elseif (strpos($str, 'Paris, Madrid') !== false) {
-        $str = str_replace('Paris, Madrid', 'UTC', $str);
-        $offset = 3600 * 1;
-    } elseif (strpos($str, 'W. Europe Standard Time') !== false) {
-        $str = str_replace('W. Europe Standard Time', 'UTC', $str);
-        $offset = 3600 * 1;
-    }
-
-    // The year is always at the end of the string if it exists (from CTest)
-    $stampyear = substr($stamp, 0, 4);
-    $year = substr($str, strlen($str) - 4, 2);
-
-    if ($year != '19' && $year != '20') {
-        // No year is defined we add it
-        // find the hours
-        $pos = strpos($str, ':');
-        if ($pos !== false) {
-            $tempstr = $str;
-            $str = substr($tempstr, 0, $pos - 2);
-            $str .= $stampyear . ' ' . substr($tempstr, $pos - 2);
-        }
-    }
-
-    $strtotimefailed = 0;
-
-    if (strtotime($str) === false) {
-        $strtotimefailed = 1;
-    }
-
-    // If it's still failing we assume GMT and put the year at the end
-    if ($strtotimefailed) {
-        // find the hours
-        $pos = strpos($str, ':');
-        if ($pos !== false) {
-            $tempstr = $str;
-            $str = substr($tempstr, 0, $pos - 2);
-            $str .= substr($tempstr, $pos - 2, 5);
-        }
-    }
-    return strtotime($str) - $offset;
-}
-
 /** Add the difference between the numbers of errors and warnings
  *  for the previous and current build */
 function compute_error_difference($buildid, $previousbuildid, $warning)

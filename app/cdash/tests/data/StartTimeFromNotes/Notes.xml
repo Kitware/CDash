@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="Dart/Source/Server/XSL/Build.xsl <file:///Dart/Source/Server/XSL/Build.xsl> "?>
+<Site BuildName="note_starttime" BuildStamp="20210916-1919-Experimental" Name="hesperides" Generator="ctest-3.20.1">
+  <Notes>
+    <Note Name="my very own note">
+      <!-- This timestamp corresponds to: Sep 16 2021 15:19:46 PM EDT -->
+      <Time>1631819986</Time>
+      <!-- DateTime purposefully doesn't match the UNIX timestamp above. -->
+      <DateTime>Sep 13 15:19 EDT</DateTime>
+      <Text>this is
+my note
+</Text>
+    </Note>
+  </Notes>
+</Site>
