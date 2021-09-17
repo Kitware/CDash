@@ -206,7 +206,7 @@ class GitHub implements RepositoryInterface
         $payload = $this->generateCheckPayloadFromBuildRows($build_rows, $head_sha);
 
         if (!$this->check) {
-            $this->check = new \Github\Api\Repository\Checks($this->apiClient);
+            $this->check = new \Github\Api\Repository\Checks\CheckRuns($this->apiClient);
         }
         try {
             $this->check->create($this->owner, $this->repo, $payload);
