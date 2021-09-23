@@ -271,7 +271,7 @@
               <a ng-href="{{test.summaryLink}}"
                  ng-click="cancelAjax()">{{test.summary}}</a>
             </td>
-            <td ng-repeat="measurement in ::test.measurements">
+            <td ng-repeat="measurement in ::test.measurements track by $index">
               {{::measurement}}
             </td>
           </tr>
