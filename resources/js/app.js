@@ -9,6 +9,7 @@ import BuildConfigure from "./components/BuildConfigure";
 import BuildNotes from "./components/BuildNotes";
 import BuildSummary from "./components/BuildSummary";
 import EditProject from "./components/EditProject";
+import ManageMeasurements from "./components/ManageMeasurements";
 import PageHeader from "./components/PageHeader";
 import PageFooter from "./components/PageFooter";
 import TestDetails from "./components/TestDetails";
@@ -18,6 +19,7 @@ const cdash_components = {
   BuildNotes,
   BuildSummary,
   EditProject,
+  ManageMeasurements,
   PageHeader,
   PageFooter,
   TestDetails

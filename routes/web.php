@@ -58,6 +58,8 @@ Route::get('/viewNotes.php', function (Request $request) {
 Route::get('/project/{id}/edit', 'Views\EditProjectController@edit');
 Route::get('/project/new', 'Views\EditProjectController@create');
 
+Route::get('/project/{id}/testmeasurements', 'Views\ManageMeasurementsController@show');
+
 Route::get('/test/{id}', 'Views\TestController@details');
 Route::get('/testDetails.php', function (Request $request) {
     $buildid = $request->query('build');
