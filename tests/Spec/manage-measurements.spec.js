@@ -1,9 +1,9 @@
-import {mount, config, createLocalVue} from "@vue/test-utils";
+import {mount, config, createLocalVue} from '@vue/test-utils';
 import axios from 'axios'
 import AxiosMockAdapter from 'axios-mock-adapter';
 import bootstrap from 'bootstrap'
 import expect from 'expect';
-import ManageMeasurements from "../../resources/js/components/ManageMeasurements.vue";
+import ManageMeasurements from '../../resources/js/components/ManageMeasurements.vue';
 
 config.mocks['$baseURL'] = '';
 axios.defaults.baseURL = config.mocks['$baseURL'];
@@ -23,7 +23,8 @@ beforeEach(function() {
         id: 1,
         name: 'my measurement',
         testpage: 1,
-        summarypage: 1
+        summarypage: 1,
+        position: 1,
       },
     ],
     projectid: 1,
@@ -66,7 +67,7 @@ test('ManageMeasurements can add a measurement', async () => {
   new_measurement_input.element.value = 'my new measurement';
   new_measurement_input.trigger('input');
   await component.vm.$nextTick();
-  expect(component.vm.cdash.newmeasurement.name).toBe('my new measurement');
+  expect(component.vm.newMeasurementName).toBe('my new measurement');
 
   const save_button = component.find('#submit_button');
   save_button.trigger('click');

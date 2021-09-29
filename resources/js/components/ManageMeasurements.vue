@@ -14,87 +14,98 @@
         width="800px"
         align="center"
       >
-        <tr bgcolor="#CCCCCC">
-          <th>Measurement Name</th>
-          <th>Show on Test Page</th>
-          <th>Show Test Summary Page</th>
-          <th>Delete</th>
-        </tr>
+        <thead>
+          <tr bgcolor="#CCCCCC">
+            <th>Measurement Name</th>
+            <th>Show on Test Page</th>
+            <th>Show Test Summary Page</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
 
-        <tr v-for="measurement in cdash.measurements">
-          <td align="center">
-            <input
-              v-model="measurement.name"
-              type="text"
-              size="25"
-              name="measurement_name"
-              @change="measurement.dirty = true"
-            >
-          </td>
-          <td align="center">
-            <input
-              v-model="measurement.testpage"
-              type="checkbox"
-              name="testpage"
-              true-value="1"
-              false-value="0"
-              @change="measurement.dirty = true"
-            >
-          </td>
-          <td align="center">
-            <input
-              v-model="measurement.summarypage"
-              type="checkbox"
-              name="summarypage"
-              true-value="1"
-              false-value="0"
-              @change="measurement.dirty = true"
-            >
-          </td>
-          <td align="center">
-            <span
-              class="glyphicon glyphicon-trash"
-              style="cursor: pointer;"
-              aria-hidden="true"
-              data-toggle="modal"
-              data-target="#deleteMeasurementDialog"
-              @click="measurementToDelete = measurement.id"
-            />
-          </td>
-        </tr>
+        <draggable
+          :list="cdash.measurements"
+          tag="tbody"
+          style="cursor: move;"
+          @end="updatePositions()"
+        >
+          <tr
+            v-for="measurement in cdash.measurements"
+            :id="'measurement_' + measurement.id"
+          >
+            <td align="center">
+              <input
+                v-model="measurement.name"
+                type="text"
+                size="25"
+                name="measurement_name"
+              >
+            </td>
+            <td align="center">
+              <input
+                v-model="measurement.testpage"
+                type="checkbox"
+                name="testpage"
+                true-value="1"
+                false-value="0"
+              >
+            </td>
+            <td align="center">
+              <input
+                v-model="measurement.summarypage"
+                type="checkbox"
+                name="summarypage"
+                true-value="1"
+                false-value="0"
+              >
+            </td>
+            <td align="center">
+              <span
+                class="glyphicon glyphicon-trash"
+                style="cursor: pointer;"
+                aria-hidden="true"
+                data-toggle="modal"
+                data-target="#deleteMeasurementDialog"
+                @click="measurementToDelete = measurement.id"
+              />
+            </td>
+          </tr>
+        </draggable>
 
-        <tr bgcolor="#CADBD9">
-          <td align="center">
-            <input
-              id="newMeasurement"
-              v-model="cdash.newmeasurement.name"
-              name="newMeasurement"
-              type="text"
-              size="25"
-            >
-          </td>
-          <td align="center">
-            <input
-              v-model="cdash.newmeasurement.testpage"
-              type="checkbox"
-              name="showTestPage"
-              value="1"
-              true-value="1"
-              false-value="0"
-            >
-          </td>
-          <td align="center">
-            <input
-              v-model="cdash.newmeasurement.summarypage"
-              type="checkbox"
-              name="showSummaryPage"
-              value="1"
-              true-value="1"
-              false-value="0"
-            >
-          </td>
-          <td />
-        </tr>
+        <tbody>
+          <tr bgcolor="#CADBD9">
+            <td align="center">
+              <input
+                id="newMeasurement"
+                v-model="newMeasurementName"
+                name="newMeasurement"
+                type="text"
+                size="25"
+              >
+            </td>
+            <td align="center">
+              <input
+                v-model="newMeasurementTestPage"
+                type="checkbox"
+                name="showTestPage"
+                value="1"
+                true-value="1"
+                false-value="0"
+              >
+            </td>
+            <td align="center">
+              <input
+                v-model="newMeasurementSummaryPage"
+                type="checkbox"
+                name="showSummaryPage"
+                value="1"
+                true-value="1"
+                false-value="0"
+              >
+            </td>
+            <td />
+          </tr>
+        </tbody>
       </table>
       <div class="center-text">
         <input
@@ -111,6 +122,10 @@
         >
       </div>
       <br>
+
+      <p class="text-center">
+        <small>Drag measurements to change their display order</small>
+      </p>
 
       <!-- confirm delete measurement modal dialog -->
       <div
@@ -171,8 +186,13 @@
 
 <script>
 import ApiLoader from './shared/ApiLoader';
+import draggable from 'vuedraggable'
 export default {
   name: "ManageMeasurements",
+
+  components: {
+    draggable,
+  },
 
   data () {
     return {
@@ -182,6 +202,9 @@ export default {
       loading: true,
       errored: false,
       measurementToDelete: -1,
+      newMeasurementName: '',
+      newMeasurementSummaryPage: 1,
+      newMeasurementTestPage: 1,
     }
   },
 
@@ -194,55 +217,48 @@ export default {
 
   methods: {
     preSetup: function(response) {
-      for (var i = 0; i < response.data.measurements.length; i++) {
-        response.data.measurements[i].dirty = false;
+      // Sort measurements by position.
+      if (response.data.measurements) {
+        response.data.measurements.sort(function (a, b) {
+          return Number(a.position) - Number(b.position);
+        });
       }
     },
 
-    postSetup: function (response) {
-      // Create a blank measurement for the user to fill out.
-      this.newMeasurement();
-    },
-
+    // Reinitialize a blank measurement for the user to fill out.
     newMeasurement: function() {
-      this.cdash.newmeasurement = {
-        id: -1,
-        dirty: false,
-        name: '',
-        summarypage: 1,
-        testpage: 1
-      };
+      this.newMeasurementName = '';
+      this.newMeasurementSummaryPage = 1;
+      this.newMeasurementTestPage = 1;
     },
 
     // Save measurements to database.
     save: function() {
-      var measurements_to_save = [];
-      // Gather up all the modified measurements.
-      for (var i = 0, len = this.cdash.measurements.length; i < len; i++) {
-        if (this.cdash.measurements[i].dirty) {
-          measurements_to_save.push(this.cdash.measurements[i]);
-        }
+      // Save the new measurement if the user filled it out.
+      var new_measurement = {};
+      if (this.newMeasurementName != '') {
+        new_measurement.name = this.newMeasurementName;
+        new_measurement.id = -1;
+        new_measurement.summarypage = this.newMeasurementSummaryPage;
+        new_measurement.testpage = this.newMeasurementTestPage;
+        new_measurement.position = this.cdash.measurements.length + 1;
+        this.cdash.measurements.push(new_measurement);
       }
-
-      // Also save the new measurement if the user filled it out.
-      if (this.cdash.newmeasurement.name != '') {
-        measurements_to_save.push(this.cdash.newmeasurement);
-      }
-
       // Submit the request.
       var parameters = {
         projectid: this.cdash.projectid,
-        measurements: measurements_to_save
+        measurements: this.cdash.measurements
       };
       this.$axios.post('api/v1/manageMeasurements.php', parameters)
         .then(response => {
           $("#save_complete").show();
           $("#save_complete").delay(3000).fadeOut(400);
           if (response.data.id > 0) {
-          // Assign an id to the "new" measurement and create a new blank one
-          // for the user to fill out.
-            this.cdash.newmeasurement.id = response.data.id;
-            this.cdash.measurements.push(this.cdash.newmeasurement);
+            // Assign an id to the measurement we just created,
+            // and initialize a new blank measurement for the user to fill out.
+            //var idx = this.cdash.measurements.length - 1;
+            //this.cdash.measurements[idx].id = response.data.id;
+            new_measurement.id = response.data.id;
             this.newMeasurement();
           }
         })
@@ -271,6 +287,11 @@ export default {
               break;
             }
           }
+
+          // Recalculate position of remaining measurements.
+          this.updatePositions();
+
+          // Hide modal dialog.
           $('#deleteMeasurementDialog').modal('hide');
         })
         .catch(error => {
@@ -278,6 +299,14 @@ export default {
           console.log(error)
         });
     },
+
+    // Update positions when dragging stops.
+    updatePositions: function() {
+      for (var i = 0; i < this.cdash.measurements.length; i++) {
+        this.cdash.measurements[i].position = i + 1;
+      }
+    },
+
   },
 }
 </script>

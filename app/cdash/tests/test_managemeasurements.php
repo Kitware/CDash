@@ -161,6 +161,7 @@ class ManageMeasurementsTestCase extends KWWebTestCase
         $this->ProjectId =  get_project_id('InsightExample');
         $this->SubProjectId =  get_project_id('SubProjectExample');
         $new_measurements = ['Processors', 'I/O Wait Time'];
+        $idx = 1;
         foreach ($new_measurements as $new_measurement) {
             foreach ([$this->ProjectId, $this->SubProjectId] as $projectid) {
                 $measurements = [];
@@ -168,7 +169,8 @@ class ManageMeasurementsTestCase extends KWWebTestCase
                     'id' => -1,
                     'name' => $new_measurement,
                     'summarypage' => 1,
-                    'testpage' => 1
+                    'testpage' => 1,
+                    'position' => $idx,
                 ];
                 try {
                     $response = $client->request('POST',
@@ -194,6 +196,7 @@ class ManageMeasurementsTestCase extends KWWebTestCase
                     $this->fail("Expected $measurement_id but found $found for DB measurement ID");
                 }
             }
+            $idx += 1;
         }
 
         // Verify that the new measurements are displayed on viewTest.php.
