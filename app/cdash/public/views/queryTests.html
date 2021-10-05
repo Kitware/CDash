@@ -109,6 +109,13 @@
       <span class="glyphicon" ng-class="orderByFields.indexOf('-nprocs') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('nprocs') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
     </th>
 
+    <th ng-repeat="measurement in ::cdash.extrameasurements track by $index"
+        class="header"
+        ng-click="sortByExtraMeasurement($index, $event)">
+      {{::measurement}}
+      <span class="glyphicon" ng-class="orderByFields.indexOf('-measurements[' + $index + ']') != -1 ? 'glyphicon-chevron-down' : (orderByFields.indexOf('measurements[' + $index + ']') != -1 ? 'glyphicon-chevron-up' : 'glyphicon-none')"></span>
+    </th>
+
     <th ng-if="::cdash.filterontestoutput"
         ng-show="cdash.showmatchingoutput">
       Matching Output
@@ -157,6 +164,10 @@
 
     <td ng-if="::cdash.hasprocessors">
       {{build.nprocs}}
+    </td>
+
+    <td ng-repeat="measurement in build.measurements track by $index">
+      {{measurement}}
     </td>
 
     <td ng-if="::cdash.filterontestoutput"

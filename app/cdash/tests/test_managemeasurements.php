@@ -71,16 +71,20 @@ class ManageMeasurementsTestCase extends KWWebTestCase
     }
 
     // Perform similar checks for the subproject case.
-    private function validate_subproject_test($test_name, $num_procs, $proc_time, $page)
+    private function validate_subproject_test($test_name, $num_procs, $proc_time, $io_wait_time, $page)
     {
         // For those special moments when 6.6 does not equal 6.6
         $proc_time = sprintf("%.1f", $proc_time);
+        $io_wait_time = sprintf("%.1f", $io_wait_time);
         if ($test_name == 'experimentalFail1') {
             if ($num_procs != 2) {
                 $this->fail("Expected 2 processors on $page, found $num_procs");
             }
             if ($proc_time != 2.2) {
                 $this->fail("Expected 2.2 proc time on $page, found $proc_time");
+            }
+            if ($io_wait_time != 4.2) {
+                $this->fail("Expected 4.2 io_wait time on $page, found $io_wait_time");
             }
         } elseif ($test_name == 'experimentalFail2') {
             if ($num_procs != 3) {
@@ -89,12 +93,18 @@ class ManageMeasurementsTestCase extends KWWebTestCase
             if ($proc_time != 6.6) {
                 $this->fail("Expected 6.6 proc time on $page, found $proc_time");
             }
+            if ($io_wait_time != 5.3) {
+                $this->fail("Expected 5.3 io_wait time on $page, found $io_wait_time");
+            }
         } elseif ($test_name == 'production') {
             if ($num_procs != 4) {
                 $this->fail("Expected 4 processors on $page, found $num_procs");
             }
             if ($proc_time != 13.2) {
                 $this->fail("Expected 13.2 proc time on $page, found $proc_time");
+            }
+            if ($io_wait_time != 6.4) {
+                $this->fail("Expected 6.4 io_wait time on $page, found $io_wait_time");
             }
         } else {
             $this->fail("Unexpected test $test_name on $page");
@@ -254,10 +264,11 @@ class ManageMeasurementsTestCase extends KWWebTestCase
         if ($jsonobj['hasprocessors'] !== true) {
             $this->fail("hasprocessors not true for queryTests.php");
         }
-        $found = count($jsonobj['builds']);
-        if ($found != 3) {
-            $this->fail("Expected three tests on queryTests.php, found $found");
+        $this->assertEqual(1, count($jsonobj['extrameasurements']));
+        if (!in_array('I/O Wait Time', $jsonobj['extrameasurements'])) {
+            $this->fail("Did not find expected extra measurement 'I/O Wait Time' on queryTests.php");
         }
+        $this->assertEqual(3, count($jsonobj['builds']));
         foreach ($jsonobj['builds'] as $build) {
             $this->validate_test($build['testname'], $build['nprocs'], $build['procTime'], 'queryTests.php');
         }
@@ -279,11 +290,13 @@ class ManageMeasurementsTestCase extends KWWebTestCase
             $this->fail("Expected three tests, found $found");
         }
         $proc_idx = array_search('Processors', $jsonobj['columnnames']);
+        $io_wait_idx = array_search('I/O Wait Time', $jsonobj['columnnames']);
         foreach ($jsonobj['tests'] as $test) {
             $test_name = $test['name'];
             $num_procs = $test['measurements'][$proc_idx];
             $proc_time = $test['procTimeFull'];
-            $this->validate_subproject_test($test_name, $num_procs, $proc_time, 'viewTest.php');
+            $io_wait_time = $test['measurements'][$io_wait_idx];
+            $this->validate_subproject_test($test_name, $num_procs, $proc_time, $io_wait_time, 'viewTest.php');
         }
 
         $this->get($this->url . '/api/v1/queryTests.php?project=SubProjectExample&date=2017-08-29');
@@ -293,7 +306,7 @@ class ManageMeasurementsTestCase extends KWWebTestCase
             $this->fail("hasprocessors not true for queryTests.php");
         }
         foreach ($jsonobj['builds'] as $build) {
-            $this->validate_subproject_test($build['testname'], $build['nprocs'], $build['procTime'], 'queryTests.php');
+            $this->validate_subproject_test($build['testname'], $build['nprocs'], $build['procTime'], $build['measurements'][0], 'queryTests.php');
         }
 
         // Verify that correct Proc Time values are shown on index.php for
