@@ -72,6 +72,7 @@ CDash.controller('ViewTestController',
           method: 'GET',
           params: {
             'tests[]': tests_to_load,
+            'buildid': $scope.cdash.build.id,
             'previous_builds': $scope.cdash.previous_builds,
             'time_begin': $scope.cdash.time_begin,
             'time_end': $scope.cdash.time_end,
