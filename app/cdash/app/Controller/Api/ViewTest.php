@@ -31,12 +31,18 @@ class ViewTest extends BuildApi
 {
     public $JSONEncodeResponse;
 
+    private $extraMeasurements;
+    private $numExtraMeasurements;
+
     public function __construct(Database $db, Build $build)
     {
         parent::__construct($db, $build);
         $this->JSONEncodeResponse = true;
         $this->config = Config::getInstance();
         $this->project->Fill();
+
+        $this->extraMeasurements = [];
+        $this->numExtraMeasurements = 0;
     }
 
     public function getResponse()
@@ -189,21 +195,21 @@ class ViewTest extends BuildApi
         $response['project'] = $project_response;
         $response['parentBuild'] = $this->build->GetParentId() == Build::PARENT_BUILD;
 
+        $params = [':buildid' => $buildid];
         $displaydetails = 1;
-        $status = '';
-        $order = 't.name';
-
+        $status = 'AND bt.status = :status';
         if ($onlypassed) {
             $displaydetails = 0;
-            $status = "AND bt.status='passed'";
+            $params[':status'] = 'passed';
         } elseif ($onlyfailed) {
-            $status = "AND bt.status='failed'";
+            $params[':status'] = 'failed';
         } elseif ($onlynotrun) {
-            $status = "AND bt.status='notrun'";
+            $params[':status'] = 'notrun';
         } elseif ($onlytimestatus) {
-            $status = "AND bt.timestatus>='$this->project->TestTimeMaxStatus'";
+            $status = 'AND bt.timestatus >= :maxtimestatus';
+            $params[':maxtimestatus'] = $this->project->TestTimeMaxStatus;
         } else {
-            $order = 'bt.status,bt.timestatus DESC,t.name';
+            $status = '';
         }
 
         $response['displaydetails'] = $displaydetails;
@@ -234,11 +240,11 @@ class ViewTest extends BuildApi
             $parentBuildJoinSql = 'JOIN build b ON (b.id = bt.buildid)
                 JOIN subproject2build sp2b on (sp2b.buildid = b.id)
                 JOIN subproject sp on (sp.id = sp2b.subprojectid)';
-            $parentBuildWhere = "b.parentid = $buildid";
+            $parentBuildWhere = 'b.parentid = :buildid';
         } else {
             $parentBuildFieldSql = '';
             $parentBuildJoinSql = '';
-            $parentBuildWhere = "bt.buildid = $buildid";
+            $parentBuildWhere = 'bt.buildid = :buildid';
         }
 
         $sql = "
@@ -250,8 +256,8 @@ class ViewTest extends BuildApi
                        $labeljoin_sql
                        WHERE $parentBuildWhere $status $this->filterSQL $limitnew $groupby_sql
                        $this->limitSQL";
-
-        $result = pdo_query($sql);
+        $stmt = $this->db->prepare($sql);
+        $this->db->execute($stmt, $params);
 
         $numPassed = 0;
         $numFailed = 0;
@@ -266,62 +272,63 @@ class ViewTest extends BuildApi
             $buildid_field = 'id';
         }
 
-        $columns = [];
-        $getcolumnnumber = pdo_query("SELECT testmeasurement.name, COUNT(DISTINCT test.name) as xxx FROM test
-                JOIN build2test ON (build2test.testid = test.id)
-                JOIN testmeasurement ON (testmeasurement.outputid = build2test.outputid)
-                JOIN build ON (build.id = build2test.buildid)
-                JOIN measurement ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
-                WHERE build.$buildid_field = '$buildid'
-                AND measurement.testpage=1
-                GROUP by testmeasurement.name
-                "); // We need to keep the count of columns for correct column-data assign
-
+        // Get the list of extra measurements that should be displayed on this page.
         $response['hasprocessors'] = false;
         $processors_idx = -1;
-        while ($row = pdo_fetch_array($getcolumnnumber)) {
-            $columns[] = $row['name'];
+        $extra_measurements_stmt = $this->db->prepare(
+                'SELECT name FROM measurement
+                WHERE projectid = ? AND testpage = 1
+                ORDER BY position');
+        $this->db->execute($extra_measurements_stmt, [$this->project->Id]);
+        while ($row = $extra_measurements_stmt->fetch()) {
+            $this->extraMeasurements[] = $row['name'];
+            // If we have the Processors measurement, then we should also
+            // compute and display 'Proc Time'.
             if ($row['name'] == 'Processors') {
-                $processors_idx = count($columns) - 1;
+                $processors_idx = count($this->extraMeasurements) - 1;
                 $response['hasprocessors'] = true;
             }
         }
-        $response['columnnames'] = $columns;
+        $this->numExtraMeasurements = count($this->extraMeasurements);
+        $response['columnnames'] = $this->extraMeasurements;
 
-        $columncount = pdo_num_rows($getcolumnnumber);
-        // If at least one column is selected
-        $extras = '';
+        $params = [':buildid' => $buildid];
+        $status_clause = 'AND build2test.status = :status';
         if ($onlypassed) {
-            $extras .= "AND build2test.status='passed'";
+            $params[':status'] = 'passed';
         } elseif ($onlyfailed) {
-            $extras .= "AND build2test.status='failed'";
+            $params[':status'] = 'failed';
         } elseif ($onlynotrun) {
-            $extras .= "AND build2test.status='notrun'";
+            $params[':status'] = 'notrun';
+        } else {
+            $status_clause = '';
         }
 
         $getalltestlistsql = "SELECT test.id
             FROM test
             JOIN build2test ON (build2test.testid = test.id)
             JOIN build ON (build.id = build2test.buildid)
-            WHERE build.$buildid_field='$buildid' $onlydelta_extra
-            $extras
+            WHERE build.$buildid_field=:buildid $onlydelta_extra
+            $status_clause
             ORDER BY test.id
             ";
+        $getalltestlist = $this->db->prepare($getalltestlistsql);
+        $this->db->execute($getalltestlist, $params);
 
         // Allocate empty array for all possible measurements.
         $test_measurements = [];
-        $getalltestlist = pdo_query($getalltestlistsql);
-        while ($row = pdo_fetch_array($getalltestlist)) {
+
+        while ($row = $getalltestlist->fetch()) {
             $test_measurements[$row['id']] = [];
-            for ($i = 0; $i < $columncount; $i++) {
+            for ($i = 0; $i < $this->numExtraMeasurements; $i++) {
                 $test_measurements[$row['id']][$i] = '';
             }
         }
 
         $etestquery = null;
-
-        if ($columncount > 0) {
-            $etestquery = pdo_query("SELECT test.id, test.projectid, build2test.buildid,
+        if ($this->numExtraMeasurements > 0) {
+            $etestquery = $this->db->prepare(
+                    "SELECT test.id, test.projectid, build2test.buildid,
                     build2test.status, build2test.timestatus, test.name, testmeasurement.name,
                     testmeasurement.value, build.starttime,
                     build2test.time, measurement.testpage FROM test
@@ -329,37 +336,39 @@ class ViewTest extends BuildApi
                     JOIN build ON (build.id = build2test.buildid)
                     JOIN testmeasurement ON (build2test.outputid = testmeasurement.outputid)
                     JOIN measurement ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
-                    WHERE build.$buildid_field = '$buildid'
+                    WHERE build.$buildid_field = :buildid
                     AND measurement.testpage=1 $onlydelta_extra
-                    $extras
-                    ORDER BY test.id, testmeasurement.name
-                    ");
+                    $status_clause
+                    ORDER BY test.id, testmeasurement.name");
+            $this->db->execute($etestquery, $params);
         }
 
         if (@$_GET['export'] == 'csv') {
             $this->JSONEncodeResponse = false;
-            return $this->exportAsCsv($etestquery, null, $result, $this->project->ShowTestTime, $this->project->TestTimeMaxStatus, $columns);
+            return $this->exportAsCsv($etestquery, null, $stmt, $this->project->ShowTestTime, $this->project->TestTimeMaxStatus);
         }
 
         // Keep track of extra measurements for each test.
         // Overwrite the empty values with the correct ones if exists.
-        while ($etestquery && $row = pdo_fetch_array($etestquery)) {
-            // Get the index of this measurement in the list of columns.
-            $idx = array_search($row['name'], $columns);
+        if ($etestquery) {
+            while ($row = $etestquery->fetch()) {
+                // Get the index of this extra measurement.
+                $idx = array_search($row['name'], $this->extraMeasurements);
 
-            // Fill in this measurement value for this test.
-            $test_measurements[$row['id']][$idx] = $row['value'];
+                // Fill in this measurement value for this test.
+                $test_measurements[$row['id']][$idx] = $row['value'];
+            }
         }
 
         // Gather test info
         $tests = [];
 
         // Find the time to run all the tests
-        $time_array = pdo_fetch_array(pdo_query("SELECT SUM(time) FROM build2test WHERE buildid='$buildid'"));
-        $time = $time_array[0];
+        $time_stmt = $this->db->prepare(
+                'SELECT SUM(time) FROM build2test WHERE buildid = ?');
+        $this->db->execute($time_stmt, [$buildid]);
+        $time = $time_stmt->fetchColumn();
         $response['totaltime'] = time_difference($time, true, '', true);
-
-        $num_tests = pdo_num_rows($result);
 
         // Gather date information.
         $testdate = $this->date;
@@ -374,7 +383,7 @@ class ViewTest extends BuildApi
         $labels_found = false;
 
         // Generate a response for each test found.
-        while ($row = pdo_fetch_array($result)) {
+        while ($row = $stmt->fetch()) {
             $marshaledTest = BuildTest::marshal($row, $row['buildid'], $this->build->ProjectId, $this->project->ShowTestTime, $this->project->TestTimeMaxStatus, $testdate);
 
             if ($marshaledTest['status'] == 'Passed') {
@@ -426,7 +435,7 @@ class ViewTest extends BuildApi
         // Only show the labels column if some were found.
         $response['build']['displaylabels'] &= $labels_found;
 
-        $response['columncount'] = $columncount;
+        $response['columncount'] = $this->numExtraMeasurements;
 
         $this->pageTimer->end($response);
         return $response;
@@ -445,20 +454,23 @@ class ViewTest extends BuildApi
         $history_query = "
             SELECT DISTINCT status FROM build2test AS b2t
             $join_type test AS t ON (t.id = b2t.testid)
-            WHERE b2t.buildid IN ($previous_buildids) AND t.name = '$testname'";
-        $history_results = pdo_query($history_query);
-
-        $num_statuses = pdo_num_rows($history_results);
+            WHERE b2t.buildid IN ($previous_buildids) AND t.name = :testname";
+        $history_stmt = $this->db->prepare($history_query);
+        $this->db->execute($history_stmt, [':testname' => $testname]);
+        $statuses = [];
+        while ($row = $history_stmt->fetch()) {
+            $statuses[] = $row['status'];
+        }
+        $num_statuses = count($statuses);
         if ($num_statuses > 0) {
             if ($num_statuses > 1) {
                 $retval['history'] = 'Unstable';
                 $retval['historyclass'] = 'warning';
             } else {
-                $row = pdo_fetch_array($history_results);
+                $status = $statuses[0];
+                $retval['history'] = ucfirst($status);
 
-                $retval['history'] = ucfirst($row['status']);
-
-                switch ($row['status']) {
+                switch ($status) {
                     case 'passed':
                         $retval['historyclass'] = 'normal';
                         $retval['history'] = 'Stable';
@@ -492,25 +504,33 @@ class ViewTest extends BuildApi
             $join_type build2group AS b2g ON (b.id = b2g.buildid)
             $join_type build2test AS b2t ON (b.id = b2t.buildid)
             $join_type test AS t ON (b2t.testid = t.id)
-            WHERE b2g.groupid = $groupid
-            AND b.projectid = $projectid
-            AND b.starttime>='$begin'
-            AND b.starttime<'$end'
-            AND t.name = '$testname'";
-
-        $summary_results = pdo_query($summary_query);
-
-        $num_statuses = pdo_num_rows($summary_results);
+            WHERE b2g.groupid = :groupid
+            AND b.projectid = :projectid
+            AND b.starttime >= :begin
+            AND b.starttime < :end
+            AND t.name = :testname";
+        $params = [
+            ':groupid' => $groupid,
+            ':projectid' => $projectid,
+            ':begin' => $begin,
+            ':end' => $end,
+            ':testname' => $testname,
+        ];
+        $summary_stmt = $this->db->prepare($summary_query);
+        $this->db->execute($summary_stmt, $params);
+        $statuses = [];
+        while ($row = $summary_stmt->fetch()) {
+            $statuses[] = $row['status'];
+        }
+        $num_statuses = count($statuses);
         if ($num_statuses > 0) {
             if ($num_statuses > 1) {
                 $retval['summary'] = 'Unstable';
                 $retval['summaryclass'] = 'warning';
             } else {
-                $row = pdo_fetch_array($summary_results);
-
-                $retval['summary'] = ucfirst($row['status']);
-
-                switch ($row['status']) {
+                $status = $statuses[0];
+                $retval['summary'] = ucfirst($status);
+                switch ($status) {
                     case 'passed':
                         $retval['summaryclass'] = 'normal';
                         $retval['summary'] = 'Stable';
@@ -600,11 +620,11 @@ class ViewTest extends BuildApi
     }
 
     // Export test results as CSV file.
-    private function exportAsCsv($etestquery, $etest, $result, $projectshowtesttime, $testtimemaxstatus, $columns)
+    private function exportAsCsv($etestquery, $etest, $stmt, $projectshowtesttime, $testtimemaxstatus)
     {
         // Store named measurements in an array
         if (!is_null($etestquery)) {
-            while ($row = pdo_fetch_array($etestquery)) {
+            while ($row = $etestquery->fetch()) {
                 $etest[$row['id']][$row['name']] = $row['value'];
             }
         }
@@ -616,13 +636,13 @@ class ViewTest extends BuildApi
             $csv_headers[] = 'Time Status';
         }
 
-        for ($c = 0; $c < count($columns); $c++) {
+        for ($c = 0; $c < $this->numExtraMeasurements; $c++) {
             // Add extra coluns.
-            $csv_headers[] = $columns[$c];
+            $csv_headers[] = $this->extraMeasurements[$c];
         }
         $csv_contents[] = $csv_headers;
 
-        while ($row = pdo_fetch_array($result)) {
+        while ($row = $stmt->fetch()) {
             $csv_row = [];
             $csv_row[] = $row['name'];
             $csv_row[] = $row['time'];
@@ -650,8 +670,8 @@ class ViewTest extends BuildApi
             }
 
             // Extra columns.
-            for ($t = 0; $t < count($columns); $t++) {
-                $csv_row[] = $etest[$row['id']][$columns[$t]];
+            for ($t = 0; $t < $this->numExtraMeasurements; $t++) {
+                $csv_row[] = $etest[$row['id']][$this->extraMeasurements[$t]];
             }
             $csv_contents[] = $csv_row;
         }
