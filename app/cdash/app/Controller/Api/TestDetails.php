@@ -302,10 +302,33 @@ class TestDetails extends BuildApi
             $measurements_response[] = $measurement_response;
         }
 
-        $test_response['measurements'] = $measurements_response;
-        usort($preformatted_measurements, function ($a, $b) {
+        // Get the list of extra test measurements that have been explicitly added to this project.
+        $stmt = $this->db->prepare(
+                'SELECT name FROM measurement WHERE projectid = ? ORDER BY position');
+        $this->db->execute($stmt, [$this->project->Id]);
+        $extra_measurements = [];
+        while ($row = $stmt->fetch()) {
+            $extra_measurements[] = $row['name'];
+        }
+
+        // Sort measurements: put those listed explicitly first (sorted by position)
+        // then sort the rest alphabetically by name.
+        $sort_measurements = function ($a, $b) use ($extra_measurements) {
+            $index_a = array_search($a['name'], $extra_measurements);
+            $index_b = array_search($b['name'], $extra_measurements);
+            if ($index_a !== false && $index_b !== false) {
+                return ($index_a < $index_b) ? -1 : 1;
+            } elseif ($index_a !== false) {
+                return -1;
+            } elseif ($index_b !== false) {
+                return 1;
+            } else {
                 return strcmp($a['name'], $b['name']);
-                });
+            }
+        };
+        usort($measurements_response, $sort_measurements);
+        $test_response['measurements'] = $measurements_response;
+        usort($preformatted_measurements, $sort_measurements);
         $test_response['preformatted_measurements'] = $preformatted_measurements;
         $response['test'] = $test_response;
         $this->pageTimer->end($response);
