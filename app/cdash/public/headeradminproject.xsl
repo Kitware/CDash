@@ -43,7 +43,7 @@
         <li><a><xsl:attribute name="href">manageBuildGroup.php?projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>Groups</a></li>
         <li><a><xsl:attribute name="href">manageCoverage.php?projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>Coverage</a></li>
         <li><a><xsl:attribute name="href">manageBanner.php?projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>Banner</a></li>
-        <li><a><xsl:attribute name="href">manageMeasurements.php?projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>Measurements</a></li>
+        <li><a><xsl:attribute name="href">project/<xsl:value-of select="cdash/project/id"/>/testmeasurements</xsl:attribute>Measurements</a></li>
         <li><a><xsl:attribute name="href">manageSubProject.php?projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>SubProjects</a></li>
         <li class="endsubmenu"><a><xsl:attribute name="href">manageOverview.php?projectid=<xsl:value-of select="cdash/project/id"/></xsl:attribute>Overview</a></li>
         </ul>

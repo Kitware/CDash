@@ -13,7 +13,23 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
+namespace CDash\Controller\Api;
 
-require_once dirname(__DIR__) . '/config/config.php';
-include_once 'include/common.php';
-load_view('manageMeasurements');
+use CDash\Database;
+use CDash\Model\Build;
+use CDash\Model\Project;
+
+/**
+ * Parent class for all API controllers responsible for displaying
+ * information about a particular build.
+ **/
+class BuildApi extends ResultsApi
+{
+    protected $project;
+
+    public function __construct(Database $db, Build $build)
+    {
+        $this->build = $build;
+        parent::__construct($db, $build->GetProject());
+    }
+}

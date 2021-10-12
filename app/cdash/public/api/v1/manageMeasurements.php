@@ -72,6 +72,7 @@ function rest_post($projectid)
         $measurement->Name = $measurement_data['name'];
         $measurement->TestPage = $measurement_data['testpage'];
         $measurement->SummaryPage = $measurement_data['summarypage'];
+        $measurement->Position = $measurement_data['position'];
         $id = $measurement_data['id'];
         if ($id > 0) {
             // Update an existing measurement rather than creating a new one.
@@ -113,8 +114,8 @@ function rest_get($projectid)
     // Menu
     $menu_response = [];
     $menu_response['back'] = 'user.php';
-    $menu_response['hidenav'] =  true;
     $response['menu'] = $menu_response;
+    $response['hidenav'] =  true;
 
     // Get any measurements associated with this project's tests.
     $measurements_response = [];
@@ -126,6 +127,7 @@ function rest_get($projectid)
         $measurement_response['name'] = $row['name'];
         $measurement_response['testpage'] = $row['testpage'];
         $measurement_response['summarypage'] = $row['summarypage'];
+        $measurement_response['position'] = $row['position'];
         $measurements_response[] = $measurement_response;
     }
     $response['measurements'] = $measurements_response;

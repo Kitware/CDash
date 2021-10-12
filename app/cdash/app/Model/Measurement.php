@@ -27,6 +27,7 @@ class Measurement
     public $TestPage;
     // Should this measurement be shown on testSummary.php?
     public $SummaryPage;
+    public $Position;
     private $PDO;
 
     public function __construct()
@@ -36,6 +37,7 @@ class Measurement
         $this->Name = '';
         $this->TestPage = 0;
         $this->SummaryPage = 0;
+        $this->Position = 0;
         $this->PDO = Database::getInstance()->getPdo();
     }
 
@@ -50,21 +52,22 @@ class Measurement
             // Update an existing record.
             $stmt = $this->PDO->prepare(
                 'UPDATE measurement SET name = :name, testpage = :testpage,
-                        summarypage = :summarypage
+                        summarypage = :summarypage, position = :position
                 WHERE id = :id');
             $stmt->bindValue(':id', $this->Id);
         } else {
             // Create a new measurement.
             $stmt = $this->PDO->prepare(
                 'INSERT INTO measurement
-                (projectid, name, testpage, summarypage)
-                VALUES (:projectid, :name, :testpage, :summarypage)');
+                (projectid, name, testpage, summarypage, position)
+                VALUES (:projectid, :name, :testpage, :summarypage, :position)');
             $stmt->bindValue(':projectid', $this->ProjectId);
         }
 
         $stmt->bindValue(':name', $this->Name);
         $stmt->bindValue(':testpage', $this->TestPage);
         $stmt->bindValue(':summarypage', $this->SummaryPage);
+        $stmt->bindValue(':position', $this->Position);
         if (!pdo_execute($stmt)) {
             return false;
         }

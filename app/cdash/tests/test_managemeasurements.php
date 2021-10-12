@@ -155,12 +155,13 @@ class ManageMeasurementsTestCase extends KWWebTestCase
         // Login as admin.
         $client = $this->getGuzzleClient();
 
-        // POST to manageMeasurements.php to add 'Processors' and
-        // 'I/O Wait Time' as test measurements for these projects.
+        // POST to manageMeasurements.php to add 'Processors', 'I/O Wait Time',
+        // and 'Peak Memory' as test measurements for these projects.
         $measurement_ids = [];
         $this->ProjectId =  get_project_id('InsightExample');
         $this->SubProjectId =  get_project_id('SubProjectExample');
-        $new_measurements = ['Processors', 'I/O Wait Time'];
+        $new_measurements = ['Processors', 'I/O Wait Time', 'Peak Memory'];
+        $idx = 1;
         foreach ($new_measurements as $new_measurement) {
             foreach ([$this->ProjectId, $this->SubProjectId] as $projectid) {
                 $measurements = [];
@@ -168,7 +169,8 @@ class ManageMeasurementsTestCase extends KWWebTestCase
                     'id' => -1,
                     'name' => $new_measurement,
                     'summarypage' => 1,
-                    'testpage' => 1
+                    'testpage' => 1,
+                    'position' => $idx,
                 ];
                 try {
                     $response = $client->request('POST',
@@ -194,30 +196,22 @@ class ManageMeasurementsTestCase extends KWWebTestCase
                     $this->fail("Expected $measurement_id but found $found for DB measurement ID");
                 }
             }
+            $idx += 1;
         }
 
         // Verify that the new measurements are displayed on viewTest.php.
         $this->get($this->url . "/api/v1/viewTest.php?buildid=$this->BuildId");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
-        $found = $jsonobj['columncount'];
-        if ($found != 2) {
-            $this->fail("Expected 2 extra columns on viewTest.php, found $found");
-        }
-        foreach ($new_measurements as $new_measurement) {
-            if (!in_array($new_measurement, $jsonobj['columnnames'])) {
-                $this->fail("Did not find expected extra column '$new_measurement'");
-            }
-        }
-        $found = count($jsonobj['tests']);
-        if ($found != 3) {
-            $this->fail("Expected three tests, found $found");
-        }
+        $this->assertEqual(3, $jsonobj['columncount']);
+        $this->assertEqual('Processors', $jsonobj['columnnames'][0]);
+        $this->assertEqual('I/O Wait Time', $jsonobj['columnnames'][1]);
+        $this->assertEqual('Peak Memory', $jsonobj['columnnames'][2]);
+        $this->assertEqual(3, count($jsonobj['tests']));
         $first = true;
-        $proc_idx = array_search('Processors', $jsonobj['columnnames']);
         foreach ($jsonobj['tests'] as $test) {
             $test_name = $test['name'];
-            $num_procs = $test['measurements'][$proc_idx];
+            $num_procs = $test['measurements'][0];
             $proc_time = $test['procTimeFull'];
             $this->validate_test($test_name, $num_procs, $proc_time, 'viewTest.php');
             if ($first && $num_procs) {
@@ -264,10 +258,9 @@ class ManageMeasurementsTestCase extends KWWebTestCase
         if ($jsonobj['hasprocessors'] !== true) {
             $this->fail("hasprocessors not true for queryTests.php");
         }
-        $this->assertEqual(1, count($jsonobj['extrameasurements']));
-        if (!in_array('I/O Wait Time', $jsonobj['extrameasurements'])) {
-            $this->fail("Did not find expected extra measurement 'I/O Wait Time' on queryTests.php");
-        }
+        $this->assertEqual(2, count($jsonobj['extrameasurements']));
+        $this->assertEqual('I/O Wait Time', $jsonobj['extrameasurements'][0]);
+        $this->assertEqual('Peak Memory', $jsonobj['extrameasurements'][1]);
         $this->assertEqual(3, count($jsonobj['builds']));
         foreach ($jsonobj['builds'] as $build) {
             $this->validate_test($build['testname'], $build['nprocs'], $build['procTime'], 'queryTests.php');
@@ -276,26 +269,16 @@ class ManageMeasurementsTestCase extends KWWebTestCase
         $this->get($this->url . "/api/v1/viewTest.php?buildid=$this->SubProjectBuildId");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
-        $found = $jsonobj['columncount'];
-        if ($found != 2) {
-            $this->fail("Expected 2 extra columns on viewTest.php, found $found");
-        }
-        foreach ($new_measurements as $new_measurement) {
-            if (!in_array($new_measurement, $jsonobj['columnnames'])) {
-                $this->fail("Did not find expected extra column '$new_measurement'");
-            }
-        }
-        $found = count($jsonobj['tests']);
-        if ($found != 3) {
-            $this->fail("Expected three tests, found $found");
-        }
-        $proc_idx = array_search('Processors', $jsonobj['columnnames']);
-        $io_wait_idx = array_search('I/O Wait Time', $jsonobj['columnnames']);
+        $this->assertEqual(3, $jsonobj['columncount']);
+        $this->assertEqual('Processors', $jsonobj['columnnames'][0]);
+        $this->assertEqual('I/O Wait Time', $jsonobj['columnnames'][1]);
+        $this->assertEqual('Peak Memory', $jsonobj['columnnames'][2]);
+        $this->assertEqual(3, count($jsonobj['tests']));
         foreach ($jsonobj['tests'] as $test) {
             $test_name = $test['name'];
-            $num_procs = $test['measurements'][$proc_idx];
+            $num_procs = $test['measurements'][0];
             $proc_time = $test['procTimeFull'];
-            $io_wait_time = $test['measurements'][$io_wait_idx];
+            $io_wait_time = $test['measurements'][1];
             $this->validate_subproject_test($test_name, $num_procs, $proc_time, $io_wait_time, 'viewTest.php');
         }
 

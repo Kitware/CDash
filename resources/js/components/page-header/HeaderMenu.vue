@@ -218,7 +218,7 @@ export default {
         this.groupSettingsUrl = `${this.$baseURL}/manageBuildGroup.php?projectid=${cdash.projectid}`;
         this.coverageSettingsUrl = `${this.$baseURL}/manageCoverage.php?projectid=${cdash.projectid}`;
         this.bannerSettingsUrl = `${this.$baseURL}/manageBanner.php?projectid=${cdash.projectid}`;
-        this.measurementSettingsUrl = `${this.$baseURL}/manageMeasurements.php?projectid=${cdash.projectid}`;
+        this.measurementSettingsUrl = `${this.$baseURL}/project/${cdash.projectid}/testmeasurements`;
         this.subProjectSettingsUrl = `${this.$baseURL}/manageSubProject.php?projectid=${cdash.projectid}`;
         this.overviewSettingsUrl = `${this.$baseURL}/manageOverview.php?projectid=${cdash.projectid}`;
       }

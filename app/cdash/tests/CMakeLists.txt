@@ -105,6 +105,7 @@ add_unit_test(/CDash/XmlHandler/TestingHandler)
 add_unit_test(/CDash/XmlHandler/UpdateHandler)
 
 add_laravel_test(/Feature/TestSchemaMigration)
+add_laravel_test(/Feature/MeasurementPositionMigration)
 add_php_test(install_into_empty_db)
 add_php_test(reinstall)
 add_php_test(compressedtest)
