@@ -1155,8 +1155,6 @@ CREATE TABLE IF NOT EXISTS `measurement` (
   `projectid` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `position` smallint(6) unsigned NOT NULL default '0',
-  `testpage` tinyint(1) NOT NULL,
-  `summarypage` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `projectid` (`projectid`),
   KEY `name` (`name`)

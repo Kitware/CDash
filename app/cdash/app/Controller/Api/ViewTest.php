@@ -277,7 +277,7 @@ class ViewTest extends BuildApi
         $processors_idx = -1;
         $extra_measurements_stmt = $this->db->prepare(
                 'SELECT name FROM measurement
-                WHERE projectid = ? AND testpage = 1
+                WHERE projectid = ?
                 ORDER BY position');
         $this->db->execute($extra_measurements_stmt, [$this->project->Id]);
         while ($row = $extra_measurements_stmt->fetch()) {
@@ -331,13 +331,13 @@ class ViewTest extends BuildApi
                     "SELECT test.id, test.projectid, build2test.buildid,
                     build2test.status, build2test.timestatus, test.name, testmeasurement.name,
                     testmeasurement.value, build.starttime,
-                    build2test.time, measurement.testpage FROM test
+                    build2test.time FROM test
                     JOIN build2test ON (build2test.testid = test.id)
                     JOIN build ON (build.id = build2test.buildid)
                     JOIN testmeasurement ON (build2test.outputid = testmeasurement.outputid)
                     JOIN measurement ON (test.projectid=measurement.projectid AND testmeasurement.name=measurement.name)
                     WHERE build.$buildid_field = :buildid
-                    AND measurement.testpage=1 $onlydelta_extra
+                    $onlydelta_extra
                     $status_clause
                     ORDER BY test.id, testmeasurement.name");
             $this->db->execute($etestquery, $params);

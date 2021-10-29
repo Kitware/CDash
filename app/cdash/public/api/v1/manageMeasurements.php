@@ -70,8 +70,6 @@ function rest_post($projectid)
         $measurement = new Measurement();
         $measurement->ProjectId = $projectid;
         $measurement->Name = $measurement_data['name'];
-        $measurement->TestPage = $measurement_data['testpage'];
-        $measurement->SummaryPage = $measurement_data['summarypage'];
         $measurement->Position = $measurement_data['position'];
         $id = $measurement_data['id'];
         if ($id > 0) {
@@ -125,8 +123,6 @@ function rest_get($projectid)
         $measurement_response = [];
         $measurement_response['id'] = $row['id'];
         $measurement_response['name'] = $row['name'];
-        $measurement_response['testpage'] = $row['testpage'];
-        $measurement_response['summarypage'] = $row['summarypage'];
         $measurement_response['position'] = $row['position'];
         $measurements_response[] = $measurement_response;
     }

@@ -29,9 +29,7 @@ class TestSchemaMigration extends TestCase
         // Populate some data to migrate.
         $base_measurement = [
             'projectid'    => 1,
-            'name'         => 'a',
-            'testpage'     => '0',
-            'summarypage'  => '0'
+            'name'         => 'a'
         ];
         $measurement1 = $base_measurement;
 

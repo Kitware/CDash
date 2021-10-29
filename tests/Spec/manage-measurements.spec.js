@@ -22,8 +22,6 @@ beforeEach(function() {
       {
         id: 1,
         name: 'my measurement',
-        testpage: 1,
-        summarypage: 1,
         position: 1,
       },
     ],

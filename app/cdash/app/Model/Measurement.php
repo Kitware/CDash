@@ -23,10 +23,6 @@ class Measurement
     public $Id;
     public $ProjectId;
     public $Name;
-    // Should this measurement be shown on viewTest.php?
-    public $TestPage;
-    // Should this measurement be shown on testSummary.php?
-    public $SummaryPage;
     public $Position;
     private $PDO;
 
@@ -35,8 +31,6 @@ class Measurement
         $this->Id = 0;
         $this->ProjectId = 0;
         $this->Name = '';
-        $this->TestPage = 0;
-        $this->SummaryPage = 0;
         $this->Position = 0;
         $this->PDO = Database::getInstance()->getPdo();
     }
@@ -51,22 +45,20 @@ class Measurement
         if ($this->Id) {
             // Update an existing record.
             $stmt = $this->PDO->prepare(
-                'UPDATE measurement SET name = :name, testpage = :testpage,
-                        summarypage = :summarypage, position = :position
+                'UPDATE measurement
+                SET name = :name, position = :position
                 WHERE id = :id');
             $stmt->bindValue(':id', $this->Id);
         } else {
             // Create a new measurement.
             $stmt = $this->PDO->prepare(
                 'INSERT INTO measurement
-                (projectid, name, testpage, summarypage, position)
-                VALUES (:projectid, :name, :testpage, :summarypage, :position)');
+                (projectid, name, position)
+                VALUES (:projectid, :name, :position)');
             $stmt->bindValue(':projectid', $this->ProjectId);
         }
 
         $stmt->bindValue(':name', $this->Name);
-        $stmt->bindValue(':testpage', $this->TestPage);
-        $stmt->bindValue(':summarypage', $this->SummaryPage);
         $stmt->bindValue(':position', $this->Position);
         if (!pdo_execute($stmt)) {
             return false;

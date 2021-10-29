@@ -11,15 +11,17 @@
       id="main_content"
     >
       <table
-        width="800px"
+        class="table table-sm"
         align="center"
       >
         <thead>
           <tr bgcolor="#CCCCCC">
-            <th>Measurement Name</th>
-            <th>Show on Test Page</th>
-            <th>Show Test Summary Page</th>
-            <th>Delete</th>
+            <th>
+              Test Measurement Name
+            </th>
+            <th>
+              Delete
+            </th>
           </tr>
         </thead>
 
@@ -33,7 +35,7 @@
             v-for="measurement in cdash.measurements"
             :id="'measurement_' + measurement.id"
           >
-            <td align="center">
+            <td>
               <input
                 v-model="measurement.name"
                 type="text"
@@ -41,25 +43,7 @@
                 name="measurement_name"
               >
             </td>
-            <td align="center">
-              <input
-                v-model="measurement.testpage"
-                type="checkbox"
-                name="testpage"
-                true-value="1"
-                false-value="0"
-              >
-            </td>
-            <td align="center">
-              <input
-                v-model="measurement.summarypage"
-                type="checkbox"
-                name="summarypage"
-                true-value="1"
-                false-value="0"
-              >
-            </td>
-            <td align="center">
+            <td>
               <span
                 class="glyphicon glyphicon-trash"
                 style="cursor: pointer;"
@@ -74,33 +58,13 @@
 
         <tbody>
           <tr bgcolor="#CADBD9">
-            <td align="center">
+            <td>
               <input
                 id="newMeasurement"
                 v-model="newMeasurementName"
                 name="newMeasurement"
                 type="text"
                 size="25"
-              >
-            </td>
-            <td align="center">
-              <input
-                v-model="newMeasurementTestPage"
-                type="checkbox"
-                name="showTestPage"
-                value="1"
-                true-value="1"
-                false-value="0"
-              >
-            </td>
-            <td align="center">
-              <input
-                v-model="newMeasurementSummaryPage"
-                type="checkbox"
-                name="showSummaryPage"
-                value="1"
-                true-value="1"
-                false-value="0"
               >
             </td>
             <td />
@@ -123,9 +87,19 @@
       </div>
       <br>
 
-      <p class="text-center">
-        <small>Drag measurements to change their display order</small>
-      </p>
+      <ul>
+        <li>
+          Use the form above to add test measurements of type <span class="text-monospace">numeric/double</span> or <span class="text-monospace">text/string</span>. Any measurement added here will be displayed as an extra column on the following pages:
+          <ul>
+            <li><span class="text-monospace">queryTests.php</span></li>
+            <li><span class="text-monospace">testSummary.php</span></li>
+            <li><span class="text-monospace">viewTest.php</span></li>
+          </ul>
+        </li>
+        <li>Other types of test measurements (eg. <span class="text-monospace">image/png</span>) are not supported for display on these pages, and they may not be rendered correctly if added here.</li>
+        <li>You can drag and drop measurements to change the order in which they are displayed.</li>
+        <li>Note that all test measurements are shown on the "Test Details" page (<span class="text-monospace">/test/{id}</span>), regardless of whether they have been added here.</li>
+      </ul>
 
       <!-- confirm delete measurement modal dialog -->
       <div
@@ -239,8 +213,6 @@ export default {
       if (this.newMeasurementName != '') {
         new_measurement.name = this.newMeasurementName;
         new_measurement.id = -1;
-        new_measurement.summarypage = this.newMeasurementSummaryPage;
-        new_measurement.testpage = this.newMeasurementTestPage;
         new_measurement.position = this.cdash.measurements.length + 1;
         this.cdash.measurements.push(new_measurement);
       }
