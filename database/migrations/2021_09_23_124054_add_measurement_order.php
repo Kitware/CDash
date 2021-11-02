@@ -13,11 +13,9 @@ class AddMeasurementOrder extends Migration
      */
     public function up()
     {
-        echo "!!! this gets called" . PHP_EOL;
         if (Schema::hasColumn('measurement', 'position')) {
             // Return early if it looks like this migration has
             // already been performed.
-            echo "!!! return early" . PHP_EOL;
             return;
         }
 

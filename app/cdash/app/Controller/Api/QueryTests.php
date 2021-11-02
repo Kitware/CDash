@@ -282,7 +282,7 @@ class QueryTests extends ResultsApi
         // Get the list of extra test measurements that should be displayed on this page.
         $this->extraMeasurements = [];
         $stmt = $this->db->prepare(
-            'SELECT name FROM measurement WHERE projectid = ? AND testpage = 1 ORDER BY position');
+            'SELECT name FROM measurement WHERE projectid = ? ORDER BY position');
         $this->db->execute($stmt, [$this->project->Id]);
         while ($row = $stmt->fetch()) {
             // If we have the Processors measurement, then we should also

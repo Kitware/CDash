@@ -1127,8 +1127,6 @@ CREATE TABLE "measurement" (
   "projectid" bigint NOT NULL,
   "name" character varying(40) NOT NULL,
   "position" smallint DEFAULT '0' NOT NULL,
-  "testpage" smallint NOT NULL DEFAULT '0',
-  "summarypage" smallint NOT NULL DEFAULT '0',
   PRIMARY KEY("id")
 );
 CREATE INDEX "measurement_projectid" on "measurement" ("projectid");

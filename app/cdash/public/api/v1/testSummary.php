@@ -109,7 +109,6 @@ $getcolumnnumber = pdo_query(
         AND build.starttime>='$beginning_UTCDate'
         AND build.starttime<'$end_UTCDate'
         AND test.projectid=$projectid
-        AND measurement.summarypage= 1
         GROUP by testmeasurement.name
         ");
 
@@ -143,7 +142,7 @@ if ($columncount > 0) {
         "SELECT test.id, test.projectid, build2test.buildid,
             build2test.status, build2test.timestatus, test.name,
             testmeasurement.name, testmeasurement.value, build.starttime,
-            build2test.time, measurement.testpage FROM test
+            build2test.time FROM test
             JOIN build2test ON (build2test.testid = test.id)
             JOIN build ON (build.id = build2test.buildid)
             JOIN testmeasurement ON (build2test.outputid = testmeasurement.outputid)
@@ -152,7 +151,6 @@ if ($columncount > 0) {
             AND build.starttime>='$beginning_UTCDate'
             AND build.starttime<'$end_UTCDate'
             AND test.projectid=$projectid
-            AND measurement.summarypage= 1
             ORDER BY build2test.buildid, testmeasurement.name
             ");
 }
@@ -312,7 +310,7 @@ if ($columncount > 0) {
         "SELECT test.id, test.projectid, build2test.buildid,
             build2test.status, build2test.timestatus, test.name,
             testmeasurement.name, testmeasurement.value, build.starttime,
-            build2test.time, measurement.testpage FROM test
+            build2test.time FROM test
             JOIN build2test ON (build2test.testid = test.id)
             JOIN build ON (build.id = build2test.buildid)
             JOIN testmeasurement ON (build2test.outputid = testmeasurement.outputid)
@@ -321,7 +319,6 @@ if ($columncount > 0) {
             AND build.starttime>='$beginning_UTCDate'
             AND build.starttime<'$end_UTCDate'
             AND test.projectid=$projectid
-            AND measurement.summarypage= 1
             ORDER BY build2test.buildid, testmeasurement.name
             ");
     while ($etestquery && $row = pdo_fetch_array($etestquery)) {

@@ -168,8 +168,6 @@ class ManageMeasurementsTestCase extends KWWebTestCase
                 $measurements[] = [
                     'id' => -1,
                     'name' => $new_measurement,
-                    'summarypage' => 1,
-                    'testpage' => 1,
                     'position' => $idx,
                 ];
                 try {
