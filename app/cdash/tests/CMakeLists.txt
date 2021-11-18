@@ -237,6 +237,7 @@ add_php_test(multiplelabelsfortests)
 add_php_test(subprojecttestfilters)
 add_php_test(dynamicanalysisdefectlongtype)
 add_php_test(starttimefromnotes)
+add_php_test(querytestsfilterlabels)
 
 add_subdirectory(ctest)
 
