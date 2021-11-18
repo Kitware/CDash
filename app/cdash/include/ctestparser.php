@@ -296,47 +296,46 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
     $parser = xml_parser_create();
     $file = '';
 
-    if (preg_match('/<Update/', $content)) {
+    if (strpos($content, '<Update') !== false) {
         // Should be first otherwise confused with Build
-
         $handler = new UpdateHandler($projectid);
         $file = 'Update';
-    } elseif (preg_match('/<Build/', $content)) {
+    } elseif (strpos($content, '<Build') !== false) {
         $handler = new BuildHandler($projectid);
         $file = 'Build';
-    } elseif (preg_match('/<Configure/', $content)) {
+    } elseif (strpos($content, '<Configure') !== false) {
         $handler = new ConfigureHandler($projectid);
         $file = 'Configure';
-    } elseif (preg_match('/<Testing/', $content)) {
+    } elseif (strpos($content, '<Testing') !== false) {
         $handler = new TestingHandler($projectid);
         $file = 'Test';
-    } elseif (preg_match('/<CoverageLog/', $content)) {
+    } elseif (strpos($content, '<CoverageLog') !== false) {
         // Should be before coverage
 
         $handler = new CoverageLogHandler($projectid);
         $file = 'CoverageLog';
-    } elseif (preg_match('/<Coverage/', $content)) {
+    } elseif (strpos($content, '<Coverage') !== false) {
         $handler = new CoverageHandler($projectid);
         $file = 'Coverage';
-    } elseif (preg_match('/<report/', $content)) {
+    } elseif (strpos($content, '<report') !== false) {
         $handler = new CoverageJUnitHandler($projectid);
         $file = 'Coverage';
-    } elseif (preg_match('/<Notes/', $content)) {
+    } elseif (strpos($content, '<Notes') !== false) {
         $handler = new NoteHandler($projectid);
         $file = 'Notes';
-    } elseif (preg_match('/<DynamicAnalysis/', $content)) {
+    } elseif (strpos($content, '<DynamicAnalysis') !== false) {
         $handler = new DynamicAnalysisHandler($projectid);
         $file = 'DynamicAnalysis';
-    } elseif (preg_match('/<Project/', $content)) {
+    } elseif (strpos($content, '<Project') !== false) {
         $handler = new ProjectHandler($projectid);
         $file = 'Project';
-    } elseif (preg_match('/<Upload/', $content)) {
+    } elseif (strpos($content, '<Upload') !== false) {
         $handler = new UploadHandler($projectid);
         $file = 'Upload';
-    } elseif (preg_match('/<testsuite/', $content)) {
+    } elseif (strpos($content, '<testsuite') !== false) {
         $handler = new TestingJUnitHandler($projectid);
         $file = 'Test';
-    } elseif (preg_match('/<Done/', $content)) {
+    } elseif (strpos($content, '<Done') !== false) {
         $handler = new DoneHandler($projectid);
         $file = 'Done';
     }
