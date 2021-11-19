@@ -291,57 +291,7 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
         return false;
     }
 
-    $content = fread($filehandler, 8192);
-    $handler = null;
-    $parser = xml_parser_create();
-    $file = '';
-
-    if (preg_match('/<Update/', $content)) {
-        // Should be first otherwise confused with Build
-
-        $handler = new UpdateHandler($projectid);
-        $file = 'Update';
-    } elseif (preg_match('/<Build/', $content)) {
-        $handler = new BuildHandler($projectid);
-        $file = 'Build';
-    } elseif (preg_match('/<Configure/', $content)) {
-        $handler = new ConfigureHandler($projectid);
-        $file = 'Configure';
-    } elseif (preg_match('/<Testing/', $content)) {
-        $handler = new TestingHandler($projectid);
-        $file = 'Test';
-    } elseif (preg_match('/<CoverageLog/', $content)) {
-        // Should be before coverage
-
-        $handler = new CoverageLogHandler($projectid);
-        $file = 'CoverageLog';
-    } elseif (preg_match('/<Coverage/', $content)) {
-        $handler = new CoverageHandler($projectid);
-        $file = 'Coverage';
-    } elseif (preg_match('/<report/', $content)) {
-        $handler = new CoverageJUnitHandler($projectid);
-        $file = 'Coverage';
-    } elseif (preg_match('/<Notes/', $content)) {
-        $handler = new NoteHandler($projectid);
-        $file = 'Notes';
-    } elseif (preg_match('/<DynamicAnalysis/', $content)) {
-        $handler = new DynamicAnalysisHandler($projectid);
-        $file = 'DynamicAnalysis';
-    } elseif (preg_match('/<Project/', $content)) {
-        $handler = new ProjectHandler($projectid);
-        $file = 'Project';
-    } elseif (preg_match('/<Upload/', $content)) {
-        $handler = new UploadHandler($projectid);
-        $file = 'Upload';
-    } elseif (preg_match('/<testsuite/', $content)) {
-        $handler = new TestingJUnitHandler($projectid);
-        $file = 'Test';
-    } elseif (preg_match('/<Done/', $content)) {
-        $handler = new DoneHandler($projectid);
-        $file = 'Done';
-    }
-
-    // Try to get the IP of the build
+    // Try to get the IP of the build.
     $ip = null;
     $config = Config::getInstance();
     if ($config->get('CDASH_REMOTE_ADDR')) {
@@ -349,6 +299,59 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
     } elseif (array_key_exists('REMOTE_ADDR', $_SERVER)) {
         $ip = $_SERVER['REMOTE_ADDR'];
     }
+
+    // Figure out what type of XML file this is.
+    $handler = null;
+    $file = '';
+    while (is_null($handler) && !feof($filehandler)) {
+        $content = fread($filehandler, 8192);
+        if (strpos($content, '<Update') !== false) {
+            // Should be first otherwise confused with Build
+            $handler = new UpdateHandler($projectid);
+            $file = 'Update';
+        } elseif (strpos($content, '<Build') !== false) {
+            $handler = new BuildHandler($projectid);
+            $file = 'Build';
+        } elseif (strpos($content, '<Configure') !== false) {
+            $handler = new ConfigureHandler($projectid);
+            $file = 'Configure';
+        } elseif (strpos($content, '<Testing') !== false) {
+            $handler = new TestingHandler($projectid);
+            $file = 'Test';
+        } elseif (strpos($content, '<CoverageLog') !== false) {
+            // Should be before coverage
+
+            $handler = new CoverageLogHandler($projectid);
+            $file = 'CoverageLog';
+        } elseif (strpos($content, '<Coverage') !== false) {
+            $handler = new CoverageHandler($projectid);
+            $file = 'Coverage';
+        } elseif (strpos($content, '<report') !== false) {
+            $handler = new CoverageJUnitHandler($projectid);
+            $file = 'Coverage';
+        } elseif (strpos($content, '<Notes') !== false) {
+            $handler = new NoteHandler($projectid);
+            $file = 'Notes';
+        } elseif (strpos($content, '<DynamicAnalysis') !== false) {
+            $handler = new DynamicAnalysisHandler($projectid);
+            $file = 'DynamicAnalysis';
+        } elseif (strpos($content, '<Project') !== false) {
+            $handler = new ProjectHandler($projectid);
+            $file = 'Project';
+        } elseif (strpos($content, '<Upload') !== false) {
+            $handler = new UploadHandler($projectid);
+            $file = 'Upload';
+        } elseif (strpos($content, '<testsuite') !== false) {
+            $handler = new TestingJUnitHandler($projectid);
+            $file = 'Test';
+        } elseif (strpos($content, '<Done') !== false) {
+            $handler = new DoneHandler($projectid);
+            $file = 'Done';
+        }
+    }
+
+    rewind($filehandler);
+    $content = fread($filehandler, 8192);
 
     if ($handler == null) {
         echo 'no handler found';
@@ -361,8 +364,9 @@ function ctest_parse($filehandler, $projectid, $buildid = null,
         return false;
     }
 
-    xml_set_element_handler($parser, array($handler, 'startElement'), array($handler, 'endElement'));
-    xml_set_character_data_handler($parser, array($handler, 'text'));
+    $parser = xml_parser_create();
+    xml_set_element_handler($parser, [$handler, 'startElement'], [$handler, 'endElement']);
+    xml_set_character_data_handler($parser, [$handler, 'text']);
     xml_parse($parser, $content, false);
 
     $projectname = get_project_name($projectid);
