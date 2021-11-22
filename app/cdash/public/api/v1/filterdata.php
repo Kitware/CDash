@@ -79,7 +79,7 @@ function getFiltersForPage($page_id)
         case 'queryTests.php':
             return [
                 'buildname', 'buildstarttime', 'details', 'groupname', 'label',
-                'site', 'status', 'testname', 'testoutput', 'time'];
+                'revision', 'site', 'status', 'testname', 'testoutput', 'time'];
             break;
 
         case 'viewCoverage.php':
