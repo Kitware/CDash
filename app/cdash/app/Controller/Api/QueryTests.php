@@ -31,6 +31,7 @@ class QueryTests extends ResultsApi
     {
         parent::__construct($db, $project);
         $this->filterOnBuildGroup = false;
+        $this->filterOnRevision = false;
         $this->filterOnTestOutput = false;
 
         $this->testOutputInclude = [];
@@ -51,6 +52,8 @@ class QueryTests extends ResultsApi
         foreach ($filters as $filter) {
             if ($filter['field'] == 'groupname') {
                 $this->filterOnBuildGroup = true;
+            } elseif ($filter['field'] == 'revision') {
+                $this->filterOnRevision = true;
             } elseif ($filter['field'] == 'testoutput') {
                 $this->filterOnTestOutput = true;
                 if ($filter['compare'] == 94) {
@@ -316,12 +319,17 @@ class QueryTests extends ResultsApi
         // Check for the presence of a filters that modify our querying behavior.
         $this->checkForSpecialFilters($filterdata);
 
-        // If we are filtering on Build Groups we need to join additional tables into our query.
+        // Some filters require us to join additional tables into our query.
         $filter_joins = '';
         if ($this->filterOnBuildGroup) {
-            $filter_joins = '
+            $filter_joins .= '
                 JOIN build2group b2g ON b2g.buildid = b.id
                 JOIN buildgroup bg ON bg.id = b2g.groupid';
+        }
+        if ($this->filterOnRevision) {
+            $filter_joins .= '
+                LEFT JOIN build2update b2u ON b2u.buildid = b.id
+                LEFT JOIN buildupdate bu ON bu.id = b2u.updateid';
         }
 
         // Select extra data if we are filtering on test output.

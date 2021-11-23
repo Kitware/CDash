@@ -391,6 +391,7 @@ class QueryTestsPhpFilters extends DefaultFilters
         $xml .= getFilterDefinitionXML('details', 'Details', 'string', '', '');
         $xml .= getFilterDefinitionXML('groupname', 'Group', 'string', '', 'Nightly');
         $xml .= getFilterDefinitionXML('label', 'Label', 'string', '', '');
+        $xml .= getFilterDefinitionXML('revision', 'Revision', 'string', '', '');
         $xml .= getFilterDefinitionXML('site', 'Site', 'string', '', '');
         $xml .= getFilterDefinitionXML('status', 'Status', 'string', '', '');
         $xml .= getFilterDefinitionXML('testname', 'Test Name', 'string', '', '');
@@ -430,6 +431,10 @@ class QueryTestsPhpFilters extends DefaultFilters
             case 'label': {
                 $sql_field = "(SELECT $this->TextConcat FROM label, label2test WHERE label2test.outputid = build2test.outputid AND label2test.labelid = label.id AND label2test.buildid = b.id)";
             }
+                break;
+
+            case 'revision':
+                $sql_field = "COALESCE(bu.revision, '')";
                 break;
 
             case 'site': {
@@ -1002,8 +1007,15 @@ function parse_filter_from_request($field_var, $compare_var, $value_var,
     // The following filter types are considered 'date clauses' so that the
     // default date clause of "builds from today only" is not used...
     //
-    if ($field == 'buildstarttime' || $field == 'buildstamp' ||
-            $field == 'revision') {
+    if ($field == 'buildstarttime' || $field == 'buildstamp') {
+        $filterdata['hasdateclause'] = 1;
+    }
+
+    // Revision filter is trickier. It should be considered a 'date clause' in the
+    // positive case, ie "revision is X", or "revision starts with X", but not in the
+    // negative case (when we're trying to filter OUT builds of specific revisions).
+    if ($field == 'revision' &&
+        ($compare == 61 || $compare == 63 || $compare == 65)) {
         $filterdata['hasdateclause'] = 1;
     }
 
