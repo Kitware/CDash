@@ -85,8 +85,8 @@ class TestDetails extends BuildApi
                 'SELECT * FROM build2test b2t
                 JOIN test t ON t.id = b2t.testid
                 JOIN testoutput ON testoutput.id = b2t.outputid
-                WHERE b2t.testid = :testid AND b2t.buildid = :buildid');
-        $this->db->execute($stmt, [':testid' => $this->testid, ':buildid' => $this->build->Id]);
+                WHERE b2t.id = :buildtestid');
+        $this->db->execute($stmt, [':buildtestid' => $this->buildtest->id]);
         $testRow = $stmt->fetch();
         $testName = $testRow['name'];
         $outputid = $testRow['outputid'];

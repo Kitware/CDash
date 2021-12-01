@@ -240,6 +240,7 @@ add_php_test(starttimefromnotes)
 add_php_test(querytestsfilterlabels)
 add_php_test(lotsofsubprojects)
 add_php_test(querytestsrevisionfilter)
+add_php_test(redundanttests)
 
 add_subdirectory(ctest)
 
