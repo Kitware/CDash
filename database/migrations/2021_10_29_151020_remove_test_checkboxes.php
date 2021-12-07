@@ -37,8 +37,8 @@ class RemoveTestCheckboxes extends Migration
     {
         if (!Schema::hasColumn('measurement', 'testpage')) {
             Schema::table('measurement', function (Blueprint $table) {
-                $table->tinyInteger('testpage');
-                $table->tinyInteger('summarypage');
+                $table->boolean('testpage');
+                $table->boolean('summarypage');
             });
         }
     }
