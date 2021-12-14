@@ -232,7 +232,7 @@ class ViewTest extends BuildApi
                 LEFT JOIN label2test AS l2t ON (l2t.outputid=bt.outputid)
                 LEFT JOIN label AS l ON (l.id=l2t.labelid)';
             $label_sql = ", GROUP_CONCAT(DISTINCT l.text SEPARATOR ', ') AS labels";
-            $groupby_sql = ' GROUP BY t.id';
+            $groupby_sql = ' GROUP BY bt.id';
         }
 
         if ($this->build->GetParentId() == Build::PARENT_BUILD) {
@@ -304,13 +304,12 @@ class ViewTest extends BuildApi
             $status_clause = '';
         }
 
-        $getalltestlistsql = "SELECT test.id
-            FROM test
-            JOIN build2test ON (build2test.testid = test.id)
+        $getalltestlistsql = "SELECT build2test.id
+            FROM build2test
             JOIN build ON (build.id = build2test.buildid)
             WHERE build.$buildid_field=:buildid $onlydelta_extra
             $status_clause
-            ORDER BY test.id
+            ORDER BY build2test.id
             ";
         $getalltestlist = $this->db->prepare($getalltestlistsql);
         $this->db->execute($getalltestlist, $params);
@@ -328,7 +327,7 @@ class ViewTest extends BuildApi
         $etestquery = null;
         if ($this->numExtraMeasurements > 0) {
             $etestquery = $this->db->prepare(
-                    "SELECT test.id, test.projectid, build2test.buildid,
+                    "SELECT build2test.id, test.projectid, build2test.buildid,
                     build2test.status, build2test.timestatus, test.name, testmeasurement.name,
                     testmeasurement.value, build.starttime,
                     build2test.time FROM test
@@ -339,7 +338,7 @@ class ViewTest extends BuildApi
                     WHERE build.$buildid_field = :buildid
                     $onlydelta_extra
                     $status_clause
-                    ORDER BY test.id, testmeasurement.name");
+                    ORDER BY build2test.id, testmeasurement.name");
             $this->db->execute($etestquery, $params);
         }
 
@@ -399,11 +398,11 @@ class ViewTest extends BuildApi
             }
 
             $labels_found = ($this->config->get('CDASH_DB_TYPE') != 'pgsql' && !empty($marshaledTest['labels']));
-            $marshaledTest['measurements'] = $test_measurements[$marshaledTest['id']];
+            $marshaledTest['measurements'] = $test_measurements[$marshaledTest['buildtestid']];
             if ($response['hasprocessors']) {
                 // Show an additional column "proc time" if these tests have
                 // the Processor measurement.
-                $num_procs = $test_measurements[$marshaledTest['id']][$processors_idx];
+                $num_procs = $test_measurements[$marshaledTest['buildtestid']][$processors_idx];
                 if (!$num_procs) {
                     $num_procs = 1;
                 }

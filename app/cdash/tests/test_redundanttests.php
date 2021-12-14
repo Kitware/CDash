@@ -31,8 +31,26 @@ class RedundantTestsTestCase extends KWWebTestCase
         $this->project = new Project();
         $this->project->Id = $this->createProject([
             'Name' => 'RedundantTests',
+            'DisplayLabels' => '1',
         ]);
         $this->project->Fill();
+
+        // Add 'color' as a custom test measurement for this project.
+        $client = $this->getGuzzleClient();
+        $measurements = [];
+        $measurements[] = [
+            'id' => -1,
+            'name' => 'color',
+            'position' => 1,
+        ];
+        try {
+            $response = $client->request('POST',
+                    $this->url . '/api/v1/manageMeasurements.php',
+                    ['json' => ['projectid' => $this->project->Id, 'measurements' => $measurements]]);
+        } catch (GuzzleHttp\Exception\ClientException $e) {
+            $this->fail($e->getMessage());
+            return false;
+        }
 
         // Submit our testing data.
         if (!$this->submission('RedundantTests', dirname(__FILE__) . '/data/RedundantTests/Test.xml')) {
@@ -60,7 +78,7 @@ class RedundantTestsTestCase extends KWWebTestCase
         $buildtestid1 = $results[0]->id;
         $buildtestid2 = $results[1]->id;
 
-        // Verify expected output from API.
+        // Verify expected output from 'test details' API.
         $this->get("{$this->url}/api/v1/testDetails.php?buildtestid={$buildtestid1}");
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
@@ -70,5 +88,13 @@ class RedundantTestsTestCase extends KWWebTestCase
         $content = $this->getBrowser()->getContent();
         $jsonobj = json_decode($content, true);
         $this->assertEqual("this is the same test but with different output\n", $jsonobj['test']['output']);
+
+        // Verify expected output from 'view tests' API.
+        $this->get("{$this->url}/api/v1/viewTest.php?buildid={$buildid}");
+        $content = $this->getBrowser()->getContent();
+        $jsonobj = json_decode($content, true);
+        $this->assertEqual(2, count($jsonobj['tests']));
+        $this->assertEqual('purple', $jsonobj['tests'][0]['measurements'][0]);
+        $this->assertEqual('orange', $jsonobj['tests'][1]['measurements'][0]);
     }
 }
