@@ -115,6 +115,7 @@ class BuildTest extends Model
         $marshaledData = [
             'id' => $data['id'],
             'buildid' => $buildid,
+            'buildtestid' => $data['buildtestid'],
             'status' => $marshaledStatus[0],
             'statusclass' => $marshaledStatus[1],
             'name' => $data['name'],

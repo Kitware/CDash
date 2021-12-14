@@ -25,6 +25,9 @@
 				<NamedMeasurement type="text/string" name="Command Line">
 					<Value>/tmp/bin/test1</Value>
 				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="color">
+					<Value>purple</Value>
+				</NamedMeasurement>
 				<Measurement>
 					<Value>this is a test
 </Value>
@@ -45,6 +48,9 @@
 				</NamedMeasurement>
 				<NamedMeasurement type="text/string" name="Command Line">
 					<Value>/tmp/bin/test1</Value>
+				</NamedMeasurement>
+				<NamedMeasurement type="text/string" name="color">
+					<Value>orange</Value>
 				</NamedMeasurement>
 				<Measurement>
 					<Value>this is the same test but with different output
