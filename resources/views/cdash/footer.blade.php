@@ -6,7 +6,7 @@ $version = Config::getVersion();
 <div id="footer" class="clearfix ng-scope">
     <div id="kitwarelogo">
         <a href="http://www.kitware.com">
-            <img src="{{ asset('img/kitware_logo_footer.png') }}" border="0" alt="logo">
+            <img src="{{ asset('img/kitware_logo_footer.svg') }}" border="0" alt="logo">
         </a>
     </div>
     <div id="footerlinks" class="clearfix">
