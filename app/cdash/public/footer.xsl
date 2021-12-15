@@ -7,7 +7,7 @@
 
 <div id="footer" class="clearfix">
   <div id="kitwarelogo">
-      <a href="http://www.kitware.com"><img src="img/kitware_logo_footer.png" border="0" alt="logo" /></a>
+      <a href="http://www.kitware.com"><img src="img/kitware_logo_footer.svg" border="0" alt="logo" /></a>
   </div>
   <div id="footerlinks" class="clearfix">
     <a href="http://www.cdash.org" class="footerlogo"><img src="img/cdash.png?rev=2019-05-08" border="0" height="30" alt="CDash logo"/></a>
