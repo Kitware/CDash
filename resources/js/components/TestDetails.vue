@@ -322,7 +322,7 @@ export default {
     displayGraph: function() {
       if (history.pushState) {
         var graph_query = "?graph=" + this.graphSelection;
-        if (this.cdash.menu.current.indexOf(graph_query) === -1) {
+        if (window.location.href.indexOf(graph_query) === -1) {
           // Update query string.
           var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + graph_query;
           window.history.pushState({path:newurl},'',newurl);
