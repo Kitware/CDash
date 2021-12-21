@@ -85,7 +85,7 @@
 			<FullCommandLine>/bin/flaky</FullCommandLine>
 			<Results>
 				<NamedMeasurement type="numeric/double" name="Execution Time">
-					<Value>0.00113797</Value>
+					<Value>1</Value>
 				</NamedMeasurement>
 				<NamedMeasurement type="text/string" name="Completion Status">
 					<Value>Completed</Value>
