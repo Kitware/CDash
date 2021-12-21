@@ -27,24 +27,15 @@ use CDash\Model\Site;
 
 require_once 'include/repository.php';
 
-class TestDetails extends BuildApi
+class TestDetails extends BuildTestApi
 {
-    public $buildtest;
-    public $testid;
     public $echoResponse;
+    public $buildtest;
 
     public function __construct(Database $db, BuildTest $buildtest)
     {
         $this->echoResponse = true;
-        $this->buildtest = $buildtest;
-        $this->testid = $this->buildtest->test->id;
-
-        $build = new Build();
-        $build->Id = $this->buildtest->buildid;
-        $build->FillFromId($build->Id);
-
-        parent::__construct($db, $build);
-        $this->project->Fill();
+        parent::__construct($db, $buildtest);
     }
 
     public function getResponse()
@@ -134,7 +125,7 @@ class TestDetails extends BuildApi
         $summaryLink = "testSummary.php?project={$this->project->Id}&name={$testName}&date={$this->date}";
 
         $test_response = [];
-        $test_response['id'] = $this->testid;
+        $test_response['id'] = $this->test->id;
         $test_response['buildid'] = $this->build->Id;
         $test_response['build'] = $this->build->Name;
         $test_response['buildstarttime'] = date(FMT_DATETIMESTD, strtotime($this->build->StartTime . ' UTC'));
@@ -341,7 +332,7 @@ class TestDetails extends BuildApi
         SELECT id FROM build2test
         WHERE buildid = :buildid AND
               testid = :testid');
-        $this->db->execute($stmt, [':buildid' => $buildid, ':testid' => $this->testid]);
+        $this->db->execute($stmt, [':buildid' => $buildid, ':testid' => $this->test->id]);
         $buildtestid = $stmt->fetchColumn();
         if ($buildtestid === false) {
             return 0;
