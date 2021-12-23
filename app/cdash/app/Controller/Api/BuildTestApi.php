@@ -30,6 +30,13 @@ class BuildTestApi extends BuildApi
 {
     public $buildtest;
     public $test;
+    public $testHistoryQuery;
+    public $testHistoryQueryExtraColumns;
+    public $testHistoryQueryExtraJoins;
+    public $testHistoryQueryExtraWheres;
+    public $testHistoryQueryLimit;
+    public $testHistoryQueryOrder;
+    public $testHistoryQueryParams;
 
     public function __construct(Database $db, BuildTest $buildtest)
     {
@@ -40,7 +47,39 @@ class BuildTestApi extends BuildApi
         $build->Id = $this->buildtest->buildid;
         $build->FillFromId($build->Id);
 
+        $this->testHistoryQuery = '';
+        $this->testHistoryQueryExtraColumns = '';
+        $this->testHistoryQueryExtraJoins = '';
+        $this->testHistoryQueryExtraWheres = '';
+        $this->testHistoryQueryLimit = '';
+        $this->testHistoryQueryOrder = '';
+
         parent::__construct($db, $build);
         $this->project->Fill();
+
+        $this->testHistoryQueryParams = [
+            ':siteid'=> $this->build->SiteId,
+            ':projectid' => $this->project->Id,
+            ':type' => $this->build->Type,
+            ':buildname' => $this->build->Name,
+            ':testname' => $this->test->name
+        ];
+    }
+
+    public function generateTestHistoryQuery()
+    {
+        $this->testHistoryQuery =
+            "SELECT b.starttime, b2t.id AS buildtestid $this->testHistoryQueryExtraColumns
+            FROM build b
+            JOIN build2test b2t ON (b.id = b2t.buildid)
+            $this->testHistoryQueryExtraJoins
+            WHERE b.siteid = :siteid
+            AND b.projectid = :projectid
+            AND b.type = :type
+            AND b.name = :buildname
+            AND b2t.testid IN (SELECT id FROM test WHERE name = :testname)
+            $this->testHistoryQueryExtraWheres
+            ORDER BY b.starttime $this->testHistoryQueryOrder
+            $this->testHistoryQueryLimit";
     }
 }

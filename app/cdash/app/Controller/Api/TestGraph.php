@@ -48,21 +48,11 @@ class TestGraph extends BuildTestApi
             return [];
         }
 
-        $extra_columns = '';
-        $extra_joins = '';
-        $extra_wheres = '';
-        $query_params = [
-            ':siteid'=> $this->build->SiteId,
-            ':projectid' => $this->project->Id,
-            ':type' => $this->build->Type,
-            ':buildname' => $this->build->Name,
-            ':testname' => $this->test->name
-        ];
         $chart_data = [];
 
         switch ($type) {
             case 'time':
-                $extra_fields = 'b2t.time, b2t.timemean, b2t.timestd';
+                $this->testHistoryQueryExtraColumns = ', b2t.time, b2t.timemean, b2t.timestd';
                 $chart_data[] = [
                     'label' => 'Execution Time (seconds)',
                     'data' => []
@@ -73,7 +63,7 @@ class TestGraph extends BuildTestApi
                 ];
                 break;
             case 'status':
-                $extra_fields = 'b2t.status';
+                $this->testHistoryQueryExtraColumns = ', b2t.status';
                 $chart_data[] = [
                     'label' => 'Passed',
                     'data' => []
@@ -92,28 +82,17 @@ class TestGraph extends BuildTestApi
                     'label' => $measurement_name,
                     'data' => []
                 ];
-                $extra_fields = 'tm.value';
-                $extra_joins = 'JOIN testmeasurement tm ON (b2t.outputid = tm.outputid)';
-                $extra_wheres = 'AND tm.name = :measurementname';
-                $query_params[':measurementname'] = $measurement_name;
+                $this->testHistoryQueryExtraColumns = ', tm.value';
+                $this->testHistoryQueryExtraJoins = 'JOIN testmeasurement tm ON (b2t.outputid = tm.outputid)';
+                $this->testHistoryQueryExtraWheres = 'AND tm.name = :measurementname';
+                $this->testHistoryQueryParams[':measurementname'] = $measurement_name;
                 break;
         }
 
         // Select relevant data about all runs of this test from this recurring build.
-        $query =
-            "SELECT b.starttime, b2t.id AS buildtestid, $extra_fields
-            FROM build b
-            JOIN build2test b2t ON (b.id = b2t.buildid)
-            $extra_joins
-            WHERE b.siteid = :siteid
-            AND b.projectid = :projectid
-            AND b.type = :type
-            AND b.name = :buildname
-            AND b2t.testid IN (SELECT id FROM test WHERE name = :testname)
-            $extra_wheres
-            ORDER BY b.starttime";
-        $stmt = $this->db->prepare($query);
-        $this->db->execute($stmt, $query_params);
+        $this->generateTestHistoryQuery();
+        $stmt = $this->db->prepare($this->testHistoryQuery);
+        $this->db->execute($stmt, $this->testHistoryQueryParams);
 
         while ($row = $stmt->fetch()) {
             $data_point = [];
