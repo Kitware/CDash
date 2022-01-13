@@ -27,24 +27,15 @@ use CDash\Model\Site;
 
 require_once 'include/repository.php';
 
-class TestDetails extends BuildApi
+class TestDetails extends BuildTestApi
 {
-    public $buildtest;
-    public $testid;
     public $echoResponse;
+    public $buildtest;
 
     public function __construct(Database $db, BuildTest $buildtest)
     {
         $this->echoResponse = true;
-        $this->buildtest = $buildtest;
-        $this->testid = $this->buildtest->test->id;
-
-        $build = new Build();
-        $build->Id = $this->buildtest->buildid;
-        $build->FillFromId($build->Id);
-
-        parent::__construct($db, $build);
-        $this->project->Fill();
+        parent::__construct($db, $buildtest);
     }
 
     public function getResponse()
@@ -94,10 +85,6 @@ class TestDetails extends BuildApi
         $menu = [];
         $menu['back'] = "/viewTest.php?buildid={$this->build->Id}";
 
-        $previous_buildid = $this->build->GetPreviousBuildId();
-        $current_buildid = $this->build->GetCurrentBuildId();
-        $next_buildid = $this->build->GetNextBuildId();
-
         // Did the user request a specific chart?
         // If so we should make that chart appears when they click next or previous.
         $extra_url = '';
@@ -105,26 +92,28 @@ class TestDetails extends BuildApi
             $extra_url = "?graph=" . $_GET['graph'];
         }
 
-        // Previous build
-        if ($previous_buildid > 0) {
-            $previous_buildtestid = $this->findTest($previous_buildid);
-            if ($previous_buildtestid) {
-                $menu['previous'] = "/test/{$previous_buildtestid}{$extra_url}";
-            }
+        // Get previous/current/next results for this buildtest.
+        $previous_buildtestid = $this->getRelatedBuildTest('previous');
+        $current_buildtestid = $this->getRelatedBuildTest('current');
+        $next_buildtestid = $this->getRelatedBuildTest('next');
+
+        // Navigation menu entry for 'Previous'.
+        if ($previous_buildtestid) {
+            $menu['previous'] = "/test/{$previous_buildtestid}{$extra_url}";
         } else {
             $menu['previous'] = false;
         }
 
-        // Current build
-        if ($current_buildtestid = $this->findTest($current_buildid)) {
+        // Current
+        if ($current_buildtestid) {
             $menu['current'] = "/test/{$current_buildtestid}{$extra_url}";
+        } else {
+            $menu['current'] = false;
         }
 
-        // Next build
-        if ($next_buildid > 0) {
-            if ($next_buildtestid = $this->findTest($next_buildid)) {
-                $menu['next'] = "/test/{$next_buildtestid}{$extra_url}";
-            }
+        // Next
+        if ($next_buildtestid) {
+            $menu['next'] = "/test/{$next_buildtestid}{$extra_url}";
         } else {
             $menu['next'] = false;
         }
@@ -134,7 +123,7 @@ class TestDetails extends BuildApi
         $summaryLink = "testSummary.php?project={$this->project->Id}&name={$testName}&date={$this->date}";
 
         $test_response = [];
-        $test_response['id'] = $this->testid;
+        $test_response['id'] = $this->test->id;
         $test_response['buildid'] = $this->build->Id;
         $test_response['build'] = $this->build->Name;
         $test_response['buildstarttime'] = date(FMT_DATETIMESTD, strtotime($this->build->StartTime . ' UTC'));
@@ -335,18 +324,37 @@ class TestDetails extends BuildApi
         return $response;
     }
 
-    private function findTest($buildid)
+    private function getRelatedBuildTest($which_buildtest)
     {
-        $stmt = $this->db->prepare('
-        SELECT id FROM build2test
-        WHERE buildid = :buildid AND
-              testid = :testid');
-        $this->db->execute($stmt, [':buildid' => $buildid, ':testid' => $this->testid]);
-        $buildtestid = $stmt->fetchColumn();
-        if ($buildtestid === false) {
-            return 0;
+        switch ($which_buildtest) {
+            case 'previous':
+                $this->testHistoryQueryOrder = 'DESC';
+                $this->testHistoryQueryExtraWheres = 'AND b.starttime < :starttime';
+                $this->testHistoryQueryParams[':starttime'] = $this->build->StartTime;
+                break;
+            case 'next':
+                $this->testHistoryQueryOrder = 'ASC';
+                $this->testHistoryQueryExtraWheres = 'AND b.starttime > :starttime';
+                $this->testHistoryQueryParams[':starttime'] = $this->build->StartTime;
+                break;
+            case 'current':
+            default:
+                $this->testHistoryQueryOrder = 'DESC';
+                $this->testHistoryQueryExtraWheres = '';
+                if (array_key_exists(':starttime', $this->testHistoryQueryParams)) {
+                    unset($this->testHistoryQueryParams[':starttime']);
+                }
+                break;
         }
-        return $buildtestid;
+        $this->testHistoryQueryLimit = 'LIMIT 1';
+        $this->generateTestHistoryQuery();
+        $stmt = $this->db->prepare($this->testHistoryQuery);
+        $this->db->execute($stmt, $this->testHistoryQueryParams);
+        $row = $stmt->fetch();
+        if (is_array($row)) {
+            return $row['buildtestid'];
+        }
+        return null;
     }
 
     // Remove bad characters for XML parser
