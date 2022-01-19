@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="append_configures"
+	BuildStamp="20210315-1730-Experimental"
+	Name="hesperides"
+	Generator="ctest-3.19.4"
+  Append="true"
+	>
+	<Configure>
+		<StartDateTime>Mar 15 13:31 EDT</StartDateTime>
+		<StartConfigureTime>1615829490</StartConfigureTime>
+		<ConfigureCommand>"cmake" "-GUnix Makefiles" "/tmp/src"</ConfigureCommand>
+		<Log>-- This is the second part of my configure
+-- CMake Warning (dev) at some/file/path:5678 (MESSAGE):
+-- WARNING: bar
+-- WARNING: baz
+</Log>
+		<ConfigureStatus>2</ConfigureStatus>
+		<EndDateTime>Mar 15 13:31 EDT</EndDateTime>
+		<EndConfigureTime>1615829490</EndConfigureTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Configure>
+</Site>
