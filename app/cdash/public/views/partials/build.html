@@ -3,12 +3,20 @@
   <a ng-href="build/{{::build.id}}">
     {{::build.label}}
   </a>
+
   <!-- Icon for build errors / test failing -->
   <a ng-if="::build.compilation.error > 0 || build.test.fail > 0" href=""
      ng-click="toggleBuildProblems(build)">
     <img src="img/Info.png" alt="info" class="icon"></img>
   </a>
-  <div ng-if="::build.id" id="buildgroup_{{::build.id}}"></div>
+
+  <!-- Link to notes specific to this subproject build -->
+  <a title="View notes"
+     name="notesLink"
+     ng-if="::build.notes > 0"
+     ng-href="build/{{::build.id}}/notes">
+    <img src="img/document.png" alt="Notes" class="icon"/>
+  </a>
 </td>
 
 <!-- Otherwise, show build name & site on the row. -->
@@ -39,6 +47,7 @@
 
   <div style="float:left;">
     <a title="View notes"
+       name="notesLink"
        ng-if="::build.notes > 0"
        ng-href="build/{{::build.id}}/notes">
       <img src="img/document.png" alt="Notes" class="icon"/>
