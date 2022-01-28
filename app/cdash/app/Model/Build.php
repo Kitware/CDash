@@ -248,7 +248,7 @@ class Build
         return true;
     }
 
-    /** Return the subproject id */
+    /** Return the subproject name */
     public function GetSubProjectName()
     {
         if (empty($this->Id)) {
@@ -469,6 +469,10 @@ class Build
             'groupid' => $build->GroupId,
 
         ];
+
+        if ($build->GetSubProjectName()) {
+            $response['subproject'] = $build->SubProjectName;
+        }
 
         return array_merge($response, $optional_values);
     }

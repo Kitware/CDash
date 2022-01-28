@@ -22,17 +22,24 @@
         </tr>
         <tr>
           <td align="left">
-            <b>Build Name: </b>
+            <b>Build: </b>
             <a :href="$baseURL + '/build/' + cdash.build.buildid">
               {{ cdash.build.buildname }}
             </a>
           </td>
         </tr>
 
+        <tr v-if="cdash.build.subproject">
+          <td align="left">
+            <b>SubProject: </b>
+            {{ cdash.build.subproject }}
+          </td>
+        </tr>
+
         <tr>
           <td align="left">
-            <b>Stamp: </b>
-            {{ cdash.build.stamp }}
+            <b>Start Time: </b>
+            {{ cdash.build.starttime }}
           </td>
         </tr>
       </table>
