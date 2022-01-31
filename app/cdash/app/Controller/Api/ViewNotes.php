@@ -16,6 +16,8 @@
 
 namespace CDash\Controller\Api;
 
+use App\Models\BuildNote;
+use App\Models\Note;
 use App\Services\TestingDay;
 
 use CDash\Database;
@@ -75,25 +77,17 @@ class ViewNotes extends BuildApi
         $response['build'] = Build::MarshalResponseArray($this->build, ['site' => $site_name]);
 
         // Notes for this build.
-        $build2note_stmt = $this->db->prepare(
-            'SELECT noteid, time FROM build2note WHERE buildid = :buildid');
-        $this->db->execute($build2note_stmt, [':buildid' => $this->build->Id]);
-
-        $note_stmt = $this->db->prepare(
-            'SELECT * FROM note WHERE id = :noteid');
-
-        $notes = [];
-        while ($build2note_row = $build2note_stmt->fetch()) {
-            $noteid = $build2note_row['noteid'];
-            $this->db->execute($note_stmt, [':noteid' => $noteid]);
-            $note_row = $note_stmt->fetch();
-            $note = [];
-            $note['name'] = $note_row['name'];
-            $note['text'] = $note_row['text'];
-            $note['time'] = $build2note_row['time'];
-            $notes[] = $note;
+        $build2notes = BuildNote::where('buildid', '=', $this->build->Id)->get();
+        $notes_response = [];
+        foreach ($build2notes as $build2note) {
+            $note = $build2note->note;
+            $note_response = [];
+            $note_response['name'] = $note->name;
+            $note_response['text'] = $note->text;
+            $note_response['time'] = $build2note->time;
+            $notes_response[] = $note_response;
         }
-        $response['notes'] = $notes;
+        $response['notes'] = $notes_response;
 
         $this->pageTimer->end($response);
         return $response;

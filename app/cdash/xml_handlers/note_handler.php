@@ -16,6 +16,8 @@
 
 require_once 'xml_handlers/abstract_handler.php';
 
+use App\Services\NoteCreator;
+
 use CDash\Model\Build;
 use CDash\Model\BuildConfigure;
 use CDash\Model\BuildInformation;
@@ -27,7 +29,7 @@ class NoteHandler extends AbstractHandler
 {
     private $AdjustStartTime;
     private $BuildId;
-    private $Note;
+    private $NoteCreator;
     private $Configure;
     private $TimeStamp;
 
@@ -74,8 +76,8 @@ class NoteHandler extends AbstractHandler
             $this->Build->Generator = $attributes['GENERATOR'];
             $this->Build->Information = $buildInformation;
         } elseif ($name == 'NOTE') {
-            $this->Note = new BuildNote();
-            $this->Note->Name =
+            $this->NoteCreator = new NoteCreator;
+            $this->NoteCreator->name =
                 isset($attributes['NAME']) ? $attributes['NAME'] : '';
             $this->Timestamp = 0;
         }
@@ -90,7 +92,7 @@ class NoteHandler extends AbstractHandler
             $this->Build->GetIdFromName($this->SubProjectName);
             $this->Build->RemoveIfDone();
 
-            $this->Note->Time = gmdate(FMT_DATETIME, $this->Timestamp);
+            $this->NoteCreator->time = gmdate(FMT_DATETIME, $this->Timestamp);
 
             // If the build doesn't exist we add it.
             if ($this->Build->Id == 0) {
@@ -104,16 +106,16 @@ class NoteHandler extends AbstractHandler
                     $build_start_timestamp = $this->Timestamp + 59;
                 }
                 $this->Build->StartTime = gmdate(FMT_DATETIME, $build_start_timestamp);
-                $this->Build->EndTime = $this->Note->Time;
+                $this->Build->EndTime = $this->NoteCreator->time;
                 $this->Build->SubmitTime = gmdate(FMT_DATETIME);
                 $this->Build->InsertErrors = false;
                 add_build($this->Build);
             }
 
-            if ($this->Build->Id > 0 && $this->Note->Time && $this->Note->Name && $this->Note->Text) {
+            if ($this->Build->Id > 0 && $this->NoteCreator->time && $this->NoteCreator->name && $this->NoteCreator->text) {
                 // Insert the note
-                $this->Note->BuildId = $this->Build->Id;
-                $this->Note->Insert();
+                $this->NoteCreator->buildid = $this->Build->Id;
+                $this->NoteCreator->create();
             } else {
                 add_log('Trying to add a note to a nonexistent build', 'note_handler.php', LOG_ERR);
             }
@@ -144,7 +146,7 @@ class NoteHandler extends AbstractHandler
                     }
                     break;
                 case 'TEXT':
-                    $this->Note->Text .= $data;
+                    $this->NoteCreator->text .= $data;
                     break;
             }
         }
