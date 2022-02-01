@@ -94,8 +94,10 @@ class NoteHandler extends AbstractHandler
 
             $this->NoteCreator->time = gmdate(FMT_DATETIME, $this->Timestamp);
 
-            // If the build doesn't exist we add it.
-            if ($this->Build->Id == 0) {
+            if ($this->Timestamp === 0) {
+                \Log::error("Cannot create build '{$this->Build->Name}' for note '{$this->NoteCreator->name}' because time was not set");
+            } elseif ($this->Build->Id == 0) {
+                // If the build doesn't exist we add it.
                 $this->Build->SetSubProject($this->SubProjectName);
 
                 $build_start_timestamp = $this->Timestamp;
@@ -112,12 +114,18 @@ class NoteHandler extends AbstractHandler
                 add_build($this->Build);
             }
 
-            if ($this->Build->Id > 0 && $this->NoteCreator->time && $this->NoteCreator->name && $this->NoteCreator->text) {
+            if (!$this->Build->Id) {
+                \Log::error("Trying to add note '{$this->NoteCreator->name}' to a nonexistent build");
+            } elseif (!$this->NoteCreator->name) {
+                \Log::error("Note missing name for build #{$this->Build->Id}");
+            } elseif (!$this->NoteCreator->text) {
+                \Log::error("No note text for '{$this->NoteCreator->name}' on build #{$this->Build->Id}");
+            } elseif ($this->Timestamp === 0) {
+                \Log::error("No note time for '{$this->NoteCreator->name}' on build #{$this->Build->Id}");
+            } else {
                 // Insert the note
                 $this->NoteCreator->buildid = $this->Build->Id;
                 $this->NoteCreator->create();
-            } else {
-                add_log('Trying to add a note to a nonexistent build', 'note_handler.php', LOG_ERR);
             }
         }
     }
