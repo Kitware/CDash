@@ -39,9 +39,9 @@ class CoverageFileLog
     public function AddLine($number, $code)
     {
         if (array_key_exists($number, $this->Lines)) {
-            $this->Lines[$number] += $code;
+            $this->Lines[$number] += (int)$code;
         } else {
-            $this->Lines[$number] = $code;
+            $this->Lines[$number] = (int)$code;
         }
     }
 
