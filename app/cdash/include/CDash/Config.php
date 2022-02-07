@@ -80,7 +80,7 @@ class Config extends Singleton
 
     public function getPath()
     {
-        $path = $this->get('CDASH_CURL_LOCALHOST_PREFIX') ?: $_SERVER['REQUEST_URI'];
+        $path = config('cdash.curl_localhost_prefix') ?: $_SERVER['REQUEST_URI'];
         if (strpos($path, '/') !== 0) {
             $path = "/{$path}";
         }
