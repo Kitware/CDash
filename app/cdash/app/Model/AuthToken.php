@@ -16,7 +16,6 @@
 namespace CDash\Model;
 
 use App\Models\User;
-use CDash\Config;
 use CDash\Database;
 
 require_once 'include/pdo.php';
@@ -43,8 +42,7 @@ class AuthToken
     // $this->Hash.
     public function Generate()
     {
-        $config = Config::getInstance();
-        $duration = $config->get('CDASH_TOKEN_DURATION');
+        $duration = config('cdash.token_duration');
         $now = time();
         $token = bin2hex(random_bytes(16));
         $this->Hash = $this->HashToken($token);
