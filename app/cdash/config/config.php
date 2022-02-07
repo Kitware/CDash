@@ -128,12 +128,10 @@ $CDASH_CURL_LOCALHOST_PREFIX = '';
 $CDASH_BASE_URL = '';
 // CSS file
 $CDASH_CSS_FILE = 'css/cdash.css';
-// Must be writable by the web server
-$CDASH_DATA_ROOT_DIRECTORY = $CDASH_ROOT_DIR;
 // Backup directory
-$CDASH_BACKUP_DIRECTORY = $CDASH_DATA_ROOT_DIRECTORY . '/backup';
+$CDASH_BACKUP_DIRECTORY = $CDASH_ROOT_DIR . '/backup';
 // Log directory
-$CDASH_LOG_DIRECTORY = $CDASH_DATA_ROOT_DIRECTORY . '/log';
+$CDASH_LOG_DIRECTORY = $CDASH_ROOT_DIR . '/log';
 // Log file location. Set to false to log to the syslog.
 $CDASH_LOG_FILE = $CDASH_LOG_DIRECTORY . '/cdash.log';
 // Upload directory (absolute or relative)
