@@ -14,11 +14,9 @@
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
 
-use CDash\Config;
-
 // No project name set.
 if (!isset($_GET['project'])) {
-    $default_project = Config::getInstance()->get('CDASH_DEFAULT_PROJECT');
+    $default_project = config('cdash.default_project');
     $url = $default_project ? "index.php?project={$default_project}" : 'viewProjects.php';
     return \redirect()->away($url);
 }

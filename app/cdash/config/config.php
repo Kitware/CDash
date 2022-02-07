@@ -269,10 +269,6 @@ $CDASH_GITHUB_PRIVATE_KEY = dirname(__FILE__) . '/github.pem';
 // Optional secret used to secure webhooks.
 $CDASH_WEBHOOK_SECRET = null;
 
-// Should users be taken directly to a certain project when they arrive
-// via index.php?
-$CDASH_DEFAULT_PROJECT = '';
-
 /* DO NOT EDIT AFTER THIS LINE */
 if (!isset($ONLY_LOAD_DEFAULTS)) {
     $localConfig = dirname(__FILE__) . '/config.local.php';
