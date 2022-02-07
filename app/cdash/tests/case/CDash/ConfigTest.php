@@ -23,8 +23,7 @@ class ConfigTest extends CDashTestCase
         // check some random values to ensure that they match that of the Config instance
         global $CDASH_CSS_FILE,
                $CDASH_UPLOAD_DIRECTORY,
-               $CDASH_ACTIVE_PROJECT_DAYS,
-               $CDASH_FORWARDING_IP;
+               $CDASH_ACTIVE_PROJECT_DAYS;
 
         include 'config/config.php';
 
@@ -33,7 +32,6 @@ class ConfigTest extends CDashTestCase
         $this->assertEquals($CDASH_CSS_FILE, $config->get('CDASH_CSS_FILE'));
         $this->assertEquals($CDASH_UPLOAD_DIRECTORY, $config->get('CDASH_UPLOAD_DIRECTORY'));
         $this->assertEquals($CDASH_ACTIVE_PROJECT_DAYS, $config->get('CDASH_ACTIVE_PROJECT_DAYS'));
-        $this->assertEquals($CDASH_FORWARDING_IP, $config->get('CDASH_FORWARDING_IP'));
     }
 
     public function testGetSet()

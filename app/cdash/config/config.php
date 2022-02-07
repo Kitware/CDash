@@ -146,9 +146,6 @@ $CDASH_BACKUP_TIMEFRAME = '48'; // 48 hours
 // Request full email address to add new users
 // instead of displaying a list
 $CDASH_FULL_EMAIL_WHEN_ADDING_USER = '0';
-// Use getIPfromApache script to get IP addresses
-// when using forwarding script
-$CDASH_FORWARDING_IP = '192.%'; // should be an SQL format
 // Use hostip.info to geolocate IP addresses
 $CDASH_GEOLOCATE_IP_ADDRESSES = true;
 $CDASH_DEFAULT_IP_LOCATIONS = array();
