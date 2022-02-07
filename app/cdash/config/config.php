@@ -95,8 +95,6 @@ $CDASH_EMAIL_SMTP_HOST = null;
 $CDASH_EMAIL_SMTP_PORT = 25;
 // Login for the SMTP server or null for anonymous.
 $CDASH_EMAIL_SMTP_LOGIN = null;
-// Password for the SMTP server.
-$CDASH_EMAIL_SMTP_PASS = null;
 // Should CDash only register valid emails
 $CDASH_REGISTRATION_EMAIL_VERIFY = true;
 // If CDash should use the SendGrid API for email
