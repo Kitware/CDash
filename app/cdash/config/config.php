@@ -53,11 +53,6 @@ $CDASH_CRITICAL_PDO_ERRORS = array();
 // host for Selenium testing
 $CDASH_SELENIUM_HUB='localhost';
 
-// Support for SSL database connections.
-$CDASH_SSL_KEY = null;
-$CDASH_SSL_CERT = null;
-$CDASH_SSL_CA = null;
-
 $CDASH_TESTING_MODE = false;
 $CDASH_TESTING_RENAME_LOGS = false;
 
@@ -92,18 +87,12 @@ $CDASH_ASYNC_WORKERS = 1;
 // Main title and subtitle for the index page
 $CDASH_MAININDEX_TITLE = 'CDash';
 $CDASH_MAININDEX_SUBTITLE = 'Projects';
-// Default from email
-$CDASH_EMAILADMIN = 'admin@cdash.org';
 $CDASH_EMAIL_FROM = 'admin@cdash.org';
 $CDASH_EMAIL_REPLY = 'noreply@cdash.org';
 // Hostname of the SMTP server or null to use the PHP mail() function.
 $CDASH_EMAIL_SMTP_HOST = null;
 // Port for the SMTP server.
 $CDASH_EMAIL_SMTP_PORT = 25;
-// Either 'ssl' for SSL encryption, 'tls' for TLS encryption, or null for no
-// encryption. For 'ssl' or 'tls', PHP must have the appropriate OpenSSL
-// transport wrappers installed.
-$CDASH_EMAIL_SMTP_ENCRYPTION = null;
 // Login for the SMTP server or null for anonymous.
 $CDASH_EMAIL_SMTP_LOGIN = null;
 // Password for the SMTP server.
@@ -132,7 +121,6 @@ $CDASH_USE_HTTPS = '0';
 // Name of the server running CDash.
 // Leave empty to use current name and default port.
 $CDASH_SERVER_NAME = '';
-$CDASH_SERVER_PORT = '';
 // If the remote request should use localhost or the full name
 // This variable should be set to 1 in most of the server configurations
 $CDASH_CURL_REQUEST_LOCALHOST = '1';
@@ -156,23 +144,14 @@ $CDASH_UPLOAD_DIRECTORY = $CDASH_ROOT_DIR . '/public/upload';
 $CDASH_DOWNLOAD_RELATIVE_URL = 'upload';
 // Should normal user allowed to create projects
 $CDASH_USER_CREATE_PROJECTS = false;
-// Maximum size allocated for the logs
-// CDash creates 10 files spanning the total size allocated
-$CDASH_LOG_FILE_MAXSIZE_MB = 50;
 // Log level
 $CDASH_LOG_LEVEL = LOG_WARNING;
-// Using external authentication
-$CDASH_EXTERNAL_AUTH = '0';
 // Backup timeframe.
 // Set to '0' if you do not wish to backup parsed .xml files.
 $CDASH_BACKUP_TIMEFRAME = '48'; // 48 hours
 // Request full email address to add new users
 // instead of displaying a list
 $CDASH_FULL_EMAIL_WHEN_ADDING_USER = '0';
-// Warn about unregistered committers: default to '1' to keep
-// the behavior the same as previous versions. Set to '0' to
-// avoid "is not registered (or has no email)" warning messages.
-$CDASH_WARN_ABOUT_UNREGISTERED_COMMITTERS = '0';
 // Use getIPfromApache script to get IP addresses
 // when using forwarding script
 $CDASH_FORWARDING_IP = '192.%'; // should be an SQL format
@@ -182,8 +161,6 @@ $CDASH_DEFAULT_IP_LOCATIONS = array();
 // Use compression (default on)
 $CDASH_USE_COMPRESSION = '1';
 
-// Allow rememberme
-$CDASH_ALLOW_LOGIN_COOKIE = '1';
 // Set to start the autoremoval on the first build of the day
 $CDASH_AUTOREMOVE_BUILDS = '0';
 // Google Map API
@@ -226,12 +203,6 @@ $OAUTH2_PROVIDERS = [];
 // Disabling this feature can improve rendering performance of index.php
 // for projects with lots of subproject builds.
 $CDASH_SHOW_LAST_SUBMISSION = 1;
-
-// How many times to retry queries via random exponential back-off
-$CDASH_MAX_QUERY_RETRIES = 1;
-
-// Whether to use persistent mysql connections (mysql_connectp)
-$CDASH_USE_PERSISTENT_MYSQL_CONNECTION = false;
 
 // Whether to delete existing subprojects and/or dependencies that aren't
 // mentioned by a newly uploaded Project.xml

@@ -99,8 +99,6 @@ else()
   set(rename_logs "false")
 endif()
 
-set(CDASH_USE_LOCAL_DIRECTORY 0)
-
 if (CDASH_USE_REDIS_QUEUE)
   set(CDASH_BERNARD_SUBMISSION "true")
   set(CDASH_BERNARD_DRIVER "new \\Bernard\\Driver\\PredisDriver(new \\Predis\\Client('tcp://localhost'))")
@@ -120,7 +118,6 @@ file(WRITE "${CDash_SOURCE_DIR}/app/cdash/config/config.local.php"
 //
 date_default_timezone_set('America/New_York');
 $CDASH_DB_NAME = 'cdash4simpletest';
-$CDASH_PRODUCTION_MODE = false;
 $CDASH_TESTING_MODE = true;
 $CDASH_REGISTRATION_EMAIL_VERIFY = false;
 $CDASH_TESTING_RENAME_LOGS = ${rename_logs};
@@ -135,7 +132,6 @@ $CDASH_LOG_LEVEL = LOG_DEBUG;
 $PHP_EXE = '${PHP_EXE}';
 $PHPUNIT_EXE = '${PHPUNIT_EXE}';
 $CDASH_DEFAULT_GIT_DIRECTORY = '${CDash_BINARY_DIR}';
-$CDASH_USE_LOCAL_DIRECTORY = '${CDASH_USE_LOCAL_DIRECTORY}';
 $CDASH_BASE_URL = '${CDASH_TESTING_URL}';
 $CDASH_BERNARD_SUBMISSION = ${CDASH_BERNARD_SUBMISSION};
 $CDASH_BERNARD_DRIVER = ${CDASH_BERNARD_DRIVER};
