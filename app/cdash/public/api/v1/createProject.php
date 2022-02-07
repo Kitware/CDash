@@ -129,7 +129,7 @@ if ($projectid > 0) {
     }
 } else {
     // Initialize some variables for project creation.
-    $project_response['AuthenticateSubmissions'] = config('cdash.allow.authenticated_submissions');
+    $project_response['AuthenticateSubmissions'] = 0;
     $project_response['Public'] = 0;
     $project_response['AutoremoveMaxBuilds'] = 500;
     $project_response['AutoremoveTimeframe'] = 60;

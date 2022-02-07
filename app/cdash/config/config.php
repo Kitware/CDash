@@ -237,12 +237,6 @@ $CDASH_USE_ELASTICACHE_AUTO_DISCOVERY = false;
 // 0 here means that tokens do not expire.
 $CDASH_TOKEN_DURATION = 15811200;
 
-// By default, should newly created projects require an authentication token
-// for submissions?
-// 0 means that the default will be to accept all submissions from any site.
-// 1 means that newly created projects will require authentication by default.
-$CDASH_DEFAULT_AUTHENTICATE_SUBMISSIONS = 0;
-
 // Should CDash should post build/test results to a build's pull request?
 // This is enabled by default but requires CTEST_CHANGE_ID to be set by the
 // client.  Set this variable to FALSE to prevent CDash from commenting on

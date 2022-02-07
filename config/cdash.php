@@ -44,9 +44,6 @@ return [
             'generateCTestConfig.php',
         ]
     ],
-    'allow' => [
-        'authenticated_submissions' => false,
-    ],
     'login' => [
         'max_attempts' => 5,
         'lockout' => [

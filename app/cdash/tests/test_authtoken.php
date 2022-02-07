@@ -20,7 +20,6 @@ class AuthTokenTestCase extends KWWebTestCase
     public function __construct()
     {
         parent::__construct();
-        $this->ConfigLine = '$CDASH_DEFAULT_AUTHENTICATE_SUBMISSIONS = 1;';
         $this->Hash = '';
         $this->PDO = get_link_identifier()->getPdo();
         $this->PostBuildId = 0;
@@ -40,20 +39,6 @@ class AuthTokenTestCase extends KWWebTestCase
     {
         // Login as admin.
         $this->login();
-
-        // Verify setting is off by default.
-        $response = $this->get($this->url . '/api/v1/createProject.php');
-        $response = json_decode($response, true);
-        $this->assertEqual($response['project']['AuthenticateSubmissions'], false);
-
-        // Enable config setting.
-        // $this->addLineToConfig($this->ConfigLine);
-        config(['cdash.allow.authenticated_submissions' => true]);
-
-        // Verify setting is now on by default.
-        $response = $this->get($this->url . '/api/v1/createProject.php');
-        $response = json_decode($response, true);
-        $this->assertEqual($response['project']['AuthenticateSubmissions'], true);
 
         // Create project.
         $settings = [
@@ -81,9 +66,6 @@ class AuthTokenTestCase extends KWWebTestCase
         if (!$userproject->Save()) {
             $this->fail('Failed to assign user to project');
         }
-
-        // Disable config setting.
-        // $this->removeLineFromConfig($this->ConfigLine);
     }
 
     public function testGenerateToken()
