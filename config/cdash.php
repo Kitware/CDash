@@ -54,6 +54,7 @@ return [
         ],
     ],
     'builds_per_project' => env('BUILDS_PER_PROJECT', 0),
+    'curl_request_localhost' => env('CURL_REQUEST_LOCALHOST', true),
     'default_project' => env('DEFAULT_PROJECT', null),
     'login_field' => env('LOGIN_FIELD', 'Email'),
     'slow_page_time' => env('SLOW_PAGE_TIME', 10),

@@ -522,15 +522,13 @@ function stripslashes_if_gpc_magic_quotes($string)
 /** Get the current URI of the dashboard */
 function get_server_URI($localhost = false)
 {
-    /** @var Config $config */
-    $config = Config::getInstance();
-
     // If we should consider the localhost.
     // This is used for submission but not emails, etc...
-    if ($localhost && $config->get('CDASH_CURL_REQUEST_LOCALHOST')) {
+    if ($localhost && config('cdash.curl_request_localhost')) {
         $localhost = true;
     }
 
+    $config = Config::getInstance();
     return $config->getBaseUrl($localhost);
 }
 
