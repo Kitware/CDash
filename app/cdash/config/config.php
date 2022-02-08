@@ -126,8 +126,6 @@ $CDASH_BACKUP_TIMEFRAME = '48'; // 48 hours
 // Request full email address to add new users
 // instead of displaying a list
 $CDASH_FULL_EMAIL_WHEN_ADDING_USER = '0';
-// Use hostip.info to geolocate IP addresses
-$CDASH_GEOLOCATE_IP_ADDRESSES = true;
 $CDASH_DEFAULT_IP_LOCATIONS = array();
 
 // Set to start the autoremoval on the first build of the day

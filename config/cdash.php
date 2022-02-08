@@ -56,9 +56,11 @@ return [
     'daily_updates' => env('DAILY_UPDATES', true),
     'default_google_analytics' => env('DEFAULT_GOOGLE_ANALYTICS', ''),
     'default_project' => env('DEFAULT_PROJECT', null),
+    'geolocate_ip_addresses' => env('GEOLOCATE_IP_ADDRESSES', true),
     'login_field' => env('LOGIN_FIELD', 'Email'),
     'slow_page_time' => env('SLOW_PAGE_TIME', 10),
     'token_duration' => env('TOKEN_DURATION', 15811200),
     'unlimited_projects' => $unlimited_projects,
     'use_compression' => env('USE_COMPRESSION', true),
+
 ];

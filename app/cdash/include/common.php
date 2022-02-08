@@ -718,7 +718,7 @@ function get_geolocation($ip)
 
     $config = Config::getInstance();
 
-    if ($config->get('CDASH_GEOLOCATE_IP_ADDRESSES')) {
+    if (config('cdash.geolocate_ip_addresses')) {
         // Ask hostip.info for geolocation
         $url = 'http://api.hostip.info/get_html.php?ip=' . $ip . '&position=true';
 
