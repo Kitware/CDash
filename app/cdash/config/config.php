@@ -56,11 +56,6 @@ $CDASH_SELENIUM_HUB='localhost';
 $CDASH_TESTING_MODE = false;
 $CDASH_TESTING_RENAME_LOGS = false;
 
-// Whether or not CDash submissions should trigger daily updates.
-// Disable this if you want more fine grained control over when/how
-// daily updates are triggered (e.g. cron).
-$CDASH_DAILY_UPDATES = true;
-
 /**
   * If a Bernard Driver is available then CDASH_BERNARD_SUBMISSION can be enabled
   * to allow processing of submissions to take place in the background on other
