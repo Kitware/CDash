@@ -132,8 +132,6 @@ $CDASH_FULL_EMAIL_WHEN_ADDING_USER = '0';
 // Use hostip.info to geolocate IP addresses
 $CDASH_GEOLOCATE_IP_ADDRESSES = true;
 $CDASH_DEFAULT_IP_LOCATIONS = array();
-// Use compression (default on)
-$CDASH_USE_COMPRESSION = '1';
 
 // Set to start the autoremoval on the first build of the day
 $CDASH_AUTOREMOVE_BUILDS = '0';

@@ -15,7 +15,6 @@
 =========================================================================*/
 namespace CDash\Model;
 
-use CDash\Config;
 use CDash\Database;
 use PDO;
 
@@ -45,8 +44,7 @@ class CoverageFile
 
         // Compute the crc32 of the file (before compression for backward compatibility)
         $this->Crc32 = crc32($this->FullPath . $this->File);
-        $config = Config::getInstance();
-        if ($config->get('CDASH_USE_COMPRESSION')) {
+        if (config('cdash.use_compression')) {
             $file = gzcompress($this->File);
             if ($file === false) {
                 $file = $this->File;
@@ -282,8 +280,7 @@ class CoverageFile
 
         $this->FullPath = $row['fullpath'];
         $this->Crc32 = $row['crc32'];
-        $config = Config::getInstance();
-        if ($config->get('CDASH_USE_COMPRESSION')) {
+        if (config('cdash.use_compression')) {
             if (is_resource($row['file'])) {
                 $this->File = base64_decode(stream_get_contents($row['file']));
             } else {

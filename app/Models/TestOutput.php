@@ -20,7 +20,7 @@ class TestOutput extends Model
      */
     public static function DecompressOutput($output)
     {
-        if (!env('USE_COMPRESSION', 'true')) {
+        if (!config('cdash.use_compression')) {
             return $output;
         }
         if (config('database.default') == 'pgsql') {
