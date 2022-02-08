@@ -50,8 +50,8 @@ class ViewProjects extends \CDash\Controller\Api
             $response['upgradewarning'] = 1;
         }
 
-        $response['title'] = $this->config->get('CDASH_MAININDEX_TITLE');
-        $response['subtitle'] = $this->config->get('CDASH_MAININDEX_SUBTITLE');
+        $response['title'] = 'CDash';
+        $response['subtitle'] = 'Projects';
         $response['googletracker'] = config('cdash.default_google_analytics');
         if ($this->config->get('CDASH_NO_REGISTRATION') == 1) {
             $response['noregister'] = 1;
