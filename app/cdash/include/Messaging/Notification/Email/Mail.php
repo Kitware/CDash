@@ -53,8 +53,7 @@ class Mail extends Singleton
     public function getDefaultSender()
     {
         if (!$this->defaultSender) {
-            $config = Config::getInstance();
-            $this->defaultSender = $config->get('CDASH_EMAIL_FROM');
+            $this->defaultSender = config('mail.from.address');
         }
         return $this->defaultSender;
     }
@@ -65,9 +64,8 @@ class Mail extends Singleton
     public function getDefaultReplyTo()
     {
         if (!$this->defaultReplyTo) {
-            $config = Config::getInstance();
-            $address = $config->get('CDASH_EMAIL_REPLY');
-            $name = 'CDash';
+            $address = config('mail.reply_to.address');
+            $name = config('mail.reply_to.name');
             $this->defaultReplyTo = "{$name} <{$address}>";
         }
         return $this->defaultReplyTo;
@@ -79,8 +77,7 @@ class Mail extends Singleton
     public function getSwiftMailer()
     {
         if (!$this->swift) {
-            $config = Config::getInstance();
-            $smtp_host = $config->get('CDASH_EMAIL_SMTP_HOST');
+            $smtp_host = config('mail.host');
             if (!$smtp_host) {
                 // TODO: this should never happen, discuss.
                 /* @see https://github.com/swiftmailer/swiftmailer/issues/866#issuecomment-289291228
@@ -91,9 +88,9 @@ class Mail extends Singleton
                 // $transport = \Swift_MailTransport::newInstance();
                 $transport = new \Swift_SendmailTransport();
             } else {
-                $smtp_port = $config->get('CDASH_EMAIL_SMTP_PORT');
-                $smtp_user = $config->get('CDASH_EMAIL_SMTP_LOGIN');
-                $smtp_pswd = $config->get('CDASH_EMAIL_STMP_PASS');
+                $smtp_port = config('mail.port');
+                $smtp_user = config('mail.username');
+                $smtp_pswd = config('mail.password');
 
                 $transport = new \Swift_SmtpTransport($smtp_host, $smtp_port);
                 if ($smtp_host && $smtp_pswd) {
@@ -105,6 +102,7 @@ class Mail extends Singleton
 
             $this->swift = new \Swift_Mailer($transport);
 
+            $config = Config::getInstance();
             if ($config->get('CDASH_TESTING_MODE')) {
                 $listener = new EmailSendListener($this);
                 $this->swift->registerPlugin($listener);

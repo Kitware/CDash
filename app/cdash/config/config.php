@@ -87,14 +87,6 @@ $CDASH_ASYNC_WORKERS = 1;
 // Main title and subtitle for the index page
 $CDASH_MAININDEX_TITLE = 'CDash';
 $CDASH_MAININDEX_SUBTITLE = 'Projects';
-$CDASH_EMAIL_FROM = 'admin@cdash.org';
-$CDASH_EMAIL_REPLY = 'noreply@cdash.org';
-// Hostname of the SMTP server or null to use the PHP mail() function.
-$CDASH_EMAIL_SMTP_HOST = null;
-// Port for the SMTP server.
-$CDASH_EMAIL_SMTP_PORT = 25;
-// Login for the SMTP server or null for anonymous.
-$CDASH_EMAIL_SMTP_LOGIN = null;
 // Should CDash only register valid emails
 $CDASH_REGISTRATION_EMAIL_VERIFY = true;
 // If CDash should use the SendGrid API for email
