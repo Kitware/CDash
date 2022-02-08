@@ -45,7 +45,7 @@ return [
         ]
     ],
     'login' => [
-        'max_attempts' => 5,
+        'max_attempts' => env('LOCKOUT_ATTEMPTS', 5),
         'lockout' => [
             'duration' => 1,
         ],

@@ -183,12 +183,6 @@ $CDASH_PASSWORD_EXPIRATION = 0;
 // 0 means you can never reuse a password.
 $CDASH_UNIQUE_PASSWORD_COUNT = 0;
 
-// Lock user account after N failed login attempts.
-// Account lockout functionality is disabled when this is set to 0.
-// Note that account lockout functionality is only supported for authentication
-// using CDash's database (not LDAP or Google account login).
-$CDASH_LOCKOUT_ATTEMPTS = 0;
-
 // How long to lock an account for? (in minutes)
 $CDASH_LOCKOUT_LENGTH = 0;
 
