@@ -128,8 +128,6 @@ $CDASH_UPLOAD_DIRECTORY = $CDASH_ROOT_DIR . '/public/upload';
 $CDASH_DOWNLOAD_RELATIVE_URL = 'upload';
 // Should normal user allowed to create projects
 $CDASH_USER_CREATE_PROJECTS = false;
-// Log level
-$CDASH_LOG_LEVEL = LOG_WARNING;
 // Backup timeframe.
 // Set to '0' if you do not wish to backup parsed .xml files.
 $CDASH_BACKUP_TIMEFRAME = '48'; // 48 hours
