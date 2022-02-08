@@ -47,7 +47,7 @@ return [
     'login' => [
         'max_attempts' => env('LOCKOUT_ATTEMPTS', 5),
         'lockout' => [
-            'duration' => 1,
+            'duration' => env('LOCKOUT_LENGTH', 1),
         ],
     ],
     'builds_per_project' => env('BUILDS_PER_PROJECT', 0),

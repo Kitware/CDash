@@ -183,9 +183,6 @@ $CDASH_PASSWORD_EXPIRATION = 0;
 // 0 means you can never reuse a password.
 $CDASH_UNIQUE_PASSWORD_COUNT = 0;
 
-// How long to lock an account for? (in minutes)
-$CDASH_LOCKOUT_LENGTH = 0;
-
 // Whether or not to use Memcache for certain pages
 $CDASH_MEMCACHE_ENABLED = false;
 
