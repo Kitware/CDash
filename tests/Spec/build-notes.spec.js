@@ -23,7 +23,7 @@ beforeEach(function() {
       buildname: 'my build',
       siteid: 1,
       site: 'mysite',
-      stamp: 'today',
+      starttime: '5 minutes ago',
     },
     notes: [
       {
@@ -56,7 +56,7 @@ test('BuildNote handles API response', async () => {
   var html = component.html();
   expect(html).toContain('my build');
   expect(html).toContain('mysite');
-  expect(html).toContain('today');
+  expect(html).toContain('5 minutes ago');
 
   // Since we only have one note it should be displayed by default.
   expect(component.find('#notetext0').isVisible()).toBe(true);

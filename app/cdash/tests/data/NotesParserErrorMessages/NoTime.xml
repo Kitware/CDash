@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="Dart/Source/Server/XSL/Build.xsl <file:///Dart/Source/Server/XSL/Build.xsl> "?>
+<Site BuildName="note_errors" BuildStamp="20210916-1921-Experimental" Name="hesperides" Generator="ctest-3.20.1">
+  <Notes>
+    <Note Name="my very own note">
+      <Text>this is my note
+</Text>
+    </Note>
+  </Notes>
+</Site>

@@ -13,85 +13,12 @@
   the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
   PURPOSE. See the above copyright notices for more information.
 =========================================================================*/
-require_once 'include/pdo.php';
+
 require_once 'include/api_common.php';
 
-use App\Services\PageTimer;
-use App\Services\TestingDay;
+use CDash\Controller\Api\ViewNotes as Controller;
+use CDash\Database;
 
-use CDash\Model\Build;
-use CDash\Model\Project;
-
-$pageTimer = new PageTimer();
-$build = get_request_build();
-if (is_null($build)) {
-    return;
-}
-
-$buildid = get_request_build_id();
-
-@$date = $_GET['date'];
-if ($date != null) {
-    $date = htmlspecialchars(pdo_real_escape_string($date));
-}
-
-$response = [];
-
-$project = new Project();
-$project->Id = $build->ProjectId;
-$project->Fill();
-$response = begin_JSON_response();
-$response['title'] = "CDash : $project->Name";
-
-$date = TestingDay::get($project, $build->StartTime);
-get_dashboard_JSON_by_name($project->Name, $date, $response);
-
-// Menu
-$menu = array();
-if ($build->GetParentId() > 0) {
-    $menu['back'] = '/index.php?project=' . urlencode($project->Name) . "&parentid={$build->GetParentId()}";
-} else {
-    $menu['back'] = '/index.php?project=' . urlencode($project->Name) . '&date=' . $date;
-}
-
-$previous_buildid = $build->GetPreviousBuildId();
-$current_buildid = $build->GetCurrentBuildId();
-$next_buildid = $build->GetNextBuildId();
-
-if ($previous_buildid > 0) {
-    $menu['previous'] = "/build/$previous_buildid/notes";
-} else {
-    $menu['previous'] = false;
-}
-
-$menu['current'] = "/build/$current_buildid/notes";
-
-if ($next_buildid > 0) {
-    $menu['next'] = "/build/$next_buildid/notes";
-} else {
-    $menu['next'] = false;
-}
-
-$response['menu'] = $menu;
-
-// Build
-$site_array = pdo_fetch_array(pdo_query("SELECT name FROM site WHERE id='{$build->SiteId}'"));
-$response['build'] = Build::MarshalResponseArray($build, ['site' => $site_array['name']]);
-
-// Notes
-$notes = array();
-$build2note = pdo_query("SELECT noteid,time FROM build2note WHERE buildid='$buildid'");
-while ($build2note_array = pdo_fetch_array($build2note)) {
-    $noteid = $build2note_array['noteid'];
-    $note_array = pdo_fetch_array(pdo_query("SELECT * FROM note WHERE id='$noteid'"));
-
-    $note = array();
-    $note['name'] = $note_array['name'];
-    $note['text'] = $note_array['text'];
-    $note['time'] = $build2note_array['time'];
-
-    $notes[] = $note;
-}
-$response['notes'] = $notes;
-$pageTimer->end($response);
-echo json_encode(cast_data_for_JSON($response));
+$db = Database::getInstance();
+$controller = new Controller($db, get_request_build());
+echo json_encode(cast_data_for_JSON($controller->getResponse()));
