@@ -168,7 +168,7 @@ export default {
 
       if (cdash.menu.back) {
         this.showBack = true;
-        this.backUrl = `${this.$baseURL}${cdash.menu.back}${extrafilterurl}`;
+        this.backUrl = `${this.$baseURL}/${cdash.menu.back}${extrafilterurl}`;
       }
       if (cdash.showcalendar) {
         this.showCalendar = true;
