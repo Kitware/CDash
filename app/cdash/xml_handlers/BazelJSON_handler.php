@@ -546,7 +546,7 @@ class BazelJSONHandler extends NonSaxHandler
 
                     $test_name = $json_array['id']['testResult']['label'];
                     $test_time = 0;
-                    if (array_key_exists('testAttemptDurationMillis', $json_array['testResult'])) {
+                    if (array_key_exists('testResult', $json_array) && array_key_exists('testAttemptDurationMillis', $json_array['testResult'])) {
                         $test_time = $json_array['testResult']['testAttemptDurationMillis'] / 1000.0;
                     } elseif (array_key_exists('testAttemptDurationMillis', $json_array['id']['testResult'])) {
                         $test_time = $json_array['id']['testResult']['testAttemptDurationMillis'] / 1000.0;
@@ -595,6 +595,9 @@ class BazelJSONHandler extends NonSaxHandler
                 $test_name = $json_array['id']['testSummary']['label'];
                 foreach ($this->Tests as $testdata) {
                     if ($testdata->name === $test_name) {
+                        if (!array_key_exists('testSummary', $json_array)) {
+                            continue;
+                        }
                         $testdata->status =
                             strtolower($json_array['testSummary']['overallStatus']);
                         if ($testdata->status === 'failed') {
